@@ -1,0 +1,50 @@
+world creation requested
+world loaded, 45 steps
+step setup
+shot 00_hud_overworld
+step spawn_ignivald
+shot monster_ignivald
+step attack_ignivald
+shot monster_ignivald_attack
+step clear_ignivald
+step spawn_frostgarm
+shot monster_frostgarm
+step attack_frostgarm
+shot monster_frostgarm_attack
+step clear_frostgarm
+step spawn_voltrix
+shot monster_voltrix
+step attack_voltrix
+shot monster_voltrix_attack
+step clear_voltrix
+step goto_village
+shot village_spawn
+step look_around
+shot village_view2
+step open_quest_board
+shot gui_quest_board
+step close_quest_board
+step open_blacksmith
+shot gui_blacksmith
+step close_blacksmith
+step open_merchant
+shot gui_merchant
+step close_merchant
+step open_kitchen
+shot gui_kitchen
+step close_kitchen
+step open_companion
+shot gui_companion
+step close_companion
+step open_hunter_notes
+shot gui_hunter_notes
+step close_hunter_notes
+step goto_verdant_hills
+dimension missing: huntcraft:verdant_hills
+shot map_verdant_hills
+step goto_frostpeak_range
+dimension missing: huntcraft:frostpeak_range
+shot map_frostpeak_range
+step goto_ember_caldera
+dimension missing: huntcraft:ember_caldera
+shot map_ember_caldera
