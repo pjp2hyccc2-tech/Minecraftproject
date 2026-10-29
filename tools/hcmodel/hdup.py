@@ -71,9 +71,16 @@ def replay(img, glow, fn, K, round_shapes=True):
     g1 = downsample(glow, K) if glow is not None else np.zeros_like(a1)
     a1c, g1c = a1.copy(), g1.copy()
     fn(a1c, g1c)
+    return apply_changes(img, glow, a1, a1c, g1, g1c, K, round_shapes)
+
+
+def apply_changes(img, glow, a1, a1c, g1, g1c, K, round_shapes=True):
+    """Applies the difference between two 1x states (a1 -> a1c colour, g1 -> g1c glow; RGBA float arrays)
+    to the HD arrays img / glow in place (see replay).  Returns the number of changed 1x texels."""
     H, W = img.shape[:2]
     h, w = a1.shape[:2]
     hd_alpha = img[..., 3] > 0
+    hd_alpha[:h * K, :w * K] |= np.kron(a1c[..., 3] > 0, np.ones((K, K), bool))   # pixels drawn on cleared areas
     # --- alpha cut-outs
     cut = (a1c[..., 3] <= 0) & (a1[..., 3] > 0)
     if cut.any():

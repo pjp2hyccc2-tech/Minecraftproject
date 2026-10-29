@@ -20,6 +20,7 @@ from hcmodel.parts import mirror_tree  # noqa: E402
 import platepaint as PP  # noqa: E402
 
 TW, TH = 128, 64
+HD = 4            # HD texel multiplier of the painted textures (1 = legacy pixel art); set by armor.py
 YMIN, YSPAN = -10.0, 34.0
 FACES = ('top', 'bottom', 'west', 'north', 'east', 'south')
 
@@ -91,15 +92,27 @@ class ArmorModel:
 
     # ------------------------------------------------------------------ painting
     def paint(self, base_painter):
+        """Paints the 1x pixel-art texture.  With HD > 1 (module setting) an HD texture is painted alongside:
+        plates are repainted in high detail (platepaint.HDContext) and every other pixel operation (studs,
+        lines, cut-outs, recolours...) is replayed onto it with rounded, anti-aliased shapes; the HD images
+        are returned instead and the LabPBR maps are kept in self.pbr_maps."""
         self.pack()
         a = np.zeros((TH, TW, 4), float)
         g = np.zeros((TH, TW, 4), float)
+        self.hd = PP.HDContext(TW, TH, HD) if HD > 1 else None
+        self.img, self.glow = a, g
+        self._shadow, self._gshadow = a.copy(), g.copy()
         base_ids = set(id(c) for c in self.base.values())
         for c in self.m.all_cubes():
             if c.mirror_of is None and id(c) not in base_ids:
-                PP.paint_cube(a, g, c)
-        self.img, self.glow = a, g
+                PP.paint_cube(a, g, c, hd=self.hd)
+        self.sync()
         base_painter(self)
+        self.flush()
+        self.pbr_maps = None
+        if self.hd is not None:
+            out, gl, self.pbr_maps = self.hd.images()
+            return out, gl
         out = Image.fromarray(np.clip(self.img, 0, 255).astype(np.uint8), 'RGBA')
         gl = None
         if (self.glow[..., 3] > 0).any():
@@ -107,6 +120,20 @@ class ArmorModel:
             gg[gg[..., 3] == 0] = 0
             gl = Image.fromarray(np.clip(gg, 0, 255).astype(np.uint8), 'RGBA')
         return out, gl
+
+    def sync(self):
+        """The 1x buffers now match what the HD buffers show."""
+        self._shadow, self._gshadow = self.img.copy(), self.glow.copy()
+
+    def flush(self):
+        """Replays 1x pixel edits made since the last sync onto the HD buffers (no-op without HD)."""
+        if self.hd is None:
+            return
+        from hcmodel.hdup import apply_changes
+        if np.array_equal(self.img, self._shadow) and np.array_equal(self.glow, self._gshadow):
+            return
+        apply_changes(self.hd.img, self.hd.glow, self._shadow, self.img, self._gshadow, self.glow, HD)
+        self.sync()
 
     def face(self, part, face):
         return FaceCanvas(self, self.base[part], face)
@@ -176,8 +203,12 @@ class FaceCanvas:
     def plate(self, style, mask=None, seed=0, offset=(0, 0)):
         """Beveled plate in a 5-level style (see platepaint). Bevel follows the mask outline."""
         st = PP.STYLES[style]
+        self.am.flush()
         PP.paint_region(self.am.img, self.am.glow, self.u0, self.v0, self.w, self.h, st, self.face,
                         self.seed + seed, mask=mask, offset=offset)
+        if self.am.hd is not None:
+            self.am.hd.plate(self.u0, self.v0, self.w, self.h, st, self.face, self.seed + seed, mask=mask, offset=offset)
+            self.am.sync()
         return self
 
     def ring(self, mask, col, inside_face=True):

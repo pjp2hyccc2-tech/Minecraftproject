@@ -8,6 +8,7 @@ to src/main/java/com/huntcraft/gear/armor/client/ArmorGeometry.java.
 
     python3 tools/art/armor.py            # all sets
     python3 tools/art/armor.py ignivald   # preview/texture one set (Java file always contains every set)
+    python3 tools/art/armor.py --1x       # legacy 128x64 pixel-art textures (default: HD, armorkit.HD x finer, + LabPBR _n/_s)
 Previews: tools/preview/armor_<set>.png
 """
 import json
@@ -1237,6 +1238,9 @@ def round_json(o):
 
 def main(argv):
     want = [a for a in argv if not a.startswith('-')]
+    if '--1x' in argv:
+        import armorkit
+        armorkit.HD = 1
     os.makedirs(ARMOR_TEX, exist_ok=True)
     geo = {}
     for sid in SETS:
@@ -1247,12 +1251,19 @@ def main(argv):
             continue
         to.save(os.path.join(ARMOR_TEX, sid + '_layer_1.png'))
         ti.save(os.path.join(ARMOR_TEX, sid + '_layer_2.png'))
-        for layer, g in (('1', go), ('2', gi)):
+        for layer, g, am in (('1', go, o), ('2', gi, i)):
             p = os.path.join(ARMOR_TEX, '%s_layer_%s_glow.png' % (sid, layer))
             if g is not None:
                 g.save(p)
             elif os.path.exists(p):
                 os.remove(p)
+            # LabPBR maps (HD mode): <set>_layer_<n>_n.png / _s.png
+            for suffix, idx in (('_n', 0), ('_s', 1)):
+                p = os.path.join(ARMOR_TEX, '%s_layer_%s%s.png' % (sid, layer, suffix))
+                if am.pbr_maps is not None:
+                    am.pbr_maps[idx].save(p)
+                elif os.path.exists(p):
+                    os.remove(p)
         if '--no-preview' not in argv:
             preview([(o, to), (i, ti)], os.path.join(PREVIEW, 'armor_%s.png' % sid))
         print('armor', sid, 'ok', 'glow' if (go is not None or gi is not None) else '')
