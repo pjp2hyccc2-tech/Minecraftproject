@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelSettings;
 import net.minecraft.world.level.WorldDataConfiguration;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.presets.WorldPresets;
@@ -156,7 +157,7 @@ public final class ShaderAutoTest {
             cmd(sp, "fill -2 -61 6 2 -61 8 minecraft:lava");
             cmd(sp, "fill -12 -60 -12 -10 -58 12 minecraft:stone_bricks");
             cmd(sp, "tp @s 0 -56 14 180 20");
-        }), 80);
+        }), 110);
         shot("shader_00_overworld");
         // the pond, the lantern, the campfire and the lava from above (yaw 135 looks towards -x/-z)
         add("look_down", mc -> server(mc, sp -> cmd(sp, "tp @s 9 -54 10 135 35")), 30);
@@ -172,13 +173,13 @@ public final class ShaderAutoTest {
         add("morning", mc -> server(mc, sp -> cmd(sp, "time set 2500")), 20);
 
         // monsters: ignivald (reference, fire) by day; voltrix (glow parts, lightning) by night
-        add("spawn_ignivald", mc -> showMonster(mc, "ignivald", 0), 60);
+        add("spawn_ignivald", mc -> showMonster(mc, "ignivald", 0), 130);
         shot("shader_monster_ignivald");
         add("attack_ignivald", mc -> server(mc, sp -> attack(sp, "fireball", "fireball_triple", "breath_sweep")), 18);
         shot("shader_monster_ignivald_attack");
         add("clear_ignivald", mc -> server(mc, sp -> clearMonster()), 5);
 
-        add("spawn_voltrix", mc -> showMonster(mc, "voltrix", 1), 60);
+        add("spawn_voltrix", mc -> showMonster(mc, "voltrix", 1), 130);
         shot("shader_monster_voltrix");
         add("night", mc -> server(mc, sp -> cmd(sp, "time set 14500")), 40);
         shot("shader_monster_voltrix_night");
@@ -217,7 +218,7 @@ public final class ShaderAutoTest {
         }
 
         // the final boss in the caldera: dark red sky + its emissive glow
-        add("spawn_azragos", mc -> server(mc, sp -> showMonsterHere(sp, "azragos")), 70);
+        add("spawn_azragos", mc -> server(mc, sp -> showMonsterHere(sp, "azragos")), 130);
         shot("shader_monster_azragos_caldera");
         add("attack_azragos", mc -> server(mc, sp -> attack(sp, "breath_beam", "orb_volley", "breath_sweep", "supernova")), 20);
         shot("shader_monster_azragos_attack");
@@ -273,8 +274,12 @@ public final class ShaderAutoTest {
         double size = Math.max(m.getBbWidth(), m.getBbHeight());
         if (m.profile().large) size *= 2.2;
         double dist = 2.5 + size * 1.2;
-        double camY = ground.getY() + m.getBbHeight() * 0.7 + size * 0.15;
-        sp.teleportTo(lvl, ground.getX() + 0.5 - dir.x * dist, camY, ground.getZ() + 0.5 - dir.z * dist, yaw, 10.0F);
+        double camX = ground.getX() + 0.5 - dir.x * dist;
+        double camZ = ground.getZ() + 0.5 - dir.z * dist;
+        int camGround = lvl.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mth.floor(camX), Mth.floor(camZ));
+        double camY = Math.max(ground.getY() + m.getBbHeight() * 0.7 + size * 0.15, camGround + 2.0);
+        float pitch = (float) Math.toDegrees(Math.atan2(camY - (ground.getY() + m.getBbHeight() * 0.5), dist));
+        sp.teleportTo(lvl, camX, camY, camZ, yaw, Mth.clamp(pitch, 0.0F, 45.0F));
         fly(sp);
         log("monster " + id + " at " + ground);
     }
@@ -283,8 +288,9 @@ public final class ShaderAutoTest {
         if (mc.player != null) mc.player.setYRot(mc.player.getYRot() + degrees);
     }
 
+    /** Runs a command as the player (so {@code @s} and relative coordinates work), silently, with op permission. */
     private static void cmd(ServerPlayer sp, String command) {
-        sp.server.getCommands().performPrefixedCommand(sp.server.createCommandSourceStack().withSuppressedOutput().withPermission(4), command);
+        sp.server.getCommands().performPrefixedCommand(sp.createCommandSourceStack().withSuppressedOutput().withPermission(4), command);
     }
 
     private static void attack(ServerPlayer sp, String... names) {

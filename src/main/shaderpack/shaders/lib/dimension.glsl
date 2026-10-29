@@ -32,7 +32,7 @@
     const vec3  DIM_SUN_NOON      = vec3(1.00, 0.95, 0.84) * 1.75;
     const vec3  DIM_SUN_LOW       = vec3(1.00, 0.52, 0.22) * 1.40;
     const vec3  DIM_SKY_ZENITH    = vec3(0.24, 0.48, 0.90);
-    const vec3  DIM_SKY_HORIZON   = vec3(0.80, 0.86, 0.92);
+    const vec3  DIM_SKY_HORIZON   = vec3(0.66, 0.78, 0.92);
     const vec3  DIM_AMBIENT       = vec3(0.55, 0.66, 0.86);
     const float DIM_AMBIENT_MUL   = 0.52;
     const vec3  DIM_FOG_TINT      = vec3(0.86, 0.93, 1.00);
@@ -42,7 +42,7 @@
     const float DIM_VL            = 1.25;
     const vec3  DIM_GRADE_TINT    = vec3(1.00, 1.00, 0.96);
     const float DIM_GRADE_SAT     = 1.15;
-    const float DIM_GRADE_CONTRAST= 1.04;
+    const float DIM_GRADE_CONTRAST= 1.06;
     const vec3  DIM_GRADE_LIFT    = vec3(0.012, 0.016, 0.012);
     const float DIM_HAZE          = 0.0;
     const float DIM_HEAT          = 0.0;
@@ -73,21 +73,21 @@
 #elif defined DIM_EMBER
     // 熾火の大カルデラ : dark red-brown sky, hot orange light, ash and heat haze
     #define DIM_ID 4
-    const vec3  DIM_SUN_NOON      = vec3(1.00, 0.60, 0.34) * 1.45;
+    const vec3  DIM_SUN_NOON      = vec3(1.00, 0.56, 0.30) * 1.30;
     const vec3  DIM_SUN_LOW       = vec3(1.00, 0.38, 0.14) * 1.25;
-    const vec3  DIM_SKY_ZENITH    = vec3(0.16, 0.06, 0.05);
-    const vec3  DIM_SKY_HORIZON   = vec3(0.62, 0.24, 0.10);
-    const vec3  DIM_AMBIENT       = vec3(0.70, 0.38, 0.24);
-    const float DIM_AMBIENT_MUL   = 0.60;
-    const vec3  DIM_FOG_TINT      = vec3(1.00, 0.50, 0.24);
-    const float DIM_FOG_DENSITY   = 1.30;
+    const vec3  DIM_SKY_ZENITH    = vec3(0.10, 0.04, 0.04);
+    const vec3  DIM_SKY_HORIZON   = vec3(0.48, 0.16, 0.06);
+    const vec3  DIM_AMBIENT       = vec3(0.66, 0.34, 0.22);
+    const float DIM_AMBIENT_MUL   = 0.55;
+    const vec3  DIM_FOG_TINT      = vec3(0.95, 0.46, 0.22);
+    const float DIM_FOG_DENSITY   = 1.15;
     const float DIM_FOG_BASE      = 70.0;
     const float DIM_FOG_FALLOFF   = 0.030;
     const float DIM_VL            = 1.30;
     const vec3  DIM_GRADE_TINT    = vec3(1.08, 0.95, 0.86);
     const float DIM_GRADE_SAT     = 1.12;
-    const float DIM_GRADE_CONTRAST= 1.10;
-    const vec3  DIM_GRADE_LIFT    = vec3(0.028, 0.008, 0.004);
+    const float DIM_GRADE_CONTRAST= 1.12;
+    const vec3  DIM_GRADE_LIFT    = vec3(0.024, 0.006, 0.003);
     const float DIM_HAZE          = 0.0;
     const float DIM_HEAT          = 1.0;
     const float DIM_ASH           = 1.0;
@@ -142,7 +142,7 @@
     const vec3  DIM_SUN_NOON      = vec3(1.00, 0.95, 0.87) * 1.65;
     const vec3  DIM_SUN_LOW       = vec3(1.00, 0.50, 0.22) * 1.35;
     const vec3  DIM_SKY_ZENITH    = vec3(0.22, 0.45, 0.86);
-    const vec3  DIM_SKY_HORIZON   = vec3(0.76, 0.83, 0.91);
+    const vec3  DIM_SKY_HORIZON   = vec3(0.64, 0.76, 0.91);
     const vec3  DIM_AMBIENT       = vec3(0.56, 0.66, 0.86);
     const float DIM_AMBIENT_MUL   = 0.52;
     const vec3  DIM_FOG_TINT      = vec3(1.00, 1.00, 1.00);
