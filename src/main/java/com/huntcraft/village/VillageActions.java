@@ -47,9 +47,8 @@ public final class VillageActions {
         });
     }
 
-    /** Sends the item box contents to the client (core only syncs the rest of HunterData) and refreshes HunterData. */
+    /** Sends the item box contents to the client (the core syncs the rest of HunterData itself whenever it is dirty). */
     public static void syncBox(ServerPlayer p) {
-        HunterData.get(p).syncTo(p);
         CompoundTag t = new CompoundTag();
         ContainerHelper.saveAllItems(t, HunterData.get(p).itemBox, true);
         HCNetwork.sendToPlayer(p, "village/box", t);

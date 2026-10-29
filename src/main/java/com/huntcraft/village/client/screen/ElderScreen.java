@@ -49,12 +49,6 @@ public class ElderScreen extends VillageScreen {
     }
 
     @Override
-    protected void init() {
-        super.init();
-        com.huntcraft.network.HCNetwork.sendToServer("village/box_request", new CompoundTag());
-    }
-
-    @Override
     public void tick() {
         super.tick();
         NpcPortrait.tick(portrait);
