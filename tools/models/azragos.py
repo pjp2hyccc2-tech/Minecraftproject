@@ -272,6 +272,52 @@ def wings(anim, keys, fore=None, fingers=True, membranes=None):
                 P(anim, '%s_%s' % (mm, side), 'scale', *[(t, (1, 1, s)) for t, s in membranes])
 
 
+# staggered wing transitions: (start, end) fractions of a fold<->spread transition per bone group
+ORDER_OPEN = {'wing': (0.0, 0.65), 'forearm': (0.12, 0.8), 'finger': (0.3, 1.0), 'mem': (0.45, 1.0)}
+ORDER_CLOSE = {'mem': (0.0, 0.4), 'finger': (0.0, 0.55), 'forearm': (0.2, 0.85), 'wing': (0.35, 1.0)}
+WING_GROUPS = ['wing', 'forearm', 'finger1', 'finger2', 'finger3', 'mem']
+
+
+def wing_track(anim, keys, ground=True, fore_extra=None):
+    """keys: (t, state) with state None (folded rest) or an extra rotation on top of SPREAD (left values).
+    Fold<->spread transitions are staggered so the wing folds like a real limb (no 'picture frame')."""
+    for side in ('l', 'r'):
+        def val(bone, st):
+            if bone == 'mem':
+                return (1, 1, 1) if st is None or not ground else (1, 1, 1.88)
+            if st is None:
+                return (0, 0, 0)
+            if bone == 'wing':
+                return woff('wing', side, st)
+            if bone == 'forearm':
+                return woff('forearm', side, fore_extra or (0, 0, 0))
+            return woff(bone, side, (0, 0, st[2] * 0.3))
+        tracks = {b: [] for b in WING_GROUPS}
+        prev = None
+        for t, st in keys:
+            if prev is not None and (prev[1] is None) != (st is None):
+                t0, s0 = prev
+                order = ORDER_OPEN if s0 is None else ORDER_CLOSE
+                for bone, tr in tracks.items():
+                    a, b = order['finger' if bone.startswith('finger') else bone]
+                    ta, tb = t0 + (t - t0) * a, t0 + (t - t0) * b
+                    if ta - t0 > 0.02:
+                        tr.append((ta, val(bone, s0)))
+                    if t - tb > 0.02:
+                        tr.append((tb, val(bone, st)))
+                    tr.append((t, val(bone, st)))
+            else:
+                for bone, tr in tracks.items():
+                    tr.append((t, val(bone, st)))
+            prev = (t, st)
+        for bone, tr in tracks.items():
+            if bone == 'mem':
+                for mm in MEMS:
+                    P(anim, '%s_%s' % (mm, side), 'scale', *tr)
+            else:
+                P(anim, wname(bone, side), 'rotation', *tr)
+
+
 def wing_delta(anim, keys, fore=None):
     """Air actions: rotation deltas on top of the fly loop (no spread offsets). keys: (t, (x, y, z)) left values."""
     for side in ('l', 'r'):
@@ -350,8 +396,7 @@ P(a, 'body', 'rotation', (0, (0, 0, 0)), (0.35, (5, 0, 0)), (0.65, (-20, 0, 0)),
 P(a, 'body', 'position', (0, (0, 0, 0)), (0.35, (0, 2, 0)), (0.65, (0, 1, 4)), (1.75, (0, 1, 4)), (2.2, (0, 0, 0)))
 neck_keys(a, [(0, (0, 0, 0)), (0.35, (28, 0, 0)), (0.65, (-30, 0, 0)), (0.95, (-26, -12, 0)), (1.3, (-28, 12, 0)), (1.75, (-22, 0, 0)), (2.2, (0, 0, 0))])
 P(a, 'jaw', 'rotation', (0, (0, 0, 0)), (0.45, (6, 0, 0)), (0.68, (46, 0, 0)), (1.7, (42, 0, 0)), (2.05, (0, 0, 0)))
-wings(a, [(0, None), (0.3, (-8, 0, 10)), (0.62, (-14, 10, -34)), (1.75, (-10, 6, -28)), (2.05, None), (2.2, None)],
-      membranes=[(0, 1.0), (0.3, 1.6), (0.62, 1.88), (1.75, 1.88), (2.05, 1.0), (2.2, 1.0)])
+wing_track(a, [(0, None), (0.55, (-14, 10, -34)), (1.7, (-10, 6, -28)), (2.1, None), (2.2, None)])
 for side in ('l', 'r'):
     leg_keys(a, 'fore', side, [(0, (0, 0, 0)), (0.35, (6, 6, 0)), (0.7, (-34, -24, 20)), (1.7, (-30, -20, 18)), (2.2, (0, 0, 0))])
     leg_keys(a, 'hind', side, [(0, (0, 0, 0)), (0.7, (-12, 14, 18)), (1.7, (-12, 14, 18)), (2.2, (0, 0, 0))])
@@ -371,7 +416,8 @@ P(a, 'body', 'rotation', (0, (0, 0, 0)), (0.12, (-8, 8, -6)), (0.45, (-2, -3, 3)
 P(a, 'body', 'position', (0, (0, 0, 0)), (0.12, (1, -1, 4)), (0.5, (0, 1, 1)), (1.2, (0, 0, 0)))
 neck_keys(a, [(0, (0, 0, 0)), (0.12, (-34, 26, 0)), (0.5, (12, -10, 0)), (1.2, (0, 0, 0))])
 P(a, 'jaw', 'rotation', (0, (0, 0, 0)), (0.15, (40, 0, 0)), (0.7, (8, 0, 0)), (1.2, (0, 0, 0)))
-wings(a, [(0, None), (0.15, (20, -30, 30)), (0.6, None), (1.2, None)], membranes=[(0, 1.0), (0.15, 1.3), (0.6, 1.0), (1.2, 1.0)])
+for side, g in (('l', 1), ('r', -1)):
+    P(a, 'wing_' + side, 'rotation', (0, (0, 0, 0)), (0.12, (-10, g * 14, g * -16)), (0.5, (3, g * -4, g * 5)), (1.2, (0, 0, 0)))
 tail_keys(a, [(0, (0, 0, 0)), (0.15, (6, -10, 0)), (0.5, (-2, 6, 0)), (1.2, (0, 0, 0))], growth=1.1)
 for side in ('l', 'r'):
     leg_keys(a, 'fore', side, [(0, (0, 0, 0)), (0.2, (12, 16, -8)), (0.6, (4, 4, -2)), (1.2, (0, 0, 0))])
@@ -508,9 +554,7 @@ tail_keys(a, [(0, (0, 0, 0)), (0.8, (-3, 0, 0)), (0.95, (4, 0, 0)), (2.5, (0, 0,
 a = T('wing_gust', 2.0)
 P(a, 'body', 'rotation', (0, (0, 0, 0)), (0.6, (-16, 0, 0)), (0.8, (-6, 0, 0)), (1.1, (-14, 0, 0)), (1.3, (-4, 0, 0)), (2.0, (0, 0, 0)))
 P(a, 'body', 'position', (0, (0, 0, 0)), (0.6, (0, 0, 4)), (0.8, (0, 1, 0)), (1.1, (0, 0, 3)), (1.3, (0, 1, 0)), (2.0, (0, 0, 0)))
-wings(a, [(0, None), (0.55, (-14, 26, -46)), (0.8, (12, -30, 36)), (1.05, (-14, 26, -46)), (1.3, (12, -30, 36)), (1.75, (0, 0, 0)), (2.0, None)],
-      fore=[(0, None), (0.55, (0, 10, 0)), (0.8, (0, -10, 0)), (1.05, (0, 10, 0)), (1.3, (0, -10, 0)), (1.75, (0, 0, 0)), (2.0, None)],
-      membranes=[(0, 1.0), (0.45, 1.88), (1.75, 1.88), (2.0, 1.0)])
+wing_track(a, [(0, None), (0.5, (-14, 26, -46)), (0.8, (12, -30, 36)), (1.05, (-14, 26, -46)), (1.3, (12, -30, 36)), (1.6, (0, 0, 0)), (2.0, None)])
 neck_keys(a, [(0, (0, 0, 0)), (0.6, (-16, 0, 0)), (0.8, (12, 0, 0)), (1.1, (-10, 0, 0)), (1.3, (12, 0, 0)), (2.0, (0, 0, 0))])
 P(a, 'jaw', 'rotation', (0, (0, 0, 0)), (0.6, (26, 0, 0)), (1.4, (20, 0, 0)), (2.0, (0, 0, 0)))
 for side in ('l', 'r'):
@@ -526,8 +570,7 @@ A.sample(a, 'body', 'position', lambda t: tuple(v + (0.35 * math.sin(t * 61.0) i
                                                  for i, v in enumerate(keyed(NOVA_POS, t))), steps=90)
 neck_keys(a, [(0, (0, 0, 0)), (0.5, (-46, 0, 0)), (2.5, (-50, 0, 0)), (2.62, (40, 0, 0)), (2.9, (30, 0, 0)), (3.8, (26, 0, 0)), (4.5, (0, 0, 0))])
 P(a, 'jaw', 'rotation', (0, (0, 0, 0)), (0.5, (44, 0, 0)), (1.0, (20, 0, 0)), (2.45, (36, 0, 0)), (2.62, (48, 0, 0)), (3.0, (20, 0, 0)), (3.8, (16, 0, 0)), (4.5, (0, 0, 0)))
-wings(a, [(0, None), (0.5, (-14, 10, -40)), (2.5, (-16, 12, -44)), (2.62, (14, -8, 30)), (3.0, (16, -10, 34)), (3.8, (20, -10, 40)), (4.4, None), (4.5, None)],
-      membranes=[(0, 1.0), (0.4, 1.88), (3.8, 1.88), (4.4, 1.0), (4.5, 1.0)])
+wing_track(a, [(0, None), (0.5, (-14, 10, -40)), (2.5, (-16, 12, -44)), (2.62, (14, -8, 30)), (3.0, (16, -10, 34)), (3.9, (20, -10, 40)), (4.35, None), (4.5, None)])
 for side in ('l', 'r'):
     A.sample(a, 'mem_f1_' + side, 'rotation', lambda t: (0, 0, 2.5 * math.sin(t * 47.0)), steps=36, t0=0.6, t1=2.45)
     leg_keys(a, 'fore', side, [(0, (0, 0, 0)), (0.5, (-50, -30, 26)), (2.5, (-54, -34, 28)), (2.62, (-10, 10, 4)), (3.0, (-14, 16, 2)), (3.8, (-14, 16, 2)), (4.5, (0, 0, 0))])
