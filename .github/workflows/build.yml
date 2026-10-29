@@ -145,6 +145,7 @@ jobs:
           cp run-shaders/huntcraft_autotest/*.txt out/ 2>/dev/null || true
           cp run-shaders/crash-reports/*.txt out/ 2>/dev/null || true
           ls run-shaders/mods > out/mods.txt 2>/dev/null || true
+          mkdir -p out/thirdparty && find ~/.gradle/caches/modules-2/files-2.1/curse.maven -name '*.jar' -not -name '*sources*' -exec cp {} out/thirdparty/ \; 2>/dev/null || true
           ls run-shaders/shaderpacks > out/shaderpacks.txt 2>/dev/null || true
           if [ -d run-shaders/patched_shaders ]; then tar czf out/patched_shaders.tgz -C run-shaders patched_shaders; fi
           cd out
