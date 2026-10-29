@@ -1,7 +1,6 @@
 package com.huntcraft.village;
 
-import com.huntcraft.network.HCScreens;
-import net.minecraft.nbt.CompoundTag;
+import com.huntcraft.quest.QuestBoardService;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
@@ -12,16 +11,8 @@ public final class VillageHooks {
     private VillageHooks() {
     }
 
-    /**
-     * Opens the quest board for a hunter.
-     * <p>
-     * TODO(integration): replace the body with {@code com.huntcraft.quest.QuestBoardService.open(player);}
-     * once the quest module is merged (the quest module owns the quest board screen and its data). Until then the
-     * generic screen id is used, which the quest module's client also registers.
-     */
+    /** Opens the quest board for a hunter (the quest module owns the board screen and its data). */
     public static void openQuestBoard(ServerPlayer player) {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("source", "village");
-        HCScreens.open(player, HCScreens.QUEST_BOARD, tag);
+        QuestBoardService.open(player);
     }
 }
