@@ -1,0 +1,19 @@
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/huntcraft/monster/ignivald/IgnivaldEntity.java:53: error: cannot find symbol
+                    .low(HCItems.IGNIVALD.scale, 30, 1, 2).low(HCItems.IGNIVALD.shell, 25).low(HCItems.IGNIVALD.webbing, 15)
+                                                                                                               ^
+  symbol:   variable webbing
+--
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/huntcraft/monster/ignivald/IgnivaldEntity.java:61: error: cannot find symbol
+                    .low(HCItems.IGNIVALD.scale, 30).low(HCItems.IGNIVALD.shell, 25).low(HCItems.IGNIVALD.webbing, 20).low(HCItems.IGNIVALD.gem, 4)
+                                                                                                         ^
+  symbol:   variable webbing
+--
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/huntcraft/monster/ignivald/IgnivaldEntity.java:64: error: cannot find symbol
+            .breakReward("wing_l", new RewardTable().low(HCItems.IGNIVALD.webbing, 80).high(HCItems.IGNIVALD.specialPlus, 80))
+                                                                         ^
+  symbol:   variable webbing
+--
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/huntcraft/monster/ignivald/IgnivaldEntity.java:65: error: cannot find symbol
+            .breakReward("wing_r", new RewardTable().low(HCItems.IGNIVALD.webbing, 80).high(HCItems.IGNIVALD.specialPlus, 80))
+                                                                         ^
+  symbol:   variable webbing
