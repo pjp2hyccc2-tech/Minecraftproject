@@ -92,7 +92,7 @@ public abstract class HunterWeaponItem extends Item implements IHunterWeapon, IU
         return line.affinity + (getLevel(stack) >= 6 ? 5 : 0);
     }
 
-    public int getRarity(ItemStack stack) {
+    public int getHcRarity(ItemStack stack) {
         int lv = getLevel(stack);
         return Math.min(8, line.rarity + (lv >= 6 ? 3 : lv >= 4 ? 1 : 0));
     }
@@ -397,7 +397,7 @@ public abstract class HunterWeaponItem extends Item implements IHunterWeapon, IU
         MutableComponent c = Component.translatable(getDescriptionId(stack));
         int lv = getLevel(stack);
         if (lv > 1) c.append(" " + ROMAN[Math.min(ROMAN.length - 1, lv)]);
-        return c.withStyle(Style.EMPTY.withColor(TextColor.fromRgb(MaterialItem.rarityColor(getRarity(stack)))));
+        return c.withStyle(Style.EMPTY.withColor(TextColor.fromRgb(MaterialItem.rarityColor(getHcRarity(stack)))));
     }
 
     @Override
@@ -423,7 +423,7 @@ public abstract class HunterWeaponItem extends Item implements IHunterWeapon, IU
             tooltip.add(Component.translatable("tooltip.huntcraft.weapon.sharpness").withStyle(ChatFormatting.WHITE).append(sharpnessBar(stack)));
         }
         appendClassInfo(stack, tooltip);
-        tooltip.add(Component.translatable("tooltip.huntcraft.rarity", getRarity(stack)).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.huntcraft.rarity", getHcRarity(stack)).withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("tooltip.huntcraft.weapon.help." + weaponClass.name().toLowerCase(java.util.Locale.ROOT)).withStyle(ChatFormatting.DARK_AQUA));
         tooltip.add(Component.translatable(getDescriptionId() + ".desc").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
     }
