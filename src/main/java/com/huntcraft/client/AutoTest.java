@@ -213,9 +213,9 @@ public final class AutoTest {
             HuntMonster m = current;
             if (m == null) return;
             double size = Math.max(m.getBbWidth(), m.getBbHeight());
-            if (m.profile().large) size *= 1.9;
-            double dist = 2.0 + size * 1.15;
-            sp.teleportTo((ServerLevel) m.level(), m.getX(), m.getY() + m.getBbHeight() * 0.7 + size * 0.12, m.getZ() + dist, 180, 14);
+            if (m.profile().large) size *= 2.0;
+            double dist = 2.5 + size * 1.55;
+            sp.teleportTo((ServerLevel) m.level(), m.getX() + size * 0.35, m.getY() + m.getBbHeight() * 0.55 + size * 0.1, m.getZ() + dist, 170, 8);
         });
     }
 
