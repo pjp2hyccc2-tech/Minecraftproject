@@ -1,0 +1,1 @@
+marker: the "shaders" CI job runs the GLSL lint and the Embeddium+Oculus client screenshot run (see tools/shader/).

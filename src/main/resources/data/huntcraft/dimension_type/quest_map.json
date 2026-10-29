@@ -16,5 +16,5 @@
   "min_y": 0,
   "height": 320,
   "infiniburn": "#minecraft:infiniburn_overworld",
-  "effects": "minecraft:overworld"
+  "effects": "huntcraft:verdant_hills"
 }

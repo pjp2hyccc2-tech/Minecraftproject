@@ -2,7 +2,7 @@
 //  HuntCraft Shaders - generic gbuffer program
 //  Selected by defines from the program stubs:
 //    PROG_TERRAIN  PROG_BLOCK  PROG_ENTITIES  PROG_HAND  PROG_TEXTURED  PROG_SPIDEREYES
-//    PROG_BEACON   PROG_GLINT  PROG_BASIC
+//    PROG_BEACON   PROG_GLINT  PROG_BASIC  PROG_DAMAGE
 //  FORWARD : the program runs after the deferred pass (translucents) and lights itself.
 //  Without FORWARD it writes the gbuffer (albedo / normal+lightmap / material) for deferred.glsl
 // =====================================================================================
@@ -38,7 +38,7 @@ void main() {
     playerPos += off;
     viewPos = (gbufferModelView * vec4(playerPos, 1.0)).xyz;
 #endif
-#ifdef PROG_TEXTURED
+#if defined PROG_TEXTURED || defined PROG_BASIC
     normalW = normalize(mat3(gbufferModelViewInverse) * vec3(0.0, 0.0, 1.0));
 #else
     normalW = normalize(mat3(gbufferModelViewInverse) * (gl_NormalMatrix * gl_Normal));
@@ -144,7 +144,7 @@ void main() {
     }
     #endif
 #endif
-#ifdef PROG_TEXTURED
+#if defined PROG_TEXTURED || defined PROG_BASIC
     mat = MAT_PARTICLE;
     if (lm.x > 0.985) emissive = 0.9 * (0.35 + 0.65 * luma(albedo.rgb));
 #endif
@@ -183,6 +183,9 @@ void main() {
     #if defined PROG_GLINT
     /* RENDERTARGETS: 0 */
     gl_FragData[0] = vec4(albedo.rgb * 0.6, albedo.a);
+    #elif defined PROG_DAMAGE
+    /* RENDERTARGETS: 0 */
+    gl_FragData[0] = albedo;
     #else
     /* RENDERTARGETS: 0,1,2 */
     gl_FragData[0] = albedo;
