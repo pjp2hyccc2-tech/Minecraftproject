@@ -266,20 +266,38 @@ public final class ShaderAutoTest {
         }
         m.setNoAi(true);
         m.setMonsterScale(1.0F);
-        float face = yaw + 180.0F + 25.0F;
-        m.setYRot(face);
-        m.yBodyRot = face;
-        m.yHeadRot = face;
         current = m;
         double size = Math.max(m.getBbWidth(), m.getBbHeight());
         if (m.profile().large) size *= 2.2;
         double dist = 2.5 + size * 1.2;
-        double camX = ground.getX() + 0.5 - dir.x * dist;
-        double camZ = ground.getZ() + 0.5 - dir.z * dist;
-        int camGround = lvl.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mth.floor(camX), Mth.floor(camZ));
-        double camY = Math.max(ground.getY() + m.getBbHeight() * 0.7 + size * 0.15, camGround + 2.0);
-        float pitch = (float) Math.toDegrees(Math.atan2(camY - (ground.getY() + m.getBbHeight() * 0.5), dist));
-        sp.teleportTo(lvl, camX, camY, camZ, yaw, Mth.clamp(pitch, 0.0F, 45.0F));
+        // camera: try four directions around the monster and keep the one whose ground is closest to the
+        // monster's ground (avoids ending up on top of a cliff looking straight down)
+        double bestX = 0, bestZ = 0, bestDelta = 1e9;
+        int bestGround = ground.getY();
+        for (int k = 0; k < 4; k++) {
+            // k = 0: back towards the camp, then the three other sides
+            double ang = Math.toRadians(yaw + 180.0 + k * 90.0);
+            double cx = ground.getX() + 0.5 - Math.sin(ang) * dist;
+            double cz = ground.getZ() + 0.5 + Math.cos(ang) * dist;
+            lvl.getChunk(Mth.floor(cx) >> 4, Mth.floor(cz) >> 4);
+            int g = lvl.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Mth.floor(cx), Mth.floor(cz));
+            double delta = Math.abs(g - ground.getY()) + k * 0.5;
+            if (delta < bestDelta) {
+                bestDelta = delta;
+                bestX = cx;
+                bestZ = cz;
+                bestGround = g;
+            }
+        }
+        double camY = Math.max(ground.getY() + m.getBbHeight() * 0.6 + size * 0.12, bestGround + 1.8);
+        double dx = ground.getX() + 0.5 - bestX, dz = ground.getZ() + 0.5 - bestZ;
+        float camYaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+        float pitch = (float) Math.toDegrees(Math.atan2(camY - (ground.getY() + m.getBbHeight() * 0.5), Math.sqrt(dx * dx + dz * dz)));
+        sp.teleportTo(lvl, bestX, camY, bestZ, camYaw, Mth.clamp(pitch, -10.0F, 40.0F));
+        float face = camYaw + 180.0F + 25.0F;
+        m.setYRot(face);
+        m.yBodyRot = face;
+        m.yHeadRot = face;
         fly(sp);
         log("monster " + id + " at " + ground);
     }

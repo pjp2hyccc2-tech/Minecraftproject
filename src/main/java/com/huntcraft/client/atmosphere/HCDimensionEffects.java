@@ -50,10 +50,10 @@ public final class HCDimensionEffects extends DimensionSpecialEffects {
         if (kind == AtmosphereModule.Kind.EMBER) {
             // the caldera horizon always glows like a sunset
             float f = Mth.cos(timeOfDay * Mth.TWO_PI) * 0.5F + 0.5F;
-            sunriseColor[0] = 1.0F;
-            sunriseColor[1] = 0.45F;
-            sunriseColor[2] = 0.18F;
-            sunriseColor[3] = 0.22F + 0.14F * f;
+            sunriseColor[0] = 0.80F;
+            sunriseColor[1] = 0.30F;
+            sunriseColor[2] = 0.10F;
+            sunriseColor[3] = 0.18F + 0.10F * f;
             return sunriseColor;
         }
         return super.getSunriseColor(timeOfDay, partialTicks);

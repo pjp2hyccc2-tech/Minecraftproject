@@ -81,7 +81,7 @@ void main() {
 #endif
 
     vec3 albedo = srgbToLinear(raw.rgb);
-    bool receiveShadow = (mat != MAT_HAND && mat != MAT_PARTICLE);
+    bool receiveShadow = (mat != MAT_HAND);
     vec3 color = shadeSurface(albedo, N, playerPos, lm, mat, emissive, sss, ao, ssao, dither, receiveShadow);
 
     /* RENDERTARGETS: 0 */

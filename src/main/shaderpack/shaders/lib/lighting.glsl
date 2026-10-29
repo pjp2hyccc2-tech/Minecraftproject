@@ -33,6 +33,8 @@ vec3 shadeSurfaceEx(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, int mat, float
     float diffuse = saturate(NdotL);
     if (sss > 0.0) diffuse = mix(diffuse, saturate(abs(NdotL)) * 0.55 + 0.40, sss);
     if (mat == MAT_HAND) diffuse = saturate(NdotL) * 0.6 + 0.4;
+    // particles (smoke, ash, petals...) are camera-facing billboards: light them softly from every side
+    if (mat == MAT_PARTICLE) diffuse = saturate(NdotL) * 0.45 + 0.55;
 
     vec3 shadow = vec3(1.0);
 #ifndef NO_SUN

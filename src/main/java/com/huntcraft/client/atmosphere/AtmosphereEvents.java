@@ -80,8 +80,8 @@ public final class AtmosphereEvents {
                 }
                 default -> {
                     // caldera: dark ember-red haze (the biome fog colours are already red-brown)
-                    tint = new float[]{0.92F, 0.50F, 0.30F};
-                    mix = 0.5F;
+                    tint = new float[]{0.80F, 0.42F, 0.26F};
+                    mix = 0.6F;
                 }
             }
             r = Mth.lerp(mix, r, r * tint[0]);
@@ -118,8 +118,8 @@ public final class AtmosphereEvents {
                 far *= gust;
             }
             default -> {
-                near = far * 0.10F;
-                far *= 0.72F;
+                near = far * 0.15F;
+                far *= 0.80F;
             }
         }
         event.setNearPlaneDistance(near);
@@ -154,7 +154,7 @@ public final class AtmosphereEvents {
         ResourceLocation loc = s.getLocation();
         if (!loc.getNamespace().equals(HuntCraft.MODID)) return;
         String path = loc.getPath();
-        if (!path.startsWith("monster.roar")) return;
+        if (!path.contains("roar")) return; // core monster.roar_* and per-monster <id>.roar events
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
         double d = mc.player.position().distanceTo(new Vec3(s.getX(), s.getY(), s.getZ()));

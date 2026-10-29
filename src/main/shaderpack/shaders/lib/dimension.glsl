@@ -73,14 +73,14 @@
 #elif defined DIM_EMBER
     // 熾火の大カルデラ : dark red-brown sky, hot orange light, ash and heat haze
     #define DIM_ID 4
-    const vec3  DIM_SUN_NOON      = vec3(1.00, 0.56, 0.30) * 1.30;
+    const vec3  DIM_SUN_NOON      = vec3(1.00, 0.58, 0.32) * 1.20;
     const vec3  DIM_SUN_LOW       = vec3(1.00, 0.38, 0.14) * 1.25;
-    const vec3  DIM_SKY_ZENITH    = vec3(0.10, 0.04, 0.04);
-    const vec3  DIM_SKY_HORIZON   = vec3(0.48, 0.16, 0.06);
+    const vec3  DIM_SKY_ZENITH    = vec3(0.07, 0.03, 0.03);
+    const vec3  DIM_SKY_HORIZON   = vec3(0.40, 0.12, 0.045);
     const vec3  DIM_AMBIENT       = vec3(0.66, 0.34, 0.22);
-    const float DIM_AMBIENT_MUL   = 0.55;
-    const vec3  DIM_FOG_TINT      = vec3(0.95, 0.46, 0.22);
-    const float DIM_FOG_DENSITY   = 1.15;
+    const float DIM_AMBIENT_MUL   = 0.50;
+    const vec3  DIM_FOG_TINT      = vec3(0.92, 0.42, 0.20);
+    const float DIM_FOG_DENSITY   = 1.10;
     const float DIM_FOG_BASE      = 70.0;
     const float DIM_FOG_FALLOFF   = 0.030;
     const float DIM_VL            = 1.30;
