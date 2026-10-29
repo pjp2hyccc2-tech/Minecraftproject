@@ -462,9 +462,10 @@ K1 = pounce_into(a, 0.0, 0.5, 0.6, 1.35, 1.75, 1.0)
 K2 = pounce_into(a, 1.75, 1.85, 1.92, 2.65, 3.6, 1.15)
 for k, v in K2.items():
     K1.setdefault(k, []).extend(v)
+# glance back at the hunter between the two leaps (replaces the neck keys of the hand-over, one track per channel)
+K1[('neck', 'rotation')] = [k for k in K1[('neck', 'rotation')] if not (1.35 < k[0] < 1.8)] + [(1.4, (14, 0, 0)), (1.6, (6, 18, 0))]
 apply_keys(a, K1)
 ears_back(a, [(0, 0), (0.4, 32), (3.0, 32), (3.8, 0)])
-P(a, 'neck', 'rotation', [(1.4, (14, 0, 0)), (1.6, (6, 18, 0)), (1.8, (8, 0, 0))])
 
 # ice breath (64 ticks): inhale (crystals swell), straight frost breath ticks 22-46
 a = T('ice_breath', 3.2)

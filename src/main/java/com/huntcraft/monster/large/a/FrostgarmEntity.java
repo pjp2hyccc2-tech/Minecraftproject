@@ -138,13 +138,13 @@ public class FrostgarmEntity extends LargeMonster {
 
         MonsterAttack clawL = TimelineAttack.builder("claw_l", 28).range(0, 5.5F).angle(60).weight(13).cooldown(26)
                 .track(0, 8, 8).move(9, 12, 0.22, 0)
-                .sweep(10, 13, 0.5F, 5.6F, -80, 30, 3.5F, 12, Element.NONE, 1.4F)
+                .sweep(9, 13, 0.5F, 5.4F, -50, 15, 3.5F, 12, Element.NONE, 1.4F)     // paw arc measured from the anim: -37 deg @9 .. +9 @13
                 .sound(9, HCSounds.TAIL_SWING, 1.6F, 1.3F)
                 .sound(4, LargeMonstersA.FROSTGARM_GROWL, 1.5F, 1.1F)
                 .build();
         MonsterAttack clawR = TimelineAttack.builder("claw_r", 28).range(0, 5.5F).angle(60).weight(13).cooldown(26)
                 .track(0, 8, 8).move(9, 12, 0.22, 0)
-                .sweep(10, 13, 0.5F, 5.6F, 80, -30, 3.5F, 12, Element.NONE, 1.4F)
+                .sweep(9, 13, 0.5F, 5.4F, 50, -15, 3.5F, 12, Element.NONE, 1.4F)
                 .sound(9, HCSounds.TAIL_SWING, 1.6F, 1.3F)
                 .sound(4, LargeMonstersA.FROSTGARM_GROWL, 1.5F, 1.1F)
                 .build();

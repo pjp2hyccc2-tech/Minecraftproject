@@ -251,12 +251,16 @@ def lizard_gait(anim, period, amp, lift, duty=0.6, steps=20, phases=None):
         A.sample(anim, paw, 'rotation', lambda t, ph=ph: (-amp * 0.5 * _cyc(t / period + ph, duty)[0] + 25 * _cyc(t / period + ph, duty)[1], 0, 0), steps)
 
 
-def undulate(anim, period, amp_body, amp_tail, neck_comp=0.8, phase=0.0, steps=None):
-    """Lateral travelling wave along the body (yaw), head kept steady."""
+def undulate(anim, period, amp_body, amp_tail, neck_comp=0.8, phase=0.0, steps=None, neck_extra=None, head_extra=(0, 0, 0)):
+    """Lateral travelling wave along the body (yaw), head kept steady.
+    neck_extra(t) / head_extra are merged into the same channels (one track per channel: Minecraft interleaves
+    duplicate keyframe tracks and divides by zero on equal timestamps)."""
     A.sine(anim, 'body', 'rotation', (0, amp_body * 0.5, 0), period, phase, steps=steps)
     A.chain_wave(anim, CHAIN, (0, amp_tail, 0), period, phase_step=0.75, growth=1.08, phase=phase - 0.6, steps=steps)
-    A.sine(anim, 'neck1', 'rotation', (0, -amp_body * 0.5 * neck_comp, 0), period, phase, steps=steps)
-    A.sine(anim, 'head', 'rotation', (0, -amp_body * 0.3 * neck_comp, 0), period, phase + 0.5, steps=steps)
+    ne = neck_extra or (lambda t: (0, 0, 0))
+    A.sample(anim, 'neck1', 'rotation', lambda t: tuple(a + b for a, b in zip(
+        (0, -amp_body * 0.5 * neck_comp * math.sin(2 * math.pi * t / period + phase), 0), ne(t))), steps)
+    A.sine(anim, 'head', 'rotation', (0, -amp_body * 0.3 * neck_comp, 0), period, phase + 0.5, offset=head_extra, steps=steps)
 
 
 def flare(anim, keys, frills=True):
@@ -290,18 +294,15 @@ A.sine(a, 'tail_fin', 'rotation', (0, 6, 0), period=2.0, phase=1.2)
 # walk: lateral undulation + sprawling diagonal gait
 a = T('walk', 1.6, True)
 lizard_gait(a, 1.6, 26, 18)
-undulate(a, 1.6, 8, 7)
+undulate(a, 1.6, 8, 7, neck_extra=lambda t: (2 * math.sin(2 * math.pi * t / 0.8 + 1.0), 0, 0))
 A.sine(a, 'body', 'position', (0, 0.6, 0), period=0.8, phase=0.3)
-A.sine(a, 'neck1', 'rotation', (2, 0, 0), period=0.8, phase=1.0)
 
 # run: fast wiggle, head held low and forward
 a = T('run', 0.9, True)
 lizard_gait(a, 0.9, 34, 24, duty=0.5, steps=16)
-undulate(a, 0.9, 14, 11, steps=16)
+undulate(a, 0.9, 14, 11, steps=16, neck_extra=lambda t: (18, 0, 0), head_extra=(-16, 0, 0))
 A.sine(a, 'body', 'position', (0, 1.2, 0), period=0.45, phase=0.3)
-A.hold(a, 'neck1', 'rotation', (18, 0, 0))
 A.hold(a, 'neck2', 'rotation', (6, 0, 0))
-A.hold(a, 'head', 'rotation', (-16, 0, 0))
 for w in WHISK:
     A.hold(a, w, 'rotation', (16, 0, 0))
 

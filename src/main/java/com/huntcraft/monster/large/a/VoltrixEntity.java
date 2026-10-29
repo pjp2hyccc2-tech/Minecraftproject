@@ -121,12 +121,12 @@ public class VoltrixEntity extends LargeMonster {
                 .build();
         MonsterAttack tailWhip = TimelineAttack.builder("tail_whip", 36).range(0, 9.5F).angle(180).weight(10).cooldown(70)
                 .track(0, 6, 6)
-                .sweep(13, 20, 1.0F, 9.0F, 60, 300, 3.2F, 15, Element.NONE, 2.4F)
+                .sweep(13, 20, 1.0F, 7.4F, 125, 240, 3.2F, 15, Element.NONE, 2.4F)   // tail fin: 150 deg @13 -> 228 deg @20 (anim)
                 .sound(13, HCSounds.TAIL_SWING, 2.5F, 0.65F).sound(17, HCSounds.TAIL_SWING, 2.2F, 0.75F)
                 .build();
         MonsterAttack coilSpin = TimelineAttack.builder("coil_spin", 44).range(0, 7.5F).angle(180).weight(8).cooldown(110)
                 .track(0, 8, 6)
-                .sweep(15, 27, 0.5F, 7.0F, 0, 360, 3.0F, 16, Element.NONE, 2.2F)
+                .sweep(14, 27, 0.5F, 7.0F, -90, -450, 3.0F, 16, Element.NONE, 2.2F)  // the body spins left: tail from the left side round the back
                 .particlesSpan(15, 27, ParticleTypes.ELECTRIC_SPARK, 0, 1.2, -0.5, 4, 2.0)
                 .sound(14, HCSounds.TAIL_SWING, 2.5F, 0.6F).sound(20, HCSounds.TAIL_SWING, 2.5F, 0.7F)
                 .sound(15, LargeMonstersA.VOLTRIX_ZAP, 1.5F, 1.0F)
@@ -150,7 +150,7 @@ public class VoltrixEntity extends LargeMonster {
         MonsterAttack orbs = TimelineAttack.builder("thunder_orbs", 46).range(5, 28).angle(45).weight(10).cooldown(100).notWhenTired()
                 .track(0, 12, 6).track(13, 30, 3)
                 .particlesSpan(4, 13, ParticleTypes.ELECTRIC_SPARK, 0, 2.4, 4.4, 2, 0.3)
-                .projectile(14, 0.6, 2.4, 4.4, orb).projectile(22, -0.6, 2.4, 4.4, orb).projectile(30, 0, 2.4, 4.4, orb)
+                .projectile(14, 0, 2.4, 4.4, orb).projectile(22, 0.5, 2.4, 4.4, orb).projectile(30, -0.5, 2.4, 4.4, orb)  // head centre, right, left (anim)
                 .sound(14, LargeMonstersA.VOLTRIX_ZAP, 2.0F, 1.0F).sound(22, LargeMonstersA.VOLTRIX_ZAP, 2.0F, 1.1F)
                 .sound(30, LargeMonstersA.VOLTRIX_ZAP, 2.0F, 1.2F)
                 .build();
