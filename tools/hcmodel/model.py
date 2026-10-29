@@ -305,6 +305,7 @@ class Model:
                 glow.save(glow_path)
             elif os.path.exists(glow_path):
                 os.remove(glow_path)
+            painter.save_pbr(self, os.path.join(tex_dir, tex_name))
             self._last_texture = img
             return img, glow
         return None, None

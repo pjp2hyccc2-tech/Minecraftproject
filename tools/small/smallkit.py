@@ -251,9 +251,28 @@ def _hex(c):
     return [int(c[i:i + 2], 16) for i in (0, 2, 4)]
 
 
+def _texel(model, img):
+    """HD texel factor of the image being painted (1 for legacy textures)."""
+    return max(1, img.shape[0] // model.tex_h)
+
+
+def pixel_pass(model, fn1x, round_shapes=True):
+    """Registers a post-paint pass written against 1x pixels: fn1x(img1x, glow1x) edits RGBA float arrays at
+    model-pixel resolution; in HD mode the edits are replayed on the HD texture (rounded, anti-aliased)."""
+    def fn(img, glow):
+        K = _texel(model, img)
+        if K == 1:
+            fn1x(img, glow)
+            return
+        from hcmodel.hdup import replay
+        replay(img, glow, fn1x, K, round_shapes=round_shapes)
+    _passes(model).append(fn)
+
+
 def stamp(model, cube, face, x, y, rows, palette, mirror=False):
     """Pixel art on one cube face. rows: list of strings, '.' = keep; palette: char -> '#rrggbb' or
-    ('#rrggbb', '#glow'). (x, y) = face-local texel of the first char (from the face's left / top)."""
+    ('#rrggbb', '#glow'). (x, y) = face-local texel of the first char (from the face's left / top).
+    In HD mode the stamp is replayed with rounded, anti-aliased shapes (pupils become round, lines soft)."""
     def fn(img, glow):
         u0, v0, w, h = cube.face_rects()[face]
         for j, row in enumerate(rows):
@@ -275,21 +294,49 @@ def stamp(model, cube, face, x, y, rows, palette, mirror=False):
                     glow[v, u, 3] = 255
                 else:
                     glow[v, u] = 0          # a plain stamped pixel (pupil, outline...) must not glow
-    _passes(model).append(fn)
+    pixel_pass(model, fn)
 
 
 def stamp_eyes(model, cube, rows, palette, front=1, top=1):
-    """Symmetric eyes on both side faces of a head cube; rows are drawn with column 0 = toward the snout."""
+    """Symmetric eyes on both side faces of a head cube; rows are drawn with column 0 = toward the snout.
+    HD: a proper eye (dark ring, iris gradient, slit pupil, highlight) is drawn over the stamp's box instead."""
     # east face (+X, entity left): column 0 is the front; west face (-X, right): last column is the front
+    def hd(img, glow):
+        K = _texel(model, img)
+        if K == 1:
+            return
+        from hcmodel.paint import _eye_hd, hexrgb
+        cols = [(ch, (_hex(v[0]) if isinstance(v, tuple) else _hex(v)), (v[1] if isinstance(v, tuple) else None)) for ch, v in palette.items()]
+        used = set(''.join(rows)) - {'.', ' '}
+        cols = [c for c in cols if c[0] in used]
+        def sat(rgb):
+            return (max(rgb) - min(rgb)) + max(rgb) * 0.2
+        iris = max(cols, key=lambda c: sat(c[1]))
+        dark = min(cols, key=lambda c: sum(c[1]))
+        gcol = hexrgb(iris[2]) if iris[2] else None
+        ys = [j for j, r in enumerate(rows) if any(ch not in '. ' for ch in r)]
+        xs = [i for r in rows for i, ch in enumerate(r) if ch not in '. ']
+        y0, y1, x0, x1 = min(ys), max(ys), min(xs), max(xs)
+        ew, eh = (x1 - x0 + 1), (y1 - y0 + 1)
+        for face, mirror in (('east', False), ('west', True)):
+            u0, v0, w, h = cube.face_rects()[face]
+            cx = (front + x0 + ew / 2.0)
+            if mirror:
+                cx = w - cx
+            cy = top + y0 + eh / 2.0
+            _eye_hd(img, glow, u0 * K, v0 * K, w * K, h * K, cx * K, cy * K, ew * K * 0.95, eh * K * 0.9,
+                    np.array(iris[1], float), gcol, np.array(dark[1], float) * 0.6, True, K)
     stamp(model, cube, 'east', front, top, rows, palette)
     stamp(model, cube, 'west', front, top, rows, palette, mirror=True)
+    _passes(model).append(hd)
 
 
 def accent_pass(model, cubes, mat_name, mask_fn, seed=7):
     """Repaints texels of `cubes` with material `mat_name` where mask_fn(P, L, N, f, d, r, face) is True.
     P / L = (h, w, 3) model-space / bone-local texel positions (rest pose), N = face normal (model space),
-    f/d/r semantic fractions (front / down / right)."""
+    f/d/r semantic fractions (front / down / right).  HD: the mask edge is anti-aliased (~half a model px)."""
     def fn(img, glow):
+        K = _texel(model, img)
         mat = painter.MATERIALS[getattr(model, '_remap', {}).get(mat_name, mat_name)]
         ys = [((c.bone.rest_matrix() @ np.array([*c.origin, 1.0]))[1]) for c in model.all_cubes()]
         ymin, yspan = min(ys) - 4, max(8.0, max(ys) - min(ys) + 8)
@@ -297,7 +344,7 @@ def accent_pass(model, cubes, mat_name, mask_fn, seed=7):
             mrest = cube.bone.rest_matrix()
             rotm = mrest[:3, :3]
             for face in ('top', 'bottom', 'west', 'north', 'east', 'south'):
-                g = painter.face_grid(cube, face)
+                g = painter.face_grid(cube, face, K)
                 if g is None:
                     continue
                 u0, v0, w, h, I, J, pts, n, f, d, r = g
@@ -307,11 +354,16 @@ def accent_pass(model, cubes, mat_name, mask_fn, seed=7):
                 mask = mask_fn(P, pts, N, f, d, r, face)
                 if mask is None or not np.any(mask):
                     continue
-                rgb, gl = painter._shade(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed + hash(face) % 97, cube)
+                rgb, gl = painter._shade(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed + hash(face) % 97, cube, texel=K)
                 region = img[v0:v0 + h, u0:u0 + w]
                 keep = region[..., 3] > 0
-                sel = mask & keep
-                region[sel, :3] = rgb[sel]
+                if K > 1:
+                    cov = painter._soften_mask(np.asarray(mask, bool), K) * keep
+                    region[..., :3] = region[..., :3] * (1 - cov[..., None]) + rgb * cov[..., None]
+                    sel = (cov > 0.5)
+                else:
+                    sel = np.asarray(mask, bool) & keep
+                    region[sel, :3] = rgb[sel]
                 if gl is not None:
                     gr = glow[v0:v0 + h, u0:u0 + w]
                     gs = sel & (gl[..., 3] > 0)
@@ -333,10 +385,12 @@ def paint(model):
     passes = getattr(model, 'post_passes', []) + getattr(model, 'final_passes', [])
     if not passes:
         return img, glow
-    a = np.array(img).copy()
-    g = np.array(glow).copy() if glow is not None else np.zeros_like(a)
+    a = np.array(img).astype(float)
+    g = np.array(glow).astype(float) if glow is not None else np.zeros_like(a)
     for fn in passes:
         fn(a, g)
+    a = np.clip(a, 0, 255)
+    g = np.clip(g, 0, 255)
     gimg = Image.fromarray(g.astype(np.uint8), 'RGBA') if g[..., 3].any() else None
     return Image.fromarray(a.astype(np.uint8), 'RGBA'), gimg
 
@@ -358,6 +412,7 @@ def export(model):
         glow.save(glow_path)
     elif os.path.exists(glow_path):
         os.remove(glow_path)
+    painter.save_pbr(model, os.path.join(tex_dir, model.name))
     return img, glow
 
 
@@ -389,6 +444,9 @@ def run(model, argv=None, variants=None, size=240, frames=6):
     if '--preview' in argv:
         contact_sheet(model, img, os.path.join(PREVIEW_DIR, model.name + '.png'), anims=sel or None, frames=frames, size=size,
                       glow=glow)
+    if '--closeup' in argv:
+        from hcmodel.render import closeup
+        closeup(model, img, os.path.join(PREVIEW_DIR, model.name + '_hd.png'), size=560, glow=glow)
     return img, glow
 
 

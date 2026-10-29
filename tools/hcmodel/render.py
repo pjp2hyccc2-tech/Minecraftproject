@@ -104,7 +104,7 @@ def view_matrix(yaw_deg, pitch_deg):
     return rx @ ry
 
 
-def rasterize(quads, tex, size, yaw, pitch, fit=None, bg=(46, 50, 58)):
+def rasterize(quads, tex, size, yaw, pitch, fit=None, bg=(46, 50, 58), lit=True):
     W = H = size
     img = np.zeros((H, W, 3), float)
     img[:] = bg
@@ -120,7 +120,7 @@ def rasterize(quads, tex, size, yaw, pitch, fit=None, bg=(46, 50, 58)):
         nw = np.array([n[0], -n[1], -n[2]])
         nl = np.linalg.norm(nw)
         nw = nw / nl if nl > 0 else nw
-        bright = min(1.0, 0.4 + 0.6 * (max(0, nw @ L0) + max(0, nw @ L1)))
+        bright = min(1.0, 0.4 + 0.6 * (max(0, nw @ L0) + max(0, nw @ L1))) if lit else 1.0
         S = Wp @ V.T
         allp.append(S)
         tris.append((S, uv, bright))
@@ -178,6 +178,57 @@ def rasterize(quads, tex, size, yaw, pitch, fit=None, bg=(46, 50, 58)):
 def render(model, tex, layers=(), size=420, yaw=35, pitch=22, fit=None):
     mats = pose_matrices(model, layers)
     return rasterize(model_quads(model, mats), tex, size, yaw, pitch, fit)
+
+
+def closeup(model, tex, out_path, size=720, views=None, glow=None, zoom_bones=('head', 'skull', 'body', 'torso')):
+    """Large renders for judging HD textures: a full view plus zooms on the head and on the body."""
+    views = views or [('front-left', 35, -18), ('left side', 90, -6)]
+    idle = [(model.animations['idle'], 0.0, 1.0)] if 'idle' in model.animations else []
+    mats = pose_matrices(model, idle)
+    targets = []
+    for key in zoom_bones:
+        for name, bone in model.bones.items():
+            if key in name and name not in [t[0] for t in targets]:
+                pv = (mats[name] @ np.array([0, 0, 0, 1.0]))[:3]
+                targets.append((name, to_world(pv[None, :])[0]))
+                break
+    tiles = []
+    for name, yaw, pitch in views:
+        im, fit = render(model, tex, idle, size, yaw, pitch)
+        if glow is not None:
+            im = _add_glow(model, tex, glow, idle, size, yaw, pitch, fit, im)
+        tiles.append(label(im, name))
+        c, s = fit
+        V = view_matrix(yaw, pitch)
+        for bname, wp in targets[:2]:
+            sc = (V @ wp)[:2]
+            zfit = (np.array(sc), s / 3.0)
+            zim, _ = render(model, tex, idle, size, yaw, pitch, zfit)
+            if glow is not None:
+                zim = _add_glow(model, tex, glow, idle, size, yaw, pitch, zfit, zim)
+            tiles.append(label(zim, '%s zoom %s' % (name, bname)))
+    cols = 3
+    rows = (len(tiles) + cols - 1) // cols
+    sheet = Image.new('RGB', (cols * size, rows * size), (20, 22, 26))
+    for i, t in enumerate(tiles):
+        sheet.paste(t, ((i % cols) * size, (i // cols) * size))
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    sheet.save(out_path)
+    return sheet
+
+
+def _add_glow(model, tex, glow, layers, size, yaw, pitch, fit, base):
+    """Adds the emissive layer full-bright (like RenderType.eyes) on top of a lit render."""
+    t = np.asarray(tex.convert('RGBA'))
+    g = np.asarray(glow.convert('RGBA'))
+    gt = np.zeros_like(t)
+    gt[..., 3] = t[..., 3]
+    lit = (g[..., 3] > 0) & (g[..., :3].sum(-1) > 0)
+    gt[lit, :3] = g[lit, :3]
+    quads = model_quads(model, pose_matrices(model, layers))
+    gim, _ = rasterize(quads, Image.fromarray(gt, 'RGBA'), size, yaw, pitch, fit, bg=(0, 0, 0), lit=False)
+    out = np.clip(np.asarray(base).astype(int) + np.asarray(gim).astype(int), 0, 255).astype(np.uint8)
+    return Image.fromarray(out)
 
 
 def label(img, text):

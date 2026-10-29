@@ -16,7 +16,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'small'))
-from smallkit import Model, A, M, run, fit_to_ground, keys, cyc, stamp, accent_pass, dim_under_glow, _passes  # noqa: E402
+from smallkit import Model, A, M, run, fit_to_ground, keys, cyc, stamp, accent_pass, dim_under_glow, pixel_pass  # noqa: E402
 from hcmodel.parts import mirror_tree  # noqa: E402
 
 # ------------------------------------------------------------------ materials
@@ -161,7 +161,7 @@ def karakusa(model, cubes):
                         lum = (int(px[0]) * 3 + int(px[1]) * 6 + int(px[2])) / 10.0
                         k = min(1.0, 0.74 + lum / 170.0)
                         px[:3] = [int(232 * k), int(242 * k), int(220 * k)]
-    _passes(model).append(fn)
+    pixel_pass(model, fn)
 
 
 karakusa(m, CLOTH_CUBES)
