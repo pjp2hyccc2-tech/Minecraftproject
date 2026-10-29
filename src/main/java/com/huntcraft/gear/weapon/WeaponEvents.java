@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -96,6 +97,15 @@ public final class WeaponEvents {
             WeaponState s = WeaponState.get(p);
             s.lastGuardHit = p.level().getGameTime();
             WeaponFx.send(p, net.minecraft.core.particles.ParticleTypes.CRIT, WeaponHits.front(p, 0.8, 1.2), 8, 0.3, 0.3, 0.3, 0.3);
+        }
+    }
+
+    /** Sword & shield: items used from the off hand (no sheathing) are used faster. Runs on both sides. */
+    @SubscribeEvent
+    public static void onUseStart(LivingEntityUseItemEvent.Start event) {
+        if (event.getEntity() instanceof Player p && p.getMainHandItem().getItem() instanceof SwordShieldItem
+                && event.getItem() == p.getOffhandItem() && event.getDuration() > 1 && event.getDuration() < 1000) {
+            event.setDuration(Math.max(1, Math.round(event.getDuration() * SwordShieldItem.QUICK_USE)));
         }
     }
 

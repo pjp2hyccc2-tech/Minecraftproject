@@ -100,7 +100,15 @@ public final class WeaponClientEvents {
     @SubscribeEvent
     public static void movementInput(MovementInputUpdateEvent event) {
         Player p = event.getEntity();
-        if (!p.isUsingItem() || !(p.getUseItem().getItem() instanceof HunterWeaponItem w)) return;
+        if (!p.isUsingItem()) return;
+        if (p.getUsedItemHand() == InteractionHand.OFF_HAND && p.getMainHandItem().getItem() instanceof SwordShieldItem) {
+            // sword & shield: walk while using an off-hand item
+            Input in = event.getInput();
+            in.forwardImpulse *= 2.5F;
+            in.leftImpulse *= 2.5F;
+            return;
+        }
+        if (!(p.getUseItem().getItem() instanceof HunterWeaponItem w)) return;
         WeaponState s = WeaponState.get(p);
         float mult = switch (w.weaponClass()) {
             case HAMMER -> 3.0F;

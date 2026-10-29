@@ -109,6 +109,7 @@ put(T + 'guard', 'ガード性能 %s%%', 'Guard %s%%')
 put(T + 'charge_mv', '溜め斬り威力 %s / %s / %s', 'Charged slam power %s / %s / %s')
 put(T + 'spirit', '練気ゲージ: 攻撃で溜まり、気刃大回転斬りで練気レベル上昇', 'Spirit gauge: fills with attacks; the Spirit Roundslash raises the spirit level')
 put(T + 'bash', 'シールドバッシュ: 打撃で気絶値を蓄積', 'Shield bash: blunt damage that builds KO')
+put(T + 'quick_item', '納刀せずにオフハンドの道具を素早く使える (スニーク+右)', 'Uses the off-hand item quickly without sheathing (Sneak+RMB)')
 put(T + 'demon', '鬼人化: 攻撃速度・威力上昇、スタミナを消費', 'Demon Mode: faster and stronger, drains stamina')
 put(T + 'ko', '打撃: 頭を叩くと気絶値が大きく溜まる', 'Blunt: hits to the head build KO')
 put(T + 'counter', 'ガード中に左クリックでカウンター突き', 'Left click while guarding: counter thrust')
@@ -120,7 +121,7 @@ put(T + 'whetstone_key', '武器を持って「武器を研ぐ」キーでも研
 HELP = {
     'great_sword': ('右長押し: 溜め斬り(3段階) / スニーク+右: ガード', 'Hold RMB: charged slam (3 levels) / Sneak+RMB: guard'),
     'long_sword': ('右: 気刃斬り / スニーク+右: 見切り斬り', 'RMB: Spirit Blade combo / Sneak+RMB: Foresight Slash'),
-    'sword_and_shield': ('右長押し: ガード / スニーク+右: シールドバッシュ', 'Hold RMB: guard / Sneak+RMB: shield bash'),
+    'sword_and_shield': ('右長押し: ガード / スニーク+右: シールドバッシュ (オフハンドに道具があれば使用)', 'Hold RMB: guard / Sneak+RMB: shield bash (or use the off-hand item)'),
     'dual_blades': ('右: 鬼人化 / 鬼人化中にスニーク+右: 乱舞', 'RMB: Demon Mode / Sneak+RMB in Demon Mode: Blade Dance'),
     'hammer': ('右長押し: 溜め (Lv1 かち上げ / Lv2 横振り / Lv3 回転ビッグバン)', 'Hold RMB: charge (Lv1 upswing / Lv2 side smash / Lv3 spinning big bang)'),
     'lance': ('右長押し: ガード(左でカウンター突き) / スニーク+右: 突進', 'Hold RMB: guard (LMB: counter) / Sneak+RMB: charge dash'),
