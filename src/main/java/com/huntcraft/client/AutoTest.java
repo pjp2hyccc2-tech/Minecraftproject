@@ -466,9 +466,14 @@ public final class AutoTest {
         }
         net.minecraft.world.entity.decoration.ArmorStand st = net.minecraft.world.entity.EntityType.ARMOR_STAND.create(lvl);
         if (st != null) {
+            CompoundTag flags = new CompoundTag();
+            st.addAdditionalSaveData(flags);
+            flags.putBoolean("Marker", true);
+            flags.putBoolean("Invisible", true);
+            flags.putBoolean("NoBasePlate", true);
+            st.readAdditionalSaveData(flags);   // marker: no hitbox, eye height 0 (camera = stand position)
             st.setInvisible(true);
             st.setNoGravity(true);
-            st.setMarker(true);
             st.setInvulnerable(true);
             st.setSilent(true);
             st.moveTo(bx + 2.4, gy + 1.45, bz + 2.9, 0, 0);
