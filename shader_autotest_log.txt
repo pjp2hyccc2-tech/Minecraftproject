@@ -1,0 +1,67 @@
+installer: copied HuntCraftShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run-shaders/shaderpacks/HuntCraftShaders.zip; selected HuntCraftShaders.zip in Oculus (no pack was selected)
+title screen: oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true
+world creation requested
+world loaded, 52 steps; oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true
+step setup
+shot shader_00_overworld (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step look_down
+shot shader_01_overworld_scene (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step sunset
+shot shader_02_overworld_sunset (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step sunset_water
+shot shader_03_overworld_sunset_water (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step morning
+step spawn_ignivald
+shot shader_monster_ignivald (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step attack_ignivald
+attack fireball
+shot shader_monster_ignivald_attack (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step clear_ignivald
+step spawn_voltrix
+shot shader_monster_voltrix (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step night
+shot shader_monster_voltrix_night (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step attack_voltrix
+attack lightning
+shot shader_monster_voltrix_lightning (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step clear_voltrix
+step goto_village
+shot shader_village (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step turn_village
+shot shader_village_2 (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step turn_village2
+shot shader_village_3 (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step village_overview
+shot shader_village_overview (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step goto_verdant_hills
+camp verdant_hills at BlockPos{x=-160, y=73, z=156} yaw 180.0 ground 73
+shot shader_map_verdant_hills (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step turn_verdant_hills
+shot shader_map_verdant_hills_2 (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step overview_verdant_hills
+camp verdant_hills at BlockPos{x=-160, y=73, z=156} yaw 180.0 ground 73
+shot shader_map_verdant_hills_overview (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step goto_frostpeak_range
+camp frostpeak_range at BlockPos{x=0, y=78, z=178} yaw 180.0 ground 78
+shot shader_map_frostpeak_range (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step turn_frostpeak_range
+shot shader_map_frostpeak_range_2 (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step overview_frostpeak_range
+camp frostpeak_range at BlockPos{x=0, y=78, z=178} yaw 180.0 ground 78
+shot shader_map_frostpeak_range_overview (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step goto_ember_caldera
+camp ember_caldera at BlockPos{x=-154, y=81, z=162} yaw -90.0 ground 81
+shot shader_map_ember_caldera (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step turn_ember_caldera
+shot shader_map_ember_caldera_2 (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step overview_ember_caldera
+camp ember_caldera at BlockPos{x=-154, y=81, z=162} yaw -90.0 ground 81
+shot shader_map_ember_caldera_overview (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step spawn_azragos
+monster azragos at BlockPos{x=-132, y=69, z=162}
+shot shader_monster_azragos_caldera (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step attack_azragos
+attack breath_beam
+shot shader_monster_azragos_attack (oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true)
+step clear_azragos
+final: oculus pack=HuntCraftShaders.zip selected=Optional[HuntCraftShaders.zip] inUse=true
