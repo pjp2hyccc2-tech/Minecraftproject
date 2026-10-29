@@ -36,6 +36,7 @@ SETS = {
 
 for sid, (jp, enp, jset, eset, jb, eb, jd, ed) in SETS.items():
     put(f'armorset.huntcraft.{sid}', jset, eset)
+    put(f'armor_set.huntcraft.{sid}', jset, eset)  # group header in the village blacksmith GUI
     put(f'armorset.huntcraft.{sid}.bonus', jb, eb)
     for pid, pj, pe in PIECES:
         put(f'item.huntcraft.{sid}_{pid}', jp + pj, f'{enp} {pe}')

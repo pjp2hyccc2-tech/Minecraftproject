@@ -6,6 +6,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +37,9 @@ public final class ArmorSet {
     public final float toughnessPerLevel;
     public final int zennyBase;
     public final int requiredHR;
+    /** Previous series whose pieces can be traded in for this one at the smith (upgrade recipes), or null. */
+    @Nullable
+    public final ArmorSet upgradeFrom;
     private final Piece[] pieces;
     private final List<Bonus> bonuses;
     @SuppressWarnings("unchecked")
@@ -82,6 +86,27 @@ public final class ArmorSet {
             return this;
         }
 
+        /** Forge materials (from scratch). */
+        public List<SmithingRegistry.Cost> forgeCost() {
+            return Collections.unmodifiableList(forgeCost);
+        }
+
+        public int forgeZenny() {
+            return forgeZenny;
+        }
+
+        /** Trade-in upgrade (consumes the previous series' piece of the same slot): about half the materials. */
+        public List<SmithingRegistry.Cost> upgradeCost() {
+            List<SmithingRegistry.Cost> l = new ArrayList<>();
+            for (SmithingRegistry.Cost c : forgeCost) l.add(SmithingRegistry.Cost.of(c.item(), Math.max(1, (c.count() + 1) / 2)));
+            return l;
+        }
+
+        /** Zenny of the trade-in upgrade (70% of the forge price, rounded to 10z). */
+        public int upgradeZenny() {
+            return Math.max(10, Math.round(forgeZenny * 0.07F) * 10);
+        }
+
         public Map<SkillType, Integer> skills() {
             return Collections.unmodifiableMap(skills);
         }
@@ -104,6 +129,7 @@ public final class ArmorSet {
         this.toughnessPerLevel = b.toughnessPerLevel;
         this.zennyBase = b.zennyBase;
         this.requiredHR = b.requiredHR;
+        this.upgradeFrom = b.upgradeFrom;
         this.pieces = b.pieces;
         this.bonuses = List.copyOf(b.bonuses);
     }
@@ -187,6 +213,7 @@ public final class ArmorSet {
         private float toughnessPerLevel;
         private int zennyBase = 100;
         private int requiredHR = 1;
+        private ArmorSet upgradeFrom;
         private final Piece[] pieces = {new Piece(), new Piece(), new Piece(), new Piece()};
         private final List<Bonus> bonuses = new ArrayList<>();
 
@@ -230,6 +257,12 @@ public final class ArmorSet {
 
         public Builder hr(int hr) {
             requiredHR = hr;
+            return this;
+        }
+
+        /** Pieces of {@code previous} can be upgraded (traded in) into this series at the smith. */
+        public Builder from(ArmorSet previous) {
+            upgradeFrom = previous;
             return this;
         }
 

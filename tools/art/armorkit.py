@@ -17,6 +17,7 @@ from hcmodel.model import Model  # noqa: E402
 from hcmodel import paint as P  # noqa: E402
 from hcmodel import render as R  # noqa: E402
 from hcmodel.parts import mirror_tree  # noqa: E402
+import platepaint as PP  # noqa: E402
 
 TW, TH = 128, 64
 YMIN, YSPAN = -10.0, 34.0
@@ -66,10 +67,14 @@ class ArmorModel:
     # ------------------------------------------------------------------ packing
     def pack(self):
         cubes = [c for c in self.m.all_cubes() if c.uv is None and c.mirror_of is None]
-        cubes.sort(key=lambda c: (c.uv_h, c.uv_w), reverse=True)
+        def foot(c):
+            dx, dy, dz = (int(math.ceil(v - 1e-6)) for v in c.size)
+            return 2 * (dz + dx), dz + dy
+        cubes.sort(key=lambda c: (foot(c)[1], foot(c)[0]), reverse=True)
         sky = [32] * 64 + [0] * (TW - 64)
         for c in cubes:
-            rw, rh = c.uv_w + 1, c.uv_h + 1
+            fw, fh = foot(c)
+            rw, rh = fw + 1, fh + 1
             best_x, best_y = None, None
             for x in range(0, TW - rw + 1):
                 y = max(sky[x:x + rw])
@@ -87,14 +92,12 @@ class ArmorModel:
     # ------------------------------------------------------------------ painting
     def paint(self, base_painter):
         self.pack()
-        img, glow = P.paint_model(self.m, seed=3)
-        a = np.asarray(img, dtype=float).copy()
-        g = np.asarray(glow, dtype=float).copy() if glow is not None else np.zeros((TH, TW, 4))
-        # base cubes are fully re-painted by the set's painter: start transparent
-        for key, cube in self.base.items():
-            for face, (u0, v0, w, h) in cube.face_rects().items():
-                a[v0:v0 + h, u0:u0 + w] = 0
-                g[v0:v0 + h, u0:u0 + w] = 0
+        a = np.zeros((TH, TW, 4), float)
+        g = np.zeros((TH, TW, 4), float)
+        base_ids = set(id(c) for c in self.base.values())
+        for c in self.m.all_cubes():
+            if c.mirror_of is None and id(c) not in base_ids:
+                PP.paint_cube(a, g, c)
         self.img, self.glow = a, g
         base_painter(self)
         out = Image.fromarray(np.clip(self.img, 0, 255).astype(np.uint8), 'RGBA')
@@ -169,6 +172,24 @@ class FaceCanvas:
             gm = mask & (gl[..., 3] > 0)
             greg[gm] = gl[gm]
         return self
+
+    def plate(self, style, mask=None, seed=0, offset=(0, 0)):
+        """Beveled plate in a 5-level style (see platepaint). Bevel follows the mask outline."""
+        st = PP.STYLES[style]
+        PP.paint_region(self.am.img, self.am.glow, self.u0, self.v0, self.w, self.h, st, self.face,
+                        self.seed + seed, mask=mask, offset=offset)
+        return self
+
+    def ring(self, mask, col, inside_face=True):
+        """Colours the 1px ring around mask (4-neighbourhood) - outlines raised plates."""
+        m = mask
+        r = np.zeros_like(m)
+        r[1:, :] |= m[:-1, :]
+        r[:-1, :] |= m[1:, :]
+        r[:, 1:] |= m[:, :-1]
+        r[:, :-1] |= m[:, 1:]
+        r &= ~m
+        return self.color(col, r)
 
     def color(self, col, mask, glow=None):
         c = hexc(col) if isinstance(col, str) else np.array(col, float)
@@ -316,7 +337,7 @@ def rasterize_multi(layers, size, yaw, pitch, fit=None, bg=(46, 50, 58)):
             nw = np.array([n[0], -n[1], -n[2]])
             nl = np.linalg.norm(nw)
             nw = nw / nl if nl > 0 else nw
-            bright = min(1.0, 0.45 + 0.55 * (abs(nw @ R.L0) * 0.0 + max(0, nw @ R.L0) + max(0, nw @ R.L1)))
+            bright = min(1.0, 0.45 + 0.55 * (max(0, nw @ R.L0) + max(0, nw @ R.L1)))
             S = Wp @ V.T
             allp.append(S)
             tris.append((S, uv, bright, -n))
@@ -373,11 +394,11 @@ POSES = {
 }
 
 
-def preview(armor_layers, out_path, size=260, with_body=True):
-    """armor_layers: list of (ArmorModel, texture PIL). Writes a sheet with 5 views + walk pose."""
+def preview(armor_layers, out_path, size=330, with_body=True, views=None):
+    """armor_layers: list of (ArmorModel, texture PIL). Writes a sheet with several views."""
     sm, stex = skin_model()
-    views = [('front-left', 35, 14, 'stand'), ('front', 0, 6, 'stand'), ('right', -90, 4, 'stand'), ('back', 180, 10, 'stand'),
-             ('back-left', 145, 25, 'stand'), ('walk', 30, 10, 'walk'), ('top', 20, 60, 'stand')]
+    views = views or [('front-left', 35, 14, 'stand'), ('front', 0, 6, 'stand'), ('back-left', 145, 22, 'stand'),
+                      ('right', -70, 8, 'walk')]
     tiles = []
     fit = None
     for label, yaw, pitch, pose in views:
@@ -402,3 +423,27 @@ def preview(armor_layers, out_path, size=260, with_body=True):
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     sheet.save(out_path)
     return sheet
+
+
+def overview(entries, out_path, size=250):
+    """entries: list of (name, [(ArmorModel, tex), ...]). Grid with front-left + back views per set."""
+    tiles = []
+    for name, layers in entries:
+        for label, yaw, pitch in (('fl', 35, 12), ('back', 160, 14)):
+            sm, stex = skin_model()
+            ls = [(R.model_quads(sm, R.pose_matrices(sm)), stex)]
+            models = [sm] + [a.m for a, _ in layers]
+            saved = [_set_pose(m, POSES['stand']) for m in models]
+            ls = [(R.model_quads(sm, R.pose_matrices(sm)), stex)] + [(R.model_quads(a.m, R.pose_matrices(a.m)), t) for a, t in layers]
+            im, f = rasterize_multi(ls, size, yaw, pitch, None)
+            c, s = f
+            im, _ = rasterize_multi(ls, size, yaw, pitch, (c, s * 1.04))
+            for m, sv in zip(models, saved):
+                _restore(m, sv)
+            tiles.append(R.label(im, name + ' ' + label))
+    cols = 4
+    rows = (len(tiles) + cols - 1) // cols
+    sheet = Image.new('RGB', (cols * size, rows * size), (20, 22, 26))
+    for k, t in enumerate(tiles):
+        sheet.paste(t, ((k % cols) * size, (k // cols) * size))
+    sheet.save(out_path)

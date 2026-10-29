@@ -41,13 +41,31 @@ public final class ArmorModule {
         for (int tier = 1; tier <= CharmItem.MAX_TIER; tier++) event.accept(CharmItem.unrolled(CHARM.get(), tier));
     }
 
-    /** Forge recipes for every piece (category ARMOR, group = set id). */
+    /** Recipe id of the forge recipe of a piece. */
+    public static String forgeRecipeId(ArmorSet set, int piece) {
+        return "armor/" + set.itemId(piece);
+    }
+
+    /** Recipe id of the trade-in upgrade recipe of a piece (only for series with {@link ArmorSet#upgradeFrom}). */
+    public static String upgradeRecipeId(ArmorSet set, int piece) {
+        return "armor/" + set.itemId(piece) + "/upgrade";
+    }
+
+    /**
+     * Blacksmith recipes (category ARMOR, group = set id): every piece can be forged from materials, and pieces of
+     * series with a predecessor can also be upgraded from the predecessor's piece of the same slot for about half the
+     * materials. Level-ups (Lv2-8) come from {@link HCArmorItem#getUpgradeCost} (armor spheres + the series' materials).
+     */
     private static void registerRecipes() {
         for (ArmorSet set : ArmorSets.ALL) {
             for (int i = 0; i < 4; i++) {
                 ArmorSet.Piece p = set.piece(i);
-                SmithingRegistry.register(new SmithingRegistry.Recipe("armor/" + set.itemId(i), SmithingRegistry.Category.ARMOR, set.id,
-                        set.item(i), null, p.forgeCost, p.forgeZenny, set.requiredHR));
+                SmithingRegistry.register(new SmithingRegistry.Recipe(forgeRecipeId(set, i), SmithingRegistry.Category.ARMOR, set.id,
+                        set.item(i), null, p.forgeCost(), p.forgeZenny(), set.requiredHR));
+                if (set.upgradeFrom != null) {
+                    SmithingRegistry.register(new SmithingRegistry.Recipe(upgradeRecipeId(set, i), SmithingRegistry.Category.ARMOR, set.id,
+                            set.item(i), set.upgradeFrom.item(i), p.upgradeCost(), p.upgradeZenny(), set.requiredHR));
+                }
             }
         }
     }

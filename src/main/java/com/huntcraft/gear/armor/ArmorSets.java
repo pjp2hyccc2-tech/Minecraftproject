@@ -14,6 +14,8 @@ import static com.huntcraft.core.SkillType.*;
 /**
  * The 8 armor series. Skill levels are summed over equipped pieces (+ set bonus + charm) by {@link ArmorSkills}.
  * Resistances (fire, water, thunder, ice, dragon) are FIRE_RES..DRAGON_RES skill points (negative = weakness).
+ * Smith tree (trade-in upgrades): hunter -> bone -> jagraptor -> {ignivald, frostgarm, voltrix, gravadon}; ignivald -> azragos.
+ * Defense at level 1 (sum of 4 pieces): hunter 7, bone 13, jagraptor 14, voltrix 17, ignivald/frostgarm 18, gravadon 20, azragos 22.
  */
 public final class ArmorSets {
     private ArmorSets() {
@@ -36,7 +38,7 @@ public final class ArmorSets {
             .bonus(4, GATHERING, 1)
             .build();
 
-    public static final ArmorSet BONE = ArmorSet.builder("bone").rarity(1).color(0xEADFC4)
+    public static final ArmorSet BONE = ArmorSet.builder("bone").rarity(1).color(0xEADFC4).from(HUNTER)
             .defense(2, 5, 4, 2, 0.5F, 0F).sound(SoundEvents.ARMOR_EQUIP_GENERIC).perLevel(0.2F, 0.03F).zenny(80).hr(1)
             .piece(0, p -> p.skill(ATTACK_BOOST, 1).res(1, 0, -1, 0, 0)
                     .cost(HCItems.MONSTER_BONE_S, 3).cost(HCItems.BOARFANG_TUSK, 1).zenny(200).upgrade(HCItems.MONSTER_BONE_M, HCItems.MONSTER_BONE_L))
@@ -49,8 +51,8 @@ public final class ArmorSets {
             .bonus(3, HEROICS, 1)
             .build();
 
-    public static final ArmorSet JAGRAPTOR = ArmorSet.builder("jagraptor").rarity(2).color(0x5DA8F0)
-            .defense(2, 5, 4, 2, 1.0F, 0F).sound(SoundEvents.ARMOR_EQUIP_LEATHER).perLevel(0.2F, 0.05F).zenny(100).hr(1)
+    public static final ArmorSet JAGRAPTOR = ArmorSet.builder("jagraptor").rarity(2).color(0x5DA8F0).from(BONE)
+            .defense(2, 6, 4, 2, 1.0F, 0F).sound(SoundEvents.ARMOR_EQUIP_LEATHER).perLevel(0.2F, 0.05F).zenny(100).hr(1)
             .piece(0, p -> p.skill(CRITICAL_EYE, 1).res(-1, 1, 0, 0, 0)
                     .cost(HCItems.JAGRAPTOR_HIDE, 2).cost(HCItems.JAGRAPTOR_FANG, 1).zenny(300).upgrade(HCItems.JAGRAPTOR_HIDE, HCItems.JAGRAPTOR_FANG))
             .piece(1, p -> p.skill(EVADE_WINDOW, 1).skill(CONSTITUTION, 1).res(0, 1, 0, -1, 0)
@@ -63,7 +65,7 @@ public final class ArmorSets {
             .build();
 
     // ------------------------------------------------------------------ large monster sets
-    public static final ArmorSet IGNIVALD = ArmorSet.builder("ignivald").rarity(4).color(0xFF6A2A)
+    public static final ArmorSet IGNIVALD = ArmorSet.builder("ignivald").rarity(4).color(0xFF6A2A).from(JAGRAPTOR)
             .defense(3, 7, 5, 3, 1.5F, 0F).sound(SoundEvents.ARMOR_EQUIP_CHAIN).perLevel(0.3F, 0.1F).zenny(200).hr(2)
             .piece(0, p -> p.skill(WEAKNESS_EXPLOIT, 1).skill(ATTACK_BOOST, 1).res(1, -1, 0, 0, 0)
                     .cost(HCItems.IGNIVALD.scale, 2).cost(HCItems.IGNIVALD.shell, 1).cost(HCItems.MONSTER_BONE_M, 1).zenny(600)
@@ -75,12 +77,12 @@ public final class ArmorSets {
                     .cost(HCItems.IGNIVALD.scale, 2).cost(HCItems.IGNIVALD.claw, 1).cost(HCItems.MONSTER_BONE_M, 1).zenny(700)
                     .upgrade(HCItems.IGNIVALD.shell, HCItems.IGNIVALD.shellPlus))
             .piece(3, p -> p.skill(ATTACK_BOOST, 1).skill(EVADE_WINDOW, 1).res(1, 0, 0, -1, 0)
-                    .cost(HCItems.IGNIVALD.claw, 2).cost(HCItems.IGNIVALD.scale, 1).cost(HCItems.FLAME_SAC, 1).zenny(600)
+                    .cost(HCItems.IGNIVALD.claw, 2).cost(HCItems.IGNIVALD.tail, 1).cost(HCItems.FLAME_SAC, 1).zenny(600)
                     .upgrade(HCItems.IGNIVALD.scale, HCItems.IGNIVALD.scalePlus))
             .bonus(3, ATTACK_BOOST, 1).bonus(4, CRITICAL_BOOST, 1)
             .build();
 
-    public static final ArmorSet FROSTGARM = ArmorSet.builder("frostgarm").rarity(4).color(0x9BE7FF)
+    public static final ArmorSet FROSTGARM = ArmorSet.builder("frostgarm").rarity(4).color(0x9BE7FF).from(JAGRAPTOR)
             .defense(3, 7, 5, 3, 2.0F, 0.05F).sound(SoundEvents.ARMOR_EQUIP_LEATHER).perLevel(0.3F, 0.1F).zenny(200).hr(2)
             .piece(0, p -> p.skill(EARPLUGS, 1).skill(HEROICS, 1).res(-1, 0, 0, 1, 0)
                     .cost(HCItems.FROSTGARM.scale, 2).cost(HCItems.FROSTGARM.special, 1).cost(HCItems.MONSTER_BONE_M, 1).zenny(600)
@@ -92,12 +94,12 @@ public final class ArmorSets {
                     .cost(HCItems.FROSTGARM.scale, 2).cost(HCItems.FROSTGARM.claw, 1).cost(HCItems.FROSTGARM.shell, 1).zenny(700)
                     .upgrade(HCItems.FROSTGARM.shell, HCItems.FROSTGARM.shellPlus))
             .piece(3, p -> p.skill(CONSTITUTION, 1).skill(TREMOR_RES, 1).res(0, 0, 0, 1, 0)
-                    .cost(HCItems.FROSTGARM.claw, 2).cost(HCItems.FROSTGARM.scale, 1).cost(HCItems.ICE_CRYSTAL, 2).zenny(600)
+                    .cost(HCItems.FROSTGARM.claw, 2).cost(HCItems.FROSTGARM.tail, 1).cost(HCItems.ICE_CRYSTAL, 2).zenny(600)
                     .upgrade(HCItems.FROSTGARM.scale, HCItems.FROSTGARM.scalePlus))
             .bonus(3, HEAT_COLD_RES, 1).bonus(4, AGITATOR, 1)
             .build();
 
-    public static final ArmorSet VOLTRIX = ArmorSet.builder("voltrix").rarity(4).color(0xFFE23D)
+    public static final ArmorSet VOLTRIX = ArmorSet.builder("voltrix").rarity(4).color(0xFFE23D).from(JAGRAPTOR)
             .defense(3, 6, 5, 3, 1.5F, 0F).sound(SoundEvents.ARMOR_EQUIP_CHAIN).perLevel(0.3F, 0.1F).zenny(200).hr(2)
             .piece(0, p -> p.skill(CRITICAL_EYE, 1).skill(SPEED_SHARPENING, 1).res(0, -1, 1, 0, 0)
                     .cost(HCItems.VOLTRIX.scale, 2).cost(HCItems.VOLTRIX.special, 1).cost(HCItems.THUNDERBUG, 2).zenny(600)
@@ -109,12 +111,12 @@ public final class ArmorSets {
                     .cost(HCItems.VOLTRIX.scale, 2).cost(HCItems.VOLTRIX.claw, 1).cost(HCItems.THUNDER_SAC, 1).zenny(700)
                     .upgrade(HCItems.VOLTRIX.shell, HCItems.VOLTRIX.shellPlus))
             .piece(3, p -> p.skill(CRITICAL_EYE, 1).skill(EVADE_WINDOW, 1).res(1, 0, 1, 0, 0)
-                    .cost(HCItems.VOLTRIX.shell, 1).cost(HCItems.VOLTRIX.claw, 1).cost(HCItems.VOLTRIX.scale, 1).zenny(600)
+                    .cost(HCItems.VOLTRIX.shell, 1).cost(HCItems.VOLTRIX.claw, 1).cost(HCItems.VOLTRIX.tail, 1).zenny(600)
                     .upgrade(HCItems.VOLTRIX.scale, HCItems.VOLTRIX.scalePlus))
             .bonus(3, EVADE_WINDOW, 1).bonus(4, CRITICAL_EYE, 1)
             .build();
 
-    public static final ArmorSet GRAVADON = ArmorSet.builder("gravadon").rarity(4).color(0xC8AA80)
+    public static final ArmorSet GRAVADON = ArmorSet.builder("gravadon").rarity(4).color(0xC8AA80).from(JAGRAPTOR)
             .defense(3, 8, 6, 3, 2.5F, 0.1F).sound(SoundEvents.ARMOR_EQUIP_IRON).perLevel(0.3F, 0.12F).zenny(220).hr(2)
             .piece(0, p -> p.skill(GUARD, 1).skill(STUN_RES, 1).res(1, 1, -1, 0, 0)
                     .cost(HCItems.GRAVADON.special, 1).cost(HCItems.GRAVADON.scale, 2).cost(HCItems.MONSTER_BONE_M, 1).zenny(650)
@@ -126,24 +128,24 @@ public final class ArmorSets {
                     .cost(HCItems.GRAVADON.shell, 2).cost(HCItems.GRAVADON.claw, 1).cost(HCItems.MONSTER_BONE_M, 1).zenny(750)
                     .upgrade(HCItems.GRAVADON.shell, HCItems.GRAVADON.shellPlus))
             .piece(3, p -> p.skill(DEFENSE_BOOST, 1).skill(WINDPROOF, 1).res(0, 1, 0, 0, 0)
-                    .cost(HCItems.GRAVADON.scale, 2).cost(HCItems.GRAVADON.shell, 1).cost(HCItems.AQUA_SAC, 1).zenny(650)
+                    .cost(HCItems.GRAVADON.scale, 2).cost(HCItems.GRAVADON.tail, 1).cost(HCItems.AQUA_SAC, 1).zenny(650)
                     .upgrade(HCItems.GRAVADON.scale, HCItems.GRAVADON.scalePlus))
             .bonus(3, DEFENSE_BOOST, 1).bonus(4, GUARD, 1)
             .build();
 
-    public static final ArmorSet AZRAGOS = ArmorSet.builder("azragos").rarity(6).color(0xC77DFF)
-            .defense(3, 8, 6, 3, 3.0F, 0.1F).sound(SoundEvents.ARMOR_EQUIP_NETHERITE).perLevel(0.35F, 0.15F).zenny(300).hr(3)
+    public static final ArmorSet AZRAGOS = ArmorSet.builder("azragos").rarity(6).color(0xC77DFF).from(IGNIVALD)
+            .defense(3, 9, 7, 3, 3.0F, 0.1F).sound(SoundEvents.ARMOR_EQUIP_NETHERITE).perLevel(0.3F, 0.15F).zenny(300).hr(3)
             .piece(0, p -> p.skill(ATTACK_BOOST, 1).skill(CRITICAL_EYE, 1).res(1, -1, 0, 0, 1)
                     .cost(HCItems.AZRAGOS.special, 1).cost(HCItems.AZRAGOS.scale, 2).cost(HCItems.MONSTER_BONE_L, 1).zenny(1000)
                     .upgrade(HCItems.AZRAGOS.scale, HCItems.AZRAGOS.scalePlus))
             .piece(1, p -> p.skill(ELEMENT_ATTACK, 1).skill(AGITATOR, 1).res(1, 0, 0, 0, 1)
-                    .cost(HCItems.AZRAGOS.shell, 2).cost(HCItems.AZRAGOS.scale, 2).cost(HCItems.MONSTER_BONE_L, 1).zenny(1300)
+                    .cost(HCItems.AZRAGOS.shell, 2).cost(HCItems.AZRAGOS.gem, 1).cost(HCItems.MONSTER_BONE_L, 1).zenny(1300)
                     .upgrade(HCItems.AZRAGOS.shell, HCItems.AZRAGOS.shellPlus))
             .piece(2, p -> p.skill(CRITICAL_BOOST, 1).skill(HEALTH_BOOST, 1).res(0, 0, 0, -1, 1)
                     .cost(HCItems.AZRAGOS.scale, 2).cost(HCItems.AZRAGOS.claw, 1).cost(HCItems.AZRAGOS.shell, 1).zenny(1150)
                     .upgrade(HCItems.AZRAGOS.shell, HCItems.AZRAGOS.shellPlus))
             .piece(3, p -> p.skill(AGITATOR, 1).skill(WEAKNESS_EXPLOIT, 1).res(0, 0, 0, 0, 1)
-                    .cost(HCItems.AZRAGOS.claw, 2).cost(HCItems.AZRAGOS.scale, 1).cost(HCItems.NOVACRYSTAL, 1).zenny(1000)
+                    .cost(HCItems.AZRAGOS.claw, 2).cost(HCItems.AZRAGOS.tail, 1).cost(HCItems.NOVACRYSTAL, 1).zenny(1000)
                     .upgrade(HCItems.AZRAGOS.scale, HCItems.AZRAGOS.scalePlus))
             .bonus(3, AGITATOR, 1).bonus(4, ATTACK_BOOST, 1)
             .build();
