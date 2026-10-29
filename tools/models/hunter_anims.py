@@ -19,7 +19,8 @@ from hcmodel import rig as R
 from hcmodel.rig import Pose, key
 import hunter as H
 
-ALL = H.BONES + ['hand_r', 'hand_l']
+ALL = list(H.BONES)
+R.LIMBS = [('arm_r', 'arm_r_lower', 'hand_r'), ('arm_l', 'arm_l_lower', 'hand_l'), ('leg_r', 'leg_r_lower', None), ('leg_l', 'leg_l_lower', None)]
 TICK = 0.05
 ACTIONS = {}
 MODEL = None
@@ -1319,22 +1320,24 @@ def misc(m):
         A.build()
         del ACTIONS[name]['hits']
 
-    # sharpen: weapon across the lap, right hand rubs the stone along the blade (loop)
+    # sharpen (loop): kneeling, the weapon lies across the lap in the LEFT hand (HeldItems swaps the hands and puts
+    # the whetstone in the right hand), the right hand rubs the stone along the blade towards the tip
     a = anim(m, 'sharpen', 16, loop=True)
     for i in range(9):
         f = i / 8.0
         p = Pose()
-        body(p, lean=18, twist=-6, drop=5.0, head=(-20, 0, 0), hips_rot=(10, 0, 0))
+        body(p, lean=22, twist=-8, drop=5.0, head=(-24, -6, 0), hips_rot=(10, 0, 0))
         plant(p, (-4.0, 1.0), (4.0, -5.0))
         p.r('leg_r', -70, 0, 0)
         p.r('leg_r_lower', 110, 0, 0)
         p.r('leg_l', -30, 0, 0)
         p.r('leg_l_lower', 95, 0, 0)
-        arm_ik(p, 'l', V(6, 12, -8), V(16, 12, 0))
-        p.r('hand_l', 0, 0, 0)
+        arm_ik(p, 'l', V(5, 13, -8), V(16, 12, 0))
+        aim(p, 'l', 'long_sword', D(-100, 8), face=V(0, 1, 0))
         s = math.sin(2 * math.pi * f)
-        arm_ik(p, 'r', V(-3 + 6 * s, 10 - 2 * s, -8 - 3 * s), V(-14, 10, 2))
-        p.r('hand_r', 0, 0, 0)
+        c = math.cos(2 * math.pi * f)
+        arm_ik(p, 'r', V(-4 - 5 * s, 11.5 - 1.2 * s, -8.5 + 0.5 * c), V(-16, 8, -2))
+        p.r('hand_r', -70, 0, 0)
         key(a, 16 * TICK * f, p, ALL)
 
     # carve: kneel, cut with the right hand
@@ -1361,23 +1364,31 @@ def misc(m):
     A.build()
     del ACTIONS['carve']['hits']
 
-    # victory: fist pump
+    # victory: crouch, then thrust the weapon to the sky (blade straight up), left fist on the hip, chest out
     A = Attack(m, 'victory', 'great_sword', 44, two=False)
     A.pose(0, Pose())
+    crouch_ = Pose()
+    body(crouch_, lean=14, twist=6, drop=3.5, head=(-10, -4, 0))
+    plant(crouch_, (-4.0, 2.0), (4.0, -2.0))
+    arm_ik(crouch_, 'r', V(-7, 12, -3), V(-16, 12, 6))
+    aim(crouch_, 'r', 'great_sword', D(-20, 30), face=V(1, 0, 0))
+    crouch_.r('arm_l', 16, 0, -14)
+    crouch_.r('arm_l_lower', -30, 0, 0)
+    A.pose(5, crouch_)
     p = Pose()
-    body(p, lean=-6, twist=-10, drop=2.0, head=(-10, 8, 0))
-    plant(p, (-4.0, 2.0), (4.0, -2.0))
-    p.r('arm_r', -150, 0, 20)
-    p.r('arm_r_lower', -40, 0, 0)
-    p.r('arm_l', 20, 0, -20)
-    p.r('arm_l_lower', -20, 0, 0)
-    A.pose(6, p)
+    body(p, lean=-12, twist=-8, drop=0.0, head=(-22, 6, 0), hips_rot=(-3, -3, 0))
+    plant(p, (-4.0, 2.0), (4.5, -2.0))
+    p.r('arm_r', -176, 0, 8)
+    p.r('arm_r_lower', -6, 0, 0)
+    aim(p, 'r', 'great_sword', D(0, 88), face=V(1, 0, 0))
+    p.r('arm_l', 24, 0, -36)
+    p.r('arm_l_lower', -92, 0, 0)
+    p.r('hand_l', 0, 0, 0)
+    A.pose(9, p, 'l')
     p2 = p.copy()
-    body(p2, lean=-10, twist=-14, drop=0.0, head=(-14, 10, 0))
-    plant(p2, (-4.0, 2.0), (4.0, -2.0))
-    p2.r('arm_r', -170, 0, 12)
-    p2.r('arm_r_lower', -20, 0, 0)
-    A.pose(10, p2)
+    body(p2, lean=-10, twist=-8, drop=0.6, head=(-20, 6, 0), hips_rot=(-3, -3, 0))
+    plant(p2, (-4.0, 2.0), (4.5, -2.0))
+    A.pose(12, p2)
     A.pose(30, p2)
     A.pose(44, Pose())
     A.lock(True).cancel(30)

@@ -161,3 +161,31 @@ Read `monster/ignivald/*` and `tools/models/ignivald.py` — copy that structure
 * `SavedData`: `level.getDataStorage().computeIfAbsent(load, create, name)` (1.20.1 signature).
 * Teleport across dimensions: `serverPlayer.teleportTo(ServerLevel, x, y, z, yaw, pitch)`.
 * Creative tabs: `Registries.CREATIVE_MODE_TAB`; `ForgeSpawnEggItem(Supplier<EntityType>, bg, fg, props)`.
+
+## 8. Hunter combat animations (client/player, gear/weapon/action, tools/models/hunter*.py)
+
+* **Rig**: `tools/models/hunter.py` builds `hcmodels/hunter.json` + `hunter_slim.json` (vanilla 64x64 skin UVs on a
+  14-bone rig with elbows/knees/wrists: `root > hips > (leg_r > leg_r_lower, leg_l > …, chest > (head, arm_r >
+  arm_r_lower > hand_r, arm_l > …))`). `client/player/HunterRenderer` replaces the vanilla player renderer
+  (RenderPlayerEvent.Pre) whenever a hunter weapon is held / sheathed, an action runs or the player rolls; the player's
+  own skin is used (no texture to regenerate). `ArmorRig` re-parents armor geometry (ArmorGeometry JSON or vanilla
+  boxes, split at elbows/knees/waist) onto the bones; `HeldItems` draws the main/off-hand items from the wrist bones
+  and the sheathed weapon (`anim/sheath` packet) on the back/hip; `FirstPersonHands` draws the same posed arms in first
+  person (RenderHandEvent); `WeaponTrail` draws the additive blade ribbon sampled from the grip/tip sprite pixels.
+* **Animations** live in `tools/models/hunter_anims.py` (absolute poses via `hcmodel/rig.py`: `Pose`, IK for the
+  arms/legs, `wk()` weapon keys = right hand position + blade direction, the left hand joins two-handed grips).
+  `python3 tools/models/hunter.py --preview <anim…> [--views 3 --frames 8]` writes `tools/preview/hunter_<anim>.png`.
+  Names: `idle_<cls>` / `charge_*` / `guard_*` / `ln_dash` (loops chosen by `HunterAnimator.stance`), `walk[_armed]`,
+  `run[_armed]`, `crouch`, `dodge_f/b/l/r`, and one animation per action.
+* **Actions** (`Attack(...)` in hunter_anims.py → `hunter_actions.json`): ticks, `hit(tick, mv, range, cone|area,
+  kind, ko, hitstop, shake, fx, sound)`, `move(from, to, speed[, up])` root motion, `cancel(tick)`, `next(name)` for
+  the left-click chain, `trail(from, to)`, `iframes(from, to)`, `stamina`, `tag(...)` (`special`, `nocancel`, `swap`,
+  `onback`, `note`, `perform`, `charge`). The server (`gear/weapon/action/CombatActions`) runs the timeline each
+  tick: damage at hit ticks through `HunterDamage`, sounds, i-frames, cancel window + input buffer, and mirrors the
+  action to tracking clients (`anim/action`, `anim/impact` = hit-stop + sparks, `anim/stance`, `anim/sheath`).
+  Weapons hook in through `HunterWeaponItem.comboStart / guardAction / onActionStart / onActionTick / onActionEnd /
+  configureActionHit / onActionHitDone`.
+* **Adding an attack**: author it in hunter_anims.py (`A = Attack(m, 'xx_name', cls, ticks)`, `A.pose/A.key…`,
+  `A.hit(...)…build()`), run `python3 tools/models/hunter.py --preview xx_name`, look at the sheet, then start it from
+  the weapon (`CombatActions.start(player, "xx_name")`) or chain it with `.next()`. No Java change is needed for the
+  animation itself. The CI autotest photographs every weapon (`screenshots/combat_*.png`).

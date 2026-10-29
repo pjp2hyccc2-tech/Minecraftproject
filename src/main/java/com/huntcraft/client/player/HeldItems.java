@@ -19,7 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import com.mojang.blaze3d.systems.RenderSystem;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.Locale;
@@ -32,8 +35,6 @@ import java.util.Locale;
  */
 @OnlyIn(Dist.CLIENT)
 public final class HeldItems {
-    private static int trailWarned;
-
     private HeldItems() {
     }
 
@@ -54,12 +55,34 @@ public final class HeldItems {
         };
     }
 
+    /** Sharpening: the weapon lies in the left hand, the whetstone rubs along it from the right hand. */
+    public static boolean isSharpening(AbstractClientPlayer p, PlayerAnimState st) {
+        return "sharpen".equals(HunterAnimator.stance(p, st)) && p.getMainHandItem().getItem() instanceof HunterWeaponItem;
+    }
+
+    public static ItemStack whetstone() {
+        return new ItemStack(com.huntcraft.gear.weapon.WeaponsModule.WHETSTONE.get());
+    }
+
     public static void render(AbstractClientPlayer p, PlayerAnimState st, HunterModel model, PoseStack ps, MultiBufferSource buffers, int light, float pt) {
         ItemStack main = p.getMainHandItem();
         ItemStack off = p.getOffhandItem();
         ItemStack inHand = main;
         ItemStack onBack = st.sheathed;
         long gt = p.level().getGameTime();
+        if (isSharpening(p, st)) {
+            ps.pushPose();
+            model.translateTo("hand_l", ps);
+            handChain(ps, true);
+            Minecraft.getInstance().getItemRenderer().renderStatic(p, main, ItemDisplayContext.THIRD_PERSON_LEFT_HAND, true, ps, buffers, p.level(), light, OverlayTexture.NO_OVERLAY, p.getId());
+            ps.popPose();
+            ps.pushPose();
+            model.translateTo("hand_r", ps);
+            handChain(ps, false);
+            Minecraft.getInstance().getItemRenderer().renderStatic(p, whetstone(), ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, ps, buffers, p.level(), light, OverlayTexture.NO_OVERLAY, p.getId());
+            ps.popPose();
+            return;
+        }
         if (st.action != null && st.actionActive(gt)) {
             int swap = st.action.tagInt("swap", -1);
             float t = st.actionTime(gt, pt);
@@ -128,28 +151,27 @@ public final class HeldItems {
         return m;
     }
 
+    /**
+     * Samples grip + tip of the held weapon in world space. The entity pose stack is in VIEW space (the level
+     * renderer applies the camera rotation before translating by entity - camera), so the points are turned back
+     * with the inverse view rotation before the camera position is added.
+     */
     private static void sampleTrail(AbstractClientPlayer p, PlayerAnimState st, ItemStack stack, HunterWeaponItem w, PoseStack ps) {
         ActionDefs.WeaponSprite ws = ActionDefs.sprite(w.weaponClass().name().toLowerCase(Locale.ROOT));
         if (ws == null) return;
         Matrix4f m = itemSpace(p, stack, ps, false);
         Vec3 cam = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        Vector4f g = new Vector4f(ws.gripX() / 32F, 1F - ws.gripY() / 32F, 0.5F, 1F).mul(m);
-        Vector4f t = new Vector4f(ws.tipX() / 32F, 1F - ws.tipY() / 32F, 0.5F, 1F).mul(m);
-        Vec3 base = cam.add(g.x(), g.y(), g.z());
-        Vec3 tip = cam.add(t.x(), t.y(), t.z());
-        if (tip.distanceToSqr(p.position()) > 16.0) {
-            // not a world render pass (GUI preview, hand pass...): never feed the world space trail from here
-            if (trailWarned < 4) {
-                trailWarned++;
-                Vector4f hand = new Vector4f(0, 0, 0, 1).mul(ps.last().pose());
-                com.huntcraft.HuntCraft.LOGGER.warn("Weapon trail sample far from the player ({} blocks): action {} t={} base {} tip {} hand {} camera {} player {} pt={}",
-                        Math.sqrt(tip.distanceToSqr(p.position())), st.action == null ? "-" : st.action.name, st.actionTime(p.level().getGameTime(), Minecraft.getInstance().getPartialTick()),
-                        base, tip, cam.add(hand.x(), hand.y(), hand.z()), cam, p.position(), Minecraft.getInstance().getPartialTick());
-            }
-            return;
-        }
+        Matrix3f inv = RenderSystem.getInverseViewRotationMatrix();
+        Vec3 base = toWorld(new Vector4f(ws.gripX() / 32F, 1F - ws.gripY() / 32F, 0.5F, 1F).mul(m), inv, cam);
+        Vec3 tip = toWorld(new Vector4f(ws.tipX() / 32F, 1F - ws.tipY() / 32F, 0.5F, 1F).mul(m), inv, cam);
+        if (tip.distanceToSqr(p.position()) > 25.0) return;   // not a world render pass (GUI preview...)
         int color = trailColor(p, stack, w);
         st.trail.add(base, tip, p.level().getGameTime() + Minecraft.getInstance().getPartialTick(), color);
+    }
+
+    private static Vec3 toWorld(Vector4f view, Matrix3f inverseViewRotation, Vec3 cam) {
+        Vector3f v = new Vector3f(view.x(), view.y(), view.z()).mul(inverseViewRotation);
+        return cam.add(v.x(), v.y(), v.z());
     }
 
     private static int trailColor(AbstractClientPlayer p, ItemStack stack, HunterWeaponItem w) {

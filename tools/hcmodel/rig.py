@@ -80,14 +80,59 @@ def unwrap(prev, cur):
     return cur + 360.0 * round((prev - cur) / 360.0)
 
 
+# Two-bone limbs (upper, lower, end-effector or None) that ``key`` canonicalises: a limb orientation has two Euler
+# representations that differ by a 180 degree twist about the limb axis (the IK solver picks one depending on the
+# pole side). Both place the end effector identically but only one keeps the bone's front facing forward and
+# interpolates sanely; ``key`` picks the one closest to the previous key (or to the rest pose for the first key).
+LIMBS = []
+_RY180 = None
+
+
+def _ry180():
+    global _RY180
+    if _RY180 is None:
+        _RY180 = rot_y(math.pi)[:3, :3]
+    return _RY180
+
+
+def _dist(a, b):
+    return sum(abs(unwrap(b[i], a[i]) - b[i]) for i in range(3))
+
+
+def canonical_limbs(pose, prev_rot):
+    """Returns a copy of `pose` where every limb in LIMBS uses the Euler representation closest to prev_rot
+    (bone -> last keyed rotation; missing = rest)."""
+    out = pose.copy()
+    for upper, lower, end in LIMBS:
+        if upper not in pose.rot and lower not in pose.rot:
+            continue
+        ru, rl = pose.get_r(upper), pose.get_r(lower)
+        mu, ml = matrix_zyx(*ru), matrix_zyx(*rl)
+        alt_u = euler_zyx(mu @ _ry180())
+        alt_l = euler_zyx(_ry180() @ ml @ _ry180())
+        pu, pl = prev_rot.get(upper, (0.0, 0.0, 0.0)), prev_rot.get(lower, (0.0, 0.0, 0.0))
+        if _dist(alt_u, pu) + _dist(alt_l, pl) < _dist(ru, pu) + _dist(rl, pl) - 1e-6:
+            out.rot[upper] = alt_u
+            out.rot[lower] = alt_l
+            if end is not None:
+                out.rot[end] = euler_zyx(_ry180() @ matrix_zyx(*pose.get_r(end)))
+    return out
+
+
 def key(anim, t, pose, bones, interp='c'):
     """Keys every bone in `bones` at time t with the pose values (missing bones = rest). Angles are unwrapped
     against the previous key of that bone so Catmull-Rom never spins the long way round."""
+    prev_rot = {}
     for b in bones:
-        r = pose.get_r(b)
         prev = anim.channels.get(b, {}).get('rotation')
         if prev:
-            pr = prev[-1][1]
+            prev_rot[b] = prev[-1][1]
+    if LIMBS:
+        pose = canonical_limbs(pose, prev_rot)
+    for b in bones:
+        r = pose.get_r(b)
+        if b in prev_rot:
+            pr = prev_rot[b]
             r = tuple(unwrap(pr[i], r[i]) for i in range(3))
         anim.rot(b, [(t, r, interp)])
         p = pose.get_p(b)

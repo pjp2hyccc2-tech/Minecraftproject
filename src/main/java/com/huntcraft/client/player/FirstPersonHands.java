@@ -28,8 +28,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = HuntCraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class FirstPersonHands {
     /** Eye of the rig relative to the camera (blocks): a touch higher and in front of the real eye. */
-    private static final float RAISE = 0.0F;
-    private static final float FORWARD = -0.62F;
+    private static final float RAISE = -0.05F;
+    private static final float FORWARD = -0.7F;
     private static boolean warned;
 
     private FirstPersonHands() {
@@ -74,6 +74,10 @@ public final class FirstPersonHands {
         // items
         ItemStack main = p.getMainHandItem();
         ItemStack off = p.getOffhandItem();
+        if (HeldItems.isSharpening(p, st)) {
+            off = main;
+            main = HeldItems.whetstone();
+        }
         if (!main.isEmpty()) {
             ps.pushPose();
             model.translateTo("hand_r", ps);
