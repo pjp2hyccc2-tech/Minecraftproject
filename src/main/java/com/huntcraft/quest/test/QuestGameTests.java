@@ -266,6 +266,7 @@ public final class QuestGameTests {
             return;
         }
         for (int i = 0; i < 3; i++) {
+            p.invulnerableTime = 0;
             p.kill();
             check(p.isAlive() && p.getHealth() > 0, "faint " + (i + 1) + " killed the player");
             check(HCDimensions.isQuestMap(p.level()), "fainted player left the quest map");

@@ -129,6 +129,7 @@ public class QuestResultScreen extends Screen {
                 case "break" -> 0x70A05030;
                 case "capture" -> 0x703070A0;
                 case "sub" -> 0x50606060;
+                case "charm" -> 0x80C8A040;
                 default -> 0x40FFFFFF;
             };
             g.fill(ix - 1, iy - 1, ix + 17, iy + 17, bg);

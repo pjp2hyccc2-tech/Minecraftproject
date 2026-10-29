@@ -254,6 +254,7 @@ k('command.huntcraft.quest.none', 'クエスト中ではありません', 'Not o
 k('command.huntcraft.quest.unknown', '不明なクエスト: %s', 'Unknown quest: %s')
 
 # ---------------------------------------------------------------- screens
+k('key.huntcraft.quest_map', '地図を開く（クエスト中）', 'Open quest map')
 k('screen.huntcraft.quest_board', 'クエストボード', 'Quest Board')
 k('screen.huntcraft.quest_result', 'クエスト結果', 'Quest Results')
 k('screen.huntcraft.quest_map', '地図', 'Map')
@@ -276,7 +277,8 @@ board = {
 for key, (ja, en) in board.items():
     k(B + key, ja, en)
 for key, ja, en in [('accept', '受注', 'Accept'), ('cancel', '破棄', 'Cancel'), ('leave', '離脱', 'Leave'), ('depart', '出発', 'Depart'),
-                    ('join', '参加', 'Join'), ('claim', '報酬を受け取る', 'Take rewards')]:
+                    ('join', '参加', 'Join'), ('claim', '報酬を受け取る', 'Take rewards'), ('abandon', 'リタイア', 'Abandon quest'),
+                    ('abandon_confirm', '本当にリタイアする？', 'Really abandon?')]:
     k(f'button.huntcraft.quest.{key}', ja, en)
 H = 'hud.huntcraft.quest.'
 for key, ja, en in [('target_area', '[エリア%s]', '[Area %s]'), ('clear', 'クエストクリア！ 帰還まで %s', 'Quest clear! Return in %s'),

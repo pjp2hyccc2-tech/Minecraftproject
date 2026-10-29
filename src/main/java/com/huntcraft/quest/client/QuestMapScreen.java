@@ -1,5 +1,6 @@
 package com.huntcraft.quest.client;
 
+import com.huntcraft.network.HCNetwork;
 import com.huntcraft.quest.QuestDef;
 import com.huntcraft.quest.QuestHudState;
 import com.huntcraft.quest.QuestMap;
@@ -7,7 +8,9 @@ import com.huntcraft.quest.Quests;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -16,8 +19,27 @@ import org.lwjgl.glfw.GLFW;
 /** Full map of the current quest region: numbered areas, base camp, party, painted / slain targets. */
 @OnlyIn(Dist.CLIENT)
 public class QuestMapScreen extends Screen {
+    private boolean confirmRetire;
+
     public QuestMapScreen() {
         super(Component.translatable("screen.huntcraft.quest_map"));
+    }
+
+    @Override
+    protected void init() {
+        int s = Math.max(96, Math.min(width - 40, height - 56));
+        int x0 = (width - s) / 2;
+        if (QuestHudState.active && QuestHudState.state == 0) {
+            addRenderableWidget(Button.builder(Component.translatable("button.huntcraft.quest.abandon"), b -> {
+                if (!confirmRetire) {
+                    confirmRetire = true;
+                    b.setMessage(Component.translatable("button.huntcraft.quest.abandon_confirm"));
+                } else {
+                    HCNetwork.sendToServer("quest/abandon", new CompoundTag());
+                    onClose();
+                }
+            }).bounds(x0 + s - 96, 6, 96, 16).build());
+        }
     }
 
     @Override
@@ -27,7 +49,7 @@ public class QuestMapScreen extends Screen {
 
     @Override
     public boolean keyPressed(int key, int scan, int mods) {
-        if (key == GLFW.GLFW_KEY_M || key == GLFW.GLFW_KEY_E) {
+        if (key == GLFW.GLFW_KEY_E || QuestClient.QUEST_MAP.matches(key, scan)) {
             onClose();
             return true;
         }

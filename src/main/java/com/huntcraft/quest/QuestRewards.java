@@ -5,6 +5,8 @@ import com.huntcraft.data.HunterData;
 import com.huntcraft.entity.monster.MonsterProfile;
 import com.huntcraft.entity.monster.MonsterRegistry;
 import com.huntcraft.entity.monster.RewardTable;
+import com.huntcraft.gear.armor.ArmorModule;
+import com.huntcraft.gear.armor.CharmItem;
 import com.huntcraft.quest.block.GatherKind;
 import com.huntcraft.registry.HCItems;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +31,7 @@ public final class QuestRewards {
     public static final String CAT_SUB = "sub";
     public static final String CAT_BREAK = "break";
     public static final String CAT_CAPTURE = "capture";
+    public static final String CAT_CHARM = "charm";
 
     private QuestRewards() {
     }
@@ -58,8 +61,21 @@ public final class QuestRewards {
         return new ItemStack(pool[r.nextInt(pool.length)]);
     }
 
-    /** Builds the (success) result tag for one member: zenny, HRP and rolled items. */
     public static CompoundTag rollSuccess(QuestInstance inst, QuestDef q, RandomSource r) {
+        return rollSuccess(inst, q, r, 1);
+    }
+
+    /** Charm drop chance: urgent quests always, large monster quests often, others rarely. */
+    public static float charmChance(QuestDef q) {
+        if (q.urgent) return 1.0F;
+        return switch (q.type) {
+            case HUNT, CAPTURE -> q.isHighRank() ? 0.35F : 0.22F;
+            case SLAY, GATHER -> 0.08F;
+        };
+    }
+
+    /** Builds the (success) result tag for one member: zenny, HRP and rolled items (charm tier scales with HR). */
+    public static CompoundTag rollSuccess(QuestInstance inst, QuestDef q, RandomSource r, int hunterRank) {
         List<Line> lines = new ArrayList<>();
         Rank rank = q.rank;
         switch (q.type) {
@@ -104,6 +120,13 @@ public final class QuestRewards {
             addLine(lines, rollTable(prof.breakRewards.get(s[1]), rank, r), CAT_BREAK);
         }
         for (QuestDef.Reward rw : q.rewards) addLine(lines, new ItemStack(rw.item().get(), rw.count()), CAT_SUB);
+        if (r.nextFloat() < charmChance(q)) {
+            try {
+                lines.add(new Line(CharmItem.roll(ArmorModule.CHARM.get(), r, rank, hunterRank), CAT_CHARM));
+            } catch (RuntimeException e) {
+                com.huntcraft.HuntCraft.LOGGER.warn("Charm reward roll failed", e);
+            }
+        }
 
         CompoundTag tag = baseResult(inst, q, true);
         int zenny = q.zenny * Math.max(0, QuestManager.MAX_FAINTS - inst.faints) / QuestManager.MAX_FAINTS;

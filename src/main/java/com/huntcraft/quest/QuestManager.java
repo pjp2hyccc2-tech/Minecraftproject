@@ -838,8 +838,9 @@ public final class QuestManager {
         RandomSource r = server.overworld().random;
         QuestSavedData data = data(server);
         for (UUID id : new ArrayList<>(inst.members)) {
-            CompoundTag result = success ? QuestRewards.rollSuccess(inst, q, r) : QuestRewards.baseResult(inst, q, false);
             ServerPlayer p = server.getPlayerList().getPlayer(id);
+            int hr = p != null ? HunterData.get(p).hunterRank : 1;
+            CompoundTag result = success ? QuestRewards.rollSuccess(inst, q, r, hr) : QuestRewards.baseResult(inst, q, false);
             if (p != null) {
                 applyResult(p, result);
                 removeSupplies(p);
