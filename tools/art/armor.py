@@ -17,6 +17,10 @@ import sys
 
 import numpy as np
 
+if os.environ.get('PYTHONHASHSEED') != '0':  # hash() seeds the pixel noise: re-run with a fixed seed (reproducible output)
+    os.environ['PYTHONHASHSEED'] = '0'
+    os.execv(sys.executable, [sys.executable] + sys.argv)
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from armorkit import ArmorModel, P, hexc, preview  # noqa: E402
 from platepaint import S  # noqa: E402
@@ -293,9 +297,11 @@ def build_hunter(o, i):
             fc.plate('hu_cloth', fc.rows(4, 6))
             fc.plate('hu_leather', fc.rows(7, 11))
             fc.plate('hu_iron', fc.rows(7, 7))
-            for y in (9, 11):
-                fc.px(1, y, '#a88458')
-                fc.px(2, y - 1, '#a88458')
+            fc.hline(9, 0, 3, '#2e1c0e')
+            fc.hline(10, 0, 3, '#5a4128')
+        for k in ('north', 'south'):
+            af[k].px(1, 9, C['brass'])
+            af[k].px(2, 9, C['brass_dk'])
         lf = faces_of(am, 'leg')
         lf['top'].clear()
         lf['bottom'].plate('shadow')
@@ -303,12 +309,14 @@ def build_hunter(o, i):
             fc = lf[k]
             fc.clear(fc.rows(0, 4))
             fc.plate('hu_leather', fc.rows(5, 11))
+            fc.hline(8, 0, 3, '#2e1c0e')
             fc.plate('hu_leather_dk', fc.rows(10, 11))
+            fc.hline(11, 0, 3, '#150b05')
         n = lf['north']
-        for y in (7, 9):
-            n.px(1, y, '#a88458')
-            n.px(2, y + 1, '#a88458')
-        lf['west'].plate('hu_brass', lf['west'].mask(1, 7, 2, 7))
+        n.px(1, 8, C['brass_hi'])
+        n.px(2, 8, C['brass_dk'])
+        n.px(1, 6, '#bd8c5c')
+        n.px(2, 6, '#9a6a40')
 
     def paint_inner(am):
         bf = faces_of(am, 'body')

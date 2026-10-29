@@ -173,8 +173,8 @@ def generic_parts():
 def gathering():
     green = ramp('#4a9a2e')
     reg('herb', L.leaves(green))
-    reg('antidote_herb', L.leaves(ramp('#2e9a8a'), broad=0.7, tint=('#9af0e0', [(4, 4), (11, 4)])))
-    reg('fire_herb', L.leaves(ramp('#d0502a'), stem=ramp('#5a3a1a'), tint=('#ffd060', [(3, 3), (13, 3), (8, 2)])))
+    reg('antidote_herb', L.leaves(ramp('#2e9a8a'), broad=0.85, tint=('#d8fff4', [(3, 6), (12, 6), (7, 3)])))
+    reg('fire_herb', L.leaves(ramp('#d0502a'), stem=ramp('#5a3a1a'), tint=('#ffd060', [(3, 6), (12, 6), (8, 2), (7, 3)])))
     reg('blue_mushroom', L.mushroom(ramp('#2e6ad0'), spots='#d8f0ff'))
     reg('numb_mushroom', L.mushroom(ramp('#e0b020'), spots='#7a4a10'))
     reg('honey', L.honey_drop(ramp('#e8a020')))
@@ -239,6 +239,12 @@ def consumables():
     reg('farcaster', L.smoke_ball(ramp('#3a9a4a'), '#c8f0d0'))
     reg('guild_pass', L.badge())
     reg('hunter_notes', L.book(ramp('#7a4a2a'), strap=ramp('#4a2a14')))
+    skull = [(x, y, '#e8e0c8') for (x, y) in ((7, 8), (8, 8), (9, 8), (6, 9), (8, 9), (10, 9), (7, 10), (9, 10))] + \
+            [(7, 9, '#1a0a06'), (9, 9, '#1a0a06'), (8, 10, '#1a0a06')]
+    reg('barrel_bomb', L.barrel_icon(ramp('#b8301c'), IRON, skull))
+    flame = [(8, 7, '#ffd860'), (7, 8, '#ff8a24'), (8, 8, '#fff0a0'), (9, 8, '#ff8a24'), (7, 9, '#ee5a10'), (8, 9, '#ffd860'),
+             (9, 9, '#ee5a10'), (8, 10, '#c42a08')]
+    reg('barrel_bomb_plus', L.barrel_icon(ramp('#7a1414'), GOLD, flame))
 
 
 # ----------------------------------------------------------------------------- armor icons
@@ -289,9 +295,9 @@ def armor_icons():
 
 
 def charms():
-    reg('charm', L.charm_icon(ramp('#7a8a6a'), ramp('#6a4a2a'), '#e8e0b0'))
-    reg('charm_t2', L.charm_icon(ramp('#4a7ab0'), GOLD, '#e8f6ff'))
-    reg('charm_t3', L.charm_icon(ramp('#5a2a8a'), GOLD, '#ff7ac8', glow=True))
+    reg('charm', L.charm_icon(ramp('#7a8a6a'), ramp('#6a4a2a'), '#3a4430'))
+    reg('charm_t2', L.charm_icon(ramp('#3a7ad0'), ramp('#8a6a3a'), '#e8f6ff', frame=GOLD))
+    reg('charm_t3', L.charm_icon(ramp('#7a2ab0'), ramp('#5a1a2a'), '#ff9ad8', glow=True, frame=GOLD))
 
 
 # ----------------------------------------------------------------------------- build
@@ -318,9 +324,6 @@ def write_models(names):
             model = {'parent': 'minecraft:item/generated', 'textures': {'layer0': 'huntcraft:item/' + n}}
         with open(os.path.join(MODELS, n + '.json'), 'w') as f:
             json.dump(model, f, indent=1)
-    for n in ('barrel_bomb', 'barrel_bomb_plus'):
-        with open(os.path.join(MODELS, n + '.json'), 'w') as f:
-            json.dump({'parent': 'huntcraft:block/' + n}, f, indent=1)
 
 
 def main():

@@ -309,14 +309,33 @@ def gem_orb(P, swirl=None, motif=None):
     c.px(5, 5, G[4])
     return c
 
-def crystal_cluster(P, n=3):
+def crystal_cluster(P, n=3, rock=None):
+    """Chunky faceted crystals growing from a small rock (n = 2 or 3 crystals)."""
     c = Canvas()
     G = P['gem']
-    shards = [((8, 15), (8, 0.6), 5.4), ((5.4, 15), (1.4, 4.6), 4.0), ((10.6, 15), (14.6, 5.6), 4.0)][:n]
-    for (b, t, w) in shards[::-1]:
-        hm = c.stroke([b, t], w, 0.5)
-        c.layer(hm, G, shade='flat', bulge=0.5)
-        c.line(b[0], b[1] - 1, t[0], t[1] + 1, G[4], only_on=True)
+    R = rock or ['#1e1a16', '#4a4038', '#6e6254', '#928474', '#b8aa98']
+    shards = [((8.2, 13.6), 0.0, 12.4, 4.6), ((4.8, 14.0), -26.0, 8.6, 3.6), ((11.6, 14.0), 28.0, 8.0, 3.4)][:n]
+    for (b, ang, ln, w) in shards[::-1]:
+        a = math.radians(ang)
+        ux, uy = math.sin(a), -math.cos(a)
+        px_, py_ = math.cos(a), math.sin(a)
+        tip = (b[0] + ux * ln, b[1] + uy * ln)
+        sh = (b[0] + ux * (ln - w * 0.9), b[1] + uy * (ln - w * 0.9))
+        pts = [(b[0] - px_ * w / 2, b[1] - py_ * w / 2), (sh[0] - px_ * w / 2, sh[1] - py_ * w / 2), tip,
+               (sh[0] + px_ * w / 2, sh[1] + py_ * w / 2), (b[0] + px_ * w / 2, b[1] + py_ * w / 2)]
+        hm = c.poly(pts)
+        M = c.layer(hm, G, shade='flat', bulge=0.4)
+        # facets: left half light, right half dark, bright ridge
+        right = c.cells(c.poly([b, (sh[0], sh[1]), tip, (sh[0] + px_ * w / 2, sh[1] + py_ * w / 2), (b[0] + px_ * w / 2, b[1] + py_ * w / 2)]), 0.5)
+        c.shift_level(right & M & (c.last_lev > 0), G, -1)
+        for k in range(1, int(ln) - 1):
+            x, y = b[0] + ux * k - px_ * 0.6, b[1] + uy * k - py_ * 0.6
+            c.px_on(int(round(x)), int(round(y)), G[4] if k > ln * 0.3 else G[3])
+    base = c.poly([(2.4, 15.8), (2.0, 14.0), (3.4, 12.4), (5.6, 13.0), (7.6, 11.8), (9.8, 12.8), (11.8, 12.0), (13.8, 13.0), (14.4, 15.8)])
+    c.layer(base, R, shade='dome', bulge=0.8)
+    c.px_on(4, 14, R[4])
+    c.px_on(8, 13, R[4])
+    c.px_on(12, 14, R[3])
     return c
 
 
@@ -447,22 +466,44 @@ def ball(rp, mark=None, rays=None, flies=False):
 
 
 # ----------------------------------------------------------------------------- gathering / nature
+def leaf_pts(base, tip, width, bend=0.0, steps=10):
+    """Pointed leaf outline from base to tip (width at the widest point, optional sideways bend)."""
+    bx, by = base
+    tx, ty = tip
+    dx, dy = tx - bx, ty - by
+    ln = math.hypot(dx, dy) + 1e-9
+    nx, ny = -dy / ln, dx / ln
+    left, right = [], []
+    for k in range(steps + 1):
+        t = k / steps
+        wv = width / 2 * math.sin(math.pi * t ** 0.8)
+        cx = bx + dx * t + nx * bend * math.sin(math.pi * t)
+        cy = by + dy * t + ny * bend * math.sin(math.pi * t)
+        left.append((cx + nx * wv, cy + ny * wv))
+        right.append((cx - nx * wv, cy - ny * wv))
+    return left + right[::-1]
+
+
 def leaves(rp, stem=None, n=3, broad=1.0, tint=None):
+    """Herb sprig: three broad oval leaves with veins on a short tied stem."""
     c = Canvas()
     st = stem or ramp('#4a6a20')
-    c.layer(c.curve((8, 15.2), (8.4, 11), (7.6, 7), 1.6, 1.0), st, shade='cyl')
-    lv = [((8, 9), (2.0, 6.0), (1.4, 1.6), -1), ((8, 8), (14.0, 5.4), (14.6, 1.4), 1), ((8, 11), (8.5, 4.0), (8.0, 0.6), 0)][:n]
-    for (b, m, t, side) in lv:
-        pts = bez(b, (m[0] - 2.6 * broad * (1 if side >= 0 else -1) * 0.4, m[1] + 2.2 * broad), t) + \
-            bez(t, (m[0] + 2.6 * broad * (1 if side >= 0 else -1) * 0.6, m[1] - 1.6 * broad), b)[1:]
-        hm = c.poly(pts)
-        c.layer(hm, rp, shade='dome', bulge=1.0)
-        c.line(b[0], b[1], (b[0] + t[0]) / 2, (b[1] + t[1]) / 2, rp[1], only_on=True)
+    c.layer(c.stroke([(8.0, 15.6), (8.0, 10.0)], 1.8, 1.4), st, shade='cyl')
+    spec = [(4.7, 7.8, 2.6 * broad, 4.7, -42, (7.4, 11.0), (2.0, 4.4)), (11.3, 7.8, 2.6 * broad, 4.7, 42, (8.6, 11.0), (14.0, 4.4)),
+            (8.0, 5.4, 3.0 * broad, 5.0, 0, (8.0, 10.4), (8.0, 1.2))]
+    for (x, y, rx, ry, ang, b, t) in spec[:max(1, n)]:
+        hm = c.ellipse(x, y, rx, ry, ang)
+        c.layer(hm, rp, shade='dome', bulge=1.1)
+        steps = int(max(abs(t[0] - b[0]), abs(t[1] - b[1])))
+        for q in range(1, steps):
+            px_ = b[0] + (t[0] - b[0]) * q / steps
+            py_ = b[1] + (t[1] - b[1]) * q / steps
+            c.px_on(int(round(px_)), int(round(py_)), rp[1])
+    c.layer(c.rect(6.6, 12.4, 9.6, 13.6), ['#3a2a14', '#8a6a3a', '#b08a50', '#cfa868', '#e8c888'], shade='flat')
     if tint:
         for (x, y) in tint[1]:
             c.px_on(x, y, tint[0])
     return c
-
 
 def mushroom(cap, stem=None, spots=None):
     c = Canvas()
@@ -526,14 +567,18 @@ def web():
 
 
 def vine(rp, dew='#cfe8ff'):
+    """Sticky grass: a clump of long blades glistening with sticky droplets."""
     c = Canvas()
-    hm = c.curve((3, 15), (1.0, 6.0), (8.0, 4.0), 2.4, 1.6) | c.curve((8.0, 4.0), (14.5, 3.0), (12.6, 10.0), 1.6, 1.0)
-    c.layer(hm, rp, shade='cyl')
-    for (p, s) in (((5, 9), 1), ((11, 5), 1)):
-        lf = c.ellipse(p[0] + 1.5, p[1] - 1.2, 2.4, 1.3, -30)
-        c.layer(lf, rp, shade='dome')
-    for (x, y) in ((4, 12), (9, 3), (13, 8), (6, 6)):
-        c.px(x, y, dew)
+    blades = [((5.0, 15.6), (2.4, 9.0), (1.2, 2.6), 2.4), ((11.4, 15.6), (13.8, 9.0), (14.8, 3.4), 2.4),
+              ((7.0, 15.6), (6.4, 8.0), (4.8, 0.8), 2.6), ((9.4, 15.6), (10.4, 8.0), (11.6, 1.2), 2.6),
+              ((8.2, 15.6), (8.4, 9.0), (8.0, 2.4), 2.8)]
+    for k, (p0, p1, p2, w) in enumerate(blades):
+        hm = c.curve(p0, p1, p2, w, 0.6)
+        c.layer(hm, rp if k >= 2 else [rp[0], rp[1], rp[1], rp[2], rp[3]], shade='cyl', outline='auto')
+    for (x, y) in ((3, 6), (12, 7), (6, 3), (10, 4), (8, 9), (13, 11), (4, 11)):
+        c.px_on(x, y, dew)
+    for (x, y) in ((6, 4), (10, 5), (8, 10)):
+        c.px_on(x, y, '#ffffff')
     return c
 
 
@@ -608,14 +653,16 @@ def turtle_shell(rp, edge):
 
 
 def stinger(rp, venom):
+    """Curved insect stinger: banded abdomen tip ending in a sharp barb with a venom drop."""
     c = Canvas()
-    hm = c.curve((3, 3), (7, 6), (14, 14), 5.0, 0.4)
-    c.layer(hm, rp, shade='cyl')
-    for t in (0.2, 0.4):
-        x, y = 3 + t * 9, 3 + t * 9
-        c.line(x - 1, y + 1, x + 1, y - 1, '#e8c020', only_on=True)
-    c.px(14, 15, venom)
-    c.px(13, 15, venom)
+    body = c.curve((3.2, 2.8), (6.0, 11.0), (14.2, 13.6), 5.2, 0.6)
+    M = c.layer(body, rp, shade='cyl', bulge=1.1)
+    for (x0, y0, x1, y1) in ((2, 5, 6, 3), (3, 8, 7, 6), (5, 10, 8, 8)):
+        c.line(x0, y0, x1, y1, '#e8c020', only_on=True)
+    c.line(4, 9, 7, 7, '#a07a10', only_on=True)
+    drop = c.ellipse(14.4, 14.6, 1.2, 1.3)
+    c.layer(drop, ['#3a0a5a', '#7a2ab0', venom, '#d8a0ff', '#ffffff'], shade='dome', outline='soft')
+    c.px(3, 3, rp[4])
     return c
 
 
@@ -887,15 +934,44 @@ def deco_layer(builder, col, shade='flat', outline='auto'):
     return fn
 
 
-def charm_icon(stone, cord, rune, glow=False):
+def charm_icon(stone, cord, rune, glow=False, frame=None):
+    """Charm (amulet stone): thin cord loop, metal cap, egg-shaped carved stone with a rune (+ gold frame)."""
     c = Canvas()
-    c.layer(c.curve((4.0, 3.0), (8.0, -1.6), (12.0, 3.0), 1.4, 1.4), cord, shade='cyl')
-    hm = c.ellipse(8, 9.4, 5.6, 5.8)
-    c.layer(hm, stone, shade='dome', bulge=1.2)
-    c.layer(c.rect(6.0, 2.6, 10.0, 4.8, rad=0.8), cord, shade='flat')
-    for (x, y) in ((8, 6), (8, 7), (8, 8), (8, 9), (8, 10), (8, 11), (6, 8), (10, 8), (7, 12), (9, 12), (6, 10), (10, 10)):
-        if (x, y) in ((6, 10), (10, 10)) and not glow:
-            continue
+    loop = c.curve((5.6, 4.4), (3.0, -1.4), (8.0, 0.8), 1.1, 1.1) | c.curve((8.0, 0.8), (13.0, -1.4), (10.4, 4.4), 1.1, 1.1)
+    c.layer(loop, cord, shade='cyl', outline='soft')
+    hm = c.ellipse(8, 10.0, 5.0, 5.6)
+    c.layer(hm, frame or stone, shade='dome', bulge=1.2)
+    if frame:
+        inner = c.ellipse(8, 10.2, 3.7, 4.3)
+        c.layer(inner, stone, shade='dome', bulge=1.3, outline='soft')
+    c.layer(c.rect(6.2, 3.4, 9.8, 5.2, rad=0.6), frame or cord, shade='flat')
+    pts = [(8, 7), (8, 8), (8, 9), (8, 10), (8, 11), (8, 12), (7, 8), (9, 8), (6, 9), (10, 9), (7, 11), (9, 11)]
+    for (x, y) in pts:
         c.px_on(x, y, rune)
-    c.px(5, 6, WHITE)
+    if glow:
+        c.sparkle(13, 13, '#ffffff', rune)
+    c.px_on(6, 7, WHITE)
+    return c
+
+def barrel_icon(body, hoop, mark, fuse='#d8c8a0'):
+    """Barrel bomb: wooden barrel with hoops, painted mark and a lit fuse."""
+    c = Canvas()
+    hm = c.rect(3.0, 3.6, 13.0, 15.4, rad=1.6) | c.ellipse(8.0, 9.5, 5.6, 5.4)
+    M = c.layer(hm, body, shade='cyl', bulge=1.2)
+    for x in (5, 8, 11):
+        for y in range(4, 15):
+            c.px_on(x, y, body[1])
+    for y in (5, 13):
+        for x in range(2, 15):
+            c.px_on(x, y, hoop[2])
+            c.px_on(x, y + 1, hoop[1])
+    top = c.cells(c.ellipse(8.0, 3.8, 4.6, 1.3), 0.4)
+    c.recolor(top & (c.img[..., 3] > 0), body[3])
+    for (x, y, col) in mark:
+        c.px_on(x, y, col)
+    for (x, y) in ((9, 2), (10, 1)):
+        c.px(x, y, fuse)
+    c.px(11, 0, '#ffb030')
+    c.px(12, 1, '#fff0a0')
+    c.px(11, 1, '#ff8a24')
     return c
