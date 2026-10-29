@@ -1,0 +1,57 @@
+{
+ "variants": {
+  "facing=north": [
+   {
+    "model": "huntcraft:block/village_quest_board"
+   },
+   {
+    "model": "huntcraft:block/village_quest_board_2"
+   },
+   {
+    "model": "huntcraft:block/village_quest_board_3"
+   }
+  ],
+  "facing=east": [
+   {
+    "model": "huntcraft:block/village_quest_board",
+    "y": 90
+   },
+   {
+    "model": "huntcraft:block/village_quest_board_2",
+    "y": 90
+   },
+   {
+    "model": "huntcraft:block/village_quest_board_3",
+    "y": 90
+   }
+  ],
+  "facing=south": [
+   {
+    "model": "huntcraft:block/village_quest_board",
+    "y": 180
+   },
+   {
+    "model": "huntcraft:block/village_quest_board_2",
+    "y": 180
+   },
+   {
+    "model": "huntcraft:block/village_quest_board_3",
+    "y": 180
+   }
+  ],
+  "facing=west": [
+   {
+    "model": "huntcraft:block/village_quest_board",
+    "y": 270
+   },
+   {
+    "model": "huntcraft:block/village_quest_board_2",
+    "y": 270
+   },
+   {
+    "model": "huntcraft:block/village_quest_board_3",
+    "y": 270
+   }
+  ]
+ }
+}
