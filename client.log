@@ -1,0 +1,764 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.8/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Java: 17.0.21, JVM: 17.0.21+9 (Eclipse Adoptium), Arch: amd64
+
+> Task :compileJava UP-TO-DATE
+> Task :mergeFragments UP-TO-DATE
+> Task :shaderPackZip UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :downloadMcpConfig
+> Task :extractSrg UP-TO-DATE
+> Task :createSrgToMcp UP-TO-DATE
+> Task :downloadMCMeta UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :extractNatives UP-TO-DATE
+> Task :makeSrcDirs
+> Task :prepareRuns
+> Task :prepareRunClient
+> Task :prepareRunClientCompile UP-TO-DATE
+
+> Task :runClient
+2026-10-29 23:42:38,980 main WARN Advanced terminal features are not available in this environment
+[23:42:39] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, MOD_DEV, --assetIndex, 5, --assetsDir, /home/runner/.gradle/caches/forge_gradle/assets, --gameDir, ., --fml.forgeVersion, 47.3.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412]
+[23:42:39] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.21 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[23:42:39] [main/INFO] [ne.mi.fm.lo.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[23:42:39] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[23:42:39] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.5
+[23:42:41] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.5 got version 4.5
+[23:42:41] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: llvmpipe (LLVM 20.1.2, 256 bits) GL version 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4, Mesa
+[23:42:41] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=CLIENT
+[23:42:42] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[23:42:42] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[23:42:42] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[23:42:42] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar is missing mods.toml file
+[23:42:42] [main/INFO] [ne.mi.fm.lo.mo.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[23:42:44] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, /home/runner/.gradle/caches/forge_gradle/assets, --assetIndex, 5]
+[23:42:48] [Datafixer Bootstrap/INFO] [mojang/DataFixerBuilder]: 188 Datafixer optimizations took 273 milliseconds
+[23:42:50] [Render thread/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[23:42:50] [Render thread/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[23:42:50] [Render thread/INFO] [mojang/YggdrasilAuthenticationService]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[23:42:50] [Render thread/INFO] [minecraft/Minecraft]: Setting user: Dev
+[23:42:50] [Render thread/INFO] [minecraft/Minecraft]: Backend library: LWJGL version 3.3.1 build 7
+[23:42:50] [modloading-worker-0/INFO] [ne.mi.co.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.0, for MC 1.20.1 with MCP 20230612.114412
+[23:42:50] [modloading-worker-0/INFO] [ne.mi.co.MinecraftForge/FORGE]: MinecraftForge v47.3.0 Initialized
+[23:42:51] [modloading-worker-0/INFO] [co.hu.HuntCraft/]: HuntCraft loaded
+[23:42:52] [Render thread/INFO] [ne.mi.ga.ForgeGameTestHooks/]: Enabled Gametest Namespaces: [huntcraft]
+[23:42:52] [Render thread/ERROR] [mojang/Narrator]: Error while loading the narrator
+com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+	at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:69) ~[text2speech-1.17.9.jar:?] {}
+	at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?] {}
+	at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?] {}
+	at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?] {}
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?] {}
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?] {}
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+libflite.so: cannot open shared object file: No such file or directory
+libflite.so: cannot open shared object file: No such file or directory
+Native library (linux-x86-64/libflite.so) not found in resource path (/home/runner/work/Minecraftproject/Minecraftproject/build/classes/java/main:/home/runner/work/Minecraftproject/Minecraftproject/build/resources/main:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/minecraft_repo/versions/1.20.1/client-extra.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlearlydisplay/1.20.1-47.3.0/91e33682894f35862e9ce29d633e3258120952f0/fmlearlydisplay-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlloader/1.20.1-47.3.0/547850469c8a336b4c60cb8619f6cd421e9e5f55/fmlloader-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarSelector/0.3.19/376cc9c8ea60720cf027c01fc033de915699801c/JarJarSelector-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarMetadata/0.3.19/83feaa9b770e6ac0e96ee4fc23fa89325c5fe2/JarJarMetadata-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre/60458f877d055d0c9114d9e1a2efb737b4bc282c/guava-31.1-jre.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/ca.weblite/java-objc-bridge/1.1/1227f9e0666314f9de41477e3ec277e542ed7f7b/java-objc-bridge-1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/7.0.1/3b4972a0cdb135853dba219be61a79b22cff1309/forgespi-7.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/24.0.1/13c5c75c4206580aa4d683bffee658caae6c9f43/annotations-24.0.1.jar:/home/runner/.gradle/caches/forge_gradle/mcp_repo/net/minecraft/mapping/1.20.1/mapping-1.20.1-mapping.zip:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/8.0.4/272d240aa73f42195b2a68e2ebd8b701ecf41f63/accesstransformers-8.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.0.5/699143dd438431d06b57416944f7cedbe52e1475/eventbus-6.0.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/10.0.9/6d9443f56f50bb85cea383686ff9c867391458b/modlauncher-10.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/5.1.6/62fab3c3d59d37f8e15af311cb638c6f6123423/coremods-5.1.6.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.openjdk.nashorn/nashorn-core/15.3/43977e804697048fc8d81d333a36c17d07a5b3dd/nashorn-core-15.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.7/e86dda4696d3c185fcc95d8d311904e7ce38a53f/asm-commons-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.7/c0655519f24d92af2202cb681cd7c1569df6ead6/asm-util-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.7/e4a258b7eb96107106c0599f0061cfc1832fe07a/asm-analysis-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.7/e446a17b175bfb733b87c5c2560ccb4e57d69f1a/asm-tree-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.7/73d7b3086e14beb604ced229c302feff6449723/asm-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.9.1/e92af8ab33e428461927b484e90bb155a4f3a052/antlr4-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.9.1/428664f05d2b7f7b7610204b5aa7c1763f62011a/antlr4-runtime-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.4/51d6cefb2b55ee55ee26b16391212fb2c7dfb4f4/toml-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.4/510f174abbf1c947494db50ef2445683bd52c230/core-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.8.5/4433f50c07debefaed0553bd0068f4f48d449313/maven-artifact-3.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.3/a01aaa6ddaea9ec07ec4f209487b7a46a526283a/typetools-0.6.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.2.0/96d02cd3b384ff015a8fef4223bcb4ccf1717c95/terminalconsoleappender-1.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.12.1/4382ab1382c7b6f379377ed5f665dc2f6e1218bc/jline-reader-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.12.1/c777448314e050d980a6b697c140f3bfe9eb7416/jline-terminal-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.2.2/54f5efc19bca95d709d9a37d19ffcbba3d21c1a6/oshi-core-6.2.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/71.1/9e7d3304c23f9ba5cb71915f7cce23231a57a445/icu4j-71.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/4.0.43/2ff9d747a77570a07a60d32ac77eb6162ad2a2d9/authlib-4.0.43.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/6.0.8/3ba4a30557a9b057760af4011f909ba619fc5125/datafixerupper-6.0.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.1.1/832b8e6674a9b325a5175a3a6267dfaf34c85139/logging-1.1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.17.9/3cad216e3a7f0c19b4b394388bc9ffc446f13b14/text2speech-1.17.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.82.Final/644041d1fa96a5d3130a29e8978630d716d76e38/netty-handler-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.82.Final/b77200379acb345a9ffdece1c605e591ac3e4e0a/netty-codec-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/476409d6255001ca53a55f65b01c13822f8dc93a/netty-transport-native-epoll-4.1.82.Final-linux-aarch_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/c7350a71920f3ae9142945e25fed4846cce53374/netty-transport-native-epoll-4.1.82.Final-linux-x86_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.82.Final/e7c7dd18deac93105797f30057c912651ea76521/netty-transport-classes-epoll-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.82.Final/3e895b35ca1b8a0eca56cacff4c2dde5d2c6abce/netty-transport-native-unix-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.82.Final/38f665ae8dcd29032eea31245ba7806bed2e0fa8/netty-resolver-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.82.Final/22d148e85c3f5ebdacc0ce1f5aabb1d420f73f3/netty-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.9/bb7ea75ecdb216654237830b3a96d87ad91f8cc5/fastutil-8.5.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.15/7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d/httpcore-4.4.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.19.0/3b6eeb4de4c49c0fe38a4ee27188ff5fee44d0bb/log4j-core-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.19.0/5c04bfdd63ce9dceb2e284b81e96b6a70010ee10/log4j-slf4j2-impl-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/cbac1b8d30cb4795149c1ef540f912671a8616d0/lwjgl-glfw-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/81716978214ecbda15050ca394b06ef61501a49e/lwjgl-glfw-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/a817bcf213db49f710603677457567c37d53e103/lwjgl-jemalloc-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/33dbb017b6ed6b25f993ad9d56741a49e7937718/lwjgl-jemalloc-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/2623a6b8ae1dfcd880738656a9f0243d2e6840bd/lwjgl-openal-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/f906b6439f6daa66001182ea7727e3467a93681b/lwjgl-openal-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/831a5533a21a5f4f81bbc51bb13e9899319b5411/lwjgl-opengl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/ab9ab6fde3743e3550fa5d46d785ecb45b047d99/lwjgl-opengl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/b119297cf8ed01f247abe8685857f8e7fcf5980f/lwjgl-stb-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/3ee7aec8686e52867677110415566a5342a80230/lwjgl-stb-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/ff1914111ef2e3e0110ef2dabc8d8cdaad82347/lwjgl-tinyfd-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/a35110b9471bea8cde826ab297550ee8c22f5035/lwjgl-tinyfd-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/ae58664f88e18a9bb2c77b063833ca7aaec484cb/lwjgl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/1de885aba434f934201b99f2f1afb142036ac189/lwjgl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.machinezoo.noexception/noexception/1.7.1/b65330c98e38a1f915fa54a6e5eca496505e3f0a/noexception-1.7.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.30/e606eac955f55ecf1d8edcccba04eb8ac98088dd/slf4j-simple-1.7.30.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.1/f48d81adce2abf5ad3cfe463df517952749e03bc/slf4j-api-2.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/srgutils/0.4.11/fbad1341ffdb47d276bbdc40ecb06da49e053e74/srgutils-0.4.11.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.3.0/cf43b5391de623b36fe066a21127baef82c64022/plexus-utils-3.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.12.0/d5692f0526415fcc6de94bb5bfbd3afd9dd3b3e5/checker-qual-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.11.0/c5a0ace696d3f8b1c1d8cc036d8c03cc0cbe6b69/error_prone_annotations-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/ST4/4.3/92f2c1ad8d84abcbeead6cf7f2c53a04166293c2/ST4-4.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr-runtime/3.5.2/cd9cd41361c155f3af0f653009dcecb08d8b4afd/antlr-runtime-3.5.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.abego.treelayout/org.abego.treelayout.core/1.0.3/457216e8e6578099ae63667bb1e4439235892028/org.abego.treelayout.core-1.0.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.glassfish/javax.json/1.0.4/3178f73569fd7a1e5ffc464e680f7a8cc784b85a/javax.json-1.0.4.jar)
+	at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:307) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+	at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+	at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+	at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?] {}
+	... 21 more
+	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+		at com.sun.jna.Native.open(Native Method) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:197) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?] {}
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?] {}
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?] {}
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?] {}
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?] {}
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?] {}
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+		at com.sun.jna.Native.open(Native Method) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:210) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?] {}
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?] {}
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?] {}
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?] {}
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?] {}
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?] {}
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+	Suppressed: java.io.IOException: Native library (linux-x86-64/libflite.so) not found in resource path (/home/runner/work/Minecraftproject/Minecraftproject/build/classes/java/main:/home/runner/work/Minecraftproject/Minecraftproject/build/resources/main:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/minecraft_repo/versions/1.20.1/client-extra.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlearlydisplay/1.20.1-47.3.0/91e33682894f35862e9ce29d633e3258120952f0/fmlearlydisplay-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlloader/1.20.1-47.3.0/547850469c8a336b4c60cb8619f6cd421e9e5f55/fmlloader-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarSelector/0.3.19/376cc9c8ea60720cf027c01fc033de915699801c/JarJarSelector-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarMetadata/0.3.19/83feaa9b770e6ac0e96ee4fc23fa89325c5fe2/JarJarMetadata-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre/60458f877d055d0c9114d9e1a2efb737b4bc282c/guava-31.1-jre.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/ca.weblite/java-objc-bridge/1.1/1227f9e0666314f9de41477e3ec277e542ed7f7b/java-objc-bridge-1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/7.0.1/3b4972a0cdb135853dba219be61a79b22cff1309/forgespi-7.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/24.0.1/13c5c75c4206580aa4d683bffee658caae6c9f43/annotations-24.0.1.jar:/home/runner/.gradle/caches/forge_gradle/mcp_repo/net/minecraft/mapping/1.20.1/mapping-1.20.1-mapping.zip:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/8.0.4/272d240aa73f42195b2a68e2ebd8b701ecf41f63/accesstransformers-8.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.0.5/699143dd438431d06b57416944f7cedbe52e1475/eventbus-6.0.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/10.0.9/6d9443f56f50bb85cea383686ff9c867391458b/modlauncher-10.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/5.1.6/62fab3c3d59d37f8e15af311cb638c6f6123423/coremods-5.1.6.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.openjdk.nashorn/nashorn-core/15.3/43977e804697048fc8d81d333a36c17d07a5b3dd/nashorn-core-15.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.7/e86dda4696d3c185fcc95d8d311904e7ce38a53f/asm-commons-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.7/c0655519f24d92af2202cb681cd7c1569df6ead6/asm-util-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.7/e4a258b7eb96107106c0599f0061cfc1832fe07a/asm-analysis-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.7/e446a17b175bfb733b87c5c2560ccb4e57d69f1a/asm-tree-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.7/73d7b3086e14beb604ced229c302feff6449723/asm-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.9.1/e92af8ab33e428461927b484e90bb155a4f3a052/antlr4-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.9.1/428664f05d2b7f7b7610204b5aa7c1763f62011a/antlr4-runtime-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.4/51d6cefb2b55ee55ee26b16391212fb2c7dfb4f4/toml-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.4/510f174abbf1c947494db50ef2445683bd52c230/core-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.8.5/4433f50c07debefaed0553bd0068f4f48d449313/maven-artifact-3.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.3/a01aaa6ddaea9ec07ec4f209487b7a46a526283a/typetools-0.6.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.2.0/96d02cd3b384ff015a8fef4223bcb4ccf1717c95/terminalconsoleappender-1.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.12.1/4382ab1382c7b6f379377ed5f665dc2f6e1218bc/jline-reader-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.12.1/c777448314e050d980a6b697c140f3bfe9eb7416/jline-terminal-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.2.2/54f5efc19bca95d709d9a37d19ffcbba3d21c1a6/oshi-core-6.2.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/71.1/9e7d3304c23f9ba5cb71915f7cce23231a57a445/icu4j-71.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/4.0.43/2ff9d747a77570a07a60d32ac77eb6162ad2a2d9/authlib-4.0.43.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/6.0.8/3ba4a30557a9b057760af4011f909ba619fc5125/datafixerupper-6.0.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.1.1/832b8e6674a9b325a5175a3a6267dfaf34c85139/logging-1.1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.17.9/3cad216e3a7f0c19b4b394388bc9ffc446f13b14/text2speech-1.17.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.82.Final/644041d1fa96a5d3130a29e8978630d716d76e38/netty-handler-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.82.Final/b77200379acb345a9ffdece1c605e591ac3e4e0a/netty-codec-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/476409d6255001ca53a55f65b01c13822f8dc93a/netty-transport-native-epoll-4.1.82.Final-linux-aarch_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/c7350a71920f3ae9142945e25fed4846cce53374/netty-transport-native-epoll-4.1.82.Final-linux-x86_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.82.Final/e7c7dd18deac93105797f30057c912651ea76521/netty-transport-classes-epoll-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.82.Final/3e895b35ca1b8a0eca56cacff4c2dde5d2c6abce/netty-transport-native-unix-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.82.Final/38f665ae8dcd29032eea31245ba7806bed2e0fa8/netty-resolver-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.82.Final/22d148e85c3f5ebdacc0ce1f5aabb1d420f73f3/netty-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.9/bb7ea75ecdb216654237830b3a96d87ad91f8cc5/fastutil-8.5.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.15/7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d/httpcore-4.4.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.19.0/3b6eeb4de4c49c0fe38a4ee27188ff5fee44d0bb/log4j-core-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.19.0/5c04bfdd63ce9dceb2e284b81e96b6a70010ee10/log4j-slf4j2-impl-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/cbac1b8d30cb4795149c1ef540f912671a8616d0/lwjgl-glfw-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/81716978214ecbda15050ca394b06ef61501a49e/lwjgl-glfw-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/a817bcf213db49f710603677457567c37d53e103/lwjgl-jemalloc-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/33dbb017b6ed6b25f993ad9d56741a49e7937718/lwjgl-jemalloc-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/2623a6b8ae1dfcd880738656a9f0243d2e6840bd/lwjgl-openal-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/f906b6439f6daa66001182ea7727e3467a93681b/lwjgl-openal-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/831a5533a21a5f4f81bbc51bb13e9899319b5411/lwjgl-opengl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/ab9ab6fde3743e3550fa5d46d785ecb45b047d99/lwjgl-opengl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/b119297cf8ed01f247abe8685857f8e7fcf5980f/lwjgl-stb-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/3ee7aec8686e52867677110415566a5342a80230/lwjgl-stb-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/ff1914111ef2e3e0110ef2dabc8d8cdaad82347/lwjgl-tinyfd-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/a35110b9471bea8cde826ab297550ee8c22f5035/lwjgl-tinyfd-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/ae58664f88e18a9bb2c77b063833ca7aaec484cb/lwjgl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/1de885aba434f934201b99f2f1afb142036ac189/lwjgl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.machinezoo.noexception/noexception/1.7.1/b65330c98e38a1f915fa54a6e5eca496505e3f0a/noexception-1.7.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.30/e606eac955f55ecf1d8edcccba04eb8ac98088dd/slf4j-simple-1.7.30.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.1/f48d81adce2abf5ad3cfe463df517952749e03bc/slf4j-api-2.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/srgutils/0.4.11/fbad1341ffdb47d276bbdc40ecb06da49e053e74/srgutils-0.4.11.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.3.0/cf43b5391de623b36fe066a21127baef82c64022/plexus-utils-3.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.12.0/d5692f0526415fcc6de94bb5bfbd3afd9dd3b3e5/checker-qual-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.11.0/c5a0ace696d3f8b1c1d8cc036d8c03cc0cbe6b69/error_prone_annotations-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/ST4/4.3/92f2c1ad8d84abcbeead6cf7f2c53a04166293c2/ST4-4.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr-runtime/3.5.2/cd9cd41361c155f3af0f653009dcecb08d8b4afd/antlr-runtime-3.5.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.abego.treelayout/org.abego.treelayout.core/1.0.3/457216e8e6578099ae63667bb1e4439235892028/org.abego.treelayout.core-1.0.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.glassfish/javax.json/1.0.4/3178f73569fd7a1e5ffc464e680f7a8cc784b85a/javax.json-1.0.4.jar)
+		at com.sun.jna.Native.extractFromResourcePath(Native.java:1145) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:281) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)] {}
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?] {}
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?] {}
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?] {}
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?] {}
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?] {}
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?] {}
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+[23:42:52] [Render thread/INFO] [minecraft/ReloadableResourceManager]: Reloading ResourceManager: vanilla, mod_resources
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/forge-client.toml is not correct. Correcting
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key client was corrected from null to its default, SimpleCommentedConfig:{}. 
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key client.alwaysSetupTerrainOffThread was corrected from null to its default, false. 
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key client.experimentalForgeLightPipelineEnabled was corrected from null to its default, false. 
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key client.showLoadWarnings was corrected from null to its default, true. 
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key client.useCombinedDepthStencilAttachment was corrected from null to its default, false. 
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key client.compressLanIPv6Addresses was corrected from null to its default, true. 
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key client.calculateAllNormals was corrected from null to its default, false. 
+[23:42:52] [modloading-worker-0/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key client.stabilizeDirectionGetNearest was corrected from null to its default, true. 
+[23:42:52] [Worker-Main-2/INFO] [minecraft/UnihexProvider]: Found unifont_all_no_pua-15.0.06.hex, loading
+[23:42:54] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[23:42:54] [Render thread/INFO] [co.hu.HuntCraft/]: [HuntCraft Shaders] no shader loader (Oculus/Iris/OptiFine) and no shaderpacks/ directory - pack not installed
+[23:42:54] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.3.0 Target: 47.4.28
+[23:42:57] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: minecraft:item.goat_horn.play
+[23:42:57] [Render thread/WARN] [minecraft/SoundEngine]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5731:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2721:(snd_pcm_open_noupdate) Unknown PCM default
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5731:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2721:(snd_pcm_open_noupdate) Unknown PCM default
+[23:42:57] [Render thread/ERROR] [minecraft/SoundEngine]: Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:283) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at com.mojang.blaze3d.audio.Library.init(Library.java:153) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.sounds.SoundEngine.loadLibrary(SoundEngine.java:104) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.sounds.SoundEngine.reload(SoundEngine.java:96) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:125) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:40) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.packs.resources.SimplePreparableReloadListener.lambda$reload$1(SimplePreparableReloadListener.java:13) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading}
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:718) ~[?:?] {}
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?] {}
+	at net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$new$3(SimpleReloadInstance.java:69) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading}
+	at net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:156) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:23) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading}
+	at net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:130) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:115) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1106) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.Minecraft.run(Minecraft.java:718) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:accesstransformer:B,pl:runtimedistcleaner:A}
+	at net.minecraft.client.main.Main.main(Main.java:218) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?] {re:classloading,pl:runtimedistcleaner:A}
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?] {}
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?] {}
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?] {}
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?] {}
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?] {}
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x1024x4 minecraft:textures/atlas/blocks.png-atlas
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[23:42:57] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[23:42:57] [Render thread/WARN] [minecraft/ShaderInstance]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[23:42:58] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[23:42:58] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[23:42:58] [Render thread/INFO] [minecraft/TextureAtlas]: Created: 256x256x0 minecraft:textures/atlas/mob_effects.png-atlas
+[23:42:58] [Realms Notification Availability checker #1/INFO] [mojang/RealmsClient]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+[23:42:59] [Render thread/INFO] [minecraft/RecipeManager]: Loaded 7 recipes
+[23:42:59] [Render thread/INFO] [minecraft/AdvancementList]: Loaded 1271 advancements
+[23:43:00] [Server thread/INFO] [minecraft/IntegratedServer]: Starting integrated minecraft server version 1.20.1
+[23:43:00] [Server thread/INFO] [minecraft/MinecraftServer]: Generating keypair
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file ./saves/hc_autotest/serverconfig/forge-server.toml is not correct. Correcting
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[23:43:00] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[23:43:01] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[23:43:02] [Render thread/INFO] [minecraft/LoggerChunkProgressListener]: スポーン地点を準備中：0%
+[23:43:02] [Render thread/INFO] [minecraft/LoggerChunkProgressListener]: スポーン地点を準備中：0%
+[23:43:02] [Render thread/INFO] [minecraft/LoggerChunkProgressListener]: スポーン地点を準備中：0%
+[23:43:02] [Render thread/INFO] [minecraft/LoggerChunkProgressListener]: スポーン地点を準備中：8%
+[23:43:03] [Render thread/INFO] [minecraft/LoggerChunkProgressListener]: スポーン地点を準備中：41%
+[23:43:03] [Render thread/INFO] [minecraft/LoggerChunkProgressListener]: スポーン地点を準備中：84%
+[23:43:03] [Server thread/INFO] [ne.mi.se.pe.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[23:43:03] [Server thread/INFO] [co.hu.HuntCraft/]: Quest system: 0 running quest instance(s) restored
+[23:43:03] [Render thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 2696 ms
+[23:43:04] [Server thread/INFO] [minecraft/IntegratedServer]: Changing view distance to 8, from 10
+[23:43:04] [Server thread/INFO] [minecraft/IntegratedServer]: Changing simulation distance to 6, from 0
+[23:43:04] [Render thread/WARN] [io.ne.ut.in.SystemPropertyUtil/]: Unable to parse the boolean system property 'java.net.preferIPv6Addresses':system - using the default value: false
+[23:43:04] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] world creation requested
+[23:43:04] [Netty Local Client IO #0/INFO] [ne.mi.ne.NetworkHooks/]: Connected to a modded server.
+[23:43:04] [Server thread/INFO] [minecraft/PlayerList]: Dev[local:E:a0a2904b] logged in with entity id 1 at (6.5, -60.0, -3.5)
+[23:43:04] [Server thread/INFO] [minecraft/MinecraftServer]: Devがゲームに参加しました
+[23:43:05] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] 風見の村があなたを待っています: [風見の村へ向かう]
+[23:43:05] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] HuntCraft へようこそ! ギルドの証を使うとハンターの村へ行けます。
+[23:43:05] [Render thread/INFO] [minecraft/AdvancementList]: Loaded 3 advancements
+[23:43:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] world loaded, 396 steps
+[23:43:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] armor shot armor_closeup_a
+[23:43:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] armor shot armor_closeup_b
+[23:43:09] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] armor shot item_icons
+[23:43:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] armor shot armor_front
+[23:43:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] armor shot armor_back
+[23:43:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] armor autotest finished at tick 101
+[23:43:11] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step setup
+[23:43:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_00_hud_overworld
+[23:43:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot 00_hud_overworld
+[23:43:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_ignivald
+[23:43:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light ignivald: sky=15 block=0 raw=15 at BlockPos{x=2000, y=-58, z=0}, clientPos=(2000.5, -60.0, 0.5), playerPos=(2000.5, -56.69399998426437, 11.500000131130218)
+[23:43:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_ignivald
+[23:43:18] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_ignivald
+[23:43:18] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_ignivald
+[23:43:18] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_ignivald
+[23:43:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_ignivald_attack
+[23:43:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_ignivald_attack
+[23:43:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_ignivald
+[23:43:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_frostgarm
+[23:43:22] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light frostgarm: sky=15 block=0 raw=15 at BlockPos{x=2064, y=-58, z=0}, clientPos=(2064.5, -60.0, 0.5), playerPos=(2064.5, -56.43600005149841, 11.77499986886978)
+[23:43:22] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_frostgarm
+[23:43:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_frostgarm
+[23:43:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_frostgarm
+[23:43:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_frostgarm
+[23:43:24] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_frostgarm_attack
+[23:43:24] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_frostgarm_attack
+[23:43:24] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_frostgarm
+[23:43:25] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_voltrix
+[23:43:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light voltrix: sky=15 block=0 raw=15 at BlockPos{x=2128, y=-58, z=0}, clientPos=(2128.5, -60.0, 0.5), playerPos=(2128.5, -57.20100001573562, 10.399999868869783)
+[23:43:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_voltrix
+[23:43:28] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_voltrix
+[23:43:29] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_voltrix
+[23:43:29] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_voltrix
+[23:43:30] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_voltrix_attack
+[23:43:30] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_voltrix_attack
+[23:43:30] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_voltrix
+[23:43:30] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_gravadon
+[23:43:33] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light gravadon: sky=15 block=0 raw=15 at BlockPos{x=2192, y=-58, z=0}, clientPos=(2192.5, -60.0, 0.5), playerPos=(2192.5, -56.327999897003174, 12.050000262260436)
+[23:43:33] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_gravadon
+[23:43:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_gravadon
+[23:43:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_gravadon
+[23:43:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_gravadon
+[23:43:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_gravadon_attack
+[23:43:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_gravadon_attack
+[23:43:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_gravadon
+[23:43:36] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_azragos
+[23:43:38] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light azragos: sky=15 block=0 raw=15 at BlockPos{x=2256, y=-58, z=0}, clientPos=(2256.5, -60.0, 0.5), playerPos=(2256.5, -56.327999897003174, 12.050000262260436)
+[23:43:38] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_azragos
+[23:43:39] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_azragos
+[23:43:39] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_azragos
+[23:43:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_azragos
+[23:43:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_azragos_attack
+[23:43:41] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_azragos_attack
+[23:43:41] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_azragos
+[23:43:41] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_jagraptor
+[23:43:44] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light jagraptor: sky=15 block=0 raw=15 at BlockPos{x=2320, y=-59, z=0}, clientPos=(2320.5, -60.0, 0.5), playerPos=(2320.5, -58.65, 4.575)
+[23:43:44] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_jagraptor
+[23:43:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_jagraptor
+[23:43:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_jagraptor
+[23:43:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_jagraptor
+[23:43:46] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_jagraptor_attack
+[23:43:46] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_jagraptor_attack
+[23:43:46] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_jagraptor
+[23:43:47] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_blizraptor
+[23:43:49] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light blizraptor: sky=15 block=0 raw=15 at BlockPos{x=2384, y=-59, z=0}, clientPos=(2384.5, -60.0, 0.5), playerPos=(2384.5, -58.65, 4.575)
+[23:43:49] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_blizraptor
+[23:43:50] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_blizraptor
+[23:43:50] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_blizraptor
+[23:43:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_blizraptor
+[23:43:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_blizraptor_attack
+[23:43:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_blizraptor_attack
+[23:43:52] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_blizraptor
+[23:43:52] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_boarfang
+[23:43:55] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light boarfang: sky=15 block=0 raw=15 at BlockPos{x=2448, y=-60, z=0}, clientPos=(2448.5, -60.0, 0.5), playerPos=(2448.5, -59.009999978542325, 4.075000029802323)
+[23:43:55] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_boarfang
+[23:43:56] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_boarfang
+[23:43:56] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_boarfang
+[23:43:56] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_boarfang
+[23:43:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_boarfang_attack
+[23:43:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_boarfang_attack
+[23:43:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_boarfang
+[23:43:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_grasica
+[23:44:00] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light grasica: sky=15 block=0 raw=15 at BlockPos{x=2512, y=-59, z=0}, clientPos=(2512.5, -60.0, 0.5), playerPos=(2512.5, -58.65, 4.575)
+[23:44:00] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_grasica
+[23:44:01] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_grasica
+[23:44:01] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_grasica
+[23:44:01] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_grasica
+[23:44:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_grasica_attack
+[23:44:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_grasica_attack
+[23:44:03] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_grasica
+[23:44:03] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_gamenos
+[23:44:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light gamenos: sky=15 block=0 raw=15 at BlockPos{x=2576, y=-59, z=0}, clientPos=(2576.5, -60.0, 0.5), playerPos=(2576.5, -58.46999995708465, 4.825000059604645)
+[23:44:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_gamenos
+[23:44:07] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_gamenos
+[23:44:07] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_gamenos
+[23:44:07] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_gamenos
+[23:44:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_gamenos_attack
+[23:44:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_gamenos_attack
+[23:44:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_gamenos
+[23:44:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_buzzling
+[23:44:11] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light buzzling: sky=15 block=0 raw=15 at BlockPos{x=2640, y=-60, z=0}, clientPos=(2640.5, -60.0, 0.5), playerPos=(2640.5, -59.26499999463558, 3.824999970197678)
+[23:44:11] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_buzzling
+[23:44:12] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_buzzling
+[23:44:12] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_buzzling
+[23:44:12] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_buzzling
+[23:44:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_buzzling_attack
+[23:44:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_buzzling_attack
+[23:44:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_buzzling
+[23:44:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_yukimammo
+[23:44:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light yukimammo: sky=15 block=0 raw=15 at BlockPos{x=2704, y=-59, z=0}, clientPos=(2704.5, -60.0, 0.5), playerPos=(2704.5, -57.930000042915346, 5.574999940395355)
+[23:44:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_yukimammo
+[23:44:17] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_yukimammo
+[23:44:18] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_yukimammo
+[23:44:18] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_yukimammo
+[23:44:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_yukimammo_attack
+[23:44:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_yukimammo_attack
+[23:44:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_yukimammo
+[23:44:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_heatgecko
+[23:44:22] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light heatgecko: sky=15 block=0 raw=15 at BlockPos{x=2768, y=-60, z=0}, clientPos=(2768.5, -60.0, 0.5), playerPos=(2768.5, -59.429999980330464, 3.7000000149011614)
+[23:44:22] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_heatgecko
+[23:44:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_heatgecko
+[23:44:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_heatgecko
+[23:44:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_heatgecko
+[23:44:24] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_heatgecko_attack
+[23:44:24] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_heatgecko_attack
+[23:44:24] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_heatgecko
+[23:44:25] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_gansekigani
+[23:44:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light gansekigani: sky=15 block=0 raw=15 at BlockPos{x=2832, y=-60, z=0}, clientPos=(2832.5, -60.0, 0.5), playerPos=(2832.5, -58.99499997496605, 4.200000059604645)
+[23:44:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_gansekigani
+[23:44:28] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_gansekigani
+[23:44:28] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_gansekigani
+[23:44:29] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_gansekigani
+[23:44:29] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_gansekigani_attack
+[23:44:30] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_gansekigani_attack
+[23:44:30] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_gansekigani
+[23:44:30] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step spawn_nussutto_mofu
+[23:44:33] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] light nussutto_mofu: sky=15 block=0 raw=15 at BlockPos{x=2896, y=-60, z=0}, clientPos=(2896.5, -60.0, 0.5), playerPos=(2896.5, -59.145000010728836, 3.887499985098839)
+[23:44:33] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step frame_nussutto_mofu
+[23:44:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_nussutto_mofu
+[23:44:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_nussutto_mofu
+[23:44:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_nussutto_mofu
+[23:44:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_monster_nussutto_mofu_attack
+[23:44:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot monster_nussutto_mofu_attack
+[23:44:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step clear_nussutto_mofu
+[23:44:36] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step combat_setup
+[23:44:36] [Server thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] combat arena at 3024.5 -60 0.5 (floor Block{minecraft:grass_block})
+[23:44:39] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] camera attached to entity 462
+[23:44:39] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step combat_cam_attach
+[23:44:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_great_sword
+[23:44:40] [Server thread/INFO] [co.hu.HuntCraft/]: Loaded 56 hunter combat actions
+[23:44:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:44:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_unsheathe_great_sword
+[23:44:42] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_great_sword_stance
+[23:44:42] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_great_sword_stance
+[23:44:42] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_great_sword
+[23:44:43] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_great_sword_swing
+[23:44:43] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_great_sword_swing
+[23:44:43] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_great_sword
+[23:44:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_side
+[23:44:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step special_great_sword
+[23:44:46] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_great_sword_special
+[23:44:46] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_great_sword_special
+[23:44:46] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest2_great_sword
+[23:44:48] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_side
+[23:44:49] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gs_charge_hold
+[23:44:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_great_sword_charge
+[23:44:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_great_sword_charge
+[23:44:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gs_charge_release
+[23:44:52] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_great_sword_charge_slash
+[23:44:52] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_great_sword_charge_slash
+[23:44:52] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest3_gs
+[23:44:54] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:44:54] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gs_guard_sneak
+[23:44:55] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gs_guard_hold
+[23:44:55] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_great_sword_guard
+[23:44:56] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_great_sword_guard
+[23:44:56] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gs_guard_release
+[23:44:56] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step combat_armor
+[23:44:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_long_sword
+[23:44:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:44:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_unsheathe_long_sword
+[23:44:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_long_sword_stance
+[23:44:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_long_sword_stance
+[23:44:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_close
+[23:44:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_armor_closeup
+[23:45:00] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_armor_closeup
+[23:45:00] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_back
+[23:45:00] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_armor_back
+[23:45:00] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_armor_back
+[23:45:01] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:01] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_long_sword
+[23:45:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_long_sword_swing
+[23:45:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_long_sword_swing
+[23:45:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_long_sword
+[23:45:04] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_back
+[23:45:04] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step special_long_sword
+[23:45:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_long_sword_special
+[23:45:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_long_sword_special
+[23:45:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest2_long_sword
+[23:45:07] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_sword_and_shield
+[23:45:07] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_unsheathe_sword_and_shield
+[23:45:09] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_sword_and_shield_stance
+[23:45:09] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_sword_and_shield_stance
+[23:45:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_sword_and_shield
+[23:45:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_sword_and_shield_swing
+[23:45:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_sword_and_shield_swing
+[23:45:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_sword_and_shield
+[23:45:12] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:12] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step special_sword_and_shield
+[23:45:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_sword_and_shield_special
+[23:45:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_sword_and_shield_special
+[23:45:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest2_sword_and_shield
+[23:45:15] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step sns_guard_hold
+[23:45:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_sword_and_shield_guard
+[23:45:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_sword_and_shield_guard
+[23:45:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step sns_guard_release
+[23:45:17] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_dual_blades
+[23:45:17] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:18] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_unsheathe_dual_blades
+[23:45:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_dual_blades_stance
+[23:45:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_dual_blades_stance
+[23:45:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_dual_blades
+[23:45:20] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_dual_blades_swing
+[23:45:20] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_dual_blades_swing
+[23:45:20] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_dual_blades
+[23:45:22] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:22] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step special_dual_blades
+[23:45:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_dual_blades_special
+[23:45:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_dual_blades_special
+[23:45:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest2_dual_blades
+[23:45:25] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_hammer
+[23:45:25] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:26] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_unsheathe_hammer
+[23:45:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_hammer_stance
+[23:45:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_hammer_stance
+[23:45:28] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_hammer
+[23:45:28] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_hammer_swing
+[23:45:28] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_hammer_swing
+[23:45:29] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_hammer
+[23:45:30] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_side
+[23:45:31] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step special_hammer
+[23:45:32] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_hammer_special
+[23:45:32] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_hammer_special
+[23:45:32] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest2_hammer
+[23:45:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_back
+[23:45:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step hm_charge_hold
+[23:45:37] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_hammer_charge
+[23:45:37] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_hammer_charge
+[23:45:37] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step hm_charge_release
+[23:45:38] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_hammer_charge_slam
+[23:45:38] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_hammer_charge_slam
+[23:45:39] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest3_hm
+[23:45:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_hunting_horn
+[23:45:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:41] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_unsheathe_hunting_horn
+[23:45:42] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_hunting_horn_stance
+[23:45:42] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_hunting_horn_stance
+[23:45:42] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_hunting_horn
+[23:45:43] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_hunting_horn_swing
+[23:45:43] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_hunting_horn_swing
+[23:45:44] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_hunting_horn
+[23:45:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:46] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step special_hunting_horn
+[23:45:47] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_hunting_horn_special
+[23:45:47] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_hunting_horn_special
+[23:45:47] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest2_hunting_horn
+[23:45:49] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_lance
+[23:45:49] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:50] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_unsheathe_lance
+[23:45:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_lance_stance
+[23:45:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_lance_stance
+[23:45:51] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_lance
+[23:45:52] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_lance_swing
+[23:45:52] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_lance_swing
+[23:45:52] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_lance
+[23:45:54] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_side
+[23:45:54] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step special_lance
+[23:45:55] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_lance_special
+[23:45:55] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_lance_special
+[23:45:55] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest2_lance
+[23:45:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:45:57] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step ln_guard_hold
+[23:45:58] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_lance_guard
+[23:45:58] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_lance_guard
+[23:45:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step ln_guard_release
+[23:45:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_bow
+[23:45:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:46:00] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_unsheathe_bow
+[23:46:01] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_bow_stance
+[23:46:01] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_bow_stance
+[23:46:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_bow
+[23:46:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_bow_swing
+[23:46:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_bow_swing
+[23:46:03] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_bow
+[23:46:04] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_side
+[23:46:04] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step special_bow
+[23:46:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_bow_special
+[23:46:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_bow_special
+[23:46:05] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest2_bow
+[23:46:07] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:46:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step bow_draw_hold
+[23:46:09] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_bow_draw
+[23:46:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_bow_draw
+[23:46:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step bow_draw_release
+[23:46:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_bow_shoot
+[23:46:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_bow_shoot
+[23:46:10] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest3_bow
+[23:46:11] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step equip_ls_move
+[23:46:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_side
+[23:46:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step walk_hold
+[23:46:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_walk_armed
+[23:46:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_walk_armed
+[23:46:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step run_hold
+[23:46:15] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_run_armed
+[23:46:15] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_run_armed
+[23:46:15] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step move_release
+[23:46:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_side
+[23:46:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step dodge
+[23:46:17] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_dodge_roll
+[23:46:17] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_dodge_roll
+[23:46:17] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step dodge_wait
+[23:46:17] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_dodge_roll2
+[23:46:18] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_dodge_roll2
+[23:46:18] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step dodge_release
+[23:46:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_side
+[23:46:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step action_flinch
+[23:46:19] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_flinch
+[23:46:20] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_flinch
+[23:46:20] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_flinch
+[23:46:21] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step action_knockdown
+[23:46:21] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_knockdown
+[23:46:22] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_knockdown
+[23:46:22] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step knockdown_up
+[23:46:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_knockdown_getup
+[23:46:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_knockdown_getup
+[23:46:23] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_kd
+[23:46:24] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:46:25] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step sharpen_start
+[23:46:25] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_sharpen
+[23:46:26] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_sharpen
+[23:46:26] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_sharpen
+[23:46:26] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step action_carve
+[23:46:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_carve
+[23:46:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_carve
+[23:46:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_carve
+[23:46:28] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step action_victory
+[23:46:29] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_victory
+[23:46:29] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_victory
+[23:46:29] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step rest_victory
+[23:46:31] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_back
+[23:46:32] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step sheathe_potion
+[23:46:32] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_sheathe
+[23:46:32] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_sheathe
+[23:46:32] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step wait_sheathed
+[23:46:33] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_sheathed_back
+[23:46:33] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_sheathed_back
+[23:46:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step cam_front
+[23:46:34] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step drink_hold
+[23:46:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_drink
+[23:46:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_drink
+[23:46:35] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step drink_release
+[23:46:36] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step combat_first_person
+[23:46:37] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_first_person_stance
+[23:46:37] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_first_person_stance
+[23:46:37] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_fp
+[23:46:38] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_first_person_swing
+[23:46:38] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_first_person_swing
+[23:46:39] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step fp_charge_hold
+[23:46:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_first_person_charge
+[23:46:40] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_first_person_charge
+[23:46:41] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step fp_charge_release
+[23:46:42] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step fp_ls
+[23:46:44] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step attack_fp_ls
+[23:46:44] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_first_person_long_sword
+[23:46:44] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_first_person_long_sword
+[23:46:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step fp_look_down
+[23:46:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_combat_first_person_look_down
+[23:46:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot combat_first_person_look_down
+[23:46:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step fp_look_reset
+[23:46:45] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step combat_cleanup
+[23:46:46] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step goto_village
+[23:46:50] [Server thread/INFO] [co.hu.HuntCraft/]: Kazami village built (16 tiles) in 3991 ms
+[23:46:50] [Server thread/WARN] [minecraft/MinecraftServer]: Can't keep up! Is the server overloaded? Running 3986ms or 79 ticks behind
+[23:46:50] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] 【村長ソウゲン】よう来たのう、新しいハンター殿。ここは風見の村じゃ。
+[23:46:50] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] 北の高台に集会所、西に鍛冶屋とよろず屋、東にモフ亭とモフの寄合所、南に訓練場がある。
+[23:46:50] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] あんたの家は南西じゃ。アイテムボックスは家と集会所の入口にあるぞ。
+[23:46:50] [Render thread/INFO] [minecraft/ChatComponent]: [System] [CHAT] まずは東の寄合所でモフ長老に会い、相棒のお供モフを選ぶとよい。わしの所にも顔を出しておくれ。
+[23:46:52] [Render thread/INFO] [minecraft/AdvancementList]: Loaded 4 advancements
+[23:46:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_village_spawn
+[23:46:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot village_spawn
+[23:46:59] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step look_around
+[23:47:01] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_village_view2
+[23:47:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot village_view2
+[23:47:02] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step open_quest_board
+[23:47:03] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_gui_quest_board
+[23:47:03] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot gui_quest_board
+[23:47:04] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step close_quest_board
+[23:47:04] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step open_blacksmith
+[23:47:06] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_gui_blacksmith
+[23:47:06] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot gui_blacksmith
+[23:47:06] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step close_blacksmith
+[23:47:07] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step open_merchant
+[23:47:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_gui_merchant
+[23:47:08] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot gui_merchant
+[23:47:09] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step close_merchant
+[23:47:09] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step open_kitchen
+[23:47:11] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_gui_kitchen
+[23:47:11] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot gui_kitchen
+[23:47:11] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step close_kitchen
+[23:47:12] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step open_companion
+[23:47:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_gui_companion
+[23:47:13] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot gui_companion
+[23:47:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step close_companion
+[23:47:14] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step open_hunter_notes
+[23:47:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_gui_hunter_notes
+[23:47:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot gui_hunter_notes
+[23:47:16] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step close_hunter_notes
+[23:47:17] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step goto_verdant_hills
+[23:47:17] [Worker-Main-2/INFO] [co.hu.HuntCraft/]: Quest map verdant_hills loaded: 9 areas, 63 gathering points, camp at BlockPos{x=96, y=73, z=412}
+[23:47:17] [Server thread/INFO] [minecraft/IntegratedServer]: Saving and pausing game...
+[23:47:17] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:overworld
+[23:47:17] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:frostpeak_range
+[23:47:17] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:hunter_village
+[23:47:17] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:the_nether
+[23:47:17] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:verdant_hills
+[23:47:17] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:ember_caldera
+[23:47:17] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:the_end
+[23:47:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_map_verdant_hills
+[23:47:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot map_verdant_hills
+[23:47:27] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step goto_frostpeak_range
+[23:47:27] [Worker-Main-3/INFO] [co.hu.HuntCraft/]: Quest map frostpeak_range loaded: 9 areas, 57 gathering points, camp at BlockPos{x=256, y=78, z=434}
+[23:47:28] [Server thread/INFO] [minecraft/IntegratedServer]: Saving and pausing game...
+[23:47:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:overworld
+[23:47:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:frostpeak_range
+[23:47:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:hunter_village
+[23:47:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:the_nether
+[23:47:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:verdant_hills
+[23:47:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:ember_caldera
+[23:47:28] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:the_end
+[23:47:37] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_map_frostpeak_range
+[23:47:37] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot map_frostpeak_range
+[23:47:38] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step goto_ember_caldera
+[23:47:38] [Worker-Main-1/INFO] [co.hu.HuntCraft/]: Quest map ember_caldera loaded: 9 areas, 53 gathering points, camp at BlockPos{x=102, y=81, z=418}
+[23:47:38] [Server thread/INFO] [minecraft/IntegratedServer]: Saving and pausing game...
+[23:47:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:overworld
+[23:47:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:frostpeak_range
+[23:47:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:hunter_village
+[23:47:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:the_nether
+[23:47:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:verdant_hills
+[23:47:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:ember_caldera
+[23:47:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:the_end
+[23:47:48] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] step gui_map_ember_caldera
+[23:47:48] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] shot map_ember_caldera
+[23:47:48] [Render thread/INFO] [co.hu.HuntCraft/]: [AUTOTEST] finished, stopping client
+[23:47:48] [Render thread/INFO] [minecraft/Minecraft]: Stopping!
+[23:47:48] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: Dev lost connection: 切断されました
+[23:47:48] [Server thread/INFO] [minecraft/MinecraftServer]: Devがゲームを退出しました
+[23:47:48] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: Stopping singleplayer server as player logged out
+[23:47:48] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[23:47:48] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[23:47:48] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:overworld
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:frostpeak_range
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:hunter_village
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:the_nether
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:verdant_hills
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/huntcraft:ember_caldera
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[hc_autotest]'/minecraft:the_end
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (hc_autotest): All chunks are saved
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (frostpeak_range): All chunks are saved
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (hunter_village): All chunks are saved
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (verdant_hills): All chunks are saved
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (ember_caldera): All chunks are saved
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[23:47:49] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/client-1793317351152.json
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.8/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 5m 23s
+12 actionable tasks: 3 executed, 9 up-to-date
