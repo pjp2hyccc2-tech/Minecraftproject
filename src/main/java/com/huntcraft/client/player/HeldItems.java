@@ -11,6 +11,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -77,7 +78,7 @@ public final class HeldItems {
             if (inHand.getItem() instanceof HunterWeaponItem w && st.action != null && st.actionActive(gt) && st.action.trailActive(st.actionTime(gt, pt))) {
                 sampleTrail(p, st, inHand, w, ps);
             }
-            Minecraft.getInstance().getItemInHandRenderer().renderItem(p, inHand, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, ps, buffers, light);
+            Minecraft.getInstance().getItemRenderer().renderStatic(p, inHand, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, ps, buffers, p.level(), light, OverlayTexture.NO_OVERLAY, p.getId());
             ps.popPose();
         }
         ItemStack left = off;
@@ -86,7 +87,7 @@ public final class HeldItems {
             ps.pushPose();
             model.translateTo("hand_l", ps);
             handChain(ps, true);
-            Minecraft.getInstance().getItemInHandRenderer().renderItem(p, left, ItemDisplayContext.THIRD_PERSON_LEFT_HAND, true, ps, buffers, light);
+            Minecraft.getInstance().getItemRenderer().renderStatic(p, left, ItemDisplayContext.THIRD_PERSON_LEFT_HAND, true, ps, buffers, p.level(), light, OverlayTexture.NO_OVERLAY, p.getId());
             ps.popPose();
         }
         if (!onBack.isEmpty() && onBack.getItem() instanceof HunterWeaponItem w) {
@@ -97,7 +98,7 @@ public final class HeldItems {
             if (sh.rotY != 0) ps.mulPose(Axis.YP.rotationDegrees(sh.rotY));
             ps.mulPose(Axis.ZP.rotationDegrees(sh.rotZ));
             ps.scale(sh.scale, sh.scale, sh.scale);
-            Minecraft.getInstance().getItemInHandRenderer().renderItem(p, onBack, ItemDisplayContext.NONE, false, ps, buffers, light);
+            Minecraft.getInstance().getItemRenderer().renderStatic(p, onBack, ItemDisplayContext.NONE, false, ps, buffers, p.level(), light, OverlayTexture.NO_OVERLAY, p.getId());
             ps.popPose();
         }
     }

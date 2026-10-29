@@ -76,7 +76,7 @@ public final class FirstPersonHands {
             ps.pushPose();
             model.translateTo("hand_r", ps);
             HeldItems.handChain(ps, false);
-            Minecraft.getInstance().getItemInHandRenderer().renderItem(p, main, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, ps, buffers, light);
+            Minecraft.getInstance().getItemRenderer().renderStatic(p, main, ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, false, ps, buffers, p.level(), light, OverlayTexture.NO_OVERLAY, p.getId());
             ps.popPose();
         }
         ItemStack left = off;
@@ -85,7 +85,7 @@ public final class FirstPersonHands {
             ps.pushPose();
             model.translateTo("hand_l", ps);
             HeldItems.handChain(ps, true);
-            Minecraft.getInstance().getItemInHandRenderer().renderItem(p, left, ItemDisplayContext.THIRD_PERSON_LEFT_HAND, true, ps, buffers, light);
+            Minecraft.getInstance().getItemRenderer().renderStatic(p, left, ItemDisplayContext.THIRD_PERSON_LEFT_HAND, true, ps, buffers, p.level(), light, OverlayTexture.NO_OVERLAY, p.getId());
             ps.popPose();
         }
         ps.popPose();
