@@ -50,7 +50,7 @@ public class IgnivaldEntity extends LargeMonster {
             .part(new PartDef("leg_l", -0.9F, 0, -0.3F, 1.2F, 1.9F, HZ_LEG))
             .part(new PartDef("leg_r", 0.9F, 0, -0.3F, 1.2F, 1.9F, HZ_LEG))
             .carves(new RewardTable()
-                    .low(HCItems.IGNIVALD.scale, 30, 1, 2).low(HCItems.IGNIVALD.shell, 25).low(HCItems.IGNIVALD.webbing, 15)
+                    .low(HCItems.IGNIVALD.scale, 30, 1, 2).low(HCItems.IGNIVALD.shell, 25).low(HCItems.IGNIVALD.special, 15)
                     .low(HCItems.IGNIVALD.claw, 15).low(HCItems.MONSTER_BONE_M, 8).low(HCItems.FLAME_SAC, 5).low(HCItems.IGNIVALD.gem, 2)
                     .high(HCItems.IGNIVALD.scalePlus, 28, 1, 2).high(HCItems.IGNIVALD.shellPlus, 22).high(HCItems.IGNIVALD.specialPlus, 14)
                     .high(HCItems.IGNIVALD.clawPlus, 14).high(HCItems.MONSTER_BONE_L, 6).high(HCItems.FLAME_SAC, 8).high(HCItems.IGNIVALD.gemPlus, 2))
@@ -58,11 +58,11 @@ public class IgnivaldEntity extends LargeMonster {
                     .low(HCItems.IGNIVALD.tail, 60).low(HCItems.IGNIVALD.scale, 25).low(HCItems.IGNIVALD.gem, 3)
                     .high(HCItems.IGNIVALD.tail, 55).high(HCItems.IGNIVALD.scalePlus, 30).high(HCItems.IGNIVALD.gemPlus, 3))
             .captureRewards(new RewardTable()
-                    .low(HCItems.IGNIVALD.scale, 30).low(HCItems.IGNIVALD.shell, 25).low(HCItems.IGNIVALD.webbing, 20).low(HCItems.IGNIVALD.gem, 4)
+                    .low(HCItems.IGNIVALD.scale, 30).low(HCItems.IGNIVALD.shell, 25).low(HCItems.IGNIVALD.special, 20).low(HCItems.IGNIVALD.gem, 4)
                     .high(HCItems.IGNIVALD.scalePlus, 30).high(HCItems.IGNIVALD.shellPlus, 25).high(HCItems.IGNIVALD.specialPlus, 20).high(HCItems.IGNIVALD.gemPlus, 4))
             .breakReward("head", new RewardTable().low(HCItems.IGNIVALD.shell, 60).low(HCItems.IGNIVALD.gem, 5).high(HCItems.IGNIVALD.shellPlus, 60).high(HCItems.IGNIVALD.gemPlus, 5))
-            .breakReward("wing_l", new RewardTable().low(HCItems.IGNIVALD.webbing, 80).high(HCItems.IGNIVALD.specialPlus, 80))
-            .breakReward("wing_r", new RewardTable().low(HCItems.IGNIVALD.webbing, 80).high(HCItems.IGNIVALD.specialPlus, 80))
+            .breakReward("wing_l", new RewardTable().low(HCItems.IGNIVALD.special, 80).high(HCItems.IGNIVALD.specialPlus, 80))
+            .breakReward("wing_r", new RewardTable().low(HCItems.IGNIVALD.special, 80).high(HCItems.IGNIVALD.specialPlus, 80))
             .questReward(2400, 90)
             .build();
 
