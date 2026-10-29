@@ -1,0 +1,23 @@
+{
+ "item.huntcraft.jagraptor_spawn_egg": "Jagraptor Spawn Egg",
+ "notes.huntcraft.jagraptor.desc": "A blue raptor striped with orange that hunts in packs across the hills. It harries prey with bites and leaping kicks, and one sharp yip brings every packmate nearby running.",
+ "item.huntcraft.blizraptor_spawn_egg": "Blizraptor Spawn Egg",
+ "notes.huntcraft.blizraptor.desc": "A snow-white raptor of the frozen peaks with a crest of frost. Its bite numbs with cold and it spits shards of ice. Jagraptor and Blizraptor packs are known to answer each other's calls.",
+ "item.huntcraft.boarfang_spawn_egg": "Boarfang Spawn Egg",
+ "notes.huntcraft.boarfang.desc": "A stubborn wild boar with curved tusks. After pawing the ground it charges in a straight line - lure it into a wall and it staggers, dazed. Hunters who get too close are tossed by its tusks.",
+ "item.huntcraft.grasica_spawn_egg": "Grasica Spawn Egg",
+ "notes.huntcraft.grasica.desc": "A gentle deer with a spotted coat and branching antlers. It grazes peacefully but keeps its distance from hunters, and the whole herd bolts the moment one of them is hurt.",
+ "item.huntcraft.gamenos_spawn_egg": "Gamenos Spawn Egg",
+ "notes.huntcraft.gamenos.desc": "A huge, placid tortoise whose plated shell is overgrown with moss and wildflowers. It never starts a fight, but a hurt Gamenos swings its heavy tail at whatever is behind it, or rears up to stomp.",
+ "item.huntcraft.buzzling_spawn_egg": "Buzzling Spawn Egg",
+ "notes.huntcraft.buzzling.desc": "A giant wasp-like insect that hovers on blurring wings. It fires poisonous stingers from afar and dives at its prey. Flash bombs and stuns drop it to the ground, where it is easy to strike.",
+ "item.huntcraft.yukimammo_spawn_egg": "Yukimammo Spawn Egg",
+ "notes.huntcraft.yukimammo.desc": "A shaggy snow mammoth with great curling tusks. Herds graze calmly on the frozen slopes, but a hurt Yukimammo trumpets in anger, then charges, sweeps its tusks and stomps - and the herd joins in.",
+ "item.huntcraft.heatgecko_spawn_egg": "Heatgecko Spawn Egg",
+ "notes.huntcraft.heatgecko.desc": "A lava lizard whose scales glow with magma spots. It spits embers and lobs blobs of lava that leave burning puddles, and flicks its hot tail at anyone sneaking up behind it.",
+ "item.huntcraft.gansekigani_spawn_egg": "Gansekigani Spawn Egg",
+ "notes.huntcraft.gansekigani.desc": "A crab that wears a boulder as its shell. It pinches and slams with its claws, and withdraws under the rock when hit too often - then even blades bounce off. Break the boulder to expose its soft body.",
+ "item.huntcraft.nussutto_mofu_spawn_egg": "Thief Mofu Spawn Egg",
+ "notes.huntcraft.nussutto_mofu.desc": "A mischievous cat-folk thief in a karakusa bandana. It tiptoes up to hunters, snatches an item from their pouch and runs off with the loot held high. Defeat it before it burrows away to get your item back!",
+ "message.huntcraft.mofu_stole": "The Thief Mofu stole your %s!"
+}
