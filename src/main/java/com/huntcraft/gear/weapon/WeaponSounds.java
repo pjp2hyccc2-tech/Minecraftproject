@@ -38,4 +38,11 @@ public final class WeaponSounds {
     public static final RegistryObject<SoundEvent> BOW_DRAW = reg("weapon.bow_draw");
     public static final RegistryObject<SoundEvent> COAT_SWITCH = reg("weapon.coat_switch");
     public static final RegistryObject<SoundEvent> SHARPEN_DONE = reg("weapon.sharpen_done");
+    // combat animation sounds (src/main/sounds/combat.json)
+    public static final RegistryObject<SoundEvent> SHEATHE = reg("combat.sheathe");
+    public static final RegistryObject<SoundEvent> UNSHEATHE = reg("combat.unsheathe");
+    public static final RegistryObject<SoundEvent> KICK = reg("combat.kick");
+    public static final RegistryObject<SoundEvent> HIT_SLASH = reg("combat.hit_slash");
+    public static final RegistryObject<SoundEvent> HIT_BLUNT = reg("combat.hit_blunt");
+    public static final RegistryObject<SoundEvent> KNOCKDOWN = reg("combat.knockdown");
 }

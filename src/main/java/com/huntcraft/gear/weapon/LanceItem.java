@@ -1,6 +1,7 @@
 package com.huntcraft.gear.weapon;
 
 import com.huntcraft.core.WeaponClass;
+import com.huntcraft.gear.weapon.action.CombatActions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -33,6 +34,7 @@ public class LanceItem extends HunterWeaponItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player p, InteractionHand hand) {
         ItemStack stack = p.getItemInHand(hand);
         if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(stack);
+        if (CombatActions.isBusy(p)) return InteractionResultHolder.fail(stack);
         WeaponState s = WeaponState.get(p);
         if (p.isShiftKeyDown()) {
             if (s.dashTicks > 0) return InteractionResultHolder.fail(stack);
@@ -42,7 +44,10 @@ public class LanceItem extends HunterWeaponItem {
             }
             s.dashTicks = DASH_TICKS;
             s.markDirty();
-            if (!level.isClientSide) playSound(p, WeaponSounds.DASH.get(), 1.0F, 1.0F);
+            if (!level.isClientSide) {
+                CombatActions.cancel((ServerPlayer) p, true);
+                playSound(p, WeaponSounds.DASH.get(), 1.0F, 1.0F);
+            }
             p.getCooldowns().addCooldown(this, DASH_TICKS + 16);
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
         }
@@ -51,16 +56,13 @@ public class LanceItem extends HunterWeaponItem {
     }
 
     @Override
-    public void guardAttack(ServerPlayer p, ItemStack stack) {
+    public String guardAction(ServerPlayer p, ItemStack stack) {
         WeaponState s = WeaponState.get(p);
-        if (s.counterCooldown > 0) return;
+        if (s.counterCooldown > 0) return null;
         s.counterCooldown = 12;
         boolean counter = p.level().getGameTime() - s.lastGuardHit <= 30;
-        float mv = counter ? 0.55F : 0.36F;
-        special(p, () -> WeaponHits.cone(p, 4.4, 36F, mv, (t, ctx) -> ctx.sharpnessCost = counter ? 2 : 1));
-        playSound(p, counter ? WeaponSounds.COUNTER.get() : WeaponSounds.SWING_LIGHT.get(), 1.0F, counter ? 1.0F : 0.8F);
-        WeaponFx.send(p, counter ? ParticleTypes.ENCHANTED_HIT : ParticleTypes.CRIT, WeaponHits.front(p, 2.6, 1.3), counter ? 16 : 6, 0.2, 0.2, 0.2, 0.25);
         if (counter) s.lastGuardHit = -1000;
+        return counter ? "ln_counter" : "ln_poke";
     }
 
     @Override
@@ -76,15 +78,8 @@ public class LanceItem extends HunterWeaponItem {
                 if (s.dashTicks % 8 == 0) playSound(p, WeaponSounds.DASH.get(), 0.6F, 1.1F);
             }
             if (tired && s.dashTicks > 2) s.dashTicks = 0;
-            if (s.dashTicks == 0) finisher(p);
+            if (s.dashTicks == 0) CombatActions.start(p, "ln_dash_finish");
         }
-    }
-
-    private void finisher(ServerPlayer p) {
-        special(p, () -> WeaponHits.cone(p, 4.0, 50F, 0.60F, (t, ctx) -> ctx.sharpnessCost = 2));
-        playSound(p, WeaponSounds.COUNTER.get(), 1.0F, 0.8F);
-        WeaponFx.send(p, ParticleTypes.ENCHANTED_HIT, WeaponHits.front(p, 2.4, 1.2), 14, 0.3, 0.3, 0.3, 0.25);
-        WeaponFx.sweep(p, 2.0, 2);
     }
 
     @Override

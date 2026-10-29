@@ -1,11 +1,14 @@
 package com.huntcraft.gear.weapon;
 
 import com.huntcraft.HuntCraft;
+import com.huntcraft.core.HunterDamage;
 import com.huntcraft.core.HunterSkills;
 import com.huntcraft.core.SkillType;
 import com.huntcraft.core.WeaponClass;
 import com.huntcraft.data.HunterData;
 import com.huntcraft.entity.monster.HuntMonster;
+import com.huntcraft.gear.weapon.action.ActionDef;
+import com.huntcraft.gear.weapon.action.CombatActions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -58,6 +61,7 @@ public class LongSwordItem extends HunterWeaponItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player p, InteractionHand hand) {
         ItemStack stack = p.getItemInHand(hand);
         if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(stack);
+        if (CombatActions.isBusy(p)) return InteractionResultHolder.fail(stack);
         if (p.isShiftKeyDown()) {
             foresight(level, p, stack);
             p.getCooldowns().addCooldown(this, 30);
@@ -72,37 +76,26 @@ public class LongSwordItem extends HunterWeaponItem {
 
     private void spiritBlade(ServerPlayer p, ItemStack stack, WeaponState s, int step) {
         boolean powered = s.spirit >= SPIRIT_COST || p.getAbilities().instabuild;
+        if (!CombatActions.start(p, "ls_spirit" + (step + 1))) return;
         if (powered) s.spirit = Math.max(0, s.spirit - SPIRIT_COST);
-        float mv = switch (step) {
-            case 0 -> 0.30F;
-            case 1 -> 0.34F;
-            default -> 0.42F;
-        };
-        if (!powered) mv *= 0.6F;
-        float fmv = mv;
-        int[] hits = new int[1];
-        special(p, () -> {
-            if (step == 2) {
-                hits[0] = WeaponHits.area(p, p.position().add(0, 1.0, 0), 3.4, fmv, null);
-            } else {
-                hits[0] = WeaponHits.cone(p, 3.6 + 0.2 * step, step == 0 ? 90F : 130F, fmv, null);
-            }
-        });
-        playSound(p, WeaponSounds.SPIRIT_SLASH.get(), 1.0F, 0.9F + 0.15F * step);
-        if (step == 2) {
-            WeaponFx.send(p, ParticleTypes.SWEEP_ATTACK, p.position().add(0, 1.0, 0), 8, 1.4, 0.1, 1.4, 0.0);
-        } else {
-            WeaponFx.sweep(p, 1.8, 3);
-        }
+        s.act.flag = powered;
         if (powered) {
             WeaponFx.send(p, WeaponFx.dust(0xFF3A2A, 1.0F), WeaponHits.front(p, 1.6, 1.1), 14, 0.8, 0.4, 0.8, 0.0);
-        }
-        if (step == 2 && powered && hits[0] > 0) {
-            raiseLevel(p, s);
         }
         s.spiritStep = (step + 1) % 3;
         s.lastSpiritTime = p.level().getGameTime();
         s.markDirty();
+    }
+
+    @Override
+    public void configureActionHit(ServerPlayer p, ItemStack stack, ActionDef def, ActionDef.Hit hit, WeaponHits.Target target, HunterDamage.Context ctx) {
+        if (def.name.startsWith("ls_spirit") && !WeaponState.get(p).act.flag) ctx.motionValue *= 0.6F;
+    }
+
+    @Override
+    public void onActionHitDone(ServerPlayer p, ItemStack stack, ActionDef def, ActionDef.Hit hit, int hits) {
+        WeaponState s = WeaponState.get(p);
+        if ("ls_spirit3".equals(def.name) && s.act.flag && hits > 0) raiseLevel(p, s);
     }
 
     private void raiseLevel(ServerPlayer p, WeaponState s) {
@@ -122,6 +115,7 @@ public class LongSwordItem extends HunterWeaponItem {
             return;
         }
         ServerPlayer sp = (ServerPlayer) p;
+        if (!CombatActions.start(sp, "ls_foresight")) return;
         WeaponState s = WeaponState.get(p);
         HunterData d = HunterData.get(p);
         d.iframes = Math.max(d.iframes, 12 + 2 * HunterSkills.level(p, SkillType.EVADE_WINDOW));
@@ -135,12 +129,6 @@ public class LongSwordItem extends HunterWeaponItem {
         s.markDirty();
         playSound(p, WeaponSounds.FORESIGHT.get(), 1.0F, 1.0F);
         WeaponFx.send(p, ParticleTypes.CLOUD, p.position().add(0, 0.2, 0), 8, 0.4, 0.05, 0.4, 0.02);
-        s.schedule(p, 6, sp2 -> {
-            if (sp2.getMainHandItem().getItem() != this) return;
-            special(sp2, () -> WeaponHits.cone(sp2, 3.8, 110F, 0.32F, null));
-            playSound(sp2, WeaponSounds.SPIRIT_SLASH.get(), 1.0F, 1.3F);
-            WeaponFx.sweep(sp2, 1.8, 4);
-        });
         // also check right away (an attack landing this very tick)
         checkDodge(sp, s);
     }

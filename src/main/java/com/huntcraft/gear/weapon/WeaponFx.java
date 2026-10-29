@@ -56,7 +56,7 @@ public final class WeaponFx {
     /** Small aura while holding a charge. */
     public static void chargeAura(Player p, int level) {
         Vec3 h = hand(p);
-        send(p, dust(chargeColor(level), 0.9F), h, 2 + level, 0.25, 0.3, 0.25, 0.0);
+        send(p, dust(chargeColor(level), 0.7F), h, 1 + level / 2, 0.25, 0.3, 0.25, 0.0);
     }
 
     /** Ground impact: dust ring with block particles, explosion puff and camera shake. */

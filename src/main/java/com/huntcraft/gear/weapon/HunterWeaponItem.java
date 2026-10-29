@@ -3,6 +3,7 @@ package com.huntcraft.gear.weapon;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.huntcraft.core.Element;
+import com.huntcraft.core.HunterDamage;
 import com.huntcraft.core.HunterSkills;
 import com.huntcraft.core.IHunterWeapon;
 import com.huntcraft.core.IUpgradeable;
@@ -11,6 +12,7 @@ import com.huntcraft.core.SkillType;
 import com.huntcraft.core.SmithingRegistry;
 import com.huntcraft.core.WeaponClass;
 import com.huntcraft.data.HunterData;
+import com.huntcraft.gear.weapon.action.ActionDef;
 import com.huntcraft.item.MaterialItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -136,42 +138,60 @@ public abstract class HunterWeaponItem extends Item implements IHunterWeapon, IU
         setSharpnessPoints(stack, sharpnessPoints(stack, player) - amount);
     }
 
-    // ================================================================== left click
-    /** Advances the combo and returns the motion value of this swing. */
-    public float nextComboMV(Player p) {
-        WeaponState s = WeaponState.get(p);
-        long now = p.level().getGameTime();
-        if (now - s.lastSwing > WeaponTuning.comboReset(weaponClass) || now < s.lastSwing) s.combo = 0;
-        float[] mvs = WeaponTuning.combo(weaponClass);
-        float v = mvs[Math.floorMod(s.combo, mvs.length)];
-        s.combo = (s.combo + 1) % mvs.length;
-        s.lastSwing = now;
-        return v;
+    // ================================================================== left click / combat actions
+    /** Short id used by the action names of this class (gs_combo1, ls_spirit1, ...). */
+    public String actionPrefix() {
+        return switch (weaponClass) {
+            case GREAT_SWORD -> "gs";
+            case LONG_SWORD -> "ls";
+            case SWORD_AND_SHIELD -> "sns";
+            case DUAL_BLADES -> "db";
+            case HAMMER -> "hm";
+            case LANCE -> "ln";
+            case HUNTING_HORN -> "hh";
+            case BOW -> "bow";
+        };
     }
 
-    /** Called for every left click swing (entity hit or air swing). Returns the motion value. */
-    protected float onLeftClick(Player p, ItemStack stack) {
-        return nextComboMV(p);
+    /** First action of the left click chain (the chain continues through ActionDef.next). */
+    public String comboStart(ServerPlayer p, ItemStack stack, boolean sneak) {
+        return actionPrefix() + "_combo1";
+    }
+
+    /** Action started by the attack key while guarding (null = nothing). */
+    @Nullable
+    public String guardAction(ServerPlayer p, ItemStack stack) {
+        return null;
+    }
+
+    /** Server: an action of this weapon started (gauges, notes, sounds...). */
+    public void onActionStart(ServerPlayer p, ItemStack stack, ActionDef def) {
+    }
+
+    /** Server: every tick of a running action (t = ticks since start). */
+    public void onActionTick(ServerPlayer p, ItemStack stack, ActionDef def, int t) {
+    }
+
+    /** Server: the action ended (naturally or interrupted). */
+    public void onActionEnd(ServerPlayer p, ItemStack stack, ActionDef def, boolean interrupted) {
+    }
+
+    /** Server: per target damage context tweaks of a hit window (motion value scaling, KO...). */
+    public void configureActionHit(ServerPlayer p, ItemStack stack, ActionDef def, ActionDef.Hit hit, WeaponHits.Target target, HunterDamage.Context ctx) {
+    }
+
+    /** Server: a hit window was applied (hits = number of entities struck). */
+    public void onActionHitDone(ServerPlayer p, ItemStack stack, ActionDef def, ActionDef.Hit hit, int hits) {
     }
 
     @Override
     public float getLeftClickMotionValue(Player player, ItemStack stack, LivingEntity target) {
-        return onLeftClick(player, stack);
+        float[] mvs = WeaponTuning.combo(weaponClass);
+        return mvs[0];
     }
 
     public double swingRange() {
         return 3.2 + WeaponTuning.reachBonus(weaponClass);
-    }
-
-    /** Server: left click that hit air or a block. Hits what is in the swing cone (big monster parts are easy to miss). */
-    public void airSwing(ServerPlayer p, ItemStack stack, float strength) {
-        float mv = onLeftClick(p, stack) * (0.2F + strength * strength * 0.8F);
-        WeaponHits.cone(p, swingRange(), WeaponTuning.swingCone(weaponClass), mv, null);
-        swingSound(p, 0.6F + 0.4F * strength);
-    }
-
-    /** Server: left click while holding right click (lance counter, guard slash...). */
-    public void guardAttack(ServerPlayer p, ItemStack stack) {
     }
 
     protected boolean heavy() {
@@ -203,7 +223,7 @@ public abstract class HunterWeaponItem extends Item implements IHunterWeapon, IU
     }
 
     /** Runs a special move: gauge filling is suppressed while it executes. */
-    protected static void special(Player p, Runnable r) {
+    public static void special(Player p, Runnable r) {
         WeaponState s = WeaponState.get(p);
         boolean old = s.special;
         s.special = true;
@@ -288,7 +308,7 @@ public abstract class HunterWeaponItem extends Item implements IHunterWeapon, IU
 
     /** Server: every tick while charging. */
     protected void chargeTick(Player p, ItemStack stack, int used, int level) {
-        if (level > 0 && used % 4 == 0) WeaponFx.chargeAura(p, level);
+        if (level > 0 && used % 6 == 0) WeaponFx.chargeAura(p, level);
     }
 
     @Override

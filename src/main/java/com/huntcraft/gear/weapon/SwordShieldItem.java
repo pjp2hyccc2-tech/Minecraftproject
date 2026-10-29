@@ -1,10 +1,9 @@
 package com.huntcraft.gear.weapon;
 
-import com.huntcraft.core.DamageKind;
 import com.huntcraft.core.WeaponClass;
+import com.huntcraft.gear.weapon.action.CombatActions;
 import com.huntcraft.registry.HCItems;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -54,33 +53,22 @@ public class SwordShieldItem extends HunterWeaponItem {
         if (p.isShiftKeyDown()) {
             // pass to the off hand: Minecraft then uses the off-hand item (potion, bomb, trap...) without sheathing
             if (isQuickUsable(p.getOffhandItem())) return InteractionResultHolder.pass(stack);
-            if (!level.isClientSide) shieldBash((ServerPlayer) p);
+            if (CombatActions.isBusy(p)) return InteractionResultHolder.fail(stack);
+            if (!level.isClientSide) CombatActions.start((ServerPlayer) p, "sns_bash");
             p.getCooldowns().addCooldown(this, 18);
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
         }
+        if (CombatActions.isBusy(p)) return InteractionResultHolder.fail(stack);
         beginUse(p, hand, WeaponState.MODE_GUARD);
         return InteractionResultHolder.consume(stack);
     }
 
-    private void shieldBash(ServerPlayer p) {
-        special(p, () -> WeaponHits.cone(p, 3.0, 70F, 0.24F, (t, ctx) -> {
-            ctx.kind = DamageKind.BLUNT;
-            ctx.extraKO = t.isKoZone() ? 14.0F : 4.0F;
-            ctx.canBounce = false;
-            ctx.useSharpness = false;
-        }));
-        playSound(p, WeaponSounds.BASH.get(), 1.0F, 1.0F);
-        WeaponFx.send(p, ParticleTypes.CRIT, WeaponHits.front(p, 1.4, 1.2), 12, 0.4, 0.4, 0.4, 0.2);
-    }
-
     @Override
-    public void guardAttack(ServerPlayer p, ItemStack stack) {
+    public String guardAction(ServerPlayer p, ItemStack stack) {
         WeaponState s = WeaponState.get(p);
-        if (s.counterCooldown > 0) return;
+        if (s.counterCooldown > 0) return null;
         s.counterCooldown = 8;
-        float mv = nextComboMV(p);
-        WeaponHits.cone(p, swingRange(), 90F, mv, null);
-        swingSound(p, 0.8F);
+        return "sns_guard_slash";
     }
 
     @Override

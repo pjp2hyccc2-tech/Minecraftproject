@@ -1,9 +1,12 @@
 package com.huntcraft.gear.weapon;
 
 import com.huntcraft.HuntCraft;
+import com.huntcraft.core.HCEvents;
 import com.huntcraft.data.HunterData;
 import com.huntcraft.entity.monster.HuntMonster;
+import com.huntcraft.gear.weapon.action.CombatActions;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,15 +39,28 @@ public final class WeaponEvents {
         ItemStack main = p.getMainHandItem();
         Item held = main.getItem();
         if (held != s.lastHeld) {
+            boolean wasWeapon = s.lastHeld instanceof HunterWeaponItem;
+            boolean isWeapon = held instanceof HunterWeaponItem;
             if (s.lastHeld instanceof HunterWeaponItem old) old.onUnequip(p, s);
             s.resetWeaponState();
             if (s.sharpenLeft > 0 && s.sharpenSlot != Sharpening.OFFHAND && s.sharpenSlot != p.getInventory().selected
                     && Sharpening.stackAt(p, s.sharpenSlot).isEmpty()) {
                 Sharpening.cancel(p, s);
             }
+            boolean first = s.lastHeld == null;
             s.lastHeld = held;
+            if (!first) {
+                CombatActions.cancel(p, true);
+                if (wasWeapon && !isWeapon) CombatActions.start(p, "sheathe");
+                else if (!wasWeapon && isWeapon) CombatActions.start(p, "unsheathe");
+            }
         }
         runScheduled(p, s);
+        try {
+            CombatActions.tick(p, s);
+        } catch (Exception e) {
+            HuntCraft.LOGGER.error("Combat action tick failed", e);
+        }
         Sharpening.tick(p, s);
         if (held instanceof HunterWeaponItem w) {
             try {
@@ -115,6 +131,42 @@ public final class WeaponEvents {
         if (event.getEntity() instanceof ServerPlayer p) {
             float m = HornSongs.defenseMultiplier(p);
             if (m < 1.0F) event.setAmount(event.getAmount() * m);
+        }
+    }
+
+    /** Flinch / knockdown reactions to monster hits (final damage amount). */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onHurtReaction(LivingHurtEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer p) || event.getAmount() <= 0) return;
+        if (!(event.getSource().getEntity() instanceof HuntMonster)) return;
+        if (HunterData.get(p).guardPower > 0) return;
+        CombatActions.react(p, event.getAmount());
+    }
+
+    /** Carving animation when interacting with a carcass. */
+    @SubscribeEvent
+    public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+        if (event.getLevel().isClientSide || !(event.getEntity() instanceof ServerPlayer p)) return;
+        if (event.getHand() == InteractionHand.MAIN_HAND && event.getTarget() instanceof HuntMonster m && m.isCarcass() && !CombatActions.isBusy(p)) {
+            CombatActions.start(p, "carve");
+        }
+    }
+
+    /** Victory pose for the hunter who finished a large monster. */
+    @SubscribeEvent
+    public static void onHunted(HCEvents.MonsterHuntedEvent event) {
+        if (event.getPlayer() instanceof ServerPlayer p && event.getMonster().profile().large && !CombatActions.isBusy(p)) {
+            WeaponState.get(p).schedule(p, 25, sp -> {
+                if (!CombatActions.isBusy(sp)) CombatActions.start(sp, "victory");
+            });
+        }
+    }
+
+    /** A player comes into view: resend its animation state. */
+    @SubscribeEvent
+    public static void onStartTracking(PlayerEvent.StartTracking event) {
+        if (event.getTarget() instanceof ServerPlayer target && event.getEntity() instanceof ServerPlayer viewer) {
+            CombatActions.onStartTracking(target, viewer);
         }
     }
 

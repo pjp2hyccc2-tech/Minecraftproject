@@ -1,8 +1,11 @@
 package com.huntcraft.gear.weapon;
 
 import com.huntcraft.core.WeaponClass;
+import com.huntcraft.gear.weapon.action.ActionDef;
+import com.huntcraft.gear.weapon.action.CombatActions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -44,29 +47,24 @@ public class GreatSwordItem extends HunterWeaponItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(stack);
+        if (CombatActions.isBusy(player)) return InteractionResultHolder.fail(stack);
         beginUse(player, hand, player.isShiftKeyDown() ? WeaponState.MODE_GUARD : WeaponState.MODE_CHARGE);
         return InteractionResultHolder.consume(stack);
     }
 
     @Override
     protected void onChargeRelease(Level level, Player p, ItemStack stack, int used, int chargeLevel) {
-        if (used < 3) return;
+        if (used < 3 || level.isClientSide) return;
         int lv = isOvercharged(p, used) ? 2 : chargeLevel;
-        p.swing(InteractionHand.MAIN_HAND);
-        if (level.isClientSide) return;
-        float mv = SLAM_MV * CHARGE_MULT[lv];
-        double range = 4.0 + 0.2 * lv;
-        float cone = 110F + 10F * lv;
-        special(p, () -> WeaponHits.cone(p, range, cone, mv, (t, ctx) -> {
-            ctx.sharpnessCost = 2;
-            ctx.elementMult = 1.0F + 0.15F * lv;
-            ctx.statusMult = 1.0F + 0.15F * lv;
-        }));
-        playSound(p, WeaponSounds.SWING_HEAVY.get(), 1.0F, 0.7F);
-        playSound(p, WeaponSounds.SLAM.get(), 0.4F + 0.2F * lv, 1.3F - 0.1F * lv);
-        WeaponFx.sweep(p, 2.2, 3 + lv);
-        WeaponFx.slam(p, WeaponHits.front(p, 2.4, 0.1), 0.5F + 0.5F * lv);
-        WeaponFx.element(p, getElement(stack), WeaponHits.front(p, 2.4, 1.0), 6 + 4 * lv);
+        CombatActions.start((ServerPlayer) p, "gs_charge" + lv);
+    }
+
+    @Override
+    public void onActionHitDone(ServerPlayer p, ItemStack stack, ActionDef def, ActionDef.Hit hit, int hits) {
+        if (def.name.startsWith("gs_charge")) {
+            int lv = def.tagInt("charge", 0);
+            WeaponFx.element(p, getElement(stack), WeaponHits.front(p, 2.4, 1.0), 6 + 4 * lv);
+        }
     }
 
     @Override

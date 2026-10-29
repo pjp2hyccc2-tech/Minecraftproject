@@ -4,8 +4,9 @@ import com.huntcraft.core.HunterSkills;
 import com.huntcraft.core.SkillType;
 import com.huntcraft.core.WeaponClass;
 import com.huntcraft.data.HunterData;
+import com.huntcraft.gear.weapon.action.ActionDef;
+import com.huntcraft.gear.weapon.action.CombatActions;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -60,6 +61,7 @@ public class DualBladesItem extends HunterWeaponItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player p, InteractionHand hand) {
         ItemStack stack = p.getItemInHand(hand);
         if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(stack);
+        if (CombatActions.isBusy(p)) return InteractionResultHolder.fail(stack);
         WeaponState s = WeaponState.get(p);
         if (p.isShiftKeyDown() && (s.demon || s.archdemon)) {
             if (!level.isClientSide) {
@@ -98,37 +100,26 @@ public class DualBladesItem extends HunterWeaponItem {
     }
 
     private void bladeDance(ServerPlayer p, WeaponState s) {
-        if (!useStamina(p, 25.0F)) {
-            p.displayClientMessage(Component.translatable("message.huntcraft.weapon.no_stamina").withStyle(ChatFormatting.GRAY), true);
-            return;
-        }
-        playSound(p, WeaponSounds.BLADE_DANCE.get(), 1.0F, 1.0F);
-        for (int i = 0; i < 7; i++) {
-            final int k = i;
-            s.schedule(p, i * 3, sp -> {
-                if (sp.getMainHandItem().getItem() != this) return;
-                float mv = k == 6 ? 0.28F : 0.15F;
-                Vec3 c = WeaponHits.front(sp, 1.0, 1.0);
-                special(sp, () -> WeaponHits.area(sp, c, 2.8, mv, null));
-                WeaponFx.send(sp, ParticleTypes.SWEEP_ATTACK, c, 2, 0.9, 0.2, 0.9, 0.0);
-                WeaponFx.send(sp, WeaponFx.dust(0xE0201A, 1.0F), c, 6, 1.0, 0.4, 1.0, 0.0);
-                if (k % 2 == 0) playSound(sp, WeaponSounds.SWING_LIGHT.get(), 0.7F, 1.2F + 0.05F * k);
-            });
-        }
+        // stamina cost is on the action definition (25)
+        CombatActions.start(p, "db_dance");
     }
 
     private void demonFlurry(ServerPlayer p, WeaponState s) {
         if (s.demonGauge < 25.0F && !p.getAbilities().instabuild) return;
+        if (!CombatActions.start(p, "db_flurry")) return;
         s.demonGauge = Math.max(0, s.demonGauge - 25.0F);
         if (s.demonGauge <= 0) s.archdemon = false;
         s.markDirty();
-        for (int i = 0; i < 3; i++) {
-            s.schedule(p, i * 4, sp -> {
-                if (sp.getMainHandItem().getItem() != this) return;
-                special(sp, () -> WeaponHits.cone(sp, 3.4, 110F, 0.18F, null));
-                WeaponFx.sweep(sp, 1.6, 2);
-                playSound(sp, WeaponSounds.SWING_LIGHT.get(), 0.8F, 1.3F);
-            });
+    }
+
+    @Override
+    public void onActionHitDone(ServerPlayer p, ItemStack stack, ActionDef def, ActionDef.Hit hit, int hits) {
+        if ("db_dance".equals(def.name)) {
+            Vec3 c = WeaponHits.front(p, 1.0, 1.0);
+            WeaponFx.send(p, WeaponFx.dust(0xE0201A, 1.0F), c, 6, 1.0, 0.4, 1.0, 0.0);
+            if ((hit.tick() / 3) % 2 == 0) playSound(p, WeaponSounds.SWING_LIGHT.get(), 0.7F, 1.2F + 0.02F * hit.tick());
+        } else if ("db_flurry".equals(def.name)) {
+            playSound(p, WeaponSounds.SWING_LIGHT.get(), 0.8F, 1.3F);
         }
     }
 
