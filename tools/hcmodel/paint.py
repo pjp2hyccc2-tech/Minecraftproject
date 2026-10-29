@@ -432,8 +432,8 @@ def _fmax():
 
 
 def _grain(X, Y, seed, amp, mat):
-    f = min(1.5, _fmax())
-    return (vnoise2(X * f, Y * f, seed) - 0.5) * amp * mat.micro
+    f = min(1.2, _fmax())
+    return (vnoise2(X * f, Y * f, seed) - 0.5) * amp * 0.6 * mat.micro
 
 
 def _edge_width(px, K):
@@ -442,16 +442,26 @@ def _edge_width(px, K):
 
 
 def _scales_hd(mat, X, Y, fw, fh, seed, out):
+    """Overlapping reptile scales: staggered rows of rounded (U-shaped) scales, each a soft dome with a lit
+    shoulder, a glossy hot-spot, faint concentric growth arcs, a thin lit rim along its free edge and the
+    shadow it casts onto the row below.  Rows undulate slightly so the lattice is not ruler-straight."""
     s = mat.scale
     sw, sh = 5.0 * s, 4.0 * s
-    rowf = Y / sh
+    Yw = Y + np.sin(X * 0.22 / s + vnoise2(X * 0.05 / s, Y * 0.05 / s, seed + 9) * 3.0) * 0.16 * s
+
+    def edge_of(cx, coli, rowi):
+        a = np.clip(2 * cx - 1, -1, 1)
+        jit = (hash2(coli, rowi, seed + 7) - 0.5) * 0.08
+        return 0.58 + 0.42 * np.sqrt(np.clip(1 - a * a, 0, 1)) + jit     # round U: 1 at the centre, 0.58 at the sides
+
+    rowf = Yw / sh
     row = np.floor(rowf)
     cy = rowf - row
     off = (row.astype(np.int64) % 2) * 0.5
     colf = X / sw + off
     col = np.floor(colf)
     cx = colf - col
-    yedge = 1 - 0.42 * (2 * cx - 1) ** 2
+    yedge = edge_of(cx, col.astype(np.int64), row.astype(np.int64))
     below = cy > yedge
     row2 = row + 1
     off2 = (row2.astype(np.int64) % 2) * 0.5
@@ -462,24 +472,24 @@ def _scales_hd(mat, X, Y, fw, fh, seed, out):
     col = np.where(below, col2, col)
     cx = np.where(below, cx2, cx)
     cy = np.where(below, cy - 1, cy)
-    yedge = 1 - 0.42 * (2 * cx - 1) ** 2
-    t = (cy + 0.45) / (yedge + 0.45)                      # 0 hidden top .. 1 bottom edge
-    dome = np.sqrt(np.clip(1 - ((2 * cx - 1) * 0.92) ** 2, 0, 1))
     coli, rowi = col.astype(np.int64), row.astype(np.int64)
-    jit = (hash2(coli, rowi, seed) - 0.5) * 0.14
-    overlap = 1 - smoothstep(0.0, 0.30, t)
+    yedge = edge_of(cx, coli, rowi)
+    t = (cy + 0.42) / (yedge + 0.42)                      # 0 hidden top .. 1 free edge
+    a = np.clip(2 * cx - 1, -1, 1)
+    dome = np.sqrt(np.clip(1 - (a * 0.94) ** 2, 0, 1))
+    jit = (hash2(coli, rowi, seed) - 0.5) * 0.12
+    overlap = 1 - smoothstep(0.0, 0.32, t)                # shadow of the scales above
     ew = _edge_width(sh, _CUR_K * _CUR_DETAIL)
-    rim = smoothstep(0.92 - 3 * ew, 0.94 - ew, t) * (1 - smoothstep(0.95 - ew, 1.0 - ew * 0.5, t))
-    spec = np.exp(-(((cx - 0.42) / 0.24) ** 2 + ((t - 0.42) / 0.24) ** 2))
-    d = jit + 0.10 - t * 0.26 + dome * 0.16 - overlap * 0.26 + rim * 0.12 + spec * 0.10
-    d -= 0.18 * smoothstep(1.0 - ew, 1.0, t)
-    # faint keel line and fine radial ridges on every scale, plus micro grain
-    d += np.exp(-((cx - 0.5) / 0.08) ** 2) * 0.025
-    d += np.sin((cx - 0.5) * 22.0) * 0.012 * smoothstep(0.35, 0.9, t) * mat.micro
-    d += _grain(X, Y, seed + 4, 0.035, mat)
-    out['height'] = np.clip(dome * 0.5 + (1 - t) * 0.5 - overlap * 0.35, 0, 1)
+    rim = smoothstep(0.90 - 3 * ew, 0.93 - ew, t) * (1 - smoothstep(0.95 - ew, 1.0 - ew * 0.5, t))
+    edge = smoothstep(1.0 - ew, 1.0, t)
+    spec = np.exp(-(((cx - 0.44) / 0.22) ** 2 + ((t - 0.40) / 0.22) ** 2))
+    growth = np.sin(t * 19.0 + a * a * 2.0) * 0.012 * smoothstep(0.3, 0.8, t) * mat.micro
+    d = jit + 0.10 - t * 0.24 + dome * 0.15 - overlap * 0.24 + rim * 0.10 + spec * 0.10 - edge * 0.2 + growth
+    d += np.exp(-(a / 0.14) ** 2) * 0.02                  # faint keel
+    d += _grain(X, Y, seed + 4, 0.03, mat)
+    out['height'] = np.clip(dome * 0.45 + (1 - t) * 0.45 - overlap * 0.35 - edge * 0.3 + 0.1, 0, 1)
     out['outline'] = t > 1.0 - ew
-    out['ao'] = overlap * 0.55 + smoothstep(1.0 - ew, 1.0, t) * 0.5
+    out['ao'] = overlap * 0.55 + edge * 0.5
     hv = (hash2(coli, rowi, seed + 3) - 0.5) * 0.08
     out['tint'] = np.stack([1 + hv, 1 + hv * 0.3, 1 - hv], -1)
     return d
@@ -492,7 +502,9 @@ def _plates_hd(mat, X, Y, fw, fh, seed, out):
     s = mat.scale
     pw, ph = 7.0 * s, 5.0 * s
     K = _CUR_K * _CUR_DETAIL
-    Yw = Y + np.sin(X * 0.35 / s + vnoise2(X * 0.08 / s, Y * 0.08 / s, seed + 9) * 4.0) * 0.22 * s
+    # organic warp: rows undulate, column seams wobble (no straight brick courses)
+    Yw = Y + np.sin(X * 0.3 / s + vnoise2(X * 0.07 / s, Y * 0.07 / s, seed + 9) * 4.0) * 0.24 * s
+    Xw = X + (vnoise2(X * 0.2 / s + 3.0, Y * 0.2 / s, seed + 8) - 0.5) * 1.5 * s
 
     def plate(rowf, X):
         row = np.floor(rowf)
@@ -503,48 +515,52 @@ def _plates_hd(mat, X, Y, fw, fh, seed, out):
         col = np.floor(colf)
         coli = col.astype(np.int64)
         cx = colf - col
-        arc = 0.16 + hash2(coli, rowi, seed + 2) * 0.16
-        yedge = 1 - arc * (2 * cx - 1) ** 2
+        a = np.abs(2 * cx - 1)
+        arc = 0.06 + hash2(coli, rowi, seed + 2) * 0.10
+        yedge = 1 - arc * a * a - 2.2 * np.clip(a - 0.7, 0, 1) ** 2      # shallow arc with rounded corners
         chip_pos = 0.15 + hash2(coli, rowi, seed + 3) * 0.7
-        has_chip = hash2(coli, rowi, seed + 4) > 0.45
-        chip_d = 0.07 + hash2(coli, rowi, seed + 5) * 0.09
-        yedge = yedge - chip_d * np.exp(-((cx - chip_pos) / 0.05) ** 2) * has_chip
+        has_chip = hash2(coli, rowi, seed + 4) > 0.55
+        chip_d = 0.06 + hash2(coli, rowi, seed + 5) * 0.08
+        yedge = yedge - chip_d * np.exp(-((cx - chip_pos) / 0.045) ** 2) * has_chip
         return rowi, coli, cx, cy, yedge
 
     rowf = Yw / ph
-    rowi, coli, cx, cy, yedge = plate(rowf, X)
+    rowi, coli, cx, cy, yedge = plate(rowf, Xw)
     below = cy > yedge
-    rowi2, coli2, cx2, cy2, yedge2 = plate(rowf + 1, X)
+    rowi2, coli2, cx2, cy2, yedge2 = plate(rowf + 1, Xw)
     rowi = np.where(below, rowi2, rowi)
     coli = np.where(below, coli2, coli)
     cx = np.where(below, cx2, cx)
     cy = np.where(below, cy2 - 1, cy)
     yedge = np.where(below, yedge2, yedge)
     t = (cy + 0.32) / (yedge + 0.32)                       # 0 hidden top .. 1 lower edge
+    a = np.abs(2 * cx - 1)
     ew = _edge_width(ph, K)
-    overlap = (1 - smoothstep(0.0, 0.30, t)) * 0.22        # shadow cast by the plate above
-    rim = smoothstep(1 - 4.0 * ew, 1 - 2.0 * ew, t) * (1 - smoothstep(1 - 1.6 * ew, 1 - 0.7 * ew, t))
+    overlap = (1 - smoothstep(0.0, 0.28, t)) * 0.20        # shadow cast by the plate above
     edge = smoothstep(1 - 0.9 * ew, 1.0, t)
-    # side overlap: the left neighbour lies over this plate's left edge; this plate's right edge is bevelled
+    # distances (model px) to the lower edge and to the side seams -> bevelled rim all around the plate
     sl = cx * pw
     sr = (1 - cx) * pw
-    lshadow = (1 - smoothstep(0.0, 0.7 * s, sl)) * 0.14
-    rbevel = smoothstep(0.9 * s, 0.4 * s, sr) * (1 - smoothstep(0.22 * s, 0.08 * s, sr)) * 0.07
-    redge = 1 - smoothstep(0.0, 0.12 * s, sr)
-    dome = 1 - (2 * cx - 1) ** 2 * 0.30 - ((t - 0.55) * 2) ** 2 * 0.18
+    db = np.clip((yedge - cy) * ph, 0, None)
+    inside = np.minimum(np.minimum(sl, sr), db)
+    bevel = smoothstep(0.0, 1.0 * s, inside)
+    seam = 1 - smoothstep(0.0, 0.14 * s, np.minimum(sl, sr))
+    lshadow = (1 - smoothstep(0.0, 0.6 * s, sl)) * 0.10    # the left neighbour lies over this plate's edge
+    dome = 1 - a * a * 0.22 - ((t - 0.5) * 2) ** 2 * 0.14
+    keel = np.exp(-((cx - 0.5) / 0.10) ** 2) * smoothstep(0.12, 0.4, t) * (1 - smoothstep(0.8, 0.97, t)) * (hash2(coli, rowi, seed + 13) > 0.35)
     jit = (hash2(coli, rowi, seed + 6) - 0.5) * 0.11
-    # pits and scratches (sparse) + micro grain
-    pc = max(2.2 * s, 2.0 / _fmax())
+    # sparse pits and hairline scratches + micro grain
+    pc = max(2.4 * s, 2.0 / _fmax())
     pb, _, _, _, _ = voronoi2(X / pc, Y / pc, seed + 7)
-    pit_gate = hash2(np.floor(X / pc).astype(np.int64), np.floor(Y / pc).astype(np.int64), seed + 8) > 0.9
+    pit_gate = hash2(np.floor(X / pc).astype(np.int64), np.floor(Y / pc).astype(np.int64), seed + 8) > 0.92
     pits = (1 - smoothstep(0.06, 0.15, pb)) * pit_gate
     scr = np.abs(fbm2(X * 0.9 + rowi * 3.1, Y * 0.14 + coli * 1.7, seed + 10, 2) - 0.5)
-    scratch = (1 - smoothstep(0.0, 0.016, scr)) * smoothstep(0.1, 0.4, t) * (1 - edge)
-    d = jit + dome * 0.14 - overlap + rim * 0.11 - edge * 0.24 - lshadow + rbevel - redge * 0.16
-    d += -pits * 0.13 * mat.micro + scratch * 0.045 * mat.micro + _grain(X, Y, seed + 11, 0.03, mat)
-    out['height'] = np.clip(0.55 + dome * 0.3 - overlap * 1.2 - edge * 0.6 - lshadow * 1.5 - pits * 0.4, 0, 1)
+    scratch = (1 - smoothstep(0.0, 0.014, scr)) * smoothstep(0.1, 0.4, t) * bevel
+    d = jit + dome * 0.12 - overlap - edge * 0.22 - seam * 0.18 - lshadow + (bevel - 0.8) * 0.06 + keel * 0.04
+    d += -pits * 0.12 * mat.micro + scratch * 0.04 * mat.micro + _grain(X, Y, seed + 11, 0.03, mat)
+    out['height'] = np.clip(0.2 + bevel * 0.6 * dome - overlap * 0.8 + keel * 0.18 - pits * 0.3, 0, 1)
     out['outline'] = edge > 0.5
-    out['ao'] = overlap * 1.8 + edge * 0.5 + lshadow * 1.5 + pits * 0.4
+    out['ao'] = overlap * 1.8 + edge * 0.5 + seam * 0.6 + lshadow + pits * 0.4
     hv = (hash2(coli, rowi, seed + 12) - 0.5) * 0.06
     out['tint'] = np.stack([1 + hv, 1 + hv * 0.4, 1 - hv], -1)
     return d
@@ -555,31 +571,62 @@ def _fur_hd(mat, X, Y, fw, fh, seed, out, face):
     faces) and are bundled into locks; every strand ends in a pale tip with the shaded root of the next strand
     beneath it, the ends being loosely staggered so the coat breaks into soft ragged tufts."""
     s = mat.scale
+    # small models get finer patterns (X is already divided by the detail factor); fur locks only shrink by
+    # the square root of it so tufts stay readable on a 1-block monster
+    k = math.sqrt(_CUR_DETAIL)
+    X, Y, fw, fh = X * k, Y * k, fw * k, fh * k
     if face in ('top', 'bottom'):
         Y = fh - Y                                        # flow from the head toward the tail
-    slant = 0.22 if face == 'west' else (-0.22 if face == 'east' else 0.0)
-    sway = (fbm2(X * 0.04 / s, Y * 0.03 / s, seed, 2) - 0.5) * 6.0 * s
-    Xs = X + Y * slant + sway + np.sin(Y * 0.2 / s + X * 0.05 / s) * 0.3 * s
+    slant = 0.2 if face == 'west' else (-0.2 if face == 'east' else 0.0)
+    sway = (fbm2(X * 0.04 / s, Y * 0.03 / s, seed, 2) - 0.5) * 5.0 * s
+    Xs = X + Y * slant + sway + np.sin(Y * 0.25 / s + X * 0.05 / s) * 0.25 * s
     fm = _fmax()
-    f1, f2 = min(1.9 / s, fm), min(3.4 / s, fm * 1.3)
-    lock = vnoise2(Xs * 0.42 / s, Y * 0.045 / s, seed + 1)
-    lock2 = vnoise2(Xs * 0.85 / s + 3.0, Y * 0.09 / s, seed + 2)
-    st = vnoise2(Xs * f1 + 7.0, Y * 0.16 / s, seed + 3)
-    st2 = vnoise2(Xs * f2 + 11.0, Y * 0.3 / s, seed + 4)
-    th = 5.0 * s
-    strc = np.floor(Xs / max(0.6 * s, 1.0 / fm)).astype(np.int64)
-    phase = fbm2(Xs * 0.2 / s, Y * 0 + 1.0, seed + 5, 2) * th * 2.0 + (hash2(strc, strc * 0, seed + 6) - 0.5) * th * 0.6
-    tt = ((Y + phase) / th) % 1.0
-    # along a strand: shaded root -> pale tip, then a short soft drop into the next root
-    seg = np.where(tt < 0.88, (tt / 0.88), 1 - (tt - 0.88) / 0.12)
-    strand_v = (seg - 0.5) * 0.18
-    rag = smoothstep(0.3, 0.7, st)
-    d = (lock - 0.5) * 0.16 + (lock2 - 0.5) * 0.12 + (st - 0.5) * 0.20 * mat.micro + (st2 - 0.5) * 0.07 * mat.micro
-    d += strand_v * (0.55 + 0.45 * rag)
-    out['height'] = np.clip(0.45 + (st - 0.5) * 0.5 + (lock - 0.5) * 0.3 + strand_v * 1.2, 0, 1)
-    out['ao'] = np.clip((0.5 - seg) * 0.4, 0, 1) + (0.5 - lock) * 0.3
-    out['rag'] = np.clip(0.5 + (st - 0.5) * 1.2 + (lock2 - 0.5) * 0.6 + (seg - 0.5) * 0.3, 0, 1)
-    hv = (lock - 0.5) * 0.10 + (fbm2(X * 0.03, Y * 0.03, seed + 8, 2) - 0.5) * 0.06
+    lw, lh = 2.7 * s, 5.0 * s                            # lock (tuft) width / nominal length
+
+    def lock(rowf, Xs, shift=0):
+        row = np.floor(rowf) - shift
+        rowi = row.astype(np.int64)
+        off = (rowi % 2) * 0.5
+        colf = Xs / lw + off
+        col = np.floor(colf)
+        coli = col.astype(np.int64)
+        cx = colf - col
+        jx = (hash2(coli, rowi, seed + 1) - 0.5) * 0.5
+        ln = 0.85 + hash2(coli, rowi, seed + 2) * 0.7      # lock length: tips reach into the next row
+        u = (rowf - row) / ln                              # 0 root .. 1 tip
+        a = (cx - 0.5 - jx) * 2.0                          # -1..1 across the lock
+        half = 1.3 - 1.2 * np.clip(u, 0, 1) ** 1.3         # wide at the root (locks overlap), tapers to a point
+        half = half * (1 + 0.22 * (vnoise2(u * 3.0 + coli * 0.37, rowi * 0.61 + 2.0, seed + 12) - 0.5))
+        return u, a, half, coli, rowi
+
+    # rows drift up and down along the flow so the tips never line up in horizontal courses
+    rowf = Y / lh + (fbm2(Xs * 0.12 / s + 4.0, Y * 0.02 / s, seed + 9, 2) - 0.5) * 1.4
+    u0, a0, h0, c0, r0 = lock(rowf, Xs)
+    u1, a1, h1, c1, r1 = lock(rowf, Xs, 1)                 # lock of the row above (its tip hangs over this row)
+    rel1 = np.where(u1 <= 1.0, np.abs(a1) / np.maximum(h1, 1e-3), 9.0)
+    rel0 = np.abs(a0) / np.maximum(h0, 1e-3)
+    cov1 = 1 - smoothstep(0.8, 1.0, rel1)                  # upper lock lies over everything
+    cov0 = (1 - smoothstep(0.8, 1.0, rel0)) * (1 - cov1)   # own lock
+    under = 1 - cov0 - cov1                                # undercoat showing between lock tips
+    u = np.where(cov1 > 0.5, u1, u0)
+    rel = np.where(cov1 > 0.5, rel1, rel0)
+    coli = np.where(cov1 > 0.5, c1, c0)
+    rowi = np.where(cov1 > 0.5, r1, r0)
+    edge = smoothstep(0.6, 1.0, np.minimum(rel, 1.0)) * (cov0 + cov1)   # soft crevice along the lock edges
+    tip = smoothstep(0.4, 1.0, u) * (cov0 + cov1)          # pale tip
+    root = (1 - smoothstep(0.0, 0.5, u)) * cov0            # shaded root under the tip of the lock above
+    # strands: fine streaks running along the lock (the main visual), two frequencies
+    f1, f2 = min(2.4 / s, fm), min(4.2 / s, fm * 1.4)
+    st = vnoise2(Xs * f1 + 7.0, Y * 0.2 / s, seed + 3)
+    st2 = vnoise2(Xs * f2 + 11.0, Y * 0.4 / s, seed + 4)
+    clump = vnoise2(Xs * 0.3 / s, Y * 0.05 / s, seed + 5)
+    jit = (hash2(coli, rowi, seed + 6) - 0.5) * 0.08 * (1 - under)
+    d = jit + (clump - 0.5) * 0.14 + (st - 0.5) * 0.22 * mat.micro + (st2 - 0.5) * 0.08 * mat.micro
+    d += tip * 0.10 - root * 0.12 - edge * 0.07 - under * 0.15
+    out['height'] = np.clip(0.4 + (st - 0.5) * 0.3 + (st2 - 0.5) * 0.12 - edge * 0.12 - under * 0.08 + tip * 0.04, 0, 1)
+    out['ao'] = np.clip(root * 0.4 + edge * 0.25 + under * 0.4, 0, 1)
+    out['rag'] = np.clip(0.5 + (st - 0.5) * 1.2 + (clump - 0.5) * 0.6 + (u - 0.5) * 0.35, 0, 1)
+    hv = (clump - 0.5) * 0.10 + (hash2(coli, rowi, seed + 8) - 0.5) * 0.05
     out['tint'] = np.stack([1 + hv, 1 + hv * 0.4, 1 - hv * 0.9], -1)
     return d
 
@@ -598,36 +645,39 @@ def _membrane_hd(mat, X, Y, fw, fh, seed, out):
     dmin = np.full(X.shape, 99.0)
     sec = np.zeros(X.shape)
 
+    aa = 0.25 / max(1.0, _CUR_K * _CUR_DETAIL / 4.0)     # anti-aliasing width (model px)
+
     def primary(k, uu):
         c0 = (k + 0.5 + (_hash1(k, seed) - 0.5) * 0.5) / n * Wd
-        return Wd * 0.5 + (c0 - Wd * 0.5) * (0.82 + 0.4 * uu) + (fbm2(uu * 4.0 + k * 3.1, uu * 0 + k * 1.7, seed + 2, 2) - 0.5) * 2.6 * s
+        return Wd * 0.5 + (c0 - Wd * 0.5) * (0.80 + 0.42 * uu) + (fbm2(uu * 3.0 + k * 3.1, uu * 0 + k * 1.7, seed + 2, 2) - 0.5) * 1.2 * s
 
     for k in range(n):
         c = primary(k, u)
         dmin = np.minimum(dmin, np.abs(across - c))
-        for j in range(4):
-            u0 = (j + 0.15 + _hash1(k * 7 + j, seed + 3) * 0.7) / 4.0
+        for j in range(5):
+            u0 = (j + 0.1 + _hash1(k * 7 + j, seed + 3) * 0.8) / 5.0
             a0, b0 = u0 * L, float(primary(k, np.asarray(u0)))
             side = 1.0 if _hash1(k * 11 + j, seed + 4) > 0.5 else -1.0
-            ln = (3.5 + _hash1(k * 13 + j, seed + 5) * 5.0) * s
-            bend = (_hash1(k * 17 + j, seed + 6) - 0.5) * 1.2
-            # curved branch: leaves the primary at ~45 deg and bends toward the free edge
+            ln = (3.0 + _hash1(k * 13 + j, seed + 5) * 5.0) * s
+            bend = (_hash1(k * 17 + j, seed + 6) - 0.5) * 1.0
+            # curved branch: leaves the primary at ~40 deg and bends toward the free edge, tapering to nothing
             pa = np.clip((along - a0) / ln, 0, 1)
-            cb = b0 + side * (0.7 * pa * ln + bend * pa * pa * ln) + 0.6 * s * np.sin(pa * 9.0 + k)
+            cb = b0 + side * (0.8 * pa * ln + bend * pa * pa * ln) + 0.35 * s * np.sin(pa * 9.0 + k)
             dist = np.abs(across - cb) * 0.8 + np.abs(along - a0 - pa * ln) * 0.6
             dist = np.where((along < a0 - 0.3 * s) | (along > a0 + ln + 0.3 * s), 99.0, dist)
-            w2 = (0.24 - 0.14 * pa) * s
-            sec = np.maximum(sec, (1 - smoothstep(w2, w2 + 0.3, dist)) * (1 - smoothstep(0.85, 1.0, pa)))
-    wmain = (0.45 - 0.2 * u) * s
-    vein = 1 - smoothstep(wmain, wmain + 0.3, dmin)
-    halo = (1 - smoothstep(wmain + 0.1, wmain + 1.2 * s, dmin)) * (1 - vein) * 0.05      # pale translucent rim
-    cap = isoline(fbm2(X * 0.26 / s, Y * 0.26 / s, seed + 8, 2), X, Y, 0.2 * s) * (1 - vein) * (1 - sec)
-    trans = u * 0.12 + smoothstep(0.0, 3.0 * s, dmin) * 0.07 + (fbm2(X * 0.06, Y * 0.06, seed + 9, 2) - 0.5) * 0.08
-    wrinkle = (vnoise2(X * 0.9 / s, Y * 0.9 / s, seed + 10) - 0.5) * 0.04
-    d = trans - vein * 0.30 - sec * 0.22 - cap * 0.085 * mat.micro + halo + 0.02 + wrinkle + _grain(X, Y, seed + 6, 0.025, mat)
-    out['height'] = np.clip(0.35 + vein * 0.6 + sec * 0.4 + cap * 0.1, 0, 1)
+            w2 = (0.15 - 0.10 * pa) * s
+            sec = np.maximum(sec, (1 - smoothstep(w2, w2 + aa, dist)) * (1 - smoothstep(0.8, 1.0, pa)))
+    wmain = (0.27 - 0.11 * u) * s
+    vein = 1 - smoothstep(wmain, wmain + aa, dmin)
+    halo = (1 - smoothstep(wmain + 0.1, wmain + 1.4 * s, dmin)) * (1 - vein) * 0.06      # pale translucent rim
+    cap = isoline(fbm2(X * 0.26 / s, Y * 0.26 / s, seed + 8, 2), X, Y, 0.14 * s, soft=aa) * (1 - vein) * (1 - sec)
+    # translucency: the membrane thins toward the free edge and between the veins (backlit, paler)
+    trans = u * 0.14 + smoothstep(0.0, 3.5 * s, dmin) * 0.08 + (fbm2(X * 0.06, Y * 0.06, seed + 9, 2) - 0.5) * 0.08
+    wrinkle = (vnoise2(X * 0.5 / s, Y * 0.5 / s, seed + 10) - 0.5) * 0.03
+    d = trans - vein * 0.26 - sec * 0.18 - cap * 0.07 * mat.micro + halo + 0.02 + wrinkle + _grain(X, Y, seed + 6, 0.012, mat)
+    out['height'] = np.clip(0.35 + vein * 0.6 + sec * 0.45 + cap * 0.12, 0, 1)
     out['outline'] = (vein + sec) > 0.5
-    out['ao'] = vein * 0.25
+    out['ao'] = vein * 0.2
     return d
 
 
@@ -691,9 +741,14 @@ def _rock_hd(mat, X, Y, fw, fh, seed, out):
     d = (bestv - 0.5) * 0.22 + (0.5 - best) * 0.10 - crack * 0.32 - sub * 0.16 + (rough - 0.5) * 0.14 * mat.micro
     d += (grain - 0.5) * 0.05 * mat.micro + speck * 0.08
     out['height'] = np.clip((1 - crack) * (0.55 + bestv * 0.45) - sub * 0.3 + (rough - 0.5) * 0.25, 0, 1)
-    heat = smoothstep(0.50, 0.66, fbm2(X * 0.045 / s + 5, Y * 0.045 / s, seed + 11, 2))
-    out['crack'] = {'core': np.exp(-(gap / 0.045) ** 2) * heat, 'ember': (1 - smoothstep(0.0, 0.26, gap)) * heat}
-    out['outline'] = (gap < 0.07) & (heat > 0.3)
+    if mat.glow is not None:
+        # hot zones (about a third of the crack network); gap is in cell units -> width in model px = gap * cell
+        heat = smoothstep(0.42, 0.60, fbm2(X * 0.07 / s + 5, Y * 0.07 / s, seed + 11, 2))
+        gpx = gap * cell
+        out['crack'] = {'core': np.exp(-(gpx / 0.22) ** 2) * heat,                 # white-hot centre line
+                        'ember': (1 - smoothstep(0.0, 0.9, gpx)) * heat,             # glowing crack
+                        'halo': (1 - smoothstep(0.3, 2.6, gpx)) * heat}              # heat-darkened crust
+        out['outline'] = (gpx < 0.5) & (heat > 0.3)
     out['ao'] = crack * 0.7 + sub * 0.3
     hv = (bestv - 0.5) * 0.06
     out['tint'] = np.stack([1 + hv, np.ones_like(hv), 1 - hv], -1)
@@ -704,23 +759,25 @@ def _crystal_hd(mat, X, Y, fw, fh, seed, out):
     """Gem / ice: large flat facets, each a plane with its own gradient, thin dark facet edges with a light
     fringe on the lit side, a few bright 'lit' facets (these also carry the emissive layer) and sparkles."""
     s = mat.scale
-    cell = 4.5 * s
-    best, second, bestv, bpx, bpy = voronoi2(X / cell, Y / cell, seed, jitter=0.85)
+    cell = 5.5 * s
+    best, second, bestv, bpx, bpy = voronoi2(X / cell, Y / cell, seed, jitter=0.8)
     gap = second - best
     ix, iy = np.floor(bpx * 13).astype(np.int64), np.floor(bpy * 13).astype(np.int64)
-    gx = (hash2(ix, iy, seed + 1) - 0.5) * 1.2
-    gy = (hash2(ix, iy, seed + 2) - 0.5) * 1.2
+    gx = (hash2(ix, iy, seed + 1) - 0.5) * 1.1
+    gy = (hash2(ix, iy, seed + 2) - 0.5) * 1.1
     plane = (X / cell - bpx) * gx + (Y / cell - bpy) * gy
-    lit = hash2(ix, iy, seed + 3) > 0.8
+    lit = hash2(ix, iy, seed + 3) > 0.84
     lit_s = smoothstep(0.02, 0.14, gap) * lit
-    ew = max(0.07, 1.6 / (cell * _CUR_K * _CUR_DETAIL))
+    ew = max(0.05, 1.1 / (cell * _CUR_K * _CUR_DETAIL))
     edge = 1 - smoothstep(0.0, ew, gap)
-    fringe = smoothstep(ew * 0.6, ew * 1.6, gap) * (1 - smoothstep(ew * 1.6, ew * 4.0, gap))
+    fringe = smoothstep(ew * 0.8, ew * 1.8, gap) * (1 - smoothstep(ew * 1.8, ew * 4.0, gap))
     depth = (fbm2(X * 0.12 / s, Y * 0.12 / s, seed + 4, 2) - 0.5) * 0.10
-    d = (bestv - 0.5) * 0.16 + plane * 0.42 - edge * 0.11 + fringe * 0.07 * (gx > 0) - fringe * 0.03 * (gx <= 0)
-    d += lit_s * (0.12 + plane * 0.35) + depth
-    glint = np.exp(-(((X / cell - bpx) - 0.12) ** 2 + ((Y / cell - bpy) - 0.1) ** 2) / 0.005) * lit * 0.28
-    d += glint + _grain(X, Y, seed + 8, 0.02, mat)
+    # faint internal fractures / inclusions inside some facets
+    frac = isoline(fbm2(X * 0.2 / s + 2, Y * 0.2 / s, seed + 6, 2), X, Y, 0.12 * s, soft=0.2) * (hash2(ix, iy, seed + 7) > 0.6) * smoothstep(ew, ew * 3, gap)
+    d = (bestv - 0.5) * 0.16 + plane * 0.40 - edge * 0.12 + fringe * 0.06 * (gx > 0) - fringe * 0.03 * (gx <= 0)
+    d += lit_s * (0.10 + plane * 0.30) + depth + frac * 0.06
+    glint = np.exp(-(((X / cell - bpx) - 0.12) ** 2 + ((Y / cell - bpy) - 0.1) ** 2) / 0.004) * lit * 0.22
+    d += glint + _grain(X, Y, seed + 8, 0.015, mat)
     out['height'] = np.clip(0.5 + plane * 1.2 - edge * 0.3, 0, 1)
     out['outline'] = lit_s > 0.5
     out['lit'] = lit_s
@@ -777,12 +834,16 @@ def _metal_hd(mat, X, Y, fw, fh, seed, out):
 
 def _cloth_hd(mat, X, Y, fw, fh, seed, out):
     s = mat.scale
-    wp = max(s, 1.0 / _fmax())
-    weave = np.sin(X * 2 * math.pi / wp) * np.sin(Y * 2 * math.pi / wp)
+    wp = max(0.8 * s, 1.0 / _fmax())
+    # plain weave: warp and weft threads alternate over / under (checker of two thread directions)
+    tx = 0.5 + 0.5 * np.cos(X * 2 * math.pi / wp)
+    ty = 0.5 + 0.5 * np.cos(Y * 2 * math.pi / wp)
+    chk = (np.floor(X / wp + 0.5).astype(np.int64) + np.floor(Y / wp + 0.5).astype(np.int64)) % 2 == 0
+    weave = np.where(chk, tx * 0.6 + 0.4 * ty, ty * 0.6 + 0.4 * tx) - 0.5
     folds = fbm2(X * 0.12 / s, Y * 0.08 / s, seed, 3)
-    d = weave * 0.012 * mat.micro + (folds - 0.5) * 0.16 + np.sin(Y * 0.8 / s + folds * 3) * 0.03
-    d += (hash2(np.floor(X * 2).astype(np.int64), np.floor(Y * 2).astype(np.int64), seed + 2) - 0.5) * 0.03
-    out['height'] = np.clip(0.5 + weave * 0.3 + (folds - 0.5) * 0.4, 0, 1)
+    fuzz = (vnoise2(X * 1.7, Y * 1.7, seed + 2) - 0.5) * 0.03
+    d = weave * 0.045 * mat.micro + (folds - 0.5) * 0.15 + np.sin(Y * 0.8 / s + folds * 3) * 0.03 + fuzz * mat.micro
+    out['height'] = np.clip(0.5 + weave * 0.35 + (folds - 0.5) * 0.4, 0, 1)
     return d
 
 
@@ -1208,7 +1269,7 @@ def texel_for(model):
     get proportionally more texels so every pattern keeps ~TEXEL texels per feature pixel (at most 8)."""
     if TEXEL <= 1:
         return 1
-    return int(min(8, max(1, round(TEXEL / detail_for(model)))))
+    return int(min(6, max(1, round(TEXEL / detail_for(model)))))
 
 
 def paint_model(model, seed=1, texel=None):
@@ -1385,6 +1446,7 @@ def paint_model(model, seed=1, texel=None):
             has_glow = True
     if K > 1:
         _finish_hd(img, glow, K)
+        img[..., :3] = np.round(img[..., :3] / 2) * 2          # 128 levels per channel: invisible, ~20% smaller PNG
     out = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8), 'RGBA')
     gout = Image.fromarray(np.clip(glow, 0, 255).astype(np.uint8), 'RGBA') if has_glow else None
     model._pbr_maps = _pbr_images(pbr, img, glow, K) if pbr is not None else None
@@ -1434,11 +1496,12 @@ def _pbr_images(pbr, img, glow, K):
     nl = np.sqrt(nx * nx + ny * ny + nz * nz)
     nx, ny = nx / nl, ny / nl
     opaque = img[..., 3] > 0
+    # mild quantisation (normal 64 levels, ao / height 32 levels) keeps the PNGs about half the size
     n_img = np.zeros((H, W, 4), np.uint8)
-    n_img[..., 0] = np.clip((nx * 0.5 + 0.5) * 255, 0, 255)
-    n_img[..., 1] = np.clip((ny * 0.5 + 0.5) * 255, 0, 255)
-    n_img[..., 2] = np.clip((1 - np.clip(pbr['ao'], 0, 1) * 0.65) * 255, 0, 255)
-    n_img[..., 3] = np.clip(hgt * 255, 0, 255)
+    n_img[..., 0] = np.clip(np.round((nx * 0.5 + 0.5) * 255 / 4) * 4, 0, 255)
+    n_img[..., 1] = np.clip(np.round((ny * 0.5 + 0.5) * 255 / 4) * 4, 0, 255)
+    n_img[..., 2] = np.clip(np.round((1 - np.clip(pbr['ao'], 0, 1) * 0.65) * 255 / 8) * 8, 0, 255)
+    n_img[..., 3] = np.clip(np.round(hgt * 255 / 8) * 8, 0, 255)
     n_img[~opaque] = (128, 128, 255, 255)
     s_img = np.zeros((H, W, 4), np.uint8)
     s_img[..., 0] = np.clip(pbr['smooth'], 0, 255)
@@ -1655,11 +1718,7 @@ def _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K, face=N
     value -= np.clip((y - ymin) / yspan, 0, 1) * 0.10 * mat.bake
     dt = _CUR_DETAIL
     pt = pattern_hd(mat, X / dt, Y / dt, fw / dt, fh / dt, seed, face)
-    value += pt['delta'] * (mat.contrast ** 0.5)      # lift for low-contrast materials (HD detail reads better)
-    # colour variation: 3D model-space noise (continuous across cubes) at three octaves
-    value += (vnoise(x * 0.35, y * 0.35, z * 0.35, seed) - 0.5) * 2 * mat.noise
-    value += (vnoise(x * 1.1, y * 1.1, z * 1.1, seed + 31) - 0.5) * 0.9 * mat.noise
-    value += (vnoise(x * 3.3, y * 3.3, z * 3.3, seed + 57) - 0.5) * 0.45 * mat.noise * mat.micro * dt
+    surf = pt['delta'] * (mat.contrast ** 0.5)         # lift for low-contrast materials (HD detail reads better)
     # height-field relief lighting (diffuse) + specular hot spots
     hgt = pt['height'] * mat.hd('relief') * K * dt
     gx = np.zeros_like(hgt)
@@ -1670,17 +1729,30 @@ def _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K, face=N
     nl = np.sqrt(nx * nx + ny * ny + nz * nz)
     nx, ny, nz = nx / nl, ny / nl, nz / nl
     diff = nx * _L[0] + ny * _L[1] + nz * _L[2]
-    value += (diff - _L[2]) * 0.55
+    surf = surf + (diff - _L[2]) * 0.55
     gloss = mat.hd('gloss')
     if gloss > 0:
         ndh = np.clip(nx * _HV[0] + ny * _HV[1] + nz * _HV[2], 0, 1)
-        value += ndh ** mat.hd('shine') * 0.22 * gloss
+        surf = surf + ndh ** mat.hd('shine') * 0.22 * gloss
     # crevice AO at the face border (soft, ~0.8 model px) instead of the 1-texel outline
     ao_edge = np.zeros_like(value)
     if fw >= 2.5 and fh >= 2.5 and mat.edge > 0:
         dist = _edge_distance(I, J, w, h) / K
         ao_edge = 1 - smoothstep(0.0, 0.85, dist)
-        value -= ao_edge * mat.edge * 1.3
+        surf = surf - ao_edge * mat.edge * 1.3
+    # tone calibration: the face keeps the mean value the 1x pixel-art painter gave it (same pattern, outline
+    # and contrast), so the HD texture box-filtered to 1x matches the original colour identity
+    w1, h1 = max(1, int(round(fw))), max(1, int(round(fh)))
+    I1, J1 = np.meshgrid(np.arange(w1), np.arange(h1))
+    d1, _ = pattern_delta(mat, I1, J1, w1, h1, seed, None)
+    m1 = float(np.mean(d1)) * mat.contrast
+    if w1 >= 3 and h1 >= 3 and mat.edge > 0:
+        m1 -= mat.edge * float(np.mean((I1 == 0) | (J1 == 0) | (I1 == w1 - 1) | (J1 == h1 - 1)))
+    value += surf + float(np.clip(m1 - np.mean(surf), -0.2, 0.2))
+    # colour variation: 3D model-space noise (continuous across cubes) at three octaves
+    value += (vnoise(x * 0.35, y * 0.35, z * 0.35, seed) - 0.5) * 2 * mat.noise
+    value += (vnoise(x * 1.1, y * 1.1, z * 1.1, seed + 31) - 0.5) * 0.9 * mat.noise
+    value += (vnoise(x * 3.3, y * 3.3, z * 3.3, seed + 57) - 0.5) * 0.45 * mat.noise * mat.micro * dt
     # continuous ramp lookup + per-element tint + low-frequency hue variation
     rgb = ramp_lookup(mat.ramp, value)
     if pt['tint'] is not None:
@@ -1705,21 +1777,23 @@ def _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K, face=N
         gcol = mat.glow
         sel = None
         if mat.pattern == 'rock':
-            # ember cracks: only inside the sparse hot zones; white-hot core -> glow colour -> dark crust
+            # ember cracks: only inside the sparse hot zones; white-hot core -> glow colour -> dull red -> crust
             ck = pt['crack']
-            core, ember = ck['core'], ck['ember']
-            hot = np.clip(gcol * 1.15 + np.array([50, 60, 30.0]), 0, 255)
-            dark = gcol * 0.42
-            e = np.clip(ember, 0, 1)
-            rgb = rgb * (1 - e[..., None] * 0.9) + dark * e[..., None] * 0.9
-            e2 = smoothstep(0.3, 0.85, ember)
+            core, ember, halo = ck['core'], ck['ember'], ck['halo']
+            hot = np.clip(gcol * 1.1 + np.array([60, 70, 50.0]), 0, 255)
+            dull = gcol * 0.38 + np.array([20, 0, 0.0])
+            h = np.clip(halo, 0, 1)
+            rgb = rgb * (1 - h[..., None] * 0.4) + dull * h[..., None] * 0.4       # scorched crust around the crack
+            e = smoothstep(0.0, 0.6, ember)
+            rgb = rgb * (1 - e[..., None]) + dull * e[..., None]
+            e2 = smoothstep(0.45, 0.9, ember)
             rgb = rgb * (1 - e2[..., None]) + gcol * e2[..., None]
             rgb = rgb * (1 - core[..., None]) + hot * core[..., None]
-            sel = ember > 0.5
+            sel = ember > 0.55
             if sel.any():
                 gl = np.zeros(I.shape + (4,))
-                lum = smoothstep(0.5, 1.0, ember) * 0.6 + core * 0.4
-                gl[sel, :3] = (gcol * (0.35 + 0.65 * lum[..., None]))[sel]
+                lum = smoothstep(0.55, 1.0, ember) * 0.6 + core * 0.4
+                gl[sel, :3] = (gcol * (0.3 + 0.7 * lum[..., None]))[sel]
                 gl[sel, 3] = 255
         elif mat.pattern == 'crystal':
             lit = pt['lit']
