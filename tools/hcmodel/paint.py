@@ -507,7 +507,7 @@ def paint_model(model, seed=1):
                     argb, agl = _shade(MATERIALS[mat.accent], I, J, w, h, P, N, f, d, r, ymin, yspan, sd + 5, cube)
                     rgb = np.where(am[..., None], argb, rgb)
                     if agl is not None:
-                        gl = agl if gl is None else np.where(am[..., None], agl, gl)
+                        gl = np.where(am[..., None], agl, 0 if gl is None else gl)
             # per-texel decals (claws / tips / bands)
             for dec in cube.decals:
                 tp = dec.get('type')
@@ -536,7 +536,7 @@ def paint_model(model, seed=1):
                     sel = (coord >= lo) & (coord <= hi)
                     rgb = np.where(sel[..., None], brgb, rgb)
                     if bgl is not None:
-                        gl = bgl if gl is None else np.where(sel[..., None], bgl, gl)
+                        gl = np.where(sel[..., None], bgl, 0 if gl is None else gl)
             if cube.tint is not None:
                 rgb = np.clip(rgb * np.array(cube.tint, float), 0, 255)
             keep = np.ones(I.shape, dtype=bool)
@@ -550,7 +550,7 @@ def paint_model(model, seed=1):
                 glow[v0:v0 + h, u0:u0 + w, 3] = 255
                 has_glow = True
             elif gl is not None:
-                m = gl[..., 3] > 0
+                m = (gl[..., 3] > 0) & keep  # no glow on cut-out texels
                 region = glow[v0:v0 + h, u0:u0 + w]
                 region[m] = gl[m]
                 if m.any():

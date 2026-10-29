@@ -84,6 +84,11 @@ public final class HCNetwork {
         }
     }
 
+    /** Runs a registered client action locally (client side only; used by the dev autotest). */
+    public static void simulateClientAction(String id, CompoundTag tag) {
+        dispatchClient(id, tag == null ? new CompoundTag() : tag);
+    }
+
     // ------------------------------------------------------------------ sending helpers
     public static void sendToServer(String id, CompoundTag tag) {
         CHANNEL.sendToServer(new ActionPacket(id, tag == null ? new CompoundTag() : tag));
