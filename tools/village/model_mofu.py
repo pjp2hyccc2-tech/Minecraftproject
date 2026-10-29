@@ -43,7 +43,7 @@ M('m_beard', ['#8a8478', '#b0a99c', '#d2ccc0', '#e8e4dc', '#f6f4ef', '#ffffff'],
 FUR = {
     'white': (['#857a70', '#ada296', '#cfc6bb', '#e6dfd6', '#f6f2ec', '#ffffff'], None, '#5aa8e8', True),
     'ginger': (['#4a2410', '#7a3d1a', '#a85a28', '#d07d3c', '#eba35c', '#fbc98a'], ('stripes_y', ['#2a1208', '#4a200e', '#6e3216', '#924620', '#b45e2e', '#d07d3c'], 0.6, 0.66), '#5ec46a', True),
-    'grey': (['#25262b', '#3c3e45', '#585b64', '#777b86', '#999ea9', '#bcc1cb'], None, '#e8d84a', True),
+    'grey': (['#2c3036', '#464c55', '#646c78', '#86909c', '#a8b2be', '#cdd6e0'], ('stripes_y', ['#1a1d22', '#262a31', '#353a43', '#454b56', '#565d69', '#68707e'], 0.65, 0.66), '#6cc8f0', True),
     'black': (['#0a0a0c', '#151519', '#22222a', '#32323b', '#45454f', '#5a5a66'], None, '#f2b636', False),
     'tabby': (['#3a2a1c', '#5c4430', '#806048', '#a27e62', '#c29f82', '#ddc0a4'], ('stripes_y', ['#1c140e', '#2e2218', '#463424', '#5e4632', '#765a42', '#8e6e54'], 0.7, 0.6), '#7ac850', True),
     'calico': (['#857a70', '#ada296', '#cfc6bb', '#e6dfd6', '#f6f2ec', '#ffffff'], ('spots', ['#1a1210', '#3a2418', '#7a3d1a', '#c06428', '#e08a40', '#f2b066'], 0.32, 0.6), '#d8a040', True),
@@ -153,6 +153,7 @@ def fur_model():
     scarf.cube((-3.7, -0.8, -3.2), (7.4, 1.6, 6.4), 'm_cloth_red')
     scarf.cube((1.2, 0.6, -3.4), (1.6, 2.6, 0.4), 'm_cloth_red')        # knot tails
     scarf.cube((-0.2, 0.6, -3.4), (1.2, 2.0, 0.4), 'm_cloth_red')
+    scarf.cube((-2.6, 0.2, -3.9), (1.4, 1.4, 1.2), 'gold')               # companion bell
     hat = head.bone('hat_chef', (0, -8, 0))
     hat.cube((-4.4, -2.2, -3.6), (8.8, 2.2, 7.2), 'm_cloth_white')          # band
     hat.cube((-5.2, -6.2, -4.4), (10.4, 4.2, 8.8), 'm_cloth_white')        # puffy top

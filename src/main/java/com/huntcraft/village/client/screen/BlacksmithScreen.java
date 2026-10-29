@@ -49,13 +49,23 @@ public class BlacksmithScreen extends VillageScreen {
     private SmithingRegistry.Recipe selected;
     private int selectedSlot = -1;
     private final List<Row> rows = new ArrayList<>();
+    /** Expanded group keys per tab ("tab:group"); groups start collapsed except the first of each tab. */
+    private final java.util.Set<String> expanded = new java.util.HashSet<>();
+    private final java.util.Set<Integer> seededTabs = new java.util.HashSet<>();
     @Nullable
     private ItemStack hoverStack;
     private int lastBox = -1;
     @Nullable
     private final VillageNpc portrait;
 
-    private record Row(@Nullable String header, @Nullable SmithingRegistry.Recipe recipe, int slot, int depth) {
+    private record Row(@Nullable String header, @Nullable SmithingRegistry.Recipe recipe, int slot, int depth, int count, int craftable) {
+        Row(@Nullable String header, @Nullable SmithingRegistry.Recipe recipe, int slot, int depth) {
+            this(header, recipe, slot, depth, 0, 0);
+        }
+    }
+
+    private String groupKey(String group) {
+        return tab + ":" + group;
     }
 
     public BlacksmithScreen(@Nullable CompoundTag tag) {
@@ -79,6 +89,10 @@ public class BlacksmithScreen extends VillageScreen {
             for (SmithingRegistry.Recipe r : recipes) byResult.put(r.result.get(), r);
             Map<String, List<SmithingRegistry.Recipe>> groups = new LinkedHashMap<>();
             for (SmithingRegistry.Recipe r : recipes) groups.computeIfAbsent(r.group, k -> new ArrayList<>()).add(r);
+            if (!seededTabs.contains(tab) && !groups.isEmpty()) {
+                seededTabs.add(tab);
+                expanded.add(groupKey(groups.keySet().iterator().next()));
+            }
             for (Map.Entry<String, List<SmithingRegistry.Recipe>> e : groups.entrySet()) {
                 List<Row> groupRows = new ArrayList<>();
                 // upgrade trees: roots first, then children depth-first
@@ -89,10 +103,13 @@ public class BlacksmithScreen extends VillageScreen {
                     boolean added = groupRows.stream().anyMatch(x -> x.recipe == r);
                     if (!added && (!onlyCraftable || (p != null && canForge(p, r)))) groupRows.add(new Row(null, r, -1, 0));
                 }
-                if (!groupRows.isEmpty()) {
-                    rows.add(new Row(e.getKey(), null, -1, 0));
-                    rows.addAll(groupRows);
-                }
+                if (groupRows.isEmpty()) continue;
+                int craftable = 0;
+                if (p != null) for (Row r : groupRows) if (r.recipe != null && canForge(p, r.recipe)) craftable++;
+                rows.add(new Row(e.getKey(), null, -1, 0, groupRows.size(), craftable));
+                boolean open = onlyCraftable || expanded.contains(groupKey(e.getKey()))
+                        || (selected != null && groupRows.stream().anyMatch(x -> x.recipe == selected) && expanded.contains("sel:" + groupKey(e.getKey())));
+                if (open) rows.addAll(groupRows);
             }
         } else if (p != null) {
             for (int i = 0; i < p.getInventory().getContainerSize(); i++) {
@@ -168,8 +185,20 @@ public class BlacksmithScreen extends VillageScreen {
             Row r = rows.get(i + scroll);
             int ry = ly + 3 + i * ROW_H;
             if (r.header != null) {
-                g.fill(lx + 3, ry + 2, lx + lw - 8, ry + ROW_H - 2, 0x50C9A66B);
-                textClip(g, groupName(r.header), lx + 7, ry + 5, lw - 18, GOLD, true);
+                boolean open = onlyCraftable || expanded.contains(groupKey(r.header));
+                boolean hov = in(mx, my, lx + 3, ry + 1, lw - 10, ROW_H - 2);
+                g.fill(lx + 3, ry + 1, lx + lw - 8, ry + ROW_H - 1, hov ? 0x70C9A66B : 0x50C9A66B);
+                icon(g, open ? I_MINUS : I_PLUS, lx + 4, ry + 1);
+                String cnt = (r.craftable > 0 ? "✔" + r.craftable + " " : "") + r.count;
+                int cw = this.font.width(cnt);
+                textClip(g, groupName(r.header), lx + 22, ry + 5, lw - 34 - cw, GOLD, true);
+                g.drawString(this.font, cnt, lx + lw - 10 - cw, ry + 5, r.craftable > 0 ? GOOD : 0xFFD8C8A8, true);
+                final String key = groupKey(r.header);
+                if (!onlyCraftable) region(lx + 3, ry, lw - 10, ROW_H, () -> {
+                    if (!expanded.remove(key)) expanded.add(key);
+                    rebuildRows();
+                    pageSound();
+                });
                 continue;
             }
             ItemStack st = r.recipe != null ? new ItemStack(r.recipe.result.get()) : (p != null ? p.getInventory().getItem(r.slot) : ItemStack.EMPTY);
