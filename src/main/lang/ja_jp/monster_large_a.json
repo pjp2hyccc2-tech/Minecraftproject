@@ -1,0 +1,10 @@
+{
+ "item.huntcraft.frostgarm_spawn_egg": "フロストガルムのスポーンエッグ",
+ "item.huntcraft.voltrix_spawn_egg": "ヴォルトリクスのスポーンエッグ",
+ "notes.huntcraft.frostgarm.desc": "凍てつく山嶺に君臨する巨大な牙獣種。肩・背・尾から氷の結晶が生え、その息吹は一直線上のすべてを凍りつかせる。遠間から飛びかかり、雪原を腹で滑走し、地を走る氷柱で獲物を貫く。結晶は炎に弱く、溶かされると脆くなる。",
+ "notes.huntcraft.voltrix.desc": "背に並ぶ発電器官に雷を蓄える長大な海竜種。獲物の周囲に落雷を呼び、追尾する雷球を吐き出す。怒ると器官が過充電状態となって激しく明滅し、やがて全身から凄まじい放電を解き放つ。氷や水を浴びると電流が鈍る。",
+ "subtitles.huntcraft.frostgarm_howl": "フロストガルムの遠吠え",
+ "subtitles.huntcraft.frostgarm_crystal": "氷晶が鳴る",
+ "subtitles.huntcraft.voltrix_charge": "電気が蓄えられる",
+ "subtitles.huntcraft.voltrix_zap": "放電音"
+}
