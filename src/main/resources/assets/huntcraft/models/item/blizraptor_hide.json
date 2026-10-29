@@ -1,0 +1,6 @@
+{
+ "parent": "minecraft:item/generated",
+ "textures": {
+  "layer0": "huntcraft:item/blizraptor_hide"
+ }
+}

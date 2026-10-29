@@ -1,0 +1,21 @@
+{
+ "frostgarm.roar": {"subtitle": "subtitles.huntcraft.roar", "sounds": [
+  {"name": "minecraft:mob/polarbear/warning1", "pitch": 0.5}, {"name": "minecraft:mob/polarbear/warning3", "pitch": 0.45},
+  {"name": "minecraft:mob/wolf/growl1", "pitch": 0.45}]},
+ "frostgarm.howl": {"subtitle": "subtitles.huntcraft.frostgarm_howl", "sounds": [
+  {"name": "minecraft:mob/wolf/howl1", "pitch": 0.55}, {"name": "minecraft:mob/wolf/howl2", "pitch": 0.5}]},
+ "frostgarm.growl": {"subtitle": "subtitles.huntcraft.growl", "sounds": [
+  {"name": "minecraft:mob/wolf/growl1", "pitch": 0.5}, {"name": "minecraft:mob/wolf/growl2", "pitch": 0.45}, {"name": "minecraft:mob/wolf/growl3", "pitch": 0.5}]},
+ "frostgarm.crystal": {"subtitle": "subtitles.huntcraft.frostgarm_crystal", "sounds": [
+  {"name": "minecraft:random/glass1", "pitch": 0.8}, {"name": "minecraft:random/glass2", "pitch": 0.9}, {"name": "minecraft:random/glass3", "pitch": 0.7}]},
+ "voltrix.roar": {"subtitle": "subtitles.huntcraft.roar", "sounds": [
+  {"name": "minecraft:mob/enderdragon/growl2", "pitch": 1.1}, {"name": "minecraft:mob/enderdragon/growl3", "pitch": 1.05},
+  {"name": "minecraft:mob/ravager/roar2", "pitch": 0.8}]},
+ "voltrix.growl": {"subtitle": "subtitles.huntcraft.growl", "sounds": [
+  {"name": "minecraft:mob/enderdragon/growl1", "pitch": 1.3, "volume": 0.6}, {"name": "minecraft:mob/ravager/idle1", "pitch": 0.9}]},
+ "voltrix.charge": {"subtitle": "subtitles.huntcraft.voltrix_charge", "sounds": [
+  {"name": "minecraft:block/respawn_anchor/charge1", "pitch": 0.7}, {"name": "minecraft:block/respawn_anchor/charge2", "pitch": 0.7},
+  {"name": "minecraft:block/respawn_anchor/charge3", "pitch": 0.75}]},
+ "voltrix.zap": {"subtitle": "subtitles.huntcraft.voltrix_zap", "sounds": [
+  {"name": "minecraft:random/fizz", "pitch": 1.5}, {"name": "minecraft:random/fizz", "pitch": 1.8}]}
+}
