@@ -1,0 +1,53 @@
+{
+  "has_precipitation": true,
+  "temperature": 0.6,
+  "downfall": 0.4,
+  "effects": {
+    "sky_color": 8103167,
+    "fog_color": 13163775,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color": 9286496,
+    "foliage_color": 7448397,
+    "mood_sound": {
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [
+      "huntcraft:verdant_boulders"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:trees_plains",
+      "minecraft:flower_default",
+      "minecraft:patch_grass_plain",
+      "huntcraft:verdant_herb_points",
+      "huntcraft:verdant_bone_points",
+      "huntcraft:verdant_mining_points"
+    ],
+    []
+  ]
+}
