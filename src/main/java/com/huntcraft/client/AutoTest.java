@@ -642,7 +642,9 @@ public final class AutoTest {
         STEPS.add(new Step(name, action, waitAfter, false, false));
     }
 
+    /** Screenshot step. The GUI flag is applied one step earlier: Screenshot.grab reads the previously rendered frame. */
     private static void shot(String name, boolean hud) {
+        STEPS.add(new Step("gui_" + name, mc -> mc.options.hideGui = !hud, 2, false, hud));
         STEPS.add(new Step(name, mc -> {
         }, 0, true, hud));
     }

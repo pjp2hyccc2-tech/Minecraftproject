@@ -28,8 +28,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = HuntCraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class FirstPersonHands {
     /** Eye of the rig relative to the camera (blocks): a touch higher and in front of the real eye. */
-    private static final float RAISE = 0.08F;
-    private static final float FORWARD = -0.34F;
+    private static final float RAISE = 0.0F;
+    private static final float FORWARD = -0.62F;
     private static boolean warned;
 
     private FirstPersonHands() {

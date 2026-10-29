@@ -32,7 +32,7 @@ import java.util.Locale;
  */
 @OnlyIn(Dist.CLIENT)
 public final class HeldItems {
-    private static boolean trailWarned;
+    private static int trailWarned;
 
     private HeldItems() {
     }
@@ -139,10 +139,12 @@ public final class HeldItems {
         Vec3 tip = cam.add(t.x(), t.y(), t.z());
         if (tip.distanceToSqr(p.position()) > 16.0) {
             // not a world render pass (GUI preview, hand pass...): never feed the world space trail from here
-            if (!trailWarned) {
-                trailWarned = true;
-                com.huntcraft.HuntCraft.LOGGER.warn("Weapon trail sample far from the player ({} blocks), camera {} player {}",
-                        Math.sqrt(tip.distanceToSqr(p.position())), cam, p.position(), new Throwable("trail sample origin"));
+            if (trailWarned < 4) {
+                trailWarned++;
+                Vector4f hand = new Vector4f(0, 0, 0, 1).mul(ps.last().pose());
+                com.huntcraft.HuntCraft.LOGGER.warn("Weapon trail sample far from the player ({} blocks): action {} t={} base {} tip {} hand {} camera {} player {} pt={}",
+                        Math.sqrt(tip.distanceToSqr(p.position())), st.action == null ? "-" : st.action.name, st.actionTime(p.level().getGameTime(), Minecraft.getInstance().getPartialTick()),
+                        base, tip, cam.add(hand.x(), hand.y(), hand.z()), cam, p.position(), Minecraft.getInstance().getPartialTick());
             }
             return;
         }
