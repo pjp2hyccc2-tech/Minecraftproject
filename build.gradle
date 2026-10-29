@@ -141,10 +141,10 @@ repositories {
         }
     }
     maven {
-        name = 'BlameJared'
-        url = 'https://maven.blamejared.com/'
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
         content {
-            includeGroup 'org.embeddedt'
+            includeGroup 'curse.maven'
         }
     }
 }
@@ -158,9 +158,11 @@ configurations {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    // shader test run only (not on the normal classpath): Embeddium 0.3.31+mc1.20.1, Oculus 1.20.1-1.8.0
-    hcShaderMods fg.deobf('org.embeddedt:embeddium-1.20.1:0.3.31+mc1.20.1')
-    hcShaderMods fg.deobf('maven.modrinth:oculus:1.20.1-1.8.0')
+    // shader test run only (not on the normal classpath), via CurseMaven (project id / file id):
+    //   Embeddium 0.3.31+mc1.20.1 (CF 908741 / 5681725, Modrinth version UTbfe5d1)
+    //   Oculus    1.20.1-1.8.0    (CF 581495 / 6020952, Modrinth version iQ1SwGc3)
+    hcShaderMods fg.deobf('curse.maven:embeddium-908741:5681725')
+    hcShaderMods fg.deobf('curse.maven:oculus-581495:6020952')
 }
 
 tasks.register('prepareShaderRun', Copy) {

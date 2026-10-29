@@ -126,7 +126,7 @@ jobs:
           cp ci/options.txt run-shaders/options.txt || true
           printf 'enableDebugOptions=true\n' > run-shaders/config/oculus.properties
           chmod +x gradlew
-          ./gradlew prepareShaderRun --info 2>&1 | grep -i -E "modrinth|blamejared|embeddium|oculus|deobf|mod_remap|FAIL|wrong" | head -40 || true
+          ./gradlew prepareShaderRun --info 2>&1 | grep -i -E "modrinth|cursemaven|curse.maven|embeddium|oculus|deobf|mod_remap|FAIL|wrong" | head -40 || true
           ls -la run-shaders/mods || true
           set -o pipefail
           timeout 2400 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClientShaders --stacktrace 2>&1 | tee shaders.log
