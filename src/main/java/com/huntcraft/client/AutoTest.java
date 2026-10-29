@@ -223,6 +223,7 @@ public final class AutoTest {
         server(mc, sp -> {
             ServerLevel lvl = sp.serverLevel();
             double baseX = 2000 + idx * 64;
+            lvl.getChunk(((int) baseX) >> 4, 0);
             BlockPos ground = lvl.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(baseX, 0, 0));
             HuntMonster m = MonsterRegistry.spawn(lvl, id, ground, Rank.LOW, null);
             if (m == null) return;

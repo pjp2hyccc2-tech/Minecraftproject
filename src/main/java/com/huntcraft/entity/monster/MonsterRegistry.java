@@ -67,6 +67,7 @@ public final class MonsterRegistry {
     public static HuntMonster spawn(ServerLevel level, String id, BlockPos pos, Rank rank, @Nullable String questId) {
         Entry e = ENTRIES.get(id);
         if (e == null) return null;
+        level.getChunk(pos.getX() >> 4, pos.getZ() >> 4); // make sure the chunk is loaded before spawning
         HuntMonster m = e.type().get().create(level);
         if (m == null) return null;
         m.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, level.random.nextFloat() * 360F, 0);
