@@ -113,7 +113,7 @@ tasks.named('processResources').configure { dependsOn 'mergeFragments' }
 // ---------------------------------------------------------------------------------------------
 // HuntCraft Shaders (src/main/shaderpack) -> HuntCraftShaders.zip at the jar resource root
 // (auto-installed into shaderpacks/ by com.huntcraft.client.atmosphere.ShaderPackInstaller)
-// and copied next to the mod jar in build/libs as a separate artifact.
+// and copied to build/shaderpack/HuntCraftShaders.zip as a separate artifact.
 // ---------------------------------------------------------------------------------------------
 def hcShaderPackDir = layout.buildDirectory.dir('generated/hcshaderpack')
 tasks.register('shaderPackZip', Zip) {
@@ -127,21 +127,24 @@ tasks.named('processResources').configure { dependsOn 'shaderPackZip' }
 tasks.register('shaderPackArtifact', Copy) {
     dependsOn 'shaderPackZip'
     from hcShaderPackDir
-    into layout.buildDirectory.dir('libs')
+    into layout.buildDirectory.dir('shaderpack')
 }
 tasks.named('build').configure { dependsOn 'shaderPackArtifact' }
 
 repositories {
-    // Modrinth maven for the shader test run (Embeddium + Oculus), only resolved by runClientShaders
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = 'Modrinth'
-                url = 'https://api.modrinth.com/maven'
-            }
-        }
-        filter {
+    // only used by the shader test run (Embeddium + Oculus), resolved by prepareShaderRun / runClientShaders
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
             includeGroup 'maven.modrinth'
+        }
+    }
+    maven {
+        name = 'BlameJared'
+        url = 'https://maven.blamejared.com/'
+        content {
+            includeGroup 'org.embeddedt'
         }
     }
 }
@@ -156,8 +159,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // shader test run only (not on the normal classpath): Embeddium 0.3.31+mc1.20.1, Oculus 1.20.1-1.8.0
-    hcShaderMods fg.deobf('maven.modrinth:embeddium:UTbfe5d1')
-    hcShaderMods fg.deobf('maven.modrinth:oculus:iQ1SwGc3')
+    hcShaderMods fg.deobf('org.embeddedt:embeddium-1.20.1:0.3.31+mc1.20.1')
+    hcShaderMods fg.deobf('maven.modrinth:oculus:1.20.1-1.8.0')
 }
 
 tasks.register('prepareShaderRun', Copy) {
