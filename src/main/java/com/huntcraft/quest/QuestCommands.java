@@ -1,19 +1,25 @@
 package com.huntcraft.quest;
 
+import com.huntcraft.quest.world.QuestMapData;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.phys.Vec3;
 
+import java.util.Arrays;
 import java.util.List;
 
-/** /huntcraft quest list | start &lt;id&gt; | complete | fail | abandon | board | info (op level 2). */
+/** /huntcraft quest list | start &lt;id&gt; | complete | fail | abandon | board | info | visit &lt;map&gt; | area &lt;n&gt; (op level 2). */
 public final class QuestCommands {
     private QuestCommands() {
     }
@@ -41,7 +47,12 @@ public final class QuestCommands {
                             QuestBoardService.open(ctx.getSource().getPlayerOrException());
                             return 1;
                         }))
-                        .then(Commands.literal("info").executes(ctx -> info(ctx.getSource())))));
+                        .then(Commands.literal("info").executes(ctx -> info(ctx.getSource())))
+                        .then(Commands.literal("visit").then(Commands.argument("map", StringArgumentType.word())
+                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(Arrays.stream(QuestMap.values()).map(m -> m.id), b))
+                                .executes(ctx -> visit(ctx.getSource(), StringArgumentType.getString(ctx, "map")))))
+                        .then(Commands.literal("area").then(Commands.argument("n", IntegerArgumentType.integer(1, 9))
+                                .executes(ctx -> area(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "n")))))));
     }
 
     private static int feedback(CommandSourceStack src, boolean ok, String what) {
@@ -75,6 +86,41 @@ public final class QuestCommands {
         }
         QuestInstance inst = QuestManager.start(p.server, q, List.of(p));
         return inst != null ? 1 : 0;
+    }
+
+    /** Teleports to the base camp of region 0 of a quest map (sightseeing; non-creative players are sent home after 5 s). */
+    private static int visit(CommandSourceStack src, String mapId) throws CommandSyntaxException {
+        ServerPlayer p = src.getPlayerOrException();
+        QuestMap map = QuestMap.byId(mapId);
+        ServerLevel level = map == null ? null : p.server.getLevel(map.dimension);
+        if (level == null) {
+            src.sendFailure(Component.literal("Unknown quest map: " + mapId));
+            return 0;
+        }
+        BlockPos center = QuestRegions.center(0);
+        QuestManager.teleport(p, level, QuestCamps.arrival(map, center, 0), QuestCamps.campYaw(map));
+        return 1;
+    }
+
+    /** Teleports to the anchor of an area in the quest region the player stands in. */
+    private static int area(CommandSourceStack src, int n) throws CommandSyntaxException {
+        ServerPlayer p = src.getPlayerOrException();
+        QuestMap map = QuestMap.of(p.level());
+        QuestMapData.Area a = map == null ? null : map.data().area(n);
+        if (a == null) {
+            src.sendFailure(Component.literal("Not in a quest map / no area " + n));
+            return 0;
+        }
+        int cx = Math.round((float) (p.getX() / QuestRegions.SPACING)) * QuestRegions.SPACING;
+        int cz = Math.round((float) (p.getZ() / QuestRegions.SPACING)) * QuestRegions.SPACING;
+        BlockPos center = new BlockPos(cx, 0, cz);
+        int x = QuestRegions.worldX(center, a.x()), z = QuestRegions.worldZ(center, a.z());
+        ServerLevel level = p.serverLevel();
+        BlockPos g = QuestCamps.dryGround(level, x, z);
+        int y = g != null ? g.getY() : QuestCamps.surfaceY(level, x, z);
+        QuestManager.teleport(p, level, new Vec3(x + 0.5, y, z + 0.5), p.getYRot());
+        src.sendSuccess(() -> Component.translatable("hud.huntcraft.quest.area", n).append(" ").append(Component.translatable(a.nameKey())), false);
+        return 1;
     }
 
     private static int info(CommandSourceStack src) throws CommandSyntaxException {

@@ -398,7 +398,7 @@ def frost():
         d = carve_path_heights(m, p, 2.5)
         pmask |= d < 1.8
     # switchback trail to the summit (terrace cut into the mountain)
-    trail = [(268, 262), (232, 238), (300, 214), (240, 190), (306, 166), (252, 146), (290, 126), (284, 112)]
+    trail = [(230, 268), (222, 242), (300, 214), (240, 190), (306, 166), (252, 146), (290, 126), (284, 112)]
     td, ts, tl = polyline(trail)
     prof = 84 + (166 - 84) * np.clip(ts / tl, 0, 1)
     m.h = np.where(td < 3.5, prof, m.h)

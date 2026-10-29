@@ -447,7 +447,7 @@ def lookout_tower(m, u0, v0, y0, height=13, seed=8, mats=None, ladder_side='sout
             side = ('north' if dv == -3 else 'south' if dv == 3 else None, 'west' if du == -3 else 'east' if du == 3 else None)
             if any(sd in parapet_dirs for sd in side if sd) and (du + dv) % 2 == 0:
                 m.put(u0 + du, top + 1, v0 + dv, 'minecraft:stone_bricks')
-    for (du, dv) in [(-3, -3), (3, 3), (-3, 3), (3, -3)]:
+    for (du, dv) in [(-3, -3), (3, 3), (-3, 3)]:
         m.put(u0 + du, top + 1, v0 + dv, 'minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]')
         m.put(u0 + du, top + 2, v0 + dv, 'minecraft:lantern[hanging=false,waterlogged=false]')
     lx, lz = DIR_VEC[ladder_side]
