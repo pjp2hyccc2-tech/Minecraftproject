@@ -6,7 +6,10 @@ Writes 32x32 icons for every weapon (8 classes x 7 lines, + drawn bow variants),
 the bow coatings, the arrow entity texture, and the item model JSONs (handheld, display transforms computed so that
 big weapons look big while the grip stays in the hand).
 
-  python3 tools/weapons/gen_art.py [--preview]
+  python3 tools/weapons/gen_art.py [--preview] [--1x]
+
+HD mode (default): icons are drawn supersampled and box-filtered to 64x64 (weapons) / 32x32 (small items)
+with continuous shading ramps, round dots and anti-aliased edges; --1x writes the legacy 32x32 / 16x16 art.
 
 Previews (8x contact sheets) go to tools/preview/weapons_*.png.
 """
@@ -98,12 +101,23 @@ PAL = {
 }
 
 
+SS = 4          # supersampling of the HD icons (drawn at 32*SS, box-filtered to 32*HD)
+HD = 2          # output icon scale (64x64 weapons, 32x32 small items); 1 = legacy pixel art
+
+
 def pick(r, t):
-    """Discrete ramp lookup: t in [0,1] -> colour (arrays supported)."""
+    """Ramp lookup: t in [0,1] -> colour (arrays supported).  Discrete steps at 1x, continuous in HD mode
+    (the steps become gradients while the band patterns keep their design)."""
     n = len(r)
-    idx = np.clip(np.floor(np.asarray(t) * n), 0, n - 1).astype(int)
     arr = np.stack(r)
-    return arr[idx]
+    t = np.asarray(t, dtype=float)
+    if HD <= 1:
+        idx = np.clip(np.floor(t * n), 0, n - 1).astype(int)
+        return arr[idx]
+    v = np.clip(t * n - 0.5, 0, n - 1)
+    i0 = np.clip(np.floor(v).astype(int), 0, n - 2)
+    f = (v - i0)[..., None]
+    return arr[i0] * (1 - f) + arr[i0 + 1] * f
 
 
 def hash01(x, y, seed=0):
@@ -113,16 +127,23 @@ def hash01(x, y, seed=0):
 
 # ------------------------------------------------------------------------------------------------ canvas
 class Canvas:
+    """Drawing grid in n x n design pixels.  In HD mode the grid is supersampled SS x (coordinates stay in
+    design pixels; ix / iy are the design pixel indices so hashed speckles keep their 1x layout) and the final
+    image is box-filtered down to n*HD with anti-aliased edges."""
+
     def __init__(self, n=32):
         self.n = n
-        yy, xx = np.mgrid[0:n, 0:n]
-        self.px = xx + 0.5
-        self.py = yy + 0.5
-        self.ix = xx
-        self.iy = yy
-        self.rgb = np.zeros((n, n, 3))
-        self.alpha = np.zeros((n, n), bool)
-        self.solid = np.zeros((n, n), bool)  # pixels that get an outline
+        self.ss = SS if HD > 1 else 1
+        g = n * self.ss
+        self.g = g
+        yy, xx = np.mgrid[0:g, 0:g]
+        self.px = (xx + 0.5) / self.ss
+        self.py = (yy + 0.5) / self.ss
+        self.ix = xx // self.ss
+        self.iy = yy // self.ss
+        self.rgb = np.zeros((g, g, 3))
+        self.alpha = np.zeros((g, g), bool)
+        self.solid = np.zeros((g, g), bool)  # pixels that get an outline
 
     def frame(self, start, end):
         sx, sy = start
@@ -148,7 +169,7 @@ class Canvas:
     def paint(self, mask, colors, outline=True):
         mask = np.asarray(mask, bool)
         if np.ndim(colors) == 1:
-            colors = np.broadcast_to(colors, (self.n, self.n, 3))
+            colors = np.broadcast_to(colors, (self.g, self.g, 3))
         self.rgb[mask] = colors[mask]
         self.alpha |= mask
         if outline:
@@ -157,29 +178,57 @@ class Canvas:
     def dot(self, x, y, col, outline=False):
         x, y = int(round(x - 0.5)), int(round(y - 0.5))
         if 0 <= x < self.n and 0 <= y < self.n:
-            self.rgb[y, x] = col
-            self.alpha[y, x] = True
-            if outline:
-                self.solid[y, x] = True
+            if self.ss == 1:
+                self.rgb[y, x] = col
+                self.alpha[y, x] = True
+                if outline:
+                    self.solid[y, x] = True
+            else:
+                m = self.disc(x + 0.5, y + 0.5, 0.56)     # a round dot in HD
+                self.rgb[m] = col
+                self.alpha |= m
+                if outline:
+                    self.solid |= m
 
     def disc(self, cx, cy, r):
         return (self.px - cx) ** 2 + (self.py - cy) ** 2 <= r * r
 
     def outline(self, col, inner_dark=None):
         s = self.solid
-        nb = np.zeros_like(s)
-        nb[1:, :] |= s[:-1, :]
-        nb[:-1, :] |= s[1:, :]
-        nb[:, 1:] |= s[:, :-1]
-        nb[:, :-1] |= s[:, 1:]
+        if self.ss == 1:
+            nb = np.zeros_like(s)
+            nb[1:, :] |= s[:-1, :]
+            nb[:-1, :] |= s[1:, :]
+            nb[:, 1:] |= s[:, :-1]
+            nb[:, :-1] |= s[:, 1:]
+        else:
+            # HD: the outline is 0.8 design px thick with rounded corners (disc dilation)
+            from scipy import ndimage
+            r = int(round(0.8 * self.ss))
+            yy, xx = np.mgrid[-r:r + 1, -r:r + 1]
+            nb = ndimage.binary_dilation(s, structure=(xx * xx + yy * yy) <= r * r + 0.5)
         edge = nb & ~self.alpha
         self.rgb[edge] = col
         self.alpha |= edge
 
     def image(self):
-        out = np.zeros((self.n, self.n, 4), np.uint8)
-        out[..., :3] = np.clip(self.rgb, 0, 255).astype(np.uint8)
-        out[..., 3] = np.where(self.alpha, 255, 0)
+        if self.ss == 1:
+            out = np.zeros((self.n, self.n, 4), np.uint8)
+            out[..., :3] = np.clip(self.rgb, 0, 255).astype(np.uint8)
+            out[..., 3] = np.where(self.alpha, 255, 0)
+            return Image.fromarray(out, 'RGBA')
+        # box-filter the supersampled drawing to n*HD: alpha-weighted colours, alpha = coverage; the output
+        # alpha is then hardened (coverage >= 50 %) so item meshes keep clean cut-out edges
+        k = self.ss // HD
+        o = self.n * HD
+        rgb = self.rgb.reshape(o, k, o, k, 3)
+        a = self.alpha.reshape(o, k, o, k).astype(float)
+        cnt = a.sum(axis=(1, 3))
+        col = (rgb * a[..., None]).sum(axis=(1, 3)) / np.maximum(cnt, 1)[..., None]
+        cov = cnt / float(k * k)
+        out = np.zeros((o, o, 4), np.uint8)
+        out[..., :3] = np.clip(col, 0, 255).astype(np.uint8)
+        out[..., 3] = np.where(cov >= 0.5, 255, 0)
         return Image.fromarray(out, 'RGBA')
 
 
@@ -845,7 +894,10 @@ def write_json(path, data):
 
 # ------------------------------------------------------------------------------------------------ main
 def main():
+    global HD
     preview = '--preview' in sys.argv
+    if '--1x' in sys.argv:
+        HD = 1
     os.makedirs(TEX_DIR, exist_ok=True)
     os.makedirs(MODEL_DIR, exist_ok=True)
     icons = {}

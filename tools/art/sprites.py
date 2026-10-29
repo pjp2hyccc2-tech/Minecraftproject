@@ -6,7 +6,8 @@
 * mob effect icons            textures/mob_effect/<effect>.png  (18x18)
 * barrel bomb blocks          blockstates + block models + textures/block/barrel_bomb*_{side,top,bottom}.png
 
-    python3 tools/art/sprites.py        # writes everything + tools/preview/sprites.png
+    python3 tools/art/sprites.py [--1x] # writes everything + tools/preview/sprites.png (HD by default:
+                                        # blocks 64x64, projectiles / traps 64x64, effect icons 36x36)
 """
 import json
 import math
@@ -698,9 +699,17 @@ def main():
     for k, fn in EFFECTS.items():
         OUT['mob_effect/' + k] = canvas_rgba(fn())
     barrel_blocks()
+    hd = '--1x' not in sys.argv
     for rel, a in OUT.items():
         p = os.path.join(ASSETS, 'textures', rel + '.png')
         os.makedirs(os.path.dirname(p), exist_ok=True)
+        if hd:
+            # HD: blocks x4 (64x64), projectiles / traps / effect icons x2 (edge-aware upscale, see hdpost)
+            from hdpost import hd_upscale_array
+            K = 4 if rel.startswith('block/') else 2
+            translucent = rel.startswith('entity/')
+            a = hd_upscale_array(a, K, round_alpha=not translucent, grain_amp=0.035 if rel.startswith('block/') else 0.02,
+                                 seed=abs(hash(rel)) % 1000)
         Image.fromarray(np.clip(np.round(a), 0, 255).astype(np.uint8), 'RGBA').save(p)
     write_block_json()
     os.makedirs(PREVIEW, exist_ok=True)

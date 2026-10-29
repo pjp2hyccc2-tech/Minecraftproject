@@ -26,9 +26,20 @@ def ramp(cols):
     return [C(c) for c in cols]
 
 
+HD = 4            # block textures are written HD (16x16 design -> 64x64, see tools/art/hdpost.py); 1 = legacy
+
+
 def tex(name, img):
     p = os.path.join(AS, 'textures', name + '.png')
     os.makedirs(os.path.dirname(p), exist_ok=True)
+    if HD > 1:
+        import sys
+        sys.path.insert(0, os.path.join(ROOT, 'tools', 'art'))
+        from hdpost import hd_upscale_array
+        K = HD if name.startswith('block/') else 2                 # item icons 16 -> 32
+        a = hd_upscale_array(img, K, grain_amp=0.035 if name.startswith('block/') else 0.02, seed=abs(hash(name)) % 1000)
+        Image.fromarray(np.clip(np.round(a), 0, 255).astype(np.uint8), 'RGBA').save(p)
+        return
     Image.fromarray(img, 'RGBA').save(p)
 
 

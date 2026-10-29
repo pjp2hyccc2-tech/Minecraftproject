@@ -104,9 +104,12 @@ def check_texture(ref, owner, size=None):
         missing('texture', '%s (for %s)' % (os.path.relpath(p, ROOT), owner))
         return
     if size:
+        # HD art: any square multiple of the design size up to 4x is fine (icons 16 -> 32 / 64, effects 18 -> 36)
         w, h = Image.open(p).size
-        if (w, h) != size:
-            warnings.append('size %s is %dx%d, expected %dx%d' % (os.path.relpath(p, ROOT), w, h, size[0], size[1]))
+        k = w / float(size[0])
+        ok = k == h / float(size[1]) and k == int(k) and 1 <= k <= 4
+        if not ok:
+            warnings.append('size %s is %dx%d, expected %dx%d (or an HD multiple)' % (os.path.relpath(p, ROOT), w, h, size[0], size[1]))
 
 
 def check_model(ref, owner, depth=0, item_icon=False):

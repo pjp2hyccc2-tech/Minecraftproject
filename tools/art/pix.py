@@ -6,12 +6,18 @@ and outlined selectively (dark outline against transparency, soft shadow line ag
 """
 import colorsys
 import math
+import os
+import sys
 
 import numpy as np
 from PIL import Image
 from scipy import ndimage
 
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')))
+
 SS = 8  # supersampling per pixel
+HD = 2  # HD output scale: the icon is also painted at n*HD texels (continuous shading, rounded outlines and
+        # pixel ops replayed with anti-aliased shapes); 1 = legacy pixel art only
 
 
 def hx(c):
@@ -62,6 +68,19 @@ class Canvas:
         yy, xx = np.mgrid[0:self.H, 0:self.H]
         self.X = (xx + 0.5) / SS
         self.Y = (yy + 0.5) / SS
+        # HD twin of img: layers are painted in high detail, every other pixel edit is replayed (see image())
+        self.hd = np.zeros((n * HD, n * HD, 4), float) if HD > 1 else None
+        self.owner_hd = np.full((n * HD, n * HD), -1, int)
+        self._shadow = self.img.copy()
+
+    def _flush(self):
+        """Replays the pixel-level edits made on img since the last layer onto the HD twin."""
+        if self.hd is None or np.array_equal(self.img, self._shadow):
+            return
+        from hcmodel.hdup import apply_changes
+        z = np.zeros_like(self.img)
+        apply_changes(self.hd, None, self._shadow, self.img, z, z, HD)
+        self._shadow = self.img.copy()
 
     # ------------------------------------------------------------------ hi-res masks
     def poly(self, pts):
@@ -182,12 +201,57 @@ class Canvas:
             elif outline == 'soft':
                 lev = np.where(edge & empty, 1, lev)
         cols = np.stack([hx(c) for c in rp])
+        if self.hd is not None:
+            self._flush()
+            self._layer_hd(hm, b, M, lev, lo, hi, amb, flat, hl, levels, outline, contrast, cols)
         self.img[M, :3] = cols[lev[M]]
         self.img[M, 3] = 255
         self.owner[M] = self.nlayers
         self.nlayers += 1
         self.last_lev = lev
+        if self.hd is not None:
+            self._shadow = self.img.copy()
         return M
+
+    def _layer_hd(self, hm, b, M, lev, lo, hi, amb, flat, hl, levels, outline, contrast, cols):
+        """HD version of a layer: the same shading evaluated per HD cell and looked up continuously along the
+        ramp (levels 1..4), the outline / shadow line ~1 design px wide with rounded corners."""
+        n, K = self.n, HD
+        k = SS // K
+        Mh = np.kron(M, np.ones((K, K), bool)) & (hm.reshape(n * K, k, n * K, k).mean(axis=(1, 3)) >= 0.35)
+        if not Mh.any():
+            return
+        with np.errstate(invalid='ignore'):
+            bh = np.nanmean(b.reshape(n * K, k, n * K, k).transpose(0, 2, 1, 3).reshape(n * K, n * K, k * k), axis=2)
+        bh = np.nan_to_num(bh, nan=0.6)
+        t = (bh - lo) / max(1e-6, hi - lo)
+        t = np.clip((t - 0.5) * contrast + 0.5 + amb, 0, 1)
+        t = t * (1 - flat) + 0.55 * flat
+        v = np.clip(t * 2.95, 0, 3.0)                       # continuous level 1..4
+        if not hl:
+            v = np.minimum(v, 2.0)
+        if levels is not None:
+            v = np.clip(v, levels[0] - 1, levels[1] - 1)
+        i0 = np.clip(np.floor(v).astype(int), 0, 2)
+        f = (v - i0)[..., None]
+        rgb = cols[1 + i0] * (1 - f) + cols[2 + i0] * f
+        if outline:
+            r = K
+            yy, xx = np.mgrid[-r:r + 1, -r:r + 1]
+            disc = (xx * xx + yy * yy) <= r * r + 0.5
+            inner = ndimage.binary_erosion(Mh, structure=disc, border_value=0)
+            edge = Mh & ~inner
+            empty = ndimage.binary_dilation(~Mh & (self.owner_hd < 0), structure=disc) & Mh
+            if outline == 'auto':
+                rgb = np.where((edge & empty)[..., None], cols[0], rgb)
+                rgb = np.where((edge & ~empty)[..., None], np.minimum(rgb, cols[1]), rgb)
+            elif outline == 'full':
+                rgb = np.where(edge[..., None], cols[0], rgb)
+            elif outline == 'soft':
+                rgb = np.where((edge & empty)[..., None], cols[1], rgb)
+        self.hd[Mh, :3] = rgb[Mh]
+        self.hd[Mh, 3] = 255
+        self.owner_hd[Mh] = self.nlayers
 
     # ------------------------------------------------------------------ pixel ops
     def px(self, x, y, col, a=255):
@@ -260,7 +324,14 @@ class Canvas:
     def drop_shadow(self, col='#00000000'):
         pass
 
-    def image(self):
+    def image(self, hd=None):
+        """The icon: HD (n*HD texels) when HD painting is on, else the 1x pixel art."""
+        if self.hd is not None and hd is not False:
+            self._flush()
+            out = self.hd.copy()
+            out[out[..., 3] < 128] = 0
+            out[..., 3] = np.where(out[..., 3] >= 128, 255, 0)
+            return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8), 'RGBA')
         return Image.fromarray(np.clip(self.img, 0, 255).astype(np.uint8), 'RGBA')
 
     def save(self, path):
