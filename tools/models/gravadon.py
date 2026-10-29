@@ -254,9 +254,7 @@ A.sine(a, 'arm_r', 'rotation', (10, 0, 0), period=2.0)
 a = T('run', 1.1, True)
 gait(a, 1.1, RUN_KEYS, steps_per_cycle=14)
 A.sine(a, 'body', 'position', (0, -2.6, 0), period=0.55, phase=-math.pi / 2, offset=(0, 1.0, 0))
-A.hold(a, 'body', 'rotation', (6, 0, 0))
 A.sine(a, 'body', 'rotation', (2.0, 3.0, 3.5), period=1.1, offset=(6, 0, 0))
-A.hold(a, 'neck', 'rotation', (8, 0, 0))
 A.sine(a, 'neck', 'rotation', (3.0, -2.0, 0), period=0.55, phase=0.8, offset=(8, 0, 0))
 A.hold(a, 'head', 'rotation', (-10, 0, 0))
 A.hold(a, 'jaw', 'rotation', (10, 0, 0))
@@ -450,7 +448,18 @@ legs_pose(a, [(0, (0, 0, 0)), (0.85, (6, 4, -8)), (1.1, (-26, 22, 6)), (1.45, (-
 arms(a, [(0, (0, 0, 0)), (0.85, (-50, 30, 40)), (1.1, (20, 10, 0)), (2.25, (-60, 40, 50)), (2.5, (20, 10, 0)), (3.2, (10, 10, 0)), (4.0, (0, 0, 0))])
 tail_keys(a, [(0, (0, 0, 0)), (0.85, (4, 4, 0)), (1.1, (-3, -4, 0)), (1.5, (-2, 0, 0)), (2.25, (6, -4, 0)), (2.5, (-3, 4, 0)), (3.0, (-2, 0, 0)), (4.0, (0, 0, 0))], growth=1.1)
 
+def check_anims(model):
+    """Minecraft divides by the gap between keyframes: duplicate timestamps in a channel would produce NaN."""
+    for an, anim in model.animations.items():
+        for bone, chans in anim.channels.items():
+            assert bone in model.bones, '%s: unknown bone %s' % (an, bone)
+            for ch, keys in chans.items():
+                for k0, k1 in zip(keys, keys[1:]):
+                    assert k1[0] - k0[0] > 1e-4, '%s %s %s: duplicate key time %.4f' % (an, bone, ch, k1[0])
+
+
 if __name__ == '__main__':
+    check_anims(m)
     root = os.path.join(os.path.dirname(__file__), '..', '..', 'src', 'main', 'resources', 'assets', 'huntcraft')
     img, glow = m.export(root)
     print('texture', m.tex_w, m.tex_h, 'cubes', sum(1 for _ in m.all_cubes()), 'bones', len(m.bones), 'anims', len(m.animations))

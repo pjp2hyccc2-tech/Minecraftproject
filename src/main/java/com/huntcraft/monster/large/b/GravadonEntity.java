@@ -19,7 +19,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -250,7 +249,7 @@ public class GravadonEntity extends LargeMonster {
     protected void customServerTick() {
         // enraged: steam snorts and water drips from the jaws
         if (isEnraged() && tickCount % 7 == 0 && !isLocked()) {
-            Vec3 m = mouthPos();
+            Vec3 m = localPos(0, 2.6, 4.5);
             burstParticles(ParticleTypes.CLOUD, m, 1, 0.1);
             burstParticles(ParticleTypes.FALLING_WATER, m.add(0, -0.6, 0), 2, 0.25);
         }

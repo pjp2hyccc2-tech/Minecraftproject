@@ -57,17 +57,17 @@ public class AzragosEntity extends LargeMonster {
             .weakness(Element.DRAGON, 2).weakness(Element.ICE, 1).weakness(Element.THUNDER, 1)
             .status(ELDER_STATUS)
             .rageThreshold(0.11F).flinchThreshold(0.06F).captureThreshold(0.0F)
-            .part(new PartDef("head", 0, 4.0F, 4.1F, 1.6F, 1.4F, HZ_HEAD).breakable(240, "horn_tip_l", "horn_tip_r", "horn2_tip_l", "horn2_tip_r").ko())
-            .part(new PartDef("neck", 0, 3.1F, 2.5F, 1.5F, 1.4F, HZ_NECK))
+            .part(new PartDef("head", 0, 3.7F, 3.95F, 1.9F, 1.6F, HZ_HEAD).breakable(240, "horn_tip_l", "horn_tip_r", "horn2_tip_l", "horn2_tip_r").ko())
+            .part(new PartDef("neck", 0, 2.9F, 2.3F, 1.5F, 1.5F, HZ_NECK))
             .part(PartDef.body(HZ_BODY))
-            .part(new PartDef("wing_l", -1.7F, 3.3F, 0.2F, 1.8F, 1.0F, HZ_WING).breakable(180, "mem_f3_l"))
-            .part(new PartDef("wing_r", 1.7F, 3.3F, 0.2F, 1.8F, 1.0F, HZ_WING).breakable(180, "mem_f3_r"))
-            .part(new PartDef("foreleg_l", -1.0F, 0, 1.4F, 1.1F, 2.3F, HZ_FORELEG).breakable(170, "elbow_spike_l", "fore_plate_l"))
-            .part(new PartDef("foreleg_r", 1.0F, 0, 1.4F, 1.1F, 2.3F, HZ_FORELEG).breakable(170, "elbow_spike_r", "fore_plate_r"))
-            .part(new PartDef("hindleg_l", -1.0F, 0, -1.3F, 1.2F, 2.3F, HZ_LEG))
-            .part(new PartDef("hindleg_r", 1.0F, 0, -1.3F, 1.2F, 2.3F, HZ_LEG))
-            .part(new PartDef("tail_base", 0, 1.9F, -2.9F, 1.5F, 1.3F, HZ_TAIL))
-            .part(new PartDef("tail", 0, 1.3F, -5.0F, 1.6F, 1.2F, HZ_TAIL).severable(300, "tail4", "tail5", "tail6", "tail_blade"))
+            .part(new PartDef("wing_l", -1.55F, 2.4F, 0.0F, 1.1F, 1.9F, HZ_WING).breakable(180, "mem_f3_l"))
+            .part(new PartDef("wing_r", 1.55F, 2.4F, 0.0F, 1.1F, 1.9F, HZ_WING).breakable(180, "mem_f3_r"))
+            .part(new PartDef("foreleg_l", -0.95F, 0, 1.75F, 1.1F, 2.4F, HZ_FORELEG).breakable(170, "elbow_spike_l", "fore_plate_l"))
+            .part(new PartDef("foreleg_r", 0.95F, 0, 1.75F, 1.1F, 2.4F, HZ_FORELEG).breakable(170, "elbow_spike_r", "fore_plate_r"))
+            .part(new PartDef("hindleg_l", -0.85F, 0, -1.2F, 1.1F, 2.3F, HZ_LEG))
+            .part(new PartDef("hindleg_r", 0.85F, 0, -1.2F, 1.1F, 2.3F, HZ_LEG))
+            .part(new PartDef("tail_base", 0, 1.9F, -2.6F, 1.4F, 1.4F, HZ_TAIL))
+            .part(new PartDef("tail", 0, 1.7F, -5.0F, 2.0F, 1.2F, HZ_TAIL).severable(300, "tail4", "tail5", "tail6", "tail_blade"))
             .carves(new RewardTable()
                     .low(HCItems.AZRAGOS.scale, 28, 1, 2).low(HCItems.AZRAGOS.shell, 25).low(HCItems.AZRAGOS.special, 12)
                     .low(HCItems.AZRAGOS.claw, 16).low(HCItems.MONSTER_BONE_L, 8).low(HCItems.AZRAGOS.gem, 3)
@@ -89,13 +89,13 @@ public class AzragosEntity extends LargeMonster {
 
     public static final String[] ANIMS = {
             "roar", "flinch", "bite", "claw_swipe", "tail_sweep", "breath_beam", "orb_volley", "wing_gust", "supernova",
-            "takeoff", "land", "fly_orb", "dive", "meteor_rain"
+            "takeoff", "land", "fly_orb", "dive", "meteor_rain", "fly_roar", "fly_flinch"
     };
 
     // geometry (blocks at scale 1, measured from the model)
-    private static final double MOUTH_UP = 4.25, MOUTH_FWD = 4.9;
-    private static final double BEAM_PIVOT_UP = 3.6, BEAM_PIVOT_FWD = 2.2, BEAM_REACH = 2.7;
-    private static final double CORE_UP = 2.7, CORE_FWD = 1.6;
+    private static final double SHOT_UP = 3.0, SHOT_FWD = 4.4;
+    private static final double BEAM_PIVOT_UP = 3.2, BEAM_PIVOT_FWD = 1.6, BEAM_REACH = 2.8;
+    private static final double CORE_UP = 4.3, CORE_FWD = 1.4;
 
     // assigned in createAttacks() (runs inside the super constructor): no field initializers here
     private MonsterAttack takeoff;
@@ -128,6 +128,13 @@ public class AzragosEntity extends LargeMonster {
         return 5.0F;
     }
 
+    /** While airborne the roar / flinch use air variants (the fly loop stays layered underneath). */
+    @Override
+    public void playAction(String anim, int ticks) {
+        if (isFlying() && ("roar".equals(anim) || "flinch".equals(anim))) anim = "fly_" + anim;
+        super.playAction(anim, ticks);
+    }
+
     @Override
     public double getRunSpeedModifier() {
         return 1.3;
@@ -141,22 +148,22 @@ public class AzragosEntity extends LargeMonster {
 
         MonsterAttack bite = TimelineAttack.builder("bite", 26).range(0, 6).angle(35).weight(10).cooldown(30)
                 .track(0, 8, 6).move(9, 12, 0.25, 0)
-                .hit(12, 0, 3.4, 4.7, 1.8F, 17, Element.NONE, 1.4F)
+                .hit(12, 0, 2.4, 4.6, 1.9F, 17, Element.NONE, 1.4F)
                 .sound(11, HCSounds.BITE, 2.2F, 0.75F)
                 .build();
         // double claw swipe (right then left)
         MonsterAttack claws = TimelineAttack.builder("claw_swipe", 44).range(0, 6.5F).angle(60).weight(12).cooldown(40)
                 .track(0, 10, 6)
-                .sweep(12, 16, 0.5F, 6.2F, 75, -45, 3.0F, 16, Element.NONE, 1.8F)
+                .sweep(12, 16, 0.5F, 5.6F, 75, -45, 3.2F, 16, Element.NONE, 1.8F)
                 .sound(12, HCSounds.TAIL_SWING, 2.2F, 1.1F)
                 .at(19, (m, tg, t) -> clearHits(m))
                 .track(18, 22, 5)
-                .sweep(24, 28, 0.5F, 6.2F, -75, 45, 3.0F, 16, Element.NONE, 1.8F)
+                .sweep(24, 28, 0.5F, 5.6F, -75, 45, 3.2F, 16, Element.NONE, 1.8F)
                 .sound(24, HCSounds.TAIL_SWING, 2.2F, 1.0F)
                 .build();
         // tail blade sweep from the right side, through the back, to the left
-        MonsterAttack tailSweep = TimelineAttack.builder("tail_sweep", 40).range(0, 10).angle(180).weight(9).cooldown(70)
-                .sweep(14, 24, 1.5F, 10.0F, 80, 280, 3.0F, 18, Element.NONE, 2.6F)
+        MonsterAttack tailSweep = TimelineAttack.builder("tail_sweep", 40).range(0, 8).angle(180).weight(9).cooldown(70)
+                .sweep(14, 24, 1.5F, 7.8F, 80, 280, 3.0F, 18, Element.NONE, 2.6F)
                 .sound(14, HCSounds.TAIL_SWING, 2.8F, 0.6F).sound(19, HCSounds.TAIL_SWING, 2.6F, 0.7F)
                 .build();
         // sweeping dragon beam (left to right across the target)
@@ -171,10 +178,10 @@ public class AzragosEntity extends LargeMonster {
         MonsterAttack volley = TimelineAttack.builder("orb_volley", 50).range(6, 30).angle(50).weight(10).cooldown(100).notWhenTired()
                 .track(0, 16, 5)
                 .span(4, 17, (m, tg, t) -> beamCharge(m, t))
-                .projectile(18, 0, MOUTH_UP, MOUTH_FWD, orb)
+                .projectile(18, 0, SHOT_UP, SHOT_FWD, orb)
                 .sound(18, HCSounds.DRAGON_BEAM, 2.5F, 1.5F)
                 .track(19, 28, 5)
-                .projectile(30, 0, MOUTH_UP, MOUTH_FWD, orb3)
+                .projectile(30, 0, SHOT_UP, SHOT_FWD, orb3)
                 .sound(30, HCSounds.DRAGON_BEAM, 2.5F, 1.7F)
                 .build();
         // ground wing gust: two forward beats that trip and push hunters
@@ -209,7 +216,7 @@ public class AzragosEntity extends LargeMonster {
         MonsterAttack flyOrb = TimelineAttack.builder("fly_orb", 36).range(0, 32).angle(60).weight(10).cooldown(50).airOnly().notWhenTired()
                 .track(0, 14, 7)
                 .span(4, 15, (m, tg, t) -> beamCharge(m, t))
-                .projectile(16, 0, 3.4, 3.6, airOrb)
+                .projectile(16, 0, 3.3, 4.6, airOrb)
                 .sound(16, HCSounds.DRAGON_BEAM, 2.5F, 1.4F)
                 .span(0, 35, (m, t, i) -> m.setDeltaMovement(m.getDeltaMovement().scale(0.6)))
                 .build();
@@ -254,7 +261,7 @@ public class AzragosEntity extends LargeMonster {
     /** Glowing energy gathering in the jaws. */
     private static void beamCharge(Object o, int t) {
         if (!(o instanceof AzragosEntity m) || !(m.level() instanceof ServerLevel sl)) return;
-        Vec3 mouth = m.localPos(0, MOUTH_UP, MOUTH_FWD);
+        Vec3 mouth = m.localPos(0, m.isFlying() ? 3.3 : SHOT_UP + 0.6, m.isFlying() ? 4.6 : SHOT_FWD);
         LBUtil.converge(sl, mouth, 1.8 * m.getMonsterScale(), ParticleTypes.DRAGON_BREATH, 3, m.getRandom(), 0.09);
         if (t % 2 == 0) LBUtil.converge(sl, mouth, 2.4 * m.getMonsterScale(), ParticleTypes.END_ROD, 1, m.getRandom(), 0.12);
     }
