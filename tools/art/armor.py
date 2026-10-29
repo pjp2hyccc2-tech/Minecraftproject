@@ -495,8 +495,11 @@ def build_jagraptor(o, i):
     i.body.cube((-3.6, 9.0, 2.5), (7.2, 3.6, 0.7), 'ja_blue')
 
     def stripes(fc, mask, phase=0):
-        m = (((fc.I + fc.J + phase) % 6) < 2) & mask
-        fc.plate('ja_stripe', m)
+        # raptor chevron bands: a 1px orange stripe with a dark underline every 4 rows, pointing down the middle
+        cx = (fc.w - 1) / 2.0
+        k = np.floor(fc.J - np.abs(fc.I - cx) * 0.6 + phase).astype(int) % 5
+        fc.color('#d8702c', (k == 0) & mask)
+        fc.color('#12243a', (k == 1) & mask)
 
     def paint_outer(am):
         hf = faces_of(am, 'head')

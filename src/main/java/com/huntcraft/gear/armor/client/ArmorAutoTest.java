@@ -1,8 +1,11 @@
 package com.huntcraft.gear.armor.client;
 
 import com.huntcraft.HuntCraft;
+import com.huntcraft.entity.misc.MonsterProjectile;
+import com.huntcraft.entity.misc.TrapEntity;
 import com.huntcraft.gear.armor.ArmorSet;
 import com.huntcraft.gear.armor.ArmorSets;
+import com.huntcraft.registry.HCBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,10 +17,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,7 +40,8 @@ import java.util.function.Consumer;
 /**
  * Development-only visual check of the armor module (active only with -Dhuntcraft.autotest=true, i.e. the CI client
  * run). Uses the warm-up window before the core autotest's first step (120 ticks after the world loads) to photograph
- * armor stands wearing all 8 series (front, back, close-up) and a wall of every HuntCraft item icon, then cleans up.
+ * armor stands wearing all 8 series (two close-ups, front, back; with both traps, both barrel bombs and every monster
+ * projectile sprite in the scene) and a wall of every HuntCraft item icon, then cleans up.
  * Screenshots: run/screenshots/armor_*.png, item_icons.png.
  */
 @Mod.EventBusSubscriber(modid = HuntCraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -43,14 +50,22 @@ public final class ArmorAutoTest {
     private static final EquipmentSlot[] SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     private static final double SPACING = 1.6;
     private static final double ROW_DIST = 7.0;
-    /** Ticks since the world loaded (-1 = not loaded yet). The core autotest starts its own steps at tick 121. */
+    /** Last tick (since the world loaded) we may act on: the core autotest runs its first step at tick ~121. */
+    private static final int DEADLINE = 114;
+    /** Ticks since the world loaded (-1 = not loaded yet). */
     private static int tick = -1;
     private static int start = -1;
+    private static int next;
     private static boolean done;
-    private static final List<ArmorStand> STANDS = new ArrayList<>();
+    private static final List<Step> STEPS = new ArrayList<>();
+    private static final List<Entity> SPAWNED = new ArrayList<>();
+    private static final List<BlockPos> BLOCKS = new ArrayList<>();
     private static Vec3 home;
     private static float homeYaw, homePitch;
     private static int groundY;
+
+    private record Step(int at, Consumer<Minecraft> action) {
+    }
 
     private ArmorAutoTest() {
     }
@@ -60,41 +75,46 @@ public final class ArmorAutoTest {
         if (!ENABLED || done || event.phase != TickEvent.Phase.END) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null || mc.getSingleplayerServer() == null) return;
-        tick++;
-        if (tick == 0) tick = 1;
+        tick = Math.max(1, tick + 1);
         try {
             if (start < 0) {
-                if (mc.screen != null && tick < 40) return; // wait for the "loading terrain" screen to close
+                if (mc.screen != null && tick < 50) return; // wait for the "loading terrain" screen to close
                 start = tick;
+                buildSteps();
             }
             int t = tick - start;
-            boolean closeup = start <= 24;
-            if (t == 1) {
-                mc.options.hideGui = true;
-                server(mc, ArmorAutoTest::spawnStands);
-            } else if (t == 30) {
-                shot(mc, "armor_front");
-            } else if (t == 32) {
-                server(mc, sp -> view(sp, 0.0, -2 * ROW_DIST, 0.0F, 9.0F));
-            } else if (t == 54) {
-                shot(mc, "armor_back");
-            } else if (t == 56 && closeup) {
-                // three-quarter close-up of the four large-monster series on the right half of the row
-                server(mc, sp -> view(sp, 0.9, -ROW_DIST + 4.3, 208.0F, 12.0F));
-            } else if (t == 78 && closeup) {
-                shot(mc, "armor_closeup");
-            } else if (t == (closeup ? 80 : 56)) {
-                mc.setScreen(new IconWall());
-            } else if (t == (closeup ? 92 : 70)) {
-                shot(mc, "item_icons");
-            } else if (t == (closeup ? 94 : 72)) {
-                finish(mc);
-            }
-            if (tick > 116 && !done) finish(mc); // never overlap the core autotest
+            while (next < STEPS.size() && STEPS.get(next).at() <= t && tick < DEADLINE) STEPS.get(next++).action().accept(mc);
+            if (next >= STEPS.size() || tick >= DEADLINE) finish(mc);
         } catch (Exception e) {
             HuntCraft.LOGGER.error("[AUTOTEST] armor autotest failed", e);
             finish(mc);
         }
+    }
+
+    /** Shots in priority order (later ones are dropped if the world took long to load). */
+    private static void buildSteps() {
+        STEPS.clear();
+        int n = ArmorSets.ALL.size();
+        double half = (n / 2 - 1) / 2.0 * SPACING + SPACING / 2.0; // centre of each half of the row
+        STEPS.add(new Step(1, mc -> {
+            mc.options.hideGui = true;
+            server(mc, sp -> {
+                spawnStands(sp);
+                view(sp, -half + 1.0, -ROW_DIST + 3.7, 165.0F, 12.0F);
+            });
+        }));
+        STEPS.add(new Step(15, mc -> shot(mc, "armor_closeup_a")));
+        STEPS.add(new Step(17, mc -> server(mc, sp -> view(sp, half - 1.0, -ROW_DIST + 3.7, 195.0F, 12.0F))));
+        STEPS.add(new Step(31, mc -> shot(mc, "armor_closeup_b")));
+        STEPS.add(new Step(33, mc -> mc.setScreen(new IconWall())));
+        STEPS.add(new Step(43, mc -> shot(mc, "item_icons")));
+        STEPS.add(new Step(45, mc -> {
+            mc.setScreen(null);
+            server(mc, sp -> view(sp, 0.0, 0.0, 180.0F, 4.0F));
+        }));
+        STEPS.add(new Step(59, mc -> shot(mc, "armor_front")));
+        STEPS.add(new Step(61, mc -> server(mc, sp -> view(sp, 0.0, -2 * ROW_DIST, 0.0F, 4.0F))));
+        STEPS.add(new Step(75, mc -> shot(mc, "armor_back")));
     }
 
     private static void spawnStands(ServerPlayer sp) {
@@ -118,17 +138,53 @@ public final class ArmorAutoTest {
             st.setYHeadRot(0.0F);
             for (int i = 0; i < 4; i++) st.setItemSlot(SLOTS[i], new ItemStack(set.item(i).get()));
             lvl.addFreshEntity(st);
-            STANDS.add(st);
+            SPAWNED.add(st);
+        }
+        double rowZ = home.z - ROW_DIST;
+        // barrel bombs at both ends of the row, both traps in front of it
+        for (int side = 0; side < 2; side++) {
+            BlockPos b = BlockPos.containing(home.x + (side == 0 ? -1 : 1) * (n / 2.0 + 0.6) * SPACING, groundY, rowZ);
+            lvl.setBlock(b, (side == 0 ? HCBlocks.BARREL_BOMB : HCBlocks.BARREL_BOMB_PLUS).get().defaultBlockState(), 3);
+            BLOCKS.add(b);
+        }
+        for (TrapEntity.TrapKind kind : TrapEntity.TrapKind.values()) {
+            TrapEntity trap = TrapEntity.create(lvl, kind, home.x + (kind.ordinal() == 0 ? -1.7 : 1.7), groundY, rowZ + 2.6);
+            lvl.addFreshEntity(trap);
+            SPAWNED.add(trap);
+        }
+        // every monster projectile sprite, hovering in two rows above the armor stands
+        MonsterProjectile.Kind[] kinds = MonsterProjectile.Kind.values();
+        int perRow = (kinds.length + 1) / 2;
+        for (int k = 0; k < kinds.length; k++) {
+            int row = k / perRow;
+            int idx = k % perRow;
+            int cnt = row == 0 ? perRow : kinds.length - perRow;
+            double px = home.x + (idx - (cnt - 1) / 2.0) * 1.7;
+            double py = groundY + 3.3 + row * 1.6;
+            CompoundTag pt = new CompoundTag();
+            pt.putString("id", HuntCraft.id("monster_projectile").toString());
+            pt.putInt("Kind", k);
+            pt.putInt("Life", 600);
+            pt.putFloat("Damage", 0.0F);
+            Entity e = EntityType.loadEntityRecursive(pt, lvl, ent -> {
+                ent.moveTo(px, py, rowZ, 0.0F, 0.0F);
+                return ent;
+            });
+            if (e != null) {
+                e.setNoGravity(true);
+                lvl.addFreshEntity(e);
+                SPAWNED.add(e);
+            }
         }
         sp.getAbilities().flying = true;
         sp.onUpdateAbilities();
-        view(sp, 0.0, 0.0, 180.0F, 9.0F);
     }
 
     /** Puts the camera at an offset from the original spawn point (z relative to the player, row at -ROW_DIST). */
     private static void view(ServerPlayer sp, double dx, double dz, float yaw, float pitch) {
         if (home == null) return;
-        sp.teleportTo(sp.serverLevel(), home.x + dx, groundY + 0.5, home.z + dz, yaw, pitch);
+        double dy = Math.abs(dz + ROW_DIST) < ROW_DIST * 0.75 ? 0.2 : 0.5; // a bit lower for close-ups
+        sp.teleportTo(sp.serverLevel(), home.x + dx, groundY + dy, home.z + dz, yaw, pitch);
     }
 
     private static void finish(Minecraft mc) {
@@ -136,8 +192,10 @@ public final class ArmorAutoTest {
         if (mc.screen instanceof IconWall) mc.setScreen(null);
         mc.options.hideGui = false;
         server(mc, sp -> {
-            for (ArmorStand st : STANDS) st.discard();
-            STANDS.clear();
+            for (Entity e : SPAWNED) e.discard();
+            SPAWNED.clear();
+            for (BlockPos b : BLOCKS) sp.serverLevel().setBlock(b, Blocks.AIR.defaultBlockState(), 3);
+            BLOCKS.clear();
             if (home != null) sp.teleportTo(sp.serverLevel(), home.x, home.y, home.z, homeYaw, homePitch);
         });
         HuntCraft.LOGGER.info("[AUTOTEST] armor autotest finished at tick {}", tick);
