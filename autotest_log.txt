@@ -1,0 +1,137 @@
+world creation requested
+world loaded, 120 steps
+step setup
+shot 00_hud_overworld
+step spawn_ignivald
+light ignivald: sky=15 block=0 raw=15 at BlockPos{x=2000, y=-58, z=0}, clientPos=(2000.5, -60.0, 0.5), playerPos=(2000.5, -56.69399998426437, 11.500000131130218)
+step frame_ignivald
+shot monster_ignivald
+step attack_ignivald
+shot monster_ignivald_attack
+step clear_ignivald
+step spawn_frostgarm
+light frostgarm: sky=15 block=0 raw=15 at BlockPos{x=2064, y=-58, z=0}, clientPos=(2064.5, -60.0, 0.5), playerPos=(2064.5, -56.43600005149841, 11.77499986886978)
+step frame_frostgarm
+shot monster_frostgarm
+step attack_frostgarm
+shot monster_frostgarm_attack
+step clear_frostgarm
+step spawn_voltrix
+light voltrix: sky=15 block=0 raw=15 at BlockPos{x=2128, y=-58, z=0}, clientPos=(2128.5, -60.0, 0.5), playerPos=(2128.5, -57.20100001573562, 10.399999868869783)
+step frame_voltrix
+shot monster_voltrix
+step attack_voltrix
+shot monster_voltrix_attack
+step clear_voltrix
+step spawn_gravadon
+light gravadon: sky=15 block=0 raw=15 at BlockPos{x=2192, y=-58, z=0}, clientPos=(2192.5, -60.0, 0.5), playerPos=(2192.5, -56.327999897003174, 12.050000262260436)
+step frame_gravadon
+shot monster_gravadon
+step attack_gravadon
+shot monster_gravadon_attack
+step clear_gravadon
+step spawn_azragos
+light azragos: sky=15 block=0 raw=15 at BlockPos{x=2256, y=-58, z=0}, clientPos=(2256.5, -60.0, 0.5), playerPos=(2256.5, -56.327999897003174, 12.050000262260436)
+step frame_azragos
+shot monster_azragos
+step attack_azragos
+shot monster_azragos_attack
+step clear_azragos
+step spawn_jagraptor
+light jagraptor: sky=15 block=0 raw=15 at BlockPos{x=2320, y=-59, z=0}, clientPos=(2320.5, -60.0, 0.5), playerPos=(2320.5, -58.65, 4.575)
+step frame_jagraptor
+shot monster_jagraptor
+step attack_jagraptor
+shot monster_jagraptor_attack
+step clear_jagraptor
+step spawn_blizraptor
+light blizraptor: sky=15 block=0 raw=15 at BlockPos{x=2384, y=-59, z=0}, clientPos=(2384.5, -60.0, 0.5), playerPos=(2384.5, -58.65, 4.575)
+step frame_blizraptor
+shot monster_blizraptor
+step attack_blizraptor
+shot monster_blizraptor_attack
+step clear_blizraptor
+step spawn_boarfang
+light boarfang: sky=15 block=0 raw=15 at BlockPos{x=2448, y=-60, z=0}, clientPos=(2448.5, -60.0, 0.5), playerPos=(2448.5, -59.009999978542325, 4.075000029802323)
+step frame_boarfang
+shot monster_boarfang
+step attack_boarfang
+shot monster_boarfang_attack
+step clear_boarfang
+step spawn_grasica
+light grasica: sky=15 block=0 raw=15 at BlockPos{x=2512, y=-59, z=0}, clientPos=(2512.5, -60.0, 0.5), playerPos=(2512.5, -58.65, 4.575)
+step frame_grasica
+shot monster_grasica
+step attack_grasica
+shot monster_grasica_attack
+step clear_grasica
+step spawn_gamenos
+light gamenos: sky=15 block=0 raw=15 at BlockPos{x=2576, y=-59, z=0}, clientPos=(2576.5, -60.0, 0.5), playerPos=(2576.5, -58.46999995708465, 4.825000059604645)
+step frame_gamenos
+shot monster_gamenos
+step attack_gamenos
+shot monster_gamenos_attack
+step clear_gamenos
+step spawn_buzzling
+light buzzling: sky=15 block=0 raw=15 at BlockPos{x=2640, y=-60, z=0}, clientPos=(2640.5, -60.0, 0.5), playerPos=(2640.5, -59.26499999463558, 3.824999970197678)
+step frame_buzzling
+shot monster_buzzling
+step attack_buzzling
+shot monster_buzzling_attack
+step clear_buzzling
+step spawn_yukimammo
+light yukimammo: sky=15 block=0 raw=15 at BlockPos{x=2704, y=-59, z=0}, clientPos=(2704.5, -60.0, 0.5), playerPos=(2704.5, -57.930000042915346, 5.574999940395355)
+step frame_yukimammo
+shot monster_yukimammo
+step attack_yukimammo
+shot monster_yukimammo_attack
+step clear_yukimammo
+step spawn_heatgecko
+light heatgecko: sky=15 block=0 raw=15 at BlockPos{x=2768, y=-60, z=0}, clientPos=(2768.5, -60.0, 0.5), playerPos=(2768.5, -59.429999980330464, 3.7000000149011614)
+step frame_heatgecko
+shot monster_heatgecko
+step attack_heatgecko
+shot monster_heatgecko_attack
+step clear_heatgecko
+step spawn_gansekigani
+light gansekigani: sky=15 block=0 raw=15 at BlockPos{x=2832, y=-60, z=0}, clientPos=(2832.5, -60.0, 0.5), playerPos=(2832.5, -58.99499997496605, 4.200000059604645)
+step frame_gansekigani
+shot monster_gansekigani
+step attack_gansekigani
+shot monster_gansekigani_attack
+step clear_gansekigani
+step spawn_nussutto_mofu
+light nussutto_mofu: sky=15 block=0 raw=15 at BlockPos{x=2896, y=-60, z=0}, clientPos=(2896.5, -60.0, 0.5), playerPos=(2896.5, -59.145000010728836, 3.887499985098839)
+step frame_nussutto_mofu
+shot monster_nussutto_mofu
+step attack_nussutto_mofu
+shot monster_nussutto_mofu_attack
+step clear_nussutto_mofu
+step goto_village
+shot village_spawn
+step look_around
+shot village_view2
+step open_quest_board
+shot gui_quest_board
+step close_quest_board
+step open_blacksmith
+shot gui_blacksmith
+step close_blacksmith
+step open_merchant
+shot gui_merchant
+step close_merchant
+step open_kitchen
+shot gui_kitchen
+step close_kitchen
+step open_companion
+shot gui_companion
+step close_companion
+step open_hunter_notes
+shot gui_hunter_notes
+step close_hunter_notes
+step goto_verdant_hills
+shot map_verdant_hills
+step goto_frostpeak_range
+shot map_frostpeak_range
+step goto_ember_caldera
+shot map_ember_caldera
