@@ -183,6 +183,19 @@ class Canvas:
         return Image.fromarray(out, 'RGBA')
 
 
+def erode(m):
+    e = m.copy()
+    e[1:, :] &= m[:-1, :]
+    e[:-1, :] &= m[1:, :]
+    e[:, 1:] &= m[:, :-1]
+    e[:, :-1] &= m[:, 1:]
+    return e
+
+
+def border(m):
+    return m & ~erode(m)
+
+
 # ------------------------------------------------------------------------------------------------ shading helpers
 def shade_band(t_v, base=0.5, slope=0.38):
     """t_v in [-1,1] (positive = up-left side) -> brightness 0..1 (light from the top-left)."""
@@ -247,7 +260,8 @@ def guard_bar(c, pal, start, end, u0, u1, half, ramp_key='metal', rounded=True):
     if rounded:
         m &= ~(((u < u0 + 0.8) | (u > u1 - 0.8)) & (np.abs(v) > half - 0.8))
     tv = v / max(half, 1) * 0.5 + (u - (u0 + u1) / 2) / max(u1 - u0, 1) * 0.8
-    c.paint(m, pick(pal[ramp_key], shade_band(tv, 0.5, 0.45)))
+    c.paint(m, pick(pal[ramp_key], shade_band(tv, 0.55, 0.45)))
+    c.paint(border(m), pal[ramp_key][1])
     return m
 
 
@@ -306,10 +320,10 @@ def ornament_blade(c, line, pal, start, end, u0, u1, hw, curve=None, seed=0, bac
         c.paint(frost, pal['accent'][3])
     elif line == 'voltrix':
         # lightning zigzag through the blade + serrated shell plates
-        zz = rel - (np.abs(((u * 0.55 + seed) % 2.0) - 1.0) - 0.5) * w * 0.9
-        bolt = inside & (np.abs(zz) < 0.55) & (u > u0 + 1)
-        c.paint(bolt, pal['accent'][3])
-        core = inside & (np.abs(zz) < 0.2) & (u > u0 + 1)
+        zz = rel - (np.abs(((u * 0.36 + seed) % 2.0) - 1.0) - 0.5) * w * 1.1
+        bolt = inside & (np.abs(zz) < 0.75) & (u > u0 + 1) & (u < u1 - 0.5)
+        c.paint(bolt, pal['accent'][2])
+        core = inside & (np.abs(zz) < 0.32) & (u > u0 + 1) & (u < u1 - 0.5)
         c.paint(core, pal['accent'][4])
         for k, uu in enumerate(np.arange(u0 + 2.0, u1 - 1.0, 3.0)):
             wk = float(hw(uu) if callable(hw) else hw)
@@ -393,22 +407,46 @@ DIAG = ((2.5, 29.5), (29.5, 2.5))
 
 def draw_great_sword(c, line, pal):
     s, e = DIAG
-    grip(c, pal, s, e, 1.0, 9.0, 1.15)
-    pommel(c, pal, s, e, 1.2, 1.7)
-    tip0 = 33.0
-    hw = lambda u: np.where(u < tip0, 3.4 + 0.25 * np.sin((u - 10) * 0.15), 3.4 * np.clip((37.6 - u) / (37.6 - tip0), 0, 1))
+    grip(c, pal, s, e, 1.0, 8.8, 1.15)
+    pommel(c, pal, s, e, 1.2, 1.8)
+    u, v, _ = c.frame(s, e)
+    b0, tip0, tip1 = 10.2, 31.0, 37.8
+    hw = 3.9
+    wob = 0.0
     if line == 'gravadon':
-        hw = lambda u: np.where(u < tip0, 3.5 + 0.45 * np.sin(u * 1.7) * (u > 12), 3.6 * np.clip((37.6 - u) / (37.6 - tip0), 0, 1))
-    m, u, v, t = stroke(c, s, e, 10.0, 37.6, hw)
-    fuller = (np.abs(t) < 0.16) & (u > 12) & (u < tip0 - 1)
-    c.paint(m, blade_colors(pal['blade'], t, u, fuller))
-    guard_bar(c, pal, s, e, 8.6, 11.2, 5.0)
-    ornament_blade(c, line, pal, s, e, 11.0, 36.0, hw, seed=1)
-    x, y = c.point(s, e, 9.9, 0)
+        wob = 0.5 * np.sin(u * 1.7) * (u > 12)
+    elif line == 'bone':
+        wob = 0.35 * np.sin(u * 0.9)
+    lower = -hw - wob * 0.6
+    upper = np.where(u < tip0, hw + wob, hw - (u - tip0) * (2 * hw - 0.8) / (tip1 - tip0))
+    m = (u >= b0) & (u <= tip1) & (v >= lower) & (v <= upper)
+    if line == 'bone':
+        m &= ~((v < lower + 1.1) & ((u % 2.6) < 1.0) & (u > b0 + 2))
+    if line in ('voltrix', 'azragos'):
+        m &= ~((v < lower + 0.9) & ((u % 3.0) < 0.9) & (u > b0 + 2) & (u < tip0))
+    t = (v - (upper + lower) / 2) / np.maximum((upper - lower) / 2, 0.5)
+    fuller = (np.abs(t + 0.1) < 0.14) & (u > b0 + 2.5) & (u < tip0 - 2)
+    cols = blade_colors(pal['blade'], np.clip(t, -1, 1), u, fuller)
+    ricasso = (u < b0 + 2.0)
+    cols = np.where(ricasso[..., None], pick(pal['blade'], shade_band(t, 0.38, 0.3)), cols)
+    c.paint(m, cols)
+    if line == 'bone':
+        for uu in (13.5, 21.0):
+            strap = m & (np.abs(u - uu) < 0.9)
+            c.paint(strap, pick(pal['grip'], shade_band(t, 0.45, 0.35)))
+    if line == 'iron':
+        shine = m & (np.abs(t - 0.45) < 0.12) & (u > b0 + 3) & (u < tip0)
+        c.paint(shine, pal['blade'][5])
+    guard_bar(c, pal, s, e, 8.4, 11.0, 5.9)
+    hwf = lambda uu: np.where(uu < tip0, hw, np.maximum(0.6, hw - (uu - tip0) * 1.1))
+    ornament_blade(c, line, pal, s, e, 11.5, 35.5, hwf, seed=1)
+    x, y = c.point(s, e, 9.7, 0)
     if line in ('ignivald', 'frostgarm', 'voltrix', 'gravadon', 'azragos'):
         gem(c, pal, x, y, 1.3)
+    else:
+        c.dot(x, y, pal['accent'][-1] if line == 'iron' else pal['metal'][4])
     if line == 'frostgarm':
-        fur(c, pal, s, e, 8.0, 3.6)
+        fur(c, pal, s, e, 7.6, 3.4)
 
 
 def fur(c, pal, s, e, u_at, r):
@@ -433,10 +471,12 @@ def draw_long_sword(c, line, pal):
     c.paint(m, cols)
     # round tsuba
     x, y = c.point(s, e, 10.0, 0)
-    tsuba = c.disc(x, y, 2.6)
-    tv = ((c.px - x) * -0.7 + (c.py - y) * -0.7) / 2.6
-    c.paint(tsuba, pick(pal['metal'], shade_band(tv, 0.45, 0.45)))
-    c.dot(x, y, pal['metal'][0])
+    tsuba = c.disc(x, y, 2.9)
+    tv = ((c.px - x) * -0.7 + (c.py - y) * -0.7) / 2.9
+    c.paint(tsuba, pick(pal['metal'], shade_band(tv, 0.32, 0.3)))
+    c.paint(border(tsuba), pick(pal['metal'], shade_band(tv, 0.62, 0.35)))
+    habaki = (np.abs(stroke(c, s, e, 10.6, 12.0, 1.7)[0]))
+    c.paint(habaki, pal['accent'][-2] if line != 'iron' else pal['metal'][4])
     ornament_blade(c, line, pal, s, e, 12.0, 35.5, hw, curve, seed=2)
 
 
@@ -543,9 +583,10 @@ def draw_lance(c, line, pal):
     pommel(c, pal, s, e, 0.6, 1.3)
     # vamplate (hand guard cone)
     u, v, _ = c.frame(s, e)
-    vamp = (u >= 6.0) & (u <= 10.5) & (np.abs(v) <= 1.2 + (u - 6.0) * 0.95)
+    vamp = (u >= 5.6) & (u <= 11.0) & (np.abs(v) <= 1.2 + (u - 5.6) * 0.95)
     tvv = v / 5.5 * 0.6 + (u - 8) / 5 * 0.6
-    c.paint(vamp, pick(pal['metal'], shade_band(tvv, 0.5, 0.45)))
+    c.paint(vamp, pick(pal['metal'], shade_band(tvv, 0.55, 0.45)))
+    c.paint(border(vamp), pal['metal'][1])
     hw = lambda u: np.clip(2.6 * (38.0 - u) / (38.0 - 10.5), 0, 2.6)
     m, u2, v2, t = stroke(c, s, e, 10.5, 38.0, hw)
     c.paint(m, blade_colors(pal['blade'], t, u2))
@@ -553,33 +594,46 @@ def draw_lance(c, line, pal):
 
 
 def draw_hunting_horn(c, line, pal):
-    s, e = (3.0, 29.0), (28.0, 4.0)
-    grip(c, pal, s, e, 0.5, 17.0, 1.1, period=2.0)
-    pommel(c, pal, s, e, 0.8, 1.5)
-    u, v, _ = c.frame(s, e)
-    # instrument body: a bulb with a flaring bell at the far end
-    body_w = lambda uu: np.where(uu < 26.0, 2.2 + (uu - 15.0) * 0.32, 5.6 + (uu - 26.0) * 0.55)
-    body = (u >= 15.0) & (u <= 35.5) & (np.abs(v + 0.6) <= body_w(u))
-    if line in ('bone', 'gravadon', 'azragos'):
-        body &= ~((u > 33.5) & (np.abs(v + 0.6) < body_w(u) - 2.0))
-    tv = (v + 0.6) / np.maximum(body_w(u), 1) * 0.6 + (u - 25) / 12 * 0.5
-    cols = pick(pal['blade'], shade_band(tv, 0.5, 0.42))
+    s, e = (3.0, 29.0), (28.5, 3.5)
+    grip(c, pal, s, e, 0.5, 15.0, 1.1, period=2.0)
+    pommel(c, pal, s, e, 0.8, 1.6)
+    u, v, L = c.frame(s, e)
+    u0, u1 = 13.5, 34.0
+    k = np.clip((u - u0) / (u1 - u0), 0, 1)
+    cen = 2.0 * np.sin(k * np.pi) - 0.3
+    w = 1.7 + 1.1 * np.sin(k * np.pi * 0.85) + 6.2 * k ** 5.0
+    body = (u >= u0) & (u <= u1) & (np.abs(v - cen) <= w)
+    t = (v - cen) / np.maximum(w, 0.5)
+    cols = pick(pal['blade'], shade_band(t * 0.8 + (k - 0.5) * 0.4, 0.5, 0.4))
     c.paint(body, cols)
-    # bell mouth
-    mouth = (u >= 34.0) & (u <= 35.8) & (np.abs(v + 0.6) <= body_w(u) - 0.8)
-    c.paint(mouth, pal['blade'][0] if line != 'frostgarm' else pal['blade'][1])
-    # rings / tone holes
-    for k, uu in enumerate((19.0, 23.0, 27.5)):
-        ring = body & (np.abs(u - uu) < 0.6)
-        c.paint(ring, pick(pal['metal'], shade_band(tv, 0.45, 0.4)))
-    for k in range(3):
-        x, y = c.point(s, e, 21.0 + k * 3.2, 0.9)
-        c.dot(x, y, pal['blade'][0])
-    # side pipe
-    pipe = (u >= 17.0) & (u <= 30.0) & (np.abs(v - (body_w(u) - 0.6) - 1.4) <= 0.75)
-    c.paint(pipe, pick(pal['metal'], np.full(pipe.shape, 0.7)))
-    cx, cy = c.point(s, e, 25.0, -0.6)
-    ornament_head(c, line, pal, cx, cy, 3.2, seed=9)
+    # bell opening: ellipse cap at the end, bright rim and dark throat
+    wend = 1.7 + 1.1 * math.sin(math.pi * 0.85) + 6.2
+    cend = 2.0 * math.sin(math.pi) - 0.3
+    ex = (u - (u1 - 0.2)) / 2.2
+    ey = (v - cend) / wend
+    cap = (ex ** 2 + ey ** 2 <= 1.0)
+    c.paint(cap, pick(pal['metal'], shade_band(-ey * 0.6 + 0.2, 0.55, 0.4)))
+    throat = ((u - (u1 + 0.1)) / 1.4) ** 2 + ((v - cend) / (wend - 1.5)) ** 2 <= 1.0
+    c.paint(throat, pick([pal['blade'][0], pal['blade'][1]], np.clip(0.5 - ey * 0.6, 0, 0.99)))
+    # rings
+    for uu in (17.0, 21.0, 25.0):
+        ring = body & (np.abs(u - uu) < 0.65)
+        c.paint(ring, pick(pal['metal'], shade_band(t, 0.5, 0.4)))
+        c.paint(ring & (t > 0.4), pal['metal'][5])
+    # valves / keys on the lower side
+    for uu in (19.0, 23.5):
+        kk = (uu - u0) / (u1 - u0)
+        cc = 2.0 * math.sin(kk * math.pi) - 0.3
+        ww = 1.7 + 1.1 * math.sin(kk * math.pi * 0.85) + 6.2 * kk ** 5.0
+        key = (np.abs(u - uu) <= 0.8) & (v <= cc - ww + 0.2) & (v >= cc - ww - 1.8)
+        c.paint(key, pick(pal['metal'], np.full(key.shape, 0.65)))
+    # mouthpiece pipe curling over the top side
+    pipe = (u >= 14.0) & (u <= 24.0) & (np.abs(v - (cen + w + 0.9 + 0.6 * np.sin((u - 14) * 0.5))) <= 0.7)
+    c.paint(pipe, pick(pal['metal'], np.full(pipe.shape, 0.75)))
+    cx, cy = c.point(s, e, 24.5, 1.0)
+    ornament_head(c, line, pal, cx, cy, 3.0, seed=9)
+    ornament_blade(c, line, pal, s, e, 15.0, 28.0, lambda uu: 1.7 + 1.1 * np.sin(np.clip((uu - u0) / (u1 - u0), 0, 1) * np.pi * 0.85),
+                   lambda uu: 2.0 * np.sin(np.clip((uu - u0) / (u1 - u0), 0, 1) * np.pi) - 0.3, seed=12, back_only=True)
 
 
 def draw_bow(c, line, pal, drawn=False):
