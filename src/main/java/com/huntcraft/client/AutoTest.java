@@ -274,10 +274,8 @@ public final class AutoTest {
                     shot("combat_great_sword_charge_slash", false);
                     add("rest3_gs", mc -> server(mc, AutoTest::resetArena), 30);
                     cam("front");
-                    add("gs_guard_hold", mc -> {
-                        mc.options.keyShift.setDown(true);
-                        mc.options.keyUse.setDown(true);
-                    }, 14);
+                    add("gs_guard_sneak", mc -> mc.options.keyShift.setDown(true), 3);
+                    add("gs_guard_hold", mc -> mc.options.keyUse.setDown(true), 14);
                     shot("combat_great_sword_guard", false);
                     add("gs_guard_release", mc -> {
                         mc.options.keyUse.setDown(false);
@@ -330,15 +328,14 @@ public final class AutoTest {
             mc.options.keySprint.setDown(false);
             server(mc, AutoTest::resetArena);
         }, 20);
-        // dodge roll (real input: dodge key with the left movement key held -> side roll)
-        cam("front");
-        add("dodge_dir", mc -> mc.options.keyLeft.setDown(true), 3);
+        // dodge roll (real input: dodge key without movement keys -> backward roll, seen from the side)
+        cam("side");
         click("dodge", mc -> HCClientSetup.DODGE, 5);
         shot("combat_dodge_roll", false);
-        add("dodge_release", mc -> {
-            mc.options.keyLeft.setDown(false);
-            server(mc, AutoTest::resetArena);
-        }, 20);
+        add("dodge_wait", mc -> {
+        }, 3);
+        shot("combat_dodge_roll2", false);
+        add("dodge_release", mc -> server(mc, AutoTest::resetArena), 20);
         // reactions / misc actions
         cam("side");
         serverAction("flinch", "flinch", 4);
@@ -371,7 +368,9 @@ public final class AutoTest {
         // sheathed weapon on the back + drinking with the weapon sheathed
         cam("back");
         add("sheathe_potion", mc -> server(mc, sp -> {
-            sp.getInventory().setItem(sp.getInventory().selected, new net.minecraft.world.item.ItemStack(com.huntcraft.registry.HCItems.POTION.get()));
+            int sel = sp.getInventory().selected;
+            sp.getInventory().setItem((sel + 1) % 9, sp.getMainHandItem().copy());   // the weapon stays in the hotbar -> shown on the back
+            sp.getInventory().setItem(sel, new net.minecraft.world.item.ItemStack(com.huntcraft.registry.HCItems.POTION.get()));
         }), 8);
         shot("combat_sheathe", false);
         add("wait_sheathed", mc -> {
@@ -393,9 +392,19 @@ public final class AutoTest {
         shot("combat_first_person_stance", true);
         click("attack_fp", mc -> mc.options.keyAttack, 15);
         shot("combat_first_person_swing", true);
+        add("fp_charge_hold", mc -> mc.options.keyUse.setDown(true), 30);
+        shot("combat_first_person_charge", true);
+        add("fp_charge_release", mc -> mc.options.keyUse.setDown(false), 34);
         add("fp_ls", mc -> server(mc, sp -> equipWeapon(sp, "bone_long_sword")), 26);
         click("attack_fp_ls", mc -> mc.options.keyAttack, 9);
         shot("combat_first_person_long_sword", true);
+        add("fp_look_down", mc -> {
+            if (mc.player != null) mc.player.setXRot(35);
+        }, 3);
+        shot("combat_first_person_look_down", true);
+        add("fp_look_reset", mc -> {
+            if (mc.player != null) mc.player.setXRot(0);
+        }, 2);
         add("combat_cleanup", mc -> {
             if (mc.player != null) mc.setCameraEntity(mc.player);
             server(mc, sp -> {
@@ -407,6 +416,8 @@ public final class AutoTest {
                     sp.setItemSlot(slot, net.minecraft.world.item.ItemStack.EMPTY);
                 }
                 sp.getInventory().setItem(sp.getInventory().selected, net.minecraft.world.item.ItemStack.EMPTY);
+                sp.getInventory().setItem((sp.getInventory().selected + 1) % 9, net.minecraft.world.item.ItemStack.EMPTY);
+                sp.getInventory().setItem(8, net.minecraft.world.item.ItemStack.EMPTY);
                 sp.getAbilities().flying = true;
                 sp.onUpdateAbilities();
             });
@@ -454,16 +465,7 @@ public final class AutoTest {
         sp.setYHeadRot(0);
         sp.yBodyRot = 0;
         log(String.format("combat arena at %.1f %d %.1f (floor %s)", bx, gy, bz, lvl.getBlockState(new BlockPos((int) Math.floor(bx), gy - 1, (int) Math.floor(bz))).getBlock()));
-        HuntMonster m = MonsterRegistry.spawn(lvl, "boarfang", BlockPos.containing(bx - 1.0, gy, bz + 2.6), Rank.LOW, null);
-        if (m != null) {
-            m.setNoAi(true);
-            m.setMonsterScale(1.0F);
-            m.moveTo(bx - 1.0, gy, bz + 2.6, 180, 0);
-            m.setYRot(180);
-            m.yBodyRot = 180;
-            m.yHeadRot = 180;
-            current = m;
-        }
+        spawnPartner(lvl);
         net.minecraft.world.entity.decoration.ArmorStand st = net.minecraft.world.entity.EntityType.ARMOR_STAND.create(lvl);
         if (st != null) {
             CompoundTag flags = new CompoundTag();
@@ -511,6 +513,24 @@ public final class AutoTest {
         camLogged = true;
     }
 
+    /** The sparring partner: a boarfang with a huge health pool so every hit sparks and it never becomes a carcass. */
+    private static void spawnPartner(ServerLevel lvl) {
+        if (current != null) current.discard();
+        current = null;
+        HuntMonster m = MonsterRegistry.spawn(lvl, "boarfang", BlockPos.containing(combatX - 1.0, combatY, combatZ + 2.6), Rank.LOW, null);
+        if (m == null) return;
+        m.setNoAi(true);
+        m.setMonsterScale(1.0F);
+        net.minecraft.world.entity.ai.attributes.AttributeInstance hp = m.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH);
+        if (hp != null) hp.setBaseValue(50000.0);
+        m.setHealth(m.getMaxHealth());
+        m.moveTo(combatX - 1.0, combatY, combatZ + 2.6, 180, 0);
+        m.setYRot(180);
+        m.yBodyRot = 180;
+        m.yHeadRot = 180;
+        current = m;
+    }
+
     /** Puts the hunter and the sparring partner back on their marks (root motion moves them during attacks). */
     private static void resetArena(ServerPlayer sp) {
         ServerLevel lvl = sp.serverLevel();
@@ -520,14 +540,16 @@ public final class AutoTest {
         sp.yBodyRot = 0;
         sp.setSprinting(false);
         HuntMonster m = current;
-        if (m != null && m.isAlive()) {
-            m.setHealth(m.getMaxHealth());
-            m.setDeltaMovement(0, 0, 0);
-            m.moveTo(combatX - 1.0, combatY, combatZ + 2.6, 180, 0);
-            m.setYRot(180);
-            m.yBodyRot = 180;
-            m.yHeadRot = 180;
+        if (m == null || !m.isAlive() || m.isCarcass()) {
+            spawnPartner(lvl);
+            return;
         }
+        m.setHealth(m.getMaxHealth());
+        m.setDeltaMovement(0, 0, 0);
+        m.moveTo(combatX - 1.0, combatY, combatZ + 2.6, 180, 0);
+        m.setYRot(180);
+        m.yBodyRot = 180;
+        m.yHeadRot = 180;
     }
 
     private static void equipWeapon(ServerPlayer sp, String id) {

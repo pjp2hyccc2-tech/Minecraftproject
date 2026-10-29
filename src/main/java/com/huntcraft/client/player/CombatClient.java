@@ -92,12 +92,16 @@ public final class CombatClient {
             double vx = (rnd.nextDouble() - 0.5) * 0.5, vy = rnd.nextDouble() * 0.35, vz = (rnd.nextDouble() - 0.5) * 0.5;
             mc.level.addParticle(blunt ? ParticleTypes.CRIT : ParticleTypes.ENCHANTED_HIT, at.x, at.y, at.z, vx, vy, vz);
         }
+        // bright flash of sparks at the contact point (the weapon trail already draws the arc of the swing)
+        DustParticleOptions flash = new DustParticleOptions(new Vector3f(1.0F, blunt ? 0.9F : 0.97F, blunt ? 0.75F : 0.9F), blunt ? 1.1F : 0.7F);
+        for (int i = 0; i < 4 + hs; i++) {
+            mc.level.addParticle(flash, at.x + (rnd.nextDouble() - 0.5) * 0.3, at.y + (rnd.nextDouble() - 0.5) * 0.3, at.z + (rnd.nextDouble() - 0.5) * 0.3,
+                    (rnd.nextDouble() - 0.5) * 0.08, rnd.nextDouble() * 0.06, (rnd.nextDouble() - 0.5) * 0.08);
+        }
         if (blunt) {
             for (int i = 0; i < 3; i++) {
                 mc.level.addParticle(ParticleTypes.POOF, at.x, at.y, at.z, (rnd.nextDouble() - 0.5) * 0.15, 0.05, (rnd.nextDouble() - 0.5) * 0.15);
             }
-        } else {
-            mc.level.addParticle(ParticleTypes.SWEEP_ATTACK, at.x, at.y, at.z, 0, 0, 0);
         }
         if (el != Element.NONE) {
             int c = el.color;

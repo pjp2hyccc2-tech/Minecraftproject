@@ -357,15 +357,12 @@ public final class CombatActions {
                 if (w != null) WeaponFx.element(p, w.getElement(st), at.add(0, 0.8, 0), 10);
             }
             case "bash" -> WeaponFx.send(p, ParticleTypes.CRIT, WeaponHits.front(p, h.fwd(), h.up()), 6, 0.3, 0.3, 0.3, 0.15);
-            case "spirit" -> {
-                WeaponFx.sweep(p, 1.8, 3);
-                WeaponFx.send(p, WeaponFx.dust(0xFF3A2A, 1.0F), WeaponHits.front(p, 1.6, 1.1), 10, 0.8, 0.4, 0.8, 0.0);
-            }
+            case "spirit" -> WeaponFx.send(p, WeaponFx.dust(0xFF3A2A, 1.0F), WeaponHits.front(p, 1.6, 1.1), 14, 0.8, 0.4, 0.8, 0.0);
             case "counter" -> WeaponFx.send(p, ParticleTypes.ENCHANTED_HIT, WeaponHits.front(p, 2.4, 1.2), 12, 0.3, 0.3, 0.3, 0.25);
             case "note" -> WeaponFx.send(p, ParticleTypes.NOTE, p.position().add(0, 1.6, 0), 12, 1.2, 0.6, 1.2, 1.0);
-            case "none" -> {
+            default -> {
+                // plain slashes: the client side weapon trail is the swing effect, impacts add their own sparks
             }
-            default -> WeaponFx.sweep(p, h.area() > 0 ? 1.0 : Math.max(1.2, h.range() * 0.45), 2);
         }
     }
 

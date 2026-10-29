@@ -308,7 +308,7 @@ public abstract class HunterWeaponItem extends Item implements IHunterWeapon, IU
 
     /** Server: every tick while charging. */
     protected void chargeTick(Player p, ItemStack stack, int used, int level) {
-        if (level > 0 && used % 4 == 0) WeaponFx.chargeAura(p, level);
+        if (level > 0 && used % 6 == 0) WeaponFx.chargeAura(p, level);
     }
 
     @Override

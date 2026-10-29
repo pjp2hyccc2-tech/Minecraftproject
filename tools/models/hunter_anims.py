@@ -189,9 +189,13 @@ def plant(pose, r=(-2.5, 1.0), l=(2.5, -1.0), y=24.0):
     return pose
 
 
+HIPS_FOLLOW = 0.35      # pelvis yaw as a fraction of the chest twist (same direction)
+
+
 def stance_base(drop=1.0, feet=((-3.0, 1.5), (3.0, -2.5)), lean=4, twist=0, head=(0, 0, 0)):
     p = Pose()
-    body(p, lean=lean, twist=twist, drop=drop, head=head, hips_rot=(0, twist * -0.4, 0))
+    head = (head[0], head[1] - twist * HIPS_FOLLOW, head[2])
+    body(p, lean=lean, twist=twist, drop=drop, head=head, hips_rot=(0, twist * HIPS_FOLLOW, 0))
     plant(p, feet[0], feet[1])
     return p
 
@@ -278,9 +282,9 @@ def make_stances():
     aim(p, 'l', 'dual_blades', D(45, 10), face=V(1, 0, 0))
     STANCE['idle_db_demon'] = p
 
-    # hammer: carried low with both hands, head of the hammer behind-right
-    p = stance_base(drop=1.5, feet=((-3.5, 2.5), (3.0, -2.5)), lean=4, twist=14, head=(0, -10, 0))
-    wk(p, 'hammer', (-6, 14, 0), D(-150, 25), face=V(1, 0, 0), pole=V(-14, 16, 8), off_pole=V(4, 20, -4))
+    # hammer: shouldered, the head up behind the right shoulder, both hands on the shaft in front of the chest
+    p = stance_base(drop=1.5, feet=((-3.5, 2.5), (3.0, -2.5)), lean=4, twist=16, head=(0, -10, 0))
+    wk(p, 'hammer', (-6, 8, -3), D(-30, 62), face=V(1, 0, 0), pole=V(-12, 20, 8), off_pole=V(8, 16, -2))
     STANCE['idle_hm'] = p
 
     # hunting horn: held like a staff, bell up over the right shoulder
@@ -374,9 +378,12 @@ class Attack:
     def key(self, tick, hand, blade, lean=0, twist=0, tilt=0, drop=1.0, head=None, feet=None, roll=0.0, face=None,
             pole=None, off_hand=None, off_pole=None, root=(0, 0, 0), interp='c', hips=None, legs_=None, twist_arm=0.0, two=None):
         p = Pose()
-        hd = head if head is not None else (lean * -0.5, twist * -0.6, 0)
+        # the pelvis turns WITH the chest (a swing is driven from the hips); the head stays on the target
+        hd = head if head is not None else (lean * -0.5, -twist * 1.0, 0)
+        if head is not None and hips is None:
+            hd = (head[0], head[1] - twist * HIPS_FOLLOW, head[2])
         body(p, lean=lean, twist=twist, tilt=tilt, drop=drop, head=hd, root=root,
-             hips_rot=hips if hips is not None else (lean * 0.25, -twist * 0.45, tilt * 0.3))
+             hips_rot=hips if hips is not None else (lean * 0.3, twist * HIPS_FOLLOW, tilt * 0.3))
         if legs_ is not None:
             legs(p, *legs_)
         else:
@@ -1350,7 +1357,7 @@ def misc(m):
     A.pose(15, k3)
     A.pose(19, kneel)
     A.pose(24, Pose())
-    A.lock(True).cancel(18)
+    A.lock(True).cancel(18).tag('onback', 1)
     A.build()
     del ACTIONS['carve']['hits']
 

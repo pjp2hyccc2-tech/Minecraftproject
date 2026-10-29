@@ -32,6 +32,8 @@ import java.util.Locale;
  */
 @OnlyIn(Dist.CLIENT)
 public final class HeldItems {
+    private static boolean trailWarned;
+
     private HeldItems() {
     }
 
@@ -61,7 +63,11 @@ public final class HeldItems {
         if (st.action != null && st.actionActive(gt)) {
             int swap = st.action.tagInt("swap", -1);
             float t = st.actionTime(gt, pt);
-            if (swap >= 0 && t < swap) {
+            if (st.action.hasTag("onback") && main.getItem() instanceof HunterWeaponItem) {
+                // carving etc.: the weapon rides on the back while both hands are busy
+                onBack = main;
+                inHand = ItemStack.EMPTY;
+            } else if (swap >= 0 && t < swap) {
                 if ("unsheathe".equals(st.action.name) && main.getItem() instanceof HunterWeaponItem) {
                     onBack = main;
                     inHand = ItemStack.EMPTY;
@@ -131,6 +137,15 @@ public final class HeldItems {
         Vector4f t = new Vector4f(ws.tipX() / 32F, 1F - ws.tipY() / 32F, 0.5F, 1F).mul(m);
         Vec3 base = cam.add(g.x(), g.y(), g.z());
         Vec3 tip = cam.add(t.x(), t.y(), t.z());
+        if (tip.distanceToSqr(p.position()) > 16.0) {
+            // not a world render pass (GUI preview, hand pass...): never feed the world space trail from here
+            if (!trailWarned) {
+                trailWarned = true;
+                com.huntcraft.HuntCraft.LOGGER.warn("Weapon trail sample far from the player ({} blocks), camera {} player {}",
+                        Math.sqrt(tip.distanceToSqr(p.position())), cam, p.position(), new Throwable("trail sample origin"));
+            }
+            return;
+        }
         int color = trailColor(p, stack, w);
         st.trail.add(base, tip, p.level().getGameTime() + Minecraft.getInstance().getPartialTick(), color);
     }

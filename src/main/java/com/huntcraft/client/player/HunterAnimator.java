@@ -143,10 +143,11 @@ public final class HunterAnimator {
             AnimationDefinition dd = HunterModels.anim(dodgeName);
             if (dd != null) AnimUtil.animate(model, dd, dodgeT / 20.0F, dodgeW, null);
         }
-        // ---- crouch
+        // ---- crouch (guards / charges are started with sneak: they already brace, so only a hint of it)
         if (p.isCrouching() && dodgeW < 0.5F) {
             AnimationDefinition cd = HunterModels.anim("crouch");
-            if (cd != null) AnimUtil.animate(model, cd, 0, (1.0F - dodgeW) * (1.0F - 0.6F * actionW), null);
+            float cw = stanceName.startsWith("guard_") || stanceName.startsWith("charge_") ? 0.2F : 1.0F;
+            if (cd != null) AnimUtil.animate(model, cd, 0, cw * (1.0F - dodgeW) * (1.0F - 0.6F * actionW), null);
         }
         // ---- head look
         float look = (1.0F - 0.6F * actionW) * (1.0F - dodgeW);

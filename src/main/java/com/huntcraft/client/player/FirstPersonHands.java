@@ -21,13 +21,15 @@ import net.minecraftforge.fml.common.Mod;
 /**
  * First person: while a hunter weapon is held the vanilla hand/item rendering is replaced by the rig's arms
  * (posed by the same animator, so attacks, stances and charges play in first person too), seen from the eye.
- * The rig is attached to the camera (it pitches with the view); it is pushed a little up/forward so the hands
- * stay in frame like the vanilla hands.
+ * The rig is attached to the camera (it pitches with the view, like the vanilla hands): the model's eye sits on
+ * the camera, the body is pushed a little forward so the shoulders sit at the bottom corners of the view and the
+ * weapon comes into frame whenever the hands are in front of the chest. Only the arms and the held items are drawn.
  */
 @Mod.EventBusSubscriber(modid = HuntCraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class FirstPersonHands {
-    private static final float RAISE = 0.42F;
-    private static final float FORWARD = -0.12F;
+    /** Eye of the rig relative to the camera (blocks): a touch higher and in front of the real eye. */
+    private static final float RAISE = 0.08F;
+    private static final float FORWARD = -0.34F;
     private static boolean warned;
 
     private FirstPersonHands() {
