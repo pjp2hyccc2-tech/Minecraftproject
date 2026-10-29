@@ -1,0 +1,23 @@
+{
+ "item.huntcraft.jagraptor_spawn_egg": "ジャグラプトルのスポーンエッグ",
+ "notes.huntcraft.jagraptor.desc": "橙の縞模様をもつ青い鳥竜。群れで丘陵を駆け回り、噛みつきや跳び蹴りで獲物を追い立てる。甲高い鳴き声を上げると、近くの仲間が一斉に駆けつけてくる。",
+ "item.huntcraft.blizraptor_spawn_egg": "ブリザラプトルのスポーンエッグ",
+ "notes.huntcraft.blizraptor.desc": "霜の鶏冠をもつ雪山の白い鳥竜。凍てつく牙で噛みつき、口から氷のつぶてを吐き出す。ジャグラプトルの群れと呼び合い、共に狩りをすることもある。",
+ "item.huntcraft.boarfang_spawn_egg": "ボアファングのスポーンエッグ",
+ "notes.huntcraft.boarfang.desc": "反り返った牙をもつ気性の荒い猪。前脚で地面を掻いた後、一直線に突進してくる。壁に激突させると目を回す。近づきすぎると牙で突き上げられるので注意。",
+ "item.huntcraft.grasica_spawn_egg": "グラシカのスポーンエッグ",
+ "notes.huntcraft.grasica.desc": "斑点模様の毛並みと枝分かれした角をもつ温厚な草食獣。のんびり草を食むが警戒心が強く、ハンターが近づくと距離を取る。一頭が傷つくと群れ全体が一斉に逃げ出す。",
+ "item.huntcraft.gamenos_spawn_egg": "ガメノスのスポーンエッグ",
+ "notes.huntcraft.gamenos.desc": "苔と野花に覆われた甲羅を背負う、巨大でのんびりした亀。自分から争うことはないが、傷つけられると重い尾を振り回し、前脚を振り上げて踏みつけてくる。",
+ "item.huntcraft.buzzling_spawn_egg": "バズリングのスポーンエッグ",
+ "notes.huntcraft.buzzling.desc": "目にも止まらぬ羽ばたきで宙に浮かぶ、蜂に似た巨大な虫。遠くから毒針を飛ばし、獲物めがけて急降下してくる。閃光や気絶で地面に落ちたところを狙うとよい。",
+ "item.huntcraft.yukimammo_spawn_egg": "ユキマンモのスポーンエッグ",
+ "notes.huntcraft.yukimammo.desc": "大きく湾曲した牙と長い毛をもつ雪原の巨獣。普段は群れで穏やかに草を食むが、傷つけられると怒りの雄叫びを上げ、牙を突き出して突進してくる。群れの仲間も加勢するので注意。",
+ "item.huntcraft.heatgecko_spawn_egg": "ヒートゲッコーのスポーンエッグ",
+ "notes.huntcraft.heatgecko.desc": "溶岩のように光る斑点をもつ小型の火蜥蜴。火の粉を吐き、着弾点を燃え上がらせる溶岩の塊を放つ。背後から近づく者には熱い尻尾を叩きつける。",
+ "item.huntcraft.gansekigani_spawn_egg": "ガンセキガニのスポーンエッグ",
+ "notes.huntcraft.gansekigani.desc": "大岩を背負う甲殻種。鋏で挟み、叩きつけてくる。攻撃を受け続けると岩の下に引きこもり、刃も弾くほど硬くなる。岩を壊せば柔らかい身体があらわになる。",
+ "item.huntcraft.nussutto_mofu_spawn_egg": "ぬすっとモフのスポーンエッグ",
+ "notes.huntcraft.nussutto_mofu.desc": "唐草模様のほっかむりと風呂敷包みが目印の、いたずら好きなモフ族の盗っ人。忍び足で近づいてポーチのアイテムを盗み、戦利品を頭に載せて逃げていく。地中に逃げ込まれる前に倒せば取り戻せる！",
+ "message.huntcraft.mofu_stole": "ぬすっとモフに%sを盗まれた！"
+}
