@@ -2,6 +2,8 @@ package com.huntcraft.monster.small.client;
 
 import com.huntcraft.HuntCraft;
 import com.huntcraft.client.model.HcModel;
+import com.huntcraft.client.model.HcModelLoader;
+import com.huntcraft.client.model.HcModels;
 import com.huntcraft.client.render.HcMonsterRenderer;
 import com.huntcraft.monster.small.NussuttoMofuEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,8 +22,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
- * Thief Mofu renderer: fur variants (textures nussutto_mofu[_ginger|_black].png) and the stolen item, held up
- * over its head while it runs away (follows the "loot" bone of the model).
+ * Thief Mofu renderer: fur variants (textures nussutto_mofu[_ginger|_black].png), the {@link MofuModel} carry pose and
+ * the stolen item, balanced on its head while it runs away (follows the "loot" bone of the model).
  */
 @OnlyIn(Dist.CLIENT)
 public class MofuRenderer extends HcMonsterRenderer<NussuttoMofuEntity> {
@@ -33,6 +35,7 @@ public class MofuRenderer extends HcMonsterRenderer<NussuttoMofuEntity> {
 
     public MofuRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, "nussutto_mofu", 0.35F);
+        this.model = new MofuModel(ctx.bakeLayer(HcModels.layer("nussutto_mofu")), HcModelLoader.get("nussutto_mofu"));
         this.addLayer(new LootLayer(this));
     }
 

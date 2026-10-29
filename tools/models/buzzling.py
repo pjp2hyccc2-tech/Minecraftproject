@@ -70,15 +70,15 @@ wf = body.bone('wing_fl', (2.5, -3, -1.5), FOLD['fw'])
 wf.cube((0, 0, -2), (12, 0, 5), 'bz_wing', decals=[{'type': 'cutout', 'shape': 'round'}])
 wb = body.bone('wing_bl', (2.5, -3, 1), FOLD['bw'])
 wb.cube((0, 0, -1.5), (9, 0, 4), 'bz_wing', decals=[{'type': 'cutout', 'shape': 'round'}])
-mirror_tree(body, wf)
-mirror_tree(body, wb)
+mirror_tree(body, wf, '_fl', '_fr')
+mirror_tree(body, wb, '_bl', '_br')
 
 # ------------------------------------------------------------------ legs (3 pairs, dangling)
 LEGS = []
 for i, (z, rx) in enumerate(((-2, 10), (0.5, 25), (3, 40))):
     up = body.bone('leg%d_l' % i, (3, 2, z), (rx, 0, -55))
     up.cube((-0.5, -0.5, -0.5), (1, 4, 1), 'bz_leg')
-    lo = up.bone('leg%d_l_lo' % i, (0, 3.5, 0), (0, 0, 70))
+    lo = up.bone('leg%d_l_shin' % i, (0, 3.5, 0), (0, 0, 70))
     lo.cube((-0.5, -0.5, -0.5), (1, 4, 1), 'bz_leg', inflate=-0.15)
     mirror_tree(body, up)
     LEGS.append(i)
@@ -109,7 +109,7 @@ def legs_pose(a, rx, rz_lo, sway=0.0, period=1.0):
     for i in LEGS:
         for side, g in (('l', 1), ('r', -1)):
             A.sample(a, 'leg%d_%s' % (i, side), 'rotation', lambda t, i=i, g=g: (rx + sway * cyc(t, period, i), 0, 0), 8)
-            A.hold(a, 'leg%d_%s_lo' % (i, side), 'rotation', (0, 0, g * rz_lo))
+            A.hold(a, 'leg%d_%s_shin' % (i, side), 'rotation', (0, 0, g * rz_lo))
 
 
 # fly: fast wing beats, hover bob, dangling legs
@@ -183,7 +183,7 @@ keys(a, 'body', 'position', [(0, (0, 0, 0)), (0.2, (0, -2, 0)), (0.7, (0, 1.5, 0
 for i in LEGS:
     for side, g in (('l', 1), ('r', -1)):
         keys(a, 'leg%d_%s' % (i, side), 'rotation', [(0, (0, 0, 0)), (0.7, (-10, 0, g * 40)), (1.0, (-10, 0, g * 50)), (1.5, (-10, 0, g * 48))])
-        keys(a, 'leg%d_%s_lo' % (i, side), 'rotation', [(0, (0, 0, 0)), (1.0, (0, 0, g * 60)), (1.5, (0, 0, g * 60))])
+        keys(a, 'leg%d_%s_shin' % (i, side), 'rotation', [(0, (0, 0, 0)), (1.0, (0, 0, g * 60)), (1.5, (0, 0, g * 60))])
 keys(a, 'abdomen', 'rotation', [(0, (0, 0, 0)), (0.7, (20, 0, 0)), (1.5, (16, 0, 0))])
 keys(a, 'antenna_l', 'rotation', [(0, (0, 0, 0)), (1.0, (40, 0, 0)), (1.5, (40, 0, 0))])
 keys(a, 'antenna_r', 'rotation', [(0, (0, 0, 0)), (1.0, (40, 0, 0)), (1.5, (40, 0, 0))])
@@ -195,7 +195,7 @@ A.sine(a, 'abdomen', 'rotation', (2, 0, 0), period=1.5, offset=(14, 0, 0))
 for i in LEGS:
     for side, g in (('l', 1), ('r', -1)):
         A.hold(a, 'leg%d_%s' % (i, side), 'rotation', (0, 0, g * -25))
-        A.hold(a, 'leg%d_%s_lo' % (i, side), 'rotation', (0, 0, g * 20))
+        A.hold(a, 'leg%d_%s_shin' % (i, side), 'rotation', (0, 0, g * 20))
 A.hold(a, 'antenna_l', 'rotation', (50, 0, 0))
 A.hold(a, 'antenna_r', 'rotation', (50, 0, 0))
 A.hold(a, 'head', 'rotation', (16, 0, 0))
@@ -212,6 +212,17 @@ for name, kind in WINGS:
     A.sine(a, name, 'rotation', (0, 0, g * 14), period=0.15)
 A.sine(a, 'antenna_l', 'rotation', (20, 0, 0), period=0.4)
 A.sine(a, 'antenna_r', 'rotation', (20, 0, 0), period=0.4, phase=1.5)
+
+# trapped (small monsters cannot be trapped by the core; kept so every required state pose exists): pinned, buzzing
+a = T('trapped', 0.6, True)
+A.hold(a, 'body', 'position', (0, 2, 0))
+A.sine(a, 'body', 'rotation', (3, 0, 6), period=0.3)
+wings_beat(a, 0.6, period=0.1, flap=30)
+for i in LEGS:
+    for side, g in (('l', 1), ('r', -1)):
+        A.sample(a, 'leg%d_%s' % (i, side), 'rotation', lambda t, i=i, g=g: (20 * cyc(t, 0.3, i * 2.0), 0, g * 10 * cyc(t, 0.3, i * 2.0 + 1)), 10)
+A.sine(a, 'antenna_l', 'rotation', (20, 0, 0), period=0.3)
+A.sine(a, 'antenna_r', 'rotation', (20, 0, 0), period=0.3, phase=1.0)
 
 if __name__ == '__main__':
     run(m)

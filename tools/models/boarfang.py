@@ -191,5 +191,18 @@ A.hold(a, 'jaw', 'rotation', (20, 0, 0))
 A.sine(a, 'ear_l', 'rotation', (0, 0, 15), period=0.6)
 A.sine(a, 'ear_r', 'rotation', (0, 0, -15), period=0.6)
 
+# trapped (small monsters cannot be trapped by the core; kept so every required state pose exists): pit struggle
+a = T('trapped', 0.8, True)
+A.hold(a, 'body', 'position', (0, 2.5, 0))
+A.sine(a, 'body', 'rotation', (3, 0, 5), period=0.4)
+A.sample(a, 'head', 'rotation', lambda t: (-14 + 10 * cyc(t, 0.4), 14 * cyc(t, 0.8), 0), 12)
+A.sine(a, 'jaw', 'rotation', (8, 0, 0), period=0.2, offset=(10, 0, 0))
+for k, (u, lo) in LEGNAMES.items():
+    ph = {'fl': 0.0, 'fr': math.pi, 'bl': math.pi / 2, 'br': 3 * math.pi / 2}[k]
+    A.sample(a, u, 'rotation', lambda t, ph=ph: (34 * cyc(t, 0.4, ph), 0, 0), 12)
+A.sine(a, 'tail', 'rotation', (0, 40, 0), period=0.2)
+A.sine(a, 'ear_l', 'rotation', (0, 0, 20), period=0.4)
+A.sine(a, 'ear_r', 'rotation', (0, 0, -20), period=0.4)
+
 if __name__ == '__main__':
     run(m)

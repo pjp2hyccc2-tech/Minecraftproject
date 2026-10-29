@@ -229,5 +229,18 @@ A.sample(a, 'head', 'rotation', lambda t: (12 + 5 * cyc(t, 1.6), 12 * cyc(t, 1.6
 A.chain_wave(a, TRUNK, (6, 14, 0), period=1.6, phase_step=0.6)
 ears(a, [(0, (0, -20, 0)), (1.6, (0, -20, 0))])
 
+# trapped (small monsters cannot be trapped by the core; kept so every required state pose exists): pit struggle
+a = T('trapped', 1.0, True)
+A.hold(a, 'body', 'position', (0, 3, 0))
+A.sine(a, 'body', 'rotation', (3, 0, 5), period=0.5)
+A.sample(a, 'head', 'rotation', lambda t: (-10 + 8 * cyc(t, 0.5), 12 * cyc(t, 1.0), 0), 12)
+A.chain_wave(a, TRUNK, (-14, 8, 0), period=0.5, phase_step=0.6)
+for k, (u, lo) in LEGNAMES.items():
+    ph = {'fl': 0.0, 'fr': math.pi, 'bl': math.pi / 2, 'br': 3 * math.pi / 2}[k]
+    A.sample(a, u, 'rotation', lambda t, ph=ph: (22 * cyc(t, 0.5, ph), 0, 0), 12)
+A.sine(a, 'ear_l', 'rotation', (0, 20, 0), period=0.5)
+A.sine(a, 'ear_r', 'rotation', (0, -20, 0), period=0.5)
+A.sine(a, 'tail', 'rotation', (0, 30, 0), period=0.25)
+
 if __name__ == '__main__':
     run(m)

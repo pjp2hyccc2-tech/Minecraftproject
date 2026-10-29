@@ -53,7 +53,7 @@ import java.util.List;
 /**
  * ぬすっとモフ - mischievous cat-folk thief with a karakusa bandana and a bundle on its back. It tiptoes up to a
  * hunter, snatches ONE random item stack from the inventory (never the held item, equipment or the guild pass),
- * cheers, and runs off holding the loot over its head. About 40 s later it burrows away with it - unless it is
+ * cheers, and runs off with the loot balanced on its head. About 40 s later it burrows away with it - unless it is
  * defeated first, in which case it drops the stolen item and a thief coin.
  */
 public class NussuttoMofuEntity extends SmallHuntMonster {
@@ -299,7 +299,8 @@ public class NussuttoMofuEntity extends SmallHuntMonster {
 
     @Override
     protected IdleAction[] idleActions() {
-        return hasLoot() ? new IdleAction[]{new IdleAction("count", 40, 1)}
+        // with loot the arms are busy holding it up (MofuModel): only glance around nervously
+        return hasLoot() ? new IdleAction[]{new IdleAction("look", 40, 1)}
                 : new IdleAction[]{new IdleAction("look", 40, 3), new IdleAction("count", 40, 1)};
     }
 

@@ -329,3 +329,14 @@ def animate(m, jag):
     legs_hold(a, -8, 14, -4)
     A.chain_wave(a, TAIL, (2, 6, 0), period=1.2, phase_step=0.5)
     A.hold(a, 'crest', 'rotation', (12, 0, 0))
+
+    # trapped (small monsters cannot be trapped by the core; kept so every required state pose exists): thrashing
+    a = T('trapped', 0.8, True)
+    A.hold(a, 'body', 'position', (0, 3, 0))
+    A.sine(a, 'body', 'rotation', (4, 0, 6), period=0.4)
+    A.sample(a, 'neck', 'rotation', lambda t: (-20 + 12 * cyc(t, 0.4), 18 * cyc(t, 0.8), 0), 12)
+    A.sine(a, 'jaw', 'rotation', (12, 0, 0), period=0.2, offset=(16, 0, 0))
+    legs_walk(a, 0.4, 30, 50, 20, steps=12)
+    A.sine(a, 'arm_l', 'rotation', (30, 0, 0), period=0.3, offset=(-30, 0, 0))
+    A.sine(a, 'arm_r', 'rotation', (30, 0, 0), period=0.3, phase=1.5, offset=(-30, 0, 0))
+    A.chain_wave(a, TAIL, (6, 18, 0), period=0.4, phase_step=0.5)

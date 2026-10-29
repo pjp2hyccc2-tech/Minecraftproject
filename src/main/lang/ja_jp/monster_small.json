@@ -10,7 +10,7 @@
  "item.huntcraft.gamenos_spawn_egg": "ガメノスのスポーンエッグ",
  "notes.huntcraft.gamenos.desc": "苔と野花に覆われた甲羅を背負う、巨大でのんびりした亀。自分から争うことはないが、傷つけられると重い尾を振り回し、前脚を振り上げて踏みつけてくる。",
  "item.huntcraft.buzzling_spawn_egg": "バズリングのスポーンエッグ",
- "notes.huntcraft.buzzling.desc": "目にも止まらぬ羽ばたきで宙に浮かぶ巨大な甲虫。遠くから毒針を飛ばし、獲物めがけて急降下してくる。閃光や気絶で地面に落ちたところを狙うとよい。",
+ "notes.huntcraft.buzzling.desc": "目にも止まらぬ羽ばたきで宙に浮かぶ、蜂に似た巨大な虫。遠くから毒針を飛ばし、獲物めがけて急降下してくる。閃光や気絶で地面に落ちたところを狙うとよい。",
  "item.huntcraft.yukimammo_spawn_egg": "ユキマンモのスポーンエッグ",
  "notes.huntcraft.yukimammo.desc": "大きく湾曲した牙と長い毛をもつ雪原の巨獣。普段は群れで穏やかに草を食むが、傷つけられると怒りの雄叫びを上げ、牙を突き出して突進してくる。群れの仲間も加勢するので注意。",
  "item.huntcraft.heatgecko_spawn_egg": "ヒートゲッコーのスポーンエッグ",
@@ -18,6 +18,6 @@
  "item.huntcraft.gansekigani_spawn_egg": "ガンセキガニのスポーンエッグ",
  "notes.huntcraft.gansekigani.desc": "大岩を背負う甲殻種。鋏で挟み、叩きつけてくる。攻撃を受け続けると岩の下に引きこもり、刃も弾くほど硬くなる。岩を壊せば柔らかい身体があらわになる。",
  "item.huntcraft.nussutto_mofu_spawn_egg": "ぬすっとモフのスポーンエッグ",
- "notes.huntcraft.nussutto_mofu.desc": "唐草模様のほっかむりをした、いたずら好きなモフ族の盗っ人。忍び足で近づいてポーチのアイテムを盗み、戦利品を掲げて逃げていく。地中に逃げ込まれる前に倒せば取り戻せる！",
+ "notes.huntcraft.nussutto_mofu.desc": "唐草模様のほっかむりと風呂敷包みが目印の、いたずら好きなモフ族の盗っ人。忍び足で近づいてポーチのアイテムを盗み、戦利品を頭に載せて逃げていく。地中に逃げ込まれる前に倒せば取り戻せる！",
  "message.huntcraft.mofu_stole": "ぬすっとモフに%sを盗まれた！"
 }

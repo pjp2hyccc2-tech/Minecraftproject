@@ -20,7 +20,7 @@ from PIL import Image  # noqa: E402
 from hcmodel import Model, anim as A  # noqa: E402,F401
 from hcmodel import paint as painter  # noqa: E402
 from hcmodel.paint import M  # noqa: E402,F401
-from hcmodel.render import preview, render, label  # noqa: E402
+from hcmodel.render import preview, render, label, pose_matrices, model_quads, to_world, view_matrix, L0, L1  # noqa: E402
 
 ASSETS = os.path.abspath(os.path.join(TOOLS, '..', 'src', 'main', 'resources', 'assets', 'huntcraft'))
 PREVIEW_DIR = os.path.join(TOOLS, 'preview')
@@ -79,11 +79,102 @@ def _restore_materials(saved):
         c.decals = decals
 
 
-def big_views(model, tex, out_path, size=440, layers=()):
-    views = [('front-left', 35, 16), ('left side', 90, 4), ('front', 0, 6), ('back-right', 215, 18)]
+# ----------------------------------------------------------------------------- glow-aware rendering
+def _raster(quads, tex, size, yaw, pitch, fit, bg=(46, 50, 58), lit=True):
+    """hcmodel.render.rasterize with an optional unlit mode (for the full-bright glow pass)."""
+    import math as _m
+    W = H = size
+    img = np.zeros((H, W, 3), float)
+    img[:] = bg
+    zbuf = np.full((H, W), np.inf)
+    V = view_matrix(yaw, pitch)
+    tex = np.asarray(tex.convert('RGBA'), dtype=float)
+    TH, TW = tex.shape[:2]
+    tris = []
+    for P, uv, n in quads:
+        nw = np.array([n[0], -n[1], -n[2]])
+        nl = np.linalg.norm(nw)
+        nw = nw / nl if nl > 0 else nw
+        bright = min(1.0, 0.4 + 0.6 * (max(0, nw @ L0) + max(0, nw @ L1))) if lit else 1.0
+        tris.append((to_world(P) @ V.T, uv, bright))
+    if not tris:
+        return Image.fromarray(img.astype(np.uint8)), fit
+    if fit is None:
+        pts = np.concatenate([t[0] for t in tris])
+        mn, mx = pts[:, :2].min(0), pts[:, :2].max(0)
+        fit = ((mn + mx) / 2, max(mx - mn) * 1.08 + 1e-6)
+    center, span = fit
+    sc = W / span
+    for S, uv, bright in tris:
+        Q = np.stack([(S[:, 0] - center[0]) * sc + W / 2, -(S[:, 1] - center[1]) * sc + H / 2, S[:, 2]], axis=-1)
+        for (a, b, c) in ((0, 1, 2), (0, 2, 3)):
+            p0, p1, p2 = Q[a], Q[b], Q[c]
+            area = (p1[0] - p0[0]) * (p2[1] - p0[1]) - (p1[1] - p0[1]) * (p2[0] - p0[0])
+            if abs(area) < 1e-9:
+                continue
+            xmin = max(0, int(_m.floor(min(p0[0], p1[0], p2[0]))))
+            xmax = min(W - 1, int(_m.ceil(max(p0[0], p1[0], p2[0]))))
+            ymin = max(0, int(_m.floor(min(p0[1], p1[1], p2[1]))))
+            ymax = min(H - 1, int(_m.ceil(max(p0[1], p1[1], p2[1]))))
+            if xmin > xmax or ymin > ymax:
+                continue
+            xs, ys = np.meshgrid(np.arange(xmin, xmax + 1) + 0.5, np.arange(ymin, ymax + 1) + 0.5)
+            w0 = ((p1[0] - xs) * (p2[1] - ys) - (p1[1] - ys) * (p2[0] - xs)) / area
+            w1 = ((p2[0] - xs) * (p0[1] - ys) - (p2[1] - ys) * (p0[0] - xs)) / area
+            w2 = 1 - w0 - w1
+            inside = (w0 >= -1e-6) & (w1 >= -1e-6) & (w2 >= -1e-6)
+            if not inside.any():
+                continue
+            z = w0 * p0[2] + w1 * p1[2] + w2 * p2[2]
+            u = w0 * uv[a][0] + w1 * uv[b][0] + w2 * uv[c][0]
+            v = w0 * uv[a][1] + w1 * uv[b][1] + w2 * uv[c][1]
+            col = tex[np.clip((v * TH).astype(int), 0, TH - 1), np.clip((u * TW).astype(int), 0, TW - 1)]
+            ok = inside & (col[..., 3] > 25)
+            sub = zbuf[ymin:ymax + 1, xmin:xmax + 1]
+            ok &= z < sub
+            if not ok.any():
+                continue
+            sub[ok] = z[ok]
+            img[ymin:ymax + 1, xmin:xmax + 1][ok] = col[ok][:, :3] * bright
+    return Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)), fit
+
+
+def render_glow(model, tex, glow, layers=(), size=420, yaw=35, pitch=-20, fit=None):
+    """Lit base render + the emissive layer added full-bright on visible surfaces (like RenderType.eyes)."""
+    quads = model_quads(model, pose_matrices(model, layers))
+    im, fit = _raster(quads, tex, size, yaw, pitch, fit)
+    if glow is None:
+        return im, fit
+    t = np.asarray(tex.convert('RGBA'))
+    g = np.asarray(glow.convert('RGBA'))
+    gt = np.zeros_like(t)
+    gt[..., 3] = t[..., 3]                    # keep occlusion of the base model
+    lit = (g[..., 3] > 0) & (g[..., :3].sum(-1) > 0)
+    gt[lit, :3] = g[lit, :3]
+    gim, _ = _raster(quads, Image.fromarray(gt, 'RGBA'), size, yaw, pitch, fit, bg=(0, 0, 0), lit=False)
+    out = np.clip(np.asarray(im).astype(int) + np.asarray(gim).astype(int), 0, 255).astype(np.uint8)
+    return Image.fromarray(out), fit
+
+
+def glow_ratio(img, glow):
+    """Lit emissive texels / opaque base texels (keep well under ~0.15)."""
+    if glow is None:
+        return 0.0
+    g = np.asarray(glow.convert('RGBA'))
+    b = np.asarray(img.convert('RGBA'))
+    lit = ((g[..., 3] > 0) & (g[..., :3].sum(-1) > 0)).sum()
+    return lit / max(1, (b[..., 3] > 0).sum())
+
+
+# NOTE: in hcmodel.render a NEGATIVE pitch looks from above (positive pitch looks from below).
+VIEWS_ABOVE = [('front-right (above)', 35, -20), ('right side', 90, -4), ('front', 0, -8), ('back-left (above)', 215, -22)]
+
+
+def big_views(model, tex, out_path, size=440, layers=(), glow=None):
+    views = VIEWS_ABOVE
     tiles = []
     for name, yaw, pitch in views:
-        im, _ = render(model, tex, layers, size, yaw, pitch)
+        im, _ = render_glow(model, tex, glow, layers, size, yaw, pitch)
         tiles.append(label(im, name))
     sheet = Image.new('RGB', (size * 2, size * 2), (20, 22, 26))
     for i, im in enumerate(tiles):
@@ -93,7 +184,36 @@ def big_views(model, tex, out_path, size=440, layers=()):
     return sheet
 
 
-def pose_sheet(model, tex, out_path, poses, size=300, yaw=35, pitch=16):
+def contact_sheet(model, tex, out_path, anims=None, frames=6, size=240, glow=None):
+    """Like hcmodel.render.preview, but every view looks from above (as players see small monsters)."""
+    rest = [('front-right', 35, -18), ('right side', 90, -4), ('front', 0, -8), ('top', 0, -80), ('back-left', 215, -20)]
+    idle = [(model.animations['idle'], 0.0, 1.0)] if 'idle' in model.animations else []
+    rows = [[label(render_glow(model, tex, glow, idle, size, y, p)[0], n) for n, y, p in rest]]
+    _, fit = render(model, tex, (), size, 35, -18)
+    fit = (fit[0], fit[1] * 1.25)
+    for an in (anims if anims is not None else list(model.animations.keys())):
+        a = model.animations[an]
+        row = []
+        for k in range(frames):
+            t = a.length * k / (frames - 1 if not a.loop else frames)
+            layers = [(a, t, 1.0)]
+            if an not in ('idle', 'walk', 'run', 'fly', 'death', 'sleep', 'stun', 'trapped') + tuple(getattr(model, 'state_poses', ())) \
+                    and 'idle' in model.animations:
+                layers.insert(0, (model.animations['idle'], t, 1.0))
+            im, _ = render_glow(model, tex, glow, layers, size, 35, -18, fit)
+            row.append(label(im, '%s t=%.2f' % (an, t)))
+        rows.append(row)
+    cols = max(len(r) for r in rows)
+    sheet = Image.new('RGB', (cols * size, len(rows) * size), (20, 22, 26))
+    for ri, r in enumerate(rows):
+        for ci, im in enumerate(r):
+            sheet.paste(im, (ci * size, ri * size))
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    sheet.save(out_path)
+    return sheet
+
+
+def pose_sheet(model, tex, out_path, poses, size=300, yaw=35, pitch=-16, glow=None):
     """poses: list of (label, anim_name, time). One tile each (idle layered under actions)."""
     tiles = []
     fit = None
@@ -104,11 +224,11 @@ def pose_sheet(model, tex, out_path, poses, size=300, yaw=35, pitch=16):
                 and an not in getattr(model, 'state_poses', ()):
             layers.append((model.animations['idle'], t, 1.0))
         layers.append((a, t, 1.0))
-        im, f = render(model, tex, layers, size, yaw, pitch, fit)
+        im, f = render_glow(model, tex, glow, layers, size, yaw, pitch, fit)
         if fit is None:
             c, s = f
             fit = (c, s * 1.25)
-            im, _ = render(model, tex, layers, size, yaw, pitch, fit)
+            im, _ = render_glow(model, tex, glow, layers, size, yaw, pitch, fit)
         tiles.append(label(im, lab))
     cols = min(6, len(tiles))
     rows = (len(tiles) + cols - 1) // cols
@@ -153,6 +273,8 @@ def stamp(model, cube, face, x, y, rows, palette, mirror=False):
                 if gcol is not None:
                     glow[v, u, :3] = _hex(gcol)
                     glow[v, u, 3] = 255
+                else:
+                    glow[v, u] = 0          # a plain stamped pixel (pupil, outline...) must not glow
     _passes(model).append(fn)
 
 
@@ -197,9 +319,18 @@ def accent_pass(model, cubes, mat_name, mask_fn, seed=7):
     _passes(model).append(fn)
 
 
+def dim_under_glow(model, factor=0.35):
+    """Final pass: darkens base texels that glow. The emissive layer is ADDED full-bright in game, so a bright base
+    under a bright glow clips to yellow-white in daylight; a dark base keeps the glow's own colour."""
+    def fn(img, glow):
+        lit = (glow[..., 3] > 0) & (glow[..., :3].sum(-1) > 0)
+        img[lit, :3] = (img[lit, :3] * factor).astype(img.dtype)
+    model.final_passes = getattr(model, 'final_passes', []) + [fn]
+
+
 def paint(model):
     img, glow = painter.paint_model(model)
-    passes = getattr(model, 'post_passes', [])
+    passes = getattr(model, 'post_passes', []) + getattr(model, 'final_passes', [])
     if not passes:
         return img, glow
     a = np.array(img).copy()
@@ -244,18 +375,20 @@ def run(model, argv=None, variants=None, size=240, frames=6):
         vimg, vglow = paint(model)
         _restore_materials(saved)
         vimg.save(os.path.join(tex_dir, '%s_%s.png' % (model.name, suffix)))
-        var_imgs[suffix] = vimg
+        var_imgs[suffix] = (vimg, vglow)
     ncubes = sum(1 for _ in model.all_cubes())
-    print('%s: texture %dx%d, %d cubes, %d bones, %d anims, %s' % (
-        model.name, model.tex_w, model.tex_h, ncubes, len(model.bones), len(model.animations), size_report(model)))
+    print('%s: texture %dx%d, %d cubes, %d bones, %d anims, %s, glow ratio %.3f' % (
+        model.name, model.tex_w, model.tex_h, ncubes, len(model.bones), len(model.animations), size_report(model),
+        glow_ratio(img, glow)))
     sel = [x for x in argv if not x.startswith('--')]
     if '--big' in argv:
         idle = [(model.animations['idle'], 0.0, 1.0)] if 'idle' in model.animations else []
-        big_views(model, img, os.path.join(PREVIEW_DIR, model.name + '_big.png'), layers=idle)
-        for suffix, vimg in var_imgs.items():
-            big_views(model, vimg, os.path.join(PREVIEW_DIR, '%s_%s_big.png' % (model.name, suffix)), layers=idle)
+        big_views(model, img, os.path.join(PREVIEW_DIR, model.name + '_big.png'), layers=idle, glow=glow)
+        for suffix, (vimg, vglow) in var_imgs.items():
+            big_views(model, vimg, os.path.join(PREVIEW_DIR, '%s_%s_big.png' % (model.name, suffix)), layers=idle, glow=vglow)
     if '--preview' in argv:
-        preview(model, img, os.path.join(PREVIEW_DIR, model.name + '.png'), anims=sel or None, frames=frames, size=size)
+        contact_sheet(model, img, os.path.join(PREVIEW_DIR, model.name + '.png'), anims=sel or None, frames=frames, size=size,
+                      glow=glow)
     return img, glow
 
 
