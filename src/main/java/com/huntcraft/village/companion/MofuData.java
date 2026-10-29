@@ -15,7 +15,8 @@ import java.util.List;
 /**
  * Companion records stored in {@code HunterData.getModuleTag("village")}:
  * <pre>
- * mofu:   list of {uid, name, cname?, pat, type, lv, xp, faint(gameTime), helm, armor, exp?:{dest, start(ms), prog, need}}
+ * mofu:   list of {uid, name, cname?, pat, type, lv, xp, faint(gameTime), gw, gh, ga (gear tier or -1),
+ *                  hunts, exp?:{dest, start(ms), dur(ms), prog, need}}
  * active: uid of the companion that follows the hunter (0 = none)
  * cands:  hire candidates (same record format, plus "cost")
  * </pre>
@@ -26,9 +27,6 @@ public final class MofuData {
     public static final int MAX_LEVEL = 50;
     public static final int PATTERNS = 6;
     public static final int NAMES = 32;
-    public static final int HELMS = 3;
-    public static final int ARMORS = 3;
-    public static final long EXPEDITION_MS = 20L * 60L * 1000L;
     public static final int EXPEDITION_HUNTS = 2;
     public static final int FAINT_TICKS = 600;
 
@@ -67,6 +65,11 @@ public final class MofuData {
         return null;
     }
 
+    @Nullable
+    public static CompoundTag active(CompoundTag v) {
+        return find(v, v.getInt("active"));
+    }
+
     public static boolean remove(CompoundTag v, int uid) {
         ListTag l = list(v);
         for (int i = 0; i < l.size(); i++) {
@@ -85,7 +88,7 @@ public final class MofuData {
         return n;
     }
 
-    /** A random new companion (candidate). */
+    /** A random new companion (hire candidate). */
     public static CompoundTag create(RandomSource r, int uid, int level) {
         CompoundTag t = new CompoundTag();
         t.putInt("uid", uid);
@@ -94,13 +97,46 @@ public final class MofuData {
         t.putInt("type", r.nextInt(MofuType.values().length));
         t.putInt("lv", Math.max(1, level));
         t.putInt("xp", 0);
-        t.putInt("helm", r.nextInt(4) == 0 ? 1 : 0);
-        t.putInt("armor", 0);
+        t.putInt("gw", level >= 12 ? MofuGear.Tier.BONE.ordinal() : MofuGear.Tier.BAMBOO.ordinal());
+        t.putInt("gh", r.nextInt(3) == 0 ? MofuGear.Tier.BAMBOO.ordinal() : -1);
+        t.putInt("ga", level >= 6 ? MofuGear.Tier.BAMBOO.ordinal() : -1);
         return t;
+    }
+
+    /** The free first companion chosen at the mofu elder. */
+    public static CompoundTag createFirst(int uid, MofuType type, int pattern, String customName) {
+        CompoundTag t = new CompoundTag();
+        t.putInt("uid", uid);
+        t.putInt("name", Math.floorMod(customName.hashCode(), NAMES));
+        if (!customName.isBlank()) t.putString("cname", sanitizeName(customName));
+        t.putInt("pat", Math.floorMod(pattern, PATTERNS));
+        t.putInt("type", type.ordinal());
+        t.putInt("lv", 1);
+        t.putInt("xp", 0);
+        t.putInt("gw", MofuGear.Tier.BAMBOO.ordinal());
+        t.putInt("gh", -1);
+        t.putInt("ga", MofuGear.Tier.BAMBOO.ordinal());
+        return t;
+    }
+
+    public static String sanitizeName(String s) {
+        StringBuilder b = new StringBuilder();
+        for (char c : s.trim().toCharArray()) {
+            if (c >= ' ' && c != '§' && b.length() < 16) b.append(c);
+        }
+        return b.toString().trim();
     }
 
     public static int hireCost(CompoundTag rec) {
         return 400 + 120 * Math.max(1, rec.getInt("lv"));
+    }
+
+    public static int trainCost(CompoundTag rec) {
+        return 150 + 60 * level(rec);
+    }
+
+    public static int retrainCost(CompoundTag rec) {
+        return 300 + 40 * level(rec);
     }
 
     public static Component name(CompoundTag rec) {
@@ -128,6 +164,10 @@ public final class MofuData {
         return rec.getLong("faint") > gameTime;
     }
 
+    public static boolean hasSkill(CompoundTag rec, MofuSkill s) {
+        return s.has(type(rec), level(rec));
+    }
+
     /** Adds XP; returns the number of levels gained. */
     public static int addXp(CompoundTag rec, int amount) {
         int lv = level(rec);
@@ -146,24 +186,51 @@ public final class MofuData {
     }
 
     // ------------------------------------------------------------------ derived combat stats
-    public static float maxHealth(int lv) {
-        return 30.0F + lv * 3.0F;
+    private static float veteran(MofuType t, int lv) {
+        return MofuSkill.VETERAN.has(t, lv) ? 1.1F : 1.0F;
     }
 
-    public static float armor(int lv) {
-        return 2.0F + lv * 0.3F;
+    public static float maxHealth(MofuType type, int lv, int armorTier) {
+        float hp = 30.0F + lv * 3.0F + (armorTier >= 0 ? MofuGear.Tier.byIndex(armorTier).armorHp : 0);
+        return hp * veteran(type, lv);
     }
 
-    public static float meleeDamage(int lv, MofuType type) {
-        float base = 3.0F + lv * 0.35F;
-        return type == MofuType.FIGHTER ? base * 1.35F : base * 0.8F;
+    public static float armor(MofuType type, int lv, int helmTier, int armorTier) {
+        float a = 2.0F + lv * 0.3F;
+        if (helmTier >= 0) a += MofuGear.Tier.byIndex(helmTier).helmDef;
+        if (armorTier >= 0) a += MofuGear.Tier.byIndex(armorTier).armorDef;
+        return Math.min(30.0F, a * veteran(type, lv));
     }
 
-    public static float bombDamage(int lv) {
-        return 7.0F + lv * 0.6F;
+    public static float meleeDamage(MofuType type, int lv, int weaponTier) {
+        float base = 2.5F + lv * 0.25F + (weaponTier >= 0 ? MofuGear.Tier.byIndex(weaponTier).attack : 0);
+        float k = type == MofuType.FIGHTER ? 1.3F : 0.8F;
+        return base * k * veteran(type, lv);
     }
 
-    public static float healFraction(int lv) {
-        return 0.25F + 0.005F * lv;
+    public static float bombDamage(MofuType type, int lv, int weaponTier) {
+        float base = 6.0F + lv * 0.5F + (weaponTier >= 0 ? MofuGear.Tier.byIndex(weaponTier).attack * 1.1F : 0);
+        return base * veteran(type, lv);
+    }
+
+    public static float healFraction(MofuType type, int lv) {
+        float f = 0.25F + 0.005F * lv;
+        if (MofuSkill.SOOTHING.has(type, lv)) f += 0.10F;
+        return f;
+    }
+
+    /** Record-based shortcuts (screens). */
+    public static float maxHealth(CompoundTag rec) {
+        return maxHealth(type(rec), level(rec), MofuGear.equipped(rec, MofuGear.Slot.ARMOR));
+    }
+
+    public static float armor(CompoundTag rec) {
+        return armor(type(rec), level(rec), MofuGear.equipped(rec, MofuGear.Slot.HELM), MofuGear.equipped(rec, MofuGear.Slot.ARMOR));
+    }
+
+    public static float attack(CompoundTag rec) {
+        MofuType t = type(rec);
+        int w = MofuGear.equipped(rec, MofuGear.Slot.WEAPON);
+        return t == MofuType.BOMBER ? bombDamage(t, level(rec), w) : meleeDamage(t, level(rec), w);
     }
 }

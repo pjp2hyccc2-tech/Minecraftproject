@@ -10,13 +10,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Animated hcmodel for non-monster entities (mofu companions / NPCs, training dummy):
+ * Animated hcmodel for non-monster entities (mofu companions / NPCs, humanoid NPCs, training dummy):
  * loops "idle" + "walk"/"run", one action layer, head look, and accessory bones toggled per entity
  * ({@link HcAnimated#hcShown()}: toggle bones are hidden unless listed).
  */
@@ -57,6 +58,11 @@ public class HcEntityModel<T extends Entity & HcAnimated> extends HierarchicalMo
         return p;
     }
 
+    /** Shows only these toggle bones (others hidden). */
+    public void showOnly(Collection<String> names) {
+        for (Map.Entry<String, ModelPart> t : toggles.entrySet()) t.getValue().visible = names.contains(t.getKey());
+    }
+
     @Nullable
     private AnimationDefinition anim(@Nullable String name) {
         return name == null ? null : data.animations.get(name);
@@ -65,8 +71,7 @@ public class HcEntityModel<T extends Entity & HcAnimated> extends HierarchicalMo
     @Override
     public void setupAnim(T e, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        Set<String> shown = e.hcShown();
-        for (Map.Entry<String, ModelPart> t : toggles.entrySet()) t.getValue().visible = shown.contains(t.getKey());
+        showOnly(e.hcShown());
         for (String h : e.hcHidden()) {
             ModelPart p = bone(h);
             if (p != null) p.visible = false;

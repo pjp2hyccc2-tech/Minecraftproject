@@ -5,6 +5,7 @@ import com.huntcraft.core.Element;
 import com.huntcraft.core.HunterDamage;
 import com.huntcraft.entity.monster.HuntMonster;
 import com.huntcraft.entity.monster.MonsterPart;
+import com.huntcraft.registry.HCEffects;
 import com.huntcraft.village.HcAnimated;
 import com.huntcraft.village.VillageRegistry;
 import com.huntcraft.village.meal.MealSystem;
@@ -18,15 +19,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -49,21 +53,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 /**
  * Mofu (cat-folk) companion. Follows its hunter (also across dimensions, see {@link CompanionManager}), fights the
- * hunter's target according to its support type, faints instead of dying and comes back 30 s later.
+ * hunter's target according to its support type and skills, faints instead of dying and comes back 30 s later.
  * The persistent state lives in the hunter's data; entities are disposable views of that record.
  */
 public class MofuEntity extends PathfinderMob implements HcAnimated {
     private static final EntityDataAccessor<Integer> DATA_PATTERN = SynchedEntityData.defineId(MofuEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_TYPE = SynchedEntityData.defineId(MofuEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_LEVEL = SynchedEntityData.defineId(MofuEntity.class, EntityDataSerializers.INT);
+    /** Gear tiers + 1 packed in 3 nibbles: weapon | helm << 4 | armor << 8 (0 = none). */
     private static final EntityDataAccessor<Integer> DATA_GEAR = SynchedEntityData.defineId(MofuEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<java.util.Optional<UUID>> DATA_OWNER = SynchedEntityData.defineId(MofuEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    public static final String[] ACTIONS = {"attack", "attack2", "throw", "horn", "cheer"};
+    private static final EntityDataAccessor<Optional<UUID>> DATA_OWNER = SynchedEntityData.defineId(MofuEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    public static final String[] ACTIONS = {"attack", "attack2", "throw", "horn", "cheer", "dance"};
     public static final String[] PATTERN_NAMES = {"white", "ginger", "grey", "black", "tabby", "calico"};
 
     public final AnimationState idleAnim = new AnimationState();
@@ -73,14 +79,23 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
 
     @Nullable
     private UUID ownerId;
+    /** Direct owner reference (GameTests use fake players that are not in the player list). */
+    @Nullable
+    private ServerPlayer ownerRef;
     private int recordUid;
+    /** Not managed by {@link CompanionManager} (GameTests, previews). */
     private boolean testMode;
     @Nullable
     private LivingEntity combatTarget;
     private int attackCd;
     private int specialCd;
+    private int flashCd;
+    private int reviveCd;
     private int retargetCd;
     private int regenCd;
+    private int comboTicks = -1;
+    private int danceTicks;
+    private boolean gutsUsed;
 
     public MofuEntity(EntityType<? extends MofuEntity> type, Level level) {
         super(type, level);
@@ -100,7 +115,7 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
         this.entityData.define(DATA_TYPE, 0);
         this.entityData.define(DATA_LEVEL, 1);
         this.entityData.define(DATA_GEAR, 0);
-        this.entityData.define(DATA_OWNER, java.util.Optional.empty());
+        this.entityData.define(DATA_OWNER, Optional.empty());
     }
 
     /** Owner UUID as seen by clients (HUD). */
@@ -131,12 +146,14 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
         return Math.max(1, this.entityData.get(DATA_LEVEL));
     }
 
-    public int getHelm() {
-        return this.entityData.get(DATA_GEAR) & 0xF;
+    /** Equipped tier index of a slot (-1 = none), from synced data. */
+    public int getGear(MofuGear.Slot slot) {
+        int shift = slot.ordinal() * 4;
+        return ((this.entityData.get(DATA_GEAR) >> shift) & 0xF) - 1;
     }
 
-    public int getArmorGear() {
-        return (this.entityData.get(DATA_GEAR) >> 4) & 0xF;
+    public boolean hasSkill(MofuSkill s) {
+        return s.has(getMofuType(), getMofuLevel());
     }
 
     public int getRecordUid() {
@@ -156,41 +173,49 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
         this.testMode = test;
     }
 
-    /** Client-side preview / test setup without an owner. */
-    public void setVisual(int pattern, MofuType type, int level, int helm, int armor) {
+    /** Visual / stat setup without a record (tests, previews). */
+    public void setVisual(int pattern, MofuType type, int level, int weapon, int helm, int armor) {
         this.entityData.set(DATA_PATTERN, pattern);
         this.entityData.set(DATA_TYPE, type.ordinal());
         this.entityData.set(DATA_LEVEL, Math.max(1, level));
-        this.entityData.set(DATA_GEAR, (helm & 0xF) | ((armor & 0xF) << 4));
+        int packed = ((weapon + 1) & 0xF) | (((helm + 1) & 0xF) << 4) | (((armor + 1) & 0xF) << 8);
+        this.entityData.set(DATA_GEAR, packed);
     }
 
     public void setup(@Nullable ServerPlayer owner, CompoundTag rec) {
         this.ownerId = owner == null ? null : owner.getUUID();
-        this.entityData.set(DATA_OWNER, java.util.Optional.ofNullable(this.ownerId));
+        this.ownerRef = owner;
+        this.entityData.set(DATA_OWNER, Optional.ofNullable(this.ownerId));
         this.recordUid = rec.getInt("uid");
         applyRecord(rec);
+        refreshStats();
         this.setHealth(this.getMaxHealth());
     }
 
     public void applyRecord(CompoundTag rec) {
         int lv = MofuData.level(rec);
-        boolean changed = lv != getMofuLevel();
-        setVisual(rec.getInt("pat"), MofuData.type(rec), lv, rec.getInt("helm"), rec.getInt("armor"));
+        int gearBefore = this.entityData.get(DATA_GEAR);
+        boolean changed = lv != getMofuLevel() || MofuData.type(rec) != getMofuType();
+        setVisual(rec.getInt("pat"), MofuData.type(rec), lv, MofuGear.equipped(rec, MofuGear.Slot.WEAPON),
+                MofuGear.equipped(rec, MofuGear.Slot.HELM), MofuGear.equipped(rec, MofuGear.Slot.ARMOR));
         this.setCustomName(MofuData.name(rec));
-        if (changed || this.tickCount < 2) refreshStats();
+        this.setCustomNameVisible(true);
+        if (changed || gearBefore != this.entityData.get(DATA_GEAR) || this.tickCount < 2) refreshStats();
     }
 
     public void refreshStats() {
         int lv = getMofuLevel();
+        MofuType t = getMofuType();
         AttributeInstance hp = this.getAttribute(Attributes.MAX_HEALTH);
-        if (hp != null) hp.setBaseValue(MofuData.maxHealth(lv));
+        if (hp != null) hp.setBaseValue(MofuData.maxHealth(t, lv, getGear(MofuGear.Slot.ARMOR)));
         AttributeInstance ar = this.getAttribute(Attributes.ARMOR);
-        if (ar != null) ar.setBaseValue(MofuData.armor(lv) + getArmorGear() * 2.0F);
+        if (ar != null) ar.setBaseValue(MofuData.armor(t, lv, getGear(MofuGear.Slot.HELM), getGear(MofuGear.Slot.ARMOR)));
         if (this.getHealth() > this.getMaxHealth()) this.setHealth(this.getMaxHealth());
     }
 
     @Nullable
     public ServerPlayer getOwner() {
+        if (ownerRef != null && !ownerRef.isRemoved()) return ownerRef;
         if (ownerId == null || this.level().getServer() == null) return null;
         return this.level().getServer().getPlayerList().getPlayer(ownerId);
     }
@@ -213,34 +238,56 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
             return;
         }
         ServerPlayer owner = getOwner();
-        if (!testMode) {
-            if (owner == null || owner.level() != this.level() || CompanionManager.current(ownerId) != this) {
-                this.discard();
-                return;
-            }
+        if (!testMode && (owner == null || owner.level() != this.level() || CompanionManager.current(ownerId) != this)) {
+            this.discard();
+            return;
         }
         if (attackCd > 0) attackCd--;
         if (specialCd > 0) specialCd--;
+        if (flashCd > 0) flashCd--;
+        if (reviveCd > 0) reviveCd--;
         if (--retargetCd <= 0) {
             retargetCd = 10;
-            if (!testMode && owner != null) pickTarget(owner);
+            if (owner != null && !testMode) pickTarget(owner);
             else if (combatTarget != null && !isValidTarget(combatTarget, null)) combatTarget = null;
         }
-        // healer horn
-        if (getMofuType() == MofuType.HEALER && specialCd <= 0) {
-            Player hurt = null;
-            for (Player p : this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(10.0D))) {
-                if (p.isAlive() && !p.isSpectator() && p.getHealth() < p.getMaxHealth() * 0.5F) {
-                    hurt = p;
-                    break;
-                }
-            }
-            if (hurt != null || (testMode && combatTarget != null && this.getHealth() < this.getMaxHealth() * 0.5F)) playHorn();
+        // delayed second strike (COMBO) and blade dance flurry
+        if (comboTicks >= 0 && --comboTicks < 0 && combatTarget != null && reachSqr(combatTarget) < 2.5 * 2.5) strike(combatTarget, 0.7F, 1);
+        if (danceTicks > 0) {
+            danceTicks--;
+            if (danceTicks % 4 == 0 && combatTarget != null && reachSqr(combatTarget) < 2.5 * 2.5) strike(combatTarget, 0.6F, 1);
         }
+        if (getMofuType() == MofuType.HEALER) healerTick();
         if (combatTarget == null && --regenCd <= 0) {
             regenCd = 40;
             if (this.getHealth() < this.getMaxHealth()) this.heal(1.0F);
         }
+    }
+
+    private void healerTick() {
+        Player hurt = null;
+        Player critical = null;
+        for (Player p : this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(10.0D))) {
+            if (!p.isAlive() || p.isSpectator()) continue;
+            if (p.getHealth() < p.getMaxHealth() * 0.25F) critical = p;
+            if (p.getHealth() < p.getMaxHealth() * 0.5F || (hasSkill(MofuSkill.SOOTHING) && hasBadStatus(p))) hurt = p;
+        }
+        if (critical != null && hasSkill(MofuSkill.REVIVAL) && reviveCd <= 0) {
+            playHorn(true);
+            return;
+        }
+        if (specialCd > 0) return;
+        if (hurt != null || (testMode && combatTarget != null && this.getHealth() < this.getMaxHealth() * 0.5F)) playHorn(false);
+    }
+
+    private static boolean hasBadStatus(Player p) {
+        for (MobEffect e : badEffects()) if (p.hasEffect(e)) return true;
+        return false;
+    }
+
+    private static MobEffect[] badEffects() {
+        return new MobEffect[]{HCEffects.FIREBLIGHT.get(), HCEffects.ICEBLIGHT.get(), HCEffects.THUNDERBLIGHT.get(), HCEffects.WATERBLIGHT.get(),
+                HCEffects.DRAGONBLIGHT.get(), HCEffects.POISON.get(), MobEffects.POISON};
     }
 
     private void pickTarget(ServerPlayer owner) {
@@ -274,42 +321,50 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
         if (e instanceof Player || e instanceof MofuEntity || e instanceof VillageNpc) return false;
         if (e instanceof HuntMonster m && m.isCarcass()) return false;
         if (owner != null) {
-            if (e.distanceToSqr(owner) > 32 * 32 || e.level() != owner.level()) return false;
-            boolean fighting = e instanceof HuntMonster || e instanceof Enemy || e instanceof TrainingDummy
+            if (e.level() != owner.level() || e.distanceToSqr(owner) > 32 * 32) return false;
+            return e instanceof HuntMonster || e instanceof Enemy || e instanceof TrainingDummy
                     || CompanionManager.ownerTarget(owner) == e || owner.getLastHurtByMob() == e;
-            return fighting;
         }
         return this.distanceToSqr(e) < 40 * 40;
     }
 
     // ------------------------------------------------------------------ attacks
-    private DamageSource source(DamageType_KEY key, @Nullable Entity direct) {
-        Holder<DamageType> h = this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key.key);
+    private DamageSource source(ResourceKey<DamageType> key, @Nullable Entity direct) {
+        Holder<DamageType> h = this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key);
         ServerPlayer owner = getOwner();
         return new DamageSource(h, direct != null ? direct : this, owner != null ? owner : this);
     }
 
-    /** Small helper enum so damage type keys stay in one place. */
-    enum DamageType_KEY {
-        MELEE(DamageTypes.MOB_ATTACK), BLAST(DamageTypes.EXPLOSION);
-        final net.minecraft.resources.ResourceKey<DamageType> key;
-
-        DamageType_KEY(net.minecraft.resources.ResourceKey<DamageType> key) {
-            this.key = key;
-        }
-    }
-
     public DamageSource meleeSource() {
-        return source(DamageType_KEY.MELEE, this);
+        return source(DamageTypes.MOB_ATTACK, this);
     }
 
     public DamageSource blastSource(Entity bomb) {
-        return source(DamageType_KEY.BLAST, bomb);
+        return source(DamageTypes.EXPLOSION, bomb);
     }
 
+    /** Meal "cheer" skill, fighter rampage and similar multipliers. */
     private float damageBoost() {
+        float k = 1.0F;
         ServerPlayer owner = getOwner();
-        return owner != null && MealSystem.has(owner, com.huntcraft.village.meal.Meals.Skill.CHEER) ? 1.25F : 1.0F;
+        if (owner != null && MealSystem.has(owner, com.huntcraft.village.meal.Ingredients.Skill.CHEER)) k *= 1.25F;
+        if (owner != null && hasSkill(MofuSkill.RAMPAGE) && owner.getHealth() < owner.getMaxHealth() * 0.5F) k *= 1.2F;
+        return k;
+    }
+
+    public Element weaponElement() {
+        int w = getGear(MofuGear.Slot.WEAPON);
+        return w < 0 ? Element.NONE : MofuGear.Tier.byIndex(w).element;
+    }
+
+    /** Elemental bonus damage against a target (scaled by the monster's weakness stars). */
+    public float elementBonus(LivingEntity t) {
+        int w = getGear(MofuGear.Slot.WEAPON);
+        if (w < 0) return 0;
+        MofuGear.Tier tier = MofuGear.Tier.byIndex(w);
+        if (tier.element == Element.NONE || tier.elemVal <= 0) return 0;
+        int stars = t instanceof HuntMonster m ? m.profile().weakness.getOrDefault(tier.element, 0) : 1;
+        return tier.elemVal * (0.4F + 0.35F * stars);
     }
 
     /** Squared distance from this mofu to the closest hitbox of the target. */
@@ -338,20 +393,39 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
 
     public void meleeAttack(LivingEntity t) {
         playAction(this.random.nextBoolean() ? 0 : 1);
-        float dmg = MofuData.meleeDamage(getMofuLevel(), getMofuType()) * damageBoost();
+        strike(t, 1.0F, 0);
+        if (hasSkill(MofuSkill.COMBO) && this.random.nextFloat() < 0.3F) comboTicks = 5;
+        if (hasSkill(MofuSkill.BLADE_DANCE) && specialCd <= 0) {
+            danceTicks = 20;
+            specialCd = 400;
+            playAction(5);
+        }
+        attackCd = getMofuType() == MofuType.FIGHTER ? 14 : 22;
+    }
+
+    /** One melee hit (mult = damage multiplier). */
+    private void strike(LivingEntity t, float mult, int anim) {
+        float dmg = MofuData.meleeDamage(getMofuType(), getMofuLevel(), getGear(MofuGear.Slot.WEAPON)) * mult * damageBoost();
         if (this.random.nextFloat() < 0.15F) dmg *= 1.5F;
-        this.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+        dmg += elementBonus(t) * mult;
+        this.swing(InteractionHand.MAIN_HAND);
+        t.invulnerableTime = 0;
         if (t.hurt(meleeSource(), dmg)) {
-            onDealtDamage(t, dmg, DamageKind.CUT, Element.NONE);
+            onDealtDamage(t, dmg, DamageKind.CUT, weaponElement());
             this.level().playSound(null, getX(), getY(), getZ(), VillageRegistry.MOFU_ATTACK.get(), SoundSource.NEUTRAL, 0.7F,
                     1.1F + this.random.nextFloat() * 0.3F);
             if (this.level() instanceof ServerLevel sl) {
                 Vec3 c = t.getBoundingBox().getCenter();
                 Vec3 hit = this.position().add(0, 0.6, 0).add(c.subtract(this.position()).normalize().scale(0.8));
                 sl.sendParticles(ParticleTypes.SWEEP_ATTACK, hit.x, hit.y, hit.z, 1, 0, 0, 0, 0);
+                if (weaponElement() == Element.FIRE) sl.sendParticles(ParticleTypes.FLAME, hit.x, hit.y, hit.z, 4, 0.2, 0.2, 0.2, 0.02);
+                else if (weaponElement() == Element.THUNDER) sl.sendParticles(ParticleTypes.ELECTRIC_SPARK, hit.x, hit.y, hit.z, 6, 0.2, 0.2, 0.2, 0.1);
+                else if (weaponElement() == Element.ICE) sl.sendParticles(ParticleTypes.SNOWFLAKE, hit.x, hit.y, hit.z, 5, 0.2, 0.2, 0.2, 0.02);
+                else if (weaponElement() == Element.DRAGON) sl.sendParticles(ParticleTypes.DRAGON_BREATH, hit.x, hit.y, hit.z, 5, 0.2, 0.2, 0.2, 0.01);
+                else if (weaponElement() == Element.WATER) sl.sendParticles(ParticleTypes.SPLASH, hit.x, hit.y, hit.z, 8, 0.2, 0.2, 0.2, 0.05);
             }
         }
-        attackCd = getMofuType() == MofuType.FIGHTER ? 14 : 22;
+        if (anim > 0) playAction(this.random.nextBoolean() ? 0 : 1);
     }
 
     /** Hook used by melee and bombs: monster part damage / rage / flinch build-up + damage number for the hunter. */
@@ -362,15 +436,28 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
             ServerPlayer owner = getOwner();
             if (owner != null) {
                 Vec3 pos = t.position().add(0, t.getBbHeight() * 0.6, 0);
-                HunterDamage.sendDamageNumber(owner, pos, applied, 0xFFC864, false, element);
+                int color = element == Element.NONE ? 0xFFC864 : element.color;
+                HunterDamage.sendDamageNumber(owner, pos, applied, color, false, element);
             }
         }
     }
 
     public void throwBomb(LivingEntity t) {
         playAction(2);
+        int n = hasSkill(MofuSkill.CARPET_BOMB) && this.random.nextFloat() < 0.35F ? 3 : 1;
+        boolean flash = hasSkill(MofuSkill.FLASH_BARREL) && flashCd <= 0 && t instanceof HuntMonster hm && !hm.isBlinded();
+        for (int i = 0; i < n; i++) launchBomb(t, (i - (n - 1) / 2.0F) * 1.6F, flash && i == 0);
+        if (flash) flashCd = 1200;
+        this.level().playSound(null, getX(), getY(), getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.6F, 0.7F);
+        attackCd = 48;
+    }
+
+    private void launchBomb(LivingEntity t, float sideOffset, boolean flash) {
         MofuBomb bomb = new MofuBomb(this.level(), this);
-        bomb.setDamage(MofuData.bombDamage(getMofuLevel()) * damageBoost());
+        bomb.setDamage(MofuData.bombDamage(getMofuType(), getMofuLevel(), getGear(MofuGear.Slot.WEAPON)) * damageBoost() + elementBonus(t));
+        bomb.setElement(weaponElement());
+        bomb.setRadius(hasSkill(MofuSkill.BIG_BARREL) ? 3.6 : 2.6);
+        bomb.setFlash(flash);
         Vec3 aim = t.getBoundingBox().getCenter();
         if (t instanceof HuntMonster m) {
             double bd = Double.MAX_VALUE;
@@ -382,28 +469,38 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
                 }
             }
         }
+        Vec3 side = new Vec3(aim.z - getZ(), 0, getX() - aim.x);
+        if (side.lengthSqr() > 1e-4) aim = aim.add(side.normalize().scale(sideOffset));
         double dx = aim.x - bomb.getX(), dz = aim.z - bomb.getZ(), dy = aim.y - bomb.getY();
         double dist = Math.sqrt(dx * dx + dz * dz);
         bomb.shoot(dx, dy + dist * 0.22, dz, 0.75F + (float) Math.min(0.5, dist * 0.03), 2.0F);
         this.level().addFreshEntity(bomb);
-        this.level().playSound(null, getX(), getY(), getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.6F, 0.7F);
-        attackCd = 48;
     }
 
     public void playHorn() {
+        playHorn(false);
+    }
+
+    /** Healing horn. {@code revival} = full heal (REVIVAL skill). */
+    public void playHorn(boolean revival) {
         playAction(3);
-        this.level().playSound(null, getX(), getY(), getZ(), VillageRegistry.MOFU_HORN.get(), SoundSource.NEUTRAL, 1.2F, 1.0F);
-        float frac = MofuData.healFraction(getMofuLevel());
+        this.level().playSound(null, getX(), getY(), getZ(), VillageRegistry.MOFU_HORN.get(), SoundSource.NEUTRAL, 1.2F, revival ? 1.2F : 1.0F);
+        float frac = revival ? 1.0F : MofuData.healFraction(getMofuType(), getMofuLevel());
         for (Player p : this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(10.0D))) {
-            if (!p.isAlive()) continue;
+            if (!p.isAlive() || p.isSpectator()) continue;
             p.heal(p.getMaxHealth() * frac);
+            if (hasSkill(MofuSkill.SOOTHING)) {
+                for (MobEffect e : badEffects()) p.removeEffect(e);
+            }
+            if (hasSkill(MofuSkill.ENCORE)) CompanionManager.grantEncore(p, 600);
             if (this.level() instanceof ServerLevel sl) {
-                sl.sendParticles(ParticleTypes.HEART, p.getX(), p.getY() + 1.2, p.getZ(), 6, 0.4, 0.5, 0.4, 0.05);
+                sl.sendParticles(ParticleTypes.HEART, p.getX(), p.getY() + 1.2, p.getZ(), revival ? 14 : 6, 0.4, 0.5, 0.4, 0.05);
                 sl.sendParticles(ParticleTypes.HAPPY_VILLAGER, p.getX(), p.getY() + 0.5, p.getZ(), 12, 0.6, 0.6, 0.6, 0.05);
             }
         }
         this.heal(this.getMaxHealth() * 0.3F);
         if (this.level() instanceof ServerLevel sl) sl.sendParticles(ParticleTypes.NOTE, getX(), getY() + 1.3, getZ(), 5, 0.4, 0.3, 0.4, 0.5);
+        if (revival) reviveCd = 6000;
         specialCd = Math.max(300, 700 - getMofuLevel() * 8);
     }
 
@@ -436,6 +533,14 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
     @Override
     public void die(DamageSource source) {
         if (this.level().isClientSide) return;
+        if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) && hasSkill(MofuSkill.GUTS) && !gutsUsed) {
+            gutsUsed = true;
+            this.setHealth(Math.max(1.0F, this.getMaxHealth() * 0.2F));
+            this.dead = false;
+            playAction(4);
+            if (this.level() instanceof ServerLevel sl) sl.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, getX(), getY() + 0.6, getZ(), 16, 0.3, 0.4, 0.3, 0.2);
+            return;
+        }
         this.setHealth(1.0F);
         if (this.level() instanceof ServerLevel sl) {
             sl.sendParticles(ParticleTypes.POOF, getX(), getY() + 0.5, getZ(), 20, 0.3, 0.4, 0.3, 0.05);
@@ -508,24 +613,23 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
 
     @Override
     public Set<String> hcShown() {
-        return shownParts(getMofuType(), getHelm(), getArmorGear());
+        return shownParts(getMofuType(), getGear(MofuGear.Slot.WEAPON), getGear(MofuGear.Slot.HELM), getGear(MofuGear.Slot.ARMOR));
     }
 
-    public static Set<String> shownParts(MofuType type, int helm, int armor) {
+    /** Bones of the mofu + mofu_gear models shown for a companion. */
+    public static Set<String> shownParts(MofuType type, int weapon, int helm, int armor) {
         Set<String> s = new HashSet<>();
-        s.add(switch (type) {
-            case FIGHTER -> "w_blade";
-            case HEALER -> "w_horn";
-            case BOMBER -> "w_bomb";
-        });
-        if (type == MofuType.BOMBER) s.add("pack");
-        s.add(switch (armor) {
-            case 1 -> "armor_leather";
-            case 2 -> "armor_iron";
-            default -> "vest";
-        });
-        if (helm == 1) s.add("bandana");
-        else if (helm == 2) s.add("helm_iron");
+        s.add("scarf");
+        if (weapon >= 0) {
+            s.add(switch (type) {
+                case FIGHTER -> "w_blade";
+                case HEALER -> "w_horn";
+                case BOMBER -> "w_bomb";
+            });
+            if (type == MofuType.BOMBER) s.add("pack");
+        }
+        if (helm >= 0) s.add("helm");
+        if (armor >= 0) s.add("armor");
         return s;
     }
 
@@ -539,6 +643,7 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
         tag.putInt("Pattern", getPattern());
         tag.putInt("MofuType", getMofuType().ordinal());
         tag.putInt("MofuLevel", getMofuLevel());
+        tag.putInt("MofuGear", this.entityData.get(DATA_GEAR));
     }
 
     @Override
@@ -547,7 +652,10 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
         if (tag.hasUUID("Owner")) ownerId = tag.getUUID("Owner");
         recordUid = tag.getInt("RecordUid");
         testMode = tag.getBoolean("TestMode");
-        setVisual(tag.getInt("Pattern"), MofuType.byId(tag.getInt("MofuType")), tag.getInt("MofuLevel"), 0, 0);
+        this.entityData.set(DATA_PATTERN, tag.getInt("Pattern"));
+        this.entityData.set(DATA_TYPE, tag.getInt("MofuType"));
+        this.entityData.set(DATA_LEVEL, Math.max(1, tag.getInt("MofuLevel")));
+        this.entityData.set(DATA_GEAR, tag.getInt("MofuGear"));
     }
 
     // ------------------------------------------------------------------ goals
@@ -655,10 +763,5 @@ public class MofuEntity extends PathfinderMob implements HcAnimated {
                 getNavigation().moveTo(o, speed);
             }
         }
-    }
-
-    /** Degrees helper for previews. */
-    public static float wrap(float deg) {
-        return Mth.wrapDegrees(deg);
     }
 }

@@ -21,7 +21,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -31,8 +30,6 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -42,12 +39,15 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Stationary, invulnerable village NPC (receptionist, blacksmith, merchant, mofu chef, mofu elder).
- * Right-click opens the matching screen (see {@link VillageActions#npcInteract}).
+ * Stationary, invulnerable village NPC (see {@link NpcRole}). Right-click opens the matching screen
+ * ({@link VillageActions#npcInteract}). Humanoid roles have their own hcmodel; mofu roles use the mofu model with outfit
+ * bones.
  */
 public class VillageNpc extends PathfinderMob implements HcAnimated {
     private static final EntityDataAccessor<Integer> DATA_ROLE = SynchedEntityData.defineId(VillageNpc.class, EntityDataSerializers.INT);
-    public static final String[] ACTIONS = {"wave", "stir", "nod", "cheer"};
+    /** Action animations (human models define wave/nod/work/cheer/bow, the mofu model wave/nod/cheer/stir/tap). */
+    public static final String[] ACTIONS = {"wave", "nod", "work", "cheer", "bow", "stir", "tap"};
+    public static final int WAVE = 0, NOD = 1, WORK = 2, CHEER = 3, BOW = 4, STIR = 5, TAP = 6;
     private static final Set<String> CHEF_PARTS = Set.of("hat_chef", "apron", "ladle");
     private static final Set<String> ELDER_PARTS = Set.of("kasa", "beard", "staff", "haori");
 
@@ -59,6 +59,7 @@ public class VillageNpc extends PathfinderMob implements HcAnimated {
     private BlockPos home;
     private float homeYaw;
     private int idleTimer;
+    private int greetCooldown;
 
     public VillageNpc(EntityType<? extends VillageNpc> type, Level level) {
         super(type, level);
@@ -85,15 +86,7 @@ public class VillageNpc extends PathfinderMob implements HcAnimated {
     public void setRole(NpcRole role) {
         this.entityData.set(DATA_ROLE, role.ordinal());
         this.setCustomName(role.displayName());
-        this.setCustomNameVisible(false);
-        ItemStack held = switch (role) {
-            case BLACKSMITH -> new ItemStack(Items.IRON_AXE);
-            case RECEPTIONIST -> new ItemStack(Items.WRITABLE_BOOK);
-            case MERCHANT -> new ItemStack(Items.PAPER);
-            default -> ItemStack.EMPTY;
-        };
-        this.setItemSlot(EquipmentSlot.MAINHAND, held);
-        this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
+        this.setCustomNameVisible(true);
     }
 
     public void setHome(BlockPos pos, float yaw) {
@@ -162,6 +155,11 @@ public class VillageNpc extends PathfinderMob implements HcAnimated {
         return false;
     }
 
+    @Override
+    public boolean canChangeDimensions() {
+        return false;
+    }
+
     // ------------------------------------------------------------------ interaction
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
@@ -169,8 +167,12 @@ public class VillageNpc extends PathfinderMob implements HcAnimated {
         if (!this.level().isClientSide && player instanceof ServerPlayer sp) {
             this.getLookControl().setLookAt(player, 30.0F, 30.0F);
             VillageActions.npcInteract(sp, this);
-            if (getRole().mofu) playAction(getRole() == NpcRole.CHEF ? 3 : 2);
-            else this.swing(InteractionHand.MAIN_HAND);
+            playAction(switch (getRole()) {
+                case RECEPTIONIST -> BOW;
+                case CHEF -> CHEER;
+                case MOFU_ELDER, ELDER -> NOD;
+                default -> WAVE;
+            });
         }
         return InteractionResult.sidedSuccess(this.level().isClientSide);
     }
@@ -183,6 +185,7 @@ public class VillageNpc extends PathfinderMob implements HcAnimated {
             this.idleAnim.startIfStopped(this.tickCount);
             return;
         }
+        if (greetCooldown > 0) greetCooldown--;
         if (--idleTimer <= 0) {
             idleTimer = 70 + this.random.nextInt(110);
             doIdleAction();
@@ -191,10 +194,15 @@ public class VillageNpc extends PathfinderMob implements HcAnimated {
     }
 
     private void doIdleAction() {
-        Player near = this.level().getNearestPlayer(this, 14.0D);
+        Player near = this.level().getNearestPlayer(this, 6.0D);
+        if (near != null && greetCooldown <= 0 && this.random.nextFloat() < 0.5F) {
+            greetCooldown = 600;
+            playAction(getRole() == NpcRole.RECEPTIONIST ? BOW : WAVE);
+            return;
+        }
         switch (getRole()) {
             case BLACKSMITH -> {
-                this.swing(InteractionHand.MAIN_HAND);
+                playAction(WORK);
                 this.level().playSound(null, getX(), getY(), getZ(), VillageRegistry.ANVIL_TAP.get(), SoundSource.NEUTRAL, 0.45F,
                         0.9F + this.random.nextFloat() * 0.2F);
                 if (this.level() instanceof ServerLevel sl) {
@@ -202,21 +210,18 @@ public class VillageNpc extends PathfinderMob implements HcAnimated {
                     sl.sendParticles(ParticleTypes.LAVA, front.x, front.y, front.z, 2, 0.1, 0.05, 0.1, 0.0);
                     sl.sendParticles(ParticleTypes.CRIT, front.x, front.y, front.z, 4, 0.15, 0.1, 0.15, 0.2);
                 }
-                idleTimer = 24 + this.random.nextInt(36);
+                idleTimer = 30 + this.random.nextInt(36);
             }
             case CHEF -> {
-                playAction(1);
+                playAction(STIR);
                 if (this.level() instanceof ServerLevel sl) {
                     Vec3 front = this.position().add(Vec3.directionFromRotation(0, this.yBodyRot).scale(1.2)).add(0, 1.0, 0);
                     sl.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, front.x, front.y, front.z, 1, 0.1, 0.1, 0.1, 0.01);
                 }
             }
-            case ELDER -> {
-                if (near != null) playAction(2);
-            }
-            default -> {
-                if (near != null && this.random.nextFloat() < 0.35F) this.swing(InteractionHand.MAIN_HAND);
-            }
+            case MOFU_ELDER -> playAction(this.random.nextBoolean() ? TAP : NOD);
+            case ELDER -> playAction(this.random.nextBoolean() ? WORK : NOD);
+            case MERCHANT, RECEPTIONIST -> playAction(WORK);
         }
     }
 
@@ -263,7 +268,7 @@ public class VillageNpc extends PathfinderMob implements HcAnimated {
     public Set<String> hcShown() {
         return switch (getRole()) {
             case CHEF -> CHEF_PARTS;
-            case ELDER -> ELDER_PARTS;
+            case MOFU_ELDER -> ELDER_PARTS;
             default -> Set.of();
         };
     }

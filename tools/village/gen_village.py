@@ -22,7 +22,7 @@ G = 3          # grass layer (world y 63)
 F = 4          # ground floor (first air layer, world y 64)
 ORIGIN = (-88, 60, -88)   # world position of template (0,0,0)
 TILE = 48
-LAYOUT_VERSION = 1
+LAYOUT_VERSION = 2
 
 W = World(SX, SY, SZ)
 K = Kit(W)
@@ -605,6 +605,7 @@ def hall_interior(x0, z0, x1, z1, y0, wall_top):
     for x in range(cx - 2, cx + 3):
         for y in (y0 + 2, y0 + 3):
             S(x, y, z0, 'huntcraft:village_quest_board', {'facing': 'south'})
+    W.mark('item_box_quest_board', cx, y0 + 2, z0, 0)
     for z in (z0 + 8, z0 + 9, z0 + 10):
         for y in (y0 + 1, y0 + 2):
             S(x0, y, z, 'huntcraft:village_quest_board', {'facing': 'east'})
@@ -657,6 +658,9 @@ def hall_interior(x0, z0, x1, z1, y0, wall_top):
     # plants
     for (px, pz) in ((x0 + 1, z1 - 1), (x1 - 1, z1 - 1), (x0 + 1, z0 + 1), (x1 - 1, z0 + 1)):
         K.pot(px, y0, pz, 'bamboo')
+    # hunters' item box right inside the entrance
+    S(cx - 4, y0, z1 - 1, 'huntcraft:item_box', {'facing': 'north'})
+    W.mark('item_box_hall', cx - 4, y0, z1 - 1, 0)
 
 
 # ====================================================================== plaza
@@ -709,6 +713,8 @@ def plaza():
     K.wall_sign(cx + 8, F + 1, cz + 11, 'north', ['- 風見の村 -', '村長より', '', ''])
     for x in range(cx + 7, cx + 10):
         K.slab(x, F + 3, cz + 12, 'deepslate_tile')
+    # the village chief waits between the torii and the great cherry tree, facing the arrival point
+    W.mark('elder', cx - 1.5, F, cz - 11.5, -34.0)
 
 
 def big_sakura(x, y, z):
@@ -1069,7 +1075,7 @@ def lodge():
         S(x, y0, dz_ - 1, 'spruce_slab', {'type': 'bottom', 'waterlogged': 'false'})
         S(x, y0, dz_, 'red_carpet')
     S(dx_, y0, dz_, 'red_wool')
-    W.mark('elder', dx_ + 0.5, y0 + 1, dz_ + 0.5, 0.0)
+    W.mark('mofu_elder', dx_ + 0.5, y0 + 1, dz_ + 0.5, 0.0)
     for (x, z) in ((x0 + 2, z1 - 2), (x1 - 2, z1 - 2), (x0 + 2, z0 + 5)):
         S(x, y0, z, 'white_wool')
         K.fence(x, y0 + 1, z, 'bamboo')
@@ -1455,7 +1461,7 @@ def export_java():
     def wp(x, y, z):
         return (x + ORIGIN[0], y + ORIGIN[1], z + ORIGIN[2])
 
-    roles = ['receptionist', 'blacksmith', 'merchant', 'chef', 'elder']
+    roles = ['receptionist', 'blacksmith', 'merchant', 'chef', 'elder', 'mofu_elder']
     lines = []
     lines.append('package com.huntcraft.village.world;')
     lines.append('')
@@ -1491,6 +1497,26 @@ def export_java():
     hd = W.markers['house_door'][0]
     x, y, z = wp(*hd[:3])
     lines.append('    public static final double[] HOUSE_DOOR = {%.1f, %.1f, %.1f, %.1f};' % (x, y, z, hd[3]))
+    ib2 = W.markers['item_box_hall'][0]
+    x, y, z = wp(*ib2[:3])
+    lines.append('    public static final int[] ITEM_BOX_HALL = {%d, %d, %d};' % (int(x), int(y), int(z)))
+    qb = W.markers['item_box_quest_board'][0]
+    x, y, z = wp(*qb[:3])
+    lines.append('    public static final int[] QUEST_BOARD = {%d, %d, %d};' % (int(x), int(y), int(z)))
+    # safe zones: the whole valley (covers the 176x176 template incl. mountains) and the gathering hall
+    vcx, vcz = (VX0 + VX1) / 2.0, (VZ0 + VZ1) / 2.0
+    vr = math.ceil(math.hypot(max(vcx, SX - vcx), max(vcz, SZ - vcz))) + 2
+    hx0, hz0, hx1, hz1 = HALL
+    hcx, hcz = (hx0 + hx1 + 1) / 2.0, (hz0 + hz1 + 1) / 2.0
+    hr = math.ceil(math.hypot((hx1 - hx0) / 2.0 + 4, (hz1 - hz0) / 2.0 + 6))
+    lines.append('    /** Safe zones: id, centre x, y, z, radius (blocks). */')
+    lines.append('    public static final String[] SAFE_ZONE_IDS = {"village", "gathering_hall"};')
+    lines.append('    public static final double[][] SAFE_ZONES = {')
+    x, y, z = wp(vcx, F, vcz)
+    lines.append('            {%.1f, %.1f, %.1f, %d}, // whole valley' % (x, y, z, vr))
+    x, y, z = wp(hcx, PY, hcz)
+    lines.append('            {%.1f, %.1f, %.1f, %d}, // gathering hall' % (x, y, z, hr))
+    lines.append('    };')
     lines.append('')
     lines.append('    private VillageLayout() {')
     lines.append('    }')
@@ -1507,7 +1533,7 @@ def validate():
     for name, lst in W.markers.items():
         for (x, y, z, yaw) in lst:
             ix, iy, iz = int(math.floor(x)), int(math.floor(y)), int(math.floor(z))
-            if name in ('item_box',):
+            if name.startswith('item_box'):
                 continue
             for dy in (0, 1):
                 b = W.get(ix, iy + dy, iz)

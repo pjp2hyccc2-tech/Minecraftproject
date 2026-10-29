@@ -2,18 +2,23 @@ package com.huntcraft.village;
 
 import com.huntcraft.core.HuntHooks;
 import com.huntcraft.registry.HCCreativeTabs;
+import com.huntcraft.village.companion.CompanionManager;
 import com.huntcraft.village.companion.MofuEntity;
+import com.huntcraft.village.companion.MofuGear;
 import com.huntcraft.village.meal.MealSystem;
 import com.huntcraft.village.npc.TrainingDummy;
 import com.huntcraft.village.npc.VillageNpc;
+import com.huntcraft.village.shop.VillageShop;
 import com.huntcraft.village.world.VillageTravel;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
- * Module entry point: Kazami village hub dimension, NPCs, GUIs (blacksmith, merchant, kitchen, companions, hunter notes,
- * item box) and the mofu companion system. Called from the HuntCraft constructor.
+ * Module entry point: Kazami village hub dimension (風見の村), NPCs, GUIs (blacksmith, merchant, kitchen, companions,
+ * village chief, hunter notes, item box) and the mofu companion system. Called from the HuntCraft constructor.
  */
 public final class VillageModule {
     private VillageModule() {
@@ -32,6 +37,11 @@ public final class VillageModule {
         HuntHooks.toOverworld = VillageTravel::toOverworld;
         HuntHooks.addExtraCarveProvider(MealSystem::extraCarves);
         HuntHooks.addAttackMultiplier(MealSystem::attackMultiplier);
+        HuntHooks.addAttackMultiplier(CompanionManager::attackMultiplier);
+        HuntHooks.addStarterKit(VillageEvents::starterKit);
+        MofuGear.registerRecipes();
+        VillageShop.registerStock();
+        VillageTravel.registerSafeZones();
         VillageActions.register();
     }
 
@@ -48,6 +58,9 @@ public final class VillageModule {
             event.accept(VillageRegistry.QUEST_BOARD_ITEM.get());
             event.accept(VillageRegistry.PAPER_LANTERN_ITEM.get());
             event.accept(VillageRegistry.PAPER_LANTERN_WHITE_ITEM.get());
+        }
+        if (event.getTabKey().equals(HCCreativeTabs.ARMOR.getKey())) {
+            for (RegistryObject<Item> ro : MofuGear.all()) event.accept(ro.get());
         }
     }
 }

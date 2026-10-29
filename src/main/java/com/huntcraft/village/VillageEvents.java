@@ -6,9 +6,16 @@ import com.huntcraft.core.HCEvents;
 import com.huntcraft.data.HunterData;
 import com.huntcraft.entity.monster.HuntMonster;
 import com.huntcraft.village.companion.CompanionManager;
+import com.huntcraft.village.companion.MofuData;
 import com.huntcraft.village.meal.MealSystem;
 import com.huntcraft.village.world.VillageBuilder;
 import com.huntcraft.village.world.VillageTravel;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +33,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,12 +46,24 @@ public final class VillageEvents {
     private VillageEvents() {
     }
 
+    /** HuntHooks starter kit part of the village: points the new hunter to Kazami village. */
+    public static void starterKit(ServerPlayer p) {
+        MofuData.village(p).putBoolean("newHunter", true);
+        Component link = Component.translatable("village.huntcraft.starter_link").withStyle(Style.EMPTY
+                .withColor(ChatFormatting.AQUA).withUnderlined(true)
+                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/village"))
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("village.huntcraft.starter_hover"))));
+        p.sendSystemMessage(Component.translatable("village.huntcraft.starter", link).withStyle(ChatFormatting.GOLD));
+        HunterData.get(p).markDirty();
+    }
+
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END || !(event.player instanceof ServerPlayer p)) return;
         MealSystem.tick(p);
         if (p.tickCount % 10 == 3) CompanionManager.tick(p);
         if (p.tickCount % 100 == 51) CompanionManager.tickExpeditions(p);
+        if (p.tickCount % 20 == 7) VillageTravel.keepInside(p);
     }
 
     @SubscribeEvent
@@ -53,6 +73,11 @@ public final class VillageEvents {
         if (server == null || server.getTickCount() % 100 != 17) return;
         ServerLevel village = server.getLevel(HCDimensions.HUNTER_VILLAGE);
         if (village != null && !village.players().isEmpty()) VillageBuilder.maintain(village);
+    }
+
+    @SubscribeEvent
+    public static void onServerStarted(ServerStartedEvent event) {
+        VillageTravel.registerSafeZones();
     }
 
     @SubscribeEvent
@@ -109,7 +134,7 @@ public final class VillageEvents {
     }
 
     // ------------------------------------------------------------------ village protection (survival players)
-    private static boolean protectedAt(Level level, net.minecraft.core.BlockPos pos, Player player) {
+    private static boolean protectedAt(Level level, BlockPos pos, Player player) {
         return HCDimensions.isVillage(level) && VillageTravel.inVillageBounds(pos) && (player == null || !player.isCreative());
     }
 

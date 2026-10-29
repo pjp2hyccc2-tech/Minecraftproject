@@ -6,6 +6,7 @@ import com.huntcraft.village.block.PaperLanternBlock;
 import com.huntcraft.village.block.QuestBoardBlock;
 import com.huntcraft.village.companion.MofuBomb;
 import com.huntcraft.village.companion.MofuEntity;
+import com.huntcraft.village.companion.MofuGear;
 import com.huntcraft.village.menu.ItemBoxMenu;
 import com.huntcraft.village.npc.TrainingDummy;
 import com.huntcraft.village.npc.VillageNpc;
@@ -54,7 +55,7 @@ public final class VillageRegistry {
 
     // ------------------------------------------------------------------ entities
     public static final RegistryObject<EntityType<VillageNpc>> HUMAN_NPC = ENTITIES.register("village_npc",
-            () -> EntityType.Builder.<VillageNpc>of(VillageNpc::new, MobCategory.MISC).sized(0.6F, 1.8F)
+            () -> EntityType.Builder.<VillageNpc>of(VillageNpc::new, MobCategory.MISC).sized(0.6F, 1.85F)
                     .clientTrackingRange(10).build("village_npc"));
     public static final RegistryObject<EntityType<VillageNpc>> MOFU_NPC = ENTITIES.register("mofu_npc",
             () -> EntityType.Builder.<VillageNpc>of(VillageNpc::new, MobCategory.MISC).sized(0.6F, 1.0F)
@@ -85,8 +86,14 @@ public final class VillageRegistry {
     public static final RegistryObject<SoundEvent> BOX_OPEN = sound("village.box_open");
     public static final RegistryObject<SoundEvent> UI_PAGE = sound("village.ui_page");
     public static final RegistryObject<SoundEvent> DUMMY_HIT = sound("village.dummy_hit");
+    public static final RegistryObject<SoundEvent> WELCOME = sound("village.welcome");
 
     private static RegistryObject<SoundEvent> sound(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(HuntCraft.id(name)));
+    }
+
+    static {
+        // mofu companion equipment (8 tiers x weapon / helm / armor)
+        MofuGear.registerItems();
     }
 }
