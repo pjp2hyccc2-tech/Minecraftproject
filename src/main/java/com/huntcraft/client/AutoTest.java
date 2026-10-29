@@ -145,7 +145,8 @@ public final class AutoTest {
         int i = 0;
         for (MonsterRegistry.Entry e : MonsterRegistry.all()) {
             final int idx = i++;
-            add("spawn_" + e.id(), mc -> showMonster(mc, e.id(), idx, null), 70);
+            add("spawn_" + e.id(), mc -> showMonster(mc, e.id(), idx, null), 50);
+            add("frame_" + e.id(), AutoTest::frameCurrent, 20);
             shot("monster_" + e.id(), false);
             MonsterRegistry.Entry entry = e;
             add("attack_" + e.id(), mc -> server(mc, sp -> {
@@ -159,6 +160,7 @@ public final class AutoTest {
             shot("monster_" + e.id() + "_attack", false);
             add("clear_" + e.id(), mc -> server(mc, sp -> {
                 if (current != null) current.discard();
+                if (refCow != null) refCow.discard();
                 current = null;
             }), 5);
         }
@@ -190,6 +192,32 @@ public final class AutoTest {
     }
 
     private static HuntMonster current;
+    private static net.minecraft.world.entity.Entity refCow;
+
+    /** Logs lighting info of the current monster and re-positions the camera exactly in front of it. */
+    private static void frameCurrent(Minecraft mc) {
+        HuntMonster sm = current;
+        if (sm == null || mc.level == null) return;
+        net.minecraft.world.entity.Entity ce = mc.level.getEntity(sm.getId());
+        if (ce != null) {
+            BlockPos probe = BlockPos.containing(ce.getEyePosition());
+            log(String.format("light %s: sky=%d block=%d raw=%d at %s, clientPos=%s, playerPos=%s", sm.profile().id,
+                    mc.level.getBrightness(net.minecraft.world.level.LightLayer.SKY, probe),
+                    mc.level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, probe),
+                    mc.level.getMaxLocalRawBrightness(probe), probe, ce.position(), mc.player.position()));
+        } else {
+            log("client entity missing for " + sm.profile().id);
+        }
+        mc.options.hideGui = true;
+        server(mc, sp -> {
+            HuntMonster m = current;
+            if (m == null) return;
+            double size = Math.max(m.getBbWidth(), m.getBbHeight());
+            if (m.profile().large) size *= 1.9;
+            double dist = 2.0 + size * 1.15;
+            sp.teleportTo((ServerLevel) m.level(), m.getX(), m.getY() + m.getBbHeight() * 0.7 + size * 0.12, m.getZ() + dist, 180, 14);
+        });
+    }
 
     private static void showMonster(Minecraft mc, String id, int idx, String anim) {
         server(mc, sp -> {
@@ -200,6 +228,13 @@ public final class AutoTest {
             if (m == null) return;
             m.setNoAi(true);
             m.setMonsterScale(1.0F);
+            net.minecraft.world.entity.animal.Cow cow = net.minecraft.world.entity.EntityType.COW.create(lvl);
+            if (cow != null) {
+                cow.moveTo(ground.getX() + 0.5 + m.getBbWidth() * 0.5 + 1.5, ground.getY(), ground.getZ() + 2.5, 0, 0);
+                cow.setNoAi(true);
+                lvl.addFreshEntity(cow);
+                refCow = cow;
+            }
             m.setYRot(35);
             m.yBodyRot = 35;
             m.yHeadRot = 35;
