@@ -426,3 +426,31 @@ def lantern_post(m, u, v, y, fence='minecraft:oak_fence', lantern='minecraft:lan
     m.put(u, y, v, fence)
     m.put(u, y + 1, v, fence)
     m.put(u, y + 2, v, f'{lantern}[hanging=false,waterlogged=false]')
+
+
+def lookout_tower(m, u0, v0, y0, height=13, seed=8, mats=None, ladder_side='south', parapet_dirs=('south', 'west')):
+    """Solid stone lookout tower (5x5 core, 7x7 platform) with a ladder and a parapet on the given sides."""
+    rng = _rng(seed)
+    mats = mats or ['minecraft:stone_bricks'] * 4 + ['minecraft:mossy_stone_bricks', 'minecraft:cracked_stone_bricks']
+    for dy in range(-3, height):
+        for du in range(-2, 3):
+            for dv in range(-2, 3):
+                m.put(u0 + du, y0 + dy, v0 + dv, mats[rng.integers(len(mats))])
+    top = y0 + height
+    for du in range(-3, 4):
+        for dv in range(-3, 4):
+            m.put(u0 + du, top, v0 + dv, 'minecraft:chiseled_stone_bricks' if du == 0 and dv == 0 else 'minecraft:stone_bricks')
+    for du in range(-3, 4):
+        for dv in range(-3, 4):
+            if max(abs(du), abs(dv)) != 3:
+                continue
+            side = ('north' if dv == -3 else 'south' if dv == 3 else None, 'west' if du == -3 else 'east' if du == 3 else None)
+            if any(sd in parapet_dirs for sd in side if sd) and (du + dv) % 2 == 0:
+                m.put(u0 + du, top + 1, v0 + dv, 'minecraft:stone_bricks')
+    for (du, dv) in [(-3, -3), (3, 3), (-3, 3), (3, -3)]:
+        m.put(u0 + du, top + 1, v0 + dv, 'minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]')
+        m.put(u0 + du, top + 2, v0 + dv, 'minecraft:lantern[hanging=false,waterlogged=false]')
+    lx, lz = DIR_VEC[ladder_side]
+    for dy in range(0, height):
+        m.put(u0 + lx * 3, y0 + dy, v0 + lz * 3, f'minecraft:ladder[facing={ladder_side},waterlogged=false]')
+    m.put(u0 + lx * 3, top, v0 + lz * 3, 'minecraft:air')

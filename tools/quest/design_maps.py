@@ -240,6 +240,7 @@ def verdant():
     gt = (126, 252)
     L.giant_tree(m, gt[0], gt[1], m.hi[gt[1], gt[0]] + 1, height=54, seed=31)
     L.ruins(m, 255, 245, 87, half=18, seed=32, gate='south')
+    L.lookout_tower(m, 264, 266, m.ground(264, 266), height=13, seed=34, ladder_side='south', parapet_dirs=('south', 'west'))
     # wyvern nest + skeleton on the plateau
     nu, nv = 112, 96
     ny = int(m.hi[nv, nu]) + 1
@@ -357,6 +358,8 @@ def frost():
     m.h = m.h * (1 - wp) + (90 + 3 * fbm(m.seed + 7, 25, 3)) * wp
     kn = dist(96, 236)
     m.h = np.maximum(m.h, 90 + 8 * (1 - smoothstep(6, 20, kn)))
+    vp = dist(264, 266)
+    m.h = np.maximum(m.h, 97 - np.maximum(0, vp - 4) * 0.75)
     # glacier (E): raised ice sheet with crevasses
     ge = ellipse(412, 236, 62, 82, 0.1) + fbm(m.seed + 8, 25, 3) * 0.08
     gl = smoothstep(1.0, 0.9, ge)
@@ -543,8 +546,12 @@ def frost():
         m.put(u, int(m.clo[v, u]) - 1, v, 'minecraft:ice')
     z = m.zone
     # boulders on the snowfield
-    for (u, v) in scatter(m, rng, (z == 4) & (sl <= 1) & ~pmask, 10, 22):
+    for (u, v) in scatter(m, rng, (z == 4) & (sl <= 1) & ~pmask & (dist(264, 266) > 30), 10, 22):
         L.boulder(m, u, v, m.ground(u, v), 1.5 + rng.random() * 1.5, ['minecraft:stone', 'minecraft:andesite', 'minecraft:snow_block'], seed=u + 7 * v)
+    for k, (du, dv) in enumerate([(-1, -1), (1, -1), (-1, 1), (1, 1), (0, 0)]):
+        y = m.ground(264 + du, 266 + dv)
+        m.put(264 + du, y, 266 + dv, 'minecraft:cobblestone' if k < 4 else 'minecraft:stone_bricks')
+    m.put(264, m.ground(264, 266) + 1, 266, 'minecraft:cobblestone_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]')
     # ---------------------------------------------------------------- gathering points
     G = m.gather_point
     dry = (m.fluid == 0) & (sl <= 1) & ~pmask & (m.clo == 0) & ~cre
@@ -607,7 +614,7 @@ def ember():
     lake = le < 1.0
     m.h = np.where(le < 1.5, np.minimum(m.h, 54 + np.maximum(0, le - 1.0) * 24), m.h)
     m.h = np.where(lake, np.minimum(m.h, LV - 2 - 6 * np.sqrt(np.clip(1 - le ** 2, 0, 1))), m.h)
-    isl = dist(266, 240)
+    isl = dist(264, 264)
     m.h = np.where(isl < 9, np.maximum(m.h, 56 + 3 * (1 - isl / 9)), m.h)
     # lava river (E) joining the lake
     river = smooth_path([(448, 128), (436, 168), (414, 210), (384, 238), (348, 250), (318, 254)], 10)
@@ -752,7 +759,7 @@ def ember():
     # ---------------------------------------------------------------- landmarks
     L.build_camp(m, cu, cv, cy, 'east', 'ember')
     # obsidian spire on the lake island
-    L.spire(m, 266, 240, int(m.hi[240, 266]), 26, 4.0, ['minecraft:obsidian', 'minecraft:crying_obsidian', 'minecraft:obsidian'], seed=301)
+    L.spire(m, 264, 264, int(m.hi[264, 264]), 26, 4.0, ['minecraft:obsidian', 'minecraft:crying_obsidian', 'minecraft:obsidian'], seed=301)
     # giant dragon skeleton in the graveyard
     L.skeleton(m, 140, 96, m.ground(140, 96), length=48, ang=2.6, seed=302)
     for k, (u, v) in enumerate(scatter(m, rng, (z == 7) & (sl <= 1) & ~pmask, 12, 12)):

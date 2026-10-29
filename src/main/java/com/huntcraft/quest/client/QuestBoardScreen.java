@@ -147,10 +147,12 @@ public class QuestBoardScreen extends Screen {
             sx += 32;
         }
         int by = top + h - 24;
-        acceptBtn = addRenderableWidget(Button.builder(Component.translatable("button.huntcraft.quest.accept"), b -> accept()).bounds(detX, by, 64, 18).build());
-        cancelBtn = addRenderableWidget(Button.builder(Component.translatable("button.huntcraft.quest.cancel"), b -> cancel()).bounds(detX + 68, by, 64, 18).build());
-        departBtn = addRenderableWidget(Button.builder(Component.translatable("button.huntcraft.quest.depart"), b -> depart()).bounds(detX + 136, by, 64, 18).build());
-        addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> onClose()).bounds(left + w - 8 - 48, by, 48, 18).build());
+        int doneW = 46;
+        int bw = Math.max(36, Math.min(70, (detW - doneW - 4 * 3) / 3));
+        acceptBtn = addRenderableWidget(Button.builder(Component.translatable("button.huntcraft.quest.accept"), b -> accept()).bounds(detX, by, bw, 18).build());
+        cancelBtn = addRenderableWidget(Button.builder(Component.translatable("button.huntcraft.quest.cancel"), b -> cancel()).bounds(detX + bw + 4, by, bw, 18).build());
+        departBtn = addRenderableWidget(Button.builder(Component.translatable("button.huntcraft.quest.depart"), b -> depart()).bounds(detX + 2 * (bw + 4), by, bw, 18).build());
+        addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> onClose()).bounds(left + w - 8 - doneW, by, doneW, 18).build());
         if (data != null && lobby() == null && !inQuest()) {
             ListTag j = data.getList("joinable", Tag.TAG_COMPOUND);
             for (int i = 0; i < Math.min(2, j.size()); i++) {
