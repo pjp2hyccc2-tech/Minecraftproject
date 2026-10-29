@@ -90,12 +90,12 @@ seg(body, -12, 23, 20, 18)
 body.cube((-7, -10.5, -10), (14, 2, 20), 'vx_dark')
 fin(body, -9, 9, -10, 8)
 fin(body, -1, 10, -10, 10)
-organ_row(body, (-8, -1, 6), 5, -11, 3, 3, 4)
+organ_row(body, (-9, -2, 5), 7.8, -9.6, 3.6, 3.6, 4.5)
 
 body2 = body.bone('body2', (0, 0, 10))
 seg(body2, -1, 22, 21, 19)
 body2.cube((-7.5, -11, 0), (15, 2, 21), 'vx_dark')
-organ_row(body2, (1, 8, 15), 5.5, -12, 3.5, 3, 4.5)
+organ_row(body2, (0.5, 7.5, 14.5), 8.3, -10.0, 3.8, 3.8, 5)
 back_el = body2.bone('back_electrodes', (0, -11, 0), (0, 0, 0))
 electrode(back_el, 'elec1', (0, 0, 4), (-28, 0, 0), 10)
 electrode(back_el, 'elec2', (0, 0, 12), (-32, 0, 0), 13)
@@ -106,7 +106,7 @@ seg(body3, -1, 21, 19, 18)
 body3.cube((-6.5, -10.5, 0), (13, 2, 19), 'vx_dark')
 fin(body3, 0, 10, -10, 10)
 fin(body3, 9, 10, -10, 8)
-organ_row(body3, (2, 9, 15), 5, -11.5, 3, 3, 4)
+organ_row(body3, (1.5, 8.5, 14.5), 7.6, -9.6, 3.6, 3.6, 4.5)
 
 TAIL_SEG = [(15, 14, 14, -4), (12, 11.5, 13, -3), (9.5, 9, 12, 0), (7, 7, 11, 3), (5, 5, 10, 5)]
 p, piv = body3, (0, 0.5, 19)
@@ -117,7 +117,7 @@ for i, (w, h, ln, rx) in enumerate(TAIL_SEG):
     if i < 4:
         fin(tb, 1, ln - 2, -h / 2, max(4, 9 - i * 1.6))
     if i < 3:
-        organ_row(tb, (3, 9) if i < 2 else (4,), w / 2 - 3, -h / 2 - 1.5, 2.5, 2.5, 3.5)
+        organ_row(tb, (2, 8) if i < 2 else (3,), w / 2 - 1.5, -h / 2 - 0.5, 2.8, 2.8, 3.5)
     TAIL.append(tb.name)
     p, piv = tb, (0, 0, ln)
 tfin = p.bone('tail_fin', (0, 0, 10), (0, 0, 0))
@@ -133,7 +133,7 @@ neck1 = body.bone('neck1', (0, -4, -10), (-36, 0, 0))
 seg(neck1, -17, 19, 15, 15, 0, 'vx_scale', 2.5)
 neck1.cube((-5, -8.5, -15), (10, 2, 15), 'vx_dark')
 fin(neck1, -14, 10, -8, 7)
-organ_row(neck1, (-12, -5), 3.5, -9.5, 2.5, 2.5, 3.5)
+organ_row(neck1, (-13, -6), 5.8, -8, 2.8, 2.8, 3.5)
 neck2 = neck1.bone('neck2', (0, 0, -15), (-14, 0, 0))
 seg(neck2, -16, 18, 13, 13, 0, 'vx_scale', 2.0)
 neck2.cube((-4, -7.5, -14), (8, 2, 13), 'vx_dark')
@@ -183,7 +183,7 @@ def leg(parent, name, pivot, upper, lower, paw, splay=58, toes=3):
     uw, uh, ud = upper
     u.cube((-uw / 2, -2, -ud / 2), (uw, uh, ud), 'vx_scale_plain')
     lw, lh, ld = lower
-    lo = u.bone(name + '_lo', (0, uh - 3, 0), (0, 0, splay))
+    lo = u.bone(name + '_mid', (0, uh - 3, 0), (0, 0, splay))
     lo.cube((-lw / 2, -1.5, -ld / 2), (lw, lh, ld), 'vx_scale_plain')
     lo.cube((-lw / 2 - 0.5, -2, -ld / 2 - 0.5), (lw + 1, 3, ld + 1), 'vx_dark')        # elbow plate
     pw, ph, pd = paw
@@ -227,8 +227,8 @@ def P(anim, b, chan, keys):
 
 
 
-LEGS = {'fl': ('fleg_l_up', 'fleg_l_lo', 'fleg_l_paw', 1), 'fr': ('fleg_r_up', 'fleg_r_lo', 'fleg_r_paw', -1),
-        'hl': ('hleg_l_up', 'hleg_l_lo', 'hleg_l_paw', 1), 'hr': ('hleg_r_up', 'hleg_r_lo', 'hleg_r_paw', -1)}
+LEGS = {'fl': ('fleg_l_up', 'fleg_l_mid', 'fleg_l_paw', 1), 'fr': ('fleg_r_up', 'fleg_r_mid', 'fleg_r_paw', -1),
+        'hl': ('hleg_l_up', 'hleg_l_mid', 'hleg_l_paw', 1), 'hr': ('hleg_r_up', 'hleg_r_mid', 'hleg_r_paw', -1)}
 FRILLS = ['frill1_l', 'frill2_l', 'frill3_l', 'frill1_r', 'frill2_r', 'frill3_r']
 WHISK = ['whisker_l', 'whisker2_l', 'whisker_r', 'whisker2_r']
 CHAIN = ['body2', 'body3'] + TAIL

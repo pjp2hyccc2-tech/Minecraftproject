@@ -237,10 +237,14 @@ TAIL = []
 for i, (w, h, ln, rx) in enumerate(TAIL_SEG):
     tb = p.bone('tail%d' % (i + 1), piv, (rx, 0, 0))
     mat = 'fg_fur_light' if i == len(TAIL_SEG) - 1 else 'fg_fur_plain'
-    tb.cube((-w / 2, -h / 2, -1), (w, h, ln + 2), mat)
-    if i in (1, 2, 3):
-        tuft(tb, 'tail_fluff%d' % (i + 1), (0, h / 2 - 1, ln * 0.55), (150, 0, 0), 6, w - 2, 'fg_fur_light')
-        c = tuft(tb, 'tail_side%d_l' % (i + 1), (w / 2 - 1, 0, ln * 0.5), (110, 0, 60), 5, w - 4, 'fg_fur_plain')
+    ch = 2 if i else 1
+    tb.cube((-w / 2, -h / 2 + ch, -1), (w, h - 2 * ch, ln + 2), mat)                  # chamfered (octagonal) section
+    tb.cube((-w / 2 + ch, -h / 2, -1), (w - 2 * ch, h, ln + 2), mat)
+    if i >= 1:
+        fl = 'fg_fur_light' if i >= 3 else 'fg_fur_plain'
+        tuft(tb, 'tail_top%d' % (i + 1), (0, -h / 2 + 1.5, ln * 0.35), (-64, 0, 0), 8 + i, w - 3, fl)
+        tuft(tb, 'tail_bot%d' % (i + 1), (0, h / 2 - 1.5, ln * 0.35), (-116, 0, 0), 7 + i, w - 4, 'fg_fur_light')
+        c = tuft(tb, 'tail_side%d_l' % (i + 1), (w / 2 - 1.5, 0, ln * 0.35), (-64, 0, 90), 7 + i, w - 4, fl)
         mirror_tree(tb, c)
     TAIL.append(tb.name)
     p, piv = tb, (0, 0, ln)
