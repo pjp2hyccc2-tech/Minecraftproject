@@ -22,6 +22,7 @@ from PIL import Image  # noqa: E402
 import hcmodel.paint as PAINT  # noqa: E402
 
 # ------------------------------------------------------------------ emissive fixes (script-local patches of the painter)
+# (the same fixes are in core paint.py since origin/huntcraft c855aa5; these patches are harmless on top of it)
 # 1) paint.py bug: a glowing ACCENT material on a non-glowing base copies the accent's glow onto the WHOLE face
 #    ("gl = agl if gl is None"), so every rune-veined face became fully emissive (84 % of the body glowed pink in game:
 #    the _glow layer is drawn additively and full-bright). Returning an empty glow array instead of None makes the
@@ -368,7 +369,7 @@ def core_keys(anim, keys):
 
 # ------------------------------------------------------------------ loops
 a = T('idle', 3.6, True)
-A.sine(a, 'body', 'position', (0, 0.6, 0))
+A.sine(a, 'body', 'position', (0, 0.6, 0), offset=(0, 1.3, 0))   # +1.3 px: the paws hovered ~0.1 block above the ground
 A.sine(a, 'body', 'rotation', (0.7, 0, 0), phase=0.4)
 A.sine(a, 'neck1', 'rotation', (2.0, 2.0, 0), phase=0.8)
 A.sine(a, 'neck3', 'rotation', (-1.5, 2.0, 0), phase=1.3)
