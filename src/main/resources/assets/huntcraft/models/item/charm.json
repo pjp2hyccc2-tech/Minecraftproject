@@ -1,0 +1,20 @@
+{
+ "parent": "minecraft:item/generated",
+ "textures": {
+  "layer0": "huntcraft:item/charm"
+ },
+ "overrides": [
+  {
+   "predicate": {
+    "huntcraft:tier": 0.5
+   },
+   "model": "huntcraft:item/charm_t2"
+  },
+  {
+   "predicate": {
+    "huntcraft:tier": 0.75
+   },
+   "model": "huntcraft:item/charm_t3"
+  }
+ ]
+}
