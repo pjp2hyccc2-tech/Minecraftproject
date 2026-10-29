@@ -1,0 +1,10 @@
+{
+ "item.huntcraft.frostgarm_spawn_egg": "Frostgarm Spawn Egg",
+ "item.huntcraft.voltrix_spawn_egg": "Voltrix Spawn Egg",
+ "notes.huntcraft.frostgarm.desc": "A colossal sabre-toothed fanged beast of the frozen peaks. Ice crystals grow from its shoulders, spine and tail, and its breath freezes everything in a straight line. It pounces from afar, toboggans across the snow on its belly and sends spikes of ice racing through the ground. Its crystals melt under fire.",
+ "notes.huntcraft.voltrix.desc": "A serpentine leviathan that stores lightning in the rows of organs along its back. It calls bolts down around its prey and spits crackling orbs that chase their target. When enraged, the organs become supercharged, blazing brighter until the whole body unleashes a devastating discharge. Ice and water dull its current.",
+ "subtitles.huntcraft.frostgarm_howl": "Frostgarm howls",
+ "subtitles.huntcraft.frostgarm_crystal": "Ice crystals ring",
+ "subtitles.huntcraft.voltrix_charge": "Electricity builds up",
+ "subtitles.huntcraft.voltrix_zap": "Electric crackle"
+}
