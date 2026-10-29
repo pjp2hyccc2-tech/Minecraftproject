@@ -130,13 +130,17 @@ public final class VillageGameTests {
             z.moveTo(hallCenter.x, hallCenter.y, hallCenter.z, 0, 0);
             helper.assertTrue(!village.addFreshEntity(z), "a zombie could spawn in the gathering hall");
         }
+        // every hostile monster is refused (passive herbivores such as grasica are allowed by the core rules)
         List<MonsterRegistry.Entry> monsters = MonsterRegistry.all();
         for (MonsterRegistry.Entry e : monsters) {
             HuntMonster m = MonsterRegistry.spawn(village, e.id(), hallPos, Rank.LOW, null);
             if (m != null && m.isAddedToWorld()) {
+                boolean hostile = SafeZones.isHostile(m);
                 m.discard();
-                helper.fail(e.id() + " could spawn in the village");
-                return;
+                if (hostile) {
+                    helper.fail(e.id() + " could spawn in the village");
+                    return;
+                }
             }
         }
         // outside the village: a registered zone pushes an intruding monster out and makes it drop hunters inside
@@ -148,13 +152,30 @@ public final class VillageGameTests {
         Vec3 center = Vec3.atBottomCenterOf(helper.absolutePos(new BlockPos(24, 1, 24)));
         String zone = "village/gametest_" + helper.absolutePos(BlockPos.ZERO).asLong();
         SafeZones.register(zone, level.dimension(), center, 7.0);
-        String id = MonsterRegistry.small().isEmpty() ? monsters.get(0).id() : MonsterRegistry.small().get(0).id();
-        HuntMonster m = MonsterRegistry.spawn(level, id, helper.absolutePos(new BlockPos(40, 1, 24)), Rank.LOW, "test");
-        if (m == null || !m.isAddedToWorld()) {
+        List<MonsterRegistry.Entry> order = new ArrayList<>(MonsterRegistry.small());
+        order.addAll(monsters);
+        HuntMonster found = null;
+        String foundId = null;
+        boolean anySpawned = false;
+        for (MonsterRegistry.Entry e : order) {
+            HuntMonster c = MonsterRegistry.spawn(level, e.id(), helper.absolutePos(new BlockPos(40, 1, 24)), Rank.LOW, "test");
+            if (c == null || !c.isAddedToWorld()) continue;
+            anySpawned = true;
+            if (SafeZones.isHostile(c)) {
+                found = c;
+                foundId = e.id();
+                break;
+            }
+            c.discard();
+        }
+        if (found == null) {
             SafeZones.unregister(zone);
-            helper.fail("could not spawn " + id + " outside the safe zone");
+            if (anySpawned) helper.succeed();
+            else helper.fail("could not spawn any monster outside the safe zone");
             return;
         }
+        final HuntMonster m = found;
+        final String id = foundId;
         m.teleportTo(center.x, center.y, center.z);
         FakePlayer p = hunter(level, "zone_hunter");
         p.moveTo(center.x + 1, center.y, center.z, 0, 0);

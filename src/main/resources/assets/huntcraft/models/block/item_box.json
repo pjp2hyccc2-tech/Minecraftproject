@@ -1,0 +1,198 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "particle": "huntcraft:block/item_box_side",
+  "side": "huntcraft:block/item_box_side",
+  "front": "huntcraft:block/item_box_front",
+  "top": "huntcraft:block/item_box_top"
+ },
+ "elements": [
+  {
+   "from": [
+    1,
+    0,
+    1
+   ],
+   "to": [
+    15,
+    10,
+    15
+   ],
+   "faces": {
+    "north": {
+     "uv": [
+      1,
+      6,
+      15,
+      16
+     ],
+     "texture": "#front"
+    },
+    "south": {
+     "uv": [
+      1,
+      6,
+      15,
+      16
+     ],
+     "texture": "#side"
+    },
+    "east": {
+     "uv": [
+      1,
+      6,
+      15,
+      16
+     ],
+     "texture": "#side"
+    },
+    "west": {
+     "uv": [
+      1,
+      6,
+      15,
+      16
+     ],
+     "texture": "#side"
+    },
+    "down": {
+     "uv": [
+      1,
+      1,
+      15,
+      15
+     ],
+     "texture": "#top",
+     "cullface": "down"
+    }
+   }
+  },
+  {
+   "from": [
+    0.5,
+    10,
+    0.5
+   ],
+   "to": [
+    15.5,
+    14,
+    15.5
+   ],
+   "faces": {
+    "north": {
+     "uv": [
+      0.5,
+      2,
+      15.5,
+      6
+     ],
+     "texture": "#front"
+    },
+    "south": {
+     "uv": [
+      0.5,
+      2,
+      15.5,
+      6
+     ],
+     "texture": "#side"
+    },
+    "east": {
+     "uv": [
+      0.5,
+      2,
+      15.5,
+      6
+     ],
+     "texture": "#side"
+    },
+    "west": {
+     "uv": [
+      0.5,
+      2,
+      15.5,
+      6
+     ],
+     "texture": "#side"
+    },
+    "up": {
+     "uv": [
+      0.5,
+      0.5,
+      15.5,
+      15.5
+     ],
+     "texture": "#top"
+    },
+    "down": {
+     "uv": [
+      0.5,
+      0.5,
+      15.5,
+      15.5
+     ],
+     "texture": "#top"
+    }
+   }
+  },
+  {
+   "from": [
+    7,
+    7,
+    0.2
+   ],
+   "to": [
+    9,
+    11.5,
+    1
+   ],
+   "faces": {
+    "north": {
+     "uv": [
+      6,
+      3,
+      8,
+      7.5
+     ],
+     "texture": "#front"
+    },
+    "east": {
+     "uv": [
+      6,
+      3,
+      7,
+      7.5
+     ],
+     "texture": "#front"
+    },
+    "west": {
+     "uv": [
+      6,
+      3,
+      7,
+      7.5
+     ],
+     "texture": "#front"
+    },
+    "up": {
+     "uv": [
+      6,
+      3,
+      8,
+      4
+     ],
+     "texture": "#front"
+    },
+    "down": {
+     "uv": [
+      6,
+      3,
+      8,
+      4
+     ],
+     "texture": "#front"
+    }
+   }
+  }
+ ]
+}

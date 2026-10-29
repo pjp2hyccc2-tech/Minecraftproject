@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "huntcraft:block/item_box"
+  },
+  "facing=east": {
+   "model": "huntcraft:block/item_box",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "huntcraft:block/item_box",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "huntcraft:block/item_box",
+   "y": 270
+  }
+ }
+}

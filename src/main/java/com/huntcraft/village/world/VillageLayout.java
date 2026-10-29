@@ -6,7 +6,7 @@ public final class VillageLayout {
     public static final int ORIGIN_X = -88, ORIGIN_Y = 60, ORIGIN_Z = -88;
     public static final int SIZE_X = 176, SIZE_Y = 60, SIZE_Z = 176;
     public static final int TILE = 48, TILES_X = 4, TILES_Z = 4;
-    public static final double SPAWN_X = 0.5, SPAWN_Y = 64.0, SPAWN_Z = -15.5;
+    public static final double SPAWN_X = 0.5, SPAWN_Y = 64.0, SPAWN_Z = -11.5;
     public static final float SPAWN_YAW = 180.0F;
     /** Protected area (village + surrounding mountains): min x, min z, max x, max z. */
     public static final int[] BOUNDS = {-88, -88, 87, 87};
@@ -17,7 +17,7 @@ public final class VillageLayout {
             {-43.5, 64.0, -18.5, 90.0}, // blacksmith
             {-19.5, 64.0, 4.5, -90.0}, // merchant
             {32.5, 64.0, -14.5, 90.0}, // chef
-            {-1.5, 64.0, -18.5, -34.0}, // elder
+            {-1.5, 64.0, -18.5, -16.0}, // elder
             {44.5, 66.0, 0.5, 0.0}, // mofu_elder
     };
     public static final double[][] DUMMY_POS = {

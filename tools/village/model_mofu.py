@@ -20,6 +20,11 @@ sys.path.insert(0, os.path.join(HERE, '..'))
 from hcmodel import Model, anim as A  # noqa: E402
 from hcmodel import paint as P  # noqa: E402
 from hcmodel.paint import M  # noqa: E402
+from hcmodel.model import Cube  # noqa: E402
+
+# Allocate UV rects with per-dimension ceil, matching how faces are painted (fractional sizes overflowed before).
+Cube.uv_w = property(lambda self: int(2 * (math.ceil(self.size[2]) + math.ceil(self.size[0]))))
+Cube.uv_h = property(lambda self: int(math.ceil(self.size[2]) + math.ceil(self.size[1])))
 
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
 ASSETS = os.path.join(ROOT, 'src', 'main', 'resources', 'assets', 'huntcraft')

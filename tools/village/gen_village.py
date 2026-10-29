@@ -714,7 +714,7 @@ def plaza():
     for x in range(cx + 7, cx + 10):
         K.slab(x, F + 3, cz + 12, 'deepslate_tile')
     # the village chief waits between the torii and the great cherry tree, facing the arrival point
-    W.mark('elder', cx - 1.5, F, cz - 11.5, -34.0)
+    W.mark('elder', cx - 1.5, F, cz - 11.5, -16.0)
 
 
 def big_sakura(x, y, z):
@@ -1453,7 +1453,7 @@ def bridges():
 
 
 def markers_spawn():
-    W.mark('spawn', ROAD_X + 0.5, F, 72.5, 180.0)
+    W.mark('spawn', ROAD_X + 0.5, F, 76.5, 180.0)   # the torii frames the grand stairs and the hall
 
 
 # ====================================================================== java layout export

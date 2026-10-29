@@ -166,7 +166,7 @@ public class CompanionScreen extends VillageScreen {
         int dx = left + 118, dy = top + 46, dw = panelW - 128, dh = panelH - 56;
         paper(g, dx, dy, dw, dh);
         if (rec == null) {
-            preview(g, dx + dw / 2, dy + dh - 30, 40, elder, mx, my);
+            preview(g, dx + dw / 2, dy + dh - 30, 54, elder, mx, my);
             wrap(g, Component.translatable("screen.huntcraft.mofu.no_companions"), dx + 8, dy + 8, dw - 16, INK_SOFT, 4);
             return;
         }
@@ -205,8 +205,8 @@ public class CompanionScreen extends VillageScreen {
             int fx = x + 40 + i * 30;
             final int idx = i;
             inset(g, fx, py, 28, 28);
-            mofuFace(g, i, fx + 2, py + 2, 24);
             if (firstPattern == i) nine(g, fx - 1, py - 1, 30, 30, 200, 0, 64, 16, 3);
+            mofuFace(g, i, fx + 2, py + 2, 24);
             region(fx, py, 28, 28, () -> {
                 firstPattern = idx;
                 click();
@@ -222,7 +222,7 @@ public class CompanionScreen extends VillageScreen {
         // preview
         int px = left + panelW - 44, ppy = top + 160;
         inset(g, px - 36, top + 50, 72, 128);
-        preview(g, px, ppy, 46, previewFor(firstPattern, MofuType.byId(firstType), 1, MofuGear.Tier.BAMBOO.ordinal(), -1, MofuGear.Tier.BAMBOO.ordinal()), mx, my);
+        preview(g, px, ppy, 64, previewFor(firstPattern, MofuType.byId(firstType), 1, MofuGear.Tier.BAMBOO.ordinal(), -1, MofuGear.Tier.BAMBOO.ordinal()), mx, my);
         button(g, left + panelW - 112, top + panelH - 28, 102, 20, Component.translatable("screen.huntcraft.mofu.decide"), true, () -> {
             CompoundTag t = new CompoundTag();
             t.putInt("type", firstType);
@@ -295,7 +295,7 @@ public class CompanionScreen extends VillageScreen {
         int lv = MofuData.level(rec);
         // preview column
         inset(g, x + 6, y + 6, 70, 100);
-        preview(g, x + 41, y + 96, 40, previewFor(rec), mx, my);
+        preview(g, x + 41, y + 96, 54, previewFor(rec), mx, my);
         // name / type / level
         int cx = x + 82, cw = w - 88;
         if (!renaming) {
@@ -431,7 +431,7 @@ public class CompanionScreen extends VillageScreen {
         if (p == null) return;
         int uid = rec.getInt("uid");
         inset(g, x + 6, y + 6, 70, 100);
-        preview(g, x + 41, y + 96, 40, previewFor(rec), mx, my);
+        preview(g, x + 41, y + 96, 54, previewFor(rec), mx, my);
         textClip(g, MofuData.name(rec).copy().withStyle(ChatFormatting.BOLD), x + 82, y + 8, w - 88, INK, false);
         // equipped slots
         int sy = y + 22;
