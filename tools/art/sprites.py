@@ -187,18 +187,22 @@ def frost_orb():
 
 def ice_shard():
     n = 32
-    img = halo(n, 14.5, '#8ad6f2', 80)
+    img = halo(n, 13.5, '#4fa9d3', 70)
     c = Canvas(n)
-    G = ['#174a6a', '#3c93c4', '#7cd0f2', '#c0f0ff', '#ffffff']
-    hm = c.poly([(16, 2), (21, 13), (19, 29), (16, 31), (13, 29), (11, 13)])
+    G = ['#0e3a5a', '#2a7ab0', '#5ab8e8', '#a6e4fa', '#ffffff']
+    hm = c.poly([(16, 1.5), (23.5, 12), (21, 28.5), (16, 31), (11, 28.5), (8.5, 12)])
     c.layer(hm, G, shade='flat', bulge=0.6)
-    side = c.poly([(16, 2), (21, 13), (19, 29), (16, 31)])
+    side = c.poly([(16, 1.5), (23.5, 12), (21, 28.5), (16, 31)])
     m = c.cells(side) & (c.img[..., 3] > 0) & (c.last_lev > 0)
     c.shift_level(m, G, -1)
     for y in range(4, 29):
-        c.px_on(15, y, G[4] if y < 14 else G[3])
+        c.px_on(15, y, G[4] if y < 15 else G[3])
+        if 8 < y < 24:
+            c.px_on(12, y, G[3])
+    for (x, y) in ((19, 9), (20, 14), (18, 20)):
+        c.px_on(x, y, G[1])
     over(img, canvas_rgba(c))
-    sparks(img, [(9, 5), (24, 24)], '#ffffff', 220)
+    sparks(img, [(7, 4), (25, 25), (26, 6)], '#ffffff', 230)
     return img
 
 
