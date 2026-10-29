@@ -97,7 +97,7 @@ def to_world(P):
 
 
 def view_matrix(yaw_deg, pitch_deg):
-    y = math.radians(yaw_deg)
+    y = math.radians(yaw_deg + 180.0)
     p = math.radians(pitch_deg)
     ry = np.array([[math.cos(y), 0, math.sin(y)], [0, 1, 0], [-math.sin(y), 0, math.cos(y)]])
     rx = np.array([[1, 0, 0], [0, math.cos(p), -math.sin(p)], [0, math.sin(p), math.cos(p)]])
@@ -192,8 +192,9 @@ def preview(model, tex, out_path, anims=None, frames=6, size=300):
     rest_views = [('front-left', 35, 18), ('left side', 90, 5), ('front', 0, 8), ('top', 0, 80), ('back-right', 215, 20)]
     tiles = []
     base_fit = None
+    idle_layer = [(model.animations['idle'], 0.0, 1.0)] if 'idle' in model.animations else []
     for name, yaw, pitch in rest_views:
-        im, fit = render(model, tex, (), size, yaw, pitch)
+        im, fit = render(model, tex, idle_layer, size, yaw, pitch)
         tiles.append(label(im, name))
     anims = anims if anims is not None else list(model.animations.keys())
     rows = [tiles]

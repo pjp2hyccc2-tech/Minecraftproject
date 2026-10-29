@@ -200,18 +200,23 @@ def pattern_delta(mat, I, J, w, h, seed, P):
     zero = np.zeros_like(I, dtype=float)
     pat = mat.pattern
     if pat == 'scales':
-        sw, sh = max(3, int(round(4 * s))), max(2, int(round(3 * s)))
+        sw, sh = max(3, int(round(5 * s))), max(3, int(round(4 * s)))
         row = J // sh
         off = (row % 2) * (sw // 2)
         col = (I + off) // sw
-        cx = ((I + off) % sw) / sw
-        cy = (J % sh) / sh
-        jit = (hash2(col, row, seed) - 0.5) * 0.14
-        d = jit + (0.5 - cy) * 0.22 - np.abs(cx - 0.5) * 0.10
-        outline = (J % sh) == (sh - 1)
-        d = np.where(outline, d - 0.16, d)
-        hl = ((J % sh) == 0) & (((I + off) % sw) == 1)
-        d = np.where(hl, d + 0.12, d)
+        cx = ((I + off) % sw + 0.5) / sw          # 0..1 across the scale
+        cy = ((J % sh) + 0.5) / sh                # 0..1 down the scale
+        jit = (hash2(col, row, seed) - 0.5) * 0.16
+        # rounded scale: bright upper-centre, dark crescent rim along the lower edge
+        rr = (cx - 0.5) ** 2 * 2.2 + (cy - 0.15) ** 2 * 1.2
+        d = jit + 0.16 - rr * 0.42
+        rim = (cy > 0.72) & (np.abs(cx - 0.5) < 0.42)
+        side = (cy > 0.45) & ((cx < 0.12) | (cx > 0.88))
+        outline = rim | side
+        d = np.where(rim, d - 0.20, d)
+        d = np.where(side, d - 0.10, d)
+        hl = (cy < 0.3) & (np.abs(cx - 0.4) < 0.18)
+        d = np.where(hl, d + 0.10, d)
         return d, outline
     if pat == 'plates':
         pw, ph = max(4, int(round(8 * s))), max(3, int(round(5 * s)))
@@ -534,8 +539,12 @@ def paint_model(model, seed=1):
                         gl = bgl if gl is None else np.where(sel[..., None], bgl, gl)
             if cube.tint is not None:
                 rgb = np.clip(rgb * np.array(cube.tint, float), 0, 255)
+            keep = np.ones(I.shape, dtype=bool)
+            for dec in cube.decals:
+                if dec.get('type') == 'cutout':
+                    keep &= _cutout(dec, face, f, d, r, I, J, sd)
             img[v0:v0 + h, u0:u0 + w, :3] = rgb
-            img[v0:v0 + h, u0:u0 + w, 3] = 255
+            img[v0:v0 + h, u0:u0 + w, 3] = np.where(keep, 255, 0)
             if cube.glow:
                 glow[v0:v0 + h, u0:u0 + w, :3] = rgb
                 glow[v0:v0 + h, u0:u0 + w, 3] = 255
@@ -553,6 +562,57 @@ def paint_model(model, seed=1):
     out = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8), 'RGBA')
     gout = Image.fromarray(np.clip(glow, 0, 255).astype(np.uint8), 'RGBA') if has_glow else None
     return out, gout
+
+
+def _cutout(dec, face, f, d, r, I, J, seed):
+    """Alpha cut-outs for planes / crossed planes. Returns a keep mask.
+
+    shapes:
+      spike        triangle pointing up on side faces (apex at top centre)
+      spike_back   triangle pointing backward on top/bottom faces (apex at the back)
+      spike_front  triangle pointing forward on top/bottom faces
+      spike_out    triangle pointing to the cube's +X/-X tip on top/bottom faces (wing fingers, fins)
+      scallop      wing trailing edge: arcs cut into the back edge of top/bottom faces
+      round        ellipse inscribed in the face
+      ragged       random ragged bottom edge (fur fringe / torn membrane)
+    """
+    shape = dec.get('shape', 'spike')
+    side_faces = face in ('west', 'east', 'north', 'south')
+    horiz = f if face in ('west', 'east') else r
+    if shape == 'spike':
+        if not side_faces:
+            return np.ones_like(f, dtype=bool)
+        return np.abs(horiz - 0.5) * 2 <= d + 0.08
+    if shape == 'spike_back':
+        if side_faces:
+            return np.ones_like(f, dtype=bool)
+        return np.abs(r - 0.5) * 2 <= f + 0.06
+    if shape == 'spike_front':
+        if side_faces:
+            return np.ones_like(f, dtype=bool)
+        return np.abs(r - 0.5) * 2 <= (1 - f) + 0.06
+    if shape == 'spike_out':
+        if side_faces:
+            return np.ones_like(f, dtype=bool)
+        x = 1 - r if dec.get('dir', 'pos') == 'pos' else r
+        return np.abs(f - 0.5) * 2 <= (1 - x) + 0.06
+    if shape == 'scallop':
+        if side_faces:
+            return np.ones_like(f, dtype=bool)
+        n = dec.get('count', 3)
+        depth = dec.get('depth', 0.3)
+        span = 1 - r if dec.get('dir', 'pos') == 'pos' else r
+        arc = depth * np.abs(np.sin(math.pi * n * span)) + dec.get('taper', 0.0) * span
+        back = 1 - f
+        return back > arc
+    if shape == 'round':
+        a = horiz if side_faces else r
+        b = d if side_faces else f
+        return (a - 0.5) ** 2 + (b - 0.5) ** 2 <= 0.25
+    if shape == 'ragged':
+        lim = 1 - dec.get('depth', 0.25) * hash2(I, I * 0, seed)
+        return d <= lim if side_faces else np.ones_like(f, dtype=bool)
+    return np.ones_like(f, dtype=bool)
 
 
 def _accent_mask(mat, P, f, d, r, seed):

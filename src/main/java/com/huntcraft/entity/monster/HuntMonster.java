@@ -596,8 +596,13 @@ public abstract class HuntMonster extends PathfinderMob {
     }
 
     /** Roar: hunters within radius without Earplugs cover their ears. */
+    /** Roar sound (override per species). */
+    protected SoundEvent roarSound() {
+        return profile().large ? HCSounds.ROAR_LARGE.get() : HCSounds.SMALL_CALL.get();
+    }
+
     public void doRoar(float radius) {
-        playSound(profile().large ? HCSounds.ROAR_LARGE.get() : HCSounds.SMALL_CALL.get(), 3.0F, 0.9F + getRandom().nextFloat() * 0.15F);
+        playSound(roarSound(), 3.0F, 0.9F + getRandom().nextFloat() * 0.15F);
         if (level() instanceof ServerLevel sl) {
             sl.sendParticles(ParticleTypes.SONIC_BOOM, getX(), getY() + getBbHeight() * 0.7, getZ(), 1, 0, 0, 0, 0);
             for (Player p : sl.getEntitiesOfClass(Player.class, getBoundingBox().inflate(radius))) {
@@ -1208,6 +1213,36 @@ public abstract class HuntMonster extends PathfinderMob {
     public void setTarget(@Nullable LivingEntity target) {
         if (target != null && SafeZones.isInSafeZone(target.level(), target.position())) target = null;
         super.setTarget(target);
+    }
+
+    @Override
+    public boolean causeFallDamage(float distance, float multiplier, DamageSource source) {
+        return false;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return profile().large ? HCSounds.GROWL.get() : HCSounds.SMALL_CALL.get();
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return profile().large ? HCSounds.HURT_LARGE.get() : HCSounds.HURT_SMALL.get();
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return profile().large ? HCSounds.DEATH_LARGE.get() : HCSounds.DEATH_SMALL.get();
+    }
+
+    @Override
+    protected float getSoundVolume() {
+        return profile().large ? 2.5F : 1.0F;
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        return profile().large ? 240 : 160;
     }
 
     @Override
