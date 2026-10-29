@@ -164,6 +164,8 @@ void main() {
 #if defined USE_NORMAL_MAP && (defined PROG_TERRAIN || defined PROG_ENTITIES || defined PROG_HAND || defined PROG_BLOCK)
     if (dot(tangentW.xyz, tangentW.xyz) > 0.01) {
         vec3 nm = texture(normals, texcoord).xyz * 2.0 - 1.0;
+        // a black / missing normal texture decodes to (-1,-1): treat it as flat
+        if (dot(nm.xy, nm.xy) > 0.96) nm.xy = vec2(0.0);
         nm.z = sqrt(saturate(1.0 - dot(nm.xy, nm.xy)));
         vec3 T = normalize(tangentW.xyz);
         vec3 B = normalize(cross(N, T)) * (tangentW.w < 0.0 ? -1.0 : 1.0);

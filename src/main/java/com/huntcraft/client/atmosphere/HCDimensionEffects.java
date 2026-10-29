@@ -53,7 +53,7 @@ public final class HCDimensionEffects extends DimensionSpecialEffects {
             sunriseColor[0] = 1.0F;
             sunriseColor[1] = 0.45F;
             sunriseColor[2] = 0.18F;
-            sunriseColor[3] = 0.35F + 0.25F * f;
+            sunriseColor[3] = 0.22F + 0.14F * f;
             return sunriseColor;
         }
         return super.getSunriseColor(timeOfDay, partialTicks);

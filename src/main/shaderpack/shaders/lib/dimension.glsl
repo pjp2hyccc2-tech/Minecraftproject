@@ -71,23 +71,23 @@
     const float DIM_ASH           = 0.0;
     const vec3  DIM_WATER_COLOR   = vec3(0.10, 0.30, 0.48);
 #elif defined DIM_EMBER
-    // 熾火の大カルデラ : hot orange ash, red-brown sky, heat haze
+    // 熾火の大カルデラ : dark red-brown sky, hot orange light, ash and heat haze
     #define DIM_ID 4
-    const vec3  DIM_SUN_NOON      = vec3(1.00, 0.62, 0.36) * 1.50;
-    const vec3  DIM_SUN_LOW       = vec3(1.00, 0.40, 0.15) * 1.30;
-    const vec3  DIM_SKY_ZENITH    = vec3(0.26, 0.11, 0.07);
-    const vec3  DIM_SKY_HORIZON   = vec3(0.78, 0.36, 0.14);
-    const vec3  DIM_AMBIENT       = vec3(0.72, 0.42, 0.28);
-    const float DIM_AMBIENT_MUL   = 0.62;
-    const vec3  DIM_FOG_TINT      = vec3(0.95, 0.48, 0.20);
-    const float DIM_FOG_DENSITY   = 1.50;
+    const vec3  DIM_SUN_NOON      = vec3(1.00, 0.60, 0.34) * 1.45;
+    const vec3  DIM_SUN_LOW       = vec3(1.00, 0.38, 0.14) * 1.25;
+    const vec3  DIM_SKY_ZENITH    = vec3(0.16, 0.06, 0.05);
+    const vec3  DIM_SKY_HORIZON   = vec3(0.62, 0.24, 0.10);
+    const vec3  DIM_AMBIENT       = vec3(0.70, 0.38, 0.24);
+    const float DIM_AMBIENT_MUL   = 0.60;
+    const vec3  DIM_FOG_TINT      = vec3(1.00, 0.50, 0.24);
+    const float DIM_FOG_DENSITY   = 1.30;
     const float DIM_FOG_BASE      = 70.0;
     const float DIM_FOG_FALLOFF   = 0.030;
     const float DIM_VL            = 1.30;
-    const vec3  DIM_GRADE_TINT    = vec3(1.08, 0.96, 0.88);
+    const vec3  DIM_GRADE_TINT    = vec3(1.08, 0.95, 0.86);
     const float DIM_GRADE_SAT     = 1.12;
-    const float DIM_GRADE_CONTRAST= 1.08;
-    const vec3  DIM_GRADE_LIFT    = vec3(0.030, 0.010, 0.004);
+    const float DIM_GRADE_CONTRAST= 1.10;
+    const vec3  DIM_GRADE_LIFT    = vec3(0.028, 0.008, 0.004);
     const float DIM_HAZE          = 0.0;
     const float DIM_HEAT          = 1.0;
     const float DIM_ASH           = 1.0;
@@ -174,7 +174,7 @@ const vec3 MOONLIGHT_COLOR  = vec3(0.30, 0.40, 0.62);
     // 0 = night, 1 = full day (soft transition around the horizon)
     float dayFactor() { return smoothstep(-0.10, 0.14, sunElevation()); }
     // 1 when the sun sits on the horizon (sunrise / sunset), 0 when high
-    float sunLowFactor() { return saturate(1.0 - abs(sunElevation()) * 4.5); }
+    float sunLowFactor() { return saturate(1.0 - abs(sunElevation()) * 1.8); }
     bool lightIsSun() { return sunAngle < 0.5; }
 #endif
 

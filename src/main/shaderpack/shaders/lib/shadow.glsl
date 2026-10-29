@@ -24,7 +24,15 @@ vec4 toShadowSpace(vec3 playerPos) {
     return vec4(sp.xyz, f);
 }
 
-#if defined SHADOWS && !defined NO_SUN
+// SHADOWS is a pack option (settings.glsl); the nested #ifdef form is what Iris/Oculus and OptiFine
+// scan for when they decide which #defines are user options.
+#ifdef SHADOWS
+    #ifndef NO_SUN
+        #define HC_SHADOWS_ON
+    #endif
+#endif
+
+#ifdef HC_SHADOWS_ON
 float sampleShadowDepthTex(sampler2D tex, vec2 uv, float z) {
     return step(z, texture(tex, uv).r);
 }

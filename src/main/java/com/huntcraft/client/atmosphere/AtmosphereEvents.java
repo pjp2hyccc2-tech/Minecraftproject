@@ -79,8 +79,9 @@ public final class AtmosphereEvents {
                     mix = 0.65F;
                 }
                 default -> {
-                    tint = new float[]{1.00F, 0.52F, 0.26F};
-                    mix = 0.6F;
+                    // caldera: dark ember-red haze (the biome fog colours are already red-brown)
+                    tint = new float[]{0.92F, 0.50F, 0.30F};
+                    mix = 0.5F;
                 }
             }
             r = Mth.lerp(mix, r, r * tint[0]);
@@ -117,8 +118,8 @@ public final class AtmosphereEvents {
                 far *= gust;
             }
             default -> {
-                near = far * 0.04F;
-                far *= 0.62F;
+                near = far * 0.10F;
+                far *= 0.72F;
             }
         }
         event.setNearPlaneDistance(near);
