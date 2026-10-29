@@ -318,7 +318,8 @@ SC = [
     ('shop.do_buy', '購入する', 'Buy'), ('shop.do_sell', '売却する', 'Sell'), ('shop.sell_price', '売値 %s z', 'Sells for %s z'),
     ('shop.from_box', 'アイテムボックスから売却', 'Selling from the item box'), ('shop.from_inventory', '手持ちから売却', 'Selling from your inventory'),
     # kitchen
-    ('kitchen.title', 'モフ亭', 'Mofu Diner'), ('kitchen.special', '本日のおすすめ (3割引・効果アップ)', 'Today\'s special (30% off, stronger)'),
+    ('kitchen.title', 'モフ亭', 'Mofu Diner'), ('kitchen.special', '本日のおすすめ', 'Today\'s special'),
+    ('kitchen.special_tip', '本日のおすすめの組み合わせは3割引、効果も2割アップ!', 'Today\'s pairing: 30% cheaper and 20% stronger!'),
     ('kitchen.pick_special', '選ぶ', 'Pick'), ('kitchen.pick_first', '左の一覧から一つ目の食材を選ぼう', 'Pick the first ingredient on the left'),
     ('kitchen.pick_second', '違う種類の食材をもう一つ選ぼう', 'Pick a second ingredient of another kind'),
     ('kitchen.special_badge', '★本日のおすすめ', '★ Today\'s special'), ('kitchen.hp', '体力 +%s', 'Health +%s'),

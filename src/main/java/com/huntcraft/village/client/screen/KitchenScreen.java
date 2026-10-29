@@ -52,6 +52,12 @@ public class KitchenScreen extends VillageScreen {
     }
 
     @Override
+    protected void init() {
+        super.init();
+        com.huntcraft.network.HCNetwork.sendToServer("village/box_request", new CompoundTag());
+    }
+
+    @Override
     public void tick() {
         super.tick();
         NpcPortrait.tick(portrait);
@@ -120,36 +126,39 @@ public class KitchenScreen extends VillageScreen {
         icon(g, I_TAG, dx + 8, sy + 2);
         icon(g, I_ING0 + Ingredients.index(special[0]), dx + 26, sy + 2);
         icon(g, I_ING0 + Ingredients.index(special[1]), dx + 42, sy + 2);
-        textClip(g, Component.translatable("screen.huntcraft.kitchen.special"), dx + 62, sy + 6, dw - 120, 0xFF9A3A10, false);
-        button(g, dx + dw - 54, sy + 1, 46, 18, Component.translatable("screen.huntcraft.kitchen.pick_special"),
+        textClip(g, Component.translatable("screen.huntcraft.kitchen.special"), dx + 62, sy + 6, dw - 116, 0xFF9A3A10, false);
+        if (in(mx, my, dx + 6, sy, dw - 60, 20)) hoverText = Component.translatable("screen.huntcraft.kitchen.special_tip");
+        button(g, dx + dw - 50, sy + 1, 42, 18, Component.translatable("screen.huntcraft.kitchen.pick_special"),
                 special[0].requiredHR() <= d.hunterRank && special[1].requiredHR() <= d.hunterRank, () -> {
                     pickA = special[0];
                     pickB = special[1];
                 });
-        // selection slots
-        int cy = dy + 34;
-        slotBox(g, dx + 10, cy, pickA, "A");
-        icon(g, I_PLUS, dx + 40, cy + 4);
-        slotBox(g, dx + 60, cy, pickB, "B");
-        text(g, "=", dx + 92, cy + 8, INK);
+        // selection slots: [A] + [B] = [dish]
+        int cy = dy + 32;
+        int sx = dx + (dw - 150) / 2;
+        slotBox(g, sx, cy, pickA, "A");
+        icon(g, I_PLUS, sx + 32, cy + 4);
+        slotBox(g, sx + 54, cy, pickB, "B");
+        text(g, "=", sx + 88, cy + 8, INK);
         Ingredients.Meal meal = pickA != null && pickB != null ? Ingredients.cook(pickA, pickB, Ingredients.isSpecial(pickA, pickB, day())) : null;
         if (meal == null) {
-            g.fill(dx + 104, cy - 4, dx + 136, cy + 28, 0x20402A10);
+            inset(g, sx + 100, cy - 4, 34, 34);
             wrap(g, Component.translatable(pickA == null ? "screen.huntcraft.kitchen.pick_first" : "screen.huntcraft.kitchen.pick_second"),
-                    dx + 142, cy, dw - 150, INK_SOFT, 3);
+                    dx + 10, cy + 34, dw - 20, INK_SOFT, 2);
             drawStatus(g, d, dx, dy, dw, dh);
             if (pickA == null) {
-                preview(g, dx + dw / 2, dy + dh - 40, 36, portrait, mx, my);
-                textClip(g, Component.translatable("npc.huntcraft.chef.line"), dx + 8, dy + dh - 28, dw - 16, INK, false);
+                preview(g, dx + dw - 30, dy + dh - 8, 30, portrait, mx, my);
+                textClip(g, Component.translatable("npc.huntcraft.chef.line"), dx + 8, dy + dh - 14, dw - 60, INK, false);
             }
             return;
         }
         int icon = Ingredients.DISH_IDS.indexOf(meal.dish().id());
-        dishIcon(g, icon, dx + 104, cy - 4, 32);
-        int nx = dx + 142;
-        wrap(g, meal.displayName().copy().withStyle(ChatFormatting.BOLD), nx, cy - 2, dw - 150, INK, 2);
-        if (meal.special()) text(g, Component.translatable("screen.huntcraft.kitchen.special_badge"), nx, cy + 19, 0xFF9A3A10);
-        cy += 36;
+        inset(g, sx + 100, cy - 4, 34, 34);
+        dishIcon(g, icon, sx + 101, cy - 3, 32);
+        cy += 34;
+        textClip(g, meal.displayName().copy().withStyle(ChatFormatting.BOLD), dx + 10, cy, dw - 20, INK, false);
+        if (meal.special()) text(g, Component.translatable("screen.huntcraft.kitchen.special_badge"), dx + 10, cy + 10, 0xFF9A3A10);
+        cy += meal.special() ? 22 : 13;
         rule(g, dx + 8, cy, dw - 16);
         cy += 5;
         int colW = (dw - 20) / 2;
@@ -221,7 +230,7 @@ public class KitchenScreen extends VillageScreen {
     private void drawStatus(GuiGraphics g, HunterData d, int dx, int dy, int dw, int dh) {
         Player p = player();
         if (p == null) return;
-        int y = dy + 74;
+        int y = dy + 92;
         rule(g, dx + 8, y, dw - 16);
         y += 6;
         Ingredients.Meal cur = MealSystem.active(p);

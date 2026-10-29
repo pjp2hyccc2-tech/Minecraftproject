@@ -62,6 +62,12 @@ public class HunterNotesScreen extends VillageScreen {
     }
 
     @Override
+    protected void init() {
+        super.init();
+        com.huntcraft.network.HCNetwork.sendToServer("village/box_request", new CompoundTag());
+    }
+
+    @Override
     public void tick() {
         super.tick();
         spin += 1.2F;
@@ -152,7 +158,7 @@ public class HunterNotesScreen extends VillageScreen {
         MonsterProfile p = e.profile();
         int hunted = d.totalHunted(e.id());
         // model box
-        int bx = x + 6, by = y + 6, bw = 92, bh = 92;
+        int bx = x + 6, by = y + 6, bw = 84, bh = 78;
         inset(g, bx, by, bw, bh);
         HuntMonster m = preview(e.id());
         if (m != null && hunted > 0) {
@@ -172,7 +178,7 @@ public class HunterNotesScreen extends VillageScreen {
             g.drawCenteredString(this.font, "?", bx + bw / 2, by + bh / 2 - 4, 0xFF8A7A68);
         }
         // name / category
-        int cx = x + 104, cw = w - 110;
+        int cx = x + 96, cw = w - 102;
         textClip(g, p.displayName().copy().withStyle(ChatFormatting.BOLD), cx, y + 8, cw, INK, false);
         String catKey = "notes.huntcraft.category." + p.category;
         text(g, I18n.exists(catKey) ? Component.translatable(catKey) : Component.literal(p.category), cx, y + 19, INK_SOFT);
@@ -189,11 +195,11 @@ public class HunterNotesScreen extends VillageScreen {
             if (span > 0 && rec[0] <= p.minScale + span * 0.12F) icon(g, rec[0] <= p.minScale + span * 0.02F ? I_CROWN_GOLD : I_CROWN_SILVER, x + w - 22, sy - 4);
             if (span > 0 && rec[1] >= p.maxScale - span * 0.12F) icon(g, rec[1] >= p.maxScale - span * 0.02F ? I_CROWN_GOLD : I_CROWN_SILVER, x + w - 22, sy + 6);
         }
-        // weaknesses
-        int wy = y + 78;
-        text(g, Component.translatable("screen.huntcraft.notes.weakness"), cx, wy, INK_SOFT);
-        wy += 11;
-        int ex = cx;
+        // weaknesses (full width under the model box)
+        int wy = y + 90;
+        text(g, Component.translatable("screen.huntcraft.notes.weakness"), x + 8, wy, INK_SOFT);
+        int ex = x + 8 + this.font.width(Component.translatable("screen.huntcraft.notes.weakness")) + 6;
+        int step = Math.max(28, (x + w - 6 - ex) / ELEMENTS.length);
         for (Element el : ELEMENTS) {
             icon(g, elementIcon(el), ex, wy - 4);
             if (hunted > 0) {
@@ -202,14 +208,10 @@ public class HunterNotesScreen extends VillageScreen {
             } else {
                 g.drawString(this.font, "?", ex + 15, wy, 0xFF8A7A68, false);
             }
-            ex += Math.max(32, cw / 5);
-            if (ex > x + w - 30) {
-                ex = cx;
-                wy += 12;
-            }
+            ex += step;
         }
         // description + parts + materials (scrollable text area)
-        int ty = y + 104;
+        int ty = y + 106;
         rule(g, x + 6, ty - 3, w - 12);
         int areaH = y + h - 6 - ty;
         g.enableScissor(x + 4, ty, x + w - 4, ty + areaH);
