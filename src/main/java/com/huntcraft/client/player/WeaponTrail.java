@@ -32,8 +32,8 @@ public final class WeaponTrail {
         Sample last = samples.peekLast();
         if (last != null && last.time >= time) return;
         if (last != null && last.tip.distanceToSqr(tip) < 1.0E-4) return;
-        // a jump of more than 2 blocks between consecutive samples is a teleport / camera swap, not a swing
-        if (last != null && last.tip.distanceToSqr(tip) > 4.0) samples.clear();
+        // a jump of more than 3 blocks between consecutive samples is a teleport / camera swap, not a swing
+        if (last != null && last.tip.distanceToSqr(tip) > 9.0) samples.clear();
         samples.addLast(new Sample(base, tip, time, color));
         while (samples.size() > MAX) samples.pollFirst();
     }
