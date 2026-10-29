@@ -27,11 +27,16 @@ public final class HCCapabilities {
 
     public static class Provider implements ICapabilitySerializable<CompoundTag> {
         private final HunterData data = new HunterData();
-        private final LazyOptional<HunterData> optional = LazyOptional.of(() -> data);
+        private LazyOptional<HunterData> optional = LazyOptional.of(() -> data);
 
         @Override
         public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-            return cap == HUNTER ? optional.cast() : LazyOptional.empty();
+            if (cap != HUNTER) return LazyOptional.empty();
+            // Forge invalidates player capabilities when the player changes dimension or dies and revives them
+            // afterwards, but an invalidated LazyOptional can never become valid again. Hand out a fresh one around
+            // the SAME HunterData so zenny/HR/item box survive teleports and the death clone can read the old data.
+            if (!optional.isPresent()) optional = LazyOptional.of(() -> data);
+            return optional.cast();
         }
 
         @Override
