@@ -1,144 +1,90 @@
 package com.huntcraft.quest;
 
-import com.huntcraft.HuntCraft;
-import com.huntcraft.quest.block.SupplyBoxBlock;
+import com.huntcraft.quest.world.QuestMapData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Terrain helpers for quest regions: base camp site selection + construction, surface lookups and
- * spawn position search. Every heightmap read force-loads the chunk first (unloaded chunks report min height).
+ * Positions inside a quest region: the designed base camp (built by worldgen, identical in every region copy),
+ * arrival spots, area anchors and spawn positions. Heightmap reads force-load the chunk first.
  */
 public final class QuestCamps {
-    /** Half size of the flattened camp pad. */
-    public static final int PAD = 8;
-    /** Template is 15x?x15, its (7, 1, 7) sits on the camp position. */
-    public static final int TEMPLATE_HALF = 7;
-    /** Player arrival offsets relative to the camp position (kept free in the camp template). */
-    private static final int[][] ARRIVALS = {{0, 1}, {-2, 1}, {2, 1}, {0, 2}, {-2, 2}, {2, 2}};
-
     private QuestCamps() {
     }
 
-    // ------------------------------------------------------------------ noise-based estimates (no chunk loading)
-    private static int baseHeight(ServerLevel level, int x, int z, Heightmap.Types type) {
-        ChunkGenerator gen = level.getChunkSource().getGenerator();
-        RandomState rs = level.getChunkSource().randomState();
-        return gen.getBaseHeight(x, z, type, level, rs);
+    // ------------------------------------------------------------------ camp
+    /** Standing position at the centre of the base camp of the region around {@code center}. */
+    public static BlockPos campPos(QuestMap map, BlockPos center) {
+        return QuestRegions.toWorld(center, map.data().camp.pos());
     }
 
-    /** Picks a flat, dry spot near the centre of area 1 of the region. */
-    public static BlockPos findCampSite(ServerLevel level, BlockPos center) {
-        int bx = QuestRegions.areaCenterX(center.getX(), QuestRegions.CAMP_AREA);
-        int bz = QuestRegions.areaCenterZ(center.getZ(), QuestRegions.CAMP_AREA);
-        int sea = level.getChunkSource().getGenerator().getSeaLevel();
-        BlockPos best = new BlockPos(bx, sea + 2, bz);
-        double bestScore = Double.MAX_VALUE;
-        int[][] ring = {{-7, -7}, {7, -7}, {-7, 7}, {7, 7}, {0, -8}, {0, 8}, {-8, 0}, {8, 0}};
-        for (int i = -2; i <= 2; i++) {
-            for (int j = -2; j <= 2; j++) {
-                int x = bx + i * 20, z = bz + j * 20;
-                int h = baseHeight(level, x, z, Heightmap.Types.WORLD_SURFACE_WG);
-                int floor = baseHeight(level, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
-                double score = (Math.abs(i) + Math.abs(j)) * 4.0;
-                if (floor < h) score += 1000; // covered by water / lava
-                if (h < sea + 2) score += 400;
-                int maxDiff = 0;
-                for (int[] o : ring) {
-                    int hh = baseHeight(level, x + o[0], z + o[1], Heightmap.Types.WORLD_SURFACE_WG);
-                    int ff = baseHeight(level, x + o[0], z + o[1], Heightmap.Types.OCEAN_FLOOR_WG);
-                    maxDiff = Math.max(maxDiff, Math.abs(hh - h));
-                    if (ff < hh) score += 60;
-                }
-                score += maxDiff * 12.0;
-                if (score < bestScore) {
-                    bestScore = score;
-                    best = new BlockPos(x, Math.max(h, sea + 2), z);
-                }
-            }
+    public static int campRadius(QuestMap map) {
+        return map.data().camp.radius();
+    }
+
+    public static float campYaw(QuestMap map) {
+        return map.data().camp.yaw();
+    }
+
+    /** Arrival position for the n-th party member (free spots in front of the tent). */
+    public static Vec3 arrival(QuestMap map, BlockPos center, int index) {
+        List<BlockPos> list = map.data().camp.arrivals();
+        BlockPos t = list.get(Math.floorMod(index, list.size()));
+        BlockPos w = QuestRegions.toWorld(center, t);
+        return new Vec3(w.getX() + 0.5, w.getY() + 0.05, w.getZ() + 0.5);
+    }
+
+    public static Vec3 arrival(QuestInstance inst, int index) {
+        QuestDef q = inst.quest();
+        if (q == null) return Vec3.atBottomCenterOf(inst.camp);
+        return arrival(q.map, inst.center, index);
+    }
+
+    /** World position of a camp fixture (supply box, delivery box, flag, bed) of the region. */
+    public static BlockPos fixture(QuestMap map, BlockPos center, BlockPos tilePos) {
+        return QuestRegions.toWorld(center, tilePos);
+    }
+
+    // ------------------------------------------------------------------ areas
+    @Nullable
+    public static QuestMapData.Area area(QuestMap map, int n) {
+        return map.data().area(n);
+    }
+
+    /** Areas where large monsters may live (excludes the camp area). */
+    public static List<QuestMapData.Area> largeAreas(QuestMap map) {
+        List<QuestMapData.Area> out = new ArrayList<>();
+        for (QuestMapData.Area a : map.data().areas) if (a.large() && a.climate() != QuestMapData.CLIMATE_SAFE) out.add(a);
+        if (out.isEmpty()) {
+            for (QuestMapData.Area a : map.data().areas) if (a.climate() != QuestMapData.CLIMATE_SAFE) out.add(a);
         }
-        return best;
+        return out;
     }
 
-    // ------------------------------------------------------------------ camp construction
-    /** Flattens the pad and places the camp template. Returns the camp position (ground level where players stand). */
-    public static BlockPos buildCamp(ServerLevel level, BlockPos site, QuestMap map) {
-        loadArea(level, site.getX(), site.getZ(), PAD + 3);
-        int y = site.getY();
-        BlockState top = map.padTop(), fill = map.padFill();
-        BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos();
-        for (int dx = -PAD - 2; dx <= PAD + 2; dx++) {
-            for (int dz = -PAD - 2; dz <= PAD + 2; dz++) {
-                boolean core = Math.abs(dx) <= PAD && Math.abs(dz) <= PAD;
-                int x = site.getX() + dx, z = site.getZ() + dz;
-                if (core) {
-                    for (int yy = y - 7; yy < y - 1; yy++) {
-                        p.set(x, yy, z);
-                        BlockState s = level.getBlockState(p);
-                        if (s.isAir() || !s.getFluidState().isEmpty() || s.canBeReplaced()) level.setBlock(p, fill, 2);
-                    }
-                    level.setBlock(p.set(x, y - 1, z), top, 2);
-                    for (int yy = y; yy <= y + 14; yy++) {
-                        p.set(x, yy, z);
-                        if (!level.getBlockState(p).isAir()) level.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
-                    }
-                } else {
-                    // soft rim: remove fluids / plants right next to the pad so nothing spills in
-                    for (int yy = y - 1; yy <= y + 3; yy++) {
-                        p.set(x, yy, z);
-                        BlockState s = level.getBlockState(p);
-                        if (!s.getFluidState().isEmpty()) level.setBlock(p, yy < y ? fill : Blocks.AIR.defaultBlockState(), 2);
-                    }
-                }
-            }
-        }
-        BlockPos camp = new BlockPos(site.getX(), y, site.getZ());
-        if (!placeTemplate(level, camp, map)) placeFallbackCamp(level, camp);
-        return camp;
+    public static int areaAt(QuestInstance inst, double x, double z) {
+        QuestDef q = inst.quest();
+        if (q == null || !QuestRegions.inside(inst.center, x, z, 0)) return 0;
+        return QuestRegions.area(q.map, x, z);
     }
 
-    private static boolean placeTemplate(ServerLevel level, BlockPos camp, QuestMap map) {
-        try {
-            Optional<StructureTemplate> opt = level.getStructureManager().get(map.campTemplate());
-            if (opt.isEmpty()) {
-                HuntCraft.LOGGER.warn("Camp template {} missing", map.campTemplate());
-                return false;
-            }
-            BlockPos origin = camp.offset(-TEMPLATE_HALF, -1, -TEMPLATE_HALF);
-            StructurePlaceSettings settings = new StructurePlaceSettings().setIgnoreEntities(true);
-            opt.get().placeInWorld(level, origin, origin, settings, RandomSource.create(camp.asLong()), Block.UPDATE_CLIENTS);
-            return true;
-        } catch (RuntimeException e) {
-            HuntCraft.LOGGER.error("Failed to place camp template", e);
-            return false;
-        }
-    }
-
-    private static void placeFallbackCamp(ServerLevel level, BlockPos camp) {
-        level.setBlock(camp.offset(-5, 0, 0), QuestRegistry.SUPPLY_BOX.get().defaultBlockState().setValue(SupplyBoxBlock.FACING, Direction.EAST), 3);
-        level.setBlock(camp.offset(-5, 0, 2), QuestRegistry.DELIVERY_BOX.get().defaultBlockState().setValue(SupplyBoxBlock.FACING, Direction.EAST), 3);
-        level.setBlock(camp.offset(0, 0, 4), Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true), 3);
-    }
-
-    /** Arrival position for the n-th party member. */
-    public static Vec3 arrival(BlockPos camp, int index) {
-        int[] o = ARRIVALS[Math.floorMod(index, ARRIVALS.length)];
-        return new Vec3(camp.getX() + o[0] + 0.5, camp.getY() + 0.05, camp.getZ() + o[1] + 0.5);
+    /** Climate at a world position of the instance (camp radius is always safe). */
+    public static int climateAt(QuestInstance inst, double x, double z) {
+        QuestDef q = inst.quest();
+        if (q == null) return QuestMapData.CLIMATE_NONE;
+        double dx = x - (inst.camp.getX() + 0.5), dz = z - (inst.camp.getZ() + 0.5);
+        int r = campRadius(q.map);
+        if (dx * dx + dz * dz <= r * r) return QuestMapData.CLIMATE_SAFE;
+        QuestMapData.Area a = area(q.map, areaAt(inst, x, z));
+        return a == null ? QuestMapData.CLIMATE_NONE : a.climate();
     }
 
     // ------------------------------------------------------------------ surface helpers (chunk loaded first)
@@ -148,7 +94,7 @@ public final class QuestCamps {
         }
     }
 
-    /** Standing position on the ground at x/z (forces the chunk to load), or null when covered by fluid. */
+    /** Standing position on the ground at x/z (forces the chunk to load), or null on fluids / hazards. */
     @Nullable
     public static BlockPos dryGround(ServerLevel level, int x, int z) {
         level.getChunk(x >> 4, z >> 4);
@@ -156,7 +102,9 @@ public final class QuestCamps {
         if (y <= level.getMinBuildHeight() + 2) return null;
         BlockPos pos = new BlockPos(x, y, z);
         if (!level.getFluidState(pos.below()).isEmpty() || !level.getFluidState(pos).isEmpty()) return null;
-        if (level.getBlockState(pos.below()).is(Blocks.MAGMA_BLOCK)) return null;
+        BlockState below = level.getBlockState(pos.below());
+        if (below.is(Blocks.MAGMA_BLOCK) || below.is(Blocks.CAMPFIRE) || below.is(Blocks.FIRE) || below.is(Blocks.LAVA)) return null;
+        if (!level.getBlockState(pos).isAir() && !level.getBlockState(pos).canBeReplaced()) return null;
         return pos;
     }
 
@@ -166,20 +114,27 @@ public final class QuestCamps {
         return level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
     }
 
-    /** Random dry position in an area of the region (tries a few times). Loads the chosen chunk. */
+    /**
+     * Random open, dry spot inside an area of the instance's region (checked against the designed data first, so
+     * caves, water, lava and cliffs are avoided before any chunk is loaded). Returns null if nothing suitable was found.
+     */
     @Nullable
-    public static BlockPos randomPosInArea(ServerLevel level, QuestInstance inst, int area, RandomSource r, int spread) {
-        int ax = QuestRegions.areaCenterX(inst.center.getX(), area);
-        int az = QuestRegions.areaCenterZ(inst.center.getZ(), area);
-        int sea = level.getChunkSource().getGenerator().getSeaLevel();
-        for (int i = 0; i < 12; i++) {
-            int x = ax + r.nextInt(spread * 2 + 1) - spread;
-            int z = az + r.nextInt(spread * 2 + 1) - spread;
+    public static BlockPos randomPosInArea(ServerLevel level, QuestInstance inst, int areaN, RandomSource r, int spread) {
+        QuestDef q = inst.quest();
+        if (q == null) return null;
+        QuestMapData d = q.map.data();
+        QuestMapData.Area a = d.area(areaN);
+        if (a == null) return null;
+        int campR = campRadius(q.map) + 30;
+        for (int i = 0; i < 24; i++) {
+            int u = a.x() + (i == 0 ? 0 : r.nextInt(spread * 2 + 1) - spread);
+            int v = a.z() + (i == 0 ? 0 : r.nextInt(spread * 2 + 1) - spread);
+            if (!QuestMapData.inTile(u, v) || d.zone(u, v) != areaN) continue;
+            if (d.fluid(u, v) != QuestMapData.FLUID_NONE || d.isCave(u, v) || d.roughness(u, v) > 2) continue;
+            int x = QuestRegions.worldX(inst.center, u), z = QuestRegions.worldZ(inst.center, v);
             if (!QuestRegions.inside(inst.center, x, z, 12)) continue;
-            if (Math.abs(x - inst.camp.getX()) < 48 && Math.abs(z - inst.camp.getZ()) < 48) continue;
-            int h = baseHeight(level, x, z, Heightmap.Types.WORLD_SURFACE_WG);
-            int f = baseHeight(level, x, z, Heightmap.Types.OCEAN_FLOOR_WG);
-            if (f < h || h <= sea) continue;
+            double dx = x - inst.camp.getX(), dz = z - inst.camp.getZ();
+            if (dx * dx + dz * dz < campR * campR) continue;
             BlockPos pos = dryGround(level, x, z);
             if (pos != null) return pos;
         }

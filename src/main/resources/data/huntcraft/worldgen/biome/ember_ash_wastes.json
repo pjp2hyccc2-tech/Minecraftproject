@@ -3,8 +3,8 @@
   "temperature": 2.0,
   "downfall": 0.0,
   "effects": {
-    "sky_color": 8269856,
-    "fog_color": 4857880,
+    "sky_color": 9062970,
+    "fog_color": 5913138,
     "water_color": 4159204,
     "water_fog_color": 329011,
     "grass_color": 8022592,
@@ -47,16 +47,9 @@
     [],
     [],
     [],
-    [
-      "huntcraft:ember_basalt_columns",
-      "huntcraft:ember_basalt_pillars"
-    ],
     [],
-    [
-      "huntcraft:ember_herb_points",
-      "huntcraft:ember_bone_points",
-      "huntcraft:ember_mining_points"
-    ],
+    [],
+    [],
     []
   ]
 }

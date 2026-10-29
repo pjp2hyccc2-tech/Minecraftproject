@@ -1,44 +1,67 @@
 package com.huntcraft.quest;
 
+import com.huntcraft.quest.world.QuestMapData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 
 /**
- * Region layout inside a quest-map dimension. Every running quest gets its own region ("slot"):
- * centres are {@link #SPACING} blocks apart, the playable square is +-{@link #HALF} blocks around the centre,
- * divided into a 3x3 grid of numbered areas (1 = north-west ... 9 = south-east). The base camp lies in area 1.
+ * Region layout inside a quest-map dimension. The designed map tile ({@link QuestMapData}, 512x512) repeats every
+ * {@link #SPACING} blocks; every running quest gets its own copy ("slot"). The playable square is +-{@link #HALF}
+ * blocks around the region centre and is divided into the map's numbered areas (zone plane of the tile).
  */
 public final class QuestRegions {
     public static final int SPACING = 2048;
     public static final int HALF = 224;
+    public static final int TILE = QuestMapData.SIZE;
+    public static final int TILE_HALF = QuestMapData.HALF;
     public static final int GRID = 16;
     public static final int MAX_SLOTS = GRID * GRID;
-    public static final int CAMP_AREA = 1;
 
     private QuestRegions() {
     }
 
+    /** Centre of a region slot (slot 0 is the origin). */
     public static BlockPos center(int slot) {
-        return new BlockPos(1024 + SPACING * (slot % GRID), 0, 1024 + SPACING * (slot / GRID));
+        return new BlockPos(SPACING * (slot % GRID), 0, SPACING * (slot / GRID));
     }
 
-    /** Area number 1..9 of a position, or 0 when outside the region. */
-    public static int area(int cx, int cz, double x, double z) {
-        double size = HALF * 2.0;
-        double lx = x - (cx - HALF), lz = z - (cz - HALF);
-        if (lx < 0 || lz < 0 || lx >= size || lz >= size) return 0;
-        int col = Math.min(2, (int) (lx * 3.0 / size));
-        int row = Math.min(2, (int) (lz * 3.0 / size));
-        return row * 3 + col + 1;
+    /** Tile column of a world x (0..511) or -1 between regions. */
+    public static int tileU(int x) {
+        int m = Math.floorMod(x + TILE_HALF, SPACING);
+        return m < TILE ? m : -1;
     }
 
-    public static int areaCenterX(int cx, int area) {
-        int col = (area - 1) % 3;
-        return (int) Math.round(cx - HALF + (col + 0.5) * HALF * 2.0 / 3.0);
+    /** Tile row of a world z (0..511) or -1 between regions. */
+    public static int tileV(int z) {
+        return tileU(z);
     }
 
-    public static int areaCenterZ(int cz, int area) {
-        int row = (area - 1) / 3;
-        return (int) Math.round(cz - HALF + (row + 0.5) * HALF * 2.0 / 3.0);
+    public static int tileU(double x) {
+        return tileU(Mth.floor(x));
+    }
+
+    public static int tileV(double z) {
+        return tileU(Mth.floor(z));
+    }
+
+    /** World position of a tile position in the region around {@code center}. */
+    public static BlockPos toWorld(BlockPos center, BlockPos tile) {
+        return new BlockPos(center.getX() - TILE_HALF + tile.getX(), tile.getY(), center.getZ() - TILE_HALF + tile.getZ());
+    }
+
+    public static int worldX(BlockPos center, int u) {
+        return center.getX() - TILE_HALF + u;
+    }
+
+    public static int worldZ(BlockPos center, int v) {
+        return center.getZ() - TILE_HALF + v;
+    }
+
+    /** Area number (1..9) of a world position on the given map, 0 outside the playable areas. */
+    public static int area(QuestMap map, double x, double z) {
+        int u = tileU(x), v = tileV(z);
+        if (u < 0 || v < 0) return 0;
+        return map.data().zone(u, v);
     }
 
     public static boolean inside(int cx, int cz, double x, double z, double margin) {

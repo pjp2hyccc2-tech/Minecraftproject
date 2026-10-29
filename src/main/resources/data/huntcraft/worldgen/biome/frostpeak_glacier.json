@@ -13,7 +13,7 @@
       "options": {
         "type": "minecraft:snowflake"
       },
-      "probability": 0.022
+      "probability": 0.02
     },
     "mood_sound": {
       "sound": "minecraft:ambient.cave",
@@ -39,17 +39,12 @@
     [],
     [],
     [],
-    [
-      "huntcraft:frostpeak_ice_spikes"
-    ],
     [],
     [],
     [],
     [],
-    [
-      "huntcraft:frostpeak_bone_points",
-      "huntcraft:frostpeak_mining_points"
-    ],
+    [],
+    [],
     [
       "minecraft:freeze_top_layer"
     ]

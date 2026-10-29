@@ -1,0 +1,54 @@
+{
+  "has_precipitation": true,
+  "temperature": 0.5,
+  "downfall": 0.9,
+  "effects": {
+    "sky_color": 10467552,
+    "fog_color": 15265524,
+    "water_color": 5028040,
+    "water_fog_color": 667704,
+    "grass_color": 8368240,
+    "foliage_color": 6199893,
+    "particle": {
+      "options": {
+        "type": "minecraft:white_ash"
+      },
+      "probability": 0.03
+    },
+    "mood_sound": {
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "axolotls": [],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "carvers": {},
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "minecraft:patch_large_fern",
+      "minecraft:patch_grass_taiga",
+      "minecraft:brown_mushroom_taiga"
+    ],
+    []
+  ]
+}

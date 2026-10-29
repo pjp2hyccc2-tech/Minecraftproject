@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "charges=0": {
+      "model": "huntcraft:block/gather_bug_empty"
+    },
+    "charges=1": {
+      "model": "huntcraft:block/gather_bug"
+    },
+    "charges=2": {
+      "model": "huntcraft:block/gather_bug"
+    },
+    "charges=3": {
+      "model": "huntcraft:block/gather_bug"
+    }
+  }
+}

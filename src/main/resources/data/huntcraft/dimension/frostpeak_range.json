@@ -1,56 +1,18 @@
 {
   "type": "huntcraft:quest_map_frost",
   "generator": {
-    "type": "minecraft:noise",
-    "settings": "huntcraft:frostpeak_range",
+    "type": "huntcraft:quest_map",
+    "map": "frostpeak_range",
     "biome_source": {
-      "type": "minecraft:multi_noise",
+      "type": "huntcraft:quest_map",
+      "map": "frostpeak_range",
       "biomes": [
-        {
-          "biome": "huntcraft:frostpeak_taiga",
-          "parameters": {
-            "temperature": 0.0,
-            "humidity": 0.0,
-            "continentalness": 0.0,
-            "erosion": 0.0,
-            "weirdness": 0.0,
-            "depth": [
-              0.45,
-              1.0
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "huntcraft:frostpeak_slopes",
-          "parameters": {
-            "temperature": 0.0,
-            "humidity": 0.0,
-            "continentalness": 0.0,
-            "erosion": 0.0,
-            "weirdness": 0.0,
-            "depth": [
-              -0.25,
-              0.45
-            ],
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "huntcraft:frostpeak_glacier",
-          "parameters": {
-            "temperature": 0.0,
-            "humidity": 0.0,
-            "continentalness": 0.0,
-            "erosion": 0.0,
-            "weirdness": 0.0,
-            "depth": [
-              -1.0,
-              -0.25
-            ],
-            "offset": 0.0
-          }
-        }
+        "huntcraft:frostpeak_taiga",
+        "huntcraft:frostpeak_snowfield",
+        "huntcraft:frostpeak_glacier",
+        "huntcraft:frostpeak_summit",
+        "huntcraft:frostpeak_hot_spring",
+        "huntcraft:frostpeak_ice_cave"
       ]
     }
   }

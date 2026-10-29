@@ -43,11 +43,7 @@
       "minecraft:flower_plains",
       "minecraft:flower_default",
       "minecraft:patch_grass_plain",
-      "minecraft:patch_tall_grass_2",
-      "huntcraft:verdant_herb_points",
-      "huntcraft:verdant_bug_points",
-      "huntcraft:verdant_bone_points",
-      "huntcraft:verdant_mining_points"
+      "minecraft:patch_tall_grass_2"
     ],
     []
   ]

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,10 @@ public final class QuestInstance {
     public int warnedMinutes = 999;
     // transient
     public final Map<UUID, Long> roamAt = new HashMap<>();
-    public final Map<UUID, Integer> orphanTicks = new HashMap<>();
+    /** Last known area of each target monster (updated while its chunk is loaded). */
+    public final Map<UUID, Integer> targetArea = new HashMap<>();
+    /** Targets a member has seen up close (their area is shown on the HUD). */
+    public final Set<UUID> spotted = new HashSet<>();
 
     public QuestInstance(String id, String questId, int slot, BlockPos center, BlockPos camp) {
         this.id = id;

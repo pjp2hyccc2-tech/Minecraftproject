@@ -44,11 +44,7 @@
       "minecraft:flower_default",
       "minecraft:patch_grass_forest",
       "minecraft:brown_mushroom_normal",
-      "minecraft:red_mushroom_normal",
-      "huntcraft:verdant_herb_points",
-      "huntcraft:verdant_mushroom_points",
-      "huntcraft:verdant_bug_points",
-      "huntcraft:verdant_bone_points"
+      "minecraft:red_mushroom_normal"
     ],
     []
   ]

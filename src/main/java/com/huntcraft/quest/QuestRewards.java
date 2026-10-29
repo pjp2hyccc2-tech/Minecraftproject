@@ -21,7 +21,8 @@ import java.util.List;
 
 /**
  * Quest reward rolls (MonsterProfile reward tables + gathering materials + fixed sub rewards) and delivery:
- * rewards wait in the player's "quest" module tag until claimed from the result screen (inventory or item box).
+ * reward materials go straight into the hunter's item box ({@link HunterData#itemBox}); overflow waits in the
+ * player's "quest" module tag until claimed from the result screen.
  */
 public final class QuestRewards {
     public static final String CAT_MAIN = "main";
@@ -127,6 +128,36 @@ public final class QuestRewards {
         tag.putInt("faints", inst.faints);
         tag.putString("reason", inst.failReason);
         return tag;
+    }
+
+    // ------------------------------------------------------------------ delivery
+    /**
+     * Stores reward items straight into the hunter's item box. Whatever does not fit is kept as pending rewards
+     * (claimable from the result screen). Returns the number of items stored in the box.
+     */
+    public static int storeRewards(HunterData d, ListTag items) {
+        int stored = 0;
+        ListTag left = new ListTag();
+        for (int i = 0; i < items.size(); i++) {
+            CompoundTag c = items.getCompound(i).copy();
+            c.remove("cat");
+            ItemStack st = ItemStack.of(c);
+            if (st.isEmpty()) continue;
+            int before = st.getCount();
+            ItemStack rest = addToItemBox(d, st);
+            stored += before - rest.getCount();
+            if (!rest.isEmpty()) left.add(rest.save(new CompoundTag()));
+        }
+        if (!left.isEmpty()) addPending(d, left);
+        d.markDirty();
+        return stored;
+    }
+
+    public static int pendingCount(HunterData d) {
+        ListTag l = pending(d);
+        int n = 0;
+        for (int i = 0; i < l.size(); i++) n += Math.max(0, l.getCompound(i).getByte("Count"));
+        return n;
     }
 
     // ------------------------------------------------------------------ pending rewards

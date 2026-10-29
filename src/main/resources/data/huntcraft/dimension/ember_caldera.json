@@ -1,62 +1,18 @@
 {
   "type": "huntcraft:quest_map_ember",
   "generator": {
-    "type": "minecraft:noise",
-    "settings": "huntcraft:ember_caldera",
+    "type": "huntcraft:quest_map",
+    "map": "ember_caldera",
     "biome_source": {
-      "type": "minecraft:multi_noise",
+      "type": "huntcraft:quest_map",
+      "map": "ember_caldera",
       "biomes": [
-        {
-          "biome": "huntcraft:ember_lava_flats",
-          "parameters": {
-            "temperature": [
-              -1.0,
-              -0.3
-            ],
-            "humidity": 0.0,
-            "continentalness": 0.0,
-            "erosion": 0.0,
-            "weirdness": 0.0,
-            "depth": 0.0,
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "huntcraft:ember_ash_wastes",
-          "parameters": {
-            "temperature": [
-              -0.3,
-              1.0
-            ],
-            "humidity": [
-              0.2,
-              1.0
-            ],
-            "continentalness": 0.0,
-            "erosion": 0.0,
-            "weirdness": 0.0,
-            "depth": 0.0,
-            "offset": 0.0
-          }
-        },
-        {
-          "biome": "huntcraft:ember_basalt_fields",
-          "parameters": {
-            "temperature": [
-              -0.3,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              0.2
-            ],
-            "continentalness": 0.0,
-            "erosion": 0.0,
-            "weirdness": 0.0,
-            "depth": 0.0,
-            "offset": 0.0
-          }
-        }
+        "huntcraft:ember_outer_slopes",
+        "huntcraft:ember_ash_wastes",
+        "huntcraft:ember_basalt_deltas",
+        "huntcraft:ember_lava_lake",
+        "huntcraft:ember_fumaroles",
+        "huntcraft:ember_lava_tube"
       ]
     }
   }

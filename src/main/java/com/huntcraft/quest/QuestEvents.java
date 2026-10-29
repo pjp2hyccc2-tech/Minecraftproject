@@ -3,12 +3,15 @@ package com.huntcraft.quest;
 import com.huntcraft.HuntCraft;
 import com.huntcraft.core.HCDimensions;
 import com.huntcraft.core.HCEvents;
+import com.huntcraft.data.HunterData;
 import com.huntcraft.entity.monster.HuntMonster;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -16,6 +19,7 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -146,6 +150,20 @@ public final class QuestEvents {
         if (!QuestManager.data(sl.getServer()).instances.containsKey(hm.getQuestId())) event.setCanceled(true);
     }
 
+    /** Quest monsters never die to the environment (lava, drowning, suffocation, falls...) on quest maps. */
+    @SubscribeEvent
+    public static void onMonsterAttacked(LivingAttackEvent event) {
+        if (!(event.getEntity() instanceof HuntMonster) || event.getEntity().level().isClientSide) return;
+        if (!HCDimensions.isQuestMap(event.getEntity().level())) return;
+        DamageSource src = event.getSource();
+        if (src.is(DamageTypes.LAVA) || src.is(DamageTypes.IN_FIRE) || src.is(DamageTypes.ON_FIRE) || src.is(DamageTypes.HOT_FLOOR)
+                || src.is(DamageTypes.DROWN) || src.is(DamageTypes.IN_WALL) || src.is(DamageTypes.CRAMMING) || src.is(DamageTypes.FALL)
+                || src.is(DamageTypes.FREEZE)) {
+            event.setCanceled(true);
+            if (event.getEntity().isOnFire() && !src.is(DamageTypes.LAVA)) event.getEntity().clearFire();
+        }
+    }
+
     // ------------------------------------------------------------------ quest maps are protected terrain
     private static boolean protectedFor(Player p, Level level) {
         return p != null && !p.isCreative() && HCDimensions.isQuestMap(level);
@@ -166,7 +184,7 @@ public final class QuestEvents {
         if (HCDimensions.isQuestMap(event.getLevel())) event.getAffectedBlocks().clear();
     }
 
-    /** Tent beds heal instead of setting the spawn point. */
+    /** Tent beds heal (health + stamina) instead of setting the spawn point. */
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Level level = event.getLevel();
@@ -175,6 +193,11 @@ public final class QuestEvents {
         event.setCancellationResult(InteractionResult.SUCCESS);
         if (!level.isClientSide && event.getEntity() instanceof ServerPlayer sp) {
             sp.setHealth(sp.getMaxHealth());
+            sp.clearFire();
+            HunterData d = HunterData.get(sp);
+            d.stamina = d.maxStamina;
+            d.exhausted = false;
+            d.markDirty();
             sp.displayClientMessage(Component.translatable("message.huntcraft.quest.rested"), true);
         }
     }

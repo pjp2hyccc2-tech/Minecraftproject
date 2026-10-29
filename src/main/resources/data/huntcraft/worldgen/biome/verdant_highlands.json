@@ -31,9 +31,7 @@
   "features": [
     [],
     [],
-    [
-      "huntcraft:verdant_boulders"
-    ],
+    [],
     [],
     [],
     [],
@@ -41,12 +39,8 @@
     [],
     [],
     [
-      "minecraft:trees_plains",
       "minecraft:flower_default",
-      "minecraft:patch_grass_plain",
-      "huntcraft:verdant_herb_points",
-      "huntcraft:verdant_bone_points",
-      "huntcraft:verdant_mining_points"
+      "minecraft:patch_grass_plain"
     ],
     []
   ]

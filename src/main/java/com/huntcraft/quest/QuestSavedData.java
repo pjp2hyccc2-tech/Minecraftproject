@@ -1,9 +1,7 @@
 package com.huntcraft.quest;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -14,13 +12,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/** Persistent quest state (stored with the overworld): running instances, region slots, camp sites, offline results. */
+/** Persistent quest state (stored with the overworld): running instances, region slots, offline results. */
 public final class QuestSavedData extends SavedData {
     public static final String NAME = "huntcraft_quests";
 
     public final Map<String, QuestInstance> instances = new LinkedHashMap<>();
     public final Map<String, BitSet> usedSlots = new HashMap<>();
-    public final Map<String, BlockPos> camps = new HashMap<>();
     /** Results of quests that ended while a member was offline (applied on next login). */
     public final Map<UUID, CompoundTag> pendingResults = new HashMap<>();
     private int counter;
@@ -57,9 +54,6 @@ public final class QuestSavedData extends SavedData {
         ListTag list = new ListTag();
         for (QuestInstance i : instances.values()) list.add(i.save());
         tag.put("instances", list);
-        CompoundTag camp = new CompoundTag();
-        camps.forEach((k, v) -> camp.put(k, NbtUtils.writeBlockPos(v)));
-        tag.put("camps", camp);
         CompoundTag pend = new CompoundTag();
         pendingResults.forEach((k, v) -> pend.put(k.toString(), v));
         tag.put("pending", pend);
@@ -81,8 +75,6 @@ public final class QuestSavedData extends SavedData {
                 com.huntcraft.HuntCraft.LOGGER.warn("Skipping broken quest instance", e);
             }
         }
-        CompoundTag camp = tag.getCompound("camps");
-        for (String k : camp.getAllKeys()) d.camps.put(k, NbtUtils.readBlockPos(camp.getCompound(k)));
         CompoundTag pend = tag.getCompound("pending");
         for (String k : pend.getAllKeys()) {
             try {

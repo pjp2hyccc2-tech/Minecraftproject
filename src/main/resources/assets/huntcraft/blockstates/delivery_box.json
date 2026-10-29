@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "huntcraft:block/delivery_box"
+    },
+    "facing=east": {
+      "model": "huntcraft:block/delivery_box",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "huntcraft:block/delivery_box",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "huntcraft:block/delivery_box",
+      "y": 270
+    }
+  }
+}

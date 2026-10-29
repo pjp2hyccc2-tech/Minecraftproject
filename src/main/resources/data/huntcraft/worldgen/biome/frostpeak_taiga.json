@@ -13,7 +13,7 @@
       "options": {
         "type": "minecraft:snowflake"
       },
-      "probability": 0.012
+      "probability": 0.01
     },
     "mood_sound": {
       "sound": "minecraft:ambient.cave",
@@ -46,11 +46,9 @@
     [],
     [
       "minecraft:trees_taiga",
-      "minecraft:brown_mushroom_taiga",
-      "huntcraft:frostpeak_herb_points",
-      "huntcraft:frostpeak_mushroom_points",
-      "huntcraft:frostpeak_bug_points",
-      "huntcraft:frostpeak_bone_points"
+      "minecraft:patch_large_fern",
+      "minecraft:patch_grass_taiga",
+      "minecraft:brown_mushroom_taiga"
     ],
     [
       "minecraft:freeze_top_layer"
