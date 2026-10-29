@@ -1,0 +1,269 @@
+{
+ "weapon.swing_heavy": {
+  "subtitle": "subtitles.huntcraft.weapon.swing",
+  "sounds": [
+   {
+    "name": "minecraft:entity/player/attack/sweep1",
+    "pitch": 0.6
+   },
+   {
+    "name": "minecraft:entity/player/attack/sweep2",
+    "pitch": 0.55
+   },
+   {
+    "name": "minecraft:entity/player/attack/sweep3",
+    "pitch": 0.65
+   }
+  ]
+ },
+ "weapon.swing_light": {
+  "subtitle": "subtitles.huntcraft.weapon.swing",
+  "sounds": [
+   {
+    "name": "minecraft:entity/player/attack/sweep4",
+    "pitch": 1.3,
+    "volume": 0.8
+   },
+   {
+    "name": "minecraft:entity/player/attack/sweep5",
+    "pitch": 1.4,
+    "volume": 0.8
+   },
+   {
+    "name": "minecraft:entity/player/attack/sweep6",
+    "pitch": 1.35,
+    "volume": 0.8
+   }
+  ]
+ },
+ "weapon.slam": {
+  "subtitle": "subtitles.huntcraft.weapon.slam",
+  "sounds": [
+   {
+    "name": "minecraft:random/explode1",
+    "pitch": 1.4,
+    "volume": 0.55
+   },
+   {
+    "name": "minecraft:random/explode2",
+    "pitch": 1.5,
+    "volume": 0.55
+   },
+   {
+    "name": "minecraft:random/explode3",
+    "pitch": 1.45,
+    "volume": 0.55
+   }
+  ]
+ },
+ "weapon.guard": {
+  "subtitle": "subtitles.huntcraft.weapon.guard",
+  "sounds": [
+   {
+    "name": "minecraft:item/shield/block1",
+    "pitch": 0.9
+   },
+   {
+    "name": "minecraft:item/shield/block2",
+    "pitch": 0.9
+   },
+   {
+    "name": "minecraft:item/shield/block3",
+    "pitch": 0.85
+   }
+  ]
+ },
+ "weapon.spirit_up": {
+  "subtitle": "subtitles.huntcraft.weapon.spirit_up",
+  "sounds": [
+   {
+    "name": "minecraft:block/amethyst/resonate1",
+    "pitch": 1.4
+   },
+   {
+    "name": "minecraft:block/amethyst/resonate2",
+    "pitch": 1.5
+   }
+  ]
+ },
+ "weapon.spirit_slash": {
+  "subtitle": "subtitles.huntcraft.weapon.spirit_slash",
+  "sounds": [
+   {
+    "name": "minecraft:entity/player/attack/sweep1",
+    "pitch": 1.6,
+    "volume": 0.9
+   },
+   {
+    "name": "minecraft:entity/player/attack/sweep2",
+    "pitch": 1.7,
+    "volume": 0.9
+   }
+  ]
+ },
+ "weapon.foresight": {
+  "subtitle": "subtitles.huntcraft.weapon.foresight",
+  "sounds": [
+   {
+    "name": "minecraft:item/trident/riptide1",
+    "pitch": 1.5,
+    "volume": 0.6
+   }
+  ]
+ },
+ "weapon.demon_on": {
+  "subtitle": "subtitles.huntcraft.weapon.demon_on",
+  "sounds": [
+   {
+    "name": "minecraft:mob/ghast/fireball4",
+    "pitch": 0.7,
+    "volume": 0.8
+   }
+  ]
+ },
+ "weapon.demon_off": {
+  "subtitle": "subtitles.huntcraft.weapon.demon_off",
+  "sounds": [
+   {
+    "name": "minecraft:random/fizz",
+    "pitch": 1.2,
+    "volume": 0.6
+   }
+  ]
+ },
+ "weapon.blade_dance": {
+  "subtitle": "subtitles.huntcraft.weapon.blade_dance",
+  "sounds": [
+   {
+    "name": "minecraft:entity/player/attack/sweep5",
+    "pitch": 1.8
+   },
+   {
+    "name": "minecraft:entity/player/attack/sweep6",
+    "pitch": 1.9
+   }
+  ]
+ },
+ "weapon.bash": {
+  "subtitle": "subtitles.huntcraft.weapon.bash",
+  "sounds": [
+   {
+    "name": "minecraft:random/anvil_land",
+    "pitch": 1.4,
+    "volume": 0.45
+   }
+  ]
+ },
+ "weapon.counter": {
+  "subtitle": "subtitles.huntcraft.weapon.counter",
+  "sounds": [
+   {
+    "name": "minecraft:item/trident/pierce1",
+    "pitch": 1.1
+   },
+   {
+    "name": "minecraft:item/trident/pierce2",
+    "pitch": 1.2
+   }
+  ]
+ },
+ "weapon.dash": {
+  "subtitle": "subtitles.huntcraft.weapon.dash",
+  "sounds": [
+   {
+    "name": "minecraft:mob/ravager/step1",
+    "pitch": 1.2,
+    "volume": 0.8
+   },
+   {
+    "name": "minecraft:mob/ravager/step2",
+    "pitch": 1.25,
+    "volume": 0.8
+   },
+   {
+    "name": "minecraft:mob/ravager/step3",
+    "pitch": 1.15,
+    "volume": 0.8
+   }
+  ]
+ },
+ "weapon.horn_note1": {
+  "subtitle": "subtitles.huntcraft.weapon.horn",
+  "sounds": [
+   {
+    "name": "minecraft:note/flute"
+   }
+  ]
+ },
+ "weapon.horn_note2": {
+  "subtitle": "subtitles.huntcraft.weapon.horn",
+  "sounds": [
+   {
+    "name": "minecraft:note/bell"
+   }
+  ]
+ },
+ "weapon.horn_note3": {
+  "subtitle": "subtitles.huntcraft.weapon.horn",
+  "sounds": [
+   {
+    "name": "minecraft:note/didgeridoo"
+   }
+  ]
+ },
+ "weapon.horn_song": {
+  "subtitle": "subtitles.huntcraft.weapon.horn_song",
+  "sounds": [
+   {
+    "name": "minecraft:note/icechime"
+   },
+   {
+    "name": "minecraft:note/pling"
+   }
+  ]
+ },
+ "weapon.bow_shot": {
+  "subtitle": "subtitles.huntcraft.weapon.bow_shot",
+  "sounds": [
+   {
+    "name": "minecraft:random/bow",
+    "pitch": 1.1
+   }
+  ]
+ },
+ "weapon.bow_draw": {
+  "subtitle": "subtitles.huntcraft.weapon.bow_draw",
+  "sounds": [
+   {
+    "name": "minecraft:item/crossbow/loading_middle1",
+    "pitch": 1.3,
+    "volume": 0.8
+   },
+   {
+    "name": "minecraft:item/crossbow/loading_middle2",
+    "pitch": 1.3,
+    "volume": 0.8
+   }
+  ]
+ },
+ "weapon.coat_switch": {
+  "subtitle": "subtitles.huntcraft.weapon.coat_switch",
+  "sounds": [
+   {
+    "name": "minecraft:item/crossbow/loading_end",
+    "pitch": 1.6,
+    "volume": 0.7
+   }
+  ]
+ },
+ "weapon.sharpen_done": {
+  "subtitle": "subtitles.huntcraft.weapon.sharpen_done",
+  "sounds": [
+   {
+    "name": "minecraft:random/anvil_use",
+    "pitch": 1.8,
+    "volume": 0.5
+   }
+  ]
+ }
+}
