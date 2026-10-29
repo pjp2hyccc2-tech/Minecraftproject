@@ -696,9 +696,9 @@ def _horn_hd(mat, X, Y, fw, fh, seed, out):
     ring_i = np.floor(ph).astype(np.int64)
     rt = ph - ring_i
     amp = 0.45 + hash2(ring_i, ring_i * 0, seed + 1) * 0.8
-    crease = (np.exp(-(rt / 0.06) ** 2) + np.exp(-((1 - rt) / 0.06) ** 2)) * 0.09 * amp
-    ridge = (rt - 0.5) * 0.05 * amp
-    band = (vnoise2(ph * 0.22, a * 0.3 + 2.0, seed + 2) - 0.5) * 0.14
+    crease = (np.exp(-(rt / 0.07) ** 2) + np.exp(-((1 - rt) / 0.07) ** 2)) * 0.13 * amp
+    ridge = (rt - 0.5) * 0.07 * amp
+    band = (vnoise2(ph * 0.22, a * 0.3 + 2.0, seed + 2) - 0.5) * 0.16
     fib = (vnoise2(across * min(1.6 / s, _fmax()), along * 0.04 / s, seed + 4) - 0.5) * 0.04 * mat.micro
     d = cyl * 0.14 - 0.07 + hl * 0.09 * (0.5 + mat.hd('gloss')) + ridge - crease + band + fib + _grain(X, Y, seed + 7, 0.02, mat)
     out['height'] = np.clip(0.3 + cyl * 0.45 + ridge * 2.0 - crease * 2.0, 0, 1)
