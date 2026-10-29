@@ -292,9 +292,11 @@ def gait(anim, period, phases, amp_f, amp_h, duty=0.62, lift_f=1.0, lift_h=1.0, 
     for side in ('l', 'r'):
         ph = phases['%sf' % side]
         up, fa, pw = FRONT[side]
-        A.sample(anim, up, 'rotation', lambda t, ph=ph: (amp_f * _cyc(t / period + ph, duty)[0] - 18 * lift_f * _cyc(t / period + ph, duty)[1], 0, 0), steps)
-        A.sample(anim, fa, 'rotation', lambda t, ph=ph: (48 * lift_f * _cyc(t / period + ph, duty)[1] - amp_f * 0.35 * _cyc(t / period + ph, duty)[0], 0, 0), steps)
-        A.sample(anim, pw, 'rotation', lambda t, ph=ph: (-amp_f * 0.65 * _cyc(t / period + ph, duty)[0] + 40 * lift_f * _cyc(t / period + ph, duty)[1], 0, 0), steps)
+        A.sample(anim, up, 'rotation', lambda t, ph=ph: (amp_f * _cyc(t / period + ph, duty)[0] - 22 * lift_f * _cyc(t / period + ph, duty)[1], 0, 0), steps)
+        # the shoulder rises during the swing so the flexed paw clears the ground (it sank 0.5 blocks into it before)
+        A.sample(anim, up, 'position', lambda t, ph=ph: (0, -9 * lift_f * _cyc(t / period + ph, duty)[1], 0), steps)
+        A.sample(anim, fa, 'rotation', lambda t, ph=ph: (52 * lift_f * _cyc(t / period + ph, duty)[1] - amp_f * 0.35 * _cyc(t / period + ph, duty)[0], 0, 0), steps)
+        A.sample(anim, pw, 'rotation', lambda t, ph=ph: (-amp_f * 0.65 * _cyc(t / period + ph, duty)[0] + 20 * lift_f * _cyc(t / period + ph, duty)[1], 0, 0), steps)
         ph = phases['%sh' % side]
         th, sh, mt, hp = HIND[side]
         A.sample(anim, th, 'rotation', lambda t, ph=ph: (amp_h * _cyc(t / period + ph, duty)[0] - 16 * lift_h * _cyc(t / period + ph, duty)[1], 0, 0), steps)
