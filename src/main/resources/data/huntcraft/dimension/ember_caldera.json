@@ -1,0 +1,19 @@
+{
+  "type": "huntcraft:quest_map_ember",
+  "generator": {
+    "type": "huntcraft:quest_map",
+    "map": "ember_caldera",
+    "biome_source": {
+      "type": "huntcraft:quest_map",
+      "map": "ember_caldera",
+      "biomes": [
+        "huntcraft:ember_outer_slopes",
+        "huntcraft:ember_ash_wastes",
+        "huntcraft:ember_basalt_deltas",
+        "huntcraft:ember_lava_lake",
+        "huntcraft:ember_fumaroles",
+        "huntcraft:ember_lava_tube"
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "huntcraft:block/camp_flag"
+    },
+    "facing=east": {
+      "model": "huntcraft:block/camp_flag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "huntcraft:block/camp_flag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "huntcraft:block/camp_flag",
+      "y": 270
+    }
+  }
+}

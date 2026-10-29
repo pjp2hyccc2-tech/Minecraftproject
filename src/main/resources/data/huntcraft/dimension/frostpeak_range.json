@@ -1,0 +1,19 @@
+{
+  "type": "huntcraft:quest_map_frost",
+  "generator": {
+    "type": "huntcraft:quest_map",
+    "map": "frostpeak_range",
+    "biome_source": {
+      "type": "huntcraft:quest_map",
+      "map": "frostpeak_range",
+      "biomes": [
+        "huntcraft:frostpeak_taiga",
+        "huntcraft:frostpeak_snowfield",
+        "huntcraft:frostpeak_glacier",
+        "huntcraft:frostpeak_summit",
+        "huntcraft:frostpeak_hot_spring",
+        "huntcraft:frostpeak_ice_cave"
+      ]
+    }
+  }
+}

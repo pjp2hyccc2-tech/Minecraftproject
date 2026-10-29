@@ -1,0 +1,19 @@
+{
+  "type": "huntcraft:quest_map",
+  "generator": {
+    "type": "huntcraft:quest_map",
+    "map": "verdant_hills",
+    "biome_source": {
+      "type": "huntcraft:quest_map",
+      "map": "verdant_hills",
+      "biomes": [
+        "huntcraft:verdant_meadow",
+        "huntcraft:verdant_forest",
+        "huntcraft:verdant_highlands",
+        "huntcraft:verdant_riverside",
+        "huntcraft:verdant_clearing",
+        "huntcraft:verdant_cave"
+      ]
+    }
+  }
+}
