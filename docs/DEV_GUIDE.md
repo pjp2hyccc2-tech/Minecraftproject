@@ -143,9 +143,27 @@ Read `monster/ignivald/*` and `tools/models/ignivald.py` — copy that structure
 * Texel density 1 texel = 1/16 block (don't shrink models and upscale). Large monsters: 3–6 blocks tall,
   bounding box ~3×3; small monsters ~1–2 blocks. Use helpers in `hcmodel/parts.py` and `hcmodel/anim.py`.
 * Model `config`: `head_bones` ([[bone, weight]…] for head look), `walk_speed`, `run_speed`, `walk_scale`.
+* **HD textures** (`paint.TEXEL = 4`, default): the PNG has `texel_for(model)` texels per model pixel (4 for large
+  monsters → 2048×1024, up to 6 for small models; the JSON keeps its 1× `texture_width/height`, entity UVs are
+  normalised). Materials are painted with continuous HD patterns (overlapping scutes, rounded scales, tufted fur,
+  veined membranes, ember cracks, facets…) and every face is tone-calibrated to the 1× pixel-art painter, so the
+  colour identity of the old textures is kept when box-filtered. Glow rules unchanged (`*_glow.png`, emissive
+  texels masked to opaque base texels; keep the lit ratio ≤ 0.15, `tools/hcmodel/hdcheck.py <script> [--export]`
+  prints it and writes `tools/preview/<id>_hd.png` close-ups; `tools/hcmodel/swatches.py` renders a material sheet).
+  Pixel-art post passes (`smallkit.stamp / stamp_eyes / accent_pass / pixel_pass`) are replayed onto the HD texture
+  with rounded anti-aliased shapes (`hcmodel/hdup.py`). `model.hd_detail` overrides the feature-size factor;
+  `paint.TEXEL = 1` restores the legacy painter. Always run scripts with `PYTHONHASHSEED=0` (cube seeds use `hash()`).
+* **LabPBR maps** (`paint.PBR = True`): `<texture>_n.png` = RG tangent-space normal (OpenGL +Y up, 128 = flat),
+  B = ambient occlusion (255 = none), A = height; `<texture>_s.png` = R perceptual smoothness, G F0 (≥ 230 = metal),
+  B porosity (0–64) / subsurface (65–255), A emissive (255 = none, lower = lit). Written next to every monster,
+  NPC / Mofu, dummy and armor layer texture (same size as the colour map); shader packs that do not use them ignore them.
+* Other HD art: `tools/art/armor.py` (armor layers 512×256 via `platepaint.HDContext`, `--1x` for legacy; geometry
+  Java unchanged), `tools/weapons/gen_art.py` (64×64 supersampled icons, `--1x`), `tools/art/icons.py` (32×32,
+  `pix.HD`), `tools/art/sprites.py` / `tools/village/gen_blocks.py` (blocks 64×64, projectiles 64×64, effect icons
+  36×36 through the edge-aware upscaler `tools/art/hdpost.py`; quest-module blocks: `python3 tools/art/hdpost.py <png>…`).
 
 ## 6. Items, weapons, armor conventions
-* Item textures 16×16 (weapons may use 32×32), item model `{"parent":"minecraft:item/handheld","textures":{"layer0":"huntcraft:item/<id>"}}`
+* Item textures: 16×16 design, written HD as 32×32 (weapons 64×64; keep items ≤ 64×64 — bigger PNGs make heavy in-hand meshes), item model `{"parent":"minecraft:item/handheld","textures":{"layer0":"huntcraft:item/<id>"}}`
   (or `item/generated` for non-tools). Names in lang fragments `item.huntcraft.<id>` + `item.huntcraft.<id>.desc`.
 * Weapons implement `IHunterWeapon` + `IUpgradeable` (level in NBT `HCLevel`); recipes go to `SmithingRegistry`.
 * Armor items extend `ArmorItem`; skills reach the game through `HunterSkills.setProvider(...)` (armor module).
