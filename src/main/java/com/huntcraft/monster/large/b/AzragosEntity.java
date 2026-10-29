@@ -161,9 +161,10 @@ public class AzragosEntity extends LargeMonster {
                 .sweep(24, 28, 0.5F, 5.6F, -75, 45, 3.2F, 16, Element.NONE, 1.8F)
                 .sound(24, HCSounds.TAIL_SWING, 2.2F, 1.0F)
                 .build();
-        // tail blade sweep from the right side, through the back, to the left
+        // tail blade sweep: the body pivots and the blade swings low from the right side, through the back, to the left
+        // (arc and timing measured from the animation: blade at ~125 deg on tick 14, ~250 deg on tick 24, reach ~5.5)
         MonsterAttack tailSweep = TimelineAttack.builder("tail_sweep", 40).range(0, 8).angle(180).weight(9).cooldown(70)
-                .sweep(14, 24, 1.5F, 7.8F, 80, 280, 3.0F, 18, Element.NONE, 2.6F)
+                .sweep(14, 24, 1.5F, 6.6F, 105, 265, 3.0F, 18, Element.NONE, 2.6F)
                 .sound(14, HCSounds.TAIL_SWING, 2.8F, 0.6F).sound(19, HCSounds.TAIL_SWING, 2.6F, 0.7F)
                 .build();
         // sweeping dragon beam (left to right across the target)

@@ -17,6 +17,40 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from hcmodel import Model, anim as A  # noqa: E402
 from hcmodel.paint import M  # noqa: E402
 from hcmodel.parts import mirror_tree, head_eyes, tail_chain, spike_plane  # noqa: E402
+import numpy as np  # noqa: E402
+from PIL import Image  # noqa: E402
+import hcmodel.paint as PAINT  # noqa: E402
+
+# ------------------------------------------------------------------ emissive fixes (script-local patches of the painter)
+# 1) paint.py bug: a glowing ACCENT material on a non-glowing base copies the accent's glow onto the WHOLE face
+#    ("gl = agl if gl is None"), so every rune-veined face became fully emissive (84 % of the body glowed pink in game:
+#    the _glow layer is drawn additively and full-bright). Returning an empty glow array instead of None makes the
+#    accent mask apply.
+_orig_shade = PAINT._shade
+
+
+def _shade_masked(*args, **kwargs):
+    rgb, gl = _orig_shade(*args, **kwargs)
+    if gl is None:
+        gl = np.zeros(rgb.shape[:2] + (4,))
+    return rgb, gl
+
+
+PAINT._shade = _shade_masked
+# 2) never glow where the base texture is cut out (the glow layer would light up the holes of membranes / blades)
+_orig_paint_model = PAINT.paint_model
+
+
+def _paint_model_masked(model, seed=1):
+    img, glow = _orig_paint_model(model, seed)
+    if glow is not None:
+        g = np.array(glow)
+        g[np.asarray(img)[..., 3] < 26] = 0
+        glow = Image.fromarray(g, 'RGBA')
+    return img, glow
+
+
+PAINT.paint_model = _paint_model_masked
 
 # ------------------------------------------------------------------ materials (module-local)
 M('azg_scale', ['#0b0714', '#190f2a', '#281842', '#3b235c', '#523279', '#6e4898'], 'scales', scale=1.5, belly='azg_belly',
@@ -514,16 +548,18 @@ for side in ('l', 'r'):
     leg_keys(a, 'hind', side, [(0, (0, 0, 0)), (0.5, (-10, 12, 10)), (1.5, (-10, 12, 10)), (2.2, (0, 0, 0))])
 tail_keys(a, [(0, (0, 0, 0)), (0.5, (2, -6, 0)), (0.8, (2, 6, 0)), (1.1, (2, 6, 0)), (1.4, (2, -6, 0)), (2.2, (0, 0, 0))])
 
-# tail_sweep: 40 ticks; blade sweeps from the right, behind, to the left @14-24
+# tail_sweep: 40 ticks; the body pivots on the hind legs and the bladed tail sweeps LOW from the right, behind, to the
+# left @14-24 (body yaw and tail bend reinforce each other; the neck counter-turns so the head keeps facing forward)
 a = T('tail_sweep', 2.0)
-P(a, 'body', 'rotation', (0, (0, 0, 0)), (0.65, (0, 18, 3)), (0.95, (0, -6, 0)), (1.25, (0, -22, -3)), (1.6, (0, -6, 0)), (2.0, (0, 0, 0)))
-P(a, 'body', 'position', (0, (0, 0, 0)), (0.65, (0, 2, 0)), (1.25, (0, 1, 0)), (2.0, (0, 0, 0)))
-neck_keys(a, [(0, (0, 0, 0)), (0.65, (6, -26, 0)), (1.25, (0, 22, 0)), (2.0, (0, 0, 0))])
-tail_keys(a, [(0, (0, 0, 0)), (0.65, (3, -15, 0)), (0.72, (3, -16, 0)), (0.95, (4, -2, 0)), (1.2, (3, 16, 0)), (1.4, (2, 20, 0)), (1.7, (0, 4, 0)), (2.0, (0, 0, 0))], growth=1.06)
-P(a, 'tail_blade', 'rotation', (0, (0, 0, 0)), (0.7, (0, -18, 0)), (1.2, (0, 16, 0)), (1.45, (0, 26, 0)), (1.8, (0, -4, 0)), (2.0, (0, 0, 0)))
+P(a, 'body', 'rotation', (0, (0, 0, 0)), (0.6, (2, -24, -4)), (0.7, (2, -26, -4)), (0.95, (0, 4, 0)), (1.2, (-2, 34, 5)), (1.45, (0, 30, 3)), (2.0, (0, 0, 0)))
+P(a, 'body', 'position', (0, (0, 0, 0)), (0.6, (0, 2, -1)), (1.2, (0, 1, 1)), (2.0, (0, 0, 0)))
+neck_keys(a, [(0, (0, 0, 0)), (0.6, (8, 30, 0)), (0.95, (6, 0, 0)), (1.2, (4, -28, 0)), (1.5, (0, -22, 0)), (2.0, (0, 0, 0))])
+tail_keys(a, [(0, (0, 0, 0)), (0.6, (-3, -12, 0)), (0.72, (-3, -13, 0)), (0.95, (-4, 1, 0)), (1.2, (-4, 14, 0)), (1.45, (-3, 15, 0)), (1.75, (-1, 4, 0)), (2.0, (0, 0, 0))], growth=1.06)
+P(a, 'tail_blade', 'rotation', (0, (0, 0, 0)), (0.7, (0, -18, 0)), (1.2, (0, 18, 0)), (1.45, (0, 26, 0)), (1.8, (0, -4, 0)), (2.0, (0, 0, 0)))
+P(a, 'jaw', 'rotation', (0, (0, 0, 0)), (0.6, (18, 0, 0)), (1.2, (10, 0, 0)), (1.7, (0, 0, 0)))
 for side, g in (('l', 1), ('r', -1)):
-    leg_keys(a, 'hind', side, [(0, (0, 0, 0)), (0.65, (-8 * g, 10, -2)), (1.25, (8 * g, 10, -6)), (2.0, (0, 0, 0))])
-    leg_keys(a, 'fore', side, [(0, (0, 0, 0)), (0.65, (6 * g, 6, -4)), (1.25, (-6 * g, 6, 2)), (2.0, (0, 0, 0))])
+    leg_keys(a, 'hind', side, [(0, (0, 0, 0)), (0.6, (8 * g, 10, -6)), (1.2, (-8 * g, 10, -2)), (2.0, (0, 0, 0))])
+    leg_keys(a, 'fore', side, [(0, (0, 0, 0)), (0.6, (-6 * g, 6, 2)), (1.2, (6 * g, 6, -4)), (2.0, (0, 0, 0))])
 
 # breath_beam: 70 ticks; charge 0-21, beam sweeps left->right @22-52
 a = T('breath_beam', 3.5)
