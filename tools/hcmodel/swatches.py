@@ -14,9 +14,9 @@ from PIL import Image, ImageDraw  # noqa: E402
 from hcmodel import paint as P  # noqa: E402
 from hcmodel.model import Model  # noqa: E402
 
-DEFAULT = ['ign_scale', 'ign_plate', 'ign_belly', 'frost_fur', 'boar_fur', 'ign_membrane', 'horn_dark', 'horn_ivory',
-           'bone', 'grav_rock', 'lava_rock', 'ice_crystal', 'grav_hide', 'volt_organ', 'metal', 'gold', 'cloth_red', 'wood',
-           'teeth', 'mouth']
+DEFAULT = ['ign_scale', 'ign_plate', 'ign_belly', 'azr_plate', 'frost_fur', 'boar_fur', 'mofu_ginger', 'grav_moss', 'ign_membrane', 'azr_membrane',
+           'horn_dark', 'horn_ivory', 'claw', 'bone', 'grav_rock', 'lava_rock', 'ice_crystal', 'grav_hide', 'volt_organ', 'metal',
+           'gold', 'cloth_red', 'wood', 'teeth', 'mouth']
 
 
 def swatch(name, px=24, detail=1.0, K=4):
@@ -46,19 +46,24 @@ def main():
     px = int(args[args.index('--px') + 1]) if '--px' in args else 24
     names = names or DEFAULT
     zoom = 3
-    cell = px * 4 * zoom
+    K = 4
+    cell = px * K * zoom
+    small = px * zoom          # the 1x box-filtered view, shown at the same zoom (distant-mip check)
     cols = 5
     rows = (len(names) + cols - 1) // cols
-    sheet = Image.new('RGB', (cols * (cell + 8), rows * (cell + 20)), (30, 32, 36))
+    cw, ch = cell + small + 12, cell + 20
+    sheet = Image.new('RGB', (cols * cw, rows * ch), (30, 32, 36))
     d = ImageDraw.Draw(sheet)
     for k, n in enumerate(names):
         if n not in P.MATERIALS:
             print('unknown material', n)
             continue
-        face = swatch(n, px, detail)
+        face = swatch(n, px, detail, K)
         big = face.resize((cell, cell), Image.NEAREST)
-        x, y = (k % cols) * (cell + 8), (k // cols) * (cell + 20)
+        x, y = (k % cols) * cw, (k // cols) * ch
         sheet.paste(big, (x + 4, y + 16), big)
+        one = face.resize((px, px), Image.BOX).resize((small, small), Image.NEAREST)
+        sheet.paste(one, (x + cell + 8, y + 16), one)
         d.text((x + 4, y + 2), '%s (%s)' % (n, P.MATERIALS[n].pattern), fill=(230, 230, 230))
     out = os.path.join(TOOLS, 'preview', 'swatches.png')
     os.makedirs(os.path.dirname(out), exist_ok=True)

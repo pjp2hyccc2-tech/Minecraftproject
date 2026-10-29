@@ -33,7 +33,7 @@ def downsample(img, K):
     return out
 
 
-def coverage(mask, K, radius=0.36, aa=0.14):
+def coverage(mask, K, radius=0.22, aa=0.12):
     """1x boolean mask -> HD soft coverage (0..1) with rounded corners and anti-aliased edges."""
     m = np.kron(mask.astype(float), np.ones((K, K)))
     if ndimage is None or K < 2:
@@ -91,7 +91,7 @@ def replay(img, glow, fn, K, round_shapes=True):
         rmean = ratio.mean(-1)
         mult = changed & (np.abs(ratio - rmean[..., None]).max(-1) < 0.04) & (rmean > 0.25) & (rmean < 1.6) & (a1[..., :3].min(-1) > 8)
         if mult.any():
-            cv = coverage(mult, K, radius=0.25, aa=0.2)
+            cv = coverage(mult, K, radius=0.2, aa=0.2)
             scale = np.kron(np.where(mult, rmean, 1.0), np.ones((K, K)))
             k = 1 + (scale - 1) * cv
             img[:h * K, :w * K, :3] *= k[..., None]
@@ -166,3 +166,66 @@ def grain(shape, K, seed=0, amp=0.03):
     X, Y = (I + 0.5) / K, (J + 0.5) / K
     n = (vnoise2(X * 1.3, Y * 1.3, seed) - 0.5) * 0.6 + (vnoise2(X * 3.1, Y * 3.1, seed + 5) - 0.5) * 0.4
     return 1 + n * amp * 2
+
+
+def _blend_rgb(a, cov, rgb):
+    a[..., :3] = a[..., :3] * (1 - cov[..., None]) + np.asarray(rgb, float)[None, None, :] * cov[..., None]
+    a[..., 3] = np.maximum(a[..., 3], cov * 255)
+
+
+def _ell(X, Y, cx, cy, rx, ry, soft=0.8):
+    q = np.sqrt(((X - cx) / max(rx, 1e-6)) ** 2 + ((Y - cy) / max(ry, 1e-6)) ** 2)
+    e = soft / max(rx, ry)
+    return np.clip((1 + e * 0.5 - q) / e, 0, 1)
+
+
+def eye_front(img, K, u0, v0, x, y, w, h, iris, dark=(28, 20, 18), white=(250, 250, 248), lid=True, glow=None,
+              gcol=None, pupil=0.45, shine=1.0):
+    """Anime / plush style front-facing eye drawn in HD over the 1x rect (x, y, w, h) of the face at (u0, v0)
+    (all in model px): white sclera, round iris with a darker rim and lower glow, pupil, upper lid line and a
+    big highlight.  img is the HD RGBA float array."""
+    X0, Y0 = int(u0 * K), int(v0 * K)
+    W, H = int(round(w * K)), int(round(h * K))
+    sub = img[Y0 + int(y * K):Y0 + int(y * K) + H, X0 + int(x * K):X0 + int(x * K) + W]
+    X, Y = np.meshgrid(np.arange(W) + 0.5, np.arange(H) + 0.5)
+    cx, cy = W / 2.0, H / 2.0
+    iris = np.asarray(iris, float)
+    dark = np.asarray(dark, float)
+    white = np.asarray(white, float)
+    # sclera (slightly inset rounded shape)
+    scl = _ell(X, Y, cx, cy, W / 2.0 - 0.2 * K / 4, H / 2.0 - 0.1 * K / 4)
+    _blend_rgb(sub, scl, white)
+    # iris: lower-centre, diameter ~85 % of the width
+    r = min(W, H) * 0.44
+    icy = cy + (H - 2 * r) * 0.25
+    ir = _ell(X, Y, cx, icy, r, r * 1.08) * scl
+    q = np.sqrt(((X - cx) / r) ** 2 + ((Y - icy) / (r * 1.08)) ** 2)
+    shade = 1.0 - 0.45 * np.clip((q - 0.35) / 0.65, 0, 1)
+    shade = shade * (1.0 + 0.18 * np.clip((Y - icy) / r, 0, 1))      # lighter lower half (anime glow)
+    col = np.clip(iris[None, None, :] * shade[..., None], 0, 255)
+    sub[..., :3] = sub[..., :3] * (1 - ir[..., None]) + col * ir[..., None]
+    if glow is not None and gcol is not None:
+        g = glow[Y0 + int(y * K):Y0 + int(y * K) + H, X0 + int(x * K):X0 + int(x * K) + W]
+        g[..., :3] = g[..., :3] * (1 - ir[..., None]) + np.asarray(gcol, float)[None, None, :] * ir[..., None]
+        g[..., 3] = np.maximum(g[..., 3], ir * 255)
+    # pupil
+    pr = r * pupil
+    pu = _ell(X, Y, cx, icy - r * 0.05, pr, pr * 1.15) * scl
+    sub[..., :3] = sub[..., :3] * (1 - pu[..., None]) + (dark * 0.6)[None, None, :] * pu[..., None]
+    # upper lid: dark band along the top (thicker at the outer corner) + soft shadow on the sclera
+    if lid:
+        t = (0.28 * K) + 0.1 * K * (1 - np.cos((X / W) * np.pi))        # thickness grows to the right (outer)
+        lidm = np.clip((t - Y) / (0.25 * K) + 0.5, 0, 1) * np.clip(scl * 1.5 + (Y < t), 0, 1)
+        sh = np.clip(1 - (Y - t) / (0.6 * K), 0, 1) * scl * 0.35
+        sub[..., :3] = sub[..., :3] * (1 - sh[..., None] * 0.6)
+        sub[..., :3] = sub[..., :3] * (1 - lidm[..., None]) + dark[None, None, :] * lidm[..., None]
+        sub[..., 3] = np.maximum(sub[..., 3], lidm * 255)
+    # highlights
+    hl = _ell(X, Y, cx - r * 0.38, icy - r * 0.42, r * 0.32 * shine, r * 0.30 * shine) * scl
+    hl2 = _ell(X, Y, cx + r * 0.35, icy + r * 0.35, r * 0.14, r * 0.14) * scl * 0.7
+    cov = np.clip(hl + hl2, 0, 1)
+    sub[..., :3] = sub[..., :3] * (1 - cov[..., None]) + white[None, None, :] * cov[..., None]
+
+
+def texel(img, model):
+    return max(1, int(np.asarray(img).shape[0] // model.tex_h))

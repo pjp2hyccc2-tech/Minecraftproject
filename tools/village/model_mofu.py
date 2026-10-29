@@ -325,9 +325,8 @@ def add_animations(m, b):
 
 
 # ------------------------------------------------------------------ face painting
-def paint_face(img, skull, muzzle, pattern):
-    """Big round eyes, pink nose, mouth and whiskers on the head's north faces."""
-    a = np.asarray(img).copy()
+def _face_1x(a, skull, muzzle, pattern, eyes=True):
+    """1x pixel-art face: eyes (3x3, dark top with a highlight, bright iris below), blush, nose and mouth."""
     _, _, eye, _ = FUR[pattern]
     eyec = P.hexrgb(eye)
     u, v, w, h = skull.face_rects()['north']      # 10 x 8
@@ -338,15 +337,16 @@ def paint_face(img, skull, muzzle, pattern):
         a[v + y, u + x, :3] = c
         a[v + y, u + x, 3] = 255
 
-    for ex in (1, 6):                               # eyes: 3x3, dark top with a highlight, bright iris below
-        for dx in range(3):
-            px(ex + dx, 2, dark)
-        px(ex, 3, white * 0.96)
-        px(ex + 1, 3, dark)
-        px(ex + 2, 3, eyec * 0.35 + dark * 0.65)
-        px(ex, 4, eyec * 0.85)
-        px(ex + 1, 4, np.minimum(eyec * 1.15, 255))
-        px(ex + 2, 4, eyec * 0.85)
+    if eyes:
+        for ex in (1, 6):
+            for dx in range(3):
+                px(ex + dx, 2, dark)
+            px(ex, 3, white * 0.96)
+            px(ex + 1, 3, dark)
+            px(ex + 2, 3, eyec * 0.35 + dark * 0.65)
+            px(ex, 4, eyec * 0.85)
+            px(ex + 1, 4, np.minimum(eyec * 1.15, 255))
+            px(ex + 2, 4, eyec * 0.85)
     # brows / fur above eyes stays; blush under eyes
     blush = np.array([236, 150, 160])
     for x in (0, 9):
@@ -358,10 +358,23 @@ def paint_face(img, skull, muzzle, pattern):
     a[mv + 1, mu + 1:mu + 3, :3] = dark
     a[mv + 2, mu, :3] = dark
     a[mv + 2, mu + 3, :3] = dark
-    # whiskers on the cheeks' north faces
-    for cname in ('cheek_l', 'cheek_r'):
-        pass
-    return Image.fromarray(a, 'RGBA')
+
+
+def paint_face(img, skull, muzzle, pattern):
+    """Big round eyes, pink nose, mouth and whiskers on the head's north faces.  HD textures: nose / mouth /
+    blush are replayed from the 1x pixel art, the eyes are drawn as proper anti-aliased plush eyes."""
+    a = np.asarray(img).astype(float).copy()
+    K = a.shape[0] // skull.bone.model.tex_h
+    if K == 1:
+        _face_1x(a, skull, muzzle, pattern)
+    else:
+        from hcmodel.hdup import replay, eye_front
+        replay(a, None, lambda a1, g1: _face_1x(a1, skull, muzzle, pattern, eyes=False), K)
+        _, _, eye, _ = FUR[pattern]
+        u, v, w, h = skull.face_rects()['north']
+        for ex in (1, 6):
+            eye_front(a, K, u, v, ex, 2, 3, 3, P.hexrgb(eye), (28, 20, 18), (250, 250, 248), lid=True, pupil=0.42, shine=1.1)
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), 'RGBA')
 
 
 def find(m, name):
@@ -381,22 +394,30 @@ def whiskers(img, m):
 
 
 def inner_ears(img, m):
-    a = np.asarray(img).copy()
-    pink = P.hexrgb('#e8a0aa')
-    deep = P.hexrgb('#c87884')
-    for side in ('l', 'r'):
-        u, v, w, h = find(m, 'ear_base_' + side).face_rects()['north']   # 4 x 2
-        a[v:v + h, u + 1:u + w - 1, :3] = [pink, deep][0]
-        a[v + h - 1, u + 1:u + w - 1, :3] = deep
-        u, v, w, h = find(m, 'ear_mid_' + side).face_rects()['north']    # 3 x 2
-        a[v + h - 1, u + 1:u + w - 1, :3] = pink
-    return Image.fromarray(a, 'RGBA')
+    def fn(a, g=None):
+        pink = P.hexrgb('#e8a0aa')
+        deep = P.hexrgb('#c87884')
+        for side in ('l', 'r'):
+            u, v, w, h = find(m, 'ear_base_' + side).face_rects()['north']   # 4 x 2
+            a[v:v + h, u + 1:u + w - 1, :3] = [pink, deep][0]
+            a[v + h - 1, u + 1:u + w - 1, :3] = deep
+            u, v, w, h = find(m, 'ear_mid_' + side).face_rects()['north']    # 3 x 2
+            a[v + h - 1, u + 1:u + w - 1, :3] = pink
+    a = np.asarray(img).astype(float).copy()
+    K = a.shape[0] // m.tex_h
+    if K == 1:
+        fn(a)
+    else:
+        from hcmodel.hdup import replay
+        replay(a, None, fn, K)
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), 'RGBA')
 
 
 def face_icon(img, skull, pattern):
     """24x24 face icon for GUIs (front of the head + ears silhouette), returns PIL image."""
     u, v, w, h = skull.face_rects()['north']
-    face = img.crop((u, v, u + w, v + h)).resize((20, 16), Image.NEAREST)
+    K = img.height // skull.bone.model.tex_h
+    face = img.crop((u * K, v * K, (u + w) * K, (v + h) * K)).resize((20, 16), Image.LANCZOS if K > 1 else Image.NEAREST)
     out = Image.new('RGBA', (24, 24), (0, 0, 0, 0))
     base = P.hexrgb(FUR[pattern][0][3])
     dark = P.hexrgb(FUR[pattern][0][1])
@@ -428,6 +449,7 @@ def main():
         img = paint_face(img, skull, muzzle, pat)
         img = inner_ears(img, m)
         img.save(os.path.join(ASSETS, 'textures', 'entity', 'mofu', 'mofu_%s.png' % pat))
+        P.save_pbr(m, os.path.join(ASSETS, 'textures', 'entity', 'mofu', 'mofu_%s' % pat))
         faces[pat] = face_icon(img, skull, pat)
         texs[pat] = img
     os.makedirs(os.path.join(ROOT, 'tools', 'village', 'out'), exist_ok=True)
@@ -445,6 +467,7 @@ def main():
         set_gear(tier)
         gimg, _ = P.paint_model(g)
         gimg.save(os.path.join(ASSETS, 'textures', 'entity', 'mofu', 'gear_%s.png' % tier))
+        P.save_pbr(g, os.path.join(ASSETS, 'textures', 'entity', 'mofu', 'gear_%s' % tier))
         gtex[tier] = gimg
     print('mofu', m.tex_w, m.tex_h, 'gear', g.tex_w, g.tex_h)
     if '--preview' in sys.argv:
@@ -456,9 +479,13 @@ def merged(m, g, tex, gtex, shown, gear_shown):
     from hcmodel.model import Model as Mo
     W = max(m.tex_w, g.tex_w)
     H = m.tex_h + g.tex_h
-    canvas = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    K = tex.height // m.tex_h                      # HD multiplier (the gear texture is resampled to match)
+    Kg = gtex.height // g.tex_h
+    if Kg != K:
+        gtex = gtex.resize((g.tex_w * K, g.tex_h * K), Image.LANCZOS)
+    canvas = Image.new('RGBA', (W * K, H * K), (0, 0, 0, 0))
     canvas.paste(tex, (0, 0))
-    canvas.paste(gtex, (0, m.tex_h))
+    canvas.paste(gtex, (0, m.tex_h * K))
     mm = Mo('preview', W, H)
     mm.animations = m.animations
     toggles = {'hat_chef', 'apron', 'ladle', 'kasa', 'beard', 'staff', 'haori', 'scarf'}

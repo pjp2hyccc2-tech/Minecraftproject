@@ -56,7 +56,9 @@ def main():
     else:
         img, glow = painter.paint_model(m)
     dt = time.time() - t0
-    print('%s: %dx%d (texel %d) painted in %.1fs, glow ratio %.3f' % (m.name, img.size[0], img.size[1], painter.TEXEL, dt, glow_ratio(img, glow)))
+    gr = glow_ratio(img, glow)
+    print('%s: %dx%d (texel %d, detail %.2f) painted in %.1fs, glow ratio %.3f%s' % (
+        m.name, img.size[0], img.size[1], img.size[0] // m.tex_w, painter.detail_for(m), dt, gr, '  ** TOO MUCH GLOW' if gr > 0.15 else ''))
     out = os.path.join(TOOLS, 'preview', m.name + '_hd.png')
     closeup(m, img, out, size=int(args[args.index('--size') + 1]) if '--size' in args else 640, glow=glow)
     print('wrote', out)

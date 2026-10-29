@@ -669,13 +669,42 @@ BUILDERS = {'npc_receptionist': receptionist, 'npc_blacksmith': blacksmith, 'npc
             'training_dummy': training_dummy}
 
 
+def _anime_eyes(iris, lid_dark=None, rows=(3, 3), cols=(1, 6), white=None):
+    def fn(a, m, K):
+        from hcmodel.hdup import eye_front
+        sk = find(m, 'skull')
+        u, v, w, h = sk.face_rects()['north']
+        for cx in cols:
+            eye_front(a, K, u, v, cx, rows[0], 2, rows[1], hexc(iris), DARK if lid_dark is None else hexc(lid_dark),
+                      WHITE * 0.97 if white is None else white)
+    return fn
+
+
+HD_EYES = {
+    'npc_receptionist': _anime_eyes('#a8502a'),
+    'npc_merchant': _anime_eyes('#2f8a4c'),
+    'npc_blacksmith': _anime_eyes('#2a1a12', '#2a2420', rows=(3.6, 1.6), white=WHITE * 0.92),
+}
+
+
 def build(name):
     m, decorate = BUILDERS[name]()
     m.pack()
     img, _ = P.paint_model(m)
     a = np.asarray(img).astype(float).copy()
-    decorate(a, m)
+    K = a.shape[0] // m.tex_h
+    if K > 1:
+        # pixel-art decorations are written at 1x and replayed on the HD texture (rounded, anti-aliased);
+        # the eyes are then redrawn as proper HD eyes
+        from hcmodel.hdup import replay
+        replay(a, None, lambda a1, g1: decorate(a1, m), K)
+        hd = HD_EYES.get(name)
+        if hd:
+            hd(a, m, K)
+    else:
+        decorate(a, m)
     img = Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), 'RGBA')
+    P.save_pbr(m, os.path.join(ASSETS, 'textures', 'entity', 'npc' if name.startswith('npc_') else '', name))
     os.makedirs(os.path.join(ASSETS, 'hcmodels'), exist_ok=True)
     with open(os.path.join(ASSETS, 'hcmodels', name + '.json'), 'w') as f:
         json.dump(m.to_json(), f, separators=(',', ':'))

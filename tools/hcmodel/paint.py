@@ -39,6 +39,7 @@ BAYER4 = (np.array([[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]
 _CUR_K = 1         # texel factor of the painting in progress (read by _shade when no texel= is given)
 _CUR_DETAIL = 1.0  # feature-size multiplier of the painting in progress (small models get finer patterns)
 _LAST = {}         # extra outputs of the last _shade call (height, ao, pbr) for the PBR maps
+_CUR_N = None      # model-space normal of the face being painted (read by _accent_mask for iso-surface veins)
 
 
 def hexrgb(h):
@@ -412,276 +413,422 @@ def pattern_delta(mat, I, J, w, h, seed, P):
 
 
 # ----------------------------------------------------------------------------- patterns (HD, continuous)
-def isoline(n, X, Y, width, level=0.5):
+def isoline(n, X, Y, width, level=0.5, soft=0.3):
     """Soft line (0..1) of uniform width (model px) along the iso-contour n == level of a noise field."""
     step = max(1e-6, float(X[0, 1] - X[0, 0])) if X.shape[1] > 1 else 1.0
     gy, gx = np.gradient(n)
     grad = np.sqrt(gx * gx + gy * gy) / step + 1e-6
     dist = np.abs(n - level) / grad
-    return 1 - smoothstep(width * 0.5, width * 0.5 + 0.3, dist)
+    return 1 - smoothstep(width * 0.5, width * 0.5 + soft, dist)
 
 
-def pattern_hd(mat, X, Y, fw, fh, seed):
+def _hash1(i, seed):
+    return float(_hash3(np.int64(i), np.int64(0), np.int64(0), seed))
+
+
+def _fmax():
+    """Highest useful spatial frequency (cycles per pattern px): features finer than ~2.5 texels turn to mush."""
+    return max(0.4, _CUR_K * _CUR_DETAIL / 2.5)
+
+
+def _grain(X, Y, seed, amp, mat):
+    f = min(1.5, _fmax())
+    return (vnoise2(X * f, Y * f, seed) - 0.5) * amp * mat.micro
+
+
+def _edge_width(px, K):
+    """Width of a 'thin line' in pattern px: about one texel, never thinner than 0.035 of a feature."""
+    return max(0.035, 0.9 / max(1.0, px * K))
+
+
+def _scales_hd(mat, X, Y, fw, fh, seed, out):
+    s = mat.scale
+    sw, sh = 5.0 * s, 4.0 * s
+    rowf = Y / sh
+    row = np.floor(rowf)
+    cy = rowf - row
+    off = (row.astype(np.int64) % 2) * 0.5
+    colf = X / sw + off
+    col = np.floor(colf)
+    cx = colf - col
+    yedge = 1 - 0.42 * (2 * cx - 1) ** 2
+    below = cy > yedge
+    row2 = row + 1
+    off2 = (row2.astype(np.int64) % 2) * 0.5
+    colf2 = X / sw + off2
+    col2 = np.floor(colf2)
+    cx2 = colf2 - col2
+    row = np.where(below, row2, row)
+    col = np.where(below, col2, col)
+    cx = np.where(below, cx2, cx)
+    cy = np.where(below, cy - 1, cy)
+    yedge = 1 - 0.42 * (2 * cx - 1) ** 2
+    t = (cy + 0.45) / (yedge + 0.45)                      # 0 hidden top .. 1 bottom edge
+    dome = np.sqrt(np.clip(1 - ((2 * cx - 1) * 0.92) ** 2, 0, 1))
+    coli, rowi = col.astype(np.int64), row.astype(np.int64)
+    jit = (hash2(coli, rowi, seed) - 0.5) * 0.14
+    overlap = 1 - smoothstep(0.0, 0.30, t)
+    ew = _edge_width(sh, _CUR_K * _CUR_DETAIL)
+    rim = smoothstep(0.92 - 3 * ew, 0.94 - ew, t) * (1 - smoothstep(0.95 - ew, 1.0 - ew * 0.5, t))
+    spec = np.exp(-(((cx - 0.42) / 0.24) ** 2 + ((t - 0.42) / 0.24) ** 2))
+    d = jit + 0.10 - t * 0.26 + dome * 0.16 - overlap * 0.26 + rim * 0.12 + spec * 0.10
+    d -= 0.18 * smoothstep(1.0 - ew, 1.0, t)
+    # faint keel line and fine radial ridges on every scale, plus micro grain
+    d += np.exp(-((cx - 0.5) / 0.08) ** 2) * 0.025
+    d += np.sin((cx - 0.5) * 22.0) * 0.012 * smoothstep(0.35, 0.9, t) * mat.micro
+    d += _grain(X, Y, seed + 4, 0.035, mat)
+    out['height'] = np.clip(dome * 0.5 + (1 - t) * 0.5 - overlap * 0.35, 0, 1)
+    out['outline'] = t > 1.0 - ew
+    out['ao'] = overlap * 0.55 + smoothstep(1.0 - ew, 1.0, t) * 0.5
+    hv = (hash2(coli, rowi, seed + 3) - 0.5) * 0.08
+    out['tint'] = np.stack([1 + hv, 1 + hv * 0.3, 1 - hv], -1)
+    return d
+
+
+def _plates_hd(mat, X, Y, fw, fh, seed, out):
+    """Overlapping armour scutes: rows of broad rounded plates with a random stagger per row; every plate
+    overlaps the row below (shadow under its lower edge, a lit bevel just inside it) and its right-hand
+    neighbour.  Lower edges are shallow arcs with the odd chip; the surface has small pits and scratches."""
+    s = mat.scale
+    pw, ph = 7.0 * s, 5.0 * s
+    K = _CUR_K * _CUR_DETAIL
+    Yw = Y + np.sin(X * 0.35 / s + vnoise2(X * 0.08 / s, Y * 0.08 / s, seed + 9) * 4.0) * 0.22 * s
+
+    def plate(rowf, X):
+        row = np.floor(rowf)
+        rowi = row.astype(np.int64)
+        cy = rowf - row
+        off = hash2(rowi, rowi * 0, seed + 1)
+        colf = X / pw + off
+        col = np.floor(colf)
+        coli = col.astype(np.int64)
+        cx = colf - col
+        arc = 0.16 + hash2(coli, rowi, seed + 2) * 0.16
+        yedge = 1 - arc * (2 * cx - 1) ** 2
+        chip_pos = 0.15 + hash2(coli, rowi, seed + 3) * 0.7
+        has_chip = hash2(coli, rowi, seed + 4) > 0.45
+        chip_d = 0.07 + hash2(coli, rowi, seed + 5) * 0.09
+        yedge = yedge - chip_d * np.exp(-((cx - chip_pos) / 0.05) ** 2) * has_chip
+        return rowi, coli, cx, cy, yedge
+
+    rowf = Yw / ph
+    rowi, coli, cx, cy, yedge = plate(rowf, X)
+    below = cy > yedge
+    rowi2, coli2, cx2, cy2, yedge2 = plate(rowf + 1, X)
+    rowi = np.where(below, rowi2, rowi)
+    coli = np.where(below, coli2, coli)
+    cx = np.where(below, cx2, cx)
+    cy = np.where(below, cy2 - 1, cy)
+    yedge = np.where(below, yedge2, yedge)
+    t = (cy + 0.32) / (yedge + 0.32)                       # 0 hidden top .. 1 lower edge
+    ew = _edge_width(ph, K)
+    overlap = (1 - smoothstep(0.0, 0.30, t)) * 0.22        # shadow cast by the plate above
+    rim = smoothstep(1 - 4.0 * ew, 1 - 2.0 * ew, t) * (1 - smoothstep(1 - 1.6 * ew, 1 - 0.7 * ew, t))
+    edge = smoothstep(1 - 0.9 * ew, 1.0, t)
+    # side overlap: the left neighbour lies over this plate's left edge; this plate's right edge is bevelled
+    sl = cx * pw
+    sr = (1 - cx) * pw
+    lshadow = (1 - smoothstep(0.0, 0.7 * s, sl)) * 0.14
+    rbevel = smoothstep(0.9 * s, 0.4 * s, sr) * (1 - smoothstep(0.22 * s, 0.08 * s, sr)) * 0.07
+    redge = 1 - smoothstep(0.0, 0.12 * s, sr)
+    dome = 1 - (2 * cx - 1) ** 2 * 0.30 - ((t - 0.55) * 2) ** 2 * 0.18
+    jit = (hash2(coli, rowi, seed + 6) - 0.5) * 0.11
+    # pits and scratches (sparse) + micro grain
+    pc = max(2.2 * s, 2.0 / _fmax())
+    pb, _, _, _, _ = voronoi2(X / pc, Y / pc, seed + 7)
+    pit_gate = hash2(np.floor(X / pc).astype(np.int64), np.floor(Y / pc).astype(np.int64), seed + 8) > 0.9
+    pits = (1 - smoothstep(0.06, 0.15, pb)) * pit_gate
+    scr = np.abs(fbm2(X * 0.9 + rowi * 3.1, Y * 0.14 + coli * 1.7, seed + 10, 2) - 0.5)
+    scratch = (1 - smoothstep(0.0, 0.016, scr)) * smoothstep(0.1, 0.4, t) * (1 - edge)
+    d = jit + dome * 0.14 - overlap + rim * 0.11 - edge * 0.24 - lshadow + rbevel - redge * 0.16
+    d += -pits * 0.13 * mat.micro + scratch * 0.045 * mat.micro + _grain(X, Y, seed + 11, 0.03, mat)
+    out['height'] = np.clip(0.55 + dome * 0.3 - overlap * 1.2 - edge * 0.6 - lshadow * 1.5 - pits * 0.4, 0, 1)
+    out['outline'] = edge > 0.5
+    out['ao'] = overlap * 1.8 + edge * 0.5 + lshadow * 1.5 + pits * 0.4
+    hv = (hash2(coli, rowi, seed + 12) - 0.5) * 0.06
+    out['tint'] = np.stack([1 + hv, 1 + hv * 0.4, 1 - hv], -1)
+    return d
+
+
+def _fur_hd(mat, X, Y, fw, fh, seed, out, face):
+    """Fur: thin strands hang along the flow (down the flanks, swept slightly backward; head-to-tail on top
+    faces) and are bundled into locks; every strand ends in a pale tip with the shaded root of the next strand
+    beneath it, the ends being loosely staggered so the coat breaks into soft ragged tufts."""
+    s = mat.scale
+    if face in ('top', 'bottom'):
+        Y = fh - Y                                        # flow from the head toward the tail
+    slant = 0.22 if face == 'west' else (-0.22 if face == 'east' else 0.0)
+    sway = (fbm2(X * 0.04 / s, Y * 0.03 / s, seed, 2) - 0.5) * 6.0 * s
+    Xs = X + Y * slant + sway + np.sin(Y * 0.2 / s + X * 0.05 / s) * 0.3 * s
+    fm = _fmax()
+    f1, f2 = min(1.9 / s, fm), min(3.4 / s, fm * 1.3)
+    lock = vnoise2(Xs * 0.42 / s, Y * 0.045 / s, seed + 1)
+    lock2 = vnoise2(Xs * 0.85 / s + 3.0, Y * 0.09 / s, seed + 2)
+    st = vnoise2(Xs * f1 + 7.0, Y * 0.16 / s, seed + 3)
+    st2 = vnoise2(Xs * f2 + 11.0, Y * 0.3 / s, seed + 4)
+    th = 5.0 * s
+    strc = np.floor(Xs / max(0.6 * s, 1.0 / fm)).astype(np.int64)
+    phase = fbm2(Xs * 0.2 / s, Y * 0 + 1.0, seed + 5, 2) * th * 2.0 + (hash2(strc, strc * 0, seed + 6) - 0.5) * th * 0.6
+    tt = ((Y + phase) / th) % 1.0
+    # along a strand: shaded root -> pale tip, then a short soft drop into the next root
+    seg = np.where(tt < 0.88, (tt / 0.88), 1 - (tt - 0.88) / 0.12)
+    strand_v = (seg - 0.5) * 0.18
+    rag = smoothstep(0.3, 0.7, st)
+    d = (lock - 0.5) * 0.16 + (lock2 - 0.5) * 0.12 + (st - 0.5) * 0.20 * mat.micro + (st2 - 0.5) * 0.07 * mat.micro
+    d += strand_v * (0.55 + 0.45 * rag)
+    out['height'] = np.clip(0.45 + (st - 0.5) * 0.5 + (lock - 0.5) * 0.3 + strand_v * 1.2, 0, 1)
+    out['ao'] = np.clip((0.5 - seg) * 0.4, 0, 1) + (0.5 - lock) * 0.3
+    out['rag'] = np.clip(0.5 + (st - 0.5) * 1.2 + (lock2 - 0.5) * 0.6 + (seg - 0.5) * 0.3, 0, 1)
+    hv = (lock - 0.5) * 0.10 + (fbm2(X * 0.03, Y * 0.03, seed + 8, 2) - 0.5) * 0.06
+    out['tint'] = np.stack([1 + hv, 1 + hv * 0.4, 1 - hv * 0.9], -1)
+    return d
+
+
+def _membrane_hd(mat, X, Y, fw, fh, seed, out):
+    """Wing / fin membrane: a few primary veins fanning out from the root edge to the free edge, short
+    secondary veins branching off them, a faint capillary network, and translucency that increases toward
+    the free edge and between the veins."""
+    s = mat.scale
+    vertical = fh >= fw
+    along, across = (Y, X) if vertical else (X, Y)
+    L, Wd = (fh, fw) if vertical else (fw, fh)
+    L = max(L, 1e-6)
+    u = along / L
+    n = max(2, int(round(Wd / (8.0 * s))))
+    dmin = np.full(X.shape, 99.0)
+    sec = np.zeros(X.shape)
+
+    def primary(k, uu):
+        c0 = (k + 0.5 + (_hash1(k, seed) - 0.5) * 0.5) / n * Wd
+        return Wd * 0.5 + (c0 - Wd * 0.5) * (0.82 + 0.4 * uu) + (fbm2(uu * 4.0 + k * 3.1, uu * 0 + k * 1.7, seed + 2, 2) - 0.5) * 2.6 * s
+
+    for k in range(n):
+        c = primary(k, u)
+        dmin = np.minimum(dmin, np.abs(across - c))
+        for j in range(4):
+            u0 = (j + 0.15 + _hash1(k * 7 + j, seed + 3) * 0.7) / 4.0
+            a0, b0 = u0 * L, float(primary(k, np.asarray(u0)))
+            side = 1.0 if _hash1(k * 11 + j, seed + 4) > 0.5 else -1.0
+            ln = (3.5 + _hash1(k * 13 + j, seed + 5) * 5.0) * s
+            bend = (_hash1(k * 17 + j, seed + 6) - 0.5) * 1.2
+            # curved branch: leaves the primary at ~45 deg and bends toward the free edge
+            pa = np.clip((along - a0) / ln, 0, 1)
+            cb = b0 + side * (0.7 * pa * ln + bend * pa * pa * ln) + 0.6 * s * np.sin(pa * 9.0 + k)
+            dist = np.abs(across - cb) * 0.8 + np.abs(along - a0 - pa * ln) * 0.6
+            dist = np.where((along < a0 - 0.3 * s) | (along > a0 + ln + 0.3 * s), 99.0, dist)
+            w2 = (0.24 - 0.14 * pa) * s
+            sec = np.maximum(sec, (1 - smoothstep(w2, w2 + 0.3, dist)) * (1 - smoothstep(0.85, 1.0, pa)))
+    wmain = (0.45 - 0.2 * u) * s
+    vein = 1 - smoothstep(wmain, wmain + 0.3, dmin)
+    halo = (1 - smoothstep(wmain + 0.1, wmain + 1.2 * s, dmin)) * (1 - vein) * 0.05      # pale translucent rim
+    cap = isoline(fbm2(X * 0.26 / s, Y * 0.26 / s, seed + 8, 2), X, Y, 0.2 * s) * (1 - vein) * (1 - sec)
+    trans = u * 0.12 + smoothstep(0.0, 3.0 * s, dmin) * 0.07 + (fbm2(X * 0.06, Y * 0.06, seed + 9, 2) - 0.5) * 0.08
+    wrinkle = (vnoise2(X * 0.9 / s, Y * 0.9 / s, seed + 10) - 0.5) * 0.04
+    d = trans - vein * 0.30 - sec * 0.22 - cap * 0.085 * mat.micro + halo + 0.02 + wrinkle + _grain(X, Y, seed + 6, 0.025, mat)
+    out['height'] = np.clip(0.35 + vein * 0.6 + sec * 0.4 + cap * 0.1, 0, 1)
+    out['outline'] = (vein + sec) > 0.5
+    out['ao'] = vein * 0.25
+    return d
+
+
+def _horn_hd(mat, X, Y, fw, fh, seed, out):
+    """Keratin horn / tusk / claw: a rounded cross-section with a long glossy highlight, growth rings across
+    the axis (irregular spacing, slightly curved, crisp crease on one side), broad colour bands and a very
+    faint lengthwise fibre."""
+    s = mat.scale
+    vertical = fh >= fw
+    along, across = (Y, X) if vertical else (X, Y)
+    L, Wd = (fh, fw) if vertical else (fw, fh)
+    a = across / max(Wd, 1e-6)
+    cyl = np.sqrt(np.clip(1 - (2 * a - 1) ** 2, 0, 1))
+    hl = np.exp(-((a - 0.36) / 0.13) ** 2)
+    ph = along / (1.7 * s) + (fbm2(along * 0.06 / s, across * 0.2 / s, seed, 2) - 0.5) * 1.6 + (2 * a - 1) ** 2 * 0.5
+    ring_i = np.floor(ph).astype(np.int64)
+    rt = ph - ring_i
+    amp = 0.45 + hash2(ring_i, ring_i * 0, seed + 1) * 0.8
+    crease = (np.exp(-(rt / 0.06) ** 2) + np.exp(-((1 - rt) / 0.06) ** 2)) * 0.09 * amp
+    ridge = (rt - 0.5) * 0.05 * amp
+    band = (vnoise2(ph * 0.22, a * 0.3 + 2.0, seed + 2) - 0.5) * 0.14
+    fib = (vnoise2(across * min(1.6 / s, _fmax()), along * 0.04 / s, seed + 4) - 0.5) * 0.04 * mat.micro
+    d = cyl * 0.14 - 0.07 + hl * 0.09 * (0.5 + mat.hd('gloss')) + ridge - crease + band + fib + _grain(X, Y, seed + 7, 0.02, mat)
+    out['height'] = np.clip(0.3 + cyl * 0.45 + ridge * 2.0 - crease * 2.0, 0, 1)
+    out['ao'] = crease * 2.0
+    return d
+
+
+def _bone_hd(mat, X, Y, fw, fh, seed, out):
+    s = mat.scale
+    und = fbm2(X * 0.3 / s, Y * 0.3 / s, seed, 3)
+    pc = max(1.3 * s, 1.6 / _fmax())
+    pb, _, _, _, _ = voronoi2(X / pc, Y / pc, seed + 5)
+    pits = 1 - smoothstep(0.10, 0.24, pb)
+    gate = (hash2(np.floor(X / pc).astype(np.int64), np.floor(Y / pc).astype(np.int64), seed + 6) > 0.88)
+    pits = pits * gate
+    # hairline cracks
+    crack = isoline(fbm2(X * 0.1 / s + 4, Y * 0.1 / s, seed + 7, 2), X, Y, 0.16) * (fbm2(X * 0.05, Y * 0.05, seed + 8, 2) > 0.55)
+    d = (und - 0.5) * 0.16 - pits * 0.12 - crack * 0.14 + _grain(X, Y, seed + 2, 0.04, mat)
+    out['height'] = np.clip(0.6 + (und - 0.5) * 0.4 - pits * 0.6 - crack * 0.4, 0, 1)
+    out['ao'] = pits * 0.5 + crack * 0.4
+    return d
+
+
+def _rock_hd(mat, X, Y, fw, fh, seed, out):
+    """Rock: wandering crack network (domain-warped voronoi), sub-cracks in some chunks, rough grain and
+    specks.  `crack` carries the heat field for glowing (lava) rock: cracks glow only inside sparse hot
+    zones, with a hot core fading through the glow colour into dark crust."""
+    s = mat.scale
+    cell = 5.0 * s
+    wx = (fbm2(X * 0.12 / s, Y * 0.12 / s, seed + 1, 2) - 0.5) * 1.6 * s
+    wy = (fbm2(X * 0.12 / s + 9, Y * 0.12 / s, seed + 2, 2) - 0.5) * 1.6 * s
+    best, second, bestv, _, _ = voronoi2((X + wx) / cell, (Y + wy) / cell, seed, jitter=1.0)
+    gap = second - best
+    b2, s2, _, _, _ = voronoi2((X + wy) / (cell * 0.45), (Y - wx) / (cell * 0.45), seed + 5)
+    sub = (1 - smoothstep(0.0, 0.10, s2 - b2)) * smoothstep(0.55, 0.7, bestv) * smoothstep(0.08, 0.2, gap)
+    crack = 1 - smoothstep(0.0, 0.14, gap)
+    rough = fbm2(X * 0.4 / s, Y * 0.4 / s, seed + 3, 3)
+    grain = fbm2(X * 1.5, Y * 1.5, seed + 6, 2)
+    speck = hash2(np.floor(X * 2).astype(np.int64), np.floor(Y * 2).astype(np.int64), seed + 4) > 0.985
+    d = (bestv - 0.5) * 0.22 + (0.5 - best) * 0.10 - crack * 0.32 - sub * 0.16 + (rough - 0.5) * 0.14 * mat.micro
+    d += (grain - 0.5) * 0.05 * mat.micro + speck * 0.08
+    out['height'] = np.clip((1 - crack) * (0.55 + bestv * 0.45) - sub * 0.3 + (rough - 0.5) * 0.25, 0, 1)
+    heat = smoothstep(0.50, 0.66, fbm2(X * 0.045 / s + 5, Y * 0.045 / s, seed + 11, 2))
+    out['crack'] = {'core': np.exp(-(gap / 0.045) ** 2) * heat, 'ember': (1 - smoothstep(0.0, 0.26, gap)) * heat}
+    out['outline'] = (gap < 0.07) & (heat > 0.3)
+    out['ao'] = crack * 0.7 + sub * 0.3
+    hv = (bestv - 0.5) * 0.06
+    out['tint'] = np.stack([1 + hv, np.ones_like(hv), 1 - hv], -1)
+    return d
+
+
+def _crystal_hd(mat, X, Y, fw, fh, seed, out):
+    """Gem / ice: large flat facets, each a plane with its own gradient, thin dark facet edges with a light
+    fringe on the lit side, a few bright 'lit' facets (these also carry the emissive layer) and sparkles."""
+    s = mat.scale
+    cell = 4.5 * s
+    best, second, bestv, bpx, bpy = voronoi2(X / cell, Y / cell, seed, jitter=0.85)
+    gap = second - best
+    ix, iy = np.floor(bpx * 13).astype(np.int64), np.floor(bpy * 13).astype(np.int64)
+    gx = (hash2(ix, iy, seed + 1) - 0.5) * 1.2
+    gy = (hash2(ix, iy, seed + 2) - 0.5) * 1.2
+    plane = (X / cell - bpx) * gx + (Y / cell - bpy) * gy
+    lit = hash2(ix, iy, seed + 3) > 0.8
+    lit_s = smoothstep(0.02, 0.14, gap) * lit
+    ew = max(0.07, 1.6 / (cell * _CUR_K * _CUR_DETAIL))
+    edge = 1 - smoothstep(0.0, ew, gap)
+    fringe = smoothstep(ew * 0.6, ew * 1.6, gap) * (1 - smoothstep(ew * 1.6, ew * 4.0, gap))
+    depth = (fbm2(X * 0.12 / s, Y * 0.12 / s, seed + 4, 2) - 0.5) * 0.10
+    d = (bestv - 0.5) * 0.16 + plane * 0.42 - edge * 0.11 + fringe * 0.07 * (gx > 0) - fringe * 0.03 * (gx <= 0)
+    d += lit_s * (0.12 + plane * 0.35) + depth
+    glint = np.exp(-(((X / cell - bpx) - 0.12) ** 2 + ((Y / cell - bpy) - 0.1) ** 2) / 0.005) * lit * 0.28
+    d += glint + _grain(X, Y, seed + 8, 0.02, mat)
+    out['height'] = np.clip(0.5 + plane * 1.2 - edge * 0.3, 0, 1)
+    out['outline'] = lit_s > 0.5
+    out['lit'] = lit_s
+    out['ao'] = edge * 0.3
+    return d
+
+
+def _skin_hd(mat, X, Y, fw, fh, seed, out):
+    s = mat.scale
+    warp = fbm2(X * 0.14 / s, Y * 0.14 / s, seed, 2)
+    wr = np.sin(Y * 1.9 / s + warp * 7.0) * 0.5 + 0.5
+    crease = smoothstep(0.86, 1.0, wr)
+    pc = max(1.1 * s, 1.6 / _fmax())
+    pb, _, _, _, _ = voronoi2(X / pc, Y / pc, seed + 5)
+    pores = (1 - smoothstep(0.08, 0.2, pb)) * (hash2(np.floor(X / pc).astype(np.int64), np.floor(Y / pc).astype(np.int64), seed + 6) > 0.8)
+    d = (vnoise2(X * 0.25 / s, Y * 0.25 / s, seed + 1) - 0.5) * 0.12 - crease * 0.10 - pores * 0.07 * mat.micro
+    d += np.sin(Y * 1.9 / s + warp * 7.0) * 0.025
+    out['height'] = np.clip(0.6 - crease * 0.5 - pores * 0.5 + (warp - 0.5) * 0.2, 0, 1)
+    out['ao'] = crease * 0.4 + pores * 0.4
+    return d
+
+
+def _veins_hd(mat, X, Y, fw, fh, seed, out):
+    """Electric organ / glowing veins: thin bright branching lines (two scales) with a soft halo."""
+    s = mat.scale
+    n1 = fbm2(X * 0.09 / s, Y * 0.09 / s, seed, 3)
+    n2 = fbm2(X * 0.24 / s + 5.0, Y * 0.24 / s, seed + 2, 2)
+    v = isoline(n1, X, Y, 0.3 * s, soft=0.15)
+    v2 = isoline(n2, X, Y, 0.16 * s, soft=0.12) * 0.5
+    veins = np.clip(v + v2, 0, 1)
+    step = max(1e-6, float(X[0, 1] - X[0, 0]))
+    gy, gx = np.gradient(n1)
+    dist = np.abs(n1 - 0.5) / (np.sqrt(gx * gx + gy * gy) / step + 1e-6)
+    halo = (1 - smoothstep(0.2, 1.4 * s, dist)) * 0.07
+    d = (vnoise2(X * 0.3 / s, Y * 0.3 / s, seed + 1) - 0.5) * 0.14 + veins * 0.34 + halo - 0.14
+    out['height'] = np.clip(0.3 + veins * 0.7, 0, 1)
+    out['outline'] = veins > 0.5
+    return d
+
+
+def _metal_hd(mat, X, Y, fw, fh, seed, out):
+    vertical = fh >= fw
+    along, across = (Y, X) if vertical else (X, Y)
+    fm = _fmax()
+    brush = vnoise2(across * min(4.5, fm), along * 0.12, seed) - 0.5
+    brush2 = vnoise2(across * min(9.0, fm * 1.5) + 3.0, along * 0.3, seed + 1) - 0.5
+    band = np.exp(-((Y - fh * 0.35) ** 2) / max(1.0, (fh * 0.14) ** 2)) * 0.22
+    scr = np.abs(fbm2(along * 0.9, across * 0.12, seed + 7, 2) - 0.5)
+    scratch = (1 - smoothstep(0.0, 0.02, scr)) * 0.07
+    d = band + brush * 0.07 * mat.micro + brush2 * 0.03 * mat.micro + scratch + (fbm2(X * 0.2, Y * 0.2, seed + 3, 2) - 0.5) * 0.05
+    out['height'] = np.clip(0.5 + brush * 0.3, 0, 1)
+    return d
+
+
+def _cloth_hd(mat, X, Y, fw, fh, seed, out):
+    s = mat.scale
+    wp = max(s, 1.0 / _fmax())
+    weave = np.sin(X * 2 * math.pi / wp) * np.sin(Y * 2 * math.pi / wp)
+    folds = fbm2(X * 0.12 / s, Y * 0.08 / s, seed, 3)
+    d = weave * 0.012 * mat.micro + (folds - 0.5) * 0.16 + np.sin(Y * 0.8 / s + folds * 3) * 0.03
+    d += (hash2(np.floor(X * 2).astype(np.int64), np.floor(Y * 2).astype(np.int64), seed + 2) - 0.5) * 0.03
+    out['height'] = np.clip(0.5 + weave * 0.3 + (folds - 0.5) * 0.4, 0, 1)
+    return d
+
+
+def _wood_hd(mat, X, Y, fw, fh, seed, out):
+    s = mat.scale
+    warp = fbm2(X * 0.08 / s, Y * 0.03 / s, seed, 2)
+    g = np.sin(X * 0.9 / s + warp * 7.0)
+    lines = smoothstep(0.75, 1.0, g)
+    fine = np.sin(X * min(3.1 / s, _fmax() * 6.0) + warp * 9.0) * 0.5 + 0.5
+    d = g * 0.06 - lines * 0.10 + (fine - 0.5) * 0.04 * mat.micro + (fbm2(X * 0.3, Y * 0.1, seed + 3, 2) - 0.5) * 0.06
+    out['height'] = np.clip(0.6 - lines * 0.5 + (fine - 0.5) * 0.2, 0, 1)
+    out['ao'] = lines * 0.3
+    return d
+
+
+def _smooth_hd(mat, X, Y, fw, fh, seed, out):
+    nz = fbm2(X * 0.2, Y * 0.2, seed, 3)
+    d = (nz - 0.5) * 0.10 + _grain(X, Y, seed + 1, 0.03, mat)
+    out['height'] = np.clip(0.5 + (nz - 0.5) * 0.3, 0, 1)
+    return d
+
+
+_PATTERNS_HD = {
+    'scales': _scales_hd, 'plates': _plates_hd, 'membrane': _membrane_hd, 'horn': _horn_hd, 'bone': _bone_hd,
+    'rock': _rock_hd, 'crystal': _crystal_hd, 'skin': _skin_hd, 'fur': _fur_hd, 'veins': _veins_hd, 'metal': _metal_hd,
+    'cloth': _cloth_hd, 'wood': _wood_hd, 'smooth': _smooth_hd,
+}
+
+
+def pattern_hd(mat, X, Y, fw, fh, seed, face=None):
     """HD pattern in continuous face-local model-pixel coordinates X (right), Y (down); fw/fh = face size.
 
     Returns dict: delta (value offset), height (0..1 relief), outline (bool, emissive selection for
-    rock/veins/crystal), tint (per-element colour multiplier, (h,w,3) or None), ao (0..1 extra occlusion)."""
-    s = mat.scale
-    pat = mat.pattern
+    rock/veins/crystal), tint (per-element colour multiplier, (h,w,3) or None), ao (0..1 extra occlusion),
+    plus pattern-specific fields (rock: crack = {core, ember}; crystal: lit)."""
     out = {'delta': None, 'height': None, 'outline': np.zeros(X.shape, bool), 'tint': None, 'ao': None}
-    if pat == 'scales':
-        sw, sh = 5.0 * s, 4.0 * s
-        rowf = Y / sh
-        row = np.floor(rowf)
-        cy = rowf - row
-        off = (row.astype(np.int64) % 2) * 0.5
-        colf = X / sw + off
-        col = np.floor(colf)
-        cx = colf - col
-        yedge = 1 - 0.42 * (2 * cx - 1) ** 2
-        below = cy > yedge
-        row2 = row + 1
-        off2 = (row2.astype(np.int64) % 2) * 0.5
-        colf2 = X / sw + off2
-        col2 = np.floor(colf2)
-        cx2 = colf2 - col2
-        row = np.where(below, row2, row)
-        col = np.where(below, col2, col)
-        cx = np.where(below, cx2, cx)
-        cy = np.where(below, cy - 1, cy)
-        yedge = 1 - 0.42 * (2 * cx - 1) ** 2
-        t = (cy + 0.45) / (yedge + 0.45)                      # 0 hidden top .. 1 bottom edge
-        dome = np.sqrt(np.clip(1 - ((2 * cx - 1) * 0.92) ** 2, 0, 1))
-        coli, rowi = col.astype(np.int64), row.astype(np.int64)
-        jit = (hash2(coli, rowi, seed) - 0.5) * 0.14
-        overlap = 1 - smoothstep(0.0, 0.30, t)
-        ew = max(0.035, 1.1 / (sh * _CUR_K * _CUR_DETAIL))        # rim line ~1 texel wide even on tiny scales
-        rim = smoothstep(0.92 - 3 * ew, 0.94 - ew, t) * (1 - smoothstep(0.95 - ew, 1.0 - ew * 0.5, t))
-        spec = np.exp(-(((cx - 0.42) / 0.24) ** 2 + ((t - 0.42) / 0.24) ** 2))
-        d = jit + 0.10 - t * 0.26 + dome * 0.16 - overlap * 0.26 + rim * 0.12 + spec * 0.10
-        d -= 0.18 * smoothstep(1.0 - ew, 1.0, t)
-        # keel line down the middle of each scale + fine micro grain
-        d += np.exp(-((cx - 0.5) / 0.08) ** 2) * 0.03
-        d += (vnoise2(X * 2.2, Y * 2.2, seed + 4) - 0.5) * 0.05 * mat.micro
-        out['height'] = np.clip(dome * 0.5 + (1 - t) * 0.5 - overlap * 0.35, 0, 1)
-        out['outline'] = t > 1.0 - ew
-        out['ao'] = overlap * 0.55 + smoothstep(1.0 - ew, 1.0, t) * 0.5
-        hv = (hash2(coli, rowi, seed + 3) - 0.5) * 0.08
-        out['tint'] = np.stack([1 + hv, 1 + hv * 0.3, 1 - hv], -1)
-    elif pat == 'plates':
-        # overlapping armour scutes: rows of rounded plates with random stagger and slightly wavy seams; each
-        # plate is domed with a keel and a soft bevelled rim, its lower edge overlapping the plate below; some
-        # plates are split in two so the rows do not read as brickwork
-        pw, ph = 8.0 * s, 5.0 * s
-        Yw = Y + np.sin(X * 0.55 + vnoise2(X * 0.1, Y * 0.1, seed + 9) * 4.0) * 0.22 * s
-        rowf = Yw / ph
-        row = np.floor(rowf)
-        rowi = row.astype(np.int64)
-        off = hash2(rowi, rowi * 0, seed + 1) * 0.9
-        Xw = X + np.sin(Y * 0.7 + rowi * 1.3) * 0.18 * s
-        colf = Xw / pw + off
-        col = np.floor(colf)
-        coli = col.astype(np.int64)
-        lxn = colf - col
-        split = hash2(coli, rowi, seed + 4) > 0.68
-        # split plates: two half plates (the split position jittered)
-        sp = 0.42 + hash2(coli, rowi, seed + 6) * 0.16
-        left = lxn < sp
-        lxn2 = np.where(split, np.where(left, lxn / sp, (lxn - sp) / (1 - sp)), lxn)
-        pwl = np.where(split, np.where(left, sp, 1 - sp), 1.0) * pw
-        lx = lxn2 * pwl
-        ly = (rowf - row) * ph
-        seam = 0.15 * s
-        rad = 0.28 * ph
-        # rounded-rectangle distance (corners rounded by rad)
-        qx = np.abs(lx - pwl / 2) - (pwl / 2 - rad)
-        qy = np.abs(ly - ph / 2) - (ph / 2 - rad)
-        dout = np.sqrt(np.maximum(qx, 0) ** 2 + np.maximum(qy, 0) ** 2) + np.minimum(np.maximum(qx, qy), 0) - rad
-        dist = -dout - seam
-        bevel = smoothstep(0.0, 0.8 * s, dist)
-        dome = (1 - (2 * lxn2 - 1) ** 2 * 0.55) * (1 - ((ly / ph - 0.5) * 2) ** 2 * 0.45)
-        keel = np.exp(-((lxn2 - 0.5) / 0.09) ** 2) * (1 - split * 0.6)
-        overlap = 1 - smoothstep(0.0, 0.7 * s, ly - seam)
-        pid = coli * 2 + left.astype(np.int64) * split.astype(np.int64)
-        jit = (hash2(pid, rowi, seed + 3) - 0.5) * 0.12
-        d = jit + dome * 0.16 + keel * 0.05 - (1 - bevel) * 0.20 - overlap * 0.10 + (0.5 - ly / ph) * 0.05
-        # scratches (anisotropic ridged noise), fine grain and grime along the seams
-        scr = np.abs(fbm2(X * 1.1 + rowi * 3.1, Y * 0.16 + coli * 1.7, seed + 7, 2) - 0.5)
-        d += (1 - smoothstep(0.0, 0.022, scr)) * 0.06 * bevel * mat.micro
-        d -= (1 - smoothstep(0.0, 1.2 * s, dist)) * 0.05
-        d += (vnoise2(X * 1.8, Y * 1.8, seed + 5) - 0.5) * 0.035 * mat.micro
-        out['height'] = np.clip(bevel * (0.55 + 0.45 * dome + keel * 0.08) - overlap * 0.2, 0, 1)
-        out['outline'] = dist < 0
-        out['ao'] = (1 - bevel) * 0.5 + overlap * 0.25
-        hv = (hash2(pid, rowi, seed + 11) - 0.5) * 0.06
-        out['tint'] = np.stack([1 + hv, 1 + hv * 0.4, 1 - hv], -1)
-    elif pat == 'fur':
-        # stylised fur: overlapping rows of pointed tufts (like scales with a V-shaped lower edge, random
-        # lengths), fine strands inside every tuft flowing downward, dark partings and clump shading
-        tw, th = 3.2 * s, 4.2 * s
-        drift = vnoise2(X * 0.06, Y * 0.05, seed) * 6.28
-        Xs = X + np.sin(Y * 0.18 + drift) * 0.5
-        rowf = Y / th
-        row = np.floor(rowf)
-        cy = rowf - row
-        off = (row.astype(np.int64) % 2) * 0.5 + hash2(row.astype(np.int64), row.astype(np.int64) * 0, seed + 1) * 0.3
-        colf = Xs / tw + off
-        col = np.floor(colf)
-        cx = colf - col
-        ln = 0.75 + hash2(col.astype(np.int64), row.astype(np.int64), seed + 2) * 0.5     # tuft length (0.75..1.25 rows)
-        yedge = ln * (1 - 0.55 * np.abs(2 * cx - 1))
-        below = cy > yedge
-        row2 = row + 1
-        off2 = (row2.astype(np.int64) % 2) * 0.5 + hash2(row2.astype(np.int64), row2.astype(np.int64) * 0, seed + 1) * 0.3
-        colf2 = Xs / tw + off2
-        col2 = np.floor(colf2)
-        cx2 = colf2 - col2
-        row = np.where(below, row2, row)
-        col = np.where(below, col2, col)
-        cx = np.where(below, cx2, cx)
-        cy = np.where(below, cy - 1, cy)
-        coli, rowi = col.astype(np.int64), row.astype(np.int64)
-        ln = 0.75 + hash2(coli, rowi, seed + 2) * 0.5
-        yedge = ln * (1 - 0.55 * np.abs(2 * cx - 1))
-        t = (cy + 0.5) / (yedge + 0.5)
-        overlap = 1 - smoothstep(0.0, 0.35, t)
-        strand = vnoise2((cx * tw + coli * 7.0) * 1.6, Y * 0.12, seed + 3)
-        strand2 = vnoise2((cx * tw + coli * 3.0) * 3.0 + 2.0, Y * 0.2, seed + 4)
-        clump = fbm2(X * 0.09, Y * 0.06, seed + 5, 3)
-        jit = (hash2(coli, rowi, seed + 6) - 0.5) * 0.12
-        d = jit + (strand - 0.5) * 0.22 + (strand2 - 0.5) * 0.10 * mat.micro + (clump - 0.5) * 0.22
-        d += (1 - t) * 0.10 - overlap * 0.16 - 0.10 * smoothstep(0.93, 1.0, t)
-        d -= np.abs(2 * cx - 1) * 0.06                      # tuft sides slightly darker (rounded tuft)
-        out['height'] = np.clip(0.5 + (1 - t) * 0.3 + (strand - 0.5) * 0.3 - overlap * 0.3, 0, 1)
-        out['ao'] = overlap * 0.4 + smoothstep(0.93, 1.0, t) * 0.3
-        hv = (clump - 0.5) * 0.10
-        out['tint'] = np.stack([1 + hv, 1 + hv * 0.5, 1 - hv * 0.8], -1)
-    elif pat == 'membrane':
-        # leathery wing skin: thin branching veins (two scales, uniform width), a lighter translucent halo
-        # beside the main veins, a soft brightness gradient along the plane and fine grain
-        n1 = fbm2(X * 0.075, Y * 0.075, seed, 3)
-        n2 = fbm2(X * 0.19 + 3.0, Y * 0.19, seed + 5, 2)
-        v1 = isoline(n1, X, Y, 0.55)
-        v2 = isoline(n2, X, Y, 0.35) * 0.55
-        veins = np.clip(v1 + v2, 0, 1)
-        halo = (1 - smoothstep(0.3, 2.2, np.abs(n1 - 0.5) / (np.sqrt(np.sum(np.stack(np.gradient(n1)) ** 2, 0)) / max(1e-6, float(X[0, 1] - X[0, 0])) + 1e-6))) * 0.09
-        along = (Y / max(fh, 1e-6)) if fh >= fw else (X / max(fw, 1e-6))
-        trans = (fbm2(X * 0.05, Y * 0.05, seed + 8, 2) - 0.5) * 0.12 + along * 0.10
-        grain = (vnoise2(X * 1.3, Y * 1.3, seed + 6) - 0.5) * 0.035 * mat.micro
-        d = trans - veins * 0.30 + halo + 0.03 + grain
-        out['height'] = np.clip(0.35 + veins * 0.65, 0, 1)
-        out['outline'] = veins > 0.5
-        out['ao'] = halo * 1.5
-    elif pat == 'horn':
-        # keratin: lengthwise fibre streaks, faint growth rings across the axis, slightly glossy
-        vertical = fh >= fw
-        along = Y if vertical else X
-        across = X if vertical else Y
-        wob = vnoise2(X * 0.3, Y * 0.3, seed) * 1.6
-        fibre = vnoise2(across * 1.3, along * 0.07, seed + 4) - 0.5
-        fibre2 = vnoise2(across * 2.8 + 5.0, along * 0.12, seed + 5) - 0.5
-        rings = np.sin(along * 1.35 + wob) * 0.028 + np.sin(along * 4.3 + wob * 2) * 0.010 * mat.micro
-        d = rings + fibre * 0.14 + fibre2 * 0.05 * mat.micro + (fbm2(X * 0.25, Y * 0.25, seed + 2, 2) - 0.5) * 0.06
-        d += (hash2(np.floor(along * 1.3).astype(np.int64), across.astype(np.int64) * 0, seed + 3) - 0.5) * 0.03
-        out['height'] = np.clip(0.5 + rings * 2.0 + fibre * 0.8, 0, 1)
-    elif pat == 'bone':
-        und = fbm2(X * 0.3, Y * 0.3, seed, 3)
-        pb, _, _, _, _ = voronoi2(X / 1.3, Y / 1.3, seed + 5)
-        pits = 1 - smoothstep(0.14, 0.30, pb)
-        gate = (hash2(np.floor(X / 1.3).astype(np.int64), np.floor(Y / 1.3).astype(np.int64), seed + 6) > 0.72)
-        pits = pits * gate
-        d = (und - 0.5) * 0.16 - pits * 0.18 + (vnoise2(X * 1.5, Y * 1.5, seed + 2) - 0.5) * 0.05 * mat.micro
-        out['height'] = np.clip(0.6 + (und - 0.5) * 0.4 - pits * 0.6, 0, 1)
-        out['ao'] = pits * 0.5
-    elif pat == 'rock':
-        cell = 5.0 * s
-        best, second, bestv, _, _ = voronoi2(X / cell, Y / cell, seed, jitter=1.0)
-        gap = second - best
-        crackd = smoothstep(0.0, 0.16, gap)
-        rough = fbm2(X * 0.45, Y * 0.45, seed + 3, 3)
-        grain = fbm2(X * 1.6, Y * 1.6, seed + 5, 2)
-        speck = hash2(np.floor(X * 2).astype(np.int64), np.floor(Y * 2).astype(np.int64), seed + 4) > 0.985
-        d = (bestv - 0.5) * 0.24 + (0.5 - best) * 0.10 - (1 - crackd) * 0.32 + (rough - 0.5) * 0.12 * mat.micro + (grain - 0.5) * 0.05 * mat.micro
-        d = np.where(speck, d + 0.08, d)
-        out['height'] = np.clip(crackd * (0.6 + bestv * 0.4) + (rough - 0.5) * 0.2, 0, 1)
-        out['outline'] = gap < 0.075
-        out['crack'] = 1 - smoothstep(0.0, 0.11, gap)      # 1 in the crack core, soft falloff (used for glowing cracks)
-        out['ao'] = (1 - crackd) * 0.7
-        hv = (bestv - 0.5) * 0.06
-        out['tint'] = np.stack([1 + hv, np.ones_like(hv), 1 - hv], -1)
-    elif pat == 'crystal':
-        # faceted gem: irregular flat facets (each with its own gradient), thin bright facet edges, a few glints
-        cell = 3.6 * s
-        best, second, bestv, bpx, bpy = voronoi2(X / cell, Y / cell, seed, jitter=0.9)
-        gap = second - best
-        gx = (bestv - 0.5) * 0.6
-        gy = (hash2(np.floor(bpx * 7).astype(np.int64), np.floor(bpy * 7).astype(np.int64), seed + 3) - 0.5) * 0.6
-        plane = ((X / cell - bpx) * gx + (Y / cell - bpy) * gy) * 0.6
-        edge = 1 - smoothstep(0.0, 0.10, gap)
-        inner = fbm2(X * 0.25, Y * 0.25, seed + 4, 2) - 0.5
-        d = (bestv - 0.5) * 0.26 + plane + edge * 0.22 + inner * 0.10 + (vnoise2(X * 1.2, Y * 1.2, seed + 8) - 0.5) * 0.03 * mat.micro
-        has_glint = hash2(np.floor(bpx * 11).astype(np.int64), np.floor(bpy * 11).astype(np.int64), seed + 9) > 0.7
-        glint = np.exp(-(((X / cell - bpx) + 0.15) ** 2 + ((Y / cell - bpy) + 0.2) ** 2) / 0.010) * 0.22 * has_glint
-        d += glint
-        out['height'] = np.clip(0.5 + plane * 1.2 + edge * 0.25, 0, 1)
-        out['outline'] = gap < 0.06
-    elif pat == 'skin':
-        warp = fbm2(X * 0.14, Y * 0.14, seed, 2)
-        wr = np.sin(Y * 1.9 + warp * 7.0) * 0.5 + 0.5
-        crease = smoothstep(0.86, 1.0, wr)
-        pb, _, _, _, _ = voronoi2(X / 1.1, Y / 1.1, seed + 5)
-        pores = (1 - smoothstep(0.12, 0.26, pb)) * (hash2(np.floor(X / 1.1).astype(np.int64), np.floor(Y / 1.1).astype(np.int64), seed + 6) > 0.5)
-        d = (vnoise2(X * 0.25, Y * 0.25, seed + 1) - 0.5) * 0.12 - crease * 0.11 - pores * 0.12 * mat.micro
-        d += np.sin(Y * 1.9 + warp * 7.0) * 0.03
-        out['height'] = np.clip(0.6 - crease * 0.5 - pores * 0.5 + (warp - 0.5) * 0.2, 0, 1)
-        out['ao'] = crease * 0.4 + pores * 0.4
-    elif pat == 'veins':
-        # electric organ / glowing veins: bright branching lines (two scales, uniform width) with a soft halo
-        n1 = fbm2(X * 0.10, Y * 0.10, seed, 3)
-        n2 = fbm2(X * 0.24 + 5.0, Y * 0.24, seed + 2, 2)
-        v = isoline(n1, X, Y, 0.7)
-        v2 = isoline(n2, X, Y, 0.4) * 0.6
-        veins = np.clip(v + v2, 0, 1)
-        step = max(1e-6, float(X[0, 1] - X[0, 0]))
-        gy, gx = np.gradient(n1)
-        dist = np.abs(n1 - 0.5) / (np.sqrt(gx * gx + gy * gy) / step + 1e-6)
-        halo = (1 - smoothstep(0.3, 2.5, dist)) * 0.14
-        d = (vnoise2(X * 0.3, Y * 0.3, seed + 1) - 0.5) * 0.16 + veins * 0.36 + halo - 0.10
-        out['height'] = np.clip(0.3 + veins * 0.7, 0, 1)
-        out['outline'] = veins > 0.5
-    elif pat == 'metal':
-        vertical = fh >= fw
-        along = Y if vertical else X
-        across = X if vertical else Y
-        brush = vnoise2(across * 4.5, along * 0.12, seed) - 0.5
-        brush2 = vnoise2(across * 9.0 + 3.0, along * 0.3, seed + 1) - 0.5
-        band = np.exp(-((Y - fh * 0.35) ** 2) / max(1.0, (fh * 0.14) ** 2)) * 0.22
-        scr = np.abs(fbm2(along * 0.9, across * 0.12, seed + 7, 2) - 0.5)
-        scratch = (1 - smoothstep(0.0, 0.02, scr)) * 0.07
-        d = band + brush * 0.07 * mat.micro + brush2 * 0.03 * mat.micro + scratch + (fbm2(X * 0.2, Y * 0.2, seed + 3, 2) - 0.5) * 0.05
-        out['height'] = np.clip(0.5 + brush * 0.3, 0, 1)
-    elif pat == 'cloth':
-        weave = np.sin(X * 2 * math.pi / 1.0) * np.sin(Y * 2 * math.pi / 1.0)
-        folds = fbm2(X * 0.12, Y * 0.08, seed, 3)
-        d = weave * 0.03 * mat.micro + (folds - 0.5) * 0.16 + np.sin(Y * 0.8 + folds * 3) * 0.03
-        d += (hash2(np.floor(X * 2).astype(np.int64), np.floor(Y * 2).astype(np.int64), seed + 2) - 0.5) * 0.03
-        out['height'] = np.clip(0.5 + weave * 0.3 + (folds - 0.5) * 0.4, 0, 1)
-    elif pat == 'wood':
-        warp = fbm2(X * 0.08, Y * 0.03, seed, 2)
-        g = np.sin(X * 0.9 + warp * 7.0)
-        lines = smoothstep(0.75, 1.0, g)
-        fine = np.sin(X * 3.1 + warp * 9.0) * 0.5 + 0.5
-        d = g * 0.06 - lines * 0.10 + (fine - 0.5) * 0.04 * mat.micro + (fbm2(X * 0.3, Y * 0.1, seed + 3, 2) - 0.5) * 0.06
-        out['height'] = np.clip(0.6 - lines * 0.5 + (fine - 0.5) * 0.2, 0, 1)
-        out['ao'] = lines * 0.3
+    fn = _PATTERNS_HD.get(mat.pattern, _smooth_hd)
+    if fn is _fur_hd:
+        d = fn(mat, X, Y, fw, fh, seed, out, face)
     else:
-        nz = fbm2(X * 0.2, Y * 0.2, seed, 3)
-        d = (nz - 0.5) * 0.10 + (vnoise2(X * 1.4, Y * 1.4, seed + 1) - 0.5) * 0.03 * mat.micro
-        out['height'] = np.clip(0.5 + (nz - 0.5) * 0.3, 0, 1)
+        d = fn(mat, X, Y, fw, fh, seed, out)
     out['delta'] = d
     if out['height'] is None:
         out['height'] = np.full(X.shape, 0.5)
     return out
+
 
 
 # ----------------------------------------------------------------------------- face geometry
@@ -1056,9 +1203,17 @@ def detail_for(model):
     return 1.0
 
 
+def texel_for(model):
+    """HD texel multiplier of a model: TEXEL for large monsters; small models (finer patterns, see detail_for)
+    get proportionally more texels so every pattern keeps ~TEXEL texels per feature pixel (at most 8)."""
+    if TEXEL <= 1:
+        return 1
+    return int(min(8, max(1, round(TEXEL / detail_for(model)))))
+
+
 def paint_model(model, seed=1, texel=None):
     global _CUR_K, _CUR_DETAIL
-    K = int(TEXEL if texel is None else texel)
+    K = int(texel_for(model) if texel is None else texel)
     _CUR_K = K
     _CUR_DETAIL = detail_for(model)
     W, H = model.tex_w * K, model.tex_h * K
@@ -1098,13 +1253,14 @@ def paint_model(model, seed=1, texel=None):
             # belly: downward-facing faces or the lower part of side faces of belly-flagged materials
             use_belly = mat.belly is not None and (N[1] > 0.55)
             sd = cube.seed * 7 + hash(face) % 101
-            rgb, gl = _shade(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, sd, cube, texel=K)
+            rgb, gl = _shade(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, sd, cube, texel=K, face=face)
             px = _take_pbr()
+            rag = _LAST.get('rag')
             if mat.belly is not None and not use_belly and abs(N[1]) < 0.5:
                 # lower 30% of side faces blend into belly colour (with a jagged edge)
                 bm = MATERIALS.get(mat.belly)
                 if bm is not None and cube.decals is not None and any(dd.get('type') == 'belly_band' for dd in cube.decals):
-                    brgb, _ = _shade(bm, I, J, w, h, P, N, f, d, r, ymin, yspan, sd + 1, cube, texel=K)
+                    brgb, _ = _shade(bm, I, J, w, h, P, N, f, d, r, ymin, yspan, sd + 1, cube, texel=K, face=face)
                     bpx = _take_pbr()
                     if K > 1:
                         edge = 0.62 + (vnoise2(I / K * 0.6, I * 0 + sd, sd) - 0.5) * 0.14 + (vnoise2(I / K * 2.5, I * 0 + 3, sd + 1) - 0.5) * 0.04
@@ -1116,19 +1272,30 @@ def paint_model(model, seed=1, texel=None):
                         mask = d > edge
                         rgb = np.where(mask[..., None], brgb, rgb)
             if use_belly:
-                rgb, gl = _shade(MATERIALS[mat.belly], I, J, w, h, P, N, f, d, r, ymin, yspan, sd, cube, texel=K)
+                rgb, gl = _shade(MATERIALS[mat.belly], I, J, w, h, P, N, f, d, r, ymin, yspan, sd, cube, texel=K, face=face)
                 px = _take_pbr()
             # accent (solid 3D masks)
             if mat.accent and mat.accent_mode:
+                global _CUR_N
+                _CUR_N = N
                 am = _accent_mask(mat, P, f, d, r, sd)
+                _CUR_N = None
                 if am is not None and am.any():
-                    argb, agl = _shade(MATERIALS[mat.accent], I, J, w, h, P, N, f, d, r, ymin, yspan, sd + 5, cube, texel=K)
+                    argb, agl = _shade(MATERIALS[mat.accent], I, J, w, h, P, N, f, d, r, ymin, yspan, sd + 5, cube, texel=K, face=face)
                     apx = _take_pbr()
                     if K > 1:
-                        amf = _soften_mask(am, K)
+                        if am.dtype == bool:
+                            amf = _soften_mask(am, K)
+                            if rag is not None:
+                                # fur: the stripe / spot edge follows the strands (ragged) instead of a soft blur
+                                amf = smoothstep(0.3, 0.7, amf + (rag - 0.5) * 0.45)
+                        else:
+                            amf = np.clip(am, 0, 1)          # already anti-aliased float coverage (thin veins)
+                            am = amf > 0.5
                         rgb = rgb * (1 - amf[..., None]) + argb * amf[..., None]
                         px = _lerp_pbr(px, apx, amf)
                     else:
+                        am = am > 0.5 if am.dtype != bool else am
                         rgb = np.where(am[..., None], argb, rgb)
                     if agl is not None:
                         gl = np.where(am[..., None], agl, 0 if gl is None else gl)
@@ -1298,10 +1465,11 @@ def save_pbr(model, path_base):
 
 
 def _soften_mask(mask, K):
-    """Boolean mask -> soft coverage with ~half a model pixel of anti-aliasing (HD only)."""
+    """Boolean mask -> anti-aliased coverage: the edge is smoothed over ~1 texel (crisp but not stair-stepped)."""
     try:
         from scipy import ndimage
-        return np.clip(ndimage.gaussian_filter(mask.astype(float), 0.35 * K), 0, 1)
+        b = ndimage.gaussian_filter(mask.astype(float), 0.3 * K)
+        return smoothstep(0.25, 0.75, b)
     except Exception:
         return mask.astype(float)
 
@@ -1389,6 +1557,25 @@ def _accent_mask(mat, P, f, d, r, seed):
         v = vnoise(x * fq, y * fq, z * fq, seed)
         return v > th
     if mat.accent_mode == 'veins3d':
+        if _CUR_K > 1:
+            # uniform-width veins (model px) along the iso-surface of a 3D noise field: the band |n-0.5| < c
+            # is normalised by the gradient so the lines do not swell where the field is flat
+            k = fq * 0.5
+            n = fbm(x * k, y * k, z * k, seed)
+            eps = 0.35
+            gx = (fbm((x + eps) * k, y * k, z * k, seed) - fbm((x - eps) * k, y * k, z * k, seed)) / (2 * eps)
+            gy = (fbm(x * k, (y + eps) * k, z * k, seed) - fbm(x * k, (y - eps) * k, z * k, seed)) / (2 * eps)
+            gz = (fbm(x * k, y * k, (z + eps) * k, seed) - fbm(x * k, y * k, (z - eps) * k, seed)) / (2 * eps)
+            if _CUR_N is not None:
+                # only the gradient component tangential to the face matters for the width of the slice
+                N = np.asarray(_CUR_N, float)
+                dn = gx * N[0] + gy * N[1] + gz * N[2]
+                gx, gy, gz = gx - dn * N[0], gy - dn * N[1], gz - dn * N[2]
+            grad = np.sqrt(gx * gx + gy * gy + gz * gz) + 1e-4
+            width = (1 - th) * 24.0            # thresh 0.975 -> 0.6 px wide veins
+            dist = np.abs(n - 0.5) / grad
+            aa = 0.6 / _CUR_K                  # anti-aliased edge of ~0.6 texel (float coverage, not softened again)
+            return 1 - smoothstep(width * 0.5 - aa * 0.5, width * 0.5 + aa * 0.5, dist)
         v = np.abs(fbm(x * fq * 0.5, y * fq * 0.5, z * fq * 0.5, seed) - 0.5)
         return v < (1 - th) * 0.25
     if mat.accent_mode == 'tips':
@@ -1396,10 +1583,10 @@ def _accent_mask(mat, P, f, d, r, seed):
     return None
 
 
-def _shade(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, texel=None):
+def _shade(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, texel=None, face=None):
     K = int(_CUR_K if texel is None else texel)
     if K > 1:
-        return _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K)
+        return _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K, face)
     _LAST.clear()
     x, y, z = P[..., 0], P[..., 1], P[..., 2]
     value = np.full(I.shape, mat.base, dtype=float)
@@ -1455,7 +1642,7 @@ _HV = np.array([0.0, 0.0, 1.0]) + _L
 _HV = _HV / np.linalg.norm(_HV)
 
 
-def _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K):
+def _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K, face=None):
     x, y, z = P[..., 0], P[..., 1], P[..., 2]
     X = (I + 0.5) / K
     Y = (J + 0.5) / K
@@ -1467,8 +1654,8 @@ def _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K):
         value += (0.5 - d) * 0.12 * mat.bake
     value -= np.clip((y - ymin) / yspan, 0, 1) * 0.10 * mat.bake
     dt = _CUR_DETAIL
-    pt = pattern_hd(mat, X / dt, Y / dt, fw / dt, fh / dt, seed)
-    value += pt['delta'] * (mat.contrast ** 0.7)      # mild lift for low-contrast materials (HD detail reads better)
+    pt = pattern_hd(mat, X / dt, Y / dt, fw / dt, fh / dt, seed, face)
+    value += pt['delta'] * (mat.contrast ** 0.5)      # lift for low-contrast materials (HD detail reads better)
     # colour variation: 3D model-space noise (continuous across cubes) at three octaves
     value += (vnoise(x * 0.35, y * 0.35, z * 0.35, seed) - 0.5) * 2 * mat.noise
     value += (vnoise(x * 1.1, y * 1.1, z * 1.1, seed + 31) - 0.5) * 0.9 * mat.noise
@@ -1507,6 +1694,7 @@ def _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K):
     rgb = np.clip(rgb, 0, 255)
     ao = np.clip(ao_edge * 0.8 + (pt['ao'] if pt['ao'] is not None else 0), 0, 1)
     _LAST.clear()
+    _LAST['rag'] = pt.get('rag')
     _LAST['height'] = np.clip(pt['height'] * 0.85 + 0.15 * (1 - ao_edge), 0, 1)
     _LAST['ao'] = ao
     _LAST['smooth'] = np.full(I.shape, float(mat.pbr_byte('smooth')))
@@ -1514,27 +1702,41 @@ def _shade_hd(mat, I, J, w, h, P, N, f, d, r, ymin, yspan, seed, cube, K):
     _LAST['por'] = np.full(I.shape, float(mat.pbr_byte('por')))
     gl = None
     if mat.glow is not None:
+        gcol = mat.glow
         sel = None
-        if mat.pattern in ('rock', 'veins', 'crystal'):
-            sel = pt['outline']
-        elif mat.pattern == 'smooth':
-            sel = np.ones_like(I, dtype=bool)
-        if sel is not None and sel.any():
-            gl = np.zeros(I.shape + (4,))
-            gcol = mat.glow
-            if mat.pattern == 'rock':
-                # glowing cracks: hot (whitened) core colour with a soft falloff into the rock
-                ci = pt.get('crack')
-                hot = np.clip(gcol * 1.15 + 40, 0, 255)
-                core = np.clip(ci * 1.6 - 0.25, 0, 1)
-                rgb = rgb * (1 - ci[..., None]) + gcol * ci[..., None]
-                rgb = rgb * (1 - core[..., None]) + hot * core[..., None]
-                sel = ci > 0.35
+        if mat.pattern == 'rock':
+            # ember cracks: only inside the sparse hot zones; white-hot core -> glow colour -> dark crust
+            ck = pt['crack']
+            core, ember = ck['core'], ck['ember']
+            hot = np.clip(gcol * 1.15 + np.array([50, 60, 30.0]), 0, 255)
+            dark = gcol * 0.42
+            e = np.clip(ember, 0, 1)
+            rgb = rgb * (1 - e[..., None] * 0.9) + dark * e[..., None] * 0.9
+            e2 = smoothstep(0.3, 0.85, ember)
+            rgb = rgb * (1 - e2[..., None]) + gcol * e2[..., None]
+            rgb = rgb * (1 - core[..., None]) + hot * core[..., None]
+            sel = ember > 0.5
+            if sel.any():
                 gl = np.zeros(I.shape + (4,))
-                gl[sel, :3] = (gcol * (0.55 + 0.45 * ci[..., None]))[sel]
+                lum = smoothstep(0.5, 1.0, ember) * 0.6 + core * 0.4
+                gl[sel, :3] = (gcol * (0.35 + 0.65 * lum[..., None]))[sel]
                 gl[sel, 3] = 255
-            else:
+        elif mat.pattern == 'crystal':
+            lit = pt['lit']
+            sel = lit > 0.5
+            if sel.any():
+                gl = np.zeros(I.shape + (4,))
+                gl[sel, :3] = (rgb * 0.55 + gcol * 0.45 * lit[..., None])[sel]
+                gl[sel, 3] = 255
+        else:
+            if mat.pattern == 'veins':
+                sel = pt['outline']
+            elif mat.pattern == 'smooth':
+                sel = np.ones_like(I, dtype=bool)
+            if sel is not None and sel.any():
+                gl = np.zeros(I.shape + (4,))
                 gl[sel, :3] = np.where(sel[..., None], rgb, 0)[sel]
                 gl[sel, 3] = 255
+        if sel is not None and sel.any():
             _LAST['smooth'] = np.where(sel, 200.0, _LAST['smooth'])
     return rgb, gl
