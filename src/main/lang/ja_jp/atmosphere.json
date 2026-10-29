@@ -1,0 +1,5 @@
+{
+  "huntcraft.shaders.installed": "§6[HuntCraft]§r 影MOD「HuntCraft Shaders」を shaderpacks に導入し、Oculus で有効にしました。切り替えは §eO§r キー（シェーダーパック画面）。",
+  "huntcraft.shaders.updated": "§6[HuntCraft]§r 「HuntCraft Shaders」を最新版に更新しました。",
+  "huntcraft.shaders.optifine": "§6[HuntCraft]§r 「HuntCraft Shaders」を shaderpacks に導入しました。OptiFine の設定 → シェーダーから選択してください。"
+}

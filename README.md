@@ -9,6 +9,17 @@ Minecraft Java Edition **1.20.1 / Forge 47.x** 向けのハンティングアク
 2. `huntcraft-1.0.0.jar` を `.minecraft/mods/` に入れて起動
 3. ワールドに入ると、チャットの【風見の村へ向かう】か `/village` でハンターの村へ移動
 
+### 影MOD（HuntCraft Shaders）— PVの画作りで遊ぶ
+PVと同じ見た目にする専用シェーダーパック **HuntCraft Shaders** が MOD に同梱されています（太陽・月のソフトシャドウ、炎・雷・溶岩・モンスターの発光部位のブルーム、光条（ゴッドレイ）と高度フォグ、狩り場ごとのカラーグレーディング、揺れる草木、水面の反射、ACESトーンマップ）。
+1. **Embeddium** と **Oculus**（どちらも 1.20.1 Forge 版、Modrinth/CurseForge）を `mods/` に追加して起動（OptiFine でも動作）
+2. 起動時に `shaderpacks/HuntCraftShaders.zip` が自動で設置され、シェーダー未選択なら自動で有効になります
+3. 切り替え・設定は Oculus のシェーダーパック画面（既定 `O` キー）。品質プリセット「低／中／高／シネマティック」と、影・ブルーム・光条・霧・色調などの個別設定があります
+4. OptiFine の場合は「設定 → ビデオ設定 → シェーダー」から `HuntCraftShaders.zip` を選択（OptiFine は `dimension.properties` 非対応のため、狩り場ごとの色調は Oculus/Iris でのみ切り替わります）
+
+パックの中身は `src/main/shaderpack/`（共通コードは `shaders/lib`・`shaders/program`、各ディメンション用フォルダの薄いスタブは `python3 tools/shader/build_pack.py` で生成）。CI の `shaders` ジョブが glslangValidator で全プログラムをチェックし、Embeddium + Oculus を入れたクライアントを llvmpipe で起動して `shader_*.png`（村・3つの狩り場・モンスター）を結果ブランチ `ci-<branch>-shaders` に出力します。
+
+影MODがなくても、狩り場ごとの霧・空・光の色味、カルデラの灰と火の粉、山脈の吹雪、丘陵の花粉と夜の蛍、村の桜吹雪、咆哮・雷の画面演出は MOD 本体で動作します。
+
 ## 収録内容
 | 分類 | 内容 |
 |---|---|

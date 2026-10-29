@@ -1,0 +1,5 @@
+{
+  "huntcraft.shaders.installed": "§6[HuntCraft]§r Installed the \"HuntCraft Shaders\" pack into shaderpacks and enabled it in Oculus. Press §eO§r to open the shader pack screen.",
+  "huntcraft.shaders.updated": "§6[HuntCraft]§r \"HuntCraft Shaders\" was updated to the bundled version.",
+  "huntcraft.shaders.optifine": "§6[HuntCraft]§r Installed \"HuntCraft Shaders\" into shaderpacks. Select it in OptiFine's Video Settings > Shaders."
+}

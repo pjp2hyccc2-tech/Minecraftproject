@@ -1,0 +1,71 @@
+# HuntCraft Shaders - option labels (English)
+profile.LOW=Low
+profile.MEDIUM=Medium
+profile.HIGH=High
+profile.CINEMATIC=Cinematic
+profile.comment=Quality preset. CINEMATIC is the trailer look (4K shadows, 24 light-shaft samples).
+
+screen.SHADOW_SCREEN=Shadows & Ambient Occlusion
+screen.BLOOM_SCREEN=Bloom
+screen.ATMOSPHERE_SCREEN=Atmosphere
+screen.COLOR_SCREEN=Colour & Tonemap
+screen.WORLD_SCREEN=World
+screen.CAMERA_SCREEN=Camera
+
+option.SHADOWS=Shadows
+option.SHADOWS.comment=Sun and moon shadow mapping with soft filtering.
+option.shadowMapResolution=Shadow Resolution
+option.shadowMapResolution.comment=Shadow map size. Higher is sharper but slower.
+option.shadowDistance=Shadow Distance
+option.shadowDistance.comment=How far (blocks) shadows are rendered.
+option.SHADOW_SOFTNESS=Shadow Softness
+option.SHADOW_SOFTNESS.comment=Blur radius of the shadow edges.
+option.COLORED_SHADOWS=Coloured Shadows
+option.COLORED_SHADOWS.comment=Stained glass and water tint the light passing through them.
+option.sunPathRotation=Sun Path Angle
+option.sunPathRotation.comment=Tilts the path of the sun so noon shadows are not straight down.
+option.SSAO=Ambient Occlusion
+option.SSAO.comment=Screen-space ambient occlusion in corners and under objects.
+option.SSAO_STRENGTH=AO Strength
+
+option.BLOOM=Bloom
+option.BLOOM.comment=Glow around fire, lava, lightning, the sun and monster glow parts.
+option.BLOOM_STRENGTH=Bloom Strength
+option.EMISSIVE_BOOST=Emissive Boost
+option.EMISSIVE_BOOST.comment=Brightness of glowing textures (monster eyes, veins, torches).
+
+option.VOLUMETRIC_LIGHT=Light Shafts
+option.VOLUMETRIC_LIGHT.comment=Volumetric god rays through trees and fog.
+option.VL_SAMPLES=Light Shaft Quality
+option.VL_STRENGTH=Light Shaft Strength
+option.FOG_DENSITY=Fog Density
+option.HEIGHT_FOG=Height Fog
+option.HEIGHT_FOG.comment=Fog that pools in valleys and low ground.
+option.WEATHER_HAZE=Blizzard Haze
+option.WEATHER_HAZE.comment=Drifting snow haze in the Frostpeak Range.
+option.HEAT_HAZE=Heat Haze
+option.HEAT_HAZE.comment=Shimmering air in the Ember Caldera and in lava.
+
+option.COLOR_GRADING=Colour Grading
+option.COLOR_GRADING.comment=Per hunting-ground colour grading (warm village, lush hills, cold peaks, hot caldera).
+option.EXPOSURE=Exposure
+option.SATURATION=Saturation
+option.CONTRAST=Contrast
+option.VIGNETTE=Vignette
+option.VIGNETTE_STRENGTH=Vignette Strength
+option.NIGHT_BRIGHTNESS=Night Brightness
+
+option.WAVING_PLANTS=Waving Plants
+option.WAVING_LEAVES=Waving Leaves
+option.WAVING_WATER=Waving Water
+option.WATER_WAVES=Water Wave Size
+option.WATER_REFLECTIONS=Water Reflections
+option.WATER_REFLECTIONS.comment=Screen-space reflections on water.
+option.SSR_STEPS=Reflection Quality
+option.DYNAMIC_HAND_LIGHT=Held Light
+option.DYNAMIC_HAND_LIGHT.comment=A held torch lights up the surroundings.
+option.LABPBR=Normal / Specular Maps
+option.LABPBR.comment=Use LabPBR _n / _s textures when a resource pack (or HuntCraft HD textures) provides them.
+
+option.MOTION_BLUR=Motion Blur
+option.MOTION_BLUR_STRENGTH=Motion Blur Strength
