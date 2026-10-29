@@ -189,6 +189,78 @@ public final class AutoTest {
             }), 200);
             shot("map_" + dim.location().getPath(), false);
         }
+        buildCombatSteps();
+    }
+
+    /** Hunter combat animations: third person shots of every weapon mid-swing, a dodge roll and first person. */
+    private static void buildCombatSteps() {
+        String[][] weapons = {
+                {"great_sword", "gs_combo1", "13"}, {"long_sword", "ls_combo1", "7"}, {"sword_and_shield", "sns_combo3", "6"},
+                {"dual_blades", "db_combo3", "6"}, {"hammer", "hm_combo1", "10"}, {"hunting_horn", "hh_combo1", "11"},
+                {"lance", "ln_combo1", "7"}, {"bow", "bow_kick", "7"}};
+        add("combat_setup", mc -> {
+            mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_FRONT);
+            server(mc, sp -> {
+                ServerLevel lvl = sp.server.overworld();
+                BlockPos ground = lvl.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, BlockPos.containing(3000, 0, 3000));
+                sp.getAbilities().flying = false;
+                sp.onUpdateAbilities();
+                sp.teleportTo(lvl, ground.getX() + 0.5, ground.getY(), ground.getZ() + 0.5, 180, 0);
+                HuntMonster m = MonsterRegistry.spawn(lvl, "boarfang", ground.offset(2, 0, -2), Rank.LOW, null);
+                if (m != null) {
+                    m.setNoAi(true);
+                    m.setMonsterScale(1.0F);
+                    m.setYRot(0);
+                    m.yBodyRot = 0;
+                    m.yHeadRot = 0;
+                    current = m;
+                }
+            });
+        }, 60);
+        for (String[] w : weapons) {
+            String cls = w[0], action = w[1];
+            int hitTick = Integer.parseInt(w[2]);
+            add("equip_" + cls, mc -> server(mc, sp -> {
+                net.minecraft.world.item.Item item = net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(HuntCraft.id("bone_" + cls));
+                sp.getInventory().setItem(sp.getInventory().selected, item == null ? net.minecraft.world.item.ItemStack.EMPTY : new net.minecraft.world.item.ItemStack(item));
+                sp.setYRot(180);
+                sp.setYHeadRot(180);
+                sp.yBodyRot = 180;
+            }), 24);
+            shot("combat_" + cls + "_stance", false);
+            add("attack_" + cls, mc -> server(mc, sp -> com.huntcraft.gear.weapon.action.CombatActions.start(sp, action)), hitTick);
+            shot("combat_" + cls + "_swing", false);
+            add("wait_" + cls, mc -> {
+            }, 30);
+        }
+        add("combat_back_view", mc -> mc.options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_BACK), 5);
+        add("attack_gs_back", mc -> server(mc, sp -> com.huntcraft.gear.weapon.action.CombatActions.start(sp, "gs_combo2")), 11);
+        shot("combat_great_sword_back", true);
+        add("wait_gs_back", mc -> {
+        }, 24);
+        add("dodge", mc -> {
+            if (mc.player != null && mc.level != null) {
+                ClientState.DODGES.put(mc.player.getId(), new ClientState.Dodge(mc.level.getGameTime(), 0));
+            }
+        }, 4);
+        shot("combat_dodge_roll", false);
+        add("sheathe_potion", mc -> server(mc, sp -> sp.getInventory().setItem(sp.getInventory().selected,
+                new net.minecraft.world.item.ItemStack(com.huntcraft.registry.HCItems.POTION.get()))), 20);
+        shot("combat_sheathed_back", false);
+        add("combat_first_person", mc -> {
+            mc.options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+            server(mc, sp -> {
+                net.minecraft.world.item.Item item = net.minecraftforge.registries.ForgeRegistries.ITEMS.getValue(HuntCraft.id("bone_great_sword"));
+                if (item != null) sp.getInventory().setItem(sp.getInventory().selected, new net.minecraft.world.item.ItemStack(item));
+            });
+        }, 24);
+        shot("combat_first_person_stance", true);
+        add("attack_fp", mc -> server(mc, sp -> com.huntcraft.gear.weapon.action.CombatActions.start(sp, "gs_combo1")), 12);
+        shot("combat_first_person_swing", true);
+        add("combat_cleanup", mc -> server(mc, sp -> {
+            if (current != null) current.discard();
+            current = null;
+        }), 5);
     }
 
     private static HuntMonster current;

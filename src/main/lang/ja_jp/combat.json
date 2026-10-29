@@ -1,0 +1,8 @@
+{
+ "subtitles.huntcraft.combat.sheathe": "武器を納める",
+ "subtitles.huntcraft.combat.unsheathe": "武器を抜く",
+ "subtitles.huntcraft.combat.kick": "蹴り",
+ "subtitles.huntcraft.combat.hit": "攻撃が命中",
+ "subtitles.huntcraft.combat.knockdown": "吹き飛ばされる",
+ "message.huntcraft.combat.busy": "攻撃中は操作できない"
+}

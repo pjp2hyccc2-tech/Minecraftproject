@@ -1,0 +1,8 @@
+{
+ "subtitles.huntcraft.combat.sheathe": "Weapon sheathed",
+ "subtitles.huntcraft.combat.unsheathe": "Weapon drawn",
+ "subtitles.huntcraft.combat.kick": "Kick",
+ "subtitles.huntcraft.combat.hit": "Attack lands",
+ "subtitles.huntcraft.combat.knockdown": "Knocked down",
+ "message.huntcraft.combat.busy": "Cannot act during an attack"
+}

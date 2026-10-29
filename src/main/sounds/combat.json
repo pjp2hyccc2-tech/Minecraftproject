@@ -1,0 +1,45 @@
+{
+ "combat.sheathe": {
+  "subtitle": "subtitles.huntcraft.combat.sheathe",
+  "sounds": [
+   {"name": "minecraft:item/armor/equip_leather1", "pitch": 0.8, "volume": 0.8},
+   {"name": "minecraft:item/armor/equip_leather2", "pitch": 0.85, "volume": 0.8}
+  ]
+ },
+ "combat.unsheathe": {
+  "subtitle": "subtitles.huntcraft.combat.unsheathe",
+  "sounds": [
+   {"name": "minecraft:item/armor/equip_leather1", "pitch": 1.2, "volume": 0.8},
+   {"name": "minecraft:entity/player/attack/sweep4", "pitch": 1.5, "volume": 0.5}
+  ]
+ },
+ "combat.kick": {
+  "subtitle": "subtitles.huntcraft.combat.kick",
+  "sounds": [
+   {"name": "minecraft:entity/player/attack/weak1", "pitch": 0.8},
+   {"name": "minecraft:entity/player/attack/weak2", "pitch": 0.75}
+  ]
+ },
+ "combat.hit_slash": {
+  "subtitle": "subtitles.huntcraft.combat.hit",
+  "sounds": [
+   {"name": "minecraft:entity/player/attack/strong1", "pitch": 1.1, "volume": 0.7},
+   {"name": "minecraft:entity/player/attack/strong2", "pitch": 1.15, "volume": 0.7},
+   {"name": "minecraft:entity/player/attack/crit1", "pitch": 1.2, "volume": 0.5}
+  ]
+ },
+ "combat.hit_blunt": {
+  "subtitle": "subtitles.huntcraft.combat.hit",
+  "sounds": [
+   {"name": "minecraft:entity/player/attack/strong3", "pitch": 0.7, "volume": 0.8},
+   {"name": "minecraft:entity/player/attack/knockback1", "pitch": 0.75, "volume": 0.8}
+  ]
+ },
+ "combat.knockdown": {
+  "subtitle": "subtitles.huntcraft.combat.knockdown",
+  "sounds": [
+   {"name": "minecraft:item/armor/equip_leather1", "pitch": 0.6},
+   {"name": "minecraft:dig/stone1", "pitch": 0.8, "volume": 0.6}
+  ]
+ }
+}

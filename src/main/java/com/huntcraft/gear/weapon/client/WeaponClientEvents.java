@@ -1,7 +1,6 @@
 package com.huntcraft.gear.weapon.client;
 
 import com.huntcraft.HuntCraft;
-import com.huntcraft.core.WeaponClass;
 import com.huntcraft.gear.weapon.HunterWeaponItem;
 import com.huntcraft.gear.weapon.LanceItem;
 import com.huntcraft.gear.weapon.SwordShieldItem;
@@ -16,7 +15,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
@@ -32,7 +30,7 @@ public final class WeaponClientEvents {
     private WeaponClientEvents() {
     }
 
-    /** Left clicks on air / blocks with a melee weapon swing it (and never mine). */
+    /** The attack key with a hunter weapon never mines or swings vanilla style: it starts a combat action. */
     @SubscribeEvent
     public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
         Minecraft mc = Minecraft.getInstance();
@@ -46,15 +44,13 @@ public final class WeaponClientEvents {
         }
         if (!event.isAttack()) return;
         ItemStack main = p.getMainHandItem();
-        if (!(main.getItem() instanceof HunterWeaponItem w) || w.weaponClass() == WeaponClass.BOW) return;
-        HitResult hr = mc.hitResult;
-        if (hr == null || hr.getType() == HitResult.Type.MISS) {
-            HCNetwork.sendToServer(WeaponNet.SWING, new CompoundTag());
-        } else if (hr.getType() == HitResult.Type.BLOCK) {
-            event.setCanceled(true);
-            p.resetAttackStrengthTicker();
-            HCNetwork.sendToServer(WeaponNet.SWING, new CompoundTag());
-        }
+        if (!(main.getItem() instanceof HunterWeaponItem)) return;
+        event.setCanceled(true);
+        event.setSwingHand(false);
+        p.resetAttackStrengthTicker();
+        CompoundTag t = new CompoundTag();
+        t.putBoolean("sneak", p.isShiftKeyDown());
+        HCNetwork.sendToServer(WeaponNet.SWING, t);
     }
 
     @SubscribeEvent
@@ -100,6 +96,14 @@ public final class WeaponClientEvents {
     @SubscribeEvent
     public static void movementInput(MovementInputUpdateEvent event) {
         Player p = event.getEntity();
+        if (com.huntcraft.client.player.CombatClient.lockMovement(p)) {
+            Input in = event.getInput();
+            in.forwardImpulse = 0;
+            in.leftImpulse = 0;
+            in.jumping = false;
+            in.up = in.down = in.left = in.right = false;
+            return;
+        }
         if (!p.isUsingItem()) return;
         if (p.getUsedItemHand() == InteractionHand.OFF_HAND && p.getMainHandItem().getItem() instanceof SwordShieldItem) {
             // sword & shield: walk while using an off-hand item

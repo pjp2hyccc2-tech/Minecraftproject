@@ -1,7 +1,8 @@
 package com.huntcraft.gear.weapon;
 
-import com.huntcraft.core.DamageKind;
 import com.huntcraft.core.WeaponClass;
+import com.huntcraft.gear.weapon.action.ActionDef;
+import com.huntcraft.gear.weapon.action.CombatActions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -26,10 +27,23 @@ public class HuntingHornItem extends HunterWeaponItem {
     }
 
     @Override
-    protected float onLeftClick(Player p, ItemStack stack) {
-        float mv = nextComboMV(p);
-        if (!p.level().isClientSide) addNote(p, p.isShiftKeyDown() ? 3 : 1);
-        return mv;
+    public String comboStart(ServerPlayer p, ItemStack stack, boolean sneak) {
+        return sneak ? "hh_swing3" : "hh_combo1";
+    }
+
+    @Override
+    public void onActionStart(ServerPlayer p, ItemStack stack, ActionDef def) {
+        int note = def.tagInt("note", 0);
+        if (note > 0) addNote(p, note);
+    }
+
+    @Override
+    public void onActionHitDone(ServerPlayer p, ItemStack stack, ActionDef def, ActionDef.Hit hit, int hits) {
+        if ("hh_perform".equals(def.name)) {
+            WeaponState s = WeaponState.get(p);
+            HornSongs.perform(p, line, s);
+            s.clearNotes();
+        }
     }
 
     public void addNote(Player p, int note) {
@@ -50,29 +64,15 @@ public class HuntingHornItem extends HunterWeaponItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player p, InteractionHand hand) {
         ItemStack stack = p.getItemInHand(hand);
         if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(stack);
+        if (CombatActions.isBusy(p)) return InteractionResultHolder.fail(stack);
         if (p.isShiftKeyDown()) {
-            if (!level.isClientSide) perform((ServerPlayer) p);
+            if (!level.isClientSide) CombatActions.start((ServerPlayer) p, "hh_perform");
             p.getCooldowns().addCooldown(this, 30);
         } else {
-            if (!level.isClientSide) {
-                ServerPlayer sp = (ServerPlayer) p;
-                special(sp, () -> WeaponHits.cone(sp, swingRange() + 0.2, 110F, 0.38F, (t, ctx) -> ctx.kind = DamageKind.BLUNT));
-                addNote(sp, 2);
-                swingSound(sp, 1.0F);
-                WeaponFx.sweep(sp, 1.8, 2);
-            }
+            if (!level.isClientSide) CombatActions.start((ServerPlayer) p, "hh_swing2");
             p.getCooldowns().addCooldown(this, 14);
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
-    }
-
-    private void perform(ServerPlayer p) {
-        WeaponState s = WeaponState.get(p);
-        playSound(p, WeaponSounds.HORN_SONG.get(), 1.2F, 1.0F);
-        special(p, () -> WeaponHits.area(p, p.position().add(0, 1.0, 0), 2.8, 0.28F, (t, ctx) -> ctx.kind = DamageKind.BLUNT));
-        WeaponFx.send(p, ParticleTypes.NOTE, p.position().add(0, 1.6, 0), 12, 1.2, 0.6, 1.2, 1.0);
-        HornSongs.perform(p, line, s);
-        s.clearNotes();
     }
 
     @Override

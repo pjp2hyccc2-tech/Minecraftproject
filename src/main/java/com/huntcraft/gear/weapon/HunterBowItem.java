@@ -1,6 +1,7 @@
 package com.huntcraft.gear.weapon;
 
 import com.huntcraft.core.WeaponClass;
+import com.huntcraft.gear.weapon.action.CombatActions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -91,6 +92,7 @@ public class HunterBowItem extends HunterWeaponItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player p, InteractionHand hand) {
         ItemStack stack = p.getItemInHand(hand);
         if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(stack);
+        if (CombatActions.isBusy(p)) return InteractionResultHolder.fail(stack);
         if (p.isShiftKeyDown()) {
             if (!level.isClientSide) cycleCoating((ServerPlayer) p, stack);
             p.getCooldowns().addCooldown(this, 6);
@@ -164,6 +166,12 @@ public class HunterBowItem extends HunterWeaponItem {
             }
         }
         playSound(p, WeaponSounds.BOW_SHOT.get(), 1.0F, 0.9F + 0.1F * charge);
+        CombatActions.start((ServerPlayer) p, "bow_shoot");
+    }
+
+    @Override
+    public String comboStart(ServerPlayer p, ItemStack stack, boolean sneak) {
+        return "bow_kick";
     }
 
     private void fire(Player p, ItemStack bow, float mv, float elementMult, int coat, float critRange, int hits, float yawOffset, int charge) {

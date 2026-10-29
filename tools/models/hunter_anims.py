@@ -366,8 +366,9 @@ class Attack:
         self.ticks = ticks
         self.two = two
         self.frames = []
+        special = 0 if ('_combo' in name or name in ('sns_guard_slash', 'ln_poke', 'bow_kick')) else 1
         self.action = {'ticks': ticks, 'anim': name, 'hits': [], 'move': [], 'sounds': [], 'cancel': ticks,
-                       'lock': True, 'iframes': [0, 0], 'trail': [0, 0], 'stamina': 0, 'next': None, 'tags': {}}
+                       'lock': True, 'iframes': [0, 0], 'trail': [0, 0], 'stamina': 0, 'next': None, 'tags': {'special': special}}
         ACTIONS[name] = self.action
 
     def key(self, tick, hand, blade, lean=0, twist=0, tilt=0, drop=1.0, head=None, feet=None, roll=0.0, face=None,
@@ -1175,10 +1176,17 @@ def reactions(m):
                 rz = ang
             else:
                 rz = -ang
-            # rotate about the body centre: lift root so the pivot is mid body
-            lift = 12.0 * tuck
+            # rotate about the body centre (11px above the feet): counter-translate the root along the circle
+            th = math.radians(ang)
+            cy = -11.0
+            if axis in ('f', 'b'):
+                sg = 1 if axis == 'f' else -1
+                px_, py_, pz_ = 0.0, cy - cy * math.cos(th), -cy * math.sin(th) * sg
+            else:
+                sg = 1 if axis == 'l' else -1
+                px_, py_, pz_ = cy * math.sin(th) * sg, cy - cy * math.cos(th), 0.0
             p.r('root', rx, ry, rz)
-            p.p('root', 0, -lift + 1.0 * tuck, 0)
+            p.p('root', px_, py_ - 2.0 * math.sin(math.pi * f), pz_)
             p.r('hips', 20 * tuck, 0, 0)
             p.r('chest', 45 * tuck, 0, 0)
             p.r('head', 10 * tuck, 0, 0)
@@ -1263,7 +1271,7 @@ def reactions(m):
     crouch.r('arm_l', 10, 0, -10)
     A.pose(38, crouch)
     A.pose(44, Pose())
-    A.iframes(0, 40).cancel(40)
+    A.iframes(0, 40).cancel(40).tag('nocancel', 1).sound(8, 'combat.knockdown', 1.0, 1.0)
     A.build()
     del ACTIONS['knockdown']['hits']
 

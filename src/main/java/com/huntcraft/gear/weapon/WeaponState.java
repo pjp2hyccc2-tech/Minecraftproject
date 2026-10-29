@@ -84,6 +84,9 @@ public final class WeaponState {
     public final int[] buffTicks = new int[HornSongs.EFFECT_COUNT];
     public final int[] buffLevel = new int[HornSongs.EFFECT_COUNT];
 
+    // ---- animation driven combat (server: timeline, see gear/weapon/action)
+    public final com.huntcraft.gear.weapon.action.ActionState act = new com.huntcraft.gear.weapon.action.ActionState();
+
     // ---- server bookkeeping
     public final List<Scheduled> scheduled = new ArrayList<>();
     @Nullable
