@@ -147,7 +147,7 @@
  "desc.mcbesiege.starting_block": "マシンの心臓部。すべてのパーツはここにつながる。上面の矢印が前方",
  "desc.mcbesiege.steel_block": "最も頑丈な装甲ブロック",
  "desc.mcbesiege.steering_block": "←→で無制限に回転し、その角度を保持",
- "desc.mcbesiege.steering_hinge": "←→で角度を変える。制限角あり",
+ "desc.mcbesiege.steering_hinge": "車体の側面に付けて車輪を載せると←→で首を振る（制限角あり）。スニーク+レンチで軸を回転",
  "desc.mcbesiege.stone_block": "重く燃えない。水に沈みにくい",
  "desc.mcbesiege.suspension": "バネとダンパーで衝撃を吸収",
  "desc.mcbesiege.thatch": "茅葺き",

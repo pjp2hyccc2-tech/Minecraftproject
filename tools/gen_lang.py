@@ -20,7 +20,7 @@ PARTS = {
     'grip_pad': ('グリップパッド', 'Grip Pad', '摩擦が非常に大きい', 'Very high friction'),
     'ice_pad': ('氷の滑り板', 'Ice Pad', 'ほとんど摩擦がない', 'Almost no friction'),
     'hinge': ('ヒンジ', 'Hinge', '自由に曲がる関節（ピン軸）。スニーク+レンチで軸を回転', 'Free joint around its pin; sneak+wrench turns the pin'),
-    'steering_hinge': ('ステアリングヒンジ', 'Steering Hinge', '←→で角度を変える。制限角あり', 'Turns while Left/Right are held, within a limit'),
+    'steering_hinge': ('ステアリングヒンジ', 'Steering Hinge', '車体の側面に付けて車輪を載せると←→で首を振る（制限角あり）。スニーク+レンチで軸を回転', 'Mount on a side with a wheel on it: swivels with Left/Right within a limit; sneak+wrench turns the pin'),
     'steering_block': ('ステアリングブロック', 'Steering Block', '←→で無制限に回転し、その角度を保持', 'Rotates without limit and holds its angle'),
     'spinning_block': ('回転ブロック', 'Spinning Block', '回り続けるモーター。プロペラやノコギリに', 'Motor that keeps spinning; for propellers and blades'),
     'ball_joint': ('ボールジョイント', 'Ball Joint', 'あらゆる方向に曲がる関節', 'Bends in every direction'),

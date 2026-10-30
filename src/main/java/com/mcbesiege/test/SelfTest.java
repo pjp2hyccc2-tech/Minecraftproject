@@ -39,8 +39,8 @@ public final class SelfTest {
     private static final List<String> info = new ArrayList<>();
     private static int tick = -1;
     private static BlockPos base;
-    private static MachineEntity car, gun;
-    private static V3 carStart, gunStart;
+    private static MachineEntity car, gun, steer;
+    private static V3 carStart, gunStart, steerStart, steerFwd0;
     private static int wallBefore;
 
     private static void err(String s) {
@@ -81,12 +81,23 @@ public final class SelfTest {
                     }
                     if (gun == null || gun.machine == null) err("cannon machine did not start");
                     else gunStart = gun.machine.corePos();
+                    steer = MachineManager.startSimulation(level, base.offset(-20, 0, 0), null);
+                    if (steer == null || steer.machine == null) err("steering car did not start");
+                    else {
+                        steerStart = steer.machine.corePos();
+                        steerFwd0 = steer.machine.core.base.body.rb.rot.rotate(V3.Z);
+                        ok("steering car started with " + steer.machine.parts.size() + " parts, " + steer.machine.bodies.size() + " bodies, " + steer.machine.joints.size() + " joints");
+                    }
                 }
                 case 50 -> {
                     if (car != null && car.machine != null) {
                         V3 c = car.machine.corePos();
                         ok(String.format("car settled at %.2f %.2f %.2f (start %.2f %.2f %.2f)", c.x, c.y, c.z, carStart.x, carStart.y, carStart.z));
                         car.machine.keys.add(Keys.UP);
+                    }
+                    if (steer != null && steer.machine != null) {
+                        steer.machine.keys.add(Keys.UP);
+                        steer.machine.keys.add(Keys.LEFT);
                     }
                 }
                 case 110 -> {
@@ -98,6 +109,15 @@ public final class SelfTest {
                         ok(String.format("car after driving: dz=%.2f dx=%.2f y=%.2f up.y=%.3f", dz, c.x - carStart.x, c.y, up.y));
                         if (dz < 6) err("car did not drive forward (dz=" + dz + ")");
                         if (up.y < 0.9) err("car flipped (up.y=" + up.y + ")");
+                    }
+                    if (steer != null && steer.machine != null) {
+                        steer.machine.keys.clear();
+                        V3 c = steer.machine.corePos();
+                        V3 f = steer.machine.core.base.body.rb.rot.rotate(V3.Z);
+                        double yaw = Math.toDegrees(Math.atan2(steerFwd0.cross(f).y, steerFwd0.dot(f)));
+                        ok(String.format("steering car: yaw %.1f deg (positive = left), moved dx=%.2f dz=%.2f, up.y=%.3f", yaw,
+                                c.x - steerStart.x, c.z - steerStart.z, steer.machine.core.base.body.rb.rot.rotate(V3.Y).y));
+                        if (yaw < 15) err("steering car did not turn left (yaw=" + yaw + ")");
                     }
                     if (gun != null && gun.machine != null) {
                         wallBefore = countWall(level);
@@ -131,6 +151,7 @@ public final class SelfTest {
                     }
                     if (car != null && !car.isRemoved()) MachineManager.reset(car, true);
                     if (gun != null && !gun.isRemoved()) MachineManager.reset(gun, true);
+                    if (steer != null && !steer.isRemoved()) MachineManager.reset(steer, true);
                 }
                 case 185 -> {
                     BlockState s = level.getBlockState(base);
@@ -152,9 +173,9 @@ public final class SelfTest {
         BlockPos spawn = level.getSharedSpawnPos();
         int x = spawn.getX() + 4, z = spawn.getZ() + 4;
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-        base = new BlockPos(x, y + 1, z);
+        base = new BlockPos(x, y, z); // y = first free block above the ground
         // clear and flatten
-        for (int dx = -6; dx <= 40; dx++) {
+        for (int dx = -36; dx <= 40; dx++) {
             for (int dz = -6; dz <= 40; dz++) {
                 level.setBlock(new BlockPos(x + dx, y - 1, z + dz), Blocks.STONE.defaultBlockState(), 3);
                 for (int dy = 0; dy < 8; dy++) level.setBlock(new BlockPos(x + dx, y + dy, z + dz), Blocks.AIR.defaultBlockState(), 3);
@@ -167,6 +188,16 @@ public final class SelfTest {
         part(level, base.offset(-2, 0, 2), PartType.WHEEL, Direction.WEST);
         part(level, base.offset(2, 0, -2), PartType.WHEEL, Direction.EAST);
         part(level, base.offset(2, 0, 2), PartType.WHEEL, Direction.EAST);
+        // steering car: rear wheels on the chassis, front wheels on steering hinges (Besiege layout)
+        BlockPos s = base.offset(-20, 0, 0);
+        for (int dx = -1; dx <= 1; dx++) for (int dz = -2; dz <= 2; dz++) part(level, s.offset(dx, 0, dz), PartType.WOODEN_BLOCK, Direction.UP);
+        part(level, s, PartType.STARTING_BLOCK, Direction.SOUTH);
+        part(level, s.offset(-2, 0, -2), PartType.WHEEL, Direction.WEST);
+        part(level, s.offset(2, 0, -2), PartType.WHEEL, Direction.EAST);
+        part(level, s.offset(-2, 0, 2), PartType.STEERING_HINGE, Direction.WEST);
+        part(level, s.offset(2, 0, 2), PartType.STEERING_HINGE, Direction.EAST);
+        part(level, s.offset(-3, 0, 2), PartType.WHEEL, Direction.WEST);
+        part(level, s.offset(3, 0, 2), PartType.WHEEL, Direction.EAST);
         // cannon machine facing +x, wall 6 blocks ahead
         BlockPos g = base.offset(20, 0, 0);
         part(level, g, PartType.STARTING_BLOCK, Direction.EAST);

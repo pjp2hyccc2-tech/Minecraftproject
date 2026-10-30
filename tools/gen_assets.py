@@ -186,9 +186,13 @@ joint('hinge',
       [box(1, 0, 1, 15, 6, 15, '#side'), box(0, 6, 6, 4, 10, 10, '#pin'), box(12, 6, 6, 16, 10, 10, '#pin')],
       [box(1, 10, 1, 15, 16, 15, '#side'), box(5, 6, 6, 11, 10, 10, '#pin'), box(0, 7.5, 7.5, 16, 8.5, 8.5, '#pin')],
       {'side': T('hinge'), 'pin': T('axle'), 'particle': T('hinge')}, twist=True)
-joint('steering_hinge', [box(0, 0, 0, 16, 8, 16, '#side')],
-      [box(1, 8, 1, 15, 16, 15, {'n': '#side', 's': '#side', 'e': '#side', 'w': '#side', 'u': '#top', 'd': '#side'})],
-      {'side': T('steering_hinge'), 'top': T('steering_hinge_top'), 'particle': T('steering_hinge')})
+# steering hinge: knuckle pin along canonical Z (vertical when mounted on a side face); the twisted variant turns it
+joint('steering_hinge',
+      [box(1, 0, 1, 15, 6, 15, '#side'), box(6, 6, 0, 10, 10, 4, '#pin'), box(6, 6, 12, 10, 10, 16, '#pin')],
+      [box(1, 10, 1, 15, 16, 15, {'n': '#side', 's': '#side', 'e': '#side', 'w': '#side', 'u': '#top', 'd': '#side'}),
+       box(6, 6, 5, 10, 10, 11, '#pin'), box(7.5, 7.5, 0, 8.5, 8.5, 16, '#pin')],
+      {'side': T('steering_hinge'), 'top': T('steering_hinge_top'), 'pin': T('axle'), 'particle': T('steering_hinge')},
+      twist=True)
 joint('steering_block', [box(0, 0, 0, 16, 8, 16, '#side')],
       [box(1, 8, 1, 15, 16, 15, {'n': '#side', 's': '#side', 'e': '#side', 'w': '#side', 'u': '#top', 'd': '#side'})],
       {'side': T('steering_block'), 'top': T('steering_block_top'), 'particle': T('steering_block')})

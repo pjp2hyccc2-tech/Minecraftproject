@@ -37,7 +37,7 @@ public enum PartType {
     // ---------------------------------------------------------------- mechanical
     HINGE(d(Cat.MECHANICAL).half().mass(0.5).hp(60).flammable().joint(JointKind.PERP).twist()
             .toggle("limits", false).slider("angle", 0, 180, 90)),
-    STEERING_HINGE(d(Cat.MECHANICAL).half().mass(0.5).hp(60).flammable().joint(JointKind.AXIAL)
+    STEERING_HINGE(d(Cat.MECHANICAL).half().mass(0.5).hp(60).flammable().joint(JointKind.PERP).twist()
             .keys(k("left", Keys.LEFT), k("right", Keys.RIGHT)).slider("speed", 0, 2, 1).slider("limit", 0, 180, 45)
             .toggle("return", true).toggle("flip", false)),
     STEERING_BLOCK(d(Cat.MECHANICAL).half().mass(0.5).hp(70).joint(JointKind.AXIAL)

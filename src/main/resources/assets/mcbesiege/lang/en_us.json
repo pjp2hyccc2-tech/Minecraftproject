@@ -147,7 +147,7 @@
  "desc.mcbesiege.starting_block": "The heart of every machine. The arrow on top marks forward",
  "desc.mcbesiege.steel_block": "The toughest armour block",
  "desc.mcbesiege.steering_block": "Rotates without limit and holds its angle",
- "desc.mcbesiege.steering_hinge": "Turns while Left/Right are held, within a limit",
+ "desc.mcbesiege.steering_hinge": "Mount on a side with a wheel on it: swivels with Left/Right within a limit; sneak+wrench turns the pin",
  "desc.mcbesiege.stone_block": "Heavy and fireproof",
  "desc.mcbesiege.suspension": "Spring and damper that soak up bumps",
  "desc.mcbesiege.thatch": "Thatch",

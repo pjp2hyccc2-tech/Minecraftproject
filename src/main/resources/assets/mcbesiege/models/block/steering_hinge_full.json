@@ -3,19 +3,20 @@
  "textures": {
   "side": "mcbesiege:block/steering_hinge",
   "top": "mcbesiege:block/steering_hinge_top",
+  "pin": "mcbesiege:block/axle",
   "particle": "mcbesiege:block/steering_hinge"
  },
  "elements": [
   {
    "from": [
+    1,
     0,
-    0,
-    0
+    1
    ],
    "to": [
-    16,
-    8,
-    16
+    15,
+    6,
+    15
    ],
    "faces": {
     "north": {
@@ -40,8 +41,72 @@
   },
   {
    "from": [
+    6,
+    6,
+    0
+   ],
+   "to": [
+    10,
+    10,
+    4
+   ],
+   "faces": {
+    "north": {
+     "texture": "#pin"
+    },
+    "south": {
+     "texture": "#pin"
+    },
+    "east": {
+     "texture": "#pin"
+    },
+    "west": {
+     "texture": "#pin"
+    },
+    "up": {
+     "texture": "#pin"
+    },
+    "down": {
+     "texture": "#pin"
+    }
+   }
+  },
+  {
+   "from": [
+    6,
+    6,
+    12
+   ],
+   "to": [
+    10,
+    10,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#pin"
+    },
+    "south": {
+     "texture": "#pin"
+    },
+    "east": {
+     "texture": "#pin"
+    },
+    "west": {
+     "texture": "#pin"
+    },
+    "up": {
+     "texture": "#pin"
+    },
+    "down": {
+     "texture": "#pin"
+    }
+   }
+  },
+  {
+   "from": [
     1,
-    8,
+    10,
     1
    ],
    "to": [
@@ -67,6 +132,70 @@
     },
     "down": {
      "texture": "#side"
+    }
+   }
+  },
+  {
+   "from": [
+    6,
+    6,
+    5
+   ],
+   "to": [
+    10,
+    10,
+    11
+   ],
+   "faces": {
+    "north": {
+     "texture": "#pin"
+    },
+    "south": {
+     "texture": "#pin"
+    },
+    "east": {
+     "texture": "#pin"
+    },
+    "west": {
+     "texture": "#pin"
+    },
+    "up": {
+     "texture": "#pin"
+    },
+    "down": {
+     "texture": "#pin"
+    }
+   }
+  },
+  {
+   "from": [
+    7.5,
+    7.5,
+    0
+   ],
+   "to": [
+    8.5,
+    8.5,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#pin"
+    },
+    "south": {
+     "texture": "#pin"
+    },
+    "east": {
+     "texture": "#pin"
+    },
+    "west": {
+     "texture": "#pin"
+    },
+    "up": {
+     "texture": "#pin"
+    },
+    "down": {
+     "texture": "#pin"
     }
    }
   }

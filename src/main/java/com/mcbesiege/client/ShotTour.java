@@ -136,7 +136,7 @@ public final class ShotTour {
             }
             case 4 -> {
                 shot(mc, "parts_closeup");
-                view(mc, G.getX() + 40, G.getY() + 9, G.getZ() + 6, 135, 25, GameType.SPECTATOR);
+                view(mc, G.getX() + 44, G.getY() + 10, G.getZ() - 4, 0, 20, GameType.SPECTATOR);
                 wait = 80;
                 stage = 5;
             }
@@ -170,7 +170,9 @@ public final class ShotTour {
             case 9 -> {
                 shot(mc, "ui_missions");
                 mc.setScreen(null);
-                wait = 20;
+                // stand on the car facing forward (south) so the orbit camera starts behind it and the seat is in reach
+                view(mc, G.getX() + 32.5, G.getY() + 2, G.getZ() + 18.5, 0, 25, GameType.CREATIVE);
+                wait = 30;
                 stage = 10;
             }
             case 10 -> { // simulation: start the car
@@ -186,18 +188,18 @@ public final class ShotTour {
             case 11 -> {
                 shot(mc, "sim_start");
                 if (carId >= 0) Net.sendKeys(carId, new int[]{Keys.UP});
-                wait = 50;
+                wait = 40;
                 stage = 12;
             }
             case 12 -> {
                 shot(mc, "sim_drive");
                 if (carId >= 0) Net.sendKeys(carId, new int[]{Keys.UP, Keys.LEFT});
-                wait = 30;
+                wait = 18;
                 stage = 13;
             }
             case 13 -> {
                 shot(mc, "sim_steer");
-                if (carId >= 0) Net.sendKeys(carId, new int[]{Keys.C});
+                if (carId >= 0) Net.sendKeys(carId, new int[]{Keys.UP, Keys.C});
                 wait = 6;
                 stage = 14;
             }
@@ -352,10 +354,13 @@ public final class ShotTour {
         for (int dx = -1; dx <= 1; dx++) for (int dz = -2; dz <= 2; dz++) part(l, carStart.offset(dx, 0, dz), PartType.WOODEN_BLOCK, Direction.UP);
         part(l, carStart, PartType.STARTING_BLOCK, Direction.SOUTH);
         part(l, carStart.offset(0, 0, 2), PartType.REINFORCED_WOOD, Direction.UP);
-        for (int dz = -2; dz <= 2; dz += 4) {
-            part(l, carStart.offset(-2, 0, dz), PartType.WHEEL, Direction.WEST);
-            part(l, carStart.offset(2, 0, dz), PartType.WHEEL, Direction.EAST);
-        }
+        part(l, carStart.offset(-2, 0, -2), PartType.WHEEL, Direction.WEST);
+        part(l, carStart.offset(2, 0, -2), PartType.WHEEL, Direction.EAST);
+        // front wheels on steering hinges
+        part(l, carStart.offset(-2, 0, 2), PartType.STEERING_HINGE, Direction.WEST);
+        part(l, carStart.offset(2, 0, 2), PartType.STEERING_HINGE, Direction.EAST);
+        part(l, carStart.offset(-3, 0, 2), PartType.WHEEL, Direction.WEST);
+        part(l, carStart.offset(3, 0, 2), PartType.WHEEL, Direction.EAST);
         part(l, carStart.offset(0, 1, 1), PartType.CANNON, Direction.SOUTH);
         part(l, carStart.offset(0, 1, 0), PartType.IRON_BLOCK, Direction.UP);
         part(l, carStart.offset(-1, 1, -2), PartType.IRON_PLATE, Direction.UP);

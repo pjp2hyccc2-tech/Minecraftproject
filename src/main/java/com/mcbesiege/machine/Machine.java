@@ -274,7 +274,7 @@ public final class Machine {
                 j.breakTorque = 900 * str;
             }
             case PERP -> {
-                Joints.Hinge h = new Joints.Hinge(a, b, anchor, p.twistAxis());
+                Joints.Hinge h = new Joints.Hinge(a, b, anchor, p.jointAxis());
                 j = h;
                 j.breakForce = 1200 * str;
                 j.breakTorque = 700 * str;
@@ -368,7 +368,7 @@ public final class Machine {
 
     private void setupAutoSign(MPart p) {
         V3 up = V3.Y;
-        V3 a = p.facingVec;
+        V3 a = p.jointAxis();
         if (p.type.isPoweredWheel()) {
             double d = a.dot(up.cross(forward));
             p.autoSign = Math.abs(d) < 0.3 ? 1 : Math.signum(d);

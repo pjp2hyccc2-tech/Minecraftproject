@@ -13,15 +13,15 @@
    "x": 180
   },
   "facing=down,sim_part=full,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_full",
+   "model": "mcbesiege:block/steering_hinge_full_b",
    "x": 180
   },
   "facing=down,sim_part=base,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_base",
+   "model": "mcbesiege:block/steering_hinge_base_b",
    "x": 180
   },
   "facing=down,sim_part=head,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_head",
+   "model": "mcbesiege:block/steering_hinge_head_b",
    "x": 180
   },
   "facing=up,sim_part=full,twist=false": {
@@ -34,13 +34,13 @@
    "model": "mcbesiege:block/steering_hinge_head"
   },
   "facing=up,sim_part=full,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_full"
+   "model": "mcbesiege:block/steering_hinge_full_b"
   },
   "facing=up,sim_part=base,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_base"
+   "model": "mcbesiege:block/steering_hinge_base_b"
   },
   "facing=up,sim_part=head,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_head"
+   "model": "mcbesiege:block/steering_hinge_head_b"
   },
   "facing=north,sim_part=full,twist=false": {
    "model": "mcbesiege:block/steering_hinge_full",
@@ -55,15 +55,15 @@
    "x": 90
   },
   "facing=north,sim_part=full,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_full",
+   "model": "mcbesiege:block/steering_hinge_full_b",
    "x": 90
   },
   "facing=north,sim_part=base,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_base",
+   "model": "mcbesiege:block/steering_hinge_base_b",
    "x": 90
   },
   "facing=north,sim_part=head,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_head",
+   "model": "mcbesiege:block/steering_hinge_head_b",
    "x": 90
   },
   "facing=south,sim_part=full,twist=false": {
@@ -82,17 +82,17 @@
    "y": 180
   },
   "facing=south,sim_part=full,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_full",
+   "model": "mcbesiege:block/steering_hinge_full_b",
    "x": 90,
    "y": 180
   },
   "facing=south,sim_part=base,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_base",
+   "model": "mcbesiege:block/steering_hinge_base_b",
    "x": 90,
    "y": 180
   },
   "facing=south,sim_part=head,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_head",
+   "model": "mcbesiege:block/steering_hinge_head_b",
    "x": 90,
    "y": 180
   },
@@ -112,17 +112,17 @@
    "y": 270
   },
   "facing=west,sim_part=full,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_full",
+   "model": "mcbesiege:block/steering_hinge_full_b",
    "x": 90,
    "y": 270
   },
   "facing=west,sim_part=base,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_base",
+   "model": "mcbesiege:block/steering_hinge_base_b",
    "x": 90,
    "y": 270
   },
   "facing=west,sim_part=head,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_head",
+   "model": "mcbesiege:block/steering_hinge_head_b",
    "x": 90,
    "y": 270
   },
@@ -142,17 +142,17 @@
    "y": 90
   },
   "facing=east,sim_part=full,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_full",
+   "model": "mcbesiege:block/steering_hinge_full_b",
    "x": 90,
    "y": 90
   },
   "facing=east,sim_part=base,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_base",
+   "model": "mcbesiege:block/steering_hinge_base_b",
    "x": 90,
    "y": 90
   },
   "facing=east,sim_part=head,twist=true": {
-   "model": "mcbesiege:block/steering_hinge_head",
+   "model": "mcbesiege:block/steering_hinge_head_b",
    "x": 90,
    "y": 90
   }

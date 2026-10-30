@@ -111,6 +111,13 @@ public final class MPart {
     /** Twist axis (hinge pin) in world space at assembly. */
     public V3 twistAxis() { return orient.rotate(V3.X); }
 
+    /** World axis of this part's joint: the facing for axial/slider parts, the hinge pin for perpendicular hinges.
+     *  A steering hinge's pin is canonical Z, which is vertical whenever it is mounted on a side face (Besiege car steering). */
+    public V3 jointAxis() {
+        if (type.joint != PartType.JointKind.PERP) return facingVec;
+        return type == PartType.STEERING_HINGE ? orient.rotate(V3.Z) : twistAxis();
+    }
+
     public boolean isExplosive() { return type.explosive > 0; }
 
     public Sub subForFace(Direction face) {

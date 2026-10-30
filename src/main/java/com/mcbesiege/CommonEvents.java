@@ -91,8 +91,10 @@ public final class CommonEvents {
     @SubscribeEvent
     public static void serverTick(TickEvent.ServerTickEvent e) {
         if (e.phase != TickEvent.Phase.END) return;
-        MissionManager.tick(e.getServer());
-        SelfTest.tick(e.getServer());
+        net.minecraft.server.MinecraftServer server = net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();
+        if (server == null) return;
+        MissionManager.tick(server);
+        SelfTest.tick(server);
     }
 
     @SubscribeEvent
