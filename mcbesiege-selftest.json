@@ -1,0 +1,28 @@
+{
+  "errors": [],
+  "info": [
+    "starting",
+    "site built at 4, -60, 4 ground y -60",
+    "car started with 19 parts, 5 bodies, 4 joints",
+    "steering car started with 21 parts, 7 bodies, 6 joints",
+    "car settled at 4.50 -59.10 4.50 (start 4.50 -59.09 4.50)",
+    "car after driving: dz\u003d20.12 dx\u003d0.00 y\u003d-59.10 up.y\u003d1.000",
+    "steering car: yaw 83.9 deg (positive \u003d left), moved dx\u003d11.76 dz\u003d7.64, up.y\u003d1.000",
+    "wall blocks before 20 after cannon 19",
+    "cannon recoil dx\u003d-0.88",
+    "bomb detonated",
+    "parts destroyed/detached by bomb: 1, bodies 1",
+    "reset restored the machine",
+    "siege dimension present, ground at 0",
+    "arena first_siege: 1 targets, 0 mobs, 0 props, goal\u003dfalse",
+    "arena windmill: 2 targets, 0 mobs, 0 props, goal\u003dfalse",
+    "arena outpost: 0 targets, 10 mobs, 0 props, goal\u003dfalse",
+    "arena castle_gate: 3 targets, 0 mobs, 0 props, goal\u003dfalse",
+    "arena treasure: 0 targets, 0 mobs, 1 props, goal\u003dtrue",
+    "arena canyon: 0 targets, 0 mobs, 0 props, goal\u003dtrue",
+    "arena three_towers: 3 targets, 0 mobs, 0 props, goal\u003dfalse",
+    "arena ravager: 0 targets, 4 mobs, 0 props, goal\u003dfalse",
+    "arena kings_castle: 4 targets, 8 mobs, 0 props, goal\u003dfalse"
+  ],
+  "ok": true
+}
