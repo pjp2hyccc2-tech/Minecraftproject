@@ -1,0 +1,25 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "minecraft:cobblestone"
+  },
+  {
+   "item": "minecraft:cobblestone"
+  },
+  {
+   "item": "minecraft:cobblestone"
+  },
+  {
+   "item": "minecraft:cobblestone"
+  },
+  {
+   "item": "minecraft:slime_ball"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:boulder",
+  "count": 1
+ }
+}

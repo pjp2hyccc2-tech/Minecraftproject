@@ -1,0 +1,19 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "minecraft:firework_rocket"
+  },
+  {
+   "item": "minecraft:firework_rocket"
+  },
+  {
+   "item": "mcbesiege:wooden_pole"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:rocket",
+  "count": 1
+ }
+}

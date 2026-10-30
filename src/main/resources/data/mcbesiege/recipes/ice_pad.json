@@ -1,0 +1,16 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "mcbesiege:wooden_panel"
+  },
+  {
+   "item": "minecraft:packed_ice"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:ice_pad",
+  "count": 1
+ }
+}

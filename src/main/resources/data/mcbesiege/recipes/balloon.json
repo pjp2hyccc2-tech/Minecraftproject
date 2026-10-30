@@ -1,0 +1,19 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "minecraft:red_wool"
+  },
+  {
+   "item": "minecraft:white_wool"
+  },
+  {
+   "item": "minecraft:string"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:balloon",
+  "count": 1
+ }
+}

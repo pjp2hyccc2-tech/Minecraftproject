@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/inner_stairs",
+ "textures": {
+  "bottom": "mcbesiege:block/castle_bricks",
+  "top": "mcbesiege:block/castle_bricks",
+  "side": "mcbesiege:block/castle_bricks"
+ }
+}

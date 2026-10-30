@@ -1,0 +1,75 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "end": "mcbesiege:block/suspension_end",
+  "coil": "mcbesiege:block/suspension",
+  "axle": "mcbesiege:block/axle",
+  "particle": "mcbesiege:block/suspension"
+ },
+ "elements": [
+  {
+   "from": [
+    1,
+    12,
+    1
+   ],
+   "to": [
+    15,
+    16,
+    15
+   ],
+   "faces": {
+    "north": {
+     "texture": "#end"
+    },
+    "south": {
+     "texture": "#end"
+    },
+    "east": {
+     "texture": "#end"
+    },
+    "west": {
+     "texture": "#end"
+    },
+    "up": {
+     "texture": "#end"
+    },
+    "down": {
+     "texture": "#end"
+    }
+   }
+  },
+  {
+   "from": [
+    6.5,
+    4,
+    6.5
+   ],
+   "to": [
+    9.5,
+    12,
+    9.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#axle"
+    },
+    "south": {
+     "texture": "#axle"
+    },
+    "east": {
+     "texture": "#axle"
+    },
+    "west": {
+     "texture": "#axle"
+    },
+    "up": {
+     "texture": "#axle"
+    },
+    "down": {
+     "texture": "#axle"
+    }
+   }
+  }
+ ]
+}

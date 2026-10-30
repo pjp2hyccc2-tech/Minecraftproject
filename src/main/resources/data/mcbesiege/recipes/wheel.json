@@ -1,0 +1,21 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "misc",
+ "pattern": [
+  " S ",
+  "SPS",
+  " S "
+ ],
+ "key": {
+  "S": {
+   "item": "minecraft:stick"
+  },
+  "P": {
+   "item": "mcbesiege:wooden_block"
+  }
+ },
+ "result": {
+  "item": "mcbesiege:wheel",
+  "count": 1
+ }
+}

@@ -1,0 +1,42 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "mount": "mcbesiege:block/spike_base",
+  "rock": "mcbesiege:block/boulder",
+  "particle": "mcbesiege:block/boulder"
+ },
+ "elements": [
+  {
+   "from": [
+    5,
+    0,
+    5
+   ],
+   "to": [
+    11,
+    1,
+    11
+   ],
+   "faces": {
+    "north": {
+     "texture": "#mount"
+    },
+    "south": {
+     "texture": "#mount"
+    },
+    "east": {
+     "texture": "#mount"
+    },
+    "west": {
+     "texture": "#mount"
+    },
+    "up": {
+     "texture": "#mount"
+    },
+    "down": {
+     "texture": "#mount"
+    }
+   }
+  }
+ ]
+}

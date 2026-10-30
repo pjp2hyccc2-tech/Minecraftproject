@@ -1,0 +1,43 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "base": "mcbesiege:block/axle",
+  "bit": "mcbesiege:block/drill_side",
+  "tip": "mcbesiege:block/drill_tip",
+  "particle": "mcbesiege:block/drill_side"
+ },
+ "elements": [
+  {
+   "from": [
+    3,
+    0,
+    3
+   ],
+   "to": [
+    13,
+    5,
+    13
+   ],
+   "faces": {
+    "north": {
+     "texture": "#base"
+    },
+    "south": {
+     "texture": "#base"
+    },
+    "east": {
+     "texture": "#base"
+    },
+    "west": {
+     "texture": "#base"
+    },
+    "up": {
+     "texture": "#base"
+    },
+    "down": {
+     "texture": "#base"
+    }
+   }
+  }
+ ]
+}

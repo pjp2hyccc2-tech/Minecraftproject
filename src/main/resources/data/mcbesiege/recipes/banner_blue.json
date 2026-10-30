@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "minecraft:blue_banner"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:banner_blue",
+  "count": 1
+ }
+}

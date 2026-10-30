@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "mcbesiege:block/banner_red"
+  },
+  "facing=east": {
+   "model": "mcbesiege:block/banner_red",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "mcbesiege:block/banner_red",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "mcbesiege:block/banner_red",
+   "y": 270
+  }
+ }
+}

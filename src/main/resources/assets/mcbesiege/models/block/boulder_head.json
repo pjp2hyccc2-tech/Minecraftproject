@@ -1,0 +1,106 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "mount": "mcbesiege:block/spike_base",
+  "rock": "mcbesiege:block/boulder",
+  "particle": "mcbesiege:block/boulder"
+ },
+ "elements": [
+  {
+   "from": [
+    0.8,
+    3.536,
+    3.536
+   ],
+   "to": [
+    15.2,
+    12.464,
+    12.464
+   ],
+   "faces": {
+    "north": {
+     "texture": "#rock"
+    },
+    "south": {
+     "texture": "#rock"
+    },
+    "east": {
+     "texture": "#rock"
+    },
+    "west": {
+     "texture": "#rock"
+    },
+    "up": {
+     "texture": "#rock"
+    },
+    "down": {
+     "texture": "#rock"
+    }
+   }
+  },
+  {
+   "from": [
+    3.536,
+    0.8,
+    3.536
+   ],
+   "to": [
+    12.464,
+    15.2,
+    12.464
+   ],
+   "faces": {
+    "north": {
+     "texture": "#rock"
+    },
+    "south": {
+     "texture": "#rock"
+    },
+    "east": {
+     "texture": "#rock"
+    },
+    "west": {
+     "texture": "#rock"
+    },
+    "up": {
+     "texture": "#rock"
+    },
+    "down": {
+     "texture": "#rock"
+    }
+   }
+  },
+  {
+   "from": [
+    3.536,
+    3.536,
+    0.8
+   ],
+   "to": [
+    12.464,
+    12.464,
+    15.2
+   ],
+   "faces": {
+    "north": {
+     "texture": "#rock"
+    },
+    "south": {
+     "texture": "#rock"
+    },
+    "east": {
+     "texture": "#rock"
+    },
+    "west": {
+     "texture": "#rock"
+    },
+    "up": {
+     "texture": "#rock"
+    },
+    "down": {
+     "texture": "#rock"
+    }
+   }
+  }
+ ]
+}

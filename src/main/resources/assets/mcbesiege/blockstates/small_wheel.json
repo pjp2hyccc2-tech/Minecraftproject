@@ -1,0 +1,160 @@
+{
+ "variants": {
+  "facing=down,sim_part=full,twist=false": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 180
+  },
+  "facing=down,sim_part=base,twist=false": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 180
+  },
+  "facing=down,sim_part=head,twist=false": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 180
+  },
+  "facing=down,sim_part=full,twist=true": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 180
+  },
+  "facing=down,sim_part=base,twist=true": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 180
+  },
+  "facing=down,sim_part=head,twist=true": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 180
+  },
+  "facing=up,sim_part=full,twist=false": {
+   "model": "mcbesiege:block/small_wheel_full"
+  },
+  "facing=up,sim_part=base,twist=false": {
+   "model": "mcbesiege:block/small_wheel_base"
+  },
+  "facing=up,sim_part=head,twist=false": {
+   "model": "mcbesiege:block/small_wheel_head"
+  },
+  "facing=up,sim_part=full,twist=true": {
+   "model": "mcbesiege:block/small_wheel_full"
+  },
+  "facing=up,sim_part=base,twist=true": {
+   "model": "mcbesiege:block/small_wheel_base"
+  },
+  "facing=up,sim_part=head,twist=true": {
+   "model": "mcbesiege:block/small_wheel_head"
+  },
+  "facing=north,sim_part=full,twist=false": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 90
+  },
+  "facing=north,sim_part=base,twist=false": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 90
+  },
+  "facing=north,sim_part=head,twist=false": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 90
+  },
+  "facing=north,sim_part=full,twist=true": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 90
+  },
+  "facing=north,sim_part=base,twist=true": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 90
+  },
+  "facing=north,sim_part=head,twist=true": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 90
+  },
+  "facing=south,sim_part=full,twist=false": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 90,
+   "y": 180
+  },
+  "facing=south,sim_part=base,twist=false": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 90,
+   "y": 180
+  },
+  "facing=south,sim_part=head,twist=false": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 90,
+   "y": 180
+  },
+  "facing=south,sim_part=full,twist=true": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 90,
+   "y": 180
+  },
+  "facing=south,sim_part=base,twist=true": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 90,
+   "y": 180
+  },
+  "facing=south,sim_part=head,twist=true": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 90,
+   "y": 180
+  },
+  "facing=west,sim_part=full,twist=false": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 90,
+   "y": 270
+  },
+  "facing=west,sim_part=base,twist=false": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 90,
+   "y": 270
+  },
+  "facing=west,sim_part=head,twist=false": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 90,
+   "y": 270
+  },
+  "facing=west,sim_part=full,twist=true": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 90,
+   "y": 270
+  },
+  "facing=west,sim_part=base,twist=true": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 90,
+   "y": 270
+  },
+  "facing=west,sim_part=head,twist=true": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 90,
+   "y": 270
+  },
+  "facing=east,sim_part=full,twist=false": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 90,
+   "y": 90
+  },
+  "facing=east,sim_part=base,twist=false": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 90,
+   "y": 90
+  },
+  "facing=east,sim_part=head,twist=false": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 90,
+   "y": 90
+  },
+  "facing=east,sim_part=full,twist=true": {
+   "model": "mcbesiege:block/small_wheel_full",
+   "x": 90,
+   "y": 90
+  },
+  "facing=east,sim_part=base,twist=true": {
+   "model": "mcbesiege:block/small_wheel_base",
+   "x": 90,
+   "y": 90
+  },
+  "facing=east,sim_part=head,twist=true": {
+   "model": "mcbesiege:block/small_wheel_head",
+   "x": 90,
+   "y": 90
+  }
+ }
+}

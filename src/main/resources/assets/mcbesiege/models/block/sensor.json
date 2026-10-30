@@ -1,0 +1,42 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "side": "mcbesiege:block/sensor_side",
+  "front": "mcbesiege:block/sensor_front",
+  "particle": "mcbesiege:block/sensor_side"
+ },
+ "elements": [
+  {
+   "from": [
+    2,
+    0,
+    2
+   ],
+   "to": [
+    14,
+    10,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#front"
+    },
+    "down": {
+     "texture": "#side"
+    }
+   }
+  }
+ ]
+}

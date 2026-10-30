@@ -1,0 +1,113 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "base": "mcbesiege:block/cannon_base",
+  "barrel": "mcbesiege:block/cannon_barrel",
+  "muzzle": "mcbesiege:block/cannon_muzzle",
+  "particle": "mcbesiege:block/cannon_barrel"
+ },
+ "elements": [
+  {
+   "from": [
+    2,
+    0,
+    2
+   ],
+   "to": [
+    14,
+    5,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#base"
+    },
+    "south": {
+     "texture": "#base"
+    },
+    "east": {
+     "texture": "#base"
+    },
+    "west": {
+     "texture": "#base"
+    },
+    "up": {
+     "texture": "#base"
+    },
+    "down": {
+     "texture": "#base"
+    }
+   }
+  },
+  {
+   "from": [
+    4,
+    3,
+    4
+   ],
+   "to": [
+    12,
+    16,
+    12
+   ],
+   "faces": {
+    "north": {
+     "texture": "#barrel"
+    },
+    "south": {
+     "texture": "#barrel"
+    },
+    "east": {
+     "texture": "#barrel"
+    },
+    "west": {
+     "texture": "#barrel"
+    },
+    "up": {
+     "texture": "#muzzle"
+    },
+    "down": {
+     "texture": "#barrel"
+    }
+   }
+  },
+  {
+   "from": [
+    4.6,
+    3,
+    4.6
+   ],
+   "to": [
+    11.4,
+    15.9,
+    11.4
+   ],
+   "faces": {
+    "north": {
+     "texture": "#barrel"
+    },
+    "south": {
+     "texture": "#barrel"
+    },
+    "east": {
+     "texture": "#barrel"
+    },
+    "west": {
+     "texture": "#barrel"
+    },
+    "up": {
+     "texture": "#muzzle"
+    }
+   },
+   "rotation": {
+    "origin": [
+     8,
+     8,
+     8
+    ],
+    "axis": "y",
+    "angle": 45
+   }
+  }
+ ]
+}

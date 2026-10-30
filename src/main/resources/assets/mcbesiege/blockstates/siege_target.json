@@ -1,0 +1,7 @@
+{
+ "variants": {
+  "": {
+   "model": "mcbesiege:block/siege_target"
+  }
+ }
+}

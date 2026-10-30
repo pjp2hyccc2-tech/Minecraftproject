@@ -1,0 +1,74 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "cloth": "mcbesiege:block/wing",
+  "rib": "mcbesiege:block/brace",
+  "particle": "mcbesiege:block/wing"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    0
+   ],
+   "to": [
+    16,
+    2,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#cloth"
+    },
+    "south": {
+     "texture": "#cloth"
+    },
+    "east": {
+     "texture": "#cloth"
+    },
+    "west": {
+     "texture": "#cloth"
+    },
+    "up": {
+     "texture": "#cloth"
+    },
+    "down": {
+     "texture": "#cloth"
+    }
+   }
+  },
+  {
+   "from": [
+    1,
+    2,
+    7
+   ],
+   "to": [
+    15,
+    3,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#rib"
+    },
+    "south": {
+     "texture": "#rib"
+    },
+    "east": {
+     "texture": "#rib"
+    },
+    "west": {
+     "texture": "#rib"
+    },
+    "up": {
+     "texture": "#rib"
+    },
+    "down": {
+     "texture": "#rib"
+    }
+   }
+  }
+ ]
+}

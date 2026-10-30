@@ -1,0 +1,42 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "side": "mcbesiege:block/wooden_pole",
+  "end": "mcbesiege:block/wooden_pole_end",
+  "particle": "mcbesiege:block/wooden_pole"
+ },
+ "elements": [
+  {
+   "from": [
+    5,
+    0,
+    5
+   ],
+   "to": [
+    11,
+    16,
+    11
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#end"
+    },
+    "down": {
+     "texture": "#end"
+    }
+   }
+  }
+ ]
+}

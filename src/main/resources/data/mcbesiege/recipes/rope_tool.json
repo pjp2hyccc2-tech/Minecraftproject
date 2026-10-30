@@ -1,0 +1,22 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "minecraft:string"
+  },
+  {
+   "item": "minecraft:string"
+  },
+  {
+   "item": "minecraft:string"
+  },
+  {
+   "item": "minecraft:lead"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:rope_tool",
+  "count": 1
+ }
+}

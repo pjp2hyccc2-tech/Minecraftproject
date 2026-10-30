@@ -1,0 +1,13 @@
+{
+ "variants": {
+  "type=bottom": {
+   "model": "mcbesiege:block/thatch_slab"
+  },
+  "type=top": {
+   "model": "mcbesiege:block/thatch_slab_top"
+  },
+  "type=double": {
+   "model": "mcbesiege:block/thatch"
+  }
+ }
+}

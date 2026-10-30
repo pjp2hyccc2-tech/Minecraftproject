@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "mcbesiege:timber_frame"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:timber_frame_plain",
+  "count": 1
+ }
+}

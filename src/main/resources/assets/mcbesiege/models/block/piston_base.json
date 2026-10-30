@@ -1,0 +1,45 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "side": "mcbesiege:block/piston_side",
+  "top": "mcbesiege:block/piston_top",
+  "bottom": "mcbesiege:block/piston_bottom",
+  "inner": "mcbesiege:block/piston_inner",
+  "axle": "mcbesiege:block/axle",
+  "particle": "mcbesiege:block/piston_side"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    0
+   ],
+   "to": [
+    16,
+    12,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#inner"
+    },
+    "down": {
+     "texture": "#bottom"
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,19 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "minecraft:blaze_powder"
+  },
+  {
+   "item": "minecraft:iron_ingot"
+  },
+  {
+   "item": "minecraft:flint_and_steel"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:flamethrower",
+  "count": 1
+ }
+}

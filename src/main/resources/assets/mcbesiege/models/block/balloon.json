@@ -1,0 +1,174 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "cloth": "mcbesiege:block/balloon",
+  "rope": "mcbesiege:block/rope",
+  "particle": "mcbesiege:block/balloon"
+ },
+ "elements": [
+  {
+   "from": [
+    0.5,
+    4.35,
+    3.35
+   ],
+   "to": [
+    15.5,
+    13.65,
+    12.65
+   ],
+   "faces": {
+    "north": {
+     "texture": "#cloth"
+    },
+    "south": {
+     "texture": "#cloth"
+    },
+    "east": {
+     "texture": "#cloth"
+    },
+    "west": {
+     "texture": "#cloth"
+    },
+    "up": {
+     "texture": "#cloth"
+    },
+    "down": {
+     "texture": "#cloth"
+    }
+   }
+  },
+  {
+   "from": [
+    3.35,
+    1.5,
+    3.35
+   ],
+   "to": [
+    12.65,
+    16.5,
+    12.65
+   ],
+   "faces": {
+    "north": {
+     "texture": "#cloth",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#cloth",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "east": {
+     "texture": "#cloth",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "west": {
+     "texture": "#cloth",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "up": {
+     "texture": "#cloth",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "down": {
+     "texture": "#cloth",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    3.35,
+    4.35,
+    0.5
+   ],
+   "to": [
+    12.65,
+    13.65,
+    15.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#cloth"
+    },
+    "south": {
+     "texture": "#cloth"
+    },
+    "east": {
+     "texture": "#cloth"
+    },
+    "west": {
+     "texture": "#cloth"
+    },
+    "up": {
+     "texture": "#cloth"
+    },
+    "down": {
+     "texture": "#cloth"
+    }
+   }
+  },
+  {
+   "from": [
+    7.5,
+    0,
+    7.5
+   ],
+   "to": [
+    8.5,
+    2,
+    8.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#rope"
+    },
+    "south": {
+     "texture": "#rope"
+    },
+    "east": {
+     "texture": "#rope"
+    },
+    "west": {
+     "texture": "#rope"
+    },
+    "up": {
+     "texture": "#rope"
+    },
+    "down": {
+     "texture": "#rope"
+    }
+   }
+  }
+ ]
+}

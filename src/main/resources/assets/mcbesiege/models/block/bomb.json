@@ -1,0 +1,43 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "side": "mcbesiege:block/bomb_side",
+  "top": "mcbesiege:block/bomb_top",
+  "bottom": "mcbesiege:block/bomb_bottom",
+  "particle": "mcbesiege:block/bomb_side"
+ },
+ "elements": [
+  {
+   "from": [
+    2,
+    0,
+    2
+   ],
+   "to": [
+    14,
+    12,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#top"
+    },
+    "down": {
+     "texture": "#bottom"
+    }
+   }
+  }
+ ]
+}

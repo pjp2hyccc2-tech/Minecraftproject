@@ -1,0 +1,106 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "side": "mcbesiege:block/grabber_side",
+  "front": "mcbesiege:block/grabber",
+  "particle": "mcbesiege:block/grabber_side"
+ },
+ "elements": [
+  {
+   "from": [
+    2,
+    0,
+    2
+   ],
+   "to": [
+    14,
+    8,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#side"
+    },
+    "down": {
+     "texture": "#side"
+    }
+   }
+  },
+  {
+   "from": [
+    2,
+    8,
+    2
+   ],
+   "to": [
+    5,
+    13,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#front"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#front"
+    },
+    "down": {
+     "texture": "#side"
+    }
+   }
+  },
+  {
+   "from": [
+    11,
+    8,
+    2
+   ],
+   "to": [
+    14,
+    13,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#front"
+    },
+    "up": {
+     "texture": "#front"
+    },
+    "down": {
+     "texture": "#side"
+    }
+   }
+  }
+ ]
+}

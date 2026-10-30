@@ -1,0 +1,128 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "stock": "mcbesiege:block/crossbow_stock",
+  "limb": "mcbesiege:block/crossbow_limb",
+  "string": "mcbesiege:block/crossbow_string",
+  "particle": "mcbesiege:block/crossbow_stock"
+ },
+ "elements": [
+  {
+   "from": [
+    6,
+    0,
+    5
+   ],
+   "to": [
+    10,
+    10,
+    11
+   ],
+   "faces": {
+    "north": {
+     "texture": "#stock"
+    },
+    "south": {
+     "texture": "#stock"
+    },
+    "east": {
+     "texture": "#stock"
+    },
+    "west": {
+     "texture": "#stock"
+    },
+    "up": {
+     "texture": "#stock"
+    },
+    "down": {
+     "texture": "#stock"
+    }
+   }
+  },
+  {
+   "from": [
+    1,
+    7,
+    7
+   ],
+   "to": [
+    15,
+    10,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#limb"
+    },
+    "south": {
+     "texture": "#limb"
+    },
+    "east": {
+     "texture": "#limb"
+    },
+    "west": {
+     "texture": "#limb"
+    },
+    "up": {
+     "texture": "#limb"
+    },
+    "down": {
+     "texture": "#limb"
+    }
+   }
+  },
+  {
+   "from": [
+    7.5,
+    9,
+    7.5
+   ],
+   "to": [
+    8.5,
+    15,
+    8.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#limb"
+    },
+    "south": {
+     "texture": "#limb"
+    },
+    "east": {
+     "texture": "#limb"
+    },
+    "west": {
+     "texture": "#limb"
+    },
+    "up": {
+     "texture": "#limb"
+    },
+    "down": {
+     "texture": "#limb"
+    }
+   }
+  },
+  {
+   "from": [
+    1,
+    7.5,
+    9
+   ],
+   "to": [
+    15,
+    8.5,
+    9.01
+   ],
+   "faces": {
+    "north": {
+     "texture": "#string"
+    },
+    "south": {
+     "texture": "#string"
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

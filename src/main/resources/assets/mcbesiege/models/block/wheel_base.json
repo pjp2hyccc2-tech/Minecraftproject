@@ -1,0 +1,44 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "axle": "mcbesiege:block/axle",
+  "tread": "mcbesiege:block/wheel_tread",
+  "face": "mcbesiege:block/wheel_face",
+  "particle": "mcbesiege:block/wheel_tread"
+ },
+ "elements": [
+  {
+   "from": [
+    6,
+    0,
+    6
+   ],
+   "to": [
+    10,
+    6,
+    10
+   ],
+   "faces": {
+    "north": {
+     "texture": "#axle"
+    },
+    "south": {
+     "texture": "#axle"
+    },
+    "east": {
+     "texture": "#axle"
+    },
+    "west": {
+     "texture": "#axle"
+    },
+    "up": {
+     "texture": "#axle"
+    },
+    "down": {
+     "texture": "#axle"
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

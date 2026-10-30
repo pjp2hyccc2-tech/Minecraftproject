@@ -1,0 +1,74 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "handle": "mcbesiege:block/hammer_handle",
+  "head": "mcbesiege:block/hammer_head",
+  "particle": "mcbesiege:block/hammer_head"
+ },
+ "elements": [
+  {
+   "from": [
+    6.5,
+    0,
+    6.5
+   ],
+   "to": [
+    9.5,
+    10,
+    9.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#handle"
+    },
+    "south": {
+     "texture": "#handle"
+    },
+    "east": {
+     "texture": "#handle"
+    },
+    "west": {
+     "texture": "#handle"
+    },
+    "up": {
+     "texture": "#handle"
+    },
+    "down": {
+     "texture": "#handle"
+    }
+   }
+  },
+  {
+   "from": [
+    2,
+    10,
+    4
+   ],
+   "to": [
+    14,
+    16,
+    12
+   ],
+   "faces": {
+    "north": {
+     "texture": "#head"
+    },
+    "south": {
+     "texture": "#head"
+    },
+    "east": {
+     "texture": "#head"
+    },
+    "west": {
+     "texture": "#head"
+    },
+    "up": {
+     "texture": "#head"
+    },
+    "down": {
+     "texture": "#head"
+    }
+   }
+  }
+ ]
+}

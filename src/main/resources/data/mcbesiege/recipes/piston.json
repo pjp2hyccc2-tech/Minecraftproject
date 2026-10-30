@@ -1,0 +1,16 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "mcbesiege:wooden_block"
+  },
+  {
+   "item": "minecraft:piston"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:piston",
+  "count": 1
+ }
+}

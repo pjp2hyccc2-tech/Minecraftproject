@@ -1,0 +1,75 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "side": "mcbesiege:block/spinning_block",
+  "top": "mcbesiege:block/spinning_block_top",
+  "axle": "mcbesiege:block/axle",
+  "particle": "mcbesiege:block/spinning_block"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    0
+   ],
+   "to": [
+    16,
+    9,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#side"
+    },
+    "down": {
+     "texture": "#side"
+    }
+   }
+  },
+  {
+   "from": [
+    1,
+    9,
+    1
+   ],
+   "to": [
+    15,
+    16,
+    15
+   ],
+   "faces": {
+    "north": {
+     "texture": "#axle"
+    },
+    "south": {
+     "texture": "#axle"
+    },
+    "east": {
+     "texture": "#axle"
+    },
+    "west": {
+     "texture": "#axle"
+    },
+    "up": {
+     "texture": "#top"
+    },
+    "down": {
+     "texture": "#axle"
+    }
+   }
+  }
+ ]
+}

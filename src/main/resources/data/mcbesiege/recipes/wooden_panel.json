@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "mcbesiege:wooden_block"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:wooden_panel",
+  "count": 2
+ }
+}

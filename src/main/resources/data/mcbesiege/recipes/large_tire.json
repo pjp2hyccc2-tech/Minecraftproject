@@ -1,0 +1,22 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "mcbesiege:wheel"
+  },
+  {
+   "item": "minecraft:black_dye"
+  },
+  {
+   "item": "minecraft:leather"
+  },
+  {
+   "item": "minecraft:leather"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:large_tire",
+  "count": 1
+ }
+}

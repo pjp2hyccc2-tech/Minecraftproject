@@ -1,0 +1,31 @@
+{
+ "replace": false,
+ "values": [
+  "mcbesiege:iron_block",
+  "mcbesiege:steel_block",
+  "mcbesiege:iron_plate",
+  "mcbesiege:iron_wheel",
+  "mcbesiege:cannon",
+  "mcbesiege:hammer",
+  "mcbesiege:spike",
+  "mcbesiege:saw_blade",
+  "mcbesiege:drill",
+  "mcbesiege:flamethrower",
+  "mcbesiege:steering_block",
+  "mcbesiege:spinning_block",
+  "mcbesiege:ballast",
+  "mcbesiege:decoupler",
+  "mcbesiege:grabber",
+  "mcbesiege:flying_block",
+  "mcbesiege:stone_block",
+  "mcbesiege:boulder",
+  "mcbesiege:castle_stone",
+  "mcbesiege:castle_bricks",
+  "mcbesiege:castle_brick_stairs",
+  "mcbesiege:castle_brick_slab",
+  "mcbesiege:timer",
+  "mcbesiege:sensor",
+  "mcbesiege:altimeter",
+  "mcbesiege:logic_gate"
+ ]
+}

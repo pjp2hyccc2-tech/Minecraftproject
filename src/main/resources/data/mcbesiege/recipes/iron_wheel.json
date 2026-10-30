@@ -1,0 +1,21 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "misc",
+ "pattern": [
+  " I ",
+  "IWI",
+  " I "
+ ],
+ "key": {
+  "I": {
+   "item": "minecraft:iron_ingot"
+  },
+  "W": {
+   "item": "mcbesiege:wheel"
+  }
+ },
+ "result": {
+  "item": "mcbesiege:iron_wheel",
+  "count": 1
+ }
+}

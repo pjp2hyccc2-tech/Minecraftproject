@@ -1,0 +1,19 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "minecraft:stick"
+  },
+  {
+   "item": "minecraft:stick"
+  },
+  {
+   "item": "mcbesiege:wooden_pole"
+  }
+ ],
+ "result": {
+  "item": "mcbesiege:brace_tool",
+  "count": 1
+ }
+}

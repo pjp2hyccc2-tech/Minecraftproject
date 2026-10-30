@@ -1,0 +1,16 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "misc",
+ "pattern": [
+  "TTT"
+ ],
+ "key": {
+  "T": {
+   "item": "mcbesiege:thatch"
+  }
+ },
+ "result": {
+  "item": "mcbesiege:thatch_slab",
+  "count": 6
+ }
+}

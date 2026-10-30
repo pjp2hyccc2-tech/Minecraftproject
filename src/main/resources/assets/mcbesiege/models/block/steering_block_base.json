@@ -1,0 +1,42 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "side": "mcbesiege:block/steering_block",
+  "top": "mcbesiege:block/steering_block_top",
+  "particle": "mcbesiege:block/steering_block"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    0
+   ],
+   "to": [
+    16,
+    8,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#side"
+    },
+    "down": {
+     "texture": "#side"
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,42 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "side": "mcbesiege:block/steering_hinge",
+  "top": "mcbesiege:block/steering_hinge_top",
+  "particle": "mcbesiege:block/steering_hinge"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    0
+   ],
+   "to": [
+    16,
+    8,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#side"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#side"
+    },
+    "down": {
+     "texture": "#side"
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="All Rights Reserved"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="MINECRAFT BESIEGE"
+logoFile="logo.png"
+authors="pjp2hyccc2-tech, Claude"
+description='''
+BUILD × FIGHT × DESTROY — マシンを作り、戦い、すべてを壊せ。
+Besiege にインスパイアされた物理攻城兵器ビルダー。始動ブロックから46種類のパーツで兵器を組み、
+[R] でシミュレーション開始。車輪・ヒンジ・ピストン・大砲・火炎放射器・プロペラ・自動化ブロック、
+破壊と炎上、2つの島・9つの攻城ミッション（城・風車・前哨基地）を収録。
+'''
+
+[[dependencies.${mod_id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"

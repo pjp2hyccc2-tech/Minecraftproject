@@ -1,0 +1,42 @@
+{
+ "parent": "block/block",
+ "textures": {
+  "base": "mcbesiege:block/axle",
+  "ball": "mcbesiege:block/ball_joint",
+  "particle": "mcbesiege:block/ball_joint"
+ },
+ "elements": [
+  {
+   "from": [
+    2,
+    0,
+    2
+   ],
+   "to": [
+    14,
+    6,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#base"
+    },
+    "south": {
+     "texture": "#base"
+    },
+    "east": {
+     "texture": "#base"
+    },
+    "west": {
+     "texture": "#base"
+    },
+    "up": {
+     "texture": "#base"
+    },
+    "down": {
+     "texture": "#base"
+    }
+   }
+  }
+ ]
+}
