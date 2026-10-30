@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="All Rights Reserved"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="日本一周旅 (Nihon Isshu Tabi)"
+authors="pjp2hyccc2-tech, Claude"
+description='''
+田舎の実家から電車に乗って神戸へ。日本を旅して学ぶMOD。
+ほなみ村・大川町・川霧線・神戸（ハーバーランド／メリケンパーク／南京町／元町／北野／ビーナスブリッジ）を収録。
+'''
+
+[[dependencies.${mod_id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
