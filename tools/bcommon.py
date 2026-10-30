@@ -147,9 +147,14 @@ def _can_take(w, x, y, z, f, half, side):
 
 
 # ===================================================================== roofs
+FULL = {'minecraft:deepslate_tile': 'minecraft:deepslate_tiles', 'minecraft:brick': 'minecraft:bricks', 'minecraft:stone_brick': 'minecraft:stone_bricks',
+        'minecraft:mud_brick': 'minecraft:mud_bricks', 'minecraft:nether_brick': 'minecraft:nether_bricks'}
+
+
 def hip_roof(w, x1, z1, x2, z2, y, block='tabi:kawara', overhang=1, ridge_block=None, max_layers=99):
     """hipped roof (yosemune) over the rectangle; eaves at y"""
     st = block + '_stairs'
+    full = FULL.get(block, block)
     x1, z1, x2, z2 = x1 - overhang, z1 - overhang, x2 + overhang, z2 + overhang
     k = 0
     while x1 + k <= x2 - k and z1 + k <= z2 - k and k < max_layers:
@@ -166,7 +171,7 @@ def hip_roof(w, x1, z1, x2, z2, y, block='tabi:kawara', overhang=1, ridge_block=
             w.set(c, yy, z, stairs(st, 'west'))
         # interior under the roof surface
         if c - a >= 2 and d - b >= 2:
-            w.fill(a + 1, yy, b + 1, c - 1, yy, d - 1, block)
+            w.fill(a + 1, yy, b + 1, c - 1, yy, d - 1, full)
         k += 1
     fix_stairs(w, x1, y, z1, x2, y + k + 1, z2)
     return y + k

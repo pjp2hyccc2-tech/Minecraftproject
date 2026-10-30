@@ -85,7 +85,7 @@ public class RicePlantBlock extends BushBlock implements SimpleWaterloggedBlock 
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (random.nextInt(4) == 0) {
+        if (random.nextInt(60) == 0) {
             level.setBlock(pos, state.setValue(AGE, Math.min(3, state.getValue(AGE) + 1)), 2);
         }
     }

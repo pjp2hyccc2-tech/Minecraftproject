@@ -97,10 +97,14 @@ public final class ShotTour {
                 cmd(mc, "gamerule doDaylightCycle false");
                 cmd(mc, "gamerule doWeatherCycle false");
                 cmd(mc, "weather clear");
-                wait = 300;
-                stage = 1;
-                // first: the bedroom where the game starts, as the player sees it
+                wait = 400;
+                stage = 100;
+            }
+            case 100 -> { // the bedroom where the game starts, as the player sees it
+                mc.options.hideGui = false;
                 shot(mc, "spawn_view");
+                stage = 1;
+                wait = 5;
             }
             case 1 -> {
                 if (index >= VIEWS.size()) {
@@ -134,9 +138,11 @@ public final class ShotTour {
             case 10, 11, 12, 13, 14, 15 -> { // riding
                 JsonObject v = VIEWS.get(index);
                 mc.options.hideGui = false;
-                if (mc.player.getVehicle() != null) {
-                    mc.player.setYRot(mc.player.getVehicle().getYRot() + (float) TabiData.dbl(v, "look", 90));
-                    mc.player.setXRot(5f);
+                if (mc.player.getVehicle() instanceof com.nihonisshu.tabi.entity.VehicleEntity ve) {
+                    double carYaw = ve.carPose(ve.getS(), 0).yaw;           // atan2(fx, fz) of the travel direction
+                    float travel = (float) -Math.toDegrees(carYaw);
+                    mc.player.setYRot(travel + (float) TabiData.dbl(v, "look", 90));
+                    mc.player.setXRot(8f);
                 }
                 shot(mc, TabiData.str(v, "name", "ride") + "_" + (stage - 10));
                 stage++;
@@ -150,14 +156,7 @@ public final class ShotTour {
             }
             case 3 -> { // GUI screens
                 mc.options.hideGui = false;
-                cmd(mc, "gamemode creative");
                 cmd(mc, "time set 6000");
-                JsonObject vp = VIEWS.isEmpty() ? null : VIEWS.get(0);
-                if (vp != null) {
-                    JsonArray p = vp.getAsJsonArray("pos");
-                    cmd(mc, String.format("execute in tabi:japan run tp @s %.1f %.1f %.1f %.1f %.1f", p.get(0).getAsDouble(), p.get(1).getAsDouble(),
-                            p.get(2).getAsDouble(), TabiData.dbl(vp, "yaw", 0), TabiData.dbl(vp, "pitch", 0)));
-                }
                 mc.setScreen(new DialogueScreen(sampleDialogue()));
                 wait = 120;
                 stage = 4;

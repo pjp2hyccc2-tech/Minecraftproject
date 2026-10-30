@@ -36,7 +36,7 @@ def terrain(w):
     # Kitano slope terraces along Kitano-zaka
     w.flatten_path([(3740, 470), (3740, 445), (3740, 420), (3740, 395)], 75, 35, targets=[67, 74, 82, 88])
     # Suwayama hill for Venus Bridge
-    w.flatten_ellipse(3548, 398, 42, 30, 104, 60)
+    w.flatten_ellipse(3548, 398, 44, 30, 104, 32)
 
 
 def regions(w):
@@ -826,7 +826,18 @@ def kitano(w, rnd):
     w.npc(3730, gy + 1, kz2 + 6, 'artist', 'artist', '絵描きのおじさん', 'kitano', 'stand', yaw=180, hold='minecraft:paper')
     w.area('kazamidori', '風見鶏の館', '北野異人館街', (kx1 - 3, gy - 5, kz1 - 3, kx2 + 3, gy + 35, kz2 + 9), 'spot.kazamidori')
     w.check(tx1 + 2, gy + 28, tz1 + 2, 'weathercock')
-    w.viewpoint('kazamidori', 3722, gy + 6, kz2 + 22, 180, 12, time=5000, mode='spectator')
+    # 北野町広場: the little square in front of the house
+    for x in range(kx1 - 4, kx2 + 6):
+        for z in range(kz2 + 9, kz2 + 20):
+            g = w.ground(x, z)
+            w.fill(x, g, z, x, gy, z, 'minecraft:stone_bricks')
+            w.set(x, gy, z, 'minecraft:bricks' if (x + z) % 3 else 'minecraft:polished_granite')
+            w.clear(x, gy + 1, z, x, gy + 10, z)
+    for x in range(kx1, kx2 + 1, 5):
+        bench(w, x, gy + 1, kz2 + 17, 'north')
+    tree(w, kx1 - 2, gy + 1, kz2 + 12, 'broad', size=0.8)
+    tree(w, kx2 + 3, gy + 1, kz2 + 12, 'broad', size=0.8)
+    w.viewpoint('kazamidori', 3722, gy + 4, kz2 + 19, 180, 8, time=5000, mode='spectator')
     reserve(kx1 - 3, kz1 - 3, kx2 + 3, kz2 + 9)
     # 萌黄の館 (pale green clapboard, verandas with bay windows)
     mx1, mx2, mz1, mz2 = 3756, 3776, 414, 430
@@ -859,7 +870,7 @@ def kitano(w, rnd):
     w.viewpoint('moegi', 3766, gy2 + 5, mz2 + 20, 180, 10, time=7000, mode='spectator')
     reserve(mx1 - 3, mz1 - 3, mx2 + 3, mz2 + 7)
     # 北野 洋館カフェ (white clapboard house with a garden terrace)
-    cx1, cx2, cz1, cz2 = 3712, 3728, 440, 452
+    cx1, cx2, cz1, cz2 = 3754, 3770, 446, 458
     gy3 = max(w.ground(x, z) for x in range(cx1, cx2 + 1) for z in range(cz1, cz2 + 4))
     w.fill(cx1 - 2, gy3 - 6, cz1 - 2, cx2 + 2, gy3, cz2 + 6, 'minecraft:stone_bricks')
     w.fill(cx1 - 2, gy3, cz2 + 1, cx2 + 2, gy3, cz2 + 6, 'minecraft:bricks')
@@ -871,7 +882,7 @@ def kitano(w, rnd):
     for x in range(cx1 + 2, cx2 - 1, 3):
         w.fill(x, gy3 + 2, cz2, x, gy3 + 3, cz2, pane(TB('sash_window'), e=True, w=True))
         w.fill(x, gy3 + 7, cz2, x, gy3 + 8, cz2, pane(TB('sash_window'), e=True, w=True))
-    w.fill(3719, gy3 + 1, cz2, 3721, gy3 + 3, cz2, AIR)
+    w.fill(cx1 + 7, gy3 + 1, cz2, cx1 + 9, gy3 + 3, cz2, AIR)
     hip_roof(w, cx1, cz1, cx2, cz2, gy3 + 10, 'minecraft:deepslate_tile', overhang=1)
     for (x, z) in ((cx1 + 2, cz2 + 3), (cx1 + 7, cz2 + 4), (cx2 - 2, cz2 + 3)):
         w.set(x, gy3 + 1, z, 'minecraft:white_concrete_powder' if False else 'minecraft:quartz_pillar[axis=y]')
@@ -892,7 +903,7 @@ def kitano(w, rnd):
 def venus(w, rnd):
     cx, cz = 3540, 400
     y = 104
-    # observation deck facing south over the city
+    # observation deck facing south over the city (cantilevered over the slope)
     for x in range(cx - 14, cx + 15):
         for z in range(cz + 8, cz + 18):
             w.fill(x, w.ground(x, z), z, x, y - 1, z, 'minecraft:stone_bricks')
@@ -944,8 +955,8 @@ def venus(w, rnd):
     reserve(cx - 40, cz - 25, cx + 16, cz + 20)
     w.area('venus', 'ビーナスブリッジ', '諏訪山', (cx - 40, 80, cz - 25, cx + 16, 140, cz + 19), 'spot.venus_bridge', night_journal='spot.night_view')
     w.area('love_locks', '愛の鍵モニュメント', 'ビーナスブリッジ', (cx - 5, y - 2, cz + 9, cx + 5, y + 8, cz + 15), 'spot.love_locks')
-    w.viewpoint('venus_night', cx, y + 2.6, cz + 14, 0, 12, time=15500, mode='spectator')
-    w.viewpoint('venus_dusk', cx - 10, y + 3, cz + 14, -20, 10, time=12300, mode='spectator')
+    w.viewpoint('venus_night', cx, y + 3.6, cz + 17, 0, 24, time=15500, mode='spectator')
+    w.viewpoint('venus_dusk', cx - 10, y + 3.6, cz + 17, -20, 20, time=12300, mode='spectator')
     w.check(cx, y + 4, cz + 12, 'love lock monument')
 
 

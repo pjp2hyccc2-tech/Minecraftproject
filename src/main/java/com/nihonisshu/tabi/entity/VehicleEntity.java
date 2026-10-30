@@ -46,6 +46,8 @@ public class VehicleEntity extends Entity {
     private boolean announcedDeparture;
     // client side interpolation
     public float prevS, curS;
+    /** set by the self-test so an unattended train is not cleaned up */
+    public boolean keepAlive;
     private boolean clientInit;
     private byte lastState = -1;
     public Object clientSound;
@@ -228,7 +230,7 @@ public class VehicleEntity extends Entity {
                     timer = 0;
                     level().playSound(null, getX(), getY(), getZ(), TabiSounds.DOOR_CHIME.get(), SoundSource.NEUTRAL, 1.0f, 1f);
                 }
-                if (!hasPlayer && tickCount % 100 == 0 && level().getNearestPlayer(this, 192) == null) {
+                if (!keepAlive && !hasPlayer && tickCount % 100 == 0 && level().getNearestPlayer(this, 192) == null) {
                     discard();
                 }
             }

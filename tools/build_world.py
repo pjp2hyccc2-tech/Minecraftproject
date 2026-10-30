@@ -60,9 +60,9 @@ def main():
     honami_bus(w)
     # 4. a few views along the line
     sz = line['shiomi_z']
-    w.viewpoint('shiomi_bridge', 2096, 75, sz - 4, -150, 8, time=11500, mode='spectator')
-    w.viewpoint('akashi_bridge_night', 2120, 90, sz + 30, -160, 5, time=15000, mode='spectator')
-    w.viewpoint('kirigaya', 1245, line['kiri_ytop'] + 3, 92, 180, 10, time=3000, mode='spectator')
+    w.viewpoint('shiomi_bridge', 2096, line['shiomi_ytop'] + 2.6, sz - 5, -28, -18, time=11500, mode='spectator')
+    w.viewpoint('akashi_bridge_night', 2110, 80, sz + 26, -32, -8, time=15000, mode='spectator')
+    w.viewpoint('kirigaya', 1245, line['kiri_ytop'] + 4, 90, 0, 18, time=3000, mode='spectator')
     w.viewpoint('train_ride', 622.5, 69, 46.5, -90, 5, time=6000, mode='creative', ride='kawagiri', look=90, interval=500)
     os.makedirs(OUT, exist_ok=True)
     n, size = w.export(os.path.join(OUT, 'japan.bin'), os.path.join(OUT, 'meta.json'))

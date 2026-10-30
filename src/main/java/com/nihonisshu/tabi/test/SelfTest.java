@@ -233,6 +233,7 @@ public final class SelfTest {
                     }
                     level.getChunk(BlockPos.containing(r.pos(st.s)));
                     train = VehicleEntity.spawnAt(level, r, st);
+                    if (train != null) train.keepAlive = true;
                     trainStartS = st.s;
                     trainRoute = r.id;
                     ok("spawned train " + r.id + " at " + st.name + " s=" + Math.round(st.s));

@@ -70,7 +70,7 @@ public class JournalScreen extends Screen {
     private int bx() { return (width - bw()) / 2; }
     private int by() { return (height - bh()) / 2; }
     private int pageW() { return bw() / 2 - 12; }
-    private int listTop() { return by() + 40; }
+    private int listTop() { return by() + 54; }
     private int listBottom() { return by() + bh() - 22; }
 
     private List<Rec> list() {
@@ -91,22 +91,25 @@ public class JournalScreen extends Screen {
             g.fill(x + 6, y + 49 + i * 12, x + w / 2 - 6, y + 50 + i * 12, 0x18405080);
             g.fill(x + w / 2 + 6, y + 49 + i * 12, x + w - 6, y + 50 + i * 12, 0x18405080);
         }
-        // tabs
-        int tx = x + 6;
+        // tabs (wrap onto a second row)
+        int tx = x + 6, ty = y + 6;
         for (String c : CATEGORY_ORDER) {
             if (byCat.get(c).isEmpty()) continue;
             String nm = CATEGORY_NAMES.getOrDefault(c, c);
             int tw = font.width(nm) + 8;
+            if (tx + tw > x + w / 2 - 6) {
+                tx = x + 6;
+                ty += 15;
+            }
             boolean on = c.equals(tab);
-            g.fill(tx, y + 6, tx + tw, y + 20, on ? 0xFF27406B : 0xFFE6DCC4);
-            g.drawString(font, nm, tx + 4, y + 9, on ? 0xFFFFFFFF : 0xFF5A4A3A, false);
+            g.fill(tx, ty, tx + tw, ty + 14, on ? 0xFF27406B : 0xFFE6DCC4);
+            g.drawString(font, nm, tx + 4, ty + 3, on ? 0xFFFFFFFF : 0xFF5A4A3A, false);
             tx += tw + 3;
-            if (tx > x + w / 2 - 20) break;
         }
         String prog = "記録 " + opened + " / " + total;
-        g.drawString(font, prog, x + w / 2 - 8 - font.width(prog), y + 26, 0xFF8A7A5A, false);
+        g.drawString(font, prog, x + w / 2 - 8 - font.width(prog), y + 40, 0xFF8A7A5A, false);
         String money = "所持金 " + String.format("%,d", ClientState.yen()) + "円";
-        g.drawString(font, money, x + 8, y + 26, 0xFF5A4A3A, false);
+        g.drawString(font, money, x + 8, y + 40, 0xFF5A4A3A, false);
 
         // list (left page)
         int top = listTop(), bottom = listBottom();
@@ -162,11 +165,15 @@ public class JournalScreen extends Screen {
     @Override
     public boolean mouseClicked(double mx, double my, int button) {
         int x = bx(), y = by(), w = bw();
-        int tx = x + 6;
+        int tx = x + 6, ty = y + 6;
         for (String c : CATEGORY_ORDER) {
             if (byCat.get(c).isEmpty()) continue;
             int tw = font.width(CATEGORY_NAMES.getOrDefault(c, c)) + 8;
-            if (mx >= tx && mx < tx + tw && my >= y + 6 && my < y + 20) {
+            if (tx + tw > x + w / 2 - 6) {
+                tx = x + 6;
+                ty += 15;
+            }
+            if (mx >= tx && mx < tx + tw && my >= ty && my < ty + 14) {
                 tab = c;
                 scroll = 0;
                 selected = byCat.get(c).stream().filter(Rec::open).findFirst().orElse(null);
@@ -175,7 +182,6 @@ public class JournalScreen extends Screen {
                 return true;
             }
             tx += tw + 3;
-            if (tx > x + w / 2 - 20) break;
         }
         int top = listTop(), bottom = listBottom();
         if (mx >= x + 6 && mx < x + w / 2 - 6 && my >= top && my < bottom) {

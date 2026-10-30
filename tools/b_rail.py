@@ -494,10 +494,10 @@ def car_dmu():
         return pal.index(s)
     blocks = []
     W, L = 5, 32
-    cream, green, roof, dark, glass = P('minecraft:white_terracotta'), P('minecraft:lime_terracotta'), P('minecraft:light_gray_concrete'), P('minecraft:gray_concrete'), P('minecraft:glass')
+    cream, green, roof, dark, glass = P('minecraft:smooth_sandstone'), P('minecraft:green_concrete'), P('minecraft:light_gray_concrete'), P('minecraft:gray_concrete'), P('minecraft:glass')
     floor_b, seat, seat_back, light, head, black = P('minecraft:spruce_planks'), P('minecraft:blue_wool'), P('minecraft:light_blue_wool'), P('minecraft:sea_lantern'), P('minecraft:pearlescent_froglight'), P('minecraft:black_concrete')
     green_dark = P('minecraft:green_terracotta')
-    door = P('minecraft:light_gray_terracotta')
+    door = P('minecraft:sandstone')
     for z in range(L):
         zc = z - L / 2
         end = z in (0, L - 1)
