@@ -1,0 +1,166 @@
+{
+ "journal": {
+  "desc_ja": "旅で見つけた場所や味を記録する手帳\n右クリックで開いて読もう",
+  "desc_en": "A notebook of places and tastes. Right-click to open."
+ },
+ "ticket": {
+  "desc_ja": "駅の券売機で買う電車の切符\n降りる駅で回収されます",
+  "desc_en": "A train ticket from the station machine."
+ },
+ "rice_seedling": {
+  "desc_ja": "水を張った田んぼに植える稲の苗\n秋には実った稲穂が頭をたれる",
+  "desc_en": "Plant it in a flooded paddy; harvest rice in autumn."
+ },
+ "rice": {
+  "desc_ja": "ほなみ村の田んぼでとれたお米\n直売所で買い取ってもらえる",
+  "desc_en": "Rice from Honami's paddies. Sell it at the market."
+ },
+ "tomato_seeds": {
+  "desc_ja": "畑にまくトマトの種\nふるさとは南米のアンデス地方",
+  "desc_en": "Tomato seeds. Tomatoes come from the Andes."
+ },
+ "cucumber_seeds": {
+  "desc_ja": "畑にまくきゅうりの種\nつるをのばしてぐんぐん育つ",
+  "desc_en": "Cucumber seeds. The vines grow fast in summer."
+ },
+ "eggplant_seeds": {
+  "desc_ja": "畑にまくなすの種\n日光をあびるほど紫色がこくなる",
+  "desc_en": "Eggplant seeds. Sunlight deepens the purple."
+ },
+ "tomato": {
+  "desc_ja": "夏の太陽で真っ赤にじゅくしたトマト\nうまみの成分もたっぷり",
+  "desc_en": "A sun-ripened summer tomato."
+ },
+ "cucumber": {
+  "desc_ja": "パリッとみずみずしい夏のきゅうり\n名前は「黄瓜」から来たといわれる",
+  "desc_en": "Crisp cucumber. Its name may mean 'yellow melon'."
+ },
+ "eggplant": {
+  "desc_ja": "つやつやの紫色の夏野菜\n奈良時代から日本で育てられてきた",
+  "desc_en": "Glossy eggplant, grown in Japan since the Nara era."
+ },
+ "onigiri": {
+  "desc_ja": "ごはんをにぎったお弁当の定番\n弥生時代の遺跡にもそれらしい物が",
+  "desc_en": "A rice ball, the classic packed lunch."
+ },
+ "mugicha": {
+  "desc_ja": "いった大麦で作る香ばしいお茶\nカフェインなしで子どもも安心",
+  "desc_en": "Roasted barley tea. Caffeine-free and cooling."
+ },
+ "suika": {
+  "desc_ja": "夏休みの縁側で食べるスイカ\n実の約90%は水分",
+  "desc_en": "A juicy watermelon slice, about 90% water."
+ },
+ "kakigori": {
+  "desc_ja": "ふわふわの氷にシロップをかけたおやつ\n平安時代の『枕草子』にも登場",
+  "desc_en": "Shaved ice with syrup, enjoyed since the Heian era."
+ },
+ "ramune": {
+  "desc_ja": "ビー玉でふたをした炭酸飲料\n名前はレモネードがなまったもの",
+  "desc_en": "Marble-sealed soda. The name comes from 'lemonade'."
+ },
+ "ice_candy": {
+  "desc_ja": "棒のついたシャリシャリの氷菓子\n昭和には自転車で売り歩いた",
+  "desc_en": "An icy pop on a stick, a Showa-era summer treat."
+ },
+ "dagashi": {
+  "desc_ja": "小さなお金で買える昔ながらのおかし\n駄菓子屋は子どもの社交場",
+  "desc_en": "Cheap old-fashioned sweets from the village shop."
+ },
+ "cider": {
+  "desc_ja": "シュワッとはじける甘い炭酸飲料\n兵庫の炭酸の泉もルーツの一つ",
+  "desc_en": "Sweet clear soda, with roots in Hyogo's fizzy springs."
+ },
+ "ayu_shioyaki": {
+  "desc_ja": "川でとれた鮎の塩焼き\nスイカのような香りから「香魚」とも",
+  "desc_en": "Salt-grilled sweetfish, prized for its melon-like scent."
+ },
+ "cream_soda": {
+  "desc_ja": "メロンソーダにアイスをのせた飲み物\n昭和の喫茶店の定番メニュー",
+  "desc_en": "Melon soda topped with ice cream, a retro kissa classic."
+ },
+ "coffee": {
+  "desc_ja": "いれたての香りが広がる一杯\n神戸はコーヒー豆の輸入港",
+  "desc_en": "Fresh coffee. Kobe is a major coffee-importing port."
+ },
+ "kocha": {
+  "desc_ja": "香りのよい紅茶\n緑茶と同じチャノキの葉から作る",
+  "desc_en": "Black tea, made from the same leaves as green tea."
+ },
+ "akashiyaki": {
+  "desc_ja": "卵たっぷりの生地にタコが入った名物\n温かいだしにつけて食べる",
+  "desc_en": "Akashi's eggy octopus dumplings, dipped in dashi."
+ },
+ "butaman": {
+  "desc_ja": "ジューシーな豚肉のあんの豚まん\n1915年、南京町から始まった味",
+  "desc_en": "A juicy pork bun, a Nankinmachi classic since 1915."
+ },
+ "xiaolongbao": {
+  "desc_ja": "熱々のスープが入った点心\nれんげにのせて、やけどに注意",
+  "desc_en": "Soup-filled dumplings. Sip carefully from a spoon!"
+ },
+ "goma_dango": {
+  "desc_ja": "あんを包んでごまをまぶした揚げ団子\n外はカリッ、中はもっちり",
+  "desc_en": "Fried sesame balls filled with sweet bean paste."
+ },
+ "sobameshi": {
+  "desc_ja": "焼きそばとごはんをいためた料理\n神戸・長田生まれの味",
+  "desc_en": "Noodles and rice fried together, born in Nagata, Kobe."
+ },
+ "wagyu_kushi": {
+  "desc_ja": "和牛をこんがり焼いた串焼き\n兵庫の但馬牛は黒毛和牛のルーツ",
+  "desc_en": "Grilled wagyu. Hyogo's Tajima cattle are its roots."
+ },
+ "baumkuchen": {
+  "desc_ja": "年輪のような層のドイツ生まれのケーキ\n1923年から神戸の街で親しまれる",
+  "desc_en": "German tree-ring cake, loved in Kobe since 1923."
+ },
+ "kobe_pudding": {
+  "desc_ja": "なめらかカスタードとほろ苦カラメル\n洋菓子の街・神戸の人気者",
+  "desc_en": "Silky custard pudding from a Motomachi sweets shop."
+ },
+ "cheesecake": {
+  "desc_ja": "しっとりなめらかなチーズケーキ\n紅茶やコーヒーとよく合う",
+  "desc_en": "Smooth, rich cheesecake. Great with tea or coffee."
+ },
+ "croissant": {
+  "desc_ja": "バター香るサクサクの三日月パン\n神戸は全国有数のパンの街",
+  "desc_en": "A buttery croissant from Kobe, a city of bread."
+ },
+ "curry_pan": {
+  "desc_ja": "カレーを包んであげたパン\n日本生まれのパンの代表",
+  "desc_en": "Fried bread filled with curry, born in Japan."
+ },
+ "crepe": {
+  "desc_ja": "生クリームと果物を巻いたクレープ\nフランス・ブルターニュ生まれ",
+  "desc_en": "A crepe rolled with cream and fruit."
+ },
+ "kawara_senbei": {
+  "desc_ja": "屋根の瓦の形をしたせんべい\n明治時代からつづく神戸の銘菓",
+  "desc_en": "Roof-tile-shaped crackers, a Kobe sweet since Meiji."
+ },
+ "kobe_cookies": {
+  "desc_ja": "クッキーがつまった缶入りの洋菓子\n洋菓子の街・神戸の定番みやげ",
+  "desc_en": "A tin of cookies, a classic Kobe souvenir."
+ },
+ "ikanago_kugini": {
+  "desc_ja": "いかなごの新子の甘からいつくだ煮\n曲がった釘に見えるので「くぎ煮」",
+  "desc_en": "Sweet-savory simmered sand lance, a spring home dish."
+ },
+ "amazake": {
+  "desc_ja": "灘の酒蔵が作った米こうじの甘酒\nアルコールは入っていない",
+  "desc_en": "Rice-koji amazake from a Nada brewery. No alcohol."
+ },
+ "arima_senbei": {
+  "desc_ja": "有馬温泉の炭酸泉で作るせんべい\nうすくてパリッと軽い",
+  "desc_en": "Thin crackers made with Arima's fizzy spring water."
+ },
+ "pearl_charm": {
+  "desc_ja": "小さな真珠がゆれるストラップ\n神戸は世界有数の真珠の街",
+  "desc_en": "A pearl charm. Kobe is a world center for pearls."
+ },
+ "port_tower_figure": {
+  "desc_ja": "赤い鼓形のポートタワーの置物\n本物は高さ108m",
+  "desc_en": "A figurine of Kobe Port Tower (108 m)."
+ }
+}

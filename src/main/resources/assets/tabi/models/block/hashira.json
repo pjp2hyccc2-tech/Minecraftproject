@@ -1,0 +1,7 @@
+{
+ "parent": "minecraft:block/cube_column",
+ "textures": {
+  "end": "tabi:block/hashira_end",
+  "side": "tabi:block/hashira_side"
+ }
+}

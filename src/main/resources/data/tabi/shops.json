@@ -1,0 +1,423 @@
+{
+ "shops": {
+  "honami_market": {
+   "name": "ほなみ農産物直売所",
+   "greet": "おう、いらっしゃい。とれた野菜、見せてみな",
+   "mode": "sell",
+   "items": [
+    {
+     "item": "tabi:tomato",
+     "price": 50,
+     "note": "夏の人気者。真っ赤なのが一番"
+    },
+    {
+     "item": "tabi:cucumber",
+     "price": 40,
+     "note": "冷やしてかじれば最高の夏の味"
+    },
+    {
+     "item": "tabi:eggplant",
+     "price": 60,
+     "note": "つやつやの紫は新鮮なしるし"
+    },
+    {
+     "item": "tabi:rice",
+     "price": 80,
+     "note": "ほなみの田んぼ自慢のお米"
+    }
+   ],
+   "journal": "life.chokubaijo"
+  },
+  "yorozuya": {
+   "name": "よろず屋 たなか",
+   "greet": "いらっしゃい！冷たいの、よう冷えとるよ",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:ramune",
+     "price": 120,
+     "note": "ビー玉をポンと落として飲もう"
+    },
+    {
+     "item": "tabi:ice_candy",
+     "price": 80,
+     "note": "とける前に急いで食べてな"
+    },
+    {
+     "item": "tabi:dagashi",
+     "price": 50,
+     "note": "小さなお金で選ぶ楽しさ"
+    },
+    {
+     "item": "tabi:mugicha",
+     "price": 100,
+     "note": "よう冷えた夏の定番"
+    },
+    {
+     "item": "tabi:tomato_seeds",
+     "price": 30,
+     "note": "畑にまいて夏に収穫"
+    },
+    {
+     "item": "tabi:cucumber_seeds",
+     "price": 30,
+     "note": "つるがのびる元気な野菜"
+    },
+    {
+     "item": "tabi:eggplant_seeds",
+     "price": 30,
+     "note": "日当たりのいい畑にどうぞ"
+    },
+    {
+     "item": "tabi:rice_seedling",
+     "price": 20,
+     "note": "水を張った田んぼに植えよう"
+    }
+   ]
+  },
+  "vending": {
+   "name": "自動販売機",
+   "greet": "（ガコン）つめたい飲み物、あります",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:mugicha",
+     "price": 130,
+     "note": "冷えた麦茶でひと休み"
+    },
+    {
+     "item": "tabi:cider",
+     "price": 160,
+     "note": "シュワッとさわやか"
+    },
+    {
+     "item": "tabi:ramune",
+     "price": 150,
+     "note": "ビー玉入りのびんラムネ"
+    }
+   ]
+  },
+  "ayutei": {
+   "name": "川魚料理 あゆ亭",
+   "greet": "へい、いらっしゃい！鮎がええ具合に焼けとるで",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:ayu_shioyaki",
+     "price": 500,
+     "note": "大川の鮎を炭火で塩焼きに"
+    },
+    {
+     "item": "tabi:onigiri",
+     "price": 150,
+     "note": "塩むすび。鮎とよく合う"
+    },
+    {
+     "item": "tabi:mugicha",
+     "price": 100,
+     "note": "食後に冷たい麦茶をどうぞ"
+    }
+   ]
+  },
+  "kawasemi": {
+   "name": "喫茶 かわせみ",
+   "greet": "いらっしゃいませ。どうぞ、ゆっくりしていってね",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:cream_soda",
+     "price": 450,
+     "note": "昭和からつづく看板メニュー"
+    },
+    {
+     "item": "tabi:coffee",
+     "price": 400,
+     "note": "マスターがいれる自慢の一杯"
+    },
+    {
+     "item": "tabi:kakigori",
+     "price": 400,
+     "note": "ふわふわ氷にあまいシロップ"
+    }
+   ]
+  },
+  "shiomi_akashiyaki": {
+   "name": "明石焼き 潮見屋",
+   "greet": "まいど！明石焼き、焼きたてやで",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:akashiyaki",
+     "price": 600,
+     "note": "明石の玉子焼き。だしにつけて"
+    },
+    {
+     "item": "tabi:ikanago_kugini",
+     "price": 900,
+     "note": "春の味。ごはんのおともに",
+     "journal": "souvenir.ikanago"
+    },
+    {
+     "item": "tabi:cider",
+     "price": 160,
+     "note": "海風とひえひえサイダー"
+    }
+   ]
+  },
+  "harbor_cafe": {
+   "name": "ハーバー煉瓦カフェ",
+   "greet": "いらっしゃいませ。海の見える席へどうぞ",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:coffee",
+     "price": 500,
+     "note": "レンガ倉庫で味わう一杯"
+    },
+    {
+     "item": "tabi:cheesecake",
+     "price": 550,
+     "note": "しっとり濃厚な人気ケーキ"
+    },
+    {
+     "item": "tabi:cream_soda",
+     "price": 600,
+     "note": "港をながめてシュワッと"
+    },
+    {
+     "item": "tabi:kocha",
+     "price": 500,
+     "note": "ポットでゆっくり紅茶タイム"
+    }
+   ]
+  },
+  "harbor_souvenir": {
+   "name": "港のおみやげ館",
+   "greet": "いらっしゃいませ！神戸のおみやげ、そろってます",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:port_tower_figure",
+     "price": 1200,
+     "note": "赤い鼓形のタワーを手のひらに",
+     "journal": "souvenir.port_tower_figure"
+    },
+    {
+     "item": "tabi:kobe_cookies",
+     "price": 1080,
+     "note": "缶もかわいい定番みやげ",
+     "journal": "souvenir.kobe_cookies"
+    },
+    {
+     "item": "tabi:kawara_senbei",
+     "price": 650,
+     "note": "明治からつづく神戸の銘菓",
+     "journal": "souvenir.kawara_senbei"
+    },
+    {
+     "item": "tabi:pearl_charm",
+     "price": 2500,
+     "note": "真珠の街・神戸の記念に",
+     "journal": "souvenir.pearl"
+    }
+   ]
+  },
+  "meriken_crepe": {
+   "name": "クレープの屋台",
+   "greet": "いらっしゃい！クレープ、焼きたてやで〜",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:crepe",
+     "price": 500,
+     "note": "生クリームと果物たっぷり"
+    },
+    {
+     "item": "tabi:cider",
+     "price": 200,
+     "note": "海を見ながらシュワッと"
+    }
+   ]
+  },
+  "nankin_butaman": {
+   "name": "南京町 豚まん処 福来",
+   "greet": "いらっしゃい！蒸したての豚まん、あるで",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:butaman",
+     "price": 120,
+     "note": "ふかふか皮にジューシーあん"
+    }
+   ]
+  },
+  "nankin_dimsum": {
+   "name": "点心屋台 龍華",
+   "greet": "いらっしゃい！点心、熱々やで",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:xiaolongbao",
+     "price": 500,
+     "note": "スープ熱々、やけどに注意"
+    },
+    {
+     "item": "tabi:goma_dango",
+     "price": 300,
+     "note": "カリッともちもち、あん入り"
+    }
+   ]
+  },
+  "motomachi_kissa": {
+   "name": "元町珈琲 さざなみ",
+   "greet": "いらっしゃい。コーヒーのええ香りやろ",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:coffee",
+     "price": 550,
+     "note": "ていねいにいれた香りの一杯"
+    },
+    {
+     "item": "tabi:cream_soda",
+     "price": 650,
+     "note": "レトロなグラスでどうぞ"
+    }
+   ]
+  },
+  "motomachi_sweets": {
+   "name": "元町洋菓子 アカシア",
+   "greet": "いらっしゃいませ！焼きたてのお菓子、ありますよ",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:baumkuchen",
+     "price": 800,
+     "note": "何層も焼き重ねた年輪もよう"
+    },
+    {
+     "item": "tabi:kobe_pudding",
+     "price": 450,
+     "note": "なめらかで、ほろ苦カラメル"
+    },
+    {
+     "item": "tabi:cheesecake",
+     "price": 500,
+     "note": "しっとり濃厚な口どけ"
+    }
+   ]
+  },
+  "motomachi_bakery": {
+   "name": "パン工房 こむぎ堂",
+   "greet": "いらっしゃい！パン、焼きあがったとこやで",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:croissant",
+     "price": 250,
+     "note": "バター香るサクサク三日月"
+    },
+    {
+     "item": "tabi:curry_pan",
+     "price": 280,
+     "note": "外はサクサク、中はスパイシー"
+    }
+   ]
+  },
+  "motomachi_souvenir": {
+   "name": "神戸みやげ 港屋",
+   "greet": "いらっしゃい。神戸の名物、なんでもそろうで",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:kawara_senbei",
+     "price": 650,
+     "note": "明治からつづく神戸の銘菓",
+     "journal": "souvenir.kawara_senbei"
+    },
+    {
+     "item": "tabi:kobe_cookies",
+     "price": 1080,
+     "note": "缶入りクッキーの定番",
+     "journal": "souvenir.kobe_cookies"
+    },
+    {
+     "item": "tabi:ikanago_kugini",
+     "price": 900,
+     "note": "神戸の春の家庭の味",
+     "journal": "souvenir.ikanago"
+    },
+    {
+     "item": "tabi:amazake",
+     "price": 400,
+     "note": "アルコールなしの米こうじ甘酒",
+     "journal": "souvenir.nada"
+    },
+    {
+     "item": "tabi:arima_senbei",
+     "price": 700,
+     "note": "有馬の炭酸泉でパリッと軽く",
+     "journal": "souvenir.arima_senbei"
+    },
+    {
+     "item": "tabi:pearl_charm",
+     "price": 2800,
+     "note": "真珠の街・神戸の記念に",
+     "journal": "souvenir.pearl"
+    },
+    {
+     "item": "tabi:port_tower_figure",
+     "price": 1200,
+     "note": "港の思い出を机の上に",
+     "journal": "souvenir.port_tower_figure"
+    }
+   ]
+  },
+  "sobameshi": {
+   "name": "そばめし 長田屋",
+   "greet": "いらっしゃい！長田名物、そばめしやで",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:sobameshi",
+     "price": 700,
+     "note": "鉄板でジュウッと、ソース味"
+    }
+   ]
+  },
+  "wagyu": {
+   "name": "和牛串 ほむら",
+   "greet": "いらっしゃい！和牛串、ええのが焼けたで",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:wagyu_kushi",
+     "price": 1500,
+     "note": "炭火でこんがり、とろける旨み"
+    }
+   ]
+  },
+  "kitano_cafe": {
+   "name": "北野 洋館カフェ",
+   "greet": "ようこそ。洋館で、ゆっくりお茶をどうぞ",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:kocha",
+     "price": 600,
+     "note": "ポットでいれる香り高い紅茶"
+    },
+    {
+     "item": "tabi:cheesecake",
+     "price": 600,
+     "note": "洋館で味わう濃厚ケーキ"
+    },
+    {
+     "item": "tabi:coffee",
+     "price": 600,
+     "note": "坂の上でひと休みの一杯"
+    }
+   ]
+  }
+ }
+}

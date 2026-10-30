@@ -1,0 +1,78 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "m": "tabi:block/sign_pole_m",
+  "particle": "tabi:block/sign_pole_m"
+ },
+ "elements": [
+  {
+   "from": [
+    7,
+    0,
+    7
+   ],
+   "to": [
+    9,
+    16,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#m",
+     "uv": [
+      7,
+      0.0,
+      9,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#m",
+     "uv": [
+      7,
+      0.0,
+      9,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#m",
+     "uv": [
+      7,
+      0.0,
+      9,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#m",
+     "uv": [
+      7,
+      0.0,
+      9,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#m",
+     "uv": [
+      7,
+      7,
+      9,
+      9
+     ]
+    },
+    "down": {
+     "texture": "#m",
+     "uv": [
+      7,
+      7,
+      9,
+      9
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

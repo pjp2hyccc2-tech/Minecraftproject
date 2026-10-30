@@ -33,10 +33,13 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+            property 'tabi.shots', System.getenv('TABI_SHOTS') ?: 'false'
+            args '--width', '1280', '--height', '720'
         }
 
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
+            property 'tabi.selftest', System.getenv('TABI_SELFTEST') ?: 'false'
             args '--nogui'
         }
     }

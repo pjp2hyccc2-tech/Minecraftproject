@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/senpuki"
+  },
+  "facing=east": {
+   "model": "tabi:block/senpuki",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/senpuki",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/senpuki",
+   "y": 270
+  }
+ }
+}

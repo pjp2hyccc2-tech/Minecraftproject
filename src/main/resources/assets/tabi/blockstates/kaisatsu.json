@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/kaisatsu"
+  },
+  "facing=east": {
+   "model": "tabi:block/kaisatsu",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/kaisatsu",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/kaisatsu",
+   "y": 270
+  }
+ }
+}

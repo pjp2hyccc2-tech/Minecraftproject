@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/template_glass_pane_noside",
+ "textures": {
+  "pane": "tabi:block/love_lock_fence_pane",
+  "edge": "tabi:block/love_lock_fence_edge"
+ },
+ "render_type": "minecraft:cutout"
+}

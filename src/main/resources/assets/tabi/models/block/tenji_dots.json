@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/cube_bottom_top",
+ "textures": {
+  "top": "tabi:block/tenji_dots_top",
+  "side": "tabi:block/tenji_dots_side",
+  "bottom": "tabi:block/tenji_dots_side"
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/tatami"
+  },
+  "facing=east": {
+   "model": "tabi:block/tatami",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/tatami",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/tatami",
+   "y": 270
+  }
+ }
+}

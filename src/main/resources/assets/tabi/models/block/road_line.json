@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/road_line_top",
+  "bottom": "tabi:block/road_line_side",
+  "front": "tabi:block/road_line_side",
+  "side": "tabi:block/road_line_side"
+ }
+}

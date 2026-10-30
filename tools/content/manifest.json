@@ -1,0 +1,1824 @@
+{
+ "items": [
+  {
+   "id": "journal",
+   "ja": "旅の手帳",
+   "en": "Travel Journal",
+   "kind": "journal",
+   "journal": null
+  },
+  {
+   "id": "ticket",
+   "ja": "切符",
+   "en": "Ticket",
+   "kind": "ticket",
+   "journal": null
+  },
+  {
+   "id": "rice_seedling",
+   "ja": "稲の苗",
+   "en": "Rice Seedling",
+   "kind": "plant",
+   "journal": null
+  },
+  {
+   "id": "rice",
+   "ja": "お米",
+   "en": "Rice",
+   "kind": "item",
+   "journal": null
+  },
+  {
+   "id": "tomato_seeds",
+   "ja": "トマトの種",
+   "en": "Tomato Seeds",
+   "kind": "seed",
+   "journal": null
+  },
+  {
+   "id": "cucumber_seeds",
+   "ja": "きゅうりの種",
+   "en": "Cucumber Seeds",
+   "kind": "seed",
+   "journal": null
+  },
+  {
+   "id": "eggplant_seeds",
+   "ja": "なすの種",
+   "en": "Eggplant Seeds",
+   "kind": "seed",
+   "journal": null
+  },
+  {
+   "id": "tomato",
+   "ja": "トマト",
+   "en": "Tomato",
+   "kind": "food",
+   "journal": "food.tomato"
+  },
+  {
+   "id": "cucumber",
+   "ja": "きゅうり",
+   "en": "Cucumber",
+   "kind": "food",
+   "journal": "food.cucumber"
+  },
+  {
+   "id": "eggplant",
+   "ja": "なす",
+   "en": "Eggplant",
+   "kind": "food",
+   "journal": "food.eggplant"
+  },
+  {
+   "id": "onigiri",
+   "ja": "おにぎり",
+   "en": "Onigiri",
+   "kind": "food",
+   "journal": "food.onigiri"
+  },
+  {
+   "id": "mugicha",
+   "ja": "麦茶",
+   "en": "Barley Tea",
+   "kind": "drink",
+   "journal": "food.mugicha"
+  },
+  {
+   "id": "suika",
+   "ja": "スイカ",
+   "en": "Watermelon Slice",
+   "kind": "food",
+   "journal": "food.suika"
+  },
+  {
+   "id": "kakigori",
+   "ja": "かき氷",
+   "en": "Shaved Ice",
+   "kind": "food",
+   "journal": "food.kakigori"
+  },
+  {
+   "id": "ramune",
+   "ja": "ラムネ",
+   "en": "Ramune",
+   "kind": "drink",
+   "journal": "food.ramune"
+  },
+  {
+   "id": "ice_candy",
+   "ja": "アイスキャンデー",
+   "en": "Ice Pop",
+   "kind": "food",
+   "journal": "food.ice_candy"
+  },
+  {
+   "id": "dagashi",
+   "ja": "駄菓子",
+   "en": "Dagashi Sweets",
+   "kind": "food",
+   "journal": "food.dagashi"
+  },
+  {
+   "id": "cider",
+   "ja": "サイダー",
+   "en": "Cider Soda",
+   "kind": "drink",
+   "journal": "food.cider"
+  },
+  {
+   "id": "ayu_shioyaki",
+   "ja": "鮎の塩焼き",
+   "en": "Grilled Sweetfish",
+   "kind": "food",
+   "journal": "food.ayu"
+  },
+  {
+   "id": "cream_soda",
+   "ja": "クリームソーダ",
+   "en": "Cream Soda",
+   "kind": "drink",
+   "journal": "food.cream_soda"
+  },
+  {
+   "id": "coffee",
+   "ja": "コーヒー",
+   "en": "Coffee",
+   "kind": "drink",
+   "journal": "food.coffee"
+  },
+  {
+   "id": "kocha",
+   "ja": "紅茶",
+   "en": "Black Tea",
+   "kind": "drink",
+   "journal": "food.kocha"
+  },
+  {
+   "id": "akashiyaki",
+   "ja": "明石焼き",
+   "en": "Akashiyaki",
+   "kind": "food",
+   "journal": "food.akashiyaki"
+  },
+  {
+   "id": "butaman",
+   "ja": "豚まん",
+   "en": "Pork Bun",
+   "kind": "food",
+   "journal": "food.butaman"
+  },
+  {
+   "id": "xiaolongbao",
+   "ja": "小籠包",
+   "en": "Xiaolongbao",
+   "kind": "food",
+   "journal": "food.xiaolongbao"
+  },
+  {
+   "id": "goma_dango",
+   "ja": "ごま団子",
+   "en": "Sesame Balls",
+   "kind": "food",
+   "journal": "food.goma_dango"
+  },
+  {
+   "id": "sobameshi",
+   "ja": "そばめし",
+   "en": "Sobameshi",
+   "kind": "food",
+   "journal": "food.sobameshi"
+  },
+  {
+   "id": "wagyu_kushi",
+   "ja": "和牛の串焼き",
+   "en": "Wagyu Skewer",
+   "kind": "food",
+   "journal": "food.wagyu"
+  },
+  {
+   "id": "baumkuchen",
+   "ja": "バウムクーヘン",
+   "en": "Baumkuchen",
+   "kind": "food",
+   "journal": "food.baumkuchen"
+  },
+  {
+   "id": "kobe_pudding",
+   "ja": "神戸プリン",
+   "en": "Kobe Pudding",
+   "kind": "food",
+   "journal": "food.pudding"
+  },
+  {
+   "id": "cheesecake",
+   "ja": "チーズケーキ",
+   "en": "Cheesecake",
+   "kind": "food",
+   "journal": "food.cheesecake"
+  },
+  {
+   "id": "croissant",
+   "ja": "クロワッサン",
+   "en": "Croissant",
+   "kind": "food",
+   "journal": "food.bread"
+  },
+  {
+   "id": "curry_pan",
+   "ja": "カレーパン",
+   "en": "Curry Bread",
+   "kind": "food",
+   "journal": "food.curry_pan"
+  },
+  {
+   "id": "crepe",
+   "ja": "クレープ",
+   "en": "Crepe",
+   "kind": "food",
+   "journal": "food.crepe"
+  },
+  {
+   "id": "kawara_senbei",
+   "ja": "瓦せんべい",
+   "en": "Kawara Senbei",
+   "kind": "food",
+   "journal": "souvenir.kawara_senbei"
+  },
+  {
+   "id": "kobe_cookies",
+   "ja": "洋菓子の缶",
+   "en": "Kobe Cookie Tin",
+   "kind": "food",
+   "journal": "souvenir.kobe_cookies"
+  },
+  {
+   "id": "ikanago_kugini",
+   "ja": "いかなごのくぎ煮",
+   "en": "Ikanago Kugini",
+   "kind": "food",
+   "journal": "souvenir.ikanago"
+  },
+  {
+   "id": "amazake",
+   "ja": "灘の甘酒",
+   "en": "Nada Amazake",
+   "kind": "drink",
+   "journal": "souvenir.nada"
+  },
+  {
+   "id": "arima_senbei",
+   "ja": "炭酸せんべい",
+   "en": "Arima Tansan Senbei",
+   "kind": "food",
+   "journal": "souvenir.arima_senbei"
+  },
+  {
+   "id": "pearl_charm",
+   "ja": "真珠のストラップ",
+   "en": "Pearl Charm",
+   "kind": "item",
+   "journal": "souvenir.pearl"
+  },
+  {
+   "id": "port_tower_figure",
+   "ja": "ポートタワーの置物",
+   "en": "Port Tower Figurine",
+   "kind": "item",
+   "journal": "souvenir.port_tower_figure"
+  }
+ ],
+ "shops": {
+  "honami_market": {
+   "name": "ほなみ農産物直売所",
+   "where": "ほなみ村（村の集荷場をかねた直売所）",
+   "mode": "sell",
+   "journal": "life.chokubaijo",
+   "items": [
+    [
+     "tomato",
+     50
+    ],
+    [
+     "cucumber",
+     40
+    ],
+    [
+     "eggplant",
+     60
+    ],
+    [
+     "rice",
+     80
+    ]
+   ]
+  },
+  "yorozuya": {
+   "name": "よろず屋 たなか",
+   "where": "ほなみ村の雑貨屋（駄菓子・飲み物・種）",
+   "mode": "buy",
+   "items": [
+    [
+     "ramune",
+     120
+    ],
+    [
+     "ice_candy",
+     80
+    ],
+    [
+     "dagashi",
+     50
+    ],
+    [
+     "mugicha",
+     100
+    ],
+    [
+     "tomato_seeds",
+     30
+    ],
+    [
+     "cucumber_seeds",
+     30
+    ],
+    [
+     "eggplant_seeds",
+     30
+    ],
+    [
+     "rice_seedling",
+     20
+    ]
+   ]
+  },
+  "vending": {
+   "name": "自動販売機",
+   "where": "村・駅・町のあちこち",
+   "mode": "buy",
+   "items": [
+    [
+     "mugicha",
+     130
+    ],
+    [
+     "cider",
+     160
+    ],
+    [
+     "ramune",
+     150
+    ]
+   ]
+  },
+  "ayutei": {
+   "name": "川魚料理 あゆ亭",
+   "where": "大川町（大川のほとりの食堂）",
+   "mode": "buy",
+   "items": [
+    [
+     "ayu_shioyaki",
+     500
+    ],
+    [
+     "onigiri",
+     150
+    ],
+    [
+     "mugicha",
+     100
+    ]
+   ]
+  },
+  "kawasemi": {
+   "name": "喫茶 かわせみ",
+   "where": "大川町の駅前商店街（昭和からつづく喫茶店）",
+   "mode": "buy",
+   "items": [
+    [
+     "cream_soda",
+     450
+    ],
+    [
+     "coffee",
+     400
+    ],
+    [
+     "kakigori",
+     400
+    ]
+   ]
+  },
+  "shiomi_akashiyaki": {
+   "name": "明石焼き 潮見屋",
+   "where": "潮見駅前（明石海峡大橋が見える）",
+   "mode": "buy",
+   "items": [
+    [
+     "akashiyaki",
+     600
+    ],
+    [
+     "ikanago_kugini",
+     900,
+     "souvenir.ikanago"
+    ],
+    [
+     "cider",
+     160
+    ]
+   ]
+  },
+  "harbor_cafe": {
+   "name": "ハーバー煉瓦カフェ",
+   "where": "神戸ハーバーランドの煉瓦倉庫",
+   "mode": "buy",
+   "items": [
+    [
+     "coffee",
+     500
+    ],
+    [
+     "cheesecake",
+     550
+    ],
+    [
+     "cream_soda",
+     600
+    ],
+    [
+     "kocha",
+     500
+    ]
+   ]
+  },
+  "harbor_souvenir": {
+   "name": "港のおみやげ館",
+   "where": "神戸ハーバーランド",
+   "mode": "buy",
+   "items": [
+    [
+     "port_tower_figure",
+     1200,
+     "souvenir.port_tower_figure"
+    ],
+    [
+     "kobe_cookies",
+     1080,
+     "souvenir.kobe_cookies"
+    ],
+    [
+     "kawara_senbei",
+     650,
+     "souvenir.kawara_senbei"
+    ],
+    [
+     "pearl_charm",
+     2500,
+     "souvenir.pearl"
+    ]
+   ]
+  },
+  "meriken_crepe": {
+   "name": "クレープの屋台",
+   "where": "メリケンパーク",
+   "mode": "buy",
+   "items": [
+    [
+     "crepe",
+     500
+    ],
+    [
+     "cider",
+     200
+    ]
+   ]
+  },
+  "nankin_butaman": {
+   "name": "南京町 豚まん処 福来",
+   "where": "南京町",
+   "mode": "buy",
+   "items": [
+    [
+     "butaman",
+     120
+    ]
+   ]
+  },
+  "nankin_dimsum": {
+   "name": "点心屋台 龍華",
+   "where": "南京町の広場前",
+   "mode": "buy",
+   "items": [
+    [
+     "xiaolongbao",
+     500
+    ],
+    [
+     "goma_dango",
+     300
+    ]
+   ]
+  },
+  "motomachi_kissa": {
+   "name": "元町珈琲 さざなみ",
+   "where": "元町商店街",
+   "mode": "buy",
+   "items": [
+    [
+     "coffee",
+     550
+    ],
+    [
+     "cream_soda",
+     650
+    ]
+   ]
+  },
+  "motomachi_sweets": {
+   "name": "元町洋菓子 アカシア",
+   "where": "元町商店街",
+   "mode": "buy",
+   "items": [
+    [
+     "baumkuchen",
+     800
+    ],
+    [
+     "kobe_pudding",
+     450
+    ],
+    [
+     "cheesecake",
+     500
+    ]
+   ]
+  },
+  "motomachi_bakery": {
+   "name": "パン工房 こむぎ堂",
+   "where": "元町商店街",
+   "mode": "buy",
+   "items": [
+    [
+     "croissant",
+     250
+    ],
+    [
+     "curry_pan",
+     280
+    ]
+   ]
+  },
+  "motomachi_souvenir": {
+   "name": "神戸みやげ 港屋",
+   "where": "元町商店街",
+   "mode": "buy",
+   "items": [
+    [
+     "kawara_senbei",
+     650,
+     "souvenir.kawara_senbei"
+    ],
+    [
+     "kobe_cookies",
+     1080,
+     "souvenir.kobe_cookies"
+    ],
+    [
+     "ikanago_kugini",
+     900,
+     "souvenir.ikanago"
+    ],
+    [
+     "amazake",
+     400,
+     "souvenir.nada"
+    ],
+    [
+     "arima_senbei",
+     700,
+     "souvenir.arima_senbei"
+    ],
+    [
+     "pearl_charm",
+     2800,
+     "souvenir.pearl"
+    ],
+    [
+     "port_tower_figure",
+     1200,
+     "souvenir.port_tower_figure"
+    ]
+   ]
+  },
+  "sobameshi": {
+   "name": "そばめし 長田屋",
+   "where": "元町商店街の路地",
+   "mode": "buy",
+   "items": [
+    [
+     "sobameshi",
+     700
+    ]
+   ]
+  },
+  "wagyu": {
+   "name": "和牛串 ほむら",
+   "where": "元町商店街",
+   "mode": "buy",
+   "items": [
+    [
+     "wagyu_kushi",
+     1500
+    ]
+   ]
+  },
+  "kitano_cafe": {
+   "name": "北野 洋館カフェ",
+   "where": "北野異人館街の洋館",
+   "mode": "buy",
+   "items": [
+    [
+     "kocha",
+     600
+    ],
+    [
+     "cheesecake",
+     600
+    ],
+    [
+     "coffee",
+     600
+    ]
+   ]
+  }
+ },
+ "areas": [
+  {
+   "id": "honami",
+   "name": "ほなみ村",
+   "sub": "田んぼと山にかこまれた村",
+   "journal": "spot.honami"
+  },
+  {
+   "id": "home",
+   "name": "わが家",
+   "sub": "おばあちゃんの家",
+   "journal": ""
+  },
+  {
+   "id": "honami_market",
+   "name": "ほなみ農産物直売所",
+   "sub": "とれたて野菜の店",
+   "journal": ""
+  },
+  {
+   "id": "honami_shrine",
+   "name": "ほなみ神社",
+   "sub": "村の鎮守さま",
+   "journal": "spot.honami_shrine"
+  },
+  {
+   "id": "okawa",
+   "name": "大川町",
+   "sub": "川と駅のある町",
+   "journal": "spot.okawa"
+  },
+  {
+   "id": "okawa_station",
+   "name": "大川駅",
+   "sub": "川霧線 始発駅",
+   "journal": ""
+  },
+  {
+   "id": "kirigaya",
+   "name": "霧ヶ谷",
+   "sub": "山あいの無人駅",
+   "journal": "spot.kirigaya"
+  },
+  {
+   "id": "shiomi",
+   "name": "潮見",
+   "sub": "海峡を望む駅",
+   "journal": "spot.shiomi"
+  },
+  {
+   "id": "akashi_bridge",
+   "name": "明石海峡大橋",
+   "sub": "本州と淡路島をむすぶ橋",
+   "journal": "spot.akashi_bridge"
+  },
+  {
+   "id": "kobe_station",
+   "name": "神戸駅",
+   "sub": "1930年の駅舎",
+   "journal": "spot.kobe_station"
+  },
+  {
+   "id": "harborland",
+   "name": "神戸ハーバーランド",
+   "sub": "海辺の街",
+   "journal": "spot.harborland"
+  },
+  {
+   "id": "brick_warehouse",
+   "name": "煉瓦倉庫",
+   "sub": "ハーバーランド",
+   "journal": "spot.brick_warehouse"
+  },
+  {
+   "id": "gaslight",
+   "name": "ガス燈通り",
+   "sub": "ハーバーランド",
+   "journal": "spot.gaslight_street"
+  },
+  {
+   "id": "meriken",
+   "name": "メリケンパーク",
+   "sub": "神戸港",
+   "journal": "spot.meriken_park"
+  },
+  {
+   "id": "port_tower",
+   "name": "神戸ポートタワー",
+   "sub": "高さ108m",
+   "journal": "spot.port_tower"
+  },
+  {
+   "id": "port_tower_top",
+   "name": "ポートタワー展望フロア",
+   "sub": "地上約100m",
+   "journal": "spot.port_tower_top"
+  },
+  {
+   "id": "maritime_museum",
+   "name": "神戸海洋博物館",
+   "sub": "白いフレームの建物",
+   "journal": "spot.maritime_museum"
+  },
+  {
+   "id": "be_kobe",
+   "name": "BE KOBE",
+   "sub": "メリケンパーク",
+   "journal": "spot.be_kobe"
+  },
+  {
+   "id": "quake_memorial",
+   "name": "神戸港震災メモリアルパーク",
+   "sub": "1995年1月17日",
+   "journal": "spot.quake_memorial"
+  },
+  {
+   "id": "nankinmachi",
+   "name": "南京町",
+   "sub": "神戸の中華街",
+   "journal": "spot.nankinmachi"
+  },
+  {
+   "id": "choanmon",
+   "name": "長安門",
+   "sub": "南京町の東の門",
+   "journal": "spot.choanmon"
+  },
+  {
+   "id": "motomachi",
+   "name": "元町商店街",
+   "sub": "1874年からつづく商店街",
+   "journal": "spot.motomachi"
+  },
+  {
+   "id": "kitano",
+   "name": "北野異人館街",
+   "sub": "坂の上の洋館",
+   "journal": "spot.kitano"
+  },
+  {
+   "id": "kazamidori",
+   "name": "風見鶏の館",
+   "sub": "北野異人館街",
+   "journal": "spot.kazamidori"
+  },
+  {
+   "id": "moegi",
+   "name": "萌黄の館",
+   "sub": "北野異人館街",
+   "journal": "spot.moegi"
+  },
+  {
+   "id": "venus",
+   "name": "ビーナスブリッジ",
+   "sub": "諏訪山",
+   "journal": "spot.venus_bridge"
+  },
+  {
+   "id": "love_locks",
+   "name": "愛の鍵モニュメント",
+   "sub": "ビーナスブリッジ",
+   "journal": "spot.love_locks"
+  }
+ ],
+ "routes": [
+  {
+   "id": "honami_bus",
+   "type": "bus",
+   "name": "ほなみ線（路線バス）",
+   "fare": "200円均一",
+   "stations": [
+    {
+     "id": "honami",
+     "name": "ほなみ",
+     "journal": "station.honami"
+    },
+    {
+     "id": "okawa_ekimae",
+     "name": "大川駅前",
+     "journal": "station.okawa_ekimae"
+    }
+   ]
+  },
+  {
+   "id": "kawagiri",
+   "type": "train",
+   "name": "川霧線",
+   "fare": "140円＋100mごとに20円（大川→神戸 700円）",
+   "stations": [
+    {
+     "id": "okawa",
+     "name": "大川",
+     "journal": "station.okawa"
+    },
+    {
+     "id": "kirigaya",
+     "name": "霧ヶ谷",
+     "journal": "station.kirigaya"
+    },
+    {
+     "id": "shiomi",
+     "name": "潮見",
+     "journal": "station.shiomi"
+    },
+    {
+     "id": "kobe",
+     "name": "神戸",
+     "journal": "station.kobe"
+    }
+   ]
+  },
+  {
+   "id": "kobe_loop",
+   "type": "bus",
+   "name": "港めぐりバス",
+   "fare": "260円均一",
+   "stations": [
+    {
+     "id": "loop_kobe",
+     "name": "神戸駅前",
+     "journal": "station.loop_kobe"
+    },
+    {
+     "id": "loop_motomachi",
+     "name": "元町・南京町",
+     "journal": "station.loop_motomachi"
+    },
+    {
+     "id": "loop_meriken",
+     "name": "メリケンパーク",
+     "journal": "station.loop_meriken"
+    },
+    {
+     "id": "loop_kitano",
+     "name": "北野異人館",
+     "journal": "station.loop_kitano"
+    },
+    {
+     "id": "loop_venus",
+     "name": "諏訪山・ビーナスブリッジ",
+     "journal": "station.loop_venus"
+    }
+   ]
+  }
+ ],
+ "journal": [
+  {
+   "key": "spot.honami",
+   "category": "spot",
+   "hint": "ほなみ村（田んぼと山にかこまれた村）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.honami_shrine",
+   "category": "spot",
+   "hint": "ほなみ神社（村の鎮守さま）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.okawa",
+   "category": "spot",
+   "hint": "大川町（川と駅のある町）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.kirigaya",
+   "category": "spot",
+   "hint": "霧ヶ谷（山あいの無人駅）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.shiomi",
+   "category": "spot",
+   "hint": "潮見（海峡を望む駅）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.akashi_bridge",
+   "category": "spot",
+   "hint": "明石海峡大橋（本州と淡路島をむすぶ橋）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.kobe_station",
+   "category": "spot",
+   "hint": "神戸駅（1930年の駅舎）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.harborland",
+   "category": "spot",
+   "hint": "神戸ハーバーランド（海辺の街）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.brick_warehouse",
+   "category": "spot",
+   "hint": "煉瓦倉庫（ハーバーランド）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.gaslight_street",
+   "category": "spot",
+   "hint": "ガス燈通り（ハーバーランド）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.meriken_park",
+   "category": "spot",
+   "hint": "メリケンパーク（神戸港）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.port_tower",
+   "category": "spot",
+   "hint": "神戸ポートタワー（高さ108m）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.port_tower_top",
+   "category": "spot",
+   "hint": "ポートタワー展望フロア（地上約100m）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.maritime_museum",
+   "category": "spot",
+   "hint": "神戸海洋博物館（白いフレームの建物）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.be_kobe",
+   "category": "spot",
+   "hint": "BE KOBE（メリケンパーク）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.quake_memorial",
+   "category": "spot",
+   "hint": "神戸港震災メモリアルパーク（1995年1月17日）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.nankinmachi",
+   "category": "spot",
+   "hint": "南京町（神戸の中華街）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.choanmon",
+   "category": "spot",
+   "hint": "長安門（南京町の東の門）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.motomachi",
+   "category": "spot",
+   "hint": "元町商店街（1874年からつづく商店街）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.kitano",
+   "category": "spot",
+   "hint": "北野異人館街（坂の上の洋館）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.kazamidori",
+   "category": "spot",
+   "hint": "風見鶏の館（北野異人館街）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.moegi",
+   "category": "spot",
+   "hint": "萌黄の館（北野異人館街）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.venus_bridge",
+   "category": "spot",
+   "hint": "ビーナスブリッジ（諏訪山）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.love_locks",
+   "category": "spot",
+   "hint": "愛の鍵モニュメント（ビーナスブリッジ）",
+   "unlocked_by": "エリアに入る"
+  },
+  {
+   "key": "spot.night_view",
+   "category": "spot",
+   "hint": "ビーナスブリッジから見る神戸の夜景（日本三大夜景）",
+   "unlocked_by": "夜にビーナスブリッジへ行く"
+  },
+  {
+   "key": "ride.honami_bus",
+   "category": "ride",
+   "hint": "ほなみ線（路線バス）（200円均一）",
+   "unlocked_by": "はじめて乗る"
+  },
+  {
+   "key": "station.honami",
+   "category": "station",
+   "hint": "ほなみ（ほなみ線（路線バス））",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "station.okawa_ekimae",
+   "category": "station",
+   "hint": "大川駅前（ほなみ線（路線バス））",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "ride.kawagiri",
+   "category": "ride",
+   "hint": "川霧線（140円＋100mごとに20円（大川→神戸 700円））",
+   "unlocked_by": "はじめて乗る"
+  },
+  {
+   "key": "station.okawa",
+   "category": "station",
+   "hint": "大川（川霧線）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "station.kirigaya",
+   "category": "station",
+   "hint": "霧ヶ谷（川霧線）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "station.shiomi",
+   "category": "station",
+   "hint": "潮見（川霧線）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "station.kobe",
+   "category": "station",
+   "hint": "神戸（川霧線）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "ride.kobe_loop",
+   "category": "ride",
+   "hint": "港めぐりバス（260円均一）",
+   "unlocked_by": "はじめて乗る"
+  },
+  {
+   "key": "station.loop_kobe",
+   "category": "station",
+   "hint": "神戸駅前（港めぐりバス）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "station.loop_motomachi",
+   "category": "station",
+   "hint": "元町・南京町（港めぐりバス）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "station.loop_meriken",
+   "category": "station",
+   "hint": "メリケンパーク（港めぐりバス）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "station.loop_kitano",
+   "category": "station",
+   "hint": "北野異人館（港めぐりバス）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "station.loop_venus",
+   "category": "station",
+   "hint": "諏訪山・ビーナスブリッジ（港めぐりバス）",
+   "unlocked_by": "この駅・停留所で降りる"
+  },
+  {
+   "key": "food.tomato",
+   "category": "food",
+   "hint": "トマト",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.cucumber",
+   "category": "food",
+   "hint": "きゅうり",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.eggplant",
+   "category": "food",
+   "hint": "なす",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.onigiri",
+   "category": "food",
+   "hint": "おにぎり",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.mugicha",
+   "category": "food",
+   "hint": "麦茶",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.suika",
+   "category": "food",
+   "hint": "スイカ",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.kakigori",
+   "category": "food",
+   "hint": "かき氷",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.ramune",
+   "category": "food",
+   "hint": "ラムネ",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.ice_candy",
+   "category": "food",
+   "hint": "アイスキャンデー",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.dagashi",
+   "category": "food",
+   "hint": "駄菓子",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.cider",
+   "category": "food",
+   "hint": "サイダー",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.ayu",
+   "category": "food",
+   "hint": "鮎の塩焼き",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.cream_soda",
+   "category": "food",
+   "hint": "クリームソーダ",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.coffee",
+   "category": "food",
+   "hint": "コーヒー",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.kocha",
+   "category": "food",
+   "hint": "紅茶",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.akashiyaki",
+   "category": "food",
+   "hint": "明石焼き",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.butaman",
+   "category": "food",
+   "hint": "豚まん",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.xiaolongbao",
+   "category": "food",
+   "hint": "小籠包",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.goma_dango",
+   "category": "food",
+   "hint": "ごま団子",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.sobameshi",
+   "category": "food",
+   "hint": "そばめし",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.wagyu",
+   "category": "food",
+   "hint": "和牛の串焼き",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.baumkuchen",
+   "category": "food",
+   "hint": "バウムクーヘン",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.pudding",
+   "category": "food",
+   "hint": "神戸プリン",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.cheesecake",
+   "category": "food",
+   "hint": "チーズケーキ",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.bread",
+   "category": "food",
+   "hint": "クロワッサン",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.curry_pan",
+   "category": "food",
+   "hint": "カレーパン",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "food.crepe",
+   "category": "food",
+   "hint": "クレープ",
+   "unlocked_by": "食べる・飲む"
+  },
+  {
+   "key": "souvenir.kawara_senbei",
+   "category": "souvenir",
+   "hint": "瓦せんべい",
+   "unlocked_by": "買う・食べる"
+  },
+  {
+   "key": "souvenir.kobe_cookies",
+   "category": "souvenir",
+   "hint": "洋菓子の缶",
+   "unlocked_by": "買う・食べる"
+  },
+  {
+   "key": "souvenir.ikanago",
+   "category": "souvenir",
+   "hint": "いかなごのくぎ煮",
+   "unlocked_by": "買う・食べる"
+  },
+  {
+   "key": "souvenir.nada",
+   "category": "souvenir",
+   "hint": "灘の甘酒",
+   "unlocked_by": "買う・食べる"
+  },
+  {
+   "key": "souvenir.arima_senbei",
+   "category": "souvenir",
+   "hint": "炭酸せんべい",
+   "unlocked_by": "買う・食べる"
+  },
+  {
+   "key": "souvenir.pearl",
+   "category": "souvenir",
+   "hint": "真珠のストラップ",
+   "unlocked_by": "買う・食べる"
+  },
+  {
+   "key": "souvenir.port_tower_figure",
+   "category": "souvenir",
+   "hint": "ポートタワーの置物",
+   "unlocked_by": "買う・食べる"
+  },
+  {
+   "key": "people.grandma",
+   "category": "people",
+   "hint": "おばあちゃん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.mom",
+   "category": "people",
+   "hint": "お母さん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.dad",
+   "category": "people",
+   "hint": "お父さん（出張中）",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.neighbor",
+   "category": "people",
+   "hint": "となりの山本のおじいちゃん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.yorozuya",
+   "category": "people",
+   "hint": "よろず屋の田中さん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.market",
+   "category": "people",
+   "hint": "直売所の佐藤さん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.okawa_ekiin",
+   "category": "people",
+   "hint": "大川駅の駅員さん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.kobe_info",
+   "category": "people",
+   "hint": "神戸の観光案内所のお姉さん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.memorial_guide",
+   "category": "people",
+   "hint": "メモリアルパークのガイドさん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.kitano_guide",
+   "category": "people",
+   "hint": "異人館のガイドさん",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "people.photographer",
+   "category": "people",
+   "hint": "ビーナスブリッジのカメラマン",
+   "unlocked_by": "はじめて話す"
+  },
+  {
+   "key": "life.rice",
+   "category": "life",
+   "hint": "稲作（田んぼの一年）",
+   "unlocked_by": "会話やできごと"
+  },
+  {
+   "key": "life.chokubaijo",
+   "category": "life",
+   "hint": "農産物直売所",
+   "unlocked_by": "会話やできごと"
+  },
+  {
+   "key": "life.natsu",
+   "category": "life",
+   "hint": "日本の夏の風物詩（風鈴・蚊取り線香・セミ）",
+   "unlocked_by": "会話やできごと"
+  },
+  {
+   "key": "life.bus",
+   "category": "life",
+   "hint": "路線バスの乗り方（整理券・運賃）",
+   "unlocked_by": "会話やできごと"
+  },
+  {
+   "key": "life.train",
+   "category": "life",
+   "hint": "切符の買い方と電車の乗り方",
+   "unlocked_by": "会話やできごと"
+  },
+  {
+   "key": "life.kissa",
+   "category": "life",
+   "hint": "昭和の喫茶店文化",
+   "unlocked_by": "会話やできごと"
+  }
+ ],
+ "profiles": [
+  {
+   "id": "grandma",
+   "name": "おばあちゃん",
+   "about": "主人公の祖母。わが家の縁側にいることが多い。料理上手で物知り。昔話が好き。",
+   "voice": "old",
+   "shop": "",
+   "bubbles": "grandma"
+  },
+  {
+   "id": "mom",
+   "name": "お母さん",
+   "about": "主人公の母。台所や居間にいる。しっかり者でやさしい。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "mom"
+  },
+  {
+   "id": "dad",
+   "name": "お父さん",
+   "about": "出張中で家にいない。居間の黒電話（電話ブロックを右クリック）で話せる。鉄道と神戸が好き。",
+   "voice": "low",
+   "shop": "",
+   "bubbles": ""
+  },
+  {
+   "id": "neighbor",
+   "name": "山本のおじいちゃん",
+   "about": "となりの農家。田んぼの見回りをしている。",
+   "voice": "old",
+   "shop": "",
+   "bubbles": "farmer"
+  },
+  {
+   "id": "market",
+   "name": "直売所の佐藤さん",
+   "about": "ほなみ農産物直売所の人。野菜とお米を買い取ってくれる。",
+   "voice": "low",
+   "shop": "honami_market",
+   "bubbles": "market"
+  },
+  {
+   "id": "yorozuya",
+   "name": "よろず屋の田中さん",
+   "about": "村のよろず屋（雑貨・駄菓子・種）のおばちゃん。",
+   "voice": "high",
+   "shop": "yorozuya",
+   "bubbles": "yorozuya"
+  },
+  {
+   "id": "village_kid",
+   "name": "村の子ども",
+   "about": "村の子ども（ケンタ、ミホなど複数配置）。セミとり・川遊びが好き。",
+   "voice": "kid",
+   "shop": "",
+   "bubbles": "village_kids"
+  },
+  {
+   "id": "busstop_oldman",
+   "name": "バス停のおじいさん",
+   "about": "ほなみバス停のベンチにいる。バスの乗り方を教えてくれる。",
+   "voice": "old",
+   "shop": "",
+   "bubbles": "busstop"
+  },
+  {
+   "id": "okawa_ekiin",
+   "name": "大川駅の駅員さん",
+   "about": "川霧線の始発駅・大川駅の駅員。切符の買い方を教えてくれる。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "station"
+  },
+  {
+   "id": "ayutei",
+   "name": "あゆ亭の大将",
+   "about": "大川のほとりの川魚料理店の主人。",
+   "voice": "low",
+   "shop": "ayutei",
+   "bubbles": ""
+  },
+  {
+   "id": "kawasemi",
+   "name": "喫茶かわせみのマスター",
+   "about": "大川町の昭和レトロな喫茶店のマスター。",
+   "voice": "low",
+   "shop": "kawasemi",
+   "bubbles": ""
+  },
+  {
+   "id": "okawa_fisher",
+   "name": "釣り人のおじさん",
+   "about": "大川で鮎釣りをしている。",
+   "voice": "low",
+   "shop": "",
+   "bubbles": "river"
+  },
+  {
+   "id": "townsfolk",
+   "name": "町の人",
+   "about": "大川町の住人（複数配置）。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "town"
+  },
+  {
+   "id": "kirigaya_obaachan",
+   "name": "霧ヶ谷のおばあさん",
+   "about": "山あいの無人駅・霧ヶ谷のホームで電車を待っている。",
+   "voice": "old",
+   "shop": "",
+   "bubbles": "kirigaya"
+  },
+  {
+   "id": "shiomi_ekiin",
+   "name": "潮見駅の駅員さん",
+   "about": "海辺の潮見駅の駅員。明石海峡大橋にくわしい。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "station"
+  },
+  {
+   "id": "shiomi_akashiyaki",
+   "name": "潮見屋のおかみさん",
+   "about": "潮見駅前の明石焼き屋。",
+   "voice": "high",
+   "shop": "shiomi_akashiyaki",
+   "bubbles": ""
+  },
+  {
+   "id": "shiomi_fisher",
+   "name": "漁師のおじさん",
+   "about": "潮見の漁港の漁師。明石海峡の潮の流れや明石だこ・明石鯛の話をする。",
+   "voice": "low",
+   "shop": "",
+   "bubbles": "sea"
+  },
+  {
+   "id": "kobe_ekiin",
+   "name": "神戸駅の駅員さん",
+   "about": "神戸駅（1930年の駅舎）の駅員。駅の歴史を知っている。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "kobe_station"
+  },
+  {
+   "id": "kobe_info",
+   "name": "観光案内所のお姉さん",
+   "about": "神戸駅の観光案内所。おすすめスポットと港めぐりバスを教えてくれる。",
+   "voice": "high",
+   "shop": "",
+   "bubbles": ""
+  },
+  {
+   "id": "harbor_cafe",
+   "name": "煉瓦カフェの店員さん",
+   "about": "ハーバーランドの煉瓦倉庫のカフェ。",
+   "voice": "high",
+   "shop": "harbor_cafe",
+   "bubbles": ""
+  },
+  {
+   "id": "harbor_souvenir",
+   "name": "おみやげ館の店員さん",
+   "about": "ハーバーランドのおみやげ店。",
+   "voice": "mid",
+   "shop": "harbor_souvenir",
+   "bubbles": ""
+  },
+  {
+   "id": "musician",
+   "name": "ストリートミュージシャン",
+   "about": "ハーバーランドの海辺で演奏している。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "musician"
+  },
+  {
+   "id": "tourist",
+   "name": "観光客",
+   "about": "神戸の観光客（家族連れ・学生・外国からの旅行者など複数配置）。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "tourists"
+  },
+  {
+   "id": "meriken_crepe",
+   "name": "クレープ屋さん",
+   "about": "メリケンパークのキッチンカー。",
+   "voice": "high",
+   "shop": "meriken_crepe",
+   "bubbles": ""
+  },
+  {
+   "id": "tower_staff",
+   "name": "ポートタワーの係員",
+   "about": "神戸ポートタワー1階の係員。展望フロア行きエレベーター（子ども500円）を案内。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": ""
+  },
+  {
+   "id": "memorial_guide",
+   "name": "メモリアルパークのガイドさん",
+   "about": "神戸港震災メモリアルパークのボランティアガイド（年配）。1995年の阪神・淡路大震災を語りつぐ。",
+   "voice": "old",
+   "shop": "",
+   "bubbles": ""
+  },
+  {
+   "id": "museum_staff",
+   "name": "海洋博物館の係員",
+   "about": "神戸海洋博物館の係員。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "museum"
+  },
+  {
+   "id": "nankin_butaman",
+   "name": "豚まん屋の店員さん",
+   "about": "南京町の豚まん専門店。",
+   "voice": "high",
+   "shop": "nankin_butaman",
+   "bubbles": ""
+  },
+  {
+   "id": "nankin_dimsum",
+   "name": "点心屋台の店主",
+   "about": "南京町の点心の屋台。",
+   "voice": "low",
+   "shop": "nankin_dimsum",
+   "bubbles": ""
+  },
+  {
+   "id": "nankin_person",
+   "name": "南京町の人",
+   "about": "南京町の通行人・店の人（複数配置）。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "nankin"
+  },
+  {
+   "id": "motomachi_kissa",
+   "name": "元町珈琲のマスター",
+   "about": "元町商店街の老舗喫茶店。",
+   "voice": "low",
+   "shop": "motomachi_kissa",
+   "bubbles": ""
+  },
+  {
+   "id": "motomachi_sweets",
+   "name": "洋菓子店のパティシエ",
+   "about": "元町商店街の洋菓子店。",
+   "voice": "high",
+   "shop": "motomachi_sweets",
+   "bubbles": ""
+  },
+  {
+   "id": "motomachi_bakery",
+   "name": "パン屋さん",
+   "about": "元町商店街のパン屋。",
+   "voice": "mid",
+   "shop": "motomachi_bakery",
+   "bubbles": ""
+  },
+  {
+   "id": "motomachi_souvenir",
+   "name": "港屋の店主",
+   "about": "元町商店街のおみやげ店のご主人（年配）。",
+   "voice": "old",
+   "shop": "motomachi_souvenir",
+   "bubbles": ""
+  },
+  {
+   "id": "sobameshi",
+   "name": "長田屋の店主",
+   "about": "そばめし屋の店主（神戸・長田出身）。",
+   "voice": "low",
+   "shop": "sobameshi",
+   "bubbles": ""
+  },
+  {
+   "id": "wagyu",
+   "name": "和牛串屋の店主",
+   "about": "元町の和牛串焼きの店。",
+   "voice": "low",
+   "shop": "wagyu",
+   "bubbles": ""
+  },
+  {
+   "id": "shopper",
+   "name": "買い物客",
+   "about": "元町商店街の買い物客（複数配置）。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "motomachi"
+  },
+  {
+   "id": "kitano_guide",
+   "name": "異人館のガイドさん",
+   "about": "北野異人館街のガイド。風見鶏の館・萌黄の館の前にいる（area条件で話題を変える）。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "kitano"
+  },
+  {
+   "id": "kitano_cafe",
+   "name": "洋館カフェの店員さん",
+   "about": "北野の洋館を使ったカフェ。",
+   "voice": "high",
+   "shop": "kitano_cafe",
+   "bubbles": ""
+  },
+  {
+   "id": "artist",
+   "name": "絵描きのおじさん",
+   "about": "北野坂でスケッチをしている。",
+   "voice": "low",
+   "shop": "",
+   "bubbles": "kitano"
+  },
+  {
+   "id": "venus_photographer",
+   "name": "カメラマン",
+   "about": "ビーナスブリッジで夜景を撮っている。",
+   "voice": "low",
+   "shop": "",
+   "bubbles": "venus"
+  },
+  {
+   "id": "couple",
+   "name": "カップル",
+   "about": "ビーナスブリッジのカップル（複数配置）。",
+   "voice": "mid",
+   "shop": "",
+   "bubbles": "venus"
+  }
+ ],
+ "bubble_pools": [
+  "busstop",
+  "farmer",
+  "grandma",
+  "kirigaya",
+  "kitano",
+  "kobe_station",
+  "market",
+  "meriken",
+  "mom",
+  "motomachi",
+  "museum",
+  "musician",
+  "nankin",
+  "river",
+  "sea",
+  "station",
+  "tourists",
+  "town",
+  "venus",
+  "village_kids",
+  "yorozuya"
+ ],
+ "flags": {
+  "started": "ゲーム開始時に自動で立つ",
+  "met_grandma": "おばあちゃんと最初に話した",
+  "quest1_given": "お母さんから『畑のトマトを3つとってきて』を頼まれた",
+  "quest1_done": "トマト3つを渡した（お母さん：300円）",
+  "quest2_given": "おばあちゃんから『直売所で野菜を売ってみな』と言われた",
+  "sold_once": "直売所ではじめて売った（自動で立つ）",
+  "quest2_done": "直売所で売ったことをおばあちゃんに報告（200円）",
+  "helped_neighbor": "山本のおじいちゃんの田んぼの見回りを手伝った（150円＋稲の苗4つ）",
+  "permit_town": "お母さんが隣町（大川町）へのおでかけを許可した。これが無いとバスに乗れない。条件：quest1_done と sold_once",
+  "gave_grandma": "おばあちゃんにおみやげを渡した",
+  "gave_mom": "お母さんにおみやげを渡した",
+  "told_dad": "お父さんに神戸のことを電話で話した"
+ },
+ "notes": [
+  "アイテムIDは dialogue の give/take/has_item では 'tabi:<id>' と書く（例 tabi:tomato）",
+  "主人公は小学生〜中学生くらいの子ども（性別は決めない）。夏休みにおばあちゃんの家（ほなみ村）に帰省している。家族はおばあちゃん・お母さん・出張中のお父さん。",
+  "季節は夏。世界はマインクラフト。お金は円。",
+  "店名・商品名の固有ブランドは架空。実在の地名・建物（神戸ポートタワー、風見鶏の館など）は実名で正確に。"
+ ]
+}

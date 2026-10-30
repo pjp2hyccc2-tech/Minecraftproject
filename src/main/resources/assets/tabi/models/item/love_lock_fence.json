@@ -1,0 +1,6 @@
+{
+ "parent": "minecraft:item/generated",
+ "textures": {
+  "layer0": "tabi:block/love_lock_fence_pane"
+ }
+}

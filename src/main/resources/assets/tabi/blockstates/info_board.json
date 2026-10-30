@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/info_board"
+  },
+  "facing=east": {
+   "model": "tabi:block/info_board",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/info_board",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/info_board",
+   "y": 270
+  }
+ }
+}

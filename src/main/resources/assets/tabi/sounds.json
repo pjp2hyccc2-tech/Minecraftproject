@@ -1,0 +1,128 @@
+{
+ "melody": {
+  "sounds": [
+   {
+    "name": "tabi:melody",
+    "stream": true
+   }
+  ],
+  "subtitle": "subtitles.tabi.melody"
+ },
+ "door_chime": {
+  "sounds": [
+   {
+    "name": "tabi:door_chime",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.door_chime"
+ },
+ "train_run": {
+  "sounds": [
+   {
+    "name": "tabi:train_run",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.train_run"
+ },
+ "train_joint": {
+  "sounds": [
+   {
+    "name": "tabi:train_joint",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.train_joint"
+ },
+ "bus_run": {
+  "sounds": [
+   {
+    "name": "tabi:bus_run",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.bus_run"
+ },
+ "bus_bell": {
+  "sounds": [
+   {
+    "name": "tabi:bus_bell",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.bus_bell"
+ },
+ "evening_chime": {
+  "sounds": [
+   {
+    "name": "tabi:evening_chime",
+    "stream": true
+   }
+  ],
+  "subtitle": "subtitles.tabi.evening_chime"
+ },
+ "cicada": {
+  "sounds": [
+   {
+    "name": "tabi:cicada",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.cicada"
+ },
+ "higurashi": {
+  "sounds": [
+   {
+    "name": "tabi:higurashi",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.higurashi"
+ },
+ "frogs": {
+  "sounds": [
+   {
+    "name": "tabi:frogs",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.frogs"
+ },
+ "waves": {
+  "sounds": [
+   {
+    "name": "tabi:waves",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.waves"
+ },
+ "talk": {
+  "sounds": [
+   {
+    "name": "tabi:talk",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.talk"
+ },
+ "coin": {
+  "sounds": [
+   {
+    "name": "tabi:coin",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.coin"
+ },
+ "ticket_gate": {
+  "sounds": [
+   {
+    "name": "tabi:ticket_gate",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.ticket_gate"
+ }
+}

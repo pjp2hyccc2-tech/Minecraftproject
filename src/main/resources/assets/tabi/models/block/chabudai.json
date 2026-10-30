@@ -1,0 +1,350 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "top": "tabi:block/chabudai_top",
+  "particle": "tabi:block/chabudai_top"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    7,
+    0
+   ],
+   "to": [
+    16,
+    9,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#top",
+     "uv": [
+      0.0,
+      7,
+      16.0,
+      9
+     ]
+    },
+    "south": {
+     "texture": "#top",
+     "uv": [
+      0.0,
+      7,
+      16.0,
+      9
+     ]
+    },
+    "east": {
+     "texture": "#top",
+     "uv": [
+      0.0,
+      7,
+      16.0,
+      9
+     ]
+    },
+    "west": {
+     "texture": "#top",
+     "uv": [
+      0.0,
+      7,
+      16.0,
+      9
+     ]
+    },
+    "up": {
+     "texture": "#top",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "down": {
+     "texture": "#top",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      16.0
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    2,
+    0,
+    2
+   ],
+   "to": [
+    4,
+    7,
+    4
+   ],
+   "faces": {
+    "north": {
+     "texture": "#top",
+     "uv": [
+      12,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#top",
+     "uv": [
+      2,
+      9,
+      4,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#top",
+     "uv": [
+      12,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#top",
+     "uv": [
+      2,
+      9,
+      4,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#top",
+     "uv": [
+      2,
+      2,
+      4,
+      4
+     ]
+    },
+    "down": {
+     "texture": "#top",
+     "uv": [
+      2,
+      12,
+      4,
+      14
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    12,
+    0,
+    2
+   ],
+   "to": [
+    14,
+    7,
+    4
+   ],
+   "faces": {
+    "north": {
+     "texture": "#top",
+     "uv": [
+      2,
+      9,
+      4,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#top",
+     "uv": [
+      12,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#top",
+     "uv": [
+      12,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#top",
+     "uv": [
+      2,
+      9,
+      4,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#top",
+     "uv": [
+      12,
+      2,
+      14,
+      4
+     ]
+    },
+    "down": {
+     "texture": "#top",
+     "uv": [
+      12,
+      12,
+      14,
+      14
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    2,
+    0,
+    12
+   ],
+   "to": [
+    4,
+    7,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#top",
+     "uv": [
+      12,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#top",
+     "uv": [
+      2,
+      9,
+      4,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#top",
+     "uv": [
+      2,
+      9,
+      4,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#top",
+     "uv": [
+      12,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#top",
+     "uv": [
+      2,
+      12,
+      4,
+      14
+     ]
+    },
+    "down": {
+     "texture": "#top",
+     "uv": [
+      2,
+      2,
+      4,
+      4
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    12,
+    0,
+    12
+   ],
+   "to": [
+    14,
+    7,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#top",
+     "uv": [
+      2,
+      9,
+      4,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#top",
+     "uv": [
+      12,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#top",
+     "uv": [
+      2,
+      9,
+      4,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#top",
+     "uv": [
+      12,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#top",
+     "uv": [
+      12,
+      12,
+      14,
+      14
+     ]
+    },
+    "down": {
+     "texture": "#top",
+     "uv": [
+      12,
+      2,
+      14,
+      4
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

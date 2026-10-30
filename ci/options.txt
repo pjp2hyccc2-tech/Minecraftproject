@@ -1,0 +1,17 @@
+version:3465
+renderDistance:10
+simulationDistance:8
+graphicsMode:1
+guiScale:2
+fov:0.0
+onboardAccessibility:false
+skipMultiplayerWarning:true
+joinedFirstServer:true
+tutorialStep:none
+pauseOnLostFocus:false
+narrator:0
+lang:ja_jp
+soundCategory_master:0.0
+maxFps:30
+enableVsync:false
+entityDistanceScaling:1.0

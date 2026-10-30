@@ -1,0 +1,67 @@
+{
+ "name": "絵描きのおじさん",
+ "voice": "low",
+ "entries": [
+  {
+   "id": "sketching",
+   "priority": 10,
+   "lines": [
+    "やあ。北野の洋館を描いているんだ。",
+    "煉瓦の赤と、空の青。神戸の色はきれいだろう？"
+   ]
+  },
+  {
+   "id": "morning_light",
+   "priority": 10,
+   "when": {
+    "time": "morning"
+   },
+   "lines": [
+    "朝の光は、やわらかくて絵になるんだよ。"
+   ]
+  },
+  {
+   "id": "evening_shadow",
+   "priority": 10,
+   "when": {
+    "time": "evening"
+   },
+   "lines": [
+    "夕方は影が長くのびて、建物がぐっと立体的に見えるんだ。"
+   ]
+  },
+  {
+   "id": "advice",
+   "priority": 10,
+   "lines": [
+    "絵はね、うまく描くより、よく見ることが大事なんだ。",
+    "きみも旅の手帳に、見たものをスケッチしてみるといい。"
+   ]
+  },
+  {
+   "id": "slope_view",
+   "priority": 10,
+   "lines": [
+    "坂をのぼって、ふりかえってごらん。海が見えるだろう？",
+    "坂の街の、いちばんのごほうびさ。"
+   ]
+  },
+  {
+   "id": "rain",
+   "priority": 10,
+   "when": {
+    "weather": "rain"
+   },
+   "lines": [
+    "雨の日は、画材がぬれないように、ひと休みさ。"
+   ]
+  },
+  {
+   "id": "fallback",
+   "priority": 10,
+   "lines": [
+    "……おっと、話しかけられて手がすべった。ははは。"
+   ]
+  }
+ ]
+}

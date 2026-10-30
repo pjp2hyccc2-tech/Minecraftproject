@@ -1,0 +1,29 @@
+{
+ "type": "minecraft:block",
+ "pools": [
+  {
+   "rolls": 1,
+   "entries": [
+    {
+     "type": "minecraft:item",
+     "name": "tabi:hinoki_slab",
+     "functions": [
+      {
+       "function": "minecraft:set_count",
+       "count": 2,
+       "conditions": [
+        {
+         "condition": "minecraft:block_state_property",
+         "block": "tabi:hinoki_slab",
+         "properties": {
+          "type": "double"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

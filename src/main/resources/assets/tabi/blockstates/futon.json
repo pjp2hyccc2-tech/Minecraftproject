@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/futon"
+  },
+  "facing=east": {
+   "model": "tabi:block/futon",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/futon",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/futon",
+   "y": 270
+  }
+ }
+}

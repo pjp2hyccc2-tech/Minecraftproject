@@ -1,0 +1,47 @@
+{
+ "vertex": "tabi:grade",
+ "fragment": "tabi:grade",
+ "attributes": [
+  "Position",
+  "UV0"
+ ],
+ "samplers": [
+  {
+   "name": "Sampler0"
+  }
+ ],
+ "uniforms": [
+  {
+   "name": "Warmth",
+   "type": "float",
+   "count": 1,
+   "values": [
+    0.0
+   ]
+  },
+  {
+   "name": "Saturation",
+   "type": "float",
+   "count": 1,
+   "values": [
+    1.0
+   ]
+  },
+  {
+   "name": "Vignette",
+   "type": "float",
+   "count": 1,
+   "values": [
+    0.0
+   ]
+  },
+  {
+   "name": "Contrast",
+   "type": "float",
+   "count": 1,
+   "values": [
+    0.0
+   ]
+  }
+ ]
+}

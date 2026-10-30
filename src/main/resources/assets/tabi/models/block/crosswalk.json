@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/crosswalk_top",
+  "bottom": "tabi:block/crosswalk_side",
+  "front": "tabi:block/crosswalk_side",
+  "side": "tabi:block/crosswalk_side"
+ }
+}

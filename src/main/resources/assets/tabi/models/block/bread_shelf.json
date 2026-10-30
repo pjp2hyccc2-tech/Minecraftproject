@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/bread_shelf_side",
+  "bottom": "tabi:block/bread_shelf_side",
+  "front": "tabi:block/bread_shelf_front",
+  "side": "tabi:block/bread_shelf_side"
+ }
+}

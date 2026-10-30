@@ -1,0 +1,7 @@
+{
+ "parent": "minecraft:block/cross",
+ "textures": {
+  "cross": "tabi:block/furin_cross"
+ },
+ "render_type": "minecraft:translucent"
+}

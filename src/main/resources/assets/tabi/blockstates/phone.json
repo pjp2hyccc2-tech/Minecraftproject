@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/phone"
+  },
+  "facing=east": {
+   "model": "tabi:block/phone",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/phone",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/phone",
+   "y": 270
+  }
+ }
+}

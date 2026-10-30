@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/souvenir_shelf"
+  },
+  "facing=east": {
+   "model": "tabi:block/souvenir_shelf",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/souvenir_shelf",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/souvenir_shelf",
+   "y": 270
+  }
+ }
+}

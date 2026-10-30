@@ -1,0 +1,147 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "r": "tabi:block/guardrail_r",
+  "p": "tabi:block/guardrail_p",
+  "particle": "tabi:block/guardrail_r"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    8,
+    6
+   ],
+   "to": [
+    16,
+    14,
+    7.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#r",
+     "uv": [
+      0.0,
+      2,
+      16.0,
+      8
+     ]
+    },
+    "south": {
+     "texture": "#r",
+     "uv": [
+      0.0,
+      2,
+      16.0,
+      8
+     ]
+    },
+    "east": {
+     "texture": "#r",
+     "uv": [
+      8.5,
+      2,
+      10,
+      8
+     ]
+    },
+    "west": {
+     "texture": "#r",
+     "uv": [
+      6,
+      2,
+      7.5,
+      8
+     ]
+    },
+    "up": {
+     "texture": "#r",
+     "uv": [
+      0.0,
+      6,
+      16.0,
+      7.5
+     ]
+    },
+    "down": {
+     "texture": "#r",
+     "uv": [
+      0.0,
+      8.5,
+      16.0,
+      10
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    7,
+    0,
+    7.5
+   ],
+   "to": [
+    9,
+    13,
+    9.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#p",
+     "uv": [
+      7,
+      3,
+      9,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#p",
+     "uv": [
+      7,
+      3,
+      9,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#p",
+     "uv": [
+      6.5,
+      3,
+      8.5,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#p",
+     "uv": [
+      7.5,
+      3,
+      9.5,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#p",
+     "uv": [
+      7,
+      7.5,
+      9,
+      9.5
+     ]
+    },
+    "down": {
+     "texture": "#p",
+     "uv": [
+      7,
+      6.5,
+      9,
+      8.5
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

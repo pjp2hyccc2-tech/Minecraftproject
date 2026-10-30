@@ -1,0 +1,78 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "k": "tabi:block/kakejiku_k",
+  "particle": "tabi:block/kakejiku_k"
+ },
+ "elements": [
+  {
+   "from": [
+    2,
+    0,
+    15
+   ],
+   "to": [
+    14,
+    16,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#k",
+     "uv": [
+      2,
+      0.0,
+      14,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#k",
+     "uv": [
+      2,
+      0.0,
+      14,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#k",
+     "uv": [
+      0.0,
+      0.0,
+      1,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#k",
+     "uv": [
+      15,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#k",
+     "uv": [
+      2,
+      15,
+      14,
+      16.0
+     ]
+    },
+    "down": {
+     "texture": "#k",
+     "uv": [
+      2,
+      0.0,
+      14,
+      1
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

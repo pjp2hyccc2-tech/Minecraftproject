@@ -1,0 +1,7 @@
+{
+ "parent": "minecraft:block/crop",
+ "textures": {
+  "crop": "tabi:block/cucumber_crop_cucumber_2"
+ },
+ "render_type": "minecraft:cutout"
+}

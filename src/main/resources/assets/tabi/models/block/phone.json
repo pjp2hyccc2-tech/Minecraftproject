@@ -1,0 +1,146 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "p": "tabi:block/phone_p",
+  "particle": "tabi:block/phone_p"
+ },
+ "elements": [
+  {
+   "from": [
+    4,
+    0,
+    5
+   ],
+   "to": [
+    12,
+    3,
+    11
+   ],
+   "faces": {
+    "north": {
+     "texture": "#p",
+     "uv": [
+      4,
+      13,
+      12,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#p",
+     "uv": [
+      4,
+      13,
+      12,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#p",
+     "uv": [
+      5,
+      13,
+      11,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#p",
+     "uv": [
+      5,
+      13,
+      11,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#p",
+     "uv": [
+      4,
+      5,
+      12,
+      11
+     ]
+    },
+    "down": {
+     "texture": "#p",
+     "uv": [
+      4,
+      5,
+      12,
+      11
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    3,
+    3,
+    7
+   ],
+   "to": [
+    13,
+    5,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#p",
+     "uv": [
+      3,
+      11,
+      13,
+      13
+     ]
+    },
+    "south": {
+     "texture": "#p",
+     "uv": [
+      3,
+      11,
+      13,
+      13
+     ]
+    },
+    "east": {
+     "texture": "#p",
+     "uv": [
+      7,
+      11,
+      9,
+      13
+     ]
+    },
+    "west": {
+     "texture": "#p",
+     "uv": [
+      7,
+      11,
+      9,
+      13
+     ]
+    },
+    "up": {
+     "texture": "#p",
+     "uv": [
+      3,
+      7,
+      13,
+      9
+     ]
+    },
+    "down": {
+     "texture": "#p",
+     "uv": [
+      3,
+      7,
+      13,
+      9
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

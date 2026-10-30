@@ -1,0 +1,215 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "m": "tabi:block/street_lamp_m",
+  "g": "tabi:block/street_lamp_g",
+  "particle": "tabi:block/street_lamp_m"
+ },
+ "elements": [
+  {
+   "from": [
+    6.5,
+    0,
+    6.5
+   ],
+   "to": [
+    9.5,
+    8,
+    9.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#m",
+     "uv": [
+      6.5,
+      8,
+      9.5,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#m",
+     "uv": [
+      6.5,
+      8,
+      9.5,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#m",
+     "uv": [
+      6.5,
+      8,
+      9.5,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#m",
+     "uv": [
+      6.5,
+      8,
+      9.5,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#m",
+     "uv": [
+      6.5,
+      6.5,
+      9.5,
+      9.5
+     ]
+    },
+    "down": {
+     "texture": "#m",
+     "uv": [
+      6.5,
+      6.5,
+      9.5,
+      9.5
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    7,
+    8,
+    0
+   ],
+   "to": [
+    9,
+    9,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#m",
+     "uv": [
+      7,
+      7,
+      9,
+      8
+     ]
+    },
+    "south": {
+     "texture": "#m",
+     "uv": [
+      7,
+      7,
+      9,
+      8
+     ]
+    },
+    "east": {
+     "texture": "#m",
+     "uv": [
+      7,
+      7,
+      16.0,
+      8
+     ]
+    },
+    "west": {
+     "texture": "#m",
+     "uv": [
+      0.0,
+      7,
+      9,
+      8
+     ]
+    },
+    "up": {
+     "texture": "#m",
+     "uv": [
+      7,
+      0.0,
+      9,
+      9
+     ]
+    },
+    "down": {
+     "texture": "#m",
+     "uv": [
+      7,
+      7,
+      9,
+      16.0
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    5,
+    7,
+    -2
+   ],
+   "to": [
+    11,
+    9,
+    4
+   ],
+   "faces": {
+    "north": {
+     "texture": "#m",
+     "uv": [
+      5,
+      7,
+      11,
+      9
+     ]
+    },
+    "south": {
+     "texture": "#m",
+     "uv": [
+      5,
+      7,
+      11,
+      9
+     ]
+    },
+    "east": {
+     "texture": "#m",
+     "uv": [
+      12,
+      7,
+      16.0,
+      9
+     ]
+    },
+    "west": {
+     "texture": "#m",
+     "uv": [
+      0.0,
+      7,
+      4,
+      9
+     ]
+    },
+    "up": {
+     "texture": "#m",
+     "uv": [
+      5,
+      0.0,
+      11,
+      4
+     ]
+    },
+    "down": {
+     "texture": "#g",
+     "uv": [
+      5,
+      12,
+      11,
+      16.0
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

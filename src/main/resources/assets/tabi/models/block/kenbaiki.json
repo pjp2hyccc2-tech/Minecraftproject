@@ -1,0 +1,79 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "front": "tabi:block/kenbaiki_front",
+  "side": "tabi:block/kenbaiki_side",
+  "particle": "tabi:block/kenbaiki_front"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    2
+   ],
+   "to": [
+    16,
+    16,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#front",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#side",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#side",
+     "uv": [
+      0.0,
+      0.0,
+      14,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#side",
+     "uv": [
+      2,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#side",
+     "uv": [
+      0.0,
+      2,
+      16.0,
+      16.0
+     ]
+    },
+    "down": {
+     "texture": "#side",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      14
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

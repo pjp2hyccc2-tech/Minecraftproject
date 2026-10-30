@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/template_glass_pane_noside",
+ "textures": {
+  "pane": "tabi:block/fusuma_pane",
+  "edge": "tabi:block/fusuma_edge"
+ },
+ "render_type": "minecraft:cutout"
+}

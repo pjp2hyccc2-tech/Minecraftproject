@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/tenji_line"
+  },
+  "facing=east": {
+   "model": "tabi:block/tenji_line",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/tenji_line",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/tenji_line",
+   "y": 270
+  }
+ }
+}

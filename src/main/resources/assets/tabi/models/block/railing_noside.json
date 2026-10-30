@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/template_glass_pane_noside",
+ "textures": {
+  "pane": "tabi:block/railing_pane",
+  "edge": "tabi:block/railing_edge"
+ },
+ "render_type": "minecraft:cutout"
+}

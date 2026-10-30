@@ -1,0 +1,841 @@
+{
+ "name": "おばあちゃん",
+ "voice": "old",
+ "entries": [
+  {
+   "id": "first_meeting",
+   "priority": 100,
+   "once": true,
+   "lines": [
+    "まあまあ、〇〇！ よう来たねえ。待っとったよ。",
+    "しばらく見んうちに、大きゅうなったねえ。",
+    "夏休みのあいだ、この家で、ゆっくりしていきや。",
+    "おなかすいとるやろ？ ほら、にぎりたてのおにぎり。",
+    "お母さんは台所におるよ。顔を見せてあげてな。"
+   ],
+   "actions": [
+    {
+     "journal": "people.grandma"
+    },
+    {
+     "flag": "met_grandma"
+    },
+    {
+     "give": "tabi:onigiri",
+     "count": 2
+    }
+   ]
+  },
+  {
+   "id": "hint_mom",
+   "priority": 70,
+   "when": {
+    "flag": "met_grandma",
+    "not_flag": "quest1_given"
+   },
+   "lines": [
+    "お母さんが、〇〇に頼みたいことがあるって言うとったよ。",
+    "台所か居間におるはずやから、行ってみ。"
+   ]
+  },
+  {
+   "id": "quest2_give",
+   "priority": 85,
+   "when": {
+    "flag": "quest1_given",
+    "not_flag": [
+     "quest2_given",
+     "sold_once"
+    ]
+   },
+   "lines": [
+    "そうそう、〇〇。ひとつ、ええこと教えたげよ。",
+    "畑でとれた野菜はな、村の直売所で買い取ってもらえるんよ。",
+    "トマトにきゅうり、なす。それに、お米もや。",
+    "自分で育てて、自分で売って、おこづかいにしてみ。",
+    "直売所の佐藤さんは、気のええ人やから安心しとき。"
+   ],
+   "actions": [
+    {
+     "flag": "quest2_given"
+    }
+   ]
+  },
+  {
+   "id": "quest2_give_already_sold",
+   "priority": 85,
+   "when": {
+    "flag": [
+     "quest1_given",
+     "sold_once"
+    ],
+    "not_flag": "quest2_given"
+   },
+   "lines": [
+    "直売所で野菜を売ってみたら、って言おうと思っとったんよ。",
+    "え、もう売ってきたん？ まあ、さすがやねえ！",
+    "自分でかせいだお金は、だいじに使うんよ。",
+    "がんばったごほうびに、おばあちゃんからも200円あげよ。"
+   ],
+   "actions": [
+    {
+     "flag": "quest2_given"
+    },
+    {
+     "yen": 200,
+     "reason": "直売所のごほうび"
+    },
+    {
+     "flag": "quest2_done"
+    }
+   ]
+  },
+  {
+   "id": "quest2_report",
+   "priority": 90,
+   "when": {
+    "flag": [
+     "sold_once",
+     "quest2_given"
+    ],
+    "not_flag": "quest2_done"
+   },
+   "lines": [
+    "直売所で売ってきたんやて？ 佐藤さんから聞いたよ。",
+    "自分で育てたもんがお金になるって、うれしいやろ。",
+    "お百姓さんの気持ちが、ちょっとわかったんちゃう？",
+    "ようがんばったね。これは、おばあちゃんからのごほうび。"
+   ],
+   "actions": [
+    {
+     "yen": 200,
+     "reason": "直売所のごほうび"
+    },
+    {
+     "flag": "quest2_done"
+    }
+   ]
+  },
+  {
+   "id": "quest2_hint_keep_tomato",
+   "priority": 70,
+   "when": {
+    "flag": "quest2_given",
+    "not_flag": [
+     "sold_once",
+     "quest1_done"
+    ],
+    "chance": 0.6
+   },
+   "lines": [
+    "直売所には、もう行ってみた？",
+    "とれた野菜を持っていったら、佐藤さんが買い取ってくれるよ。",
+    "お母さんに頼まれたトマトは、売らんと取っときや。"
+   ]
+  },
+  {
+   "id": "quest2_hint",
+   "priority": 70,
+   "when": {
+    "flag": [
+     "quest2_given",
+     "quest1_done"
+    ],
+    "not_flag": "sold_once",
+    "chance": 0.6
+   },
+   "lines": [
+    "直売所には、もう行ってみた？",
+    "トマトでもきゅうりでも、とれたもんを持っていってごらん。"
+   ]
+  },
+  {
+   "id": "permit_hint",
+   "priority": 65,
+   "when": {
+    "flag": [
+     "quest1_done",
+     "sold_once"
+    ],
+    "not_flag": "permit_town",
+    "chance": 0.6
+   },
+   "lines": [
+    "〇〇、大川町のほうへ行ってみたいんちゃう？",
+    "お母さんに聞いてごらん。今のあんたなら、きっとええって言うよ。"
+   ]
+  },
+  {
+   "id": "quest1_pending",
+   "priority": 60,
+   "when": {
+    "flag": "quest2_done",
+    "not_flag": "quest1_done",
+    "chance": 0.6
+   },
+   "lines": [
+    "お母さんに頼まれたトマトは、もう渡したん？",
+    "赤う熟れたのを3つ。お母さん、待っとるよ。"
+   ]
+  },
+  {
+   "id": "after_permit",
+   "priority": 55,
+   "once": true,
+   "when": {
+    "flag": "permit_town"
+   },
+   "lines": [
+    "お母さんから、おでかけのお許しが出たんやね。",
+    "大川町は川がきれいな町よ。鮎の塩焼きがおいしいんよ。",
+    "知らん人について行ったらあかんよ。気ぃつけて行っといで。"
+   ]
+  },
+  {
+   "id": "suika_gift",
+   "priority": 60,
+   "when": {
+    "time": "day",
+    "weather": "clear",
+    "chance": 0.3
+   },
+   "lines": [
+    "今日も暑いねえ。冷やしといたスイカ、切ったよ。",
+    "縁側で食べ。種は、ぷーっと庭に飛ばしてええからね。"
+   ],
+   "actions": [
+    {
+     "give": "tabi:suika",
+     "count": 1
+    }
+   ]
+  },
+  {
+   "id": "natsu_fubutsushi",
+   "priority": 40,
+   "once": true,
+   "lines": [
+    "ちりん、ちりん……風鈴の音を聞くと、涼しい気がするやろ。",
+    "夕方には蚊取り線香をたいて、縁側で夕涼みするんよ。",
+    "昼はセミ、夜はカエル。夏の音は、にぎやかやねえ。",
+    "こういうのを「夏の風物詩」って言うんよ。おぼえとき。"
+   ],
+   "actions": [
+    {
+     "journal": "life.natsu"
+    }
+   ]
+  },
+  {
+   "id": "natsu_katorisenko",
+   "priority": 10,
+   "lines": [
+    "蚊取り線香のうずまき、ゆっくり燃えていくやろ。",
+    "あのけむりのにおいがすると、ああ夏やなあって思うんよ。"
+   ],
+   "actions": [
+    {
+     "journal": "life.natsu"
+    }
+   ]
+  },
+  {
+   "id": "semi",
+   "priority": 10,
+   "lines": [
+    "ミンミン、ジージー……今日もセミが元気やねえ。",
+    "ツクツクボウシが鳴きだしたら、夏休みも終わりが近いんよ。"
+   ]
+  },
+  {
+   "id": "tip_tomato",
+   "priority": 10,
+   "lines": [
+    "トマトは、まっ赤に熟れたら収穫どきよ。",
+    "おひさまをたっぷり浴びたトマトは、あまいんよ。",
+    "「トマトが赤くなると医者が青くなる」って言うてね、体にええの。"
+   ]
+  },
+  {
+   "id": "tip_cucumber",
+   "priority": 10,
+   "lines": [
+    "きゅうりは育つのが早いんよ。夏は一日でぐんと大きゅうなる。",
+    "ぬか漬けにしてもええし、冷やして丸かじりもおいしいよ。"
+   ]
+  },
+  {
+   "id": "tip_eggplant",
+   "priority": 10,
+   "lines": [
+    "「親の意見となすびの花は、千に一つもむだがない」ってね。",
+    "なすの花は、咲いたらほとんど実になるんよ。",
+    "親の言うことも、ちゃんと聞いときなさいってことや。ふふ。"
+   ]
+  },
+  {
+   "id": "tip_seeds",
+   "priority": 10,
+   "lines": [
+    "種は、よろず屋の田中さんとこで売っとるよ。",
+    "くわで耕した土にまいて、水の近くやとよう育つんよ。",
+    "実ったら、株ごとこわして収穫するの。"
+   ]
+  },
+  {
+   "id": "tip_rice",
+   "priority": 10,
+   "lines": [
+    "稲はな、水を張った田んぼで育つんよ。",
+    "穂が金色になったら、さわって（右クリック）刈り取れる。",
+    "一度、自分の手でお米を刈り取ってごらん。ええ勉強になるよ。"
+   ]
+  },
+  {
+   "id": "rice_year",
+   "priority": 10,
+   "lines": [
+    "田んぼの一年はな、春に田植え、夏は草とりと水の世話。",
+    "秋になったら、金色の稲を刈り取るんよ。",
+    "今ごろは、稲の小さい白い花が咲くころやねえ。"
+   ]
+  },
+  {
+   "id": "rice_88",
+   "priority": 10,
+   "lines": [
+    "「米」っていう字は、八十八って書くやろ。",
+    "お米ができるまで、八十八回も手間がかかるって言われとるんよ。",
+    "せやから、ごはんは一粒も残したらあかんよ。"
+   ]
+  },
+  {
+   "id": "story_mom",
+   "priority": 10,
+   "lines": [
+    "お母さんも子どものころ、この縁側でスイカを食べとったんよ。",
+    "種の飛ばしっこをして、よう笑っとったわ。"
+   ]
+  },
+  {
+   "id": "story_grandpa",
+   "priority": 10,
+   "lines": [
+    "おじいちゃんはな、毎朝田んぼを見回るのが好きな人やった。",
+    "仏壇のおじいちゃんにも、手を合わせてあげてな。きっと喜ぶよ。"
+   ]
+  },
+  {
+   "id": "shrine",
+   "priority": 10,
+   "when": {
+    "not_journal": "spot.honami_shrine"
+   },
+   "lines": [
+    "村のほなみ神社には、もう行ってみた？",
+    "鎮守さまが、村と田んぼを守ってくださっとるんよ。",
+    "行ったら、手を合わせてごあいさつしといで。"
+   ]
+  },
+  {
+   "id": "shrine_visited",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.honami_shrine"
+   },
+   "lines": [
+    "神社にお参りしてきたん？ えらいねえ。",
+    "夏祭りの夜は、夜店が出て、そらにぎやかやったんよ。",
+    "おばあちゃんも娘のころ、浴衣で盆おどりをおどったもんや。"
+   ]
+  },
+  {
+   "id": "obon",
+   "priority": 10,
+   "lines": [
+    "お盆にはな、きゅうりとなすで「精霊馬」をつくるんよ。",
+    "きゅうりの馬で早う帰ってきて、なすの牛でゆっくり帰ってもらうの。",
+    "ご先祖さまを、家族みんなでお迎えするんよ。"
+   ]
+  },
+  {
+   "id": "kaya",
+   "priority": 10,
+   "lines": [
+    "むかしは夏になると、蚊帳をつって寝たもんよ。",
+    "緑の網の中に入るとな、秘密基地みたいでわくわくしたわ。"
+   ]
+  },
+  {
+   "id": "old_trip",
+   "priority": 10,
+   "lines": [
+    "むかしは、大川町へ行くのも一日がかりやったんよ。",
+    "今はバスと電車で神戸まで行けるんやから、便利になったねえ。"
+   ]
+  },
+  {
+   "id": "dad",
+   "priority": 10,
+   "lines": [
+    "お父さん、出張でいそがしいんやろねえ。",
+    "居間の黒電話で、声を聞かせてあげたら喜ぶよ。"
+   ]
+  },
+  {
+   "id": "journal_book",
+   "priority": 10,
+   "lines": [
+    "旅の手帳は持っとる？ 見たもの、食べたもの、ぜんぶ残しとき。",
+    "大人になって読み返したら、きっと宝物になるよ。"
+   ]
+  },
+  {
+   "id": "idle",
+   "priority": 10,
+   "lines": [
+    "〇〇がおると、家がにぎやかでうれしいわあ。",
+    "困ったことがあったら、いつでもおばあちゃんに言いや。"
+   ]
+  },
+  {
+   "id": "money_talk",
+   "priority": 10,
+   "lines": [
+    "お金はな、ほんまにほしいもんか、よう考えてから使うんよ。",
+    "せやけど、旅でしか食べられんもんには、使うてもええね。ふふ。"
+   ]
+  },
+  {
+   "id": "travel_care",
+   "priority": 10,
+   "when": {
+    "flag": "permit_town"
+   },
+   "lines": [
+    "おでかけの前は、お金がちゃんとあるか確かめてな。",
+    "帰りのバスと電車の分は、ちゃんと残しとくんよ。"
+   ]
+  },
+  {
+   "id": "morning_early",
+   "priority": 10,
+   "when": {
+    "time": "morning"
+   },
+   "lines": [
+    "おはよう、〇〇。早起きやねえ。",
+    "畑仕事は、涼しい朝のうちにすませるんよ。"
+   ]
+  },
+  {
+   "id": "morning_taiso",
+   "priority": 10,
+   "when": {
+    "time": "morning"
+   },
+   "lines": [
+    "おはよう。ラジオ体操には行ってきた？",
+    "夏休みの朝は、体操して、朝ごはんをしっかり食べるんよ。"
+   ]
+  },
+  {
+   "id": "day_somen",
+   "priority": 10,
+   "when": {
+    "time": "day"
+   },
+   "lines": [
+    "お昼はそうめんにしよか。",
+    "きゅうりを細う切って、トマトものせたげるよ。"
+   ]
+  },
+  {
+   "id": "day_heat",
+   "priority": 10,
+   "when": {
+    "time": "day",
+    "weather": "clear"
+   },
+   "lines": [
+    "こう暑いと、外に出るときは帽子をかぶるんよ。",
+    "麦茶もこまめに飲んでな。熱中症になったら大変や。"
+   ]
+  },
+  {
+   "id": "evening_yuyake",
+   "priority": 10,
+   "when": {
+    "time": "evening",
+    "weather": "clear"
+   },
+   "lines": [
+    "夕焼けがきれいやねえ。あしたも、きっと晴れるよ。"
+   ]
+  },
+  {
+   "id": "evening_higurashi",
+   "priority": 10,
+   "when": {
+    "time": "evening"
+   },
+   "lines": [
+    "カナカナカナ……ヒグラシが鳴きだしたら、夕方の合図よ。",
+    "5時のチャイムが鳴ったら、おうちに帰っておいで。"
+   ]
+  },
+  {
+   "id": "evening_dinner",
+   "priority": 10,
+   "when": {
+    "time": "evening"
+   },
+   "lines": [
+    "今日の晩ごはんは、なすの煮びたしよ。",
+    "畑でとれたばっかりやから、そらおいしいで。"
+   ]
+  },
+  {
+   "id": "night_sleep",
+   "priority": 10,
+   "when": {
+    "time": "night"
+   },
+   "lines": [
+    "もう夜やね。お風呂に入って、早う寝なさいよ。",
+    "あしたもええ日になるように。おやすみ。"
+   ]
+  },
+  {
+   "id": "night_stars",
+   "priority": 10,
+   "when": {
+    "time": "night",
+    "weather": "clear"
+   },
+   "lines": [
+    "見てみ、星がようけ出とるやろ。",
+    "村は明かりが少ないから、天の川まで見えるんよ。"
+   ]
+  },
+  {
+   "id": "night_frogs",
+   "priority": 10,
+   "when": {
+    "time": "night"
+   },
+   "lines": [
+    "夜の田んぼは、カエルの大合唱やねえ。",
+    "あの声を聞きながら寝ると、よう眠れるんよ。"
+   ]
+  },
+  {
+   "id": "rain_rest",
+   "priority": 10,
+   "when": {
+    "weather": "rain"
+   },
+   "lines": [
+    "雨やねえ。今日は畑の水やりはお休みやわ。",
+    "雨の音を聞きながら、のんびりしよか。"
+   ]
+  },
+  {
+   "id": "rain_yudachi",
+   "priority": 10,
+   "when": {
+    "weather": "rain"
+   },
+   "lines": [
+    "夏の夕立は、ざーっと降って、すぐやむんよ。",
+    "やんだあとは、ちょっと涼しゅうなるで。"
+   ]
+  },
+  {
+   "id": "react_okawa",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.okawa"
+   },
+   "lines": [
+    "大川町まで行ってきたん？ ひとりで、えらいねえ。",
+    "大川の川ぞいは、むかしおじいちゃんと歩いた道なんよ。"
+   ]
+  },
+  {
+   "id": "react_ayu",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "food.ayu"
+   },
+   "lines": [
+    "あゆ亭の鮎を食べたん？ ええ香りがしたやろ。",
+    "鮎は「香魚」とも書いてね、夏のごちそうなんよ。"
+   ]
+  },
+  {
+   "id": "react_kobe",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "station.kobe"
+   },
+   "lines": [
+    "神戸まで行ってきたんやて！ まあ、遠いとこまで。",
+    "神戸駅の駅舎は、おばあちゃんが生まれる前からあるんよ。"
+   ]
+  },
+  {
+   "id": "react_port_tower",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.port_tower"
+   },
+   "lines": [
+    "ポートタワーを見てきたん？ 赤うて、きれいやったやろ。",
+    "できたころは、みんなで見に行ったもんよ。鼓みたいな形でね。"
+   ]
+  },
+  {
+   "id": "react_nankinmachi",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.nankinmachi"
+   },
+   "lines": [
+    "南京町は、にぎやかやったやろ。",
+    "おばあちゃんも若いころ、食べ歩きしてな、ようしかられたわ。ふふ。"
+   ]
+  },
+  {
+   "id": "react_butaman",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "food.butaman"
+   },
+   "lines": [
+    "豚まんを食べたんやね。皮がふっくらしとったやろ。",
+    "おばあちゃんは、からしをちょっとつけるのが好きなんよ。"
+   ]
+  },
+  {
+   "id": "react_kitano",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.kitano"
+   },
+   "lines": [
+    "北野の異人館を見てきたん？",
+    "坂の上の洋館なんて、絵本の中みたいやったやろうねえ。"
+   ]
+  },
+  {
+   "id": "react_night_view",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.night_view"
+   },
+   "lines": [
+    "神戸の夜景を見たん？ 「1000万ドルの夜景」やもんねえ。",
+    "でも、夜おそうに出歩くときは、気ぃつけなあかんよ。"
+   ]
+  },
+  {
+   "id": "react_memorial",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.quake_memorial"
+   },
+   "lines": [
+    "メモリアルパークにも行ったんやね。",
+    "あの地震のときは、このあたりも、ようゆれたんよ。",
+    "神戸の人たちは助けおうて、町を立て直したんよ。忘れたらあかんね。"
+   ]
+  },
+  {
+   "id": "react_akashi_bridge",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.akashi_bridge"
+   },
+   "lines": [
+    "明石海峡大橋、大きかったやろ。",
+    "あの橋ができる前は、淡路島へは船で渡っとったんよ。"
+   ]
+  },
+  {
+   "id": "gift_kawara_senbei",
+   "priority": 80,
+   "when": {
+    "has_item": "tabi:kawara_senbei",
+    "not_flag": "gave_grandma"
+   },
+   "lines": [
+    "あら、〇〇。その包み、瓦せんべいやないの？"
+   ],
+   "choices": [
+    {
+     "text": "おみやげを渡す",
+     "actions": [
+      {
+       "take": "tabi:kawara_senbei",
+       "count": 1
+      },
+      {
+       "flag": "gave_grandma"
+      },
+      {
+       "yen": 300,
+       "reason": "おこづかい"
+      }
+     ],
+     "reply": [
+      "まあ、おばあちゃんに？ なつかしいわあ、瓦せんべい。",
+      "かたいけど、かむほどに甘うてね。むかしから好きなんよ。",
+      "遠いとこで、おばあちゃんのこと思い出してくれたんやね。",
+      "ほんまにありがとう。これは、おばあちゃんからのおこづかい。"
+     ]
+    },
+    {
+     "text": "あとでね",
+     "reply": [
+      "ふふ、そうなん。だれかへのおみやげなら、それもええねえ。"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gift_kobe_pudding",
+   "priority": 80,
+   "when": {
+    "has_item": "tabi:kobe_pudding",
+    "not_flag": "gave_grandma"
+   },
+   "lines": [
+    "あら、それは神戸のプリン？ おいしそうやねえ。"
+   ],
+   "choices": [
+    {
+     "text": "おみやげを渡す",
+     "actions": [
+      {
+       "take": "tabi:kobe_pudding",
+       "count": 1
+      },
+      {
+       "flag": "gave_grandma"
+      },
+      {
+       "yen": 300,
+       "reason": "おこづかい"
+      }
+     ],
+     "reply": [
+      "おばあちゃんにくれるん？ まあ、うれしいわあ。",
+      "なめらかで、口の中でとろけるねえ。長生きするわ。",
+      "旅のみやげ話といっしょにいただくのが、いちばんのごちそうや。",
+      "ほんまにありがとう。これは、おばあちゃんからのおこづかい。"
+     ]
+    },
+    {
+     "text": "あとでね",
+     "reply": [
+      "そうなん。プリンは冷やして、早めに食べるんよ。"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gift_ikanago",
+   "priority": 80,
+   "when": {
+    "has_item": "tabi:ikanago_kugini",
+    "not_flag": "gave_grandma"
+   },
+   "lines": [
+    "あら、それはいかなごのくぎ煮？ ええにおいやねえ。"
+   ],
+   "choices": [
+    {
+     "text": "おみやげを渡す",
+     "actions": [
+      {
+       "take": "tabi:ikanago_kugini",
+       "count": 1
+      },
+      {
+       "flag": "gave_grandma"
+      },
+      {
+       "yen": 300,
+       "reason": "おこづかい"
+      }
+     ],
+     "reply": [
+      "まあ、おばあちゃんの好物、よう覚えとったねえ。",
+      "あったかいごはんにのせたら、なんぼでも食べられるんよ。",
+      "春の神戸の味や。夏に食べられるなんて、ぜいたくやねえ。",
+      "ほんまにありがとう。これは、おばあちゃんからのおこづかい。"
+     ]
+    },
+    {
+     "text": "あとでね",
+     "reply": [
+      "ふふ、ええにおいだけで、ごはんが食べられそうやわ。"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gift_baumkuchen",
+   "priority": 80,
+   "when": {
+    "has_item": "tabi:baumkuchen",
+    "not_flag": "gave_grandma"
+   },
+   "lines": [
+    "その箱、バウムクーヘンやないの？ 木の年輪みたいなお菓子やろ。"
+   ],
+   "choices": [
+    {
+     "text": "おみやげを渡す",
+     "actions": [
+      {
+       "take": "tabi:baumkuchen",
+       "count": 1
+      },
+      {
+       "flag": "gave_grandma"
+      },
+      {
+       "yen": 300,
+       "reason": "おこづかい"
+      }
+     ],
+     "reply": [
+      "おばあちゃんに？ まあまあ、ありがとう。",
+      "年輪みたいに、しあわせが重なりますようにって、縁起がええんよ。",
+      "みんなでお茶の時間に、切り分けていただこうね。",
+      "ほんまにありがとう。これは、おばあちゃんからのおこづかい。"
+     ]
+    },
+    {
+     "text": "あとでね",
+     "reply": [
+      "お母さんにあげるん？ やさしい子やねえ。"
+     ]
+    }
+   ]
+  }
+ ]
+}

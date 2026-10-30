@@ -1,0 +1,147 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "front": "tabi:block/mailbox_front",
+  "side": "tabi:block/mailbox_side",
+  "particle": "tabi:block/mailbox_front"
+ },
+ "elements": [
+  {
+   "from": [
+    3,
+    0,
+    3
+   ],
+   "to": [
+    13,
+    15,
+    13
+   ],
+   "faces": {
+    "north": {
+     "texture": "#front",
+     "uv": [
+      3,
+      1,
+      13,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#side",
+     "uv": [
+      3,
+      1,
+      13,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#side",
+     "uv": [
+      3,
+      1,
+      13,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#side",
+     "uv": [
+      3,
+      1,
+      13,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#side",
+     "uv": [
+      3,
+      3,
+      13,
+      13
+     ]
+    },
+    "down": {
+     "texture": "#side",
+     "uv": [
+      3,
+      3,
+      13,
+      13
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    2,
+    15,
+    2
+   ],
+   "to": [
+    14,
+    16,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side",
+     "uv": [
+      2,
+      0.0,
+      14,
+      1
+     ]
+    },
+    "south": {
+     "texture": "#side",
+     "uv": [
+      2,
+      0.0,
+      14,
+      1
+     ]
+    },
+    "east": {
+     "texture": "#side",
+     "uv": [
+      2,
+      0.0,
+      14,
+      1
+     ]
+    },
+    "west": {
+     "texture": "#side",
+     "uv": [
+      2,
+      0.0,
+      14,
+      1
+     ]
+    },
+    "up": {
+     "texture": "#side",
+     "uv": [
+      2,
+      2,
+      14,
+      14
+     ]
+    },
+    "down": {
+     "texture": "#side",
+     "uv": [
+      2,
+      2,
+      14,
+      14
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

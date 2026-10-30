@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/souvenir_shelf_side",
+  "bottom": "tabi:block/souvenir_shelf_side",
+  "front": "tabi:block/souvenir_shelf_front",
+  "side": "tabi:block/souvenir_shelf_side"
+ }
+}

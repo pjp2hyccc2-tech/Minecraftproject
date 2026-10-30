@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/platform_edge_top",
+  "bottom": "tabi:block/platform_edge_side",
+  "front": "tabi:block/platform_edge_side",
+  "side": "tabi:block/platform_edge_side"
+ }
+}

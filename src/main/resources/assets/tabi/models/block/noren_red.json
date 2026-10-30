@@ -1,0 +1,78 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "cloth": "tabi:block/noren_red_cloth",
+  "particle": "tabi:block/noren_red_cloth"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    7.5
+   ],
+   "to": [
+    16,
+    16,
+    8.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#cloth",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#cloth",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#cloth",
+     "uv": [
+      7.5,
+      0.0,
+      8.5,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#cloth",
+     "uv": [
+      7.5,
+      0.0,
+      8.5,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#cloth",
+     "uv": [
+      0.0,
+      7.5,
+      16.0,
+      8.5
+     ]
+    },
+    "down": {
+     "texture": "#cloth",
+     "uv": [
+      0.0,
+      7.5,
+      16.0,
+      8.5
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/inner_stairs",
+ "textures": {
+  "bottom": "tabi:block/kawara",
+  "top": "tabi:block/kawara",
+  "side": "tabi:block/kawara"
+ }
+}

@@ -1,0 +1,9 @@
+{
+ "type": "tabi:japan",
+ "generator": {
+  "type": "tabi:japan",
+  "biome_source": {
+   "type": "tabi:japan"
+  }
+ }
+}

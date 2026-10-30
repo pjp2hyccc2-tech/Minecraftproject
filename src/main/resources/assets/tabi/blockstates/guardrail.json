@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/guardrail"
+  },
+  "facing=east": {
+   "model": "tabi:block/guardrail",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/guardrail",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/guardrail",
+   "y": 270
+  }
+ }
+}

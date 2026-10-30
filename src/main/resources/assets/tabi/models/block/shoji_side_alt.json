@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/template_glass_pane_side_alt",
+ "textures": {
+  "pane": "tabi:block/shoji_pane",
+  "edge": "tabi:block/shoji_edge"
+ },
+ "render_type": "minecraft:cutout"
+}

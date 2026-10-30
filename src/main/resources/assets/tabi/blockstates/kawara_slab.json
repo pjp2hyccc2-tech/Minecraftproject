@@ -1,0 +1,13 @@
+{
+ "variants": {
+  "type=bottom": {
+   "model": "tabi:block/kawara_slab"
+  },
+  "type=top": {
+   "model": "tabi:block/kawara_slab_top"
+  },
+  "type=double": {
+   "model": "tabi:block/kawara"
+  }
+ }
+}

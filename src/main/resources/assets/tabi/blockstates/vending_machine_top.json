@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/vending_machine_top"
+  },
+  "facing=east": {
+   "model": "tabi:block/vending_machine_top",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/vending_machine_top",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/vending_machine_top",
+   "y": 270
+  }
+ }
+}

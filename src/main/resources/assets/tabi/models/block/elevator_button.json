@@ -1,0 +1,78 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "b": "tabi:block/elevator_button_b",
+  "particle": "tabi:block/elevator_button_b"
+ },
+ "elements": [
+  {
+   "from": [
+    3,
+    2,
+    15
+   ],
+   "to": [
+    13,
+    14,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#b",
+     "uv": [
+      3,
+      2,
+      13,
+      14
+     ]
+    },
+    "south": {
+     "texture": "#b",
+     "uv": [
+      3,
+      2,
+      13,
+      14
+     ]
+    },
+    "east": {
+     "texture": "#b",
+     "uv": [
+      0.0,
+      2,
+      1,
+      14
+     ]
+    },
+    "west": {
+     "texture": "#b",
+     "uv": [
+      15,
+      2,
+      16.0,
+      14
+     ]
+    },
+    "up": {
+     "texture": "#b",
+     "uv": [
+      3,
+      15,
+      13,
+      16.0
+     ]
+    },
+    "down": {
+     "texture": "#b",
+     "uv": [
+      3,
+      0.0,
+      13,
+      1
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

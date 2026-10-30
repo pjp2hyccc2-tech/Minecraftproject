@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/cake_showcase_side",
+  "bottom": "tabi:block/cake_showcase_side",
+  "front": "tabi:block/cake_showcase_front",
+  "side": "tabi:block/cake_showcase_side"
+ }
+}

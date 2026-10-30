@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/kakejiku"
+  },
+  "facing=east": {
+   "model": "tabi:block/kakejiku",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/kakejiku",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/kakejiku",
+   "y": 270
+  }
+ }
+}

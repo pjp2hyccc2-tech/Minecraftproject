@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/track_low"
+  },
+  "facing=east": {
+   "model": "tabi:block/track_low",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/track_low",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/track_low",
+   "y": 270
+  }
+ }
+}

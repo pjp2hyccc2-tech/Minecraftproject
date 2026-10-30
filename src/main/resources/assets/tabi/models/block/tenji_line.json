@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/tenji_line_top",
+  "bottom": "tabi:block/tenji_line_side",
+  "front": "tabi:block/tenji_line_side",
+  "side": "tabi:block/tenji_line_side"
+ }
+}

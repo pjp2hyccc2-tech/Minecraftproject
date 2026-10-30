@@ -1,0 +1,16 @@
+{
+ "variants": {
+  "axis=y": {
+   "model": "tabi:block/hashira"
+  },
+  "axis=z": {
+   "model": "tabi:block/hashira",
+   "x": 90
+  },
+  "axis=x": {
+   "model": "tabi:block/hashira",
+   "x": 90,
+   "y": 90
+  }
+ }
+}

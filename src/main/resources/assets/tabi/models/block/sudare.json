@@ -1,0 +1,78 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "s": "tabi:block/sudare_s",
+  "particle": "tabi:block/sudare_s"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    15
+   ],
+   "to": [
+    16,
+    16,
+    15.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#s",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#s",
+     "uv": [
+      0.0,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#s",
+     "uv": [
+      0.5,
+      0.0,
+      1,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#s",
+     "uv": [
+      15,
+      0.0,
+      15.5,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#s",
+     "uv": [
+      0.0,
+      15,
+      16.0,
+      15.5
+     ]
+    },
+    "down": {
+     "texture": "#s",
+     "uv": [
+      0.0,
+      0.5,
+      16.0,
+      1
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

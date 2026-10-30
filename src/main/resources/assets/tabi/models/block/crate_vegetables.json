@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/cube_bottom_top",
+ "textures": {
+  "top": "tabi:block/crate_vegetables_top",
+  "side": "tabi:block/crate_vegetables_side",
+  "bottom": "tabi:block/crate_vegetables_side"
+ }
+}

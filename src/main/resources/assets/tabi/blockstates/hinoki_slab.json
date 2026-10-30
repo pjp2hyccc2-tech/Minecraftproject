@@ -1,0 +1,13 @@
+{
+ "variants": {
+  "type=bottom": {
+   "model": "tabi:block/hinoki_slab"
+  },
+  "type=top": {
+   "model": "tabi:block/hinoki_slab_top"
+  },
+  "type=double": {
+   "model": "tabi:block/hinoki"
+  }
+ }
+}

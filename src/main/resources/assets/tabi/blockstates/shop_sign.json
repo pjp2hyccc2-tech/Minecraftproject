@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/shop_sign"
+  },
+  "facing=east": {
+   "model": "tabi:block/shop_sign",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/shop_sign",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/shop_sign",
+   "y": 270
+  }
+ }
+}

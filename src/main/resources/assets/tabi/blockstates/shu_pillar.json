@@ -1,0 +1,16 @@
+{
+ "variants": {
+  "axis=y": {
+   "model": "tabi:block/shu_pillar"
+  },
+  "axis=z": {
+   "model": "tabi:block/shu_pillar",
+   "x": 90
+  },
+  "axis=x": {
+   "model": "tabi:block/shu_pillar",
+   "x": 90,
+   "y": 90
+  }
+ }
+}

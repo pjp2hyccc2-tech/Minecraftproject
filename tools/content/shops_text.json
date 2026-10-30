@@ -1,0 +1,148 @@
+{
+ "honami_market": {
+  "greet": "おう、いらっしゃい。とれた野菜、見せてみな",
+  "notes": {
+   "tomato": "夏の人気者。真っ赤なのが一番",
+   "cucumber": "冷やしてかじれば最高の夏の味",
+   "eggplant": "つやつやの紫は新鮮なしるし",
+   "rice": "ほなみの田んぼ自慢のお米"
+  }
+ },
+ "yorozuya": {
+  "greet": "いらっしゃい！冷たいの、よう冷えとるよ",
+  "notes": {
+   "ramune": "ビー玉をポンと落として飲もう",
+   "ice_candy": "とける前に急いで食べてな",
+   "dagashi": "小さなお金で選ぶ楽しさ",
+   "mugicha": "よう冷えた夏の定番",
+   "tomato_seeds": "畑にまいて夏に収穫",
+   "cucumber_seeds": "つるがのびる元気な野菜",
+   "eggplant_seeds": "日当たりのいい畑にどうぞ",
+   "rice_seedling": "水を張った田んぼに植えよう"
+  }
+ },
+ "vending": {
+  "greet": "（ガコン）つめたい飲み物、あります",
+  "notes": {
+   "mugicha": "冷えた麦茶でひと休み",
+   "cider": "シュワッとさわやか",
+   "ramune": "ビー玉入りのびんラムネ"
+  }
+ },
+ "ayutei": {
+  "greet": "へい、いらっしゃい！鮎がええ具合に焼けとるで",
+  "notes": {
+   "ayu_shioyaki": "大川の鮎を炭火で塩焼きに",
+   "onigiri": "塩むすび。鮎とよく合う",
+   "mugicha": "食後に冷たい麦茶をどうぞ"
+  }
+ },
+ "kawasemi": {
+  "greet": "いらっしゃいませ。どうぞ、ゆっくりしていってね",
+  "notes": {
+   "cream_soda": "昭和からつづく看板メニュー",
+   "coffee": "マスターがいれる自慢の一杯",
+   "kakigori": "ふわふわ氷にあまいシロップ"
+  }
+ },
+ "shiomi_akashiyaki": {
+  "greet": "まいど！明石焼き、焼きたてやで",
+  "notes": {
+   "akashiyaki": "明石の玉子焼き。だしにつけて",
+   "ikanago_kugini": "春の味。ごはんのおともに",
+   "cider": "海風とひえひえサイダー"
+  }
+ },
+ "harbor_cafe": {
+  "greet": "いらっしゃいませ。海の見える席へどうぞ",
+  "notes": {
+   "coffee": "レンガ倉庫で味わう一杯",
+   "cheesecake": "しっとり濃厚な人気ケーキ",
+   "cream_soda": "港をながめてシュワッと",
+   "kocha": "ポットでゆっくり紅茶タイム"
+  }
+ },
+ "harbor_souvenir": {
+  "greet": "いらっしゃいませ！神戸のおみやげ、そろってます",
+  "notes": {
+   "port_tower_figure": "赤い鼓形のタワーを手のひらに",
+   "kobe_cookies": "缶もかわいい定番みやげ",
+   "kawara_senbei": "明治からつづく神戸の銘菓",
+   "pearl_charm": "真珠の街・神戸の記念に"
+  }
+ },
+ "meriken_crepe": {
+  "greet": "いらっしゃい！クレープ、焼きたてやで〜",
+  "notes": {
+   "crepe": "生クリームと果物たっぷり",
+   "cider": "海を見ながらシュワッと"
+  }
+ },
+ "nankin_butaman": {
+  "greet": "いらっしゃい！蒸したての豚まん、あるで",
+  "notes": {
+   "butaman": "ふかふか皮にジューシーあん"
+  }
+ },
+ "nankin_dimsum": {
+  "greet": "いらっしゃい！点心、熱々やで",
+  "notes": {
+   "xiaolongbao": "スープ熱々、やけどに注意",
+   "goma_dango": "カリッともちもち、あん入り"
+  }
+ },
+ "motomachi_kissa": {
+  "greet": "いらっしゃい。コーヒーのええ香りやろ",
+  "notes": {
+   "coffee": "ていねいにいれた香りの一杯",
+   "cream_soda": "レトロなグラスでどうぞ"
+  }
+ },
+ "motomachi_sweets": {
+  "greet": "いらっしゃいませ！焼きたてのお菓子、ありますよ",
+  "notes": {
+   "baumkuchen": "何層も焼き重ねた年輪もよう",
+   "kobe_pudding": "なめらかで、ほろ苦カラメル",
+   "cheesecake": "しっとり濃厚な口どけ"
+  }
+ },
+ "motomachi_bakery": {
+  "greet": "いらっしゃい！パン、焼きあがったとこやで",
+  "notes": {
+   "croissant": "バター香るサクサク三日月",
+   "curry_pan": "外はサクサク、中はスパイシー"
+  }
+ },
+ "motomachi_souvenir": {
+  "greet": "いらっしゃい。神戸の名物、なんでもそろうで",
+  "notes": {
+   "kawara_senbei": "明治からつづく神戸の銘菓",
+   "kobe_cookies": "缶入りクッキーの定番",
+   "ikanago_kugini": "神戸の春の家庭の味",
+   "amazake": "アルコールなしの米こうじ甘酒",
+   "arima_senbei": "有馬の炭酸泉でパリッと軽く",
+   "pearl_charm": "真珠の街・神戸の記念に",
+   "port_tower_figure": "港の思い出を机の上に"
+  }
+ },
+ "sobameshi": {
+  "greet": "いらっしゃい！長田名物、そばめしやで",
+  "notes": {
+   "sobameshi": "鉄板でジュウッと、ソース味"
+  }
+ },
+ "wagyu": {
+  "greet": "いらっしゃい！和牛串、ええのが焼けたで",
+  "notes": {
+   "wagyu_kushi": "炭火でこんがり、とろける旨み"
+  }
+ },
+ "kitano_cafe": {
+  "greet": "ようこそ。洋館で、ゆっくりお茶をどうぞ",
+  "notes": {
+   "kocha": "ポットでいれる香り高い紅茶",
+   "cheesecake": "洋館で味わう濃厚ケーキ",
+   "coffee": "坂の上でひと休みの一杯"
+  }
+ }
+}

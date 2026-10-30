@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/mailbox"
+  },
+  "facing=east": {
+   "model": "tabi:block/mailbox",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/mailbox",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/mailbox",
+   "y": 270
+  }
+ }
+}

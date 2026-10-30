@@ -1,0 +1,658 @@
+{
+ "name": "お母さん",
+ "voice": "mid",
+ "entries": [
+  {
+   "id": "first_meeting",
+   "priority": 100,
+   "once": true,
+   "lines": [
+    "〇〇、おばあちゃんの家での夏休み、いよいよ始まりね。",
+    "お父さんは出張中だけど、居間の黒電話で話せるわよ。",
+    "おばあちゃんには、もうあいさつした？ まだなら縁側にいるわ。"
+   ],
+   "actions": [
+    {
+     "journal": "people.mom"
+    }
+   ]
+  },
+  {
+   "id": "hint_grandma",
+   "priority": 70,
+   "when": {
+    "not_flag": "met_grandma"
+   },
+   "lines": [
+    "まずは、おばあちゃんにあいさつしてらっしゃい。",
+    "縁側で、〇〇が来るのを楽しみに待ってるわよ。"
+   ]
+  },
+  {
+   "id": "quest1_give",
+   "priority": 85,
+   "when": {
+    "flag": "met_grandma",
+    "not_flag": "quest1_given"
+   },
+   "lines": [
+    "〇〇、さっそくだけど、お手伝いをお願いできる？",
+    "家のとなりの畑から、トマトを3つ取ってきてほしいの。",
+    "赤く熟したトマトの株をこわすと、収穫できるわ。",
+    "実がなっていなかったら、よろず屋さんで種を買って植えてみてね。"
+   ],
+   "actions": [
+    {
+     "flag": "quest1_given"
+    }
+   ]
+  },
+  {
+   "id": "quest1_some",
+   "priority": 75,
+   "when": {
+    "has_item": "tabi:tomato",
+    "flag": "quest1_given",
+    "not_flag": "quest1_done"
+   },
+   "lines": [
+    "あら、トマトがとれたのね。いい色！",
+    "3つそろったら、お母さんに渡してね。"
+   ]
+  },
+  {
+   "id": "quest1_remind",
+   "priority": 70,
+   "when": {
+    "flag": "quest1_given",
+    "not_flag": "quest1_done",
+    "chance": 0.5
+   },
+   "lines": [
+    "トマトは見つかった？ 3つお願いね。",
+    "赤く熟したものを選んでね。青いのは、まだ早いわ。"
+   ]
+  },
+  {
+   "id": "quest1_remind_seeds",
+   "priority": 70,
+   "when": {
+    "flag": "quest1_given",
+    "not_flag": "quest1_done",
+    "chance": 0.5
+   },
+   "lines": [
+    "トマトの種は、よろず屋さんで30円よ。",
+    "くわで畑を耕して植えたら、水の近くだとよく育つわ。"
+   ]
+  },
+  {
+   "id": "quest1_done",
+   "priority": 90,
+   "when": {
+    "has_item": "tabi:tomato",
+    "has_count": 3,
+    "flag": "quest1_given",
+    "not_flag": "quest1_done"
+   },
+   "lines": [
+    "まあ、りっぱなトマト！ 3つもありがとう。",
+    "さっそく、お昼のサラダにするわね。",
+    "はい、これはお手伝いのお駄賃。大事に使ってね。"
+   ],
+   "actions": [
+    {
+     "take": "tabi:tomato",
+     "count": 3
+    },
+    {
+     "yen": 300,
+     "reason": "トマトのお駄賃"
+    },
+    {
+     "flag": "quest1_done"
+    }
+   ]
+  },
+  {
+   "id": "hint_sell_first",
+   "priority": 70,
+   "when": {
+    "flag": "quest1_done",
+    "not_flag": "sold_once",
+    "chance": 0.7
+   },
+   "lines": [
+    "大川町へ行ってみたい？ そうねえ……。",
+    "まずは村の直売所で、野菜を売ってみたらどう？",
+    "お金をかせぐ大変さがわかったら、おでかけしてもいいわよ。"
+   ]
+  },
+  {
+   "id": "hint_tomato_after_sell",
+   "priority": 72,
+   "once": true,
+   "when": {
+    "flag": [
+     "quest1_given",
+     "sold_once"
+    ],
+    "not_flag": "quest1_done"
+   },
+   "lines": [
+    "直売所で野菜を売ってきたのね。すごいじゃない。",
+    "トマト3つのお手伝いも、忘れないでね。"
+   ]
+  },
+  {
+   "id": "permit_town",
+   "priority": 95,
+   "when": {
+    "flag": [
+     "quest1_done",
+     "sold_once"
+    ],
+    "not_flag": "permit_town"
+   },
+   "lines": [
+    "お手伝いも直売所も、よくがんばったわね。おでかけ、許可します！",
+    "ほなみのバス停から大川駅前までは、バスで200円よ。",
+    "大川駅で川霧線の切符を買えば神戸まで行けるわ。大川から神戸は700円。",
+    "帰りの運賃も残しておくこと。暗くなる前に帰ってくること。いいわね？",
+    "はい、おにぎり。おなかがすいたら食べなさい。気をつけてね。"
+   ],
+   "actions": [
+    {
+     "flag": "permit_town"
+    },
+    {
+     "give": "tabi:onigiri",
+     "count": 2
+    }
+   ]
+  },
+  {
+   "id": "money_plan",
+   "priority": 10,
+   "when": {
+    "flag": "permit_town"
+   },
+   "lines": [
+    "神戸まで往復すると、バスと電車で1800円かかるわ。",
+    "おみやげを買うなら、その分もちゃんと考えておきなさいね。"
+   ]
+  },
+  {
+   "id": "money_low",
+   "priority": 40,
+   "when": {
+    "flag": "permit_town",
+    "yen_lt": 900,
+    "chance": 0.5
+   },
+   "lines": [
+    "お財布、だいじょうぶ？ 神戸までは片道900円かかるのよ。",
+    "足りないときは、畑の野菜を直売所で売ってみたら？"
+   ]
+  },
+  {
+   "id": "busstop_tip",
+   "priority": 10,
+   "when": {
+    "flag": "permit_town"
+   },
+   "lines": [
+    "バスの乗り方は、バス停のおじいさんが教えてくれるわよ。",
+    "わからないことは、えんりょしないで聞いてみてね。"
+   ]
+  },
+  {
+   "id": "morning_breakfast",
+   "priority": 10,
+   "when": {
+    "time": "morning"
+   },
+   "lines": [
+    "おはよう。朝ごはんはしっかり食べた？",
+    "おばあちゃんのぬか漬け、きゅうりがよく漬かってたわよ。"
+   ]
+  },
+  {
+   "id": "morning_field",
+   "priority": 10,
+   "when": {
+    "time": "morning",
+    "weather": "clear"
+   },
+   "lines": [
+    "おはよう、〇〇。今日も暑くなりそうね。",
+    "暑くなる前に、畑の様子を見てきたら？"
+   ]
+  },
+  {
+   "id": "day_lunch",
+   "priority": 10,
+   "when": {
+    "time": "day"
+   },
+   "lines": [
+    "お昼は冷やし中華にしようかしら。",
+    "きゅうりとトマト、畑のをたっぷりのせるわね。"
+   ]
+  },
+  {
+   "id": "day_heat",
+   "priority": 10,
+   "when": {
+    "time": "day",
+    "weather": "clear"
+   },
+   "lines": [
+    "外は暑いわよ。帽子をかぶって、こまめに水分をとってね。"
+   ]
+  },
+  {
+   "id": "evening_gohan",
+   "priority": 10,
+   "when": {
+    "time": "evening"
+   },
+   "lines": [
+    "〇〇、ごはんよー！ 手を洗ってらっしゃい。",
+    "今日は畑のなすで、マーボーなすにしたの。"
+   ]
+  },
+  {
+   "id": "evening_come_home",
+   "priority": 10,
+   "when": {
+    "time": "evening"
+   },
+   "lines": [
+    "そろそろ晩ごはんよ。",
+    "遠くまで行っていたなら、暗くなる前に帰ってきてね。"
+   ]
+  },
+  {
+   "id": "night_sleep",
+   "priority": 10,
+   "when": {
+    "time": "night"
+   },
+   "lines": [
+    "もうこんな時間！ 早く寝なさい。",
+    "お部屋のおふとんで寝れば、すぐに朝よ。"
+   ]
+  },
+  {
+   "id": "night_teeth",
+   "priority": 10,
+   "when": {
+    "time": "night"
+   },
+   "lines": [
+    "歯みがきはした？ 夜ふかしは、ほどほどにね。",
+    "あしたも、たくさん遊べるように。おやすみなさい。"
+   ]
+  },
+  {
+   "id": "homework",
+   "priority": 10,
+   "lines": [
+    "宿題は進んでる？ ドリルは毎日少しずつやるのよ。",
+    "最後の日にまとめてやるのは、大変なんだから。"
+   ]
+  },
+  {
+   "id": "jiyu_kenkyu_ikimono",
+   "priority": 10,
+   "lines": [
+    "夏休みの自由研究、テーマは決まった？",
+    "田んぼの生きもの調べなんてどう？ カエルやメダカがいるわよ。"
+   ]
+  },
+  {
+   "id": "jiyu_kenkyu_techo",
+   "priority": 10,
+   "lines": [
+    "自由研究なら「旅の手帳」をまとめるのもいいわね。",
+    "乗ったバスや電車、食べたものを記録すれば、立派な研究よ。"
+   ]
+  },
+  {
+   "id": "jiyu_kenkyu_tomato",
+   "priority": 10,
+   "lines": [
+    "トマトの観察日記はどう？ 種から育てて、毎日記録するの。",
+    "絵をかいて、大きさを測って。きっと楽しいわよ。"
+   ]
+  },
+  {
+   "id": "dad_call",
+   "priority": 10,
+   "lines": [
+    "お父さん、出張先でもちゃんとごはん食べてるかしら。",
+    "居間の黒電話で、電話してあげてね。きっと喜ぶわ。"
+   ]
+  },
+  {
+   "id": "dad_likes",
+   "priority": 10,
+   "lines": [
+    "お父さんはね、鉄道と神戸が大好きなの。",
+    "神戸のことなら、電話で聞けばいろいろ教えてくれるわよ。"
+   ]
+  },
+  {
+   "id": "rain_homework",
+   "priority": 10,
+   "when": {
+    "weather": "rain"
+   },
+   "lines": [
+    "雨ね。こんな日は、おうちで宿題を進めるチャンスよ。",
+    "おばあちゃんのお手伝いをするのもいいわね。"
+   ]
+  },
+  {
+   "id": "rain_frogs",
+   "priority": 10,
+   "when": {
+    "weather": "rain"
+   },
+   "lines": [
+    "あら、雨。洗濯物を取りこまなくちゃ。",
+    "雨の日の田んぼは、カエルがうれしそうに鳴くのよね。"
+   ]
+  },
+  {
+   "id": "childhood",
+   "priority": 10,
+   "lines": [
+    "お母さんも子どものころ、夏休みはここで過ごしたのよ。",
+    "神社の夏祭りが、一年でいちばんの楽しみだったわ。"
+   ]
+  },
+  {
+   "id": "river_promise",
+   "priority": 10,
+   "lines": [
+    "川で遊ぶときは、大人といっしょのときだけよ。約束ね。"
+   ]
+  },
+  {
+   "id": "house_rules",
+   "priority": 10,
+   "lines": [
+    "畑と自分の部屋なら、ものを置いたり、こわしたりしてもいいわ。",
+    "ほかの場所は村の人たちのものだから、大切にしてね。"
+   ]
+  },
+  {
+   "id": "about_grandma",
+   "priority": 10,
+   "lines": [
+    "おばあちゃん、〇〇が来てから毎日うれしそうよ。",
+    "昔の話が大好きだから、いっぱい聞いてあげてね。"
+   ]
+  },
+  {
+   "id": "fallback",
+   "priority": 10,
+   "lines": [
+    "なにか困ったことがあったら、いつでも言ってね。"
+   ]
+  },
+  {
+   "id": "react_okawa",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.okawa"
+   },
+   "lines": [
+    "大川町まで行けたのね。ちゃんとバスに乗れた？",
+    "えらいわ。少しずつ、大きくなっていくのね。"
+   ]
+  },
+  {
+   "id": "react_kobe",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "station.kobe"
+   },
+   "lines": [
+    "神戸まで行ったの！ 遠かったでしょう？",
+    "お母さんも学生のころ、川霧線で神戸に遊びに行ったのよ。"
+   ]
+  },
+  {
+   "id": "react_harborland",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.harborland"
+   },
+   "lines": [
+    "ハーバーランドの海、きれいだったでしょう。",
+    "煉瓦倉庫の前で、お父さんと待ち合わせしたこともあるのよ。ふふ。"
+   ]
+  },
+  {
+   "id": "react_tower_top",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.port_tower_top"
+   },
+   "lines": [
+    "ポートタワーの上まで登ったの？ 高かったでしょう！",
+    "お母さん、高いところはちょっと苦手なの。〇〇はすごいわね。"
+   ]
+  },
+  {
+   "id": "react_motomachi",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.motomachi"
+   },
+   "lines": [
+    "元町商店街は、歩くだけでも楽しいのよね。",
+    "洋菓子屋さんやパン屋さん、たくさんあったでしょう？"
+   ]
+  },
+  {
+   "id": "react_kitano",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.kitano"
+   },
+   "lines": [
+    "北野の坂、のぼるのは大変だったでしょう？",
+    "でも、坂の上から見た港の景色、すてきだったんじゃない？"
+   ]
+  },
+  {
+   "id": "react_night_view",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.night_view"
+   },
+   "lines": [
+    "夜景を見てきたの？ きれいだったでしょうね。",
+    "でも、夜はあぶないから、あまりおそくならないようにね。"
+   ]
+  },
+  {
+   "id": "react_memorial",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "spot.quake_memorial"
+   },
+   "lines": [
+    "震災メモリアルパークに行ったのね。",
+    "見たこと、感じたことを、大切にしてね。",
+    "今度いっしょに、おうちの防災グッズを確かめましょうか。"
+   ]
+  },
+  {
+   "id": "react_sobameshi",
+   "priority": 50,
+   "once": true,
+   "when": {
+    "journal": "food.sobameshi"
+   },
+   "lines": [
+    "そばめしを食べたの？ 焼きそばとごはんがいっしょなんて、おもしろいわよね。"
+   ]
+  },
+  {
+   "id": "gift_kobe_cookies",
+   "priority": 80,
+   "when": {
+    "has_item": "tabi:kobe_cookies",
+    "not_flag": "gave_mom"
+   },
+   "lines": [
+    "あら、そのきれいな缶はなあに？"
+   ],
+   "choices": [
+    {
+     "text": "おみやげを渡す",
+     "actions": [
+      {
+       "take": "tabi:kobe_cookies",
+       "count": 1
+      },
+      {
+       "flag": "gave_mom"
+      }
+     ],
+     "reply": [
+      "お母さんに？ ありがとう、うれしい！",
+      "神戸の洋菓子の缶ね。食べたあとは、缶を小物入れにするわ。",
+      "〇〇が選んでくれたおみやげ、大切にするわね。"
+     ]
+    },
+    {
+     "text": "あとでね",
+     "reply": [
+      "ふふ、なにかしら。楽しみにしてるわね。"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gift_baumkuchen",
+   "priority": 80,
+   "when": {
+    "has_item": "tabi:baumkuchen",
+    "not_flag": "gave_mom"
+   },
+   "lines": [
+    "その箱……もしかして、バウムクーヘン？"
+   ],
+   "choices": [
+    {
+     "text": "おみやげを渡す",
+     "actions": [
+      {
+       "take": "tabi:baumkuchen",
+       "count": 1
+      },
+      {
+       "flag": "gave_mom"
+      }
+     ],
+     "reply": [
+      "お母さんの大好物、覚えていてくれたの？",
+      "ありがとう。おばあちゃんと三人で、お茶の時間にいただきましょう。"
+     ]
+    },
+    {
+     "text": "あとでね",
+     "reply": [
+      "あら、ちがったかしら。ふふ、気にしないで。"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gift_cheesecake",
+   "priority": 80,
+   "when": {
+    "has_item": "tabi:cheesecake",
+    "not_flag": "gave_mom"
+   },
+   "lines": [
+    "あら、あまいにおい。それ、チーズケーキ？"
+   ],
+   "choices": [
+    {
+     "text": "おみやげを渡す",
+     "actions": [
+      {
+       "take": "tabi:cheesecake",
+       "count": 1
+      },
+      {
+       "flag": "gave_mom"
+      }
+     ],
+     "reply": [
+      "お母さんに？ ありがとう！",
+      "神戸はチーズケーキもおいしいのよね。",
+      "冷やしておいて、晩ごはんのあとにいただくわ。"
+     ]
+    },
+    {
+     "text": "あとでね",
+     "reply": [
+      "おいしそうね。冷やしておくと、もっとおいしいわよ。"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gift_pearl_charm",
+   "priority": 80,
+   "when": {
+    "has_item": "tabi:pearl_charm",
+    "not_flag": "gave_mom"
+   },
+   "lines": [
+    "その小さな包み、なにかきらきらしたものが見えるけど……？"
+   ],
+   "choices": [
+    {
+     "text": "おみやげを渡す",
+     "actions": [
+      {
+       "take": "tabi:pearl_charm",
+       "count": 1
+      },
+      {
+       "flag": "gave_mom"
+      }
+     ],
+     "reply": [
+      "真珠のストラップ！ こんなすてきな物を、お母さんに？",
+      "高かったでしょう……。おこづかいを、がんばってためたのね。",
+      "ありがとう。ずっと、ずっと大切にするわ。"
+     ]
+    },
+    {
+     "text": "あとでね",
+     "reply": [
+      "ふふ、ないしょなのね。わかったわ。"
+     ]
+    }
+   ]
+  }
+ ]
+}

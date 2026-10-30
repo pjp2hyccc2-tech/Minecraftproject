@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/tansu_side",
+  "bottom": "tabi:block/tansu_side",
+  "front": "tabi:block/tansu_front",
+  "side": "tabi:block/tansu_side"
+ }
+}

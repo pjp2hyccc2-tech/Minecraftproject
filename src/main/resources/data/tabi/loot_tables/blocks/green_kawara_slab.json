@@ -1,0 +1,29 @@
+{
+ "type": "minecraft:block",
+ "pools": [
+  {
+   "rolls": 1,
+   "entries": [
+    {
+     "type": "minecraft:item",
+     "name": "tabi:green_kawara_slab",
+     "functions": [
+      {
+       "function": "minecraft:set_count",
+       "count": 2,
+       "conditions": [
+        {
+         "condition": "minecraft:block_state_property",
+         "block": "tabi:green_kawara_slab",
+         "properties": {
+          "type": "double"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

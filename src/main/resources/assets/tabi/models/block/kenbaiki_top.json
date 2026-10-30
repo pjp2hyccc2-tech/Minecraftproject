@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/kenbaiki_top_side",
+  "bottom": "tabi:block/kenbaiki_top_side",
+  "front": "tabi:block/kenbaiki_top_front",
+  "side": "tabi:block/kenbaiki_top_side"
+ }
+}

@@ -63,7 +63,7 @@ jobs:
           set -o pipefail
           timeout 2400 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient --no-daemon 2>&1 | tee client.log
 
-      - name: Publish results to ci-out branch
+      - name: Publish results to tabi-ci branch
         if: always()
         run: |
           mkdir -p out
@@ -74,6 +74,7 @@ jobs:
           mkdir -p out/screenshots
           cp run/screenshots/*.png out/screenshots/ 2>/dev/null || true
           cp run/logs/latest.log out/run-latest.log 2>/dev/null || true
+          cp run/tabi-selftest.json out/ 2>/dev/null || true
           cp -r run/crash-reports out/ 2>/dev/null || true
           cat > out/summary.json <<EOF
           {"sha": "${GITHUB_SHA}", "run": "${GITHUB_RUN_NUMBER}", "build": "${{ steps.build.outcome }}", "selftest": "${{ steps.selftest.outcome }}", "shots": "${{ steps.shots.outcome }}"}
@@ -82,10 +83,10 @@ jobs:
           git init -q
           git config user.name "ci"
           git config user.email "ci@users.noreply.github.com"
-          git checkout -q -b ci-out
+          git checkout -q -b tabi-ci
           git add -A
           git commit -qm "CI results for ${GITHUB_SHA} (run ${GITHUB_RUN_NUMBER})"
-          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" ci-out
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" tabi-ci
 
       - name: Fail if build failed
         if: steps.build.outcome != 'success'
