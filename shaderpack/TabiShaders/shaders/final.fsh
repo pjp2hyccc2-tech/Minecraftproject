@@ -3,6 +3,10 @@
 #include "/lib/settings.glsl"
 #include "/lib/common.glsl"
 
+/*
+const bool colortex3MipmapEnabled = true;
+*/
+
 uniform sampler2D colortex0;
 uniform sampler2D colortex3;
 in vec2 texcoord;

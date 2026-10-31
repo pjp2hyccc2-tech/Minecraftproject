@@ -53,6 +53,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     exclusiveContent {
         forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+        forRepositories(fg.repository)    // ForgeGradle's deobf repo must also serve the remapped maven.modrinth artifacts
         filter { includeGroup 'maven.modrinth' }
     }
 }
