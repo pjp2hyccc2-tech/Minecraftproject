@@ -162,5 +162,17 @@
  "port_tower_figure": {
   "desc_ja": "赤い鼓形のポートタワーの置物\n本物は高さ108m",
   "desc_en": "A figurine of Kobe Port Tower (108 m)."
+ },
+ "ekiben_okawa": {
+  "desc_ja": "大川の鮎の炊き込みご飯\n車窓をながめて食べよう",
+  "desc_en": "Rice cooked with sweetfish from the Okawa river."
+ },
+ "ekiben_shiomi": {
+  "desc_ja": "明石海峡のたこめし\n潮風の駅の名物弁当",
+  "desc_en": "Octopus rice from the Akashi Strait."
+ },
+ "ekiben_kobe": {
+  "desc_ja": "甘辛いすき焼き風の牛肉\n港町・神戸の駅弁",
+  "desc_en": "Sweet-savoury sukiyaki beef on rice."
  }
 }

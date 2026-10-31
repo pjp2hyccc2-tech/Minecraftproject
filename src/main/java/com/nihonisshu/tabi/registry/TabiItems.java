@@ -58,6 +58,9 @@ public final class TabiItems {
     public static final RegistryObject<Item> ARIMA_SENBEI = ITEMS.register("arima_senbei", () -> new TabiFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationMod(0.3f).alwaysEat().build()), false, "souvenir.arima_senbei"));
     public static final RegistryObject<Item> PEARL_CHARM = ITEMS.register("pearl_charm", () -> new TabiItem(new Item.Properties()));
     public static final RegistryObject<Item> PORT_TOWER_FIGURE = ITEMS.register("port_tower_figure", () -> new TabiItem(new Item.Properties()));
+    public static final RegistryObject<Item> EKIBEN_OKAWA = ITEMS.register("ekiben_okawa", () -> new TabiFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(10).saturationMod(0.6f).alwaysEat().build()), false, "food.ekiben_okawa"));
+    public static final RegistryObject<Item> EKIBEN_SHIOMI = ITEMS.register("ekiben_shiomi", () -> new TabiFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(10).saturationMod(0.6f).alwaysEat().build()), false, "food.ekiben_shiomi"));
+    public static final RegistryObject<Item> EKIBEN_KOBE = ITEMS.register("ekiben_kobe", () -> new TabiFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(12).saturationMod(0.6f).alwaysEat().build()), false, "food.ekiben_kobe"));
     public static final RegistryObject<Item> PADDY_MUD_BLOCK = ITEMS.register("paddy_mud", () -> new BlockItem(TabiBlocks.PADDY_MUD.get(), new Item.Properties()));
     public static final RegistryObject<Item> KAWARA_BLOCK = ITEMS.register("kawara", () -> new BlockItem(TabiBlocks.KAWARA.get(), new Item.Properties()));
     public static final RegistryObject<Item> KAWARA_STAIRS_BLOCK = ITEMS.register("kawara_stairs", () -> new BlockItem(TabiBlocks.KAWARA_STAIRS.get(), new Item.Properties()));
@@ -135,6 +138,7 @@ public final class TabiItems {
     public static final RegistryObject<Item> CHINA_GOLD_BLOCK = ITEMS.register("china_gold", () -> new BlockItem(TabiBlocks.CHINA_GOLD.get(), new Item.Properties()));
     public static final RegistryObject<Item> RED_STEEL_BLOCK = ITEMS.register("red_steel", () -> new BlockItem(TabiBlocks.RED_STEEL.get(), new Item.Properties()));
     public static final RegistryObject<Item> RED_STEEL_LIT_BLOCK = ITEMS.register("red_steel_lit", () -> new BlockItem(TabiBlocks.RED_STEEL_LIT.get(), new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_STEEL_LIT_BLOCK = ITEMS.register("white_steel_lit", () -> new BlockItem(TabiBlocks.WHITE_STEEL_LIT.get(), new Item.Properties()));
     public static final RegistryObject<Item> WHITE_STEEL_BLOCK = ITEMS.register("white_steel", () -> new BlockItem(TabiBlocks.WHITE_STEEL.get(), new Item.Properties()));
     public static final RegistryObject<Item> WINDOW_LIT_BLOCK = ITEMS.register("window_lit", () -> new BlockItem(TabiBlocks.WINDOW_LIT.get(), new Item.Properties()));
     public static final RegistryObject<Item> WINDOW_LIT_COOL_BLOCK = ITEMS.register("window_lit_cool", () -> new BlockItem(TabiBlocks.WINDOW_LIT_COOL.get(), new Item.Properties()));
@@ -155,4 +159,7 @@ public final class TabiItems {
     public static final RegistryObject<Item> GATE_PLAQUE_BLOCK = ITEMS.register("gate_plaque", () -> new BlockItem(TabiBlocks.GATE_PLAQUE.get(), new Item.Properties()));
     public static final RegistryObject<Item> NEON_SIGN_BLOCK = ITEMS.register("neon_sign", () -> new BlockItem(TabiBlocks.NEON_SIGN.get(), new Item.Properties()));
     public static final RegistryObject<Item> BUS_STOP_SIGN_BLOCK = ITEMS.register("bus_stop_sign", () -> new BlockItem(TabiBlocks.BUS_STOP_SIGN.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CLEAR_GLASS_BLOCK = ITEMS.register("clear_glass", () -> new BlockItem(TabiBlocks.CLEAR_GLASS.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CEILING_FAN_BLOCK = ITEMS.register("ceiling_fan", () -> new BlockItem(TabiBlocks.CEILING_FAN.get(), new Item.Properties()));
+    public static final RegistryObject<Item> TRAIN_LCD_BLOCK = ITEMS.register("train_lcd", () -> new BlockItem(TabiBlocks.TRAIN_LCD.get(), new Item.Properties()));
 }

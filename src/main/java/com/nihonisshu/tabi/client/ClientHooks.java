@@ -27,6 +27,16 @@ public final class ClientHooks {
                 }
             }
             case "tickets" -> mc.setScreen(new TicketScreen(data));
+            case "guide" -> Hud.showGuide(data.getString("text"));
+            case "look" -> {
+                if (mc.player != null) {
+                    float yaw = data.getFloat("yaw");
+                    mc.player.setYRot(yaw);
+                    mc.player.setYHeadRot(yaw);
+                    mc.player.yRotO = yaw;
+                    mc.player.setXRot(6f);
+                }
+            }
             default -> {
             }
         }

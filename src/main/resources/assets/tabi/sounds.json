@@ -124,5 +124,104 @@
    }
   ],
   "subtitle": "subtitles.tabi.ticket_gate"
+ },
+ "melody_okawa": {
+  "sounds": [
+   {
+    "name": "tabi:melody_okawa",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.melody_okawa"
+ },
+ "melody_kirigaya": {
+  "sounds": [
+   {
+    "name": "tabi:melody_kirigaya",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.melody_kirigaya"
+ },
+ "melody_shiomi": {
+  "sounds": [
+   {
+    "name": "tabi:melody_shiomi",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.melody_shiomi"
+ },
+ "melody_kobe": {
+  "sounds": [
+   {
+    "name": "tabi:melody_kobe",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.melody_kobe"
+ },
+ "approach": {
+  "sounds": [
+   {
+    "name": "tabi:approach",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.approach"
+ },
+ "car_chime": {
+  "sounds": [
+   {
+    "name": "tabi:car_chime",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.car_chime"
+ },
+ "guide_chime": {
+  "sounds": [
+   {
+    "name": "tabi:guide_chime",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.guide_chime"
+ },
+ "door_open": {
+  "sounds": [
+   {
+    "name": "tabi:door_open",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.door_open"
+ },
+ "door_close": {
+  "sounds": [
+   {
+    "name": "tabi:door_close",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.door_close"
+ },
+ "horn": {
+  "sounds": [
+   {
+    "name": "tabi:horn",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.horn"
+ },
+ "brake": {
+  "sounds": [
+   {
+    "name": "tabi:brake",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.brake"
  }
 }

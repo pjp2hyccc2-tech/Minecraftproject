@@ -140,7 +140,7 @@ public final class ShotTour {
                 mc.options.hideGui = false;
                 if (mc.player.getVehicle() instanceof com.nihonisshu.tabi.entity.VehicleEntity ve) {
                     double carYaw = ve.carPose(ve.getS(), 0).yaw;           // atan2(fx, fz) of the travel direction
-                    float travel = (float) -Math.toDegrees(carYaw);
+                    float travel = (float) -Math.toDegrees(carYaw) + (ve.getDir() < 0 ? 180f : 0f);
                     mc.player.setYRot(travel + (float) TabiData.dbl(v, "look", 90));
                     mc.player.setXRot(8f);
                 }

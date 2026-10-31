@@ -29,6 +29,8 @@ public final class Route {
         public final double s;
         public final Vec3 exit;
         public final boolean terminal;
+        /** sound id played on arrival (tabi:<melody>), door side relative to +s ("L"/"R"), transfer guidance */
+        public final String melody, door, transfer;
 
         Station(int index, JsonObject o, boolean terminal) {
             this.index = index;
@@ -40,8 +42,26 @@ public final class Route {
             JsonArray e = o.getAsJsonArray("exit");
             this.exit = new Vec3(e.get(0).getAsDouble(), e.get(1).getAsDouble(), e.get(2).getAsDouble());
             this.terminal = terminal;
+            this.melody = TabiData.str(o, "melody", "");
+            this.door = TabiData.str(o, "door", "");
+            this.transfer = TabiData.str(o, "transfer", "");
         }
     }
+
+    /** a point along the route: scenic guide announcement or horn */
+    public static final class Event {
+        public final double s;
+        public final String type, text, journal;
+
+        Event(JsonObject o) {
+            s = o.get("s").getAsDouble();
+            type = TabiData.str(o, "type", "guide");
+            text = TabiData.str(o, "text", "");
+            journal = TabiData.str(o, "journal", "");
+        }
+    }
+
+    public final List<Event> events = new ArrayList<>();
 
     private Route(JsonObject o) {
         id = TabiData.str(o, "id", "route");
@@ -79,6 +99,8 @@ public final class Route {
             }
         }
         length = n > 0 ? cum[n - 1] : 0;
+        JsonArray evs = o.getAsJsonArray("events");
+        if (evs != null) for (com.google.gson.JsonElement e : evs) events.add(new Event(e.getAsJsonObject()));
         JsonArray st = o.getAsJsonArray("stations");
         for (int i = 0; i < st.size(); i++) {
             stations.add(new Station(i, st.get(i).getAsJsonObject(), i == 0 || i == st.size() - 1));

@@ -33,6 +33,11 @@ public final class ClientEvents {
     }
 
     @SubscribeEvent
+    public static void camera(net.minecraftforge.client.event.ViewportEvent.ComputeCameraAngles e) {
+        CameraSway.apply(e);
+    }
+
+    @SubscribeEvent
     public static void stage(RenderLevelStageEvent e) {
         if (e.getStage() == RenderLevelStageEvent.Stage.AFTER_LEVEL) Grading.apply();
     }

@@ -25,6 +25,12 @@ public final class CarDesign {
     /** each block: x, y, z (local block corner, may be fractional), palette index, flags (1 = door panel hidden when open) */
     public final List<double[]> blocks = new ArrayList<>();
     public final List<Vec3> seats = new ArrayList<>();
+    private final List<Integer> seatSides = new ArrayList<>();
+
+    /** -1 / +1: which side wall (local x) the seat is next to, 0: none */
+    public int seatSide(int i) {
+        return i >= 0 && i < seatSides.size() ? seatSides.get(i) : 0;
+    }
 
     private CarDesign(JsonObject o) {
         id = TabiData.str(o, "id", "car");
@@ -41,6 +47,7 @@ public final class CarDesign {
         for (JsonElement e : o.getAsJsonArray("seats")) {
             JsonArray a = e.getAsJsonArray();
             seats.add(new Vec3(a.get(0).getAsDouble(), a.get(1).getAsDouble(), a.get(2).getAsDouble()));
+            seatSides.add(a.size() > 3 ? a.get(3).getAsInt() : 0);
         }
     }
 

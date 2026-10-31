@@ -418,6 +418,67 @@
      "note": "坂の上でひと休みの一杯"
     }
    ]
+  },
+  "ekiben_okawa": {
+   "name": "大川駅 駅弁 あゆ屋",
+   "greet": "鮎めし、炊きたてだよ！",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:ekiben_okawa",
+     "price": 900,
+     "note": "川の町の名物駅弁"
+    },
+    {
+     "item": "tabi:mugicha",
+     "price": 130,
+     "note": "冷えてるよ"
+    },
+    {
+     "item": "tabi:ramune",
+     "price": 150,
+     "note": "ビー玉入り"
+    }
+   ]
+  },
+  "ekiben_shiomi": {
+   "name": "潮見駅 駅弁 浜屋",
+   "greet": "たこめし、うまいでぇ",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:ekiben_shiomi",
+     "price": 1000,
+     "note": "明石のたこがごろごろ"
+    },
+    {
+     "item": "tabi:cider",
+     "price": 160,
+     "note": "海を見ながらどうぞ"
+    }
+   ]
+  },
+  "ekiben_kobe": {
+   "name": "神戸駅 駅弁 港庵",
+   "greet": "旅のおともに駅弁どうぞ",
+   "mode": "buy",
+   "items": [
+    {
+     "item": "tabi:ekiben_kobe",
+     "price": 1300,
+     "note": "港町の牛肉弁当"
+    },
+    {
+     "item": "tabi:kobe_pudding",
+     "price": 450,
+     "note": "食後のデザートに"
+    },
+    {
+     "item": "tabi:coffee",
+     "price": 400,
+     "note": "ホットでどうぞ"
+    }
+   ]
   }
  }
 }

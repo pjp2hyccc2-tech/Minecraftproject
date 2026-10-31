@@ -36,7 +36,13 @@ public class TabiFoodItem extends TabiItem {
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (entity instanceof ServerPlayer sp && !journalKey.isEmpty()) {
             PlayerData.unlock(sp, journalKey);
-            sp.displayClientMessage(Component.literal("「" + stack.getHoverName().getString() + "」をいただきました。"), true);
+            boolean onBoard = sp.getVehicle() instanceof com.nihonisshu.tabi.entity.VehicleEntity;
+            if (onBoard && journalKey.startsWith("food.ekiben")) {
+                PlayerData.unlock(sp, "life.ekiben");
+                sp.displayClientMessage(Component.literal("車窓をながめながらの駅弁は、格別のおいしさ！").withStyle(net.minecraft.ChatFormatting.GOLD), false);
+            } else {
+                sp.displayClientMessage(Component.literal("「" + stack.getHoverName().getString() + "」をいただきました。"), true);
+            }
         }
         return super.finishUsingItem(stack, level, entity);
     }

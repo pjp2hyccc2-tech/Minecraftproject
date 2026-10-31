@@ -286,6 +286,27 @@
    "en": "Port Tower Figurine",
    "kind": "item",
    "journal": "souvenir.port_tower_figure"
+  },
+  {
+   "id": "ekiben_okawa",
+   "ja": "鮎めし弁当",
+   "en": "Sweetfish Rice Bento",
+   "kind": "food",
+   "journal": "food.ekiben_okawa"
+  },
+  {
+   "id": "ekiben_shiomi",
+   "ja": "たこめし弁当",
+   "en": "Octopus Rice Bento",
+   "kind": "food",
+   "journal": "food.ekiben_shiomi"
+  },
+  {
+   "id": "ekiben_kobe",
+   "ja": "和牛すき焼き弁当",
+   "en": "Wagyu Sukiyaki Bento",
+   "kind": "food",
+   "journal": "food.ekiben_kobe"
   }
  ],
  "shops": {
@@ -649,6 +670,59 @@
     [
      "coffee",
      600
+    ]
+   ]
+  },
+  "ekiben_okawa": {
+   "name": "大川駅 駅弁 あゆ屋",
+   "where": "大川駅のホーム",
+   "mode": "buy",
+   "items": [
+    [
+     "ekiben_okawa",
+     900
+    ],
+    [
+     "mugicha",
+     130
+    ],
+    [
+     "ramune",
+     150
+    ]
+   ]
+  },
+  "ekiben_shiomi": {
+   "name": "潮見駅 駅弁 浜屋",
+   "where": "潮見駅のホーム",
+   "mode": "buy",
+   "items": [
+    [
+     "ekiben_shiomi",
+     1000
+    ],
+    [
+     "cider",
+     160
+    ]
+   ]
+  },
+  "ekiben_kobe": {
+   "name": "神戸駅 駅弁 港庵",
+   "where": "神戸駅のホーム",
+   "mode": "buy",
+   "items": [
+    [
+     "ekiben_kobe",
+     1300
+    ],
+    [
+     "kobe_pudding",
+     450
+    ],
+    [
+     "coffee",
+     400
     ]
    ]
   }
@@ -1438,6 +1512,30 @@
    "category": "life",
    "hint": "昭和の喫茶店文化",
    "unlocked_by": "会話やできごと"
+  },
+  {
+   "key": "food.ekiben_okawa",
+   "category": "food",
+   "hint": "鮎めし弁当",
+   "unlocked_by": "食べる"
+  },
+  {
+   "key": "food.ekiben_shiomi",
+   "category": "food",
+   "hint": "たこめし弁当",
+   "unlocked_by": "食べる"
+  },
+  {
+   "key": "food.ekiben_kobe",
+   "category": "food",
+   "hint": "和牛すき焼き弁当",
+   "unlocked_by": "食べる"
+  },
+  {
+   "key": "life.ekiben",
+   "category": "life",
+   "hint": "駅弁の楽しみ（車内で食べる）",
+   "unlocked_by": "食べる"
   }
  ],
  "profiles": [
@@ -1776,6 +1874,30 @@
    "voice": "mid",
    "shop": "",
    "bubbles": "venus"
+  },
+  {
+   "id": "ekiben_okawa",
+   "name": "駅弁売りのおばちゃん",
+   "about": "大川駅のホームで鮎めし弁当を売っている。",
+   "voice": "high",
+   "shop": "ekiben_okawa",
+   "bubbles": "station"
+  },
+  {
+   "id": "ekiben_shiomi",
+   "name": "駅弁売りのおじさん",
+   "about": "潮見駅のホームでたこめし弁当を売っている。",
+   "voice": "low",
+   "shop": "ekiben_shiomi",
+   "bubbles": "station"
+  },
+  {
+   "id": "ekiben_kobe",
+   "name": "駅弁屋さん",
+   "about": "神戸駅のホームの駅弁屋。",
+   "voice": "mid",
+   "shop": "ekiben_kobe",
+   "bubbles": "station"
   }
  ],
  "bubble_pools": [

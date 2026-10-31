@@ -15,6 +15,13 @@ public final class Hud {
 
     private static int ticks;
     private static String area = "";
+    private static String guide = "";
+    private static int guideUntil;
+
+    public static void showGuide(String text) {
+        guide = text;
+        guideUntil = ticks + 200;
+    }
 
     public static void tick(Minecraft mc) {
         ticks++;
@@ -52,6 +59,28 @@ public final class Hud {
         if (!area.isEmpty()) g.drawString(f, area, 10, 29, 0xFFA8D8FF, false);
 
         if (mc.player.getVehicle() instanceof VehicleEntity v) renderDisplay(g, f, v, w);
+        if (!guide.isEmpty() && ticks < guideUntil) renderGuide(g, f, w, h);
+    }
+
+    /** tourist-train style guide card at the bottom centre */
+    private static void renderGuide(GuiGraphics g, Font f, int w, int h) {
+        int left = guideUntil - ticks;
+        float a = Math.min(1f, Math.min(left / 20f, (200 - left) / 10f));
+        int alpha = (int) (a * 220);
+        if (alpha < 8) return;
+        java.util.List<net.minecraft.util.FormattedCharSequence> lines = f.split(net.minecraft.network.chat.Component.literal(guide), 300);
+        int bw = 24;
+        for (var l : lines) bw = Math.max(bw, f.width(l) + 24);
+        int bh = 18 + lines.size() * 11;
+        int x = (w - bw) / 2, y = h - 92 - bh;
+        g.fill(x, y, x + bw, y + bh, (alpha << 24) | 0x10161E);
+        g.fill(x, y, x + 3, y + bh, (alpha << 24) | 0xE0A030);
+        g.drawString(f, "車窓ガイド", x + 10, y + 4, (alpha << 24) | 0xE0B050, false);
+        int yy = y + 15;
+        for (var l : lines) {
+            g.drawString(f, l, x + 10, yy, (alpha << 24) | 0xFFFFFF, false);
+            yy += 11;
+        }
     }
 
     private static void renderDisplay(GuiGraphics g, Font f, VehicleEntity v, int w) {

@@ -172,9 +172,9 @@ for b in BLOCKS:
     props = f'BlockBehaviour.Properties.of().mapColor(MapColor.{p["map"]}).strength({p["strength"][0]}f, {p["strength"][1]}f).sound(SoundType.{p["sound"]})'
     if b.get('light'):
         props += f'.lightLevel(s -> {b["light"]})'
-    if b['id'] in ('window_lit', 'window_lit_cool', 'neon_sign', 'vending_machine_top', 'gas_lamp', 'street_lamp', 'chochin', 'kenbaiki_top', 'red_steel_lit'):
+    if b['id'] in ('window_lit', 'window_lit_cool', 'neon_sign', 'vending_machine_top', 'gas_lamp', 'street_lamp', 'chochin', 'kenbaiki_top', 'red_steel_lit', 'train_lcd', 'white_steel_lit'):
         props += '.emissiveRendering((s, l, q) -> true)'
-    solid_cube = kind in ('cube', 'cube_bt', 'facing_cube', 'pillar')
+    solid_cube = kind in ('cube', 'cube_bt', 'facing_cube', 'pillar') and not render
     if not solid_cube and kind not in ('stairs', 'slab'):
         props += '.noOcclusion()'
     if b.get('nocollide'):
@@ -189,6 +189,8 @@ for b in BLOCKS:
 
     if kind == 'cube':
         model_json = {'parent': 'minecraft:block/cube_all', 'textures': {'all': texmap['all']}}
+        if render:
+            model_json['render_type'] = 'minecraft:' + render
         wjson(f'{BS}/{bid}.json', {'variants': {'': {'model': M}}})
         ctor = f'new Block({props})'
     elif kind == 'cube_bt':
@@ -358,7 +360,7 @@ for it in MANIFEST['items']:
                      'ayu_shioyaki': 6, 'cream_soda': 3, 'coffee': 1, 'kocha': 1, 'akashiyaki': 6, 'butaman': 6, 'xiaolongbao': 5,
                      'goma_dango': 3, 'sobameshi': 8, 'wagyu_kushi': 8, 'baumkuchen': 4, 'kobe_pudding': 3, 'cheesecake': 4,
                      'croissant': 4, 'curry_pan': 5, 'crepe': 4, 'kawara_senbei': 2, 'kobe_cookies': 3, 'ikanago_kugini': 4,
-                     'amazake': 2, 'arima_senbei': 2}.get(iid, nut or 2)
+                     'amazake': 2, 'arima_senbei': 2, 'ekiben_okawa': 10, 'ekiben_shiomi': 10, 'ekiben_kobe': 12}.get(iid, nut or 2)
         sat = 0.6 if nutrition >= 5 else 0.3
         food = f'new FoodProperties.Builder().nutrition({nutrition}).saturationMod({sat}f).alwaysEat().build()'
         ctor = f'new TabiFoodItem(new Item.Properties().food({food}), {"true" if kind == "drink" else "false"}, "{it["journal"] or ""}")'

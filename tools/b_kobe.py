@@ -109,6 +109,18 @@ def roads(w):
         p = fillet_path([(3330, z), (4050, z)], 6)
         road(w, p, G, width=6, center=None, sidewalk=1)
         reserve(3330, z - 4, 4050, z + 4)
+    # street lamps along the avenues (they make the night view sparkle)
+    for x in range(3336, 3816, 16):
+        if free(x, 696, x, 696, 0) or True:
+            street_lamp(w, x, G + 1, 695, 'south')
+            street_lamp(w, x + 8, G + 1, 709, 'north')
+    for x in range(3366, 3816, 16):
+        street_lamp(w, x, G + 1, 584, 'south')
+        street_lamp(w, x + 8, G + 1, 596, 'north')
+    for z in range(600, 700, 16):
+        street_lamp(w, 3477, G + 1, z, 'east')
+    for z in range(480, 590, 16):
+        street_lamp(w, 3693, G + 1, z, 'east')
     # Suwayama road: hairpin up to Venus Bridge
     hill = fillet_path([(3700, 474), (3700, 462), (3600, 470), (3575, 452), (3640, 440), (3600, 422), (3566, 414)], 9)
     n = len(hill)
@@ -347,6 +359,7 @@ def meriken(w, rnd):
     for x in range(x1 + 4, x2, 14):
         street_lamp(w, x, G + 1, z2 - 2, 'north')
         bench(w, x + 3, G + 1, z2 - 3, 'south')
+    ferry(w, 3742, 842)
     port_tower(w, 3612, 800)
     maritime_museum(w)
     be_kobe(w, 3650, 897)
@@ -366,6 +379,29 @@ def meriken(w, rnd):
     reserve(3540, 758, 3725, 910)
     w.viewpoint('meriken_day', 3655, 74, 930, 160, 5, time=6000, mode='spectator')
     w.viewpoint('port_tower_night', 3650, 90, 860, 160, -25, time=15000, mode='spectator')
+
+
+def ferry(w, x0, z0):
+    """a sightseeing boat moored at the pier (lights along the deck)"""
+    L, W = 34, 9
+    for i in range(L):
+        z = z0 + i
+        half = W // 2 if 3 < i < L - 6 else max(1, (W // 2) - (3 - i if i <= 3 else (i - (L - 6))))
+        for x in range(x0 - half, x0 + half + 1):
+            w.fill(x, 58, z, x, 61, z, 'minecraft:white_concrete' if x in (x0 - half, x0 + half) else 'minecraft:blue_concrete')
+            w.set(x, 62, z, 'minecraft:white_concrete')
+            w.set(x, 63, z, 'tabi:hinoki' if abs(x - x0) < half else 'minecraft:white_concrete')
+        if abs(i - L // 2) < 9:
+            for x in range(x0 - 2, x0 + 3):
+                w.fill(x, 64, z, x, 66, z, 'minecraft:white_concrete' if x in (x0 - 2, x0 + 2) else 'minecraft:air')
+                w.set(x, 67, z, 'minecraft:white_concrete')
+            w.set(x0 - 2, 65, z, 'tabi:window_lit' if i % 2 else 'minecraft:white_concrete')
+            w.set(x0 + 2, 65, z, 'tabi:window_lit' if i % 2 else 'minecraft:white_concrete')
+        if i % 4 == 0:
+            w.set(x0 - half, 64, z, 'minecraft:sea_lantern')
+            w.set(x0 + half, 64, z, 'minecraft:sea_lantern')
+    w.fill(x0, 68, z0 + L // 2 - 2, x0, 72, z0 + L // 2 - 2, 'minecraft:white_concrete')
+    w.set(x0, 73, z0 + L // 2 - 2, 'minecraft:redstone_lamp[lit=true]')
 
 
 def port_tower(w, cx, cz):
@@ -476,7 +512,7 @@ def maritime_museum(w):
                 t = i / h
                 x = sx + int(round(14 * t * t))
                 y = G + 9 + i
-                w.set(x, y, zz, TB('white_steel'))
+                w.set(x, y, zz, TB('white_steel_lit') if i % 3 == 0 else TB('white_steel'))
             line3(w, (sx, G + 9, zz), (sx + 14, G + 9, zz), TB('white_steel'))
         for i in range(0, h + 1, 3):
             t = i / h
@@ -680,9 +716,10 @@ def motomachi(w, rnd):
         for z in range(zs1, zs2 + 1):
             w.set(x, G, z, 'minecraft:smooth_stone' if (x // 4 + z) % 2 else 'minecraft:polished_diorite')
             w.clear(x, G + 1, z, x, G + 10, z)
-    special = {3520: ('motomachi_kissa', '元町珈琲 さざなみ', '自家焙煎珈琲'), 3556: ('motomachi_sweets', '元町洋菓子 アカシア', 'バウムクーヘン・プリン'),
-               3592: ('motomachi_bakery', 'パン工房 こむぎ堂', '焼きたてパン'), 3628: ('motomachi_souvenir', '神戸みやげ 港屋', '瓦せんべい・洋菓子'),
-               3664: ('sobameshi', 'そばめし 長田屋', '長田名物'), 3700: ('wagyu', '和牛串 ほむら', '炭火焼')}
+    special_by_slot = {1: ('motomachi_kissa', '元町珈琲 さざなみ', '自家焙煎珈琲'), 4: ('motomachi_sweets', '元町洋菓子 アカシア', 'バウムクーヘン・プリン'),
+                       7: ('motomachi_bakery', 'パン工房 こむぎ堂', '焼きたてパン'), 10: ('motomachi_souvenir', '神戸みやげ 港屋', '瓦せんべい・洋菓子'),
+                       13: ('sobameshi', 'そばめし 長田屋', '長田名物'), 16: ('wagyu', '和牛串 ほむら', '炭火焼')}
+    special = {x1 + 2 + 12 * k: v for k, v in special_by_slot.items()}
     others = ['靴 マリン', '帽子 コウベ', '時計 元町堂', '雑貨 ハーバー', '本 海文堂', '洋装 リリー', '眼鏡 光学堂', '紅茶 キタノ', '画材 みなと', '真珠 アコヤ', '帆布 かばん', '楽器 ソナタ']
     skins = {'motomachi_kissa': ('master', '元町珈琲のマスター'), 'motomachi_sweets': ('patissier', '洋菓子店のパティシエ'),
              'motomachi_bakery': ('baker', 'パン屋さん'), 'motomachi_souvenir': ('shopkeeper_old', '港屋の店主'),

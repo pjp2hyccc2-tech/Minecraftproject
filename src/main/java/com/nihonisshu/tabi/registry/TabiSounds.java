@@ -26,6 +26,17 @@ public final class TabiSounds {
     public static final RegistryObject<SoundEvent> TALK = reg("talk");
     public static final RegistryObject<SoundEvent> COIN = reg("coin");
     public static final RegistryObject<SoundEvent> TICKET_GATE = reg("ticket_gate");
+    public static final RegistryObject<SoundEvent> MELODY_OKAWA = reg("melody_okawa");
+    public static final RegistryObject<SoundEvent> MELODY_KIRIGAYA = reg("melody_kirigaya");
+    public static final RegistryObject<SoundEvent> MELODY_SHIOMI = reg("melody_shiomi");
+    public static final RegistryObject<SoundEvent> MELODY_KOBE = reg("melody_kobe");
+    public static final RegistryObject<SoundEvent> APPROACH = reg("approach");
+    public static final RegistryObject<SoundEvent> CAR_CHIME = reg("car_chime");
+    public static final RegistryObject<SoundEvent> GUIDE_CHIME = reg("guide_chime");
+    public static final RegistryObject<SoundEvent> DOOR_OPEN = reg("door_open");
+    public static final RegistryObject<SoundEvent> DOOR_CLOSE = reg("door_close");
+    public static final RegistryObject<SoundEvent> HORN = reg("horn");
+    public static final RegistryObject<SoundEvent> BRAKE = reg("brake");
 
     private static RegistryObject<SoundEvent> reg(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(TabiMod.MODID, name)));

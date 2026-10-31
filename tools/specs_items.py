@@ -394,7 +394,28 @@ def s_tower():
     return fin(t, '#5a1410')
 
 
+def s_bento(kind):
+    t = sprite(60)
+    t.rect(1, 3, 15, 14, '#5a3418')
+    t.rect(2, 4, 14, 13, '#f4f1e6')
+    if kind == 'ayu':
+        t.rect(3, 5, 13, 8, '#e0cc98')
+        poly(t, [(3, 9), (11, 9), (13, 11), (3, 12)], '#9a9488')
+        t.set(11, 10, '#1a1a1a')
+    elif kind == 'tako':
+        t.rect(3, 5, 13, 12, '#c8904a')
+        t.speckle(12, ['#b03a2a', '#d84a3a', '#3aa655'], 3, 5, 13, 12)
+    else:
+        t.rect(3, 5, 13, 7, '#f4f1e6')
+        t.rect(3, 8, 13, 12, '#7a3a24')
+        t.speckle(8, ['#a85a3a', '#f0c060', '#3aa655'], 3, 8, 13, 12)
+    t.rect(1, 2, 15, 3, '#c0392b')
+    t.vline(8, 2, 14, '#c0392b')
+    return fin(t)
+
+
 ITEM_SPRITES = {
+    'ekiben_okawa': lambda: s_bento('ayu'), 'ekiben_shiomi': lambda: s_bento('tako'), 'ekiben_kobe': lambda: s_bento('beef'),
     'journal': s_journal, 'ticket': s_ticket, 'rice_seedling': s_seedling, 'rice': s_rice,
     'tomato_seeds': lambda: s_seeds('#d8392b'), 'cucumber_seeds': lambda: s_seeds('#3f8a2e'), 'eggplant_seeds': lambda: s_seeds('#5b2d6e'),
     'tomato': lambda: s_round('#d8392b', '#ff8a7a'), 'cucumber': s_cucumber, 'eggplant': s_eggplant,

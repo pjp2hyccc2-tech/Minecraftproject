@@ -32,6 +32,7 @@ public final class VehicleSounds {
                 float vol = riding ? 0.55f : 0.35f;
                 mc.level.playLocalSound(v.getX(), v.getY(), v.getZ(), TabiSounds.TRAIN_JOINT.get(), SoundSource.NEUTRAL,
                         vol, 0.85f + Mth.clamp(speed, 0f, 1f) * 0.3f, false);
+                if (riding) CameraSway.jolt(0.35f + speed * 0.5f);
             }
         }
     }

@@ -144,5 +144,28 @@
    "cheesecake": "洋館で味わう濃厚ケーキ",
    "coffee": "坂の上でひと休みの一杯"
   }
+ },
+ "ekiben_okawa": {
+  "greet": "鮎めし、炊きたてだよ！",
+  "notes": {
+   "ekiben_okawa": "川の町の名物駅弁",
+   "mugicha": "冷えてるよ",
+   "ramune": "ビー玉入り"
+  }
+ },
+ "ekiben_shiomi": {
+  "greet": "たこめし、うまいでぇ",
+  "notes": {
+   "ekiben_shiomi": "明石のたこがごろごろ",
+   "cider": "海を見ながらどうぞ"
+  }
+ },
+ "ekiben_kobe": {
+  "greet": "旅のおともに駅弁どうぞ",
+  "notes": {
+   "ekiben_kobe": "港町の牛肉弁当",
+   "kobe_pudding": "食後のデザートに",
+   "coffee": "ホットでどうぞ"
+  }
  }
 }

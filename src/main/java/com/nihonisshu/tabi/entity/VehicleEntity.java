@@ -44,6 +44,9 @@ public class VehicleEntity extends Entity {
 
     private int timer;
     private boolean announcedDeparture;
+    private int approachAnnounced = -1;
+    private boolean brakeSound;
+    private double lastS = Double.NaN;
     // client side interpolation
     public float prevS, curS;
     /** set by the self-test so an unattended train is not cleaned up */
@@ -91,6 +94,11 @@ public class VehicleEntity extends Entity {
     public int getStationIndex() { return entityData.get(STATION); }
     public boolean doorsOpen() { return getState() == STOPPED; }
 
+    public boolean bus() {
+        Route r = route();
+        return r != null && "bus".equals(r.type);
+    }
+
     public Route.Station currentStation() {
         Route r = route();
         int i = getStationIndex();
@@ -131,11 +139,10 @@ public class VehicleEntity extends Entity {
             return p;
         }
         int n = carCount();
-        int dir = getDir();
         double cs = s + ((n - 1) / 2.0 - i) * r.carSpacing;
         double half = d.length * 0.35;
-        Vec3 front = r.pos(cs + dir * half);
-        Vec3 back = r.pos(cs - dir * half);
+        Vec3 front = r.pos(cs + half);
+        Vec3 back = r.pos(cs - half);
         p.center = front.add(back).scale(0.5);
         double fx = front.x - back.x, fy = front.y - back.y, fz = front.z - back.z;
         double hz = Math.sqrt(fx * fx + fz * fz);
@@ -213,22 +220,36 @@ public class VehicleEntity extends Entity {
         int dir = getDir();
         byte state = getState();
         boolean hasPlayer = getPassengers().stream().anyMatch(e -> e instanceof Player);
+        boolean bus = "bus".equals(r.type);
         Route.Station here = currentStation();
         switch (state) {
             case STOPPED -> {
-                timer++;
                 boolean terminalWait = here != null && here.terminal;
-                int dwell = terminalWait ? (hasPlayer ? 200 : Integer.MAX_VALUE) : 300;
-                if (hasPlayer && dwell != Integer.MAX_VALUE && timer == dwell - 120 && !announcedDeparture) {
+                if (terminalWait && !hasPlayer) {
+                    timer = 0;             // wait at the terminus until somebody boards
+                } else {
+                    timer++;
+                }
+                int dwell = terminalWait ? 300 : (bus ? 160 : 400);
+                if (hasPlayer && timer == dwell - 150 && !announcedDeparture) {
                     announcedDeparture = true;
                     Route.Station next = r.nextStation(s, dir);
-                    announce("まもなく発車します。" + (next != null ? "次は " + next.name + " に止まります。" : ""));
-                    level().playSound(null, getX(), getY(), getZ(), TabiSounds.MELODY.get(), SoundSource.NEUTRAL, 1.6f, 1f);
+                    if (bus) {
+                        announce("発車します。おつかまりください。" + (next != null ? "次は " + next.name + " です。" : ""), null);
+                    } else {
+                        announce("まもなく発車します。" + (next != null ? "次は " + next.name + " に止まります。" : ""),
+                                next != null && !next.en.isEmpty() ? "The next station is " + next.en + "." : null);
+                        sound(TabiSounds.MELODY.get(), 1.8f, 1f);
+                    }
                 }
-                if (timer >= dwell) {
+                if (!bus && hasPlayer && timer == dwell - 30) {
+                    announce("ドアが閉まります。ご注意ください。", null);
+                    sound(TabiSounds.DOOR_CHIME.get(), 1.2f, 1f);
+                }
+                if (timer >= dwell && (hasPlayer || !terminalWait)) {
                     entityData.set(STATE, DEPARTING);
                     timer = 0;
-                    level().playSound(null, getX(), getY(), getZ(), TabiSounds.DOOR_CHIME.get(), SoundSource.NEUTRAL, 1.0f, 1f);
+                    sound(TabiSounds.DOOR_CLOSE.get(), 1.0f, 1f);
                 }
                 if (!keepAlive && !hasPlayer && tickCount % 100 == 0 && level().getNearestPlayer(this, 192) == null) {
                     discard();
@@ -236,20 +257,30 @@ public class VehicleEntity extends Entity {
             }
             case DEPARTING -> {
                 timer++;
+                if (timer == 20 && !bus) sound(TabiSounds.HORN.get(), 2.5f, 1f);
                 if (timer >= 40) {
                     entityData.set(STATE, RUNNING);
                     timer = 0;
                     announcedDeparture = false;
+                    brakeSound = false;
                 }
             }
             case RUNNING -> {
                 Route.Station next = r.nextStation(s, dir);
                 double dist = next == null ? Math.max(0, (dir > 0 ? r.length - s : s)) : (next.s - s) * dir;
-                double accel = r.type.equals("bus") ? 0.006 : 0.004;
-                double decel = r.type.equals("bus") ? 0.008 : 0.006;
+                double accel = bus ? 0.006 : 0.004;
+                double decel = bus ? 0.008 : 0.006;
                 v = Math.min(r.maxSpeed, v + accel);
                 v = Math.min(v, Math.sqrt(2 * decel * Math.max(0, dist)));
                 if (v < 0.03) v = 0.03;
+                if (next != null && dist < (bus ? 60 : 160) && approachAnnounced != next.index) {
+                    approachAnnounced = next.index;
+                    onApproach(r, next, dir, bus);
+                }
+                if (!bus && !brakeSound && next != null && dist < 26 && v > 0.08) {
+                    brakeSound = true;
+                    sound(TabiSounds.BRAKE.get(), 0.8f, 1f);
+                }
                 if (dist <= v) {
                     s = next != null ? next.s : (dir > 0 ? r.length : 0);
                     v = 0;
@@ -257,18 +288,20 @@ public class VehicleEntity extends Entity {
                     timer = 0;
                     if (next != null) {
                         entityData.set(STATION, next.index);
-                        announce(next.name + "、" + next.name + "です。" + (next.terminal ? "終点です。ご乗車ありがとうございました。" : ""));
+                        onArrive(r, next, dir, bus);
                         if (next.terminal) dir = -dir;
                     }
                 } else {
                     s += dir * v;
-                    if (timer++ % 600 == 30 && hasPlayer && next != null) {
-                        announce("次は " + next.name + "（" + next.en + "）です。");
+                    if (timer++ % 900 == 300 && hasPlayer && next != null && !bus) {
+                        announce("次は " + next.name + "（" + next.en + "）です。", null);
                     }
                 }
+                routeEvents(r, s, dir);
             }
             default -> entityData.set(STATE, STOPPED);
         }
+        lastS = s;
         entityData.set(S, (float) s);
         entityData.set(SPEED, (float) v);
         entityData.set(DIR, (byte) dir);
@@ -276,10 +309,89 @@ public class VehicleEntity extends Entity {
         setPos(p.x, p.y, p.z);
     }
 
-    private void announce(String text) {
+    /** "まもなく〇〇です" with the in-car chime; the approach melody is heard on the platform */
+    private void onApproach(Route r, Route.Station st, int dir, boolean bus) {
+        if (bus) {
+            playAt(st, TabiSounds.BUS_BELL.get(), 1.0f);
+            announce("次は " + st.name + " です。" + (st.terminal ? "終点です。" : "") + "お降りの方はお忘れ物のないようご注意ください。", null);
+            return;
+        }
+        playAt(st, TabiSounds.APPROACH.get(), 2.0f);
+        for (Entity e : getPassengers()) {
+            if (e instanceof ServerPlayer sp) {
+                sp.playNotifySound(TabiSounds.CAR_CHIME.get(), SoundSource.NEUTRAL, 0.9f, 1f);
+            }
+        }
+        String side = doorSide(st, dir);
+        StringBuilder t = new StringBuilder("まもなく " + st.name + "、" + st.name + " です。");
+        if (!side.isEmpty()) t.append("お出口は").append(side).append("側です。");
+        if (st.terminal) t.append("終点です。");
+        if (!st.transfer.isEmpty()) t.append(st.transfer);
+        announce(t.toString(), st.en.isEmpty() ? null : "We will soon arrive at " + st.en + ".");
+    }
+
+    /** station melody plays on arrival, doors open */
+    private void onArrive(Route r, Route.Station st, int dir, boolean bus) {
+        approachAnnounced = -1;
+        if (!bus) {
+            net.minecraft.sounds.SoundEvent mel = st.melody.isEmpty() ? null
+                    : net.minecraftforge.registries.ForgeRegistries.SOUND_EVENTS.getValue(new net.minecraft.resources.ResourceLocation("tabi", st.melody));
+            if (mel != null) playAt(st, mel, 2.2f);
+        }
+        sound(TabiSounds.DOOR_OPEN.get(), 1.0f, 1f);
+        String side = doorSide(st, dir);
+        announce(st.name + "、" + st.name + " です。" + (!side.isEmpty() && !bus ? "お出口は" + side + "側です。" : "")
+                + (st.terminal ? "終点です。ご乗車ありがとうございました。" : ""), null);
+    }
+
+    private String doorSide(Route.Station st, int dir) {
+        if (st.door.isEmpty()) return "";
+        boolean left = st.door.equals("L");
+        if (dir < 0) left = !left;
+        return left ? "左" : "右";
+    }
+
+    /** scenic guide announcements and horn points along the line */
+    private void routeEvents(Route r, double s, int dir) {
+        if (Double.isNaN(lastS) || r.events.isEmpty()) return;
+        double a = Math.min(lastS, s), b = Math.max(lastS, s);
+        for (Route.Event ev : r.events) {
+            if (ev.s <= a || ev.s > b) continue;
+            if (ev.type.equals("horn")) {
+                sound(TabiSounds.HORN.get(), 2.5f, 1f);
+                continue;
+            }
+            String text = ev.text;
+            if (dir < 0) text = text.replace("右手", "@@R@@").replace("左手", "右手").replace("@@R@@", "左手");
+            for (Entity e : getPassengers()) {
+                if (e instanceof ServerPlayer sp) {
+                    sp.playNotifySound(TabiSounds.GUIDE_CHIME.get(), SoundSource.NEUTRAL, 0.9f, 1f);
+                    sp.displayClientMessage(Component.literal("【車窓ガイド】" + text).withStyle(net.minecraft.ChatFormatting.GOLD), false);
+                    net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
+                    tag.putString("text", text);
+                    com.nihonisshu.tabi.network.TabiNet.send(sp, "guide", tag);
+                    if (!ev.journal.isEmpty()) com.nihonisshu.tabi.game.PlayerData.unlock(sp, ev.journal);
+                }
+            }
+        }
+    }
+
+    private void sound(net.minecraft.sounds.SoundEvent ev, float vol, float pitch) {
+        level().playSound(null, getX(), getY() + 1.5, getZ(), ev, SoundSource.NEUTRAL, vol, pitch);
+    }
+
+    private void playAt(Route.Station st, net.minecraft.sounds.SoundEvent ev, float vol) {
+        Route r = route();
+        if (r == null) return;
+        Vec3 p = r.pos(st.s);
+        level().playSound(null, p.x, p.y + 2, p.z, ev, SoundSource.NEUTRAL, vol, 1f);
+    }
+
+    private void announce(String text, String english) {
         for (Entity e : getPassengers()) {
             if (e instanceof ServerPlayer sp) {
                 sp.displayClientMessage(Component.literal("【車内放送】" + text).withStyle(net.minecraft.ChatFormatting.AQUA), false);
+                if (english != null) sp.displayClientMessage(Component.literal("  " + english).withStyle(net.minecraft.ChatFormatting.GRAY), false);
             }
         }
     }
@@ -306,6 +418,19 @@ public class VehicleEntity extends Entity {
         seats.putInt(player.getStringUUID(), seat);
         entityData.set(SEATS, seats);
         player.startRiding(this, true);
+        if (player instanceof ServerPlayer sp) {
+            CarDesign d = design();
+            int per = d == null || d.seats.isEmpty() ? 1 : d.seats.size();
+            int side = d == null ? 0 : d.seatSide(seat % per);
+            CarPose pose = carPose(getS(), Math.min(carCount() - 1, seat / per));
+            Vec3 c = pose.center;
+            Vec3 look = side == 0 ? toWorld(pose, 0, 0, getDir()) : toWorld(pose, side, 0, 0);
+            double dx = look.x - c.x, dz = look.z - c.z;
+            net.minecraft.nbt.CompoundTag t = new net.minecraft.nbt.CompoundTag();
+            t.putFloat("yaw", (float) Math.toDegrees(Math.atan2(-dx, dz)));
+            com.nihonisshu.tabi.network.TabiNet.send(sp, "look", t);
+            sp.displayClientMessage(Component.literal(bus() ? "バスに乗りました" : "席にすわりました（降りるときはスニークキー）"), true);
+        }
         return InteractionResult.CONSUME;
     }
 
@@ -448,6 +573,7 @@ public class VehicleEntity extends Entity {
         entityData.set(STATE, tag.getByte("state"));
         entityData.set(STATION, tag.getInt("station"));
         timer = tag.getInt("timer");
+        approachAnnounced = tag.contains("approach") ? tag.getInt("approach") : -1;
     }
 
     @Override
@@ -458,6 +584,7 @@ public class VehicleEntity extends Entity {
         tag.putByte("state", getState());
         tag.putInt("station", getStationIndex());
         tag.putInt("timer", timer);
+        tag.putInt("approach", approachAnnounced);
     }
 
     @Override

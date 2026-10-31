@@ -277,3 +277,204 @@ def write_ogg(sig, path):
         w.writeframes(pcm.tobytes())
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', tmp, '-ac', '1', '-c:a', 'libvorbis', '-q:a', '4', path], check=True)
     os.unlink(tmp)
+
+
+# ===================================================================== instruments for station melodies (all original)
+def marimba(freq, dur, amp=0.5):
+    n = int(SR * dur)
+    t = np.arange(n) / SR
+    s = np.sin(2 * np.pi * freq * t) * np.exp(-t * 5.5)
+    s += 0.35 * np.sin(2 * np.pi * freq * 3.93 * t) * np.exp(-t * 14)
+    s += 0.12 * np.sin(2 * np.pi * freq * 9.2 * t) * np.exp(-t * 30)
+    s *= np.minimum(1.0, t / 0.003)
+    return amp * s
+
+
+def epiano(freq, dur, amp=0.45):
+    n = int(SR * dur)
+    t = np.arange(n) / SR
+    idx = 1.6 * np.exp(-t * 3.0)
+    s = np.sin(2 * np.pi * freq * t + idx * np.sin(2 * np.pi * freq * t)) * np.exp(-t * 2.2)
+    s += 0.25 * np.sin(2 * np.pi * freq * 2 * t) * np.exp(-t * 5)
+    s *= np.minimum(1.0, t / 0.004) * (0.9 + 0.1 * np.sin(2 * np.pi * 5.0 * t))
+    return amp * s
+
+
+def flute(freq, dur, amp=0.35):
+    n = int(SR * dur)
+    t = np.arange(n) / SR
+    vib = 1 + 0.006 * np.sin(2 * np.pi * 5.2 * t) * np.minimum(1, t / 0.4)
+    ph = 2 * np.pi * freq * np.cumsum(vib) / SR
+    s = np.sin(ph) + 0.18 * np.sin(2 * ph) + 0.06 * np.sin(3 * ph)
+    rng = np.random.default_rng(int(freq))
+    s += 0.05 * lowpass_fast(rng.standard_normal(n), 3000)
+    return amp * s * env_adsr(n, 0.08, 0.2, 0.8, min(0.4, dur * 0.4))
+
+
+def vibes(freq, dur, amp=0.45):
+    n = int(SR * dur)
+    t = np.arange(n) / SR
+    s = (np.sin(2 * np.pi * freq * t) + 0.2 * np.sin(2 * np.pi * freq * 4 * t) * np.exp(-t * 8)) * np.exp(-t * 1.8)
+    s *= 1 + 0.25 * np.sin(2 * np.pi * 6.0 * t)
+    return amp * s * np.minimum(1.0, t / 0.003)
+
+
+def bass(freq, dur, amp=0.35):
+    n = int(SR * dur)
+    t = np.arange(n) / SR
+    s = np.sin(2 * np.pi * freq * t) + 0.3 * np.sin(2 * np.pi * freq * 2 * t)
+    return amp * s * np.exp(-t * 3.5) * np.minimum(1.0, t / 0.01)
+
+
+def seq_render(events, total, reverb=(0.23, 0.3, 3)):
+    buf = np.zeros(int(SR * total))
+    for at, sig in events:
+        place(buf, sig, at)
+    return norm(echo(buf, *reverb))
+
+
+def s_melody_okawa():
+    """大川: lilting river song on marimba (C pentatonic, 6/8)"""
+    notes = [('G', 4, 1), ('A', 4, 1), ('C', 5, 1), ('D', 5, 2), ('E', 5, 1), ('D', 5, 1), ('C', 5, 1), ('A', 4, 2),
+             ('G', 4, 1), ('A', 4, 1), ('C', 5, 1), ('E', 5, 1), ('D', 5, 1), ('C', 5, 4)]
+    ev, t = [], 0.1
+    for n, o, d in notes:
+        ev.append((t, marimba(hz(n, o), 1.2)))
+        t += 0.22 * d
+    for k, (n, o) in enumerate((('C', 3), ('G', 2), ('A', 2), ('C', 3))):
+        ev.append((0.1 + k * 1.32, bass(hz(n, o), 1.2)))
+    return seq_render(ev, t + 1.6)
+
+
+def s_melody_kirigaya():
+    """霧ヶ谷: slow misty flute (D minor pentatonic) with long echoes"""
+    notes = [('D', 5, 2), ('F', 5, 1), ('G', 5, 1), ('A', 5, 3), ('G', 5, 1), ('F', 5, 1), ('D', 5, 3), ('C', 5, 1), ('D', 5, 4)]
+    ev, t = [], 0.1
+    for n, o, d in notes:
+        ev.append((t, flute(hz(n, o), 0.3 * d + 0.25)))
+        t += 0.3 * d
+    ev.append((0.1, bell(hz('D', 4), 3.5, 0.2, ratio=1.0, index=0.3, decay=0.9)))
+    ev.append((3.0, bell(hz('A', 3), 3.5, 0.2, ratio=1.0, index=0.3, decay=0.9)))
+    return seq_render(ev, t + 2.5, (0.37, 0.42, 5))
+
+
+def s_melody_shiomi():
+    """潮見: rolling arpeggios like waves, glass bells (A major)"""
+    arps = [('A', 4), ('C#', 5), ('E', 5), ('A', 5), ('E', 5), ('C#', 5),
+            ('B', 4), ('D', 5), ('F#', 5), ('B', 5), ('F#', 5), ('D', 5),
+            ('C#', 5), ('E', 5), ('A', 5), ('C#', 6)]
+    ev, t = [], 0.1
+    for i, (n, o) in enumerate(arps):
+        dur = 2.0 if i == len(arps) - 1 else 1.2
+        ev.append((t, bell(hz(n, o), dur, 0.42, ratio=2.0, index=0.8, decay=2.4)))
+        t += 0.17 if i < len(arps) - 1 else 0
+    for k, (n, o) in enumerate((('A', 2), ('B', 2), ('A', 2))):
+        ev.append((0.1 + k * 1.02, bass(hz(n, o), 1.0, 0.3)))
+    return seq_render(ev, t + 2.2, (0.19, 0.35, 4))
+
+
+def s_melody_kobe():
+    """神戸: short swing jingle on electric piano with walking bass and brushes (F major) - a nod to Kobe's jazz"""
+    beat = 0.32
+    swing = [0.0, beat * 0.66]
+    mel = [('A', 4), ('C', 5), ('E', 5), ('F', 5), ('D', 5), ('F', 5), ('A', 5), ('G', 5), ('F', 5), ('E', 5), ('D', 5), ('C', 5), ('A', 4), ('F', 5)]
+    ev = []
+    t = 0.1
+    for i, (n, o) in enumerate(mel):
+        ev.append((t, epiano(hz(n, o), 1.0 if i < len(mel) - 1 else 2.2)))
+        t += beat * (0.66 if i % 2 == 0 else 0.34) * 2
+    chords = [(('F', 4), ('A', 4), ('C', 5), ('E', 5)), (('D', 4), ('F', 4), ('A', 4), ('C', 5)), (('G', 3), ('A#', 3), ('D', 4), ('F', 4)),
+              (('C', 4), ('E', 4), ('A#', 4), ('D', 5)), (('F', 3), ('A', 3), ('D', 4), ('G', 4))]
+    for k, ch in enumerate(chords):
+        for (n, o) in ch:
+            ev.append((0.1 + k * beat * 2, epiano(hz(n, o), 0.9, 0.16)))
+    walk = [('F', 2), ('A', 2), ('D', 2), ('F', 2), ('G', 2), ('A#', 2), ('C', 3), ('E', 2), ('F', 2)]
+    for k, (n, o) in enumerate(walk):
+        ev.append((0.1 + k * beat, bass(hz(n, o), 0.5, 0.32)))
+    rng = np.random.default_rng(21)
+    for k in range(int(t / beat) + 2):
+        for sw in swing:
+            nn = int(SR * 0.08)
+            tt = np.arange(nn) / SR
+            ev.append((0.1 + k * beat + sw, bandpass_fast(rng.standard_normal(nn), 4000, 11000) * np.exp(-tt * 40) * 0.12))
+    return seq_render(ev, t + 2.4, (0.21, 0.25, 3))
+
+
+def s_approach():
+    ev = [(0.05, bell(hz('E', 5), 1.6, 0.4, ratio=1.0, index=0.4, decay=2.0)), (0.22, bell(hz('G#', 5), 1.6, 0.4, ratio=1.0, index=0.4, decay=2.0)),
+          (0.39, bell(hz('B', 5), 2.2, 0.45, ratio=1.0, index=0.4, decay=1.6)), (0.39, bell(hz('E', 5), 2.2, 0.25, ratio=1.0, index=0.3, decay=1.6))]
+    return seq_render(ev, 2.8)
+
+
+def s_car_chime():
+    return seq_render([(0.02, vibes(hz('G', 5), 1.2)), (0.42, vibes(hz('E', 5), 1.6))], 2.1, (0.15, 0.2, 2))
+
+
+def s_guide_chime():
+    ev = [(0.02 + k * 0.13, bell(hz(n, o), 1.2, 0.35, ratio=1.0, index=0.2, decay=3)) for k, (n, o) in enumerate((('C', 5), ('E', 5), ('G', 5), ('C', 6)))]
+    return seq_render(ev, 1.9)
+
+
+def hiss(dur, sweep_from, sweep_to, amp=0.6, seed=3):
+    n = int(SR * dur)
+    rng = np.random.default_rng(seed)
+    x = rng.standard_normal(n)
+    out = np.zeros(n)
+    chunks = 24
+    for k in range(chunks):
+        a, b = k * n // chunks, (k + 1) * n // chunks
+        f = sweep_from + (sweep_to - sweep_from) * k / chunks
+        out[a:b] = bandpass_fast(x, f * 0.5, f * 1.6)[a:b]
+    t = np.arange(n) / SR
+    return amp * out * env_adsr(n, 0.02, 0.15, 0.7, dur * 0.5)
+
+
+def s_door_open():
+    buf = np.zeros(int(SR * 1.3))
+    place(buf, hiss(1.0, 5000, 2500, 0.7), 0.0)
+    clack(0.85, buf, 0.5)
+    return norm(buf, 0.6)
+
+
+def s_door_close():
+    buf = np.zeros(int(SR * 1.3))
+    place(buf, hiss(0.7, 3500, 6000, 0.6, 5), 0.0)
+    clack(0.62, buf, 1.0)
+    clack(0.7, buf, 0.6)
+    return norm(buf, 0.6)
+
+
+def s_horn():
+    n = int(SR * 1.5)
+    t = np.arange(n) / SR
+    s = np.zeros(n)
+    for f in (311.0, 392.0):
+        for k in range(1, 9):
+            s += np.sin(2 * np.pi * f * k * t + 0.3 * k) / k ** 1.1
+    s = lowpass_fast(s, 2500)
+    return norm(s * env_adsr(n, 0.04, 0.1, 0.9, 0.3) * (1 + 0.03 * np.sin(2 * np.pi * 6 * t)), 0.7)
+
+
+def s_brake():
+    n = int(SR * 2.0)
+    t = np.arange(n) / SR
+    rng = np.random.default_rng(13)
+    f = 2600 + 120 * np.sin(2 * np.pi * 0.7 * t) + 40 * rng.standard_normal(n).cumsum() / np.sqrt(np.arange(1, n + 1))
+    ph = 2 * np.pi * np.cumsum(f) / SR
+    s = 0.5 * np.sin(ph) * (0.6 + 0.4 * np.sin(2 * np.pi * 11 * t)) + 0.2 * bandpass_fast(rng.standard_normal(n), 1500, 4500)
+    return norm(s * env_adsr(n, 0.3, 0.3, 0.8, 0.6), 0.35)
+
+
+SOUNDS.update({
+    'melody_okawa': (s_melody_okawa, '大川駅のメロディ', 'Okawa station melody'),
+    'melody_kirigaya': (s_melody_kirigaya, '霧ヶ谷駅のメロディ', 'Kirigaya station melody'),
+    'melody_shiomi': (s_melody_shiomi, '潮見駅のメロディ', 'Shiomi station melody'),
+    'melody_kobe': (s_melody_kobe, '神戸駅のメロディ', 'Kobe station melody'),
+    'approach': (s_approach, '接近メロディ', 'Train approaching'),
+    'car_chime': (s_car_chime, '車内チャイム', 'In-car chime'),
+    'guide_chime': (s_guide_chime, '車窓ガイド', 'Guide chime'),
+    'door_open': (s_door_open, 'ドアが開く', 'Doors open'),
+    'door_close': (s_door_close, 'ドアが閉まる', 'Doors close'),
+    'horn': (s_horn, '警笛', 'Train horn'),
+    'brake': (s_brake, 'ブレーキ', 'Brakes'),
+})

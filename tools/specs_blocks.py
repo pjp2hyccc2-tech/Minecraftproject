@@ -986,6 +986,7 @@ B('shu_block', '朱塗りの木材', 'Vermilion Wood', 'cube', 'wood', {'all': l
 B('china_gold', '金の装飾', 'Gold Ornament', 'cube', 'metal', {'all': t_china_gold})
 B('red_steel', '赤い鉄骨', 'Red Steel', 'cube', 'metal', {'all': t_red_steel})
 B('red_steel_lit', '光る赤い鉄骨', 'Lit Red Steel', 'cube', 'metal', {'all': lambda: solid('#ff4a3a', 0.05, 61)}, light=10)
+B('white_steel_lit', 'ライトアップされた白い鉄骨', 'Lit White Steel', 'cube', 'metal', {'all': lambda: solid('#eaf6ff', 0.03, 62)}, light=9)
 B('white_steel', '白い鉄骨', 'White Steel', 'cube', 'metal', {'all': t_white_steel})
 B('window_lit', '明かりのついた窓', 'Lit Window', 'cube', 'glass', {'all': t_window_lit}, light=11)
 B('window_lit_cool', '蛍光灯の窓', 'Lit Office Window', 'cube', 'glass', {'all': lambda: t_window_lit(True, 77)}, light=11)
@@ -1002,6 +1003,54 @@ B('jizo', 'お地蔵さま', 'Jizo Statue', 'shaped', 'stone', {'s': lambda: t_s
 B('crate_vegetables', '野菜のコンテナ', 'Vegetable Crate', 'cube_bt', 'plastic', {'top': lambda: t_crate(True), 'side': t_crate_side})
 B('crate_empty', 'からのコンテナ', 'Empty Crate', 'cube_bt', 'plastic', {'top': lambda: t_crate(False), 'side': t_crate_side})
 
+def t_clear_glass():
+    t = Tex(color=(200, 228, 240, 34), seed=91)
+    for k in range(5):
+        t.set(3 + k, 9 - k, (255, 255, 255, 70))
+        t.set(9 + k, 14 - k, (255, 255, 255, 50))
+    return t
+
+
+def t_fan_blade():
+    t = Tex(color='#e9eef0', seed=92)
+    t.noise(0.03)
+    return t
+
+
+def t_lcd():
+    t = Tex(color='#0b0d10', seed=93)
+    t.frame(0, 0, 16, 16, '#3a3f45')
+    for x in range(2, 14):
+        if x % 3 != 1:
+            t.set(x, 4, '#ff9a2a')
+            t.set(x, 5, '#ff9a2a' if x % 2 else '#0b0d10')
+    for x in range(2, 9):
+        t.set(x, 8, '#ffffff')
+        t.set(x, 9, '#ffffff' if x % 3 else '#0b0d10')
+    t.hline(12, 2, 14, '#2fa05a')
+    for x in (3, 7, 11):
+        t.set(x, 11, '#ffffff')
+        t.set(x, 12, '#ffffff')
+    return t
+
+
+def t_bento(kind):
+    t = Tex(color='#6b4423', seed=94)
+    t.frame(0, 0, 16, 16, '#4a2c14')
+    t.rect(1, 1, 15, 15, '#f4f1e6')
+    if kind == 'ayu':
+        t.rect(2, 2, 14, 7, '#e8d8a8')
+        poly(t, [(3, 9), (12, 9), (14, 11), (3, 13)], '#a8a090')
+    elif kind == 'tako':
+        ellipse(t, 2, 2, 13, 13, '#c88a4a')
+        t.speckle(14, ['#b03a2a', '#d84a3a', '#3aa655'], 3, 3, 13, 13)
+    else:
+        t.rect(2, 2, 14, 7, '#f4f1e6')
+        t.rect(2, 8, 14, 14, '#7a3a24')
+        t.speckle(10, ['#a85a3a', '#f0c060', '#3aa655'], 2, 8, 14, 14)
+    return t
+
+
 # signboards with text drawn by the block entity renderer.
 # panel(front, back, text centre y, text height) in the NORTH orientation.
 B('station_sign', '駅名標', 'Station Name Board', 'panel', 'metal', {'f': lambda: t_board('#ffffff', '#2fa05a', 12), 'b': t_board_back},
@@ -1017,3 +1066,8 @@ B('neon_sign', 'ネオン看板', 'Neon Sign', 'panel', 'glass', {'f': lambda: s
 B('bus_stop_sign', 'バス停の標識', 'Bus Stop Sign', 'panel', 'metal',
   {'f': lambda: round_mask(Tex(color='#ffffff', seed=27)) if False else t_board('#ffffff', '#2f6fb3', 13), 'b': t_board_back},
   elements=[[2, 1, 7.5, 14, 15, 8.5, {'n': 'f', 's': 'f', 'e': 'b', 'w': 'b', 'u': 'b', 'd': 'b'}]], panel=(7.5, 8.5, 0.56, 0.6), style='white')
+
+B('clear_glass', '透明ガラス', 'Clear Glass', 'cube', 'glass', {'all': t_clear_glass}, render='translucent')
+B('ceiling_fan', '天井の扇風機', 'Ceiling Fan', 'shaped', 'metal', {'m': lambda: t_metal('#9aa3ab', 31), 'b': t_fan_blade},
+  elements=[[6, 10, 6, 10, 16, 10, 'm'], [1, 10, 7, 15, 11, 9, 'b'], [7, 10, 1, 9, 11, 15, 'b'], [7, 11, 7, 9, 13, 9, 'm']], facing=False, nocollide=True)
+B('train_lcd', '車内の案内表示', 'Passenger Display', 'facing_cube', 'metal', {'front': t_lcd, 'side': lambda: solid('#2a2e33', 0.03, 32)}, top='side', bottom='side', light=6)
