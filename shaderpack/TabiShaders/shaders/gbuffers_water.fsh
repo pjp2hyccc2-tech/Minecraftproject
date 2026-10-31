@@ -66,8 +66,8 @@ void main() {
     if (mat == 31) {           // glass: a faint reflection of the sky (+ SSR in composite)
         vec3 nW = mat3(gbufferModelViewInverse) * normalV;
         float F = 0.04 + 0.96 * pow(1.0 - clamp(dot(-V, nW), 0.0, 1.0), 5.0);
-        c = mix(c, skyRadiance(reflect(V, nW), sd) * smoothstep(0.1, 0.9, lmcoord.y), F * 0.8);
-        a = max(a, F * 0.7);
+        c = mix(c, skyRadiance(reflect(V, nW), sd) * smoothstep(0.1, 0.9, lmcoord.y), F * 0.5);
+        a = max(a, F * 0.4);
         flag = 0.5;
     }
     outColor = vec4(c, a);

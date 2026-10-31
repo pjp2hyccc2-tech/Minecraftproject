@@ -35,6 +35,7 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', mod_id
             property 'tabi.shots', System.getenv('TABI_SHOTS') ?: 'false'
             property 'tabi.shots.only', System.getenv('TABI_SHOTS_ONLY') ?: ''
+            property 'tabi.shots.waitmul', System.getenv('TABI_SHOTS_WAITMUL') ?: '1'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             args '--width', '1280', '--height', '720'

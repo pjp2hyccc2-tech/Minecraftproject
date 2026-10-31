@@ -70,6 +70,7 @@ jobs:
         env:
           TABI_SHOTS: 'true'
           TABI_OCULUS: 'true'
+          TABI_SHOTS_WAITMUL: '3'
           TABI_SHOTS_ONLY: 'village_morning,engawa_evening,village_kura,okawa_station,kirigaya,shiomi_bridge,shiomi_crossing,akashi_bridge_night,port_tower_night,kobe_overview_dusk,venus_dusk,venus_night,kobe_junction_night,meriken_day,train_ride'
           LIBGL_ALWAYS_SOFTWARE: '1'
           MESA_GL_VERSION_OVERRIDE: '4.5'

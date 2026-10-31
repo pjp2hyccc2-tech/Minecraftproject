@@ -1,7 +1,7 @@
 // ============================================================== analytic sky (also used for fog colour and reflections)
 vec3 skyRadiance(vec3 dir, vec3 sunDir) {
     float h = sunDir.y;
-    float hor = pow(1.0 - clamp(dir.y, 0.0, 1.0), 3.0);
+    float hor = pow(1.0 - clamp(dir.y, 0.0, 1.0), 4.0);
     float cosS = dot(dir, sunDir);
     float toward = 0.5 + 0.5 * cosS;
     float day = smoothstep(-0.02, 0.30, h);
@@ -10,7 +10,7 @@ vec3 skyRadiance(vec3 dir, vec3 sunDir) {
     float night = tNight(h);
 
     // clear daytime sky: deep blue zenith, pale horizon
-    vec3 c = mix(vec3(0.13, 0.33, 0.85), vec3(0.62, 0.77, 0.96), hor) * 1.55 * day;
+    vec3 c = mix(vec3(0.09, 0.25, 0.78) * 1.45, vec3(0.42, 0.58, 0.90) * 1.2, hor) * day;
     // golden hour / sunset: amber toward the sun, rose-violet opposite, indigo zenith
     vec3 setHor = mix(vec3(0.40, 0.27, 0.52), vec3(1.30, 0.50, 0.15), pow(toward, 2.4));
     c = mix(c, mix(vec3(0.14, 0.17, 0.40), setHor, hor), twi * 0.94);

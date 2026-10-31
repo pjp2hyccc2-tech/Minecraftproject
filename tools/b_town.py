@@ -296,7 +296,7 @@ def build(w, rnd=None):
     w.area('okawa', '大川町', '川と駅のある町', (420, 40, -200, 790, 140, 200), 'spot.okawa')
     w.area('okawa_station', '大川駅', '川霧線 始発駅', (600, 60, 30, 655, 85, 50))
     w.check(632, G + 1, 35, 'ticket machine')
-    w.viewpoint('okawa_station', 626, 74, 18, 0, 20, time=6000)
+    w.viewpoint('okawa_station', 626, 72, 14, 0, 18, time=6000)
     w.viewpoint('shotengai', 601, 70, 18, 180, 5, time=6000)
     w.viewpoint('okawa_river', 551, 72, -40, 0, 15, time=11000)
     fix_stairs(w, 540, 60, -80, 680, 90, 50)

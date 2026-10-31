@@ -71,8 +71,8 @@ vec4 ssr(vec3 vp, vec3 nV, float dither) {
 #endif
 
 float fogDensity(float h) {
-    float d = 0.0016 + 0.0035 * rMount() + 0.0012 * rSea();
-    d += 0.0065 * rMount() * tGolden(h);                    // morning / evening mist in the misty valley
+    float d = 0.0009 + 0.0022 * rMount() + 0.0005 * rSea();
+    d += 0.0040 * rMount() * tGolden(h);                    // morning / evening mist in the misty valley
     d *= mix(1.0, 0.55, tNight(h));                         // crisp night air keeps city lights sharp
     d += 0.010 * rainStrength;
     return d * FOG_DENSITY;
@@ -83,8 +83,8 @@ vec3 applyFog(vec3 col, vec3 pPos, vec3 sd) {
     vec3 dir = pPos / max(dist, 1e-3);
     float wy = pPos.y + cameraPosition.y;
     float hf = exp(-max(wy - 66.0, 0.0) * 0.045);          // mist hugs the valleys and the sea
-    float amount = 1.0 - exp(-dist * fogDensity(sd.y) * (0.5 + 1.5 * hf));
-    float edge = smoothstep(far * 0.70, far * 0.98, dist);  // fade the edge of the loaded world into the sky
+    float amount = 1.0 - exp(-dist * fogDensity(sd.y) * (0.6 + 0.9 * hf));
+    float edge = smoothstep(far * 0.80, far * 1.0, dist);  // fade the edge of the loaded world into the sky
     vec3 fc = skyRadiance(dir, sd);
     fc += sunLight(sd.y) * pow(max(dot(dir, lightDirW()), 0.0), 8.0) * 0.12;
     return mix(col, fc, clamp(max(amount, edge), 0.0, 1.0));

@@ -613,8 +613,8 @@ def build(w, line):
     fix_connections(w, -40, 60, -20, 30, 90, 10)
     # screenshot viewpoints for the new details
     sz, g0 = line['shiomi_z'], line['shiomi_ytop']
-    w.viewpoint('shiomi_crossing', 2131.5, g0 + 2.6, sz - 12.5, -30, 8, time=11800, mode='spectator')
+    w.viewpoint('shiomi_crossing', 2131.5, g0 + 2.6, sz - 12.5, -30, 8, time=12550, mode='spectator')
     w.viewpoint('kobe_junction_night', 3560.5, KG + 3.6, 716.5, -133, 6, time=14500, mode='spectator')
     w.viewpoint('village_kura', -12.5, VG + 3.6, 9.5, 150, 6, time=1500, mode='spectator')
-    w.viewpoint('engawa_evening', -6.5, VG + 3.2, 12.5, 180, 14, time=12300, mode='spectator')
+    w.viewpoint('engawa_evening', -6.5, VG + 3.2, 12.5, 180, 14, time=12600, mode='spectator')
     print('deco:', ', '.join(f'{k.replace("tabi:", "")} {v}' for k, v in sorted(STATS.items())))

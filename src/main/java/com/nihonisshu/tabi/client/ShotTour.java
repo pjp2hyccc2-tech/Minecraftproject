@@ -123,7 +123,7 @@ public final class ShotTour {
                 cmd(mc, String.format("execute in tabi:japan run tp @s %.1f %.1f %.1f %.1f %.1f", p.get(0).getAsDouble(), p.get(1).getAsDouble(),
                         p.get(2).getAsDouble(), TabiData.dbl(v, "yaw", 0), TabiData.dbl(v, "pitch", 0)));
                 mc.options.hideGui = !v.has("gui");
-                wait = TabiData.integer(v, "wait", 160);
+                wait = TabiData.integer(v, "wait", 160) * Math.max(1, Integer.getInteger("tabi.shots.waitmul", 1));
                 stage = 2;
             }
             case 2 -> {

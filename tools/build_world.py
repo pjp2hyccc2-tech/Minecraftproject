@@ -63,7 +63,7 @@ def main():
     print(f'deco done ({time.time() - t0:.0f}s)')
     # 4. a few views along the line
     sz = line['shiomi_z']
-    w.viewpoint('shiomi_bridge', 2096, line['shiomi_ytop'] + 2.6, sz - 5, -28, -18, time=11500, mode='spectator')
+    w.viewpoint('shiomi_bridge', 2118, line['shiomi_ytop'] + 2.6, sz - 3, -40, -6, time=12650, mode='spectator')
     w.viewpoint('akashi_bridge_night', 2110, 80, sz + 26, -32, -8, time=15000, mode='spectator')
     w.viewpoint('kirigaya', 1245, line['kiri_ytop'] + 4, 90, 0, 18, time=3000, mode='spectator')
     w.viewpoint('train_ride', 622.5, 69, 46.5, -90, 5, time=6000, mode='creative', ride='kawagiri', look=90, interval=500)

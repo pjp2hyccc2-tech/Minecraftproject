@@ -37,12 +37,14 @@ void main() {
 #endif
     vec4 viewPos = gl_ModelViewMatrix * gl_Vertex;
     playerPos = (gbufferModelViewInverse * viewPos).xyz;
-#if defined PROGRAM_TERRAIN && defined WAVING_PLANTS
+#ifdef PROGRAM_TERRAIN
+#ifdef WAVING_PLANTS
     vec3 wp = playerPos + cameraPosition;
     bool top = texcoord.y < mc_midTexCoord.y;
     if (mat == 20 && top) playerPos += sway(wp, 0.09, 1.6);
     else if (mat == 21) playerPos += sway(wp, 0.035, 1.2);
     else if (mat == 22 && !top) playerPos += sway(wp, 0.06, 2.1);
+#endif
 #endif
     vec3 nP = mat3(gbufferModelViewInverse) * normalV;
     vec4 sp = shadowProjection * (shadowModelView * vec4(playerPos + nP * 0.06, 1.0));

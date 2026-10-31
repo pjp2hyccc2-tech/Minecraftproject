@@ -56,7 +56,8 @@ void main() {
 #endif
     // exposure: opens up at night and indoors so lamplit streets and rooms read well
     float eyeSky = float(eyeBrightnessSmooth.y) / 240.0;
-    col *= EXPOSURE * mix(2.8, 1.0, day * mix(0.55, 1.0, eyeSky)) * mix(1.0, 1.25, blueH);
+    float dayE = smoothstep(-0.06, 0.14, h);
+    col *= EXPOSURE * mix(2.8, 1.0, dayE * mix(0.55, 1.0, eyeSky)) * mix(1.0, 1.25, blueH);
     // white balance per scene and time of day (linear light, before the tone curve)
     vec3 wb = vec3(1.0);
     wb *= mix(vec3(1.0), vec3(1.07, 1.00, 0.88), vil);      // village: warm, nostalgic summer
@@ -77,7 +78,7 @@ void main() {
     col = mix(vec3(luma(col)), col, mix(1.0, sat, GRADING_STRENGTH));
     col = clamp(col, 0.0, 1.0);
     col = mix(col, col * col * (3.0 - 2.0 * col), 0.16 * GRADING_STRENGTH);  // gentle S-curve
-    col = col * (1.0 - 0.035 * vil) + 0.025 * vil;                             // faded film blacks in the village
+    col = col * (1.0 - 0.02 * vil) + 0.012 * vil;                             // faded film blacks in the village
     // vignette + film grain
     vec2 q = (uv - 0.5) * vec2(viewWidth / viewHeight, 1.0);
     col *= 1.0 - VIGNETTE_STRENGTH * 0.28 * pow(dot(q, q) * 1.25, 1.3) * (1.0 + 0.5 * night);
