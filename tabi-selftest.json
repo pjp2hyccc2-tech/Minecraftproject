@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "errors": [],
+  "info": [
+    "starting",
+    "shops: 21 shops, 64 items",
+    "npcs: 65 placed, 44 profiles, 838 dialogue lines",
+    "routes: 3",
+    "block checks 10/10",
+    "NPCs near spawn: 3",
+    "spawned train kawagiri at 霧ヶ谷 s\u003d651",
+    "train moved 642 blocks, state 2, station 1"
+  ]
+}
