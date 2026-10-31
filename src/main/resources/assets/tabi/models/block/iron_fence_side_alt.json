@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/template_glass_pane_side_alt",
+ "textures": {
+  "pane": "tabi:block/iron_fence_pane",
+  "edge": "tabi:block/iron_fence_edge"
+ },
+ "render_type": "minecraft:cutout"
+}

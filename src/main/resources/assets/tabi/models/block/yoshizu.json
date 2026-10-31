@@ -1,0 +1,78 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "r": "tabi:block/yoshizu_r",
+  "particle": "tabi:block/yoshizu_r"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    12
+   ],
+   "to": [
+    16,
+    16,
+    13
+   ],
+   "faces": {
+    "north": {
+     "texture": "#r",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#r",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "east": {
+     "texture": "#r",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "west": {
+     "texture": "#r",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "up": {
+     "texture": "#r",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "down": {
+     "texture": "#r",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

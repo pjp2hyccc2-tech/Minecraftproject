@@ -1,0 +1,147 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "m": "tabi:block/barber_pole_m",
+  "c": "tabi:block/barber_pole_c",
+  "particle": "tabi:block/barber_pole_m"
+ },
+ "elements": [
+  {
+   "from": [
+    5,
+    0,
+    5
+   ],
+   "to": [
+    11,
+    14,
+    11
+   ],
+   "faces": {
+    "north": {
+     "texture": "#m",
+     "uv": [
+      5,
+      2,
+      11,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#m",
+     "uv": [
+      5,
+      2,
+      11,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#m",
+     "uv": [
+      5,
+      2,
+      11,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#m",
+     "uv": [
+      5,
+      2,
+      11,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#m",
+     "uv": [
+      5,
+      5,
+      11,
+      11
+     ]
+    },
+    "down": {
+     "texture": "#m",
+     "uv": [
+      5,
+      5,
+      11,
+      11
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    4,
+    14,
+    4
+   ],
+   "to": [
+    12,
+    16,
+    12
+   ],
+   "faces": {
+    "north": {
+     "texture": "#c",
+     "uv": [
+      4,
+      0.0,
+      12,
+      2
+     ]
+    },
+    "south": {
+     "texture": "#c",
+     "uv": [
+      4,
+      0.0,
+      12,
+      2
+     ]
+    },
+    "east": {
+     "texture": "#c",
+     "uv": [
+      4,
+      0.0,
+      12,
+      2
+     ]
+    },
+    "west": {
+     "texture": "#c",
+     "uv": [
+      4,
+      0.0,
+      12,
+      2
+     ]
+    },
+    "up": {
+     "texture": "#c",
+     "uv": [
+      4,
+      4,
+      12,
+      12
+     ]
+    },
+    "down": {
+     "texture": "#c",
+     "uv": [
+      4,
+      4,
+      12,
+      12
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

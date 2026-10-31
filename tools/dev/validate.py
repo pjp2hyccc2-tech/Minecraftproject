@@ -4,6 +4,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 A = os.path.join(ROOT, 'src/main/resources/assets/tabi')
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 from specs_blocks import BLOCKS
+import specs_deco  # noqa
 errors = []
 def tex_exists(ref):
     ns, path = ref.split(':') if ':' in ref else ('minecraft', ref)
@@ -88,6 +89,8 @@ for s in pal:
             allowed = {'age'}
         if k == 'rice':
             allowed = {'age', 'waterlogged'}
+        if k == 'crossing':
+            allowed = {'facing', 'flash'}
         bad = set(props) - allowed
         if bad:
             errors.append(f'palette: {s} has invalid props {bad}')

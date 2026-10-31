@@ -1,0 +1,147 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "b": "tabi:block/monohoshi_b",
+  "t": "tabi:block/monohoshi_t",
+  "particle": "tabi:block/monohoshi_b"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    13,
+    7
+   ],
+   "to": [
+    16,
+    15,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#b",
+     "uv": [
+      0.0,
+      1,
+      16.0,
+      3
+     ]
+    },
+    "south": {
+     "texture": "#b",
+     "uv": [
+      0.0,
+      1,
+      16.0,
+      3
+     ]
+    },
+    "east": {
+     "texture": "#b",
+     "uv": [
+      7,
+      1,
+      9,
+      3
+     ]
+    },
+    "west": {
+     "texture": "#b",
+     "uv": [
+      7,
+      1,
+      9,
+      3
+     ]
+    },
+    "up": {
+     "texture": "#b",
+     "uv": [
+      0.0,
+      7,
+      16.0,
+      9
+     ]
+    },
+    "down": {
+     "texture": "#b",
+     "uv": [
+      0.0,
+      7,
+      16.0,
+      9
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    3,
+    5,
+    8
+   ],
+   "to": [
+    10,
+    13,
+    8.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#t",
+     "uv": [
+      6,
+      3,
+      13,
+      11
+     ]
+    },
+    "south": {
+     "texture": "#t",
+     "uv": [
+      3,
+      3,
+      10,
+      11
+     ]
+    },
+    "east": {
+     "texture": "#t",
+     "uv": [
+      7.5,
+      3,
+      8,
+      11
+     ]
+    },
+    "west": {
+     "texture": "#t",
+     "uv": [
+      8,
+      3,
+      8.5,
+      11
+     ]
+    },
+    "up": {
+     "texture": "#t",
+     "uv": [
+      3,
+      8,
+      10,
+      8.5
+     ]
+    },
+    "down": {
+     "texture": "#t",
+     "uv": [
+      3,
+      7.5,
+      10,
+      8
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

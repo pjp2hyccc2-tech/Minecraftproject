@@ -37,6 +37,7 @@ public final class TabiSounds {
     public static final RegistryObject<SoundEvent> DOOR_CLOSE = reg("door_close");
     public static final RegistryObject<SoundEvent> HORN = reg("horn");
     public static final RegistryObject<SoundEvent> BRAKE = reg("brake");
+    public static final RegistryObject<SoundEvent> CROSSING_BELL = reg("crossing_bell");
 
     private static RegistryObject<SoundEvent> reg(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(TabiMod.MODID, name)));

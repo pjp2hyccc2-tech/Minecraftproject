@@ -89,8 +89,35 @@ public final class Grading {
         contrast += (tContrast - contrast) * k;
     }
 
+    private static java.lang.reflect.Method irisInUse;
+    private static Object irisApi;
+    private static boolean irisChecked;
+    private static long irisCheckedAt;
+    private static boolean irisActive;
+
+    /** true while an Oculus/Iris shaderpack (e.g. TabiShaders) is running: it does its own scene grading. */
+    public static boolean shaderPackActive() {
+        long now = System.currentTimeMillis();
+        if (irisChecked && now - irisCheckedAt < 1000) return irisActive;
+        irisCheckedAt = now;
+        try {
+            if (!irisChecked) {
+                irisChecked = true;
+                Class<?> c = Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+                irisApi = c.getMethod("getInstance").invoke(null);
+                irisInUse = c.getMethod("isShaderPackInUse");
+            }
+            irisActive = irisInUse != null && (Boolean) irisInUse.invoke(irisApi);
+        } catch (Throwable t) {
+            irisActive = false;
+            irisInUse = null;
+        }
+        return irisActive;
+    }
+
     public static void apply() {
         if (failed || shader == null || mode == 3) return;
+        if (shaderPackActive()) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
         if (Math.abs(warmth) < 0.01f && Math.abs(saturation - 1) < 0.01f && vignette < 0.01f && contrast < 0.01f) return;

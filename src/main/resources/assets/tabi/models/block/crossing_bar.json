@@ -1,0 +1,78 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "m": "tabi:block/crossing_bar_m",
+  "particle": "tabi:block/crossing_bar_m"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    6,
+    7
+   ],
+   "to": [
+    16,
+    8,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#m",
+     "uv": [
+      0.0,
+      8,
+      16.0,
+      10
+     ]
+    },
+    "south": {
+     "texture": "#m",
+     "uv": [
+      0.0,
+      8,
+      16.0,
+      10
+     ]
+    },
+    "east": {
+     "texture": "#m",
+     "uv": [
+      7,
+      8,
+      9,
+      10
+     ]
+    },
+    "west": {
+     "texture": "#m",
+     "uv": [
+      7,
+      8,
+      9,
+      10
+     ]
+    },
+    "up": {
+     "texture": "#m",
+     "uv": [
+      0.0,
+      7,
+      16.0,
+      9
+     ]
+    },
+    "down": {
+     "texture": "#m",
+     "uv": [
+      0.0,
+      7,
+      16.0,
+      9
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

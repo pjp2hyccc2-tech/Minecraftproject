@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/monohoshi"
+  },
+  "facing=east": {
+   "model": "tabi:block/monohoshi",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/monohoshi",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/monohoshi",
+   "y": 270
+  }
+ }
+}

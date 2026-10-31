@@ -606,7 +606,10 @@ def car_dmu():
                 elif k == 1:
                     st = CREAM
                 elif k in (2, 3, 4):
-                    pillar = (z % 3 == 0) or z in (-17, -16, 15, 16) or abs(z - (-13.5)) < 2 or abs(z - 12.5) < 2
+                    if -10 <= z <= 9:          # saloon: one wide window per seat bay, pillars behind the backrests
+                        pillar = (z - (-10)) % 5 in (0, 4)
+                    else:
+                        pillar = (z % 3 == 0) or z in (-17, -16, 15, 16) or abs(z - (-13.5)) < 2 or abs(z - 12.5) < 2
                     st = CREAM if pillar else GLASS
                 else:
                     st = GREEN

@@ -58,6 +58,9 @@ def main():
     b_kobe.build(w)
     print(f'kobe done ({time.time() - t0:.0f}s)')
     honami_bus(w)
+    import b_deco
+    b_deco.build(w, line)
+    print(f'deco done ({time.time() - t0:.0f}s)')
     # 4. a few views along the line
     sz = line['shiomi_z']
     w.viewpoint('shiomi_bridge', 2096, line['shiomi_ytop'] + 2.6, sz - 5, -28, -18, time=11500, mode='spectator')

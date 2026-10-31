@@ -34,6 +34,9 @@ minecraft {
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
             property 'tabi.shots', System.getenv('TABI_SHOTS') ?: 'false'
+            property 'tabi.shots.only', System.getenv('TABI_SHOTS_ONLY') ?: ''
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             args '--width', '1280', '--height', '720'
         }
 
@@ -48,10 +51,19 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    exclusiveContent {
+        forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // CI only: run the client with Oculus + Embeddium to test the TabiShaders shaderpack
+    if (System.getenv('TABI_OCULUS') == 'true') {
+        runtimeOnly fg.deobf("maven.modrinth:oculus:${System.getenv('OCULUS_VERSION') ?: '1.20.1-1.7.0'}")
+        runtimeOnly fg.deobf("maven.modrinth:embeddium:${System.getenv('EMBEDDIUM_VERSION') ?: '0.3.31+mc1.20.1'}")
+    }
 }
 
 tasks.named('processResources', ProcessResources).configure {

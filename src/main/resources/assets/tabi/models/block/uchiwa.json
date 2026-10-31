@@ -1,0 +1,78 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "u": "tabi:block/uchiwa_u",
+  "particle": "tabi:block/uchiwa_u"
+ },
+ "elements": [
+  {
+   "from": [
+    2,
+    1,
+    15
+   ],
+   "to": [
+    14,
+    15,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#u",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#u",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "east": {
+     "texture": "#u",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "west": {
+     "texture": "#u",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "up": {
+     "texture": "#u",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "down": {
+     "texture": "#u",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

@@ -92,7 +92,12 @@ public final class ShotTour {
                     return;
                 }
                 JsonArray arr = TabiData.meta().getAsJsonArray("viewpoints");
-                if (arr != null) for (JsonElement e : arr) VIEWS.add(e.getAsJsonObject());
+                String only = System.getProperty("tabi.shots.only", "").trim();
+                java.util.Set<String> keep = new java.util.HashSet<>(java.util.Arrays.asList(only.split(",")));
+                if (arr != null) for (JsonElement e : arr) {
+                    JsonObject o = e.getAsJsonObject();
+                    if (only.isEmpty() || keep.contains(TabiData.str(o, "name", ""))) VIEWS.add(o);
+                }
                 TabiMod.LOGGER.info("[tabi-shots] in japan, {} viewpoints", VIEWS.size());
                 cmd(mc, "gamerule doDaylightCycle false");
                 cmd(mc, "gamerule doWeatherCycle false");
@@ -108,7 +113,7 @@ public final class ShotTour {
             }
             case 1 -> {
                 if (index >= VIEWS.size()) {
-                    stage = 3;
+                    stage = System.getProperty("tabi.shots.only", "").isBlank() ? 3 : 8;
                     return;
                 }
                 JsonObject v = VIEWS.get(index);

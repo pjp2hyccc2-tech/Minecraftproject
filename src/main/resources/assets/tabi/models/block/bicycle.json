@@ -1,0 +1,42 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "b": "tabi:block/bicycle_b",
+  "particle": "tabi:block/bicycle_b"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    0,
+    7.5
+   ],
+   "to": [
+    16,
+    16,
+    8.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#b",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#b",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

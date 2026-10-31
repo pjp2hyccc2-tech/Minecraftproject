@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/shimenawa"
+  },
+  "facing=east": {
+   "model": "tabi:block/shimenawa",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/shimenawa",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/shimenawa",
+   "y": 270
+  }
+ }
+}

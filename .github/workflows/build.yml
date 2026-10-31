@@ -63,6 +63,33 @@ jobs:
           set -o pipefail
           timeout 2400 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient --no-daemon 2>&1 | tee client.log
 
+      - name: Client shaderpack tour (Oculus + Embeddium + TabiShaders)
+        id: shaders
+        if: steps.build.outcome == 'success' && hashFiles('ci/shaders.enabled') != ''
+        continue-on-error: true
+        env:
+          TABI_SHOTS: 'true'
+          TABI_OCULUS: 'true'
+          TABI_SHOTS_ONLY: 'village_morning,engawa_evening,village_kura,okawa_station,kirigaya,shiomi_bridge,shiomi_crossing,akashi_bridge_night,port_tower_night,kobe_overview_dusk,venus_dusk,venus_night,kobe_junction_night,meriken_day,train_ride'
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          MESA_GL_VERSION_OVERRIDE: '4.5'
+        run: |
+          mkdir -p run/shaderpacks run/config
+          if [ -d run/screenshots ]; then mv run/screenshots run/screenshots_vanilla; fi
+          (cd shaderpack/TabiShaders && zip -qr ../../run/shaderpacks/TabiShaders.zip shaders)
+          printf 'shadowMapResolution=1024\n' > run/shaderpacks/TabiShaders.zip.txt
+          printf 'enableShaders=true\nshaderPack=TabiShaders.zip\n' > run/config/oculus.properties
+          cp run/config/oculus.properties run/config/iris.properties
+          set -o pipefail
+          rc=0
+          timeout 2700 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient --no-daemon 2>&1 | tee client_shaders.log || rc=$?
+          mkdir -p run/screenshots_shaders
+          mv run/screenshots/*.png run/screenshots_shaders/ 2>/dev/null || true
+          cp run/logs/latest.log run/shaders-latest.log 2>/dev/null || true
+          if [ -d run/screenshots_vanilla ]; then rm -rf run/screenshots; mv run/screenshots_vanilla run/screenshots; fi
+          ls run/screenshots_shaders | head -40
+          exit $rc
+
       - name: Publish results to tabi-ci branch
         if: always()
         run: |
@@ -70,6 +97,11 @@ jobs:
           cp build.log out/ 2>/dev/null || true
           cp selftest.log out/ 2>/dev/null || true
           cp client.log out/ 2>/dev/null || true
+          cp client_shaders.log out/ 2>/dev/null || true
+          cp run/shaders-latest.log out/ 2>/dev/null || true
+          mkdir -p out/screenshots_shaders
+          cp run/screenshots_shaders/*.png out/screenshots_shaders/ 2>/dev/null || true
+          (cd shaderpack/TabiShaders && zip -qr ../../out/TabiShaders.zip shaders) || true
           cp build/libs/*.jar out/ 2>/dev/null || true
           mkdir -p out/screenshots
           cp run/screenshots/*.png out/screenshots/ 2>/dev/null || true
@@ -77,7 +109,7 @@ jobs:
           cp run/tabi-selftest.json out/ 2>/dev/null || true
           cp -r run/crash-reports out/ 2>/dev/null || true
           cat > out/summary.json <<EOF
-          {"sha": "${GITHUB_SHA}", "run": "${GITHUB_RUN_NUMBER}", "build": "${{ steps.build.outcome }}", "selftest": "${{ steps.selftest.outcome }}", "shots": "${{ steps.shots.outcome }}"}
+          {"sha": "${GITHUB_SHA}", "run": "${GITHUB_RUN_NUMBER}", "build": "${{ steps.build.outcome }}", "selftest": "${{ steps.selftest.outcome }}", "shots": "${{ steps.shots.outcome }}", "shaders": "${{ steps.shaders.outcome }}"}
           EOF
           cd out
           git init -q

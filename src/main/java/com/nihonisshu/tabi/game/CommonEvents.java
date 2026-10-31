@@ -104,6 +104,7 @@ public final class CommonEvents {
             }
         }
         SelfTest.tick(event.getServer());
+        CrossingManager.tick(event.getServer());
     }
 
     @SubscribeEvent

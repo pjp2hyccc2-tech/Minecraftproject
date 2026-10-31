@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/uchiwa"
+  },
+  "facing=east": {
+   "model": "tabi:block/uchiwa",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/uchiwa",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/uchiwa",
+   "y": 270
+  }
+ }
+}

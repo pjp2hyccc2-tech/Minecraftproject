@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/yoshizu"
+  },
+  "facing=east": {
+   "model": "tabi:block/yoshizu",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/yoshizu",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/yoshizu",
+   "y": 270
+  }
+ }
+}

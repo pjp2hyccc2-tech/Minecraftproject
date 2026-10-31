@@ -1071,3 +1071,314 @@ B('clear_glass', '透明ガラス', 'Clear Glass', 'cube', 'glass', {'all': t_cl
 B('ceiling_fan', '天井の扇風機', 'Ceiling Fan', 'shaped', 'metal', {'m': lambda: t_metal('#9aa3ab', 31), 'b': t_fan_blade},
   elements=[[6, 10, 6, 10, 16, 10, 'm'], [1, 10, 7, 15, 11, 9, 'b'], [7, 10, 1, 9, 11, 15, 'b'], [7, 11, 7, 9, 13, 9, 'm']], facing=False, nocollide=True)
 B('train_lcd', '車内の案内表示', 'Passenger Display', 'facing_cube', 'metal', {'front': t_lcd, 'side': lambda: solid('#2a2e33', 0.03, 32)}, top='side', bottom='side', light=6)
+
+
+# =============================================================== decorative detail blocks (round 2)
+from PIL import ImageFont as _IF
+_FONT = '/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc'
+
+
+def _text(t, xy, s, size, fill):
+    d = t.draw()
+    f = _IF.truetype(_FONT, size)
+    d.text(xy, s, font=f, fill=hexc(fill) if isinstance(fill, str) else fill)
+    t.px = t.im.load()
+
+
+def t_mirror():
+    t = Tex(color=(0, 0, 0, 0), seed=101)
+    ellipse(t, 0, 0, 15, 15, '#ff7a1a')
+    ellipse(t, 2, 2, 13, 13, '#9fb4c4')
+    for y in range(16):
+        for x in range(16):
+            c = t.get(x, y)
+            if c[:3] == hexc('#9fb4c4')[:3]:
+                k = 1.25 - 0.45 * ((x - 4) ** 2 + (y - 4) ** 2) ** 0.5 / 12
+                t.set(x, y, mul(hexc('#a8c4d8'), k))
+    t.set(4, 4, '#ffffff')
+    t.set(5, 4, '#ffffff')
+    t.set(4, 5, '#ffffff')
+    return t
+
+
+def t_pole_orange():
+    t = Tex(color='#ff7a1a', seed=102)
+    for y in range(0, 16, 8):
+        t.rect(0, y, 16, y + 1, '#d85a10')
+    return t
+
+
+def t_signal_front(lit='green'):
+    t = Tex(color='#3a3f45', seed=103)
+    t.frame(0, 0, 16, 16, '#2a2e33')
+    cols = {'green': '#3aff9a', 'yellow': '#ffd23a', 'red': '#ff3a3a'}
+    dim = {'green': '#1f4a33', 'yellow': '#5a4a1f', 'red': '#5a1f1f'}
+    for i, k in enumerate(('green', 'yellow', 'red')):
+        cx = 3 + i * 5
+        ellipse(t, cx - 2, 5, cx + 2, 10, cols[k] if k == lit else dim[k])
+    return t
+
+
+def t_stop_sign():
+    t = Tex(32, 32, (0, 0, 0, 0), seed=104)
+    poly(t, [(0, 2), (31, 2), (15.5, 30)], '#ffffff')
+    poly(t, [(3, 4), (28, 4), (15.5, 26)], '#d8202a')
+    _text(t, (5, 3), '止まれ', 8, '#ffffff')
+    return t
+
+
+def t_crossbuck(state=0):
+    t = Tex(32, 32, (0, 0, 0, 0), seed=105)
+    d = t.draw()
+    for a, b in (((2, 2), (29, 18)), ((29, 2), (2, 18))):
+        d.line([a, b], fill=hexc('#f2c91a'), width=5)
+        d.line([a, b], fill=hexc('#1a1a1a'), width=1)
+    t.px = t.im.load()
+    on = hexc('#ff3020')
+    off = hexc('#5a1a14')
+    ellipse(t, 3, 20, 12, 29, '#1a1a1a')
+    ellipse(t, 19, 20, 28, 29, '#1a1a1a')
+    ellipse(t, 5, 22, 10, 27, on if state == 1 else off)
+    ellipse(t, 21, 22, 26, 27, on if state == 2 else off)
+    t.vline(15, 18, 32, '#2a2a2a')
+    t.vline(16, 18, 32, '#2a2a2a')
+    return t
+
+
+def t_stripes_yb(vertical=True):
+    t = Tex(color='#f2c91a', seed=106)
+    for y in range(16):
+        for x in range(16):
+            if ((x + y) // 4) % 2 == 0:
+                t.set(x, y, '#1a1a1a')
+    return t
+
+
+def t_clock():
+    t = Tex(color=(0, 0, 0, 0), seed=107)
+    ellipse(t, 0, 0, 15, 15, '#1a1a1a')
+    ellipse(t, 1, 1, 14, 14, '#fafaf6')
+    for a in range(12):
+        import math as _m
+        x = 7.5 + 5.6 * _m.cos(a * _m.pi / 6)
+        y = 7.5 + 5.6 * _m.sin(a * _m.pi / 6)
+        t.set(int(round(x)), int(round(y)), '#1a1a1a')
+    d = t.draw()
+    d.line([(7.5, 7.5), (4.5, 4.8)], fill=hexc('#1a1a1a'), width=1)     # 10 o'clock hand
+    d.line([(7.5, 7.5), (11.5, 4.5)], fill=hexc('#1a1a1a'), width=1)    # 2 (10:10)
+    t.px = t.im.load()
+    t.set(7, 7, '#c0392b')
+    return t
+
+
+def t_barber():
+    t = Tex(color='#ffffff', seed=108)
+    for y in range(16):
+        for x in range(16):
+            k = (x + y) % 12
+            if k < 4:
+                t.set(x, y, '#d8202a')
+            elif 6 <= k < 10:
+                t.set(x, y, '#1f4aa8')
+    return t
+
+
+def t_kamado_front():
+    t = Tex(color='#e8e2d4', seed=109)
+    t.noise(0.04)
+    for cx in (4, 11):
+        ellipse(t, cx - 3, 6, cx + 2, 13, '#1c1612')
+        t.set(cx - 1, 11, '#ff7a2a')
+        t.set(cx, 12, '#ffb04a')
+    t.rect(0, 14, 16, 16, '#8a8478')
+    return t
+
+
+def t_pot():
+    t = Tex(color='#1f1f22', seed=110)
+    t.noise(0.08)
+    return t
+
+
+def t_tsukubai():
+    t = stones('#8a877e', '#6a675e', seed=111, n=4)
+    ellipse(t, 3, 3, 12, 12, '#2a5a78')
+    t.set(6, 6, '#8ac4e8')
+    return t
+
+
+def t_bamboo():
+    t = Tex(color='#a8b06a', seed=112)
+    for y in range(16):
+        for x in range(16):
+            t.set(x, y, mul(hexc('#a8b06a'), 0.9 + 0.2 * ((x % 4) == 1)))
+    t.hline(5, 0, 16, '#7a8044')
+    t.hline(12, 0, 16, '#7a8044')
+    return t
+
+
+def t_geta():
+    t = planks('#c8a070', seed=113, board=16, grain=0.08, seam=1.0)
+    t.rect(6, 2, 10, 4, '#c0392b')
+    t.rect(4, 4, 6, 7, '#c0392b')
+    t.rect(10, 4, 12, 7, '#c0392b')
+    return t
+
+
+def t_towel():
+    t = Tex(color='#f4f4f0', seed=114)
+    t.rect(0, 3, 16, 5, '#5a8ac8')
+    t.rect(0, 11, 16, 12, '#5a8ac8')
+    t.noise(0.03)
+    return t
+
+
+def t_onigawara():
+    t = Tex(color='#5d646e', seed=115)
+    t.noise(0.05)
+    ellipse(t, 2, 2, 13, 13, '#4a5059')
+    ellipse(t, 4, 5, 6, 7, '#2a2e33')
+    ellipse(t, 9, 5, 11, 7, '#2a2e33')
+    t.rect(5, 9, 11, 11, '#2a2e33')
+    t.set(3, 2, '#7b838d')
+    t.set(12, 2, '#7b838d')
+    return t
+
+
+def t_bin():
+    t = Tex(color='#2f7a4a', seed=116)
+    t.noise(0.04)
+    t.rect(0, 5, 16, 9, '#f4f4f0')
+    _text(t, (1, 4), 'ごみ', 4, '#2a2a2a')
+    t.rect(0, 0, 16, 2, '#245f39')
+    return t
+
+
+def t_bicycle():
+    t = Tex(color=(0, 0, 0, 0), seed=117)
+    d = t.draw()
+    d.ellipse([0, 7, 6, 13], outline=hexc('#2a2a2a'))
+    d.ellipse([9, 7, 15, 13], outline=hexc('#2a2a2a'))
+    d.line([(3, 10), (7, 6), (12, 10)], fill=hexc('#c0392b'))
+    d.line([(7, 6), (8, 10), (3, 10)], fill=hexc('#c0392b'))
+    d.line([(6, 5), (8, 5)], fill=hexc('#1a1a1a'))
+    d.line([(11, 4), (12, 10)], fill=hexc('#9aa0a6'))
+    d.line([(10, 4), (13, 4)], fill=hexc('#1a1a1a'))
+    d.rectangle([10, 5, 14, 7], outline=hexc('#9aa0a6'))
+    t.px = t.im.load()
+    return t
+
+
+def t_asagao():
+    t = Tex(color=(0, 0, 0, 0), seed=118)
+    for x in (4, 11):
+        t.vline(x, 0, 16, '#b89a6a')
+    for y in range(0, 16, 2):
+        t.set(5 + (y % 4), y, '#3f8a2e')
+        t.set(10 - (y % 4), y + 1, '#4f9a3a')
+    for (x, y, c) in ((5, 3, '#4a5ad8'), (10, 6, '#c04ac8'), (6, 9, '#4a8ad8'), (11, 11, '#4a5ad8'), (8, 1, '#c04ac8')):
+        t.rect(x - 1, y - 1, x + 2, y + 2, c)
+        t.set(x, y, '#ffffff')
+    return t
+
+
+def t_pot_clay():
+    t = Tex(color='#a8603a', seed=119)
+    t.noise(0.06)
+    t.rect(0, 0, 16, 2, '#8a4a2a')
+    return t
+
+
+def t_coil():
+    t = Tex(color=(0, 0, 0, 0), seed=120)
+    import math as _m
+    for i in range(140):
+        a = i * 0.21
+        r = 1 + a * 0.55
+        x, y = 7.5 + r * _m.cos(a), 7.5 + r * _m.sin(a)
+        if r < 7.5:
+            t.set(int(x), int(y), '#3f6a2a')
+    t.set(7, 7, '#ff6a2a')
+    return t
+
+
+def t_rail_signal(state='green'):
+    t = Tex(color='#1f2226', seed=121)
+    cols = {'green': '#3aff9a', 'yellow': '#ffd23a', 'red': '#ff3a3a'}
+    for i, k in enumerate(('red', 'yellow', 'green')):
+        cy = 3 + i * 5
+        ellipse(t, 5, cy - 2, 10, cy + 2, cols[k] if k == state else '#3a3a3a')
+    return t
+
+
+def t_poster(kind):
+    t = Tex(32, 32, '#f4f1e6', seed=122)
+    if kind == 'kobe':
+        for y in range(32):
+            t.rect(1, y, 31, y + 1, mix(hexc('#1f3a6a'), hexc('#e8805a'), y / 22) if y < 22 else hexc('#2a5a8a'))
+        t.rect(1, 22, 31, 31, '#2a5a8a')
+        for y in range(6, 22):
+            w = 1 + abs(y - 12) // 3
+            t.rect(16 - w, y, 16 + w, y + 1, '#d8202a')
+        ellipse(t, 22, 4, 27, 9, '#fff0b0')
+        _text(t, (3, 23), '神戸へ', 6, '#ffffff')
+    else:
+        for y in range(32):
+            t.rect(1, y, 31, y + 1, mix(hexc('#7ac4f0'), hexc('#e8f4ff'), y / 16) if y < 16 else hexc('#2e86b8'))
+        poly(t, [(1, 18), (12, 12), (20, 17), (31, 13), (31, 20), (1, 20)], '#3f8a4a')
+        _text(t, (3, 22), '瀬戸内', 6, '#ffffff')
+    t.frame(0, 0, 32, 32, '#2a2a2a')
+    return t
+
+
+B('pole_orange', 'オレンジの支柱', 'Orange Pole', 'shaped', 'metal', {'m': t_pole_orange}, elements=[[7, 0, 7, 9, 16, 9, 'm']], facing=False)
+B('curve_mirror', 'カーブミラー', 'Traffic Mirror', 'shaped', 'metal', {'f': t_mirror, 'b': lambda: t_metal('#8a9096', 41), 'p': t_pole_orange},
+  elements=[[1, 2, 6, 15, 16, 7, {'n': 'f!', 's': 'b', 'e': 'b', 'w': 'b', 'u': 'b', 'd': 'b'}], [7, 0, 7, 9, 4, 9, 'p']], render='cutout')
+B('traffic_light', '信号機', 'Traffic Light', 'shaped', 'metal', {'f': t_signal_front, 'b': lambda: t_metal('#3a3f45', 42), 'v': lambda: solid('#2a2e33', 0.03, 43)},
+  elements=[[0, 4, 6, 16, 12, 10, {'n': 'f!', 's': 'b', 'e': 'b', 'w': 'b', 'u': 'b', 'd': 'b'}], [0, 11, 4, 16, 12, 6, 'v'], [7, 0, 8, 9, 4, 10, 'b']], light=7)
+B('crossing_pole', '踏切の柱', 'Crossing Pole', 'shaped', 'metal', {'m': t_stripes_yb}, elements=[[6.5, 0, 6.5, 9.5, 16, 9.5, 'm']], facing=False)
+B('crossing_signal', '踏切警報機', 'Crossing Signal', 'crossing', 'metal', {f'x{i}': (lambda i=i: t_crossbuck(i)) for i in range(3)} | {'m': t_stripes_yb})
+B('crossing_bar', '踏切の遮断かん', 'Crossing Bar', 'shaped', 'metal', {'m': t_stripes_yb}, elements=[[0, 6, 7, 16, 8, 9, 'm']], nocollide=True)
+B('bollard', '係船柱', 'Mooring Bollard', 'shaped', 'metal', {'m': lambda: t_metal('#2a2c30', 45)},
+  elements=[[3, 0, 3, 13, 2, 13, 'm'], [5, 2, 5, 11, 9, 11, 'm'], [4, 9, 4, 12, 11, 12, 'm']], facing=False)
+B('life_ring', '救命浮輪', 'Life Ring', 'shaped', 'wood', {'f': lambda: _lifering(), 'b': lambda: solid('#f4f4f0', 0.03, 46)},
+  elements=[[1, 1, 15, 15, 15, 16, {'n': 'f!', 's': 'b', 'e': 'b', 'w': 'b', 'u': 'b', 'd': 'b'}]], nocollide=True)
+B('station_clock', '駅の時計', 'Station Clock', 'shaped', 'metal', {'f': t_clock, 'r': lambda: t_metal('#3a3f45', 47)},
+  elements=[[2, 1, 7, 14, 13, 9, {'n': 'f!', 's': 'f!', 'e': 'r', 'w': 'r', 'u': 'r', 'd': 'r'}], [7.5, 13, 7.5, 8.5, 16, 8.5, 'r']], nocollide=True, render='cutout')
+B('barber_pole', 'サインポール', 'Barber Pole', 'shaped', 'glass', {'m': t_barber, 'c': lambda: solid('#e8f0f8', 0.02, 50)},
+  elements=[[5, 0, 5, 11, 14, 11, 'm'], [4, 14, 4, 12, 16, 12, 'c']], facing=False, light=6)
+B('kamado', 'かまど', 'Kamado Stove', 'shaped', 'stone', {'f': t_kamado_front, 's': lambda: solid('#e8e2d4', 0.04, 51), 'p': t_pot, 'l': t_dark_wood},
+  elements=[[0, 0, 0, 16, 10, 16, {'n': 'f!', 's': 's', 'e': 's', 'w': 's', 'u': 's', 'd': 's'}], [2, 10, 4, 7, 13, 9, 'p'], [9, 10, 4, 14, 13, 9, 'p'],
+            [2, 13, 4, 7, 14, 9, 'l'], [9, 13, 4, 14, 14, 9, 'l']], light=4)
+B('tsukubai', 'つくばい', 'Tsukubai Basin', 'shaped', 'stone', {'t': t_tsukubai, 's': lambda: t_stone('#8a877e', 52), 'b': t_bamboo},
+  elements=[[2, 0, 2, 14, 7, 14, {'n': 's', 's': 's', 'e': 's', 'w': 's', 'u': 't', 'd': 's'}], [7, 8, 8, 9, 10, 16, 'b']])
+B('geta', '下駄', 'Geta Sandals', 'shaped', 'wood', {'g': t_geta}, elements=[[3, 0, 3, 7, 2, 13, 'g'], [9, 0, 3, 13, 2, 13, 'g']], nocollide=True)
+B('monohoshi', '物干し竿', 'Laundry Pole', 'shaped', 'wood', {'b': t_bamboo, 't': t_towel},
+  elements=[[0, 13, 7, 16, 15, 9, 'b'], [3, 5, 8, 10, 13, 8.5, 't']], nocollide=True)
+B('onigawara', '鬼瓦', 'Onigawara Ridge Tile', 'shaped', 'tile', {'f': t_onigawara, 's': lambda: t_kawara()},
+  elements=[[1, 0, 6, 15, 14, 10, {'n': 'f!', 's': 'f!', 'e': 's', 'w': 's', 'u': 's', 'd': 's'}]])
+B('trash_bin', 'ごみ箱', 'Litter Bin', 'shaped', 'metal', {'f': t_bin, 'l': lambda: solid('#245f39', 0.03, 53)},
+  elements=[[4, 0, 4, 12, 11, 12, 'f'], [3, 11, 3, 13, 12, 13, 'l']])
+B('bicycle', '自転車', 'Bicycle', 'shaped', 'metal', {'b': t_bicycle},
+  elements=[[0, 0, 7.5, 16, 16, 8.5, {'n': 'b!', 's': 'b!'}]], nocollide=True, render='cutout')
+B('asagao', '朝顔の鉢', 'Morning Glory Pot', 'shaped', 'plant', {'v': t_asagao, 'p': t_pot_clay},
+  elements=[[4, 0, 4, 12, 5, 12, 'p'], [1, 5, 8, 15, 16, 8, {'n': 'v!', 's': 'v!'}, {'origin': [8, 8, 8], 'axis': 'y', 'angle': 45, 'rescale': True}],
+            [8, 5, 1, 8, 16, 15, {'e': 'v!', 'w': 'v!'}, {'origin': [8, 8, 8], 'axis': 'y', 'angle': 45, 'rescale': True}]],
+  facing=False, render='cutout', shape=[4, 0, 4, 12, 12, 12])
+B('katori_senko', '蚊取り線香', 'Mosquito Coil', 'shaped', 'plant', {'c': t_coil, 'm': lambda: solid('#3a6a8a', 0.04, 54)},
+  elements=[[3, 0, 3, 13, 1, 13, 'm'], [3, 1, 3, 13, 1.5, 13, {'u': 'c!'}]], nocollide=True, facing=False, render='cutout')
+B('rail_signal', '鉄道信号機', 'Railway Signal', 'shaped', 'metal', {'f': lambda: t_rail_signal('green'), 'b': lambda: solid('#1f2226', 0.03, 55)},
+  elements=[[5, 0, 6, 11, 16, 10, {'n': 'f!', 's': 'b', 'e': 'b', 'w': 'b', 'u': 'b', 'd': 'b'}]], light=6)
+B('poster_kobe', '旅のポスター（神戸）', 'Travel Poster (Kobe)', 'shaped', 'paper', {'f': lambda: t_poster('kobe'), 'b': lambda: solid('#f4f1e6', 0.02, 56)},
+  elements=[[1, 0, 15, 15, 16, 16, {'n': 'f!', 's': 'b', 'e': 'b', 'w': 'b', 'u': 'b', 'd': 'b'}]], nocollide=True)
+B('poster_sea', '旅のポスター（瀬戸内）', 'Travel Poster (Seto)', 'shaped', 'paper', {'f': lambda: t_poster('sea'), 'b': lambda: solid('#f4f1e6', 0.02, 57)},
+  elements=[[1, 0, 15, 15, 16, 16, {'n': 'f!', 's': 'b', 'e': 'b', 'w': 'b', 'u': 'b', 'd': 'b'}]], nocollide=True)
+
+
+def _lifering():
+    t = Tex(color='#f4f4f0', seed=58)
+    ellipse(t, 1, 1, 14, 14, '#ff6a1a')
+    ellipse(t, 5, 5, 10, 10, '#f4f4f0')
+    for (x, y) in ((7, 1), (7, 13), (1, 7), (13, 7)):
+        t.rect(x, y, x + 2, y + 2, '#f4f4f0')
+    return t

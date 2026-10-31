@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/rice_cooker"
+  },
+  "facing=east": {
+   "model": "tabi:block/rice_cooker",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/rice_cooker",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/rice_cooker",
+   "y": 270
+  }
+ }
+}

@@ -1,0 +1,144 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "s": "tabi:block/flower_planter_s",
+  "f": "tabi:block/flower_planter_f",
+  "d": "tabi:block/flower_planter_d",
+  "particle": "tabi:block/flower_planter_s"
+ },
+ "elements": [
+  {
+   "from": [
+    1,
+    0,
+    1
+   ],
+   "to": [
+    15,
+    6,
+    15
+   ],
+   "faces": {
+    "north": {
+     "texture": "#s",
+     "uv": [
+      1,
+      10,
+      15,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#s",
+     "uv": [
+      1,
+      10,
+      15,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#s",
+     "uv": [
+      1,
+      10,
+      15,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#s",
+     "uv": [
+      1,
+      10,
+      15,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#d",
+     "uv": [
+      1,
+      1,
+      15,
+      15
+     ]
+    },
+    "down": {
+     "texture": "#s",
+     "uv": [
+      1,
+      1,
+      15,
+      15
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    2,
+    6,
+    8
+   ],
+   "to": [
+    14,
+    15,
+    8
+   ],
+   "faces": {
+    "north": {
+     "texture": "#f",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#f",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    8,
+    6,
+    2
+   ],
+   "to": [
+    8,
+    15,
+    14
+   ],
+   "faces": {
+    "east": {
+     "texture": "#f",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "west": {
+     "texture": "#f",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

@@ -1,0 +1,7 @@
+{
+ "variants": {
+  "": {
+   "model": "tabi:block/car_stop_post"
+  }
+ }
+}

@@ -9,6 +9,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 from specs_blocks import BLOCKS  # noqa: E402
+import specs_deco  # noqa: E402,F401  (registers the decorative blocks into BLOCKS)
 from specs_items import ITEM_SPRITES  # noqa: E402
 from skins import SKINS, make_skin  # noqa: E402
 import sounds  # noqa: E402
@@ -172,7 +173,9 @@ for b in BLOCKS:
     props = f'BlockBehaviour.Properties.of().mapColor(MapColor.{p["map"]}).strength({p["strength"][0]}f, {p["strength"][1]}f).sound(SoundType.{p["sound"]})'
     if b.get('light'):
         props += f'.lightLevel(s -> {b["light"]})'
-    if b['id'] in ('window_lit', 'window_lit_cool', 'neon_sign', 'vending_machine_top', 'gas_lamp', 'street_lamp', 'chochin', 'kenbaiki_top', 'red_steel_lit', 'train_lcd', 'white_steel_lit'):
+    if b['id'] in ('window_lit', 'window_lit_cool', 'neon_sign', 'vending_machine_top', 'gas_lamp', 'street_lamp', 'chochin', 'kenbaiki_top', 'red_steel_lit',
+                   'train_lcd', 'white_steel_lit', 'departure_board', 'barber_pole', 'vending_machine_red_top', 'aviation_light',
+                   'traffic_light', 'ped_signal', 'rail_signal'):
         props += '.emissiveRendering((s, l, q) -> true)'
     solid_cube = kind in ('cube', 'cube_bt', 'facing_cube', 'pillar') and not render
     if not solid_cube and kind not in ('stairs', 'slab'):
@@ -251,6 +254,24 @@ for b in BLOCKS:
         wjson(f'{BS}/{bid}.json', {'variants': {f'age={a}': {'model': f'{M}_stage{a}'} for a in range(4)}})
         ctor = f'new RicePlantBlock({props})'
         item_model = None
+    elif kind == 'crossing':
+        for i in range(3):
+            els = [{'from': [6.5, 0, 6.5], 'to': [9.5, 6, 9.5], 'faces': {f: {'texture': '#m', 'uv': default_uv(f, (6.5, 0, 6.5), (9.5, 6, 9.5))}
+                                                                        for f in ('north', 'south', 'east', 'west', 'up', 'down')}},
+                   {'from': [0, 2, 7.5], 'to': [16, 18, 8.5], 'faces': {'north': {'texture': '#x', 'uv': [0, 0, 16, 16]},
+                                                                      'south': {'texture': '#x', 'uv': [0, 0, 16, 16]}}}]
+            wjson(f'{MB}/{bid}_{i}.json', {'parent': 'minecraft:block/block', 'render_type': 'minecraft:cutout',
+                                            'textures': {'particle': texmap['m'], 'm': texmap['m'], 'x': texmap[f'x{i}']}, 'elements': els})
+        v = {}
+        for f, y in (('north', 0), ('east', 90), ('south', 180), ('west', 270)):
+            for i in range(3):
+                d = {'model': f'{M}_{i}'}
+                if y:
+                    d['y'] = y
+                v[f'facing={f},flash={i}'] = d
+        wjson(f'{BS}/{bid}.json', {'variants': v})
+        item_model = {'parent': f'{M}_1'}
+        ctor = f'new CrossingSignalBlock({props}, TabiShapes.horizontal(6.5, 0, 6.5, 9.5, 16, 9.5))'
     else:  # element models: shaped / seat / futon / action / panel
         texs = dict(texmap)
         texs['particle'] = list(texmap.values())[0]

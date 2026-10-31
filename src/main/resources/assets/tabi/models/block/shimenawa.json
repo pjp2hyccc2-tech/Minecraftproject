@@ -1,0 +1,215 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "r": "tabi:block/shimenawa_r",
+  "s": "tabi:block/shimenawa_s",
+  "particle": "tabi:block/shimenawa_r"
+ },
+ "elements": [
+  {
+   "from": [
+    0,
+    10,
+    6
+   ],
+   "to": [
+    16,
+    14,
+    10
+   ],
+   "faces": {
+    "north": {
+     "texture": "#r",
+     "uv": [
+      0.0,
+      2,
+      16.0,
+      6
+     ]
+    },
+    "south": {
+     "texture": "#r",
+     "uv": [
+      0.0,
+      2,
+      16.0,
+      6
+     ]
+    },
+    "east": {
+     "texture": "#r",
+     "uv": [
+      6,
+      2,
+      10,
+      6
+     ]
+    },
+    "west": {
+     "texture": "#r",
+     "uv": [
+      6,
+      2,
+      10,
+      6
+     ]
+    },
+    "up": {
+     "texture": "#r",
+     "uv": [
+      0.0,
+      6,
+      16.0,
+      10
+     ]
+    },
+    "down": {
+     "texture": "#r",
+     "uv": [
+      0.0,
+      6,
+      16.0,
+      10
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    3,
+    3,
+    7.5
+   ],
+   "to": [
+    6,
+    10,
+    8.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "east": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "west": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "up": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "down": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    10,
+    3,
+    7.5
+   ],
+   "to": [
+    13,
+    10,
+    8.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "east": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "west": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "up": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "down": {
+     "texture": "#s",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

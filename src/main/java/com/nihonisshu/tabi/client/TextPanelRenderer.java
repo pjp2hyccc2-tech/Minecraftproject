@@ -46,10 +46,13 @@ public class TextPanelRenderer implements BlockEntityRenderer<TextPanelBlockEnti
             case "dark", "info" -> { main = 0xFFFFFFFF; sub = 0xFFDDE6F0; }
             case "gate" -> { main = 0xFFFFD84A; sub = 0xFFFFE68A; }
             case "neon" -> { main = 0xFFFF6FB0; sub = 0xFF9FE8FF; }
+            case "stop" -> { main = 0xFFFFFFFF; sub = 0xFFFFFFFF; }
+            case "led" -> { main = 0xFFFF9A2A; sub = 0xFF8CFFA8; }
+            case "lcd" -> { main = 0xFFFF9A2A; sub = 0xFF7CFC9A; }
             default -> { main = 0xFF202020; sub = 0xFF404040; }
         }
         if (be.getColor() != -1) main = 0xFF000000 | be.getColor();
-        int useLight = be.isGlow() || style.equals("neon") ? LightTexture.FULL_BRIGHT : light;
+        int useLight = be.isGlow() || style.equals("neon") || style.equals("lcd") || style.equals("led") ? LightTexture.FULL_BRIGHT : light;
 
         ps.pushPose();
         ps.translate(0.5, 0.5, 0.5);

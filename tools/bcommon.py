@@ -488,8 +488,12 @@ def fence_line(w, pts, y, block='minecraft:spruce_fence'):
 
 
 # ===================================================================== connection fixing for panes / fences
-_PANE_HINTS = ('_pane', 'iron_bars', 'tabi:shoji', 'tabi:fusuma', 'tabi:bamboo_fence', 'tabi:sash_window', 'tabi:love_lock_fence', 'tabi:railing')
-_NONSOLID = ('air', 'stairs', 'slab', 'leaves', 'door', 'lantern', 'torch', 'carpet', 'water', 'bamboo', 'grass[', 'short_grass', 'flower',
+_PANE_HINTS = ('_pane', 'iron_bars', 'tabi:shoji', 'tabi:fusuma', 'tabi:bamboo_fence', 'tabi:sash_window', 'tabi:love_lock_fence', 'tabi:railing', 'tabi:koshi', 'tabi:iron_fence')
+_NONSOLID = ('air', 'tabi:power_line', 'tabi:traffic_light', 'tabi:ped_signal', 'tabi:curve_mirror', 'tabi:pole_orange', 'tabi:stop_sign',
+             'tabi:crossing', 'tabi:station_clock', 'tabi:departure_board', 'tabi:bollard', 'tabi:life_ring', 'tabi:aviation_light',
+             'tabi:palm_fronds', 'tabi:barber_pole', 'tabi:poster', 'tabi:bicycle', 'tabi:trash_bin', 'tabi:asagao', 'tabi:katori_senko',
+             'tabi:uchiwa', 'tabi:suika_plate', 'tabi:yoshizu', 'tabi:geta', 'tabi:monohoshi', 'tabi:rail_signal', 'tabi:car_stop_post',
+             'tabi:flower_planter', 'tabi:shimenawa', 'tabi:komainu', 'tabi:ema_rack', 'tabi:public_phone', 'tabi:onigawara', 'tabi:tetrapod', 'stairs', 'slab', 'leaves', 'door', 'lantern', 'torch', 'carpet', 'water', 'bamboo', 'grass[', 'short_grass', 'flower',
              'tabi:chochin', 'tabi:noren', 'tabi:sudare', 'tabi:street_lamp', 'tabi:gas_lamp', 'tabi:lamp_pole', 'tabi:sign_pole', 'tabi:utility_pole',
              'tabi:weathercock', 'tabi:furin', 'tabi:jizo', 'tabi:stone_lantern', 'tabi:mailbox', 'tabi:shop_sign', 'tabi:gate_plaque', 'tabi:neon_sign',
              'tabi:station_sign', 'tabi:info_board', 'tabi:bus_stop_sign', 'tabi:track', 'tabi:guardrail', 'rail', 'button', 'sign', 'tabi:kakejiku',

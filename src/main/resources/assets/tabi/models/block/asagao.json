@@ -1,0 +1,163 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "v": "tabi:block/asagao_v",
+  "p": "tabi:block/asagao_p",
+  "particle": "tabi:block/asagao_v"
+ },
+ "elements": [
+  {
+   "from": [
+    4,
+    0,
+    4
+   ],
+   "to": [
+    12,
+    5,
+    12
+   ],
+   "faces": {
+    "north": {
+     "texture": "#p",
+     "uv": [
+      4,
+      11,
+      12,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#p",
+     "uv": [
+      4,
+      11,
+      12,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#p",
+     "uv": [
+      4,
+      11,
+      12,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#p",
+     "uv": [
+      4,
+      11,
+      12,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#p",
+     "uv": [
+      4,
+      4,
+      12,
+      12
+     ]
+    },
+    "down": {
+     "texture": "#p",
+     "uv": [
+      4,
+      4,
+      12,
+      12
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    1,
+    5,
+    8
+   ],
+   "to": [
+    15,
+    16,
+    8
+   ],
+   "faces": {
+    "north": {
+     "texture": "#v",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#v",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   },
+   "rotation": {
+    "origin": [
+     8,
+     8,
+     8
+    ],
+    "axis": "y",
+    "angle": 45,
+    "rescale": true
+   }
+  },
+  {
+   "from": [
+    8,
+    5,
+    1
+   ],
+   "to": [
+    8,
+    16,
+    15
+   ],
+   "faces": {
+    "east": {
+     "texture": "#v",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "west": {
+     "texture": "#v",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    }
+   },
+   "rotation": {
+    "origin": [
+     8,
+     8,
+     8
+    ],
+    "axis": "y",
+    "angle": 45,
+    "rescale": true
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

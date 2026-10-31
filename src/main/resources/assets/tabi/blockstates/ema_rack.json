@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/ema_rack"
+  },
+  "facing=east": {
+   "model": "tabi:block/ema_rack",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/ema_rack",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/ema_rack",
+   "y": 270
+  }
+ }
+}

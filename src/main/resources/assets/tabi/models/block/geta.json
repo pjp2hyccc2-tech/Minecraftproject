@@ -1,0 +1,146 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "g": "tabi:block/geta_g",
+  "particle": "tabi:block/geta_g"
+ },
+ "elements": [
+  {
+   "from": [
+    3,
+    0,
+    3
+   ],
+   "to": [
+    7,
+    2,
+    13
+   ],
+   "faces": {
+    "north": {
+     "texture": "#g",
+     "uv": [
+      9,
+      14,
+      13,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#g",
+     "uv": [
+      3,
+      14,
+      7,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#g",
+     "uv": [
+      3,
+      14,
+      13,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#g",
+     "uv": [
+      3,
+      14,
+      13,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#g",
+     "uv": [
+      3,
+      3,
+      7,
+      13
+     ]
+    },
+    "down": {
+     "texture": "#g",
+     "uv": [
+      3,
+      3,
+      7,
+      13
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    9,
+    0,
+    3
+   ],
+   "to": [
+    13,
+    2,
+    13
+   ],
+   "faces": {
+    "north": {
+     "texture": "#g",
+     "uv": [
+      3,
+      14,
+      7,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#g",
+     "uv": [
+      9,
+      14,
+      13,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#g",
+     "uv": [
+      3,
+      14,
+      13,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#g",
+     "uv": [
+      3,
+      14,
+      13,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#g",
+     "uv": [
+      9,
+      3,
+      13,
+      13
+     ]
+    },
+    "down": {
+     "texture": "#g",
+     "uv": [
+      9,
+      3,
+      13,
+      13
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

@@ -1,0 +1,79 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "f": "tabi:block/poster_kobe_f",
+  "b": "tabi:block/poster_kobe_b",
+  "particle": "tabi:block/poster_kobe_f"
+ },
+ "elements": [
+  {
+   "from": [
+    1,
+    0,
+    15
+   ],
+   "to": [
+    15,
+    16,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#f",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#b",
+     "uv": [
+      1,
+      0.0,
+      15,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#b",
+     "uv": [
+      0.0,
+      0.0,
+      1,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#b",
+     "uv": [
+      15,
+      0.0,
+      16.0,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#b",
+     "uv": [
+      1,
+      15,
+      15,
+      16.0
+     ]
+    },
+    "down": {
+     "texture": "#b",
+     "uv": [
+      1,
+      0.0,
+      15,
+      1
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

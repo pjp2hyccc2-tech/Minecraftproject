@@ -1,0 +1,214 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "p": "tabi:block/rice_cooker_p",
+  "particle": "tabi:block/rice_cooker_p"
+ },
+ "elements": [
+  {
+   "from": [
+    4,
+    0,
+    4
+   ],
+   "to": [
+    12,
+    6,
+    12
+   ],
+   "faces": {
+    "north": {
+     "texture": "#p",
+     "uv": [
+      4,
+      10,
+      12,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#p",
+     "uv": [
+      4,
+      10,
+      12,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#p",
+     "uv": [
+      4,
+      10,
+      12,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#p",
+     "uv": [
+      4,
+      10,
+      12,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#p",
+     "uv": [
+      4,
+      4,
+      12,
+      12
+     ]
+    },
+    "down": {
+     "texture": "#p",
+     "uv": [
+      4,
+      4,
+      12,
+      12
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    4.5,
+    6,
+    4.5
+   ],
+   "to": [
+    11.5,
+    7.5,
+    11.5
+   ],
+   "faces": {
+    "north": {
+     "texture": "#p",
+     "uv": [
+      4.5,
+      8.5,
+      11.5,
+      10
+     ]
+    },
+    "south": {
+     "texture": "#p",
+     "uv": [
+      4.5,
+      8.5,
+      11.5,
+      10
+     ]
+    },
+    "east": {
+     "texture": "#p",
+     "uv": [
+      4.5,
+      8.5,
+      11.5,
+      10
+     ]
+    },
+    "west": {
+     "texture": "#p",
+     "uv": [
+      4.5,
+      8.5,
+      11.5,
+      10
+     ]
+    },
+    "up": {
+     "texture": "#p",
+     "uv": [
+      4.5,
+      4.5,
+      11.5,
+      11.5
+     ]
+    },
+    "down": {
+     "texture": "#p",
+     "uv": [
+      4.5,
+      4.5,
+      11.5,
+      11.5
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    7,
+    7.5,
+    6
+   ],
+   "to": [
+    9,
+    8,
+    10
+   ],
+   "faces": {
+    "north": {
+     "texture": "#p",
+     "uv": [
+      7,
+      8,
+      9,
+      8.5
+     ]
+    },
+    "south": {
+     "texture": "#p",
+     "uv": [
+      7,
+      8,
+      9,
+      8.5
+     ]
+    },
+    "east": {
+     "texture": "#p",
+     "uv": [
+      6,
+      8,
+      10,
+      8.5
+     ]
+    },
+    "west": {
+     "texture": "#p",
+     "uv": [
+      6,
+      8,
+      10,
+      8.5
+     ]
+    },
+    "up": {
+     "texture": "#p",
+     "uv": [
+      7,
+      6,
+      9,
+      10
+     ]
+    },
+    "down": {
+     "texture": "#p",
+     "uv": [
+      7,
+      6,
+      9,
+      10
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

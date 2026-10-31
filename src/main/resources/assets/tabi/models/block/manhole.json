@@ -1,0 +1,8 @@
+{
+ "parent": "minecraft:block/cube_bottom_top",
+ "textures": {
+  "top": "tabi:block/manhole_top",
+  "side": "tabi:block/manhole_side",
+  "bottom": "tabi:block/manhole_side"
+ }
+}

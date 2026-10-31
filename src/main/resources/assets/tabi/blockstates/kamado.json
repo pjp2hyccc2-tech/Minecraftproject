@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/kamado"
+  },
+  "facing=east": {
+   "model": "tabi:block/kamado",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/kamado",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/kamado",
+   "y": 270
+  }
+ }
+}

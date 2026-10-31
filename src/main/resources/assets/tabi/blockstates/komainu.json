@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/komainu"
+  },
+  "facing=east": {
+   "model": "tabi:block/komainu",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/komainu",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/komainu",
+   "y": 270
+  }
+ }
+}

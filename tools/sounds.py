@@ -478,3 +478,17 @@ SOUNDS.update({
     'horn': (s_horn, '警笛', 'Train horn'),
     'brake': (s_brake, 'ブレーキ', 'Brakes'),
 })
+
+
+def s_crossing_bell():
+    """カンカン: two metallic dings (one cycle, repeated by the game every 0.5 s)"""
+    buf = np.zeros(int(SR * 0.55))
+    for at in (0.0, 0.25):
+        n = int(SR * 0.3)
+        t = np.arange(n) / SR
+        sig = (np.sin(2 * np.pi * 1350 * t) + 0.6 * np.sin(2 * np.pi * 2710 * t) + 0.3 * np.sin(2 * np.pi * 4130 * t)) * np.exp(-t * 16)
+        place(buf, sig, at)
+    return norm(buf, 0.7)
+
+
+SOUNDS['crossing_bell'] = (s_crossing_bell, '踏切の警報音', 'Level crossing bell')

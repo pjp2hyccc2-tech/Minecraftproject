@@ -1,0 +1,79 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "f": "tabi:block/rail_signal_f",
+  "b": "tabi:block/rail_signal_b",
+  "particle": "tabi:block/rail_signal_f"
+ },
+ "elements": [
+  {
+   "from": [
+    5,
+    0,
+    6
+   ],
+   "to": [
+    11,
+    16,
+    10
+   ],
+   "faces": {
+    "north": {
+     "texture": "#f",
+     "uv": [
+      0,
+      0,
+      16,
+      16
+     ]
+    },
+    "south": {
+     "texture": "#b",
+     "uv": [
+      5,
+      0.0,
+      11,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#b",
+     "uv": [
+      6,
+      0.0,
+      10,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#b",
+     "uv": [
+      6,
+      0.0,
+      10,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#b",
+     "uv": [
+      5,
+      6,
+      11,
+      10
+     ]
+    },
+    "down": {
+     "texture": "#b",
+     "uv": [
+      5,
+      6,
+      11,
+      10
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

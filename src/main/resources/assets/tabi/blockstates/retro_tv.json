@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/retro_tv"
+  },
+  "facing=east": {
+   "model": "tabi:block/retro_tv",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/retro_tv",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/retro_tv",
+   "y": 270
+  }
+ }
+}

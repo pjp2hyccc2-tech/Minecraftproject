@@ -223,5 +223,14 @@
    }
   ],
   "subtitle": "subtitles.tabi.brake"
+ },
+ "crossing_bell": {
+  "sounds": [
+   {
+    "name": "tabi:crossing_bell",
+    "stream": false
+   }
+  ],
+  "subtitle": "subtitles.tabi.crossing_bell"
  }
 }

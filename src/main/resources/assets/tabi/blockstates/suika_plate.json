@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "tabi:block/suika_plate"
+  },
+  "facing=east": {
+   "model": "tabi:block/suika_plate",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "tabi:block/suika_plate",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "tabi:block/suika_plate",
+   "y": 270
+  }
+ }
+}

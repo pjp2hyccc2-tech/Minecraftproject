@@ -1,0 +1,9 @@
+{
+ "parent": "minecraft:block/orientable_with_bottom",
+ "textures": {
+  "top": "tabi:block/vending_machine_red_top_side",
+  "bottom": "tabi:block/vending_machine_red_top_side",
+  "front": "tabi:block/vending_machine_red_top_front",
+  "side": "tabi:block/vending_machine_red_top_side"
+ }
+}

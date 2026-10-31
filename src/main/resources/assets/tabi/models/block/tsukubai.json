@@ -1,0 +1,148 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "t": "tabi:block/tsukubai_t",
+  "s": "tabi:block/tsukubai_s",
+  "b": "tabi:block/tsukubai_b",
+  "particle": "tabi:block/tsukubai_t"
+ },
+ "elements": [
+  {
+   "from": [
+    2,
+    0,
+    2
+   ],
+   "to": [
+    14,
+    7,
+    14
+   ],
+   "faces": {
+    "north": {
+     "texture": "#s",
+     "uv": [
+      2,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "south": {
+     "texture": "#s",
+     "uv": [
+      2,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "east": {
+     "texture": "#s",
+     "uv": [
+      2,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "west": {
+     "texture": "#s",
+     "uv": [
+      2,
+      9,
+      14,
+      16.0
+     ]
+    },
+    "up": {
+     "texture": "#t",
+     "uv": [
+      2,
+      2,
+      14,
+      14
+     ]
+    },
+    "down": {
+     "texture": "#s",
+     "uv": [
+      2,
+      2,
+      14,
+      14
+     ]
+    }
+   }
+  },
+  {
+   "from": [
+    7,
+    8,
+    8
+   ],
+   "to": [
+    9,
+    10,
+    16
+   ],
+   "faces": {
+    "north": {
+     "texture": "#b",
+     "uv": [
+      7,
+      6,
+      9,
+      8
+     ]
+    },
+    "south": {
+     "texture": "#b",
+     "uv": [
+      7,
+      6,
+      9,
+      8
+     ]
+    },
+    "east": {
+     "texture": "#b",
+     "uv": [
+      0.0,
+      6,
+      8,
+      8
+     ]
+    },
+    "west": {
+     "texture": "#b",
+     "uv": [
+      8,
+      6,
+      16.0,
+      8
+     ]
+    },
+    "up": {
+     "texture": "#b",
+     "uv": [
+      7,
+      8,
+      9,
+      16.0
+     ]
+    },
+    "down": {
+     "texture": "#b",
+     "uv": [
+      7,
+      0.0,
+      9,
+      8
+     ]
+    }
+   }
+  }
+ ],
+ "render_type": "minecraft:cutout"
+}

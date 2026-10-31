@@ -1,0 +1,49 @@
+{
+ "variants": {
+  "facing=north,flash=0": {
+   "model": "tabi:block/crossing_signal_0"
+  },
+  "facing=north,flash=1": {
+   "model": "tabi:block/crossing_signal_1"
+  },
+  "facing=north,flash=2": {
+   "model": "tabi:block/crossing_signal_2"
+  },
+  "facing=east,flash=0": {
+   "model": "tabi:block/crossing_signal_0",
+   "y": 90
+  },
+  "facing=east,flash=1": {
+   "model": "tabi:block/crossing_signal_1",
+   "y": 90
+  },
+  "facing=east,flash=2": {
+   "model": "tabi:block/crossing_signal_2",
+   "y": 90
+  },
+  "facing=south,flash=0": {
+   "model": "tabi:block/crossing_signal_0",
+   "y": 180
+  },
+  "facing=south,flash=1": {
+   "model": "tabi:block/crossing_signal_1",
+   "y": 180
+  },
+  "facing=south,flash=2": {
+   "model": "tabi:block/crossing_signal_2",
+   "y": 180
+  },
+  "facing=west,flash=0": {
+   "model": "tabi:block/crossing_signal_0",
+   "y": 270
+  },
+  "facing=west,flash=1": {
+   "model": "tabi:block/crossing_signal_1",
+   "y": 270
+  },
+  "facing=west,flash=2": {
+   "model": "tabi:block/crossing_signal_2",
+   "y": 270
+  }
+ }
+}
