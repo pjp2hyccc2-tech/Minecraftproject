@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "frostbound:block/generator_grate_off"
+    },
+    "lit=true": {
+      "model": "frostbound:block/generator_grate"
+    }
+  }
+}

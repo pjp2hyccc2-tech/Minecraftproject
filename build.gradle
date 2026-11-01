@@ -39,12 +39,16 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+            // CI screenshot tour (client/AutoShots): FROSTBOUND_AUTOSHOTS=true
+            property 'frostbound.autoshots', System.getenv('FROSTBOUND_AUTOSHOTS') ?: 'false'
             args '--width', '1280', '--height', '720'
         }
 
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
+            // CI self-test (selftest/BootSelfTest): FROSTBOUND_SELFTEST=true, FROSTBOUND_SELFTEST_PHASE=1|2
             property 'frostbound.selftest', System.getenv('FROSTBOUND_SELFTEST') ?: 'false'
+            property 'frostbound.selftest.phase', System.getenv('FROSTBOUND_SELFTEST_PHASE') ?: '1'
             args '--nogui'
         }
 

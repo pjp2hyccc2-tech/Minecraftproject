@@ -1,0 +1,9 @@
+{
+  "type": "frostbound:frozen_wastes",
+  "generator": {
+    "type": "frostbound:frozen_wastes",
+    "biome_source": {
+      "type": "frostbound:frozen_rings"
+    }
+  }
+}

@@ -10,3 +10,5 @@ eclipse/
 *.launch
 tools/__pycache__/
 tools/preview/
+__pycache__/
+*.pyc

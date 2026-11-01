@@ -1,0 +1,101 @@
+{
+  "generator_hum": {
+    "subtitle": "subtitles.frostbound.generator_hum",
+    "sounds": [
+      {
+        "name": "frostbound:generator_hum",
+        "stream": true
+      }
+    ]
+  },
+  "steam_hiss": {
+    "subtitle": "subtitles.frostbound.steam_hiss",
+    "sounds": [
+      {
+        "name": "frostbound:steam_hiss",
+        "stream": false
+      }
+    ]
+  },
+  "wind_loop": {
+    "subtitle": "subtitles.frostbound.wind_loop",
+    "sounds": [
+      {
+        "name": "frostbound:wind_loop",
+        "stream": true
+      }
+    ]
+  },
+  "blizzard_loop": {
+    "subtitle": "subtitles.frostbound.blizzard_loop",
+    "sounds": [
+      {
+        "name": "frostbound:blizzard_loop",
+        "stream": true
+      }
+    ]
+  },
+  "build": {
+    "subtitle": "subtitles.frostbound.build",
+    "sounds": [
+      {
+        "name": "frostbound:build",
+        "stream": false
+      }
+    ]
+  },
+  "mining": {
+    "subtitle": "subtitles.frostbound.mining",
+    "sounds": [
+      {
+        "name": "frostbound:mining",
+        "stream": false
+      }
+    ]
+  },
+  "alert": {
+    "subtitle": "subtitles.frostbound.alert",
+    "sounds": [
+      {
+        "name": "frostbound:alert",
+        "stream": false
+      }
+    ]
+  },
+  "event_major": {
+    "subtitle": "subtitles.frostbound.event_major",
+    "sounds": [
+      {
+        "name": "frostbound:event_major",
+        "stream": false
+      }
+    ]
+  },
+  "ui_click": {
+    "subtitle": "subtitles.frostbound.ui_click",
+    "sounds": [
+      {
+        "name": "frostbound:ui_click",
+        "stream": false
+      }
+    ]
+  },
+  "ui_open": {
+    "subtitle": "subtitles.frostbound.ui_open",
+    "sounds": [
+      {
+        "name": "frostbound:ui_open",
+        "stream": false
+      }
+    ]
+  },
+  "city_murmur": {
+    "subtitle": "subtitles.frostbound.city_murmur",
+    "sounds": [
+      {
+        "name": "frostbound:city_murmur",
+        "stream": true
+      }
+    ]
+  }
+}

@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -34,35 +34,63 @@ jobs:
           set -o pipefail
           ./gradlew build --no-daemon --stacktrace 2>&1 | tee build.log
 
-      - name: Dedicated server boot self-test
+      # Phase 1: fresh FROSTBOUND world (founding, structures, construction, heat, laws, 3 simulated days, save).
+      # Phase 2: restart on the same world (identical reload, structures, backup, continue).
+      - name: Dedicated server self-test (two phases)
         id: selftest
         if: steps.build.outcome == 'success' && hashFiles('ci/selftest.enabled') != ''
         continue-on-error: true
         env:
           FROSTBOUND_SELFTEST: 'true'
         run: |
+          rm -rf run
           mkdir -p run
           echo "eula=true" > run/eula.txt
           cp ci/server.properties run/server.properties
           set -o pipefail
-          timeout 900 ./gradlew runServer --no-daemon 2>&1 | tee selftest.log
+          FROSTBOUND_SELFTEST_PHASE=1 timeout 900 ./gradlew runServer --no-daemon 2>&1 | tee selftest1.log
+          cp run/logs/latest.log selftest1-latest.log || true
+          FROSTBOUND_SELFTEST_PHASE=2 timeout 900 ./gradlew runServer --no-daemon 2>&1 | tee selftest2.log
           test -f run/frostbound-selftest.json
           grep -q '"result": "pass"' run/frostbound-selftest.json
+
+      - name: Client screenshot tour (Xvfb)
+        id: client
+        if: steps.build.outcome == 'success' && hashFiles('ci/client.enabled') != ''
+        continue-on-error: true
+        env:
+          FROSTBOUND_AUTOSHOTS: 'true'
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          MESA_GL_VERSION_OVERRIDE: '4.5'
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 > /dev/null
+          cp ci/options.txt run/options.txt
+          set -o pipefail
+          timeout 1800 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient --no-daemon 2>&1 | tee client.log
+          test -f run/frostbound_autoshots.txt
+          grep -q 'finished' run/frostbound_autoshots.txt
 
       - name: Publish results to frostbound-ci branch
         if: always()
         run: |
-          mkdir -p out/test-results
+          mkdir -p out/test-results out/screenshots
           cp build.log out/ 2>/dev/null || true
           grep -E "error:|warning: \[|FAILED|BUILD" build.log > out/build-errors.txt 2>/dev/null || true
-          cp selftest.log out/ 2>/dev/null || true
+          grep -E "\.java:[0-9]+: error" -A3 build.log > out/compile-errors.txt 2>/dev/null || true
+          tail -c 300000 selftest1.log > out/selftest1.log 2>/dev/null || true
+          tail -c 300000 selftest2.log > out/selftest2.log 2>/dev/null || true
+          cp selftest1-latest.log out/ 2>/dev/null || true
+          tail -c 400000 client.log > out/client.log 2>/dev/null || true
           cp build/libs/*.jar out/ 2>/dev/null || true
           cp core/build/test-results/test/*.xml out/test-results/ 2>/dev/null || true
-          cp run/frostbound-selftest.json out/ 2>/dev/null || true
+          cp run/frostbound-selftest*.json out/ 2>/dev/null || true
+          cp run/frostbound_autoshots.txt out/ 2>/dev/null || true
+          cp run/screenshots/*.png out/screenshots/ 2>/dev/null || true
           cp run/logs/latest.log out/run-latest.log 2>/dev/null || true
           cp -r run/crash-reports out/ 2>/dev/null || true
           cat > out/summary.json <<JSON
-          {"sha": "${GITHUB_SHA}", "run": "${GITHUB_RUN_NUMBER}", "build": "${{ steps.build.outcome }}", "selftest": "${{ steps.selftest.outcome }}"}
+          {"sha": "${GITHUB_SHA}", "run": "${GITHUB_RUN_NUMBER}", "build": "${{ steps.build.outcome }}", "selftest": "${{ steps.selftest.outcome }}", "client": "${{ steps.client.outcome }}"}
           JSON
           cd out
           git init -q
@@ -70,9 +98,9 @@ jobs:
           git config user.email "ci@users.noreply.github.com"
           git checkout -q -b frostbound-ci
           git add -A
-          git commit -qm "CI results for ${GITHUB_SHA} (run ${GITHUB_RUN_NUMBER}) build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }}"
+          git commit -qm "CI results for ${GITHUB_SHA} (run ${GITHUB_RUN_NUMBER}) build=${{ steps.build.outcome }} selftest=${{ steps.selftest.outcome }} client=${{ steps.client.outcome }}"
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" frostbound-ci
 
-      - name: Fail if build or self-test failed
-        if: steps.build.outcome != 'success' || steps.selftest.outcome == 'failure'
+      - name: Fail if build or a test failed
+        if: steps.build.outcome != 'success' || steps.selftest.outcome == 'failure' || steps.client.outcome == 'failure'
         run: exit 1

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "frostbound:block/generator_casing",
+    "side": "frostbound:block/generator_pipe"
+  }
+}
