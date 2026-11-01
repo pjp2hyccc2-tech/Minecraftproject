@@ -65,6 +65,15 @@ dependencies {
     compileOnly project(':core')
 }
 
+// Compile-only API canary (src/apiProbe): fails the build if a Forge/Minecraft API the design relies on
+// is missing or has a different signature. Not part of the mod jar and never loaded at runtime.
+sourceSets {
+    apiProbe {
+        compileClasspath += sourceSets.main.compileClasspath
+    }
+}
+tasks.named('check') { dependsOn tasks.named('compileApiProbeJava') }
+
 tasks.named('processResources', ProcessResources).configure {
     filteringCharset = 'UTF-8'
     var replaceProperties = [
