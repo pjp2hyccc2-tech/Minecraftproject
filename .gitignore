@@ -1,0 +1,13 @@
+.gradle/
+build/
+out/
+run/
+run-data/
+*.iml
+.idea/
+.vscode/
+eclipse/
+*.launch
+tools/__pycache__/
+tools/preview/
+ci-results/

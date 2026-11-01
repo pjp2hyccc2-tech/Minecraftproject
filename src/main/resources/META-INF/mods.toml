@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''
+BLOCK CITY - Minecraftの中に、もう一つのオープンワールド都市を。
+運転・警察からの逃走・武器・ミッション・ショップ・ガレージを備えた現代都市オープンワールドMODです。
+ワールド作成画面の「ワールドタイプ」で「BLOCK CITY」を選ぶと都市ワールドが生成されます。
+'''
+
+[[dependencies.${mod_id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
