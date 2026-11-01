@@ -1,0 +1,7 @@
+45:/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/blockcity/BlockCity.java:18: warning: [removal] ResourceLocation(String,String) in ResourceLocation has been deprecated and marked for removal
+46-        return new ResourceLocation(MODID, path);
+47-               ^
+48-1 warning
+--
+68:BUILD SUCCESSFUL in 2m 2s
+69-7 actionable tasks: 7 executed
