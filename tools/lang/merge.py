@@ -25,6 +25,8 @@ for s in ["construction", "active", "paused", "upgrading"]:
     dynamic.append("frostbound.ui.bstate." + s)
 dynamic += ["frostbound.ui.hunger_band.%d" % i for i in range(4)]
 dynamic += ["frostbound.ui.temp_band.%d" % i for i in range(5)]
+dynamic += ["frostbound.ui.law_short." + s for s in ["requires", "cooldown", "conflict", "enacted"]]
+dynamic += ["frostbound.tutorial.build_food"]
 
 result = {}
 for lang in ["en_us", "ja_jp"]:

@@ -117,13 +117,13 @@ public final class CitizenRules {
         } else if (c.satiety < 15) {
             c.health -= 1.5 * risk;
         }
-        if (c.fatigue >= 95) {
-            c.health -= 1.0;
+        if (c.fatigue >= 98) {
+            c.health -= 0.5;
         }
         if (c.condition == Condition.HEALTHY) {
-            double p = 0.0008;
+            double p = 0.0005;
             if (c.bodyTemp < 35.5) {
-                p += 0.003;
+                p += 0.002;
             }
             if (c.satiety < 25) {
                 p += 0.003;
@@ -146,13 +146,13 @@ public final class CitizenRules {
                     c.recoverHours = 12;
                 }
             } else if (c.condition == Condition.LIGHTLY_ILL) {
-                if (c.sickHours > 36 && city.rng().chance(0.05 * risk)) {
+                if (c.sickHours > 48 && city.rng().chance(0.03 * risk)) {
                     setCondition(c, Condition.SEVERELY_ILL);
-                } else if (city.rng().chance(0.03)) {
+                } else if (city.rng().chance(c.bodyTemp >= 36 ? 0.045 : 0.025)) {
                     setCondition(c, Condition.HEALTHY);
                 }
             } else {
-                c.health -= 0.8 * risk;
+                c.health -= 0.6 * risk;
             }
         } else if (c.condition == Condition.RECOVERING) {
             c.health = Math.min(100, c.health + 1.0);
@@ -162,7 +162,8 @@ public final class CitizenRules {
         }
         c.health = Math.max(0, Math.min(100, c.health));
         if (c.health <= 0) {
-            String cause = c.bodyTemp < 32 ? "frostbound.cause.cold" : c.satiety <= 0 ? "frostbound.cause.hunger"
+            String cause = c.condition.sick() ? "frostbound.cause.illness" : c.satiety <= 0 ? "frostbound.cause.hunger"
+                    : c.bodyTemp < 35 ? "frostbound.cause.cold" : c.fatigue >= 95 ? "frostbound.cause.exhaustion"
                     : "frostbound.cause.illness";
             city.killCitizen(c, cause);
             return;

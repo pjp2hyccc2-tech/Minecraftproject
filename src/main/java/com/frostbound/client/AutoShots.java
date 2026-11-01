@@ -42,16 +42,17 @@ public final class AutoShots {
     private AutoShots() {
     }
 
+    private static TitleScreen titleScreen;
+
     static void onTitle(TitleScreen title) {
         if (!ENABLED || stage != 0) {
             return;
         }
         stage = 1;
-        Minecraft mc = Minecraft.getInstance();
-        mc.options.pauseOnLostFocus = false;
-        mc.setScreen(new FoundingScreen(true, title));
+        titleScreen = title;
+        Minecraft.getInstance().options.pauseOnLostFocus = false;
         wait = 40;
-        log("founding screen opened");
+        log("title screen");
     }
 
     static void tick(Minecraft mc) {
@@ -68,6 +69,16 @@ public final class AutoShots {
             return;
         }
         if (stage == 1) {
+            if (mc.getOverlay() != null) {
+                return;
+            }
+            shot(mc, "00_title_screen");
+            mc.setScreen(new FoundingScreen(true, titleScreen));
+            stage = 10;
+            wait = 30;
+            return;
+        }
+        if (stage == 10) {
             shot(mc, "00_founding_screen");
             FoundingScreen.createWorld(mc, Difficulty.NORMAL, 20, "CI", true, GameType.CREATIVE, 20261101L);
             log("world creation requested");
@@ -192,7 +203,7 @@ public final class AutoShots {
         }, 30);
         shotStep("07_building_panel");
         add("zoom_out", mc -> {
-            CameraController.dist = 150f;
+            CameraController.dist = 125f;
             CameraController.pitch = 70f;
             ManagementScreen m = ms(mc);
             if (m != null) {

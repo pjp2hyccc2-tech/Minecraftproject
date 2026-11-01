@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -116,12 +117,11 @@ public final class CitizenTracker {
                 if (e == null) {
                     continue;
                 }
-                int ox = Math.floorMod(c.id * 7, 5) - 2;
-                int oz = Math.floorMod(c.id * 13, 5) - 2;
-                int x = w.anchor().getX() + ox;
-                int z = w.anchor().getZ() + oz;
-                int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-                e.moveTo(x + 0.5, y, z + 0.5, level.random.nextFloat() * 360f, 0f);
+                BlockPos spot = standable(level, w.anchor(), c.id);
+                if (spot == null) {
+                    continue;
+                }
+                e.moveTo(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5, level.random.nextFloat() * 360f, 0f);
                 e.citizenId = c.id;
                 e.setLook(c.look);
                 e.setCustomName(Component.literal(c.name));
@@ -132,6 +132,25 @@ public final class CitizenTracker {
             e.setAnchor(w.anchor(), w.wander());
             e.setMood(mood(c));
         }
+    }
+
+    private static final int[][] OFFSETS = {{0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}, {2, 1}, {-2, -1}, {1, 2}, {-1, -2}, {2, -2},
+            {-2, 2}};
+
+    /** A free spot on the ground near the anchor (two passable blocks above a sturdy floor), or null. */
+    private static BlockPos standable(ServerLevel level, BlockPos anchor, int seed) {
+        for (int k = 0; k < OFFSETS.length; k++) {
+            int[] o = OFFSETS[Math.floorMod(k + seed, OFFSETS.length)];
+            for (int dy = 1; dy >= -2; dy--) {
+                BlockPos p = anchor.offset(o[0], dy, o[1]);
+                if (level.getBlockState(p).getCollisionShape(level, p).isEmpty()
+                        && level.getBlockState(p.above()).getCollisionShape(level, p.above()).isEmpty()
+                        && level.getBlockState(p.below()).isFaceSturdy(level, p.below(), Direction.UP)) {
+                    return p;
+                }
+            }
+        }
+        return null;
     }
 
     private static int mood(Citizen c) {

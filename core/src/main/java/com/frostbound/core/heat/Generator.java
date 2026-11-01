@@ -137,12 +137,19 @@ public final class Generator {
         }
         Change change = Change.NONE;
         if (level > 0) {
+            // Burn straight from the stockpile, falling back on the small hopper buffer; refill the hopper gently
+            // so the coal consumption stays smooth (no large hourly spikes).
             long need = Math.round(burnPerDay(m, d) * ResourceLedger.MILLI / SimClock.STEPS_PER_DAY);
-            if (buffer < BUFFER_MAX / 2) {
-                buffer += ledger.take(ResourceType.COAL, BUFFER_MAX - buffer);
+            long missing = need - ledger.take(ResourceType.COAL, need);
+            if (missing > 0) {
+                long fromBuffer = Math.min(buffer, missing);
+                buffer -= fromBuffer;
+                missing -= fromBuffer;
             }
-            if (buffer >= need) {
-                buffer -= need;
+            if (missing <= 0) {
+                if (buffer < BUFFER_MAX) {
+                    buffer += ledger.take(ResourceType.COAL, Math.min(BUFFER_MAX - buffer, Math.max(1, need / 2)));
+                }
                 if (fuelOut) {
                     fuelOut = false;
                     change = Change.FUEL_RESTORED;

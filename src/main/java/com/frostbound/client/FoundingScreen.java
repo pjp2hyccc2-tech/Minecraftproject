@@ -47,7 +47,7 @@ public final class FoundingScreen extends FScreen {
         int x0 = (width - w) / 2;
         int y0 = Math.max(10, height / 2 - 100);
         String prev = name == null ? Component.translatable("frostbound.ui.default_city").getString() : name.getValue();
-        name = new EditBox(font, x0 + 98, y0 + 103, w - 110, 12, Component.translatable("frostbound.ui.city_name"));
+        name = new EditBox(font, x0 + 98, y0 + 0, w - 110, 12, Component.translatable("frostbound.ui.city_name"));
         name.setMaxLength(32);
         name.setBordered(false);
         name.setTextColor(Theme.TEXT);
@@ -79,7 +79,7 @@ public final class FoundingScreen extends FScreen {
         int w = Math.min(300, width - 30);
         int x0 = (width - w) / 2;
         int y0 = Math.max(10, height / 2 - 100);
-        int h = 200;
+        int h = 210;
         Theme.titled(g, x0, y0, x0 + w, y0 + h, Component.translatable("frostbound.ui.founding"));
         int y = y0 + 18;
         y += Theme.wrapped(g, Component.translatable("frostbound.ui.founding_intro"), x0 + 10, y, w - 20, Theme.TEXT_DIM) + 4;
@@ -93,8 +93,8 @@ public final class FoundingScreen extends FScreen {
             i++;
         }
         y += 18;
-        g.drawString(font, Component.translatable(difficulty.key() + ".desc"), x0 + 98, y, Theme.TEXT_FAINT, false);
-        y = Math.max(y + 12, y0 + 78);
+        y += Theme.wrapped(g, Component.translatable(difficulty.key() + ".desc"), x0 + 98, y, w - 108, Theme.TEXT_FAINT);
+        y = Math.max(y + 4, y0 + 78);
         g.drawString(font, Component.translatable("frostbound.ui.day_length"), x0 + 10, y + 4, Theme.TEXT, false);
         g.drawString(font, Component.translatable("frostbound.ui.minutes", dayLength), x0 + 98, y + 4, Theme.EMBER, false);
         int[] presets = {10, 20, 30, 60};
@@ -106,6 +106,9 @@ public final class FoundingScreen extends FScreen {
         y += 20;
         g.drawString(font, Component.translatable("frostbound.ui.city_name"), x0 + 10, y + 7, Theme.TEXT, false);
         Theme.inset(g, x0 + 94, y + 3, x0 + w - 10, y + 17);
+        if (name != null) {
+            name.setY(y + 6);
+        }
         y += 22;
         g.drawString(font, Component.translatable("frostbound.ui.tutorial"), x0 + 10, y + 4, Theme.TEXT, false);
         button(g, x0 + 98, y, 60, 15, Component.translatable(tutorial ? "frostbound.ui.on" : "frostbound.ui.off"), true, tutorial,

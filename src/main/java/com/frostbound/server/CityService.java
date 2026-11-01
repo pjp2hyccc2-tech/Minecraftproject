@@ -10,6 +10,7 @@ import com.frostbound.core.city.Building;
 import com.frostbound.core.city.BuildingTypes;
 import com.frostbound.core.city.City;
 import com.frostbound.core.city.Notice;
+import com.frostbound.core.city.Tutorial;
 import com.frostbound.core.events.EventSystem;
 import com.frostbound.core.heat.HeatNetwork;
 import com.frostbound.core.save.SaveMigrations;
@@ -379,16 +380,23 @@ public final class CityService {
         if (city.phase() != lastPhase) {
             lastPhase = city.phase();
             if (city.phase() == City.Phase.ENDED || city.phase() == City.Phase.FAILED) {
+                broadcastSync();
                 broadcastOpen("ending");
             }
         }
         EventSystem.Pending pending = city.events().pending();
         String key = pending == null ? null : pending.id() + "@" + pending.start();
         if (key != null && !key.equals(lastEventKey) && FrostboundConfig.AUTO_OPEN_EVENTS.get()) {
+            broadcastSync();
             broadcastOpen("event");
         }
         lastEventKey = key;
         if (ticks % 20 == 0) {
+            Tutorial tut = city.tutorial();
+            if (tut.enabled() && tut.step() == Tutorial.Step.WELCOME && city.clock().step() >= 30) {
+                tut.flag("welcome");
+                tut.check();
+            }
             broadcastSync();
             syncGeneratorBlock(city);
             ServerLevel level = frozenLevel();
@@ -553,7 +561,9 @@ public final class CityService {
             managing.add(player.getUUID());
             City city = city();
             if (city != null) {
+                city.tutorial().flag("welcome");
                 city.tutorial().flag("management");
+                city.tutorial().check();
             }
         } else {
             managing.remove(player.getUUID());

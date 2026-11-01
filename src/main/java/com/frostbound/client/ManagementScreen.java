@@ -860,13 +860,16 @@ public final class ManagementScreen extends FScreen {
                 button(g, x + w - 52, y + 6, 48, 14, tr(law.decree ? "frostbound.ui.decree" : "frostbound.ui.enact"), true,
                         () -> act("law", "id", law.id));
             } else {
-                String st = Component.translatable(reason).getString();
-                st = font.plainSubstrByWidth(st, 70);
+                String suffix = reason.substring(reason.lastIndexOf('.') + 1);
+                String st = Component.translatable("frostbound.ui.law_short." + suffix).getString();
                 g.drawString(font, st, x + w - 4 - font.width(st), y + 14, Theme.TEXT_FAINT, false);
             }
             List<Component> tip = new ArrayList<>();
             tip.add(Component.translatable(law.key()).withStyle(st -> st.withColor(Theme.EMBER)));
             tip.add(Component.translatable(law.key() + ".desc"));
+            if (!can && !on) {
+                tip.add(Component.translatable(reason).withStyle(st -> st.withColor(Theme.WARN)));
+            }
             if (!law.dailyCost.isEmpty()) {
                 tip.add(tr("frostbound.ui.daily_cost"));
                 tip.addAll(costTooltip(law.dailyCost));
@@ -910,10 +913,10 @@ public final class ManagementScreen extends FScreen {
         for (Tech t : Techs.inCategory(researchCategory)) {
             boolean isDone = done.contains(t.id);
             boolean isCur = t.id.equals(current);
-            String reason = null;
+            String missing = null;
             for (String r : t.requires) {
-                if (!done.contains(r)) {
-                    reason = "frostbound.research.reason.requires";
+                if (!done.contains(r) && missing == null) {
+                    missing = r;
                 }
             }
             int h = 26;
@@ -926,14 +929,12 @@ public final class ManagementScreen extends FScreen {
                 g.drawString(font, tr("frostbound.ui.done"), x + 4, y + 14, Theme.GOOD, false);
             } else if (isCur) {
                 Theme.bar(g, x + 4, y + 15, w - 8, 6, rs.getDouble("progress") / Math.max(1, t.points), Theme.ORANGE);
-            } else {
+            } else if (missing == null) {
                 costLine(g, x + 4, y + 14, t.cost);
-                if (reason == null) {
-                    button(g, x + w - 44, y + 11, 40, 13, tr("frostbound.ui.start"), true, () -> act("research", "id", t.id));
-                } else {
-                    String st = font.plainSubstrByWidth(Component.translatable(reason).getString(), 60);
-                    g.drawString(font, st, x + w - 4 - font.width(st), y + 14, Theme.TEXT_FAINT, false);
-                }
+                button(g, x + w - 44, y + 11, 40, 13, tr("frostbound.ui.start"), true, () -> act("research", "id", t.id));
+            } else {
+                String st = tr("frostbound.ui.requires_short", Component.translatable("frostbound.tech." + missing)).getString();
+                g.drawString(font, font.plainSubstrByWidth(st, w - 8), x + 4, y + 14, Theme.TEXT_FAINT, false);
             }
             List<Component> tip = new ArrayList<>();
             tip.add(Component.translatable(t.key()).withStyle(st -> st.withColor(Theme.EMBER)));

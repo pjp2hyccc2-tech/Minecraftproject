@@ -187,7 +187,8 @@ class CoreRulesTest {
             c.step();
         }
         assertTrue(c.generator().running());
-        assertTrue(c.ledger().amount(ResourceType.COAL) + c.generator().bufferMilli() / 1000 < coal + 60);
+        assertTrue(c.ledger().consumedPerDay(ResourceType.COAL) > 30, "burns coal: " + c.ledger().consumedPerDay(ResourceType.COAL)
+                + " (start " + coal + ")");
         double outside = c.outsideTemperature();
         Building shelter = c.buildings().stream().filter(b -> b.typeId.equals("shelter")).findFirst().orElseThrow();
         assertTrue(shelter.temperature > outside + 20, "heated: " + shelter.temperature + " vs " + outside);
@@ -203,7 +204,7 @@ class CoreRulesTest {
         City c = newCity(17);
         assertTrue(c.enactLaw("extended_shift").ok());
         assertFalse(c.enactLaw("food_rationing").ok(), "one law per day");
-        assertEquals(22, c.modifiers().shiftEndHour);
+        assertEquals(20, c.modifiers().shiftEndHour);
         assertTrue(c.startResearch("wooden_houses").ok());
         c.addResearchPoints(1000);
         assertTrue(c.research().isCompleted("wooden_houses"));
@@ -213,5 +214,55 @@ class CoreRulesTest {
         int before = c.population().alive;
         assertTrue(c.answerEvent(0).ok());
         assertEquals(before + 4, c.population().alive);
+    }
+    @Test
+    void constructionBorrowsBuildersWhenEveryoneIsBusy() {
+        City c = newCity(21);
+        c.give(ResourceType.WOOD, 400);
+        for (Building b : c.buildings()) {
+            if (b.active() && b.type().employs()) {
+                c.setDesiredWorkers(b.id, b.type().maxWorkers(b.level));
+            }
+        }
+        assertTrue(c.placeBuilding("sawmill", 30, 64, -30, 0).ok());
+        assertTrue(c.placeBuilding("hunters_lodge", -30, 64, 30, 0).ok());
+        assertTrue(c.placeBuilding("tent", 30, 64, 30, 0).ok());
+        assertTrue(c.placeBuilding("tent", -30, 64, -30, 0).ok());
+        for (int i = 0; i < SimClock.STEPS_PER_DAY * 3; i++) {
+            c.step();
+            for (Building b : c.buildings()) {
+                if (b.active() && b.type().employs()) {
+                    c.setDesiredWorkers(b.id, b.type().maxWorkers(b.level));
+                }
+            }
+        }
+        for (Building b : c.buildings()) {
+            assertTrue(b.active(), b.typeId + " still under construction");
+        }
+    }
+
+    @Test
+    void specialistsReturnToTheirTrade() {
+        City c = newCity(22);
+        c.give(ResourceType.WOOD, 100);
+        assertTrue(c.placeBuilding("medical_tent", 20, 64, 20, 0).ok());
+        for (int i = 0; i < SimClock.STEPS_PER_DAY * 2; i++) {
+            c.step();
+        }
+        Building tent = c.buildings().stream().filter(b -> b.typeId.equals("medical_tent")).findFirst().orElseThrow();
+        assertTrue(tent.active());
+        assertTrue(tent.workers == 2, "both medics work in the medical tent: " + tent.workers);
+    }
+
+    @Test
+    void idleCitizensScavengeWoodSoTheCityCannotSoftLock() {
+        City c = newCity(23);
+        c.take(ResourceType.WOOD, c.ledger().amount(ResourceType.WOOD));
+        assertEquals(0, c.ledger().amount(ResourceType.WOOD));
+        for (int i = 0; i < SimClock.STEPS_PER_DAY; i++) {
+            c.step();
+        }
+        assertTrue(c.ledger().amount(ResourceType.WOOD) >= 20, "a sawmill (20 wood) is affordable again after a day: "
+                + c.ledger().amount(ResourceType.WOOD));
     }
 }

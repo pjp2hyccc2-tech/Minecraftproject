@@ -96,7 +96,7 @@ public final class CameraController {
     }
 
     public static void zoom(double scroll) {
-        dist = Mth.clamp(dist * (float) Math.pow(0.88, scroll), 12f, 190f);
+        dist = Mth.clamp(dist * (float) Math.pow(0.88, scroll), 12f, 130f);
     }
 
     public static void rotate(double dyaw, double dpitch) {

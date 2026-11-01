@@ -13,8 +13,8 @@ public final class Laws {
     private static final Map<String, Law> BY_ID = new LinkedHashMap<>();
 
     public static final Law EXTENDED_SHIFT = add(new Law("extended_shift", List.of(), List.of(), -2, 5, Cost.NONE, false, m -> {
-        m.shiftEndHour = 22;
-        m.fatigueMult *= 1.5;
+        m.shiftEndHour = 20;
+        m.fatigueMult *= 1.25;
         m.discontentTarget += 8;
     }));
     public static final Law EMERGENCY_SHIFT = add(new Law("emergency_shift", List.of("extended_shift"), List.of(), -3, 12,

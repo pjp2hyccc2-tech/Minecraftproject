@@ -14,6 +14,7 @@ public final class Tutorial {
         ASSIGN_WORKERS("workers"),
         GENERATOR("generator"),
         BUILD_HOUSING("house"),
+        BUILD_FOOD("food"),
         ENACT_LAW("law"),
         START_RESEARCH("research"),
         DONE(null);

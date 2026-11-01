@@ -215,6 +215,15 @@ UI = {
                                    "%s日目・生存%s人・死者%s人・合流%s人"),
     "frostbound.ui.continue_endless": ("Keep the city going", "都市を存続させる"),
     "frostbound.ui.close": ("Close", "閉じる"),
+    "frostbound.cause.exhaustion": ("exhaustion", "過労"),
+    "frostbound.ui.law_short.requires": ("Needs a prior law", "前提の法律が必要"),
+    "frostbound.ui.law_short.cooldown": ("Not yet", "まだ署名できない"),
+    "frostbound.ui.law_short.conflict": ("Conflicts", "対立する法律あり"),
+    "frostbound.ui.law_short.enacted": ("In force", "施行中"),
+    "frostbound.ui.requires_short": ("Needs: %s", "前提：%s"),
+    "frostbound.tutorial.build_food": (
+        "Nobody brings food yet. Open Build > Food and set up a Hunting Camp, then staff it.",
+        "食料を集める人がいません。建設 > 食料 から狩猟拠点を建て、人を配置してください。"),
 }
 
 

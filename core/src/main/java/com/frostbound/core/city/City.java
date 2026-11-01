@@ -476,6 +476,33 @@ public final class City {
                 researchThisHour += workforce * t.research * tempEff * lvl * mods.researchMult;
             }
         }
+        scavenge(shift && !strike);
+    }
+
+    /** Wood gathered per idle adult per shift hour (scrap from the snow), and coal. */
+    public static final double SCAVENGE_WOOD = 0.25;
+    public static final double SCAVENGE_COAL = 0.1;
+
+    /**
+     * Idle adults pick scrap wood and coal out of the snow during the shift, so a city that spent all its wood
+     * can always build a sawmill again (slow, weather-dependent).
+     */
+    private void scavenge(boolean shift) {
+        if (!shift) {
+            return;
+        }
+        double idle = 0;
+        for (Citizen c : population.all()) {
+            if (c.present() && !c.child() && c.workId < 0) {
+                idle += CitizenRules.workFactor(this, c);
+            }
+        }
+        if (idle <= 0) {
+            return;
+        }
+        double f = idle * weather.current().outdoorWork * mods.resourceMult;
+        ledger.add(ResourceType.WOOD, Math.round(f * SCAVENGE_WOOD * ResourceLedger.MILLI));
+        ledger.add(ResourceType.COAL, Math.round(f * SCAVENGE_COAL * ResourceLedger.MILLI));
     }
 
     private void construction(boolean shift) {
@@ -851,6 +878,14 @@ public final class City {
             b.workers = 0;
         }
         List<Citizen> idle = new ArrayList<>();
+        // Open places for specialists (medics, engineers, technicians, scouts) in buildings of their own trade.
+        Map<Profession, Integer> tradeSlots = new java.util.EnumMap<>(Profession.class);
+        for (Building b : buildings) {
+            if (b.active() && b.type().employs() && b.type().job != Profession.WORKER) {
+                tradeSlots.merge(b.type().job, desired(b), Integer::sum);
+            }
+        }
+        List<Citizen> keep = new ArrayList<>();
         for (Citizen c : population.all()) {
             if (!c.present()) {
                 if (c.status == Citizen.Status.EXPEDITION) {
@@ -859,8 +894,21 @@ public final class City {
                 continue;
             }
             Building b = c.workId >= 0 ? buildingIndex.get(c.workId) : null;
+            if (b != null && b.active() && b.type().job == c.profession && c.profession != Profession.WORKER) {
+                tradeSlots.merge(c.profession, -1, Integer::sum);
+            }
+            keep.add(c);
+        }
+        for (Citizen c : keep) {
+            Building b = c.workId >= 0 ? buildingIndex.get(c.workId) : null;
             boolean valid = b != null && (b.state == Building.State.CONSTRUCTION || (b.active() && b.type().employs()))
                     && eligible(c, b) && b.workers < desired(b);
+            // a specialist doing someone else's job goes back to their trade when it has room for them
+            if (valid && c.profession != Profession.WORKER && b.type().job != c.profession
+                    && tradeSlots.getOrDefault(c.profession, 0) > 0) {
+                valid = false;
+                tradeSlots.merge(c.profession, -1, Integer::sum);
+            }
             if (valid) {
                 b.workers++;
                 staff.computeIfAbsent(b.id, k -> new ArrayList<>()).add(c);
@@ -871,13 +919,14 @@ public final class City {
         }
         List<Building> order = new ArrayList<>(buildings);
         order.sort(Comparator.comparingInt(City::priority).thenComparingInt(b -> b.id));
-        for (Building b : order) {
-            int need = desired(b) - b.workers;
-            if (need <= 0) {
-                continue;
-            }
-            Profession job = b.state == Building.State.CONSTRUCTION ? Profession.WORKER : b.type().job;
-            for (int pass = 0; pass < 3 && need > 0; pass++) {
+        // pass 0: people of the right trade everywhere first, then anyone able (1), then children if allowed (2)
+        for (int pass = 0; pass < 3; pass++) {
+            for (Building b : order) {
+                int need = desired(b) - b.workers;
+                if (need <= 0) {
+                    continue;
+                }
+                Profession job = b.state == Building.State.CONSTRUCTION ? Profession.WORKER : b.type().job;
                 for (int i = 0; i < idle.size() && need > 0; i++) {
                     Citizen c = idle.get(i);
                     boolean match = switch (pass) {
@@ -894,6 +943,50 @@ public final class City {
                     idle.remove(i--);
                     need--;
                 }
+            }
+        }
+        borrowBuilders();
+    }
+
+    /**
+     * Construction sites that still lack builders borrow adult workers from running workplaces, least important
+     * first (never from medical buildings), so new buildings always get built. The borrowed workers return when
+     * the site is finished.
+     */
+    private void borrowBuilders() {
+        for (Building site : buildings) {
+            if (site.state != Building.State.CONSTRUCTION) {
+                continue;
+            }
+            int need = desired(site) - site.workers;
+            while (need > 0) {
+                Building donor = null;
+                Citizen moved = null;
+                for (Building b : buildings) {
+                    if (!b.active() || b.workers <= 0 || b.type().category == BuildingCategory.MEDICAL) {
+                        continue;
+                    }
+                    if (donor != null && (priority(b) < priority(donor)
+                            || (priority(b) == priority(donor) && b.workers <= donor.workers))) {
+                        continue;
+                    }
+                    for (Citizen c : staff.getOrDefault(b.id, List.of())) {
+                        if (!c.child() && c.profession.canWork(Profession.WORKER)) {
+                            donor = b;
+                            moved = c;
+                            break;
+                        }
+                    }
+                }
+                if (donor == null) {
+                    return;
+                }
+                staff.get(donor.id).remove(moved);
+                donor.workers--;
+                moved.workId = site.id;
+                site.workers++;
+                staff.computeIfAbsent(site.id, k -> new ArrayList<>()).add(moved);
+                need--;
             }
         }
     }
@@ -1154,6 +1247,8 @@ public final class City {
         assignWork();
         if (t.category == BuildingCategory.HOUSING) {
             tutorial.flag("house");
+        } else if (t.category == BuildingCategory.FOOD) {
+            tutorial.flag("food");
         }
         history.add(clock.step(), "build", Msg.of("frostbound.msg.construction_started", Msg.tr(t.key())));
         return ActionResult.ok("frostbound.msg.construction_started", Msg.tr(t.key()));

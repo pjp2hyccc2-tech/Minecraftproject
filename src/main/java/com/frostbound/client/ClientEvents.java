@@ -11,6 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.TickEvent;
@@ -34,7 +35,9 @@ public final class ClientEvents {
         Minecraft mc = Minecraft.getInstance();
         while (ClientSetup.MANAGEMENT_KEY.consumeClick()) {
             if (mc.screen == null && mc.player != null) {
-                if (ClientCity.hasCity()) {
+                if (ClientCity.hasCity() && ClientCity.event() != null) {
+                    mc.setScreen(new EventScreen(new ManagementScreen(null, -1)));
+                } else if (ClientCity.hasCity()) {
                     mc.setScreen(new ManagementScreen(null, -1));
                 } else if (ClientCity.frostbound()) {
                     mc.setScreen(new FoundingScreen(false));
@@ -53,10 +56,10 @@ public final class ClientEvents {
         }
         String w = ClientCity.snap().getString("weather");
         int n = switch (w) {
-            case "BLIZZARD" -> 40;
-            case "GREAT_COLD_WAVE" -> 60;
-            case "EXTREME_COLD" -> 18;
-            case "WIND" -> 8;
+            case "BLIZZARD" -> 22;
+            case "GREAT_COLD_WAVE" -> 34;
+            case "EXTREME_COLD" -> 9;
+            case "WIND" -> 4;
             default -> 0;
         };
         if (n == 0 || mc.getCameraEntity() == null) {
@@ -67,10 +70,13 @@ public final class ClientEvents {
         }
         Vec3 c = mc.getCameraEntity().position();
         double radius = CameraController.active() ? 40 : 14;
+        double minDist = CameraController.active() ? 12 : 4.5;
         for (int i = 0; i < n; i++) {
-            double x = c.x + (RANDOM.nextDouble() - 0.5) * radius * 2;
+            double a = RANDOM.nextDouble() * Math.PI * 2;
+            double r = minDist + RANDOM.nextDouble() * (radius - minDist);
+            double x = c.x + Math.cos(a) * r;
             double y = c.y + (RANDOM.nextDouble() - 0.3) * 10;
-            double z = c.z + (RANDOM.nextDouble() - 0.5) * radius * 2;
+            double z = c.z + Math.sin(a) * r;
             mc.level.addParticle(ParticleTypes.SNOWFLAKE, x, y, z, 0.35 + RANDOM.nextDouble() * 0.3, -0.12, 0.12);
         }
     }
@@ -89,6 +95,13 @@ public final class ClientEvents {
         ClientCity.reset();
         WorldOverlay.reset();
         Sounds.stopAll();
+    }
+
+    @SubscribeEvent
+    public static void onRenderHand(RenderHandEvent event) {
+        if (CameraController.active()) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
@@ -114,13 +127,17 @@ public final class ClientEvents {
             default -> 1.0f;
         };
         if (CameraController.active()) {
-            target = Math.min(1f, target * 2.2f);
+            target = Math.min(1f, target * 2.5f);
         }
         fogFactor += (target - fogFactor) * 0.02f;
+        if (fogFactor > 0.97f) {
+            return;
+        }
         float far = event.getFarPlaneDistance();
         float newFar = Math.max(24f, far * fogFactor);
+        float near = CameraController.active() ? newFar * 0.6f : newFar * (fogFactor < 0.5f ? 0.02f : 0.3f);
         event.setFarPlaneDistance(newFar);
-        event.setNearPlaneDistance(Math.min(event.getNearPlaneDistance(), newFar * (fogFactor < 0.5f ? 0.02f : 0.25f)));
+        event.setNearPlaneDistance(Math.min(event.getNearPlaneDistance(), near));
         event.setCanceled(true);
     }
 
@@ -130,14 +147,17 @@ public final class ClientEvents {
         if (mc.level == null || !mc.level.dimension().equals(Dims.FROZEN_WASTES)) {
             return;
         }
-        float k = 1f - fogFactor;
+        float k = (1f - fogFactor) * 0.75f;
+        if (k <= 0.01f) {
+            return;
+        }
         float r = event.getRed();
         float g = event.getGreen();
         float b = event.getBlue();
         float lum = (r + g + b) / 3f;
-        event.setRed(r + (lum * 0.86f + 0.04f - r) * (0.35f + k * 0.6f));
-        event.setGreen(g + (lum * 0.93f + 0.05f - g) * (0.35f + k * 0.6f));
-        event.setBlue(b + (lum * 1.02f + 0.07f - b) * (0.35f + k * 0.6f));
+        event.setRed(r + (lum * 0.86f + 0.04f - r) * k);
+        event.setGreen(g + (lum * 0.93f + 0.05f - g) * k);
+        event.setBlue(b + (lum * 1.02f + 0.07f - b) * k);
     }
 
     @SubscribeEvent

@@ -71,11 +71,11 @@ public final class BuildingTypes {
 
     // Medical
     public static final BuildingType MEDICAL_TENT = add(BuildingType.of("medical_tent", MEDICAL, 5, 5, 4)
-            .cost(WOOD, 15).build(2, 2).workers(2, MEDIC).beds(6).heat(4, 6).done());
+            .cost(WOOD, 15).build(2, 2).workers(2, MEDIC).beds(8).heat(4, 6).done());
     public static final BuildingType CLINIC = add(BuildingType.of("clinic", MEDICAL, 7, 5, 5)
-            .cost(WOOD, 30, IRON, 10).build(6, 4).workers(4, MEDIC).beds(12).heat(10, 8).tech("clinic").done());
+            .cost(WOOD, 30, IRON, 10).build(6, 4).workers(4, MEDIC).beds(16).heat(10, 8).tech("clinic").done());
     public static final BuildingType HOSPITAL = add(BuildingType.of("hospital", MEDICAL, 9, 7, 7)
-            .cost(WOOD, 50, IRON, 30).build(12, 6).workers(8, MEDIC).beds(25).heat(12, 14).tech("hospital").done());
+            .cost(WOOD, 50, IRON, 30).build(12, 6).workers(8, MEDIC).beds(30).heat(12, 14).tech("hospital").done());
     public static final BuildingType ADVANCED_LAB = add(BuildingType.of("advanced_lab", MEDICAL, 7, 7, 7)
             .cost(WOOD, 40, IRON, 30, STEAM_CORE, 1).build(12, 5).workers(6, MEDIC).beds(5).output(MEDICINE, 0.15)
             .heat(12, 12).tech("advanced_medicine").done());
