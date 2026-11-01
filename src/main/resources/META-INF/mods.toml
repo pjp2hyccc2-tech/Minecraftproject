@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="All Rights Reserved"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+description='''
+FROSTBOUND: THE LAST HEARTH
+極寒の世界で、人類最後の都市を100日間存続させる都市運営サバイバル。
+BUILD 0: ビルド検証用の最小構成です。ゲーム機能はまだありません。
+'''
+
+[[dependencies.${mod_id}]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"

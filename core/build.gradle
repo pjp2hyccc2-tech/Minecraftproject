@@ -1,0 +1,29 @@
+plugins {
+    id 'java-library'
+}
+
+// Pure-Java simulation core: deliberately has NO Minecraft or Forge dependency,
+// so city rules can be unit-tested quickly and deterministically.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        exceptionFormat 'full'
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

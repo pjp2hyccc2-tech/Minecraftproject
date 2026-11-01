@@ -1,0 +1,105 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+}
+
+// The mod bundles the pure-Java simulation core; make sure it is configured first.
+evaluationDependsOn(':core')
+def coreMain = project(':core').sourceSets.main
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'info'
+            mods {
+                "${mod_id}" {
+                    // The core classes are part of the mod itself (one module, no split packages).
+                    source sourceSets.main
+                    source coreMain
+                }
+            }
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--width', '1280', '--height', '720'
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            property 'frostbound.selftest', System.getenv('FROSTBOUND_SELFTEST') ?: 'false'
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // Compile against the core; at runtime its classes ship inside this mod (see jar and runs).
+    compileOnly project(':core')
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    filteringCharset = 'UTF-8'
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            forge_version          : forge_version,
+            forge_version_range    : forge_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    from(coreMain.output)
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : 'frostbound',
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : 'frostbound',
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '2000']
+}
