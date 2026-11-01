@@ -594,9 +594,19 @@ public final class CityService {
         }
     }
 
+    /** City-wide time controls: the single-player host, or an operator on a server. */
+    private static boolean mayControlTime(ServerPlayer player) {
+        return server.isSingleplayerOwner(player.getGameProfile()) || player.hasPermissions(2);
+    }
+
     public static void cityAction(ServerPlayer player, String op, CompoundTag a) {
         City city = city();
         if (city == null) {
+            return;
+        }
+        if ((op.equals("speed") || op.equals("pause") || op.equals("day_length") || op.equals("endless"))
+                && !mayControlTime(player)) {
+            sendResult(player, ActionResult.fail("frostbound.reason.no_permission"));
             return;
         }
         ActionResult r = switch (op) {

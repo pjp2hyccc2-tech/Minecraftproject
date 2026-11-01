@@ -585,6 +585,7 @@
   "frostbound.ui.title_button": "FROSTBOUND：新しい都市を築く",
   "frostbound.ui.tomorrow": "明日の基準気温",
   "frostbound.ui.too_far_site": "遠すぎる",
+  "frostbound.ui.total_time": "%s日で約%s時間のプレイ",
   "frostbound.ui.tutorial": "ガイド",
   "frostbound.ui.unemployed": "待機中",
   "frostbound.ui.upgrade": "レベル%sに改良",

@@ -215,6 +215,7 @@ UI = {
                                    "%s日目・生存%s人・死者%s人・合流%s人"),
     "frostbound.ui.continue_endless": ("Keep the city going", "都市を存続させる"),
     "frostbound.ui.close": ("Close", "閉じる"),
+    "frostbound.ui.total_time": ("%s days take about %s hours of play", "%s日で約%s時間のプレイ"),
     "frostbound.cause.exhaustion": ("exhaustion", "過労"),
     "frostbound.ui.law_short.requires": ("Needs a prior law", "前提の法律が必要"),
     "frostbound.ui.law_short.cooldown": ("Not yet", "まだ署名できない"),

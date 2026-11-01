@@ -3,10 +3,13 @@ package com.frostbound.client;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.world.phys.Vec3;
 
-/** Sky of the frozen wastes: normal sun and moon, low clouds, a cold desaturated fog colour. */
+/**
+ * Sky of the frozen wastes: normal sun and moon, a cold desaturated fog colour. Clouds sit above the highest
+ * management camera position (about y 200) so the zoomed-out city view never looks down onto them.
+ */
 public final class FrozenEffects extends DimensionSpecialEffects {
     public FrozenEffects() {
-        super(160.0f, true, SkyType.NORMAL, false, false);
+        super(250.0f, true, SkyType.NORMAL, false, false);
     }
 
     @Override

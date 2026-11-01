@@ -72,6 +72,11 @@ public final class AutoShots {
             if (mc.getOverlay() != null) {
                 return;
             }
+            stage = 11;
+            wait = 60;
+            return;
+        }
+        if (stage == 11) {
             shot(mc, "00_title_screen");
             mc.setScreen(new FoundingScreen(true, titleScreen));
             stage = 10;

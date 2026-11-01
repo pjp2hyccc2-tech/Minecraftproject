@@ -103,7 +103,10 @@ public final class FoundingScreen extends FScreen {
             int m = presets[k];
             button(g, px + k * 26, y, 24, 15, Component.literal(String.valueOf(m)), true, dayLength == m, () -> dayLength = m);
         }
-        y += 20;
+        y += 18;
+        g.drawString(font, Component.translatable("frostbound.ui.total_time", 100, Math.round(100 * dayLength / 60.0)), x0 + 98, y,
+                Theme.TEXT_FAINT, false);
+        y += 12;
         g.drawString(font, Component.translatable("frostbound.ui.city_name"), x0 + 10, y + 7, Theme.TEXT, false);
         Theme.inset(g, x0 + 94, y + 3, x0 + w - 10, y + 17);
         if (name != null) {

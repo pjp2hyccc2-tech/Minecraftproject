@@ -585,6 +585,7 @@
   "frostbound.ui.title_button": "FROSTBOUND: Found a New City",
   "frostbound.ui.tomorrow": "Tomorrow (base)",
   "frostbound.ui.too_far_site": "Too far",
+  "frostbound.ui.total_time": "%s days take about %s hours of play",
   "frostbound.ui.tutorial": "Guide",
   "frostbound.ui.unemployed": "Idle",
   "frostbound.ui.upgrade": "Upgrade to level %s",
