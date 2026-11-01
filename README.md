@@ -24,5 +24,5 @@ GitHub Actions が `frostbound` ブランチへの push ごとにビルドし、
 ## 動作環境
 
 - Minecraft Java Edition 1.20.1
-- Forge 47.4.0 以上（47.x）
+- Forge 47.x（47.4.0 以上を推奨）
 - Java 17
