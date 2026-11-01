@@ -1,0 +1,36 @@
+{
+  "result": "pass",
+  "phase": 2,
+  "minecraft": "1.20.1",
+  "forge": "47.4.0",
+  "mod": "frostbound",
+  "hash": "77de6e80e8535a419c2415743a2ffa56df97bb1406e10b0b265ae268d001b8ba",
+  "phase1": {"checks": [
+    {"name": "frozen_dimension", "pass": true, "detail": "frostbound:frozen_wastes"},
+    {"name": "frostbound_world", "pass": true, "detail": "phase=RUNNING"},
+    {"name": "city_founded", "pass": true, "detail": "alive=30 buildings=5"},
+    {"name": "generator_structure", "pass": true, "detail": "core=0, 66, 3 floor=65"},
+    {"name": "structures_match", "pass": true, "detail": "generator:820/820 shelter:108/108 shelter:108/108 warehouse:228/228 coal_pit:157/157"},
+    {"name": "terrain_and_biomes", "pass": true, "detail": "basinY=64 ring(215,0)=120 zone(400,0)=INDUSTRIAL"},
+    {"name": "placement_rules", "pass": true, "detail": "frostbound.reason.overlap / frostbound.reason.too_far / frostbound.reason.locked"},
+    {"name": "heat_network", "pass": true, "detail": "gen=true level=1 outside=-17.2 shelter=13.3 eta=1.00 supply=1.00"},
+    {"name": "construction", "pass": true, "detail": "result=frostbound.msg.construction_started scaffold=true hours=3 state=ACTIVE"},
+    {"name": "law", "pass": true, "detail": "frostbound.msg.law_enacted"},
+    {"name": "research_start", "pass": true, "detail": "frostbound.msg.research_started"},
+    {"name": "simulate_3_days", "pass": true, "detail": "day=4 alive=29 hope=63.0 disc=21.0 coal=118 wood=219 iron=20 food=16 medicine=10 steam_core=0  msPerStep=0.0079"},
+    {"name": "performance", "pass": true, "detail": "0.0079 ms per simulation step"},
+    {"name": "command_status", "pass": true, "detail": "rc=1"},
+    {"name": "npc_tracker_idle", "pass": true, "detail": "no players, live=0"},
+    {"name": "save_file", "pass": true, "detail": "frostbound_city.dat size=3592"}
+  ]
+},
+  "checks": [
+    {"name": "phase1_passed", "pass": true, "detail": "found"},
+    {"name": "reload_city", "pass": true, "detail": "phase=RUNNING"},
+    {"name": "reload_identical", "pass": true, "detail": "saved=77de6e80e853 loaded=77de6e80e853 step=4050"},
+    {"name": "reload_structures", "pass": true, "detail": "generator:820/820 shelter:108/108 shelter:108/108 warehouse:228/228 coal_pit:157/157 tent:27/27"},
+    {"name": "backup_file", "pass": true, "detail": "frostbound_city.dat.bak"},
+    {"name": "corrupt_file_detected", "pass": true, "detail": "garbage file rejected=true"},
+    {"name": "continue_after_reload", "pass": true, "detail": "step 4050 -> 4150"}
+  ]
+}

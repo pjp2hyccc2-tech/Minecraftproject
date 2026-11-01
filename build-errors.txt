@@ -1,0 +1,4 @@
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/frostbound/FrostboundMod.java:30: warning: [removal] get() in FMLJavaModLoadingContext has been deprecated and marked for removal
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/frostbound/FrostboundMod.java:33: warning: [removal] get() in ModLoadingContext has been deprecated and marked for removal
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/frostbound/FrostboundMod.java:43: warning: [removal] ResourceLocation(String,String) in ResourceLocation has been deprecated and marked for removal
+BUILD SUCCESSFUL in 2m 29s

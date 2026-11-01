@@ -1,0 +1,106 @@
+[01Nov2026 20:53:42.112] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserveruserdev, --gameDir, ., --fml.forgeVersion, 47.4.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --nogui]
+[01Nov2026 20:53:42.117] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.21 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[01Nov2026 20:53:42.211] [main/WARN] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/fml.toml is not correct. Correcting
+[01Nov2026 20:53:42.213] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[01Nov2026 20:53:42.213] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowLogHelpMessage] was corrected from null to true
+[01Nov2026 20:53:42.214] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[01Nov2026 20:53:42.214] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[01Nov2026 20:53:42.234] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserveruserdev
+[01Nov2026 20:53:42.290] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=SERVER
+[01Nov2026 20:53:42.626] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.0/f0c0b352173d0a378cbdcec9cfc4ba65899a721/javafmllanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[01Nov2026 20:53:42.628] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.0/e862740d8c84d08dbfedea412bef88fe42e727c5/lowcodelanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[01Nov2026 20:53:42.629] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.0/5719b3a297a33f877ed5dde4cb4bd75c859096af/mclanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[01Nov2026 20:53:42.631] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.0/235975dafa4309945b59c56b53f31dc5b65a6051/fmlcore-1.20.1-47.4.0.jar is missing mods.toml file
+[01Nov2026 20:53:42.690] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[01Nov2026 20:53:44.284] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserveruserdev' with arguments [--gameDir, ., --nogui]
+[01Nov2026 20:53:50.793] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.0, for MC 1.20.1 with MCP 20230612.114412
+[01Nov2026 20:53:50.799] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.4.0 Initialized
+[01Nov2026 20:53:50.837] [modloading-worker-0/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] server self-test enabled (phase 1)
+[01Nov2026 20:53:50.838] [modloading-worker-0/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] mod constructed
+[01Nov2026 20:53:51.137] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/frostbound-common.toml is not correct. Correcting
+[01Nov2026 20:53:51.138] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game was corrected from null to its default, SimpleCommentedConfig:{}. 
+[01Nov2026 20:53:51.139] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.pauseInManagement was corrected from null to its default, false. 
+[01Nov2026 20:53:51.139] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.autoOpenEvents was corrected from null to its default, true. 
+[01Nov2026 20:53:51.141] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.defaultDayLength was corrected from null to its default, 20. 
+[01Nov2026 20:53:51.141] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.serverDifficulty was corrected from null to its default, NORMAL. 
+[01Nov2026 20:53:51.142] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key performance was corrected from null to its default, SimpleCommentedConfig:{}. 
+[01Nov2026 20:53:51.142] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key performance.npcEnabled was corrected from null to its default, true. 
+[01Nov2026 20:53:51.142] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key performance.npcPerPlayer was corrected from null to its default, 40. 
+[01Nov2026 20:53:51.143] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key performance.npcRadius was corrected from null to its default, 64. 
+[01Nov2026 20:53:51.144] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key save was corrected from null to its default, SimpleCommentedConfig:{}. 
+[01Nov2026 20:53:51.144] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key save.dailyBackups was corrected from null to its default, 3. 
+[01Nov2026 20:53:51.432] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[01Nov2026 20:53:52.064] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.4.0 Target: 47.4.28
+[01Nov2026 20:53:52.544] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[01Nov2026 20:53:52.666] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.0_mapped_official_1.20.1/forge-1.20.1-47.4.0_mapped_official_1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[01Nov2026 20:53:52.666] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.0_mapped_official_1.20.1/forge-1.20.1-47.4.0_mapped_official_1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[01Nov2026 20:53:54.741] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[01Nov2026 20:53:54.902] [main/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1271 advancements
+[01Nov2026 20:53:55.407] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.20.1
+[01Nov2026 20:53:55.407] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
+[01Nov2026 20:53:55.407] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: SURVIVAL
+[01Nov2026 20:53:55.408] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[01Nov2026 20:53:55.566] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on *:25565
+[01Nov2026 20:53:55.593] [Server thread/INFO] [net.minecraft.server.network.ServerConnectionListener/]: Using epoll channel type
+[01Nov2026 20:53:55.691] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[01Nov2026 20:53:55.691] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: The server will make no attempt to authenticate usernames. Beware.
+[01Nov2026 20:53:55.691] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[01Nov2026 20:53:55.691] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: To change this, set "online-mode" to "true" in the server.properties file.
+[01Nov2026 20:53:55.712] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/forge-server.toml is not correct. Correcting
+[01Nov2026 20:53:55.713] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[01Nov2026 20:53:55.713] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[01Nov2026 20:53:55.713] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[01Nov2026 20:53:55.714] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[01Nov2026 20:53:55.714] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[01Nov2026 20:53:55.714] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[01Nov2026 20:53:55.715] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[01Nov2026 20:53:55.715] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[01Nov2026 20:53:55.715] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.useItemWithDurationZero was corrected from null to its default, false. 
+[01Nov2026 20:53:55.746] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Preparing level "world"
+[01Nov2026 20:53:56.529] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[01Nov2026 20:53:57.348] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[01Nov2026 20:53:57.349] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[01Nov2026 20:53:57.531] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 2%
+[01Nov2026 20:53:58.031] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 22%
+[01Nov2026 20:53:58.531] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 64%
+[01Nov2026 20:53:58.895] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 2365 ms
+[01Nov2026 20:53:58.896] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Done (3.185s)! For help, type "help"
+[01Nov2026 20:53:58.920] [Server thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: [frostbound]
+[01Nov2026 20:53:58.927] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[01Nov2026 20:53:59.657] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] city 'FROSTBOUND' founded (NORMAL, 20 min/day) at y=65
+[01Nov2026 20:53:59.658] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] server started: frostboundWorld=true phase=RUNNING city=true
+[01Nov2026 20:53:59.659] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS frozen_dimension: frostbound:frozen_wastes
+[01Nov2026 20:53:59.659] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS frostbound_world: phase=RUNNING
+[01Nov2026 20:53:59.660] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS city_founded: alive=30 buildings=5
+[01Nov2026 20:53:59.663] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS generator_structure: core=0, 66, 3 floor=65
+[01Nov2026 20:53:59.670] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS structures_match: generator:820/820 shelter:108/108 shelter:108/108 warehouse:228/228 coal_pit:157/157
+[01Nov2026 20:53:59.771] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS terrain_and_biomes: basinY=64 ring(215,0)=120 zone(400,0)=INDUSTRIAL
+[01Nov2026 20:53:59.772] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS placement_rules: frostbound.reason.overlap / frostbound.reason.too_far / frostbound.reason.locked
+[01Nov2026 20:53:59.788] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS heat_network: gen=true level=1 outside=-17.2 shelter=13.3 eta=1.00 supply=1.00
+[01Nov2026 20:53:59.837] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS construction: result=frostbound.msg.construction_started scaffold=true hours=3 state=ACTIVE
+[01Nov2026 20:53:59.840] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS law: frostbound.msg.law_enacted
+[01Nov2026 20:53:59.846] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS research_start: frostbound.msg.research_started
+[01Nov2026 20:53:59.874] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS simulate_3_days: day=4 alive=29 hope=63.0 disc=21.0 coal=118 wood=219 iron=20 food=16 medicine=10 steam_core=0  msPerStep=0.0079
+[01Nov2026 20:53:59.875] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS performance: 0.0079 ms per simulation step
+[01Nov2026 20:53:59.879] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: FROSTBOUND day 4 15:00 | -22.8°C wind | pop 29 (sick 0) | hope 63 disc 21 | gen L1 on | coal=118 wood=219 iron=20 food=16 medicine=10 steam_core=0 | RUNNING
+[01Nov2026 20:53:59.879] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS command_status: rc=1
+[01Nov2026 20:53:59.881] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS npc_tracker_idle: no players, live=0
+[01Nov2026 20:54:00.785] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[01Nov2026 20:54:00.785] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (frozen_wastes): All chunks are saved
+[01Nov2026 20:54:00.785] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[01Nov2026 20:54:00.785] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[01Nov2026 20:54:00.785] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[01Nov2026 20:54:00.792] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test PASS save_file: frostbound_city.dat size=3592
+[01Nov2026 20:54:00.800] [Server thread/INFO] [com.frostbound.FrostboundMod/]: [FROSTBOUND] self-test phase 1 PASS
+[01Nov2026 20:54:00.833] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[01Nov2026 20:54:00.835] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[01Nov2026 20:54:00.835] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[01Nov2026 20:54:02.367] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[01Nov2026 20:54:02.411] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/frostbound:frozen_wastes
+[01Nov2026 20:54:02.567] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[01Nov2026 20:54:02.568] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[01Nov2026 20:54:02.595] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[01Nov2026 20:54:02.595] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (frozen_wastes): All chunks are saved
+[01Nov2026 20:54:02.595] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[01Nov2026 20:54:02.595] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[01Nov2026 20:54:02.595] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved

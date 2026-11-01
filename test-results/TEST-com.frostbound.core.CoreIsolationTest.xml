@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.frostbound.core.CoreIsolationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-01T20:53:19" hostname="runnervm48cm3" time="0.023">
+  <properties/>
+  <testcase name="modIdIsStable()" classname="com.frostbound.core.CoreIsolationTest" time="0.017"/>
+  <testcase name="forgeIsNotOnTheCoreClasspath()" classname="com.frostbound.core.CoreIsolationTest" time="0.002"/>
+  <testcase name="minecraftIsNotOnTheCoreClasspath()" classname="com.frostbound.core.CoreIsolationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

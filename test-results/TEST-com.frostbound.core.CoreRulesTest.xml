@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.frostbound.core.CoreRulesTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-11-01T20:53:19" hostname="runnervm48cm3" time="0.494">
+  <properties/>
+  <testcase name="clockRunsTheSameNumberOfStepsAtEverySpeed()" classname="com.frostbound.core.CoreRulesTest" time="0.007"/>
+  <testcase name="placementIsValidatedAndPaidFor()" classname="com.frostbound.core.CoreRulesTest" time="0.071"/>
+  <testcase name="simulationIsDeterministic()" classname="com.frostbound.core.CoreRulesTest" time="0.103"/>
+  <testcase name="foundingCreatesTheStartingCity()" classname="com.frostbound.core.CoreRulesTest" time="0.002"/>
+  <testcase name="generatorBurnsCoalAndHeatsHomes()" classname="com.frostbound.core.CoreRulesTest" time="0.01"/>
+  <testcase name="lawsResearchAndEventsWork()" classname="com.frostbound.core.CoreRulesTest" time="0.012"/>
+  <testcase name="dayStartsAtSixInTheMorning()" classname="com.frostbound.core.CoreRulesTest" time="0.002"/>
+  <testcase name="pausedClockDoesNotAdvance()" classname="com.frostbound.core.CoreRulesTest" time="0.001"/>
+  <testcase name="idleCitizensScavengeWoodSoTheCityCannotSoftLock()" classname="com.frostbound.core.CoreRulesTest" time="0.006"/>
+  <testcase name="ledgerNeverGoesNegativeOrOverCapacity()" classname="com.frostbound.core.CoreRulesTest" time="0.001"/>
+  <testcase name="constructionBorrowsBuildersWhenEveryoneIsBusy()" classname="com.frostbound.core.CoreRulesTest" time="0.206"/>
+  <testcase name="saveAndLoadRestoresTheWholeState()" classname="com.frostbound.core.CoreRulesTest" time="0.019"/>
+  <testcase name="heatEfficiencyFallsOffOutsideTheCore()" classname="com.frostbound.core.CoreRulesTest" time="0.002"/>
+  <testcase name="newerSchemaIsRefused()" classname="com.frostbound.core.CoreRulesTest" time="0.003"/>
+  <testcase name="corruptedValuesAreRepaired()" classname="com.frostbound.core.CoreRulesTest" time="0.006"/>
+  <testcase name="specialistsReturnToTheirTrade()" classname="com.frostbound.core.CoreRulesTest" time="0.016"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

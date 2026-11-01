@@ -1,0 +1,100 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.8/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Java: 17.0.21, JVM: 17.0.21+9 (Eclipse Adoptium), Arch: amd64
+
+> Task :core:compileJava UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :downloadMcpConfig
+> Task :extractSrg UP-TO-DATE
+> Task :createSrgToMcp UP-TO-DATE
+> Task :downloadMCMeta UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :extractNatives UP-TO-DATE
+> Task :makeSrcDirs
+> Task :prepareRuns
+> Task :prepareRunServer
+> Task :prepareRunServerCompile UP-TO-DATE
+
+> Task :runServer
+2026-11-01 20:54:16,309 main WARN Advanced terminal features are not available in this environment
+[20:54:16] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserveruserdev, --gameDir, ., --fml.forgeVersion, 47.4.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --nogui]
+[20:54:16] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.21 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[20:54:16] [main/INFO] [ne.mi.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserveruserdev
+[20:54:16] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=SERVER
+[20:54:16] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.0/f0c0b352173d0a378cbdcec9cfc4ba65899a721/javafmllanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[20:54:16] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.0/e862740d8c84d08dbfedea412bef88fe42e727c5/lowcodelanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[20:54:16] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.0/5719b3a297a33f877ed5dde4cb4bd75c859096af/mclanguage-1.20.1-47.4.0.jar is missing mods.toml file
+[20:54:16] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.0/235975dafa4309945b59c56b53f31dc5b65a6051/fmlcore-1.20.1-47.4.0.jar is missing mods.toml file
+[20:54:17] [main/INFO] [ne.mi.fm.lo.mo.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[20:54:18] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserveruserdev' with arguments [--gameDir, ., --nogui]
+[20:54:25] [modloading-worker-0/INFO] [ne.mi.co.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.0, for MC 1.20.1 with MCP 20230612.114412
+[20:54:25] [modloading-worker-0/INFO] [ne.mi.co.MinecraftForge/FORGE]: MinecraftForge v47.4.0 Initialized
+[20:54:25] [modloading-worker-0/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] server self-test enabled (phase 2)
+[20:54:25] [modloading-worker-0/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] mod constructed
+[20:54:25] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[20:54:26] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.4.0 Target: 47.4.28
+[20:54:26] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[20:54:27] [main/INFO] [ne.mi.re.GameData/REGISTRIES]: Injecting existing registry data into this CLIENT instance
+[20:54:27] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.0_mapped_official_1.20.1/forge-1.20.1-47.4.0_mapped_official_1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[20:54:27] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.0_mapped_official_1.20.1/forge-1.20.1-47.4.0_mapped_official_1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[20:54:30] [main/INFO] [minecraft/RecipeManager]: Loaded 7 recipes
+[20:54:30] [main/INFO] [minecraft/AdvancementList]: Loaded 1271 advancements
+[20:54:30] [Server thread/INFO] [minecraft/DedicatedServer]: Starting minecraft server version 1.20.1
+[20:54:30] [Server thread/INFO] [minecraft/DedicatedServer]: Loading properties
+[20:54:30] [Server thread/INFO] [minecraft/DedicatedServer]: Default game type: SURVIVAL
+[20:54:30] [Server thread/INFO] [minecraft/MinecraftServer]: Generating keypair
+[20:54:30] [Server thread/INFO] [minecraft/DedicatedServer]: Starting Minecraft server on *:25565
+[20:54:31] [Server thread/INFO] [minecraft/ServerConnectionListener]: Using epoll channel type
+[20:54:31] [Server thread/WARN] [minecraft/DedicatedServer]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[20:54:31] [Server thread/WARN] [minecraft/DedicatedServer]: The server will make no attempt to authenticate usernames. Beware.
+[20:54:31] [Server thread/WARN] [minecraft/DedicatedServer]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[20:54:31] [Server thread/WARN] [minecraft/DedicatedServer]: To change this, set "online-mode" to "true" in the server.properties file.
+[20:54:31] [Server thread/INFO] [minecraft/DedicatedServer]: Preparing level "world"
+[20:54:31] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[20:54:34] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[20:54:34] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[20:54:34] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[20:54:34] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[20:54:34] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[20:54:34] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[20:54:34] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[20:54:34] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 43%
+[20:54:35] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 3869 ms
+[20:54:35] [Server thread/INFO] [minecraft/DedicatedServer]: Done (4.133s)! For help, type "help"
+[20:54:35] [Server thread/INFO] [ne.mi.ga.ForgeGameTestHooks/]: Enabled Gametest Namespaces: [frostbound]
+[20:54:35] [Server thread/INFO] [ne.mi.se.pe.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[20:54:35] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] server started: frostboundWorld=true phase=RUNNING city=true
+[20:54:35] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] self-test PASS phase1_passed: found
+[20:54:35] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] self-test PASS reload_city: phase=RUNNING
+[20:54:35] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] self-test PASS reload_identical: saved=77de6e80e853 loaded=77de6e80e853 step=4050
+[20:54:36] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] self-test PASS reload_structures: generator:820/820 shelter:108/108 shelter:108/108 warehouse:228/228 coal_pit:157/157 tent:27/27
+[20:54:36] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] self-test PASS backup_file: frostbound_city.dat.bak
+[20:54:36] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] self-test PASS corrupt_file_detected: garbage file rejected=true
+[20:54:36] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] self-test PASS continue_after_reload: step 4050 -> 4150
+[20:54:36] [Server thread/INFO] [co.fr.FrostboundMod/]: [FROSTBOUND] self-test phase 2 PASS
+[20:54:36] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[20:54:36] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[20:54:36] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/frostbound:frozen_wastes
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (frozen_wastes): All chunks are saved
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[20:54:38] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/selftest-1793566447487.json
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.8/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 35s
+11 actionable tasks: 3 executed, 8 up-to-date
