@@ -400,7 +400,7 @@ def item_canvas():
     return new(16, 16)
 
 
-def outline(img, color=(30, 18, 8, 255)):
+def outline(img, color=(74, 50, 26, 255)):
     src = img.copy()
     for y in range(16):
         for x in range(16):
@@ -517,7 +517,8 @@ def other_items():
         px(img, x, y, rgb(BRASS, 1.1))
         px(img, x + 1, y, rgb(BRASS, 0.8))
         px(img, x, y - 1, rgb(BRASS, 1.3) if i % 3 else rgb(BRASS_DARK))
-    disc(img, 12, 4, 3.2, rgb(STEEL, 1.1))
+    disc(img, 12, 4, 3.2, rgb(STEEL, 1.3))
+    ring(img, 12, 4, 2.4, 3.2, rgb(STEEL, 0.95))
     disc(img, 13, 3, 1.5, (0, 0, 0, 0))
     px(img, 14, 2, (0, 0, 0, 0))
     px(img, 11, 3, (255, 255, 255, 255))

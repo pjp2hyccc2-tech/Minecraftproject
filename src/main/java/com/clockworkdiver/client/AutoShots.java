@@ -4,11 +4,16 @@ import com.clockworkdiver.ClockworkDiver;
 import com.clockworkdiver.client.gui.BenchScreen;
 import com.clockworkdiver.client.gui.DialogueScreen;
 import com.clockworkdiver.client.gui.RepairPromptScreen;
+import com.clockworkdiver.clock.ClockData;
+import com.clockworkdiver.clock.ClockType;
+import com.clockworkdiver.clock.CommissionGenerator;
+import com.clockworkdiver.network.S2C;
 import net.minecraft.FileUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GameType;
@@ -255,10 +260,33 @@ public final class AutoShots {
         zone("screw", "24_screw_zone", 180.0f, -12.0f, 0);
         zone("spring", "25_spring_zone", 180.0f, -18.0f, 0);
         zone("nest", "26_boss", 180.0f, 5.0f, 60);
+        int n = 0;
+        for (ClockType type : ClockType.values()) {
+            final String shotName = String.format("%02d_bench_%s", 29 + n++, type.id);
+            add("bench_" + type.id, mc -> {
+                ClockData clock = null;
+                RandomSource rand = RandomSource.create(type.ordinal() * 31L + 7L);
+                for (int i = 0; i < 400 && clock == null; i++) {
+                    ClockData c = CommissionGenerator.random(rand, 99, i);
+                    if (c.type == type && c.defects.size() >= 2) clock = c;
+                }
+                if (clock == null) return;
+                clock.defects.get(0).found = true;
+                clock.defects.get(1).repaired = true;
+                clock.defects.get(1).found = true;
+                BenchScreen b = new BenchScreen(new S2C.OpenBench(clock.save(), 30, 1, 1, 1, false, false, 12));
+                mc.setScreen(b);
+                int target = clock.defects.size() > 2 ? 2 : 0;
+                b.forcedLensX = b.defectScreenX(clock.defects.get(target).id);
+                b.forcedLensY = b.defectScreenY(clock.defects.get(target).id);
+            }, 12);
+            snap(shotName);
+        }
+        add("close_benches", mc -> mc.setScreen(null), 5);
         add("street", mc -> cmd(mc, "tp @s 0.5 64 20.5 180 -4"), 40);
-        snap("27_shop_front");
+        snap("35_shop_front");
         add("tower", mc -> look(mc, 0.0f, -55.0f), 10);
-        snap("28_clock_tower");
+        snap("36_clock_tower");
     }
 
     private static void shot(Minecraft mc, String name) {
