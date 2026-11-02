@@ -16,6 +16,14 @@
         the directives, per-program blending, the squeezed hand depth, mipmap directives,
         celestial / shadow matrices, uniforms incl. both held items).
         Writes one PNG per shot plus contact.png, and prints buffer statistics (NaN / black).
+        --timing prints the llvmpipe time of every pass.
+
+  python3 tools/shader/preview.py --shots t_forest_deep,t_fear,...
+        shots named t_* are taken on the REAL mountain at the CI tour's viewpoints: a 72x72
+        piece of the baked terrain (src/main/resources/data/sounan/terrain/terrain.bin.gz or
+        $SOUNAN_TERRAIN) decorated with a port of com.sounan.world.Decorator (cedars, boulders,
+        fallen logs, ferns; no POI structures), a peeking monster behind a trunk ahead.
+        The repo's block textures (or $SOUNAN_TEXTURES) replace the procedural tiles when present.
 
 This is a development aid, not a substitute for the CI client run.
 """
@@ -1488,6 +1496,8 @@ TERRAIN_SHOTS = {
     "t_flare": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=FLARE),
     "t_low": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=FLASH_LOW, t=127.5),
     "t_camera": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=CAMERA),
+    "t_shafts": dict(at=(-60.5, -60.5), yaw=0.0, pitch=-18.0, fear=0.1, held=0),
+    "t_shafts2": dict(at=(-42.5, -44.5), yaw=10.0, pitch=-8.0, fear=0.1, held=0),
 }
 
 
