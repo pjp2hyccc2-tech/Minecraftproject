@@ -433,7 +433,7 @@ final class TrailerShots {
         void frame(float t, Frame f) {
             float k = easeSine(seg(t, 0.0f, 4.5f));
             Vec3 g = new Vec3(-34.7, groundAt(-34.7, -46.6), -46.6);
-            double x = lerp(-44.5f, -43.4f, k), z = lerp(-44.5f, -44.75f, k);
+            double x = lerp(-42.05f, -41.15f, k), z = lerp(-45.03f, -45.22f, k);
             f.cam = eye(x, z, 1.62);
             Vec3 at = g.add(0.0, 1.25, 0.0);
             f.yaw = yawTo(f.cam, at) + 1.0f * noise(t * 0.6f, 22.0f);

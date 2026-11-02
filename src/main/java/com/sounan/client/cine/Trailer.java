@@ -221,8 +221,15 @@ public final class Trailer {
             Vec3 c = F.cam;
             cmd(mc, String.format(Locale.ROOT, "execute in sounan:kaerazu run tp @s %.3f %.3f %.3f %.2f %.2f", c.x, c.y - 1.62, c.z, F.yaw, F.pitch));
             cmd(mc, "item replace entity @s weapon.mainhand with " + heldId(F.held));
+            // the server keeps the shot's opening fear / danger, so the set-up ends on the values the film starts with
+            cmd(mc, String.format(Locale.ROOT, "sounan debug fear %d %.2f 2000", Math.round(clamp01(F.fear) * 100.0f), clamp01(F.danger)));
             cmd(mc, F.held == TrailerShots.CAMERA ? "effect give @s minecraft:night_vision infinite 0 true" : "effect clear @s minecraft:night_vision");
             shot.setup(mc);
+            LocalPlayer lp = mc.player;
+            if (lp != null) {
+                lp.getAbilities().flying = true;
+                lp.onUpdateAbilities();
+            }
             // pose the new actors at once, so nothing pops in on the first filmed frame
             F.reset();
             shot.frame(0.0f, F);
@@ -338,6 +345,9 @@ public final class Trailer {
         float fear = clamp01(F.fear), danger = clamp01(F.danger);
         mc.level.setRainLevel(fear);
         mc.level.setThunderLevel(danger);
+        // Iris refreshes its per-tick uniforms (rainStrength = fear, thunderStrength = danger) only when the level's game
+        // time moves on, and a paused game's never does: one tick per filmed frame keeps them on the film's values
+        mc.level.setGameTime(mc.level.getGameTime() + 1L);
         ClientState.fear = ClientState.fearShown = ClientState.fearPrev = fear * 100.0f;
         ClientState.danger = ClientState.dangerShown = ClientState.dangerPrev = danger;
         mc.gameRenderer.setRenderHand(F.hand);
