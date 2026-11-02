@@ -218,7 +218,8 @@ public final class GolfMatch {
         Hole h = currentHole();
         Wind w = Wind.random(rng);
         double factor = course.windFactor * GolfConfig.WIND_MULTIPLIER.get();
-        wind = new Wind(Math.round(w.speedMps * factor * 10.0) / 10.0, w.yawDeg);
+        double speed = Math.min(12.0, w.speedMps * factor);
+        wind = new Wind(Math.round(speed * 10.0) / 10.0, w.yawDeg);
         for (Participant p : participants) {
             p.cur = 0;
             p.holed = false;
@@ -245,8 +246,8 @@ public final class GolfMatch {
         int k = 0;
         for (ServerPlayer sp : humans()) {
             double side = (k % 2 == 0 ? 1 : -1) * (1 + k / 2) * 1.6;
-            double x = h.teeX() - bx * 3.0 - bz * side;
-            double z = h.teeZ() - bz * 3.0 + bx * side;
+            double x = h.teeX() - bx * 5.0 - bz * side;
+            double z = h.teeZ() - bz * 5.0 + bx * side;
             if (GolfConfig.TELEPORT_TO_BALL.get()) sp.teleportTo(level, x, h.teeY(), z, (float) yaw, 8f);
             k++;
         }
