@@ -164,14 +164,18 @@ public final class AutoShots {
             int x = (int) Math.floor(mc.player.getX() + fx * d + fz * side);
             int z = (int) Math.floor(mc.player.getZ() + fz * d - fx * side);
             int y = mc.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-            // nothing solid from knee height up in the column and its four neighbours (leaf litter underfoot is fine)
+            // the column itself clear to head height; no trunk right beside it (the slope may rise a block)
             boolean clear = true;
             int[][] cells = {{0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
             for (int[] c : cells) {
-                for (int dy = 1; dy < 5 && clear; dy++) {
+                boolean centre = c[0] == 0 && c[1] == 0;
+                for (int dy = centre ? 1 : 2; dy < 5 && clear; dy++) {
                     net.minecraft.core.BlockPos bp = new net.minecraft.core.BlockPos(x + c[0], y + dy, z + c[1]);
                     if (!mc.level.getBlockState(bp).getCollisionShape(mc.level, bp).isEmpty()) clear = false;
                 }
+            }
+            if (!clear && tries == 0) {
+                log("  first spot blocked at " + x + " " + y + " " + z);
             }
             if (!clear) continue;
             float face = mc.player.getYRot() + 180.0f;

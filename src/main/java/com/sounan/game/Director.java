@@ -100,7 +100,8 @@ public final class Director {
     static Vec3 trunkSpot(ServerLevel level, ServerPlayer p, double minR, double maxR, double maxAngle, int side) {
         Vec3 eye = p.position();
         float view = p.getYRot() * Mth.DEG_TO_RAD;
-        for (int tries = 0; tries < 70; tries++) {
+        Vec3 fallback = null;
+        for (int tries = 0; tries < 90; tries++) {
             double ang = view + Math.PI / 2 + (RAND.nextDouble() * 2 - 1) * maxAngle;
             double r = minR + RAND.nextDouble() * (maxR - minR);
             int x = Mth.floor(eye.x + Math.cos(ang) * r), z = Mth.floor(eye.z + Math.sin(ang) * r);
@@ -120,9 +121,13 @@ public final class Director {
             if (!level.getBlockState(at).isAir() || !level.getBlockState(at.above()).isAir() || !level.getBlockState(at.above(2)).isAir()) continue;
             if (TerrainData.get().area(sx, sz) == TerrainData.AREA_OUT) continue;
             if (routeDistance(spot.x, spot.z) < 7.5) continue;   // the trail must pass it at a safe distance
-            return new Vec3(spot.x, sy, spot.z);
+            Vec3 found = new Vec3(spot.x, sy, spot.z);
+            // the leaning head must be in plain view (no rise of the ground or another trunk in between)
+            Vec3 head = found.add(left.scale(side * 0.7));
+            if (visibleFrom(level, p, head, 2.1)) return found;
+            if (fallback == null) fallback = found;
         }
-        return null;
+        return fallback;
     }
 
     /** How far the bark reaches from a log's centre in a direction (0.5 for a lone log, about 1.5 across a 2x2 trunk). */
@@ -261,14 +266,15 @@ public final class Director {
     static boolean spawnYobigoe(ServerLevel level, ServerPlayer p) {
         // off to one side, so following the trail does not mean walking into it — only choosing to go to the light does
         // and somewhere its lamp can actually be seen between the trunks (else the first fitting spot)
-        Vec3 at = null, fallback = null;
-        for (int i = 0; i < 16 && at == null; i++) {
+        Vec3 at = null, fallback = null, partly = null;
+        for (int i = 0; i < 30 && at == null; i++) {
             Vec3 c = openSpot(level, p, 32, 46, 1.9, false);
             if (c == null || routeDistance(c.x, c.z) <= 16) continue;
             if (fallback == null) fallback = c;
             if (visibleFrom(level, p, c, 1.86)) at = c;
+            else if (partly == null && visibleFrom(level, p, c, 3.2)) partly = c; // the glow shows over the rise
         }
-        if (at == null) at = fallback;
+        if (at == null) at = partly != null ? partly : fallback;
         if (at == null) return false;
         return spawn(level, ModEntities.YOBIGOE.get(), at, yawTo(at, p.position()), p) != null;
     }
@@ -289,11 +295,11 @@ public final class Director {
     static boolean stalkOyama(ServerLevel level, ServerPlayer p) {
         // where its eyes can be glimpsed, far off between the trunks, if there is such a place
         Vec3 at = null, fallback = null;
-        for (int i = 0; i < 12 && at == null; i++) {
+        for (int i = 0; i < 24 && at == null; i++) {
             Vec3 c = openSpot(level, p, 40, 58, 1.4, false);
             if (c == null) continue;
             if (fallback == null) fallback = c;
-            if (visibleFrom(level, p, c, 3.7)) at = c;
+            if (visibleFrom(level, p, c, 3.75)) at = c;
         }
         if (at == null) at = fallback;
         if (at == null) return false;
@@ -633,6 +639,17 @@ public final class Director {
 
     /** Debug / screenshot tour: stage one monster scene for this player the way the director would. */
     public static boolean scene(ServerLevel level, ServerPlayer p, String what) {
+        boolean ok = runScene(level, p, what);
+        // for the CI tour log: where it ended up and whether it can be seen from here
+        for (SounanMonster m : level.getEntitiesOfClass(SounanMonster.class, new AABB(p.blockPosition()).inflate(64))) {
+            if (m.tickCount > 2) continue;
+            com.sounan.Sounan.LOGGER.info("[sounan] scene {}: {} at {} blocks, in view: {}", what, m.getType().getDescriptionId(),
+                    String.format(java.util.Locale.ROOT, "%.1f", m.distanceTo(p)), visibleFrom(level, p, m.position(), m.getBbHeight() * 0.85));
+        }
+        return ok;
+    }
+
+    private static boolean runScene(ServerLevel level, ServerPlayer p, String what) {
         PoiLayout L = PoiLayout.get();
         return switch (what) {
             case "nozoki" -> spawnNozoki(level, p);
