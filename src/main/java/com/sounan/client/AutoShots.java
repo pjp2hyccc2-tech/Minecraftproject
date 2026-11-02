@@ -166,6 +166,42 @@ public final class AutoShots {
         snap(name);
     }
 
+    /** A monster scene: set it up, then turn the camera onto the nearest monster of that kind, then the shot. */
+    private static void scene(String name, Consumer<Minecraft> setup, int settle,
+                              Class<? extends net.minecraft.world.entity.Entity> kind, float heightFrac) {
+        add("go_" + name, setup, settle);
+        add("face_" + name, mc -> face(mc, kind, heightFrac), 16);
+        snap(name);
+    }
+
+    /** Turns the camera onto the nearest entity of a kind and logs how far it is (proof that it is there). */
+    private static void face(Minecraft mc, Class<? extends net.minecraft.world.entity.Entity> kind, float heightFrac) {
+        if (mc.player == null || mc.level == null) return;
+        net.minecraft.world.entity.Entity best = null;
+        double bd = Double.MAX_VALUE;
+        for (net.minecraft.world.entity.Entity e : mc.level.entitiesForRendering()) {
+            if (!kind.isInstance(e)) continue;
+            double d = e.distanceTo(mc.player);
+            if (d < bd) {
+                bd = d;
+                best = e;
+            }
+        }
+        if (best == null) {
+            log("  no " + kind.getSimpleName() + " in view range");
+            return;
+        }
+        double dx = best.getX() - mc.player.getX(), dz = best.getZ() - mc.player.getZ();
+        double dy = best.getY() + best.getBbHeight() * heightFrac - mc.player.getEyeY();
+        float yaw = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90.0f;
+        float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+        mc.player.setYRot(yaw);
+        mc.player.yRotO = yaw;
+        mc.player.setXRot(pitch);
+        mc.player.xRotO = pitch;
+        log(String.format(Locale.ROOT, "  %s %.1f blocks away%s", kind.getSimpleName(), bd, best.isInvisible() ? " (invisible)" : ""));
+    }
+
     private static void build() {
         STEPS.clear();
         PoiLayout L = PoiLayout.get();
@@ -176,7 +212,7 @@ public final class AutoShots {
         }, 10);
         if (!SHADERS) {
             snap("01_intro_text");
-            add("intro_wait_title", mc -> dynamicWait = Math.max(0, 280 - ClientState.introTicks), 0);
+            add("intro_wait_title", mc -> dynamicWait = Math.max(0, 262 - ClientState.introTicks), 0);
             snap("02_intro_title");
             add("intro_wait", mc -> {
             }, 50);
@@ -238,12 +274,12 @@ public final class AutoShots {
             cmd(mc, "sounan debug scene clear");
             at(mc, -78.5, -74.5, -40.0f, 2.0f);
             cmd(mc, "sounan debug scene nozoki");
-        }, 50);
+        }, 30, com.sounan.entity.Nozoki.class, 0.8f);
         scene("39_yobigoe_light", mc -> {
             cmd(mc, "sounan debug scene clear");
             at(mc, -24.5, -28.5, -45.0f, 0.0f);
             cmd(mc, "sounan debug scene yobigoe");
-        }, 60);
+        }, 40, com.sounan.entity.Yobigoe.class, 0.9f);
         add("ushiro_attach", mc -> {
             cmd(mc, "sounan debug scene clear");
             at(mc, -6.5, -12.5, -60.0f, 0.0f);
@@ -260,7 +296,7 @@ public final class AutoShots {
             cmd(mc, "sounan debug scene clear");
             at(mc, L.hut.x2() + 6.5, L.hut.cz() + 0.5, 90.0f, -4.0f);
             cmd(mc, "sounan debug scene oyama");
-        }, 60);
+        }, 40, com.sounan.entity.Oyamasama.class, 0.85f);
         scene("42_sleeper", mc -> {
             cmd(mc, "sounan debug scene clear");
             cmd(mc, "sounan debug scene koyanushi");
@@ -270,7 +306,7 @@ public final class AutoShots {
             hold(mc, "sounan:phone_camera");
             at(mc, -60.5, -60.5, -45.0f, 0.0f);
             cmd(mc, "sounan debug scene utsurumono");
-        }, 50);
+        }, 30, com.sounan.entity.Utsurumono.class, 0.7f);
         scene("26_fear_high", mc -> {
             hold(mc, "sounan:flashlight_on");
             cmd(mc, "sounan debug scene clear");

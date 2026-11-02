@@ -30,6 +30,8 @@ public final class PlayerState {
     public int syncTimer;
     public int saveTimer;
     public int introTicks = -1;
+    /** Ticks until the controls hint is shown (after the intro). */
+    public int hintIn;
     public int endingTicks = -1;
     public int stillTicks;
     public int bellCooldown;

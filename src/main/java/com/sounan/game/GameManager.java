@@ -416,6 +416,7 @@ public final class GameManager {
             ps.saveTimer = 0;
             savePlayer(p);
         }
+        if (ps.hintIn > 0 && --ps.hintIn == 0) event(p, EV_SUBTITLE, 0, "hint.sounan.controls");
         if (ps.introTicks >= 0) {
             ps.introTicks++;
             if (ps.introTicks == 20 * 15) introOver(p, ps);
@@ -485,7 +486,7 @@ public final class GameManager {
     private static void introOver(ServerPlayer p, PlayerState ps) {
         ps.introTicks = -1;
         thought(p, "thought.sounan.wake");
-        event(p, EV_SUBTITLE, 0, "hint.sounan.controls");
+        ps.hintIn = 70; // the controls a little later, once the title has gone
     }
 
     private static void tickBody(ServerLevel level, ServerPlayer p, PlayerState ps) {

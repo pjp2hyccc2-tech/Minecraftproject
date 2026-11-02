@@ -261,17 +261,18 @@ public final class HorrorOverlay {
         float fadeOut = k > 20 * 13 ? Math.max(0.0f, 1.0f - (k - 260) / 60.0f) : 1.0f;
         g.fill(0, 0, w, h, argb(fadeOut, 0x000000));
         String[] keys = {"intro.sounan.1", "intro.sounan.2", "intro.sounan.3", "intro.sounan.4"};
-        float[] at = {10, 60, 120, 190};
+        // one line at a time (a cross-fade of two lines in the same place reads as a smear)
+        float[] at = {8, 70, 128, 186};
         for (int i = 0; i < keys.length; i++) {
             float local = k - at[i];
-            if (local < 0 || local > 70) continue;
-            float a = local < 15 ? local / 15.0f : local > 50 ? (70 - local) / 20.0f : 1.0f;
+            if (local < 0 || local > 56) continue;
+            float a = local < 12 ? local / 12.0f : local > 44 ? (56 - local) / 12.0f : 1.0f;
             centered(g, font, I18n.get(keys[i], ClientState.introName), w / 2, h / 2 - 6, argb(a * fadeOut, 0xC8C0B4), 1.3f);
         }
         // the title, over the first dim look at where you landed
-        float lt = k - 264;
+        float lt = k - 246;
         if (lt >= 0 && lt < 56) {
-            float a = lt < 6 ? lt / 6.0f : lt > 36 ? (56 - lt) / 20.0f : 1.0f;
+            float a = lt < 5 ? lt / 5.0f : lt > 34 ? (56 - lt) / 22.0f : 1.0f;
             int lw = Math.min(w * 3 / 5, 384), lh = lw / 2;
             com.mojang.blaze3d.systems.RenderSystem.enableBlend();
             g.setColor(1.0f, 1.0f, 1.0f, a);
