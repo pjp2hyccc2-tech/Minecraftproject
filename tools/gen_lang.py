@@ -84,6 +84,7 @@ COMMON = {
     "intro.sounan.2": ("――おーい", "— Hey! Over here —"),
     "intro.sounan.3": ("誰かに呼ばれた気がして、道を外れた", "Someone called. You stepped off the trail."),
     "intro.sounan.4": ("足元が、崩れた", "The ground gave way."),
+    "hint.sounan.controls": ("懐中電灯: 右クリックで点灯\nスマホ: P キー　／　メモ: J キー\nスニーク: 足音を殺す", "Flashlight: right-click\nPhone: P   Notes: J\nSneak: walk silently"),
     # ---- HUD
     "hud.sounan.checkpoint": ("――少しだけ、息が落ち着いた", "— your breathing slows, a little"),
     "hud.sounan.omamori": ("お守りが、身代わりになった", "The omamori took your place"),

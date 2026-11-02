@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  */
 public class Nozoki extends SounanMonster {
     public static final int PEEK_LEFT = 0, PEEK_RIGHT = 1, STAND = 2, CRAWL = 3, RETREAT = 4;
-    private static final int S_PEEK = 0, S_RETREAT = 1, S_WINDUP = 2, S_ATTACK = 3;
+    private static final int S_PEEK = 0, S_RETREAT = 1, S_WINDUP = 2, S_ATTACK = 3, S_DASH = 4;
     private int state = S_PEEK;
     private int stare;
     private int lit;
@@ -25,6 +25,7 @@ public class Nozoki extends SounanMonster {
     private boolean noticed;
     public int relocations;
     private int lostSight;
+    private net.minecraft.world.phys.Vec3 dashTo;
 
     public Nozoki(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
@@ -43,6 +44,14 @@ public class Nozoki extends SounanMonster {
     @Override
     public boolean hostileNow() {
         return state == S_WINDUP || state == S_ATTACK;
+    }
+
+    /** Something running past between the trees, on all fours, gone before you can light it. */
+    public void dash(net.minecraft.world.phys.Vec3 to) {
+        state = S_DASH;
+        stateTicks = 0;
+        dashTo = to;
+        setAnimPose(CRAWL);
     }
 
     /** Something made it angry (flash photo). */
@@ -108,6 +117,15 @@ public class Nozoki extends SounanMonster {
                     stateTicks = 0;
                     setAnimPose(RETREAT);
                 }
+            }
+            case S_DASH -> {
+                if (dashTo == null || stateTicks > 50 || distanceToSqr(dashTo) < 2.0) {
+                    vanish();
+                    return;
+                }
+                getMoveControl().setWantedPosition(dashTo.x, dashTo.y, dashTo.z, mod(0.42));
+                if (tickCount % 5 == 0) play(ModSounds.NOZOKI_CRAWL.get(), 0.9f, 1.1f);
+                GameManager.reportThreat(p, 0.4f);
             }
             case S_RETREAT -> {
                 faceTowards(p.position());

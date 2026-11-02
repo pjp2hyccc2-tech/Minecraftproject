@@ -130,6 +130,7 @@
   "entity.sounan.utsurumono": "写るもの",
   "entity.sounan.yobigoe": "呼び声",
   "gui.sounan.scroll": "%s / %s　（ホイールでめくる）",
+  "hint.sounan.controls": "懐中電灯: 右クリックで点灯\nスマホ: P キー　／　メモ: J キー\nスニーク: 足音を殺す",
   "hud.sounan.camera_help": "右クリック:撮影　スニーク+右クリック:戻る",
   "hud.sounan.checkpoint": "――少しだけ、息が落ち着いた",
   "hud.sounan.date": "%s月%s日",

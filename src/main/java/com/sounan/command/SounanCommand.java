@@ -126,6 +126,12 @@ public final class SounanCommand {
                             GameManager.beginCapture(c.getSource().getPlayerOrException(), IntegerArgumentType.getInteger(c, "kind"), null);
                             return 1;
                         })))
+                        .then(Commands.literal("scene").then(Commands.argument("monster", StringArgumentType.word()).executes(c -> {
+                            ServerPlayer p = c.getSource().getPlayerOrException();
+                            boolean ok = Director.scene(p.serverLevel(), p, StringArgumentType.getString(c, "monster"));
+                            c.getSource().sendSuccess(() -> Component.literal("scene: " + ok), false);
+                            return ok ? 1 : 0;
+                        })))
                         .then(Commands.literal("spawn").then(Commands.argument("monster", StringArgumentType.word()).executes(c -> {
                             ServerPlayer p = c.getSource().getPlayerOrException();
                             EntityType<? extends Mob> type = switch (StringArgumentType.getString(c, "monster")) {

@@ -130,6 +130,7 @@
   "entity.sounan.utsurumono": "Utsurumono",
   "entity.sounan.yobigoe": "Yobigoe",
   "gui.sounan.scroll": "%s / %s (scroll)",
+  "hint.sounan.controls": "Flashlight: right-click\nPhone: P   Notes: J\nSneak: walk silently",
   "hud.sounan.camera_help": "Right-click: photo   Sneak + right-click: back",
   "hud.sounan.checkpoint": "— your breathing slows, a little",
   "hud.sounan.date": "%s/%s",
