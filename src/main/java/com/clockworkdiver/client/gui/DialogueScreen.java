@@ -317,7 +317,7 @@ public class DialogueScreen extends Screen {
             y += 11;
         }
         if (!finished() && chars >= full.length() && (ticks / 8) % 2 == 0) {
-            g.drawString(font, "▼", boxX + boxW - 16, boxY + boxH - 14, 0xFF7A3A10, false);
+            g.drawString(font, "▼", boxX + boxW - 16, boxY + boxH - 26, 0xFF7A3A10, false);
         }
         g.drawString(font, Component.literal((line + 1) + "/" + lines.size()).withStyle(ChatFormatting.ITALIC), boxX + 12, boxY + boxH - 14,
                 0xFF8A7050, false);

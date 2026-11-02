@@ -173,7 +173,7 @@ public final class ClockworkHud implements IGuiOverlay {
         List<FormattedCharSequence> lines = font.split(Component.translatable(key), 250);
         int w = 26 + lines.stream().mapToInt(font::width).max().orElse(0);
         int h = 10 + lines.size() * 10;
-        int x = (width - w) / 2, y = height - 64 - h - (ClientState.inDive ? 6 : 0);
+        int x = (width - w) / 2, y = height - 64 - h - (ClientState.inDive ? 18 : 0);
         Gfx.begin(g);
         Gfx.alphaMul = a;
         Gfx.brassFrame(x, y, x + w, y + h, 3, 0xF0EADCB8);
@@ -304,7 +304,8 @@ public final class ClockworkHud implements IGuiOverlay {
         int kind = ClientState.transitionKind;
         if (kind < 0) return;
         if (kind == S2C.TRANSITION_QUEST || kind == S2C.TRANSITION_CHAPTER || kind == S2C.TRANSITION_CHAPTER_END) {
-            drawStoryCard(g, font, partial, width, height, kind);
+            // Story cards step aside while a dialogue or other screen is open.
+            if (Minecraft.getInstance().screen == null) drawStoryCard(g, font, partial, width, height, kind);
             return;
         }
         float t = ClientState.transitionTicks + partial;

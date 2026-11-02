@@ -30,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -105,6 +106,14 @@ public final class CommonEvents {
     public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             DelayedTasks.schedule(player.server, 15, () -> Objectives.sync(player));
+        }
+    }
+
+    /** Clock chambers are rebuilt for every dive: creatures saved with an old chamber must not come back. */
+    @SubscribeEvent
+    public static void onEntityJoin(EntityJoinLevelEvent event) {
+        if (event.loadedFromDisk() && !(event.getEntity() instanceof Player) && ModDimensions.isInterior(event.getLevel())) {
+            event.setCanceled(true);
         }
     }
 

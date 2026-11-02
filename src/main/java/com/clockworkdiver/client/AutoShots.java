@@ -400,7 +400,7 @@ public final class AutoShots {
         add("hold2", mc -> cmd(mc, "clockwork debug hold"), 5);
 
         zone("dust swarm", "52_dust_zone", 180.0f, 14.0f, 0);
-        zone("tuning", "53_tuning_bells", 180.0f, 16.0f, 90);
+        zone("tuning", "53_tuning_bells", 180.0f, 16.0f, 15);
         zone("teeth offbeat dark elite", "54_dark_offbeat", 180.0f, 2.0f, 30);
         zone("nest shadow", "55_shadow_boss", 180.0f, 6.0f, 70);
         zone("nest queen", "56_queen", 180.0f, -6.0f, 70);
@@ -409,12 +409,18 @@ public final class AutoShots {
             mc.setScreen(null);
             cmd(mc, "tp @s 0.5 64 26.5 0 0");
             cmd(mc, "clockwork story set 17");
-        }, 100);
-        add("q17_view", mc -> cmd(mc, "tp @s 0.5 64 29.2 0 -12"), 40);
+        }, 300);
+        add("q17_view", mc -> {
+            cmd(mc, "gamemode spectator");
+            cmd(mc, "tp @s 0.5 70 30.6 0 36");
+        }, 40);
         snap("57_plaza");
-        add("q17_wide", mc -> cmd(mc, "tp @s 0.5 64 20.5 0 -28"), 30);
+        add("q17_wide", mc -> cmd(mc, "tp @s 0.5 67 18.5 0 -16"), 30);
         snap("58_tower_arch");
-        add("q17_back", mc -> cmd(mc, "tp @s 0.5 64 30.5 0 0"), 20);
+        add("q17_back", mc -> {
+            cmd(mc, "gamemode creative");
+            cmd(mc, "tp @s 0.5 64 30.5 0 0");
+        }, 30);
         add("q17_talk", mc -> cmd(mc, "clockwork debug talk"), 20);
         add("q17_line", mc -> {
             DialogueScreen d = dialogue(mc);
@@ -468,6 +474,8 @@ public final class AutoShots {
         }, 6);
         snap("66_finale_dialogue");
         add("q20_close", mc -> mc.setScreen(null), 10);
+        add("chapter_end", mc -> ClientState.card(S2C.TRANSITION_CHAPTER_END, "4", StoryQuests.chapterKey(4)), 40);
+        snap("67_chapter_end");
     }
 
     private static void shot(Minecraft mc, String name) {

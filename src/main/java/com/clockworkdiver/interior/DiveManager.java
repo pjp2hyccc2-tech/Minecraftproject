@@ -294,6 +294,8 @@ public final class DiveManager {
 
         switch (s.phase) {
             case DiveSession.INTRO -> {
+                // Anything still standing around from an earlier dive in this chamber does not belong here.
+                if (s.phaseTicks % 5 == 1) purge(level, s);
                 if (s.phaseTicks >= 30) {
                     s.phase = DiveSession.ACTIVE;
                     s.phaseTicks = 0;
@@ -846,7 +848,7 @@ public final class DiveManager {
         double hp = switch (s.boss) {
             case Defect.BOSS_SHADOW -> 230.0 + 25.0 * s.difficulty;
             case Defect.BOSS_SHADE -> 270.0 + 25.0 * s.difficulty;
-            case Defect.BOSS_QUEEN -> 560.0;
+            case Defect.BOSS_QUEEN -> 480.0;
             default -> 150.0 + 25.0 * s.difficulty;
         };
         AttributeInstance maxHp = boss.getAttribute(Attributes.MAX_HEALTH);
@@ -971,6 +973,7 @@ public final class DiveManager {
     public static void exit(ServerPlayer player, DiveSession s, boolean success) {
         SESSIONS.remove(s.playerId);
         MinecraftServer server = player.server;
+        cleanupZone(server, s);
         PlayerProgress progress = WorldProgress.of(player);
         if (success && !s.debug && progress.activeClock != null) {
             Defect d = progress.activeClock.defect(s.defectId);
@@ -1036,6 +1039,12 @@ public final class DiveManager {
         s.pendingComplete = false;
         complete(player, s, level);
         return true;
+    }
+
+    private static void purge(ServerLevel level, DiveSession s) {
+        for (Entity e : level.getEntitiesOfClass(Entity.class, s.layout.bounds, e -> !(e instanceof Player) && e.isAlive())) {
+            e.discard();
+        }
     }
 
     private static void cleanupZone(MinecraftServer server, DiveSession s) {
