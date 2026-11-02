@@ -1,0 +1,94 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "sounan:block/memo_wall",
+    "t": "sounan:block/memo_wall",
+    "n": "sounan:block/rope_anchor"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        1,
+        15.6
+      ],
+      "to": [
+        14,
+        15,
+        15.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t",
+          "uv": [
+            2,
+            1,
+            14,
+            15
+          ]
+        },
+        "south": {
+          "texture": "#t",
+          "uv": [
+            14,
+            1,
+            2,
+            15
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        12.5,
+        15.0
+      ],
+      "to": [
+        8.5,
+        13.5,
+        15.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#n",
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        "east": {
+          "texture": "#n",
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        "west": {
+          "texture": "#n",
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        "up": {
+          "texture": "#n",
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  ]
+}

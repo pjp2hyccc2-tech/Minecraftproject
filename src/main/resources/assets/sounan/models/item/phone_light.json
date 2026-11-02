@@ -1,0 +1,299 @@
+{
+  "loader": "forge:separate_transforms",
+  "base": {
+    "textures": {
+      "s": "sounan:item/held/phone",
+      "particle": "sounan:item/held/phone"
+    },
+    "elements": [
+      {
+        "from": [
+          4.5,
+          1.0,
+          7.25
+        ],
+        "to": [
+          11.5,
+          15.0,
+          8.75
+        ],
+        "faces": {
+          "south": {
+            "texture": "#s",
+            "uv": [
+              4.25,
+              8.5,
+              7.75,
+              15.5
+            ],
+            "forge_data": {
+              "block_light": 15,
+              "sky_light": 15
+            }
+          },
+          "north": {
+            "texture": "#s",
+            "uv": [
+              8.0,
+              0.0,
+              11.5,
+              7.0
+            ]
+          },
+          "east": {
+            "texture": "#s",
+            "uv": [
+              0.0,
+              0.5,
+              1.0,
+              7.5
+            ]
+          },
+          "west": {
+            "texture": "#s",
+            "uv": [
+              0.0,
+              0.5,
+              1.0,
+              7.5
+            ]
+          },
+          "up": {
+            "texture": "#s",
+            "uv": [
+              1.0,
+              0.0,
+              8.0,
+              1.0
+            ]
+          },
+          "down": {
+            "texture": "#s",
+            "uv": [
+              1.0,
+              0.0,
+              8.0,
+              1.0
+            ]
+          }
+        }
+      },
+      {
+        "from": [
+          5.25,
+          11.5,
+          6.85
+        ],
+        "to": [
+          7.75,
+          14.25,
+          7.25
+        ],
+        "faces": {
+          "north": {
+            "texture": "#s",
+            "uv": [
+              12.0,
+              8.0,
+              14.0,
+              10.0
+            ]
+          },
+          "east": {
+            "texture": "#s",
+            "uv": [
+              0.0,
+              0.0,
+              0.5,
+              1.5
+            ]
+          },
+          "west": {
+            "texture": "#s",
+            "uv": [
+              0.0,
+              0.0,
+              0.5,
+              1.5
+            ]
+          },
+          "up": {
+            "texture": "#s",
+            "uv": [
+              0.0,
+              0.0,
+              1.5,
+              0.5
+            ]
+          },
+          "down": {
+            "texture": "#s",
+            "uv": [
+              0.0,
+              0.0,
+              1.5,
+              0.5
+            ]
+          }
+        }
+      },
+      {
+        "from": [
+          8.25,
+          12.75,
+          7.05
+        ],
+        "to": [
+          9.25,
+          13.75,
+          7.25
+        ],
+        "faces": {
+          "north": {
+            "texture": "#s",
+            "uv": [
+              15.0,
+              8.0,
+              16.0,
+              9.0
+            ],
+            "forge_data": {
+              "block_light": 15,
+              "sky_light": 15
+            }
+          }
+        },
+        "shade": false
+      }
+    ],
+    "display": {
+      "firstperson_righthand": {
+        "rotation": [
+          -6,
+          -20,
+          2
+        ],
+        "translation": [
+          -1.0,
+          5.0,
+          0.5
+        ],
+        "scale": [
+          0.45,
+          0.45,
+          0.45
+        ]
+      },
+      "firstperson_lefthand": {
+        "rotation": [
+          -6,
+          -20,
+          2
+        ],
+        "translation": [
+          -1.0,
+          5.0,
+          0.5
+        ],
+        "scale": [
+          0.45,
+          0.45,
+          0.45
+        ]
+      },
+      "thirdperson_righthand": {
+        "rotation": [
+          70,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          2.5,
+          -1.5
+        ],
+        "scale": [
+          0.42,
+          0.42,
+          0.42
+        ]
+      },
+      "thirdperson_lefthand": {
+        "rotation": [
+          70,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          2.5,
+          -1.5
+        ],
+        "scale": [
+          0.42,
+          0.42,
+          0.42
+        ]
+      },
+      "ground": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          2,
+          0
+        ],
+        "scale": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "fixed": {
+        "rotation": [
+          0,
+          180,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.75,
+          0.75,
+          0.75
+        ]
+      },
+      "head": {
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          10,
+          -4
+        ],
+        "scale": [
+          0.6,
+          0.6,
+          0.6
+        ]
+      }
+    }
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "sounan:item/phone_light"
+      }
+    }
+  }
+}
