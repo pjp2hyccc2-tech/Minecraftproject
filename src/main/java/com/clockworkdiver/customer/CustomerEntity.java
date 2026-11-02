@@ -22,6 +22,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -115,29 +116,37 @@ public class CustomerEntity extends PathfinderMob {
         int state = state();
         if (state == ARRIVING && counterPos != null) {
             double d = distanceToSqr(counterPos.getX() + 0.5, counterPos.getY(), counterPos.getZ() + 0.5);
-            if (d < 1.0) {
+            if (d < 1.7) {
                 getNavigation().stop();
+                setYRot(180.0f);
+                yBodyRot = 180.0f;
+                yHeadRot = 180.0f;
                 setState(WAITING);
                 WorkshopManager.onCustomerArrived(this);
             } else if (stateTicks > 500) {
                 // Stuck somewhere: step to the counter.
                 moveTo(counterPos.getX() + 0.5, counterPos.getY(), counterPos.getZ() + 0.5, 180.0f, 0.0f);
             } else if (stateTicks % 20 == 1 || getNavigation().isDone()) {
-                getNavigation().moveTo(counterPos.getX() + 0.5, counterPos.getY(), counterPos.getZ() + 0.5, 0.75);
+                walkTo(counterPos, 0.75);
             }
         } else if ((state == WAITING || state == WAITING_REPAIR) && counterPos != null) {
             double d = distanceToSqr(counterPos.getX() + 0.5, counterPos.getY(), counterPos.getZ() + 0.5);
-            if (d > 4.0 && stateTicks % 20 == 0) {
-                getNavigation().moveTo(counterPos.getX() + 0.5, counterPos.getY(), counterPos.getZ() + 0.5, 0.6);
-            }
+            if (d > 4.0 && stateTicks % 20 == 0) walkTo(counterPos, 0.6);
         } else if (state == LEAVING) {
             if (exitPos == null || stateTicks > 400
                     || distanceToSqr(exitPos.getX() + 0.5, exitPos.getY(), exitPos.getZ() + 0.5) < 2.5) {
                 discard();
             } else if (stateTicks % 20 == 1 || getNavigation().isDone()) {
-                getNavigation().moveTo(exitPos.getX() + 0.5, exitPos.getY(), exitPos.getZ() + 0.5, 0.8);
+                walkTo(exitPos, 0.8);
             }
         }
+    }
+
+    /** Paths to the exact block (vanilla moveTo stops within a block of the target). */
+    private void walkTo(BlockPos target, double speed) {
+        Path path = getNavigation().createPath(target, 0);
+        if (path != null) getNavigation().moveTo(path, speed);
+        else getNavigation().moveTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5, speed);
     }
 
     @Override

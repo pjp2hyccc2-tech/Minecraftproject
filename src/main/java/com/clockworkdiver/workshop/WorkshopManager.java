@@ -232,8 +232,13 @@ public final class WorkshopManager {
         if (ws == null) return;
         for (ServerPlayer player : ws.players()) {
             PlayerProgress progress = WorldProgress.of(player);
-            if (!progress.started || DiveManager.session(player) != null) continue;
             BlockPos o = origin(progress.slot);
+            if (player.getY() < o.getY() - 20 && !player.isSpectator()) {
+                // Fell off the street into the void: back to the shop door.
+                Teleport.to(player, ws, o.getX() + 0.5, o.getY(), o.getZ() + 6.5, 180.0f, 0.0f);
+                continue;
+            }
+            if (!progress.started || DiveManager.session(player) != null) continue;
             if (player.distanceToSqr(o.getX(), o.getY(), o.getZ()) > 80.0 * 80.0) continue;
             CustomerEntity customer = findCustomer(ws, progress);
             if (progress.activeClock == null) {
