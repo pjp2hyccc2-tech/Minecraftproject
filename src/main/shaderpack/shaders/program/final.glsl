@@ -282,7 +282,7 @@ void main() {
   #ifdef PAREIDOLIA
     // ---- faces in the peripheral darkness at high fear -----------------------------------
     float faceAmt = smoothstep(0.62, 0.95, fear()) * FEAR_EFFECTS;
-    if (faceAmt > 0.0 && cam < 0.5) {
+    if (faceAmt > 0.0 && cam < 0.5 && !isHandDepth(texture(depthtex0, uv).r)) {   // never on your own hand
         float dark = 1.0 - smoothstep(0.03, 0.16, luma(color));
         float face = pareidolia(q, aspectRatio, t) * faceAmt * dark * smoothstep(0.30, 0.55, r);
         // they come out of the grain: the pale part is half texture, half noise

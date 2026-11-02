@@ -157,7 +157,7 @@ HandLight makeHandLight(int item, float side) {
         L.halfDist = 1.7;
         L.hot = 0.65;
         L.fog = 0.7;
-        L.color = PHONE_COLOR * 2.4 * mix(1.0, dangerFlicker(t), 0.6) * BEAM_STRENGTH;
+        L.color = PHONE_COLOR * 3.2 * mix(1.0, dangerFlicker(t), 0.6) * BEAM_STRENGTH;
     } else if (item == ITEM_CAMERA) {
         L.type = LIGHT_SPOT;                    // the invisible infrared flood of the camera
         originV = vec3(0.16 * side, -0.14, -0.34);
