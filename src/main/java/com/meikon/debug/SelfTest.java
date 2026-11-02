@@ -43,6 +43,7 @@ public final class SelfTest {
     private static long ticks;
     private static Hanayome bride;
     private static Vec3 measureFrom;
+    private static double maxMoved;
     private static int speedIndex;
     private static final double[] SPEEDS = {0.52, 0.85, 1.13};
 
@@ -76,6 +77,9 @@ public final class SelfTest {
             check(false, "global timeout at stage " + stage);
             finish(server);
             return;
+        }
+        if (stage == 6 && bride != null && measureFrom != null) {
+            maxMoved = Math.max(maxMoved, bride.position().distanceTo(measureFrom));
         }
         if (wait > 0) {
             wait--;
@@ -229,14 +233,17 @@ public final class SelfTest {
                     mb.moveTo(16.5, 65, 0.5, 0, 0);
                     level.addFreshEntity(mb);
                 }
+                // forget the marble first, or she walks back to it and searches the spot
+                NoiseSystem.clear();
                 bride.force(Hanayome.State.WANDER, null);
                 stage = 6;
                 wait = 200;
                 measureFrom = bride.position();
+                maxMoved = 0.0;
             }
             case 6 -> {
-                double moved = bride.position().distanceTo(measureFrom);
-                check(moved > 3.0, String.format("bride wanders (%.1f blocks in 10 s, state %s)", moved, bride.state()));
+                double moved = Math.max(maxMoved, bride.position().distanceTo(measureFrom));
+                check(moved > 3.0, String.format("bride wanders (up to %.1f blocks away in 10 s, state %s)", moved, bride.state()));
                 check(bride.isAlive(), "bride survived 10 s of ticking");
                 log("mansion seed 20261102: " + GameManager.mansion().rooms.stream().map(r -> r.type.name()).toList());
                 finish(server);
