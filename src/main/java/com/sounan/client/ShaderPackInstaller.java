@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Ships the bundled "MeikonShaders" pack ({@code /MeikonShaders.zip} in the mod jar) into the game's
+ * Ships the bundled "SounanShaders" pack ({@code /SounanShaders.zip} in the mod jar) into the game's
  * {@code shaderpacks/} directory and, when Oculus (or Iris) is present and no pack is selected yet, selects it.
  * OptiFine users get {@code optionsshaders.txt} pre-filled so the pack is active on the next launch.
  * Everything is best-effort and never throws into mod loading.
  */
 public final class ShaderPackInstaller {
-    public static final String PACK_FILE = "MeikonShaders.zip";
+    public static final String PACK_FILE = "SounanShaders.zip";
     private static final String RESOURCE = "/" + PACK_FILE;
     private static volatile String status = "not run";
     private static volatile boolean installed;
@@ -76,13 +76,13 @@ public final class ShaderPackInstaller {
             boolean optifine = isOptiFine();
             if (!oculus && !optifine && !Files.isDirectory(packsDir)) {
                 status = "no shader loader (Oculus/Iris/OptiFine) and no shaderpacks/ directory - pack not installed";
-                Sounan.LOGGER.info("[MeikonShaders] {}", status);
+                Sounan.LOGGER.info("[SounanShaders] {}", status);
                 return;
             }
             byte[] data = readResource();
             if (data == null) {
                 status = "bundled " + PACK_FILE + " missing from the mod jar";
-                Sounan.LOGGER.warn("[MeikonShaders] {}", status);
+                Sounan.LOGGER.warn("[SounanShaders] {}", status);
                 return;
             }
             Files.createDirectories(packsDir);
@@ -98,10 +98,10 @@ public final class ShaderPackInstaller {
             if (oculus) notes.add(selectInOculus(copied));
             if (optifine) notes.add(selectInOptiFine(gameDir));
             status = String.join("; ", notes);
-            Sounan.LOGGER.info("[MeikonShaders] {}", status);
+            Sounan.LOGGER.info("[SounanShaders] {}", status);
         } catch (Throwable t) {
             status = "install failed: " + t;
-            Sounan.LOGGER.warn("[MeikonShaders] could not install the shader pack", t);
+            Sounan.LOGGER.warn("[SounanShaders] could not install the shader pack", t);
         }
     }
 
@@ -159,16 +159,16 @@ public final class ShaderPackInstaller {
                         try {
                             reloadMethod.invoke(null);
                         } catch (Exception ex) {
-                            Sounan.LOGGER.warn("[MeikonShaders] Oculus reload failed", ex);
+                            Sounan.LOGGER.warn("[SounanShaders] Oculus reload failed", ex);
                         }
                     });
                 }
             }
             if (select) {
-                pendingMessage = "meikon.shaders.installed";
+                pendingMessage = "sounan.shaders.installed";
                 return "selected " + PACK_FILE + " in Oculus (no pack was selected)";
             }
-            if (reload) pendingMessage = "meikon.shaders.updated";
+            if (reload) pendingMessage = "sounan.shaders.updated";
             return "Oculus pack already selected: " + current.get() + (reload ? " (reloading updated pack)" : "");
         } catch (Throwable t) {
             return "Oculus selection failed: " + t;
@@ -193,7 +193,7 @@ public final class ShaderPackInstaller {
             if (idx >= 0) lines.set(idx, "shaderPack=" + PACK_FILE);
             else lines.add("shaderPack=" + PACK_FILE);
             Files.write(opts, lines, StandardCharsets.UTF_8);
-            pendingMessage = "meikon.shaders.optifine";
+            pendingMessage = "sounan.shaders.optifine";
             try {
                 Class<?> shaders = Class.forName("net.optifine.shaders.Shaders");
                 shaders.getMethod("setShaderPack", String.class).invoke(null, PACK_FILE);

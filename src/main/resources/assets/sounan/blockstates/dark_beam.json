@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "sounan:block/dark_beam"
+    },
+    "axis=z": {
+      "model": "sounan:block/dark_beam_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "sounan:block/dark_beam_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

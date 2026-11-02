@@ -2,26 +2,27 @@ package com.sounan.game;
 
 import com.sounan.Sounan;
 import com.sounan.SounanConfig;
-import com.sounan.block.CandleStandBlock;
-import com.sounan.block.SuzuDaiBlock;
-import com.sounan.block.ToriiGateBlock;
-import com.sounan.entity.Hanayome;
-import com.sounan.entity.Ichimatsu;
-import com.sounan.entity.Kageboshi;
-import com.sounan.entity.Maboroshi;
-import com.sounan.item.LanternItem;
-import com.sounan.item.NoteItem;
+import com.sounan.block.HokoraBlock;
+import com.sounan.block.KeyHookBlock;
+import com.sounan.block.LockedGateBlock;
+import com.sounan.block.LostBagBlock;
+import com.sounan.block.RopeAnchorBlock;
+import com.sounan.block.TunnelLampBlock;
+import com.sounan.item.GameItem;
 import com.sounan.network.ModNetwork;
 import com.sounan.network.S2C;
 import com.sounan.registry.ModBlocks;
 import com.sounan.registry.ModDimensions;
 import com.sounan.registry.ModItems;
 import com.sounan.registry.ModSounds;
+import com.sounan.world.Pois;
+import com.sounan.world.PoiLayout;
+import com.sounan.world.TerrainData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -30,7 +31,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -40,384 +40,271 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
-/** Server-side game logic of 冥婚. */
+/** The night on 帰らず山: progress, the player's body and nerves, gates, captures, endings. Server side. */
 public final class GameManager {
-    public static boolean debugPeaceful;
-    /**
-     * Trailer capture (client {@code -Dmeikon.trailer}): the world holds still - no player logic, no director, no lantern
-     * light blocks - and the camera, the actors and the lights are driven by the capture script.
-     */
-    public static volatile boolean cinematic;
-    public static final int CAPTURE_TICKS = 36;
-    public static final int EVENT_JUMPSCARE = 1, EVENT_DEATH = 2, EVENT_OFUDA = 3, EVENT_INTRO = 4, EVENT_TITLE = 5,
-            EVENT_ENDING = 6, EVENT_SPOTTED = 7, EVENT_STINGER = 8, EVENT_SHADOW = 9, EVENT_SCREEN = 10, EVENT_LEFT = 11,
-            EVENT_SHAKE = 12, EVENT_BELL = 13, EVENT_FLICKER = 14, EVENT_RITUAL = 15;
-    public static final int SCREEN_ENVELOPE = 0, SCREEN_SAKAZUKI = 1;
+    public static final int FLARE_TICKS = 20 * 40;
+    public static final int CAPTURE_TICKS = 44;
+    public static final int MAX_CAPTURES = 5;
+    /** Phone clock: 2:13 AM when you wake up; one phone minute per 30 seconds of play. */
+    public static final int START_MINUTES = 2 * 60 + 13;
 
-    @Nullable private static Mansion mansion;
-    private static long mansionSeed = Long.MIN_VALUE;
+    // S2C.Event types
+    public static final int EV_JUMPSCARE = 1, EV_WAKE = 2, EV_INTRO = 3, EV_AREA = 4, EV_THOUGHT = 5, EV_LOOP = 6, EV_CHECKPOINT = 7,
+            EV_SIGNAL = 8, EV_CALL = 9, EV_ENDING = 10, EV_BUZZ = 11, EV_FLASH = 12, EV_OMAMORI = 13, EV_SHAKE = 14, EV_SILENCE = 15,
+            EV_FOG_LIFT = 16, EV_STINGER = 17, EV_LEFT = 18, EV_SUBTITLE = 19, EV_GLITCH = 20;
+    // capture kinds (= jumpscare images)
+    public static final int KIND_NOZOKI = 0, KIND_YOBIGOE = 1, KIND_USHIRO = 2, KIND_KOYANUSHI = 3, KIND_OYAMASAMA = 4;
+    // S2C.State flags
+    public static final int F_INGAME = 1, F_SIGNAL = 2, F_MAP = 4, F_PHONE_DEAD = 8, F_CAPTURED = 16, F_EXHAUSTED = 32, F_OFFERED = 64,
+            F_BAG = 128, F_CALLED = 256, F_CLIMAX = 512, F_ENDING = 1024, F_KEY = 2048, F_FLARE = 4096;
+
     private static final Map<UUID, PlayerState> STATES = new HashMap<>();
-    private static final Set<Long> SALT = new HashSet<>();
-    private static final RandomSource RAND = RandomSource.create();
-    private static int phase = 1;
-    private static int lastPhase = 1;
+    /** Highest threat reported this tick per player (from the monsters / director). */
+    private static final Map<UUID, Float> THREAT = new HashMap<>();
+    public static boolean debugPeaceful;
+    public static volatile boolean cinematic;
 
     private GameManager() {}
 
-    // ================================================================== access
+    // ------------------------------------------------------------------------------------------------ access
     @Nullable
-    public static Mansion mansion() {
-        return mansion;
+    public static ServerLevel mountain(MinecraftServer server) {
+        return server.getLevel(ModDimensions.KAERAZU);
     }
 
-    @Nullable
     public static PlayerState state(Player p) {
-        return STATES.get(p.getUUID());
+        return STATES.computeIfAbsent(p.getUUID(), id -> {
+            PlayerState ps = new PlayerState();
+            ps.load(p.getPersistentData().getCompound("sounan"));
+            return ps;
+        });
     }
 
-    public static PlayerState stateOrCreate(Player p) {
-        return STATES.computeIfAbsent(p.getUUID(), k -> new PlayerState());
+    public static boolean inGame(Player p) {
+        return p != null && ModDimensions.isMountain(p.level()) && !p.isSpectator();
     }
 
-    public static int phase() {
-        return phase;
-    }
-
-    public static int phaseFor(int bells) {
-        if (bells >= 7) return 5;
-        if (bells >= 6) return 4;
-        if (bells >= 4) return 3;
-        if (bells >= 2) return 2;
-        return 1;
-    }
-
-    @Nullable
-    public static ServerLevel kakuriyo(MinecraftServer server) {
-        return server.getLevel(ModDimensions.KAKURIYO);
-    }
-
-    public static boolean inGame(ServerPlayer p) {
-        return ModDimensions.isKakuriyo(p.level()) && GameData.get(p.server).active && STATES.containsKey(p.getUUID());
-    }
-
-    private static void ensureMansion(GameData data) {
-        if (data.built && (mansion == null || mansionSeed != data.seed)) {
-            mansion = MansionBuilder.record(data.seed);
-            mansionSeed = data.seed;
-        }
-    }
-
-    // ================================================================== tuning by phase
-    public static double brideSpeedFactor() {
-        return switch (phase) {
-            case 1 -> 1.0;
-            case 2 -> 1.03;
-            case 3 -> 1.07;
-            case 4 -> 1.10;
-            default -> 1.05;
-        } * SounanConfig.brideSpeed();
-    }
-
-    public static double hearingFactor() {
-        return 1.0 + 0.1 * (phase - 1);
-    }
-
-    public static boolean relentless() {
-        return phase >= 4;
-    }
-
-    public static boolean dollsAwake() {
-        return phase >= 2;
-    }
-
-    public static double dollSpeedFactor() {
-        return 1.0 + 0.08 * Math.max(0, phase - 2);
-    }
-
-    public static double sightRange(ServerPlayer p, PlayerState ps) {
-        double r;
-        if (ps.lanternLit) r = 26.0;
-        else if (p.level().getMaxLocalRawBrightness(p.blockPosition().above()) >= 8) r = 18.0;
-        else r = 9.0;
-        if (p.isCrouching()) r *= 0.65;
-        return r * (1.0 + 0.07 * (phase - 1));
-    }
-
-    // ================================================================== player lists
-    public static List<ServerPlayer> huntable(ServerLevel level) {
-        List<ServerPlayer> out = new ArrayList<>();
-        GameData data = GameData.get(level.getServer());
-        if (!data.active) return out;
-        for (ServerPlayer p : level.players()) {
-            PlayerState ps = STATES.get(p.getUUID());
-            if (ps == null || ps.captured || ps.ending || !p.isAlive() || p.isSpectator() || p.isCreative()) continue;
-            out.add(p);
-        }
-        return out;
-    }
-
-    @Nullable
-    public static ServerPlayer nearestHuntable(ServerLevel level, Vec3 from, double max) {
-        ServerPlayer best = null;
-        double bd = max * max;
-        for (ServerPlayer p : huntable(level)) {
-            double d = p.distanceToSqr(from);
-            if (d < bd) {
-                bd = d;
-                best = p;
-            }
-        }
-        return best;
-    }
-
-    public static boolean lanternLit(ServerPlayer p) {
+    /** Players monsters may hunt (not creative/spectator, not already being taken, not in an ending). */
+    public static boolean huntable(ServerPlayer p) {
+        if (!inGame(p) || p.isCreative() || debugPeaceful || cinematic) return false;
         PlayerState ps = state(p);
-        return ps != null && ps.lanternLit;
+        return !ps.captured && ps.endingTicks < 0 && ps.introTicks < 0;
     }
 
-    public static boolean holdsLitLantern(Player p) {
-        return p.getMainHandItem().is(ModItems.CHOCHIN_LIT.get()) || p.getOffhandItem().is(ModItems.CHOCHIN_LIT.get());
+    public static void reportThreat(ServerPlayer p, float threat) {
+        THREAT.merge(p.getUUID(), threat, Math::max);
     }
 
-    /** Is any player (any mode except spectator) looking at this entity? */
-    public static boolean anyoneSees(ServerLevel level, Entity e) {
-        for (ServerPlayer p : level.players()) {
-            if (p.isSpectator()) continue;
-            if (looksAt(p, e, 0.5, 48.0)) return true;
-        }
-        return false;
-    }
-
-    public static boolean looksAt(ServerPlayer p, Entity e, double minDot, double maxDist) {
-        Vec3 to = e.position().add(0, e.getBbHeight() * 0.6, 0).subtract(p.getEyePosition());
-        double dist = to.length();
-        if (dist > maxDist || dist < 1.0e-3) return dist < 1.0e-3;
-        double dot = p.getViewVector(1.0f).dot(to.scale(1.0 / dist));
-        return dot >= minDot && p.hasLineOfSight(e);
-    }
-
-    // ================================================================== safe room, salt, closets, waypoints
-    public static boolean nearSafeRoom(Vec3 pos, double margin) {
-        return mansion != null && mansion.safeBox != null && mansion.safeBox.inflate(margin).contains(pos);
-    }
-
-    public static void saltPlaced(ServerLevel level, BlockPos pos) {
-        SALT.add(pos.asLong());
-    }
-
-    /** Active salt within the radius of this position (the bride will not cross it). */
-    public static boolean nearSalt(ServerLevel level, Vec3 pos, double radius) {
-        Iterator<Long> it = SALT.iterator();
-        boolean found = false;
-        while (it.hasNext()) {
-            BlockPos p = BlockPos.of(it.next());
-            if (!level.getBlockState(p).is(ModBlocks.SALT_PILE.get())) {
-                it.remove();
-                continue;
-            }
-            if (Vec3.atBottomCenterOf(p).distanceToSqr(pos) < radius * radius) found = true;
-        }
-        return found;
-    }
-
-    @Nullable
-    public static Closet closet(int index) {
-        if (mansion == null || index < 0 || index >= mansion.closets.size()) return null;
-        return mansion.closets.get(index);
-    }
-
-    @Nullable
-    public static ServerPlayer playerInCloset(ServerLevel level, int index) {
-        for (ServerPlayer p : level.players()) {
-            PlayerState ps = state(p);
-            if (ps != null && ps.closet == index) return p;
-        }
-        return null;
-    }
-
-    @Nullable
-    public static BlockPos nextWaypoint(ServerLevel level, Hanayome bride) {
-        if (mansion == null || mansion.waypoints.isEmpty()) return null;
-        List<BlockPos> wps = mansion.waypoints;
-        ServerPlayer target = nearestHuntable(level, bride.position(), 300);
-        if (target != null) {
-            PlayerState ps = state(target);
-            boolean menace = ps != null && Director.wantsMenace(ps, level.getGameTime());
-            if (menace && RAND.nextFloat() < 0.65f) {
-                List<BlockPos> near = new ArrayList<>();
-                for (BlockPos w : wps) {
-                    double d = w.distSqr(target.blockPosition());
-                    if (d > 7 * 7 && d < 18 * 18) near.add(w);
-                }
-                if (!near.isEmpty()) return near.get(RAND.nextInt(near.size()));
-            }
-        }
-        for (int i = 0; i < 8; i++) {
-            BlockPos w = wps.get(RAND.nextInt(wps.size()));
-            if (w.distSqr(bride.blockPosition()) > 10 * 10) return w;
-        }
-        return wps.get(RAND.nextInt(wps.size()));
-    }
-
-    public static BlockPos farWaypoint(ServerLevel level, BlockPos from) {
-        if (mansion == null || mansion.waypoints.isEmpty()) return from;
-        List<ServerPlayer> players = huntable(level);
-        BlockPos best = from;
-        double bestScore = -1;
-        for (BlockPos w : mansion.waypoints) {
-            double score = Double.MAX_VALUE;
-            for (ServerPlayer p : players) score = Math.min(score, w.distSqr(p.blockPosition()));
-            if (players.isEmpty()) score = w.distSqr(from);
-            score += RAND.nextDouble() * 40;
-            if (score > bestScore) {
-                bestScore = score;
-                best = w;
-            }
-        }
-        return best;
-    }
-
-    // ================================================================== fear helpers
     public static void addFear(ServerPlayer p, float amount) {
         PlayerState ps = state(p);
-        if (ps == null) return;
-        float mul = amount > 0 && hasItem(p, ModItems.OMAMORI.get()) ? 0.7f : 1.0f;
-        ps.fear = Mth.clamp(ps.fear + amount * mul * (float) SounanConfig.fearRate(), 0.0f, 100.0f);
+        float scaled = amount > 0 ? (float) (amount * SounanConfig.fearRate()) : amount;
+        ps.fear = Mth.clamp(ps.fear + scaled, 0.0f, 100.0f);
     }
 
-    public static boolean hasItem(Player p, Item item) {
+    public static void event(ServerPlayer p, int type, int arg, String text) {
+        ModNetwork.send(p, new S2C.Event(type, arg, text));
+    }
+
+    public static void thought(ServerPlayer p, String key) {
+        event(p, EV_THOUGHT, 0, key);
+    }
+
+    /** A sound only this player hears, at a position (director tricks). */
+    public static void privateSound(ServerPlayer p, SoundEvent sound, Vec3 at, float volume, float pitch) {
+        ModNetwork.send(p, new S2C.Sound(sound.getLocation().toString(), at.x, at.y, at.z, volume, pitch));
+    }
+
+    public static void worldSound(Level level, Vec3 at, SoundEvent sound, float volume, float pitch) {
+        level.playSound(null, at.x, at.y, at.z, sound, SoundSource.HOSTILE, volume, pitch);
+    }
+
+    public static boolean has(Player p, Item item) {
         for (ItemStack s : p.getInventory().items) if (s.is(item)) return true;
         return p.getOffhandItem().is(item);
     }
 
-    private static boolean consume(Player p, Item item) {
+    public static boolean consume(Player p, Item item) {
         for (ItemStack s : p.getInventory().items) {
             if (s.is(item)) {
                 s.shrink(1);
                 return true;
             }
         }
-        if (p.getOffhandItem().is(item)) {
-            p.getOffhandItem().shrink(1);
+        ItemStack off = p.getOffhandItem();
+        if (off.is(item)) {
+            off.shrink(1);
             return true;
         }
         return false;
     }
 
-    public static void extinguish(ServerPlayer p) {
+    @Nullable
+    public static InteractionHand handHolding(Player p, GameItem.Kind... kinds) {
         for (InteractionHand h : InteractionHand.values()) {
-            ItemStack s = p.getItemInHand(h);
-            if (s.is(ModItems.CHOCHIN_LIT.get())) p.setItemInHand(h, LanternItem.toggled(s, false));
+            GameItem.Kind k = GameItem.kindOf(p.getItemInHand(h));
+            if (k == null) continue;
+            for (GameItem.Kind want : kinds) if (k == want) return h;
         }
-        for (int i = 0; i < p.getInventory().items.size(); i++) {
-            ItemStack s = p.getInventory().items.get(i);
-            if (s.is(ModItems.CHOCHIN_LIT.get())) p.getInventory().items.set(i, LanternItem.toggled(s, false));
-        }
-        p.level().playSound(null, p.getX(), p.getY() + 1, p.getZ(), ModSounds.GAME_LANTERN_OFF.get(), SoundSource.PLAYERS, 0.9f, 0.7f);
+        return null;
     }
 
-    // ================================================================== packets helpers
-    public static void event(ServerPlayer p, int type, int arg, String text) {
-        ModNetwork.send(p, new S2C.Event(type, arg, text));
+    public static boolean holding(Player p, GameItem.Kind... kinds) {
+        return handHolding(p, kinds) != null;
     }
 
-    public static void sound(ServerPlayer p, SoundEvent sound, Vec3 at, float volume, float pitch) {
-        ResourceLocation id = ForgeRegistries.SOUND_EVENTS.getKey(sound);
-        if (id != null) ModNetwork.send(p, new S2C.Sound(id.toString(), at.x, at.y, at.z, volume, pitch));
+    public static boolean flashlightOn(Player p) {
+        return holding(p, GameItem.Kind.FLASHLIGHT_ON, GameItem.Kind.FLASHLIGHT_LOW);
     }
 
-    private static void allInGame(MinecraftServer server, java.util.function.Consumer<ServerPlayer> action) {
-        ServerLevel level = kakuriyo(server);
-        if (level == null) return;
-        for (ServerPlayer p : level.players()) {
-            if (STATES.containsKey(p.getUUID())) action.accept(p);
-        }
+    public static boolean anyLight(Player p) {
+        return holding(p, GameItem.Kind.FLASHLIGHT_ON, GameItem.Kind.FLASHLIGHT_LOW, GameItem.Kind.PHONE_LIGHT, GameItem.Kind.FLARE_LIT);
     }
 
-    // ================================================================== start / leave / reset
-    public static void openEnvelope(ServerPlayer p) {
-        if (inGame(p)) {
-            openNote(p, Notes.INVITATION);
+    public static boolean flareLit(Player p) {
+        return holding(p, GameItem.Kind.FLARE_LIT);
+    }
+
+    /** Replaces the item in a hand keeping the hand (flashlight on/off, phone modes). */
+    public static void swap(Player p, InteractionHand hand, Item to) {
+        ItemStack old = p.getItemInHand(hand);
+        ItemStack fresh = new ItemStack(to, Math.max(1, old.getCount()));
+        if (old.hasTag() && old.getTag() != null) fresh.setTag(old.getTag().copy());
+        p.setItemInHand(hand, fresh);
+    }
+
+    /** Is the entity inside this player's flashlight / phone light beam? */
+    public static boolean inBeam(ServerPlayer p, Entity e, double maxDist) {
+        if (!anyLight(p)) return false;
+        boolean wide = holding(p, GameItem.Kind.PHONE_LIGHT) && !flashlightOn(p);
+        double range = flashlightOn(p) ? maxDist : Math.min(maxDist, 12.0);
+        Vec3 eye = p.getEyePosition();
+        Vec3 to = e.getBoundingBox().getCenter().subtract(eye);
+        double d = to.length();
+        if (d > range || d < 0.01) return false;
+        double cos = to.scale(1.0 / d).dot(p.getViewVector(1.0f));
+        if (cos < (wide ? 0.80 : 0.91)) return false;
+        return p.hasLineOfSight(e);
+    }
+
+    /** Is the player looking at the entity (in view, unobstructed)? */
+    public static boolean looksAt(ServerPlayer p, Entity e, double minDot, double maxDist) {
+        Vec3 eye = p.getEyePosition();
+        Vec3 to = e.getEyePosition().subtract(eye);
+        double d = to.length();
+        if (d > maxDist || d < 0.01) return false;
+        if (to.scale(1.0 / d).dot(p.getViewVector(1.0f)) < minDot) return false;
+        return p.hasLineOfSight(e);
+    }
+
+    public static int areaAt(ServerPlayer p) {
+        PoiLayout L = PoiLayout.get();
+        if (L.inTunnel(p.getX(), p.getY(), p.getZ())) return TerrainData.AREA_TUNNEL;
+        int a = TerrainData.get().area(p.getX(), p.getZ());
+        if (a == TerrainData.AREA_TUNNEL) return TerrainData.AREA_OUT;   // on top of the ridge
+        return a;
+    }
+
+    public static int phoneMinutes(GameData data) {
+        return START_MINUTES + (int) (data.playTicks / 600L);
+    }
+
+    // ------------------------------------------------------------------------------------------------ start / leave
+    public static void onLogin(ServerPlayer p) {
+        PlayerState ps = state(p);
+        GameData data = GameData.get(p.server);
+        if (!data.started && data.ending == 0) {
+            if (SounanConfig.autoStart()) startGame(p);
             return;
         }
-        event(p, EVENT_SCREEN, SCREEN_ENVELOPE, p.getGameProfile().getName());
+        if (data.started && data.ending == 0 && !inGame(p) && !p.getPersistentData().contains("sounan_return")) {
+            // somebody else started the night: join them at the checkpoint
+            saveReturn(p);
+            p.getInventory().clearContent();
+            giveStartItems(p);
+            if (!p.isCreative()) p.setGameMode(GameType.ADVENTURE);
+            toCheckpoint(p, data);
+        }
+        syncState(p, ps, data);
+    }
+
+    public static void onLogout(ServerPlayer p) {
+        savePlayer(p);
+        FlashlightLight.remove(p);
+        STATES.remove(p.getUUID());
+    }
+
+    public static void savePlayer(ServerPlayer p) {
+        PlayerState ps = STATES.get(p.getUUID());
+        if (ps != null) p.getPersistentData().put("sounan", ps.save());
     }
 
     public static void startGame(ServerPlayer p) {
         MinecraftServer server = p.server;
-        GameData data = GameData.get(server);
-        ServerLevel level = kakuriyo(server);
+        ServerLevel level = mountain(server);
         if (level == null) {
-            p.displayClientMessage(Component.translatable("message.meikon.no_dimension"), false);
+            Sounan.LOGGER.error("[sounan] the mountain dimension is missing");
             return;
         }
-        if (!data.active || !data.built) {
-            Long fixed = Long.getLong("meikon.mansionSeed");
-            long seed = fixed != null ? fixed : RAND.nextLong() ^ System.nanoTime();
-            newMansion(level, data, seed);
+        GameData data = GameData.get(server);
+        if (!data.started || data.ending != 0) {
+            data.reset();
+            data.started = true;
+            data.setDirty();
         }
-        ensureMansion(data);
-        if (!ModDimensions.isKakuriyo(p.level())) saveReturn(p);
+        if (!inGame(p) && !p.getPersistentData().contains("sounan_return")) saveReturn(p);
         p.getInventory().clearContent();
-        ItemStack lantern = new ItemStack(ModItems.CHOCHIN.get());
-        LanternItem.setOil(lantern, LanternItem.MAX_OIL * 6 / 10);
-        p.getInventory().add(lantern);
+        giveStartItems(p);
         if (!p.isCreative()) p.setGameMode(GameType.ADVENTURE);
         PlayerState ps = new PlayerState();
         STATES.put(p.getUUID(), ps);
-        toSpawn(p);
+        PoiLayout L = PoiLayout.get();
+        teleport(p, level, Vec3.atBottomCenterOf(L.start), L.startFacing.toYRot(), 20.0f);
+        ps.safePos = Vec3.atBottomCenterOf(L.start);
+        ps.safeYaw = L.startFacing.toYRot();
         p.removeAllEffects();
         p.setHealth(p.getMaxHealth());
-        event(p, EVENT_INTRO, 0, p.getGameProfile().getName());
+        p.getFoodData().setFoodLevel(20);
+        ps.introTicks = 0;
+        ps.fear = 35.0f;
+        event(p, EV_INTRO, 0, p.getGameProfile().getName());
         syncState(p, ps, data);
-        Sounan.LOGGER.info("[sounan] {} entered the mansion (seed {})", p.getGameProfile().getName(), data.seed);
+        Sounan.LOGGER.info("[sounan] {} is lost on the mountain", p.getGameProfile().getName());
     }
 
-    /** Builds a fresh mansion and resets progress. */
-    public static void newMansion(ServerLevel level, GameData data, long seed) {
-        data.resetProgress(seed);
-        long t = System.currentTimeMillis();
-        for (int cx = -3; cx <= 2; cx++) {
-            for (int cz = -3; cz <= 2; cz++) level.setChunkForced(cx, cz, true);
-        }
-        mansion = MansionBuilder.build(level, seed);
-        mansionSeed = seed;
-        data.built = true;
-        data.active = true;
-        data.setDirty();
-        phase = 1;
-        lastPhase = 1;
-        SALT.clear();
-        NoiseSystem.clear();
-        LanternLight.forgetAll();
-        Sounan.LOGGER.info("[sounan] mansion built in {} ms ({} rooms, {} closets, {} bells on pedestals)",
-                System.currentTimeMillis() - t, mansion.rooms.size(), mansion.closets.size(), mansion.bellSpots.size());
+    static void giveStartItems(ServerPlayer p) {
+        p.getInventory().add(new ItemStack(ModItems.FLASHLIGHT.get()));
+        p.getInventory().add(new ItemStack(ModItems.PHONE.get()));
     }
 
-    public static void toSpawn(ServerPlayer p) {
-        ServerLevel level = kakuriyo(p.server);
-        if (level == null || mansion == null) return;
-        BlockPos s = mansion.spawn;
+    public static void teleport(ServerPlayer p, ServerLevel level, Vec3 pos, float yaw, float pitch) {
         p.stopRiding();
-        p.teleportTo(level, s.getX() + 0.5, s.getY(), s.getZ() + 0.5, mansion.spawnYaw, 5.0f);
+        p.teleportTo(level, pos.x, pos.y, pos.z, yaw, pitch);
         p.setDeltaMovement(Vec3.ZERO);
         p.fallDistance = 0;
+    }
+
+    public static void toCheckpoint(ServerPlayer p, GameData data) {
+        ServerLevel level = mountain(p.server);
+        if (level == null) return;
+        Pois.Point cp = Pois.get().checkpoint(data.checkpoint);
+        PoiLayout L = PoiLayout.get();
+        Vec3 pos = cp != null ? cp.center() : Vec3.atBottomCenterOf(L.start);
+        float yaw = cp != null ? cp.facing().toYRot() : L.startFacing.toYRot();
+        teleport(p, level, pos, yaw, 10.0f);
+        PlayerState ps = state(p);
+        ps.safePos = pos;
+        ps.safeYaw = yaw;
     }
 
     private static void saveReturn(ServerPlayer p) {
@@ -431,14 +318,14 @@ public final class GameManager {
         tag.put("Inv", p.getInventory().save(new ListTag()));
         tag.putInt("XpLevel", p.experienceLevel);
         tag.putFloat("XpProgress", p.experienceProgress);
-        p.getPersistentData().put("meikon_return", tag);
+        p.getPersistentData().put("sounan_return", tag);
     }
 
-    /** Sends the player back to where they opened the envelope (with their own inventory). */
-    public static void leaveGame(ServerPlayer p, boolean goodEnding) {
-        LanternLight.remove(p);
-        STATES.remove(p.getUUID());
-        CompoundTag tag = p.getPersistentData().getCompound("meikon_return");
+    /** Back to the world they came from, with their own things. */
+    public static void leaveGame(ServerPlayer p) {
+        FlashlightLight.remove(p);
+        Director.clearFor(p);
+        CompoundTag tag = p.getPersistentData().getCompound("sounan_return");
         MinecraftServer server = p.server;
         ServerLevel target = server.overworld();
         double x, y, z;
@@ -446,7 +333,7 @@ public final class GameManager {
         if (tag.contains("Dim")) {
             ResourceKey<Level> key = ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION, new ResourceLocation(tag.getString("Dim")));
             ServerLevel l = server.getLevel(key);
-            if (l != null && l != kakuriyo(server)) target = l;
+            if (l != null && l != mountain(server)) target = l;
             x = tag.getDouble("X");
             y = tag.getDouble("Y");
             z = tag.getDouble("Z");
@@ -458,7 +345,7 @@ public final class GameManager {
             z = sp.getZ() + 0.5;
         }
         p.removeAllEffects();
-        p.teleportTo(target, x, y, z, yaw, 0.0f);
+        teleport(p, target, new Vec3(x, y, z), yaw, 0.0f);
         p.getInventory().clearContent();
         if (tag.contains("Inv")) p.getInventory().load(tag.getList("Inv", Tag.TAG_COMPOUND));
         if (tag.contains("Mode")) p.setGameMode(GameType.byId(tag.getInt("Mode")));
@@ -467,209 +354,608 @@ public final class GameManager {
             p.setExperienceLevels(tag.getInt("XpLevel"));
             p.experienceProgress = tag.getFloat("XpProgress");
         }
-        p.getPersistentData().remove("meikon_return");
-        if (goodEnding) {
-            for (int i = 0; i < p.getInventory().items.size(); i++) {
-                if (p.getInventory().items.get(i).is(ModItems.RED_ENVELOPE.get())) p.getInventory().items.set(i, ItemStack.EMPTY);
-            }
-            p.getInventory().add(new ItemStack(ModItems.ASH.get()));
-            if (server.isSingleplayer()) server.overworld().setDayTime((server.overworld().getDayTime() / 24000L + 1) * 24000L - 600L);
-        }
-        event(p, EVENT_LEFT, goodEnding ? 1 : 0, "");
+        p.getPersistentData().remove("sounan_return");
+        STATES.remove(p.getUUID());
+        p.getPersistentData().remove("sounan");
+        event(p, EV_LEFT, GameData.get(server).ending, "");
     }
 
-    public static void endGame(MinecraftServer server) {
-        GameData data = GameData.get(server);
-        data.active = false;
-        data.endings++;
-        data.setDirty();
-    }
-
-    // ================================================================== ticking
+    // ------------------------------------------------------------------------------------------------ tick
     public static void serverTick(MinecraftServer server) {
-        ServerLevel level = kakuriyo(server);
+        THREAT.keySet().retainAll(STATES.keySet());
+        ServerLevel level = mountain(server);
         if (level == null) return;
         GameData data = GameData.get(server);
-        ensureMansion(data);
-        if (cinematic) return;
-        phase = phaseFor(data.bells);
-        if (phase != lastPhase) {
-            int old = lastPhase;
-            lastPhase = phase;
-            if (data.active) onPhaseChanged(level, old, phase);
-        }
-        // forget players who are gone
-        STATES.keySet().removeIf(id -> {
-            ServerPlayer p = server.getPlayerList().getPlayer(id);
-            return p == null || p.level() != level;
-        });
+        if (data.started && data.ending == 0 && !level.players().isEmpty() && !cinematic) data.playTicks++;
         for (ServerPlayer p : level.players()) {
-            PlayerState ps = STATES.get(p.getUUID());
-            if (ps == null) {
-                if (data.active && !p.isSpectator()) {
-                    ps = stateOrCreate(p);
-                } else {
-                    continue;
-                }
-            }
-            try {
-                tickPlayer(level, p, ps, data);
-            } catch (Exception e) {
-                Sounan.LOGGER.error("[sounan] player tick failed", e);
-            }
+            PlayerState ps = state(p);
+            tickPlayer(level, p, ps, data);
         }
-        LanternLight.tick(level);
-        if (data.active && level.getGameTime() % 20 == 0) Director.tickLevel(level, data);
+        FlashlightLight.tick(level);
+        if (!cinematic) Director.tickLevel(level, data);
+        THREAT.clear();
     }
 
     private static void tickPlayer(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
-        long now = level.getGameTime();
-        // ---------------------------------------------------------- capture in progress
-        if (ps.captured) {
-            ps.captureTicks++;
-            if (ps.capturePos != null) {
-                p.teleportTo(ps.capturePos.x, ps.capturePos.y, ps.capturePos.z);
+        if (p.isSpectator()) return;
+        PoiLayout L = PoiLayout.get();
+        Pois pois = Pois.get();
+        TerrainData terrain = TerrainData.get();
+        if (p.tickCount % 100 == 0) {
+            p.getFoodData().setFoodLevel(20);
+            p.getFoodData().setSaturation(5.0f);
+        }
+        if (++ps.saveTimer >= 200) {
+            ps.saveTimer = 0;
+            savePlayer(p);
+        }
+        if (ps.introTicks >= 0) {
+            ps.introTicks++;
+            if (ps.introTicks == 20 * 15) introOver(p, ps);
+            if (ps.introTicks < 20 * 15) {
                 p.setDeltaMovement(Vec3.ZERO);
+                syncTimer(p, ps, data);
+                return;
             }
-            if (ps.captureTicks >= CAPTURE_TICKS) finishCapture(level, p, ps, data);
+        }
+        if (ps.endingTicks >= 0) {
+            ps.endingTicks++;
             syncTimer(p, ps, data);
             return;
         }
-        if (ps.ending) {
-            ps.endingTicks++;
-            if (ps.endingTicks > 20 * 120) {
-                boolean good = ps.endingGood;
-                leaveGame(p, good);
-            }
+        if (ps.captured) {
+            tickCapture(level, p, ps, data);
+            syncTimer(p, ps, data);
             return;
         }
-        // keep the body going: no hunger, no health loss
-        p.getFoodData().setFoodLevel(20);
-        p.getFoodData().setSaturation(5.0f);
-        if (p.getHealth() < p.getMaxHealth()) p.setHealth(p.getMaxHealth());
 
-        // ---------------------------------------------------------- where is the player
-        BlockPos feet = p.blockPosition();
-        int c = mansion == null ? -1 : mansion.closetAt(feet);
-        if (c >= 0) {
-            Closet cl = mansion.closets.get(c);
-            BlockState door = level.getBlockState(cl.front());
-            if (!(door.getBlock() instanceof DoorBlock) || door.getValue(DoorBlock.OPEN)) c = -1;
-        }
-        ps.closet = c;
-        ps.hiddenTicks = c >= 0 ? ps.hiddenTicks + 1 : 0;
-        ps.inSafeRoom = nearSafeRoom(p.position(), 0.0);
-        if (!ps.everLeftSafeRoom && !ps.inSafeRoom && mansion != null && p.position().distanceToSqr(Vec3.atCenterOf(mansion.spawn)) > 4) {
-            ps.everLeftSafeRoom = true;
-            event(p, EVENT_TITLE, phase, "");
-            sound(p, ModSounds.BRIDE_SCREECH.get(), p.position().add(0, 2, -30), 0.35f, 0.6f);
-        }
-        ps.lanternLit = holdsLitLantern(p);
-
-        // ---------------------------------------------------------- stamina and footstep noise
-        double moved = ps.lastPos == null ? 0 : Math.hypot(p.getX() - ps.lastPos.x, p.getZ() - ps.lastPos.z);
-        ps.lastPos = p.position();
-        boolean sprinting = p.isSprinting() && moved > 0.15;
-        if (ps.exhausted > 0) {
-            ps.exhausted--;
-            if (p.isSprinting()) p.setSprinting(false);
-        }
-        if (sprinting && !p.isCreative()) {
-            ps.stamina -= 0.75f;
-            if (++ps.stepNoise >= 8) {
-                ps.stepNoise = 0;
-                float r = 12.0f;
-                if (data.bells > 0 && hasItem(p, ModItems.SUZU.get())) {
-                    r += 5.0f;
-                    level.playSound(null, p.getX(), p.getY() + 0.8, p.getZ(), ModSounds.GAME_BELL_CHIME.get(), SoundSource.PLAYERS, 0.35f, 1.3f);
-                }
-                NoiseSystem.emit(level, p.position(), r, NoiseSystem.Source.SPRINT);
+        // ---- where am I
+        int area = areaAt(p);
+        if (area != ps.area) {
+            ps.area = area;
+            if (area > 0 && data.once("area_" + TerrainData.areaKey(area))) {
+                event(p, EV_AREA, area, "");
+                Director.onAreaEntered(level, p, ps, data, area);
             }
-            if (ps.stamina <= 0.0f) {
-                ps.stamina = 0.0f;
-                ps.exhausted = 70;
-                p.setSprinting(false);
-                level.playSound(null, p.getX(), p.getY() + 1.5, p.getZ(), ModSounds.PLAYER_BREATH_EXHAUSTED.get(), SoundSource.PLAYERS, 0.8f, 1.0f);
-                NoiseSystem.emit(level, p.position(), 9.0f, NoiseSystem.Source.VOICE);
+        }
+        boolean fog = !data.offered && pois.inFogBand(p.getX(), p.getZ());
+        boolean out = area == TerrainData.AREA_OUT && !p.isCreative();
+        boolean fell = p.getY() < terrain.height(p.getBlockX(), p.getBlockZ()) - 6 && !L.inTunnel(p.getX(), p.getY(), p.getZ());
+        if (fog) {
+            if (ps.fogTicks++ == 0 && data.once("fog_first")) thought(p, "thought.sounan.fog");
+        } else ps.fogTicks = 0;
+        if ((out || fog) && !p.isCreative()) ps.outTicks++;
+        else {
+            ps.outTicks = 0;
+            if (p.tickCount % 40 == 0 && p.onGround() && area > 0 && !fell) {
+                ps.safePos = p.position();
+                ps.safeYaw = p.getYRot();
             }
-        } else {
-            ps.stamina = Math.min(100.0f, ps.stamina + (moved < 0.02 ? 0.55f : 0.33f));
-            if (moved > 0.05 && !p.isCrouching() && ++ps.stepNoise >= 16) {
-                ps.stepNoise = 0;
-                NoiseSystem.emit(level, p.position(), 3.5f, NoiseSystem.Source.STEP);
-            }
+        }
+        if (fell && !p.isCreative() && p.getY() < terrain.height(p.getBlockX(), p.getBlockZ()) - 10) loopBack(p, ps);
+        else if (ps.outTicks > (fog ? 70 : 50)) loopBack(p, ps);
+        else if (p.fallDistance > 7.0f && !p.onClimbable() && !p.isCreative()) {
+            // a fall like that would end the night; the mountain gives you back instead
+            if (data.once("fall_warning")) thought(p, "thought.sounan.fall");
+            loopBack(p, ps);
         }
 
-        // ---------------------------------------------------------- holding breath in a closet
-        if (ps.closet >= 0 && p.isShiftKeyDown()) {
-            ps.holdingBreath = true;
-            ps.breath -= 0.85f;
-            if (ps.breath <= 0.0f) {
-                ps.breath = 0.0f;
-                ps.holdingBreath = false;
-                level.playSound(null, p.getX(), p.getY() + 1.5, p.getZ(), ModSounds.PLAYER_GASP.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
-                NoiseSystem.emit(level, p.position(), 8.0f, NoiseSystem.Source.VOICE);
-                addFear(p, 10.0f);
-            }
-        } else {
-            if (ps.holdingBreath && ps.breath < 40.0f) {
-                level.playSound(null, p.getX(), p.getY() + 1.5, p.getZ(), ModSounds.PLAYER_GASP.get(), SoundSource.PLAYERS, 0.5f, 1.1f);
-            }
-            ps.holdingBreath = false;
-            ps.breath = Math.min(100.0f, ps.breath + 1.1f);
-        }
+        // ---- body: stamina, noise
+        tickBody(level, p, ps);
 
-        // ---------------------------------------------------------- fear
-        float perSecond = 0.0f;
-        int light = ps.lanternLit ? 12 : level.getMaxLocalRawBrightness(feet.above());
-        if (ps.inSafeRoom) perSecond -= 4.0f;
-        else if (light >= 7) perSecond -= 0.8f;
-        else if (light >= 3) perSecond += 0.5f;
-        else perSecond += 1.5f;
-        if (ps.closet >= 0) perSecond += 0.3f;
-        Hanayome bride = nearestBride(level, p.position());
-        float dangerTarget = 0.0f;
-        if (bride != null && !ps.inSafeRoom) {
-            double d = bride.distanceTo(p);
-            if (d < 14.0) perSecond += (float) (14.0 - d) * 0.2f;
-            boolean hunting = bride.state() == Hanayome.State.CHASE && p.equals(bride.target());
-            if (hunting) {
-                perSecond += 5.0f;
-                dangerTarget = 1.0f;
-                ps.lastChase = (int) (now % Integer.MAX_VALUE);
-            } else if (d < 8.0 && (bride.state() == Hanayome.State.SEARCH || bride.state() == Hanayome.State.CHECK_CLOSET
-                    || bride.state() == Hanayome.State.INVESTIGATE)) {
-                dangerTarget = 0.55f;
-            } else if (d < 6.0) {
-                dangerTarget = 0.35f;
-            }
-            if (d < 24.0 && looksAt(p, bride, 0.8, 24.0)) perSecond += 5.0f;
-        }
-        if (perSecond > 0) addFear(p, perSecond / 20.0f);
-        else ps.fear = Math.max(0.0f, ps.fear + perSecond / 20.0f);
-        ps.danger += (dangerTarget - ps.danger) * 0.08f;
-        if (ps.seenByBride > 0) ps.seenByBride--;
+        // ---- light: flashlight and phone batteries, camera night vision, flare
+        tickLights(level, p, ps, data);
 
-        // panic: your breathing gives you away
-        if (ps.fear >= 95.0f && ++ps.panicNoise >= 50) {
-            ps.panicNoise = 0;
-            NoiseSystem.emit(level, p.position(), 6.0f, NoiseSystem.Source.VOICE);
-        }
-        if (bride != null && bride.distanceTo(p) < 3.0 && bride.state() == Hanayome.State.CHASE) {
-            p.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 50, 0, false, false, false));
-        }
-        // the ritual
-        if (now - ps.atGate > 5) ps.atGate = Long.MIN_VALUE / 2;
-        if (ps.forceTicks > 0) {
-            ps.forceTicks--;
-            ps.fear = ps.forceFear;
-            ps.danger = ps.forceDanger;
-        }
+        // ---- nerves
+        tickFear(level, p, ps, data);
+
+        // ---- checkpoints and the pylon signal
+        tickPlaces(level, p, ps, data, L, pois);
 
         syncTimer(p, ps, data);
-        if (now % 20 == 0) Director.tickPlayer(level, p, ps, data);
     }
 
+    private static void introOver(ServerPlayer p, PlayerState ps) {
+        ps.introTicks = -1;
+        thought(p, "thought.sounan.wake");
+    }
+
+    private static void tickBody(ServerLevel level, ServerPlayer p, PlayerState ps) {
+        boolean sprinting = p.isSprinting();
+        double dx = p.getX() - ps.lastX, dz = p.getZ() - ps.lastZ;
+        double speed = Math.sqrt(dx * dx + dz * dz);
+        ps.lastX = p.getX();
+        ps.lastZ = p.getZ();
+        if (speed < 0.01) ps.stillTicks++;
+        else ps.stillTicks = 0;
+        if (sprinting) ps.stamina = Math.max(0.0f, ps.stamina - 0.55f);
+        else ps.stamina = Math.min(100.0f, ps.stamina + (speed > 0.05 ? 0.22f : 0.45f));
+        if (ps.stamina <= 0.0f && ps.exhausted <= 0) {
+            ps.exhausted = 90;
+            worldSound(level, p.position(), ModSounds.PLAYER_BREATH_RUN.get(), 0.9f, 1.0f);
+            NoiseSystem.emit(level, p.position(), 10.0f, NoiseSystem.Source.VOICE);
+        }
+        if (ps.exhausted > 0) {
+            ps.exhausted--;
+            p.setSprinting(false);
+            if (p.tickCount % 20 == 0) p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30, 0, false, false, false));
+        }
+        if (p.tickCount % 10 == 0) {
+            if (sprinting) NoiseSystem.emit(level, p.position(), 16.0f, NoiseSystem.Source.SPRINT);
+            else if (speed > 0.06 && !p.isShiftKeyDown()) NoiseSystem.emit(level, p.position(), 5.0f, NoiseSystem.Source.STEP);
+        }
+        if (!p.onGround() && p.getDeltaMovement().y > 0.3 && !p.onClimbable()) {
+            NoiseSystem.emit(level, p.position(), 9.0f, NoiseSystem.Source.STEP);
+        }
+        if (ps.fear >= 85.0f && p.tickCount % 20 == 0) NoiseSystem.emit(level, p.position(), 6.0f, NoiseSystem.Source.VOICE);
+        if (ps.bellCooldown > 0) ps.bellCooldown--;
+        if (ps.photoCooldown > 0) ps.photoCooldown--;
+    }
+
+    private static void tickLights(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
+        InteractionHand fh = handHolding(p, GameItem.Kind.FLASHLIGHT_ON, GameItem.Kind.FLASHLIGHT_LOW);
+        if (fh != null) {
+            ps.flash = Math.max(0.0f, ps.flash - 100.0f / (8 * 60 * 20));
+            GameItem.Kind k = GameItem.kindOf(p.getItemInHand(fh));
+            if (ps.flash <= 0.0f) {
+                swap(p, fh, ModItems.FLASHLIGHT.get());
+                worldSound(level, p.position(), ModSounds.ITEM_FLASHLIGHT_FLICKER.get(), 0.7f, 0.8f);
+                thought(p, "thought.sounan.flash_dead");
+                addFear(p, 10.0f);
+            } else if (ps.flash < 15.0f && k == GameItem.Kind.FLASHLIGHT_ON) {
+                swap(p, fh, ModItems.FLASHLIGHT_LOW.get());
+                if (ps.lowWarned++ == 0) thought(p, "thought.sounan.flash_low");
+            } else if (ps.flash >= 15.0f && k == GameItem.Kind.FLASHLIGHT_LOW) {
+                swap(p, fh, ModItems.FLASHLIGHT_ON.get());
+            }
+        }
+        float drain = 0.0f;
+        boolean camera = holding(p, GameItem.Kind.PHONE_CAMERA);
+        if (camera) drain += 1.0f / (20 * 20);
+        if (holding(p, GameItem.Kind.PHONE_LIGHT)) drain += 1.0f / (12 * 20);
+        if (ps.phoneOpen) drain += 1.0f / (40 * 20);
+        if (drain > 0.0f && ps.phone > 0.0f) {
+            ps.phone = Math.max(0.0f, ps.phone - drain);
+            if (ps.phone <= 0.0f) {
+                InteractionHand ph = handHolding(p, GameItem.Kind.PHONE_CAMERA, GameItem.Kind.PHONE_LIGHT);
+                if (ph != null) swap(p, ph, ModItems.PHONE.get());
+                privateSound(p, ModSounds.PHONE_DEAD.get(), p.getEyePosition(), 0.8f, 1.0f);
+                thought(p, "thought.sounan.phone_dead");
+                camera = false;
+            } else if (ps.phone < 10.0f && p.tickCount % 600 == 0) {
+                privateSound(p, ModSounds.PHONE_LOW_BATTERY.get(), p.getEyePosition(), 0.6f, 1.0f);
+            }
+        }
+        if (camera) {
+            MobEffectInstance nv = p.getEffect(MobEffects.NIGHT_VISION);
+            if (nv == null || nv.getDuration() < 300) p.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 420, 0, false, false, false));
+        } else if (p.hasEffect(MobEffects.NIGHT_VISION)) {
+            p.removeEffect(MobEffects.NIGHT_VISION);
+        }
+    }
+
+    private static void tickFear(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
+        float threat = THREAT.getOrDefault(p.getUUID(), 0.0f);
+        ps.danger += (threat - ps.danger) * (threat > ps.danger ? 0.25f : 0.03f);
+        BlockPos eye = BlockPos.containing(p.getEyePosition());
+        int blockLight = level.getBrightness(LightLayer.BLOCK, eye);
+        boolean light = anyLight(p) || blockLight >= 7;
+        float d = 0.0f;
+        if (!light) d += 0.030f;
+        else d -= 0.010f;
+        d += ps.danger * 0.22f;
+        if (ps.area == TerrainData.AREA_TUNNEL) d += 0.012f;
+        float calm = 22.0f + data.captures * 4.0f;
+        if (ps.fear > calm && light && ps.danger < 0.1f) d -= 0.018f;
+        if (d > 0) d *= (float) SounanConfig.fearRate();
+        ps.fear = Mth.clamp(ps.fear + d, 0.0f, 100.0f);
+        if (ps.forceTicks > 0) {
+            ps.forceTicks--;
+            if (ps.forceFear >= 0) ps.fear = ps.forceFear;
+            if (ps.forceDanger >= 0) ps.danger = ps.forceDanger;
+        }
+    }
+
+    private static void tickPlaces(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data, PoiLayout L, Pois pois) {
+        for (Pois.Point cp : pois.checkpoints) {
+            if (cp.id().equals(data.checkpoint)) continue;
+            if (p.distanceToSqr(cp.center()) > 4.5 * 4.5) continue;
+            if (cp.id().equals("hut") && !data.keyTaken) continue;
+            if (cp.id().equals("tunnel") && !data.keyTaken) continue;
+            if (cp.id().equals("bag") && !data.bagOpened) continue;
+            data.checkpoint = cp.id();
+            data.setDirty();
+            event(p, EV_CHECKPOINT, 0, cp.id());
+            savePlayer(p);
+        }
+        Pois.Point here = pois.checkpoint(data.checkpoint);
+        if (here != null && p.distanceToSqr(here.center()) < 5.0 * 5.0 && ps.danger < 0.2f) {
+            ps.fear = Math.max(10.0f, ps.fear - 0.2f);
+        }
+        if (nearPylon(p, L)) {
+            if (!data.signal) {
+                data.signal = true;
+                data.setDirty();
+                event(p, EV_SIGNAL, data.captures, p.getGameProfile().getName());
+                thought(p, "thought.sounan.signal");
+            }
+        }
+    }
+
+    public static boolean nearPylon(Player p, PoiLayout L) {
+        double dx = p.getX() - (L.pylon.getX() + 0.5), dz = p.getZ() - (L.pylon.getZ() + 0.5);
+        return dx * dx + dz * dz < 11.0 * 11.0 && p.getY() > L.pylon.getY() - 3;
+    }
+
+    /** Lost in the fog: you come out where you went in, facing the other way. */
+    public static void loopBack(ServerPlayer p, PlayerState ps) {
+        ServerLevel level = mountain(p.server);
+        if (level == null) return;
+        Vec3 target = ps.safePos != null ? ps.safePos : Vec3.atBottomCenterOf(PoiLayout.get().start);
+        teleport(p, level, target, ps.safeYaw + 180.0f, 0.0f);
+        ps.outTicks = 0;
+        ps.fogTicks = 0;
+        addFear(p, 9.0f);
+        event(p, EV_LOOP, 0, "");
+    }
+
+    // ------------------------------------------------------------------------------------------------ capture
+    /** A monster got you. Returns false if the omamori saved you. */
+    public static boolean beginCapture(ServerPlayer p, int kind, @Nullable Entity monster) {
+        PlayerState ps = state(p);
+        if (ps.captured || !huntable(p)) return false;
+        if (consume(p, ModItems.OMAMORI.get())) {
+            event(p, EV_OMAMORI, kind, "");
+            worldSound(p.level(), p.position(), ModSounds.ITEM_OMAMORI.get(), 1.0f, 1.0f);
+            addFear(p, 25.0f);
+            if (monster != null) monster.discard();
+            Director.calmDown(p, 20 * 40);
+            return false;
+        }
+        ps.captured = true;
+        ps.captureTicks = 0;
+        ps.captureKind = kind;
+        ps.capturePos = p.position();
+        ps.fear = 100.0f;
+        p.addEffect(new MobEffectInstance(MobEffects.DARKNESS, CAPTURE_TICKS + 40, 0, false, false, false));
+        event(p, EV_JUMPSCARE, kind, "");
+        FlashlightLight.remove(p);
+        return true;
+    }
+
+    private static void tickCapture(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
+        ps.captureTicks++;
+        if (ps.capturePos != null) {
+            p.teleportTo(ps.capturePos.x, ps.capturePos.y, ps.capturePos.z);
+            p.setDeltaMovement(Vec3.ZERO);
+        }
+        if (ps.captureTicks < CAPTURE_TICKS) return;
+        data.captures++;
+        data.setDirty();
+        Director.clearFor(p);
+        if (data.captures >= MAX_CAPTURES) {
+            spiritedAway(p, ps, data);
+            return;
+        }
+        toCheckpoint(p, data);
+        ps.resetAfterCapture();
+        p.removeEffect(MobEffects.DARKNESS);
+        p.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 50, 0, false, false, false));
+        event(p, EV_WAKE, data.captures, "");
+        savePlayer(p);
+    }
+
+    // ------------------------------------------------------------------------------------------------ endings
+    public static void startEnding(ServerPlayer p, int ending) {
+        GameData data = GameData.get(p.server);
+        if (data.ending != 0) return;
+        data.ending = ending;
+        data.setDirty();
+        PlayerState ps = state(p);
+        ps.endingTicks = 0;
+        Director.clearFor(p);
+        FlashlightLight.remove(p);
+        event(p, EV_ENDING, ending, p.getGameProfile().getName() + "|" + data.captures + "|" + phoneMinutes(data));
+    }
+
+    private static void spiritedAway(ServerPlayer p, PlayerState ps, GameData data) {
+        ps.captured = false;
+        startEnding(p, 2);
+    }
+
+    public static void endingDone(ServerPlayer p) {
+        PlayerState ps = state(p);
+        if (ps.endingTicks < 0) return;
+        leaveGame(p);
+    }
+
+    // ------------------------------------------------------------------------------------------------ items
+    public static boolean useItem(ServerPlayer p, InteractionHand hand, GameItem.Kind kind, boolean sneak) {
+        PlayerState ps = state(p);
+        ServerLevel level = p.serverLevel();
+        switch (kind) {
+            case FLASHLIGHT -> {
+                if (ps.flash <= 0.0f) {
+                    worldSound(level, p.position(), ModSounds.ITEM_FLASHLIGHT_OFF.get(), 0.6f, 0.8f);
+                    thought(p, "thought.sounan.flash_empty");
+                    return true;
+                }
+                swap(p, hand, ps.flash < 15.0f ? ModItems.FLASHLIGHT_LOW.get() : ModItems.FLASHLIGHT_ON.get());
+                worldSound(level, p.position(), ModSounds.ITEM_FLASHLIGHT_ON.get(), 0.6f, 1.0f);
+                return true;
+            }
+            case FLASHLIGHT_ON, FLASHLIGHT_LOW -> {
+                swap(p, hand, ModItems.FLASHLIGHT.get());
+                worldSound(level, p.position(), ModSounds.ITEM_FLASHLIGHT_OFF.get(), 0.6f, 1.0f);
+                return true;
+            }
+            case PHONE -> {
+                if (!sneak) return false;
+                if (ps.phone <= 0.0f) return false;
+                swap(p, hand, ModItems.PHONE_LIGHT.get());
+                privateSound(p, ModSounds.PHONE_TAP.get(), p.getEyePosition(), 0.5f, 1.0f);
+                return true;
+            }
+            case PHONE_LIGHT -> {
+                if (!sneak) return false;
+                swap(p, hand, ModItems.PHONE.get());
+                privateSound(p, ModSounds.PHONE_TAP.get(), p.getEyePosition(), 0.5f, 0.9f);
+                return true;
+            }
+            case PHONE_CAMERA -> {
+                if (sneak) {
+                    swap(p, hand, ModItems.PHONE.get());
+                    p.removeEffect(MobEffects.NIGHT_VISION);
+                    return true;
+                }
+                if (ps.photoCooldown > 0 || ps.phone <= 0.0f) return false;
+                ps.photoCooldown = 30;
+                ps.phone = Math.max(0.0f, ps.phone - 0.5f);
+                privateSound(p, ModSounds.PHONE_SHUTTER.get(), p.getEyePosition(), 0.8f, 1.0f);
+                event(p, EV_FLASH, 0, "");
+                Director.onPhoto(level, p);
+                return true;
+            }
+            case BATTERY -> {
+                if (ps.flash >= 98.0f) {
+                    thought(p, "thought.sounan.battery_full");
+                    return false;
+                }
+                ItemStack st = p.getItemInHand(hand);
+                st.shrink(1);
+                ps.flash = 100.0f;
+                ps.lowWarned = 0;
+                worldSound(level, p.position(), ModSounds.ITEM_BATTERY.get(), 0.8f, 1.0f);
+                InteractionHand low = handHolding(p, GameItem.Kind.FLASHLIGHT_LOW);
+                if (low != null) swap(p, low, ModItems.FLASHLIGHT_ON.get());
+                thought(p, "thought.sounan.battery");
+                return true;
+            }
+            case POWER_BANK -> {
+                p.getItemInHand(hand).shrink(1);
+                ps.phone = Math.min(100.0f, ps.phone + 60.0f);
+                privateSound(p, ModSounds.PHONE_UNLOCK.get(), p.getEyePosition(), 0.7f, 1.0f);
+                thought(p, "thought.sounan.charged");
+                return true;
+            }
+            case BEAR_BELL -> {
+                if (ps.bellCooldown > 0) return false;
+                ps.bellCooldown = 60;
+                worldSound(level, p.position(), ModSounds.ITEM_BEAR_BELL.get(), 1.0f, 1.0f);
+                NoiseSystem.emit(level, p.position(), 30.0f, NoiseSystem.Source.BELL);
+                p.getItemInHand(hand).hurtAndBreak(1, p, pl -> pl.broadcastBreakEvent(hand));
+                Director.onBell(level, p);
+                return true;
+            }
+            case FLARE -> {
+                swap(p, hand, ModItems.FLARE_LIT.get());
+                worldSound(level, p.position(), ModSounds.ITEM_FLARE_IGNITE.get(), 1.0f, 1.0f);
+                Director.onFlare(level, p);
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    public static void flareBurnedOut(ServerPlayer p) {
+        thought(p, "thought.sounan.flare_out");
+    }
+
+    // ------------------------------------------------------------------------------------------------ the phone (C2S)
+    public static void phoneAction(ServerPlayer p, int action, int arg) {
+        PlayerState ps = state(p);
+        GameData data = GameData.get(p.server);
+        switch (action) {
+            case 0 -> ps.phoneOpen = arg != 0;
+            case 1 -> { // camera app
+                if (ps.phone <= 0.0f) return;
+                InteractionHand h = handHolding(p, GameItem.Kind.PHONE, GameItem.Kind.PHONE_LIGHT);
+                if (h != null) swap(p, h, ModItems.PHONE_CAMERA.get());
+            }
+            case 2 -> { // torch toggle
+                if (ps.phone <= 0.0f) return;
+                InteractionHand h = handHolding(p, GameItem.Kind.PHONE, GameItem.Kind.PHONE_LIGHT);
+                if (h == null) return;
+                boolean on = GameItem.kindOf(p.getItemInHand(h)) == GameItem.Kind.PHONE_LIGHT;
+                swap(p, h, on ? ModItems.PHONE.get() : ModItems.PHONE_LIGHT.get());
+            }
+            case 3 -> { // call 110 / 119
+                if (nearPylon(p, PoiLayout.get()) && ps.phone > 0.0f) {
+                    data.called = true;
+                    data.setDirty();
+                    event(p, EV_CALL, arg, p.getGameProfile().getName() + "|" + data.captures);
+                    Director.onCall(p.serverLevel(), p);
+                } else {
+                    event(p, EV_CALL, -1, "");
+                }
+            }
+            case 4 -> ps.shaders = arg != 0;
+            case 5 -> endingDone(p);
+            case 6 -> { // the intro screen finished early
+                if (ps.introTicks >= 0 && ps.introTicks < 20 * 15) ps.introTicks = 20 * 15 - 1;
+            }
+            default -> {
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------ blocks
+    public static void interact(ServerPlayer p, BlockPos pos, String action) {
+        ServerLevel level = p.serverLevel();
+        GameData data = GameData.get(p.server);
+        PoiLayout L = PoiLayout.get();
+        BlockState state = level.getBlockState(pos);
+        switch (action) {
+            case "bag" -> {
+                if (!pos.equals(L.bag)) {
+                    thought(p, "thought.sounan.old_bag");
+                    return;
+                }
+                if (data.bagOpened || (state.hasProperty(LostBagBlock.OPEN) && state.getValue(LostBagBlock.OPEN))) {
+                    thought(p, "thought.sounan.bag_empty");
+                    return;
+                }
+                data.bagOpened = true;
+                data.checkpoint = "bag";
+                data.setDirty();
+                level.setBlock(pos, state.setValue(LostBagBlock.OPEN, true), 3);
+                worldSound(level, Vec3.atCenterOf(pos), ModSounds.ITEM_BAG.get(), 0.9f, 1.0f);
+                give(p, new ItemStack(ModItems.BATTERY.get(), 2));
+                give(p, new ItemStack(ModItems.POWER_BANK.get()));
+                give(p, new ItemStack(ModItems.BEAR_BELL.get()));
+                give(p, new ItemStack(ModItems.ROPE.get()));
+                give(p, new ItemStack(ModItems.TRAIL_MAP.get()));
+                give(p, new ItemStack(ModItems.FLARE.get()));
+                give(p, new ItemStack(ModItems.OMAMORI.get()));
+                event(p, EV_CHECKPOINT, 1, "bag");
+                thought(p, "thought.sounan.bag");
+                addFear(p, -15.0f);
+                Director.onBagOpened(level, p);
+            }
+            case "memo" -> openNote(p, L.memoId(pos));
+            case "logbook" -> openNote(p, Notes.LOGBOOK);
+            case "notice" -> openNote(p, pos.distManhattan(L.memorial) <= 2 ? Notes.MEMORIAL : Notes.RULES);
+            case "sign" -> event(p, EV_SUBTITLE, 0, signText(pos));
+            case "bus_stop" -> event(p, EV_SUBTITLE, 0, "sign.sounan.bus_stop");
+            case "public_phone" -> Director.answerPayphone(level, p);
+            case "hokora" -> {
+                if (data.offered) {
+                    thought(p, "thought.sounan.hokora_done");
+                } else if (consume(p, ModItems.OMIKI.get())) {
+                    data.offered = true;
+                    data.checkpoint = "shrine";
+                    data.setDirty();
+                    if (state.hasProperty(HokoraBlock.OFFERED)) level.setBlock(pos, state.setValue(HokoraBlock.OFFERED, true), 3);
+                    worldSound(level, Vec3.atCenterOf(pos), ModSounds.ITEM_OFFERING.get(), 1.0f, 1.0f);
+                    event(p, EV_FOG_LIFT, 0, "");
+                    thought(p, "thought.sounan.fog_lift");
+                } else {
+                    thought(p, data.notes.contains(Notes.SHRINE) ? "thought.sounan.hokora_need" : "thought.sounan.hokora");
+                }
+            }
+            case "rope_anchor" -> {
+                if (data.roped) return;
+                if (consume(p, ModItems.ROPE.get())) {
+                    data.roped = true;
+                    data.setDirty();
+                    if (state.hasProperty(RopeAnchorBlock.ROPED)) level.setBlock(pos, state.setValue(RopeAnchorBlock.ROPED, true), 3);
+                    hangRope(level, L);
+                    worldSound(level, Vec3.atCenterOf(pos), ModSounds.ITEM_ROPE.get(), 1.0f, 1.0f);
+                    thought(p, "thought.sounan.roped");
+                } else {
+                    thought(p, "thought.sounan.need_rope");
+                }
+            }
+            case "key_hook" -> {
+                if (state.hasProperty(KeyHookBlock.HAS_KEY) && state.getValue(KeyHookBlock.HAS_KEY)) {
+                    level.setBlock(pos, state.setValue(KeyHookBlock.HAS_KEY, false), 3);
+                    give(p, new ItemStack(ModItems.HUT_KEY.get()));
+                    data.keyTaken = true;
+                    data.setDirty();
+                    worldSound(level, Vec3.atCenterOf(pos), ModSounds.ITEM_KEY.get(), 0.9f, 1.0f);
+                    NoiseSystem.emit(level, Vec3.atCenterOf(pos), 7.0f, NoiseSystem.Source.OTHER);
+                    thought(p, "thought.sounan.key");
+                    Director.onKeyTaken(level, p);
+                }
+            }
+            case "gate" -> {
+                if (data.gateUnlocked) return;
+                if (consume(p, ModItems.HUT_KEY.get())) {
+                    data.gateUnlocked = true;
+                    data.setDirty();
+                    LockedGateBlock.unlock(level, pos);
+                    worldSound(level, Vec3.atCenterOf(pos), ModSounds.ITEM_UNLOCK.get(), 1.0f, 1.0f);
+                    thought(p, "thought.sounan.unlocked");
+                } else {
+                    worldSound(level, Vec3.atCenterOf(pos), net.minecraft.sounds.SoundEvents.CHAIN_HIT, 1.0f, 0.8f);
+                    thought(p, "thought.sounan.locked");
+                }
+            }
+            case "omiki" -> {
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                give(p, new ItemStack(ModItems.OMIKI.get()));
+                data.omikiTaken = true;
+                data.setDirty();
+                worldSound(level, Vec3.atCenterOf(pos), ModSounds.ITEM_OFFERING.get(), 0.6f, 1.3f);
+                NoiseSystem.emit(level, Vec3.atCenterOf(pos), 6.0f, NoiseSystem.Source.OTHER);
+                thought(p, "thought.sounan.omiki");
+            }
+            case "car" -> {
+                if (data.ending == 0) startEnding(p, 1);
+            }
+            default -> {
+            }
+        }
+    }
+
+    static void give(ServerPlayer p, ItemStack stack) {
+        if (!p.getInventory().add(stack)) p.drop(stack, false);
+    }
+
+    public static void openNote(ServerPlayer p, int id) {
+        GameData data = GameData.get(p.server);
+        if (data.notes.add(id)) data.setDirty();
+        worldSound(p.level(), p.position(), ModSounds.ITEM_PAPER.get(), 0.6f, 1.0f);
+        ModNetwork.send(p, new S2C.Note(id, p.getGameProfile().getName() + "|" + data.captures + "|" + data.dayOffset()));
+    }
+
+    static String signText(BlockPos pos) {
+        String best = "sign.sounan.generic";
+        double bestD = 9.0;
+        for (Pois.Point s : Pois.get().signs) {
+            double d = s.pos().distSqr(pos);
+            if (d < bestD) {
+                bestD = d;
+                best = "sign.sounan." + s.json().get("text").getAsString().replace("sign_", "");
+            }
+        }
+        if (pos.getX() == 130 && pos.getZ() == 233) best = "sign.sounan.trailhead";
+        return best;
+    }
+
+    /** The climbing rope down the cliff face below the stake. */
+    public static void hangRope(ServerLevel level, PoiLayout L) {
+        Direction f = L.ropeFacing;
+        for (int y = L.ropeTopY; y >= L.ropeBottomY; y--) {
+            BlockPos rp = new BlockPos(L.ropeX, y, L.ropeZ);
+            BlockPos behind = rp.relative(f.getOpposite());
+            if (!level.getBlockState(behind).isSolid()) level.setBlock(behind, ModBlocks.MOUNTAIN_ROCK.get().defaultBlockState(), 3);
+            BlockState cur = level.getBlockState(rp);
+            if (cur.isAir() || cur.canBeReplaced()) {
+                level.setBlock(rp, ModBlocks.CLIMBING_ROPE.get().defaultBlockState().setValue(LadderBlock.FACING, f), 3);
+            }
+        }
+    }
+
+    /** Lights the tunnel lamps one after another (the climax) or puts them out. */
+    public static void setTunnelLamp(ServerLevel level, BlockPos pos, boolean lit) {
+        BlockState s = level.getBlockState(pos);
+        if (s.hasProperty(TunnelLampBlock.LIT) && s.getValue(TunnelLampBlock.LIT) != lit) level.setBlock(pos, s.setValue(TunnelLampBlock.LIT, lit), 3);
+    }
+
+    // ------------------------------------------------------------------------------------------------ sync
     private static void syncTimer(ServerPlayer p, PlayerState ps, GameData data) {
         if (++ps.syncTimer >= 4) {
             ps.syncTimer = 0;
@@ -678,501 +964,32 @@ public final class GameManager {
     }
 
     public static void syncState(ServerPlayer p, PlayerState ps, GameData data) {
-        int flags = 1;
-        if (ps.closet >= 0) flags |= 2;
-        if (ps.holdingBreath) flags |= 4;
-        if (ps.exhausted > 0) flags |= 8;
-        if (ps.captured) flags |= 16;
-        if (ps.inSafeRoom) flags |= 32;
-        if (canStartRitual(p)) flags |= 64;
-        if (data.kuraUnlocked) flags |= 128;
-        if (!ps.everLeftSafeRoom) flags |= 256;
-        ModNetwork.send(p, new S2C.State(ps.fear, ps.stamina, ps.breath, ps.danger, flags, data.bells, phase, data.deaths));
+        int flags = 0;
+        if (inGame(p)) flags |= F_INGAME;
+        if (nearPylon(p, PoiLayout.get())) flags |= F_SIGNAL;
+        if (data.signal) flags |= F_MAP;
+        if (ps.phone <= 0.0f) flags |= F_PHONE_DEAD;
+        if (ps.captured) flags |= F_CAPTURED;
+        if (ps.exhausted > 0) flags |= F_EXHAUSTED;
+        if (data.offered) flags |= F_OFFERED;
+        if (data.bagOpened) flags |= F_BAG;
+        if (data.called) flags |= F_CALLED;
+        if (data.climax) flags |= F_CLIMAX;
+        if (ps.endingTicks >= 0) flags |= F_ENDING;
+        if (data.keyTaken) flags |= F_KEY;
+        if (flareLit(p)) flags |= F_FLARE;
+        int notes = 0;
+        for (int n : data.notes) notes |= 1 << Math.min(30, n);
+        ModNetwork.send(p, new S2C.State(ps.fear, ps.danger, ps.stamina, ps.flash, ps.phone, flags, data.captures,
+                Math.max(0, ps.area), phoneMinutes(data), data.dayOffset(), notes));
     }
 
-    @Nullable
-    public static Hanayome nearestBride(ServerLevel level, Vec3 pos) {
-        Hanayome best = null;
-        double bd = 80 * 80;
-        for (Hanayome h : level.getEntitiesOfClass(Hanayome.class, new net.minecraft.world.phys.AABB(pos, pos).inflate(80))) {
-            double d = h.distanceToSqr(pos);
-            if (d < bd) {
-                bd = d;
-                best = h;
-            }
-        }
-        return best;
-    }
-
-    @Nullable
-    public static Hanayome anyBride(ServerLevel level) {
-        for (Entity e : level.getAllEntities()) {
-            if (e instanceof Hanayome h && h.isAlive()) return h;
-        }
-        return null;
-    }
-
-    // ================================================================== phases
-    private static void onPhaseChanged(ServerLevel level, int old, int now) {
-        Sounan.LOGGER.info("[sounan] phase {} -> {}", old, now);
-        if (mansion == null) return;
-        for (BlockPos c : mansion.clocks) {
-            level.playSound(null, c, ModSounds.AMBIENT_CLOCK_CHIME.get(), SoundSource.AMBIENT, 4.0f, 1.0f);
-        }
-        allInGame(level.getServer(), p -> {
-            event(p, EVENT_TITLE, now, "");
-            sound(p, ModSounds.AMBIENT_TEMPLE_BELL.get(), p.position().add(0, 6, 0), 0.9f, 0.9f);
-        });
-        if (now >= 3) {
-            for (BlockPos a : mansion.andons) {
-                BlockState s = level.getBlockState(a);
-                if (s.is(ModBlocks.ANDON.get()) && RAND.nextFloat() < 0.6f) {
-                    level.setBlock(a, s.setValue(com.sounan.block.AndonBlock.LIT, false), 3);
-                }
-            }
-        }
-        if (now >= 5) {
-            for (BlockPos g : mansion.gateBlocks) {
-                BlockState s = level.getBlockState(g);
-                if (s.is(ModBlocks.TORII_GATE.get())) level.setBlock(g, s.setValue(ToriiGateBlock.ACTIVE, true), 3);
-            }
-            level.playSound(null, mansion.toriiCenter, ModSounds.GAME_GATE_OPEN.get(), SoundSource.AMBIENT, 4.0f, 1.0f);
-            Hanayome bride = anyBride(level);
-            ServerPlayer p = huntable(level).isEmpty() ? null : huntable(level).get(0);
-            if (bride != null && p != null) {
-                BlockPos far = null;
-                for (BlockPos w : mansion.waypoints) {
-                    double d = w.distSqr(p.blockPosition());
-                    if (d > 18 * 18 && d < 30 * 30) {
-                        far = w;
-                        break;
-                    }
-                }
-                if (far != null && !anyoneSees(level, bride)) bride.teleportTo(far.getX() + 0.5, far.getY(), far.getZ() + 0.5);
-                bride.force(Hanayome.State.INVESTIGATE, p.position());
-            }
-        }
-    }
-
-    // ================================================================== bells
-    public static void bellTaken(ServerPlayer p, BlockPos pos) {
-        GameData data = GameData.get(p.server);
-        if (!inGame(p)) {
-            p.getInventory().add(new ItemStack(ModItems.SUZU.get()));
-            return;
-        }
-        if (!data.takenBells.add(pos.asLong())) return;
-        grantBell(p, data);
-    }
-
-    private static void grantBell(ServerPlayer p, GameData data) {
-        data.bells = Math.min(7, data.bells + 1);
-        data.setDirty();
-        p.getInventory().add(new ItemStack(ModItems.SUZU.get()));
-        ServerLevel level = p.serverLevel();
-        level.playSound(null, p.getX(), p.getY() + 1, p.getZ(), ModSounds.GAME_BELL_CHIME.get(), SoundSource.PLAYERS, 1.2f, 1.0f);
-        NoiseSystem.emit(level, p.position(), 14.0f, NoiseSystem.Source.BELL);
-        event(p, EVENT_BELL, data.bells, "");
-        p.displayClientMessage(Component.translatable("message.meikon.bell", data.bells), true);
-        Sounan.LOGGER.info("[sounan] bell {} / 7", data.bells);
-    }
-
-    // ================================================================== puzzles and interactions
-    public static boolean tryUnlockKura(ServerPlayer p, BlockPos pos) {
-        GameData data = GameData.get(p.server);
-        if (data.kuraUnlocked) return true;
-        if (consume(p, ModItems.KURA_KEY.get())) {
-            data.kuraUnlocked = true;
-            data.setDirty();
-            p.level().playSound(null, pos, ModSounds.GAME_UNLOCK.get(), SoundSource.BLOCKS, 1.0f, 1.0f);
-            NoiseSystem.emit(p.serverLevel(), pos, 10.0f, NoiseSystem.Source.DOOR);
-            p.displayClientMessage(Component.translatable("message.meikon.unlocked"), true);
-            return true;
-        }
-        return false;
-    }
-
-    public static void candleLit(ServerPlayer p, BlockPos pos, int colour) {
-        if (mansion == null || !inGame(p)) return;
-        GameData data = GameData.get(p.server);
-        int idx = -1;
-        for (int i = 0; i < 3; i++) if (pos.equals(mansion.candles[i])) idx = i;
-        if (idx < 0 || data.butsumaSolved) return;
-        ServerLevel level = p.serverLevel();
-        int expected = mansion.candleOrder[Math.min(2, data.candleStep)];
-        if (colour == expected) {
-            data.candleStep++;
-            data.setDirty();
-            if (data.candleStep >= 3) {
-                data.butsumaSolved = true;
-                if (mansion.butsumaBell != null) {
-                    level.setBlock(mansion.butsumaBell, ModBlocks.SUZU_DAI.get().defaultBlockState().setValue(SuzuDaiBlock.HAS_BELL, true), 3);
-                }
-                level.playSound(null, pos, ModSounds.AMBIENT_TEMPLE_BELL.get(), SoundSource.BLOCKS, 1.5f, 1.2f);
-                p.displayClientMessage(Component.translatable("message.meikon.butsuma_solved"), true);
-            }
-        } else {
-            data.candleStep = 0;
-            data.setDirty();
-            for (BlockPos c : mansion.candles) {
-                if (c == null) continue;
-                BlockState s = level.getBlockState(c);
-                if (s.is(ModBlocks.CANDLE_STAND.get())) level.setBlock(c, s.setValue(CandleStandBlock.LIT, false), 3);
-            }
-            level.playSound(null, pos, ModSounds.GAME_PUZZLE_FAIL.get(), SoundSource.BLOCKS, 1.4f, 1.0f);
-            NoiseSystem.emit(level, Vec3.atCenterOf(pos), 24.0f, NoiseSystem.Source.VOICE);
-            addFear(p, 15.0f);
-            event(p, EVENT_SHAKE, 12, "");
-            p.displayClientMessage(Component.translatable("message.meikon.butsuma_fail"), true);
-        }
-    }
-
-    public static void dollHeadPlaced(ServerPlayer p, BlockPos pos) {
-        if (mansion == null || !inGame(p)) return;
-        GameData data = GameData.get(p.server);
-        if (!pos.equals(mansion.headlessDoll) || data.dollSolved) return;
-        data.dollSolved = true;
-        data.setDirty();
-        ServerLevel level = p.serverLevel();
-        if (mansion.dollBell != null) {
-            level.setBlock(mansion.dollBell, ModBlocks.SUZU_DAI.get().defaultBlockState().setValue(SuzuDaiBlock.HAS_BELL, true), 3);
-        }
-        level.playSound(null, pos, ModSounds.DOLL_HEAD_TURN.get(), SoundSource.BLOCKS, 1.4f, 0.8f);
-        for (Ichimatsu doll : level.getEntitiesOfClass(Ichimatsu.class, p.getBoundingBox().inflate(12))) {
-            doll.getLookControl().setLookAt(p, 90, 90);
-        }
-        event(p, EVENT_STINGER, 0, "");
-        addFear(p, 12.0f);
-        p.displayClientMessage(Component.translatable("message.meikon.doll_solved"), true);
-    }
-
-    public static void interact(ServerPlayer p, BlockPos pos, String action) {
-        switch (action) {
-            case "well" -> useWell(p, pos);
-            case "sakazuki" -> {
-                if (inGame(p)) event(p, EVENT_SCREEN, SCREEN_SAKAZUKI, "");
-                else p.displayClientMessage(Component.translatable("message.meikon.sakazuki_idle"), true);
-            }
-            default -> {
-            }
-        }
-    }
-
-    private static void useWell(ServerPlayer p, BlockPos pos) {
-        ServerLevel level = p.serverLevel();
-        level.playSound(null, pos, ModSounds.GAME_WELL.get(), SoundSource.BLOCKS, 1.0f, 0.9f + RAND.nextFloat() * 0.2f);
-        if (!inGame(p)) return;
-        GameData data = GameData.get(p.server);
-        if (data.wellSolved) {
-            p.displayClientMessage(Component.translatable("message.meikon.well_empty"), true);
-            return;
-        }
-        data.wellPulls++;
-        data.setDirty();
-        NoiseSystem.emit(level, Vec3.atCenterOf(pos), 12.0f, NoiseSystem.Source.OTHER);
-        if (data.wellPulls < 3) {
-            p.displayClientMessage(Component.translatable("message.meikon.well_" + data.wellPulls), true);
-            addFear(p, 4.0f);
-            return;
-        }
-        data.wellSolved = true;
-        data.setDirty();
-        event(p, EVENT_JUMPSCARE, 2, "");
-        addFear(p, 22.0f);
-        grantBell(p, data);
-        p.displayClientMessage(Component.translatable("message.meikon.well_done"), false);
-        Director.spawnPeek(level, p);
-    }
-
-    public static void tansuSearched(ServerPlayer p, BlockPos pos) {
-        ServerLevel level = p.serverLevel();
-        level.playSound(null, pos, ModSounds.GAME_DRAWER.get(), SoundSource.BLOCKS, 1.0f, 0.9f + RAND.nextFloat() * 0.2f);
-        NoiseSystem.emit(level, Vec3.atCenterOf(pos), 8.0f, NoiseSystem.Source.DRAWER);
-        if (mansion == null || !inGame(p)) return;
-        GameData data = GameData.get(p.server);
-        if (!data.searched.add(pos.asLong())) {
-            p.displayClientMessage(Component.translatable("message.meikon.empty"), true);
-            return;
-        }
-        data.setDirty();
-        String loot = mansion.tansuLoot.getOrDefault(pos.asLong(), "");
-        if (loot.isEmpty()) {
-            p.displayClientMessage(Component.translatable("message.meikon.empty"), true);
-            return;
-        }
-        if (loot.equals("scare") || loot.equals("hair")) {
-            sound(p, ModSounds.AMBIENT_WHISPER.get(), p.getEyePosition().add(p.getViewVector(1.0f).scale(-0.6)), 1.0f, 0.9f);
-            addFear(p, 9.0f);
-            event(p, EVENT_SHAKE, 6, "");
-            p.displayClientMessage(Component.translatable(loot.equals("hair") ? "message.meikon.found_hair" : "message.meikon.found_scare"), true);
-            return;
-        }
-        List<Component> names = new ArrayList<>();
-        for (String id : loot.split(",")) {
-            Item item = ForgeRegistries.ITEMS.getValue(Sounan.id(id));
-            if (item == null || item == net.minecraft.world.item.Items.AIR) continue;
-            ItemStack stack = new ItemStack(item);
-            if (!p.getInventory().add(stack)) p.drop(stack, false);
-            names.add(Component.translatable(item.getDescriptionId()));
-        }
-        if (!names.isEmpty()) {
-            Component joined = names.get(0);
-            for (int i = 1; i < names.size(); i++) joined = Component.empty().append(joined).append("、").append(names.get(i));
-            p.displayClientMessage(Component.translatable("message.meikon.found", joined), true);
-        }
-    }
-
-    public static void letterTaken(ServerPlayer p, BlockPos pos) {
-        ServerLevel level = p.serverLevel();
-        int note = mansion == null ? Notes.MAID_2 : mansion.letters.getOrDefault(pos.asLong(), Notes.MAID_2);
-        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-        level.playSound(null, pos, ModSounds.GAME_PAPER.get(), SoundSource.BLOCKS, 0.8f, 1.0f);
-        ItemStack stack = NoteItem.create(ModItems.NOTE.get(), note);
-        if (!p.getInventory().add(stack)) p.drop(stack, false);
-        GameData data = GameData.get(p.server);
-        data.foundNotes.add(note);
-        data.lettersTaken.add(pos.asLong());
-        data.setDirty();
-        openNote(p, note);
-    }
-
-    public static void openNote(ServerPlayer p, int id) {
-        String extra = p.getGameProfile().getName();
-        if (id == Notes.CANDLES && mansion != null) {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < 3; i++) {
-                if (i > 0) sb.append(',');
-                sb.append(mansion.candleOrder[i]);
-            }
-            extra = sb.toString();
-        }
-        ModNetwork.send(p, new S2C.Note(id, extra));
-        p.level().playSound(null, p.getX(), p.getY() + 1, p.getZ(), ModSounds.GAME_PAPER.get(), SoundSource.PLAYERS, 0.6f, 1.1f);
-    }
-
-    public static void saltThrown(ServerPlayer p) {
-        ServerLevel level = p.serverLevel();
-        for (Hanayome bride : level.getEntitiesOfClass(Hanayome.class, p.getBoundingBox().inflate(6))) {
-            Vec3 to = bride.position().subtract(p.position());
-            if (to.horizontalDistance() < 5.5 && p.getViewVector(1.0f).dot(to.normalize()) > 0.4) {
-                bride.repelled();
-                PlayerState ps = state(p);
-                if (ps != null) ps.fear = Math.max(0.0f, ps.fear - 10.0f);
-                p.displayClientMessage(Component.translatable("message.meikon.salt_hit"), true);
-            }
-        }
-        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(6))) k.dissolve(level);
-    }
-
-    // ================================================================== creatures
-    public static void onBrideSpotted(ServerPlayer p, Hanayome bride) {
-        addFear(p, 18.0f);
-        event(p, EVENT_SPOTTED, 0, "");
-    }
-
-    @Nullable
-    public static ServerPlayer dollObserver(ServerLevel level, Ichimatsu doll) {
-        for (ServerPlayer p : level.players()) {
-            if (p.isSpectator()) continue;
-            double d = p.distanceTo(doll);
-            if (d > 32) continue;
-            boolean visible = d < 4.0 || level.getMaxLocalRawBrightness(doll.blockPosition()) >= 5 || (holdsLitLantern(p) && d < 13);
-            if (!visible) continue;
-            if (looksAt(p, doll, 0.55, 32.0)) return p;
-        }
-        return null;
-    }
-
-    public static void dollAttack(ServerPlayer p, Ichimatsu doll) {
-        PlayerState ps = state(p);
-        if (ps == null || ps.captured || ps.inSafeRoom) return;
-        ServerLevel level = p.serverLevel();
-        level.playSound(null, p.getX(), p.getY() + 1, p.getZ(), ModSounds.DOLL_ATTACK.get(), SoundSource.HOSTILE, 1.6f, 1.0f);
-        event(p, EVENT_JUMPSCARE, 1, "");
-        addFear(p, 35.0f);
-        if (ps.lanternLit) extinguish(p);
-        NoiseSystem.emit(level, p.position(), 30.0f, NoiseSystem.Source.VOICE);
-    }
-
-    public static boolean lanternBurns(ServerPlayer p, Entity shadow) {
-        PlayerState ps = state(p);
-        return ps != null && ps.lanternLit && p.distanceTo(shadow) < 7.5 && looksAt(p, shadow, 0.6, 8.0);
-    }
-
-    public static void shadowTouch(ServerPlayer p, Kageboshi shadow) {
-        PlayerState ps = state(p);
-        if (ps == null || ps.inSafeRoom) return;
-        if (ps.lanternLit) extinguish(p);
-        addFear(p, 20.0f);
-        event(p, EVENT_SHADOW, 0, "");
-        p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 1, false, false, false));
-    }
-
-    public static void peekSeen(ServerPlayer p, Maboroshi m) {
-        addFear(p, 16.0f);
-        event(p, EVENT_STINGER, 1, "");
-    }
-
-    // ================================================================== capture & fake death
-    public static void beginCapture(ServerPlayer p, Hanayome bride) {
-        PlayerState ps = state(p);
-        if (ps == null || ps.captured || ps.ending) return;
-        if (consume(p, ModItems.OFUDA.get())) {
-            p.level().playSound(null, p.getX(), p.getY() + 1, p.getZ(), ModSounds.GAME_OFUDA_BURN.get(), SoundSource.PLAYERS, 1.4f, 1.0f);
-            event(p, EVENT_OFUDA, 0, "");
-            bride.repelled();
-            addFear(p, 25.0f);
-            p.displayClientMessage(Component.translatable("message.meikon.ofuda"), true);
-            return;
-        }
-        ps.captured = true;
-        ps.captureTicks = 0;
-        ps.capturePos = p.position();
-        LanternLight.remove(p);
-        Vec3 eye = bride.getEyePosition().add(0, 0.25, 0);
-        Vec3 d = eye.subtract(p.getEyePosition());
-        float yaw = (float) (Mth.atan2(d.z, d.x) * (180.0 / Math.PI)) - 90.0f;
-        float pitch = (float) -(Mth.atan2(d.y, Math.sqrt(d.x * d.x + d.z * d.z)) * (180.0 / Math.PI));
-        p.connection.teleport(p.getX(), p.getY(), p.getZ(), yaw, pitch);
-        p.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 80, 0, false, false, false));
-        event(p, EVENT_JUMPSCARE, 0, "");
-    }
-
-    private static void finishCapture(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
-        data.deaths++;
-        data.setDirty();
-        event(p, EVENT_DEATH, data.deaths, "");
-        extinguish(p);
-        ps.resetAfterDeath();
-        toSpawn(p);
-        p.removeAllEffects();
-        NoiseSystem.clear();
-        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(64))) k.discard();
-        Hanayome bride = anyBride(level);
-        if (bride != null) {
-            BlockPos far = farWaypoint(level, p.blockPosition());
-            bride.teleportTo(far.getX() + 0.5, far.getY(), far.getZ() + 0.5);
-            bride.force(Hanayome.State.WANDER, null);
-        }
-        Sounan.LOGGER.info("[sounan] {} was taken (deaths {})", p.getGameProfile().getName(), data.deaths);
-    }
-
-    /** Used by the death handler: something killed the player inside the mansion. */
-    public static void fakeDeath(ServerPlayer p) {
-        PlayerState ps = stateOrCreate(p);
-        ServerLevel level = p.serverLevel();
-        ps.captured = true;
-        ps.captureTicks = CAPTURE_TICKS - 1;
-        finishCapture(level, p, ps, GameData.get(p.server));
-        ps.captured = false;
-    }
-
-    // ================================================================== the ritual and the endings
-    public static void insideGate(ServerPlayer p, boolean active) {
-        PlayerState ps = state(p);
-        if (ps != null) ps.atGate = p.level().getGameTime();
-    }
-
-    public static boolean canStartRitual(ServerPlayer p) {
-        PlayerState ps = state(p);
-        if (ps == null || ps.captured || mansion == null || !GameData.get(p.server).active) return false;
-        if (GameData.get(p.server).bells < 7) return false;
-        boolean atGate = p.level().getGameTime() - ps.atGate <= 5
-                || p.position().distanceToSqr(Vec3.atBottomCenterOf(mansion.toriiCenter)) < 2.5 * 2.5;
-        return atGate;
-    }
-
-    public static void ritualStarted(ServerPlayer p) {
-        PlayerState ps = state(p);
-        if (ps == null) return;
-        ps.ritualTicks = 0;
-        event(p, EVENT_RITUAL, 1, "");
-        ServerLevel level = p.serverLevel();
-        Hanayome bride = anyBride(level);
-        if (bride != null) bride.force(Hanayome.State.INVESTIGATE, p.position());
-        NoiseSystem.emit(level, p.position(), 60.0f, NoiseSystem.Source.BELL);
-    }
-
-    public static void ritualTick(ServerPlayer p, int t) {
-        if (t % 10 == 0) {
-            ServerLevel level = p.serverLevel();
-            level.playSound(null, p.getX(), p.getY() + 1.2, p.getZ(), ModSounds.GAME_BELL_CHIME.get(), SoundSource.PLAYERS, 1.6f,
-                    0.8f + t / 160.0f);
-            level.sendParticles(net.minecraft.core.particles.ParticleTypes.END_ROD, p.getX(), p.getY() + 1.2, p.getZ(), 8, 0.6, 0.6, 0.6, 0.02);
-        }
-    }
-
-    public static void ritualInterrupted(ServerPlayer p) {
-        event(p, EVENT_RITUAL, 0, "");
-        p.displayClientMessage(Component.translatable("message.meikon.ritual_broken"), true);
-    }
-
-    public static void ritualComplete(ServerPlayer p) {
-        PlayerState ps = state(p);
-        if (ps == null || ps.ending) return;
-        ps.ending = true;
-        ps.endingGood = true;
-        ps.endingTicks = 0;
-        ServerLevel level = p.serverLevel();
-        Hanayome bride = anyBride(level);
-        if (bride != null) bride.discard();
-        for (Ichimatsu d : level.getEntitiesOfClass(Ichimatsu.class, p.getBoundingBox().inflate(80))) d.discard();
-        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(80))) k.discard();
-        endGame(p.server);
-        event(p, EVENT_ENDING, 1, p.getGameProfile().getName());
-        Sounan.LOGGER.info("[sounan] good ending for {}", p.getGameProfile().getName());
-    }
-
-    public static void sakazukiAccepted(ServerPlayer p) {
-        PlayerState ps = state(p);
-        if (ps == null || ps.ending || !inGame(p)) return;
-        ps.ending = true;
-        ps.endingGood = false;
-        ps.endingTicks = 0;
-        endGame(p.server);
-        event(p, EVENT_ENDING, 0, p.getGameProfile().getName());
-        Sounan.LOGGER.info("[sounan] bad ending for {}", p.getGameProfile().getName());
-    }
-
-    public static void endingDone(ServerPlayer p) {
-        PlayerState ps = state(p);
-        if (ps != null && ps.ending) {
-            leaveGame(p, ps.endingGood);
-        }
-    }
-
-    // ================================================================== login / logout
-    public static void onLogin(ServerPlayer p) {
-        CompoundTag pd = p.getPersistentData();
-        if (SounanConfig.giveEnvelope() && !pd.getBoolean("meikon_envelope")) {
-            pd.putBoolean("meikon_envelope", true);
-            p.getInventory().add(new ItemStack(ModItems.RED_ENVELOPE.get()));
-            p.displayClientMessage(Component.translatable("message.meikon.envelope_found"), false);
-        }
-        if (ModDimensions.isKakuriyo(p.level())) {
-            GameData data = GameData.get(p.server);
-            if (!data.active) {
-                leaveGame(p, false);
-            } else {
-                ensureMansion(data);
-                PlayerState ps = stateOrCreate(p);
-                ps.everLeftSafeRoom = true;
-                syncState(p, ps, data);
-            }
-        }
-    }
-
-    public static void onLogout(ServerPlayer p) {
-        LanternLight.remove(p);
-        STATES.remove(p.getUUID());
-    }
-
-    public static void onServerStopping() {
-        LanternLight.forgetAll();
+    public static void onServerStopping(MinecraftServer server) {
+        for (ServerPlayer p : server.getPlayerList().getPlayers()) savePlayer(p);
+        ServerLevel level = mountain(server);
+        if (level != null) FlashlightLight.removeAll(level);
         STATES.clear();
-        mansion = null;
-        mansionSeed = Long.MIN_VALUE;
-        SALT.clear();
+        THREAT.clear();
         NoiseSystem.clear();
     }
 }

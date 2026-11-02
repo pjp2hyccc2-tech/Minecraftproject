@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "sounan:block/hair_strands"
+    },
+    "facing=east": {
+      "model": "sounan:block/hair_strands",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "sounan:block/hair_strands",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "sounan:block/hair_strands",
+      "y": 270
+    }
+  }
+}

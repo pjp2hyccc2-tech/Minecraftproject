@@ -1,13 +1,24 @@
 #!/usr/bin/env python3
-"""Generates every blockstate, block model and item model of MEIKON (assets/meikon/...).
+"""Generates the blockstates, simple block models and item models of SOUNAN (assets/sounan/...).
 
+Prop block models and 3D held item models are made by the art pass (tools/art) and are never overwritten here.
 Run from anywhere: python3 tools/gen_assets.py
 """
 import json
 import os
 
-ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", "meikon"))
-NS = "meikon"
+ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", "sounan"))
+NS = "sounan"
+
+# made by the art pass (tools/art): never written here
+ART_BLOCK_MODELS = {"lost_bag", "lost_bag_open", "memo", "memo_wall", "logbook", "notice_board", "signpost", "jizo", "hokora",
+                    "hokora_offered", "wara_ningyo", "rope_anchor", "rope_anchor_roped", "climbing_rope", "public_phone", "bus_stop",
+                    "tunnel_lamp", "tunnel_lamp_lit", "guardrail", "key_hook", "key_hook_empty", "car_door", "blue_tarp",
+                    "fallen_leaves"}
+ART_ITEM_MODELS = {"flashlight", "flashlight_on", "flashlight_low", "phone", "phone_light", "phone_camera", "flare", "flare_lit"}
+FLAT_ITEMS = ["battery", "power_bank", "bear_bell", "rope", "trail_map", "omamori", "hut_key", "omiki", "memo"]
+MONSTERS = ["nozoki", "yobigoe", "ushiro", "koyanushi", "oyamasama", "utsurumono"]
+FACING_Y = {"north": 0, "east": 90, "south": 180, "west": 270}
 
 
 def write(rel, data):
@@ -23,277 +34,251 @@ def bs(name, variants):
 
 
 def model(name, data):
+    if name in ART_BLOCK_MODELS:
+        return
     write(f"models/block/{name}.json", data)
 
 
 def item(name, data):
+    if name in ART_ITEM_MODELS:
+        return
     write(f"models/item/{name}.json", data)
 
 
-def tex(t):
-    return t if ":" in t else f"{NS}:block/{t}"
+def t(name):
+    return name if ":" in name else f"{NS}:block/{name}"
 
 
-def face(t, uv=None, cull=None):
-    f = {"texture": t}
-    if uv:
-        f["uv"] = uv
-    if cull:
-        f["cullface"] = cull
-    return f
-
-
-def box(frm, to, faces, shade=True):
-    e = {"from": frm, "to": to, "faces": faces}
-    if not shade:
-        e["shade"] = False
-    return e
-
-
-def all_faces(t, uvs=None):
-    return {d: face(t, (uvs or {}).get(d)) for d in ("north", "south", "east", "west", "up", "down")}
-
-
-FACING_Y = {"north": 0, "east": 90, "south": 180, "west": 270}
-
-
-def facing_variants(model_for, extra_props=None):
-    """model_for(props dict) -> (model name). extra_props: list of (name, values)."""
-    variants = {}
-    combos = [{}]
-    for pname, values in (extra_props or []):
-        combos = [dict(c, **{pname: v}) for c in combos for v in values]
-    for f, y in FACING_Y.items():
-        for c in combos:
-            key = ",".join([f"facing={f}"] + [f"{k}={v}" for k, v in c.items()])
-            v = {"model": f"{NS}:block/{model_for(c)}"}
-            if y:
-                v["y"] = y
-            variants[key] = v
-    return variants
+def m(name):
+    return f"{NS}:block/{name}"
 
 
 def block_item(name, model_name=None):
-    item(name, {"parent": f"{NS}:block/{model_name or name}"})
+    item(name, {"parent": m(model_name or name)})
 
 
-def flat_item(name, texture):
-    item(name, {"parent": "minecraft:item/generated", "textures": {"layer0": texture}})
+def flat_item(name, texture=None):
+    item(name, {"parent": "minecraft:item/generated", "textures": {"layer0": texture or f"{NS}:item/{name}"}})
 
 
-# ------------------------------------------------------------------ simple cubes
-for name in ["old_planks", "engawa", "rotten_planks", "plaster_wall", "plaster_wall_stained", "wainscot", "kura_wall",
-             "shoji", "shoji_bloody", "fusuma", "black_lacquer", "hina_dan"]:
-    model(name, {"parent": "minecraft:block/cube_all", "textures": {"all": tex(name)}})
-    bs(name, {"": {"model": f"{NS}:block/{name}"}})
-    block_item(name)
-
-for name in ["shoji_torn", "ranma"]:
-    model(name, {"parent": "minecraft:block/cube_all", "render_type": "minecraft:cutout", "textures": {"all": tex(name)}})
-    bs(name, {"": {"model": f"{NS}:block/{name}"}})
-    block_item(name)
-
-# ------------------------------------------------------------------ tatami (horizontal axis)
-model("tatami", {"parent": "minecraft:block/cube", "textures": {
-    "up": tex("tatami_top"), "down": tex("tatami_side"), "north": tex("tatami_side"), "south": tex("tatami_side"),
-    "east": tex("tatami_side"), "west": tex("tatami_side"), "particle": tex("tatami_top")}})
-bs("tatami", {"axis=z": {"model": f"{NS}:block/tatami"}, "axis=x": {"model": f"{NS}:block/tatami", "y": 90}})
-block_item("tatami")
-
-# ------------------------------------------------------------------ pillars
-for name in ["dark_beam", "vermilion"]:
-    model(name, {"parent": "minecraft:block/cube_column", "textures": {"end": tex(name + "_top"), "side": tex(name + "_side" if name == "dark_beam" else name)}})
-    model(name + "_horizontal", {"parent": "minecraft:block/cube_column_horizontal",
-                                 "textures": {"end": tex(name + "_top"), "side": tex(name + "_side" if name == "dark_beam" else name)}})
-    bs(name, {"axis=y": {"model": f"{NS}:block/{name}"},
-              "axis=z": {"model": f"{NS}:block/{name}_horizontal", "x": 90},
-              "axis=x": {"model": f"{NS}:block/{name}_horizontal", "x": 90, "y": 90}})
-    block_item(name)
-
-# ------------------------------------------------------------------ doors
-DOORS = {"fusuma_door": "fusuma_door", "shoji_door": "shoji_door", "sealed_door": "shoji_door",
-         "oshiire_door": "oshiire_door", "kura_door": "kura_door"}
-for name, t in DOORS.items():
-    for part in ["bottom_left", "bottom_left_open", "bottom_right", "bottom_right_open",
-                 "top_left", "top_left_open", "top_right", "top_right_open"]:
-        model(f"{name}_{part}", {"parent": f"minecraft:block/door_{part}", "render_type": "minecraft:cutout",
-                                 "textures": {"bottom": tex(t + "_bottom"), "top": tex(t + "_top")}})
+def facing(name, model_for, extra=None):
+    """extra: (property, [values]) -> model_for(value)."""
     variants = {}
-    base = {"east": 0, "south": 90, "west": 180, "north": 270}
-    for f, rot in base.items():
-        for half, hname in (("lower", "bottom"), ("upper", "top")):
+    for f, y in FACING_Y.items():
+        if extra:
+            prop, values = extra
+            for v in values:
+                variants[f"facing={f},{prop}={v}"] = {"model": model_for(v), "y": y} if y else {"model": model_for(v)}
+        else:
+            variants[f"facing={f}"] = {"model": model_for(None), "y": y} if y else {"model": model_for(None)}
+    return variants
+
+
+def cube_all(name, texture=None, cutout=False):
+    d = {"parent": "minecraft:block/cube_all", "textures": {"all": t(texture or name)}}
+    if cutout:
+        d["render_type"] = "minecraft:cutout"
+    model(name, d)
+    bs(name, {"": {"model": m(name)}})
+    block_item(name)
+
+
+def bottom_top(name, top, side, bottom):
+    model(name, {"parent": "minecraft:block/cube_bottom_top", "textures": {"top": t(top), "side": t(side), "bottom": t(bottom)}})
+    bs(name, {"": {"model": m(name)}})
+    block_item(name)
+
+
+def pillar(name, side, end):
+    model(name, {"parent": "minecraft:block/cube_column", "textures": {"side": t(side), "end": t(end)}})
+    model(name + "_horizontal", {"parent": "minecraft:block/cube_column_horizontal", "textures": {"side": t(side), "end": t(end)}})
+    bs(name, {"axis=y": {"model": m(name)}, "axis=z": {"model": m(name + "_horizontal"), "x": 90},
+              "axis=x": {"model": m(name + "_horizontal"), "x": 90, "y": 90}})
+    block_item(name)
+
+
+def decal(name, texture, height=0.5, cutout=True):
+    d = {"parent": "minecraft:block/block", "textures": {"particle": t(texture), "tex": t(texture)},
+         "elements": [{"from": [0, 0, 0], "to": [16, height, 16],
+                       "faces": {"up": {"uv": [0, 0, 16, 16], "texture": "#tex"}, "down": {"uv": [0, 16, 16, 0], "texture": "#tex"}}}]}
+    if cutout:
+        d["render_type"] = "minecraft:cutout"
+    model(name, d)
+    bs(name, facing(name, lambda v: m(name)))
+    block_item(name)
+
+
+def stairs_slab(base, texture):
+    tx = t(texture)
+    model(base + "_stairs", {"parent": "minecraft:block/stairs", "textures": {"bottom": tx, "top": tx, "side": tx}})
+    model(base + "_stairs_inner", {"parent": "minecraft:block/inner_stairs", "textures": {"bottom": tx, "top": tx, "side": tx}})
+    model(base + "_stairs_outer", {"parent": "minecraft:block/outer_stairs", "textures": {"bottom": tx, "top": tx, "side": tx}})
+    variants = {}
+    rot = {"east": 0, "south": 90, "west": 180, "north": 270}
+    for f in ("east", "north", "south", "west"):
+        for half in ("bottom", "top"):
+            for shape in ("straight", "inner_left", "inner_right", "outer_left", "outer_right"):
+                mdl = m(base + "_stairs") if shape == "straight" else m(base + ("_stairs_inner" if shape.startswith("inner") else "_stairs_outer"))
+                y = rot[f]
+                if shape in ("inner_left", "outer_left"):
+                    y = (y + 270) % 360
+                x = 0
+                if half == "top":
+                    x = 180
+                    if shape in ("inner_left", "outer_left", "inner_right", "outer_right"):
+                        y = (y + 90) % 360
+                v = {"model": mdl}
+                if x:
+                    v["x"] = x
+                if y:
+                    v["y"] = y
+                if x or y:
+                    v["uvlock"] = True
+                variants[f"facing={f},half={half},shape={shape}"] = v
+    bs(base + "_stairs", variants)
+    block_item(base + "_stairs")
+    model(base + "_slab", {"parent": "minecraft:block/slab", "textures": {"bottom": tx, "top": tx, "side": tx}})
+    model(base + "_slab_top", {"parent": "minecraft:block/slab_top", "textures": {"bottom": tx, "top": tx, "side": tx}})
+    bs(base + "_slab", {"type=bottom": {"model": m(base + "_slab")}, "type=top": {"model": m(base + "_slab_top")},
+                        "type=double": {"model": m(base)}})
+    block_item(base + "_slab")
+
+
+def door(name):
+    lo, hi = t(name + "_bottom"), t(name + "_top")
+    for kind in ("bottom_left", "bottom_left_open", "bottom_right", "bottom_right_open", "top_left", "top_left_open", "top_right",
+                 "top_right_open"):
+        model(f"{name}_{kind}", {"parent": f"minecraft:block/door_{kind}", "render_type": "minecraft:cutout",
+                                 "textures": {"bottom": lo, "top": hi}})
+    variants = {}
+    base_y = {"east": 0, "south": 90, "west": 180, "north": 270}
+    for f in ("east", "north", "south", "west"):
+        for half in ("lower", "upper"):
             for hinge in ("left", "right"):
                 for opened in ("false", "true"):
-                    m = f"{NS}:block/{name}_{hname}_{hinge}" + ("_open" if opened == "true" else "")
-                    y = rot
+                    part = ("bottom" if half == "lower" else "top") + "_" + hinge + ("_open" if opened == "true" else "")
+                    y = base_y[f]
                     if opened == "true":
-                        y = (rot + (90 if hinge == "left" else 270)) % 360
-                    v = {"model": m}
+                        y = (y + (90 if hinge == "left" else 270)) % 360
+                    v = {"model": m(f"{name}_{part}")}
                     if y:
                         v["y"] = y
                     variants[f"facing={f},half={half},hinge={hinge},open={opened}"] = v
     bs(name, variants)
-    flat_item(name, f"{NS}:item/{t}")
+    flat_item(name)
 
-# ------------------------------------------------------------------ torii veil (translucent, animated)
-for name in ["torii_gate", "torii_gate_active"]:
-    t = tex(name)
-    model(name, {"render_type": "minecraft:translucent", "textures": {"particle": t, "veil": t}, "elements": [
-        box([0, 0, 7], [16, 16, 9], {"north": face("#veil"), "south": face("#veil")}, shade=False)]})
-bs("torii_gate", {"active=false": {"model": f"{NS}:block/torii_gate"}, "active=true": {"model": f"{NS}:block/torii_gate_active"}})
-flat_item("torii_gate", f"{NS}:block/torii_gate")
 
-# ------------------------------------------------------------------ thin facing decorations (model built facing NORTH, back at z=16)
-model("shimenawa", {"render_type": "minecraft:cutout", "ambientocclusion": False,
-                    "textures": {"particle": tex("shimenawa"), "t": tex("shimenawa")}, "elements": [
-    box([0, 0, 7.5], [16, 16, 8.5], {"north": face("#t"), "south": face("#t", [16, 0, 0, 16])}, shade=False)]})
-bs("shimenawa", facing_variants(lambda c: "shimenawa"))
-flat_item("shimenawa", f"{NS}:block/shimenawa")
-
-for name in ["blood_stain", "hair_strands", "footprints"]:
-    model(name, {"render_type": "minecraft:cutout", "ambientocclusion": False,
-                 "textures": {"particle": tex(name), "t": tex(name)}, "elements": [
-        box([0, 0.05, 0], [16, 0.3, 16], {"up": face("#t"), "down": face("#t")})]})
-    bs(name, facing_variants(lambda c, n=name: n))
-    flat_item(name, f"{NS}:block/{name}")
-
-model("letter", {"render_type": "minecraft:cutout", "ambientocclusion": False,
-                 "textures": {"particle": f"{NS}:item/note", "t": f"{NS}:item/note"}, "elements": [
-    box([0, 0.05, 0], [16, 0.3, 16], {"up": face("#t"), "down": face("#t")})]})
-bs("letter", facing_variants(lambda c: "letter"))
-flat_item("letter", f"{NS}:item/note")
-
-for name in ["kakejiku", "kakejiku_face"]:
-    model(name, {"render_type": "minecraft:cutout", "textures": {"particle": tex(name), "t": tex(name)}, "elements": [
-        box([0, 0, 15.4], [16, 16, 16], {"north": face("#t"), "south": face("#t", [16, 0, 0, 16]),
-                                         "up": face("#t", [0, 0, 16, 1]), "down": face("#t", [0, 15, 16, 16])})]})
-bs("kakejiku", facing_variants(lambda c: "kakejiku_face" if c["face"] == "true" else "kakejiku", [("face", ["false", "true"])]))
-flat_item("kakejiku", f"{NS}:block/kakejiku")
-
-model("futon", {"textures": {"particle": tex("futon_top"), "top": tex("futon_top"), "side": tex("futon_side")}, "elements": [
-    box([0, 0, 0], [16, 3, 16], {"up": face("#top"), "down": face("#side"), "north": face("#side", [0, 13, 16, 16]),
-                                 "south": face("#side", [0, 13, 16, 16]), "east": face("#side", [0, 13, 16, 16]),
-                                 "west": face("#side", [0, 13, 16, 16])})]})
-bs("futon", facing_variants(lambda c: "futon"))
-block_item("futon")
-
-# ------------------------------------------------------------------ furniture (facing north)
-def front_box(name, frm, to, front, side, top, cutout=False):
-    d = {"textures": {"particle": tex(side), "front": tex(front), "side": tex(side), "top": tex(top)}, "elements": [
-        box(frm, to, {"north": face("#front"), "south": face("#side"), "east": face("#side"), "west": face("#side"),
-                      "up": face("#top"), "down": face("#top")})]}
+def front_model(name, frm, to, front, side, top=None, cutout=False):
+    tx = {"particle": t(side), "front": t(front), "side": t(side), "top": t(top or side)}
+    faces = {"north": {"texture": "#front"}, "south": {"texture": "#side"}, "east": {"texture": "#side"},
+             "west": {"texture": "#side"}, "up": {"texture": "#top"}, "down": {"texture": "#top"}}
+    d = {"parent": "minecraft:block/block", "textures": tx, "elements": [{"from": frm, "to": to, "faces": faces}]}
     if cutout:
         d["render_type"] = "minecraft:cutout"
-    return d
+    model(name, d)
 
 
-model("butsudan", front_box("butsudan", [1, 0, 4], [15, 16, 16], "butsudan_front", "butsudan_side", "butsudan_top"))
-bs("butsudan", facing_variants(lambda c: "butsudan"))
-block_item("butsudan")
+def main():
+    # ---- nature
+    pillar("cedar_log", "cedar_log", "cedar_log_top")
+    pillar("cedar_log_ribbon", "cedar_log_ribbon", "cedar_log_top")
+    pillar("cedar_log_shimenawa", "cedar_log_shimenawa", "cedar_log_top")
+    model("cedar_leaves", {"parent": "minecraft:block/leaves", "render_type": "minecraft:cutout_mipped",
+                           "textures": {"all": t("cedar_leaves")}})
+    bs("cedar_leaves", {"": {"model": m("cedar_leaves")}})
+    block_item("cedar_leaves")
+    bottom_top("forest_floor", "forest_floor_top", "forest_floor_side", "forest_dirt")
+    cube_all("forest_dirt")
+    bottom_top("moss_floor", "moss_floor", "forest_floor_side", "forest_dirt")
+    bottom_top("trail", "trail_top", "forest_dirt", "forest_dirt")
+    for n in ("mountain_rock", "mossy_rock", "river_stones"):
+        cube_all(n)
+    bs("fallen_leaves", facing("fallen_leaves", lambda v: m("fallen_leaves")))
+    block_item("fallen_leaves")
 
-model("kamado", {"parent": "minecraft:block/orientable", "textures": {"front": tex("kamado_front"), "side": tex("kamado_side"), "top": tex("kamado_top")}})
-bs("kamado", facing_variants(lambda c: "kamado"))
-block_item("kamado")
+    # ---- buildings
+    for n in ("weathered_planks", "dark_planks", "old_plaster", "tin_roof", "concrete_old", "concrete_moss", "asphalt", "old_planks",
+              "rotten_planks", "plaster_wall"):
+        cube_all(n)
+    cube_all("shoji_torn", cutout=True)
+    cube_all("steel_lattice", cutout=True)
+    stairs_slab("tin_roof", "tin_roof")
+    bs("blue_tarp", facing("blue_tarp", lambda v: m("blue_tarp")))
+    block_item("blue_tarp")
+    bottom_top("tatami_old", "tatami_old_top", "tatami_old_side", "tatami_old_side")
+    pillar("dark_beam", "dark_beam_side", "dark_beam_top")
+    # futon: a 3 px mattress
+    model("futon", {"parent": "minecraft:block/block", "textures": {"particle": t("futon_top"), "top": t("futon_top"), "side": t("futon_side")},
+                    "elements": [{"from": [0, 0, 0], "to": [16, 3, 16], "faces": {
+                        "up": {"texture": "#top"}, "down": {"texture": "#side"}, "north": {"uv": [0, 13, 16, 16], "texture": "#side"},
+                        "south": {"uv": [0, 13, 16, 16], "texture": "#side"}, "east": {"uv": [0, 13, 16, 16], "texture": "#side"},
+                        "west": {"uv": [0, 13, 16, 16], "texture": "#side"}}}]})
+    bs("futon", facing("futon", lambda v: m("futon")))
+    block_item("futon")
+    # stone lantern: base, post, fire box, cap
+    st = t("stone_lantern")
+    def el(a, b):
+        return {"from": a, "to": b, "faces": {d: {"texture": "#s"} for d in ("north", "south", "east", "west", "up", "down")}}
+    model("stone_lantern", {"parent": "minecraft:block/block", "textures": {"particle": st, "s": st},
+                            "elements": [el([4, 0, 4], [12, 2, 12]), el([6, 2, 6], [10, 8, 10]), el([4, 8, 4], [12, 12, 12]),
+                                         el([3, 12, 3], [13, 14, 13]), el([6, 14, 6], [10, 16, 10])]})
+    bs("stone_lantern", facing("stone_lantern", lambda v: m("stone_lantern")))
+    block_item("stone_lantern")
+    for n in ("blood_stain", "footprints", "hair_strands"):
+        decal(n, n)
+    # shimenawa: a hanging plane in the middle of the block
+    model("shimenawa", {"parent": "minecraft:block/block", "render_type": "minecraft:cutout",
+                        "textures": {"particle": t("shimenawa"), "tex": t("shimenawa")},
+                        "elements": [{"from": [0, 0, 8], "to": [16, 16, 8], "shade": False, "faces": {
+                            "north": {"uv": [0, 0, 16, 16], "texture": "#tex"}, "south": {"uv": [16, 0, 0, 16], "texture": "#tex"}}}]})
+    bs("shimenawa", facing("shimenawa", lambda v: m("shimenawa")))
+    block_item("shimenawa")
 
-model("old_clock", front_box("old_clock", [3, 0, 11], [13, 16, 16], "old_clock_front", "old_clock_side", "old_clock_side"))
-bs("old_clock", facing_variants(lambda c: "old_clock"))
-block_item("old_clock")
+    # ---- doors
+    for d in ("hut_door", "house_door", "iron_gate"):
+        door(d)
 
-tansu = front_box("tansu", [1, 0, 3], [15, 16, 16], "tansu_front", "tansu_side", "tansu_top")
-model("tansu", tansu)
-tansu_open = json.loads(json.dumps(tansu))
-tansu_open["elements"].append(box([2.5, 7, 0], [13.5, 10, 3], {"north": face("#front", [2, 6, 14, 9]), "east": face("#side"), "west": face("#side"),
-                                                                 "up": face("#top"), "down": face("#side")}))
-model("tansu_opened", tansu_open)
-bs("tansu", facing_variants(lambda c: "tansu_opened" if c["opened"] == "true" else "tansu", [("opened", ["false", "true"])]))
-block_item("tansu")
+    # ---- props (models by the art pass)
+    bs("lost_bag", facing("lost_bag", lambda v: m("lost_bag_open" if v == "true" else "lost_bag"), ("open", ["false", "true"])))
+    block_item("lost_bag")
+    for n in ("memo", "memo_wall", "logbook", "notice_board", "signpost", "jizo", "wara_ningyo", "public_phone", "bus_stop",
+              "guardrail", "car_door"):
+        bs(n, facing(n, lambda v, n=n: m(n)))
+        if n not in ("memo", "memo_wall"):
+            block_item(n)
+    bs("hokora", facing("hokora", lambda v: m("hokora_offered" if v == "true" else "hokora"), ("offered", ["false", "true"])))
+    block_item("hokora")
+    bs("rope_anchor", facing("rope_anchor", lambda v: m("rope_anchor_roped" if v == "true" else "rope_anchor"), ("roped", ["false", "true"])))
+    block_item("rope_anchor")
+    bs("tunnel_lamp", facing("tunnel_lamp", lambda v: m("tunnel_lamp_lit" if v == "true" else "tunnel_lamp"), ("lit", ["false", "true"])))
+    block_item("tunnel_lamp")
+    bs("key_hook", facing("key_hook", lambda v: m("key_hook" if v == "true" else "key_hook_empty"), ("has_key", ["true", "false"])))
+    block_item("key_hook")
+    bs("climbing_rope", {f"facing={f}": ({"model": m("climbing_rope"), "y": y} if y else {"model": m("climbing_rope")})
+                         for f, y in FACING_Y.items()})
+    flat_item("climbing_rope", t("climbing_rope"))
+    # the sake bottle (徳利), vanilla textures
+    model("omiki_bottle", {"parent": "minecraft:block/block",
+                           "textures": {"particle": "minecraft:block/calcite", "body": "minecraft:block/calcite",
+                                        "label": "minecraft:block/white_wool", "cap": "minecraft:block/stripped_oak_log"},
+                           "elements": [
+                               {"from": [5.5, 0, 5.5], "to": [10.5, 6, 10.5], "faces": {d: {"texture": "#body"} for d in
+                                                                                       ("north", "south", "east", "west", "up", "down")}},
+                               {"from": [6.5, 6, 6.5], "to": [9.5, 9, 9.5], "faces": {d: {"texture": "#body"} for d in
+                                                                                     ("north", "south", "east", "west", "up")}},
+                               {"from": [6.2, 2, 5.4], "to": [9.8, 5, 5.5], "faces": {"north": {"texture": "#label"}}},
+                               {"from": [7, 9, 7], "to": [9, 10.5, 9], "faces": {d: {"texture": "#cap"} for d in
+                                                                                ("north", "south", "east", "west", "up")}}]})
+    bs("omiki_bottle", facing("omiki_bottle", lambda v: m("omiki_bottle")))
+    block_item("omiki_bottle")
 
-model("well", {"parent": "minecraft:block/cube_bottom_top", "textures": {"top": tex("well_top"), "bottom": tex("well_side"), "side": tex("well_side")}})
-bs("well", facing_variants(lambda c: "well"))
-block_item("well")
+    # ---- items
+    for n in FLAT_ITEMS:
+        flat_item(n)
+    for n in MONSTERS:
+        item(f"{n}_spawn_egg", {"parent": "minecraft:item/template_spawn_egg"})
+    print("assets written to", ROOT)
 
-model("sakazuki_table", {"textures": {"particle": tex("sakazuki_table"), "t": tex("sakazuki_table")}, "elements": [
-    box([2, 0, 2], [14, 4, 14], {"up": face("#t"), "down": face("#t"), "north": face("#t", [0, 12, 16, 16]),
-                                 "south": face("#t", [0, 12, 16, 16]), "east": face("#t", [0, 12, 16, 16]), "west": face("#t", [0, 12, 16, 16])})]})
-bs("sakazuki_table", facing_variants(lambda c: "sakazuki_table"))
-block_item("sakazuki_table")
 
-st = "stone_lantern"
-model(st, {"textures": {"particle": tex(st), "t": tex(st)}, "elements": [
-    box([4, 0, 4], [12, 2, 12], all_faces("#t")),
-    box([6, 2, 6], [10, 8, 10], all_faces("#t")),
-    box([4, 8, 4], [12, 12, 12], all_faces("#t")),
-    box([3, 12, 3], [13, 14, 13], all_faces("#t")),
-    box([6, 14, 6], [10, 16, 10], all_faces("#t"))]})
-bs(st, facing_variants(lambda c: st))
-block_item(st)
-
-# headless doll: body + (optional) head
-doll_body = box([5, 0, 6], [11, 8, 10], all_faces("#k"))
-doll_head = box([5.5, 8, 6], [10.5, 13, 10], {"north": face("#f"), "south": face("#f", [0, 0, 4, 16]), "east": face("#f", [0, 0, 4, 16]),
-                                              "west": face("#f", [12, 0, 16, 16]), "up": face("#f", [0, 0, 16, 3]), "down": face("#f")})
-model("headless_doll", {"textures": {"particle": tex("doll_kimono"), "k": tex("doll_kimono"), "f": tex("doll_face")}, "elements": [doll_body]})
-model("headless_doll_head", {"textures": {"particle": tex("doll_kimono"), "k": tex("doll_kimono"), "f": tex("doll_face")}, "elements": [doll_body, doll_head]})
-bs("headless_doll", facing_variants(lambda c: "headless_doll_head" if c["head"] == "true" else "headless_doll", [("head", ["false", "true"])]))
-block_item("headless_doll")
-
-# ------------------------------------------------------------------ lamps and candles
-for lit in (True, False):
-    n = "andon" if lit else "andon_off"
-    side = "andon_side" if lit else "andon_side_off"
-    model(n, {"textures": {"particle": tex(side), "s": tex(side), "t": tex("andon_top")}, "elements": [
-        box([3, 0, 3], [13, 15, 13], {"north": face("#s"), "south": face("#s"), "east": face("#s"), "west": face("#s"),
-                                      "up": face("#t"), "down": face("#t")}, shade=not lit)]})
-bs("andon", {"lit=true": {"model": f"{NS}:block/andon"}, "lit=false": {"model": f"{NS}:block/andon_off"}})
-block_item("andon")
-
-COLORS = ["gold", "silver", "black"]
-for ci, c in enumerate(COLORS):
-    for lit in (False, True):
-        n = f"candle_stand_{c}" + ("_lit" if lit else "")
-        holder = "#h"
-        els = [
-            box([5, 0, 5], [11, 1, 11], all_faces(holder)),
-            box([7, 1, 7], [9, 8, 9], all_faces(holder)),
-            box([5.5, 8, 5.5], [10.5, 9, 10.5], all_faces(holder)),
-            box([7, 9, 7], [9, 13, 9], all_faces("#w")),
-        ]
-        if lit:
-            els.append({"from": [8, 13, 6.5], "to": [8, 16, 9.5], "shade": False,
-                        "faces": {"east": face("#f", [5, 7, 11, 16]), "west": face("#f", [5, 7, 11, 16])}})
-            els.append({"from": [6.5, 13, 8], "to": [9.5, 16, 8], "shade": False,
-                        "faces": {"north": face("#f", [5, 7, 11, 16]), "south": face("#f", [5, 7, 11, 16])}})
-        model(n, {"render_type": "minecraft:cutout", "textures": {"particle": tex(f"candle_{c}"), "h": tex(f"candle_{c}"),
-                                                                 "w": tex("candle_wax"), "f": tex("candle_flame")}, "elements": els})
-variants = {}
-for ci, c in enumerate(COLORS):
-    for lit in ("false", "true"):
-        variants[f"color={ci},lit={lit}"] = {"model": f"{NS}:block/candle_stand_{c}" + ("_lit" if lit == "true" else "")}
-bs("candle_stand", variants)
-block_item("candle_stand", "candle_stand_gold_lit")
-
-# bell pedestal
-ped = [box([4, 0, 4], [12, 3, 12], {"up": face("#d", [2, 2, 14, 14]), "down": face("#d"), "north": face("#d", [0, 13, 16, 16]),
-                                    "south": face("#d", [0, 13, 16, 16]), "east": face("#d", [0, 13, 16, 16]), "west": face("#d", [0, 13, 16, 16])}),
-       box([5, 3, 5], [11, 5, 11], {"up": face("#d", [4, 4, 12, 12]), "north": face("#d", [4, 6, 12, 8]), "south": face("#d", [4, 6, 12, 8]),
-                                    "east": face("#d", [4, 6, 12, 8]), "west": face("#d", [4, 6, 12, 8])})]
-bell = [box([6.5, 5, 6.5], [9.5, 8.5, 9.5], all_faces("#b")), box([7.5, 8.5, 7.5], [8.5, 9.5, 8.5], all_faces("#b"))]
-model("suzu_dai", {"textures": {"particle": tex("suzu_dai"), "d": tex("suzu_dai"), "b": tex("suzu_bell")}, "elements": ped + bell})
-model("suzu_dai_empty", {"textures": {"particle": tex("suzu_dai"), "d": tex("suzu_dai"), "b": tex("suzu_bell")}, "elements": ped})
-bs("suzu_dai", {"has_bell=true": {"model": f"{NS}:block/suzu_dai"}, "has_bell=false": {"model": f"{NS}:block/suzu_dai_empty"}})
-block_item("suzu_dai")
-
-model("salt_pile", {"textures": {"particle": tex("salt_pile"), "t": tex("salt_pile")}, "elements": [
-    box([4, 0, 4], [12, 3, 12], all_faces("#t")), box([5.5, 3, 5.5], [10.5, 5, 10.5], all_faces("#t")),
-    box([7, 5, 7], [9, 6, 9], all_faces("#t"))]})
-bs("salt_pile", {"": {"model": f"{NS}:block/salt_pile"}})
-block_item("salt_pile")
-
-# ------------------------------------------------------------------ items
-for name in ["chochin", "chochin_lit", "lamp_oil", "suzu", "shio", "ofuda", "ohajiki", "kura_key", "doll_head", "matches",
-             "note", "red_envelope", "omamori", "ash"]:
-    flat_item(name, f"{NS}:item/{name}")
-for egg in ["hanayome_spawn_egg", "ichimatsu_spawn_egg", "kageboshi_spawn_egg"]:
-    item(egg, {"parent": "minecraft:item/template_spawn_egg"})
-
-print("assets written to", ROOT)
+if __name__ == "__main__":
+    main()

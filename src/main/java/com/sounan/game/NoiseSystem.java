@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Noises in the mansion that the bride can hear (footsteps, doors, drawers, marbles, breathing...). */
+/** Noises on the mountain the monsters can hear (running, doors, the bear bell, panicked breathing...). */
 public final class NoiseSystem {
     public enum Source { STEP, SPRINT, DOOR, DRAWER, MARBLE, BELL, VOICE, FALL, OTHER }
 
@@ -25,7 +25,7 @@ public final class NoiseSystem {
     }
 
     public static synchronized void emit(ServerLevel level, Vec3 pos, float radius, Source source) {
-        if (!ModDimensions.isKakuriyo(level)) return;
+        if (!ModDimensions.isMountain(level)) return;
         long now = level.getGameTime();
         NOISES.removeIf(n -> now - n.time() > MEMORY);
         NOISES.add(new Noise(pos, radius, now, source, 1.0));

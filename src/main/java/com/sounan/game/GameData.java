@@ -2,94 +2,122 @@ package com.sounan.game;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntArrayTag;
-import net.minecraft.nbt.LongArrayTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.HashSet;
 import java.util.Set;
 
-/** World-wide game progress (stored with the overworld). The mansion layout itself is a pure function of the seed. */
+/** World-wide progress of the night on the mountain (stored with the overworld). */
 public final class GameData extends SavedData {
-    private static final String NAME = "meikon_game";
+    private static final String NAME = "sounan_game";
 
-    public boolean active;
-    public boolean built;
-    public long seed;
-    public int bells;
-    public int deaths;
-    public int candleStep;
-    public boolean kuraUnlocked;
-    public boolean dollSolved;
-    public boolean wellSolved;
-    public boolean butsumaSolved;
-    public int wellPulls;
-    public int endings;
-    public final Set<Integer> foundNotes = new HashSet<>();
-    public final Set<Long> takenBells = new HashSet<>();
-    public final Set<Long> searched = new HashSet<>();
-    public final Set<Long> lettersTaken = new HashSet<>();
+    public boolean started;
+    public boolean bagOpened;
+    public boolean roped;
+    public boolean omikiTaken;
+    public boolean offered;
+    public boolean keyTaken;
+    public boolean gateUnlocked;
+    public boolean signal;
+    public boolean called;
+    public boolean climax;
+    public int captures;
+    /** 0 = still on the mountain, 1 = escaped, 2 = spirited away. */
+    public int ending;
+    public String checkpoint = "start";
+    public long playTicks;
+    public final Set<Integer> notes = new HashSet<>();
+    public final Set<String> done = new HashSet<>();
 
     public static GameData get(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(GameData::load, GameData::new, NAME);
     }
 
-    public void resetProgress(long newSeed) {
-        seed = newSeed;
-        bells = 0;
-        deaths = 0;
-        candleStep = 0;
-        kuraUnlocked = false;
-        dollSolved = false;
-        wellSolved = false;
-        butsumaSolved = false;
-        wellPulls = 0;
-        foundNotes.clear();
-        takenBells.clear();
-        searched.clear();
-        lettersTaken.clear();
+    /** Has this one-off thing already happened? Marks it as happened. */
+    public boolean once(String key) {
+        if (done.contains(key)) return false;
+        done.add(key);
         setDirty();
+        return true;
+    }
+
+    public boolean happened(String key) {
+        return done.contains(key);
+    }
+
+    public void reset() {
+        started = false;
+        bagOpened = roped = omikiTaken = offered = keyTaken = gateUnlocked = signal = called = climax = false;
+        captures = 0;
+        ending = 0;
+        checkpoint = "start";
+        playTicks = 0;
+        notes.clear();
+        done.clear();
+        setDirty();
+    }
+
+    /** Days the phone's calendar has jumped because of the captures (神隠し time). */
+    public int dayOffset() {
+        return dayOffset(captures);
+    }
+
+    public static int dayOffset(int captures) {
+        return switch (Math.min(captures, 5)) {
+            case 0 -> 0;
+            case 1 -> 1;
+            case 2 -> 9;
+            case 3 -> 70;
+            case 4 -> 1165;
+            default -> 2920;
+        };
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        tag.putBoolean("Active", active);
-        tag.putBoolean("Built", built);
-        tag.putLong("Seed", seed);
-        tag.putInt("Bells", bells);
-        tag.putInt("Deaths", deaths);
-        tag.putInt("CandleStep", candleStep);
-        tag.putBoolean("KuraUnlocked", kuraUnlocked);
-        tag.putBoolean("DollSolved", dollSolved);
-        tag.putBoolean("WellSolved", wellSolved);
-        tag.putBoolean("ButsumaSolved", butsumaSolved);
-        tag.putInt("WellPulls", wellPulls);
-        tag.putInt("Endings", endings);
-        tag.put("Notes", new IntArrayTag(foundNotes.stream().mapToInt(Integer::intValue).toArray()));
-        tag.put("TakenBells", new LongArrayTag(takenBells.stream().mapToLong(Long::longValue).toArray()));
-        tag.put("Searched", new LongArrayTag(searched.stream().mapToLong(Long::longValue).toArray()));
-        tag.put("Letters", new LongArrayTag(lettersTaken.stream().mapToLong(Long::longValue).toArray()));
+        tag.putBoolean("Started", started);
+        tag.putBoolean("Bag", bagOpened);
+        tag.putBoolean("Roped", roped);
+        tag.putBoolean("Omiki", omikiTaken);
+        tag.putBoolean("Offered", offered);
+        tag.putBoolean("Key", keyTaken);
+        tag.putBoolean("Gate", gateUnlocked);
+        tag.putBoolean("Signal", signal);
+        tag.putBoolean("Called", called);
+        tag.putBoolean("Climax", climax);
+        tag.putInt("Captures", captures);
+        tag.putInt("Ending", ending);
+        tag.putString("Checkpoint", checkpoint);
+        tag.putLong("PlayTicks", playTicks);
+        tag.put("Notes", new IntArrayTag(notes.stream().mapToInt(Integer::intValue).toArray()));
+        ListTag list = new ListTag();
+        for (String s : done) list.add(StringTag.valueOf(s));
+        tag.put("Done", list);
         return tag;
     }
 
     public static GameData load(CompoundTag tag) {
         GameData d = new GameData();
-        d.active = tag.getBoolean("Active");
-        d.built = tag.getBoolean("Built");
-        d.seed = tag.getLong("Seed");
-        d.bells = tag.getInt("Bells");
-        d.deaths = tag.getInt("Deaths");
-        d.candleStep = tag.getInt("CandleStep");
-        d.kuraUnlocked = tag.getBoolean("KuraUnlocked");
-        d.dollSolved = tag.getBoolean("DollSolved");
-        d.wellSolved = tag.getBoolean("WellSolved");
-        d.butsumaSolved = tag.getBoolean("ButsumaSolved");
-        d.wellPulls = tag.getInt("WellPulls");
-        d.endings = tag.getInt("Endings");
-        for (int i : tag.getIntArray("Notes")) d.foundNotes.add(i);
-        for (long l : tag.getLongArray("TakenBells")) d.takenBells.add(l);
-        for (long l : tag.getLongArray("Searched")) d.searched.add(l);
-        for (long l : tag.getLongArray("Letters")) d.lettersTaken.add(l);
+        d.started = tag.getBoolean("Started");
+        d.bagOpened = tag.getBoolean("Bag");
+        d.roped = tag.getBoolean("Roped");
+        d.omikiTaken = tag.getBoolean("Omiki");
+        d.offered = tag.getBoolean("Offered");
+        d.keyTaken = tag.getBoolean("Key");
+        d.gateUnlocked = tag.getBoolean("Gate");
+        d.signal = tag.getBoolean("Signal");
+        d.called = tag.getBoolean("Called");
+        d.climax = tag.getBoolean("Climax");
+        d.captures = tag.getInt("Captures");
+        d.ending = tag.getInt("Ending");
+        d.checkpoint = tag.contains("Checkpoint") ? tag.getString("Checkpoint") : "start";
+        d.playTicks = tag.getLong("PlayTicks");
+        for (int i : tag.getIntArray("Notes")) d.notes.add(i);
+        for (Tag t : tag.getList("Done", Tag.TAG_STRING)) d.done.add(t.getAsString());
         return d;
     }
 }

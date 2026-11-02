@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "sounan:block/guardrail"
+    },
+    "facing=east": {
+      "model": "sounan:block/guardrail",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "sounan:block/guardrail",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "sounan:block/guardrail",
+      "y": 270
+    }
+  }
+}
