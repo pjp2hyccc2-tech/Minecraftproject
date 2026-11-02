@@ -282,11 +282,11 @@ def rust_cluster():
     for y in range(16):
         for x in range(16):
             v = rnd.random()
-            c = RUST_DARK if v < 0.25 else RUST if v < 0.75 else RUST_LIGHT
-            px(img, x, y, rgb(c, rnd.uniform(0.8, 1.15)))
-    for _ in range(10):
+            c = RUST if v < 0.3 else RUST_LIGHT if v < 0.8 else (238, 140, 60)
+            px(img, x, y, rgb(c, rnd.uniform(0.85, 1.2)))
+    for _ in range(18):
         x, y = rnd.randrange(16), rnd.randrange(16)
-        px(img, x, y, rgb((240, 150, 70)))
+        px(img, x, y, rgb((255, 196, 96)))
     for _ in range(6):
         cx, cy = rnd.randrange(16), rnd.randrange(16)
         disc(img, cx, cy, 1.4, rgb(RUST_DARK, 0.8))
@@ -584,7 +584,7 @@ def mechanism_metal():
     for y in range(64):
         row = rnd.uniform(-0.05, 0.05)
         for x in range(64):
-            v = 200 * (1 + row + rnd.uniform(-0.035, 0.035))
+            v = 232 * (1 + row + rnd.uniform(-0.035, 0.035))
             px(img, x, y, (clamp(v), clamp(v), clamp(v), 255))
     for _ in range(40):
         y = rnd.randrange(64)

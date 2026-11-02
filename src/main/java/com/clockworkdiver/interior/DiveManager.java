@@ -30,6 +30,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
@@ -143,6 +144,7 @@ public final class DiveManager {
         SESSIONS.put(player.getUUID(), s);
         WorkshopManager.rememberReturn(player, progress);
         ensureItem(player, ModItems.TINKER_WRENCH.get(), "message.clockworkdiver.got_wrench");
+        selectItem(player, ModItems.TINKER_WRENCH.get());
         TickStrike.reset(player);
         player.setHealth(player.getMaxHealth());
         Teleport.to(player, interior, layout.spawn.x, layout.spawn.y, layout.spawn.z, layout.spawnYaw, 0.0f);
@@ -658,6 +660,28 @@ public final class DiveManager {
         ItemStack stack = new ItemStack(item);
         if (!player.getInventory().add(stack)) player.drop(stack, false);
         player.displayClientMessage(Component.translatable(messageKey), false);
+    }
+
+    /** Puts the item in the player's hand: selects its hotbar slot, or swaps it into the selected slot. */
+    public static void selectItem(ServerPlayer player, Item item) {
+        Inventory inv = player.getInventory();
+        if (inv.getSelected().is(item)) return;
+        for (int i = 0; i < Inventory.getSelectionSize(); i++) {
+            if (inv.getItem(i).is(item)) {
+                inv.selected = i;
+                player.connection.send(new ClientboundSetCarriedItemPacket(i));
+                return;
+            }
+        }
+        for (int i = Inventory.getSelectionSize(); i < inv.items.size(); i++) {
+            if (inv.items.get(i).is(item)) {
+                ItemStack held = inv.items.get(inv.selected);
+                inv.items.set(inv.selected, inv.items.get(i));
+                inv.items.set(i, held);
+                inv.setChanged();
+                return;
+            }
+        }
     }
 
     private static Vec3 randomSpawn(DiveSession s, RandomSource random) {

@@ -32,7 +32,7 @@ public final class ClientEvents {
         if (mc.level == null || mc.player == null) return;
 
         if (ClientState.hintTicks > 0) {
-            ClientState.hintTicks--;
+            if (mc.screen == null) ClientState.hintTicks--;
         } else if (!ClientState.HINTS.isEmpty()) {
             ClientState.currentHint = ClientState.HINTS.poll();
             ClientState.hintTicks = ClientState.HINT_DURATION;

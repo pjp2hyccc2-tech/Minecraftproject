@@ -38,7 +38,7 @@ public final class ModBlocks {
             () -> new SteamVentBlock(metal(MapColor.COLOR_GRAY)));
     public static final RegistryObject<Block> RUST_CLUSTER = BLOCKS.register("rust_cluster",
             () -> new RustClusterBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_RED)
-                    .strength(2.0f, 1.0f).sound(SoundType.GRAVEL).noOcclusion().noLootTable()
+                    .strength(2.0f, 1.0f).sound(SoundType.GRAVEL).noOcclusion().noLootTable().lightLevel(s -> 5)
                     .pushReaction(PushReaction.DESTROY)));
     public static final RegistryObject<Block> TOOTH_SOCKET = BLOCKS.register("tooth_socket",
             () -> new ToothSocketBlock(metal(MapColor.GOLD).noOcclusion().lightLevel(s -> s.getValue(ToothSocketBlock.FILLED) ? 0 : 9)));

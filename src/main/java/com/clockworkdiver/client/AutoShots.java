@@ -257,7 +257,7 @@ public final class AutoShots {
         zone("nest", "26_boss", 180.0f, 5.0f, 60);
         add("street", mc -> cmd(mc, "tp @s 0.5 64 20.5 180 -4"), 40);
         snap("27_shop_front");
-        add("tower", mc -> look(mc, 0.0f, -28.0f), 10);
+        add("tower", mc -> look(mc, 0.0f, -55.0f), 10);
         snap("28_clock_tower");
     }
 

@@ -274,13 +274,13 @@ public final class ZoneBuilder {
     private static void spring(StructureBuilder b, ZoneLayout layout, int period) {
         BlockState brass = ModBlocks.BRASS_BLOCK.get().defaultBlockState();
         BlockState plate = ModBlocks.BRASS_PLATE.get().defaultBlockState();
-        for (int x = -16; x <= 16; x++) {
-            for (int z = -16; z <= 16; z++) {
+        for (int x = -13; x <= 13; x++) {
+            for (int z = -13; z <= 13; z++) {
                 double d = Math.sqrt(x * x + z * z);
                 double ang = (Math.toDegrees(Math.atan2(z, x)) + 360.0) % 360.0;
-                if (d > 14.0 && d <= 15.6) {
+                if (d > 10.5 && d <= 12.1) {
                     double m = (ang + 45.0) % 90.0;
-                    if (m < 9.0 || m > 81.0) continue; // four gaps on the diagonals
+                    if (m < 11.0 || m > 79.0) continue; // four gaps on the diagonals
                     b.set(x, 0, z, plate);
                     b.set(x, 1, z, ang % 20.0 < 10.0 ? brass : plate);
                 }
@@ -303,10 +303,10 @@ public final class ZoneBuilder {
         layout.mainMechanism = b.abs(0, 14, 0);
         layout.mechanisms.add(layout.mainMechanism);
 
-        vent(b, layout, 9, 0);
-        vent(b, layout, -9, 0);
-        vent(b, layout, 0, 9);
-        vent(b, layout, 0, -9);
+        vent(b, layout, 7, 0);
+        vent(b, layout, -7, 0);
+        vent(b, layout, 0, 7);
+        vent(b, layout, 0, -7);
     }
 
     // ------------------------------------------------------------------ nest

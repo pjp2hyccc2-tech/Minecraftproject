@@ -30,9 +30,14 @@ public class RustClusterBlock extends Block {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (random.nextInt(3) == 0) {
+        if (random.nextInt(2) == 0) {
             level.addParticle(new BlockParticleOption(ParticleTypes.FALLING_DUST, state), pos.getX() + random.nextDouble(),
                     pos.getY() + 0.9, pos.getZ() + random.nextDouble(), 0.0, 0.0, 0.0);
+        }
+        if (random.nextInt(3) == 0) {
+            // A faint orange shimmer marks the clusters as repair targets.
+            level.addParticle(ParticleTypes.WAX_ON, pos.getX() + 0.2 + random.nextDouble() * 0.6, pos.getY() + 0.6 + random.nextDouble() * 0.5,
+                    pos.getZ() + 0.2 + random.nextDouble() * 0.6, 0.0, 0.03, 0.0);
         }
     }
 

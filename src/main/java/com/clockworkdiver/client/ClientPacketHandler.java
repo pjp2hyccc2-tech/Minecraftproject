@@ -41,6 +41,10 @@ public final class ClientPacketHandler {
             ClientState.lensLevel = msg.lensLevel();
             ClientState.tutorialDive = msg.tutorial();
             ClientState.lastBeat = Long.MIN_VALUE;
+            // Fresh hints for the chamber follow this message; drop stale workshop hints.
+            ClientState.HINTS.clear();
+            ClientState.currentHint = null;
+            ClientState.hintTicks = 0;
         } else {
             ClientState.leaveDive();
         }

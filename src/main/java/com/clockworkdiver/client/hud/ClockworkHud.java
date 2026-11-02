@@ -40,7 +40,7 @@ public final class ClockworkHud implements IGuiOverlay {
                 drawCombo(g, mc.font, width, height);
                 drawAbort(g, mc.font, height);
             }
-            drawHint(g, mc.font, width, height);
+            if (mc.screen == null) drawHint(g, mc.font, width, height);
         }
         drawTransition(g, mc.font, partialTick, width, height);
     }
@@ -110,7 +110,7 @@ public final class ClockworkHud implements IGuiOverlay {
         double beats = Tempo.beats(time, partial, ClientState.anchor, ClientState.period);
         double dist = Tempo.distanceToBeat(time, partial, ClientState.anchor, ClientState.period);
         boolean perfect = dist <= Tempo.perfectWindow(ClientState.lensLevel);
-        float cx = width / 2.0f, py = 6.0f;
+        float cx = width / 2.0f, py = "nest".equals(ClientState.defectType) ? 30.0f : 6.0f;
         float len = 40.0f;
         float amp = 0.62f;
         float angle = amp * (float) Math.sin(PI * beats);

@@ -36,7 +36,7 @@ public class MechanismRenderer implements BlockEntityRenderer<MechanismBlockEnti
         Level level = be.getLevel();
         if (level == null) return;
         double t = level.getGameTime() + partialTick;
-        int lit = LightTexture.pack(Math.max(LightTexture.block(light), 11), LightTexture.sky(light));
+        int lit = LightTexture.pack(Math.max(LightTexture.block(light), 14), Math.max(LightTexture.sky(light), 6));
         VertexConsumer vc = buffers.getBuffer(RenderType.entityCutoutNoCull(METAL));
         int color = color(be.color);
         boolean rusted = !be.running && be.kind == MechanismBlockEntity.GEAR && be.color != MechanismBlockEntity.COLOR_RUST;

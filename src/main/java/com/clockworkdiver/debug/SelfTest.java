@@ -185,7 +185,7 @@ public final class SelfTest {
                 Mob mob = type.create(interior);
                 check("create " + EntityType.getKey(type), mob != null);
                 if (mob == null) continue;
-                mob.moveTo(zo.getX() + 4.5 + i * 3, zo.getY() + (type == ModEntities.DUST_MOTH.get() ? 4 : 0.2), zo.getZ() + 8.5, 0.0f, 0.0f);
+                mob.moveTo(zo.getX() - 5.5 + i * 4, zo.getY() + (type == ModEntities.DUST_MOTH.get() ? 4 : 0.2), zo.getZ() + 15.5, 0.0f, 0.0f);
                 if (mob instanceof CogGremlin g) g.setHasTooth(true);
                 check("spawn " + EntityType.getKey(type), interior.addFreshEntity(mob));
                 SPAWNED.add(mob);
