@@ -21,7 +21,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 /**
- * The look of 隠り世 without shaders: crimson-black fog, a blood-red moon at the zenith, no clouds, no rain
+ * The look of 隠り世 without shaders: crimson-black fog, a blood-red moon high in the south, no clouds, no rain
  * (the mod drives the rain level to carry fear to shader packs), a cold dark lightmap with warm lamp light.
  * With a shader pack in use the vanilla sky is kept so the pack can colour the moon itself.
  */
@@ -77,8 +77,9 @@ public final class KakuriyoEffects extends DimensionSpecialEffects {
                 com.mojang.blaze3d.platform.GlStateManager.DestFactor.ONE);
         RenderSystem.depthMask(false);
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(-30.0f));
-        poseStack.mulPose(Axis.XP.rotationDegrees(-32.0f));
+        // 50 degrees up in the south, over the safe room roof: the same spot as the moon of
+        // the bundled shader pack (sunPathRotation -40 at the fixed midnight)
+        poseStack.mulPose(Axis.XP.rotationDegrees(40.0f));
         Matrix4f m = poseStack.last().pose();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, MOON);
@@ -122,9 +123,9 @@ public final class KakuriyoEffects extends DimensionSpecialEffects {
         b += 0.032f;
         // moonlight in the courtyard: cold and blue
         float moon = sky * sky * Math.max(0.0f, 1.0f - block);
-        r += moon * 0.045f;
-        g += moon * 0.058f;
-        b += moon * 0.105f;
+        r += moon * 0.075f;
+        g += moon * 0.095f;
+        b += moon * 0.17f;
         colors.set(Mth.clamp(r * dark, 0.0f, 1.0f), Mth.clamp(g * dark, 0.0f, 1.0f), Mth.clamp(b * dark, 0.0f, 1.0f));
     }
 }

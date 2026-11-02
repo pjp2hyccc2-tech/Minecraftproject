@@ -163,6 +163,11 @@ public final class SelfTest {
                 for (Room room : m.rooms) {
                     if (room.type == Room.Type.SAFE) continue;
                     BlockPos c = room.center();
+                    BlockPos best = c;
+                    for (BlockPos w : m.waypoints) {
+                        if (room.contains(w.getX() + 0.5, w.getZ() + 0.5)) best = w;
+                    }
+                    c = best;
                     Path path = bride.getNavigation().createPath(c, 1);
                     boolean ok = path != null && path.canReach();
                     if (!ok) {

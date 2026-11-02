@@ -48,11 +48,13 @@ const float wetnessHalflife = 250.0;
 const float drynessHalflife = 120.0;
 
 #ifdef MEIKON_KAKURIYO
-    // the mansion is small and the fog swallows everything past ~24 blocks: spend the
-    // whole shadow map on the courtyard. The moon path is tilted so walls catch moonlight
-    // on one side and throw shadows on the other.
+    // the mansion is small and the fog swallows everything past ~30 blocks: spend the
+    // whole shadow map on the courtyard. Kakuriyo is frozen at midnight, so the tilt alone
+    // places the moon: -40 puts it 50 degrees up in the south, over the safe room roof. It
+    // lights the torii and the wedding hall facade and the south wing throws a long shadow
+    // across the courtyard. The mod's own sky (no shaders) draws its moon at the same spot.
     const float shadowDistance = 56.0;
-    const float sunPathRotation = -22.0;
+    const float sunPathRotation = -40.0;
 #else
     const float shadowDistance = 96.0;
     const float sunPathRotation = -25.0;

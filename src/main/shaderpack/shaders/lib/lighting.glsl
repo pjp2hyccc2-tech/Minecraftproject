@@ -26,11 +26,16 @@ float flameFlicker(vec3 worldPos) {
 }
 
 // light level 0..1 -> brightness. Vanilla light drops one level per block, so 15*(1-l) is
-// roughly the distance to the flame: an exponential in that distance gives a tight warm pool
-// (~6 blocks) that fades to nothing instead of the flat wash of the vanilla curve.
+// roughly the distance to the flame. A hot core (exponential in that distance) sits on a
+// long soft tail, so a room lit by the lantern stays readable 6-9 blocks out - the far wall
+// dim but there - while true darkness (levels 0-2) stays black.
+//   level: 15    12    10    8     7     6     5     4     3     2
+//   value: 1.0   .53   .36   .25   .20   .16   .12   .07   .03   .009
 float flameFalloff(float l) {
     const float k = 6.6;            // 15 / 2.27 blocks
-    return max(exp(-k * (1.0 - l)) - exp(-k), 0.0) / (1.0 - exp(-k));
+    float core = max(exp(-k * (1.0 - l)) - exp(-k), 0.0) / (1.0 - exp(-k));
+    float tail = l * sqrt(l) * smoothstep(0.0, 0.36, l);
+    return 0.42 * core + 0.58 * tail;
 }
 
 // warm flame colour: deeper orange where the light is weak or the flame dips

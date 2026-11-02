@@ -230,7 +230,7 @@ public final class AutoShots {
         snap("07_corridor_dark");
         add("courtyard", mc -> tpLook(mc, new BlockPos(0, 65, 11), 180.0f, -18.0f), 80);
         snap("08_courtyard");
-        add("moon", mc -> look(mc, 150.0f, -55.0f), 30);
+        add("moon", mc -> tpLook(mc, new BlockPos(0, 65, -4), 0.0f, -42.0f), 40);
         snap("09_moon");
         add("torii", mc -> tpLook(mc, new BlockPos(0, 65, -4), 180.0f, -8.0f), 40);
         snap("10_torii");
@@ -341,6 +341,41 @@ public final class AutoShots {
         add("final_view", mc -> tpLook(mc, new BlockPos(0, 65, -5), 180.0f, -6.0f), 50);
         snap("35_torii_active");
         if (!SHADERS) {
+            // real gameplay: the bride hunts an adventure-mode player, catches her, the player wakes in the lamplight room
+            add("hunt_setup", mc -> {
+                Mansion m = mansion();
+                cmd(mc, "meikon debug bells 3");
+                cmd(mc, "meikon debug fear 0 0 0");
+                if (m != null) tpLook(mc, m.safeOutside.east(5), 90.0f, 0.0f);
+            }, 40);
+            add("hunt_go", mc -> {
+                cmd(mc, "gamemode adventure");
+                cmd(mc, "meikon debug peaceful false");
+                cmd(mc, "meikon debug lantern");
+                cmd(mc, "meikon debug spawn bride");
+            }, 30);
+            snap("38_captured");
+            add("hunt_wait", mc -> {
+            }, 60);
+            snap("39_taken");
+            add("hunt_after", mc -> {
+            }, 120);
+            snap("40_back_in_safe_room");
+            add("doll_test", mc -> {
+                Mansion m = mansion();
+                cmd(mc, "tp @e[type=meikon:hanayome] 0 65 -22");
+                if (m != null) tpLook(mc, m.safeOutside.east(5), 90.0f, 0.0f);
+            }, 40);
+            add("doll_behind", mc -> cmd(mc, "summon meikon:ichimatsu ^ ^ ^-3"), 40);
+            snap("41_doll_attack");
+            add("doll_wait", mc -> {
+            }, 40);
+            snap("42_doll_after");
+            add("hunt_end", mc -> {
+                cmd(mc, "gamemode creative");
+                cmd(mc, "meikon debug peaceful true");
+                cmd(mc, "meikon debug state");
+            }, 20);
             add("ending_bad", mc -> {
                 EndingScreen e = new EndingScreen(false, mc.getUser().getName());
                 e.localOnly = true;

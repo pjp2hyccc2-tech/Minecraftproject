@@ -16,7 +16,7 @@ out vec2 texcoord;
 out vec4 glcolor;
 
 #ifdef WORLD_KAKURIYO
-const float MOON_SCALE = 1.35;
+const float MOON_SCALE = 1.6;
 #endif
 
 void main() {
@@ -57,6 +57,36 @@ void main() {
 
 #ifdef PROG_SKYTEXTURED
     vec4 tex = texture(gtexture, texcoord);
+  #if defined WORLD_KAKURIYO && defined MC_RENDER_STAGE_MOON
+    #ifdef MC_RENDER_STAGE_SUN
+    if (renderStage == MC_RENDER_STAGE_SUN) discard;      // midnight forever: no sun
+    #endif
+    if (renderStage == MC_RENDER_STAGE_MOON) {
+        // Always a full blood moon. The vanilla texture follows the moon phase of the
+        // overworld day count (a new moon would leave the sky empty), so the disc is painted
+        // here: a soft glowing face with darker maria, a brighter limb and a red halo.
+        vec2 p = fract(texcoord * vec2(4.0, 2.0)) - 0.5;     // inside the phase cell
+        float r = length(p);
+        const float R = 0.215;
+        float aa = fwidth(r) * 1.5 + 0.002;
+        float disc = 1.0 - smoothstep(R - aa, R + aa, r);
+        vec2 sp = p / R;
+        float maria = smoothstep(0.42, 0.72, fbm2(sp * 2.3 + vec2(3.1, 7.7)));
+        float crater = smoothstep(0.62, 0.80, vnoise2(sp * 9.0 + vec2(1.3, 2.9)));
+        float limb = sqrt(saturate(1.0 - dot(sp, sp)));
+        float face = (0.55 + 0.45 * limb) * (1.0 - 0.50 * maria) * (1.0 - 0.18 * crater);
+        float halo = exp(-max(r - R, 0.0) * 24.0) * smoothstep(0.50, 0.30, r) * (1.0 - disc);
+        vec3 moon = vec3(1.00, 0.028, 0.018) * face * 2.6 * disc
+                  + vec3(1.00, 0.10, 0.04) * pow(face, 4.0) * 0.45 * disc
+                  + vec3(0.90, 0.03, 0.02) * halo * 0.50;
+        moon *= 1.0 + 0.25 * fear();
+        float a = saturate(disc + halo);
+        /* RENDERTARGETS: 0,1 */
+        gl_FragData[0] = vec4(moon, a);
+        gl_FragData[1] = vec4(disc, 0.0, 0.0, a);
+        return;
+    }
+  #endif
   #if defined WORLD_KAKURIYO
     // vanilla fades sun / moon by (1 - rain level) through the vertex colour alpha; here the
     // rain level is the fear value, so ignore it - the moon must stay, fear or not.

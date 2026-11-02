@@ -46,17 +46,19 @@ const vec3 FLAME_HOT  = vec3(1.00, 0.66, 0.40);
 const vec3 FLAME_DEEP = vec3(1.00, 0.46, 0.20);
 
 #if defined WORLD_KAKURIYO
-    const vec3  MOON_LIGHT        = vec3(0.30, 0.38, 0.56) * 0.46;   // cold, dim, blue-grey
-    const vec3  SKY_AMBIENT       = vec3(0.16, 0.19, 0.27) * 0.10;
-    const vec3  MIN_LIGHT         = vec3(0.50, 0.58, 0.80) * 0.0095; // the dark is never quite black
+    // moonlit ground reads as cold blue-grey (~20% on screen), surfaces in the moon shadow
+    // under the open sky stay just readable; roofed rooms get none of it
+    const vec3  MOON_LIGHT        = vec3(0.30, 0.38, 0.56) * 0.80;   // cold, blue-grey
+    const vec3  SKY_AMBIENT       = vec3(0.16, 0.19, 0.27) * 0.27;
+    const vec3  MIN_LIGHT         = vec3(0.50, 0.58, 0.80) * 0.0120; // the dark is never quite black
     const vec3  SKY_ZENITH        = vec3(0.0026, 0.0004, 0.0007);
     const vec3  SKY_MID           = vec3(0.0130, 0.0019, 0.0026);
     const vec3  SKY_HORIZON       = vec3(0.0500, 0.0058, 0.0070);    // a dark crimson haze
     const vec3  FOG_INDOOR        = vec3(0.0034, 0.0011, 0.0015);    // crimson-black
     const vec3  FOG_OUTDOOR       = vec3(0.0105, 0.0052, 0.0068);    // moonlit, still crimson
-    const float FOG_RANGE_INDOOR  = 11.5;   // exp^2 fog scale in blocks: corridors are black at ~20-24
-    const float FOG_RANGE_OUTDOOR = 15.5;
-    const float FLAME_GAIN        = 0.68;
+    const float FOG_RANGE_INDOOR  = 13.0;   // exp^2 fog scale in blocks: corridors are black at ~24
+    const float FOG_RANGE_OUTDOOR = 24.0;   // across the courtyard (~26 blocks) the torii is a shape
+    const float FLAME_GAIN        = 1.00;
 #elif defined WORLD_NETHER
     const vec3  MIN_LIGHT         = vec3(0.60, 0.40, 0.36) * 0.012;
     const float FLAME_GAIN        = 0.65;

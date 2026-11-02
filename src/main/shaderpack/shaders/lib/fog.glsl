@@ -94,7 +94,7 @@ vec3 volumetricLight(vec3 dirW, float dist, float dither) {
     float phase = mix(1.0, phaseHG(vdl, 0.35) * 4.0 * PI, 0.5);
     float eyeSky = eyeSkyFactor();
 #ifdef WORLD_KAKURIYO
-    float strength = 0.10;
+    float strength = 0.06;          // MOON_LIGHT is bright enough to light the ground: keep the mist thin
     // cold silver shafts, but the mist glows red toward the blood moon
     vec3 tint = mix(vec3(1.0), vec3(1.9, 0.30, 0.26), pow(saturate(vdl), 6.0) * 0.65);
 #else

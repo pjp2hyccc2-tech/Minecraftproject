@@ -122,10 +122,10 @@ public final class GameManager {
     public static double brideSpeedFactor() {
         return switch (phase) {
             case 1 -> 1.0;
-            case 2 -> 1.05;
-            case 3 -> 1.11;
-            case 4 -> 1.17;
-            default -> 1.08;
+            case 2 -> 1.03;
+            case 3 -> 1.07;
+            case 4 -> 1.10;
+            default -> 1.05;
         } * MeikonConfig.brideSpeed();
     }
 

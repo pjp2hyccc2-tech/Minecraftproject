@@ -7,6 +7,20 @@ float eyeSkyFactor() {
     return smoothstep(0.10, 0.70, float(eyeBrightnessSmooth.y) / 240.0);
 }
 
+#if defined WORLD_KAKURIYO
+// the slow dark cloud deck of Kakuriyo: x = cloud cover, y = lit rim (0 below the horizon)
+vec2 kakuriyoClouds(vec3 dir) {
+    float up = dir.y;
+    if (up <= 0.0) return vec2(0.0);
+    vec2 p = dir.xz / (up + 0.10) * 1.4 + vec2(frameTimeCounter * 0.0040, frameTimeCounter * 0.0016);
+    float n = fbm2(p);
+    float fade = smoothstep(0.0, 0.10, up) * (1.0 - 0.6 * smoothstep(0.40, 0.95, up));
+    float cloud = smoothstep(0.46, 0.78, n) * fade;
+    float rim = smoothstep(0.34, 0.48, n) * (1.0 - smoothstep(0.48, 0.62, n)) * fade;
+    return vec2(cloud, rim);
+}
+#endif
+
 vec3 skyGradient(vec3 dir) {
     float up = dir.y;
     float h = saturate(up);
@@ -15,13 +29,12 @@ vec3 skyGradient(vec3 dir) {
     vec3 c = mix(SKY_HORIZON, SKY_MID, smoothstep(0.0, 0.22, h));
     c = mix(c, SKY_ZENITH, smoothstep(0.16, 0.80, h));
     if (up > 0.0) {
-        vec2 p = dir.xz / (up + 0.10) * 1.4 + vec2(frameTimeCounter * 0.0040, frameTimeCounter * 0.0016);
-        float n = fbm2(p);
-        float fade = smoothstep(0.0, 0.10, up) * (1.0 - 0.6 * smoothstep(0.40, 0.95, up));
-        float cloud = smoothstep(0.46, 0.78, n) * fade;
-        float rim = smoothstep(0.34, 0.48, n) * (1.0 - smoothstep(0.48, 0.62, n)) * fade;
-        c = mix(c, c * 0.22, cloud);
-        c += SKY_HORIZON * 0.30 * rim;
+        vec2 cl = kakuriyoClouds(dir);
+        c = mix(c, c * 0.22, cl.x);
+        c += SKY_HORIZON * 0.30 * cl.y;
+        // the blood moon stains the clouds and the haze around it
+        float m = saturate(dot(dir, moonDirW()));
+        c += vec3(0.060, 0.004, 0.003) * (pow(m, 48.0) * 0.8 + pow(m, 8.0) * 0.12) * (0.4 + 1.2 * cl.y + 0.6 * cl.x);
     }
     c = mix(c, FOG_OUTDOOR * 0.75, smoothstep(0.0, -0.20, up));
     // fear: the sky bleeds a little

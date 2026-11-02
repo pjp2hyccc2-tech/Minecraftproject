@@ -21,7 +21,12 @@ void main() {
     float depth = texture(depthtex0, texcoord).r;
     if (depth >= 1.0) {
         vec3 dirW = viewDirToWorld(screenToView(texcoord, 1.0));
-        color = skyGradient(dirW) + max(color, vec3(0.0));
+        vec3 objects = max(color, vec3(0.0));
+#ifdef WORLD_KAKURIYO
+        // the cloud deck drifts in front of the blood moon
+        objects *= 1.0 - 0.80 * kakuriyoClouds(dirW).x;
+#endif
+        color = skyGradient(dirW) + objects;
     }
     /* RENDERTARGETS: 0 */
     gl_FragData[0] = vec4(color, 1.0);

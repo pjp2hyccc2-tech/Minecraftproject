@@ -85,6 +85,8 @@ public final class ClientEvents {
         if (!inKakuriyo() || event.getType() != FogType.NONE || ShaderCompat.active()) return;
         float fear = ClientState.fearShown / 100.0f;
         float far = Mth.lerp(fear, 30.0f, 14.0f) - 4.0f * ClientState.dangerShown;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null && mc.level != null && mc.level.canSeeSky(mc.player.blockPosition().above())) far *= 1.7f;
         if (ClientState.hidden) far = Math.min(far, 12.0f);
         if (event.getMode() == FogRenderer.FogMode.FOG_SKY) far *= 1.6f;
         event.setNearPlaneDistance(far * 0.04f);

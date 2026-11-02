@@ -72,6 +72,7 @@ public class Hanayome extends Monster {
         if (getNavigation() instanceof GroundPathNavigation nav) {
             nav.setCanOpenDoors(true);
         }
+        getNavigation().setMaxVisitedNodesMultiplier(3.0f);
         setPathfindingMalus(BlockPathTypes.DOOR_WOOD_CLOSED, 0.0f);
         setPathfindingMalus(BlockPathTypes.WATER, 8.0f);
     }
@@ -80,7 +81,7 @@ public class Hanayome extends Monster {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 200.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.30)
-                .add(Attributes.FOLLOW_RANGE, 64.0)
+                .add(Attributes.FOLLOW_RANGE, 96.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
                 .add(Attributes.ATTACK_DAMAGE, 0.0);
     }
