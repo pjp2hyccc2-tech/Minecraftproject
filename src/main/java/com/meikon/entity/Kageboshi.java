@@ -88,8 +88,16 @@ public class Kageboshi extends Monster {
             dissolve(level);
             return;
         }
-        if (tickCount % 10 == 0) getNavigation().moveTo(target, GameManager.lanternLit(target) ? 0.55 : 0.9);
-        if (distanceTo(target) < 1.2) {
+        double speed = GameManager.lanternLit(target) ? 0.55 : 0.9;
+        double dist = distanceTo(target);
+        if (dist < 3.0 && hasLineOfSight(target)) {
+            // the path ends one block short of the player: glide the last steps directly
+            getNavigation().stop();
+            getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), speed);
+        } else if (tickCount % 10 == 0) {
+            getNavigation().moveTo(target, speed);
+        }
+        if (dist < 1.35) {
             GameManager.shadowTouch(target, this);
             dissolve(level);
         }

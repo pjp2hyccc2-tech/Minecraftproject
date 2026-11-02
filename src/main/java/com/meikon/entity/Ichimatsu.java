@@ -127,12 +127,20 @@ public class Ichimatsu extends Monster {
             if (target != null) getLookControl().setLookAt(target, 4f, 4f);
             return;
         }
-        getNavigation().moveTo(target, 1.2 * GameManager.dollSpeedFactor());
+        double speed = 1.2 * GameManager.dollSpeedFactor();
+        double dist = distanceTo(target);
+        if (dist < 3.0 && hasLineOfSight(target)) {
+            // the path ends one block short of the player: close the last steps directly
+            getNavigation().stop();
+            getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), speed);
+        } else {
+            getNavigation().moveTo(target, speed);
+        }
         if (--moveSound <= 0) {
             playSound(ModSounds.DOLL_MOVE.get(), 0.75f, 0.85f + random.nextFloat() * 0.3f);
             moveSound = 6 + random.nextInt(8);
         }
-        if (distanceTo(target) < 1.15) {
+        if (dist < 1.3) {
             GameManager.dollAttack(target, this);
             cooldown = 20 * 40;
             getNavigation().stop();

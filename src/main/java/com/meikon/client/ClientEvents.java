@@ -47,7 +47,9 @@ public final class ClientEvents {
             if (ClientState.deathTicks >= 0 && ++ClientState.deathTicks > 160) ClientState.deathTicks = -1;
             if (ClientState.ofudaTicks >= 0 && ++ClientState.ofudaTicks > 40) ClientState.ofudaTicks = -1;
             if (ClientState.introTicks >= 0 && ++ClientState.introTicks > ClientState.IntroTiming.END) ClientState.introTicks = -1;
-            if (ClientState.titleTicks >= 0 && ++ClientState.titleTicks > 140) ClientState.titleTicks = -1;
+            // a phase title card waits until a jump scare / the death screen is over
+            boolean blocking = ClientState.jumpscareTicks >= 0 || ClientState.deathTicks >= 0;
+            if (ClientState.titleTicks >= 0 && !blocking && ++ClientState.titleTicks > 140) ClientState.titleTicks = -1;
             if (ClientState.spottedTicks >= 0 && ++ClientState.spottedTicks > 12) ClientState.spottedTicks = -1;
             if (ClientState.stingerTicks >= 0 && ++ClientState.stingerTicks > 14) ClientState.stingerTicks = -1;
             if (ClientState.shadowTicks >= 0 && ++ClientState.shadowTicks > 24) ClientState.shadowTicks = -1;

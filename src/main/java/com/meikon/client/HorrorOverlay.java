@@ -212,7 +212,7 @@ public final class HorrorOverlay {
         boolean calm = MeikonConfig.flashReduction();
 
         // phase title card
-        if (ClientState.titleTicks >= 0 && ClientState.titleTicks < 140) {
+        if (ClientState.titleTicks >= 0 && ClientState.titleTicks < 140 && ClientState.jumpscareTicks < 0 && ClientState.deathTicks < 0) {
             float t = ClientState.titleTicks + partial;
             float a = t < 20 ? t / 20.0f : t > 110 ? (140 - t) / 30.0f : 1.0f;
             int p = Mth.clamp(ClientState.titlePhase, 0, 5);

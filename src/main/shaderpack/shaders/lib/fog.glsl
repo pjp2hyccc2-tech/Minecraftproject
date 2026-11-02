@@ -85,7 +85,14 @@ vec3 volumetricLight(vec3 dirW, float dist, float dither) {
         // slow drifting wisps of mist
         float wisp = vnoise2(wp.xz * 0.075 + vec2(t0 * 0.035, t0 * 0.013) + vec2(wp.y * 0.05));
         float w = fogTransmittance(t, dirW);
-        lit += vis * (0.45 + 1.1 * wisp) * w;
+#ifdef WORLD_KAKURIYO
+        // the mist lies low over the courtyard and thins out above the eaves, so the roofs
+        // stay dark shapes against the sky instead of flat grey planes
+        float low = exp(-max(wp.y - 67.5, 0.0) * 0.40);
+#else
+        float low = 1.0;
+#endif
+        lit += vis * (0.45 + 1.1 * wisp) * w * low;
         wsum += w;
     }
     float amount = 1.0 - fogTransmittance(maxD, dirW);
