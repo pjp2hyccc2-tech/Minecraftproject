@@ -58,8 +58,9 @@ def build(spec):
     with open(os.path.join(jd, f'{spec.java_name}.java'), 'w', encoding='utf-8') as f:
         f.write(src)
     names = [p.jname for p in spec.root.walk() if p is not spec.root]
-    body = spec.anim.replace('this.', '')
-    fn, code = ent_java.compile_anim(body, spec.helpers, names + [f'{n}' for n, _ in []])
+    body = 'this.root.visible = !entity.isInvisible();\n' + spec.anim
+    body = body.replace('this.', '')
+    fn, code = ent_java.compile_anim(body, spec.helpers, ['root'] + names)
     pose_consts = {n: v for n, v in spec.poses}
     return base.astype(np.float64), eye.astype(np.float64), fn, pose_consts
 

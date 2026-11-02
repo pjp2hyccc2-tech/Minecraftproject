@@ -92,6 +92,8 @@ public class YobigoeModel<T extends Mob & Animated> extends HierarchicalModel<T>
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
+        // invisible (e.g. the yobigoe after its lamp goes out): hide everything, the eyes layer included
+        this.root.visible = !entity.isInvisible();
         float partial = ageInTicks - (float) ((int) ageInTicks);
         int pose = entity.pose();
         float pt = entity.poseTime(partial);

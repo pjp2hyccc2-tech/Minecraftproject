@@ -206,6 +206,8 @@ def java_source(spec, tex_w, tex_h):
     A('    @Override')
     A('    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {')
     A('        this.root().getAllParts().forEach(ModelPart::resetPose);')
+    A('        // invisible (e.g. the yobigoe after its lamp goes out): hide everything, the eyes layer included')
+    A('        this.root.visible = !entity.isInvisible();')
     for l in spec.anim.strip('\n').splitlines():
         A(('        ' + l) if l.strip() else '')
     A('    }')
@@ -219,11 +221,15 @@ def java_source(spec, tex_w, tex_h):
 
 # ------------------------------------------------------------------------------------------------ posing / render
 class FakeEntity:
-    def __init__(self, pose, pose_time, left=False, ident=7):
+    def __init__(self, pose, pose_time, left=False, ident=7, invisible=False):
         self._pose = pose
         self._t = pose_time
         self._left = left
         self._id = ident
+        self._inv = invisible
+
+    def isInvisible(self):
+        return self._inv
 
     def pose(self):
         return self._pose
@@ -239,7 +245,7 @@ class FakeEntity:
 
 
 def pose_model(spec, anim_fn, pose, pose_time, age, limb_swing=0.0, limb_amount=0.0, head_yaw=0.0, head_pitch=0.0, left=False):
-    parts = {}
+    parts = {'root': spec.root}
     for p in spec.root.walk():
         p.reset()
         if p is not spec.root:
