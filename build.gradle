@@ -1,0 +1,123 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'info'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            // CI screenshot tour (MEIKON_SHOTS=true) and the Oculus run (MEIKON_OCULUS=true)
+            property 'meikon.shots', System.getenv('MEIKON_SHOTS') ?: 'false'
+            property 'meikon.shots.shaders', System.getenv('MEIKON_OCULUS') ?: 'false'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            args '--width', '1280', '--height', '720'
+            jvmArgs '-Xmx3G'
+        }
+
+        server {
+            property 'meikon.selftest', System.getenv('MEIKON_SELFTEST') ?: 'false'
+            args '--nogui'
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+// ---------------------------------------------------------------------------------------------
+// MeikonShaders (src/main/shaderpack) -> MeikonShaders.zip at the jar resource root (installed into
+// shaderpacks/ by com.meikon.client.ShaderPackInstaller) and build/shaderpack/MeikonShaders.zip.
+// ---------------------------------------------------------------------------------------------
+def shaderPackDir = layout.buildDirectory.dir('generated/shaderpack')
+tasks.register('shaderPackZip', Zip) {
+    from 'src/main/shaderpack'
+    archiveFileName = 'MeikonShaders.zip'
+    destinationDirectory = shaderPackDir
+    includeEmptyDirs = false
+}
+sourceSets.main.resources.srcDir(shaderPackDir)
+tasks.named('processResources').configure { dependsOn 'shaderPackZip' }
+tasks.register('shaderPackArtifact', Copy) {
+    dependsOn 'shaderPackZip'
+    from shaderPackDir
+    into layout.buildDirectory.dir('shaderpack')
+}
+tasks.named('build').configure { dependsOn 'shaderPackArtifact' }
+
+repositories {
+    exclusiveContent {
+        forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+        forRepositories(fg.repository)    // ForgeGradle's deobf repo must also serve the remapped maven.modrinth artifacts
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // CI only: run the client with Oculus + Embeddium to photograph MeikonShaders
+    if (System.getenv('MEIKON_OCULUS') == 'true') {
+        runtimeOnly fg.deobf("maven.modrinth:oculus:${System.getenv('OCULUS_VERSION') ?: '1.20.1-1.7.0'}")
+        runtimeOnly fg.deobf("maven.modrinth:embeddium:${System.getenv('EMBEDDIUM_VERSION') ?: '0.3.31+mc1.20.1'}")
+    }
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    filteringCharset = 'UTF-8'
+    var replaceProperties = [
+            minecraft_version      : minecraft_version, minecraft_version_range: minecraft_version_range,
+            forge_version          : forge_version, forge_version_range: forge_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors            : mod_authors, mod_description: mod_description,
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xmaxerrs', '3000']
+}
