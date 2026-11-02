@@ -1,0 +1,118 @@
+title screen (shaders=false)
+shot 00_title
+world creation requested
+in world, 107 steps
+step rules dim=sounan:kaerazu pos=-199, 191, -210
+shot 01_intro_text
+step intro_wait_title dim=sounan:kaerazu pos=-199, 191, -210
+shot 02_intro_title
+step intro_wait dim=sounan:kaerazu pos=-199, 191, -210
+shot 02_intro_wake
+step settle dim=sounan:kaerazu pos=-199, 191, -210
+step go_03_start_dark dim=sounan:kaerazu pos=-199, 191, -210
+shot 03_start_dark
+step go_04_start_flashlight dim=sounan:kaerazu pos=-199, 191, -210
+shot 04_start_flashlight
+step go_05_bag dim=sounan:kaerazu pos=-199, 191, -210
+shot 05_bag
+step go_06_cliff_edge dim=sounan:kaerazu pos=-166, 184, -169
+shot 06_cliff_edge
+step go_07_forest_ribbons dim=sounan:kaerazu pos=-139, 179, -139
+shot 07_forest_ribbons
+step go_08_forest_deep dim=sounan:kaerazu pos=-96, 156, -89
+shot 08_forest_deep
+step go_09_dead_end dim=sounan:kaerazu pos=-43, 147, -45
+shot 09_dead_end
+step go_10_village dim=sounan:kaerazu pos=-93, 152, -27
+shot 10_village
+step go_11_village_houses dim=sounan:kaerazu pos=2, 133, 6
+shot 11_village_houses
+step go_12_phone_booth dim=sounan:kaerazu pos=30, 133, 6
+shot 12_phone_booth
+step go_13_omiki_house dim=sounan:kaerazu pos=11, 133, 5
+shot 13_omiki_house
+step go_14_shrine_steps dim=sounan:kaerazu pos=20, 134, 14
+shot 14_shrine_steps
+step go_15_shrine dim=sounan:kaerazu pos=49, 134, 36
+shot 15_shrine
+step go_16_fog_rope dim=sounan:kaerazu pos=64, 142, 36
+shot 16_fog_rope
+step go_17_bridge dim=sounan:kaerazu pos=77, 140, 50
+shot 17_bridge
+step go_18_hut dim=sounan:kaerazu pos=95, 132, 84
+shot 18_hut
+step go_19_hut_inside dim=sounan:kaerazu pos=84, 125, 133
+shot 19_hut_inside
+step go_20_pylon dim=sounan:kaerazu pos=74, 126, 131
+shot 20_pylon
+step go_21_tunnel_gate dim=sounan:kaerazu pos=6, 152, 111
+shot 21_tunnel_gate
+step go_22_tunnel_inside dim=sounan:kaerazu pos=120, 115, 143
+shot 22_tunnel_inside
+step go_23_trailhead dim=sounan:kaerazu pos=120, 113, 181
+shot 23_trailhead
+step lineup_spawn dim=sounan:kaerazu pos=158, 103, 246
+step lineup_mobs dim=sounan:kaerazu pos=20, 133, 6
+shot 24_monsters
+step lineup_camera dim=sounan:kaerazu pos=20, 133, 6
+shot 25_monsters_camera
+step go_38_nozoki_peek dim=sounan:kaerazu pos=20, 133, 6
+  Nozoki 21.5 blocks away
+step face_38_nozoki_peek dim=sounan:kaerazu pos=-79, 153, -75
+shot 38_nozoki_peek
+step go_39_yobigoe_light dim=sounan:kaerazu pos=-79, 153, -75
+  Yobigoe 40.6 blocks away
+step face_39_yobigoe_light dim=sounan:kaerazu pos=-25, 143, -29
+shot 39_yobigoe_light
+step ushiro_attach dim=sounan:kaerazu pos=-25, 143, -29
+step go_40_ushiro_look_back dim=sounan:kaerazu pos=-7, 138, -13
+shot 40_ushiro_look_back
+step go_41_oyama_stalk dim=sounan:kaerazu pos=-7, 138, -13
+  Oyamasama 44.7 blocks away
+step face_41_oyama_stalk dim=sounan:kaerazu pos=82, 125, 131
+shot 41_oyama_stalk
+step go_42_sleeper dim=sounan:kaerazu pos=82, 125, 131
+shot 42_sleeper
+step go_43_utsurumono_camera dim=sounan:kaerazu pos=73, 126, 131
+  Utsurumono 29.3 blocks away
+step face_43_utsurumono_camera dim=sounan:kaerazu pos=-61, 150, -61
+shot 43_utsurumono_camera
+step beam_spot dim=sounan:kaerazu pos=-61, 150, -61
+  oyamasama summoned 7.8 blocks ahead
+step go_44_beam_monster dim=sounan:kaerazu pos=-43, 147, -45
+shot 44_beam_monster
+  nozoki summoned 6.4 blocks ahead
+step go_45_eyes_dark dim=sounan:kaerazu pos=-43, 147, -45
+shot 45_eyes_dark
+step go_26_fear_high dim=sounan:kaerazu pos=-43, 147, -45
+shot 26_fear_high
+step go_27_danger_high dim=sounan:kaerazu pos=-61, 150, -61
+shot 27_danger_high
+step go_28_phone_light dim=sounan:kaerazu pos=-61, 150, -61
+shot 28_phone_light
+step go_29_flare dim=sounan:kaerazu pos=-61, 150, -61
+shot 29_flare
+step go_30_flashlight_low dim=sounan:kaerazu pos=-61, 150, -61
+shot 30_flashlight_low
+step phone_hold dim=sounan:kaerazu pos=-61, 150, -61
+step go_31_phone_home dim=sounan:kaerazu pos=-61, 150, -61
+shot 31_phone_home
+step phone_close dim=sounan:kaerazu pos=-61, 150, -61
+step go_32_trail_map dim=sounan:kaerazu pos=-61, 150, -61
+shot 32_trail_map
+step map_close dim=sounan:kaerazu pos=-61, 150, -61
+step go_33_note dim=sounan:kaerazu pos=-61, 150, -61
+shot 33_note
+step note_close dim=sounan:kaerazu pos=-61, 150, -61
+step capture_mode dim=sounan:kaerazu pos=-61, 150, -61
+step go_34_capture dim=sounan:kaerazu pos=-61, 150, -61
+shot 34_capture
+step capture_wait dim=sounan:kaerazu pos=-61, 150, -61
+shot 35_wake
+step wake_wait dim=sounan:kaerazu pos=64, 142, 36
+step ending_bad dim=sounan:kaerazu pos=64, 142, 36
+shot 36_ending_bad
+step ending_good dim=sounan:kaerazu pos=64, 142, 36
+shot 37_ending_good
+step ending_close dim=sounan:kaerazu pos=64, 142, 36
+finished
