@@ -1,0 +1,393 @@
+[02Nov2026 12:47:18.105] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, MOD_DEV, --assetIndex, 5, --assetsDir, /home/runner/.gradle/caches/forge_gradle/assets, --gameDir, ., --fml.forgeVersion, 47.3.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --width, 1920, --height, 804]
+[02Nov2026 12:47:18.107] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.21 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[02Nov2026 12:47:18.155] [main/WARN] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/fml.toml is not correct. Correcting
+[02Nov2026 12:47:18.156] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[02Nov2026 12:47:18.156] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[02Nov2026 12:47:18.157] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[02Nov2026 12:47:18.166] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[02Nov2026 12:47:18.313] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[02Nov2026 12:47:18.360] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.5
+[02Nov2026 12:47:18.453] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.5 got version 4.5
+[02Nov2026 12:47:18.497] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=CLIENT
+[02Nov2026 12:47:18.505] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: llvmpipe (LLVM 21.1.8, 256 bits) GL version 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3, Mesa
+[02Nov2026 12:47:18.736] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[02Nov2026 12:47:18.737] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[02Nov2026 12:47:18.738] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[02Nov2026 12:47:18.739] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar is missing mods.toml file
+[02Nov2026 12:47:18.853] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 3 dependencies adding them to mods collection
+[02Nov2026 12:47:19.858] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[02Nov2026 12:47:19.870] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, /home/runner/.gradle/caches/forge_gradle/assets, --assetIndex, 5, --width, 1920, --height, 804]
+[02Nov2026 12:47:19.951] [main/INFO] [Embeddium/]: Loaded configuration file for Embeddium: 51 options available, 3 override(s) found
+[02Nov2026 12:47:19.952] [main/INFO] [Embeddium-GraphicsAdapterProbe/]: Searching for graphics cards...
+[02Nov2026 12:47:19.953] [main/WARN] [Embeddium-GraphicsAdapterProbe/]: No graphics cards were found. Either you have no hardware devices supporting 3D acceleration, or something has gone terribly wrong!
+[02Nov2026 12:47:19.956] [main/WARN] [Embeddium-Workarounds/]: Unable to determine desktop session type because the environment variable XDG_SESSION_TYPE is not set! Your user session may not be configured correctly.
+[02Nov2026 12:47:20.231] [main/INFO] [mixin/]: Remapping refMap embeddium-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.235] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.237] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.240] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.244] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.248] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.249] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.254] [main/INFO] [mixin/]: Remapping refMap sodiumCompatibility-oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.257] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.259] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.261] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.263] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[02Nov2026 12:47:20.642] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.world.sky.WorldRendererMixin' as rule 'mixin.features.render.world.sky' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.643] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.world.sky.ClientWorldMixin' as rule 'mixin.features.render.world.sky' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.646] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.world.sky.BackgroundRendererMixin' as rule 'mixin.features.render.world.sky' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.648] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.gui.font.GlyphRendererMixin' as rule 'mixin.features.render.gui.font' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.649] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.gui.font.FontSetMixin' as rule 'mixin.features.render.gui.font' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.650] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.shadows.EntityRenderDispatcherMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.650] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.remove_streams.ModelPartMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.650] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.remove_streams.HierarchicalModelMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.650] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.fast_render.ModelPartMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.650] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.fast_render.CuboidMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.651] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.cull.EntityRendererMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[02Nov2026 12:47:20.849] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.3.5).
+[02Nov2026 12:47:23.292] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 188 Datafixer optimizations took 139 milliseconds
+[02Nov2026 12:47:24.691] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[02Nov2026 12:47:24.691] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[02Nov2026 12:47:24.702] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[02Nov2026 12:47:24.706] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[02Nov2026 12:47:24.840] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.1 build 7
+[02Nov2026 12:47:24.931] [Render thread/ERROR] [Embeddium-MixinTaintDetector/]: Mod mixin into Embeddium internals detected. This instance is now tainted. The Embeddium team does not provide any guarantee of support for issues encountered while such mods are installed.
+[02Nov2026 12:47:24.931] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gui.SodiumGameOptions, which may cause instability.
+[02Nov2026 12:47:24.962] [Render thread/INFO] [Embeddium-PostlaunchChecks/]: OpenGL Vendor: Mesa
+[02Nov2026 12:47:24.963] [Render thread/INFO] [Embeddium-PostlaunchChecks/]: OpenGL Renderer: llvmpipe (LLVM 21.1.8, 256 bits)
+[02Nov2026 12:47:24.963] [Render thread/INFO] [Embeddium-PostlaunchChecks/]: OpenGL Version: 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3
+[02Nov2026 12:47:25.200] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+[02Nov2026 12:47:25.203] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+[02Nov2026 12:47:25.310] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+1 option changed by user)
+[02Nov2026 12:47:25.548] [Render thread/INFO] [Oculus/]: Using shaderpack: MeikonShaders.zip
+[02Nov2026 12:47:25.662] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.0, for MC 1.20.1 with MCP 20230612.114412
+[02Nov2026 12:47:25.662] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.3.0 Initialized
+[02Nov2026 12:47:25.708] [modloading-worker-0/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI, which may cause instability.
+[02Nov2026 12:47:25.738] [modloading-worker-0/INFO] [com.meikon.Meikon/]: [meikon] 冥婚: the invitation has been sent
+[02Nov2026 12:47:27.022] [Render thread/INFO] [Oculus/]: Hardware information:
+[02Nov2026 12:47:27.022] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 9V45 96-Core Processor
+[02Nov2026 12:47:27.022] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+[02Nov2026 12:47:27.022] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+[02Nov2026 12:47:27.312] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.vertex.VertexFormatDescriptionImpl, which may cause instability.
+[02Nov2026 12:47:27.321] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.vertex.buffer.SodiumBufferBuilder, which may cause instability.
+[02Nov2026 12:47:27.341] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer, which may cause instability.
+[02Nov2026 12:47:27.478] [Render thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: []
+[02Nov2026 12:47:27.713] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
+[02Nov2026 12:47:27.729] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/meikon-client.toml is not correct. Correcting
+[02Nov2026 12:47:27.730] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key accessibility was corrected from null to its default, SimpleCommentedConfig:{}. 
+[02Nov2026 12:47:27.731] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key accessibility.flashReduction was corrected from null to its default, false. 
+[02Nov2026 12:47:27.731] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key accessibility.jumpscares was corrected from null to its default, true. 
+[02Nov2026 12:47:27.731] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key accessibility.screenEffects was corrected from null to its default, 1.0. 
+[02Nov2026 12:47:27.732] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders was corrected from null to its default, SimpleCommentedConfig:{}. 
+[02Nov2026 12:47:27.732] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders.installShaderPack was corrected from null to its default, true. 
+[02Nov2026 12:47:27.735] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/forge-client.toml is not correct. Correcting
+[02Nov2026 12:47:27.736] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client was corrected from null to its default, SimpleCommentedConfig:{}. 
+[02Nov2026 12:47:27.736] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.alwaysSetupTerrainOffThread was corrected from null to its default, false. 
+[02Nov2026 12:47:27.736] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.experimentalForgeLightPipelineEnabled was corrected from null to its default, false. 
+[02Nov2026 12:47:27.737] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.showLoadWarnings was corrected from null to its default, true. 
+[02Nov2026 12:47:27.737] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.useCombinedDepthStencilAttachment was corrected from null to its default, false. 
+[02Nov2026 12:47:27.737] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.compressLanIPv6Addresses was corrected from null to its default, true. 
+[02Nov2026 12:47:27.737] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.calculateAllNormals was corrected from null to its default, false. 
+[02Nov2026 12:47:27.737] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.stabilizeDirectionGetNearest was corrected from null to its default, true. 
+[02Nov2026 12:47:27.743] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/meikon-common.toml is not correct. Correcting
+[02Nov2026 12:47:27.743] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game was corrected from null to its default, SimpleCommentedConfig:{}. 
+[02Nov2026 12:47:27.743] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.brideSpeed was corrected from null to its default, 1.0. 
+[02Nov2026 12:47:27.744] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.fearRate was corrected from null to its default, 1.0. 
+[02Nov2026 12:47:27.744] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.giveEnvelope was corrected from null to its default, true. 
+[02Nov2026 12:47:27.916] [Worker-Main-1/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
+[02Nov2026 12:47:28.717] [Render thread/INFO] [com.meikon.Meikon/]: [MeikonShaders] copied MeikonShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/MeikonShaders.zip; Oculus pack already selected: MeikonShaders.zip (reloading updated pack)
+[02Nov2026 12:47:28.734] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+1 option changed by user)
+[02Nov2026 12:47:28.745] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[02Nov2026 12:47:28.920] [Render thread/INFO] [Oculus/]: Using shaderpack: MeikonShaders.zip
+[02Nov2026 12:47:29.109] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.3.0 Target: 47.4.28
+[02Nov2026 12:47:30.745] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[02Nov2026 12:47:30.746] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[02Nov2026 12:47:30.770] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:283) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at com.mojang.blaze3d.audio.Library.init(Library.java:153) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundEngine.loadLibrary(SoundEngine.java:104) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundEngine.reload(SoundEngine.java:96) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:125) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:40) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.server.packs.resources.SimplePreparableReloadListener.lambda$reload$1(SimplePreparableReloadListener.java:13) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:718) ~[?:?]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?]
+	at net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$new$3(SimpleReloadInstance.java:69) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:156) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:23) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:130) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:115) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1106) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:718) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:218) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+[02Nov2026 12:47:30.841] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[02Nov2026 12:47:30.884] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[02Nov2026 12:47:30.884] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[02Nov2026 12:47:30.885] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[02Nov2026 12:47:30.886] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[02Nov2026 12:47:30.890] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[02Nov2026 12:47:30.891] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[02Nov2026 12:47:30.891] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[02Nov2026 12:47:30.891] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[02Nov2026 12:47:31.069] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[02Nov2026 12:47:31.172] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[02Nov2026 12:47:31.173] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[02Nov2026 12:47:31.174] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[02Nov2026 12:47:31.193] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+[02Nov2026 12:47:31.225] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+[02Nov2026 12:47:31.392] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+[02Nov2026 12:47:33.283] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.device.GLRenderDevice$ImmediateDrawCommandList, which may cause instability.
+[02Nov2026 12:47:33.298] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: title screen (preview=false, only=[])
+[02Nov2026 12:47:34.336] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.vertex.serializers.VertexSerializerRegistryImpl, which may cause instability.
+[02Nov2026 12:47:36.664] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[02Nov2026 12:47:36.747] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1271 advancements
+[02Nov2026 12:47:37.075] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.1
+[02Nov2026 12:47:37.076] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[02Nov2026 12:47:37.113] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/MeikonTrailer/serverconfig/forge-server.toml is not correct. Correcting
+[02Nov2026 12:47:37.113] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[02Nov2026 12:47:37.113] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[02Nov2026 12:47:37.113] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[02Nov2026 12:47:37.113] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[02Nov2026 12:47:37.114] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[02Nov2026 12:47:37.114] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[02Nov2026 12:47:37.114] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[02Nov2026 12:47:37.114] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[02Nov2026 12:47:37.636] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[02Nov2026 12:47:38.123] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[02Nov2026 12:47:38.164] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[02Nov2026 12:47:38.649] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：20%
+[02Nov2026 12:47:39.178] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：75%
+[02Nov2026 12:47:39.320] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[02Nov2026 12:47:39.339] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1694 ms
+[02Nov2026 12:47:39.391] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 8, from 10
+[02Nov2026 12:47:39.394] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 8, from 0
+[02Nov2026 12:47:39.451] [Render thread/WARN] [io.netty.util.internal.SystemPropertyUtil/]: Unable to parse the boolean system property 'java.net.preferIPv6Addresses':system - using the default value: false
+[02Nov2026 12:47:39.563] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: world creation requested
+[02Nov2026 12:47:39.739] [Netty Local Client IO #0/INFO] [net.minecraftforge.network.NetworkHooks/]: Connected to a modded server.
+[02Nov2026 12:47:39.821] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:e79c08a1] logged in with entity id 1 at (-1.5, -60.0, 6.5)
+[02Nov2026 12:47:39.873] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Devがゲームに参加しました
+[02Nov2026 12:47:39.879] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+[02Nov2026 12:47:39.880] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+[02Nov2026 12:47:39.907] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+[02Nov2026 12:47:39.917] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+[02Nov2026 12:47:40.907] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.RenderSectionManager, which may cause instability.
+[02Nov2026 12:47:40.946] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.compile.tasks.ChunkBuilderMeshingTask, which may cause instability.
+[02Nov2026 12:47:40.986] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.vertex.format.ChunkMeshFormats, which may cause instability.
+[02Nov2026 12:47:40.987] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.vertex.format.ChunkMeshAttribute, which may cause instability.
+[02Nov2026 12:47:40.992] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.attribute.GlVertexFormat$Builder, which may cause instability.
+[02Nov2026 12:47:41.002] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.attribute.GlVertexAttributeFormat, which may cause instability.
+[02Nov2026 12:47:41.007] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.DefaultChunkRenderer, which may cause instability.
+[02Nov2026 12:47:41.028] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.ShaderChunkRenderer, which may cause instability.
+[02Nov2026 12:47:41.051] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers, which may cause instability.
+[02Nov2026 12:47:41.057] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.vertex.builder.ChunkMeshBufferBuilder, which may cause instability.
+[02Nov2026 12:47:41.059] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.compile.buffers.BakedChunkModelBuilder, which may cause instability.
+[02Nov2026 12:47:41.067] [Render thread/WARN] [mixin/]: Error loading class: net/fabricmc/fabric/api/blockview/v2/FabricBlockView (java.lang.ClassNotFoundException: net.fabricmc.fabric.api.blockview.v2.FabricBlockView)
+[02Nov2026 12:47:41.068] [Render thread/WARN] [mixin/]: Error loading class: net/fabricmc/fabric/api/rendering/data/v1/RenderAttachedBlockView (java.lang.ClassNotFoundException: net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView)
+[02Nov2026 12:47:41.075] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.model.light.smooth.SmoothLightPipeline, which may cause instability.
+[02Nov2026 12:47:41.082] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.model.light.flat.FlatLightPipeline, which may cause instability.
+[02Nov2026 12:47:41.106] [Render thread/INFO] [ChunkBuilder/]: Started 1 worker threads
+[02Nov2026 12:47:41.139] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] MeikonShaders を更新しました。
+[02Nov2026 12:47:41.285] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 足元に、赤い封筒が落ちている……（右クリックで開く）
+[02Nov2026 12:47:41.288] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 2 advancements
+[02Nov2026 12:47:41.413] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.shader.ShaderType, which may cause instability.
+[02Nov2026 12:47:41.422] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.shader.GlProgram, which may cause instability.
+[02Nov2026 12:47:41.567] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.immediate.model.BakedModelEncoder, which may cause instability.
+[02Nov2026 12:47:41.918] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.immediate.CloudRenderer, which may cause instability.
+[02Nov2026 12:47:41.956] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ModelViewMat in the specified shader program.
+[02Nov2026 12:47:41.956] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ProjMat in the specified shader program.
+[02Nov2026 12:47:41.956] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ColorModulator in the specified shader program.
+[02Nov2026 12:47:41.956] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogStart in the specified shader program.
+[02Nov2026 12:47:41.956] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogEnd in the specified shader program.
+[02Nov2026 12:47:41.956] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogColor in the specified shader program.
+[02Nov2026 12:47:42.617] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.region.RenderRegion$DeviceResources, which may cause instability.
+[02Nov2026 12:47:47.826] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームルール「doDaylightCycle」がfalseに設定されました］
+[02Nov2026 12:47:47.826] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームルール「doMobSpawning」がfalseに設定されました］
+[02Nov2026 12:47:47.826] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームルール「sendCommandFeedback」がfalseに設定されました］
+[02Nov2026 12:47:47.826] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：時刻を18000に設定しました］
+[02Nov2026 12:47:48.203] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] ゲームルール「doDaylightCycle」がfalseに設定されました
+[02Nov2026 12:47:48.205] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] ゲームルール「doMobSpawning」がfalseに設定されました
+[02Nov2026 12:47:48.727] [Server thread/INFO] [com.meikon.Meikon/]: [meikon] mansion built in 900 ms (20 rooms, 11 closets, 3 bells on pedestals)
+[02Nov2026 12:47:48.783] [Server thread/INFO] [com.meikon.Meikon/]: [meikon] Dev entered the mansion (seed 20261102)
+[02Nov2026 12:47:48.820] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='meikon', name='kakuriyo'}
+[02Nov2026 12:47:48.821] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+[02Nov2026 12:47:48.834] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='meikon', name='kakuriyo'}
+[02Nov2026 12:47:48.865] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:47:48.879] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:47:48.887] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:47:48.893] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:47:48.893] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:47:48.979] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+[02Nov2026 12:47:50.616] [Render thread/INFO] [ChunkBuilder/]: Stopping worker threads
+[02Nov2026 12:47:50.619] [Render thread/INFO] [ChunkBuilder/]: Started 1 worker threads
+[02Nov2026 12:47:50.627] [Render thread/INFO] [ChunkBuilder/]: Stopping worker threads
+[02Nov2026 12:47:50.628] [Render thread/INFO] [ChunkBuilder/]: Started 1 worker threads
+[02Nov2026 12:48:00.500] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devに透明化の効果を与えました］
+[02Nov2026 12:48:00.501] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:48:03.481] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: in meikon:kakuriyo, mansion seed 20261102, shaders true, iris clock ok (net.irisshaders.iris.uniforms.SystemTimeUniforms, lastStartTime OptionalLong)
+[02Nov2026 12:48:03.486] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: 14 shots, 62.1 s
+[02Nov2026 12:48:03.489] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 00_moon (7.0 s, 0 actors)
+[02Nov2026 12:48:03.489] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 68.380000, -8.000000にテレポートさせました］
+[02Nov2026 12:48:03.490] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:48:18.813] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: pause partial tick: getter true, field realPartialTick
+[02Nov2026 12:48:18.814] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: item-in-hand renderer true
+[02Nov2026 12:48:18.821] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:48:18.824] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:48:18.826] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:48:18.829] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:48:18.829] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:49:12.052] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 00_moon: 210 frames in 53.5 s (245 ms/frame)
+[02Nov2026 12:49:12.054] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 01_corridor (5.0 s, 0 actors)
+[02Nov2026 12:49:12.055] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-13.000000, 65.000000, 16.300000にテレポートさせました］
+[02Nov2026 12:49:12.057] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[提灯（灯）]に置換しました］
+[02Nov2026 12:49:27.271] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:49:27.274] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:49:27.276] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:49:27.278] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:49:27.279] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:50:12.899] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 01_corridor: 150 frames in 45.9 s (291 ms/frame)
+[02Nov2026 12:50:12.902] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを1.000000, 64.800000, -16.800000にテレポートさせました］
+[02Nov2026 12:50:12.902] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:50:12.903] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 02_wedding (5.0 s, 1 actors)
+[02Nov2026 12:50:28.122] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:50:28.127] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:50:28.129] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:50:28.139] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:50:28.142] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:51:08.492] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 02_wedding: 150 frames in 40.7 s (257 ms/frame)
+[02Nov2026 12:51:08.494] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-22.000000, 64.680000, 19.750000にテレポートさせました］
+[02Nov2026 12:51:08.494] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 03_dolls (4.5 s, 1 actors)
+[02Nov2026 12:51:08.494] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:51:23.673] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:51:23.682] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:51:23.688] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:51:23.693] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:51:23.693] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:51:57.351] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 03_dolls: 135 frames in 34.0 s (238 ms/frame)
+[02Nov2026 12:51:57.353] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 04_butsuma (4.0 s, 0 actors)
+[02Nov2026 12:51:57.353] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを20.700000, 64.630000, -20.350000にテレポートさせました］
+[02Nov2026 12:51:57.353] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:52:12.621] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:52:12.626] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:52:12.628] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:52:12.632] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:52:12.636] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:52:45.923] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 04_butsuma: 120 frames in 33.5 s (262 ms/frame)
+[02Nov2026 12:52:45.925] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: bell at -14, 65, -21, camera side south
+[02Nov2026 12:52:45.926] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 05_bell (4.0 s, 0 actors)
+[02Nov2026 12:52:45.927] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-13.109000, 64.350000, -19.135000にテレポートさせました］
+[02Nov2026 12:52:45.928] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[提灯（灯）]に置換しました］
+[02Nov2026 12:53:01.022] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:53:01.024] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:53:01.027] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:53:01.029] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:53:01.032] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:53:35.392] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 05_bell: 120 frames in 34.6 s (271 ms/frame)
+[02Nov2026 12:53:35.400] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 06_bride_far (5.5 s, 1 actors)
+[02Nov2026 12:53:35.401] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを12.800000, 64.830000, 16.400000にテレポートさせました］
+[02Nov2026 12:53:35.402] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:53:50.421] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:53:50.424] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:53:50.426] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:53:50.430] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:53:50.431] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:54:36.325] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 06_bride_far: 165 frames in 46.1 s (267 ms/frame)
+[02Nov2026 12:54:36.329] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: closet 3 at 1, 65, 21 facing east (open cells 99), lamp BlockPos{x=7, y=65, z=23}
+[02Nov2026 12:54:36.330] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 07_closet (7.0 s, 1 actors)
+[02Nov2026 12:54:36.331] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを1.650000, 64.830000, 21.500000にテレポートさせました］
+[02Nov2026 12:54:36.332] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:54:51.371] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:54:51.375] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:54:51.376] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:54:51.378] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:54:51.378] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:55:49.816] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 07_closet: 210 frames in 58.7 s (269 ms/frame)
+[02Nov2026 12:55:49.819] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 08_shadow (3.0 s, 1 actors)
+[02Nov2026 12:55:49.819] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-11.000000, 64.800000, -15.550000にテレポートさせました］
+[02Nov2026 12:55:49.819] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:56:05.021] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:56:05.026] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:56:05.027] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:56:05.031] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:56:05.031] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:56:30.615] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 08_shadow: 90 frames in 25.8 s (264 ms/frame)
+[02Nov2026 12:56:30.618] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 09_lantern_out (3.5 s, 1 actors)
+[02Nov2026 12:56:30.618] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-15.600000, 65.000000, -9.600000にテレポートさせました］
+[02Nov2026 12:56:30.621] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[提灯（灯）]に置換しました］
+[02Nov2026 12:56:45.671] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:56:45.675] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:56:45.678] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:56:45.682] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:56:45.683] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:57:16.758] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 09_lantern_out: 105 frames in 31.3 s (277 ms/frame)
+[02Nov2026 12:57:16.760] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 10_chase (5.0 s, 1 actors)
+[02Nov2026 12:57:16.761] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.417000, 64.880000, -11.000000にテレポートさせました］
+[02Nov2026 12:57:16.761] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[提灯（灯）]に置換しました］
+[02Nov2026 12:57:31.974] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:57:31.978] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:57:31.980] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:57:31.984] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:57:31.986] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:58:18.526] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 10_chase: 150 frames in 46.8 s (296 ms/frame)
+[02Nov2026 12:58:18.528] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 11_chase_low (2.5 s, 1 actors)
+[02Nov2026 12:58:18.528] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.400000, 63.700000, 9.300000にテレポートさせました］
+[02Nov2026 12:58:18.529] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[提灯（灯）]に置換しました］
+[02Nov2026 12:58:33.572] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:58:33.576] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:58:33.578] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:58:33.580] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:58:33.583] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:58:57.108] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 11_chase_low: 75 frames in 23.8 s (287 ms/frame)
+[02Nov2026 12:58:57.110] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 12_torii (3.5 s, 0 actors)
+[02Nov2026 12:58:57.111] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.480000, 3.600000にテレポートさせました］
+[02Nov2026 12:58:57.112] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[空気]に置換しました］
+[02Nov2026 12:59:12.271] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 12:59:12.280] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 12:59:12.283] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 12:59:12.287] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 12:59:12.288] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 12:59:45.831] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 12_torii: 105 frames in 33.9 s (300 ms/frame)
+[02Nov2026 12:59:45.833] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを8.500000, 64.800000, 16.400000にテレポートさせました］
+[02Nov2026 12:59:45.833] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: set-up 13_face (2.6 s, 1 actors)
+[02Nov2026 12:59:45.833] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[提灯（灯）]に置換しました］
+[02Nov2026 13:00:00.874] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 13:00:00.876] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 13:00:00.882] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 13:00:00.884] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 13:00:00.886] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 13:00:26.448] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: filmed 13_face: 78 frames in 25.9 s (301 ms/frame)
+[02Nov2026 13:00:26.450] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: all shots done; writing 1 frames
+[02Nov2026 13:00:26.778] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] trailer: finished
+[02Nov2026 13:00:27.032] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!
+[02Nov2026 13:00:27.075] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: 切断されました
+[02Nov2026 13:00:27.076] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Devがゲームを退出しました
+[02Nov2026 13:00:27.081] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Stopping singleplayer server as player logged out
+[02Nov2026 13:00:27.122] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[02Nov2026 13:00:27.122] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[02Nov2026 13:00:27.122] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[02Nov2026 13:00:27.780] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:overworld
+[02Nov2026 13:00:27.823] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/meikon:kakuriyo
+[02Nov2026 13:00:27.854] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_end
+[02Nov2026 13:00:27.855] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonTrailer]'/minecraft:the_nether
+[02Nov2026 13:00:27.880] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (MeikonTrailer): All chunks are saved
+[02Nov2026 13:00:27.880] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (kakuriyo): All chunks are saved
+[02Nov2026 13:00:27.880] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[02Nov2026 13:00:27.880] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[02Nov2026 13:00:27.880] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[02Nov2026 13:00:28.369] [Render thread/INFO] [ChunkBuilder/]: Stopping worker threads

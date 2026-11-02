@@ -1,0 +1,38 @@
+title screen (preview=false, only=[])
+world creation requested
+in meikon:kakuriyo, mansion seed 20261102, shaders true, iris clock ok (net.irisshaders.iris.uniforms.SystemTimeUniforms, lastStartTime OptionalLong)
+14 shots, 62.1 s
+set-up 00_moon (7.0 s, 0 actors)
+pause partial tick: getter true, field realPartialTick
+item-in-hand renderer true
+filmed 00_moon: 210 frames in 53.5 s (245 ms/frame)
+set-up 01_corridor (5.0 s, 0 actors)
+filmed 01_corridor: 150 frames in 45.9 s (291 ms/frame)
+set-up 02_wedding (5.0 s, 1 actors)
+filmed 02_wedding: 150 frames in 40.7 s (257 ms/frame)
+set-up 03_dolls (4.5 s, 1 actors)
+filmed 03_dolls: 135 frames in 34.0 s (238 ms/frame)
+set-up 04_butsuma (4.0 s, 0 actors)
+filmed 04_butsuma: 120 frames in 33.5 s (262 ms/frame)
+bell at -14, 65, -21, camera side south
+set-up 05_bell (4.0 s, 0 actors)
+filmed 05_bell: 120 frames in 34.6 s (271 ms/frame)
+set-up 06_bride_far (5.5 s, 1 actors)
+filmed 06_bride_far: 165 frames in 46.1 s (267 ms/frame)
+closet 3 at 1, 65, 21 facing east (open cells 99), lamp BlockPos{x=7, y=65, z=23}
+set-up 07_closet (7.0 s, 1 actors)
+filmed 07_closet: 210 frames in 58.7 s (269 ms/frame)
+set-up 08_shadow (3.0 s, 1 actors)
+filmed 08_shadow: 90 frames in 25.8 s (264 ms/frame)
+set-up 09_lantern_out (3.5 s, 1 actors)
+filmed 09_lantern_out: 105 frames in 31.3 s (277 ms/frame)
+set-up 10_chase (5.0 s, 1 actors)
+filmed 10_chase: 150 frames in 46.8 s (296 ms/frame)
+set-up 11_chase_low (2.5 s, 1 actors)
+filmed 11_chase_low: 75 frames in 23.8 s (287 ms/frame)
+set-up 12_torii (3.5 s, 0 actors)
+filmed 12_torii: 105 frames in 33.9 s (300 ms/frame)
+set-up 13_face (2.6 s, 1 actors)
+filmed 13_face: 78 frames in 25.9 s (301 ms/frame)
+all shots done; writing 1 frames
+finished
