@@ -82,19 +82,20 @@ def weathered_planks():
 @texture('block/dark_planks', opaque=True, tile=True)
 def dark_planks():
     """Dark rotten interior floor boards: soft black rot, pale fungus specks, a broken gap."""
-    v = boards(211, DARKWOOD, base=3.8, tone=[0.2, -0.3, 0.4, 0], joints=[4, 11, 14, 7], streak=0.6)
+    v = boards(211, DARKWOOD, base=3.8, tone=[0.2, -0.3, 0.4, 0], joints=[4, None, 12, None], streak=0.6, lmin=5, lmax=13)
     q = np.clip(np.round(v), 0, 6).astype(int)
     t = Tex(16)
     paint_idx(t, q, DARKWOOD)
     rot = blob(16, 16, 10.0, 9.5, 3.4, 1.6, 212, rough=0.5) > 0
     t.a[rot, :3] *= 0.62
     for (fx, fy) in ((9, 9), (12, 10), (11, 8), (3, 2)):
-        t.set(fx, fy, '#6d665a')
+        t.blend(fx, fy, '#6d665a', 0.45)
     for xx in range(7, 10):
         t.set(xx, 7, '#050404')
     t.set(8, 6, DARKWOOD[0])
     for (nx, ny) in ((2, 1), (13, 5), (6, 13)):
-        t.set(nx, ny, '#0a0807')
+        t.blend(nx, ny, '#0a0807', 0.7)
+    detile(t, keep=0.4)
     return t
 
 
