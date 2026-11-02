@@ -106,6 +106,8 @@ public final class ClientPacketHandler {
                 if (mc.player != null) {
                     mc.getSoundManager().play(new SimpleSoundInstance(ModSounds.PHONE_VIBRATE.get(), SoundSource.PLAYERS, 0.9f, 1.0f,
                             RAND, mc.player.getX(), mc.player.getY() + 0.8, mc.player.getZ()));
+                    if (e.text().endsWith("buzz.found")) ui(ModSounds.PHONE_MITSUKETA.get(), 0.55f, 1.0f);
+                    else if (!e.text().endsWith("buzz.messages")) ui(ModSounds.PHONE_NOTIFY_WRONG.get(), 0.6f, 1.0f);
                 }
             }
             case GameManager.EV_FLASH -> ClientState.flashTicks = 0;

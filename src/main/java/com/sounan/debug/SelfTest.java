@@ -89,6 +89,11 @@ public final class SelfTest {
                     log("start " + L.start + " bag " + L.bag + " rope " + L.ropeAnchor + " rope column " + L.ropeX + "," + L.ropeZ
                             + " y " + L.ropeTopY + ".." + L.ropeBottomY);
                     check(L.ropeTopY - L.ropeBottomY >= 6, "the cliff below the stake is high enough for a rope");
+                    // keep the test areas loaded (nothing else holds a chunk on an empty dedicated server)
+                    for (BlockPos c : new BlockPos[]{L.start, L.hutSleeper}) {
+                        for (int dx = -1; dx <= 1; dx++)
+                            for (int dz = -1; dz <= 1; dz++) level.setChunkForced((c.getX() >> 4) + dx, (c.getZ() >> 4) + dz, true);
+                    }
                     stage = 1;
                 }
                 case 1 -> {
@@ -149,6 +154,26 @@ public final class SelfTest {
                     for (Mob m : MOBS) m.discard();
                     GameData data = GameData.get(server);
                     check(!data.started, "nobody started the game on the dedicated server");
+                    stage = 4;
+                }
+                case 4 -> {
+                    playthrough(server, level);
+                    stage = 5;
+                    wait = 60;
+                }
+                case 5 -> {
+                    monsterChecks(level);
+                    wait = 80;
+                    stage = 6;
+                }
+                case 6 -> {
+                    monsterResults(level);
+                    wait = 40;
+                    stage = 7;
+                }
+                case 7 -> {
+                    check(sleeper != null && !sleeper.asleep(), "the sleeper wakes when a door bangs next to it");
+                    if (sleeper != null) sleeper.discard();
                     finish(server);
                 }
                 default -> finish(server);
@@ -157,6 +182,84 @@ public final class SelfTest {
             check(false, "exception at stage " + stage + ": " + e);
             Sounan.LOGGER.error("[sounan-selftest] exception", e);
             finish(server);
+        }
+    }
+
+    private static net.minecraftforge.common.util.FakePlayer fake;
+    private static com.sounan.entity.Nozoki nozoki;
+    private static com.sounan.entity.Koyanushi sleeper;
+
+    /** The whole chain of gates with a fake player: bag, rope, sake, shrine, key, gate, car. */
+    private static void playthrough(MinecraftServer server, ServerLevel level) {
+        PoiLayout L = PoiLayout.get();
+        GameData data = GameData.get(server);
+        fake = net.minecraftforge.common.util.FakePlayerFactory.get(level,
+                new com.mojang.authlib.GameProfile(java.util.UUID.fromString("5c0a0a00-0000-4000-8000-00000000c0de"), "selftest"));
+        fake.setGameMode(net.minecraft.world.level.GameType.ADVENTURE);
+        fake.moveTo(L.bag.getX() + 1.5, L.bag.getY(), L.bag.getZ() + 0.5, 0, 0);
+        GameManager.interact(fake, L.bag, "bag");
+        check(data.bagOpened, "the bag opens");
+        check(GameManager.has(fake, com.sounan.registry.ModItems.ROPE.get()) && GameManager.has(fake, com.sounan.registry.ModItems.FLARE.get())
+                && GameManager.has(fake, com.sounan.registry.ModItems.BATTERY.get()), "the bag holds the rope, the flare and batteries");
+        GameManager.interact(fake, L.ropeAnchor, "rope_anchor");
+        check(data.roped, "the rope is tied to the stake");
+        int rope = 0;
+        for (int y = L.ropeTopY; y >= L.ropeBottomY; y--) {
+            if (level.getBlockState(new BlockPos(L.ropeX, y, L.ropeZ)).is(ModBlocks.CLIMBING_ROPE.get())) rope++;
+        }
+        check(rope >= L.ropeTopY - L.ropeBottomY - 1, "the rope hangs down the cliff (" + rope + " blocks)");
+        GameManager.interact(fake, L.hokora, "hokora");
+        check(!data.offered, "the shrine wants an offering first");
+        GameManager.interact(fake, L.omiki, "omiki");
+        check(data.omikiTaken && level.getBlockState(L.omiki).isAir(), "the sake is taken from the village house");
+        GameManager.interact(fake, L.hokora, "hokora");
+        check(data.offered, "the sake is offered at the shrine");
+        check(level.getBlockState(L.hokora).getValue(com.sounan.block.HokoraBlock.OFFERED), "the shrine shows the offering");
+        GameManager.interact(fake, L.gate, "gate");
+        check(!data.gateUnlocked, "the gate stays locked without the key");
+        GameManager.interact(fake, L.hutKeyHook, "key_hook");
+        check(data.keyTaken, "the key is taken from the hut");
+        GameManager.interact(fake, L.gate, "gate");
+        check(data.gateUnlocked && !level.getBlockState(L.gate).getValue(LockedGateBlock.LOCKED), "the key opens the tunnel gate");
+        log("checkpoint after the key: " + data.checkpoint);
+        // a fall from the cliff must not be a shortcut: the night loops you back
+        check(data.ending == 0, "no ending yet");
+        GameManager.interact(fake, L.carDoor, "car");
+        check(data.ending == 1, "the car ends the night");
+        data.reset();
+        check(!data.started && data.ending == 0, "progress resets");
+    }
+
+    private static void monsterChecks(ServerLevel level) {
+        PoiLayout L = PoiLayout.get();
+        // the fake player stands still near the start; a nozoki 5 blocks away must be provoked
+        BlockPos at = L.start.offset(2, 0, 2);
+        fake.moveTo(at.getX() + 0.5, TerrainData.get().height(at.getX(), at.getZ()) + 1, at.getZ() + 0.5, 0, 0);
+        nozoki = ModEntities.NOZOKI.get().create(level);
+        if (nozoki != null) {
+            nozoki.moveTo(at.getX() + 5.5, TerrainData.get().height(at.getX() + 5, at.getZ()) + 1, at.getZ() + 0.5, 90, 0);
+            nozoki.setTarget(fake);
+            nozoki.peek(true);
+            level.addFreshEntity(nozoki);
+        }
+        // a sleeper wakes when noise is made next to it
+        sleeper = ModEntities.KOYANUSHI.get().create(level);
+        if (sleeper != null) {
+            sleeper.moveTo(L.hutSleeper.getX() + 0.5, L.hutSleeper.getY(), L.hutSleeper.getZ() + 0.5, 0, 0);
+            sleeper.setHome(L.hutSleeper, L.hutSleeperFacing);
+            level.addFreshEntity(sleeper);
+        }
+    }
+
+    private static void monsterResults(ServerLevel level) {
+        check(nozoki != null && (nozoki.hostileNow() || !nozoki.isAlive() || GameManager.state(fake).captured),
+                "a nozoki provoked at 5 blocks attacks (hostile=" + (nozoki != null && nozoki.hostileNow()) + ", captured="
+                        + GameManager.state(fake).captured + ")");
+        if (nozoki != null) nozoki.discard();
+        check(sleeper != null && sleeper.asleep(), "the hut sleeper sleeps while it is quiet");
+        if (sleeper != null) {
+            com.sounan.game.NoiseSystem.emit(level, sleeper.position().add(1, 0, 0), 8.0f, com.sounan.game.NoiseSystem.Source.DOOR);
+            sleeper.life = 100;
         }
     }
 
@@ -177,6 +280,14 @@ public final class SelfTest {
 
     private static void finish(MinecraftServer server) {
         stage = 99;
+        ServerLevel level = GameManager.mountain(server);
+        if (level != null) {
+            PoiLayout L = PoiLayout.get();
+            for (BlockPos c : new BlockPos[]{L.start, L.hutSleeper}) {
+                for (int dx = -1; dx <= 1; dx++)
+                    for (int dz = -1; dz <= 1; dz++) level.setChunkForced((c.getX() >> 4) + dx, (c.getZ() >> 4) + dz, false);
+            }
+        }
         log("SELFTEST RESULT: " + (failures == 0 ? "PASS" : "FAIL (" + failures + ")"));
         server.halt(false);
     }

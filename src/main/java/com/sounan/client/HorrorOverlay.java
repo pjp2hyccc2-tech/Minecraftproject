@@ -126,6 +126,17 @@ public final class HorrorOverlay {
                 g.fill(0, y, w, y + bh, RAND.nextBoolean() ? 0x90000000 : 0x38FFFFFF);
             }
         }
+        // at the edge of panic the brain fills the dark with faces: two frames, then nothing
+        if (!calm && SounanConfig.jumpscares() && fear > 0.9f && ClientState.subliminal <= 0 && RAND.nextFloat() < 0.0015f) {
+            ClientState.subliminal = 2;
+            ClientState.subliminalKind = RAND.nextInt(SCARES.length);
+        }
+        if (ClientState.subliminal > 0) {
+            ClientState.subliminal--;
+            int size = (int) (Math.min(w, h) * 0.55f);
+            int sx = w / 2 + (RAND.nextBoolean() ? w / 5 : -w / 5) - size / 2;
+            image(g, SCARES[ClientState.subliminalKind], sx, (h - size) / 2, size, size, 0.6f, 0.6f, 0.6f, 0.16f);
+        }
         if (ClientState.stingerTicks >= 0) {
             float a = 1.0f - (ClientState.stingerTicks + partial) / 18.0f;
             image(g, VIGNETTE, -w / 4, -h / 4, w + w / 2, h + h / 2, 0.0f, 0.0f, 0.0f, Math.max(0.0f, a));

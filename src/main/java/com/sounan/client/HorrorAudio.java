@@ -134,6 +134,12 @@ public final class HorrorAudio {
         lastDanger = dng;
 
         tickCall();
+        if (intro) {
+            int it = ClientState.introTicks;
+            if (it == 62) ClientPacketHandler.ui(ModSounds.YOBIGOE_CALL.get(), 0.35f, 1.0f);
+            if (it == 192) ClientPacketHandler.ui(ModSounds.PLAYER_FALL.get(), 1.0f, 1.0f);
+            if (it == 250) ClientPacketHandler.ui(ModSounds.AMB_TINNITUS.get(), 0.5f, 1.0f);
+        }
         if (captured || intro || ending) return;
 
         // ---- the heartbeat, at the real rate

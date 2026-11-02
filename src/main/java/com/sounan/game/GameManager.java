@@ -458,6 +458,7 @@ public final class GameManager {
     private static void introOver(ServerPlayer p, PlayerState ps) {
         ps.introTicks = -1;
         thought(p, "thought.sounan.wake");
+        event(p, EV_SUBTITLE, 0, "hint.sounan.controls");
     }
 
     private static void tickBody(ServerLevel level, ServerPlayer p, PlayerState ps) {

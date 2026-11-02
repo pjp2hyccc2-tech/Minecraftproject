@@ -200,7 +200,7 @@ public final class AutoShots {
         scene("10_village", mc -> at(mc, 2.5, 6.5, -90.0f, 4.0f), 90);
         scene("11_village_houses", mc -> at(mc, 30.5, 6.5, 160.0f, 2.0f), 40);
         scene("12_phone_booth", mc -> at(mc, L.publicPhone.getX() + 0.5, L.publicPhone.getZ() - 3.5, 0.0f, 10.0f), 40);
-        scene("13_omiki_house", mc -> atY(mc, L.villageSleeper.getX() - 3.5, L.villageSleeper.getY(), L.villageSleeper.getZ() - 1.5, 120.0f, 25.0f), 40);
+        scene("13_omiki_house", mc -> atY(mc, L.villageSleeper.getX() - 2.5, L.villageSleeper.getY(), L.villageSleeper.getZ() - 2.5, -45.0f, 25.0f), 40);
         scene("14_shrine_steps", mc -> at(mc, L.hokora.getX() - 18.5, L.hokora.getZ() + 0.5, -90.0f, -8.0f), 90);
         scene("15_shrine", mc -> at(mc, L.hokora.getX() - 3.5, L.hokora.getZ() + 0.5, -90.0f, 12.0f), 40);
         scene("16_fog_rope", mc -> at(mc, P.fogCx - P.fogNx * 6, P.fogCz - P.fogNz * 6, yawToward(-P.fogNx, -P.fogNz) + 180.0f, 0.0f), 80);
@@ -214,7 +214,7 @@ public final class AutoShots {
         // the monsters, lined up in the village (camera on so the camera-only one shows)
         add("lineup_spawn", mc -> {
             at(mc, 20.5, 6.5, -90.0f, 6.0f);
-            cmd(mc, "kill @e[type=!player]");
+            cmd(mc, "sounan debug scene clear");
         }, 60);
         add("lineup_mobs", mc -> {
             int y = TerrainData.get().height(26, 6) + 1;
@@ -227,9 +227,48 @@ public final class AutoShots {
         snap("24_monsters");
         add("lineup_camera", mc -> hold(mc, "sounan:phone_camera"), 25);
         snap("25_monsters_camera");
+        // the monsters doing what they do (creative: they cannot take you, but they act)
+        scene("38_nozoki_peek", mc -> {
+            hold(mc, "sounan:flashlight_on");
+            cmd(mc, "sounan debug scene clear");
+            at(mc, -78.5, -74.5, -40.0f, 2.0f);
+            cmd(mc, "sounan debug scene nozoki");
+        }, 50);
+        scene("39_yobigoe_light", mc -> {
+            cmd(mc, "sounan debug scene clear");
+            at(mc, -24.5, -28.5, -45.0f, 0.0f);
+            cmd(mc, "sounan debug scene yobigoe");
+        }, 60);
+        add("ushiro_attach", mc -> {
+            cmd(mc, "sounan debug scene clear");
+            at(mc, -6.5, -12.5, -60.0f, 0.0f);
+            cmd(mc, "sounan debug scene ushiro");
+        }, 30);
+        scene("40_ushiro_look_back", mc -> {
+            if (mc.player != null) {
+                float yaw = mc.player.getYRot() + 180.0f;
+                mc.player.setYRot(yaw);
+                mc.player.yRotO = yaw;
+            }
+        }, 6);
+        scene("41_oyama_stalk", mc -> {
+            cmd(mc, "sounan debug scene clear");
+            at(mc, L.hut.x2() + 6.5, L.hut.cz() + 0.5, 90.0f, -4.0f);
+            cmd(mc, "sounan debug scene oyama");
+        }, 60);
+        scene("42_sleeper", mc -> {
+            cmd(mc, "sounan debug scene clear");
+            cmd(mc, "sounan debug scene koyanushi");
+            atY(mc, L.hutSleeper.getX() + 4.5, L.hutSleeper.getY(), L.hutSleeper.getZ() - 1.5, 63.0f, 30.0f);
+        }, 50);
+        scene("43_utsurumono_camera", mc -> {
+            hold(mc, "sounan:phone_camera");
+            at(mc, -60.5, -60.5, -45.0f, 0.0f);
+            cmd(mc, "sounan debug scene utsurumono");
+        }, 50);
         scene("26_fear_high", mc -> {
             hold(mc, "sounan:flashlight_on");
-            cmd(mc, "kill @e[type=!player]");
+            cmd(mc, "sounan debug scene clear");
             at(mc, -60.5, -60.5, 45.0f, 0.0f);
             fear(mc, 92, 0.15f);
         }, 80);

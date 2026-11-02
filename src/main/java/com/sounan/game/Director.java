@@ -321,6 +321,7 @@ public final class Director {
             return;
         }
         if (r < 14) behind(p, ModSounds.AMB_BRANCH_SNAP.get(), 7 + RAND.nextInt(8), 1.0f);
+        else if (r < 20 && (area == TerrainData.AREA_SUGI || area == TerrainData.AREA_KOYA) && !hasActive(level, p)) dasher(level, p);
         else if (r < 24) passing(p, ModSounds.AMB_FOOTSTEPS_RUN.get(), 18);
         else if (r < 32) around(p, ModSounds.AMB_TREE_KNOCK.get(), 20, 30, 1.0f);
         else if (r < 39) around(p, ModSounds.AMB_DEER_SCREAM.get(), 40, 60, 1.0f);
@@ -349,6 +350,23 @@ public final class Director {
         } else {
             around(p, ModSounds.AMB_THUD.get(), 25, 45, 1.0f);
         }
+    }
+
+    /** A shape crossing the view far ahead, from one side to the other. */
+    static void dasher(ServerLevel level, ServerPlayer p) {
+        float yaw = p.getYRot() * Mth.DEG_TO_RAD;
+        Vec3 fwd = new Vec3(-Mth.sin(yaw), 0, Mth.cos(yaw));
+        Vec3 side = new Vec3(fwd.z, 0, -fwd.x);
+        double dist = 18 + RAND.nextInt(8);
+        double sgn = RAND.nextBoolean() ? 1 : -1;
+        Vec3 a = p.position().add(fwd.scale(dist)).add(side.scale(10 * sgn));
+        Vec3 b = p.position().add(fwd.scale(dist + 3)).add(side.scale(-12 * sgn));
+        int ax = Mth.floor(a.x), az = Mth.floor(a.z), bx = Mth.floor(b.x), bz = Mth.floor(b.z);
+        TerrainData t = TerrainData.get();
+        if (t.area(ax, az) == TerrainData.AREA_OUT || Math.abs(t.height(ax, az) + 1 - p.getY()) > 5) return;
+        Vec3 from = new Vec3(a.x, ground(ax, az), a.z), to = new Vec3(b.x, ground(bx, bz), b.z);
+        Nozoki n = spawn(level, ModEntities.NOZOKI.get(), from, yawTo(from, to), p);
+        if (n != null) n.dash(to);
     }
 
     static Vec3 behindPos(ServerPlayer p, double dist) {
@@ -380,7 +398,10 @@ public final class Director {
             Vec3 to = Vec3.atCenterOf(j).subtract(p.getEyePosition()).normalize();
             if (to.dot(p.getViewVector(1.0f)) > 0.3) continue;
             Direction face = Direction.fromYRot(yawTo(Vec3.atCenterOf(j), p.position()));
-            if (s.getValue(FacingBlock.FACING) != face) level.setBlock(j, s.setValue(FacingBlock.FACING, face), 3);
+            if (s.getValue(FacingBlock.FACING) != face) {
+                level.setBlock(j, s.setValue(FacingBlock.FACING, face), 3);
+                GameManager.privateSound(p, ModSounds.AMB_STONE_GRIND.get(), Vec3.atCenterOf(j), 0.8f, 0.9f + RAND.nextFloat() * 0.2f);
+            }
         }
     }
 
@@ -416,12 +437,17 @@ public final class Director {
         // something under the bridge
         if (area == TerrainData.AREA_TSURIBASHI && Math.abs(p.getX() - (L.bridgeX + 0.5)) < 2.5
                 && p.getZ() > L.bridgeZ0 + 4 && p.getZ() < L.bridgeZ1 - 4 && data.once("under_bridge")) {
-            Vec3 below = p.position().add(0, -5, 0);
-            GameManager.privateSound(p, ModSounds.AMB_THUD.get(), below, 1.0f, 0.7f);
-            GameManager.privateSound(p, ModSounds.NOZOKI_GIGGLE.get(), below.add(0, 2, 0), 0.9f, 0.9f);
+            Vec3 below = p.position().add(0, -3, 0);
+            GameManager.privateSound(p, ModSounds.AMB_UNDER_BRIDGE.get(), below, 1.0f, 1.0f);
+            GameManager.privateSound(p, ModSounds.NOZOKI_GIGGLE.get(), below.add(0, -2, 0), 0.7f, 0.9f);
             GameManager.event(p, GameManager.EV_SHAKE, 14, "");
             GameManager.event(p, GameManager.EV_STINGER, 6, "");
             GameManager.addFear(p, 18.0f);
+        }
+        // the old bridge complains under every step
+        if (area == TerrainData.AREA_TSURIBASHI && Math.abs(p.getX() - (L.bridgeX + 0.5)) < 2.5 && p.getZ() > L.bridgeZ0 - 1
+                && p.getZ() < L.bridgeZ1 + 1 && p.getDeltaMovement().horizontalDistance() > 0.03 && RAND.nextInt(22) == 0) {
+            GameManager.worldSound(level, p.position(), ModSounds.AMB_BRIDGE_CREAK.get(), 0.9f, 0.9f + RAND.nextFloat() * 0.2f);
         }
         // the tunnel: the lamps come on one by one toward the exit, and it comes from behind
         if (area == TerrainData.AREA_TUNNEL && data.gateUnlocked && p.getZ() > L.tunnelZ0 + 26 && !data.climax) {
@@ -543,6 +569,41 @@ public final class Director {
     public static void onKeyTaken(ServerLevel level, ServerPlayer p) {
         PlayerState ps = GameManager.state(p);
         ps.nextMonster = Math.min(ps.nextMonster, 20 * 35);
+    }
+
+    /** Debug / screenshot tour: stage one monster scene for this player the way the director would. */
+    public static boolean scene(ServerLevel level, ServerPlayer p, String what) {
+        PoiLayout L = PoiLayout.get();
+        return switch (what) {
+            case "nozoki" -> spawnNozoki(level, p);
+            case "yobigoe" -> spawnYobigoe(level, p);
+            case "ushiro" -> attachUshiro(level, p) || forceUshiro(level, p);
+            case "oyama" -> stalkOyama(level, p);
+            case "hunt" -> huntOyama(level, p);
+            case "koyanushi" -> {
+                ensureResident(level, L.hutSleeper, L.hutSleeperFacing);
+                ensureResident(level, L.villageSleeper, L.villageSleeperFacing);
+                yield true;
+            }
+            case "utsurumono" -> {
+                tickUtsurumono(level, p, GameData.get(level.getServer()), TerrainData.AREA_SUGI);
+                tickUtsurumono(level, p, GameData.get(level.getServer()), TerrainData.AREA_SUGI);
+                yield true;
+            }
+            case "clear" -> {
+                for (SounanMonster m : level.getEntitiesOfClass(SounanMonster.class, new AABB(p.blockPosition()).inflate(96))) m.vanish();
+                yield true;
+            }
+            default -> false;
+        };
+    }
+
+    private static boolean forceUshiro(ServerLevel level, ServerPlayer p) {
+        Ushiro u = ModEntities.USHIRO.get().create(level);
+        if (u == null) return false;
+        u.attach(p);
+        level.addFreshEntity(u);
+        return true;
     }
 
     public static void clearAll() {

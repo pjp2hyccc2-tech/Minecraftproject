@@ -116,15 +116,15 @@ public class Koyanushi extends SounanMonster {
                         near = sp;
                     }
                 }
-                if (near == null) return;
-                GameManager.reportThreat(near, best < 8 ? 0.35f : 0.18f);
-                if (best < 9 && com.sounan.game.GameData.get(level.getServer()).once("sleeper_" + (home == null ? 0 : home.asLong()))) {
-                    GameManager.thought(near, "thought.sounan.sleeper");
-                }
                 NoiseSystem.Noise n = life > 60 ? NoiseSystem.loudest(level, position(), 0.6) : null;
                 if (n != null) {
                     wake(near);
                     return;
+                }
+                if (near == null) return;
+                GameManager.reportThreat(near, best < 8 ? 0.35f : 0.18f);
+                if (best < 9 && com.sounan.game.GameData.get(level.getServer()).once("sleeper_" + (home == null ? 0 : home.asLong()))) {
+                    GameManager.thought(near, "thought.sounan.sleeper");
                 }
                 if (GameManager.inBeam(near, this, 16.0)) lit++;
                 else lit = Math.max(0, lit - 1);

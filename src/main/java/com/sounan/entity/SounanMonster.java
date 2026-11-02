@@ -36,7 +36,8 @@ public abstract class SounanMonster extends PathfinderMob implements Animated {
     private static final EntityDataAccessor<Integer> POSE_ID = SynchedEntityData.defineId(SounanMonster.class, EntityDataSerializers.INT);
     private int poseStart;
     @Nullable protected UUID targetId;
-    protected int life;
+    @Nullable private ServerPlayer targetRef;
+    public int life;
     protected int stateTicks;
     /** Director-spawned: removed on reload. Residents (the sleepers) persist. */
     public boolean temporary = true;
@@ -92,13 +93,19 @@ public abstract class SounanMonster extends PathfinderMob implements Animated {
     // ------------------------------------------------------------------------------------------------ target
     public void setTarget(ServerPlayer p) {
         targetId = p.getUUID();
+        targetRef = p;
     }
 
     @Nullable
     public ServerPlayer target() {
+        if (targetRef != null && !targetRef.isRemoved() && targetRef.isAlive() && targetRef.level() == level()) return targetRef;
         if (targetId == null || !(level() instanceof ServerLevel sl)) return null;
         Player p = sl.getPlayerByUUID(targetId);
-        return p instanceof ServerPlayer sp && sp.isAlive() && sp.level() == level() ? sp : null;
+        if (p instanceof ServerPlayer sp && sp.isAlive() && sp.level() == level()) {
+            targetRef = sp;
+            return sp;
+        }
+        return null;
     }
 
     /** Speed modifier so that the effective speed (attribute × modifier) is {@code effective}. */

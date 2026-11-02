@@ -1,162 +1,138 @@
-"""game.* sounds: UI cues, scares, interactions."""
+"""game.* - non-diegetic cues (stereo): jumpscares, stingers, false risers,
+capture, waking up, checkpoints, area titles, the fog lifting, the loop,
+the car, the title and the 神隠し ending sting."""
 import numpy as np
 
 import dsp
 import instruments as ins
+import sfx_monsters as MO
 import voice as V
-import sfx_bride
-from dsp import SR, ns
+from dsp import SR, TAU, ns
+
+
+def _nrm(x):
+    return x / (np.max(np.abs(x)) + 1e-12)
+
+
+def _wide(x, rng, amount=0.012):
+    return dsp.widen(x, rng, amount)
+
+
+def _sub_drop(dur=1.2, f_hi=90.0, f_lo=28.0, tau=0.12, drive=2.0):
+    m = ns(dur)
+    t = np.arange(m) / SR
+    s = np.sin(TAU * np.cumsum(f_lo + (f_hi - f_lo) * np.exp(-t / tau)) / SR) * dsp.env_ad(m, 0.002, dur * 0.25)
+    return dsp.sat(s * drive, 1.0)
+
+
+def _cluster(names, dur, rng, env, **kw):
+    return ins.strings([dsp.hz(x) for x in names], dur, rng, env=env, **kw)
 
 
 # --------------------------------------------------------------------------
-# game.bell_chime_1..3 (M) - suzu jingle
-# --------------------------------------------------------------------------
-def bell_chime(rng, i=1):
-    dur = 2.4
-    if i == 1:
-        shakes, nh = [(0.02, 1.0), (0.17, 0.75)], (4, 8)
-    elif i == 2:
-        shakes, nh = [(0.02, 1.0)], (2, 3)
-    else:
-        shakes, nh = [(0.02, 1.0), (0.14, 0.8), (0.28, 0.9), (0.42, 0.65), (0.57, 0.45)], (3, 7)
-    y = ins.suzu_jingle(rng, dur, shakes, n_hits=nh)
-    ir = dsp.make_ir(0.7, rng, predelay=0.004)
-    y = dsp.reverb(y, ir, wet=0.25)
-    return dsp.trim(dsp.highpass(y, 300, 2), -60)
-
-
-# --------------------------------------------------------------------------
-# game.bell_get (S, 4 s) - jingle + sacred swell + reverse shimmer
-# --------------------------------------------------------------------------
-def bell_get(rng, i=1):
-    dur = 4.0
-    n = ns(dur)
-    out = np.zeros((2, n))
-    for p, t0 in [(-0.5, 0.0), (0.5, 0.025)]:
-        j = ins.suzu_jingle(rng, 2.5, [(0.0, 1.0), (0.12, 0.6)], n_hits=(4, 7))
-        dsp.place(out, dsp.pan(j, p), t0)
-    chord = [dsp.hz(x) for x in ["A2", "E3", "A3", "B3", "E4"]]
-    sw = ins.sho([(0.0, dur, chord, 1.0)], dur, rng)
-    env = dsp.env_pts(n, [(0, 0), (1.3, 1.0), (2.6, 0.7), (4.0, 0.0)]) ** 1.2
-    sw = dsp.lowpass(sw, 2500, 2) * env
-    out += sw / (np.max(np.abs(sw)) + 1e-9) * 0.6
-    sub = np.sin(dsp.TAU * 55 * np.arange(n) / SR) * env * 0.3
-    out += sub
-    # reverse shimmer rising into a soft second chime at 2.2 s
-    sh = ins.suzu_jingle(rng, 1.0, [(0.0, 0.8)], n_hits=(3, 5))
-    sh = dsp.reverb(sh, dsp.make_ir(2.2, rng, stereo=True), wet=1.0, dry=0.0)
-    sh = dsp.reverse(sh)
-    sh = sh / (np.max(np.abs(sh)) + 1e-9) * 0.5
-    dsp.place_end(out, sh, 2.2)
-    ring = ins.suzu_strike(rng, 4700, 0.6, dur=1.8)
-    dsp.place(out, dsp.pan(ring, 0.1), 2.2)
-    ir = dsp.make_ir(2.8, rng, stereo=True, predelay=0.02)
-    out = dsp.reverb(out, ir, wet=0.35)
-    out = dsp.pad_to(out, n)
-    return dsp.fade(dsp.highpass(out, 40, 2), 0.0, 0.6)
-
-
-# --------------------------------------------------------------------------
-# game.jumpscare_1..2 (S) - brutally loud
+# game.jumpscare_1..3 - extremely loud (dense master, <= -1 dBTP)
 # --------------------------------------------------------------------------
 def jumpscare(rng, i=1):
-    dur = 2.3 if i == 1 else 1.9
+    dur = {1: 2.2, 2: 2.4, 3: 1.7}[i]
     n = ns(dur)
-    tt = np.arange(n) / SR
     out = np.zeros((2, n))
-    body = dsp.env_pts(n, [(0, 1.0), (0.9 if i == 1 else 0.75, 0.95), (dur - 0.15, 0.12), (dur, 0.0)])
-    # scream layers (wide)
-    if i == 1:
-        layers = [([(0, 700), (0.25, 1150), (1.0, 1250), (dur, 700)], -0.6, 1.0),
-                  ([(0, 930), (0.2, 1480), (1.0, 1390), (dur, 900)], 0.6, 0.85),
-                  ([(0, 520), (0.3, 640), (1.0, 600), (dur, 380)], 0.0, 0.7)]
-    else:
-        layers = [([(0, 1250), (0.12, 1750), (0.9, 1650), (dur, 1100)], -0.5, 1.0),
-                  ([(0, 1600), (0.15, 2050), (0.9, 1900), (dur, 1300)], 0.5, 0.8),
-                  ([(0, 780), (0.2, 900), (1.0, 820), (dur, 600)], 0.0, 0.5)]
-    for pts, p, g in layers:
-        y, _ = sfx_bride._scream_layer(n, pts, body, rng, sub=0.5, flutter=0.04, breaks=2, breath=0.4)
-        car = np.sin(dsp.TAU * np.cumsum(rng.uniform(90, 160) * (1 + 0.2 * dsp.smooth(n, rng, 5))) / SR)
-        y = y * 0.7 + 0.5 * y * car
-        y = dsp.sat(y / (np.max(np.abs(y)) + 1e-9) * 3.0, 1.0)
-        out += dsp.pan(y, p) * g
-    # string cluster stab, sul ponticello tremolo
-    cl = ["E5", "F5", "F#5", "A#4", "B4", "C6", "C#6"] if i == 1 else ["G5", "G#5", "A5", "D#6", "E6", "C#5"]
-    st = ins.strings([dsp.hz(x) for x in cl], dur, rng, env=body, voices=3, detune=25, vib_depth=30, trem=0.5,
-                     trem_rate=16, bright=0.9, pont=0.7)
-    out += st / (np.max(np.abs(st)) + 1e-9) * 0.7
-    # distorted noise burst
-    nz = np.vstack([dsp.bandpass(rng.standard_normal(n), 400, 7000, 2) for _ in range(2)])
-    out += dsp.sat(nz * 2, 1.0) * dsp.env_pts(n, [(0, 1.0), (0.25, 0.25), (1.0, 0.06), (dur, 0)]) * 0.35
-    # impact transient
+    body = dsp.env_pts(n, [(0, 1.0), (dur * 0.45, 0.95), (dur - 0.15, 0.15), (dur, 0.0)])
+    epis = [(0, 3.93), (0.14, 3.93), (0.18, 0), (0.5, 0), (0.54, 3.3), (0.85, 3.3), (0.9, 3.92), (1.3, 3.92),
+            (1.34, 3.5), (1.6, 3.5), (1.64, 3.94), (dur, 3.94)]
+    if i == 1:  # 覗き-type: a shriek with a second throat a tritone below
+        s = MO._shriek_core(rng, dur, 1600, chaos=epis, jumps=[(0.5, 5, 0.12), (1.3, -4, None)], biphon_at=0.9,
+                            vowels=[(0, "i"), (0.4, "a"), (dur, "a")], rough=(0.7, 70, 0.6))
+        out += dsp.pan(_nrm(s) * body, 0.0) * 1.0
+        s2 = MO._shriek_core(rng, dur, 2050, chaos=epis[::-1][::-1], jumps=[(0.8, -6, None)], biphon_at=0.4,
+                             vowels=[(0, "e"), (dur, "i")], rough=(0.6, 85, 0.6), scale=1.2)
+        out += _wide(_nrm(s2) * body, rng, 0.02)[:, :n] * 0.35
+        cl = ["E5", "F5", "F#5", "A#4", "B4", "C6", "C#6"]
+    elif i == 2:  # the giant: a roar with a scream inside it
+        r = MO.oyama_roar(rng, 1)[:n]
+        out += _wide(_nrm(dsp.pad_to(r, n)) * body, rng)[:, :n] * 0.8
+        s, _ = V.scream(dur, rng, [(0, 900), (0.1, 1300), (1.2, 1200), (dur, 700)], [(0, 1.0), (dur * 0.6, 0.9), (dur, 0)],
+                        vowel_pts=[(0, "a"), (dur, "e")], chaos_pts=epis, jumps=[(0.7, 4, None)], rough=(0.7, 66, 0.6),
+                        rasp=1.0, breath=0.5)
+        out += dsp.pan(_nrm(s), 0.25) * 0.9
+        cl = ["D3", "D#3", "A3", "G#4", "D5", "D#5"]
+    else:  # 後ろ: a scream inside your ear, then the signal tears
+        s = MO.ushiro_attack(rng, 1)
+        s = dsp.pad_to(_nrm(s), n)
+        out += np.vstack([s, s * 0.5])
+        cl = ["G5", "G#5", "A5", "D#6", "E6", "C#5"]
+    st = _cluster(cl, dur, rng, body, voices=3, detune=28, vib_depth=35, trem=0.55, trem_rate=17, bright=0.95, pont=0.8)
+    out += st / (np.max(np.abs(st)) + 1e-9) * 0.3
+    nz = np.vstack([dsp.bandpass(rng.standard_normal(n), 400, 9000, 2) for _ in range(2)])
+    out += dsp.sat(nz * 2.5, 1.0) * dsp.env_pts(n, [(0, 1.0), (0.12, 0.35), (0.3, 0.0), (dur, 0)]) * 0.45
     m = ns(0.05)
     tr = rng.standard_normal(m) * np.exp(-np.arange(m) / (0.008 * SR))
-    dsp.place(out, np.vstack([tr, tr]) * 1.5, 0)
-    if i == 2:  # clatter + stutter glitch
-        for k in range(16):
-            c = ins.wood_hit(rng, ins.CERAMIC, size=rng.uniform(0.8, 1.3), hardness=0.95, vel=rng.uniform(0.4, 1.0), dur=0.1)
-            dsp.place(out, dsp.pan(c, rng.uniform(-0.8, 0.8)), rng.uniform(0, 0.8))
-        seg = out[:, ns(0.05): ns(0.08)].copy()
-        for k in range(5):
-            dsp.place(out, seg * 0.6, 0.9 + k * 0.032)
-    out = dsp.highpass(out, 110, 2)
-    out = out / (np.max(np.abs(out)) + 1e-9)
-    # sub hit: short punch (with harmonics so small speakers carry it)
-    m = ns(0.9)
-    t = np.arange(m) / SR
-    f = 45 + 50 * np.exp(-t / 0.08)
-    sub = dsp.sat(np.sin(dsp.TAU * np.cumsum(f) / SR) * dsp.env_ad(m, 0.002, 0.16) * 2.0, 1.0)
-    dsp.place(out, np.vstack([sub, sub]) * 0.4, 0)
-    out = dsp.highpass(out, 25, 2)
-    # final density stage (maximize to RMS -8 dBFS, true-peak checked after
-    # encoding) happens in gen_sounds.py, norm=('dense', -8, -0.5)
-    return out / (np.max(np.abs(out)) + 1e-9)
-
+    dsp.place(out, np.vstack([tr, tr]) * 1.2, 0)
+    if i == 3:  # stutter glitch: a 31 ms slice repeated like a torn buffer
+        seg = out[:, ns(0.3):ns(0.331)].copy()
+        for k in range(7):
+            dsp.place(out, seg * 0.8, 0.9 + k * 0.031)
+    out = dsp.highpass(out, 120, 2)
+    out = _nrm(out)
+    sub = _sub_drop(0.9, 95, 32, 0.07, 2.4)
+    dsp.place(out, np.vstack([sub, sub]) * 0.28, 0)
+    out = dsp.highpass(out, 30, 2)
+    return _nrm(out)
 
 
 # --------------------------------------------------------------------------
-# game.stinger_1..3 (S) - dissonant cluster swells that slam in
+# game.stinger_1..4 - dissonant cluster swell hits
 # --------------------------------------------------------------------------
 def stinger(rng, i=1):
     if i == 1:
         dur = 3.6
         n = ns(dur)
-        env = dsp.env_pts(n, [(0, 0), (0.07, 1.0), (0.6, 0.75), (dur - 0.2, 0.0), (dur, 0)])
-        st = ins.strings([dsp.hz(x) for x in ["C#5", "D5", "D#5", "G5", "G#5", "C6", "C#6"]], dur, rng, env=env, voices=3,
-                         detune=18, vib_depth=15, trem=0.55, trem_rate=15, bright=0.8, pont=0.6)
-        lo = ins.strings([dsp.hz(x) for x in ["D2", "D#2", "A2"]], dur, rng, env=env, voices=3, detune=12, bright=0.4)
-        out = st / np.max(np.abs(st)) + 0.6 * lo / np.max(np.abs(lo))
+        env = dsp.env_pts(n, [(0, 0), (0.06, 1.0), (0.6, 0.75), (dur - 0.2, 0.0), (dur, 0)])
+        st = _cluster(["C#5", "D5", "D#5", "G5", "G#5", "C6", "C#6"], dur, rng, env, voices=3, detune=18, vib_depth=15,
+                      trem=0.55, trem_rate=15, bright=0.8, pont=0.6)
+        lo = _cluster(["D2", "D#2", "A2"], dur, rng, env, voices=3, detune=12, bright=0.4)
+        out = _nrm(st) + 0.6 * _nrm(lo)
         boom = ins.taiko(rng, f0=48, vel=1.0, decay=0.8, dur=2.5)
         dsp.place(out, np.vstack([boom, boom]) * 0.8, 0.0)
     elif i == 2:
         dur = 4.4
         n = ns(dur)
         th = 1.3
-        cl = [dsp.hz(x) for x in ["C3", "C#3", "G3", "G#3", "D4", "D#4", "A4"]]
-        rev_src = ins.strings(cl, 1.0, rng, env=dsp.env_pts(ns(1.0), [(0, 1), (1.0, 0)]), voices=2, bright=0.7)
+        cl = ["C3", "C#3", "G3", "G#3", "D4", "D#4", "A4"]
+        rev_src = _cluster(cl, 1.0, rng, dsp.env_pts(ns(1.0), [(0, 1), (1.0, 0)]), voices=2, bright=0.7)
         rev = dsp.reverse(dsp.reverb(rev_src, dsp.make_ir(2.5, rng, stereo=True), wet=1.0, dry=0.2))
-        rev = rev / np.max(np.abs(rev)) * 0.8
         out = np.zeros((2, n))
-        dsp.place_end(out, rev, th)
+        dsp.place_end(out, _nrm(rev) * 0.8, th)
         env = dsp.env_pts(n, [(0, 0), (th, 0), (th + 0.04, 1.0), (th + 0.8, 0.6), (dur - 0.2, 0), (dur, 0)])
-        hit = ins.strings(cl + [dsp.hz("C2"), dsp.hz("C#2")], dur, rng, env=env, voices=3, detune=20, trem=0.3, bright=0.6, pont=0.3)
-        out += hit / np.max(np.abs(hit))
+        hit = _cluster(cl + ["C2", "C#2"], dur, rng, env, voices=3, detune=20, trem=0.3, bright=0.6, pont=0.3)
+        out += _nrm(hit)
         tk = ins.taiko(rng, f0=52, vel=1.0, decay=0.7, dur=2.0)
         dsp.place(out, np.vstack([tk, tk]) * 0.9, th)
-    else:
+    elif i == 3:
         dur = 3.4
         n = ns(dur)
         env = dsp.env_pts(n, [(0, 0), (0.55, 1.0), (1.2, 0.8), (dur - 0.2, 0), (dur, 0)]) ** 1.3
         gl = dsp.env_pts(n, [(0, -500), (0.6, 0), (dur, 60)])
         st = ins.strings([dsp.hz(x) for x in ["E6", "F6", "A#5", "B5", "F#6"]], dur, rng, env=env, voices=3, detune=30,
                          vib_depth=25, trem=0.6, trem_rate=18, bright=1.0, pont=0.9, gliss=gl)
-        out = st / np.max(np.abs(st))
+        out = _nrm(st)
         wh = dsp.tv_filter(rng.standard_normal(n), dsp.env_pts(n, [(0, 300), (0.6, 3000), (dur, 500)]), 1.5, "bp")
         out += np.vstack([wh, wh]) / np.std(wh) * env * 0.12
-        m = ns(1.6)
-        t = np.arange(m) / SR
-        sub = np.sin(dsp.TAU * np.cumsum(28 + 40 * np.exp(-t / 0.2)) / SR) * dsp.env_ad(m, 0.003, 0.5)
+        sub = _sub_drop(1.6, 68, 28, 0.2, 1.6)
         dsp.place(out, np.vstack([sub, sub]) * 0.9, 0.58)
+    else:  # low brass cluster slam + taiko + metal scrape
+        dur = 4.0
+        n = ns(dur)
+        env = dsp.env_pts(n, [(0, 0), (0.05, 1.0), (0.5, 0.7), (dur - 0.3, 0), (dur, 0)])
+        out = _brass_cluster([36.71, 38.89, 55.0, 51.91, 73.42, 103.83], dur, rng, env)
+        tk = ins.taiko(rng, f0=44, vel=1.0, decay=1.0, dur=3.0, size=1.6)
+        dsp.place(out, np.vstack([tk, tk]) * 0.9, 0.0)
+        m = ns(1.6)
+        x = np.linspace(0, 1, m)
+        sc = np.zeros(m)
+        for f in (1630, 2290, 3110, 4570):
+            sc += np.sin(TAU * np.cumsum(f * dsp.cents(-500 * x + 20 * dsp.smooth(m, rng, 8))) / SR) * rng.uniform(0.3, 1)
+        sc *= np.sin(np.pi * x) ** 1.5
+        dsp.place(out, dsp.pan(sc, np.linspace(-0.8, 0.8, m)) * 0.06, 0.1)
     ir = dsp.make_ir(2.4, rng, stereo=True, predelay=0.02)
     out = dsp.reverb(out, ir, wet=0.3)
     out = dsp.highpass(out, 30, 2)
@@ -164,525 +140,280 @@ def stinger(rng, i=1):
     return dsp.trim(out, -60)
 
 
-# --------------------------------------------------------------------------
-# game.chase (S) - 16 s seamless loop at 135 BPM (36 beats)
-# --------------------------------------------------------------------------
-def chase(rng, i=1):
-    L = 16.0
-    n = ns(L)
-    beat = L / 36.0
-    s16 = beat / 4.0
+def _brass_cluster(freqs, dur, rng, env):
+    n = ns(dur)
     out = np.zeros((2, n))
-    low_pat = "x.....x.x......."
-    mid_pat = "..x.x..x..x.x.xx"
-    mid_pat2 = "x.xxx.xxx.xxx.xx"
-    rim_pat = ".x.x.x.x.x.x.x.x"
-    big = [ins.taiko(rng, f0=54, vel=1.0, decay=0.5, dur=1.2, size=1.3) for _ in range(3)]
-    mid = [ins.taiko(rng, f0=92, vel=0.8, decay=0.25, dur=0.6, size=0.8, stick=0.8) for _ in range(4)]
-    for bar in range(9):
-        b0 = bar * 4 * beat
-        if bar == 8:  # fill: 16th roll crescendo on mid drums, big hits on 1 and 3
-            for k in range(16):
-                v = 0.4 + 0.6 * k / 15
-                dsp.place(out, dsp.pan(mid[k % 4], -0.3 + 0.6 * (k % 2)) * v, b0 + k * s16, circular=True)
-            for k in (0, 8, 14):
-                dsp.place(out, dsp.pan(big[k % 3], 0.0) * 0.9, b0 + k * s16, circular=True)
-            continue
-        dense = bar >= 4
-        for k in range(16):
-            t = b0 + k * s16 + rng.normal(0, 0.003)
-            if low_pat[k] == "x":
-                dsp.place(out, dsp.pan(big[rng.integers(3)], rng.uniform(-0.15, 0.15)) * (1.0 if k == 0 else 0.8), t, circular=True)
-            mp = mid_pat2 if dense else mid_pat
-            if mp[k] == "x":
-                dsp.place(out, dsp.pan(mid[rng.integers(4)], rng.uniform(-0.5, 0.5)) * rng.uniform(0.5, 0.85), t, circular=True)
-            if rim_pat[k] == "x":
-                rim = ins.kakko_hit(rng, 0.18 if dense else 0.12)
-                dsp.place(out, dsp.pan(rim, 0.6 if k % 4 == 1 else -0.6), t, circular=True)
-    drums = out.copy()
-    # pulsing bass: D/Eb alternation, 8th-note pumping
-    tt = np.arange(n) / SR
-    ph8 = (tt / (beat / 2)) % 1.0
-    pump = np.exp(-ph8 / 0.35)
-    bass_f = np.where(tt < 16 * beat, dsp.hz("D2"), np.where(tt < 32 * beat, dsp.hz("Eb2"), dsp.hz("D2") * dsp.cents((tt - 32 * beat) / (4 * beat) * 300)))
-    bass_f = dsp.lowpass0(bass_f, 30)
-    bass = dsp.saw(bass_f, n, loop=True) + 0.6 * dsp.saw(bass_f * 1.003, n, 0.3, loop=True)
-    bass = dsp.circ(lambda x: dsp.lowpass(x, 420, 3), bass) * pump
-    # tremolo dissonant strings (rate locked to 16ths -> periodic)
-    trem_rate = 1.0 / s16
-    def trem_voice(f, depth=0.6):
-        fv = f * dsp.cents(rng.normal(0, 9) + 6 * dsp.smooth(n, rng, 0.5))
-        s = dsp.saw(fv, n, rng.random(), loop=True)
-        ph = trem_rate * tt + rng.random()
-        return s * ((1 - depth) + depth * (0.5 + 0.5 * np.cos(dsp.TAU * ph)) ** 1.5)
-    strings = np.zeros((2, n))
-    for nm in ["D4", "Eb4", "Ab4", "D5", "Eb5"]:
+    for f in freqs:
         for v in range(3):
-            strings += dsp.pan(trem_voice(dsp.hz(nm)), rng.uniform(-0.8, 0.8))
-    hi_env = np.clip((tt - 16 * beat) / (16 * beat), 0, 1) ** 1.5
-    hi_env = np.where(tt >= 32 * beat, 1.0 - (tt - 32 * beat) / (4 * beat), hi_env)
-    for nm in ["A5", "Bb5", "E6"]:
+            fv = f * dsp.cents(rng.normal(0, 8)) * dsp.cents(dsp.env_pts(n, [(0, -60), (0.08, 0), (dur, 0)]))
+            s = dsp.saw(fv, n, rng.random())
+            out += dsp.pan(s, rng.uniform(-0.6, 0.6))
+    bright = 300 + 2600 * env
+    out = np.vstack([dsp.tv_filter(out[c], bright, 0.8, "lp", block=128) for c in range(2)])
+    out = dsp.am(out, 31.0, 0.15)
+    return _nrm(out) * env
+
+
+# --------------------------------------------------------------------------
+# game.riser_1..2 - rising tension that cuts to silence
+# --------------------------------------------------------------------------
+def riser(rng, i=1):
+    dur = 5.2 if i == 1 else 4.3
+    n = ns(dur)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    prog = np.clip(t / dur, 0, 1)
+    # accelerating Shepard rise (the rate itself climbs)
+    rate = 0.2 + 1.4 * prog ** 2
+    ph_oct = np.cumsum(rate) / SR
+    sh = np.zeros(n)
+    for k in range(7):
+        pos = (ph_oct / 7.0 + k / 7.0) % 1.0
+        f = 40.0 * 2 ** (7.0 * pos)
+        sh += np.sin(TAU * np.cumsum(f) / SR) * np.sin(np.pi * pos) ** 2
+    out += _wide(sh, rng)[:, :n] * 0.18 * (0.3 + 0.7 * prog)
+    nz = rng.standard_normal(n)
+    fc = 200 * 2 ** (prog * 5.5)
+    rs = dsp.tv_filter(nz, fc, 1.6, "bp")
+    out += np.vstack([rs, np.roll(rs, 200)]) / np.std(rs) * 0.1 * prog ** 1.5
+    cl = ["D4", "D#4", "G#4", "A4", "D5"] if i == 1 else ["C#5", "D5", "G5", "G#5"]
+    st = _cluster(cl, dur, rng, prog ** 1.8, voices=3, detune=20, trem=0.6, trem_rate=8, bright=0.7, pont=0.5,
+                  gliss=dsp.env_pts(n, [(0, 0), (dur, 150)]))
+    out += _nrm(st) * 0.45
+    beat = 0.9
+    tt = 0.2
+    while tt < dur - 0.15:  # heartbeat accelerating
+        hb = ins.heartbeat(rng, vel=0.5 + 0.5 * tt / dur)
+        dsp.place(out, np.vstack([hb, hb]) * 0.9, tt)
+        tt += beat
+        beat = max(0.28, beat * 0.88)
+    if i == 2:  # a whisper rides the swell: 「うしろ」
+        w = V.whisper("u shi ro", rng, rate=0.9, close=0.8)
+        dsp.place(out, dsp.pan(_nrm(w), -0.85) * 0.25, dur - 1.4)
+    out *= (0.15 + 0.85 * prog ** 1.4)[None, :]
+    out = dsp.highpass(out, 30, 2)
+    out = _nrm(out) * 0.9
+    out[:, -ns(0.003):] *= np.linspace(1, 0, ns(0.003))[None, :]  # cut to silence
+    return out
+
+
+# --------------------------------------------------------------------------
+# game.capture - violent rush, choir cluster, cut to silence
+# --------------------------------------------------------------------------
+def _choir(rng, freqs, dur, env, vowel="a", table=V.VM):
+    n = ns(dur)
+    out = np.zeros((2, n))
+    for f in freqs:
         for v in range(2):
-            strings += dsp.pan(trem_voice(dsp.hz(nm), 0.7) * hi_env * 0.8, rng.uniform(-0.9, 0.9))
-    strings = dsp.circ(lambda x: dsp.lowpass(x, 5000, 2), strings)
-    strings = dsp.circ(lambda x: dsp.peq(x, 2800, 1.0, 4.0), strings)
-    cresc = 0.65 + 0.35 * np.interp(tt, [0, 32 * beat, 34 * beat, L], [0, 1, 1, 0])
-    strings *= cresc
-    # scraping metal every two bars
-    scr = np.zeros((2, n))
-    for k, t0 in enumerate([1.5 * beat, 9.5 * beat, 17.5 * beat, 25.5 * beat, 31.0 * beat]):
-        d = beat * (3.0 if k < 4 else 4.5)
-        m = ns(d)
-        x = np.linspace(0, 1, m)
-        e = np.sin(np.pi * x) ** 1.5
-        s = np.zeros(m)
-        g0 = rng.uniform(-200, 200)
-        for f in [1630, 2290, 3110, 4570, 6230]:
-            fr = f * dsp.cents(g0 + 300 * x * rng.choice([-1, 1]) + 20 * dsp.smooth(m, rng, 8))
-            s += np.sin(dsp.TAU * np.cumsum(fr) / SR) * rng.uniform(0.3, 1.0)
-        fr_n = ins.friction_pulses(d, rng, 180 + 120 * x, e, jitter=0.4)
-        s = s * e * (0.6 + 0.4 * dsp.lowpass(np.abs(fr_n), 50, 1) / (np.max(np.abs(fr_n)) + 1e-9) * 8)
-        s += dsp.bandpass(rng.standard_normal(m), 2500, 8000, 2) * e * 0.4
-        p = np.linspace(rng.uniform(-0.9, 0), rng.uniform(0, 0.9), m)
-        dsp.place(scr, dsp.pan(s, p), t0, circular=True)
-    mixd = drums / (np.max(np.abs(drums)) + 1e-9) * 1.0 + np.vstack([bass, bass]) / (np.max(np.abs(bass)) + 1e-9) * 0.35
-    mixd += strings / (np.max(np.abs(strings)) + 1e-9) * 0.4 + scr / (np.max(np.abs(scr)) + 1e-9) * 0.18
-    ir = dsp.make_ir(1.6, rng, stereo=True, predelay=0.015)
-    mixd = dsp.circ_reverb(mixd, ir, wet=0.3, dry=0.9)
-    mixd = dsp.dc_block(mixd, circular=True)
-    return mixd
+            ff = f * dsp.cents(rng.normal(0, 12) + 18 * np.sin(TAU * rng.uniform(4.5, 6.0) * np.arange(n) / SR + rng.random() * 6))
+            vv = V.voice(ff, env, [(0, V.fs(vowel, table)), (dur, V.fs("o", table))], rng, tilt=-7, fmax=7000,
+                         jitter=0.01, shimmer=0.08, breath=0.3)
+            out += dsp.pan(vv / (np.std(vv) + 1e-9), rng.uniform(-0.8, 0.8))
+    return out
+
+
+def capture(rng, i=1):
+    dur = 3.0
+    cut = 2.45
+    n = ns(dur)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    env = np.clip(t / cut, 0, 1) ** 1.5 * (t < cut)
+    nz = rng.standard_normal(n)
+    rush = dsp.tv_filter(nz, 150 * 2 ** (np.clip(t / cut, 0, 1) * 5), 0.9, "bp")
+    out += np.vstack([rush, np.roll(rush, 300)]) / np.std(rush) * env * 0.35
+    ch = _choir(rng, [146.83, 155.56, 207.65, 220.0, 293.66, 311.13], dur, env)
+    chf = _choir(rng, [587.33, 622.25, 830.61], dur, env, vowel="i", table=V.VF)
+    out += _nrm(ch) * 0.6 + _nrm(chf) * 0.3
+    sub = dsp.sub_rumble(n, 36.71, rng=rng, am_rate=7.0, am_depth=0.5)
+    out += np.vstack([sub, sub]) * env * 0.4
+    out = dsp.highpass(out, 25, 2) * (t < cut)[None, :]
+    out = _nrm(out) * 0.95
+    k = ns(cut)
+    out[:, k - ns(0.002):k] *= np.linspace(1, 0, ns(0.002))[None, :]
+    return out
 
 
 # --------------------------------------------------------------------------
-# game.phase (S, 6 s) - reversed swell -> deep boom + bell
+# game.wake / game.checkpoint / game.area / game.fog_lift / game.loop
 # --------------------------------------------------------------------------
-def phase(rng, i=1):
+def wake(rng, i=1):
+    dur = 4.0
+    n = ns(dur)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    tt, gap = 0.15, 0.62
+    while tt < dur - 0.4:
+        hb = ins.heartbeat(rng, vel=min(1.0, 0.25 + tt / 2.0))
+        dsp.place(out, np.vstack([hb, hb]) * 1.2, tt)
+        tt += gap
+        gap = min(0.9, gap * 1.07)
+    ring = (np.sin(TAU * 5300 * t) + 0.3 * np.sin(TAU * 7950 * t + 1)) * dsp.env_pts(n, [(0, 0), (0.6, 1.0), (2.4, 0.4), (dur, 0)])
+    out += np.vstack([ring, ring * 0.8]) * 0.04
+    amb = np.vstack([dsp.colored(n, rng, -3.0, lo=100, hi=6000) for _ in range(2)])
+    fc = 300 + 7000 * np.clip((t - 1.0) / 2.5, 0, 1) ** 2  # hearing comes back
+    amb = np.vstack([dsp.tv_filter(amb[c], fc, 0.7, "lp", block=256) for c in range(2)])
+    out += amb * 0.03 * np.clip(t / 1.5, 0, 1)
+    return dsp.fade(dsp.highpass(out, 25, 2), 0.3, 0.6)
+
+
+def checkpoint(rng, i=1):
+    dur = 3.2
+    n = ns(dur)
+    out = np.zeros((2, n))
+    for t0, nm, p in ((0.05, "D6", -0.3), (0.42, "A5", 0.3), (0.9, "F6", 0.0)):
+        tn = ins.tine(dsp.hz(nm, rng.uniform(-12, 8)), rng, vel=0.8)
+        dsp.place(out, dsp.pan(tn, p), t0)
+    env = dsp.env_pts(n, [(0, 0), (0.8, 1.0), (2.2, 0.7), (dur, 0)])
+    pad = _cluster(["D3", "A3", "F4"], dur, rng, env, voices=3, detune=8, vib_depth=5, bright=0.15)
+    out += dsp.lowpass(pad, 1500, 2) / (np.max(np.abs(pad)) + 1e-9) * 0.25
+    out = dsp.reverb(out, dsp.make_ir(3.0, rng, stereo=True, predelay=0.02), wet=0.45)
+    return dsp.fade(dsp.pad_to(dsp.highpass(out, 40, 2), n), 0.0, 0.8)
+
+
+def area(rng, i=1):
+    dur = 4.0
+    n = ns(dur)
+    th = 1.2
+    out = np.zeros((2, n))
+    src = ins.piano(dsp.hz("D2"), 1.5, rng, vel=0.9) + ins.piano(dsp.hz("D#3"), 1.5, rng, vel=0.6) + ins.piano(dsp.hz("A3"), 1.5, rng, vel=0.6)
+    rv = dsp.reverse(dsp.reverb(src, dsp.make_ir(3.0, rng, stereo=True), wet=1.0, dry=0.0))
+    dsp.place_end(out, _nrm(rv) * 0.6, th)
+    tk = ins.taiko(rng, f0=42, vel=1.0, decay=1.2, dur=2.8, size=1.7)
+    sub = _sub_drop(2.0, 60, 30, 0.3, 1.5)
+    dsp.place(out, np.vstack([tk, tk]) * 0.8, th)
+    dsp.place(out, np.vstack([sub, sub]) * 0.6, th)
+    out = dsp.reverb(out, dsp.make_ir(2.8, rng, stereo=True, predelay=0.03), wet=0.35)
+    return dsp.fade(dsp.pad_to(dsp.highpass(out, 25, 2), n), 0.0, 0.8)
+
+
+def fog_lift(rng, i=1):
+    dur = 5.0
+    n = ns(dur)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    nz = rng.standard_normal((2, n))
+    fc = dsp.env_pts(n, [(0, 1800), (1.0, 900), (dur, 4000)])
+    env = dsp.env_pts(n, [(0, 0), (0.3, 1.0), (1.5, 0.7), (dur, 0)]) ** 1.3
+    for c in range(2):
+        w = dsp.tv_filter(nz[c], fc, 0.8, "bp")
+        out[c] = w / np.std(w) * env * 0.25 * (1 + (0.6 if c else -0.6) * np.clip(t / dur, 0, 1))  # rushing out to the sides
+    rin = dsp.mix(ins.rin(rng, 1180.0, 4.5, 1.0), ins.rin(rng, 1771.0, 4.0, 0.5))
+    dsp.place(out, np.vstack([rin, np.roll(rin, 220)]) * 0.35, 0.6)
+    j = ins.suzu_jingle(rng, 3.5, [(0.0, 0.8), (0.12, 0.5)], n_hits=(4, 7))
+    dsp.place(out, dsp.pan(j, 0.2) * 0.3, 0.62)
+    out = dsp.reverb(out, dsp.make_ir(3.2, rng, stereo=True, predelay=0.03), wet=0.4)
+    return dsp.fade(dsp.pad_to(dsp.highpass(out, 40, 2), n), 0.0, 1.0)
+
+
+def loop(rng, i=1):
+    dur = 3.2
+    n = ns(dur)
+    out = np.zeros((2, n))
+    m = ns(1.0)
+    tt = np.arange(m) / SR
+    wh = dsp.tv_filter(rng.standard_normal(m), 3000 * 2 ** (-tt * 3.0), 1.2, "bp") * np.exp(-tt / 0.3)
+    wh = dsp.reverse(wh)  # reverse whoosh: sucked back
+    dsp.place(out, np.vstack([wh, np.roll(wh, 400)]) * 0.5 / (np.max(np.abs(wh)) + 1e-9), 0.0)
+    env = dsp.env_pts(n, [(0, 0), (0.9, 0.0), (1.8, 1.0), (2.3, 0.6), (dur, 0)])
+    st = _cluster(["D4", "D#4", "A4", "G#4"], dur, rng, env, voices=3, detune=25, vib_depth=20, trem=0.3, bright=0.6, pont=0.4)
+    out += _nrm(st) * 0.4
+    w = V.whisper("o ka e ri", rng, scale=1.07, rate=0.75, close=1.0, bw=1.25)  # 「おかえり」- welcome back
+    w = dsp.close_mic(w, 5, 4, 3)
+    dsp.place(out, dsp.pan(_nrm(w), -0.9) * 0.4, 1.6)
+    out = dsp.reverb(out, dsp.make_ir(2.0, rng, stereo=True, predelay=0.02), wet=0.25)
+    return dsp.fade(dsp.pad_to(dsp.highpass(out, 40, 2), n), 0.0, 0.5)
+
+
+# --------------------------------------------------------------------------
+# game.car - door, engine struggling, then it catches
+# --------------------------------------------------------------------------
+def _engine(rng, rpm, dur, roughness=0.1, load=1.0):
+    n = ns(dur)
+    rpm = np.broadcast_to(np.asarray(rpm, float), (n,))
+    fire = rpm / 60.0 * 2.0  # 4-cylinder 4-stroke: 2 firings per revolution
+    ph = np.cumsum(fire * (1 + roughness * 0.05 * dsp.smooth(n, rng, 20.0))) / SR
+    pulses = (0.5 + 0.5 * np.cos(TAU * ph)) ** 6
+    y = pulses * (1 + roughness * dsp.smooth(n, rng, 30.0))
+    y = dsp.lowpass(y, 900, 2) + 0.3 * dsp.bandpass(rng.standard_normal(n), 200, 2000, 2) * pulses
+    y += 0.08 * np.sin(TAU * np.cumsum(rpm / 60.0 * 7.3) / SR)  # belt / alternator whine
+    return y * load
+
+
+def car(rng, i=1):
     dur = 6.0
+    n = ns(dur)
+    y = np.zeros(n)
+    dsp.place(y, ins.modal_hit(rng, ins.METAL, size=1.2, hardness=0.9, vel=0.4, dur=0.2), 0.05)  # handle
+    m = ns(0.4)
+    tt = np.arange(m) / SR
+    thunk = np.sin(TAU * np.cumsum(90 + 60 * np.exp(-tt / 0.02)) / SR) * dsp.env_ad(m, 0.002, 0.07)
+    thunk += dsp.lowpass(rng.standard_normal(m), 800, 2) * dsp.env_ad(m, 0.001, 0.02) * 0.5
+    dsp.place(y, thunk, 0.55)  # door shuts
+    dsp.place(y, ins.modal_hit(rng, ins.METAL, size=0.9, hardness=1.0, vel=0.5, dur=0.25), 0.56)
+    dsp.place(y, ins.modal_hit(rng, ins.KEYS, size=1.0, hardness=1.0, vel=0.3, dur=0.3), 1.0)  # key turns
+
+    def crank(t0, d, fails=True):
+        mm = ns(d)
+        tt2 = np.arange(mm) / SR
+        rpm = 210 + 30 * np.sin(TAU * 1.3 * tt2)
+        comp = _engine(rng, rpm, d, roughness=0.5)
+        whine = np.sin(TAU * np.cumsum(np.full(mm, 380.0) * (1 + 0.05 * np.sin(TAU * 7 * tt2))) / SR) * 0.25
+        gears = dsp.bandpass(rng.standard_normal(mm), 1500, 5000, 2) * 0.12
+        env = dsp.env_pts(mm, [(0, 0), (0.05, 1), (d - 0.08, 1), (d, 0)])
+        dsp.place(y, (comp * 0.9 + whine + gears) * env, t0)
+    crank(1.15, 1.25)
+    crank(2.75, 1.0)
+    t0 = 3.85
+    mm = n - ns(t0)
+    tt3 = np.arange(mm) / SR
+    rpm = np.interp(tt3, [0, 0.08, 0.35, 0.8, 2.15], [220, 600, 1900, 1100, 820])
+    eng = _engine(rng, rpm, mm / SR, roughness=np.interp(tt3, [0, 0.3, 2.0], [0.6, 0.3, 0.12]) * 1.0)
+    for k in range(4):  # first misfires / pops
+        mpop = ns(0.02)
+        dsp.place(eng, rng.standard_normal(mpop) * np.exp(-np.arange(mpop) / (0.003 * SR)) * 0.8, rng.uniform(0.02, 0.25))
+    dsp.place(y, eng * dsp.env_pts(mm, [(0, 0), (0.05, 1.0), (mm / SR, 0.9)]), t0)
+    y = dsp.reverb(y, dsp.make_ir(1.2, rng, predelay=0.01, lp_hz=5000), wet=0.25)
+    y = dsp.pad_to(dsp.highpass(y, 30, 2), n)
+    return dsp.fade(np.vstack([y, np.roll(y, ns(0.004))]), 0.0, 0.3)
+
+
+def title_hit(rng, i=1):
+    dur = 5.0
+    n = ns(dur)
+    out = np.zeros((2, n))
+    tk = ins.taiko(rng, f0=40, vel=1.0, decay=1.4, dur=3.5, size=1.9)
+    sub = _sub_drop(3.0, 70, 27, 0.35, 1.8)
+    dsp.place(out, np.vstack([tk, tk]) * 0.9, 0.02)
+    dsp.place(out, np.vstack([sub, sub]) * 0.7, 0.02)
+    b = ins.bonsho(73.42, 4.5, rng)
+    dsp.place(out, np.vstack([b, np.roll(b, 300)]) * 0.25, 0.03)
+    out = dsp.reverb(out, dsp.make_ir(3.5, rng, stereo=True, predelay=0.03), wet=0.4)
+    return dsp.fade(dsp.pad_to(dsp.highpass(out, 22, 2), n), 0.0, 1.2)
+
+
+def kamikakushi(rng, i=1):
+    dur = 5.2
     n = ns(dur)
     th = 1.5
     out = np.zeros((2, n))
-    src = mixsrc = ins.bonsho(110.0, 1.2, rng) * 0.6 + ins.suzu_jingle(rng, 1.2, [(0, 0.8)], n_hits=(3, 5)) * 0.5
-    rv = dsp.reverse(dsp.reverb(mixsrc, dsp.make_ir(3.0, rng, stereo=True), wet=1.0, dry=0.0))
-    rv = rv / np.max(np.abs(rv)) * 0.7
-    dsp.place_end(out, rv, th)
-    boom = ins.taiko(rng, f0=42, vel=1.0, decay=1.1, dur=3.5, size=1.6)
-    m = ns(3.0)
-    t = np.arange(m) / SR
-    sub = np.sin(dsp.TAU * np.cumsum(30 + 35 * np.exp(-t / 0.25)) / SR) * dsp.env_ad(m, 0.003, 0.9)
-    dsp.place(out, np.vstack([boom, boom]) * 0.9 + 0.0, th)
-    dsp.place(out, np.vstack([sub, sub]) * 0.8, th)
-    bell = ins.bonsho(110.0, dur - th, rng)
-    dsp.place(out, dsp.pan(dsp.lowpass(bell, 3000), 0.0) * 0.55, th + 0.01)
-    jg = ins.suzu_jingle(rng, 3.0, [(0, 0.9), (0.15, 0.5)], n_hits=(4, 7))
-    dsp.place(out, dsp.pan(jg, 0.3) * 0.35, th + 0.02)
-    ir = dsp.make_ir(3.0, rng, stereo=True, predelay=0.03)
-    out = dsp.reverb(out, ir, wet=0.35)
-    out = dsp.pad_to(out, n)
-    out = dsp.highpass(out, 25, 2)
-    return dsp.fade(out, 0.0, 1.0)
-
-
-# --------------------------------------------------------------------------
-# game.death (S, 5 s) - descending rumble, heartbeat stopping, ringing
-# --------------------------------------------------------------------------
-def death(rng, i=1):
-    dur = 5.0
-    n = ns(dur)
+    sw = np.zeros(ns(1.6))
+    for k in range(5):
+        w = V.whisper(["ka mi ka ku shi", "o ka e ri", "mo u", "ka e sa na i", "ko q chi"][k], rng,
+                      scale=rng.uniform(0.95, 1.1), rate=rng.uniform(0.9, 1.2))
+        dsp.place(sw, w * rng.uniform(0.5, 1.0), rng.uniform(0, 0.6))
+    sw = sw + ins.suzu_jingle(rng, 1.6, [(0.0, 0.8), (0.3, 0.6), (0.6, 0.7)], n_hits=(3, 6)) * 0.3
+    rv = dsp.reverse(dsp.reverb(sw, dsp.make_ir(2.8, rng, stereo=True), wet=1.0, dry=0.3))
+    dsp.place_end(out, _nrm(rv) * 0.7, th)
+    b = ins.bonsho(61.74, dur - th, rng) + 0.6 * ins.bonsho(65.41, dur - th, rng)  # B1 + C2: a minor second of bells
+    dsp.place(out, np.vstack([b, np.roll(b, 500)]) * 0.45, th)
+    env = dsp.env_pts(n, [(0, 0), (th, 0), (th + 0.05, 1.0), (dur, 0)])
+    cl = _choir(rng, [146.83, 155.56, 220.0, 233.08], dur, env * 0.8)
+    out += _nrm(cl) * 0.3
     tt = np.arange(n) / SR
-    out = np.zeros((2, n))
-    drop = 2 ** (-np.clip(tt / 3.8, 0, 1) ** 1.3 * 2.2)
-    rum = np.zeros(n)
-    for f, a in [(110, 1.0), (165, 0.5), (220, 0.35), (233, 0.3), (55, 0.8)]:
-        rum += a * np.sin(dsp.TAU * np.cumsum(f * drop) / SR + rng.random() * 6)
-    rum += dsp.lowpass(rng.standard_normal(n), 300, 2) * 1.2
-    rum *= dsp.env_pts(n, [(0, 0.0), (0.08, 1.0), (2.5, 0.7), (4.0, 0.2), (dur, 0.0)])
-    rum = dsp.sat(rum * 0.7, 1.5)
-    out += np.vstack([rum, np.roll(rum, 300)]) * 0.5
-    for t0, v, sc in [(0.15, 1.0, 1.0), (1.05, 0.85, 0.95), (2.15, 0.65, 0.9), (3.6, 0.4, 0.85)]:
-        hb = ins.heartbeat(rng, vel=v, lub_f=(68 * sc, 44 * sc), dub_f=(78 * sc, 54 * sc), gap=0.27 / sc ** 2)
-        dsp.place(out, np.vstack([hb, hb]) * 1.4, t0)
-    ring = np.sin(dsp.TAU * 6800 * tt) + 0.25 * np.sin(dsp.TAU * 8470 * tt)
-    ring *= dsp.env_pts(n, [(0, 0), (3.2, 0.0), (4.0, 0.12), (dur, 0.0)])
-    out += np.vstack([ring, ring])
-    ir = dsp.make_ir(2.5, rng, stereo=True, predelay=0.02, lp_hz=4000)
-    out = dsp.reverb(out, ir, wet=0.3)
-    out = dsp.pad_to(out, n)
-    return dsp.fade(dsp.highpass(out, 25, 2), 0.0, 0.4)
-
-
-# --------------------------------------------------------------------------
-# sliding doors
-# --------------------------------------------------------------------------
-def _slide(rng, d, rough=1.0, pitch=1.0, peak=0.5):
-    m = ns(d)
-    env = dsp.env_pts(m, [(0, 0), (d * 0.15, 0.8), (d * peak, 1.0), (d * 0.9, 0.6), (d, 0)])
-    rate = (90 + 150 * env) * pitch * (1 + 0.2 * dsp.smooth(m, rng, 6))
-    fp = ins.friction_pulses(d, rng, rate, env, jitter=0.45)
-    body = dsp.resbank(fp, [(f * pitch, 8, g) for f, _, g in ins.WOOD_DOOR[:7]])
-    body /= np.max(np.abs(body)) + 1e-9
-    nz = dsp.bandpass(rng.standard_normal(m), 250, 3000, 2) * env * (1 + 0.4 * dsp.smooth(m, rng, 30))
-    return dsp.lowpass(body * 0.6 * rough + nz * 0.5, 4500, 2)
-
-
-def fusuma(rng, i=1):
-    if i == 1:
-        dur, d, end = 1.2, 0.6, 0.25
-    elif i == 2:
-        dur, d, end = 1.2, 0.5, 0.6
-    else:
-        dur, d, end = 1.8, 1.1, 0.2
-    y = np.zeros(ns(dur))
-    s = _slide(rng, d, rough=1.3 if i == 3 else 0.9, pitch=1.0)
-    s = dsp.peq(s, 220, 1.2, 5.0)
-    dsp.place(y, s, 0.02)
-    if i == 3:
-        cr = ins.creak(d, rng, [(0, 60), (d * 0.5, 130), (d, 80)], [(0, 0), (0.1, 0.6), (d * 0.8, 0.5), (d, 0)], pitch=1.2, tonal=0.4)
-        dsp.place(y, cr * 0.25, 0.02)
-    dsp.place(y, ins.wood_hit(rng, ins.WOOD_DOOR, size=1.1, hardness=0.5, vel=end, dur=0.5), 0.02 + d - 0.02)
-    ir = dsp.make_ir(0.7, rng, predelay=0.004)
-    y = dsp.reverb(y, ir, wet=0.25)
-    return dsp.trim(dsp.highpass(y, 60, 2), -60)
-
-
-def closet(rng, i=1):
-    dur = 1.8
-    y = np.zeros(ns(dur))
-    if i == 1:
-        d = 0.85
-        dsp.place(y, _slide(rng, d, rough=1.4, pitch=0.8, peak=0.3), 0.02)
-        cr = ins.creak(0.7, rng, [(0, 40), (0.3, 120), (0.7, 60)], [(0, 0), (0.08, 0.9), (0.6, 0.6), (0.7, 0)], pitch=1.05, tonal=0.5)
-        dsp.place(y, cr * 0.5, 0.0)
-    else:
-        d = 0.45
-        dsp.place(y, _slide(rng, d, rough=1.2, pitch=0.8, peak=0.7), 0.02)
-        dsp.place(y, ins.wood_hit(rng, ins.WOOD_DOOR, size=1.4, hardness=0.45, vel=0.9, dur=0.6), 0.02 + d)
-    y = dsp.peq(y, 180, 1.0, 4.0)
-    ir = dsp.make_ir(0.6, rng, predelay=0.004)
-    y = dsp.reverb(y, ir, wet=0.25)
-    return dsp.trim(dsp.highpass(y, 60, 2), -60)
-
-
-# --------------------------------------------------------------------------
-# fire & light
-# --------------------------------------------------------------------------
-def _flame(rng, d, level=1.0, flicker=1.0):
-    m = ns(d)
-    env = dsp.env_pts(m, [(0, 0), (0.08, 1.0), (d * 0.6, 0.6), (d, 0)])
-    nz = dsp.lowpass(rng.standard_normal(m), 900, 2) * env * (1 + 0.5 * flicker * dsp.smooth(m, rng, 12))
-    nz += dsp.bandpass(rng.standard_normal(m), 800, 3000, 2) * env * 0.15
-    return nz * level
-
-
-def lantern_on(rng, i=1):
-    dur = 1.6
-    y = np.zeros(ns(dur))
-    m = ns(0.14)
-    se = dsp.env_pts(m, [(0, 0), (0.02, 1.0), (0.1, 0.8), (0.14, 0)])
-    strike = dsp.bandpass(rng.standard_normal(m), 1800, 9000, 2) * se * (1 + 0.6 * dsp.smooth(m, rng, 60))
-    strike += ins.crackle(0.14, rng, 900, se, hp=2500) * 0.6
-    dsp.place(y, strike * 0.8, 0.02)
-    m = ns(0.45)
-    fw = dsp.bandpass(rng.standard_normal(m), 200, 3500, 2) * dsp.env_ad(m, 0.04, 0.12)
-    fw += ins.crackle(0.45, rng, 300, dsp.env_ad(m, 0.02, 0.15), hp=1500) * 0.5
-    dsp.place(y, fw * 0.9, 0.12)
-    dsp.place(y, _flame(rng, 0.9, 0.55), 0.35)
-    m = ns(0.35)
-    dsp.place(y, dsp.lowpass(rng.standard_normal(m), 1200, 2) * dsp.env_ad(m, 0.05, 0.1) * 0.6, 0.62)
-    ir = dsp.make_ir(0.5, rng, predelay=0.003)
-    y = dsp.reverb(y, ir, wet=0.15)
-    return dsp.trim(dsp.highpass(y, 80, 2), -60)
-
-
-def lantern_off(rng, i=1):
-    dur = 0.9
-    y = np.zeros(ns(dur))
-    m = ns(0.38)
-    blow = V.vt_noise(m, [(0, V.fs("u", V.VM, f1=0.8))], dsp.env_ad(m, 0.04, 0.12), rng, tilt_db=0.0, bw=1.5)
-    dsp.place(y, blow * 0.5, 0.02)
-    m = ns(0.2)
-    puff = dsp.lowpass(rng.standard_normal(m), 500, 2) * dsp.env_ad(m, 0.005, 0.04)
-    dsp.place(y, puff * 0.7, 0.1)
-    dsp.place(y, _flame(rng, 0.3, 0.25, flicker=2.0) * dsp.env_pts(ns(0.3), [(0, 1), (0.3, 0)]), 0.08)
-    ir = dsp.make_ir(0.5, rng, predelay=0.003)
-    y = dsp.reverb(y, ir, wet=0.15)
-    return dsp.trim(dsp.highpass(y, 80, 2), -60)
-
-
-def candle(rng, i=1):
-    dur = 0.8
-    y = np.zeros(ns(dur))
-    m = ns(0.16)
-    y_ = dsp.bandpass(rng.standard_normal(m), 300, 4500, 2) * dsp.env_ad(m, 0.015, 0.04)
-    y_ += ins.crackle(0.16, rng, 200, dsp.env_ad(m, 0.01, 0.05), hp=2000) * 0.4
-    dsp.place(y, y_ * 0.8, 0.02)
-    dsp.place(y, _flame(rng, 0.5, 0.35), 0.1)
-    ir = dsp.make_ir(0.4, rng, predelay=0.003)
-    y = dsp.reverb(y, ir, wet=0.12)
-    return dsp.trim(dsp.highpass(y, 100, 2), -60)
-
-
-def ofuda_burn(rng, i=1):
-    dur = 2.6
-    n = ns(dur)
-    y = np.zeros(n)
-    m = ns(1.4)
-    fl = dsp.bandpass(rng.standard_normal(m), 150, 4000, 2) * dsp.env_pts(m, [(0, 0), (0.08, 1.0), (0.5, 0.6), (1.4, 0)])
-    fl += ins.crackle(1.4, rng, 500, dsp.env_pts(m, [(0, 0), (0.05, 1), (1.4, 0)]), hp=1500) * 0.7
-    dsp.place(y, fl * 0.8, 0.02)
-    sh = np.zeros(ns(2.4))
-    t = np.arange(len(sh)) / SR
-    for f in [1320, 1980, 2640, 3520, 4410]:
-        fr = f * (1 + 0.15 * np.clip(t / 1.5, 0, 1)) * (1 + 0.004 * np.sin(dsp.TAU * 5.5 * t + rng.random() * 6))
-        sh += np.sin(dsp.TAU * np.cumsum(fr) / SR) * rng.uniform(0.4, 1.0)
-    sh *= dsp.env_pts(len(sh), [(0, 0), (0.5, 1.0), (1.3, 0.7), (2.4, 0)])
-    dsp.place(y, sh * 0.12, 0.15)
-    jg = ins.suzu_jingle(rng, 1.5, [(0.0, 0.5)], n_hits=(2, 4))
-    dsp.place(y, jg * 0.3, 0.2)
-    ir = dsp.make_ir(1.6, rng, predelay=0.01)
-    y = dsp.reverb(y, ir, wet=0.35)
-    return dsp.trim(dsp.highpass(y, 80, 2), -60)
-
-
-def salt(rng, i=1):
-    dur = 1.4
-    y = np.zeros(ns(dur))
-    m = ns(0.25)
-    wh = dsp.bandpass(rng.standard_normal(m), 300, 2500, 2) * dsp.env_ad(m, 0.08, 0.06)
-    dsp.place(y, wh * 0.4, 0.0)
-    m = ns(0.75)
-    env = dsp.env_pts(m, [(0, 0), (0.05, 1.0), (0.3, 0.5), (0.75, 0)])
-    grains = ins.crackle(0.75, rng, 6000, env, hp=3000, decay=0.0002)
-    hiss = dsp.bandpass(rng.standard_normal(m), 3000, 10000, 2) * env * 0.25
-    dsp.place(y, grains * 0.5 + hiss, 0.12)
-    m = ns(0.8)
-    siz = dsp.bandpass(rng.standard_normal(m), 4000, 9000, 2) * dsp.env_ad(m, 0.1, 0.3) * (0.5 + 0.5 * np.abs(dsp.smooth(m, rng, 40)))
-    dsp.place(y, siz * 0.12, 0.3)
-    ir = dsp.make_ir(0.6, rng, predelay=0.003)
-    y = dsp.reverb(y, ir, wet=0.18)
-    return dsp.trim(dsp.highpass(y, 150, 2), -60)
-
-
-# --------------------------------------------------------------------------
-# small objects
-# --------------------------------------------------------------------------
-GLASS = [(2650, 0.18, 1.0), (4380, 0.12, 0.6), (6300, 0.09, 0.4), (8700, 0.06, 0.25)]
-
-
-def _glass_hit(rng, vel):
-    g = ins.wood_hit(rng, GLASS, size=rng.uniform(0.85, 1.15), hardness=1.0, vel=1.0, dur=0.25, noise=0.2)
-    w = ins.wood_hit(rng, ins.WOOD_FLOOR, size=0.5, hardness=0.95, vel=0.8, dur=0.2, noise=0.3)
-    return dsp.mix(g * 0.6, w) * vel
-
-
-def marble(rng, i=1):
-    dur = 2.2
-    n = ns(dur)
-    y = np.zeros(n)
-    if i == 2:
-        t = 0.02
-        for k, v in enumerate([1.0, 0.55, 0.3]):
-            g = ins.wood_hit(rng, GLASS, size=0.75, hardness=1.0, vel=v, dur=0.4, noise=0.15)
-            dsp.place(y, g, t)
-            t += rng.uniform(0.06, 0.1)
-        nb = 2
-    else:
-        nb = 7 if i == 1 else 4
-        t = 0.02
-        dt = rng.uniform(0.22, 0.3)
-        v = 1.0
-        for k in range(nb):
-            dsp.place(y, _glass_hit(rng, v), t)
-            t += dt
-            dt *= 0.68
-            v *= 0.66
-    if i != 3:
-        m = ns(0.9)
-        env = dsp.env_pts(m, [(0, 0), (0.05, 0.6), (0.9, 0)])
-        roll = dsp.bandpass(rng.standard_normal(m), 250, 1800, 2) * env * (0.6 + 0.4 * np.abs(dsp.smooth(m, rng, 25)))
-        dsp.place(y, roll * 0.12, t)
-    ir = dsp.make_ir(0.6, rng, predelay=0.004)
-    y = dsp.reverb(y, ir, wet=0.2)
-    return dsp.trim(dsp.highpass(y, 150, 2), -60)
-
-
-def drawer(rng, i=1):
-    dur = 1.4
-    y = np.zeros(ns(dur))
-    d = 0.6 if i == 1 else 0.35
-    m = ns(d)
-    env = dsp.env_pts(m, [(0, 0), (0.05, 1.0), (d * 0.8, 0.8), (d, 0)])
-    fp = ins.friction_pulses(d, rng, (40 + 60 * env) * (1 + 0.3 * dsp.smooth(m, rng, 5)), env, jitter=0.5)
-    box = dsp.resbank(fp, [(210, 6, 1.0), (330, 7, 0.8), (520, 8, 0.6), (790, 9, 0.4), (1300, 10, 0.25)])
-    box /= np.max(np.abs(box)) + 1e-9
-    nz = dsp.bandpass(rng.standard_normal(m), 300, 2500, 2) * env * 0.35
-    dsp.place(y, dsp.lowpass(box * 0.7 + nz, 4500, 2), 0.02)
-    dsp.place(y, ins.wood_hit(rng, ins.WOOD_DOOR, size=0.8, hardness=0.5, vel=0.6 if i == 1 else 0.9, dur=0.4), 0.02 + d)
-    ir = dsp.make_ir(0.5, rng, predelay=0.003)
-    y = dsp.reverb(y, ir, wet=0.2)
-    return dsp.trim(dsp.highpass(y, 80, 2), -60)
-
-
-METAL = [(620, 0.5, 0.8), (1240 * 1.03, 0.4, 0.6), (1890, 0.35, 0.7), (2710, 0.28, 0.5), (3650, 0.2, 0.4), (4800, 0.15, 0.3)]
-
-
-def unlock(rng, i=1):
-    dur = 1.8
-    y = np.zeros(ns(dur))
-    m = ns(0.28)
-    env = dsp.env_pts(m, [(0, 0), (0.03, 1.0), (0.28, 0.3)])
-    scr = dsp.bandpass(rng.standard_normal(m), 2000, 8000, 2) * env * (1 + 0.8 * dsp.smooth(m, rng, 40))
-    dsp.place(y, scr * 0.25, 0.02)
-    for k, t0 in enumerate([0.36, 0.47, 0.55]):
-        c = ins.wood_hit(rng, METAL, size=0.5, hardness=1.0, vel=0.35 + 0.1 * k, dur=0.15, noise=0.4)
-        dsp.place(y, c, t0)
-    clunk = ins.wood_hit(rng, METAL, size=1.6, hardness=0.7, vel=1.0, dur=0.8, noise=0.5)
-    thud = ins.wood_hit(rng, ins.WOOD_DOOR, size=1.3, hardness=0.6, vel=0.9, dur=0.5)
-    dsp.place(y, clunk + dsp.pad_to(thud, len(clunk)), 0.72)
-    ir = dsp.make_ir(0.9, rng, predelay=0.005)
-    y = dsp.reverb(y, ir, wet=0.28)
-    return dsp.trim(dsp.highpass(y, 60, 2), -60)
-
-
-def paper(rng, i=1):
-    dur = 0.9 if i == 1 else 0.7
-    n = ns(dur)
-    env = dsp.env_pts(n, [(0, 0), (0.05, 1.0), (dur * 0.5, 0.6), (dur, 0)])
-    if i == 2:
-        env = dsp.env_pts(n, [(0, 0), (0.04, 0.7), (0.2, 1.0), (0.45, 0.3), (dur, 0)])
-    cr = ins.crackle(dur, rng, 1500 if i == 1 else 900, env, hp=1200, decay=0.0004)
-    sl = dsp.bandpass(rng.standard_normal(n), 800, 7000, 2) * env * (0.5 + 0.5 * np.abs(dsp.smooth(n, rng, 15)))
-    y = cr / (np.max(np.abs(cr)) + 1e-9) * 0.6 + sl * 0.15
-    ir = dsp.make_ir(0.4, rng, predelay=0.002)
-    y = dsp.reverb(y, ir, wet=0.15)
-    return dsp.trim(dsp.highpass(y, 200, 2), -60)
-
-
-def puzzle_fail(rng, i=1):
-    dur = 2.0
-    y = np.zeros(ns(dur))
-    for k, (sc, sp, t0, g) in enumerate([(1.0, 1.6, 0.0, 1.0), (0.9, 1.4, 0.05, 0.8), (1.1, 1.8, 0.1, 0.7)]):
-        w = V.whisper("shi su sho sa shi", rng, scale=sc, rate=sp, intensity=g, hiss=2.2)
-        dsp.place(y, w, t0)
-    m = ns(0.7)
-    hiss = dsp.bandpass(rng.standard_normal(m), 2500, 9000, 2) * dsp.env_ad(m, 0.05, 0.2)
-    dsp.place(y, hiss * 0.6 * np.std(y[y != 0]) * 3, 0.05)
-    m = ns(0.25)
-    snuff = dsp.lowpass(rng.standard_normal(m), 600, 2) * dsp.env_ad(m, 0.004, 0.05)
-    dsp.place(y, snuff * np.max(np.abs(y)) * 0.9, 0.85)
-    m = ns(1.0)
-    t = np.arange(m) / SR
-    dr = np.sin(dsp.TAU * np.cumsum(90 * 2 ** (-t)) / SR) * dsp.env_ad(m, 0.05, 0.3)
-    dsp.place(y, dr * np.max(np.abs(y)) * 0.4, 0.8)
-    ir = dsp.make_ir(0.9, rng, predelay=0.005)
-    y = dsp.reverb(y, ir, wet=0.3)
-    return dsp.trim(dsp.highpass(y, 60, 2), -60)
-
-
-def _well_ir(rng, dur=2.5):
-    n = ns(dur)
-    ir = np.zeros(n)
-    per = 0.0165
-    t = 0.004
-    a = 1.0
-    while t < dur:
-        ir[ns(t)] += a * rng.choice([-1, 1]) * rng.uniform(0.7, 1.0)
-        t += per * rng.uniform(0.97, 1.03)
-        a *= 0.93
-    ir = dsp.lowpass(ir, 2500, 2) + dsp.make_ir(1.8, rng, dur=dur) * 0.4
-    return ir / np.sqrt(np.sum(ir ** 2))
-
-
-def well(rng, i=1):
-    if i == 1:
-        dur = 2.8
-        n = ns(dur)
-        t = np.arange(n) / SR
-        rot = 0.5 + 0.5 * np.sin(dsp.TAU * 1.4 * t)
-        rate = 30 + 110 * rot
-        y = ins.creak(dur, rng, [(0, 1), (dur, 1)], [(0, 0), (0.15, 0.8), (dur - 0.3, 0.8), (dur, 0)], pitch=0.9, tonal=0.5, jitter=0.25)
-        cr2 = ins.friction_pulses(dur, rng, rate, dsp.env_pts(n, [(0, 0), (0.15, 1), (dur - 0.3, 1), (dur, 0)]) * rot, jitter=0.2)
-        cr2 = dsp.resbank(cr2, [(380, 15, 1.0), (760, 18, 0.7), (1140, 20, 0.5), (1900, 22, 0.3)])
-        y = y * 0.4 + cr2 / (np.max(np.abs(cr2)) + 1e-9) * 0.6
-        rope = dsp.bandpass(np.random.default_rng(int(rng.integers(1 << 30))).standard_normal(n), 300, 3000, 2)
-        y += rope * 0.05 * dsp.env_pts(n, [(0, 0), (0.2, 1), (dur - 0.3, 1), (dur, 0)])
-        wet = 0.3
-    else:
-        dur = 3.2
-        n = ns(dur)
-        y = np.zeros(n)
-        dsp.place(y, ins.wood_hit(rng, ins.WOOD_DOOR, size=1.6, hardness=0.6, vel=0.8, dur=0.5), 0.02)
-        dsp.place(y, ins.wood_hit(rng, ins.WOOD_DOOR, size=1.5, hardness=0.6, vel=0.5, dur=0.5), 0.3)
-        m = ns(0.8)
-        spl = dsp.bandpass(rng.standard_normal(m), 300, 5000, 2) * dsp.env_ad(m, 0.008, 0.12)
-        bub = np.zeros(m)
-        for k in range(12):
-            tb = rng.uniform(0.02, 0.6)
-            mb = ns(0.05)
-            tt = np.arange(mb) / SR
-            fb = rng.uniform(400, 1400)
-            dsp.place(bub, np.sin(dsp.TAU * np.cumsum(fb * (1 + 1.5 * tt / 0.05)) / SR) * np.exp(-tt / 0.012) * rng.uniform(0.2, 0.6), tb)
-        dsp.place(y, dsp.lowpass(spl * 0.8 + bub, 3000, 2) * 0.8, 1.05)
-        wet = 0.7
-    y = dsp.reverb(y, _well_ir(rng), wet=wet, dry=0.8)
-    return dsp.trim(dsp.highpass(y, 60, 2), -60)
-
-
-# --------------------------------------------------------------------------
-# game.gate_open (S, 6 s) and game.ritual (S, ~6 s)
-# --------------------------------------------------------------------------
-def gate_open(rng, i=1):
-    dur = 6.0
-    n = ns(dur)
-    tt = np.arange(n) / SR
-    out = np.zeros((2, n))
-    chord = [dsp.hz(x) for x in ["D3", "A3", "D4", "E4", "A4", "B4"]]
-    sw = ins.sho([(0.0, dur, chord, 1.0)], dur, rng)
-    env = dsp.env_pts(n, [(0, 0), (3.2, 1.0), (4.8, 0.8), (dur, 0.0)]) ** 1.5
-    out += sw / (np.max(np.abs(sw)) + 1e-9) * env * 0.45
-    for f, a in [(73.42, 0.5), (110.0, 0.3), (146.83, 0.2)]:
-        out += np.vstack([np.sin(dsp.TAU * f * tt), np.sin(dsp.TAU * f * 1.002 * tt)]) * a * env
-    shakes = []
-    t = 0.3
-    gap = 0.5
-    while t < 4.6:
-        shakes.append((t, 0.5 + 0.5 * t / 4.6))
-        t += gap
-        gap = max(0.07, gap * 0.85)
-    for p in (-0.6, 0.6):
-        out += dsp.pan(ins.suzu_jingle(rng, dur, shakes, n_hits=(2, 5)), p) * 0.5
-    nz = rng.standard_normal(n)
-    fc = dsp.env_pts(n, [(0, 200), (3.5, 2500), (dur, 600)])
-    wind = dsp.tv_filter(nz, fc, 0.9, "bp")
-    wind = wind / np.std(wind) * dsp.env_pts(n, [(0, 0), (3.4, 1.0), (4.5, 0.6), (dur, 0)])
-    out += np.vstack([wind, np.roll(wind, ns(0.013))]) * 0.18
-    ir = dsp.make_ir(3.2, rng, stereo=True, predelay=0.03)
-    out = dsp.reverb(out, ir, wet=0.35)
-    out = dsp.pad_to(out, n)
-    return dsp.fade(dsp.highpass(out, 30, 2), 0.0, 0.8)
-
-
-def ritual(rng, i=1):
-    dur = 6.2
-    n = ns(dur)
-    tt = np.arange(n) / SR
-    out = np.zeros((2, n))
-    shakes = []
-    t = 0.05
-    gap = 0.55
-    while t < 5.1:
-        shakes.append((t, 0.55 + 0.45 * t / 5.1))
-        t += gap
-        gap = max(0.035, gap * 0.86)
-    for p, bases in [(-0.5, (3300, 4200, 5300)), (0.5, (3550, 4500, 5800))]:
-        out += dsp.pan(ins.suzu_jingle(rng, dur, shakes, bases=bases, n_hits=(2, 4)), p) * 0.5
-    env = dsp.env_pts(n, [(0, 0), (5.1, 1.0), (5.3, 0.6), (dur, 0.0)]) ** 2
-    for f, a in [(73.42, 0.6), (110.0, 0.35), (220.0 * dsp.cents(15), 0.12)]:
-        out += np.vstack([np.sin(dsp.TAU * f * tt), np.sin(dsp.TAU * f * 1.003 * tt)]) * a * env
-    hi = ins.strings([dsp.hz(x) for x in ["D5", "A5", "E6"]], dur, rng, env=env, voices=2, trem=0.4, bright=0.6)
-    out += hi / (np.max(np.abs(hi)) + 1e-9) * 0.25
-    fin = ins.suzu_jingle(rng, 1.2, [(0.0, 1.0)], n_hits=(6, 9))
-    dsp.place(out, np.vstack([fin, fin]) * 0.6, 5.15)
-    ir = dsp.make_ir(2.6, rng, stereo=True, predelay=0.02)
-    out = dsp.reverb(out, ir, wet=0.3)
-    out = dsp.pad_to(out, n)
-    return dsp.fade(dsp.highpass(out, 30, 2), 0.0, 0.5)
+    sh = dsp.shepard(n, -0.6, f_lo=60, n_oct=6)
+    out += np.vstack([sh, np.roll(sh, 200)]) * 0.04 * np.clip((tt - th) / 0.5, 0, 1)
+    sub = _sub_drop(3.0, 80, 28, 0.3, 2.0)
+    dsp.place(out, np.vstack([sub, sub]) * 0.6, th)
+    out = dsp.reverb(out, dsp.make_ir(4.0, rng, stereo=True, predelay=0.04), wet=0.4)
+    return dsp.fade(dsp.pad_to(dsp.highpass(out, 25, 2), n), 0.0, 1.5)

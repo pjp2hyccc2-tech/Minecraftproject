@@ -39,6 +39,7 @@ public final class ClientState {
     public static int silenceTicks = -1;
     public static int glitchTicks = -1;
     public static int stingerTicks = -1;
+    public static int subliminal, subliminalKind;
     public static float shake;
     public static int shakeTicks;
     public static int buzzTicks = -1;
