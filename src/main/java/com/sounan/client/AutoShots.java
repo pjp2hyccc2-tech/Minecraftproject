@@ -354,6 +354,13 @@ public final class AutoShots {
             summonAhead(mc, "nozoki", 9);
         }, 40);
         snap("45_eyes_dark");
+        // a rescuer's lamp down the village street, light off: the far glow (its own pass, or the particle with shaders)
+        add("go_46_far_lamp", mc -> {
+            cmd(mc, "sounan debug scene clear");
+            at(mc, 2.5, 6.5, -90.0f, 2.0f);
+        }, 40);
+        add("summon_46", mc -> summonAhead(mc, "yobigoe", 28), 30);
+        snap("46_far_lamp");
         scene("26_fear_high", mc -> {
             hold(mc, "sounan:flashlight_on");
             cmd(mc, "sounan debug scene clear");
