@@ -1,6 +1,7 @@
 // =====================================================================================
-//  MeikonShaders - shadow map pass (moon / sun). Translucents are not drawn here
-//  (shadowTranslucent=false), so water, glass and the torii portal cast no shadow.
+//  SounanShaders - shadow map pass (the moon). Translucents are not drawn here
+//  (shadowTranslucent=false), so water and glass cast no shadow. The canopy sways in the
+//  shadow map too, so the moonlight patches and shafts shift slowly with the wind.
 // =====================================================================================
 #define PROGRAM_SHADOW
 #include "/lib/header.glsl"

@@ -1,15 +1,25 @@
 // =====================================================================================
-//  MeikonShaders - every lit gbuffers program (forward shading)
+//  SounanShaders - every lit gbuffers program
 //  The stub selects the variant:
 //    PROG_TERRAIN  PROG_WATER (translucent terrain)  PROG_BLOCK  PROG_ENTITIES  PROG_HAND
 //    PROG_TEXTURED (particles)  PROG_BASIC (lines)  PROG_EYES  PROG_GLINT  PROG_BEACON
 //    PROG_DAMAGE  PROG_WEATHER  PROG_CLOUDS        (+ TRANSLUCENT for blended variants)
-//  Forward shading means it does not matter whether the loader draws a program before or
-//  after the deferred pass: every pixel leaves here fully lit, in linear HDR.
-//  colortex1 (aux): r emissive, g flame light reaching the surface,
-//  b class (1 hand, 0.5 cloud, 0.25 the bride - resists the fog), a coverage (blending).
+//  Opaque surfaces are lit forward here (moon, sky, block light) and leave their albedo
+//  and normal behind for the deferred pass, which adds the hand lights once per pixel.
+//  Translucents (water, glass, the camera ghost), particles and the hand light themselves.
+//    colortex0  linear HDR colour
+//    colortex1  r emissive, g flame light, b class (1 hand, 0.5 cloud, 0.25 resists fog), a coverage
+//    colortex5  albedo (sRGB) + a: 0 = no hand light here, 0.5 = foliage, 1 = lit surface
+//    colortex6  octahedral world normal (rg), gloss strength (b), smoothness (a)
 // =====================================================================================
 #include "/lib/header.glsl"
+
+#if (defined PROG_TERRAIN || defined PROG_BLOCK || defined PROG_ENTITIES) && !defined TRANSLUCENT
+    #define WRITES_GBUFFER      // opaque: lit by the hand lights in the deferred pass
+#endif
+#if defined PROG_HAND && !defined TRANSLUCENT
+    #define WRITES_GBUFFER_SKIP // the solid hand lights itself; deferred must leave it alone
+#endif
 
 #ifdef VERTEX_SHADER
 #if defined PROG_TERRAIN || defined PROG_WATER
@@ -56,16 +66,19 @@ in vec3 normalW;
 in vec3 playerPos;
 flat in int matId;
 
-// small slow ripples for water surfaces (world-space normal, +Y up)
+// ripples of the mountain stream (world-space normal, +Y up): quick, broken, flowing
 vec3 waterRipples(vec3 wp) {
     float t = frameTimeCounter;
-#ifdef WORLD_KAKURIYO
-    float s = 0.018;     // the well is almost still
+#ifdef WORLD_MOUNTAIN
+    float s = 0.060;
+    vec2 flow = vec2(0.15, 0.55) * t;
 #else
     float s = 0.045 * (1.0 + rainAmount());
+    vec2 flow = vec2(0.0);
 #endif
-    float dx = cos(wp.x * 1.7 + t * 0.9) * 0.6 + cos(wp.x * 3.1 - wp.z * 1.3 + t * 1.4) * 0.4;
-    float dz = cos(wp.z * 1.9 - t * 0.8) * 0.6 + cos(wp.z * 2.9 + wp.x * 1.1 + t * 1.2) * 0.4;
+    vec2 p = wp.xz + flow;
+    float dx = cos(p.x * 1.7 + t * 1.3) * 0.5 + cos(p.x * 3.3 - p.y * 1.9 + t * 2.1) * 0.3 + cos(p.x * 7.1 + p.y * 4.3 - t * 3.7) * 0.2;
+    float dz = cos(p.y * 1.9 - t * 1.1) * 0.5 + cos(p.y * 3.1 + p.x * 1.4 + t * 1.8) * 0.3 + cos(p.y * 6.7 - p.x * 5.1 + t * 3.3) * 0.2;
     return normalize(vec3(-dx * s, 1.0, -dz * s));
 }
 
@@ -95,17 +108,32 @@ void main() {
     /* RENDERTARGETS: 0 */
     gl_FragData[0] = vec4(toLinear(albedo.rgb) * 0.30, albedo.a);
 #elif defined PROG_EYES
-    // glowing eyes (spiders, endermen, any mod using the eyes render type)
+    // Entity eyes / headlamps (RenderType.eyes). Additive. In the mountain they are only a
+    // faint glint in the dark - until the beam finds them: retro-reflection (eyeshine).
+    vec3 lin = toLinear(albedo.rgb);
+  #ifdef WORLD_MOUNTAIN
+    vec3 eyes;
+    if (entityId == ENT_YOBIGOE) {
+        eyes = lin * vec3(1.0, 0.93, 0.82) * 5.0;              // the "rescuer"'s headlamp: a real lamp
+    } else {
+        vec3 tint = mix(lin, vec3(0.80, 0.95, 0.74), 0.62);     // the tapetum, not the texture, colours it
+        vec3 shine = handLightEyeshine(playerPos);
+        eyes = tint * (0.12 + shine * 0.55);
+        eyes += tint * cameraMode() * 0.55;                     // IR: eyes blaze in night-vision footage
+    }
+  #else
+    vec3 eyes = lin * 2.2 + mix(lin, vec3(0.9), 0.5) * handLightEyeshine(playerPos) * 0.4;
+  #endif
     /* RENDERTARGETS: 0,1 */
-    gl_FragData[0] = vec4(toLinear(albedo.rgb) * 2.2, albedo.a);
-    gl_FragData[1] = vec4(1.0, 0.0, 0.0, albedo.a);
+    gl_FragData[0] = vec4(eyes, albedo.a);
+    gl_FragData[1] = vec4(saturate(maxOf(eyes) * 2.0), 0.0, 0.0, albedo.a);
 #elif defined PROG_BEACON
     /* RENDERTARGETS: 0,1 */
     gl_FragData[0] = vec4(toLinear(albedo.rgb) * 1.8, albedo.a);
     gl_FragData[1] = vec4(1.0, 0.0, 0.0, albedo.a);
 #elif defined PROG_WEATHER
-    // rain and snow - never in Kakuriyo (there rainStrength is fear, not rain)
-  #ifdef WORLD_KAKURIYO
+    // rain and snow - never in the mountain (there rainStrength is fear, not rain)
+  #ifdef WORLD_MOUNTAIN
     discard;
   #endif
     vec3 lin = toLinear(albedo.rgb);
@@ -113,15 +141,14 @@ void main() {
     /* RENDERTARGETS: 0 */
     gl_FragData[0] = vec4(lin * light, albedo.a * 0.40);
 #elif defined PROG_CLOUDS
+    // no clouds over Kaerazu-yama: the sky is the canopy
+  #ifdef WORLD_MOUNTAIN
+    discard;
+  #endif
     vec3 dirW = normalize(playerPos);
     vec3 lin = toLinear(albedo.rgb);
-  #ifdef WORLD_KAKURIYO
-    // dark silhouettes against the crimson haze, a faint cold rim toward the moon
-    vec3 c = SKY_HORIZON * 0.25 + MOON_LIGHT * pow(saturate(dot(dirW, lightDirW())), 6.0) * 0.05;
-  #else
     vec3 c = lin * (skyAmbient() * 1.5 + celestialLight() * 0.35 * (0.5 + 0.5 * saturate(dot(dirW, lightDirW()))));
     c = mix(c, vec3(luma(c)), 0.35);
-  #endif
     /* RENDERTARGETS: 0,1 */
     gl_FragData[0] = vec4(c, albedo.a * 0.78);
     gl_FragData[1] = vec4(0.0, 0.0, 0.5, 1.0);
@@ -143,20 +170,14 @@ void main() {
         emissive = flameMask(albedo.rgb);
         emission = lin * emissive * 3.2;
     } else if (mat == BLK_LAMP) {
-        emissive = paperMask(albedo.rgb) * 0.80;
-        emission = lin * FLAME_HOT * emissive * 1.6;          // warm paper glow
+        emissive = paperMask(albedo.rgb) * 0.85;
+        emission = lin * FLAME_HOT * emissive * 1.8;          // warm glass / sodium glow
     } else if (mat == BLK_GLOW) {
         emissive = 0.30 + 0.55 * luma(albedo.rgb);
         emission = lin * emissive * 1.6;
     } else if (mat == BLK_LAVA) {
         emissive = 0.90;
         emission = lin * 2.0;
-    } else if (mat == BLK_TORII) {
-        emissive = 0.25 + 0.75 * smoothstep(0.12, 0.60, luma(albedo.rgb));
-        emission = lin * emissive * 0.9;
-    } else if (mat == BLK_BELL) {
-        emissive = goldMask(albedo.rgb) * 0.30;
-        emission = lin * emissive * 2.0;
     }
   #endif
   #if defined PROG_TEXTURED || defined PROG_BASIC
@@ -169,12 +190,12 @@ void main() {
     }
   #endif
   #ifdef PROG_ENTITIES
-    if (entityId == ENT_BRIDE) {
-        cls = 0.25;                                              // the fog cannot fully hide her
-        emission = lin * vec3(0.80, 0.86, 1.0) * 0.04;           // a faint pale shape even in total darkness
-    } else if (entityId == ENT_SHADOW) {
-        emissive = smoothstep(0.55, 0.80, luma(albedo.rgb));     // two pale eyes
-        emission = lin * emissive * 3.0;
+    if (entityId == ENT_UTSURU) {
+        // the hiker only the camera sees: pale, faintly luminous, the fog cannot hide it
+        cls = 0.25;
+        float cam = cameraMode();
+        emission = mix(vec3(luma(lin)), lin, 0.3) * vec3(0.85, 0.92, 1.0) * (0.03 + 0.20 * cam);
+        emissive = 0.3 * cam;
     } else if (entityId == ENT_LIGHTNING) {
         emissive = 1.0;
         emission = lin * 2.5;
@@ -182,12 +203,24 @@ void main() {
   #endif
   #ifdef PROG_HAND
     cls = 1.0;
-    mat = -1;                                                    // lit by the lightmap only, not by its own lantern
+    mat = -1;
     receiveShadow = false;
-    if (currentRenderedItemId == ITEM_CHOCHIN_LIT) {
-        emissive = paperMask(albedo.rgb) * 0.85;
-        emission = lin * FLAME_HOT * emissive * 1.1;
-    } else if (currentRenderedItemId == ITEM_HANDLIGHT) {
+    int item = currentRenderedItemId;
+    if (item == ITEM_FLASHLIGHT || item == ITEM_FLASH_LOW || item == ITEM_PHONE_LIGHT) {
+        // the lens / LED glows
+        float lens = smoothstep(0.55, 0.85, luma(albedo.rgb) + 0.25 * chroma(albedo.rgb));
+        float on = item == ITEM_FLASH_LOW ? 0.35 : 1.0;
+        emissive = lens;
+        emission = lin * lens * (item == ITEM_PHONE_LIGHT ? PHONE_COLOR * 2.0 : FLASHLIGHT_COLOR * 3.0 * on);
+    } else if (item == ITEM_FLARE) {
+        float hotT = flameMask(albedo.rgb) * max(redness(albedo.rgb), 0.35);
+        emissive = hotT;
+        emission = lin * hotT * vec3(1.0, 0.35, 0.25) * 4.0 * flareFlicker(frameTimeCounter);
+    } else if (item == ITEM_CAMERA) {
+        float scr = smoothstep(0.35, 0.70, luma(albedo.rgb));
+        emissive = scr * 0.5;
+        emission = lin * scr * 0.6;
+    } else if (item == ITEM_HANDLIGHT) {
         emissive = flameMask(albedo.rgb);
         emission = lin * emissive * 2.4;
     }
@@ -196,9 +229,12 @@ void main() {
     float dither = ign(gl_FragCoord.xy);
     float glow = 0.0;
     vec3 color;
+    vec2 gloss = surfaceGloss(mat, albedo.rgb);
+    float foliage = (mat == BLK_PLANT || mat == BLK_LEAVES || mat == BLK_HANGING) ? 1.0 : 0.0;
 
   #ifdef PROG_WATER
     if (mat == BLK_WATER) {
+        // the mountain stream: dark, cold, the beam glints on its ripples
         vec3 wp = playerPos + cameraPosition;
         if (N.y > 0.5) N = waterRipples(wp);
         vec3 V = -normalize(playerPos);
@@ -207,30 +243,58 @@ void main() {
         vec3 R = reflect(-V, N);
         R.y = abs(R.y);
         float skyVis = smoothstep(0.30, 0.90, lm.y);
-        vec3 refl = (fogColorFor(R) * 0.5 + skyGradient(R) * 0.5 + moonReflection(R)) * skyVis;
-        // dark body: a little of the water colour, lit like any surface
-        vec3 body = shadeSurface(lin * 0.30, N, playerPos, lm, 1.0, vec3(0.0), mat, dither, true, glow);
-        color = mix(body, refl, F);
-        alpha = mix(0.72, 0.96, F);
+        vec3 refl = (fogColorFor(R) * 0.6 + skyGradient(R) * 0.4 + moonReflection(R)) * skyVis;
+        vec3 body = shadeSurface(lin * 0.22, N, playerPos, lm, 1.0, vec3(0.0), mat, dither, true, glow);
+        body += handLightsForward(lin * 0.22, playerPos, vec3(0.0, 1.0, 0.0), 0.0, vec2(0.0));
+        // two specular lobes of the hand lights on the moving surface: sharp glints + sheen
+        vec3 glints = handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(1.6, 0.92))
+                    + handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(0.45, 0.55));
+        color = mix(body, refl, F) + glints;
+        alpha = mix(0.66, 0.94, F);
         if (isEyeInWater == 1) alpha = 0.45;
+        emissive = saturate(maxOf(glints) * 0.5);
     } else
   #endif
     {
         color = shadeSurface(lin, N, playerPos, lm, ao, emission, mat, dither, receiveShadow, glow);
+  #if defined TRANSLUCENT || defined PROG_WATER || defined PROG_TEXTURED || defined PROG_BASIC || defined PROG_HAND
+        // no deferred pass for these: the hand lights are added right here
+    #ifdef PROG_HAND
+        // the hand holding the light only gets its spill (and a lit flare in the other hand)
+        color += handLightsForward(lin, playerPos, N, 0.0, vec2(0.0)) * 0.35;
+    #else
+        color += handLightsForward(lin, playerPos, N, foliage, gloss);
+    #endif
+  #endif
   #ifdef PROG_WATER
         if (mat == BLK_GLASS) {
             vec3 V = -normalize(playerPos);
             float F = 0.04 + 0.96 * pow(1.0 - saturate(dot(N, V)), 5.0);
             vec3 R = reflect(-V, N);
             color = mix(color, (fogColorFor(R) + moonReflection(R)) * smoothstep(0.3, 0.9, lm.y), F * 0.6);
+            color += handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(1.0, 0.95));
             alpha = max(alpha, F * 0.5);
         }
   #endif
     }
 
+  #if defined WRITES_GBUFFER
+    /* RENDERTARGETS: 0,1,5,6 */
+    gl_FragData[0] = vec4(color, alpha);
+    gl_FragData[1] = vec4(saturate(emissive), saturate(glow), cls, alpha);
+    gl_FragData[2] = vec4(albedo.rgb, foliage > 0.5 ? 0.5 : 1.0);
+    gl_FragData[3] = vec4(octEncode(N), saturate(gloss.x * 0.5), gloss.y);
+  #elif defined WRITES_GBUFFER_SKIP
+    /* RENDERTARGETS: 0,1,5,6 */
+    gl_FragData[0] = vec4(color, alpha);
+    gl_FragData[1] = vec4(saturate(emissive), saturate(glow), cls, alpha);
+    gl_FragData[2] = vec4(0.0);
+    gl_FragData[3] = vec4(octEncode(N), 0.0, 0.0);
+  #else
     /* RENDERTARGETS: 0,1 */
     gl_FragData[0] = vec4(color, alpha);
     gl_FragData[1] = vec4(saturate(emissive), saturate(glow), cls, alpha);
+  #endif
 #endif
 }
 #endif

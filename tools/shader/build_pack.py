@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the thin per-program stub files of the MeikonShaders pack.
+"""Generates the thin per-program stub files of the SounanShaders pack.
 
 Iris/Oculus treat every dimension folder as a separate program set, so each folder needs its
 own gbuffers_* / deferred / composite* / final stubs. The real code lives in
@@ -7,7 +7,7 @@ shaders/program/*.glsl and shaders/lib/*.glsl; a stub only #defines the dimensio
 program variant and #includes the shared source.
 
   (root)            every dimension not listed below (overworld, mod dimensions ...)
-  meikon_kakuriyo/  meikon:kakuriyo  -> #define MEIKON_KAKURIYO (fear / danger effects)
+  sounan_kaerazu/   sounan:kaerazu   -> #define SOUNAN_MOUNTAIN (the mountain: fear / danger / camera)
   world-1/          the Nether       -> #define DIM_NETHER (no shadow pass)
   world1/           the End          -> #define DIM_END    (no shadow pass)
 
@@ -58,7 +58,7 @@ PROGRAMS = {
 # folder -> (dimension define or None, has a shadow pass)
 FOLDERS = {
     "": (None, True),
-    "meikon_kakuriyo": ("MEIKON_KAKURIYO", True),
+    "sounan_kaerazu": ("SOUNAN_MOUNTAIN", True),
     "world-1": ("DIM_NETHER", False),
     "world1": ("DIM_END", False),
 }
