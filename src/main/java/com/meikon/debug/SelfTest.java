@@ -80,6 +80,11 @@ public final class SelfTest {
         }
         if (stage == 6 && bride != null && measureFrom != null) {
             maxMoved = Math.max(maxMoved, bride.position().distanceTo(measureFrom));
+            if (wait % 20 == 0) {
+                net.minecraft.world.level.pathfinder.Path pth = bride.getNavigation().getPath();
+                log(String.format("  wander trace: %s at %s, path %s", bride.state(), bride.blockPosition(),
+                        pth == null ? "none" : (pth.isDone() ? "done" : "to " + pth.getTarget() + " node " + pth.getNextNodeIndex() + "/" + pth.getNodeCount())));
+            }
         }
         if (wait > 0) {
             wait--;

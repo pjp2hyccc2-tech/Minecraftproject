@@ -508,6 +508,11 @@ public class Hanayome extends Monster {
         }
         if (++stuck >= 60) {
             if (position().distanceToSqr(stuckRef) < 0.5) {
+                Path stuckPath = getNavigation().getPath();
+                net.minecraft.world.level.pathfinder.Node next = stuckPath == null || stuckPath.isDone() ? null : stuckPath.getNextNode();
+                com.meikon.Meikon.LOGGER.info("[meikon] bride stuck in {} at {} (next node {} = {}, target {})", state, blockPosition(),
+                        next == null ? "-" : next.asBlockPos(), next == null ? "-" : level.getBlockState(next.asBlockPos()),
+                        stuckPath == null ? "-" : stuckPath.getTarget());
                 getNavigation().stop();
                 waypoint = null;
                 repath = 0;
