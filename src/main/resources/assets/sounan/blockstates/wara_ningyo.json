@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "sounan:block/wara_ningyo"
+    },
+    "facing=east": {
+      "model": "sounan:block/wara_ningyo",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "sounan:block/wara_ningyo",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "sounan:block/wara_ningyo",
+      "y": 270
+    }
+  }
+}

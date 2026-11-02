@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "sounan:block/tin_roof_slab"
+    },
+    "type=top": {
+      "model": "sounan:block/tin_roof_slab_top"
+    },
+    "type=double": {
+      "model": "sounan:block/tin_roof"
+    }
+  }
+}

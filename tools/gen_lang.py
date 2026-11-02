@@ -1,460 +1,345 @@
 #!/usr/bin/env python3
-"""Writes assets/meikon/lang/ja_jp.json and en_us.json (merging the sound subtitles from tools/audio/)."""
+"""Writes assets/sounan/lang/ja_jp.json and en_us.json (merging the sound subtitles from tools/audio/)."""
 import json
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.normpath(os.path.join(HERE, "..", "src", "main", "resources", "assets", "meikon", "lang"))
+OUT = os.path.normpath(os.path.join(HERE, "..", "src", "main", "resources", "assets", "sounan", "lang"))
+NS = "sounan"
 
 BLOCKS = {
-    "tatami": ("畳", "Tatami"), "old_planks": ("古びた床板", "Old Floorboards"), "engawa": ("縁側板", "Engawa Boards"),
+    "cedar_log": ("杉の丸太", "Cedar Log"), "cedar_log_ribbon": ("目印テープの杉", "Cedar with Marking Tape"),
+    "cedar_log_shimenawa": ("御神木", "Sacred Cedar"), "cedar_leaves": ("杉の葉", "Cedar Needles"),
+    "forest_floor": ("杉の落ち葉", "Forest Floor"), "forest_dirt": ("腐葉土", "Forest Soil"), "moss_floor": ("苔", "Moss"),
+    "trail": ("踏み跡", "Old Trail"), "mountain_rock": ("岩", "Mountain Rock"), "mossy_rock": ("苔むした岩", "Mossy Rock"),
+    "river_stones": ("沢の石", "River Stones"), "fallen_leaves": ("落ち葉", "Fallen Leaves"),
+    "weathered_planks": ("色褪せた板", "Weathered Planks"), "dark_planks": ("黒ずんだ床板", "Dark Planks"),
+    "old_plaster": ("崩れた土壁", "Crumbling Plaster"), "tin_roof": ("錆びたトタン", "Rusted Tin"),
+    "tin_roof_stairs": ("錆びたトタン屋根", "Rusted Tin Roof"), "tin_roof_slab": ("錆びたトタンのハーフ", "Rusted Tin Slab"),
+    "blue_tarp": ("ブルーシート", "Blue Tarp"), "concrete_old": ("古いコンクリート", "Old Concrete"),
+    "concrete_moss": ("苔むしたコンクリート", "Mossy Concrete"), "asphalt": ("ひび割れたアスファルト", "Cracked Asphalt"),
+    "steel_lattice": ("鉄塔の鉄骨", "Pylon Lattice"), "tatami_old": ("古い畳", "Old Tatami"), "old_planks": ("古びた床板", "Old Floorboards"),
     "rotten_planks": ("朽ちた板", "Rotten Planks"), "dark_beam": ("黒い柱", "Dark Beam"), "plaster_wall": ("漆喰壁", "Plaster Wall"),
-    "plaster_wall_stained": ("染みのある漆喰壁", "Stained Plaster Wall"), "wainscot": ("腰板", "Wainscot"),
-    "kura_wall": ("海鼠壁", "Namako Wall"), "shoji": ("障子", "Shoji"), "shoji_torn": ("破れ障子", "Torn Shoji"),
-    "shoji_bloody": ("血の手形の障子", "Bloody Shoji"), "fusuma": ("襖", "Fusuma"), "ranma": ("欄間", "Ranma Transom"),
-    "vermilion": ("朱塗りの柱", "Vermilion Pillar"), "black_lacquer": ("黒漆の梁", "Black Lacquer Beam"),
-    "fusuma_door": ("襖戸", "Fusuma Door"), "shoji_door": ("障子戸", "Shoji Door"), "sealed_door": ("灯明の間の戸", "Lamplight Room Door"),
-    "oshiire_door": ("押入れの戸", "Closet Door"), "kura_door": ("蔵の扉", "Storehouse Door"), "torii_gate": ("縁切りの結界", "Bond-Severing Veil"),
-    "shimenawa": ("注連縄", "Shimenawa"), "blood_stain": ("血痕", "Blood Stain"), "hair_strands": ("髪の毛", "Hair"),
-    "footprints": ("濡れた足跡", "Wet Footprints"), "futon": ("布団", "Futon"), "kakejiku": ("掛け軸", "Hanging Scroll"),
-    "letter": ("落ちている手紙", "Fallen Letter"), "butsudan": ("仏壇", "Butsudan"), "candle_stand": ("燭台", "Candle Stand"),
-    "andon": ("行灯", "Andon Lamp"), "tansu": ("箪笥", "Tansu"), "kamado": ("竈", "Kamado Stove"), "well": ("井戸", "Well"),
-    "suzu_dai": ("鈴台", "Bell Pedestal"), "salt_pile": ("盛り塩", "Salt Ward"), "hina_dan": ("雛壇", "Doll Steps"),
-    "headless_doll": ("首のない人形", "Headless Doll"), "sakazuki_table": ("三三九度の膳", "Wedding Sake Tray"),
-    "old_clock": ("柱時計", "Old Clock"), "stone_lantern": ("石灯籠", "Stone Lantern"),
+    "shoji_torn": ("破れ障子", "Torn Shoji"), "futon": ("湿った布団", "Damp Futon"), "stone_lantern": ("石灯籠", "Stone Lantern"),
+    "blood_stain": ("血痕", "Blood Stain"), "footprints": ("裸足の足跡", "Bare Footprints"), "hair_strands": ("髪の毛", "Hair"),
+    "shimenawa": ("注連縄", "Shimenawa"), "hut_door": ("小屋の戸", "Hut Door"), "house_door": ("古い引き戸", "Old Sliding Door"),
+    "iron_gate": ("隧道の鉄門", "Tunnel Gate"), "lost_bag": ("失くしたバッグ", "Lost Backpack"), "memo": ("メモ", "Note"),
+    "memo_wall": ("打ち付けられたメモ", "Nailed Note"), "logbook": ("登山者ノート", "Hikers' Logbook"),
+    "notice_board": ("掲示板", "Notice Board"), "signpost": ("道標", "Trail Sign"), "jizo": ("地蔵", "Jizo Statue"),
+    "hokora": ("山の祠", "Mountain Shrine"), "wara_ningyo": ("藁人形", "Straw Doll"), "rope_anchor": ("ロープ場の杭", "Climbing Stake"),
+    "climbing_rope": ("垂らしたロープ", "Hanging Rope"), "public_phone": ("公衆電話", "Public Phone"), "bus_stop": ("バス停", "Bus Stop"),
+    "tunnel_lamp": ("隧道の灯り", "Tunnel Lamp"), "guardrail": ("ガードレール", "Guardrail"), "key_hook": ("鍵掛け", "Key Board"),
+    "car_door": ("自分の車", "Your Car"), "omiki_bottle": ("御神酒の徳利", "Sake Bottle"),
 }
 
 ITEMS = {
-    "chochin": ("提灯", "Paper Lantern", "右クリックで灯す／消す。持っている間だけ辺りを照らす――あの方からも、よく見える。",
-                "Right-click to light or put out. Lights the way while held - and shows you to her."),
-    "chochin_lit": ("提灯（灯）", "Paper Lantern (lit)", "右クリックで灯す／消す。持っている間だけ辺りを照らす――あの方からも、よく見える。",
-                    "Right-click to light or put out. Lights the way while held - and shows you to her."),
-    "lamp_oil": ("菜種油", "Rapeseed Oil", "右クリックで提灯に油を足す。", "Right-click to refill the lantern."),
-    "suzu": ("鈴", "Bell", "嫁入り行列の、七つの鈴のひとつ。", "One of the seven bells of the wedding procession."),
-    "shio": ("清め塩", "Purifying Salt", "右クリックで投げつけ、あの方を退ける。床に向けて使えば盛り塩になる。",
-             "Throw it at her to drive her back, or use it on the floor to heap a ward."),
-    "ofuda": ("護符", "Ofuda", "持っていれば、一度だけ花嫁の手から逃れられる。", "Saves you from the bride's hands, once."),
-    "ohajiki": ("おはじき", "Glass Marbles", "投げると落ちた場所で音が鳴る。あの方を音で誘える。",
-                "Throw one: wherever it clatters, she goes to look."),
-    "kura_key": ("蔵の鍵", "Storehouse Key", "中庭の蔵の錠前の鍵。", "The key to the storehouse in the courtyard."),
-    "doll_head": ("人形の首", "Doll's Head", "どこかの人形の首。黒い瞳がこちらを見ている。", "A doll's head. Its black eyes follow you."),
-    "matches": ("燐寸", "Matches", "燭台や行灯に火を灯す。", "Lights candle stands and paper lamps."),
-    "note": ("手記", "Note", "右クリックで読む。Jキーで手記の一覧。", "Right-click to read. J opens your notes."),
-    "red_envelope": ("赤い封筒", "Red Envelope", "差出人の名はない。拾ってはいけなかった気がする。",
-                     "No sender. You feel you should not have picked it up."),
-    "omamori": ("お守り", "Omamori", "持っていると、恐怖が和らぐ。", "Carrying it eases your fear."),
-    "ash": ("灰", "Ash", "赤い封筒だったもの。", "What was once a red envelope."),
+    "flashlight": ("懐中電灯", "Flashlight"), "flashlight_on": ("懐中電灯（点灯）", "Flashlight (on)"),
+    "flashlight_low": ("懐中電灯（電池切れ間近）", "Flashlight (low battery)"), "phone": ("スマホ", "Smartphone"),
+    "phone_light": ("スマホ（ライト）", "Smartphone (torch)"), "phone_camera": ("スマホ（カメラ）", "Smartphone (camera)"),
+    "battery": ("予備電池", "Spare Batteries"), "power_bank": ("モバイルバッテリー", "Power Bank"), "bear_bell": ("熊鈴", "Bear Bell"),
+    "rope": ("ロープ", "Rope"), "trail_map": ("登山地図", "Trail Map"), "flare": ("発煙筒", "Emergency Flare"),
+    "flare_lit": ("発煙筒（燃焼中）", "Emergency Flare (burning)"), "omamori": ("お守り", "Omamori"), "hut_key": ("古い鍵", "Old Key"),
+    "omiki": ("御神酒", "Offering Sake"), "memo": ("メモ", "Note"),
+}
+ITEM_DESC = {
+    "flashlight": ("右クリックで点灯／消灯。電池は減っていく。灯りを向けてはいけないものもいる。",
+                   "Right-click to switch on/off. The batteries drain. Some things must not be lit."),
+    "phone": ("右クリックで開く（Pキーでも）。スニーク+右クリックでライト。圏外。",
+              "Right-click (or P) to open. Sneak + right-click: torch. No signal."),
+    "battery": ("右クリックで懐中電灯の電池を交換する。", "Right-click to put fresh batteries in the flashlight."),
+    "power_bank": ("右クリックでスマホを充電する（+60%）。", "Right-click to charge the phone (+60%)."),
+    "bear_bell": ("右クリックで鳴らす。覗くものは鈴の音を嫌い、背中のものも離れていく。大きな音が出る。",
+                  "Right-click to ring. The peeking things hate it, the one behind you lets go. It is loud."),
+    "rope": ("崖の杭に結べば、下へ降りられる。", "Tie it to the climbers' stake at the cliff to climb down."),
+    "trail_map": ("右クリックで広げる。濡れて、端が破れている。", "Right-click to unfold. Wet, torn at one edge."),
+    "flare": ("右クリックで点火。四十秒間、赤い火が燃える。御山様は火を嫌う。",
+              "Right-click to ignite: forty seconds of red fire. The mountain hates fire."),
+    "omamori": ("祖母がくれたお守り。一度だけ、身代わりになってくれる。", "Your grandmother's charm. It takes your place, once."),
+    "hut_key": ("「旧隧道」と書かれた木札が付いている。", "A wooden tag reads \"Old Tunnel\"."),
+    "omiki": ("祠に供える酒。", "Sake to offer at a shrine."),
+    "memo": ("拾ったメモ。スマホのメモ（Jキー）で読み返せる。", "A note you found. Read it again in the phone's notes (J)."),
+}
+ENTITIES = {"nozoki": ("覗き", "Nozoki"), "yobigoe": ("呼び声", "Yobigoe"), "ushiro": ("後ろ", "Ushiro"),
+            "koyanushi": ("小屋主", "Koyanushi"), "oyamasama": ("御山様", "Oyama-sama"), "utsurumono": ("写るもの", "Utsurumono")}
+AREAS = {"rakuraku": ("滑落地点", "Where You Fell", "KATSURAKU"), "sawa": ("沢", "The Stream", "SAWA"),
+         "gake": ("崖", "The Cliff", "GAKE"), "sugi": ("杉の森", "Cedar Forest", "SUGI NO MORI"),
+         "haison": ("廃村 帰野", "Kaerino, Abandoned", "HAISON"), "hokora": ("山の祠", "Mountain Shrine", "HOKORA"),
+         "tsuribashi": ("吊り橋", "Suspension Bridge", "TSURIBASHI"), "koya": ("避難小屋", "Emergency Hut", "HINAN-GOYA"),
+         "tetto": ("鉄塔", "Power Pylon", "TETTŌ"), "tunnel": ("旧帰野隧道", "Old Kaerino Tunnel", "KYŪ KAERINO ZUIDŌ"),
+         "tozanguchi": ("登山口", "Trailhead", "TOZANGUCHI")}
+
+COMMON = {
+    "itemGroup.sounan": ("遭難 ―SOUNAN―", "SOUNAN: Lost on the Mountain"),
+    "key.categories.sounan": ("遭難", "SOUNAN"),
+    "key.sounan.phone": ("スマホを開く", "Open phone"),
+    "key.sounan.memo": ("メモを読む", "Read notes"),
+    "gui.sounan.scroll": ("%s / %s　（ホイールでめくる）", "%s / %s (scroll)"),
+    "sounan.shaders.installed": ("影MOD「SounanShaders」をインストールして有効にしました。（Oculus / Iris）",
+                                 "Installed and enabled the SounanShaders shader pack (Oculus / Iris)."),
+    "sounan.shaders.updated": ("SounanShaders を更新しました。", "SounanShaders was updated."),
+    "sounan.shaders.optifine": ("SounanShaders を OptiFine に設定しました。次回の起動から有効になります。",
+                                "SounanShaders was set for OptiFine; it will be active from the next launch."),
+    # ---- intro
+    "intro.sounan.1": ("十一月二日　午後四時四十分　帰らず山・下山道", "November 2nd, 4:40 p.m. — the trail down Kaerazu-yama"),
+    "intro.sounan.2": ("――おーい", "— Hey! Over here —"),
+    "intro.sounan.3": ("誰かに呼ばれた気がして、道を外れた", "Someone called. You stepped off the trail."),
+    "intro.sounan.4": ("足元が、崩れた", "The ground gave way."),
+    # ---- HUD
+    "hud.sounan.checkpoint": ("――少しだけ、息が落ち着いた", "— your breathing slows, a little"),
+    "hud.sounan.omamori": ("お守りが、身代わりになった", "The omamori took your place"),
+    "hud.sounan.date": ("%s月%s日", "%s/%s"),
+    "hud.sounan.camera_help": ("右クリック:撮影　スニーク+右クリック:戻る", "Right-click: photo   Sneak + right-click: back"),
+    # ---- thoughts
+    "thought.sounan.wake": ("……っ、痛……。ここ、どこだ……？　バッグがない", "...ugh. Where... am I? My bag is gone."),
+    "thought.sounan.fog": ("霧が濃すぎる……前が見えない", "The fog is too thick... I can't see anything."),
+    "thought.sounan.flash_dead": ("……電池が切れた", "...the batteries are dead."),
+    "thought.sounan.flash_low": ("ライトが暗くなってきた……電池がもたない", "The light is dimming... the batteries won't last."),
+    "thought.sounan.flash_empty": ("点かない。電池が空だ", "Nothing. The batteries are empty."),
+    "thought.sounan.phone_dead": ("スマホの電源が……落ちた", "The phone... just died."),
+    "thought.sounan.battery_full": ("まだ電池は残っている", "There is still charge left."),
+    "thought.sounan.battery": ("電池を入れ替えた", "Fresh batteries."),
+    "thought.sounan.charged": ("スマホを充電した", "Phone charged."),
+    "thought.sounan.flare_out": ("発煙筒が燃え尽きた", "The flare has burned out."),
+    "thought.sounan.signal": ("……電波が、入った！", "...one bar. Signal!"),
+    "thought.sounan.old_bag": ("……自分のじゃない。随分古いバッグだ。中は空っぽだ", "...not mine. An old bag, long empty."),
+    "thought.sounan.bag_empty": ("もう何も残っていない", "Nothing left in it."),
+    "thought.sounan.bag": ("あった……！　落ちた時に転がっていったんだ", "There it is...! It must have rolled down when I fell."),
+    "thought.sounan.hokora_done": ("霧が晴れている。通れそうだ", "The fog has cleared. I can get through."),
+    "thought.sounan.fog_lift": ("霧が……晴れていく", "The fog... is lifting."),
+    "thought.sounan.hokora_need": ("御神酒を供えないと……村に残っていたはずだ", "I need to offer sake... there was some in the village."),
+    "thought.sounan.hokora": ("古い祠だ。何か供えるものがあれば……", "An old shrine. If only I had something to offer..."),
+    "thought.sounan.roped": ("ロープを結んだ。これで降りられる", "Rope tied. I can climb down now."),
+    "thought.sounan.need_rope": ("古い杭だ。ロープがあれば、ここから降りられそうだ", "An old stake. With a rope I could climb down here."),
+    "thought.sounan.key": ("鍵だ……「旧隧道」と書いた札が付いている", "A key... the tag says \"Old Tunnel\"."),
+    "thought.sounan.unlocked": ("開いた……", "It opened..."),
+    "thought.sounan.locked": ("鎖と南京錠で閉ざされている。鍵が要る", "Chained and padlocked. I need a key."),
+    "thought.sounan.omiki": ("お酒……御神酒だ。祠に供えるものかもしれない", "Sake... an offering. Maybe for a shrine."),
+    "thought.sounan.payphone_dead": ("受話器からは、何も聞こえない", "Nothing on the line."),
+    "thought.sounan.wake_1": ("……夢？　いや……", "...a dream? No..."),
+    "thought.sounan.wake_2": ("また、ここに戻ってきた……", "Back here again..."),
+    "thought.sounan.wake_3": ("何日経った……？　スマホの日付がおかしい", "How many days...? The date on the phone is wrong."),
+    "thought.sounan.wake_4": ("もう、自分が誰だったか……思い出せなくなりそうだ", "I can barely remember who I was..."),
+    "thought.sounan.ushiro": ("……振り返ってはいけない気がする", "...I feel I must not look back."),
+    "thought.sounan.ushiro_gone": ("……気配が、消えた", "...it's gone."),
+    "thought.sounan.light": ("あれは……救助の人？", "Is that... a rescuer?"),
+    "thought.sounan.watched": ("……見られている", "...something is watching."),
+    "thought.sounan.sleeper": ("奥で、誰かが寝ている……", "Someone is sleeping in there..."),
+    "thought.sounan.tunnel": ("真っ暗だ……出口は、まだ見えない", "Pitch black... no sign of the exit."),
+    "thought.sounan.run": ("――走れ！", "— RUN!"),
+    "thought.sounan.car": ("車だ……！", "My car...!"),
+    # ---- signs
+    "sign.sounan.fork": ("↓ 帰野（廃村）2.1km\n← 近道　（後から手書きで書き足されている）",
+                         "↓ Kaerino (abandoned) 2.1 km\n← Shortcut (written on later, by hand)"),
+    "sign.sounan.shrine": ("← 山の祠\n祠の先　霧多し", "← Mountain shrine\nheavy fog beyond the shrine"),
+    "sign.sounan.hut": ("→ 避難小屋\n← 鉄塔巡視路", "→ Emergency hut\n← Pylon patrol path"),
+    "sign.sounan.tunnel": ("→ 旧帰野隧道\n登山口まで 1.2km", "→ Old Kaerino tunnel\n1.2 km to the trailhead"),
+    "sign.sounan.start": ("この先　崖　立入禁止", "Cliffs ahead — keep out"),
+    "sign.sounan.trailhead": ("帰らず山　登山口\n入山届は必ず提出してください", "Kaerazu-yama trailhead\nAlways file a climbing plan"),
+    "sign.sounan.bus_stop": ("帰野　バス停\n帰野線　一日一往復　最終 17:10\n（平成十年　廃止）",
+                             "Kaerino bus stop\none bus a day, last 17:10\n(discontinued 1998)"),
+    "sign.sounan.generic": ("文字が掠れて読めない", "The writing has worn away."),
+    # ---- phone
+    "phone.sounan.title": ("スマホ", "Phone"),
+    "phone.sounan.no_signal": ("圏外", "No signal"),
+    "phone.sounan.date": ("%s月%s日(%s)", "%s/%s (%s)"),
+    "phone.sounan.app.map": ("地図", "Map"), "phone.sounan.app.camera": ("カメラ", "Camera"),
+    "phone.sounan.app.light": ("ライト", "Torch"), "phone.sounan.app.messages": ("メッセージ", "Messages"),
+    "phone.sounan.app.call": ("電話", "Phone"), "phone.sounan.app.memo": ("メモ", "Notes"),
+    "phone.sounan.help": ("右クリック / Backspace: 戻る　Esc: 閉じる", "Right-click / Backspace: back   Esc: close"),
+    "phone.sounan.map.nodata": ("地図データがありません（オフライン）", "No map data (offline)"),
+    "phone.sounan.poi.bag": ("沢", "Stream"), "phone.sounan.poi.village": ("帰野", "Kaerino"),
+    "phone.sounan.poi.shrine": ("祠", "Shrine"), "phone.sounan.poi.hut": ("避難小屋", "Hut"),
+    "phone.sounan.poi.pylon": ("鉄塔", "Pylon"), "phone.sounan.poi.tunnel_n": ("旧隧道", "Old tunnel"),
+    "phone.sounan.poi.parking": ("登山口P", "Trailhead P"),
+    "phone.sounan.who.mom": ("お母さん", "Mom"), "phone.sounan.who.kenta": ("健太", "Kenta"),
+    "phone.sounan.who.work": ("佐藤課長", "Mr. Sato (work)"), "phone.sounan.who.unknown": ("非通知", "Unknown"),
+    "phone.sounan.msg.mom.1": ("明日、帰らず山に行くんだって？気をつけてね", "You're going up Kaerazu-yama tomorrow? Be careful."),
+    "phone.sounan.msg.mom.2": ("大丈夫、日帰りだから。夕方には下りるよ", "It's a day hike. I'll be down by evening."),
+    "phone.sounan.msg.mom.3": ("いってらっしゃい。下りたら連絡してね", "Have a good hike. Text me when you're down."),
+    "phone.sounan.msg.mom.4": ("まだ山？", "Still on the mountain?"),
+    "phone.sounan.msg.mom.5": ("電話出て", "Pick up."),
+    "phone.sounan.msg.mom.6": ("警察に相談しました。返事して", "I called the police. Answer me."),
+    "phone.sounan.msg.mom.7": ("どこにいるの", "Where are you"),
+    "phone.sounan.msg.mom.8": ("今朝から捜索隊が山に入ってくれています。お願い、返事して",
+                               "A search team went up this morning. Please, answer."),
+    "phone.sounan.msg.mom.9": ("捜索が打ち切られました。でも、お母さんは待ってるからね", "They called off the search. But I'm still waiting."),
+    "phone.sounan.msg.mom.10": ("今日、あなたの部屋を少しだけ片付けました。ごめんね", "I tidied your room a little today. I'm sorry."),
+    "phone.sounan.msg.mom.11": ("あれから三年。今日も山に向かって名前を呼びました。返事、してくれないね",
+                                "Three years now. I called your name toward the mountain again today. You never answer."),
+    "phone.sounan.msg.kenta.1": ("帰らず山ってマジ？あそこ地元じゃ夜は絶対入るなって言われてるぞ",
+                                 "Kaerazu-yama, seriously? The locals say never go up there at night."),
+    "phone.sounan.msg.kenta.2": ("迷信だろｗ", "superstition lol"),
+    "phone.sounan.msg.kenta.3": ("名前呼ばれても返事すんなよ。マジで", "If something calls your name, don't answer. I mean it."),
+    "phone.sounan.msg.kenta.4": ("おい、大丈夫か？おばさんから連絡きたぞ", "Hey, you okay? Your mom called me."),
+    "phone.sounan.msg.kenta.5": ("今から車で向かう。登山口で待ってる", "Driving up now. I'll wait at the trailhead."),
+    "phone.sounan.msg.kenta.6": ("登山口にお前の車、まだあった。ごめん。俺があのとき止めてれば",
+                                 "Your car's still at the trailhead. I'm sorry. I should have stopped you."),
+    "phone.sounan.msg.kenta.7": ("結婚するよ。お前にも来てほしかった", "I'm getting married. I wish you could come."),
+    "phone.sounan.msg.work.1": ("明日の会議資料、どうなってる？", "Where are the slides for tomorrow's meeting?"),
+    "phone.sounan.msg.work.2": ("ご家族から事情を伺いました。こちらのことは気にせず……", "Your family told us. Don't worry about work..."),
+    "phone.sounan.msg.unknown.1": ("みつけた", "found you"),
+    "phone.sounan.notification": ("通知", "Notification"),
+    "phone.sounan.buzz.messages": ("新着メッセージがあります", "New messages"),
+    "phone.sounan.buzz.found": ("非通知：みつけた", "Unknown: found you"),
+    "phone.sounan.buzz.behind": ("非通知：うしろ", "Unknown: behind you"),
+    "phone.sounan.buzz.come": ("非通知：こっちだよ", "Unknown: over here"),
+    "phone.sounan.memo.empty": ("メモはまだない", "No notes yet"),
+    "phone.sounan.call.ringing": ("呼び出し中", "Calling"),
+    "phone.sounan.call.end": ("終了", "End"),
+    "phone.sounan.call.no_signal": ("圏外です", "No service"),
+    "phone.sounan.call.hint": ("電波のある場所でしか通話できません", "Calls only work where there is signal"),
+    "call.sounan.110.1": ("はい、110番です。事件ですか、事故ですか", "Police emergency. What is the emergency?"),
+    "call.sounan.110.2": ("山で遭難……ですね。今いる場所は分かりますか", "Lost on a mountain... Do you know where you are?"),
+    "call.sounan.110.3": ("帰らず山……？　少々お待ちください", "Kaerazu-yama...? Please hold."),
+    "call.sounan.110.4": ("…………", "............"),
+    "call.sounan.110.5": ("……もしもし。今、どこにいますか", "...hello. Where are you right now?"),
+    "call.sounan.110.6": ("もっと奥まで来られますか。こちらから、呼びますから", "Can you come further in? We'll call out to you."),
+    "call.sounan.110.7": ("おーい", "Hey! Over here!"),
+    "call.sounan.119.1": ("119番消防です。火事ですか、救急ですか", "Fire and ambulance. Fire, or medical?"),
+    "call.sounan.119.2": ("遭難ですね。落ち着いてください。お名前は", "You're lost. Stay calm. Your name?"),
+    "call.sounan.119.3": ("%sさん、ですね", "%s, right."),
+    "call.sounan.119.4": ("そこから動かないでください。今、迎えが行きます", "Don't move. Someone is coming for you."),
+    "call.sounan.119.5": ("……灯りを持った者が、迎えに行きます", "...someone with a light is coming for you."),
+    "call.sounan.119.6": ("ついて来てくださいね", "Follow them, won't you."),
+    "call.sounan.mom.1": ("……もしもし？　もしもし！？", "...hello? HELLO?"),
+    "call.sounan.mom.2": ("%s？　あなたなの？　どこにいるの！？", "%s? Is that you? Where are you?!"),
+    "call.sounan.mom.3": ("声が遠いの。ねえ、聞こえる？", "You sound so far away. Can you hear me?"),
+    "call.sounan.mom.4": ("……ずっと、待ってたのに", "...I waited so long."),
+    "call.sounan.mom.5": ("……ねえ。後ろ、見て", "...hey. Look behind you."),
+    "call.sounan.mom.6": ("――つまらない", "— boring."),
+    # ---- endings
+    "ending.sounan.title": ("遭難", "SOUNAN"),
+    "ending.sounan.good.1": ("――木々の向こうに、街灯の明かりが見えた", "— past the trees, the light of a street lamp."),
+    "ending.sounan.good.2": ("駐車場。見慣れた、自分の車", "The parking lot. Your own car."),
+    "ending.sounan.good.3": ("エンジンが、かかった", "The engine starts."),
+    "ending.sounan.good.4": ("スマホが震えた。電波が戻ったのだ", "The phone buzzes. Signal again."),
+    "ending.sounan.good.5a": ("十一月三日　午前五時十二分。……一晩で、山を下りられた",
+                              "November 3rd, 5:12 a.m. ...one night, and you made it down."),
+    "ending.sounan.good.5b": ("画面の日付は　%s　を示していた", "The date on the screen read %s."),
+    "ending.sounan.good.6a": ("東の空が、白み始めている", "The eastern sky is turning pale."),
+    "ending.sounan.good.6b": ("あの山にいたのは、一晩だけのはずなのに", "It was supposed to be one night on that mountain."),
+    "ending.sounan.good.7": ("……ふと、バックミラーを見た", "...you glance at the rear-view mirror."),
+    "ending.sounan.date": ("%s年%s月%s日", "%3$s/%2$s/%1$s"),
+    "ending.sounan.bad.1": ("霧が、すべてを包んでいく", "The fog swallows everything."),
+    "ending.sounan.bad.2": ("誰かが呼んでいる。もう、怖くはなかった", "Someone is calling. You are not afraid anymore."),
+    "ending.sounan.bad.3": ("――もう、どこにも行かなくていい", "— you never have to leave."),
+    "ending.sounan.bad.4": ("数年後。ある登山者のスマホに、一枚の写真が残されていた",
+                            "Years later, a hiker's phone held one strange photograph."),
+    "ending.sounan.bad.5": ("霧の木立に立つ、見覚えのある人影", "A familiar figure, standing among the foggy cedars."),
+    "ending.sounan.bad.6": ("行方不明者　%s　――捜索は打ち切られている", "Missing person: %s — the search was called off."),
+    "ending.sounan.end_good": ("END 1 ― 下山", "END 1 — Down the Mountain"),
+    "ending.sounan.end_good_company": ("END 2 ― 同行者", "END 2 — Company"),
+    "ending.sounan.end_bad": ("END 3 ― 神隠し", "END 3 — Spirited Away"),
+    "ending.sounan.continue": ("クリックで戻る", "Click to return"),
+    # ---- config
+    "sounan.configuration.title": ("遭難 設定", "SOUNAN settings"),
 }
 
-JA = {
-    "itemGroup.meikon": "冥婚 ―MEIKON―",
-    "key.meikon.journal": "手記を開く",
-    "key.categories.meikon": "冥婚",
-    "entity.meikon.hanayome": "花嫁",
-    "entity.meikon.ichimatsu": "市松人形",
-    "entity.meikon.kageboshi": "影法師",
-    "entity.meikon.maboroshi": "幻",
-    "entity.meikon.ohajiki": "おはじき",
-    "item.meikon.hanayome_spawn_egg": "花嫁のスポーンエッグ",
-    "item.meikon.ichimatsu_spawn_egg": "市松人形のスポーンエッグ",
-    "item.meikon.kageboshi_spawn_egg": "影法師のスポーンエッグ",
-    "item.meikon.chochin.oil": "油: %s%%",
-    "item.meikon.suzu.desc2": "七つ揃えて、鳥居の下で鳴らせ。",
-    "painting.meikon.mukasari.title": "ムカサリ絵馬",
-    "painting.meikon.mukasari.author": "作者不明",
-    "painting.meikon.sayo.title": "小夜",
-    "painting.meikon.sayo.author": "作者不明",
-    "painting.meikon.family.title": "家族写真",
-    "painting.meikon.family.author": "大正十二年",
-    "painting.meikon.mansion.title": "屋敷",
-    "painting.meikon.mansion.author": "作者不明",
-    "candle.meikon.0": "金の燭台",
-    "candle.meikon.1": "銀の燭台",
-    "candle.meikon.2": "黒の燭台",
-
-    "intro.meikon.1": "――赤い封筒を、開けてしまった。",
-    "intro.meikon.2": "中には一房の黒髪と、婚礼の招待状。",
-    "intro.meikon.3": "新郎の欄には、「%s」と書かれていた。",
-
-    "title.meikon.phase.0": "招待", "title.meikon.phase.0.sub": "灯明の間",
-    "title.meikon.phase.1": "鈴の音", "title.meikon.phase.1.sub": "七つの鈴を集めよ",
-    "title.meikon.phase.2": "人形", "title.meikon.phase.2.sub": "人形から、目を離すな",
-    "title.meikon.phase.3": "影", "title.meikon.phase.3.sub": "灯りが、消えていく",
-    "title.meikon.phase.4": "祝言", "title.meikon.phase.4.sub": "婚礼の支度が、整った",
-    "title.meikon.phase.5": "縁切り", "title.meikon.phase.5.sub": "鳥居の下で、七つの鈴を鳴らせ",
-
-    "death.meikon.taken": "――連れて行かれた",
-    "death.meikon.count": "（%s 度目）",
-    "death.meikon.hint.0": "灯りは、あの方からもよく見える。",
-    "death.meikon.hint.1": "押入れの中では、Shift長押しで息を止められる。",
-    "death.meikon.hint.2": "走れば足音が響く。鈴を持っていれば、なおさらだ。",
-    "death.meikon.hint.3": "清め塩は、あの方を退ける。護符は一度だけ命を救う。",
-    "death.meikon.hint.4": "おはじきを投げれば、あの方を音で誘い出せる。",
-
-    "hud.meikon.objective.prologue": "提灯を手に取り、部屋を出よ",
-    "hud.meikon.objective.bells": "鈴 %s / 7",
-    "hud.meikon.objective.final": "鳥居へ――七つの鈴を鳴らせ",
-    "hud.meikon.holding": "息を止めている……",
-    "hud.meikon.hold_hint": "Shift長押しで息を止める",
-    "hud.meikon.ritual": "鈴を鳴らし続けろ……",
-    "hud.meikon.ritual_ready": "鈴を持って右クリック長押しで、縁を切る",
-
-    "prompt.meikon.search": "［右クリック］調べる",
-    "prompt.meikon.hide": "［右クリック］押入れに入り、戸を閉める",
-    "prompt.meikon.leave_closet": "［右クリック］戸を開ける",
-    "prompt.meikon.open": "［右クリック］開ける",
-    "prompt.meikon.close": "［右クリック］閉める",
-    "prompt.meikon.kura": "［右クリック］蔵の扉",
-    "prompt.meikon.read": "［右クリック］読む",
-    "prompt.meikon.bell": "［右クリック］鈴を取る",
-    "prompt.meikon.light": "［燐寸を持って右クリック］火を灯す",
-    "prompt.meikon.well": "［右クリック］縄を引く",
-    "prompt.meikon.doll": "［人形の首を持って右クリック］首を戻す",
-    "prompt.meikon.sakazuki": "［右クリック］盃……",
-
-    "message.meikon.locked": "鍵がかかっている。",
-    "message.meikon.unlocked": "蔵の錠前が外れた。",
-    "message.meikon.need_fire": "火が要る。燐寸があれば……",
-    "message.meikon.no_oil": "油が切れている。",
-    "message.meikon.oil_out": "提灯の火が消えた。油が尽きた。",
-    "message.meikon.no_lantern": "提灯がない。",
-    "message.meikon.oil_full": "油はもう十分に入っている。",
-    "message.meikon.oil_refilled": "提灯に油を足した（%s%%）",
-    "message.meikon.bell": "鈴を手に入れた（%s / 7）",
-    "message.meikon.butsuma_solved": "仏壇の前に、鈴が戻ってきた。",
-    "message.meikon.butsuma_fail": "炎が一斉に掻き消えた。誰かが、すぐそばで息を吐いた。",
-    "message.meikon.doll_solved": "人形たちが一斉にこちらを向いた気がした。……鈴の音がする。",
-    "message.meikon.doll_headless": "首のない人形だ。首がどこかにあるはずだ。",
-    "message.meikon.well_1": "縄を引いた。……重い。",
-    "message.meikon.well_2": "何かが、上がってくる。",
-    "message.meikon.well_done": "桶の中に、鈴と――長い黒髪が、絡みついていた。",
-    "message.meikon.well_empty": "井戸の底は、真っ暗だ。",
-    "message.meikon.empty": "何もない。",
-    "message.meikon.found": "%s を見つけた。",
-    "message.meikon.found_scare": "……指先に、冷たい何かが触れた。",
-    "message.meikon.found_hair": "引き出しの中に、長い髪がびっしりと詰まっていた。",
-    "message.meikon.salt_hit": "花嫁が悲鳴を上げて退いた！",
-    "message.meikon.ofuda": "護符が燃え尽きた。……まだ、生きている。",
-    "message.meikon.ritual_broken": "鈴の音が途切れた……",
-    "message.meikon.sakazuki_idle": "空の盃が三つ、並んでいる。",
-    "message.meikon.envelope_found": "足元に、赤い封筒が落ちている……（右クリックで開く）",
-    "message.meikon.no_dimension": "隠り世への道が見つからない。（データの読み込みに失敗しました）",
-
-    "gui.meikon.scroll": "%s / %s　（ホイールでめくる）",
-    "gui.meikon.journal": "手記",
-    "gui.meikon.journal.empty": "まだ何も見つけていない。",
-    "gui.meikon.journal.hint.0": "灯明の間の中は安全だ。準備をしてから出よう。",
-    "gui.meikon.journal.hint.1": "鈴の音を辿れ。走れば足音で気づかれる。",
-    "gui.meikon.journal.hint.2": "人形は見ている間は動かない。背を向けるな。",
-    "gui.meikon.journal.hint.3": "影法師は提灯の灯りを向けると消える。",
-    "gui.meikon.journal.hint.4": "婚礼の支度が整った。あの方はもう、あなたの居場所を知っている。",
-    "gui.meikon.journal.hint.5": "中庭の鳥居へ。鈴を手に、右クリックを長押しし続けろ。",
-    "gui.meikon.warning": "※この作品には、大きな音・暗闇・点滅表現・ジャンプスケアが含まれます。設定ファイル config/meikon-client.toml で軽減できます。やめたくなったら /meikon leave でいつでも元の世界に戻れます。",
-    "gui.meikon.envelope.go": "封を切り、中へ入る",
-    "gui.meikon.envelope.close": "閉じる",
-    "gui.meikon.sakazuki": "三三九度の盃",
-    "gui.meikon.sakazuki.text1": "なみなみと注がれた、赤い酒。",
-    "gui.meikon.sakazuki.text2": "盃を交わせば、もう二度と戻れない。",
-    "gui.meikon.sakazuki.drink": "盃を交わす",
-    "gui.meikon.sakazuki.refuse": "やめる",
-
-    "ending.meikon.good.title": "縁切り",
-    "ending.meikon.good.1": "七つ目の鈴が鳴り終わったとき、",
-    "ending.meikon.good.2": "鳥居の向こうから、白い光があふれた。",
-    "ending.meikon.good.3": "背後で、誰かが泣いていた。",
-    "ending.meikon.good.4": "振り返ってはいけないと、なぜか分かっていた。",
-    "ending.meikon.good.5": "",
-    "ending.meikon.good.6": "――気がつくと、見慣れた景色の中に立っていた。",
-    "ending.meikon.good.7": "東の空が、白みはじめている。",
-    "ending.meikon.good.8": "手の中の赤い封筒は、灰になって崩れた。",
-    "ending.meikon.good.9": "",
-    "ending.meikon.good.10": "これで、終わったのだ。",
-    "ending.meikon.good.11": "そう思った。",
-    "ending.meikon.good.12": "",
-    "ending.meikon.good.13": "その夜、%s は夢を見た。",
-    "ending.meikon.good.14": "白無垢の女が、鈴をひとつ、大切そうに握りしめている夢を。",
-    "ending.meikon.fin": "― 完 ―",
-    "ending.meikon.click": "クリックで戻る",
-    "ending.meikon.bad.title": "祝言",
-    "ending.meikon.bad.1": "盃の酒は、ひどく甘かった。",
-    "ending.meikon.bad.2": "どこからか、雅楽の音が聞こえる。",
-    "ending.meikon.bad.3": "隣に座った花嫁が、綿帽子の下で微笑んだ。",
-    "ending.meikon.bad.4": "その顔を、%s ははじめて見た。",
-    "ending.meikon.bad.5": "",
-    "ending.meikon.bad.6": "――それきり、%s を見た者はいない。",
-    "ending.meikon.bad.7": "屋敷の奥に飾られたムカサリ絵馬には、",
-    "ending.meikon.bad.8": "花婿の顔が、新しく描き加えられていたという。",
-    "ending.meikon.bad.9": "",
-    "ending.meikon.bad.fin": "― 婚礼は、成った ―",
-
-    "meikon.shaders.installed": "影MOD「MeikonShaders」をインストールして有効にしました。（Oculus / Iris）",
-    "meikon.shaders.updated": "MeikonShaders を更新しました。",
-    "meikon.shaders.optifine": "MeikonShaders を OptiFine に設定しました。次回の起動から有効になります。",
-}
-
-NOTES_JA = {
-    1: ("招待状",
-        "謹啓\n\nこのたび、小夜（さよ）と %1$s 殿の婚礼を執り行う運びと相成りました。\n"
-        "つきましては新郎として、御来臨を賜りたく、ここに御案内申し上げます。\n\n"
-        "　日時　今宵　丑三つ時\n　場所　隠り世　小夜の屋敷\n\n"
-        "――封筒の中には、一房の長い黒髪が入っていた。\n髪は、まだ湿っている。"),
-    2: ("女中の日記　一",
-        "大正十二年　皐月\n\n"
-        "お嬢様の御婚礼が決まった。お相手は町の呉服問屋の若旦那様。\n"
-        "お嬢様は毎晩、白無垢を眺めては、嬉しそうに鈴を鳴らしておいでだ。\n"
-        "嫁入り行列の七つの鈴。お嬢様のお気に入り。\n\n"
-        "このところ、夜になると廊下の行灯がよく消える。"),
-    3: ("灯りの心得",
-        "提灯の火を、決して絶やすな。\n闇には影法師が棲む。灯りを持たぬ者に寄ってきて、火を吸う。\n"
-        "影法師には、灯りを向けよ。光の中では形を保てぬ。\n\n"
-        "だが、忘れるな。\n灯りは、あの方からもよく見える。遠くからでも、灯りを持つ者は見つかる。\n"
-        "あの方が近いと感じたら、火を消し、身を低くせよ。\n\n"
-        "走れば足音が響く。鈴を持っていれば、なおさらだ。"),
-    4: ("女中の日記　二",
-        "祝言の前の晩、若旦那様が姿を消した。\n"
-        "お嬢様は一晩じゅう、白無垢のまま門の前で待っておられた。\n"
-        "夜が明けても、お嬢様はお戻りにならなかった。\n\n"
-        "中庭の井戸の底で見つかったとき、お嬢様は綿帽子をかぶったまま、\nにっこりと笑っておられたという。\n\n"
-        "あの日から、夜になると廊下を歩く音がする。\n「かごめ　かごめ」と歌う声がする。"),
-    5: ("母の手記",
-        "あの子が一人で逝くのは、あまりに不憫だ。\n"
-        "古い習いに倣い、ムカサリ絵馬を描かせた。冥土で祝言を挙げさせるための絵だ。\n\n"
-        "花婿の顔は――私は絵師に、生きている男の顔を描かせた。\nあの子を捨てた男の顔を。\n\n"
-        "生きた者を絵馬に描けば、その者は連れて行かれる。\n知っていた。知っていて、描かせた。\n\n"
-        "けれど、あの男が消えても、あの子は満足しなかった。\n"
-        "絵の花婿の顔は、いつの間にか削り取られていた。\nあの子は今も、新しい花婿を探している。"),
-    6: ("住職の書付",
-        "縁切りの儀について\n\n"
-        "花嫁の嫁入り行列には、七つの鈴があった。鈴は、花嫁と花婿を結ぶ縁の印である。\n\n"
-        "屋敷に散った七つの鈴をすべて集め、中庭の鳥居の下で鳴らし続ければ、\n"
-        "結ばれた縁は断ち切られ、生者は現世へ戻れよう。\n\n"
-        "ただし、鈴の音はあの方を呼ぶ。\n鳴らし終えるまで、決して手を止めてはならぬ。\n\n"
-        "蔵の鍵、仏間の燭台、首のない人形、そして井戸。\n残りの鈴は、そこに眠っている。"),
-    7: ("人形のこと",
-        "雛壇の市松人形には、決して背を向けてはならない。\n"
-        "見ているあいだ、人形は動かない。目を離せば、少しずつ近づいてくる。\n"
-        "灯りのない場所では、見ているつもりでも、見えてはいない。\n\n"
-        "一番上の段の人形は、首を失くしている。\n"
-        "お嬢様が癇癪を起こして、もいでしまわれたのだ。\n首は、子供部屋のどこかにあるはずだ。"),
-    8: ("押入れの中で",
-        "あの方に見つかったら、走れ。\n"
-        "姿が見えなくなったら、押入れに入って戸を閉めろ。\n"
-        "戸の隙間から外は見える。外からは、見えない。\n\n"
-        "ただし、入るところを見られたら、もう終わりだ。\n\n"
-        "あの方が戸の前に立ったら――息を止めろ。（Shiftを押し続ける）\n怯えた息の音は、戸越しにも聞こえる。"),
-    9: ("仏間の作法",
-        "仏間の燭台には、順に火を灯すこと。\n順を違えれば、ご先祖様がお怒りになる。\n\n"
-        "灯す順は――\n\n　%2$s\n\n"
-        "正しく灯せば、仏壇の前に鈴がお戻りになる。\n燐寸は台所の箪笥にある。"),
-    10: ("塩とおはじき",
-         "清め塩は、あの方を退ける。\nすぐそこまで来たら、顔に投げつけろ。（右クリック）\n"
-         "床に向けて使えば盛り塩になる。しばらくの間、あの方は近寄れない。\n\n"
-         "おはじきを投げれば、落ちた場所で音が鳴る。\nあの方は、音のする方へ行く。\n\n"
-         "護符を持っていれば、一度だけ、あの方の手から逃れられる。"),
-    11: ("盃を交わすな",
-         "婚礼の間の三三九度の盃に、決して口をつけてはならない。\n"
-         "盃を交わせば、婚礼は成る。成ってしまえば、二度と現世には戻れない。\n\n"
-         "……それでも、あの方は待っている。\n毎晩、盃を用意して。"),
-    12: ("子供の絵",
-         "（クレヨンで描かれた絵。白い着物の女の人と、小さな子供。）\n\n"
-         "おねえちゃんは　まいばん　ろうかを　あるいてる\n"
-         "おねえちゃんの　かおを　みちゃだめ\n"
-         "みたら　おねえちゃんが　およめさんに　してくれる\n\n\n"
-         "おねえちゃんは　いま　あなたの　うしろに　いるよ"),
-}
-
-EN = {
-    "itemGroup.meikon": "MEIKON: The Ghost Wedding",
-    "key.meikon.journal": "Open notes",
-    "key.categories.meikon": "MEIKON",
-    "entity.meikon.hanayome": "Bride",
-    "entity.meikon.ichimatsu": "Ichimatsu Doll",
-    "entity.meikon.kageboshi": "Shadow",
-    "entity.meikon.maboroshi": "Apparition",
-    "entity.meikon.ohajiki": "Marble",
-    "item.meikon.hanayome_spawn_egg": "Bride Spawn Egg",
-    "item.meikon.ichimatsu_spawn_egg": "Ichimatsu Doll Spawn Egg",
-    "item.meikon.kageboshi_spawn_egg": "Shadow Spawn Egg",
-    "item.meikon.chochin.oil": "Oil: %s%%",
-    "item.meikon.suzu.desc2": "Gather all seven and ring them under the torii.",
-    "painting.meikon.mukasari.title": "Mukasari Ema", "painting.meikon.mukasari.author": "Unknown",
-    "painting.meikon.sayo.title": "Sayo", "painting.meikon.sayo.author": "Unknown",
-    "painting.meikon.family.title": "Family Photograph", "painting.meikon.family.author": "1923",
-    "painting.meikon.mansion.title": "The Mansion", "painting.meikon.mansion.author": "Unknown",
-    "candle.meikon.0": "the gold candle", "candle.meikon.1": "the silver candle", "candle.meikon.2": "the black candle",
-    "intro.meikon.1": "- I opened the red envelope.",
-    "intro.meikon.2": "Inside: a lock of black hair, and a wedding invitation.",
-    "intro.meikon.3": "The groom's name was written as \"%s\".",
-    "title.meikon.phase.0": "The Invitation", "title.meikon.phase.0.sub": "The Room of Lamplight",
-    "title.meikon.phase.1": "The Bells", "title.meikon.phase.1.sub": "Gather the seven bells",
-    "title.meikon.phase.2": "The Dolls", "title.meikon.phase.2.sub": "Do not take your eyes off them",
-    "title.meikon.phase.3": "The Shadows", "title.meikon.phase.3.sub": "The lights are dying",
-    "title.meikon.phase.4": "The Wedding", "title.meikon.phase.4.sub": "Everything is ready",
-    "title.meikon.phase.5": "Severance", "title.meikon.phase.5.sub": "Ring the seven bells under the torii",
-    "death.meikon.taken": "- You were taken",
-    "death.meikon.count": "(time %s)",
-    "death.meikon.hint.0": "She sees your lantern from far away.",
-    "death.meikon.hint.1": "Inside a closet, hold Shift to hold your breath.",
-    "death.meikon.hint.2": "Running is loud. Running with bells is louder.",
-    "death.meikon.hint.3": "Salt drives her back. An ofuda saves you once.",
-    "death.meikon.hint.4": "Throw a marble to lure her with sound.",
-    "hud.meikon.objective.prologue": "Take the lantern and leave the room",
-    "hud.meikon.objective.bells": "Bells %s / 7",
-    "hud.meikon.objective.final": "To the torii - ring the seven bells",
-    "hud.meikon.holding": "Holding your breath...",
-    "hud.meikon.hold_hint": "Hold Shift to hold your breath",
-    "hud.meikon.ritual": "Keep ringing...",
-    "hud.meikon.ritual_ready": "Hold right-click with a bell to sever the bond",
-    "prompt.meikon.search": "[Right-click] Search",
-    "prompt.meikon.hide": "[Right-click] Hide inside and close the door",
-    "prompt.meikon.leave_closet": "[Right-click] Open the door",
-    "prompt.meikon.open": "[Right-click] Open",
-    "prompt.meikon.close": "[Right-click] Close",
-    "prompt.meikon.kura": "[Right-click] Storehouse door",
-    "prompt.meikon.read": "[Right-click] Read",
-    "prompt.meikon.bell": "[Right-click] Take the bell",
-    "prompt.meikon.light": "[Right-click with matches] Light",
-    "prompt.meikon.well": "[Right-click] Pull the rope",
-    "prompt.meikon.doll": "[Right-click with the head] Give her back her head",
-    "prompt.meikon.sakazuki": "[Right-click] The sake cups...",
-    "message.meikon.locked": "It is locked.",
-    "message.meikon.unlocked": "The storehouse lock falls open.",
-    "message.meikon.need_fire": "You need fire. Matches, perhaps...",
-    "message.meikon.no_oil": "The lantern has no oil.",
-    "message.meikon.oil_out": "The lantern went out. The oil is gone.",
-    "message.meikon.no_lantern": "You have no lantern.",
-    "message.meikon.oil_full": "The lantern is full.",
-    "message.meikon.oil_refilled": "You refill the lantern (%s%%)",
-    "message.meikon.bell": "You took a bell (%s / 7)",
-    "message.meikon.butsuma_solved": "A bell has returned before the altar.",
-    "message.meikon.butsuma_fail": "Every flame dies at once. Someone exhales right beside you.",
-    "message.meikon.doll_solved": "The dolls seem to turn toward you... a bell rings.",
-    "message.meikon.doll_headless": "A headless doll. Its head must be somewhere.",
-    "message.meikon.well_1": "You pull the rope. ...It is heavy.",
-    "message.meikon.well_2": "Something is coming up.",
-    "message.meikon.well_done": "In the bucket: a bell - tangled in long black hair.",
-    "message.meikon.well_empty": "The bottom of the well is pitch black.",
-    "message.meikon.empty": "Nothing.",
-    "message.meikon.found": "You found: %s",
-    "message.meikon.found_scare": "...Something cold touched your fingers.",
-    "message.meikon.found_hair": "The drawer is packed full of long hair.",
-    "message.meikon.salt_hit": "The bride shrieks and recoils!",
-    "message.meikon.ofuda": "The ofuda burned away. ...You are still alive.",
-    "message.meikon.ritual_broken": "The ringing stopped...",
-    "message.meikon.sakazuki_idle": "Three empty sake cups.",
-    "message.meikon.envelope_found": "A red envelope lies at your feet... (right-click to open)",
-    "message.meikon.no_dimension": "There is no way into the hidden world (data failed to load).",
-    "gui.meikon.scroll": "%s / %s (scroll)",
-    "gui.meikon.journal": "Notes",
-    "gui.meikon.journal.empty": "You have found nothing yet.",
-    "gui.meikon.journal.hint.0": "The room of lamplight is safe. Prepare, then go.",
-    "gui.meikon.journal.hint.1": "Follow the ringing. Running makes noise.",
-    "gui.meikon.journal.hint.2": "The dolls do not move while watched. Never turn your back.",
-    "gui.meikon.journal.hint.3": "Shine your lantern at a shadow and it tears apart.",
-    "gui.meikon.journal.hint.4": "The wedding is ready. She knows where you are.",
-    "gui.meikon.journal.hint.5": "Go to the torii. Hold right-click with a bell and do not let go.",
-    "gui.meikon.warning": "This game contains loud sounds, darkness, flashing effects and jump scares. You can tone them down in config/meikon-client.toml. Use /meikon leave to go home at any time.",
-    "gui.meikon.envelope.go": "Break the seal and go in",
-    "gui.meikon.envelope.close": "Close",
-    "gui.meikon.sakazuki": "The Three Sake Cups",
-    "gui.meikon.sakazuki.text1": "Red sake, filled to the brim.",
-    "gui.meikon.sakazuki.text2": "Drink with her, and you can never return.",
-    "gui.meikon.sakazuki.drink": "Drink",
-    "gui.meikon.sakazuki.refuse": "Refuse",
-    "ending.meikon.good.title": "Severance",
-    "ending.meikon.good.1": "When the seventh bell fell silent,",
-    "ending.meikon.good.2": "white light poured through the torii.",
-    "ending.meikon.good.3": "Behind you, someone was crying.",
-    "ending.meikon.good.4": "Somehow you knew you must not look back.",
-    "ending.meikon.good.5": "",
-    "ending.meikon.good.6": "- When you came to, you stood somewhere familiar.",
-    "ending.meikon.good.7": "The eastern sky was growing pale.",
-    "ending.meikon.good.8": "The red envelope crumbled to ash in your hand.",
-    "ending.meikon.good.9": "",
-    "ending.meikon.good.10": "It was over.",
-    "ending.meikon.good.11": "Or so you thought.",
-    "ending.meikon.good.12": "",
-    "ending.meikon.good.13": "That night, %s dreamed",
-    "ending.meikon.good.14": "of a woman in white, holding a single bell close to her heart.",
-    "ending.meikon.fin": "- The End -",
-    "ending.meikon.click": "Click to return",
-    "ending.meikon.bad.title": "The Wedding",
-    "ending.meikon.bad.1": "The sake was terribly sweet.",
-    "ending.meikon.bad.2": "Somewhere, wedding music began to play.",
-    "ending.meikon.bad.3": "The bride beside you smiled under her hood.",
-    "ending.meikon.bad.4": "For the first time, %s saw her face.",
-    "ending.meikon.bad.5": "",
-    "ending.meikon.bad.6": "- No one ever saw %s again.",
-    "ending.meikon.bad.7": "They say the mukasari painting in the mansion",
-    "ending.meikon.bad.8": "now has a groom's face, freshly painted.",
-    "ending.meikon.bad.9": "",
-    "ending.meikon.bad.fin": "- The wedding is complete -",
-    "meikon.shaders.installed": "Installed and enabled the MeikonShaders shader pack (Oculus / Iris).",
-    "meikon.shaders.updated": "MeikonShaders was updated.",
-    "meikon.shaders.optifine": "MeikonShaders was set for OptiFine; it will be active from the next launch.",
-}
-
-NOTES_EN = {
-    1: ("Invitation", "We respectfully announce the wedding of Sayo and %1$s.\nWe humbly request your presence as the groom.\n\n"
-                      "  When: tonight, at the hour of the ox\n  Where: the hidden world, Sayo's mansion\n\n"
-                      "- Inside the envelope is a lock of long black hair.\nIt is still damp."),
-    2: ("Maid's Diary I", "May, 1923\n\nThe young mistress is to be married, to the son of a kimono merchant in town.\n"
-                          "Every night she gazes at her white wedding kimono and rings her bells.\n"
-                          "The seven bells of the wedding procession. Her favourites.\n\nLately the lamps in the corridor keep going out at night."),
-    3: ("On Light", "Never let your lantern die.\nShadows live in the dark. They come to those without light, and drink their fire.\n"
-                    "Turn your light on a shadow; it cannot keep its shape in the light.\n\n"
-                    "But remember:\nShe sees the light too. Even from far away, the one who carries it is found.\n"
-                    "When you feel her near, put out the flame and keep low.\n\nRunning is loud. Running with bells is louder."),
-    4: ("Maid's Diary II", "The night before the wedding, the groom disappeared.\n"
-                           "The mistress waited at the gate all night in her white kimono.\nWhen dawn came, she did not return.\n\n"
-                           "They found her at the bottom of the well in the courtyard, still in her hood,\nsmiling.\n\n"
-                           "Since that day, at night, there are footsteps in the corridor,\nand a voice singing \"kagome, kagome\"."),
-    5: ("Mother's Note", "It was too cruel to let her go alone.\nFollowing the old custom, I had a mukasari ema painted: a wedding in the afterlife.\n\n"
-                         "For the groom's face I had the painter paint a living man.\nThe man who abandoned her.\n\n"
-                         "Paint the living on the ema, and they are taken.\nI knew. I knew, and I had it painted.\n\n"
-                         "But when he vanished she was not satisfied.\nThe groom's face was scraped away from the painting.\n"
-                         "She is still looking for a new groom."),
-    6: ("The Priest's Note", "On severing the bond\n\nThe bride's procession carried seven bells, the tokens that bind bride and groom.\n\n"
-                             "Gather all seven bells scattered through the mansion and keep ringing them under the torii in the courtyard,\n"
-                             "and the bond will be cut; the living may return to their world.\n\n"
-                             "But the ringing calls her.\nDo not stop until it is done.\n\n"
-                             "The storehouse key, the altar candles, the headless doll, and the well.\nThe last bells sleep there."),
-    7: ("About the Dolls", "Never turn your back on the Ichimatsu dolls.\nWhile you watch them they do not move. Look away, and they come closer.\n"
-                           "Where there is no light, you are not really seeing them.\n\n"
-                           "The doll on the top step has lost her head.\nThe mistress tore it off in a tantrum.\nIt must be somewhere in the child's room."),
-    8: ("In the Closet", "If she finds you, run.\nWhen she loses sight of you, get into a closet and close the door.\n"
-                         "You can see out through the slats. She cannot see in.\n\nBut if she sees you go in, it is over.\n\n"
-                         "If she stands before the door - hold your breath. (keep holding Shift)\nFrightened breathing carries through the door."),
-    9: ("Rites of the Altar Room", "Light the altar candles in order.\nThe wrong order angers the ancestors.\n\nThe order is:\n\n  %2$s\n\n"
-                                   "Light them rightly and a bell returns before the altar.\nThere are matches in the kitchen drawers."),
-    10: ("Salt and Marbles", "Purifying salt drives her away.\nWhen she is upon you, throw it in her face. (right-click)\n"
-                             "Use it on the floor to heap a ward she will not cross for a while.\n\n"
-                             "A thrown marble clatters where it lands.\nShe goes toward the sound.\n\nAn ofuda frees you from her hands, once."),
-    11: ("Do Not Drink", "Never touch the three sake cups in the wedding hall.\nDrink with her and the wedding is done, and you will never go back.\n\n"
-                         "...Still, she waits.\nEvery night, with the cups ready."),
-    12: ("A Child's Drawing", "(A crayon drawing: a woman in a white kimono, and a small child.)\n\n"
-                              "big sister walks the hallway every night\ndont look at big sisters face\nif you look she will make you her husband\n\n\n"
-                              "big sister is behind you right now"),
+NOTES = {
+    1: (("濡れた手帳の切れ端", "十月二十八日。午後、下山道で誰かに呼ばれた。「おーい、こっちだ」と。救助の人かと思って、道を外れた。\n"
+                       "それが間違いだった。\n\nここには道がない。沢の音だけが聞こえる。\n\n――佐伯"),
+        ("Torn page from a wet notebook", "October 28th. On the way down someone called me. \"Hey! Over here!\" I thought it was a "
+                                          "rescuer, so I left the trail.\nThat was the mistake.\n\nThere is no trail here. Only the "
+                                          "sound of the stream.\n\n— Saeki")),
+    2: (("沢沿いの書き付け", "沢に沿って下れば、いつか里に出る。山ではそう教わった。\nでも、この沢は下るほど山の奥へ入っていく気がする。\n\n"
+                     "背中のほうで、誰かが同じ歩幅で歩いている。\n振り返る勇気はない。"),
+        ("Scribbled by the stream", "Follow a stream downhill and you reach a village. That is what they teach you.\nBut this stream "
+                                    "seems to lead deeper into the mountain.\n\nSomeone behind me walks in step with me.\nI don't "
+                                    "dare look back.")),
+    3: (("崖下の紙片", "ロープ場の杭は古いが、まだ使える。降りたら、もう登っては戻れない。\n\n下に着いたとき、上から誰かが覗いていた。\n"
+                  "私の顔をしていた。"),
+        ("Scrap below the cliff", "The climbers' stake is old but it holds. Once down, there is no climbing back.\n\nWhen I reached the "
+                                  "bottom someone was looking down at me from the top.\nIt had my face.")),
+    4: (("テープのこと", "ピンクの目印テープを辿っている。古いもの、新しいもの。\n\n新しいテープは、誰が結んだのだろう。\nこの山には、私しかいないはずなのに。\n\n"
+                   "テープが一本、私の手首に結ばれていた。\nいつ？"),
+        ("About the tapes", "I am following the pink marking tapes. Old ones, new ones.\n\nWho tied the new ones?\nThere should be "
+                            "no one on this mountain but me.\n\nThere was a tape tied around my wrist.\nWhen?")),
+    5: (("行き止まり", "テープを辿ってはいけなかった。ここで道は終わっている。\n\n木の根元に、靴が並べてある。左右揃えて、きちんと。何足も。\n\n"
+                  "私の靴も、ここに並べることになるのだろうか。"),
+        ("Dead end", "I should not have followed the tapes. The path ends here.\n\nShoes are lined up at the foot of the tree. Neatly, in "
+                     "pairs. Many pairs.\n\nWill mine be set here too?")),
+    6: (("見られている", "木の陰から、誰かが覗いている。首を傾けて、片目だけで。\n灯りを向けると、笑った。だから、もう向けない。目も合わせない。\n\n"
+                   "近づかなければ、何もしてこない。\n……今のところは。"),
+        ("Watched", "Something peeks from behind the trees. Head tilted, one eye.\nWhen I shone my light on it, it smiled. So I don't "
+                    "anymore. I don't meet its eye.\n\nIf I don't go near, it does nothing.\n...so far.")),
+    7: (("子供の作文", "「やまのひと」　三ねん　やまだ はるか\n\nおばあちゃんが言ってた。夜の山で名前をよばれても、へんじしちゃだめ。\n"
+                  "ライトをもった人によばれても、ついていっちゃだめ。\n\nやまのひとは、さみしいから、つれていくんだって。"),
+        ("A child's composition", "\"The mountain people\" - Haruka Yamada, 3rd grade\n\nGrandma said if something calls your name on the "
+                                  "mountain at night, don't answer.\nIf someone with a light calls you, don't follow.\n\nThe "
+                                  "mountain people are lonely, so they take you with them.")),
+    8: (("最後の村人", "この村の者は、皆、山に呼ばれていった。\n最初は年寄り。次に子供たち。夫は、灯りを持った誰かに呼ばれて出ていったきりだ。\n\n"
+                  "今夜は私の番だ。外で、夫の声が私の名前を呼んでいる。\n答えてはいけない。答えては――"),
+        ("The last villager", "Everyone in this village was called into the mountain.\nThe old ones first. Then the children. My husband "
+                              "went out after someone with a light and never came back.\n\nTonight it is my turn. Outside, my "
+                              "husband's voice is calling my name.\nI must not answer. I must not—")),
+    9: (("祠のこと", "祠の先は、霧が晴れない。何度進んでも、気がつくと祠の前に戻っている。\n\n村の古い決まりを思い出した。\n"
+                 "「祠の前を通る者は、御神酒を供えよ」\n\n村の家に、酒が残っていたはずだ。\n……あの家には、何かが寝ている。"),
+        ("About the shrine", "Beyond the shrine the fog never clears. However far I walk, I end up back at the shrine.\n\nI remembered the "
+                             "village rule:\n\"Whoever passes the shrine must offer sake.\"\n\nThere was sake left in one of the "
+                             "houses.\n...something sleeps in that house.")),
+    10: (("登山者ノート", "1987.10.3　雨。小屋に先客あり。奥で寝ているようなので、静かに出た。\n\n"
+                    "1993.11.2　鍵は旧隧道の門のものらしい。誰か持っていってくれ。\n\n"
+                    "1998.10.29　佐伯。小屋の奥で、何かが寝ている。息が湿っている。鍵を取る。起こしてはいけない。屈んで歩け。\n\n"
+                    "2011.8.15　（文字が震えていて読めない）\n\n2026.11.3　%1$s　ここまで来た。"),
+         ("Hikers' logbook", "1987.10.3 Rain. Someone already here, asleep at the back. Left quietly.\n\n1993.11.2 The key is for the old "
+                             "tunnel gate, I think. Someone take it.\n\n1998.10.29 Saeki. Something is sleeping at the back. Its "
+                             "breath is wet. Taking the key. Don't wake it. Crouch.\n\n2011.8.15 (the handwriting shakes too much to "
+                             "read)\n\n2026.11.3 %1$s - made it this far.")),
+    11: (("鉄塔の下で", "ここなら電波が入る。家に電話した。妻が出た。\n「どこにいるの」と泣いていた。山の名前を言った。\n\n"
+                   "そのあと、受話器の向こうで妻が言った。\n「もう、来なくていいよ。ずっと、そこにいればいいのに」\n\n妻の声じゃなかった。"),
+         ("Under the pylon", "There is signal here. I called home. My wife answered.\nShe was crying, asking where I was. I told her the "
+                             "mountain's name.\n\nThen, on the line, she said:\n\"You don't have to come back. You could just stay "
+                             "there forever.\"\n\nIt wasn't her voice.")),
+    12: (("出口", "トンネルの向こうに、出口の光が見える。\nなのに、いくら歩いても、光は近づかない。\n\n後ろで、大きな何かが四つ足で這ってくる音がする。\n\n"
+                "火を。火を焚け。御山様は、火を嫌う――"),
+         ("The exit", "At the far end of the tunnel I can see the light of the exit.\nBut however far I walk, it gets no closer.\n\nBehind "
+                      "me, something huge is crawling on all fours.\n\nFire. Light a fire. The mountain hates fire—")),
+    13: (("帰らず山　入山の心得", "帰野地区自治会\n夜の帰らず山に立ち入る者は、以下を必ず守ること。\n\n"
+                        "一、夜の山で、灯りを持つ者に呼ばれても、決してついて行ってはならない。\n\n"
+                        "一、木の陰から覗くものと、目を合わせてはならない。灯りを向けてもならない。\n\n"
+                        "一、背中に気配を感じたら、決して振り返らず、そのまま歩き続けること。\n\n"
+                        "一、小屋の主を起こしてはならない。小屋では音を立てず、屈んで歩くこと。\n\n"
+                        "一、祠の前を通る者は、御神酒を供えること。供えぬ者は霧に迷う。\n\n"
+                        "一、御山様に会ったなら、火を焚け。御山様は火を嫌う。\n\n山に呼ばれた者は、帰らない。"),
+         ("Kaerazu-yama: rules for entering the mountain", "Kaerino district association\nAnyone entering Kaerazu-yama at night must keep "
+                                                           "these rules.\n\nI. If someone carrying a light calls you on the mountain at "
+                                                           "night, never follow.\n\nII. Never meet the eyes of what peeks from behind the "
+                                                           "trees. Never shine a light on it.\n\nIII. If you feel something at your back, "
+                                                           "never turn around. Keep walking.\n\nIV. Never wake the master of a hut. Make no "
+                                                           "sound inside, and crouch.\n\nV. Whoever passes the shrine must offer sake. "
+                                                           "Those who do not lose their way in the fog.\n\nVI. If you meet Oyama-sama, "
+                                                           "light a fire. Oyama-sama hates fire.\n\nThose the mountain calls do not "
+                                                           "come back.")),
+    14: (("遭難者慰霊", "帰らず山にて消息を絶った方々\n\n昭和六十二年　十月　（苔に覆われて読めない）\n平成五年　十一月　（同上）\n"
+                   "平成十年　十月　佐伯 和也\n平成二十三年　八月　（名札が削られている）\n令和八年　十一月　%1$s\n\n――御霊の安らかならんことを"),
+         ("In memory of the lost", "Those who disappeared on Kaerazu-yama\n\nOctober 1987 (covered in moss)\nNovember 1993 (likewise)\n"
+                                   "October 1998 - Kazuya Saeki\nAugust 2011 (the name has been scratched off)\nNovember 2026 - %1$s\n\n"
+                                   "- may they rest in peace")),
 }
 
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    ja, en = dict(JA), dict(EN)
+    ja, en = {}, {}
+    for k, (j, e) in COMMON.items():
+        ja[k], en[k] = j, e
     for k, (j, e) in BLOCKS.items():
-        ja[f"block.meikon.{k}"] = j
-        en[f"block.meikon.{k}"] = e
-    for k, (j, e, dj, de) in ITEMS.items():
-        ja[f"item.meikon.{k}"] = j
-        en[f"item.meikon.{k}"] = e
-        ja[f"item.meikon.{k}.desc"] = dj
-        en[f"item.meikon.{k}.desc"] = de
-    for i, (t, b) in NOTES_JA.items():
-        ja[f"note.meikon.{i}.title"] = t
-        ja[f"note.meikon.{i}.body"] = b
-    for i, (t, b) in NOTES_EN.items():
-        en[f"note.meikon.{i}.title"] = t
-        en[f"note.meikon.{i}.body"] = b
+        ja[f"block.{NS}.{k}"], en[f"block.{NS}.{k}"] = j, e
+    for k, (j, e) in ITEMS.items():
+        ja[f"item.{NS}.{k}"], en[f"item.{NS}.{k}"] = j, e
+    for k, (j, e) in ITEM_DESC.items():
+        ja[f"item.{NS}.{k}.desc"], en[f"item.{NS}.{k}.desc"] = j, e
+    for k, (j, e) in ENTITIES.items():
+        ja[f"entity.{NS}.{k}"], en[f"entity.{NS}.{k}"] = j, e
+        ja[f"item.{NS}.{k}_spawn_egg"] = f"{j}のスポーンエッグ"
+        en[f"item.{NS}.{k}_spawn_egg"] = f"{e} Spawn Egg"
+    for k, (j, e, roman) in AREAS.items():
+        ja[f"area.{NS}.{k}"], en[f"area.{NS}.{k}"] = j, e
+        ja[f"area.{NS}.{k}.sub"] = roman
+        en[f"area.{NS}.{k}.sub"] = roman
+    for i, ((tj, bj), (te, be)) in NOTES.items():
+        ja[f"note.{NS}.{i}.title"], ja[f"note.{NS}.{i}.body"] = tj, bj
+        en[f"note.{NS}.{i}.title"], en[f"note.{NS}.{i}.body"] = te, be
     for lang, d in (("ja", ja), ("en", en)):
         sub = os.path.join(HERE, "audio", f"subtitles_{lang}.json")
         if os.path.exists(sub):

@@ -12,22 +12,26 @@ import java.util.function.Supplier;
 public final class S2C {
     private S2C() {}
 
-    /** The player's horror state, sent 5 times a second. */
-    public record State(float fear, float stamina, float breath, float danger, int flags, int bells, int phase, int deaths) {
+    /** The player's body and the night's progress, sent 5 times a second. */
+    public record State(float fear, float danger, float stamina, float flash, float phone, int flags, int captures, int area,
+                        int minutes, int days, int notes) {
         public void encode(FriendlyByteBuf buf) {
             buf.writeFloat(fear);
-            buf.writeFloat(stamina);
-            buf.writeFloat(breath);
             buf.writeFloat(danger);
+            buf.writeFloat(stamina);
+            buf.writeFloat(flash);
+            buf.writeFloat(phone);
             buf.writeVarInt(flags);
-            buf.writeVarInt(bells);
-            buf.writeVarInt(phase);
-            buf.writeVarInt(deaths);
+            buf.writeVarInt(captures);
+            buf.writeVarInt(area);
+            buf.writeVarInt(minutes);
+            buf.writeVarInt(days);
+            buf.writeVarInt(notes);
         }
 
         public static State decode(FriendlyByteBuf buf) {
-            return new State(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readVarInt(), buf.readVarInt(),
-                    buf.readVarInt(), buf.readVarInt());
+            return new State(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readVarInt(),
+                    buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
         }
 
         public void handle(Supplier<NetworkEvent.Context> ctx) {
@@ -35,7 +39,7 @@ public final class S2C {
         }
     }
 
-    /** A one-off event (jump scare, title card, ending...). */
+    /** A one-off event (jump scare, area title, thought, ending...). */
     public record Event(int type, int arg, String text) {
         public void encode(FriendlyByteBuf buf) {
             buf.writeVarInt(type);
@@ -52,7 +56,7 @@ public final class S2C {
         }
     }
 
-    /** A positional sound only this player hears (director events, hallucinations). */
+    /** A positional sound only this player hears (director tricks, hallucinations). */
     public record Sound(String id, double x, double y, double z, float volume, float pitch) {
         public void encode(FriendlyByteBuf buf) {
             buf.writeUtf(id);
@@ -72,7 +76,7 @@ public final class S2C {
         }
     }
 
-    /** Opens a note. {@code extra}: player name, or the candle order "a,b,c" for the butsuma note. */
+    /** Opens a note. {@code extra} = "playerName|captures|dayOffset". */
     public record Note(int id, String extra) {
         public void encode(FriendlyByteBuf buf) {
             buf.writeVarInt(id);

@@ -1,74 +1,97 @@
 package com.sounan.game;
 
-import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
-/** Runtime state of one player inside the game (not saved; rebuilt on login). */
+/** State of one player on the mountain. Batteries and the loop-back point persist in the player's data. */
 public final class PlayerState {
-    public float fear;
-    public float stamina = 100.0f;
-    public float breath = 100.0f;
+    // ---- persistent
+    public float flash = 100.0f;
+    public float phone = 31.0f;
+    @Nullable public Vec3 safePos;
+    public float safeYaw;
+
+    // ---- runtime
+    public float fear = 25.0f;
     public float danger;
-    public int closet = -1;
-    public boolean inSafeRoom;
+    public float stamina = 100.0f;
+    public int exhausted;
+    public int area = -1;
+    public int outTicks;
+    public int fogTicks;
+    public boolean phoneOpen;
+    public boolean shaders;
     public boolean captured;
     public int captureTicks;
-    @Nullable public Vec3 capturePos;
     public int captureKind;
-    public int exhausted;
-    public boolean holdingBreath;
-    public int seenByBride;
-    public int brideNearTicks;
-    public boolean everLeftSafeRoom;
-    public int ritualTicks;
-    public int stepNoise;
-    public int panicNoise;
-    @Nullable public BlockPos lightPos;
-    public int lightFlicker;
+    @Nullable public Vec3 capturePos;
     public int syncTimer;
-    public int hiddenTicks;
-    public boolean lanternLit;
-    public boolean introSent;
-    public boolean ending;
-    public boolean endingGood;
-    public int endingTicks;
-    @Nullable public Vec3 lastPos;
-    public long atGate = Long.MIN_VALUE / 2;
-    public float forceFear;
-    public float forceDanger;
+    public int saveTimer;
+    public int introTicks = -1;
+    public int endingTicks = -1;
+    public int stillTicks;
+    public int bellCooldown;
+    public int photoCooldown;
+    public int lowWarned;
+    public float lastYaw;
+    public double lastX, lastZ;
+    public boolean wasSprinting;
+    public int breathNoise;
+    /** Fear / danger forced by debug commands and the screenshot tour. */
+    public float forceFear = -1.0f;
+    public float forceDanger = -1.0f;
     public int forceTicks;
 
-    // director timers (ticks until next event)
-    public int nextMinor = 20 * 20;
-    public int nextMajor = 20 * 70;
-    public int nextPhantom = 20 * 150;
-    public int nextShadow = 20 * 60;
-    public int peeksLeft = 2;
+    // ---- director
+    public int nextMinor = 20 * 18;
+    public int nextMajor = 20 * 75;
+    public int nextMonster = 20 * 50;
     public int calmTicks;
-    public int lastChase;
+    public int litTicks;
+    public int lookTicks;
+    public long lastScare;
 
-    /** While hiding: true if she can hear you breathing (you are scared and not holding your breath). */
-    public boolean breathAudible() {
-        return closet >= 0 && !holdingBreath && (fear > 45.0f || breath < 25.0f);
+    public float bpm() {
+        return 68.0f + fear * 1.12f;
     }
 
-    public void resetAfterDeath() {
-        fear = 40.0f;
-        stamina = 100.0f;
-        breath = 100.0f;
+    public void resetAfterCapture() {
+        fear = 45.0f;
         danger = 0.0f;
-        closet = -1;
+        stamina = 100.0f;
+        exhausted = 0;
         captured = false;
         captureTicks = 0;
         capturePos = null;
-        exhausted = 0;
-        holdingBreath = false;
-        seenByBride = 0;
-        ritualTicks = 0;
+        outTicks = 0;
+        fogTicks = 0;
+        flash = Math.max(flash, 30.0f);
         nextMinor = 20 * 25;
-        nextMajor = 20 * 80;
-        nextPhantom = 20 * 160;
+        nextMajor = 20 * 90;
+        nextMonster = 20 * 60;
+    }
+
+    public CompoundTag save() {
+        CompoundTag t = new CompoundTag();
+        t.putFloat("Flash", flash);
+        t.putFloat("Phone", phone);
+        if (safePos != null) {
+            t.putDouble("SafeX", safePos.x);
+            t.putDouble("SafeY", safePos.y);
+            t.putDouble("SafeZ", safePos.z);
+            t.putFloat("SafeYaw", safeYaw);
+        }
+        return t;
+    }
+
+    public void load(CompoundTag t) {
+        if (t.contains("Flash")) flash = t.getFloat("Flash");
+        if (t.contains("Phone")) phone = t.getFloat("Phone");
+        if (t.contains("SafeX")) {
+            safePos = new Vec3(t.getDouble("SafeX"), t.getDouble("SafeY"), t.getDouble("SafeZ"));
+            safeYaw = t.getFloat("SafeYaw");
+        }
     }
 }

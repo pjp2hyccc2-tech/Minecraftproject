@@ -1,16 +1,10 @@
 package com.sounan.client;
 
-import com.sounan.Sounan;
-import com.sounan.client.render.HanayomeModel;
-import com.sounan.client.render.HanayomeRenderer;
-import com.sounan.client.render.IchimatsuModel;
-import com.sounan.client.render.IchimatsuRenderer;
-import com.sounan.client.render.KageboshiRenderer;
-import com.sounan.client.render.MaboroshiRenderer;
-import com.sounan.registry.ModEntities;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.sounan.Sounan;
+import com.sounan.client.render.PlaceholderRenderer;
+import com.sounan.registry.ModEntities;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
@@ -23,8 +17,10 @@ import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(modid = Sounan.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ClientSetup {
-    public static final KeyMapping JOURNAL_KEY = new KeyMapping("key.meikon.journal", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J,
-            "key.categories.meikon");
+    public static final KeyMapping PHONE_KEY = new KeyMapping("key.sounan.phone", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P,
+            "key.categories.sounan");
+    public static final KeyMapping MEMO_KEY = new KeyMapping("key.sounan.memo", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J,
+            "key.categories.sounan");
 
     private ClientSetup() {}
 
@@ -35,33 +31,28 @@ public final class ClientSetup {
 
     @SubscribeEvent
     public static void renderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModEntities.HANAYOME.get(), HanayomeRenderer::new);
-        event.registerEntityRenderer(ModEntities.ICHIMATSU.get(), IchimatsuRenderer::new);
-        event.registerEntityRenderer(ModEntities.KAGEBOSHI.get(), KageboshiRenderer::new);
-        event.registerEntityRenderer(ModEntities.MABOROSHI.get(), MaboroshiRenderer::new);
-        event.registerEntityRenderer(ModEntities.OHAJIKI.get(), ThrownItemRenderer::new);
-    }
-
-    @SubscribeEvent
-    public static void layers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(HanayomeModel.LAYER, HanayomeModel::createLayer);
-        event.registerLayerDefinition(IchimatsuModel.LAYER, IchimatsuModel::createLayer);
+        event.registerEntityRenderer(ModEntities.NOZOKI.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/drowned.png", 1.35f));
+        event.registerEntityRenderer(ModEntities.YOBIGOE.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/husk.png", 1.0f));
+        event.registerEntityRenderer(ModEntities.USHIRO.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/zombie.png", 1.15f));
+        event.registerEntityRenderer(ModEntities.KOYANUSHI.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/husk.png", 0.95f));
+        event.registerEntityRenderer(ModEntities.OYAMASAMA.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/drowned.png", 2.2f));
+        event.registerEntityRenderer(ModEntities.UTSURUMONO.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/zombie.png", 0.95f));
     }
 
     @SubscribeEvent
     public static void overlays(RegisterGuiOverlaysEvent event) {
-        event.registerBelowAll("meikon_world", HorrorOverlay::renderWorld);
-        event.registerAboveAll("meikon_hud", HorrorOverlay::renderHud);
-        event.registerAboveAll("meikon_cinematic", HorrorOverlay::renderCinematic);
+        event.registerBelowAll("sounan_world", HorrorOverlay::renderWorld);
+        event.registerAboveAll("sounan_hud", HorrorOverlay::renderHud);
     }
 
     @SubscribeEvent
     public static void keys(RegisterKeyMappingsEvent event) {
-        event.register(JOURNAL_KEY);
+        event.register(PHONE_KEY);
+        event.register(MEMO_KEY);
     }
 
     @SubscribeEvent
     public static void dimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
-        event.register(Sounan.id("kakuriyo"), new MountainEffects());
+        event.register(Sounan.id("kaerazu"), new MountainEffects());
     }
 }

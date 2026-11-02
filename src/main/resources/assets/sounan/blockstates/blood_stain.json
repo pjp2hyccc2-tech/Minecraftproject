@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "sounan:block/blood_stain"
+    },
+    "facing=east": {
+      "model": "sounan:block/blood_stain",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "sounan:block/blood_stain",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "sounan:block/blood_stain",
+      "y": 270
+    }
+  }
+}

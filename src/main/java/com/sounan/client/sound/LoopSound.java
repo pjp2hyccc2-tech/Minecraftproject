@@ -10,6 +10,8 @@ import net.minecraft.util.RandomSource;
 public class LoopSound extends AbstractTickableSoundInstance {
     public float target;
     private final float ease;
+    /** Ease used while fading out (beds that must vanish quickly: the insects falling silent). */
+    public float easeDown = -1.0f;
 
     public LoopSound(SoundEvent event, SoundSource source, float ease) {
         super(event, source, RandomSource.create());
@@ -30,7 +32,8 @@ public class LoopSound extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
-        volume += (target - volume) * ease;
+        float e = target < volume && easeDown > 0 ? easeDown : ease;
+        volume += (target - volume) * e;
         if (volume < 0.001f) volume = 0.001f;
     }
 

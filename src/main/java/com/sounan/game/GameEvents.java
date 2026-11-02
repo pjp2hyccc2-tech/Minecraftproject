@@ -3,9 +3,8 @@ package com.sounan.game;
 import com.sounan.Sounan;
 import com.sounan.command.SounanCommand;
 import com.sounan.debug.SelfTest;
+import com.sounan.item.GameItem;
 import com.sounan.registry.ModDimensions;
-import com.sounan.registry.ModItems;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.item.ItemStack;
@@ -31,8 +30,6 @@ public final class GameEvents {
     public static void serverTick(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         GameManager.serverTick(event.getServer());
-        ServerLevel level = GameManager.kakuriyo(event.getServer());
-        if (level != null) Director.runTasks(level);
         SelfTest.tick(event.getServer());
     }
 
@@ -49,17 +46,15 @@ public final class GameEvents {
     @SubscribeEvent
     public static void respawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
-        if (p.getPersistentData().contains("meikon_return") && GameData.get(p.server).active) {
-            GameManager.stateOrCreate(p).everLeftSafeRoom = true;
-            GameManager.toSpawn(p);
-        }
+        GameData data = GameData.get(p.server);
+        if (data.started && data.ending == 0 && p.getPersistentData().contains("sounan_return")) GameManager.toCheckpoint(p, data);
     }
 
-    /** Nothing hurts you in the mansion — except her. */
+    /** Nothing on the mountain hurts you the ordinary way — they take you instead. */
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void attack(LivingAttackEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
-        if (!ModDimensions.isKakuriyo(p.level()) || !GameData.get(p.server).active) return;
+        if (!ModDimensions.isMountain(p.level())) return;
         if (event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD) || event.getSource().is(DamageTypes.GENERIC_KILL)) return;
         event.setCanceled(true);
     }
@@ -67,18 +62,20 @@ public final class GameEvents {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void death(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
-        if (!ModDimensions.isKakuriyo(p.level()) || !GameData.get(p.server).active) return;
+        if (!ModDimensions.isMountain(p.level())) return;
         if (event.getSource().is(DamageTypes.GENERIC_KILL)) return;
         event.setCanceled(true);
         p.setHealth(p.getMaxHealth());
-        GameManager.fakeDeath(p);
+        GameManager.loopBack(p, GameManager.state(p));
     }
 
+    /** The flashlight and the phone never leave your hands. */
     @SubscribeEvent
     public static void toss(ItemTossEvent event) {
         ItemStack stack = event.getEntity().getItem();
-        if (!(event.getPlayer() instanceof ServerPlayer p) || !ModDimensions.isKakuriyo(p.level())) return;
-        if (stack.is(ModItems.SUZU.get()) || stack.is(ModItems.CHOCHIN.get()) || stack.is(ModItems.CHOCHIN_LIT.get())) {
+        if (!(event.getPlayer() instanceof ServerPlayer p) || !ModDimensions.isMountain(p.level())) return;
+        GameItem.Kind k = GameItem.kindOf(stack);
+        if (k != null && k != GameItem.Kind.MEMO) {
             event.setCanceled(true);
             p.getInventory().add(stack.copy());
         }
@@ -86,7 +83,7 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void breakBlock(BlockEvent.BreakEvent event) {
-        if (event.getPlayer() instanceof ServerPlayer p && ModDimensions.isKakuriyo(p.level()) && !p.isCreative()) {
+        if (event.getPlayer() instanceof ServerPlayer p && ModDimensions.isMountain(p.level()) && !p.isCreative()) {
             event.setCanceled(true);
         }
     }
@@ -103,9 +100,7 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void stopping(ServerStoppingEvent event) {
-        ServerLevel level = GameManager.kakuriyo(event.getServer());
-        if (level != null) LanternLight.removeAll(level);
-        Director.clearTasks();
-        GameManager.onServerStopping();
+        Director.clearAll();
+        GameManager.onServerStopping(event.getServer());
     }
 }

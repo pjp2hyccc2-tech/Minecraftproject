@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "sounan:block/fallen_leaves"
+    },
+    "facing=east": {
+      "model": "sounan:block/fallen_leaves",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "sounan:block/fallen_leaves",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "sounan:block/fallen_leaves",
+      "y": 270
+    }
+  }
+}
