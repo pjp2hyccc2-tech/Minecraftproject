@@ -1,0 +1,131 @@
+package com.sounan.client;
+
+import com.sounan.Sounan;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Axis;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+/**
+ * The look of 隠り世 without shaders: crimson-black fog, a blood-red moon high in the south, no clouds, no rain
+ * (the mod drives the rain level to carry fear to shader packs), a cold dark lightmap with warm lamp light.
+ * With a shader pack in use the vanilla sky is kept so the pack can colour the moon itself.
+ */
+public final class MountainEffects extends DimensionSpecialEffects {
+    private static final ResourceLocation MOON = Sounan.id("textures/environment/red_moon.png");
+
+    public MountainEffects() {
+        super(Float.NaN, false, SkyType.NONE, false, false);
+    }
+
+    @Override
+    public SkyType skyType() {
+        return ShaderCompat.active() ? SkyType.NORMAL : SkyType.NONE;
+    }
+
+    @Override
+    public Vec3 getBrightnessDependentFogColor(Vec3 color, float brightness) {
+        return new Vec3(0.032, 0.012, 0.016);
+    }
+
+    @Override
+    public boolean isFoggyAt(int x, int y) {
+        return true;
+    }
+
+    @Override
+    public float[] getSunriseColor(float timeOfDay, float partialTicks) {
+        return null;
+    }
+
+    @Override
+    public boolean renderClouds(ClientLevel level, int ticks, float partialTick, PoseStack poseStack, double camX, double camY, double camZ,
+                                Matrix4f projectionMatrix) {
+        return true;
+    }
+
+    @Override
+    public boolean renderSnowAndRain(ClientLevel level, int ticks, float partialTick, LightTexture lightTexture, double camX, double camY, double camZ) {
+        return true;
+    }
+
+    @Override
+    public boolean tickRain(ClientLevel level, int ticks, Camera camera) {
+        return true;
+    }
+
+    @Override
+    public boolean renderSky(ClientLevel level, int ticks, float partialTick, PoseStack poseStack, Camera camera, Matrix4f projectionMatrix,
+                             boolean isFoggy, Runnable setupFog) {
+        if (ShaderCompat.active()) return false;
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(com.mojang.blaze3d.platform.GlStateManager.SourceFactor.SRC_ALPHA,
+                com.mojang.blaze3d.platform.GlStateManager.DestFactor.ONE);
+        RenderSystem.depthMask(false);
+        poseStack.pushPose();
+        // 50 degrees up in the south, over the safe room roof: the same spot as the moon of
+        // the bundled shader pack (sunPathRotation -40 at the fixed midnight)
+        poseStack.mulPose(Axis.XP.rotationDegrees(40.0f));
+        Matrix4f m = poseStack.last().pose();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, MOON);
+        float fear = ClientState.fearShown / 100.0f;
+        RenderSystem.setShaderColor(1.0f, 0.85f - fear * 0.25f, 0.85f - fear * 0.25f, 1.0f);
+        BufferBuilder b = Tesselator.getInstance().getBuilder();
+        float s = 34.0f;
+        b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        b.vertex(m, -s, 100.0f, -s).uv(0.0f, 0.0f).endVertex();
+        b.vertex(m, s, 100.0f, -s).uv(1.0f, 0.0f).endVertex();
+        b.vertex(m, s, 100.0f, s).uv(1.0f, 1.0f).endVertex();
+        b.vertex(m, -s, 100.0f, s).uv(0.0f, 1.0f).endVertex();
+        BufferUploader.drawWithShader(b.end());
+        poseStack.popPose();
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.depthMask(true);
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableBlend();
+        return true;
+    }
+
+    @Override
+    public void adjustLightmapColors(ClientLevel level, float partialTicks, float skyDarken, float blockLightRedFlicker, float skyLight,
+                                     int pixelX, int pixelY, Vector3f colors) {
+        float block = pixelX / 15.0f;
+        float sky = pixelY / 15.0f;
+        float fear = ClientState.fearShown / 100.0f;
+        // desaturate and cool the dark, warm the lamp light
+        float lum = colors.x * 0.3f + colors.y * 0.59f + colors.z * 0.11f;
+        float warm = block * block;
+        float r = Mth.lerp(0.35f, colors.x, lum);
+        float g = Mth.lerp(0.35f, colors.y, lum);
+        float b = Mth.lerp(0.35f, colors.z, lum);
+        r *= Mth.lerp(warm, 0.80f, 1.10f);
+        g *= Mth.lerp(warm, 0.84f, 0.88f);
+        b *= Mth.lerp(warm, 1.02f, 0.62f);
+        float dark = 1.0f - 0.15f * fear;
+        // the darkness is deep but never a flat black: a cold floor of light
+        r += 0.016f;
+        g += 0.020f;
+        b += 0.032f;
+        // moonlight in the courtyard: cold and blue
+        float moon = sky * sky * Math.max(0.0f, 1.0f - block);
+        r += moon * 0.075f;
+        g += moon * 0.095f;
+        b += moon * 0.17f;
+        colors.set(Mth.clamp(r * dark, 0.0f, 1.0f), Mth.clamp(g * dark, 0.0f, 1.0f), Mth.clamp(b * dark, 0.0f, 1.0f));
+    }
+}

@@ -5,14 +5,15 @@ license="${mod_license}"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
-displayName="冥婚 -MEIKON-"
+displayName="遭難 -SOUNAN-"
 authors="${mod_authors}"
 description='''
-赤い封筒を拾ってしまった。
-あなたは死者との婚礼に招かれた。屋敷に散らばる七つの鈴を集め、縁切りの鳥居で鳴らせ。
-花嫁に見つかる前に。
+夜の帰らず山で遭難した。
+手元には圏外のスマホと懐中電灯だけ。失くしたバッグを見つけ、山を抜けろ。
+木の陰から覗くもの、背後を歩くもの、灯りを持って呼ぶもの――
+近づいてはいけない。振り返ってはいけない。返事をしてはいけない。
 
-A Japanese folk-horror game: gather the seven bells and sever the bond before the bride finds you.
+A Japanese mountain survival horror. Lost at night with a dead phone and a flashlight: find your bag and get off the mountain alive.
 '''
 
 [[dependencies.${mod_id}]]

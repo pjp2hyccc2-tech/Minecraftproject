@@ -1,8 +1,8 @@
-name: MEIKON build
+name: SOUNAN build
 
 on:
   push:
-    branches: [ meikon, 'mk-*' ]
+    branches: [ sounan, 'sn-*' ]
   workflow_dispatch:
 
 permissions:
@@ -43,22 +43,22 @@ jobs:
         if: steps.build.outcome == 'success' && hashFiles('ci/selftest.enabled') != ''
         continue-on-error: true
         env:
-          MEIKON_SELFTEST: 'true'
+          SOUNAN_SELFTEST: 'true'
         run: |
           mkdir -p run
           echo "eula=true" > run/eula.txt
           cp ci/server.properties run/server.properties
           set -o pipefail
           timeout 1500 ./gradlew runServer --no-daemon 2>&1 | tee selftest.log || true
-          cat run/meikon-selftest.txt
-          grep -q "SELFTEST RESULT: PASS" run/meikon-selftest.txt
+          cat run/sounan-selftest.txt
+          grep -q "SELFTEST RESULT: PASS" run/sounan-selftest.txt
 
       - name: Client screenshot tour
         id: shots
         if: steps.build.outcome == 'success' && hashFiles('ci/shots.enabled') != ''
         continue-on-error: true
         env:
-          MEIKON_SHOTS: 'true'
+          SOUNAN_SHOTS: 'true'
           LIBGL_ALWAYS_SOFTWARE: '1'
           MESA_GL_VERSION_OVERRIDE: '4.5'
         run: |
@@ -66,11 +66,11 @@ jobs:
           sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 > /dev/null
           mkdir -p run
           cp ci/options.txt run/options.txt
-          rm -rf run/screenshots run/saves/MeikonCI*
+          rm -rf run/screenshots run/saves/SounanCI*
           set -o pipefail
           timeout 2400 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient --no-daemon 2>&1 | tee client.log || true
-          cat run/meikon_autoshots.txt
-          grep -q finished run/meikon_autoshots.txt
+          cat run/sounan_autoshots.txt
+          grep -q finished run/sounan_autoshots.txt
 
       - name: Publish results
         if: always()
@@ -83,7 +83,7 @@ jobs:
           tail -c 300000 selftest.log > out/selftest.log 2>/dev/null || true
           tail -c 300000 client.log > out/client.log 2>/dev/null || true
           cp run/logs/latest.log out/run-latest.log 2>/dev/null || true
-          cp run/meikon-selftest.txt run/meikon_autoshots.txt run/meikon-layout.txt out/ 2>/dev/null || true
+          cp run/sounan-selftest.txt run/sounan_autoshots.txt run/sounan-layout.txt out/ 2>/dev/null || true
           cp run/screenshots/*.png out/screenshots/ 2>/dev/null || true
           cp run/crash-reports/*.txt out/ 2>/dev/null || true
           cp build/libs/*.jar out/ 2>/dev/null || true
@@ -91,8 +91,8 @@ jobs:
           cd out
           RESULT_BRANCH="ci-${GITHUB_REF_NAME}"
           git init -q -b "$RESULT_BRANCH"
-          git config user.name "meikon-ci"
-          git config user.email "meikon-ci@users.noreply.github.com"
+          git config user.name "sounan-ci"
+          git config user.email "sounan-ci@users.noreply.github.com"
           git add -A
           git commit -q -m "CI results for ${GITHUB_SHA} ($(cat STATUS))"
           git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "$RESULT_BRANCH"
@@ -101,7 +101,7 @@ jobs:
         if: steps.build.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
-          name: meikon-jar
+          name: sounan-jar
           path: |
             build/libs/*.jar
             build/shaderpack/*.zip
@@ -111,7 +111,7 @@ jobs:
         run: exit 1
 
   # -------------------------------------------------------------------------------------------
-  # MeikonShaders: GLSL lint + client tour with Oculus + Embeddium + the bundled pack.
+  # SounanShaders: GLSL lint + client tour with Oculus + Embeddium + the bundled pack.
   # Results: branch ci-<branch>-shaders
   # -------------------------------------------------------------------------------------------
   shaders:
@@ -137,13 +137,13 @@ jobs:
           set -o pipefail
           if [ -f tools/shader/lint.py ]; then python3 tools/shader/lint.py 2>&1 | tee lint.txt; else echo "no lint tool" | tee lint.txt; fi
 
-      - name: Shader client tour (Oculus + Embeddium + MeikonShaders)
+      - name: Shader client tour (Oculus + Embeddium + SounanShaders)
         id: shaderrun
         if: hashFiles('ci/shaders.enabled') != ''
         continue-on-error: true
         env:
-          MEIKON_SHOTS: 'true'
-          MEIKON_OCULUS: 'true'
+          SOUNAN_SHOTS: 'true'
+          SOUNAN_OCULUS: 'true'
           LIBGL_ALWAYS_SOFTWARE: '1'
           MESA_GL_VERSION_OVERRIDE: '4.5'
           MESA_GLSL_VERSION_OVERRIDE: '450'
@@ -152,13 +152,13 @@ jobs:
           chmod +x ./gradlew
           mkdir -p run/shaderpacks run/config
           cp ci/options.txt run/options.txt
-          (cd src/main/shaderpack && zip -qr ../../../run/shaderpacks/MeikonShaders.zip shaders)
-          printf 'enableShaders=true\nshaderPack=MeikonShaders.zip\n' > run/config/oculus.properties
+          (cd src/main/shaderpack && zip -qr ../../../run/shaderpacks/SounanShaders.zip shaders)
+          printf 'enableShaders=true\nshaderPack=SounanShaders.zip\n' > run/config/oculus.properties
           cp run/config/oculus.properties run/config/iris.properties
           set -o pipefail
           timeout 3000 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient --no-daemon 2>&1 | tee shaders.log || true
-          cat run/meikon_autoshots.txt
-          grep -q finished run/meikon_autoshots.txt
+          cat run/sounan_autoshots.txt
+          grep -q finished run/sounan_autoshots.txt
 
       - name: Publish shader results
         if: always()
@@ -169,8 +169,8 @@ jobs:
           cp lint.txt out/ 2>/dev/null || true
           tail -c 400000 shaders.log > out/shaders.log 2>/dev/null || true
           cp run/logs/latest.log out/shaders-latest.log 2>/dev/null || true
-          grep -n -i -E "oculus|iris|shader|glsl|meikon|Exception|error" run/logs/latest.log | grep -v -i "mixin" > out/shaders-grep.txt 2>/dev/null || true
-          cp run/meikon_autoshots.txt out/ 2>/dev/null || true
+          grep -n -i -E "oculus|iris|shader|glsl|sounan|Exception|error" run/logs/latest.log | grep -v -i "mixin" > out/shaders-grep.txt 2>/dev/null || true
+          cp run/sounan_autoshots.txt out/ 2>/dev/null || true
           cp run/screenshots/*.png out/screenshots/ 2>/dev/null || true
           cp run/crash-reports/*.txt out/ 2>/dev/null || true
           ls run/mods > out/mods.txt 2>/dev/null || true
@@ -178,14 +178,14 @@ jobs:
           cd out
           RESULT_BRANCH="ci-${GITHUB_REF_NAME}-shaders"
           git init -q -b "$RESULT_BRANCH"
-          git config user.name "meikon-ci"
-          git config user.email "meikon-ci@users.noreply.github.com"
+          git config user.name "sounan-ci"
+          git config user.email "sounan-ci@users.noreply.github.com"
           git add -A
           git commit -q -m "Shader CI results for ${GITHUB_SHA} ($(cat STATUS))"
           git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "$RESULT_BRANCH"
 
   # -------------------------------------------------------------------------------------------
-  # Trailer footage: the scripted capture (com.meikon.client.cine.Trailer) with Oculus + MeikonShaders,
+  # Trailer footage: the scripted capture (com.sounan.client.cine.Trailer) with Oculus + SounanShaders,
   # 1920x804, 30 fps, one H.264 clip per shot. Toggles: ci/trailer.enabled, ci/trailer.preview (3 key
   # frames per shot as JPEG), ci/trailer.only (comma separated shot names).
   # Results: branch ci-<branch>-trailer
@@ -210,9 +210,9 @@ jobs:
         if: hashFiles('ci/trailer.enabled') != ''
         continue-on-error: true
         env:
-          MEIKON_TRAILER: 'true'
-          MEIKON_OCULUS: 'true'
-          MEIKON_MANSION_SEED: '20261102'
+          SOUNAN_TRAILER: 'true'
+          SOUNAN_OCULUS: 'true'
+          SOUNAN_SEED: '20261102'
           LIBGL_ALWAYS_SOFTWARE: '1'
           MESA_GL_VERSION_OVERRIDE: '4.5'
           MESA_GLSL_VERSION_OVERRIDE: '450'
@@ -223,21 +223,21 @@ jobs:
           chmod +x ./gradlew
           mkdir -p run/shaderpacks run/config
           cp ci/options.txt run/options.txt
-          (cd src/main/shaderpack && zip -qr ../../../run/shaderpacks/MeikonShaders.zip shaders)
-          printf 'enableShaders=true\nshaderPack=MeikonShaders.zip\n' > run/config/oculus.properties
+          (cd src/main/shaderpack && zip -qr ../../../run/shaderpacks/SounanShaders.zip shaders)
+          printf 'enableShaders=true\nshaderPack=SounanShaders.zip\n' > run/config/oculus.properties
           cp run/config/oculus.properties run/config/iris.properties
           # clean frames: film grain is added in the edit
-          printf 'FILM_GRAIN=0.0\n' > run/shaderpacks/MeikonShaders.zip.txt
-          rm -rf run/trailer run/trailer_preview run/saves/MeikonTrailer*
-          export MEIKON_TRAILER_PREVIEW=false
-          [ -f ci/trailer.preview ] && export MEIKON_TRAILER_PREVIEW=true
-          export MEIKON_TRAILER_ONLY=all
-          [ -s ci/trailer.only ] && export MEIKON_TRAILER_ONLY="$(tr -d ' \n' < ci/trailer.only)"
-          echo "preview=$MEIKON_TRAILER_PREVIEW only=$MEIKON_TRAILER_ONLY"
+          printf 'FILM_GRAIN=0.0\n' > run/shaderpacks/SounanShaders.zip.txt
+          rm -rf run/trailer run/trailer_preview run/saves/SounanTrailer*
+          export SOUNAN_TRAILER_PREVIEW=false
+          [ -f ci/trailer.preview ] && export SOUNAN_TRAILER_PREVIEW=true
+          export SOUNAN_TRAILER_ONLY=all
+          [ -s ci/trailer.only ] && export SOUNAN_TRAILER_ONLY="$(tr -d ' \n' < ci/trailer.only)"
+          echo "preview=$SOUNAN_TRAILER_PREVIEW only=$SOUNAN_TRAILER_ONLY"
           set -o pipefail
           timeout 13000 xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runClient --no-daemon 2>&1 | tee trailer.log || true
-          cat run/meikon_trailer.txt
-          grep -q finished run/meikon_trailer.txt
+          cat run/sounan_trailer.txt
+          grep -q finished run/sounan_trailer.txt
 
       - name: Encode clips
         if: always() && hashFiles('ci/trailer.enabled') != ''
@@ -263,14 +263,14 @@ jobs:
           echo "film=${{ steps.film.outcome }}" > out/STATUS
           tail -c 400000 trailer.log > out/trailer.log 2>/dev/null || true
           cp run/logs/latest.log out/trailer-latest.log 2>/dev/null || true
-          grep -n -i -E "oculus|iris|meikon|Exception|error" run/logs/latest.log | grep -v -i "mixin" > out/trailer-grep.txt 2>/dev/null || true
-          cp run/meikon_trailer.txt out/ 2>/dev/null || true
+          grep -n -i -E "oculus|iris|sounan|Exception|error" run/logs/latest.log | grep -v -i "mixin" > out/trailer-grep.txt 2>/dev/null || true
+          cp run/sounan_trailer.txt out/ 2>/dev/null || true
           cp run/crash-reports/*.txt out/ 2>/dev/null || true
           cd out
           RESULT_BRANCH="ci-${GITHUB_REF_NAME}-trailer"
           git init -q -b "$RESULT_BRANCH"
-          git config user.name "meikon-ci"
-          git config user.email "meikon-ci@users.noreply.github.com"
+          git config user.name "sounan-ci"
+          git config user.email "sounan-ci@users.noreply.github.com"
           git add -A
           git commit -q -m "Trailer CI results for ${GITHUB_SHA} ($(cat STATUS))"
           git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "$RESULT_BRANCH"

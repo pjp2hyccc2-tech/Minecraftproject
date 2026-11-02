@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/door_bottom_left_open",
-  "render_type": "minecraft:cutout",
-  "textures": {
-    "bottom": "meikon:block/kura_door_bottom",
-    "top": "meikon:block/kura_door_top"
-  }
-}

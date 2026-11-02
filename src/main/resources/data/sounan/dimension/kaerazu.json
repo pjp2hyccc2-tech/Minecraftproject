@@ -1,0 +1,7 @@
+{
+  "type": "sounan:kaerazu",
+  "generator": {
+    "type": "sounan:mountain",
+    "biome_source": { "type": "minecraft:fixed", "biome": "sounan:kaerazu" }
+  }
+}

@@ -32,14 +32,14 @@ minecraft {
         }
 
         client {
-            // CI screenshot tour (MEIKON_SHOTS=true), the Oculus run (MEIKON_OCULUS=true) and the trailer capture (MEIKON_TRAILER=true)
-            def trailer = System.getenv('MEIKON_TRAILER') == 'true'
-            property 'meikon.shots', System.getenv('MEIKON_SHOTS') ?: 'false'
-            property 'meikon.shots.shaders', System.getenv('MEIKON_OCULUS') ?: 'false'
-            property 'meikon.trailer', trailer ? 'true' : 'false'
-            property 'meikon.trailer.preview', System.getenv('MEIKON_TRAILER_PREVIEW') ?: 'false'
-            property 'meikon.trailer.only', System.getenv('MEIKON_TRAILER_ONLY') ?: 'all'
-            property 'meikon.mansionSeed', System.getenv('MEIKON_MANSION_SEED') ?: 'random'
+            // CI screenshot tour (SOUNAN_SHOTS=true), the Oculus run (SOUNAN_OCULUS=true) and the trailer capture (SOUNAN_TRAILER=true)
+            def trailer = System.getenv('SOUNAN_TRAILER') == 'true'
+            property 'sounan.shots', System.getenv('SOUNAN_SHOTS') ?: 'false'
+            property 'sounan.shots.shaders', System.getenv('SOUNAN_OCULUS') ?: 'false'
+            property 'sounan.trailer', trailer ? 'true' : 'false'
+            property 'sounan.trailer.preview', System.getenv('SOUNAN_TRAILER_PREVIEW') ?: 'false'
+            property 'sounan.trailer.only', System.getenv('SOUNAN_TRAILER_ONLY') ?: 'all'
+            property 'sounan.seed', System.getenv('SOUNAN_SEED') ?: 'random'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             if (trailer) {
@@ -52,7 +52,7 @@ minecraft {
         }
 
         server {
-            property 'meikon.selftest', System.getenv('MEIKON_SELFTEST') ?: 'false'
+            property 'sounan.selftest', System.getenv('SOUNAN_SELFTEST') ?: 'false'
             args '--nogui'
         }
     }
@@ -61,13 +61,13 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 // ---------------------------------------------------------------------------------------------
-// MeikonShaders (src/main/shaderpack) -> MeikonShaders.zip at the jar resource root (installed into
-// shaderpacks/ by com.meikon.client.ShaderPackInstaller) and build/shaderpack/MeikonShaders.zip.
+// SounanShaders (src/main/shaderpack) -> SounanShaders.zip at the jar resource root (installed into
+// shaderpacks/ by com.sounan.client.ShaderPackInstaller) and build/shaderpack/SounanShaders.zip.
 // ---------------------------------------------------------------------------------------------
 def shaderPackDir = layout.buildDirectory.dir('generated/shaderpack')
 tasks.register('shaderPackZip', Zip) {
     from 'src/main/shaderpack'
-    archiveFileName = 'MeikonShaders.zip'
+    archiveFileName = 'SounanShaders.zip'
     destinationDirectory = shaderPackDir
     includeEmptyDirs = false
 }
@@ -90,8 +90,8 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    // CI only: run the client with Oculus + Embeddium to photograph MeikonShaders
-    if (System.getenv('MEIKON_OCULUS') == 'true') {
+    // CI only: run the client with Oculus + Embeddium to photograph SounanShaders
+    if (System.getenv('SOUNAN_OCULUS') == 'true') {
         runtimeOnly fg.deobf("maven.modrinth:oculus:${System.getenv('OCULUS_VERSION') ?: '1.20.1-1.7.0'}")
         runtimeOnly fg.deobf("maven.modrinth:embeddium:${System.getenv('EMBEDDIUM_VERSION') ?: '0.3.31+mc1.20.1'}")
     }

@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "meikon:block/vermilion_top",
-    "side": "meikon:block/vermilion"
-  }
-}
