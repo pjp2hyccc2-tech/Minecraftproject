@@ -236,7 +236,7 @@ public final class Trailer {
             // pose the new actors at once, so nothing pops in on the first filmed frame
             F.reset();
             shot.frame(0.0f, F);
-            for (Puppet pp : shot.puppets) pp.apply(mc.getFrameTime(), 0.0f);
+            for (Puppet pp : shot.puppets) pp.apply(PartialTick.current(mc), 0.0f);
             log("set-up " + label() + " (" + shot.duration + " s, " + shot.puppets.size() + " actors)");
         } catch (Exception e) {
             log("set-up failed " + label() + ": " + e);
@@ -601,18 +601,33 @@ public final class Trailer {
     /** The frozen partial tick of a paused game (found by probing Minecraft's float fields once). */
     static final class PartialTick {
         private static Field field;
+        private static java.lang.reflect.Method getter;
         private static boolean probed;
+
+        /** What the renderer uses this frame: Minecraft#getPartialTick (pause-aware) when it exists. */
+        static float current(Minecraft mc) {
+            try {
+                if (getter != null) return (Float) getter.invoke(mc);
+            } catch (Exception ignored) {
+            }
+            return mc.getFrameTime();
+        }
 
         static float set(Minecraft mc, float value) {
             if (!probed) {
                 probed = true;
+                try {
+                    getter = Minecraft.class.getMethod("getPartialTick");
+                } catch (Exception e) {
+                    getter = null;
+                }
                 try {
                     for (Field f : Minecraft.class.getDeclaredFields()) {
                         if (f.getType() != float.class || java.lang.reflect.Modifier.isStatic(f.getModifiers())) continue;
                         f.setAccessible(true);
                         float old = f.getFloat(mc);
                         f.setFloat(mc, 0.4375f);
-                        boolean hit = mc.getFrameTime() == 0.4375f;
+                        boolean hit = current(mc) == 0.4375f;
                         f.setFloat(mc, old);
                         if (hit) {
                             field = f;
@@ -622,7 +637,7 @@ public final class Trailer {
                 } catch (Exception e) {
                     log("partial tick probe failed: " + e);
                 }
-                log("pause partial tick field " + (field == null ? "not found" : field.getName()));
+                log("pause partial tick: getter " + (getter != null) + ", field " + (field == null ? "not found" : field.getName()));
             }
             if (field != null) {
                 try {
@@ -630,7 +645,7 @@ public final class Trailer {
                 } catch (Exception ignored) {
                 }
             }
-            return mc.getFrameTime();
+            return current(mc);
         }
     }
 

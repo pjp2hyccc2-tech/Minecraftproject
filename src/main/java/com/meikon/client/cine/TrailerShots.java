@@ -109,7 +109,7 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             float k = easeSine(t / duration);
-            f.cam = lerp(new Vec3(0.5, 70.0, -8.0), new Vec3(0.5, 66.35, -2.6), k);
+            f.cam = lerp(new Vec3(0.5, 70.0, -8.0), new Vec3(0.5, 66.25, 5.0), k);
             f.yaw = lerp(0.0f, 3.0f, k);
             f.pitch = lerp(-50.0f, -5.0f, easeSine(seg(t, 0.3f, 6.8f)));
             f.fov = 55.0f;
@@ -127,7 +127,7 @@ final class TrailerShots {
         void frame(float t, Frame f) {
             float step = (float) Math.sin(t * Math.PI * 2.0 * 1.7);
             double x = lerp(-13.0f, -7.4f, t / duration);
-            f.cam = new Vec3(x, 66.62 + 0.035 * step, 15.0 + 0.04 * Math.sin(t * Math.PI * 1.7));
+            f.cam = new Vec3(x, 66.62 + 0.035 * step, 16.3 + 0.04 * Math.sin(t * Math.PI * 1.7));
             f.yaw = 270.0f + 3.0f * noise(t * 0.6f, 1.0f);
             f.pitch = 2.0f + 1.5f * noise(t * 0.5f, 2.0f) + 0.4f * step;
             f.hand = true;
@@ -161,7 +161,7 @@ final class TrailerShots {
         void frame(float t, Frame f) {
             float k = easeSine(t / duration);
             Vec3 cam = lerp(new Vec3(1.0, 66.42, -16.8), new Vec3(1.0, 66.32, -19.9), k);
-            f.look(cam, new Vec3(0.6, 66.05, -25.5));
+            f.look(cam, new Vec3(0.9, 66.45, -25.5));
             f.fov = 48.0f;
             f.fear = lerp(0.35f, 0.5f, k);
             if (bride != null) {
@@ -291,14 +291,14 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             float k = easeSine(t / duration);
-            f.cam = lerp(new Vec3(12.8, 66.45, 15.5), new Vec3(10.2, 66.45, 15.5), k);
+            f.cam = lerp(new Vec3(12.8, 66.45, 16.4), new Vec3(10.2, 66.45, 16.4), k);
             f.yaw = 90.0f + 0.6f * noise(t * 0.4f, 5.0f);
             f.pitch = 0.5f + 0.4f * noise(t * 0.35f, 6.0f);
             f.fov = 42.0f;
             f.fear = lerp(0.45f, 0.7f, seg(t, 3.5f, 5.5f));
             if (bride != null) {
                 float snap = easeSine(seg(t, 3.7f, 3.95f));
-                bride.at(0.5, 65.0, 15.5).look(270.0f, 270.0f + 35.0f * (1.0f - snap), 22.0f * (1.0f - snap) - 2.0f * snap);
+                bride.at(0.5, 65.0, 16.4).look(270.0f, 270.0f + 35.0f * (1.0f - snap), 22.0f * (1.0f - snap) - 2.0f * snap);
                 bride(bride).setClientState(t >= 4.15f ? Hanayome.State.SEARCH : Hanayome.State.WANDER);
             }
         }
@@ -309,7 +309,7 @@ final class TrailerShots {
         Trailer.Puppet bride;
         Vec3 cam = Vec3.ZERO, fwd = new Vec3(0, 0, 1), right = new Vec3(1, 0, 0), front = Vec3.ZERO;
         float camYaw;
-        BlockPos lamp;
+        BlockPos lamp, entrance;
 
         ClosetPeek() {
             super("closet", 7.0f);
@@ -320,7 +320,14 @@ final class TrailerShots {
             super.prepare(m);
             Closet best = null;
             int bestScore = -1;
+            // seed 20261102: closet 3 looks east into the south storeroom, whose shoji door (4,65,18) she comes in by
             for (Closet c : m.closets) {
+                if (c.inside().equals(new BlockPos(1, 65, 21)) && c.facing() == Direction.EAST) {
+                    best = c;
+                    bestScore = 99;
+                }
+            }
+            for (Closet c : best != null ? List.<Closet>of() : m.closets) {
                 Direction d = c.facing(), r = d.getClockWise();
                 int score = 0;
                 for (int a = 1; a <= 4; a++) {
@@ -344,7 +351,12 @@ final class TrailerShots {
             BlockPos fr = best.front();
             front = new Vec3(fr.getX() + 0.5, fr.getY(), fr.getZ() + 0.5);
             lamp = null;
-            for (int side : new int[]{1, -1, 2, -2}) {
+            entrance = null;
+            if (bestScore == 99) {
+                lamp = new BlockPos(7, 65, 23);
+                entrance = new BlockPos(4, 65, 18);
+            }
+            for (int side : lamp != null ? new int[0] : new int[]{1, -1, 2, -2}) {
                 BlockPos p = fr.relative(d, 3).relative(r, side);
                 if (open(p) && open(p.above())) {
                     lamp = p;
@@ -356,10 +368,14 @@ final class TrailerShots {
 
         @Override
         void setup(Minecraft mc, Mansion m) {
-            if (lamp != null) {
-                BlockPos at = lamp;
-                Trailer.server(l -> setAndon(l, at, true));
-            }
+            BlockPos at = lamp, door = entrance;
+            Trailer.server(l -> {
+                if (at != null) setAndon(l, at, true);
+                if (door != null) {
+                    openDoor(l, door);
+                    placeCandle(l, new BlockPos(6, 65, 20));
+                }
+            });
             bride = puppet(ModEntities.HANAYOME.get());
             bride(bride).setClientState(Hanayome.State.WANDER);
         }
@@ -372,9 +388,9 @@ final class TrailerShots {
             f.fov = 62.0f;
             f.fear = lerp(0.7f, 0.95f, seg(t, 0.0f, 6.0f));
             if (bride == null) return;
-            Vec3 p0 = front.add(fwd.scale(2.3)).add(right.scale(-3.0));
-            Vec3 p1 = front.add(fwd.scale(2.3));
-            Vec3 p2 = front.add(fwd.scale(1.2));
+            Vec3 p0 = entrance != null ? new Vec3(entrance.getX() + 0.5, front.y, entrance.getZ() + 0.6) : front.add(fwd.scale(2.3)).add(right.scale(-3.0));
+            Vec3 p1 = entrance != null ? new Vec3(entrance.getX() + 0.5, front.y, front.z - 0.2) : front.add(fwd.scale(2.3));
+            Vec3 p2 = entrance != null ? new Vec3(front.x + 1.1, front.y, front.z) : front.add(fwd.scale(1.2));
             float walkYaw = yawOf(right);
             float faceYaw = yawOf(fwd.scale(-1));
             float w1 = seg(t, 0.3f, 3.4f);
@@ -480,7 +496,7 @@ final class TrailerShots {
         void frame(float t, Frame f) {
             float run = (float) Math.sin(t * Math.PI * 2.0 * 2.4);
             double camZ = lerp(-11.0f, 11.5f, t / duration);
-            f.cam = new Vec3(15.45 + 0.05 * noise(t * 2.0f, 14.0f), 66.5 + 0.06 * run, camZ);
+            f.cam = new Vec3(16.4 + 0.05 * noise(t * 2.0f, 14.0f), 66.5 + 0.06 * run, camZ);
             f.yaw = 180.0f;
             f.pitch = 1.0f;
             f.shake(1.3f, t, 15.0f);
@@ -490,7 +506,7 @@ final class TrailerShots {
             f.danger = 1.0f;
             if (bride != null) {
                 double z = lerp(-14.6f, 8.6f, t / duration);
-                bride.at(15.45, 65.0, z).look(0.0f, 0.0f, -4.0f).walk(20.0f * 0.93f * t, 0.93f);
+                bride.at(16.4, 65.0, z).look(0.0f, 0.0f, -4.0f).walk(20.0f * 0.93f * t, 0.93f);
             }
         }
     }
@@ -512,7 +528,7 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             float k = t / duration;
-            f.cam = new Vec3(15.5, 65.32, 9.3);
+            f.cam = new Vec3(16.4, 65.32, 9.3);
             f.yaw = 180.0f;
             f.pitch = lerp(-16.0f, -26.0f, easeSine(k));
             f.shake(0.6f + 1.4f * k, t, 16.0f);
@@ -522,7 +538,7 @@ final class TrailerShots {
             f.danger = 1.0f;
             if (bride != null) {
                 double z = lerp(-2.6f, 9.0f, k);
-                bride.at(15.45, 65.0, z).look(0.0f, 0.0f, 10.0f).walk(20.0f * 0.93f * t, 0.93f);
+                bride.at(16.4, 65.0, z).look(0.0f, 0.0f, 10.0f).walk(20.0f * 0.93f * t, 0.93f);
             }
         }
     }
@@ -573,7 +589,7 @@ final class TrailerShots {
 
         @Override
         void frame(float t, Frame f) {
-            f.cam = new Vec3(8.5, 66.42, 15.5);
+            f.cam = new Vec3(8.5, 66.42, 16.4);
             f.yaw = 90.0f;
             f.pitch = 0.5f;
             float lunge = seg(t, 1.05f, 1.55f);
@@ -585,8 +601,8 @@ final class TrailerShots {
             f.fear = 1.0f;
             f.danger = 1.0f;
             if (bride != null) {
-                double x = lerp(5.3f, 7.7f, lunge);
-                bride.at(x, 65.0, 15.5).look(270.0f, 270.0f, -6.0f);
+                double x = lerp(5.3f, 7.3f, lunge);
+                bride.at(x, 65.0, 16.4).look(270.0f, 270.0f, -6.0f);
             }
         }
     }
