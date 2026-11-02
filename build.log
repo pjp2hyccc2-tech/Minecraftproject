@@ -1,0 +1,1531 @@
+Downloading https://services.gradle.org/distributions/gradle-8.8-bin.zip
+.............10%.............20%.............30%.............40%.............50%.............60%..............70%.............80%.............90%.............100%
+
+Welcome to Gradle 8.8!
+
+Here are the highlights of this release:
+ - Running Gradle on Java 22
+ - Configurable Gradle daemon JVM
+ - Improved IDE performance for large projects
+
+For more details see https://docs.gradle.org/8.8/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.8/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Java: 17.0.21, JVM: 17.0.21+9 (Eclipse Adoptium), Arch: amd64
+
+> Task :compileJava
+Setting up MCP environment
+Initializing steps
+Executing steps
+ > Running 'downloadManifest'
+ > Running 'downloadJson'
+ > Running 'downloadClient'
+ > Running 'downloadServer'
+ > Running 'extractServer'
+ > Running 'downloadClientMappings'
+ > Running 'mergeMappings'
+ > Running 'stripClient'
+ > Running 'stripServer'
+ > Running 'merge'
+ > Running 'listLibraries'
+ > Running 'rename'
+Stopping at requested step: /home/runner/.gradle/caches/forge_gradle/mcp_repo/de/oceanlabs/mcp/mcp_config/1.20.1-20230612.114412/joined/rename/output.jar
+[16:13:37] [main/INFO]: Writing debug log file accesstransform.log
+[16:13:37] [main/INFO]: Access Transformer processor running version 8.2.14
+[16:13:37] [main/INFO]: Command line arguments [--inJar, /home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-injected.jar, --outJar, /home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar, --logFile, accesstransform.log, --atFile, /home/runner/work/Minecraftproject/Minecraftproject/build/_atJar_4/parent_at.cfg]
+[16:13:37] [main/INFO]: Reading from /home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-injected.jar
+[16:13:37] [main/INFO]: Writing to /home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar
+[16:13:37] [main/INFO]: Transformer file /home/runner/work/Minecraftproject/Minecraftproject/build/_atJar_4/parent_at.cfg
+[16:13:37] [main/WARN]: Found existing output jar /home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar, overwriting
+[16:13:40] [main/INFO]: JAR transformation complete /home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar
+Creating SRG -> MCP TSRG
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/Sounan.java:8: error: cannot find symbol
+import com.sounan.registry.ModPaintings;
+                          ^
+  symbol:   class ModPaintings
+  location: package com.sounan.registry
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:4: error: package com.sounan.entity does not exist
+import com.sounan.entity.Hanayome;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:5: error: package com.sounan.entity does not exist
+import com.sounan.entity.Ichimatsu;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:6: error: package com.sounan.entity does not exist
+import com.sounan.entity.Kageboshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:7: error: package com.sounan.entity does not exist
+import com.sounan.entity.Maboroshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:11: error: cannot find symbol
+import com.sounan.game.Mansion;
+                      ^
+  symbol:   class Mansion
+  location: package com.sounan.game
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:12: error: cannot find symbol
+import com.sounan.game.MansionBuilder;
+                      ^
+  symbol:   class MansionBuilder
+  location: package com.sounan.game
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:14: error: cannot find symbol
+import com.sounan.game.Room;
+                      ^
+  symbol:   class Room
+  location: package com.sounan.game
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:44: error: cannot find symbol
+    private static Hanayome bride;
+                   ^
+  symbol:   class Hanayome
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:5: error: cannot find symbol
+import com.sounan.block.AndonBlock;
+                       ^
+  symbol:   class AndonBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:6: error: cannot find symbol
+import com.sounan.block.CandleStandBlock;
+                       ^
+  symbol:   class CandleStandBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:7: error: cannot find symbol
+import com.sounan.block.SuzuDaiBlock;
+                       ^
+  symbol:   class SuzuDaiBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:8: error: cannot find symbol
+import com.sounan.block.TansuBlock;
+                       ^
+  symbol:   class TansuBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:9: error: cannot find symbol
+import com.sounan.block.HeadlessDollBlock;
+                       ^
+  symbol:   class HeadlessDollBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:10: error: package com.sounan.entity does not exist
+import com.sounan.entity.Hanayome;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:11: error: package com.sounan.item does not exist
+import com.sounan.item.BellItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:312: error: cannot find symbol
+    public static boolean chasing(Hanayome h) {
+                                  ^
+  symbol:   class Hanayome
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:4: error: package com.sounan.client.render does not exist
+import com.sounan.client.render.HanayomeModel;
+                               ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:5: error: package com.sounan.client.render does not exist
+import com.sounan.client.render.HanayomeRenderer;
+                               ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:6: error: package com.sounan.client.render does not exist
+import com.sounan.client.render.IchimatsuModel;
+                               ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:7: error: package com.sounan.client.render does not exist
+import com.sounan.client.render.IchimatsuRenderer;
+                               ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:8: error: package com.sounan.client.render does not exist
+import com.sounan.client.render.KageboshiRenderer;
+                               ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:9: error: package com.sounan.client.render does not exist
+import com.sounan.client.render.MaboroshiRenderer;
+                               ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/gui/JournalScreen.java:4: error: package com.sounan.item does not exist
+import com.sounan.item.NoteItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorAudio.java:5: error: package com.sounan.entity does not exist
+import com.sounan.entity.Hanayome;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientPacketHandler.java:5: error: cannot find symbol
+import com.sounan.client.gui.EnvelopeScreen;
+                            ^
+  symbol:   class EnvelopeScreen
+  location: package com.sounan.client.gui
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientPacketHandler.java:7: error: cannot find symbol
+import com.sounan.client.gui.SakazukiScreen;
+                            ^
+  symbol:   class SakazukiScreen
+  location: package com.sounan.client.gui
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:5: error: cannot find symbol
+import com.sounan.client.gui.EnvelopeScreen;
+                            ^
+  symbol:   class EnvelopeScreen
+  location: package com.sounan.client.gui
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:9: error: cannot find symbol
+import com.sounan.game.Mansion;
+                      ^
+  symbol:   class Mansion
+  location: package com.sounan.game
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:10: error: cannot find symbol
+import com.sounan.game.Room;
+                      ^
+  symbol:   class Room
+  location: package com.sounan.game
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:158: error: cannot find symbol
+    private static Mansion mansion() {
+                   ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:163: error: cannot find symbol
+    private static float backYaw(Room r) {
+                                 ^
+  symbol:   class Room
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:4: error: cannot find symbol
+import com.sounan.block.AndonBlock;
+                       ^
+  symbol:   class AndonBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:5: error: cannot find symbol
+import com.sounan.block.CandleStandBlock;
+                       ^
+  symbol:   class CandleStandBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:7: error: cannot find symbol
+import com.sounan.block.HeadlessDollBlock;
+                       ^
+  symbol:   class HeadlessDollBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:9: error: cannot find symbol
+import com.sounan.block.KakejikuBlock;
+                       ^
+  symbol:   class KakejikuBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:10: error: cannot find symbol
+import com.sounan.block.KuraDoorBlock;
+                       ^
+  symbol:   class KuraDoorBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:11: error: cannot find symbol
+import com.sounan.block.LetterBlock;
+                       ^
+  symbol:   class LetterBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:13: error: cannot find symbol
+import com.sounan.block.SaltPileBlock;
+                       ^
+  symbol:   class SaltPileBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:14: error: cannot find symbol
+import com.sounan.block.SuzuDaiBlock;
+                       ^
+  symbol:   class SuzuDaiBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:15: error: cannot find symbol
+import com.sounan.block.TansuBlock;
+                       ^
+  symbol:   class TansuBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:16: error: cannot find symbol
+import com.sounan.block.TatamiBlock;
+                       ^
+  symbol:   class TatamiBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:18: error: cannot find symbol
+import com.sounan.block.ToriiGateBlock;
+                       ^
+  symbol:   class ToriiGateBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModCreativeTab.java:4: error: package com.sounan.item does not exist
+import com.sounan.item.NoteItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:4: error: package com.sounan.entity does not exist
+import com.sounan.entity.Hanayome;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:5: error: package com.sounan.entity does not exist
+import com.sounan.entity.Ichimatsu;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:6: error: package com.sounan.entity does not exist
+import com.sounan.entity.Kageboshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:7: error: package com.sounan.entity does not exist
+import com.sounan.entity.Maboroshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:8: error: package com.sounan.entity does not exist
+import com.sounan.entity.Ohajiki;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:19: error: cannot find symbol
+    public static final RegistryObject<EntityType<Hanayome>> HANAYOME = ENTITIES.register("hanayome",
+                                                  ^
+  symbol:   class Hanayome
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:22: error: cannot find symbol
+    public static final RegistryObject<EntityType<Ichimatsu>> ICHIMATSU = ENTITIES.register("ichimatsu",
+                                                  ^
+  symbol:   class Ichimatsu
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:25: error: cannot find symbol
+    public static final RegistryObject<EntityType<Kageboshi>> KAGEBOSHI = ENTITIES.register("kageboshi",
+                                                  ^
+  symbol:   class Kageboshi
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:28: error: cannot find symbol
+    public static final RegistryObject<EntityType<Maboroshi>> MABOROSHI = ENTITIES.register("maboroshi",
+                                                  ^
+  symbol:   class Maboroshi
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:31: error: cannot find symbol
+    public static final RegistryObject<EntityType<Ohajiki>> OHAJIKI = ENTITIES.register("ohajiki",
+                                                  ^
+  symbol:   class Ohajiki
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:4: error: package com.sounan.item does not exist
+import com.sounan.item.BellItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:5: error: package com.sounan.item does not exist
+import com.sounan.item.EnvelopeItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:6: error: package com.sounan.item does not exist
+import com.sounan.item.LanternItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:7: error: package com.sounan.item does not exist
+import com.sounan.item.LoreItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:8: error: package com.sounan.item does not exist
+import com.sounan.item.MarbleItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:9: error: package com.sounan.item does not exist
+import com.sounan.item.NoteItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:10: error: package com.sounan.item does not exist
+import com.sounan.item.OilItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:11: error: package com.sounan.item does not exist
+import com.sounan.item.SaltItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:3: error: package com.sounan.entity does not exist
+import com.sounan.entity.Hanayome;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:4: error: package com.sounan.entity does not exist
+import com.sounan.entity.Ichimatsu;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:5: error: package com.sounan.entity does not exist
+import com.sounan.entity.Kageboshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:11: error: cannot find symbol
+import com.sounan.game.Mansion;
+                      ^
+  symbol:   class Mansion
+  location: package com.sounan.game
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:13: error: cannot find symbol
+import com.sounan.game.Room;
+                      ^
+  symbol:   class Room
+  location: package com.sounan.game
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:14: error: package com.sounan.item does not exist
+import com.sounan.item.LanternItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:3: error: cannot find symbol
+import com.sounan.block.AndonBlock;
+                       ^
+  symbol:   class AndonBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:4: error: cannot find symbol
+import com.sounan.block.KakejikuBlock;
+                       ^
+  symbol:   class KakejikuBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:5: error: package com.sounan.entity does not exist
+import com.sounan.entity.Hanayome;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:6: error: package com.sounan.entity does not exist
+import com.sounan.entity.Ichimatsu;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:7: error: package com.sounan.entity does not exist
+import com.sounan.entity.Kageboshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:8: error: package com.sounan.entity does not exist
+import com.sounan.entity.Maboroshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:201: error: cannot find symbol
+    private static boolean lampFlicker(ServerLevel level, ServerPlayer p, Mansion m, int phase) {
+                                                                          ^
+  symbol:   class Mansion
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:240: error: cannot find symbol
+    private static boolean handprint(ServerLevel level, ServerPlayer p, Mansion m) {
+                                                                        ^
+  symbol:   class Mansion
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:252: error: cannot find symbol
+    private static boolean scrollFace(ServerLevel level, ServerPlayer p, Mansion m) {
+                                                                         ^
+  symbol:   class Mansion
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:277: error: cannot find symbol
+    private static boolean doorOpens(ServerLevel level, ServerPlayer p, Mansion m) {
+                                                                        ^
+  symbol:   class Mansion
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:5: error: cannot find symbol
+import com.sounan.block.CandleStandBlock;
+                       ^
+  symbol:   class CandleStandBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:6: error: cannot find symbol
+import com.sounan.block.SuzuDaiBlock;
+                       ^
+  symbol:   class SuzuDaiBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:7: error: cannot find symbol
+import com.sounan.block.ToriiGateBlock;
+                       ^
+  symbol:   class ToriiGateBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:8: error: package com.sounan.entity does not exist
+import com.sounan.entity.Hanayome;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:9: error: package com.sounan.entity does not exist
+import com.sounan.entity.Ichimatsu;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:10: error: package com.sounan.entity does not exist
+import com.sounan.entity.Kageboshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:11: error: package com.sounan.entity does not exist
+import com.sounan.entity.Maboroshi;
+                        ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:12: error: package com.sounan.item does not exist
+import com.sounan.item.LanternItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:13: error: package com.sounan.item does not exist
+import com.sounan.item.NoteItem;
+                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:73: error: cannot find symbol
+    @Nullable private static Mansion mansion;
+                             ^
+  symbol:   class Mansion
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:85: error: cannot find symbol
+    public static Mansion mansion() {
+                  ^
+  symbol:   class Mansion
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:255: error: cannot find symbol
+    public static BlockPos nextWaypoint(ServerLevel level, Hanayome bride) {
+                                                           ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:694: error: cannot find symbol
+    public static Hanayome nearestBride(ServerLevel level, Vec3 pos) {
+                  ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:708: error: cannot find symbol
+    public static Hanayome anyBride(ServerLevel level) {
+                  ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:968: error: cannot find symbol
+    public static void onBrideSpotted(ServerPlayer p, Hanayome bride) {
+                                                      ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:974: error: cannot find symbol
+    public static ServerPlayer dollObserver(ServerLevel level, Ichimatsu doll) {
+                                                               ^
+  symbol:   class Ichimatsu
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:986: error: cannot find symbol
+    public static void dollAttack(ServerPlayer p, Ichimatsu doll) {
+                                                  ^
+  symbol:   class Ichimatsu
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1002: error: cannot find symbol
+    public static void shadowTouch(ServerPlayer p, Kageboshi shadow) {
+                                                   ^
+  symbol:   class Kageboshi
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1011: error: cannot find symbol
+    public static void peekSeen(ServerPlayer p, Maboroshi m) {
+                                                ^
+  symbol:   class Maboroshi
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1017: error: cannot find symbol
+    public static void beginCapture(ServerPlayer p, Hanayome bride) {
+                                                    ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/Sounan.java:34: error: package ModPaintings does not exist
+        ModPaintings.PAINTINGS.register(modBus);
+                    ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:115: error: cannot find symbol
+                Mansion m = GameManager.mansion();
+                ^
+  symbol:   class Mansion
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:141: error: cannot find symbol
+                LayoutDump.write(level, m);
+                ^
+  symbol:   variable LayoutDump
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:148: error: cannot find symbol
+                Mansion r = MansionBuilder.record(20261102L);
+                ^
+  symbol:   class Mansion
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:148: error: cannot find symbol
+                Mansion r = MansionBuilder.record(20261102L);
+                            ^
+  symbol:   variable MansionBuilder
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:160: error: cannot find symbol
+                List<Hanayome> brides = level.getEntitiesOfClass(Hanayome.class, new AABB(-60, 40, -60, 60, 120, 60));
+                     ^
+  symbol:   class Hanayome
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:160: error: cannot find symbol
+                List<Hanayome> brides = level.getEntitiesOfClass(Hanayome.class, new AABB(-60, 40, -60, 60, 120, 60));
+                                                                 ^
+  symbol:   class Hanayome
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:161: error: cannot find symbol
+                List<Ichimatsu> dolls = level.getEntitiesOfClass(Ichimatsu.class, new AABB(-60, 40, -60, 60, 120, 60));
+                     ^
+  symbol:   class Ichimatsu
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:161: error: cannot find symbol
+                List<Ichimatsu> dolls = level.getEntitiesOfClass(Ichimatsu.class, new AABB(-60, 40, -60, 60, 120, 60));
+                                                                 ^
+  symbol:   class Ichimatsu
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:162: error: cannot find symbol
+                LayoutDump.entities(level);
+                ^
+  symbol:   variable LayoutDump
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:171: error: cannot find symbol
+                Mansion m = GameManager.mansion();
+                ^
+  symbol:   class Mansion
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:174: error: cannot find symbol
+                for (Room room : m.rooms) {
+                     ^
+  symbol:   class Room
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:175: error: package Room does not exist
+                    if (room.type == Room.Type.SAFE) continue;
+                                         ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:203: error: package Hanayome does not exist
+                bride.force(Hanayome.State.IDLE, null);
+                                    ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:224: error: package Hanayome does not exist
+                bride.force(Hanayome.State.WANDER, null);
+                                    ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:231: error: package Hanayome does not exist
+                check(bride.state() == Hanayome.State.INVESTIGATE, "bride hears a marble and investigates (" + bride.state() + ")");
+                                               ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:233: error: cannot find symbol
+                Kageboshi k = ModEntities.KAGEBOSHI.get().create(level);
+                ^
+  symbol:   class Kageboshi
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:238: error: cannot find symbol
+                Maboroshi mb = ModEntities.MABOROSHI.get().create(level);
+                ^
+  symbol:   class Maboroshi
+  location: class SelfTest
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/debug/SelfTest.java:245: error: package Hanayome does not exist
+                bride.force(Hanayome.State.WANDER, null);
+                                    ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:170: error: cannot find symbol
+        if (mc.player.isUsingItem() && mc.player.getUseItem().getItem() instanceof BellItem) {
+                                                                                   ^
+  symbol:   class BellItem
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:171: error: cannot find symbol
+            float p = (BellItem.RITUAL_TICKS - mc.player.getUseItemRemainingTicks()) / (float) BellItem.RITUAL_TICKS;
+                       ^
+  symbol:   variable BellItem
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:171: error: cannot find symbol
+            float p = (BellItem.RITUAL_TICKS - mc.player.getUseItemRemainingTicks()) / (float) BellItem.RITUAL_TICKS;
+                                                                                               ^
+  symbol:   variable BellItem
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:191: error: cannot find symbol
+        if (b == ModBlocks.TANSU.get() && !s.getValue(TansuBlock.OPENED)) key = "search";
+                                                      ^
+  symbol:   variable TansuBlock
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:197: error: cannot find symbol
+        else if (b == ModBlocks.SUZU_DAI.get() && s.getValue(SuzuDaiBlock.HAS_BELL)) key = "bell";
+                                                             ^
+  symbol:   variable SuzuDaiBlock
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:198: error: cannot find symbol
+        else if (b == ModBlocks.CANDLE_STAND.get() && !s.getValue(CandleStandBlock.LIT)) key = "light";
+                                                                  ^
+  symbol:   variable CandleStandBlock
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:199: error: cannot find symbol
+        else if (b == ModBlocks.ANDON.get() && !s.getValue(AndonBlock.LIT)) key = "light";
+                                                           ^
+  symbol:   variable AndonBlock
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:201: error: cannot find symbol
+        else if (b == ModBlocks.HEADLESS_DOLL.get() && !s.getValue(HeadlessDollBlock.HEAD)) key = "doll";
+                                                                   ^
+  symbol:   variable HeadlessDollBlock
+  location: class HorrorOverlay
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:313: error: package Hanayome does not exist
+        return h.clientState() == Hanayome.State.CHASE || h.clientState() == Hanayome.State.CAPTURE;
+                                          ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorOverlay.java:313: error: package Hanayome does not exist
+        return h.clientState() == Hanayome.State.CHASE || h.clientState() == Hanayome.State.CAPTURE;
+                                                                                     ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:38: error: cannot find symbol
+        event.registerEntityRenderer(ModEntities.HANAYOME.get(), HanayomeRenderer::new);
+                                                                 ^
+  symbol:   class HanayomeRenderer
+  location: class ClientSetup
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:39: error: cannot find symbol
+        event.registerEntityRenderer(ModEntities.ICHIMATSU.get(), IchimatsuRenderer::new);
+                                                                  ^
+  symbol:   class IchimatsuRenderer
+  location: class ClientSetup
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:40: error: cannot find symbol
+        event.registerEntityRenderer(ModEntities.KAGEBOSHI.get(), KageboshiRenderer::new);
+                                                                  ^
+  symbol:   class KageboshiRenderer
+  location: class ClientSetup
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:41: error: cannot find symbol
+        event.registerEntityRenderer(ModEntities.MABOROSHI.get(), MaboroshiRenderer::new);
+                                                                  ^
+  symbol:   class MaboroshiRenderer
+  location: class ClientSetup
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:47: error: cannot find symbol
+        event.registerLayerDefinition(HanayomeModel.LAYER, HanayomeModel::createLayer);
+                                      ^
+  symbol:   variable HanayomeModel
+  location: class ClientSetup
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:47: error: cannot find symbol
+        event.registerLayerDefinition(HanayomeModel.LAYER, HanayomeModel::createLayer);
+                                                           ^
+  symbol:   variable HanayomeModel
+  location: class ClientSetup
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:48: error: cannot find symbol
+        event.registerLayerDefinition(IchimatsuModel.LAYER, IchimatsuModel::createLayer);
+                                      ^
+  symbol:   variable IchimatsuModel
+  location: class ClientSetup
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientSetup.java:48: error: cannot find symbol
+        event.registerLayerDefinition(IchimatsuModel.LAYER, IchimatsuModel::createLayer);
+                                                            ^
+  symbol:   variable IchimatsuModel
+  location: class ClientSetup
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/gui/JournalScreen.java:26: error: cannot find symbol
+                if (s.is(ModItems.NOTE.get())) ids.add(NoteItem.noteId(s));
+                                                       ^
+  symbol:   variable NoteItem
+  location: class JournalScreen
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientEvents.java:39: error: package com.sounan.client.cine does not exist
+        com.sounan.client.cine.Trailer.tick(mc);
+                              ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientEvents.java:103: error: package com.sounan.client.cine does not exist
+        if (!inKakuriyo() || com.sounan.client.cine.Trailer.active()) return;
+                                                   ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientEvents.java:127: error: package com.sounan.client.cine does not exist
+        if (!inKakuriyo() || !event.usedConfiguredFov() || com.sounan.client.cine.Trailer.active()) return;
+                                                                                 ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientEvents.java:162: error: package com.sounan.client.cine does not exist
+            com.sounan.client.cine.Trailer.onTitle();
+                                  ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorAudio.java:110: error: cannot find symbol
+            if (!(e instanceof Hanayome h)) continue;
+                               ^
+  symbol:   class Hanayome
+  location: class HorrorAudio
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorAudio.java:114: error: cannot find symbol
+                s = new EntityLoopSound(ModSounds.BRIDE_HUM.get(), h, 1.0f, ent -> ent instanceof Hanayome b
+                                                                                                  ^
+  symbol:   class Hanayome
+  location: class HorrorAudio
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorAudio.java:115: error: package Hanayome does not exist
+                        && (b.clientState() == Hanayome.State.WANDER || b.clientState() == Hanayome.State.IDLE));
+                                                       ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/HorrorAudio.java:115: error: package Hanayome does not exist
+                        && (b.clientState() == Hanayome.State.WANDER || b.clientState() == Hanayome.State.IDLE));
+                                                                                                   ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientPacketHandler.java:93: error: cannot find symbol
+                if (e.arg() == GameManager.SCREEN_ENVELOPE) mc.setScreen(new EnvelopeScreen(e.text()));
+                                                                             ^
+  symbol:   class EnvelopeScreen
+  location: class ClientPacketHandler
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/ClientPacketHandler.java:94: error: cannot find symbol
+                else mc.setScreen(new SakazukiScreen());
+                                      ^
+  symbol:   class SakazukiScreen
+  location: class ClientPacketHandler
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:173: error: cannot find symbol
+            Mansion m = mansion();
+            ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:175: error: cannot find symbol
+            for (Room r : m.rooms) {
+                 ^
+  symbol:   class Room
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:198: error: cannot find symbol
+            add("envelope", mc -> mc.setScreen(new EnvelopeScreen(mc.getUser().getName())), 12);
+                                                   ^
+  symbol:   class EnvelopeScreen
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:214: error: cannot find symbol
+            Mansion m = mansion();
+            ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:219: error: cannot find symbol
+            Mansion m = mansion();
+            ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:224: error: cannot find symbol
+            Mansion m = mansion();
+            ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:238: error: cannot find symbol
+            Mansion m = mansion();
+            ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:265: error: cannot find symbol
+                Mansion m = mansion();
+                ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:270: error: cannot find symbol
+                Mansion m = mansion();
+                ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:275: error: cannot find symbol
+                Mansion m = mansion();
+                ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:281: error: cannot find symbol
+                Mansion m = mansion();
+                ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:299: error: cannot find symbol
+            Mansion m = mansion();
+            ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:324: error: cannot find symbol
+            Mansion m = mansion();
+            ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:332: error: cannot find symbol
+            Mansion m = mansion();
+            ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:346: error: cannot find symbol
+                Mansion m = mansion();
+                ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/client/AutoShots.java:365: error: cannot find symbol
+                Mansion m = mansion();
+                ^
+  symbol:   class Mansion
+  location: class AutoShots
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:35: error: cannot find symbol
+            () -> new TatamiBlock(props(MapColor.COLOR_YELLOW, SoundType.WOOL, 1.0f)));
+                      ^
+  symbol:   class TatamiBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:68: error: cannot find symbol
+            () -> new KuraDoorBlock(door().strength(-1.0f, 3600000.0f), ModSounds.GAME_UNLOCK));
+                      ^
+  symbol:   class KuraDoorBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:72: error: cannot find symbol
+            () -> new ToriiGateBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).noCollission().noOcclusion()
+                      ^
+  symbol:   class ToriiGateBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:74: error: cannot find symbol
+                    .lightLevel(s -> s.getValue(ToriiGateBlock.ACTIVE) ? 13 : 2)));
+                                                ^
+  symbol:   variable ToriiGateBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:88: error: cannot find symbol
+            () -> new KakejikuBlock(decor(SoundType.WOOL)));
+                      ^
+  symbol:   class KakejikuBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:90: error: cannot find symbol
+            () -> new LetterBlock(decor(SoundType.WOOL)));
+                      ^
+  symbol:   class LetterBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:96: error: cannot find symbol
+            () -> new CandleStandBlock(props(MapColor.GOLD, SoundType.METAL, 0.8f).noOcclusion()
+                      ^
+  symbol:   class CandleStandBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:97: error: cannot find symbol
+                    .lightLevel(s -> s.getValue(CandleStandBlock.LIT) ? 9 : 0)));
+                                                ^
+  symbol:   variable CandleStandBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:99: error: cannot find symbol
+            () -> new AndonBlock(props(MapColor.SAND, SoundType.BAMBOO_WOOD, 0.8f).noOcclusion()
+                      ^
+  symbol:   class AndonBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:100: error: cannot find symbol
+                    .lightLevel(s -> s.getValue(AndonBlock.LIT) ? 11 : 0)));
+                                                ^
+  symbol:   variable AndonBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:101: error: cannot find symbol
+    public static final RegistryObject<Block> TANSU = BLOCKS.register("tansu", () -> new TansuBlock(wood(MapColor.COLOR_BROWN).noOcclusion()));
+                                                                                         ^
+  symbol:   class TansuBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:107: error: cannot find symbol
+            () -> new SuzuDaiBlock(wood(MapColor.COLOR_RED).noOcclusion().lightLevel(s -> s.getValue(SuzuDaiBlock.HAS_BELL) ? 4 : 0)));
+                      ^
+  symbol:   class SuzuDaiBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:107: error: cannot find symbol
+            () -> new SuzuDaiBlock(wood(MapColor.COLOR_RED).noOcclusion().lightLevel(s -> s.getValue(SuzuDaiBlock.HAS_BELL) ? 4 : 0)));
+                                                                                                     ^
+  symbol:   variable SuzuDaiBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:109: error: cannot find symbol
+            () -> new SaltPileBlock(props(MapColor.SNOW, SoundType.SAND, 0.2f).noOcclusion().noCollission().noLootTable()));
+                      ^
+  symbol:   class SaltPileBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModBlocks.java:113: error: cannot find symbol
+            () -> new HeadlessDollBlock(props(MapColor.COLOR_RED, SoundType.WOOL, 0.5f).noOcclusion()));
+                      ^
+  symbol:   class HeadlessDollBlock
+  location: class ModBlocks
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModCreativeTab.java:33: error: cannot find symbol
+                for (int i = 1; i <= com.sounan.game.Notes.COUNT; i++) output.accept(NoteItem.create(ModItems.NOTE.get(), i));
+                                                                                     ^
+  symbol:   variable NoteItem
+  location: class ModCreativeTab
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:20: error: cannot find symbol
+            () -> EntityType.Builder.<Hanayome>of(Hanayome::new, MobCategory.MONSTER)
+                                      ^
+  symbol:   class Hanayome
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:20: error: cannot find symbol
+            () -> EntityType.Builder.<Hanayome>of(Hanayome::new, MobCategory.MONSTER)
+                                                  ^
+  symbol:   class Hanayome
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:23: error: cannot find symbol
+            () -> EntityType.Builder.<Ichimatsu>of(Ichimatsu::new, MobCategory.MONSTER)
+                                      ^
+  symbol:   class Ichimatsu
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:23: error: cannot find symbol
+            () -> EntityType.Builder.<Ichimatsu>of(Ichimatsu::new, MobCategory.MONSTER)
+                                                   ^
+  symbol:   class Ichimatsu
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:26: error: cannot find symbol
+            () -> EntityType.Builder.<Kageboshi>of(Kageboshi::new, MobCategory.MONSTER)
+                                      ^
+  symbol:   class Kageboshi
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:26: error: cannot find symbol
+            () -> EntityType.Builder.<Kageboshi>of(Kageboshi::new, MobCategory.MONSTER)
+                                                   ^
+  symbol:   class Kageboshi
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:29: error: cannot find symbol
+            () -> EntityType.Builder.<Maboroshi>of(Maboroshi::new, MobCategory.MISC)
+                                      ^
+  symbol:   class Maboroshi
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:29: error: cannot find symbol
+            () -> EntityType.Builder.<Maboroshi>of(Maboroshi::new, MobCategory.MISC)
+                                                   ^
+  symbol:   class Maboroshi
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:32: error: cannot find symbol
+            () -> EntityType.Builder.<Ohajiki>of(Ohajiki::new, MobCategory.MISC)
+                                      ^
+  symbol:   class Ohajiki
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:32: error: cannot find symbol
+            () -> EntityType.Builder.<Ohajiki>of(Ohajiki::new, MobCategory.MISC)
+                                                 ^
+  symbol:   class Ohajiki
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:38: error: cannot find symbol
+        event.put(HANAYOME.get(), Hanayome.createAttributes().build());
+                                  ^
+  symbol:   variable Hanayome
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:39: error: cannot find symbol
+        event.put(ICHIMATSU.get(), Ichimatsu.createAttributes().build());
+                                   ^
+  symbol:   variable Ichimatsu
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:40: error: cannot find symbol
+        event.put(KAGEBOSHI.get(), Kageboshi.createAttributes().build());
+                                   ^
+  symbol:   variable Kageboshi
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModEntities.java:41: error: cannot find symbol
+        event.put(MABOROSHI.get(), Maboroshi.createAttributes().build());
+                                   ^
+  symbol:   variable Maboroshi
+  location: class ModEntities
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:31: error: cannot find symbol
+    public static final RegistryObject<Item> CHOCHIN = ITEMS.register("chochin", () -> new LanternItem(single(), false));
+                                                                                           ^
+  symbol:   class LanternItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:32: error: cannot find symbol
+    public static final RegistryObject<Item> CHOCHIN_LIT = ITEMS.register("chochin_lit", () -> new LanternItem(single(), true));
+                                                                                                   ^
+  symbol:   class LanternItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:33: error: cannot find symbol
+    public static final RegistryObject<Item> LAMP_OIL = ITEMS.register("lamp_oil", () -> new OilItem(new Item.Properties().stacksTo(8)));
+                                                                                             ^
+  symbol:   class OilItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:35: error: cannot find symbol
+            () -> new BellItem(new Item.Properties().stacksTo(7).rarity(Rarity.RARE)));
+                      ^
+  symbol:   class BellItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:36: error: cannot find symbol
+    public static final RegistryObject<Item> SHIO = ITEMS.register("shio", () -> new SaltItem(new Item.Properties().stacksTo(8)));
+                                                                                     ^
+  symbol:   class SaltItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:37: error: cannot find symbol
+    public static final RegistryObject<Item> OFUDA = ITEMS.register("ofuda", () -> new LoreItem(new Item.Properties().stacksTo(4).rarity(Rarity.UNCOMMON)));
+                                                                                       ^
+  symbol:   class LoreItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:38: error: cannot find symbol
+    public static final RegistryObject<Item> OHAJIKI = ITEMS.register("ohajiki", () -> new MarbleItem(new Item.Properties().stacksTo(16)));
+                                                                                           ^
+  symbol:   class MarbleItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:39: error: cannot find symbol
+    public static final RegistryObject<Item> KURA_KEY = ITEMS.register("kura_key", () -> new LoreItem(single()));
+                                                                                             ^
+  symbol:   class LoreItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:40: error: cannot find symbol
+    public static final RegistryObject<Item> DOLL_HEAD = ITEMS.register("doll_head", () -> new LoreItem(single()));
+                                                                                               ^
+  symbol:   class LoreItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:41: error: cannot find symbol
+    public static final RegistryObject<Item> MATCHES = ITEMS.register("matches", () -> new LoreItem(new Item.Properties().durability(6)));
+                                                                                           ^
+  symbol:   class LoreItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:42: error: cannot find symbol
+    public static final RegistryObject<Item> NOTE = ITEMS.register("note", () -> new NoteItem(single()));
+                                                                                     ^
+  symbol:   class NoteItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:44: error: cannot find symbol
+            () -> new EnvelopeItem(single().rarity(Rarity.EPIC)));
+                      ^
+  symbol:   class EnvelopeItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:45: error: cannot find symbol
+    public static final RegistryObject<Item> OMAMORI = ITEMS.register("omamori", () -> new LoreItem(single().rarity(Rarity.UNCOMMON)));
+                                                                                           ^
+  symbol:   class LoreItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/registry/ModItems.java:46: error: cannot find symbol
+    public static final RegistryObject<Item> ASH = ITEMS.register("ash", () -> new LoreItem(single()));
+                                                                                   ^
+  symbol:   class LoreItem
+  location: class ModItems
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:75: error: cannot find symbol
+                                        e -> e instanceof Hanayome || e instanceof com.sounan.entity.Kageboshi || e instanceof com.sounan.entity.Maboroshi)) {
+                                                          ^
+  symbol:   class Hanayome
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:75: error: package com.sounan.entity does not exist
+                                        e -> e instanceof Hanayome || e instanceof com.sounan.entity.Kageboshi || e instanceof com.sounan.entity.Maboroshi)) {
+                                                                                                    ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:75: error: package com.sounan.entity does not exist
+                                        e -> e instanceof Hanayome || e instanceof com.sounan.entity.Kageboshi || e instanceof com.sounan.entity.Maboroshi)) {
+                                                                                                                                                ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:117: error: cannot find symbol
+                            Hanayome b = GameManager.anyBride(p.serverLevel());
+                            ^
+  symbol:   class Hanayome
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:119: error: package Hanayome does not exist
+                            b.force(Hanayome.State.valueOf(StringArgumentType.getString(c, "state").toUpperCase(java.util.Locale.ROOT)), p.position());
+                                            ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:125: error: cannot find symbol
+                            LanternItem.setOil(s, LanternItem.MAX_OIL);
+                                                  ^
+  symbol:   variable LanternItem
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:125: error: cannot find symbol
+                            LanternItem.setOil(s, LanternItem.MAX_OIL);
+                            ^
+  symbol:   variable LanternItem
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:131: error: cannot find symbol
+                            for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, new net.minecraft.world.phys.AABB(-80, 0, -80, 80, 200, 80))) k.discard();
+                                                                        ^
+  symbol:   class Kageboshi
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:131: error: cannot find symbol
+                            for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, new net.minecraft.world.phys.AABB(-80, 0, -80, 80, 200, 80))) k.discard();
+                                 ^
+  symbol:   class Kageboshi
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:132: error: package com.sounan.entity does not exist
+                            for (var m : level.getEntitiesOfClass(com.sounan.entity.Maboroshi.class, new net.minecraft.world.phys.AABB(-80, 0, -80, 80, 200, 80))) m.discard();
+                                                                                   ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:139: error: cannot find symbol
+                            Hanayome b = GameManager.anyBride(p.serverLevel());
+                            ^
+  symbol:   class Hanayome
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:158: error: cannot find symbol
+                Hanayome b = GameManager.anyBride(level);
+                ^
+  symbol:   class Hanayome
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:169: error: package Hanayome does not exist
+                b.force(Hanayome.State.IDLE, null);
+                                ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:172: error: cannot find symbol
+                Ichimatsu d = ModEntities.ICHIMATSU.get().create(level);
+                ^
+  symbol:   class Ichimatsu
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:181: error: cannot find symbol
+                Kageboshi k = ModEntities.KAGEBOSHI.get().create(level);
+                ^
+  symbol:   class Kageboshi
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:198: error: cannot find symbol
+        Mansion m = GameManager.mansion();
+        ^
+  symbol:   class Mansion
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/command/SounanCommand.java:216: error: cannot find symbol
+                for (Room r : m.rooms) {
+                     ^
+  symbol:   class Room
+  location: class SounanCommand
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:82: error: cannot find symbol
+        List<Kageboshi> shadows = level.getEntitiesOfClass(Kageboshi.class, new net.minecraft.world.phys.AABB(-60, 40, -60, 60, 110, 60));
+             ^
+  symbol:   class Kageboshi
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:82: error: cannot find symbol
+        List<Kageboshi> shadows = level.getEntitiesOfClass(Kageboshi.class, new net.minecraft.world.phys.AABB(-60, 40, -60, 60, 110, 60));
+                                                           ^
+  symbol:   class Kageboshi
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:86: error: cannot find symbol
+            Hanayome bride = ModEntities.HANAYOME.get().create(level);
+            ^
+  symbol:   class Hanayome
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:136: error: cannot find symbol
+            Hanayome bride = GameManager.anyBride(level);
+            ^
+  symbol:   class Hanayome
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:137: error: package Hanayome does not exist
+            if (bride != null && bride.distanceTo(p) > 30 && (bride.state() == Hanayome.State.WANDER || bride.state() == Hanayome.State.IDLE)) {
+                                                                                       ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:137: error: package Hanayome does not exist
+            if (bride != null && bride.distanceTo(p) > 30 && (bride.state() == Hanayome.State.WANDER || bride.state() == Hanayome.State.IDLE)) {
+                                                                                                                                 ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:138: error: package Hanayome does not exist
+                bride.force(Hanayome.State.INVESTIGATE, p.position().add(RAND.nextGaussian() * 6, 0, RAND.nextGaussian() * 6));
+                                    ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:184: error: cannot find symbol
+        Mansion m = GameManager.mansion();
+        ^
+  symbol:   class Mansion
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:205: error: cannot find symbol
+            if (!s.is(ModBlocks.ANDON.get()) || !s.getValue(AndonBlock.LIT)) continue;
+                                                            ^
+  symbol:   variable AndonBlock
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:206: error: cannot find symbol
+            level.setBlock(a, s.setValue(AndonBlock.LIT, false), 3);
+                                         ^
+  symbol:   variable AndonBlock
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:211: error: cannot find symbol
+                    if (now.is(ModBlocks.ANDON.get())) level.setBlock(a, now.setValue(AndonBlock.LIT, true), 3);
+                                                                                      ^
+  symbol:   variable AndonBlock
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:256: error: cannot find symbol
+            if (!st.is(ModBlocks.KAKEJIKU.get()) || st.getValue(KakejikuBlock.FACE)) continue;
+                                                                ^
+  symbol:   variable KakejikuBlock
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:258: error: cannot find symbol
+            level.setBlock(s, st.setValue(KakejikuBlock.FACE, true), 3);
+                                          ^
+  symbol:   variable KakejikuBlock
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:272: error: cannot find symbol
+                level.setBlock(s, st.setValue(KakejikuBlock.FACE, false), 3);
+                                              ^
+  symbol:   variable KakejikuBlock
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:306: error: cannot find symbol
+        Ichimatsu doll = ModEntities.ICHIMATSU.get().create(level);
+        ^
+  symbol:   class Ichimatsu
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:336: error: cannot find symbol
+        Maboroshi m = ModEntities.MABOROSHI.get().create(level);
+        ^
+  symbol:   class Maboroshi
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:339: error: cannot find symbol
+        m.setup(p, Maboroshi.MODE_FAR);
+                   ^
+  symbol:   variable Maboroshi
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:349: error: cannot find symbol
+        Maboroshi m = ModEntities.MABOROSHI.get().create(level);
+        ^
+  symbol:   class Maboroshi
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:352: error: cannot find symbol
+        m.setup(p, Maboroshi.MODE_PEEK);
+                   ^
+  symbol:   variable Maboroshi
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:359: error: cannot find symbol
+        Mansion m = GameManager.mansion();
+        ^
+  symbol:   class Mansion
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/Director.java:366: error: cannot find symbol
+            Kageboshi k = ModEntities.KAGEBOSHI.get().create(level);
+            ^
+  symbol:   class Kageboshi
+  location: class Director
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:121: error: cannot find symbol
+            mansion = MansionBuilder.record(data.seed);
+                      ^
+  symbol:   variable MansionBuilder
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:326: error: cannot find symbol
+            if (s.is(ModItems.CHOCHIN_LIT.get())) p.setItemInHand(h, LanternItem.toggled(s, false));
+                                                                     ^
+  symbol:   variable LanternItem
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:330: error: cannot find symbol
+            if (s.is(ModItems.CHOCHIN_LIT.get())) p.getInventory().items.set(i, LanternItem.toggled(s, false));
+                                                                                ^
+  symbol:   variable LanternItem
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:379: error: cannot find symbol
+        LanternItem.setOil(lantern, LanternItem.MAX_OIL * 6 / 10);
+                                    ^
+  symbol:   variable LanternItem
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:379: error: cannot find symbol
+        LanternItem.setOil(lantern, LanternItem.MAX_OIL * 6 / 10);
+        ^
+  symbol:   variable LanternItem
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:399: error: cannot find symbol
+        mansion = MansionBuilder.build(level, seed);
+                  ^
+  symbol:   variable MansionBuilder
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:630: error: cannot find symbol
+        Hanayome bride = nearestBride(level, p.position());
+        ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:635: error: package Hanayome does not exist
+            boolean hunting = bride.state() == Hanayome.State.CHASE && p.equals(bride.target());
+                                                       ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:640: error: package Hanayome does not exist
+            } else if (d < 8.0 && (bride.state() == Hanayome.State.SEARCH || bride.state() == Hanayome.State.CHECK_CLOSET
+                                                            ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:640: error: package Hanayome does not exist
+            } else if (d < 8.0 && (bride.state() == Hanayome.State.SEARCH || bride.state() == Hanayome.State.CHECK_CLOSET
+                                                                                                      ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:641: error: package Hanayome does not exist
+                    || bride.state() == Hanayome.State.INVESTIGATE)) {
+                                                ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:658: error: package Hanayome does not exist
+        if (bride != null && bride.distanceTo(p) < 3.0 && bride.state() == Hanayome.State.CHASE) {
+                                                                                   ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:695: error: cannot find symbol
+        Hanayome best = null;
+        ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:697: error: cannot find symbol
+        for (Hanayome h : level.getEntitiesOfClass(Hanayome.class, new net.minecraft.world.phys.AABB(pos, pos).inflate(80))) {
+                                                   ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:697: error: cannot find symbol
+        for (Hanayome h : level.getEntitiesOfClass(Hanayome.class, new net.minecraft.world.phys.AABB(pos, pos).inflate(80))) {
+             ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:710: error: cannot find symbol
+            if (e instanceof Hanayome h && h.isAlive()) return h;
+                             ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:730: error: cannot find symbol
+                    level.setBlock(a, s.setValue(com.sounan.block.AndonBlock.LIT, false), 3);
+                                                                 ^
+  symbol:   class AndonBlock
+  location: package com.sounan.block
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:737: error: cannot find symbol
+                if (s.is(ModBlocks.TORII_GATE.get())) level.setBlock(g, s.setValue(ToriiGateBlock.ACTIVE, true), 3);
+                                                                                   ^
+  symbol:   variable ToriiGateBlock
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:740: error: cannot find symbol
+            Hanayome bride = anyBride(level);
+            ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:752: error: package Hanayome does not exist
+                bride.force(Hanayome.State.INVESTIGATE, p.position());
+                                    ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:809: error: cannot find symbol
+                    level.setBlock(mansion.butsumaBell, ModBlocks.SUZU_DAI.get().defaultBlockState().setValue(SuzuDaiBlock.HAS_BELL, true), 3);
+                                                                                                              ^
+  symbol:   variable SuzuDaiBlock
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:820: error: cannot find symbol
+                if (s.is(ModBlocks.CANDLE_STAND.get())) level.setBlock(c, s.setValue(CandleStandBlock.LIT, false), 3);
+                                                                                     ^
+  symbol:   variable CandleStandBlock
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:838: error: cannot find symbol
+            level.setBlock(mansion.dollBell, ModBlocks.SUZU_DAI.get().defaultBlockState().setValue(SuzuDaiBlock.HAS_BELL, true), 3);
+                                                                                                   ^
+  symbol:   variable SuzuDaiBlock
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:841: error: cannot find symbol
+        for (Ichimatsu doll : level.getEntitiesOfClass(Ichimatsu.class, p.getBoundingBox().inflate(12))) {
+                                                       ^
+  symbol:   class Ichimatsu
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:841: error: cannot find symbol
+        for (Ichimatsu doll : level.getEntitiesOfClass(Ichimatsu.class, p.getBoundingBox().inflate(12))) {
+             ^
+  symbol:   class Ichimatsu
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:930: error: cannot find symbol
+        ItemStack stack = NoteItem.create(ModItems.NOTE.get(), note);
+                          ^
+  symbol:   variable NoteItem
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:955: error: cannot find symbol
+        for (Hanayome bride : level.getEntitiesOfClass(Hanayome.class, p.getBoundingBox().inflate(6))) {
+                                                       ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:955: error: cannot find symbol
+        for (Hanayome bride : level.getEntitiesOfClass(Hanayome.class, p.getBoundingBox().inflate(6))) {
+             ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:964: error: cannot find symbol
+        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(6))) k.dissolve(level);
+                                                    ^
+  symbol:   class Kageboshi
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:964: error: cannot find symbol
+        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(6))) k.dissolve(level);
+             ^
+  symbol:   class Kageboshi
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1050: error: cannot find symbol
+        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(64))) k.discard();
+                                                    ^
+  symbol:   class Kageboshi
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1050: error: cannot find symbol
+        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(64))) k.discard();
+             ^
+  symbol:   class Kageboshi
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1051: error: cannot find symbol
+        Hanayome bride = anyBride(level);
+        ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1055: error: package Hanayome does not exist
+            bride.force(Hanayome.State.WANDER, null);
+                                ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1091: error: cannot find symbol
+        Hanayome bride = anyBride(level);
+        ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1092: error: package Hanayome does not exist
+        if (bride != null) bride.force(Hanayome.State.INVESTIGATE, p.position());
+                                               ^
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1117: error: cannot find symbol
+        Hanayome bride = anyBride(level);
+        ^
+  symbol:   class Hanayome
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1119: error: cannot find symbol
+        for (Ichimatsu d : level.getEntitiesOfClass(Ichimatsu.class, p.getBoundingBox().inflate(80))) d.discard();
+                                                    ^
+  symbol:   class Ichimatsu
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1119: error: cannot find symbol
+        for (Ichimatsu d : level.getEntitiesOfClass(Ichimatsu.class, p.getBoundingBox().inflate(80))) d.discard();
+             ^
+  symbol:   class Ichimatsu
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1120: error: cannot find symbol
+        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(80))) k.discard();
+                                                    ^
+  symbol:   class Kageboshi
+  location: class GameManager
+/home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/game/GameManager.java:1120: error: cannot find symbol
+        for (Kageboshi k : level.getEntitiesOfClass(Kageboshi.class, p.getBoundingBox().inflate(80))) k.discard();
+             ^
+  symbol:   class Kageboshi
+  location: class GameManager
+Note: /home/runner/work/Minecraftproject/Minecraftproject/src/main/java/com/sounan/block/FacingBlock.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+285 errors
+
+> Task :compileJava FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/build-1793635929711.json
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':compileJava'.
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:130)
+	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:282)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:128)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:80)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:463)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:380)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
+Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler error output for details.
+	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:61)
+	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:41)
+	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.delegateAndHandleErrors(NormalizingJavaCompiler.java:98)
+	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.execute(NormalizingJavaCompiler.java:52)
+	at org.gradle.api.internal.tasks.compile.NormalizingJavaCompiler.execute(NormalizingJavaCompiler.java:38)
+	at org.gradle.api.internal.tasks.compile.AnnotationProcessorDiscoveringCompiler.execute(AnnotationProcessorDiscoveringCompiler.java:52)
+	at org.gradle.api.internal.tasks.compile.AnnotationProcessorDiscoveringCompiler.execute(AnnotationProcessorDiscoveringCompiler.java:38)
+	at org.gradle.api.internal.tasks.compile.ModuleApplicationNameWritingCompiler.execute(ModuleApplicationNameWritingCompiler.java:46)
+	at org.gradle.api.internal.tasks.compile.ModuleApplicationNameWritingCompiler.execute(ModuleApplicationNameWritingCompiler.java:36)
+	at org.gradle.jvm.toolchain.internal.DefaultToolchainJavaCompiler.execute(DefaultToolchainJavaCompiler.java:57)
+	at org.gradle.api.tasks.compile.JavaCompile.lambda$createToolchainCompiler$3(JavaCompile.java:202)
+	at org.gradle.api.internal.tasks.compile.CleaningJavaCompiler.execute(CleaningJavaCompiler.java:53)
+	at org.gradle.api.internal.tasks.compile.incremental.IncrementalCompilerFactory.lambda$createRebuildAllCompiler$0(IncrementalCompilerFactory.java:52)
+	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:70)
+	at org.gradle.api.internal.tasks.compile.incremental.SelectiveCompiler.execute(SelectiveCompiler.java:44)
+	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:66)
+	at org.gradle.api.internal.tasks.compile.incremental.IncrementalResultStoringCompiler.execute(IncrementalResultStoringCompiler.java:52)
+	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler$1.call(CompileJavaBuildOperationReportingCompiler.java:64)
+	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler$1.call(CompileJavaBuildOperationReportingCompiler.java:48)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.api.internal.tasks.compile.CompileJavaBuildOperationReportingCompiler.execute(CompileJavaBuildOperationReportingCompiler.java:48)
+	at org.gradle.api.tasks.compile.JavaCompile.performCompilation(JavaCompile.java:220)
+	at org.gradle.api.tasks.compile.JavaCompile.performIncrementalCompilation(JavaCompile.java:161)
+	at org.gradle.api.tasks.compile.JavaCompile.compile(JavaCompile.java:146)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:125)
+	at org.gradle.api.internal.project.taskfactory.IncrementalTaskAction.doExecute(IncrementalTaskAction.java:45)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:51)
+	at org.gradle.api.internal.project.taskfactory.IncrementalTaskAction.execute(IncrementalTaskAction.java:26)
+	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:29)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:244)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:29)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:26)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:47)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:41)
+	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:74)
+	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:67)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:45)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$1(BuildCacheStep.java:75)
+	at org.gradle.internal.Either$Right.fold(Either.java:175)
+	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:76)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:54)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:54)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:36)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:106)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:55)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:61)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:61)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:80)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:463)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:380)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:47)
+
+
+BUILD FAILED in 1m 53s
+1 actionable task: 1 executed
