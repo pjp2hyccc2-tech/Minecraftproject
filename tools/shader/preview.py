@@ -265,6 +265,32 @@ def sky_angle(world_time):
 TILES = {}
 ATLAS_N = 8          # 8x8 tiles of 16 px
 
+# the real block textures (from the repo, once the art is merged) replace the procedural tiles
+TEXTURE_DIR = os.environ.get("SOUNAN_TEXTURES") or os.path.normpath(
+    os.path.join(ROOT, "..", "..", "resources", "assets", "sounan", "textures", "block"))
+TILE_FILES = {"bark": "cedar_log", "log_top": "cedar_log_top", "leaves": "cedar_leaves", "floor_top": "forest_floor_top",
+              "floor_side": "forest_floor_side", "dirt": "forest_dirt", "moss": "moss_floor", "rock": "mountain_rock",
+              "stones": "river_stones", "planks": "weathered_planks", "tin": "tin_roof", "concrete": "concrete_old",
+              "asphalt": "asphalt", "ribbon": "cedar_log_ribbon", "trail": "trail_top", "lamp": "tunnel_lamp_lit"}
+
+
+def real_tile(name):
+    """16x16 RGBA uint8 of the repo texture for a tile, or None"""
+    f = TILE_FILES.get(name)
+    if not f:
+        return None
+    path = os.path.join(TEXTURE_DIR, f + ".png")
+    if not os.path.isfile(path) or os.path.getsize(path) == 0:
+        return None
+    from PIL import Image
+    try:
+        im = Image.open(path).convert("RGBA")
+    except Exception:
+        return None
+    if im.size != (16, 16):
+        im = im.crop((0, 0, im.size[0], im.size[0])).resize((16, 16), Image.NEAREST)
+    return np.asarray(im, np.uint8)
+
 
 def make_atlas(seed=7):
     """procedural 16x16 pixel-art-ish tiles. Returns uint8 RGBA (128x128)."""
@@ -368,7 +394,16 @@ def make_atlas(seed=7):
             glass = (x > 3) & (x < 12) & (y > 4) & (y < 12); t[glass] = np.array([250, 170, 70])
         atlas[ty * 16:(ty + 1) * 16, tx * 16:(tx + 1) * 16, :3] = np.clip(t, 0, 255).astype(np.uint8)
         atlas[ty * 16:(ty + 1) * 16, tx * 16:(tx + 1) * 16, 3] = np.clip(a, 0, 255).astype(np.uint8)
+        real = real_tile(n)
+        if real is not None:
+            REAL_TILES.add(n)
+            atlas[ty * 16:(ty + 1) * 16, tx * 16:(tx + 1) * 16] = real
+            if n == "leaves":                    # cutout: binary alpha like the alpha test
+                atlas[ty * 16:(ty + 1) * 16, tx * 16:(tx + 1) * 16, 3] = np.where(real[..., 3] > 25, 255, 0)
     return atlas
+
+
+REAL_TILES = set()
 
 
 # block type: (tile(s), mc_Entity id, opaque, emission, layer, shape)
@@ -1332,6 +1367,7 @@ def main():
     ver, ren = glctx.init()
     print("GL:", ver, "|", ren)
     make_atlas()                                  # fills TILES
+    print("textures: %d real (%s), the rest procedural" % (len(REAL_TILES), TEXTURE_DIR))
     t0 = time.time()
     scene = Scene()
     scene.compute_light()

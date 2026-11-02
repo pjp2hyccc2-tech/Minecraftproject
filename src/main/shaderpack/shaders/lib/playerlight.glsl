@@ -20,7 +20,7 @@
 #define LIGHT_POINT 2
 
 // colours (linear)
-const vec3 FLASHLIGHT_COLOR = vec3(1.00, 0.79, 0.58);   // ~4300 K: warm white
+const vec3 FLASHLIGHT_COLOR = vec3(1.00, 0.83, 0.66);   // ~4300 K: warm white
 const vec3 FLASH_LOW_COLOR  = vec3(1.00, 0.52, 0.20);   // a dying battery: dim, orange
 const vec3 PHONE_COLOR      = vec3(0.80, 0.89, 1.00);   // cold white LED
 const vec3 FLARE_COLOR      = vec3(1.00, 0.085, 0.030); // road flare

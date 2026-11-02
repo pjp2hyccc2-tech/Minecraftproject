@@ -87,7 +87,7 @@ vec3 grade(vec3 c, float F, float D) {
 #endif
     float l = luma(c);
     // alarm colours (the pink tape, the orange jacket, the flare, jizo bibs) keep some colour
-    float keep = smoothstep(0.45, 0.85, chroma(c)) * smoothstep(0.05, 0.16, maxOf(c));
+    float keep = smoothstep(0.58, 0.92, chroma(c)) * smoothstep(0.05, 0.16, maxOf(c));
     c = mix(vec3(l), c, mix(sat, max(sat, 0.95), keep));
 #if defined WORLD_MOUNTAIN
     // only the deep shadows take the tint (blue-grey, red in danger); midtones stay neutral
