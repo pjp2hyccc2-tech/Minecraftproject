@@ -470,6 +470,8 @@ def bleed_rgb(arr, iterations=16):
 def finalize(arr, cutout=False, opaque=False):
     a = np.asarray(arr, np.float32).copy()
     if opaque:
+        if (a[..., 3] <= 0).any() and (a[..., 3] > 0).any():
+            a = bleed_rgb(a)          # unpainted atlas regions take their neighbours' colours (block particles)
         a[..., 3] = 255
     if cutout:
         a[..., 3] = np.where(a[..., 3] >= 128, 255, 0)

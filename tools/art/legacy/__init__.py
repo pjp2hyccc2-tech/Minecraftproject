@@ -30,7 +30,12 @@ KEEP = {
 }
 
 
+_CACHE = {}
+
+
 def load():
+    if _CACHE:
+        return dict(_CACHE)
     import common
     saved = dict(common.REGISTRY)
     common.REGISTRY.clear()
@@ -47,4 +52,5 @@ def load():
         spec = dict(old[o])
         spec['name'] = n
         out[n] = spec
+    _CACHE.update(out)
     return out
