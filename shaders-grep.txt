@@ -1,0 +1,257 @@
+59:[02Nov2026 16:36:58.072] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+60:[02Nov2026 16:36:58.075] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+61:[02Nov2026 16:36:58.243] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+62:[02Nov2026 16:36:59.081] [Render thread/INFO] [Oculus/]: Using shaderpack: SounanShaders.zip
+66:[02Nov2026 16:36:59.363] [modloading-worker-0/INFO] [com.sounan.Sounan/]: [sounan] 遭難: somebody is calling from below the trail
+67:[02Nov2026 16:37:01.468] [Render thread/INFO] [Oculus/]: Hardware information:
+68:[02Nov2026 16:37:01.468] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 7763 64-Core Processor
+69:[02Nov2026 16:37:01.469] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+70:[02Nov2026 16:37:01.469] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+75:[02Nov2026 16:37:02.854] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+76:com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+99:Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+108:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+135:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+190:[02Nov2026 16:37:02.908] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/sounan-client.toml is not correct. Correcting
+195:[02Nov2026 16:37:02.911] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders was corrected from null to its default, SimpleCommentedConfig:{}. 
+196:[02Nov2026 16:37:02.911] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders.installShaderPack was corrected from null to its default, true. 
+206:[02Nov2026 16:37:02.922] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/sounan-common.toml is not correct. Correcting
+212:[02Nov2026 16:37:04.746] [Render thread/INFO] [com.sounan.Sounan/]: [SounanShaders] copied SounanShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/SounanShaders.zip; Oculus pack already selected: SounanShaders.zip (reloading updated pack)
+214:[02Nov2026 16:37:04.810] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+215:[02Nov2026 16:37:04.832] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/fallen_leaves' referenced from: sounan:fallen_leaves#facing=north: java.io.FileNotFoundException: sounan:models/block/fallen_leaves.json
+216:[02Nov2026 16:37:04.836] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/blue_tarp' referenced from: sounan:blue_tarp#facing=north: java.io.FileNotFoundException: sounan:models/block/blue_tarp.json
+217:[02Nov2026 16:37:04.843] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/lost_bag_open' referenced from: sounan:lost_bag#facing=north,open=true: java.io.FileNotFoundException: sounan:models/block/lost_bag_open.json
+218:[02Nov2026 16:37:04.843] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/lost_bag' referenced from: sounan:lost_bag#facing=north,open=true: java.io.FileNotFoundException: sounan:models/block/lost_bag.json
+219:[02Nov2026 16:37:04.848] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/memo' referenced from: sounan:memo#facing=north: java.io.FileNotFoundException: sounan:models/block/memo.json
+220:[02Nov2026 16:37:04.848] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/memo_wall' referenced from: sounan:memo_wall#facing=north: java.io.FileNotFoundException: sounan:models/block/memo_wall.json
+221:[02Nov2026 16:37:04.849] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/logbook' referenced from: sounan:logbook#facing=north: java.io.FileNotFoundException: sounan:models/block/logbook.json
+222:[02Nov2026 16:37:04.849] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/notice_board' referenced from: sounan:notice_board#facing=north: java.io.FileNotFoundException: sounan:models/block/notice_board.json
+223:[02Nov2026 16:37:04.849] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/signpost' referenced from: sounan:signpost#facing=north: java.io.FileNotFoundException: sounan:models/block/signpost.json
+224:[02Nov2026 16:37:04.849] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/jizo' referenced from: sounan:jizo#facing=north: java.io.FileNotFoundException: sounan:models/block/jizo.json
+225:[02Nov2026 16:37:04.850] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/hokora_offered' referenced from: sounan:hokora#facing=north,offered=true: java.io.FileNotFoundException: sounan:models/block/hokora_offered.json
+226:[02Nov2026 16:37:04.850] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/hokora' referenced from: sounan:hokora#facing=north,offered=true: java.io.FileNotFoundException: sounan:models/block/hokora.json
+227:[02Nov2026 16:37:04.850] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/wara_ningyo' referenced from: sounan:wara_ningyo#facing=north: java.io.FileNotFoundException: sounan:models/block/wara_ningyo.json
+228:[02Nov2026 16:37:04.851] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/rope_anchor' referenced from: sounan:rope_anchor#facing=north,roped=true: java.io.FileNotFoundException: sounan:models/block/rope_anchor.json
+229:[02Nov2026 16:37:04.851] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/rope_anchor_roped' referenced from: sounan:rope_anchor#facing=north,roped=true: java.io.FileNotFoundException: sounan:models/block/rope_anchor_roped.json
+230:[02Nov2026 16:37:04.852] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/climbing_rope' referenced from: sounan:climbing_rope#facing=north,waterlogged=true: java.io.FileNotFoundException: sounan:models/block/climbing_rope.json
+231:[02Nov2026 16:37:04.852] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/public_phone' referenced from: sounan:public_phone#facing=north: java.io.FileNotFoundException: sounan:models/block/public_phone.json
+232:[02Nov2026 16:37:04.852] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/bus_stop' referenced from: sounan:bus_stop#facing=north: java.io.FileNotFoundException: sounan:models/block/bus_stop.json
+233:[02Nov2026 16:37:04.853] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/tunnel_lamp' referenced from: sounan:tunnel_lamp#facing=north,lit=true: java.io.FileNotFoundException: sounan:models/block/tunnel_lamp.json
+234:[02Nov2026 16:37:04.853] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/tunnel_lamp_lit' referenced from: sounan:tunnel_lamp#facing=north,lit=true: java.io.FileNotFoundException: sounan:models/block/tunnel_lamp_lit.json
+235:[02Nov2026 16:37:04.853] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/guardrail' referenced from: sounan:guardrail#facing=north: java.io.FileNotFoundException: sounan:models/block/guardrail.json
+236:[02Nov2026 16:37:04.854] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/key_hook_empty' referenced from: sounan:key_hook#facing=north,has_key=true: java.io.FileNotFoundException: sounan:models/block/key_hook_empty.json
+237:[02Nov2026 16:37:04.854] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/key_hook' referenced from: sounan:key_hook#facing=north,has_key=true: java.io.FileNotFoundException: sounan:models/block/key_hook.json
+238:[02Nov2026 16:37:04.854] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:block/car_door' referenced from: sounan:car_door#facing=north: java.io.FileNotFoundException: sounan:models/block/car_door.json
+239:[02Nov2026 16:37:04.871] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:flashlight#inventory' referenced from: sounan:flashlight#inventory: java.io.FileNotFoundException: sounan:models/item/flashlight.json
+240:[02Nov2026 16:37:04.871] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:flashlight_on#inventory' referenced from: sounan:flashlight_on#inventory: java.io.FileNotFoundException: sounan:models/item/flashlight_on.json
+241:[02Nov2026 16:37:04.871] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:flashlight_low#inventory' referenced from: sounan:flashlight_low#inventory: java.io.FileNotFoundException: sounan:models/item/flashlight_low.json
+242:[02Nov2026 16:37:04.871] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:phone#inventory' referenced from: sounan:phone#inventory: java.io.FileNotFoundException: sounan:models/item/phone.json
+243:[02Nov2026 16:37:04.872] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:phone_light#inventory' referenced from: sounan:phone_light#inventory: java.io.FileNotFoundException: sounan:models/item/phone_light.json
+244:[02Nov2026 16:37:04.872] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:phone_camera#inventory' referenced from: sounan:phone_camera#inventory: java.io.FileNotFoundException: sounan:models/item/phone_camera.json
+245:[02Nov2026 16:37:04.872] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:flare#inventory' referenced from: sounan:flare#inventory: java.io.FileNotFoundException: sounan:models/item/flare.json
+246:[02Nov2026 16:37:04.873] [Worker-Main-3/WARN] [net.minecraft.client.resources.model.ModelBakery/]: Unable to load model: 'sounan:flare_lit#inventory' referenced from: sounan:flare_lit#inventory: java.io.FileNotFoundException: sounan:models/item/flare_lit.json
+248:[02Nov2026 16:37:05.370] [Render thread/INFO] [Oculus/]: Using shaderpack: SounanShaders.zip
+251:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.forest
+252:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.insects
+253:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.wind_ridge
+254:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.tunnel
+255:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.village
+256:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.silence
+257:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.stream
+258:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.dread
+259:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.tension
+260:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.danger
+261:[02Nov2026 16:37:08.297] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.chase
+262:[02Nov2026 16:37:08.300] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.safe
+263:[02Nov2026 16:37:08.300] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.oyama
+264:[02Nov2026 16:37:08.300] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.binaural
+265:[02Nov2026 16:37:08.300] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.title
+266:[02Nov2026 16:37:08.300] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.ending_good
+267:[02Nov2026 16:37:08.300] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:music.ending_bad
+268:[02Nov2026 16:37:08.300] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.branch_snap
+269:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.footsteps_run
+270:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.footsteps_walk
+271:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.deer_scream
+272:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.fox_scream
+273:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.owl
+274:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.tree_knock
+275:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.rockfall
+276:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.creak_tree
+277:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.thud
+278:[02Nov2026 16:37:08.301] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.whisper
+279:[02Nov2026 16:37:08.302] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.whisper_name
+280:[02Nov2026 16:37:08.302] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.giggle
+281:[02Nov2026 16:37:08.302] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.distant_bell
+282:[02Nov2026 16:37:08.302] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.distant_scream
+283:[02Nov2026 16:37:08.302] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.distant_call
+284:[02Nov2026 16:37:08.302] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.breath_behind
+285:[02Nov2026 16:37:08.302] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.drip
+286:[02Nov2026 16:37:08.302] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.tin_bang
+287:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.wind_chime
+288:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.radio
+289:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.tinnitus
+290:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:amb.ear_pressure
+291:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:nozoki.breath
+292:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:nozoki.giggle
+293:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:nozoki.shriek
+294:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:nozoki.crawl
+295:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:nozoki.creak
+296:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:yobigoe.call
+297:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:yobigoe.call_wrong
+298:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:yobigoe.laugh
+299:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:yobigoe.rush
+300:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:ushiro.step
+301:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:ushiro.breath
+302:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:ushiro.whisper
+303:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:ushiro.leave
+304:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:ushiro.attack
+305:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:koyanushi.sleep
+306:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:koyanushi.mumble
+307:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:koyanushi.wake
+308:[02Nov2026 16:37:08.303] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:koyanushi.scream
+309:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:koyanushi.step
+310:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:oyama.step
+311:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:oyama.groan
+312:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:oyama.roar
+313:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:oyama.near
+314:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:oyama.branch
+315:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:utsuru.hum
+316:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:utsuru.turn
+317:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:player.heartbeat
+318:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:player.breath_fear
+319:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:player.breath_run
+320:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:player.gasp
+321:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:player.fall
+322:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:block.leaves_step
+323:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.flashlight_on
+324:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.flashlight_off
+325:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.flashlight_flicker
+326:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.battery
+327:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.bear_bell
+328:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.rope
+329:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.map
+330:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.flare_ignite
+331:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.flare_burn
+332:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.omamori
+333:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.key
+334:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.unlock
+335:[02Nov2026 16:37:08.304] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.offering
+336:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.paper
+337:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:item.bag
+338:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.tap
+339:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.unlock
+340:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.vibrate
+341:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.notify
+342:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.notify_wrong
+343:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.signal
+344:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.ringtone
+345:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.ringtone_wrong
+346:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.ring_old
+347:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.call_static
+348:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.voice
+349:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.hangup
+350:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.shutter
+351:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.low_battery
+352:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:phone.dead
+353:[02Nov2026 16:37:08.305] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.jumpscare
+354:[02Nov2026 16:37:08.307] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.stinger
+355:[02Nov2026 16:37:08.307] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.riser
+356:[02Nov2026 16:37:08.307] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.capture
+357:[02Nov2026 16:37:08.307] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.wake
+358:[02Nov2026 16:37:08.307] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.checkpoint
+359:[02Nov2026 16:37:08.307] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.area
+360:[02Nov2026 16:37:08.308] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.fog_lift
+361:[02Nov2026 16:37:08.308] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.loop
+362:[02Nov2026 16:37:08.308] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.car
+363:[02Nov2026 16:37:08.308] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.title_hit
+364:[02Nov2026 16:37:08.308] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: sounan:game.kamikakushi
+365:[02Nov2026 16:37:08.351] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+366:java.lang.IllegalStateException: Failed to open OpenAL device
+409:[02Nov2026 16:37:08.880] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+413:[02Nov2026 16:37:09.057] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+414:[02Nov2026 16:37:09.118] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+415:[02Nov2026 16:37:09.134] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+417:[02Nov2026 16:37:15.859] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: title screen (shaders=true)
+419:[02Nov2026 16:37:18.447] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 00_title
+424:[02Nov2026 16:37:20.962] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/SounanCI/serverconfig/forge-server.toml is not correct. Correcting
+426:[02Nov2026 16:37:20.963] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+427:[02Nov2026 16:37:20.963] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+445:[02Nov2026 16:37:25.090] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: world creation requested
+448:[02Nov2026 16:37:25.601] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+449:[02Nov2026 16:37:25.602] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+451:[02Nov2026 16:37:25.646] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+452:[02Nov2026 16:37:25.658] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+453:[02Nov2026 16:37:25.737] [Server thread/INFO] [com.sounan.Sounan/]: [sounan] mountain terrain loaded: 512x512 from -256
+454:[02Nov2026 16:37:26.892] [Server thread/INFO] [com.sounan.Sounan/]: [sounan] Dev is lost on the mountain
+471:[02Nov2026 16:37:29.414] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] SounanShaders を更新しました。
+472:[02Nov2026 16:37:29.956] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='sounan', name='kaerazu'}
+473:[02Nov2026 16:37:29.956] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+474:[02Nov2026 16:37:29.969] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='sounan', name='kaerazu'}
+475:[02Nov2026 16:37:30.468] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+485:[02Nov2026 16:37:45.981] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: in world, 60 steps
+486:[02Nov2026 16:37:46.938] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step rules dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+489:[02Nov2026 16:37:47.369] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step intro_wait dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+490:[02Nov2026 16:38:04.888] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step settle dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+491:[02Nov2026 16:38:26.275] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_03_start_dark dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+494:[02Nov2026 16:38:38.240] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 03_start_dark
+495:[02Nov2026 16:38:38.794] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_04_start_flashlight dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+497:[02Nov2026 16:38:42.339] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 04_start_flashlight
+498:[02Nov2026 16:38:42.342] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_05_bag dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+500:[02Nov2026 16:38:58.867] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 05_bag
+501:[02Nov2026 16:38:59.560] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_06_cliff_edge dim=sounan:kaerazu pos=-166, 184, -169 shaders=true
+503:[02Nov2026 16:39:14.480] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 06_cliff_edge
+504:[02Nov2026 16:39:14.484] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_07_forest_ribbons dim=sounan:kaerazu pos=-139, 179, -139 shaders=true
+506:[02Nov2026 16:39:32.342] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 07_forest_ribbons
+507:[02Nov2026 16:39:33.146] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_08_forest_deep dim=sounan:kaerazu pos=-96, 156, -89 shaders=true
+509:[02Nov2026 16:39:49.750] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 08_forest_deep
+510:[02Nov2026 16:39:49.753] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_09_dead_end dim=sounan:kaerazu pos=-43, 147, -45 shaders=true
+512:[02Nov2026 16:40:07.556] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 09_dead_end
+513:[02Nov2026 16:40:08.286] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_10_village dim=sounan:kaerazu pos=-93, 152, -27 shaders=true
+515:[02Nov2026 16:40:22.820] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 10_village
+516:[02Nov2026 16:40:23.426] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_11_village_houses dim=sounan:kaerazu pos=2, 133, 6 shaders=true
+518:[02Nov2026 16:40:31.191] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 11_village_houses
+519:[02Nov2026 16:40:31.195] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_12_phone_booth dim=sounan:kaerazu pos=30, 133, 6 shaders=true
+521:[02Nov2026 16:40:38.299] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 12_phone_booth
+522:[02Nov2026 16:40:38.967] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_13_omiki_house dim=sounan:kaerazu pos=11, 133, 5 shaders=true
+524:[02Nov2026 16:40:45.534] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 13_omiki_house
+525:[02Nov2026 16:40:45.538] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_14_shrine_steps dim=sounan:kaerazu pos=19, 134, 15 shaders=true
+527:[02Nov2026 16:41:02.825] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 14_shrine_steps
+528:[02Nov2026 16:41:03.544] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_15_shrine dim=sounan:kaerazu pos=49, 134, 36 shaders=true
+530:[02Nov2026 16:41:12.202] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 15_shrine
+531:[02Nov2026 16:41:12.204] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_16_fog_rope dim=sounan:kaerazu pos=64, 142, 36 shaders=true
+533:[02Nov2026 16:41:28.434] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 16_fog_rope
+534:[02Nov2026 16:41:29.164] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_17_bridge dim=sounan:kaerazu pos=77, 140, 50 shaders=true
+536:[02Nov2026 16:41:46.447] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 17_bridge
+537:[02Nov2026 16:41:46.450] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_18_hut dim=sounan:kaerazu pos=95, 132, 84 shaders=true
+539:[02Nov2026 16:42:04.748] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 18_hut
+540:[02Nov2026 16:42:05.520] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_19_hut_inside dim=sounan:kaerazu pos=84, 125, 133 shaders=true
+542:[02Nov2026 16:42:12.678] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 19_hut_inside
+543:[02Nov2026 16:42:12.682] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_20_pylon dim=sounan:kaerazu pos=74, 126, 131 shaders=true
+545:[02Nov2026 16:42:31.744] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 20_pylon
+546:[02Nov2026 16:42:32.512] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_21_tunnel_gate dim=sounan:kaerazu pos=6, 152, 111 shaders=true
+548:[02Nov2026 16:42:46.881] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 21_tunnel_gate
+549:[02Nov2026 16:42:46.884] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_22_tunnel_inside dim=sounan:kaerazu pos=120, 115, 143 shaders=true
+551:[02Nov2026 16:43:01.184] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 22_tunnel_inside
+552:[02Nov2026 16:43:01.186] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_23_trailhead dim=sounan:kaerazu pos=120, 113, 181 shaders=true
+554:[02Nov2026 16:43:15.937] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 23_trailhead
+556:[02Nov2026 16:43:15.941] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step lineup_spawn dim=sounan:kaerazu pos=158, 103, 246 shaders=true
+558:[02Nov2026 16:43:25.506] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step lineup_mobs dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+566:[02Nov2026 16:43:32.032] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 24_monsters
+567:[02Nov2026 16:43:32.683] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step lineup_camera dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+569:[02Nov2026 16:43:37.053] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 25_monsters_camera
+570:[02Nov2026 16:43:37.732] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_26_fear_high dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+574:[02Nov2026 16:43:51.780] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 26_fear_high
+575:[02Nov2026 16:43:51.783] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_27_danger_high dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+576:[02Nov2026 16:43:58.455] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 27_danger_high
+577:[02Nov2026 16:43:58.458] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_28_phone_light dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+579:[02Nov2026 16:44:05.074] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 28_phone_light
+580:[02Nov2026 16:44:05.078] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_29_flare dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+582:[02Nov2026 16:44:11.862] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 29_flare
+583:[02Nov2026 16:44:11.864] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_30_flashlight_low dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+585:[02Nov2026 16:44:16.092] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 30_flashlight_low
+586:[02Nov2026 16:44:16.094] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: finished
+594:[02Nov2026 16:44:17.898] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanCI]'/minecraft:overworld
+595:[02Nov2026 16:44:17.919] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanCI]'/minecraft:the_end
+596:[02Nov2026 16:44:17.921] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanCI]'/sounan:kaerazu
+597:[02Nov2026 16:44:18.041] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanCI]'/minecraft:the_nether
+598:[02Nov2026 16:44:18.103] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (SounanCI): All chunks are saved
