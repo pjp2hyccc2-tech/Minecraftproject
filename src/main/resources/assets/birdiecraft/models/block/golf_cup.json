@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "birdiecraft:block/golf_cup",
+    "side": "birdiecraft:block/turf_side",
+    "bottom": "minecraft:block/dirt"
+  }
+}

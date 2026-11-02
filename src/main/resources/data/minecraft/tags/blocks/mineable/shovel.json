@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "birdiecraft:tee_box",
+    "birdiecraft:tee_marker",
+    "birdiecraft:fairway",
+    "birdiecraft:fairway_dark",
+    "birdiecraft:fringe",
+    "birdiecraft:green",
+    "birdiecraft:golf_cup",
+    "birdiecraft:rough",
+    "birdiecraft:rough_dry",
+    "birdiecraft:rough_snow",
+    "birdiecraft:rough_ash",
+    "birdiecraft:deep_rough",
+    "birdiecraft:bunker_sand",
+    "birdiecraft:bunker_white",
+    "birdiecraft:bunker_red",
+    "birdiecraft:bunker_ash"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "birdiecraft:block/ob_stake"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "birdiecraft:item/golf_club_putter"
+  }
+}

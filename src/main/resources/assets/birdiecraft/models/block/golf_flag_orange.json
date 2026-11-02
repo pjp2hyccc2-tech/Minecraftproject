@@ -1,0 +1,104 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "birdiecraft:block/flag_orange",
+    "pole": "birdiecraft:block/flag_pole",
+    "cloth": "birdiecraft:block/flag_orange"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        7.5
+      ],
+      "to": [
+        8.5,
+        32,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            7,
+            0,
+            8,
+            16
+          ],
+          "texture": "#pole"
+        },
+        "south": {
+          "uv": [
+            7,
+            0,
+            8,
+            16
+          ],
+          "texture": "#pole"
+        },
+        "east": {
+          "uv": [
+            8,
+            0,
+            9,
+            16
+          ],
+          "texture": "#pole"
+        },
+        "west": {
+          "uv": [
+            8,
+            0,
+            9,
+            16
+          ],
+          "texture": "#pole"
+        },
+        "up": {
+          "uv": [
+            7,
+            0,
+            8,
+            1
+          ],
+          "texture": "#pole"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        21,
+        8
+      ],
+      "to": [
+        18.5,
+        31,
+        8
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ],
+          "texture": "#cloth"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#cloth"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "color=red": {
+      "model": "birdiecraft:block/golf_flag_red"
+    },
+    "color=yellow": {
+      "model": "birdiecraft:block/golf_flag_yellow"
+    },
+    "color=blue": {
+      "model": "birdiecraft:block/golf_flag_blue"
+    },
+    "color=pink": {
+      "model": "birdiecraft:block/golf_flag_pink"
+    },
+    "color=orange": {
+      "model": "birdiecraft:block/golf_flag_orange"
+    },
+    "color=white": {
+      "model": "birdiecraft:block/golf_flag_white"
+    }
+  }
+}

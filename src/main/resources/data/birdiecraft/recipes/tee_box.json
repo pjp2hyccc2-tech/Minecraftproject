@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "birdiecraft:fairway"
+    },
+    {
+      "item": "birdiecraft:fairway"
+    },
+    {
+      "item": "birdiecraft:fairway"
+    },
+    {
+      "item": "birdiecraft:fairway"
+    },
+    {
+      "item": "minecraft:white_dye"
+    }
+  ],
+  "result": {
+    "item": "birdiecraft:tee_box",
+    "count": 4
+  }
+}

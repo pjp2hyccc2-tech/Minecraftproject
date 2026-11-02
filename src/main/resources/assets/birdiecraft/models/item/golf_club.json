@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "birdiecraft:item/golf_club_driver"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "birdiecraft:club_type": 0.25
+      },
+      "model": "birdiecraft:item/golf_club_wood"
+    },
+    {
+      "predicate": {
+        "birdiecraft:club_type": 0.5
+      },
+      "model": "birdiecraft:item/golf_club_iron"
+    },
+    {
+      "predicate": {
+        "birdiecraft:club_type": 0.75
+      },
+      "model": "birdiecraft:item/golf_club_wedge"
+    },
+    {
+      "predicate": {
+        "birdiecraft:club_type": 1.0
+      },
+      "model": "birdiecraft:item/golf_club_putter"
+    }
+  ]
+}

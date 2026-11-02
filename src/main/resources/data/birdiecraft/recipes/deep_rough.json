@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "birdiecraft:rough"
+    },
+    {
+      "item": "birdiecraft:rough"
+    },
+    {
+      "item": "birdiecraft:rough"
+    },
+    {
+      "item": "birdiecraft:rough"
+    },
+    {
+      "item": "minecraft:fern"
+    }
+  ],
+  "result": {
+    "item": "birdiecraft:deep_rough",
+    "count": 4
+  }
+}

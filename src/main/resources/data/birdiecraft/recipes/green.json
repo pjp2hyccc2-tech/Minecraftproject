@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "birdiecraft:fairway"
+    },
+    {
+      "item": "birdiecraft:fairway"
+    },
+    {
+      "item": "birdiecraft:fairway"
+    },
+    {
+      "item": "birdiecraft:fairway"
+    },
+    {
+      "item": "minecraft:bone_meal"
+    }
+  ],
+  "result": {
+    "item": "birdiecraft:green",
+    "count": 4
+  }
+}

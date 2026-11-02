@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "birdiecraft:fairway_dark"
+    }
+  ],
+  "result": {
+    "item": "birdiecraft:fairway",
+    "count": 1
+  }
+}

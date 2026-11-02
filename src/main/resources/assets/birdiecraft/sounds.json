@@ -1,0 +1,74 @@
+{
+  "hit_driver": {
+    "sounds": [
+      "birdiecraft:hit_driver"
+    ],
+    "subtitle": "subtitles.birdiecraft.hit_driver"
+  },
+  "hit_iron": {
+    "sounds": [
+      "birdiecraft:hit_iron"
+    ],
+    "subtitle": "subtitles.birdiecraft.hit_iron"
+  },
+  "hit_putt": {
+    "sounds": [
+      "birdiecraft:hit_putt"
+    ],
+    "subtitle": "subtitles.birdiecraft.hit_putt"
+  },
+  "ball_bounce": {
+    "sounds": [
+      "birdiecraft:ball_bounce"
+    ],
+    "subtitle": "subtitles.birdiecraft.ball_bounce"
+  },
+  "cup_in": {
+    "sounds": [
+      "birdiecraft:cup_in"
+    ],
+    "subtitle": "subtitles.birdiecraft.cup_in"
+  },
+  "gauge_tick": {
+    "sounds": [
+      "birdiecraft:gauge_tick"
+    ],
+    "subtitle": "subtitles.birdiecraft.gauge_tick"
+  },
+  "perfect": {
+    "sounds": [
+      "birdiecraft:perfect"
+    ],
+    "subtitle": "subtitles.birdiecraft.perfect"
+  },
+  "fanfare_small": {
+    "sounds": [
+      "birdiecraft:fanfare_small"
+    ],
+    "subtitle": "subtitles.birdiecraft.fanfare_small"
+  },
+  "fanfare_big": {
+    "sounds": [
+      "birdiecraft:fanfare_big"
+    ],
+    "subtitle": "subtitles.birdiecraft.fanfare_big"
+  },
+  "applause": {
+    "sounds": [
+      "birdiecraft:applause"
+    ],
+    "subtitle": "subtitles.birdiecraft.applause"
+  },
+  "groan": {
+    "sounds": [
+      "birdiecraft:groan"
+    ],
+    "subtitle": "subtitles.birdiecraft.groan"
+  },
+  "whoosh": {
+    "sounds": [
+      "birdiecraft:whoosh"
+    ],
+    "subtitle": "subtitles.birdiecraft.whoosh"
+  }
+}

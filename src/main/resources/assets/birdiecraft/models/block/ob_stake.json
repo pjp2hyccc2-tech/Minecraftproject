@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "birdiecraft:block/ob_stake",
+    "stake": "birdiecraft:block/ob_stake"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        14,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6,
+            2,
+            9,
+            16
+          ],
+          "texture": "#stake"
+        },
+        "south": {
+          "uv": [
+            6,
+            2,
+            9,
+            16
+          ],
+          "texture": "#stake"
+        },
+        "east": {
+          "uv": [
+            6,
+            2,
+            9,
+            16
+          ],
+          "texture": "#stake"
+        },
+        "west": {
+          "uv": [
+            6,
+            2,
+            9,
+            16
+          ],
+          "texture": "#stake"
+        },
+        "up": {
+          "uv": [
+            6,
+            0,
+            9,
+            3
+          ],
+          "texture": "#stake"
+        },
+        "down": {
+          "uv": [
+            6,
+            13,
+            9,
+            16
+          ],
+          "texture": "#stake",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
