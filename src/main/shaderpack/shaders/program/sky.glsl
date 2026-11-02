@@ -1,11 +1,11 @@
 // =====================================================================================
-//  MeikonShaders - vanilla sky geometry
+//  SounanShaders - vanilla sky geometry
 //   PROG_SKYBASIC   : sky disc / sunset fan / void / stars. The gradient is painted by the
 //                     deferred pass for every empty pixel, so only (dim) stars are kept,
-//                     and none at all in Kakuriyo.
-//   PROG_SKYTEXTURED: sun and moon (and the End sky box). In Kakuriyo the moon - vanilla or
-//                     drawn by the mod's own sky renderer - is turned blood red, made a
-//                     little larger and flagged emissive so the bloom gives it a glow.
+//                     and none at all over the mountain (the fog and the canopy hide them).
+//   PROG_SKYTEXTURED: sun and moon. Over the mountain the moon - vanilla or drawn by the mod -
+//                     is a cold, pale full moon, a little larger, flagged emissive so the
+//                     bloom gives it a halo when it shows through a gap in the canopy.
 //  Sky objects are written into the black-cleared colortex0 and added to the gradient by
 //  the deferred pass.
 // =====================================================================================
@@ -15,15 +15,15 @@
 out vec2 texcoord;
 out vec4 glcolor;
 
-#ifdef WORLD_KAKURIYO
-const float MOON_SCALE = 1.6;
+#ifdef WORLD_MOUNTAIN
+const float MOON_SCALE = 1.35;
 #endif
 
 void main() {
     texcoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
     glcolor = gl_Color;
     vec4 viewPos = gl_ModelViewMatrix * gl_Vertex;
-#if defined PROG_SKYTEXTURED && defined WORLD_KAKURIYO && defined MC_RENDER_STAGE_MOON
+#if defined PROG_SKYTEXTURED && defined WORLD_MOUNTAIN && defined MC_RENDER_STAGE_MOON
     // vanilla moon quad: grow it around its centre (the moon direction)
     if (renderStage == MC_RENDER_STAGE_MOON && dot(moonPosition, moonPosition) > 1.0) {
         vec3 m = normalize(moonPosition);
@@ -57,14 +57,13 @@ void main() {
 
 #ifdef PROG_SKYTEXTURED
     vec4 tex = texture(gtexture, texcoord);
-  #if defined WORLD_KAKURIYO && defined MC_RENDER_STAGE_MOON
+  #if defined WORLD_MOUNTAIN && defined MC_RENDER_STAGE_MOON
     #ifdef MC_RENDER_STAGE_SUN
     if (renderStage == MC_RENDER_STAGE_SUN) discard;      // midnight forever: no sun
     #endif
     if (renderStage == MC_RENDER_STAGE_MOON) {
-        // Always a full blood moon. The vanilla texture follows the moon phase of the
-        // overworld day count (a new moon would leave the sky empty), so the disc is painted
-        // here: a soft glowing face with darker maria, a brighter limb and a red halo.
+        // Always a full moon (the vanilla texture follows the moon phase of the day count):
+        // a soft cold face with darker maria, a brighter limb and a pale halo.
         vec2 p = fract(texcoord * vec2(4.0, 2.0)) - 0.5;     // inside the phase cell
         float r = length(p);
         const float R = 0.215;
@@ -74,12 +73,11 @@ void main() {
         float maria = smoothstep(0.42, 0.72, fbm2(sp * 2.3 + vec2(3.1, 7.7)));
         float crater = smoothstep(0.62, 0.80, vnoise2(sp * 9.0 + vec2(1.3, 2.9)));
         float limb = sqrt(saturate(1.0 - dot(sp, sp)));
-        float face = (0.55 + 0.45 * limb) * (1.0 - 0.50 * maria) * (1.0 - 0.18 * crater);
-        float halo = exp(-max(r - R, 0.0) * 24.0) * smoothstep(0.50, 0.30, r) * (1.0 - disc);
-        vec3 moon = vec3(1.00, 0.028, 0.018) * face * 2.6 * disc
-                  + vec3(1.00, 0.10, 0.04) * pow(face, 4.0) * 0.45 * disc
-                  + vec3(0.90, 0.03, 0.02) * halo * 0.50;
-        moon *= 1.0 + 0.25 * fear();
+        float face = (0.60 + 0.40 * limb) * (1.0 - 0.42 * maria) * (1.0 - 0.15 * crater);
+        float halo = exp(-max(r - R, 0.0) * 22.0) * smoothstep(0.50, 0.30, r) * (1.0 - disc);
+        vec3 moon = vec3(0.78, 0.86, 1.00) * face * 1.6 * disc
+                  + vec3(0.55, 0.65, 0.85) * halo * 0.22;
+        moon *= 1.0 - 0.35 * fear();
         float a = saturate(disc + halo);
         /* RENDERTARGETS: 0,1 */
         gl_FragData[0] = vec4(moon, a);
@@ -87,17 +85,13 @@ void main() {
         return;
     }
   #endif
-  #if defined WORLD_KAKURIYO
-    // vanilla fades sun / moon by (1 - rain level) through the vertex colour alpha; here the
-    // rain level is the fear value, so ignore it - the moon must stay, fear or not.
+  #if defined WORLD_MOUNTAIN
+    // a custom sky renderer's moon: vanilla fades sun / moon by (1 - rain level) through the
+    // vertex alpha - here the rain level is fear, so ignore it: the moon stays.
     vec3 lin = toLinear(tex.rgb * glcolor.rgb);
-    // brightness from the strongest channel so an already red moon texture stays bright
     float lum = maxOf(lin) * 0.7 + luma(lin) * 0.3;
-    float a = tex.a * smoothstep(0.002, 0.03, lum);   // black / empty texels drop out
-    // blood red: dark maria stay dark, the bright face glows. Green / blue stay tiny in
-    // linear light, otherwise the tone curve turns the red into salmon.
-    vec3 moon = vec3(1.00, 0.028, 0.018) * pow(lum, 0.85) * 2.4 + vec3(1.0, 0.10, 0.04) * pow(lum, 4.0) * 0.5;
-    moon *= 1.0 + 0.25 * fear();
+    float a = tex.a * smoothstep(0.002, 0.03, lum);
+    vec3 moon = vec3(0.78, 0.86, 1.00) * pow(lum, 0.9) * 1.6 * (1.0 - 0.35 * fear());
     /* RENDERTARGETS: 0,1 */
     gl_FragData[0] = vec4(moon, a);
     gl_FragData[1] = vec4(1.0, 0.0, 0.0, a);

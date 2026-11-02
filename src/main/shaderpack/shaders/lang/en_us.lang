@@ -1,49 +1,72 @@
-# MeikonShaders 冥婚 ―MEIKON― - option labels (English)
+# SounanShaders 遭難 ―SOUNAN― - option labels (English)
 profile.LOW=Low
 profile.MEDIUM=Medium
 profile.HIGH=High
-profile.comment=Quality preset. Low uses coarse shadows and no light shafts; High uses fine, soft shadows.
+profile.ULTRA=Ultra
+profile.comment=Quality preset. Medium is tuned for 60 fps on a mid-range GPU at 1080p. Low drops the light shafts and the beam shadows; High and Ultra sharpen shadows and smooth the fog.
 
+screen.FLASHLIGHT=Flashlight
+screen.FLASHLIGHT.comment=The beam of the flashlight, the phone light and the camera's infrared.
+screen.ATMOSPHERE=Fog & Air
+screen.ATMOSPHERE.comment=The drifting mist, moonlight shafts through the cedar canopy.
+screen.FEAR=Fear
+screen.FEAR.comment=What your heart rate and the nearness of danger do to the picture.
+screen.LIGHTING=Moon & Shadow
+screen.LIGHTING.comment=Moon shadows of the canopy and the wind in the trees.
 screen.POST=Image
 screen.POST.comment=Film grain, vignette, chromatic aberration and bloom.
-screen.ATMOSPHERE=Fog & Air
-screen.ATMOSPHERE.comment=Fog density and moonlight shafts in the fog.
-screen.LIGHTING=Light & Shadow
-screen.LIGHTING.comment=Moon shadows, flame flicker and the hand-held light.
 
 option.FLASH_REDUCTION=Flash Reduction
-option.FLASH_REDUCTION.comment=For photosensitive players: no glitches, no frame jitter, no heartbeat-pulsing vignette, no flashing red in a chase, and a calmer flame flicker.
+option.FLASH_REDUCTION.comment=For photosensitive players: calmer flashlight flicker and battery stutter, no heartbeat-pulsing vignette, no breathing image, no camera interference.
 option.BRIGHTNESS=Brightness
-option.BRIGHTNESS.comment=Overall brightness. Raise it if you cannot see anything (the horror mood gets a little weaker).
+option.BRIGHTNESS.comment=Overall brightness. Raise it if you cannot see anything (the horror gets a little weaker).
 
-option.FILM_GRAIN=Film Grain
-option.FILM_GRAIN.comment=Old-film grain. In Kakuriyo it grows stronger with fear.
-option.VIGNETTE=Vignette
-option.VIGNETTE.comment=Darkens the corners. In Kakuriyo it closes in with fear and beats with your heart.
-option.CHROMATIC_ABERRATION=Chromatic Aberration
-option.CHROMATIC_ABERRATION.comment=Colour fringes at the edges. Stronger at high fear and while the bride hunts you.
-option.BLOOM_STRENGTH=Bloom
-option.BLOOM_STRENGTH.comment=Soft glow of lanterns, andon lamps, candles, the torii and the red moon.
+option.BEAM_STRENGTH=Beam Brightness
+option.BEAM_STRENGTH.comment=How brightly the flashlight and the phone light light the world.
+option.BEAM_FOG=Visible Beam
+option.BEAM_FOG.comment=How strongly the beam glows in the fog and dust. 0 turns the visible cone off.
+option.BEAM_SAMPLES=Beam Quality
+option.BEAM_SAMPLES.comment=Samples per pixel for the visible beam. More is smoother but slower.
+option.BEAM_SHADOWS=Beam Shadows
+option.BEAM_SHADOWS.comment=Trunks and rocks throw thin shadows in the flashlight beam (screen space).
+option.LENS_COOKIE=Reflector Rings
+option.LENS_COOKIE.comment=The faint rings and smudges a real flashlight reflector and lens put into the beam.
+option.DUST_MOTES=Dust in the Beam
+option.DUST_MOTES.comment=Specks of dust (and droplets in the forest) floating in the beam.
 
 option.FOG_DENSITY=Fog Density
-option.FOG_DENSITY.comment=In Kakuriyo the corridors fade to black about 20 blocks away. Lower it to see further.
+option.FOG_DENSITY.comment=How thick the mist on the mountain is. Lower it to see further.
+option.FOG_NOISE=Drifting Mist
+option.FOG_NOISE.comment=The fog is uneven and drifts down the mountain in slow wisps. Off: smooth fog (faster).
 option.VOLUMETRIC_FOG=Moonlight Shafts
-option.VOLUMETRIC_FOG.comment=Moonlight falling through the fog between the eaves and the torii in the courtyard. Turn off if it is too slow.
-option.VOLUMETRIC_SAMPLES=Light Shaft Quality
-option.VOLUMETRIC_SAMPLES.comment=Samples per pixel for the light shafts. More is smoother but slower.
+option.VOLUMETRIC_FOG.comment=Moonlight falling through gaps in the canopy, scattered in the ground fog. Turn off if it is too slow.
+option.VOLUMETRIC_SAMPLES=Fog Quality
+option.VOLUMETRIC_SAMPLES.comment=Samples per pixel for the fog and the light shafts. More is smoother but slower.
+
+option.FEAR_EFFECTS=Fear Effects
+option.FEAR_EFFECTS.comment=Strength of the heartbeat vignette, tunnel vision, colour fringes, breathing image and double vision.
+option.PAREIDOLIA=Faces in the Dark
+option.PAREIDOLIA.comment=At very high fear, something like faces seems to form in the darkness at the edge of your vision.
 
 option.SHADOWS=Shadows
 option.SHADOWS.comment=Shadows cast by the moon (by the sun in the overworld).
 option.shadowMapResolution=Shadow Resolution
-option.shadowMapResolution.comment=Higher gives finer shadow edges but is slower.
+option.shadowMapResolution.comment=Higher gives finer canopy shadows and light shafts but is slower.
+option.shadowDistance=Shadow Distance
+option.shadowDistance.comment=How far the moon shadows reach. The fog hides the far forest anyway.
 option.SHADOW_FILTER=Shadow Quality
 option.SHADOW_FILTER.comment=Number of samples that soften the shadow edges.
 value.SHADOW_FILTER.1=Low (4)
 value.SHADOW_FILTER.2=Medium (8)
 value.SHADOW_FILTER.3=High (12)
-option.FLAME_FLICKER=Flame Flicker
-option.FLAME_FLICKER.comment=The light of lanterns, andon lamps, candles and torches gently flickers.
-option.HAND_LANTERN_LIGHT=Hand-held Light
-option.HAND_LANTERN_LIGHT.comment=A held lantern or torch lights its surroundings with a smooth, swaying light.
-option.WAVING_PLANTS=Waving Plants
-option.WAVING_PLANTS.comment=Grass, leaves and the paper streamers of the shimenawa stir faintly.
+option.WAVING_PLANTS=Wind in the Trees
+option.WAVING_PLANTS.comment=The canopy sways in slow gusts (the moonlight patches move with it); ferns and grass stir.
+
+option.FILM_GRAIN=Film Grain
+option.FILM_GRAIN.comment=Grain noise. On the mountain it grows stronger with fear and danger.
+option.VIGNETTE=Vignette
+option.VIGNETTE.comment=Darkens the corners. On the mountain it closes in with fear and beats with your heart.
+option.CHROMATIC_ABERRATION=Chromatic Aberration
+option.CHROMATIC_ABERRATION.comment=Colour fringes at the edges. Stronger at high fear, in danger and through the camera.
+option.BLOOM_STRENGTH=Bloom
+option.BLOOM_STRENGTH.comment=Soft glow of lamps, flames, the flare, eyes in the beam and the moon.

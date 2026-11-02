@@ -1,11 +1,11 @@
 // =====================================================================================
-//  MeikonShaders - per-world palette, time of day, fear / danger
-//  The stub folders define MEIKON_KAKURIYO / DIM_NETHER / DIM_END; nothing = overworld
-//  (and any other dimension).
+//  SounanShaders - per-world palette, fear / danger, celestial light
+//  The stub folders define SOUNAN_MOUNTAIN / DIM_NETHER / DIM_END; nothing = overworld
+//  (and any other dimension: the lobby, mod dimensions ...).
 // =====================================================================================
 
-#if defined MEIKON_KAKURIYO
-    #define WORLD_KAKURIYO
+#if defined SOUNAN_MOUNTAIN
+    #define WORLD_MOUNTAIN
     #define HAS_CELESTIAL_LIGHT
 #elif defined DIM_NETHER
     #define WORLD_NETHER
@@ -23,14 +23,16 @@
     #endif
 #endif
 #ifdef VOLUMETRIC_FOG
+    #define VOLUMETRICS_ON
     #ifdef SHADOWS_ON
-        #define VOLUMETRICS_ON
+        #define LIGHT_SHAFTS_ON
     #endif
 #endif
 
-// ---- the mod's contract (docs/DESIGN.md section 6) --------------------------------------
-// Only inside meikon:kakuriyo the mod drives rainStrength = fear and thunderStrength = danger.
-#ifdef WORLD_KAKURIYO
+// ---- the mod's contract (docs/DESIGN.md section 8) --------------------------------------
+// Only inside sounan:kaerazu the mod drives rainStrength = fear and thunderStrength = danger.
+// Nothing weather-like (rain, wetness, lightning, darker clouds) may come from them there.
+#ifdef WORLD_MOUNTAIN
 float fear()       { return saturate(rainStrength); }
 float danger()     { return saturate(thunderStrength); }
 float rainAmount() { return 0.0; }
@@ -40,32 +42,32 @@ float danger()     { return 0.0; }
 float rainAmount() { return saturate(rainStrength); }
 #endif
 
-// ---- palette -------------------------------------------------------------------------
-// warm flame light of lanterns, andon lamps and candles (linear)
-const vec3 FLAME_HOT  = vec3(1.00, 0.66, 0.40);
-const vec3 FLAME_DEEP = vec3(1.00, 0.46, 0.20);
+// ---- palette (linear) ----------------------------------------------------------------
+// warm light of flames, lanterns and the sodium tunnel lamps
+const vec3 FLAME_HOT  = vec3(1.00, 0.62, 0.34);
+const vec3 FLAME_DEEP = vec3(1.00, 0.42, 0.16);
 
-#if defined WORLD_KAKURIYO
-    // moonlit ground reads as cold blue-grey (~20% on screen), surfaces in the moon shadow
-    // under the open sky stay just readable; roofed rooms get none of it
-    const vec3  MOON_LIGHT        = vec3(0.30, 0.38, 0.56) * 0.80;   // cold, blue-grey
-    const vec3  SKY_AMBIENT       = vec3(0.16, 0.19, 0.27) * 0.27;
-    const vec3  MIN_LIGHT         = vec3(0.50, 0.58, 0.80) * 0.0120; // the dark is never quite black
-    const vec3  SKY_ZENITH        = vec3(0.0026, 0.0004, 0.0007);
-    const vec3  SKY_MID           = vec3(0.0130, 0.0019, 0.0026);
-    const vec3  SKY_HORIZON       = vec3(0.0500, 0.0058, 0.0070);    // a dark crimson haze
-    const vec3  FOG_INDOOR        = vec3(0.0034, 0.0011, 0.0015);    // crimson-black
-    const vec3  FOG_OUTDOOR       = vec3(0.0105, 0.0052, 0.0068);    // moonlit, still crimson
-    const float FOG_RANGE_INDOOR  = 13.0;   // exp^2 fog scale in blocks: corridors are black at ~24
-    const float FOG_RANGE_OUTDOOR = 24.0;   // across the courtyard (~26 blocks) the torii is a shape
-    const float FLAME_GAIN        = 1.00;
+#if defined WORLD_MOUNTAIN
+    // Cold blue-grey midnight under a dense cedar canopy. The moon reaches the ground only
+    // through gaps (shadow map): bright cold patches and shafts, everything else is very dark.
+    const vec3  MOON_LIGHT   = vec3(0.30, 0.39, 0.56) * 0.70;
+    const vec3  SKY_AMBIENT  = vec3(0.15, 0.19, 0.27) * 0.026;   // the sky dome, mostly blocked by needles
+    const vec3  MIN_LIGHT    = vec3(0.42, 0.50, 0.70) * 0.0040;  // never quite black
+    const vec3  SKY_ZENITH   = vec3(0.0030, 0.0040, 0.0064);
+    const vec3  SKY_HORIZON  = vec3(0.0105, 0.0128, 0.0170);
+    // radiance of deep fog lit by the moonlight that leaks through the canopy: a touch
+    // brighter than the unlit trunks in front of it, so they read as silhouettes
+    const vec3  FOG_AMBIENT  = vec3(0.0135, 0.0168, 0.0228);
+    const vec3  FOG_TUNNEL   = vec3(0.0007, 0.0007, 0.0008);   // no sky light: black
+    const float FLAME_GAIN   = 1.10;
 #elif defined WORLD_NETHER
-    const vec3  MIN_LIGHT         = vec3(0.60, 0.40, 0.36) * 0.012;
-    const float FLAME_GAIN        = 0.65;
+    const vec3  MIN_LIGHT    = vec3(0.60, 0.40, 0.36) * 0.012;
+    const float FLAME_GAIN   = 0.65;
 #elif defined WORLD_END
-    const vec3  MIN_LIGHT         = vec3(0.50, 0.46, 0.62) * 0.030;
-    const float FLAME_GAIN        = 0.65;
+    const vec3  MIN_LIGHT    = vec3(0.50, 0.46, 0.62) * 0.030;
+    const float FLAME_GAIN   = 0.65;
 #else
+    // the overworld (lobby, any other dimension): moody, overcast, but playable
     const vec3  SUN_NOON          = vec3(1.00, 0.96, 0.90) * 1.35;   // pale, joyless sun
     const vec3  SUN_LOW           = vec3(1.00, 0.55, 0.32) * 0.95;
     const vec3  MOON_LIGHT        = vec3(0.30, 0.38, 0.56) * 0.085;
@@ -95,11 +97,10 @@ float dayFactor() {
 
 // colour of the light that casts the shadow map (linear)
 vec3 celestialLight() {
-#if defined WORLD_KAKURIYO
+#if defined WORLD_MOUNTAIN
     return MOON_LIGHT * (1.0 - 0.35 * fear());          // fear swallows the moonlight
 #elif defined WORLD_OVERWORLD
     float h = sunDirW().y;
-    float day = dayFactor();
     vec3 sun = mix(SUN_LOW, SUN_NOON, smoothstep(0.05, 0.45, h));
     float moonPhaseMul = 1.0 - 0.55 * float(abs(moonPhase - 4) < 2);   // new moon: darker
     vec3 c = h > -0.03 ? sun * smoothstep(-0.03, 0.10, h) : MOON_LIGHT * moonPhaseMul * smoothstep(-0.03, -0.14, h);
@@ -111,8 +112,8 @@ vec3 celestialLight() {
 
 // ambient light from the sky dome for a fully sky-lit surface (linear)
 vec3 skyAmbient() {
-#if defined WORLD_KAKURIYO
-    return SKY_AMBIENT;
+#if defined WORLD_MOUNTAIN
+    return SKY_AMBIENT * (1.0 - 0.3 * fear());
 #elif defined WORLD_OVERWORLD
     vec3 a = mix(AMBIENT_NIGHT, AMBIENT_DAY, dayFactor());
     return mix(a, vec3(luma(a)) * 0.8, rainAmount() * 0.6);

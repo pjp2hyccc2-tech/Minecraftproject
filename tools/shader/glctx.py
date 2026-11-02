@@ -1,6 +1,6 @@
 """Minimal headless OpenGL (Mesa, EGL surfaceless, 4.5 compatibility profile) via ctypes.
 
-Used by tools/shader/preview.py to compile, link and run the MeikonShaders programs with the
+Used by tools/shader/preview.py to compile, link and run the SounanShaders programs with the
 same compiler the CI run uses (Mesa llvmpipe). No window, no X server.
 """
 import ctypes as C

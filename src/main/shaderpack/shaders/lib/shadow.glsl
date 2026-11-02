@@ -1,5 +1,5 @@
 // =====================================================================================
-//  MeikonShaders - shadow map distortion + soft hardware-PCF lookups
+//  SounanShaders - shadow map distortion + soft hardware-PCF lookups (the moon)
 //  shadow.vsh and every lookup use the same distortion (more texels near the player).
 // =====================================================================================
 
@@ -52,7 +52,7 @@ float shadowLookup(vec3 playerPos, vec3 N, float NdotL, float dither) {
     if (s.x <= 0.002 || s.x >= 0.998 || s.y <= 0.002 || s.y >= 0.998 || s.z >= 1.0) return 1.0;
 
     // penumbra in world units -> shadow uv (uv = world / (2 * shadowDistance * f))
-    float softWorld = 0.07 + dist * 0.0045;
+    float softWorld = 0.06 + dist * 0.0040;
     float texel = 1.0 / float(shadowMapResolution);
     float radius = max(softWorld / (2.0 * shadowDistance * f), texel * 0.75);
     float z = s.z - 0.00006;
@@ -61,7 +61,7 @@ float shadowLookup(vec3 playerPos, vec3 N, float NdotL, float dither) {
     mat2 rot = mat2(cos(a), sin(a), -sin(a), cos(a)) * radius;
     float acc = 0.0;
     for (int i = 0; i < SHADOW_TAPS; i++) {
-        acc += texture(shadowtex0, vec3(s.xy + rot * SHADOW_DISK[i], z));
+        acc += textureLod(shadowtex0, vec3(s.xy + rot * SHADOW_DISK[i], z), 0.0);
     }
     return acc / float(SHADOW_TAPS);
 }
@@ -72,7 +72,7 @@ float shadowTap(vec3 playerPos) {
     vec3 s = distortShadowClip(sp.xyz) * 0.5 + 0.5;
     if (s.x <= 0.0 || s.x >= 1.0 || s.y <= 0.0 || s.y >= 1.0) return 0.0;
     if (s.z >= 1.0) return 1.0;
-    return texture(shadowtex0, vec3(s.xy, s.z - 0.0003));
+    return textureLod(shadowtex0, vec3(s.xy, s.z - 0.0002), 0.0);
 }
 #elif defined SHADOWS_ON
 // the shadow pass never samples the map: stubs so the shared lighting code compiles

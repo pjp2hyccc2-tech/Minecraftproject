@@ -1,5 +1,5 @@
 // =====================================================================================
-//  MeikonShaders - uniforms shared by every program
+//  SounanShaders - uniforms shared by every program
 //  (shadowtex0 is declared as sampler2DShadow in lib/shadow.glsl, only where it is sampled)
 // =====================================================================================
 
@@ -10,6 +10,8 @@ uniform sampler2D colortex1;
 uniform sampler2D colortex2;
 uniform sampler2D colortex3;
 uniform sampler2D colortex4;
+uniform sampler2D colortex5;
+uniform sampler2D colortex6;
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
 
@@ -33,18 +35,17 @@ uniform float aspectRatio;
 uniform float near;
 uniform float far;
 uniform float frameTimeCounter;
-uniform float rainStrength;      // meikon:kakuriyo -> FEAR 0..1   (elsewhere: rain)
-uniform float thunderStrength;   // meikon:kakuriyo -> DANGER 0..1 (elsewhere: thunder)
-uniform float wetness;
-uniform float nightVision;
+uniform float rainStrength;      // sounan:kaerazu -> FEAR 0..1   (elsewhere: rain)
+uniform float thunderStrength;   // sounan:kaerazu -> DANGER 0..1 (elsewhere: thunder)
+uniform float nightVision;       // sounan:kaerazu -> > 0 while the phone camera is on
 uniform float blindness;
-uniform float darknessFactor;
+uniform float darknessFactor;    // vanilla Darkness: being captured
 uniform float darknessLightFactor;
 
 uniform int frameCounter;
 uniform int isEyeInWater;
-uniform int heldItemId;
-uniform int heldItemId2;
+uniform int heldItemId;          // main hand (item.properties)
+uniform int heldItemId2;         // off hand
 uniform int heldBlockLightValue;
 uniform int heldBlockLightValue2;
 uniform int renderStage;
