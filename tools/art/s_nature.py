@@ -9,7 +9,7 @@ import numpy as np
 from common import Tex, texture, ramp, pal, C, fnoise, vnoise, white, grid, rng, equalize, norm01, blob, \
     lighten_arr, wrapdist, dilate, erode, bayer
 from px import paint_idx, levels, despeckle, emboss, voronoi, jitter_points, stamp, curve_pts, line_pts, \
-    shade_sprite, overlay, tint
+    shade_sprite, overlay, tint, detile
 
 # ------------------------------------------------------------------------------------------------ palettes
 # cedar bark: warm red-brown in the furrows and fresh fibres, weathering to grey-brown on the outer fibres
@@ -256,7 +256,7 @@ SPRAYS = [  # small dead needle-spray / twig shapes (x, y offsets), drawn light 
 
 def litter_field(seed=41, n=26, hi=(5, 6), base=3.1):
     W = H = 16
-    v = base + fnoise(W, H, seed, beta=1.0) * 0.55 + fnoise(W, H, seed + 1, beta=0.25) * 0.5
+    v = base + fnoise(W, H, seed, beta=1.0, lo=2) * 0.45 + fnoise(W, H, seed + 1, beta=0.25) * 0.5
     r = rng(seed + 2)
     lit = np.zeros((H, W), bool)
     for i in range(n):
@@ -301,6 +301,7 @@ def forest_floor_top():
     t.set(12, 4, MOSS[3])
     t.set(13, 4, MOSS[2])
     t.set(5, 13, MOSS[2])
+    detile(t, keep=0.4)
     return t
 
 
@@ -380,6 +381,7 @@ def moss_floor():
     for (a, b, c_, d) in ((9, 3, 11, 2), (2, 14, 4, 15)):
         for (px_, py_) in line_pts(a, b, c_, d):
             t.set(px_, py_, LITTER[4])
+    detile(t, keep=0.45)
     return t
 
 
@@ -388,7 +390,7 @@ def trail_top():
     """Packed path: trodden brown dirt, a short exposed root, pebbles, a few needles kicked onto it."""
     W = H = 16
     t = Tex(16)
-    n = fnoise(W, H, 81, beta=1.5) * 0.5 + fnoise(W, H, 82, beta=0.2) * 0.4
+    n = fnoise(W, H, 81, beta=1.2, lo=2) * 0.45 + fnoise(W, H, 82, beta=0.2) * 0.4
     q = np.clip(np.round(3.2 + n), 0, 6).astype(int)
     q = despeckle(q, passes=2)
     paint_idx(t, q, TRAIL)
@@ -407,28 +409,29 @@ def trail_top():
     for (a, b, c_, d) in ((8, 2, 10, 3), (1, 7, 1, 8), (14, 7, 15, 8), (9, 14, 10, 14)):
         for (px_, py_) in line_pts(a, b, c_, d):
             t.set(px_, py_, LITTER[5])
+    detile(t, keep=0.45)
     return t
 
 
 # ------------------------------------------------------------------------------------------------ rock
 def rock_base(seed=91):
     W = H = 16
-    hgt = fnoise(W, H, seed, beta=1.8) * 1.0 + fnoise(W, H, seed + 1, beta=0.9) * 0.3
+    hgt = fnoise(W, H, seed, beta=1.4, lo=2) * 1.0 + fnoise(W, H, seed + 1, beta=0.9) * 0.35
     lit = emboss(hgt)
-    v = 3.4 + hgt * 0.7 + lit * 1.9 + fnoise(W, H, seed + 2, beta=0.1) * 0.3
+    v = 3.4 + hgt * 0.6 + lit * 1.5 + fnoise(W, H, seed + 2, beta=0.1) * 0.35
     sp = white(W, H, seed + 3)
-    v = np.where(sp > 0.955, v + 1.4, v)
-    v = np.where(sp < 0.035, v - 1.1, v)
+    v = np.where(sp > 0.955, v + 1.2, v)
+    v = np.where(sp < 0.035, v - 1.0, v)
     q = np.clip(np.round(v), 0, 7).astype(int)
     q = despeckle(q, keep=(sp > 0.955) | (sp < 0.035))
     t = Tex(16)
     paint_idx(t, q, ROCK)
-    # short cracks (dark line, lit lower lip)
+    # short cracks (dark line, lit lower lip), soft so a cliff face does not show them in rows
     for pts in (((2, 3), (4, 4), (6, 4)), ((11, 9), (12, 11), (13, 12)), ((4, 12), (5, 14))):
         path = curve_pts(pts)
         for (px_, py_) in path:
-            t.set(px_, py_, ROCK[1])
-            t.dl(px_, py_ + 1, 0.035)
+            t.blend(px_, py_, ROCK[1], 0.55)
+            t.dl(px_, py_ + 1, 0.025)
     return t
 
 
@@ -442,7 +445,8 @@ def mountain_rock():
             px_, py_ = cx + int(r.integers(-2, 3)), cy + int(r.integers(-1, 2))
             t.set(px_, py_, LICHEN[int(r.integers(0, 4))])
     for (gx, gy) in ((7, 2), (1, 6), (14, 8)):
-        t.dl(gx, gy, 0.07)
+        t.dl(gx, gy, 0.05)
+    detile(t, keep=0.4)
     return t
 
 
@@ -451,16 +455,17 @@ def mossy_rock():
     t = rock_base(seed=93)
     moss, d1, d2 = moss_tex(seed=105, n=24, dark=0.4)
     W = H = 16
-    cover = vnoise(W, H, 4, 4, 101) * 0.55 + vnoise(W, H, 8, 8, 102) * 0.3 + white(W, H, 103) * 0.15
+    cover = vnoise(W, H, 4, 4, 101) * 0.3 + vnoise(W, H, 8, 8, 102) * 0.5 + white(W, H, 103) * 0.2
     m = cover > 0.60
     m = despeckle(m.astype(int), passes=2).astype(bool)
     t.a[m] = moss.a[m]
     # shadow where the moss cushion overhangs the rock (below / right of the moss edge)
-    sh = ~m & (np.roll(m, 1, 0) | np.roll(m, 1, 1))
-    t.a[sh, :3] *= 0.72
+    sh = ~m & np.roll(m, 1, 0)
+    t.a[sh, :3] *= 0.84
     for (fx, fy) in ((5, 3), (12, 12), (2, 9)):
         if not m[fy, fx]:
             t.set(fx, fy, MOSS[3])
+    detile(t, keep=0.4)
     return t
 
 

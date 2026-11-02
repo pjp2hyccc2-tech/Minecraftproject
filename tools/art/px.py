@@ -207,3 +207,31 @@ def mul(t, f, mask=None):
     m = np.ones(t.a.shape[:2], bool) if mask is None else mask
     t.a[m, :3] *= np.asarray(f, np.float32)
     return t
+
+
+def detile(t, keep=0.35, rcut=2.0, chroma=True):
+    """Weaken the tile-scale (lowest frequency) light/dark and colour blotches of a tiling texture, keeping all
+    the small detail: a 16 px tile with one big dark patch shows as a grid of patches on a long wall or slope.
+    keep: fraction of the frequency components below rcut (cycles per tile) that survives."""
+    a = t.a
+    h, w = a.shape[:2]
+    fy = np.fft.fftfreq(h)[:, None] * h
+    fx = np.fft.fftfreq(w)[None, :] * w
+    r = np.hypot(fx, fy)
+    band = (r > 0) & (r < rcut)
+
+    def low(f):
+        return np.real(np.fft.ifft2(np.fft.fft2(f) * band))
+
+    rgb = a[..., :3].astype(np.float64)
+    lum = rgb @ np.array([0.2126, 0.7152, 0.0722])
+    lum_new = lum - (1.0 - keep) * low(lum)
+    scale = lum_new / np.maximum(lum, 1.0)
+    out = rgb * scale[..., None]
+    if chroma:
+        # the same for the colour cast (rusty / mossy / grey patches): pull each channel's low band towards luma's
+        for c in range(3):
+            dev = out[..., c] - lum_new
+            out[..., c] = lum_new + dev - (1.0 - keep) * low(dev)
+    a[..., :3] = np.clip(out, 0, 255).astype(np.float32)
+    return t

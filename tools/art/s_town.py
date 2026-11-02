@@ -7,7 +7,7 @@ import numpy as np
 from common import Tex, texture, ramp, pal, C, fnoise, vnoise, white, grid, rng, blob, lighten_arr, \
     dilate, erode, edge, equalize
 from px import paint_idx, despeckle, emboss, voronoi, jitter_points, stamp, curve_pts, line_pts, overlay, \
-    outline_alpha, shade_sprite, tint, cutout
+    outline_alpha, shade_sprite, tint, cutout, detile
 
 GREYWOOD = ramp(['#1f1c19', '#2e2a26', '#403a35', '#534c45', '#665e56', '#787067', '#8a8278', '#9a9288'], 8)
 DARKWOOD = ramp(['#0c0a08', '#15110e', '#1e1814', '#28201b', '#322822', '#3d312a', '#483a31'], 7)
@@ -57,23 +57,25 @@ def boards(seed, P, rows=4, base=4.0, tone=None, joints=None, streak=0.7, gap_lv
 
 @texture('block/weathered_planks', opaque=True, tile=True)
 def weathered_planks():
-    """Sun-bleached grey old boards (hut walls, village houses): cracks, nail holes bleeding rust."""
-    v = boards(201, GREYWOOD, base=4.6, tone=[0.3, -0.4, 0.5, -0.2], joints=[6, 13, 2, 10], knots=((11, 9),))
+    """Sun-bleached grey old boards (hut walls, village gables): long boards (a butt joint only now and then),
+    splits along the grain, nails in stud lines bleeding a little rust."""
+    v = boards(201, GREYWOOD, base=4.6, tone=[0.3, -0.4, 0.5, -0.2], joints=[None, 11, None, None], knots=((11, 9),),
+               lmin=5, lmax=13)
     q = np.clip(np.round(v), 0, 7).astype(int)
     t = Tex(16)
     paint_idx(t, q, GREYWOOD)
     # a warm brown cast deeper in the grain (old cedar under the grey)
-    warm = vnoise(16, 16, 2, 4, 202) > 0.62
-    t.a[warm, :3] *= np.array([1.06, 0.98, 0.9])
+    warm = vnoise(16, 16, 4, 4, 202) > 0.62
+    t.a[warm, :3] *= np.array([1.05, 0.985, 0.92])
     # splits along the grain
-    for (x0, y0, ln) in ((2, 1, 4), (9, 6, 3), (12, 13, 3)):
+    for (x0, y0, ln) in ((2, 1, 4), (9, 6, 3), (13, 13, 3)):
         for k in range(ln):
-            t.set(x0 + k, y0, GREYWOOD[1])
-    # nails with rust runs
-    for (nx, ny) in ((5, 1), (5, 9), (12, 5), (1, 13)):
-        t.set(nx, ny, '#1a120d')
-        t.set(nx, ny + 1, RUST[2])
-        t.blend(nx, ny + 2, RUST[3], 0.5)
+            t.blend(x0 + k, y0, GREYWOOD[1], 0.75)
+    # nails on two stud lines (every board is nailed to every stud), short faint rust runs
+    for (nx, ny) in ((4, 1), (4, 5), (4, 9), (4, 13), (12, 1), (12, 5), (12, 9), (12, 13)):
+        t.blend(nx, ny, '#2a221c', 0.6)
+        t.blend(nx, ny + 1, RUST[3], 0.25)
+    detile(t, keep=0.4)
     return t
 
 
@@ -96,35 +98,60 @@ def dark_planks():
     return t
 
 
+ROTWOOD = ramp(['#0e0b09', '#181411', '#221c17', '#2c241e', '#372d25', '#42372d', '#4e4236'], 7)
+
+
+@texture('block/rotten_planks', opaque=True, tile=True)
+def rotten_planks():
+    """Rotting boards (house skirting, broken floors): soft black rot, green damp, splits and worm holes; no hole
+    big enough to repeat as a pattern along a wall."""
+    v = boards(281, ROTWOOD, base=3.6, tone=[0.3, -0.3, 0.2, -0.1], joints=[None, 9, None, 3], streak=0.7,
+               lmin=4, lmax=12)
+    q = np.clip(np.round(v), 0, 6).astype(int)
+    t = Tex(16)
+    paint_idx(t, q, ROTWOOD)
+    W = H = 16
+    rot = fnoise(W, H, 282, beta=0.9, lo=2) > 0.9
+    t.a[rot, :3] *= 0.7
+    damp = fnoise(W, H, 283, beta=0.8, lo=2) > 1.0
+    t.a[damp, :3] = t.a[damp, :3] * 0.7 + np.array([40, 52, 30]) * 0.3
+    for (hx, hy) in ((6, 1), (13, 6), (2, 10), (10, 13)):
+        t.set(hx, hy, '#070504')
+    for (x0, y0, ln) in ((1, 5, 3), (10, 9, 4)):
+        for k in range(ln):
+            t.blend(x0 + k, y0, ROTWOOD[0], 0.7)
+    detile(t, keep=0.35)
+    return t
+
+
 @texture('block/old_plaster', opaque=True, tile=True)
 def old_plaster():
-    """Village wall: dirty cracked plaster, mould creeping up from below, water streaks, a chipped spot."""
+    """Village wall: dirty plaster, mould spores, faint water streaks, hairline cracks, one tiny chip. Every mark
+    stays small and soft: a house wall is a long row of identical blocks and a bold blotch would grid it."""
     W = H = 16
-    n = fnoise(W, H, 221, beta=1.2) * 0.6 + fnoise(W, H, 222, beta=0.3) * 0.4
-    x, y = grid(W, H)
+    n = fnoise(W, H, 221, beta=1.0, lo=2) * 0.5 + fnoise(W, H, 222, beta=0.3) * 0.45
     v = 4.2 + n
     streak = fnoise(W, H, 223, beta=1.0, sx=1, sy=8)
-    v -= np.clip(streak, 0, None) * 0.8
+    v -= np.clip(streak, 0, None) * 0.55
     q = np.clip(np.round(v), 0, 6).astype(int)
     q = despeckle(q)
     t = Tex(16)
     paint_idx(t, q, PLASTER)
-    # mould: dark green-black blotches, denser low down (the wall's foot is always damp)
-    mo = fnoise(W, H, 224, beta=1.6) * 0.8 + (y / 15.0) * 1.0 - 0.5
-    m = mo > 0.8
-    t.a[m, :3] = t.a[m, :3] * 0.62 + MOULD[2][:3] * 0.38
-    m2 = mo > 1.15
-    t.a[m2, :3] = t.a[m2, :3] * 0.7 + MOULD[0][:3] * 0.3
-    # cracks
-    for pts in (((3, 1), (4, 3), (3, 6)), ((12, 7), (13, 9), (12, 11))):
+    # mould: scattered small spore clusters in green-black
+    mo = fnoise(W, H, 224, beta=0.9, lo=2) * 0.8 + white(W, H, 225) * 0.45
+    m = mo > 1.1
+    t.a[m, :3] = t.a[m, :3] * 0.78 + MOULD[2][:3] * 0.22
+    m2 = mo > 1.45
+    t.a[m2, :3] = t.a[m2, :3] * 0.85 + MOULD[0][:3] * 0.15
+    # hairline cracks
+    for pts in (((3, 1), (4, 3), (3, 5)), ((12, 8), (13, 10))):
         for (px_, py_) in curve_pts(pts):
-            t.set(px_, py_, PLASTER[1])
-            t.dl(px_ + 1, py_, 0.03)
-    # a chip where the plaster fell away, showing the dark mud layer (small, so long walls do not repeat a pattern)
-    for (cx, cy) in ((9, 11), (10, 11), (9, 12)):
-        t.set(cx, cy, '#3b2f22')
-    t.dl(9, 10, -0.06)
-    t.dl(10, 10, -0.06)
+            t.blend(px_, py_, PLASTER[1], 0.55)
+    # a tiny chip showing the dark mud layer
+    t.set(9, 11, '#4a3d2e')
+    t.blend(10, 11, '#4a3d2e', 0.5)
+    t.dl(9, 10, -0.04)
+    detile(t, keep=0.3)
     return t
 
 
@@ -138,7 +165,7 @@ def tin_roof():
     t = Tex(16)
     paint = np.clip(np.round(pv * 0.9 + fnoise(W, H, 231, beta=0.8, sx=1, sy=4) * 0.4), 0, 4).astype(int)
     paint_idx(t, paint, TINPAINT)
-    rustm = (fnoise(W, H, 232, beta=1.3) + fnoise(W, H, 233, beta=0.8, sx=1, sy=6) * 0.6) > 0.7
+    rustm = (fnoise(W, H, 232, beta=1.1, lo=2) + fnoise(W, H, 233, beta=0.8, sx=1, sy=6) * 0.6) > 0.7
     rv = np.clip(np.round(pv * 0.9 + fnoise(W, H, 234, beta=0.4) * 0.5 - 0.3), 0, 5).astype(int)
     t.a[rustm] = RUST[rv][rustm]
     # rust runs down from the nails
@@ -148,7 +175,8 @@ def tin_roof():
             t.blend(nx, ny + k, RUST[3], 0.5 - k * 0.1)
     # dark overlap seam where one sheet lies over the next
     for xx in range(16):
-        t.dl(xx, 15, -0.08)
+        t.dl(xx, 15, -0.06)
+    detile(t, keep=0.4)
     return t
 
 
@@ -182,14 +210,13 @@ def blue_tarp():
 
 def concrete(seed=251):
     W = H = 16
-    x, y = grid(W, H)
-    v = 4.0 + fnoise(W, H, seed, beta=1.3) * 0.5 + fnoise(W, H, seed + 1, beta=0.1) * 0.45
-    # vertical water streaks
+    v = 4.0 + fnoise(W, H, seed, beta=1.0, lo=2) * 0.45 + fnoise(W, H, seed + 1, beta=0.1) * 0.5
+    # vertical water streaks (they run on through stacked blocks)
     st = fnoise(W, H, seed + 2, beta=1.2, sx=1, sy=10)
-    v -= np.clip(st, 0, None) * 1.1
+    v -= np.clip(st, 0, None) * 0.7
     # formwork joint
-    v[7, :] -= 1.0
-    v[8, :] += 0.4
+    v[7, :] -= 0.6
+    v[8, :] += 0.3
     q = np.clip(np.round(v), 0, 7).astype(int)
     q = despeckle(q)
     t = Tex(16)
@@ -199,73 +226,63 @@ def concrete(seed=251):
 
 @texture('block/concrete_old', opaque=True, tile=True)
 def concrete_old():
-    """Tunnel lining: stained grey concrete, a crack weeping white efflorescence, tie-rod holes."""
+    """Tunnel lining: stained grey concrete, a hairline crack weeping a little white efflorescence, form-tie holes."""
     t = concrete()
     EFF = pal('#7d7e78', '#94958e', '#aaaba3')
-    path = curve_pts([(5, 4), (6, 6), (5, 8), (6, 10)])
+    path = curve_pts([(5, 9), (6, 11), (5, 13)])
     for (px_, py_) in path:
-        t.set(px_, py_, CONC[1])
-    for i, (px_, py_) in enumerate(path):
-        if i % 3 == 1:
-            t.blend(px_ + 1, py_, EFF[1], 0.6)
-    for k in range(3):
-        t.blend(6, 11 + k, EFF[2], 0.55 - k * 0.15)
+        t.blend(px_, py_, CONC[1], 0.6)
+    t.blend(6, 14, EFF[1], 0.35)
+    t.blend(6, 15, EFF[1], 0.2)
     for (hx, hy) in ((12, 3), (12, 12)):
-        t.set(hx, hy, CONC[0])
-        t.set(hx + 1, hy, CONC[1])
-        t.set(hx, hy + 1, CONC[1])
-        t.blend(hx, hy + 2, '#5a3a24', 0.5)
+        t.set(hx, hy, CONC[1])
+        t.blend(hx, hy + 1, '#5a3a24', 0.3)
+    detile(t, keep=0.35)
     return t
 
 
 @texture('block/concrete_moss', opaque=True, tile=True)
 def concrete_moss():
-    """Tunnel portal: concrete with moss in the joints and dead ivy hanging over it."""
+    """Tunnel portal: concrete with moss in the formwork joint and in damp patches, dead leaves caught in it."""
     from s_nature import moss_tex
     t = concrete(seed=261)
     moss, _, _ = moss_tex(seed=262, n=22, dark=0.3)
     W = H = 16
     x, y = grid(W, H)
-    cover = vnoise(W, H, 4, 4, 263) * 0.7 + (np.abs(y - 7.5) < 1.5) * 0.35 + white(W, H, 264) * 0.1
-    m = cover > 0.62
+    cover = vnoise(W, H, 8, 8, 263) * 0.6 + fnoise(W, H, 265, beta=0.6, lo=2) * 0.12 \
+        + (np.abs(y - 7.5) < 1.0) * 0.14 + white(W, H, 264) * 0.12
+    m = cover > 0.58
     m = despeckle(m.astype(int)).astype(bool)
     t.a[m] = moss.a[m]
-    VINE = pal('#1f150d', '#3a2717', '#563a22')
+    # the cushions' shadow on the concrete below them
+    sh = ~m & np.roll(m, 1, 0)
+    t.a[sh, :3] *= 0.8
     DRYLEAF = pal('#3b2614', '#5a3c1f', '#73502a')
-    for pts in (((3, 0), (2, 4), (4, 8), (3, 12), (4, 16)), ((12, 0), (13, 3), (11, 6), (12, 9))):
-        path = curve_pts(pts)
-        for (px_, py_) in path:
-            t.set(px_, py_, VINE[1])
-            t.set(px_ + 1, py_, VINE[0])
-        for i, (px_, py_) in enumerate(path):
-            if i % 4 == 2:
-                t.set(px_ - 1, py_, DRYLEAF[2])
-                t.set(px_ - 2, py_, DRYLEAF[1])
-                t.set(px_ - 1, py_ + 1, DRYLEAF[0])
+    for (lx, ly, k) in ((3, 5, 2), (11, 10, 1), (7, 13, 0), (14, 2, 1)):
+        t.blend(lx, ly, DRYLEAF[k], 0.8)
+    detile(t, keep=0.35)
     return t
 
 
 @texture('block/asphalt', opaque=True, tile=True)
 def asphalt():
-    """Cracked dark asphalt of the forest road; weeds in the cracks."""
+    """Old dark asphalt of the forest road: worn aggregate, short hairline cracks, a weed in one of them."""
     W = H = 16
-    v = 3.0 + fnoise(W, H, 271, beta=1.2) * 0.5 + fnoise(W, H, 272, beta=0.0) * 0.6
+    v = 3.0 + fnoise(W, H, 271, beta=1.0, lo=2) * 0.4 + fnoise(W, H, 272, beta=0.0) * 0.6
     q = np.clip(np.round(v), 0, 6).astype(int)
     t = Tex(16)
     paint_idx(t, q, ASPH)
     sp = white(W, H, 273)
-    t.a[sp > 0.95] = C('#4e4f50')
-    t.a[sp < 0.03] = C('#5a5754')
-    for pts in (((0, 9), (3, 8), (6, 10), (9, 9)), ((6, 10), (7, 13), (6, 16)), ((11, 0), (12, 3), (14, 4))):
+    t.a[sp > 0.96] = C('#4a4b4c')
+    t.a[sp < 0.025] = C('#55524f')
+    for pts in (((1, 9), (4, 8), (7, 10)), ((11, 1), (12, 3), (14, 4))):
         for (px_, py_) in curve_pts(pts):
-            t.set(px_, py_, ASPH[0])
-            t.dl(px_ + 1, py_ + 1, 0.03)
+            t.blend(px_, py_, ASPH[0], 0.75)
     WEED = pal('#2a3216', '#3d4720', '#56602d')
-    for (wx, wy) in ((4, 8), (12, 3)):
-        t.set(wx, wy, WEED[1])
-        t.set(wx + 1, wy - 1, WEED[2])
-        t.set(wx - 1, wy - 1, WEED[0])
-        t.set(wx, wy - 2, WEED[1])
+    t.set(4, 8, WEED[1])
+    t.set(5, 7, WEED[2])
+    t.set(3, 7, WEED[0])
+    detile(t, keep=0.4)
     return t
 
 
