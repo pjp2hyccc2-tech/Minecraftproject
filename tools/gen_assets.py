@@ -244,7 +244,8 @@ def main():
     for n in ("memo", "memo_wall", "logbook", "notice_board", "signpost", "jizo", "wara_ningyo", "public_phone", "bus_stop",
               "guardrail", "car_door"):
         bs(n, facing(n, lambda v, n=n: m(n)))
-        block_item(n)
+        if n not in ("memo", "memo_wall"):
+            block_item(n)
     bs("hokora", facing("hokora", lambda v: m("hokora_offered" if v == "true" else "hokora"), ("offered", ["false", "true"])))
     block_item("hokora")
     bs("rope_anchor", facing("rope_anchor", lambda v: m("rope_anchor_roped" if v == "true" else "rope_anchor"), ("roped", ["false", "true"])))

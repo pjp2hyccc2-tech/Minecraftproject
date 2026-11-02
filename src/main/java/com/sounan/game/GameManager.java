@@ -434,6 +434,11 @@ public final class GameManager {
         }
         if (fell && !p.isCreative() && p.getY() < terrain.height(p.getBlockX(), p.getBlockZ()) - 10) loopBack(p, ps);
         else if (ps.outTicks > (fog ? 70 : 50)) loopBack(p, ps);
+        else if (p.fallDistance > 7.0f && !p.onClimbable() && !p.isCreative()) {
+            // a fall like that would end the night; the mountain gives you back instead
+            if (data.once("fall_warning")) thought(p, "thought.sounan.fall");
+            loopBack(p, ps);
+        }
 
         // ---- body: stamina, noise
         tickBody(level, p, ps);

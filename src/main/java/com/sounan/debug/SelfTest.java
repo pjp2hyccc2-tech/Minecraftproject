@@ -170,6 +170,7 @@ public final class SelfTest {
         Mob m = type.create(level);
         if (m == null) return;
         m.moveTo(near.getX() + 0.5, y, near.getZ() + 0.5, 0.0f, 0.0f);
+        if (m instanceof com.sounan.entity.SounanMonster sm) sm.temporary = false;
         level.addFreshEntity(m);
         MOBS.add(m);
     }

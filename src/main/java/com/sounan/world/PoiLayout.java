@@ -94,7 +94,7 @@ public final class PoiLayout {
         }
         ropeX = bx;
         ropeZ = bz;
-        ropeTopY = topH;
+        ropeTopY = topH + 1;
         ropeBottomY = t.height(bx, bz) + 1;
 
         // village houses: (x1, z1, x2, z2, door, kind)

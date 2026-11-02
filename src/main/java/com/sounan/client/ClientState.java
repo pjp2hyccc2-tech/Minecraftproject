@@ -93,7 +93,14 @@ public final class ClientState {
         if (glitchTicks >= 0 && ++glitchTicks > 16) glitchTicks = -1;
         if (stingerTicks >= 0 && ++stingerTicks > 40) stingerTicks = -1;
         if (buzzTicks >= 0 && ++buzzTicks > 100) buzzTicks = -1;
-        if (callTicks >= 0) callTicks++;
+        if (callTicks >= 0) {
+            callTicks++;
+            int length = callKind == -1 ? 50 : callKind == 900 ? 20 * 22 : 20 * 29;
+            if (callTicks > length) {
+                callKind = -2;
+                callTicks = -1;
+            }
+        }
         if (shakeTicks > 0) {
             shakeTicks--;
             if (shakeTicks == 0) shake = 0.0f;

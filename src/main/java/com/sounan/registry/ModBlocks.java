@@ -105,9 +105,9 @@ public final class ModBlocks {
 
     // ---------------------------------------------------------------- doors
     public static final RegistryObject<Block> HUT_DOOR = BLOCKS.register("hut_door",
-            () -> new SounanDoorBlock(door(), BlockSetType.SPRUCE, () -> SoundEvents.WOODEN_DOOR_OPEN, 12.0f));
+            () -> new SounanDoorBlock(door(), BlockSetType.SPRUCE, () -> SoundEvents.WOODEN_DOOR_OPEN, 8.0f));
     public static final RegistryObject<Block> HOUSE_DOOR = BLOCKS.register("house_door",
-            () -> new SounanDoorBlock(door(), BlockSetType.OAK, () -> SoundEvents.WOODEN_DOOR_OPEN, 12.0f));
+            () -> new SounanDoorBlock(door(), BlockSetType.OAK, () -> SoundEvents.WOODEN_DOOR_OPEN, 8.0f));
     public static final RegistryObject<Block> IRON_GATE = BLOCKS.register("iron_gate",
             () -> new LockedGateBlock(door().sound(SoundType.METAL).strength(-1.0f, 3600000.0f), () -> SoundEvents.IRON_DOOR_OPEN));
 

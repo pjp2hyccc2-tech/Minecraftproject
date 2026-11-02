@@ -14,6 +14,7 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -78,6 +79,19 @@ public final class GameEvents {
         if (k != null && k != GameItem.Kind.MEMO) {
             event.setCanceled(true);
             p.getInventory().add(stack.copy());
+        }
+    }
+
+    /**
+     * Sneaking (to be quiet near a sleeper) must still open doors and pick things up while the flashlight is in hand:
+     * vanilla skips the block when you sneak with an item, so our blocks take precedence over the held item.
+     */
+    @SubscribeEvent
+    public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        var block = event.getLevel().getBlockState(event.getPos()).getBlock();
+        if (block instanceof com.sounan.block.InteractBlock || block instanceof com.sounan.block.SounanDoorBlock) {
+            event.setUseBlock(net.minecraftforge.eventbus.api.Event.Result.ALLOW);
+            event.setUseItem(net.minecraftforge.eventbus.api.Event.Result.DENY);
         }
     }
 

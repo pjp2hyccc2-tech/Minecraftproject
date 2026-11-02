@@ -74,19 +74,6 @@ public class PhoneScreen extends Screen {
     @Override
     public void tick() {
         ticks++;
-        if (ClientState.callTicks >= 0 && ClientState.callKind != -2) {
-            int t = ClientState.callTicks;
-            if (ClientState.callKind > 0) {
-                if (t % 120 == 1 && t < 20 * 26) ClientPacketHandler.ui(ModSounds.PHONE_CALL_STATIC.get(), 0.6f, 1.0f);
-                if (t > 50 && t % 70 == 30) ClientPacketHandler.ui(ModSounds.PHONE_VOICE.get(), 0.7f, 0.9f + RAND.nextFloat() * 0.15f);
-                if (t == 20 * 26) ClientPacketHandler.ui(ModSounds.PHONE_HANGUP.get(), 0.7f, 1.0f);
-            }
-            if (t > callLength()) ClientState.callKind = -2;
-        }
-    }
-
-    private int callLength() {
-        return ClientState.callKind == -1 ? 50 : 20 * 29;
     }
 
     @Override

@@ -181,6 +181,17 @@ public final class HorrorOverlay {
                 y += 11;
             }
         }
+        // the public phone: the voice on the line, line after line
+        if (ClientState.callKind == 900 && ClientState.callTicks >= 60) {
+            int line = Math.min(8, (ClientState.callTicks - 60) / 55 + 1);
+            String key = "call.sounan.900." + line;
+            if (I18n.exists(key)) {
+                String text = I18n.get(key, ClientState.introName);
+                int tw = font.width(text);
+                g.fill(w / 2 - tw / 2 - 6, h - 104, w / 2 + tw / 2 + 6, h - 90, argb(0.55f, 0x08080A));
+                centered(g, font, text, w / 2, h - 101, 0xFFD8D4CC, 1.0f);
+            }
+        }
         if (ClientState.checkpointTicks >= 0) {
             float k = ClientState.checkpointTicks + partial;
             float a = k < 10 ? k / 10.0f : Math.max(0.0f, (100 - k) / 90.0f);

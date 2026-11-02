@@ -59,6 +59,7 @@ public final class ModItems {
     static {
         for (RegistryObject<Block> block : ModBlocks.BLOCKS.getEntries()) {
             String name = block.getId().getPath();
+            if (name.equals("memo") || name.equals("memo_wall")) continue;   // decals; the item "memo" is the found note
             BLOCK_ITEMS.add(ITEMS.register(name, () -> block.get() instanceof DoorBlock
                     ? new DoubleHighBlockItem(block.get(), new Item.Properties())
                     : new BlockItem(block.get(), new Item.Properties())));

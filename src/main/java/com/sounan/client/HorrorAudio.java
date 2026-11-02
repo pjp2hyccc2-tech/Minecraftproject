@@ -133,6 +133,7 @@ public final class HorrorAudio {
         if (dng - lastDanger > 0.35f) ClientState.silenceTicks = 40;
         lastDanger = dng;
 
+        tickCall();
         if (captured || intro || ending) return;
 
         // ---- the heartbeat, at the real rate
@@ -185,6 +186,16 @@ public final class HorrorAudio {
 
         tickStream(mc);
         tickEntityLoops(mc);
+    }
+
+    /** A phone call (yours at the pylon, or the public phone): static and a voice that is not quite a voice. */
+    private static void tickCall() {
+        int t = ClientState.callTicks;
+        if (t < 0 || ClientState.callKind <= 0) return;
+        int end = ClientState.callKind == 900 ? 20 * 20 : 20 * 26;
+        if (t % 120 == 1 && t < end) ClientPacketHandler.ui(ModSounds.PHONE_CALL_STATIC.get(), 0.55f, 1.0f);
+        if (t > 50 && t % 70 == 30 && t < end) ClientPacketHandler.ui(ModSounds.PHONE_VOICE.get(), 0.7f, 0.88f + RAND.nextFloat() * 0.15f);
+        if (t == end) ClientPacketHandler.ui(ModSounds.PHONE_HANGUP.get(), 0.7f, 1.0f);
     }
 
     private static void tickStream(Minecraft mc) {

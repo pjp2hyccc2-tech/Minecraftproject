@@ -127,6 +127,7 @@ COMMON = {
     "thought.sounan.tunnel": ("真っ暗だ……出口は、まだ見えない", "Pitch black... no sign of the exit."),
     "thought.sounan.run": ("――走れ！", "— RUN!"),
     "thought.sounan.car": ("車だ……！", "My car...!"),
+    "thought.sounan.fall": ("……っ！　落ちたら、ただでは済まない", "...! A fall like that would kill me."),
     # ---- signs
     "sign.sounan.fork": ("↓ 帰野（廃村）2.1km\n← 近道　（後から手書きで書き足されている）",
                          "↓ Kaerino (abandoned) 2.1 km\n← Shortcut (written on later, by hand)"),
@@ -207,6 +208,12 @@ COMMON = {
     "call.sounan.mom.4": ("……ずっと、待ってたのに", "...I waited so long."),
     "call.sounan.mom.5": ("……ねえ。後ろ、見て", "...hey. Look behind you."),
     "call.sounan.mom.6": ("――つまらない", "— boring."),
+    "call.sounan.900.1": ("……もしもし", "...hello"),
+    "call.sounan.900.2": ("――%sさん？", "— %s?"),
+    "call.sounan.900.3": ("やっと、繋がった", "Finally, we're connected."),
+    "call.sounan.900.4": ("今、帰野にいるのね。……ああ、見えるよ", "You're in Kaerino now. ...yes, I can see you."),
+    "call.sounan.900.5": ("ここの人たちは、みんな山に行ったよ", "Everyone here went up the mountain."),
+    "call.sounan.900.6": ("あなたも、もうすぐ", "You too, soon."),
     # ---- endings
     "ending.sounan.title": ("遭難", "SOUNAN"),
     "ending.sounan.good.1": ("――木々の向こうに、街灯の明かりが見えた", "— past the trees, the light of a street lamp."),

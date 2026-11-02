@@ -1,28 +1,45 @@
 package com.sounan.entity;
 
+import com.sounan.SounanConfig;
+import com.sounan.game.GameManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
- * Base of every monster of the mountain: invulnerable, persistent, silent in the vanilla sense (all their sounds are
- * played deliberately by their AI), with a synced animation pose for the models.
+ * Base of every monster of the mountain: invulnerable, silent in the vanilla sense (all their sounds are played
+ * deliberately by their own AI), with a synced animation pose for the models and the player it haunts.
+ * Monsters spawned by the director are temporary (they are discarded when their scene is over or the world reloads).
  */
 public abstract class SounanMonster extends PathfinderMob implements Animated {
     private static final EntityDataAccessor<Integer> POSE_ID = SynchedEntityData.defineId(SounanMonster.class, EntityDataSerializers.INT);
     private int poseStart;
+    @Nullable protected UUID targetId;
+    protected int life;
+    protected int stateTicks;
+    /** Director-spawned: removed on reload. Residents (the sleepers) persist. */
+    public boolean temporary = true;
 
     protected SounanMonster(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
@@ -72,6 +89,93 @@ public abstract class SounanMonster extends PathfinderMob implements Animated {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------ target
+    public void setTarget(ServerPlayer p) {
+        targetId = p.getUUID();
+    }
+
+    @Nullable
+    public ServerPlayer target() {
+        if (targetId == null || !(level() instanceof ServerLevel sl)) return null;
+        Player p = sl.getPlayerByUUID(targetId);
+        return p instanceof ServerPlayer sp && sp.isAlive() && sp.level() == level() ? sp : null;
+    }
+
+    /** Speed modifier so that the effective speed (attribute × modifier) is {@code effective}. */
+    protected double mod(double effective) {
+        double base = getAttributeValue(Attributes.MOVEMENT_SPEED);
+        return effective * SounanConfig.monsterSpeed() / Math.max(0.01, base);
+    }
+
+    protected void faceTowards(Vec3 at) {
+        double dx = at.x - getX(), dz = at.z - getZ();
+        float yaw = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0f;
+        setYRot(yaw);
+        yRotO = yaw;
+        setYHeadRot(yaw);
+        yHeadRotO = yaw;
+        yBodyRot = yaw;
+        yBodyRotO = yaw;
+    }
+
+    protected void chase(ServerPlayer p, double effectiveSpeed) {
+        double d = distanceTo(p);
+        if (d < 3.5) {
+            getMoveControl().setWantedPosition(p.getX(), p.getY(), p.getZ(), mod(effectiveSpeed));
+        } else if (tickCount % 8 == 0 || getNavigation().isDone()) {
+            getNavigation().moveTo(p, mod(effectiveSpeed));
+        }
+        getLookControl().setLookAt(p, 60.0f, 60.0f);
+    }
+
+    protected boolean touching(ServerPlayer p, double reach) {
+        return distanceToSqr(p) < reach * reach && Math.abs(p.getY() - getY()) < 2.5;
+    }
+
+    protected void play(SoundEvent sound, float volume, float pitch) {
+        level().playSound(null, getX(), getEyeY(), getZ(), sound, SoundSource.HOSTILE, volume, pitch);
+    }
+
+    /** Leaves the scene (and the world). */
+    public void vanish() {
+        discard();
+    }
+
+    public boolean hostileNow() {
+        return false;
+    }
+
+    // ------------------------------------------------------------------------------------------------ ticking
+    @Override
+    public void tick() {
+        super.tick();
+        if (level().isClientSide) return;
+        life++;
+        stateTicks++;
+        if (GameManager.cinematic || isNoAi()) return;
+        ServerPlayer p = target();
+        if (p == null && temporary && life > 40) {
+            vanish();
+            return;
+        }
+        serverTick(p);
+    }
+
+    /** Per-tick AI on the server; {@code p} may be null for residents without a target. */
+    protected abstract void serverTick(@Nullable ServerPlayer p);
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("Temporary", temporary);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        temporary = !tag.contains("Temporary") || tag.getBoolean("Temporary");
+    }
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return super.hurt(source, amount);
@@ -116,7 +220,11 @@ public abstract class SounanMonster extends PathfinderMob implements Animated {
     }
 
     @Override
-    public boolean canBeLeashed(net.minecraft.world.entity.player.Player player) {
+    protected void playStepSound(BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+    }
+
+    @Override
+    public boolean canBeLeashed(Player player) {
         return false;
     }
 }
