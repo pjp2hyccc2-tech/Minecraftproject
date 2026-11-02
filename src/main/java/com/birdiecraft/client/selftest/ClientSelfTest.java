@@ -133,6 +133,7 @@ public final class ClientSelfTest {
             }
             case PLAYING -> playTurn(m, hole);
             case BALL_MOVING -> {
+                if (stateTicks == 12 && m.turnId != m.myId) shot("04_cpu_swing_h" + hole + "_" + flights);
                 if (stateTicks == 35) shot("03_flight_" + (flights++));
                 if (stateTicks == 70 && m.turnId == m.myId) shot("03_flight_late_" + flights);
             }

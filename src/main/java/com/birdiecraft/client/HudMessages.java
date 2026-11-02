@@ -29,7 +29,7 @@ public final class HudMessages {
         ACTIVE.clear();
     }
 
-    public static void render(GuiGraphics g, Font font, int width, int height) {
+    public static void render(GuiGraphics g, Font font, int width, int height, boolean hideTitles) {
         long now = System.currentTimeMillis();
         ACTIVE.removeIf(m -> now - m.startMs > m.duration * 50L);
         int toastY = 70;
@@ -40,6 +40,7 @@ public final class HudMessages {
             int alpha = (int) (255 * Math.min(1f, Math.min(t / 0.12f, fadeOut)));
             if (alpha < 8) continue;
             int argb = (alpha << 24) | (m.color & 0xFFFFFF);
+            if (hideTitles && m.kind != S2CMessagePacket.KIND_TOAST) continue;
             switch (m.kind) {
                 case S2CMessagePacket.KIND_TITLE -> {
                     // pop-in with overshoot
@@ -47,8 +48,9 @@ public final class HudMessages {
                     if (t < 0.12f) pop = 0.4f + t / 0.12f * 0.75f;
                     else if (t < 0.32f) pop = 1.15f - (t - 0.12f) / 0.2f * 0.15f;
                     else pop = 1f;
-                    float scale = 3.2f * pop;
                     int tw = font.width(m.text);
+                    float fit = Math.max(1.2f, (width - 250f) / Math.max(1, tw));
+                    float scale = Math.min(3.2f, fit) * pop;
                     g.pose().pushPose();
                     g.pose().translate(width / 2f, height / 2f - 46, 0);
                     g.pose().scale(scale, scale, 1f);
@@ -57,8 +59,8 @@ public final class HudMessages {
                     g.pose().popPose();
                 }
                 case S2CMessagePacket.KIND_SUB -> {
-                    float scale = 1.6f;
                     int tw = font.width(m.text);
+                    float scale = Math.min(1.6f, Math.max(1.0f, (width - 250f) / Math.max(1, tw)));
                     g.pose().pushPose();
                     g.pose().translate(width / 2f, height / 2f - 18, 0);
                     g.pose().scale(scale, scale, 1f);

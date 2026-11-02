@@ -67,10 +67,15 @@ public final class GolfHud implements IGuiOverlay {
         if (m == null && club && !BallCam.isActive()) {
             g.drawString(font, Component.translatable("hud.birdiecraft.practice"), 6, 6, ACCENT, true);
         }
-        HudMessages.render(g, font, width, height);
-        if (m != null && (m.state == MatchState.HOLE_END || m.state == MatchState.FINISHED || ClientGolfState.scorecardToggled)) {
-            renderScorecard(g, font, m, width, height);
+        boolean card = false;
+        if (m != null) {
+            long since = System.currentTimeMillis() - ClientGolfState.stateSinceMs;
+            card = ClientGolfState.scorecardToggled
+                    || (m.state == MatchState.HOLE_END && since > 2600)
+                    || (m.state == MatchState.FINISHED && since > 3600);
         }
+        HudMessages.render(g, font, width, height, card);
+        if (card) renderScorecard(g, font, m, width, height);
         if (BallCam.isActive()) {
             g.drawString(font, Component.translatable("hud.birdiecraft.ballcam"), width - font.width(Component.translatable("hud.birdiecraft.ballcam")) - 6,
                     height - 14, 0xAAFFFFFF, true);
@@ -346,11 +351,21 @@ public final class GolfHud implements IGuiOverlay {
     private static final double G_MAX = 1.06;
 
     private void renderGauge(GuiGraphics g, Font font, int width, int height) {
-        int w = Math.min(240, width - 290);
-        if (w < 140) w = Math.min(240, width - 20);
+        // fit between the club panel (left) and the spin panel (right); stack above them if too narrow
+        int left = 142;
+        int right = width - 52;
+        int w = Math.min(240, right - left - 8);
         int h = 12;
-        int x = width / 2 - w / 2;
-        int y = height - 52;
+        int x;
+        int y;
+        if (w >= 120) {
+            x = left + (right - left - w) / 2;
+            y = height - 52;
+        } else {
+            w = Math.min(240, width - 20);
+            x = width / 2 - w / 2;
+            y = height - 120;
+        }
         Club club = SwingController.club;
         double zone = SwingController.zoneHalf;
 
@@ -425,7 +440,7 @@ public final class GolfHud implements IGuiOverlay {
                 default -> Component.empty();
             };
         }
-        g.drawString(font, hint, width / 2 - font.width(hint) / 2, y - 24, 0xFFDDDDDD, true);
+        g.drawString(font, hint, x + w / 2 - font.width(hint) / 2, y - 24, 0xFFDDDDDD, true);
         if (pin > 0) {
             MatchView m = ClientGolfState.match;
             Vec3 o = SwingController.origin();

@@ -84,9 +84,15 @@ public final class WorldRenderer {
         if (aiming && !SwingController.club.isPutter() && GolfConfig.SHOW_LANDING_PREVIEW.get()) {
             float pulse = 0.85f + 0.15f * (float) Math.sin((mc.level.getGameTime() + partial) * 0.25);
             Vec3 land = LandingPreview.full();
-            if (land != null) flat(ps, rings, land.x, land.y + 0.03, land.z, 0.9f * pulse, 1f, 1f, 1f, 0.95f);
+            if (land != null) {
+                float size = (float) Math.max(0.9, cam.distanceTo(land) * 0.022);
+                flat(ps, rings, land.x, land.y + 0.03, land.z, size * pulse, 1f, 1f, 1f, 0.95f);
+            }
             Vec3 pw = LandingPreview.atCurrentPower();
-            if (pw != null) flat(ps, rings, pw.x, pw.y + 0.035, pw.z, 0.55f, 1f, 0.85f, 0.25f, 0.95f);
+            if (pw != null) {
+                float size = (float) Math.max(0.55, cam.distanceTo(pw) * 0.015);
+                flat(ps, rings, pw.x, pw.y + 0.035, pw.z, size, 1f, 0.85f, 0.25f, 0.95f);
+            }
         }
         if (m != null) {
             // coloured ring under every resting ball so players can spot them
@@ -270,9 +276,9 @@ public final class WorldRenderer {
                 if (st == null) continue;
                 double y = gy + 1.012;
                 float fade = 1f - (float) Math.sqrt(dx * dx + dz * dz) / (r + 1);
-                int lineA = (int) (90 * fade);
+                int lineA = (int) (150 * fade);
                 int line = (lineA << 24) | 0xFFFFFF;
-                double t = 0.025;
+                double t = 0.045;
                 // west and north edges of the cell
                 quad(vc, mat, gx, y, gz, gx, y, gz + 1, gx + t, y, gz + 1, gx + t, y, gz, line);
                 quad(vc, mat, gx, y, gz, gx + 1, y, gz, gx + 1, y, gz + t, gx, y, gz + t, line);
@@ -288,7 +294,7 @@ public final class WorldRenderer {
                     double phase = (time * 0.02 * speed + k * 0.5 + ((gx * 31 + gz * 17) & 7) * 0.125) % 1.0;
                     double cx = gx + 0.5 + sx * (phase - 0.5) * 0.8;
                     double cz = gz + 0.5 + sz * (phase - 0.5) * 0.8;
-                    double s = 0.05 + 0.02 * steep;
+                    double s = 0.08 + 0.03 * steep;
                     int a = (int) (220 * fade * Math.sin(phase * Math.PI));
                     // small arrow-ish diamond pointing downhill
                     double fx = sx * s * 1.6, fz = sz * s * 1.6;

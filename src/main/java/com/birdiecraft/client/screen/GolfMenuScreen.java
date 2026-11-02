@@ -296,7 +296,7 @@ public class GolfMenuScreen extends Screen {
         S2CMenuDataPacket.CourseEntry c = d.courses.get(Math.floorMod(courseIndex, d.courses.size()));
         g.drawCenteredString(font, c.title(), width / 2, y + 2, 0xFFFFFFFF);
         g.drawCenteredString(font, Component.translatable("screen.birdiecraft.course_info", c.holes(), c.par()), width / 2, y + 11, 0xFFB8E6FF);
-        g.drawString(font, Component.translatable("screen.birdiecraft.play_hint"), x, y + 124, 0xFF9A9A9A, false);
+        smallText(g, Component.translatable("screen.birdiecraft.play_hint"), x, y + 118, w - 100, 0xFF9A9A9A);
     }
 
     private void renderCourses(GuiGraphics g, S2CMenuDataPacket d, int x, int y, int w) {
@@ -315,11 +315,9 @@ public class GolfMenuScreen extends Screen {
             g.drawString(font, info, x + 52, ry + 11, 0xFF8FC8E8, false);
             if (p.built()) g.drawString(font, "✔", x + font.width(name) + 6, ry + 1, 0xFF7CFF6B, true);
         }
-        if (!d.canBuild) {
-            g.drawString(font, Component.translatable("screen.birdiecraft.build_need_op"), x, panelY + panelH - 22, 0xFFFF9A6A, false);
-        } else {
-            g.drawString(font, Component.translatable("screen.birdiecraft.build_warning"), x, panelY + panelH - 22, 0xFFFFD34A, false);
-        }
+        Component note = d.canBuild ? Component.translatable("screen.birdiecraft.build_warning")
+                : Component.translatable("screen.birdiecraft.build_need_op");
+        smallText(g, note, x, panelY + panelH - 24, w - 130, d.canBuild ? 0xFFFFD34A : 0xFFFF9A6A);
     }
 
     private void renderMulti(GuiGraphics g, S2CMenuDataPacket d, int x, int y, int w) {
@@ -363,6 +361,21 @@ public class GolfMenuScreen extends Screen {
             bar(g, bx + 20, by + 22, bw - 24, Component.translatable("screen.birdiecraft.stat_spin"), s.spin, 0.8, 1.5, 0xFFFFD34A);
             if (d.style == s.ordinal()) g.renderOutline(bx - 2, by - 24, bw + 4, 58, 0xFF7CFF6B);
         }
+    }
+
+    /** Draws wrapped text at 75% scale inside the given width. */
+    private void smallText(GuiGraphics g, Component text, int x, int y, int maxWidth, int color) {
+        float scale = 0.75f;
+        int lineW = (int) (maxWidth / scale);
+        g.pose().pushPose();
+        g.pose().translate(x, y, 0);
+        g.pose().scale(scale, scale, 1f);
+        int ly = 0;
+        for (net.minecraft.util.FormattedCharSequence line : font.split(text, Math.max(40, lineW))) {
+            g.drawString(font, line, 0, ly, color, false);
+            ly += 10;
+        }
+        g.pose().popPose();
     }
 
     private void bar(GuiGraphics g, int x, int y, int w, Component label, double value, double min, double max, int color) {

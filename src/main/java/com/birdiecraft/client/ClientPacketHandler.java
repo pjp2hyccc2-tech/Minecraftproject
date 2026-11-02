@@ -35,6 +35,7 @@ public final class ClientPacketHandler {
         MatchState prev = old != null && old.matchId == msg.view.matchId ? old.state : null;
         ClientGolfState.previousState = prev;
         if (prev != msg.view.state) {
+            ClientGolfState.stateSinceMs = System.currentTimeMillis();
             if (msg.view.state == MatchState.HOLE_END || msg.view.state == MatchState.FINISHED) {
                 SwingController.cancel();
             }

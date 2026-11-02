@@ -11,6 +11,8 @@ import java.util.List;
 public final class ClientGolfState {
     public static MatchView match;
     public static MatchState previousState;
+    /** System time when the match state last changed (for delayed overlays). */
+    public static long stateSinceMs;
     public static final List<BallFlight> flights = new ArrayList<>();
     public static HoleMapTexture holeMap;
     public static S2CMenuDataPacket menu;
