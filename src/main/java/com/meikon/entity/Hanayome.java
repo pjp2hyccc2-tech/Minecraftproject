@@ -510,6 +510,12 @@ public class Hanayome extends Monster {
             if (position().distanceToSqr(stuckRef) < 0.5) {
                 Path stuckPath = getNavigation().getPath();
                 net.minecraft.world.level.pathfinder.Node next = stuckPath == null || stuckPath.isDone() ? null : stuckPath.getNextNode();
+                // a door was shut on her (by the player, or while she stood in the doorway): open it and go on
+                if (openDoorAt(level, blockPosition()) || next != null && openDoorAt(level, next.asBlockPos())) {
+                    stuck = 0;
+                    stuckRef = position();
+                    return;
+                }
                 com.meikon.Meikon.LOGGER.info("[meikon] bride stuck in {} at {} (next node {} = {}, target {})", state, blockPosition(),
                         next == null ? "-" : next.asBlockPos(), next == null ? "-" : level.getBlockState(next.asBlockPos()),
                         stuckPath == null ? "-" : stuckPath.getTarget());
@@ -528,6 +534,18 @@ public class Hanayome extends Monster {
             stuck = 0;
             stuckRef = position();
         }
+    }
+
+    private boolean openDoorAt(ServerLevel level, BlockPos pos) {
+        for (BlockPos p : new BlockPos[] {pos, pos.above()}) {
+            net.minecraft.world.level.block.state.BlockState s = level.getBlockState(p);
+            if (s.getBlock() instanceof net.minecraft.world.level.block.DoorBlock door && door.type().canOpenByHand()
+                    && !s.getValue(net.minecraft.world.level.block.DoorBlock.OPEN)) {
+                door.setOpen(this, level, s, p, true);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void tickBreathing(ServerLevel level) {

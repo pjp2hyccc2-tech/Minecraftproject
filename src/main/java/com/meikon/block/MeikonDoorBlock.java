@@ -49,6 +49,19 @@ public class MeikonDoorBlock extends DoorBlock {
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
+    /**
+     * Fusuma and shoji slide into the wall: an open one leaves the whole doorway free. (The swinging vanilla panel
+     * left a 13/16 gap that a 0.6 wide mob only fits through when it is centred to within a hundredth of a block,
+     * so the bride kept getting stuck on the edge of open doors.)
+     */
+    @Override
+    @SuppressWarnings("deprecation")
+    public net.minecraft.world.phys.shapes.VoxelShape getCollisionShape(BlockState state, net.minecraft.world.level.BlockGetter level,
+                                                                        BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext ctx) {
+        if (state.getValue(OPEN)) return net.minecraft.world.phys.shapes.Shapes.empty();
+        return super.getCollisionShape(state, level, pos, ctx);
+    }
+
     /** Hook for locked doors; called on both sides. */
     protected boolean canPlayerOpen(BlockState state, Level level, BlockPos pos, Player player) {
         return true;
