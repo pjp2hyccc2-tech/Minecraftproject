@@ -148,6 +148,7 @@ public final class Trailer {
             case SETUP -> {
                 // set-up done: pause and film
                 logLight(mc, "end of set-up");
+                if (PREVIEW) saveLive(mc);
                 mc.setScreen(new HoldScreen());
                 phase = Phase.CAPTURE;
                 frame = 0;
@@ -400,6 +401,19 @@ public final class Trailer {
         mc.gameRenderer.setRenderHand(true);
         mc.setScreen(null);
         nextShot(mc);
+    }
+
+    /** Diagnostics: the last frame drawn while the game still ran (before the pause), next to the filmed ones. */
+    private static void saveLive(Minecraft mc) {
+        try {
+            NativeImage img = Screenshot.takeScreenshot(mc.getMainRenderTarget());
+            Path out = mc.gameDirectory.toPath().resolve("trailer_preview").resolve(label() + "_live.png");
+            Files.createDirectories(out.getParent());
+            img.writeToFile(out);
+            img.close();
+        } catch (Exception e) {
+            log("live frame failed: " + e);
+        }
     }
 
     /** Diagnostics: what the shader pack is told about the light at the eye (its indoor / outdoor switch). */
