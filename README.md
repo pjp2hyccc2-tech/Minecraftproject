@@ -9,7 +9,7 @@ Minecraft Java Edition **1.20.1 / Forge 47.x** 用のスチームパンク時計
 ## 導入
 
 1. Minecraft 1.20.1 に Forge 47.x（47.2 以降推奨）をインストール
-2. `clockworkdiver-1.0.0.jar` を `.minecraft/mods` フォルダに入れる
+2. `clockworkdiver-1.1.0.jar` を `.minecraft/mods` フォルダに入れる
 3. Forge のプロファイルで起動し、ワールドに入る
 
 ## 遊び方（チュートリアル）
@@ -84,7 +84,7 @@ Minecraft Java Edition **1.20.1 / Forge 47.x** 用のスチームパンク時計
 ## ビルド
 
 ```
-./gradlew build      # build/libs/clockworkdiver-1.0.0.jar
+./gradlew build      # build/libs/clockworkdiver-1.1.0.jar
 ```
 
 `tools/` のスクリプトでテクスチャ・効果音・JSON・言語ファイルを再生成できます
