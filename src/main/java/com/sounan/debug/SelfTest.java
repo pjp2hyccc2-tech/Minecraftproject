@@ -228,6 +228,14 @@ public final class SelfTest {
         check(data.ending == 1, "the car ends the night");
         data.reset();
         check(!data.started && data.ending == 0, "progress resets");
+        GameManager.resetWorldState(level);
+        check(!level.getBlockState(L.bag).getValue(com.sounan.block.LostBagBlock.OPEN)
+                && level.getBlockState(L.omiki).is(ModBlocks.OMIKI_BOTTLE.get())
+                && !level.getBlockState(L.hokora).getValue(com.sounan.block.HokoraBlock.OFFERED)
+                && level.getBlockState(L.hutKeyHook).getValue(com.sounan.block.KeyHookBlock.HAS_KEY)
+                && level.getBlockState(L.gate).getValue(LockedGateBlock.LOCKED)
+                && !level.getBlockState(new BlockPos(L.ropeX, L.ropeTopY - 3, L.ropeZ)).is(ModBlocks.CLIMBING_ROPE.get()),
+                "a replay puts the mountain back (bag, rope, sake, shrine, key, gate)");
     }
 
     private static void monsterChecks(ServerLevel level) {
