@@ -98,7 +98,7 @@ def dark_planks():
 
 @texture('block/old_plaster', opaque=True, tile=True)
 def old_plaster():
-    """Village wall: dirty cracked plaster, mould creeping up from below, water streaks, exposed lath."""
+    """Village wall: dirty cracked plaster, mould creeping up from below, water streaks, a chipped spot."""
     W = H = 16
     n = fnoise(W, H, 221, beta=1.2) * 0.6 + fnoise(W, H, 222, beta=0.3) * 0.4
     x, y = grid(W, H)
@@ -120,19 +120,11 @@ def old_plaster():
         for (px_, py_) in curve_pts(pts):
             t.set(px_, py_, PLASTER[1])
             t.dl(px_ + 1, py_, 0.03)
-    # a patch where the plaster fell off: bamboo lath (komai) behind
-    LATH = pal('#1c140d', '#3b2b1c', '#56412a', '#6c5436')
-    for yy in range(10, 13):
-        for xx in range(7, 11):
-            if (xx, yy) in ((7, 10), (10, 12)):
-                continue
-            c = LATH[2] if yy % 2 == 0 else LATH[0]
-            if xx == 8:
-                c = LATH[3] if yy % 2 == 0 else LATH[1]
-            t.set(xx, yy, c)
-    for xx in range(7, 11):
-        t.dl(xx, 9, -0.08)
-        t.dl(xx, 13, 0.04)
+    # a chip where the plaster fell away, showing the dark mud layer (small, so long walls do not repeat a pattern)
+    for (cx, cy) in ((9, 11), (10, 11), (9, 12)):
+        t.set(cx, cy, '#3b2f22')
+    t.dl(9, 10, -0.06)
+    t.dl(10, 10, -0.06)
     return t
 
 
