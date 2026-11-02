@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "meikon:block/torii_gate"
+    },
+    "active=true": {
+      "model": "meikon:block/torii_gate_active"
+    }
+  }
+}

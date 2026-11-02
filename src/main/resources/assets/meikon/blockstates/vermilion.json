@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "meikon:block/vermilion"
+    },
+    "axis=z": {
+      "model": "meikon:block/vermilion_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "meikon:block/vermilion_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

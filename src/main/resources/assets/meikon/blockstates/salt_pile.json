@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "meikon:block/salt_pile"
+    }
+  }
+}

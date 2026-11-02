@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/futon"
+    },
+    "facing=east": {
+      "model": "meikon:block/futon",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/futon",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/futon",
+      "y": 270
+    }
+  }
+}

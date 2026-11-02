@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "meikon:block/dark_beam_top",
+    "side": "meikon:block/dark_beam_side"
+  }
+}

@@ -1,0 +1,49 @@
+# MeikonShaders 冥婚 ―MEIKON― - option labels (English)
+profile.LOW=Low
+profile.MEDIUM=Medium
+profile.HIGH=High
+profile.comment=Quality preset. Low uses coarse shadows and no light shafts; High uses fine, soft shadows.
+
+screen.POST=Image
+screen.POST.comment=Film grain, vignette, chromatic aberration and bloom.
+screen.ATMOSPHERE=Fog & Air
+screen.ATMOSPHERE.comment=Fog density and moonlight shafts in the fog.
+screen.LIGHTING=Light & Shadow
+screen.LIGHTING.comment=Moon shadows, flame flicker and the hand-held light.
+
+option.FLASH_REDUCTION=Flash Reduction
+option.FLASH_REDUCTION.comment=For photosensitive players: no glitches, no frame jitter, no heartbeat-pulsing vignette, no flashing red in a chase, and a calmer flame flicker.
+option.BRIGHTNESS=Brightness
+option.BRIGHTNESS.comment=Overall brightness. Raise it if you cannot see anything (the horror mood gets a little weaker).
+
+option.FILM_GRAIN=Film Grain
+option.FILM_GRAIN.comment=Old-film grain. In Kakuriyo it grows stronger with fear.
+option.VIGNETTE=Vignette
+option.VIGNETTE.comment=Darkens the corners. In Kakuriyo it closes in with fear and beats with your heart.
+option.CHROMATIC_ABERRATION=Chromatic Aberration
+option.CHROMATIC_ABERRATION.comment=Colour fringes at the edges. Stronger at high fear and while the bride hunts you.
+option.BLOOM_STRENGTH=Bloom
+option.BLOOM_STRENGTH.comment=Soft glow of lanterns, andon lamps, candles, the torii and the red moon.
+
+option.FOG_DENSITY=Fog Density
+option.FOG_DENSITY.comment=In Kakuriyo the corridors fade to black about 20 blocks away. Lower it to see further.
+option.VOLUMETRIC_FOG=Moonlight Shafts
+option.VOLUMETRIC_FOG.comment=Moonlight falling through the fog between the eaves and the torii in the courtyard. Turn off if it is too slow.
+option.VOLUMETRIC_SAMPLES=Light Shaft Quality
+option.VOLUMETRIC_SAMPLES.comment=Samples per pixel for the light shafts. More is smoother but slower.
+
+option.SHADOWS=Shadows
+option.SHADOWS.comment=Shadows cast by the moon (by the sun in the overworld).
+option.shadowMapResolution=Shadow Resolution
+option.shadowMapResolution.comment=Higher gives finer shadow edges but is slower.
+option.SHADOW_FILTER=Shadow Quality
+option.SHADOW_FILTER.comment=Number of samples that soften the shadow edges.
+value.SHADOW_FILTER.1=Low (4)
+value.SHADOW_FILTER.2=Medium (8)
+value.SHADOW_FILTER.3=High (12)
+option.FLAME_FLICKER=Flame Flicker
+option.FLAME_FLICKER.comment=The light of lanterns, andon lamps, candles and torches gently flickers.
+option.HAND_LANTERN_LIGHT=Hand-held Light
+option.HAND_LANTERN_LIGHT.comment=A held lantern or torch lights its surroundings with a smooth, swaying light.
+option.WAVING_PLANTS=Waving Plants
+option.WAVING_PLANTS.comment=Grass, leaves and the paper streamers of the shimenawa stir faintly.

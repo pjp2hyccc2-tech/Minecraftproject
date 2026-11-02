@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "color=0,lit=false": {
+      "model": "meikon:block/candle_stand_gold"
+    },
+    "color=0,lit=true": {
+      "model": "meikon:block/candle_stand_gold_lit"
+    },
+    "color=1,lit=false": {
+      "model": "meikon:block/candle_stand_silver"
+    },
+    "color=1,lit=true": {
+      "model": "meikon:block/candle_stand_silver_lit"
+    },
+    "color=2,lit=false": {
+      "model": "meikon:block/candle_stand_black"
+    },
+    "color=2,lit=true": {
+      "model": "meikon:block/candle_stand_black_lit"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "up": "meikon:block/tatami_top",
+    "down": "meikon:block/tatami_side",
+    "north": "meikon:block/tatami_side",
+    "south": "meikon:block/tatami_side",
+    "east": "meikon:block/tatami_side",
+    "west": "meikon:block/tatami_side",
+    "particle": "meikon:block/tatami_top"
+  }
+}

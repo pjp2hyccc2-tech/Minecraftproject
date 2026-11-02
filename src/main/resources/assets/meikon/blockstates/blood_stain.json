@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/blood_stain"
+    },
+    "facing=east": {
+      "model": "meikon:block/blood_stain",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/blood_stain",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/blood_stain",
+      "y": 270
+    }
+  }
+}

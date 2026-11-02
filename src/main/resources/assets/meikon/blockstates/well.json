@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/well"
+    },
+    "facing=east": {
+      "model": "meikon:block/well",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/well",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/well",
+      "y": 270
+    }
+  }
+}

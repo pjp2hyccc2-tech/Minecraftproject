@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/butsudan"
+    },
+    "facing=east": {
+      "model": "meikon:block/butsudan",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/butsudan",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/butsudan",
+      "y": 270
+    }
+  }
+}

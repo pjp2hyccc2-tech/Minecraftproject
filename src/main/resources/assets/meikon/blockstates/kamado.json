@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/kamado"
+    },
+    "facing=east": {
+      "model": "meikon:block/kamado",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/kamado",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/kamado",
+      "y": 270
+    }
+  }
+}

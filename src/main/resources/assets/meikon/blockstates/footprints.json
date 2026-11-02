@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/footprints"
+    },
+    "facing=east": {
+      "model": "meikon:block/footprints",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/footprints",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/footprints",
+      "y": 270
+    }
+  }
+}

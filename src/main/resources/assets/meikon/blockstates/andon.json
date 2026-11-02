@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=true": {
+      "model": "meikon:block/andon"
+    },
+    "lit=false": {
+      "model": "meikon:block/andon_off"
+    }
+  }
+}

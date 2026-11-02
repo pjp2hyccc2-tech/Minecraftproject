@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "has_bell=true": {
+      "model": "meikon:block/suzu_dai"
+    },
+    "has_bell=false": {
+      "model": "meikon:block/suzu_dai_empty"
+    }
+  }
+}

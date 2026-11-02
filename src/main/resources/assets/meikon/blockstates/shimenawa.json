@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/shimenawa"
+    },
+    "facing=east": {
+      "model": "meikon:block/shimenawa",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/shimenawa",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/shimenawa",
+      "y": 270
+    }
+  }
+}

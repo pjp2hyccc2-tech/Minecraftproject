@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "meikon:block/kamado_front",
+    "side": "meikon:block/kamado_side",
+    "top": "meikon:block/kamado_top"
+  }
+}

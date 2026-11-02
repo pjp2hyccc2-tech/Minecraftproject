@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,opened=false": {
+      "model": "meikon:block/tansu"
+    },
+    "facing=north,opened=true": {
+      "model": "meikon:block/tansu_opened"
+    },
+    "facing=east,opened=false": {
+      "model": "meikon:block/tansu",
+      "y": 90
+    },
+    "facing=east,opened=true": {
+      "model": "meikon:block/tansu_opened",
+      "y": 90
+    },
+    "facing=south,opened=false": {
+      "model": "meikon:block/tansu",
+      "y": 180
+    },
+    "facing=south,opened=true": {
+      "model": "meikon:block/tansu_opened",
+      "y": 180
+    },
+    "facing=west,opened=false": {
+      "model": "meikon:block/tansu",
+      "y": 270
+    },
+    "facing=west,opened=true": {
+      "model": "meikon:block/tansu_opened",
+      "y": 270
+    }
+  }
+}

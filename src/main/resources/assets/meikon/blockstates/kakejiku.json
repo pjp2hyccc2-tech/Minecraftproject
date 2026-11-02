@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,face=false": {
+      "model": "meikon:block/kakejiku"
+    },
+    "facing=north,face=true": {
+      "model": "meikon:block/kakejiku_face"
+    },
+    "facing=east,face=false": {
+      "model": "meikon:block/kakejiku",
+      "y": 90
+    },
+    "facing=east,face=true": {
+      "model": "meikon:block/kakejiku_face",
+      "y": 90
+    },
+    "facing=south,face=false": {
+      "model": "meikon:block/kakejiku",
+      "y": 180
+    },
+    "facing=south,face=true": {
+      "model": "meikon:block/kakejiku_face",
+      "y": 180
+    },
+    "facing=west,face=false": {
+      "model": "meikon:block/kakejiku",
+      "y": 270
+    },
+    "facing=west,face=true": {
+      "model": "meikon:block/kakejiku_face",
+      "y": 270
+    }
+  }
+}

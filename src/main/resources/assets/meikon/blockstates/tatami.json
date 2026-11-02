@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "meikon:block/tatami"
+    },
+    "axis=x": {
+      "model": "meikon:block/tatami",
+      "y": 90
+    }
+  }
+}

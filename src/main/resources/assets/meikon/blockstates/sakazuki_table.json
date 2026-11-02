@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/sakazuki_table"
+    },
+    "facing=east": {
+      "model": "meikon:block/sakazuki_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/sakazuki_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/sakazuki_table",
+      "y": 270
+    }
+  }
+}

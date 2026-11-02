@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "meikon:block/stone_lantern"
+    },
+    "facing=east": {
+      "model": "meikon:block/stone_lantern",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "meikon:block/stone_lantern",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "meikon:block/stone_lantern",
+      "y": 270
+    }
+  }
+}

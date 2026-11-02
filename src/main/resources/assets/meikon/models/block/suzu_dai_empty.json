@@ -1,0 +1,130 @@
+{
+  "textures": {
+    "particle": "meikon:block/suzu_dai",
+    "d": "meikon:block/suzu_dai",
+    "b": "meikon:block/suzu_bell"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        3,
+        12
+      ],
+      "faces": {
+        "up": {
+          "texture": "#d",
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ]
+        },
+        "down": {
+          "texture": "#d"
+        },
+        "north": {
+          "texture": "#d",
+          "uv": [
+            0,
+            13,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#d",
+          "uv": [
+            0,
+            13,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#d",
+          "uv": [
+            0,
+            13,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#d",
+          "uv": [
+            0,
+            13,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        5
+      ],
+      "to": [
+        11,
+        5,
+        11
+      ],
+      "faces": {
+        "up": {
+          "texture": "#d",
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ]
+        },
+        "north": {
+          "texture": "#d",
+          "uv": [
+            4,
+            6,
+            12,
+            8
+          ]
+        },
+        "south": {
+          "texture": "#d",
+          "uv": [
+            4,
+            6,
+            12,
+            8
+          ]
+        },
+        "east": {
+          "texture": "#d",
+          "uv": [
+            4,
+            6,
+            12,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#d",
+          "uv": [
+            4,
+            6,
+            12,
+            8
+          ]
+        }
+      }
+    }
+  ]
+}
