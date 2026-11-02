@@ -59,6 +59,11 @@ import java.util.UUID;
 /** Server-side game logic of 冥婚. */
 public final class GameManager {
     public static boolean debugPeaceful;
+    /**
+     * Trailer capture (client {@code -Dmeikon.trailer}): the world holds still - no player logic, no director, no lantern
+     * light blocks - and the camera, the actors and the lights are driven by the capture script.
+     */
+    public static volatile boolean cinematic;
     public static final int CAPTURE_TICKS = 36;
     public static final int EVENT_JUMPSCARE = 1, EVENT_DEATH = 2, EVENT_OFUDA = 3, EVENT_INTRO = 4, EVENT_TITLE = 5,
             EVENT_ENDING = 6, EVENT_SPOTTED = 7, EVENT_STINGER = 8, EVENT_SHADOW = 9, EVENT_SCREEN = 10, EVENT_LEFT = 11,
@@ -363,7 +368,8 @@ public final class GameManager {
             return;
         }
         if (!data.active || !data.built) {
-            long seed = RAND.nextLong() ^ System.nanoTime();
+            Long fixed = Long.getLong("meikon.mansionSeed");
+            long seed = fixed != null ? fixed : RAND.nextLong() ^ System.nanoTime();
             newMansion(level, data, seed);
         }
         ensureMansion(data);
@@ -485,6 +491,7 @@ public final class GameManager {
         if (level == null) return;
         GameData data = GameData.get(server);
         ensureMansion(data);
+        if (cinematic) return;
         phase = phaseFor(data.bells);
         if (phase != lastPhase) {
             int old = lastPhase;

@@ -7,6 +7,7 @@ import com.meikon.game.Closet;
 import com.meikon.game.Director;
 import com.meikon.game.GameData;
 import com.meikon.game.GameManager;
+import com.meikon.game.LanternLight;
 import com.meikon.game.Mansion;
 import com.meikon.game.PlayerState;
 import com.meikon.game.Room;
@@ -26,7 +27,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 /** /meikon start | leave | reset | debug ... */
@@ -60,6 +63,19 @@ public final class MeikonCommand {
                 .then(Commands.literal("debug").requires(s -> s.hasPermission(2))
                         .then(Commands.literal("peaceful").then(Commands.argument("on", BoolArgumentType.bool()).executes(c -> {
                             GameManager.debugPeaceful = BoolArgumentType.getBool(c, "on");
+                            return 1;
+                        })))
+                        .then(Commands.literal("cinematic").then(Commands.argument("on", BoolArgumentType.bool()).executes(c -> {
+                            boolean on = BoolArgumentType.getBool(c, "on");
+                            GameManager.cinematic = on;
+                            ServerLevel lvl = GameManager.kakuriyo(c.getSource().getServer());
+                            if (on && lvl != null) {
+                                LanternLight.removeAll(lvl);
+                                for (Entity e : lvl.getEntities((Entity) null, new AABB(-80, 0, -80, 80, 256, 80),
+                                        e -> e instanceof Hanayome || e instanceof com.meikon.entity.Kageboshi || e instanceof com.meikon.entity.Maboroshi)) {
+                                    e.discard();
+                                }
+                            }
                             return 1;
                         })))
                         .then(Commands.literal("bells").then(Commands.argument("n", IntegerArgumentType.integer(0, 7)).executes(c -> {

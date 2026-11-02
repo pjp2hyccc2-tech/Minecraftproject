@@ -138,6 +138,7 @@ public final class SelfTest {
                     if (!ok) check(false, "closet " + c.index() + " at " + c.inside().toShortString());
                 }
                 log("closets checked");
+                LayoutDump.write(level, m);
                 int blocked = 0;
                 for (BlockPos w : m.waypoints) {
                     if (!level.getBlockState(w).isAir() && !level.getBlockState(w).getCollisionShape(level, w).isEmpty()) blocked++;
@@ -158,6 +159,7 @@ public final class SelfTest {
             case 1 -> {
                 List<Hanayome> brides = level.getEntitiesOfClass(Hanayome.class, new AABB(-60, 40, -60, 60, 120, 60));
                 List<Ichimatsu> dolls = level.getEntitiesOfClass(Ichimatsu.class, new AABB(-60, 40, -60, 60, 120, 60));
+                LayoutDump.entities(level);
                 check(brides.size() == 1, "one bride (" + brides.size() + ")");
                 check(dolls.size() >= 6, "dolls (" + dolls.size() + ")");
                 if (brides.isEmpty()) {

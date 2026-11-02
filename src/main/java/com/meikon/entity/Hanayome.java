@@ -98,6 +98,11 @@ public class Hanayome extends Monster {
         entityData.define(DATA_STATE, State.WANDER.ordinal());
     }
 
+    /** Sets the synced state on a client-side copy only (used by the trailer's puppets; no AI involved). */
+    public void setClientState(State s) {
+        entityData.set(DATA_STATE, s.ordinal());
+    }
+
     public State clientState() {
         int i = entityData.get(DATA_STATE);
         return i >= 0 && i < State.values().length ? State.values()[i] : State.WANDER;

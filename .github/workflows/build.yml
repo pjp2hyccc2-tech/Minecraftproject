@@ -83,7 +83,7 @@ jobs:
           tail -c 300000 selftest.log > out/selftest.log 2>/dev/null || true
           tail -c 300000 client.log > out/client.log 2>/dev/null || true
           cp run/logs/latest.log out/run-latest.log 2>/dev/null || true
-          cp run/meikon-selftest.txt run/meikon_autoshots.txt out/ 2>/dev/null || true
+          cp run/meikon-selftest.txt run/meikon_autoshots.txt run/meikon-layout.txt out/ 2>/dev/null || true
           cp run/screenshots/*.png out/screenshots/ 2>/dev/null || true
           cp run/crash-reports/*.txt out/ 2>/dev/null || true
           cp build/libs/*.jar out/ 2>/dev/null || true
@@ -182,4 +182,95 @@ jobs:
           git config user.email "meikon-ci@users.noreply.github.com"
           git add -A
           git commit -q -m "Shader CI results for ${GITHUB_SHA} ($(cat STATUS))"
+          git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "$RESULT_BRANCH"
+
+  # -------------------------------------------------------------------------------------------
+  # Trailer footage: the scripted capture (com.meikon.client.cine.Trailer) with Oculus + MeikonShaders,
+  # 1920x804, 30 fps, one H.264 clip per shot. Toggles: ci/trailer.enabled, ci/trailer.preview (3 key
+  # frames per shot as JPEG), ci/trailer.only (comma separated shot names).
+  # Results: branch ci-<branch>-trailer
+  # -------------------------------------------------------------------------------------------
+  trailer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        if: hashFiles('ci/trailer.enabled') != ''
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        if: hashFiles('ci/trailer.enabled') != ''
+
+      - name: Film the trailer
+        id: film
+        if: hashFiles('ci/trailer.enabled') != ''
+        continue-on-error: true
+        env:
+          MEIKON_TRAILER: 'true'
+          MEIKON_OCULUS: 'true'
+          MEIKON_MANSION_SEED: '20261102'
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          MESA_GL_VERSION_OVERRIDE: '4.5'
+          MESA_GLSL_VERSION_OVERRIDE: '450'
+          GALLIUM_DRIVER: llvmpipe
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 ffmpeg zip > /dev/null
+          chmod +x ./gradlew
+          mkdir -p run/shaderpacks run/config
+          cp ci/options.txt run/options.txt
+          (cd src/main/shaderpack && zip -qr ../../../run/shaderpacks/MeikonShaders.zip shaders)
+          printf 'enableShaders=true\nshaderPack=MeikonShaders.zip\n' > run/config/oculus.properties
+          cp run/config/oculus.properties run/config/iris.properties
+          # clean frames: film grain is added in the edit
+          printf 'FILM_GRAIN=0.0\n' > run/shaderpacks/MeikonShaders.zip.txt
+          rm -rf run/trailer run/trailer_preview run/saves/MeikonTrailer*
+          export MEIKON_TRAILER_PREVIEW=false
+          [ -f ci/trailer.preview ] && export MEIKON_TRAILER_PREVIEW=true
+          export MEIKON_TRAILER_ONLY=all
+          [ -s ci/trailer.only ] && export MEIKON_TRAILER_ONLY="$(tr -d ' \n' < ci/trailer.only)"
+          echo "preview=$MEIKON_TRAILER_PREVIEW only=$MEIKON_TRAILER_ONLY"
+          set -o pipefail
+          timeout 13000 xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runClient --no-daemon 2>&1 | tee trailer.log || true
+          cat run/meikon_trailer.txt
+          grep -q finished run/meikon_trailer.txt
+
+      - name: Encode clips
+        if: always() && hashFiles('ci/trailer.enabled') != ''
+        run: |
+          mkdir -p out/trailer out/preview
+          for d in run/trailer/*/; do
+            [ -d "$d" ] || continue
+            n=$(basename "$d")
+            ffmpeg -hide_banner -loglevel error -framerate 30 -i "$d/%05d.png" -c:v libx264 -preset slow -crf 15 \
+              -pix_fmt yuv420p -movflags +faststart "out/trailer/$n.tmp.mp4" && mv "out/trailer/$n.tmp.mp4" "out/trailer/$n.mp4"
+            echo "$n: $(ls "$d" | wc -l) frames, $(du -h "out/trailer/$n.mp4" | cut -f1)"
+          done
+          for f in run/trailer_preview/*.png; do
+            [ -f "$f" ] || continue
+            ffmpeg -hide_banner -loglevel error -i "$f" -q:v 3 "out/preview/$(basename "${f%.png}").jpg"
+          done
+
+      - name: Publish trailer results
+        if: always() && hashFiles('ci/trailer.enabled') != ''
+        run: |
+          mkdir -p out
+          echo "${GITHUB_SHA}" > out/SOURCE_SHA
+          echo "film=${{ steps.film.outcome }}" > out/STATUS
+          tail -c 400000 trailer.log > out/trailer.log 2>/dev/null || true
+          cp run/logs/latest.log out/trailer-latest.log 2>/dev/null || true
+          grep -n -i -E "oculus|iris|meikon|Exception|error" run/logs/latest.log | grep -v -i "mixin" > out/trailer-grep.txt 2>/dev/null || true
+          cp run/meikon_trailer.txt out/ 2>/dev/null || true
+          cp run/crash-reports/*.txt out/ 2>/dev/null || true
+          cd out
+          RESULT_BRANCH="ci-${GITHUB_REF_NAME}-trailer"
+          git init -q -b "$RESULT_BRANCH"
+          git config user.name "meikon-ci"
+          git config user.email "meikon-ci@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Trailer CI results for ${GITHUB_SHA} ($(cat STATUS))"
           git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "$RESULT_BRANCH"

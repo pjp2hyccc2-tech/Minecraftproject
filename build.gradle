@@ -32,13 +32,23 @@ minecraft {
         }
 
         client {
-            // CI screenshot tour (MEIKON_SHOTS=true) and the Oculus run (MEIKON_OCULUS=true)
+            // CI screenshot tour (MEIKON_SHOTS=true), the Oculus run (MEIKON_OCULUS=true) and the trailer capture (MEIKON_TRAILER=true)
+            def trailer = System.getenv('MEIKON_TRAILER') == 'true'
             property 'meikon.shots', System.getenv('MEIKON_SHOTS') ?: 'false'
             property 'meikon.shots.shaders', System.getenv('MEIKON_OCULUS') ?: 'false'
+            property 'meikon.trailer', trailer ? 'true' : 'false'
+            property 'meikon.trailer.preview', System.getenv('MEIKON_TRAILER_PREVIEW') ?: 'false'
+            property 'meikon.trailer.only', System.getenv('MEIKON_TRAILER_ONLY') ?: 'all'
+            property 'meikon.mansionSeed', System.getenv('MEIKON_MANSION_SEED') ?: 'random'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            args '--width', '1280', '--height', '720'
-            jvmArgs '-Xmx3G'
+            if (trailer) {
+                args '--width', '1920', '--height', '804'
+                jvmArgs '-Xmx5G'
+            } else {
+                args '--width', '1280', '--height', '720'
+                jvmArgs '-Xmx3G'
+            }
         }
 
         server {

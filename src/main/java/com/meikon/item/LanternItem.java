@@ -92,6 +92,12 @@ public class LanternItem extends Item {
     }
 
     @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        // lighting or dousing the lantern swaps lit/unlit items: keep it in the hand instead of a re-equip bob
+        return slotChanged || !(newStack.getItem() instanceof LanternItem);
+    }
+
+    @Override
     public boolean isBarVisible(ItemStack stack) {
         return true;
     }

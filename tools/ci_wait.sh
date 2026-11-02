@@ -5,7 +5,7 @@ set -u
 SHA=$1; JOB=${2:-build}
 BR=$(git rev-parse --abbrev-ref HEAD)
 REPO=pjp2hyccc2-tech/Minecraftproject
-RB="ci-$BR"; [ "$JOB" = "shaders" ] && RB="ci-$BR-shaders"
+RB="ci-$BR"; [ "$JOB" = "shaders" ] && RB="ci-$BR-shaders"; [ "$JOB" = "trailer" ] && RB="ci-$BR-trailer"
 retry() { for i in 1 2 3 4 5 6 7 8; do if "$@" 2>/tmp/ci_err_$$; then return 0; fi; sleep $((6 + RANDOM % 20)); done; cat /tmp/ci_err_$$; return 1; }
 for i in $(seq 1 200); do
   ST=$(curl -s "https://api.github.com/repos/$REPO/commits/$SHA/check-runs" | python3 -c "import sys,json
@@ -29,6 +29,11 @@ if [ "$JOB" = "build" ]; then
   git show origin/$RB:build.log 2>/dev/null | grep -E "BUILD (SUCCESSFUL|FAILED)|What went wrong" -A4 | head -16
   git show origin/$RB:meikon-selftest.txt 2>/dev/null | tail -60
   git show origin/$RB:meikon_autoshots.txt 2>/dev/null | tail -40
+elif [ "$JOB" = "trailer" ]; then
+  git show origin/$RB:meikon_trailer.txt 2>/dev/null | tail -60
+  git show origin/$RB:trailer-grep.txt 2>/dev/null | grep -i -E "error|exception|fail" | head -30
+  git ls-tree -r --name-only origin/$RB 2>/dev/null | grep -E "\.(mp4|jpg)$" | tr '\n' ' '; echo
+  exit 0
 else
   git show origin/$RB:lint.txt 2>/dev/null | tail -40
   git show origin/$RB:meikon_autoshots.txt 2>/dev/null | tail -30
