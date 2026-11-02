@@ -94,7 +94,7 @@ public class LanternItem extends Item {
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         // lighting or dousing the lantern swaps lit/unlit items: keep it in the hand instead of a re-equip bob
-        return slotChanged || !(newStack.getItem() instanceof LanternItem);
+        return slotChanged || !(oldStack.getItem() instanceof LanternItem && newStack.getItem() instanceof LanternItem);
     }
 
     @Override
@@ -111,11 +111,6 @@ public class LanternItem extends Item {
     public int getBarColor(ItemStack stack) {
         float f = oil(stack) / (float) MAX_OIL;
         return Mth.color(0.9f, 0.35f + 0.4f * f, 0.1f);
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return slotChanged || oldStack.getItem() != newStack.getItem();
     }
 
     @Override
