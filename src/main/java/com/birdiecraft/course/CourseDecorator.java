@@ -240,6 +240,11 @@ public final class CourseDecorator {
 
     // ------------------------------------------------------------------ decorations
 
+    private static boolean solidBelow(BlockWriter w, int x, int y, int z) {
+        BlockState below = w.get(x, y - 1, z);
+        return !below.isAir() && below.getFluidState().isEmpty() && !below.canBeReplaced();
+    }
+
     private static final Block[] FLOWERS = {Blocks.POPPY, Blocks.DANDELION, Blocks.CORNFLOWER, Blocks.OXEYE_DAISY, Blocks.AZURE_BLUET, Blocks.ALLIUM};
 
     /** Places a decoration standing on the ground at (x, y-1, z); y is the first air block. */
@@ -252,13 +257,16 @@ public final class CourseDecorator {
             case MUSHROOMS -> w.setIfFree(x, y, z, (r.nextBoolean() ? Blocks.RED_MUSHROOM : Blocks.BROWN_MUSHROOM).defaultBlockState());
             case PETALS -> w.setIfFree(x, y, z, Blocks.PINK_PETALS.defaultBlockState());
             case DUNES -> {
+                // sand only where it is supported, so nothing turns into falling blocks
                 for (int dx = -1; dx <= 1; dx++) {
                     for (int dz = -1; dz <= 1; dz++) {
-                        w.setIfFree(x + dx, y, z + dz, Blocks.SAND.defaultBlockState());
+                        if (solidBelow(w, x + dx, y, z + dz)) w.setIfFree(x + dx, y, z + dz, Blocks.SAND.defaultBlockState());
                     }
                 }
-                w.setIfFree(x, y + 1, z, Blocks.SAND.defaultBlockState());
-                w.setIfFree(x, y + 2, z, Blocks.DEAD_BUSH.defaultBlockState());
+                if (solidBelow(w, x, y + 1, z)) {
+                    w.setIfFree(x, y + 1, z, Blocks.SAND.defaultBlockState());
+                    w.setIfFree(x, y + 2, z, Blocks.DEAD_BUSH.defaultBlockState());
+                }
             }
             case BOULDERS -> {
                 Block[] rocks = {Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE, Blocks.ANDESITE, Blocks.STONE};

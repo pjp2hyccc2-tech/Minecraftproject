@@ -34,6 +34,7 @@ public final class CourseBuildJob {
     private final String presetId;
     private final UUID requester;
     private final long total;
+    private final int minY;
 
     private Phase phase = Phase.TERRAIN;
     private int hole;
@@ -52,6 +53,7 @@ public final class CourseBuildJob {
         this.presetId = presetId == null ? "" : presetId;
         this.requester = requester;
         this.total = Math.max(1, plan.columnCount());
+        this.minY = level.getMinBuildHeight();
         CoursePlan.HolePlan first = plan.holes.get(0);
         this.u = first.uMin();
         this.v = -CoursePlan.LANE_HALF;
@@ -136,26 +138,33 @@ public final class CourseBuildJob {
                     default -> Blocks.WATER.defaultBlockState();
                 };
                 BlockState surfaceFluid = theme.fluid == CourseTheme.Fluid.ICE ? Blocks.ICE.defaultBlockState() : fluid;
-                w.set(x, base, z, surfaceFluid);
-                w.set(x, base - 1, z, fluid);
-                Block bed = theme.fluid == CourseTheme.Fluid.LAVA ? Blocks.BLACKSTONE : Blocks.SAND;
-                w.set(x, base - 2, z, bed);
-                w.set(x, base - 3, z, sub);
+                Block bed = theme.fluid == CourseTheme.Fluid.LAVA ? Blocks.BLACKSTONE : Blocks.CLAY;
+                safeSet(x, base - 3, z, sub.defaultBlockState());
+                safeSet(x, base - 2, z, bed.defaultBlockState());
+                safeSet(x, base - 1, z, fluid);
+                safeSet(x, base, z, surfaceFluid);
             }
             case CHASM -> {
-                for (int y = top + 1; y <= base; y++) w.set(x, y, z, Blocks.AIR.defaultBlockState());
-                w.set(x, top, z, theme.obGround[0]);
+                for (int y = Math.max(top + 1, minY); y <= base; y++) w.set(x, y, z, Blocks.AIR.defaultBlockState());
+                safeSet(x, top, z, Blocks.TERRACOTTA.defaultBlockState());
             }
             default -> {
-                for (int y = base - FILL_DEPTH; y < top; y++) {
-                    w.set(x, y, z, cell.surface() == CoursePlan.Surface.BUNKER ? Blocks.SAND : sub);
-                }
-                w.set(x, top, z, surfaceState(hp, cell, lu, lv, x, z));
+                // solid, non-falling fill so nothing can collapse into a falling-block entity
+                BlockState fill = (cell.surface() == CoursePlan.Surface.BUNKER ? Blocks.SANDSTONE : sub).defaultBlockState();
+                for (int y = base - FILL_DEPTH; y < top; y++) safeSet(x, y, z, fill);
+                safeSet(x, top, z, surfaceState(hp, cell, lu, lv, x, z));
                 if (cell.surface() == CoursePlan.Surface.CUP) {
                     w.set(x, top + 1, z, ModBlocks.GOLF_FLAG.get().defaultBlockState().setValue(FlagBlock.COLOR, theme.flag));
                 }
             }
         }
+    }
+
+    /** Places a block unless it is outside the world or would replace the world floor (bedrock). */
+    private void safeSet(int x, int y, int z, BlockState state) {
+        if (y <= minY || y >= level.getMaxBuildHeight()) return;
+        if (w.get(x, y, z).is(Blocks.BEDROCK)) return;
+        w.set(x, y, z, state);
     }
 
     private BlockState surfaceState(CoursePlan.HolePlan hp, CoursePlan.Cell cell, int lu, int lv, int x, int z) {

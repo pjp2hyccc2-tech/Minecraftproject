@@ -19,7 +19,7 @@ public enum CourseTheme {
             new Decor[]{Decor.FLOWERS, Decor.FLOWERS, Decor.TALL_GRASS}),
     COAST(Elevation.FLAT, FlagColor.BLUE, 1.4, 1.0, 1.0, 0.7, 0.70, 2, 4, 1, 3, 0.22, Fluid.WATER,
             () -> ModBlocks.ROUGH.get(), () -> ModBlocks.DEEP_ROUGH.get(), () -> ModBlocks.BUNKER_WHITE.get(),
-            new Block[]{Blocks.SAND, Blocks.SAND, Blocks.SAND, Blocks.GRASS_BLOCK}, () -> Blocks.SAND,
+            new Block[]{Blocks.SAND, Blocks.SAND, Blocks.SAND, Blocks.GRASS_BLOCK}, () -> Blocks.SANDSTONE,
             new TreeStyle[]{TreeStyle.PALM},
             new Decor[]{Decor.DUNES, Decor.DEAD_BUSH, Decor.TALL_GRASS}),
     AUTUMN(Elevation.ROLLING, FlagColor.ORANGE, 0.9, 1.0, 1.0, 1.0, 0.40, 1, 3, 0, 1, 0.85, Fluid.WATER,
