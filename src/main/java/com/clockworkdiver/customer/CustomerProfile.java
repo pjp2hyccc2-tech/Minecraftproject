@@ -6,12 +6,12 @@ import java.util.List;
 
 /** The cast of customers who visit the workshop. Names and lines live in the language files. */
 public enum CustomerProfile {
-    GREGORY("gregory", 0, 1, 0x1C1C22, List.of(ClockType.POCKET_WATCH)),
+    GREGORY("gregory", 0, 1, 0x55525E, List.of(ClockType.POCKET_WATCH)),
     ADA("ada", 1, 0, 0, List.of(ClockType.ASTRONOMICAL, ClockType.ORRERY, ClockType.POCKET_WATCH)),
     BOLT("bolt", 2, 0, 0, List.of(ClockType.STEAM_TOWER, ClockType.POCKET_WATCH, ClockType.CUCKOO)),
     LILY("lily", 3, 0, 0, List.of(ClockType.CUCKOO, ClockType.POCKET_WATCH, ClockType.BIRDCAGE)),
-    CELES("celes", 4, 1, 0x2A2F5A, List.of(ClockType.ASTRONOMICAL, ClockType.ORRERY)),
-    PHANTOM("phantom", 5, 1, 0x3A1020, List.of(ClockType.BIRDCAGE, ClockType.ORRERY, ClockType.STEAM_TOWER));
+    CELES("celes", 4, 1, 0x5A68B8, List.of(ClockType.ASTRONOMICAL, ClockType.ORRERY)),
+    PHANTOM("phantom", 5, 1, 0x8A3048, List.of(ClockType.BIRDCAGE, ClockType.ORRERY, ClockType.STEAM_TOWER));
 
     public final String id;
     public final int skin;
