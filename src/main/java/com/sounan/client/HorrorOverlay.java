@@ -118,8 +118,8 @@ public final class HorrorOverlay {
         if (holding(mc, GameItem.Kind.FLARE_LIT) && !shaders) {
             g.fill(0, 0, w, h, argb(0.10f + 0.04f * Mth.sin(t * 0.9f), 0xB01808));
         }
-        // glitches when terror peaks
-        if (!calm && ((fear > 0.88f && RAND.nextFloat() < (fear - 0.88f) * 0.8f) || ClientState.glitchTicks >= 0)) {
+        // glitches when terror peaks (the shader pack warps the image itself; scripted glitches still show)
+        if (!calm && ((!shaders && fear > 0.88f && RAND.nextFloat() < (fear - 0.88f) * 0.8f) || ClientState.glitchTicks >= 0)) {
             int bars = 1 + RAND.nextInt(ClientState.glitchTicks >= 0 ? 6 : 3);
             for (int i = 0; i < bars; i++) {
                 int y = RAND.nextInt(h);

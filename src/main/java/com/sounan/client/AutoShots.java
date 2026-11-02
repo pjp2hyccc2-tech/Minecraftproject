@@ -153,6 +153,35 @@ public final class AutoShots {
         cmd(mc, String.format(Locale.ROOT, "execute in sounan:kaerazu run tp @s %.2f %.2f %.2f %.1f %.1f", x, y, z, yaw, pitch));
     }
 
+    /** Summons a still monster facing you on clear ground about {@code dist} blocks ahead (not inside a trunk). */
+    private static void summonAhead(Minecraft mc, String id, int dist) {
+        if (mc.player == null || mc.level == null) return;
+        float yaw = mc.player.getYRot() * (float) Math.PI / 180.0f;
+        double fx = -Math.sin(yaw), fz = Math.cos(yaw);
+        for (int tries = 0; tries < 40; tries++) {
+            double d = dist + (tries % 5) - 2;
+            double side = (tries / 5) % 2 == 0 ? (tries / 10) : -(tries / 10);
+            int x = (int) Math.floor(mc.player.getX() + fx * d + fz * side);
+            int z = (int) Math.floor(mc.player.getZ() + fz * d - fx * side);
+            int y = mc.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            boolean clear = true;
+            for (int dx = -1; dx <= 1 && clear; dx++) {
+                for (int dz = -1; dz <= 1 && clear; dz++) {
+                    for (int dy = 0; dy < 5 && clear; dy++) {
+                        net.minecraft.core.BlockPos bp = new net.minecraft.core.BlockPos(x + dx, y + dy, z + dz);
+                        if (!mc.level.getBlockState(bp).getCollisionShape(mc.level, bp).isEmpty()) clear = false;
+                    }
+                }
+            }
+            if (!clear) continue;
+            float face = mc.player.getYRot() + 180.0f;
+            cmd(mc, String.format(Locale.ROOT, "summon sounan:%s %.1f %d %.1f {NoAI:1b,Rotation:[%.1ff,0f]}", id, x + 0.5, y, z + 0.5, face));
+            log(String.format(Locale.ROOT, "  %s summoned %.1f blocks ahead", id, Math.sqrt(Math.pow(x + 0.5 - mc.player.getX(), 2) + Math.pow(z + 0.5 - mc.player.getZ(), 2))));
+            return;
+        }
+        log("  no clear ground ahead for " + id);
+    }
+
     private static void hold(Minecraft mc, String item) {
         cmd(mc, "item replace entity @s weapon.mainhand with " + item);
     }
@@ -307,6 +336,20 @@ public final class AutoShots {
             at(mc, -60.5, -60.5, -45.0f, 0.0f);
             cmd(mc, "sounan debug scene utsurumono");
         }, 30, com.sounan.entity.Utsurumono.class, 0.7f);
+        // for the shader pack: a monster standing in the beam ten blocks into the forest, then eyes in the dark
+        add("beam_spot", mc -> {
+            hold(mc, "sounan:flashlight_on");
+            cmd(mc, "sounan debug scene clear");
+            at(mc, -42.5, -44.5, -40.0f, 6.0f);
+        }, 40);
+        add("go_44_beam_monster", mc -> summonAhead(mc, "oyamasama", 10), 40);
+        snap("44_beam_monster");
+        add("go_45_eyes_dark", mc -> {
+            cmd(mc, "sounan debug scene clear");
+            hold(mc, "sounan:flashlight");
+            summonAhead(mc, "nozoki", 9);
+        }, 40);
+        snap("45_eyes_dark");
         scene("26_fear_high", mc -> {
             hold(mc, "sounan:flashlight_on");
             cmd(mc, "sounan debug scene clear");
