@@ -258,6 +258,10 @@ void main() {
     // ---- vignette that closes in with fear and beats with the heart --------------------
     vStrength = VIGNETTE * (0.42 + 0.50 * F + 0.25 * D) * (cam > 0.5 ? 0.5 : 1.0);
     vInner = 0.50 - 0.22 * F - pulse * 0.075 * (0.35 + F);
+    // the darkness does not close in as a clean circle: it creeps, in slow uneven tongues
+    vec2 around = q / max(length(q), 1e-4);         // noise on the unit circle: no seam
+    float creep = vnoise2(around * 1.6 + vec2(t * 0.11, 3.0)) * 0.6 + vnoise2(around * 3.9 + vec2(7.0, -t * 0.17)) * 0.4;
+    vInner -= (creep - 0.5) * 0.16 * smoothstep(0.3, 1.0, F);
 #endif
     float vig = smoothstep(vInner, vInner + 0.85, r);
     color *= 1.0 - saturate(vig * vStrength);
