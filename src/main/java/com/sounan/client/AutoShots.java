@@ -163,7 +163,7 @@ public final class AutoShots {
             double side = (tries / 5) % 2 == 0 ? (tries / 10) : -(tries / 10);
             int x = (int) Math.floor(mc.player.getX() + fx * d + fz * side);
             int z = (int) Math.floor(mc.player.getZ() + fz * d - fx * side);
-            int y = mc.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            int y = TerrainData.get().height(x, z) + 1; // the baked ground (client heightmaps count the canopy)
             // the column itself clear to head height; no trunk right beside it (the slope may rise a block)
             boolean clear = true;
             int[][] cells = {{0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};

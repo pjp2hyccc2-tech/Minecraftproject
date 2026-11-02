@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.sounan.Sounan;
@@ -29,7 +28,8 @@ import org.joml.Vector3f;
 /**
  * Lights that carry through the fog further than the fog lets the models show (only without a shader pack, which
  * draws these itself): the rescuer's headlamp waving far off between the trunks, and a pair of dim red points at
- * the height of something far too tall, watching from beyond where you can see. The trunks still hide them.
+ * the height of something far too tall, watching from beyond where you can see. Trunks hide the lights
+ * themselves, but not the faint glow a lamp makes in the fog around it, so you can tell where it is.
  */
 @Mod.EventBusSubscriber(modid = Sounan.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class FarLights {
@@ -43,10 +43,14 @@ public final class FarLights {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null || !ModDimensions.isMountain(mc.level) || ShaderCompat.active()) return;
         Camera cam = event.getCamera();
+        Matrix4f m = event.getPoseStack().last().pose();
+        // the lights themselves (trunks hide them), then the glow they make in the fog (seen around the trunks)
+        draw(mc, cam, m, event.getPartialTick(), false);
+        draw(mc, cam, m, event.getPartialTick(), true);
+    }
+
+    private static void draw(Minecraft mc, Camera cam, Matrix4f m, float partial, boolean fogGlow) {
         Vec3 cp = cam.getPosition();
-        float partial = event.getPartialTick();
-        PoseStack pose = event.getPoseStack();
-        Matrix4f m = pose.last().pose();
         Vector3f left = cam.getLeftVector(), up = cam.getUpVector();
         BufferBuilder bb = Tesselator.getInstance().getBuilder();
         boolean any = false;
@@ -60,41 +64,51 @@ public final class FarLights {
             if (e instanceof Yobigoe y) {
                 if (y.pose() == Yobigoe.RUSH || flicker(e.tickCount + partial)) continue;
                 // headlamp: 1.86 up, a little in front of the face
-                Vec3 lamp = at.add(fx * 0.3, 1.86, fz * 0.3);
-                float near = smooth((float) (d - 8.0) / 10.0f); // close up the model's own glow takes over
+                Vec3 lamp = at.add(fx * 0.3, 1.86, fz * 0.3).subtract(cp);
                 float far = (float) Math.exp(-d / 70.0);
-                float a = near * far;
-                if (a < 0.01f) continue;
-                if (!any) begin(bb);
-                any = true;
-                float grow = (float) Math.max(1.0, d / 22.0); // stays a visible point far away
-                fan(bb, m, lamp.subtract(cp), left, up, 0.22f * grow, 1.0f, 0.98f, 0.9f, 0.95f * a);
-                fan(bb, m, lamp.subtract(cp), left, up, 1.6f * grow, 1.0f, 0.93f, 0.78f, 0.22f * a);
-            } else if (e instanceof Oyamasama o) {
+                if (fogGlow) {
+                    float a = smooth((float) (d - 12.0) / 10.0f) * far;
+                    if (a < 0.01f) continue;
+                    if (!any) begin(bb);
+                    any = true;
+                    float grow = (float) Math.max(1.0, d / 30.0);
+                    fan(bb, m, lamp, left, up, 3.6f * grow, 1.0f, 0.9f, 0.72f, 0.15f * a);
+                } else {
+                    float a = smooth((float) (d - 8.0) / 10.0f) * far; // close up the model's own glow takes over
+                    if (a < 0.01f) continue;
+                    if (!any) begin(bb);
+                    any = true;
+                    float grow = (float) Math.max(1.0, d / 22.0); // stays a visible point far away
+                    fan(bb, m, lamp, left, up, 0.22f * grow, 1.0f, 0.98f, 0.9f, 0.95f * a);
+                    fan(bb, m, lamp, left, up, 1.6f * grow, 1.0f, 0.93f, 0.78f, 0.22f * a);
+                }
+            } else if (e instanceof Oyamasama o && !fogGlow) {
                 float h = o.pose() == Oyamasama.CRAWL ? 1.25f : 3.78f;
-                float near = smooth((float) (d - 16.0) / 10.0f);
-                float a = near * (float) Math.exp(-d / 80.0) * (0.8f + 0.2f * Mth.sin((e.tickCount + partial) * 0.07f));
+                float a = smooth((float) (d - 16.0) / 10.0f) * (float) Math.exp(-d / 80.0)
+                        * (0.8f + 0.2f * Mth.sin((e.tickCount + partial) * 0.07f));
                 if (a < 0.01f) continue;
                 if (!any) begin(bb);
                 any = true;
                 float grow = (float) Math.max(1.0, d / 30.0);
                 for (int side = -1; side <= 1; side += 2) {
-                    Vec3 eye = at.add(fx * 0.26 + fz * 0.13 * side, h, fz * 0.26 - fx * 0.13 * side);
-                    fan(bb, m, eye.subtract(cp), left, up, 0.07f * grow, 0.75f, 0.12f, 0.07f, 0.9f * a);
-                    fan(bb, m, eye.subtract(cp), left, up, 0.3f * grow, 0.6f, 0.06f, 0.03f, 0.25f * a);
+                    Vec3 eye = at.add(fx * 0.26 + fz * 0.13 * side, h, fz * 0.26 - fx * 0.13 * side).subtract(cp);
+                    fan(bb, m, eye, left, up, 0.07f * grow, 0.75f, 0.12f, 0.07f, 0.9f * a);
+                    fan(bb, m, eye, left, up, 0.3f * grow, 0.6f, 0.06f, 0.03f, 0.25f * a);
                 }
             }
         }
         if (!any) return;
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-        RenderSystem.enableDepthTest();
+        if (fogGlow) RenderSystem.disableDepthTest();
+        else RenderSystem.enableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.disableCull();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         BufferUploader.drawWithShader(bb.end());
         RenderSystem.enableCull();
         RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
     }
