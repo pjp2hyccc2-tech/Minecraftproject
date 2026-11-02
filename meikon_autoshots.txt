@@ -1,0 +1,61 @@
+title screen (shaders=true)
+shot 00_title
+world creation requested
+in world, 56 steps
+step rules dim=minecraft:overworld pos=6, -60, -9 shaders=true
+step start dim=minecraft:overworld pos=6, -60, -9 shaders=true
+step prepare dim=meikon:kakuriyo pos=-4, 65, 21 shaders=true
+step look_altar dim=meikon:kakuriyo pos=-4, 65, 21 shaders=true
+shot 04_safe_room
+step look_door dim=meikon:kakuriyo pos=-4, 65, 21 shaders=true
+shot 05_safe_door
+step corridor dim=meikon:kakuriyo pos=-4, 65, 21 shaders=true
+shot 06_corridor_lantern
+step lantern_off dim=meikon:kakuriyo pos=-4, 65, 16 shaders=true
+shot 07_corridor_dark
+step courtyard dim=meikon:kakuriyo pos=-4, 65, 16 shaders=true
+shot 08_courtyard
+step moon dim=meikon:kakuriyo pos=0, 65, 11 shaders=true
+shot 09_moon
+step torii dim=meikon:kakuriyo pos=0, 65, -4 shaders=true
+shot 10_torii
+step bride_close dim=meikon:kakuriyo pos=0, 65, -4 shaders=true
+step bride_spawn dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+shot 11_bride_close
+step bride_chase dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+shot 12_bride_chase
+step bride_far dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+shot 13_bride_far
+step bride_away dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+step tp_dolls dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+shot 14_doll_room
+step tp_butsuma dim=meikon:kakuriyo pos=20, 65, -13 shaders=true
+shot 15_butsuma
+step tp_wedding dim=meikon:kakuriyo pos=-13, 65, 20 shaders=true
+shot 16_wedding_hall
+step tp_kitchen dim=meikon:kakuriyo pos=0, 65, -19 shaders=true
+shot 17_kitchen
+step tp_bath dim=meikon:kakuriyo pos=13, 65, 20 shaders=true
+shot 18_bath
+step tp_bedroom dim=meikon:kakuriyo pos=20, 65, -4 shaders=true
+shot 19_bedroom
+step hud dim=meikon:kakuriyo pos=-22, 65, -20 shaders=true
+shot 26_hud
+step fear_high dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+shot 27_fear_high
+step danger dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+shot 28_danger
+step calm dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+step title_card dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+shot 29_title_card
+step shadow dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+step shadow_spawn dim=meikon:kakuriyo pos=2, 65, 16 shaders=true
+shot 33_kageboshi
+step clear dim=meikon:kakuriyo pos=2, 65, 16 shaders=true
+step phantom dim=meikon:kakuriyo pos=2, 65, 16 shaders=true
+step phantom_spawn dim=meikon:kakuriyo pos=-16, 65, 14 shaders=true
+shot 34_phantom
+step final dim=meikon:kakuriyo pos=-16, 65, 14 shaders=true
+step final_view dim=meikon:kakuriyo pos=-16, 65, 14 shaders=true
+shot 35_torii_active
+finished

@@ -1,0 +1,119 @@
+59:[02Nov2026 13:24:24.405] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+60:[02Nov2026 13:24:24.407] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+61:[02Nov2026 13:24:24.535] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+62:[02Nov2026 13:24:24.851] [Render thread/INFO] [Oculus/]: Using shaderpack: MeikonShaders.zip
+66:[02Nov2026 13:24:25.185] [modloading-worker-0/INFO] [com.meikon.Meikon/]: [meikon] 冥婚: the invitation has been sent
+67:[02Nov2026 13:24:26.487] [Render thread/INFO] [Oculus/]: Hardware information:
+68:[02Nov2026 13:24:26.487] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 9V45 96-Core Processor
+69:[02Nov2026 13:24:26.487] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+70:[02Nov2026 13:24:26.488] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+75:[02Nov2026 13:24:27.423] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+76:com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+99:Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+108:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+135:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+190:[02Nov2026 13:24:27.472] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/meikon-client.toml is not correct. Correcting
+195:[02Nov2026 13:24:27.480] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders was corrected from null to its default, SimpleCommentedConfig:{}. 
+196:[02Nov2026 13:24:27.480] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders.installShaderPack was corrected from null to its default, true. 
+206:[02Nov2026 13:24:27.491] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/meikon-common.toml is not correct. Correcting
+212:[02Nov2026 13:24:28.638] [Render thread/INFO] [com.meikon.Meikon/]: [MeikonShaders] copied MeikonShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/MeikonShaders.zip; Oculus pack already selected: MeikonShaders.zip (reloading updated pack)
+214:[02Nov2026 13:24:28.693] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+215:[02Nov2026 13:24:28.924] [Render thread/INFO] [Oculus/]: Using shaderpack: MeikonShaders.zip
+219:[02Nov2026 13:24:31.098] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+220:java.lang.IllegalStateException: Failed to open OpenAL device
+263:[02Nov2026 13:24:31.408] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+267:[02Nov2026 13:24:31.610] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+268:[02Nov2026 13:24:31.650] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+269:[02Nov2026 13:24:31.803] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+271:[02Nov2026 13:24:33.957] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: title screen (shaders=true)
+273:[02Nov2026 13:24:36.516] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 00_title
+278:[02Nov2026 13:24:38.037] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/MeikonCI/serverconfig/forge-server.toml is not correct. Correcting
+280:[02Nov2026 13:24:38.038] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+281:[02Nov2026 13:24:38.038] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+296:[02Nov2026 13:24:40.057] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: world creation requested
+299:[02Nov2026 13:24:40.480] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+300:[02Nov2026 13:24:40.480] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+302:[02Nov2026 13:24:40.526] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+303:[02Nov2026 13:24:40.536] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+320:[02Nov2026 13:24:42.016] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] MeikonShaders を更新しました。
+327:[02Nov2026 13:24:42.944] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ModelViewMat in the specified shader program.
+328:[02Nov2026 13:24:42.945] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ProjMat in the specified shader program.
+329:[02Nov2026 13:24:42.945] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ColorModulator in the specified shader program.
+330:[02Nov2026 13:24:42.945] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogStart in the specified shader program.
+331:[02Nov2026 13:24:42.945] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogEnd in the specified shader program.
+332:[02Nov2026 13:24:42.945] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogColor in the specified shader program.
+334:[02Nov2026 13:24:45.549] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: in world, 56 steps
+335:[02Nov2026 13:25:00.507] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step rules dim=minecraft:overworld pos=6, -60, -9 shaders=true
+343:[02Nov2026 13:25:01.195] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step start dim=minecraft:overworld pos=6, -60, -9 shaders=true
+344:[02Nov2026 13:25:02.111] [Server thread/INFO] [com.meikon.Meikon/]: [meikon] mansion built in 916 ms (20 rooms, 13 closets, 3 bells on pedestals)
+345:[02Nov2026 13:25:02.141] [Server thread/INFO] [com.meikon.Meikon/]: [meikon] Dev entered the mansion (seed -2195634391574998962)
+346:[02Nov2026 13:25:02.259] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='meikon', name='kakuriyo'}
+347:[02Nov2026 13:25:02.260] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+348:[02Nov2026 13:25:02.270] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='meikon', name='kakuriyo'}
+350:[02Nov2026 13:25:02.291] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonCI]'/minecraft:overworld
+351:[02Nov2026 13:25:02.299] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonCI]'/minecraft:the_nether
+352:[02Nov2026 13:25:02.300] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonCI]'/meikon:kakuriyo
+353:[02Nov2026 13:25:02.304] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonCI]'/minecraft:the_end
+354:[02Nov2026 13:25:02.448] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+359:[02Nov2026 13:25:17.375] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step prepare dim=meikon:kakuriyo pos=-4, 65, 21 shaders=true
+360:[02Nov2026 13:25:39.987] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step look_altar dim=meikon:kakuriyo pos=-4, 65, 21 shaders=true
+362:[02Nov2026 13:25:46.009] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 04_safe_room
+363:[02Nov2026 13:25:46.199] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step look_door dim=meikon:kakuriyo pos=-4, 65, 21 shaders=true
+365:[02Nov2026 13:25:50.684] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 05_safe_door
+366:[02Nov2026 13:25:50.903] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step corridor dim=meikon:kakuriyo pos=-4, 65, 21 shaders=true
+368:[02Nov2026 13:26:02.941] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 06_corridor_lantern
+369:[02Nov2026 13:26:03.151] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step lantern_off dim=meikon:kakuriyo pos=-4, 65, 16 shaders=true
+371:[02Nov2026 13:26:09.149] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 07_corridor_dark
+372:[02Nov2026 13:26:09.352] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step courtyard dim=meikon:kakuriyo pos=-4, 65, 16 shaders=true
+374:[02Nov2026 13:26:21.539] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 08_courtyard
+375:[02Nov2026 13:26:21.745] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step moon dim=meikon:kakuriyo pos=0, 65, 11 shaders=true
+377:[02Nov2026 13:26:27.681] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 09_moon
+378:[02Nov2026 13:26:27.863] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step torii dim=meikon:kakuriyo pos=0, 65, -4 shaders=true
+380:[02Nov2026 13:26:33.945] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 10_torii
+381:[02Nov2026 13:26:34.160] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step bride_close dim=meikon:kakuriyo pos=0, 65, -4 shaders=true
+383:[02Nov2026 13:26:40.234] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step bride_spawn dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+384:[02Nov2026 13:26:46.295] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 11_bride_close
+385:[02Nov2026 13:26:46.508] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step bride_chase dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+386:[02Nov2026 13:26:46.682] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 12_bride_chase
+387:[02Nov2026 13:26:46.919] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step bride_far dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+389:[02Nov2026 13:26:53.000] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 13_bride_far
+390:[02Nov2026 13:26:53.216] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step bride_away dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+392:[02Nov2026 13:26:53.777] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step tp_dolls dim=meikon:kakuriyo pos=0, 65, 16 shaders=true
+394:[02Nov2026 13:27:04.237] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 14_doll_room
+395:[02Nov2026 13:27:04.431] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step tp_butsuma dim=meikon:kakuriyo pos=20, 65, -13 shaders=true
+397:[02Nov2026 13:27:14.961] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 15_butsuma
+398:[02Nov2026 13:27:15.163] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step tp_wedding dim=meikon:kakuriyo pos=-13, 65, 20 shaders=true
+400:[02Nov2026 13:27:25.659] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 16_wedding_hall
+401:[02Nov2026 13:27:25.861] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step tp_kitchen dim=meikon:kakuriyo pos=0, 65, -19 shaders=true
+403:[02Nov2026 13:27:36.527] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 17_kitchen
+404:[02Nov2026 13:27:36.725] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step tp_bath dim=meikon:kakuriyo pos=13, 65, 20 shaders=true
+406:[02Nov2026 13:27:47.254] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 18_bath
+407:[02Nov2026 13:27:47.469] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step tp_bedroom dim=meikon:kakuriyo pos=20, 65, -4 shaders=true
+409:[02Nov2026 13:27:58.030] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 19_bedroom
+410:[02Nov2026 13:27:58.251] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step hud dim=meikon:kakuriyo pos=-22, 65, -20 shaders=true
+412:[02Nov2026 13:27:58.292] [Server thread/INFO] [com.meikon.Meikon/]: [meikon] phase 1 -> 2
+413:[02Nov2026 13:28:04.260] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 26_hud
+414:[02Nov2026 13:28:04.481] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step fear_high dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+415:[02Nov2026 13:28:11.900] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 27_fear_high
+416:[02Nov2026 13:28:12.112] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step danger dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+417:[02Nov2026 13:28:18.305] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 28_danger
+418:[02Nov2026 13:28:18.524] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step calm dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+419:[02Nov2026 13:28:25.959] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step title_card dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+420:[02Nov2026 13:28:30.577] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 29_title_card
+421:[02Nov2026 13:28:30.804] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step shadow dim=meikon:kakuriyo pos=-6, 65, 16 shaders=true
+423:[02Nov2026 13:28:35.334] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step shadow_spawn dim=meikon:kakuriyo pos=2, 65, 16 shaders=true
+424:[02Nov2026 13:28:39.863] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 33_kageboshi
+425:[02Nov2026 13:28:40.074] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step clear dim=meikon:kakuriyo pos=2, 65, 16 shaders=true
+426:[02Nov2026 13:28:40.252] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step phantom dim=meikon:kakuriyo pos=2, 65, 16 shaders=true
+429:[02Nov2026 13:28:46.478] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step phantom_spawn dim=meikon:kakuriyo pos=-16, 65, 14 shaders=true
+430:[02Nov2026 13:28:49.512] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 34_phantom
+431:[02Nov2026 13:28:49.741] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step final dim=meikon:kakuriyo pos=-16, 65, 14 shaders=true
+432:[02Nov2026 13:28:49.791] [Server thread/INFO] [com.meikon.Meikon/]: [meikon] phase 2 -> 5
+433:[02Nov2026 13:29:01.641] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: step final_view dim=meikon:kakuriyo pos=-16, 65, 14 shaders=true
+435:[02Nov2026 13:29:09.148] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: shot 35_torii_active
+436:[02Nov2026 13:29:09.398] [Render thread/INFO] [com.meikon.Meikon/]: [meikon] autoshots: finished
+444:[02Nov2026 13:29:10.212] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonCI]'/minecraft:overworld
+445:[02Nov2026 13:29:10.244] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonCI]'/minecraft:the_nether
+446:[02Nov2026 13:29:10.245] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonCI]'/meikon:kakuriyo
+447:[02Nov2026 13:29:10.267] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[MeikonCI]'/minecraft:the_end
+448:[02Nov2026 13:29:10.282] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (MeikonCI): All chunks are saved
