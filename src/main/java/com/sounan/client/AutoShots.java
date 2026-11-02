@@ -214,7 +214,7 @@ public final class AutoShots {
         // the monsters, lined up in the village (camera on so the camera-only one shows)
         add("lineup_spawn", mc -> {
             at(mc, 20.5, 6.5, -90.0f, 6.0f);
-            cmd(mc, "kill @e[type=!player]");
+            cmd(mc, "sounan debug scene clear");
         }, 60);
         add("lineup_mobs", mc -> {
             int y = TerrainData.get().height(26, 6) + 1;
@@ -229,7 +229,8 @@ public final class AutoShots {
         snap("25_monsters_camera");
         // the monsters doing what they do (creative: they cannot take you, but they act)
         scene("38_nozoki_peek", mc -> {
-            cmd(mc, "kill @e[type=!player]");
+            hold(mc, "sounan:flashlight_on");
+            cmd(mc, "sounan debug scene clear");
             at(mc, -78.5, -74.5, -40.0f, 2.0f);
             cmd(mc, "sounan debug scene nozoki");
         }, 50);
@@ -267,7 +268,7 @@ public final class AutoShots {
         }, 50);
         scene("26_fear_high", mc -> {
             hold(mc, "sounan:flashlight_on");
-            cmd(mc, "kill @e[type=!player]");
+            cmd(mc, "sounan debug scene clear");
             at(mc, -60.5, -60.5, 45.0f, 0.0f);
             fear(mc, 92, 0.15f);
         }, 80);
