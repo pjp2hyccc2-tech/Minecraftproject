@@ -1,0 +1,107 @@
+title screen (shaders=false)
+shot 00_title
+world creation requested
+in world, 102 steps
+step rules dim=minecraft:overworld pos=-2, -60, 10
+step envelope dim=minecraft:overworld pos=-2, -60, 10
+shot 01_envelope
+step close_envelope dim=minecraft:overworld pos=-2, -60, 10
+step start dim=minecraft:overworld pos=-2, -60, 10
+shot 02_intro
+step intro_wait dim=meikon:kakuriyo pos=-4, 65, 21
+shot 03_logo
+step prepare dim=meikon:kakuriyo pos=-4, 65, 21
+step look_altar dim=meikon:kakuriyo pos=-4, 65, 21
+shot 04_safe_room
+step look_door dim=meikon:kakuriyo pos=-4, 65, 21
+shot 05_safe_door
+step corridor dim=meikon:kakuriyo pos=-4, 65, 21
+shot 06_corridor_lantern
+step lantern_off dim=meikon:kakuriyo pos=-4, 65, 16
+shot 07_corridor_dark
+step courtyard dim=meikon:kakuriyo pos=-4, 65, 16
+shot 08_courtyard
+step moon dim=meikon:kakuriyo pos=0, 65, 11
+shot 09_moon
+step torii dim=meikon:kakuriyo pos=0, 65, -4
+shot 10_torii
+step bride_close dim=meikon:kakuriyo pos=0, 65, -4
+step bride_spawn dim=meikon:kakuriyo pos=0, 65, 16
+shot 11_bride_close
+step bride_chase dim=meikon:kakuriyo pos=0, 65, 16
+shot 12_bride_chase
+step bride_far dim=meikon:kakuriyo pos=0, 65, 16
+shot 13_bride_far
+step bride_away dim=meikon:kakuriyo pos=0, 65, 16
+step tp_dolls dim=meikon:kakuriyo pos=0, 65, 16
+shot 14_doll_room
+step tp_butsuma dim=meikon:kakuriyo pos=22, 65, -20
+shot 15_butsuma
+step tp_wedding dim=meikon:kakuriyo pos=22, 65, 20
+shot 16_wedding_hall
+step tp_kitchen dim=meikon:kakuriyo pos=0, 65, -19
+shot 17_kitchen
+step tp_bath dim=meikon:kakuriyo pos=-20, 65, 13
+shot 18_bath
+step tp_bedroom dim=meikon:kakuriyo pos=20, 65, 4
+shot 19_bedroom
+step kura dim=meikon:kakuriyo pos=13, 65, -20
+shot 20_kura
+step well dim=meikon:kakuriyo pos=9, 65, -2
+shot 21_well
+step closet dim=meikon:kakuriyo pos=-6, 65, 9
+step closet_bride dim=meikon:kakuriyo pos=10, 65, -21
+shot 22_closet_peek
+step note dim=meikon:kakuriyo pos=10, 65, -21
+shot 23_note
+step note_candles dim=meikon:kakuriyo pos=10, 65, -21
+shot 24_note_candles
+step journal dim=meikon:kakuriyo pos=10, 65, -21
+shot 25_journal
+step close_screen dim=meikon:kakuriyo pos=10, 65, -21
+step hud dim=meikon:kakuriyo pos=10, 65, -21
+shot 26_hud
+step fear_high dim=meikon:kakuriyo pos=-6, 65, 16
+shot 27_fear_high
+step danger dim=meikon:kakuriyo pos=-6, 65, 16
+shot 28_danger
+step calm dim=meikon:kakuriyo pos=-6, 65, 16
+step title_card dim=meikon:kakuriyo pos=-6, 65, 16
+shot 29_title_card
+step jumpscare dim=meikon:kakuriyo pos=-6, 65, 16
+shot 30_jumpscare_bride
+step js_wait dim=meikon:kakuriyo pos=-6, 65, 16
+step jumpscare_doll dim=meikon:kakuriyo pos=-6, 65, 16
+shot 31_jumpscare_doll
+step death dim=meikon:kakuriyo pos=-6, 65, 16
+shot 32_death
+step death_wait dim=meikon:kakuriyo pos=-6, 65, 16
+step shadow dim=meikon:kakuriyo pos=-6, 65, 16
+step shadow_spawn dim=meikon:kakuriyo pos=2, 65, 16
+shot 33_kageboshi
+step clear dim=meikon:kakuriyo pos=2, 65, 16
+step phantom dim=meikon:kakuriyo pos=2, 65, 16
+step phantom_spawn dim=meikon:kakuriyo pos=-16, 65, 14
+shot 34_phantom
+step final dim=meikon:kakuriyo pos=-16, 65, 14
+step final_view dim=meikon:kakuriyo pos=-16, 65, 14
+shot 35_torii_active
+step hunt_setup dim=meikon:kakuriyo pos=0, 65, -5
+step hunt_go dim=meikon:kakuriyo pos=1, 65, 16
+shot 38_captured
+step hunt_wait dim=meikon:kakuriyo pos=1, 65, 16
+shot 39_taken
+step hunt_after dim=meikon:kakuriyo pos=-4, 65, 21
+shot 40_back_in_safe_room
+step doll_test dim=meikon:kakuriyo pos=-4, 65, 21
+step doll_behind dim=meikon:kakuriyo pos=1, 65, 16
+shot 41_doll_attack
+step doll_wait dim=meikon:kakuriyo pos=1, 65, 16
+shot 42_doll_after
+step hunt_end dim=meikon:kakuriyo pos=1, 65, 16
+step ending_bad dim=meikon:kakuriyo pos=1, 65, 16
+shot 36_ending_bad
+step ending_good dim=meikon:kakuriyo pos=1, 65, 16
+shot 37_ending_good
+step ending_close dim=meikon:kakuriyo pos=1, 65, 16
+finished

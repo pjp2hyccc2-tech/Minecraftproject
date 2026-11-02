@@ -1,0 +1,45 @@
+selftest starting
+PASS dimension meikon:kakuriyo exists
+mansion built in 1092 ms
+PASS mansion recorded
+PASS 20 rooms (20)
+PASS closets >= 6 (11)
+PASS 3 bells on pedestals (3)
+PASS puzzle bells (kura, butsuma, dolls, well)
+PASS torii veil blocks (6)
+PASS notes placed (11)
+PASS drawers (16)
+PASS the storehouse key is somewhere
+PASS the doll's head is somewhere
+PASS matches are somewhere
+PASS three butsuma candles
+PASS spawn is free
+PASS spawn has a floor
+PASS lamplight room has the sealed door
+closets checked
+PASS waypoints standable (1 blocked)
+PASS mansion record is deterministic
+PASS game data save/load
+PASS one bride (1)
+PASS dolls (7)
+PASS bride can reach every room (0 unreachable)
+PASS bride cannot path into the lamplight room
+  bride speed x0.52: 1.02 blocks/s (player walks 4.32, sprints 5.61)
+  bride speed x0.85: 2.73 blocks/s (player walks 4.32, sprints 5.61)
+  bride speed x1.13: 4.83 blocks/s (player walks 4.32, sprints 5.61)
+PASS bride hears a marble and investigates (INVESTIGATE)
+  wander trace: WANDER at BlockPos{x=0, y=65, z=-17}, path to BlockPos{x=0, y=65, z=4} node 0/22
+  wander trace: WANDER at BlockPos{x=-1, y=65, z=-16}, path to BlockPos{x=0, y=65, z=4} node 1/22
+  wander trace: WANDER at BlockPos{x=-1, y=65, z=-15}, path to BlockPos{x=0, y=65, z=4} node 2/22
+  wander trace: WANDER at BlockPos{x=-2, y=65, z=-15}, path to BlockPos{x=0, y=65, z=4} node 4/22
+  wander trace: WANDER at BlockPos{x=-3, y=65, z=-15}, path to BlockPos{x=0, y=65, z=4} node 4/22
+  wander trace: WANDER at BlockPos{x=-3, y=65, z=-14}, path to BlockPos{x=0, y=65, z=4} node 5/22
+  wander trace: WANDER at BlockPos{x=-3, y=65, z=-13}, path to BlockPos{x=0, y=65, z=4} node 6/22
+  wander trace: WANDER at BlockPos{x=-3, y=65, z=-12}, path to BlockPos{x=0, y=65, z=4} node 7/22
+  wander trace: WANDER at BlockPos{x=-3, y=65, z=-11}, path to BlockPos{x=0, y=65, z=4} node 8/22
+  wander trace: WANDER at BlockPos{x=-3, y=65, z=-10}, path to BlockPos{x=0, y=65, z=4} node 9/22
+  wander trace: WANDER at BlockPos{x=-3, y=65, z=-9}, path to BlockPos{x=0, y=65, z=4} node 10/22
+PASS bride wanders (up to 8.7 blocks away in 10 s, state WANDER)
+PASS bride survived 10 s of ticking
+mansion seed 20261102: [WASHITSU, WEDDING, WEDDING, STORAGE, WASHITSU, SAFE, STORAGE, STUDY, KITCHEN, WASHITSU, BATH, BEDROOM, CHILD, STORAGE, WASHITSU, BEDROOM, BEDROOM, BUTSUMA, DOLLS, WASHITSU]
+SELFTEST RESULT: PASS
