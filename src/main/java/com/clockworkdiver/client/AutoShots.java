@@ -412,7 +412,7 @@ public final class AutoShots {
         }, 300);
         add("q17_view", mc -> {
             cmd(mc, "gamemode spectator");
-            cmd(mc, "tp @s 0.5 70 30.6 0 36");
+            cmd(mc, "tp @s -8.5 67 31.5 -52 20");
         }, 40);
         snap("57_plaza");
         add("q17_wide", mc -> cmd(mc, "tp @s 0.5 67 18.5 0 -16"), 30);
@@ -480,7 +480,7 @@ public final class AutoShots {
             DialogueScreen d = new DialogueScreen(-1, S2C.DIALOGUE_THANKS, "viktor", StoryQuests.get(15).createClock(1), 70, "");
             mc.setScreen(d);
             d.showLine(1);
-        }, 130);
+        }, 12);
         snap("68_mira_voice");
         add("finale_thanks", mc -> {
             DialogueScreen d = new DialogueScreen(-1, S2C.DIALOGUE_THANKS, "elias", StoryQuests.get(19).createClock(1), 120, "");
