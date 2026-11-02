@@ -147,6 +147,7 @@ public final class Trailer {
             case PREP -> prep(mc);
             case SETUP -> {
                 // set-up done: pause and film
+                logLight(mc, "end of set-up");
                 mc.setScreen(new HoldScreen());
                 phase = Phase.CAPTURE;
                 frame = 0;
@@ -286,6 +287,7 @@ public final class Trailer {
             pose(mc, t);
             posed = true;
         } else if (posed) {
+            if (frame == WARMUP) logLight(mc, "first frame");
             if (captureThisFrame) save(mc);
             frame++;
             if (frame >= WARMUP + frameCount()) endShot(mc);
@@ -347,7 +349,7 @@ public final class Trailer {
         ItemInHandRenderer hands = hands(mc);
         if (hands != null) hands.tick();
         for (Puppet pp : shot.puppets) pp.apply(partial, ageTicks);
-        IrisClock.set(shotIndex * 97.0f + t);
+        if (shot.irisClock) IrisClock.set(shotIndex * 97.0f + t);
         mc.getToasts().clear();
     }
 
@@ -388,6 +390,38 @@ public final class Trailer {
         mc.gameRenderer.setRenderHand(true);
         mc.setScreen(null);
         nextShot(mc);
+    }
+
+    /** Diagnostics: what the shader pack is told about the light at the eye (its indoor / outdoor switch). */
+    private static void logLight(Minecraft mc, String when) {
+        if (mc.player == null || mc.level == null) return;
+        net.minecraft.core.BlockPos eye = net.minecraft.core.BlockPos.containing(mc.player.getEyePosition());
+        StringBuilder fx = new StringBuilder();
+        for (var e : mc.player.getActiveEffects()) fx.append(e.getEffect().getDescriptionId()).append(' ');
+        log(String.format(Locale.ROOT, "  %s: eye %s sky %d block %d raw sky %d, rain %.2f thunder %.2f, creative %s flying %s, effects [%s] %s",
+                when, eye.toShortString(), mc.level.getBrightness(net.minecraft.world.level.LightLayer.SKY, eye),
+                mc.level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, eye),
+                mc.level.getChunkSource().getLightEngine().getLayerListener(net.minecraft.world.level.LightLayer.SKY).getLightValue(eye),
+                mc.level.getRainLevel(1.0f), mc.level.getThunderLevel(1.0f), mc.player.isCreative(), mc.player.getAbilities().flying,
+                fx.toString().trim(), IrisEye.describe()));
+    }
+
+    /** Iris / Oculus: the smoothed eye brightness the pack sees (reflection; best effort). */
+    static final class IrisEye {
+        static String describe() {
+            try {
+                Class<?> c = Class.forName("net.irisshaders.iris.uniforms.CommonUniforms");
+                for (java.lang.reflect.Method m : c.getDeclaredMethods()) {
+                    if (m.getName().equals("getEyeBrightness") && m.getParameterCount() == 0) {
+                        m.setAccessible(true);
+                        return "iris eyeBrightness " + m.invoke(null);
+                    }
+                }
+                return "iris eyeBrightness: no method";
+            } catch (Throwable t) {
+                return "iris eyeBrightness: " + t.getClass().getSimpleName();
+            }
+        }
     }
 
     // =========================================================================================== view
