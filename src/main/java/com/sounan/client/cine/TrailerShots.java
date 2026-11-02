@@ -33,7 +33,8 @@ final class TrailerShots {
 
     static List<Shot> all() {
         return List.of(new Descent(), new Wake(), new Walk(), new Bag(), new LampFar(), new Peek(), new Behind(), new Hut(),
-                new Village(), new CameraGhost(), new Bridge(), new Loom(), new Turn(), new Tunnel(), new Rush(), new Face());
+                new Village(), new CameraGhost(), new Bridge(), new Loom(), new Turn(), new Tunnel(), new Rush(), new Face(),
+                lampFarNoClock());
     }
 
     // =========================================================================================== frame / shot
@@ -81,6 +82,8 @@ final class TrailerShots {
         final float duration;
         /** Real ticks between set-up and filming: chunk rebuilds, and Iris eases eye brightness (fog) with a 4 s half-life. */
         int setupTicks = 300;
+        /** Drive the shader clock from the film's virtual clock (off: the pack runs on real time; diagnostics). */
+        boolean irisClock = true;
         final List<Trailer.Puppet> puppets = new ArrayList<>();
 
         Shot(String name, float duration) {
@@ -125,6 +128,13 @@ final class TrailerShots {
 
     static Vec3 eye(double x, double z, double height) {
         return new Vec3(x, ground(x, z) + height, z);
+    }
+
+    /** Diagnostics: the far lamp again, with the shader pack left on its own clock. */
+    static Shot lampFarNoClock() {
+        LampFar s = new LampFar("lamp_far_nc");
+        s.irisClock = false;
+        return s;
     }
 
     // =========================================================================================== shots
@@ -226,7 +236,11 @@ final class TrailerShots {
         Trailer.Puppet yobi;
 
         LampFar() {
-            super("lamp_far", 5.5f);
+            this("lamp_far");
+        }
+
+        LampFar(String name) {
+            super(name, 5.5f);
         }
 
         @Override
@@ -418,8 +432,8 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             float k = easeSine(seg(t, 0.0f, 4.5f));
-            Vec3 g = new Vec3(-52.9, groundAt(-52.9, -63.0), -63.0);
-            double x = lerp(-60.5f, -59.9f, k), z = lerp(-60.5f, -60.7f, k);
+            Vec3 g = new Vec3(-34.7, groundAt(-34.7, -46.6), -46.6);
+            double x = lerp(-44.5f, -43.4f, k), z = lerp(-44.5f, -44.75f, k);
             f.cam = eye(x, z, 1.62);
             Vec3 at = g.add(0.0, 1.25, 0.0);
             f.yaw = yawTo(f.cam, at) + 1.0f * noise(t * 0.6f, 22.0f);
@@ -528,6 +542,9 @@ final class TrailerShots {
             f.yaw = yawTo(f.cam, at) + 0.8f * noise(t * 0.6f, 29.0f);
             f.pitch = pitchTo(f.cam, at) + 0.6f * noise(t * 0.5f, 30.0f);
             f.shake(0.2f, t, 31.0f);
+            // your flashlight on it while it turns; then your light dies with its lamp
+            f.hand = true;
+            f.held = t < 2.2f ? FLASHLIGHT_ON : (t < 2.35f ? FLASHLIGHT_LOW : FLASHLIGHT_OFF);
             f.fov = lerp(46.0f, 40.0f, easeSine(seg(t, 0.0f, 2.4f)));
             f.fear = lerp(0.5f, 0.85f, seg(t, 0.9f, 2.0f));
             if (yobi != null) {
@@ -629,10 +646,15 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             f.cam = eye(-93.5, -87.5, 1.62);
-            f.yaw = 135.0f;
             float lunge = seg(t, 1.0f, 1.4f);
             lunge = lunge * lunge * lunge;
-            f.pitch = lerp(-14.0f, -22.0f, lunge);
+            double d = lerp(2.3f, 0.85f, lunge);
+            double r = Math.toRadians(135.0);
+            double nx = -93.5 - Math.sin(r) * d, nz = -87.5 + Math.cos(r) * d;
+            double drop = 0.3 * lunge;
+            Vec3 head = new Vec3(nx, ground(nx, nz) - drop + 2.3, nz);
+            f.yaw = yawTo(f.cam, head);
+            f.pitch = pitchTo(f.cam, head) + 3.0f;
             if (t > 1.35f) f.shake(2.2f, t, 38.0f);
             else f.shake(0.25f, t, 38.0f);
             f.hand = true;
@@ -641,10 +663,7 @@ final class TrailerShots {
             f.fear = 1.0f;
             f.danger = 1.0f;
             if (noz != null) {
-                double d = lerp(2.3f, 0.35f, lunge);
-                double r = Math.toRadians(135.0);
-                double nx = -93.5 - Math.sin(r) * d, nz = -87.5 + Math.cos(r) * d;
-                noz.at(nx, ground(nx, nz) - 0.55 * lunge, nz).look(-45.0f, -45.0f, 12.0f).walk(0.0f, 0.0f);
+                noz.at(nx, ground(nx, nz) - drop, nz).look(-45.0f, -45.0f, 12.0f).walk(0.0f, 0.0f);
                 mon(noz).puppetPose(Nozoki.STAND, t * 20.0f);
             }
         }
