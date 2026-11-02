@@ -1,4 +1,4 @@
-"""Shared helpers for the MEIKON procedural texture generator.
+"""Shared helpers for the SOUNAN procedural texture generator (inherited from MEIKON).
 
 Everything here is deterministic: every random source takes an explicit seed.
 Colours are float32 RGBA arrays in 0..255.
@@ -11,13 +11,22 @@ from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
-TEX_ROOT = os.path.join(ROOT, 'src', 'main', 'resources', 'assets', 'meikon', 'textures')
+ASSETS = os.path.join(ROOT, 'src', 'main', 'resources', 'assets', 'sounan')
+TEX_ROOT = os.path.join(ASSETS, 'textures')
+MODEL_ROOT = os.path.join(ASSETS, 'models')
+JAVA_ROOT = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'sounan')
 PREVIEW = os.path.join(HERE, 'preview')
 
 FONT_SERIF_JP_BLACK = ('/usr/share/fonts/opentype/noto/NotoSerifCJK-Black.ttc', 0)
 FONT_SERIF_JP_BOLD = ('/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc', 0)
 FONT_SERIF_JP_REG = ('/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc', 0)
+FONT_SANS_JP_BLACK = ('/usr/share/fonts/opentype/noto/NotoSansCJK-Black.ttc', 0)
+FONT_SANS_JP_BOLD = ('/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc', 0)
+FONT_SANS_JP_MED = ('/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc', 0)
+FONT_SANS_JP_REG = ('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', 0)
 FONT_LABEL = '/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf'
+FONT_SANS = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
+FONT_SANS_BOLD = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
 
 # --------------------------------------------------------------------------
 # registry
