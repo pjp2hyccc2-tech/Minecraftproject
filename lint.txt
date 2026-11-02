@@ -1,0 +1,3 @@
+stubs: OK
+glslang: checked 408 program variants, 0 failed
+consistency: OK

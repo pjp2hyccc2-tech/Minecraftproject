@@ -1,0 +1,124 @@
+59:[02Nov2026 16:52:22.347] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+60:[02Nov2026 16:52:22.350] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+61:[02Nov2026 16:52:22.510] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+62:[02Nov2026 16:52:23.066] [Render thread/INFO] [Oculus/]: Using shaderpack: SounanShaders.zip
+66:[02Nov2026 16:52:23.416] [modloading-worker-0/INFO] [com.sounan.Sounan/]: [sounan] 遭難: somebody is calling from below the trail
+67:[02Nov2026 16:52:25.693] [Render thread/INFO] [Oculus/]: Hardware information:
+68:[02Nov2026 16:52:25.694] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 7763 64-Core Processor
+69:[02Nov2026 16:52:25.694] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+70:[02Nov2026 16:52:25.694] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+75:[02Nov2026 16:52:26.928] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+76:com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+99:Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+108:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+135:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+190:[02Nov2026 16:52:26.991] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/sounan-client.toml is not correct. Correcting
+195:[02Nov2026 16:52:26.996] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders was corrected from null to its default, SimpleCommentedConfig:{}. 
+196:[02Nov2026 16:52:26.996] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders.installShaderPack was corrected from null to its default, true. 
+206:[02Nov2026 16:52:27.016] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/sounan-common.toml is not correct. Correcting
+212:[02Nov2026 16:52:28.477] [Render thread/INFO] [com.sounan.Sounan/]: [SounanShaders] copied SounanShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/SounanShaders.zip; Oculus pack already selected: SounanShaders.zip (reloading updated pack)
+214:[02Nov2026 16:52:28.550] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+215:[02Nov2026 16:52:28.961] [Render thread/INFO] [Oculus/]: Using shaderpack: SounanShaders.zip
+219:[02Nov2026 16:52:33.069] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+220:java.lang.IllegalStateException: Failed to open OpenAL device
+263:[02Nov2026 16:52:33.777] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+267:[02Nov2026 16:52:34.020] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+268:[02Nov2026 16:52:34.094] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+269:[02Nov2026 16:52:34.156] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+271:[02Nov2026 16:52:37.727] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: title screen (shaders=true)
+273:[02Nov2026 16:52:40.304] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 00_title
+278:[02Nov2026 16:52:43.083] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/SounanCI/serverconfig/forge-server.toml is not correct. Correcting
+280:[02Nov2026 16:52:43.085] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+281:[02Nov2026 16:52:43.085] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+298:[02Nov2026 16:52:46.849] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: world creation requested
+301:[02Nov2026 16:52:47.280] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+302:[02Nov2026 16:52:47.281] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+303:[02Nov2026 16:52:47.310] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+304:[02Nov2026 16:52:47.322] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+306:[02Nov2026 16:52:47.434] [Server thread/INFO] [com.sounan.Sounan/]: [sounan] mountain terrain loaded: 512x512 from -256
+307:[02Nov2026 16:52:49.115] [Server thread/INFO] [com.sounan.Sounan/]: [sounan] Dev is lost on the mountain
+325:[02Nov2026 16:52:50.483] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] SounanShaders を更新しました。
+326:[02Nov2026 16:52:51.009] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='sounan', name='kaerazu'}
+327:[02Nov2026 16:52:51.009] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+328:[02Nov2026 16:52:51.022] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='sounan', name='kaerazu'}
+329:[02Nov2026 16:52:51.049] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+339:[02Nov2026 16:52:57.631] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: in world, 73 steps
+340:[02Nov2026 16:52:58.365] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step rules dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+343:[02Nov2026 16:52:59.025] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step intro_wait dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+344:[02Nov2026 16:53:15.587] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step settle dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+346:[02Nov2026 16:53:33.621] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_03_start_dark dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+348:[02Nov2026 16:53:45.754] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 03_start_dark
+349:[02Nov2026 16:53:45.757] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_04_start_flashlight dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+351:[02Nov2026 16:53:49.087] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 04_start_flashlight
+352:[02Nov2026 16:53:49.091] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_05_bag dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+354:[02Nov2026 16:54:01.934] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 05_bag
+355:[02Nov2026 16:54:02.385] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_06_cliff_edge dim=sounan:kaerazu pos=-166, 184, -169 shaders=true
+357:[02Nov2026 16:54:14.658] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 06_cliff_edge
+358:[02Nov2026 16:54:15.246] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_07_forest_ribbons dim=sounan:kaerazu pos=-139, 179, -139 shaders=true
+360:[02Nov2026 16:54:28.863] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 07_forest_ribbons
+361:[02Nov2026 16:54:28.867] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_08_forest_deep dim=sounan:kaerazu pos=-96, 156, -89 shaders=true
+363:[02Nov2026 16:54:42.341] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 08_forest_deep
+364:[02Nov2026 16:54:42.803] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_09_dead_end dim=sounan:kaerazu pos=-43, 147, -45 shaders=true
+366:[02Nov2026 16:54:56.598] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 09_dead_end
+367:[02Nov2026 16:54:56.601] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_10_village dim=sounan:kaerazu pos=-93, 152, -27 shaders=true
+369:[02Nov2026 16:55:10.055] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 10_village
+370:[02Nov2026 16:55:10.569] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_11_village_houses dim=sounan:kaerazu pos=2, 133, 6 shaders=true
+372:[02Nov2026 16:55:16.778] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 11_village_houses
+373:[02Nov2026 16:55:17.323] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_12_phone_booth dim=sounan:kaerazu pos=30, 133, 6 shaders=true
+375:[02Nov2026 16:55:23.033] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 12_phone_booth
+376:[02Nov2026 16:55:23.494] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_13_omiki_house dim=sounan:kaerazu pos=11, 133, 5 shaders=true
+378:[02Nov2026 16:55:29.401] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 13_omiki_house
+379:[02Nov2026 16:55:29.404] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_14_shrine_steps dim=sounan:kaerazu pos=20, 134, 14 shaders=true
+381:[02Nov2026 16:55:43.399] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 14_shrine_steps
+382:[02Nov2026 16:55:43.898] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_15_shrine dim=sounan:kaerazu pos=49, 134, 36 shaders=true
+384:[02Nov2026 16:55:49.877] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 15_shrine
+385:[02Nov2026 16:55:49.882] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_16_fog_rope dim=sounan:kaerazu pos=64, 142, 36 shaders=true
+387:[02Nov2026 16:56:02.282] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 16_fog_rope
+388:[02Nov2026 16:56:02.285] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_17_bridge dim=sounan:kaerazu pos=77, 140, 50 shaders=true
+390:[02Nov2026 16:56:15.770] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 17_bridge
+391:[02Nov2026 16:56:16.235] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_18_hut dim=sounan:kaerazu pos=95, 132, 84 shaders=true
+393:[02Nov2026 16:56:30.026] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 18_hut
+394:[02Nov2026 16:56:30.030] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_19_hut_inside dim=sounan:kaerazu pos=84, 125, 133 shaders=true
+396:[02Nov2026 16:56:36.021] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 19_hut_inside
+397:[02Nov2026 16:56:36.457] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_20_pylon dim=sounan:kaerazu pos=74, 126, 131 shaders=true
+399:[02Nov2026 16:56:49.953] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 20_pylon
+400:[02Nov2026 16:56:50.474] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_21_tunnel_gate dim=sounan:kaerazu pos=6, 152, 111 shaders=true
+402:[02Nov2026 16:57:03.584] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 21_tunnel_gate
+403:[02Nov2026 16:57:03.963] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_22_tunnel_inside dim=sounan:kaerazu pos=120, 115, 143 shaders=true
+405:[02Nov2026 16:57:17.612] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 22_tunnel_inside
+406:[02Nov2026 16:57:17.614] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_23_trailhead dim=sounan:kaerazu pos=120, 113, 181 shaders=true
+408:[02Nov2026 16:57:31.346] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 23_trailhead
+409:[02Nov2026 16:57:31.349] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step lineup_spawn dim=sounan:kaerazu pos=158, 103, 246 shaders=true
+411:[02Nov2026 16:57:40.417] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step lineup_mobs dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+419:[02Nov2026 16:57:46.570] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 24_monsters
+420:[02Nov2026 16:57:47.034] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step lineup_camera dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+422:[02Nov2026 16:57:50.671] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 25_monsters_camera
+423:[02Nov2026 16:57:51.137] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_38_nozoki_peek dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+426:[02Nov2026 16:57:58.251] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 38_nozoki_peek
+427:[02Nov2026 16:57:58.684] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_39_yobigoe_light dim=sounan:kaerazu pos=-79, 153, -75 shaders=true
+429:[02Nov2026 16:58:07.615] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 39_yobigoe_light
+430:[02Nov2026 16:58:08.069] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step ushiro_attach dim=sounan:kaerazu pos=-25, 143, -29 shaders=true
+432:[02Nov2026 16:58:12.353] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_40_ushiro_look_back dim=sounan:kaerazu pos=-7, 138, -13 shaders=true
+433:[02Nov2026 16:58:12.848] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 40_ushiro_look_back
+434:[02Nov2026 16:58:12.852] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_41_oyama_stalk dim=sounan:kaerazu pos=-7, 138, -13 shaders=true
+436:[02Nov2026 16:58:22.264] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 41_oyama_stalk
+437:[02Nov2026 16:58:22.656] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_42_sleeper dim=sounan:kaerazu pos=82, 125, 131 shaders=true
+439:[02Nov2026 16:58:30.006] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 42_sleeper
+440:[02Nov2026 16:58:30.339] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_43_utsurumono_camera dim=sounan:kaerazu pos=73, 126, 131 shaders=true
+443:[02Nov2026 16:58:37.942] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 43_utsurumono_camera
+445:[02Nov2026 16:58:37.946] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_26_fear_high dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+447:[02Nov2026 16:58:49.997] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 26_fear_high
+448:[02Nov2026 16:58:50.463] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_27_danger_high dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+449:[02Nov2026 16:58:54.725] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 27_danger_high
+450:[02Nov2026 16:58:55.220] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_28_phone_light dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+452:[02Nov2026 16:58:59.716] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 28_phone_light
+453:[02Nov2026 16:58:59.719] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_29_flare dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+455:[02Nov2026 16:59:04.609] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 29_flare
+456:[02Nov2026 16:59:04.614] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: step go_30_flashlight_low dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+458:[02Nov2026 16:59:07.666] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: shot 30_flashlight_low
+459:[02Nov2026 16:59:08.220] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] autoshots: finished
+467:[02Nov2026 16:59:09.354] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanCI]'/minecraft:overworld
+468:[02Nov2026 16:59:09.379] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanCI]'/minecraft:the_end
+469:[02Nov2026 16:59:09.382] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanCI]'/minecraft:the_nether
+470:[02Nov2026 16:59:09.386] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanCI]'/sounan:kaerazu
+471:[02Nov2026 16:59:09.455] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (SounanCI): All chunks are saved

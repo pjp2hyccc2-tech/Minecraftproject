@@ -1,0 +1,78 @@
+title screen (shaders=true)
+shot 00_title
+world creation requested
+in world, 73 steps
+step rules dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+step intro_wait dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+step settle dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+step go_03_start_dark dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+shot 03_start_dark
+step go_04_start_flashlight dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+shot 04_start_flashlight
+step go_05_bag dim=sounan:kaerazu pos=-199, 191, -210 shaders=true
+shot 05_bag
+step go_06_cliff_edge dim=sounan:kaerazu pos=-166, 184, -169 shaders=true
+shot 06_cliff_edge
+step go_07_forest_ribbons dim=sounan:kaerazu pos=-139, 179, -139 shaders=true
+shot 07_forest_ribbons
+step go_08_forest_deep dim=sounan:kaerazu pos=-96, 156, -89 shaders=true
+shot 08_forest_deep
+step go_09_dead_end dim=sounan:kaerazu pos=-43, 147, -45 shaders=true
+shot 09_dead_end
+step go_10_village dim=sounan:kaerazu pos=-93, 152, -27 shaders=true
+shot 10_village
+step go_11_village_houses dim=sounan:kaerazu pos=2, 133, 6 shaders=true
+shot 11_village_houses
+step go_12_phone_booth dim=sounan:kaerazu pos=30, 133, 6 shaders=true
+shot 12_phone_booth
+step go_13_omiki_house dim=sounan:kaerazu pos=11, 133, 5 shaders=true
+shot 13_omiki_house
+step go_14_shrine_steps dim=sounan:kaerazu pos=20, 134, 14 shaders=true
+shot 14_shrine_steps
+step go_15_shrine dim=sounan:kaerazu pos=49, 134, 36 shaders=true
+shot 15_shrine
+step go_16_fog_rope dim=sounan:kaerazu pos=64, 142, 36 shaders=true
+shot 16_fog_rope
+step go_17_bridge dim=sounan:kaerazu pos=77, 140, 50 shaders=true
+shot 17_bridge
+step go_18_hut dim=sounan:kaerazu pos=95, 132, 84 shaders=true
+shot 18_hut
+step go_19_hut_inside dim=sounan:kaerazu pos=84, 125, 133 shaders=true
+shot 19_hut_inside
+step go_20_pylon dim=sounan:kaerazu pos=74, 126, 131 shaders=true
+shot 20_pylon
+step go_21_tunnel_gate dim=sounan:kaerazu pos=6, 152, 111 shaders=true
+shot 21_tunnel_gate
+step go_22_tunnel_inside dim=sounan:kaerazu pos=120, 115, 143 shaders=true
+shot 22_tunnel_inside
+step go_23_trailhead dim=sounan:kaerazu pos=120, 113, 181 shaders=true
+shot 23_trailhead
+step lineup_spawn dim=sounan:kaerazu pos=158, 103, 246 shaders=true
+step lineup_mobs dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+shot 24_monsters
+step lineup_camera dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+shot 25_monsters_camera
+step go_38_nozoki_peek dim=sounan:kaerazu pos=20, 133, 6 shaders=true
+shot 38_nozoki_peek
+step go_39_yobigoe_light dim=sounan:kaerazu pos=-79, 153, -75 shaders=true
+shot 39_yobigoe_light
+step ushiro_attach dim=sounan:kaerazu pos=-25, 143, -29 shaders=true
+step go_40_ushiro_look_back dim=sounan:kaerazu pos=-7, 138, -13 shaders=true
+shot 40_ushiro_look_back
+step go_41_oyama_stalk dim=sounan:kaerazu pos=-7, 138, -13 shaders=true
+shot 41_oyama_stalk
+step go_42_sleeper dim=sounan:kaerazu pos=82, 125, 131 shaders=true
+shot 42_sleeper
+step go_43_utsurumono_camera dim=sounan:kaerazu pos=73, 126, 131 shaders=true
+shot 43_utsurumono_camera
+step go_26_fear_high dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+shot 26_fear_high
+step go_27_danger_high dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+shot 27_danger_high
+step go_28_phone_light dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+shot 28_phone_light
+step go_29_flare dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+shot 29_flare
+step go_30_flashlight_low dim=sounan:kaerazu pos=-61, 150, -61 shaders=true
+shot 30_flashlight_low
+finished
