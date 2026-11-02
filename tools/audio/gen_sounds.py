@@ -90,7 +90,8 @@ def encode(x, out_path, q):
     ch = 1 if x.ndim == 1 else 2
     data = (x if x.ndim == 1 else x.T).astype(np.float32).tobytes()
     cmd = [FFMPEG, "-y", "-loglevel", "error", "-f", "f32le", "-ar", str(dsp.SR), "-ac", str(ch), "-i", "pipe:0",
-           "-c:a", "libvorbis", "-q:a", str(q), "-map_metadata", "-1", out_path]
+           "-c:a", "libvorbis", "-q:a", str(q), "-map_metadata", "-1",
+           "-fflags", "+bitexact", "-flags:a", "+bitexact", out_path]  # byte-identical reruns
     subprocess.run(cmd, input=data, check=True)
 
 
@@ -221,6 +222,12 @@ def report(spec_dir=None, pattern=None):
                                         fmax=12000 if ent.ch == 1 else 8000)
     lines.append("-" * len(hdr))
     lines.append(f"{len(durations)} files, total {total / 1024 / 1024:.2f} MB")
+    lines.append("")
+    lines.append("Loop seam columns: 2nd-difference (click) energy in a 3 ms window around the wrap point,")
+    lines.append("as percentile rank among 400 interior positions and relative to their median; step = |x[0]-x[-1]|")
+    lines.append("relative to the median sample step.  Loops are built circularly (periodic noise/oscillators,")
+    lines.append("circular reverb), so a high value only means an event sits on the seam: game/chase starts on")
+    lines.append("its bar-1 downbeat drum hit by design.")
     with open(os.path.join(HERE, "report.txt"), "w", encoding="utf-8") as f:
         f.write("MEIKON sound report (measured on the decoded OGG files)\n\n")
         f.write("\n".join(lines) + "\n")

@@ -173,7 +173,7 @@ def paint_bride():
 
     # hair hanging over the face 7x14x1 at (82,0): strands with gaps
     hf = Box(82, 0, 7, 14, 1).regions()
-    strands = {0: 14, 1: 11, 2: 6, 4: 9, 5: 13, 6: 12}
+    strands = {0: 14, 1: 3, 3: 9, 5: 2, 6: 13}
     for k in ("front", "back"):
         x0, y0, w, h = hf[k]
         for x in range(w):

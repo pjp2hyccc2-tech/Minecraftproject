@@ -387,6 +387,9 @@ public final class GameManager {
     public static void newMansion(ServerLevel level, GameData data, long seed) {
         data.resetProgress(seed);
         long t = System.currentTimeMillis();
+        for (int cx = -3; cx <= 2; cx++) {
+            for (int cz = -3; cz <= 2; cz++) level.setChunkForced(cx, cz, true);
+        }
         mansion = MansionBuilder.build(level, seed);
         mansionSeed = seed;
         data.built = true;

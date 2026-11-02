@@ -58,8 +58,9 @@ public final class ClientEvents {
         boolean here = ModDimensions.isKakuriyo(mc.level);
         if (here) {
             // carry fear and danger to shader packs (rainStrength / thunderStrength); the biome has no rain
-            mc.level.setRainLevel(Mth.clamp(ClientState.fearShown / 100.0f, 0.0f, 1.0f));
-            mc.level.setThunderLevel(Mth.clamp(ClientState.dangerShown, 0.0f, 1.0f));
+            boolean shaders = ShaderCompat.active();
+            mc.level.setRainLevel(shaders ? Mth.clamp(ClientState.fearShown / 100.0f, 0.0f, 1.0f) : 0.0f);
+            mc.level.setThunderLevel(shaders ? Mth.clamp(ClientState.dangerShown, 0.0f, 1.0f) : 0.0f);
             if (ClientState.exhausted && mc.player.isSprinting()) mc.player.setSprinting(false);
             if (ClientState.exhausted) mc.options.keySprint.setDown(false);
             if (ClientState.captured) mc.options.keyUp.setDown(false);

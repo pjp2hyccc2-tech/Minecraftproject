@@ -192,6 +192,7 @@ public final class AutoShots {
             cmd(mc, "gamerule doDaylightCycle false");
             cmd(mc, "gamerule doMobSpawning false");
             cmd(mc, "time set 18000");
+            cmd(mc, "gamerule sendCommandFeedback false");
         }, 10);
         if (!SHADERS) {
             add("envelope", mc -> mc.setScreen(new EnvelopeScreen(mc.getUser().getName())), 12);
@@ -249,7 +250,10 @@ public final class AutoShots {
             cmd(mc, "meikon debug spawn bride_far");
         }, 40);
         snap("13_bride_far");
-        add("bride_away", mc -> cmd(mc, "tp @e[type=meikon:hanayome] 0 65 -22"), 10);
+        add("bride_away", mc -> {
+            cmd(mc, "tp @e[type=meikon:hanayome] 0 65 -22");
+            cmd(mc, "meikon debug lantern");
+        }, 10);
         room("dolls", "14_doll_room", 2.0f);
         room("butsuma", "15_butsuma", 4.0f);
         room("wedding", "16_wedding_hall", 2.0f);

@@ -115,11 +115,16 @@ public final class KakuriyoEffects extends DimensionSpecialEffects {
         r *= Mth.lerp(warm, 0.80f, 1.10f);
         g *= Mth.lerp(warm, 0.84f, 0.88f);
         b *= Mth.lerp(warm, 1.02f, 0.62f);
-        float dark = 1.0f - 0.22f * fear;
-        // moonlight stays faint and blue
-        if (sky > block) {
-            b += 0.02f * sky;
-        }
+        float dark = 1.0f - 0.15f * fear;
+        // the darkness is deep but never a flat black: a cold floor of light
+        r += 0.016f;
+        g += 0.020f;
+        b += 0.032f;
+        // moonlight in the courtyard: cold and blue
+        float moon = sky * sky * Math.max(0.0f, 1.0f - block);
+        r += moon * 0.045f;
+        g += moon * 0.058f;
+        b += moon * 0.105f;
         colors.set(Mth.clamp(r * dark, 0.0f, 1.0f), Mth.clamp(g * dark, 0.0f, 1.0f), Mth.clamp(b * dark, 0.0f, 1.0f));
     }
 }

@@ -2,30 +2,30 @@ MEIKON sound report (measured on the decoded OGG files)
 
 file                                     dur s  ch  peak dBFS  RMS dBFS      KB  notes
 --------------------------------------------------------------------------------------
-ambient/drone                            48.00   2      -7.49    -19.99   471.0  loop seam: rank 82%, hf x2.05, step x3.12
-ambient/drone_tense                      32.00   2      -3.91    -19.07   358.6  loop seam: rank 100%, hf x5.87, step x3.74
+ambient/drone                            48.00   2      -7.57    -19.97   688.5  loop seam: rank 76%, hf x1.84, step x1.22
+ambient/drone_tense                      32.00   2      -3.97    -19.02   521.1  loop seam: rank 62%, hf x1.14, step x3.82
 ambient/wind                             30.00   2      -3.21    -21.13   421.3  loop seam: rank 41%, hf x0.44, step x2.03
-ambient/koto_1                           12.00   2      -3.71    -29.09   151.7  
-ambient/koto_2                           10.00   2      -3.38    -31.75   126.2  
-ambient/koto_3                            9.00   2      -3.82    -31.21   115.4  
-ambient/koto_4                           14.00   2      -2.82    -30.56   162.7  
-ambient/creak_1                           1.59   1      -3.01    -25.42    15.7  
-ambient/creak_2                           2.17   1      -3.17    -17.25    20.6  
-ambient/creak_3                           2.67   1      -3.06    -27.34    26.5  
-ambient/creak_4                           1.16   1      -3.05    -17.51    11.3  
-ambient/creak_5                           1.86   1      -2.88    -26.45    18.8  
-ambient/creak_6                           1.80   1      -3.54    -23.85    16.4  
-ambient/footsteps_above_1                 5.00   1      -3.08    -21.35    10.9  
+ambient/koto_1                           12.00   2      -3.83    -29.35   150.3  
+ambient/koto_2                           10.00   2      -3.66    -32.13   124.4  
+ambient/koto_3                            9.00   2      -3.83    -31.06   114.4  
+ambient/koto_4                           14.00   2      -2.93    -30.76   161.6  
+ambient/creak_1                           1.59   1      -2.98    -25.26    14.0  
+ambient/creak_2                           2.27   1      -3.19    -17.36    18.5  
+ambient/creak_3                           2.68   1      -3.43    -27.01    23.9  
+ambient/creak_4                           1.16   1      -3.03    -17.48    10.4  
+ambient/creak_5                           1.86   1      -3.51    -26.02    17.4  
+ambient/creak_6                           1.80   1      -3.28    -23.31    15.5  
+ambient/footsteps_above_1                 5.00   1      -3.08    -21.34    10.9  
 ambient/footsteps_above_2                 6.00   1      -2.75    -20.75    11.9  
-ambient/footsteps_above_3                 5.20   1      -2.97    -22.50    14.5  
-ambient/knock_1                           1.34   1      -2.92    -23.78    11.4  
-ambient/knock_2                           3.06   1      -2.93    -26.61    17.9  
-ambient/knock_3                           2.63   1      -2.97    -27.04    15.0  
-ambient/knock_4                           2.40   1      -2.93    -30.52    10.7  
+ambient/footsteps_above_3                 5.20   1      -2.97    -22.49    14.5  
+ambient/knock_1                           1.34   1      -3.10    -23.76    10.7  
+ambient/knock_2                           3.06   1      -2.81    -26.42    17.0  
+ambient/knock_3                           2.63   1      -2.94    -26.97    14.2  
+ambient/knock_4                           2.40   1      -2.95    -30.46    10.4  
 ambient/whisper_1                         1.83   1      -8.45    -24.67    13.3  
 ambient/whisper_2                         1.17   1      -8.67    -25.02    10.6  
 ambient/whisper_3                         1.53   1      -8.63    -26.58    11.6  
-ambient/whisper_4                         1.53   1      -8.18    -23.40    12.6  
+ambient/whisper_4                         1.53   1      -8.18    -23.40    12.5  
 ambient/whisper_5                         2.25   1      -8.34    -27.75    20.6  
 ambient/whisper_6                         1.71   1      -8.40    -29.17    11.7  
 ambient/door_slam_1                       2.63   1      -2.83    -22.06    13.6  
@@ -36,48 +36,48 @@ ambient/crying_1                          5.67   1      -5.06    -22.13    27.0
 ambient/crying_2                          5.48   1      -5.14    -23.25    25.0  
 ambient/clock_chime                       8.50   1      -2.94    -19.16    44.5  
 ambient/temple_bell                      10.00   1      -3.45    -19.64    20.3  
-ambient/drip_1                            1.10   1      -6.19    -29.14    10.3  
-ambient/drip_2                            1.11   1      -5.00    -27.20    10.5  
-ambient/drip_3                            1.16   1      -5.41    -27.89    10.6  
-ambient/drip_4                            1.45   1      -5.88    -28.63    13.7  
-ambient/scratch_1                         2.52   1      -3.95    -21.81    20.6  
-ambient/scratch_2                         2.31   1      -4.23    -20.83    20.5  
+ambient/drip_1                            1.19   1      -4.98    -26.79     9.9  
+ambient/drip_2                            1.11   1      -4.50    -26.22     9.9  
+ambient/drip_3                            1.22   1      -5.23    -26.85    10.0  
+ambient/drip_4                            1.45   1      -5.13    -27.32    12.8  
+ambient/scratch_1                         2.52   1      -4.02    -21.08    17.7  
+ambient/scratch_2                         2.31   1      -4.40    -21.02    17.2  
 ambient/scratch_3                         2.64   1      -4.99    -25.08    28.5  
-ambient/thud_1                            1.28   1      -2.84    -19.24     6.2  
+ambient/thud_1                            1.28   1      -2.84    -19.24     6.1  
 ambient/thud_2                            1.50   1      -2.95    -20.11     6.6  
 ambient/thud_3                            1.41   1      -3.26    -18.47     6.6  
 ambient/tinnitus                          4.00   1     -13.98    -22.13    20.6  
-bride/hum                                20.00   1      -4.03    -16.95    82.6  loop seam: rank 4%, hf x0.03, step x0.18
+bride/hum                                20.00   1      -4.03    -16.95    82.5  loop seam: rank 4%, hf x0.03, step x0.18
 bride/step_1                              0.78   1      -4.88    -25.05     6.9  
 bride/step_2                              0.85   1      -5.05    -23.45     7.2  
 bride/step_3                              0.86   1      -5.05    -23.89     7.1  
-bride/step_4                              0.96   1      -5.04    -23.49     9.3  
-bride/step_5                              0.98   1      -4.91    -24.11     9.1  
-bride/step_6                              1.19   1      -4.87    -22.10    11.5  
+bride/step_4                              0.96   1      -5.04    -23.49     8.7  
+bride/step_5                              0.98   1      -4.91    -24.15     8.6  
+bride/step_6                              1.19   1      -4.87    -22.11    11.5  
 bride/screech_1                           3.14   1      -1.22    -14.56    31.5  
-bride/screech_2                           3.10   1      -1.15    -15.11    29.1  
-bride/breath_1                            3.50   1      -7.88    -31.74    17.8  
-bride/breath_2                            3.02   1      -8.34    -30.10    15.5  
-bride/breath_3                            3.92   1      -8.24    -28.63    19.4  
+bride/screech_2                           3.10   1      -1.15    -15.11    29.0  
+bride/breath_1                            3.50   1      -8.15    -28.40    18.0  
+bride/breath_2                            3.02   1      -7.96    -28.23    15.6  
+bride/breath_3                            3.92   1      -7.90    -28.21    19.4  
 bride/rustle_1                            0.95   1      -8.42    -28.27    11.6  
 bride/rustle_2                            1.37   1      -8.45    -27.83    15.2  
 bride/rustle_3                            0.81   1      -9.22    -28.60    10.5  
-bride/laugh_1                             2.10   1      -5.21    -26.95    14.5  
-bride/laugh_2                             2.33   1      -5.08    -24.79    16.3  
+bride/laugh_1                             2.10   1      -5.17    -26.96    11.9  
+bride/laugh_2                             2.33   1      -5.27    -24.94    13.9  
 bride/door                                1.32   1      -1.51    -20.63    13.2  
 doll/move_1                               0.39   1      -4.16    -24.35     6.6  
 doll/move_2                               0.35   1      -4.20    -26.58     6.2  
 doll/move_3                               0.32   1      -4.62    -28.78     6.0  
 doll/move_4                               0.38   1      -4.42    -25.35     6.4  
 doll/move_5                               0.47   1      -4.13    -24.06     7.7  
-doll/head_turn_1                          1.77   1      -5.73    -27.81    19.9  
-doll/head_turn_2                          1.35   1      -4.96    -27.31    16.2  
+doll/head_turn_1                          1.77   1      -5.70    -27.07    19.9  
+doll/head_turn_2                          1.39   1      -5.42    -26.24    16.2  
 doll/attack                               1.74   1      -1.78    -16.01    19.7  
 shadow/whoosh_1                           2.12   1      -4.35    -21.90    17.9  
-shadow/whoosh_2                           2.00   1      -4.29    -24.29    16.4  
+shadow/whoosh_2                           2.00   1      -4.29    -24.29    16.3  
 shadow/whoosh_3                           2.84   1      -4.02    -20.84    22.8  
-shadow/drone                              6.00   1      -9.17    -20.04    42.6  loop seam: rank 60%, hf x1.63, step x4.48
-player/heartbeat                          0.62   1      -2.93    -17.41     4.6  
+shadow/drone                              6.00   1      -9.19    -20.01    55.1  loop seam: rank 29%, hf x0.14, step x0.57
+player/heartbeat                          0.62   1      -2.93    -17.41     4.5  
 player/breath_fear_1                      2.87   1      -8.48    -26.08    15.1  
 player/breath_fear_2                      2.53   1      -8.58    -24.10    14.0  
 player/breath_fear_3                      2.78   1      -8.28    -26.17    18.3  
@@ -86,43 +86,49 @@ player/gasp_2                             0.83   1      -5.09    -21.79     7.1
 player/breath_exhausted_1                 3.87   1      -6.22    -22.49    19.9  
 player/breath_exhausted_2                 4.27   1      -6.24    -25.31    21.2  
 game/bell_chime_1                         1.12   1      -3.12    -20.75    11.2  
-game/bell_chime_2                         0.86   1      -3.15    -23.72     7.8  
+game/bell_chime_2                         0.86   1      -3.15    -23.72     7.7  
 game/bell_chime_3                         1.51   1      -3.10    -20.77    15.9  
-game/bell_get                             4.00   2      -2.05    -22.40    63.0  
+game/bell_get                             4.00   2      -2.05    -22.40    62.9  
 game/jumpscare_1                          2.30   2      -0.79     -8.18    39.7  
-game/jumpscare_2                          1.90   2      -0.71     -8.25    31.6  
+game/jumpscare_2                          1.90   2      -0.71     -8.25    31.5  
 game/stinger_1                            3.97   2      -1.51    -17.48    61.1  
-game/stinger_2                            4.98   2      -1.58    -17.95    69.3  
-game/stinger_3                            3.44   2      -1.65    -18.32    52.4  
+game/stinger_2                            4.98   2      -1.58    -17.95    69.2  
+game/stinger_3                            3.44   2      -1.65    -18.32    52.3  
 game/chase                               16.00   2      -1.87    -15.01   248.3  loop seam: rank 82%, hf x3.34, step x12.42
-game/phase                                6.00   2      -1.95    -17.56    53.9  
+game/phase                                6.00   2      -1.95    -17.56    53.8  
 game/death                                5.00   2      -1.69    -15.04    54.7  
-game/fusuma_1                             1.11   1      -3.69    -22.66    11.5  
-game/fusuma_2                             1.06   1      -4.44    -20.41    11.0  
-game/fusuma_3                             1.59   1      -4.46    -21.32    15.7  
-game/closet_1                             1.22   1      -3.72    -19.75    13.2  
-game/closet_2                             1.05   1      -3.99    -20.81    10.7  
-game/lantern_on                           1.28   1      -6.85    -32.06    14.0  
+game/fusuma_1                             1.13   1      -3.49    -22.64    11.1  
+game/fusuma_2                             1.07   1      -3.98    -20.47    10.5  
+game/fusuma_3                             1.59   1      -3.48    -20.93    14.6  
+game/closet_1                             1.22   1      -4.33    -19.96    12.1  
+game/closet_2                             1.05   1      -3.90    -21.16    10.2  
+game/lantern_on                           1.28   1      -3.54    -25.61    14.7  
 game/lantern_off                          0.71   1      -7.05    -23.81     7.2  
-game/paper_1                              0.95   1      -8.55    -29.51    12.5  
-game/paper_2                              0.74   1      -7.83    -29.90    10.8  
-game/ofuda_burn                           2.62   1      -4.96    -31.16    25.7  
-game/salt                                 0.99   1      -6.62    -39.59    12.9  
+game/paper_1                              0.95   1      -8.24    -27.24    12.6  
+game/paper_2                              0.74   1      -8.68    -27.33    10.8  
+game/ofuda_burn                           2.62   1      -4.84    -24.34    25.9  
+game/salt                                 0.96   1      -6.11    -29.10    12.7  
 game/marble_1                             1.62   1      -4.10    -27.53    17.2  
 game/marble_2                             1.16   1      -3.78    -26.41    12.8  
 game/marble_3                             0.94   1      -4.04    -27.93    10.7  
-game/drawer_1                             1.07   1      -4.38    -21.53    11.2  
-game/drawer_2                             0.80   1      -3.90    -23.99     9.0  
+game/drawer_1                             1.07   1      -4.08    -21.19    10.7  
+game/drawer_2                             0.80   1      -4.05    -24.15     8.7  
 game/unlock                               1.58   1      -3.01    -23.55    15.0  
-game/candle                               0.69   1      -8.65    -31.77     8.8  
+game/candle                               0.69   1      -7.96    -28.61     8.8  
 game/puzzle_fail                          2.06   1      -3.27    -21.91    15.5  
-game/well_1                               3.63   1      -4.03    -22.46    32.6  
+game/well_1                               3.60   1      -4.23    -22.62    31.6  
 game/well_2                               2.71   1      -3.99    -23.76    20.9  
 game/gate_open                            6.00   2      -2.18    -18.65   105.0  
 game/ritual                               6.20   2      -2.31    -20.57   121.6  
-music/title                              40.00   2      -4.24    -19.98   704.9  loop seam: rank 98%, hf x4575.70, step x43.95
+music/title                              40.00   2      -3.12    -19.98   710.5  loop seam: rank 24%, hf x0.28, step x0.34
 music/gagaku                             40.00   2      -4.52    -20.00   760.6  loop seam: rank 8%, hf x0.44, step x1.21
-music/ending                             60.00   2      -3.31    -20.58   997.5  
+music/ending                             60.00   2      -3.31    -20.58   997.4  
 music/bad_ending                         30.00   2      -1.88    -18.11   551.9  
 --------------------------------------------------------------------------------------
-122 files, total 7.25 MB
+122 files, total 7.60 MB
+
+Loop seam columns: 2nd-difference (click) energy in a 3 ms window around the wrap point,
+as percentile rank among 400 interior positions and relative to their median; step = |x[0]-x[-1]|
+relative to the median sample step.  Loops are built circularly (periodic noise/oscillators,
+circular reverb), so a high value only means an event sits on the seam: game/chase starts on
+its bar-1 downbeat drum hit by design.

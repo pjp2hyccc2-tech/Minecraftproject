@@ -46,7 +46,7 @@ def title(rng, i=1):
             s = ins.koto(dsp.hz(nm, rng.uniform(-12, 6)), 6.0, rng, vel=vel, bend=bend)
             dsp.place(ev, dsp.pan(s, rng.uniform(-0.5, 0.5)), t0 + dt)
     t = 0.8
-    while t < L:
+    while t < L - 1.5:  # no chime attack right on the loop point
         p = rng.uniform(-0.9, 0.9)
         base = rng.uniform(2100, 3300)
         for k in range(rng.integers(1, 4)):

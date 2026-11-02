@@ -1285,12 +1285,30 @@ public final class MansionBuilder {
         level.addFreshEntity(bride);
     }
 
+    /** The free floor cell of a room closest to a point (furniture cells are skipped). */
+    private BlockPos freeNear(Info i, BlockPos p) {
+        Room r = i.room;
+        BlockPos best = p;
+        int bestD = Integer.MAX_VALUE;
+        for (int x = r.x1; x <= r.x2; x++) {
+            for (int z = r.z1; z <= r.z2; z++) {
+                if (i.used[x - r.x1][z - r.z1]) continue;
+                int d = (x - p.getX()) * (x - p.getX()) + (z - p.getZ()) * (z - p.getZ());
+                if (d < bestD) {
+                    bestD = d;
+                    best = new BlockPos(x, Y + 1, z);
+                }
+            }
+        }
+        return best;
+    }
+
     // ================================================================== waypoints for the bride
     private void waypoints() {
         for (Info i : infos) {
             if (i.room.type == Room.Type.SAFE) continue;
             if (i.room.type == Room.Type.WEDDING && i != side(0, 1)) continue;
-            BlockPos c = i.room.type == Room.Type.WEDDING ? new BlockPos(0, Y + 1, -22) : i.room.center();
+            BlockPos c = i.room.type == Room.Type.WEDDING ? new BlockPos(0, Y + 1, -22) : freeNear(i, i.room.center());
             m.waypoints.add(c);
         }
         for (int a = -16; a <= 16; a += 8) {

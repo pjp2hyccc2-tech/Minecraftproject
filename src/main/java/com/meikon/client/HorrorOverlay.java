@@ -93,10 +93,10 @@ public final class HorrorOverlay {
             float a = (danger - 0.3f) * 0.5f * (calm ? 0.6f : 0.6f + beat * 0.4f) * strength;
             image(g, VIGNETTE, 0, 0, w, h, 0.55f, 0.0f, 0.02f, a);
         }
-        if (danger > 0.75f) {
-            float a = (danger - 0.75f) * 3.0f;
-            int off = (int) ((1.0f - Math.min(1.0f, a)) * 40);
-            image(g, HANDS, -off, -off / 2, w + off * 2, h + off, 1.0f, 1.0f, 1.0f, Math.min(0.9f, a));
+        if (danger > 0.85f) {
+            float a = (danger - 0.85f) * 4.0f;
+            int off = (int) ((1.0f - Math.min(1.0f, a)) * 60) + w / 10;
+            image(g, HANDS, -off, -off / 2, w + off * 2, h + off, 0.55f, 0.55f, 0.6f, Math.min(0.32f, a * 0.32f));
         }
         // glitches when terror peaks
         if (!calm && fear > 0.86f && RAND.nextFloat() < (fear - 0.86f) * 0.9f) {
