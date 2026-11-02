@@ -1,0 +1,46 @@
+[10:06:04] [modloading-worker-0/DEBUG] [ne.mi.fm.ja.AutomaticEventSubscriber/LOADING]: Auto-subscribing com.birdiecraft.selftest.ServerSelfTest to FORGE
+java.lang.UnsupportedOperationException: Reflective setAccessible(true) disabled
+java.lang.IllegalAccessException: class io.netty.util.internal.PlatformDependent0$7 (in module io.netty.common) cannot access class jdk.internal.misc.Unsafe (in module java.base) because module java.base does not export jdk.internal.misc to module io.netty.common
+	at jdk.internal.reflect.Reflection.newIllegalAccessException(Reflection.java:392) ~[?:?] {}
+[10:06:04] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/birdiecraft-common.toml is not correct. Correcting
+[10:06:06] [main/ERROR] [minecraft/DedicatedServerProperties]: No key layers in MapLike[{}]
+[10:06:13] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] building coral_bay at BlockPos{x=0, y=-61, z=0}
+[10:06:16] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] still building...
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 par 4 376Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 par 4 378Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 3 par 3 174Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 4 par 5 520Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 5 par 4 336Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 6 par 4 352Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 7 par 3 188Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 8 par 5 534Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 9 par 4 332Y tee=true cup=true
+[10:06:20] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] match started with 3 CPUs over 3 holes
+[10:06:21] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Riku shot 1 with 1W -> REST lie ROUGH at (7, -60, 160) 75Y to pin
+[10:06:21] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Hana shot 1 with 1W -> REST lie FAIRWAY at (0, -60, 154) 86Y to pin
+[10:06:21] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Tetsu shot 1 with 1W -> REST lie ROUGH at (7, -60, 147) 101Y to pin
+[10:06:22] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Tetsu shot 2 with 7I -> REST lie GREEN at (0, -60, 194) 7Y to pin
+[10:06:22] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Hana shot 2 with 8I -> REST lie GREEN at (-1, -60, 190) 14Y to pin
+[10:06:22] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Riku shot 2 with 8I -> REST lie GREEN at (-2, -60, 196) 1Y to pin
+[10:06:22] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Hana shot 3 with PT -> IN_CUP lie GREEN at (-2, -60, 197) 0Y to pin
+[10:06:23] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Tetsu shot 3 with PT -> IN_CUP lie GREEN at (-2, -60, 197) 0Y to pin
+[10:06:23] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Riku shot 3 with PT -> REST lie GREEN at (-2, -60, 197) 2Y to pin
+[10:06:23] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 1 Riku shot 4 with PT -> IN_CUP lie GREEN at (-2, -60, 197) 0Y to pin
+[10:06:24] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 Hana shot 1 with 1W -> REST lie ROUGH at (-63, -60, 43) 74Y to pin
+[10:06:24] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 Riku shot 1 with 1W -> REST lie FAIRWAY at (-58, -60, 21) 28Y to pin
+[10:06:25] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 Tetsu shot 1 with 1W -> REST lie FAIRWAY at (-57, -60, 51) 87Y to pin
+[10:06:25] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 Tetsu shot 2 with 1W -> IN_CUP lie GREEN at (-54, -60, 8) 0Y to pin
+[10:06:25] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 Hana shot 2 with 9I -> REST lie GREEN at (-57, -60, 6) 7Y to pin
+[10:06:26] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 Riku shot 2 with AW -> REST lie GREEN at (-54, -60, 7) 1Y to pin
+[10:06:26] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 Hana shot 3 with PT -> IN_CUP lie GREEN at (-54, -60, 8) 0Y to pin
+[10:06:26] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 2 Riku shot 3 with PT -> IN_CUP lie GREEN at (-54, -60, 8) 0Y to pin
+[10:06:27] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 3 Tetsu shot 1 with 3I -> REST lie FRINGE at (-125, -60, 99) 15Y to pin
+[10:06:27] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 3 Riku shot 1 with 5I -> REST lie GREEN at (-119, -60, 91) 6Y to pin
+[10:06:28] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 3 Hana shot 1 with 6I -> REST lie GREEN at (-122, -60, 92) 2Y to pin
+[10:06:28] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 3 Tetsu shot 2 with PT -> IN_CUP lie GREEN at (-121, -60, 93) 0Y to pin
+[10:06:28] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 3 Riku shot 2 with PT -> IN_CUP lie GREEN at (-121, -60, 93) 0Y to pin
+[10:06:28] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] hole 3 Hana shot 2 with PT -> IN_CUP lie GREEN at (-121, -60, 93) 0Y to pin
+[10:06:28] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] Riku: 4 3 2  total 9  shots 9 perfect 1
+[10:06:28] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] Hana: 3 3 2  total 8  shots 8 perfect 2
+[10:06:28] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] Tetsu: 3 2 2  total 7  shots 7 perfect 0
+[10:06:28] [Server thread/INFO] [co.bi.BirdieCraft/]: [SelfTest] SELFTEST PASS
