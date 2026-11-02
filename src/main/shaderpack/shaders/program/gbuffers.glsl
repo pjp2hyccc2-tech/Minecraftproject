@@ -236,7 +236,13 @@ void main() {
     if (mat == BLK_WATER) {
         // the mountain stream: dark, cold, the beam glints on its ripples
         vec3 wp = playerPos + cameraPosition;
-        if (N.y > 0.5) N = waterRipples(wp);
+        if (N.y > 0.5) {
+            N = waterRipples(wp);
+        } else {
+            // side faces (where the stream spills over an edge): broken, never a mirror
+            vec3 rp = waterRipples(wp + vec3(wp.y * 1.7, 0.0, wp.y * 1.3));
+            N = normalize(N + vec3(rp.x, 0.0, rp.z) * 3.0 + vec3(0.0, rp.x - rp.z, 0.0) * 2.0);
+        }
         vec3 V = -normalize(playerPos);
         float NdotV = saturate(dot(N, V));
         float F = 0.02 + 0.98 * pow(1.0 - NdotV, 5.0);
@@ -254,7 +260,8 @@ void main() {
         vec3 body = shadeSurface(lin * BODY, N, playerPos, lm, 1.0, vec3(0.0), mat, dither, true, glow);
         body += handLightsForward(lin * BODY, playerPos, vec3(0.0, 1.0, 0.0), 0.0, vec2(0.0));
         // two specular lobes of the hand lights on the moving surface: sharp glints + sheen
-        vec3 glints = handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(1.6, 0.92))
+        float top = step(0.5, normalW.y);                     // spilling side faces glint less
+        vec3 glints = handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(mix(0.7, 1.6, top), 0.92))
                     + handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(0.45, 0.55));
         // turbulent facets that happen to face the lamp: glitter carried by the current
         if (anyHandLight()) {

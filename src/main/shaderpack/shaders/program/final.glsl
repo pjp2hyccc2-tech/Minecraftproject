@@ -68,22 +68,18 @@ vec3 grade(vec3 c, float F, float D) {
     // cold blue-grey dark; danger drags the deep shadows toward red
     vec3 shadowTint = mix(vec3(0.86, 0.96, 1.15), vec3(1.32, 0.70, 0.64), saturate(D * 0.70));
     float contrast = 1.06 + 0.08 * F;
-    vec3 lift = mix(vec3(0.010, 0.012, 0.016), vec3(0.015, 0.008, 0.008), D);
 #elif defined WORLD_OVERWORLD
     float sat = 0.68 * (1.0 - 0.25 * rainAmount());
     vec3 shadowTint = vec3(0.93, 0.98, 1.08);
     float contrast = 1.04;
-    vec3 lift = vec3(0.008, 0.009, 0.012);
 #elif defined WORLD_NETHER
     float sat = 0.72;
     vec3 shadowTint = vec3(1.04, 0.97, 0.95);
     float contrast = 1.05;
-    vec3 lift = vec3(0.010, 0.007, 0.006);
 #else
     float sat = 0.66;
     vec3 shadowTint = vec3(0.98, 0.95, 1.06);
     float contrast = 1.05;
-    vec3 lift = vec3(0.008, 0.007, 0.010);
 #endif
     float l = luma(c);
     // alarm colours (the pink tape, the orange jacket, the flare, jizo bibs) keep some colour
@@ -96,7 +92,20 @@ vec3 grade(vec3 c, float F, float D) {
     c *= mix(shadowTint, vec3(1.0), smoothstep(0.0, 0.42, l));
 #endif
     c = max((c - 0.40) * contrast + 0.40, vec3(0.0));
-    return c + lift * (1.0 - c);
+    return c;
+}
+
+// the floor of the darkness (added after the vignette: the corners never go pure black)
+vec3 liftColor(float D) {
+#if defined WORLD_MOUNTAIN
+    return mix(vec3(0.015, 0.018, 0.024), vec3(0.020, 0.010, 0.010), D);
+#elif defined WORLD_OVERWORLD
+    return vec3(0.008, 0.009, 0.012);
+#elif defined WORLD_NETHER
+    return vec3(0.010, 0.007, 0.006);
+#else
+    return vec3(0.008, 0.007, 0.010);
+#endif
 }
 
 #if defined WORLD_MOUNTAIN && defined PAREIDOLIA
@@ -265,6 +274,7 @@ void main() {
 #endif
     float vig = smoothstep(vInner, vInner + 0.85, r);
     color *= 1.0 - saturate(vig * vStrength);
+    if (cam < 0.5) color += liftColor(D) * (1.0 - color) * (1.0 - 0.9 * darknessFactor);
 
 #ifdef WORLD_MOUNTAIN
     // ---- capture: everything but the centre is crushed -----------------------------------

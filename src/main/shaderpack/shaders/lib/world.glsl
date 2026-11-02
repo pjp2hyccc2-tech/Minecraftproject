@@ -52,7 +52,7 @@ const vec3 FLAME_DEEP = vec3(1.00, 0.42, 0.16);
     // through gaps (shadow map): bright cold patches and shafts, everything else is very dark.
     const vec3  MOON_LIGHT   = vec3(0.30, 0.39, 0.56) * 0.70;
     const vec3  SKY_AMBIENT  = vec3(0.15, 0.19, 0.27) * 0.026;   // the sky dome, mostly blocked by needles
-    const vec3  MIN_LIGHT    = vec3(0.42, 0.50, 0.70) * 0.0022;  // never quite black
+    const vec3  MIN_LIGHT    = vec3(0.42, 0.50, 0.70) * 0.0040;  // never quite black
     const vec3  SKY_ZENITH   = vec3(0.0030, 0.0040, 0.0064);
     const vec3  SKY_HORIZON  = vec3(0.0105, 0.0128, 0.0170);
     // radiance of deep fog lit by the moonlight that leaks through the canopy: a touch

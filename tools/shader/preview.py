@@ -442,9 +442,9 @@ def lcg(seed):
 class Scene:
     """voxel scene, world coordinates = index + origin"""
 
-    def __init__(self):
-        self.sx, self.sy, self.sz = 64, 48, 64
-        self.origin = np.array([0, 58, 0])
+    def __init__(self, size=(64, 48, 64), origin=(0, 58, 0)):
+        self.sx, self.sy, self.sz = size
+        self.origin = np.array(origin)
         self.b = np.zeros((self.sx, self.sy, self.sz), np.int16)
         self.ground = np.zeros((self.sx, self.sz), np.int32)
         self.trunks = []
@@ -777,6 +777,164 @@ class Scene:
         return dict(pos=f(P, 3), nrm=f(N, 3), col=f(Cc, 4), uv0=f(U0, 2), uv1=f(U1, 2), ent=f(E, 4), mid=f(M, 4))
 
 
+
+# ---- the real mountain: tools/terrain's baked terrain + a port of the chunk decorator -------
+TERRAIN_FILE = os.environ.get("SOUNAN_TERRAIN") or os.path.normpath(
+    os.path.join(ROOT, "..", "..", "resources", "data", "sounan", "terrain", "terrain.bin.gz"))
+M64 = (1 << 64) - 1
+
+
+def _mix64(z):
+    z &= M64
+    z = ((z ^ (z >> 30)) * 0xbf58476d1ce4e5b9) & M64
+    z = ((z ^ (z >> 27)) * 0x94d049bb133111eb) & M64
+    return z ^ (z >> 31)
+
+
+def jhash(x, z, salt):
+    """com.sounan.world.Decorator.hash (Java int)"""
+    v = (x * 0x9E3779B97F4A7C15 + z * 0xC2B2AE3D27D4EB4F + salt * 0x165667B19E3779F9 + 0x2545F4914F6CDD1D) & M64
+    r = _mix64(v) & 0xFFFFFFFF
+    return r - (1 << 32) if r >= (1 << 31) else r
+
+
+def jrand(x, z, salt):
+    return ((jhash(x, z, salt) & 0xFFFFFFFF) >> 1) / 2147483648.0
+
+
+class Terrain:
+    def __init__(self, path=TERRAIN_FILE):
+        import gzip
+        import struct
+        raw = gzip.open(path).read()
+        assert raw[:4] == b"SNTR", "bad terrain magic"
+        self.size, self.org = struct.unpack(">Hh", raw[4:8])
+        n = self.size
+        planes = np.frombuffer(raw[8:8 + 5 * n * n], np.uint8).reshape(5, n, n)
+        self.h, self.surf, self.trees, self.water, self.area = (p.astype(np.int32) for p in planes)
+
+    def _get(self, plane, x, z, outside):
+        i, j = x - self.org, z - self.org
+        if 0 <= i < self.size and 0 <= j < self.size:
+            return int(plane[j, i])
+        return outside
+
+    def height(self, x, z): return self._get(self.h, x, z, 236)
+    def surface(self, x, z): return self._get(self.surf, x, z, 3)
+    def tree(self, x, z): return self._get(self.trees, x, z, 0)
+    def wat(self, x, z): return self._get(self.water, x, z, 0)
+
+
+class TerrainScene(Scene):
+    """a 72x72 piece of Kaerazu-yama around (cx, cz), decorated like MountainGenerator"""
+    SURF = {0: FLOOR, 1: MOSS, 2: TRAIL, 3: ROCK, 4: STONES, 5: STONES, 6: ASPHALT, 7: DIRT, 8: ROCK}
+
+    def __init__(self, terrain, cx, cz, half=36):
+        self.t = terrain
+        self.x0, self.z0 = int(cx) - half, int(cz) - half
+        hs = [terrain.height(x, z) for x in range(self.x0, self.x0 + 2 * half) for z in range(self.z0, self.z0 + 2 * half)]
+        y0 = min(hs) - 4
+        super().__init__(size=(2 * half, max(hs) + 26 - y0, 2 * half), origin=(self.x0, y0, self.z0))
+
+    def build(self):
+        t, o = self.t, self.origin
+        X0, Z0, X1, Z1 = self.x0, self.z0, self.x0 + self.sx - 1, self.z0 + self.sz - 1
+        for i in range(self.sx):
+            for k in range(self.sz):
+                x, z = X0 + i, Z0 + k
+                h = t.height(x, z)
+                self.ground[i, k] = h
+                for y in range(o[1], h):
+                    self.set(x, y, z, DIRT if y >= h - 3 and t.surface(x, z) != 3 else ROCK)
+                self.set(x, h, z, self.SURF.get(t.surface(x, z), FLOOR))
+                for y in range(h + 1, t.wat(x, z) + 1):
+                    self.set(x, y, z, WATER)
+
+        def soft(x, y, z, b):
+            if X0 <= x <= X1 and Z0 <= z <= Z1 and self.get(x, y, z) == AIR:
+                self.set(x, y, z, b)
+        # cedars (Decorator.collectTrees / makeTree / trunk / crown)
+        trees = []
+        for gx in range((X0 - 4) // 3, (X1 + 4) // 3 + 1):
+            for gz in range((Z0 - 4) // 3, (Z1 + 4) // 3 + 1):
+                x = gx * 3 + jhash(gx, gz, 1) % 3
+                z = gz * 3 + jhash(gx, gz, 2) % 3
+                d = t.tree(x, z) / 255.0
+                if d <= 0.0 or jrand(gx, gz, 3) > d * 0.66:
+                    continue
+                if t.surface(x, z) not in (0, 1, 8, 3, 7) or t.wat(x, z) > 0:
+                    continue
+                base = t.height(x, z)
+                hh = 14 + jhash(x, z, 11) % 8
+                crown = base + int(hh * 0.46) + jhash(x, z, 12) % 3
+                trees.append((x, z, base, hh, crown, 2.0 + jrand(x, z, 13) * 1.1))
+        for (x, z, base, hh, crown, rad) in trees:
+            if X0 <= x <= X1 and Z0 <= z <= Z1:
+                for y in range(base + 1, base + hh + 1):
+                    self.set(x, y, z, BARK)
+                self.trunks.append((x - o[0], base, z - o[2], base + hh))
+        for (x, z, base, hh, crown, rad) in trees:
+            top = base + hh + 1
+            span = max(1, top - crown)
+            for y in range(crown, top + 1):
+                rel = (y - crown) / span
+                r = rad * (1.0 - rel) ** 0.85 + 0.35
+                if y == crown:
+                    r *= 0.7
+                ri = int(math.ceil(r))
+                for dx in range(-ri, ri + 1):
+                    for dz in range(-ri, ri + 1):
+                        xx, zz = x + dx, z + dz
+                        jit = (jrand(xx * 7 + y, zz * 13 - y, 17) - 0.5) * 0.9
+                        if dx * dx + dz * dz > r * r + jit or jrand(xx + y * 31, zz, 19) < 0.05:
+                            continue
+                        soft(xx, y, zz, LEAVES)
+        # boulders, fallen logs
+        for gx in range((X0 - 3) // 11, (X1 + 3) // 11 + 1):
+            for gz in range((Z0 - 3) // 11, (Z1 + 3) // 11 + 1):
+                if jrand(gx, gz, 31) > 0.2:
+                    continue
+                cx, cz = gx * 11 + jhash(gx, gz, 32) % 11, gz * 11 + jhash(gx, gz, 33) % 11
+                if t.tree(cx, cz) < 60 or t.wat(cx, cz) > 0 or t.surface(cx, cz) == 2:
+                    continue
+                r = 1 + jhash(gx, gz, 34) % 2
+                base = t.height(cx, cz)
+                for dx in range(-r, r + 1):
+                    for dz in range(-r, r + 1):
+                        x, z = cx + dx, cz + dz
+                        if t.surface(x, z) == 2:
+                            continue
+                        hh = r + 1 - max(abs(dx), abs(dz)) - (1 if jrand(x, z, 35) < 0.4 else 0)
+                        for y in range(t.height(x, z) + 1, base + hh + 1):
+                            soft(x, y, z, ROCK)
+        for gx in range((X0 - 8) // 14, (X1 + 8) // 14 + 1):
+            for gz in range((Z0 - 8) // 14, (Z1 + 8) // 14 + 1):
+                if jrand(gx, gz, 41) > 0.24:
+                    continue
+                sx_, sz_ = gx * 14 + jhash(gx, gz, 42) % 14, gz * 14 + jhash(gx, gz, 43) % 14
+                if t.tree(sx_, sz_) < 80:
+                    continue
+                along_x = (jhash(gx, gz, 44) & 1) == 0
+                for kk in range(4 + jhash(gx, gz, 45) % 4):
+                    x, z = sx_ + (kk if along_x else 0), sz_ + (0 if along_x else kk)
+                    if t.surface(x, z) == 2 or t.wat(x, z) > 0:
+                        break
+                    soft(x, t.height(x, z) + 1, z, BARK)
+        # undergrowth: ferns (large ferns as two), dead bushes
+        for x in range(X0, X1 + 1):
+            for z in range(Z0, Z1 + 1):
+                if t.wat(x, z) > 0 or t.surface(x, z) not in (0, 1, 7):
+                    continue
+                y = t.height(x, z) + 1
+                if self.get(x, y, z) != AIR or (t.tree(x, z) == 0 and t.surface(x, z) == 7):
+                    continue
+                r = jrand(x, z, 51)
+                if r < 0.08:
+                    self.set(x, y, z, FERN)
+                    if 0.06 <= r < 0.075 and self.get(x, y + 1, z) == AIR:
+                        self.set(x, y + 1, z, FERN)
+
+
 def quad_arrays(quads, light):
     """quads: list of (normal, 4 corners, tile name); light: (lu, lv)"""
     P, N, Cc, U0, U1 = [], [], [], [], []
@@ -800,7 +958,7 @@ def box_quads(wmin, wmax, tiles):
     ]
 
 
-def monster_meshes(scene, trunk, far=(22.5, 31.6)):
+def monster_meshes(scene, trunk, far=None):
     """a 覗き peeking from behind a trunk toward the camera (-z): tall thin grey body hidden
     behind the trunk, the head tilted out past its edge, an eyes layer; plus a second pair of
     eyes far off to the side, outside the beam. Returns (body arrays, eyes arrays)."""
@@ -821,7 +979,9 @@ def monster_meshes(scene, trunk, far=(22.5, 31.6)):
     for ex in (hx - 0.19, hx + 0.03):
         eyes.append(((0, 0, -1), [(ex, g + 2.22, ez), (ex, g + 2.32, ez), (ex + 0.16, g + 2.32, ez), (ex + 0.16, g + 2.22, ez)], "eyes"))
     # a second one far off in the dark: only its eyes
-    fx, fz = far
+    fx, fz = far if far else (tx - 10.5, tz + 7.6)
+    if not (0 <= int(fx) - scene.origin[0] < scene.sx and 0 <= int(fz) - scene.origin[2] < scene.sz):
+        fx, fz = tx + 0.5, tz + 0.5
     fg = scene.ground[int(fx) - scene.origin[0], int(fz) - scene.origin[2]] + 1
     for ex in (fx - 0.19, fx + 0.03):
         eyes.append(((0, 0, -1), [(ex, fg + 2.2, fz), (ex, fg + 2.3, fz), (ex + 0.16, fg + 2.3, fz), (ex + 0.16, fg + 2.2, fz)], "eyes"))
@@ -1309,6 +1469,42 @@ def make_shots(scene):
     }
 
 
+def mc_dir(yaw, pitch):
+    """Minecraft yaw / pitch (degrees; yaw 0 = south +Z, pitch > 0 = down) -> look vector"""
+    y, p = math.radians(yaw), math.radians(pitch)
+    return (-math.sin(y) * math.cos(p), -math.sin(p), math.cos(y) * math.cos(p))
+
+
+# the CI tour's viewpoints on the real mountain (com.sounan.client.AutoShots)
+TERRAIN_SHOTS = {
+    "t_start_dark": dict(at=(-198.5, -209.5), yaw=155.0, pitch=4.0, fear=0.3, held=0),
+    "t_start_beam": dict(at=(-198.5, -209.5), yaw=155.0, pitch=4.0, fear=0.3, held=FLASHLIGHT),
+    "t_ribbons": dict(at=(-95.5, -88.5), yaw=-45.0, pitch=2.0, fear=0.3, held=FLASHLIGHT),
+    "t_forest_deep": dict(at=(-42.5, -44.5), yaw=-40.0, pitch=0.0, fear=0.3, held=FLASHLIGHT),
+    "t_forest_dark": dict(at=(-42.5, -44.5), yaw=-40.0, pitch=0.0, fear=0.3, held=0),
+    "t_fear": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.92, danger=0.15, held=FLASHLIGHT, t=131.7),
+    "t_danger": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.95, danger=0.9, held=FLASHLIGHT, t=126.02),
+    "t_phone": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=PHONE_LIGHT),
+    "t_flare": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=FLARE),
+    "t_low": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=FLASH_LOW, t=127.5),
+    "t_camera": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=CAMERA),
+}
+
+
+def terrain_monster_trunk(scene, eye, look):
+    """a trunk 8..16 blocks ahead, within 20 degrees of the view, for the peeking monster"""
+    best = None
+    f = np.array([look[0], look[2]]) / max(math.hypot(look[0], look[2]), 1e-6)
+    for (x, g, z, top) in scene.trunks:
+        wx, wz = x + scene.origin[0] + 0.5, z + scene.origin[2] + 0.5
+        d = np.array([wx - eye[0], wz - eye[2]])
+        dist = float(np.linalg.norm(d))
+        if 8.0 <= dist <= 16.0 and float(np.dot(d / dist, f)) > math.cos(math.radians(20)):
+            if best is None or abs(dist - 11.0) < best[0]:
+                best = (abs(dist - 11.0), (x + scene.origin[0], z + scene.origin[2]))
+    return best[1] if best else None
+
+
 def write_png(path, img):
     from PIL import Image
     Image.fromarray(img).save(path)
@@ -1368,26 +1564,49 @@ def main():
     print("GL:", ver, "|", ren)
     make_atlas()                                  # fills TILES
     print("textures: %d real (%s), the rest procedural" % (len(REAL_TILES), TEXTURE_DIR))
-    t0 = time.time()
-    scene = Scene()
-    scene.compute_light()
-    meshes = scene.mesh()
-    monster = monster_meshes(scene, scene.monster_trunk)
-    print("scene: %d solid / %d translucent vertices (%.1fs)" % (len(meshes["solid"]["pos"]), len(meshes["translucent"]["pos"]), time.time() - t0))
-    shots = make_shots(scene)
-    names = args.shots.split(",") if args.shots else list(shots)
+    names = args.shots.split(",") if args.shots else None
+    scenes = {}
+
+    def get_scene(key):
+        if key not in scenes:
+            t0 = time.time()
+            if key == "test":
+                sc = Scene()
+            else:
+                sc = TerrainScene(Terrain(), key[0], key[1])
+            sc.compute_light()
+            meshes = sc.mesh()
+            scenes[key] = (sc, meshes)
+            print("scene %s: %d solid / %d translucent vertices (%.1fs)" % (key, len(meshes["solid"]["pos"]), len(meshes["translucent"]["pos"]), time.time() - t0))
+        return scenes[key]
+
+    test_scene = get_scene("test")[0] if (names is None or any(not n.startswith("t_") for n in names)) else None
+    shots = make_shots(test_scene) if test_scene is not None else {}
+    if names is None:
+        names = list(shots)
     renderers = {}
     paths = []
     moon_quad = moon_quad_factory()
     for name in names:
-        shot = dict(shots[name])
+        if name in TERRAIN_SHOTS:
+            ts = TERRAIN_SHOTS[name]
+            sc, meshes = get_scene(ts["at"])
+            eye = eye_at(sc, ts["at"][0], ts["at"][1])
+            shot = dict(ts, folder=MOUNTAIN, eye=eye, look=mc_dir(ts["yaw"], ts["pitch"]))
+            mt = terrain_monster_trunk(sc, eye, shot["look"])
+            shot["monster"] = mt is not None
+            monster = monster_meshes(sc, mt) if mt else (None, None)
+        else:
+            shot = dict(shots[name])
+            sc, meshes = get_scene("test")
+            monster = monster_meshes(sc, sc.monster_trunk, far=(22.5, 31.6))
         folder = shot["folder"]
         if folder not in renderers:
             renderers[folder] = Renderer(folder, w, h, overrides)
         r = renderers[folder]
         timing = {} if args.timing else None
         t0 = time.time()
-        img, st = r.render(shot, scene, meshes, monster, moon_quad, timing)
+        img, st = r.render(shot, sc, meshes, monster, moon_quad, timing)
         p = os.path.join(args.out, name + ".png")
         write_png(p, img)
         paths.append(p)

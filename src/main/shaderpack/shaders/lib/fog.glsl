@@ -49,6 +49,8 @@ vec3 fogAmbientLight(vec3 rd) {
 #if defined WORLD_MOUNTAIN
     vec3 c = mix(FOG_TUNNEL, FOG_AMBIENT, eyeSkyFactor());
     c *= 1.0 + 0.6 * pow(saturate(dot(rd, lightDirW())), 6.0);      // a little brighter toward the moon
+    // a burning flare blinds you to the faint moonlit mist: its red glow takes over
+    if (heldItemId == ITEM_FLARE || heldItemId2 == ITEM_FLARE) c *= 0.6;
     return c * (1.0 - 0.30 * fear());
 #else
     return fogColorFor(rd);
@@ -87,7 +89,7 @@ vec4 fogAnalytic(vec3 rd, float dist) {
         HandLight L = handLight(i);
         if (L.type != LIGHT_POINT) continue;
         float along = L.halfDist * atan(min(d, L.range) / L.halfDist);
-        S += L.color * 0.08 * L.fog * sigma * along * exp(-sigma * min(d, L.range) * 0.5);
+        S += L.color * 0.10 * L.fog * sigma * along * exp(-sigma * min(d, L.range) * 0.5);
     }
     return vec4(S, T);
 }
@@ -141,8 +143,8 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
 #ifdef LIGHT_SHAFTS_ON
         L += shaftLight * shadowTap(p);
 #endif
-        if (pt0) { vec3 l; float dd; L += handLightReach(P0, p, l, dd) * 0.08 * P0.fog; }
-        if (pt1) { vec3 l; float dd; L += handLightReach(P1, p, l, dd) * 0.08 * P1.fog; }
+        if (pt0) { vec3 l; float dd; L += handLightReach(P0, p, l, dd) * 0.10 * P0.fog; }
+        if (pt1) { vec3 l; float dd; L += handLightReach(P1, p, l, dd) * 0.10 * P1.fog; }
         float st = exp(-sigma * ds);
         S += T * L * (1.0 - st);
         T *= st;

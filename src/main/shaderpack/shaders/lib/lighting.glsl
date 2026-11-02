@@ -8,7 +8,13 @@
 
 // 0 = indoors / underground / tunnel, 1 = under the open sky (smoothed sky light at the eye)
 float eyeSkyFactor() {
+#ifdef WORLD_MOUNTAIN
+    // under the dense cedar canopy the sky light at the eye drops to ~6-10 (leaves dim it by
+    // one per block): that is still outdoors. Only the tunnel and closed huts go to 0.
+    return smoothstep(0.04, 0.40, float(eyeBrightnessSmooth.y) / 240.0);
+#else
     return smoothstep(0.10, 0.70, float(eyeBrightnessSmooth.y) / 240.0);
+#endif
 }
 
 // organic flame flicker, ~1.0 +- 0.12. Each region of the world gets its own phase so
