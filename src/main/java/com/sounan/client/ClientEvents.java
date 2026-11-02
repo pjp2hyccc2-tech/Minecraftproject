@@ -52,6 +52,7 @@ public final class ClientEvents {
         if (event.phase != TickEvent.Phase.END) return;
         Minecraft mc = Minecraft.getInstance();
         AutoShots.tick(mc);
+        com.sounan.client.cine.Trailer.tick(mc);
         if (mc.level == null || mc.player == null) return;
         if (!mc.isPaused()) ClientState.tick();
         boolean here = ModDimensions.isMountain(mc.level);
@@ -140,7 +141,7 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void camera(ViewportEvent.ComputeCameraAngles event) {
-        if (!onMountain()) return;
+        if (!onMountain() || com.sounan.client.cine.Trailer.active()) return;
         float strength = (float) SounanConfig.screenEffects() * (SounanConfig.flashReduction() ? 0.4f : 1.0f);
         float t = (float) (ClientState.clientTicks + event.getPartialTick());
         float yaw = 0, pitch = 0, roll = 0;
@@ -170,7 +171,7 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void fov(ViewportEvent.ComputeFov event) {
-        if (!onMountain() || !event.usedConfiguredFov()) return;
+        if (!onMountain() || !event.usedConfiguredFov() || com.sounan.client.cine.Trailer.active()) return;
         float fear = ClientState.fearShown / 100.0f;
         double mul = 1.0 - 0.07 * ClientState.dangerShown - 0.05 * Math.max(0.0f, fear - 0.7f) / 0.3f;
         if (HorrorAudio.isCamera(Minecraft.getInstance())) mul *= 0.88;
@@ -216,7 +217,10 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void screenInit(ScreenEvent.Init.Post event) {
-        if (event.getScreen() instanceof TitleScreen title) AutoShots.onTitle(title);
+        if (event.getScreen() instanceof TitleScreen title) {
+            AutoShots.onTitle(title);
+            com.sounan.client.cine.Trailer.onTitle();
+        }
     }
 
     @SubscribeEvent

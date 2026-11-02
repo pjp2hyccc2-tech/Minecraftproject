@@ -71,12 +71,21 @@ public abstract class SounanMonster extends PathfinderMob implements Animated {
 
     @Override
     public int pose() {
-        return entityData.get(POSE_ID);
+        return puppetPose >= 0 ? puppetPose : entityData.get(POSE_ID);
     }
 
     @Override
     public float poseTime(float partialTick) {
-        return tickCount - poseStart + partialTick;
+        return puppetPose >= 0 ? puppetPoseTime : tickCount - poseStart + partialTick;
+    }
+
+    // client-side trailer actors: the pose and how far into it, set directly every frame
+    private int puppetPose = -1;
+    private float puppetPoseTime;
+
+    public void puppetPose(int pose, float ticks) {
+        puppetPose = pose;
+        puppetPoseTime = ticks;
     }
 
     public int poseTicks() {
