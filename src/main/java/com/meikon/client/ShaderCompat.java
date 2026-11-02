@@ -2,7 +2,7 @@ package com.meikon.client;
 
 import java.lang.reflect.Method;
 
-/** Detects whether an Iris/Oculus shader pack is currently in use (via the Iris API, reflectively). */
+/** Detects whether a shader pack is currently in use: Iris/Oculus via the Iris API, OptiFine via its Shaders class (both reflectively). */
 public final class ShaderCompat {
     private static Object api;
     private static Method inUse;
@@ -20,7 +20,27 @@ public final class ShaderCompat {
         return cached;
     }
 
+    private static java.lang.reflect.Field optifineLoaded;
+    private static boolean lookedOptifine;
+
     private static boolean query() {
+        return queryIris() || queryOptifine();
+    }
+
+    private static boolean queryOptifine() {
+        try {
+            if (!lookedOptifine) {
+                lookedOptifine = true;
+                optifineLoaded = Class.forName("net.optifine.shaders.Shaders").getField("shaderPackLoaded");
+            }
+            return optifineLoaded != null && optifineLoaded.getBoolean(null);
+        } catch (Throwable t) {
+            optifineLoaded = null;
+            return false;
+        }
+    }
+
+    private static boolean queryIris() {
         try {
             if (!looked) {
                 looked = true;
