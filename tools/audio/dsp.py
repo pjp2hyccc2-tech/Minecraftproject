@@ -1,4 +1,4 @@
-"""Core DSP helpers for the MEIKON sound generator (numpy + scipy only).
+"""Core DSP helpers for the SOUNAN sound generator (numpy + scipy only).
 
 Conventions
 -----------
@@ -795,3 +795,283 @@ def norm_rms_capped(x, target_rms_db, max_peak_db=-1.0):
     if peak_db(y) > max_peak_db:
         y = limiter(y, max_peak_db, 0.01)
     return y
+
+
+# --------------------------------------------------------------------------
+# psychoacoustic palette (SOUNAN)
+# --------------------------------------------------------------------------
+def binaural(fc, beat, n, L=None, amp=1.0, rng=None, phase=None):
+    """Binaural-beat carrier pair (stereo): left = fc - beat/2, right = fc + beat/2.
+    Each ear alone hears a steady tone; the brain hears the |fR - fL| beat
+    (theta range 4-7 Hz).  With a loop length L both carriers are quantised to
+    whole cycles, so the loop is seamless."""
+    fl, fr = fc - beat / 2.0, fc + beat / 2.0
+    if L:
+        fl, fr = loop_freq(fl, L), loop_freq(fr, L)
+    if phase is None:
+        phase = (rng.random(), rng.random()) if rng is not None else (0.0, 0.25)
+    t = np.arange(n) / SR
+    return amp * np.vstack([np.sin(TAU * (fl * t + phase[0])), np.sin(TAU * (fr * t + phase[1]))])
+
+
+def am(x, rate, depth=0.5, L=None, shape=1.0, phase=0.0):
+    """Amplitude modulation.  rate 30-150 Hz = *roughness* (the acoustic
+    signature of screams), 4-8 Hz = theta throb.  rate / depth may be arrays
+    (per sample); with L the (scalar) rate is quantised for seamless loops."""
+    n = length(x)
+    if np.isscalar(rate):
+        r = loop_freq(rate, L) if L else rate
+        ph = phase + r * np.arange(n) / SR
+    else:
+        ph = phase + (periodic_phase(rate) if L else np.cumsum(rate) / SR)
+    m = (0.5 + 0.5 * np.cos(TAU * ph)) ** shape
+    return x * ((1.0 - depth) + depth * m)
+
+
+def sub_rumble(n, f=36.71, L=None, rng=None, am_rate=6.0, am_depth=0.45, drive=2.4, bias=0.35, lp=360.0):
+    """30-45 Hz rumble whose fundamental small speakers cannot play: asymmetric
+    saturation generates the 2nd..6th harmonics (missing-fundamental effect),
+    plus a slow theta AM.  Unit peak, periodic over n when L is given."""
+    f = loop_freq(f, L) if L else f
+    p0 = rng.random() if rng is not None else 0.0
+    s = np.sin(TAU * (f * np.arange(n) / SR + p0))
+    y = np.tanh(drive * (s + bias)) - np.tanh(drive * bias)
+    y = y - y.mean()
+    if am_depth > 0:
+        y = am(y, am_rate, am_depth, L)
+    y = circ(lambda v: lowpass(v, lp, 4), y) if L else lowpass(y, lp, 4)
+    return y / (np.max(np.abs(y)) + 1e-12)
+
+
+def shepard(n, rate, f_lo=40.0, n_oct=7.0, L=None, partials=((1, 1.0),), strands=(0.0,), gains=None,
+            env_pow=2.0, t0=0.0, wave="sine"):
+    """Shepard-Risset glissando: octave-spaced voices gliding forever up
+    (rate > 0, octaves per second) or down (rate < 0) under a fixed bell-shaped
+    spectral envelope, so the pitch seems to rise/fall endlessly.
+
+    Every voice is the *same* waveform (same trajectory, same phase from its
+    birth), born every 1/|rate| s.  With a loop length L the rate is quantised
+    so that rate*L is an integer and the voices are placed circularly: the
+    result is exactly periodic.  ``strands`` are extra copies offset by a
+    fraction of an octave (0.5 = a tritone away: the tritone paradox)."""
+    r = abs(rate)
+    if L:
+        r = max(1, round(r * L)) / L
+    period = 1.0 / r
+    T = n_oct * period
+    m = ns(T)
+    a = np.arange(m) / m
+    lf = np.log2(f_lo) + n_oct * (a if rate > 0 else 1.0 - a)
+    f = 2.0 ** lf
+    ph = np.cumsum(f) / SR
+    env = np.sin(np.pi * a) ** env_pow
+    v = np.zeros(m)
+    if wave == "saw":
+        s = saw(f, m)
+        v = s * env
+    else:
+        for k, g in partials:
+            w = np.clip((0.45 * SR - f * k) / (0.04 * SR), 0.0, 1.0)
+            v += g * w * np.sin(TAU * k * ph)
+        v *= env
+    gains = gains if gains is not None else [1.0] * len(strands)
+    out = np.zeros(n)
+    dur = n / SR
+    for off, g in zip(strands, gains):
+        if L:
+            for b in range(int(round(L / period))):
+                place(out, v * g, t0 + (b + off) * period, circular=True)
+        else:
+            b = -int(np.ceil(n_oct)) - 1
+            while (b + off) * period + t0 < dur:
+                tb = t0 + (b + off) * period
+                if tb + T > 0:
+                    if tb < 0:
+                        place(out, v[ns(-tb):] * g, 0)
+                    else:
+                        place(out, v * g, tb)
+                b += 1
+    return out
+
+
+def logistic(k, r, x0=0.37):
+    """k iterates of the logistic map x <- r x (1 - x).  r < 3: fixed point,
+    3.0-3.45: period 2 (subharmonic f0/2), 3.45-3.57: period 4, > 3.57: chaos."""
+    r = np.broadcast_to(np.asarray(r, float), (k,))
+    out = np.empty(k)
+    v = x0
+    for i in range(k):
+        v = r[i] * v * (1.0 - v)
+        if not 0.0 < v < 1.0:
+            v = 0.37
+        out[i] = v
+    return out
+
+
+def lorenz(n, rate, rng=None, sigma=10.0, rho=28.0, beta=8.0 / 3.0, ctrl_sr=2000.0):
+    """Deterministic chaotic control signal (Lorenz x), time-scaled so that its
+    wandering happens at roughly `rate` Hz.  Zero mean, unit std."""
+    m = max(8, int(n / SR * ctrl_sr) + 2)
+    dt = rate / ctrl_sr
+    s = np.array([1.0, 1.0, 1.0]) + (rng.standard_normal(3) * 0.1 if rng is not None else 0.0)
+    out = np.empty(m)
+
+    def d(v):
+        return np.array([sigma * (v[1] - v[0]), v[0] * (rho - v[2]) - v[1], v[0] * v[1] - beta * v[2]])
+
+    for _ in range(200):  # settle on the attractor
+        s = s + 0.01 * d(s)
+    for i in range(m):
+        k1 = d(s)
+        k2 = d(s + 0.5 * dt * k1)
+        k3 = d(s + 0.5 * dt * k2)
+        k4 = d(s + dt * k3)
+        s = s + dt / 6.0 * (k1 + 2 * k2 + 2 * k3 + k4)
+        out[i] = s[0]
+    y = np.interp(np.arange(n) / SR * ctrl_sr, np.arange(m), out)
+    y -= y.mean()
+    return y / (np.std(y) + 1e-12)
+
+
+def loop_xfade(x, n, xf):
+    """Seamless loop of n samples from a longer render (>= n + xf): the
+    material that follows sample n is crossfaded (equal power) into the start,
+    so sample n-1 -> sample 0 continues the original signal."""
+    xf = min(xf, length(x) - n, n)
+    out = x[..., :n].copy()
+    w = np.linspace(0.0, 1.0, xf)
+    fi, fo = np.sin(w * np.pi / 2), np.cos(w * np.pi / 2)
+    out[..., :xf] = out[..., :xf] * fi + x[..., n:n + xf] * fo
+    return out
+
+
+def echoes(x, taps, tail=True):
+    """Discrete echoes: taps = [(delay_s, gain, lowpass_hz or None)]."""
+    n = length(x)
+    extra = ns(max(t[0] for t in taps)) if tail else 0
+    out = pad_to(x.copy(), n + extra)
+    for d, g, lp in taps:
+        e = lowpass(x, lp, 2) if lp else x
+        place(out, e * g, d)
+    return out
+
+
+def close_mic(x, prox_db=5.0, pres_db=4.0, air_db=3.0):
+    """Ultra-close (at the ear) colour: proximity bass lift + presence + air."""
+    y = shelf(x, 220.0, prox_db, "low")
+    y = peq(y, 4200.0, 0.9, pres_db)
+    return shelf(y, 9000.0, air_db, "high")
+
+
+def far(x, rng, rt60=2.8, wet=1.0, dry=0.35, lp=3500.0, predelay=0.04, stereo=False, hf_ratio=0.3, taps=()):
+    """Distance: air absorption, attenuated direct sound, long diffuse reverb
+    with pre-delay, optional slope echoes."""
+    d = lowpass(x, lp, 2) if lp else x
+    if taps:
+        d = echoes(d, taps)
+    ir = make_ir(rt60, rng, predelay=predelay, stereo=stereo, hf_ratio=hf_ratio, lp_hz=lp * 1.2 if lp else None)
+    return reverb(d, ir, wet=wet, dry=dry)
+
+
+def tv_formants(x, F, B, block=64):
+    """Cascade of 2-pole formant resonators (unity DC gain each) with
+    per-block coefficient updates.  F, B: arrays (k, n) of Hz."""
+    n = len(x)
+    y = np.asarray(x, float)
+    for j in range(F.shape[0]):
+        out = np.empty(n)
+        zi = np.zeros(2)
+        for i in range(0, n, block):
+            f = min(float(F[j, i]), SR * 0.47)
+            r = np.exp(-np.pi * float(B[j, i]) / SR)
+            c = -2.0 * r * np.cos(TAU * f / SR)
+            a = [1.0, c, r * r]
+            out[i:i + block], zi = signal.lfilter([1.0 + c + r * r], a, y[i:i + block], zi=zi)
+        y = out
+    return y
+
+
+# --------------------------------------------------------------------------
+# loudness (ITU-R BS.1770 K-weighting, gated integrated loudness) & true peak
+# --------------------------------------------------------------------------
+def _kweight(x):
+    G, Q, fc = 3.999843853973347, 0.7071752369554196, 1681.974450955533
+    K = np.tan(np.pi * fc / SR)
+    Vh = 10 ** (G / 20.0)
+    Vb = Vh ** 0.4996667741545416
+    a0 = 1.0 + K / Q + K * K
+    b1 = np.array([(Vh + Vb * K / Q + K * K) / a0, 2.0 * (K * K - Vh) / a0, (Vh - Vb * K / Q + K * K) / a0])
+    a1 = np.array([1.0, 2.0 * (K * K - 1.0) / a0, (1.0 - K / Q + K * K) / a0])
+    fc2, Q2 = 38.13547087602444, 0.5003270373238773
+    K2 = np.tan(np.pi * fc2 / SR)
+    a02 = 1.0 + K2 / Q2 + K2 * K2
+    b2 = np.array([1.0, -2.0, 1.0])
+    a2 = np.array([1.0, 2.0 * (K2 * K2 - 1.0) / a02, (1.0 - K2 / Q2 + K2 * K2) / a02])
+    return signal.lfilter(b2, a2, signal.lfilter(b1, a1, x, axis=-1), axis=-1)
+
+
+def loudness(x, gated=True):
+    """Integrated loudness in LUFS (mono or stereo, G = 1 per channel).
+    Signals shorter than one 400 ms block are measured as a single block."""
+    x = np.atleast_2d(np.asarray(x, float))
+    y = _kweight(x)
+    n = y.shape[1]
+    blk, hop = ns(0.4), ns(0.1)
+    if n <= blk:
+        z = np.sum(np.mean(y ** 2, axis=1))
+        return float(-0.691 + 10 * np.log10(z + 1e-20))
+    c = np.cumsum(np.concatenate([np.zeros((y.shape[0], 1)), y ** 2], axis=1), axis=1)
+    starts = np.arange(0, n - blk + 1, hop)
+    z = np.sum((c[:, starts + blk] - c[:, starts]) / blk, axis=0)
+    l = -0.691 + 10 * np.log10(z + 1e-20)
+    if not gated:
+        return float(-0.691 + 10 * np.log10(np.mean(z) + 1e-20))
+    zz = z[l > -70.0]
+    if len(zz) == 0:
+        return -100.0
+    rel = -0.691 + 10 * np.log10(np.mean(zz)) - 10.0
+    zz = z[(l > -70.0) & (l > rel)]
+    return float(-0.691 + 10 * np.log10(np.mean(zz) + 1e-20))
+
+
+def momentary_max(x):
+    """Maximum momentary (400 ms) loudness in LUFS."""
+    x = np.atleast_2d(np.asarray(x, float))
+    y = _kweight(x)
+    n = y.shape[1]
+    blk, hop = ns(0.4), ns(0.05)
+    if n <= blk:
+        return loudness(x)
+    c = np.cumsum(np.concatenate([np.zeros((y.shape[0], 1)), y ** 2], axis=1), axis=1)
+    starts = np.arange(0, n - blk + 1, hop)
+    z = np.sum((c[:, starts + blk] - c[:, starts]) / blk, axis=0)
+    return float(-0.691 + 10 * np.log10(np.max(z) + 1e-20))
+
+
+def true_peak_db(x, os=4):
+    """Inter-sample (true) peak estimate in dBTP via 4x polyphase oversampling."""
+    x = np.atleast_2d(np.asarray(x, float))
+    up = signal.resample_poly(x, os, 1, axis=-1)
+    return float(to_db(np.max(np.abs(up))))
+
+
+def norm_lufs(x, target, peak_cap_db=-1.0):
+    """Normalise to an integrated-loudness target, then brickwall to the cap."""
+    y = x * db(target - loudness(x))
+    if peak_db(y) > peak_cap_db:
+        y = limiter(y, peak_cap_db, 0.01)
+    return y
+
+
+def quiet_rotation(x, win=0.08):
+    """Offset (samples) of the quietest `win`-second stretch of a periodic
+    signal (circular).  Rotating a loop so that its seam falls there hides the
+    small, uncorrelated codec errors at the start and the end of the encoded
+    stream (Minecraft restarts decoding at every loop)."""
+    m = np.atleast_2d(x)
+    e = np.sum(m ** 2, axis=0)
+    n = len(e)
+    w = max(1, ns(win))
+    c = np.concatenate([[0.0], np.cumsum(np.concatenate([e, e[:w]]))])
+    s = c[w:w + n] - c[:n]
+    return int((np.argmin(s) + w // 2) % n)
