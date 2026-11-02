@@ -124,6 +124,11 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> GAME_CAR = reg("game.car");
     public static final RegistryObject<SoundEvent> GAME_TITLE_HIT = reg("game.title_hit");
     public static final RegistryObject<SoundEvent> GAME_KAMIKAKUSHI = reg("game.kamikakushi");
+    public static final RegistryObject<SoundEvent> AMB_STONE_GRIND = reg("amb.stone_grind");
+    public static final RegistryObject<SoundEvent> AMB_BRIDGE_CREAK = reg("amb.bridge_creak");
+    public static final RegistryObject<SoundEvent> AMB_UNDER_BRIDGE = reg("amb.under_bridge");
+    public static final RegistryObject<SoundEvent> PHONE_MITSUKETA = reg("phone.mitsuketa");
+    public static final RegistryObject<SoundEvent> OYAMA_RECOIL = reg("oyama.recoil");
 
     private ModSounds() {}
 

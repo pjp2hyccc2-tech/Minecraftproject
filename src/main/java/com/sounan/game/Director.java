@@ -398,7 +398,10 @@ public final class Director {
             Vec3 to = Vec3.atCenterOf(j).subtract(p.getEyePosition()).normalize();
             if (to.dot(p.getViewVector(1.0f)) > 0.3) continue;
             Direction face = Direction.fromYRot(yawTo(Vec3.atCenterOf(j), p.position()));
-            if (s.getValue(FacingBlock.FACING) != face) level.setBlock(j, s.setValue(FacingBlock.FACING, face), 3);
+            if (s.getValue(FacingBlock.FACING) != face) {
+                level.setBlock(j, s.setValue(FacingBlock.FACING, face), 3);
+                GameManager.privateSound(p, ModSounds.AMB_STONE_GRIND.get(), Vec3.atCenterOf(j), 0.8f, 0.9f + RAND.nextFloat() * 0.2f);
+            }
         }
     }
 
@@ -434,12 +437,17 @@ public final class Director {
         // something under the bridge
         if (area == TerrainData.AREA_TSURIBASHI && Math.abs(p.getX() - (L.bridgeX + 0.5)) < 2.5
                 && p.getZ() > L.bridgeZ0 + 4 && p.getZ() < L.bridgeZ1 - 4 && data.once("under_bridge")) {
-            Vec3 below = p.position().add(0, -5, 0);
-            GameManager.privateSound(p, ModSounds.AMB_THUD.get(), below, 1.0f, 0.7f);
-            GameManager.privateSound(p, ModSounds.NOZOKI_GIGGLE.get(), below.add(0, 2, 0), 0.9f, 0.9f);
+            Vec3 below = p.position().add(0, -3, 0);
+            GameManager.privateSound(p, ModSounds.AMB_UNDER_BRIDGE.get(), below, 1.0f, 1.0f);
+            GameManager.privateSound(p, ModSounds.NOZOKI_GIGGLE.get(), below.add(0, -2, 0), 0.7f, 0.9f);
             GameManager.event(p, GameManager.EV_SHAKE, 14, "");
             GameManager.event(p, GameManager.EV_STINGER, 6, "");
             GameManager.addFear(p, 18.0f);
+        }
+        // the old bridge complains under every step
+        if (area == TerrainData.AREA_TSURIBASHI && Math.abs(p.getX() - (L.bridgeX + 0.5)) < 2.5 && p.getZ() > L.bridgeZ0 - 1
+                && p.getZ() < L.bridgeZ1 + 1 && p.getDeltaMovement().horizontalDistance() > 0.03 && RAND.nextInt(22) == 0) {
+            GameManager.worldSound(level, p.position(), ModSounds.AMB_BRIDGE_CREAK.get(), 0.9f, 0.9f + RAND.nextFloat() * 0.2f);
         }
         // the tunnel: the lamps come on one by one toward the exit, and it comes from behind
         if (area == TerrainData.AREA_TUNNEL && data.gateUnlocked && p.getZ() > L.tunnelZ0 + 26 && !data.climax) {

@@ -194,12 +194,23 @@ public final class ClientEvents {
         if (HorrorAudio.isCamera(Minecraft.getInstance()) && id.equals(VanillaGuiOverlay.CROSSHAIR.id())) event.setCanceled(true);
     }
 
-    /** Vanilla background music has no place on the mountain. */
+    private static net.minecraft.client.resources.sounds.SoundInstance titleMusic;
+
+    /** Vanilla background music has no place on the mountain; the menus get the title theme instead. */
     @SubscribeEvent
     public static void music(PlaySoundEvent event) {
-        if (!onMountain() || event.getSound() == null) return;
-        if (event.getSound().getSource() == SoundSource.MUSIC && !event.getSound().getLocation().getNamespace().equals(Sounan.MODID)) {
+        if (event.getSound() == null || event.getSound().getSource() != SoundSource.MUSIC) return;
+        if (event.getSound().getLocation().getNamespace().equals(Sounan.MODID)) return;
+        Minecraft mc = Minecraft.getInstance();
+        if (onMountain()) {
             event.setSound(null);
+        } else if (mc.level == null) {
+            if (titleMusic != null && mc.getSoundManager().isActive(titleMusic)) {
+                event.setSound(null);
+            } else {
+                titleMusic = net.minecraft.client.resources.sounds.SimpleSoundInstance.forMusic(com.sounan.registry.ModSounds.MUSIC_TITLE.get());
+                event.setSound(titleMusic);
+            }
         }
     }
 

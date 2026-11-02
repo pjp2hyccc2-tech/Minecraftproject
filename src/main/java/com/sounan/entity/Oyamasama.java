@@ -56,7 +56,7 @@ public class Oyamasama extends SounanMonster {
         if (fleeing >= 0) return;
         fleeing = 0;
         setAnimPose(WALK);
-        play(ModSounds.OYAMA_GROAN.get(), 2.0f, 1.2f);
+        play(ModSounds.OYAMA_RECOIL.get(), 2.0f, 1.0f);
     }
 
     @Override
