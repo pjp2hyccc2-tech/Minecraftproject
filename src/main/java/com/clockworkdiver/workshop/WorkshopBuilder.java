@@ -15,6 +15,9 @@ import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import com.clockworkdiver.block.TowerGateBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
@@ -24,7 +27,7 @@ import net.minecraft.world.level.block.state.properties.SlabType;
  * Coordinates are relative to the shop origin (floor surface, centre of the shop).
  */
 public final class WorkshopBuilder {
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     private WorkshopBuilder() {}
 
@@ -218,6 +221,7 @@ public final class WorkshopBuilder {
         buildStreet(b, rand);
         buildFacade(b);
         buildTower(b);
+        buildPlaza(b);
         b.finish();
     }
 
@@ -283,6 +287,21 @@ public final class WorkshopBuilder {
         for (int x = -12; x <= 12; x += 6) {
             for (int y = 0; y <= 12; y++) b.set(x, y, 27, Blocks.STRIPPED_DARK_OAK_LOG);
         }
+        // An archway through the middle of the row leads to the clock tower plaza.
+        for (int z = 27; z <= 30; z++) {
+            for (int x = -2; x <= 2; x++) {
+                b.set(x, -2, z, Blocks.STONE_BRICKS);
+                b.set(x, -1, z, Blocks.POLISHED_ANDESITE);
+                for (int y = 0; y <= 3; y++) b.set(x, y, z, Blocks.AIR);
+            }
+        }
+        for (int y = 0; y <= 4; y++) {
+            b.set(-3, y, 27, Blocks.STRIPPED_DARK_OAK_LOG);
+            b.set(3, y, 27, Blocks.STRIPPED_DARK_OAK_LOG);
+        }
+        for (int x = -3; x <= 3; x++) b.set(x, 4, 27, Blocks.STRIPPED_DARK_OAK_LOG.defaultBlockState().setValue(RotatedPillarBlock.AXIS, Direction.Axis.X));
+        b.set(0, 5, 27, ModBlocks.BRASS_BLOCK.get());
+        b.set(0, 3, 28, Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true));
         chimney(b, -10, 29, 13);
         chimney(b, 10, 30, 13);
         MechanismBlockEntity gear = b.mechanism(8, 15, 28);
@@ -294,6 +313,45 @@ public final class WorkshopBuilder {
         gear2.stepped(false);
         gear2.offsetX = 0.05f;
         gear2.sync();
+    }
+
+    /** The cobbled plaza around the Great Clock tower, walled in, with the tower gate. */
+    private static void buildPlaza(StructureBuilder b) {
+        for (int x = -10; x <= 10; x++) {
+            for (int z = 31; z <= 43; z++) {
+                b.set(x, -2, z, Blocks.STONE_BRICKS);
+                boolean wall = Math.abs(x) == 10 || z == 43;
+                if (wall) {
+                    b.set(x, -1, z, Blocks.STONE_BRICKS);
+                    for (int y = 0; y <= 2; y++) b.set(x, y, z, Blocks.STONE_BRICKS);
+                    b.set(x, 3, z, Blocks.STONE_BRICK_SLAB);
+                } else {
+                    boolean ring = (x * x + (z - 37) * (z - 37)) % 7 == 0;
+                    b.set(x, -1, z, ring ? Blocks.POLISHED_ANDESITE : Blocks.COBBLESTONE);
+                }
+            }
+        }
+        // Lamp posts in the four corners.
+        for (int[] p : new int[][]{{-8, 32}, {8, 32}, {-8, 41}, {8, 41}}) {
+            for (int y = 0; y <= 2; y++) b.set(p[0], y, p[1], Blocks.DARK_OAK_FENCE);
+            b.set(p[0], 3, p[1], Blocks.LANTERN);
+        }
+        // The gate of the tower, flanked by lanterns on posts.
+        b.set(0, 0, 34, ModBlocks.TOWER_GATE.get().defaultBlockState().setValue(TowerGateBlock.HALF, DoubleBlockHalf.LOWER));
+        b.set(0, 1, 34, ModBlocks.TOWER_GATE.get().defaultBlockState().setValue(TowerGateBlock.HALF, DoubleBlockHalf.UPPER));
+        b.set(0, 2, 34, ModBlocks.BRASS_BLOCK.get());
+        for (int side : new int[]{-2, 2}) {
+            b.set(side, 0, 33, Blocks.DARK_OAK_FENCE);
+            b.set(side, 1, 33, Blocks.DARK_OAK_FENCE);
+            b.set(side, 2, 33, Blocks.LANTERN);
+        }
+        // A few crates and a bench by the walls.
+        b.set(-9, 0, 37, Blocks.BARREL);
+        b.set(-9, 0, 38, Blocks.BARREL);
+        b.set(-9, 1, 37, Blocks.POTTED_RED_TULIP);
+        b.set(9, 0, 37, Blocks.SPRUCE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.EAST));
+        b.set(9, 0, 38, Blocks.SPRUCE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.EAST));
+        b.set(9, -1, 35, ModBlocks.STEAM_VENT.get());
     }
 
     private static void buildTower(StructureBuilder b) {

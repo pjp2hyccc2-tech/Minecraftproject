@@ -3,6 +3,9 @@ package com.clockworkdiver.client;
 import com.clockworkdiver.ClockworkDiver;
 import com.clockworkdiver.client.gui.BenchScreen;
 import com.clockworkdiver.client.gui.DialogueScreen;
+import com.clockworkdiver.client.gui.EndingScreen;
+import com.clockworkdiver.client.gui.JournalScreen;
+import com.clockworkdiver.story.StoryQuests;
 import com.clockworkdiver.client.gui.RepairPromptScreen;
 import com.clockworkdiver.clock.ClockData;
 import com.clockworkdiver.clock.ClockType;
@@ -58,7 +61,7 @@ public final class AutoShots {
 
     static void tick(Minecraft mc) {
         if (!ENABLED || stage == 0 || stage == 9) return;
-        if (++ticks > 20 * 60 * 18) {
+        if (++ticks > 20 * 60 * 26) {
             log("global timeout");
             finish(mc);
             return;
@@ -155,14 +158,15 @@ public final class AutoShots {
     }
 
     private static void zone(String type, String shot, float yaw, float pitch, int extraWait) {
-        add("dive_" + type, mc -> {
+        String id = type.replace(' ', '_');
+        add("dive_" + id, mc -> {
             mc.setScreen(null);
             cmd(mc, "clockwork dive " + type);
         }, 90 + extraWait);
-        add("look_" + type, mc -> look(mc, yaw, pitch), 10);
+        add("look_" + id, mc -> look(mc, yaw, pitch), 10);
         snap(shot);
-        add("abort_" + type, mc -> cmd(mc, "clockwork abort"), 70);
-        add("close_" + type, mc -> mc.setScreen(null), 10);
+        add("abort_" + id, mc -> cmd(mc, "clockwork abort"), 70);
+        add("close_" + id, mc -> mc.setScreen(null), 10);
     }
 
     private static void build() {
@@ -257,6 +261,7 @@ public final class AutoShots {
         snap("22_thanks");
         add("thanks_close", mc -> mc.setScreen(null), 40);
         snap("23_tutorial_done");
+        add("hold", mc -> cmd(mc, "clockwork debug hold"), 10);
         zone("screw", "24_screw_zone", 180.0f, -12.0f, 0);
         zone("spring", "25_spring_zone", 180.0f, -18.0f, 0);
         zone("nest", "26_boss", 180.0f, 5.0f, 60);
@@ -265,10 +270,14 @@ public final class AutoShots {
             final String shotName = String.format("%02d_bench_%s", 29 + n++, type.id);
             add("bench_" + type.id, mc -> {
                 ClockData clock = null;
-                RandomSource rand = RandomSource.create(type.ordinal() * 31L + 7L);
-                for (int i = 0; i < 400 && clock == null; i++) {
-                    ClockData c = CommissionGenerator.random(rand, 99, i);
-                    if (c.type == type && c.defects.size() >= 2) clock = c;
+                if (type == ClockType.GREAT_CLOCK) {
+                    clock = StoryQuests.get(17).createClock(7);
+                } else {
+                    RandomSource rand = RandomSource.create(type.ordinal() * 31L + 7L);
+                    for (int i = 0; i < 400 && clock == null; i++) {
+                        ClockData c = CommissionGenerator.random(rand, 99, i);
+                        if (c.type == type && c.defects.size() >= 2) clock = c;
+                    }
                 }
                 if (clock == null) return;
                 clock.defects.get(0).found = true;
@@ -284,9 +293,181 @@ public final class AutoShots {
         }
         add("close_benches", mc -> mc.setScreen(null), 5);
         add("street", mc -> cmd(mc, "tp @s 0.5 64 20.5 180 -4"), 40);
-        snap("35_shop_front");
+        snap("38_shop_front");
         add("tower", mc -> look(mc, 0.0f, -55.0f), 10);
-        snap("36_clock_tower");
+        snap("39_clock_tower");
+        story();
+    }
+
+    private static DialogueScreen dialogue(Minecraft mc) {
+        return mc.screen instanceof DialogueScreen d ? d : null;
+    }
+
+    /** The story: chapter and quest cards, story dialogue, clues, twists, the tower plaza, the journal and the ending. */
+    private static void story() {
+        add("story_start", mc -> {
+            mc.setScreen(null);
+            cmd(mc, "tp @s 0.5 64 1.2 0 8");
+            cmd(mc, "clockwork story set 1");
+        }, 70);
+        snap("40_chapter_card");
+        add("wait_quest_card", mc -> {
+        }, 110);
+        snap("41_quest_card");
+        add("q1_counter", mc -> cmd(mc, "clockwork debug counter"), 20);
+        add("q1_talk", mc -> cmd(mc, "clockwork debug talk"), 20);
+        add("q1_line_me", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) d.showLine(2);
+        }, 6);
+        snap("42_story_dialogue_me");
+        add("q1_line_bolt", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) d.showLine(1);
+        }, 6);
+        snap("43_story_dialogue");
+        add("q1_skip", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) d.skipAll();
+        }, 6);
+        snap("44_story_offer");
+        add("q1_accept", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) d.primaryAction();
+        }, 12);
+        add("q1_bench", mc -> {
+            if (mc.screen instanceof RepairPromptScreen r) r.goToBench();
+            else cmd(mc, "clockwork bench");
+        }, 60);
+        add("q1_lens_screw", mc -> lensOn(mc, 1), 26);
+        add("q1_lens_clue", mc -> lensOn(mc, 2), 26);
+        snap("45_clue_found");
+        add("q1_select_screw", mc -> {
+            BenchScreen b = bench(mc);
+            if (b != null) {
+                b.forcedLensX = -1000;
+                b.forcedLensY = -1000;
+                b.select(1);
+            }
+        }, 8);
+        snap("46_bench_twists");
+        add("q1_dive", mc -> {
+            BenchScreen b = bench(mc);
+            if (b != null) b.startDive();
+        }, 150);
+        add("q1_look", mc -> look(mc, 180.0f, -10.0f), 10);
+        snap("47_timed_screw");
+        add("q1_complete", mc -> cmd(mc, "clockwork complete"), 130);
+        add("q1_close", mc -> mc.setScreen(null), 10);
+
+        add("q10_set", mc -> {
+            cmd(mc, "tp @s 0.5 64 1.2 0 8");
+            cmd(mc, "clockwork story set 10");
+        }, 80);
+        add("q10_counter", mc -> cmd(mc, "clockwork debug counter"), 20);
+        add("q10_talk", mc -> cmd(mc, "clockwork debug talk"), 20);
+        add("q10_line", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) d.showLine(3);
+        }, 6);
+        snap("48_stranger_dialogue");
+        add("q10_accept", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) {
+                d.skipAll();
+                d.primaryAction();
+            }
+        }, 12);
+        add("q10_bench", mc -> {
+            if (mc.screen instanceof RepairPromptScreen r) r.goToBench();
+            else cmd(mc, "clockwork bench");
+        }, 60);
+        add("q10_lens", mc -> lensOn(mc, 0), 26);
+        snap("49_bench_music_box");
+        add("q10_dive", mc -> {
+            BenchScreen b = bench(mc);
+            if (b != null) {
+                b.select(0);
+                b.startDive();
+            }
+        }, 150);
+        add("q10_look", mc -> look(mc, 180.0f, 10.0f), 10);
+        snap("50_spring_fragments");
+        add("q10_fragment", mc -> cmd(mc, "clockwork debug fragment"), 24);
+        snap("51_memory_card");
+        add("q10_complete", mc -> cmd(mc, "clockwork complete"), 130);
+        add("q10_close", mc -> mc.setScreen(null), 10);
+        add("hold2", mc -> cmd(mc, "clockwork debug hold"), 5);
+
+        zone("dust swarm", "52_dust_zone", 180.0f, 14.0f, 0);
+        zone("tuning", "53_tuning_bells", 180.0f, 16.0f, 90);
+        zone("teeth offbeat dark elite", "54_dark_offbeat", 180.0f, 2.0f, 30);
+        zone("nest shadow", "55_shadow_boss", 180.0f, 6.0f, 70);
+        zone("nest queen", "56_queen", 180.0f, -6.0f, 70);
+
+        add("q17_set", mc -> {
+            mc.setScreen(null);
+            cmd(mc, "tp @s 0.5 64 26.5 0 0");
+            cmd(mc, "clockwork story set 17");
+        }, 100);
+        add("q17_view", mc -> cmd(mc, "tp @s 0.5 64 29.2 0 -12"), 40);
+        snap("57_plaza");
+        add("q17_wide", mc -> cmd(mc, "tp @s 0.5 64 20.5 0 -28"), 30);
+        snap("58_tower_arch");
+        add("q17_back", mc -> cmd(mc, "tp @s 0.5 64 30.5 0 0"), 20);
+        add("q17_talk", mc -> cmd(mc, "clockwork debug talk"), 20);
+        add("q17_line", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) d.showLine(1);
+        }, 6);
+        snap("59_tower_dialogue");
+        add("q17_accept", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) {
+                d.skipAll();
+                d.primaryAction();
+            }
+        }, 12);
+        add("q17_bench", mc -> {
+            if (mc.screen instanceof RepairPromptScreen r) r.goToBench();
+            else cmd(mc, "clockwork bench");
+        }, 70);
+        add("q17_lens", mc -> lensOn(mc, 0), 26);
+        snap("60_great_clock_bench");
+        add("q17_close", mc -> mc.setScreen(null), 10);
+
+        add("journal", mc -> mc.setScreen(new JournalScreen()), 15);
+        snap("61_journal");
+        add("journal_done", mc -> {
+            if (mc.screen instanceof JournalScreen j) j.select(9);
+        }, 8);
+        snap("62_journal_done");
+        add("ending", mc -> {
+            EndingScreen e = new EndingScreen(false);
+            mc.setScreen(e);
+            e.setScroll(260);
+        }, 20);
+        snap("63_ending");
+        add("ending_cast", mc -> {
+            if (mc.screen instanceof EndingScreen e) e.setScroll(820);
+        }, 10);
+        snap("64_ending_cast");
+        add("ending_close", mc -> mc.setScreen(null), 10);
+
+        add("q20_set", mc -> {
+            cmd(mc, "tp @s 0.5 64 1.2 0 8");
+            cmd(mc, "clockwork story set 20");
+        }, 100);
+        add("q20_counter", mc -> cmd(mc, "clockwork debug counter"), 40);
+        add("q20_view", mc -> cmd(mc, "tp @s 0.5 64 -2.5 0 14"), 30);
+        snap("65_finale_shop");
+        add("q20_talk", mc -> cmd(mc, "clockwork debug talk"), 20);
+        add("q20_line", mc -> {
+            DialogueScreen d = dialogue(mc);
+            if (d != null) d.showLine(3);
+        }, 6);
+        snap("66_finale_dialogue");
+        add("q20_close", mc -> mc.setScreen(null), 10);
     }
 
     private static void shot(Minecraft mc, String name) {

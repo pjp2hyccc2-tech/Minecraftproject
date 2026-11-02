@@ -35,7 +35,7 @@ public class BrokenClockItem extends Item {
         ClockData d = ClockData.fromStack(stack);
         if (d == null) return super.getName(stack);
         return Component.translatable(d.allRepaired() ? "item.clockworkdiver.broken_clock.repaired" : "item.clockworkdiver.broken_clock.named",
-                Component.translatable(d.type.nameKey()));
+                Component.translatable(d.nameKey()));
     }
 
     @Override
@@ -55,6 +55,12 @@ public class BrokenClockItem extends Item {
                 .withStyle(ChatFormatting.GOLD));
         for (Defect def : d.defects) {
             MutableComponent line = Component.literal(" ");
+            if (def.type == com.clockworkdiver.clock.DefectType.CLUE) {
+                if (!def.found) continue;
+                line.append(Component.translatable(d.isStory() ? "story.clockworkdiver." + d.story + ".clue" : "defect.clockworkdiver.clue"));
+                tooltip.add(line.withStyle(ChatFormatting.LIGHT_PURPLE));
+                continue;
+            }
             line.append(def.found ? Component.translatable(def.partKey()) : Component.literal("???"));
             line.append(" ");
             line.append(Component.translatable(def.repaired ? "tooltip.clockworkdiver.clock.fixed"

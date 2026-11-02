@@ -13,6 +13,9 @@ import com.clockworkdiver.registry.ModDimensions;
 import com.clockworkdiver.registry.ModEntities;
 import com.clockworkdiver.registry.ModItems;
 import com.clockworkdiver.registry.ModSounds;
+import com.clockworkdiver.clock.DefectType;
+import com.clockworkdiver.story.StoryManager;
+import com.clockworkdiver.story.StoryQuest;
 import com.clockworkdiver.util.DelayedTasks;
 import com.clockworkdiver.util.Teleport;
 import net.minecraft.core.BlockPos;
@@ -159,7 +162,26 @@ public final class WorkshopManager {
 
     private static void teleportToBench(ServerPlayer player, ServerLevel ws, PlayerProgress progress) {
         BlockPos o = origin(progress.slot);
+        if (StoryManager.isTower(progress.activeClock) && progress.accepted) {
+            // The Great Clock is inspected from the plaza in front of the tower gate.
+            BlockPos p = StoryManager.PLAZA_BENCH;
+            Teleport.to(player, ws, o.getX() + p.getX() + 0.5, o.getY() + p.getY(), o.getZ() + p.getZ() + 0.5, 0.0f, -32.0f);
+            return;
+        }
         Teleport.to(player, ws, o.getX() + BENCH.getX() + 0.5, o.getY(), o.getZ() + BENCH.getZ() + 1.7, 180.0f, 38.0f);
+    }
+
+    /** The tower gate: in the last chapter it opens onto the Great Clock's inspection hatch. */
+    public static void useTowerGate(ServerPlayer player) {
+        PlayerProgress progress = WorldProgress.of(player);
+        if (StoryManager.isTower(progress.activeClock) && progress.accepted) {
+            openBench(player, true);
+            return;
+        }
+        String key = StoryManager.finished(progress) ? "message.clockworkdiver.gate_peace"
+                : progress.storyIndex >= 16 ? "message.clockworkdiver.gate_wait" : "message.clockworkdiver.gate_locked";
+        player.displayClientMessage(Component.translatable(key), true);
+        player.level().playSound(null, player.blockPosition(), SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.7f);
     }
 
     // ------------------------------------------------------------------ the bench
@@ -208,6 +230,13 @@ public final class WorkshopManager {
         Defect d = clock.defect(defectId);
         if (d == null || d.found) return;
         d.found = true;
+        if (d.type == DefectType.CLUE) {
+            // A clue is "done" as soon as it is seen.
+            d.repaired = true;
+            if (progress.markSeen(PlayerProgress.HINT_CLUE)) {
+                ModNetwork.send(player, new S2C.Hint(List.of("hint.clockworkdiver.clue.0")));
+            }
+        }
         syncClockItem(player, clock);
         player.level().playSound(null, player.blockPosition(), ModSounds.DISCOVER.get(), SoundSource.PLAYERS, 0.9f, 1.0f);
         Objectives.sync(player);
@@ -240,6 +269,7 @@ public final class WorkshopManager {
             }
             if (!progress.started || DiveManager.session(player) != null) continue;
             if (player.distanceToSqr(o.getX(), o.getY(), o.getZ()) > 80.0 * 80.0) continue;
+            if (player.distanceToSqr(o.getX(), o.getY(), o.getZ()) < 44.0 * 44.0) StoryManager.tickScene(player, progress, ws);
             CustomerEntity customer = findCustomer(ws, progress);
             if (progress.activeClock == null) {
                 if (customer != null && customer.state() != CustomerEntity.LEAVING) customer.leave();
@@ -268,14 +298,17 @@ public final class WorkshopManager {
     public static void newCommission(ServerPlayer player, PlayerProgress progress, ServerLevel ws, @Nullable ClockData forced) {
         progress.commissionCounter++;
         ClockData clock = forced != null ? forced
-                : progress.tutorialDone ? CommissionGenerator.random(ws.random, progress.reputation, progress.commissionCounter)
-                : CommissionGenerator.tutorial(progress.commissionCounter);
+                : !progress.tutorialDone ? CommissionGenerator.tutorial(progress.commissionCounter)
+                : StoryManager.active(progress) ? StoryManager.commission(progress, progress.commissionCounter)
+                : CommissionGenerator.random(ws.random, progress.reputation, progress.commissionCounter);
         clock.commissionId = progress.commissionCounter;
         progress.activeClock = clock;
         progress.accepted = false;
         CustomerEntity old = findCustomer(ws, progress);
         if (old != null) old.discard();
         spawnCustomer(player, progress, ws, true);
+        StoryQuest quest = StoryManager.of(clock);
+        if (quest != null) StoryManager.announce(player, quest);
         Objectives.sync(player);
     }
 
@@ -285,6 +318,20 @@ public final class WorkshopManager {
         CustomerEntity customer = ModEntities.CUSTOMER.get().create(ws);
         if (customer == null) return;
         BlockPos o = origin(progress.slot);
+        if (StoryManager.isTower(clock)) {
+            // Chapter 5: Pip waits for the player in the plaza before the Great Clock tower.
+            BlockPos spot = o.offset(StoryManager.PIP_SPOT);
+            customer.setup(player.getUUID(), clock.profile, spot, spot);
+            customer.moveTo(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5, 180.0f, 0.0f);
+            customer.setState(progress.accepted ? CustomerEntity.WAITING_REPAIR : CustomerEntity.WAITING);
+            ws.addFreshEntity(customer);
+            progress.customerId = customer.getUUID();
+            if (walkIn) {
+                player.displayClientMessage(Component.translatable("message.clockworkdiver.customer_at_tower",
+                        Component.translatable(clock.profile.nameKey())), true);
+            }
+            return;
+        }
         BlockPos counter = o.offset(COUNTER_SPOT);
         BlockPos exit = o.offset(STREET_SPAWN);
         customer.setup(player.getUUID(), clock.profile, counter, exit);
@@ -335,6 +382,11 @@ public final class WorkshopManager {
             player.displayClientMessage(Component.translatable("message.clockworkdiver.not_your_customer"), true);
             return;
         }
+        if (customer.isExtra()) {
+            String key = "story.clockworkdiver.scene." + customer.scene() + "." + customer.profile().id;
+            ModNetwork.send(player, new S2C.OpenDialogue(customer.getId(), S2C.DIALOGUE_CHATTER, customer.profile().id, new CompoundTag(), 0, key));
+            return;
+        }
         PlayerProgress progress = WorldProgress.of(player);
         ClockData clock = progress.activeClock;
         if (clock == null || customer.state() == CustomerEntity.LEAVING) {
@@ -342,7 +394,7 @@ public final class WorkshopManager {
             return;
         }
         int mode = !progress.accepted ? S2C.DIALOGUE_OFFER : clock.allRepaired() ? S2C.DIALOGUE_DELIVER : S2C.DIALOGUE_WAITING;
-        ModNetwork.send(player, new S2C.OpenDialogue(customer.getId(), mode, clock.profile.id, clock.save(), clock.reward));
+        ModNetwork.send(player, new S2C.OpenDialogue(customer.getId(), mode, clock.profile.id, clock.save(), clock.reward, ""));
     }
 
     public static void acceptCommission(ServerPlayer player, int entityId) {
@@ -382,8 +434,11 @@ public final class WorkshopManager {
         level.playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.6f, 1.2f);
         ServerLevel ws = workshopLevel(player.server);
         long now = ws != null ? ws.getGameTime() : level.getGameTime();
-        progress.nextCustomerTime = now + (clock.tutorial ? 200 : 360);
-        ModNetwork.send(player, new S2C.OpenDialogue(entityId, S2C.DIALOGUE_THANKS, clock.profile.id, clock.save(), clock.reward));
+        StoryQuest quest = StoryManager.of(clock);
+        progress.nextCustomerTime = now + (clock.tutorial ? 200 : quest == null ? 360 : quest.closesChapter() ? 420 : 240);
+        if (quest != null) StoryManager.onDelivered(player, progress, clock, now);
+        else StoryManager.sync(player);
+        ModNetwork.send(player, new S2C.OpenDialogue(entityId, S2C.DIALOGUE_THANKS, clock.profile.id, clock.save(), clock.reward, ""));
         if (clock.tutorial && !progress.tutorialDone) {
             progress.tutorialDone = true;
             player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 70, 20));

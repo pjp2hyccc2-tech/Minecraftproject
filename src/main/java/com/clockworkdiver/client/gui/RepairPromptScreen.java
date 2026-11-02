@@ -81,11 +81,11 @@ public class RepairPromptScreen extends Screen {
 
         Component title = Component.translatable(received ? "gui.clockworkdiver.received" : "gui.clockworkdiver.commission").withStyle(ChatFormatting.BOLD);
         g.drawString(font, title, x0 + 86, y0 + 14, 0xFF3A2410, false);
-        g.drawString(font, Component.translatable(clock.type.nameKey()), x0 + 86, y0 + 30, 0xFF7A3A10, false);
+        g.drawString(font, Component.translatable(clock.nameKey()), x0 + 86, y0 + 30, 0xFF7A3A10, false);
         g.drawString(font, Component.translatable("gui.clockworkdiver.owner", Component.translatable(clock.profile.nameKey())), x0 + 86, y0 + 42,
                 0xFF5A4630, false);
         g.drawString(font, Component.translatable("gui.clockworkdiver.progress", clock.foundCount(), clock.defects.size(), clock.repairedCount(),
-                clock.defects.size()), x0 + 86, y0 + 56, 0xFF5A4630, false);
+                clock.faultCount()), x0 + 86, y0 + 56, 0xFF5A4630, false);
         List<FormattedCharSequence> help = font.split(Component.translatable(clock.allRepaired() ? "gui.clockworkdiver.prompt.done"
                 : "gui.clockworkdiver.prompt.help"), cw - 100);
         int y = y0 + 74;

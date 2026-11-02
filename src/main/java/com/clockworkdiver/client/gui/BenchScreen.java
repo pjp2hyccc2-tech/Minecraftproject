@@ -3,6 +3,8 @@ package com.clockworkdiver.client.gui;
 import com.clockworkdiver.clock.ClockData;
 import com.clockworkdiver.clock.ClockType;
 import com.clockworkdiver.clock.Defect;
+import com.clockworkdiver.clock.DefectType;
+import com.clockworkdiver.clock.DiveMods;
 import com.clockworkdiver.network.C2S;
 import com.clockworkdiver.network.ModNetwork;
 import com.clockworkdiver.network.S2C;
@@ -84,7 +86,7 @@ public class BenchScreen extends Screen {
     protected void init() {
         int clockArea = Math.min(height - 36, (int) (width * 0.56f));
         s = clockArea * 0.40f;
-        if (type() == ClockType.CUCKOO || type() == ClockType.BIRDCAGE || type() == ClockType.STEAM_TOWER) s *= 0.8f;
+        if (type().tall()) s *= 0.8f;
         cx = 14 + clockArea / 2.0f;
         cy = height / 2.0f + 8;
         panelX = 14 + clockArea + 12;
@@ -120,7 +122,7 @@ public class BenchScreen extends Screen {
         boolean job = !upgradeTab && clock != null;
         diveButton.visible = job && diveTicks < 0;
         Defect sel = clock == null ? null : clock.defect(selectedId);
-        diveButton.active = sel != null && sel.found && !sel.repaired && lensReady();
+        diveButton.active = sel != null && sel.found && !sel.repaired && sel.type.divable() && lensReady();
         if (clock != null && clock.allRepaired()) {
             diveButton.setMessage(Component.translatable("gui.clockworkdiver.all_done"));
             diveButton.glow = false;
@@ -183,17 +185,32 @@ public class BenchScreen extends Screen {
         focusId = -1;
         focusTicks = 0;
         ModNetwork.sendToServer(new C2S.DiscoverDefect(d.id));
-        flashText = Component.translatable("gui.clockworkdiver.found", Component.translatable(d.partKey()), Component.translatable(d.type.nameKey()));
+        if (d.type == DefectType.CLUE) {
+            d.repaired = true;
+            flashText = Component.translatable("gui.clockworkdiver.found_clue", Component.translatable(clueKey()));
+        } else {
+            flashText = Component.translatable("gui.clockworkdiver.found", Component.translatable(d.partKey()), Component.translatable(d.type.nameKey()));
+        }
         flashTicks = 60;
         if (minecraft != null) minecraft.getSoundManager().play(SimpleSoundInstance.forUI(ModSounds.DISCOVER.get(), 1.0f, 0.8f));
         if (selectedId < 0 || clock == null || clock.defect(selectedId) == null || clock.defect(selectedId).repaired) selectedId = d.id;
+        if (d.type == DefectType.CLUE) selectedId = d.id;
+    }
+
+    /** Language key of this clock's clue (story clocks). */
+    private String clueKey() {
+        return clock != null && clock.isStory() ? "story.clockworkdiver." + clock.story + ".clue" : "defect.clockworkdiver.clue";
+    }
+
+    private Component partName(Defect d) {
+        return d.type == DefectType.CLUE ? Component.translatable(clueKey()) : Component.translatable(d.partKey());
     }
 
     /** Starts the shrinking animation; the server is asked to start the dive halfway through. */
     public void startDive() {
         if (clock == null || diveTicks >= 0) return;
         Defect sel = clock.defect(selectedId);
-        if (sel == null || !sel.found || sel.repaired) return;
+        if (sel == null || !sel.found || sel.repaired || !sel.type.divable()) return;
         diveTicks = 0;
         if (minecraft != null) minecraft.getSoundManager().play(SimpleSoundInstance.forUI(ModSounds.SHRINK.get(), 1.0f, 1.0f));
         updateButtons();
@@ -389,6 +406,12 @@ public class BenchScreen extends Screen {
                 Gfx.ring(x, y, r * (1.5f + p * 0.3f), r * (1.75f + p * 0.3f), 0xFFFFD27A);
             }
             Gfx.circle(x, y, r + 1.5f, 0xFF1A0E06);
+            if (d.type == DefectType.CLUE) {
+                Gfx.circleGradient(x, y, r, 0xFFE0B8FF, 0xFF6A2A9A);
+                Gfx.ring(x - r * 0.12f, y - r * 0.12f, r * 0.3f, r * 0.45f, 0xFFFFF4E0);
+                Gfx.line(x + r * 0.2f, y + r * 0.2f, x + r * 0.55f, y + r * 0.55f, Math.max(1.0f, r * 0.15f), 0xFFFFF4E0);
+                continue;
+            }
             Gfx.circleGradient(x, y, r, d.repaired ? 0xFF9CFFB0 : 0xFFFF8A70, d.repaired ? 0xFF2E9A4A : 0xFFB0201A);
             Gfx.gear(x, y, r * 0.45f, r * 0.62f, 8, time * (d.repaired ? 0.08f : 0.0f), 0xFFFFF4E0, 0, 0);
         }
@@ -402,8 +425,9 @@ public class BenchScreen extends Screen {
             if (!d.found) continue;
             float dx = ClockArt.defectX(d, cx, s) - mouseX, dy = ClockArt.defectY(d, cy, s) - mouseY;
             if (dx * dx + dy * dy < pick * pick) {
-                g.renderTooltip(font, List.of(Component.translatable(d.partKey()).withStyle(ChatFormatting.GOLD),
-                        Component.translatable(d.type.nameKey()).withStyle(d.repaired ? ChatFormatting.GREEN : ChatFormatting.RED)),
+                g.renderTooltip(font, List.of(partName(d).copy().withStyle(ChatFormatting.GOLD),
+                        Component.translatable(d.type.nameKey()).withStyle(d.type == DefectType.CLUE ? ChatFormatting.LIGHT_PURPLE
+                                : d.repaired ? ChatFormatting.GREEN : ChatFormatting.RED)),
                         java.util.Optional.empty(), mouseX, mouseY);
                 return;
             }
@@ -447,10 +471,10 @@ public class BenchScreen extends Screen {
             }
             return;
         }
-        g.drawString(font, Component.translatable(clock.type.nameKey()).withStyle(ChatFormatting.BOLD), x, y, ink, false);
+        g.drawString(font, Component.translatable(clock.nameKey()).withStyle(ChatFormatting.BOLD), x, y, ink, false);
         g.drawString(font, Component.translatable("gui.clockworkdiver.owner", Component.translatable(clock.profile.nameKey())), x, y + 12, soft, false);
         int dy = y + 26;
-        for (FormattedCharSequence line : font.split(Component.translatable(clock.type.descKey()), w)) {
+        for (FormattedCharSequence line : font.split(Component.translatable(clock.descKey()), w)) {
             if (dy > listTop() - 22) break;
             g.drawString(font, line, x, dy, 0xFF5A4630, false);
             dy += 9;
@@ -465,27 +489,58 @@ public class BenchScreen extends Screen {
                 Gfx.rect(panelX + 6, rowY - 2, panelX + panelW - 6, rowY + 10, 0x40C08A2E);
                 Gfx.end();
             }
-            Component name = d.found ? Component.translatable(d.partKey()) : Component.translatable("gui.clockworkdiver.unknown_part");
-            int color = d.repaired ? 0xFF2E7A3A : d.found ? 0xFF9A2A1A : 0xFF8A7A66;
-            g.drawString(font, Component.literal(d.repaired ? "✔ " : d.found ? "✖ " : "? ").append(name), x, rowY, color, false);
+            Component name = d.found ? partName(d) : Component.translatable("gui.clockworkdiver.unknown_part");
+            boolean clue = d.type == DefectType.CLUE && d.found;
+            int color = clue ? 0xFF6A2A9A : d.repaired ? 0xFF2E7A3A : d.found ? 0xFF9A2A1A : 0xFF8A7A66;
+            String mark = clue ? "◆ " : d.repaired ? "✔ " : d.found ? "✖ " : "? ";
+            g.drawString(font, Component.literal(mark).append(name), x, rowY, color, false);
+            if (d.found && !d.repaired && (d.mods != 0 || d.fragCount > 0 || d.boss != 0)) {
+                g.drawString(font, "⚠", panelX + panelW - 18, rowY, 0xFFB06A10, false);
+            }
             rowY += 12;
         }
         rowY += 4;
         Defect sel = clock.defect(selectedId);
         Component detail;
-        if (clock.allRepaired()) detail = Component.translatable("gui.clockworkdiver.done_help");
+        if (sel != null && sel.found && sel.type == DefectType.CLUE) detail = Component.translatable(clueKey() + ".desc");
+        else if (clock.allRepaired()) detail = Component.translatable("gui.clockworkdiver.done_help");
         else if (sel != null && sel.found) detail = Component.translatable("defect.clockworkdiver." + sel.type.id + ".desc");
         else if (clock.foundCount() < clock.defects.size()) detail = Component.translatable("gui.clockworkdiver.find_help");
         else detail = Component.translatable("gui.clockworkdiver.select_help");
-        if (sel != null && sel.found && !clock.allRepaired()) {
+        if (sel != null && sel.found && sel.type == DefectType.CLUE) {
+            g.drawString(font, Component.translatable("defect.clockworkdiver.clue").withStyle(ChatFormatting.BOLD), x, rowY, 0xFF6A2A9A, false);
+            rowY += 11;
+        } else if (sel != null && sel.found && !clock.allRepaired()) {
             g.drawString(font, Component.translatable(sel.type.nameKey()).withStyle(ChatFormatting.BOLD), x, rowY, 0xFF9A2A1A, false);
             rowY += 11;
+            if (!sel.repaired) {
+                // The twists waiting inside this part.
+                for (Component twist : twists(sel)) {
+                    if (rowY > panelY + panelH - 76) break;
+                    g.drawString(font, Component.literal("⚠ ").append(twist), x, rowY, 0xFFB0400A, false);
+                    rowY += 10;
+                }
+            }
         }
         for (FormattedCharSequence line : font.split(detail, w)) {
             if (rowY > panelY + panelH - 66) break;
             g.drawString(font, line, x, rowY, 0xFF4A3420, false);
             rowY += 9;
         }
+    }
+
+    private static List<Component> twists(Defect d) {
+        java.util.List<Component> out = new java.util.ArrayList<>();
+        for (String key : DiveMods.keys(d.mods)) {
+            if (key.endsWith(".timed") && d.timeLimit > 0) {
+                out.add(Component.translatable(key + ".time", d.timeLimit / 60, String.format("%02d", d.timeLimit % 60)));
+            } else {
+                out.add(Component.translatable(key));
+            }
+        }
+        if (d.boss != 0) out.add(Component.translatable("gui.clockworkdiver.twist.boss." + d.boss));
+        if (d.fragCount > 0) out.add(Component.translatable("gui.clockworkdiver.twist.fragments", d.fragCount));
+        return out;
     }
 
     private void drawBanner(GuiGraphics g, float time) {

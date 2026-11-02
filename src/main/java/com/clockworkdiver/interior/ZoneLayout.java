@@ -24,4 +24,10 @@ public final class ZoneLayout {
     public int screwHeight;
     public int screwMaxHeight;
     public AABB bounds = new AABB(BlockPos.ZERO);
+    /** No steam vents in this chamber. */
+    public boolean noVents;
+    /** Memory fragments waiting to be picked up. */
+    public final List<BlockPos> fragments = new ArrayList<>();
+    /** Tuning bells by note (tuning chambers). */
+    public final List<BlockPos> bells = new ArrayList<>();
 }

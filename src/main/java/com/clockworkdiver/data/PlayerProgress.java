@@ -18,6 +18,17 @@ public final class PlayerProgress {
     public static final int HINT_NEST = 1 << 7;
     public static final int HINT_STEAM = 1 << 8;
     public static final int HINT_DELIVER = 1 << 9;
+    public static final int HINT_DUST = 1 << 10;
+    public static final int HINT_TUNING = 1 << 11;
+    public static final int HINT_STORY = 1 << 12;
+    public static final int HINT_FRAGMENT = 1 << 13;
+    public static final int HINT_OFFBEAT = 1 << 14;
+    public static final int HINT_DARK = 1 << 15;
+    public static final int HINT_TIMED = 1 << 16;
+    public static final int HINT_PRECISION = 1 << 17;
+    public static final int HINT_CLUE = 1 << 18;
+    public static final int HINT_TOWER = 1 << 19;
+    public static final int HINT_POSTGAME = 1 << 20;
 
     public final UUID id;
     public int slot = -1;
@@ -47,6 +58,13 @@ public final class PlayerProgress {
     public double returnY;
     public double returnZ;
     public float returnYaw;
+    /** Story quests delivered so far (0..20); the next story commission is quest storyIndex + 1. */
+    public int storyIndex;
+    /** Bit i set: the keepsake of story quest i + 1 was handed over. */
+    public int keepsakes;
+    /** Keeps a story scene's gathered friends around for a while after its quest ended. */
+    public String sceneHold = "";
+    public long sceneHoldUntil;
     /** Not saved: how many workshop checks in a row found the customer missing. */
     public int missingCustomerChecks;
 
@@ -86,6 +104,12 @@ public final class PlayerProgress {
         tag.putLong("NextCustomer", nextCustomerTime);
         tag.putLong("CommissionCounter", commissionCounter);
         tag.putInt("Hints", hintsSeen);
+        tag.putInt("Story", storyIndex);
+        tag.putInt("Keepsakes", keepsakes);
+        if (!sceneHold.isEmpty()) {
+            tag.putString("SceneHold", sceneHold);
+            tag.putLong("SceneHoldUntil", sceneHoldUntil);
+        }
         if (returnDim != null) {
             tag.putString("ReturnDim", returnDim);
             tag.putDouble("ReturnX", returnX);
@@ -116,6 +140,10 @@ public final class PlayerProgress {
         p.nextCustomerTime = tag.getLong("NextCustomer");
         p.commissionCounter = tag.getLong("CommissionCounter");
         p.hintsSeen = tag.getInt("Hints");
+        p.storyIndex = tag.getInt("Story");
+        p.keepsakes = tag.getInt("Keepsakes");
+        p.sceneHold = tag.getString("SceneHold");
+        p.sceneHoldUntil = tag.getLong("SceneHoldUntil");
         if (tag.contains("ReturnDim")) {
             p.returnDim = tag.getString("ReturnDim");
             p.returnX = tag.getDouble("ReturnX");

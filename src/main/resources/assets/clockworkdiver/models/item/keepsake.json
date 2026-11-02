@@ -1,0 +1,98 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "clockworkdiver:item/keepsake_0"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.0312
+      },
+      "model": "clockworkdiver:item/keepsake_1"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.0938
+      },
+      "model": "clockworkdiver:item/keepsake_2"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.1562
+      },
+      "model": "clockworkdiver:item/keepsake_3"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.2188
+      },
+      "model": "clockworkdiver:item/keepsake_4"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.2812
+      },
+      "model": "clockworkdiver:item/keepsake_5"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.3438
+      },
+      "model": "clockworkdiver:item/keepsake_6"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.4062
+      },
+      "model": "clockworkdiver:item/keepsake_7"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.4688
+      },
+      "model": "clockworkdiver:item/keepsake_8"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.5312
+      },
+      "model": "clockworkdiver:item/keepsake_9"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.5938
+      },
+      "model": "clockworkdiver:item/keepsake_10"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.6562
+      },
+      "model": "clockworkdiver:item/keepsake_11"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.7188
+      },
+      "model": "clockworkdiver:item/keepsake_12"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.7812
+      },
+      "model": "clockworkdiver:item/keepsake_13"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.8438
+      },
+      "model": "clockworkdiver:item/keepsake_14"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:keepsake": 0.9062
+      },
+      "model": "clockworkdiver:item/keepsake_15"
+    }
+  ]
+}

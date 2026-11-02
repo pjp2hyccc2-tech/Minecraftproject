@@ -14,6 +14,7 @@ import com.clockworkdiver.client.render.TimeEaterModel;
 import com.clockworkdiver.client.render.TimeEaterRenderer;
 import com.clockworkdiver.client.render.TopHatModel;
 import com.clockworkdiver.item.BrokenClockItem;
+import com.clockworkdiver.item.KeepsakeItem;
 import com.clockworkdiver.registry.ModBlockEntities;
 import com.clockworkdiver.registry.ModEntities;
 import com.clockworkdiver.registry.ModItems;
@@ -34,13 +35,19 @@ import org.lwjgl.glfw.GLFW;
 public final class ClientSetup {
     public static final KeyMapping ABORT_KEY = new KeyMapping("key.clockworkdiver.abort", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R,
             "key.categories.clockworkdiver");
+    public static final KeyMapping JOURNAL_KEY = new KeyMapping("key.clockworkdiver.journal", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J,
+            "key.categories.clockworkdiver");
 
     private ClientSetup() {}
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> ItemProperties.register(ModItems.BROKEN_CLOCK.get(), ClockworkDiver.id("clock_type"),
-                (stack, level, entity, seed) -> BrokenClockItem.typeIndex(stack) / 10.0f));
+        event.enqueueWork(() -> {
+            ItemProperties.register(ModItems.BROKEN_CLOCK.get(), ClockworkDiver.id("clock_type"),
+                    (stack, level, entity, seed) -> BrokenClockItem.typeIndex(stack) / 10.0f);
+            ItemProperties.register(ModItems.KEEPSAKE.get(), ClockworkDiver.id("keepsake"),
+                    (stack, level, entity, seed) -> KeepsakeItem.icon(stack));
+        });
     }
 
     @SubscribeEvent
@@ -71,5 +78,6 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void onRegisterKeys(RegisterKeyMappingsEvent event) {
         event.register(ABORT_KEY);
+        event.register(JOURNAL_KEY);
     }
 }

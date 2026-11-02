@@ -2,6 +2,7 @@ package com.clockworkdiver.registry;
 
 import com.clockworkdiver.ClockworkDiver;
 import com.clockworkdiver.item.BrokenClockItem;
+import com.clockworkdiver.item.KeepsakeItem;
 import com.clockworkdiver.item.SpectaclesItem;
 import com.clockworkdiver.item.WorkshopKeyItem;
 import com.clockworkdiver.item.WrenchItem;
@@ -33,6 +34,8 @@ public final class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> BOLT = ITEMS.register("bolt",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> KEEPSAKE = ITEMS.register("keepsake",
+            () -> new KeepsakeItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
 
     public static final RegistryObject<Item> BRASS_BLOCK = block("brass_block", ModBlocks.BRASS_BLOCK);
     public static final RegistryObject<Item> BRASS_PLATE = block("brass_plate", ModBlocks.BRASS_PLATE);
@@ -46,6 +49,9 @@ public final class ModItems {
     public static final RegistryObject<Item> TOOTH_SOCKET = block("tooth_socket", ModBlocks.TOOTH_SOCKET);
     public static final RegistryObject<Item> SCREW_HEAD = block("screw_head", ModBlocks.SCREW_HEAD);
     public static final RegistryObject<Item> WINDING_CRANK = block("winding_crank", ModBlocks.WINDING_CRANK);
+    public static final RegistryObject<Item> TUNING_BELL = block("tuning_bell", ModBlocks.TUNING_BELL);
+    public static final RegistryObject<Item> DUST_PILE = block("dust_pile", ModBlocks.DUST_PILE);
+    public static final RegistryObject<Item> MEMORY_COG = block("memory_cog", ModBlocks.MEMORY_COG);
 
     public static final RegistryObject<Item> CUSTOMER_SPAWN_EGG = ITEMS.register("customer_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.CUSTOMER, 0x6B4A2B, 0xD4AF37, new Item.Properties()));

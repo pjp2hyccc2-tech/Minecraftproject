@@ -78,6 +78,16 @@ public final class ClockArt {
             float r = s * (0.13f + 0.05f * ((i * 7) % 3));
             int teeth = Math.max(10, (int) (r / s * 120));
             float dir = (i % 2 == 0) ? 1.0f : -1.0f;
+            if (d != null && d.type == DefectType.CLUE) {
+                // A clue is not a broken part: an ordinary wheel with something odd glinting on it.
+                Gfx.gear(ax, ay, r, r * 1.14f, teeth, dir * tick * (0.3f / (r / s * 6.0f)) + i, BRASS, r > s * 0.15f ? 4 : 0, 0);
+                float tw = 0.5f + 0.5f * (float) Math.sin(time * 0.2f + i);
+                int glint = d.found ? 0xFFC890FF : Gfx.withAlpha(0xD8A8FF, (int) (120 + 120 * tw));
+                Gfx.circleGradient(ax, ay, r * 0.8f, Gfx.withAlpha(0xB070FF, (int) (60 + 60 * tw)), 0x00B070FF);
+                Gfx.quad(ax, ay - r * 0.55f, ax + r * 0.18f, ay, ax, ay + r * 0.55f, ax - r * 0.18f, ay, glint);
+                Gfx.quad(ax - r * 0.55f, ay, ax, ay - r * 0.18f, ax + r * 0.55f, ay, ax, ay + r * 0.18f, glint);
+                continue;
+            }
             if (d == null || d.repaired) {
                 Gfx.gear(ax, ay, r, r * 1.14f, teeth, dir * tick * (0.3f / (r / s * 6.0f)) + i, d != null ? GOLD : BRASS, r > s * 0.15f ? 4 : 0, 0);
                 if (d != null) Gfx.ring(ax, ay, r * 1.2f, r * 1.32f, Gfx.withAlpha(0x7CFF9A, 90 + (int) (60 * Math.sin(time * 0.2f))));
@@ -139,6 +149,31 @@ public final class ClockArt {
                 Gfx.spiral(x, y, r * 0.15f, r * 0.92f, 3.2f + wob, Math.max(1.0f, r * 0.06f), seed + wob, 0xFFC9CED6);
                 Gfx.spiral(x + r * 0.2f, y + r * 0.1f, r * 0.3f, r * 0.7f, 1.4f, Math.max(1.0f, r * 0.05f), seed * 2.0f, 0xFFE05050);
             }
+            case DUST -> {
+                Gfx.gear(x, y, r, r * 1.14f, teeth, seed, BRASS_DARK, 4, 0);
+                for (int k = 0; k < 11; k++) {
+                    float a = k * 2.1f + seed;
+                    float rr = r * (0.2f + (k % 5) * 0.2f);
+                    float wob = (float) Math.sin(time * 0.05f + k) * r * 0.03f;
+                    Gfx.circle(x + (float) Math.cos(a) * rr + wob, y + (float) Math.sin(a) * rr, r * (0.16f + (k % 3) * 0.06f),
+                            k % 2 == 0 ? 0xFFB8B4AC : 0xFF8C8880);
+                }
+                float mx = x + (float) Math.cos(time * 0.08f + seed) * r * 0.9f, my = y + (float) Math.sin(time * 0.11f) * r * 0.6f;
+                Gfx.tri(mx, my, mx - r * 0.2f, my - r * 0.12f, mx - r * 0.2f, my + r * 0.12f, 0xFF6A6460);
+                Gfx.tri(mx, my, mx + r * 0.2f, my - r * 0.12f, mx + r * 0.2f, my + r * 0.12f, 0xFF6A6460);
+            }
+            case TUNING -> {
+                Gfx.gear(x, y, r, r * 1.14f, teeth, seed, BRASS, 0, 0);
+                float ring = (float) Math.sin(time * 0.6f + seed) * r * 0.08f;
+                Gfx.quad(x - r * 0.3f + ring, y - r * 0.35f, x + r * 0.3f + ring, y - r * 0.35f, x + r * 0.5f, y + r * 0.35f, x - r * 0.5f, y + r * 0.35f, GOLD);
+                Gfx.circle(x + ring * 0.5f, y + r * 0.45f, r * 0.1f, BRASS_DARK);
+                for (int k = 1; k <= 2; k++) {
+                    Gfx.arc(x, y, r * (0.65f + k * 0.18f), r * (0.7f + k * 0.18f), -0.6f, 0.6f, Gfx.withAlpha(0xFF3030, (int) (200 * pulse)));
+                    Gfx.arc(x, y, r * (0.65f + k * 0.18f), r * (0.7f + k * 0.18f), PI - 0.6f, PI + 0.6f, Gfx.withAlpha(0xFF3030, (int) (200 * pulse)));
+                }
+            }
+            case CLUE -> {
+            }
             case NEST -> {
                 Gfx.circleGradient(x, y, r * 1.1f, 0xFF120818, 0xFF3A1650);
                 for (int k = 0; k < 6; k++) {
@@ -170,7 +205,124 @@ public final class ClockArt {
             case BIRDCAGE -> birdcage(cx, cy, s, time, running);
             case STEAM_TOWER -> steamTower(cx, cy, s, time, running);
             case ORRERY -> orrery(cx, cy, s, time, running);
+            case MUSIC_BOX -> musicBox(cx, cy, s, time, running);
+            case GRANDFATHER -> grandfather(cx, cy, s, time, running);
+            case GREAT_CLOCK -> greatClock(cx, cy, s, time, running);
         }
+    }
+
+    private static void musicBox(float cx, float cy, float s, float time, boolean running) {
+        // Open lid behind, with a mirror.
+        Gfx.quad(cx - s * 0.92f, cy - s * 0.22f, cx + s * 0.92f, cy - s * 0.22f, cx + s * 0.8f, cy - s * 0.95f, cx - s * 0.8f, cy - s * 0.95f, 0xFF5A2E18);
+        Gfx.quad(cx - s * 0.8f, cy - s * 0.28f, cx + s * 0.8f, cy - s * 0.28f, cx + s * 0.7f, cy - s * 0.88f, cx - s * 0.7f, cy - s * 0.88f, 0xFF9AB4C8);
+        Gfx.quad(cx - s * 0.5f, cy - s * 0.3f, cx - s * 0.3f, cy - s * 0.3f, cx - s * 0.05f, cy - s * 0.86f, cx - s * 0.25f, cy - s * 0.86f, 0x60FFFFFF);
+        // The box.
+        Gfx.rectV(cx - s * 0.98f, cy - s * 0.25f, cx + s * 0.98f, cy + s * 0.88f, 0xFF8A4A26, 0xFF5A2A14);
+        Gfx.rect(cx - s * 0.98f, cy - s * 0.25f, cx + s * 0.98f, cy - s * 0.17f, 0xFFB86A36);
+        Gfx.rect(cx - s * 0.98f, cy + s * 0.8f, cx + s * 0.98f, cy + s * 0.88f, 0xFF3A1A0A);
+        for (float[] c : new float[][]{{-0.9f, -0.17f}, {0.9f, -0.17f}, {-0.9f, 0.8f}, {0.9f, 0.8f}}) {
+            Gfx.circle(cx + c[0] * s, cy + c[1] * s, s * 0.07f, GOLD);
+        }
+        for (int i = 0; i < 5; i++) {
+            float x = cx - s * 0.75f + i * s * 0.375f;
+            Gfx.circle(x, cy + s * 0.7f, s * 0.035f, 0xFFE8C46A);
+        }
+        // Winding key.
+        float kx = cx + s * 1.02f, ky = cy + s * 0.3f, ka = running ? time * 0.05f : 0.4f;
+        Gfx.rect(cx + s * 0.98f, ky - s * 0.03f, kx + s * 0.06f, ky + s * 0.03f, GOLD);
+        Gfx.line(kx + s * 0.06f, ky - (float) Math.cos(ka) * s * 0.14f, kx + s * 0.06f, ky + (float) Math.cos(ka) * s * 0.14f, s * 0.07f, GOLD);
+        // Turntable and dancer.
+        float dx = cx, dy = cy - s * 0.32f;
+        Gfx.circleGradient(dx, dy, s * 0.22f, 0xFFF0D080, 0xFFB08030);
+        float spin = running ? (float) Math.cos(time * 0.15f) : 0.8f;
+        float skirt = s * 0.17f * (0.35f + 0.65f * Math.abs(spin));
+        Gfx.tri(dx, dy - s * 0.42f, dx - skirt, dy - s * 0.08f, dx + skirt, dy - s * 0.08f, 0xFFF4B8C8);
+        Gfx.line(dx, dy - s * 0.42f, dx, dy - s * 0.6f, s * 0.035f, 0xFFF4D8C0);
+        Gfx.circle(dx, dy - s * 0.66f, s * 0.06f, 0xFFF4D8C0);
+        Gfx.line(dx - s * 0.12f * spin, dy - s * 0.66f, dx + s * 0.12f * spin, dy - s * 0.74f, s * 0.02f, 0xFFF4D8C0);
+        Gfx.line(dx, dy - s * 0.08f, dx, dy, s * 0.03f, 0xFFF4D8C0);
+        // Dial on the front.
+        Gfx.metalRing(cx, cy + s * 0.3f, s * 0.36f, s * 0.42f, GOLD);
+        dial(cx, cy + s * 0.3f, s * 0.36f, CREAM, INK, time, running, false);
+        if (running) {
+            for (int i = 0; i < 3; i++) {
+                float t = ((time * 0.015f) + i / 3.0f) % 1.0f;
+                float nx = cx + s * (0.55f + t * 0.4f), ny = cy - s * (0.3f + t * 0.6f);
+                Gfx.circle(nx, ny, s * 0.035f, Gfx.withAlpha(0x3A2410, (int) (220 * (1.0f - t))));
+                Gfx.line(nx + s * 0.03f, ny, nx + s * 0.03f, ny - s * 0.12f, s * 0.012f, Gfx.withAlpha(0x3A2410, (int) (220 * (1.0f - t))));
+            }
+        }
+    }
+
+    private static void grandfather(float cx, float cy, float s, float time, boolean running) {
+        int wood = 0xFF5A2E16, woodLight = 0xFF7A4224, woodDark = 0xFF3A1A0A;
+        // Trunk with a glass door, pendulum and weights.
+        Gfx.rectV(cx - s * 0.42f, cy - s * 0.15f, cx + s * 0.42f, cy + s * 1.2f, woodLight, wood);
+        Gfx.rect(cx - s * 0.5f, cy + s * 1.12f, cx + s * 0.5f, cy + s * 1.25f, woodDark);
+        Gfx.rect(cx - s * 0.3f, cy, cx + s * 0.3f, cy + s * 1.02f, 0xFF20140C);
+        float swing = running ? (float) Math.sin(time * PI / 20.0f) * 0.22f : 0.02f;
+        float px = cx, py = cy + s * 0.02f;
+        float bobX = px + (float) Math.sin(swing) * s * 0.78f, bobY = py + (float) Math.cos(swing) * s * 0.78f;
+        Gfx.line(px, py, bobX, bobY, Math.max(1.0f, s * 0.02f), 0xFFC8A040);
+        Gfx.circleGradient(bobX, bobY, s * 0.11f, 0xFFFFF0A0, 0xFFB08020);
+        for (int side : new int[]{-1, 1}) {
+            float wx = cx + side * s * 0.18f, wy = cy + s * (side < 0 ? 0.55f : 0.4f);
+            Gfx.line(wx, cy, wx, wy, Math.max(0.6f, s * 0.008f), 0xFF9A9AA0);
+            Gfx.rectV(wx - s * 0.045f, wy, wx + s * 0.045f, wy + s * 0.22f, 0xFFE8C46A, 0xFF9A7020);
+        }
+        Gfx.rect(cx - s * 0.3f, cy, cx + s * 0.3f, cy + s * 1.02f, 0x2088C8FF);
+        Gfx.line(cx - s * 0.2f, cy + s * 0.1f, cx - s * 0.05f, cy + s * 0.5f, Math.max(0.6f, s * 0.01f), 0x40FFFFFF);
+        // Hood with an arched top and finials.
+        Gfx.rectV(cx - s * 0.56f, cy - s * 1.08f, cx + s * 0.56f, cy - s * 0.12f, woodLight, wood);
+        Gfx.disc(cx, cy - s * 1.08f, s * 0.56f, woodLight);
+        Gfx.rect(cx - s * 0.6f, cy - s * 0.18f, cx + s * 0.6f, cy - s * 0.1f, woodDark);
+        for (int side : new int[]{-1, 0, 1}) {
+            float fx = cx + side * s * 0.45f, fy = cy - s * (side == 0 ? 1.68f : 1.22f);
+            Gfx.circle(fx, fy, s * 0.06f, GOLD);
+            Gfx.rect(fx - s * 0.02f, fy, fx + s * 0.02f, fy + s * 0.1f, GOLD);
+        }
+        for (int side : new int[]{-1, 1}) Gfx.rect(cx + side * s * 0.5f - s * 0.03f, cy - s * 1.0f, cx + side * s * 0.5f + s * 0.03f, cy - s * 0.2f, GOLD);
+        // Moon phase arch above the dial.
+        Gfx.arc(cx, cy - s * 1.0f, s * 0.2f, s * 0.36f, PI, TAU, 0xFF1B2A55);
+        Gfx.circle(cx + (float) Math.cos(PI + (running ? time * 0.002f : 1.2f) % PI) * s * 0.28f,
+                cy - s * 1.0f + (float) Math.sin(PI + (running ? time * 0.002f : 1.2f) % PI) * s * 0.28f, s * 0.06f, 0xFFF0F0E0);
+        Gfx.metalRing(cx, cy - s * 0.6f, s * 0.4f, s * 0.46f, BRASS);
+        dial(cx, cy - s * 0.6f, s * 0.4f, CREAM, INK, time, running, true);
+    }
+
+    private static void greatClock(float cx, float cy, float s, float time, boolean running) {
+        // Stone surround of the tower face.
+        Gfx.rectFine(cx - s * 1.05f, cy - s * 1.05f, cx + s * 1.05f, cy + s * 1.05f, 0xFF4A4648, Math.max(4.0f, s * 0.1f));
+        Gfx.rectFine(cx - s * 1.0f, cy - s * 1.0f, cx + s * 1.0f, cy + s * 1.0f, 0xFF6A6466, Math.max(4.0f, s * 0.1f));
+        for (int i = 0; i < 8; i++) {
+            float y = cy - s * 0.95f + i * s * 0.27f;
+            Gfx.rect(cx - s * 1.0f, y, cx + s * 1.0f, y + s * 0.012f, 0x30000000);
+        }
+        for (float[] c : new float[][]{{-0.86f, -0.86f}, {0.86f, -0.86f}, {-0.86f, 0.86f}, {0.86f, 0.86f}}) {
+            Gfx.gear(cx + c[0] * s, cy + c[1] * s, s * 0.09f, s * 0.12f, 10, time * 0.01f * (c[0] * c[1] > 0 ? 1 : -1), GOLD, 0, 0);
+        }
+        if (!running) {
+            float pulse = 0.5f + 0.5f * (float) Math.sin(time * 0.08f);
+            Gfx.circleGradient(cx, cy, s * 1.1f, Gfx.withAlpha(0x8A30C0, (int) (60 + 50 * pulse)), 0x008A30C0);
+        }
+        Gfx.metalRing(cx, cy, s * 0.88f, s * 0.97f, GOLD);
+        Gfx.ring(cx, cy, s * 0.84f, s * 0.88f, 0xFF2A2420);
+        Gfx.disc(cx, cy, s * 0.84f, 0xFFF0E6CE);
+        Gfx.ring(cx, cy, s * 0.58f, s * 0.6f, 0xFF2A2420);
+        for (int i = 0; i < 60; i++) {
+            float a = i * TAU / 60.0f - PI / 2.0f;
+            float c = (float) Math.cos(a), sn = (float) Math.sin(a);
+            float r0 = i % 5 == 0 ? s * 0.62f : s * 0.66f;
+            Gfx.line(cx + c * r0, cy + sn * r0, cx + c * s * 0.69f, cy + sn * s * 0.69f, i % 5 == 0 ? Math.max(1.2f, s * 0.02f) : Math.max(0.6f, s * 0.008f), 0xFF2A2420);
+        }
+        // Iron filigree at the centre.
+        for (int k = 0; k < 8; k++) {
+            float a = k * TAU / 8.0f + PI / 8.0f;
+            Gfx.line(cx, cy, cx + (float) Math.cos(a) * s * 0.4f, cy + (float) Math.sin(a) * s * 0.4f, Math.max(0.8f, s * 0.012f), 0x902A2420);
+            Gfx.circle(cx + (float) Math.cos(a) * s * 0.4f, cy + (float) Math.sin(a) * s * 0.4f, s * 0.03f, 0xA02A2420);
+        }
+        Gfx.ring(cx, cy, s * 0.22f, s * 0.24f, 0xA02A2420);
+        hands(cx, cy, s * 0.72f, 0xFF1E1A18, time, running);
     }
 
     private static void dial(float cx, float cy, float r, int face, int ink, float time, boolean running, boolean minuteTrack) {
@@ -425,13 +577,28 @@ public final class ClockArt {
                 oy = cy - s * 0.45f;
                 roman = false;
             }
+            case MUSIC_BOX -> {
+                r = s * 0.27f;
+                oy = cy + s * 0.3f;
+                roman = false;
+            }
+            case GRANDFATHER -> {
+                r = s * 0.3f;
+                oy = cy - s * 0.6f;
+                roman = true;
+            }
+            case GREAT_CLOCK -> {
+                r = s * 0.76f;
+                roman = true;
+            }
             default -> {
                 return;
             }
         }
         String[] romanNums = {"XII", "I", "II", "III", "IIII", "V", "VI", "VII", "VIII", "IX", "X", "XI"};
         float scale = Math.max(0.5f, Math.min(1.6f, r / 70.0f));
-        if (type == ClockType.ASTRONOMICAL) scale *= 0.75f;
+        if (type == ClockType.ASTRONOMICAL || type == ClockType.GRANDFATHER) scale *= 0.75f;
+        if (type == ClockType.GREAT_CLOCK) scale *= 1.15f;
         for (int i = 0; i < 12; i++) {
             float a = i * TAU / 12.0f - PI / 2.0f;
             float x = ox + (float) Math.cos(a) * r, y = oy + (float) Math.sin(a) * r;
@@ -454,6 +621,9 @@ public final class ClockArt {
             case SCREW -> "✚";
             case SPRING -> "∞";
             case NEST -> "☠";
+            case DUST -> "☁";
+            case TUNING -> "♪";
+            case CLUE -> "◆";
         };
     }
 }

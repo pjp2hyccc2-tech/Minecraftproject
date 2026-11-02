@@ -12,6 +12,7 @@ import com.clockworkdiver.registry.ModBlocks;
 import com.clockworkdiver.registry.ModDimensions;
 import com.clockworkdiver.registry.ModItems;
 import com.clockworkdiver.registry.ModSounds;
+import com.clockworkdiver.story.StoryManager;
 import com.clockworkdiver.util.DelayedTasks;
 import com.clockworkdiver.workshop.Objectives;
 import com.clockworkdiver.workshop.WorkshopManager;
@@ -86,7 +87,10 @@ public final class CommonEvents {
         if (ModDimensions.isInterior(player.level()) && DiveManager.session(player) == null) {
             DelayedTasks.schedule(player.server, 20, () -> WorkshopManager.returnToBench(player, false));
         }
-        DelayedTasks.schedule(player.server, 40, () -> Objectives.sync(player));
+        DelayedTasks.schedule(player.server, 40, () -> {
+            Objectives.sync(player);
+            StoryManager.sync(player);
+        });
     }
 
     @SubscribeEvent
@@ -124,6 +128,19 @@ public final class CommonEvents {
         if (level.isClientSide || !(event.getEntity() instanceof ServerPlayer player)) return;
         if (event.getAction() != PlayerInteractEvent.LeftClickBlock.Action.START) return;
         BlockPos pos = event.getPos();
+        if (level.getBlockState(pos).is(ModBlocks.MEMORY_COG.get())) {
+            DiveManager.onFragment(player, pos);
+            event.setCanceled(true);
+            return;
+        }
+        if (level.getBlockState(pos).is(ModBlocks.DUST_PILE.get())) {
+            DiveSession ds = DiveManager.session(player);
+            if (ds != null && player.getMainHandItem().is(ModItems.TINKER_WRENCH.get())
+                    && DiveManager.onDustPoked(player, pos, TickStrike.consumeQuality(player, ds))) {
+                event.setCanceled(true);
+            }
+            return;
+        }
         if (!level.getBlockState(pos).is(ModBlocks.RUST_CLUSTER.get())) return;
         DiveSession s = DiveManager.session(player);
         if (s == null || !player.getMainHandItem().is(ModItems.TINKER_WRENCH.get())) return;

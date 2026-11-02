@@ -33,6 +33,12 @@ public final class ModCreativeTab {
                 output.accept(ModItems.TOOTH_SOCKET.get());
                 output.accept(ModItems.SCREW_HEAD.get());
                 output.accept(ModItems.WINDING_CRANK.get());
+                output.accept(ModItems.TUNING_BELL.get());
+                output.accept(ModItems.DUST_PILE.get());
+                output.accept(ModItems.MEMORY_COG.get());
+                for (com.clockworkdiver.story.StoryQuest q : com.clockworkdiver.story.StoryQuests.all()) {
+                    output.accept(com.clockworkdiver.item.KeepsakeItem.create(q));
+                }
                 output.accept(ModItems.CUSTOMER_SPAWN_EGG.get());
                 output.accept(ModItems.RUST_MITE_SPAWN_EGG.get());
                 output.accept(ModItems.COG_GREMLIN_SPAWN_EGG.get());

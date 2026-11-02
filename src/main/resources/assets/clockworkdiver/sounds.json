@@ -106,5 +106,23 @@
     "sounds": [
       "clockworkdiver:fanfare"
     ]
+  },
+  "memory": {
+    "subtitle": "subtitles.clockworkdiver.memory",
+    "sounds": [
+      "clockworkdiver:memory"
+    ]
+  },
+  "music_box": {
+    "subtitle": "subtitles.clockworkdiver.music_box",
+    "sounds": [
+      "clockworkdiver:music_box"
+    ]
+  },
+  "story_card": {
+    "subtitle": "subtitles.clockworkdiver.story_card",
+    "sounds": [
+      "clockworkdiver:story_card"
+    ]
   }
 }

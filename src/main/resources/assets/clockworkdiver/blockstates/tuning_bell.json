@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "lit=false,note=0": {
+      "model": "clockworkdiver:block/tuning_bell_0"
+    },
+    "lit=true,note=0": {
+      "model": "clockworkdiver:block/tuning_bell_0_lit"
+    },
+    "lit=false,note=1": {
+      "model": "clockworkdiver:block/tuning_bell_1"
+    },
+    "lit=true,note=1": {
+      "model": "clockworkdiver:block/tuning_bell_1_lit"
+    },
+    "lit=false,note=2": {
+      "model": "clockworkdiver:block/tuning_bell_2"
+    },
+    "lit=true,note=2": {
+      "model": "clockworkdiver:block/tuning_bell_2_lit"
+    },
+    "lit=false,note=3": {
+      "model": "clockworkdiver:block/tuning_bell_3"
+    },
+    "lit=true,note=3": {
+      "model": "clockworkdiver:block/tuning_bell_3_lit"
+    }
+  }
+}

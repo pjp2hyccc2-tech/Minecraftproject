@@ -19,7 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 
 /** Customers use the player model with their own steampunk outfits (and sometimes a top hat). */
 public class CustomerRenderer extends HumanoidMobRenderer<CustomerEntity, PlayerModel<CustomerEntity>> {
-    private static final ResourceLocation[] SKINS = new ResourceLocation[6];
+    private static final ResourceLocation[] SKINS = new ResourceLocation[9];
 
     static {
         for (int i = 0; i < SKINS.length; i++) SKINS[i] = ClockworkDiver.id("textures/entity/customer/customer_" + i + ".png");

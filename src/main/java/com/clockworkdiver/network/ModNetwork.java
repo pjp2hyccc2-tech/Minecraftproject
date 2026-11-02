@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public final class ModNetwork {
-    private static final String PROTOCOL = "3";
+    private static final String PROTOCOL = "4";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(ClockworkDiver.id("main"),
             () -> PROTOCOL, PROTOCOL::equals, PROTOCOL::equals);
     private static int nextId;
@@ -40,6 +40,8 @@ public final class ModNetwork {
         toClient(S2C.Transition.class, S2C.Transition::encode, S2C.Transition::decode, S2C.Transition::handle);
         toClient(S2C.TempoSync.class, S2C.TempoSync::encode, S2C.TempoSync::decode, S2C.TempoSync::handle);
         toClient(S2C.RepairPrompt.class, S2C.RepairPrompt::encode, S2C.RepairPrompt::decode, S2C.RepairPrompt::handle);
+        toClient(S2C.Memory.class, S2C.Memory::encode, S2C.Memory::decode, S2C.Memory::handle);
+        toClient(S2C.StorySync.class, S2C.StorySync::encode, S2C.StorySync::decode, S2C.StorySync::handle);
     }
 
     private static <M> void toServer(Class<M> type, BiConsumer<M, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, M> decoder,

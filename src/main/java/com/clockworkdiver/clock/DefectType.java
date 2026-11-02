@@ -11,7 +11,13 @@ public enum DefectType {
     /** The spring ran down: wind the crank while defending it from waves of vermin. */
     SPRING("spring", new String[]{"mainspring", "hairspring"}),
     /** A Time Eater nests in the escapement: defeat it. */
-    NEST("nest", new String[]{"balance_wheel", "pallet_fork"});
+    NEST("nest", new String[]{"balance_wheel", "pallet_fork"}),
+    /** Dust and moth nests clog the train: blow the dust heaps away with Steam Bursts. */
+    DUST("dust", new String[]{"third_wheel", "fourth_wheel", "barrel_gear"}),
+    /** The chime comb is out of tune: memorise the bells' melody and strike it back on the beat. */
+    TUNING("tuning", new String[]{"chime_comb", "chime_hammer"}),
+    /** Not a fault: a clue spotted through the lens (story clocks). There is nothing to dive into. */
+    CLUE("clue", new String[]{"clue"});
 
     public final String id;
     public final String[] parts;
@@ -19,6 +25,10 @@ public enum DefectType {
     DefectType(String id, String[] parts) {
         this.id = id;
         this.parts = parts;
+    }
+
+    public boolean divable() {
+        return this != CLUE;
     }
 
     public String nameKey() {

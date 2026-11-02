@@ -5,6 +5,11 @@ import com.clockworkdiver.clock.ClockType;
 import com.clockworkdiver.clock.CommissionGenerator;
 import com.clockworkdiver.clock.Defect;
 import com.clockworkdiver.clock.DefectType;
+import com.clockworkdiver.clock.DiveMods;
+import com.clockworkdiver.item.KeepsakeItem;
+import com.clockworkdiver.story.StoryManager;
+import com.clockworkdiver.story.StoryQuest;
+import com.clockworkdiver.story.StoryQuests;
 import com.clockworkdiver.customer.CustomerEntity;
 import com.clockworkdiver.data.PlayerProgress;
 import com.clockworkdiver.data.WorldProgress;
@@ -53,8 +58,18 @@ public final class ClockworkCommand {
                                 .executes(ctx -> customer(ctx, StringArgumentType.getString(ctx, "type")))))
                 .then(Commands.literal("dive").requires(s -> s.hasPermission(2))
                         .then(Commands.argument("defect", StringArgumentType.word())
-                                .suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(DefectType.values()).map(t -> t.id), b))
-                                .executes(ClockworkCommand::dive)))
+                                .suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(DefectType.values())
+                                        .filter(DefectType::divable).map(t -> t.id), b))
+                                .executes(ctx -> dive(ctx, ""))
+                                .then(Commands.argument("options", StringArgumentType.greedyString())
+                                        .executes(ctx -> dive(ctx, StringArgumentType.getString(ctx, "options"))))))
+                .then(Commands.literal("story")
+                        .executes(ClockworkCommand::storyStatus)
+                        .then(Commands.literal("set").requires(s -> s.hasPermission(2))
+                                .then(Commands.argument("quest", IntegerArgumentType.integer(1, StoryQuests.count() + 1))
+                                        .executes(ctx -> storySet(ctx, IntegerArgumentType.getInteger(ctx, "quest")))))
+                        .then(Commands.literal("skip").requires(s -> s.hasPermission(2)).executes(ClockworkCommand::storySkip))
+                        .then(Commands.literal("keepsakes").requires(s -> s.hasPermission(2)).executes(ClockworkCommand::keepsakes)))
                 .then(Commands.literal("complete").requires(s -> s.hasPermission(2))
                         .executes(ctx -> check(ctx, DiveManager::forceComplete)))
                 .then(Commands.literal("coins").requires(s -> s.hasPermission(2))
@@ -70,7 +85,14 @@ public final class ClockworkCommand {
                         .then(Commands.literal("talk").executes(ClockworkCommand::talk))
                         .then(Commands.literal("findall").executes(ClockworkCommand::findAll))
                         .then(Commands.literal("repairall").executes(ClockworkCommand::repairAll))
-                        .then(Commands.literal("wave").executes(ClockworkCommand::wave))));
+                        .then(Commands.literal("wave").executes(ClockworkCommand::wave))
+                        .then(Commands.literal("fragment").executes(ctx -> check(ctx, DiveManager::debugFragment)))
+                        .then(Commands.literal("hold").executes(ctx -> {
+                            // Keeps the next customer away for half an hour (CI tour).
+                            ServerPlayer p = ctx.getSource().getPlayerOrException();
+                            WorldProgress.of(p).nextCustomerTime = p.level().getGameTime() + 20L * 60 * 30;
+                            return 1;
+                        }))));
     }
 
     private interface PlayerAction {
@@ -138,10 +160,82 @@ public final class ClockworkCommand {
         return 1;
     }
 
-    private static int dive(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+    /** {@code /clockwork dive <defect> [timed fast offbeat dark swarm elite novents precision frag3 shadow shade queen]} */
+    private static int dive(CommandContext<CommandSourceStack> ctx, String options) throws CommandSyntaxException {
         ServerPlayer p = ctx.getSource().getPlayerOrException();
         DefectType type = DefectType.byId(StringArgumentType.getString(ctx, "defect"));
-        return DiveManager.startDebugDive(p, type, false) ? 1 : 0;
+        int mods = 0, frags = 0, boss = Defect.BOSS_NORMAL;
+        for (String opt : options.trim().split("\\s+")) {
+            if (opt.isEmpty()) continue;
+            if (opt.startsWith("frag")) {
+                try {
+                    frags = Math.max(1, Math.min(6, Integer.parseInt(opt.substring(4))));
+                } catch (NumberFormatException e) {
+                    frags = 2;
+                }
+            } else if (opt.equals("shadow")) {
+                boss = Defect.BOSS_SHADOW;
+            } else if (opt.equals("shade")) {
+                boss = Defect.BOSS_SHADE;
+            } else if (opt.equals("queen")) {
+                boss = Defect.BOSS_QUEEN;
+            } else {
+                mods |= DiveMods.byName(opt);
+            }
+        }
+        return DiveManager.startDebugDive(p, type, false, mods, frags, boss) ? 1 : 0;
+    }
+
+    private static int storyStatus(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer p = ctx.getSource().getPlayerOrException();
+        PlayerProgress pr = WorldProgress.of(p);
+        if (StoryManager.finished(pr)) {
+            ctx.getSource().sendSuccess(() -> Component.translatable("command.clockworkdiver.story.done"), false);
+        } else {
+            StoryQuest q = StoryQuests.get(pr.storyIndex);
+            ctx.getSource().sendSuccess(() -> Component.translatable("command.clockworkdiver.story.status", q.number,
+                    Component.translatable(q.titleKey()), pr.storyIndex, StoryQuests.count()), false);
+        }
+        return 1;
+    }
+
+    /** Jumps the story to the given quest (1-based; count + 1 = finished) and sends its client right away. */
+    private static int storySet(CommandContext<CommandSourceStack> ctx, int quest) throws CommandSyntaxException {
+        ServerPlayer p = ctx.getSource().getPlayerOrException();
+        PlayerProgress pr = WorldProgress.of(p);
+        ServerLevel ws = WorkshopManager.workshopLevel(p.server);
+        if (ws != null) {
+            CustomerEntity c = WorkshopManager.findCustomer(ws, pr);
+            if (c != null) c.discard();
+        }
+        pr.tutorialDone = true;
+        pr.storyIndex = Math.max(0, Math.min(StoryQuests.count(), quest - 1));
+        pr.keepsakes = pr.storyIndex >= 31 ? -1 : (1 << pr.storyIndex) - 1;
+        pr.activeClock = null;
+        pr.accepted = false;
+        pr.customerId = null;
+        pr.nextCustomerTime = ws != null ? ws.getGameTime() + 20 : 0;
+        StoryManager.sync(p);
+        Objectives.sync(p);
+        ctx.getSource().sendSuccess(() -> Component.translatable("command.clockworkdiver.story.set", quest), false);
+        return 1;
+    }
+
+    /** Finishes the current story quest as if it had been repaired and delivered. */
+    private static int storySkip(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer p = ctx.getSource().getPlayerOrException();
+        PlayerProgress pr = WorldProgress.of(p);
+        if (!StoryManager.active(pr)) return 0;
+        return storySet(ctx, pr.storyIndex + 2);
+    }
+
+    private static int keepsakes(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer p = ctx.getSource().getPlayerOrException();
+        for (StoryQuest q : StoryQuests.all()) {
+            ItemStack stack = KeepsakeItem.create(q);
+            if (!p.getInventory().add(stack)) p.drop(stack, false);
+        }
+        return 1;
     }
 
     private static int talk(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {

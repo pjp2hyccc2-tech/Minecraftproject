@@ -2,6 +2,10 @@ package com.clockworkdiver.registry;
 
 import com.clockworkdiver.ClockworkDiver;
 import com.clockworkdiver.block.CopperPipeBlock;
+import com.clockworkdiver.block.DustPileBlock;
+import com.clockworkdiver.block.MemoryCogBlock;
+import com.clockworkdiver.block.TowerGateBlock;
+import com.clockworkdiver.block.TuningBellBlock;
 import com.clockworkdiver.block.MechanismBlock;
 import com.clockworkdiver.block.RepairBenchBlock;
 import com.clockworkdiver.block.RustClusterBlock;
@@ -49,6 +53,18 @@ public final class ModBlocks {
     public static final RegistryObject<Block> REPAIR_BENCH = BLOCKS.register("repair_bench",
             () -> new RepairBenchBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(2.5f, 6.0f)
                     .sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<Block> TUNING_BELL = BLOCKS.register("tuning_bell",
+            () -> new TuningBellBlock(metal(MapColor.GOLD).noOcclusion().sound(SoundType.AMETHYST)
+                    .lightLevel(s -> s.getValue(TuningBellBlock.LIT) ? 15 : 5)));
+    public static final RegistryObject<Block> DUST_PILE = BLOCKS.register("dust_pile",
+            () -> new DustPileBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(1.5f, 1.0f)
+                    .sound(SoundType.WOOL).noOcclusion().noLootTable().lightLevel(s -> 3).pushReaction(PushReaction.DESTROY)));
+    public static final RegistryObject<Block> MEMORY_COG = BLOCKS.register("memory_cog",
+            () -> new MemoryCogBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DIAMOND).strength(1.0f, 1.0f)
+                    .sound(SoundType.AMETHYST).noOcclusion().noCollission().noLootTable().lightLevel(s -> 13)));
+    public static final RegistryObject<Block> TOWER_GATE = BLOCKS.register("tower_gate",
+            () -> new TowerGateBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(-1.0f, 3600000.0f)
+                    .sound(SoundType.WOOD).noLootTable()));
     public static final RegistryObject<Block> MECHANISM = BLOCKS.register("mechanism",
             () -> new MechanismBlock(BlockBehaviour.Properties.of().mapColor(MapColor.GOLD).strength(2.0f, 6.0f)
                     .sound(SoundType.METAL).noOcclusion().noCollission().noLootTable()));

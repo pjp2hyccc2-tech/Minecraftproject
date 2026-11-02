@@ -19,7 +19,24 @@ public final class ClockData {
     public long commissionId;
     public boolean tutorial;
     public int reward;
+    /** Story quest id ("q01".."q20"), or empty for an ordinary commission. */
+    public String story = "";
+    /** Fixed difficulty for story clocks, -1 = worked out from the clock. */
+    public int level = -1;
     public final List<Defect> defects = new ArrayList<>();
+
+    public boolean isStory() {
+        return !story.isEmpty();
+    }
+
+    /** Name of this particular clock (story clocks have their own). */
+    public String nameKey() {
+        return isStory() ? "story.clockworkdiver." + story + ".clock" : type.nameKey();
+    }
+
+    public String descKey() {
+        return isStory() ? "story.clockworkdiver." + story + ".clock.desc" : type.descKey();
+    }
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
@@ -28,6 +45,8 @@ public final class ClockData {
         tag.putLong("Commission", commissionId);
         tag.putBoolean("Tutorial", tutorial);
         tag.putInt("Reward", reward);
+        if (isStory()) tag.putString("Story", story);
+        if (level >= 0) tag.putInt("Level", level);
         ListTag list = new ListTag();
         for (Defect d : defects) list.add(d.save());
         tag.put("Defects", list);
@@ -43,6 +62,8 @@ public final class ClockData {
         data.commissionId = tag.getLong("Commission");
         data.tutorial = tag.getBoolean("Tutorial");
         data.reward = tag.getInt("Reward");
+        data.story = tag.getString("Story");
+        data.level = tag.contains("Level") ? tag.getInt("Level") : -1;
         ListTag list = tag.getList("Defects", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) data.defects.add(Defect.load(list.getCompound(i)));
         return data;
@@ -67,6 +88,7 @@ public final class ClockData {
         return null;
     }
 
+    /** Every fault repaired and every clue found. */
     public boolean allRepaired() {
         for (Defect d : defects) {
             if (!d.repaired) return false;
@@ -82,13 +104,21 @@ public final class ClockData {
 
     public int repairedCount() {
         int n = 0;
-        for (Defect d : defects) if (d.repaired) n++;
+        for (Defect d : defects) if (d.repaired && d.type.divable()) n++;
         return n;
     }
 
-    /** 0 (tutorial) .. 5 (orrery with many defects). */
+    /** Faults that need a dive (clues excluded). */
+    public int faultCount() {
+        int n = 0;
+        for (Defect d : defects) if (d.type.divable()) n++;
+        return n;
+    }
+
+    /** 0 (tutorial) .. 5 (orrery with many defects, the Great Clock). */
     public int difficulty() {
         if (tutorial) return 0;
+        if (level >= 0) return Math.min(5, level);
         return Math.min(5, type.difficulty + (defects.size() >= 4 ? 1 : 0));
     }
 }

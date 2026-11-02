@@ -23,6 +23,8 @@ public final class StructureBuilder {
     private final List<BlockPos> shapeFix = new ArrayList<>();
     private final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
     public int placed;
+    /** When set, jewel lamps are replaced with this (dark clock chambers). */
+    public BlockState jewelReplacement;
 
     public StructureBuilder(ServerLevel level, BlockPos origin) {
         this.level = level;
@@ -34,6 +36,7 @@ public final class StructureBuilder {
     }
 
     public void set(int x, int y, int z, BlockState state) {
+        if (jewelReplacement != null && state.is(ModBlocks.JEWEL_BEARING.get())) state = jewelReplacement;
         cursor.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
         level.setBlock(cursor, state, FLAGS);
         placed++;

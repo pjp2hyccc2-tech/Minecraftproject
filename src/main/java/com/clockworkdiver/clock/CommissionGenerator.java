@@ -32,11 +32,12 @@ public final class CommissionGenerator {
         ClockType type = unlocked.get(random.nextInt(unlocked.size()));
         if (unlocked.size() > 2 && random.nextFloat() < 0.35f) type = unlocked.get(unlocked.size() - 1 - random.nextInt(2));
 
+        List<CustomerProfile> regulars = CustomerProfile.regulars();
         List<CustomerProfile> fans = new ArrayList<>();
-        for (CustomerProfile p : CustomerProfile.values()) {
-            if (p != CustomerProfile.GREGORY && p.favourites.contains(type)) fans.add(p);
+        for (CustomerProfile p : regulars) {
+            if (p.favourites.contains(type)) fans.add(p);
         }
-        CustomerProfile profile = fans.isEmpty() ? CustomerProfile.byIndex(1 + random.nextInt(CustomerProfile.values().length - 1))
+        CustomerProfile profile = fans.isEmpty() ? regulars.get(random.nextInt(regulars.size()))
                 : fans.get(random.nextInt(fans.size()));
 
         ClockData data = new ClockData();

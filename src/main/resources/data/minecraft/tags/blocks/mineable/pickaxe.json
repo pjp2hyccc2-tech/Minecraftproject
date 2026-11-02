@@ -11,6 +11,7 @@
     "clockworkdiver:tooth_socket",
     "clockworkdiver:screw_head",
     "clockworkdiver:winding_crank",
-    "clockworkdiver:mechanism"
+    "clockworkdiver:mechanism",
+    "clockworkdiver:tuning_bell"
   ]
 }

@@ -1,6 +1,7 @@
 package com.clockworkdiver.client;
 
 import com.clockworkdiver.ClockworkDiver;
+import com.clockworkdiver.client.gui.JournalScreen;
 import com.clockworkdiver.combat.Quality;
 import com.clockworkdiver.combat.Tempo;
 import com.clockworkdiver.network.C2S;
@@ -44,6 +45,10 @@ public final class ClientEvents {
         }
         if (ClientState.clickTicks > 0) ClientState.clickTicks--;
         if (ClientState.objectiveFlash > 0) ClientState.objectiveFlash--;
+        if (ClientState.memoryTicks > 0) ClientState.memoryTicks--;
+        while (ClientSetup.JOURNAL_KEY.consumeClick()) {
+            if (mc.screen == null) mc.setScreen(new JournalScreen());
+        }
 
         if (ClientState.inDive && !ModDimensions.isInterior(mc.level) && ClientState.transitionKind != 0) {
             // Left the clock some other way (commands, death screen...).
@@ -81,7 +86,7 @@ public final class ClientEvents {
         long now = mc.level.getGameTime();
         if (now - ClientState.lastBeatInputTick < 3) return;
         ClientState.lastBeatInputTick = now;
-        Quality q = Tempo.judge(now, mc.getFrameTime(), ClientState.anchor, ClientState.period, ClientState.lensLevel);
+        Quality q = Tempo.judge(now, mc.getFrameTime(), ClientState.anchor + ClientState.offset, ClientState.period, ClientState.lensLevel);
         ModNetwork.sendToServer(new C2S.BeatInput(q, event.isAttack()));
         ClientState.clickQuality = q.ordinal();
         ClientState.clickTicks = 14;

@@ -19,7 +19,11 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -46,6 +50,17 @@ public class TimeEater extends Monster {
 
     private static final EntityDataAccessor<Boolean> ENRAGED = SynchedEntityData.defineId(TimeEater.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> PULSE = SynchedEntityData.defineId(TimeEater.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(TimeEater.class, EntityDataSerializers.INT);
+
+    /** Variants (same numbers as the Defect.BOSS_* constants). */
+    public static final int NORMAL = 0;
+    /** 黒殻の時喰い: black shell, blinks next to its prey. */
+    public static final int SHADOW = 1;
+    /** 女王の影: the Queen's shade, calls dust moths. */
+    public static final int SHADE = 2;
+    /** 時喰いの女王: three phases; races the beat, then turns it inside out. */
+    public static final int QUEEN = 3;
+    private int queenPhase = 1;
 
     private final ServerBossEvent bossEvent = new ServerBossEvent(Component.translatable("entity.clockworkdiver.time_eater"),
             BossEvent.BossBarColor.YELLOW, BossEvent.BossBarOverlay.NOTCHED_10);
@@ -72,6 +87,68 @@ public class TimeEater extends Monster {
         super.defineSynchedData();
         entityData.define(ENRAGED, false);
         entityData.define(PULSE, -1);
+        entityData.define(VARIANT, NORMAL);
+    }
+
+    public int variant() {
+        return entityData.get(VARIANT);
+    }
+
+    public void setVariant(int variant) {
+        entityData.set(VARIANT, Math.max(0, Math.min(QUEEN, variant)));
+        applyVariant();
+    }
+
+    private void applyVariant() {
+        int v = variant();
+        String key = switch (v) {
+            case SHADOW -> "entity.clockworkdiver.time_eater.shadow";
+            case SHADE -> "entity.clockworkdiver.time_eater.shade";
+            case QUEEN -> "entity.clockworkdiver.time_eater.queen";
+            default -> "entity.clockworkdiver.time_eater";
+        };
+        bossEvent.setName(Component.translatable(key));
+        bossEvent.setColor(v == SHADOW ? BossEvent.BossBarColor.RED : v >= SHADE ? BossEvent.BossBarColor.PURPLE : BossEvent.BossBarColor.YELLOW);
+        AttributeInstance speed = getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) speed.setBaseValue(v == SHADOW ? 0.29 : v == QUEEN ? 0.24 : 0.26);
+        AttributeInstance damage = getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) damage.setBaseValue(v == QUEEN ? 11.0 : v >= SHADOW ? 9.0 : 8.0);
+        refreshDimensions();
+    }
+
+    /** Model scale relative to the ordinary Time Eater. */
+    public static float scaleOf(int variant) {
+        return switch (variant) {
+            case SHADE -> 1.12f;
+            case QUEEN -> 1.55f;
+            default -> 1.0f;
+        };
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pose) {
+        return super.getDimensions(pose).scale(scaleOf(variant()));
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (VARIANT.equals(key)) refreshDimensions();
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putInt("Variant", variant());
+        tag.putInt("QueenPhase", queenPhase);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        entityData.set(VARIANT, tag.getInt("Variant"));
+        queenPhase = Math.max(1, tag.getInt("QueenPhase"));
+        applyVariant();
     }
 
     public boolean isEnraged() {
@@ -97,7 +174,12 @@ public class TimeEater extends Monster {
     protected void customServerAiStep() {
         super.customServerAiStep();
         bossEvent.setProgress(getHealth() / getMaxHealth());
-        if (!isEnraged() && getHealth() < getMaxHealth() * 0.5f) enrage();
+        if (variant() == QUEEN) {
+            if (queenPhase < 2 && getHealth() < getMaxHealth() * 0.66f) queenPhase(2);
+            if (queenPhase < 3 && getHealth() < getMaxHealth() * 0.33f) queenPhase(3);
+        } else if (!isEnraged() && getHealth() < getMaxHealth() * (variant() == SHADOW ? 0.6f : 0.5f)) {
+            enrage();
+        }
 
         int charge = pulseCharge();
         if (charge >= 0) {
@@ -114,7 +196,8 @@ public class TimeEater extends Monster {
             if (charge >= PULSE_CHARGE_TICKS) {
                 releasePulse();
                 entityData.set(PULSE, -1);
-                pulseCooldown = isEnraged() ? 130 : 190;
+                pulseCooldown = variant() == QUEEN ? (queenPhase >= 3 ? 90 : 140) : isEnraged() ? 130 : 190;
+                if (variant() == SHADOW) blink();
             }
         } else if (getTarget() != null && --pulseCooldown <= 0) {
             entityData.set(PULSE, 0);
@@ -123,7 +206,11 @@ public class TimeEater extends Monster {
 
         if (getTarget() != null && --summonCooldown <= 0) {
             summonMites();
-            summonCooldown = isEnraged() ? 200 : 280;
+            summonCooldown = switch (variant()) {
+                case SHADOW -> isEnraged() ? 160 : 220;
+                case QUEEN -> queenPhase >= 2 ? 170 : 230;
+                default -> isEnraged() ? 200 : 280;
+            };
         }
     }
 
@@ -138,13 +225,42 @@ public class TimeEater extends Monster {
         DiveManager.onBossEnraged(this);
     }
 
+    private void queenPhase(int phase) {
+        queenPhase = phase;
+        entityData.set(ENRAGED, phase >= 3);
+        level().playSound(null, blockPosition(), ModSounds.BOSS_ROAR.get(), SoundSource.HOSTILE, 2.5f, phase == 2 ? 1.0f : 0.7f);
+        if (level() instanceof ServerLevel sl) {
+            sl.sendParticles(ParticleTypes.FLASH, getX(), getY() + 2.0, getZ(), 1, 0.0, 0.0, 0.0, 0.0);
+            sl.sendParticles(ParticleTypes.REVERSE_PORTAL, getX(), getY() + 1.5, getZ(), 80, 1.5, 1.5, 1.5, 0.1);
+        }
+        AttributeInstance speed = getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) speed.setBaseValue(phase >= 3 ? 0.31 : 0.27);
+        DiveManager.onBossPhase(this, phase);
+    }
+
+    /** The black-shelled Time Eater slips through the gears and reappears beside its prey. */
+    private void blink() {
+        LivingEntity target = getTarget();
+        if (target == null || !(level() instanceof ServerLevel sl)) return;
+        sl.sendParticles(ParticleTypes.LARGE_SMOKE, getX(), getY() + 1.0, getZ(), 30, 0.8, 0.8, 0.8, 0.02);
+        for (int i = 0; i < 8; i++) {
+            double a = random.nextDouble() * Mth.TWO_PI;
+            if (randomTeleport(target.getX() + Math.cos(a) * 3.5, target.getY(), target.getZ() + Math.sin(a) * 3.5, false)) {
+                sl.playSound(null, blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.HOSTILE, 1.0f, 0.6f);
+                sl.sendParticles(ParticleTypes.LARGE_SMOKE, getX(), getY() + 1.0, getZ(), 30, 0.8, 0.8, 0.8, 0.02);
+                return;
+            }
+        }
+    }
+
     private void releasePulse() {
         level().playSound(null, blockPosition(), SoundEvents.WARDEN_SONIC_BOOM, SoundSource.HOSTILE, 1.0f, 1.6f);
         if (level() instanceof ServerLevel sl) {
             sl.sendParticles(ParticleTypes.SONIC_BOOM, getX(), getY() + 1.0, getZ(), 1, 0.0, 0.0, 0.0, 0.0);
         }
-        for (Player p : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(PULSE_RADIUS, 3.0, PULSE_RADIUS))) {
-            if (p.isCreative() || p.isSpectator() || p.distanceTo(this) > PULSE_RADIUS) continue;
+        double radius = pulseRadius();
+        for (Player p : level().getEntitiesOfClass(Player.class, getBoundingBox().inflate(radius, 3.0, radius))) {
+            if (p.isCreative() || p.isSpectator() || p.distanceTo(this) > radius) continue;
             p.hurt(damageSources().mobAttack(this), 4.0f);
             p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 2), this);
             Vec3 push = p.position().subtract(position()).normalize().scale(1.1);
@@ -153,14 +269,27 @@ public class TimeEater extends Monster {
         }
     }
 
+    public double pulseRadius() {
+        return switch (variant()) {
+            case SHADE -> 8.0;
+            case QUEEN -> 9.0;
+            default -> PULSE_RADIUS;
+        };
+    }
+
     private void summonMites() {
         if (!(level() instanceof ServerLevel sl)) return;
         sl.playSound(null, blockPosition(), SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.HOSTILE, 0.6f, 1.8f);
-        for (int i = 0; i < 2; i++) {
-            RustMite mite = ModEntities.RUST_MITE.get().create(sl);
+        int v = variant();
+        for (int i = 0; i < (v == QUEEN ? 3 : 2); i++) {
+            EntityType<? extends Mob> kind = ModEntities.RUST_MITE.get();
+            if (v == SHADE || (v == QUEEN && queenPhase >= 2 && i == 2)) kind = ModEntities.DUST_MOTH.get();
+            else if (v == QUEEN && i == 1) kind = ModEntities.COG_GREMLIN.get();
+            Mob mite = kind.create(sl);
             if (mite == null) continue;
             double a = random.nextDouble() * Mth.TWO_PI;
-            mite.moveTo(getX() + Math.cos(a) * 2.5, getY() + 0.5, getZ() + Math.sin(a) * 2.5, random.nextFloat() * 360.0f, 0.0f);
+            mite.moveTo(getX() + Math.cos(a) * 2.5, getY() + (kind == ModEntities.DUST_MOTH.get() ? 3.5 : 0.5), getZ() + Math.sin(a) * 2.5,
+                    random.nextFloat() * 360.0f, 0.0f);
             LivingEntity target = getTarget();
             if (target != null) mite.setTarget(target);
             sl.addFreshEntity(mite);

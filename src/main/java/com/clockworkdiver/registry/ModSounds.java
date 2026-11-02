@@ -27,6 +27,9 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> BOSS_ROAR = reg("boss_roar");
     public static final RegistryObject<SoundEvent> BOSS_PULSE = reg("boss_pulse");
     public static final RegistryObject<SoundEvent> FANFARE = reg("fanfare");
+    public static final RegistryObject<SoundEvent> MEMORY = reg("memory");
+    public static final RegistryObject<SoundEvent> MUSIC_BOX = reg("music_box");
+    public static final RegistryObject<SoundEvent> STORY_CARD = reg("story_card");
 
     private ModSounds() {}
 

@@ -127,6 +127,32 @@ def block_models():
             box([9, 24, 9], [14, 26, 14], all_faces("#metal")),
         ]})
 
+    # Story blocks: tuning bells (one model per note and lit state), dust heaps, memory fragments, the tower gate.
+    for note in range(4):
+        for lit in (False, True):
+            name = "tuning_bell_%d%s" % (note, "_lit" if lit else "")
+            write(os.path.join(m, name + ".json"), {
+                "parent": "minecraft:block/block",
+                "textures": {"particle": tex(name), "bell": tex(name), "base": tex("brass_block")},
+                "elements": [
+                    box([2, 0, 2], [14, 3, 14], all_faces("#base")),
+                    box([3, 3, 3], [13, 12, 13], all_faces("#bell"), {f: [0, 0, 16, 16] for f in ALL6}),
+                    box([6, 12, 6], [10, 16, 10], all_faces("#base")),
+                ]})
+    d = "#dust"
+    write(os.path.join(m, "dust_pile.json"), {
+        "parent": "minecraft:block/block",
+        "textures": {"particle": tex("dust_pile"), "dust": tex("dust_pile")},
+        "elements": [box([0, 0, 0], [16, 5, 16], all_faces(d)), box([2, 5, 1], [13, 8, 12], all_faces(d)),
+                     box([5, 8, 4], [10, 10, 9], all_faces(d)), box([10, 5, 9], [15, 7, 15], all_faces(d))]})
+    write(os.path.join(m, "memory_cog.json"), {"parent": "minecraft:block/cross", "render_type": "minecraft:cutout",
+                                               "textures": {"cross": tex("memory_cog"), "particle": tex("memory_cog")}})
+    for half in ("lower", "upper"):
+        stone = "minecraft:block/stone_bricks"
+        write(os.path.join(m, "tower_gate_" + half + ".json"), {"parent": "minecraft:block/cube", "textures": {
+            "particle": tex("tower_gate_" + half), "north": tex("tower_gate_" + half), "south": stone, "east": stone, "west": stone,
+            "up": stone, "down": stone}})
+
     write(os.path.join(m, "mechanism.json"), {
         "parent": "minecraft:block/block",
         "textures": {"particle": tex("mechanism"), "hub": tex("mechanism")},
@@ -145,6 +171,17 @@ def blockstates():
     write(os.path.join(b, "tooth_socket.json"), {"variants": {
         "filled=false": {"model": f"{NS}:block/tooth_socket"},
         "filled=true": {"model": f"{NS}:block/tooth_socket_filled"}}})
+    bell = {}
+    for note in range(4):
+        for lit in (False, True):
+            bell["lit=%s,note=%d" % ("true" if lit else "false", note)] = {
+                "model": f"{NS}:block/tuning_bell_%d%s" % (note, "_lit" if lit else "")}
+    write(os.path.join(b, "tuning_bell.json"), {"variants": bell})
+    write(os.path.join(b, "dust_pile.json"), {"variants": {"": {"model": f"{NS}:block/dust_pile"}}})
+    write(os.path.join(b, "memory_cog.json"), {"variants": {"": {"model": f"{NS}:block/memory_cog"}}})
+    write(os.path.join(b, "tower_gate.json"), {"variants": {
+        "half=lower": {"model": f"{NS}:block/tower_gate_lower"},
+        "half=upper": {"model": f"{NS}:block/tower_gate_upper"}}})
     write(os.path.join(b, "repair_bench.json"), {"variants": {
         "facing=north": {"model": f"{NS}:block/repair_bench"},
         "facing=east": {"model": f"{NS}:block/repair_bench", "y": 90},
@@ -152,7 +189,8 @@ def blockstates():
         "facing=west": {"model": f"{NS}:block/repair_bench", "y": 270}}})
 
 
-CLOCKS = ["pocket_watch", "cuckoo", "astronomical", "birdcage", "steam_tower", "orrery"]
+CLOCKS = ["pocket_watch", "cuckoo", "astronomical", "birdcage", "steam_tower", "orrery", "music_box", "grandfather", "great_clock"]
+KEEPSAKE_ICONS = 16
 
 
 def item_models():
@@ -163,6 +201,16 @@ def item_models():
     for name in ("chrono_spectacles", "gear_tooth", "brass_coin", "workshop_key", "bolt"):
         write(os.path.join(m, name + ".json"), {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/{name}"}})
     write(os.path.join(m, "tinker_wrench.json"), {"parent": "minecraft:item/handheld", "textures": {"layer0": f"{NS}:item/tinker_wrench"}})
+    write(os.path.join(m, "tuning_bell.json"), {"parent": f"{NS}:block/tuning_bell_1"})
+    write(os.path.join(m, "dust_pile.json"), {"parent": f"{NS}:block/dust_pile"})
+    write(os.path.join(m, "memory_cog.json"), {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:block/memory_cog"}})
+    keep = []
+    for i in range(KEEPSAKE_ICONS):
+        write(os.path.join(m, "keepsake_%d.json" % i), {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/keepsake_%d" % i}})
+        if i > 0:
+            keep.append({"predicate": {f"{NS}:keepsake": round(i / KEEPSAKE_ICONS - 0.5 / KEEPSAKE_ICONS, 4)}, "model": f"{NS}:item/keepsake_%d" % i})
+    write(os.path.join(m, "keepsake.json"), {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/keepsake_0"},
+                                              "overrides": keep})
     for egg in ("customer", "rust_mite", "cog_gremlin", "dust_moth", "time_eater"):
         write(os.path.join(m, egg + "_spawn_egg.json"), {"parent": "minecraft:item/template_spawn_egg"})
     overrides = []
@@ -176,7 +224,7 @@ def item_models():
 
 
 SOUNDS = ["tick", "tock", "perfect", "steam_burst", "shrink", "grow", "discover", "repaired", "ratchet", "clunk", "shop_bell", "glasses",
-          "mite", "gremlin", "moth", "boss_roar", "boss_pulse", "fanfare"]
+          "mite", "gremlin", "moth", "boss_roar", "boss_pulse", "fanfare", "memory", "music_box", "story_card"]
 
 
 def sounds():
@@ -219,7 +267,7 @@ def dimensions():
 
 def loot():
     for name in ("brass_block", "brass_plate", "brass_tiles", "rusty_plate", "copper_pipe", "jewel_bearing", "steam_vent", "repair_bench",
-                 "tooth_socket", "screw_head", "winding_crank"):
+                 "tooth_socket", "screw_head", "winding_crank", "tuning_bell"):
         write(os.path.join(DATA, "loot_tables", "blocks", name + ".json"), {
             "type": "minecraft:block",
             "pools": [{"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": f"{NS}:{name}"}],
@@ -250,7 +298,7 @@ def recipes():
 
 def tags():
     pick = [f"{NS}:{n}" for n in ("brass_block", "brass_plate", "brass_tiles", "rusty_plate", "copper_pipe", "jewel_bearing", "steam_vent",
-                                   "tooth_socket", "screw_head", "winding_crank", "mechanism")]
+                                   "tooth_socket", "screw_head", "winding_crank", "mechanism", "tuning_bell")]
     write(os.path.join(RES, "data", "minecraft", "tags", "blocks", "mineable", "pickaxe.json"), {"replace": False, "values": pick})
     write(os.path.join(RES, "data", "minecraft", "tags", "blocks", "mineable", "axe.json"), {"replace": False, "values": [f"{NS}:repair_bench"]})
 

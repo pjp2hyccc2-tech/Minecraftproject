@@ -102,7 +102,7 @@ public final class TickStrike {
             st.pending = null;
             return q;
         }
-        return Tempo.judge(now, 0.0f, s.anchor, s.period, WorldProgress.of(player).lensLevel);
+        return Tempo.judge(now, 0.0f, s.anchor + s.offset, s.period, WorldProgress.of(player).lensLevel);
     }
 
     public static void addSteam(ServerPlayer player, float amount) {
@@ -234,6 +234,7 @@ public final class TickStrike {
             if (q == Quality.PERFECT) {
                 st.combo++;
             }
+            DiveManager.onSteamBurst(player, radius, q);
         }
         sync(player, q);
     }

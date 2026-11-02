@@ -47,6 +47,9 @@ public class CustomerEntity extends PathfinderMob {
     @Nullable
     private BlockPos exitPos;
     private int stateTicks;
+    /** A friend standing around for a story scene rather than a customer. */
+    private boolean extra;
+    private String scene = "";
 
     public CustomerEntity(EntityType<? extends CustomerEntity> type, Level level) {
         super(type, level);
@@ -80,6 +83,27 @@ public class CustomerEntity extends PathfinderMob {
         entityData.set(PROFILE, profile.id);
         setCustomName(Component.translatable(profile.nameKey()));
         setCustomNameVisible(true);
+    }
+
+    /** A friend gathered for a story scene: stands at {@code spot}, never leaves on its own. */
+    public void setupExtra(UUID owner, CustomerProfile profile, BlockPos spot, String scene) {
+        setup(owner, profile, spot, spot);
+        this.extra = true;
+        this.scene = scene;
+        entityData.set(STATE, WAITING);
+    }
+
+    public boolean isExtra() {
+        return extra;
+    }
+
+    public String scene() {
+        return scene;
+    }
+
+    /** Client side only: a stand-in used to draw portraits in dialogues. */
+    public void setProfileForPortrait(CustomerProfile profile) {
+        entityData.set(PROFILE, profile.id);
     }
 
     public CustomerProfile profile() {
@@ -187,6 +211,10 @@ public class CustomerEntity extends PathfinderMob {
         if (exitPos != null) tag.put("Exit", NbtUtils.writeBlockPos(exitPos));
         tag.putString("Profile", entityData.get(PROFILE));
         tag.putInt("CustomerState", state());
+        if (extra) {
+            tag.putBoolean("Extra", true);
+            tag.putString("Scene", scene);
+        }
     }
 
     @Override
@@ -197,5 +225,7 @@ public class CustomerEntity extends PathfinderMob {
         exitPos = tag.contains("Exit") ? NbtUtils.readBlockPos(tag.getCompound("Exit")) : null;
         if (tag.contains("Profile")) entityData.set(PROFILE, tag.getString("Profile"));
         entityData.set(STATE, tag.getInt("CustomerState"));
+        extra = tag.getBoolean("Extra");
+        scene = tag.getString("Scene");
     }
 }

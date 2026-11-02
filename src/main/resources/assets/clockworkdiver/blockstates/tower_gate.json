@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "clockworkdiver:block/tower_gate_lower"
+    },
+    "half=upper": {
+      "model": "clockworkdiver:block/tower_gate_upper"
+    }
+  }
+}

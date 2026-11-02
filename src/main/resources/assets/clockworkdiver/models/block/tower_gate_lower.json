@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "clockworkdiver:block/tower_gate_lower",
+    "north": "clockworkdiver:block/tower_gate_lower",
+    "south": "minecraft:block/stone_bricks",
+    "east": "minecraft:block/stone_bricks",
+    "west": "minecraft:block/stone_bricks",
+    "up": "minecraft:block/stone_bricks",
+    "down": "minecraft:block/stone_bricks"
+  }
+}

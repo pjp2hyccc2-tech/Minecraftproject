@@ -2,6 +2,8 @@ package com.clockworkdiver.interior;
 
 import com.clockworkdiver.block.MechanismBlockEntity;
 import com.clockworkdiver.clock.DefectType;
+import com.clockworkdiver.clock.DiveMods;
+import com.clockworkdiver.block.TuningBellBlock;
 import com.clockworkdiver.registry.ModBlocks;
 import com.clockworkdiver.util.StructureBuilder;
 import net.minecraft.core.BlockPos;
@@ -29,9 +31,20 @@ public final class ZoneBuilder {
 
     public static ZoneLayout build(ServerLevel level, BlockPos origin, DefectType type, int difficulty, int period, boolean tutorial,
                                    RandomSource rand) {
+        return build(level, origin, type, difficulty, period, tutorial, rand, 0, 0);
+    }
+
+    /**
+     * @param mods      {@link DiveMods} of the dive (dark chambers lose their jewel lamps, some lose their vents)
+     * @param fragments memory fragments to hide around the chamber
+     */
+    public static ZoneLayout build(ServerLevel level, BlockPos origin, DefectType type, int difficulty, int period, boolean tutorial,
+                                   RandomSource rand, int mods, int fragments) {
         StructureBuilder b = new StructureBuilder(level, origin);
         ZoneLayout layout = new ZoneLayout();
+        layout.noVents = DiveMods.has(mods, DiveMods.NO_VENTS);
         b.clear(-R - 4, -4, -R - 4, R + 4, H + 4, R + 4);
+        if (DiveMods.has(mods, DiveMods.DARK)) b.jewelReplacement = ModBlocks.BRASS_PLATE.get().defaultBlockState();
         chamber(b, layout, type, period, rand);
         switch (type) {
             case RUST -> rust(b, layout, difficulty, tutorial, rand);
@@ -39,7 +52,12 @@ public final class ZoneBuilder {
             case SCREW -> screw(b, layout, difficulty, tutorial);
             case SPRING -> spring(b, layout, period);
             case NEST -> nest(b, layout, period);
+            case DUST -> dust(b, layout, difficulty, tutorial, period, rand);
+            case TUNING -> tuning(b, layout, period);
+            case CLUE -> {
+            }
         }
+        if (fragments > 0) placeFragments(b, layout, fragments, rand);
         b.finish();
 
         layout.center = origin;
@@ -55,6 +73,34 @@ public final class ZoneBuilder {
             layout.enemySpawns.add(new Vec3(origin.getX() + 0.5 + x, origin.getY() + 0.1, origin.getZ() + 0.5 + z));
         }
         return layout;
+    }
+
+    /** Hides memory fragments on free floor (or ledges) spread around the chamber. */
+    private static void placeFragments(StructureBuilder b, ZoneLayout layout, int count, RandomSource rand) {
+        double start = rand.nextDouble() * Math.PI * 2.0;
+        for (int i = 0; i < count; i++) {
+            boolean placed = false;
+            for (int attempt = 0; attempt < 40 && !placed; attempt++) {
+                double a = start + Math.PI * 2.0 * i / count + (attempt == 0 ? 0.0 : (rand.nextDouble() - 0.5) * 1.2);
+                double r = 11.0 + rand.nextDouble() * 5.5;
+                int x = (int) Math.round(Math.cos(a) * r);
+                int z = (int) Math.round(Math.sin(a) * r);
+                if (z > R - 7 && Math.abs(x) < 4) continue; // not right on the arrival spot
+                // Only on the floor or on a one-block ledge, so every fragment can be reached.
+                for (int y = 0; y <= 1 && !placed; y++) {
+                    BlockState below = b.get(x, y - 1, z);
+                    if (below.isAir() || below.is(ModBlocks.MECHANISM.get())) continue;
+                    if (!b.get(x, y, z).isAir() || !b.get(x, y + 1, z).isAir()) continue;
+                    BlockPos abs = b.abs(x, y, z);
+                    boolean near = false;
+                    for (BlockPos other : layout.fragments) if (other.distSqr(abs) < 25) near = true;
+                    if (near) continue;
+                    b.set(x, y, z, ModBlocks.MEMORY_COG.get().defaultBlockState());
+                    layout.fragments.add(abs);
+                    placed = true;
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------ chamber
@@ -119,6 +165,7 @@ public final class ZoneBuilder {
     }
 
     private static void vent(StructureBuilder b, ZoneLayout layout, int x, int z) {
+        if (layout.noVents) return;
         b.set(x, -1, z, ModBlocks.STEAM_VENT.get().defaultBlockState());
         layout.vents.add(b.abs(x, -1, z));
     }
@@ -345,5 +392,108 @@ public final class ZoneBuilder {
         vent(b, layout, -15, 0);
         vent(b, layout, 0, -15);
         vent(b, layout, 0, 15);
+    }
+
+    // ------------------------------------------------------------------ dust
+
+    private static void dust(StructureBuilder b, ZoneLayout layout, int difficulty, boolean tutorial, int period, RandomSource rand) {
+        BlockState brass = ModBlocks.BRASS_BLOCK.get().defaultBlockState();
+        BlockState plate = ModBlocks.BRASS_PLATE.get().defaultBlockState();
+        BlockState dust = ModBlocks.DUST_PILE.get().defaultBlockState();
+        // A broad wheel with four spokes and a hub, its teeth clogged with grey fluff.
+        int gearR = 9;
+        for (int x = -gearR - 1; x <= gearR + 1; x++) {
+            for (int z = -gearR - 1; z <= gearR + 1; z++) {
+                double d = Math.sqrt(x * x + z * z);
+                double ang = (Math.toDegrees(Math.atan2(z, x)) + 360.0) % 360.0;
+                if (d <= gearR - 0.5) {
+                    boolean spoke = ang % 90.0 < 12.0 || ang % 90.0 > 78.0;
+                    if (d > 3.0 && d < 6.5 && !spoke) continue;
+                    b.set(x, 0, z, (int) d % 3 == 0 ? plate : brass);
+                } else if (d <= gearR + 1.0 && ang % 15.0 < 7.5) {
+                    b.set(x, 0, z, brass);
+                }
+            }
+        }
+        // Two smaller wheels on stilts at the sides, reached by two steps.
+        for (int side : new int[]{-1, 1}) {
+            int cx = side * 13, cz = -7;
+            for (int x = -4; x <= 4; x++) {
+                for (int z = -4; z <= 4; z++) {
+                    double d = Math.sqrt(x * x + z * z);
+                    if (d > 4.3) continue;
+                    b.set(cx + x, 2, cz + z, d < 1.5 ? ModBlocks.JEWEL_BEARING.get().defaultBlockState() : brass);
+                }
+            }
+            for (int y = 0; y <= 1; y++) b.set(cx, y, cz, plate);
+            b.set(cx - side * 6, 0, cz, plate);
+            b.set(cx - side * 5, 0, cz, plate);
+            b.set(cx - side * 5, 1, cz, plate);
+            MechanismBlockEntity small = b.mechanism(cx, 6, cz);
+            small.gear(4.5f, 26, 0.5f, MechanismBlockEntity.AXIS_Y, side * 5.0f, MechanismBlockEntity.COLOR_COPPER);
+            small.period = period;
+            small.running = false;
+            small.sync();
+            layout.mechanisms.add(b.abs(cx, 6, cz));
+        }
+        int count = tutorial ? 6 : Math.min(16, 8 + difficulty * 2);
+        java.util.Set<Long> used = new java.util.HashSet<>();
+        int guard = 0;
+        while (layout.targets.size() < count && guard++ < 800) {
+            int x, y, z;
+            if (rand.nextInt(4) == 0) {
+                // On one of the raised wheels.
+                int side = rand.nextBoolean() ? -1 : 1;
+                double a = rand.nextDouble() * Math.PI * 2.0, r = 1.6 + rand.nextDouble() * 2.4;
+                x = side * 13 + (int) Math.round(Math.cos(a) * r);
+                z = -7 + (int) Math.round(Math.sin(a) * r);
+                y = 3;
+            } else {
+                double a = rand.nextDouble() * Math.PI * 2.0;
+                double r = rand.nextBoolean() ? 1.8 + rand.nextDouble() * 1.4 : 6.6 + rand.nextDouble() * 3.2;
+                x = (int) Math.round(Math.cos(a) * r);
+                z = (int) Math.round(Math.sin(a) * r);
+                y = 1;
+            }
+            if (b.get(x, y - 1, z).isAir() || !b.get(x, y, z).isAir()) continue;
+            long key = ((long) x * 1000L + z) * 10L + y;
+            if (!used.add(key)) continue;
+            b.set(x, y, z, dust);
+            layout.targets.add(b.abs(x, y, z));
+        }
+        vent(b, layout, 13, 8);
+        vent(b, layout, -13, 8);
+        vent(b, layout, 0, -15);
+    }
+
+    // ------------------------------------------------------------------ tuning
+
+    private static void tuning(StructureBuilder b, ZoneLayout layout, int period) {
+        BlockState brass = ModBlocks.BRASS_BLOCK.get().defaultBlockState();
+        BlockState plate = ModBlocks.BRASS_PLATE.get().defaultBlockState();
+        BlockState jewel = ModBlocks.JEWEL_BEARING.get().defaultBlockState();
+        // Four bells on pedestals, close enough to reach them all from one spot, like the keys of a great music box.
+        for (int x = -6; x <= 6; x++) {
+            for (int z = -1; z <= 6; z++) {
+                if (Math.abs(x) == 6 || z == -1 || z == 6) b.set(x, -1, z, plate);
+            }
+        }
+        int[] xs = {-3, -1, 1, 3};
+        for (int i = 0; i < 4; i++) {
+            b.set(xs[i], 0, 1, brass);
+            b.set(xs[i], 1, 1, ModBlocks.TUNING_BELL.get().defaultBlockState().setValue(TuningBellBlock.NOTE, i));
+            layout.bells.add(b.abs(xs[i], 1, 1));
+            layout.targets.add(b.abs(xs[i], 1, 1));
+            b.set(xs[i], -1, 3, jewel);
+        }
+        // The chime comb lies on the floor before the pin drum on the far wall.
+        for (int i = 0; i < 13; i++) {
+            int x = -12 + i * 2;
+            int len = 3 + (int) Math.round(5.0 * (1.0 - Math.abs(i - 6) / 6.0));
+            for (int k = 0; k < len; k++) b.set(x, 0, -15 + k, k == len - 1 ? jewel : brass);
+        }
+        layout.mainMechanism = b.abs(0, 10, -(R - 2));
+        vent(b, layout, 12, 9);
+        vent(b, layout, -12, 9);
     }
 }
