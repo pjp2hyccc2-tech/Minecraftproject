@@ -255,6 +255,7 @@ public final class SelfTest {
                     "message.clockworkdiver.gate_locked", "message.clockworkdiver.gate_wait", "message.clockworkdiver.gate_peace",
                     "message.clockworkdiver.customer_at_tower", "message.clockworkdiver.story_upgrade", "message.clockworkdiver.time_up",
                     "dialogue.clockworkdiver.offer.story", "dialogue.clockworkdiver.keepsake", "speaker.clockworkdiver.note",
+                    "speaker.clockworkdiver.mira", "speaker.clockworkdiver.voice",
                     "gui.clockworkdiver.journal", "gui.clockworkdiver.quest_tag", "gui.clockworkdiver.ending.thanks", "key.clockworkdiver.journal",
                     "hud.clockworkdiver.quest_no", "hud.clockworkdiver.chapter_end", "hud.clockworkdiver.memory", "hud.clockworkdiver.story_line",
                     "item.clockworkdiver.keepsake", "block.clockworkdiver.tuning_bell", "block.clockworkdiver.tower_gate",
@@ -272,7 +273,7 @@ public final class SelfTest {
             for (String k : jaKeys) if (!enKeys.contains(k)) onlyJa.add(k);
             for (String k : enKeys) if (!jaKeys.contains(k)) onlyEn.add(k);
             check("ja_jp and en_us have the same keys (" + jaKeys.size() + ") " + onlyJa + onlyEn, onlyJa.isEmpty() && onlyEn.isEmpty());
-            Set<String> speakers = new HashSet<>(List.of("me", "narr", "note"));
+            Set<String> speakers = new HashSet<>(List.of("me", "narr", "note", "mira", "voice"));
             for (CustomerProfile pr : CustomerProfile.values()) speakers.add(pr.id);
             List<String> badSpeakers = new ArrayList<>();
             for (Map.Entry<String, com.google.gson.JsonElement> e : ja.entrySet()) {

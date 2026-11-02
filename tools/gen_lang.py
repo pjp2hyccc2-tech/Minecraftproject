@@ -159,6 +159,8 @@ UI = {
     "dialogue.clockworkdiver.pip.thanks.1": ("いつか、ぼくも時計の中に潜ってみたいな……！", "Someday I want to dive into a clock too...!"),
     "speaker.clockworkdiver.me": ("あなた", "You"),
     "speaker.clockworkdiver.note": ("手記", "Note"),
+    "speaker.clockworkdiver.mira": ("ミラの声", "Mira's voice"),
+    "speaker.clockworkdiver.voice": ("師匠の声", "The master's voice"),
     # customers
     "customer.clockworkdiver.pip": ("鐘つきピップ", "Pip the Bell-Ringer"),
     "customer.clockworkdiver.stranger": ("灰色の紳士", "The Grey Gentleman"),

@@ -247,7 +247,8 @@ public class DialogueScreen extends Screen {
             case ME -> minecraft != null && minecraft.player != null ? minecraft.player.getName() : Component.translatable("speaker.clockworkdiver.me");
             case NOTE -> Component.translatable("speaker.clockworkdiver.note");
             case NARRATION, SYSTEM -> null;
-            default -> CustomerProfile.exists(speaker) ? Component.translatable(CustomerProfile.byId(speaker).nameKey()) : Component.literal(speaker);
+            default -> CustomerProfile.exists(speaker) ? Component.translatable(CustomerProfile.byId(speaker).nameKey())
+                    : Component.translatable("speaker.clockworkdiver." + speaker);
         };
     }
 
@@ -276,14 +277,16 @@ public class DialogueScreen extends Screen {
         Component name = speakerName(current.speaker());
         boolean narration = NARRATION.equals(current.speaker()) || SYSTEM.equals(current.speaker());
         boolean note = NOTE.equals(current.speaker());
+        boolean voice = !note && !narration && !ME.equals(current.speaker()) && !CustomerProfile.exists(current.speaker());
         g.fillGradient(0, height / 3, width, height, 0x00000000, 0xC8000000);
         int px = boxX - 104, py = boxY - 30, pw = 96, ph = boxH + 30;
         Gfx.begin(g);
         Gfx.brassFrame(px, py, px + pw, py + ph, 5, 0xFF2A1E14);
         Gfx.rectV(px + 6, py + 6, px + pw - 6, py + ph - 6, 0xFF4A3420, 0xFF1E140C);
-        int boxFill = note ? 0xF0F4ECD4 : narration ? 0xF0D8CCAE : 0xF0EADCB8;
+        int boxFill = note ? 0xF0F4ECD4 : voice ? 0xF0ECE4F4 : narration ? 0xF0D8CCAE : 0xF0EADCB8;
         Gfx.brassFrame(boxX, boxY, boxX + boxW, boxY + boxH, 5, boxFill);
-        if (name != null) Gfx.brassFrame(boxX + 8, boxY - 14, boxX + 16 + font.width(name) + 16, boxY + 4, 3, note ? 0xFF4A3A28 : 0xFF3A2410);
+        if (name != null) Gfx.brassFrame(boxX + 8, boxY - 14, boxX + 16 + font.width(name) + 16, boxY + 4, 3,
+                note ? 0xFF4A3A28 : voice ? 0xFF3A2A4A : 0xFF3A2410);
         LivingEntity who = portrait(current.speaker());
         if (who == null) {
             float cx = px + pw / 2.0f, cy = py + ph / 2.0f;
@@ -292,6 +295,15 @@ public class DialogueScreen extends Screen {
                 Gfx.quad(cx - 26, cy - 34, cx + 22, cy - 38, cx + 28, cy + 30, cx - 22, cy + 34, 0xFFEFE4C6);
                 for (int i = 0; i < 6; i++) Gfx.line(cx - 18, cy - 24 + i * 9, cx + 16, cy - 26 + i * 9, 1.0f, 0xFF7A6448);
                 Gfx.circle(cx + 14, cy + 22, 5, 0xFF8A1E1E);
+            } else if (voice) {
+                // A voice from somewhere else: rings of light.
+                float p = (ticks % 40) / 40.0f;
+                Gfx.circleGradient(cx, cy, 30, 0x70C8A8FF, 0x00C8A8FF);
+                for (int i = 0; i < 3; i++) {
+                    float r = 8 + ((p + i / 3.0f) % 1.0f) * 30;
+                    Gfx.ring(cx, cy, r, r + 1.5f, Gfx.withAlpha(0xE8D8FF, (int) (200 * (1.0f - r / 40.0f))));
+                }
+                Gfx.circle(cx, cy, 6, 0xFFF4ECFF);
             } else {
                 Gfx.gear(cx, cy, 20, 26, 14, ticks * 0.02f, 0xFF8C6424, 5, 0);
                 Gfx.circle(cx, cy, 6, 0xFF2A1E14);
@@ -311,7 +323,7 @@ public class DialogueScreen extends Screen {
         String shown = full.substring(0, Math.min(full.length(), (int) chars));
         List<FormattedCharSequence> wrapped = font.split(FormattedText.of(shown), boxW - 26);
         int y = boxY + 12;
-        int ink = SYSTEM.equals(current.speaker()) ? 0xFF6A3A10 : narration ? 0xFF4A3A2A : note ? 0xFF3A2A4A : 0xFF2A1A0C;
+        int ink = SYSTEM.equals(current.speaker()) ? 0xFF6A3A10 : narration ? 0xFF4A3A2A : note || voice ? 0xFF3A2A4A : 0xFF2A1A0C;
         for (FormattedCharSequence seq : wrapped) {
             g.drawString(font, seq, boxX + 13, y, ink, false);
             y += 11;

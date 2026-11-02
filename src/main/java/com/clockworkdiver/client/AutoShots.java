@@ -318,7 +318,7 @@ public final class AutoShots {
         add("q1_talk", mc -> cmd(mc, "clockwork debug talk"), 20);
         add("q1_line_me", mc -> {
             DialogueScreen d = dialogue(mc);
-            if (d != null) d.showLine(2);
+            if (d != null) d.showLine(3);
         }, 6);
         snap("42_story_dialogue_me");
         add("q1_line_bolt", mc -> {
@@ -476,6 +476,19 @@ public final class AutoShots {
         add("q20_close", mc -> mc.setScreen(null), 10);
         add("chapter_end", mc -> ClientState.card(S2C.TRANSITION_CHAPTER_END, "4", StoryQuests.chapterKey(4)), 40);
         snap("67_chapter_end");
+        add("mira_voice", mc -> {
+            DialogueScreen d = new DialogueScreen(-1, S2C.DIALOGUE_THANKS, "viktor", StoryQuests.get(15).createClock(1), 70, "");
+            mc.setScreen(d);
+            d.showLine(1);
+        }, 130);
+        snap("68_mira_voice");
+        add("finale_thanks", mc -> {
+            DialogueScreen d = new DialogueScreen(-1, S2C.DIALOGUE_THANKS, "elias", StoryQuests.get(19).createClock(1), 120, "");
+            mc.setScreen(d);
+            d.showLine(1);
+        }, 10);
+        snap("69_finale_thanks");
+        add("finale_close", mc -> mc.setScreen(null), 10);
     }
 
     private static void shot(Minecraft mc, String name) {
