@@ -89,11 +89,13 @@ public final class FarLights {
                 if (a < 0.01f) continue;
                 if (!any) begin(bb);
                 any = true;
-                float grow = (float) Math.max(1.0, d / 30.0);
+                // grown with distance so two points still read as two eyes far off, not one smudge
+                float grow = (float) Math.max(1.0, d / 24.0);
+                double apart = 0.13 * Math.max(1.0, grow * 0.75);
                 for (int side = -1; side <= 1; side += 2) {
-                    Vec3 eye = at.add(fx * 0.26 + fz * 0.13 * side, h, fz * 0.26 - fx * 0.13 * side).subtract(cp);
-                    fan(bb, m, eye, left, up, 0.07f * grow, 0.75f, 0.12f, 0.07f, 0.9f * a);
-                    fan(bb, m, eye, left, up, 0.3f * grow, 0.6f, 0.06f, 0.03f, 0.25f * a);
+                    Vec3 eye = at.add(fx * 0.26 + fz * apart * side, h, fz * 0.26 - fx * apart * side).subtract(cp);
+                    fan(bb, m, eye, left, up, 0.11f * grow, 0.95f, 0.16f, 0.08f, 1.0f * a);
+                    fan(bb, m, eye, left, up, 0.5f * grow, 0.7f, 0.07f, 0.03f, 0.3f * a);
                 }
             }
         }

@@ -101,7 +101,7 @@ public final class Director {
         Vec3 eye = p.position();
         float view = p.getYRot() * Mth.DEG_TO_RAD;
         Vec3 fallback = null;
-        for (int tries = 0; tries < 90; tries++) {
+        for (int tries = 0; tries < 150; tries++) {
             double ang = view + Math.PI / 2 + (RAND.nextDouble() * 2 - 1) * maxAngle;
             double r = minR + RAND.nextDouble() * (maxR - minR);
             int x = Mth.floor(eye.x + Math.cos(ang) * r), z = Mth.floor(eye.z + Math.sin(ang) * r);
