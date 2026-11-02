@@ -58,6 +58,9 @@ public final class GolfMatch {
     private static final PlayStyle[] CPU_STYLES = {PlayStyle.POWER, PlayStyle.CONTROL, PlayStyle.SPIN, PlayStyle.BALANCED,
             PlayStyle.BALANCED, PlayStyle.SPIN, PlayStyle.POWER, PlayStyle.CONTROL};
 
+    /** Log every shot (enabled by the automated self-test). */
+    public static boolean verbose;
+
     public final int id;
     public final MatchMode mode;
     public final Course course;
@@ -525,6 +528,12 @@ public final class GolfMatch {
                     }
                 }
             }
+        }
+        if (verbose) {
+            BirdieCraft.LOGGER.info("[SelfTest] hole {} {} shot {} with {} -> {} lie {} at ({}, {}, {}) {}Y to pin",
+                    startHole + holeIdx + 1, p.name, p.cur, flightInput != null ? flightInput.club().label : "?", t.result,
+                    p.lie, Math.round(p.bx), Math.round(p.by), Math.round(p.bz),
+                    GolfUnits.yardsRounded(GolfUnits.horizontalDistance(p.bx, p.bz, h.cupX(), h.cupZ())));
         }
         int maxStrokes = par + GolfConfig.MAX_STROKES_OVER_PAR.get();
         if (!p.holed && p.cur >= maxStrokes) {

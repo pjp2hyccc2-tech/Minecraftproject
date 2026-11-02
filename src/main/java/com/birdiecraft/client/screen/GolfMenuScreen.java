@@ -40,6 +40,12 @@ public class GolfMenuScreen extends Screen {
         super(Component.translatable("screen.birdiecraft.menu"));
     }
 
+    /** Switches the open menu to a tab (0 play, 1 courses, 2 multiplayer, 3 style). */
+    public static void selectTab(int index) {
+        tab = Tab.values()[Math.max(0, Math.min(Tab.values().length - 1, index))];
+        if (net.minecraft.client.Minecraft.getInstance().screen instanceof GolfMenuScreen s) s.refresh();
+    }
+
     public void refresh() {
         this.clearWidgets();
         this.init();

@@ -16,6 +16,9 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 
+// set BIRDIE_SELFTEST=server|client to run the automated in-game tests (see .github/workflows)
+def selftest = System.getenv('BIRDIE_SELFTEST')
+
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
     copyIdeResources = true
@@ -34,11 +37,18 @@ minecraft {
 
         client {
             property 'forge.enabledGameTestNamespaces', mod_id
+            if (selftest) {
+                property 'birdiecraft.selftest', selftest
+                args '--quickPlaySingleplayer', 'selftest'
+            }
         }
 
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
+            if (selftest) {
+                property 'birdiecraft.selftest', selftest
+            }
         }
     }
 }

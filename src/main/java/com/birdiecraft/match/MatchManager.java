@@ -113,6 +113,15 @@ public final class MatchManager {
         return m;
     }
 
+    /** A match with only CPU golfers (used by the automated self-test). */
+    public static GolfMatch createCpuOnly(MinecraftServer s, Course course, int startHole, int holeCount, int cpus, Difficulty difficulty) {
+        GolfMatch m = new GolfMatch(nextId++, s, MatchMode.VS_CPU, course, startHole, holeCount);
+        for (int i = 0; i < cpus; i++) m.addCpu(difficulty);
+        MATCHES.put(m.id, m);
+        m.begin();
+        return m;
+    }
+
     public static boolean join(ServerPlayer player, int matchId) {
         GolfMatch m = MATCHES.get(matchId);
         if (m == null || m.state != MatchState.LOBBY || m.mode != MatchMode.MULTI) {

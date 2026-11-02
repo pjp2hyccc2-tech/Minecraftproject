@@ -50,6 +50,13 @@ public final class CourseBuilder {
         JOBS.add(new CourseBuildJob(level, plan, preset.id, name, preset.id, player.getUUID()));
     }
 
+    /** Builds a preset at an explicit place (used by the automated self-test). */
+    public static void buildPresetAt(ServerLevel level, BlockPos origin, Direction forward, CoursePreset preset,
+                                     java.util.UUID requester, String displayName) {
+        CoursePlan plan = CoursePlan.create(preset.theme, preset.seed, preset.pars, preset.lengthScale, origin, forward);
+        JOBS.add(new CourseBuildJob(level, plan, preset.id, displayName, preset.id, requester));
+    }
+
     public static void buildRandom(ServerPlayer player, String id, String displayName, int holes, CourseTheme theme) {
         ServerLevel level = player.serverLevel();
         BlockPos origin = player.blockPosition().below();
