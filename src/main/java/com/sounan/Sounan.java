@@ -3,9 +3,9 @@ package com.sounan;
 import com.sounan.network.ModNetwork;
 import com.sounan.registry.ModBlocks;
 import com.sounan.registry.ModCreativeTab;
+import com.sounan.registry.ModDimensions;
 import com.sounan.registry.ModEntities;
 import com.sounan.registry.ModItems;
-import com.sounan.registry.ModPaintings;
 import com.sounan.registry.ModSounds;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -17,8 +17,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 /**
- * 冥婚 ―MEIKON―: a Japanese folk-horror game. You opened a red envelope and were invited to a ghost wedding.
- * Gather the seven bells in the mansion of eternal night and sever the bond at the torii before the bride finds you.
+ * 遭難 ―SOUNAN―: lost on 帰らず山 at night with a phone that has no signal and a flashlight. Find your bag, keep
+ * the mountain's rules, and get off the mountain before it keeps you.
  */
 @Mod(Sounan.MODID)
 public class Sounan {
@@ -31,13 +31,13 @@ public class Sounan {
         ModBlocks.BLOCKS.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModEntities.ENTITIES.register(modBus);
-        ModPaintings.PAINTINGS.register(modBus);
+        ModDimensions.CHUNK_GENERATORS.register(modBus);
         ModCreativeTab.TABS.register(modBus);
         modBus.addListener(ModEntities::onAttributes);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, SounanConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SounanConfig.CLIENT_SPEC);
         ModNetwork.register();
-        LOGGER.info("[sounan] 冥婚: the invitation has been sent");
+        LOGGER.info("[sounan] 遭難: somebody is calling from below the trail");
     }
 
     public static ResourceLocation id(String path) {

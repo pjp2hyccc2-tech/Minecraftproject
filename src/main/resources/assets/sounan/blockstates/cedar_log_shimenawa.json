@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "sounan:block/cedar_log_shimenawa"
+    },
+    "axis=z": {
+      "model": "sounan:block/cedar_log_shimenawa_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "sounan:block/cedar_log_shimenawa_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

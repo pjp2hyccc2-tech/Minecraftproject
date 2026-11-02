@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 /**
- * Sliding doors of the mansion (fusuma, shoji, closet, storehouse). Opening one makes noise the bride can hear.
+ * Doors of the huts and houses. Opening one makes noise the sleepers can hear (much less when sneaking).
  * The BlockSetType decides whether mobs may open it (OAK = yes, IRON = no).
  */
 public class SounanDoorBlock extends DoorBlock {
@@ -44,7 +44,8 @@ public class SounanDoorBlock extends DoorBlock {
         playDoorSound(level, pos, open, player);
         level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
         if (level instanceof ServerLevel sl && noiseRadius > 0) {
-            NoiseSystem.emit(sl, pos, noiseRadius, NoiseSystem.Source.DOOR);
+            // a careful hand (sneaking) opens it almost without a sound
+            NoiseSystem.emit(sl, pos, player.isShiftKeyDown() ? noiseRadius * 0.25f : noiseRadius, NoiseSystem.Source.DOOR);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

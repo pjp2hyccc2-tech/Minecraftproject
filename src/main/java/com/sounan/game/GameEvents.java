@@ -3,9 +3,8 @@ package com.sounan.game;
 import com.sounan.Sounan;
 import com.sounan.command.SounanCommand;
 import com.sounan.debug.SelfTest;
+import com.sounan.item.GameItem;
 import com.sounan.registry.ModDimensions;
-import com.sounan.registry.ModItems;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +14,7 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
@@ -31,8 +31,6 @@ public final class GameEvents {
     public static void serverTick(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
         GameManager.serverTick(event.getServer());
-        ServerLevel level = GameManager.kakuriyo(event.getServer());
-        if (level != null) Director.runTasks(level);
         SelfTest.tick(event.getServer());
     }
 
@@ -49,17 +47,15 @@ public final class GameEvents {
     @SubscribeEvent
     public static void respawn(PlayerEvent.PlayerRespawnEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
-        if (p.getPersistentData().contains("meikon_return") && GameData.get(p.server).active) {
-            GameManager.stateOrCreate(p).everLeftSafeRoom = true;
-            GameManager.toSpawn(p);
-        }
+        GameData data = GameData.get(p.server);
+        if (data.started && data.ending == 0 && p.getPersistentData().contains("sounan_return")) GameManager.toCheckpoint(p, data);
     }
 
-    /** Nothing hurts you in the mansion — except her. */
+    /** Nothing on the mountain hurts you the ordinary way — they take you instead. */
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void attack(LivingAttackEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
-        if (!ModDimensions.isKakuriyo(p.level()) || !GameData.get(p.server).active) return;
+        if (!ModDimensions.isMountain(p.level())) return;
         if (event.getSource().is(DamageTypes.FELL_OUT_OF_WORLD) || event.getSource().is(DamageTypes.GENERIC_KILL)) return;
         event.setCanceled(true);
     }
@@ -67,26 +63,41 @@ public final class GameEvents {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void death(LivingDeathEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
-        if (!ModDimensions.isKakuriyo(p.level()) || !GameData.get(p.server).active) return;
+        if (!ModDimensions.isMountain(p.level())) return;
         if (event.getSource().is(DamageTypes.GENERIC_KILL)) return;
         event.setCanceled(true);
         p.setHealth(p.getMaxHealth());
-        GameManager.fakeDeath(p);
+        GameManager.loopBack(p, GameManager.state(p));
     }
 
+    /** The flashlight and the phone never leave your hands. */
     @SubscribeEvent
     public static void toss(ItemTossEvent event) {
         ItemStack stack = event.getEntity().getItem();
-        if (!(event.getPlayer() instanceof ServerPlayer p) || !ModDimensions.isKakuriyo(p.level())) return;
-        if (stack.is(ModItems.SUZU.get()) || stack.is(ModItems.CHOCHIN.get()) || stack.is(ModItems.CHOCHIN_LIT.get())) {
+        if (!(event.getPlayer() instanceof ServerPlayer p) || !ModDimensions.isMountain(p.level())) return;
+        GameItem.Kind k = GameItem.kindOf(stack);
+        if (k != null && k != GameItem.Kind.MEMO) {
             event.setCanceled(true);
             p.getInventory().add(stack.copy());
         }
     }
 
+    /**
+     * Sneaking (to be quiet near a sleeper) must still open doors and pick things up while the flashlight is in hand:
+     * vanilla skips the block when you sneak with an item, so our blocks take precedence over the held item.
+     */
+    @SubscribeEvent
+    public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        var block = event.getLevel().getBlockState(event.getPos()).getBlock();
+        if (block instanceof com.sounan.block.InteractBlock || block instanceof com.sounan.block.SounanDoorBlock) {
+            event.setUseBlock(net.minecraftforge.eventbus.api.Event.Result.ALLOW);
+            event.setUseItem(net.minecraftforge.eventbus.api.Event.Result.DENY);
+        }
+    }
+
     @SubscribeEvent
     public static void breakBlock(BlockEvent.BreakEvent event) {
-        if (event.getPlayer() instanceof ServerPlayer p && ModDimensions.isKakuriyo(p.level()) && !p.isCreative()) {
+        if (event.getPlayer() instanceof ServerPlayer p && ModDimensions.isMountain(p.level()) && !p.isCreative()) {
             event.setCanceled(true);
         }
     }
@@ -103,9 +114,7 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void stopping(ServerStoppingEvent event) {
-        ServerLevel level = GameManager.kakuriyo(event.getServer());
-        if (level != null) LanternLight.removeAll(level);
-        Director.clearTasks();
-        GameManager.onServerStopping();
+        Director.clearAll();
+        GameManager.onServerStopping(event.getServer());
     }
 }

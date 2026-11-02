@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "sounan:block/tatami_old_top",
+    "side": "sounan:block/tatami_old_side",
+    "bottom": "sounan:block/tatami_old_side"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "sounan:block/tin_roof",
+    "top": "sounan:block/tin_roof",
+    "side": "sounan:block/tin_roof"
+  }
+}

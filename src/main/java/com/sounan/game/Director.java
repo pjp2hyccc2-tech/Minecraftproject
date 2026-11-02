@@ -1,14 +1,19 @@
 package com.sounan.game;
 
-import com.sounan.block.AndonBlock;
-import com.sounan.block.KakejikuBlock;
-import com.sounan.entity.Hanayome;
-import com.sounan.entity.Ichimatsu;
-import com.sounan.entity.Kageboshi;
-import com.sounan.entity.Maboroshi;
+import com.sounan.block.FacingBlock;
+import com.sounan.entity.Koyanushi;
+import com.sounan.entity.Nozoki;
+import com.sounan.entity.Oyamasama;
+import com.sounan.entity.SounanMonster;
+import com.sounan.entity.Ushiro;
+import com.sounan.entity.Utsurumono;
+import com.sounan.entity.Yobigoe;
 import com.sounan.registry.ModBlocks;
 import com.sounan.registry.ModEntities;
 import com.sounan.registry.ModSounds;
+import com.sounan.world.Pois;
+import com.sounan.world.PoiLayout;
+import com.sounan.world.TerrainData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,381 +21,533 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
- * The AI director: decides when something frightening happens. Small unexplained sounds come often, visible
- * events less often, hallucinations rarely — and everything backs off for a while after a chase or a scare,
- * so the dread can build again. When the player has been calm too long, she is nudged closer.
+ * Paces the night: ambient tricks played to one player only (a branch snapping behind you, someone running past in the
+ * trees, a deer screaming like a woman, knocks on a trunk, a bear bell that is not yours, a whisper at one ear, the
+ * forest falling silent, jizo that have turned to face you), monster appearances chosen by place and progress, and the
+ * scripted moments (the ringing public phone, something under the bridge, the final act, the tunnel).
  */
 public final class Director {
     private static final RandomSource RAND = RandomSource.create();
-    private static final List<Task> TASKS = new ArrayList<>();
-
-    private record Task(long due, Runnable action) {}
+    private static final Map<Long, UUID> RESIDENTS = new HashMap<>();
+    private static final Map<UUID, Integer> PAYPHONE = new HashMap<>();
+    private static final Map<UUID, Integer> TUNNEL_LAMPS = new HashMap<>();
 
     private Director() {}
 
-    public static void later(ServerLevel level, int ticks, Runnable action) {
-        TASKS.add(new Task(level.getGameTime() + ticks, action));
+    // ------------------------------------------------------------------------------------------------ queries
+    static List<SounanMonster> monstersOf(ServerLevel level, ServerPlayer p, double radius) {
+        return level.getEntitiesOfClass(SounanMonster.class, new AABB(p.blockPosition()).inflate(radius),
+                m -> m.isAlive() && m.target() == p);
     }
 
-    public static void runTasks(ServerLevel level) {
-        if (TASKS.isEmpty()) return;
-        long now = level.getGameTime();
-        List<Task> due = new ArrayList<>();
-        Iterator<Task> it = TASKS.iterator();
-        while (it.hasNext()) {
-            Task t = it.next();
-            if (t.due() <= now) {
-                due.add(t);
-                it.remove();
-            }
+    static boolean hasActive(ServerLevel level, ServerPlayer p) {
+        for (SounanMonster m : monstersOf(level, p, 96)) {
+            if (!(m instanceof Utsurumono) && !(m instanceof Koyanushi)) return true;
         }
-        for (Task t : due) {
-            try {
-                t.action().run();
-            } catch (Exception e) {
-                com.sounan.Sounan.LOGGER.warn("[sounan] director task failed", e);
-            }
+        return false;
+    }
+
+    static <T extends SounanMonster> T spawn(ServerLevel level, EntityType<T> type, Vec3 at, float yaw, ServerPlayer target) {
+        T m = type.create(level);
+        if (m == null) return null;
+        m.moveTo(at.x, at.y, at.z, yaw, 0.0f);
+        m.setYHeadRot(yaw);
+        m.setTarget(target);
+        level.addFreshEntity(m);
+        return m;
+    }
+
+    static float yawTo(Vec3 from, Vec3 to) {
+        return (float) (Mth.atan2(to.z - from.z, to.x - from.x) * Mth.RAD_TO_DEG) - 90.0f;
+    }
+
+    static int ground(int x, int z) {
+        return TerrainData.get().height(x, z) + 1;
+    }
+
+    /** A spot right behind a cedar trunk (seen from the player), roughly in front of them. */
+    @Nullable
+    static Vec3 trunkSpot(ServerLevel level, ServerPlayer p, double minR, double maxR, double maxAngle) {
+        Vec3 eye = p.position();
+        float view = p.getYRot() * Mth.DEG_TO_RAD;
+        for (int tries = 0; tries < 70; tries++) {
+            double ang = view + Math.PI / 2 + (RAND.nextDouble() * 2 - 1) * maxAngle;
+            double r = minR + RAND.nextDouble() * (maxR - minR);
+            int x = Mth.floor(eye.x + Math.cos(ang) * r), z = Mth.floor(eye.z + Math.sin(ang) * r);
+            int y = ground(x, z);
+            if (Math.abs(y - p.getY()) > 7) continue;
+            BlockPos trunk = new BlockPos(x, y + 1, z);
+            if (!level.getBlockState(trunk).is(ModBlocks.CEDAR_LOG.get())) continue;
+            Vec3 dir = new Vec3(x + 0.5 - eye.x, 0, z + 0.5 - eye.z).normalize();
+            Vec3 spot = new Vec3(x + 0.5, 0, z + 0.5).add(dir.scale(1.05));
+            int sx = Mth.floor(spot.x), sz = Mth.floor(spot.z);
+            int sy = ground(sx, sz);
+            BlockPos at = new BlockPos(sx, sy, sz);
+            if (!level.getBlockState(at).isAir() || !level.getBlockState(at.above()).isAir() || !level.getBlockState(at.above(2)).isAir()) continue;
+            if (TerrainData.get().area(sx, sz) == TerrainData.AREA_OUT) continue;
+            return new Vec3(spot.x, sy, spot.z);
         }
+        return null;
     }
 
-    public static void clearTasks() {
-        TASKS.clear();
+    /** An open spot inside the corridor at a distance, biased to the player's front (bias 0..1). */
+    @Nullable
+    static Vec3 openSpot(ServerLevel level, ServerPlayer p, double minR, double maxR, double maxAngle, boolean behind) {
+        float view = p.getYRot() * Mth.DEG_TO_RAD + (behind ? Mth.PI : 0.0f);
+        TerrainData t = TerrainData.get();
+        for (int tries = 0; tries < 60; tries++) {
+            double ang = view + Math.PI / 2 + (RAND.nextDouble() * 2 - 1) * maxAngle;
+            double r = minR + RAND.nextDouble() * (maxR - minR);
+            int x = Mth.floor(p.getX() + Math.cos(ang) * r), z = Mth.floor(p.getZ() + Math.sin(ang) * r);
+            if (t.area(x, z) == TerrainData.AREA_OUT || t.water(x, z) > 0 || t.steepness(x, z) > 2) continue;
+            int y = ground(x, z);
+            BlockPos at = new BlockPos(x, y, z);
+            if (!level.getBlockState(at).isAir() || !level.getBlockState(at.above()).isAir() || !level.getBlockState(at.above(2)).isAir()) continue;
+            return new Vec3(x + 0.5, y, z + 0.5);
+        }
+        return null;
     }
 
-    /** Calm for a long time: time to bring her closer. */
-    public static boolean wantsMenace(PlayerState ps, long now) {
-        return ps.everLeftSafeRoom && !ps.inSafeRoom && ps.fear < 35.0f && ps.calmTicks > 20 * 35;
-    }
-
-    // ================================================================== per level (every second)
+    // ------------------------------------------------------------------------------------------------ ticking
     public static void tickLevel(ServerLevel level, GameData data) {
-        // keep the number of shadows in check
-        List<Kageboshi> shadows = level.getEntitiesOfClass(Kageboshi.class, new net.minecraft.world.phys.AABB(-60, 40, -60, 60, 110, 60));
-        int max = Math.max(0, GameManager.phase() - 1) + 1;
-        for (int i = max; i < shadows.size(); i++) shadows.get(i).discard();
-        if (GameManager.anyBride(level) == null && GameManager.mansion() != null) {
-            Hanayome bride = ModEntities.HANAYOME.get().create(level);
-            if (bride != null) {
-                BlockPos p = GameManager.farWaypoint(level, GameManager.mansion().brideStart);
-                bride.moveTo(p.getX() + 0.5, p.getY(), p.getZ() + 0.5, 0, 0);
-                level.addFreshEntity(bride);
-            }
+        if (data.ending != 0) return;
+        for (ServerPlayer p : level.players()) {
+            if (!GameManager.huntable(p)) continue;
+            tickPlayer(level, p, GameManager.state(p), data);
         }
     }
 
-    // ================================================================== per player (every second)
-    public static void tickPlayer(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
-        if (!ps.everLeftSafeRoom || ps.captured || ps.ending) return;
-        ps.calmTicks = ps.fear < 30.0f ? ps.calmTicks + 20 : 0;
-        if (ps.inSafeRoom) {
-            // only the faintest things happen in the room of lamplight
-            if (RAND.nextInt(90) == 0) sound(p, ModSounds.AMBIENT_FOOTSTEPS_ABOVE.get(), p.position().add(RAND.nextGaussian() * 2, 5, RAND.nextGaussian() * 2), 0.6f);
-            return;
-        }
-        long now = level.getGameTime();
-        boolean recentChase = (int) (now % Integer.MAX_VALUE) - ps.lastChase < 20 * 30 && ps.lastChase != 0;
-        float pace = ps.fear > 75.0f || recentChase ? 0.4f : ps.calmTicks > 20 * 40 ? 1.7f : 1.0f;
-        int step = Math.round(20 * pace);
-        ps.nextMinor -= step;
-        ps.nextMajor -= step;
-        ps.nextPhantom -= step;
-        ps.nextShadow -= step;
-        int phase = GameManager.phase();
-        if (ps.nextMinor <= 0) {
-            minorEvent(level, p, ps, phase);
-            ps.nextMinor = 20 * (10 + RAND.nextInt(22));
-        }
-        if (ps.nextMajor <= 0) {
-            majorEvent(level, p, ps, phase);
-            ps.nextMajor = 20 * (40 + RAND.nextInt(55));
-        }
-        if (data.bells >= 1 && ps.nextPhantom <= 0) {
-            boolean peek = phase >= 2 && ps.peeksLeft > 0 && ps.fear < 70.0f && RAND.nextFloat() < 0.4f;
-            if (peek ? spawnPeek(level, p) : spawnFar(level, p)) {
-                if (peek) ps.peeksLeft--;
-                ps.nextPhantom = 20 * (110 + RAND.nextInt(130));
-            } else {
-                ps.nextPhantom = 20 * 15;
-            }
-        }
-        if (phase >= 2 && ps.nextShadow <= 0) {
-            spawnShadow(level, p);
-            ps.nextShadow = 20 * Math.max(18, 45 - phase * 6 + RAND.nextInt(30));
-        }
-        // the bride has been far away for too long
-        if (wantsMenace(ps, now) && RAND.nextInt(12) == 0) {
-            Hanayome bride = GameManager.anyBride(level);
-            if (bride != null && bride.distanceTo(p) > 30 && (bride.state() == Hanayome.State.WANDER || bride.state() == Hanayome.State.IDLE)) {
-                bride.force(Hanayome.State.INVESTIGATE, p.position().add(RAND.nextGaussian() * 6, 0, RAND.nextGaussian() * 6));
-                ps.calmTicks = 0;
-            }
-        }
-    }
-
-    // ================================================================== small things
-    private static void minorEvent(ServerLevel level, ServerPlayer p, PlayerState ps, int phase) {
-        Vec3 eye = p.getEyePosition();
-        Vec3 look = p.getViewVector(1.0f);
-        Vec3 right = new Vec3(-look.z, 0, look.x).normalize();
-        int roll = RAND.nextInt(phase >= 2 ? 12 : 9);
-        switch (roll) {
-            case 0, 1 -> sound(p, ModSounds.AMBIENT_CREAK.get(), around(eye, 4, 10, 0), 0.9f);
-            case 2 -> sound(p, ModSounds.AMBIENT_KNOCK.get(), around(eye, 3, 6, 0), 1.0f);
-            case 3 -> sound(p, ModSounds.AMBIENT_FOOTSTEPS_ABOVE.get(), p.position().add(RAND.nextGaussian() * 3, 5, RAND.nextGaussian() * 3), 1.0f);
-            case 4 -> sound(p, ModSounds.AMBIENT_WHISPER.get(), eye.add(right.scale(RAND.nextBoolean() ? 1.1 : -1.1)), 0.9f);
-            case 5 -> sound(p, ModSounds.AMBIENT_DOOR_SLAM.get(), around(eye, 18, 30, 0), 1.4f);
-            case 6 -> sound(p, ModSounds.AMBIENT_DRIP.get(), around(eye, 5, 10, 1), 0.8f);
-            case 7 -> sound(p, ModSounds.AMBIENT_SCRATCH.get(), eye.subtract(look.scale(3)), 0.9f);
-            case 8 -> sound(p, ModSounds.AMBIENT_THUD.get(), p.position().add(RAND.nextGaussian() * 4, 5, RAND.nextGaussian() * 4), 1.0f);
-            case 9 -> sound(p, ModSounds.AMBIENT_CRYING.get(), around(eye, 14, 24, 0), 1.2f);
-            case 10 -> sound(p, ModSounds.AMBIENT_MUSIC_BOX.get(), around(eye, 12, 20, 0), 1.0f);
-            default -> {
-                // footsteps behind you that are not there
-                Vec3 behind = p.position().subtract(look.x * 5, 0, look.z * 5);
-                for (int i = 0; i < 4; i++) {
-                    Vec3 at = behind.add(look.x * i * 0.7, 0.1, look.z * i * 0.7);
-                    later(level, i * 9, () -> sound(p, ModSounds.BRIDE_STEP.get(), at, 0.7f));
+    private static void tickPlayer(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
+        int area = Math.max(0, ps.area);
+        tickScripts(level, p, ps, data, area);
+        // fire and the bell keep things away
+        if (GameManager.flareLit(p) && p.tickCount % 10 == 0) repelAround(level, p, 14.0, true);
+        // sighting: the first time a hostile thing is in view, the heart jumps
+        if (p.tickCount % 5 == 0) {
+            for (SounanMonster m : monstersOf(level, p, 48)) {
+                if (m instanceof Utsurumono) continue;
+                if (m.getTags().contains("seen")) continue;
+                if (GameManager.looksAt(p, m, 0.9, 48.0)) {
+                    m.addTag("seen");
+                    GameManager.addFear(p, m instanceof Oyamasama ? 18.0f : 9.0f);
                 }
             }
         }
-    }
-
-    private static Vec3 around(Vec3 c, double min, double max, double dy) {
-        double a = RAND.nextDouble() * Math.PI * 2;
-        double r = min + RAND.nextDouble() * (max - min);
-        return c.add(Math.cos(a) * r, dy, Math.sin(a) * r);
-    }
-
-    private static void sound(ServerPlayer p, SoundEvent s, Vec3 at, float vol) {
-        GameManager.sound(p, s, at, vol, 0.88f + RAND.nextFloat() * 0.2f);
-    }
-
-    // ================================================================== visible things
-    private static void majorEvent(ServerLevel level, ServerPlayer p, PlayerState ps, int phase) {
-        Mansion m = GameManager.mansion();
-        if (m == null) return;
-        for (int attempt = 0; attempt < 4; attempt++) {
-            int roll = RAND.nextInt(phase >= 2 ? 7 : 5);
-            boolean ok = switch (roll) {
-                case 0 -> lampFlicker(level, p, m, phase);
-                case 1 -> footprints(level, p);
-                case 2 -> handprint(level, p, m);
-                case 3 -> scrollFace(level, p, m);
-                case 4 -> doorOpens(level, p, m);
-                case 5 -> lanternFlicker(level, p, ps);
-                default -> dollAppears(level, p);
-            };
-            if (ok) return;
+        if (area == TerrainData.AREA_OUT) return;
+        if (--ps.nextMinor <= 0) {
+            minorScare(level, p, ps, data, area);
+            float speed = 0.7f + (1.0f - ps.fear / 100.0f) * 0.6f;
+            ps.nextMinor = (int) ((20 * 18 + RAND.nextInt(20 * 26)) * speed);
         }
-    }
-
-    private static boolean lampFlicker(ServerLevel level, ServerPlayer p, Mansion m, int phase) {
-        for (BlockPos a : shuffled(m.andons)) {
-            if (a.distSqr(p.blockPosition()) > 14 * 14) continue;
-            BlockState s = level.getBlockState(a);
-            if (!s.is(ModBlocks.ANDON.get()) || !s.getValue(AndonBlock.LIT)) continue;
-            level.setBlock(a, s.setValue(AndonBlock.LIT, false), 3);
-            GameManager.sound(p, ModSounds.GAME_LANTERN_OFF.get(), Vec3.atCenterOf(a), 0.8f, 0.7f);
-            if (phase < 3 || RAND.nextBoolean()) {
-                later(level, 60 + RAND.nextInt(120), () -> {
-                    BlockState now = level.getBlockState(a);
-                    if (now.is(ModBlocks.ANDON.get())) level.setBlock(a, now.setValue(AndonBlock.LIT, true), 3);
-                });
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean footprints(ServerLevel level, ServerPlayer p) {
-        Vec3 look = p.getViewVector(1.0f);
-        Vec3 dir = new Vec3(-look.x, 0, -look.z).normalize();
-        BlockPos start = p.blockPosition();
-        List<BlockPos> placed = new ArrayList<>();
-        Direction facing = Direction.getNearest(-dir.x, 0, -dir.z);
-        for (int i = 2; i <= 9; i++) {
-            BlockPos at = BlockPos.containing(start.getX() + 0.5 + dir.x * i, start.getY(), start.getZ() + 0.5 + dir.z * i);
-            if (!level.getBlockState(at).isAir() || !level.getBlockState(at.below()).isSolidRender(level, at.below())) break;
-            placed.add(at);
-        }
-        if (placed.size() < 3) return false;
-        for (BlockPos at : placed) {
-            level.setBlock(at, ModBlocks.FOOTPRINTS.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing), 3);
-        }
-        later(level, 20 * 45, () -> {
-            for (BlockPos at : placed) if (level.getBlockState(at).is(ModBlocks.FOOTPRINTS.get())) level.setBlock(at, Blocks.AIR.defaultBlockState(), 3);
-        });
-        return true;
-    }
-
-    private static boolean handprint(ServerLevel level, ServerPlayer p, Mansion m) {
-        for (BlockPos s : shuffled(m.shoji)) {
-            if (s.distSqr(p.blockPosition()) > 10 * 10 || s.distSqr(p.blockPosition()) < 3 * 3) continue;
-            if (!level.getBlockState(s).is(ModBlocks.SHOJI.get())) continue;
-            if (visible(p, Vec3.atCenterOf(s), 0.3)) continue;
-            level.setBlock(s, ModBlocks.SHOJI_BLOODY.get().defaultBlockState(), 3);
-            GameManager.sound(p, ModSounds.AMBIENT_SCRATCH.get(), Vec3.atCenterOf(s), 0.9f, 1.0f);
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean scrollFace(ServerLevel level, ServerPlayer p, Mansion m) {
-        for (BlockPos s : shuffled(m.scrolls)) {
-            if (s.distSqr(p.blockPosition()) > 12 * 12) continue;
-            BlockState st = level.getBlockState(s);
-            if (!st.is(ModBlocks.KAKEJIKU.get()) || st.getValue(KakejikuBlock.FACE)) continue;
-            if (visible(p, Vec3.atCenterOf(s), 0.3)) continue;
-            level.setBlock(s, st.setValue(KakejikuBlock.FACE, true), 3);
-            revertScroll(level, s, p, 0);
-            return true;
-        }
-        return false;
-    }
-
-    private static void revertScroll(ServerLevel level, BlockPos s, ServerPlayer p, int tries) {
-        later(level, 20 * 8, () -> {
-            BlockState st = level.getBlockState(s);
-            if (!st.is(ModBlocks.KAKEJIKU.get())) return;
-            if (visible(p, Vec3.atCenterOf(s), 0.2) && tries < 20) {
-                revertScroll(level, s, p, tries + 1);
+        if (--ps.nextMonster <= 0) {
+            if (!hasActive(level, p)) {
+                if (spawnMonster(level, p, ps, data, area)) ps.nextMonster = 20 * 55 + RAND.nextInt(20 * 55);
+                else ps.nextMonster = 20 * 12;
             } else {
-                level.setBlock(s, st.setValue(KakejikuBlock.FACE, false), 3);
+                ps.nextMonster = 20 * 15;
             }
-        });
+        }
+        if (p.tickCount % 200 == 0) tickUtsurumono(level, p, data, area);
     }
 
-    private static boolean doorOpens(ServerLevel level, ServerPlayer p, Mansion m) {
-        List<BlockPos> doors = new ArrayList<>(m.doors);
-        for (Closet c : m.closets) doors.add(c.front());
-        for (BlockPos d : shuffled(doors)) {
-            if (d.distSqr(p.blockPosition()) > 9 * 9 || d.distSqr(p.blockPosition()) < 2 * 2) continue;
-            if (d.equals(m.safeDoor)) continue;
-            BlockState s = level.getBlockState(d);
-            if (!(s.getBlock() instanceof DoorBlock door) || s.getValue(DoorBlock.OPEN)) continue;
-            door.setOpen(null, level, s, d, true);
-            return true;
+    // ------------------------------------------------------------------------------------------------ monsters
+    private static boolean spawnMonster(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data, int area) {
+        if (!data.bagOpened && data.playTicks < 20 * 150) return false;
+        boolean act3 = data.keyTaken;
+        int r = RAND.nextInt(100);
+        switch (area) {
+            case TerrainData.AREA_RAKURAKU, TerrainData.AREA_SAWA -> {
+                if (!data.bagOpened) return false;
+                return r < 55 ? attachUshiro(level, p) : spawnYobigoe(level, p);
+            }
+            case TerrainData.AREA_SUGI -> {
+                if (r < 50) return spawnNozoki(level, p);
+                if (r < 75) return spawnYobigoe(level, p);
+                return attachUshiro(level, p);
+            }
+            case TerrainData.AREA_HAISON -> {
+                if (r < 40) return spawnNozoki(level, p);
+                return r < 65 && spawnYobigoe(level, p);
+            }
+            case TerrainData.AREA_HOKORA -> {
+                return r < 45 && attachUshiro(level, p);
+            }
+            case TerrainData.AREA_TSURIBASHI -> {
+                return r < 40 ? spawnNozoki(level, p) : r < 60 && attachUshiro(level, p);
+            }
+            case TerrainData.AREA_KOYA, TerrainData.AREA_TETTO -> {
+                if (act3) {
+                    if (!data.happened("oyama_hunt") && data.happened("oyama_stalk")) {
+                        data.once("oyama_hunt");
+                        return huntOyama(level, p);
+                    }
+                    if (r < 45) {
+                        data.once("oyama_stalk");
+                        return stalkOyama(level, p);
+                    }
+                }
+                if (r < 35) return spawnYobigoe(level, p);
+                return r < 70 && attachUshiro(level, p);
+            }
+            default -> {
+                return false;
+            }
         }
-        return false;
     }
 
-    private static boolean lanternFlicker(ServerLevel level, ServerPlayer p, PlayerState ps) {
-        if (!ps.lanternLit) return false;
-        GameManager.event(p, GameManager.EVENT_FLICKER, 0, "");
-        for (int i = 0; i < 3; i++) {
-            later(level, i * 7, () -> LanternLight.suppress(p, 4));
-        }
+    static boolean spawnNozoki(ServerLevel level, ServerPlayer p) {
+        Vec3 at = trunkSpot(level, p, 13, 26, 1.25);
+        if (at == null) return false;
+        Nozoki n = spawn(level, ModEntities.NOZOKI.get(), at, yawTo(at, p.position()), p);
+        if (n != null) n.peek(RAND.nextBoolean());
+        return n != null;
+    }
+
+    static boolean spawnYobigoe(ServerLevel level, ServerPlayer p) {
+        Vec3 at = openSpot(level, p, 34, 48, 1.6, false);
+        if (at == null) return false;
+        return spawn(level, ModEntities.YOBIGOE.get(), at, yawTo(at, p.position()), p) != null;
+    }
+
+    static boolean attachUshiro(ServerLevel level, ServerPlayer p) {
+        PlayerState ps = GameManager.state(p);
+        if (p.getDeltaMovement().horizontalDistance() < 0.04 && ps.stillTicks > 10) return false;
+        if (ps.area == TerrainData.AREA_TUNNEL || ps.area == TerrainData.AREA_HAISON) return false;
+        Ushiro u = ModEntities.USHIRO.get().create(level);
+        if (u == null) return false;
+        u.attach(p);
+        level.addFreshEntity(u);
+        GameData data = GameData.get(level.getServer());
+        if (data.once("ushiro_first")) GameManager.thought(p, "thought.sounan.ushiro");
         return true;
     }
 
-    private static boolean dollAppears(ServerLevel level, ServerPlayer p) {
-        Vec3 look = p.getViewVector(1.0f);
-        Vec3 behind = p.position().subtract(look.x * 3.2, 0, look.z * 3.2);
-        BlockPos at = BlockPos.containing(behind);
-        if (!level.getBlockState(at).isAir() || !level.getBlockState(at.above()).isAir()) return false;
-        if (!level.getBlockState(at.below()).isSolidRender(level, at.below())) return false;
-        Ichimatsu doll = ModEntities.ICHIMATSU.get().create(level);
-        if (doll == null) return false;
-        float yaw = (float) (Mth.atan2(look.z, look.x) * (180.0 / Math.PI)) - 90.0f + 180.0f;
-        doll.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, yaw, 0);
-        doll.setYHeadRot(yaw);
-        doll.setHome(at, true);
-        level.addFreshEntity(doll);
-        later(level, 20 * 50, () -> {
-            if (doll.isAlive() && !GameManager.anyoneSees(level, doll)) doll.discard();
-            else if (doll.isAlive()) later(level, 20 * 30, doll::discard);
-        });
-        return true;
+    static boolean stalkOyama(ServerLevel level, ServerPlayer p) {
+        Vec3 at = openSpot(level, p, 40, 58, 1.4, false);
+        if (at == null) return false;
+        Oyamasama o = spawn(level, ModEntities.OYAMASAMA.get(), at, yawTo(at, p.position()), p);
+        if (o != null) o.setMode(Oyamasama.MODE_STALK, 20 * 18);
+        return o != null;
     }
 
-    // ================================================================== hallucinations & shadows
-    public static boolean spawnFar(ServerLevel level, ServerPlayer p) {
-        Vec3 eye = p.getEyePosition();
-        Vec3 look = p.getViewVector(1.0f);
-        Vec3 flat = new Vec3(look.x, 0, look.z);
-        if (flat.lengthSqr() < 1.0e-3) return false;
-        flat = flat.normalize();
-        float side = (RAND.nextFloat() - 0.5f) * 0.5f;
-        Vec3 dir = new Vec3(flat.x - flat.z * side, 0, flat.z + flat.x * side).normalize();
-        BlockHitResult hit = level.clip(new ClipContext(eye, eye.add(dir.scale(26)), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, p));
-        Vec3 end = hit.getType() == HitResult.Type.MISS ? eye.add(dir.scale(26)) : hit.getLocation().subtract(dir.scale(0.8));
-        double dist = end.distanceTo(eye);
-        if (dist < 10) return false;
-        BlockPos at = BlockPos.containing(end.x, p.getY(), end.z);
-        for (int dy = 0; dy < 3 && !level.getBlockState(at.below()).isSolidRender(level, at.below()); dy++) at = at.below();
-        if (!level.getBlockState(at).isAir() || !level.getBlockState(at.above()).isAir()) return false;
-        Maboroshi m = ModEntities.MABOROSHI.get().create(level);
-        if (m == null) return false;
-        m.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0, 0);
-        m.setup(p, Maboroshi.MODE_FAR);
-        level.addFreshEntity(m);
-        return true;
-    }
-
-    public static boolean spawnPeek(ServerLevel level, ServerPlayer p) {
-        Vec3 look = p.getViewVector(1.0f);
-        Vec3 behind = p.position().subtract(look.x * 1.7, 0, look.z * 1.7);
-        BlockPos at = BlockPos.containing(behind);
-        if (!level.getBlockState(at).isAir() || !level.getBlockState(at.above()).isAir()) return false;
-        Maboroshi m = ModEntities.MABOROSHI.get().create(level);
-        if (m == null) return false;
-        m.moveTo(behind.x, p.getY(), behind.z, 0, 0);
-        m.setup(p, Maboroshi.MODE_PEEK);
-        level.addFreshEntity(m);
-        GameManager.sound(p, ModSounds.BRIDE_BREATH.get(), behind.add(0, 1.7, 0), 0.7f, 0.8f);
-        return true;
-    }
-
-    public static boolean spawnShadow(ServerLevel level, ServerPlayer p) {
-        Mansion m = GameManager.mansion();
-        if (m == null) return false;
-        for (BlockPos s : shuffled(m.darkSpots)) {
-            double d = s.distSqr(p.blockPosition());
-            if (d < 10 * 10 || d > 26 * 26) continue;
-            if (level.getMaxLocalRawBrightness(s) > 3) continue;
-            if (visible(p, Vec3.atCenterOf(s), 0.4)) continue;
-            Kageboshi k = ModEntities.KAGEBOSHI.get().create(level);
-            if (k == null) return false;
-            k.moveTo(s.getX() + 0.5, s.getY(), s.getZ() + 0.5, RAND.nextFloat() * 360, 0);
-            level.addFreshEntity(k);
-            GameManager.sound(p, ModSounds.SHADOW_WHOOSH.get(), Vec3.atCenterOf(s), 0.6f, 0.7f);
-            return true;
+    static boolean huntOyama(ServerLevel level, ServerPlayer p) {
+        Vec3 at = openSpot(level, p, 24, 34, 1.0, true);
+        if (at == null) return false;
+        Oyamasama o = spawn(level, ModEntities.OYAMASAMA.get(), at, yawTo(at, p.position()), p);
+        if (o != null) {
+            o.setMode(Oyamasama.MODE_HUNT, 20 * 24);
+            GameManager.thought(p, "thought.sounan.run");
         }
-        return false;
+        return o != null;
     }
 
-    // ================================================================== helpers
-    private static boolean visible(ServerPlayer p, Vec3 target, double minDot) {
-        Vec3 to = target.subtract(p.getEyePosition());
-        double len = to.length();
-        if (len < 1.0e-3) return true;
-        if (p.getViewVector(1.0f).dot(to.scale(1.0 / len)) < minDot) return false;
-        BlockHitResult hit = p.level().clip(new ClipContext(p.getEyePosition(), target, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, p));
-        return hit.getType() == HitResult.Type.MISS || hit.getLocation().distanceToSqr(target) < 1.0;
-    }
-
-    private static <T> List<T> shuffled(List<T> in) {
-        List<T> out = new ArrayList<>(in);
-        for (int i = out.size() - 1; i > 0; i--) {
-            int j = RAND.nextInt(i + 1);
-            T t = out.get(i);
-            out.set(i, out.get(j));
-            out.set(j, t);
+    /** The lost stand ahead along the route, pointing the way out (camera only). */
+    private static void tickUtsurumono(ServerLevel level, ServerPlayer p, GameData data, int area) {
+        if (area < TerrainData.AREA_SUGI || area == TerrainData.AREA_TETTO) return;
+        int have = 0;
+        for (SounanMonster m : monstersOf(level, p, 70)) if (m instanceof Utsurumono) have++;
+        if (have >= 2) return;
+        List<int[]> route = Pois.get().route;
+        int best = 0;
+        double bestD = 1e18, bestT = 0;
+        for (int i = 0; i < route.size() - 1; i++) {
+            double ax = route.get(i)[0], az = route.get(i)[1], bx = route.get(i + 1)[0], bz = route.get(i + 1)[1];
+            double dx = bx - ax, dz = bz - az, l2 = dx * dx + dz * dz;
+            double tt = Mth.clamp(((p.getX() - ax) * dx + (p.getZ() - az) * dz) / l2, 0, 1);
+            double px = ax + dx * tt - p.getX(), pz = az + dz * tt - p.getZ();
+            double d = px * px + pz * pz;
+            if (d < bestD) {
+                bestD = d;
+                best = i;
+                bestT = tt;
+            }
         }
-        return out;
+        double ahead = 22 + RAND.nextInt(22);
+        int seg = best;
+        double t = bestT;
+        while (seg < route.size() - 1 && ahead > 0) {
+            double ax = route.get(seg)[0], az = route.get(seg)[1], bx = route.get(seg + 1)[0], bz = route.get(seg + 1)[1];
+            double len = Math.hypot(bx - ax, bz - az);
+            double left = (1 - t) * len;
+            if (ahead <= left) {
+                t += ahead / len;
+                ahead = 0;
+            } else {
+                ahead -= left;
+                seg++;
+                t = 0;
+            }
+        }
+        if (seg >= route.size() - 1) return;
+        double ax = route.get(seg)[0], az = route.get(seg)[1], bx = route.get(seg + 1)[0], bz = route.get(seg + 1)[1];
+        double len = Math.hypot(bx - ax, bz - az);
+        double ux = (bx - ax) / len, uz = (bz - az) / len;
+        double side = (RAND.nextBoolean() ? 1 : -1) * (2.5 + RAND.nextDouble() * 2);
+        double x = ax + (bx - ax) * t - uz * side, z = az + (bz - az) * t + ux * side;
+        Vec3 at = new Vec3(x, ground(Mth.floor(x), Mth.floor(z)), z);
+        float yaw = (float) (Mth.atan2(uz, ux) * Mth.RAD_TO_DEG) - 90.0f;
+        Utsurumono u = spawn(level, ModEntities.UTSURUMONO.get(), at, yaw, p);
+        if (u != null) u.pointAt(yaw);
+    }
+
+    // ------------------------------------------------------------------------------------------------ the little things
+    private static void minorScare(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data, int area) {
+        Vec3 pos = p.position();
+        float fear = ps.fear / 100.0f;
+        int r = RAND.nextInt(100);
+        if (area == TerrainData.AREA_TUNNEL) {
+            if (r < 40) behind(p, ModSounds.AMB_DRIP.get(), 6, 0.8f);
+            else if (r < 70) behind(p, ModSounds.AMB_FOOTSTEPS_WALK.get(), 14, 0.9f);
+            else if (r < 85) behind(p, ModSounds.AMB_THUD.get(), 25, 1.0f);
+            else GameManager.privateSound(p, ModSounds.AMB_BREATH_BEHIND.get(), behindPos(p, 1.5), 0.6f, 1.0f);
+            return;
+        }
+        if (area == TerrainData.AREA_HAISON && r < 25) {
+            PoiLayout.House radio = PoiLayout.get().houses.get(1);
+            Vec3 at = new Vec3(radio.cx() + 0.5, radio.floorY() + 1.5, radio.cz() + 0.5);
+            GameManager.privateSound(p, r < 12 ? ModSounds.AMB_RADIO.get() : ModSounds.AMB_TIN_BANG.get(), at, 0.9f, 1.0f);
+            return;
+        }
+        if (r < 14) behind(p, ModSounds.AMB_BRANCH_SNAP.get(), 7 + RAND.nextInt(8), 1.0f);
+        else if (r < 24) passing(p, ModSounds.AMB_FOOTSTEPS_RUN.get(), 18);
+        else if (r < 32) around(p, ModSounds.AMB_TREE_KNOCK.get(), 20, 30, 1.0f);
+        else if (r < 39) around(p, ModSounds.AMB_DEER_SCREAM.get(), 40, 60, 1.0f);
+        else if (r < 44) around(p, ModSounds.AMB_FOX_SCREAM.get(), 30, 45, 1.0f);
+        else if (r < 51) around(p, ModSounds.AMB_DISTANT_BELL.get(), 35, 50, 1.0f);
+        else if (r < 56) around(p, ModSounds.AMB_DISTANT_CALL.get(), 50, 70, 1.0f);
+        else if (r < 61) around(p, ModSounds.AMB_ROCKFALL.get(), 20, 35, 1.0f);
+        else if (r < 67) behind(p, ModSounds.AMB_GIGGLE.get(), 10 + RAND.nextInt(6), 0.8f);
+        else if (r < 72) behind(p, ModSounds.AMB_FOOTSTEPS_WALK.get(), 10, 0.9f);
+        else if (r < 76) around(p, ModSounds.AMB_DISTANT_SCREAM.get(), 60, 80, 1.0f);
+        else if (r < 80 && fear > 0.45f) {
+            double side = RAND.nextBoolean() ? 0.7 : -0.7;
+            Vec3 ear = p.getEyePosition().add(Vec3.directionFromRotation(0, p.getYRot() + 90).scale(side));
+            GameManager.privateSound(p, ModSounds.AMB_WHISPER_NAME.get(), ear, 0.6f, 1.0f);
+        } else if (r < 85) {
+            // the forest holds its breath... then something very close
+            GameManager.event(p, GameManager.EV_SILENCE, 0, "");
+            GameManager.privateSound(p, ModSounds.AMB_BRANCH_SNAP.get(), behindPos(p, 4), 1.0f, 0.8f);
+        } else if (r < 90) {
+            turnJizo(level, p);
+        } else if (r < 94 && data.playTicks - ps.lastScare > 20 * 300) {
+            ps.lastScare = data.playTicks;
+            String[] texts = {"phone.sounan.buzz.found", "phone.sounan.buzz.behind", "phone.sounan.buzz.come"};
+            GameManager.event(p, GameManager.EV_BUZZ, 0, texts[RAND.nextInt(texts.length)]);
+            GameManager.addFear(p, 8.0f);
+        } else {
+            around(p, ModSounds.AMB_THUD.get(), 25, 45, 1.0f);
+        }
+    }
+
+    static Vec3 behindPos(ServerPlayer p, double dist) {
+        Vec3 back = Vec3.directionFromRotation(0, p.getYRot() + 180 + (RAND.nextFloat() - 0.5f) * 70).scale(dist);
+        return p.position().add(back).add(0, 1.0, 0);
+    }
+
+    static void behind(ServerPlayer p, SoundEvent s, double dist, float vol) {
+        GameManager.privateSound(p, s, behindPos(p, dist), vol, 0.9f + RAND.nextFloat() * 0.2f);
+    }
+
+    static void around(ServerPlayer p, SoundEvent s, double min, double max, float vol) {
+        double ang = RAND.nextDouble() * Math.PI * 2, d = min + RAND.nextDouble() * (max - min);
+        GameManager.privateSound(p, s, p.position().add(Math.cos(ang) * d, 2 + RAND.nextDouble() * 6, Math.sin(ang) * d), vol,
+                0.9f + RAND.nextFloat() * 0.2f);
+    }
+
+    static void passing(ServerPlayer p, SoundEvent s, double dist) {
+        Vec3 side = Vec3.directionFromRotation(0, p.getYRot() + (RAND.nextBoolean() ? 90 : -90)).scale(dist);
+        GameManager.privateSound(p, s, p.position().add(side).add(0, 1, 0), 1.0f, 1.0f);
+    }
+
+    /** Jizo you are not looking at turn to face you. */
+    static void turnJizo(ServerLevel level, ServerPlayer p) {
+        for (BlockPos j : PoiLayout.get().jizo) {
+            if (j.distSqr(p.blockPosition()) > 24 * 24) continue;
+            BlockState s = level.getBlockState(j);
+            if (!s.is(ModBlocks.JIZO.get())) continue;
+            Vec3 to = Vec3.atCenterOf(j).subtract(p.getEyePosition()).normalize();
+            if (to.dot(p.getViewVector(1.0f)) > 0.3) continue;
+            Direction face = Direction.fromYRot(yawTo(Vec3.atCenterOf(j), p.position()));
+            if (s.getValue(FacingBlock.FACING) != face) level.setBlock(j, s.setValue(FacingBlock.FACING, face), 3);
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------ scripts
+    public static void onAreaEntered(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data, int area) {
+        PoiLayout L = PoiLayout.get();
+        switch (area) {
+            case TerrainData.AREA_SUGI -> ps.nextMonster = Math.min(ps.nextMonster, 20 * 25);
+            case TerrainData.AREA_TUNNEL -> GameManager.thought(p, "thought.sounan.tunnel");
+            case TerrainData.AREA_TOZANGUCHI -> GameManager.thought(p, "thought.sounan.car");
+            default -> {
+            }
+        }
+    }
+
+    private static void tickScripts(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data, int area) {
+        PoiLayout L = PoiLayout.get();
+        // residents: the sleepers of the village house and the hut
+        if (p.tickCount % 40 == 0) {
+            if (area == TerrainData.AREA_HAISON) ensureResident(level, L.villageSleeper, L.villageSleeperFacing);
+            if (area == TerrainData.AREA_KOYA || area == TerrainData.AREA_TETTO) ensureResident(level, L.hutSleeper, L.hutSleeperFacing);
+        }
+        // the public phone rings as you pass
+        if (area == TerrainData.AREA_HAISON && p.distanceToSqr(Vec3.atCenterOf(L.publicPhone)) < 14 * 14 && data.once("payphone")) {
+            PAYPHONE.put(p.getUUID(), 0);
+        }
+        Integer ring = PAYPHONE.get(p.getUUID());
+        if (ring != null) {
+            if (ring % 120 == 0) GameManager.worldSound(level, Vec3.atCenterOf(L.publicPhone), ModSounds.PHONE_RING_OLD.get(), 1.2f, 1.0f);
+            if (ring > 20 * 24) PAYPHONE.remove(p.getUUID());
+            else PAYPHONE.put(p.getUUID(), ring + 1);
+        }
+        // something under the bridge
+        if (area == TerrainData.AREA_TSURIBASHI && Math.abs(p.getX() - (L.bridgeX + 0.5)) < 2.5
+                && p.getZ() > L.bridgeZ0 + 4 && p.getZ() < L.bridgeZ1 - 4 && data.once("under_bridge")) {
+            Vec3 below = p.position().add(0, -5, 0);
+            GameManager.privateSound(p, ModSounds.AMB_THUD.get(), below, 1.0f, 0.7f);
+            GameManager.privateSound(p, ModSounds.NOZOKI_GIGGLE.get(), below.add(0, 2, 0), 0.9f, 0.9f);
+            GameManager.event(p, GameManager.EV_SHAKE, 14, "");
+            GameManager.event(p, GameManager.EV_STINGER, 6, "");
+            GameManager.addFear(p, 18.0f);
+        }
+        // the tunnel: the lamps come on one by one toward the exit, and it comes from behind
+        if (area == TerrainData.AREA_TUNNEL && data.gateUnlocked && p.getZ() > L.tunnelZ0 + 26 && !data.climax) {
+            data.climax = true;
+            data.setDirty();
+            TUNNEL_LAMPS.put(p.getUUID(), 0);
+            Vec3 at = new Vec3(L.tunnelX + 0.5, L.roadY(L.tunnelZ0 + 2) + 1, L.tunnelZ0 + 2.5);
+            Oyamasama o = spawn(level, ModEntities.OYAMASAMA.get(), at, 180.0f, p);
+            if (o != null) o.setMode(Oyamasama.MODE_TUNNEL, 20 * 70);
+            GameManager.thought(p, "thought.sounan.run");
+            GameManager.event(p, GameManager.EV_STINGER, 10, "");
+        }
+        Integer lamps = TUNNEL_LAMPS.get(p.getUUID());
+        if (lamps != null) {
+            int i = lamps / 8;
+            if (lamps % 8 == 0 && i < L.tunnelLamps.size()) {
+                GameManager.setTunnelLamp(level, L.tunnelLamps.get(i), true);
+                GameManager.worldSound(level, Vec3.atCenterOf(L.tunnelLamps.get(i)), ModSounds.ITEM_FLASHLIGHT_FLICKER.get(), 0.6f, 0.6f);
+            }
+            TUNNEL_LAMPS.put(p.getUUID(), lamps + 1);
+            if (p.getZ() > L.tunnelZ1 + 3 || area == TerrainData.AREA_TOZANGUCHI) {
+                for (SounanMonster m : monstersOf(level, p, 120)) if (m instanceof Oyamasama) m.vanish();
+                for (BlockPos lp : L.tunnelLamps) GameManager.setTunnelLamp(level, lp, false);
+                TUNNEL_LAMPS.remove(p.getUUID());
+            }
+        }
+        // if it got you in the tunnel, it comes again
+        if (data.climax && area == TerrainData.AREA_TUNNEL && !TUNNEL_LAMPS.containsKey(p.getUUID()) && p.getZ() < L.tunnelZ0 + 20) {
+            data.climax = false;
+            data.setDirty();
+        }
+    }
+
+    static void ensureResident(ServerLevel level, BlockPos home, Direction facing) {
+        UUID id = RESIDENTS.get(home.asLong());
+        if (id != null && level.getEntity(id) instanceof Koyanushi k && k.isAlive()) return;
+        for (Koyanushi k : level.getEntitiesOfClass(Koyanushi.class, new AABB(home).inflate(40))) {
+            if (home.equals(k.home())) {
+                RESIDENTS.put(home.asLong(), k.getUUID());
+                return;
+            }
+        }
+        Koyanushi k = ModEntities.KOYANUSHI.get().create(level);
+        if (k == null) return;
+        k.moveTo(home.getX() + 0.5, home.getY(), home.getZ() + 0.5, facing.toYRot(), 0.0f);
+        k.setHome(home, facing);
+        level.addFreshEntity(k);
+        RESIDENTS.put(home.asLong(), k.getUUID());
+    }
+
+    // ------------------------------------------------------------------------------------------------ hooks
+    public static void clearFor(ServerPlayer p) {
+        if (!(p.level() instanceof ServerLevel level)) return;
+        for (SounanMonster m : monstersOf(level, p, 128)) {
+            if (m instanceof Koyanushi k) k.repel();
+            else m.vanish();
+        }
+        PAYPHONE.remove(p.getUUID());
+        TUNNEL_LAMPS.remove(p.getUUID());
+        PoiLayout L = PoiLayout.get();
+        for (BlockPos lp : L.tunnelLamps) GameManager.setTunnelLamp(level, lp, false);
+        PlayerState ps = GameManager.state(p);
+        ps.nextMonster = Math.max(ps.nextMonster, 20 * 50);
+    }
+
+    public static void calmDown(ServerPlayer p, int ticks) {
+        PlayerState ps = GameManager.state(p);
+        ps.nextMonster = Math.max(ps.nextMonster, ticks);
+        ps.nextMajor = Math.max(ps.nextMajor, ticks);
+    }
+
+    static void repelAround(ServerLevel level, ServerPlayer p, double radius, boolean fire) {
+        for (SounanMonster m : level.getEntitiesOfClass(SounanMonster.class, new AABB(p.blockPosition()).inflate(radius))) {
+            if (m instanceof Nozoki n) n.repel();
+            else if (m instanceof Yobigoe y) y.repel();
+            else if (m instanceof Ushiro u && m.target() == p) u.letGo(false);
+            else if (m instanceof Koyanushi k && fire) k.repel();
+            else if (m instanceof Oyamasama o && fire) o.repel();
+        }
+    }
+
+    public static void onPhoto(ServerLevel level, ServerPlayer p) {
+        for (SounanMonster m : level.getEntitiesOfClass(SounanMonster.class, new AABB(p.blockPosition()).inflate(26))) {
+            Vec3 to = m.getBoundingBox().getCenter().subtract(p.getEyePosition());
+            double d = to.length();
+            if (d < 0.1 || to.scale(1 / d).dot(p.getViewVector(1.0f)) < 0.85) continue;
+            if (m instanceof Nozoki n && d < 22) n.provoke();
+            else if (m instanceof Utsurumono u) u.photographed(p);
+            else if (m instanceof Koyanushi k && d < 12) k.wake(p);
+        }
+    }
+
+    public static void onBell(ServerLevel level, ServerPlayer p) {
+        repelAround(level, p, 32.0, false);
+    }
+
+    public static void onFlare(ServerLevel level, ServerPlayer p) {
+        repelAround(level, p, 20.0, true);
+    }
+
+    public static void onCall(ServerLevel level, ServerPlayer p) {
+        GameManager.addFear(p, 10.0f);
+    }
+
+    public static void answerPayphone(ServerLevel level, ServerPlayer p) {
+        if (PAYPHONE.remove(p.getUUID()) != null) {
+            GameManager.event(p, GameManager.EV_CALL, 900, p.getGameProfile().getName() + "|0");
+            GameManager.addFear(p, 12.0f);
+        } else {
+            GameManager.thought(p, "thought.sounan.payphone_dead");
+        }
+    }
+
+    public static void onBagOpened(ServerLevel level, ServerPlayer p) {
+        PlayerState ps = GameManager.state(p);
+        ps.nextMonster = 20 * 45;
+    }
+
+    public static void onKeyTaken(ServerLevel level, ServerPlayer p) {
+        PlayerState ps = GameManager.state(p);
+        ps.nextMonster = Math.min(ps.nextMonster, 20 * 35);
+    }
+
+    public static void clearAll() {
+        RESIDENTS.clear();
+        PAYPHONE.clear();
+        TUNNEL_LAMPS.clear();
     }
 }

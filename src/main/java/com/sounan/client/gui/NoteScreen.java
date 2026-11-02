@@ -1,9 +1,8 @@
 package com.sounan.client.gui;
 
-import com.sounan.Sounan;
-import com.sounan.game.Notes;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
+import com.sounan.Sounan;
+import com.sounan.client.ClientState;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -13,41 +12,42 @@ import net.minecraft.util.Mth;
 
 import java.util.List;
 
-/** Reading a note on old washi paper. The world does not pause while you read. */
+/** Reading a damp note by flashlight. The world does not pause while you read. */
 public class NoteScreen extends Screen {
     private static final ResourceLocation PAPER = Sounan.id("textures/gui/paper.png");
     private final int id;
-    private final String extra;
+    private final String name;
+    private final String captures;
+    private final String date;
     private List<FormattedCharSequence> lines = List.of();
     private int scroll;
     private int visible;
     private int pw, ph, px, py;
 
+    /** {@code extra} = "playerName|captures|dayOffset". */
     public NoteScreen(int id, String extra) {
-        super(Component.translatable("note.meikon." + id + ".title"));
+        super(Component.translatable("note.sounan." + id + ".title"));
         this.id = id;
-        this.extra = extra == null ? "" : extra;
-    }
-
-    public static Component candleText(String extra) {
-        String[] parts = extra.split(",");
-        Component out = Component.empty();
-        for (int i = 0; i < parts.length; i++) {
-            if (i > 0) out = Component.empty().append(out).append(" → ");
-            out = Component.empty().append(out).append(Component.translatable("candle.meikon." + parts[i].trim()));
+        String[] p = (extra == null ? "" : extra).split("\\|");
+        this.name = p.length > 0 ? p[0] : "";
+        this.captures = p.length > 1 ? p[1] : "0";
+        int days = 0;
+        try {
+            days = p.length > 2 ? Integer.parseInt(p[2]) : 0;
+        } catch (NumberFormatException ignored) {
         }
-        return out;
+        int[] d = ClientState.dateAfter(days);
+        this.date = d[0] + "." + d[1] + "." + d[2];
+        ClientState.notesRead |= 1 << Math.min(30, id);
     }
 
     @Override
     protected void init() {
-        pw = Math.min(280, width - 30);
-        ph = Math.min(height - 24, 300);
+        pw = Math.min(290, width - 30);
+        ph = Math.min(height - 24, 310);
         px = (width - pw) / 2;
         py = (height - ph) / 2;
-        Object a1 = id == Notes.CANDLES ? Minecraft.getInstance().getUser().getName() : extra;
-        Object a2 = id == Notes.CANDLES ? candleText(extra) : Component.literal("");
-        Component body = Component.translatable("note.meikon." + id + ".body", a1, a2);
+        Component body = Component.translatable("note.sounan." + id + ".body", name, captures, date);
         lines = font.split(body, pw - 48);
         visible = Math.max(1, (ph - 70) / 11);
     }
@@ -56,17 +56,19 @@ public class NoteScreen extends Screen {
     public void render(GuiGraphics g, int mouseX, int mouseY, float partial) {
         renderBackground(g);
         RenderSystem.enableBlend();
+        g.setColor(0.86f, 0.84f, 0.80f, 1.0f);
         g.blit(PAPER, px, py, pw, ph, 0, 0, 256, 256, 256, 256);
+        g.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
-        g.drawCenteredString(font, title, width / 2, py + 22, 0x3A0E0E);
+        g.drawCenteredString(font, title, width / 2, py + 22, 0x2A1810);
         g.fill(px + 30, py + 34, px + pw - 30, py + 35, 0x553A2A1A);
         int y = py + 44;
         for (int i = scroll; i < Math.min(lines.size(), scroll + visible); i++) {
-            g.drawString(font, lines.get(i), px + 24, y, 0x2B1D12, false);
+            g.drawString(font, lines.get(i), px + 24, y, 0x22180F, false);
             y += 11;
         }
         if (lines.size() > visible) {
-            g.drawCenteredString(font, Component.translatable("gui.meikon.scroll", scroll + 1, Math.max(1, lines.size() - visible + 1)),
+            g.drawCenteredString(font, Component.translatable("gui.sounan.scroll", scroll + 1, Math.max(1, lines.size() - visible + 1)),
                     width / 2, py + ph - 18, 0x6A5442);
         }
         super.render(g, mouseX, mouseY, partial);

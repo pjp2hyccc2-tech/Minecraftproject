@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "sounan:block/climbing_rope"
+    },
+    "facing=east": {
+      "model": "sounan:block/climbing_rope",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "sounan:block/climbing_rope",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "sounan:block/climbing_rope",
+      "y": 270
+    }
+  }
+}

@@ -2,18 +2,16 @@ package com.sounan.client;
 
 import com.sounan.Sounan;
 import com.sounan.client.gui.EndingScreen;
-import com.sounan.client.gui.EnvelopeScreen;
-import com.sounan.client.gui.JournalScreen;
-import com.sounan.game.Closet;
-import com.sounan.game.GameManager;
-import com.sounan.game.Mansion;
-import com.sounan.game.Room;
+import com.sounan.client.gui.NoteScreen;
+import com.sounan.client.gui.PhoneScreen;
+import com.sounan.client.gui.TrailMapScreen;
+import com.sounan.world.Pois;
+import com.sounan.world.PoiLayout;
+import com.sounan.world.TerrainData;
 import net.minecraft.FileUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.level.GameRules;
@@ -29,16 +27,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 /**
- * CI only ({@code -Dmeikon.shots=true}, Xvfb + software GL): plays a scripted tour of the game and saves
- * screenshots into {@code run/screenshots/}. With {@code -Dmeikon.shots.shaders=true} (Oculus run) it takes a
- * shorter tour with longer waits. Log: {@code run/meikon_autoshots.txt}.
+ * CI only ({@code -Dsounan.shots=true}, Xvfb + software GL): plays a scripted tour of the mountain and saves
+ * screenshots into {@code run/screenshots/}. With {@code -Dsounan.shots.shaders=true} (Oculus run) it takes a shorter
+ * tour with longer waits. Log: {@code run/sounan_autoshots.txt}.
  */
 public final class AutoShots {
-    private static final boolean ENABLED = Boolean.getBoolean("meikon.shots");
-    private static final boolean SHADERS = Boolean.getBoolean("meikon.shots.shaders");
+    private static final boolean ENABLED = Boolean.getBoolean("sounan.shots");
+    private static final boolean SHADERS = Boolean.getBoolean("sounan.shots.shaders");
     private static final int MUL = SHADERS ? 3 : 1;
     private static int stage;
     private static int wait;
@@ -61,7 +60,7 @@ public final class AutoShots {
 
     static void tick(Minecraft mc) {
         if (!ENABLED || stage == 0 || stage == 9) return;
-        if (++ticks > 20 * 60 * (SHADERS ? 44 : 30)) {
+        if (++ticks > 20 * 60 * (SHADERS ? 50 : 34)) {
             log("global timeout");
             finish(mc);
             return;
@@ -80,7 +79,7 @@ public final class AutoShots {
             case 2 -> {
                 if (mc.level == null || mc.player == null || mc.screen != null) return;
                 stage = 3;
-                wait = 100 * MUL;
+                wait = 20;
                 build();
                 log("in world, " + STEPS.size() + " steps");
             }
@@ -113,11 +112,11 @@ public final class AutoShots {
 
     private static void createWorld(Minecraft mc) {
         try {
-            String folder = FileUtil.findAvailableName(mc.getLevelSource().getBaseDir(), "MeikonCI", "");
+            String folder = FileUtil.findAvailableName(mc.getLevelSource().getBaseDir(), "SounanCI", "");
             GameRules rules = new GameRules();
             rules.getRule(GameRules.RULE_DAYLIGHT).set(false, null);
             rules.getRule(GameRules.RULE_DOMOBSPAWNING).set(false, null);
-            LevelSettings settings = new LevelSettings("MeikonCI", GameType.CREATIVE, false, Difficulty.NORMAL, true, rules,
+            LevelSettings settings = new LevelSettings("SounanCI", GameType.CREATIVE, false, Difficulty.NORMAL, true, rules,
                     WorldDataConfiguration.DEFAULT);
             WorldOptions options = new WorldOptions(20261102L, false, false);
             mc.createWorldOpenFlows().createFreshLevel(folder, settings, options,
@@ -141,250 +140,135 @@ public final class AutoShots {
         if (mc.player != null) mc.player.connection.sendCommand(command);
     }
 
-    private static void look(Minecraft mc, float yaw, float pitch) {
-        if (mc.player != null) {
-            mc.player.setYRot(yaw);
-            mc.player.setXRot(pitch);
-            mc.player.yRotO = yaw;
-            mc.player.xRotO = pitch;
-            mc.player.setYHeadRot(yaw);
-        }
+    /** Teleport to a column of the mountain (feet on the surface) looking along yaw / pitch. */
+    private static void at(Minecraft mc, double x, double z, float yaw, float pitch) {
+        int y = TerrainData.get().height((int) Math.floor(x), (int) Math.floor(z)) + 1;
+        cmd(mc, String.format(Locale.ROOT, "execute in sounan:kaerazu run tp @s %.2f %d %.2f %.1f %.1f", x, y, z, yaw, pitch));
     }
 
-    private static void tpLook(Minecraft mc, BlockPos p, float yaw, float pitch) {
-        cmd(mc, String.format(java.util.Locale.ROOT, "tp @s %.2f %d %.2f %.1f %.1f", p.getX() + 0.5, p.getY(), p.getZ() + 0.5, yaw, pitch));
+    private static void atY(Minecraft mc, double x, double y, double z, float yaw, float pitch) {
+        cmd(mc, String.format(Locale.ROOT, "execute in sounan:kaerazu run tp @s %.2f %.2f %.2f %.1f %.1f", x, y, z, yaw, pitch));
     }
 
-    private static Mansion mansion() {
-        return GameManager.mansion();
+    private static void hold(Minecraft mc, String item) {
+        cmd(mc, "item replace entity @s weapon.mainhand with " + item);
     }
 
-    /** Yaw facing the exterior (back) wall of a room. */
-    private static float backYaw(Room r) {
-        BlockPos c = r.center();
-        Direction d;
-        if (Math.abs(c.getZ()) >= Math.abs(c.getX())) d = c.getZ() < 0 ? Direction.NORTH : Direction.SOUTH;
-        else d = c.getX() < 0 ? Direction.WEST : Direction.EAST;
-        return d.toYRot();
+    private static void fear(Minecraft mc, int fear, float danger) {
+        cmd(mc, String.format(Locale.ROOT, "sounan debug fear %d %.2f 2000", fear, danger));
     }
 
-    private static void room(String key, String shot, float pitch) {
-        add("tp_" + key, mc -> {
-            Mansion m = mansion();
-            if (m == null) return;
-            for (Room r : m.rooms) {
-                if (r.key().equals(key)) {
-                    float yaw = backYaw(r);
-                    Direction back = Direction.fromYRot(yaw);
-                    BlockPos stand = r.center().relative(back.getOpposite(), 2);
-                    if (key.equals("wedding")) stand = new BlockPos(0, 65, -19);
-                    tpLook(mc, stand, yaw, pitch);
-                    return;
-                }
-            }
-        }, 70);
-        snap(shot);
+    private static void scene(String name, Consumer<Minecraft> setup, int settle) {
+        add("go_" + name, setup, settle);
+        snap(name);
     }
 
     private static void build() {
         STEPS.clear();
+        PoiLayout L = PoiLayout.get();
+        Pois P = Pois.get();
         add("rules", mc -> {
-            cmd(mc, "gamerule doDaylightCycle false");
-            cmd(mc, "gamerule doMobSpawning false");
-            cmd(mc, "time set 18000");
             cmd(mc, "gamerule sendCommandFeedback false");
+            cmd(mc, "gamerule doMobSpawning false");
         }, 10);
         if (!SHADERS) {
-            add("envelope", mc -> mc.setScreen(new EnvelopeScreen(mc.getUser().getName())), 12);
-            snap("01_envelope");
-            add("close_envelope", mc -> mc.setScreen(null), 5);
-        }
-        add("start", mc -> cmd(mc, "meikon start"), 90);
-        if (!SHADERS) {
-            snap("02_intro");
+            snap("01_intro_text");
             add("intro_wait", mc -> {
-            }, 150);
-            snap("03_logo");
-        }
-        add("prepare", mc -> {
-            cmd(mc, "gamemode creative");
-            cmd(mc, "meikon debug peaceful true");
-        }, 150);
-        add("look_altar", mc -> {
-            Mansion m = mansion();
-            if (m != null) tpLook(mc, m.spawn, m.spawnYaw, 8.0f);
-        }, 40);
-        snap("04_safe_room");
-        add("look_door", mc -> {
-            Mansion m = mansion();
-            if (m != null) tpLook(mc, m.spawn, m.spawnYaw + 180.0f, 4.0f);
-        }, 30);
-        snap("05_safe_door");
-        add("corridor", mc -> {
-            Mansion m = mansion();
-            cmd(mc, "meikon debug lantern");
-            if (m != null) tpLook(mc, m.safeOutside, 90.0f, 2.0f);
-        }, 80);
-        snap("06_corridor_lantern");
-        add("lantern_off", mc -> cmd(mc, "item replace entity @s weapon.mainhand with air"), 40);
-        snap("07_corridor_dark");
-        add("courtyard", mc -> tpLook(mc, new BlockPos(0, 65, 11), 180.0f, -18.0f), 80);
-        snap("08_courtyard");
-        add("moon", mc -> tpLook(mc, new BlockPos(0, 65, -4), 0.0f, -42.0f), 40);
-        snap("09_moon");
-        add("torii", mc -> tpLook(mc, new BlockPos(0, 65, -4), 180.0f, -8.0f), 40);
-        snap("10_torii");
-        add("bride_close", mc -> {
-            Mansion m = mansion();
-            if (m != null) tpLook(mc, m.safeOutside.east(4), 90.0f, -6.0f);
-        }, 40);
-        add("bride_spawn", mc -> {
-            cmd(mc, "meikon debug lantern");
-            cmd(mc, "meikon debug spawn bride");
-        }, 40);
-        snap("11_bride_close");
-        add("bride_chase", mc -> cmd(mc, "meikon debug bride chase"), 3);
-        snap("12_bride_chase");
-        add("bride_far", mc -> {
-            cmd(mc, "item replace entity @s weapon.mainhand with air");
-            cmd(mc, "meikon debug spawn bride_far");
-        }, 40);
-        snap("13_bride_far");
-        add("bride_away", mc -> {
-            cmd(mc, "tp @e[type=meikon:hanayome] 0 65 -22");
-            cmd(mc, "meikon debug lantern");
-        }, 10);
-        room("dolls", "14_doll_room", 2.0f);
-        room("butsuma", "15_butsuma", 4.0f);
-        room("wedding", "16_wedding_hall", 2.0f);
-        room("kitchen", "17_kitchen", 6.0f);
-        room("bath", "18_bath", 10.0f);
-        room("bedroom", "19_bedroom", 8.0f);
-        if (!SHADERS) {
-            add("kura", mc -> {
-                Mansion m = mansion();
-                if (m != null && m.kuraDoor != null) tpLook(mc, m.kuraDoor.south(4), 180.0f, -6.0f);
-            }, 40);
-            snap("20_kura");
-            add("well", mc -> {
-                Mansion m = mansion();
-                if (m != null && m.well != null) tpLook(mc, m.well.offset(2, 1, 2), 135.0f, 22.0f);
-            }, 40);
-            snap("21_well");
-            add("closet", mc -> {
-                Mansion m = mansion();
-                if (m == null || m.closets.isEmpty()) return;
-                Closet c = m.closets.get(0);
-                tpLook(mc, c.inside(), c.facing().toYRot(), 4.0f);
-            }, 40);
-            add("closet_bride", mc -> {
-                Mansion m = mansion();
-                if (m == null || m.closets.isEmpty()) return;
-                Closet c = m.closets.get(0);
-                BlockPos out = c.front().relative(c.facing(), 2);
-                cmd(mc, String.format(java.util.Locale.ROOT, "tp @e[type=meikon:hanayome] %.1f %d %.1f %.1f 0", out.getX() + 0.5, out.getY(),
-                        out.getZ() + 0.5, c.facing().getOpposite().toYRot()));
-                cmd(mc, "meikon debug bride check_closet");
-            }, 30);
-            snap("22_closet_peek");
-            add("note", mc -> cmd(mc, "meikon debug note 2"), 20);
-            snap("23_note");
-            add("note_candles", mc -> cmd(mc, "meikon debug note 9"), 20);
-            snap("24_note_candles");
-            add("journal", mc -> mc.setScreen(new JournalScreen()), 15);
-            snap("25_journal");
-            add("close_screen", mc -> mc.setScreen(null), 5);
-        }
-        add("hud", mc -> {
-            Mansion m = mansion();
-            cmd(mc, "meikon debug bells 3");
-            if (m != null) tpLook(mc, m.safeOutside.west(2), 270.0f, 4.0f);
-        }, 40);
-        snap("26_hud");
-        add("fear_high", mc -> cmd(mc, "meikon debug fear 96 0.1 300"), 50);
-        snap("27_fear_high");
-        add("danger", mc -> cmd(mc, "meikon debug fear 85 1.0 300"), 40);
-        snap("28_danger");
-        add("calm", mc -> cmd(mc, "meikon debug fear 10 0 40"), 50);
-        add("title_card", mc -> cmd(mc, "meikon debug event 5 2"), 30);
-        snap("29_title_card");
-        if (!SHADERS) {
-            add("jumpscare", mc -> cmd(mc, "meikon debug event 1 0"), 6);
-            snap("30_jumpscare_bride");
-            add("js_wait", mc -> {
-            }, 60);
-            add("jumpscare_doll", mc -> cmd(mc, "meikon debug event 1 1"), 5);
-            snap("31_jumpscare_doll");
-            add("death", mc -> cmd(mc, "meikon debug event 2 3"), 55);
-            snap("32_death");
-            add("death_wait", mc -> {
+            }, 120);
+            snap("02_intro_wake");
+        } else {
+            add("intro_wait", mc -> {
             }, 110);
         }
-        add("shadow", mc -> {
-            Mansion m = mansion();
-            if (m != null) tpLook(mc, m.safeOutside.east(6), 90.0f, 0.0f);
-        }, 30);
-        add("shadow_spawn", mc -> cmd(mc, "meikon debug spawn shadow"), 30);
-        snap("33_kageboshi");
-        add("clear", mc -> cmd(mc, "meikon debug clear"), 5);
-        add("phantom", mc -> {
-            cmd(mc, "tp @e[type=meikon:hanayome] 0 65 -22");
-            Mansion m = mansion();
-            if (m != null) tpLook(mc, new BlockPos(-16, 65, 14), 180.0f, 0.0f);
-        }, 40);
-        add("phantom_spawn", mc -> cmd(mc, "meikon debug spawn phantom"), 20);
-        snap("34_phantom");
-        add("final", mc -> {
-            cmd(mc, "meikon debug clear");
-            cmd(mc, "meikon debug bells 7");
+        add("settle", mc -> {
+            cmd(mc, "sounan debug peaceful true");
+            fear(mc, 30, 0.0f);
+        }, 120);
+        scene("03_start_dark", mc -> {
+            hold(mc, "sounan:flashlight");
+            at(mc, L.start.getX() + 0.5, L.start.getZ() + 0.5, 155.0f, 4.0f);
         }, 80);
-        add("final_view", mc -> tpLook(mc, new BlockPos(0, 65, -5), 180.0f, -6.0f), 50);
-        snap("35_torii_active");
+        scene("04_start_flashlight", mc -> hold(mc, "sounan:flashlight_on"), 20);
+        scene("05_bag", mc -> at(mc, L.bag.getX() - 3.5, L.bag.getZ() + 3.5, -135.0f, 25.0f), 80);
+        scene("06_cliff_edge", mc -> at(mc, L.ropeAnchor.getX() - 1.5, L.ropeAnchor.getZ() - 2.5, -20.0f, 40.0f), 80);
+        scene("07_forest_ribbons", mc -> at(mc, -95.5, -88.5, -45.0f, 2.0f), 90);
+        scene("08_forest_deep", mc -> at(mc, -42.5, -44.5, -40.0f, 0.0f), 90);
+        scene("09_dead_end", mc -> {
+            Pois.Point d = P.point("dead_end");
+            at(mc, d.x() + 0.5, d.z() - 5.5, 0.0f, 12.0f);
+        }, 90);
+        scene("10_village", mc -> at(mc, 2.5, 6.5, -90.0f, 4.0f), 90);
+        scene("11_village_houses", mc -> at(mc, 30.5, 6.5, 160.0f, 2.0f), 40);
+        scene("12_phone_booth", mc -> at(mc, L.publicPhone.getX() + 0.5, L.publicPhone.getZ() - 3.5, 0.0f, 10.0f), 40);
+        scene("13_omiki_house", mc -> atY(mc, L.villageSleeper.getX() - 3.5, L.villageSleeper.getY(), L.villageSleeper.getZ() - 1.5, 120.0f, 25.0f), 40);
+        scene("14_shrine_steps", mc -> at(mc, L.hokora.getX() - 18.5, L.hokora.getZ() + 0.5, -90.0f, -8.0f), 90);
+        scene("15_shrine", mc -> at(mc, L.hokora.getX() - 3.5, L.hokora.getZ() + 0.5, -90.0f, 12.0f), 40);
+        scene("16_fog_rope", mc -> at(mc, P.fogCx - P.fogNx * 6, P.fogCz - P.fogNz * 6, yawToward(-P.fogNx, -P.fogNz) + 180.0f, 0.0f), 80);
+        scene("17_bridge", mc -> atY(mc, L.bridgeX + 0.5, L.bridgeY + 1, L.bridgeZ0 - 2.5, 0.0f, 8.0f), 90);
+        scene("18_hut", mc -> at(mc, L.hut.x2() + 8.5, L.hut.cz() + 2.5, 105.0f, 4.0f), 90);
+        scene("19_hut_inside", mc -> atY(mc, L.hut.x2() - 1.5, L.hut.floorY() + 1, L.hut.cz() + 0.5, 90.0f, 15.0f), 40);
+        scene("20_pylon", mc -> at(mc, L.pylon.getX() + 12.5, L.pylon.getZ() + 6.5, 120.0f, -25.0f), 90);
+        scene("21_tunnel_gate", mc -> at(mc, L.tunnelX + 0.5, L.tunnelZ0 - 7.5, 0.0f, 2.0f), 90);
+        scene("22_tunnel_inside", mc -> atY(mc, L.tunnelX + 0.5, L.roadY(L.tunnelZ0 + 30) + 1, L.tunnelZ0 + 30.5, 0.0f, 0.0f), 90);
+        scene("23_trailhead", mc -> at(mc, L.carDoor.getX() - 9.5, L.carDoor.getZ() + 4.5, -110.0f, 6.0f), 90);
+        // the monsters, lined up in the village (camera on so the camera-only one shows)
+        add("lineup_spawn", mc -> {
+            at(mc, 20.5, 6.5, -90.0f, 6.0f);
+            cmd(mc, "kill @e[type=!player]");
+        }, 60);
+        add("lineup_mobs", mc -> {
+            int y = TerrainData.get().height(26, 6) + 1;
+            String[] ids = {"nozoki", "yobigoe", "ushiro", "koyanushi", "oyamasama", "utsurumono"};
+            for (int i = 0; i < ids.length; i++) {
+                cmd(mc, String.format(Locale.ROOT, "summon sounan:%s %d %d %d {NoAI:1b,Rotation:[90f,0f]}", ids[i], 27, y, 1 + i * 2));
+            }
+            hold(mc, "sounan:flashlight_on");
+        }, 40);
+        snap("24_monsters");
+        add("lineup_camera", mc -> hold(mc, "sounan:phone_camera"), 25);
+        snap("25_monsters_camera");
+        scene("26_fear_high", mc -> {
+            hold(mc, "sounan:flashlight_on");
+            cmd(mc, "kill @e[type=!player]");
+            at(mc, -60.5, -60.5, 45.0f, 0.0f);
+            fear(mc, 92, 0.15f);
+        }, 80);
+        scene("27_danger_high", mc -> fear(mc, 95, 0.9f), 30);
+        scene("28_phone_light", mc -> {
+            fear(mc, 30, 0.0f);
+            hold(mc, "sounan:phone_light");
+        }, 30);
+        scene("29_flare", mc -> hold(mc, "sounan:flare_lit"), 30);
+        scene("30_flashlight_low", mc -> hold(mc, "sounan:flashlight_low"), 20);
         if (!SHADERS) {
-            // real gameplay: the bride hunts an adventure-mode player, catches her, the player wakes in the lamplight room
-            add("hunt_setup", mc -> {
-                Mansion m = mansion();
-                cmd(mc, "meikon debug bells 3");
-                cmd(mc, "meikon debug fear 0 0 0");
-                if (m != null) tpLook(mc, m.safeOutside.east(5), 90.0f, 0.0f);
-            }, 40);
-            add("hunt_go", mc -> {
+            add("phone_hold", mc -> hold(mc, "sounan:phone"), 10);
+            scene("31_phone_home", mc -> mc.setScreen(new PhoneScreen()), 15);
+            add("phone_close", mc -> mc.setScreen(null), 5);
+            scene("32_trail_map", mc -> mc.setScreen(new TrailMapScreen()), 15);
+            add("map_close", mc -> mc.setScreen(null), 5);
+            scene("33_note", mc -> mc.setScreen(new NoteScreen(13, mc.getUser().getName() + "|0|0")), 15);
+            add("note_close", mc -> mc.setScreen(null), 5);
+            add("capture_mode", mc -> {
                 cmd(mc, "gamemode adventure");
-                cmd(mc, "meikon debug peaceful false");
-                cmd(mc, "meikon debug lantern");
-                cmd(mc, "meikon debug spawn bride");
-            }, 30);
-            snap("38_captured");
-            add("hunt_wait", mc -> {
-            }, 60);
-            snap("39_taken");
-            add("hunt_after", mc -> {
-            }, 120);
-            snap("40_back_in_safe_room");
-            add("doll_test", mc -> {
-                Mansion m = mansion();
-                cmd(mc, "tp @e[type=meikon:hanayome] 0 65 -22");
-                if (m != null) tpLook(mc, m.safeOutside.east(5), 90.0f, 0.0f);
-            }, 40);
-            add("doll_behind", mc -> cmd(mc, "summon meikon:ichimatsu ^ ^ ^-3"), 40);
-            snap("41_doll_attack");
-            add("doll_wait", mc -> {
-            }, 40);
-            snap("42_doll_after");
-            add("hunt_end", mc -> {
+                cmd(mc, "sounan debug peaceful false");
+            }, 10);
+            scene("34_capture", mc -> cmd(mc, "sounan debug capture 0"), 8);
+            add("capture_wait", mc -> {
+            }, 90);
+            snap("35_wake");
+            add("wake_wait", mc -> {
                 cmd(mc, "gamemode creative");
-                cmd(mc, "meikon debug peaceful true");
-                cmd(mc, "meikon debug state");
-            }, 20);
+                cmd(mc, "sounan debug peaceful true");
+            }, 60);
             add("ending_bad", mc -> {
-                EndingScreen e = new EndingScreen(false, mc.getUser().getName());
+                EndingScreen e = new EndingScreen(2, mc.getUser().getName() + "|5|0");
                 e.localOnly = true;
                 mc.setScreen(e);
-                e.setTicks(9999);
+                e.setTicks(520);
             }, 10);
             snap("36_ending_bad");
             add("ending_good", mc -> {
-                EndingScreen e = new EndingScreen(true, mc.getUser().getName());
+                EndingScreen e = new EndingScreen(1, mc.getUser().getName() + "|0|0");
                 e.localOnly = true;
                 mc.setScreen(e);
                 e.setTicks(9999);
@@ -392,6 +276,10 @@ public final class AutoShots {
             snap("37_ending_good");
             add("ending_close", mc -> mc.setScreen(null), 5);
         }
+    }
+
+    private static float yawToward(double dx, double dz) {
+        return (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90.0);
     }
 
     private static void shot(Minecraft mc, String name) {
@@ -408,7 +296,7 @@ public final class AutoShots {
         LOG.add(s);
         Sounan.LOGGER.info("[sounan] autoshots: {}", s);
         try {
-            Files.writeString(Path.of("meikon_autoshots.txt"), String.join("\n", LOG) + "\n", StandardCharsets.UTF_8);
+            Files.writeString(Path.of("sounan_autoshots.txt"), String.join("\n", LOG) + "\n", StandardCharsets.UTF_8);
         } catch (IOException ignored) {
         }
     }
