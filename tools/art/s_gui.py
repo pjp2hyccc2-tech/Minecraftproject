@@ -68,8 +68,9 @@ def brush_glyphs(text, size, font_spec, seed):
     edge_dist = ndimage.distance_transform_edt(m > 0.5)
     dryness = blur(r.random((H, W)), size * 0.18)
     dryness = (dryness - dryness.min()) / (np.ptp(dryness) + 1e-6)
-    dry_zone = np.clip((dryness - 0.62) * 4.0, 0, 1)                    # only a few dry patches
-    dry = ((streak * 0.65 + streak2 * 0.35) > (1.05 - dry_zone * 0.9)) & (dry_zone > 0)
+    # dry patches where the brush ran out of ink (more likely towards stroke edges), streaked along the stroke
+    dry_zone = np.clip((dryness - 0.5) * 3.0, 0, 1) * (0.55 + 0.45 * np.exp(-edge_dist / (size * 0.05)))
+    dry = ((streak * 0.65 + streak2 * 0.35) > (1.08 - dry_zone * 1.05)) & (dry_zone > 0.05)
     ink = (m > 0.5) & ~dry
     # ragged edges
     rough = blur(r.normal(0, 1, (H, W)), 1.2)
