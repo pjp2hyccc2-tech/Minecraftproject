@@ -8,7 +8,9 @@ import com.sounan.client.model.OyamasamaModel;
 import com.sounan.client.model.UshiroModel;
 import com.sounan.client.model.UtsurumonoModel;
 import com.sounan.client.model.YobigoeModel;
+import com.sounan.client.render.LampGlowParticle;
 import com.sounan.client.render.MonsterRenderer;
+import com.sounan.registry.ModParticles;
 import com.sounan.entity.Koyanushi;
 import com.sounan.entity.Nozoki;
 import com.sounan.entity.Oyamasama;
@@ -22,6 +24,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -65,6 +68,11 @@ public final class ClientSetup {
                 c, new OyamasamaModel<Oyamasama>(c.bakeLayer(OyamasamaModel.LAYER)), "oyamasama", 0.9f));
         event.registerEntityRenderer(ModEntities.UTSURUMONO.get(), c -> new MonsterRenderer<Utsurumono, UtsurumonoModel<Utsurumono>>(
                 c, new UtsurumonoModel<Utsurumono>(c.bakeLayer(UtsurumonoModel.LAYER)), "utsurumono", 0.0f));
+    }
+
+    @SubscribeEvent
+    public static void particles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(ModParticles.LAMP_GLOW.get(), LampGlowParticle.Provider::new);
     }
 
     @SubscribeEvent

@@ -12,6 +12,7 @@ import com.sounan.client.ShaderCompat;
 import com.sounan.entity.Oyamasama;
 import com.sounan.entity.Yobigoe;
 import com.sounan.registry.ModDimensions;
+import com.sounan.registry.ModParticles;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
@@ -113,6 +115,28 @@ public final class FarLights {
         RenderSystem.enableDepthTest();
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
+    }
+
+    /**
+     * With a shader pack the pack draws the lamp itself, but its fog swallows a small point at thirty blocks, so a
+     * big soft glow particle hangs round the lamp too (particles go through the pack like everything else).
+     */
+    @SubscribeEvent
+    public static void tick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || mc.player == null || mc.isPaused() || !ModDimensions.isMountain(mc.level) || !ShaderCompat.active()) return;
+        Vec3 eye = mc.player.getEyePosition();
+        for (Entity e : mc.level.entitiesForRendering()) {
+            if (!(e instanceof Yobigoe y) || e.isInvisible() || y.pose() == Yobigoe.RUSH || flicker(e.tickCount)) continue;
+            float yaw = e.getYRot() * Mth.DEG_TO_RAD;
+            Vec3 lamp = e.position().add(-Mth.sin(yaw) * 0.3, 1.86, Mth.cos(yaw) * 0.3);
+            double d = lamp.distanceTo(eye);
+            if (d > 90) continue;
+            float a = smooth((float) (d - 10.0) / 12.0f) * (float) Math.exp(-d / 90.0) * 0.55f;
+            if (a < 0.02f) continue;
+            mc.level.addParticle(ModParticles.LAMP_GLOW.get(), lamp.x, lamp.y, lamp.z, 0.5 + d * 0.025, a, 0.0);
+        }
     }
 
     private static void begin(BufferBuilder bb) {

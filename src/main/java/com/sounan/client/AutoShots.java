@@ -226,7 +226,7 @@ public final class AutoShots {
         }
         double dx = best.getX() - mc.player.getX(), dz = best.getZ() - mc.player.getZ();
         double dy = best.getY() + best.getBbHeight() * heightFrac - mc.player.getEyeY();
-        float yaw = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90.0f;
+        float yaw = (float) Math.toDegrees(Math.atan2(dz, dx)) - 90.0f - 4.0f; // just right of the crosshair
         float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
         mc.player.setYRot(yaw);
         mc.player.yRotO = yaw;

@@ -6,6 +6,7 @@ import com.sounan.registry.ModCreativeTab;
 import com.sounan.registry.ModDimensions;
 import com.sounan.registry.ModEntities;
 import com.sounan.registry.ModItems;
+import com.sounan.registry.ModParticles;
 import com.sounan.registry.ModSounds;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +32,7 @@ public class Sounan {
         ModBlocks.BLOCKS.register(modBus);
         ModItems.ITEMS.register(modBus);
         ModEntities.ENTITIES.register(modBus);
+        ModParticles.PARTICLES.register(modBus);
         ModDimensions.CHUNK_GENERATORS.register(modBus);
         ModCreativeTab.TABS.register(modBus);
         modBus.addListener(ModEntities::onAttributes);
