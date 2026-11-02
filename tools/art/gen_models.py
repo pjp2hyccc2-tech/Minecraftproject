@@ -60,7 +60,7 @@ def E(fr, to, faces, rot=None, shade=True, name=None):
 
 
 def model(name, tex_map, elements, particle, cutout=False, ao=True):
-    m = {}
+    m = {'parent': 'minecraft:block/block'}       # standard display transforms for the block items
     if cutout:
         m['render_type'] = 'minecraft:cutout'
     if not ao:
