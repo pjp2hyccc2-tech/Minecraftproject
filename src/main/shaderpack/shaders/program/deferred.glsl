@@ -21,6 +21,10 @@ void main() {
 in vec2 texcoord;
 
 #ifdef BEAM_SHADOWS
+// view-space z of a depth buffer value (perspective projection)
+float viewZ(float depth) {
+    return -gbufferProjection[3][2] / (depth * 2.0 - 1.0 + gbufferProjection[2][2]);
+}
 // march from the surface toward the lamp through the depth buffer. Returns 1 = lit.
 float beamShadow(vec3 viewP, vec3 lampView, float dither) {
     vec3 d = lampView - viewP;
@@ -38,7 +42,7 @@ float beamShadow(vec3 viewP, vec3 lampView, float dither) {
         if (sc.x < 0.0 || sc.x > 1.0 || sc.y < 0.0 || sc.y > 1.0) break;
         float d0 = textureLod(depthtex0, sc.xy, 0.0).r;
         if (isHandDepth(d0) || d0 >= 1.0) continue;
-        float delta = screenToView(sc.xy, d0).z - q.z;      // > 0: something in front of the sample
+        float delta = viewZ(d0) - q.z;                       // > 0: something in front of the sample
         occ = max(occ, smoothstep(bias, bias * 2.5, delta) * (1.0 - smoothstep(1.2, 1.8, delta)));
         if (occ > 0.99) break;
     }

@@ -81,7 +81,15 @@ vec4 fogAnalytic(vec3 rd, float dist) {
     sigma = mix(sigma, fogDensity(cameraPosition + rd * min(d, 24.0), 0.0), 0.5);
 #endif
     float T = exp(-sigma * d) * farFade(d) * closeInTransmittance(d);
-    return vec4(fogAmbientLight(rd) * (1.0 - T), T);
+    vec3 S = fogAmbientLight(rd) * (1.0 - T);
+    // the flare's glow: the integral of its falloff along the ray (closed form)
+    for (int i = 0; i < 2; i++) {
+        HandLight L = handLight(i);
+        if (L.type != LIGHT_POINT) continue;
+        float along = L.halfDist * atan(min(d, L.range) / L.halfDist);
+        S += L.color * 0.08 * L.fog * sigma * along * exp(-sigma * min(d, L.range) * 0.5);
+    }
+    return vec4(S, T);
 }
 
 #ifdef VOLUMETRICS_ON
@@ -256,7 +264,7 @@ vec3 beamFogReach(HandLight L, vec3 P, out float dist) {
     vec3 d = P - L.pos;
     dist = length(d);
     if (dist > L.range) return vec3(0.0);
-    float prof = spotProfile(L, d / max(dist, 1e-4));
+    float prof = spotProfileD(L, d / max(dist, 1e-4), false);
     float nearF = 1.0 / (1.0 + sq(dist / 1.1));
     float farF = lightFalloff(L, dist);
     return L.color * prof * (nearF * 0.85 + farF * 0.07);

@@ -211,8 +211,9 @@ float lightFalloff(HandLight L, float d) {
 }
 
 // angular profile of a spot. toP: unit vector from the light to the point.
-// Hot spot, soft body, faint spill; the flashlight adds its reflector rings and lens dirt.
-float spotProfile(HandLight L, vec3 toP) {
+// Hot spot, soft body, faint spill; the flashlight adds its reflector rings and (detail)
+// lens dirt.
+float spotProfileD(HandLight L, vec3 toP, bool detail) {
     float c = dot(toP, L.dir);
     if (c <= 0.02) return 0.0;
     vec2 q = vec2(dot(toP, L.right), dot(toP, L.up)) / (c * L.tanOuter);   // 1 = cone edge
@@ -228,12 +229,13 @@ float spotProfile(HandLight L, vec3 toP) {
         // fine concentric ripples and a smudge of dirt on the lens
         float rings = -0.32 * exp(-sq((x - 0.42) * 8.0)) + 0.24 * exp(-sq((x - 0.88) * 11.0))
                     + 0.05 * sin(x * 37.0);
-        float dirt = vnoise2(q * 3.2 + 7.0) - 0.5;
+        float dirt = detail ? vnoise2(q * 3.2 + 7.0) - 0.5 : 0.0;
         p *= 1.0 + L.cookie * (rings * (1.0 - smoothstep(0.75, 1.15, x)) + dirt * 0.24);
     }
 #endif
     return max(p, 0.0);
 }
+float spotProfile(HandLight L, vec3 toP) { return spotProfileD(L, toP, true); }
 
 // intensity (colour) of the light arriving at a point, before the surface cosine
 vec3 handLightReach(HandLight L, vec3 P, out vec3 l, out float dist) {

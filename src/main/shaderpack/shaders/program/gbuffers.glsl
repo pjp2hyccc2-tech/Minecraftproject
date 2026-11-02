@@ -70,7 +70,7 @@ flat in int matId;
 vec3 waterRipples(vec3 wp) {
     float t = frameTimeCounter;
 #ifdef WORLD_MOUNTAIN
-    float s = 0.060;
+    float s = 0.150;                     // a fast, broken mountain stream
     vec2 flow = vec2(0.15, 0.55) * t;
 #else
     float s = 0.045 * (1.0 + rainAmount());
@@ -194,7 +194,7 @@ void main() {
         // the hiker only the camera sees: pale, faintly luminous, the fog cannot hide it
         cls = 0.25;
         float cam = cameraMode();
-        emission = mix(vec3(luma(lin)), lin, 0.3) * vec3(0.85, 0.92, 1.0) * (0.03 + 0.20 * cam);
+        emission = mix(vec3(luma(lin)), lin, 0.3) * vec3(0.85, 0.92, 1.0) * (0.03 + 0.14 * cam);
         emissive = 0.3 * cam;
     } else if (entityId == ENT_LIGHTNING) {
         emissive = 1.0;
@@ -244,13 +244,27 @@ void main() {
         R.y = abs(R.y);
         float skyVis = smoothstep(0.30, 0.90, lm.y);
         vec3 refl = (fogColorFor(R) * 0.6 + skyGradient(R) * 0.4 + moonReflection(R)) * skyVis;
-        vec3 body = shadeSurface(lin * 0.22, N, playerPos, lm, 1.0, vec3(0.0), mat, dither, true, glow);
-        body += handLightsForward(lin * 0.22, playerPos, vec3(0.0, 1.0, 0.0), 0.0, vec2(0.0));
+  #ifdef WORLD_MOUNTAIN
+        const float BODY = 0.10;             // dark, cold water
+        const float ALPHA = 0.82;
+  #else
+        const float BODY = 0.22;
+        const float ALPHA = 0.66;
+  #endif
+        vec3 body = shadeSurface(lin * BODY, N, playerPos, lm, 1.0, vec3(0.0), mat, dither, true, glow);
+        body += handLightsForward(lin * BODY, playerPos, vec3(0.0, 1.0, 0.0), 0.0, vec2(0.0));
         // two specular lobes of the hand lights on the moving surface: sharp glints + sheen
         vec3 glints = handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(1.6, 0.92))
                     + handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(0.45, 0.55));
+        // turbulent facets that happen to face the lamp: glitter carried by the current
+        if (anyHandLight()) {
+            vec2 fp = wp.xz * 14.0 + vec2(0.15, 0.55) * frameTimeCounter * 14.0;
+            float slot = floor(frameTimeCounter * 6.0);
+            float sparkle = step(0.975, hash12(floor(fp) + slot * 17.0));
+            glints += handLightsForward(vec3(sparkle * 1.2), playerPos, vec3(0.0, 1.0, 0.0), 0.0, vec2(0.0));
+        }
         color = mix(body, refl, F) + glints;
-        alpha = mix(0.66, 0.94, F);
+        alpha = mix(ALPHA, 0.96, F);
         if (isEyeInWater == 1) alpha = 0.45;
         emissive = saturate(maxOf(glints) * 0.5);
     } else

@@ -43,7 +43,7 @@ MOUNTAIN = "sounan_kaerazu"
 
 # item / entity ids (item.properties, entity.properties)
 FLASHLIGHT, FLASH_LOW, PHONE_LIGHT, CAMERA, FLARE = 10001, 10002, 10003, 10004, 10005
-NOZOKI = 20001
+NOZOKI, UTSURU = 20001, 20006
 
 # =====================================================================================
 #  pack loading
@@ -793,6 +793,17 @@ def monster_meshes(scene, trunk, far=(22.5, 31.6)):
     return body, quad_arrays(eyes, light)
 
 
+def ghost_mesh(scene, x, z):
+    """写るもの: a translucent pale hiker only the phone camera sees (entities_translucent)"""
+    g = scene.ground[int(x) - scene.origin[0], int(z) - scene.origin[2]] + 1
+    cell = (int(x) - scene.origin[0], g - scene.origin[1] + 1, int(z) - scene.origin[2])
+    bl, sl = scene.light_at(*cell)
+    quads = box_quads((x - 0.3, g, z - 0.25), (x + 0.3, g + 1.8, z + 0.25), {"side": "skin", "top": "skin"})
+    arr = quad_arrays(quads, ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0))
+    arr["col"][:, 3] = 0.45
+    return arr
+
+
 def hand_mesh(item, side, light):
     """the held item in view space (Iris draws it with its own projection)"""
     sx = 1.0 if side > 0 else -1.0
@@ -1162,6 +1173,9 @@ class Renderer:
             gl.glDepthMask(0)
             self.gbuffer_draw("gbuffers_spidereyes", U, monster[1], view, proj, cam, blend=("additive",), extra={"entityId": NOZOKI})
             gl.glDepthMask(1)
+        if shot.get("ghost"):
+            self.gbuffer_draw("gbuffers_entities_translucent", U, ghost_mesh(scene, *shot["ghost"]), view, proj, cam,
+                              blend=("translucent", ()), extra={"entityId": UTSURU})
         hand_proj = np.diag([1.0, 1.0, 0.125, 1.0]).astype(np.float32) @ perspective(70.0, w / h, 0.05, 192.0 * 4)
         light = ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0)
         for item, side in ((held, 1), (held2, -1)):
@@ -1235,13 +1249,18 @@ def make_shots(scene):
         "m_fear": dict(folder=M, eye=forest_eye, look=down, fear=0.95, held=FLASHLIGHT, t=131.7),
         "m_danger": dict(folder=M, eye=forest_eye, look=down, fear=0.8, danger=1.0, held=FLASHLIGHT, t=128.31),
         "m_danger_lit": dict(folder=M, eye=forest_eye, look=down, fear=0.8, danger=0.8, held=FLASHLIGHT, t=126.02),
-        "m_camera": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=CAMERA, held2=FLASHLIGHT),
+        "m_camera": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=CAMERA, held2=FLASHLIGHT, ghost=(30.6, 18.5)),
+        "m_ghost_eye": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=FLASHLIGHT, ghost=(30.6, 18.5)),
         "m_low": dict(folder=M, eye=forest_eye, look=down, fear=0.4, held=FLASH_LOW, t=124.0),
         "m_phone": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=PHONE_LIGHT),
         "m_flare": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=FLASHLIGHT, held2=FLARE),
         "m_tunnel": dict(folder=M, eye=tunnel_eye, look=(0.0, -0.05, -1.0), fear=0.5, held=FLASHLIGHT, monster=False),
         "m_hut": dict(folder=M, eye=hut_eye, look=(0.0, -0.12, 1.0), fear=0.3, held2=FLASHLIGHT, monster=False),
+        "m_wall": dict(folder=M, eye=eye_at(scene, 48.5, 12.0), look=(0.0, -0.05, 1.0), fear=0.0, held=FLASHLIGHT, monster=False, t=100.0),
         "m_darkness": dict(folder=M, eye=forest_eye, look=down, fear=0.9, darkness=0.9, held=FLASHLIGHT),
+        "m_stream": dict(folder=M, eye=eye_at(scene, 36.5, 43.5), look=(0.25, -0.55, 1.0), fear=0.2, held=FLASHLIGHT, monster=False),
+        "m_moon": dict(folder=M, eye=rim, look=(0.0, 1.55, 1.0), fear=0.1, held=0, monster=False),
+        "m_low2": dict(folder=M, eye=forest_eye, look=down, fear=0.4, held=FLASH_LOW, t=127.5),
         # other dimensions (root programs etc.)
         "o_day": dict(folder="", eye=forest_eye, look=down, time=6000, held=0, monster=False),
         "o_day_up": dict(folder="", eye=forest_eye, look=(0.15, 0.28, 1.0), time=6000, held=0),
