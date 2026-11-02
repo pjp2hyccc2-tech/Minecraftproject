@@ -2,7 +2,11 @@ name: BirdieCraft build
 
 on:
   push:
+    branches: [ birdiecraft ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -37,3 +41,17 @@ jobs:
           name: birdiecraft-jar
           path: build/libs/*.jar
           if-no-files-found: error
+
+      - name: Publish jar to the birdiecraft-dist branch
+        run: |
+          mkdir -p /tmp/dist
+          cp build/libs/*.jar /tmp/dist/
+          cd /tmp/dist
+          git init -q
+          git checkout -q -b birdiecraft-dist
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          printf '# BirdieCraft jar\n\nBuilt from commit %s of the birdiecraft branch.\nPut the jar into .minecraft/mods (Forge 1.20.1).\n' "$GITHUB_SHA" > README.md
+          git add -A
+          git commit -q -m "BirdieCraft jar built from $GITHUB_SHA"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" birdiecraft-dist
