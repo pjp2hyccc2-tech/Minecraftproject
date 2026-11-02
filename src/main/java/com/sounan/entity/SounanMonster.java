@@ -90,6 +90,18 @@ public abstract class SounanMonster extends PathfinderMob implements Animated {
         }
     }
 
+    // ------------------------------------------------------------------------------------------------ render
+    /** How far (blocks) the model reaches outside the hitbox: arms, the crawl's splayed limbs, a lamp beam. */
+    protected double cullMargin() {
+        return 1.5;
+    }
+
+    @Override
+    public net.minecraft.world.phys.AABB getBoundingBoxForCulling() {
+        // so a long arm or a head round a trunk doesn't pop out of view at the screen edge
+        return getBoundingBox().inflate(cullMargin());
+    }
+
     // ------------------------------------------------------------------------------------------------ target
     public void setTarget(ServerPlayer p) {
         targetId = p.getUUID();

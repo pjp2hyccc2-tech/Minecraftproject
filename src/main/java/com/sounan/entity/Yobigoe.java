@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 public class Yobigoe extends SounanMonster {
     public static final int CALL = 0, IDLE = 1, TURN = 2, RUSH = 3;
     private static final int S_CALL = 0, S_DARK = 1, S_RUSH = 2, S_LEAVE = 3;
+    /** Ticks it stands there twisted round at you before the lamp goes out (the model's turn takes 18). */
+    private static final int TURN_TICKS = 26;
     private int state = S_CALL;
     private int nextCall = 20;
     private double startDist = -1;
@@ -32,6 +34,11 @@ public class Yobigoe extends SounanMonster {
 
     public static AttributeSupplier.Builder createAttributes() {
         return baseAttributes(0.25, 64);
+    }
+
+    @Override
+    protected double cullMargin() {
+        return 4.0; // the headlamp's beam reaches far in front of it
     }
 
     @Override
@@ -63,10 +70,10 @@ public class Yobigoe extends SounanMonster {
                 GameManager.reportThreat(p, d < 24 ? 0.35f : 0.15f);
                 // walking toward the light is the mistake
                 if (d < 16.0 || (startDist - d > 12.0 && d < 26.0)) {
+                    // it stops waving; the body turns away and the head stays on you
                     state = S_DARK;
                     stateTicks = 0;
                     setAnimPose(TURN);
-                    GameManager.event(p, GameManager.EV_SILENCE, 0, "");
                 } else if (calls >= 5 && nextCall < 40) {
                     state = S_LEAVE;
                     stateTicks = 0;
@@ -74,9 +81,16 @@ public class Yobigoe extends SounanMonster {
                 }
             }
             case S_DARK -> {
-                setInvisible(true);
                 GameManager.reportThreat(p, 0.6f);
-                if (stateTicks == 34) {
+                if (stateTicks < TURN_TICKS) {
+                    faceTowards(p.position());
+                } else if (stateTicks == TURN_TICKS) {
+                    // then the lamp clicks off, and everything goes quiet
+                    play(ModSounds.ITEM_FLASHLIGHT_OFF.get(), 1.2f, 0.7f);
+                    setInvisible(true);
+                    GameManager.event(p, GameManager.EV_SILENCE, 0, "");
+                }
+                if (stateTicks == TURN_TICKS + 30) {
                     // it is beside you
                     Vec3 look = p.getViewVector(1.0f);
                     float side = random.nextBoolean() ? 1.0f : -1.0f;

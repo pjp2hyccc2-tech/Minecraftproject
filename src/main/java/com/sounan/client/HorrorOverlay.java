@@ -20,6 +20,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 /** The screen: atmosphere without shaders, the camera viewfinder, the HUD, and every cinematic overlay. */
 public final class HorrorOverlay {
     private static final ResourceLocation VIGNETTE = Sounan.id("textures/gui/vignette.png");
+    private static final ResourceLocation TITLE_LOGO = Sounan.id("textures/gui/title_logo.png");
     private static final ResourceLocation GRAIN = Sounan.id("textures/gui/grain.png");
     private static final ResourceLocation HANDS = Sounan.id("textures/gui/hands.png");
     private static final ResourceLocation FACES = Sounan.id("textures/gui/faces_overlay.png");
@@ -266,6 +267,16 @@ public final class HorrorOverlay {
             if (local < 0 || local > 70) continue;
             float a = local < 15 ? local / 15.0f : local > 50 ? (70 - local) / 20.0f : 1.0f;
             centered(g, font, I18n.get(keys[i], ClientState.introName), w / 2, h / 2 - 6, argb(a * fadeOut, 0xC8C0B4), 1.3f);
+        }
+        // the title, over the first dim look at where you landed
+        float lt = k - 264;
+        if (lt >= 0 && lt < 56) {
+            float a = lt < 6 ? lt / 6.0f : lt > 36 ? (56 - lt) / 20.0f : 1.0f;
+            int lw = Math.min(w * 3 / 5, 384), lh = lw / 2;
+            com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+            g.setColor(1.0f, 1.0f, 1.0f, a);
+            g.blit(TITLE_LOGO, (w - lw) / 2, (h - lh) / 2 - 8, lw, lh, 0, 0, 512, 256, 512, 256);
+            g.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         }
     }
 

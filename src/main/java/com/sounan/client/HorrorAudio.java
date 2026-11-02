@@ -139,6 +139,7 @@ public final class HorrorAudio {
             if (it == 62) ClientPacketHandler.ui(ModSounds.YOBIGOE_CALL.get(), 0.35f, 1.0f);
             if (it == 192) ClientPacketHandler.ui(ModSounds.PLAYER_FALL.get(), 1.0f, 1.0f);
             if (it == 250) ClientPacketHandler.ui(ModSounds.AMB_TINNITUS.get(), 0.5f, 1.0f);
+            if (it == 264) ClientPacketHandler.ui(ModSounds.GAME_TITLE_HIT.get(), 0.8f, 1.0f);
         }
         if (captured || intro || ending) return;
 

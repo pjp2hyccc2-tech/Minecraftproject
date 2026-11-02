@@ -34,6 +34,11 @@ public class Oyamasama extends SounanMonster {
         return baseAttributes(0.25, 96);
     }
 
+    @Override
+    protected double cullMargin() {
+        return 3.0; // about five blocks tall, long arms
+    }
+
     public void setMode(int mode, int maxTicks) {
         this.mode = mode;
         this.maxTicks = maxTicks;

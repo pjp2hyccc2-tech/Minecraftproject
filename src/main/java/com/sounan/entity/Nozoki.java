@@ -35,7 +35,14 @@ public class Nozoki extends SounanMonster {
         return baseAttributes(0.25, 48);
     }
 
+    @Override
+    protected double cullMargin() {
+        return 2.2;
+    }
+
     public void peek(boolean left) {
+        // the model leans out on this side, and later pulls back the same way
+        setLeftHanded(left);
         setAnimPose(left ? PEEK_LEFT : PEEK_RIGHT);
         state = S_PEEK;
         stateTicks = 0;

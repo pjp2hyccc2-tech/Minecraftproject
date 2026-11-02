@@ -2,7 +2,19 @@ package com.sounan.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.sounan.Sounan;
-import com.sounan.client.render.PlaceholderRenderer;
+import com.sounan.client.model.KoyanushiModel;
+import com.sounan.client.model.NozokiModel;
+import com.sounan.client.model.OyamasamaModel;
+import com.sounan.client.model.UshiroModel;
+import com.sounan.client.model.UtsurumonoModel;
+import com.sounan.client.model.YobigoeModel;
+import com.sounan.client.render.MonsterRenderer;
+import com.sounan.entity.Koyanushi;
+import com.sounan.entity.Nozoki;
+import com.sounan.entity.Oyamasama;
+import com.sounan.entity.Ushiro;
+import com.sounan.entity.Utsurumono;
+import com.sounan.entity.Yobigoe;
 import com.sounan.registry.ModEntities;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
@@ -30,13 +42,29 @@ public final class ClientSetup {
     }
 
     @SubscribeEvent
+    public static void layers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(NozokiModel.LAYER, NozokiModel::createBodyLayer);
+        event.registerLayerDefinition(YobigoeModel.LAYER, YobigoeModel::createBodyLayer);
+        event.registerLayerDefinition(UshiroModel.LAYER, UshiroModel::createBodyLayer);
+        event.registerLayerDefinition(KoyanushiModel.LAYER, KoyanushiModel::createBodyLayer);
+        event.registerLayerDefinition(OyamasamaModel.LAYER, OyamasamaModel::createBodyLayer);
+        event.registerLayerDefinition(UtsurumonoModel.LAYER, UtsurumonoModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
     public static void renderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModEntities.NOZOKI.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/drowned.png", 1.35f));
-        event.registerEntityRenderer(ModEntities.YOBIGOE.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/husk.png", 1.0f));
-        event.registerEntityRenderer(ModEntities.USHIRO.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/zombie.png", 1.15f));
-        event.registerEntityRenderer(ModEntities.KOYANUSHI.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/husk.png", 0.95f));
-        event.registerEntityRenderer(ModEntities.OYAMASAMA.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/drowned.png", 2.2f));
-        event.registerEntityRenderer(ModEntities.UTSURUMONO.get(), c -> new PlaceholderRenderer<>(c, "minecraft:textures/entity/zombie/zombie.png", 0.95f));
+        event.registerEntityRenderer(ModEntities.NOZOKI.get(), c -> new MonsterRenderer<Nozoki, NozokiModel<Nozoki>>(
+                c, new NozokiModel<Nozoki>(c.bakeLayer(NozokiModel.LAYER)), "nozoki", 0.5f));
+        event.registerEntityRenderer(ModEntities.YOBIGOE.get(), c -> new MonsterRenderer<Yobigoe, YobigoeModel<Yobigoe>>(
+                c, new YobigoeModel<Yobigoe>(c.bakeLayer(YobigoeModel.LAYER)), "yobigoe", 0.4f));
+        event.registerEntityRenderer(ModEntities.USHIRO.get(), c -> new MonsterRenderer<Ushiro, UshiroModel<Ushiro>>(
+                c, new UshiroModel<Ushiro>(c.bakeLayer(UshiroModel.LAYER)), "ushiro", 0.4f));
+        event.registerEntityRenderer(ModEntities.KOYANUSHI.get(), c -> new MonsterRenderer<Koyanushi, KoyanushiModel<Koyanushi>>(
+                c, new KoyanushiModel<Koyanushi>(c.bakeLayer(KoyanushiModel.LAYER)), "koyanushi", 0.4f));
+        event.registerEntityRenderer(ModEntities.OYAMASAMA.get(), c -> new MonsterRenderer<Oyamasama, OyamasamaModel<Oyamasama>>(
+                c, new OyamasamaModel<Oyamasama>(c.bakeLayer(OyamasamaModel.LAYER)), "oyamasama", 0.9f));
+        event.registerEntityRenderer(ModEntities.UTSURUMONO.get(), c -> new MonsterRenderer<Utsurumono, UtsurumonoModel<Utsurumono>>(
+                c, new UtsurumonoModel<Utsurumono>(c.bakeLayer(UtsurumonoModel.LAYER)), "utsurumono", 0.0f));
     }
 
     @SubscribeEvent

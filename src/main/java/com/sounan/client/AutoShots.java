@@ -43,6 +43,8 @@ public final class AutoShots {
     private static int wait;
     private static int ticks;
     private static int index;
+    /** Set by a step's action to wait for something instead of its fixed time (-1: use the step's own wait). */
+    private static int dynamicWait = -1;
     private static final List<Step> STEPS = new ArrayList<>();
     private static final List<String> LOG = new ArrayList<>();
 
@@ -103,7 +105,8 @@ public final class AutoShots {
                     log("step failed " + s.name() + ": " + e);
                     Sounan.LOGGER.error("[sounan] autoshot step {} failed", s.name(), e);
                 }
-                wait = s.waitAfter() * (s.waitAfter() > 10 ? MUL : 1);
+                wait = dynamicWait >= 0 ? dynamicWait : s.waitAfter() * (s.waitAfter() > 10 ? MUL : 1);
+                dynamicWait = -1;
             }
             default -> {
             }
@@ -173,8 +176,10 @@ public final class AutoShots {
         }, 10);
         if (!SHADERS) {
             snap("01_intro_text");
+            add("intro_wait_title", mc -> dynamicWait = Math.max(0, 280 - ClientState.introTicks), 0);
+            snap("02_intro_title");
             add("intro_wait", mc -> {
-            }, 120);
+            }, 50);
             snap("02_intro_wake");
         } else {
             add("intro_wait", mc -> {

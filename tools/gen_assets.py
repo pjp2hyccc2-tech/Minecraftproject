@@ -83,9 +83,14 @@ def cube_all(name, texture=None, cutout=False):
     block_item(name)
 
 
-def bottom_top(name, top, side, bottom):
+def bottom_top(name, top, side, bottom, spin=False):
     model(name, {"parent": "minecraft:block/cube_bottom_top", "textures": {"top": t(top), "side": t(side), "bottom": t(bottom)}})
-    bs(name, {"": {"model": m(name)}})
+    if spin:
+        # ground that covers whole hillsides: a random quarter turn per block hides the tile repeat
+        bs(name, {"": [{"model": m(name)}, {"model": m(name), "y": 90}, {"model": m(name), "y": 180},
+                       {"model": m(name), "y": 270}]})
+    else:
+        bs(name, {"": {"model": m(name)}})
     block_item(name)
 
 
@@ -187,10 +192,10 @@ def main():
                            "textures": {"all": t("cedar_leaves")}})
     bs("cedar_leaves", {"": {"model": m("cedar_leaves")}})
     block_item("cedar_leaves")
-    bottom_top("forest_floor", "forest_floor_top", "forest_floor_side", "forest_dirt")
+    bottom_top("forest_floor", "forest_floor_top", "forest_floor_side", "forest_dirt", spin=True)
     cube_all("forest_dirt")
-    bottom_top("moss_floor", "moss_floor", "forest_floor_side", "forest_dirt")
-    bottom_top("trail", "trail_top", "forest_dirt", "forest_dirt")
+    bottom_top("moss_floor", "moss_floor", "forest_floor_side", "forest_dirt", spin=True)
+    bottom_top("trail", "trail_top", "forest_dirt", "forest_dirt", spin=True)
     for n in ("mountain_rock", "mossy_rock", "river_stones"):
         cube_all(n)
     bs("fallen_leaves", facing("fallen_leaves", lambda v: m("fallen_leaves")))
