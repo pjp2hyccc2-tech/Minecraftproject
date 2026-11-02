@@ -305,13 +305,13 @@ def thud(rng, i=1):
 # --------------------------------------------------------------------------
 # whispers (ultra-close, dry, at one ear)
 # --------------------------------------------------------------------------
-WHISPERS = {
-    1: [("ka e re na i yo", 1.0, 1.05, 0.0, 1.0)],
-    2: [("mi te ru , ko q chi", 1.02, 1.1, 0.0, 1.0, "rev")],
-    3: [("ma da , ma da", 1.0, 0.9, 0.0, 1.0), ("ya ma no na ka", 0.93, 1.0, 0.35, 0.75)],
-    4: [("su ku ra shi ma ta ne ko so ri tsu", 1.0, 1.45, 0.0, 1.0)],
-    5: [("mi i tsu ke ta -", 1.0, 0.72, 0.0, 1.0)],
-    6: [("ha a . ne e", 1.04, 0.85, 0.0, 0.9), ("ko q chi", 1.0, 0.8, 1.15, 1.0)],
+WHISPERS = {  # (script, formant scale, rate, start, gain[, "rev"]) - all 1.5-3 s with the breaths
+    1: [("ka e re na i yo", 1.0, 0.82, 0.25, 1.0)],                                  # かえれないよ
+    2: [("mi te ru , ko q chi", 1.02, 0.9, 0.2, 1.0, "rev")],                        # reversed: みてる、こっち
+    3: [("ma da , ma da", 1.0, 0.85, 0.15, 1.0), ("ya ma no na ka", 0.93, 0.95, 0.75, 0.75)],  # まだ、まだ / やまのなか
+    4: [("su ku ra shi ma ta ne ko so ri tsu , mo ga na i", 1.0, 1.35, 0.1, 1.0)],   # fast, meaningless muttering
+    5: [("mi i tsu ke ta -", 1.0, 0.62, 0.3, 1.0)],                                   # みいつけた
+    6: [("ha a . ne e", 1.04, 0.8, 0.1, 0.9), ("ko q chi", 1.0, 0.75, 1.45, 1.0)],      # はあ…ねえ…こっち
 }
 
 
@@ -326,15 +326,27 @@ def _ear(y, rng, clicks=1.0):
 
 def whisper(rng, i=1):
     parts = []
+    t_end = 0.0
     for item in WHISPERS[i]:
         script, scale, rate, t0, g = item[:5]
         w = V.whisper(script, rng, scale=scale, rate=rate, intensity=g, close=1.0, bw=1.3)
         if len(item) > 5:
             w = dsp.reverse(w)
         parts.append(dsp.place(np.zeros(ns(t0) + len(w)), w, t0))
+        t_end = max(t_end, t0 + len(w) / SR)
     y = dsp.mix(*parts)
-    y = _ear(y, rng)
-    return dsp.trim(y, -60)
+    ref = np.std(y[np.abs(y) > 1e-4]) if np.any(np.abs(y) > 1e-4) else 1.0
+    out = np.zeros(len(y) + ns(0.9))
+    dsp.place(out, y, 0.0)
+    if i in (1, 3, 5, 6):  # a quick, close inhale before the words
+        b = V.breath(rng, "in", 0.22, table=V.VF, scale=1.06, vowel_in="x")
+        dsp.place(out, b / (np.std(b) + 1e-9) * ref * 0.35, 0.0)
+    m = ns(rng.uniform(0.5, 0.8))  # ...and the breath that leaves the mouth after them, at your ear
+    keys = [(0, V.fs("x", V.VF, 1.06)), (m / SR, V.fs("u", V.VF, 1.06))]
+    ex = V.vt_noise(m, keys, dsp.env_pts(m, [(0, 0), (0.06, 1.0), (m / SR, 0)]) ** 1.3, rng, tilt_db=2.0)
+    dsp.place(out, ex / (np.std(ex) + 1e-9) * ref * 0.3, t_end - 0.05)
+    out = _ear(out, rng)
+    return dsp.trim(out, -60, min_len=1.55)
 
 
 def whisper_name(rng, i=1):

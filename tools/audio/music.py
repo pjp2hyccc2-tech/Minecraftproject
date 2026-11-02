@@ -123,6 +123,8 @@ SAFE_BASS = [(0.5, "D3", 0.4), (0.52, "A3", 0.3), (7.5, "A#2", 0.4), (14.5, "G2"
 def dread(rng, i=1):
     L = 64.0
     n = ns(L)
+    # NB: steady, loop-quantised tones are added *dry* after the reverb: a circular reverb gives every
+    # spectral line a random complex gain per ear (it once cancelled a binaural carrier by 37 dB)
     out = np.zeros((2, n))
     for f, a, bt in ((36.71, 0.55, 0.07), (73.42, 1.0, 0.11), (110.0, 0.32, 0.17), (146.83, 0.2, 0.09), (220.0, 0.06, 0.23)):
         for c in range(2):
@@ -136,17 +138,16 @@ def dread(rng, i=1):
     out += dsp.binaural(132.0, 6.0, n, L=L, rng=rng) * 0.16 * _lfo(n, 2, rng, 0.35, 1.0)  # 129 / 135 Hz: between the drone partials
     sub = dsp.sub_rumble(n, 36.71, L=L, rng=rng, am_rate=5.5, am_depth=0.5) * _lfo(n, 2, rng, 0.0, 1.0, 2.5)
     out += np.vstack([sub, sub]) * 0.4
-    br = np.vstack([dsp.colored(n, rng, -6.0, lo=25, hi=220) for _ in range(2)])
-    out += br * 0.22 * _lfo(n, 3, rng, 0.2, 1.0, 1.5)
-    out = _nrm(out)
+    br = np.vstack([dsp.colored(n, rng, -6.0, lo=25, hi=220) for _ in range(2)]) * 0.22 * _lfo(n, 3, rng, 0.2, 1.0, 1.5)
+    s = 1.0 / (np.max(np.abs(out + br)) + 1e-12)
     met = np.zeros((2, n))
     for k in range(3):
         d = rng.uniform(6.0, 9.0)
         bm = _bowed_metal(rng, d, rng.uniform(410, 640), 1.0)
         dsp.place(met, dsp.pan(bm, rng.uniform(-0.8, 0.8)), k * L / 3 + rng.uniform(2, 10), circular=True)
-    out += _nrm(met) * 0.1
+    wet_in = br * s + _nrm(met) * 0.1
     ir = dsp.make_ir(4.5, rng, stereo=True, predelay=0.04, hf_ratio=0.35)
-    out = dsp.circ_reverb(out, ir, wet=0.45, dry=0.85)
+    out = out * s * 0.95 + dsp.circ_reverb(wet_in, ir, wet=0.5, dry=0.85)
     return dsp.dc_block(out, circular=True)
 
 
@@ -175,9 +176,8 @@ def tension(rng, i=1):
     hb = np.tanh(2.0 * _nrm(hb))
     out += np.vstack([hb, hb]) * 0.5
     sub = dsp.sub_rumble(n, 38.89, L=L, rng=rng, am_rate=6.0, am_depth=0.4)  # Eb1 under the D drone above
-    out += np.vstack([sub, sub]) * 0.15
     ir = dsp.make_ir(3.0, rng, stereo=True, predelay=0.03)
-    out = dsp.circ_reverb(out, ir, wet=0.4, dry=0.85)
+    out = dsp.circ_reverb(out, ir, wet=0.4, dry=0.85) + np.vstack([sub, sub]) * 0.15
     return dsp.dc_block(out, circular=True)
 
 
@@ -206,9 +206,10 @@ def danger(rng, i=1):
         dsp.place(ticks, c * (1.0 if acc[k] else 0.45), k * L / 64, circular=True)
     out += np.vstack([ticks * 0.9, ticks]) * 0.18 / (np.max(np.abs(ticks)) + 1e-9)
     sub = dsp.sub_rumble(n, 36.71, L=L, rng=rng, am_rate=6.0, am_depth=0.6)
-    out += np.vstack([sub, sub]) * 0.22
     ir = dsp.make_ir(2.0, rng, stereo=True, predelay=0.02)
-    out = dsp.circ_reverb(out, ir, wet=0.3, dry=0.9)
+    out = dsp.circ_reverb(out, ir, wet=0.3, dry=0.9) + np.vstack([sub, sub]) * 0.22
+    whine = np.vstack([_tone(14800.0, L, n, rng), _tone(14806.0, L, n, rng)])  # at the edge of hearing, unstable between the ears
+    out += whine * 0.004 * _lfo(n, 2, rng, 0.1, 1.0, 2.0)[None, :]
     return np.roll(dsp.dc_block(out, circular=True), ns(0.03), axis=-1)  # first tick just after the seam
 
 
@@ -361,9 +362,8 @@ def oyama(rng, i=1):
     tk = dsp.circ_reverb(tk, dsp.make_ir(3.8, rng, stereo=True, predelay=0.06, hf_ratio=0.3), wet=0.9, dry=0.3)
     out += _nrm(tk) * 0.55
     sub = dsp.sub_rumble(n, 36.71, L=L, rng=rng, am_rate=6.0, am_depth=0.5)
-    out += np.vstack([sub, sub]) * 0.3 * env
     ir = dsp.make_ir(4.0, rng, stereo=True, predelay=0.04, hf_ratio=0.35)
-    out = dsp.circ_reverb(out, ir, wet=0.4, dry=0.85)
+    out = dsp.circ_reverb(out, ir, wet=0.4, dry=0.85) + np.vstack([sub, sub]) * 0.3 * env
     return dsp.dc_block(out, circular=True)
 
 
@@ -392,11 +392,12 @@ def title(rng, i=1):
         g = dsp.smooth(n, rng, 0.08)
         g = (g - g.min()) / (g.max() - g.min())
         out[c] += dsp.colored(n, rng, -4.0, lo=120, hi=2500) * (0.2 + 0.8 * g ** 2) * 0.08
+    dry = np.zeros((2, n))  # steady tones stay out of the circular reverb
     for f, a, bt in ((73.42, 1.0, 0.09), (110.0, 0.4, 0.13), (36.71, 0.35, 0.05)):
         for c in range(2):
-            out[c] += a * 0.12 * (_tone(f, L, n, rng) + 0.7 * _tone(f + bt * (1 + 0.4 * c), L, n, rng))
+            dry[c] += a * 0.12 * (_tone(f, L, n, rng) + 0.7 * _tone(f + bt * (1 + 0.4 * c), L, n, rng))
     hi = (_tone(1174.66, L, n, rng) + 0.5 * _tone(1174.66 + 0.31, L, n, rng)) * _lfo(n, 2, rng, 0.0, 1.0, 3.0)
-    out += np.vstack([hi, np.roll(hi, ns(0.02))]) * 0.025
+    dry += np.vstack([hi, np.roll(hi, ns(0.02))]) * 0.025
     ev = np.zeros((2, n))
     for t0, nm, v in [(4.0, "A4", 0.5), (5.2, "D5", 0.6), (6.1, "E5", 0.45), (7.0, "F5", 0.6),
                       (26.0, "A#4", 0.5), (27.0, "A4", 0.45), (27.9, "G4", 0.5), (29.2, "F4", 0.55), (31.5, "E4", 0.45)]:
@@ -413,7 +414,7 @@ def title(rng, i=1):
         b = dsp.lowpass(b, 3200, 2) * dsp.env_pts(len(b), [(0, 0), (1.5, 1), (4.5, 1), (6.5, 0)])
         dsp.place(out, dsp.pan(b, rng.uniform(-0.7, 0.7)) * 0.02, t0, circular=True)
     ir = dsp.make_ir(4.5, rng, stereo=True, predelay=0.04, hf_ratio=0.3)
-    out = dsp.circ_reverb(out, ir, wet=0.5, dry=0.8)
+    out = dsp.circ_reverb(out, ir, wet=0.5, dry=0.8) + dry * 0.9
     return dsp.dc_block(out, circular=True)
 
 

@@ -63,7 +63,7 @@ def nozoki_breath(rng, i=1):
             if kind == "out":  # gurgle deep in the throat
                 gl = V.creak(ns(d), 22 + 8 * dsp.smooth(ns(d), rng, 2.0), dsp.env_pts(ns(d), [(0, 0), (0.2, 1), (d, 0)]),
                              rng, vowel="o", table=tbl, scale=sc, jitter=0.5)
-                dsp.place(y, gl * np.std(b) * 0.9, t)
+                dsp.place(y, dsp.fade(gl, 0.01, 0.06) * np.std(b) * 0.9, t)
         t += d + rng.uniform(0.05, 0.15)
     y = dsp.lowpass(y, 8500, 2)
     y = dsp.close_mic(y, prox_db=3.0, pres_db=2.0, air_db=1.0)
@@ -434,7 +434,7 @@ def koyanushi_scream(rng, i=1):
                     breath=0.6, rasp=1.4, rough=(0.65, 55, 0.6), scale=0.92, oq=0.45, closure=0.8)
     cr = V.creak(ns(0.35), np.linspace(18, 60, ns(0.35)), np.linspace(0.3, 1, ns(0.35)), rng, vowel="a", table=V.VM)
     y = np.zeros(ns(dur + 0.35))
-    dsp.place(y, cr * 0.5, 0.0)
+    dsp.place(y, dsp.fade(cr, 0.005, 0.06) * 0.5, 0.0)
     dsp.place(y, _nrm(s), 0.3)
     y = _nrm(y)
     y = 0.55 * dsp.sat(y * 2.5, 1.0) + 0.45 * y
@@ -540,21 +540,23 @@ def oyama_near(rng, i=1):
     mi = ns(di)
     keys = [(0, V.fs("o", V.VM, 0.5, bw=1.5)), (di, V.fs("u", V.VM, 0.5, bw=1.5))]
     inh = V.vt_noise(mi, keys, dsp.env_pts(mi, [(0, 0), (di * 0.6, 1.0), (di, 0)]), rng, tilt_db=-3.0, hp=60)
-    dsp.place(y, inh * 0.6, 0.1, circular=True)
+    dsp.place(y, dsp.fade(inh, 0.02, 0.05) * 0.6, 0.1, circular=True)
     mo = ns(do)
     eo = dsp.env_pts(mo, [(0, 0), (0.25, 1.0), (do * 0.6, 0.7), (do, 0)])
     exh = V.vt_noise(mo, [(0, V.fs("a", V.VM, 0.5, bw=1.4)), (do, V.fs("o", V.VM, 0.5))], eo, rng, tilt_db=-4.0, hp=50)
     rumble = V.creak(mo, 34 + 6 * dsp.smooth(mo, rng, 1.0), eo, rng, vowel="o", table=V.VM, scale=0.5, jitter=0.3)
-    dsp.place(y, exh * 0.7 + rumble * np.std(exh) * 1.2, 0.1 + di + 0.2, circular=True)
+    dsp.place(y, dsp.fade(exh * 0.7 + rumble * np.std(exh) * 1.2, 0.02, 0.08), 0.1 + di + 0.2, circular=True)
     sub = dsp.sub_rumble(n, 34.0, L=L, rng=rng, am_rate=6.0, am_depth=0.55, drive=2.2)
-    y = y / (np.std(y) + 1e-9) * 0.35 + sub * 0.5
+    tt = np.arange(n) / SR  # the rumble swells with the breath and nearly stops at the turn (the loop seam lands there)
+    sub *= 0.08 + 0.92 * (0.5 - 0.5 * np.cos(TAU * (tt - 0.05) / L)) ** 1.5
+    y = y / (np.std(y) + 1e-9) * 0.35
     for _ in range(2):
         d = rng.uniform(0.5, 0.9)
         c = ins.creak(d, rng, [(0, 7), (d / 2, 16), (d, 6)], [(0, 0), (0.1, 0.7), (d, 0)], pitch=0.3, tonal=0.3)
-        dsp.place(y, c * 0.12, rng.uniform(0, L), circular=True)
+        dsp.place(y, dsp.fade(c, 0.01, 0.05) * 0.12, rng.uniform(0, L), circular=True)
     y = dsp.circ(lambda x: dsp.lowpass(x, 2500, 2), y)
     ir = dsp.make_ir(1.8, rng, predelay=0.02, lp_hz=2500)
-    y = dsp.circ_reverb(y, ir, wet=0.35, dry=0.85)
+    y = dsp.circ_reverb(y, ir, wet=0.35, dry=0.85) + sub * 0.5  # the sub stays dry (steady lines + circular reverb = random gains)
     return dsp.dc_block(y, circular=True)
 
 

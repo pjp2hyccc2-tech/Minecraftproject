@@ -97,7 +97,7 @@ CATALOG = [
     e("oyama.step", "oyama/step", 4, 1, MO.oyama_step, 64, ("peak", -1.5), "巨大な足音", "Huge footsteps"),
     e("oyama.groan", "oyama/groan", 3, 1, MO.oyama_groan, 96, ("peak", -1.5), "山が呻く", "The mountain groans"),
     e("oyama.roar", "oyama/roar", 2, 1, MO.oyama_roar, 128, ("peak", -1), "凄まじい咆哮", "Tremendous roar", preload=True),
-    e("oyama.near", "oyama/near", 1, 1, MO.oyama_near, 32, ("peak", -3), "巨大な何かの息遣い", "Something huge breathes", loop=True),
+    e("oyama.near", "oyama/near", 1, 1, MO.oyama_near, 32, ("peak", -3), "巨大な何かの息遣い", "Something huge breathes", loop=True, q=8),
     e("oyama.branch", "oyama/branch", 3, 1, MO.oyama_branch, 48, ("peak", -2), "枝がへし折れる", "Branches break"),
     e("utsuru.hum", "utsuru/hum", 1, 1, MO.utsuru_hum, 12, ("peak", -8), "微かな雑音と囁き", "Faint static whispers", loop=True),
     e("utsuru.turn", "utsuru/turn", 1, 1, MO.utsuru_turn, 12, ("peak", -4), "息を呑む囁き", "A whispered gasp"),

@@ -72,13 +72,12 @@ def forest(rng, i=1):
     for _ in range(9):
         g = ins.crunch(0.06, rng, lambda t: 600 * np.exp(-t / 0.01), lo=1500, hi=7000)
         _place_circ(out, dsp.pan(g, rng.uniform(-1, 1)) * 0.012, rng.uniform(0, L))
-    # subliminal: binaural wind tone (theta 5.5 Hz) riding the gusts, and a sub swell
+    # subliminal: binaural wind tone (theta 5.5 Hz) riding the gusts, and a sub swell - added dry,
+    # after the circular reverb (which would give each steady line a random gain per ear)
     bt = dsp.binaural(421.0, 5.5, n, L=L, rng=rng) * (0.25 + 0.75 * gsum ** 1.5)[None, :]
-    out += bt * 0.02
     sub = dsp.sub_rumble(n, 33.0, L=L, rng=rng, am_rate=6.0, am_depth=0.5) * _lfo(n, 2, rng, 0.0, 1.0, 3.0)
-    out += np.vstack([sub, sub]) * 0.03
     ir = dsp.make_ir(1.5, rng, stereo=True, predelay=0.015, hf_ratio=0.45)
-    out = dsp.circ_reverb(out, ir, wet=0.38, dry=0.85)
+    out = dsp.circ_reverb(out, ir, wet=0.38, dry=0.85) + bt * 0.02 + np.vstack([sub, sub]) * 0.03
     return dsp.dc_block(out, circular=True)
 
 
@@ -167,9 +166,9 @@ def insects(rng, i=1):
     # a very faint floor so the silence after the chorus stops is *heard*
     fl = np.vstack([dsp.colored(n, rng, -3.0, lo=200, hi=6000) for _ in range(2)])
     out += fl * 0.004
-    out += dsp.binaural(333.0, 6.0, n, L=L, rng=rng) * 0.006 * _lfo(n, 3, rng, 0.3, 1.0)[None, :]  # theta under the chorus
+    bt = dsp.binaural(333.0, 6.0, n, L=L, rng=rng) * 0.006 * _lfo(n, 3, rng, 0.3, 1.0)[None, :]  # theta under the chorus
     ir = dsp.make_ir(1.1, rng, stereo=True, predelay=0.012, hf_ratio=0.5)
-    out = dsp.circ_reverb(out, ir, wet=0.3, dry=0.85)
+    out = dsp.circ_reverb(out, ir, wet=0.3, dry=0.85) + bt
     return dsp.dc_block(out, circular=True)
 
 
@@ -201,10 +200,11 @@ def wind_ridge(rng, i=1):
     hum = sum(a * np.sin(TAU * f * t + rng.random() * 6) for f, a in ((100, 1.0), (200, 0.5), (300, 0.35), (500, 0.15)))
     buzz = dsp.colored(n, rng, 0.0, lo=1500, hi=8000) * (0.5 + 0.5 * np.cos(TAU * 100 * t)) ** 6
     crk = ins.crackle(L, rng, 25, hp=2500)
-    corona = hum * 0.012 + buzz * 0.01 + crk / (np.max(np.abs(crk)) + 1e-9) * 0.03
+    corona = buzz * 0.01 + crk / (np.max(np.abs(crk)) + 1e-9) * 0.03
     out += np.vstack([corona * 0.8, corona])
     gr = _norm01(dsp.smooth(n, rng, 0.1))
-    out += dsp.binaural(566.0, 6.0, n, L=L, rng=rng) * (0.2 + 0.8 * gr) * 0.04  # a pure lattice tone, 6 Hz apart
+    tones = dsp.binaural(566.0, 6.0, n, L=L, rng=rng) * (0.2 + 0.8 * gr) * 0.04  # a pure lattice tone, 6 Hz apart
+    tones += np.vstack([hum * 0.012 * 0.8, hum * 0.012])
     # the lattice flexing: a few metallic groans / pings
     for _ in range(3):
         d = rng.uniform(0.6, 1.2)
@@ -212,7 +212,7 @@ def wind_ridge(rng, i=1):
                        modes=[(f, 25, a) for f, a in ((430, 1.0), (980, 0.7), (1730, 0.5), (2620, 0.3))], tonal=0.6)
         _place_circ(out, dsp.pan(gr / (np.max(np.abs(gr)) + 1e-9), rng.uniform(-0.7, 0.7)) * 0.05, rng.uniform(0, L))
     ir = dsp.make_ir(0.9, rng, stereo=True, predelay=0.008)
-    out = dsp.circ_reverb(out, ir, wet=0.18, dry=0.95)
+    out = dsp.circ_reverb(out, ir, wet=0.18, dry=0.95) + tones
     return dsp.dc_block(out, circular=True)
 
 
@@ -249,7 +249,7 @@ def tunnel(rng, i=1):
     n = ns(L)
     out = np.zeros((2, n))
     sub = dsp.sub_rumble(n, 31.0, L=L, rng=rng, am_rate=5.0, am_depth=0.35, drive=2.0)
-    out += np.vstack([sub, sub]) * 0.4 * _lfo(n, 3, rng, 0.55, 1.0)
+    tones = np.vstack([sub, sub]) * 0.4 * _lfo(n, 3, rng, 0.55, 1.0)
     moan = np.zeros((2, n))
     for c in range(2):
         fr = np.full(n, 64.0 + 2.5 * c) * (1 + 0.03 * dsp.smooth(n, rng, 0.2))
@@ -260,7 +260,7 @@ def tunnel(rng, i=1):
     hiss = np.vstack([dsp.colored(n, rng, -1.0, lo=1500, hi=7000) for _ in range(2)])
     out += hiss * 0.012 * _lfo(n, 3, rng, 0.3, 1.0)[None, :]
     bt = dsp.binaural(107.0, 4.5, n, L=L, rng=rng)  # 104.75 / 109.25 Hz, clear of the 31 Hz harmonics
-    out += bt * 0.05 * _lfo(n, 2, rng, 0.2, 1.0, 2.0)[None, :]
+    tones += bt * 0.05 * _lfo(n, 2, rng, 0.2, 1.0, 2.0)[None, :]
     ir = _tunnel_ir(rng)
     drips = np.zeros((2, n))
     t = rng.uniform(0.5, 2.0)
@@ -272,7 +272,7 @@ def tunnel(rng, i=1):
         t += rng.uniform(1.8, 5.5)
     drips = dsp.circ_reverb(drips, ir, wet=1.0, dry=0.25)
     out += drips * 0.35
-    out = dsp.circ_reverb(out, ir, wet=0.25, dry=0.9)
+    out = dsp.circ_reverb(out, ir, wet=0.25, dry=0.9) + tones
     return dsp.dc_block(out, circular=True)
 
 
@@ -347,10 +347,10 @@ def village(rng, i=1):
                        modes=[(f, 30, a) for f, a in ((610, 1.0), (1290, 0.6), (2050, 0.35))], tonal=0.7, jitter=0.2)
         _place_circ(out, dsp.pan(cr / (np.max(np.abs(cr)) + 1e-9), -0.3) * 0.03, t0)
     sub = dsp.sub_rumble(n, 36.71, L=L, rng=rng, am_rate=6.5, am_depth=0.5)
-    out += np.vstack([sub, sub]) * 0.02 * _lfo(n, 2, rng, 0.0, 1.0, 2.0)
-    out += dsp.binaural(200.0, 5.5, n, L=L, rng=rng) * 0.02 * _lfo(n, 2, rng, 0.2, 1.0)[None, :]
+    tones = np.vstack([sub, sub]) * 0.02 * _lfo(n, 2, rng, 0.0, 1.0, 2.0)
+    tones += dsp.binaural(200.0, 5.5, n, L=L, rng=rng) * 0.02 * _lfo(n, 2, rng, 0.2, 1.0)[None, :]
     ir = dsp.make_ir(1.7, rng, stereo=True, predelay=0.02, hf_ratio=0.4)
-    out = dsp.circ_reverb(out, ir, wet=0.32, dry=0.85)
+    out = dsp.circ_reverb(out, ir, wet=0.32, dry=0.85) + tones
     return dsp.dc_block(out, circular=True)
 
 
