@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -51,6 +52,24 @@ public class FacingBlock extends HorizontalDirectionalBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         return defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
+    }
+
+    /**
+     * Furniture with a partial shape must be an obstacle to mobs. The vanilla default treats every block whose
+     * collision is not a full cube as walkable, so the pathfinder walked the bride straight into stone lanterns
+     * and chests of drawers and she stood there pushing against them.
+     */
+    public static boolean openForPaths(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
+        if (type == PathComputationType.WATER) return level.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER);
+        VoxelShape shape = state.getCollisionShape(level, pos);
+        // decals, futons and low tables stay walkable (one auto-step); anything taller blocks the path
+        return shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.5;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
+        return openForPaths(state, level, pos, type);
     }
 
     @Override

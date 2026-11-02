@@ -18,7 +18,7 @@ public final class ModEntities {
 
     public static final RegistryObject<EntityType<Hanayome>> HANAYOME = ENTITIES.register("hanayome",
             () -> EntityType.Builder.<Hanayome>of(Hanayome::new, MobCategory.MONSTER)
-                    .sized(0.7f, 1.95f).fireImmune().clientTrackingRange(12).build(Meikon.MODID + ":hanayome"));
+                    .sized(0.6f, 1.95f).fireImmune().clientTrackingRange(12).build(Meikon.MODID + ":hanayome"));
     public static final RegistryObject<EntityType<Ichimatsu>> ICHIMATSU = ENTITIES.register("ichimatsu",
             () -> EntityType.Builder.<Ichimatsu>of(Ichimatsu::new, MobCategory.MONSTER)
                     .sized(0.45f, 0.9f).fireImmune().clientTrackingRange(10).build(Meikon.MODID + ":ichimatsu"));
@@ -27,7 +27,7 @@ public final class ModEntities {
                     .sized(0.6f, 1.9f).fireImmune().clientTrackingRange(10).build(Meikon.MODID + ":kageboshi"));
     public static final RegistryObject<EntityType<Maboroshi>> MABOROSHI = ENTITIES.register("maboroshi",
             () -> EntityType.Builder.<Maboroshi>of(Maboroshi::new, MobCategory.MISC)
-                    .sized(0.7f, 1.95f).fireImmune().clientTrackingRange(12).build(Meikon.MODID + ":maboroshi"));
+                    .sized(0.6f, 1.95f).fireImmune().clientTrackingRange(12).build(Meikon.MODID + ":maboroshi"));
     public static final RegistryObject<EntityType<Ohajiki>> OHAJIKI = ENTITIES.register("ohajiki",
             () -> EntityType.Builder.<Ohajiki>of(Ohajiki::new, MobCategory.MISC)
                     .sized(0.25f, 0.25f).clientTrackingRange(6).updateInterval(10).build(Meikon.MODID + ":ohajiki"));

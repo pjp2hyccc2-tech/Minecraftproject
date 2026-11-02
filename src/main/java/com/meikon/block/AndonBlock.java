@@ -49,4 +49,11 @@ public class AndonBlock extends Block {
         if (!player.isCreative()) held.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
         return InteractionResult.CONSUME;
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean isPathfindable(BlockState state, net.minecraft.world.level.BlockGetter level, net.minecraft.core.BlockPos pos,
+                                  net.minecraft.world.level.pathfinder.PathComputationType type) {
+        return FacingBlock.openForPaths(state, level, pos, type);
+    }
 }

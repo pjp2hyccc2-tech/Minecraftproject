@@ -62,4 +62,11 @@ public class SuzuDaiBlock extends Block {
                     pos.getZ() + 0.3 + random.nextDouble() * 0.4, 0, 0.012, 0);
         }
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean isPathfindable(BlockState state, net.minecraft.world.level.BlockGetter level, net.minecraft.core.BlockPos pos,
+                                  net.minecraft.world.level.pathfinder.PathComputationType type) {
+        return FacingBlock.openForPaths(state, level, pos, type);
+    }
 }
