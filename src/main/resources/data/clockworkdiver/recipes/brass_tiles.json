@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PP",
+    "PP"
+  ],
+  "key": {
+    "P": {
+      "item": "clockworkdiver:brass_plate"
+    }
+  },
+  "result": {
+    "item": "clockworkdiver:brass_tiles",
+    "count": 4
+  }
+}

@@ -1,0 +1,349 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "clockworkdiver:block/rust_cluster",
+    "rust": "clockworkdiver:block/rust_cluster"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        7,
+        14
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            9,
+            14,
+            16
+          ],
+          "texture": "#rust"
+        },
+        "south": {
+          "uv": [
+            2,
+            9,
+            14,
+            16
+          ],
+          "texture": "#rust"
+        },
+        "east": {
+          "uv": [
+            2,
+            9,
+            14,
+            16
+          ],
+          "texture": "#rust"
+        },
+        "west": {
+          "uv": [
+            2,
+            9,
+            14,
+            16
+          ],
+          "texture": "#rust"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#rust"
+        },
+        "down": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        7,
+        3
+      ],
+      "to": [
+        11,
+        13,
+        10
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            4,
+            3,
+            11,
+            9
+          ],
+          "texture": "#rust"
+        },
+        "south": {
+          "uv": [
+            4,
+            3,
+            11,
+            9
+          ],
+          "texture": "#rust"
+        },
+        "east": {
+          "uv": [
+            3,
+            3,
+            10,
+            9
+          ],
+          "texture": "#rust"
+        },
+        "west": {
+          "uv": [
+            3,
+            3,
+            10,
+            9
+          ],
+          "texture": "#rust"
+        },
+        "up": {
+          "uv": [
+            4,
+            3,
+            11,
+            10
+          ],
+          "texture": "#rust"
+        },
+        "down": {
+          "uv": [
+            4,
+            3,
+            11,
+            10
+          ],
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        5,
+        8
+      ],
+      "to": [
+        14,
+        11,
+        13
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            9,
+            5,
+            14,
+            11
+          ],
+          "texture": "#rust"
+        },
+        "south": {
+          "uv": [
+            9,
+            5,
+            14,
+            11
+          ],
+          "texture": "#rust"
+        },
+        "east": {
+          "uv": [
+            8,
+            5,
+            13,
+            11
+          ],
+          "texture": "#rust"
+        },
+        "west": {
+          "uv": [
+            8,
+            5,
+            13,
+            11
+          ],
+          "texture": "#rust"
+        },
+        "up": {
+          "uv": [
+            9,
+            8,
+            14,
+            13
+          ],
+          "texture": "#rust"
+        },
+        "down": {
+          "uv": [
+            9,
+            8,
+            14,
+            13
+          ],
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        3,
+        9
+      ],
+      "to": [
+        6,
+        9,
+        14
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            1,
+            7,
+            6,
+            13
+          ],
+          "texture": "#rust"
+        },
+        "south": {
+          "uv": [
+            1,
+            7,
+            6,
+            13
+          ],
+          "texture": "#rust"
+        },
+        "east": {
+          "uv": [
+            9,
+            7,
+            14,
+            13
+          ],
+          "texture": "#rust"
+        },
+        "west": {
+          "uv": [
+            9,
+            7,
+            14,
+            13
+          ],
+          "texture": "#rust"
+        },
+        "up": {
+          "uv": [
+            1,
+            9,
+            6,
+            14
+          ],
+          "texture": "#rust"
+        },
+        "down": {
+          "uv": [
+            1,
+            9,
+            6,
+            14
+          ],
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        11,
+        6
+      ],
+      "to": [
+        9,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6,
+            2,
+            9,
+            5
+          ],
+          "texture": "#rust"
+        },
+        "south": {
+          "uv": [
+            6,
+            2,
+            9,
+            5
+          ],
+          "texture": "#rust"
+        },
+        "east": {
+          "uv": [
+            6,
+            2,
+            9,
+            5
+          ],
+          "texture": "#rust"
+        },
+        "west": {
+          "uv": [
+            6,
+            2,
+            9,
+            5
+          ],
+          "texture": "#rust"
+        },
+        "up": {
+          "uv": [
+            6,
+            6,
+            9,
+            9
+          ],
+          "texture": "#rust"
+        },
+        "down": {
+          "uv": [
+            6,
+            6,
+            9,
+            9
+          ],
+          "texture": "#rust"
+        }
+      }
+    }
+  ]
+}

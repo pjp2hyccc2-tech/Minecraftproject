@@ -36,6 +36,7 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', mod_id
             // CI only: -Pclienttest=true makes the client take screenshots of the mod's scenes and quit.
             property 'clockworkdiver.clienttest', (project.findProperty('clienttest') ?: 'false').toString()
+            args '--width', '1280', '--height', '720'
         }
 
         server {

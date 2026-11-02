@@ -1,0 +1,110 @@
+{
+  "tick": {
+    "subtitle": "subtitles.clockworkdiver.tick",
+    "sounds": [
+      "clockworkdiver:tick"
+    ]
+  },
+  "tock": {
+    "subtitle": "subtitles.clockworkdiver.tock",
+    "sounds": [
+      "clockworkdiver:tock"
+    ]
+  },
+  "perfect": {
+    "subtitle": "subtitles.clockworkdiver.perfect",
+    "sounds": [
+      "clockworkdiver:perfect"
+    ]
+  },
+  "steam_burst": {
+    "subtitle": "subtitles.clockworkdiver.steam_burst",
+    "sounds": [
+      "clockworkdiver:steam_burst"
+    ]
+  },
+  "shrink": {
+    "subtitle": "subtitles.clockworkdiver.shrink",
+    "sounds": [
+      "clockworkdiver:shrink"
+    ]
+  },
+  "grow": {
+    "subtitle": "subtitles.clockworkdiver.grow",
+    "sounds": [
+      "clockworkdiver:grow"
+    ]
+  },
+  "discover": {
+    "subtitle": "subtitles.clockworkdiver.discover",
+    "sounds": [
+      "clockworkdiver:discover"
+    ]
+  },
+  "repaired": {
+    "subtitle": "subtitles.clockworkdiver.repaired",
+    "sounds": [
+      "clockworkdiver:repaired"
+    ]
+  },
+  "ratchet": {
+    "subtitle": "subtitles.clockworkdiver.ratchet",
+    "sounds": [
+      "clockworkdiver:ratchet"
+    ]
+  },
+  "clunk": {
+    "subtitle": "subtitles.clockworkdiver.clunk",
+    "sounds": [
+      "clockworkdiver:clunk"
+    ]
+  },
+  "shop_bell": {
+    "subtitle": "subtitles.clockworkdiver.shop_bell",
+    "sounds": [
+      "clockworkdiver:shop_bell"
+    ]
+  },
+  "glasses": {
+    "subtitle": "subtitles.clockworkdiver.glasses",
+    "sounds": [
+      "clockworkdiver:glasses"
+    ]
+  },
+  "mite": {
+    "subtitle": "subtitles.clockworkdiver.mite",
+    "sounds": [
+      "clockworkdiver:mite"
+    ]
+  },
+  "gremlin": {
+    "subtitle": "subtitles.clockworkdiver.gremlin",
+    "sounds": [
+      "clockworkdiver:gremlin"
+    ]
+  },
+  "moth": {
+    "subtitle": "subtitles.clockworkdiver.moth",
+    "sounds": [
+      "clockworkdiver:moth"
+    ]
+  },
+  "boss_roar": {
+    "subtitle": "subtitles.clockworkdiver.boss_roar",
+    "sounds": [
+      "clockworkdiver:boss_roar"
+    ]
+  },
+  "boss_pulse": {
+    "subtitle": "subtitles.clockworkdiver.boss_pulse",
+    "sounds": [
+      "clockworkdiver:boss_pulse"
+    ]
+  },
+  "fanfare": {
+    "subtitle": "subtitles.clockworkdiver.fanfare",
+    "sounds": [
+      "clockworkdiver:fanfare"
+    ]
+  }
+}

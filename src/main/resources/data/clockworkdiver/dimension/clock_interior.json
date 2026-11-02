@@ -1,0 +1,18 @@
+{
+  "type": "clockworkdiver:clock_interior",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "clockworkdiver:clock_interior",
+      "lakes": false,
+      "features": false,
+      "layers": [
+        {
+          "block": "minecraft:air",
+          "height": 1
+        }
+      ],
+      "structure_overrides": []
+    }
+  }
+}

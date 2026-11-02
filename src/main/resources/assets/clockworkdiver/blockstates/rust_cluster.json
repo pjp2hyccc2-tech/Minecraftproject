@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "clockworkdiver:block/rust_cluster"
+    }
+  }
+}

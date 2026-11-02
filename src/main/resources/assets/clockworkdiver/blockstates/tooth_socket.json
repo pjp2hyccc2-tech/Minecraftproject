@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "filled=false": {
+      "model": "clockworkdiver:block/tooth_socket"
+    },
+    "filled=true": {
+      "model": "clockworkdiver:block/tooth_socket_filled"
+    }
+  }
+}

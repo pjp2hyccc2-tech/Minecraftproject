@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "clockworkdiver:block/copper_pipe"
+    },
+    "axis=z": {
+      "model": "clockworkdiver:block/copper_pipe",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "clockworkdiver:block/copper_pipe",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

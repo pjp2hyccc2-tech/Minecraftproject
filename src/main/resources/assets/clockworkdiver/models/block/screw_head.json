@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "clockworkdiver:block/screw_head_top",
+    "side": "clockworkdiver:block/screw_head_side"
+  }
+}

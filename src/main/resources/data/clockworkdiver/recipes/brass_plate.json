@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BB",
+    "BB"
+  ],
+  "key": {
+    "B": {
+      "item": "clockworkdiver:brass_block"
+    }
+  },
+  "result": {
+    "item": "clockworkdiver:brass_plate",
+    "count": 4
+  }
+}

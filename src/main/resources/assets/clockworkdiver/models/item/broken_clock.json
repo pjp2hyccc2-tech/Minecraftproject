@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "clockworkdiver:item/clock_pocket_watch"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "clockworkdiver:clock_type": 0.05
+      },
+      "model": "clockworkdiver:item/broken_clock_cuckoo"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:clock_type": 0.15
+      },
+      "model": "clockworkdiver:item/broken_clock_astronomical"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:clock_type": 0.25
+      },
+      "model": "clockworkdiver:item/broken_clock_birdcage"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:clock_type": 0.35
+      },
+      "model": "clockworkdiver:item/broken_clock_steam_tower"
+    },
+    {
+      "predicate": {
+        "clockworkdiver:clock_type": 0.45
+      },
+      "model": "clockworkdiver:item/broken_clock_orrery"
+    }
+  ]
+}

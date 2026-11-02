@@ -249,7 +249,7 @@ public class BenchScreen extends Screen {
     }
 
     private void click() {
-        if (minecraft != null) minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.2f, 0.5f));
+        if (minecraft != null) minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK.value(), 1.2f, 0.5f));
     }
 
     private int listTop() {

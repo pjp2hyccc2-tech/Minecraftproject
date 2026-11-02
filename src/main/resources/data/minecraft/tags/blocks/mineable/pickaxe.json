@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "clockworkdiver:brass_block",
+    "clockworkdiver:brass_plate",
+    "clockworkdiver:brass_tiles",
+    "clockworkdiver:rusty_plate",
+    "clockworkdiver:copper_pipe",
+    "clockworkdiver:jewel_bearing",
+    "clockworkdiver:steam_vent",
+    "clockworkdiver:tooth_socket",
+    "clockworkdiver:screw_head",
+    "clockworkdiver:winding_crank",
+    "clockworkdiver:mechanism"
+  ]
+}

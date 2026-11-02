@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " R ",
+    "RBR",
+    " R "
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "B": {
+      "item": "clockworkdiver:brass_block"
+    }
+  },
+  "result": {
+    "item": "clockworkdiver:jewel_bearing",
+    "count": 2
+  }
+}

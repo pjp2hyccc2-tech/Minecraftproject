@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "clockworkdiver:block/repair_bench"
+    },
+    "facing=east": {
+      "model": "clockworkdiver:block/repair_bench",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "clockworkdiver:block/repair_bench",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "clockworkdiver:block/repair_bench",
+      "y": 270
+    }
+  }
+}

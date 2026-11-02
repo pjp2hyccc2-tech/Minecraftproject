@@ -31,6 +31,7 @@ jobs:
         id: build
         continue-on-error: true
         run: |
+          set -o pipefail
           chmod +x gradlew
           ./gradlew build --stacktrace --no-daemon 2>&1 | tee build.log
 
@@ -39,10 +40,12 @@ jobs:
         if: steps.build.outcome == 'success'
         continue-on-error: true
         run: |
+          set -o pipefail
           mkdir -p run
           echo "eula=true" > run/eula.txt
           printf "online-mode=false\nspawn-protection=0\nlevel-type=minecraft\\:flat\n" > run/server.properties
           timeout 1500 ./gradlew runServer -Pselftest=true --no-daemon 2>&1 | tee selftest.log || true
+          cp run/logs/latest.log server-latest.log || true
           cat run/selftest-report.txt
           grep -q "SELFTEST RESULT: PASS" run/selftest-report.txt
 
@@ -51,21 +54,21 @@ jobs:
         if: steps.build.outcome == 'success' && hashFiles('ci/client-test.sh') != ''
         continue-on-error: true
         run: |
+          set -o pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri > /dev/null
+          sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri libglx-mesa0 > /dev/null
           bash ci/client-test.sh 2>&1 | tee clienttest.log
 
       - name: Publish results to ci-results branch
         if: always()
         run: |
           mkdir -p /tmp/results/screens
-          cp build.log selftest.log clienttest.log /tmp/results/ 2>/dev/null || true
+          cp build.log clienttest.log clienttest-tail.log server-latest.log client-latest.log /tmp/results/ 2>/dev/null || true
+          tail -c 300000 selftest.log > /tmp/results/selftest.log 2>/dev/null || true
+          grep -E "\.java:[0-9]+: error" -A3 build.log > /tmp/results/compile-errors.txt 2>/dev/null || true
           cp build/libs/*.jar /tmp/results/ 2>/dev/null || true
-          cp run/logs/latest.log /tmp/results/server-latest.log 2>/dev/null || true
-          cp run/selftest-report.txt /tmp/results/ 2>/dev/null || true
-          cp run-client/logs/latest.log /tmp/results/client-latest.log 2>/dev/null || true
-          cp run-client/screenshots/*.png /tmp/results/screens/ 2>/dev/null || true
-          cp run-client/crash-reports/*.txt /tmp/results/ 2>/dev/null || true
+          cp run/selftest-report.txt run/clockworkdiver_autoshots.txt /tmp/results/ 2>/dev/null || true
+          cp run/screenshots/*.png /tmp/results/screens/ 2>/dev/null || true
           cp run/crash-reports/*.txt /tmp/results/ 2>/dev/null || true
           echo "sha=${GITHUB_SHA}" > /tmp/results/status.txt
           echo "build=${{ steps.build.outcome }}" >> /tmp/results/status.txt
@@ -87,6 +90,6 @@ jobs:
           name: clockworkdiver-jar
           path: build/libs/*.jar
 
-      - name: Fail if build failed
-        if: steps.build.outcome != 'success'
+      - name: Fail if build or a test failed
+        if: steps.build.outcome != 'success' || steps.selftest.outcome == 'failure' || steps.clienttest.outcome == 'failure'
         run: exit 1

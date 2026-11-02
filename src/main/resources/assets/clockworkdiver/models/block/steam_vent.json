@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "clockworkdiver:block/steam_vent_top",
+    "bottom": "clockworkdiver:block/steam_vent_side",
+    "side": "clockworkdiver:block/steam_vent_side"
+  }
+}
