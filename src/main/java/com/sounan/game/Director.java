@@ -73,6 +73,19 @@ public final class Director {
         return (float) (Mth.atan2(to.z - from.z, to.x - from.x) * Mth.RAD_TO_DEG) - 90.0f;
     }
 
+    /** Distance from the main trail (polyline of pois.json). */
+    static double routeDistance(double x, double z) {
+        List<int[]> r = Pois.get().route;
+        double best = 1e18;
+        for (int i = 0; i < r.size() - 1; i++) {
+            double ax = r.get(i)[0], az = r.get(i)[1], dx = r.get(i + 1)[0] - ax, dz = r.get(i + 1)[1] - az;
+            double t = Mth.clamp(((x - ax) * dx + (z - az) * dz) / (dx * dx + dz * dz), 0, 1);
+            double px = ax + dx * t - x, pz = az + dz * t - z;
+            best = Math.min(best, px * px + pz * pz);
+        }
+        return Math.sqrt(best);
+    }
+
     static int ground(int x, int z) {
         return TerrainData.get().height(x, z) + 1;
     }
@@ -97,6 +110,7 @@ public final class Director {
             BlockPos at = new BlockPos(sx, sy, sz);
             if (!level.getBlockState(at).isAir() || !level.getBlockState(at.above()).isAir() || !level.getBlockState(at.above(2)).isAir()) continue;
             if (TerrainData.get().area(sx, sz) == TerrainData.AREA_OUT) continue;
+            if (routeDistance(spot.x, spot.z) < 7.5) continue;   // the trail must pass it at a safe distance
             return new Vec3(spot.x, sy, spot.z);
         }
         return null;
@@ -153,7 +167,7 @@ public final class Director {
         }
         if (--ps.nextMonster <= 0) {
             if (!hasActive(level, p)) {
-                if (spawnMonster(level, p, ps, data, area)) ps.nextMonster = 20 * 55 + RAND.nextInt(20 * 55);
+                if (spawnMonster(level, p, ps, data, area)) ps.nextMonster = 20 * 70 + RAND.nextInt(20 * 70);
                 else ps.nextMonster = 20 * 12;
             } else {
                 ps.nextMonster = 20 * 15;
@@ -216,7 +230,12 @@ public final class Director {
     }
 
     static boolean spawnYobigoe(ServerLevel level, ServerPlayer p) {
-        Vec3 at = openSpot(level, p, 34, 48, 1.6, false);
+        // off to one side, so following the trail does not mean walking into it — only choosing to go to the light does
+        Vec3 at = null;
+        for (int i = 0; i < 4 && at == null; i++) {
+            Vec3 c = openSpot(level, p, 32, 46, 1.9, false);
+            if (c != null && routeDistance(c.x, c.z) > 16) at = c;
+        }
         if (at == null) return false;
         return spawn(level, ModEntities.YOBIGOE.get(), at, yawTo(at, p.position()), p) != null;
     }
@@ -454,7 +473,7 @@ public final class Director {
             data.climax = true;
             data.setDirty();
             TUNNEL_LAMPS.put(p.getUUID(), 0);
-            Vec3 at = new Vec3(L.tunnelX + 0.5, L.roadY(L.tunnelZ0 + 2) + 1, L.tunnelZ0 + 2.5);
+            Vec3 at = new Vec3(L.tunnelX + 0.5, L.roadY(L.tunnelZ0 + 5) + 1, L.tunnelZ0 + 5.5);
             Oyamasama o = spawn(level, ModEntities.OYAMASAMA.get(), at, 180.0f, p);
             if (o != null) o.setMode(Oyamasama.MODE_TUNNEL, 20 * 70);
             GameManager.thought(p, "thought.sounan.run");

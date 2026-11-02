@@ -258,9 +258,11 @@ public final class GameManager {
         }
         GameData data = GameData.get(server);
         if (!data.started || data.ending != 0) {
+            boolean replay = data.ending != 0 || data.bagOpened;
             data.reset();
             data.started = true;
             data.setDirty();
+            if (replay) resetWorldState(level);
         }
         if (!inGame(p) && !p.getPersistentData().contains("sounan_return")) saveReturn(p);
         p.getInventory().clearContent();
@@ -280,6 +282,31 @@ public final class GameManager {
         event(p, EV_INTRO, 0, p.getGameProfile().getName());
         syncState(p, ps, data);
         Sounan.LOGGER.info("[sounan] {} is lost on the mountain", p.getGameProfile().getName());
+    }
+
+    /** A new night in a world that has already been played: everything the last night changed goes back. */
+    public static void resetWorldState(ServerLevel level) {
+        PoiLayout L = PoiLayout.get();
+        BlockState bag = level.getBlockState(L.bag);
+        if (bag.hasProperty(LostBagBlock.OPEN)) level.setBlock(L.bag, bag.setValue(LostBagBlock.OPEN, false), 3);
+        BlockState anchor = level.getBlockState(L.ropeAnchor);
+        if (anchor.hasProperty(RopeAnchorBlock.ROPED)) level.setBlock(L.ropeAnchor, anchor.setValue(RopeAnchorBlock.ROPED, false), 3);
+        for (int y = L.ropeTopY; y >= L.ropeBottomY; y--) {
+            BlockPos rp = new BlockPos(L.ropeX, y, L.ropeZ);
+            if (level.getBlockState(rp).is(ModBlocks.CLIMBING_ROPE.get())) level.setBlock(rp, Blocks.AIR.defaultBlockState(), 3);
+        }
+        if (level.getBlockState(L.omiki).isAir()) level.setBlock(L.omiki, ModBlocks.OMIKI_BOTTLE.get().defaultBlockState(), 3);
+        BlockState hok = level.getBlockState(L.hokora);
+        if (hok.hasProperty(HokoraBlock.OFFERED)) level.setBlock(L.hokora, hok.setValue(HokoraBlock.OFFERED, false), 3);
+        BlockState hook = level.getBlockState(L.hutKeyHook);
+        if (hook.hasProperty(KeyHookBlock.HAS_KEY)) level.setBlock(L.hutKeyHook, hook.setValue(KeyHookBlock.HAS_KEY, true), 3);
+        for (BlockPos g : new BlockPos[]{L.gate, L.gate.above()}) {
+            BlockState gs = level.getBlockState(g);
+            if (gs.getBlock() instanceof LockedGateBlock) {
+                level.setBlock(g, gs.setValue(LockedGateBlock.LOCKED, true).setValue(net.minecraft.world.level.block.DoorBlock.OPEN, false), 3);
+            }
+        }
+        for (BlockPos lp : L.tunnelLamps) setTunnelLamp(level, lp, false);
     }
 
     static void giveStartItems(ServerPlayer p) {
@@ -496,7 +523,7 @@ public final class GameManager {
     private static void tickLights(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
         InteractionHand fh = handHolding(p, GameItem.Kind.FLASHLIGHT_ON, GameItem.Kind.FLASHLIGHT_LOW);
         if (fh != null) {
-            ps.flash = Math.max(0.0f, ps.flash - 100.0f / (8 * 60 * 20));
+            ps.flash = Math.max(0.0f, ps.flash - 100.0f / (10 * 60 * 20));
             GameItem.Kind k = GameItem.kindOf(p.getItemInHand(fh));
             if (ps.flash <= 0.0f) {
                 swap(p, fh, ModItems.FLASHLIGHT.get());

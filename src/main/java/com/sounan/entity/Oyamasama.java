@@ -97,7 +97,7 @@ public class Oyamasama extends SounanMonster {
             case MODE_HUNT, MODE_TUNNEL -> {
                 GameManager.reportThreat(p, 1.0f);
                 boolean lit = GameManager.inBeam(p, this, 30.0);
-                double speed = mode == MODE_TUNNEL ? (lit ? 0.24 : 0.30) : (lit ? 0.18 : 0.29);
+                double speed = mode == MODE_TUNNEL ? (lit ? 0.27 : 0.34) : (lit ? 0.18 : 0.29);
                 setAnimPose(d < 3.5 ? REACH : CRAWL);
                 chase(p, speed);
                 if (--stepIn <= 0) {
