@@ -1,4 +1,4 @@
-name: Build mod jar
+name: BirdieCraft build
 
 on:
   push:

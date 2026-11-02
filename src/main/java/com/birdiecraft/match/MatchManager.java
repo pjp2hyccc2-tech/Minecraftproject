@@ -139,7 +139,7 @@ public final class MatchManager {
         GolfMatch m = MATCHES.get(id);
         if (m == null) return;
         boolean empty = m.removePlayer(player.getUUID());
-        GolfNetwork.sendTo(player, new com.birdiecraft.network.S2CMatchStatePacket(null));
+        GolfNetwork.sendTo(player, com.birdiecraft.network.S2CMatchStatePacket.none());
         if (empty) {
             m.dispose();
             MATCHES.remove(id);

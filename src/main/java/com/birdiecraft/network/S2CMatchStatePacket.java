@@ -16,6 +16,11 @@ public final class S2CMatchStatePacket {
         this.view = view;
     }
 
+    /** "You are not in a match any more." */
+    public static S2CMatchStatePacket none() {
+        return new S2CMatchStatePacket((MatchView) null);
+    }
+
     public S2CMatchStatePacket(FriendlyByteBuf buf) {
         this.view = buf.readBoolean() ? MatchView.read(buf) : null;
     }

@@ -608,7 +608,7 @@ public final class GolfMatch {
         if (disposed && participants.isEmpty()) return;
         disposed = true;
         removeCpuEntities();
-        for (ServerPlayer sp : humans()) GolfNetwork.sendTo(sp, new S2CMatchStatePacket(null));
+        for (ServerPlayer sp : humans()) GolfNetwork.sendTo(sp, S2CMatchStatePacket.none());
     }
 
     // ------------------------------------------------------------------ positioning
