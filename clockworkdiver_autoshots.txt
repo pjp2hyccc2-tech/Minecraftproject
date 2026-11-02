@@ -1,0 +1,202 @@
+title screen
+shot 00_title
+world creation requested
+in world, 197 steps
+step gamerules screen=none dim=minecraft:overworld
+step workshop screen=none dim=minecraft:overworld
+shot 01_workshop
+step look_bench screen=none dim=clockworkdiver:workshop
+shot 02_workshop_bench
+step customer_counter screen=none dim=clockworkdiver:workshop
+step behind_counter screen=none dim=clockworkdiver:workshop
+shot 03_customer
+step talk screen=none dim=clockworkdiver:workshop
+shot 04_dialogue
+step skip screen=DialogueScreen dim=clockworkdiver:workshop
+shot 05_dialogue_full
+step accept screen=RepairPromptScreen dim=clockworkdiver:workshop
+shot 06_repair_bench_button
+step go_bench screen=none dim=clockworkdiver:workshop
+shot 07_glasses_on
+step wait_glasses screen=BenchScreen dim=clockworkdiver:workshop
+shot 08_bench
+step lens_first screen=BenchScreen dim=clockworkdiver:workshop
+shot 09_lens_found
+step lens_second screen=BenchScreen dim=clockworkdiver:workshop
+shot 10_lens_second
+step select screen=BenchScreen dim=clockworkdiver:workshop
+shot 11_selected
+step dive screen=BenchScreen dim=clockworkdiver:workshop
+shot 12_shrinking
+step arrive screen=BenchScreen dim=clockworkdiver:workshop
+shot 13_arrival
+step wait_zone screen=none dim=clockworkdiver:clock_interior
+step look_rust screen=none dim=clockworkdiver:clock_interior
+shot 14_rust_zone
+step wave screen=none dim=clockworkdiver:clock_interior
+shot 15_combat
+step look_up screen=none dim=clockworkdiver:clock_interior
+shot 16_gears_above
+step complete screen=none dim=clockworkdiver:clock_interior
+shot 17_repaired
+step back screen=none dim=clockworkdiver:clock_interior
+shot 18_back_at_bench
+step dive_teeth_real screen=BenchScreen dim=clockworkdiver:workshop
+step look_teeth screen=none dim=clockworkdiver:clock_interior
+shot 19_teeth_zone
+step complete_teeth screen=none dim=clockworkdiver:clock_interior
+shot 20_all_repaired
+step close_bench screen=none dim=clockworkdiver:workshop
+step to_counter screen=none dim=clockworkdiver:workshop
+step deliver_talk screen=none dim=clockworkdiver:workshop
+step deliver_skip screen=DialogueScreen dim=clockworkdiver:workshop
+shot 21_deliver
+step deliver screen=none dim=clockworkdiver:workshop
+step thanks_skip screen=DialogueScreen dim=clockworkdiver:workshop
+shot 22_thanks
+step thanks_close screen=none dim=clockworkdiver:workshop
+shot 23_tutorial_done
+step hold screen=none dim=clockworkdiver:workshop
+step dive_screw screen=none dim=clockworkdiver:workshop
+step look_screw screen=none dim=clockworkdiver:clock_interior
+shot 24_screw_zone
+step abort_screw screen=none dim=clockworkdiver:clock_interior
+step close_screw screen=none dim=clockworkdiver:workshop
+step dive_spring screen=none dim=clockworkdiver:workshop
+step look_spring screen=none dim=clockworkdiver:clock_interior
+shot 25_spring_zone
+step abort_spring screen=none dim=clockworkdiver:clock_interior
+step close_spring screen=none dim=clockworkdiver:workshop
+step dive_nest screen=none dim=clockworkdiver:workshop
+step look_nest screen=none dim=clockworkdiver:clock_interior
+shot 26_boss
+step abort_nest screen=none dim=clockworkdiver:clock_interior
+step close_nest screen=none dim=clockworkdiver:workshop
+step bench_pocket_watch screen=BenchScreen dim=clockworkdiver:workshop
+shot 29_bench_pocket_watch
+step bench_cuckoo screen=BenchScreen dim=clockworkdiver:workshop
+shot 30_bench_cuckoo
+step bench_astronomical screen=BenchScreen dim=clockworkdiver:workshop
+shot 31_bench_astronomical
+step bench_birdcage screen=BenchScreen dim=clockworkdiver:workshop
+shot 32_bench_birdcage
+step bench_steam_tower screen=BenchScreen dim=clockworkdiver:workshop
+shot 33_bench_steam_tower
+step bench_orrery screen=BenchScreen dim=clockworkdiver:workshop
+shot 34_bench_orrery
+step bench_music_box screen=BenchScreen dim=clockworkdiver:workshop
+shot 35_bench_music_box
+step bench_grandfather screen=BenchScreen dim=clockworkdiver:workshop
+shot 36_bench_grandfather
+step bench_great_clock screen=BenchScreen dim=clockworkdiver:workshop
+shot 37_bench_great_clock
+step close_benches screen=none dim=clockworkdiver:workshop
+step street screen=none dim=clockworkdiver:workshop
+shot 38_shop_front
+step tower screen=none dim=clockworkdiver:workshop
+shot 39_clock_tower
+step story_start screen=none dim=clockworkdiver:workshop
+shot 40_chapter_card
+step wait_quest_card screen=none dim=clockworkdiver:workshop
+shot 41_quest_card
+step q1_counter screen=none dim=clockworkdiver:workshop
+step q1_talk screen=none dim=clockworkdiver:workshop
+step q1_line_me screen=DialogueScreen dim=clockworkdiver:workshop
+shot 42_story_dialogue_me
+step q1_line_bolt screen=DialogueScreen dim=clockworkdiver:workshop
+shot 43_story_dialogue
+step q1_skip screen=DialogueScreen dim=clockworkdiver:workshop
+shot 44_story_offer
+step q1_accept screen=RepairPromptScreen dim=clockworkdiver:workshop
+step q1_bench screen=none dim=clockworkdiver:workshop
+step q1_lens_screw screen=BenchScreen dim=clockworkdiver:workshop
+step q1_lens_clue screen=BenchScreen dim=clockworkdiver:workshop
+shot 45_clue_found
+step q1_select_screw screen=BenchScreen dim=clockworkdiver:workshop
+shot 46_bench_twists
+step q1_dive screen=BenchScreen dim=clockworkdiver:workshop
+step q1_look screen=none dim=clockworkdiver:clock_interior
+shot 47_timed_screw
+step q1_complete screen=none dim=clockworkdiver:clock_interior
+step q1_close screen=none dim=clockworkdiver:workshop
+step q10_set screen=none dim=clockworkdiver:workshop
+step q10_counter screen=none dim=clockworkdiver:workshop
+step q10_talk screen=none dim=clockworkdiver:workshop
+step q10_line screen=DialogueScreen dim=clockworkdiver:workshop
+shot 48_stranger_dialogue
+step q10_accept screen=RepairPromptScreen dim=clockworkdiver:workshop
+step q10_bench screen=none dim=clockworkdiver:workshop
+step q10_lens screen=BenchScreen dim=clockworkdiver:workshop
+shot 49_bench_music_box
+step q10_dive screen=BenchScreen dim=clockworkdiver:workshop
+step q10_look screen=none dim=clockworkdiver:clock_interior
+shot 50_spring_fragments
+step q10_fragment screen=none dim=clockworkdiver:clock_interior
+shot 51_memory_card
+step q10_complete screen=none dim=clockworkdiver:clock_interior
+step q10_close screen=none dim=clockworkdiver:workshop
+step hold2 screen=none dim=clockworkdiver:workshop
+step dive_dust_swarm screen=none dim=clockworkdiver:workshop
+step look_dust_swarm screen=none dim=clockworkdiver:clock_interior
+shot 52_dust_zone
+step abort_dust_swarm screen=none dim=clockworkdiver:clock_interior
+step close_dust_swarm screen=none dim=clockworkdiver:workshop
+step dive_tuning screen=none dim=clockworkdiver:workshop
+step look_tuning screen=none dim=clockworkdiver:clock_interior
+shot 53_tuning_bells
+step abort_tuning screen=none dim=clockworkdiver:clock_interior
+step close_tuning screen=none dim=clockworkdiver:workshop
+step dive_teeth_offbeat_dark_elite screen=none dim=clockworkdiver:workshop
+step look_teeth_offbeat_dark_elite screen=none dim=clockworkdiver:clock_interior
+shot 54_dark_offbeat
+step abort_teeth_offbeat_dark_elite screen=none dim=clockworkdiver:clock_interior
+step close_teeth_offbeat_dark_elite screen=none dim=clockworkdiver:workshop
+step dive_nest_shadow screen=none dim=clockworkdiver:workshop
+step look_nest_shadow screen=none dim=clockworkdiver:clock_interior
+shot 55_shadow_boss
+step abort_nest_shadow screen=none dim=clockworkdiver:clock_interior
+step close_nest_shadow screen=none dim=clockworkdiver:workshop
+step dive_nest_queen screen=none dim=clockworkdiver:workshop
+step look_nest_queen screen=none dim=clockworkdiver:clock_interior
+shot 56_queen
+step abort_nest_queen screen=none dim=clockworkdiver:clock_interior
+step close_nest_queen screen=none dim=clockworkdiver:workshop
+step q17_set screen=none dim=clockworkdiver:workshop
+step q17_view screen=none dim=clockworkdiver:workshop
+shot 57_plaza
+step q17_wide screen=none dim=clockworkdiver:workshop
+shot 58_tower_arch
+step q17_back screen=none dim=clockworkdiver:workshop
+step q17_talk screen=none dim=clockworkdiver:workshop
+step q17_line screen=DialogueScreen dim=clockworkdiver:workshop
+shot 59_tower_dialogue
+step q17_accept screen=RepairPromptScreen dim=clockworkdiver:workshop
+step q17_bench screen=none dim=clockworkdiver:workshop
+step q17_lens screen=BenchScreen dim=clockworkdiver:workshop
+shot 60_great_clock_bench
+step q17_close screen=none dim=clockworkdiver:workshop
+step journal screen=JournalScreen dim=clockworkdiver:workshop
+shot 61_journal
+step journal_done screen=JournalScreen dim=clockworkdiver:workshop
+shot 62_journal_done
+step ending screen=EndingScreen dim=clockworkdiver:workshop
+shot 63_ending
+step ending_cast screen=EndingScreen dim=clockworkdiver:workshop
+shot 64_ending_cast
+step ending_close screen=none dim=clockworkdiver:workshop
+step q20_set screen=none dim=clockworkdiver:workshop
+step q20_counter screen=none dim=clockworkdiver:workshop
+step q20_view screen=none dim=clockworkdiver:workshop
+shot 65_finale_shop
+step q20_talk screen=none dim=clockworkdiver:workshop
+step q20_line screen=DialogueScreen dim=clockworkdiver:workshop
+shot 66_finale_dialogue
+step q20_close screen=none dim=clockworkdiver:workshop
+step chapter_end screen=none dim=clockworkdiver:workshop
+shot 67_chapter_end
+step mira_voice screen=DialogueScreen dim=clockworkdiver:workshop
+shot 68_mira_voice
+step finale_thanks screen=DialogueScreen dim=clockworkdiver:workshop
+shot 69_finale_thanks
+step finale_close screen=none dim=clockworkdiver:workshop
+finished

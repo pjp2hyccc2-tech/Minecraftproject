@@ -1,0 +1,119 @@
+Clockwork Diver self test
+ok   workshop dimension loaded
+ok   clock interior dimension loaded
+ok   command /clockwork registered
+ok   commission save/load round trip (525 clocks, regular clients only)
+ok   tutorial clock has 2 defects
+     (commission data took 15 ms)
+ok   story has 20 quests
+ok   chapter 1 has 4 quests
+ok   chapter 2 has 4 quests
+ok   chapter 3 has 4 quests
+ok   chapter 4 has 4 quests
+ok   chapter 5 has 4 quests
+ok   story clocks valid and round trip 
+ok   final quest is the master's
+ok   queen fight is in the Great Clock
+     (story data took 3 ms)
+ok   story inactive before the tutorial
+ok   all 20 quests advance in order
+ok   story finished afterwards
+ok   20 keepsakes handed over
+ok   replaying a delivered quest gives nothing new
+ok   story progress saves
+     (story play-through took 1 ms)
+ok   language keys present (505 checked) []
+ok   ja_jp and en_us have the same keys (893) [][]
+ok   story speakers known []
+     (language files took 12 ms)
+ok   repair bench placed
+ok   gear train block entity
+ok   tower clock block entity
+ok   counter spot is free
+ok   street spawn is free
+ok   archway to the plaza is open
+ok   tower gate placed
+ok   plaza bench spot is free
+ok   Pip's spot is free
+ok   scene spots are free []
+     (workshop build took 563 ms)
+ok   customer created
+ok   customer added
+ok   scene friend added
+     (customer spawn took 8 ms)
+ok   rust: spawn has floor and headroom
+ok   rust: mechanisms placed (6)
+ok   rust: clusters placed (12)
+ok   rust: steam vents (2)
+ok   rust: enemy spawn points (11)
+     (zone rust took 601 ms)
+ok   teeth: spawn has floor and headroom
+ok   teeth: mechanisms placed (5)
+ok   teeth: sockets placed (4)
+ok   teeth: escape wheel missing teeth
+ok   teeth: steam vents (2)
+ok   teeth: enemy spawn points (11)
+     (zone teeth took 163 ms)
+ok   screw: spawn has floor and headroom
+ok   screw: mechanisms placed (6)
+ok   screw: head at height 10
+ok   screw: rebuilt one block lower
+ok   screw: rebuilt back up (precision slip)
+ok   screw: steam vents (3)
+ok   screw: enemy spawn points (11)
+     (zone screw took 103 ms)
+ok   spring: spawn has floor and headroom
+ok   spring: mechanisms placed (5)
+ok   spring: crank placed
+ok   spring: steam vents (4)
+ok   spring: enemy spawn points (11)
+     (zone spring took 72 ms)
+ok   nest: spawn has floor and headroom
+ok   nest: mechanisms placed (5)
+ok   nest: balance wheel
+ok   nest: steam vents (4)
+ok   nest: enemy spawn points (11)
+     (zone nest took 114 ms)
+ok   dust: spawn has floor and headroom
+ok   dust: mechanisms placed (8)
+ok   dust: heaps placed on solid ground (12)
+ok   dust: steam vents (3)
+ok   dust: enemy spawn points (11)
+     (zone dust took 91 ms)
+ok   tuning: spawn has floor and headroom
+ok   tuning: mechanisms placed (6)
+ok   tuning: four bells in note order
+ok   tuning: every bell in reach from one spot
+ok   tuning: drum mechanism
+ok   tuning: steam vents (2)
+ok   tuning: enemy spawn points (11)
+     (zone tuning took 93 ms)
+ok   dark chamber has no jewel lamps
+ok   no-vent chamber has no vents
+ok   nest: memory fragments placed and reachable (4)
+ok   screw: memory fragments placed and reachable (4)
+ok   teeth: memory fragments placed and reachable (4)
+ok   dust: memory fragments placed and reachable (4)
+ok   tuning: memory fragments placed and reachable (4)
+ok   spring: memory fragments placed and reachable (4)
+ok   rust: memory fragments placed and reachable (4)
+     (dive twists took 831 ms)
+ok   create clockworkdiver:rust_mite
+ok   spawn clockworkdiver:rust_mite
+ok   create clockworkdiver:cog_gremlin
+ok   spawn clockworkdiver:cog_gremlin
+ok   create clockworkdiver:dust_moth
+ok   spawn clockworkdiver:dust_moth
+ok   create clockworkdiver:time_eater
+ok   spawn clockworkdiver:time_eater
+ok   spawn time eater variant 1
+ok   spawn time eater variant 2
+ok   spawn time eater variant 3
+ok   spawn bolt
+     (enemies took 7 ms)
+ok   customer walked to the counter (17.0 -> 1.1 blocks, state 1)
+ok   entities still alive and ticking (8/8)
+ok   time eater ticking
+ok   queen is bigger than her kin
+     (after 11 seconds of ticking took 0 ms)
+SELFTEST RESULT: PASS

@@ -1,0 +1,603 @@
+[02Nov2026 08:24:34.144] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, MOD_DEV, --assetIndex, 5, --assetsDir, /home/runner/.gradle/caches/forge_gradle/assets, --gameDir, ., --fml.forgeVersion, 47.4.10, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --width, 1280, --height, 720]
+[02Nov2026 08:24:34.149] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.21 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[02Nov2026 08:24:34.243] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[02Nov2026 08:24:34.457] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[02Nov2026 08:24:34.458] [main/INFO] [EARLYDISPLAY/]: If this message is the only thing at the bottom of your log before a crash, you probably have a driver issue.
+
+Possible solutions:
+A) Make sure Minecraft is set to prefer high performance graphics in the OS and/or driver control panel
+B) Check for driver updates on the graphics brand's website
+C) Try reinstalling your graphics drivers
+D) If still not working after trying all of the above, ask for further help on the Forge forums or Discord
+
+You can safely ignore this message if the game starts up successfully.
+[02Nov2026 08:24:34.674] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.5
+[02Nov2026 08:24:35.716] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.5 got version 4.5
+[02Nov2026 08:24:35.782] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=CLIENT
+[02Nov2026 08:24:35.830] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: llvmpipe (LLVM 21.1.8, 256 bits) GL version 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3, Mesa
+[02Nov2026 08:24:36.132] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.10/ccc533c7dd67e0983217197d7549c8b49e7ab453/javafmllanguage-1.20.1-47.4.10.jar is missing mods.toml file
+[02Nov2026 08:24:36.134] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.10/e9a2879fe3612ea34b9728ec2633304a1e67d480/lowcodelanguage-1.20.1-47.4.10.jar is missing mods.toml file
+[02Nov2026 08:24:36.135] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.10/ec5cefbbc65c67302b8fac317010faab85fa14b9/mclanguage-1.20.1-47.4.10.jar is missing mods.toml file
+[02Nov2026 08:24:36.136] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.10/94dae566be650566ea9115a1414ab76bfcf5a804/fmlcore-1.20.1-47.4.10.jar is missing mods.toml file
+[02Nov2026 08:24:36.217] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[02Nov2026 08:24:37.918] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, /home/runner/.gradle/caches/forge_gradle/assets, --assetIndex, 5, --width, 1280, --height, 720]
+[02Nov2026 08:24:41.751] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 188 Datafixer optimizations took 217 milliseconds
+[02Nov2026 08:24:43.567] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.10_mapped_official_1.20.1/forge-1.20.1-47.4.10_mapped_official_1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[02Nov2026 08:24:43.568] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.10_mapped_official_1.20.1/forge-1.20.1-47.4.10_mapped_official_1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[02Nov2026 08:24:43.587] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[02Nov2026 08:24:43.593] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[02Nov2026 08:24:43.706] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.1 build 7
+[02Nov2026 08:24:44.149] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.10, for MC 1.20.1 with MCP 20230612.114412
+[02Nov2026 08:24:44.152] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.4.10 Initialized
+[02Nov2026 08:24:45.068] [Render thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: [clockworkdiver]
+[02Nov2026 08:24:45.418] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+	at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:69) ~[text2speech-1.17.9.jar:?]
+	at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?]
+	at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?]
+	at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.10.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.10.jar:?]
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.10.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.10.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+libflite.so: cannot open shared object file: No such file or directory
+libflite.so: cannot open shared object file: No such file or directory
+Native library (linux-x86-64/libflite.so) not found in resource path (/home/runner/work/Minecraftproject/Minecraftproject/build/classes/java/main:/home/runner/work/Minecraftproject/Minecraftproject/build/resources/main:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.10_mapped_official_1.20.1/forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/minecraft_repo/versions/1.20.1/client-extra.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlearlydisplay/1.20.1-47.4.10/a262fa19e65f643aae210b4275b53bee053aa765/fmlearlydisplay-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.10/ccc533c7dd67e0983217197d7549c8b49e7ab453/javafmllanguage-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.10/e9a2879fe3612ea34b9728ec2633304a1e67d480/lowcodelanguage-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.10/ec5cefbbc65c67302b8fac317010faab85fa14b9/mclanguage-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.10/94dae566be650566ea9115a1414ab76bfcf5a804/fmlcore-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlloader/1.20.1-47.4.10/55c46d27e7cfc8b829af8a28e562a7d290fa38b6/fmlloader-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarSelector/0.3.19/376cc9c8ea60720cf027c01fc033de915699801c/JarJarSelector-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarMetadata/0.3.19/83feaa9b770e6ac0e96ee4fc23fa89325c5fe2/JarJarMetadata-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre/60458f877d055d0c9114d9e1a2efb737b4bc282c/guava-31.1-jre.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/ca.weblite/java-objc-bridge/1.1/1227f9e0666314f9de41477e3ec277e542ed7f7b/java-objc-bridge-1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/7.0.1/3b4972a0cdb135853dba219be61a79b22cff1309/forgespi-7.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/24.0.1/13c5c75c4206580aa4d683bffee658caae6c9f43/annotations-24.0.1.jar:/home/runner/.gradle/caches/forge_gradle/mcp_repo/net/minecraft/mapping/1.20.1/mapping-1.20.1-mapping.zip:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/8.0.4/272d240aa73f42195b2a68e2ebd8b701ecf41f63/accesstransformers-8.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.0.5/699143dd438431d06b57416944f7cedbe52e1475/eventbus-6.0.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/10.0.9/6d9443f56f50bb85cea383686ff9c867391458b/modlauncher-10.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/5.2.4/e30bab269d896613e38396274711410b3a0e4b87/coremods-5.2.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.openjdk.nashorn/nashorn-core/15.4/f67f5ffaa5f5130cf6fb9b133da00c7df3b532a5/nashorn-core-15.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.8/36e4d212970388e5bd2c5180292012502df461bb/asm-commons-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.8/395f1c1f035258511f27bc9b2583d76e4b143f59/asm-util-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.8/b9747a320844b6cb1eacd90d8ecfd260a16c01d3/asm-analysis-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.8/18419ca5b77a2f81097c741e7872e6ab8d2f40d/asm-tree-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.8/dc19ecb3f7889b7860697215cae99c0f9b6f6b4b/asm-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.9.1/e92af8ab33e428461927b484e90bb155a4f3a052/antlr4-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.9.1/428664f05d2b7f7b7610204b5aa7c1763f62011a/antlr4-runtime-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.4/51d6cefb2b55ee55ee26b16391212fb2c7dfb4f4/toml-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.4/510f174abbf1c947494db50ef2445683bd52c230/core-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.8.5/4433f50c07debefaed0553bd0068f4f48d449313/maven-artifact-3.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.3/a01aaa6ddaea9ec07ec4f209487b7a46a526283a/typetools-0.6.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.2.0/96d02cd3b384ff015a8fef4223bcb4ccf1717c95/terminalconsoleappender-1.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.12.1/4382ab1382c7b6f379377ed5f665dc2f6e1218bc/jline-reader-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.12.1/c777448314e050d980a6b697c140f3bfe9eb7416/jline-terminal-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.2.2/54f5efc19bca95d709d9a37d19ffcbba3d21c1a6/oshi-core-6.2.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/71.1/9e7d3304c23f9ba5cb71915f7cce23231a57a445/icu4j-71.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/4.0.43/2ff9d747a77570a07a60d32ac77eb6162ad2a2d9/authlib-4.0.43.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/6.0.8/3ba4a30557a9b057760af4011f909ba619fc5125/datafixerupper-6.0.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.1.1/832b8e6674a9b325a5175a3a6267dfaf34c85139/logging-1.1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.17.9/3cad216e3a7f0c19b4b394388bc9ffc446f13b14/text2speech-1.17.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.82.Final/644041d1fa96a5d3130a29e8978630d716d76e38/netty-handler-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.82.Final/b77200379acb345a9ffdece1c605e591ac3e4e0a/netty-codec-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/476409d6255001ca53a55f65b01c13822f8dc93a/netty-transport-native-epoll-4.1.82.Final-linux-aarch_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/c7350a71920f3ae9142945e25fed4846cce53374/netty-transport-native-epoll-4.1.82.Final-linux-x86_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.82.Final/e7c7dd18deac93105797f30057c912651ea76521/netty-transport-classes-epoll-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.82.Final/3e895b35ca1b8a0eca56cacff4c2dde5d2c6abce/netty-transport-native-unix-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.82.Final/38f665ae8dcd29032eea31245ba7806bed2e0fa8/netty-resolver-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.82.Final/22d148e85c3f5ebdacc0ce1f5aabb1d420f73f3/netty-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.9/bb7ea75ecdb216654237830b3a96d87ad91f8cc5/fastutil-8.5.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.15/7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d/httpcore-4.4.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.19.0/3b6eeb4de4c49c0fe38a4ee27188ff5fee44d0bb/log4j-core-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.19.0/5c04bfdd63ce9dceb2e284b81e96b6a70010ee10/log4j-slf4j2-impl-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/cbac1b8d30cb4795149c1ef540f912671a8616d0/lwjgl-glfw-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/81716978214ecbda15050ca394b06ef61501a49e/lwjgl-glfw-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/a817bcf213db49f710603677457567c37d53e103/lwjgl-jemalloc-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/33dbb017b6ed6b25f993ad9d56741a49e7937718/lwjgl-jemalloc-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/2623a6b8ae1dfcd880738656a9f0243d2e6840bd/lwjgl-openal-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/f906b6439f6daa66001182ea7727e3467a93681b/lwjgl-openal-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/831a5533a21a5f4f81bbc51bb13e9899319b5411/lwjgl-opengl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/ab9ab6fde3743e3550fa5d46d785ecb45b047d99/lwjgl-opengl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/b119297cf8ed01f247abe8685857f8e7fcf5980f/lwjgl-stb-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/3ee7aec8686e52867677110415566a5342a80230/lwjgl-stb-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/ff1914111ef2e3e0110ef2dabc8d8cdaad82347/lwjgl-tinyfd-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/a35110b9471bea8cde826ab297550ee8c22f5035/lwjgl-tinyfd-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/ae58664f88e18a9bb2c77b063833ca7aaec484cb/lwjgl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/1de885aba434f934201b99f2f1afb142036ac189/lwjgl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.machinezoo.noexception/noexception/1.7.1/b65330c98e38a1f915fa54a6e5eca496505e3f0a/noexception-1.7.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.30/e606eac955f55ecf1d8edcccba04eb8ac98088dd/slf4j-simple-1.7.30.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.1/f48d81adce2abf5ad3cfe463df517952749e03bc/slf4j-api-2.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/srgutils/0.4.11/fbad1341ffdb47d276bbdc40ecb06da49e053e74/srgutils-0.4.11.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.3.0/cf43b5391de623b36fe066a21127baef82c64022/plexus-utils-3.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.12.0/d5692f0526415fcc6de94bb5bfbd3afd9dd3b3e5/checker-qual-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.11.0/c5a0ace696d3f8b1c1d8cc036d8c03cc0cbe6b69/error_prone_annotations-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/ST4/4.3/92f2c1ad8d84abcbeead6cf7f2c53a04166293c2/ST4-4.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr-runtime/3.5.2/cd9cd41361c155f3af0f653009dcecb08d8b4afd/antlr-runtime-3.5.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.abego.treelayout/org.abego.treelayout.core/1.0.3/457216e8e6578099ae63667bb1e4439235892028/org.abego.treelayout.core-1.0.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.glassfish/javax.json/1.0.4/3178f73569fd7a1e5ffc464e680f7a8cc784b85a/javax.json-1.0.4.jar)
+	at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:307) ~[jna-5.12.1.jar:5.12.1 (b0)]
+	at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)]
+	at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)]
+	at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?]
+	... 21 more
+	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+		at com.sun.jna.Native.open(Native Method) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:197) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+		at com.sun.jna.Native.open(Native Method) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:210) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+	Suppressed: java.io.IOException: Native library (linux-x86-64/libflite.so) not found in resource path (/home/runner/work/Minecraftproject/Minecraftproject/build/classes/java/main:/home/runner/work/Minecraftproject/Minecraftproject/build/resources/main:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.4.10_mapped_official_1.20.1/forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/minecraft_repo/versions/1.20.1/client-extra.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlearlydisplay/1.20.1-47.4.10/a262fa19e65f643aae210b4275b53bee053aa765/fmlearlydisplay-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.10/ccc533c7dd67e0983217197d7549c8b49e7ab453/javafmllanguage-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.10/e9a2879fe3612ea34b9728ec2633304a1e67d480/lowcodelanguage-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.10/ec5cefbbc65c67302b8fac317010faab85fa14b9/mclanguage-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.10/94dae566be650566ea9115a1414ab76bfcf5a804/fmlcore-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlloader/1.20.1-47.4.10/55c46d27e7cfc8b829af8a28e562a7d290fa38b6/fmlloader-1.20.1-47.4.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarSelector/0.3.19/376cc9c8ea60720cf027c01fc033de915699801c/JarJarSelector-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarMetadata/0.3.19/83feaa9b770e6ac0e96ee4fc23fa89325c5fe2/JarJarMetadata-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre/60458f877d055d0c9114d9e1a2efb737b4bc282c/guava-31.1-jre.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/ca.weblite/java-objc-bridge/1.1/1227f9e0666314f9de41477e3ec277e542ed7f7b/java-objc-bridge-1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/7.0.1/3b4972a0cdb135853dba219be61a79b22cff1309/forgespi-7.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/24.0.1/13c5c75c4206580aa4d683bffee658caae6c9f43/annotations-24.0.1.jar:/home/runner/.gradle/caches/forge_gradle/mcp_repo/net/minecraft/mapping/1.20.1/mapping-1.20.1-mapping.zip:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/8.0.4/272d240aa73f42195b2a68e2ebd8b701ecf41f63/accesstransformers-8.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.0.5/699143dd438431d06b57416944f7cedbe52e1475/eventbus-6.0.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/10.0.9/6d9443f56f50bb85cea383686ff9c867391458b/modlauncher-10.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/5.2.4/e30bab269d896613e38396274711410b3a0e4b87/coremods-5.2.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.openjdk.nashorn/nashorn-core/15.4/f67f5ffaa5f5130cf6fb9b133da00c7df3b532a5/nashorn-core-15.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.8/36e4d212970388e5bd2c5180292012502df461bb/asm-commons-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.8/395f1c1f035258511f27bc9b2583d76e4b143f59/asm-util-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.8/b9747a320844b6cb1eacd90d8ecfd260a16c01d3/asm-analysis-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.8/18419ca5b77a2f81097c741e7872e6ab8d2f40d/asm-tree-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.8/dc19ecb3f7889b7860697215cae99c0f9b6f6b4b/asm-9.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.9.1/e92af8ab33e428461927b484e90bb155a4f3a052/antlr4-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.9.1/428664f05d2b7f7b7610204b5aa7c1763f62011a/antlr4-runtime-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.4/51d6cefb2b55ee55ee26b16391212fb2c7dfb4f4/toml-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.4/510f174abbf1c947494db50ef2445683bd52c230/core-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.8.5/4433f50c07debefaed0553bd0068f4f48d449313/maven-artifact-3.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.3/a01aaa6ddaea9ec07ec4f209487b7a46a526283a/typetools-0.6.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.2.0/96d02cd3b384ff015a8fef4223bcb4ccf1717c95/terminalconsoleappender-1.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.12.1/4382ab1382c7b6f379377ed5f665dc2f6e1218bc/jline-reader-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.12.1/c777448314e050d980a6b697c140f3bfe9eb7416/jline-terminal-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.2.2/54f5efc19bca95d709d9a37d19ffcbba3d21c1a6/oshi-core-6.2.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/71.1/9e7d3304c23f9ba5cb71915f7cce23231a57a445/icu4j-71.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/4.0.43/2ff9d747a77570a07a60d32ac77eb6162ad2a2d9/authlib-4.0.43.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/6.0.8/3ba4a30557a9b057760af4011f909ba619fc5125/datafixerupper-6.0.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.1.1/832b8e6674a9b325a5175a3a6267dfaf34c85139/logging-1.1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.17.9/3cad216e3a7f0c19b4b394388bc9ffc446f13b14/text2speech-1.17.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.82.Final/644041d1fa96a5d3130a29e8978630d716d76e38/netty-handler-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.82.Final/b77200379acb345a9ffdece1c605e591ac3e4e0a/netty-codec-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/476409d6255001ca53a55f65b01c13822f8dc93a/netty-transport-native-epoll-4.1.82.Final-linux-aarch_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/c7350a71920f3ae9142945e25fed4846cce53374/netty-transport-native-epoll-4.1.82.Final-linux-x86_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.82.Final/e7c7dd18deac93105797f30057c912651ea76521/netty-transport-classes-epoll-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.82.Final/3e895b35ca1b8a0eca56cacff4c2dde5d2c6abce/netty-transport-native-unix-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.82.Final/38f665ae8dcd29032eea31245ba7806bed2e0fa8/netty-resolver-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.82.Final/22d148e85c3f5ebdacc0ce1f5aabb1d420f73f3/netty-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.9/bb7ea75ecdb216654237830b3a96d87ad91f8cc5/fastutil-8.5.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.15/7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d/httpcore-4.4.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.19.0/3b6eeb4de4c49c0fe38a4ee27188ff5fee44d0bb/log4j-core-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.19.0/5c04bfdd63ce9dceb2e284b81e96b6a70010ee10/log4j-slf4j2-impl-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/cbac1b8d30cb4795149c1ef540f912671a8616d0/lwjgl-glfw-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/81716978214ecbda15050ca394b06ef61501a49e/lwjgl-glfw-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/a817bcf213db49f710603677457567c37d53e103/lwjgl-jemalloc-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/33dbb017b6ed6b25f993ad9d56741a49e7937718/lwjgl-jemalloc-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/2623a6b8ae1dfcd880738656a9f0243d2e6840bd/lwjgl-openal-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/f906b6439f6daa66001182ea7727e3467a93681b/lwjgl-openal-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/831a5533a21a5f4f81bbc51bb13e9899319b5411/lwjgl-opengl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/ab9ab6fde3743e3550fa5d46d785ecb45b047d99/lwjgl-opengl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/b119297cf8ed01f247abe8685857f8e7fcf5980f/lwjgl-stb-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/3ee7aec8686e52867677110415566a5342a80230/lwjgl-stb-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/ff1914111ef2e3e0110ef2dabc8d8cdaad82347/lwjgl-tinyfd-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/a35110b9471bea8cde826ab297550ee8c22f5035/lwjgl-tinyfd-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/ae58664f88e18a9bb2c77b063833ca7aaec484cb/lwjgl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/1de885aba434f934201b99f2f1afb142036ac189/lwjgl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.machinezoo.noexception/noexception/1.7.1/b65330c98e38a1f915fa54a6e5eca496505e3f0a/noexception-1.7.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.30/e606eac955f55ecf1d8edcccba04eb8ac98088dd/slf4j-simple-1.7.30.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.1/f48d81adce2abf5ad3cfe463df517952749e03bc/slf4j-api-2.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/srgutils/0.4.11/fbad1341ffdb47d276bbdc40ecb06da49e053e74/srgutils-0.4.11.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.3.0/cf43b5391de623b36fe066a21127baef82c64022/plexus-utils-3.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.12.0/d5692f0526415fcc6de94bb5bfbd3afd9dd3b3e5/checker-qual-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.11.0/c5a0ace696d3f8b1c1d8cc036d8c03cc0cbe6b69/error_prone_annotations-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/ST4/4.3/92f2c1ad8d84abcbeead6cf7f2c53a04166293c2/ST4-4.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr-runtime/3.5.2/cd9cd41361c155f3af0f653009dcecb08d8b4afd/antlr-runtime-3.5.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.abego.treelayout/org.abego.treelayout.core/1.0.3/457216e8e6578099ae63667bb1e4439235892028/org.abego.treelayout.core-1.0.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.glassfish/javax.json/1.0.4/3178f73569fd7a1e5ffc464e680f7a8cc784b85a/javax.json-1.0.4.jar)
+		at com.sun.jna.Native.extractFromResourcePath(Native.java:1145) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:281) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.10.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+[02Nov2026 08:24:45.450] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
+[02Nov2026 08:24:45.498] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/forge-client.toml is not correct. Correcting
+[02Nov2026 08:24:45.500] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client was corrected from null to its default, SimpleCommentedConfig:{}. 
+[02Nov2026 08:24:45.501] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.alwaysSetupTerrainOffThread was corrected from null to its default, false. 
+[02Nov2026 08:24:45.501] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.experimentalForgeLightPipelineEnabled was corrected from null to its default, false. 
+[02Nov2026 08:24:45.501] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.showLoadWarnings was corrected from null to its default, true. 
+[02Nov2026 08:24:45.501] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.useCombinedDepthStencilAttachment was corrected from null to its default, false. 
+[02Nov2026 08:24:45.501] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.compressLanIPv6Addresses was corrected from null to its default, true. 
+[02Nov2026 08:24:45.501] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.calculateAllNormals was corrected from null to its default, false. 
+[02Nov2026 08:24:45.501] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.stabilizeDirectionGetNearest was corrected from null to its default, true. 
+[02Nov2026 08:24:45.501] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.allowMipmapLowering was corrected from null to its default, false. 
+[02Nov2026 08:24:45.691] [Worker-Main-1/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
+[02Nov2026 08:24:46.799] [Worker-Main-1/INFO] [com.clockworkdiver.ClockworkDiver/]: Clockwork Diver: the workshop bell is ready
+[02Nov2026 08:24:46.879] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[02Nov2026 08:24:47.227] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.4.10 Target: 47.4.28
+[02Nov2026 08:24:49.824] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[02Nov2026 08:24:49.825] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[02Nov2026 08:24:49.896] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:283) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at com.mojang.blaze3d.audio.Library.init(Library.java:153) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundEngine.loadLibrary(SoundEngine.java:104) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundEngine.reload(SoundEngine.java:96) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:125) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:40) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.server.packs.resources.SimplePreparableReloadListener.lambda$reload$1(SimplePreparableReloadListener.java:13) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:718) ~[?:?]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?]
+	at net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$new$3(SimpleReloadInstance.java:69) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:156) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:23) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:130) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:115) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1106) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:718) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:218) ~[forge-1.20.1-47.4.10_mapped_official_1.20.1.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.10.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.10.jar:?]
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.10.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.10.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+[02Nov2026 08:24:50.040] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[02Nov2026 08:24:50.060] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[02Nov2026 08:24:50.061] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[02Nov2026 08:24:50.063] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[02Nov2026 08:24:50.064] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[02Nov2026 08:24:50.073] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[02Nov2026 08:24:50.073] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[02Nov2026 08:24:50.074] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[02Nov2026 08:24:50.074] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[02Nov2026 08:24:50.296] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[02Nov2026 08:24:50.450] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[02Nov2026 08:24:50.451] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[02Nov2026 08:24:50.452] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[02Nov2026 08:24:50.492] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: title screen
+[02Nov2026 08:24:50.609] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+[02Nov2026 08:24:52.759] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 00_title
+[02Nov2026 08:24:54.180] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[02Nov2026 08:24:54.363] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1271 advancements
+[02Nov2026 08:24:54.955] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.1
+[02Nov2026 08:24:54.956] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[02Nov2026 08:24:55.073] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/ClockworkCI/serverconfig/forge-server.toml is not correct. Correcting
+[02Nov2026 08:24:55.073] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[02Nov2026 08:24:55.075] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[02Nov2026 08:24:55.075] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[02Nov2026 08:24:55.077] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[02Nov2026 08:24:55.077] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[02Nov2026 08:24:55.077] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[02Nov2026 08:24:55.077] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[02Nov2026 08:24:55.077] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[02Nov2026 08:24:55.077] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.useItemWithDurationZero was corrected from null to its default, false. 
+[02Nov2026 08:24:55.903] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[02Nov2026 08:24:56.877] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[02Nov2026 08:24:56.878] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[02Nov2026 08:24:56.920] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[02Nov2026 08:24:57.427] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：12%
+[02Nov2026 08:24:57.927] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：49%
+[02Nov2026 08:24:58.435] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：88%
+[02Nov2026 08:24:58.538] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[02Nov2026 08:24:58.546] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 2636 ms
+[02Nov2026 08:24:58.646] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 8, from 10
+[02Nov2026 08:24:58.650] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 8, from 0
+[02Nov2026 08:24:58.770] [Render thread/WARN] [io.netty.util.internal.SystemPropertyUtil/]: Unable to parse the boolean system property 'java.net.preferIPv6Addresses':system - using the default value: false
+[02Nov2026 08:24:58.972] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: world creation requested
+[02Nov2026 08:24:59.224] [Netty Local Client IO #0/INFO] [net.minecraftforge.network.NetworkHooks/]: Connected to a modded server.
+[02Nov2026 08:24:59.335] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:3704aa76] logged in with entity id 1 at (7.5, -60.0, 8.5)
+[02Nov2026 08:24:59.434] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Devがゲームに参加しました
+[02Nov2026 08:25:00.003] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 【Clockwork Diver】スチームパンクの街角で、時計修理工房を開こう！
+[02Nov2026 08:25:00.011] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] インベントリの「工房の鍵」を右クリック、または → [工房へ向かう]
+[02Nov2026 08:25:00.017] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 2 advancements
+[02Nov2026 08:25:01.524] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: in world, 197 steps
+[02Nov2026 08:25:06.371] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step gamerules screen=none dim=minecraft:overworld
+[02Nov2026 08:25:06.374] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームルール「doDaylightCycle」がfalseに設定されました］
+[02Nov2026 08:25:06.376] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームルール「doMobSpawning」がfalseに設定されました］
+[02Nov2026 08:25:06.428] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] ゲームルール「doDaylightCycle」がfalseに設定されました
+[02Nov2026 08:25:06.428] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] ゲームルール「doMobSpawning」がfalseに設定されました
+[02Nov2026 08:25:06.908] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step workshop screen=none dim=minecraft:overworld
+[02Nov2026 08:25:07.539] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:25:07.568] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:25:07.600] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:25:07.608] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:25:07.609] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:25:07.609] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:25:13.970] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 01_workshop
+[02Nov2026 08:25:14.165] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_bench screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:25:14.730] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 02_workshop_bench
+[02Nov2026 08:25:14.919] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step customer_counter screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:25:15.973] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step behind_counter screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:25:15.975] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, 1.200000にテレポートさせました］
+[02Nov2026 08:25:16.006] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, 1.200000にテレポートさせました
+[02Nov2026 08:25:17.538] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 03_customer
+[02Nov2026 08:25:17.750] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step talk screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:25:19.006] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 04_dialogue
+[02Nov2026 08:25:19.225] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step skip screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:19.565] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 05_dialogue_full
+[02Nov2026 08:25:19.755] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step accept screen=RepairPromptScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:20.413] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 06_repair_bench_button
+[02Nov2026 08:25:20.620] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step go_bench screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:25:21.521] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 07_glasses_on
+[02Nov2026 08:25:21.670] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step wait_glasses screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:23.719] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 08_bench
+[02Nov2026 08:25:23.942] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step lens_first screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:25.279] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 09_lens_found
+[02Nov2026 08:25:25.455] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step lens_second screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:26.833] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 10_lens_second
+[02Nov2026 08:25:27.020] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step select screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:27.468] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 11_selected
+[02Nov2026 08:25:27.663] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:28.519] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 12_shrinking
+[02Nov2026 08:25:28.727] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step arrive screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:29.352] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理工のレンチを手に取った
+[02Nov2026 08:25:29.409] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:25:29.419] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:25:29.430] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:25:29.434] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:25:29.436] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:25:29.437] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:25:30.328] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 13_arrival
+[02Nov2026 08:25:30.532] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step wait_zone screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:25:33.049] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_rust screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:25:33.587] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 14_rust_zone
+[02Nov2026 08:25:33.784] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step wave screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:25:35.850] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 15_combat
+[02Nov2026 08:25:36.038] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_up screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:25:36.491] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 16_gears_above
+[02Nov2026 08:25:36.695] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step complete screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:25:37.987] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 17_repaired
+[02Nov2026 08:25:38.200] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step back screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:25:43.753] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 18_back_at_bench
+[02Nov2026 08:25:43.935] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_teeth_real screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:25:45.911] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:25:45.916] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:25:45.928] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:25:45.937] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:25:45.941] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:25:45.942] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:25:51.005] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_teeth screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:25:51.579] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 19_teeth_zone
+[02Nov2026 08:25:51.771] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step complete_teeth screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:25:58.291] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 20_all_repaired
+[02Nov2026 08:25:58.497] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_bench screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:25:59.033] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step to_counter screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:25:59.038] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, 1.200000にテレポートさせました］
+[02Nov2026 08:25:59.064] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, 1.200000にテレポートさせました
+[02Nov2026 08:26:00.595] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step deliver_talk screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:01.637] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step deliver_skip screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:01.973] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 21_deliver
+[02Nov2026 08:26:02.192] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step deliver screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:03.721] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step thanks_skip screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:04.067] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 22_thanks
+[02Nov2026 08:26:04.275] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step thanks_close screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:06.316] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 23_tutorial_done
+[02Nov2026 08:26:06.518] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step hold screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:07.072] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_screw screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:07.575] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:26:07.579] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:26:07.590] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:26:07.620] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:26:07.624] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:26:07.625] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:26:11.612] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_screw screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:26:12.148] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 24_screw_zone
+[02Nov2026 08:26:12.370] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step abort_screw screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:26:12.432] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理を中断して時計から出た
+[02Nov2026 08:26:15.927] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_screw screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:16.463] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_spring screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:16.851] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:26:16.855] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:26:16.859] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:26:16.862] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:26:16.865] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:26:16.867] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:26:21.009] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_spring screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:26:21.557] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 25_spring_zone
+[02Nov2026 08:26:21.763] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step abort_spring screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:26:21.850] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理を中断して時計から出た
+[02Nov2026 08:26:21.957] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:26:21.962] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:26:21.967] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:26:21.983] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:26:21.987] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:26:21.988] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:26:25.275] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_spring screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:25.844] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_nest screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:26.102] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:26:26.108] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:26:26.112] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:26:26.116] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:26:26.118] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:26:26.119] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:26:33.399] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_nest screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:26:33.969] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 26_boss
+[02Nov2026 08:26:34.146] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step abort_nest screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:26:34.185] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理を中断して時計から出た
+[02Nov2026 08:26:37.690] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_nest screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:38.226] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_pocket_watch screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:38.875] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 29_bench_pocket_watch
+[02Nov2026 08:26:39.086] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_cuckoo screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:39.742] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 30_bench_cuckoo
+[02Nov2026 08:26:39.937] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_astronomical screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:40.605] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 31_bench_astronomical
+[02Nov2026 08:26:40.767] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_birdcage screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:41.417] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 32_bench_birdcage
+[02Nov2026 08:26:41.613] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_steam_tower screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:42.265] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 33_bench_steam_tower
+[02Nov2026 08:26:42.468] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_orrery screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:43.122] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 34_bench_orrery
+[02Nov2026 08:26:43.345] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_music_box screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:43.971] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 35_bench_music_box
+[02Nov2026 08:26:44.180] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_grandfather screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:44.814] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 36_bench_grandfather
+[02Nov2026 08:26:45.019] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step bench_great_clock screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:26:45.680] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 37_bench_great_clock
+[02Nov2026 08:26:45.874] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_benches screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:46.175] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step street screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:46.176] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, 20.500000にテレポートさせました］
+[02Nov2026 08:26:46.207] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, 20.500000にテレポートさせました
+[02Nov2026 08:26:48.240] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 38_shop_front
+[02Nov2026 08:26:48.418] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step tower screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:48.989] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 39_clock_tower
+[02Nov2026 08:26:49.180] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, 1.200000にテレポートさせました］
+[02Nov2026 08:26:49.180] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step story_start screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:49.212] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, 1.200000にテレポートさせました
+[02Nov2026 08:26:49.212] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 物語を第1話へ進めました
+[02Nov2026 08:26:52.715] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 40_chapter_card
+[02Nov2026 08:26:52.926] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step wait_quest_card screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:58.468] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 41_quest_card
+[02Nov2026 08:26:58.678] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_counter screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:26:59.715] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_talk screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:00.783] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_line_me screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:01.113] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 42_story_dialogue_me
+[02Nov2026 08:27:01.329] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_line_bolt screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:01.664] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 43_story_dialogue
+[02Nov2026 08:27:01.881] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_skip screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:02.220] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 44_story_offer
+[02Nov2026 08:27:02.434] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_accept screen=RepairPromptScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:03.069] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_bench screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:06.134] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_lens_screw screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:07.491] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_lens_clue screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:08.827] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 45_clue_found
+[02Nov2026 08:27:09.034] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_select_screw screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:09.481] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 46_bench_twists
+[02Nov2026 08:27:09.688] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_dive screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:11.348] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:27:11.351] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:27:11.355] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:27:11.371] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:27:11.374] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:27:11.375] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:27:17.189] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_look screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:27:17.759] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 47_timed_screw
+[02Nov2026 08:27:17.944] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_complete screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:27:24.490] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q1_close screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:25.059] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_set screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:25.060] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, 1.200000にテレポートさせました］
+[02Nov2026 08:27:25.090] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, 1.200000にテレポートさせました
+[02Nov2026 08:27:25.091] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 物語を第10話へ進めました
+[02Nov2026 08:27:29.083] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_counter screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:30.153] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_talk screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:31.188] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_line screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:31.537] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 48_stranger_dialogue
+[02Nov2026 08:27:31.750] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_accept screen=RepairPromptScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:32.386] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_bench screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:35.454] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_lens screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:36.806] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 49_bench_music_box
+[02Nov2026 08:27:36.983] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_dive screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:27:38.603] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:27:38.606] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:27:38.610] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:27:38.627] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:27:38.630] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:27:38.631] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:27:44.560] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_look screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:27:45.096] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 50_spring_fragments
+[02Nov2026 08:27:45.299] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_fragment screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:27:46.559] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 51_memory_card
+[02Nov2026 08:27:46.750] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_complete screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:27:53.294] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q10_close screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:53.862] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step hold2 screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:54.164] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_dust_swarm screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:27:54.488] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:27:54.491] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:27:54.495] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:27:54.510] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:27:54.512] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:27:54.513] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:27:58.678] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_dust_swarm screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:27:59.215] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 52_dust_zone
+[02Nov2026 08:27:59.421] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step abort_dust_swarm screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:27:59.490] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理を中断して時計から出た
+[02Nov2026 08:28:02.979] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_dust_swarm screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:03.547] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_tuning screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:03.833] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:28:03.836] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:28:03.840] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:28:03.854] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:28:03.857] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:28:03.858] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:28:08.850] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_tuning screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:28:09.420] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 53_tuning_bells
+[02Nov2026 08:28:09.587] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step abort_tuning screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:28:09.621] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理を中断して時計から出た
+[02Nov2026 08:28:13.160] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_tuning screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:13.695] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_teeth_offbeat_dark_elite screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:13.988] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:28:13.994] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:28:13.996] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:28:14.007] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:28:14.009] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:28:14.010] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:28:19.757] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_teeth_offbeat_dark_elite screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:28:20.294] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 54_dark_offbeat
+[02Nov2026 08:28:20.512] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step abort_teeth_offbeat_dark_elite screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:28:20.587] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理を中断して時計から出た
+[02Nov2026 08:28:20.668] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:28:20.671] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:28:20.711] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:28:20.726] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:28:20.728] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:28:20.728] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:28:24.016] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_teeth_offbeat_dark_elite screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:24.585] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_nest_shadow screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:24.852] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:28:24.855] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:28:24.858] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:28:24.877] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:28:24.880] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:28:24.883] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:28:32.611] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_nest_shadow screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:28:33.147] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 55_shadow_boss
+[02Nov2026 08:28:33.349] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step abort_nest_shadow screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:28:33.388] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理を中断して時計から出た
+[02Nov2026 08:28:33.505] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:28:33.511] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:28:33.514] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:28:33.530] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:28:33.533] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:28:33.534] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:28:36.922] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_nest_shadow screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:37.490] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step dive_nest_queen screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:37.734] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Saving and pausing game...
+[02Nov2026 08:28:37.737] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:28:37.740] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:28:37.743] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:28:37.744] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:28:37.745] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:28:45.538] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step look_nest_queen screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:28:46.108] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 56_queen
+[02Nov2026 08:28:46.299] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step abort_nest_queen screen=none dim=clockworkdiver:clock_interior
+[02Nov2026 08:28:46.336] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 修理を中断して時計から出た
+[02Nov2026 08:28:49.846] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step close_nest_queen screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:50.381] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_set screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:28:50.382] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, 26.500000にテレポートさせました］
+[02Nov2026 08:28:50.413] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, 26.500000にテレポートさせました
+[02Nov2026 08:28:50.414] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 物語を第17話へ進めました
+[02Nov2026 08:29:05.422] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_view screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:05.423] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームモードをスペクテイターモードに変更しました］
+[02Nov2026 08:29:05.424] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-8.500000, 67.000000, 31.500000にテレポートさせました］
+[02Nov2026 08:29:05.453] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] ゲームモードをスペクテイターモードに変更しました
+[02Nov2026 08:29:05.453] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを-8.500000, 67.000000, 31.500000にテレポートさせました
+[02Nov2026 08:29:07.473] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 57_plaza
+[02Nov2026 08:29:07.685] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_wide screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:07.686] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 67.000000, 18.500000にテレポートさせました］
+[02Nov2026 08:29:07.723] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 67.000000, 18.500000にテレポートさせました
+[02Nov2026 08:29:09.244] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 58_tower_arch
+[02Nov2026 08:29:09.442] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_back screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:09.442] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームモードをクリエイティブモードに変更しました］
+[02Nov2026 08:29:09.443] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, 30.500000にテレポートさせました］
+[02Nov2026 08:29:09.473] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] ゲームモードをクリエイティブモードに変更しました
+[02Nov2026 08:29:09.473] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, 30.500000にテレポートさせました
+[02Nov2026 08:29:10.981] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_talk screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:12.033] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_line screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:12.368] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 59_tower_dialogue
+[02Nov2026 08:29:12.583] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_accept screen=RepairPromptScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:13.246] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_bench screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:16.807] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_lens screen=BenchScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:18.151] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 60_great_clock_bench
+[02Nov2026 08:29:18.326] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q17_close screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:18.866] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step journal screen=JournalScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:19.689] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 61_journal
+[02Nov2026 08:29:19.891] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step journal_done screen=JournalScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:20.325] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 62_journal_done
+[02Nov2026 08:29:20.533] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step ending screen=EndingScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:21.565] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 63_ending
+[02Nov2026 08:29:21.763] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step ending_cast screen=EndingScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:22.334] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 64_ending_cast
+[02Nov2026 08:29:22.530] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step ending_close screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:23.065] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q20_set screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:23.067] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, 1.200000にテレポートさせました］
+[02Nov2026 08:29:23.100] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, 1.200000にテレポートさせました
+[02Nov2026 08:29:23.101] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] 物語を第20話へ進めました
+[02Nov2026 08:29:28.135] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q20_counter screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:30.190] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q20_view screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:30.191] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを0.500000, 64.000000, -2.500000にテレポートさせました］
+[02Nov2026 08:29:30.222] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] Devを0.500000, 64.000000, -2.500000にテレポートさせました
+[02Nov2026 08:29:31.737] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 65_finale_shop
+[02Nov2026 08:29:31.923] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q20_talk screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:32.989] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q20_line screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:33.333] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 66_finale_dialogue
+[02Nov2026 08:29:33.539] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step q20_close screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:34.073] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step chapter_end screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:36.130] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 67_chapter_end
+[02Nov2026 08:29:36.321] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step mira_voice screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:36.964] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 68_mira_voice
+[02Nov2026 08:29:37.184] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step finale_thanks screen=DialogueScreen dim=clockworkdiver:workshop
+[02Nov2026 08:29:37.719] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: shot 69_finale_thanks
+[02Nov2026 08:29:37.938] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: step finale_close screen=none dim=clockworkdiver:workshop
+[02Nov2026 08:29:38.481] [Render thread/INFO] [com.clockworkdiver.ClockworkDiver/]: [clockworkdiver] autoshots: finished
+[02Nov2026 08:29:38.513] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!
+[02Nov2026 08:29:38.542] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: 切断されました
+[02Nov2026 08:29:38.543] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Devがゲームを退出しました
+[02Nov2026 08:29:38.548] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Stopping singleplayer server as player logged out
+[02Nov2026 08:29:38.591] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[02Nov2026 08:29:38.591] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[02Nov2026 08:29:38.591] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[02Nov2026 08:29:39.156] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:overworld
+[02Nov2026 08:29:39.205] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:clock_interior
+[02Nov2026 08:29:39.206] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/clockworkdiver:workshop
+[02Nov2026 08:29:39.231] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_end
+[02Nov2026 08:29:39.233] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ClockworkCI]'/minecraft:the_nether
+[02Nov2026 08:29:39.246] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (ClockworkCI): All chunks are saved
+[02Nov2026 08:29:39.246] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (clock_interior): All chunks are saved
+[02Nov2026 08:29:39.246] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (workshop): All chunks are saved
+[02Nov2026 08:29:39.246] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[02Nov2026 08:29:39.246] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[02Nov2026 08:29:39.246] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
