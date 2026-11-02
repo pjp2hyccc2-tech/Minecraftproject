@@ -92,7 +92,12 @@ public final class Director {
 
     /** A spot right behind a cedar trunk (seen from the player), roughly in front of them. */
     @Nullable
-    static Vec3 trunkSpot(ServerLevel level, ServerPlayer p, double minR, double maxR, double maxAngle) {
+    /**
+     * A spot hidden behind a cedar trunk (seen from the player), shifted to the trunk's edge on the given side
+     * (+1 the monster's left, -1 its right, as it faces the player) so a head leaning out on that side clears the
+     * bark, whether the trunk is one block wide or two.
+     */
+    static Vec3 trunkSpot(ServerLevel level, ServerPlayer p, double minR, double maxR, double maxAngle, int side) {
         Vec3 eye = p.position();
         float view = p.getYRot() * Mth.DEG_TO_RAD;
         for (int tries = 0; tries < 70; tries++) {
@@ -103,8 +108,12 @@ public final class Director {
             if (Math.abs(y - p.getY()) > 7) continue;
             BlockPos trunk = new BlockPos(x, y + 1, z);
             if (!level.getBlockState(trunk).is(ModBlocks.CEDAR_LOG.get())) continue;
-            Vec3 dir = new Vec3(x + 0.5 - eye.x, 0, z + 0.5 - eye.z).normalize();
-            Vec3 spot = new Vec3(x + 0.5, 0, z + 0.5).add(dir.scale(1.05));
+            Vec3 c = new Vec3(x + 0.5, 0, z + 0.5);
+            Vec3 dir = new Vec3(c.x - eye.x, 0, c.z - eye.z).normalize();
+            Vec3 left = new Vec3(-dir.z, 0, dir.x);
+            double depth = logExtent(level, c, dir, y + 1) + 0.45;
+            Vec3 spot = c.add(dir.scale(depth));
+            if (side != 0) spot = spot.add(left.scale(side * Math.max(0.0, logExtent(level, c, left.scale(side), y + 1) - 0.3)));
             int sx = Mth.floor(spot.x), sz = Mth.floor(spot.z);
             int sy = ground(sx, sz);
             BlockPos at = new BlockPos(sx, sy, sz);
@@ -114,6 +123,17 @@ public final class Director {
             return new Vec3(spot.x, sy, spot.z);
         }
         return null;
+    }
+
+    /** How far the bark reaches from a log's centre in a direction (0.5 for a lone log, about 1.5 across a 2x2 trunk). */
+    private static double logExtent(ServerLevel level, Vec3 c, Vec3 dir, int y) {
+        double reach = 0.5;
+        for (double t = 0.1; t <= 2.0; t += 0.1) {
+            BlockPos b = BlockPos.containing(c.x + dir.x * t, y, c.z + dir.z * t);
+            if (level.getBlockState(b).is(ModBlocks.CEDAR_LOG.get())) reach = Math.max(reach, t + 0.05);
+            else if (t > reach + 0.15) break;
+        }
+        return reach;
     }
 
     /** An open spot inside the corridor at a distance, biased to the player's front (bias 0..1). */
@@ -132,6 +152,14 @@ public final class Director {
             return new Vec3(x + 0.5, y, z + 0.5);
         }
         return null;
+    }
+
+    /** Can the player see a point {@code height} above this spot (trunks and walls in the way)? */
+    static boolean visibleFrom(ServerLevel level, ServerPlayer p, Vec3 at, double height) {
+        Vec3 eye = p.getEyePosition();
+        Vec3 to = at.add(0.0, height, 0.0);
+        return level.clip(new net.minecraft.world.level.ClipContext(eye, to, net.minecraft.world.level.ClipContext.Block.VISUAL,
+                net.minecraft.world.level.ClipContext.Fluid.NONE, p)).getType() == net.minecraft.world.phys.HitResult.Type.MISS;
     }
 
     // ------------------------------------------------------------------------------------------------ ticking
@@ -222,20 +250,25 @@ public final class Director {
     }
 
     static boolean spawnNozoki(ServerLevel level, ServerPlayer p) {
-        Vec3 at = trunkSpot(level, p, 13, 26, 1.25);
+        boolean left = RAND.nextBoolean();
+        Vec3 at = trunkSpot(level, p, 13, 26, 1.25, left ? 1 : -1);
         if (at == null) return false;
         Nozoki n = spawn(level, ModEntities.NOZOKI.get(), at, yawTo(at, p.position()), p);
-        if (n != null) n.peek(RAND.nextBoolean());
+        if (n != null) n.peek(left);
         return n != null;
     }
 
     static boolean spawnYobigoe(ServerLevel level, ServerPlayer p) {
         // off to one side, so following the trail does not mean walking into it — only choosing to go to the light does
-        Vec3 at = null;
-        for (int i = 0; i < 4 && at == null; i++) {
+        // and somewhere its lamp can actually be seen between the trunks (else the first fitting spot)
+        Vec3 at = null, fallback = null;
+        for (int i = 0; i < 16 && at == null; i++) {
             Vec3 c = openSpot(level, p, 32, 46, 1.9, false);
-            if (c != null && routeDistance(c.x, c.z) > 16) at = c;
+            if (c == null || routeDistance(c.x, c.z) <= 16) continue;
+            if (fallback == null) fallback = c;
+            if (visibleFrom(level, p, c, 1.86)) at = c;
         }
+        if (at == null) at = fallback;
         if (at == null) return false;
         return spawn(level, ModEntities.YOBIGOE.get(), at, yawTo(at, p.position()), p) != null;
     }
@@ -254,7 +287,15 @@ public final class Director {
     }
 
     static boolean stalkOyama(ServerLevel level, ServerPlayer p) {
-        Vec3 at = openSpot(level, p, 40, 58, 1.4, false);
+        // where its eyes can be glimpsed, far off between the trunks, if there is such a place
+        Vec3 at = null, fallback = null;
+        for (int i = 0; i < 12 && at == null; i++) {
+            Vec3 c = openSpot(level, p, 40, 58, 1.4, false);
+            if (c == null) continue;
+            if (fallback == null) fallback = c;
+            if (visibleFrom(level, p, c, 3.7)) at = c;
+        }
+        if (at == null) at = fallback;
         if (at == null) return false;
         Oyamasama o = spawn(level, ModEntities.OYAMASAMA.get(), at, yawTo(at, p.position()), p);
         if (o != null) o.setMode(Oyamasama.MODE_STALK, 20 * 18);

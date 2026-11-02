@@ -164,13 +164,13 @@ public final class AutoShots {
             int x = (int) Math.floor(mc.player.getX() + fx * d + fz * side);
             int z = (int) Math.floor(mc.player.getZ() + fz * d - fx * side);
             int y = mc.level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            // nothing solid from knee height up in the column and its four neighbours (leaf litter underfoot is fine)
             boolean clear = true;
-            for (int dx = -1; dx <= 1 && clear; dx++) {
-                for (int dz = -1; dz <= 1 && clear; dz++) {
-                    for (int dy = 0; dy < 5 && clear; dy++) {
-                        net.minecraft.core.BlockPos bp = new net.minecraft.core.BlockPos(x + dx, y + dy, z + dz);
-                        if (!mc.level.getBlockState(bp).getCollisionShape(mc.level, bp).isEmpty()) clear = false;
-                    }
+            int[][] cells = {{0, 0}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+            for (int[] c : cells) {
+                for (int dy = 1; dy < 5 && clear; dy++) {
+                    net.minecraft.core.BlockPos bp = new net.minecraft.core.BlockPos(x + c[0], y + dy, z + c[1]);
+                    if (!mc.level.getBlockState(bp).getCollisionShape(mc.level, bp).isEmpty()) clear = false;
                 }
             }
             if (!clear) continue;
