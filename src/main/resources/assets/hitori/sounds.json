@@ -1,0 +1,227 @@
+{
+  "amb.apartment": {
+    "subtitle": "subtitles.hitori.amb.apartment",
+    "sounds": [
+      {
+        "name": "hitori:amb/apartment",
+        "stream": true
+      }
+    ]
+  },
+  "amb.closet": {
+    "subtitle": "subtitles.hitori.amb.closet",
+    "sounds": [
+      {
+        "name": "hitori:amb/closet",
+        "stream": true
+      }
+    ]
+  },
+  "amb.bath": {
+    "subtitle": "subtitles.hitori.amb.bath",
+    "sounds": [
+      {
+        "name": "hitori:amb/bath",
+        "stream": true
+      }
+    ]
+  },
+  "amb.outside": {
+    "subtitle": "subtitles.hitori.amb.outside",
+    "sounds": [
+      {
+        "name": "hitori:amb/outside",
+        "stream": true
+      }
+    ]
+  },
+  "amb.tv_static": {
+    "subtitle": "subtitles.hitori.amb.tv_static",
+    "sounds": [
+      {
+        "name": "hitori:amb/tv_static",
+        "attenuation_distance": 16,
+        "preload": true
+      }
+    ]
+  },
+  "amb.silence": {
+    "sounds": [
+      {
+        "name": "hitori:amb/silence",
+        "stream": true
+      }
+    ]
+  },
+  "fixture.fridge": {
+    "subtitle": "subtitles.hitori.fixture.fridge",
+    "sounds": [
+      {
+        "name": "hitori:fixture/fridge",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "fixture.clock": {
+    "subtitle": "subtitles.hitori.fixture.clock",
+    "sounds": [
+      {
+        "name": "hitori:fixture/clock",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "fixture.tap_bath": {
+    "subtitle": "subtitles.hitori.fixture.tap_bath",
+    "sounds": [
+      {
+        "name": "hitori:fixture/tap_bath",
+        "stream": true,
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.tap": {
+    "subtitle": "subtitles.hitori.fixture.tap",
+    "sounds": [
+      {
+        "name": "hitori:fixture/tap",
+        "attenuation_distance": 10
+      }
+    ]
+  },
+  "fixture.washing_machine": {
+    "subtitle": "subtitles.hitori.fixture.washing_machine",
+    "sounds": [
+      {
+        "name": "hitori:fixture/washing_machine",
+        "stream": true,
+        "attenuation_distance": 14
+      }
+    ]
+  },
+  "fixture.rain_window": {
+    "subtitle": "subtitles.hitori.fixture.rain_window",
+    "sounds": [
+      {
+        "name": "hitori:fixture/rain_window",
+        "attenuation_distance": 10
+      }
+    ]
+  },
+  "camera.mic_hiss": {
+    "sounds": [
+      {
+        "name": "hitori:camera/mic_hiss"
+      }
+    ]
+  },
+  "ritual.cut": {
+    "subtitle": "subtitles.hitori.ritual.cut",
+    "sounds": [
+      {
+        "name": "hitori:ritual/cut",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "ritual.stuffing": {
+    "subtitle": "subtitles.hitori.ritual.stuffing",
+    "sounds": [
+      {
+        "name": "hitori:ritual/stuffing",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "ritual.rice": {
+    "subtitle": "subtitles.hitori.ritual.rice",
+    "sounds": [
+      {
+        "name": "hitori:ritual/rice",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "ritual.clip": {
+    "subtitle": "subtitles.hitori.ritual.clip",
+    "sounds": [
+      {
+        "name": "hitori:ritual/clip",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "ritual.sew": {
+    "subtitle": "subtitles.hitori.ritual.sew",
+    "sounds": [
+      {
+        "name": "hitori:ritual/sew",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "ritual.thread_wind": {
+    "subtitle": "subtitles.hitori.ritual.thread_wind",
+    "sounds": [
+      {
+        "name": "hitori:ritual/thread_wind",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "ritual.splash": {
+    "subtitle": "subtitles.hitori.ritual.splash",
+    "sounds": [
+      {
+        "name": "hitori:ritual/splash",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "ritual.stab": {
+    "subtitle": "subtitles.hitori.ritual.stab",
+    "sounds": [
+      {
+        "name": "hitori:ritual/stab",
+        "attenuation_distance": 12,
+        "preload": true
+      }
+    ]
+  },
+  "ritual.salt_pour": {
+    "subtitle": "subtitles.hitori.ritual.salt_pour",
+    "sounds": [
+      {
+        "name": "hitori:ritual/salt_pour",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "ritual.spit": {
+    "subtitle": "subtitles.hitori.ritual.spit",
+    "sounds": [
+      {
+        "name": "hitori:ritual/spit"
+      }
+    ]
+  },
+  "ritual.burn_ignite": {
+    "subtitle": "subtitles.hitori.ritual.burn_ignite",
+    "sounds": [
+      {
+        "name": "hitori:ritual/burn_ignite",
+        "attenuation_distance": 10
+      }
+    ]
+  },
+  "ritual.burn_loop": {
+    "subtitle": "subtitles.hitori.ritual.burn_loop",
+    "sounds": [
+      {
+        "name": "hitori:ritual/burn_loop",
+        "attenuation_distance": 10
+      }
+    ]
+  }
+}

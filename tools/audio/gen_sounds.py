@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""霊撮 ―HITORI― sound generator.
+"""ひとりかくれんぼ ―HITORI KAKURENBO― sound generator.
 
 Synthesises every sound effect and music cue of the mod from scratch
 (numpy / scipy, no samples), encodes them to OGG Vorbis with ffmpeg and writes
@@ -183,7 +183,7 @@ def _render(job):
 
 def write_sounds_json(durations):
     """sounds.json for every event that has its files (positional sounds get their attenuation distance; files
-    longer than 8 s stream; diegetic events carry their subtitle)."""
+    longer than 10 s stream unless the entry says stream=False; diegetic events carry their subtitle)."""
     data = {}
     for ent in CATALOG:
         sounds = []
@@ -191,7 +191,7 @@ def write_sounds_json(durations):
             if not os.path.exists(os.path.join(SOUND_DIR, path + ".ogg")):
                 continue
             s = {"name": f"hitori:{path}"}
-            if durations.get(path, 0.0) > STREAM_MIN_SEC:
+            if durations.get(path, 0.0) > STREAM_MIN_SEC and ent.extra.get("stream", True):
                 s["stream"] = True
             if ent.att is not None and ent.ch == 1:
                 s["attenuation_distance"] = ent.att
@@ -365,7 +365,7 @@ def _show(results):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--only", help="glob on file path or event id (e.g. 'nozoki/*', 'music.chase')")
+    ap.add_argument("--only", help="glob on file path or event id (e.g. 'ritual/*', 'music.chase')")
     ap.add_argument("--jobs", type=int, default=min(2, os.cpu_count() or 1))
     ap.add_argument("--spec", help="also write spectrogram PNGs of the decoded files to this directory")
     ap.add_argument("--report-only", action="store_true")
@@ -374,7 +374,8 @@ def main():
     t0 = time.time()
     if not args.report_only:
         todo = jobs(args.only)
-        weight = {"music/": 9, "amb/night_road": 7, "amb/": 3, "game/jumpscare": 4, "fixture/crash": 3}
+        weight = {"music/": 9, "amb/apartment": 7, "amb/outside": 7, "amb/": 4, "voice/": 3, "game/jumpscare": 4,
+                  "doll/voice": 2, "woman/": 2}
         todo.sort(key=lambda j: -max([w for k, w in weight.items() if j[1].startswith(k)] + [1]))
         print(f"rendering {len(todo)} files with {args.jobs} worker(s)...")
         if args.jobs > 1:
