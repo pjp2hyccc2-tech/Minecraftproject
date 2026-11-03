@@ -535,12 +535,20 @@ A_PBELL = Atlas('pass_bell')
 
 
 def pass_bell():
-    m = Model('pass_bell', A_PBELL, display=disp(gui=(30, 225, 0), gui_scale=1.2, gui_t=(0, 3, 0)))
+    """The pickup bell standing on a pass-shelf segment (same 1.5 px stainless shelf as pass_shelf), so it can take one
+    pass_shelf position in the pass window (or stand on a counter as a little steel tray)."""
+    m = Model('pass_bell', A_PBELL, display=disp(gui=(30, 225, 0), gui_scale=1.1, gui_t=(0, 2, 0)))
     G = M.brushed('brass', ramp(['#3a2a10', '#6a5020', '#9a7a34', '#c8a24c', '#e8c870'], 5), base=3.0)
-    m.box([5.5, 0, 5.5], [10.5, 1, 10.5], M.custom('bell_base', lambda w, h, f: bevel(blank(w, h, '#3a2414'))))
-    m.box([6, 1, 6], [10, 2.2, 10], G)
-    m.box([6.5, 2.2, 6.5], [9.5, 3, 9.5], G)
-    m.box([7.75, 3, 7.75], [8.25, 3.8, 8.25], M.CHROME_M)
+    m.box([0, 0, 0], [16, 1.5, 16], M.STEEL_M)
+    y = 1.5
+    m.box([5.5, y, 5.5], [10.5, y + 1, 10.5], M.custom('bell_base', lambda w, h, f: bevel(blank(w, h, '#3a2414'))))
+    m.box([6, y + 1, 6], [10, y + 2.2, 10], G)
+    m.box([6.5, y + 2.2, 6.5], [9.5, y + 3, 9.5], G)
+    m.box([7.75, y + 3, 7.75], [8.25, y + 3.8, 8.25], M.CHROME_M)
+    # an order slip spiked next to it
+    m.box([11.5, y, 3.5], [12, y + 3, 4], M.CHROME_M)
+    m.box([10.5, y + 1.5, 3.4], [13, y + 2.7, 3.5], M.custom('slip', lambda w, h, f: blank(w, h, '#e8e0c0')),
+          only=('north', 'south'))
     return m
 
 

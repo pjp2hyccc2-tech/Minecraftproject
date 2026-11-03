@@ -47,7 +47,7 @@ def main(args):
     names = sorted(rs_kit.MODELS)
     for n in ('register', 'register_open', 'service_bell', 'business_phone', 'business_phone_ringing',
               'reservation_book', 'drink_bar', 'drink_bar_pouring', 'coffee_machine', 'ice_machine', 'cup_shelf',
-              'soup_warmer', 'pass_bell'):
+              'soup_warmer'):
         rs_render.SUPPORT[n] = 'counter'
     rs_render.SUPPORT['cutting_board'] = 'prep_table'
     rs_render.SUPPORT['pc'] = 'office_desk'

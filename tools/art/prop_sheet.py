@@ -14,7 +14,7 @@ for _n in ("cutting_board",):
     RR.SUPPORT[_n] = "prep_table"
 for _n in ("pc",):
     RR.SUPPORT[_n] = "office_desk"
-for _n in ("pass_bell",):
+for _n in ():
     RR.SUPPORT[_n] = "counter"
 
 out = sys.argv[1]

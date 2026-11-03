@@ -94,13 +94,47 @@ def brush_glyphs(text, size, font_spec, seed, wobble=0.9, dry=1.0, splatter=12, 
     return ink.astype(np.float32)
 
 
+def kasure(mask, size, seed, amount=0.55, streak_len=0.22):
+    """掠れ: dry-brush streaks running along the strokes, strongest in random patches and toward stroke edges."""
+    r = rng(seed)
+    H, W = mask.shape
+    m = mask.astype(np.float32)
+    gy, gx = np.gradient(blur(m, size * 0.03))
+    Jxx, Jyy, Jxy = blur(gx * gx, size * 0.06), blur(gy * gy, size * 0.06), blur(gx * gy, size * 0.06)
+    theta = 0.5 * np.arctan2(2 * Jxy, Jxx - Jyy) + math.pi / 2       # stroke direction
+    noise_ = r.random((H, W)).astype(np.float32)
+    L = max(3, int(size * streak_len))
+    bins = 8
+    out = np.zeros((H, W), np.float32)
+    idx = np.floor(((theta % math.pi) / math.pi) * bins + 0.5).astype(int) % bins
+    for b in range(bins):
+        ang = b / bins * math.pi
+        k = np.zeros((2 * L + 1, 2 * L + 1), np.float32)
+        for t in np.linspace(-L, L, 4 * L + 1):
+            k[int(round(L + math.sin(ang) * t)), int(round(L + math.cos(ang) * t))] = 1
+        k /= k.sum()
+        conv = ndimage.convolve(noise_, k, mode='wrap')
+        out[idx == b] = conv[idx == b]
+    out = (out - out.mean()) / (out.std() + 1e-6)
+    patch = blur(r.random((H, W)), size * 0.16)
+    patch = (patch - patch.min()) / (np.ptp(patch) + 1e-6)
+    edge = ndimage.distance_transform_edt(m > 0.5)
+    near_edge = np.exp(-edge / (size * 0.06))
+    p = np.clip((patch - 0.45) * 2.6, 0, 1) * (0.5 + 0.5 * near_edge) * amount
+    dry = out > (1.6 - p * 2.6)
+    res = m.copy()
+    res[dry & (m > 0.5)] = 0
+    return res
+
+
 # ================================================================================================ title logo
 @gui('title_logo', (512, 256))
 def title_logo():
     S = SS
     W, H = 512 * S, 256 * S
     out = np.zeros((H, W, 4), np.float32)
-    ink = brush_glyphs('霊撮', 168 * S, FONT_SERIF_JP_BLACK, 15401)
+    ink = brush_glyphs('霊撮', 168 * S, FONT_SERIF_JP_BLACK, 15401, wobble=0.5, dry=0.6, splatter=18)
+    ink = kasure(ink, 168 * S, 15405, amount=0.85)
     ih, iw = ink.shape
     ox, oy = int(40 * S), int(10 * S)
     canvas = np.zeros((H, W), np.float32)
