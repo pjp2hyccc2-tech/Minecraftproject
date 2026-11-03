@@ -951,60 +951,65 @@ def shot(x, z, yaw, pitch, **kw):
     return d
 
 
-# the world's state per shot (apartment_scene.build): tv / tv_channel / fusuma / curtains / bath /
-# street / lights / laptop. Entities: (kind, x, y, z, yaw, pose)
-DOLL_TATAMI = (DOLL, 24.9, 70.0, 9.7, -60.0, "stand")
+# the world's state per shot (apartment_scene.build): tv / tv_channel / tv_light / fusuma / curtains /
+# bath / street / lights / laptop / desk_lamp / swing. Entities: (kind, x, y, z, yaw, pose).
+# Placements as the world builds them: the TV on its stand at (27, 70..71, 9) facing west, the closet
+# x 23 z 10..12 (its fusuma in its own column's east edge; a crack opens at z 10.0..10.25), the
+# hanging lamp (25, 72, 11), curtains z 12 (x 24, 25 drawn, 26 open), the tub (32, 70, 1..2), the
+# street lamp (26, 71, 17) in front of the balconies, the vending machine (0, 65, 18).
+DOLL_TATAMI = (DOLL, 24.9, 70.0, 10.3, -60.0, "stand")
 SHOTS = {
     # ---- after three: the tatami room lit only by the TV's static ------------------------------
-    "tv_room": shot(26.9, 12.5, 118.0, 16.0, fear=0.25),
-    "tv_room_tv": shot(24.8, 11.7, -118.0, 10.0, y=71.25, fear=0.3),
-    "tv_room_doll": shot(26.9, 12.5, 118.0, 16.0, fear=0.55, figures=[DOLL_TATAMI]),
+    "tv_room": shot(26.9, 12.4, 112.0, 14.0, fear=0.25),
+    "tv_room_tv": shot(24.6, 11.6, -112.0, 8.0, y=71.25, fear=0.3),
+    "tv_room_doll": shot(26.9, 12.4, 112.0, 14.0, fear=0.55, figures=[DOLL_TATAMI]),
     # before three: the hanging lamp on, the TV off
-    "lit_room": shot(26.9, 12.5, 118.0, 16.0, state=dict(tv=False, lights=("tatami",))),
+    "lit_room": shot(26.9, 12.4, 112.0, 14.0, state=dict(tv=False, lights=("tatami",))),
+    "lamp_swing": shot(26.9, 12.4, 112.0, 14.0, fear=0.5, t=124.1, state=dict(tv=False, lights=("tatami",), swing=True)),
     # the TV without any vanilla light of its own (robustness), its other channels (a dark room, a face)
-    "tv_nolight": shot(24.8, 11.7, -118.0, 10.0, y=71.25, fear=0.3, state=dict(tv_light=0)),
-    "tv_channel1": shot(24.8, 11.7, -118.0, 10.0, y=71.25, fear=0.3, state=dict(tv_channel=1)),
-    "tv_channel2": shot(24.8, 11.7, -118.0, 10.0, y=71.25, fear=0.3, state=dict(tv_channel=2)),
+    "tv_nolight": shot(24.6, 11.6, -112.0, 8.0, y=71.25, fear=0.3, state=dict(tv_light=0)),
+    "tv_channel1": shot(24.6, 11.6, -112.0, 8.0, y=71.25, fear=0.3, state=dict(tv_channel=1)),
+    "tv_channel2": shot(24.6, 11.6, -112.0, 8.0, y=71.25, fear=0.3, state=dict(tv_channel=2)),
     # ---- the closet: the crack of the fusuma - the only bright thing; shut, with the laptop ------
-    "closet_crack": shot(23.45, 10.55, -100.0, 4.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=1)),
-    "closet_shut_laptop": shot(23.5, 11.5, -90.0, 22.0, y=EYE_CROUCH, fear=0.55, held=LAPTOP, state=dict(fusuma=0)),
-    # ---- the bathroom: the deep tub filled, the frosted window glowing with the street lamp ------
-    "bath": shot(31.4, 2.75, -150.0, 38.0, fear=0.4, state=dict(bath=2)),
+    "closet_crack": shot(23.46, 10.22, -101.0, 2.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=1)),
+    "closet_peek": shot(23.5, 10.5, -90.0, 2.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=1)),
+    "closet_shut_laptop": shot(23.4, 11.5, -90.0, 22.0, y=EYE_CROUCH, fear=0.55, held=LAPTOP, state=dict(fusuma=0)),
+    "closet_dark": shot(23.4, 11.5, -90.0, 6.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=0)),
+    # ---- the bathroom: the deep tub filled; its light on, then dark with the phone's LED --------------
+    "bath": shot(31.3, 2.75, -150.0, 38.0, fear=0.4, state=dict(bath=2, lights=("bath",))),
+    "bath_phone": shot(31.3, 2.75, -150.0, 38.0, fear=0.5, held=PHONE_LIGHT, state=dict(bath=2)),
     # ---- the camera app: IR feeds -------------------------------------------------------------------
-    "cctv_tatami": shot(27.6, 12.6, 108.0, 16.0, y=71.1, cctv=True, fear=0.5, figures=[DOLL_TATAMI]),
-    "cctv_bath": shot(31.35, 2.8, -140.0, 42.0, y=72.3, cctv=True, fear=0.6,
-                      figures=[(DOLL, 32.45, 70.86, 1.6, 90.0, "float"), (WOMAN, 31.25, 70.0, 1.2, 160.0, "stand")]),
-    "cctv_woman": shot(27.6, 12.6, 108.0, 14.0, y=71.1, cctv=True, fear=0.6, t=130.9,
+    "cctv_tatami": shot(27.5, 12.5, 106.0, 20.0, y=72.3, cctv=True, fear=0.5, figures=[DOLL_TATAMI]),
+    "cctv_bath": shot(31.3, 2.6, -138.0, 46.0, y=72.4, cctv=True, fear=0.6,
+                      figures=[(DOLL, 32.5, 70.66, 1.8, 90.0, "float"), (WOMAN, 31.45, 70.0, 1.25, 0.0, "stand")]),
+    "cctv_woman": shot(27.5, 12.5, 106.0, 16.0, y=72.3, cctv=True, fear=0.6, t=130.9,
                        figures=[(WOMAN, 24.45, 70.0, 9.45, -45.0, "stand")]),
-    "cctv_glitch": shot(27.6, 12.6, 108.0, 16.0, y=71.1, cctv=True, fear=0.8, danger=0.9, t=131.62,
-                        figures=[(DOLL, 26.2, 70.0, 11.8, -50.0, "stand")]),
+    "cctv_glitch": shot(27.5, 12.5, 106.0, 20.0, y=72.3, cctv=True, fear=0.8, danger=0.9, t=131.62,
+                        figures=[(DOLL, 26.2, 70.0, 11.6, -50.0, "stand")]),
     # the doll moving between two frames (stop-motion): the interlaced fields comb its outline
-    "cctv_motion": shot(27.6, 12.6, 108.0, 16.0, y=71.1, cctv=True, fear=0.6, figures=[DOLL_TATAMI],
+    "cctv_motion": shot(27.5, 12.5, 106.0, 20.0, y=72.3, cctv=True, fear=0.6, figures=[DOLL_TATAMI],
                         sequence=dict(frames=3, move=(0.10, 0.0, 0.06), dt=1.0 / 30.0)),
-    "cctv_lit": shot(27.6, 12.6, 108.0, 16.0, y=71.1, cctv=True, fear=0.2, state=dict(tv=False, lights=("tatami",))),
+    "cctv_lit": shot(27.5, 12.5, 106.0, 20.0, y=72.3, cctv=True, fear=0.2, state=dict(tv=False, lights=("tatami",))),
     # ---- eyes closed at the TV (counting to ten); in the dark ------------------------------------------
-    "eyes_tv": shot(26.1, 9.6, -90.0, 6.0, y=71.2, fear=0.5, eyes=1.0),
-    "eyes_dark": shot(26.1, 9.6, -90.0, 6.0, y=71.2, fear=0.5, eyes=1.0, state=dict(tv=False)),
+    "eyes_tv": shot(25.9, 9.5, -90.0, 4.0, y=71.2, fear=0.5, eyes=1.0),
+    "eyes_dark": shot(25.9, 9.5, -90.0, 4.0, y=71.2, fear=0.5, eyes=1.0, state=dict(tv=False)),
     # ---- the rain: through the balcony door, the curtains drawn (sodium through them), the street --
-    "window_rain": shot(25.5, 11.2, 8.0, 4.0, fear=0.2, state=dict(curtains=False, tv=False)),
-    "curtains_sodium": shot(25.6, 10.6, 10.0, 6.0, fear=0.2, state=dict(curtains=True, tv=False)),
-    "street": shot(21.5, 21.0, -112.0, -3.0, y=66.62, fear=0.1),
+    "window_rain": shot(25.9, 11.2, -12.0, 2.0, fear=0.2, state=dict(tv=False)),
+    "curtains_sodium": shot(25.6, 10.4, 18.0, 6.0, fear=0.2, state=dict(curtains=True, tv=False)),
+    "street": shot(20.5, 21.5, -112.0, -6.0, y=66.62, fear=0.1),
     "corridor": shot(20.5, -2.0, -90.0, 4.0, fear=0.2),
     # ---- the hand lights: the phone's LED in the dark hall, the lighter in the kitchen -----------------
     "phone_hall": shot(26.5, 7.4, 180.0, 10.0, fear=0.35, held=PHONE_LIGHT),
     "lighter_dk": shot(25.4, 6.2, 80.0, 18.0, fear=0.35, held=LIGHTER),
     # the entities in the lit room (checking the stand-ins): the doll, the woman, a camera
-    "figures_lit": shot(26.9, 12.5, 118.0, 16.0, state=dict(tv=False, lights=("tatami",)),
-                        figures=[DOLL_TATAMI, (WOMAN, 24.6, 70.0, 12.4, -110.0, "stand"), (CAMERA, 25.4, 70.45, 11.2, 60.0, "stand")]),
-    # the closet: looking down at the slit of light on the floor and the box; from the corner spot
-    "closet_slit_floor": shot(23.4, 11.8, -170.0, 46.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=1)),
-    "closet_corner": shot(23.45, 12.55, -150.0, 6.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=1)),
+    "figures_lit": shot(26.9, 12.4, 112.0, 14.0, state=dict(tv=False, lights=("tatami",)),
+                        figures=[DOLL_TATAMI, (WOMAN, 24.6, 70.0, 11.2, -110.0, "stand"), (CAMERA, 25.4, 70.4, 11.4, 60.0, "stand")]),
     # ---- fear, danger, caught ---------------------------------------------------------------------
-    "fear_danger": shot(26.9, 12.5, 118.0, 16.0, fear=0.95, danger=1.0, t=126.02, figures=[DOLL_TATAMI]),
-    "caught": shot(26.9, 12.5, 118.0, 16.0, fear=0.9, darkness=0.65, figures=[DOLL_TATAMI]),
+    "fear_danger": shot(26.9, 12.4, 112.0, 14.0, fear=0.95, danger=1.0, t=126.02, figures=[DOLL_TATAMI]),
+    "caught": shot(26.9, 12.4, 112.0, 14.0, fear=0.9, darkness=0.65, figures=[DOLL_TATAMI]),
     # other dimensions: the root programs on the same street by day / at night
-    "o_day": dict(shot(21.5, 21.0, -112.0, -3.0, y=66.62), folder="", time=6000),
-    "o_night": dict(shot(21.5, 21.0, -112.0, -3.0, y=66.62), folder="", time=18000),
+    "o_day": dict(shot(20.5, 21.5, -112.0, -6.0, y=66.62), folder="", time=6000),
+    "o_night": dict(shot(20.5, 21.5, -112.0, -6.0, y=66.62), folder="", time=18000),
 }
 
 

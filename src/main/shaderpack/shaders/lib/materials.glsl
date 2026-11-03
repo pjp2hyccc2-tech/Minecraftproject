@@ -56,9 +56,9 @@
 #define BLK_SHUT         12031   // closed doors and fusuma: a wall for the lamps' light (walls tiles)
 #define BLK_BATH_WATER   12032   // the bathtub filled (water 1 / 2): dark still water
 #define BLK_CRT_OFF      12033   // the TV switched off: dark curved glass
-#define BLK_TREE_DARK    12034   // (unused slot)
 #define BLK_SHUT_PAPER   12035   // a shut fusuma (closet or room): a wall of paper and wood
 #define BLK_INDICATOR    12036   // blocks with a small indicator light (breaker panel, rice cooker ...)
+#define BLK_DARK_LED     12037   // an indicator switched off (the breaker off): a full-bright face that does not glow
 
 // full wall blocks: they stop the lamps' light (lib/emitters.glsl wall tiles at y 70 / 71)
 bool isWallBlock(int id) {
@@ -124,7 +124,7 @@ int materialOfBlock(int id) {
     if (id == BLK_MIRROR)        return MAT_MIRROR;
     if (id == BLK_GLASS_SMALL)   return MAT_GLASS_SMALL;
     if (id == BLK_VARNISH)       return MAT_VARNISH;
-    if (id == BLK_PLASTIC || id == BLK_INDICATOR) return MAT_PLASTIC;
+    if (id == BLK_PLASTIC || id == BLK_INDICATOR || id == BLK_DARK_LED) return MAT_PLASTIC;
     if (id == BLK_PORCELAIN)     return MAT_PORCELAIN;
     if (id == BLK_ENAMEL)        return MAT_ENAMEL;
     if (id == BLK_STEEL)         return MAT_STEEL;

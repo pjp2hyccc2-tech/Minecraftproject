@@ -96,11 +96,14 @@ const float EM_SIZE[EM_COUNT] = float[EM_COUNT](
     0.5, 0.30, 0.30, 0.30, 0.30, 0.30, 0.30, 0.30, 0.30, 0.30, 0.30, 0.30, 0.30,
     0.45, 0.40, 0.40, 0.20, 0.35, 0.70, 0.20, 0.25, 0.35, 0.10, 0.05, 0.10, 0.20, 0.20, 0.50);
 
-// where the light leaves the block, relative to the block centre (y): the ring under the
-// ceiling shines from its diffuser, the hanging shade below its cord, a street lamp head from below
+// where the light leaves the block, relative to the block centre (y), after the art's models: the
+// CRT hangs from its block down onto its stand (its screen centre ~0.8 lower), the ring tube sits
+// just under the ceiling, the hanging shade in the lower half, the desk lamp's bulb low in its
+// block (the lamp stands on the desk below), the vending machine's display high up its 28 px body,
+// the laptop's screen (it reaches down onto the desk)
 const float EM_YOFF[EM_COUNT] = float[EM_COUNT](
-    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    0.15, -0.15, -0.15, 0.0, -0.25, 0.0, -0.10, -0.30, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    0.0, -0.80, -0.80, -0.80, -0.80, -0.80, -0.80, -0.80, -0.80, -0.80, -0.80, -0.80, -0.80,
+    0.33, -0.09, -0.09, -0.26, 0.0, 0.72, -0.52, 0.10, -0.14, 0.13, 0.0, 0.0, 0.0, 0.0, 0.0);
 
 // emission pattern: 0 omni, 1 ceiling fixture (cosine downwards, nothing above), 2 paper shade
 // (mostly down, much to the sides), 3 street lamp (down-wide), 4 desk lamp (a cone down),
@@ -458,7 +461,7 @@ struct Lamp {
 vec3 lampOrigin(int type, vec3 block) {
     int ti = clamp(type, 0, EM_COUNT - 1);
     vec3 p = block + vec3(0.5, 0.5 + EM_YOFF[ti], 0.5);
-    if (emitterIsTv(type)) p += facingDir(tvFacing(type)) * 0.42;
+    if (emitterIsTv(type)) p += facingDir(tvFacing(type)) * 0.34;      // the screen's face
     if (type == EM_HANGING_SWING) p += lampSwing(block, frameTimeCounter);
     return p;
 }

@@ -413,7 +413,7 @@ void main() {
         emissive = m * saturate(f * 1.2);
         emission = tint * m * gain * f;
         mat = m > 0.4 ? MAT_EMITTER : mat;
-    } else if (marked || id == BLK_INDICATOR) {
+    } else if ((marked && id != BLK_DARK_LED) || id == BLK_INDICATOR) {
         // an indicator light on a block that is not a lamp: the breaker's lamp, the rice
         // cooker's "keep warm", the washing machine's panel
         float m = indicatorMask(albedo.rgb);
@@ -441,7 +441,7 @@ void main() {
     if (mat == MAT_CURTAIN) {
         float u = (wp.x + wp.z) * 3.1;
         float fold = 0.5 + 0.5 * sin(u * TAU + 1.7 * sin(u * 1.3));
-        backK = 0.45 * (0.6 + 0.8 * fold);
+        backK = 0.75 * (0.6 + 0.8 * fold);
         N = normalize(N + vec3(cos(u * TAU), 0.0, sin(u * TAU)) * 0.25 * (1.0 - abs(N.y)));
     }
     if (mat == MAT_FROSTED) backK = 0.65;

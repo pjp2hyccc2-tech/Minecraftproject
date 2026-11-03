@@ -30,12 +30,13 @@ float viewZ(float depth) {
     return -gbufferProjection[3][2] / (depth * 2.0 - 1.0 + gbufferProjection[2][2]);
 }
 // march from the surface toward a light through the depth buffer. Returns 1 = lit.
+// stop: how far short of the light the march ends (the lamp's own shade / cabinet is no shadow)
 // strict: a ray that leaves the picture or turns behind the camera counts as blocked
-float screenShadow(vec3 viewP, vec3 lightView, float dither, float maxLen, float thickness, bool strict) {
+float screenShadow(vec3 viewP, vec3 lightView, float dither, float maxLen, float thickness, float stop, bool strict) {
     vec3 d = lightView - viewP;
     float len = length(d);
     vec3 dir = d / max(len, 1e-4);
-    float marchLen = min(len - 0.25, maxLen);
+    float marchLen = min(len - stop, maxLen);
     if (marchLen <= 0.05) return 1.0;
     const int STEPS = 12;
     float bias = 0.03 + 0.006 * -viewP.z;
@@ -57,12 +58,13 @@ float screenShadow(vec3 viewP, vec3 lightView, float dither, float maxLen, float
 
 #ifdef EMITTERS_ON
 // the lamp that gives a surface most of its light (cheap version of lampsAt)
-bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos) {
+bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos, out float lampSize) {
     vec3 cellP = wp + N * 0.5;
     ivec2 column = ivec2(floor(cellP.xz));
     vec4 tab = tableFetch(column);
     float best = 0.0;
     lampPos = vec3(0.0);
+    lampSize = 0.3;
     bool openAir = openSky(cellP) > 0.5;
     for (int k = 0; k < 4; k++) {
         float v = tab[k];
@@ -80,6 +82,7 @@ bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos) {
         if (w > best) {
             best = w;
             lampPos = L.pos;
+            lampSize = EM_SIZE[clamp(L.type, 0, EM_COUNT - 1)];
         }
     }
     return best > 0.0;
@@ -127,13 +130,15 @@ void main() {
   #endif
             if (doShadow) {
                 vec3 lampPos;
-                if (dominantLamp(P + cameraPosition, N, nm.b * 15.0, lampPos)) {
+                float lampSize;
+                if (dominantLamp(P + cameraPosition, N, nm.b * 15.0, lampPos, lampSize)) {
                     vec3 lv = playerToView(lampPos - cameraPosition);
+                    float stop = max(0.25, lampSize + 0.25);
                     if (enclosed > 0.5) {
-                        float sh = screenShadow(viewP + Nv * 0.02, lv, dither, 3.0, 2.0, true);
+                        float sh = screenShadow(viewP + Nv * 0.02, lv, dither, 3.0, 2.0, stop, true);
                         color *= 1.0 - (1.0 - sh) * saturate(share * 1.15);
                     } else {
-                        float sh = screenShadow(viewP + Nv * 0.03, lv, dither, 6.0, 1.4, false);
+                        float sh = screenShadow(viewP + Nv * 0.03, lv, dither, 6.0, 1.4, stop, false);
                         color *= 1.0 - (1.0 - sh) * share * 0.85;
                     }
                 }
@@ -158,7 +163,7 @@ void main() {
                     float sh = 1.0;
 #ifdef BEAM_SHADOWS
                     if (L.type == LIGHT_SPOT || L.type == LIGHT_POINT)
-                        sh = screenShadow(viewP + Nv * 0.04, playerToView(L.pos), dither, 8.0, 1.2, false);
+                        sh = screenShadow(viewP + Nv * 0.04, playerToView(L.pos), dither, 8.0, 1.2, 0.25, false);
 #endif
                     float T = exp(-sigma * length(P - L.pos));      // the light fades in the air
                     vec3 a = L.type == LIGHT_IR ? vec3(irAlbedo(albedo, mat)) : albedo;

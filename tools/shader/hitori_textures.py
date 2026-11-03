@@ -150,15 +150,14 @@ def _curtain(t, a, rng, name):
     t[:] = np.array([128, 132, 104]) * fold[..., None] * (0.96 + 0.06 * rng.random((16, 16, 1)))
 
 
-@gen("rain_window", "balcony_door")
+@gen("rain_window", "balcony_door", "rain_glass")
 def _glass(t, a, rng, name):
-    t[:] = np.array([150, 170, 175])
-    a[:] = 58
-    fr = (X == 0) | (X == 15) | (Y == 0) | (Y == 15)
-    if name == "balcony_door":
-        fr |= (X == 7)
-    t[fr] = np.array([160, 164, 168])
-    a[fr] = 255
+    # the glass only (the frames are their own elements): faint streaks of water
+    t[:] = np.array([120, 138, 150]) * (0.9 + 0.15 * rng.random((16, 16, 1)))
+    a[:] = 60
+    streak = (rng.random(16) < 0.25)[None, :] & (rng.random((16, 16)) < 0.7)
+    t[streak] = np.array([170, 186, 196])
+    a[streak] = 90
     return t, a
 
 
@@ -346,3 +345,16 @@ def _hwin(t, a, rng, name):
     t[:] = np.array([255, 214, 150]) * (0.9 + 0.1 * rng.random((16, 16, 1)))
     t[(X == 7) | (Y == 7)] = np.array([60, 50, 40])
     t[(X == 0) | (X == 15) | (Y == 0) | (Y == 15)] = np.array([80, 70, 60])
+
+
+@gen("window_frame")
+def _frame(t, a, rng, name):
+    # dull aluminium
+    t[:] = np.array([150, 154, 156]) * (0.92 + 0.08 * rng.random((16, 16, 1)))
+
+
+@gen("puddle_water")
+def _pwater(t, a, rng, name):
+    t[:] = np.array([49, 59, 66]) * (0.9 + 0.2 * rng.random((16, 16, 1)))
+    a[:] = 150
+    return t, a
