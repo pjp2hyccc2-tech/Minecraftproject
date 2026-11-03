@@ -61,9 +61,29 @@
 #define BLK_DARK_LED     12037   // an indicator switched off (the breaker off): a full-bright face that does not glow
 
 // full wall blocks: they stop the lamps' light (lib/emitters.glsl wall tiles at y 70 / 71)
+// the world's two-sided walls (block.properties: 12100 + facing * 64 + inner * 8 + outer): one
+// block between two different rooms, or a room and the outside
+#define BLK_TWO_SIDED    12100
+bool isTwoSidedWall(int id) {
+    return id >= BLK_TWO_SIDED && id < BLK_TWO_SIDED + 256;
+}
+// the plain block a two-sided wall shows on the face with world normal N: the face toward its
+// FACING has the inner texture, all the others the outer one. Faces (the world's Props.Face):
+// plaster, stained plaster, wallpaper, wainscot, bath tiles, closet plywood, siding, concrete
+int twoSidedFace(int id, vec3 N) {
+    int c = clamp(id - BLK_TWO_SIDED, 0, 255);
+    int f = c >> 6;
+    vec3 dir = f == 0 ? vec3(0.0, 0.0, -1.0) : (f == 1 ? vec3(1.0, 0.0, 0.0) : (f == 2 ? vec3(0.0, 0.0, 1.0) : vec3(-1.0, 0.0, 0.0)));
+    int kind = dot(N, dir) > 0.5 ? ((c >> 3) & 7) : (c & 7);
+    if (kind == 4) return BLK_BATH_WALL;
+    if (kind == 6) return BLK_SIDING;
+    if (kind == 7) return BLK_CONCRETE;
+    return BLK_WALL;
+}
+
 bool isWallBlock(int id) {
     return id == BLK_WALL || id == BLK_BATH_WALL || id == BLK_SIDING || id == BLK_BLOCK_WALL
-        || id == BLK_SHUT || id == BLK_SHUT_PAPER;
+        || id == BLK_SHUT || id == BLK_SHUT_PAPER || isTwoSidedWall(id);
 }
 
 // ---- entity.properties (entityId) -------------------------------------------------------

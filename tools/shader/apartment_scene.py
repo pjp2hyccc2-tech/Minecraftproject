@@ -239,11 +239,21 @@ def build(state=None):
         for xi, ch in enumerate(row):
             x = X0 + xi
             if ch == "#" or (x == 23 and z == 9):          # (23, 9): the pier beside the closet
-                bath_side = any(PLAN[zz][xx] in "bt" for zz in range(max(zi - 1, 0), min(zi + 2, 14))
-                                for xx in range(max(xi - 1, 0), min(xi + 2, 12)))
-                tex = "bath_tile_wall" if bath_side else ("plaster_wall_stained" if (x + z) % 7 == 0 else "plaster_wall")
+                # like the world's ApartmentBuilder.wall: a wall between the bathroom and another room
+                # is a two-sided wall (the bath's tiles toward the tub, plaster on the other faces)
+                nb = {}
+                for fac, (dx, dz) in (("north", (0, -1)), ("east", (1, 0)), ("south", (0, 1)), ("west", (-1, 0))):
+                    xx, zz = xi + dx, zi + dz
+                    nb[fac] = PLAN[zz][xx] if 0 <= zz < len(PLAN) and 0 <= xx < len(PLAN[0]) else "#"
+                bath = [f for f, c in nb.items() if c in "bt"]
+                other = [f for f, c in nb.items() if c not in "bt#"]
+                plain = "plaster_wall_stained" if (x + z) % 7 == 0 else "plaster_wall"
                 for y in range(70, 73):
-                    w.set(x, y, z, cube(tex))
+                    if bath and other:
+                        w.set(x, y, z, Block("two_sided_wall", {"facing": bath[0], "inner": "bath_tile_wall", "outer": "plaster_wall"}, facing=bath[0],
+                                             model="two_sided_wall_bath_tile_wall__plaster_wall", opaque=True))
+                    else:
+                        w.set(x, y, z, cube("bath_tile_wall" if bath else plain))
                 continue
             fl = FLOOR_OF.get(ch, "old_flooring")
             w.set(x, 69, z, cube(fl))

@@ -334,6 +334,8 @@ void main() {
     vec3 Ngeo = N;
     vec2 lm = lmcoord;
     int id = matId;
+    // a two-sided wall: the material of the face we see
+    if (isTwoSidedWall(id)) id = twoSidedFace(id, Ngeo);
     int mat = MAT_DIFFUSE;
     float emissive = 0.0;
     float cls = 0.0;
@@ -510,7 +512,9 @@ void main() {
             emissive = max(emissive, led);
         }
     } else if (item == ITEM_LIGHTER) {
-        float fl = flameMask(albedo.rgb) * step(albedo.b, albedo.r + 0.02);
+        // only flame-coloured texels burn (yellow-orange: green well above blue) - not the art's
+        // pink plastic body or its red band
+        float fl = flameMask(albedo.rgb) * smoothstep(0.12, 0.25, albedo.g - albedo.b);
         emissive = fl;
         emission = lin * fl * vec3(1.0, 0.80, 0.55) * 3.0 * lighterFlicker(frameTimeCounter);
         if (lit) lm = vec2(0.35, 0.0);
