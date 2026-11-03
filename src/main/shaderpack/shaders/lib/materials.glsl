@@ -48,6 +48,8 @@
 #define BLK_STEEL_WALL  12024   // the stainless wall behind the cooking line (a wall)
 #define BLK_WALL        12025   // plain walls (wallpaper, wainscot, facade, concrete, pillars)
 #define BLK_PORCELAIN   12026   // toilets, urinals, sinks
+#define BLK_BLIND_CLOSED 12027  // window blinds (the emitter map's blind tile: slats for the light from outside)
+#define BLK_BLIND_OPEN  12028
 
 // full wall blocks: they stop the lamps' light (lib/emitters.glsl wall tiles)
 bool isWallBlock(int id) { return id == BLK_WALL || id == BLK_STEEL_WALL || id == BLK_WALL_TILE; }

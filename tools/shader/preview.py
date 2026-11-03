@@ -832,6 +832,8 @@ SHOTS = {
     "r_dining_beam": shot(21.5, 14.5, -35.0, 8.0, fear=0.2, held=FLASHLIGHT),
     "r_dining_bar": shot(24.5, 16.5, 132.0, 10.0, fear=0.2),
     "r_register": shot(19.5, 23.5, 95.0, 8.0, fear=0.2),
+    # the roof sign outside, falling in through the blinds onto the booths by the windows
+    "r_blinds": shot(24.5, 24.5, -15.0, 28.0, fear=0.2),
     "r_dining_lit": shot(21.5, 14.5, -35.0, 8.0, fear=0.0, circuits=dict(dining=True)),
     # the wet lot at night: the pole sign, the vending machines, the sodium lamps, puddles
     "r_lot": shot(28.5, 44.5, 150.0, 4.0, fear=0.1),

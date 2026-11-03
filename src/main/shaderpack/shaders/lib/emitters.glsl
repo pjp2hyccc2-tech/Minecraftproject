@@ -10,7 +10,8 @@
 //     (block.properties ids 11001.., see EM_*) of 4 height layers, every face of a lamp
 //     block snapped onto the block's footprint (at_midBlock); tile 4 holds the height of the
 //     topmost surface of every column (roof / sky cover); tiles 5 / 6 the full wall blocks at
-//     y 66 / 67 (a column is a wall where both are set: doorways stay open).
+//     y 66 / 67 (a column is a wall where both are set: doorways stay open); tile 7 the
+//     lowest window blind of each column (the light from the sign outside falls through slats).
 //  2. prepare  (TABLE_Z): per column, the best 4 lamps along z within reach (separable
 //     Manhattan distance - exactly how vanilla light spreads)
 //     prepare1 (TABLE_X): the same along x  ->  colortex7: the 4 lamps that can light each
@@ -83,7 +84,7 @@ const vec3 EM_COLOR[EM_COUNT] = vec3[EM_COUNT](
 // much as a fluorescent panel (12) a dining table 4 blocks below; an exit sign (0.3) is a dim
 // green pool, the standby glow of the drink bar (0.45) a pale cyan wash.
 const float EM_GAIN[EM_COUNT] = float[EM_COUNT](
-    0.0, 12.0, 12.0, 8.0, 4.5, 0.30, 3.0, 9.0, 6.0, 50.0, 2.5, 0.45, 0.80, 1.6, 0.50, 0.35,
+    0.0, 12.0, 12.0, 8.0, 4.5, 0.30, 3.0, 9.0, 14.0, 50.0, 2.5, 0.45, 0.80, 1.6, 0.50, 0.35,
     0.30, 0.35, 0.22, 0.15, 0.0, 0.0, 1.2, 1.6, 2.5);
 
 // radius of the glowing part: the soft core of the falloff, widens the highlights
@@ -228,11 +229,13 @@ float emitterSurfaceMask(int type, vec3 albedoSrgb, vec3 N) {
 //  lamp tiles : r = type / 255, g = (block y - 32) / 255, b = (128 + measured level) / 255
 //  cover tile : r / g = height of the topmost surface in 1/16 blocks (hi / lo byte), b = 64 / 255
 //  wall tiles : b = 32 / 255
+//  blind tile : r = closed, g = (block y - 32) / 255 of the lowest blind, b = 16 / 255
 const int EMAP_TILE = 128;
 const int EMAP_COVER = 4;          // tile index of the cover heights
 const int EMAP_WALL_LO = 5;        // full wall blocks at y 66
 const int EMAP_WALL_HI = 6;        // full wall blocks at y 67
 const int EMAP_WALL_Y = 66;
+const int EMAP_BLIND = 7;          // the lowest window blind of each column
 
 ivec2 emapOrigin() { return ivec2(floor(cameraPosition.xz)) - ivec2(EMAP_TILE / 2); }
 ivec2 emapTileOffset(int tile) { return ivec2(tile % 4, tile / 4) * EMAP_TILE; }
@@ -246,6 +249,7 @@ int emapLayer(int blockY) {
 bool emapLampMarker(vec4 t) { float b = floor(t.b * 255.0 + 0.5); return b >= 128.0 && b <= 143.0 && t.a > 0.5; }
 bool emapCoverMarker(vec4 t) { return abs(t.b * 255.0 - 64.0) < 0.5 && t.a > 0.5; }
 bool emapWallMarker(vec4 t) { return abs(t.b * 255.0 - 32.0) < 0.5 && t.a > 0.5; }
+bool emapBlindMarker(vec4 t) { return abs(t.b * 255.0 - 16.0) < 0.5 && t.a > 0.5; }
 int emapLampLevel(vec4 t) { return int(floor(t.b * 255.0 + 0.5)) - 128; }
 float emapCoverHeight(vec4 t) { return (floor(t.r * 255.0 + 0.5) * 256.0 + floor(t.g * 255.0 + 0.5)) / 16.0; }
 
@@ -287,6 +291,44 @@ bool wallBetween(ivec2 a, ivec2 b) {
         if (min(tMax.x, tMax.y) > 1.0 + 1e-4) return false;
     }
     return false;
+}
+
+// light from outside through the window blinds: walk from the surface toward the lamp until a
+// column with blinds; where the ray crosses it, the blind's slats (closed: thin slits, open:
+// wide gaps) cut the light into stripes. 1 = no blind on the way. P, L: world positions.
+float blindTransmission(vec3 P, vec3 L) {
+    ivec2 a = ivec2(floor(P.xz)) - emapOrigin();
+    ivec2 b = ivec2(floor(L.xz)) - emapOrigin();
+    if (a == b) return 1.0;
+    vec2 d = L.xz - P.xz;
+    float len = length(d);
+    vec2 stp = sign(d);
+    vec2 inv = 1.0 / max(abs(d), vec2(1e-5));
+    vec2 f = fract(P.xz);
+    vec2 tMax = vec2(stp.x > 0.0 ? 1.0 - f.x : f.x, stp.y > 0.0 ? 1.0 - f.y : f.y) * inv;
+    ivec2 c = a;
+    for (int i = 0; i < 10; i++) {
+        float tEnter = min(tMax.x, tMax.y);
+        if (tMax.x < tMax.y) { c.x += int(stp.x); tMax.x += inv.x; }
+        else { c.y += int(stp.y); tMax.y += inv.y; }
+        if (tEnter > 1.0 || c == b) return 1.0;
+        if (c.x < 0 || c.y < 0 || c.x >= EMAP_TILE || c.y >= EMAP_TILE) return 1.0;
+        vec4 t = texelFetch(shadowcolor0, emapTileOffset(EMAP_BLIND) + c, 0);
+        if (!emapBlindMarker(t)) continue;
+        // the height of the ray in the middle of the blind's column
+        float tMid = clamp((tEnter + min(tMax.x, tMax.y)) * 0.5, 0.0, 1.0);
+        float y = mix(P.y, L.y, tMid);
+        float yLow = floor(t.g * 255.0 + 0.5) + 32.0;
+        if (y < yLow || y > yLow + 2.0) return 1.0;     // below the blinds: through clear glass
+        float s = fract(y * 5.0 + 0.25);
+        if (t.r > 0.5) {
+            // closed: the slats overlap, a thin bright slit between each
+            return 0.04 + 0.55 * smoothstep(0.78, 0.84, s) * (1.0 - smoothstep(0.93, 0.99, s));
+        }
+        // open: wide gaps between thin slats
+        return 0.10 + 0.80 * smoothstep(0.30, 0.38, s) * (1.0 - smoothstep(0.88, 0.96, s));
+    }
+    return 1.0;
 }
 
 // ---- the light table (colortex7) ----------------------------------------------------------
@@ -404,6 +446,8 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
         vec3 l = d / max(dist, 1e-3);
         float fall = lampFalloff(L, dist) * lampPattern(L.type, -l) * vis;
         if (fall <= 0.0) continue;
+        // the sign outside, falling in through the blinds
+        if (!L.covered && wp.y < 69.5) fall *= blindTransmission(wp + N * 0.05, L.pos);
         float ndl = dot(N, l);
         float lambert = mix(saturate(ndl * 0.92 + 0.08), 0.35 + 0.65 * abs(ndl), twoSided);
         vec3 E = rad * fall;
