@@ -1,0 +1,55 @@
+59:[03Nov2026 01:44:24.577] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+60:[03Nov2026 01:44:24.580] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+61:[03Nov2026 01:44:24.761] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+1 option changed by user)
+62:[03Nov2026 01:44:25.356] [Render thread/INFO] [Oculus/]: Using shaderpack: SounanShaders.zip
+66:[03Nov2026 01:44:25.653] [modloading-worker-0/INFO] [com.sounan.Sounan/]: [sounan] 遭難: somebody is calling from below the trail
+67:[03Nov2026 01:44:28.337] [Render thread/INFO] [Oculus/]: Hardware information:
+68:[03Nov2026 01:44:28.337] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 7763 64-Core Processor
+69:[03Nov2026 01:44:28.338] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+70:[03Nov2026 01:44:28.338] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+76:[03Nov2026 01:44:29.181] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/sounan-client.toml is not correct. Correcting
+92:[03Nov2026 01:44:29.204] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/sounan-common.toml is not correct. Correcting
+98:[03Nov2026 01:44:30.815] [Render thread/INFO] [com.sounan.Sounan/]: [SounanShaders] copied SounanShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/SounanShaders.zip; Oculus pack already selected: SounanShaders.zip (reloading updated pack)
+99:[03Nov2026 01:44:30.849] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+1 option changed by user)
+101:[03Nov2026 01:44:31.391] [Render thread/INFO] [Oculus/]: Using shaderpack: SounanShaders.zip
+105:[03Nov2026 01:44:35.480] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+106:java.lang.IllegalStateException: Failed to open OpenAL device
+153:[03Nov2026 01:44:36.279] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+154:[03Nov2026 01:44:36.340] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+155:[03Nov2026 01:44:36.366] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+157:[03Nov2026 01:44:42.690] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: title screen (preview=false, only=[bag])
+163:[03Nov2026 01:44:47.749] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/SounanTrailer/serverconfig/forge-server.toml is not correct. Correcting
+165:[03Nov2026 01:44:47.751] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+166:[03Nov2026 01:44:47.751] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+184:[03Nov2026 01:44:51.700] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: world creation requested
+187:[03Nov2026 01:44:52.197] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+188:[03Nov2026 01:44:52.198] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+190:[03Nov2026 01:44:52.259] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+191:[03Nov2026 01:44:52.277] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+192:[03Nov2026 01:44:52.328] [Server thread/INFO] [com.sounan.Sounan/]: [sounan] mountain terrain loaded: 512x512 from -256
+193:[03Nov2026 01:44:53.681] [Server thread/INFO] [com.sounan.Sounan/]: [sounan] Dev is lost on the mountain
+210:[03Nov2026 01:44:55.396] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] SounanShaders を更新しました。
+211:[03Nov2026 01:44:55.839] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='sounan', name='kaerazu'}
+212:[03Nov2026 01:44:55.839] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+213:[03Nov2026 01:44:55.855] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='sounan', name='kaerazu'}
+214:[03Nov2026 01:44:56.329] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+229:[03Nov2026 01:45:52.686] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: in sounan:kaerazu, shaders true, iris clock ok (net.irisshaders.iris.uniforms.SystemTimeUniforms, lastStartTime OptionalLong)
+230:[03Nov2026 01:45:52.696] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: 1 shots, 3.5 s
+232:[03Nov2026 01:45:52.701] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: set-up 00_bag (3.5 s, 0 actors)
+234:[03Nov2026 01:45:52.706] [Server thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: bag placed at -164, 184, -170: true -> Block{sounan:lost_bag}[facing=west,open=false]
+236:[03Nov2026 01:46:22.493] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer:   end of set-up: eye -167, 184, -167 sky 14 block 0 raw sky 14, rain 0.25 thunder 0.00, creative true flying false, effects [effect.minecraft.invisibility] iris eyeBrightness ( 0.000E+0  2.240E+2)
+237:[03Nov2026 01:46:23.450] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: pause partial tick: getter true, field realPartialTick
+238:[03Nov2026 01:46:23.451] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: item-in-hand renderer true
+240:[03Nov2026 01:46:23.488] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanTrailer]'/minecraft:overworld
+241:[03Nov2026 01:46:23.492] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanTrailer]'/minecraft:the_nether
+242:[03Nov2026 01:46:23.493] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanTrailer]'/sounan:kaerazu
+243:[03Nov2026 01:46:23.495] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanTrailer]'/minecraft:the_end
+244:[03Nov2026 01:46:32.212] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer:   first frame: eye -167, 185, -167 sky 14 block 0 raw sky 14, rain 0.25 thunder 0.00, creative true flying false, effects [effect.minecraft.invisibility] iris eyeBrightness ( 0.000E+0  2.240E+2)
+245:[03Nov2026 01:48:19.433] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: filmed 00_bag: 105 frames in 116.9 s (1035 ms/frame)
+246:[03Nov2026 01:48:19.434] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: all shots done; writing 1 frames
+247:[03Nov2026 01:48:20.447] [Render thread/INFO] [com.sounan.Sounan/]: [sounan] trailer: finished
+255:[03Nov2026 01:48:23.112] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanTrailer]'/minecraft:overworld
+256:[03Nov2026 01:48:23.153] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanTrailer]'/minecraft:the_nether
+257:[03Nov2026 01:48:23.157] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanTrailer]'/sounan:kaerazu
+258:[03Nov2026 01:48:23.205] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[SounanTrailer]'/minecraft:the_end
+259:[03Nov2026 01:48:23.242] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (SounanTrailer): All chunks are saved

@@ -1,0 +1,12 @@
+title screen (preview=false, only=[bag])
+world creation requested
+in sounan:kaerazu, shaders true, iris clock ok (net.irisshaders.iris.uniforms.SystemTimeUniforms, lastStartTime OptionalLong)
+1 shots, 3.5 s
+set-up 00_bag (3.5 s, 0 actors)
+  end of set-up: eye -167, 184, -167 sky 14 block 0 raw sky 14, rain 0.25 thunder 0.00, creative true flying false, effects [effect.minecraft.invisibility] iris eyeBrightness ( 0.000E+0  2.240E+2)
+pause partial tick: getter true, field realPartialTick
+item-in-hand renderer true
+  first frame: eye -167, 185, -167 sky 14 block 0 raw sky 14, rain 0.25 thunder 0.00, creative true flying false, effects [effect.minecraft.invisibility] iris eyeBrightness ( 0.000E+0  2.240E+2)
+filmed 00_bag: 105 frames in 116.9 s (1035 ms/frame)
+all shots done; writing 1 frames
+finished
