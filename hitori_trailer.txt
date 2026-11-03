@@ -1,0 +1,35 @@
+title screen (preview=false, only=[09_eyes, 11_closet, 06_tv, 08_lights_off, 07_tub_float, 10_knife])
+world creation requested
+in hitori:shirakaba, shaders true, iris clock ok (net.irisshaders.iris.uniforms.SystemTimeUniforms, lastStartTime OptionalLong), gui scale 3.0, window 1920x804, cameras 4
+6 shots, 25.5 s
+set-up 06_tv (5.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 24, 71, 11 sky 7 block 3, rain 0.25 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  1.120E+2); Blindness 0.0; NightVision 0.0; 
+pause partial tick: getter true, field realPartialTick, pause field pausePartialTick
+item-in-hand renderer true
+client clock: timer lastMs / partialTick
+  first frame: view LocalPlayer eye 24, 71, 11 sky 7 block 3, rain 0.25 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  1.120E+2); Blindness 0.0; NightVision 0.0; 
+filmed 06_tv: 150 frames in 180.7 s (1144 ms/frame)
+set-up 07_tub_float (5.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 31, 71, 2 sky 7 block 8, rain 0.30 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.280E+2  1.120E+2); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 31, 72, 2 sky 8 block 7, rain 0.30 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.120E+2  1.280E+2); Blindness 0.0; NightVision 0.0; 
+filmed 07_tub_float: 150 frames in 171.3 s (1084 ms/frame)
+set-up 08_lights_off (3.5 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 27, 71, 2 sky 5 block 10, rain 0.28 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.600E+2  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 27, 71, 2 sky 5 block 10, rain 0.28 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.600E+2  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  08_lights_off at 1.20 s: the hall and the kitchen go dark
+filmed 08_lights_off: 105 frames in 152.7 s (1352 ms/frame)
+set-up 09_eyes (4.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 24, 71, 9 sky 5 block 5, rain 0.35 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 8.000E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 24, 70, 9 sky 5 block 4, rain 0.35 thunder 0.00, effects [effect.minecraft.invisibility effect.minecraft.blindness] iris EyeBrightness ( 6.400E+1  8.000E+1); Blindness 1.0; NightVision 0.0; 
+filmed 09_eyes: 120 frames in 152.9 s (1195 ms/frame)
+set-up 10_knife (4.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 30, 71, 5 sky 3 block 12, rain 0.38 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.920E+2  4.800E+1); Blindness 0.0; NightVision 0.0; 
+  10_knife at 0.00 s: the doorway's light on the tub
+  first frame: view LocalPlayer eye 30, 71, 5 sky 3 block 12, rain 0.38 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.920E+2  4.800E+1); Blindness 0.0; NightVision 0.0; 
+filmed 10_knife: 120 frames in 145.5 s (1137 ms/frame)
+set-up 11_closet (4.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 11 sky 6 block 2, rain 0.50 thunder 0.02, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  9.600E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 23, 70, 11 sky 6 block 1, rain 0.50 thunder 0.03, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.600E+1  9.600E+1); Blindness 0.0; NightVision 0.0; 
+filmed 11_closet: 120 frames in 137.3 s (1072 ms/frame)
+all shots done; writing 1 frames
+finished
