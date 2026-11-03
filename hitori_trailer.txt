@@ -1,0 +1,91 @@
+title screen (preview=true, only=[])
+world creation requested
+in hitori:shirakaba, shaders true, iris clock ok (net.irisshaders.iris.uniforms.SystemTimeUniforms, lastStartTime OptionalLong), gui scale 3.0, window 1920x804, cameras 4
+19 shots, 76.0 s
+set-up 00_ext (6.5 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 31, 66, 24 sky 15 block 0, rain 0.08 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 0.000E+0  2.400E+2); Blindness 0.0; NightVision 0.0; 
+  00_ext at 0.00 s: fill lights under the eaves
+pause partial tick: getter true, field realPartialTick, pause field pausePartialTick
+item-in-hand renderer true
+client clock: timer lastMs / partialTick
+  first frame: view LocalPlayer eye 31, 65, 24 sky 15 block 0, rain 0.08 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 0.000E+0  2.400E+2); Blindness 0.0; NightVision 0.0; 
+filmed 00_ext: 3 frames in 23.6 s (1390 ms/frame)
+set-up 01_corridor (4.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 19, 70, -1 sky 11 block 3, rain 0.12 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  1.760E+2); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 19, 70, -2 sky 12 block 7, rain 0.12 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.120E+2  1.920E+2); Blindness 0.0; NightVision 0.0; 
+filmed 01_corridor: 3 frames in 23.0 s (1351 ms/frame)
+set-up 02_desk (4.5 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 29, 71, 8 sky 5 block 6, rain 0.12 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 9.600E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 29, 71, 8 sky 5 block 6, rain 0.12 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 9.600E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+filmed 02_desk: 3 frames in 21.5 s (1266 ms/frame)
+set-up 03_plush (4.5 s, 5 actors, view eyes)
+  end of set-up: view LocalPlayer eye 26, 71, 11 sky 7 block 11, rain 0.15 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.760E+2  1.120E+2); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 26, 70, 11 sky 7 block 10, rain 0.15 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.600E+2  1.120E+2); Blindness 0.0; NightVision 0.0; 
+filmed 03_plush: 3 frames in 20.8 s (1224 ms/frame)
+set-up 04_bath_fill (4.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 31, 71, 2 sky 7 block 8, rain 0.15 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.280E+2  1.120E+2); Blindness 0.0; NightVision 0.0; 
+  04_bath_fill at 0.00 s: the tap runs
+  first frame: view LocalPlayer eye 31, 71, 2 sky 7 block 8, rain 0.15 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.280E+2  1.120E+2); Blindness 0.0; NightVision 0.0; 
+filmed 04_bath_fill: 3 frames in 21.9 s (1290 ms/frame)
+set-up 05_camera (3.5 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 27, 71, 1 sky 5 block 9, rain 0.18 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.440E+2  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 27, 70, 1 sky 6 block 8, rain 0.18 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.280E+2  9.600E+1); Blindness 0.0; NightVision 0.0; 
+filmed 05_camera: 3 frames in 22.6 s (1330 ms/frame)
+set-up 06_tv (5.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 24, 71, 11 sky 7 block 3, rain 0.25 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  1.120E+2); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 24, 71, 11 sky 7 block 3, rain 0.25 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  1.120E+2); Blindness 0.0; NightVision 0.0; 
+filmed 06_tv: 3 frames in 19.1 s (1126 ms/frame)
+set-up 07_tub_float (5.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 31, 71, 2 sky 7 block 8, rain 0.30 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.280E+2  1.120E+2); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 31, 72, 2 sky 8 block 7, rain 0.30 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.120E+2  1.280E+2); Blindness 0.0; NightVision 0.0; 
+filmed 07_tub_float: 3 frames in 18.2 s (1072 ms/frame)
+set-up 08_lights_off (3.5 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 27, 71, 2 sky 5 block 10, rain 0.28 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.600E+2  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 27, 71, 2 sky 5 block 10, rain 0.28 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.600E+2  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  08_lights_off at 1.70 s: the hall and the kitchen go dark
+filmed 08_lights_off: 3 frames in 28.1 s (1651 ms/frame)
+set-up 09_eyes (4.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 24, 71, 9 sky 5 block 5, rain 0.35 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 8.000E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 24, 70, 9 sky 5 block 4, rain 0.35 thunder 0.00, effects [effect.minecraft.invisibility effect.minecraft.blindness] iris EyeBrightness ( 6.400E+1  8.000E+1); Blindness 1.0; NightVision 0.0; 
+filmed 09_eyes: 3 frames in 20.4 s (1202 ms/frame)
+set-up 10_knife (4.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 30, 71, 5 sky 3 block 12, rain 0.38 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.920E+2  4.800E+1); Blindness 0.0; NightVision 0.0; 
+  10_knife at 0.00 s: the doorway's light on the tub
+  first frame: view LocalPlayer eye 31, 71, 3 sky 6 block 9, rain 0.38 thunder 0.00, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.440E+2  9.600E+1); Blindness 0.0; NightVision 0.0; 
+filmed 10_knife: 3 frames in 22.8 s (1343 ms/frame)
+set-up 11_closet (4.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 11 sky 6 block 2, rain 0.50 thunder 0.02, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  9.600E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 23, 70, 11 sky 6 block 1, rain 0.50 thunder 0.03, effects [effect.minecraft.invisibility] iris EyeBrightness ( 1.600E+1  9.600E+1); Blindness 0.0; NightVision 0.0; 
+filmed 11_closet: 3 frames in 18.6 s (1092 ms/frame)
+set-up 12_peek (4.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.52 thunder 0.04, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.52 thunder 0.04, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  12_peek at 1.40 s: the fusuma opens a crack
+filmed 12_peek: 3 frames in 23.5 s (1383 ms/frame)
+set-up 13_cam_tub (3.5 s, 0 actors, view CAM1)
+  end of set-up: view FixedCamera eye 31, 72, 2 sky 8 block 4, rain 0.55 thunder 0.06, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.280E+2); Blindness 0.0; NightVision 1.0; 
+  first frame: view FixedCamera eye 31, 72, 2 sky 8 block 4, rain 0.55 thunder 0.06, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.280E+2); Blindness 0.0; NightVision 1.0; 
+filmed 13_cam_tub: 3 frames in 18.1 s (1064 ms/frame)
+set-up 14_cam_hall (4.0 s, 1 actors, view CAM2)
+  end of set-up: view FixedCamera eye 26, 70, 1 sky 7 block 4, rain 0.60 thunder 0.09, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+  first frame: view FixedCamera eye 27, 70, 1 sky 6 block 3, rain 0.60 thunder 0.09, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  9.600E+1); Blindness 0.0; NightVision 1.0; 
+filmed 14_cam_hall: 3 frames in 21.0 s (1236 ms/frame)
+set-up 15_cam_woman (3.5 s, 1 actors, view CAM3)
+  end of set-up: view FixedCamera eye 27, 72, 12 sky 7 block 4, rain 0.60 thunder 0.05, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+  first frame: view FixedCamera eye 26, 71, 11 sky 7 block 5, rain 0.60 thunder 0.05, effects [effect.minecraft.invisibility] iris EyeBrightness ( 8.000E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+filmed 15_cam_woman: 3 frames in 21.8 s (1282 ms/frame)
+set-up 16_slit_doll (3.5 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.72 thunder 0.32, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.72 thunder 0.32, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+filmed 16_slit_doll: 3 frames in 20.6 s (1210 ms/frame)
+set-up 17_turn (3.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.80 thunder 0.44, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.80 thunder 0.44, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+filmed 17_turn: 3 frames in 20.4 s (1201 ms/frame)
+set-up 18_lunge (2.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.85 thunder 0.43, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  18_lunge at 0.75 s: the fusuma flung open
+  first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.85 thunder 0.57, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+filmed 18_lunge: 3 frames in 28.3 s (1667 ms/frame)
+all shots done; writing 1 frames
+finished
