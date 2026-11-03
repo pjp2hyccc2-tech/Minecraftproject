@@ -642,6 +642,10 @@ void main() {
             // no deferred pass for these: the hand lights and the IR illuminator are added here
     #ifdef PROG_HAND
             color += handLightsForward(lin, playerPos, N, 0.0, vec2(gloss.x, mat == MAT_STEEL ? 0.6 : -1.0)) * 0.35;
+            // the lighter under its own flame (composite2 draws it): the flame is wide and a few
+            // centimetres away - its warm light wraps round the body and the fingers
+            if (currentRenderedItemId == ITEM_LIGHTER && cctv() < 0.5)
+                color += lin * vec3(1.00, 0.62, 0.30) * 0.30 * lighterFlicker(frameTimeCounter) * (0.55 + 0.45 * saturate(Nv.y));
     #else
             color += handLightsForward(lin, playerPos, N, twoSided, gloss);
     #endif

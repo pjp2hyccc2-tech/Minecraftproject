@@ -108,6 +108,8 @@ void main() {
 #endif
     }
     color = max(color, vec3(0.0));
+    // the lighter's flame on its hood (the art's lighter has none)
+    color += lighterFlameSprite(texcoord);
 
     // ---- bloom source: emissive surfaces (the TV's screen, the lamps, the REC LED) -------------
     float cam = cctv();

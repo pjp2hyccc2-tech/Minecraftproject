@@ -110,6 +110,47 @@ HandLight emptyLight() {
     return L;
 }
 
+// ---- the lighter's flame ----------------------------------------------------------------------
+// The art's lighter has no flame in its model: it is drawn on the picture (composite2, before
+// bloom), on the hood of the lighter as the first-person item renderer places it - arm offset
+// (0.56, -0.52, -0.72), the model's firstperson transform (translation 0 / 3.5 / -0.5 px, scale
+// 0.9), its hood 11.6 px up - with the hand's own projection (70 degrees), and moved with the
+// view bobbing, which is the translation in the world's projection matrix (the hand gets the
+// same). Not on a camera feed (the player's hands are not in that picture).
+const vec3 LIGHTER_TOP = vec3(0.565, -0.099, -0.749);
+vec3 lighterFlameSprite(vec2 uv) {
+    float side = heldItemId == ITEM_LIGHTER ? 1.0 : (heldItemId2 == ITEM_LIGHTER ? -1.0 : 0.0);
+    if (side == 0.0 || cctv() > 0.5) return vec3(0.0);
+    float t = frameTimeCounter;
+    float flick = lighterFlicker(t);
+    vec3 p = vec3(LIGHTER_TOP.x * side, LIGHTER_TOP.y, LIGHTER_TOP.z);
+    p.xy += vec2(gbufferProjection[3][0] / gbufferProjection[0][0], gbufferProjection[3][1] / gbufferProjection[1][1]);
+    const float FH = 1.4281;                         // 1 / tan(35 degrees): the hand's projection
+    float iz = 1.0 / max(-p.z, 0.05);
+    vec2 base = vec2(FH / aspectRatio * p.x, FH * p.y) * iz * 0.5 + 0.5;
+    float H = 0.050 * (0.80 + 0.30 * flick);         // the flame's height and width, in blocks
+    float W = 0.016;
+    vec2 scale = vec2(FH / aspectRatio * W, FH * H) * iz * 0.5;
+    vec2 q = (uv - base) / scale;                    // x: half widths, y: 0 at the wick, 1 at the tip
+    if (q.y < -1.5 || q.y > 2.5 || abs(q.x) > 6.0) return vec3(0.0);
+    // it leans and wavers: breath, the hand's tremor
+    float lean = (vnoise1(t * 2.3) - 0.5) * 0.9 + (vnoise1(t * 9.7 + 3.0) - 0.5) * 0.35 * (0.4 + fear());
+    float y = q.y;
+    float x = q.x - lean * max(y, 0.0) * max(y, 0.0);
+    float r = 1.15 * sqrt(saturate(y + 0.12)) * pow(saturate(1.0 - y), 0.65);
+    float d = abs(x) / max(r, 1e-3);
+    float body = (1.0 - smoothstep(0.55, 1.0, d)) * step(-0.12, y) * step(y, 1.0);
+    float core = (1.0 - smoothstep(0.20, 0.62, d)) * (1.0 - smoothstep(0.35, 0.75, y));
+    float blue = (1.0 - smoothstep(0.0, 0.25, y)) * (1.0 - smoothstep(0.3, 0.9, d));
+    vec3 c = vec3(1.00, 0.46, 0.12) * 2.2 * body * (1.0 - 0.55 * smoothstep(0.55, 1.0, y));
+    c = mix(c, vec3(1.00, 0.86, 0.58) * 5.0, core * body);
+    c = mix(c, vec3(0.30, 0.42, 1.00) * 1.4, blue * 0.65);
+    // the glow round it (the eye's own glare)
+    vec2 g = vec2(q.x * W, (q.y - 0.4) * H) / 0.06;
+    c += vec3(1.00, 0.55, 0.22) * 0.10 * exp(-dot(g, g) * 3.0);
+    return c * flick;
+}
+
 // ---- the light held in one hand ---------------------------------------------------------
 HandLight makeHandLight(int item, float side) {
     HandLight L = emptyLight();
@@ -130,7 +171,7 @@ HandLight makeHandLight(int item, float side) {
         L.color = PHONE_LED_COLOR * 2.6 * dangerFlicker(t) * BEAM_STRENGTH;
     } else if (item == ITEM_LIGHTER) {
         L.type = LIGHT_POINT;
-        originV = vec3(0.24 * side, -0.20, -0.42);
+        originV = vec3(LIGHTER_TOP.x * side, LIGHTER_TOP.y + 0.035, LIGHTER_TOP.z);   // the flame
         L.range = 7.0;
         L.halfDist = 0.95;
         L.fog = 0.35;
