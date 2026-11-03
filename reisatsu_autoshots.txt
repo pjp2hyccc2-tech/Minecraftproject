@@ -1,0 +1,266 @@
+title screen (shaders=true)
+shot 00_title
+world creation requested
+world tour: 38 shots
+in world, 241 steps
+step rules pos=4, 65, 41 shaders=true
+step skip_intro pos=4, 65, 41 shaders=true
+step settle pos=4, 65, 41 shaders=true
+shot 05_after_intro
+step tour_begin pos=4, 65, 41 shaders=true
+step go_world_ext_road_approach pos=4, 65, 41 shaders=true
+shot world_ext_road_approach
+step go_world_ext_front pos=-27, 65, 53 shaders=true
+shot world_ext_front
+step go_world_ext_entrance pos=20, 65, 46 shaders=true
+shot world_ext_entrance
+step go_world_ext_vending pos=4, 65, 37 shaders=true
+shot world_ext_vending
+step go_world_ext_sign pos=10, 65, 34 shaders=true
+shot world_ext_sign
+step go_world_ext_lot pos=37, 65, 40 shaders=true
+shot world_ext_lot
+step go_world_ext_window_table7 pos=-7, 65, 47 shaders=true
+shot world_ext_window_table7
+step go_world_ext_curve pos=34, 65, 36 shaders=true
+shot world_ext_curve
+step go_world_ext_flowers pos=52, 65, 54 shaders=true
+shot world_ext_flowers
+step go_world_ext_curve_mirror pos=72, 65, 48 shaders=true
+shot world_ext_curve_mirror
+step go_world_ext_traffic_light pos=61, 65, 53 shaders=true
+shot world_ext_traffic_light
+step go_world_ext_back_yard pos=-19, 65, 54 shaders=true
+shot world_ext_back_yard
+step go_world_ext_staff_path pos=38, 65, -9 shaders=true
+shot world_ext_staff_path
+step go_world_ext_east_side pos=-3, 65, 28 shaders=true
+shot world_ext_east_side
+step go_world_ext_overview pos=44, 65, 31 shaders=true
+shot world_ext_overview
+step go_world_ext_overview_curve pos=20, 88, 72 shaders=true
+shot world_ext_overview_curve
+step go_world_vestibule_off pos=30, 92, 92 shaders=true
+shot world_vestibule_off
+step go_world_waiting_off pos=6, 65, 28 shaders=true
+shot world_waiting_off
+step go_world_register_off pos=1, 65, 24 shaders=true
+shot world_register_off
+step go_world_kids_corner_off pos=8, 65, 25 shaders=true
+shot world_kids_corner_off
+step go_world_dining_west_off pos=9, 65, 25 shaders=true
+shot world_dining_west_off
+step go_world_dining_east_off pos=15, 65, 12 shaders=true
+shot world_dining_east_off
+step go_world_dining_booths_off pos=37, 65, 26 shaders=true
+shot world_dining_booths_off
+step go_world_table7_off pos=22, 65, 26 shaders=true
+shot world_table7_off
+step go_world_drink_bar_off pos=31, 65, 25 shaders=true
+shot world_drink_bar_off
+step go_world_pass_window_off pos=19, 65, 15 shaders=true
+shot world_pass_window_off
+step go_world_kitchen_line_off pos=24, 65, 14 shaders=true
+shot world_kitchen_line_off
+step go_world_kitchen_dish_pit_off pos=25, 65, 8 shaders=true
+shot world_kitchen_dish_pit_off
+step go_world_fridge_off pos=31, 65, 6 shaders=true
+shot world_fridge_off
+step go_world_corridor_off pos=17, 65, 3 shaders=true
+shot world_corridor_off
+step go_world_staff_room_off pos=13, 65, 8 shaders=true
+shot world_staff_room_off
+step go_world_office_off pos=5, 65, 5 shaders=true
+shot world_office_off
+step go_world_office_window_off pos=12, 65, 5 shaders=true
+shot world_office_window_off
+step go_world_storage_off pos=9, 65, 9 shaders=true
+shot world_storage_off
+step go_world_mens_off pos=3, 65, 11 shaders=true
+shot world_mens_off
+step go_world_womens_off pos=3, 65, 21 shaders=true
+shot world_womens_off
+step go_world_mirror_off pos=11, 65, 21 shaders=true
+shot world_mirror_off
+step go_world_cavity_off pos=10, 65, 19 shaders=true
+shot world_cavity_off
+step tour_end pos=11, 65, 11 shaders=true
+step lights_start pos=11, 65, 11 shaders=true
+step go_10_hud_dining pos=11, 65, 11 shaders=true
+shot 10_hud_dining
+step go_11_flashlight pos=16, 65, 13 shaders=true
+shot 11_flashlight
+step go_12_finder_dining pos=16, 65, 13 shaders=true
+shot 12_finder_dining
+step go_13_finder_kitchen pos=16, 65, 13 shaders=true
+shot 13_finder_kitchen
+step go_14_finder_restroom pos=25, 65, 8 shaders=true
+shot 14_finder_restroom
+step go_15_finder_outside pos=10, 65, 19 shaders=true
+shot 15_finder_outside
+step finder_down pos=4, 65, 41 shaders=true
+step situ_chef pos=4, 65, 41 shaders=true
+  chef at 25.50 65.00 6.50 yaw -180 pose 0
+step situ_where_chef pos=24, 65, 13 shaders=true
+shot 30_situ_chef_eye
+step situ_finder_chef pos=24, 65, 13 shaders=true
+shot 31_situ_chef_finder
+step situ_down_chef pos=24, 65, 13 shaders=true
+step situ_waitress pos=24, 65, 13 shaders=true
+  waitress at 32.50 65.00 12.50 yaw -180 pose 3
+step situ_where_waitress pos=35, 65, 13 shaders=true
+shot 30_situ_waitress_eye
+step situ_finder_waitress pos=35, 65, 13 shaders=true
+shot 31_situ_waitress_finder
+step situ_down_waitress pos=35, 65, 13 shaders=true
+step situ_child pos=35, 65, 13 shaders=true
+  child at 12.50 65.00 27.30 yaw -180 pose 1
+step situ_where_child pos=9, 65, 27 shaders=true
+shot 30_situ_child_eye
+step situ_finder_child pos=9, 65, 27 shaders=true
+shot 31_situ_child_finder
+step situ_down_child pos=9, 65, 27 shaders=true
+step situ_mirror_woman pos=9, 65, 27 shaders=true
+  mirror_woman at 10.50 65.00 14.50 yaw 0 pose 0
+step situ_where_mirror_woman pos=10, 65, 19 shaders=true
+shot 30_situ_mirror_woman_eye
+step situ_finder_mirror_woman pos=10, 65, 19 shaders=true
+shot 31_situ_mirror_woman_finder
+step situ_down_mirror_woman pos=10, 65, 19 shaders=true
+step situ_manager pos=10, 65, 19 shaders=true
+  manager at 9.75 65.00 6.50 yaw 90 pose 0
+step situ_where_manager pos=11, 65, 2 shaders=true
+shot 30_situ_manager_eye
+step situ_finder_manager pos=11, 65, 2 shaders=true
+shot 31_situ_manager_finder
+step situ_down_manager pos=11, 65, 2 shaders=true
+step situ_visitor pos=11, 65, 2 shaders=true
+  visitor at 33.50 65.00 28.50 yaw -90 pose 1
+step situ_where_visitor pos=34, 65, 24 shaders=true
+shot 30_situ_visitor_eye
+step situ_finder_visitor pos=34, 65, 24 shaders=true
+shot 31_situ_visitor_finder
+step situ_down_visitor pos=34, 65, 24 shaders=true
+step sweep_lights pos=34, 65, 24 shaders=true
+step sweep_visitor pos=34, 65, 24 shaders=true
+step spawn_visitor pos=16, 65, 13 shaders=true
+step pose_visitor_1 pos=16, 65, 13 shaders=true
+  entity.reisatsu.visitor 4.0 blocks away
+step face_visitor_1 pos=16, 65, 13 shaders=true
+shot 40_visitor_eye_p1
+step finder_visitor_1 pos=16, 65, 13 shaders=true
+shot 40_visitor_finder_p1
+step pose_visitor_4 pos=16, 65, 13 shaders=true
+  entity.reisatsu.visitor 4.0 blocks away
+step face_visitor_4 pos=16, 65, 13 shaders=true
+shot 41_visitor_eye_p4
+step finder_visitor_4 pos=16, 65, 13 shaders=true
+shot 41_visitor_finder_p4
+step clear_visitor pos=16, 65, 13 shaders=true
+step sweep_waitress pos=16, 65, 13 shaders=true
+step spawn_waitress pos=16, 65, 13 shaders=true
+step pose_waitress_0 pos=16, 65, 13 shaders=true
+  entity.reisatsu.waitress 4.0 blocks away
+step face_waitress_0 pos=16, 65, 13 shaders=true
+shot 42_waitress_eye_p0
+step finder_waitress_0 pos=16, 65, 13 shaders=true
+shot 42_waitress_finder_p0
+step pose_waitress_2 pos=16, 65, 13 shaders=true
+  entity.reisatsu.waitress 4.0 blocks away
+step face_waitress_2 pos=16, 65, 13 shaders=true
+shot 43_waitress_eye_p2
+step finder_waitress_2 pos=16, 65, 13 shaders=true
+shot 43_waitress_finder_p2
+step clear_waitress pos=16, 65, 13 shaders=true
+step sweep_chef pos=16, 65, 13 shaders=true
+step spawn_chef pos=16, 65, 13 shaders=true
+step pose_chef_0 pos=16, 65, 13 shaders=true
+  entity.reisatsu.chef 4.0 blocks away
+step face_chef_0 pos=16, 65, 13 shaders=true
+shot 44_chef_eye_p0
+step finder_chef_0 pos=16, 65, 13 shaders=true
+shot 44_chef_finder_p0
+step pose_chef_5 pos=16, 65, 13 shaders=true
+  entity.reisatsu.chef 4.0 blocks away
+step face_chef_5 pos=16, 65, 13 shaders=true
+shot 45_chef_eye_p5
+step finder_chef_5 pos=16, 65, 13 shaders=true
+shot 45_chef_finder_p5
+step clear_chef pos=16, 65, 13 shaders=true
+step sweep_child pos=16, 65, 13 shaders=true
+step spawn_child pos=16, 65, 13 shaders=true
+step pose_child_2 pos=16, 65, 13 shaders=true
+  entity.reisatsu.child 4.0 blocks away
+step face_child_2 pos=16, 65, 13 shaders=true
+shot 46_child_eye_p2
+step finder_child_2 pos=16, 65, 13 shaders=true
+shot 46_child_finder_p2
+step pose_child_6 pos=16, 65, 13 shaders=true
+  entity.reisatsu.child 4.0 blocks away
+step face_child_6 pos=16, 65, 13 shaders=true
+shot 47_child_eye_p6
+step finder_child_6 pos=16, 65, 13 shaders=true
+shot 47_child_finder_p6
+step clear_child pos=16, 65, 13 shaders=true
+step sweep_mirror_woman pos=16, 65, 13 shaders=true
+step spawn_mirror_woman pos=16, 65, 13 shaders=true
+step pose_mirror_woman_1 pos=16, 65, 13 shaders=true
+  entity.reisatsu.mirror_woman 4.0 blocks away
+step face_mirror_woman_1 pos=16, 65, 13 shaders=true
+shot 48_mirror_woman_eye_p1
+step finder_mirror_woman_1 pos=16, 65, 13 shaders=true
+shot 48_mirror_woman_finder_p1
+step pose_mirror_woman_3 pos=16, 65, 13 shaders=true
+  entity.reisatsu.mirror_woman 4.0 blocks away
+step face_mirror_woman_3 pos=16, 65, 13 shaders=true
+shot 49_mirror_woman_eye_p3
+step finder_mirror_woman_3 pos=16, 65, 13 shaders=true
+shot 49_mirror_woman_finder_p3
+step clear_mirror_woman pos=16, 65, 13 shaders=true
+step sweep_manager pos=16, 65, 13 shaders=true
+step spawn_manager pos=16, 65, 13 shaders=true
+step pose_manager_1 pos=16, 65, 13 shaders=true
+  entity.reisatsu.manager 4.0 blocks away
+step face_manager_1 pos=16, 65, 13 shaders=true
+shot 50_manager_eye_p1
+step finder_manager_1 pos=16, 65, 13 shaders=true
+shot 50_manager_finder_p1
+step pose_manager_5 pos=16, 65, 13 shaders=true
+  entity.reisatsu.manager 4.0 blocks away
+step face_manager_5 pos=16, 65, 13 shaders=true
+shot 51_manager_eye_p5
+step finder_manager_5 pos=16, 65, 13 shaders=true
+shot 51_manager_finder_p5
+step clear_manager pos=16, 65, 13 shaders=true
+step photo_setup pos=16, 65, 13 shaders=true
+step photo_pose pos=16, 65, 13 shaders=true
+  entity.reisatsu.waitress 5.0 blocks away
+step photo_face pos=16, 65, 13 shaders=true
+step photo_shutter pos=16, 65, 13 shaders=true
+shot 50_photo_eject
+step photo_develop pos=16, 65, 13 shaders=true
+shot 51_photo_named
+step photo_lower pos=16, 65, 13 shaders=true
+step locker_go pos=16, 65, 13 shaders=true
+step go_56_locker pos=2, 65, 4 shaders=true
+shot 56_locker
+step locker_out pos=1, 65, 4 shaders=true
+step go_57_fear_high pos=2, 65, 4 shaders=true
+shot 57_fear_high
+step go_58_danger_high pos=16, 65, 13 shaders=true
+shot 58_danger_high
+step calm pos=16, 65, 13 shaders=true
+step closing_spirits pos=16, 65, 13 shaders=true
+step go_62_closing pos=16, 65, 13 shaders=true
+shot 62_closing
+step closing_wait pos=16, 65, 13 shaders=true
+shot 63_closing_manager
+step exorcism pos=16, 65, 13 shaders=true
+shot 64_exorcism_walk
+step exorcism_wait pos=34, 65, 23 shaders=true
+shot 65_exorcism_table
+step exorcism_wait2 pos=34, 65, 23 shaders=true
+shot 66_exorcism_spirit
+step exorcism_wait3 pos=34, 65, 23 shaders=true
+shot 67_exorcism_release
+finished
