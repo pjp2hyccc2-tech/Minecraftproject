@@ -76,6 +76,10 @@ public final class AutoShots {
         return ENABLED && fovOverride > 0;
     }
 
+    public static float fovOverride() {
+        return fovOverride;
+    }
+
     static void onTitle(TitleScreen title) {
         if (!ENABLED || stage != 0) return;
         stage = 1;
@@ -289,6 +293,7 @@ public final class AutoShots {
         }, 40);
         snap("05_after_intro");
         worldTour();
+        panorama();
         // ---- the HUD and the finder in the real rooms
         add("lights_start", mc -> server(mc, (ServerLevel level) -> Fixtures.resetAll(level)), 40);
         scene("10_hud_dining", mc -> {
@@ -464,6 +469,33 @@ public final class AutoShots {
         add("situ_finder_" + id, mc -> hold(mc, "reisatsu:reisha_camera_finder{film:10}"), 20);
         snap("31_situ_" + id + "_finder");
         add("situ_down_" + id, mc -> hold(mc, "reisatsu:reisha_camera{film:10}"), 6);
+    }
+
+    /**
+     * Six 90° views from the parking lot for the title screen's panorama
+     * (assets/minecraft/textures/gui/title/background/panorama_0..5: front, right, back, left, up, down; the centre
+     * 720×720 of each 1280×720 shot is exactly 90°×90° at a vertical FOV of 90).
+     */
+    private static void panorama() {
+        final double px = 16.5, pz = 41.5;
+        add("pano_begin", mc -> {
+            clearSpirits(mc);
+            cmd(mc, "gamemode spectator");
+            mc.options.hideGui = true;
+            fovOverride = 90.0f;
+            server(mc, (ServerLevel level) -> Fixtures.resetAll(level));
+        }, 60);
+        float[][] faces = {{180, 0}, {270, 0}, {0, 0}, {90, 0}, {180, -90}, {180, 90}};
+        for (int i = 0; i < faces.length; i++) {
+            final float yaw = faces[i][0], pitch = faces[i][1];
+            add("go_pano_" + i, mc -> at(mc, px, Layout.FEET_Y, pz, yaw, pitch), i == 0 ? 90 : 30);
+            snap("pano_" + i);
+        }
+        add("pano_end", mc -> {
+            fovOverride = -1;
+            cmd(mc, "gamemode creative");
+            mc.options.hideGui = false;
+        }, 10);
     }
 
     /** The world's camera positions with its lighting setups, the HUD hidden, as a spectator (no collisions). */

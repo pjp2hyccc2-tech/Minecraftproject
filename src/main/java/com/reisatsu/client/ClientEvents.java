@@ -181,7 +181,11 @@ public final class ClientEvents {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void fov(ViewportEvent.ComputeFov event) {
         Minecraft mc = Minecraft.getInstance();
-        if (!inRestaurant() || !event.usedConfiguredFov() || AutoShots.overridesFov()) return;
+        if (AutoShots.overridesFov()) {
+            if (event.usedConfiguredFov()) event.setFOV(AutoShots.fovOverride());
+            return;
+        }
+        if (!inRestaurant() || !event.usedConfiguredFov()) return;
         if (Finder.active(mc)) {
             event.setFOV(Finder.fov((float) event.getPartialTick()));
             return;
