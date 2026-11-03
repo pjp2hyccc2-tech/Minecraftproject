@@ -266,9 +266,11 @@ public final class GameManager {
         if (data.phase == GameData.PHASE_INTRO) {
             Story.finishIntro(p, data);
         } else if (Nights.needsResume(data)) {
-            // save and quit: the current night starts again (photos, お札 and notes kept)
+            // save and quit: the current night starts again (photos, お札 and notes kept); saved while she was saying
+            // goodnight, the next one
             ServerLevel level = level(p.server);
-            if (level != null) Nights.start(level, data, data.night, true);
+            int night = data.nightStage == GameData.NS_ENDING ? Math.min(Week.NIGHTS, data.night + 1) : data.night;
+            if (level != null) Nights.start(level, data, night, true);
         }
         if (data.phase == GameData.PHASE_ENDING && data.ending != GameData.ENDING_NONE) {
             // the night ended while they were away: show them the end

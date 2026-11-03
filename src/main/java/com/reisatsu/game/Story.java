@@ -339,6 +339,11 @@ public final class Story {
             keys.add("dialogue.reisatsu.ready.2");
             ticks.add(70);
             exorcismIn = 150;
+        } else if (Week.spirit(data.night) != null && data.isSubmitted(Week.spirit(data.night)) && data.night < Week.NIGHTS) {
+            // tonight's photo is already with her (a night resumed after it was handed in): goodnight
+            keys.add("dialogue.reisatsu.end." + data.night);
+            ticks.add(110);
+            endNight = true;
         } else if (data.night == 1 && data.nightStage == GameData.NS_RETURN) {
             // the first night is over: six of them; one a night, beginning with the one who comes at two
             for (int l = 1; l <= 4; l++) {

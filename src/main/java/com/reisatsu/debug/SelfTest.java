@@ -659,6 +659,7 @@ public final class SelfTest {
             Spirits.ensure(lvl, dat);
             return false;
         }
+        remember();
         place(m.position().add(1.5, 0, 0), 90.0f);
         Story.skipDialogue(fake);
         Story.talk(fake, m);
