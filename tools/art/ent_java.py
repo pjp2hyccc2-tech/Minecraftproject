@@ -340,20 +340,24 @@ def jmod(a, b):
 '''
 
 
-def compile_anim(body_src, helpers_src, part_names, consts, extra_globals=None):
+def compile_anim(body_src, post_src, helpers_src, part_names, consts, extra_globals=None):
     """Returns a python function setup(parts, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch,
-    pose, pt, glitch, st, prev, partial) -> blend ticks, running the translated Java body."""
+    pose, pt, glitch, st, prev, partial, blend_cb) running the translated Java body, then blend_cb(blend) (the
+    template's pose blend), then the translated post-blend code - the same order as the Java setupAnim."""
     lines = [PRELUDE]
     for k, v in consts.items():
         lines.append(f'{k} = {v}')
     lines += translate_helpers(helpers_src or '')
     lines.append('def setup_anim(__parts, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, '
-                 'pose, pt, glitch, st, prev, partial):')
+                 'pose, pt, glitch, st, prev, partial, __blend_cb):')
     for n in part_names:
         lines.append(f'    {n} = __parts[{n!r}]')
     lines.append('    blend = 8.0')
     lines += translate_body(body_src, 1)
-    lines.append('    return blend')
+    lines.append('    __blend_cb(blend)')
+    if post_src and post_src.strip():
+        lines += translate_body(post_src, 1)
+    lines.append('    return None')
     code = '\n'.join(lines)
     ns = dict(extra_globals or {})
     try:

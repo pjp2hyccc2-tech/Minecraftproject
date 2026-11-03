@@ -23,7 +23,7 @@ from PIL import Image
 import render3d as R  # noqa: E402
 import ent_java  # noqa: E402
 import ent_render as ER  # noqa: E402
-from ent_model import java_source, entity_world, Animator, HELPERS, PROLOGUE  # noqa: E402
+from ent_model import java_source, entity_world, Animator, HELPERS, PROLOGUE, level  # noqa: E402
 from ent_paint import finalize_eyes, finalize_base  # noqa: E402
 from common import TEX_ROOT, JAVA_ROOT, PREVIEW  # noqa: E402
 
@@ -47,9 +47,10 @@ class Built:
         self.java = java_source(spec)
         names = [p.jname for p in spec.root.walk() if p is not spec.root]
         body = (PROLOGUE + spec.anim).replace('this.', '')
+        post = spec.post.replace('this.', '')
         consts = {n: v for n, v in spec.poses}
-        fn, self.py = ent_java.compile_anim(body, HELPERS + spec.helpers, ['root'] + names, consts,
-                                            extra_globals={'follow': follow})
+        fn, self.py = ent_java.compile_anim(body, post, HELPERS + spec.helpers, ['root'] + names, consts,
+                                            extra_globals={'follow': follow, 'level': level})
         self.anim = Animator(spec, fn)
 
     def save(self):

@@ -179,6 +179,16 @@ def pack(root, tex_w, tex_h=None):
     raise ValueError('textures do not fit')
 
 
+def level(target, *chain):
+    """Python twin of the Java level(): undo the ancestors' rotations (ZYX) so the target stays level."""
+    M = np.eye(3)
+    for p in chain:
+        M = M @ (R.rot_z(p.zRot) @ R.rot_y(p.yRot) @ R.rot_x(p.xRot))
+    target.yRot = math.asin(max(-1.0, min(1.0, -M[0, 2])))
+    target.xRot = math.atan2(M[1, 2], M[2, 2])
+    target.zRot = math.atan2(M[0, 1], M[0, 0])
+
+
 # ------------------------------------------------------------------------------------------------ Java
 def jf(v):
     s = f'{float(v):.4f}'.rstrip('0')
@@ -326,6 +336,27 @@ STATE_JAVA = '''
             l[o + 8] = p.zScale;
         }
         s.lastAge = age;
+    }
+
+    /** Undoes the rotations of `chain` (the target's ancestors, root side first) so that `target` stays level / hangs
+     *  straight down in model space (trays, glasses, strands of hair, keys); add any sway afterwards. */
+    private static void level(ModelPart target, ModelPart... chain) {
+        float m00 = 1.0F, m01 = 0.0F, m02 = 0.0F, m10 = 0.0F, m11 = 1.0F, m12 = 0.0F, m20 = 0.0F, m21 = 0.0F, m22 = 1.0F;
+        for (ModelPart p : chain) {
+            float cz = Mth.cos(p.zRot), sz = Mth.sin(p.zRot), cy = Mth.cos(p.yRot), sy = Mth.sin(p.yRot);
+            float cx = Mth.cos(p.xRot), sx = Mth.sin(p.xRot);
+            float r00 = cz * cy, r01 = cz * sy * sx - sz * cx, r02 = cz * sy * cx + sz * sx;
+            float r10 = sz * cy, r11 = sz * sy * sx + cz * cx, r12 = sz * sy * cx - cz * sx;
+            float r20 = -sy, r21 = cy * sx, r22 = cy * cx;
+            float n00 = m00 * r00 + m01 * r10 + m02 * r20, n01 = m00 * r01 + m01 * r11 + m02 * r21, n02 = m00 * r02 + m01 * r12 + m02 * r22;
+            float n10 = m10 * r00 + m11 * r10 + m12 * r20, n11 = m10 * r01 + m11 * r11 + m12 * r21, n12 = m10 * r02 + m11 * r12 + m12 * r22;
+            float n20 = m20 * r00 + m21 * r10 + m22 * r20, n21 = m20 * r01 + m21 * r11 + m22 * r21, n22 = m20 * r02 + m21 * r12 + m22 * r22;
+            m00 = n00; m01 = n01; m02 = n02; m10 = n10; m11 = n11; m12 = n12; m20 = n20; m21 = n21; m22 = n22;
+        }
+        // local rotation = transpose(M), decomposed as Rz * Ry * Rx
+        target.yRot = (float) Math.asin(Mth.clamp(-m02, -1.0F, 1.0F));
+        target.xRot = (float) Math.atan2(m12, m22);
+        target.zRot = (float) Math.atan2(m01, m00);
     }
 
     /** A value that follows its target with a lag (exponential, `speed` per tick), remembered per entity. */
@@ -489,6 +520,8 @@ def java_source(spec):
     for l in (PROLOGUE + spec.anim).strip('\n').splitlines():
         A(('        ' + l) if l.strip() else '')
     A('        this.blend(st, poseTicks, blend, ageInTicks);')
+    for l in spec.post.strip('\n').splitlines():
+        A(('        ' + l) if l.strip() else '')
     A('    }')
     A('')
     for l in (HELPERS + spec.helpers).strip('\n').splitlines():
@@ -597,9 +630,8 @@ class Animator:
         pt = max(0.0, ent.poseTime(partial))
         glitch = min(1.0, max(0.0, ent.glitch(partial)))
         st = self.state(ent, pose, age)
-        blend = self.fn(parts, ent, limbSwing, limbAmount, age, head_yaw, head_pitch, pose, pt, glitch, st, st.prev,
-                        partial)
-        self.blend(st, pt, blend, age)
+        self.fn(parts, ent, limbSwing, limbAmount, age, head_yaw, head_pitch, pose, pt, glitch, st, st.prev,
+                partial, lambda b: self.blend(st, pt, b, age))
 
     def timeline(self, events, t_end, limb=None, head=None, glitch=None, ident=7, step=1.0):
         """Simulates an entity: events = [(tick, pose), ...] (sorted). Runs every tick (so pose blends and lagged
@@ -642,6 +674,7 @@ class Spec:
     poses = []
     doc = ''
     anim = ''
+    post = ''
     helpers = ''
 
     def __init__(self):
