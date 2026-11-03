@@ -536,6 +536,12 @@ this.apron.xRot = -this.body.xRot * 0.85F + (this.leftLeg.xRot + this.rightLeg.x
 SPEC = Chef
 
 
+import ent_scene as SC  # noqa: E402
+POSE_SCENES = {0: SC.kitchen(board=True), 1: SC.kitchen(board=True), 2: SC.kitchen(pass_window=True), 3: SC.kitchen(board=True), 4: SC.kitchen(), 5: SC.kitchen(), 6: SC.kitchen()}
+WALKING = (4, 5)
+NAKED_ALPHA = 0.75
+
+
 # ================================================================================================ previews
 def previews(b, ER, rows_sel=None):
     import ent_scene as SC
@@ -583,9 +589,9 @@ def previews(b, ER, rows_sel=None):
     rows.append(('IDLE (6): wheezing; face close-ups', ims))
     ims = []
     ims.append(('naked eye a=0.75: CHOP', b.view(0, 40, size=(300, 260), eye=(-0.5, 1.62, -4.5), target=(0, 1.3, 0),
-                                                night=True, alpha=0.75, scene=kb, fov=50)))
+                                                night=True, alpha=0.75, eyes_gain=1.0, scene=kb, fov=50)))
     ims.append(('naked eye: LOOK', b.view([(0, 0), (100, 3)], 150, size=(300, 260), eye=(-0.5, 1.62, -4.5),
-                                          target=(0, 1.5, 0), night=True, alpha=0.75, head=lambda tt: (40.0, 0.0), scene=kb,
+                                          target=(0, 1.5, 0), night=True, alpha=0.75, eyes_gain=1.0, head=lambda tt: (40.0, 0.0), scene=kb,
                                           fov=50)))
     ims.append(('finder: CHASE', b.view([(0, 5)], 202, size=(300, 260), eye=(0.3, 1.62, 3.5), target=(0, 1.4, 0),
                                         finder=True, limb=run, scene=k0, fov=50)))

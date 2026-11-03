@@ -500,6 +500,12 @@ Medium.consts = {
 SPEC = Medium
 
 
+import ent_scene as SC  # noqa: E402
+POSE_SCENES = {0: SC.lot(), 1: SC.lot(), 2: SC.lot(), 3: SC.lot(), 4: SC.lot(), 5: SC.lot()}
+WALKING = (3,)
+NAKED_ALPHA = 1.0
+
+
 # ================================================================================================ previews
 def previews(b, ER, rows_sel=None):
     import ent_scene as SC
