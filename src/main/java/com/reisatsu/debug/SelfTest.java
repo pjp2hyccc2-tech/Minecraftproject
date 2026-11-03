@@ -59,6 +59,7 @@ public final class SelfTest {
     private static int worldStage;
     /** The test lane: where the camera stands and where the spirit stands (clear line of sight, chosen at runtime). */
     private static Vec3 laneEye, laneSpirit;
+    private static float maxAware;
     private static float laneYaw;
 
     private SelfTest() {}
@@ -112,7 +113,9 @@ public final class SelfTest {
                 case 0 -> setup(server, level, data);
                 case 1 -> shots(level, data);
                 case 2 -> awarenessStart(level, data);
-                case 3 -> awarenessResult(level, data);
+                case 3 -> awarenessWatch(level, data);
+                case 30 -> awayStart(level, data);
+                case 31 -> awayResult(level, data);
                 case 4 -> noiseStart(level, data);
                 case 5 -> noiseResult(level, data);
                 case 6 -> caughtStart(level, data);
@@ -346,13 +349,46 @@ public final class SelfTest {
             probe.setAnimPose(Manager.STAND);
             probe.faceYaw(laneYaw + 180.0f);
         }
-        next(3, 60);
+        maxAware = 0.0f;
+        next(3, 0);
     }
 
-    private static void awarenessResult(ServerLevel level, GameData data) {
-        float a = probe == null ? 0 : probe.awarenessOf(fake);
-        boolean hunting = probe != null && probe.hunting();
-        check(a > 0.25f || hunting, String.format(Locale.ROOT, "a spirit that sees you grows aware (%.2f, hunting=%s)", a, hunting));
+    /**
+     * Watches the awareness grow tick by tick until the spirit notices (then it is removed before it can hunt the test
+     * player down: being caught clears its awareness and would leave the player un-huntable for the next checks).
+     */
+    private static void awarenessWatch(ServerLevel level, GameData data) {
+        if (probe == null) {
+            check(false, "the probe spirit spawns");
+            next(30, 5);
+            return;
+        }
+        float a = probe.awarenessOf(fake);
+        maxAware = Math.max(maxAware, a);
+        boolean noticed = a >= 1.0f || probe.mode() == Spirit.Mode.NOTICE || probe.hunting();
+        if (noticed || stageTicks > 120) {
+            check(noticed, String.format(Locale.ROOT, "a spirit that sees you (3 blocks, in the dark) notices you (after %d ticks, awareness %.2f, %s)",
+                    stageTicks, maxAware, probe.mode()));
+            check(GameManager.huntable(fake), "you are still huntable");
+            probe.discard();
+            next(30, 5);
+        }
+    }
+
+    private static void awayStart(ServerLevel level, GameData data) {
+        place(laneEye, laneYaw);
+        probe = Spirits.spawnAt(level, SpiritKind.MANAGER, along(3.0), laneYaw); // its back to you
+        if (probe != null) {
+            probe.debugStill = true;
+            probe.setAnimPose(Manager.STAND);
+            probe.faceYaw(laneYaw);
+        }
+        next(31, 40);
+    }
+
+    private static void awayResult(ServerLevel level, GameData data) {
+        float a = probe == null ? -1 : probe.awarenessOf(fake);
+        check(a == 0.0f && probe != null && !probe.hunting(), String.format(Locale.ROOT, "a spirit with its back to you does not see you (%.2f)", a));
         if (probe != null) probe.discard();
         next(4, 5);
     }
