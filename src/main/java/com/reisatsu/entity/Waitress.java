@@ -98,6 +98,8 @@ public class Waitress extends Spirit {
 
     @Override
     protected Vec3 home() {
+        // the night starts (and a fresh spawn begins) at her station; afterwards home is where she was on her round
+        if (sub == S_STATION) return Layout.marker("waitress_station").center();
         List<Layout.Marker> route = Layout.markers("waitress_route");
         return route.get(Math.min(routeIdx, route.size() - 1)).center();
     }

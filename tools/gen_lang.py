@@ -5,6 +5,7 @@ Block names of docs/DESIGN.md §7 are listed here; the sound subtitles come from
 (sound worker) when present. Run: python3 tools/gen_lang.py
 """
 import json
+import re
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -351,6 +352,7 @@ DIALOGUE = {
 THOUGHTS = {
     "film_loaded": ("フィルムを装填した", "Film loaded."),
     "film_found": ("フィルムパックだ", "A film pack."),
+    "note_blank": ("……白紙だ。濡れて、波打っている", "...Blank. Wet, and warped."),
     "office_key": ("「事務所」の札が付いた鍵だ", "A key tagged \"Office\"."),
     "menu_board": ("黒板。「本日のおすすめ」……", "The board: \"Today's special\"..."),
     "menu_board_2": ("「まだ　いますか」", "\"ARE YOU STILL HERE\""),
@@ -363,7 +365,8 @@ THOUGHTS = {
 }
 
 BLOCK_NAMES = {
-    "dining_floor": ("客席の床", "Dining Floor"), "kitchen_floor": ("厨房の床", "Kitchen Floor"), "restroom_floor": ("トイレの床", "Restroom Floor"),
+    "dining_floor": ("客席の床", "Dining Floor"), "dining_floor_worn": ("すり減った客席の床", "Worn Dining Floor"),
+    "two_sided_wall": ("間仕切り壁", "Partition Wall"), "power_wire": ("電線", "Power Line"), "kitchen_floor": ("厨房の床", "Kitchen Floor"), "restroom_floor": ("トイレの床", "Restroom Floor"),
     "restroom_floor_dark": ("黒ずんだタイル", "Stained Tiles"), "vestibule_floor": ("風除室の床", "Vestibule Floor"), "entrance_mat": ("玄関マット", "Entrance Mat"),
     "wallpaper": ("壁紙", "Wallpaper"), "wallpaper_stained": ("染みのある壁紙", "Stained Wallpaper"), "wainscot": ("腰板", "Wainscot"),
     "white_tile": ("白タイル", "White Tile"), "white_tile_dirty": ("汚れた白タイル", "Dirty White Tile"), "ceiling_tile": ("天井板", "Ceiling Tile"),
@@ -530,6 +533,21 @@ def main():
         if os.path.exists(sub):
             with open(sub, encoding="utf-8") as f:
                 d.update(json.load(f))
+    # every registered block, item and entity needs a name (the world registers blocks too)
+    src = os.path.join(HERE, "..", "src", "main", "java", "com", "reisatsu", "registry")
+    unnamed = []
+    for fname, prefix, pattern in (("ModBlocks.java", "block", r'=\s*(?:block|cube|litProp|prop)\(\s*"([a-z0-9_]+)"'),
+                                   ("ModItems.java", "item", r'(?:ITEMS\.register|game)\(\s*"([a-z0-9_]+)"'),
+                                   ("ModEntities.java", "entity", r'(?:ENTITIES\.register|register|type)\(\s*"([a-z0-9_]+)"')):
+        path = os.path.join(src, fname)
+        if not os.path.exists(path):
+            continue
+        with open(path, encoding="utf-8") as f:
+            for rid in sorted(set(re.findall(pattern, f.read()))):
+                if f"{prefix}.{NS}.{rid}" not in en:
+                    unnamed.append(f"{prefix}.{NS}.{rid}")
+    if unnamed:
+        raise SystemExit("no name for: " + ", ".join(unnamed))
     os.makedirs(OUT, exist_ok=True)
     for lang, d in (("ja_jp", ja), ("en_us", en)):
         with open(os.path.join(OUT, f"{lang}.json"), "w", encoding="utf-8") as f:

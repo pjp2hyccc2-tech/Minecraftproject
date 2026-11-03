@@ -438,7 +438,7 @@ public final class Story {
             Hiding.exit(p, false);
             GameManager.lowerCamera(p);
             GameManager.event(p, GameManager.EV_FADE, 40, "");
-            GameManager.teleport(p, level, spot.center(), spot.yaw(), 8.0f);
+            GameManager.teleport(p, level, spot.center(), spot.yaw(), 14.0f);
             ps.locked = true;
             ps.lockPos = spot.center();
             GameManager.event(p, GameManager.EV_EXORCISM, 0, "");
@@ -490,7 +490,8 @@ public final class Story {
                 int local = t - exoStageAt;
                 int i = local / 150;
                 int k = local % 150;
-                if (m != null && local == 40) m.setAnimPose(Medium.PRAY);
+                // she stays on her knees at the table end, praying, so the table and its photos stay in view
+                if (m != null && m.pose() != Medium.KNEEL) m.setAnimPose(Medium.KNEEL);
                 if (i < SpiritKind.ALL.length) {
                     SpiritKind kind = SpiritKind.ALL[i];
                     List<Layout.Marker> spots = Layout.markers("exorcism_spirits");
@@ -558,18 +559,20 @@ public final class Story {
     /** Candles and the six photos on table 7. */
     private static void layTable(ServerLevel level, GameData data) {
         Layout.Marker tm = Layout.marker("table_7");
-        BlockPos top = tm.pos().above();
-        BlockPos[] cs = {top.west(), top.east()};
-        for (BlockPos c : cs) {
-            if (level.getBlockState(c).isAir()) {
-                BlockState candle = Blocks.WHITE_CANDLE.defaultBlockState().setValue(CandleBlock.CANDLES, 3).setValue(CandleBlock.LIT, true);
-                level.setBlock(c, candle, 2 | 16);
-                CANDLES.add(c);
-            }
+        // the booth table is two blocks long (aisle end at the marker, window end beyond); its top is at the block above
+        net.minecraft.core.Direction toWindow = tm.facing().getOpposite();
+        BlockPos windowTop = tm.pos().relative(toWindow).above();
+        BlockState was = level.getBlockState(windowTop);
+        if (was.isAir() || net.minecraftforge.registries.ForgeRegistries.BLOCKS.getKey(was.getBlock()).getPath().equals("menu_stand")) {
+            BlockState candle = Blocks.WHITE_CANDLE.defaultBlockState().setValue(CandleBlock.CANDLES, 4).setValue(CandleBlock.LIT, true);
+            level.setBlock(windowTop, candle, 2 | 16);
+            CANDLES.add(windowTop);
         }
-        Vec3 centre = tm.center().add(0, 0.82, 0);
+        Vec3 centre = Vec3.atBottomCenterOf(tm.pos()).add(Vec3.atLowerCornerOf(toWindow.getNormal()).scale(0.45)).add(0, 1.02, 0);
+        boolean alongX = toWindow.getAxis() == net.minecraft.core.Direction.Axis.X;
         for (int i = 0; i < SpiritKind.ALL.length; i++) {
-            double ox = (i % 3 - 1) * 0.32, oz = (i / 3 - 0.5) * 0.36;
+            double across = (i % 3 - 1) * 0.30, along = (i / 3 - 0.5) * 0.36;
+            double ox = alongX ? along : across, oz = alongX ? across : along;
             Entity d = photoDisplay(level, centre.add(ox, 0, oz), SpiritKind.ALL[i]);
             TABLE_PHOTOS.add(d);
         }

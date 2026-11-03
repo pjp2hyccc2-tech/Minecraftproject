@@ -54,11 +54,13 @@ public final class SelfTest {
     private static int kindIdx;
     private static Spirit probe;
     private static int ofudaBefore;
+    private static int reishouBefore;
     private static int stageTicks;
     private static final int STAGE_WORLD = 50;
     private static int worldStage;
     /** The test lane: where the camera stands and where the spirit stands (clear line of sight, chosen at runtime). */
     private static Vec3 laneEye, laneSpirit;
+    private static float maxAware;
     private static float laneYaw;
 
     private SelfTest() {}
@@ -112,7 +114,14 @@ public final class SelfTest {
                 case 0 -> setup(server, level, data);
                 case 1 -> shots(level, data);
                 case 2 -> awarenessStart(level, data);
-                case 3 -> awarenessResult(level, data);
+                case 3 -> awarenessWatch(level, data);
+                case 30 -> awayStart(level, data);
+                case 31 -> awayResult(level, data);
+                case 32 -> camStart(level, data);
+                case 33 -> camWatch(level, data);
+                case 34 -> camOffResult(level, data);
+                case 35 -> breathWatch(level, data);
+                case 36 -> heldResult(level, data);
                 case 4 -> noiseStart(level, data);
                 case 5 -> noiseResult(level, data);
                 case 6 -> caughtStart(level, data);
@@ -122,6 +131,7 @@ public final class SelfTest {
                 case 10 -> submit(level, data);
                 case 11 -> exorcismWait(level, data);
                 case 12 -> endingAndReset(server, level, data);
+                case 13 -> badEnding(server, level, data);
                 case 20 -> fixtures(level, data);
                 case 21 -> lockerResult(level, data);
                 default -> finish(server);
@@ -338,22 +348,138 @@ public final class SelfTest {
         return laneEye.add(laneSpirit.subtract(laneEye).normalize().scale(blocks));
     }
 
+    /** Sight alone: the waitress (no security cameras, unlike the manager) 3 blocks away, facing you, in the dark. */
     private static void awarenessStart(ServerLevel level, GameData data) {
         place(laneEye, laneYaw);
-        probe = Spirits.spawnAt(level, SpiritKind.MANAGER, along(3.0), laneYaw + 180.0f);
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, along(3.0), laneYaw + 180.0f);
         if (probe != null) {
             probe.debugStill = true;
-            probe.setAnimPose(Manager.STAND);
+            probe.setAnimPose(com.reisatsu.entity.Waitress.STAND);
             probe.faceYaw(laneYaw + 180.0f);
         }
-        next(3, 60);
+        maxAware = 0.0f;
+        next(3, 0);
     }
 
-    private static void awarenessResult(ServerLevel level, GameData data) {
-        float a = probe == null ? 0 : probe.awarenessOf(fake);
-        boolean hunting = probe != null && probe.hunting();
-        check(a > 0.25f || hunting, String.format(Locale.ROOT, "a spirit that sees you grows aware (%.2f, hunting=%s)", a, hunting));
+    /**
+     * Watches the awareness grow tick by tick until the spirit notices (then it is removed before it can hunt the test
+     * player down: being caught clears its awareness and would leave the player un-huntable for the next checks).
+     */
+    private static void awarenessWatch(ServerLevel level, GameData data) {
+        if (probe == null) {
+            check(false, "the probe spirit spawns");
+            next(30, 5);
+            return;
+        }
+        float a = probe.awarenessOf(fake);
+        maxAware = Math.max(maxAware, a);
+        boolean noticed = a >= 1.0f || probe.mode() == Spirit.Mode.NOTICE || probe.hunting();
+        if (noticed || stageTicks > 120) {
+            check(noticed, String.format(Locale.ROOT, "a spirit that sees you (3 blocks, in the dark) notices you (after %d ticks, awareness %.2f, %s)",
+                    stageTicks, maxAware, probe.mode()));
+            check(GameManager.huntable(fake), "you are still huntable");
+            probe.discard();
+            next(30, 5);
+        }
+    }
+
+    private static void awayStart(ServerLevel level, GameData data) {
+        // calm (a panicked player's breathing carries: tested next)
+        PlayerState ps = GameManager.state(fake);
+        ps.forceFear = 0.3f;
+        ps.forceDanger = 0.0f;
+        ps.forceTicks = 600;
+        place(laneEye, laneYaw);
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, along(3.0), laneYaw); // her back to you
+        if (probe != null) {
+            probe.debugStill = true;
+            probe.setAnimPose(com.reisatsu.entity.Waitress.STAND);
+            probe.faceYaw(laneYaw);
+        }
+        next(31, 40);
+    }
+
+    private static void awayResult(ServerLevel level, GameData data) {
+        float a = probe == null ? -1 : probe.awarenessOf(fake);
+        check(a == 0.0f && probe != null && !probe.hunting(), String.format(Locale.ROOT, "a spirit with its back to you does not see you (%.2f)", a));
+        if (probe == null) {
+            next(32, 5);
+            return;
+        }
+        // §3.5: at high fear your breathing is heard close by...
+        GameManager.state(fake).forceFear = 0.95f;
+        probe.setAwareness(fake, 0.0f);
+        next(35, 0);
+    }
+
+    /** Watched tick by tick: once it has heard you it turns, sees you and would take you (which would end the checks). */
+    private static void breathWatch(ServerLevel level, GameData data) {
+        float a = probe.awarenessOf(fake);
+        if (a <= 0.05f && stageTicks <= 90) return;
+        check(a > 0.05f, String.format(Locale.ROOT, "...but it hears your panicked breathing 3 blocks behind it (%.2f after %d ticks)", a, stageTicks));
+        // ...unless you hold it: a fresh pair of ears, back turned
+        probe.discard();
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, along(3.0), laneYaw);
+        if (probe != null) {
+            probe.debugStill = true;
+            probe.setAnimPose(com.reisatsu.entity.Waitress.STAND);
+            probe.faceYaw(laneYaw);
+        }
+        PlayerState ps = GameManager.state(fake);
+        ps.breathHolding = true;
+        ps.breathTicks = 0;
+        ps.breathGauge = 1.0f;
+        next(36, 40);
+    }
+
+    private static void heldResult(ServerLevel level, GameData data) {
+        float a = probe == null ? -1 : probe.awarenessOf(fake);
+        check(a == 0.0f, String.format(Locale.ROOT, "holding your breath, it hears nothing (%.2f)", a));
+        PlayerState ps = GameManager.state(fake);
+        ps.breathHolding = false;
+        ps.breathTicks = 0;
+        ps.forceFear = 0.3f;
+        ps.forceTicks = 40;
         if (probe != null) probe.discard();
+        check(GameManager.huntable(fake), "still huntable (nothing took you)");
+        next(32, 5);
+    }
+
+    // ------------------------------------------------------------------------------------------------ 32-34: the security cameras
+    /** The manager at his desk, far away in the office, watches the dining room through its cameras (circuit on). */
+    private static void camStart(ServerLevel level, GameData data) {
+        place(laneEye, laneYaw);
+        Layout.Marker d = Layout.marker("manager_desk");
+        probe = Spirits.spawnAt(level, SpiritKind.MANAGER, Manager.deskSpot(), d.yaw());
+        if (probe != null) {
+            probe.debugStill = true;
+            probe.setAnimPose(Manager.SIT);
+        }
+        maxAware = 0.0f;
+        next(33, 0);
+    }
+
+    private static void camWatch(ServerLevel level, GameData data) {
+        if (probe == null) {
+            check(false, "the manager spawns at his desk");
+            next(4, 5);
+            return;
+        }
+        float a = probe.awarenessOf(fake);
+        maxAware = Math.max(maxAware, a);
+        if (a >= 0.5f || stageTicks > 100) {
+            check(a >= 0.5f, String.format(Locale.ROOT, "the manager at his desk sees you through a security camera (%.2f after %d ticks)", maxAware, stageTicks));
+            probe.setAwareness(fake, 0.0f);
+            com.reisatsu.world.Fixtures.setCircuit(level, com.reisatsu.world.Circuit.CAMERAS, false);
+            next(34, 40);
+        }
+    }
+
+    private static void camOffResult(ServerLevel level, GameData data) {
+        float a = probe == null ? -1 : probe.awarenessOf(fake);
+        check(a == 0.0f, String.format(Locale.ROOT, "with the cameras' circuit off he sees nothing from there (%.2f)", a));
+        if (probe != null) probe.discard();
+        com.reisatsu.world.Fixtures.setCircuit(level, com.reisatsu.world.Circuit.CAMERAS, true);
         next(4, 5);
     }
 
@@ -384,6 +510,7 @@ public final class SelfTest {
     // ------------------------------------------------------------------------------------------------ 6-7: caught
     private static void caughtStart(ServerLevel level, GameData data) {
         ofudaBefore = GameManager.count(fake, ModItems.OFUDA.get());
+        reishouBefore = data.reishou;
         place(laneEye, laneYaw);
         probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, fake.position().add(0, 0, 0.5), 180.0f);
         if (probe != null) GameManager.caught(fake, probe);
@@ -396,7 +523,7 @@ public final class SelfTest {
         check(!ps.caught(), "you wake up");
         check(GameManager.count(fake, ModItems.OFUDA.get()) == ofudaBefore - 1, "the medium burnt one お札 (" + GameManager.count(fake, ModItems.OFUDA.get()) + " left)");
         check(fake.position().distanceTo(Layout.marker("wake").center()) < 2.0, "you wake by the car");
-        check(data.reishou == 1, "霊障 +1 (" + data.reishou + ")");
+        check(data.reishou == Math.min(3, reishouBefore + 1), "霊障 +1 (" + reishouBefore + " → " + data.reishou + ")");
         Spirits.removeAll(level);
         next(8, 5);
     }
@@ -457,6 +584,35 @@ public final class SelfTest {
         com.reisatsu.world.Fixtures.resetAll(level);
         Spirits.removeAll(level);
         check(data.captured == 0 && data.photos.isEmpty() && data.phase == GameData.PHASE_IDLE, "a reset clears the progress");
+        // ---- a second night for the other ending: no お札 left, and the waitress takes you
+        data.started = true;
+        data.phase = GameData.PHASE_INVESTIGATE;
+        data.introSeen = true;
+        data.setDirty();
+        GameManager.debugPeaceful = false;
+        Spirits.paused = true;
+        for (int i = 0; i < fake.getInventory().getContainerSize(); i++) {
+            if (fake.getInventory().getItem(i).is(ModItems.OFUDA.get())) fake.getInventory().setItem(i, net.minecraft.world.item.ItemStack.EMPTY);
+        }
+        place(laneEye, laneYaw);
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, fake.position().add(0, 0, 0.5), 180.0f);
+        if (probe != null) GameManager.caught(fake, probe);
+        check(GameManager.state(fake).caught(), "the second night: taken again, with no お札 left");
+        next(13, GameManager.CAUGHT_TICKS + 330);
+    }
+
+    /** 相席: you stay at table 7; the waitress sets down a glass of water for one. */
+    private static void badEnding(MinecraftServer server, ServerLevel level, GameData data) {
+        check(data.phase == GameData.PHASE_ENDING && data.ending == GameData.ENDING_BAD, "no お札: the 相席 ending (phase " + data.phase + ", ending " + data.ending + ")");
+        check(fake.isPassenger() && fake.position().distanceTo(Layout.marker("seat_7").center()) < 1.0, "seated at table 7 (" + fake.blockPosition().toShortString() + ")");
+        boolean serving = false;
+        for (Spirit sp : Spirits.all(level)) if (sp.kind() == SpiritKind.WAITRESS && sp.pose() == com.reisatsu.entity.Waitress.SERVE) serving = true;
+        check(serving, "the waitress serves the table");
+        Story.endingDone(fake);
+        check(!data.started && !fake.isPassenger(), "the night is over, you are back");
+        data.resetProgress();
+        com.reisatsu.world.Fixtures.resetAll(level);
+        Spirits.removeAll(level);
         finish(server);
     }
 

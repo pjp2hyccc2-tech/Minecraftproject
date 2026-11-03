@@ -26,6 +26,9 @@ public class NoteScreen extends Screen {
     private int scroll;
     private int visible;
     private int pw, ph, px, py;
+    /** The text column and line pitch: on the ruled paper texture (rules every 13 of 256 px from 40, red margin at 34). */
+    private int textX, textW, firstY, lineH;
+    private boolean ruled;
 
     public NoteScreen(String id, String extra) {
         this(id, extra, null);
@@ -44,18 +47,31 @@ public class NoteScreen extends Screen {
         ph = Math.min(height - 24, 320);
         px = (width - pw) / 2;
         py = (height - ph) / 2;
-        List<FormattedCharSequence> out = new ArrayList<>(font.split(Component.translatable("note.reisatsu." + id + ".body"), pw - 48));
+        ruled = Tex.has(PAPER);
+        if (ruled) {
+            textX = px + pw * 39 / 256;
+            textW = pw - pw * 39 / 256 - pw * 14 / 256;
+            lineH = Math.max(10, Math.round(ph * 13 / 256.0f));
+            firstY = py + Math.round(ph * 40 / 256.0f) - 9;
+            visible = Math.max(1, (py + Math.round(ph * 235 / 256.0f) - 9 - firstY) / lineH + 1);
+        } else {
+            textX = px + 24;
+            textW = pw - 48;
+            lineH = 11;
+            firstY = py + 42;
+            visible = Math.max(1, (ph - 70) / 11);
+        }
+        List<FormattedCharSequence> out = new ArrayList<>(font.split(Component.translatable("note.reisatsu." + id + ".body"), textW));
         if (id.equals(Notes.REPORT)) {
             out.add(FormattedCharSequence.EMPTY);
-            out.addAll(font.split(Component.translatable("note.reisatsu.report.list"), pw - 48));
+            out.addAll(font.split(Component.translatable("note.reisatsu.report.list"), textW));
             List<String> seen = List.of(extra.split(","));
             for (String k : Notes.PHENOMENA) {
                 String mark = seen.contains(k) ? "☑ " : "☐ ";
-                out.addAll(font.split(Component.literal(mark + I18n.get("phenomenon.reisatsu." + k)), pw - 48));
+                out.addAll(font.split(Component.literal(mark + I18n.get("phenomenon.reisatsu." + k)), textW));
             }
         }
         lines = out;
-        visible = Math.max(1, (ph - 70) / 11);
     }
 
     @Override
@@ -69,16 +85,21 @@ public class NoteScreen extends Screen {
             g.fill(px, py, px + pw, py + ph, 0xFFE8E0CC);
             g.fill(px, py, px + pw, py + 2, 0xFFD0C6B0);
         }
-        g.drawCenteredString(font, title, width / 2, py + 20, 0x2A1810);
-        g.fill(px + 30, py + 32, px + pw - 30, py + 33, 0x553A2A1A);
-        int y = py + 42;
+        if (ruled) {
+            g.drawString(font, title, textX, firstY - lineH - 3, 0x2A1810, false);
+        } else {
+            g.drawCenteredString(font, title, width / 2, py + 20, 0x2A1810);
+            g.fill(px + 30, py + 32, px + pw - 30, py + 33, 0x553A2A1A);
+        }
+        int y = firstY;
         for (int i = scroll; i < Math.min(lines.size(), scroll + visible); i++) {
-            g.drawString(font, lines.get(i), px + 24, y, 0x22180F, false);
-            y += 11;
+            g.drawString(font, lines.get(i), textX, y, 0x22180F, false);
+            y += lineH;
         }
         if (lines.size() > visible) {
-            g.drawCenteredString(font, Component.translatable("gui.reisatsu.scroll", scroll + 1, Math.max(1, lines.size() - visible + 1)),
-                    width / 2, py + ph - 18, 0x6A5442);
+            int pages = (lines.size() + visible - 3) / Math.max(1, visible - 1);
+            int page = scroll >= lines.size() - visible ? pages : Math.min(pages, scroll / Math.max(1, visible - 1) + 1);
+            g.drawCenteredString(font, Component.translatable("gui.reisatsu.scroll", page, Math.max(1, pages)), width / 2, py + ph - 18, 0x6A5442);
         }
         super.render(g, mouseX, mouseY, partial);
     }

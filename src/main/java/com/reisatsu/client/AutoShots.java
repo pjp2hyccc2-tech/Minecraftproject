@@ -238,6 +238,25 @@ public final class AutoShots {
         log(String.format(Locale.ROOT, "  %s %.1f blocks away", best.getType().getDescriptionId(), bd));
     }
 
+    /** Logs where the spirits the client knows about are, and what they do. */
+    private static void logSpirits(Minecraft mc) {
+        if (mc.level == null) return;
+        for (Entity e : mc.level.entitiesForRendering()) {
+            if (e instanceof Spirit sp) {
+                log(String.format(Locale.ROOT, "  %s at %.2f %.2f %.2f yaw %.0f pose %d", sp.kind().id, e.getX(), e.getY(), e.getZ(), e.getYRot(), sp.pose()));
+            }
+        }
+    }
+
+    /** Removes the spirits of one kind (no chat error when there are none, unlike /kill). */
+    private static void removeKind(Minecraft mc, String id) {
+        SpiritKind k = SpiritKind.byId(id);
+        server(mc, (ServerLevel level) -> {
+            for (Spirit sp : Spirits.all(level)) if (sp.kind() == k) sp.discard();
+            Spirits.invalidate();
+        });
+    }
+
     private static void clearSpirits(Minecraft mc) {
         server(mc, (ServerLevel level) -> {
             Spirits.paused = true;
@@ -283,12 +302,12 @@ public final class AutoShots {
         scene("15_finder_outside", mc -> at(mc, 4.5, 41.5, 180.0f, 0.0f), 50);
         add("finder_down", mc -> hold(mc, "reisatsu:reisha_camera{film:10}"), 10);
         // ---- each spirit at work where it lives: with the eye, then through the finder
-        inSitu("chef", SpiritKind.CHEF, 24.5, 13.5, 180.0f, 6.0f);
-        inSitu("waitress", SpiritKind.WAITRESS, 32.5, 17.5, 180.0f, 4.0f);
-        inSitu("child", SpiritKind.CHILD, 9.5, 27.5, -90.0f, 12.0f);
-        inSitu("mirror_woman", SpiritKind.MIRROR_WOMAN, 10.5, 19.5, 180.0f, 2.0f);
-        inSitu("manager", SpiritKind.MANAGER, 12.5, 5.5, 70.0f, 10.0f);
-        inSitu("visitor", SpiritKind.VISITOR, 34.5, 24.5, 14.0f, 14.0f);
+        inSitu("chef", SpiritKind.CHEF, 24.5, 13.5, 180.0f, 6.0f, false);
+        inSitu("waitress", SpiritKind.WAITRESS, 35.5, 13.5, 108.0f, 8.0f, true);
+        inSitu("child", SpiritKind.CHILD, 9.5, 27.5, -90.0f, 12.0f, false);
+        inSitu("mirror_woman", SpiritKind.MIRROR_WOMAN, 10.5, 19.5, 180.0f, 2.0f, false);
+        inSitu("manager", SpiritKind.MANAGER, 11.5, 2.5, 24.0f, 14.0f, false);
+        inSitu("visitor", SpiritKind.VISITOR, 34.5, 24.5, 14.0f, 14.0f, false);
         // ---- a pose sweep in the dining room's north aisle, lights on
         add("sweep_lights", mc -> {
             clearSpirits(mc);
@@ -301,7 +320,7 @@ public final class AutoShots {
         for (String[] p : poses) {
             String id = p[0];
             add("sweep_" + id, mc -> {
-                cmd(mc, "kill @e[type=reisatsu:" + id + "]");
+                removeKind(mc, id);
                 at(mc, 16.5, 13.5, -90.0f, 6.0f);
                 hold(mc, "reisatsu:reisha_camera{film:10}");
             }, 30);
@@ -319,7 +338,7 @@ public final class AutoShots {
                 add("finder_" + id + "_" + pose, mc -> hold(mc, "reisatsu:reisha_camera_finder{film:10}"), 16);
                 snap(String.format(Locale.ROOT, "%02d_%s_finder_p%s", k, id, pose));
             }
-            add("clear_" + id, mc -> cmd(mc, "kill @e[type=reisatsu:" + id + "]"), 5);
+            add("clear_" + id, mc -> removeKind(mc, id), 5);
         }
         // ---- a photo: the waitress bowing, unaware, facing us
         add("photo_setup", mc -> {
@@ -339,7 +358,7 @@ public final class AutoShots {
         snap("51_photo_named");
         add("photo_lower", mc -> {
             hold(mc, "reisatsu:reisha_camera{film:9}");
-            cmd(mc, "kill @e[type=reisatsu:waitress]");
+            removeKind(mc, "waitress");
         }, 20);
         if (!SHADERS) {
             scene("52_album", mc -> mc.setScreen(new AlbumScreen()), 12);
@@ -428,7 +447,7 @@ public final class AutoShots {
     }
 
     /** One spirit alone, spawned at home and left to its routine; seen with the eye, then through the finder. */
-    private static void inSitu(String id, SpiritKind kind, double x, double z, float yaw, float pitch) {
+    private static void inSitu(String id, SpiritKind kind, double x, double z, float yaw, float pitch, boolean still) {
         add("situ_" + id, mc -> {
             clearSpirits(mc);
             hold(mc, "reisatsu:reisha_camera{film:10}");
@@ -436,9 +455,11 @@ public final class AutoShots {
             server(mc, (ServerLevel level) -> {
                 Spirit s = Spirits.spawnAtHome(level, kind);
                 if (s instanceof Visitor v) v.seatNow();
+                if (s != null && still) s.debugStill = true;
                 if (s == null) Reisatsu.LOGGER.warn("[reisatsu] autoshots: {} did not spawn at home", id);
             });
         }, 90);
+        add("situ_where_" + id, AutoShots::logSpirits, 0);
         snap("30_situ_" + id + "_eye");
         add("situ_finder_" + id, mc -> hold(mc, "reisatsu:reisha_camera_finder{film:10}"), 20);
         snap("31_situ_" + id + "_finder");
@@ -447,7 +468,9 @@ public final class AutoShots {
 
     /** The world's camera positions with its lighting setups, the HUD hidden, as a spectator (no collisions). */
     private static void worldTour() {
-        List<WorldTour.Shot> shots = WorldTour.shots();
+        List<WorldTour.Shot> shots = new ArrayList<>(WorldTour.shots());
+        // under a shader pack every frame is slow: the night views only (no night-vision copies, no all-lights-on set)
+        if (SHADERS) shots.removeIf(s -> s.nightVision() || s.name().endsWith("_on"));
         add("tour_begin", mc -> {
             clearSpirits(mc);
             cmd(mc, "gamemode spectator");
@@ -471,8 +494,9 @@ public final class AutoShots {
             snap("world_" + s.name());
             last = s;
         }
+        final boolean endNv = nv;
         add("tour_end", mc -> {
-            cmd(mc, "effect clear @s night_vision");
+            if (endNv) cmd(mc, "effect clear @s night_vision");
             cmd(mc, "gamemode creative");
             mc.options.hideGui = false;
             server(mc, (ServerLevel level) -> Spirits.paused = false);

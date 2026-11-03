@@ -184,9 +184,18 @@ public final class Finder {
         }
         int px = (w - pw) / 2, py = (h - ph) / 2;
         if (Tex.has(FRAME)) {
+            // the texture's 4:3 window (352 x 264 at 80,12 of 512 x 288) laid exactly over the photo window, whatever
+            // the screen's shape; its mask colour continues beyond the texture
+            float sc = pw / 352.0f;
+            int tx = Math.round(px - 80 * sc), ty = Math.round(py - 12 * sc), tw = Math.round(512 * sc), th = Math.round(288 * sc);
+            int mask = 0xF20B0B0B;
+            if (tx > 0) g.fill(0, 0, tx, h, mask);
+            if (tx + tw < w) g.fill(tx + tw, 0, w, h, mask);
+            if (ty > 0) g.fill(Math.max(0, tx), 0, Math.min(w, tx + tw), ty, mask);
+            if (ty + th < h) g.fill(Math.max(0, tx), ty + th, Math.min(w, tx + tw), h, mask);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            g.blit(FRAME, 0, 0, w, h, 0, 0, 512, 288, 512, 288);
+            g.blit(FRAME, tx, ty, tw, th, 0, 0, 512, 288, 512, 288);
             RenderSystem.disableBlend();
         } else {
             // a stand-in frame: dark mask outside the window, bright corner lines
