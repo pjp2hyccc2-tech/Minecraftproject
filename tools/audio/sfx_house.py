@@ -393,12 +393,12 @@ def knock_closet(rng, i=1):
     def paper(v):
         m = ns(0.25)
         tt = np.arange(m) / SR
-        th = np.sin(TAU * np.cumsum(300 + 120 * np.exp(-tt / 0.006)) / SR) * dsp.env_ad(m, 0.0008, 0.03)
-        buzz = dsp.bandpass(rng.standard_normal(m), 800, 6000, 2) * dsp.env_ad(m, 0.0005, 0.008)
-        lat = _hit(rng, FUSUMA, vel=0.6, hard=0.4, dur=0.2, noise=0.2)
-        out = th * 0.8 + K.rmsn(buzz) * 0.15
-        out[:len(lat)] += K.nrm(lat)[:m] * 0.35
-        return out * v
+        th = np.sin(TAU * np.cumsum(300 + 120 * np.exp(-tt / 0.006)) / SR) * dsp.env_ad(m, 0.0012, 0.018)
+        buzz = dsp.bandpass(rng.standard_normal(m), 600, 4000, 2) * dsp.env_ad(m, 0.0008, 0.008)
+        lat = _hit(rng, FUSUMA, vel=0.6, hard=0.3, dur=0.2, noise=0.1)
+        out = th * 0.8 + K.rmsn(buzz) * 0.12
+        out[:len(lat)] += K.nrm(lat)[:m] * 0.3
+        return dsp.lowpass(out, 4500, 2) * v * 0.4  # a knuckle on paper: soft, dull
     if i == 1:
         y = np.zeros(ns(1.0))
         K.place(y, paper(0.9), 0.02)
