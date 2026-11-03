@@ -57,19 +57,21 @@ class OniDoll(Spec):
     Pose ids: 0 FLOAT (face down in the water, limp, bobbing, every ~23 s an arm jerks; the knife is hidden; put the
     entity at the water surface), 1 SIT (slumped against a wall behind it, head lolling, nodding off and snapping
     awake every 13 s; the knife lying on the floor in its paw),
-    2 CRAWL (dragging itself on its arms, legs and ears trailing; one pull every 8 ticks, ~0.28 blocks each, so
-    move it at ~0.035 blocks/tick; the knife strikes the floor at clock 16n + 9), 3 WALK (stiff marionette steps
-    with a step every 11 ticks covering ~0.2 blocks (~0.018 blocks/tick), swaying as if on strings, the knife dragging
-    behind and clanking down at clock 22n + 18.5), 4 STAND (upright, perfectly still, head lying on its shoulder
-    at 90 degrees), 5 TURN (the head turns 180 degrees round to the viewer in three jerks at pose ticks 6, 13 and 20 -
-    leave the body facing away from the viewer), 6 PEEK (leans its head and left ear out past a door frame on its
-    left: the frame edge belongs ~0.17 blocks to its left; the head emerges in three little starts over 30 ticks),
-    7 LUNGE (crouch 0-2, the knife raised over 0-4, springs from tick 2: ~0.56 blocks forward and ~0.2 up by tick 6 on its own (carry the
-    entity on to the camera), the knife raised and the mouth seam torn open, the knife comes down at ticks 6-8:
-    cut to the jump scare at ~6-7), 8 LIMP (shrieks and spasms 0-3, the knife flies out of its
-    paw and vanishes at tick 3.5 - drop the knife item there - falls on its back by tick 9 with a plush bounce, rice pours from the
-    wound), 9 BURN (lying on its back: thrashing, then curling up and shrinking over ~200 ticks while burnt patches
-    glowing on the eyes layer spread over it).
+    2 CRAWL (dragging itself on its arms, legs and ears trailing: a pull every 8 ticks covering 0.275 blocks, so
+    0.034 blocks/tick moves it without sliding; the knife stabs into the floor at clock 16n + 6.5), 3 WALK (stiff
+    marionette steps, one every 11 ticks covering 0.16 blocks (0.015 blocks/tick), hoisted and swaying as if on
+    strings, the knife dragging behind and clanking down at clock 11n + 6.5), 4 STAND (upright, perfectly still,
+    the head turned over on its neck to lie at 90 degrees; snaps up out of a crawl or a walk in 3 ticks),
+    5 TURN (the head turns 180 degrees round to the viewer in three jerks at pose ticks 6, 13 and 20 - leave the
+    body facing away from the viewer), 6 PEEK (leans its head and left ear out past a door frame on its left - the
+    entity's left = yaw - 90: the frame edge belongs ~0.17 blocks that way; the head emerges in three little
+    starts over 30 ticks),
+    7 LUNGE (crouch 0-2, the knife raised over 0-4, springs from tick 2: ~0.56 blocks forward and ~0.2 up by tick 6
+    on its own - carry the entity on to the camera - the mouth seam torn open over rice teeth, the knife comes down
+    at ticks 6-8: cut to the jump scare at ~6-7), 8 LIMP (shrieks and spasms 0-3, the knife flies out of its paw and
+    vanishes at tick 3.5 - drop the knife item there - falls on its back by tick 9 with a plush bounce, rice pours
+    from the wound), 9 BURN (lying on its back: thrashing, then curling up and shrinking over ~200 ticks while burnt
+    patches glowing on the eyes layer spread over it). LIMP and BURN lie on the floor plane at the entity origin.
     The eyes layer carries the button-eye glints, the knife edge, the drips and the embers of BURN."""
 
     # ------------------------------------------------------------------------------------------------ geometry
