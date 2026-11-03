@@ -195,8 +195,8 @@ for _t in range(8):
 A_POLE = Atlas('pole_sign')
 FRAME_BROWN = M.paint('sign_frame', ramp(['#140a06', '#22120a', '#301a0e', '#3e2414', '#4c2e1a'], 5), base=2.4,
                       scuffs=0.04, rust=0.02)
-POLE_PAINT = M.paint('sign_pole', ramp(['#1a1c1e', '#2a2c2e', '#3a3c3e', '#4a4c4e', '#5a5c5e'], 5), base=2.6,
-                     scuffs=0.05, rust=0.03)
+POLE_PAINT = M.paint('sign_pole', ramp(['#1e1410', '#2c1e16', '#3a281e', '#4a3426', '#5a4030'], 5), base=2.6,
+                     scuffs=0.03, rust=0.0)
 
 
 def pole_sign_tile(t, lit_):
@@ -502,18 +502,24 @@ A_DUMP = Atlas('dumpster')
 
 
 def _dump_side(w, h, face):
-    a = m_paint(w, h, ramp(['#0c1a12', '#14281c', '#1c3826', '#264830', '#30583a'], 5), 12601 + w, base=2.6, scuffs=0.08,
-                rust=0.04)
-    if face != 'h' and w >= 12 and h >= 8:
-        g = text_mask('ゴミ', 9, FONT_SANS_JP_BOLD, binary=True)
-        stamp_center(a, g, w / 2, h / 2, '#d8dcd0')
-        grime(a, 12602, strength=0.25, color='#2a2010', bottom=0.4)
+    a = m_paint(w, h, ramp(['#0c1a12', '#14281c', '#1c3826', '#264830', '#30583a'], 5), 12601 + w, base=2.8, amp=0.2,
+                scuffs=0.04)
+    if face not in ('h', 'up', 'down'):
+        for x in range(2, w - 1, 4):                       # pressed ribs
+            vline(a, x, 1, h - 2, '#30583a')
+            vline(a, x + 1, 1, h - 2, '#0e1c14')
+        grime(a, 12602, strength=0.12, color='#2a2010', bottom=0.35)
+        if face == 'north' and w >= 12 and h >= 8:
+            # a weathered collection sticker
+            rect(a, w // 2 - 3, 3, w // 2 + 3, 7, '#d8dcd0')
+            hline(a, w // 2 - 2, w // 2 + 2, 4, '#3a5a8a')
+            hline(a, w // 2 - 2, w // 2 + 1, 6, '#6a6e66')
     return a
 
 
 def dumpster():
     m = Model('dumpster', A_DUMP)
-    S = M.custom('dump', _dump_side)
+    S = M.custom('dump', _dump_side, per_face=True)
     m.box([0.5, 1.5, 1.5], [15.5, 13.5, 14.5], S)
     m.box([0.2, 13.5, 1.2], [15.8, 14.5, 14.8], M.paint('dump_lid', ramp(['#0c1a12', '#14281c', '#1c3826', '#264830'], 4),
                                                         base=2.0, scuffs=0.06), rot=('x', -22.5, [8, 13.5, 14.8]))

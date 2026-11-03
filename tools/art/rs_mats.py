@@ -125,7 +125,7 @@ def granite(key):
 
 
 def custom(key, fn, per_face=False):
-    """fn(w, h, face) -> array (full control)."""
+    """fn(w, h, face) -> array (full control). per_face: face is the face name (north, ...) instead of 'v' / 'h'."""
     return Mat(key, lambda w, h, face, **_: fn(w, h, face), per_face=per_face)
 
 
