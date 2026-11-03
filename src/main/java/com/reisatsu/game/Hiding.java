@@ -54,13 +54,12 @@ public final class Hiding {
         p.setYHeadRot(facing.toYRot());
         ps.lastYaw = facing.toYRot();
         ps.lastPitch = 0;
-        level.playSound(null, c.x, c.y + 1, c.z, ModSounds.FIXTURE_LOCKER.get(), SoundSource.BLOCKS, 0.7f, 1.0f);
-        NoiseSystem.emit(level, c.add(0, 1, 0), 6.0f, "locker", p);
+        // the locker's door sound, noise and flap are the world's (Behaviours.locker)
         GameManager.event(p, GameManager.EV_LOCKER, 1 + facing.get2DDataValue(), "");
         return true;
     }
 
-    /** Steps out in front of the locker. */
+    /** Steps out in front of the locker; sound = the game's own exits (sneaking out, being taken), not the world's. */
     public static void exit(ServerPlayer p, boolean sound) {
         PlayerState ps = GameManager.state(p);
         if (ps.hiddenAt == null) return;
@@ -73,8 +72,9 @@ public final class Hiding {
         Vec3 out = Vec3.atBottomCenterOf(at.relative(f));
         p.teleportTo(out.x, out.y, out.z);
         if (sound && p.level() instanceof ServerLevel level) {
-            level.playSound(null, out.x, out.y + 1, out.z, ModSounds.FIXTURE_LOCKER.get(), SoundSource.BLOCKS, 0.7f, 0.92f);
-            NoiseSystem.emit(level, out.add(0, 1, 0), 6.0f, "locker", p);
+            level.playSound(null, out.x, out.y + 1, out.z, ModSounds.FIXTURE_LOCKER.get(), SoundSource.BLOCKS, p.isShiftKeyDown() ? 0.5f : 0.9f, 0.95f);
+            NoiseSystem.emit(level, out.add(0, 1, 0), p.isShiftKeyDown() ? 3.0f : 6.0f, "locker", p);
+            if (level.getBlockState(at).hasProperty(com.reisatsu.block.Props.OPEN)) com.reisatsu.world.Fixtures.flapLocker(level, at);
         }
         if (p.level() instanceof ServerLevel level) for (Spirit s : Spirits.all(level)) s.markSawHide(p, false);
         GameManager.event(p, GameManager.EV_LOCKER, 0, "");

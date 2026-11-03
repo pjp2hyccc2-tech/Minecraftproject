@@ -1,10 +1,17 @@
 package com.reisatsu.client.render;
 
 import com.reisatsu.Reisatsu;
+import com.reisatsu.client.model.ChefModel;
+import com.reisatsu.client.model.ChildModel;
+import com.reisatsu.client.model.ManagerModel;
+import com.reisatsu.client.model.MediumCarModel;
+import com.reisatsu.client.model.MediumModel;
+import com.reisatsu.client.model.MirrorWomanModel;
+import com.reisatsu.client.model.VisitorModel;
+import com.reisatsu.client.model.WaitressModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -16,80 +23,53 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * The entity models. The spirits worker makes {@code com.reisatsu.client.model.<Name>Model} (each with
- * {@code LAYER}, {@code createBodyLayer()} and a {@code (ModelPart)} constructor); they are picked up by reflection as
- * soon as they exist in the build, and until then a plain humanoid / box stands in.
+ * The entity models: the spirits worker's {@code com.reisatsu.client.model.*Model} (docs/DESIGN.md §5). The plain
+ * humanoid / box stand-ins remain registered for anything unknown.
  */
 public final class Models {
     public static final ModelLayerLocation PLACEHOLDER = new ModelLayerLocation(Reisatsu.id("placeholder_humanoid"), "main");
     public static final ModelLayerLocation PLACEHOLDER_CAR = new ModelLayerLocation(Reisatsu.id("placeholder_car"), "main");
 
-    private record Found(ModelLayerLocation layer, Method create, Constructor<?> ctor) {}
-
-    private static final Map<String, Found> FOUND = new HashMap<>();
-    private static boolean scanned;
-
     private Models() {}
 
-    private static synchronized void scan() {
-        if (scanned) return;
-        scanned = true;
-        for (String name : new String[]{"Visitor", "Waitress", "Chef", "Child", "MirrorWoman", "Manager", "Medium", "MediumCar"}) {
-            try {
-                Class<?> c = Class.forName("com.reisatsu.client.model." + name + "Model");
-                ModelLayerLocation layer = (ModelLayerLocation) c.getField("LAYER").get(null);
-                Method create = c.getMethod("createBodyLayer");
-                Constructor<?> ctor = c.getConstructor(ModelPart.class);
-                FOUND.put(name, new Found(layer, create, ctor));
-                Reisatsu.LOGGER.info("[reisatsu] model {}Model found", name);
-            } catch (ClassNotFoundException e) {
-                Reisatsu.LOGGER.info("[reisatsu] model {}Model not in this build: a stand-in is drawn", name);
-            } catch (Throwable t) {
-                Reisatsu.LOGGER.warn("[reisatsu] model {}Model unusable: {}", name, t.toString());
-            }
-        }
-    }
-
     public static boolean has(String name) {
-        scan();
-        return FOUND.containsKey(name);
+        return switch (name) {
+            case "Visitor", "Waitress", "Chef", "Child", "MirrorWoman", "Manager", "Medium", "MediumCar" -> true;
+            default -> false;
+        };
     }
 
     public static void layers(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        scan();
         event.registerLayerDefinition(PLACEHOLDER, () -> LayerDefinition.create(HumanoidModel.createMesh(CubeDeformation.NONE, 0.0f), 64, 64));
         event.registerLayerDefinition(PLACEHOLDER_CAR, Models::carLayer);
-        for (Map.Entry<String, Found> e : FOUND.entrySet()) {
-            Found f = e.getValue();
-            event.registerLayerDefinition(f.layer(), () -> {
-                try {
-                    return (LayerDefinition) f.create().invoke(null);
-                } catch (Exception ex) {
-                    throw new IllegalStateException("createBodyLayer of " + e.getKey() + "Model failed", ex);
-                }
-            });
-        }
+        event.registerLayerDefinition(VisitorModel.LAYER, VisitorModel::createBodyLayer);
+        event.registerLayerDefinition(WaitressModel.LAYER, WaitressModel::createBodyLayer);
+        event.registerLayerDefinition(ChefModel.LAYER, ChefModel::createBodyLayer);
+        event.registerLayerDefinition(ChildModel.LAYER, ChildModel::createBodyLayer);
+        event.registerLayerDefinition(MirrorWomanModel.LAYER, MirrorWomanModel::createBodyLayer);
+        event.registerLayerDefinition(ManagerModel.LAYER, ManagerModel::createBodyLayer);
+        event.registerLayerDefinition(MediumModel.LAYER, MediumModel::createBodyLayer);
+        event.registerLayerDefinition(MediumCarModel.LAYER, MediumCarModel::createBodyLayer);
     }
 
-    /** The real model of this name, or null. */
+    /** The real model of this name, or null for an unknown name. */
     @Nullable
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T extends Entity> EntityModel<T> create(String name, EntityRendererProvider.Context ctx) {
-        scan();
-        Found f = FOUND.get(name);
-        if (f == null) return null;
-        try {
-            return (EntityModel<T>) f.ctor().newInstance(ctx.bakeLayer(f.layer()));
-        } catch (Throwable t) {
-            Reisatsu.LOGGER.error("[reisatsu] could not build {}Model", name, t);
-            return null;
-        }
+        EntityModel model = switch (name) {
+            case "Visitor" -> new VisitorModel(ctx.bakeLayer(VisitorModel.LAYER));
+            case "Waitress" -> new WaitressModel(ctx.bakeLayer(WaitressModel.LAYER));
+            case "Chef" -> new ChefModel(ctx.bakeLayer(ChefModel.LAYER));
+            case "Child" -> new ChildModel(ctx.bakeLayer(ChildModel.LAYER));
+            case "MirrorWoman" -> new MirrorWomanModel(ctx.bakeLayer(MirrorWomanModel.LAYER));
+            case "Manager" -> new ManagerModel(ctx.bakeLayer(ManagerModel.LAYER));
+            case "Medium" -> new MediumModel(ctx.bakeLayer(MediumModel.LAYER));
+            case "MediumCar" -> new MediumCarModel(ctx.bakeLayer(MediumCarModel.LAYER));
+            default -> null;
+        };
+        return (EntityModel<T>) model;
     }
 
     private static LayerDefinition carLayer() {

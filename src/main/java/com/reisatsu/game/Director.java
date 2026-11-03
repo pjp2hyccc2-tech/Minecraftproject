@@ -44,6 +44,7 @@ public final class Director {
         nextBig = 20 * 75;
         lastBig = -20 * 60;
         clock = 0;
+        phoneUntil = -1;
         PENDING.clear();
         PENDING_RUN.clear();
     }
@@ -55,6 +56,16 @@ public final class Director {
     public static void witness(ServerPlayer p, String what) {
         GameData data = GameData.get(p.server);
         if (data.witnessed.add(what)) data.setDirty();
+    }
+
+    /** Until when the phone rings (the world clears its RINGING state before telling us it was picked up). */
+    private static long phoneUntil = -1;
+
+    /** Was the phone ringing (and is now answered)? Clears the ringing. */
+    public static boolean answerPhone() {
+        boolean ringing = clock < phoneUntil;
+        phoneUntil = -1;
+        return ringing;
     }
 
     private static void later(int ticks, Runnable r) {
@@ -268,6 +279,8 @@ public final class Director {
             }
             case "phone" -> {
                 Fixtures.setDevice(level, "phone", true);
+                phoneUntil = clock + 20 * 14;
+                NoiseSystem.emit(level, Layout.marker("phone").center(), 12.0f, "phone", null);
                 later(20 * 14, () -> Fixtures.setDevice(level, "phone", false));
                 fear(p, 0.1f);
                 witnessNear(p, "phone", Layout.marker("phone").center(), 40);
