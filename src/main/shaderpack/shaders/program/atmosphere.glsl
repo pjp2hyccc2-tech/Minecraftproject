@@ -57,7 +57,6 @@ void main() {
     vec4 sp = texture(colortex8, uv);
     float hazeAmt = 0.0;
     float splitAmt = 0.0;
-    float fmode = finderMode();
 #ifdef SPIRIT_HAZE_ON
     // dilate a little: the air around the body wavers too
     vec4 s1 = texture(colortex8, uv + vec2(6.0, 0.0) * px);
@@ -68,8 +67,7 @@ void main() {
     if (hazeAmt > 0.0) {
         vec2 q = uv * vec2(aspectRatio, 1.0) * 26.0;
         vec2 w = vec2(vnoise2(q + vec2(0.0, -t * 1.7)), vnoise2(q * 1.3 + vec2(5.1, -t * 2.1))) - 0.5;
-        // (through the finder the figure itself holds still: its face must stay sharp)
-        uv += w * hazeAmt * 0.0042 * (1.0 + 0.6 * fear()) * (1.0 - 0.7 * fmode);
+        uv += w * hazeAmt * 0.0042 * (1.0 + 0.6 * fear());
     }
     splitAmt = max(sp.r, max(max(s1.r, s2.r), max(s3.r, s4.r)));
 #endif
@@ -77,11 +75,10 @@ void main() {
     vec3 color = texture(colortex0, uv).rgb;
 #ifdef SPIRIT_HAZE_ON
     if (splitAmt > 0.0) {
-        // the spirit's colours do not quite line up: a thin fringe at its outline (where the
-        // mask changes), never a rainbow over the body - through the finder only the outline
-        vec2 dir = vec2(1.0, 0.25) * px * (1.2 + 1.6 * fear()) * (1.0 - 0.35 * fmode);
+        // the spirit's colours do not quite line up (strongest at its edges, where the mask changes)
+        vec2 dir = vec2(1.0, 0.25) * px * (2.0 + 2.0 * fear() + 1.2 * finderMode());
         float edge = abs(texture(colortex8, uv + dir * 2.0).r - texture(colortex8, uv - dir * 2.0).r);
-        float k = splitAmt * mix(0.20 + 0.80 * edge, edge * 0.70, fmode) * (0.25 + 0.75 * max(sp.b, fmode));
+        float k = splitAmt * (0.35 + 0.65 * edge) * (0.25 + 0.75 * max(sp.b, finderMode()));
         vec3 cr = texture(colortex0, uv + dir * 1.5).rgb;
         vec3 cb = texture(colortex0, uv - dir * 1.5).rgb;
         color = mix(color, vec3(cr.r, color.g, cb.b), saturate(k));
@@ -125,13 +122,13 @@ void main() {
     vec4 hist = vec4(0.0);
 #ifdef AFTERIMAGE_ON
     vec3 prev = texture(colortex9, texcoord).rgb;
-    float decay = exp(-clamp(frameTime, 0.0, 0.25) / 0.06);       // a short trail
+    float decay = exp(-clamp(frameTime, 0.0, 0.25) / 0.11);
     vec3 now = vec3(0.55, 0.80, 1.00) * sp.g;
     hist = vec4(max(now, prev * decay * finderMode()), 1.0);
 #endif
 
-    // ---- bloom source: emissive surfaces (lamps, signs, embers, the spirits' rims in the finder)
-    float fm = fmode;
+    // ---- bloom source: emissive surfaces (lamps, signs, embers, the spirits in the finder)
+    float fm = finderMode();
     float thr = mix(1.10, 0.90, fm);
     vec3 bloom = color * aux.r * 0.85 + max(color - vec3(thr), vec3(0.0)) * 0.30;
     bloom = min(bloom, vec3(32.0));

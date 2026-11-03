@@ -62,16 +62,10 @@ vec3 sceneWithAberration(vec2 uv, float ca, float lod) {
     return vec3(sampleSceneLod(uv + d, lod).r, sampleSceneLod(uv, lod).g, sampleSceneLod(uv - d, lod).b);
 }
 
-// filmic curve (ACES fit): deep toe, soft shoulder. In the restaurant the toe is lifted a little
-// (dark-adapted eyes): the deepest shadows keep their shapes - the booths and pillars of the dark
-// dining hall stay barely readable - while the mid-tones and the lights stay as they were
+// filmic curve (ACES fit): deep toe, soft shoulder
 vec3 toneCurve(vec3 x) {
     x = max(x, vec3(0.0));
-    vec3 y = (x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14);
-#ifdef WORLD_HIDAMARI
-    y += 0.30 * x * exp(-x / 0.03);
-#endif
-    return saturate(y);
+    return saturate((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14));
 }
 
 vec3 grade(vec3 c, float F, float D, float fm) {
@@ -256,7 +250,7 @@ void main() {
     if (fm > 0.5) {
         vec3 trail = texture(colortex9, uv).rgb;
         float here = texture(colortex8, uv).g;
-        color += max(trail - vec3(0.55, 0.80, 1.00) * here, vec3(0.0)) * 0.09;
+        color += max(trail - vec3(0.55, 0.80, 1.00) * here, vec3(0.0)) * 0.16;
     }
   #endif
 #endif

@@ -5,8 +5,7 @@
 //  separable: TABLE_Z finds the best 4 along z (from the emitter map's 4 lamp layers),
 //  TABLE_X the best 6 of those along x, walks the wall tiles from the column to each of them
 //  (lamps behind a wall are flagged and ranked last) and keeps 4.
-//  Score = level - |dx| - |dz| - a vertical penalty (distance from the camera's height band),
-//  + OUTDOOR_REACH for the lamps outside (they light the open lot farther than vanilla does).
+//  Score = level - |dx| - |dz| - a vertical penalty (distance from the camera's height band).
 //    out: colortex7 texel (x, z) = 4 packed lamps (lib/emitters.glsl tablePack)
 //  prepare1 also writes the frame's list of outdoor lamps for the air (row 0 right of the
 //  table, airListTexel; read by lib/emitters.glsl airLampsGather).
@@ -61,7 +60,6 @@ vec4 airListTexel(int slot) {
     float eN[AIR_WORK];
     int eType[AIR_WORK];
     int eLevel[AIR_WORK];
-    for (int e = 0; e < AIR_WORK; e++) { eSum[e] = vec3(0.0); eN[e] = 1.0; eType[e] = 0; eLevel[e] = 0; }
     int nE = 0;
     for (int r = 0; r < 6; r++) {
         int zg = cc.y - 30 + r * 12;
@@ -73,7 +71,7 @@ vec4 airListTexel(int slot) {
             for (int k = 0; k < 4; k++) {
                 float v = zt[k];
                 if (abs(v) < 0.5) continue;
-                int c = tableCode(v);
+                int c = int(abs(v) + 0.5);
                 int type = c & 31;
                 if (!emitterOutdoorType(type) || !emitterCasts(type)) continue;
                 int level = (c >> 5) & 15;
@@ -174,9 +172,7 @@ void main() {
                 if (yrel < 0 || yrel > 31) continue;
                 int level = emapLampLevel(t);
                 if (level <= 0) level = int(EM_LEVEL[type]);
-                // the lamps outside reach farther over the open lot (lib/emitters.glsl OUTDOOR_REACH)
-                float score = float(level) - abs(float(dz)) - tableVerticalPenalty(float(by))
-                            + (emitterOutdoorType(type) ? OUTDOOR_REACH : 0.0);
+                float score = float(level) - abs(float(dz)) - tableVerticalPenalty(float(by));
                 if (score <= 0.0) continue;
                 // tiny bias: brighter lamps first on equal score
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, 0, dz, false));
@@ -193,13 +189,12 @@ void main() {
             for (int k = 0; k < 4; k++) {
                 float v = zt[k];
                 if (abs(v) < 0.5) continue;
-                int c = tableCode(v);
+                int c = int(abs(v) + 0.5);
                 int type = c & 31;
                 int level = (c >> 5) & 15;
                 int yrel = (c >> 9) & 31;
                 int dz = ((c >> 19) & 31) - 15;
-                float score = float(level) - abs(float(dz)) - abs(float(dx)) - tableVerticalPenalty(float(yrel + refY))
-                            + (emitterOutdoorType(type) ? OUTDOOR_REACH : 0.0);
+                float score = float(level) - abs(float(dz)) - abs(float(dx)) - tableVerticalPenalty(float(yrel + refY));
                 if (score <= 0.0) continue;
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, dx, dz, false));
             }
@@ -211,7 +206,7 @@ void main() {
         for (int i = 0; i < KEEP; i++) {
             float v = bestE[i];
             if (abs(v) < 0.5) continue;
-            int c = tableCode(v);
+            int c = int(abs(v) + 0.5);
             int dx = ((c >> 14) & 31) - 15;
             int dz = ((c >> 19) & 31) - 15;
             bool walled = wallBetween(cell, cell + ivec2(dx, dz));

@@ -106,7 +106,7 @@ const int EM_PATTERN[EM_COUNT] = int[EM_COUNT](
 
 // how bright the lamp's own glowing texels are (surface emission, x texture colour)
 const float EM_SURF[EM_COUNT] = float[EM_COUNT](
-    0.0, 3.2, 3.2, 3.6, 3.0, 2.6, 1.6, 3.2, 3.0, 5.0, 4.0, 1.7, 1.2, 3.0, 3.0, 1.6,
+    0.0, 3.2, 3.2, 3.6, 3.0, 2.6, 2.0, 3.2, 3.0, 5.0, 4.0, 1.7, 1.2, 3.0, 3.0, 1.6,
     1.3, 1.6, 1.4, 2.6, 2.2, 0.9, 3.2, 1.8, 1.6);
 
 // vanilla light levels of the design (used when the shadow pass cannot measure them)
@@ -117,7 +117,7 @@ const float EM_LEVEL[EM_COUNT] = float[EM_COUNT](
 bool emitterCasts(int type) { return type > EM_NONE && type < EM_COUNT && type != EM_LED && type != EM_SCREEN; }
 int emitterTypeOfBlock(int id) {
     if (id > BLK_EMIT_BASE && id <= BLK_EMIT_MAX) return id - BLK_EMIT_BASE;
-    if (id == BLK_FLAME || id == BLK_CANDLE) return EM_FLAME;
+    if (id == BLK_FLAME) return EM_FLAME;
     if (id == BLK_LAMP)  return EM_LANTERN;
     if (id == BLK_GLOW)  return EM_GLOWBLOCK;
     return EM_NONE;
@@ -204,86 +204,24 @@ float dangerStutter(int type, vec3 blockPos, float t) {
 #endif
 }
 
-// ---- the glowing surface of a lamp (gbuffers, shadow pass) ------------------------------------
-// Which texels of a lamp model glow - never the whole model: the housings around the light
-// (the call button's white plastic, the vending machine's cabinet, steel, the beige ceiling
-// tile round a panel) are as bright as any lamp in the texture, so brightness alone says little.
-//  * marked: the art draws the glowing faces of its lamp models full-bright (forge_data
-//    block_light / sky_light 15, baked into the quad and merged with the computed light by
-//    Embeddium and vanilla): on such a face every lit texel glows (a display's white, a sign's
-//    face, the cakes in the lit case), the dark ones do not.
-//  * unmarked faces (and the cube lamps: ceiling panels and downlights) glow only where the
-//    colour is the lamp's own: its hue, saturated and bright, or a white hotter than any
-//    housing. c: texture colour (sRGB), N: world normal
-float emitterSurfaceMask(int type, vec3 c, vec3 N, bool marked) {
-    float l = luma(c);
-    float mx = maxOf(c);
-    float ch = mx - minOf(c);           // absolute chroma: dark colours count less
-    if (type == EM_FLUO || type == EM_FLUO_BROKEN) {
-        // the cool white diffuser on the bottom face, not its frame or the tile round it
-        return smoothstep(-0.4, -0.6, N.y) * smoothstep(0.80, 0.88, l) * (1.0 - smoothstep(0.05, 0.10, c.r - c.b));
+// ---- the glowing surface of a lamp (gbuffers) -----------------------------------------------
+// which texels of the lamp's texture glow. albedoSrgb: texture colour, N: world normal
+float emitterSurfaceMask(int type, vec3 albedoSrgb, vec3 N) {
+    float l = luma(albedoSrgb);
+    float c = chroma(albedoSrgb);
+    if (type == EM_FLUO || type == EM_FLUO_BROKEN || type == EM_DOWN) {
+        // only the panel / lens on the bottom face
+        return smoothstep(-0.4, -0.6, N.y) * smoothstep(0.30, 0.62, l);
     }
-    if (type == EM_DOWN) {
-        // the round lens: white-hot, or warm and bright - not the trim ring, not the tile
-        return smoothstep(-0.4, -0.6, N.y) * max(smoothstep(0.90, 0.95, l), smoothstep(0.76, 0.83, l) * smoothstep(0.18, 0.28, ch));
+    if (type == EM_EXIT || type == EM_CALLDISP || type == EM_LED || type == EM_TRAFFIC || type == EM_GAS || type == EM_HEAT) {
+        // coloured lamps: the saturated (or white-hot) texels
+        return smoothstep(0.42, 0.75, l + c * 0.55) * smoothstep(0.08, 0.22, maxOf(albedoSrgb));
     }
-    float strict;
-    if (type == EM_LED) {
-        // a red LED: pure, bright red (the call button's orange cap and white body stay dark)
-        return smoothstep(0.50, 0.70, c.r - max(c.g, c.b)) * smoothstep(0.70, 0.90, c.r);
-    } else if (type == EM_CALLDISP) {
-        // the lit dots of the digits (red, the orange corner LEDs), not the dark unlit dots
-        return smoothstep(0.50, 0.70, ch) * smoothstep(0.60, 0.85, mx) * step(c.g, c.r);
-    } else if (type == EM_EXIT) {
-        // the green panel and the white figure on it, not the light grey housing
-        strict = max(smoothstep(0.12, 0.28, c.g - max(c.r, c.b)), smoothstep(0.95, 0.98, l));
-    } else if (type == EM_SODIUM || type == EM_TRAFFIC) {
-        // the lens: saturated and bright (the grey housing, the unlit lenses stay dark)
-        strict = smoothstep(0.35, 0.55, ch) * smoothstep(0.75, 0.95, mx);
-    } else if (type == EM_VENDING) {
-        // the cans and labels; the white display only where the art marks it (the cabinet is as white)
-        strict = smoothstep(0.30, 0.50, ch) * smoothstep(0.45, 0.75, mx);
-    } else if (type == EM_DRINK) {
-        // the lit drink labels, not the stainless around them
-        strict = max(smoothstep(0.30, 0.45, ch) * smoothstep(0.50, 0.75, mx), smoothstep(0.86, 0.92, l));
-    } else if (type == EM_CAKE) {
-        // the cakes in their light and the tube itself, not the white case or the glass
-        strict = max(smoothstep(0.25, 0.40, ch) * smoothstep(0.40, 0.70, mx), smoothstep(0.965, 0.99, l));
-    } else if (type == EM_HEAT) {
-        // the heat lamp's red-orange, not the steel shelf or the order slips
-        strict = smoothstep(0.45, 0.65, ch) * smoothstep(0.75, 0.92, mx) * step(c.b, c.r);
-    } else if (type == EM_GAS) {
-        strict = smoothstep(0.30, 0.45, ch) * smoothstep(0.60, 0.85, mx) * step(c.r, c.b);
-    } else if (type == EM_CRT) {
-        // the static's greys, not the dark cabinet or the chrome knobs
-        strict = smoothstep(0.30, 0.42, l) * (1.0 - smoothstep(0.72, 0.76, l)) * (1.0 - smoothstep(0.05, 0.08, ch));
-    } else if (type == EM_MONITOR || type == EM_ALERT) {
-        // the feeds are tinted (green views, the red REC frame) or bright (the time stamps);
-        // the casing is a neutral grey
-        float mid = c.r + c.g + c.b - mx - minOf(c);
-        strict = max(smoothstep(0.035, 0.07, mx - mid), smoothstep(0.50, 0.60, l));
-    } else if (type == EM_PC) {
-        // the blue screen and its white icons, not the beige case
-        strict = max(smoothstep(0.06, 0.14, c.b - c.r), smoothstep(0.86, 0.90, l) * (1.0 - smoothstep(0.03, 0.07, c.r - c.b)));
-    } else if (type == EM_SCREEN) {
-        // the register's teal screen and its green display, not the keys or the receipt
-        strict = smoothstep(0.06, 0.14, c.g - c.r) * step(c.r, c.b + 0.05);
-    } else if (type == EM_PENDANT) {
-        // the amber glass and the bulb, not the dark cap and cord
-        strict = max(smoothstep(0.45, 0.70, l + ch * 0.3) * smoothstep(0.15, 0.30, ch), smoothstep(0.88, 0.94, l));
-    } else {
-        // signs (the pole sign's box, the roof letters) and anything else: the bright texels
-        strict = smoothstep(0.38, 0.72, l + ch * 0.30);
+    if (type == EM_CRT || type == EM_MONITOR || type == EM_ALERT || type == EM_PC || type == EM_SCREEN) {
+        return smoothstep(0.22, 0.50, l + c * 0.3);
     }
-    // a marked face: every lit texel glows by its own colour
-    return marked ? max(strict, smoothstep(0.30, 0.65, l + 0.5 * ch)) : strict;
-}
-
-// the small indicator lights the art marks full-bright on blocks that are not lamps (the door
-// sensor, a ringing phone, the dishwasher, the hand dryer, a camera's power LED): their
-// coloured texels glow, the grey panels around them do not
-float indicatorMask(vec3 c) {
-    return max(smoothstep(0.35, 0.55, maxOf(c) - minOf(c)) * smoothstep(0.60, 0.85, maxOf(c)), smoothstep(0.92, 0.97, luma(c)));
+    // signs, panels, shades, cases: the bright texels
+    return smoothstep(0.38, 0.72, l + c * 0.30);
 }
 
 // ---- shadow pass encoding (shadowcolor0, RGBA8; alpha is always 1, so neither an injected
@@ -395,11 +333,9 @@ float blindTransmission(vec3 P, vec3 L) {
 
 // ---- the light table (colortex7) ----------------------------------------------------------
 //  texel (x, z) in [0, 128)^2 = block column emapOrigin() + (x, z); rgba = 4 lamps, each an
-//  integer (stored doubled, tablePack): type (5 bits) | level (4) | y - tableRefY (5) | dx + 15 (5) | dz + 15 (5),
+//  integer in a float: type (5 bits) | level (4) | y - tableRefY (5) | dx + 15 (5) | dz + 15 (5),
 //  negative when a wall stands between the column and the lamp. 0 = empty.
-//  The 32-block height band starts 12 below the camera, at most at y 58: the world's lamps stand
-//  between y 62 and 76 (the pole sign) and stay in the band when the camera is high over the lot.
-int tableRefY() { return min(int(floor(cameraPosition.y)) - 12, 58); }
+int tableRefY() { return int(floor(cameraPosition.y)) - 12; }
 const float TABLE_REACH = 15.0;
 // the outdoor lamps of the air, one list for the whole frame (prepare1), in colortex7 row 0
 // right of the table: texel AIR_LIST_X + i = (block - emap origin / table ref y as floats,
@@ -413,20 +349,9 @@ float tableVerticalPenalty(float y) {
     return max(abs(y + 0.5 - ref) - 2.5, 0.0) * 0.6;
 }
 
-// The 24-bit code is stored doubled (an even integer below 2^25: exact in a float). Read back
-// with int(x + 0.5): above 2^23 a float cannot hold x.5 and the sum rounds to even - an odd code
-// stored as itself would gain one there (its type bits change: a sodium lamp south of a column
-// read as the traffic light, an exit sign as a vending machine, a heat lamp as the gas flames),
-// an even one comes back as it was. (Keep this exact decode expression: int(abs(v) + 0.25) made
-// the CI's llvmpipe - Mesa 26 / LLVM 21 - hang at the first frame in the world.)
 float tablePack(int type, int level, int yrel, int dx, int dz, bool walled) {
     int c = type | (level << 5) | (yrel << 9) | ((dx + 15) << 14) | ((dz + 15) << 19);
-    float f = float(c * 2);
-    return walled ? -f : f;
-}
-// the packed integer back from its float
-int tableCode(float v) {
-    return int(abs(v) + 0.5) >> 1;
+    return walled ? -float(c) : float(c);
 }
 
 struct Lamp {
@@ -440,7 +365,7 @@ struct Lamp {
 
 Lamp tableUnpack(float v, ivec2 column) {
     Lamp L;
-    int c = tableCode(v);
+    int c = int(abs(v) + 0.5);
     L.type = c & 31;
     L.level = float((c >> 5) & 15);
     int yrel = (c >> 9) & 31;
@@ -464,25 +389,11 @@ vec4 tableFetch(ivec2 column) {
 // ---- light of one lamp at a point ---------------------------------------------------------
 // distance falloff: inverse square with a soft core of the lamp's size, gone at its reach
 // (vanilla's light level ends there too)
-// Out in the open the lamps that stand outside (the sodium lamps, the signs, the vending machines)
-// light the lot well beyond vanilla's 15 levels - a wet lot faintly lit from lamp to lamp, not
-// pools that end in a step: the light table keeps them for columns this much farther away
-// (prepare.glsl) and open-air surfaces see them that much farther.
-const float OUTDOOR_REACH = 7.0;
-float lampFalloff(Lamp L, float d, bool open) {
+float lampFalloff(Lamp L, float d) {
     int ti = clamp(L.type, 0, EM_COUNT - 1);
     float s = EM_SIZE[ti];
-    float reach = L.level + 1.0 + (open ? OUTDOOR_REACH : 0.0);
+    float reach = L.level + 1.0;
     return (1.0 - smoothstep(reach * 0.55, reach * 1.05, d)) / (d * d + s * s + 0.12);
-}
-float lampFalloff(Lamp L, float d) { return lampFalloff(L, d, false); }
-// does the lamp reach the surface? X: the level the lamp alone would give here (vanilla:
-// Manhattan distance), A: the vanilla level here. A lamp whose light would have to be brighter
-// here than it is must be behind a wall. An outdoor lamp lighting an open-air surface (open) is
-// stopped only by the walls the table knows (the building), not by vanilla's reach.
-float lampVis(float X, float A, bool open) {
-    if (open) return smoothstep(0.3, 1.6, X + OUTDOOR_REACH);
-    return (1.0 - smoothstep(A + 0.6, A + 2.2, X)) * smoothstep(0.3, 1.6, X);
 }
 // angular emission pattern. dir: unit vector from the lamp to the point
 float lampPattern(int type, vec3 dir) {
@@ -517,9 +428,7 @@ vec3 lampRadiance(Lamp L) {
 //  level here (0..15, smooth), rough / f0: specular response (f0 < 0: no highlights)
 //  diffuse: out, irradiance (x albedo by the caller), spec: out, reflected light
 //  domDir / domW: out, direction to the strongest lamp and its share (screen-space shadows)
-//  fillK: the fill for light no lamp explains (0 on the art's full-bright faces, whose lightmap
-//  was replaced: their real light level is unknown)
-void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoSided, float fillK,
+void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoSided,
              out vec3 diffuse, out vec3 spec, out vec3 domPos, out float domW) {
     diffuse = vec3(0.0);
     spec = vec3(0.0);
@@ -532,19 +441,16 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
     vec3 bounceC = vec3(0.0);
     float bounceW = 0.0;
     float best = 0.0;
-    float Xmax = 0.0;                    // the brightest level the known lamps explain here
-    bool openAir = openSky(cellP) > 0.5;
     for (int k = 0; k < 4; k++) {
         float v = tab[k];
         if (abs(v) < 0.5) continue;
         Lamp L = tableUnpack(v, column);
+        if (!emitterCasts(L.type)) continue;
         // the level this lamp would give here on a free path (vanilla: Manhattan distance)
         vec3 cc = floor(cellP) + 0.5;
         vec3 bc = L.block + 0.5;
         vec3 md = abs(cc - bc);
         float X = L.level - (md.x + md.y + md.z);
-        Xmax = max(Xmax, X);             // walled ones too: vanilla light goes round the walls
-        if (!emitterCasts(L.type)) continue;
         vec3 colNow = lampColorNow(L);
         vec3 rad = colNow * EM_GAIN[clamp(L.type, 0, EM_COUNT - 1)] * LIGHT_STRENGTH;
         // the coloured bounce: the lamp that best explains the light level here
@@ -553,13 +459,12 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
         bounceW += wb;
         // direct light: only if no wall stands in between and the vanilla level says the path is free
         if (L.walled) continue;
-        bool open = openAir && !L.covered;
-        float vis = lampVis(X, A, open);
+        float vis = (1.0 - smoothstep(A + 0.6, A + 2.2, X)) * smoothstep(0.3, 1.6, X);
         if (vis <= 0.0) continue;
         vec3 d = L.pos - wp;
         float dist = length(d);
         vec3 l = d / max(dist, 1e-3);
-        float fall = lampFalloff(L, dist, open) * lampPattern(L.type, -l) * vis;
+        float fall = lampFalloff(L, dist) * lampPattern(L.type, -l) * vis;
         if (fall <= 0.0) continue;
         // the sign outside, falling in through the blinds
         if (!L.covered && wp.y < 69.5) fall *= blindTransmission(wp + N * 0.05, L.pos);
@@ -582,12 +487,6 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
     float bounceF = 0.10 * lv * lv + 0.010 * lv;
     vec3 bc = bounceW > 1e-3 ? bounceC / bounceW : vec3(0.80, 0.80, 0.78);
     diffuse += bc * bounceF * LIGHT_STRENGTH;
-    // light that no lamp explains: vanilla light from something the pack does not draw - the
-    // invisible light block over the medium's spot (the glow of her car's dome light), the torch
-    // of a player without shaders: a soft warm fill from above, as bright as its level says
-    float unexplained = smoothstep(1.0, 3.0, A - Xmax);
-    float la = A / 15.0;
-    diffuse += vec3(1.00, 0.84, 0.66) * (0.75 * la * la) * unexplained * (0.70 + 0.30 * N.y) * LIGHT_STRENGTH * fillK;
     domW = best / max(maxOf(diffuse), 1e-4);
 }
 
@@ -613,17 +512,13 @@ float airS2[AIR_LAMPS];       // squared soft core
 float airReach[AIR_LAMPS];
 bool  airCovered[AIR_LAMPS];
 
-// a sodium head is a small, hot source high above the lot: in the low mist it makes a halo, it
-// does not light up the whole sky (its in-scatter is scaled down from its surface light)
-const float SODIUM_AIR = 0.10;
 void airAdd(int slot, Lamp L, vec3 rd, float tEnd, float w, float gainMul) {
     int ti = clamp(L.type, 0, EM_COUNT - 1);
     vec3 o = L.pos - cameraPosition;
     float tc = dot(o, rd);
     vec3 toClose = rd * clamp(tc, 0.0, tEnd) - o;
     airBlock[slot] = L.block;
-    airRad[slot] = lampRadiance(L) * gainMul * lampPatternAir(L.type, toClose / max(length(toClose), 1e-3))
-                 * (L.type == EM_SODIUM ? SODIUM_AIR : 1.0);
+    airRad[slot] = lampRadiance(L) * gainMul * lampPatternAir(L.type, toClose / max(length(toClose), 1e-3));
     airW[slot] = w;
     airTc[slot] = tc;
     airH2[slot] = max(dot(o, o) - tc * tc, 0.0);
