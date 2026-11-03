@@ -546,6 +546,12 @@ this.fog.yScale = Math.max(0.02F, fogk);
 SPEC = Visitor
 
 
+import ent_scene as SC  # noqa: E402
+POSE_SCENES = {1: SC.booth_table(), 3: SC.booth_table()}
+WALKING = (0, 5)
+NAKED_ALPHA = 0.0
+
+
 # ================================================================================================ previews
 def previews(b, ER, rows_sel=None):
     import ent_scene as SC
