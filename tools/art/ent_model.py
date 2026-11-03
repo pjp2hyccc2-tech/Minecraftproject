@@ -87,6 +87,7 @@ class Part:
         self.xRot, self.yRot, self.zRot = self.rot
         self.xScale = self.yScale = self.zScale = 1.0
         self.visible = True
+        self.skipDraw = False
 
     def walk(self):
         yield self

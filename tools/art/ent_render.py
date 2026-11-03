@@ -101,9 +101,10 @@ def collect_quads(spec, M_world):
         Mp = M @ p.matrix()
         if not p.visible:
             return
-        for c in p.cubes:
-            for (fname, pts, uv) in cube_quads(c, Mp, spec.tex_w, spec.tex_h):
-                quads.append((pts, uv))
+        if not p.skipDraw:
+            for c in p.cubes:
+                for (fname, pts, uv) in cube_quads(c, Mp, spec.tex_w, spec.tex_h):
+                    quads.append((pts, uv))
         for ch in render_children(p):
             rec(ch, Mp)
     rec(spec.root, M_world)
