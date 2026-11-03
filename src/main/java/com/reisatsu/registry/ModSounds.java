@@ -2,6 +2,8 @@ package com.reisatsu.registry;
 
 import com.reisatsu.Reisatsu;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraftforge.common.util.ForgeSoundType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -174,6 +176,25 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> GAME_RELEASE = reg("game.release");
     public static final RegistryObject<SoundEvent> GAME_DAWN = reg("game.dawn");
     public static final RegistryObject<SoundEvent> GAME_ENDING_BAD = reg("game.ending_bad");
+
+    // Floor sound types: step and fall use the floor's footstep, break / place / hit come from a vanilla type.
+    // Vanilla plays step sounds at 0.15 x the type's volume; 4.0 keeps footsteps well above the quiet room beds.
+    /** restroom / vestibule tiles, white tiles */
+    public static final ForgeSoundType SOUND_TYPE_TILE = floor(PLAYER_STEP_TILE, SoundType.STONE);
+    /** the wood-look vinyl of the dining room */
+    public static final ForgeSoundType SOUND_TYPE_VINYL = floor(PLAYER_STEP_VINYL, SoundType.WOOD);
+    /** the kitchen's quarry tiles */
+    public static final ForgeSoundType SOUND_TYPE_KITCHEN = floor(PLAYER_STEP_KITCHEN, SoundType.STONE);
+    /** wet asphalt, parking lines, the sidewalk */
+    public static final ForgeSoundType SOUND_TYPE_WET = floor(PLAYER_STEP_WET, SoundType.STONE);
+    /** broken plates / glass decals */
+    public static final ForgeSoundType SOUND_TYPE_GLASS = floor(PLAYER_STEP_GLASS, SoundType.GLASS);
+    /** scattered menus */
+    public static final ForgeSoundType SOUND_TYPE_PAPER = floor(PLAYER_STEP_PAPER, SoundType.WOOL);
+
+    private static ForgeSoundType floor(RegistryObject<SoundEvent> step, SoundType base) {
+        return new ForgeSoundType(4.0f, 1.0f, base::getBreakSound, step, base::getPlaceSound, base::getHitSound, step);
+    }
 
     private ModSounds() {}
 

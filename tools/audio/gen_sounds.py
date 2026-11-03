@@ -222,11 +222,17 @@ def write_subtitles():
 def _group(ent):
     if ent.event.startswith("music."):
         return "music"
-    if ent.loop and ent.event.startswith("amb."):
+    if ent.loop and ent.ch == 2:
         return "beds"
+    if ent.loop:
+        return "pos. loops"
     if ent.event == "game.jumpscare":
         return "jumpscare"
-    return "one-shots"
+    if ent.ja and ent.ja.startswith("「"):
+        return "voice lines"
+    if ent.ch == 2:
+        return "game / UI"
+    return "foley"
 
 
 CACHE = os.path.join(HERE, ".stats_cache.json")
@@ -315,14 +321,14 @@ def report(spec_dir=None, pattern=None):
                  + (f", {len(missing)} MISSING" if missing else ""))
     lines.append("")
     lines.append("Level summary (decoded files)")
-    for g in ("beds", "music", "jumpscare", "one-shots"):
+    for g in ("beds", "pos. loops", "music", "foley", "voice lines", "game / UI", "jumpscare"):
         items = groups.get(g, [])
         if not items:
             continue
         lu = [s["lufs"] for _, s in items]
         mm = [s["mmax"] for _, s in items]
         rm = [s["rms_db"] for _, s in items]
-        lines.append(f"  {g:10s} {len(items):3d} files  LUFS-I {min(lu):6.1f} .. {max(lu):6.1f}   max momentary "
+        lines.append(f"  {g:11s} {len(items):3d} files  LUFS-I {min(lu):6.1f} .. {max(lu):6.1f}   max momentary "
                      f"{min(mm):6.1f} .. {max(mm):6.1f}   RMS {min(rm):6.1f} .. {max(rm):6.1f} dBFS")
     lines.append("")
     lines.append("Loop seams: the click measure at the wrap point compared with the same measure at 40 interior points")

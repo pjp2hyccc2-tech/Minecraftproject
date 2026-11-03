@@ -145,7 +145,7 @@ CATALOG = [
     # ------------------------------------------------------------ spirits (mono)
     e("visitor.step", 4, 1, f"{SP}:visitor_step", 12, ("peak", -4, 22), "濡れた足を引きずる音", "Wet, dragging footsteps"),
     e("visitor.breath", 2, 1, f"{SP}:visitor_breath", 6, ("peak", -5), "ヘルメットの中の息", "Breathing inside a helmet"),
-    e("visitor.visor", 1, 1, f"{SP}:visitor_visor", 8, ("peak", -2), "バイザーがひび割れる", "Visor cracks"),
+    e("visitor.visor", 1, 1, f"{SP}:visitor_visor", 8, ("peak", -1.5, 13), "バイザーがひび割れる", "Visor cracks"),
     e("visitor.drip", 2, 1, f"{SP}:visitor_drip", 6, ("peak", -6), "滴り落ちる水", "Water drips off something"),
     e("visitor.whisper", 2, 1, f"{SP}:visitor_whisper", 6, ("peak", -4), "「……まだかな」", "\"...Is she coming...\""),
     e("waitress.step", 3, 1, f"{SP}:waitress_step", 10, ("peak", -6, 22), "規則正しすぎる足音", "Too-regular footsteps"),
