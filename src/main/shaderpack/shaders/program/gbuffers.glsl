@@ -275,6 +275,7 @@ void main() {
 
     vec3 lin = toLinear(albedo.rgb);
     vec3 emission = vec3(0.0);       // linear HDR light emitted by the surface itself
+    float fillK = 1.0;               // the fill for light no lamp explains (lampsAt)
     vec4 spiritOut = vec4(0.0);
 
   #if defined PROG_TERRAIN || defined PROG_WATER || defined PROG_BLOCK
@@ -290,7 +291,7 @@ void main() {
     if (marked) {
         float own = etype > EM_NONE ? max(EM_LEVEL[clamp(etype, 0, EM_COUNT - 1)] - 1.0, 0.0) : 12.0;
         lm = vec2(own / 15.0, openSky(wp + Ngeo * 0.3));
-        lampFillScale = 0.0;
+        fillK = 0.0;
     }
     #endif
     if (id == BLK_FLAME) {
@@ -424,7 +425,7 @@ void main() {
         float NdotV = saturate(dot(N, V));
         float F = 0.02 + 0.98 * pow(1.0 - NdotV, 5.0);
         float BODY = id == BLK_PUDDLE ? 0.05 : 0.18;
-        vec3 body = shadeSurface(lin * BODY, N, playerPos, lm, 1.0, vec3(0.0), MAT_PUDDLE, 1.0, dither, true, 0.0, glow);
+        vec3 body = shadeSurface(lin * BODY, N, playerPos, lm, 1.0, vec3(0.0), MAT_PUDDLE, 1.0, dither, true, 0.0, fillK, glow);
         body += handLightsForward(lin * BODY, playerPos, vec3(0.0, 1.0, 0.0), 0.0, vec2(1.0, -1.0));
         vec3 glints = handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(0.05, 0.02));
         color = body + glints;
@@ -457,7 +458,7 @@ void main() {
             float NdotV = saturate(abs(dot(N, V)));
             float F = 0.04 + 0.96 * pow(1.0 - NdotV, 5.0);
             vec3 tint = mix(vec3(0.80, 0.88, 0.86), lin, 0.35);
-            color = shadeSurface(tint * 0.05, N, playerPos, lm, 1.0, vec3(0.0), MAT_WINDOW, 0.0, dither, true, 0.0, glow);
+            color = shadeSurface(tint * 0.05, N, playerPos, lm, 1.0, vec3(0.0), MAT_WINDOW, 0.0, dither, true, 0.0, fillK, glow);
             color += handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(0.04, 0.04)) * (0.3 + cover * 1.5);
             alpha = clamp(max(albedo.a * 0.40, 0.08) + F * 0.5 + cover * 0.12, 0.0, 0.85);
         } else if (mat == MAT_MIRROR) {
@@ -472,13 +473,13 @@ void main() {
                 emission += vec3(0.55, 0.62, 0.70) * k * 0.010;
             }
             vec3 tint = vec3(0.30, 0.36, 0.40);
-            color = shadeSurface(tint * 0.10 * (1.0 + smudge), N, playerPos, lm, 1.0, emission, MAT_MIRROR, 0.0, dither, true, 0.0, glow);
+            color = shadeSurface(tint * 0.10 * (1.0 + smudge), N, playerPos, lm, 1.0, emission, MAT_MIRROR, 0.0, dither, true, 0.0, fillK, glow);
             color += handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(0.06 + 0.4 * smudge, 0.40)) * 0.6;
             alpha = 0.50 + 0.12 * smudge;
         } else if (mat == MAT_GLASS_SMALL || id == BLK_GLASS) {
             float NdotV = saturate(abs(dot(N, V)));
             float F = 0.04 + 0.96 * pow(1.0 - NdotV, 5.0);
-            color = shadeSurface(lin, N, playerPos, lm, ao, emission, mat, 0.0, dither, true, 0.0, glow);
+            color = shadeSurface(lin, N, playerPos, lm, ao, emission, mat, 0.0, dither, true, 0.0, fillK, glow);
             color += handLightsForward(lin, playerPos, N, 0.0, vec2(0.08, 0.04));
             alpha = clamp(albedo.a + F * 0.4, 0.0, 0.95);
         } else
@@ -486,7 +487,7 @@ void main() {
         {
             vec4 surf = materialSurface(mat, wet);
             vec2 gloss = vec2(mix(surf.x, 0.06, puddle), surf.w > 0.0 || surf.z > 0.5 ? surf.y : -1.0);
-            color = shadeSurface(lin, N, playerPos, lm, ao, emission, mat, wet, dither, receiveShadow, twoSided, glow);
+            color = shadeSurface(lin, N, playerPos, lm, ao, emission, mat, wet, dither, receiveShadow, twoSided, fillK, glow);
   #if defined TRANSLUCENT || defined PROG_WATER || defined PROG_TEXTURED || defined PROG_BASIC || defined PROG_HAND
             // no deferred pass for these: the hand lights and the flash are added right here
     #ifdef PROG_HAND

@@ -474,9 +474,6 @@ float lampFalloff(Lamp L, float d) { return lampFalloff(L, d, false); }
 // Manhattan distance), A: the vanilla level here. A lamp whose light would have to be brighter
 // here than it is must be behind a wall. An outdoor lamp lighting an open-air surface (open) is
 // stopped only by the walls the table knows (the building), not by vanilla's reach.
-// the fill for light no lamp explains (lampsAt): off for the art's full-bright faces, whose
-// lightmap was replaced (their real light level is unknown)
-float lampFillScale = 1.0;
 float lampVis(float X, float A, bool open) {
     if (open) return smoothstep(0.3, 1.6, X + OUTDOOR_REACH);
     return (1.0 - smoothstep(A + 0.6, A + 2.2, X)) * smoothstep(0.3, 1.6, X);
@@ -514,7 +511,9 @@ vec3 lampRadiance(Lamp L) {
 //  level here (0..15, smooth), rough / f0: specular response (f0 < 0: no highlights)
 //  diffuse: out, irradiance (x albedo by the caller), spec: out, reflected light
 //  domDir / domW: out, direction to the strongest lamp and its share (screen-space shadows)
-void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoSided,
+//  fillK: the fill for light no lamp explains (0 on the art's full-bright faces, whose lightmap
+//  was replaced: their real light level is unknown)
+void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoSided, float fillK,
              out vec3 diffuse, out vec3 spec, out vec3 domPos, out float domW) {
     diffuse = vec3(0.0);
     spec = vec3(0.0);
@@ -582,7 +581,7 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
     // of a player without shaders: a soft warm fill from above, as bright as its level says
     float unexplained = smoothstep(1.0, 3.0, A - Xmax);
     float la = A / 15.0;
-    diffuse += vec3(1.00, 0.84, 0.66) * (0.75 * la * la) * unexplained * (0.70 + 0.30 * N.y) * LIGHT_STRENGTH * lampFillScale;
+    diffuse += vec3(1.00, 0.84, 0.66) * (0.75 * la * la) * unexplained * (0.70 + 0.30 * N.y) * LIGHT_STRENGTH * fillK;
     domW = best / max(maxOf(diffuse), 1e-4);
 }
 
