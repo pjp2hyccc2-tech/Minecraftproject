@@ -468,7 +468,9 @@ public final class AutoShots {
 
     /** The world's camera positions with its lighting setups, the HUD hidden, as a spectator (no collisions). */
     private static void worldTour() {
-        List<WorldTour.Shot> shots = WorldTour.shots();
+        List<WorldTour.Shot> shots = new ArrayList<>(WorldTour.shots());
+        // under a shader pack every frame is slow: the night views only (no night-vision copies, no all-lights-on set)
+        if (SHADERS) shots.removeIf(s -> s.nightVision() || s.name().endsWith("_on"));
         add("tour_begin", mc -> {
             clearSpirits(mc);
             cmd(mc, "gamemode spectator");
