@@ -1,0 +1,51 @@
+selftest starting
+PASS mountain dimension exists
+PASS terrain loaded (512)
+PASS pois loaded (15 points, 31 ribbons)
+start BlockPos{x=-199, y=191, z=-210} bag BlockPos{x=-162, y=182, z=-172} rope BlockPos{x=-137, y=179, z=-136} rope column -137,-132 y 178..163
+PASS the cliff below the stake is high enough for a rope
+generated 12 POI chunks in 601 ms
+PASS lost bag at -162, 182, -172 (found block.sounan.lost_bag)
+PASS rope anchor at -137, 179, -136 (found block.sounan.rope_anchor)
+PASS omiki bottle at 19, 135, 17 (found block.sounan.omiki_bottle)
+PASS hokora at 68, 142, 36 (found block.sounan.hokora)
+PASS hut key hook at 73, 127, 129 (found block.sounan.key_hook)
+PASS tunnel gate at 120, 115, 152 (found block.sounan.iron_gate)
+PASS car door at 168, 104, 242 (found block.sounan.car_door)
+PASS public phone at 11, 133, 9 (found block.sounan.public_phone)
+PASS notice board at 28, 133, 9 (found block.sounan.notice_board)
+PASS memorial board at 155, 103, 235 (found block.sounan.notice_board)
+PASS the gate starts locked
+PASS the start position is free
+PASS tunnel interior is air
+PASS tunnel ceiling is concrete
+route sweep: 32 chunks in 306 ms
+PASS route chunks generate in reasonable time
+PASS all six monsters spawn
+PASS monsters survive 100 ticks (6)
+PASS nobody started the game on the dedicated server
+PASS the bag opens
+PASS the bag holds the rope, the flare and batteries
+PASS the rope is tied to the stake
+PASS the rope hangs down the cliff (16 blocks)
+rope top BlockPos{x=-137, y=178, z=-132} edge BlockPos{x=-137, y=178, z=-133} edge above: Block{minecraft:air} / Block{minecraft:air}, over the rope: Block{minecraft:air}
+PASS the rope starts level with the cliff edge
+PASS the cliff edge next to the rope is free to stand on (no rock on it)
+PASS the air over the rope's top is free, so you can step onto it from the edge
+PASS the rope's top lies against the cliff face
+PASS the shrine wants an offering first
+PASS the sake is taken from the village house
+PASS the sake is offered at the shrine
+PASS the shrine shows the offering
+PASS the gate stays locked without the key
+PASS the key is taken from the hut
+PASS the key opens the tunnel gate
+checkpoint after the key: shrine
+PASS no ending yet
+PASS the car ends the night
+PASS progress resets
+PASS a replay puts the mountain back (bag, rope, sake, shrine, key, gate)
+PASS a nozoki provoked at 5 blocks attacks (hostile=true, captured=false)
+PASS the hut sleeper sleeps while it is quiet
+PASS the sleeper wakes when a door bangs next to it
+SELFTEST RESULT: PASS
