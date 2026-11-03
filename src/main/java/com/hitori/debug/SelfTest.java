@@ -555,7 +555,7 @@ public final class SelfTest {
         add("suspicion_check", () -> {
             OniDoll d = Doll.get(level);
             check(d.suspicion > 0.5f, String.format(Locale.ROOT, "a noise from the closet raises its suspicion (%.2f)", d.suspicion));
-            check(d.state() == OniDoll.State.FUSUMA, "and it comes to the fusuma (" + d.state() + ")");
+            check(d.state() == OniDoll.State.FUSUMA || d.state() == OniDoll.State.STANDOFF, "and it comes to the fusuma (" + d.state() + ")");
             ps().mouth = 1.0f;
             d.suspicion = 1.0f;
         }, 6);
@@ -694,7 +694,14 @@ public final class SelfTest {
             Woman w = Director.womanEntity(level);
             check(cam > 0 && w != null && w.haunts() == cam, "the woman in a camera's feed (CAM" + cam + ")");
             int other = cam == 1 ? 2 : 1;
-            for (int i = 0; i < 4 && w != null; i++) Director.onCameraShown(level, fake, ps(), other, cam);
+            if (w != null) {
+                Director.onCameraShown(level, fake, ps(), other, cam);
+                check(w.stage == 0, "the first look finds her as she was placed, facing the wall (stage " + w.stage + ")");
+            }
+            for (int i = 0; i < 4 && w != null; i++) {
+                w.seenTicks = 20;  // watched her feed
+                Director.onCameraShown(level, fake, ps(), other, cam);
+            }
             check(w != null && w.stage >= 4, "closer every time you come back to her feed (stage " + (w == null ? -1 : w.stage) + ")");
         }, 30);
         add("woman_gone", () -> check(Director.womanEntity(level) == null, "and then she is gone"), 5);

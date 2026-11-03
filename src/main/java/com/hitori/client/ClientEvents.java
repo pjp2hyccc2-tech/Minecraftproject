@@ -321,7 +321,7 @@ public final class ClientEvents {
             }
             return;
         }
-        if (inGame()) HorrorAudio.bodyEcho(event.getSound());
+        HorrorAudio.observe(event.getSound());
     }
 
     @SubscribeEvent

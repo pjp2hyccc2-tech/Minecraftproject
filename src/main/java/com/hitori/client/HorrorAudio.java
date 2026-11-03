@@ -10,7 +10,6 @@ import com.hitori.game.GameManager;
 import com.hitori.registry.ModSounds;
 import com.hitori.world.Layout;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -25,17 +24,20 @@ import java.util.Map;
 /**
  * The sound direction of the night (docs/DESIGN.md §8): the apartment at 3 a.m. is silent — the beds by where you are
  * (the apartment's rain and fridge, the closet's close dead air, the tiled bathroom, the corridor's rain), the CRT's
- * static (the most important sound of the game) at the TV whenever it is on, the camera microphone's hiss and the
- * laptop's fan while you watch a feed; music layers by phase, fear and danger; your body: the heartbeat at its real
+ * static (the most important sound of the game) at the TV whenever it is on, the laptop's fan while you watch a feed;
+ * music layers by phase, fear and danger; your body: the heartbeat at its real
  * rate (loud while you hold your breath), frightened breathing — muffled and gurgling with salt water in the mouth;
- * the doll's dragging. While the listener is a camera, what happens close to your body is still heard, faintly
- * ({@link #bodyEcho}).
+ * the doll's dragging. The acoustics engine ({@link com.hitori.client.sound.Acoustics}, fed by {@link ClientSetup})
+ * does the rest: the closet's muffling, the camera microphone's band-limit and hiss, the body path while the listener
+ * is a camera.
  */
 public final class HorrorAudio {
     private static final RandomSource RAND = RandomSource.create();
-    private static LoopSound apartment, closet, bath, outside, silence, micHiss, fan;
+    private static LoopSound apartment, closet, bath, outside, silence, fan;
     private static LoopSound prep, dread, tension, danger, chase;
     private static PositionLoopSound tvStatic;
+    /** The world's own loop of the TV's static (its ambience follows the TV's state), if it plays one: never doubled. */
+    private static SoundInstance worldTv;
     private static final Map<Integer, EntityLoopSound> DRAG = new HashMap<>();
     private static float heartbeatIn = 40;
     private static int breathIn = 60;
@@ -52,13 +54,14 @@ public final class HorrorAudio {
     }
 
     public static void stopAll() {
-        for (LoopSound l : new LoopSound[]{apartment, closet, bath, outside, silence, micHiss, fan, prep, dread, tension, danger, chase}) {
+        for (LoopSound l : new LoopSound[]{apartment, closet, bath, outside, silence, fan, prep, dread, tension, danger, chase}) {
             if (l != null) l.finish();
         }
-        apartment = closet = bath = outside = silence = micHiss = fan = null;
+        apartment = closet = bath = outside = silence = fan = null;
         prep = dread = tension = danger = chase = null;
         if (tvStatic != null) tvStatic.finish();
         tvStatic = null;
+        worldTv = null;
         for (EntityLoopSound s : DRAG.values()) Minecraft.getInstance().getSoundManager().stop(s);
         DRAG.clear();
     }
@@ -101,8 +104,9 @@ public final class HorrorAudio {
         if (dng - lastDanger > 0.3f) ClientState.stingerTicks = Math.max(ClientState.stingerTicks, 0);
         lastDanger = dng;
         silence.target = (dng > 0.5f && dng < 0.95f) || ClientState.scareTicks >= 0 ? 0.5f : 0.0f;
-        // the CRT's static at the TV: always there once it is on
-        if (ClientState.flag(GameManager.F_TV) && Layout.has("tv")) {
+        // the CRT's static at the TV: always there once it is on (unless the world plays it already)
+        boolean worldStatic = worldTv != null && mc.getSoundManager().isActive(worldTv);
+        if (ClientState.flag(GameManager.F_TV) && Layout.has("tv") && !worldStatic) {
             if (tvStatic == null || !mc.getSoundManager().isActive(tvStatic)) {
                 Vec3 at = Layout.marker("tv").center().add(0.0, 0.7, 0.0);
                 tvStatic = new PositionLoopSound(ModSounds.AMB_TV_STATIC.get(), SoundSource.BLOCKS, at.x, at.y, at.z);
@@ -110,12 +114,15 @@ public final class HorrorAudio {
             }
             tvStatic.target = 0.85f * (caught ? 0.0f : 1.0f);
         } else if (tvStatic != null) {
-            tvStatic.target = 0.0f;
+            if (worldStatic) {
+                tvStatic.finish();
+                tvStatic = null;
+            } else {
+                tvStatic.target = 0.0f;
+            }
         }
-        // the feed: the microphone's hiss, the laptop's fan
-        micHiss = ensure(micHiss, ModSounds.CAMERA_MIC_HISS.get(), 0.2f, SoundSource.PLAYERS);
+        // the feed: the laptop's fan (the microphone's hiss is the acoustics engine's)
         fan = ensure(fan, ModSounds.LAPTOP_FAN.get(), 0.1f, SoundSource.PLAYERS);
-        micHiss.target = app ? 0.35f : 0.0f;
         fan.target = CameraApp.isOpen() && CameraApp.device() == 0 ? 0.18f : 0.0f;
 
         // ---- music
@@ -187,28 +194,8 @@ public final class HorrorAudio {
         });
     }
 
-    /** A copy of a near-body sound, played quietly close to the listener (no position): not echoed again. */
-    public static final class BodySound extends SimpleSoundInstance {
-        public BodySound(SoundEvent event, float volume, float pitch) {
-            super(event.getLocation(), SoundSource.AMBIENT, volume, pitch, RAND, false, 0, SoundInstance.Attenuation.NONE, 0.0, 0.0, 0.0, true);
-        }
-    }
-
-    /**
-     * The listener is a camera: a sound right by your body (in the closet: the doll at the fusuma, knocking, your own
-     * breath) is still heard, quietly and without a position — the muffled bit of what is near you.
-     */
-    public static void bodyEcho(SoundInstance sound) {
-        if (sound instanceof BodySound || !CameraApp.viewing() || sound.isRelative() || sound.getAttenuation() == SoundInstance.Attenuation.NONE) return;
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) return;
-        Vec3 at = new Vec3(sound.getX(), sound.getY(), sound.getZ());
-        double dBody = at.distanceTo(mc.player.getEyePosition());
-        Entity cam = mc.getCameraEntity();
-        double dCam = cam == null ? 99 : at.distanceTo(cam.getEyePosition());
-        if (dBody > 7.0 || dCam < 4.0) return;
-        SoundEvent ev = ClientPacketHandler.event(sound.getLocation().toString());
-        float vol = (float) (0.35 * (1.0 - dBody / 7.0));
-        if (vol > 0.03f) mc.getSoundManager().play(new BodySound(ev, vol, 1.0f));
+    /** Every sound played: notices the world's own TV static loop. */
+    public static void observe(SoundInstance sound) {
+        if (sound != tvStatic && sound.getLocation().equals(ModSounds.AMB_TV_STATIC.getId())) worldTv = sound;
     }
 }

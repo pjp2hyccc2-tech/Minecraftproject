@@ -431,9 +431,11 @@ public final class Ritual {
         if (ps.busy() || ps.caught() || ps.locked || ps.inApp()) return;
         ServerLevel level = p.serverLevel();
         long now = d.playTicks;
-        if (d.has("line_at") && now - lastLine < LINE_GAP) return;
         Step cur = current(d);
         if (cur == null) return;
+        // a spoken line is not cut off by the next one (the count and the spitting are not lines)
+        boolean line = cur == Step.FIRST_ONI || cur == Step.NEXT_ONI || cur == Step.WIN;
+        if (line && d.has("line_at") && now >= lastLine && now - lastLine < LINE_GAP) return;
         switch (cur) {
             case FIRST_ONI -> {
                 if (!GameManager.holding(p, ModItems.RITUAL_DOLL.get())) {

@@ -69,6 +69,8 @@ public final class FrameCapture {
     @Nullable private static FixedCamera virtualCam;
     @Nullable private static Entity jobView;
     @Nullable private static RemotePlayer twin;
+    /** The capture's view is dark: the camera's IR (night vision on the view, and on the player without shaders). */
+    private static boolean jobIr, jobPlayerNv;
 
     private FrameCapture() {}
 
@@ -220,6 +222,20 @@ public final class FrameCapture {
         jobView = view;
         if (view != null) mc.setCameraEntity(view);
         if (c.label().equals("you_tub")) spawnTwin(mc, view);
+        // like the app: in the dark the camera sees in IR
+        int light = mc.level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, net.minecraft.core.BlockPos.containing(c.x(), c.y(), c.z()));
+        jobIr = light < 7;
+        if (jobIr) {
+            if (view instanceof net.minecraft.world.entity.LivingEntity le) le.forceAddEffect(nightVision(), null);
+            if (!ShaderCompat.active() && !mc.player.hasEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION)) {
+                mc.player.forceAddEffect(nightVision(), null);
+                jobPlayerNv = true;
+            }
+        }
+    }
+
+    private static net.minecraft.world.effect.MobEffectInstance nightVision() {
+        return new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 100000, 0, false, false, false);
     }
 
     /** A figure that is you, standing in the bathtub, facing the lens. */
@@ -268,13 +284,16 @@ public final class FrameCapture {
             return;
         }
         String id = String.format(java.util.Locale.ROOT, "final_%s_%d", job.label(), jobFrame);
-        pending = new Grab(id, Math.max(0, job.number()), ClientState.clock, job.label(), true, job.label());
+        pending = new Grab(id, Math.max(0, job.number()), ClientState.clock, job.label(), jobIr, job.label());
         jobFrame++;
         jobWait = Math.max(1, job.interval());
     }
 
     private static void finishJob(Minecraft mc) {
         job = null;
+        if (jobView instanceof net.minecraft.world.entity.LivingEntity le && le != mc.player) le.removeEffectNoUpdate(net.minecraft.world.effect.MobEffects.NIGHT_VISION);
+        if (jobPlayerNv && mc.player != null) mc.player.removeEffectNoUpdate(net.minecraft.world.effect.MobEffects.NIGHT_VISION);
+        jobPlayerNv = false;
         jobView = null;
         if (twin != null && mc.level != null) {
             mc.level.removeEntity(TWIN_ID, Entity.RemovalReason.DISCARDED);
@@ -397,6 +416,7 @@ public final class FrameCapture {
         pending = null;
         job = null;
         jobView = null;
+        jobPlayerNv = false;
         twin = null;
         loaded = false;
         TEX.clear();

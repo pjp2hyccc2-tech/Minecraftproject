@@ -37,6 +37,8 @@ public class Woman extends PathfinderMob implements Animated {
     public int stage;
     /** Ticks left before she fades away by herself (server, -1 = stays). */
     public int lifeTicks = -1;
+    /** Ticks the player has watched her feed at this stage (server): she comes closer only after being seen. */
+    public int seenTicks;
 
     public Woman(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);

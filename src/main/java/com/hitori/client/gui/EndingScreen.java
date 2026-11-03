@@ -202,6 +202,7 @@ public class EndingScreen extends Screen {
             String rk = "ending.hitori.good.rules." + Math.min(3, broken);
             line(g, I18n.get(rk), 290, 110, cy, broken == 0 ? 0x8A5A10 : col, broken == 0 ? 1.4f : 1.0f);
             if (ticks > 400) {
+                g.flush();
                 g.fill(0, 0, width, height, HorrorOverlay.argb(Mth.clamp((t - 400) / 30.0f, 0.0f, 1.0f), 0x000000));
                 line(g, I18n.get("ending.hitori.good.afternoon"), 410, 60, cy, 0xC8C0B4, 1.2f);
             }
@@ -209,11 +210,21 @@ public class EndingScreen extends Screen {
         }
         // the playback on the laptop, the next afternoon
         g.fill(0, 0, width, height, 0xFF0A0A0C);
-        int bx = width / 14, by = height / 12;
-        int x0 = bx, y0 = by, x1 = width - bx, y1 = height - by - 10;
-        int fw = x1 - x0, fh = y1 - y0;
-        int vw = Math.min(fw, fh * 16 / 9), vh = vw * 9 / 16;
-        int vx = x0 + (fw - vw) / 2, vy = y0 + (fh - vh) / 2;
+        int vx, vy, vw, vh;
+        if (Tex.has(LAPTOP)) {
+            // the laptop frame's screen: the same rect as the camera app's feed
+            vx = width / 22;
+            vy = height / 14;
+            vw = width - width / 22 - vx;
+            vh = height - height / 9 - vy;
+        } else {
+            int bx = width / 14, by = height / 12;
+            int fw = width - 2 * bx, fh = height - 2 * by - 10;
+            vw = Math.min(fw, fh * 16 / 9);
+            vh = vw * 9 / 16;
+            vx = bx + (fw - vw) / 2;
+            vy = by + (fh - vh) / 2;
+        }
         g.fill(vx, vy, vx + vw, vy + vh, 0xFF000000);
         int pt = ticks - playStart;
         String id = null;
@@ -237,8 +248,11 @@ public class EndingScreen extends Screen {
         }
         ResourceLocation tex = id == null ? null : FrameCapture.texture(id);
         if (tex != null) {
+            // fills the screen, cropped to its shape
+            float sc = Math.max(vw / (float) FrameCapture.W, vh / (float) FrameCapture.H);
+            int uw = Math.min(FrameCapture.W, Math.round(vw / sc)), uh = Math.min(FrameCapture.H, Math.round(vh / sc));
             RenderSystem.enableBlend();
-            g.blit(tex, vx, vy, vw, vh, 0, 0, FrameCapture.W, FrameCapture.H, FrameCapture.W, FrameCapture.H);
+            g.blit(tex, vx, vy, vw, vh, (FrameCapture.W - uw) / 2.0f, (FrameCapture.H - uh) / 2.0f, uw, uh, FrameCapture.W, FrameCapture.H);
             RenderSystem.disableBlend();
         } else if (pt >= 40) {
             HorrorOverlay.grainIn(g, vx, vy, vx + vw, vy + vh, 0.5f);
@@ -275,7 +289,10 @@ public class EndingScreen extends Screen {
             g.fill(vx + vw + 2, vy - 2, width, vy + vh + 2, 0xFF16171A);
         }
         if (pt < 40) HorrorOverlay.centered(g, font, I18n.get("ending.hitori.good.playback"), width / 2, height / 2, HorrorOverlay.argb(Mth.clamp(pt / 15.0f, 0, 1), 0xD0D0D0), 1.0f);
-        if (ticks >= cardAt) g.fill(0, 0, width, height, 0xFF000000);
+        if (ticks >= cardAt) {
+            g.flush();
+            g.fill(0, 0, width, height, 0xFF000000);
+        }
     }
 
     // ------------------------------------------------------------------------------------------------ 鬼

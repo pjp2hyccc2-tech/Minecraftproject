@@ -385,6 +385,7 @@ public final class Director {
         }
         w.setHaunts(cam.number());
         w.stage = stage;
+        w.seenTicks = 0;
         w.lifeTicks = 20 * 200;
         w.getPersistentData().putDouble("hx", at.x);
         w.getPersistentData().putDouble("hy", at.y);
@@ -400,6 +401,15 @@ public final class Director {
         Recording.event(level, "woman", at.add(0.0, 1.0, 0.0));
     }
 
+    /** Watching her feed this long counts as having seen her (half a second). */
+    private static final int SEEN_TICKS = 10;
+
+    /** Per player tick while the app is open: the woman of the watched feed is being seen. */
+    static void watching(ServerLevel level, PlayerState ps) {
+        Woman w = womanEntity(level);
+        if (w != null && ps.appCamera > 0 && w.haunts() == ps.appCamera) w.seenTicks++;
+    }
+
     /** Debug: the woman in this camera's feed now. */
     public static boolean debugWoman(ServerLevel level, @Nullable ServerPlayer p, int number) {
         FixedCamera cam = Cameras.entity(level, number);
@@ -413,11 +423,12 @@ public final class Director {
     /** The player switched to camera {@code now} (from {@code before}): the woman of that feed has come closer. */
     public static void onCameraShown(ServerLevel level, ServerPlayer p, PlayerState ps, int before, int now) {
         Woman w = womanEntity(level);
-        if (w == null || w.haunts() != now || before == 0 && w.stage == 0 && w.tickCount < 40) return;
+        // she comes closer only once you have seen her where she stood: the first look finds her as she was placed
+        if (w == null || w.haunts() != now || before == now || w.seenTicks < SEEN_TICKS) return;
         FixedCamera cam = Cameras.entity(level, now);
         if (cam == null) return;
-        if (before == now) return;
         w.stage++;
+        w.seenTicks = 0;
         Vec3 home = new Vec3(w.getPersistentData().getDouble("hx"), w.getPersistentData().getDouble("hy"), w.getPersistentData().getDouble("hz"));
         Vec3 lens = cam.getEyePosition();
         Vec3 floorLens = new Vec3(lens.x, home.y, lens.z);

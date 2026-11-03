@@ -180,6 +180,7 @@ public final class Cameras {
     static void tickPlayer(ServerLevel level, ServerPlayer p, PlayerState ps, GameData d) {
         if (!ps.inApp()) return;
         ps.appTicks++;
+        Director.watching(level, ps);
         if (ps.appTicks % 20 == 0 && entity(level, ps.appCamera) == null) {
             ps.appCamera = 0;
             GameManager.event(p, GameManager.EV_APP, 0, "");

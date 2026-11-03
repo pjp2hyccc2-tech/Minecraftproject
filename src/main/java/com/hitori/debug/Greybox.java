@@ -73,6 +73,8 @@ public final class Greybox {
                 for (int y = Y; y <= Y + 2; y++) set(level, x, y, 0, Blocks.LIGHT_GRAY_CONCRETE.defaultBlockState());
             }
             set(level, x, Y + 3, -1, Blocks.LIGHT_GRAY_CONCRETE.defaultBlockState());
+            // the corridor's lamps, one by every other door
+            if (x % 6 == 4) set(level, x, Y + 2, -1, Blocks.LIGHT.defaultBlockState().setValue(LightBlock.LEVEL, 11));
         }
         for (int unit = 0; unit < 4; unit++) {
             if (unit == 2) continue;
@@ -201,10 +203,11 @@ public final class Greybox {
                 var list = Layout.markers("closet_fusuma");
                 for (int i = 0; i < list.size(); i++) {
                     BlockPos p = list.get(i).pos();
+                    // the crack (1): the middle panel open its whole height, a slit to look through
                     boolean open = v == 2 || (v == 1 && i == list.size() / 2);
                     BlockState s = open ? Blocks.AIR.defaultBlockState() : Blocks.WHITE_WOOL.defaultBlockState();
                     level.setBlock(p, s, 2 | 16);
-                    level.setBlock(p.above(), open && v == 2 ? Blocks.AIR.defaultBlockState() : Blocks.WHITE_WOOL.defaultBlockState(), 2 | 16);
+                    level.setBlock(p.above(), s, 2 | 16);
                 }
             }
             case "bath" -> {

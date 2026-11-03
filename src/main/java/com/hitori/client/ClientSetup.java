@@ -6,6 +6,8 @@ import com.hitori.client.render.CameraRenderer;
 import com.hitori.client.render.Models;
 import com.hitori.client.render.OniDollRenderer;
 import com.hitori.client.render.WomanRenderer;
+import com.hitori.client.sound.Acoustics;
+import com.hitori.client.sound.AcousticsState;
 import com.hitori.registry.ModEntities;
 import com.hitori.registry.ModKeys;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
@@ -26,8 +28,29 @@ public final class ClientSetup {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(ShaderPackInstaller::install);
+        event.enqueueWork(() -> {
+            ShaderPackInstaller.install();
+            Acoustics.setState(ACOUSTICS);
+        });
     }
+
+    /**
+     * What the acoustics engine (docs/DESIGN.md §10) asks of the game every client tick: how shut in you are (1 in a
+     * closet, 0.5 peeking through the fusuma's crack) and whether the listener is a camera of the app (the engine
+     * plays {@code camera.mic_hiss} itself then).
+     */
+    public static final AcousticsState ACOUSTICS = new AcousticsState() {
+        @Override
+        public float enclosure() {
+            if (!ClientState.hiding()) return 0.0f;
+            return Peek.active() ? 0.5f : 1.0f;
+        }
+
+        @Override
+        public boolean cameraView() {
+            return CameraApp.viewing();
+        }
+    };
 
     @SubscribeEvent
     public static void layers(EntityRenderersEvent.RegisterLayerDefinitions event) {

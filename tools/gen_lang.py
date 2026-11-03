@@ -155,7 +155,7 @@ THOUGHTS = {
 SAY = {
     "first_oni": ("「最初の鬼は、わたしだから」（%2$s/3）", "\"The first oni is me.\" (%2$s/3)"),
     "named": ("「……あなたの名前は、%s」", "\"...Your name is %s.\""),
-    "mitsuketa": ("「%sちゃん、みつけた」", "\"%s, found you.\""),
+    "mitsuketa": ("「%s、みつけた」", "\"%s, found you.\""),
     "next_oni": ("「次は、%sが鬼だから」", "\"Next, %s is the oni.\""),
     "count": ("「いち、に、さん、し、ご、ろく、しち、はち、きゅう……じゅう」", "\"One, two, three, four, five, six, seven, eight, nine... ten.\""),
     "win": ("「わたしの勝ち」（%s/3）", "\"I win.\" (%s/3)"),

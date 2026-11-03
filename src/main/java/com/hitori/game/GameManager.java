@@ -243,6 +243,7 @@ public final class GameManager {
     public static void onLogin(ServerPlayer p) {
         GameData data = GameData.get(p.server);
         PlayerState ps = state(p);
+        ps.relightIn = RELIGHT_DELAY;
         if (!data.started && data.ending == GameData.ENDING_NONE) {
             if (HitoriConfig.autoStart() && level(p.server) != null && !p.getPersistentData().getBoolean("hitori_done")) startGame(p);
             return;
@@ -312,6 +313,7 @@ public final class GameManager {
         STATES.put(p.getUUID(), ps);
         Layout.Marker spawn = Layout.marker("spawn");
         teleport(p, level, spawn.center(), spawn.yaw(), 12.0f);
+        ps.relightIn = RELIGHT_DELAY;
         p.removeAllEffects();
         p.setHealth(p.getMaxHealth());
         p.getFoodData().setFoodLevel(20);
@@ -323,6 +325,33 @@ public final class GameManager {
         data.introSeen = true;
         syncState(p, ps, data);
         Hitori.LOGGER.info("[hitori] {} begins the night in room 203", p.getGameProfile().getName());
+    }
+
+    /** A second and a half: the light engine has caught up with the lamps switched at the start. */
+    private static final int RELIGHT_DELAY = 30;
+
+    /**
+     * The apartment's light as the server has it, sent to the client again. Lamps switched in the tick the chunks are
+     * sent (joining, a new night, the teleport into 203) would otherwise stay dark on the client: the chunk carries the
+     * light from before the switch, the server sends later light changes only to players at the edge of their view
+     * distance, and the client relights only blocks it sees change.
+     */
+    public static void resendLight(ServerPlayer p, ServerLevel level) {
+        if (p instanceof FakePlayer || p.level() != level) return;
+        var engine = level.getLightEngine();
+        java.util.BitSet sections = new java.util.BitSet();
+        for (int sy = (Layout.GROUND_Y - 8) >> 4; sy <= (Layout.FEET_Y + 8) >> 4; sy++) {
+            int i = sy - engine.getMinLightSection();
+            if (i >= 0 && i < engine.getLightSectionCount()) sections.set(i);
+        }
+        net.minecraft.world.phys.AABB a = Doll.AREA;
+        for (int cx = Mth.floor(a.minX) >> 4; cx <= Mth.floor(a.maxX) >> 4; cx++) {
+            for (int cz = Mth.floor(a.minZ) >> 4; cz <= Mth.floor(a.maxZ) >> 4; cz++) {
+                if (!level.getChunkSource().hasChunk(cx, cz)) continue;
+                p.connection.send(new net.minecraft.network.protocol.game.ClientboundLightUpdatePacket(
+                        new net.minecraft.world.level.ChunkPos(cx, cz), engine, sections, sections));
+            }
+        }
     }
 
     public static void teleport(ServerPlayer p, ServerLevel level, Vec3 pos, float yaw, float pitch) {
@@ -427,6 +456,7 @@ public final class GameManager {
     }
 
     private static void tickPlayer(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
+        if (ps.relightIn >= 0 && ps.relightIn-- == 0) resendLight(p, level);
         if (p.isSpectator()) return;
         if (p.tickCount % 100 == 0) {
             p.getFoodData().setFoodLevel(20);

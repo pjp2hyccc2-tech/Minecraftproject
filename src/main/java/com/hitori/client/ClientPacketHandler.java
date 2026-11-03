@@ -125,8 +125,10 @@ public final class ClientPacketHandler {
                 Dialogue.clear();
                 PhoneUi.reset();
                 CameraApp.reset();
-                ClientState.morningTicks = -1;
-                ClientState.mapTicks = -1;
+                Peek.reset();
+                eyes(false);
+                ClientState.newNight();
+                if (mc.screen instanceof EndingScreen) mc.setScreen(null);
             }
             case GameManager.EV_MORNING -> {
                 ClientState.morningTicks = 0;

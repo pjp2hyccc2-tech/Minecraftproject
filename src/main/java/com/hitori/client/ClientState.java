@@ -169,6 +169,16 @@ public final class ClientState {
         if (shakeTicks > 0 && --shakeTicks == 0) shake = 0.0f;
     }
 
+    /** A new night: whatever the last one left on the screen (caught, a fade, the morning, the map) is gone. */
+    public static void newNight() {
+        stepFlash = threeTicks = eyesTicks = jumpscareTicks = caughtTicks = fadeTicks = morningTicks = -1;
+        stingerTicks = scareTicks = ruleTicks = thoughtTicks = hintTicks = mapTicks = -1;
+        hideKind = 0;
+        subliminal = 0;
+        shake = 0;
+        shakeTicks = 0;
+    }
+
     public static void reset() {
         fear = fearShown = fearPrev = 0;
         danger = dangerShown = dangerPrev = 0;

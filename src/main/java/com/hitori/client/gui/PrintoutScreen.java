@@ -115,12 +115,21 @@ public class PrintoutScreen extends Screen {
         boolean done = ClientState.done(s);
         boolean current = ClientState.hud == s.ordinal();
         String box = done ? "☑" : "☐";
-        String text = n + ". " + I18n.get("printout.hitori.step." + s.id);
+        // the number in its own column: a line never breaks between the number and its text
+        String num = n + ".";
+        String text = I18n.get("printout.hitori.step." + s.id);
         int col = done ? 0xFF8A8478 : current ? 0xFFA0201A : 0xFF2A2622;
         if (current && (ticks / 10) % 2 == 0) g.drawString(font, "▶", x - 9, y, 0xFFA0201A, false);
         g.drawString(font, box, x, y, col, false);
-        int ny = wrap(g, text, x + 10, y, PW - 34, col);
-        if (done) g.fill(x + 10, y + 4, x + 10 + Math.min(PW - 34, font.width(text)), y + 5, 0x808A8478);
+        int numW = font.width("00.") + 3;
+        g.drawString(font, num, x + 10 + numW - 3 - font.width(num), y, col, false);
+        int tw = PW - 34 - numW;
+        int ny = wrap(g, text, x + 10 + numW, y, tw, col);
+        if (done) {
+            for (int ly = y; ly < ny; ly += 10) {
+                g.fill(x + 10, ly + 4, x + 10 + numW + Math.min(tw, font.width(text)), ly + 5, 0x808A8478);
+            }
+        }
         return ny + 1;
     }
 

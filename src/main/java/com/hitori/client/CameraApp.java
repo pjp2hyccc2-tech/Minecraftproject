@@ -445,9 +445,6 @@ public final class CameraApp {
         g.fill(x0 + m, y1 - m - L, x0 + m + 1, y1 - m, c);
         g.fill(x1 - m - L, y1 - m - 1, x1 - m, y1 - m, c);
         g.fill(x1 - m - 1, y1 - m - L, x1 - m, y1 - m, c);
-        int cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
-        g.fill(cx - 5, cy, cx + 6, cy + 1, 0x60E8E8E8);
-        g.fill(cx, cy - 5, cx + 1, cy + 6, 0x60E8E8E8);
     }
 
     private static void battery(GuiGraphics g, Font font, int x, int y, int pct) {

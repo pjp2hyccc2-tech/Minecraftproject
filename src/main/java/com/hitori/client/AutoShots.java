@@ -275,6 +275,8 @@ public final class AutoShots {
             cmd(mc, "hitori debug director true");
         }, 40);
         snap("03_spawn_hud");
+        // like a player getting ready: the lights on where the work is
+        add("prep_lights", mc -> cmd(mc, "hitori debug fixture lights true"), 10);
         worldTour();
         // ---- the evening: the printout
         if (!SHADERS) {
@@ -533,7 +535,21 @@ public final class AutoShots {
             cmd(mc, "hitori debug step burn");
             cmd(mc, "hitori debug cameras");
         }, 30);
-        add("good", mc -> cmd(mc, "hitori debug ending good"), 30);
+        // a night's worth of recordings for the playback: each feed for a while
+        add("record_app", mc -> {
+            ClientState.introTicks = -1;
+            hold(mc, "hitori:laptop");
+        }, 6);
+        add("record_open", mc -> CameraApp.open(0), 70);
+        for (int c = 2; c <= 4; c++) {
+            int cam = c;
+            add("record_cam" + c, mc -> CameraApp.select(cam), 70);
+        }
+        add("record_close", mc -> CameraApp.close(), 10);
+        add("good", mc -> {
+            ClientState.introTicks = -1;
+            cmd(mc, "hitori debug ending good");
+        }, 30);
         snap("63_morning");
         add("good_wait", mc -> {
         }, 120);
@@ -564,7 +580,10 @@ public final class AutoShots {
             cmd(mc, "hitori debug step hide");
             cmd(mc, "hitori debug cameras");
         }, 30);
-        add("mikan", mc -> cmd(mc, "hitori debug ending mikan"), 160);
+        add("mikan", mc -> {
+            ClientState.introTicks = -1;
+            cmd(mc, "hitori debug ending mikan");
+        }, 160);
         add("mikan_screen", mc -> {
             if (mc.screen instanceof EndingScreen e) {
                 e.localOnly = true;
@@ -577,12 +596,15 @@ public final class AutoShots {
             cmd(mc, "hitori reset");
         }, 20);
         add("soto_start", mc -> cmd(mc, "hitori debug step knife"), 30);
-        add("soto", mc -> cmd(mc, "hitori debug ending soto"), 60);
+        add("soto", mc -> {
+            ClientState.introTicks = -1;
+            cmd(mc, "hitori debug ending soto");
+        }, 110);
         snap("69_soto_corridor");
         add("soto_map", mc -> ClientState.mapTicks = 30, 6);
         snap("70_soto_map");
         add("soto_wait", mc -> {
-        }, 20 * 30);
+        }, 20 * 30 + 20);
         add("soto_screen", mc -> {
             if (mc.screen instanceof EndingScreen e) {
                 e.localOnly = true;

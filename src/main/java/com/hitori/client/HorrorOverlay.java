@@ -385,6 +385,8 @@ public final class HorrorOverlay {
     // ================================================================================================ cinematic layers
     private static void overlays(Minecraft mc, GuiGraphics g, Font font, int w, int h, float partial, float t) {
         boolean calm = HitoriConfig.flashReduction();
+        // text is batched and drawn last: what was written before must be under these layers, not over them
+        g.flush();
         // 3 a.m.
         if (ClientState.threeTicks >= 0) {
             float k = ClientState.threeTicks + partial;
@@ -395,6 +397,7 @@ public final class HorrorOverlay {
         }
         // the woman / the doll at the crack
         if (ClientState.scareTicks >= 0) {
+            g.flush();
             int k = ClientState.scareTicks;
             if (ClientState.scareKind == 2 && HitoriConfig.jumpscares() && k < 10) {
                 g.fill(0, 0, w, h, 0xFF000000);
@@ -406,6 +409,7 @@ public final class HorrorOverlay {
             }
         }
         // the fade, the morning
+        if (ClientState.fadeTicks >= 0 || ClientState.morningTicks >= 0) g.flush();
         if (ClientState.fadeTicks >= 0) {
             float k = ClientState.fadeTicks + partial;
             int L = ClientState.fadeLength;
@@ -421,6 +425,7 @@ public final class HorrorOverlay {
         // the map (外へ): you are inside 203
         if (ClientState.mapTicks >= 0) map(g, font, w, h, ClientState.mapTicks + partial);
         // found
+        if (ClientState.jumpscareTicks >= 0 || ClientState.caughtTicks >= 0 || ClientState.introTicks >= 0) g.flush();
         if (ClientState.jumpscareTicks >= 0) {
             int k = ClientState.jumpscareTicks;
             g.fill(0, 0, w, h, 0xFF000000);

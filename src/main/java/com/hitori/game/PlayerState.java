@@ -76,6 +76,8 @@ public final class PlayerState {
     // ---- misc
     public boolean shaders;
     public int hintIn = 100;
+    /** Ticks until the apartment's light is sent to the client again (-1 = not pending). */
+    public int relightIn = -1;
 
     // ---- debug
     public float forceFear = -1.0f;
