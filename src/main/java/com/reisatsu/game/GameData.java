@@ -78,8 +78,10 @@ public final class GameData extends SavedData {
     public int nightStage = NS_OPENING;
     /** What the player witnessed tonight: night 1 the phenomena, later nights the signs of the night's spirit. */
     public final Set<String> signs = new LinkedHashSet<>();
-    /** Play tick of the player's first step inside tonight (-1: not yet). */
-    public long enteredAt = -1;
+    /** "Not inside yet tonight" for {@link #enteredAt} (set-backs by tests and debug may make it negative). */
+    public static final long NOT_YET = Long.MIN_VALUE;
+    /** Play tick of the player's first step inside tonight ({@link #NOT_YET}: not yet). */
+    public long enteredAt = NOT_YET;
     /** Ticks after that first step before the night's spirit may show (60–90 s, rolled each night). */
     public int manifestAt = 20 * 75;
 
@@ -98,6 +100,16 @@ public final class GameData extends SavedData {
         return done.contains(key);
     }
 
+    /** Has the player been inside tonight? */
+    public boolean entered() {
+        return enteredAt != NOT_YET;
+    }
+
+    /** Ticks since the player first went inside tonight (0 before). */
+    public long insideTicks() {
+        return entered() ? playTicks - enteredAt : 0;
+    }
+
     /** {@link #once} for tonight only (cleared when a night starts). */
     public boolean tonight(String key) {
         return once("n:" + key);
@@ -111,7 +123,7 @@ public final class GameData extends SavedData {
     public void clearNight() {
         done.removeIf(k -> k.startsWith("n:"));
         signs.clear();
-        enteredAt = -1;
+        enteredAt = NOT_YET;
         visitorNext = -1;
         visitorArrivals = 0;
         closingAt = -1;
@@ -163,7 +175,7 @@ public final class GameData extends SavedData {
         night = 1;
         nightStage = NS_OPENING;
         signs.clear();
-        enteredAt = -1;
+        enteredAt = NOT_YET;
         manifestAt = 20 * 75;
         setDirty();
     }
@@ -227,7 +239,7 @@ public final class GameData extends SavedData {
         d.night = tag.contains("Night") ? Math.max(1, Math.min(Week.NIGHTS, tag.getInt("Night"))) : 1;
         d.nightStage = tag.getInt("NightStage");
         for (Tag t : tag.getList("Signs", Tag.TAG_STRING)) d.signs.add(t.getAsString());
-        d.enteredAt = tag.contains("EnteredAt") ? tag.getLong("EnteredAt") : -1;
+        d.enteredAt = tag.contains("EnteredAt") ? tag.getLong("EnteredAt") : NOT_YET;
         d.manifestAt = tag.contains("ManifestAt") ? tag.getInt("ManifestAt") : 20 * 75;
         return d;
     }

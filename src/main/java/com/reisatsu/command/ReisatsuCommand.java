@@ -84,7 +84,7 @@ public final class ReisatsuCommand {
                     ServerPlayer p = c.getSource().getPlayerOrException();
                     PlayerState ps = GameManager.state(p);
                     String s = String.format(Locale.ROOT, "started=%s night=%d stage=%d phase=%d signs=%s inside=%ds captured=%s submitted=%s ofudaUsed=%d reishou=%d fear=%.2f danger=%.2f aware=%.2f room=%s photos=%d",
-                            data.started, data.night, data.nightStage, data.phase, data.signs, data.enteredAt < 0 ? -1 : (data.playTicks - data.enteredAt) / 20,
+                            data.started, data.night, data.nightStage, data.phase, data.signs, data.entered() ? data.insideTicks() / 20 : -1,
                             Integer.toBinaryString(data.captured), Integer.toBinaryString(data.submitted),
                             data.ofudaUsed, data.reishou, ps.fear, ps.danger, ps.aware, ps.room, data.photos.size());
                     c.getSource().sendSuccess(() -> Component.literal(s), false);

@@ -310,8 +310,8 @@ public final class Director {
     /** Nights 2–7: the signs of the night's spirit, a few quiet general ones. */
     private static void signs(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data) {
         SpiritKind k = Week.spirit(data.night);
-        if (k == null || data.enteredAt < 0) return;
-        long since = data.playTicks - data.enteredAt;
+        if (k == null || !data.entered()) return;
+        long since = data.insideTicks();
         if (next < 0) next = clock + 20 * (14 + RAND.nextInt(10));
         if (nextQuiet < 0) nextQuiet = clock + 20 * (45 + RAND.nextInt(30));
         if (k == SpiritKind.VISITOR) {

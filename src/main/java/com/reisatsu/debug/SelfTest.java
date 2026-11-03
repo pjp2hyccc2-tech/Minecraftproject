@@ -667,6 +667,12 @@ public final class SelfTest {
 
     /** The night's end (her lines skipped), black, then the next night's card. */
     private static boolean nextNight(int n) {
+        if (stepTicks == 1 && !Nights.inEnding() && dat.night != n) {
+            // the night before did not end (a failure above): carry on from the next one so the rest is still tested
+            check(false, "night " + (n - 1) + " did not end: jumping to night " + n);
+            Nights.jump(lvl, dat, n);
+            remember();
+        }
         if (stepTicks == 1) Nights.skip(fake, true);
         if (dat.night != n || dat.nightStage != GameData.NS_OPENING) return false;
         PlayerState ps = ps();
@@ -691,7 +697,7 @@ public final class SelfTest {
     /** Inside at this spot and the night's clock started (its first step inside), then set back by `back` seconds. */
     private static boolean enter(Vec3 feet, float yaw, int back) {
         if (!at(feet, yaw)) return false;
-        if (dat.enteredAt < 0) return false;
+        if (!dat.entered()) return false;
         if (back > 0) dat.enteredAt = dat.playTicks - 20L * back;
         return true;
     }
@@ -709,7 +715,7 @@ public final class SelfTest {
         Spirit s = Spirits.get(lvl, k);
         if (dat.nightStage != GameData.NS_HUNT || s == null) return false;
         tonight = s;
-        check(true, k.id + " shows itself (after " + (dat.playTicks - dat.enteredAt) / 20 + " s inside, signs " + dat.signs + ")");
+        check(true, k.id + " shows itself (after " + dat.insideTicks() / 20 + " s inside, signs " + dat.signs + ")");
         return true;
     }
 
@@ -846,6 +852,8 @@ public final class SelfTest {
             return true;
         });
         step("night 2: his photo", 5, () -> {
+            tonight = Spirits.get(lvl, SpiritKind.VISITOR);
+            if (tonight == null) return false;
             boolean ok = shoot(tonight, 1, v(36.5, 27.5), v(36.5, 26.5), v(35.5, 26.5), v(34.5, 26.5), v(37.5, 28.5), v(36.5, 28.5));
             check(ok && dat.isCaptured(SpiritKind.VISITOR) && dat.nightStage == GameData.NS_RETURN && photoItems() == 1,
                     "night 2: the visitor's photo (back to the medium, stage " + dat.nightStage + ")");
@@ -871,7 +879,7 @@ public final class SelfTest {
             Nights.forgetSession();
             check(Nights.needsResume(dat), "a world loaded mid-night resumes it");
             Nights.start(lvl, dat, dat.night, true);
-            check(dat.night == 3 && dat.nightStage == GameData.NS_OPENING && dat.signs.isEmpty() && dat.enteredAt < 0,
+            check(dat.night == 3 && dat.nightStage == GameData.NS_OPENING && dat.signs.isEmpty() && !dat.entered(),
                     "...at the start of night 3 (stage " + dat.nightStage + ", signs " + dat.signs + ")");
             check(Spirits.get(lvl, SpiritKind.WAITRESS) == null && photosKept(), "the waitress is dormant again, photos and お札 kept");
             return true;
@@ -885,8 +893,13 @@ public final class SelfTest {
         step("night 3: caught", 20 * 8, () -> {
             if (stepTicks == 1) {
                 remember();
-                place(tonight.position().add(0.6, 0, 0), 90.0f);
-                GameManager.caught(fake, tonight);
+                Spirit w = Spirits.get(lvl, SpiritKind.WAITRESS);
+                if (w == null) {
+                    check(false, "night 3: no waitress to be caught by");
+                    return true;
+                }
+                place(w.position().add(0.6, 0, 0), 90.0f);
+                GameManager.caught(fake, w);
                 check(ps().caught(), "night 3: the waitress takes you");
                 return false;
             }
@@ -938,6 +951,8 @@ public final class SelfTest {
             return true;
         });
         step("night 4: her photo (hiding)", 5, () -> {
+            tonight = Spirits.get(lvl, SpiritKind.CHILD);
+            if (tonight == null) return false;
             tonight.freeze(com.reisatsu.entity.Child.HIDE);
             boolean ok = shoot(tonight, 2, inFront(tonight, 2.5, 3.5, 1.8));
             check(ok && dat.isCaptured(SpiritKind.CHILD) && dat.nightStage == GameData.NS_RETURN, "night 4: the child's photo, hands over her eyes");
@@ -1000,6 +1015,8 @@ public final class SelfTest {
             return true;
         });
         step("night 6: his photo (through the pass window)", 5, () -> {
+            tonight = Spirits.get(lvl, SpiritKind.CHEF);
+            if (tonight == null) return false;
             Layout.Marker pm = Layout.marker("chef_pass");
             tonight.moveTo(pm.center().x, pm.center().y, pm.center().z, pm.yaw(), 0.0f);
             tonight.freeze(com.reisatsu.entity.Chef.PLATE);
@@ -1020,7 +1037,7 @@ public final class SelfTest {
             GameManager.debugPeaceful = true;
             if (!at(v(20.5, 20.5), 0.0f)) return false;
             if (dat.phase != GameData.PHASE_CLOSING) return false;
-            check(true, "night 7 begins as closing time (" + (dat.playTicks - dat.enteredAt) / 20 + " s after coming in)");
+            check(true, "night 7 begins as closing time (" + dat.insideTicks() / 20 + " s after coming in)");
             return true;
         });
         step("night 7: the store closes", 20 * 12, () -> {
@@ -1039,6 +1056,8 @@ public final class SelfTest {
             return true;
         });
         step("night 7: his photo", 5, () -> {
+            tonight = Spirits.get(lvl, SpiritKind.MANAGER);
+            if (tonight == null) return false;
             boolean ok = shoot(tonight, 1, inFront(tonight, 3.0, 4.0));
             check(ok && dat.isCaptured(SpiritKind.MANAGER) && dat.allCaptured(), "night 7: the manager's photo — all six");
             return true;

@@ -56,7 +56,7 @@ public class Visitor extends Spirit {
         if (data.nightStage != GameData.NS_WORK && data.nightStage != GameData.NS_HUNT) return;
         if (Spirits.get(level, SpiritKind.VISITOR) != null) return;
         if (data.visitorNext == -1) {
-            if (data.enteredAt < 0) return; // two o'clock comes once the player is inside
+            if (!data.entered()) return; // two o'clock comes once the player is inside
             data.visitorNext = data.enteredAt + 20L * (90 + level.random.nextInt(61)) + 20 * 13;
             data.setDirty();
         }

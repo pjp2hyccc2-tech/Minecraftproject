@@ -232,7 +232,7 @@ public final class Nights {
         if (!nightPhase(data)) return;
         if (data.nightStage != GameData.NS_WORK && data.nightStage != GameData.NS_HUNT) return;
         // the first step inside starts the night's clock
-        if (data.enteredAt < 0) {
+        if (!data.entered()) {
             for (ServerPlayer p : GameManager.players(level)) {
                 if (!GameManager.inGame(p)) continue;
                 PlayerState ps = GameManager.state(p);
@@ -242,9 +242,9 @@ public final class Nights {
                     break;
                 }
             }
-            if (data.enteredAt < 0) return;
+            if (!data.entered()) return;
         }
-        long since = data.playTicks - data.enteredAt;
+        long since = data.insideTicks();
         // the last night: closing time a few steps after you come in
         if (data.night == 7 && data.nightStage == GameData.NS_WORK && !data.happenedTonight("closing") && since >= 20 * 7) {
             Story.startClosing(level, data);
