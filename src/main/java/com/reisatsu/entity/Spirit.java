@@ -80,8 +80,10 @@ public abstract class Spirit extends PathfinderMob implements Animated {
     protected int lookAtTicks;
     private long lastNoise = NoiseSystem.lastId();
     private int spikeTicks;
-    /** Debug: frozen in a pose (screenshots), {@code shown}: forced visible to the naked eye. */
+    /** Debug: forced visible to the naked eye. */
     public boolean debugShown;
+    /** Debug / self test: perceives and reacts, but its routine does not move it. */
+    public boolean debugStill;
 
     // ---- path following
     @Nullable private List<Vec3> path;
@@ -367,7 +369,7 @@ public abstract class Spirit extends PathfinderMob implements Animated {
 
     private void perceive(ServerLevel level) {
         boolean seeing = coneHalfAngle() > 0.0f;
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : GameManager.players(level)) {
             if (!GameManager.huntable(p)) continue;
             if (distanceToSqr(p) > 34 * 34) continue;
             float add = seeing ? Stealth.sightRate(this, p) : 0.0f;
@@ -464,8 +466,8 @@ public abstract class Spirit extends PathfinderMob implements Animated {
     @Nullable
     public ServerPlayer huntTarget() {
         if (huntId == null || !(level() instanceof ServerLevel sl)) return null;
-        Player p = sl.getPlayerByUUID(huntId);
-        return p instanceof ServerPlayer sp && sp.isAlive() && sp.level() == level() ? sp : null;
+        ServerPlayer sp = GameManager.player(sl, huntId);
+        return sp != null && sp.isAlive() && sp.level() == level() ? sp : null;
     }
 
     public boolean hunting() {
@@ -562,7 +564,9 @@ public abstract class Spirit extends PathfinderMob implements Animated {
         }
         perceive(level);
         switch (mode) {
-            case ROUTINE -> routine(level);
+            case ROUTINE -> {
+                if (!debugStill) routine(level);
+            }
             case INVESTIGATE -> tickInvestigate(level);
             case NOTICE -> tickNotice(level);
             case HUNT -> tickHunt(level);
@@ -852,7 +856,7 @@ public abstract class Spirit extends PathfinderMob implements Animated {
     protected ServerPlayer nearestPlayer(ServerLevel level, double range) {
         ServerPlayer best = null;
         double bd = range * range;
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : GameManager.players(level)) {
             if (!GameManager.huntable(p)) continue;
             double d = distanceToSqr(p);
             if (d < bd) {

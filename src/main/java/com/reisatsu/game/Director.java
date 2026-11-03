@@ -104,7 +104,7 @@ public final class Director {
 
     @Nullable
     private static ServerPlayer focus(ServerLevel level) {
-        for (ServerPlayer p : level.players()) if (GameManager.huntable(p)) return p;
+        for (ServerPlayer p : GameManager.players(level)) if (GameManager.huntable(p)) return p;
         return null;
     }
 
@@ -356,7 +356,7 @@ public final class Director {
         Vec3 far = new Vec3(110, Layout.FEET_Y + 2, 54);
         sound(level, far, ModSounds.FIXTURE_MOTORBIKE.get(), 4.0f);
         later(20 * 8, () -> sound(level, new Vec3(76, Layout.FEET_Y + 2, 52), ModSounds.FIXTURE_CRASH.get(), 5.0f));
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : GameManager.players(level)) {
             if (!GameManager.inGame(p)) continue;
             later(20 * 9, () -> {
                 GameManager.addFear(p, 0.22f);

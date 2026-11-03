@@ -28,7 +28,7 @@ public final class FlashlightLight {
     private FlashlightLight() {}
 
     public static void tick(ServerLevel level) {
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : GameManager.players(level)) {
             if (p.tickCount % 2 != 0) continue;
             PlayerState ps = GameManager.state(p);
             boolean beam = GameManager.flashlightOn(p) && !ps.shaders && !ps.caught() && GameManager.inGame(p);

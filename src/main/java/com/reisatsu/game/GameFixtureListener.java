@@ -92,7 +92,7 @@ public final class GameFixtureListener implements FixtureEvents.Listener {
         // the waitress goes to greet whoever came in
         if (Spirits.get(level, SpiritKind.WAITRESS) instanceof Waitress w) w.onDoorChime();
         if (cause == null) {
-            for (ServerPlayer p : level.players()) if (p.distanceToSqr(Vec3.atCenterOf(com.reisatsu.world.Layout.marker("door_inner").pos())) < 24 * 24) Director.witness(p, "door");
+            for (ServerPlayer p : GameManager.players(level)) if (p.distanceToSqr(Vec3.atCenterOf(com.reisatsu.world.Layout.marker("door_inner").pos())) < 24 * 24) Director.witness(p, "door");
         }
     }
 
@@ -106,7 +106,7 @@ public final class GameFixtureListener implements FixtureEvents.Listener {
         if (!GameManager.isGameLevel(level)) return;
         if (circuit == Circuit.CAMERAS && Spirits.get(level, SpiritKind.MANAGER) instanceof Manager m) m.camerasSwitched(on);
         if (!on) {
-            for (ServerPlayer p : level.players()) {
+            for (ServerPlayer p : GameManager.players(level)) {
                 if (GameManager.inGame(p)) GameManager.addFear(p, 0.06f);
             }
         }

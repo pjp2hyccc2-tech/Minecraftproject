@@ -21,9 +21,7 @@ public final class NoiseSystem {
     public record Noise(long id, Vec3 pos, float radius, String cause, @Nullable UUID source, float weight, long time) {
         @Nullable
         public ServerPlayer player(ServerLevel level) {
-            if (source == null) return null;
-            Player p = level.getPlayerByUUID(source);
-            return p instanceof ServerPlayer sp ? sp : null;
+            return GameManager.player(level, source);
         }
     }
 

@@ -196,7 +196,7 @@ public class MirrorWoman extends Spirit {
     private void tickScream(ServerLevel level) {
         if (sub != S_SCREAM) return;
         if (subTicks >= 60) {
-            ServerPlayer p = screamAt == null ? null : (ServerPlayer) level.getPlayerByUUID(screamAt);
+            ServerPlayer p = GameManager.player(level, screamAt);
             if (p != null && GameManager.huntable(p)) {
                 PlayerState ps = GameManager.state(p);
                 if (ps.room.equals("womens")) GameManager.caught(p, this);
@@ -206,7 +206,7 @@ public class MirrorWoman extends Spirit {
             sub = S_BOWED;
             subTicks = 0;
             setAnimPose(BOWED);
-            for (ServerPlayer pl : level.players()) if (awarenessOf(pl) > 0) setAwareness(pl, 0.4f);
+            for (ServerPlayer pl : GameManager.players(level)) if (awarenessOf(pl) > 0) setAwareness(pl, 0.4f);
         }
     }
 }

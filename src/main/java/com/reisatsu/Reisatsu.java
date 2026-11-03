@@ -1,6 +1,7 @@
 package com.reisatsu;
 
 import com.mojang.logging.LogUtils;
+import com.reisatsu.game.GameFixtureListener;
 import com.reisatsu.network.ModNetwork;
 import com.reisatsu.registry.ModBlockEntities;
 import com.reisatsu.registry.ModBlocks;
@@ -10,6 +11,7 @@ import com.reisatsu.registry.ModEntities;
 import com.reisatsu.registry.ModItems;
 import com.reisatsu.registry.ModParticles;
 import com.reisatsu.registry.ModSounds;
+import com.reisatsu.world.FixtureEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -42,6 +44,8 @@ public class Reisatsu {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ReisatsuConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ReisatsuConfig.CLIENT_SPEC);
         ModNetwork.register();
+        // the restaurant tells the game what happens in it
+        FixtureEvents.LISTENER = new GameFixtureListener();
         LOGGER.info("[reisatsu] 霊撮: the automatic door opens. Nobody is there.");
     }
 

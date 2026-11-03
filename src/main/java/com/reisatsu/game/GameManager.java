@@ -66,6 +66,8 @@ public final class GameManager {
 
     public static final int CAUGHT_TICKS = 70;
     private static final Map<UUID, PlayerState> STATES = new HashMap<>();
+    /** Players that are not in the level's own list (the self test's fake player). */
+    private static final java.util.List<ServerPlayer> EXTRA = new java.util.ArrayList<>();
     private static final Map<UUID, Float> DANGER = new HashMap<>();
     public static boolean debugPeaceful;
 
@@ -78,6 +80,31 @@ public final class GameManager {
         ServerLevel l = server.getLevel(Layout.DIMENSION);
         if (l != null) return l;
         return Greybox.fallback(server) ? server.overworld() : null;
+    }
+
+    /** Every player of the night in this level (including a test player). */
+    public static java.util.List<ServerPlayer> players(ServerLevel level) {
+        if (EXTRA.isEmpty()) return level.players();
+        java.util.List<ServerPlayer> all = new java.util.ArrayList<>(level.players());
+        for (ServerPlayer p : EXTRA) if (p.level() == level && !all.contains(p)) all.add(p);
+        return all;
+    }
+
+    @Nullable
+    public static ServerPlayer player(ServerLevel level, @Nullable UUID id) {
+        if (id == null) return null;
+        Player p = level.getPlayerByUUID(id);
+        if (p instanceof ServerPlayer sp) return sp;
+        for (ServerPlayer e : EXTRA) if (e.getUUID().equals(id)) return e;
+        return null;
+    }
+
+    public static void addTestPlayer(ServerPlayer p) {
+        if (!EXTRA.contains(p)) EXTRA.add(p);
+    }
+
+    public static void removeTestPlayer(ServerPlayer p) {
+        EXTRA.remove(p);
     }
 
     public static boolean isGameLevel(@Nullable Level level) {
@@ -308,7 +335,8 @@ public final class GameManager {
 
     public static void teleport(ServerPlayer p, ServerLevel level, Vec3 pos, float yaw, float pitch) {
         p.stopRiding();
-        p.teleportTo(level, pos.x, pos.y, pos.z, yaw, pitch);
+        if (p instanceof FakePlayer) p.moveTo(pos.x, pos.y, pos.z, yaw, pitch);
+        else p.teleportTo(level, pos.x, pos.y, pos.z, yaw, pitch);
         p.setDeltaMovement(Vec3.ZERO);
         p.fallDistance = 0;
         PlayerState ps = state(p);
@@ -384,7 +412,7 @@ public final class GameManager {
         }
         GameData data = GameData.get(server);
         boolean anyone = false;
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : players(level)) {
             if (!inGame(p)) continue;
             anyone = true;
             tickPlayer(level, p, state(p), data);
@@ -812,6 +840,7 @@ public final class GameManager {
     }
 
     public static void onServerStopping(MinecraftServer server) {
+        EXTRA.clear();
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {
             Hiding.exit(p, false);
             savePlayer(p);

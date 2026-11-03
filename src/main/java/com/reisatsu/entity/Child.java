@@ -77,7 +77,7 @@ public class Child extends Spirit {
 
     @Override
     public boolean photogenic() {
-        return pose() == HIDE && sub == S_HIDE;
+        return pose() == HIDE;
     }
 
     @Override

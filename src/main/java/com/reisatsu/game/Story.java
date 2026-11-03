@@ -245,7 +245,7 @@ public final class Story {
         if (exorcismIn > 0 && --exorcismIn == 0) startExorcism(level, data);
         if (exoTicks >= 0) tickExorcism(level, data);
         if (data.phase == GameData.PHASE_EXORCISM && exoTicks < 0 && exorcismIn < 0) startExorcism(level, data); // resumed
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : GameManager.players(level)) {
             PlayerState ps = GameManager.state(p);
             if (ps.endingTicks >= 0 && data.ending == GameData.ENDING_BAD) tickBadEnding(level, p, ps, data);
         }
@@ -363,7 +363,7 @@ public final class Story {
         data.phase = GameData.PHASE_CLOSING;
         data.setDirty();
         closingTicks = 0;
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : GameManager.players(level)) {
             if (!GameManager.inGame(p)) continue;
             GameManager.event(p, GameManager.EV_CLOSING, 0, "");
         }
@@ -373,14 +373,14 @@ public final class Story {
     private static void tickClosing(ServerLevel level, GameData data) {
         int t = ++closingTicks;
         if (t == 1) {
-            for (ServerPlayer p : level.players()) if (GameManager.inGame(p)) GameManager.privateSound(p, ModSounds.FIXTURE_PA_CHIME.get(), p.getEyePosition().add(0, 2, 0), 1.0f, 1.0f);
+            for (ServerPlayer p : GameManager.players(level)) if (GameManager.inGame(p)) GameManager.privateSound(p, ModSounds.FIXTURE_PA_CHIME.get(), p.getEyePosition().add(0, 2, 0), 1.0f, 1.0f);
         }
         if (t == 30) {
             Fixtures.allLightsOn(level);
             Fixtures.setCallDisplay(level, 0, true);
         }
         if (t == 50) {
-            for (ServerPlayer p : level.players()) {
+            for (ServerPlayer p : GameManager.players(level)) {
                 if (!GameManager.inGame(p)) continue;
                 GameManager.privateSound(p, ModSounds.MANAGER_CLOSED.get(), p.getEyePosition().add(0, 2, 0), 1.0f, 0.96f);
                 say(p, "pa", 90, "dialogue.reisatsu.pa.closed");
@@ -390,7 +390,7 @@ public final class Story {
         if (t == 140) {
             if (Spirits.get(level, SpiritKind.MANAGER) instanceof Manager m) m.closingTime();
             else returnIn = 60;
-            for (ServerPlayer p : level.players()) if (GameManager.inGame(p)) GameManager.event(p, GameManager.EV_OBJECTIVE, 0, "");
+            for (ServerPlayer p : GameManager.players(level)) if (GameManager.inGame(p)) GameManager.event(p, GameManager.EV_OBJECTIVE, 0, "");
             closingTicks = -1;
         }
     }
@@ -402,7 +402,7 @@ public final class Story {
         data.setDirty();
         Fixtures.setDevice(level, "store_music", false);
         data.done.remove("store_music");
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : GameManager.players(level)) {
             if (!GameManager.inGame(p)) continue;
             GameManager.event(p, GameManager.EV_OBJECTIVE, 0, "");
             GameManager.event(p, GameManager.EV_THOUGHT, 0, "thought.reisatsu.quiet");
@@ -419,7 +419,7 @@ public final class Story {
         doorOuter = doorInner = false;
         Medium m = Spirits.medium(level);
         Layout.Marker spot = Layout.marker("exorcism_player");
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : GameManager.players(level)) {
             if (!GameManager.inGame(p)) continue;
             PlayerState ps = GameManager.state(p);
             Hiding.exit(p, false);
@@ -462,7 +462,7 @@ public final class Story {
                         m.setAnimPose(Medium.KNEEL);
                     }
                     layTable(level, data);
-                    for (ServerPlayer p : level.players()) {
+                    for (ServerPlayer p : GameManager.players(level)) {
                         if (!GameManager.inGame(p)) continue;
                         GameManager.event(p, GameManager.EV_EXORCISM, 1, "");
                         say(p, "medium", 80, "dialogue.reisatsu.exorcism.begin");
@@ -490,14 +490,14 @@ public final class Story {
                         level.playSound(null, sm.center().x, sm.center().y + 1, sm.center().z, ModSounds.MEDIUM_BELL.get(), SoundSource.NEUTRAL, 0.9f, 1.0f);
                     }
                     if (k == 60) {
-                        for (ServerPlayer p : level.players()) {
+                        for (ServerPlayer p : GameManager.players(level)) {
                             if (GameManager.inGame(p)) say(p, "medium", 80, "dialogue.reisatsu.release." + kind.id);
                         }
                     }
                     if (k == 110) {
                         burnPhoto(level, i);
                         for (Spirit s : Spirits.all(level)) if (s.mode() == Spirit.Mode.EXORCISM && s.exorcismSlot() == i) s.release();
-                        for (ServerPlayer p : level.players()) if (GameManager.inGame(p)) GameManager.event(p, GameManager.EV_EXORCISM, 2, kind.id);
+                        for (ServerPlayer p : GameManager.players(level)) if (GameManager.inGame(p)) GameManager.event(p, GameManager.EV_EXORCISM, 2, kind.id);
                     }
                 } else {
                     exoStage = 2;
@@ -511,7 +511,7 @@ public final class Story {
                 if (local == 100) Fixtures.openAutoDoor(level, "inner", 50);
                 if (local == 130) Fixtures.openAutoDoor(level, "outer", 50);
                 if (local == 175) {
-                    for (ServerPlayer p : level.players()) {
+                    for (ServerPlayer p : GameManager.players(level)) {
                         if (!GameManager.inGame(p)) continue;
                         GameManager.privateSound(p, ModSounds.WAITRESS_GREET.get(), Layout.marker("door_inner").center().add(0, 1.5, 0), 0.8f, 1.0f);
                         say(p, "waitress", 90, "dialogue.reisatsu.waitress.thanks");
@@ -520,14 +520,14 @@ public final class Story {
                 if (local == 200 && m != null) m.setAnimPose(Medium.BOW);
                 if (local == 280) {
                     clearTable(level);
-                    for (ServerPlayer p : level.players()) if (GameManager.inGame(p)) GameManager.event(p, GameManager.EV_DAWN, 0, "");
+                    for (ServerPlayer p : GameManager.players(level)) if (GameManager.inGame(p)) GameManager.event(p, GameManager.EV_DAWN, 0, "");
                 }
                 if (local == 420) {
                     exoTicks = -1;
                     data.phase = GameData.PHASE_ENDING;
                     data.ending = GameData.ENDING_GOOD;
                     data.setDirty();
-                    for (ServerPlayer p : level.players()) {
+                    for (ServerPlayer p : GameManager.players(level)) {
                         if (!GameManager.inGame(p)) continue;
                         PlayerState ps = GameManager.state(p);
                         ps.endingTicks = 0;

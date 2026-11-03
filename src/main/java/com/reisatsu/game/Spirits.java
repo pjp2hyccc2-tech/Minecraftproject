@@ -28,6 +28,8 @@ public final class Spirits {
     private static List<Spirit> cache = List.of();
     private static long cacheTick = Long.MIN_VALUE;
     private static ServerLevel cacheLevel;
+    /** Self test: the spirits are placed by hand. */
+    public static boolean paused;
 
     private Spirits() {}
 
@@ -96,7 +98,7 @@ public final class Spirits {
         }
         boolean night = data.phase == GameData.PHASE_INTRO || data.phase == GameData.PHASE_INVESTIGATE
                 || data.phase == GameData.PHASE_CLOSING || data.phase == GameData.PHASE_RETURN;
-        if (!night) return; // the exorcism and the endings place their own spirits
+        if (!night || paused) return; // the exorcism and the endings place their own spirits
         for (SpiritKind kind : SpiritKind.ALL) {
             List<Spirit> mine = new ArrayList<>();
             for (Spirit s : all(level)) if (s.kind() == kind && s.mode() != Spirit.Mode.EXORCISM && s.mode() != Spirit.Mode.BOUND) mine.add(s);
