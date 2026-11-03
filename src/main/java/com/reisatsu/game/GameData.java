@@ -14,13 +14,21 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-/** The night's progress (stored with the overworld): save and quit resumes where you were. */
+/**
+ * The week's progress (stored with the overworld). Save and quit resumes at the start of the current night: the
+ * photos, the お札 and the notes are kept, the night's own state (signs witnessed, the spirit shown) starts again.
+ */
 public final class GameData extends SavedData {
     private static final String NAME = "reisatsu_game";
 
     public static final int PHASE_IDLE = 0, PHASE_INTRO = 1, PHASE_INVESTIGATE = 2, PHASE_CLOSING = 3, PHASE_RETURN = 4,
             PHASE_EXORCISM = 5, PHASE_ENDING = 6;
     public static final int ENDING_NONE = 0, ENDING_GOOD = 1, ENDING_BAD = 2;
+    /**
+     * The stage of a night: the title card and the medium's opening lines (locked), the work before the spirit shows,
+     * the hunt for its photo, back to the medium, her closing lines (locked, then the next night).
+     */
+    public static final int NS_OPENING = 0, NS_WORK = 1, NS_HUNT = 2, NS_RETURN = 3, NS_ENDING = 4;
     public static final int RESULT_EMPTY = 0, RESULT_CAPTURED = 1, RESULT_FAILED = 2;
 
     /** One shot of the camera (kept in the album). spirit = ordinal or -1. */
@@ -65,6 +73,17 @@ public final class GameData extends SavedData {
     public long visitorNext = -1;
     public int visitorArrivals;
     public long closingAt = -1;
+    /** The night of the week, 1..7 (docs §1 Flow, {@link Week}). */
+    public int night = 1;
+    public int nightStage = NS_OPENING;
+    /** What the player witnessed tonight: night 1 the phenomena, later nights the signs of the night's spirit. */
+    public final Set<String> signs = new LinkedHashSet<>();
+    /** "Not inside yet tonight" for {@link #enteredAt} (set-backs by tests and debug may make it negative). */
+    public static final long NOT_YET = Long.MIN_VALUE;
+    /** Play tick of the player's first step inside tonight ({@link #NOT_YET}: not yet). */
+    public long enteredAt = NOT_YET;
+    /** Ticks after that first step before the night's spirit may show (60–90 s, rolled each night). */
+    public int manifestAt = 20 * 75;
 
     public static GameData get(MinecraftServer server) {
         return server.overworld().getDataStorage().computeIfAbsent(GameData::load, GameData::new, NAME);
@@ -79,6 +98,36 @@ public final class GameData extends SavedData {
 
     public boolean happened(String key) {
         return done.contains(key);
+    }
+
+    /** Has the player been inside tonight? */
+    public boolean entered() {
+        return enteredAt != NOT_YET;
+    }
+
+    /** Ticks since the player first went inside tonight (0 before). */
+    public long insideTicks() {
+        return entered() ? playTicks - enteredAt : 0;
+    }
+
+    /** {@link #once} for tonight only (cleared when a night starts). */
+    public boolean tonight(String key) {
+        return once("n:" + key);
+    }
+
+    public boolean happenedTonight(String key) {
+        return done.contains("n:" + key);
+    }
+
+    /** A night begins: its own state goes back (the week's progress stays). */
+    public void clearNight() {
+        done.removeIf(k -> k.startsWith("n:"));
+        signs.clear();
+        enteredAt = NOT_YET;
+        visitorNext = -1;
+        visitorArrivals = 0;
+        closingAt = -1;
+        setDirty();
     }
 
     public boolean isCaptured(SpiritKind k) {
@@ -104,7 +153,7 @@ public final class GameData extends SavedData {
         return true;
     }
 
-    /** A new night: everything but the "seen the intro once" flag goes back. */
+    /** A new week: everything but the "seen the intro once" flag goes back. */
     public void resetProgress() {
         started = false;
         phase = PHASE_IDLE;
@@ -123,6 +172,11 @@ public final class GameData extends SavedData {
         visitorNext = -1;
         visitorArrivals = 0;
         closingAt = -1;
+        night = 1;
+        nightStage = NS_OPENING;
+        signs.clear();
+        enteredAt = NOT_YET;
+        manifestAt = 20 * 75;
         setDirty();
     }
 
@@ -148,6 +202,11 @@ public final class GameData extends SavedData {
         tag.putLong("VisitorNext", visitorNext);
         tag.putInt("VisitorArrivals", visitorArrivals);
         tag.putLong("ClosingAt", closingAt);
+        tag.putInt("Night", night);
+        tag.putInt("NightStage", nightStage);
+        tag.put("Signs", strings(signs));
+        tag.putLong("EnteredAt", enteredAt);
+        tag.putInt("ManifestAt", manifestAt);
         return tag;
     }
 
@@ -177,6 +236,11 @@ public final class GameData extends SavedData {
         d.visitorNext = tag.contains("VisitorNext") ? tag.getLong("VisitorNext") : -1;
         d.visitorArrivals = tag.getInt("VisitorArrivals");
         d.closingAt = tag.contains("ClosingAt") ? tag.getLong("ClosingAt") : -1;
+        d.night = tag.contains("Night") ? Math.max(1, Math.min(Week.NIGHTS, tag.getInt("Night"))) : 1;
+        d.nightStage = tag.getInt("NightStage");
+        for (Tag t : tag.getList("Signs", Tag.TAG_STRING)) d.signs.add(t.getAsString());
+        d.enteredAt = tag.contains("EnteredAt") ? tag.getLong("EnteredAt") : NOT_YET;
+        d.manifestAt = tag.contains("ManifestAt") ? tag.getInt("ManifestAt") : 20 * 75;
         return d;
     }
 }

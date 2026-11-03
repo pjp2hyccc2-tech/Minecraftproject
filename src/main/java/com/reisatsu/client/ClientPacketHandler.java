@@ -37,7 +37,11 @@ public final class ClientPacketHandler {
         ClientState.reishou = s.reishou();
         ClientState.breath = s.breath();
         ClientState.circuits = s.closingMask();
-        if (oldPhase != s.phase()) ClientState.objectiveTicks = 0;
+        int oldStage = ClientState.nightStage, oldNight = ClientState.night;
+        ClientState.night = s.night();
+        ClientState.nightStage = s.nightStage();
+        ClientState.signs = s.signs();
+        if (oldPhase != s.phase() || oldStage != s.nightStage() || oldNight != s.night()) ClientState.objectiveTicks = 0;
         if (!ClientState.flag(GameManager.F_HIDING) && ClientState.lockerFacing >= 0 && ClientState.clientTicks % 20 == 0) ClientState.lockerFacing = -1;
     }
 
@@ -148,6 +152,41 @@ public final class ClientPacketHandler {
                     ClientState.releaseTicks = 0;
                     ui(ModSounds.GAME_RELEASE.get(), 0.9f, 1.0f);
                 }
+            }
+            case GameManager.EV_NIGHT -> {
+                if (e.arg() > 0) {
+                    // a new night: black, its title, the lot fading in; whatever cinematic was left is over
+                    ClientState.nightCard = e.arg();
+                    ClientState.nightCardTicks = 0;
+                    ClientState.blackoutTicks = -1;
+                    ClientState.exorcismStage = ClientState.exorcismTicks = ClientState.dawnTicks = ClientState.releaseTicks = -1;
+                    ClientState.closingTicks = ClientState.fadeTicks = ClientState.wakeTicks = ClientState.screamTicks = -1;
+                    ClientState.thoughtTicks = ClientState.witnessTicks = ClientState.submitTicks = -1;
+                    ClientState.introTicks = -1;
+                    Dialogue.clear();
+                    PhotoView.dismiss();
+                    Finder.reset();
+                    ui(ModSounds.GAME_TITLE_HIT.get(), 0.55f, 0.8f);
+                } else {
+                    // her lines are over (or skipped)
+                    Dialogue.clear();
+                    if (ClientState.nightCardTicks >= 0) ClientState.nightCardTicks = Math.max(ClientState.nightCardTicks, ClientState.NIGHT_CARD_END - 20);
+                }
+            }
+            case GameManager.EV_BLACKOUT -> {
+                ClientState.blackoutTicks = 0;
+                ClientState.blackoutFade = Math.max(5, e.arg());
+            }
+            case GameManager.EV_WITNESS -> {
+                ClientState.witnessKey = "witness.reisatsu." + e.text();
+                ClientState.witnessTicks = 0;
+                ClientState.objectiveTicks = 0;
+                ui(ModSounds.ITEM_PAPER.get(), 0.35f, 1.3f);
+            }
+            case GameManager.EV_MANIFEST -> {
+                ClientState.manifestTicks = 0;
+                ClientState.objectiveTicks = 0;
+                ui(ModSounds.GAME_RISER.get(), 0.45f, 1.0f);
             }
             case GameManager.EV_SUBMIT -> {
                 ClientState.submitKind = e.arg();

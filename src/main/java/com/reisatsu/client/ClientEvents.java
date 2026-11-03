@@ -146,8 +146,9 @@ public final class ClientEvents {
     public static void key(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.screen != null || event.getAction() != GLFW.GLFW_PRESS) return;
-        if (ClientState.introTicks >= 0 && ClientState.introSkippable
-                && (event.getKey() == GLFW.GLFW_KEY_SPACE || event.getKey() == GLFW.GLFW_KEY_ENTER)) {
+        boolean skipKey = event.getKey() == GLFW.GLFW_KEY_SPACE || event.getKey() == GLFW.GLFW_KEY_ENTER;
+        if (skipKey && ((ClientState.introTicks >= 0 && ClientState.introSkippable) || ClientState.flag(GameManager.F_SKIPPABLE))) {
+            // the intro, or the medium's lines at the start or the end of a night
             ModNetwork.sendToServer(new C2S.Action(C2S.INTRO_SKIP, 0));
         }
     }
@@ -181,7 +182,11 @@ public final class ClientEvents {
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void fov(ViewportEvent.ComputeFov event) {
         Minecraft mc = Minecraft.getInstance();
-        if (!inRestaurant() || !event.usedConfiguredFov() || AutoShots.overridesFov()) return;
+        if (AutoShots.overridesFov()) {
+            if (event.usedConfiguredFov()) event.setFOV(AutoShots.fovOverride());
+            return;
+        }
+        if (!inRestaurant() || !event.usedConfiguredFov()) return;
         if (Finder.active(mc)) {
             event.setFOV(Finder.fov((float) event.getPartialTick()));
             return;
@@ -261,7 +266,8 @@ public final class ClientEvents {
         }
         // nothing of the HUD on the black screens (jump scare, being taken, waking) and in cinematic moments
         boolean black = ClientState.jumpscareTicks >= 0 || ClientState.caughtTicks >= 0 || ClientState.wakeTicks >= 0
-                || ClientState.flag(com.reisatsu.game.GameManager.F_CAUGHT) || ClientState.introTicks >= 0 || ClientState.fadeTicks >= 0;
+                || ClientState.flag(com.reisatsu.game.GameManager.F_CAUGHT) || ClientState.introTicks >= 0 || ClientState.fadeTicks >= 0
+                || ClientState.black();
         boolean hideBar = black || ClientState.locked() || ClientState.hiding() || Finder.active(mc) || ClientState.exorcismStage >= 0;
         if (hideBar && (id.equals(VanillaGuiOverlay.HOTBAR.id()) || id.equals(VanillaGuiOverlay.ITEM_NAME.id())
                 || id.equals(VanillaGuiOverlay.RECORD_OVERLAY.id()))) {

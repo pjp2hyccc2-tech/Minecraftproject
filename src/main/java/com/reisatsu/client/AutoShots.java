@@ -46,10 +46,12 @@ import java.util.function.Consumer;
 
 /**
  * CI only ({@code -Dreisatsu.shots=true}, Xvfb + software GL): a scripted tour saved to {@code run/screenshots/}.
- * The intro, then the world's own camera positions ({@link WorldTour#shots()}, {@code world_<name>.png}, HUD hidden),
- * then the game in the real restaurant: the HUD and the finder, each spirit at work where it lives (with the eye and
- * through the finder), a pose sweep, a photo ejecting and developing, the album, notes, the breaker, a locker, fear,
- * a jump scare and waking, closing time, the exorcism, both endings. Log: {@code run/reisatsu_autoshots.txt}.
+ * The intro (the first night's card), the week (a night's title card, the medium's opening, night 1's witness line,
+ * her line at the end of a night, the next card), then the world's own camera positions ({@link WorldTour#shots()},
+ * {@code world_<name>.png}, HUD hidden), then the game in the real restaurant: the HUD and the finder, each spirit at
+ * work where it lives (with the eye and through the finder), a pose sweep, a photo ejecting and developing, the album
+ * (and its week), notes, the breaker, a locker, fear, a jump scare and waking, closing time, the exorcism, both
+ * endings. Log: {@code run/reisatsu_autoshots.txt}.
  */
 public final class AutoShots {
     private static final boolean ENABLED = Boolean.getBoolean("reisatsu.shots");
@@ -74,6 +76,10 @@ public final class AutoShots {
 
     public static boolean overridesFov() {
         return ENABLED && fovOverride > 0;
+    }
+
+    public static float fovOverride() {
+        return fovOverride;
     }
 
     static void onTitle(TitleScreen title) {
@@ -273,7 +279,9 @@ public final class AutoShots {
         }, 5);
         // the intro plays by itself on a new world, at the real spawn with the medium and her car
         if (!SHADERS) {
-            add("intro_text_wait", mc -> dynamicWait = Math.max(0, 70 - ClientState.introTicks), 0);
+            add("intro_card_wait", mc -> dynamicWait = Math.max(0, 38 - ClientState.introTicks), 0);
+            snap("01_intro_card");
+            add("intro_text_wait", mc -> dynamicWait = Math.max(0, 95 - ClientState.introTicks), 0);
             snap("01_intro_text");
             add("intro_title_wait", mc -> dynamicWait = Math.max(0, com.reisatsu.game.Story.INTRO_TEXT + 30 - ClientState.introTicks), 0);
             snap("02_intro_title");
@@ -288,7 +296,9 @@ public final class AutoShots {
             fear(mc, 0.3f, 0.0f);
         }, 40);
         snap("05_after_intro");
+        if (!SHADERS) week();
         worldTour();
+        panorama();
         // ---- the HUD and the finder in the real rooms
         add("lights_start", mc -> server(mc, (ServerLevel level) -> Fixtures.resetAll(level)), 40);
         scene("10_hud_dining", mc -> {
@@ -362,6 +372,7 @@ public final class AutoShots {
         }, 20);
         if (!SHADERS) {
             scene("52_album", mc -> mc.setScreen(new AlbumScreen()), 12);
+            scene("52_album_week", mc -> mc.setScreen(new AlbumScreen().tab(3)), 12);
             add("album_close", mc -> mc.setScreen(null), 4);
             scene("53_note", mc -> mc.setScreen(new NoteScreen("handover", "")), 12);
             add("note_close", mc -> mc.setScreen(null), 4);
@@ -446,6 +457,48 @@ public final class AutoShots {
         }
     }
 
+    /**
+     * The week (docs §1 Flow): a night's title card over black and over the lot, the medium's opening line; night 1's
+     * 「記録：…」 line and its count, five witnessed; her line at the end of the night; the blackout and the next card.
+     * Back to night 1 at the end.
+     */
+    private static void week() {
+        add("night_3", mc -> cmd(mc, "reisatsu debug night 3"), 36);
+        snap("06_night_card");
+        add("night_card_wait", mc -> {
+        }, 54);
+        snap("06_night_card_lot");
+        add("night_opening_wait", mc -> {
+        }, 72);
+        snap("06_night_opening");
+        add("night_1", mc -> cmd(mc, "reisatsu debug night 1"), 40);
+        add("night_1_skip", mc -> cmd(mc, "reisatsu debug skipintro"), 24);
+        add("night_1_in", mc -> {
+            at(mc, 20.5, 20.5, -60.0f, 10.0f);
+            hold(mc, "reisatsu:reisha_camera{film:10}");
+        }, 50);
+        add("night_1_event", mc -> cmd(mc, "reisatsu debug event menus"), 14);
+        snap("07_witness");
+        add("night_1_more", mc -> {
+            cmd(mc, "reisatsu debug event call");
+            cmd(mc, "reisatsu debug event chair");
+            cmd(mc, "reisatsu debug event glass");
+            cmd(mc, "reisatsu debug event drink");
+            cmd(mc, "reisatsu debug event pa");
+        }, 40);
+        snap("07_witness_done");
+        add("night_1_car", mc -> at(mc, 1.8, 39.6, 90.0f, 2.0f), 50);
+        add("night_1_talk", mc -> cmd(mc, "reisatsu debug talk"), 46);
+        snap("08_night_end");
+        add("night_1_end_skip", mc -> cmd(mc, "reisatsu debug skipintro"), 36);
+        snap("08_night_blackout");
+        add("night_2_card", mc -> {
+        }, 44);
+        snap("08_next_night");
+        add("week_done", mc -> cmd(mc, "reisatsu debug night 1"), 30);
+        add("week_done_skip", mc -> cmd(mc, "reisatsu debug skipintro"), 30);
+    }
+
     /** One spirit alone, spawned at home and left to its routine; seen with the eye, then through the finder. */
     private static void inSitu(String id, SpiritKind kind, double x, double z, float yaw, float pitch, boolean still) {
         add("situ_" + id, mc -> {
@@ -464,6 +517,33 @@ public final class AutoShots {
         add("situ_finder_" + id, mc -> hold(mc, "reisatsu:reisha_camera_finder{film:10}"), 20);
         snap("31_situ_" + id + "_finder");
         add("situ_down_" + id, mc -> hold(mc, "reisatsu:reisha_camera{film:10}"), 6);
+    }
+
+    /**
+     * Six 90° views from the parking lot for the title screen's panorama
+     * (assets/minecraft/textures/gui/title/background/panorama_0..5: front, right, back, left, up, down; the centre
+     * 720×720 of each 1280×720 shot is exactly 90°×90° at a vertical FOV of 90).
+     */
+    private static void panorama() {
+        final double px = 16.5, pz = 41.5;
+        add("pano_begin", mc -> {
+            clearSpirits(mc);
+            cmd(mc, "gamemode spectator");
+            mc.options.hideGui = true;
+            fovOverride = 90.0f;
+            server(mc, (ServerLevel level) -> Fixtures.resetAll(level));
+        }, 60);
+        float[][] faces = {{180, 0}, {270, 0}, {0, 0}, {90, 0}, {180, -90}, {180, 90}};
+        for (int i = 0; i < faces.length; i++) {
+            final float yaw = faces[i][0], pitch = faces[i][1];
+            add("go_pano_" + i, mc -> at(mc, px, Layout.FEET_Y, pz, yaw, pitch), i == 0 ? 90 : 30);
+            snap("pano_" + i);
+        }
+        add("pano_end", mc -> {
+            fovOverride = -1;
+            cmd(mc, "gamemode creative");
+            mc.options.hideGui = false;
+        }, 10);
     }
 
     /** The world's camera positions with its lighting setups, the HUD hidden, as a spectator (no collisions). */

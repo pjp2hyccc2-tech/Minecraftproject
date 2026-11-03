@@ -108,8 +108,10 @@ public final class GameFixtureListener implements FixtureEvents.Listener {
         // the waitress goes to greet whoever came in
         if (Spirits.get(level, SpiritKind.WAITRESS) instanceof Waitress w) w.onDoorChime();
         if (Spirits.get(level, SpiritKind.MANAGER) instanceof Manager m) m.onDoorChime(level);
-        if (cause == null) {
-            for (ServerPlayer p : GameManager.players(level)) if (p.distanceToSqr(Vec3.atCenterOf(com.reisatsu.world.Layout.marker("door_inner").pos())) < 24 * 24) Director.witness(p, "door");
+        // opened for nobody (or for someone nobody can see): a phenomenon, seen from either side of the door
+        if (!(cause instanceof net.minecraft.world.entity.player.Player)) {
+            Vec3 c = com.reisatsu.world.Layout.marker("inner".equals(door) ? "door_inner" : "door_outer").center();
+            Director.happen(level, "door", 40, new Vec3(c.x + 0.5, c.y + 1.0, c.z - 0.6), new Vec3(c.x + 0.5, c.y + 1.0, c.z + 1.6));
         }
     }
 

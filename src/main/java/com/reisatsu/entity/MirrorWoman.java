@@ -1,5 +1,6 @@
 package com.reisatsu.entity;
 
+import com.reisatsu.game.Director;
 import com.reisatsu.game.GameManager;
 import com.reisatsu.game.PlayerState;
 import com.reisatsu.registry.ModSounds;
@@ -151,7 +152,12 @@ public class MirrorWoman extends Spirit {
         if (tapsOn == on || !(level() instanceof ServerLevel level)) return;
         tapsOn = on;
         if (!Layout.has("sink_w")) return;
-        for (Layout.Marker m : Layout.markers("sink_w")) Fixtures.setTap(level, m.pos(), on);
+        java.util.List<Vec3> pts = new java.util.ArrayList<>();
+        for (Layout.Marker m : Layout.markers("sink_w")) {
+            Fixtures.setTap(level, m.pos(), on);
+            pts.add(Vec3.atCenterOf(m.pos()).add(0, 0.6, 0));
+        }
+        if (on) Director.happen(level, "taps", 20 * 40, pts);
     }
 
     @Override
@@ -176,7 +182,10 @@ public class MirrorWoman extends Spirit {
                     setTaps(true);
                     bowedFor = 20 * (30 + random.nextInt(21));
                 }
-                if (subTicks % 70 == 10) play(ModSounds.MIRROR_SOB.get(), 0.7f, 0.95f + random.nextFloat() * 0.1f);
+                if (subTicks % 70 == 10) {
+                    play(ModSounds.MIRROR_SOB.get(), 0.7f, 0.95f + random.nextFloat() * 0.1f);
+                    Director.happen(level, "sob", 60, new Vec3(10.5, Layout.FEET_Y + 1.5, 17.3));
+                }
                 if (subTicks > bowedFor) {
                     setTaps(false);
                     sub = S_STARE;

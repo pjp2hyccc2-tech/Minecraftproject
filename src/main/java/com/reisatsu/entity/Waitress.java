@@ -1,5 +1,6 @@
 package com.reisatsu.entity;
 
+import com.reisatsu.game.Director;
 import com.reisatsu.game.GameManager;
 import com.reisatsu.game.Story;
 import com.reisatsu.registry.ModSounds;
@@ -207,6 +208,7 @@ public class Waitress extends Spirit {
                 if (pose() == SERVE && poseTicks() == 24) {
                     Fixtures.placeWaterGlass(level, serveTable);
                     play(ModSounds.FIXTURE_GLASS_SET.get(), 0.6f, 1.0f);
+                    Director.happen(level, "glass", 20 * 30, Vec3.atCenterOf(Fixtures.menuSlot(serveTable)));
                     if (random.nextInt(3) == 0) {
                         play(ModSounds.WAITRESS_WATER.get(), 0.8f, 1.0f);
                         ServerPlayer near = nearestPlayer(level, 10.0);
@@ -233,6 +235,7 @@ public class Waitress extends Spirit {
                 if (subTicks == 6 && greetPending) {
                     greetPending = false;
                     play(ModSounds.WAITRESS_GREET.get(), 1.0f, 0.97f + random.nextFloat() * 0.06f);
+                    Director.happen(level, "greet", 40, position().add(0, 1.5, 0));
                     ServerPlayer near = nearestPlayer(level, 16.0);
                     if (near != null) Story.say(near, "waitress", 50, "dialogue.reisatsu.waitress.greet");
                 }
