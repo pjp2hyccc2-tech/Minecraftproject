@@ -10,6 +10,9 @@ public final class HitoriConfig {
     private static final ForgeConfigSpec.DoubleValue DOLL_SPEED;
     private static final ForgeConfigSpec.DoubleValue AWARENESS_RATE;
     private static final ForgeConfigSpec.BooleanValue AUTO_START;
+    private static final ForgeConfigSpec.DoubleValue PREP_CLOCK;
+    private static final ForgeConfigSpec.DoubleValue NIGHT_CLOCK;
+    private static final ForgeConfigSpec.DoubleValue MOUTH_MINUTES;
 
     private static final ForgeConfigSpec.BooleanValue FLASH_REDUCTION;
     private static final ForgeConfigSpec.BooleanValue JUMPSCARES;
@@ -24,6 +27,12 @@ public final class HitoriConfig {
         AWARENESS_RATE = b.comment("How fast the doll grows suspicious of your hiding place (0.5 = easier, 1.5 = harder)").defineInRange("awarenessRate", 1.0, 0.2, 2.0);
         AUTO_START = b.comment("Start the night in apartment 203 as soon as a player joins a new world (otherwise: /hitori start)")
                 .define("autoStart", true);
+        PREP_CLOCK = b.comment("How fast the night's clock runs before 3:00 (in-game seconds per real second; 02:20 -> 03:00)")
+                .defineInRange("prepClockRate", 4.0, 1.0, 30.0);
+        NIGHT_CLOCK = b.comment("How fast the night's clock runs from 3:00 (dawn at 5:00 ends an unfinished ritual)")
+                .defineInRange("nightClockRate", 2.0, 1.0, 20.0);
+        MOUTH_MINUTES = b.comment("Real minutes a mouthful of salt water lasts (holding your breath drains it three times faster)")
+                .defineInRange("mouthMinutes", 10.0, 1.0, 120.0);
         b.pop();
         COMMON_SPEC = b.build();
 
@@ -65,6 +74,9 @@ public final class HitoriConfig {
     public static double dollSpeed() { return d(DOLL_SPEED, 1.0); }
     public static double awarenessRate() { return d(AWARENESS_RATE, 1.0); }
     public static boolean autoStart() { return b(AUTO_START, true); }
+    public static double prepClockRate() { return d(PREP_CLOCK, 4.0); }
+    public static double nightClockRate() { return d(NIGHT_CLOCK, 2.0); }
+    public static double mouthMinutes() { return d(MOUTH_MINUTES, 10.0); }
     public static boolean flashReduction() { return b(FLASH_REDUCTION, false); }
     public static boolean jumpscares() { return b(JUMPSCARES, true); }
     public static double screenEffects() { return d(SCREEN_EFFECTS, 1.0); }

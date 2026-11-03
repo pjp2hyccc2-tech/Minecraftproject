@@ -1,6 +1,7 @@
 package com.hitori;
 
 import com.mojang.logging.LogUtils;
+import com.hitori.game.GameFixtureListener;
 import com.hitori.network.ModNetwork;
 import com.hitori.registry.ModBlockEntities;
 import com.hitori.registry.ModBlocks;
@@ -10,6 +11,7 @@ import com.hitori.registry.ModEntities;
 import com.hitori.registry.ModItems;
 import com.hitori.registry.ModParticles;
 import com.hitori.registry.ModSounds;
+import com.hitori.world.FixtureEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -42,6 +44,7 @@ public class Hitori {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, HitoriConfig.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, HitoriConfig.CLIENT_SPEC);
         ModNetwork.register();
+        FixtureEvents.LISTENER = GameFixtureListener.INSTANCE;
         LOGGER.info("[hitori] ひとりかくれんぼ: the first oni is me.");
     }
 
