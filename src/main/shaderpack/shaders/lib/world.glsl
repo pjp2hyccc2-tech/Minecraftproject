@@ -1,10 +1,10 @@
 // =====================================================================================
 //  ReisatsuShaders - per-world palette, fear / danger, celestial light
-//  The stub folders define REISATSU_MOUNTAIN / DIM_NETHER / DIM_END; nothing = overworld
+//  The stub folders define REISATSU_HIDAMARI / DIM_NETHER / DIM_END; nothing = overworld
 //  (and any other dimension: the lobby, mod dimensions ...).
 // =====================================================================================
 
-#if defined REISATSU_MOUNTAIN
+#if defined REISATSU_HIDAMARI
     #define WORLD_MOUNTAIN
     #define HAS_CELESTIAL_LIGHT
 #elif defined DIM_NETHER

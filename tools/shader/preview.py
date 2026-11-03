@@ -47,7 +47,7 @@ import build_pack  # noqa: E402
 
 ROOT = lint.ROOT
 ATTRIBS = {"mc_Entity": 10, "mc_midTexCoord": 11}
-MOUNTAIN = "reisatsu_kaerazu"
+MOUNTAIN = "reisatsu_hidamari"
 
 # item / entity ids (item.properties, entity.properties)
 FLASHLIGHT, FLASH_LOW, PHONE_LIGHT, CAMERA, FLARE = 10001, 10002, 10003, 10004, 10005

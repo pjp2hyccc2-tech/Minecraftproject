@@ -62,7 +62,7 @@ const float eyeBrightnessHalflife = 3.0;
 const float wetnessHalflife = 250.0;
 const float drynessHalflife = 120.0;
 
-#ifdef REISATSU_MOUNTAIN
+#ifdef REISATSU_HIDAMARI
     // Kaerazu-yama is frozen at 18000 (midnight), so the tilt alone places the moon: -30 puts
     // it 60 degrees up in the south (downhill, the way out). The canopy gaps let slanted shafts
     // through, and looking down the mountain they glow against the fog (forward scattering).

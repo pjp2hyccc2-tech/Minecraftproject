@@ -7,7 +7,7 @@ shaders/program/*.glsl and shaders/lib/*.glsl; a stub only #defines the dimensio
 program variant and #includes the shared source.
 
   (root)            every dimension not listed below (overworld, mod dimensions ...)
-  reisatsu_kaerazu/   reisatsu:kaerazu   -> #define REISATSU_MOUNTAIN (the mountain: fear / danger / camera)
+  reisatsu_hidamari/  reisatsu:hidamari  -> #define REISATSU_HIDAMARI (the restaurant: fear / danger / finder / flash)
   world-1/          the Nether       -> #define DIM_NETHER (no shadow pass)
   world1/           the End          -> #define DIM_END    (no shadow pass)
 
@@ -58,7 +58,7 @@ PROGRAMS = {
 # folder -> (dimension define or None, has a shadow pass)
 FOLDERS = {
     "": (None, True),
-    "reisatsu_kaerazu": ("REISATSU_MOUNTAIN", True),
+    "reisatsu_hidamari": ("REISATSU_HIDAMARI", True),
     "world-1": ("DIM_NETHER", False),
     "world1": ("DIM_END", False),
 }
