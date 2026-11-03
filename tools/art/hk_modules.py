@@ -6,3 +6,5 @@ import hk_kitchen  # noqa: F401  DK: sink, gas stove, fridge, rice, salt, cup, k
 import hk_western  # noqa: F401  western room, hall, genkan: desk, laptop, sewing box, bed, shelf, plush, lamp, ...
 import hk_exterior  # noqa: F401  outside: laundry, AC, vending machine, street lamp, pole, mailboxes, bike, rail, signs
 import hk_particles  # noqa: F401  particle textures + definitions
+import hk_items  # noqa: F401  item sprites and 3D held models
+import hk_gui  # noqa: F401  GUI textures
