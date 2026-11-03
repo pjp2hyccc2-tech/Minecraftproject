@@ -72,3 +72,26 @@ def solve(spec, end, end_offset, target, vary, fixed=None, bounds=None, init=Non
     for p in parts.values():
         p.reset()
     return out
+
+
+def write_consts(module_file, cls, consts):
+    """Stores solved constants in the spec module between marker lines (re-run solve_ik to refresh)."""
+    import re
+    src = open(module_file, encoding='utf-8').read()
+    body = '\n'.join(f'    {k!r}: {v:.4f},' for k, v in sorted(consts.items()))
+    block = f'# --- solved constants (ent_ik), do not edit by hand\n{cls}.consts = {{\n{body}\n}}\n# --- end solved constants\n'
+    if '# --- solved constants' in src:
+        src = re.sub(r'# --- solved constants.*?# --- end solved constants\n', lambda m: block, src, flags=re.S)
+    else:
+        src = src.replace(f'\n\nSPEC = {cls}\n', f'\n\n{block}\n\nSPEC = {cls}\n')
+    open(module_file, 'w', encoding='utf-8').write(src)
+
+
+def mirror(r, side_from='right', side_to='left'):
+    """Mirror an arm solution to the other side (x stays, y and z rotations flip)."""
+    out = {}
+    for k, v in r.items():
+        part, attr = k.split('.')
+        part = part.replace(side_from, side_to)
+        out[f'{part}.{attr}'] = -v if attr in ('yRot', 'zRot') else v
+    return out

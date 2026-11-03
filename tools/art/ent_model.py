@@ -677,10 +677,24 @@ class Spec:
     post = ''
     helpers = ''
 
+    consts = {}
+
     def __init__(self):
         self.root = Part('root')
         self.build()
         self.tex_w, self.tex_h = pack(self.root, self.tex_w, self.tex_h)
+        self.anim = self.subst(type(self).anim)
+        self.post = self.subst(type(self).post)
+
+    def subst(self, code):
+        """$NAME$ placeholders -> the solved constants (IK angles etc.) as Java float literals."""
+        import re
+        def rep(mt):
+            k = mt.group(1)
+            if k not in self.consts:
+                raise KeyError(f'{self.id}: constant {k} not solved (run its solve_ik)')
+            return f'{self.consts[k]:.3f}F'
+        return re.sub(r'\$([A-Z0-9_]+)\$', rep, code)
 
     def build(self):
         raise NotImplementedError

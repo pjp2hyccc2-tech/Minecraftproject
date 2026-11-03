@@ -77,3 +77,11 @@ def lot(light=1.0):
     def sc(cv):
         ER.floor(cv, 4, light=light, tex=ER.flat_tex((34, 35, 38), 0.10, 21))
     return sc
+
+
+def pillar_near(light=1.0):
+    """The kids' corner pillar, its face 0.3 blocks in front (the child counts with her arms against it)."""
+    def sc(cv):
+        ER.floor(cv, 3, light=light)
+        ER.box(cv, (-0.5, 0.0, 0.30), (0.5, 3.0, 1.30), DARKWOOD, light=light)
+    return sc
