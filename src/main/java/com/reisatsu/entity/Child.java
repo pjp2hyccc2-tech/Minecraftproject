@@ -222,7 +222,10 @@ public class Child extends Spirit {
                 } else {
                     setAnimPose(HIDE);
                 }
-                if (random.nextInt(500) == 0) play(ModSounds.CHILD_GIGGLE.get(), 0.6f, 1.0f);
+                if (random.nextInt(500) == 0) {
+                    play(ModSounds.CHILD_GIGGLE.get(), 0.6f, 1.0f);
+                    com.reisatsu.game.Director.happen(level, "giggle", 20, position().add(0, 0.8, 0));
+                }
                 if (random.nextInt(1400) == 0) play(ModSounds.CHILD_HUM.get(), 0.5f, 1.0f);
                 if (started && level.getGameTime() % 20 == 0 && --nextCount <= 0) {
                     nextCount = 150 + random.nextInt(90);

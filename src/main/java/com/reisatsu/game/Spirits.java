@@ -20,7 +20,8 @@ import java.util.List;
 
 /**
  * Who is in the restaurant tonight. Spirits, the medium and her car are never saved; this keeps them in the level
- * according to the progress (a captured spirit never comes back; the visitor comes and goes on his own schedule).
+ * according to the week (only the night's own spirit, once it has shown itself; a captured spirit never comes back;
+ * the visitor comes and goes on his own schedule).
  */
 public final class Spirits {
     /** Everything of the game happens inside this box (the lot, the road and the curve included). */
@@ -96,25 +97,25 @@ public final class Spirits {
                 level.addFreshEntity(car);
             }
         }
-        boolean night = data.phase == GameData.PHASE_INTRO || data.phase == GameData.PHASE_INVESTIGATE
-                || data.phase == GameData.PHASE_CLOSING || data.phase == GameData.PHASE_RETURN;
+        boolean night = data.phase == GameData.PHASE_INTRO || Nights.nightPhase(data);
         if (!night || paused) return; // the exorcism and the endings place their own spirits
+        // only tonight's spirit, and only once it has shown itself (docs §1 Flow): the bound ones are gone, the later ones dormant
+        SpiritKind tonight = data.phase == GameData.PHASE_INTRO ? null : Week.spirit(data.night);
         for (SpiritKind kind : SpiritKind.ALL) {
             List<Spirit> mine = new ArrayList<>();
             for (Spirit s : all(level)) {
                 if (s.kind() == kind && !s.extra && s.mode() != Spirit.Mode.EXORCISM && s.mode() != Spirit.Mode.BOUND) mine.add(s);
             }
-            boolean keep = night && !data.isCaptured(kind);
+            boolean keep = kind == tonight && !data.isCaptured(kind) && data.nightStage == GameData.NS_HUNT;
             for (int i = keep ? 1 : 0; i < mine.size(); i++) mine.get(i).discard();
             // the visitor is not resident: he arrives on his own schedule (Visitor.schedule)
             if (keep && kind != SpiritKind.VISITOR && mine.isEmpty()) {
                 Spirit s = spawnAtHome(level, kind);
-                // a world saved during the night: they pick up where they were
-                if (s instanceof Manager m && (data.phase == GameData.PHASE_CLOSING || data.phase == GameData.PHASE_RETURN)) m.closingTime();
-                if (s instanceof com.reisatsu.entity.Child c && data.happened("child_moui")) c.startGame(null);
+                if (s instanceof Manager m) m.closingTime();
+                if (s instanceof com.reisatsu.entity.Child c) c.startGame(null);
             }
         }
-        if (night && data.phase != GameData.PHASE_INTRO) Visitor.schedule(level, data);
+        if (tonight == SpiritKind.VISITOR) Visitor.schedule(level, data);
         invalidate();
     }
 

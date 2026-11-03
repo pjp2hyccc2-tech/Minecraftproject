@@ -46,10 +46,12 @@ import java.util.function.Consumer;
 
 /**
  * CI only ({@code -Dreisatsu.shots=true}, Xvfb + software GL): a scripted tour saved to {@code run/screenshots/}.
- * The intro, then the world's own camera positions ({@link WorldTour#shots()}, {@code world_<name>.png}, HUD hidden),
- * then the game in the real restaurant: the HUD and the finder, each spirit at work where it lives (with the eye and
- * through the finder), a pose sweep, a photo ejecting and developing, the album, notes, the breaker, a locker, fear,
- * a jump scare and waking, closing time, the exorcism, both endings. Log: {@code run/reisatsu_autoshots.txt}.
+ * The intro (the first night's card), the week (a night's title card, the medium's opening, night 1's witness line,
+ * her line at the end of a night, the next card), then the world's own camera positions ({@link WorldTour#shots()},
+ * {@code world_<name>.png}, HUD hidden), then the game in the real restaurant: the HUD and the finder, each spirit at
+ * work where it lives (with the eye and through the finder), a pose sweep, a photo ejecting and developing, the album
+ * (and its week), notes, the breaker, a locker, fear, a jump scare and waking, closing time, the exorcism, both
+ * endings. Log: {@code run/reisatsu_autoshots.txt}.
  */
 public final class AutoShots {
     private static final boolean ENABLED = Boolean.getBoolean("reisatsu.shots");
@@ -277,7 +279,9 @@ public final class AutoShots {
         }, 5);
         // the intro plays by itself on a new world, at the real spawn with the medium and her car
         if (!SHADERS) {
-            add("intro_text_wait", mc -> dynamicWait = Math.max(0, 70 - ClientState.introTicks), 0);
+            add("intro_card_wait", mc -> dynamicWait = Math.max(0, 38 - ClientState.introTicks), 0);
+            snap("01_intro_card");
+            add("intro_text_wait", mc -> dynamicWait = Math.max(0, 95 - ClientState.introTicks), 0);
             snap("01_intro_text");
             add("intro_title_wait", mc -> dynamicWait = Math.max(0, com.reisatsu.game.Story.INTRO_TEXT + 30 - ClientState.introTicks), 0);
             snap("02_intro_title");
@@ -292,6 +296,7 @@ public final class AutoShots {
             fear(mc, 0.3f, 0.0f);
         }, 40);
         snap("05_after_intro");
+        if (!SHADERS) week();
         worldTour();
         panorama();
         // ---- the HUD and the finder in the real rooms
@@ -367,6 +372,7 @@ public final class AutoShots {
         }, 20);
         if (!SHADERS) {
             scene("52_album", mc -> mc.setScreen(new AlbumScreen()), 12);
+            scene("52_album_week", mc -> mc.setScreen(new AlbumScreen().tab(3)), 12);
             add("album_close", mc -> mc.setScreen(null), 4);
             scene("53_note", mc -> mc.setScreen(new NoteScreen("handover", "")), 12);
             add("note_close", mc -> mc.setScreen(null), 4);
@@ -449,6 +455,48 @@ public final class AutoShots {
             snap("72_ending_card");
             add("ending_close", mc -> mc.setScreen(null), 5);
         }
+    }
+
+    /**
+     * The week (docs §1 Flow): a night's title card over black and over the lot, the medium's opening line; night 1's
+     * 「記録：…」 line and its count, five witnessed; her line at the end of the night; the blackout and the next card.
+     * Back to night 1 at the end.
+     */
+    private static void week() {
+        add("night_3", mc -> cmd(mc, "reisatsu debug night 3"), 36);
+        snap("06_night_card");
+        add("night_card_wait", mc -> {
+        }, 54);
+        snap("06_night_card_lot");
+        add("night_opening_wait", mc -> {
+        }, 72);
+        snap("06_night_opening");
+        add("night_1", mc -> cmd(mc, "reisatsu debug night 1"), 40);
+        add("night_1_skip", mc -> cmd(mc, "reisatsu debug skipintro"), 24);
+        add("night_1_in", mc -> {
+            at(mc, 20.5, 20.5, -60.0f, 10.0f);
+            hold(mc, "reisatsu:reisha_camera{film:10}");
+        }, 50);
+        add("night_1_event", mc -> cmd(mc, "reisatsu debug event menus"), 14);
+        snap("07_witness");
+        add("night_1_more", mc -> {
+            cmd(mc, "reisatsu debug event call");
+            cmd(mc, "reisatsu debug event chair");
+            cmd(mc, "reisatsu debug event glass");
+            cmd(mc, "reisatsu debug event drink");
+            cmd(mc, "reisatsu debug event pa");
+        }, 40);
+        snap("07_witness_done");
+        add("night_1_car", mc -> at(mc, 1.8, 39.6, 90.0f, 2.0f), 50);
+        add("night_1_talk", mc -> cmd(mc, "reisatsu debug talk"), 46);
+        snap("08_night_end");
+        add("night_1_end_skip", mc -> cmd(mc, "reisatsu debug skipintro"), 36);
+        snap("08_night_blackout");
+        add("night_2_card", mc -> {
+        }, 44);
+        snap("08_next_night");
+        add("week_done", mc -> cmd(mc, "reisatsu debug night 1"), 30);
+        add("week_done_skip", mc -> cmd(mc, "reisatsu debug skipintro"), 30);
     }
 
     /** One spirit alone, spawned at home and left to its routine; seen with the eye, then through the finder. */

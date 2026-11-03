@@ -8,6 +8,7 @@ import com.reisatsu.client.PhotoView;
 import com.reisatsu.client.Tex;
 import com.reisatsu.entity.SpiritKind;
 import com.reisatsu.game.GameData;
+import com.reisatsu.game.Week;
 import com.reisatsu.registry.ModSounds;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -21,12 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 霊撮帳 (docs/DESIGN.md §3.2, key J): six silhouette slots that fill with each spirit's photo and red name, every
- * shot of the night (empty and failed ones too), the notes found, the medium's rules. Click a photo to see it large.
+ * 霊撮帳 (docs/DESIGN.md §3.2, key J): six silhouette slots that fill with each spirit's photo and red name (and the
+ * night it was sent on), every shot of the week (empty and failed ones too), the notes found, the medium's rules, and
+ * the week: which spirit was sent on which night. Click a photo to see it large.
  */
 public class AlbumScreen extends Screen {
     private static final ResourceLocation ALBUM = Reisatsu.id("textures/gui/album.png");
-    private static final int TAB_SHOTS = 0, TAB_NOTES = 1, TAB_RULES = 2;
+    private static final int TAB_SHOTS = 0, TAB_NOTES = 1, TAB_RULES = 2, TAB_NIGHTS = 3;
     private int tab;
     private int page;
     private int bx, by, bw, bh;
@@ -113,9 +115,15 @@ public class AlbumScreen extends Screen {
             String fitted = font.plainSubstrByWidth(label, cellW - 2);
             g.drawString(font, fitted, cx + (cellW - font.width(fitted)) / 2, cy + photoH + 3, lc, false);
             if ((ClientState.submitted & k.bit()) != 0) g.drawString(font, "✓", px + pw - 6, cy + 2, 0xFF2E6A2E, false);
+            // its night of the week (full size: kanji do not survive scaling down)
+            int n = Week.nightOf(k);
+            String nl = font.plainSubstrByWidth(I18n.get("night.reisatsu." + n + ".short")
+                    + ((ClientState.submitted & k.bit()) != 0 ? "・" + I18n.get("gui.reisatsu.sent") : ""), cellW - 2);
+            g.drawString(font, nl, cx + (cellW - font.width(nl)) / 2, cy + photoH + 14, (ClientState.submitted & k.bit()) != 0 ? 0xFF4A3A2A : 0xFF9A8A78, false);
         }
         // ---- the right page: tabs
-        String[] tabs = {I18n.get("gui.reisatsu.tab_shots"), I18n.get("gui.reisatsu.tab_notes"), I18n.get("gui.reisatsu.tab_rules")};
+        String[] tabs = {I18n.get("gui.reisatsu.tab_shots"), I18n.get("gui.reisatsu.tab_notes"), I18n.get("gui.reisatsu.tab_rules"),
+                I18n.get("gui.reisatsu.tab_nights")};
         int tx = rx;
         for (int i = 0; i < tabs.length; i++) {
             int tw = font.width(tabs[i]) + 10;
@@ -133,6 +141,7 @@ public class AlbumScreen extends Screen {
         switch (tab) {
             case TAB_SHOTS -> shots(g, rx, y0, pageW, by + bh - pad - y0, ink);
             case TAB_NOTES -> notes(g, rx, y0, pageW, ink);
+            case TAB_NIGHTS -> nights(g, rx, y0, pageW, ink);
             default -> rules(g, rx, y0, pageW, ink);
         }
         super.render(g, mouseX, mouseY, partial);
@@ -184,6 +193,35 @@ public class AlbumScreen extends Screen {
             final String nid = id;
             hits.add(new Hit(x, y - 1, x + w, y + 10, () -> minecraft.setScreen(new NoteScreen(nid, "", this))));
             y += 13;
+        }
+    }
+
+    /** The week: each night's date and what happened on it (sent on / tonight / not yet). */
+    private void nights(GuiGraphics g, int x, int y, int w, int ink) {
+        int now = ClientState.night;
+        boolean over = ClientState.phase >= GameData.PHASE_EXORCISM;
+        for (int n = 1; n <= Week.NIGHTS; n++) {
+            boolean past = n < now || (n == now && (over || ClientState.nightStage == GameData.NS_ENDING));
+            boolean tonight = n == now && !past;
+            int col = past ? ink : tonight ? 0xFF8A1A14 : 0xFF9A8A78;
+            String head = I18n.get("night.reisatsu." + n + ".short") + "　" + I18n.get("night.reisatsu." + n + ".date");
+            g.drawString(font, font.plainSubstrByWidth(head, w), x, y, col, false);
+            SpiritKind k = Week.spirit(n);
+            String what;
+            int wc = 0xFF6A5A48;
+            if (k == null) {
+                what = past ? I18n.get("gui.reisatsu.night_observed") : tonight ? I18n.get("gui.reisatsu.night_tonight_observe") : "――";
+            } else if ((ClientState.submitted & k.bit()) != 0) {
+                what = I18n.get(k.roleKey()) + "　" + I18n.get(k.nameKey());
+                wc = 0xFF9A1414;
+            } else if (tonight) {
+                what = I18n.get("gui.reisatsu.night_tonight");
+                wc = 0xFF8A1A14;
+            } else {
+                what = "――";
+            }
+            g.drawString(font, font.plainSubstrByWidth("　" + what, w), x, y + 10, wc, false);
+            y += 24;
         }
     }
 

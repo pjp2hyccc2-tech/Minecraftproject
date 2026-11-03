@@ -102,6 +102,18 @@ public final class PlayerState {
         hiddenAt = null;
     }
 
+    /** A new night begins: calm again, nothing pending (the rooms seen are remembered). */
+    public void resetForNight() {
+        resetAfterWake();
+        fear = 0.2f;
+        endingTicks = -1;
+        introTicks = -1;
+        room = "";
+        outsideTicks = 0;
+        flickerTicks = 0;
+        forceTicks = 0;
+    }
+
     public CompoundTag save() {
         CompoundTag t = new CompoundTag();
         ListTag rooms = new ListTag();
