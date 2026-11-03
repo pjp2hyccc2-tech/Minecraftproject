@@ -436,3 +436,23 @@ def mic(x, lo=200.0, hi=6000.0):
     y = dsp.lowpass(y, hi, 4)
     y = dsp.peq(y, 2500, 1.2, 3.0)
     return dsp.compress(y, thresh_db=-24.0, ratio=3.0, window=0.03)
+
+
+def circ_varispeed(x, n_out, rate):
+    """Read the periodic signal x at a periodic rate (per output sample), rescaled so that exactly one pass of x
+    fills n_out samples: tape / spring wow and flutter that still loops seamlessly.  Catmull-Rom interpolation."""
+    m = x.shape[-1]
+    r = np.asarray(rate, float)
+    r = r * (m / r.sum())
+    pos = np.concatenate([[0.0], np.cumsum(r)[:-1]])
+    i1 = np.floor(pos).astype(np.int64)
+    f = pos - i1
+    i0, i2, i3 = (i1 - 1) % m, (i1 + 1) % m, (i1 + 2) % m
+    i1 = i1 % m
+
+    def interp(s):
+        p0, p1, p2, p3 = s[i0], s[i1], s[i2], s[i3]
+        return p1 + 0.5 * f * (p2 - p0 + f * (2 * p0 - 5 * p1 + 4 * p2 - p3 + f * (3 * (p1 - p2) + p3 - p0)))
+    if x.ndim == 1:
+        return interp(x)
+    return np.vstack([interp(c) for c in x])

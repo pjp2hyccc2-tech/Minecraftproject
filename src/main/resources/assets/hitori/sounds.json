@@ -126,6 +126,78 @@
       }
     ]
   },
+  "music.dread": {
+    "sounds": [
+      {
+        "name": "hitori:music/dread",
+        "stream": true
+      }
+    ]
+  },
+  "music.tension": {
+    "sounds": [
+      {
+        "name": "hitori:music/tension",
+        "stream": true
+      }
+    ]
+  },
+  "music.danger": {
+    "sounds": [
+      {
+        "name": "hitori:music/danger",
+        "stream": true
+      }
+    ]
+  },
+  "music.chase": {
+    "sounds": [
+      {
+        "name": "hitori:music/chase",
+        "stream": true
+      }
+    ]
+  },
+  "music.title": {
+    "sounds": [
+      {
+        "name": "hitori:music/title",
+        "stream": true
+      }
+    ]
+  },
+  "music.prep": {
+    "sounds": [
+      {
+        "name": "hitori:music/prep",
+        "stream": true
+      }
+    ]
+  },
+  "music.ending_good": {
+    "sounds": [
+      {
+        "name": "hitori:music/ending_good",
+        "stream": true
+      }
+    ]
+  },
+  "music.ending_bad": {
+    "sounds": [
+      {
+        "name": "hitori:music/ending_bad",
+        "stream": true
+      }
+    ]
+  },
+  "music.playback": {
+    "sounds": [
+      {
+        "name": "hitori:music/playback",
+        "stream": true
+      }
+    ]
+  },
   "ritual.cut": {
     "subtitle": "subtitles.hitori.ritual.cut",
     "sounds": [
@@ -698,6 +770,159 @@
       }
     ]
   },
+  "player.heartbeat": {
+    "subtitle": "subtitles.hitori.player.heartbeat",
+    "sounds": [
+      {
+        "name": "hitori:player/heartbeat",
+        "attenuation_distance": 8,
+        "preload": true
+      }
+    ]
+  },
+  "player.breath_fear": {
+    "subtitle": "subtitles.hitori.player.breath_fear",
+    "sounds": [
+      {
+        "name": "hitori:player/breath_fear_1",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "hitori:player/breath_fear_2",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "hitori:player/breath_fear_3",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "player.breath_hold": {
+    "subtitle": "subtitles.hitori.player.breath_hold",
+    "sounds": [
+      {
+        "name": "hitori:player/breath_hold"
+      }
+    ]
+  },
+  "player.gasp": {
+    "subtitle": "subtitles.hitori.player.gasp",
+    "sounds": [
+      {
+        "name": "hitori:player/gasp_1",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "hitori:player/gasp_2",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "player.breath_mouth": {
+    "subtitle": "subtitles.hitori.player.breath_mouth",
+    "sounds": [
+      {
+        "name": "hitori:player/breath_mouth_1",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "hitori:player/breath_mouth_2",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "player.swallow": {
+    "subtitle": "subtitles.hitori.player.swallow",
+    "sounds": [
+      {
+        "name": "hitori:player/swallow"
+      }
+    ]
+  },
+  "player.step_tatami": {
+    "subtitle": "subtitles.hitori.player.step_tatami",
+    "sounds": [
+      {
+        "name": "hitori:player/step_tatami_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_tatami_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_tatami_3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_tatami_4",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "player.step_floor": {
+    "subtitle": "subtitles.hitori.player.step_floor",
+    "sounds": [
+      {
+        "name": "hitori:player/step_floor_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_floor_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_floor_3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_floor_4",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "player.step_tile": {
+    "subtitle": "subtitles.hitori.player.step_tile",
+    "sounds": [
+      {
+        "name": "hitori:player/step_tile_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_tile_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_tile_3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_tile_4",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "player.step_wet": {
+    "subtitle": "subtitles.hitori.player.step_wet",
+    "sounds": [
+      {
+        "name": "hitori:player/step_wet_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_wet_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_wet_3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:player/step_wet_4",
+        "attenuation_distance": 16
+      }
+    ]
+  },
   "doll.step": {
     "subtitle": "subtitles.hitori.doll.step",
     "sounds": [
@@ -902,6 +1127,80 @@
       },
       {
         "name": "hitori:whisper/name_2"
+      }
+    ]
+  },
+  "game.jumpscare": {
+    "subtitle": "subtitles.hitori.game.jumpscare",
+    "sounds": [
+      {
+        "name": "hitori:game/jumpscare_1",
+        "preload": true
+      },
+      {
+        "name": "hitori:game/jumpscare_2",
+        "preload": true
+      }
+    ]
+  },
+  "game.stinger": {
+    "subtitle": "subtitles.hitori.game.stinger",
+    "sounds": [
+      {
+        "name": "hitori:game/stinger_1",
+        "preload": true
+      },
+      {
+        "name": "hitori:game/stinger_2",
+        "preload": true
+      },
+      {
+        "name": "hitori:game/stinger_3",
+        "preload": true
+      },
+      {
+        "name": "hitori:game/stinger_4",
+        "preload": true
+      }
+    ]
+  },
+  "game.riser": {
+    "sounds": [
+      {
+        "name": "hitori:game/riser_1"
+      },
+      {
+        "name": "hitori:game/riser_2"
+      }
+    ]
+  },
+  "game.step_done": {
+    "sounds": [
+      {
+        "name": "hitori:game/step_done"
+      }
+    ]
+  },
+  "game.three_am": {
+    "subtitle": "subtitles.hitori.game.three_am",
+    "sounds": [
+      {
+        "name": "hitori:game/three_am"
+      }
+    ]
+  },
+  "game.title_hit": {
+    "sounds": [
+      {
+        "name": "hitori:game/title_hit"
+      }
+    ]
+  },
+  "game.morning": {
+    "subtitle": "subtitles.hitori.game.morning",
+    "sounds": [
+      {
+        "name": "hitori:game/morning"
       }
     ]
   }
