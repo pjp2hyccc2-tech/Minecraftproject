@@ -539,18 +539,52 @@ def scene_camera_app():
     rng_ = np.random.default_rng(5)
     lum = np.clip(lum * 1.15 + rng_.normal(0, 9, lum.shape), 0, 255)
     ir = np.stack([lum * 0.78, lum * 0.92, lum * 0.82], -1)
-    feed = overlay(ir, 'cctv')
-    lap = np.zeros_like(ir)
-    lap[:] = 20
+    from PIL import ImageDraw
+    from common import font as _font, FONT_LABEL as _FL
     h, w = ir.shape[:2]
-    import hk_gui
-    vx0, vy0, vx1, vy1 = hk_gui.RECTS['laptop_viewport']
-    sx, sy = w / 512, h / 288
-    small = np.asarray(Image.fromarray(ir.astype(np.uint8)).resize((int((vx1 - vx0 + 1) * sx),
-                                                                     int((vy1 - vy0 + 1) * sy))), np.float32)
-    lap[int(vy0 * sy):int(vy0 * sy) + small.shape[0], int(vx0 * sx):int(vx0 * sx) + small.shape[1]] = small
-    lap = overlay(lap, 'laptop_frame')
-    return pair(feed, lap, 'scene_camera_app')
+    gs = w / 640.0                      # the GUI scale of a 1080p screen at gui scale 3 (640 x 360 scaled units)
+
+    def texts(img, x0, y0, x1, y1):
+        """The game's CameraApp text, drawn where it draws it (scaled units * gs)."""
+        im = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8))
+        d = ImageDraw.Draw(im)
+        f = _font(_FL, int(9 * gs))
+        pad = max(6, (x1 - x0) / gs / 40) * gs
+        d.rectangle([x0 + pad, y0 + pad + gs, x0 + pad + 6 * gs, y0 + pad + 7 * gs], fill=(224, 32, 32))
+        d.text((x0 + pad + 9 * gs, y0 + pad), 'REC', fill=(240, 240, 240), font=f)
+        d.text((x0 + pad, y0 + pad + 12 * gs), 'CAM1  浴室' if False else 'CAM1  bath', fill=(240, 240, 240), font=f)
+        d.text((x0 + pad, y0 + pad + 24 * gs), 'IR', fill=(184, 224, 184), font=f)
+        d.text((x1 - pad - 110 * gs, y1 - pad - 9 * gs), '2026/11/03 03:21:07', fill=(240, 240, 240), font=f)
+        d.text((x1 - pad - 52 * gs, y0 + pad), '62%', fill=(240, 240, 240), font=f)
+        d.rectangle([x1 - pad - 30 * gs, y0 + pad, x1 - pad - 12 * gs, y0 + pad + 9 * gs], outline=(240, 240, 240))
+        for k in range(3):
+            tx = x0 + pad + k * 17 * gs
+            d.rectangle([tx, y1 - pad - 11 * gs, tx + 14 * gs, y1 - pad], fill=(224, 224, 224) if k == 0 else (40, 40, 40))
+        return np.asarray(im, np.float32)
+    # the laptop: the feed in the game's rect, the CCTV frame over it, the laptop frame over everything
+    x0, y0, x1, y1 = int(w / 22), int(h / 14), int(w - w / 22), int(h - h / 9)
+    lap = np.zeros_like(ir)
+    lap[:] = ir
+    feed = overlay(lap, 'cctv', (x0, y0, x1, y1))
+    feed = texts(feed, x0, y0, x1, y1)
+    lap = overlay(feed, 'laptop_frame')
+    # the phone: the feed rect 0.58 w, centred a little high, the dark around it, the phone frame over the body
+    fw = int(w * 0.58)
+    fh = fw * 9 // 16
+    px0 = (w - fw) // 2
+    py0 = (h - fh) // 2 - h // 20
+    ph = np.zeros_like(ir)
+    ph[:] = ir
+    ph = overlay(ph, 'cctv', (px0, py0, px0 + fw, py0 + fh))
+    ph = texts(ph, px0, py0, px0 + fw, py0 + fh)
+    m14, m10 = int(14 * gs), int(10 * gs)
+    dark = np.array([5, 5, 6], np.float32)
+    mask = np.ones(ph.shape[:2], bool)
+    mask[py0 - m10:py0 + fh + m10, px0 - m14:px0 + fw + m14] = False
+    ph[mask] = ph[mask] * (1 - 0.956) + dark * 0.956
+    ph = overlay(ph, 'phone_frame', (px0 - m14, py0 - m10, px0 + fw + m14, py0 + fh + m10))
+    save(ph, 'scene_camera_phone')
+    return pair(ir, lap, 'scene_camera_app')
 
 
 def scene_title():

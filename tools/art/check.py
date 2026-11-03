@@ -94,7 +94,7 @@ HELD = ['knife', 'laptop', 'phone', 'salt_water', 'ritual_doll', 'lighter', 'fix
 PARTICLES = ['rice_grain', 'stuffing', 'water_drip', 'salt_spray', 'ember', 'smoke', 'tv_static_mote']
 GUI_SIZES = {'title_logo': (512, 256), 'cctv': (512, 288), 'laptop_frame': (512, 288), 'phone_frame': (512, 288),
              'fusuma_slit': (512, 288), 'closet_dark': (512, 288), 'printout': (256, 320), 'icons': (128, 32),
-             'name_field': (256, 48), 'vignette': (256, 256), 'grain': (256, 256)}
+             'name_field': (192, 36), 'vignette': (256, 256), 'grain': (256, 256)}
 
 
 # ---------------------------------------------------------------------------------------------- DESIGN parsing

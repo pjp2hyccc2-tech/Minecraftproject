@@ -22,21 +22,15 @@ FONT_MONO_B = '/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf'
 FONT_SERIF = '/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf'
 
 RECTS = {
-    # laptop_frame: the camera app's transparent viewport, the status line (REC / CAM name / time drawn by code),
-    # the four camera tab buttons (highlight the active one by code) and the taskbar clock
-    'laptop_viewport': (52, 58, 459, 243),
-    'laptop_status': (52, 245, 459, 255),
-    'laptop_tabs': [(52, 45, 109, 56), (112, 45, 169, 56), (172, 45, 229, 56), (232, 45, 289, 56)],
-    'laptop_clock': (452, 263, 494, 274),
-    # phone_frame: the screen (transparent) inside the bezel
-    'phone_screen': (136, 82, 375, 216),
-    # cctv: free corners for code text: bottom-left CAM name, bottom-right timestamp
-    'cctv_cam_label': (22, 252, 220, 270),
-    'cctv_timestamp': (300, 252, 490, 270),
+    # laptop_frame (drawn stretched over the whole screen by CameraApp / EndingScreen): the transparent viewport is
+    # the camera app's feed rect (w/22, h/14) - (w - w/22, h - h/9) -> texture px 23..488 x 21..255
+    'laptop_viewport': (23, 21, 488, 255),
+    # phone_frame (drawn over the phone body = the feed rect + 14 / 10 screen px): its screen hole
+    'phone_screen': (18, 13, 493, 274),
+    # name_field (192 x 36, drawn at 192 x 36): the EditBox (light text, no border) sits at 16..176 x 10..28
+    'name_text': (16, 10, 176, 28),
     # fusuma_slit: the gap of light
     'fusuma_gap': (243, 0, 263, 287),
-    # name_field: where the typed name goes
-    'name_text': (78, 12, 244, 36),
 }
 
 
@@ -275,33 +269,19 @@ def _corner_brackets(a, inset=14, L=26, t=2, col='#f0f0f0', alpha=0.95):
 
 @gui('cctv', (512, 288))
 def cctv():
-    """Camera-app overlay: corner brackets, ● REC, the battery, IR / resolution tags, a faint centre cross and edge
-    darkening; transparent in the middle. The CAM name (bottom-left) and timestamp (bottom-right) are drawn by code."""
+    """Camera-app overlay drawn stretched over the feed: corner brackets, a faint centre cross, safe-area ticks and a
+    cheap lens's darker corners; transparent in the middle. REC, the CAM name, IR, the battery, the timestamp and the
+    camera tabs are drawn by the game's CameraApp, so none of them is baked in here."""
     W, H = 512, 288
     a = blank(W, H)
     x, y = grid(W, H)
-    # edge vignette (darker corners like a cheap wide lens)
     d = np.hypot((x - W / 2) / (W / 2), (y - H / 2) / (H / 2))
     a[..., 3] = np.clip((d - 0.82) * 260, 0, 120)
-    _corner_brackets(a)
-    # REC
-    a[disc_mask(W, H, 30, 30, 5.5)] = C('#ff2a1a')
-    rec = _pil_text('REC', 15, FONT_MONO_B, fill=(245, 245, 245, 255), spacing=1)
-    paste(a, rec, 40, 23)
-    # battery (3/4)
-    frame(a, 444, 23, 470, 36, C('#f0f0f0'))
-    frame(a, 445, 24, 469, 35, C('#f0f0f0'))
-    rect(a, 471, 27, 473, 32, C('#f0f0f0'))
-    for k in range(3):
-        rect(a, 448 + k * 7, 27, 452 + k * 7, 32, C('#f0f0f0'))
-    tag = _pil_text('IR  1080p', 11, FONT_MONO_B, fill=(235, 235, 235, 230), spacing=0)
-    paste(a, tag, 438 - tag.shape[1], 25)
-    # centre cross
+    _corner_brackets(a, inset=5, L=22)                    # at the outer corners: the game's texts sit inside them
     for k in range(-7, 8):
         if abs(k) > 2:
             px(a, W // 2 + k, H // 2, C('#f0f0f0', 150))
             px(a, W // 2, H // 2 + k, C('#f0f0f0', 150))
-    # safe-area tick marks at the edge centres
     for (x0, y0, x1, y1) in ((W // 2 - 6, 16, W // 2 + 6, 17), (W // 2 - 6, H - 18, W // 2 + 6, H - 17),
                              (16, H // 2 - 6, 17, H // 2 + 6), (W - 18, H // 2 - 6, W - 17, H // 2 + 6)):
         rect(a, x0, y0, x1, y1, C('#f0f0f0', 160))
@@ -334,106 +314,107 @@ def _window_chrome(a, x0, y0, x1, y1, title):
 
 @gui('laptop_frame', (512, 288))
 def laptop_frame():
-    """The laptop seen up close: the dark plastic bezel with its webcam, an old OS desktop (teal), the taskbar with a
-    start button and the clock area, and the 定点カメラ viewer window: menu bar, CAM 1-4 tabs, the transparent
-    viewport and a status line. Drawn stretched over the screen; RECTS gives the regions for code."""
+    """The laptop seen up close, drawn stretched over the whole screen: the dark plastic bezel with its webcam, an old
+    OS with the 定点カメラ viewer maximized - title bar above the feed, the taskbar below it (start button, the viewer's
+    task button, the tray) - and the transparent viewport exactly where the game draws the feed
+    (RECTS['laptop_viewport'])."""
     W, H = 512, 288
     a = blank(W, H, C('#0e0e10'))
-    x, y = grid(W, H)
-    # bezel: dark plastic with a soft sheen, a webcam dot, a few fingerprints
     n = noise(W, H, 16201, beta=1.8, wrap=False)
     a[..., :3] += n[..., None] * 3 + 10
-    a[disc_mask(W, H, W / 2, 6.5, 2.2)] = C('#1e2228')
-    px(a, W // 2, 6, C('#3a4a5a'))
-    # screen: the desktop wallpaper
-    sx0, sy0, sx1, sy1 = 14, 12, 497, 275
+    # bezel sheen toward the top, the webcam and its dead LED, a few smudges
+    x, y = grid(W, H)
+    a[..., :3] += np.clip(1 - y / 40, 0, 1)[..., None] * 6
+    a[disc_mask(W, H, W / 2, 4.5, 2.2)] = C('#1e2228')
+    px(a, W // 2, 4, C('#3a4a5a'))
+    px(a, W // 2 + 5, 4, C('#2a1a1a'))
+    # the screen
+    sx0, sy0, sx1, sy1 = 12, 7, 499, 279
     rect(a, sx0, sy0, sx1, sy1, C('#245a5c'))
-    wall = noise(sx1 - sx0 + 1, sy1 - sy0 + 1, 16202, beta=2.0, wrap=False)
-    a[sy0:sy1 + 1, sx0:sx1 + 1, :3] += wall[..., None] * 6
-    # two desktop icons on the left (a folder, the recycle bin)
-    rect(a, 20, 20, 33, 30, C('#e8c860'))
-    rect(a, 20, 18, 26, 20, C('#e8c860'))
-    rect(a, 21, 40, 31, 52, C('#c8ccd0'))
-    hline(a, 20, 32, 40, C('#e8ecee'))
-    # taskbar
-    rect(a, sx0, 262, sx1, sy1, C('#c0c0bc'))
-    hline(a, sx0, sx1, 262, C('#f4f4f0'))
-    rect(a, 17, 264, 58, 273, C('#c0c0bc'))
-    frame(a, 17, 264, 58, 273, C('#40403c'))
-    hline(a, 17, 58, 264, C('#f4f4f0'))
-    vline(a, 17, 264, 273, C('#f4f4f0'))
-    st = _pil_text('スタート', 9, FONT_SANS_JP_BOLD, fill=(10, 10, 10, 255))
-    paste(a, st, 22, 265)
-    rect(a, 62, 264, 170, 273, C('#a8a8a4'))
-    tb = _pil_text('定点カメラ', 9, FONT_SANS_JP_REG, fill=(10, 10, 10, 255))
-    paste(a, tb, 66, 265)
-    c0 = RECTS['laptop_clock']
-    rect(a, c0[0], c0[1], c0[2], c0[3], C('#b0b0ac'))
-    hline(a, c0[0], c0[2], c0[1], C('#80807c'))
-    # the viewer window
-    wx0, wy0, wx1, wy1 = 44, 20, 467, 258
-    _window_chrome(a, wx0, wy0, wx1, wy1, '定点カメラ - CamView 2.1')
-    menu = _pil_text('ファイル(F)  表示(V)  カメラ(C)  録画(R)  ヘルプ(H)', 9, FONT_SANS_JP_REG, fill=(10, 10, 10, 255))
-    paste(a, menu, wx0 + 6, wy0 + 15)
-    for k, (t0, t1, t2, t3) in enumerate(RECTS['laptop_tabs']):
-        rect(a, t0, t1, t2, t3, C('#c8c8c4'))
-        hline(a, t0, t2, t1, C('#f4f4f0'))
-        vline(a, t0, t1, t3, C('#f4f4f0'))
-        vline(a, t2, t1, t3, C('#40403c'))
-        lab = _pil_text(f'CAM {k + 1}', 9, FONT_MONO_B, fill=(10, 10, 10, 255))
-        paste(a, lab, (t0 + t2) // 2 - lab.shape[1] // 2, t1 + 2)
     v0 = RECTS['laptop_viewport']
+    # the maximized window: frame, title bar above the feed
+    wx0, wy0, wx1, wy1 = v0[0] - 2, 8, v0[2] + 2, v0[3] + 1
+    rect(a, wx0, wy0, wx1, wy1, C('#c0c0bc'))
+    hline(a, wx0, wx1, wy0, C('#f4f4f0'))
+    vline(a, wx0, wy0, wy1, C('#f4f4f0'))
+    vline(a, wx1, wy0, wy1, C('#40403c'))
+    tb0, tb1 = wy0 + 1, v0[1] - 2
+    for xx in range(wx0 + 1, wx1):
+        f = (xx - wx0) / max(1, wx1 - wx0)
+        a[tb0:tb1 + 1, xx] = C('#0a2a6a') * (1 - f) + C('#5a86c8') * f
+    t = _pil_text('定点カメラ  -  CamView 2.1', 9, FONT_SANS_JP_BOLD, fill=(250, 250, 250, 255))
+    paste(a, t, wx0 + 16, tb0 + 1)
+    rect(a, wx0 + 4, tb0 + 2, wx0 + 11, tb1 - 2, C('#e8e4d8'))
+    a[disc_mask(W, H, wx0 + 7.5, (tb0 + tb1) / 2 + 0.5, 1.6)] = C('#c81a10')
+    for k, sym in enumerate(('_', '□', 'x')):
+        bx = wx1 - 12 - (2 - k) * 11
+        rect(a, bx, tb0 + 1, bx + 9, tb1 - 1, C('#c0c0bc'))
+        hline(a, bx, bx + 9, tb0 + 1, C('#f4f4f0'))
+        vline(a, bx + 9, tb0 + 1, tb1 - 1, C('#40403c'))
+        hline(a, bx, bx + 9, tb1 - 1, C('#40403c'))
+        sy = _pil_text(sym, 7, FONT_SANS_BOLD, fill=(20, 20, 20, 255))
+        paste(a, sy, bx + 5 - sy.shape[1] // 2, tb0 + 2)
+    # the viewport: a sunken black edge, then transparent
     frame(a, v0[0] - 1, v0[1] - 1, v0[2] + 1, v0[3] + 1, C('#40403c'))
     a[v0[1]:v0[3] + 1, v0[0]:v0[2] + 1] = 0
-    s0 = RECTS['laptop_status']
-    rect(a, s0[0], s0[1], s0[2], s0[3], C('#b8b8b4'))
-    hline(a, s0[0], s0[2], s0[1], C('#80807c'))
-    a[disc_mask(W, H, s0[0] + 6, s0[1] + 5.5, 3.0)] = C('#c81a10')
-    # screen glass: a faint reflection streak over the bezel edge, the screen's dark edge
+    # the taskbar under the window
+    ty0, ty1 = v0[3] + 2, sy1
+    rect(a, sx0, ty0, sx1, ty1, C('#c0c0bc'))
+    hline(a, sx0, sx1, ty0, C('#f4f4f0'))
+    rect(a, 15, ty0 + 2, 62, ty1 - 2, C('#c0c0bc'))
+    frame(a, 15, ty0 + 2, 62, ty1 - 2, C('#40403c'))
+    hline(a, 15, 62, ty0 + 2, C('#f4f4f0'))
+    vline(a, 15, ty0 + 2, ty1 - 2, C('#f4f4f0'))
+    a[disc_mask(W, H, 21.5, (ty0 + ty1) / 2 + 0.5, 3.0)] = C('#3a7a3a')
+    st = _pil_text('スタート', 8, FONT_SANS_JP_BOLD, fill=(10, 10, 10, 255))
+    paste(a, st, 26, ty0 + 3)
+    rect(a, 66, ty0 + 2, 178, ty1 - 2, C('#a8a8a4'))
+    frame(a, 66, ty0 + 2, 178, ty1 - 2, C('#f4f4f0'))
+    hline(a, 66, 178, ty0 + 2, C('#40403c'))
+    vline(a, 66, ty0 + 2, ty1 - 2, C('#40403c'))
+    tb = _pil_text('定点カメラ - CamView', 8, FONT_SANS_JP_REG, fill=(10, 10, 10, 255))
+    paste(a, tb, 71, ty0 + 3)
+    rect(a, 438, ty0 + 2, 496, ty1 - 2, C('#b0b0ac'))
+    hline(a, 438, 496, ty0 + 2, C('#80807c'))
+    vline(a, 438, ty0 + 2, ty1 - 2, C('#80807c'))
+    for k, c in enumerate(('#3a6ac8', '#e8e4d8', '#3aa04a')):
+        rect(a, 442 + k * 8, ty0 + 5, 446 + k * 8, ty1 - 5, C(c))
     frame(a, sx0 - 1, sy0 - 1, sx1 + 1, sy1 + 1, C('#050506'))
     return a
 
 
 @gui('phone_frame', (512, 288))
 def phone_frame():
-    """Your phone held sideways in the dark: everything around it near black, the bezel and its camera notch, two
-    fingers at the edges, the camera app's soft buttons; the screen itself transparent (RECTS['phone_screen'])."""
+    """Your phone held sideways, drawn by CameraApp over the phone body (the feed rect plus a 14 / 10 px margin): the
+    black glossy bezel with rounded corners, the front camera dot and earpiece on the left end, a cracked corner of the
+    glass; the screen (RECTS['phone_screen']) is transparent."""
     W, H = 512, 288
-    a = blank(W, H, C('#050506', 246))
-    x, y = grid(W, H)
-    d = np.hypot((x - W / 2) / (W * 0.42), (y - H / 2) / (H * 0.42))
-    a[..., 3] = np.clip(200 + (d - 0.6) * 160, 200, 250)
-    # the phone body (rounded rectangle)
-    bx0, by0, bx1, by1 = 118, 70, 393, 228
-    img = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    dr = ImageDraw.Draw(img)
-    dr.rounded_rectangle([bx0, by0, bx1, by1], radius=18, fill=(22, 22, 26, 255), outline=(60, 62, 68, 255), width=2)
-    s = RECTS['phone_screen']
-    dr.rounded_rectangle([s[0] - 2, s[1] - 2, s[2] + 2, s[3] + 2], radius=8, fill=(4, 4, 6, 255))
-    # fingers: left hand's thumb and fingers wrapping the left end, the right thumb at the right end (dim skin)
-    dr.rounded_rectangle([96, 120, 132, 150], radius=12, fill=(58, 44, 38, 255))
-    dr.rounded_rectangle([92, 160, 128, 190], radius=12, fill=(52, 40, 34, 255))
-    dr.rounded_rectangle([380, 150, 420, 178], radius=12, fill=(60, 46, 40, 255))
-    body = np.asarray(img, np.float32)
-    a = over(a, body)
-    a[disc_mask(W, H, bx0 + 9, (by0 + by1) / 2, 2.5)] = C('#1e2a3a')
-    # the screen hole
-    a[s[1]:s[3] + 1, s[0]:s[2] + 1] = 0
-    rnd = Image.new('L', (W, H), 0)
-    ImageDraw.Draw(rnd).rounded_rectangle([s[0], s[1], s[2], s[3]], radius=7, fill=255)
-    hole = np.asarray(rnd) > 0
-    corner = (x >= s[0]) & (x <= s[2]) & (y >= s[1]) & (y <= s[3]) & ~hole
-    a[corner] = C('#040406')
-    # soft UI on the screen: REC, the camera selector chips (code highlights the active one), the shutter
-    a[disc_mask(W, H, s[0] + 9, s[1] + 9, 3.5)] = C('#ff2a1a', 230)
-    for k in range(4):
-        cx = s[0] + 70 + k * 30
-        img2 = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-        ImageDraw.Draw(img2).rounded_rectangle([cx - 11, s[3] - 18, cx + 11, s[3] - 6], radius=6,
-                                               fill=(0, 0, 0, 110), outline=(230, 230, 230, 160))
-        a = over(a, np.asarray(img2, np.float32))
-        lab = _pil_text(str(k + 1), 9, FONT_MONO_B, fill=(240, 240, 240, 230))
-        paste(a, lab, cx - lab.shape[1] // 2, s[3] - 16)
+    img = Image.new('RGBA', (W, H), (5, 5, 6, 244))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([0, 0, W - 1, H - 1], radius=26, fill=(18, 18, 22, 255), outline=(58, 60, 66, 255), width=2)
+    d.rounded_rectangle([4, 4, W - 5, H - 5], radius=22, outline=(30, 30, 36, 255), width=2)
+    s0 = RECTS['phone_screen']
+    d.rounded_rectangle([s0[0] - 2, s0[1] - 2, s0[2] + 2, s0[3] + 2], radius=10, fill=(4, 4, 6, 255))
+    a = np.asarray(img, np.float32).copy()
+    # bezel sheen on the top edge, the front camera and the earpiece slot on the left end
+    for k in range(2, 9):
+        hline(a, 30, W - 31, k, C('#2a2a32'), 0.25)
+    a[disc_mask(W, H, 9.5, H / 2, 3.0)] = C('#0a0c12')
+    a[disc_mask(W, H, 9.0, H / 2 - 0.8, 1.0)] = C('#2a3a5a')
+    rect(a, 8, H // 2 + 14, 10, H // 2 + 40, C('#0a0a0c'))
+    # the screen hole with rounded corners
+    hole = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(hole).rounded_rectangle([s0[0], s0[1], s0[2], s0[3]], radius=9, fill=255)
+    hm = np.asarray(hole) > 0
+    a[hm] = 0
+    # a cracked corner of the glass (bottom right): thin bright lines over the feed's corner, translucent
+    cr = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+    dc = ImageDraw.Draw(cr)
+    ox, oy = s0[2] + 1, H // 2 + 34          # from the right edge, away from the game's texts in the corners
+    for (dx, dy) in ((-30, -8), (-18, 14), (-36, 6), (-10, -22)):
+        dc.line([(ox, oy), (ox + dx, oy + dy)], fill=(220, 226, 230, 110), width=1)
+    dc.line([(ox - 30, oy - 8), (ox - 44, oy - 4)], fill=(220, 226, 230, 80), width=1)
+    a = over(a, np.asarray(cr, np.float32))
     return a
 
 
@@ -526,77 +507,41 @@ PRINT_ITEMS = ['手足のあるぬいぐるみ', '米', '自分の爪', '赤い�
 
 @gui('printout', (256, 320))
 def printout():
-    """The forum thread printed on a cheap inkjet: board header, the thread title 「ひとりかくれんぼのやり方」, the
-    things to prepare (pencil ticks beside them), the numbered procedure, the rules, the URL and page footer, a
-    coffee ring and handwritten notes in red pen."""
+    """The forum thread printed on a cheap inkjet, as paper: PrintoutScreen writes the text (title, post line, the
+    steps with their check boxes, the rules, the page number) over it, so the texture carries only the paper - the
+    grey header band of the page (the site name is drawn on it at 12, 5), a rule under the post line, printer banding,
+    a fold, a staple, a coffee ring and a smudge of red pen in the margin."""
     W, H = 256, 320
-    r = rng(16601)
     x, y = grid(W, H)
     n = noise(W, H, 16602, beta=1.8, wrap=False)
-    a = blank(W, H, C('#efede6'))
-    a[..., :3] += n[..., None] * 3
-    INK = (34, 34, 36, 255)
-    GREY = (110, 110, 112, 255)
-    # header bar
-    rect(a, 0, 0, W - 1, 13, C('#d8d8d4'))
-    hdr = _pil_text('■オカルト板 ＞ 怖い話・都市伝説スレ', 8, FONT_SANS_JP_REG, fill=GREY)
-    paste(a, hdr, 5, 3)
-    title = _pil_text('ひとりかくれんぼのやり方', 14, FONT_SANS_JP_BOLD, fill=INK)
-    paste(a, title, 8, 17)
-    meta = _pil_text('1 名前：本当にあった怖い名無し 2006/02/28(火) 03:12:44', 7, FONT_SANS_JP_REG, fill=GREY)
-    paste(a, meta, 8, 35)
-    hline(a, 6, W - 7, 44, C('#b8b8b4'))
-    LH = 10
-    yy = 47
-    head = _pil_text('【用意するもの】', 9, FONT_SANS_JP_BOLD, fill=INK)
-    paste(a, head, 8, yy)
-    yy += 11
-    col_x = [16, 132]
-    for k, it in enumerate(PRINT_ITEMS):
-        cx = col_x[k % 2]
-        cy = yy + (k // 2) * LH
-        t = _pil_text('・' + it, 9, FONT_SANS_JP_REG, fill=INK)
-        paste(a, t, cx, cy)
-        for (dx, dy) in ((-8, 4), (-7, 5), (-6, 6), (-5, 5), (-4, 4), (-3, 3), (-2, 2)):      # pencil tick
-            px(a, cx + dx, cy + dy, C('#5a5a5e', 200))
-    yy += 4 * LH + 2
-    head = _pil_text('【やり方】', 9, FONT_SANS_JP_BOLD, fill=INK)
-    paste(a, head, 8, yy)
-    yy += 11
-    step_y = {}
-    for k, st in enumerate(PRINT_STEPS):
-        num = _pil_text(f'{k + 1}.', 9, FONT_SANS_JP_REG, fill=INK)
-        paste(a, num, 10, yy)
-        t = _pil_text(st, 9, FONT_SANS_JP_REG, fill=INK)
-        paste(a, t, 24, yy)
-        step_y[k] = (yy, t.shape[1])
-        yy += LH
-    yy += 2
-    head = _pil_text('【注意】', 9, FONT_SANS_JP_BOLD, fill=(150, 20, 20, 255))
-    paste(a, head, 8, yy)
-    yy += 11
-    for ru in PRINT_RULES:
-        t = _pil_text(ru, 9, FONT_SANS_JP_REG, fill=INK)
-        paste(a, t, 14, yy)
-        yy += LH
-    foot = _pil_text('http://occult-bbs.jp/test/read.cgi/occult/1141063964/  1/1', 6, FONT_SANS_JP_REG, fill=GREY)
-    paste(a, foot, 8, H - 9)
-    # handwritten notes in red pen: a reminder beside the list, step 10 circled
-    note = _pil_text('カメラ4台！', 10, FONT_SANS_JP_MED, fill=(190, 30, 24, 230))
-    note = np.asarray(Image.fromarray(note.astype(np.uint8)).rotate(8, expand=True, resample=Image.BICUBIC),
-                      np.float32)
-    paste(a, note, 180, 44)
-    circ = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    dr = ImageDraw.Draw(circ)
-    ty, tw = step_y[9]
-    dr.ellipse([18, ty - 2, 24 + tw + 6, ty + 11], outline=(190, 30, 24, 200), width=1)
-    a = over(a, np.asarray(circ, np.float32))
-    # a coffee ring and a fold line, the printer's banding
+    fib = noise(W, H, 16603, beta=0.2, wrap=False)
+    a = blank(W, H, C('#ede9df'))
+    a[..., :3] += n[..., None] * 3 + fib[..., None] * 1.5
+    # header band of the printed page and a faint favicon square at its right end
+    rect(a, 0, 0, W - 1, 15, C('#d8d2c4'))
+    hline(a, 0, W - 1, 15, C('#c4bcac'))
+    rect(a, W - 20, 4, W - 13, 11, C('#a8a090'))
+    rect(a, W - 18, 6, W - 15, 9, C('#d8d2c4'))
+    # the rule under the post line, a thin grey line
+    hline(a, 8, W - 9, 45, C('#c8c2b4'))
+    # printer banding: every 37 rows a pale streak, and a faint toner-starved band
+    dl(a, -0.018, (y % 37) == 0)
+    tint(a, '#f6f4ee', 0.25, (y >= 200) & (y <= 203))
+    # fold across the middle (light / shade pair)
+    hline(a, 0, W - 1, H // 2, C('#d6d2c6'))
+    hline(a, 0, W - 1, H // 2 + 1, C('#f4f2ea'))
+    # staple at the top left
+    hline(a, 3, 9, 3, C('#9aa0a4'))
+    hline(a, 3, 9, 4, C('#5a5e62'))
+    # coffee ring (low right) and a smear of red pen in the right margin
     ring = np.abs(np.hypot(x - 214, y - 262) - 17) < 1.4
-    tint(a, '#8a6a40', 0.22, ring)
-    hline(a, 0, W - 1, H // 2, C('#d8d6ce'))
-    band = (y % 37) == 0
-    dl(a, -0.02, band)
+    tint(a, '#8a6a40', 0.2, ring)
+    tint(a, '#8a6a40', 0.06, np.hypot(x - 214, y - 262) < 17)
+    for k in range(6):
+        px(a, 248 - (k % 2), 70 + k * 2, C('#b8302a'), 0.5)
+    # the paper's edge
+    vline(a, W - 1, 0, H - 1, C('#c8c2b4'))
+    hline(a, 0, W - 1, H - 1, C('#c8c2b4'))
     return a
 
 
@@ -656,65 +601,74 @@ def _icon_cam(a, x0, y0, n):
     px(a, x0 + 12, y0 + 4, '#ff2a1a')
 
 
+def _icon_box(a, x0, y0, ticked):
+    """A pencil-drawn check box (the printout's), ticked in red pen."""
+    frame(a, x0 + 3, y0 + 4, x0 + 12, y0 + 13, '#d8d4cc')
+    if ticked:
+        for (dx, dy) in ((4, 8), (5, 9), (6, 10), (7, 9), (8, 8), (9, 7), (10, 6), (11, 5), (12, 4), (13, 3)):
+            px(a, x0 + dx, y0 + dy, '#e83a2a')
+            px(a, x0 + dx, y0 + dy + 1, '#a82a1a')
+
+
 @gui('icons', (128, 32))
 def icons():
-    """16x16 cells. Row 0: cup empty, cup full (salt water), mouth full, mouth empty, breath, breath held, REC on,
-    REC off. Row 1: CAM 1, CAM 2, CAM 3, CAM 4, battery, phone vibrating, eye (peek), tick (step done)."""
+    """16x16 cells, indexed as the game's HorrorOverlay uses them: 0 cup (salt water), 1 breath, 2 REC, 3 cup empty,
+    4 breath held, 5 mouth full (cheeks puffed), 6 mouth empty, 7 check (ticked box), 8 box (empty), 9-12 CAM 1-4,
+    13 battery, 14 phone vibrating, 15 eye (peek)."""
     a = blank(128, 32)
-    _icon_cup(a, 0, 0, False)
-    _icon_cup(a, 16, 0, True)
-    _icon_mouth(a, 32, 0, True)
-    _icon_mouth(a, 48, 0, False)
-    _icon_breath(a, 64, 0, False)
-    _icon_breath(a, 80, 0, True)
-    a[disc_mask(128, 32, 104, 8, 4.5)] = C('#ff2a1a')
-    a[disc_mask(128, 32, 104, 8, 2.0)] = C('#ff8a7a')
-    a[disc_mask(128, 32, 120, 8, 4.5)] = C('#4a1410')
+    _icon_cup(a, 0, 0, True)
+    _icon_breath(a, 16, 0, False)
+    a[disc_mask(128, 32, 40, 8, 4.5)] = C('#ff2a1a')
+    a[disc_mask(128, 32, 40, 8, 2.0)] = C('#ff8a7a')
+    _icon_cup(a, 48, 0, False)
+    _icon_breath(a, 64, 0, True)
+    _icon_mouth(a, 80, 0, True)
+    _icon_mouth(a, 96, 0, False)
+    _icon_box(a, 112, 0, True)
+    _icon_box(a, 0, 16, False)
     for k in range(4):
-        _icon_cam(a, k * 16, 16, k + 1)
-    frame(a, 66, 21, 77, 27, '#f0f0f0')
-    rect(a, 78, 23, 78, 25, '#f0f0f0')
-    rect(a, 68, 23, 73, 25, '#f0f0f0')
-    rect(a, 84, 18, 91, 29, '#1a1a1e')
-    frame(a, 84, 18, 91, 29, '#e8e8e8')
-    for (dx, dy) in ((81, 21), (81, 25), (94, 21), (94, 25), (80, 23), (95, 23)):
+        _icon_cam(a, 16 + k * 16, 16, k + 1)
+    frame(a, 82, 21, 93, 27, '#f0f0f0')
+    rect(a, 94, 23, 94, 25, '#f0f0f0')
+    rect(a, 84, 23, 89, 25, '#f0f0f0')
+    rect(a, 100, 18, 107, 29, '#1a1a1e')
+    frame(a, 100, 18, 107, 29, '#e8e8e8')
+    for (dx, dy) in ((97, 21), (97, 25), (110, 21), (110, 25), (96, 23), (111, 23)):
         px(a, dx, dy, '#e8e8e8')
     img = Image.new('RGBA', (128, 32), (0, 0, 0, 0))
-    ImageDraw.Draw(img).ellipse([98, 20, 109, 27], outline=(232, 232, 232, 255), width=1)
+    ImageDraw.Draw(img).ellipse([114, 20, 125, 27], outline=(232, 232, 232, 255), width=1)
     a = over(a, np.asarray(img, np.float32))
-    a[disc_mask(128, 32, 104, 23.5, 2.2)] = C('#e8e8e8')
-    px(a, 104, 23, '#1a1a1a')
-    for (dx, dy) in ((114, 24), (115, 25), (116, 26), (117, 25), (118, 24), (119, 23), (120, 22), (121, 21)):
-        px(a, dx, dy, '#d83a2a')
-        px(a, dx, dy + 1, '#a82a1a')
+    a[disc_mask(128, 32, 120, 23.5, 2.2)] = C('#e8e8e8')
+    px(a, 120, 23, '#1a1a1a')
     return a
 
 
-@gui('name_field', (256, 48))
+@gui('name_field', (192, 36))
 def name_field():
-    """The naming field: a sewn-on cloth name tag (名札) - off-white cotton with a red running stitch round it, the
-    label 「なまえ」 at the left; the typed name goes in RECTS['name_text']."""
-    W, H = 256, 48
+    """The naming field (drawn at 192 x 36; the game's EditBox writes light text, no border, at 16..176 x 10..28): a
+    dark cloth name tag with a red running stitch around it, sewn on - the name reads light on it."""
+    W, H = 192, 36
     x, y = grid(W, H)
     a = blank(W, H)
     img = Image.new('RGBA', (W, H), (0, 0, 0, 0))
-    ImageDraw.Draw(img).rounded_rectangle([4, 4, W - 5, H - 5], radius=6, fill=(236, 232, 222, 255))
+    ImageDraw.Draw(img).rounded_rectangle([1, 1, W - 2, H - 2], radius=5, fill=(40, 22, 24, 255))
     a = over(a, np.asarray(img, np.float32))
-    weave = ((x + y) % 2 == 0) & (a[..., 3] > 0)
-    dl(a, -0.015, weave)
+    inside = a[..., 3] > 0
+    weave = ((x + y) % 2 == 0) & inside
+    dl(a, 0.015, weave)
     n = noise(W, H, 16801, beta=1.8, wrap=False)
-    a[..., :3] += n[..., None] * 4
-    # running stitch in red thread just inside the edge
-    for xx in range(10, W - 10, 6):
-        hline(a, xx, xx + 2, 8, '#c41a1a')
-        hline(a, xx, xx + 2, H - 9, '#c41a1a')
-    for yy in range(10, H - 10, 6):
-        vline(a, 8, yy, yy + 2, '#c41a1a')
-        vline(a, W - 9, yy, yy + 2, '#c41a1a')
-    lab = _pil_text('なまえ', 11, FONT_SANS_JP_BOLD, fill=(180, 26, 26, 255))
-    paste(a, lab, 16, 17)
-    vline(a, 70, 12, H - 13, '#d8b8b0')
-    hline(a, 78, 244, 37, '#c8c0b0')
+    a[..., :3] += n[..., None] * 3
+    for xx in range(7, W - 8, 6):
+        hline(a, xx, xx + 2, 4, '#c41a1a')
+        hline(a, xx, xx + 2, H - 5, '#c41a1a')
+    for yy in range(7, H - 8, 6):
+        vline(a, 4, yy, yy + 2, '#c41a1a')
+        vline(a, W - 5, yy, yy + 2, '#c41a1a')
+    r0 = RECTS['name_text']
+    rect(a, r0[0], r0[3] + 1, r0[2], r0[3] + 1, C('#5a3a3a'))
+    # a loose end of the red thread at the corner
+    for k in range(5):
+        px(a, W - 6 + (k % 2), H - 5 + k // 2, '#c41a1a')
     return a
 
 
