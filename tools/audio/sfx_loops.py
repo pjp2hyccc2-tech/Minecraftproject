@@ -302,8 +302,11 @@ def spirit_near(rng, i=1):
     for t0, kind, d in ((0.1, "in", 1.4), (2.0, "out", 2.0)):
         b = V.breath(rng, kind, d, table=V.VM, scale=0.9)
         dsp.place(br, b, t0, circular=True)
+    buzz = np.tanh(5.0 * (sub + 0.3)) - np.tanh(1.5)  # its harmonics, so small speakers carry it too
+    buzz = _cr(buzz, lambda x: dsp.bandpass(x, 110, 700, 2))
+    buzz = dsp.am(buzz, 41.0, 0.55, L)
     sw = _lfo(n, 1, rng, 0.35, 1.0, 1.5)
-    y = (_nrm(sub) * 0.65 + rough / np.std(rough) * 0.09) * sw + ring * 0.006 + _nrm(w) * 0.05 + _nrm(br) * 0.05
+    y = (_nrm(sub) * 0.55 + _nrm(buzz) * 0.3 + rough / np.std(rough) * 0.12) * sw + ring * 0.006 + _nrm(w) * 0.05 + _nrm(br) * 0.05
     return dsp.dc_block(y, circular=True)
 
 

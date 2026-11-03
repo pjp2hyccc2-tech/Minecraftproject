@@ -838,10 +838,10 @@ def pa_voice(rng, i=1):
     dsp.place(y, dsp.lowpass(rng.standard_normal(m), 220, 2) * dsp.env_ad(m, 0.002, 0.02) * 0.5, 0.0)
     dsp.place(y, _nrm(v), 0.25)
     dsp.place(y, dsp.lowpass(rng.standard_normal(m), 300, 2) * dsp.env_ad(m, 0.002, 0.015) * 0.35, n / SR - 0.2)
-    y += dsp.colored(n, rng, -1.0, lo=400, hi=6000) * 0.02
+    y += dsp.colored(n, rng, -1.0, lo=400, hi=6000) * (0.008 if i == 3 else 0.02)
     tt = np.arange(n) / SR
-    y += (np.sin(TAU * 50 * tt) + 0.4 * np.sin(TAU * 150 * tt)) * 0.01
-    out = _pa(y, rng, wet=0.5)
+    y += (np.sin(TAU * 50 * tt) + 0.4 * np.sin(TAU * 150 * tt)) * 0.008
+    out = _pa(y, rng, wet=0.32 if i == 3 else 0.5, rt=1.2)
     return dsp.trim(dsp.highpass(out, 120, 2), -60)
 
 
