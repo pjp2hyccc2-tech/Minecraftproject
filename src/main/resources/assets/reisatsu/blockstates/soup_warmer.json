@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/soup_warmer"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/soup_warmer",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/soup_warmer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/soup_warmer",
+      "y": 270
+    }
+  }
+}

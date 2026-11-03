@@ -1,0 +1,544 @@
+{
+  "variants": {
+    "facing=north,number=0,closed=false": {
+      "model": "reisatsu:block/call_display_0"
+    },
+    "facing=north,number=0,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=1,closed=false": {
+      "model": "reisatsu:block/call_display_1"
+    },
+    "facing=north,number=1,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=2,closed=false": {
+      "model": "reisatsu:block/call_display_2"
+    },
+    "facing=north,number=2,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=3,closed=false": {
+      "model": "reisatsu:block/call_display_3"
+    },
+    "facing=north,number=3,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=4,closed=false": {
+      "model": "reisatsu:block/call_display_4"
+    },
+    "facing=north,number=4,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=5,closed=false": {
+      "model": "reisatsu:block/call_display_5"
+    },
+    "facing=north,number=5,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=6,closed=false": {
+      "model": "reisatsu:block/call_display_6"
+    },
+    "facing=north,number=6,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=7,closed=false": {
+      "model": "reisatsu:block/call_display_7"
+    },
+    "facing=north,number=7,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=8,closed=false": {
+      "model": "reisatsu:block/call_display_8"
+    },
+    "facing=north,number=8,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=9,closed=false": {
+      "model": "reisatsu:block/call_display_9"
+    },
+    "facing=north,number=9,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=10,closed=false": {
+      "model": "reisatsu:block/call_display_10"
+    },
+    "facing=north,number=10,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=11,closed=false": {
+      "model": "reisatsu:block/call_display_11"
+    },
+    "facing=north,number=11,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=12,closed=false": {
+      "model": "reisatsu:block/call_display_12"
+    },
+    "facing=north,number=12,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=13,closed=false": {
+      "model": "reisatsu:block/call_display_13"
+    },
+    "facing=north,number=13,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=14,closed=false": {
+      "model": "reisatsu:block/call_display_14"
+    },
+    "facing=north,number=14,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=15,closed=false": {
+      "model": "reisatsu:block/call_display_15"
+    },
+    "facing=north,number=15,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=16,closed=false": {
+      "model": "reisatsu:block/call_display_16"
+    },
+    "facing=north,number=16,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=north,number=17,closed=false": {
+      "model": "reisatsu:block/call_display_17"
+    },
+    "facing=north,number=17,closed=true": {
+      "model": "reisatsu:block/call_display_closed"
+    },
+    "facing=east,number=0,closed=false": {
+      "model": "reisatsu:block/call_display_0",
+      "y": 90
+    },
+    "facing=east,number=0,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=1,closed=false": {
+      "model": "reisatsu:block/call_display_1",
+      "y": 90
+    },
+    "facing=east,number=1,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=2,closed=false": {
+      "model": "reisatsu:block/call_display_2",
+      "y": 90
+    },
+    "facing=east,number=2,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=3,closed=false": {
+      "model": "reisatsu:block/call_display_3",
+      "y": 90
+    },
+    "facing=east,number=3,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=4,closed=false": {
+      "model": "reisatsu:block/call_display_4",
+      "y": 90
+    },
+    "facing=east,number=4,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=5,closed=false": {
+      "model": "reisatsu:block/call_display_5",
+      "y": 90
+    },
+    "facing=east,number=5,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=6,closed=false": {
+      "model": "reisatsu:block/call_display_6",
+      "y": 90
+    },
+    "facing=east,number=6,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=7,closed=false": {
+      "model": "reisatsu:block/call_display_7",
+      "y": 90
+    },
+    "facing=east,number=7,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=8,closed=false": {
+      "model": "reisatsu:block/call_display_8",
+      "y": 90
+    },
+    "facing=east,number=8,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=9,closed=false": {
+      "model": "reisatsu:block/call_display_9",
+      "y": 90
+    },
+    "facing=east,number=9,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=10,closed=false": {
+      "model": "reisatsu:block/call_display_10",
+      "y": 90
+    },
+    "facing=east,number=10,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=11,closed=false": {
+      "model": "reisatsu:block/call_display_11",
+      "y": 90
+    },
+    "facing=east,number=11,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=12,closed=false": {
+      "model": "reisatsu:block/call_display_12",
+      "y": 90
+    },
+    "facing=east,number=12,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=13,closed=false": {
+      "model": "reisatsu:block/call_display_13",
+      "y": 90
+    },
+    "facing=east,number=13,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=14,closed=false": {
+      "model": "reisatsu:block/call_display_14",
+      "y": 90
+    },
+    "facing=east,number=14,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=15,closed=false": {
+      "model": "reisatsu:block/call_display_15",
+      "y": 90
+    },
+    "facing=east,number=15,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=16,closed=false": {
+      "model": "reisatsu:block/call_display_16",
+      "y": 90
+    },
+    "facing=east,number=16,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=east,number=17,closed=false": {
+      "model": "reisatsu:block/call_display_17",
+      "y": 90
+    },
+    "facing=east,number=17,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 90
+    },
+    "facing=south,number=0,closed=false": {
+      "model": "reisatsu:block/call_display_0",
+      "y": 180
+    },
+    "facing=south,number=0,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=1,closed=false": {
+      "model": "reisatsu:block/call_display_1",
+      "y": 180
+    },
+    "facing=south,number=1,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=2,closed=false": {
+      "model": "reisatsu:block/call_display_2",
+      "y": 180
+    },
+    "facing=south,number=2,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=3,closed=false": {
+      "model": "reisatsu:block/call_display_3",
+      "y": 180
+    },
+    "facing=south,number=3,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=4,closed=false": {
+      "model": "reisatsu:block/call_display_4",
+      "y": 180
+    },
+    "facing=south,number=4,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=5,closed=false": {
+      "model": "reisatsu:block/call_display_5",
+      "y": 180
+    },
+    "facing=south,number=5,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=6,closed=false": {
+      "model": "reisatsu:block/call_display_6",
+      "y": 180
+    },
+    "facing=south,number=6,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=7,closed=false": {
+      "model": "reisatsu:block/call_display_7",
+      "y": 180
+    },
+    "facing=south,number=7,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=8,closed=false": {
+      "model": "reisatsu:block/call_display_8",
+      "y": 180
+    },
+    "facing=south,number=8,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=9,closed=false": {
+      "model": "reisatsu:block/call_display_9",
+      "y": 180
+    },
+    "facing=south,number=9,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=10,closed=false": {
+      "model": "reisatsu:block/call_display_10",
+      "y": 180
+    },
+    "facing=south,number=10,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=11,closed=false": {
+      "model": "reisatsu:block/call_display_11",
+      "y": 180
+    },
+    "facing=south,number=11,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=12,closed=false": {
+      "model": "reisatsu:block/call_display_12",
+      "y": 180
+    },
+    "facing=south,number=12,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=13,closed=false": {
+      "model": "reisatsu:block/call_display_13",
+      "y": 180
+    },
+    "facing=south,number=13,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=14,closed=false": {
+      "model": "reisatsu:block/call_display_14",
+      "y": 180
+    },
+    "facing=south,number=14,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=15,closed=false": {
+      "model": "reisatsu:block/call_display_15",
+      "y": 180
+    },
+    "facing=south,number=15,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=16,closed=false": {
+      "model": "reisatsu:block/call_display_16",
+      "y": 180
+    },
+    "facing=south,number=16,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=south,number=17,closed=false": {
+      "model": "reisatsu:block/call_display_17",
+      "y": 180
+    },
+    "facing=south,number=17,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 180
+    },
+    "facing=west,number=0,closed=false": {
+      "model": "reisatsu:block/call_display_0",
+      "y": 270
+    },
+    "facing=west,number=0,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=1,closed=false": {
+      "model": "reisatsu:block/call_display_1",
+      "y": 270
+    },
+    "facing=west,number=1,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=2,closed=false": {
+      "model": "reisatsu:block/call_display_2",
+      "y": 270
+    },
+    "facing=west,number=2,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=3,closed=false": {
+      "model": "reisatsu:block/call_display_3",
+      "y": 270
+    },
+    "facing=west,number=3,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=4,closed=false": {
+      "model": "reisatsu:block/call_display_4",
+      "y": 270
+    },
+    "facing=west,number=4,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=5,closed=false": {
+      "model": "reisatsu:block/call_display_5",
+      "y": 270
+    },
+    "facing=west,number=5,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=6,closed=false": {
+      "model": "reisatsu:block/call_display_6",
+      "y": 270
+    },
+    "facing=west,number=6,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=7,closed=false": {
+      "model": "reisatsu:block/call_display_7",
+      "y": 270
+    },
+    "facing=west,number=7,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=8,closed=false": {
+      "model": "reisatsu:block/call_display_8",
+      "y": 270
+    },
+    "facing=west,number=8,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=9,closed=false": {
+      "model": "reisatsu:block/call_display_9",
+      "y": 270
+    },
+    "facing=west,number=9,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=10,closed=false": {
+      "model": "reisatsu:block/call_display_10",
+      "y": 270
+    },
+    "facing=west,number=10,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=11,closed=false": {
+      "model": "reisatsu:block/call_display_11",
+      "y": 270
+    },
+    "facing=west,number=11,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=12,closed=false": {
+      "model": "reisatsu:block/call_display_12",
+      "y": 270
+    },
+    "facing=west,number=12,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=13,closed=false": {
+      "model": "reisatsu:block/call_display_13",
+      "y": 270
+    },
+    "facing=west,number=13,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=14,closed=false": {
+      "model": "reisatsu:block/call_display_14",
+      "y": 270
+    },
+    "facing=west,number=14,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=15,closed=false": {
+      "model": "reisatsu:block/call_display_15",
+      "y": 270
+    },
+    "facing=west,number=15,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=16,closed=false": {
+      "model": "reisatsu:block/call_display_16",
+      "y": 270
+    },
+    "facing=west,number=16,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    },
+    "facing=west,number=17,closed=false": {
+      "model": "reisatsu:block/call_display_17",
+      "y": 270
+    },
+    "facing=west,number=17,closed=true": {
+      "model": "reisatsu:block/call_display_closed",
+      "y": 270
+    }
+  }
+}

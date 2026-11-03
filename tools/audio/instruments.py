@@ -761,3 +761,177 @@ def water_texture(n, rng, L=None, density=220.0, r_range=(0.7, 6.0), noise=0.5, 
     spray = dsp.colored(n, rng, 0.0, lo=3000, hi=11000)
     sm = np.clip(1 + 0.5 * dsp.smooth(n, rng, 6.0), 0.25, None)
     return y / (np.std(y) + 1e-9) * 0.5 + rush * mod * noise + spray * sm * splash * 0.25
+
+
+# --------------------------------------------------------------------------
+# REISATSU: the family restaurant's instruments (store music, chimes, organ)
+# --------------------------------------------------------------------------
+def epiano(freq, dur, rng, vel=0.7, bright=0.5, tine=0.6, release=None):
+    """Tine electric piano (2-op FM 1:1 whose index decays = the bark, a high
+    operator near 14x for the tine 'ding', two-stage decay, damper)."""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    idx = (0.5 + 2.4 * vel * bright) * np.exp(-t / 0.3) + 0.22
+    ph = rng.random()
+    car = np.sin(TAU * (freq * t + ph) + idx * np.sin(TAU * freq * t))
+    T = float(np.clip(5.0 * (260.0 / freq) ** 0.5, 0.9, 7.0))
+    env = (0.62 * np.exp(-t / (T * 0.16)) + 0.38 * np.exp(-t / T)) * (1 - np.exp(-t / 0.0015))
+    y = car * env
+    fd = freq * 13.97
+    if fd < SR * 0.45:
+        y += 0.28 * tine * vel * np.sin(TAU * fd * t) * np.exp(-t / 0.012)
+    y += 0.06 * np.sin(TAU * 2.0 * freq * t + 0.4) * np.exp(-t / 0.25)
+    if release is not None and release < dur:
+        r0 = ns(release)
+        rl = ns(0.09)
+        y[r0:r0 + rl] *= np.linspace(1, 0.0, len(y[r0:r0 + rl])) ** 1.5
+        y[r0 + rl:] = 0.0
+    return dsp.fade(y, 0.0, 0.03) * vel
+
+
+def vibraphone(freq, dur, rng, vel=0.8, motor=5.2, depth=0.3, hard=0.5, release=None):
+    """Vibraphone bar: modes 1 : 3.99 : 9.9, a long fundamental, the motor's
+    rotating-disc tremolo, soft mallet contact."""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    T1 = float(np.clip(3.4 * (440.0 / freq) ** 0.45, 1.0, 6.5))
+    y = np.sin(TAU * freq * t + rng.random() * 6) * np.exp(-6.9 * t / T1)
+    for r, a, T in ((3.99, 0.22 + 0.2 * hard, 0.45), (9.9, 0.06 + 0.1 * hard, 0.1)):
+        if freq * r < SR * 0.45:
+            y += a * np.sin(TAU * freq * r * t + rng.random() * 6) * np.exp(-6.9 * t / T)
+    cl = max(2, ns(0.0007 + 0.0025 * (1 - hard)))
+    contact = np.sin(np.pi * np.arange(cl) / cl) ** 2
+    y = signal.fftconvolve(y, contact / contact.sum())[:n]
+    if depth > 0:
+        y *= 1.0 - depth * (0.5 + 0.5 * np.cos(TAU * motor * t + rng.random() * 6))
+    if release is not None and release < dur:
+        r0 = ns(release)
+        rl = ns(0.12)
+        y[r0:r0 + rl] *= np.linspace(1, 0.0, len(y[r0:r0 + rl]))
+        y[r0 + rl:] = 0.0
+    return dsp.fade(y, 0.0, 0.03) * vel
+
+
+def nylon(freq, dur, rng, vel=0.7, bright=0.32, pos=None):
+    """Nylon-string guitar pluck: Karplus-Strong + a small hollow body."""
+    t60 = float(np.clip(3.2 * (196.0 / freq) ** 0.4, 0.9, 4.2))
+    s = ks_string(freq, dur, rng, t60=t60, bright=bright * (0.8 + 0.4 * vel),
+                  pluck_pos=pos if pos is not None else rng.uniform(0.14, 0.22), exc_soft=0.55)
+    s = s / (np.max(np.abs(s)) + 1e-9)
+    body = dsp.resbank(s, [(102, 3.0, 1.0), (215, 4.0, 0.7), (395, 5.0, 0.45), (610, 6.0, 0.3)])
+    y = s + 0.35 * body / (np.max(np.abs(body)) + 1e-9)
+    y = dsp.lowpass(y, 5200, 2)
+    return dsp.fade(y, 0.0005, 0.04) * vel
+
+
+def upright_bass(freq, dur, rng, vel=0.8, release=None):
+    """Plucked double bass: few harmonics, a woody thump, a slight pitch drop."""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    f = freq * dsp.cents(18.0 * np.exp(-t / 0.03))
+    ph = np.cumsum(f) / SR
+    y = (np.sin(TAU * ph) * np.exp(-t / 0.95) + 0.42 * np.sin(2 * TAU * ph + 0.3) * np.exp(-t / 0.45)
+         + 0.16 * np.sin(3 * TAU * ph + 0.9) * np.exp(-t / 0.22) + 0.05 * np.sin(4 * TAU * ph) * np.exp(-t / 0.12))
+    y *= 1 - np.exp(-t / 0.004)
+    m = ns(0.03)
+    th = dsp.lowpass(rng.standard_normal(m), 700, 2) * np.exp(-np.arange(m) / (0.006 * SR))
+    y[:m] += th * 0.35
+    if release is not None and release < dur:
+        r0 = ns(release)
+        rl = ns(0.06)
+        y[r0:r0 + rl] *= np.linspace(1, 0, len(y[r0:r0 + rl]))
+        y[r0 + rl:] = 0
+    return dsp.fade(y, 0.0, 0.03) * vel
+
+
+def shaker(rng, vel=0.5, dur=0.085):
+    m = ns(dur)
+    e = dsp.env_pts(m, [(0, 0), (dur * 0.25, 1.0), (dur, 0.0)]) ** 1.6
+    return dsp.bandpass(rng.standard_normal(m), 4200, 11500, 2) * e * vel
+
+
+def rim_click(rng, vel=0.6):
+    return modal_hit(rng, [(1650, 0.04, 1.0), (3900, 0.02, 0.5), (720, 0.05, 0.35)], size=1.0, hardness=1.0,
+                     vel=vel, dur=0.12, noise=0.25)
+
+
+def soft_kick(rng, vel=0.7):
+    m = ns(0.35)
+    t = np.arange(m) / SR
+    y = np.sin(TAU * np.cumsum(48 + 62 * np.exp(-t / 0.018)) / SR) * dsp.env_ad(m, 0.002, 0.11)
+    y += dsp.lowpass(rng.standard_normal(m), 1500, 2) * np.exp(-t / 0.003) * 0.15
+    return y * vel
+
+
+def brush(rng, vel=0.4, dur=0.22):
+    m = ns(dur)
+    e = dsp.env_pts(m, [(0, 0), (0.02, 1.0), (dur, 0.0)]) ** 1.2
+    return dsp.bandpass(rng.standard_normal(m), 1800, 8000, 2) * e * vel
+
+
+DRAWBARS = (0.5, 1.5, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0)  # 16' 5 1/3' 8' 4' 2 2/3' 2' 1 3/5' 1 1/3' 1'
+
+
+def organ(chords, dur, rng, bars=(6, 2, 8, 4, 0, 2, 0, 0, 0), leslie=0.75, leslie_depth=0.18, click=0.25,
+          stereo=True, detune_c=0.0, vib_c=0.0):
+    """Tonewheel-ish drawbar organ.  chords = [(t0, t1, [freqs], level)];
+    bars = drawbar settings 0..8 (3 dB per step).  Slow 'leslie': AM + a little
+    Doppler FM, phase-shifted between the ears."""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    amps = [0.0 if b <= 0 else 10 ** ((b - 8) * 3.0 / 20.0) for b in bars]
+    lph = rng.random()
+    for (t0, t1, fr, lvl) in chords:
+        i0, i1 = ns(t0), min(n, ns(t1))
+        m = i1 - i0
+        if m <= 0:
+            continue
+        tt = np.arange(m) / SR
+        env = np.minimum(1.0, tt / 0.012) * np.minimum(1.0, (m / SR - tt) / 0.06)
+        acc = np.zeros(m)
+        for f in fr:
+            fv = f * dsp.cents(detune_c + rng.normal(0, 1.5))
+            for r, a in zip(DRAWBARS, amps):
+                if a <= 0 or fv * r > SR * 0.45:
+                    continue
+                acc += a * np.sin(TAU * fv * r * tt + rng.random() * 6)
+        if click > 0:
+            k = ns(0.006)
+            ck = dsp.bandpass(rng.standard_normal(k), 1500, 7000, 2) * np.exp(-np.arange(k) / (0.0012 * SR))
+            ck *= np.minimum(1.0, np.arange(k) / (0.001 * SR))
+            acc[:k] += ck * click * len(fr)
+        seg = acc * env * lvl
+        for c in range(2 if stereo else 1):
+            lfo = np.sin(TAU * (leslie * (t[i0:i1]) + lph + 0.25 * c))
+            am = 1.0 - leslie_depth * (0.5 + 0.5 * lfo)
+            out[c, i0:i1] += seg * am
+    if not stereo:
+        out[1] = out[0]
+    if vib_c:
+        pass
+    return out
+
+
+def chime_bar(freq, dur, rng, vel=1.0, bright=0.5, decay=1.2):
+    """Electronic door/PA chime tone: a soft struck bar (partials 1, 2.76, 5.4)
+    with a slightly slow attack, as heard from a small loudspeaker."""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    y = np.sin(TAU * freq * t) * np.exp(-6.9 * t / decay)
+    y += 0.5 * np.sin(TAU * freq * t + 0.3) * np.exp(-6.9 * t / (decay * 0.7)) * 0.4
+    for r, a, T in ((2.0, 0.12, 0.6), (2.76, 0.18 * bright, 0.35), (5.4, 0.07 * bright, 0.12)):
+        if freq * r < SR * 0.45:
+            y += a * np.sin(TAU * freq * r * t + rng.random() * 6) * np.exp(-6.9 * t / (T * decay))
+    y *= 1 - np.exp(-t / 0.004)
+    return dsp.fade(y, 0.0, min(0.1, dur * 0.2)) * vel
+
+
+def small_speaker(x, lo=380.0, hi=7800.0, res=2600.0, drive=1.15):
+    """A cheap ceiling / panel loudspeaker."""
+    y = dsp.highpass(x, lo, 3)
+    y = dsp.lowpass(y, hi, 3)
+    y = dsp.peq(y, res, 1.2, 3.5)
+    y = dsp.peq(y, 900, 1.0, 1.5)
+    pk = np.max(np.abs(y)) + 1e-12
+    return dsp.sat(y / pk * drive, 1.0) * pk / drive

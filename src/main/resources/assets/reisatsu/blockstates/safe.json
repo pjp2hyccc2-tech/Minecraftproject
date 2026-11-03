@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/safe"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/safe",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/safe",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/safe",
+      "y": 270
+    }
+  }
+}

@@ -1,170 +1,227 @@
-"""The complete 遭難 ―REISATSU― sound list (docs/DESIGN.md section 7, plus the
-extra events listed at the end) with generator, level target, attenuation,
-loop flag, Vorbis quality and subtitles for every event."""
+"""The complete 霊撮 ―REISATSU― sound list (docs/DESIGN.md section 8): generator, level target, attenuation,
+loop flag, Vorbis quality and subtitles for every event.  Generators are 'module:function' strings, resolved
+when a file is rendered."""
 from collections import namedtuple
-
-import music as MU
-import sfx_amb as A
-import sfx_beds as B
-import sfx_game as G
-import sfx_monsters as MO
-import sfx_phone as P
-import sfx_player as PL
+import importlib
 
 # event : sound event id (registered as reisatsu:<event>)
 # path  : file path under assets/reisatsu/sounds (variants get _1.._n)
 # count : number of variants
 # ch    : 1 = mono (positional), 2 = stereo (beds / music / UI)
-# fn    : generator(rng, index) -> numpy signal
+# fn    : 'module:function', function(rng, index) -> numpy signal
 # att   : attenuation_distance for positional (mono) sounds, None otherwise
 # norm  : ('peak', dB[, max_crest_dB])     sample peak (true peak verified <= -1 dBTP)
 #         ('lufs', LUFS, peak_cap_dB)       integrated loudness (BS.1770), brickwalled at the cap
 #         ('dense', rms_dB, true_peak_dB)   maximised, true peak verified on the decoded OGG
 # loop  : must loop seamlessly (built circularly; checked in report.txt)
 # q     : Vorbis quality
-# ja/en : subtitle (None = no subtitle: music, beds, UI ticks)
+# ja/en : subtitle text (lang keys subtitles.reisatsu.<event>)
+# extra : sub=False -> sounds.json carries no "subtitle" (non-diegetic score); seam='start' keeps the loop's
+#         own start (rhythmic loops); preload=True
 E = namedtuple("E", "event path count ch fn att norm loop q ja en extra")
 
 
-def e(event, path, count, ch, fn, att, norm, ja, en, loop=False, q=4, **extra):
-    return E(event, path, count, ch, fn, att, norm, loop, q, ja, en, extra)
+def e(event, count, ch, fn, att, norm, ja, en, loop=False, q=4, path=None, **extra):
+    return E(event, path or event.replace(".", "/"), count, ch, fn, att, norm, loop, q, ja, en, extra)
 
+
+B, LP, MU, MS, R, PL, SP, G = ("sfx_beds", "sfx_loops", "music", "music_store", "sfx_rest", "sfx_player",
+                               "sfx_spirits", "sfx_game")
 
 CATALOG = [
-    # ------------------------------------------------------------ ambient beds
-    e("amb.forest", "amb/forest", 1, 2, B.forest, None, ("lufs", -31, -6), None, None, loop=True, q=4),
-    e("amb.insects", "amb/insects", 1, 2, B.insects, None, ("lufs", -29, -6), None, None, loop=True, q=4),
-    e("amb.wind_ridge", "amb/wind_ridge", 1, 2, B.wind_ridge, None, ("lufs", -26, -4), None, None, loop=True, q=4),
-    e("amb.tunnel", "amb/tunnel", 1, 2, B.tunnel, None, ("lufs", -31, -6), None, None, loop=True, q=4),
-    e("amb.village", "amb/village", 1, 2, B.village, None, ("lufs", -30, -4), None, None, loop=True, q=4),
-    e("amb.silence", "amb/silence", 1, 2, B.silence, None, ("lufs", -45, -20), None, None, loop=True, q=4),
-    e("amb.stream", "amb/stream", 1, 1, B.stream, 24, ("lufs", -25, -4), None, None, loop=True, q=4),
-    # ------------------------------------------------------------ music layers
-    e("music.dread", "music/dread", 1, 2, MU.dread, None, ("lufs", -28, -4), None, None, loop=True, q=6),
-    e("music.tension", "music/tension", 1, 2, MU.tension, None, ("lufs", -28, -4), None, None, loop=True, q=5),
-    e("music.danger", "music/danger", 1, 2, MU.danger, None, ("lufs", -26, -3), None, None, loop=True, q=5, seam="start"),
-    e("music.chase", "music/chase", 1, 2, MU.chase, None, ("lufs", -20, -1.5), None, None, loop=True, q=5, seam="start"),
-    e("music.safe", "music/safe", 1, 2, MU.safe, None, ("lufs", -29, -4), None, None, loop=True, q=5),
-    e("music.oyama", "music/oyama", 1, 2, MU.oyama, None, ("lufs", -23, -2), None, None, loop=True, q=5),
-    e("music.binaural", "music/binaural", 1, 2, MU.binaural, None, ("lufs", -32, -10), None, None, loop=True, q=5),
-    e("music.title", "music/title", 1, 2, MU.title, None, ("lufs", -26, -4), None, None, loop=True, q=5),
-    e("music.ending_good", "music/ending_good", 1, 2, MU.ending_good, None, ("lufs", -24, -2), None, None, q=5),
-    e("music.ending_bad", "music/ending_bad", 1, 2, MU.ending_bad, None, ("lufs", -25, -2), None, None, q=5),
-    # ------------------------------------------------------------ ambient one-shots
-    e("amb.branch_snap", "amb/branch_snap", 5, 1, A.branch_snap, 24, ("peak", -2, 24), "枝の折れる音", "Branch snaps"),
-    e("amb.footsteps_run", "amb/footsteps_run", 3, 1, A.footsteps_run, 32, ("peak", -3), "誰かが走り抜ける", "Someone runs past"),
-    e("amb.footsteps_walk", "amb/footsteps_walk", 3, 1, A.footsteps_walk, 24, ("peak", -3, 20), "落ち葉を踏む足音", "Footsteps in the leaves"),
-    e("amb.deer_scream", "amb/deer_scream", 3, 1, A.deer_scream, 64, ("peak", -2), "女の悲鳴のような鹿の声", "A deer screams like a woman"),
-    e("amb.fox_scream", "amb/fox_scream", 2, 1, A.fox_scream, 48, ("peak", -2), "狐の金切り声", "Fox shrieks"),
-    e("amb.owl", "amb/owl", 2, 1, A.owl, 64, ("peak", -3), "フクロウが鳴く", "Owl hoots"),
-    e("amb.tree_knock", "amb/tree_knock", 3, 1, A.tree_knock, 40, ("peak", -2), "木の幹を叩く音", "Knocking on a tree"),
-    e("amb.rockfall", "amb/rockfall", 2, 1, A.rockfall, 40, ("peak", -2), "落石の音", "Rocks tumble"),
-    e("amb.creak_tree", "amb/creak_tree", 4, 1, A.creak_tree, 32, ("peak", -2), "杉の幹が軋む", "A cedar groans"),
-    e("amb.thud", "amb/thud", 3, 1, A.thud, 48, ("peak", -2), "遠くで重い物が落ちる", "Something heavy falls"),
-    e("amb.whisper", "amb/whisper", 6, 1, A.whisper, 6, ("peak", -4), "耳元で囁く声", "Something whispers"),
-    e("amb.whisper_name", "amb/whisper_name", 2, 1, A.whisper_name, 6, ("peak", -4), "「ねえ…」", "\"Hey...\""),
-    e("amb.giggle", "amb/giggle", 3, 1, A.giggle, 16, ("peak", -3), "くすくす笑う声", "Soft giggling"),
-    e("amb.distant_bell", "amb/distant_bell", 3, 1, A.distant_bell, 64, ("peak", -3), "遠くで熊鈴が鳴る", "A distant bear bell"),
-    e("amb.distant_scream", "amb/distant_scream", 2, 1, A.distant_scream, 96, ("peak", -2), "遠くで悲鳴", "A distant scream"),
-    e("amb.distant_call", "amb/distant_call", 3, 1, A.distant_call, 96, ("peak", -2), "誰かが呼んでいる", "Someone calls out"),
-    e("amb.breath_behind", "amb/breath_behind", 3, 1, A.breath_behind, 4, ("peak", -3), "背後で息遣い", "Breathing behind you"),
-    e("amb.drip", "amb/drip", 4, 1, A.drip, 16, ("peak", -4), "水が滴る", "Water drips"),
-    e("amb.tin_bang", "amb/tin_bang", 2, 1, A.tin_bang, 32, ("peak", -2), "トタンが鳴る", "Tin sheet bangs"),
-    e("amb.wind_chime", "amb/wind_chime", 2, 1, A.wind_chime, 24, ("peak", -4), "風鈴が鳴る", "Wind chime rings"),
-    e("amb.radio", "amb/radio", 2, 1, A.radio, 24, ("peak", -3), "古いラジオの雑音", "Old radio crackles"),
-    e("amb.tinnitus", "amb/tinnitus", 1, 2, A.tinnitus, None, ("peak", -14), "耳鳴り", "Ears ring"),
-    e("amb.ear_pressure", "amb/ear_pressure", 1, 2, A.ear_pressure, None, ("peak", -4), "耳が詰まる", "Ears pop"),
-    # ------------------------------------------------------------ monsters
-    e("nozoki.breath", "nozoki/breath", 3, 1, MO.nozoki_breath, 12, ("peak", -3), "湿った息遣い", "Wet breathing"),
-    e("nozoki.giggle", "nozoki/giggle", 2, 1, MO.nozoki_giggle, 20, ("peak", -2), "甲高い壊れた笑い声", "High, broken giggle"),
-    e("nozoki.shriek", "nozoki/shriek", 2, 1, MO.nozoki_shriek, 48, ("peak", -1), "おぞましい絶叫", "Horrible shriek", preload=True),
-    e("nozoki.crawl", "nozoki/crawl", 4, 1, MO.nozoki_crawl, 24, ("peak", -2), "何かが這い寄る", "Something crawls closer"),
-    e("nozoki.creak", "nozoki/creak", 2, 1, MO.nozoki_creak, 12, ("peak", -3, 20), "関節の鳴る音", "Joints crack"),
-    e("yobigoe.call", "yobigoe/call", 4, 1, MO.yobigoe_call, 96, ("peak", -1.5), "「おーい」と呼ぶ声", "\"Hey!\" someone calls"),
-    e("yobigoe.call_wrong", "yobigoe/call_wrong", 2, 1, MO.yobigoe_call_wrong, 96, ("peak", -1.5), "歪んだ呼び声", "The call warps"),
-    e("yobigoe.laugh", "yobigoe/laugh", 2, 1, MO.yobigoe_laugh, 32, ("peak", -3), "低い笑い声", "Low laughter"),
-    e("yobigoe.rush", "yobigoe/rush", 1, 1, MO.yobigoe_rush, 24, ("peak", -1), "何かが迫る", "Something rushes at you", preload=True),
-    e("ushiro.step", "ushiro/step", 6, 1, MO.ushiro_step, 8, ("peak", -3, 18), "背後の足音", "Footsteps behind you"),
-    e("ushiro.breath", "ushiro/breath", 3, 1, MO.ushiro_breath, 4, ("peak", -4), "耳元に冷たい息", "Cold breath on your ear"),
-    e("ushiro.whisper", "ushiro/whisper", 3, 1, MO.ushiro_whisper, 4, ("peak", -3), "「ふりかえって…」", "\"Turn around...\""),
-    e("ushiro.leave", "ushiro/leave", 1, 1, MO.ushiro_leave, 6, ("peak", -4), "「…つまらない」", "\"...Boring.\""),
-    e("ushiro.attack", "ushiro/attack", 1, 1, MO.ushiro_attack, 8, ("peak", -1), "耳元で絶叫", "A scream in your ear", preload=True),
-    e("koyanushi.sleep", "koyanushi/sleep", 1, 1, MO.koyanushi_sleep, 12, ("peak", -4), "湿ったいびき", "Wet snoring", loop=True),
-    e("koyanushi.mumble", "koyanushi/mumble", 3, 1, MO.koyanushi_mumble, 12, ("peak", -4), "寝言", "Sleep-mumbling"),
-    e("koyanushi.wake", "koyanushi/wake", 1, 1, MO.koyanushi_wake, 16, ("peak", -2), "骨の鳴る音", "Bones crack"),
-    e("koyanushi.scream", "koyanushi/scream", 1, 1, MO.koyanushi_scream, 40, ("peak", -1), "怒りの咆哮", "Furious howl", preload=True),
-    e("koyanushi.step", "koyanushi/step", 4, 1, MO.koyanushi_step, 16, ("peak", -2), "裸足の足音", "Bare feet on wood"),
-    e("oyama.step", "oyama/step", 4, 1, MO.oyama_step, 64, ("peak", -1.5), "巨大な足音", "Huge footsteps"),
-    e("oyama.groan", "oyama/groan", 3, 1, MO.oyama_groan, 96, ("peak", -1.5), "山が呻く", "The mountain groans"),
-    e("oyama.roar", "oyama/roar", 2, 1, MO.oyama_roar, 128, ("peak", -1), "凄まじい咆哮", "Tremendous roar", preload=True),
-    e("oyama.near", "oyama/near", 1, 1, MO.oyama_near, 32, ("peak", -3), "巨大な何かの息遣い", "Something huge breathes", loop=True, q=8),
-    e("oyama.branch", "oyama/branch", 3, 1, MO.oyama_branch, 48, ("peak", -2), "枝がへし折れる", "Branches break"),
-    e("utsuru.hum", "utsuru/hum", 1, 1, MO.utsuru_hum, 12, ("peak", -8), "微かな雑音と囁き", "Faint static whispers", loop=True),
-    e("utsuru.turn", "utsuru/turn", 1, 1, MO.utsuru_turn, 12, ("peak", -4), "息を呑む囁き", "A whispered gasp"),
-    # ------------------------------------------------------------ player & blocks
-    e("player.heartbeat", "player/heartbeat", 1, 1, PL.heartbeat, 8, ("peak", -2), "心臓の鼓動", "Heartbeat", preload=True),
-    e("player.breath_fear", "player/breath_fear", 3, 1, PL.breath_fear, 8, ("peak", -5), "震える息", "Trembling breath"),
-    e("player.breath_run", "player/breath_run", 2, 1, PL.breath_run, 12, ("peak", -4), "荒い息", "Panting"),
-    e("player.gasp", "player/gasp", 2, 1, PL.gasp, 8, ("peak", -3), "息を呑む", "Gasp"),
-    e("player.fall", "player/fall", 1, 1, PL.fall, 16, ("peak", -1.5), "斜面を転がり落ちる", "Tumbling down the slope"),
-    e("block.leaves_step", "block/leaves_step", 6, 1, PL.leaves_step, 16, ("peak", -2, 18), "落ち葉を踏む音", "Footsteps on dry leaves"),
-    # ------------------------------------------------------------ items
-    e("item.flashlight_on", "item/flashlight_on", 1, 1, PL.flashlight_on, 8, ("peak", -4), "懐中電灯をつける", "Flashlight clicks on"),
-    e("item.flashlight_off", "item/flashlight_off", 1, 1, PL.flashlight_off, 8, ("peak", -4), "懐中電灯を消す", "Flashlight clicks off"),
-    e("item.flashlight_flicker", "item/flashlight_flicker", 3, 1, PL.flashlight_flicker, 8, ("peak", -5), "懐中電灯が明滅する", "Flashlight flickers"),
-    e("item.battery", "item/battery", 1, 1, PL.battery, 8, ("peak", -4), "電池を交換する", "Batteries swapped"),
-    e("item.bear_bell", "item/bear_bell", 3, 1, PL.bear_bell, 48, ("peak", -2), "熊鈴が鳴る", "Bear bell rings"),
-    e("item.rope", "item/rope", 1, 1, PL.rope, 12, ("peak", -3), "ロープを結ぶ", "Rope tied"),
-    e("item.map", "item/map", 1, 1, PL.map_, 8, ("peak", -5), "地図を広げる", "Map unfolds"),
-    e("item.flare_ignite", "item/flare_ignite", 1, 1, PL.flare_ignite, 24, ("peak", -2), "発煙筒に点火", "Flare ignites"),
-    e("item.flare_burn", "item/flare_burn", 1, 1, PL.flare_burn, 16, ("peak", -5), "発煙筒が燃える", "Flare burns", loop=True),
-    e("item.omamori", "item/omamori", 1, 2, PL.omamori, None, ("peak", -2), "お守りが弾ける", "Omamori bursts"),
-    e("item.key", "item/key", 1, 1, PL.key, 8, ("peak", -5), "鍵の音", "Keys jingle"),
-    e("item.unlock", "item/unlock", 1, 1, PL.unlock, 16, ("peak", -3), "錠が外れ、鎖が落ちる", "Lock opens, chain falls"),
-    e("item.offering", "item/offering", 1, 1, PL.offering, 12, ("peak", -4), "御神酒を供える", "Offering placed"),
-    e("item.paper", "item/paper", 2, 1, PL.paper, 8, ("peak", -6, 20), "紙の音", "Paper rustles"),
-    e("item.bag", "item/bag", 1, 1, PL.bag, 8, ("peak", -4), "バッグを探る", "Rummaging in the bag"),
-    # ------------------------------------------------------------ phone
-    e("phone.tap", "phone/tap", 2, 2, P.tap, None, ("peak", -12), None, None),
-    e("phone.unlock", "phone/unlock", 1, 2, P.unlock, None, ("peak", -10), None, None),
-    e("phone.vibrate", "phone/vibrate", 1, 1, P.vibrate, 6, ("peak", -3), "スマホが震える", "Phone vibrates"),
-    e("phone.notify", "phone/notify", 1, 2, P.notify, None, ("peak", -5), "通知音", "Notification chime"),
-    e("phone.notify_wrong", "phone/notify_wrong", 1, 2, P.notify_wrong, None, ("peak", -5), "歪んだ通知音", "A warped notification"),
-    e("phone.signal", "phone/signal", 1, 2, P.signal, None, ("peak", -4), "通知が次々と届く", "Notifications flood in"),
-    e("phone.ringtone", "phone/ringtone", 1, 1, P.ringtone, 24, ("peak", -3), "着信音", "Phone rings", loop=True, q=5, seam="start"),
-    e("phone.ringtone_wrong", "phone/ringtone_wrong", 1, 2, P.ringtone_wrong, None, ("peak", -4), "狂った着信音", "The ringtone warps", loop=True, q=5, seam="start"),
-    e("phone.ring_old", "phone/ring_old", 1, 1, P.ring_old, 32, ("peak", -2), "公衆電話が鳴る", "Public phone rings", loop=True, seam="start"),
-    e("phone.call_static", "phone/call_static", 1, 2, P.call_static, None, ("peak", -6), "受話口の雑音", "Static on the line", loop=True),
-    e("phone.voice", "phone/voice", 3, 2, P.voice, None, ("peak", -4), "電話の向こうの声", "A voice on the line"),
-    e("phone.hangup", "phone/hangup", 1, 2, P.hangup, None, ("peak", -8), "話し中の音", "Busy tone"),
-    e("phone.shutter", "phone/shutter", 1, 2, P.shutter, None, ("peak", -5), "シャッター音", "Camera shutter"),
-    e("phone.low_battery", "phone/low_battery", 1, 2, P.low_battery, None, ("peak", -8), "電池残量の警告音", "Low battery beep"),
-    e("phone.dead", "phone/dead", 1, 2, P.dead, None, ("peak", -6), "スマホの電源が落ちる", "Phone dies"),
+    # ------------------------------------------------------------ ambient beds (stereo loops)
+    e("amb.night_road", 1, 2, f"{B}:night_road", None, ("lufs", -33, -8), "雨上がりの国道", "Wet road at night", loop=True, q=3),
+    e("amb.dining", 1, 2, f"{B}:dining", None, ("lufs", -41, -14), "閉店後の客席", "Closed dining hall", loop=True, q=3),
+    e("amb.kitchen", 1, 2, f"{B}:kitchen", None, ("lufs", -36, -10), "厨房の機械音", "Kitchen machines hum", loop=True, q=3),
+    e("amb.restroom", 1, 2, f"{B}:restroom", None, ("lufs", -40, -14), "配管を水が流れる", "Water in the pipes", loop=True, q=3),
+    e("amb.back", 1, 2, f"{B}:back", None, ("lufs", -39, -14), "安定器の唸り", "Ballasts hum", loop=True, q=3),
+    e("amb.fridge", 1, 2, f"{B}:fridge", None, ("lufs", -29, -8), "冷蔵室の轟音", "Walk-in fridge roars", loop=True, q=3),
+    e("amb.silence", 1, 2, f"{B}:silence", None, ("lufs", -48, -26), "静寂", "Silence", loop=True, q=3, sub=False),
+    e("amb.closing", 1, 2, f"{B}:closing", None, ("lufs", -31, -8), "閉店の店内", "The store at closing time", loop=True, q=3),
+    # ------------------------------------------------------------ positional loops (mono)
+    e("amb.fluorescent", 1, 1, f"{LP}:fluorescent", 10, ("lufs", -27, -6), "蛍光灯が唸る", "Fluorescent tube buzzes", loop=True),
+    e("amb.vending", 1, 1, f"{LP}:vending", 12, ("lufs", -27, -6), "自動販売機の唸り", "Vending machine hums", loop=True),
+    e("amb.sign_buzz", 1, 1, f"{LP}:sign_buzz", 24, ("lufs", -25, -5), "看板が唸り、瞬く", "Sign buzzes and flickers", loop=True),
+    e("amb.drip", 4, 1, f"{LP}:drip", 12, ("peak", -6), "水滴が落ちる", "Water drips"),
+    e("amb.gutter", 1, 1, f"{LP}:gutter", 16, ("lufs", -25, -5), "雨樋を水が流れる", "Gutter trickles", loop=True),
+    e("fixture.faucet_loop", 1, 1, f"{LP}:faucet_loop", 12, ("lufs", -21, -3), "水が流れ続ける", "Tap runs", loop=True),
+    e("fixture.hand_dryer", 1, 1, f"{LP}:hand_dryer", 16, ("lufs", -14, -1.5), "ハンドドライヤーが轟く", "Hand dryer roars", loop=True),
+    e("fixture.fryer_loop", 1, 1, f"{LP}:fryer_loop", 12, ("lufs", -23, -4), "油が煮え立つ", "Fryer oil bubbles", loop=True),
+    e("fixture.gas_loop", 1, 1, f"{LP}:gas_loop", 12, ("lufs", -23, -4), "ガスの炎が燃える", "Gas flame roars", loop=True),
+    e("fixture.dishwasher", 1, 1, f"{LP}:dishwasher", 14, ("lufs", -21, -3), "食洗機が動いている", "Dishwasher runs", loop=True),
+    e("fixture.tv_static", 1, 1, f"{LP}:tv_static", 12, ("lufs", -22, -4), "テレビの砂嵐", "TV static hisses", loop=True),
+    e("fixture.monitor_static", 1, 1, f"{LP}:monitor_static", 8, ("lufs", -28, -6), "監視モニターのノイズ", "Security monitors hiss", loop=True),
+    e("fixture.phone_ring", 1, 1, f"{LP}:phone_ring", 24, ("lufs", -18, -4), "電話が鳴る", "Phone rings", loop=True, seam="start"),
+    e("spirit.near", 1, 1, f"{LP}:spirit_near", 8, ("lufs", -26, -5), "空気が重く唸る", "The air presses in", loop=True),
+    e("camera.sense", 1, 2, f"{LP}:camera_sense", None, ("lufs", -24, -5), "霊感計が反応する", "Spirit meter crackles", loop=True),
+    # ------------------------------------------------------------ music (stereo)
+    e("music.dread", 1, 2, f"{MU}:dread", None, ("lufs", -29, -5), "不穏な音楽", "Dread", loop=True, q=5, sub=False),
+    e("music.tension", 1, 2, f"{MU}:tension", None, ("lufs", -29, -5), "緊迫した音楽", "Tension", loop=True, q=5, sub=False),
+    e("music.danger", 1, 2, f"{MU}:danger", None, ("lufs", -27, -4), "危険が迫る音楽", "Danger", loop=True, q=5, seam="start", sub=False),
+    e("music.chase", 1, 2, f"{MU}:chase", None, ("lufs", -20, -1.5), "追われる音楽", "Chase", loop=True, q=5, seam="start", sub=False),
+    e("music.safe", 1, 2, f"{MU}:safe", None, ("lufs", -30, -5), "静かな音楽", "Quiet music", loop=True, q=5, sub=False),
+    e("music.title", 1, 2, f"{MS}:title", None, ("lufs", -27, -4), "オルゴールの音楽", "Music box", loop=True, q=5, sub=False),
+    e("music.store", 1, 2, f"{MS}:store", None, ("lufs", -24, -2), "店内BGMが流れる", "Store music plays", loop=True, q=5, seam="start"),
+    e("music.store_wrong", 1, 2, f"{MS}:store_wrong", None, ("lufs", -25, -2), "歪んだ店内BGM", "Warped store music", loop=True, q=5),
+    e("music.closing", 1, 2, f"{MS}:closing", None, ("lufs", -25, -3), "閉店の音楽が流れる", "Closing-time music plays", loop=True, q=5, seam="start"),
+    e("music.exorcism", 1, 2, f"{MU}:exorcism", None, ("lufs", -24, -2), "除霊の調べ", "The rite", q=5, sub=False),
+    e("music.ending_good", 1, 2, f"{MS}:ending_good", None, ("lufs", -25, -2), "夜明けの音楽", "Dawn", q=5, sub=False),
+    e("music.ending_bad", 1, 2, f"{MS}:ending_bad", None, ("lufs", -27, -3), "壊れたオルゴール", "A dying music box", q=5, sub=False),
+    # ------------------------------------------------------------ restaurant one-shots (mono)
+    e("door.auto_open", 1, 1, f"{R}:auto_open", 16, ("peak", -3), "自動ドアが開く", "Automatic door opens"),
+    e("door.auto_close", 1, 1, f"{R}:auto_close", 16, ("peak", -3), "自動ドアが閉まる", "Automatic door closes"),
+    e("door.chime", 2, 1, f"{R}:chime", 32, ("peak", -2), "入店チャイム", "Entrance chime", preload=True),
+    e("door.chime_wrong", 2, 1, f"{R}:chime_wrong", 32, ("peak", -5), "歪んだ入店チャイム", "The chime warps"),
+    e("door.swing", 3, 1, f"{R}:swing", 12, ("peak", -3), "スイングドアが揺れる", "Swing doors flap"),
+    e("door.open", 2, 1, f"{R}:door_open", 12, ("peak", -4), "ドアが開く", "Door opens"),
+    e("door.close", 2, 1, f"{R}:door_close", 12, ("peak", -3), "ドアが閉まる", "Door closes"),
+    e("door.fridge_open", 1, 1, f"{R}:fridge_open", 12, ("peak", -3), "冷蔵室の扉が開く", "Walk-in door opens"),
+    e("door.fridge_close", 1, 1, f"{R}:fridge_close", 12, ("peak", -2), "冷蔵室の扉が閉まる", "Walk-in door thuds shut"),
+    e("door.stall_bang", 2, 1, f"{R}:stall_bang", 16, ("peak", -1), "個室の扉が叩きつけられる", "Stall door slams"),
+    e("door.locked", 1, 1, f"{R}:locked", 8, ("peak", -4), "鍵がかかっている", "Handle rattles: locked"),
+    e("door.unlock", 1, 1, f"{R}:unlock", 8, ("peak", -4), "鍵が開く", "Lock turns"),
+    e("door.switch", 1, 1, f"{R}:door_switch", 8, ("peak", -4), "キースイッチが回る", "Key switch clacks"),
+    e("fixture.call_button", 2, 1, f"{R}:call_button", 24, ("peak", -5), "呼び出しボタンが鳴る", "Call button chimes", preload=True),
+    e("fixture.call_display", 1, 1, f"{R}:call_display", 32, ("peak", -5), "呼び出し表示器のチャイム", "Call display chimes"),
+    e("fixture.service_bell", 1, 1, f"{R}:service_bell", 24, ("peak", -4), "呼び鈴が鳴る", "Counter bell rings"),
+    e("fixture.pass_bell", 1, 1, f"{R}:pass_bell", 24, ("peak", -2), "デシャップのベルが鳴る", "Pickup bell rings"),
+    e("fixture.register_drawer", 1, 1, f"{R}:register_drawer", 12, ("peak", -3), "レジが開く", "Register drawer opens"),
+    e("fixture.phone_voice", 2, 2, f"{R}:phone_voice", None, ("peak", -3), "「……二時に……一名で……」", "\"...at two... for one...\""),
+    e("fixture.faucet_on", 1, 1, f"{R}:faucet_on", 12, ("peak", -3), "蛇口から水が出る", "Tap turns on"),
+    e("fixture.faucet_off", 1, 1, f"{R}:faucet_off", 12, ("peak", -4), "水が止まる", "Tap turns off"),
+    e("fixture.drink_pour", 2, 1, f"{R}:drink_pour", 12, ("peak", -3), "ドリンクバーが注ぐ", "Drink bar pours"),
+    e("fixture.ice_drop", 2, 1, f"{R}:ice_drop", 12, ("peak", -3), "製氷機の氷が落ちる", "Ice drops"),
+    e("fixture.gas_ignite", 1, 1, f"{R}:gas_ignite", 12, ("peak", -2), "ガスに火がつく", "Gas ignites"),
+    e("fixture.breaker_off", 1, 1, f"{R}:breaker_off", 24, ("peak", -1), "ブレーカーが落ちる", "Breaker trips, power dies"),
+    e("fixture.breaker_on", 1, 1, f"{R}:breaker_on", 24, ("peak", -1), "ブレーカーが入る", "Breaker on, tubes ping"),
+    e("fixture.light_flicker", 3, 1, f"{R}:light_flicker", 12, ("peak", -4), "照明が明滅する", "Lights flicker"),
+    e("fixture.light_burst", 2, 1, f"{R}:light_burst", 16, ("peak", -1), "蛍光灯が割れる", "Tube bursts"),
+    e("fixture.time_card", 1, 1, f"{R}:time_card", 8, ("peak", -3), "タイムカードを打つ", "Time clock punches"),
+    e("fixture.locker", 2, 1, f"{R}:locker", 8, ("peak", -3), "ロッカーの扉", "Locker door"),
+    e("fixture.chair_scrape", 3, 1, f"{R}:chair_scrape", 16, ("peak", -2), "椅子が引きずられる", "Chair scrapes"),
+    e("fixture.chair_fall", 2, 1, f"{R}:chair_fall", 20, ("peak", -1), "椅子が倒れる", "Chair falls over"),
+    e("fixture.plate_break", 3, 1, f"{R}:plate_break", 32, ("peak", -1), "皿が割れる", "Plate smashes", preload=True),
+    e("fixture.glass_set", 2, 1, f"{R}:glass_set", 10, ("peak", -4), "水の入ったグラスが置かれる", "A glass of water is set down"),
+    e("fixture.menu_scatter", 2, 1, f"{R}:menu_scatter", 16, ("peak", -2), "メニューが散らばる", "Menus scatter"),
+    e("fixture.pa_chime", 1, 2, f"{R}:pa_chime", None, ("lufs", -19, -4), "店内放送のチャイム", "PA chime"),
+    e("fixture.pa_voice", 3, 2, f"{R}:pa_voice", None, ("peak", -3), "店内放送が流れる", "Garbled store announcement"),
+    e("fixture.car_pass", 3, 1, f"{R}:car_pass", 48, ("peak", -2), "濡れた道を車が通る", "Car passes on the wet road"),
+    e("fixture.motorbike", 1, 1, f"{R}:motorbike", 96, ("peak", -2), "遠くからバイクが近づく", "A motorbike approaches"),
+    e("fixture.crash", 1, 1, f"{R}:crash", 96, ("peak", -1), "急ブレーキと衝突音", "Tyres scream, a crash"),
+    e("fixture.toilet_flush", 1, 1, f"{R}:toilet_flush", 16, ("peak", -3), "トイレが流れる", "Toilet flushes"),
+    e("fixture.stall_knock", 3, 1, f"{R}:stall_knock", 12, ("peak", -2), "個室の中からノック", "Knocking inside the stall"),
+    e("fixture.fridge_knock", 3, 1, f"{R}:fridge_knock", 12, ("peak", -3), "冷蔵室の中から叩く音", "Knocking inside the walk-in"),
+    e("fixture.ball_bounce", 1, 1, f"{R}:ball_bounce", 16, ("peak", -3), "ボールが弾む", "A ball bounces"),
+    e("fixture.toy_squeak", 1, 1, f"{R}:toy_squeak", 8, ("peak", -4), "おもちゃが鳴る", "A toy squeaks"),
+    # ------------------------------------------------------------ camera and items
+    e("camera.raise", 1, 2, f"{PL}:camera_raise", None, ("peak", -6), "霊写機を構える", "Camera raised"),
+    e("camera.lower", 1, 2, f"{PL}:camera_lower", None, ("peak", -6), "霊写機を下ろす", "Camera lowered"),
+    e("camera.shutter", 2, 1, f"{PL}:camera_shutter", 10, ("peak", -1), "シャッターとフラッシュ", "Shutter and flash", preload=True),
+    e("camera.charge", 1, 2, f"{PL}:camera_charge", None, ("lufs", -27, -12), "フラッシュが充電される", "Flash charges"),
+    e("camera.eject", 1, 2, f"{PL}:camera_eject", None, ("lufs", -21, -6), "写真が出てくる", "Photo ejects"),
+    e("camera.empty", 1, 2, f"{PL}:camera_empty", None, ("peak", -6), "空撮り", "Dry click: no film"),
+    e("camera.zoom", 1, 2, f"{PL}:camera_zoom", None, ("peak", -17), "レンズが動く", "Lens whirs", sub=False),
+    e("camera.load", 1, 2, f"{PL}:camera_load", None, ("peak", -5), "フィルムを装填する", "Film loaded"),
+    e("photo.develop", 1, 2, f"{PL}:photo_develop", None, ("peak", -8), "写真が浮かび上がる", "The photo develops"),
+    e("photo.name", 1, 2, f"{PL}:photo_name", None, ("peak", -4), "名前が浮かび上がる", "A name writes itself"),
+    e("photo.fail", 1, 2, f"{PL}:photo_fail", None, ("peak", -5), "写真が歪む", "The photo smears"),
+    e("item.flashlight_on", 1, 1, f"{PL}:flashlight_on", 8, ("peak", -5), "懐中電灯をつける", "Flashlight clicks on"),
+    e("item.flashlight_off", 1, 1, f"{PL}:flashlight_off", 8, ("peak", -5), "懐中電灯を消す", "Flashlight clicks off"),
+    e("item.flashlight_flicker", 3, 1, f"{PL}:flashlight_flicker", 8, ("peak", -6), "懐中電灯が明滅する", "Flashlight flickers"),
+    e("item.ofuda_burn", 1, 2, f"{PL}:ofuda_burn", None, ("peak", -2), "お札が燃え上がる", "An ofuda burns up"),
+    e("item.key", 1, 1, f"{PL}:key", 8, ("peak", -5), "鍵の音", "Keys jingle"),
+    e("item.paper", 2, 2, f"{PL}:paper", None, ("peak", -7, 20), "紙の音", "Paper rustles"),
+    # ------------------------------------------------------------ player (mono)
+    e("player.heartbeat", 1, 1, f"{PL}:heartbeat", 8, ("peak", -2), "心臓の鼓動", "Heartbeat", preload=True),
+    e("player.breath_fear", 3, 1, f"{PL}:breath_fear", 8, ("peak", -6), "震える息", "Trembling breath"),
+    e("player.breath_hold", 1, 1, f"{PL}:breath_hold", 8, ("peak", -6), "息を止める", "Breath held"),
+    e("player.gasp", 2, 1, f"{PL}:gasp", 8, ("peak", -3), "息を吐き出す", "Gasp"),
+    e("player.step_tile", 4, 1, f"{PL}:step_tile", 16, ("peak", -6, 22), "タイルの足音", "Footsteps on tiles"),
+    e("player.step_vinyl", 4, 1, f"{PL}:step_vinyl", 16, ("peak", -8, 22), "床の足音", "Footsteps"),
+    e("player.step_kitchen", 4, 1, f"{PL}:step_kitchen", 16, ("peak", -6, 22), "厨房の床の足音", "Footsteps on the kitchen floor"),
+    e("player.step_wet", 4, 1, f"{PL}:step_wet", 16, ("peak", -7, 22), "濡れた足音", "Footsteps on wet asphalt"),
+    e("player.step_glass", 3, 1, f"{PL}:step_glass", 16, ("peak", -4), "破片を踏む", "Glass crunches underfoot"),
+    e("player.step_paper", 2, 1, f"{PL}:step_paper", 16, ("peak", -6), "メニューを踏む", "Stepping on menus"),
+    # ------------------------------------------------------------ spirits (mono)
+    e("visitor.step", 4, 1, f"{SP}:visitor_step", 12, ("peak", -4, 22), "濡れた足を引きずる音", "Wet, dragging footsteps"),
+    e("visitor.breath", 2, 1, f"{SP}:visitor_breath", 6, ("peak", -5), "ヘルメットの中の息", "Breathing inside a helmet"),
+    e("visitor.visor", 1, 1, f"{SP}:visitor_visor", 8, ("peak", -2), "バイザーがひび割れる", "Visor cracks"),
+    e("visitor.drip", 2, 1, f"{SP}:visitor_drip", 6, ("peak", -6), "滴り落ちる水", "Water drips off something"),
+    e("visitor.whisper", 2, 1, f"{SP}:visitor_whisper", 6, ("peak", -4), "「……まだかな」", "\"...Is she coming...\""),
+    e("waitress.step", 3, 1, f"{SP}:waitress_step", 10, ("peak", -6, 22), "規則正しすぎる足音", "Too-regular footsteps"),
+    e("waitress.greet", 3, 1, f"{SP}:waitress_greet", 24, ("peak", -2), "「いらっしゃいませ」", "\"Welcome!\""),
+    e("waitress.water", 1, 1, f"{SP}:waitress_water", 12, ("peak", -3), "「お冷やを、どうぞ」", "\"Your water...\""),
+    e("waitress.hum", 1, 1, f"{SP}:waitress_hum", 12, ("peak", -4), "店の歌を口ずさむ声", "Someone hums the store jingle"),
+    e("waitress.tray", 1, 1, f"{SP}:waitress_tray", 16, ("peak", -2), "トレイとグラスの音", "Tray and glass clatter"),
+    e("chef.chop", 2, 1, f"{SP}:chef_chop", 20, ("peak", -2), "包丁の音", "Cleaver chops", loop=True, seam="start"),
+    e("chef.chop_stop", 1, 1, f"{SP}:chef_chop_stop", 20, ("peak", -1), "包丁の音が止まる", "The chopping stops"),
+    e("chef.breath", 2, 1, f"{SP}:chef_breath", 8, ("peak", -4), "煙たい喘ぎ", "Smoky wheezing"),
+    e("chef.sizzle", 1, 1, f"{SP}:chef_sizzle", 8, ("peak", -5), "焦げた肌が爆ぜる", "Burnt skin crackles"),
+    e("chef.roar", 1, 1, f"{SP}:chef_roar", 32, ("peak", -1), "怒号と包丁の一撃", "A roar, the cleaver strikes", preload=True),
+    e("chef.step", 3, 1, f"{SP}:chef_step", 16, ("peak", -3, 22), "重い足音", "Heavy footsteps"),
+    e("chef.scrape", 1, 1, f"{SP}:chef_scrape", 12, ("peak", -3), "包丁が鉄を擦る", "Cleaver scrapes steel"),
+    e("child.giggle", 4, 1, f"{SP}:child_giggle", 16, ("peak", -3), "子供のくすくす笑い", "A child giggles"),
+    e("child.count", 1, 1, f"{SP}:child_count", 24, ("peak", -3), "「いーち、にーい、さーん……」", "\"One... two... three...\""),
+    e("child.moui", 1, 1, f"{SP}:child_moui", 32, ("peak", -2), "「もういいかい」", "\"Ready or not?\""),
+    e("child.madada", 1, 1, f"{SP}:child_madada", 24, ("peak", -2), "「まーだだよ」", "\"Not yet!\""),
+    e("child.mitsuketa", 1, 1, f"{SP}:child_mitsuketa", 16, ("peak", -2), "「みーつけた」", "\"Found you!\"", preload=True),
+    e("child.run", 3, 1, f"{SP}:child_run", 16, ("peak", -4), "小さな足が走る", "Small feet run"),
+    e("child.hum", 1, 1, f"{SP}:child_hum", 12, ("peak", -4), "子供の鼻歌", "A child hums"),
+    e("child.whisper", 1, 1, f"{SP}:child_whisper", 6, ("peak", -4), "「こっちだよ」", "\"Over here...\""),
+    e("mirror.sob", 2, 1, f"{SP}:mirror_sob", 10, ("peak", -4), "ガラスの向こうで泣く声", "Sobbing behind glass"),
+    e("mirror.whisper", 1, 1, f"{SP}:mirror_whisper", 6, ("peak", -4), "「……うしろ」", "\"...Behind you\""),
+    e("mirror.knock", 2, 1, f"{SP}:mirror_knock", 12, ("peak", -2), "鏡の向こうから叩く音", "Knocking from inside the mirror"),
+    e("mirror.squeak", 2, 1, f"{SP}:mirror_squeak", 10, ("peak", -8), "ガラスを擦る手", "Palms squeak on glass"),
+    e("mirror.scream", 1, 1, f"{SP}:mirror_scream", 24, ("peak", -1), "絶叫、鏡が割れる", "A scream, the mirror cracks", preload=True),
+    e("manager.step", 3, 1, f"{SP}:manager_step", 12, ("peak", -5, 22), "革靴の足音", "Leather shoes, measured"),
+    e("manager.keys", 1, 1, f"{SP}:manager_keys", 10, ("peak", -4), "腰の鍵束が鳴る", "Keys jingle at a belt"),
+    e("manager.welcome", 1, 1, f"{SP}:manager_welcome", 16, ("peak", -3), "「いらっしゃいませ」", "\"...Welcome.\""),
+    e("manager.closed", 1, 1, f"{SP}:manager_closed", 32, ("peak", -2), "「本日の営業は、終了いたしました」", "\"We are now closed for the day.\""),
+    e("manager.customer", 2, 1, f"{SP}:manager_customer", 16, ("peak", -3), "「お客様……」", "\"Excuse me, sir...\""),
+    e("manager.sigh", 1, 1, f"{SP}:manager_sigh", 8, ("peak", -4), "疲れ切ったため息", "An exhausted sigh"),
+    e("manager.typing", 1, 1, f"{SP}:manager_typing", 8, ("peak", -6), "キーボードを打つ音", "Typing", loop=True),
+    e("manager.chair", 1, 1, f"{SP}:manager_chair", 8, ("peak", -4), "事務椅子が軋む", "Office chair creaks"),
+    e("medium.voice", 6, 1, f"{SP}:medium_voice", 8, ("peak", -4), "霊媒師の呟き", "The medium murmurs"),
+    e("medium.bell", 1, 1, f"{SP}:medium_bell", 24, ("peak", -6), "りんが鳴る", "A singing bowl rings"),
+    e("medium.chant", 1, 1, f"{SP}:medium_chant", 16, ("peak", -3), "読経", "Chanting", loop=True),
+    e("medium.clap", 1, 1, f"{SP}:medium_clap", 24, ("peak", -2), "柏手", "Two ritual claps"),
+    e("spirit.whisper", 6, 1, f"{SP}:spirit_whisper", 6, ("peak", -4), "耳元の囁き", "Something whispers"),
+    e("spirit.notice", 3, 1, f"{SP}:spirit_notice", 16, ("peak", -1), "気付かれた", "It noticed you!", preload=True),
+    e("spirit.bound", 1, 1, f"{SP}:spirit_bound", 16, ("peak", -1), "霊が写真に吸い込まれる", "A spirit is pulled into the photo"),
+    e("spirit.vanish", 1, 1, f"{SP}:spirit_vanish", 12, ("peak", -4), "気配が消える", "A presence fades"),
     # ------------------------------------------------------------ game (stereo)
-    e("game.jumpscare", "game/jumpscare", 3, 2, G.jumpscare, None, ("dense", -7.5, -1.0), "絶叫", "Scream", preload=True, post_rough=(0.55, 72.0, 0.5)),
-    e("game.stinger", "game/stinger", 4, 2, G.stinger, None, ("peak", -1.5), "戦慄", "Dread", preload=True),
-    e("game.riser", "game/riser", 2, 2, G.riser, None, ("peak", -1.5), None, None),
-    e("game.capture", "game/capture", 1, 2, G.capture, None, ("peak", -1.0), "連れ去られる", "You are taken"),
-    e("game.wake", "game/wake", 1, 2, G.wake, None, ("peak", -3), "意識が戻る", "You come to"),
-    e("game.checkpoint", "game/checkpoint", 1, 2, G.checkpoint, None, ("peak", -4), None, None),
-    e("game.area", "game/area", 1, 2, G.area, None, ("peak", -2), None, None),
-    e("game.fog_lift", "game/fog_lift", 1, 2, G.fog_lift, None, ("peak", -3), "霧が晴れていく", "The fog lifts"),
-    e("game.loop", "game/loop", 1, 2, G.loop, None, ("peak", -3), "「…おかえり」", "\"...Welcome back.\""),
-    e("game.car", "game/car", 1, 2, G.car, None, ("peak", -2), "車のエンジンがかかる", "The car starts"),
-    e("game.title_hit", "game/title_hit", 1, 2, G.title_hit, None, ("peak", -1.5), None, None),
-    e("game.kamikakushi", "game/kamikakushi", 1, 2, G.kamikakushi, None, ("peak", -1.5), None, None),
-    # ------------------------------------------------------------ extras (not in DESIGN.md section 7)
-    e("amb.stone_grind", "amb/stone_grind", 2, 1, A.stone_grind, 16, ("peak", -3), "石の擦れる音", "Stone grinds"),
-    e("amb.bridge_creak", "amb/bridge_creak", 4, 1, A.bridge_creak, 16, ("peak", -3), "吊り橋が軋む", "The bridge creaks"),
-    e("amb.under_bridge", "amb/under_bridge", 2, 1, A.under_bridge, 24, ("peak", -3), "橋の下で何かが動く", "Something moves under the bridge"),
-    e("phone.mitsuketa", "phone/mitsuketa", 1, 2, P.mitsuketa, None, ("peak", -4), "スマホから「みつけた」", "The phone whispers: \"Found you\""),
-    e("oyama.recoil", "oyama/recoil", 2, 1, MO.oyama_recoil, 64, ("peak", -1.5), "御山様が怯む", "It recoils from the fire"),
+    e("game.jumpscare", 3, 2, f"{G}:jumpscare", None, ("dense", -7.5, -1.0), "絶叫", "Scream", preload=True, post_rough=(0.55, 72.0, 0.5)),
+    e("game.stinger", 4, 2, f"{G}:stinger", None, ("peak", -1.5), "戦慄", "Dread", preload=True),
+    e("game.riser", 2, 2, f"{G}:riser", None, ("peak", -1.5), "高まる緊張", "Rising tension", sub=False),
+    e("game.caught", 1, 2, f"{G}:caught", None, ("peak", -1.0), "連れ去られる", "You are taken"),
+    e("game.wake", 1, 2, f"{G}:wake", None, ("peak", -3), "意識が戻る", "You come to"),
+    e("game.captured", 1, 2, f"{G}:captured", None, ("peak", -6.5), "名前が浮かんだ", "A name appears"),
+    e("game.closing", 1, 2, f"{G}:closing", None, ("peak", -1), "閉店の時間", "Closing time"),
+    e("game.title_hit", 1, 2, f"{G}:title_hit", None, ("peak", -1.5), "タイトル", "Title", sub=False),
+    e("game.release", 1, 2, f"{G}:release", None, ("peak", -2), "霊が光に還る", "A spirit is sent on"),
+    e("game.dawn", 1, 2, f"{G}:dawn", None, ("peak", -5.5), "夜が明ける", "Dawn breaks"),
+    e("game.ending_bad", 1, 2, f"{G}:ending_bad", None, ("peak", -2), "「いらっしゃいませ。……お一人様ですね」", "\"Welcome... Just one, is it?\""),
 ]
 
-EXTRAS = ["amb.stone_grind", "amb.bridge_creak", "amb.under_bridge", "phone.mitsuketa", "oyama.recoil"]
+EXTRAS = []
 
 
 def files(entry):
     if entry.count == 1:
         return [(entry.path, 1)]
     return [(f"{entry.path}_{i}", i) for i in range(1, entry.count + 1)]
+
+
+_FN = {}
+
+
+def resolve(entry):
+    """The generator function of an entry."""
+    if callable(entry.fn):
+        return entry.fn
+    f = _FN.get(entry.fn)
+    if f is None:
+        mod, name = entry.fn.split(":")
+        f = getattr(importlib.import_module(mod), name)
+        _FN[entry.fn] = f
+    return f

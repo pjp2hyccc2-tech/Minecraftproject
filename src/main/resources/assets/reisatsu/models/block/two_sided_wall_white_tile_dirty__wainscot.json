@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "reisatsu:block/wainscot",
+    "north": "reisatsu:block/white_tile_dirty",
+    "south": "reisatsu:block/wainscot",
+    "east": "reisatsu:block/wainscot",
+    "west": "reisatsu:block/wainscot",
+    "up": "reisatsu:block/wainscot",
+    "down": "reisatsu:block/wainscot"
+  }
+}

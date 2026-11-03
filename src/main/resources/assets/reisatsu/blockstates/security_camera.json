@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,on=false,seen=false": {
+      "model": "reisatsu:block/security_camera"
+    },
+    "facing=north,on=false,seen=true": {
+      "model": "reisatsu:block/security_camera"
+    },
+    "facing=north,on=true,seen=false": {
+      "model": "reisatsu:block/security_camera_on"
+    },
+    "facing=north,on=true,seen=true": {
+      "model": "reisatsu:block/security_camera_on_seen"
+    },
+    "facing=east,on=false,seen=false": {
+      "model": "reisatsu:block/security_camera",
+      "y": 90
+    },
+    "facing=east,on=false,seen=true": {
+      "model": "reisatsu:block/security_camera",
+      "y": 90
+    },
+    "facing=east,on=true,seen=false": {
+      "model": "reisatsu:block/security_camera_on",
+      "y": 90
+    },
+    "facing=east,on=true,seen=true": {
+      "model": "reisatsu:block/security_camera_on_seen",
+      "y": 90
+    },
+    "facing=south,on=false,seen=false": {
+      "model": "reisatsu:block/security_camera",
+      "y": 180
+    },
+    "facing=south,on=false,seen=true": {
+      "model": "reisatsu:block/security_camera",
+      "y": 180
+    },
+    "facing=south,on=true,seen=false": {
+      "model": "reisatsu:block/security_camera_on",
+      "y": 180
+    },
+    "facing=south,on=true,seen=true": {
+      "model": "reisatsu:block/security_camera_on_seen",
+      "y": 180
+    },
+    "facing=west,on=false,seen=false": {
+      "model": "reisatsu:block/security_camera",
+      "y": 270
+    },
+    "facing=west,on=false,seen=true": {
+      "model": "reisatsu:block/security_camera",
+      "y": 270
+    },
+    "facing=west,on=true,seen=false": {
+      "model": "reisatsu:block/security_camera_on",
+      "y": 270
+    },
+    "facing=west,on=true,seen=true": {
+      "model": "reisatsu:block/security_camera_on_seen",
+      "y": 270
+    }
+  }
+}

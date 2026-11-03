@@ -1,35 +1,20 @@
 #!/usr/bin/env python3
-"""Renders every prop block model (and the held item models in first / third person) to contact sheets.
+"""Renders every REISATSU prop block model to contact sheets (two views each) -> tools/art/preview/props_<group>.png.
 
-usage: python3 tools/art/model_preview.py [name ...]   -> tools/art/preview/props.png, held_items.png
+Also the texture lookup used by other preview tools (gen_entities.py): tex_lookup('reisatsu:block/dining_floor').
+usage: python3 tools/art/model_preview.py [glob ...]
 """
+import fnmatch
 import json
-import math
 import os
 import sys
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import numpy as np
-from PIL import Image, ImageDraw
+from common import PREVIEW, MODEL_ROOT  # noqa: E402
+import rs_render  # noqa: E402
 
-import gen_textures as G  # noqa: E402
-import render3d as R  # noqa: E402
-from common import PREVIEW, MODEL_ROOT, font, FONT_LABEL  # noqa: E402
-
-_TEX = {}
-
-
-def tex_lookup(ref):
-    name = ref.split(':', 1)[1] if ':' in ref else ref
-    if name not in _TEX:
-        if name in G.REGISTRY:
-            _TEX[name] = G.render(name).astype(np.float64)
-        else:
-            from PIL import Image as I
-            p = os.path.join(G.TEX_ROOT, name + '.png')
-            _TEX[name] = np.asarray(I.open(p).convert('RGBA'), np.float64)
-    return _TEX[name]
+tex_lookup = rs_render.tex
 
 
 def load_model(kind, name):
@@ -37,63 +22,45 @@ def load_model(kind, name):
         return json.load(f)
 
 
-def render_block(model, yaw=-35.0, pitch=28.0, size=256, ground=True, bg=(46, 48, 54)):
-    c = np.array([0.5, 0.5, 0.5])
-    d = 3.0
-    eye = c + d * np.array([math.sin(math.radians(yaw)) * math.cos(math.radians(pitch)),
-                            math.sin(math.radians(pitch)),
-                            -math.cos(math.radians(yaw)) * math.cos(math.radians(pitch))])
-    cv = R.Canvas(size, size, R.look_at(eye, c), ortho=0.95, bg=bg)
-    if ground:
-        g = tex_lookup('reisatsu:block/forest_floor_top')
-        for gx in (-1, 0, 1):
-            for gz in (-1, 0, 1):
-                pts = np.array([(gx, 0, gz), (gx + 1, 0, gz), (gx + 1, 0, gz + 1), (gx, 0, gz + 1)], float)
-                cv.quad(pts, R._uv_corners([0, 0, 16, 16]), g * np.array([0.55, 0.55, 0.55, 1.0]), shade=1.0)
-    R.draw_block_model(cv, model, tex_lookup)
-    cv.finish()
-    return np.clip(cv.color, 0, 255)
+GROUPS = {
+    'dining': ['booth_*', 'restaurant_*', 'call_button*', 'menu_stand', 'menu_scattered_*', 'water_glass_*',
+               'broken_plate', 'pendant_lamp*', 'exit_sign*', 'window_blind*', 'planter'],
+    'waiting': ['counter', 'register*', 'service_bell', 'cake_case', 'business_phone*', 'reservation_book',
+                'capsule_machine', 'waiting_bench', 'magazine_rack', 'umbrella_stand', 'notice_board', 'call_display_*',
+                'drink_bar*', 'coffee_machine', 'ice_machine', 'cup_shelf', 'soup_warmer', 'server_station', 'kids_*',
+                'toy_shelf', 'stuffed_bear', 'high_chair'],
+    'kitchen': ['gas_range*', 'fryer*', 'griddle', 'kitchen_*', 'exhaust_hood', 'pot_shelf', 'dish_rack', 'prep_table',
+                'cutting_board', 'dishwasher*', 'pass_*', 'walkin_shelf', 'frost*'],
+    'back': ['locker_*', 'time_recorder', 'staff_table', 'folding_chair', 'bulletin_board', 'cardboard_boxes',
+             'cleaning_cart', 'filing_cabinet', 'safe', 'crt_tv*', 'office_*', 'pc', 'security_*', 'breaker_panel*'],
+    'restroom': ['restroom_*', 'mirror*', 'toilet', 'urinal', 'stall_wall', 'hand_dryer*', 'paper_towel'],
+    'exterior': ['vending_machine_*', 'pole_sign_pole*', 'pole_sign_tile_5*', 'roof_sign_tile_3*', 'menu_board_*',
+                 'bike_rack', 'trash_station', 'ac_unit', 'gas_cylinder', 'dumpster', 'wheel_stop', 'outdoor_planter',
+                 'street_lamp_*', 'utility_pole_*', 'guardrail', 'chevron_sign', 'curve_mirror', 'traffic_light*',
+                 'flower_offering', 'note_paper', 'door_switch*', 'auto_door_rail', 'swing_door_frame'],
+}
 
 
-def sheet(items, out, cols=6, cell=256):
-    f = font(FONT_LABEL, 12)
-    rows = (len(items) + cols - 1) // cols
-    W, H = cols * (cell + 6) + 6, rows * (cell + 20) + 6
-    img = Image.new('RGB', (W, H), (18, 16, 18))
-    d = ImageDraw.Draw(img)
-    for i, (label, arr) in enumerate(items):
-        r, c = divmod(i, cols)
-        x, y = 6 + c * (cell + 6), 6 + r * (cell + 20)
-        img.paste(Image.fromarray(arr.astype(np.uint8)), (x, y))
-        d.text((x, y + cell + 2), label, fill=(220, 210, 200), font=f)
-    img.save(out)
+def main(args):
+    import rs_modules  # noqa: F401
+    import rs_kit
+    names = sorted(rs_kit.MODELS)
+    for n in ('register', 'register_open', 'service_bell', 'business_phone', 'business_phone_ringing',
+              'reservation_book', 'drink_bar', 'drink_bar_pouring', 'coffee_machine', 'ice_machine', 'cup_shelf',
+              'soup_warmer'):
+        rs_render.SUPPORT[n] = 'counter'
+    rs_render.SUPPORT['cutting_board'] = 'prep_table'
+    rs_render.SUPPORT['pc'] = 'office_desk'
+    out = []
+    for g, pats in GROUPS.items():
+        if args and not any(fnmatch.fnmatch(g, a) for a in args):
+            continue
+        sel = [n for n in names if any(fnmatch.fnmatch(n, p) for p in pats)]
+        out.append(rs_render.props_sheet(sel, os.path.join(PREVIEW, f'props_{g}.png'), views=((-35, 26), (145, 22)),
+                                         cols=8, cell=200, title=f'REISATSU props: {g} (front 3/4, back 3/4)'))
     return out
 
 
-PROPS = ['lost_bag', 'lost_bag_open', 'memo', 'memo_wall', 'logbook', 'notice_board', 'signpost', 'jizo', 'hokora',
-         'hokora_offered', 'wara_ningyo', 'rope_anchor', 'rope_anchor_roped', 'climbing_rope', 'public_phone',
-         'bus_stop', 'tunnel_lamp', 'tunnel_lamp_lit', 'guardrail', 'key_hook', 'key_hook_empty', 'car_door',
-         'blue_tarp', 'fallen_leaves']
-
-
-def props(names=None):
-    items = []
-    for n in (names or PROPS):
-        m = load_model('block', n)
-        items.append((n, render_block(m)))
-        items.append((n + ' (back)', render_block(m, yaw=145, pitch=22)))
-    return sheet(items, os.path.join(PREVIEW, 'props.png'), cols=6, cell=256)
-
-
-def main():
-    names = [a for a in sys.argv[1:] if not a.startswith('-')]
-    print(props(names or None))
-    try:
-        import held_preview
-        print(held_preview.main())
-    except ImportError:
-        pass
-
-
 if __name__ == '__main__':
-    main()
+    for p in main(sys.argv[1:]):
+        print(p)

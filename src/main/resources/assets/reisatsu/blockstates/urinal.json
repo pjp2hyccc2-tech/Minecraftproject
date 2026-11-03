@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/urinal"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/urinal",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/urinal",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/urinal",
+      "y": 270
+    }
+  }
+}

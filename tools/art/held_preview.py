@@ -17,8 +17,17 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 import render3d as R  # noqa: E402
-from model_preview import tex_lookup, load_model  # noqa: E402
 from common import PREVIEW, font, FONT_LABEL  # noqa: E402
+import rs_modules  # noqa: E402,F401
+import rs_kit  # noqa: E402
+import rs_render  # noqa: E402
+
+tex_lookup = rs_render.tex
+
+
+def load_model(kind, name):
+    m = rs_kit.ITEM_MODELS[name]
+    return m() if callable(m) else m
 
 
 def quat_xyz(rx, ry, rz):
@@ -54,16 +63,16 @@ def draw_item(cv, item_model, ctx, left, M_pre):
 
 def first_person(item_model, left=False, w=480, h=270, equip=0.0):
     cv = R.Canvas(w, h, np.eye(4), fov=70, bg=(28, 31, 38))
-    # a ground plane + a few trunks for scale (camera at eye height 1.62)
-    floor = tex_lookup('reisatsu:block/forest_floor_top') * np.array([0.5, 0.5, 0.5, 1])
+    # the dining floor + a few booth-height wall blocks for scale (camera at eye height 1.62)
+    floor = tex_lookup('reisatsu:block/dining_floor') * np.array([0.5, 0.5, 0.5, 1])
     for gx in range(-6, 6):
         for gz in range(-12, 0):
             pts = np.array([(gx, -1.62, gz), (gx + 1, -1.62, gz), (gx + 1, -1.62, gz + 1), (gx, -1.62, gz + 1)], float)
             cv.quad(pts, R._uv_corners([0, 0, 16, 16]), floor)
-    bark = tex_lookup('reisatsu:block/cedar_log') * np.array([0.6, 0.6, 0.6, 1])
+    wall = tex_lookup('reisatsu:block/wallpaper') * np.array([0.6, 0.6, 0.6, 1])
     for (tx, tz) in ((-3, -7), (2, -9), (5, -5)):
         for ty in range(0, 4):
-            R.cube(cv, (tx, -1.62 + ty, tz), lambda f: bark)
+            R.cube(cv, (tx, -1.62 + ty, tz), lambda f: wall)
     side = -1 if left else 1
     M_pre = R.affine(None, [side * 0.56, -0.52 + equip * -0.6, -0.72])
     draw_item(cv, item_model, 'firstperson', left, M_pre)
@@ -122,7 +131,7 @@ def third_person(item_model, left=False, w=320, h=320, yaw=-30, pitch=15):
     return np.clip(cv.color, 0, 255)
 
 
-ITEMS = ['flashlight', 'flashlight_on', 'flashlight_low', 'phone', 'phone_light', 'phone_camera', 'flare', 'flare_lit']
+ITEMS = ['reisha_camera', 'reisha_camera_finder', 'flashlight', 'flashlight_on']
 
 
 def main(names=None):
