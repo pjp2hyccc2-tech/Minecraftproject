@@ -7,6 +7,8 @@
 //  (lamps behind a wall are flagged and ranked last) and keeps 4.
 //  Score = level - |dx| - |dz| - a vertical penalty (distance from the camera's height band).
 //    out: colortex7 texel (x, z) = 4 packed lamps (lib/emitters.glsl tablePack)
+//  prepare1 also writes the frame's list of outdoor lamps for the air (row 0 right of the
+//  table, airListTexel; read by lib/emitters.glsl airLampsGather).
 // =====================================================================================
 #include "/lib/header.glsl"
 
@@ -39,16 +41,119 @@ void consider(float score, float enc) {
     bestE[i] = enc;
 }
 
-// lamps far above or below the camera's band reach fewer of the surfaces that are seen
-float verticalPenalty(int y) {
-    float ref = cameraPosition.y - 0.6;
-    return max(abs(float(y) + 0.5 - ref) - 2.5, 0.0) * 0.6;
+#if defined WORLD_HIDAMARI && defined TABLE_X
+// ---- the outdoor lamps of the air: one list for the whole frame ---------------------------
+// The glow of the lamps in the mist must not depend on which lamps the columns along a ray
+// happen to list (that drew walls and wedges of light across the sky): the outdoor lamps
+// within ~40 blocks are gathered here once - from the z-lines (TABLE_Z) of six rows of
+// columns, overlapping, deduplicated - a sign's blocks merged into a few bright entries, and
+// ranked by how much they matter from the camera. The weakest kept ones fade out before they
+// would drop off the list. Every texel of the list computes the same list and writes its part.
+#define AIR_WORK 24
+#define AIR_SEEN 64
+vec4 airListTexel(int slot) {
+    ivec2 cc = ivec2(floor(cameraPosition.xz)) - emapOrigin();
+    int refY = tableRefY();
+    int seen[AIR_SEEN];
+    int nSeen = 0;
+    vec3 eSum[AIR_WORK];
+    float eN[AIR_WORK];
+    int eType[AIR_WORK];
+    int eLevel[AIR_WORK];
+    int nE = 0;
+    for (int r = 0; r < 6; r++) {
+        int zg = cc.y - 30 + r * 12;
+        if (zg < 0 || zg >= EMAP_TILE) continue;
+        for (int dx = -40; dx <= 40; dx++) {
+            int x = cc.x + dx;
+            if (x < 0 || x >= EMAP_TILE) continue;
+            vec4 zt = texelFetch(colortex7, ivec2(x, zg), 0);
+            for (int k = 0; k < 4; k++) {
+                float v = zt[k];
+                if (abs(v) < 0.5) continue;
+                int c = int(abs(v) + 0.5);
+                int type = c & 31;
+                if (!emitterOutdoorType(type) || !emitterCasts(type)) continue;
+                int level = (c >> 5) & 15;
+                int yrel = (c >> 9) & 31;
+                int z = zg + ((c >> 19) & 31) - 15;
+                int key = x | (z << 7) | (yrel << 14);
+                bool dup = false;
+                for (int q = 0; q < AIR_SEEN; q++) {
+                    if (q >= nSeen) break;
+                    if (seen[q] == key) { dup = true; break; }
+                }
+                if (dup) continue;
+                if (nSeen < AIR_SEEN) { seen[nSeen] = key; nSeen++; }
+                vec3 pb = vec3(float(x), float(yrel), float(z));
+                // a sign is many blocks: its neighbours of one type become one bright entry
+                int m = -1;
+                for (int e = 0; e < AIR_WORK; e++) {
+                    if (e >= nE) break;
+                    if (eType[e] != type) continue;
+                    vec3 d = abs(eSum[e] / eN[e] - pb);
+                    if (max(d.x, max(d.y, d.z)) < 2.6) { m = e; break; }
+                }
+                if (m >= 0) {
+                    eSum[m] += pb;
+                    eN[m] += 1.0;
+                    eLevel[m] = max(eLevel[m], level);
+                } else if (nE < AIR_WORK) {
+                    eSum[nE] = pb;
+                    eN[nE] = 1.0;
+                    eType[nE] = type;
+                    eLevel[nE] = level;
+                    nE++;
+                }
+            }
+        }
+    }
+    // how much each matters from here: its strength over (distance^2 + 100)
+    float imp[AIR_WORK];
+    for (int e = 0; e < AIR_WORK; e++) {
+        imp[e] = 0.0;
+        if (e >= nE) continue;
+        vec3 p = eSum[e] / eN[e];
+        vec3 wpos = vec3(float(emapOrigin().x) + p.x, float(refY) + p.y, float(emapOrigin().y) + p.z) + 0.5;
+        vec3 d = wpos - cameraPosition;
+        // gone before the edge of the gathered window
+        float edge = 1.0 - smoothstep(30.0, 39.0, max(abs(p.x - float(cc.x)), abs(p.z - float(cc.y))));
+        imp[e] = EM_GAIN[clamp(eType[e], 0, EM_COUNT - 1)] * eN[e] / (dot(d, d) + 100.0) * edge;
+    }
+    // the best AIR_OUT, strongest first; the best one left out sets the fade
+    int pick = -1;
+    float pickImp = 0.0;
+    float rejected = 0.0;
+    int want = slot < AIR_OUT ? slot : slot - AIR_OUT;
+    for (int n = 0; n <= AIR_OUT; n++) {
+        int bi = -1;
+        float bv = 0.0;
+        for (int e = 0; e < AIR_WORK; e++) {
+            if (e >= nE) break;
+            if (imp[e] > bv) { bv = imp[e]; bi = e; }
+        }
+        if (bi < 0) break;
+        if (n == AIR_OUT) { rejected = bv; break; }
+        if (n == want) { pick = bi; pickImp = bv; }
+        imp[bi] = -1.0;
+    }
+    if (pick < 0) return vec4(0.0);
+    if (slot < AIR_OUT) return vec4(eSum[pick] / eN[pick], float(eType[pick]));
+    float w = rejected > 0.0 ? smoothstep(rejected, rejected * 1.8, pickImp) : 1.0;
+    w *= smoothstep(0.0, 1e-4, pickImp);
+    return vec4(eN[pick], float(eLevel[pick]), w, 0.0);
 }
+#endif
 
 void main() {
     ivec2 cell = ivec2(gl_FragCoord.xy);
     vec4 outv = vec4(0.0);
 #ifdef WORLD_HIDAMARI
+  #ifdef TABLE_X
+    if (cell.y == 0 && cell.x >= AIR_LIST_X && cell.x < AIR_LIST_X + 2 * AIR_OUT) {
+        outv = airListTexel(cell.x - AIR_LIST_X);
+    }
+  #endif
     if (cell.x < EMAP_TILE && cell.y < EMAP_TILE) {
         for (int i = 0; i < KEEP; i++) { bestS[i] = 0.0; bestE[i] = 0.0; }
         int refY = tableRefY();
@@ -67,7 +172,7 @@ void main() {
                 if (yrel < 0 || yrel > 31) continue;
                 int level = emapLampLevel(t);
                 if (level <= 0) level = int(EM_LEVEL[type]);
-                float score = float(level) - abs(float(dz)) - verticalPenalty(by);
+                float score = float(level) - abs(float(dz)) - tableVerticalPenalty(float(by));
                 if (score <= 0.0) continue;
                 // tiny bias: brighter lamps first on equal score
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, 0, dz, false));
@@ -89,7 +194,7 @@ void main() {
                 int level = (c >> 5) & 15;
                 int yrel = (c >> 9) & 31;
                 int dz = ((c >> 19) & 31) - 15;
-                float score = float(level) - abs(float(dz)) - abs(float(dx)) - verticalPenalty(yrel + refY);
+                float score = float(level) - abs(float(dz)) - abs(float(dx)) - tableVerticalPenalty(float(yrel + refY));
                 if (score <= 0.0) continue;
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, dx, dz, false));
             }

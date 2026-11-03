@@ -153,6 +153,18 @@ def load_source(folder, prog, ext, overrides, flip=False):
     return lines[:1] + header + lines[1:]
 
 
+def buffer_sizes(w, h):
+    """size.buffer.colortexN=W H from shaders.properties (absolute texels, or a scale <= 1)"""
+    sizes = {}
+    with open(os.path.join(ROOT, "shaders.properties"), encoding="utf-8") as fh:
+        for line in fh:
+            m = re.match(r"\s*size\.buffer\.colortex(\d+)\s*=\s*([\d.]+)\s+([\d.]+)", line)
+            if m:
+                a, b = float(m.group(2)), float(m.group(3))
+                sizes[int(m.group(1))] = (int(a * w) if a <= 1.0 else int(a), int(b * h) if b <= 1.0 else int(b))
+    return sizes
+
+
 def buffer_directives():
     """colortexN formats and clear colours from lib/settings.glsl"""
     fmts, clears = {}, {}
@@ -446,7 +458,10 @@ class Renderer:
             self.units["colortex%d" % i] = 5 + i
         self.blend_off = read_blend_overrides()
         # colour buffers (ping-pong) + depth
-        self.tex = {i: [tex2d(w, h, f, glctx.GL_RGBA, glctx.GL_FLOAT), tex2d(w, h, f, glctx.GL_RGBA, glctx.GL_FLOAT)] for i, f in self.formats.items()}
+        self.sizes = {i: (w, h) for i in self.formats}
+        self.sizes.update({i: v for i, v in buffer_sizes(w, h).items() if i in self.formats})
+        self.tex = {i: [tex2d(*self.sizes[i], f, glctx.GL_RGBA, glctx.GL_FLOAT), tex2d(*self.sizes[i], f, glctx.GL_RGBA, glctx.GL_FLOAT)]
+                    for i, f in self.formats.items()}
         self.cur = {i: 0 for i in self.formats}
         self.depth0 = tex2d(w, h, glctx.GL_DEPTH_COMPONENT32F, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT, filt=glctx.GL_NEAREST)
         self.depth1 = tex2d(w, h, glctx.GL_DEPTH_COMPONENT32F, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT, filt=glctx.GL_NEAREST)
@@ -494,7 +509,9 @@ class Renderer:
         st = gl.glCheckFramebufferStatus(glctx.GL_FRAMEBUFFER)
         if st != glctx.GL_FRAMEBUFFER_COMPLETE:
             raise RuntimeError("framebuffer incomplete 0x%x" % st)
-        gl.glViewport(0, 0, self.w, self.h)
+        # like Iris: a pass renders at the size of its targets (size.buffer)
+        vw, vh = self.sizes[targets[0]] if targets else (self.w, self.h)
+        gl.glViewport(0, 0, vw, vh)
 
     def bind_samplers(self, prog, mip=()):
         gl.glUseProgram(prog.id)
@@ -649,7 +666,8 @@ class Renderer:
 
     def read_float(self, idx):
         t = self.tex[idx][self.cur[idx]]
-        buf = np.zeros((self.h, self.w, 4), np.float32)
+        bw, bh = self.sizes[idx]
+        buf = np.zeros((bh, bw, 4), np.float32)
         gl.glBindTexture(glctx.GL_TEXTURE_2D, t)
         gl.glGetTexImage(glctx.GL_TEXTURE_2D, 0, glctx.GL_RGBA, glctx.GL_FLOAT, buf.ctypes.data)
         return buf
@@ -832,11 +850,15 @@ SHOTS = {
     "r_dining_beam": shot(21.5, 14.5, -35.0, 8.0, fear=0.2, held=FLASHLIGHT),
     "r_dining_bar": shot(24.5, 16.5, 132.0, 10.0, fear=0.2),
     "r_register": shot(19.5, 23.5, 95.0, 8.0, fear=0.2),
+    # the roof sign outside, falling in through the blinds onto the booths by the windows
+    "r_blinds": shot(24.5, 24.5, -15.0, 28.0, fear=0.2),
     "r_dining_lit": shot(21.5, 14.5, -35.0, 8.0, fear=0.0, circuits=dict(dining=True)),
     # the wet lot at night: the pole sign, the vending machines, the sodium lamps, puddles
     "r_lot": shot(28.5, 44.5, 150.0, 4.0, fear=0.1),
     "r_lot_sign": shot(26.5, 38.5, -70.0, -6.0, fear=0.1),
     "r_lot_vending": shot(13.5, 40.5, 155.0, 10.0, fear=0.1),
+    # the same through the finder: the lights must keep their faces (no blown-out boxes)
+    "r_lot_finder": shot(13.5, 40.5, 155.0, 10.0, fear=0.1, held=FINDER),
     # the kitchen under its fluorescent tubes: steel, the blue flames, the heat lamp
     "r_kitchen": shot(31.5, 7.5, 125.0, 12.0, fear=0.1, circuits=dict(kitchen=True)),
     # the women's restroom: the dark mirror over the sinks, the cavity and the woman behind it
@@ -994,6 +1016,7 @@ def main():
             buf = r.read_float(idx)[::-1, :, :3]
             m = max(float(np.nanmax(buf)), 1e-6)
             write_png(os.path.join(args.out, "%s_ct%d.png" % (name, idx)), np.clip(buf / m * 255.0, 0, 255).astype(np.uint8))
+            np.save(os.path.join(args.out, "%s_ct%d.npy" % (name, idx)), buf)
             print("    colortex%d max %.4f" % (idx, m))
         if args.dump_emap and folder == HIDAMARI:
             em = r.read_shadow_color()

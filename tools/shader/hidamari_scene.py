@@ -117,11 +117,20 @@ def build(circuits=None, puddle_seed=7):
     for x in range(9, 40):
         for y in range(65, 69):
             w.set(x, y, 30, cube("shop_window", opaque=False, layer="translucent"))
-        if x % 2 == 0:
-            w.set(x, 68, 29, prop("window_blind", facing="north", state={"closed": "false"}))
+        # the blinds as the world hangs them: the top row closed, open around tables 5..7,
+        # lowered further at some windows
+        open_ = 27 <= x <= 35
+        w.set(x, 68, 29, prop("window_blind", "window_blind" if open_ else "window_blind_closed", facing="north",
+                              state={"closed": "false" if open_ else "true"}))
+        if not open_ and x >= 15 and x % 7 in (1, 2, 3):
+            w.set(x, 67, 29, prop("window_blind", "window_blind_closed", facing="north", state={"closed": "true"}))
     for z in range(12, 30):
         for y in range(65, 69):
             w.set(40, y, z, cube("shop_window", opaque=False, layer="translucent"))
+        if z <= 28:
+            w.set(39, 68, z, prop("window_blind", "window_blind_closed", facing="west", state={"closed": "true"}))
+            if z % 6 in (0, 1):
+                w.set(39, 67, z, prop("window_blind", "window_blind_closed", facing="west", state={"closed": "true"}))
     # the entrance: automatic doors (glass) at x 3..4
     for x in (3, 4):
         for y in range(65, 68):

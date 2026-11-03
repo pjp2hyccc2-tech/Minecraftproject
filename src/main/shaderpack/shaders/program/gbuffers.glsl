@@ -337,8 +337,10 @@ void main() {
     receiveShadow = false;
     int item = currentRenderedItemId;
     if (item == ITEM_FLASHLIGHT) {
-        // the lens glows
-        float lens = smoothstep(0.55, 0.85, luma(albedo.rgb) + 0.25 * chroma(albedo.rgb));
+        // the lens glows - only on the face that looks forward, along the beam (in first
+        // person it faces away; the cream head and the body are not lights)
+        vec3 Nv = mat3(gbufferModelView) * N;
+        float lens = smoothstep(0.55, 0.85, luma(albedo.rgb) + 0.25 * chroma(albedo.rgb)) * smoothstep(0.5, 0.8, -Nv.z);
         emissive = lens;
         emission = lin * lens * FLASHLIGHT_COLOR * 3.0;
     } else if (item == ITEM_HANDLIGHT) {
@@ -418,7 +420,7 @@ void main() {
             vec3 tint = mix(vec3(0.80, 0.88, 0.86), lin, 0.35);
             color = shadeSurface(tint * 0.05, N, playerPos, lm, 1.0, vec3(0.0), MAT_WINDOW, 0.0, dither, true, 0.0, glow);
             color += handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(0.04, 0.04)) * (0.3 + cover * 1.5);
-            alpha = clamp(max(albedo.a * 0.55, 0.10) + F * 0.5 + cover * 0.12, 0.0, 0.85);
+            alpha = clamp(max(albedo.a * 0.40, 0.08) + F * 0.5 + cover * 0.12, 0.0, 0.85);
         } else if (mat == MAT_MIRROR) {
             // ---- the dark mirror: smoked glass over the cavity, smudges, cracks ------------
             vec2 pc = planeCoords(wp, Ngeo);

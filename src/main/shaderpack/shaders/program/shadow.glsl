@@ -11,6 +11,7 @@
 //      tile 4: the height of the topmost surface of every column (what is under a roof).
 //      tiles 5 / 6: full wall blocks at y 66 / 67 (their side faces snapped onto the footprint
 //        like the lamps): lamps behind a wall do not light this side.
+//      tile 7: the lowest window blind of each column (slats for the light from outside).
 // =====================================================================================
 #define PROGRAM_SHADOW
 #include "/lib/header.glsl"
@@ -25,7 +26,7 @@ in vec3 at_midBlock;
 out vec2 texcoord;
 out vec4 glcolor;
 #ifdef WORLD_HIDAMARI
-flat out int kind;          // 0 dropped, 1 lamp, 2 cover, 3 wall
+flat out int kind;          // 0 dropped, 1 lamp, 2 cover, 3 wall, 4 blind
 flat out int etype;
 flat out int blockY;
 flat out vec2 midUv;
@@ -77,6 +78,19 @@ void main() {
             texel = vec2(emapTileOffset(emapLayer(blk.y))) + cxz;
             depth = 1.0 - float(blk.y) / 256.0 - lightLevel * 1e-4;
             kind = 1;
+        }
+    } else if ((id == BLK_BLIND_CLOSED || id == BLK_BLIND_OPEN) && dot(at_midBlock, at_midBlock) > 1e-6) {
+        // window blinds: snapped onto the footprint; the lowest blind of a column wins
+        ivec3 blk = ivec3(floor(wp + at_midBlock / 64.0));
+        ivec2 c = blk.xz - org;
+        blockY = blk.y;
+        etype = id == BLK_BLIND_CLOSED ? 1 : 0;
+        if (c.x >= 0 && c.y >= 0 && c.x < EMAP_TILE && c.y < EMAP_TILE) {
+            int corner = gl_VertexID & 3;
+            vec2 cxz = vec2(c) + vec2((corner == 1 || corner == 2) ? 1.0 : 0.0, corner >= 2 ? 1.0 : 0.0);
+            texel = vec2(emapTileOffset(EMAP_BLIND)) + cxz;
+            depth = float(blk.y) / 256.0 - 0.5;
+            kind = 4;
         }
     } else if (abs(n.y) < 0.5) {
         // side faces: only those of full wall blocks at y 66 / 67 matter (the wall tiles);
@@ -157,6 +171,9 @@ void main() {
     } else if (kind == 3) {
         /* RENDERTARGETS: 0 */
         gl_FragData[0] = vec4(0.0, 0.0, 32.0 / 255.0, 1.0);
+    } else if (kind == 4) {
+        /* RENDERTARGETS: 0 */
+        gl_FragData[0] = vec4(float(etype), float(clamp(blockY - 32, 0, 255)) / 255.0, 16.0 / 255.0, 1.0);
     } else {
         vec4 c = texture(gtexture, texcoord) * glcolor;
         if (c.a < 0.1) discard;

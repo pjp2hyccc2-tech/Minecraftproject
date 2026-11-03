@@ -100,8 +100,13 @@ vec3 grade(vec3 c, float F, float D, float fm) {
 #else
     c *= mix(shadowTint, vec3(1.0), smoothstep(0.0, 0.42, l));
 #endif
-    c = max((c - 0.40) * contrast + 0.40, vec3(0.0));
-    return c;
+    // contrast about 0.40 that keeps black at black: a straight line here clipped everything
+    // under ~6/255 to zero and flattened the dark rooms (the booths and pillars must stay
+    // barely readable against the dark)
+    c = max(c, vec3(0.0));
+    vec3 below = 0.40 * pow(c / 0.40, vec3(contrast));
+    vec3 above = (c - 0.40) * contrast + 0.40;
+    return mix(below, above, step(0.40, c));
 }
 
 // the floor of the darkness (added after the vignette: the corners never go pure black)
@@ -232,11 +237,13 @@ void main() {
     vec3 b0 = texture(colortex3, uv).rgb;
     vec3 b1 = textureLod(colortex3, uv, 3.0).rgb;
     vec3 bloom = b0 * 0.65 + b1 * 0.55;
-    color += bloom * (BLOOM_STRENGTH * mix(0.45, 0.85, fm));
+    color += bloom * (BLOOM_STRENGTH * 0.45);
 #ifdef WORLD_HIDAMARI
     if (fm > 0.5) {
+        // halation: a wide, warm, soft fringe - around the lights, never over them (the wide
+        // blur minus the core: where the light itself is, there is nothing to add)
         vec3 b2 = textureLod(colortex3, uv, 4.5).rgb;
-        color += (b1 * 0.6 + b2 * 0.8) * vec3(1.0, 0.52, 0.40) * 0.45 * BLOOM_STRENGTH;
+        color += max(b2 - b0 * 0.6, vec3(0.0)) * vec3(1.0, 0.52, 0.40) * 0.16 * BLOOM_STRENGTH;
     }
   #ifdef AFTERIMAGE_ON
     // the spirits' cold glow lingers in the finder: a faint outline where they just were
@@ -257,13 +264,20 @@ void main() {
     // the eyes open in the dark restaurant, close a little under the sign and the lamps
     float eyeBlock = float(eyeBrightnessSmooth.x) / 240.0;
     exposure *= mix(1.45, 0.95, smoothstep(0.10, 0.80, eyeBlock));
-    exposure *= mix(1.0, 1.65, fm);                // the finder: a bright optical finder, the eye pressed to it
 #endif
     exposure *= 1.0 - 0.92 * saturate(darknessFactor * 0.55 + darknessLightFactor * 1.5);
 #ifndef WORLD_HIDAMARI
     exposure *= 1.0 - 0.6 * blindness;             // vanilla blindness outside the restaurant
 #endif
     color = min(color * exposure, vec3(64.0));
+#ifdef WORLD_HIDAMARI
+    // the finder: a bright optical finder, the eye pressed to it - it opens up the dark, the
+    // lights keep their faces (a boost that fades out over the highlights; still monotonic)
+    if (fm > 0.0) {
+        float lum = luma(color);
+        color *= mix(1.0, mix(1.65, 1.0, smoothstep(0.04, 0.60, lum)), fm);
+    }
+#endif
 
     float seed = float(frameCounter % 1024);
     float n1 = hash12(gl_FragCoord.xy + seed * vec2(13.37, 7.91));
@@ -326,6 +340,12 @@ void main() {
     grain *= 0.6;
 #endif
     color += grainN * grain * (1.0 - 0.6 * luma(color));
+    // the grain must not dig holes into the floor of the darkness either
+    float floorK = 0.5 * (1.0 - 0.9 * darknessFactor);
+#ifdef WORLD_HIDAMARI
+    floorK *= 1.0 - smoothstep(0.55, 1.0, C);
+#endif
+    color = max(color, liftColor(D) * floorK);
 
     color += (bayer8(gl_FragCoord.xy) - 0.5) / 255.0;
     if (any(isnan(color))) color = vec3(0.0);
