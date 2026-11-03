@@ -447,7 +447,7 @@ public final class Fixtures {
                 for (BlockPos p : lightsOfCircuit(c)) setBool(level, p, Props.LIT, on && !d.burst.contains(p));
                 if (c == Circuit.KITCHEN) {
                     // the heat lamps over the pass come on with the kitchen
-                    for (int x = 22; x <= 26; x++) setBool(level, new BlockPos(x, 65, 10), Props.LIT, on);
+                    for (int x = 22; x <= 26; x++) setBool(level, new BlockPos(x, 66, 10), Props.LIT, on);
                 }
             }
         }
@@ -513,7 +513,7 @@ public final class Fixtures {
             case "fryer" -> Layout.markers("fryer").forEach(m -> out.add(m.pos()));
             case "gas_range" -> Layout.markers("gas_range").forEach(m -> out.add(m.pos()));
             case "pass_lamp" -> {
-                for (int x = 22; x <= 26; x++) out.add(new BlockPos(x, 65, 10));
+                for (int x = 22; x <= 26; x++) if (x != RestaurantBuilder.PASS_BELL_X) out.add(new BlockPos(x, 66, 10));
             }
             case "phone" -> out.add(Layout.marker("phone").pos());
             case "monitors" -> Layout.markers("monitors").forEach(m -> out.add(m.pos()));

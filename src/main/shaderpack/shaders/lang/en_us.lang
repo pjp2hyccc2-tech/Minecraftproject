@@ -1,47 +1,76 @@
-# ReisatsuShaders 遭難 ―REISATSU― - option labels (English)
+# ReisatsuShaders - REISATSU - option labels (English)
 profile.LOW=Low
 profile.MEDIUM=Medium
 profile.HIGH=High
 profile.ULTRA=Ultra
-profile.comment=Quality preset. Medium is tuned for 60 fps on a mid-range GPU at 1080p. Low drops the light shafts and the beam shadows; High and Ultra sharpen shadows and smooth the fog.
+profile.comment=Quality preset. Medium is tuned for 60 fps on a mid-range GPU at 1080p. Low drops the reflections, the lamp shadows, the volumetric mist and the beam shadows; High and Ultra trace finer reflections and smoother mist.
 
+screen.LIGHTS=Lamps
+screen.LIGHTS.comment=The restaurant's light sources: every lamp lights in its own colour (exit signs, fluorescent tubes, sodium lamps ...).
+screen.REFLECT=Reflections & Wet
+screen.REFLECT.comment=The wet lot after the rain, the puddles, the glossy floors, the windows and the mirrors.
+screen.SPIRITS=Spirits
+screen.SPIRITS.comment=What the spirits leave in the picture.
 screen.FLASHLIGHT=Flashlight
-screen.FLASHLIGHT.comment=The beam of the flashlight, the phone light and the camera's infrared.
-screen.ATMOSPHERE=Fog & Air
-screen.ATMOSPHERE.comment=The drifting mist, moonlight shafts through the cedar canopy.
+screen.FLASHLIGHT.comment=The beam of the flashlight.
+screen.ATMOSPHERE=Mist & Air
+screen.ATMOSPHERE.comment=The low mist over the wet lot, the dust indoors, the lamps glowing in the air.
 screen.FEAR=Fear
 screen.FEAR.comment=What your heart rate and the nearness of danger do to the picture.
-screen.LIGHTING=Moon & Shadow
-screen.LIGHTING.comment=Moon shadows of the canopy and the wind in the trees.
 screen.POST=Image
 screen.POST.comment=Film grain, vignette, chromatic aberration and bloom.
+screen.SUN=Sun & Shadow
+screen.SUN.comment=Sun and moon shadows outside the restaurant's world (its sky is overcast).
 
 option.FLASH_REDUCTION=Flash Reduction
-option.FLASH_REDUCTION.comment=For photosensitive players: calmer flashlight flicker and battery stutter, no heartbeat-pulsing vignette, no breathing image, no camera interference.
+option.FLASH_REDUCTION.comment=For photosensitive players: calmer flicker of broken tubes, signs and the flashlight, no heartbeat-pulsing vignette, no breathing image, no focus hunting in the finder.
 option.BRIGHTNESS=Brightness
 option.BRIGHTNESS.comment=Overall brightness. Raise it if you cannot see anything (the horror gets a little weaker).
 
+option.COLORED_LIGHT=Coloured Lamps
+option.COLORED_LIGHT.comment=Every lamp lights its surroundings in its own colour, with its own flicker and highlights on glossy surfaces. Off: one warm block light.
+option.LIGHT_STRENGTH=Lamp Brightness
+option.LIGHT_STRENGTH.comment=How strongly the restaurant's lamps light the world.
+option.LIGHT_SHADOWS=Lamp Shadows
+option.LIGHT_SHADOWS.comment=Tables, chairs and planters throw shadows from the nearest lamp (screen space): deep darkness under the tables.
+option.LIGHT_FLICKER=Lamp Flicker
+option.LIGHT_FLICKER.comment=Broken tubes stutter, the old sign buzzes, the traffic light blinks, a dying street lamp fades out.
+
+option.REFLECTIONS=Reflections
+option.REFLECTIONS.comment=Screen-space reflections: the sign and the lamps mirrored in the wet lot and the puddles, the lights on the glossy floors, the windows, the mirrors.
+option.SSR_STEPS=Reflection Quality
+option.SSR_STEPS.comment=Steps per reflected ray. More reaches further and misses less, but is slower.
+option.WET_SURFACES=Wet After the Rain
+option.WET_SURFACES.comment=Everything under the open sky is wet: darker, glossy, with standing water in the dips and drips making rings.
+option.GLASS_DROPLETS=Rain on the Windows
+option.GLASS_DROPLETS.comment=Drops and run-down streaks left on the shop windows; they catch the light and bend what is behind them.
+
+option.SPIRIT_HAZE=Spirit Haze
+option.SPIRIT_HAZE.comment=Where a spirit stands the air wavers and colours split - even when your eyes cannot see it.
+option.AFTERIMAGE=Finder Afterimage
+option.AFTERIMAGE.comment=In the camera's finder the glowing spirits leave a short afterimage when they move.
+
 option.BEAM_STRENGTH=Beam Brightness
-option.BEAM_STRENGTH.comment=How brightly the flashlight and the phone light light the world.
+option.BEAM_STRENGTH.comment=How brightly the flashlight lights the world.
 option.BEAM_FOG=Visible Beam
-option.BEAM_FOG.comment=How strongly the beam glows in the fog and dust. 0 turns the visible cone off.
+option.BEAM_FOG.comment=How strongly the beam glows in the mist and dust. 0 turns the visible cone off.
 option.BEAM_SAMPLES=Beam Quality
 option.BEAM_SAMPLES.comment=Samples per pixel for the visible beam. More is smoother but slower.
 option.BEAM_SHADOWS=Beam Shadows
-option.BEAM_SHADOWS.comment=Trunks and rocks throw thin shadows in the flashlight beam (screen space).
+option.BEAM_SHADOWS.comment=Things throw thin shadows in the flashlight beam and under the camera flash (screen space).
 option.LENS_COOKIE=Reflector Rings
 option.LENS_COOKIE.comment=The faint rings and smudges a real flashlight reflector and lens put into the beam.
 option.DUST_MOTES=Dust in the Beam
-option.DUST_MOTES.comment=Specks of dust (and droplets in the forest) floating in the beam.
+option.DUST_MOTES.comment=Specks of dust (and fine droplets outside) floating in the beam.
 
-option.FOG_DENSITY=Fog Density
-option.FOG_DENSITY.comment=How thick the mist on the mountain is. Lower it to see further.
+option.FOG_DENSITY=Mist Density
+option.FOG_DENSITY.comment=How thick the mist and the dust are. Lower it to see further.
 option.FOG_NOISE=Drifting Mist
-option.FOG_NOISE.comment=The fog is uneven and drifts down the mountain in slow wisps. Off: smooth fog (faster).
-option.VOLUMETRIC_FOG=Moonlight Shafts
-option.VOLUMETRIC_FOG.comment=Moonlight falling through gaps in the canopy, scattered in the ground fog. Turn off if it is too slow.
-option.VOLUMETRIC_SAMPLES=Fog Quality
-option.VOLUMETRIC_SAMPLES.comment=Samples per pixel for the fog and the light shafts. More is smoother but slower.
+option.FOG_NOISE.comment=The mist is uneven and creeps across the lot in slow wisps. Off: smooth (faster).
+option.VOLUMETRIC_FOG=Volumetric Mist
+option.VOLUMETRIC_FOG.comment=The mist is marched through: the street lamps, the sign and the exit signs glow in it. Off: a cheaper estimate.
+option.VOLUMETRIC_SAMPLES=Mist Quality
+option.VOLUMETRIC_SAMPLES.comment=Samples per pixel for the mist. More is smoother but slower.
 
 option.FEAR_EFFECTS=Fear Effects
 option.FEAR_EFFECTS.comment=Strength of the heartbeat vignette, tunnel vision, colour fringes, breathing image and double vision.
@@ -49,24 +78,24 @@ option.PAREIDOLIA=Faces in the Dark
 option.PAREIDOLIA.comment=At very high fear, something like faces seems to form in the darkness at the edge of your vision.
 
 option.SHADOWS=Shadows
-option.SHADOWS.comment=Shadows cast by the moon (by the sun in the overworld).
+option.SHADOWS.comment=Shadows cast by the sun and the moon (outside the restaurant's overcast world).
 option.shadowMapResolution=Shadow Resolution
-option.shadowMapResolution.comment=Higher gives finer canopy shadows and light shafts but is slower.
+option.shadowMapResolution.comment=Higher gives finer sun shadows but is slower. (The restaurant's world uses its own small light map.)
 option.shadowDistance=Shadow Distance
-option.shadowDistance.comment=How far the moon shadows reach. The fog hides the far forest anyway.
+option.shadowDistance.comment=How far the sun shadows reach.
 option.SHADOW_FILTER=Shadow Quality
 option.SHADOW_FILTER.comment=Number of samples that soften the shadow edges.
 value.SHADOW_FILTER.1=Low (4)
 value.SHADOW_FILTER.2=Medium (8)
 value.SHADOW_FILTER.3=High (12)
-option.WAVING_PLANTS=Wind in the Trees
-option.WAVING_PLANTS.comment=The canopy sways in slow gusts (the moonlight patches move with it); ferns and grass stir.
+option.WAVING_PLANTS=Swaying Plants
+option.WAVING_PLANTS.comment=The hedges and the flowers stir very slightly in the still air after the rain.
 
 option.FILM_GRAIN=Film Grain
-option.FILM_GRAIN.comment=Grain noise. On the mountain it grows stronger with fear and danger.
+option.FILM_GRAIN.comment=Grain noise. Stronger with fear and danger, heavy in the camera's finder.
 option.VIGNETTE=Vignette
-option.VIGNETTE.comment=Darkens the corners. On the mountain it closes in with fear and beats with your heart.
+option.VIGNETTE.comment=Darkens the corners. It closes in with fear and beats with your heart; deep in the finder.
 option.CHROMATIC_ABERRATION=Chromatic Aberration
-option.CHROMATIC_ABERRATION.comment=Colour fringes at the edges. Stronger at high fear, in danger and through the camera.
+option.CHROMATIC_ABERRATION.comment=Colour fringes at the edges. Stronger at high fear, in danger and through the finder.
 option.BLOOM_STRENGTH=Bloom
-option.BLOOM_STRENGTH.comment=Soft glow of lamps, flames, the flare, eyes in the beam and the moon.
+option.BLOOM_STRENGTH.comment=Soft glow round the lamps, the signs, the embers; halation in the finder.

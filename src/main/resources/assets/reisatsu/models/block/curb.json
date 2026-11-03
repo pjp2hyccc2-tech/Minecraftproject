@@ -3,7 +3,7 @@
   "textures": {
     "particle": "reisatsu:block/curb",
     "side": "reisatsu:block/curb",
-    "top": "reisatsu:block/curb"
+    "top": "reisatsu:block/curb_top"
   },
   "elements": [
     {

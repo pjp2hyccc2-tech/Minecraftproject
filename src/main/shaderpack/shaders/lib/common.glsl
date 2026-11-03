@@ -140,3 +140,23 @@ float phaseHG(float cosTheta, float g) {
     float d = max(1.0 + g2 - 2.0 * g * cosTheta, 1e-4);
     return (1.0 - g2) / (4.0 * PI * d * sqrt(d));
 }
+
+// ---- specular ---------------------------------------------------------------------------
+// GGX specular lobe (normalised), roughness r (perceptual), widened by the lamp's angular size
+float ggxSpec(vec3 N, vec3 V, vec3 l, float r, float sizeAngle) {
+    float a = max(r * r, 0.002);
+    a = saturate(a + sizeAngle * 0.5);
+    vec3 H = normalize(l + V);
+    float nh = saturate(dot(N, H));
+    float nl = saturate(dot(N, l));
+    float nv = saturate(dot(N, V)) + 1e-3;
+    float a2 = a * a;
+    float d = nh * nh * (a2 - 1.0) + 1.0;
+    float D = a2 / (PI * d * d);
+    float k = a * 0.5;
+    float vis = 0.25 / ((nl * (1.0 - k) + k) * (nv * (1.0 - k) + k));
+    return D * vis * nl;
+}
+float fresnelSchlick(float f0, float cosT) {
+    return f0 + (1.0 - f0) * pow(1.0 - saturate(cosT), 5.0);
+}

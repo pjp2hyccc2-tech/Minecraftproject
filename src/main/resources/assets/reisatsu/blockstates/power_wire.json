@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/power_wire"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/power_wire",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/power_wire",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/power_wire",
+      "y": 270
+    }
+  }
+}

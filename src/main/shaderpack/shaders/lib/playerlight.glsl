@@ -1,33 +1,31 @@
 // =====================================================================================
-//  ReisatsuShaders - the lights the player carries, in either hand
-//    heldItemId  (main hand, drawn on the right)   heldItemId2 (off hand, on the left)
-//  flashlight / low flashlight / phone light / phone camera IR: spot lights from the hand,
-//  slightly below and to the side of the eye, aimed along the view; the flare: a red point
-//  light. The same functions light opaque surfaces (deferred), translucents (forward), the
-//  entity eyes (eyeshine) and the fog (composite), so every pass sees the same beam.
+//  ReisatsuShaders - the lights the player carries
+//    slot 0: main hand (heldItemId, drawn on the right)   slot 1: off hand (heldItemId2)
+//    slot 2: the camera FLASH (reisatsu:hidamari: blindness = flash strength)
+//  The flashlight is a spot light from the hand, slightly below and beside the eye, aimed
+//  along the view; the flash is a very bright point light at the camera's bulb (just above
+//  the eye) with an inverse-square falloff. The same functions light opaque surfaces
+//  (deferred), translucents (forward), the eyes layers and the air (composite), so every
+//  pass sees the same light.
 // =====================================================================================
 
 // item.properties (heldItemId / heldItemId2 / currentRenderedItemId)
 #define ITEM_FLASHLIGHT   10001   // reisatsu:flashlight_on
-#define ITEM_FLASH_LOW    10002   // reisatsu:flashlight_low   (dying battery: dim, orange, stutters)
-#define ITEM_PHONE_LIGHT  10003   // reisatsu:phone_light      (wide, weak, cold)
-#define ITEM_CAMERA       10004   // reisatsu:phone_camera     (night-vision camcorder + IR illuminator)
-#define ITEM_FLARE        10005   // reisatsu:flare_lit        (flickering red point light)
+#define ITEM_FINDER       10004   // reisatsu:reisha_camera_finder (the camera raised to the eye)
 #define ITEM_HANDLIGHT    10010   // vanilla torches / lanterns held in a hand
 
 #define LIGHT_NONE  0
 #define LIGHT_SPOT  1
 #define LIGHT_POINT 2
+#define LIGHT_FLASH 3
 
 // colours (linear)
-const vec3 FLASHLIGHT_COLOR = vec3(1.00, 0.83, 0.66);   // ~4300 K: warm white
-const vec3 FLASH_LOW_COLOR  = vec3(1.00, 0.52, 0.20);   // a dying battery: dim, orange
-const vec3 PHONE_COLOR      = vec3(0.80, 0.89, 1.00);   // cold white LED
-const vec3 FLARE_COLOR      = vec3(1.00, 0.085, 0.030); // road flare
-const vec3 IR_COLOR         = vec3(1.00, 1.00, 1.00);   // only exists in the camera image
+const vec3 FLASHLIGHT_COLOR = vec3(1.00, 0.84, 0.68);   // ~4300 K: warm white
+const vec3 FLASH_COLOR      = vec3(0.90, 0.95, 1.00);   // xenon flash: slightly cool white
+const float FLASH_POWER     = 16.0;
 
 struct HandLight {
-    int   type;      // LIGHT_NONE / LIGHT_SPOT / LIGHT_POINT
+    int   type;      // LIGHT_NONE / LIGHT_SPOT / LIGHT_POINT / LIGHT_FLASH
     vec3  pos;       // player space (camera-relative, world aligned)
     vec3  dir;       // beam axis, player space, unit
     vec3  right;     // cone cross-section basis (lens pattern)
@@ -38,24 +36,22 @@ struct HandLight {
     float halfDist;  // distance at which the light has fallen to one half
     float hot;       // hot spot width, fraction of the cone
     float cookie;    // lens / reflector pattern strength
-    float fog;       // scattering strength in the fog
+    float fog;       // scattering strength in the air
 };
 
-// ---- camera mode ----------------------------------------------------------------------
-bool holdsCamera() { return heldItemId == ITEM_CAMERA || heldItemId2 == ITEM_CAMERA; }
-float cameraMode() {
-#ifdef WORLD_MOUNTAIN
-    return (holdsCamera() || nightVision > 0.0) ? 1.0 : 0.0;
+// ---- the finder -------------------------------------------------------------------------
+bool holdsFinder() { return heldItemId == ITEM_FINDER || heldItemId2 == ITEM_FINDER; }
+// 1 while the camera is raised to the eye (reisatsu:hidamari)
+float finderMode() {
+#ifdef WORLD_HIDAMARI
+    return (holdsFinder() || nightVision > 0.0) ? 1.0 : 0.0;
 #else
-    return holdsCamera() ? 1.0 : 0.0;
+    return 0.0;
 #endif
 }
 
-bool isLightItem(int id) {
-    return id == ITEM_FLASHLIGHT || id == ITEM_FLASH_LOW || id == ITEM_PHONE_LIGHT
-        || id == ITEM_CAMERA || id == ITEM_FLARE || id == ITEM_HANDLIGHT;
-}
-bool anyHandLight() { return isLightItem(heldItemId) || isLightItem(heldItemId2); }
+bool isLightItem(int id) { return id == ITEM_FLASHLIGHT || id == ITEM_HANDLIGHT; }
+bool anyHandLight() { return isLightItem(heldItemId) || isLightItem(heldItemId2) || flash() > 0.0; }
 
 // ---- flicker --------------------------------------------------------------------------
 // danger > ~0.35: electrical dropouts in bursts, a faint buzz
@@ -74,26 +70,6 @@ float dangerFlicker(float t) {
     float f = mix(1.0, level, drop);
     return f * (1.0 - 0.10 * gate * (0.5 + 0.5 * sin(t * TAU * 29.0)));
 }
-// a dying battery: the light sags and stutters irregularly, sometimes nearly dies
-float lowBatteryStutter(float t) {
-    float sag = 0.70 + 0.30 * vnoise1(t * 1.3);
-    float slot = floor(t * 11.0);
-    float dip = step(0.80, hash11(slot * 2.17 + 5.0)) * (0.35 + 0.55 * hash11(slot * 3.3 + 1.0));
-    float outage = smoothstep(0.84, 0.93, vnoise1(t * 0.45 + 9.0));
-#ifdef FLASH_REDUCTION
-    dip *= 0.4;
-    outage *= 0.5;
-#endif
-    return sag * (1.0 - dip) * (1.0 - 0.88 * outage);
-}
-// the flare: violent, fast sputter
-float flareFlicker(float t) {
-    float n = vnoise1(t * 9.0) * 0.45 + vnoise1(t * 23.0 + 4.0) * 0.30 + vnoise1(t * 3.1 + 8.0) * 0.25;
-#ifdef FLASH_REDUCTION
-    n = 0.5 + (n - 0.5) * 0.4;
-#endif
-    return 0.70 + 0.60 * n;
-}
 
 // shaking hands: idle sway + a tremor that grows with fear (offset of the aim, radians)
 vec2 handWobble(float side) {
@@ -109,8 +85,7 @@ vec2 handWobble(float side) {
     return sway * (1.0 + F) + tremor * amp;
 }
 
-// ---- the light held in one hand ---------------------------------------------------------
-HandLight makeHandLight(int item, float side) {
+HandLight emptyLight() {
     HandLight L;
     L.type = LIGHT_NONE;
     L.pos = vec3(0.0);
@@ -124,13 +99,19 @@ HandLight makeHandLight(int item, float side) {
     L.hot = 0.3;
     L.cookie = 0.0;
     L.fog = 0.0;
+    return L;
+}
 
+// ---- the light held in one hand ---------------------------------------------------------
+HandLight makeHandLight(int item, float side) {
+    HandLight L = emptyLight();
     float t = frameTimeCounter;
     vec3 originV = vec3(0.0);
     float aim = 12.0;
-    if (item == ITEM_FLASHLIGHT || item == ITEM_FLASH_LOW) {
+    if (item == ITEM_FLASHLIGHT) {
         L.type = LIGHT_SPOT;
-        originV = vec3(0.30 * side, -0.27, -0.16);
+        // with the camera at the eye the lamp is held lower and further out
+        originV = finderMode() > 0.5 ? vec3(0.36 * side, -0.33, -0.10) : vec3(0.30 * side, -0.27, -0.16);
         aim = 14.0;
         L.tanOuter = 0.466;                     // ~25 degree half angle
         L.range = 30.0;
@@ -138,43 +119,7 @@ HandLight makeHandLight(int item, float side) {
         L.hot = 0.34;
         L.cookie = 1.0;
         L.fog = 1.0;
-        float f = dangerFlicker(t);
-        if (item == ITEM_FLASHLIGHT) {
-            L.color = FLASHLIGHT_COLOR * 14.0 * f;
-        } else {
-            L.color = FLASH_LOW_COLOR * 5.0 * f * lowBatteryStutter(t);
-            L.hot = 0.27;
-            L.range = 18.0;
-            L.halfDist = 3.2;
-        }
-        L.color *= BEAM_STRENGTH;
-    } else if (item == ITEM_PHONE_LIGHT) {
-        L.type = LIGHT_SPOT;
-        originV = vec3(0.20 * side, -0.21, -0.30);
-        aim = 8.0;
-        L.tanOuter = 0.84;                      // ~40 degrees: wide and weak
-        L.range = 12.0;
-        L.halfDist = 1.7;
-        L.hot = 0.65;
-        L.fog = 0.7;
-        L.color = PHONE_COLOR * 3.2 * mix(1.0, dangerFlicker(t), 0.6) * BEAM_STRENGTH;
-    } else if (item == ITEM_CAMERA) {
-        L.type = LIGHT_SPOT;                    // the invisible infrared flood of the camera
-        originV = vec3(0.16 * side, -0.14, -0.34);
-        aim = 10.0;
-        L.tanOuter = 0.90;                      // ~42 degrees
-        L.range = 26.0;
-        L.halfDist = 3.4;
-        L.hot = 0.75;
-        L.fog = 0.55;
-        L.color = IR_COLOR * 2.6 * mix(1.0, dangerFlicker(t), 0.5);
-    } else if (item == ITEM_FLARE) {
-        L.type = LIGHT_POINT;
-        originV = vec3(0.34 * side, -0.40, -0.42);
-        L.range = 16.0;
-        L.halfDist = 2.3;
-        L.fog = 1.0;
-        L.color = FLARE_COLOR * 7.0 * flareFlicker(t);
+        L.color = FLASHLIGHT_COLOR * 14.0 * dangerFlicker(t) * BEAM_STRENGTH;
     } else if (item == ITEM_HANDLIGHT) {
         L.type = LIGHT_POINT;
         originV = vec3(0.30 * side, -0.32, -0.36);
@@ -198,23 +143,50 @@ HandLight makeHandLight(int item, float side) {
     return L;
 }
 
-// slot 0 = main hand (right), slot 1 = off hand (left)
+// the camera flash: the bulb sits on top of the camera, a hand above the lens
+HandLight makeFlash() {
+    HandLight L = emptyLight();
+    float f = flash();
+    if (f <= 0.0) return L;
+    L.type = LIGHT_FLASH;
+    mat3 toPlayer = mat3(gbufferModelViewInverse);
+    L.pos = toPlayer * vec3(0.0, 0.17, -0.06);
+    L.dir = toPlayer * vec3(0.0, -0.015, -1.0);
+    L.right = toPlayer * vec3(1.0, 0.0, 0.0);
+    L.up = toPlayer * vec3(0.0, 1.0, 0.0);
+    L.range = 64.0;
+    L.halfDist = 0.3;
+    L.fog = 1.0;
+    // the xenon pulse: a hard white peak, a slightly warmer tail
+    L.color = mix(FLASH_COLOR * vec3(1.0, 0.97, 0.93), FLASH_COLOR, f) * FLASH_POWER * f * f;
+    return L;
+}
+
+// slot 0 = main hand (right), 1 = off hand (left), 2 = the flash
 HandLight handLight(int slot) {
+    if (slot == 2) return makeFlash();
     return slot == 0 ? makeHandLight(heldItemId, 1.0) : makeHandLight(heldItemId2, -1.0);
 }
+#define HAND_LIGHTS 3
 
 // ---- beam shape -------------------------------------------------------------------------
 // distance falloff: half intensity at L.halfDist, gone at L.range
 float lightFalloff(HandLight L, float d) {
+    if (L.type == LIGHT_FLASH) {
+        // inverse square from a small bulb, gone far away
+        return 1.0 / (d * d + 0.06) * (1.0 - smoothstep(L.range * 0.5, L.range, d));
+    }
     float a = 1.0 / (1.0 + sq(d / L.halfDist));
     return a * (1.0 - smoothstep(L.range * 0.55, L.range, d));
 }
 
 // angular profile of a spot. toP: unit vector from the light to the point.
-// Hot spot, soft body, faint spill; the flashlight adds its reflector rings and (detail)
-// lens dirt.
 float spotProfileD(HandLight L, vec3 toP, bool detail) {
     float c = dot(toP, L.dir);
+    if (L.type == LIGHT_FLASH) {
+        // a wide reflector: the frame is covered, the corners get a little less
+        return 0.30 + 0.70 * smoothstep(0.15, 0.80, c);
+    }
     if (c <= 0.02) return 0.0;
     vec2 q = vec2(dot(toP, L.right), dot(toP, L.up)) / (c * L.tanOuter);   // 1 = cone edge
     float x = length(q);
@@ -244,12 +216,12 @@ vec3 handLightReach(HandLight L, vec3 P, out vec3 l, out float dist) {
     l = d / max(dist, 1e-4);
     if (L.type == LIGHT_NONE || dist > L.range) return vec3(0.0);
     float k = lightFalloff(L, dist);
-    if (L.type == LIGHT_SPOT) k *= spotProfile(L, -l);
+    if (L.type == LIGHT_SPOT || L.type == LIGHT_FLASH) k *= spotProfile(L, -l);
     return L.color * k;
 }
 
 // light reflected by a surface: diffuse (times albedo by the caller) and specular.
-// N: world normal, foliage: 1 = thin two-sided needles / leaves, gloss: surfaceGloss()
+// N: world normal, foliage: 1 = thin two-sided leaves, gloss: x roughness, y f0 (< 0: none)
 vec3 handLightSurface(HandLight L, vec3 P, vec3 N, float foliage, vec2 gloss, out vec3 spec) {
     spec = vec3(0.0);
     vec3 l;
@@ -258,27 +230,23 @@ vec3 handLightSurface(HandLight L, vec3 P, vec3 N, float foliage, vec2 gloss, ou
     if (maxOf(E) <= 0.0) return vec3(0.0);
     float ndl = dot(N, l);
     float diff = foliage > 0.5 ? 0.30 + 0.70 * abs(ndl) : max(ndl, 0.0);
-    if (gloss.x > 0.0 && ndl > 0.0) {
+    if (gloss.y >= 0.0 && ndl > 0.0) {
         vec3 V = -P / max(length(P), 1e-4);
-        vec3 H = normalize(l + V);
-        float e = exp2(4.0 + gloss.y * 7.0);                  // 16 .. 2048
-        float s = pow(saturate(dot(N, H)), e) * 0.04 * (e + 2.0) / 8.0;
-        spec = E * s * gloss.x * saturate(ndl * 3.0);
+        spec = E * ggxSpec(N, V, l, gloss.x, 0.02 / max(dist, 0.3)) * fresnelSchlick(gloss.y, dot(normalize(l + V), V));
     }
     return E * diff;
 }
 
-// retro-reflection of a beam in an eye (eyeshine): how much beam light reaches P,
-// with a gentle distance falloff (a retro-reflector sends the light back to its source)
+// retro-reflection of a beam in an eye (eyeshine): how much beam light reaches P
 vec3 handLightEyeshine(vec3 P) {
     vec3 sum = vec3(0.0);
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < HAND_LIGHTS; i++) {
         HandLight L = handLight(i);
-        if (L.type != LIGHT_SPOT) continue;
+        if (L.type != LIGHT_SPOT && L.type != LIGHT_FLASH) continue;
         vec3 d = P - L.pos;
         float dist = length(d);
         float prof = spotProfile(L, d / max(dist, 1e-4));
-        float fall = 1.0 / (1.0 + dist * 0.06);
+        float fall = L.type == LIGHT_FLASH ? 0.15 : 1.0 / (1.0 + dist * 0.06);
         sum += L.color * prof * fall * (1.0 - smoothstep(L.range * 0.8, L.range * 1.6, dist));
     }
     return sum;

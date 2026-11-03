@@ -1,15 +1,18 @@
 // =====================================================================================
-//  ReisatsuShaders - final: lens, bloom, exposure, tone curve, grading and - in the mountain -
-//  everything fear (rainStrength), danger (thunderStrength), the camera and capture do:
-//    fear   : heartbeat-pulsed vignette (rate 72 -> 180 bpm), tunnel vision (peripheral
-//             blur + darkening), chromatic aberration, desaturation, and at high fear faint
-//             faces in the peripheral darkness (pareidolia)
+//  ReisatsuShaders - final: lens, bloom, exposure, tone curve, grading and - in the
+//  restaurant - everything the mod's channels do (docs/DESIGN.md section 9):
+//    fear   : heartbeat-pulsed vignette (72 -> 180 bpm), tunnel vision (the periphery
+//             smears and sinks), chromatic aberration, desaturation, and at high fear faint
+//             faces in the peripheral dark (pareidolia)
 //    danger : the image breathes (barrel pulse), the edges warp, deep shadows go red,
 //             heavier grain, double vision
-//    camera : green-grey night-vision camcorder: fisheye + CA, sensor gain, foliage glows in
-//             infrared, bright noise, blooming lights, scanlines, vignette (HUD draws REC)
-//    capture: vanilla Darkness crushes everything but the centre
-//  FLASH_REDUCTION removes the pulsing, the jitter and the camera interference.
+//    finder : (reishi) the picture through an old camera's finder: cool, a little desaturated,
+//             heavy fine grain, an optical vignette, slight barrel distortion, focus
+//             breathing, halation round the lights, the spirits glowing with a short
+//             afterimage (colortex9)
+//    flash  : lit in the scene (deferred / forward / the air); nothing here ever darkens
+//    caught : vanilla Darkness crushes everything to black, the centre last
+//  FLASH_REDUCTION removes the pulsing, the breathing and the jitter.
 // =====================================================================================
 #include "/lib/header.glsl"
 
@@ -24,8 +27,8 @@ void main() {
 #ifdef FRAGMENT_SHADER
 in vec2 texcoord;
 
-const bool colortex0MipmapEnabled = true;   // tunnel vision blur, darkness
-const bool colortex3MipmapEnabled = true;   // wide bloom
+const bool colortex0MipmapEnabled = true;   // tunnel vision blur, focus breathing
+const bool colortex3MipmapEnabled = true;   // wide bloom, halation
 
 // one heartbeat: "lub" then a softer "dub"
 float beat(float t, float bpm) {
@@ -51,9 +54,12 @@ float heartbeat(float f) {
 vec3 sampleScene(vec2 uv) {
     return texture(colortex0, clamp(uv, vec2(0.0005), vec2(0.9995))).rgb;
 }
-vec3 sceneWithAberration(vec2 uv, float ca) {
+vec3 sampleSceneLod(vec2 uv, float lod) {
+    return textureLod(colortex0, clamp(uv, vec2(0.0005), vec2(0.9995)), lod).rgb;
+}
+vec3 sceneWithAberration(vec2 uv, float ca, float lod) {
     vec2 d = (uv - 0.5) * ca;
-    return vec3(sampleScene(uv + d).r, sampleScene(uv).g, sampleScene(uv - d).b);
+    return vec3(sampleSceneLod(uv + d, lod).r, sampleSceneLod(uv, lod).g, sampleSceneLod(uv - d, lod).b);
 }
 
 // filmic curve (ACES fit): deep toe, soft shoulder
@@ -62,12 +68,14 @@ vec3 toneCurve(vec3 x) {
     return saturate((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14));
 }
 
-vec3 grade(vec3 c, float F, float D) {
-#if defined WORLD_MOUNTAIN
-    float sat = 0.80 * (1.0 - 0.62 * F * FEAR_EFFECTS);
-    // cold blue-grey dark; danger drags the deep shadows toward red
-    vec3 shadowTint = mix(vec3(0.86, 0.96, 1.15), vec3(1.32, 0.70, 0.64), saturate(D * 0.70));
-    float contrast = 1.06 + 0.08 * F;
+vec3 grade(vec3 c, float F, float D, float fm) {
+#if defined WORLD_HIDAMARI
+    // cold and dark; the lamps keep their colour (the green exit signs, the sodium orange);
+    // fear drains the colour, danger drags the deep shadows toward red
+    float sat = 0.86 * (1.0 - 0.60 * F) * mix(1.0, 0.62, fm);
+    vec3 shadowTint = mix(vec3(0.90, 0.97, 1.12), vec3(1.34, 0.68, 0.62), saturate(D * 0.75));
+    shadowTint = mix(shadowTint, vec3(0.86, 0.98, 1.16), fm * (1.0 - D * 0.5));
+    float contrast = 1.06 + 0.08 * F + 0.04 * fm;
 #elif defined WORLD_OVERWORLD
     float sat = 0.68 * (1.0 - 0.25 * rainAmount());
     vec3 shadowTint = vec3(0.93, 0.98, 1.08);
@@ -82,12 +90,13 @@ vec3 grade(vec3 c, float F, float D) {
     float contrast = 1.05;
 #endif
     float l = luma(c);
-    // alarm colours (the pink tape, the orange jacket, the flare, jizo bibs) keep some colour
-    float keep = smoothstep(0.58, 0.92, chroma(c)) * smoothstep(0.05, 0.16, maxOf(c));
-    c = mix(vec3(l), c, mix(sat, max(sat, 0.95), keep));
-#if defined WORLD_MOUNTAIN
-    // only the deep shadows take the tint (blue-grey, red in danger); midtones stay neutral
-    c *= mix(shadowTint, vec3(1.0), smoothstep(0.0, mix(0.42, 0.22, D), l));
+    // lamp colours (exit-sign green, sodium, the red LEDs) keep some colour even in fear
+    float keep = smoothstep(0.55, 0.92, chroma(c)) * smoothstep(0.05, 0.18, maxOf(c));
+    c = mix(vec3(l), c, mix(sat, max(sat, 0.92), keep * (1.0 - 0.5 * fm)));
+#if defined WORLD_HIDAMARI
+    c *= mix(shadowTint, vec3(1.0), smoothstep(0.0, mix(0.42, 0.24, D), l));
+    // the finder: a cool cast over everything, not only the shadows
+    c *= mix(vec3(1.0), vec3(0.90, 0.98, 1.06), fm);
 #else
     c *= mix(shadowTint, vec3(1.0), smoothstep(0.0, 0.42, l));
 #endif
@@ -97,8 +106,8 @@ vec3 grade(vec3 c, float F, float D) {
 
 // the floor of the darkness (added after the vignette: the corners never go pure black)
 vec3 liftColor(float D) {
-#if defined WORLD_MOUNTAIN
-    return mix(vec3(0.015, 0.018, 0.024), vec3(0.020, 0.010, 0.010), D);
+#if defined WORLD_HIDAMARI
+    return mix(vec3(0.011, 0.013, 0.017), vec3(0.018, 0.009, 0.009), D);
 #elif defined WORLD_OVERWORLD
     return vec3(0.008, 0.009, 0.012);
 #elif defined WORLD_NETHER
@@ -108,7 +117,7 @@ vec3 liftColor(float D) {
 #endif
 }
 
-#if defined WORLD_MOUNTAIN && defined PAREIDOLIA
+#if defined WORLD_HIDAMARI && defined PAREIDOLIA
 // a face in the dark: a pale oval, two dark sockets, an open mouth, all warped by noise.
 // > 0 paler "skin", < 0 dark holes. p in face units (oval radius ~1).
 float faceShape(vec2 p, float seed, float t) {
@@ -150,13 +159,15 @@ void main() {
     float F = fear() * FEAR_EFFECTS;
     float D = danger() * FEAR_EFFECTS;
     float t = frameTimeCounter;
-    float cam = cameraMode();
+    float fm = finderMode();
+    float C = caught();
 
     vec2 q = (texcoord - 0.5) * vec2(aspectRatio, 1.0);
     float r = length(q) / length(vec2(aspectRatio, 1.0) * 0.5);    // 0 centre .. 1 corner
 
     float pulse = 0.0;
-#ifdef WORLD_MOUNTAIN
+    float lod = 0.0;
+#ifdef WORLD_HIDAMARI
   #ifndef FLASH_REDUCTION
     pulse = heartbeat(fear()) * smoothstep(0.05, 0.40, F + D);
   #endif
@@ -174,62 +185,84 @@ void main() {
         vec2 n = vec2(vnoise2(uv * 4.0 + vec2(t * 0.35, 0.0)), vnoise2(uv * 4.0 + vec2(7.1, -t * 0.30))) - 0.5;
         uv += n * edge * D * 0.014;
     }
-#endif
-    // ---- camera: wide-angle lens ---------------------------------------------------------
-    if (cam > 0.5) {
+    // ---- the finder: barrel distortion, focus breathing --------------------------------
+    if (fm > 0.5) {
+        // normalised so the corners stay inside the picture (the photo is grabbed from it)
         vec2 c = uv - 0.5;
-        uv = 0.5 + c * (0.93 + 0.10 * dot(c * vec2(aspectRatio, 1.0), c * vec2(aspectRatio, 1.0)));
-  #if defined WORLD_MOUNTAIN && !defined FLASH_REDUCTION
-        // interference when something hostile is near: torn lines
-        float slot = floor(t * 12.0);
-        if (D > 0.2 && hash11(slot * 1.37) < D * 0.35) {
-            float band = floor(uv.y * 40.0 + hash11(slot) * 13.0);
-            uv.x += (hash12(vec2(band, slot)) - 0.5) * 0.04 * step(0.75, hash12(vec2(band * 1.3, slot + 2.0))) * D;
-        }
-  #endif
+        vec2 ca2 = c * vec2(aspectRatio, 1.0);
+        float rMax2 = 0.25 * (aspectRatio * aspectRatio + 1.0);
+        uv = 0.5 + c * (1.0 + 0.085 * dot(ca2, ca2)) / (1.0 + 0.085 * rMax2 + 0.004);
+        float hunt = 0.0;
+    #ifndef FLASH_REDUCTION
+        // an old lens hunting for focus: the picture swells and softens, settles, swells
+        hunt = sin(t * 1.15) * 0.6 + sin(t * 0.47 + 1.3) * 0.4;
+        uv = 0.5 + (uv - 0.5) * (1.0 - 0.0045 * hunt);
+    #endif
+        lod = 0.25 + 0.55 * smoothstep(0.2, 1.0, abs(hunt)) + 0.6 * smoothstep(0.55, 1.0, r);
     }
+#endif
     bool outside = uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0;
     uv = clamp(uv, vec2(0.0005), vec2(0.9995));
 
     // ---- chromatic aberration ----------------------------------------------------------
     float ca = 0.0012 * CHROMATIC_ABERRATION;
-#ifdef WORLD_MOUNTAIN
-    ca += CHROMATIC_ABERRATION * (smoothstep(0.35, 1.0, F) * 0.0070 + D * 0.0060);
+#ifdef WORLD_HIDAMARI
+    ca += CHROMATIC_ABERRATION * (smoothstep(0.35, 1.0, F) * 0.0070 + D * 0.0060 + fm * 0.0030 * r);
 #endif
-    ca += cam * 0.0045 * CHROMATIC_ABERRATION * r;
-    vec3 color = ca > 0.00005 ? sceneWithAberration(uv, ca) : sampleScene(uv);
+    vec3 color = ca > 0.00005 ? sceneWithAberration(uv, ca, lod) : sampleSceneLod(uv, lod);
 
-#ifdef WORLD_MOUNTAIN
+#ifdef WORLD_HIDAMARI
     // ---- danger: double vision -----------------------------------------------------------
     if (D > 0.02) {
         vec2 off = vec2(0.011, 0.0035) * D;
   #ifndef FLASH_REDUCTION
         off *= 0.65 + 0.35 * sin(t * 0.9);
   #endif
-        color = mix(color, sampleScene(uv + off), 0.32 * D);
+        color = mix(color, sampleSceneLod(uv + off, lod), 0.32 * D);
     }
     // ---- fear: tunnel vision - the periphery smears and sinks ---------------------------
-    float tunnel = smoothstep(0.30, 1.0, F) * smoothstep(0.25, 0.95, r) + darknessFactor * 0.7 * smoothstep(0.15, 0.8, r);
+    float tunnel = smoothstep(0.30, 1.0, F) * smoothstep(0.25, 0.95, r) + C * 0.8 * smoothstep(0.10, 0.7, r);
     if (tunnel > 0.01) {
         vec3 blurred = textureLod(colortex0, uv, 1.0 + 3.0 * saturate(tunnel)).rgb;
         color = mix(color, blurred, saturate(tunnel * 1.3));
     }
 #endif
 
-    // ---- bloom -------------------------------------------------------------------------
-    vec3 bloom = texture(colortex3, uv).rgb * 0.65 + textureLod(colortex3, uv, 3.0).rgb * 0.55;
-    color += bloom * (BLOOM_STRENGTH * mix(0.40, 1.30, cam));
+    // ---- bloom (and in the finder: halation, a warm fringe round every light) -------------
+    vec3 b0 = texture(colortex3, uv).rgb;
+    vec3 b1 = textureLod(colortex3, uv, 3.0).rgb;
+    vec3 bloom = b0 * 0.65 + b1 * 0.55;
+    color += bloom * (BLOOM_STRENGTH * mix(0.45, 0.85, fm));
+#ifdef WORLD_HIDAMARI
+    if (fm > 0.5) {
+        vec3 b2 = textureLod(colortex3, uv, 4.5).rgb;
+        color += (b1 * 0.6 + b2 * 0.8) * vec3(1.0, 0.52, 0.40) * 0.45 * BLOOM_STRENGTH;
+    }
+  #ifdef AFTERIMAGE_ON
+    // the spirits' cold glow lingers in the finder: a faint outline where they just were
+    if (fm > 0.5) {
+        vec3 trail = texture(colortex9, uv).rgb;
+        float here = texture(colortex8, uv).g;
+        color += max(trail - vec3(0.55, 0.80, 1.00) * here, vec3(0.0)) * 0.16;
+    }
+  #endif
+#endif
 
     // ---- exposure ----------------------------------------------------------------------
     float exposure = BRIGHTNESS;
 #ifdef WORLD_OVERWORLD
     exposure *= mix(1.7, 1.0, dayFactor());
 #endif
-#ifdef WORLD_MOUNTAIN
-    exposure *= 1.0 + 0.25 * (1.0 - eyeSkyFactor());      // the eyes open a little in the tunnel
+#ifdef WORLD_HIDAMARI
+    // the eyes open in the dark restaurant, close a little under the sign and the lamps
+    float eyeBlock = float(eyeBrightnessSmooth.x) / 240.0;
+    exposure *= mix(1.45, 0.95, smoothstep(0.10, 0.80, eyeBlock));
+    exposure *= mix(1.0, 1.65, fm);                // the finder: a bright optical finder, the eye pressed to it
 #endif
     exposure *= 1.0 - 0.92 * saturate(darknessFactor * 0.55 + darknessLightFactor * 1.5);
-    exposure *= 1.0 - 0.6 * blindness;
+#ifndef WORLD_HIDAMARI
+    exposure *= 1.0 - 0.6 * blindness;             // vanilla blindness outside the restaurant
+#endif
     color = min(color * exposure, vec3(64.0));
 
     float seed = float(frameCounter % 1024);
@@ -237,52 +270,35 @@ void main() {
     float n2 = hash12(gl_FragCoord.xy * 1.31 + seed * vec2(3.17, 11.31));
     float grainN = n1 + n2 - 1.0;
 
-    if (cam > 0.5) {
-        // ---- the night-vision camcorder -------------------------------------------------
-        float fol = texture(colortex5, uv).a;
-        float leaf = (fol > 0.25 && fol < 0.75) ? 1.0 : 0.0;       // needles / leaves glow in infrared
-        float lum = dot(color, vec3(0.30, 0.52, 0.18)) * (1.0 + 1.4 * leaf);
-        lum *= 5.5;                                                // sensor gain
-        lum = 1.0 - exp(-lum * 1.6);                               // hard, flat video curve
-        // sensor noise: bright, coarse, crawling; worst in the dark
-        float nb = hash12(floor(gl_FragCoord.xy * 0.5) + seed * vec2(5.1, 9.7)) - 0.5;
-        lum += (grainN * 0.6 + nb * 0.9) * (0.06 + 0.16 * (1.0 - lum)) * max(FILM_GRAIN, 0.4);
-        lum += step(0.9985, n1) * 0.5;                             // hot pixels sparkle
-        // scanlines and a slow rolling band
-        lum *= 0.92 + 0.08 * cos(gl_FragCoord.y * PI);
-  #ifndef FLASH_REDUCTION
-        lum *= 1.0 + 0.05 * smoothstep(0.92, 1.0, sin(uv.y * 3.0 - t * 1.3));
-  #endif
-        lum *= 1.0 - smoothstep(0.62, 1.12, r) * 0.85;             // lens vignette
-        vec3 nv = mix(vec3(lum), lum * vec3(0.66, 1.0, 0.70), 0.70);
-        color = outside ? vec3(0.0) : saturate(nv);
-    } else {
-        color = toSrgb(toneCurve(color));
-        color = grade(color, F, D);
-    }
+    color = toSrgb(toneCurve(color));
+    color = grade(color, F, D, fm);
 
     float vStrength = VIGNETTE * 0.35;
     float vInner = 0.50;
-#ifdef WORLD_MOUNTAIN
+#ifdef WORLD_HIDAMARI
     // ---- vignette that closes in with fear and beats with the heart --------------------
-    vStrength = VIGNETTE * (0.42 + 0.50 * F + 0.25 * D) * (cam > 0.5 ? 0.5 : 1.0);
+    vStrength = VIGNETTE * (0.40 + 0.50 * F + 0.25 * D);
     vInner = 0.50 - 0.22 * F - pulse * 0.075 * (0.35 + F);
     // the darkness does not close in as a clean circle: it creeps, in slow uneven tongues
     vec2 around = q / max(length(q), 1e-4);         // noise on the unit circle: no seam
     float creep = vnoise2(around * 1.6 + vec2(t * 0.11, 3.0)) * 0.6 + vnoise2(around * 3.9 + vec2(7.0, -t * 0.17)) * 0.4;
     vInner -= (creep - 0.5) * 0.16 * smoothstep(0.3, 1.0, F);
+    if (fm > 0.5) {
+        // the finder's optics: a deep, even fall-off toward the frame
+        vStrength = VIGNETTE * (0.72 + 0.25 * F);
+        vInner = 0.28 - pulse * 0.03;
+    }
 #endif
     float vig = smoothstep(vInner, vInner + 0.85, r);
     color *= 1.0 - saturate(vig * vStrength);
-    if (cam < 0.5) color += liftColor(D) * (1.0 - color) * (1.0 - 0.9 * darknessFactor);
+    color += liftColor(D) * (1.0 - color) * (1.0 - 0.9 * darknessFactor) * (1.0 - 0.5 * fm);
+    if (outside) color *= 0.0;
 
-#ifdef WORLD_MOUNTAIN
-    // ---- capture: everything but the centre is crushed -----------------------------------
-    color *= 1.0 - darknessFactor * 0.97 * smoothstep(0.06, 0.50, r);
+#ifdef WORLD_HIDAMARI
   #ifdef PAREIDOLIA
     // ---- faces in the peripheral darkness at high fear -----------------------------------
-    float faceAmt = smoothstep(0.62, 0.95, fear()) * FEAR_EFFECTS;
-    if (faceAmt > 0.0 && cam < 0.5 && !isHandDepth(texture(depthtex0, uv).r)) {   // never on your own hand
+    float faceAmt = smoothstep(0.62, 0.95, fear()) * FEAR_EFFECTS * (1.0 - fm);
+    if (faceAmt > 0.0 && !isHandDepth(texture(depthtex0, uv).r)) {   // never on your own hand
         float dark = 1.0 - smoothstep(0.03, 0.16, luma(color));
         float face = pareidolia(q, aspectRatio, t) * faceAmt * dark * smoothstep(0.30, 0.55, r);
         // they come out of the grain: the pale part is half texture, half noise
@@ -291,16 +307,25 @@ void main() {
         grainN *= 1.0 + 1.4 * max(face, 0.0) / max(faceAmt, 0.05);
     }
   #endif
+    // ---- caught: everything goes black, the centre last ------------------------------------
+    color *= 1.0 - C * smoothstep(0.55 * (1.0 - C), 0.55 * (1.0 - C) + 0.25, r);
+    color *= 1.0 - smoothstep(0.55, 1.0, C);
 #endif
 
-    // ---- film grain: stronger in the dark, with fear and danger ------------------------
-    if (cam < 0.5) {
-        float grain = FILM_GRAIN * (0.016 + 0.030 * F + 0.034 * D);
-#ifdef FLASH_REDUCTION
-        grain *= 0.6;
-#endif
-        color += grainN * grain * (1.0 - 0.6 * luma(color));
+    // ---- film grain: stronger in the dark, with fear and danger; heavy in the finder --------
+    float grain = FILM_GRAIN * (0.016 + 0.030 * F + 0.034 * D);
+#ifdef WORLD_HIDAMARI
+    if (fm > 0.5) {
+        // fine and heavy: the finder's ground glass and the night
+        float g2 = hash12(gl_FragCoord.xy * 0.97 + seed * vec2(7.7, 2.9)) - 0.5;
+        grainN = grainN * 0.7 + g2 * 0.9;
+        grain = FILM_GRAIN * (0.050 + 0.020 * F + 0.025 * D);
     }
+#endif
+#ifdef FLASH_REDUCTION
+    grain *= 0.6;
+#endif
+    color += grainN * grain * (1.0 - 0.6 * luma(color));
 
     color += (bayer8(gl_FragCoord.xy) - 0.5) / 255.0;
     if (any(isnan(color))) color = vec3(0.0);

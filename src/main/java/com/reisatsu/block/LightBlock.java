@@ -11,7 +11,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * The restaurant's lights: {@code ceiling_light} (recessed fluorescent panel, lit + broken = flickers),
- * {@code downlight} and {@code pendant_lamp}. Which circuit a light belongs to follows from where it is
+ * {@code downlight} (also in the eave outside: fascia = true) and {@code pendant_lamp}. Which circuit a light belongs to follows from where it is
  * ({@link com.reisatsu.world.Fixtures}); the flicker of broken tubes is driven by the world ticker.
  */
 public class LightBlock extends Block {
@@ -24,6 +24,7 @@ public class LightBlock extends Block {
         this.shape = shape;
         BlockState s = stateDefinition.any().setValue(Props.LIT, false);
         if (hasBroken) s = s.setValue(Props.BROKEN, false);
+        if (this instanceof Down) s = s.setValue(Props.FASCIA, false);
         registerDefaultState(s);
     }
 
@@ -37,6 +38,7 @@ public class LightBlock extends Block {
         builder.add(Props.LIT);
         // the panel lights have a "broken" (flickering) state; the stateDefinition is built before our fields are set
         if (this instanceof Panel) builder.add(Props.BROKEN);
+        if (this instanceof Down) builder.add(Props.FASCIA);
     }
 
     public boolean hasBroken() {
@@ -59,6 +61,13 @@ public class LightBlock extends Block {
     @SuppressWarnings("deprecation")
     public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
         return shape == Shapes.block() ? shape : Shapes.empty();
+    }
+
+    /** The downlight: in a ceiling, or set into the eave's fascia band outside ({@link Props#FASCIA}). */
+    public static class Down extends LightBlock {
+        public Down(Properties properties) {
+            super(properties, false, Shapes.block());
+        }
     }
 
     /** The ceiling panel light (has the broken state). */

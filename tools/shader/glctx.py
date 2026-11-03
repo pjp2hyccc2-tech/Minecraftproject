@@ -18,6 +18,7 @@ GL_RGBA = 0x1908
 GL_RGBA8 = 0x8058
 GL_RGBA16F = 0x881A
 GL_FLOAT = 0x1406
+GL_UNSIGNED_INT = 0x1405
 GL_UNSIGNED_BYTE = 0x1401
 GL_DEPTH_COMPONENT = 0x1902
 GL_DEPTH_COMPONENT32F = 0x8CAC
@@ -144,6 +145,7 @@ SIGS = {
     "glNormalPointer": (None, [U, I, P]),
     "glTexCoordPointer": (None, [I, U, I, P]),
     "glDrawArrays": (None, [U, I, I]),
+    "glDrawElements": (None, [U, I, U, P]),
     "glFinish": (None, []),
     "glPixelStorei": (None, [U, I]),
 }
