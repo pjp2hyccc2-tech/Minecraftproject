@@ -1,856 +1,413 @@
-# 霊撮 ―REISATSU― : design contract (read fully before working)
+# ひとりかくれんぼ ―HITORI KAKURENBO― : design contract (read fully before working)
 
-Minecraft **Forge 1.20.1 (47.3.0), official Mojang mappings, Java 17**. Mod id **`reisatsu`**, base package
-`com.reisatsu`. Player-facing text is Japanese first (`ja_jp`), English (`en_us`) second. Built on the systems of the
-previous mods 遭難 ―SOUNAN― (branch `sounan`) and 冥婚 ―MEIKON― (branch `meikon`): `git show sounan:<path>` shows any
-old file (paths there use `sounan` instead of `reisatsu`). Reuse freely, but nothing of the mountain may remain.
+Minecraft **Forge 1.20.1 (47.3.0), official Mojang mappings, Java 17**. Mod id **`hitori`**, base package
+`com.hitori`. Player-facing text is Japanese first (`ja_jp`), English (`en_us`) second. Built on the systems of the
+previous mods 霊撮 ―REISATSU― (branch `reisatsu`), 遭難 (`sounan`) and 冥婚 (`meikon`): `git show reisatsu:<path>`
+shows any old file (package `com.reisatsu`, mod id `reisatsu`). Reuse freely — awareness/noise/hiding, the director,
+dialogue/subtitles, the acoustics engine, the screenshot tour and self test, the shader pack — but nothing of the
+restaurant may remain.
 
-A **stealth photography horror** set in a Japanese family restaurant (ファミレス) at night. The user asked for the most
-effort on: **the systems, the textures, the spirits' looks and animations, the restaurant's interior and exterior
-detail, the shader pack (影MOD) and the sound (音MOD)**. It must be genuinely frightening — stillness, darkness, faces,
-sound, the feeling of being watched — not gore.
+An **experiential first-person horror** about **ひとりかくれんぼ (one-person hide-and-seek)**, the Japanese internet
+séance ritual: you perform it alone in your old apartment at 3 a.m., hide in the 押し入れ (closet) with salt water in
+your mouth, and **watch your own apartment through fixed cameras (定点カメラ) you set up** while something that used
+to be a stuffed toy searches for you. The user asked for the most effort on **the game systems, animation, graphics,
+sound and the shader pack (影MOD)**. It must be genuinely frightening — silence, waiting, the thing you cannot see from
+the closet, the camera feed that shows the bathtub empty — not gore.
 
-## 1. Story
+## 1. Story and flow
 
-Present day, a week of nights: **十一月三日（火）〜九日（月）**. **ファミリーレストラン「ひだまり」** stands on a dark stretch of the national
-highway (国道), right at a curve where people keep dying (魔のカーブ). Since the restaurant stopped running 24 hours, the
-closing crew keeps reporting things: **the automatic door they locked opens by itself with its chime, the taps run with
-nobody there, the menus on the tables are found scattered over the floor**, call buttons ring at empty tables, plates
-break in the empty kitchen. The owner called in a medium, **八雲 トキ (Yakumo Toki)**, an old woman in a dark kimono.
+You are a university student living alone in **コーポ白樺 203号室**, a 1970s two-storey wooden apartment
+(木造アパート) on a quiet street. You read about ひとりかくれんぼ on an old forum thread and decide to try it — and to
+record it with the action cameras you own, like the people who live-posted it. Night of 2 → 3 November, light rain.
 
-She cannot go in: the spirits would hide from her. She needs their **faces and names**. She hands the player
-(an investigator she hires) her **霊写機 (reisha-ki)**, an old instant camera that photographs what the eye cannot
-see: *if a spirit's face is in the photo, its name rises in red on the white margin.* With the names she can send them
-on (送る). **The spirits must not notice the camera** — a spirit that notices you will not show in a photo, and it will
-try to take you with it.
+The procedure (a printout on your desk: `howto` note) is the game. Each step is a real action in the world; the HUD
+shows the current step as a checklist line, the printout shows the whole list.
 
-The dead of HIDAMARI (their names appear on the photos; the medium tells their story when you hand her the photo):
+**Phase 0 — preparation (from 2:20 a.m., the in-game clock runs ~4× fast until 3:00):**
+1. 人形を用意する — take the stuffed toy (`plush`, a worn white rabbit with button eyes) from the western room's shelf.
+2. 綿を抜く — cut it open with the scissors (sewing box, western room desk) at the low table (ちゃぶ台) in the
+   tatami room: the stuffing spills out.
+3. 米を詰める — fill it with rice (rice bag in the kitchen).
+4. 爪を入れる — your nail clippings (nail clipper in the washroom; using it plays the clipping sound).
+5. 赤い糸で縫う — sew it shut with the red thread (sewing box) and wind the rest around it → the item `ritual_doll`.
+6. 風呂に水を張る — fill the bathtub (turn the bath tap; it fills over ~20 s).
+7. 塩水を用意する — salt (kitchen) into a cup of water (cup at the sink) → `salt_water`, put it in the 押し入れ (or keep it).
+8. 定点カメラを置く — place up to **4 cameras** (`fixed_camera`, from the bag in the western room) anywhere — the
+   printout suggests: the bathtub, the hallway, the tatami room, the genkan. Open the camera app on the laptop
+   (`laptop`) to check each feed.
+9. テレビをつける — turn on the CRT TV in the tatami room (static: 砂嵐).
+**Phase 1 — the ritual (at 3:00; the clock now runs in real time ×2):**
+10. 名前をつける — name the doll (a small text field; default 「みーちゃん」) at the low table.
+11. 「最初の鬼は〇〇（自分）だから」 ×3 — hold the doll and press the action key three times (your voice, subtitles).
+12. 人形を風呂に入れる — put the doll into the full bathtub.
+13. 家中の電気を消す — every light off (switches in each room, or the breaker in the genkan); the TV stays on.
+14. 目を閉じて10数える — at the TV, eyes closed (screen black, your counting voice, something moves in the water).
+15. 刃物を持って風呂場へ — take the kitchen knife (`knife`), go to the bathroom.
+16. 「〇〇みつけた」 — and **stab the doll** (use the knife on it in the tub).
+17. 「次は〇〇が鬼だから」 — leave it, run.
+18. 塩水を口に含んで隠れる — take a mouthful of salt water (`salt_water`: the "mouth" gauge fills) and hide in the
+    押し入れ, closing the fusuma.
+**Phase 2 — hiding (3:15 → about 4:30):** the doll becomes **鬼 (oni)** and searches the apartment. You watch it on
+the laptop's camera feeds from inside the closet; you peek through the gap of the fusuma; you hold your breath; you
+listen. The apartment fills with 霊障 (§3.7): the TV changes channel, the intercom rings, your phone vibrates with a call
+from your own number, knocking, wet footsteps, the faucet, the doll's giggling, a woman standing in a corner of one
+camera feed, closer every time you look.
+**Phase 3 — ending it (after 4:00, or earlier if you dare):** leave the closet with the salt water still in your
+mouth, find the doll (it is no longer in the tub — use the cameras), **spit the salt water on it**, say
+**「私の勝ち」 ×3**, and **burn it** (lighter, in the kitchen sink or the bathtub after draining). Then the lights go on
+and it is morning.
 
-| spirit | id | true name (photo margin) | story (told by the medium / found in notes) |
-|---|---|---|---|
-| 来店者 the visitor | `visitor` | 三浦 健司 (24) | 2009: rode his motorbike to meet his girlfriend here at 2:00 a.m.; died at the curve in front. Every night at two the door opens for him; he sits at **table 7**, presses the call button and waits. |
-| 給仕 the waitress | `waitress` | 小野寺 千夏 (19) | the night-shift waitress who ran out onto the road to help him that night and was hit by a truck. She still works the night shift, serving water to customers nobody else can see. |
-| 料理長 the chef | `chef` | 権藤 剛 (52) | head chef, died in a grease fire in the kitchen in 1996. Still chops at his board. His face is burnt black; embers glow in the cracks. |
-| かくれんぼの子 the child | `child` | 春日 ゆうか (5) | went missing during hide-and-seek in the restaurant in 2001; never found. She still plays — and she is very good at hiding. |
-| 鏡の女 the woman in the mirror | `mirror_woman` | 白石 玲子 (31) | a regular who collapsed in the women's restroom in 2015 and was found in the morning with the tap still running. She is on *the other side* of the mirror. |
-| 店長 the manager | `manager` | 森田 浩一 (47) | ran the 24-hour store alone at night for years; died of overwork at his desk in 2019 (過労死). After that the store stopped opening at night. He still watches the security monitors — and he still closes the store. |
+**Endings**
+* **終了 (good)**: ended properly. Morning light. You review the recordings the next afternoon on the laptop: the feeds
+  play back… and in the last seconds of CAM 3, after the doll burned, the closet's fusuma slides open by itself.
+  Text varies with how many rules you broke (0 = 「完璧な終わり」).
+* **鬼 (bad)**: the doll found you (it opens the fusuma: jump scare) — 「つぎは、あなたがおに」. Black. The cameras keep
+  recording an empty room… and a figure that is you, standing in the bathtub.
+* **外へ (bad)**: you opened the front door during phases 1–3 (a rule): the outdoor corridor goes on forever; your phone's
+  map shows you inside 203.
+* **未完 (bad)**: dawn (5:00) comes and the ritual was never ended: the doll is gone. The last feed shows it on the
+  balcony, looking in.
 
-**Flow — seven nights** (`game/Nights`, `game/Week`; the user asked for a week, one spirit a night, the first night only
-watching the 霊障)
-1. **Intro** (the first night only; ≈ 40 s, skippable after the first time): black, the first night's card
-   「一日目の夜」「十一月三日（火）」, four lines of text (the place, the reports, "a medium hired you — every night, for
-   seven nights"), then the parking lot: rain has just stopped, the pole sign flickers, the medium stands by her car.
-   Dialogue (subtitles with her portrait), she hands over: 霊写機 (10 film), 懐中電灯, お札 ×3 (**for the whole week**),
-   店の鍵 — and tonight's task: photograph nothing, go and see what happens in there.
-2. **Every night** begins the same way: the restaurant is reset (`Fixtures.resetAll`), the player stands at `spawn` by
-   the medium's car, the camera's film topped up to 10 (「フィルムは足しておいたわ」). The screen holds black with the
-   **title card** (「二日目の夜」 + 「十一月四日（水）」), the lot fades in under it, the medium speaks the night's opening
-   lines (hints about tonight's signs; the player is held still; SPACE skips). Then the night is the player's: they go
-   in and work, and **return to the medium to end the night** — she reads the photo's name, tells that spirit's story,
-   says goodnight → black → the next night's card.
-3. **Night 1 — 観察の夜**: no spirit manifests and none can be photographed (a shot uses film and shows nothing — now
-   and then a ghost overlay). The director stages the 霊障 around the player at a steady, readable pace (§3.12).
-   Objective **「霊障を確かめる n/5」**. A phenomenon counts as **witnessed** when it happens within 18 blocks of the
-   player and the player is in the same room or has a line of sight to it (sound alone in the same room counts;
-   lasting ones — taps running, a glass on a table, scattered menus, the turned bear, footprints — count while they
-   last; the PA and the store speakers count anywhere inside). Each kind counts once; the HUD shows a short line
-   (「記録：閉めたはずの自動ドアが開いた」) and the report note's list ticks it. After five: 「霊媒師のもとへ戻る」; at
-   the car she explains: there are six of them; one a night; tomorrow, the one who comes through the door at two.
-4. **Nights 2–7: one spirit a night** — 2 来店者, 3 給仕, 4 かくれんぼの子, 5 鏡の女, 6 料理長, 7 店長. Only tonight's
-   spirit exists (the bound ones are gone, the later ones dormant). **It does not appear at once**: it shows itself
-   (fading in) only after the player has been inside 60–90 s (rolled each night) **and** has witnessed two of its signs
-   (after 4 minutes one sign is enough, after 6 none). The director plays mostly its signs — where the player can
-   witness them, else (a lead) the nearest place they can happen — and a few quiet general ones. So each night is:
-   notice the signs → work out where it is → a valid photo (§3.1 unchanged) without being noticed. Objective:
-   「異変を探る」 → 「<role>を撮影する」 → with its photo 「霊媒師のもとへ戻る」.
-
-   | night | spirit | its signs | then |
-   |---|---|---|---|
-   | 2 十一月四日（水） | visitor | the 2:00 cue 90–150 s after the player first went in (a motorbike far away, tyres screaming, an impact, silence; heard everywhere), the outer and inner auto doors opening for nobody with the chime, wet footprints toward table 7, table 7's call button. Before the cue, once: the register phone or table 7's button | he arrives 13 s after the cue (his cycle, §5) and again every 2–3 min until photographed |
-   | 3 十一月五日（木） | waitress | glasses of water appearing on empty tables, 「いらっしゃいませ」 from the dark, a tray clattering | she begins her rounds (incl. the bow when an auto door opens) |
-   | 4 十一月六日（金） | child | menus scattered off a table, giggles right behind the player, a ball bouncing / the toy squeak in the kids' corner, the bear turned to face you | 「もういいかい」 from nowhere: her hide-and-seek begins |
-   | 5 十一月七日（土） | mirror woman | the women's taps running (needed: she comes once you have heard the water), sobbing from the mirror, the occupied stall knocking | she is in the cavity behind the mirror |
-   | 6 十一月八日（日） | chef | a plate smashing in the kitchen, the gas range igniting by itself, chopping at his board that stops when you come near | he is at his board |
-   | 7 十一月九日（月） | manager | **closing time** 7 s after the player comes in: the PA chime and 「本日の営業は、終了いたしました」, every light in the store on, the store music warped, the call display 「閉店」; then a security camera's LED turning red, keys jingling in the corridor | he wakes and closes the store (§5 phase 2); the cameras are his eyes |
-5. **Caught** (§3.8): you wake by the car, お札 −1, 霊障 +1, and the night goes on with its spirit back at its routine.
-   Caught with none left: 相席.
-6. **The last night**: after the manager's photo the store goes quiet; back to the medium with it → she reads his name
-   and story → **除霊 (exorcism)** with all six photos, an in-world sequence: she walks in to table 7, lays the six
-   photos on the table between candles and chants; one by one each spirit stands at the table, its photo burns, it
-   fades into light; the lights flicker on; the automatic door opens and closes one last time with its chime (the
-   visitor leaving); 「……ありがとうございました」 in the waitress's voice. Dawn breaks. Ending text, credits.
-7. **Endings**: **送り (good)** — all six sent; text varies with how many お札 were used over the week (0 used =
-   「完璧な夜」). **相席 (bad)** — caught with no お札 left: you sit at table 7, the waitress puts a glass of water in
-   front of you: 「いらっしゃいませ。……お一人様ですね」. 「その夜から、ひだまりの七番テーブルの呼び出しボタンは、二度鳴る
-   ようになった。」
-8. **Save and quit** resumes at the start of the current night (title card, her lines; the photos, notes and お札 are
-   kept; the night's signs and its spirit start again). The album's 「七夜」 page shows the week: each night's date and
-   who was sent on it. Debug: `/reisatsu debug night <1..7>` jumps to the start of a night (the nights before it done),
-   `debug manifest`, `debug talk`, `debug closing` (night 7's closing time where you stand).
-
-The medium's rules (撮影の心得; shown in the intro dialogue, in the HUD hint list and on her note):
-一、霊に気付かれてはならない。気付かれた霊は、写真に写らない。
-一、霊は光と音に敏い。灯りは控え、足音を殺すこと。
-一、ファインダー越しにしか見えないものがいる。
-一、顔が写らなければ、名は浮かばない。
-一、気付かれたら、逃げなさい。隠れなさい。お札が身代わりになるのは三度まで。
+The rules (printout and HUD hint list; breaking one = penalty, see §3):
+一、必ず一人で行うこと。
+一、隠れている間は、塩水を口から出してはいけない。声を出してはいけない。
+一、始めたら、家から出てはいけない。
+一、始めたら、必ず終わらせること。（二時間以内）
+一、終わったら、人形を燃やすこと。
 
 ## 2. The world
 
-* Dimension **`reisatsu:hidamari`** (dimension, dimension_type and biome share the id). Fixed time **18000**, sky light
-  on, overcast night (no moon visible), no precipitation (the rain has *just* stopped: wet ground, puddles, dripping —
-  drawn by blocks, sounds and the shader), no vanilla mob spawns, adventure mode. Fog: dark blue-grey, mid distance.
-* **Feet level `Y = 65`** everywhere (the restaurant floor and the parking lot surface are blocks at y = 64).
-  Interior air y = 65..68 (4 high), suspended ceiling blocks at y = 69, roof above.
-* **Building**: X 0..40, Z 0..30 (exterior walls on the border). Entrance on the south side; the parking lot is south
-  (Z 31..48), the national road further south (Z ≈ 50..58), the curve to the east (X ≈ 60..90) with guardrails, chevron
-  signs, a curve mirror and **flowers left at the guardrail (献花)**. North of the building: back yard (dumpsters, gas
-  cylinders, A/C units, the kitchen exhaust, the staff bicycle). West: the staff path to the back door.
-  Beyond: dark harvested rice paddies with puddles, utility poles with wires, a wooded hill, a few far houses with one lit
-  window, a blinking yellow traffic light. The playable area ends at hedges, fences and guardrails with `barrier`
-  blocks; the road vanishes into the fog both ways.
-
-### Ground floor plan (one character = one block column; `#` exterior wall, `=` interior wall)
+* Dimension **`hitori:shirakaba`** (dimension, dimension_type and biome share the id). Fixed time 18000 (the in-game
+  clock on the HUD/laptop is the game's own, not the sky), overcast, **no vanilla rain** (rain is drawn by the shader
+  on windows and by our sounds), no vanilla spawns, adventure mode.
+* **The building** コーポ白樺: a two-storey wooden apartment, 4 units per floor, **X 0..43, Z 0..13**, outdoor corridor and
+  stairs on the north side (Z −3..−1, stairs at the west end), balconies on the south side (Z 14..15). Ground floor feet
+  level **y 65**, second floor feet level **y 70**. Only **203** (second floor, third from the west) is enterable; the
+  other doors are locked (a TV murmurs behind 204; 202 has a 「入居者募集」 sign). Around it: a narrow street with a
+  street lamp, a vending machine, a utility pole with wires, a bicycle shelter, neighbouring houses (dark, one lit
+  window), a small park with a swing at the end of the street, rain on everything. Bounded by barriers.
+* **Room 203** (2DK), outer walls X 22..33, Z 0..13; interior feet level y 70, **interior 3 high** (y 70..72, ceiling
+  y 73) — low and close, on purpose.
 
 ```
-      00000000001111111111222222222233333333334
-      01234567890123456789012345678901234567890
-z00   #########################################
-z01   #ssssss#oooooo#ffff=kkkkkkkkkkkkkkkkkkkk#
-z02   #ssssss#oooooo#ffff=kkkkkkkkkkkkkkkkkkkk#
-z03   #ssssss#oooooo#ffff=kkkkkkkkkkkkkkkkkkkk#
-z04   #ssssss#oooooo#==F==kkkkkkkkkkkkkkkkkkkk#
-z05   #ssssss#oooooo#kkkkkkkkkkkkkkkkkkkkkkkkk#
-z06   #ssssss#oooooo#kkkkkkkkkkkkkkkkkkkkkkkkk#
-z07   ###d###E#wwd###kkkkkkkkkkkkkkkkkkkkkkkkk#
-z08   Bccccccccccccc#kkkkkkkkkkkkkkkkkkkkkkkkk#
-z09   #cccccccccccccdkkkkkkkkkkkkkkkkkkkkkkkkk#
-z10   ###d##################PPPPP##SS##########
-z11   #ttttt#xxxxxxx#.........................#
-z12   #ttttt#xxxxxxx#.........................W
-z13   #ttttt#xxxxxxx#.........................W
-z14   #ttttt#xxxxxxx#.........................W
-z15   #ttttt#xxxxxxx#.........................W
-z16   #########MMM###.........................W
-z17   #mmmmm#rrrrrrr#.........................W
-z18   #mmmmm#rrrrrrr#.........................W
-z19   #mmmmm#rrrrrrr#.........................W
-z20   #mmmmm#rrrrrrr#.........................W
-z21   #mmmmm#rrrrrrr#.........................W
-z22   ###d######d####.........................W
-z23   #aaaaaaaaaaaaaa.........................W
-z24   #aaaaaaaaaaaaaa.........................W
-z25   #aaaaaaaaaaaaaa.........................W
-z26   ###AA####aaaaaa.........................W
-z27   #vvvvvvv#aaaaaa.........................W
-z28   #vvvvvvv#aaaaaa.........................W
-z29   #vvvvvvv#aaaaaa.........................W
-z30   ###AA####WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW#
+      222222223333
+      234567890123
+z00   ##D#########
+z01   #ggghh#t#bb#
+z02   #ggghhdt#bb#
+z03   ####hh###d##
+z04   #kkkhh#wwww#
+z05   #kkkhhdwwww#
+z06   #kkkhh######
+z07   #kkkhhdyyyy#
+z08   ##ff#f#yyyy#
+z09   #jjjjV#yyyy#
+z10   #Ojjjj#yyyc#
+z11   #Ojjjj#yyyc#
+z12   #Ojjjj#yyyc#
+z13   ##WWW###WW##
 ```
-`A` automatic door panel (outer pair at z 30, inner pair at z 26) · `W` shop window · `w` interior window · `d` door ·
-`B` back door · `F` walk-in fridge door · `S` kitchen swing doors · `P` pass window (デシャップ, counter-height opening) ·
-`M` the mirror · `E` breaker panel (on the wall, used from the corridor).
+`D` front door (to the corridor at z −1) · `d` door · `f` fusuma · `W` sliding glass doors to the balcony ·
+`V` the CRT TV on its low stand (faces west, toward the closet) · `O` **押し入れ**: 1 deep × 3 wide along the west wall
+of the tatami room, a lower level the player hides in (2 high) and an upper level with futons, closed by two sliding
+fusuma on its east face.
 
-### Rooms (`Layout.rooms()`; acoustics preset → §10; circuit → §4.9)
+| key | name | box (x z, inclusive) | floor | acoustics | contents (minimum) |
+|---|---|---|---|---|---|
+| `genkan` | 玄関 | 23..25, 1..2 | `genkan_tile` (one step down, y 69) | `small_hard` | front door with peephole + chain, shoe cabinet, shoes, umbrella, **breaker panel** high on the wall, intercom handset |
+| `hall` | 廊下 | 26..27, 1..7 | `old_flooring` | `corridor` | light switch panel, a calendar, a mirror |
+| `toilet` | トイレ | 29, 1..2 | `bath_tile_floor` | `restroom` | old western toilet, small window, paper |
+| `bath` | 浴室 | 31..32, 1..2 | `bath_tile_floor` | `restroom` | **deep square bathtub** (`bathtub`, 1×2, water level states) with lid, tap, shower, small frosted window, bucket and stool |
+| `washroom` | 脱衣所 | 29..32, 4..5 | `vinyl_floor` | `small_hard` | washing machine, washbasin with mirror, **nail clipper**, towels, the bathroom's frosted glass door |
+| `dk` | DK | 23..27, 4..7 | `vinyl_floor` | `small_hard` | sink, 2-burner gas stove, old fridge (humming), rice bag + rice cooker, **salt**, **cup**, **kitchen knife** on the rack, small dining table with 2 chairs, a microwave, a **lighter** in the drawer |
+| `tatami` | 和室 | 23..27, 9..12 (minus the closet) | `tatami` | `small_soft` | **ちゃぶ台** (low table — the ritual table), **CRT TV** on a low stand, a hanging lamp with pull-cord, cushions (座布団), a small Buddhist-altar-like shelf (empty), curtains on the balcony doors, **押し入れ** |
+| `western` | 洋室 | 29..32, 7..12 | `old_flooring` | `small_soft` | bed, **desk with the laptop + sewing box + the printout**, a shelf with the **plush**, the camera bag, a closet (`c`, hide-able but forbidden by the printout), a poster, a desk lamp |
+| `closet` | 押し入れ | 23, 10..12 | `oshiire_floor` | `tiny_dead` | futons above, a cardboard box; the player hides on the lower level |
+| `corridor` | 外廊下 | outside 203 | `concrete` | `outside` | the forbidden outside |
 
-| key | name | box (inclusive, x z) | floor | acoustics | circuit | contents (minimum) |
-|---|---|---|---|---|---|---|
-| `vestibule` | 風除室 | 1..7, 27..29 | `vestibule_floor`, `entrance_mat` | `small_hard` | dining | umbrella stand, notice board (lost-child flyer 2001), capsule toy machines, the key switch of the auto door outside at x 5, z 31 |
-| `waiting` | 待合・レジ | 1..14, 23..25 + 9..14, 26..29 | `dining_floor` | `medium` | dining | waiting bench, magazine rack, **register counter** (register, service bell, reservation book, business phone, cake case), call display high on the wall, kids' corner at x 9..14 z 27..29 by the window (mat, toy shelf, stuffed bear, low fence, **the pillar** where the child counts) |
-| `dining` | 客席 | 15..39, 11..29 | `dining_floor` | `dining` | dining | south window booths (tables 1–7, **table 7 = booth with its table at x 34, z 28..29 against the south window**), east window booths (tables 8–11), centre four-seat tables (12–17) separated by a long planter divider and pillars, drink bar on the north wall (x 15..20), server station by the swing doors, booth partitions (frosted glass, 2 high) so a crouching player can hide |
-| `kitchen` | 厨房 | 15..39, 1..9 (minus fridge) | `kitchen_floor` | `kitchen` | kitchen | cooking line on the north wall (gas ranges, fryer, griddle, hood), **prep island with the chef's cutting board facing north at x 25, z 5**, pass shelf with heat lamp and pass bell on the pass window, dish pit with big sink and dishwasher in the east (x 33..39), pot shelves, trash |
-| `fridge` | 冷蔵室 | 15..18, 1..3 | `kitchen_floor` | `tiny_dead` | kitchen | wire shelves, boxes, frost; a film pack; knocking from inside |
-| `corridor` | 通路 | 1..13, 8..9 | `kitchen_floor` | `corridor` | back | breaker panel, mop bucket, cardboard boxes; back door (x 0, z 8) |
-| `staff` | 休憩室 | 1..6, 1..6 | `dining_floor` (worn) | `small_soft` | back | **lockers (hiding)**, time recorder with cards, table + folding chairs, CRT TV, bulletin board (news clipping 2009), handover notebook |
-| `office` | 事務所 | 8..13, 1..6 | `dining_floor` (worn) | `small_soft` | back | **manager's desk facing west with the bank of security monitors on the west wall (x 8)**; PC, filing cabinet, safe, shift schedule; the interior window (x 9..10, z 7) shows his left profile from the corridor |
-| `storage` | 倉庫 | 1..5, 11..15 | `kitchen_floor` | `small_hard` | back | shelves with stock, cleaning cart, spare chairs, the old high chair |
-| `mens` | 男子トイレ | 1..5, 17..21 | `restroom_floor` | `restroom` | restroom | sink + mirror (normal), urinals, one stall, hand dryer |
-| `womens` | 女子トイレ | 7..13, 17..21 | `restroom_floor` | `restroom` | restroom | **sink counter along the north wall under the mirror (x 9..11, z 16)**, three stalls along the south (one always 使用中, knocking), hand dryer, paper towels |
-| `cavity` | 鏡の向こう | 7..13, 11..15 | `restroom_floor_dark` | `restroom` | none | sealed. A dark, decayed, mirrored copy of the women's restroom seen through the mirror (stained tiles, a dead sink, wet floor). The mirror woman stands here |
+### Markers (`Layout.marker(name)` / `Layout.markers(name)`, feet positions, facing = where it looks)
+`spawn` (in the western room by the desk, facing it) · `door_front`, `peephole` · `breaker` · `tv` · `table` (ちゃぶ台) ·
+`bathtub` (list: the 2 blocks) · `bath_tap` · `washbasin` · `kitchen_sink` · `rice`, `salt`, `cup`, `knife`,
+`lighter`, `scissors`, `thread` (sewing box), `nail_clipper`, `plush_shelf`, `camera_bag`, `laptop` (desk) ·
+`switch_<room>` (light switches) · `lights_<room>` (list of the room's lamps) · `closet_hide` (list: the 3 hide
+positions inside the 押し入れ, facing east) · `closet_fusuma` (list) · `closet_peek` (the eye position at the gap) ·
+`western_closet` · `cam_suggest` (list: 4 suggested camera spots, facing what they should watch) · `doll_route` (list:
+the doll's search waypoints through every room) · `doll_hides` (spots where the doll may lurk/stop: under the table, in the
+washing machine's shadow, behind the bathroom door, on the balcony…) · `woman_spots` (list: corners where the apparition
+stands, each facing the nearest camera suggestion) · `balcony` · `intercom` · `phone` (your phone starts on the desk) ·
+`morning` (where the good ending's playback sits: the desk chair).
 
-* The exterior must be as detailed as the interior: brick base + beige walls, big shop windows with interior blinds,
-  an entrance canopy with the logo, a terracotta hip roof with a lit roof sign 「ひだまり」, a ramp with handrails,
-  flower planters, an A-frame menu board, two vending machines (lit, humming), a trash station, the bicycle rack,
-  the **pole sign** by the road (≈ 12 high, a lit box sign with the sun logo, flickering), parking lines and wheel stops,
-  puddles, sodium street lamps, utility poles, the curve with the 献花, the curve mirror, the blinking traffic light.
-  The medium's car (a dark old kei car, entity `medium_car`) is parked at the marker `medium_car`.
-
-### Markers (`Layout.marker(name)` / `Layout.markers(name)`; positions are feet positions, facing = where it looks)
-
-`spawn` (player start in the lot) · `medium` · `medium_car` · `wake` (where you wake after being caught: beside the
-car) · `door_outer`, `door_inner` (centre of each auto-door pair) · `door_switch` · `table_<n>` for n = 1..17 (table
-centre) · `button_<n>` (call button block of table n) · `seat_7` (the visitor's seat on the west bench of table 7,
-facing east) · `call_display` · `register` · `phone` · `visitor_path` (list: outside the door → vestibule → waiting →
-aisle → `seat_7`) · `visitor_spawn` (on the lot near the road) · `waitress_route` (list: patrol loop through the dining
-aisles, ≥ 10 points) · `waitress_station` · `waitress_bow` (facing the inner door) · `child_count` (beside the pillar,
-facing it) · `child_hides` (list, ≥ 6: under the booth table of table 3, behind the toy shelf, behind the register
-counter, in the drink-bar alcove, behind the planter divider, in the storage room, …) · `chef_board`, `chef_stove`,
-`chef_pass` (facing the pass window), `pass_bell` · `mirror_woman` (in the cavity, facing south toward the mirror) ·
-`mirror` (list of the mirror blocks) · `sink_w` (list, women's taps), `sink_m`, `sink_kitchen` · `manager_desk` (seated,
-facing the monitors) · `manager_route` (list: office → corridor → kitchen → dining → waiting → back) · `breaker` ·
-`cameras` (list: every security camera block, facing = its view) · `monitors` · `lockers` (list, hiding spots) ·
-`stall_occupied` · `tv` · `hand_dryer_w`, `hand_dryer_m` · `drink_bar` · `fryer` · `gas_range` · `dishwasher` ·
-`fridge_door` · `stuffed_bear` · `menu_board` · `curve_mirror` · `flowers` · `film_<n>` (n = 1..3 film pack spots:
-the register drawer, a staff locker, the walk-in fridge) · `key_office` (in the staff room) · `note_<id>` (§4.11) ·
-`exorcism_*` (the medium's standing spot at table 7, the six spirit spots around it, the player's viewing spot).
-
-## 3. Mechanics overview
+## 3. Mechanics
 
 | | |
 |---|---|
-| **Fear 恐怖 0..1** | server value, synced. Rises in darkness, near spirits (even unseen), at poltergeist events, when a spirit's awareness of you rises; falls in light, outside near the medium. Drives heartbeat/breathing sound, vignette, grain, chromatic aberration, the shader (§9). |
-| **Danger 0..1** | max over spirits of their awareness of you (1 while hunted). Drives the danger music layer, the flashlight flicker and the shader. |
-| **霊障 level 0..3** | +1 each time you are caught. The director gets busier, spirits notice 15 % faster per level. |
+| **Fear 恐怖 0..1** | synced; rises in darkness, alone in the closet, at 霊障, when the doll is close or out of sight too long; falls with light (only before the ritual). Drives breathing/heartbeat, vignette, grain, chromatic aberration, the shader (§9). |
+| **Danger 0..1** | how close the doll is to finding you (its suspicion of your hiding place; 1 while it is at the fusuma). |
+| **Mouth (塩水) 0..1** | salt water in your mouth: you cannot speak; your breathing is muffled (half noise). Holding your breath (key **V**) drains it slowly; **gasping or speaking empties it** — the doll's protection (§3.5) is gone. Refill only from the cup. |
 
-### 3.1 The camera 霊写機 (`reisha_camera` / `reisha_camera_finder`)
-* Right-click: raise / lower the camera. Raising swaps the stack to `reisha_camera_finder` (film count kept in NBT
-  `film`) and the server applies Night Vision (ambient, hidden) — the shader keys on both. The hand is hidden.
-* **Finder view** (HUD + shader): an optical finder frame with parallax marks, a centre focus circle, `のこり 8枚`,
-  a **霊感計 (spirit meter)**: a needle that swings toward the strength of spirit presence in the frame, crackling.
-  Zoom with the scroll wheel (FOV 70 → 30). **In the finder every spirit is fully visible** (§5 says what the naked eye
-  sees). The focus circle turns red when a photographable face is inside it.
-* **Shutter**: left click in the finder (attack key, intercepted). Costs 1 film; no film = dry click. The flash always
-  fires: the photographed frame is lit by it (shader: `blindness` channel, §9; no shader: the photo is brightened in
-  post), and **every other spirit within 14 blocks with line of sight to you gets awareness +0.6**.
-* **The photo**: the client grabs the rendered frame (world only, no HUD/hand) at the flash, crops it to the instant
-  film window (4:3), shrinks to 320×240 and processes it like old instant film (warm shift, faded blacks, flash
-  falloff toward the edges, vignette, grain, slight blur, light leak). It is saved to
-  `<game dir>/reisatsu/photos/<world>/<photo id>.png` and shown as an **ejecting instant photo** sliding out of the
-  camera that develops over ~3 s. If the shot is valid, the spirit's **name writes itself in red on the margin**
-  (art: `textures/gui/photo_name_<spirit>.png`). Invalid shots of a spirit that had noticed you come out as a smeared
-  blur with a face-like shape. Empty shots occasionally carry a faint face/hand (心霊写真 overlay, `textures/gui/photo_ghost_<n>.png`).
-* **Validity (server decides; the client sends the shot with its zoom)** — a spirit is captured when all hold:
-  1. its head is inside the central 80 % of the finder frame (projected with the shot's FOV),
-  2. distance ≤ 12 blocks (≤ 20 at full zoom),
-  3. line of sight from the camera to its head (glass, the mirror and the pass window do not block),
-  4. **its face shows**: the angle between its facing and the direction to the camera ≤ 110°,
-  5. **it has not noticed you** (awareness < 1 and not hunting / not in its 30 s after-hunt),
-  6. it is in a photographable state (§5),
-  7. it is not already captured.
-  Quality ★1..★3 from centring, distance and how frontal the face is.
-* A captured spirit is **bound into the photo**: a scream sucked backwards, the spirit is pulled into the lens and
-  vanishes (it no longer acts). The photo becomes the item `evidence_photo` (NBT: `photo`, `spirit`, `stars`, `time`)
-  and is also kept in the album.
+### 3.1 The fixed cameras 定点カメラ (`fixed_camera` item → `camera` entity)
+* Right-click a block face to place a camera (small action cam on a mini tripod, red REC LED); up to 4, numbered in
+  placement order (CAM 1–4, the HUD names them after their room: 「CAM1 浴室」). Sneak + right-click picks one up
+  (before 3:00 only).
+* The **laptop** (`laptop`, or the phone `phone` with a smaller screen) opens the **camera app**: the client view
+  switches to the selected camera (`Minecraft.setCameraEntity` on the camera entity; the player's body stays where it is),
+  with a CCTV overlay (REC ●, CAM n + room, timestamp 「2026/11/03 03:21:07」, battery, a slow scanline, noise, IR
+  night-vision monochrome when the room is dark). Keys: 1–4 / A–D cycle cameras, **ESC / right-click closes**. The sound
+  listener follows the camera (you hear what its microphone hears) — and a muffled mix of what is near your body.
+* Feeds glitch: noise bursts when the doll or the woman is in view, a frame freeze, **frame skipping when the doll moves
+  (stop-motion)**, a blackout when something covers the lens, the timestamp jumping.
+* Observed by a camera the doll moves stiffly in jerks; **directly seen by the player's own eyes it freezes** (and turns
+  its head toward you if you look away and back).
+* The cameras keep recording; the good ending plays back their footage (the game logs key events per camera with
+  timestamps and replays them as a slideshow of real captured frames — capture a frame from the active feed every few
+  seconds while watching and at key events, like REISATSU's photo capture).
 
-### 3.2 Album 霊撮帳 (key **J**)
-A notebook GUI: six silhouette slots (filled with the photo and the red name once captured, each labelled with its
-night — 「二日目・送った」), all shots taken (empty and failed ones too), the notes found, the medium's rules, and the
-week (「七夜」: every night's date and who was sent on it). Clicking a photo shows it large.
+### 3.2 Hiding (`closet` + the western closet + under the bed? no — only closed spaces count)
+* Right-click the fusuma from outside: enter the 押し入れ (lower level; crouched camera height, the fusuma closes). Inside:
+  look around a dark cramped space (futon edge above, a box, the gap of light).
+* **Peek** (hold **right mouse** facing the fusuma): the fusuma opens a crack (4 px); view through the slit (overlay) — a
+  slice of the tatami room with the TV's static light. Peeking makes a soft sliding noise (2) and **the doll sees light
+  move** if it faces the gap.
+* Leaving: right-click the fusuma (noisy: 6).
+* A closed hiding place makes you safe from sight; the doll finds you only by **sound** (breathing, gasping, phone,
+  moving, peeking) or by searching the closet when its suspicion is high (§3.4).
 
-### 3.3 Awareness (stealth)
-Every spirit keeps an awareness 0..1 of the player:
-* **Sight**: in its view cone (half-angle per spirit, typically 60°), line of sight (`ClipContext.Block.VISUAL`, glass is
-  see-through; booth partitions, counters, shelves and doors block), within range. Range: 6 blocks if you stand in the
-  dark, 14 if lit (block light ≥ 8 at your eyes, or your flashlight is on and points within 60° of the spirit), ×0.6
-  while sneaking, ×1.15 per 霊障 level. Rate ∝ closeness × centrality (dead centre of its view ≈ 1.2 s to notice at half
-  range).
-* **Hearing**: noise events (§3.4) add awareness by distance and turn the spirit toward the sound; most spirits walk
-  over to investigate the position (INVESTIGATE state) before going back to their routine.
-* Awareness decays slowly when nothing is perceived (−0.1/s after 2 s).
-* Feedback: the HUD **eye** near the crosshair (closed → half-open → open, red when ≥ 0.8), whispers rising, the
-  spirit turning its head toward you; the danger music layer.
-* **Noticed** (awareness reaches 1): the spirit's NOTICE animation + `spirit.notice` sting, then **HUNT**: it comes for
-  you (speed per spirit, mostly a little below your sprint). Touch = **caught**. Breaking line of sight and staying
-  out of it for 5 s (a locker, a closed stall, another room) loses it; it goes back to its routine but stays wary
-  (photos of it fail for 30 s). Some spirits react differently (§5).
+### 3.3 Noise (`NoiseSystem.emit(level, pos, radius, cause)`)
+walking on tatami 3 / flooring 5 / tiles 6 / sprinting 12 / closet fusuma open-close 6 / peek 2 / door 8 / dropping an
+item 6 / speaking (a ritual line) 10 / breathing at fear ≥ 0.8 with an empty mouth 4 (with salt water 2) / gasp 8 /
+phone vibrating (if not silenced) 7 / the laptop app (screen light leaks through the fusuma gap; 0 noise but light).
 
-### 3.4 Noise (`NoiseSystem.emit(level, pos, radius, cause)`)
-| cause | radius |
-|---|---|
-| sprinting footsteps | 14 | walking footsteps on tile / kitchen / glass shards / scattered menus | 6 / 7 / 10 / 8 |
-| walking on carpet / mat | 3 | sneaking | 0 (glass shards 3) |
-| jump landing | 8 | kitchen swing doors (passing) | 9 |
-| door open/close (not sneaking / sneaking) | 8 / 3 | locker | 6 |
-| knocking a chair (walking into it) | 10 | the camera shutter + flash | 10 |
-| flashlight click | 3 | gasp after holding breath > 4 s | 9 |
-| heavy breathing at fear ≥ 0.85 | 4 | pressing a call button, ringing the bell, the phone | 16 |
+### 3.4 The doll (鬼, entity `oni_doll`)
+* Spawned into the bathtub as the ritual item `ritual_doll` turns into an entity at step 12; after step 17 it **wakes**:
+  at first it stays in the tub (you can see it on CAM, floating face down) for ~1–3 min, then **it is not there any more**.
+* Searches room by room along `doll_route`, pausing at `doll_hides`, investigating noises (moves toward the source),
+  checking hiding places (the western closet, behind doors, the bathtub, the 押し入れ last unless it heard you). Its
+  suspicion of the 押し入れ rises with your noises nearby and with light from the gap (peek, laptop) when it is in the
+  tatami room; at **1.0 it opens the fusuma**: jump scare → 鬼 ending. Unless the salt water is still in your mouth:
+  then it stops at the fusuma, stands there for a long time (you hear it breathing / rice rustling), and leaves. With the
+  mouth empty it does not stop.
+* Movement: crawling/dragging itself fast when unobserved, stiff stop-motion steps when on camera, frozen when you see it
+  directly (§3.1). It carries **the knife** after it leaves the bath (it took it). Wet: drips, leaves damp marks.
+* Phase 3: once you leave the closet it **stops searching and waits** somewhere (one of `doll_hides`, sitting, facing the
+  wall); you must find it via the cameras and do the ending ritual. It moves only while you are not looking; if you take
+  too long (> 6 min after leaving) it starts hunting you openly (approaching whenever unseen; touching you = 鬼 ending).
+* Ending ritual: face it within 2 blocks → **spit (action key)**: the salt water hits it (it shrieks, falls limp);
+  then press the action key 3× for 「私の勝ち」; then carry it (`ritual_doll` again) to the sink/drained tub and use the
+  lighter: it burns (fire particles, smoke, a scream in the static) → good ending.
 
-### 3.5 Breath (key **V**, hold)
-Hold your breath: no breathing sound, the heartbeat gets loud, a thin gauge drains over 10 s (tighter at high fear).
-Releasing after more than 4 s = gasp (noise 9). Some spirits react to breathing nearby (the mirror woman, the child).
+### 3.5 Rules and penalties
+Speaking before 3:00 is fine. During phases 1–3: opening the front door = **外へ** ending; the salt water spat or
+gasped out while hiding = no protection (the doll will open the fusuma if it reaches it); hiding anywhere but the
+押し入れ = the doll's suspicion rises 2× faster; using the lights = it sees you from afar; after 5:00 = **未完**.
 
-### 3.6 Hiding
-* **Lockers** (staff room): right-click to step in / out. View through the slits (overlay). A spirit that did not see
-  you go in cannot find you. The door rattles if you move the camera too fast (noise 4) — keep still.
-* **Restroom stalls**: close the door; the manager and the waitress check stalls only if they heard you.
-* Crouching behind booth partitions, counters, the planter divider and the register counter breaks line of sight.
+### 3.6 Phone and laptop
+* `phone` (smartphone): the camera app (small view), a flashlight (weak), the time, a muted "silent" switch (the phone
+  vibrates audibly unless silenced), messages from a friend 「ほんとにやるの？」「やめとけって」… and at 3:33 a call from
+  **your own number**.
+* `laptop` (on the desk, carry it into the closet): the camera app (large view), the printout as a PDF.
 
-### 3.7 Flashlight 懐中電灯 (`flashlight` / `flashlight_on`)
-Right-click toggles. No battery limit (this game's pressure is attention, not resources). Its beam makes you visible
-far away (§3.3) and flickers when danger is high. Usable in the off hand while the camera is raised (the beam then
-lights the finder image — and makes you conspicuous).
+### 3.7 Director (霊障) — paced by phase, fear and time; quiet stretches matter
+Before 3:00: almost nothing (a creak, the fridge, rain). Phase 1: the TV static swells when you count; water sloshing.
+Phase 2: the TV changes channel by itself (a dark room… your own room from above), the intercom chimes (the corridor
+camera view shows nobody… then someone very close to the peephole), the phone vibrates (your number), knocking on the
+closet from the outside, wet small footsteps, the bath tap runs, the hanging lamp swings, a pull-cord clicks, the
+washing machine starts, things fall in the kitchen, the doll's giggle from the wrong room, your name whispered at the
+fusuma, the woman in a camera feed's corner (only on camera; each time you return to that feed she is closer to the
+lens; once she is in the closet feed — if you placed one there — behind you).
+Phase 3: silence except the TV and the rain.
 
-### 3.8 Caught, お札 and the medium
-Caught = the spirit's jump scare (full-screen face, 0.6 s, `game.jumpscare`) → black → `game.caught` → you wake at
-`wake` beside the car; the medium has burnt an お札 (`item.ofuda_burn`, 「……間に合ってよかった」). お札 −1 (three for the
-whole week), 霊障 +1, the spirit returns to its routine and the night goes on. **Caught with no お札 left = 相席 ending.**
-The HUD shows the お札 count.
+### 3.8 HUD
+Top left: the current step 「次：米を詰める」 / 「隠れる」 / 「人形を探す」. Top right: the clock 「03:21」. Bottom
+right: the mouth gauge (a small cup icon) and breath. The step checklist on the printout (key **J**). Subtitles bottom
+centre. In the camera app: the CCTV overlay only.
 
-### 3.9 Power: the breaker panel 分電盤 (`breaker_panel`)
-Right-click opens a small GUI with switches (big clunks): `dining` (dining + waiting + vestibule lights), `kitchen`,
-`restroom`, `back` (corridor/staff/office/storage), `sign` (pole sign, roof sign, lot lamps), `cameras` (security
-cameras + monitors), `door` (automatic doors). Start: dining OFF (only the green exit signs, the drink bar's standby
-glow, the cake case, a few downlights over the register on a night circuit), kitchen OFF (pilot lights, the heat lamp
-off), restroom ON (flickering), back ON (one corridor tube flickering), sign ON, cameras ON, door ON. Lights on make
-everything easier to see — for you and for them. Poltergeist events can trip a circuit (`fixture.breaker_off`).
-
-### 3.10 Keys and doors
-* **店の鍵** (`shop_key`): turns the key switch at `door_switch` → the automatic doors work (they open for anything
-  that comes near — you, a spirit, or nothing). Also opens the back door.
-* **事務所の鍵** (`office_key`): in the staff room (marker `key_office`), opens the office.
-* Staff doors open normally; the walk-in fridge door is heavy and loud unless you sneak.
-
-### 3.11 Notes (found by right-clicking paper blocks; read in a paper GUI, kept in the album)
-`report` 業務報告書 (given at the start: the phenomena list) · `handover` 引き継ぎノート (staff room; years of entries:
-「7番の呼び出し、誰もいないのに鳴る」「鏡のこと、新人には言わないで」「権藤さんの包丁、絶対動かさないこと」…) ·
-`clipping` 新聞の切り抜き (2009 crash; the waitress) · `reservation` 予約台帳 (register: every night 「2:00　1名様
-ミウラ様」 in the same hand, for years) · `diary` 店長の業務日誌 (office; exhaustion; the last entries go wrong) ·
-`drawing` 子供の絵 (kids' corner: crayon drawing of the restaurant and a girl hiding, 「もういいよ」) · `flyer` 迷子の
-お知らせ (vestibule board, 2001) · `fire` 消防点検記録 (kitchen; the 1996 fire) · `cleaning` 清掃チェック表 (women's
-restroom: 「鏡　拭いても曇る」「3番個室　開かない」) · `medium` 霊媒師のメモ (the rules, given at the start).
-
-### 3.12 Director (poltergeist, 霊障)
-Server-side pacing by night (§1 Flow): **night 1** one phenomenon every 25–45 s around the player (40–70 s once five
-were seen), never two big ones within 15 s, chosen where the player can witness it — near their area, about one time
-in three behind them — preferring kinds not seen yet; **nights 2–7** a sign of the night's spirit every 20–32 s until it
-shows (then only now and then), a quiet general one every 60–120 s. Nothing on top of a chase, nothing during the
-medium's scenes, nothing before the player has gone in. Witnessing (§1 Flow 3) is `Director.canWitness`; every kind
-of the report's list also ticks the report note. Events (`/reisatsu debug event <id>`):
-the outer auto door opens by itself with the chime · taps turn on (kitchen, restrooms) · **menus fly off a table and
-scatter** (flutter particles, `menu_scattered` decals) · call buttons ring at empty tables (the call display shows the
-number) · chairs slide / fall · lights flicker, a tube bursts, a circuit trips · the store music starts (warped) · the
-PA chimes and mumbles · the register phone rings (answer: static and 「……二時に……一名で……」) · the staff TV turns
-on to static · the hand dryer roars in an empty restroom · the drink bar pours by itself · a plate smashes in the
-kitchen · knocking from inside the walk-in fridge / the occupied stall · the stuffed bear has turned to face you ·
-glasses of water appear on empty tables · wet footprints from the door to table 7 · the menu board outside reads
-「まだ　いますか」 · a car passes on the wet road · 2:00: a motorbike far away, tyres screaming, an impact, silence —
-then the door opens (the visitor arrives). The spirits' signs: 「いらっしゃいませ」 from the dark (`greet`), a tray
-clattering (`tray`), a giggle right behind you (`giggle`), a ball / the toy squeak (`ball`), sobbing from the mirror
-(`sob`), the women's taps (`taps_w`), the gas lighting itself (`gas`), chopping that stops as you come near (`chop`),
-keys in the corridor (`keys`), a camera's red LED (`camera`). In a dark room "the lights flicker" means the dead tubes
-stutter on for a moment.
-
-### 3.13 HUD
-Bottom right: film left, お札 left (icons). Top left: tonight's objective (`霊障を確かめる 3/5`; `異変を探る`, then
-`料理長を撮影する`; `霊媒師のもとへ戻る`) and under it, for a few seconds, `記録：…` when something that counts tonight was
-witnessed. The night's title card (black, then the lot fading in under it). The awareness eye. The breath gauge while holding. Subtitles for voices and important sounds (bottom
-centre). Area name when entering a room the first time (small, fading). Controls hint after the intro.
-
-### 3.14 Controls
-| key | |
-|---|---|
-| right-click (camera) | raise / lower the camera |
-| left-click (finder) | shutter |
-| scroll (finder) | zoom |
-| right-click (flashlight) | on / off |
-| right-click | interact: doors, lockers, the breaker, notes, the phone, the medium |
-| sneak | silent steps, quiet doors |
-| **V** (hold) | hold your breath |
-| **J** | 霊撮帳 (album, notes) |
+### 3.9 Controls
+right-click: use/interact (cut, fill, sew, place a camera, open/enter the closet, peek (hold), stab, light) · left
+click: — · **V** hold breath · **R** spit / speak the ritual line (context) · **C** open the camera app (laptop/phone
+in hand) · **1–4** select camera · **J** printout/checklist · sneak: quiet.
 
 ## 4. (reserved)
 
-## 5. Spirits (entities)
+## 5. Entities
 
-All spirits extend vanilla `PathfinderMob` and implement `com.reisatsu.entity.Animated`:
-```java
-public interface Animated { int pose(); float poseTime(float partialTick); default float glitch(float partialTick) { return 0; } }
-```
-`pose()` = pose id, `poseTime()` = ticks since the pose began, `glitch()` = 0..1 strength of the unnatural stutter
-(frame skips, jitter, wrong-way joints) that the model applies. Models (§12) read these plus limbSwing, ageInTicks,
-netHeadYaw, headPitch. Glow details (eyes, embers, the visor glint) are a second full-bright layer `<id>_eyes.png`
-(`RenderType.eyes`). **Spirits render translucent** (`entityTranslucent`, alpha decided by the renderer): naked-eye alpha
-per spirit below, **always 1.0 in the finder**, plus brief flickers to higher alpha at high fear.
+All implement `com.hitori.entity.Animated` (pose, poseTime, glitch — same contract as REISATSU).
 
-| id | name | size (w×h) | naked eye | look | poses |
-|---|---|---|---|---|---|
-| `visitor` | 来店者 | 0.6×1.9 | invisible (wet footprints, the door, the chair pulled out, breathing) | rider in a black leather jacket scraped raw on one side, a **full-face helmet with a cracked visor** (behind the cracks: one eye, a faint glint), right arm hanging broken the wrong way, jeans dark with water, dripping | 0 WALK (slow limp, broken arm swinging dead), 1 SIT (seated, hands flat on the table, head bowed), 2 STAND (waiting, head down), 3 PRESS (reaching for the call button), 4 NOTICE (helmet snaps toward you, visor cracks wider), 5 LUNGE |
-| `waitress` | 給仕 | 0.6×1.8 | faint (alpha 0.3) | HIDAMARI uniform: brown dress, orange apron, white collar, name badge 「小野寺」, hair in a net; skin grey-white, **a fixed polite smile too wide**, eyes black hollows; one shoe missing; a round tray with a glass of water | 0 WALK (tray at the shoulder, too smooth, head tilted), 1 SERVE (bends to set a glass), 2 BOW (deep 90° bow, hair falls forward), 3 STAND (tray before her, head tilted 30°), 4 NOTICE (head rotates sideways 90°, mouth opens), 5 CHASE (fast stiff walk, arms out, tray gone) |
-| `chef` | 料理長 | 0.8×2.2 | visible (alpha 0.75) | big man in a stained white chef coat and a tall toque, apron charred; **face and hands burnt black and cracked, embers glowing in the cracks and the eyes** (eyes layer); a heavy cleaver | 0 CHOP (back to us, cleaver arm chopping), 1 STOVE (tending flames, leaning in), 2 PLATE (at the pass, head bowed, arranging), 3 LOOK (head turns slowly over the shoulder, body still), 4 WALK, 5 CHASE (charge, cleaver raised), 6 IDLE |
-| `child` | かくれんぼの子 | 0.45×1.1 | invisible (giggles, running feet, things move) | 5-year-old girl: yellow kindergarten hat, pale blue smock with a name tag 「ゆうか」, red shoes, black bob covering the eyes; too still | 0 RUN (skipping), 1 COUNT (face to the pillar, forearm over the eyes), 2 HIDE (crouched small, hands over the eyes), 3 PEEK (hands slide down, head up, looking), 4 FOUND (points at you, mouth wide), 5 STAND (head tilted, hands behind), 6 GIGGLE (shoulders shaking, hand over mouth) |
-| `mirror_woman` | 鏡の女 | 0.6×1.8 | only *through the mirror* and faint (alpha 0.25) | white blouse, dark skirt, soaked; long wet black hair over the face, **one eye showing**; grey skin, blue lips; water running off her fingers | 0 BOWED (leaning over the dead sink, face in her hands, crying), 1 STARE (upright, staring through the glass), 2 PRESS (both palms flat on the glass), 3 SCREAM (head back, mouth too wide), 4 STAND |
-| `manager` | 店長 | 0.6×1.85 | invisible while seated in the office; visible (alpha 0.85) while hunting | white shirt with sweat stains, loosened tie, name badge 「店長　森田」, keys on the belt; grey face with deep black rings, **glasses with one lens cracked**, thinning hair, slouched | 0 SIT (at the desk facing the monitors, one hand on the mouse), 1 STAND, 2 WALK (stiff, head forward), 3 BOW (deep bow, head hanging), 4 LOOK (scanning left/right), 5 CHASE (fast power walk), 6 REACH |
-| `medium` | 霊媒師 八雲トキ | 0.6×1.6 | normal living person (alpha 1, not a spirit) | old woman, grey hair in a bun, dark purple kimono with a black haori, white tabi, prayer beads (数珠) | 0 IDLE (hands together), 1 TALK (gestures), 2 PRAY (beads raised, chanting), 3 WALK, 4 KNEEL, 5 BOW |
-| `medium_car` | (the car) | 1.6×1.5 | normal | old dark-green kei car (軽自動車), wet, a dim dome light inside, a small omamori hanging from the mirror | static (no AI); 0 CLOSED, 1 DOOR_OPEN |
+| id | name | size | look | poses |
+|---|---|---|---|---|
+| `oni_doll` | 鬼（人形） | 0.45×0.6 | the worn white plush rabbit, soaked grey, button eyes (one hanging by a thread), rice spilling from the knife wound sewn with **red thread wound round and round its body**, ears drooping, holding the kitchen knife (bigger than its arm) | 0 FLOAT (face down in water, limp), 1 SIT (slumped against something, head lolling), 2 CRAWL (dragging itself fast on its arms, legs trailing), 3 WALK (stiff marionette steps, swaying, knife dragging), 4 STAND (upright, perfectly still, head tilted 90°), 5 TURN (head rotates 180° to look at you), 6 PEEK (around a door frame, only head and one ear), 7 LUNGE (jump scare: springs at your face, knife raised), 8 LIMP (after the salt water: collapses), 9 BURN (twitching in the fire) |
+| `woman` | 女 | 0.6×1.8 | camera-only apparition: long wet black hair hiding the face, a stained white nightdress, grey bare feet, too-long fingers, standing in a corner facing the wall… or the lens | 0 STAND (facing the wall), 1 FACE (turned to the lens, hair parted on one eye), 2 CLOSE (leaning toward the lens), 3 GONE |
+| `camera` | 定点カメラ | 0.25×0.3 | a small black action camera on a mini tripod, red REC LED (eyes layer) | 0 IDLE, 1 FALLEN (knocked over by something) |
+| `plush` (item model + block `plush_doll`) | the plush before the ritual | — | the same rabbit, clean, white, sitting | — |
 
-### Behaviour (server) and photo windows
-* **visitor** — (night 2) arrives every 2–3 min (first at 2:00 with the motorbike/crash sound cue): spawns at `visitor_spawn`,
-  walks the `visitor_path` (the outer and inner auto doors open with the chime), sits at `seat_7` (SIT), presses
-  `button_7` (PRESS) every 30–60 s, waits 2–3 min, fades; the chair is left pulled out and the footprints dry slowly.
-  Sight cone 50°, range ×0.8. Noticed → the auto doors lock, he stands and LUNGEs (fast, short range 8). Photo window:
-  walking in (face visible from the front/side) and **seated at table 7 — his profile is visible through the south
-  window from the parking lot.**
-* **waitress** — walks `waitress_route` serving water: SERVE at tables (a `water_glass` appears), back to
-  `waitress_station`. **When an auto door opens she goes to `waitress_bow` and BOWs (2 s, eyes closed: blind)**
-  「いらっしゃいませ」. Sight cone 60°, range ×1.0; while SERVE her cone is 25° downward. Noticed → CHASE across the
-  customer area (speed 0.9 × your sprint), checks stalls if she heard you. Photo windows: the bow, SERVE, from the side.
-* **chef** — cycle: CHOP at `chef_board` (25–40 s, rhythmic chopping; back to the pass window; every 6–12 s the
-  chopping stops and he LOOKs over his shoulder for 2–3 s), STOVE at `chef_stove` (8 s, flames roar: deaf, cone 20°),
-  PLATE at `chef_pass` (6 s, head bowed: cone 30° downward, range 3, rings the pass bell). Hearing ×1.5 (noise in the
-  kitchen). Noticed → CHASE inside the kitchen and corridor only (fast), roars, slams the cleaver. Photo window:
-  **through the pass window from the dining room while he PLATEs**, or from the side at the stove.
-* **child** — when she shows herself (night 4): 「もういいかい」 from nowhere. Plays hide-and-seek: picks one of
-  `child_hides`, runs there (running feet, a chair scrapes), HIDEs. Every 6–10 s she PEEKs for 2 s (cone 70°, range 9):
-  **if she sees you during a peek: FOUND 「みーつけた」** — not a capture: she giggles, runs to a new hide and **calls the
-  nearest other spirit to your position** (its awareness +0.5). Every few minutes she COUNTs at `child_count` (blind,
-  facing the pillar). She hears breathing within 3 blocks. Photo window: **while hiding with her hands over her eyes**
-  (face counts as visible).
-* **mirror_woman** — lives in the cavity behind the mirror; never leaves it. Cycle: the women's taps run (`sink_w`),
-  she is BOWED crying (cannot see; hears breath within 4 blocks) for 30–50 s; then **the taps stop by themselves**, she
-  straightens, STAREs through the mirror for 8–12 s (sees everything in front of the mirror, cone 70°), PRESSes her
-  palms on the glass (squeak, prints of hands appear), back to BOWED. Noticed → SCREAM, the mirror cracks
-  (`mirror` state `cracked`), the restroom lights burst; **leave the restroom within 3 s or be caught.** Photo window:
-  **BOWED, through the mirror** (from in front of the mirror).
-* **manager** — phase 1: SIT at `manager_desk`, unseen; **he sees through the security cameras**: standing in any
-  camera's cone (≤ 10 blocks, light or not) raises his awareness; the camera's LED turns red when it sees you; the
-  office monitors show the view. Noticed in phase 1 → the PA 「お客様……」 and he comes out to hunt. With the `cameras`
-  circuit off he is blind, gets up, walks to the breaker and turns it back on (STAND/WALK, LOOK). Photo window (phase
-  1): his left profile through the office window, or at the breaker. Phase 2 (closing time): he patrols
-  `manager_route` (WALK, LOOK, BOW at the entrance 「本日の営業は、終了いたしました」), cameras still his eyes, hearing ×1.3;
-  photo window: BOW, LOOK away, or catching him at the breaker after you cut the cameras. On the last night he wakes
-  straight into phase 2 once closing time is over.
-* **medium** — stands at `medium`, faces the player, TALKs when right-clicked: hints for the next objective, accepts
-  photos (reads the name, tells the story: §1), PRAYs during the exorcism.
+The doll is **never fully visible in the dark** to the naked eye except within the lamp/phone light or the TV glow; on
+the IR camera feed it shows as a pale blob with two glinting button eyes (eyes layer). Movement rules (§3.4) matter for
+the animation: stop-motion frame skipping when seen by a camera (the model holds poses, then jumps), complete stillness
+when seen by the player, frantic crawling when unseen.
 
 ## 6. (reserved)
 
 ## 7. Registry ids
 
-### Blocks (`assets/reisatsu/textures/block/<texture>.png`, 16×16 unless noted; prop models in
-`assets/reisatsu/models/block/<id>.json` face **north** at rest, blockstates rotate by `facing`)
+### Blocks (`assets/hitori/textures/block/<texture>.png`, 16×16; prop models face north at rest; same model/state
+naming rules as REISATSU DESIGN §7.1: boolean `p` → `<id>` / `<id>_<p>`; int → `<id>_<n>`; `half`/`part` first)
 
-Surfaces and structure (simple cubes unless noted)
-| id | notes |
-|---|---|
-| `dining_floor` | wood-look vinyl planks, warm brown, worn paths |
-| `kitchen_floor` | red-brown quarry tiles (4 per block), dark grout, grease |
-| `restroom_floor` | small grey-white mosaic tiles |
-| `restroom_floor_dark` | the cavity: same mosaic, stained black, wet |
-| `vestibule_floor` | dark grey granite-look tiles |
-| `entrance_mat` | thin (1 px) dark rubber mat with the sun logo, facing |
-| `wallpaper` / `wallpaper_stained` | cream wallpaper, faint vertical stripe / with a brown water stain and mould |
-| `wainscot` | dark wood panelling with a chair rail (lower wall band) |
-| `white_tile` / `white_tile_dirty` | glossy white wall tiles / with grease, cracks, black grout |
-| `ceiling_tile` / `ceiling_tile_stained` | acoustic ceiling tile with pinholes and grid / with a water stain |
-| `ceiling_light` | recessed square fluorescent panel. states `lit` (bool), `broken` (bool → flickers). light 13 when lit |
-| `downlight` | round recessed downlight, warm; `lit`; light 11 |
-| `pendant_lamp` | warm glass shade on a cord over booth tables (model in the upper half); `lit`; light 12 |
-| `exit_sign` | green 誘導灯 (running man + arrow), facing, wall or ceiling (`hanging`); always light 7 |
-| `exterior_wall` | beige stucco siding |
-| `facade_brick` | brown brick (base of the façade) |
-| `brick_sill` | brick with a concrete window sill top (slab-like, 10 px) |
-| `roof_tile` (+ `_stairs`, `_slab`) | terracotta roof tiles |
-| `fascia` | roof edge band: orange with a cream stripe |
-| `shop_window` | big glass panel with a thin aluminium frame, translucent; condensation / droplets left by the rain |
-| `window_blind` | interior blind panel (2 px) against a window, facing; `closed` (bool) |
-| `asphalt` | dark wet asphalt, fine aggregate |
-| `parking_line` | asphalt with a white line along `axis` (x/z) |
-| `road_line` | asphalt with a yellow centre line along `axis` |
-| `curb` | concrete curb (slab 8 px) |
-| `sidewalk` | grey interlocking pavers, wet |
-| `puddle` | 1 px translucent water film on the ground (shader: reflective water) |
-| `rice_paddy` | dark harvested paddy mud with stubble |
-| `hedge` | dark trimmed hedge (leaves-like, cutout) |
-| `concrete_wall` | plain grey concrete (back yard wall, foundation) |
-| `granite_counter` | dark speckled granite countertop |
-| `stainless` | brushed stainless steel panel (kitchen walls behind the line) |
-| `pillar` | square column clad in dark wood |
+Surfaces (plain cubes; world makes their models): `tatami` (6-mat pattern edges, axis), `tatami_worn`, `old_flooring`
+(dark varnished planks, worn), `vinyl_floor` (beige cushion floor, kitchen), `genkan_tile` (small dark tiles),
+`bath_tile_floor`, `bath_tile_wall` (pale blue small tiles, old grout), `plaster_wall` (old beige textured wall),
+`plaster_wall_stained`, `wallpaper_old` (faded floral), `wood_wainscot`, `ceiling_board` (old wooden ceiling boards),
+`ceiling_board_stained`, `oshiire_floor` (bare plywood), `apartment_siding` (grey corrugated siding of the building),
+`apartment_door_metal` (outer face of the steel doors), `corridor_concrete`, `concrete`, `asphalt_wet`, `block_wall`
+(concrete block garden wall), `roof_slate` (+ `_stairs`, `_slab`).
+Doors (vanilla-style, world makes models; textures `<id>_bottom` / `_top`): `front_door` (steel door with peephole and
+mail slot, 「203」), `interior_door` (cheap wood-grain door), `toilet_door` (with a small frosted window),
+`bath_door` (frosted folding glass door, translucent), `fusuma` (sliding paper door: a block with `open` 0..2 and
+`half` — art model), `oshiire_fusuma` (the closet's, with `open` 0 shut, 1 crack, 2 open), `balcony_door` (aluminium
+sliding glass door, translucent, `open`).
+Props (art models): `chabudai` (low round table), `zabuton`, `crt_tv` (`on`, `channel` 0 static / 1 dark room / 2 face —
+emissive screen, animated textures), `tv_stand`, `hanging_lamp` (`lit`, pull-cord; swings: block entity or state
+`swing`), `fluorescent_ring` (`lit`), `pull_switch`, `light_switch` (`on`), `curtain` (`closed`), `futon_folded`,
+`cardboard_box`, `altar_shelf`, `bathtub` (`water` 0 empty / 1 half / 2 full, `lid`), `bath_tap` (`running`),
+`shower`, `bath_stool`, `bucket`, `washing_machine` (`running`), `washbasin` (`running`), `mirror_small`, `toilet_seat`,
+`kitchen_sink` (`running`), `gas_stove` (`lit`), `fridge_old` (`open`), `rice_bag`, `rice_cooker`, `salt_shaker`,
+`cup_glass`, `knife_rack` (`has_knife`), `microwave`, `dining_table`, `dining_chair`, `drawer` (`open`),
+`desk`, `desk_chair`, `laptop_block` (`open`, `on`), `sewing_box` (`open`), `printout` (paper on the desk),
+`bed`, `shelf`, `plush_doll` (`present`), `camera_bag`, `poster`, `desk_lamp` (`lit`), `shoe_cabinet`, `shoes`,
+`umbrella`, `breaker_panel` (`open`), `intercom` (`ringing`), `calendar`, `wall_clock`, `laundry_pole` (balcony),
+`ac_outdoor_unit`, `vending_machine_small` (lit), `street_lamp_old` (`lit`), `utility_pole`, `mailboxes` (row of
+apartment mailboxes), `bicycle`, `stairs_rail`, `nameplate` (`unit` 0..7: 101–204), `vacancy_sign`, `swing_set`,
+`puddle`, `rain_window` (window glass with rain streaks, translucent).
 
-Doors
-| id | notes |
-|---|---|
-| `auto_door` | automatic sliding glass door panel, 3 high. states `facing`, `side` (left/right: slides that way), `part` (bottom/middle/top), `open` (bool). Block entity on the bottom part animates the slide (≈ 0.7 s) and is rendered by a BER (aluminium frame, glass, the sun-logo decal and 「自動ドア」 sticker at hand height); no collision while open |
-| `door_switch` | key switch box beside the door (自動 / 開放 / 閉鎖), facing, `on` (bool) |
-| `swing_door` | kitchen swing door with a round porthole, 2 high (`half`), `facing`, `side`, `swing` (0 shut, 1 open in, 2 open out) — swings open when an entity walks through, flaps shut |
-| `staff_door` | grey steel door with a 「STAFF ONLY」 plate (DoorBlock) |
-| `office_door` | wood door with a small window and a 「事務所」 plate; locked until `office_key` |
-| `restroom_door_m` / `restroom_door_w` | wood doors with pictogram plates |
-| `back_door` | heavy steel back door with a push bar |
-| `fridge_door` | white insulated walk-in door with a big chrome handle |
-| `stall_door` | toilet stall door (beige laminate) with the vacant/occupied indicator; `occupied` (bool: red 使用中 and locked) |
+### Items (16×16, `assets/hitori/textures/item/<id>.png`)
+`plush` (the clean toy), `plush_open` (cut open, stuffing out), `plush_rice` (filled), `ritual_doll` (sewn, red
+thread), `scissors`, `rice_scoop`, `red_thread`, `nail_clipper`, `knife`, `salt`, `cup_water`, `salt_water`,
+`fixed_camera`, `laptop`, `phone`, `lighter`, `printout`. 3D held models (`forge:separate_transforms`): `knife`,
+`laptop` (open, screen glowing), `phone`, `salt_water`, `ritual_doll`, `lighter`, `fixed_camera`.
 
-Furniture and fixtures (custom block models; `facing` unless noted)
-| id | notes |
-|---|---|
-| `booth_seat` | red-brown vinyl booth bench with a back (back 16 px tall, seat at 7 px) |
-| `booth_partition` | frosted glass panel in a dark wood frame, sits on top of a booth back (2-high divider); blocks sight |
-| `restaurant_table` | dark wood top on a central pedestal; adjacent tables read as one long table |
-| `restaurant_chair` | wooden chair with a vinyl seat; `fallen` (bool → lying on its back) |
-| `call_button` | table call button (round, white, a red LED); `lit` (bool) |
-| `menu_stand` | laminated menus in a stand + condiments + napkin box (the table top set) |
-| `menu_scattered` | thin decal of scattered laminated menus; `variant` 0..3 |
-| `water_glass` | glass of ice water; `glasses` 1..4 |
-| `broken_plate` | thin decal of plate shards (step = crunch) |
-| `register` | POS register with a dim screen, on the counter; `open` (drawer) |
-| `service_bell` | the counter bell (呼び鈴) |
-| `counter` | register counter body (wood front, granite top) |
-| `cake_case` | refrigerated glass case with cakes, lit (light 9) |
-| `business_phone` | beige office telephone; `ringing` (bool) |
-| `reservation_book` | open reservation book (note `reservation`) |
-| `capsule_machine` | two stacked gacha capsule machines |
-| `waiting_bench` | padded bench |
-| `magazine_rack`, `umbrella_stand`, `notice_board` | waiting / vestibule props (`notice_board` is a wall decal with flyers) |
-| `drink_bar` | soda fountain with a lit panel of (fictional) drinks and nozzles; `pouring` (bool); light 6 |
-| `coffee_machine`, `ice_machine`, `cup_shelf`, `soup_warmer` | drink bar props |
-| `server_station` | cabinet with cutlery bins, water pitchers, trays |
-| `call_display` | wall/ceiling call display (呼び出し表示器); `number` 0..17 (0 blank) + `closed` (bool: shows 「閉店」 in red); light 4 |
-| `planter` | long planter box with artificial foliage (divider, 1.5 high model) |
-| `kids_mat`, `toy_shelf`, `stuffed_bear`, `kids_fence`, `high_chair` | kids' corner |
-| `gas_range` | 4-burner range; `lit` (blue flames, light 9) |
-| `fryer` | oil vat; `on` (bubbling) |
-| `griddle`, `kitchen_counter`, `exhaust_hood`, `pot_shelf`, `dish_rack`, `kitchen_trash` | kitchen props (`exhaust_hood` hangs from the ceiling) |
-| `prep_table` | stainless prep table |
-| `cutting_board` | board with a cleaver and chopped vegetables (on a prep table) |
-| `kitchen_sink` | deep stainless sink with a tall faucet; `running` (bool) |
-| `dishwasher` | hood dishwasher; `running` |
-| `pass_shelf` | stainless pass shelf with a heat lamp; `lit` (red-orange, light 8) |
-| `pass_bell` | the pickup bell |
-| `walkin_shelf` | wire shelf with boxes and frozen goods, frost |
-| `frost` | frost decal for walls/floor |
-| `locker` | grey steel staff locker, 2 high (`half`), `open` (bool); hiding spot |
-| `time_recorder` | time clock with a card rack |
-| `staff_table`, `folding_chair`, `bulletin_board`, `cardboard_boxes`, `cleaning_cart`, `filing_cabinet`, `safe` | back-of-house props |
-| `crt_tv` | old CRT TV on a stand; `on` (static, light 5) |
-| `office_desk`, `office_chair`, `pc` | office (`pc`: monitor glow light 4) |
-| `security_monitors` | bank of four monitors; `on` (dim camera views + static, light 5), `alert` (red REC frame) |
-| `security_camera` | ceiling dome camera, facing = view; `on`, `seen` (red LED) |
-| `breaker_panel` | grey electrical panel; `open` |
-| `restroom_sink` | counter sink with faucet; `running` |
-| `mirror` | the dark mirror over the women's sinks (translucent smoked glass; the cavity shows through); `cracked` |
-| `restroom_mirror` | an ordinary opaque mirror (men's) |
-| `toilet`, `urinal`, `stall_wall`, `hand_dryer` (`running`), `paper_towel` | restroom props |
-| `vending_machine` | drinks vending machine, 2 high (`half`), lit front (light 12) |
-| `pole_sign` | the road sign: `part` = `pole` or a `tile` 0..15 of the 4×4 box face (one 64×64 texture `pole_sign_face` split in tiles) + `lit` (light 15) |
-| `roof_sign` | the 「ひだまり」 roof letters, `tile` 0..7 of an 8×1 strip (`roof_sign_face` 128×16), `lit` |
-| `menu_board` | A-frame chalk board; `message` 0 = 「本日のおすすめ」, 1 = 「まだ　いますか」 |
-| `bike_rack`, `trash_station`, `ac_unit`, `gas_cylinder`, `dumpster`, `wheel_stop`, `outdoor_planter` | exterior props |
-| `street_lamp` | sodium street lamp head on a pole (`part` pole/head), `lit` (orange, light 14) |
-| `utility_pole` | concrete utility pole with a transformer / crossarm part (`part`) |
-| `guardrail`, `chevron_sign`, `curve_mirror`, `traffic_light` (`lit`, blinking yellow) | road props |
-| `flower_offering` | wrapped bouquet, a can of coffee and a small toy motorbike at the guardrail |
-| `note_paper` | a sheet of paper (decal; note id from the block entity / marker) |
+### Entities — §5. Textures `assets/hitori/textures/entity/<id>.png` + `<id>_eyes.png`.
 
-### 7.1 Who makes which block model, and their names
+### GUI (`assets/hitori/textures/gui/`)
+`title_logo` 512×256 (「ひとりかくれんぼ」 in a scrawled, wet, red-thread-like hand + "HITORI KAKURENBO") ·
+`cctv` (camera-app overlay frame: REC, corners, battery, transparent centre) · `laptop_frame` (the laptop screen bezel
+and taskbar of an old OS, the camera app window) · `phone_frame` · `fusuma_slit` (the peek overlay: dark with a narrow
+vertical gap) · `closet_dark` (inside-the-closet vignette with the futon edge) · `printout` 256×320 (the forum printout
+with the procedure and the rules) · `icons` (mouth/cup, breath, camera numbers, REC) · `jumpscare_doll`,
+`jumpscare_woman` 256² · `name_field` (the naming text field) · `vignette`, `grain` (copies).
 
-* **world** (`tools/gen_assets.py`) writes every **blockstate** and the models of the plain shapes: full cubes
-  (`cube_all` / `cube_column` / `cube_bottom_top` / `orientable`), vanilla-parented shapes (slab, stairs, carpet for the
-  1 px layers `entrance_mat` and `puddle`, leaves for `hedge`, doors) and every block **item** model. That covers:
-  all of "Surfaces and structure" except `pendant_lamp`, `exit_sign`, `window_blind` (art), and the vanilla-style
-  doors `staff_door`, `office_door`, `restroom_door_m`, `restroom_door_w`, `back_door`, `fridge_door`, `stall_door`
-  (textures `<id>_bottom` / `<id>_top`, and `stall_door_occupied_bottom` / `_top`).
-  `ceiling_light` / `downlight`: cubes whose bottom face is the panel (`<id>` / `<id>_lit` textures; `ceiling_tile` on
-  the other faces).
-* **art** writes every other block model (`models/block/<name>.json`, facing **north**). Names for the visual states
-  (the blockstate maps to them; provide every name even if two are identical — a child model with a `parent` is fine):
-  boolean property `p` → `<id>` (false) and `<id>_<p>` (true); several booleans in the order of §7 → `<id>_<p1>_<p2>`
-  for the true ones (`security_monitors`, `security_monitors_on`, `security_monitors_on_alert`; `security_camera`,
-  `security_camera_on`, `security_camera_on_seen`); integer property → `<id>_<value>` (`water_glass_1..4`,
-  `menu_scattered_0..3`, `menu_board_0`/`_1`, `call_display_0..17` plus `call_display_closed`); `half` / `part` →
-  `<id>_<part>` first, then boolean suffixes (`locker_lower`, `locker_upper_open`, `vending_machine_lower`,
-  `street_lamp_head_lit`, `utility_pole_pole`, `utility_pole_top`, `pole_sign_pole`, `pole_sign_tile_<t>` /
-  `pole_sign_tile_<t>_lit`, `roof_sign_tile_<t>` / `_lit`); `exit_sign` / `exit_sign_hanging`; `mirror` /
-  `mirror_cracked`; `restaurant_chair` / `restaurant_chair_fallen`.
-* The two moving doors are drawn by the world's block entity renderers: `auto_door` (texture `auto_door_panel`
-  16×48: aluminium frame, glass (translucent), the sun-logo decal and the 「自動ドア」 sticker; static block model
-  `auto_door_rail` for the top part's rail/header, art) and `swing_door` (texture `swing_door` 16×32 with the
-  porthole; block model `swing_door_frame`, art).
+### Particles
+`rice_grain`, `stuffing`, `water_drip`, `salt_spray`, `ember`, `smoke`, `tv_static_mote`.
 
-### Items (`assets/reisatsu/textures/item/<id>.png`, 16×16)
-`reisha_camera`, `reisha_camera_finder`, `film_pack`, `evidence_photo`, `flashlight`, `flashlight_on`, `ofuda`,
-`shop_key`, `office_key`. 3D held models (`forge:separate_transforms`): `reisha_camera` (boxy old instant camera,
-brown leather and chrome, flash bulb on top), `reisha_camera_finder` (the same, raised: mostly not visible),
-`flashlight`, `flashlight_on`.
+## 8. Sounds (`assets/hitori/sounds/<path>.ogg`, event id `hitori:<event>`)
 
-### Entities — §5. Textures `assets/reisatsu/textures/entity/<id>.png` + `<id>_eyes.png`.
+OGG Vorbis 44.1 kHz, **mono for positional**, stereo for beds/music/UI; `att` = attenuation. Variants `name_1..n`.
+**Real dynamic range**: the apartment at 3 a.m. is *silent* — fridge hum, the clock, rain on the window, the CRT's
+whine and static — and then violence. SOUNAN/REISATSU psychoacoustic palette (binaural theta, sub with harmonics,
+roughness, nonlinear voice chaos, Shepard–Risset, clusters, dry close whispers vs reverbs, false risers, silence). New:
+**the claustrophobic closet** (your own muffled breathing and heartbeat loud and close, the world outside filtered), the
+CRT TV's static as the constant bed, and the **camera microphone** sound (feeds sound thin, compressed, with mic hiss).
+All melodies original. Voice lines (formant synthesis + processing; subtitles carry the words): the player's ritual
+lines 「最初の鬼は、わたしだから」, 「みーちゃん、みつけた」, 「次は、みーちゃんが鬼だから」, 「わたしの勝ち」, counting
+「いち、に、さん…じゅう」; the doll 「みつけた」, giggles, 「どこ？」, 「つぎは、あなたがおに」; the woman's whisper
+「……そこにいるの」; your name whispered.
 
-### GUI (`assets/reisatsu/textures/gui/`)
-`title_logo` 512×256 (「霊撮」 brush calligraphy, a red seal stamp, "REISATSU") · `finder` 512×288 (transparent
-optical-finder frame: dark rounded mask, bright frame lines, parallax marks, centre circle; drawn stretched to the
-screen) · `finder_meter` 128×64 (霊感計 dial; needle drawn by code) · `photo_frame` 128×160 (instant film: white
-frame, photo window 112×84 at 8,8, wide bottom margin) · `photo_name_<spirit>` 128×32 ×6 (the true name in red
-brush ink on transparent) · `photo_blur` 256×192 (the smeared ghost blur for failed photos) · `photo_ghost_1..3`
-256×192 (faint transparent face/hand overlays) · `album` 512×320 (open notebook) · `icons` 128×32 (film, お札, eye
-closed / half / open / alert, breath) · `jumpscare_<spirit>` 256² ×6 (full-face close-ups on black) ·
-`medium_portrait` 64×64 · `paper` 256² (note paper) · `vignette` 256², `grain` 256² (MEIKON/SOUNAN copies) ·
-`locker_slits` 256×144 (locker vents overlay) · `logo_sun` 64×64 (the HIDAMARI smiling sun, for decals and GUIs).
+Beds (S, loops): `amb.apartment` (60 s: rain on the window and gutter, fridge cycling, far trains/cars, house creaks),
+`amb.closet` (40 s: inside the closet: muffled outside, fabric, your space), `amb.bath` (30 s: drips into a full tub,
+tiled resonance), `amb.outside` (60 s: the corridor/street in rain), `amb.tv_static` (M loop, att 16: the CRT static +
+line whine — the most important sound in the game), `amb.silence` (20 s).
+Positional loops (M): `fixture.fridge` (8), `fixture.clock` (8), `fixture.tap_bath` (12, filling), `fixture.tap`
+(10), `fixture.washing_machine` (14), `fixture.rain_window` (10), `doll.drag_loop` (12, dragging on tatami/flooring),
+`camera.mic_hiss` (S, the feed's microphone noise).
+Music (S): `music.dread` (64 s), `music.tension` (32 s), `music.danger` (16 s), `music.chase` (16 s),
+`music.title` (48 s: a detuned toy music box playing an original かくれんぼ-like tune over rain), `music.prep` (40 s:
+near nothing, a low pad, the clock), `music.ending_good` (50 s, no loop: morning, birds, a sour note at the end),
+`music.ending_bad` (30 s, no loop: the music box winding down), `music.playback` (40 s: the laptop playback, VHS hum).
+One-shots (M unless noted; att): `ritual.cut` (scissors through fabric, 8), `ritual.stuffing` (pulling stuffing, 8),
+`ritual.rice` (rice poured into fabric, 8), `ritual.clip` (nail clipper ×3 clicks, 6), `ritual.sew` (needle and
+thread pulled, 6), `ritual.thread_wind` (8), `ritual.splash` (doll into the bath, 12), `ritual.stab` (knife into a
+wet plush with rice, 12), `ritual.salt_pour` (6), `ritual.spit` (S, spitting), `ritual.burn_ignite` (lighter + whoosh,
+10), `ritual.burn_loop` (crackling fabric and rice, 10), `voice.first_oni` ×1 (S), `voice.mitsuketa` (S),
+`voice.next_oni` (S), `voice.watashi_kachi` (S), `voice.count` (S, 10 s), `door.front_open` / `door.front_close`
+(steel apartment door, chain, 16), `door.interior_open` / `door.interior_close` (8), `door.fusuma` ×3 (paper door sliding, 8),
+`door.fusuma_crack` (2 px slide, 4), `door.bath_fold` (folding glass door, 8), `door.locked` (6), `fixture.switch` ×2
+(light switch click, 6), `fixture.pull_cord` (6), `fixture.breaker_off` / `fixture.breaker_on` (12),
+`fixture.tv_on` (CRT thunk + rising whine, 12), `fixture.tv_channel` (channel click + burst, 12), `fixture.tv_voice`
+×3 (garbled voices from the TV, 12), `fixture.intercom` (apartment intercom chime "pin-pon", original, 24),
+`fixture.knock_door` ×3 (on the steel door, 24), `fixture.knock_closet` ×3 (on the fusuma, 8), `fixture.thing_fall`
+×3 (16), `fixture.dish_break` (24), `fixture.lamp_swing` (creak, 6), `fixture.water_slosh` ×3 (in the tub, 10),
+`fixture.washing_start` (12), `fixture.creak` ×4 (wood house creaks, 16), `fixture.footsteps_ceiling` ×2 (from above,
+24), `phone.vibrate` (M, 6), `phone.ring_own` (S loop, a ringtone wrong), `phone.notify` (S), `phone.tap` (S),
+`camera.place` (6), `camera.app_open` / `camera.app_close` (S), `camera.switch` (S, a click and static burst),
+`camera.glitch` ×3 (S, feed glitch noise), `camera.fall` (8), `laptop.open` (S), `laptop.fan` (S loop, quiet),
+`item.lighter` (6), `item.paper` ×2 (S), `item.cup` (6), `player.heartbeat`, `player.breath_fear` ×3,
+`player.breath_hold` (S), `player.gasp` ×2, `player.breath_mouth` ×2 (breathing with water in the mouth, gurgling),
+`player.swallow` (S), `player.step_tatami` ×4, `player.step_floor` ×4, `player.step_tile` ×4, `player.step_wet` ×4,
+`doll.step` ×4 (soft wet plush thumps, 10), `doll.crawl` ×3 (fast dragging, 12), `doll.drip` ×3 (6),
+`doll.rice` ×3 (rice rustling inside it, 6), `doll.giggle` ×4 (16), `doll.voice_mitsuketa` (12),
+`doll.voice_doko` ×2 (12), `doll.voice_tsugi` (S: 「つぎは、あなたがおに」), `doll.knife_drag` ×2 (12),
+`doll.knife_stab` (into the fusuma, 12), `doll.shriek` (salt water, 24), `doll.breath` ×2 (at the fusuma, 6),
+`woman.whisper` ×3 (6), `woman.breath` (4), `whisper.name` ×2 (S), `game.jumpscare` ×2 (S), `game.stinger` ×4 (S),
+`game.riser` ×2 (S), `game.step_done` (S, soft tick when a ritual step completes), `game.three_am` (S: the clock
+striking 3, a deep bell-like tone), `game.title_hit` (S), `game.morning` (S).
 
-### Particles (`reisatsu:<id>`)
-`menu_flutter` (a flying laminated menu, tumbling), `water_drop` (tap water), `wet_print` (footprint, flat on the
-ground, fades), `ember` (the chef), `spirit_mote` (pale motes when a spirit is bound / at the exorcism),
-`frost_breath` (your breath in the walk-in fridge), `paper_ash` (burning photos / お札).
+## 9. Shader contract ("HitoriShaders", `src/main/shaderpack/shaders/`)
 
-## 8. Sounds (`assets/reisatsu/sounds/<path>.ogg`, event id `reisatsu:<event>`)
+* `dimension.properties`: `dimension.hitori_shirakaba=hitori:shirakaba` → folder `hitori_shirakaba/` (define
+  `HITORI_SHIRAKABA`). Root programs serve every other dimension.
+* Channels (mod-driven, only in `hitori:shirakaba`): `rainStrength` = fear, `thunderStrength` = danger,
+  **`nightVision` > 0 = the camera app is open (CCTV/IR look)**, `blindness` > 0 = **eyes closed** while counting (and
+  the jump scare cut), `darknessFactor` = being caught. `heldItemId`: `item.10001=hitori:phone` (weak cool light when
+  its flashlight is on — the mod swaps the item id to `hitori:phone_light` for that: `item.10002`), `item.10003=hitori:lighter`
+  (small warm flame light), `item.10004=hitori:laptop` (screen glow on the face/closet when open in the closet).
+* `entity.properties`: `entity.30001=hitori:oni_doll`, `30002 hitori:woman` (camera-only: the mod renders her only to
+  cameras; under the IR look she glows faintly), `30003 hitori:camera` (its REC LED).
+* `block.properties`: **the CRT TV** (`crt_tv:on=true`) is the main light source after 3:00: a flickering cool-blue
+  light whose intensity follows a noise signal (static) and lights the tatami room, washing over walls, with flicker
+  visible through the fusuma gap; `hanging_lamp:lit=true`, `fluorescent_ring:lit=true` (cold), `desk_lamp`,
+  `street_lamp_old` (sodium through curtains), `vending_machine_small`, `laptop_block:on=true`, the camera LEDs, the
+  breaker panel's indicator; **water** (`bathtub` water states: still dark water with reflections, ripples), wet
+  asphalt and puddles outside (reflections), **rain on windows** (`rain_window`, `balcony_door`: streaks and drops running
+  down, refraction of the street light), tatami (soft matte), old varnished flooring (soft reflections), bath tiles
+  (wet gloss).
+* **The look**: a dark Showa apartment at 3 a.m.: everything near black except the TV's flicker, the street lamp leaking
+  through curtains and frosted glass, the laptop screen; deep shadows; dust in the phone light. **CCTV (camera app)**: IR
+  night-vision monochrome (cool grey-green), heavy noise, slight fisheye, scanline, interlace, the doll's button eyes
+  and the woman glinting, chromatic tearing on glitches. **Eyes closed**: black with faint phosphenes and the TV's
+  flicker through the eyelids (reddish). **Fear/danger**: vignette, tunnel vision, chromatic aberration, desaturation,
+  the image breathing. **Closet**: when the player is in the 押し入れ (fear + darkness), the slit of light is the only
+  bright thing.
+* Performance: 60 fps on a mid GPU; quality profiles; **every loop bounded** (REISATSU's pack once froze a client with
+  an unbounded loop — never again); must compile under Iris/Oculus and OptiFine and pass `tools/shader/lint.py`.
 
-OGG Vorbis 44.1 kHz. **Mono (M) for everything positional**, stereo (S) for beds, music and UI. `att` = attenuation
-distance. Variants `name_1..n`. **The mix needs real dynamic range**: the closed restaurant at night is *quiet* —
-compressor hum, a ticking clock, drips — and then violence. Reuse the SOUNAN psychoacoustic palette (binaural theta
-beats, infrasound-like sub with harmonics, roughness 30–150 Hz AM, nonlinear vocal phenomena, Shepard–Risset
-glissandi, clusters, beating, dry close whispers vs huge reverbs, false risers, silence). New for this game: **the
-banal sounds of a family restaurant made wrong** — the entrance chime, the call-button ping, 「いらっしゃいませ」,
-cheerful store music — detuned, slowed, too late, too many. All melodies must be **original** (no real chimes or
-songs). Japanese voice lines may be formant-synthesised and processed (SOUNAN `tools/audio/voice.py`); subtitles carry
-the words.
-
-Ambient beds (S, loops)
-| event | files | description |
-|---|---|---|
-| `amb.night_road` | 60 s | outside after rain: wet road hiss, far traffic swells, gutters dripping, a far dog, wind in wires |
-| `amb.dining` | 40 s | closed dining hall: room tone, the drink bar / cake case compressors cycling, exit-sign buzz, a wall clock ticking |
-| `amb.kitchen` | 40 s | kitchen: big compressor hum, exhaust fan idling, a drip in the sink, stainless ticking as it cools |
-| `amb.restroom` | 30 s | tiled room tone, water in pipes, slow drip, ventilation fan |
-| `amb.back` | 30 s | back corridor / office: 50 Hz ballast hum with harmonics, PC fans, breaker buzz |
-| `amb.fridge` | 20 s | walk-in fridge: loud compressor and fans, icy crackle |
-| `amb.silence` | 20 s | near-silence (room-tone hiss, high faint ringing) |
-| `amb.closing` | 40 s | closing time: all the lights' hum at once, the store music bleeding through walls, PA hiss |
-
-Positional loops (M) — `att` in brackets
-`amb.fluorescent` (10, flickering tube buzz) · `amb.vending` (12) · `amb.sign_buzz` (24, transformer buzz with flicker
-ticks) · `amb.drip` (one-shots ×4, 12) · `amb.gutter` (16, gutter running after rain) · `fixture.faucet_loop` (12) ·
-`fixture.hand_dryer` (16, 5 s roar) · `fixture.fryer_loop` (12) · `fixture.gas_loop` (12) · `fixture.dishwasher` (14) ·
-`fixture.tv_static` (12) · `fixture.monitor_static` (8) · `fixture.phone_ring` (24, 6 s business phone ring) ·
-`spirit.near` (8, pressure hum near a spirit) · `camera.sense` (S, the 霊感計 crackle/whine, volume by meter)
-
-Music (S, loops unless noted)
-| event | files | description |
-|---|---|---|
-| `music.dread` | 64 s | base score: very low drone with a binaural theta beat, beating partials, faint bowed metal |
-| `music.tension` | 32 s | micro-tonal string clusters, irregular low thumps (volume = fear) |
-| `music.danger` | 16 s | Shepard rise + rough strings + ticking (volume = danger) |
-| `music.chase` | 16 s | hunted: pounding low drums with irregular accents, screeching clusters, falling Shepard |
-| `music.safe` | 40 s | outside with the medium: fragile sparse music-box/piano, rain-dripping, sad |
-| `music.title` | 48 s | title: a music-box version of the store jingle slowly detuning, drips, a far entrance chime, low drone |
-| `music.store` | 32 s | the store's cheerful in-store music (original easy-listening/bossa loop, slightly lo-fi) |
-| `music.store_wrong` | 32 s | the same, slowed and detuned, tape warble, dropouts, a voice humming along under it |
-| `music.closing` | 32 s | closing time: the jingle in a minor key on organ, PA hiss, low clusters, a ticking clock pulse |
-| `music.exorcism` | 60 s (no loop) | the ritual: singing bowl strikes, low chant drones, rising light (shimmer), a release |
-| `music.ending_good` | 50 s (no loop) | dawn: warm pads, birds starting, the jingle's melody resolved gently |
-| `music.ending_bad` | 30 s (no loop) | 相席: the store music on a dying music box, the call button, silence |
-
-Restaurant one-shots (M)
-| event | files | att | description |
-|---|---|---|---|
-| `door.auto_open` / `door.auto_close` | 1 / 1 | 16 | motor whirr + glass slide / slide + rubber seal thump |
-| `door.chime` | 2 | 32 | entrance chime: an original bright two-tone "pin-poon" |
-| `door.chime_wrong` | 2 | 32 | the chime too slow, detuned, a third tone that should not be there |
-| `door.swing` | 3 | 12 | kitchen swing doors flapping |
-| `door.open` / `door.close` | 2 / 2 | 12 | staff / office / restroom doors |
-| `door.fridge_open` / `door.fridge_close` | 1 / 1 | 12 | seal pop, heavy hinge / heavy thud |
-| `door.stall_bang` | 2 | 16 | stall door slammed |
-| `door.locked` | 1 | 8 | handle rattle |
-| `door.unlock` | 1 | 8 | key turning |
-| `door.switch` | 1 | 8 | the auto-door key switch clack |
-| `fixture.call_button` | 2 | 24 | table call "pin-pon" (original electronic two-tone) |
-| `fixture.call_display` | 1 | 32 | the call display's chime |
-| `fixture.service_bell` / `fixture.pass_bell` | 1 / 1 | 24 | counter bell "chin" / brighter pickup bell |
-| `fixture.register_drawer` | 1 | 12 | drawer slides out, coins |
-| `fixture.phone_voice` | 2 | S | the line: static, a garbled voice 「……二時に……一名で……」 |
-| `fixture.faucet_on` / `fixture.faucet_off` | 1 / 1 | 12 | tap squeak + water start / stop + drips |
-| `fixture.drink_pour` | 2 | 12 | soda pouring + ice |
-| `fixture.ice_drop` | 2 | 12 | ice machine dropping cubes |
-| `fixture.gas_ignite` | 1 | 12 | click-click-whoomph |
-| `fixture.breaker_off` / `fixture.breaker_on` | 1 / 1 | 24 | big clunk + power-down whine / clunk + tubes pinging on |
-| `fixture.light_flicker` | 3 | 12 | ballast ticks and buzz stutter |
-| `fixture.light_burst` | 2 | 16 | tube pop + glass tinkle |
-| `fixture.time_card` | 1 | 8 | time clock punch |
-| `fixture.locker` | 2 | 8 | locker door open/close |
-| `fixture.chair_scrape` | 3 | 16 | chair dragged on vinyl |
-| `fixture.chair_fall` | 2 | 20 | chair falling over |
-| `fixture.plate_break` | 3 | 32 | plate smashing on tile |
-| `fixture.glass_set` | 2 | 10 | a glass of water set down, ice clinks |
-| `fixture.menu_scatter` | 2 | 16 | laminated menus flapping and sliding over the floor |
-| `fixture.pa_chime` | 1 | S | store PA four-tone chime (original) |
-| `fixture.pa_voice` | 3 | S | garbled announcement; one says 「本日の営業は、終了いたしました」 |
-| `fixture.car_pass` | 3 | 48 | a car passing on the wet road (hiss, doppler) |
-| `fixture.motorbike` | 1 | 96 | a motorbike approaching far away (8 s) |
-| `fixture.crash` | 1 | 96 | tyres screaming, impact, glass, silence |
-| `fixture.toilet_flush` | 1 | 16 | flush |
-| `fixture.stall_knock` | 3 | 12 | knocking from inside the stall |
-| `fixture.fridge_knock` | 3 | 12 | knocking from inside the walk-in fridge, muffled |
-| `fixture.ball_bounce` | 1 | 16 | a ball bouncing to a stop in the kids' corner |
-| `fixture.toy_squeak` | 1 | 8 | a squeaky toy |
-
-Camera and items
-| event | files | ch | description |
-|---|---|---|---|
-| `camera.raise` / `camera.lower` | 1 / 1 | S | leather strap rustle + click |
-| `camera.shutter` | 2 | M att 10 | heavy mechanical shutter + flash pop |
-| `camera.charge` | 1 | S | flash capacitor charging whine |
-| `camera.eject` | 1 | S | motor whirr, the instant photo sliding out |
-| `camera.empty` | 1 | S | dry click |
-| `camera.zoom` | 1 | S | lens motor tick |
-| `camera.load` | 1 | S | opening the back, film pack in, closing |
-| `photo.develop` | 1 | S | soft sizzle swell as the image appears |
-| `photo.name` | 1 | S | a whisper and a pen scratching as the red name writes itself |
-| `photo.fail` | 1 | S | a moan smeared under a distorted shutter |
-| `item.flashlight_on` / `item.flashlight_off` | 1 / 1 | M | switch click |
-| `item.flashlight_flicker` | 3 | M | electric stutter |
-| `item.ofuda_burn` | 1 | S | paper flaring up, small bells, a whoosh |
-| `item.key` | 1 | M | keys jingle |
-| `item.paper` | 2 | S | paper rustle |
-
-Player (M)
-`player.heartbeat` (one muffled lub-dub), `player.breath_fear` ×3, `player.breath_hold` (inhale, then strained
-silence), `player.gasp` ×2, `player.step_tile` ×4, `player.step_vinyl` ×4, `player.step_kitchen` ×4 (slightly sticky),
-`player.step_wet` ×4 (wet asphalt), `player.step_glass` ×3 (shards), `player.step_paper` ×2 (menus) — the blocks'
-sound types use these.
-
-Spirits (M)
-| event | files | att | description |
-|---|---|---|---|
-| `visitor.step` | 4 | 12 | wet squelching steps, one foot dragging |
-| `visitor.breath` | 2 | 6 | breathing inside a helmet, muffled, fogging |
-| `visitor.visor` | 1 | 8 | visor cracking |
-| `visitor.drip` | 2 | 6 | water dripping off him |
-| `visitor.whisper` | 2 | 6 | 「……まだかな」 inside the helmet |
-| `waitress.step` | 3 | 10 | soft shoe steps, too regular |
-| `waitress.greet` | 3 | 24 | 「いらっしゃいませ」: one almost normal, one slowed, one with too many syllables |
-| `waitress.water` | 1 | 12 | 「お冷やを、どうぞ」 |
-| `waitress.hum` | 1 | 12 | humming the store jingle, off key |
-| `waitress.tray` | 1 | 16 | tray clatter + glass |
-| `chef.chop` | 2 | 20 | cleaver on board, a 4 s rhythmic loop segment |
-| `chef.chop_stop` | 1 | 20 | the last heavy chop, then nothing |
-| `chef.breath` | 2 | 8 | wheezing smoky breath with crackles |
-| `chef.sizzle` | 1 | 8 | burning skin crackle |
-| `chef.roar` | 1 | 32 | furious roar + cleaver slammed into steel |
-| `chef.step` | 3 | 16 | heavy steps on tile |
-| `chef.scrape` | 1 | 12 | cleaver scraped along steel |
-| `child.giggle` | 4 | 16 | small giggles (one right behind you) |
-| `child.count` | 1 | 24 | 「いーち、にーい、さーん……」 sing-song, 8 s, the last numbers wrong |
-| `child.moui` | 1 | 32 | 「もういいかい」 |
-| `child.madada` | 1 | 24 | 「まーだだよ」 |
-| `child.mitsuketa` | 1 | 16 | 「みーつけた」 (close, delighted) |
-| `child.run` | 3 | 16 | small feet running on vinyl |
-| `child.hum` | 1 | 12 | humming an (original) nursery tune |
-| `child.whisper` | 1 | 6 | 「こっちだよ」 |
-| `mirror.sob` | 2 | 10 | crying behind glass |
-| `mirror.whisper` | 1 | 6 | 「……うしろ」 |
-| `mirror.knock` | 2 | 12 | knocking on the glass from the other side |
-| `mirror.squeak` | 2 | 10 | palms dragged on glass |
-| `mirror.scream` | 1 | 24 | scream, glass cracking |
-| `manager.step` | 3 | 12 | leather shoes, measured |
-| `manager.keys` | 1 | 10 | keys jingling at the belt |
-| `manager.welcome` | 1 | 16 | 「いらっしゃいませ」 tired monotone |
-| `manager.closed` | 1 | 32 | 「本日の営業は、終了いたしました」 |
-| `manager.customer` | 2 | 16 | 「お客様……」 |
-| `manager.sigh` | 1 | 8 | exhausted sigh |
-| `manager.typing` | 1 | 8 | keyboard typing (loopable 6 s) |
-| `manager.chair` | 1 | 8 | office chair creak |
-| `medium.voice` | 6 | 8 | short soft murmurs under her dialogue lines (no words) |
-| `medium.bell` | 1 | 24 | singing bowl (りん) |
-| `medium.chant` | 1 | 16 | chant drone loop for the exorcism (8 s) |
-| `medium.clap` | 1 | 24 | two ritual claps |
-| `spirit.whisper` | 6 | 6 | unintelligible close whispers |
-| `spirit.notice` | 3 | 16 | the universal "noticed" sting: sharp rough breath-scream |
-| `spirit.bound` | 1 | 16 | being pulled into the photo: reversed scream + shimmer |
-| `spirit.vanish` | 1 | 12 | fading out (soft reversed swell) |
-
-Game (S)
-`game.jumpscare` ×3 (extremely loud: rough scream + distorted burst + sub drop) · `game.stinger` ×4 · `game.riser`
-×2 (rising tension that cuts to silence) · `game.caught` (being taken: rush, choir-like cluster, cut) · `game.wake`
-(waking at the car: ringing fades, the medium's bell) · `game.captured` (a spirit's name appears: soft chime + low
-swell) · `game.closing` (closing time begins: PA chime, all lights clunking on, a deep boom) · `game.title_hit` ·
-`game.release` (a spirit sent on at the exorcism: bright shimmer swell) · `game.dawn` (warm swell, first birds) ·
-`game.ending_bad`.
-
-Subtitles: every event has `subtitles.reisatsu.<event>` in both languages (`tools/audio/subtitles_{ja,en}.json`).
-Voice lines show their words as subtitles.
-
-## 9. Shader contract ("ReisatsuShaders", `src/main/shaderpack/shaders/`, Oculus / Iris / OptiFine)
-
-* `dimension.properties`: `dimension.reisatsu_hidamari=reisatsu:hidamari` → folder `reisatsu_hidamari/` holds stubs
-  that `#define REISATSU_HIDAMARI` and include the shared programs. The root programs serve every other dimension.
-* **Channels driven by the mod, only inside `reisatsu:hidamari`, every client tick**: `rainStrength` = **fear** 0..1,
-  `thunderStrength` = **danger** 0..1 (no precipitation is drawn there; the pack must not draw rain/lightning from
-  them), `nightVision` > 0 while the **finder** is raised, **`blindness` = camera flash** (1.0 on the shutter frame,
-  decaying to 0 over ≈ 0.25 s; the pack must never darken for it — it must light the scene like a flash: a very bright
-  light at the camera, falloff ∝ 1/d², slightly cool white), `darknessFactor` (vanilla Darkness) while being caught.
-  `worldTime` is always 18000.
-* `item.properties` (main hand → `heldItemId`, off hand → `heldItemId2`; handle both):
-  `item.10001=reisatsu:flashlight_on` (warm white beam ~4300 K, bright hot spot, ~25° half-angle, range ~30, dust in
-  the beam indoors) · `item.10004=reisatsu:reisha_camera_finder` (the **finder look**, below).
-* `entity.properties`: `entity.20001=reisatsu:visitor`, `20002 waitress`, `20003 chef`, `20004 child`,
-  `20005 mirror_woman`, `20006 manager` (spirits), `20010 reisatsu:medium`. **Spirits**: translucent; pale rim glow,
-  slow noise dissolve at the edges, a slight vertex waver, chromatic split; a faint heat-haze refraction of the scene
-  where a spirit stands even when it is invisible to the eye (keep it subtle: the player should *almost* see
-  something); in the finder they glow cold white-blue with a short **afterimage trail**.
-* `block.properties` ids (with states where they matter): emissive lights (`ceiling_light:lit=true`, `downlight`,
-  `pendant_lamp`, `exit_sign` (green), `vending_machine`, `pole_sign:lit=true`, `roof_sign`, `street_lamp:lit=true`
-  (sodium orange), `traffic_light:lit=true` (yellow), `drink_bar`, `cake_case`, `pass_shelf:lit=true` (red-orange),
-  `gas_range:lit=true` (blue), `crt_tv:on=true`, `security_monitors`, `pc`, `call_display`, `call_button:lit=true`,
-  `security_camera:seen=true` (red LED)); **wet / reflective**: `asphalt`, `parking_line`, `road_line`, `sidewalk`,
-  `curb` (wet, screen-space reflections of the sign, the vending machines and lamps), `puddle` (water: mirror-like),
-  glossy floors (`dining_floor`, `kitchen_floor`, `restroom_floor`, `vestibule_floor`: soft reflections of lights),
-  metal (`stainless`, `kitchen_sink`, `prep_table`, `exhaust_hood`, `kitchen_counter`: sharp specular), glass
-  (`shop_window`: droplets and streaks, reflections of the lit interior from outside and of the dark lot from inside;
-  `mirror`: dark mirror — ~40 % screen-space reflection over the cavity seen through it, cold tint, smudges; `cake_case`,
-  `water_glass`), foliage (`hedge`, plants: very slight sway).
-* **The look**: inside — dark; pools of light from the green exit signs, the drink bar's standby glow, the cake case's
-  cold white, the street light and the sign leaking orange through the blinds; fluorescent tubes (when on) cold
-  white-green, flickering; glossy floors reflecting every light; deep shadows under tables; dust in the beam. Outside —
-  wet asphalt mirroring the pole sign, vending machines and sodium lamps; low mist; overcast sky with an orange town
-  glow on the horizon; drips. **Fear**: heartbeat-pulsed vignette, tunnel vision, chromatic aberration, desaturation,
-  faint faces in the peripheral noise at high fear. **Danger**: subtle barrel "breathing", shadows shifting red, heavier
-  grain, double vision. **Finder (霊視)**: the image through an old camera finder — slightly desaturated cool tone,
-  heavy fine grain, vignette, slight barrel distortion, focus breathing, a soft halation on lights, spirits glowing
-  (above). **Flash**: above. **Caught**: `darknessFactor` crushes to black.
-* Performance: 60 fps on a mid GPU at 1080p by default; profiles in `shaders.properties` (+ `lang/ja_jp.lang`).
-  The mod's own non-shader effects (fog, vignette, grain) are reduced while a pack is active.
-
-## 10. Acoustics engine (音MOD) — `com.reisatsu.client.sound.Acoustics`
-
-A built-in, lightweight version of what sound-physics mods do, via OpenAL EFX (LWJGL `EXTEfx`), listening to Forge's
-`PlaySoundSourceEvent` / `PlayStreamingSourceEvent` (both fire on the sound thread with the `Channel`; read its source
-id reflectively: the non-static `int` field of `com.mojang.blaze3d.audio.Channel` for which `AL10.alIsSource` is true).
-* **Room reverb**: one auxiliary effect slot with an EAX reverb whose preset follows the listener's room
-  (`Layout.roomAt`): `dining` (medium room, soft), `kitchen` (bright, hard, short), `restroom` (very reflective tiles),
-  `small_hard`, `small_soft`, `corridor`, `tiny_dead` (walk-in fridge: almost none), `outside` (none + a faint slap
-  from the building façade), cross-fading over 0.5 s when you move. Sounds started inside a different room than the
-  listener get less send.
-* **Occlusion**: each new positional source gets a low-pass direct filter from a ray march between listener and source
-  (count solid, non-glass blocks; doors count half; each block −3 dB HF, cap −24 dB), so a spirit's steps behind a wall
-  are muffled and through an open door are clear. Update looping/moving sources every 4 ticks.
-* Must fail safe: no EFX → do nothing. A client config switch `acoustics` (default on).
-* Footsteps: the blocks' `SoundType`s use the `player.step_*` sounds (§8).
+## 10. Acoustics (音MOD)
+Reuse REISATSU's `client/sound/Acoustics*` (EFX room reverb + occlusion) with presets for the rooms above; add
+**`closet`**: when the player is inside the 押し入れ everything outside it is low-passed hard (−18 dB HF) and the
+player's own sounds are dry and close; **camera listening**: while the camera app is open the listener is the camera,
+and the feed audio gets a band-limited "mic" filter (high-pass 200 Hz, low-pass 6 kHz) + `camera.mic_hiss`.
 
 ## 11. Art direction
+A 1970s Japanese wooden apartment, lived in by a student: yellowed tatami with frayed edges, faded fusuma paper with a
+pale pattern, varnished dark flooring, beige textured walls with stains, a cramped kitchen with an old fridge and
+2-burner stove, pale blue tiles in a tiny bathroom with a deep square tub, laundry and clutter, a CRT TV on a low stand,
+cheap posters, a laptop with stickers. At night only the TV and the street lamp. Outside: grey corrugated siding,
+rusty outdoor stairs, a mailbox row, wet asphalt, one street lamp, rain. Pixel art that reads at 16×16 like vanilla,
+careful shading, signs of life and neglect. **The doll**: a cheap white plush rabbit made horrible by what you did to
+it — wet, grey, rice bulging, red thread biting into it, one button eye hanging, the knife. Stillness and stop-motion.
 
-A Japanese suburban family restaurant from around 1990, refitted in the 2000s, now tired: warm wood-look floors,
-cream wallpaper, dark wood wainscot, red-brown vinyl booths, frosted-glass partitions, orange/brown brand colours with
-the smiling sun logo, yellowed ceiling tiles with water stains, stainless kitchen with old grease, tired restrooms.
-**At night everything is cold and dark except the light sources.** Outside: wet black asphalt, white parking lines,
-sodium orange, vending-machine white, the sign's warm orange — and darkness beyond. The cheerful brand is what makes it
-creepy. Pixel art that reads at 16×16 like vanilla, careful shading, a little noise, signs of use everywhere (scuffs,
-stains, chipped corners). **Spirits**: J-horror — stillness, wrong proportions, faces half hidden, wet hair, burnt skin,
-the polite smile; no gore. Their animations matter as much as their looks: stutter (missing frames), heads that turn
-too far or too slowly, bows that go too deep, the stillness between movements.
-
-## 12. Code ownership and contracts
-
-Five parallel workers + the integrator. Stay inside your paths; when you need something from another owner, use the
-contract below or ask the integrator.
+## 12. Code ownership and contracts (same model as REISATSU)
 
 | owner | paths |
 |---|---|
-| **world** | `world/**` (dimension, chunk generator, restaurant + exterior builder, `Layout`, `Fixtures`, `Circuits`), `block/**` (all block classes and block entities), `client/render/block/**` (block entity renderers), `client/WorldClientSetup.java`, `registry/ModBlocks.java`, `registry/ModBlockEntities.java`, `registry/ModDimensions.java`, `data/**`, `tools/gen_assets.py` (blockstates, simple models, block items), `debug/WorldTour.java`, `debug/WorldCheck.java` |
-| **game** | everything else in `src/main/java` (`Reisatsu`, config, `entity/**` AI, `item/**`, `game/**`, `network/**`, `client/**` except `client/model/**`, `client/render/block/**`, `client/sound/Acoustics*.java`, `client/WorldClientSetup.java`), `registry/ModItems|ModEntities|ModParticles|ModCreativeTab|ModKeys`, `command/**`, `debug/**` except the world's two files, `assets/reisatsu/lang/**` + `tools/gen_lang.py`, `README.md` |
-| **spirits** (art) | `client/model/**` (the seven entity models + the car), `assets/reisatsu/textures/entity/**`, `textures/gui/jumpscare_*`, `textures/gui/medium_portrait.png`, `tools/art/ent_*.py` |
-| **art** | all other textures (`textures/block|item|gui|particle/**`), prop block models and 3D item models in `assets/reisatsu/models/**` (never the simple ones made by `gen_assets.py`), particle JSONs, `tools/art/**` except `ent_*` |
-| **sound** | `assets/reisatsu/sounds/**`, `assets/reisatsu/sounds.json`, `registry/ModSounds.java` (generated by `tools/gen_sounds_java.py` from the catalog: **field names are the event ids upper-cased with `.` → `_`**, e.g. `DOOR_CHIME`), `tools/audio/**`, `client/sound/Acoustics*.java` |
+| **world** | `world/**` (dimension, generator, the building + 203 + street, `Layout`, `Fixtures`, `Circuit`), `block/**` + block entities, `client/render/block/**`, `client/WorldClientSetup.java`, `client/WorldAmbience.java`, `registry/ModBlocks|ModBlockEntities|ModDimensions`, `data/**`, `tools/gen_assets.py`, `debug/WorldTour.java`, `debug/WorldCheck.java` |
+| **game** | everything else in `src/main/java` (ritual flow, items, cameras + camera app, hiding/peek, the doll's and the woman's AI, director, phone/laptop, HUD, network, commands, config, `client/**` except models/world/acoustics), `registry/ModItems|ModEntities|ModParticles|ModCreativeTab|ModKeys`, `debug/**` except the world's, lang + `tools/gen_lang.py`, `README.md` |
+| **models** (art) | `client/model/**` (`OniDollModel`, `WomanModel`, `CameraModel`), `textures/entity/**`, `gui/jumpscare_*`, `tools/art/ent_*` |
+| **art** | all other textures, prop block models + 3D item models, particle JSONs, GUI (except jumpscares), `tools/art/**` except `ent_*` |
+| **sound** | `assets/hitori/sounds/**`, `sounds.json`, `registry/ModSounds.java` (generated from §8 by `tools/gen_sounds_java.py`: field = event id upper-cased, `.`→`_`), `tools/audio/**`, `client/sound/Acoustics*.java` |
 | **shader** | `src/main/shaderpack/**`, `tools/shader/**` |
 
-**Contracts (already in the base commit as compiling stubs; the world fills them in, everybody calls them):**
-* `com.reisatsu.world.Layout` — `DIMENSION` key, `FEET_Y`, `marker(String)`, `markers(String)`, `rooms()`,
-  `roomAt(BlockPos)`, `Room(key, nameJa, box, acoustics)`.
-* `com.reisatsu.world.Fixtures` — what the game's director and spirits do to the restaurant (doors, taps, buttons,
-  menus, glasses, chairs, lights, circuits, devices, mirror, footprints, reset).
-* `com.reisatsu.world.FixtureEvents` — what the restaurant tells the game: the game sets `FixtureEvents.LISTENER`;
-  the world's blocks call it for interactions (`interact(player, key, pos)`), noises (`noise(level, pos, radius,
-  cause)`), the breaker, lockers (hide / leave), notes (`note(player, id)`), call buttons, the phone, the key switch.
-* `com.reisatsu.entity.Animated` — §5. Models never import game classes other than `Animated` (and vanilla).
-* `com.reisatsu.registry.ModSounds` — one `RegistryObject<SoundEvent>` per event of §8.
-
-Testing: builds run only on GitHub Actions (`bash tools/ci.sh "msg"` on your own branch). The `build` job runs the
-dedicated-server self test (`debug/SelfTest`, system property `reisatsu.selftest`) and a vanilla client screenshot tour
-(`client/AutoShots`, `reisatsu.shots`); the `shaders` job runs the same tour under Oculus + Embeddium with the pack.
-Results: branches `ci-<branch>` / `ci-<branch>-shaders` (screenshots, logs). The tour starts with
-`debug/WorldTour.shots()` (a list of named camera positions) and then the game's shots.
+Contracts in the base commit (compiling stubs): `world/Layout` (`DIMENSION`, `FEET_Y` = 70 for 203, markers, rooms),
+`world/Fixtures` (lights/switches/breaker, TV on/channel, taps/bath water level, intercom, fridge/washing machine, doors
+incl. fusuma open states, knife rack, plush shelf, items' world presence, `resetAll`, `ensureBuilt`),
+`world/FixtureEvents` (interactions with keys, noises, hide/unhide/peek, the front door opened, notes),
+`entity/Animated`, `registry/ModSounds`.
+Testing: builds only on GitHub Actions (`bash tools/ci.sh "msg"` on your own branch `hk-*`); the `build` job runs the
+self test (`debug/SelfTest`, `hitori.selftest`) and the vanilla client tour (`client/AutoShots`, `hitori.shots`), the
+`shaders` job the same tour under Oculus + the pack. Results on `ci-<branch>` / `ci-<branch>-shaders`.

@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - common helpers: math, colour, hashes / noise, dithering, transforms
+//  HitoriShaders - common helpers: math, colour, hashes / noise, dithering, transforms
 // =====================================================================================
 
 float saturate(float x) { return clamp(x, 0.0, 1.0); }

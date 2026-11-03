@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Builds the REISATSU spirits from their specs (tools/art/ent_<id>.py):
+"""Builds the HITORI spirits from their specs (tools/art/ent_<id>.py):
 
-  assets/reisatsu/textures/entity/<id>.png + <id>_eyes.png   (box UVs packed automatically, px texels per pixel)
-  src/main/java/com/reisatsu/client/model/<Name>Model.java    (HierarchicalModel, DESIGN §5/§12 contract)
+  assets/hitori/textures/entity/<id>.png + <id>_eyes.png   (box UVs packed automatically, px texels per pixel)
+  src/main/java/com/hitori/client/model/<Name>Model.java    (HierarchicalModel, DESIGN §5/§12 contract)
   tools/art/preview/ent_<id>.png                              (every pose: front / side / 3-4 / night / finder)
 
 The setupAnim body of each spec is written in a strict Java subset and translated to Python (ent_java.py), so the

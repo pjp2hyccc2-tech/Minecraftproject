@@ -1,4 +1,4 @@
-"""Pixel-art helpers shared by the REISATSU texture modules (s_*.py)."""
+"""Pixel-art helpers shared by the HITORI texture modules (s_*.py)."""
 import math
 
 import numpy as np

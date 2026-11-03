@@ -1,4 +1,4 @@
-REISATSU sound report (measured on the decoded OGG files)
+HITORI sound report (measured on the decoded OGG files)
 
 file                              dur s ch   peak     TP    RMS   LUFS   Mmax crest  cent rough     KB  notes
 -------------------------------------------------------------------------------------------------------------

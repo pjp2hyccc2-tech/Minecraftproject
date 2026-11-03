@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - final: lens, bloom, exposure, tone curve, grading and - in the
+//  HitoriShaders - final: lens, bloom, exposure, tone curve, grading and - in the
 //  restaurant - everything the mod's channels do (docs/DESIGN.md section 9):
 //    fear   : heartbeat-pulsed vignette (72 -> 180 bpm), tunnel vision (the periphery
 //             smears and sinks), chromatic aberration, desaturation, and at high fear faint

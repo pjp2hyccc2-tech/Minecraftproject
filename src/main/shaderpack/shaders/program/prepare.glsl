@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - prepare / prepare1 (reisatsu:hidamari): the light table
+//  HitoriShaders - prepare / prepare1 (hitori:hidamari): the light table
 //  For every block column of the 128 x 128 window around the camera: the 4 lamps that can
 //  reach it, best first. Vanilla light spreads by Manhattan distance, so the search is
 //  separable: TABLE_Z finds the best 4 along z (from the emitter map's 4 lamp layers),

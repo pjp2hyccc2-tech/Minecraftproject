@@ -1,4 +1,4 @@
-"""Core DSP helpers for the REISATSU sound generator (numpy + scipy only).
+"""Core DSP helpers for the HITORI sound generator (numpy + scipy only).
 
 Conventions
 -----------
@@ -798,7 +798,7 @@ def norm_rms_capped(x, target_rms_db, max_peak_db=-1.0):
 
 
 # --------------------------------------------------------------------------
-# psychoacoustic palette (REISATSU)
+# psychoacoustic palette (HITORI)
 # --------------------------------------------------------------------------
 def binaural(fc, beat, n, L=None, amp=1.0, rng=None, phase=None):
     """Binaural-beat carrier pair (stereo): left = fc - beat/2, right = fc + beat/2.

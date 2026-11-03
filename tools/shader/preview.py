@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ReisatsuShaders offline harness: Mesa compile/link check + Iris-like preview renders.
+"""HitoriShaders offline harness: Mesa compile/link check + Iris-like preview renders.
 
   python3 tools/shader/preview.py --check
         compile AND link every program of every dimension folder with Mesa (llvmpipe, the
@@ -18,7 +18,7 @@
         channels: fear, danger, the finder, the flash, caught).
         Writes one PNG per shot plus contact.png, and prints buffer statistics (NaN / black).
         --timing prints the llvmpipe time of every pass. --list shows the shots.
-        Assets: $REISATSU_ASSETS (an assets/reisatsu dir, e.g. extracted from the art branch:
+        Assets: $HITORI_ASSETS (an assets/hitori dir, e.g. extracted from the art branch:
         git archive origin/rs-art src/main/resources/assets | tar -x -C /tmp/art) or the repo's.
 
 This is a development aid, not a substitute for the CI client run.
@@ -44,7 +44,7 @@ import hidamari_scene  # noqa: E402
 
 ROOT = lint.ROOT
 ATTRIBS = {"mc_Entity": 10, "mc_midTexCoord": 11, "at_midBlock": 12}
-HIDAMARI = "reisatsu_hidamari"
+HIDAMARI = "hitori_hidamari"
 
 # item / entity ids (item.properties, entity.properties)
 FLASHLIGHT, FINDER = 10001, 10004
@@ -932,7 +932,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--list", action="store_true")
-    ap.add_argument("--out", default="/tmp/reisatsu_preview")
+    ap.add_argument("--out", default="/tmp/hitori_preview")
     ap.add_argument("--size", default="960x540")
     ap.add_argument("--shots", default="")
     ap.add_argument("--timing", action="store_true", help="print the time of every pass (llvmpipe)")

@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - shadow map distortion + soft hardware-PCF lookups (the moon)
+//  HitoriShaders - shadow map distortion + soft hardware-PCF lookups (the moon)
 //  shadow.vsh and every lookup use the same distortion (more texels near the player).
 // =====================================================================================
 

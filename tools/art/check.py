@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Contract checker for the REISATSU art (docs/DESIGN.md §7 / §7.1).
+"""Contract checker for the HITORI art (docs/DESIGN.md §7 / §7.1).
 
 Verifies that
   * every texture the world's plain block models need exists (Surfaces and structure, door halves, lit panels),
@@ -191,7 +191,7 @@ def resolve_model(name, kind='block', depth=0):
         return None
     m = load(p)
     par = m.get('parent', '')
-    if par.startswith('reisatsu:block/') and depth < 5:
+    if par.startswith('hitori:block/') and depth < 5:
         base = resolve_model(par.split('/', 1)[1], 'block', depth + 1)
         if base:
             out = dict(base)
@@ -239,7 +239,7 @@ def check_alpha(label, body, problems):
                 ref = texs.get(ref[1:], '')
                 seen += 1
             ns, p = tex_path(ref)
-            if ns != 'reisatsu' or not os.path.isfile(p):
+            if ns != 'hitori' or not os.path.isfile(p):
                 continue
             a = tex_alpha(p)
             h, w = a.shape
@@ -262,7 +262,7 @@ def check_body(label, body, problems, used):
         if v.startswith('#'):
             continue
         ns, p = tex_path(v)
-        if ns == 'reisatsu':
+        if ns == 'hitori':
             used.add(v.split(':', 1)[1])
             if not os.path.isfile(p):
                 problems.append(f'TEXREF   {label}: {k} -> {v} does not exist')

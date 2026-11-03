@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - composite1: reflections
+//  HitoriShaders - composite1: reflections
 //   Screen-space reflections for everything glossy: the wet black lot mirroring the pole
 //   sign, the vending machines and the sodium lamps (streaked by the wet grain of the
 //   asphalt), the puddles (black mirrors), the glossy floors of the restaurant (soft), the

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Renders every REISATSU prop block model to contact sheets (two views each) -> tools/art/preview/props_<group>.png.
+"""Renders every HITORI prop block model to contact sheets (two views each) -> tools/art/preview/props_<group>.png.
 
-Also the texture lookup used by other preview tools (gen_entities.py): tex_lookup('reisatsu:block/dining_floor').
+Also the texture lookup used by other preview tools (gen_entities.py): tex_lookup('hitori:block/dining_floor').
 usage: python3 tools/art/model_preview.py [glob ...]
 """
 import fnmatch
@@ -57,7 +57,7 @@ def main(args):
             continue
         sel = [n for n in names if any(fnmatch.fnmatch(n, p) for p in pats)]
         out.append(rs_render.props_sheet(sel, os.path.join(PREVIEW, f'props_{g}.png'), views=((-35, 26), (145, 22)),
-                                         cols=8, cell=200, title=f'REISATSU props: {g} (front 3/4, back 3/4)'))
+                                         cols=8, cell=200, title=f'HITORI props: {g} (front 3/4, back 3/4)'))
     return out
 
 

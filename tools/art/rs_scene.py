@@ -88,8 +88,8 @@ def pair(a, b, name):
 
 
 # ================================================================================================ scenes
-def room_shell(S, x0, x1, z0, z1, floor='reisatsu:block/dining_floor', wall='reisatsu:block/wallpaper',
-               lower='reisatsu:block/wainscot', ceiling='reisatsu:block/ceiling_tile', height=4, open_sides=('north',)):
+def room_shell(S, x0, x1, z0, z1, floor='hitori:block/dining_floor', wall='hitori:block/wallpaper',
+               lower='hitori:block/wainscot', ceiling='hitori:block/ceiling_tile', height=4, open_sides=('north',)):
     for x in range(x0, x1 + 1):
         for z in range(z0, z1 + 1):
             S.cube(x, -1, z, floor)
@@ -114,9 +114,9 @@ def scene_booth():
     room_shell(S, -3, 6, -2, 3, open_sides=('north', 'east'))
     # the window wall (south): wainscot band, shop windows above with blinds behind (inside)
     for x in range(-4, 8):
-        S.cube(x, 0, 4, 'reisatsu:block/wainscot')
+        S.cube(x, 0, 4, 'hitori:block/wainscot')
         for y in (1, 2, 3):
-            S.cube(x, y, 4, 'reisatsu:block/shop_window', mode='translucent')
+            S.cube(x, y, 4, 'hitori:block/shop_window', mode='translucent')
     for x in range(-3, 7):
         for y in (2, 3):
             S.model('window_blind', x, y, 3, 'north')
@@ -157,8 +157,8 @@ def scene_booth():
 
 def scene_kitchen():
     S = Scene()
-    room_shell(S, -4, 4, -1, 2, floor='reisatsu:block/kitchen_floor', wall='reisatsu:block/white_tile_dirty',
-               lower='reisatsu:block/stainless', ceiling='reisatsu:block/ceiling_tile_stained', open_sides=('north',))
+    room_shell(S, -4, 4, -1, 2, floor='hitori:block/kitchen_floor', wall='hitori:block/white_tile_dirty',
+               lower='hitori:block/stainless', ceiling='hitori:block/ceiling_tile_stained', open_sides=('north',))
     line_ = ['kitchen_counter', 'fryer_on', 'gas_range_lit', 'gas_range', 'griddle', 'kitchen_counter', 'kitchen_sink',
              'dishwasher_running', 'kitchen_counter']
     for i, n in enumerate(line_):
@@ -182,10 +182,10 @@ def scene_kitchen():
 
 def scene_register():
     S = Scene()
-    room_shell(S, -3, 4, -1, 2, ceiling='reisatsu:block/ceiling_tile', open_sides=('north',))
+    room_shell(S, -3, 4, -1, 2, ceiling='hitori:block/ceiling_tile', open_sides=('north',))
     for x in range(-3, 5):
-        S.cube(x, 4, 0, 'reisatsu:block/ceiling_tile', down='reisatsu:block/downlight_lit' if x in (0, 1) else
-               'reisatsu:block/ceiling_tile')
+        S.cube(x, 4, 0, 'hitori:block/ceiling_tile', down='hitori:block/downlight_lit' if x in (0, 1) else
+               'hitori:block/ceiling_tile')
     for x in (-1, 0, 1):
         S.model('counter', x, 0, 1, 'north')
     S.model('register', 0, 1, 1, 'north')
@@ -211,19 +211,19 @@ def scene_register():
 
 def scene_restroom():
     S = Scene()
-    room_shell(S, -2, 3, -1, 1, floor='reisatsu:block/restroom_floor', wall='reisatsu:block/white_tile',
-               lower='reisatsu:block/white_tile', ceiling='reisatsu:block/ceiling_tile_stained', open_sides=('north', 'south'))
+    room_shell(S, -2, 3, -1, 1, floor='hitori:block/restroom_floor', wall='hitori:block/white_tile',
+               lower='hitori:block/white_tile', ceiling='hitori:block/ceiling_tile_stained', open_sides=('north', 'south'))
     # the wall with the dark mirror: the cavity behind it (stained floor, a dead sink)
     for x in range(-3, 5):
         for y in range(4):
             if not (y == 1 and x in (-1, 0, 1)):
-                S.cube(x, y, 2, 'reisatsu:block/white_tile')
+                S.cube(x, y, 2, 'hitori:block/white_tile')
     for x in (-1, 0, 1):
         S.model('mirror' if x != 0 else 'mirror_cracked', x, 1, 2, 'south' if False else 'north')
     for x in range(-2, 4):
-        S.cube(x, -1, 3, 'reisatsu:block/restroom_floor_dark')
-        S.cube(x, -1, 4, 'reisatsu:block/restroom_floor_dark')
-        S.cube(x, 4, 3, 'reisatsu:block/ceiling_tile_stained')
+        S.cube(x, -1, 3, 'hitori:block/restroom_floor_dark')
+        S.cube(x, -1, 4, 'hitori:block/restroom_floor_dark')
+        S.cube(x, 4, 3, 'hitori:block/ceiling_tile_stained')
     S.model('restroom_sink', 0, 0, 3, 'south')
     for x in (-1, 0, 1):
         S.model('restroom_sink_running' if x == 0 else 'restroom_sink', x, 0, 1, 'north')
@@ -231,7 +231,7 @@ def scene_restroom():
     S.model('paper_towel', 2, 1, 1, 'north')
     S.model('hand_dryer', 3, 1, 0, 'west')
     S.model('stall_wall', -2, 0, -1, 'east') if False else None
-    S.cube(0, 4, 0, 'reisatsu:block/ceiling_tile', down='reisatsu:block/ceiling_light_lit')
+    S.cube(0, 4, 0, 'hitori:block/ceiling_tile', down='hitori:block/ceiling_light_lit')
     S.light((0.5, 3.4, 0.5), (0.85, 1.0, 0.9), 1.6, 2.4)
     S.light((0.5, 1.5, 3.6), (0.4, 0.5, 0.7), 0.25, 1.0)
     eye = (0.5, 1.62, -2.2)
@@ -246,21 +246,21 @@ def scene_exterior():
     W0, W1 = -8, 10
     zf = 6
     for x in range(W0, W1 + 1):
-        S.cube(x, 0, zf, 'reisatsu:block/facade_brick')
-        S.cube(x, 4, zf, 'reisatsu:block/fascia')
+        S.cube(x, 0, zf, 'hitori:block/facade_brick')
+        S.cube(x, 4, zf, 'hitori:block/fascia')
         for y in (1, 2, 3):
             if -1 <= x <= 1:
                 continue
             if x in (W0, W1) or x % 6 == 0:
-                S.cube(x, y, zf, 'reisatsu:block/exterior_wall')
+                S.cube(x, y, zf, 'hitori:block/exterior_wall')
             else:
-                S.cube(x, y, zf, 'reisatsu:block/shop_window', mode='translucent')
+                S.cube(x, y, zf, 'hitori:block/shop_window', mode='translucent')
                 S.model('window_blind' if (x + y) % 3 else 'window_blind_closed', x, y, zf + 1, 'south')
-        S.cube(x, 5, zf + 1, 'reisatsu:block/roof_tile')
-        S.cube(x, 6, zf + 2, 'reisatsu:block/roof_tile')
+        S.cube(x, 5, zf + 1, 'hitori:block/roof_tile')
+        S.cube(x, 6, zf + 2, 'hitori:block/roof_tile')
         for zz in range(zf + 1, zf + 4):
-            S.cube(x, -1, zz, 'reisatsu:block/dining_floor')
-            S.cube(x, 4, zz, 'reisatsu:block/ceiling_tile', down='reisatsu:block/ceiling_light_lit' if x % 4 == 0 and zz == zf + 2 else 'reisatsu:block/ceiling_tile')
+            S.cube(x, -1, zz, 'hitori:block/dining_floor')
+            S.cube(x, 4, zz, 'hitori:block/ceiling_tile', down='hitori:block/ceiling_light_lit' if x % 4 == 0 and zz == zf + 2 else 'hitori:block/ceiling_tile')
     for k in range(8):
         S.model(f'roof_sign_tile_{k}_lit', 4 - k, 7, zf + 2, 'north')
     # entrance: brick sill, the automatic door rail, the key switch, the mat
@@ -270,17 +270,17 @@ def scene_exterior():
     # the lot
     for x in range(W0 - 2, W1 + 3):
         for z in range(-12, zf):
-            t = 'reisatsu:block/asphalt'
+            t = 'hitori:block/asphalt'
             if z in (-1, 0, 1, 2, 3) and (x % 3 == 1) and x not in (-1, 0, 1):
-                t = 'reisatsu:block/parking_line'
+                t = 'hitori:block/parking_line'
             if z >= zf - 1:
-                t = 'reisatsu:block/sidewalk'
+                t = 'hitori:block/sidewalk'
             S.cube(x, -1, z, t)
     for x in range(W0, W1 + 1):
         if x % 3 != 1 and x not in (-1, 0, 1):
             S.model('wheel_stop', x, 0, 3, 'south')
     for (px_, pz) in ((-3, -2), (-2, -2), (-2, -3), (4, -5), (5, -5)):
-        S.decal(px_, 0, pz, 'reisatsu:block/puddle')
+        S.decal(px_, 0, pz, 'hitori:block/puddle')
     S.model('vending_machine_lower', 6, 0, zf - 1, 'north')
     S.model('vending_machine_upper', 6, 1, zf - 1, 'north')
     S.model('vending_machine_lower', 7, 0, zf - 1, 'north')
@@ -314,8 +314,8 @@ def scene_exterior():
 
 def scene_back():
     S = Scene()
-    room_shell(S, -3, 3, -1, 2, floor='reisatsu:block/dining_floor_worn', wall='reisatsu:block/wallpaper_stained',
-               lower='reisatsu:block/wainscot', ceiling='reisatsu:block/ceiling_tile_stained', open_sides=('north',))
+    room_shell(S, -3, 3, -1, 2, floor='hitori:block/dining_floor_worn', wall='hitori:block/wallpaper_stained',
+               lower='hitori:block/wainscot', ceiling='hitori:block/ceiling_tile_stained', open_sides=('north',))
     for x in (-3, -2, -1):
         S.model('locker_lower' if x != -2 else 'locker_lower_open', x, 0, 2, 'north')
         S.model('locker_upper' if x != -2 else 'locker_upper_open', x, 1, 2, 'north')
@@ -327,7 +327,7 @@ def scene_back():
     S.model('folding_chair', 2, 0, 0, 'west')
     S.model('security_monitors_on', -3, 2, 1, 'east') if False else None
     S.model('cardboard_boxes', -3, 0, 0, 'east')
-    S.cube(0, 4, 0, 'reisatsu:block/ceiling_tile', down='reisatsu:block/ceiling_light')
+    S.cube(0, 4, 0, 'hitori:block/ceiling_tile', down='hitori:block/ceiling_light')
     S.light((3.5, 0.9, 1.5), (0.7, 0.8, 1.0), 1.0, 1.4)
     eye = (3.2, 1.62, -2.6)
     tgt = (-0.5, 0.9, 2.0)
@@ -336,8 +336,8 @@ def scene_back():
 
 def scene_office():
     S = Scene()
-    room_shell(S, -2, 2, -1, 2, floor='reisatsu:block/dining_floor_worn', wall='reisatsu:block/wallpaper',
-               lower='reisatsu:block/wainscot', ceiling='reisatsu:block/ceiling_tile', open_sides=('north',))
+    room_shell(S, -2, 2, -1, 2, floor='hitori:block/dining_floor_worn', wall='hitori:block/wallpaper',
+               lower='hitori:block/wainscot', ceiling='hitori:block/ceiling_tile', open_sides=('north',))
     for x in (-1, 0):
         S.model('security_monitors_on' if x == -1 else 'security_monitors_on_alert', x, 1, 2, 'north')
         S.model('filing_cabinet', x, 0, 2, 'north') if x == 0 else None
@@ -359,14 +359,14 @@ def scene_road():
     S = Scene()
     for x in range(-8, 12):
         for z in range(-6, 8):
-            t = 'reisatsu:block/asphalt'
+            t = 'hitori:block/asphalt'
             if z == 1:
-                t = 'reisatsu:block/road_line'
+                t = 'hitori:block/road_line'
             if z >= 5:
-                t = 'reisatsu:block/rice_paddy'
+                t = 'hitori:block/rice_paddy'
             S.cube(x, -1, z, t)
             if z == 4:
-                S.cube(x, -1, z, 'reisatsu:block/curb', up='reisatsu:block/curb_top')
+                S.cube(x, -1, z, 'hitori:block/curb', up='hitori:block/curb_top')
     for x in range(-8, 12):
         S.model('guardrail', x, 0, 4, 'south')
     S.model('flower_offering', 2, 0, 3, 'north')
@@ -389,7 +389,7 @@ def scene_road():
 def vanilla_door(half_tex, hinge='left'):
     """minecraft:block/door_bottom_left / _right geometry (closed, facing east -> panel at x 0..3) with the given
     texture: the west face shows the texture as is for hinge=left (mirrored for hinge=right)."""
-    t = 'reisatsu:block/' + half_tex
+    t = 'hitori:block/' + half_tex
     left = hinge == 'left'
     return {'textures': {'b': t, 'particle': t}, 'elements': [{
         'from': [0, 0, 0], 'to': [3, 16, 16],
@@ -405,8 +405,8 @@ def scene_doors():
     """The vanilla-style doors in a corridor wall (seen from the corridor side), the auto door panels and the kitchen
     swing doors as the block entity renderers would draw them."""
     S = Scene()
-    room_shell(S, -6, 6, -2, 1, floor='reisatsu:block/kitchen_floor', wall='reisatsu:block/wallpaper',
-               lower='reisatsu:block/wainscot', ceiling='reisatsu:block/ceiling_tile', open_sides=('north',))
+    room_shell(S, -6, 6, -2, 1, floor='hitori:block/kitchen_floor', wall='hitori:block/wallpaper',
+               lower='hitori:block/wainscot', ceiling='hitori:block/ceiling_tile', open_sides=('north',))
     doors = ['staff_door', 'office_door', 'restroom_door_m', 'restroom_door_w', 'back_door', 'fridge_door', 'stall_door',
              'stall_door_occupied']
     extra = []
@@ -442,10 +442,10 @@ def scene_doors():
     # auto door panels (16x48 drawn on 1x3 quads) and a swing door (16x32 on 1x2)
     for k, x in enumerate((5.0, 6.0)):
         pts = np.array([(x + 1, 3, 1.4), (x, 3, 1.4), (x, 0, 1.4), (x + 1, 0, 1.4)], float)
-        cv.quad(pts, R._uv_corners([0, 0, 16, 16]), RR.tex('reisatsu:block/auto_door_panel'), shade=0.9,
+        cv.quad(pts, R._uv_corners([0, 0, 16, 16]), RR.tex('hitori:block/auto_door_panel'), shade=0.9,
                 mode='translucent')
     pts = np.array([(4.6, 2, 1.2), (3.6, 2, 1.2), (3.6, 0, 1.2), (4.6, 0, 1.2)], float)
-    cv.quad(pts, R._uv_corners([0, 0, 16, 16]), RR.tex('reisatsu:block/swing_door'), shade=0.9, mode='translucent')
+    cv.quad(pts, R._uv_corners([0, 0, 16, 16]), RR.tex('hitori:block/swing_door'), shade=0.9, mode='translucent')
     cv.finish()
     return save(np.clip(cv.color, 0, 255), 'scene_doors')
 
@@ -503,9 +503,9 @@ def scene_booth_night():
     S = Scene()
     room_shell(S, -3, 6, -2, 3, open_sides=('north', 'east'))
     for x in range(-4, 8):
-        S.cube(x, 0, 4, 'reisatsu:block/wainscot')
+        S.cube(x, 0, 4, 'hitori:block/wainscot')
         for y in (1, 2, 3):
-            S.cube(x, y, 4, 'reisatsu:block/shop_window', mode='translucent')
+            S.cube(x, y, 4, 'hitori:block/shop_window', mode='translucent')
     for x in range(-3, 7):
         for y in (2, 3):
             S.model('window_blind', x, y, 3, 'north')

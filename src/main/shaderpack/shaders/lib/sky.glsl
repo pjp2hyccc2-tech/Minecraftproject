@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - sky gradient, analytic moon (reflections), fog colour
+//  HitoriShaders - sky gradient, analytic moon (reflections), fog colour
 //  HIDAMARI: an overcast night just after rain - a low ceiling of dark clouds, faintly lit
 //  from below by the town (an orange glow on the horizon, strongest west-south-west), no
 //  moon, no stars.

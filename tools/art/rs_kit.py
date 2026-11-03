@@ -1,4 +1,4 @@
-"""REISATSU prop kit: block models built from boxes whose faces are painted into an automatically packed texture atlas.
+"""HITORI prop kit: block models built from boxes whose faces are painted into an automatically packed texture atlas.
 
     A = Atlas('gas_range')                       # -> textures/block/gas_range.png (size chosen by the packer)
     m = Model('gas_range', A)
@@ -18,7 +18,7 @@ import numpy as np
 
 from common import REGISTRY, MODEL_ROOT, C
 
-NS = 'reisatsu'
+NS = 'hitori'
 ATLASES = {}      # texture path ('block/x') -> Atlas
 MODELS = {}       # model name -> Model | dict
 ITEM_MODELS = {}  # item model name -> dict

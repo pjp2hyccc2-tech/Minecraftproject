@@ -1,7 +1,7 @@
 // =====================================================================================
-//  ReisatsuShaders - the lights the player carries
+//  HitoriShaders - the lights the player carries
 //    slot 0: main hand (heldItemId, drawn on the right)   slot 1: off hand (heldItemId2)
-//    slot 2: the camera FLASH (reisatsu:hidamari: blindness = flash strength)
+//    slot 2: the camera FLASH (hitori:hidamari: blindness = flash strength)
 //  The flashlight is a spot light from the hand, slightly below and beside the eye, aimed
 //  along the view; the flash is a very bright point light at the camera's bulb (just above
 //  the eye) with an inverse-square falloff. The same functions light opaque surfaces
@@ -10,8 +10,8 @@
 // =====================================================================================
 
 // item.properties (heldItemId / heldItemId2 / currentRenderedItemId)
-#define ITEM_FLASHLIGHT   10001   // reisatsu:flashlight_on
-#define ITEM_FINDER       10004   // reisatsu:reisha_camera_finder (the camera raised to the eye)
+#define ITEM_FLASHLIGHT   10001   // hitori:flashlight_on
+#define ITEM_FINDER       10004   // hitori:reisha_camera_finder (the camera raised to the eye)
 #define ITEM_HANDLIGHT    10010   // vanilla torches / lanterns held in a hand
 
 #define LIGHT_NONE  0
@@ -41,7 +41,7 @@ struct HandLight {
 
 // ---- the finder -------------------------------------------------------------------------
 bool holdsFinder() { return heldItemId == ITEM_FINDER || heldItemId2 == ITEM_FINDER; }
-// 1 while the camera is raised to the eye (reisatsu:hidamari)
+// 1 while the camera is raised to the eye (hitori:hidamari)
 float finderMode() {
 #ifdef WORLD_HIDAMARI
     return (holdsFinder() || nightVision > 0.0) ? 1.0 : 0.0;

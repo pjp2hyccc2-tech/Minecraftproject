@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Writes the REISATSU prop block models (models/block/<name>.json, facing north) and the item models
+"""Writes the HITORI prop block models (models/block/<name>.json, facing north) and the item models
 (models/item/<id>.json; 3D held models use forge:separate_transforms). UVs come from the rs_kit atlases, so models and
 textures always match: run gen_textures.py as well after any change.
 

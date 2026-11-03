@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Runtime check of the acoustics engine's OpenAL EFX usage (com.reisatsu.client.sound.Acoustics*), without
+"""Runtime check of the acoustics engine's OpenAL EFX usage (com.hitori.client.sound.Acoustics*), without
 Minecraft: drives the system's OpenAL Soft through a loopback device (ALC_SOFT_loopback, no sound card) with the very
 call sequence of AcousticsEfx.java - one auxiliary slot with an EAX reverb, send-auto off, two low-pass filter
 objects reused for every source, sources set up like Minecraft's Channel (per-source linear distance model) - and
@@ -49,7 +49,7 @@ ORDER = [("DENSITY", 0, 1), ("DIFFUSION", 0, 1), ("GAIN", 0, 1), ("GAINHF", 0, 1
 
 
 def presets():
-    src = open(os.path.join(ROOT, "src/main/java/com/reisatsu/client/sound/AcousticsPresets.java"), encoding="utf-8").read()
+    src = open(os.path.join(ROOT, "src/main/java/com/hitori/client/sound/AcousticsPresets.java"), encoding="utf-8").read()
     out = {}
     for m in re.finditer(r'def\("([a-z_]+)",\s*([^)]*)\);', src):
         out[m.group(1)] = [float(v.strip().rstrip("f")) for v in m.group(2).split(",")]

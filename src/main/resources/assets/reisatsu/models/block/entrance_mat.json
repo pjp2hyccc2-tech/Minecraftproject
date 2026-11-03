@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/carpet",
-  "textures": {
-    "wool": "reisatsu:block/entrance_mat",
-    "particle": "reisatsu:block/entrance_mat"
-  }
-}

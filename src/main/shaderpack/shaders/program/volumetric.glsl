@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - composite: the air -> colortex2 (rgb in-scattered light, a transmittance)
+//  HitoriShaders - composite: the air -> colortex2 (rgb in-scattered light, a transmittance)
 //   * fogMarch: the low mist over the wet lot, dust indoors (the emitter map's cover tile
 //     tells which), the glow of every lamp in the air (the light table), the flash
 //   * beamMarch per hand: the flashlight's cone clipped to the view ray, wisps drifting

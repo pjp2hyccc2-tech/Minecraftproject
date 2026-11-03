@@ -7,10 +7,10 @@ OUT=$(mktemp -d)
 LOG=$(mktemp)
 javac --release 17 -Xlint:all -Xlint:-processing -d "$OUT" \
   $(find "$HERE/stubs" -name '*.java') \
-  "$ROOT/src/main/java/com/reisatsu/entity/Animated.java" \
-  $(find "$ROOT/src/main/java/com/reisatsu/client/model" -name '*.java') "$@" > "$LOG" 2>&1
+  "$ROOT/src/main/java/com/hitori/entity/Animated.java" \
+  $(find "$ROOT/src/main/java/com/hitori/client/model" -name '*.java') "$@" > "$LOG" 2>&1
 RC=$?
 grep -v "^Picked up" "$LOG"
-ls "$OUT/com/reisatsu/client/model" 2>/dev/null | grep -v '\$' | sed 's/^/compiled: /'
+ls "$OUT/com/hitori/client/model" 2>/dev/null | grep -v '\$' | sed 's/^/compiled: /'
 rm -rf "$OUT" "$LOG"
 exit $RC

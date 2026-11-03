@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - fog
+//  HitoriShaders - fog
 //   fogDensity()      extinction per block. HIDAMARI: outside a blue-grey haze and a low,
 //                     drifting mist over the wet lot and the fields (rain just stopped);
 //                     inside (under a roof: the emitter map's cover tile) a little dust

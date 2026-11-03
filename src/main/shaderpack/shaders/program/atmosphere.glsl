@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - composite2: the air goes onto the picture, the spirits' traces,
+//  HitoriShaders - composite2: the air goes onto the picture, the spirits' traces,
 //  the finder's afterimage, bloom bright-pass
 //   * colortex2 (in-scatter, transmittance) is blurred with a 4x4 depth-aware filter that
 //     cancels the Bayer dither of the march; colour = colour * T + in-scatter.

@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - the restaurant's light sources (reisatsu:hidamari)
+//  HitoriShaders - the restaurant's light sources (hitori:hidamari)
 //
 //  Vanilla only knows one light LEVEL per block. The pack finds out WHICH lamp lights a
 //  surface - and so its colour, direction and flicker - like this:

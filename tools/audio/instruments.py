@@ -1,4 +1,4 @@
-"""Instrument / physical-ish sound sources for REISATSU."""
+"""Instrument / physical-ish sound sources for HITORI."""
 import numpy as np
 from scipy import signal
 
@@ -764,7 +764,7 @@ def water_texture(n, rng, L=None, density=220.0, r_range=(0.7, 6.0), noise=0.5, 
 
 
 # --------------------------------------------------------------------------
-# REISATSU: the family restaurant's instruments (store music, chimes, organ)
+# HITORI: the family restaurant's instruments (store music, chimes, organ)
 # --------------------------------------------------------------------------
 def epiano(freq, dur, rng, vel=0.7, bright=0.5, tine=0.6, release=None):
     """Tine electric piano (2-op FM 1:1 whose index decays = the bark, a high

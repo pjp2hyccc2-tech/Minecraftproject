@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - surface lighting
+//  HitoriShaders - surface lighting
 //  Forward (every lit gbuffers program): the restaurant's lamps (lib/emitters.glsl) or, in
 //  other dimensions, warm block light and the sun / moon; sky ambient; wet surfaces.
 //  The hand lights (flashlight) and the camera flash are added once per pixel by the

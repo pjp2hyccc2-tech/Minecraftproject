@@ -1,4 +1,4 @@
-"""Item sprites (16x16, item/generated in the GUI) and the 3D held models (forge:separate_transforms) of REISATSU:
+"""Item sprites (16x16, item/generated in the GUI) and the 3D held models (forge:separate_transforms) of HITORI:
 the 霊写機 instant camera (normal / raised to the finder) and the flashlight (off / on). Also flat sprites for the door
 block items (the world's item models may point at item/<door>)."""
 import math

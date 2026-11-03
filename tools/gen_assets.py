@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the blockstates, the plain block models and the block item models of REISATSU (docs/DESIGN.md §7.1).
+"""Generates the blockstates, the plain block models and the block item models of HITORI (docs/DESIGN.md §7.1).
 
 World (this script) writes: every blockstate; the models of the plain shapes (cubes, the ceiling light / downlight
 panels, roof stairs and slab, the 1 px mat and puddle, the hedge, the painted lines, the curb and the brick sill, the
@@ -12,8 +12,8 @@ import json
 import os
 import sys
 
-ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", "reisatsu"))
-NS = "reisatsu"
+ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", "hitori"))
+NS = "hitori"
 FACING_Y = {"north": 0, "east": 90, "south": 180, "west": 270}
 WRITTEN_MODELS = set()
 ART_MODELS = set()

@@ -1,4 +1,4 @@
-"""Voice synthesis for REISATSU.
+"""Voice synthesis for HITORI.
 
 * ``voice``   - additive glottal-pulse source (band-limited harmonics whose
                 amplitudes follow a cascade formant envelope evaluated at every
@@ -855,7 +855,7 @@ def call_oi(rng, dur_o=0.95, dur_i=0.40, f0=215.0, rise=1.12, end_drop=0.86, bre
 
 
 # --------------------------------------------------------------------------
-# lines with explicit timing and intonation (REISATSU's Japanese voice lines)
+# lines with explicit timing and intonation (HITORI's Japanese voice lines)
 # --------------------------------------------------------------------------
 def speak_line(script, rng, pitch, durs, table=VF, scale=1.0, f0=230.0, gains=None, pauses=None, smooth_hz=14.0,
                breath=0.25, jitter=0.01, shimmer=0.06, tilt=-8.0, subharm=0.0, slur=0.0, cons_gain=1.0, fmax=7500.0,

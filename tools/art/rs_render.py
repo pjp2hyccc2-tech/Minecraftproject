@@ -1,4 +1,4 @@
-"""Offline preview renderer for REISATSU props and scenes (not shipped).
+"""Offline preview renderer for HITORI props and scenes (not shipped).
 
 LitCanvas extends render3d.Canvas with a normal buffer, an emissive mask and a deferred point-light pass, so props can
 be judged both in neutral light and at night lit only by the restaurant's light sources (emissive faces stay bright).
@@ -17,7 +17,7 @@ _TEX = {}
 
 
 def tex(ref):
-    """Texture array by reference ('reisatsu:block/x', 'block/x' or 'minecraft:...'). Rendered fresh from the
+    """Texture array by reference ('hitori:block/x', 'block/x' or 'minecraft:...'). Rendered fresh from the
     generators when registered, else read from disk."""
     name = ref.split(':', 1)[1] if ':' in ref else ref
     if name not in _TEX:
@@ -47,7 +47,7 @@ def model_json(name):
         with open(os.path.join(MODEL_ROOT, 'block', name + '.json'), encoding='utf-8') as f:
             return json.load(f)
     if isinstance(m, dict):
-        if 'parent' in m and m['parent'].startswith('reisatsu:block/') and 'elements' not in m:
+        if 'parent' in m and m['parent'].startswith('hitori:block/') and 'elements' not in m:
             base = dict(model_json(m['parent'].split('/', 1)[1]))
             if 'textures' in m:
                 t = dict(base.get('textures', {}))
@@ -259,7 +259,7 @@ def orbit_eye(target, yaw, pitch, dist):
 SUPPORT = {}     # prop name -> model drawn in the block below (table / counter) in previews
 
 
-def render_prop(name, yaw=-35.0, pitch=26.0, size=224, floor='reisatsu:block/dining_floor', zoom=1.0, extent=None,
+def render_prop(name, yaw=-35.0, pitch=26.0, size=224, floor='hitori:block/dining_floor', zoom=1.0, extent=None,
                 bg=(46, 48, 54)):
     m = model_json(name)
     lo = np.array([0, 0, 0.0])

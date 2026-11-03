@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - vanilla sky geometry
+//  HitoriShaders - vanilla sky geometry
 //   PROG_SKYBASIC   : sky disc / sunset fan / void / stars. The gradient is painted by the
 //                     deferred pass for every empty pixel, so only (dim) stars are kept -
 //                     none over the overcast restaurant.

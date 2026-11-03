@@ -1,11 +1,11 @@
 // =====================================================================================
-//  ReisatsuShaders - deferred (after opaque terrain / entities / the solid hand, before
+//  HitoriShaders - deferred (after opaque terrain / entities / the solid hand, before
 //  translucent terrain)
 //   * the flashlight and the camera FLASH on every opaque surface, once per pixel: position
 //     from depth, normal / albedo / material from colortex5 / colortex6. Screen-space shadows
 //     toward the lamp in the hand and toward the flash bulb (a hand above the lens: thin hard
 //     shadows under every edge, like a real flash photo).
-//   * reisatsu:hidamari: screen-space shadows of the strongest lamp of each pixel (the deep
+//   * hitori:hidamari: screen-space shadows of the strongest lamp of each pixel (the deep
 //     shadows under the tables, chairs and the planters).
 //   * the sky behind everything (sky objects already sit in colortex0).
 // =====================================================================================

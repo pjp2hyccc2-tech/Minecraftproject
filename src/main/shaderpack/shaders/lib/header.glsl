@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - common header (include order matters)
+//  HitoriShaders - common header (include order matters)
 // =====================================================================================
 #include "/lib/settings.glsl"
 #include "/lib/uniforms.glsl"

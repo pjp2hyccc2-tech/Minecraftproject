@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/door_top_right",
-  "render_type": "minecraft:cutout",
-  "textures": {
-    "bottom": "reisatsu:block/back_door_bottom",
-    "top": "reisatsu:block/back_door_top"
-  }
-}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""霊撮 ―REISATSU― procedural texture generator.
+"""霊撮 ―HITORI― procedural texture generator.
 
 Generates every block / item / GUI / particle texture of docs/DESIGN.md §7 (entity textures, gui/jumpscare_* and
 gui/medium_portrait belong to the spirits worker) as deterministic pixel art, writes contact sheets / tiling previews
@@ -70,17 +70,17 @@ def build_previews(results):
         props = [(l, a) for l, a in blocks if not REGISTRY['block/' + l]['tile']]
         if surf:
             made.append(preview.contact_sheet(surf, os.path.join(PREVIEW, 'sheet_surfaces.png'), cell=112, cols=10,
-                                              title='REISATSU surfaces / doors (x7)'))
+                                              title='HITORI surfaces / doors (x7)'))
             made.append(preview.contact_sheet(surf, os.path.join(PREVIEW, 'sheet_surfaces_night.png'), cell=112,
-                                              cols=10, night=True, title='REISATSU surfaces (night tint)'))
+                                              cols=10, night=True, title='HITORI surfaces (night tint)'))
         if props:
             made.append(preview.contact_sheet(props, os.path.join(PREVIEW, 'sheet_prop_atlases.png'), cell=192,
-                                              cols=8, title='REISATSU prop atlases'))
+                                              cols=8, title='HITORI prop atlases'))
     items = groups.get('item', [])
     small_items = [(l, a) for l, a in items if a.shape[0] <= 16]
     if small_items:
         made.append(preview.contact_sheet(small_items, os.path.join(PREVIEW, 'sheet_items.png'),
-                                          cell=128, cols=8, title='REISATSU items (x8)'))
+                                          cell=128, cols=8, title='HITORI items (x8)'))
     skins = [(l, a) for l, a in items if a.shape[0] > 16]
     if skins:
         made.append(preview.contact_sheet(skins, os.path.join(PREVIEW, 'sheet_item_skins.png'),
@@ -88,11 +88,11 @@ def build_previews(results):
     gui = groups.get('gui', [])
     if gui:
         made.append(preview.contact_sheet(gui, os.path.join(PREVIEW, 'sheet_gui.png'),
-                                          cell=256, cols=4, title='REISATSU gui'))
+                                          cell=256, cols=4, title='HITORI gui'))
     parts = groups.get('particle', [])
     if parts:
         made.append(preview.contact_sheet(parts, os.path.join(PREVIEW, 'sheet_particles.png'),
-                                          cell=96, cols=10, title='REISATSU particles'))
+                                          cell=96, cols=10, title='HITORI particles'))
     if tiles:
         tl = [(l, a) for l, a in tiles if a.shape[0] == 16 and a.shape[1] == 16]
         made.append(preview.tile_preview(tl, os.path.join(PREVIEW, 'tiles.png'), cols=6))

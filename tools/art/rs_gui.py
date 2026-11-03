@@ -1,4 +1,4 @@
-"""GUI textures of 霊撮 ―REISATSU― (textures/gui/): title logo, the camera finder + 霊感計, instant photo frame,
+"""GUI textures of 霊撮 ―HITORI― (textures/gui/): title logo, the camera finder + 霊感計, instant photo frame,
 the spirits' true names in red brush ink, failed-photo blur and 心霊写真 overlays, the 霊撮帳 album, HUD icons,
 note paper, locker slits, the HIDAMARI sun. (gui/jumpscare_* and gui/medium_portrait belong to the spirits worker;
 vignette and grain are the MEIKON/SOUNAN images.)
@@ -171,11 +171,11 @@ def title_logo():
     ra = reg[..., 3:4] / 255.0
     reg[..., :3] = reg[..., :3] * (1 - a) + seal_col * a
     reg[..., 3:4] = np.maximum(ra, a) * 255
-    # REISATSU in spaced capitals between thin rules
+    # HITORI in spaced capitals between thin rules
     img = Image.new('L', (W, H), 0)
     d = ImageDraw.Draw(img)
     fnt = font(FONT_SERIF_JP_BOLD, 24 * S)
-    label = '  '.join('REISATSU')
+    label = '  '.join('HITORI')
     tw = d.textlength(label, font=fnt)
     ty = int(212 * S)
     d.text(((W - tw) / 2, ty), label, fill=255, font=fnt)

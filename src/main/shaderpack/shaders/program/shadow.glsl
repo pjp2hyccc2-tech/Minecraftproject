@@ -1,7 +1,7 @@
 // =====================================================================================
-//  ReisatsuShaders - the shadow pass
+//  HitoriShaders - the shadow pass
 //  * other dimensions: the sun / moon shadow map (water and glass cast none)
-//  * reisatsu:hidamari: the overcast night has no moon to cast shadows - the pass draws the
+//  * hitori:hidamari: the overcast night has no moon to cast shadows - the pass draws the
 //    top-down EMITTER MAP instead (lib/emitters.glsl): 4 x 4 tiles of 128 x 128 texels, one
 //    texel per block column around the camera.
 //      tiles 0..3: the lit lamps of 4 height layers. Every face of a lamp block is snapped onto

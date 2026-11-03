@@ -1,11 +1,11 @@
-"""The complete 霊撮 ―REISATSU― sound list (docs/DESIGN.md section 8): generator, level target, attenuation,
+"""The complete 霊撮 ―HITORI― sound list (docs/DESIGN.md section 8): generator, level target, attenuation,
 loop flag, Vorbis quality and subtitles for every event.  Generators are 'module:function' strings, resolved
 when a file is rendered."""
 from collections import namedtuple
 import importlib
 
-# event : sound event id (registered as reisatsu:<event>)
-# path  : file path under assets/reisatsu/sounds (variants get _1.._n)
+# event : sound event id (registered as hitori:<event>)
+# path  : file path under assets/hitori/sounds (variants get _1.._n)
 # count : number of variants
 # ch    : 1 = mono (positional), 2 = stereo (beds / music / UI)
 # fn    : 'module:function', function(rng, index) -> numpy signal
@@ -15,7 +15,7 @@ import importlib
 #         ('dense', rms_dB, true_peak_dB)   maximised, true peak verified on the decoded OGG
 # loop  : must loop seamlessly (built circularly; checked in report.txt)
 # q     : Vorbis quality
-# ja/en : subtitle text (lang keys subtitles.reisatsu.<event>)
+# ja/en : subtitle text (lang keys subtitles.hitori.<event>)
 # extra : sub=False -> sounds.json carries no "subtitle" (non-diegetic score); seam='start' keeps the loop's
 #         own start (rhythmic loops); preload=True
 E = namedtuple("E", "event path count ch fn att norm loop q ja en extra")

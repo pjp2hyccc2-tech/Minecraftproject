@@ -1,4 +1,4 @@
-"""Particle textures (textures/particle/<id>_<n>.png) and particle definitions (particles/<id>.json) of REISATSU.
+"""Particle textures (textures/particle/<id>_<n>.png) and particle definitions (particles/<id>.json) of HITORI.
 
 Frame counts (the game's providers use the SpriteSet: setSpriteFromAge for animations, pickSprite for variants):
   menu_flutter 4 (tumbling, cycle them), water_drop 2 (falling, splash), wet_print 2 (left / right foot: pick),
@@ -19,7 +19,7 @@ def particle(pid, frames, size=16):
         for i in range(frames):
             name = f'{pid}_{i}' if frames > 1 else pid
             texture('particle/' + name, size=(size, size))(lambda _i=i: fn(_i))
-            names.append(f'reisatsu:{name}')
+            names.append(f'hitori:{name}')
         PARTICLES[pid] = {'textures': names}
         return fn
     return deco

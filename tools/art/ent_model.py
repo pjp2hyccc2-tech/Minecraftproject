@@ -1,5 +1,5 @@
-"""Entity model framework (offline) for the REISATSU spirits: one Python spec per spirit -> packed box UVs,
-painted hi-res textures, the Java model class (com.reisatsu.client.model.<Name>Model) and posed previews that run
+"""Entity model framework (offline) for the HITORI spirits: one Python spec per spirit -> packed box UVs,
+painted hi-res textures, the Java model class (com.hitori.client.model.<Name>Model) and posed previews that run
 the translated setupAnim.
 
 Coordinate rules are vanilla 1.20.1: model units are pixels, y points down, feet at y = 24, the model faces -z
@@ -396,9 +396,9 @@ def java_source(spec):
     uses_faces = any(set(c.faces) != set(ALL_FACES) for p in parts for c in p.cubes)
     lines = []
     A = lines.append
-    A('package com.reisatsu.client.model;')
+    A('package com.hitori.client.model;')
     A('')
-    A('import com.reisatsu.entity.Animated;')
+    A('import com.hitori.entity.Animated;')
     if uses_faces:
         A('import java.util.EnumSet;')
     A('import java.util.Map;')
@@ -435,7 +435,7 @@ def java_source(spec):
         A(f'public class {name}<T extends Entity> extends HierarchicalModel<T> {{')
     else:
         A(f'public class {name}<T extends Mob & Animated> extends HierarchicalModel<T> {{')
-    A(f'    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation("reisatsu", "{spec.id}"), "main");')
+    A(f'    public static final ModelLayerLocation LAYER = new ModelLayerLocation(new ResourceLocation("hitori", "{spec.id}"), "main");')
     for pname, pid in spec.poses:
         A(f'    public static final int {pname} = {pid};')
     A('')

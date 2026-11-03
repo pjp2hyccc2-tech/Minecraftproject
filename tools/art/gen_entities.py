@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Builds the REISATSU monsters from their specs (tools/art/ent_<id>.py):
+"""Builds the HITORI monsters from their specs (tools/art/ent_<id>.py):
 
   textures/entity/<id>.png + <id>_eyes.png     (box UVs packed automatically, eyes layer: RGB 0 where alpha 0)
-  src/main/java/com/reisatsu/client/model/<Name>Model.java   (HierarchicalModel, §6 contract)
-  src/main/java/com/reisatsu/entity/Animated.java
+  src/main/java/com/hitori/client/model/<Name>Model.java   (HierarchicalModel, §6 contract)
+  src/main/java/com/hitori/entity/Animated.java
   tools/art/preview/entity_<id>.png             (every pose over time, front / 3-4 / side, plus night views)
 
 The setupAnim body of each spec is written in a strict Java subset and translated to Python (ent_java.py), so
@@ -28,9 +28,9 @@ from common import TEX_ROOT, JAVA_ROOT, PREVIEW, font, FONT_LABEL  # noqa: E402
 
 IDS = ['nozoki', 'yobigoe', 'ushiro', 'koyanushi', 'oyamasama', 'utsurumono']
 
-ANIMATED = '''package com.reisatsu.entity;
+ANIMATED = '''package com.hitori.entity;
 
-/** Animation state shared by all REISATSU monsters (read by the client models). */
+/** Animation state shared by all HITORI monsters (read by the client models). */
 public interface Animated {
     int pose();
 
@@ -105,7 +105,7 @@ def view(spec, tex, eyes, run, pose, pt, age, yaw_view=0.0, pitch_view=8.0, size
 
 def ground(cv, size=2, y=0.0, tex_name='block/forest_floor_top', dim=0.6):
     from model_preview import tex_lookup
-    g = tex_lookup('reisatsu:' + tex_name) * np.array([dim, dim, dim, 1.0])
+    g = tex_lookup('hitori:' + tex_name) * np.array([dim, dim, dim, 1.0])
     for gx in range(-size, size):
         for gz in range(-size, size):
             pts = np.array([(gx, y, gz), (gx + 1, y, gz), (gx + 1, y, gz + 1), (gx, y, gz + 1)], float)
@@ -114,7 +114,7 @@ def ground(cv, size=2, y=0.0, tex_name='block/forest_floor_top', dim=0.6):
 
 def trunk(cv, x, z, h=4, tex_name='block/cedar_log', dim=0.75):
     from model_preview import tex_lookup
-    b = tex_lookup('reisatsu:' + tex_name) * np.array([dim, dim, dim, 1.0])
+    b = tex_lookup('hitori:' + tex_name) * np.array([dim, dim, dim, 1.0])
     for y in range(h):
         R.cube(cv, (x, y, z), lambda f: b)
 

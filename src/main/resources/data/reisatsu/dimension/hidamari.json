@@ -1,7 +1,0 @@
-{
-  "type": "reisatsu:hidamari",
-  "generator": {
-    "type": "reisatsu:hidamari",
-    "biome_source": { "type": "minecraft:fixed", "biome": "reisatsu:hidamari" }
-  }
-}

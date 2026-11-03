@@ -5,15 +5,14 @@ license="${mod_license}"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
-displayName="霊撮 -REISATSU-"
+displayName="ひとりかくれんぼ -HITORI KAKURENBO-"
 authors="${mod_authors}"
 description='''
-国道沿いのファミリーレストラン「ひだまり」。閉店後に、閉めたはずの自動ドアが開き、誰もいない水道から水が流れ、
-テーブルのメニューが床にばらまかれる――。
-霊媒師から渡された古い写真機を手に、夜の店内へ。霊たちに気付かれずに、そのすべてを写真に収めろ。
+午前三時。木造アパートの203号室で、ひとりかくれんぼを始める。
+米を詰め、爪を入れ、赤い糸で縫ったぬいぐるみ。「最初の鬼は、わたしだから」。
+塩水を口に含んで押し入れに隠れ、仕掛けた定点カメラの映像を見る。――浴槽が、空になっている。
 
-A Japanese stealth photography horror. A family restaurant by a deadly curve is haunted after closing: photograph
-every spirit without being noticed, and hand the evidence to the medium.
+A first-person Japanese ritual horror: hitori kakurenbo, alone in apartment 203 at 3 a.m.
 '''
 
 [[dependencies.${mod_id}]]

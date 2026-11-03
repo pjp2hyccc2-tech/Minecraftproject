@@ -1,10 +1,10 @@
 // =====================================================================================
-//  ReisatsuShaders - per-world palette, the mod's channels, celestial light
-//  The stub folders define REISATSU_HIDAMARI / DIM_NETHER / DIM_END; nothing = overworld
+//  HitoriShaders - per-world palette, the mod's channels, celestial light
+//  The stub folders define HITORI_HIDAMARI / DIM_NETHER / DIM_END; nothing = overworld
 //  (and any other dimension: mod dimensions, the lobby ...).
 // =====================================================================================
 
-#if defined REISATSU_HIDAMARI
+#if defined HITORI_HIDAMARI
     #define WORLD_HIDAMARI
 #elif defined DIM_NETHER
     #define WORLD_NETHER
@@ -45,7 +45,7 @@
 #endif
 
 // ---- the mod's contract (docs/DESIGN.md section 9) -----------------------------------------
-// Only inside reisatsu:hidamari, every client tick:
+// Only inside hitori:hidamari, every client tick:
 //   rainStrength    = fear 0..1        thunderStrength = danger 0..1
 //   nightVision > 0 = the camera finder is raised (also: holding reisha_camera_finder)
 //   blindness       = the camera flash (1 on the shutter frame, ~0.25 s decay): it LIGHTS

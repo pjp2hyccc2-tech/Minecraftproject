@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - uniforms shared by every program
+//  HitoriShaders - uniforms shared by every program
 //  (shadowtex0 is declared as sampler2DShadow in lib/shadow.glsl, only where it is sampled)
 // =====================================================================================
 
@@ -40,10 +40,10 @@ uniform float near;
 uniform float far;
 uniform float frameTimeCounter;
 uniform float frameTime;
-uniform float rainStrength;      // reisatsu:hidamari -> FEAR 0..1   (elsewhere: rain)
-uniform float thunderStrength;   // reisatsu:hidamari -> DANGER 0..1 (elsewhere: thunder)
-uniform float nightVision;       // reisatsu:hidamari -> > 0 while the camera finder is raised
-uniform float blindness;         // reisatsu:hidamari -> the camera FLASH 1..0 (never darkens)
+uniform float rainStrength;      // hitori:hidamari -> FEAR 0..1   (elsewhere: rain)
+uniform float thunderStrength;   // hitori:hidamari -> DANGER 0..1 (elsewhere: thunder)
+uniform float nightVision;       // hitori:hidamari -> > 0 while the camera finder is raised
+uniform float blindness;         // hitori:hidamari -> the camera FLASH 1..0 (never darkens)
 uniform float darknessFactor;    // vanilla Darkness: being caught
 uniform float darknessLightFactor;
 

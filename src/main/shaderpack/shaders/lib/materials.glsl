@@ -1,5 +1,5 @@
 // =====================================================================================
-//  ReisatsuShaders - ids from block.properties / entity.properties, material codes,
+//  HitoriShaders - ids from block.properties / entity.properties, material codes,
 //  surface response (gloss, metal, wetness) and the wind
 //  (item ids live in lib/playerlight.glsl, emitter types in lib/emitters.glsl)
 // =====================================================================================

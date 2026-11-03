@@ -1,4 +1,4 @@
-"""Shared helpers for the REISATSU procedural texture generator (inherited from MEIKON).
+"""Shared helpers for the HITORI procedural texture generator (inherited from MEIKON).
 
 Everything here is deterministic: every random source takes an explicit seed.
 Colours are float32 RGBA arrays in 0..255.
@@ -11,10 +11,10 @@ from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
-ASSETS = os.path.join(ROOT, 'src', 'main', 'resources', 'assets', 'reisatsu')
+ASSETS = os.path.join(ROOT, 'src', 'main', 'resources', 'assets', 'hitori')
 TEX_ROOT = os.path.join(ASSETS, 'textures')
 MODEL_ROOT = os.path.join(ASSETS, 'models')
-JAVA_ROOT = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'reisatsu')
+JAVA_ROOT = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'hitori')
 PREVIEW = os.path.join(HERE, 'preview')
 
 FONT_SERIF_JP_BLACK = ('/usr/share/fonts/opentype/noto/NotoSerifCJK-Black.ttc', 0)

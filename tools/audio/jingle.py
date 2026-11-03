@@ -1,4 +1,4 @@
-"""ひだまり - the restaurant's own jingle (original composition for REISATSU).
+"""ひだまり - the restaurant's own jingle (original composition for HITORI).
 
 An 8-bar tune in F major, 4/4, easy-listening bossa feel.  It is the musical
 spine of the sound set: music.store (the in-store loop), music.store_wrong

@@ -1,4 +1,4 @@
-"""REISATSU art library: palettes, material painters, pixel glyphs / text, the HIDAMARI sun logo.
+"""HITORI art library: palettes, material painters, pixel glyphs / text, the HIDAMARI sun logo.
 
 Painters return float32 (h, w, 4) arrays (0..255). Everything is deterministic (explicit seeds).
 """

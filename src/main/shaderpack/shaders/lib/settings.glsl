@@ -1,7 +1,7 @@
 // =====================================================================================
-//  ReisatsuShaders  (REISATSU - the family restaurant HIDAMARI at night)  -  user options
+//  HitoriShaders  (HITORI - the family restaurant HIDAMARI at night)  -  user options
 //  Iris / Oculus / OptiFine discover "#define NAME value // [list]" and "#define FLAG".
-//  Every option is shared by all dimension folders (root, reisatsu_hidamari, world-1, world1).
+//  Every option is shared by all dimension folders (root, hitori_hidamari, world-1, world1).
 // =====================================================================================
 
 // ---- image ---------------------------------------------------------------------------
@@ -60,7 +60,7 @@ const int colortex3Format = RGBA16F;    // bloom
 const int colortex4Format = RGBA16F;    // bloom (temp)
 const int colortex5Format = RGBA8;      // albedo (sRGB) + a: material code / 255 (0 = no deferred light)
 const int colortex6Format = RGBA16;     // octahedral normal (rg), block light (b), sky light (a)
-const int colortex7Format = RGBA32F;    // reisatsu:hidamari - the light table (prepare -> every lit program)
+const int colortex7Format = RGBA32F;    // hitori:hidamari - the light table (prepare -> every lit program)
 const int colortex8Format = RGBA8;      // spirits: r body, g finder glow, b eye alpha, a haze
 const int colortex9Format = RGBA16F;    // the finder's afterimage (kept between frames)
 */
@@ -81,7 +81,7 @@ const float eyeBrightnessHalflife = 3.0;
 const float wetnessHalflife = 250.0;
 const float drynessHalflife = 120.0;
 
-#ifdef REISATSU_HIDAMARI
+#ifdef HITORI_HIDAMARI
     // The restaurant's sky is overcast: no moon light, no shadow map. The shadow pass draws
     // the top-down emitter map instead (lib/emitters.glsl): 4 x 4 tiles of 128 x 128 blocks
     // around the camera, one texel per block. Fixed size - not a user option here.

@@ -32,14 +32,14 @@ minecraft {
         }
 
         client {
-            // CI screenshot tour (REISATSU_SHOTS=true), the Oculus run (REISATSU_OCULUS=true) and the trailer capture (REISATSU_TRAILER=true)
-            def trailer = System.getenv('REISATSU_TRAILER') == 'true'
-            property 'reisatsu.shots', System.getenv('REISATSU_SHOTS') ?: 'false'
-            property 'reisatsu.shots.shaders', System.getenv('REISATSU_OCULUS') ?: 'false'
-            property 'reisatsu.trailer', trailer ? 'true' : 'false'
-            property 'reisatsu.trailer.preview', System.getenv('REISATSU_TRAILER_PREVIEW') ?: 'false'
-            property 'reisatsu.trailer.only', System.getenv('REISATSU_TRAILER_ONLY') ?: 'all'
-            property 'reisatsu.seed', System.getenv('REISATSU_SEED') ?: 'random'
+            // CI screenshot tour (HITORI_SHOTS=true), the Oculus run (HITORI_OCULUS=true) and the trailer capture (HITORI_TRAILER=true)
+            def trailer = System.getenv('HITORI_TRAILER') == 'true'
+            property 'hitori.shots', System.getenv('HITORI_SHOTS') ?: 'false'
+            property 'hitori.shots.shaders', System.getenv('HITORI_OCULUS') ?: 'false'
+            property 'hitori.trailer', trailer ? 'true' : 'false'
+            property 'hitori.trailer.preview', System.getenv('HITORI_TRAILER_PREVIEW') ?: 'false'
+            property 'hitori.trailer.only', System.getenv('HITORI_TRAILER_ONLY') ?: 'all'
+            property 'hitori.seed', System.getenv('HITORI_SEED') ?: 'random'
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             if (trailer) {
@@ -52,7 +52,7 @@ minecraft {
         }
 
         server {
-            property 'reisatsu.selftest', System.getenv('REISATSU_SELFTEST') ?: 'false'
+            property 'hitori.selftest', System.getenv('HITORI_SELFTEST') ?: 'false'
             args '--nogui'
         }
     }
@@ -61,13 +61,13 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 // ---------------------------------------------------------------------------------------------
-// ReisatsuShaders (src/main/shaderpack) -> ReisatsuShaders.zip at the jar resource root (installed into
-// shaderpacks/ by com.reisatsu.client.ShaderPackInstaller) and build/shaderpack/ReisatsuShaders.zip.
+// HitoriShaders (src/main/shaderpack) -> HitoriShaders.zip at the jar resource root (installed into
+// shaderpacks/ by com.hitori.client.ShaderPackInstaller) and build/shaderpack/HitoriShaders.zip.
 // ---------------------------------------------------------------------------------------------
 def shaderPackDir = layout.buildDirectory.dir('generated/shaderpack')
 tasks.register('shaderPackZip', Zip) {
     from 'src/main/shaderpack'
-    archiveFileName = 'ReisatsuShaders.zip'
+    archiveFileName = 'HitoriShaders.zip'
     destinationDirectory = shaderPackDir
     includeEmptyDirs = false
 }
@@ -90,8 +90,8 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    // CI only: run the client with Oculus + Embeddium to photograph ReisatsuShaders
-    if (System.getenv('REISATSU_OCULUS') == 'true') {
+    // CI only: run the client with Oculus + Embeddium to photograph HitoriShaders
+    if (System.getenv('HITORI_OCULUS') == 'true') {
         runtimeOnly fg.deobf("maven.modrinth:oculus:${System.getenv('OCULUS_VERSION') ?: '1.20.1-1.7.0'}")
         runtimeOnly fg.deobf("maven.modrinth:embeddium:${System.getenv('EMBEDDIUM_VERSION') ?: '0.3.31+mc1.20.1'}")
     }

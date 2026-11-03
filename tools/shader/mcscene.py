@@ -1,10 +1,10 @@
-"""A small Minecraft-like block world for the ReisatsuShaders preview (tools/shader/preview.py).
+"""A small Minecraft-like block world for the HitoriShaders preview (tools/shader/preview.py).
 
-* Assets: the art's block models (assets/reisatsu/models/block/*.json: elements, uv, face
+* Assets: the art's block models (assets/hitori/models/block/*.json: elements, uv, face
   rotation, element rotation, forge_data full-bright faces, render_type) and textures
-  (assets/reisatsu/textures/block/*.png, first frame of animated ones), packed into one atlas.
+  (assets/hitori/textures/block/*.png, first frame of animated ones), packed into one atlas.
   Blocks without a model are cubes of their texture. Missing textures get a procedural tile.
-  Paths: $REISATSU_ASSETS (an assets/reisatsu directory) or the repo's src/main/resources.
+  Paths: $HITORI_ASSETS (an assets/hitori directory) or the repo's src/main/resources.
 * Ids: block.properties of the pack, matched with the placement's block state (so the
   preview exercises the real ids).
 * World: a voxel grid of placements (name, state, facing), vanilla-like light propagation
@@ -23,7 +23,7 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
 SHADERS = os.path.join(REPO, "src", "main", "shaderpack", "shaders")
-ASSETS = os.environ.get("REISATSU_ASSETS") or os.path.join(REPO, "src", "main", "resources", "assets", "reisatsu")
+ASSETS = os.environ.get("HITORI_ASSETS") or os.path.join(REPO, "src", "main", "resources", "assets", "hitori")
 
 FACES = {
     "north": ((0, 0, -1)), "south": ((0, 0, 1)), "east": ((1, 0, 0)), "west": ((-1, 0, 0)),
@@ -67,7 +67,7 @@ class BlockIds:
 
     def lookup(self, name, state):
         if ":" not in name:
-            name = "reisatsu:" + name
+            name = "hitori:" + name
         for n, st, bid in self.entries:
             if n != name:
                 continue
@@ -340,7 +340,7 @@ class Models:
             return m
         parent = m.get("parent", "")
         pm = None
-        if parent.startswith("reisatsu:"):
+        if parent.startswith("hitori:"):
             path = os.path.join(self.dir, parent.split("/")[-1] + ".json")
             if os.path.isfile(path):
                 with open(path, encoding="utf-8") as fh:
