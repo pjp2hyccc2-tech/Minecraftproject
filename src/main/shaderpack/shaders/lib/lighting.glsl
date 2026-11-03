@@ -206,6 +206,11 @@ vec3 handLightsForward(vec3 albedo, vec3 P, vec3 N, float foliage, vec2 gloss) {
     for (int i = 0; i < HAND_LIGHTS; i++) {
         HandLight L = handLight(i);
         if (L.type == LIGHT_NONE) continue;
+  #ifdef PROG_HAND
+        // the held items: never lit by the flashlight's own beam (its body sits right at the
+        // beam's origin), only by the flash and a held flame
+        if (L.type == LIGHT_SPOT) continue;
+  #endif
         vec3 spec;
         vec3 diff = handLightSurface(L, P, N, foliage, gloss, spec);
         float T = exp(-sigma * length(P - L.pos));

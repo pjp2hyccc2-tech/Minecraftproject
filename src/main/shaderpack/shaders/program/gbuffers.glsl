@@ -337,8 +337,10 @@ void main() {
     receiveShadow = false;
     int item = currentRenderedItemId;
     if (item == ITEM_FLASHLIGHT) {
-        // the lens glows
-        float lens = smoothstep(0.55, 0.85, luma(albedo.rgb) + 0.25 * chroma(albedo.rgb));
+        // the lens glows - only on the face that looks forward, along the beam (in first
+        // person it faces away; the cream head and the body are not lights)
+        vec3 Nv = mat3(gbufferModelView) * N;
+        float lens = smoothstep(0.55, 0.85, luma(albedo.rgb) + 0.25 * chroma(albedo.rgb)) * smoothstep(0.5, 0.8, -Nv.z);
         emissive = lens;
         emission = lin * lens * FLASHLIGHT_COLOR * 3.0;
     } else if (item == ITEM_HANDLIGHT) {
