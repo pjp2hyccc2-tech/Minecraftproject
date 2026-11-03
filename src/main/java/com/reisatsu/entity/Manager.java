@@ -68,6 +68,16 @@ public class Manager extends Spirit {
         }
     }
 
+    /** A door chimed: now and then, a tired 「いらっしゃいませ」 over the PA. */
+    public void onDoorChime(ServerLevel level) {
+        if (mode != Mode.ROUTINE || random.nextInt(3) != 0) return;
+        for (ServerPlayer p : GameManager.players(level)) {
+            if (!GameManager.inGame(p)) continue;
+            GameManager.privateSound(p, ModSounds.MANAGER_WELCOME.get(), p.getEyePosition().add(0, 2.5, 0), 0.7f, 0.97f);
+            Story.say(p, "pa", 50, "dialogue.reisatsu.manager.welcome");
+        }
+    }
+
     /** The cameras' circuit was switched: blind, he goes to the breaker. */
     public void camerasSwitched(boolean on) {
         if (!on && mode == Mode.ROUTINE && (sub == S_DESK || sub == S_PATROL || sub == S_LOOK)) {

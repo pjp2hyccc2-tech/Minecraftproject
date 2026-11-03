@@ -95,6 +95,15 @@ public final class ClientEvents {
             if (Math.abs(d) > 62.0f) mc.player.setYRot(base + Math.signum(d) * 62.0f);
             mc.player.setXRot(Mth.clamp(mc.player.getXRot(), -30.0f, 35.0f));
         }
+        // your breath clouds in the walk-in fridge
+        if (ClientState.clientTicks % 45 == 0 && !ClientState.flag(GameManager.F_BREATH)) {
+            Layout.Room r = Layout.roomAt(mc.player.blockPosition());
+            if (r != null && r.key().equals("fridge")) {
+                var look = mc.player.getViewVector(1.0f);
+                mc.level.addParticle(com.reisatsu.registry.ModParticles.FROST_BREATH.get(), mc.player.getX() + look.x * 0.35,
+                        mc.player.getEyeY() - 0.1, mc.player.getZ() + look.z * 0.35, look.x * 0.03, 0.005, look.z * 0.03);
+            }
+        }
         HorrorAudio.tick(mc);
     }
 

@@ -264,6 +264,12 @@ public final class GameManager {
             teleport(p, level, w.center(), w.yaw(), 0.0f);
         }
         if (data.phase == GameData.PHASE_INTRO) Story.finishIntro(p, data);
+        if (data.phase == GameData.PHASE_ENDING && data.ending != GameData.ENDING_NONE) {
+            // the night ended while they were away: show them the end
+            ps.endingTicks = 0;
+            ps.locked = true;
+            event(p, EV_ENDING, data.ending, String.valueOf(data.ofudaUsed));
+        }
         syncState(p, ps, data);
         Camera.syncAlbum(p);
     }
@@ -310,7 +316,9 @@ public final class GameManager {
         PlayerState ps = new PlayerState();
         STATES.put(p.getUUID(), ps);
         Layout.Marker spawn = Layout.marker("spawn");
-        teleport(p, level, spawn.center(), spawn.yaw(), 4.0f);
+        Vec3 med = Layout.marker("medium").center();
+        float faceMedium = (float) (Mth.atan2(med.z - spawn.center().z, med.x - spawn.center().x) * Mth.RAD_TO_DEG) - 90.0f;
+        teleport(p, level, spawn.center(), faceMedium, 6.0f);
         ps.lastX = p.getX();
         ps.lastZ = p.getZ();
         p.removeAllEffects();

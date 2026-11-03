@@ -342,6 +342,9 @@ DIALOGUE = {
     "child.mitsuketa": ("みーつけた", "Found you!"),
     "child.count": ("いーち、にーい、さーん、しーい……", "One... two... three... four..."),
     "child.whisper": ("こっちだよ", "Over here."),
+    "child.madada": ("まーだだよ", "Not yet!"),
+    "mirror.whisper": ("……うしろ", "...behind you."),
+    "manager.welcome": ("……いらっしゃいませ", "...welcome."),
     "visitor.whisper": ("……まだかな", "...is she coming?"),
 }
 

@@ -63,6 +63,7 @@ public class Visitor extends Spirit {
             Layout.Marker m = Layout.marker("visitor_spawn");
             Spirit s = Spirits.spawnAt(level, SpiritKind.VISITOR, m.center(), m.yaw());
             if (s != null) {
+                s.extra = false;
                 data.visitorArrivals++;
                 data.visitorNext = -2;
                 data.setDirty();
@@ -243,6 +244,10 @@ public class Visitor extends Spirit {
     protected void ambient(ServerLevel level) {
         if (tickCount % 61 == 0) play(ModSounds.VISITOR_BREATH.get(), 0.45f, 0.95f + random.nextFloat() * 0.1f);
         if (tickCount % 47 == 0 && random.nextBoolean()) play(ModSounds.VISITOR_DRIP.get(), 0.35f, 1.0f);
+        if (tickCount % 6 == 0) {
+            level.sendParticles(com.reisatsu.registry.ModParticles.WATER_DROP.get(), getX() + (random.nextDouble() - 0.5) * 0.5,
+                    getY() + 0.4 + random.nextDouble(), getZ() + (random.nextDouble() - 0.5) * 0.5, 1, 0.0, 0.0, 0.0, 0.0);
+        }
         if (stage == S_SEATED && random.nextInt(900) == 0) {
             play(ModSounds.VISITOR_WHISPER.get(), 0.5f, 1.0f);
             ServerPlayer p = nearestPlayer(level, 7.0);

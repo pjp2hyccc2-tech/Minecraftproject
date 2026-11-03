@@ -91,6 +91,7 @@ public final class GameFixtureListener implements FixtureEvents.Listener {
         if (!GameManager.isGameLevel(level)) return;
         // the waitress goes to greet whoever came in
         if (Spirits.get(level, SpiritKind.WAITRESS) instanceof Waitress w) w.onDoorChime();
+        if (Spirits.get(level, SpiritKind.MANAGER) instanceof Manager m) m.onDoorChime(level);
         if (cause == null) {
             for (ServerPlayer p : GameManager.players(level)) if (p.distanceToSqr(Vec3.atCenterOf(com.reisatsu.world.Layout.marker("door_inner").pos())) < 24 * 24) Director.witness(p, "door");
         }

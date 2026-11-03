@@ -101,11 +101,18 @@ public final class Spirits {
         if (!night || paused) return; // the exorcism and the endings place their own spirits
         for (SpiritKind kind : SpiritKind.ALL) {
             List<Spirit> mine = new ArrayList<>();
-            for (Spirit s : all(level)) if (s.kind() == kind && s.mode() != Spirit.Mode.EXORCISM && s.mode() != Spirit.Mode.BOUND) mine.add(s);
+            for (Spirit s : all(level)) {
+                if (s.kind() == kind && !s.extra && s.mode() != Spirit.Mode.EXORCISM && s.mode() != Spirit.Mode.BOUND) mine.add(s);
+            }
             boolean keep = night && !data.isCaptured(kind);
             for (int i = keep ? 1 : 0; i < mine.size(); i++) mine.get(i).discard();
             // the visitor is not resident: he arrives on his own schedule (Visitor.schedule)
-            if (keep && kind != SpiritKind.VISITOR && mine.isEmpty()) spawnAtHome(level, kind);
+            if (keep && kind != SpiritKind.VISITOR && mine.isEmpty()) {
+                Spirit s = spawnAtHome(level, kind);
+                // a world saved during the night: they pick up where they were
+                if (s instanceof Manager m && (data.phase == GameData.PHASE_CLOSING || data.phase == GameData.PHASE_RETURN)) m.closingTime();
+                if (s instanceof com.reisatsu.entity.Child c && data.happened("child_moui")) c.startGame(null);
+            }
         }
         if (night && data.phase != GameData.PHASE_INTRO) Visitor.schedule(level, data);
         invalidate();
@@ -125,11 +132,12 @@ public final class Spirits {
         return s;
     }
 
-    /** Spawns a spirit at a position (debug, the exorcism, the bad ending). */
+    /** Spawns a spirit at a position (debug, the exorcism, the bad ending): an extra, not the resident. */
     @Nullable
     public static Spirit spawnAt(ServerLevel level, SpiritKind kind, Vec3 at, float yaw) {
         Spirit s = ModEntities.type(kind).create(level);
         if (s == null) return null;
+        s.extra = true;
         s.moveTo(at.x, at.y, at.z, yaw, 0.0f);
         s.faceYaw(yaw);
         level.addFreshEntity(s);

@@ -193,6 +193,25 @@ public class MirrorWoman extends Spirit {
         }
     }
 
+    @Override
+    protected void ambient(ServerLevel level) {
+        if (tickCount % 9 == 0) {
+            level.sendParticles(com.reisatsu.registry.ModParticles.WATER_DROP.get(), getX() + (random.nextDouble() - 0.5) * 0.5,
+                    getY() + 0.9, getZ() + (random.nextDouble() - 0.5) * 0.5, 1, 0.02, 0.0, 0.02, 0.0);
+        }
+        // someone stands at her sink with their back to the mirror
+        if (sub == S_STARE && subTicks == 60) {
+            for (ServerPlayer p : GameManager.players(level)) {
+                if (!GameManager.huntable(p) || !GameManager.state(p).room.equals("womens") || p.distanceTo(this) > 7) continue;
+                double away = p.getViewVector(1.0f).dot(position().subtract(p.position()).normalize());
+                if (away < -0.3) {
+                    play(ModSounds.MIRROR_WHISPER.get(), 0.8f, 1.0f);
+                    com.reisatsu.game.Story.say(p, "mirror_woman", 50, "dialogue.reisatsu.mirror.whisper");
+                }
+            }
+        }
+    }
+
     private void tickScream(ServerLevel level) {
         if (sub != S_SCREAM) return;
         if (subTicks >= 60) {

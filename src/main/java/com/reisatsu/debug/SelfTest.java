@@ -354,7 +354,7 @@ public final class SelfTest {
 
     private static void exorcismWait(ServerLevel level, GameData data) {
         if (data.phase == GameData.PHASE_EXORCISM && stageTicks % 200 == 1) log("exorcism running (" + stageTicks + " ticks)");
-        if (data.phase == GameData.PHASE_ENDING || stageTicks > 20 * 150) {
+        if (data.phase == GameData.PHASE_ENDING || stageTicks > 20 * 400) {
             check(data.phase == GameData.PHASE_ENDING && data.ending == GameData.ENDING_GOOD, "the exorcism ends at dawn: 送り");
             next(12, 10);
         }

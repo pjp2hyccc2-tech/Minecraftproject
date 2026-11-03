@@ -159,7 +159,7 @@ public final class Finder {
             sense.target = Mth.clamp(meterShown, 0.0f, 1.0f) * 0.75f;
         } else if (sense != null) {
             sense.target = 0.0f;
-            if (sense.getVolume() <= 0.002f) {
+            if (sense.rawVolume() <= 0.002f) {
                 sense.finish();
                 sense = null;
             }

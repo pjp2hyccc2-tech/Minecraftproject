@@ -99,11 +99,23 @@ public final class Dialogue {
             g.fill(x0, y0, x0 + boxW, y0 + boxH, HorrorOverlay.argb(a * 0.62f, 0x06070A));
             int tx = x0 + 8;
             if (medium) {
-                RenderSystem.enableBlend();
-                g.setColor(1.0f, 1.0f, 1.0f, a);
-                g.blit(PORTRAIT, x0 + 4, y0 + 2, 40, 40, 0, 0, 64, 64, 64, 64);
-                g.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-                RenderSystem.disableBlend();
+                if (Tex.has(PORTRAIT)) {
+                    RenderSystem.enableBlend();
+                    g.setColor(1.0f, 1.0f, 1.0f, a);
+                    g.blit(PORTRAIT, x0 + 4, y0 + 2, 40, 40, 0, 0, 64, 64, 64, 64);
+                    g.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+                    RenderSystem.disableBlend();
+                } else {
+                    // a stand-in: dark kimono, pale face, grey bun
+                    int px = x0 + 4, py = y0 + 2;
+                    g.fill(px, py, px + 40, py + 40, HorrorOverlay.argb(a, 0x15121A));
+                    g.fill(px + 8, py + 28, px + 32, py + 40, HorrorOverlay.argb(a, 0x3A2440));
+                    g.fill(px + 13, py + 10, px + 27, py + 28, HorrorOverlay.argb(a, 0xC9B9A8));
+                    g.fill(px + 12, py + 4, px + 28, py + 11, HorrorOverlay.argb(a, 0x8E8A86));
+                    g.fill(px + 16, py + 1, px + 24, py + 5, HorrorOverlay.argb(a, 0x7A7672));
+                    g.fill(px + 15, py + 17, px + 18, py + 18, HorrorOverlay.argb(a, 0x2A2020));
+                    g.fill(px + 22, py + 17, px + 25, py + 18, HorrorOverlay.argb(a, 0x2A2020));
+                }
                 tx += 46;
             }
             String name = speakerName(current.speaker());

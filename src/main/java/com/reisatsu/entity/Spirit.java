@@ -84,6 +84,8 @@ public abstract class Spirit extends PathfinderMob implements Animated {
     public boolean debugShown;
     /** Debug / self test: perceives and reacts, but its routine does not move it. */
     public boolean debugStill;
+    /** Placed by a command or a scene: not the resident the game keeps in the level. */
+    public boolean extra;
 
     // ---- path following
     @Nullable private List<Vec3> path;

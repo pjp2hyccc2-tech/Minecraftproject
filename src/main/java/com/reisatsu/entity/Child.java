@@ -45,7 +45,7 @@ public class Child extends Spirit {
     }
 
     /** 「もういいかい」: the game begins. */
-    public void startGame(ServerPlayer p) {
+    public void startGame(@javax.annotation.Nullable ServerPlayer p) {
         started = true;
         runToNewHide();
     }
@@ -229,7 +229,12 @@ public class Child extends Spirit {
                     setAnimPose(GIGGLE);
                     play(ModSounds.CHILD_GIGGLE.get(), 0.9f, 1.05f);
                 }
-                if (subTicks > 55) runToNewHide();
+                if (subTicks > 55) {
+                    runToNewHide();
+                    play(ModSounds.CHILD_MADADA.get(), 0.9f, 1.0f);
+                    ServerPlayer near = nearestPlayer(level, 16.0);
+                    if (near != null) Story.say(near, "child", 50, "dialogue.reisatsu.child.madada");
+                }
             }
             case S_TO_COUNT -> {
                 Layout.Marker c = Layout.marker("child_count");

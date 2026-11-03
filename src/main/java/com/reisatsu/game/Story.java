@@ -467,6 +467,7 @@ public final class Story {
                         GameManager.event(p, GameManager.EV_EXORCISM, 1, "");
                         say(p, "medium", 80, "dialogue.reisatsu.exorcism.begin");
                     }
+                    level.playSound(null, ms.center().x, ms.center().y + 1, ms.center().z, ModSounds.MEDIUM_CLAP.get(), SoundSource.NEUTRAL, 1.0f, 1.0f);
                     level.playSound(null, ms.center().x, ms.center().y + 1, ms.center().z, ModSounds.MEDIUM_BELL.get(), SoundSource.NEUTRAL, 1.2f, 1.0f);
                     exoStage = 1;
                     exoStageAt = t;

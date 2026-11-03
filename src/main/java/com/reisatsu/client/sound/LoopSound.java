@@ -30,6 +30,11 @@ public class LoopSound extends AbstractTickableSoundInstance {
         stop();
     }
 
+    /** The volume this loop is easing at (safe when the sound system is off: no resolved sound needed). */
+    public float rawVolume() {
+        return volume;
+    }
+
     @Override
     public void tick() {
         float e = target < volume && easeDown > 0 ? easeDown : ease;
