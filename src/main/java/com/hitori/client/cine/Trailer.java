@@ -714,6 +714,11 @@ public final class Trailer {
      */
     static Puppet display(BlockState block, ItemStack item, String itemContext, Vec3 at, float yRot, float xRot, float zRot,
                           float scale, Vec3 translate) {
+        return display(block, item, itemContext, at, yRot, xRot, zRot, new Vec3(scale, scale, scale), translate);
+    }
+
+    static Puppet display(BlockState block, ItemStack item, String itemContext, Vec3 at, float yRot, float xRot, float zRot,
+                          Vec3 scale, Vec3 translate) {
         Minecraft mc = Minecraft.getInstance();
         EntityType<?> type = block != null ? EntityType.BLOCK_DISPLAY : EntityType.ITEM_DISPLAY;
         Entity e = type.create(mc.level);
@@ -731,7 +736,7 @@ public final class Trailer {
         tr.put("left_rotation", floats(q.x, q.y, q.z, q.w));
         tr.put("right_rotation", floats(0.0f, 0.0f, 0.0f, 1.0f));
         tr.put("translation", floats((float) translate.x, (float) translate.y, (float) translate.z));
-        tr.put("scale", floats(scale, scale, scale));
+        tr.put("scale", floats((float) scale.x, (float) scale.y, (float) scale.z));
         tag.put("transformation", tr);
         tag.putFloat("view_range", 4.0f);
         e.load(tag);

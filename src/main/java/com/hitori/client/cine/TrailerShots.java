@@ -62,7 +62,8 @@ final class TrailerShots {
     enum Held {
         NONE("air", () -> ItemStack.EMPTY),
         KNIFE("hitori:knife", () -> new ItemStack(ModItems.KNIFE.get())),
-        PHONE_LIGHT("hitori:phone_light", () -> new ItemStack(ModItems.PHONE_LIGHT.get()));
+        PHONE_LIGHT("hitori:phone_light", () -> new ItemStack(ModItems.PHONE_LIGHT.get())),
+        LAPTOP("hitori:laptop", () -> new ItemStack(ModItems.LAPTOP.get()));
 
         final String id;
         private final Supplier<ItemStack> make;
@@ -350,24 +351,45 @@ final class TrailerShots {
     }
 
     // =========================================================================================== act 1: the evening
-    /** 00: the street at night in the rain, under the sodium lamp; the camera cranes up toward 203's lit window. */
+    /** 00: the street at night in the rain, under the sodium lamp, the asphalt shining; the camera cranes up toward 203,
+     *  its two windows lit (the corridor and its door are on the far side of the building). Fill: a few invisible lights
+     *  under the eaves, on the client only, so the facade reads as a house. */
     static final class Ext extends Shot {
+        static final int[][] FILL = {{8, 71, 16, 11}, {16, 71, 16, 12}, {22, 72, 16, 12}, {30, 72, 16, 12}, {37, 71, 16, 12},
+                {44, 71, 16, 11}, {20, 67, 16, 10}, {33, 67, 16, 10}};
+
         Ext() {
             super("00_ext", 6.5f);
-            set.lights("western");
+            set.lights("western", "tatami");
             setupTicks = 360;
-            setupAt = v(28.8, 66.63, 25.3);
+            setupAt = v(31.6, 66.63, 24.9);
+            event(0.0f, "fill lights under the eaves", () -> {
+                ClientLevel level = Minecraft.getInstance().level;
+                for (int[] l : FILL) {
+                    BlockPos p = new BlockPos(l[0], l[1], l[2]);
+                    if (level == null || !level.getBlockState(p).isAir()) continue;
+                    Trailer.clientBlock(p, net.minecraft.world.level.block.Blocks.LIGHT.defaultBlockState()
+                            .setValue(net.minecraft.world.level.block.LightBlock.LEVEL, l[3]));
+                }
+            }, null);
+        }
+
+        @Override
+        void dress(ServerLevel l) {
+            super.dress(l);
+            // the tatami room's curtains open: its window glows too
+            Fixtures.setCurtains(l, "tatami", false);
         }
 
         @Override
         void frame(float t, Frame f) {
             float k = easeSine(seg(t, 0.0f, 6.5f));
-            Vec3 from = lerp(v(28.8, 65.85, 25.3), v(27.5, 69.3, 20.5), k);
+            Vec3 from = lerp(v(31.6, 65.75, 24.9), v(28.2, 69.0, 20.4), k);
             from = from.add(0.03 * noise(t * 0.4f, 1.0f), 0.02 * noise(t * 0.35f, 2.0f), 0.0);
-            Vec3 at = lerp(v(27.3, 70.2, 13.6), v(27.2, 71.3, 13.8), easeSine(seg(t, 0.3f, 6.5f)));
+            Vec3 at = lerp(v(26.5, 69.4, 14.0), v(27.4, 71.2, 13.8), easeSine(seg(t, 0.2f, 6.5f)));
             f.look(from, at);
             f.yaw += 0.6f * noise(t * 0.3f, 3.0f);
-            f.fov = lerp(54.0f, 46.0f, k);
+            f.fov = lerp(62.0f, 46.0f, k);
             f.fear = 0.08f;
         }
     }
@@ -448,13 +470,16 @@ final class TrailerShots {
         }
     }
 
-    /** 04: the bathroom, lit: the tap running into the deep square tub. */
+    /** 04: the bathroom (the washroom's light through the open door): the tap running into the deep square tub, the water
+     *  rising (a water surface on the client climbing inside the emptied tub; the tub's own water has only three levels). */
     static final class BathFill extends Shot {
+        Trailer.Puppet water;
+
         BathFill() {
             super("04_bath_fill", 4.0f);
-            set.lights("bath", "washroom");
+            set.lights("washroom");
             set.doors("bath");
-            set.bath = 1;
+            set.bath = 0;
             setupAt = v(31.4, 71.62, 2.7);
             // the tap runs on the client only: on the server the tub would fill up during the set-up
             event(0.0f, "the tap runs", () -> {
@@ -465,23 +490,28 @@ final class TrailerShots {
         }
 
         @Override
+        void setup(Minecraft mc) {
+            // the inner area of the tub (both its blocks): x 32 + 1.5..14.5 px, z 1 + 1.5 px .. 2 + 14.5 px
+            water = Trailer.display(ModBlocks.PUDDLE.get().defaultBlockState(), null, "none", v(32.09375, 70.3, 1.09375), 0.0f, 0.0f, 0.0f,
+                    new Vec3(0.8125, 1.0, 1.8125), Vec3.ZERO);
+            puppets.add(water);
+        }
+
+        static double level(float t) {
+            return 70.24 + 0.36 * easeSine(seg(t, 0.0f, 4.6f));
+        }
+
+        @Override
         void frame(float t, Frame f) {
             float k = easeSine(seg(t, 0.0f, 4.0f));
-            Vec3 from = lerp(v(31.28, 71.62, 2.88), v(31.55, 71.48, 2.42), k);
-            Vec3 at = lerp(v(32.5, 70.7, 1.5), v(32.5, 70.85, 1.4), k);
+            Vec3 from = lerp(v(31.3, 71.58, 2.86), v(31.5, 71.45, 2.5), k);
+            Vec3 at = lerp(v(32.5, 70.55, 1.5), v(32.5, 70.62, 1.4), k);
             f.look(from, at);
             f.breathe(t, 0.35f, 10.0f);
             f.hide = CAM1;
             f.fov = 52.0f;
             f.fear = 0.15f;
-        }
-
-        @Override
-        void particles(ClientLevel level, RandomSource r) {
-            // where the stream hits the water
-            for (int i = 0; i < 2; i++) {
-                level.addParticle(ParticleTypes.SPLASH, 32.5 + (r.nextDouble() - 0.5) * 0.25, 70.5, 1.38 + (r.nextDouble() - 0.5) * 0.2, 0, 0.05, 0);
-            }
+            if (water != null) water.at(32.09375, level(t), 1.09375);
         }
     }
 
@@ -530,13 +560,14 @@ final class TrailerShots {
         }
     }
 
-    /** 07: the dark bathroom: the doll floating face down in the black water; a slow push from above (the phone's
-     *  light in your other hand, the hand itself out of frame). */
+    /** 07: the dark bathroom (only the washroom's light coming through the door): the doll floating face down in the black
+     *  water; a slow push from above. */
     static final class TubFloat extends Shot {
         Trailer.Puppet d;
 
         TubFloat() {
             super("07_tub_float", 5.0f);
+            set.lights("washroom");
             set.tv = true;
             set.bath = 2;
             set.doors("bath", "washroom");
@@ -551,24 +582,18 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             float k = easeSine(seg(t, 0.0f, 5.0f));
-            Vec3 from = lerp(v(31.6, 72.38, 2.66), v(31.88, 71.96, 2.24), k);
-            Vec3 at = lerp(v(32.45, 70.62, 1.55), v(32.5, 70.62, 1.5), k);
+            Vec3 from = lerp(v(31.82, 72.3, 2.78), v(31.95, 71.88, 2.32), k);
+            Vec3 at = lerp(v(32.48, 70.62, 1.55), v(32.5, 70.62, 1.5), k);
             f.look(from, at);
             f.breathe(t, 0.3f, 16.0f);
-            f.off = Held.PHONE_LIGHT;
             f.hide = CAM1;
-            f.fov = 50.0f;
+            f.fov = 40.0f;
             f.fear = 0.3f;
             if (d != null) {
                 Vec3 p = OniDoll.tubSpot(0);
-                d.at(p).look(80.0f, 80.0f, 0.0f).walk(0.0f, 0.0f);
+                d.at(p.x, p.y, p.z + 0.08).look(150.0f, 150.0f, 0.0f).walk(0.0f, 0.0f);
                 doll(d).puppetPose(OniDoll.FLOAT, t * 20.0f + 260.0f, 0.0f);
             }
-        }
-
-        @Override
-        void particles(ClientLevel level, RandomSource r) {
-            if (r.nextInt(14) == 0) level.addParticle(ParticleTypes.FALLING_WATER, 32.5, 71.28, 1.22, 0, 0, 0);
         }
     }
 
@@ -614,7 +639,7 @@ final class TrailerShots {
 
         @Override
         void frame(float t, Frame f) {
-            f.look(v(24.78, 71.08, 9.56), v(27.2, 71.36, 9.5));
+            f.look(v(24.78, 70.98, 9.56), v(27.2, 70.86, 9.5));
             f.breathe(t, 0.5f, 20.0f);
             // shut, a flutter, open
             float open = easeSine(seg(t, 2.78f, 3.3f));
@@ -625,13 +650,14 @@ final class TrailerShots {
         }
     }
 
-    /** 10: first person, the knife in your hand (the phone's light in the other), into the dark bathroom toward the
-     *  floating doll; the knife comes up at the end. */
+    /** 10: first person, the kitchen knife in your hand, out of the lit washroom into the dark bathroom toward the floating
+     *  doll; the knife comes up at the end. */
     static final class Knife extends Shot {
         Trailer.Puppet d;
 
         Knife() {
             super("10_knife", 4.0f);
+            set.lights("washroom");
             set.tv = true;
             set.bath = 2;
             set.doors("bath", "washroom");
@@ -645,17 +671,19 @@ final class TrailerShots {
 
         @Override
         void frame(float t, Frame f) {
+            // through the doorway east of the open folding door's leaf (it stands at the cell's west edge)
             float w = seg(t, 0.0f, 3.0f);
             float k = w * w * (3.0f - 2.0f * w);
-            Vec3 from = lerp(v(30.3, 71.62, 4.95), v(31.42, 71.58, 2.82), k);
-            Vec3 door = v(31.5, 71.15, 2.4);
-            Vec3 tub = v(32.45, 70.7, 1.55);
-            f.look(from, lerp(door, tub, easeSine(seg(t, 1.2f, 3.0f))));
+            double x = 30.95 + 0.62 * easeSine(seg(t, 0.0f, 1.4f));
+            double z = 5.15 - 2.45 * k;
+            Vec3 from = v(x, 71.62, z);
+            Vec3 door = v(31.6, 71.1, 2.2);
+            Vec3 tub = v(32.45, 70.68, 1.5);
+            f.look(from, lerp(door, tub, easeSine(seg(t, 1.3f, 3.0f))));
             f.walking(t, 1.6f, 1.0f - seg(t, 2.4f, 3.0f));
             f.shake(0.15f + 0.25f * seg(t, 3.0f, 3.8f), t, 22.0f);
             f.hand = true;
             f.main = Held.KNIFE;
-            f.off = Held.PHONE_LIGHT;
             f.customHand = true;
             f.raise = seg(t, 3.0f, 3.75f);
             f.hide = CAM1;
@@ -663,32 +691,56 @@ final class TrailerShots {
             f.fear = lerp(0.38f, 0.48f, seg(t, 2.5f, 4.0f));
             if (d != null) {
                 Vec3 p = OniDoll.tubSpot(0);
-                d.at(p).look(80.0f, 80.0f, 0.0f).walk(0.0f, 0.0f);
+                d.at(p.x, p.y, p.z + 0.08).look(150.0f, 150.0f, 0.0f).walk(0.0f, 0.0f);
                 doll(d).puppetPose(OniDoll.FLOAT, t * 20.0f + 520.0f, 0.0f);
             }
         }
     }
 
     // =========================================================================================== act 3: hiding
-    /** 11: inside the 押し入れ: near darkness, the thin vertical slit of the TV's light at the fusuma; handheld breathing. */
+    /** 11: inside the 押し入れ, the fusuma shut: near darkness, as the game draws it while you hide (its closet layer: the
+     *  dark, the futon's edge above) and the thin vertical slit of the TV's light at the gap; handheld breathing. */
     static final class Closet extends Shot {
+        static final net.minecraft.resources.ResourceLocation DARK = new net.minecraft.resources.ResourceLocation("hitori", "textures/gui/closet_dark.png");
+
         Closet() {
             super("11_closet", 4.0f);
             set.tv = true;
-            set.fusuma = 1;
+            set.fusuma = 0;
             setupAt = v(23.42, 71.62, 11.4);
         }
 
         @Override
         void frame(float t, Frame f) {
             float k = easeSine(seg(t, 0.0f, 4.0f));
-            Vec3 from = lerp(v(23.36, 70.95, 11.82), v(23.4, 70.97, 11.62), k);
-            f.look(from, v(23.9, 71.2, 10.1));
+            Vec3 from = lerp(v(23.32, 70.95, 11.62), v(23.36, 70.97, 11.48), k);
+            f.look(from, v(23.62, 71.25, 10.2));
             f.breathe(t, 1.0f, 24.0f);
             f.shake(0.12f, t, 25.0f);
             f.fov = 58.0f;
             f.fear = 0.5f;
             f.danger = 0.05f;
+        }
+
+        @Override
+        void overlay(GuiGraphics g, Minecraft mc, int w, int h, float t, Frame f) {
+            com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+            com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
+            g.blit(DARK, 0, 0, w, h, 0.0f, 0.0f, 256, 256, 256, 256);
+            com.mojang.blaze3d.systems.RenderSystem.disableBlend();
+            // the gap of the fusuma: the TV's flicker in a thin line where the panels meet the post
+            float[] top = Trailer.project(mc, f, v(23.9, 71.9, 10.12), w, h);
+            float[] bot = Trailer.project(mc, f, v(23.9, 70.08, 10.12), w, h);
+            if (top == null || bot == null) return;
+            float flick = clamp01(0.62f + 0.22f * noise(t * 9.0f, 3.0f) + 0.16f * noise(t * 23.0f, 7.0f));
+            float[][] layers = {{4.5f, 0.07f}, {1.8f, 0.22f}, {0.55f, 0.95f}};
+            for (float[] l : layers) {
+                float hw = l[0] * 0.5f;
+                int a = Math.round(255.0f * clamp01(l[1] * flick));
+                int col = (a << 24) | 0xBFD4FF;
+                Trailer.quad(g, new float[]{top[0] - hw, top[1]}, new float[]{bot[0] - hw, bot[1]}, new float[]{bot[0] + hw, bot[1]},
+                        new float[]{top[0] + hw, top[1]}, col);
+            }
         }
     }
 
@@ -746,24 +798,20 @@ final class TrailerShots {
             f.danger = 0.1f;
         }
 
-        @Override
-        void particles(ClientLevel level, RandomSource r) {
-            if (r.nextInt(9) == 0) level.addParticle(ParticleTypes.FALLING_WATER, 32.5, 71.28, 1.22, 0, 0, 0);
-            if (r.nextInt(5) == 0) level.addParticle(ParticleTypes.SPLASH, 32.2 + r.nextDouble() * 0.6, 70.67, 1.2 + r.nextDouble() * 1.5, 0, 0.02, 0);
-        }
     }
 
-    /** 14: the camera app, CAM2 廊下 (on the hall floor), IR: the doll crawling down the hall toward it with the knife,
-     *  in stop-motion (the pose and the place held, then a jump, about six times a second). */
+    /** 14: the camera app, CAM2 廊下 (on the hall floor), IR: the doll crawling down the hall toward it with the knife, in
+     *  stop-motion (the pose and the place held, then a jump, about six times a second). */
     static final class CamHall extends Shot {
         static final int[] HOLDS = {5, 4, 6, 5, 7, 4, 5, 6, 4, 5, 6, 5, 4, 7, 5, 5, 6, 4, 5, 6, 5, 4, 6, 5, 5, 7, 4, 5, 6, 5};
+        static final float SPEED = 1.3f;
         Trailer.Puppet d;
 
         CamHall() {
             super("14_cam_hall", 4.0f);
             set.tv = true;
-            setupAt = v(27.3, 71.63, 1.4);
             set.doors("tatami_dk", "tatami_hall");
+            setupAt = v(27.3, 71.63, 1.4);
         }
 
         @Override
@@ -785,34 +833,39 @@ final class TrailerShots {
 
         @Override
         void frame(float t, Frame f) {
-            CamSpotView.of(2, f, 0.0f, 3.0f);
+            // CAM2 on the floor at the hall's north end, set down a little east of its spot, looking down the hall
+            f.cam = v(27.32, 70.255, 1.55);
+            f.yaw = 0.0f;
+            f.pitch = 3.5f;
             f.view = 2;
             f.feed = true;
             f.camTicks = (int) Math.floor(t * 20.0f);
             f.clock = 3 * 3600 + 52 * 60 + 40 + t;
-            f.fov = 60.0f;
+            f.fov = 50.0f;
             f.fear = 0.6f;
-            f.danger = lerp(0.2f, 0.35f, seg(t, 0.0f, 4.0f));
+            f.danger = lerp(0.15f, 0.3f, seg(t, 0.0f, 4.0f));
             float h = held(t);
-            f.burst = Math.abs(t - 2.62f) < 0.05f ? 1.0f : 0.12f;
+            f.burst = Math.abs(t - 2.62f) < 0.05f ? 0.7f : 0.0f;
             if (d != null) {
-                // dragging itself toward the lens at its own pace: 0.034 blocks a tick
-                double z = 7.45 - 0.034 * 20.0 * h * 1.05;
-                d.at(26.98, 70.0, z).look(180.0f, 180.0f, 0.0f).walk(0.0f, 0.0f);
-                doll(d).puppetPose(OniDoll.CRAWL, h * 20.0f * 1.05f + 40.0f, 0.15f);
+                // dragging itself toward the lens: 0.034 blocks a tick of its own clock
+                double z = 6.75 - 0.034 * 20.0 * h * SPEED;
+                d.at(27.42, 70.0, z).look(180.0f, 180.0f, 0.0f).walk(0.0f, 0.0f);
+                doll(d).puppetPose(OniDoll.CRAWL, h * 20.0f * SPEED + 40.0f, 0.12f);
             }
         }
     }
 
-    /** 15: the camera app, CAM3 和室, IR: the woman standing in the corner by the pillar, head bowed; the feed tears. */
+    /** 15: the camera app, CAM3 和室, IR: the woman standing in the corner by the pillar, head bowed; one short tear of the
+     *  feed. (The camera is set a little nearer to her than its spot in the SE corner.) */
     static final class CamWoman extends Shot {
+        static final float TEAR0 = 2.0f, TEAR1 = 2.13f;
         Trailer.Puppet w;
 
         CamWoman() {
             super("15_cam_woman", 3.5f);
             set.tv = true;
             setupAt = v(26.6, 71.63, 11.9);
-            keys = new float[]{0.5f, 1.95f, 3.4f};
+            keys = new float[]{0.5f, 2.05f, 3.4f};
         }
 
         @Override
@@ -823,23 +876,22 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             Vec3 at = Layout.markers("woman_spots").get(0).center();
-            CamSpotView.of(3, f, 0.0f, 0.0f);
-            f.look(f.cam, v(at.x + 0.15, 71.05, at.z + 0.15));
+            f.look(v(26.62, 71.98, 11.62), v(at.x + 0.12, 70.98, at.z + 0.12));
             f.view = 3;
             f.feed = true;
             f.camTicks = (int) Math.floor(t * 20.0f);
             f.clock = 4 * 3600 + 3 * 60 + 17 + t;
-            f.fov = 62.0f;
-            f.fear = 0.65f;
-            f.danger = 0.3f;
-            boolean tear = (t > 1.88f && t < 2.08f) || (t > 2.9f && t < 2.97f);
-            f.burst = tear ? 1.0f : 0.3f;
+            f.fov = 46.0f;
+            f.fear = 0.6f;
+            f.danger = 0.08f;
+            boolean tear = t > TEAR0 && t < TEAR1;
+            f.burst = tear ? 1.0f : 0.0f;
             if (w != null) {
                 // facing into the corner, away from the lens
                 Vec3 away = at.add(at.subtract(f.cam).multiply(1, 0, 1).normalize());
                 float yaw = yawTo(at, away);
                 w.at(at).look(yaw, yaw, 0.0f).walk(0.0f, 0.0f);
-                ((Woman) w.entity()).puppetPose(Woman.STAND, t * 20.0f + 300.0f, tear ? 0.7f : 0.15f);
+                ((Woman) w.entity()).puppetPose(Woman.STAND, t * 20.0f + 300.0f, tear ? 0.7f : 0.1f);
             }
         }
     }
@@ -912,9 +964,10 @@ final class TrailerShots {
         }
     }
 
-    /** 18: the fusuma flung open, the doll lunging into the lens. */
+    /** 18: the fusuma flung open, the doll lunging into the lens until its face fills the frame (the laptop in your hands,
+     *  its screen's glow on the face). */
     static final class Lunge extends Shot {
-        static final float OPEN = 0.2f, SLID = 0.34f, SPRING = 0.45f;
+        static final float OPEN = 0.2f, SLID = 0.34f, SPRING = 0.5f;
         Trailer.Puppet d;
 
         Lunge() {
@@ -922,7 +975,7 @@ final class TrailerShots {
             set.tv = true;
             set.fusuma = 1;
             setupAt = v(23.42, 71.62, 10.4);
-            keys = new float[]{0.1f, 0.62f, 0.8f};
+            keys = new float[]{0.1f, 0.7f, 1.6f};
             event(OPEN, "the fusuma flung open", () -> fusumaRow(2), l -> Fixtures.setClosetFusuma(l, 2));
         }
 
@@ -933,14 +986,16 @@ final class TrailerShots {
 
         @Override
         void frame(float t, Frame f) {
-            f.look(v(23.2, 70.9, 10.2), v(24.6, 70.45, 10.3));
             float pt = Math.max(0.0f, t - SPRING) * 20.0f;
             float hit = seg(pt, 2.0f, 7.5f);
-            f.shake(0.25f + 1.8f * hit + 0.6f * seg(t, OPEN, SLID), t, 32.0f);
+            float creep = easeSine(seg(t, 0.95f, 2.0f));
+            f.look(v(23.2, 70.9, 10.2), lerp(v(24.6, 70.45, 10.3), v(23.9, 70.62, 10.22), easeSine(hit)));
+            f.shake(0.25f + 1.6f * hit * (1.0f - 0.6f * creep) + 0.6f * seg(t, OPEN, SLID), t, 32.0f);
             f.breathe(t, 0.6f, 33.0f);
+            f.main = Held.LAPTOP;
             f.fov = 54.0f;
-            f.fear = 0.95f;
-            f.danger = lerp(0.85f, 1.0f, seg(t, OPEN, 0.8f));
+            f.fear = 0.85f;
+            f.danger = lerp(0.5f, 0.72f, seg(t, OPEN, 0.9f));
             if (t >= OPEN - 0.001f) {
                 float s = seg(t, OPEN, SLID);
                 s = s * s;
@@ -950,12 +1005,12 @@ final class TrailerShots {
                 }
             }
             if (d != null) {
-                // the model springs ~0.56 blocks by itself; the body carries it on toward the lens
+                // the model springs ~0.56 blocks by itself; the body carries it on to the lens, then it creeps closer
                 float carry = hit * hit * (3.0f - 2.0f * hit);
-                double x = 24.6 - 0.62 * carry;
+                double x = 24.6 - 0.62 * carry - 0.07 * creep;
                 double y = 70.0 + 0.12 * carry;
                 d.at(x, y, 10.2).look(90.0f, 90.0f, -10.0f * carry).walk(0.0f, 0.0f);
-                doll(d).puppetPose(OniDoll.LUNGE, pt, 0.3f);
+                doll(d).puppetPose(OniDoll.LUNGE, pt, 0.25f);
             }
         }
     }
