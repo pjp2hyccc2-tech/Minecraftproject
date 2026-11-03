@@ -1,20 +1,18 @@
-"""music.* cues (stereo).
+"""music.* score cues (stereo): dread, tension, danger, chase, safe, exorcism.  (The cues built on the store's
+jingle - store, store_wrong, closing, title, the endings - are in music_store.py.)
 
-Tonal plan, so that the layers the client mixes at runtime (dread, tension,
-danger, binaural, chase, oyama) clash on purpose without turning to mush:
-  dread    : low D drone (D1/D2/A2) with slowly beating partner partials, a
-             6 Hz binaural theta pair at A2 (110 / 116 Hz), sub swells
-  binaural : D3 carriers 146.8 / 152.8 Hz (the right ear sits a sour 70 cents
-             above D3) + D2 pair 4.5 Hz apart
-  tension  : micro-tonal string clusters around D - Eb - Ab (minor second,
-             tritone), irregular heartbeat
-  danger   : endless Shepard rise (key independent, tritone-paired strands) +
-             rough 52 Hz AM strings on D/Eb/A + ticking
-  chase    : D/Eb pumping bass, falling Shepard, screeching clusters
-  oyama    : D/Eb/Ab low brass clusters, shō, a chant drone
-Loops are circular (loop-quantised oscillators, circular placement /
-reverb); layers that cannot be periodic are rendered longer and crossfaded
-into their start."""
+Tonal plan, so that the layers the client mixes at runtime (dread, tension, danger, chase) clash on purpose without
+turning to mush, and sit in D minor, the relative minor of the jingle's F major:
+  dread    : low D drone (D1/D2/A2) with slowly beating partner partials, a 6 Hz binaural theta pair
+             (129 / 135 Hz, between the drone partials), sub swells, faint bowled metal
+  tension  : micro-tonal string clusters around D - Eb - Ab (minor second, tritone), irregular heartbeat
+  danger   : endless Shepard rise (key independent, tritone-paired strands) + rough 52 Hz AM strings on D/Eb/A + the
+             wall clock ticking twice too fast
+  chase    : D/Eb pumping bass, falling Shepard, screeching clusters, stainless steel struck in the kitchen
+  safe     : the jingle's melody in D minor, sparse, on a piano and a music box, rain dripping off the canopy
+  exorcism : singing bowls, a chant drone over a wooden fish, light rising, a release into F major
+Loops are circular (loop-quantised oscillators, circular placement / reverb); layers that cannot be periodic are
+rendered longer and crossfaded into their start."""
 import numpy as np
 
 import dsp
@@ -107,16 +105,6 @@ def _bowed_metal(rng, d, f0, vel=1.0):
     return (y + bow) * vel
 
 
-SAFE = [  # the safe motif (D minor, sparse): (t, note, vel)
-    (0.5, "A4", 0.6), (1.6, "D5", 0.7), (2.5, "E5", 0.55), (3.3, "F5", 0.75),
-    (7.5, "E5", 0.6), (8.6, "D5", 0.55), (9.9, "A4", 0.6),
-    (14.5, "A#4", 0.6), (15.4, "A4", 0.5), (16.2, "G4", 0.55), (17.4, "F4", 0.65),
-    (22.0, "E4", 0.55), (23.2, "F4", 0.5), (24.0, "A4", 0.6), (25.5, "C#5", 0.6),
-    (30.5, "D5", 0.6), (31.8, "F5", 0.5), (33.0, "E5", 0.45),
-]
-SAFE_BASS = [(0.5, "D3", 0.4), (0.52, "A3", 0.3), (7.5, "A#2", 0.4), (14.5, "G2", 0.4), (22.0, "A2", 0.45), (30.5, "D2", 0.45)]
-
-
 # --------------------------------------------------------------------------
 # music.dread - 64 s base score
 # --------------------------------------------------------------------------
@@ -197,14 +185,12 @@ def danger(rng, i=1):
                          detune=14, vib=8, bright=0.6, pont=0.35)
     rough = dsp.am(rough, 52.0, 0.65, L)  # roughness band
     out += _nrm(rough) * 0.42
-    ticks = np.zeros(n)
-    acc = rng.random(64) < 0.3
-    for k in range(64):
-        m = ns(0.02)
-        c = rng.standard_normal(m) * np.exp(-np.arange(m) / (0.0012 * SR))
-        c = dsp.reson(c, 3200 if k % 2 == 0 else 2500, 6, 2.0)
-        dsp.place(ticks, c * (1.0 if acc[k] else 0.45), k * L / 64, circular=True)
-    out += np.vstack([ticks * 0.9, ticks]) * 0.18 / (np.max(np.abs(ticks)) + 1e-9)
+    ticks = np.zeros(n)  # the dining room's wall clock, ticking twice as fast as it should
+    for k in range(32):
+        c = ins.modal_hit(rng, [(2100, 0.025, 1.0), (3400, 0.018, 0.6), (5600, 0.01, 0.3), (900, 0.03, 0.3)],
+                          size=1.0, hardness=1.0, vel=1.0 if k % 2 == 0 else 0.8, dur=0.07, noise=0.35)
+        dsp.place(ticks, c, k * L / 32, circular=True)
+    out += np.vstack([ticks * 0.9, ticks]) * 0.2 / (np.max(np.abs(ticks)) + 1e-9)
     sub = dsp.sub_rumble(n, 36.71, L=L, rng=rng, am_rate=6.0, am_depth=0.6)
     ir = dsp.make_ir(2.0, rng, stereo=True, predelay=0.02)
     out = dsp.circ_reverb(out, ir, wet=0.3, dry=0.9) + np.vstack([sub, sub]) * 0.22
@@ -277,150 +263,18 @@ def chase(rng, i=1):
     mix = drums * 1.0 + np.vstack([bass, bass]) / (np.max(np.abs(bass)) + 1e-9) * 0.4
     mix += np.vstack([sh, np.roll(sh, ns(0.007))]) / (np.max(np.abs(sh)) + 1e-9) * 0.3
     mix += _nrm(scr) * 0.22 + _nrm(met) * 0.12
+    steel = np.zeros((2, n))  # stainless steel struck in the kitchen on the off-accents
+    STEEL = [(410, 0.6, 0.8), (980, 0.5, 1.0), (1730, 0.4, 0.8), (2650, 0.3, 0.6), (3900, 0.2, 0.4), (5400, 0.15, 0.25)]
+    for bar in range(10):
+        for k in (3, 6) if bar % 2 else (5,):
+            h = ins.modal_hit(rng, STEEL, size=rng.uniform(0.8, 1.3), hardness=0.9, vel=rng.uniform(0.5, 1.0), dur=0.9, noise=0.3)
+            dsp.place(steel, dsp.pan(h, rng.uniform(-0.7, 0.7)), bar * 4 * beat + k * e8 + rng.normal(0, 0.004), circular=True)
+    mix += _nrm(steel) * 0.16
     ir = dsp.make_ir(1.4, rng, stereo=True, predelay=0.015)
     mix = dsp.circ_reverb(mix, ir, wet=0.28, dry=0.9)
     return np.roll(dsp.dc_block(mix, circular=True), ns(0.02), axis=-1)  # downbeat 20 ms after the seam
 
 
-# --------------------------------------------------------------------------
-# music.safe - 40 s, fragile detuned piano / music box, long reverb
-# --------------------------------------------------------------------------
-def safe(rng, i=1):
-    L = 40.0
-    n = ns(L)
-    ev = np.zeros((2, n))
-    for t0, nm, v in SAFE:
-        f = dsp.hz(nm, rng.uniform(-18, 12))
-        p = ins.piano(f, 6.0, rng, vel=v, unison_c=2.5, bright=0.35)
-        dsp.place(ev, dsp.pan(p, rng.uniform(-0.35, 0.35)), t0, circular=True)
-        if rng.random() < 0.45:  # a sour music-box ghost an octave up
-            tn = ins.tine(f * 2 * dsp.cents(rng.uniform(15, 35)), rng, vel=0.25)
-            dsp.place(ev, dsp.pan(tn, rng.uniform(-0.6, 0.6)), t0 + 0.01, circular=True)
-    for t0, nm, v in SAFE_BASS:
-        p = ins.piano(dsp.hz(nm, rng.uniform(-10, 6)), 7.0, rng, vel=v, bright=0.25)
-        dsp.place(ev, dsp.pan(p, -0.2), t0, circular=True)
-    ev = _nrm(ev)
-    pad = loop_strings([dsp.hz("D3"), dsp.hz("A3"), dsp.hz("F4")], L, rng, env=_lfo(n, 2, rng, 0.0, 1.0, 2.0),
-                       voices=2, detune=6, vib=4, bright=0.1)
-    out = ev + _nrm(pad) * 0.08
-    air = np.vstack([dsp.colored(n, rng, -3.0, lo=150, hi=4000) for _ in range(2)])
-    out += air * 0.004
-    ir = dsp.make_ir(5.5, rng, stereo=True, predelay=0.035, hf_ratio=0.3)
-    out = dsp.circ_reverb(out, ir, wet=0.55, dry=0.8)
-    return dsp.dc_block(out, circular=True)
-
-
-# --------------------------------------------------------------------------
-# music.oyama - 32 s final act
-# --------------------------------------------------------------------------
-def _chant(dur, rng):
-    n = ns(dur)
-    out = np.zeros((2, n))
-    for f, vw in ((73.42, ("o", "u", "o")), (73.42 * dsp.cents(14), ("u", "o", "a")), (103.83, ("o", "a", "u")),
-                  (110.0, ("u", "o", "u")), (146.83, ("o", "o", "a"))):
-        ff = f * dsp.cents(10 * np.sin(TAU * rng.uniform(4.2, 5.4) * np.arange(n) / SR + rng.random() * 6) + 5 * dsp.smooth(n, rng, 0.5, periodic=False))
-        amp = 0.6 + 0.4 * np.sin(np.pi * np.arange(n) / n * rng.integers(2, 5) + rng.random() * 6) ** 2
-        keys = [(0, V.fs(vw[0], V.VM, 0.92)), (dur / 2, V.fs(vw[1], V.VM, 0.92)), (dur, V.fs(vw[2], V.VM, 0.92))]
-        v = V.voice(ff, amp, keys, rng, tilt=-9, fmax=5000, jitter=0.008, shimmer=0.06, breath=0.25)
-        out += dsp.pan(v / (np.std(v) + 1e-9), rng.uniform(-0.7, 0.7))
-    return out
-
-
-def _sho_layer(dur, rng):
-    chords = []
-    seq = [["D4", "E4", "G#4", "A4", "C#5", "D5"], ["D#4", "F4", "A4", "A#4", "D5", "D#5"],
-           ["C#4", "D4", "G#4", "A4", "D#5", "E5"], ["D4", "D#4", "A4", "A#4", "D5", "E5"]]
-    k = 0
-    t = 0.0
-    while t < dur:
-        fr = [dsp.hz(x, rng.uniform(-12, 12)) for x in seq[k % len(seq)]]
-        chords.append((t, t + 8.6, fr, 1.0))
-        t += 8.0
-        k += 1
-    return ins.sho(chords, dur, rng)
-
-
-def oyama(rng, i=1):
-    L = 32.0
-    n = ns(L)
-    t = np.arange(n) / SR
-    env = np.zeros(n)
-    for c in (0.0, 11.0, 21.5):  # three huge swells
-        env += np.exp(-((t - c - 3.5) % L) / 4.0) * np.clip(((t - c) % L) / 3.5, 0, 1) ** 2 * (((t - c) % L) < 10.5)
-    env = dsp.circ(lambda x: dsp.lowpass0(x, 3.0), np.clip(env, 0, 1)) * 0.85 + 0.15
-    br = loop_brass([36.71, 38.89, 73.42, 77.78, 103.83, 110.0], L, rng, env)
-    out = _nrm(br) * 0.8
-    ch = _xf_loop(_chant, L, 4.0, rng)
-    out += _nrm(ch) * 0.3
-    sho = _xf_loop(_sho_layer, L, 4.0, rng)
-    out += _nrm(sho) * 0.2 * _lfo(n, 2, rng, 0.4, 1.0)[None, :]
-    tk = np.zeros((2, n))
-    for t0, v in ((0.0, 1.0), (2.4, 0.7), (4.0, 0.9), (8.0, 1.0), (11.0, 1.0), (13.2, 0.6), (16.0, 0.95), (19.6, 0.7),
-                  (21.5, 1.0), (24.0, 0.8), (26.3, 0.6), (28.0, 0.95)):
-        h = ins.taiko(rng, f0=rng.uniform(46, 54), vel=v, decay=1.0, dur=2.8, size=1.7)
-        dsp.place(tk, dsp.pan(dsp.lowpass(h, 1600, 2), rng.uniform(-0.3, 0.3)), t0, circular=True)
-    tk = dsp.circ_reverb(tk, dsp.make_ir(3.8, rng, stereo=True, predelay=0.06, hf_ratio=0.3), wet=0.9, dry=0.3)
-    out += _nrm(tk) * 0.55
-    sub = dsp.sub_rumble(n, 36.71, L=L, rng=rng, am_rate=6.0, am_depth=0.5)
-    ir = dsp.make_ir(4.0, rng, stereo=True, predelay=0.04, hf_ratio=0.35)
-    out = dsp.circ_reverb(out, ir, wet=0.4, dry=0.85) + np.vstack([sub, sub]) * 0.3 * env
-    return dsp.dc_block(out, circular=True)
-
-
-# --------------------------------------------------------------------------
-# music.binaural - 32 s pure theta bed
-# --------------------------------------------------------------------------
-def binaural(rng, i=1):
-    L = 32.0
-    n = ns(L)
-    out = dsp.binaural(149.83, 6.0, n, L=L, rng=rng) * 1.0  # 146.83 L / 152.83 R
-    out += dsp.binaural(75.67, 4.5, n, L=L, rng=rng) * 0.6   # 73.42 L / 77.92 R
-    out *= _lfo(n, 2, rng, 0.7, 1.0)[None, :]
-    pn = np.vstack([dsp.colored(n, rng, -3.0, lo=40, hi=6000) for _ in range(2)])
-    out += pn * 0.012
-    return dsp.dc_block(out, circular=True)
-
-
-# --------------------------------------------------------------------------
-# music.title - 48 s: wind, a distant bear bell, a lonely high tone, drone, piano
-# --------------------------------------------------------------------------
-def title(rng, i=1):
-    L = 48.0
-    n = ns(L)
-    out = np.zeros((2, n))
-    for c in range(2):
-        g = dsp.smooth(n, rng, 0.08)
-        g = (g - g.min()) / (g.max() - g.min())
-        out[c] += dsp.colored(n, rng, -4.0, lo=120, hi=2500) * (0.2 + 0.8 * g ** 2) * 0.08
-    dry = np.zeros((2, n))  # steady tones stay out of the circular reverb
-    for f, a, bt in ((73.42, 1.0, 0.09), (110.0, 0.4, 0.13), (36.71, 0.35, 0.05)):
-        for c in range(2):
-            dry[c] += a * 0.12 * (_tone(f, L, n, rng) + 0.7 * _tone(f + bt * (1 + 0.4 * c), L, n, rng))
-    hi = (_tone(1174.66, L, n, rng) + 0.5 * _tone(1174.66 + 0.31, L, n, rng)) * _lfo(n, 2, rng, 0.0, 1.0, 3.0)
-    dry += np.vstack([hi, np.roll(hi, ns(0.02))]) * 0.025
-    ev = np.zeros((2, n))
-    for t0, nm, v in [(4.0, "A4", 0.5), (5.2, "D5", 0.6), (6.1, "E5", 0.45), (7.0, "F5", 0.6),
-                      (26.0, "A#4", 0.5), (27.0, "A4", 0.45), (27.9, "G4", 0.5), (29.2, "F4", 0.55), (31.5, "E4", 0.45)]:
-        p = ins.piano(dsp.hz(nm, rng.uniform(-15, 10)), 6.0, rng, vel=v, unison_c=2.5, bright=0.3)
-        dsp.place(ev, dsp.pan(p, rng.uniform(-0.3, 0.3)), t0, circular=True)
-    out += _nrm(ev) * 0.35
-    for t0 in (12.0, 37.0):  # someone's bear bell, far away, walking
-        strikes = []
-        tt = 0.0
-        while tt < 5.0:
-            strikes.append((tt, rng.uniform(0.5, 1.0)))
-            tt += rng.uniform(0.5, 0.62)
-        b = ins.bear_bell(rng, 6.5, strikes, base=1600)
-        b = dsp.lowpass(b, 3200, 2) * dsp.env_pts(len(b), [(0, 0), (1.5, 1), (4.5, 1), (6.5, 0)])
-        dsp.place(out, dsp.pan(b, rng.uniform(-0.7, 0.7)) * 0.02, t0, circular=True)
-    ir = dsp.make_ir(4.5, rng, stereo=True, predelay=0.04, hf_ratio=0.3)
-    out = dsp.circ_reverb(out, ir, wet=0.5, dry=0.8) + dry * 0.9
-    return dsp.dc_block(out, circular=True)
-
-
-# --------------------------------------------------------------------------
-# music.ending_good - 50 s, dawn (no loop)
-# --------------------------------------------------------------------------
 def _bird_tit(rng):
     y = np.zeros(ns(0.5))
     for k, t0 in enumerate((0.0, 0.16)):
@@ -444,78 +298,133 @@ def _crow(rng):
     return y
 
 
-def ending_good(rng, i=1):
-    dur = 50.0
+
+
+# --------------------------------------------------------------------------
+# music.safe - 40 s: outside with the medium; the jingle's melody in D minor, sparse, rain dripping off the canopy
+# --------------------------------------------------------------------------
+def safe(rng, i=1):
+    import jingle as J
+    L = 40.0
+    n = ns(L)
+    ev = np.zeros((2, n))
+    # the jingle's head and its cadence, transposed to D minor (F minor down a minor third), very slowly, with gaps
+    phrase = [(b, J.to_minor(nm), d) for b, nm, d in J.MELODY[:9]] + [(b - 12, J.to_minor(nm), d) for b, nm, d in J.MELODY[23:]]
+    beat = 1.05
+    t0 = 1.0
+    for k, (b, nm, d) in enumerate(phrase):
+        f = dsp.hz(nm, -300 + rng.uniform(-14, 8))
+        tb = t0 + b * beat + (4.0 if b >= 16 else 0.0)
+        if tb > L - 3:
+            break
+        p = ins.piano(f, 6.0, rng, vel=rng.uniform(0.45, 0.6), unison_c=2.5, bright=0.3)
+        dsp.place(ev, dsp.pan(p, rng.uniform(-0.3, 0.3)), tb, circular=True)
+        if rng.random() < 0.4:  # a music-box ghost an octave up, a little sour
+            tn = ins.tine(f * 2 * dsp.cents(rng.uniform(18, 35)), rng, vel=0.22)
+            dsp.place(ev, dsp.pan(tn, rng.uniform(-0.6, 0.6)), tb + 0.012, circular=True)
+    for tb, nm in ((1.0, "D3"), (9.4, "A#2"), (17.8, "G2"), (26.2, "A2"), (33.5, "D2")):
+        p = ins.piano(dsp.hz(nm, rng.uniform(-8, 4)), 7.0, rng, vel=0.38, bright=0.22)
+        dsp.place(ev, dsp.pan(p, -0.2), tb, circular=True)
+    ev = _nrm(ev)
+    pad = loop_strings([dsp.hz("D3"), dsp.hz("A3"), dsp.hz("F4")], L, rng, env=_lfo(n, 2, rng, 0.0, 1.0, 2.0),
+                       voices=2, detune=6, vib=4, bright=0.1)
+    from sfx_beds import _drip
+    rain = np.zeros((2, n))  # the canopy and the car roof still dripping
+    for s_ in range(3):
+        per, pn, f0 = rng.uniform(0.9, 2.2), rng.uniform(-0.8, 0.8), rng.uniform(700, 1200)
+        tt = rng.uniform(0, per)
+        while tt < L:
+            d = _drip(rng, f0 * rng.uniform(0.96, 1.04), rng.uniform(0.5, 1.0))
+            dsp.place(rain, dsp.pan(dsp.lowpass(d, 7000, 2), pn), tt, circular=True)
+            tt += per * rng.uniform(0.85, 1.2)
+    out = ev + _nrm(pad) * 0.07 + _nrm(rain) * 0.06
+    air = np.vstack([dsp.colored(n, rng, -3.0, lo=150, hi=4000) for _ in range(2)])
+    out += air * 0.004
+    ir = dsp.make_ir(5.0, rng, stereo=True, predelay=0.035, hf_ratio=0.3)
+    out = dsp.circ_reverb(out, ir, wet=0.5, dry=0.8)
+    return dsp.dc_block(out, circular=True)
+
+
+# --------------------------------------------------------------------------
+# music.exorcism - 60 s (no loop): singing bowls, a chant drone over a wooden fish, rising light, the release
+# --------------------------------------------------------------------------
+def _bowl(rng, f0, dur, vel=1.0):
+    """A large singing bowl struck with a padded mallet: long beating partials (split modes)."""
+    return ins.bell_partials(f0, dur, rng, [1.0, 2.71, 5.03, 7.9, 11.2], [1.0, 0.55, 0.3, 0.12, 0.05],
+                             [14.0, 8.0, 4.5, 2.5, 1.4], beat=(0.4, 1.6), attack=0.004) * vel
+
+
+def _mokugyo(rng, vel=1.0):
+    """The wooden fish: a hollow, round knock."""
+    return ins.modal_hit(rng, [(420, 0.09, 1.0), (980, 0.05, 0.45), (1650, 0.03, 0.25), (2400, 0.02, 0.1)],
+                         size=1.0, hardness=0.6, vel=vel, dur=0.35, noise=0.2)
+
+
+def _chant_drone(rng, dur, f0, vowels, voices=4, table=V.VM, scale=0.93, breath=0.3, level_pts=None):
+    n = ns(dur)
+    out = np.zeros((2, n))
+    for k in range(voices):
+        f = f0 * dsp.cents(rng.normal(0, 9) + 6 * dsp.smooth(n, rng, 0.4, periodic=False))
+        f = f * dsp.cents(7 * np.sin(TAU * rng.uniform(4.6, 5.6) * np.arange(n) / SR + rng.random() * 6))
+        amp = 0.75 + 0.25 * np.sin(np.pi * np.arange(n) / n * rng.integers(2, 6) + rng.random() * 6) ** 2
+        if level_pts:
+            amp = amp * dsp.env_pts(n, level_pts)
+        keys = [(dur * j / (len(vowels) - 1), V.fs(v, table, scale)) for j, v in enumerate(vowels)]
+        v = V.voice(f, amp, keys, rng, tilt=-9, fmax=5000, jitter=0.008, shimmer=0.06, breath=breath)
+        out += dsp.pan(v / (np.std(v) + 1e-9), rng.uniform(-0.6, 0.6))
+    return out
+
+
+def exorcism(rng, i=1):
+    import jingle as J
+    dur = 60.0
     n = ns(dur)
     t = np.arange(n) / SR
     out = np.zeros((2, n))
-    wind = np.vstack([dsp.colored(n, rng, -4.0, lo=120, hi=2500) for _ in range(2)])
-    out += wind * 0.05 * dsp.env_pts(n, [(0, 1.0), (12, 0.6), (40, 0.3), (dur, 0.2)])
-    dr = (np.sin(TAU * 73.42 * t) + 0.6 * np.sin(TAU * 73.53 * t)) * dsp.env_pts(n, [(0, 0), (2, 1), (14, 0.6), (30, 0.2), (dur, 0.2)])
-    out += np.vstack([dr, dr]) * 0.12
-    chords = [(8.0, ["D2", "A2", "F#3", "A3", "E4"]), (16.0, ["G2", "D3", "B3", "D4", "A4"]),
-              (24.0, ["A2", "E3", "A3", "D4", "E4"]), (32.0, ["D2", "A2", "F#3", "D4", "F#4", "A4"])]
-    for k, (t0, names) in enumerate(chords):
-        d = 9.5 if k < 3 else dur - t0
-        m = ns(d)
-        env = dsp.env_pts(m, [(0, 0), (3.0, 1.0), (d - 2.0, 0.85), (d, 0)])
-        pad = ins.strings([dsp.hz(x) for x in names], d, rng, env=env, voices=3, detune=7, vib_depth=5, vib_rate=4.6,
-                          bright=0.15 + 0.08 * k)
-        dsp.place(out, dsp.lowpass(pad, 1600 + 400 * k, 2) / (np.max(np.abs(pad)) + 1e-9) * (0.22 + 0.05 * k), t0)
-    for t0, nm, v in [(18.5, "A4", 0.5), (19.6, "D5", 0.55), (20.5, "E5", 0.45), (21.3, "F#5", 0.6),
-                      (26.0, "E5", 0.5), (27.1, "D5", 0.45), (28.4, "A4", 0.5), (34.0, "D5", 0.5), (35.2, "F#5", 0.45),
-                      (36.4, "A5", 0.5)]:
-        p = ins.piano(dsp.hz(nm, rng.uniform(-4, 4)), 6.0, rng, vel=v, bright=0.4)
-        dsp.place(out, dsp.pan(p, rng.uniform(-0.3, 0.3)) * 0.35, t0)
-    for _ in range(14):  # dawn birds, and a crow far away
-        t0 = rng.uniform(6.0, 46.0)
-        b = _bird_tit(rng) if rng.random() < 0.6 else _bird_bulbul(rng)
-        dsp.place(out, dsp.pan(dsp.lowpass(b, 7000, 2), rng.uniform(-0.9, 0.9)) * 0.03 * min(1.0, (t0 - 4) / 10), t0)
-    for t0 in (13.0, 13.5, 14.1, 38.0, 38.55):
-        c = _crow(rng)
-        dsp.place(out, dsp.pan(dsp.lowpass(c, 3000, 2), 0.6) * 0.04, t0)
-    for t0, nm in [(44.0, "A5"), (45.4, "D6"), (46.9, "E6"), (48.6, "F6")]:  # ...and the motif comes back in minor
-        tn = ins.tine(dsp.hz(nm, rng.uniform(-25, -10)), rng, vel=0.22)
-        dsp.place(out, dsp.pan(tn, 0.35), t0)
-    sw = dsp.sub_rumble(n, 38.89, rng=rng, am_rate=6.0, am_depth=0.5) * dsp.env_pts(n, [(0, 0), (44, 0), (49, 1.0), (dur, 0.6)])
-    out += np.vstack([sw, sw]) * 0.12
-    ir = dsp.make_ir(3.8, rng, stereo=True, predelay=0.03, hf_ratio=0.4)
-    out = dsp.reverb(out, ir, wet=0.42, dry=0.8)
-    out = dsp.pad_to(out, n)
-    return dsp.fade(dsp.highpass(out, 30, 2), 1.0, 2.5)
-
-
-# --------------------------------------------------------------------------
-# music.ending_bad - 30 s 神隠し: the safe motif on a dying music box
-# --------------------------------------------------------------------------
-def ending_bad(rng, i=1):
-    dur = 30.0
-    n = ns(dur)
-    out = np.zeros((2, n))
-    t = 0.8
-    speed = 1.0
-    for k, (t0, nm, v) in enumerate(SAFE):
-        if k in (5, 9, 13):
-            continue  # broken tines
-        f = dsp.hz(nm, -15 - 40 * (1 - speed) + rng.uniform(-10, 10)) * 2
-        tn = ins.tine(f * speed ** 0.5, rng, vel=0.6 * speed ** 0.3)
-        dsp.place(out, dsp.pan(tn, 0.15), t)
-        if k + 1 < len(SAFE):
-            t += (SAFE[k + 1][0] - t0) * 0.42 / speed
-        speed *= 0.93
-        if t > 24.0:
-            break
-    m = ns(0.05)  # the spring's last click
-    dsp.place(out, np.vstack([dsp.bandpass(rng.standard_normal(m), 2000, 6000) * np.exp(-np.arange(m) / (0.003 * SR))] * 2) * 0.2, t + 1.2)
-    for t_hit in (6.0, 14.5, 22.0):  # reversed swells
-        src = ins.strings([dsp.hz(x) for x in ("D3", "D#3", "A3", "G#4")], 1.2, rng, env=dsp.env_pts(ns(1.2), [(0, 1), (1.2, 0)]), voices=2, bright=0.4)
-        rv = dsp.reverse(dsp.reverb(src, dsp.make_ir(3.0, rng, stereo=True), wet=1.0, dry=0.1))
-        dsp.place_end(out, _nrm(rv) * 0.25, t_hit)
-    tt = np.arange(n) / SR
-    wind = np.vstack([dsp.colored(n, rng, -4.0, lo=120, hi=3000) for _ in range(2)])
-    g = dsp.env_pts(n, [(0, 0.3), (15, 0.6), (26, 1.0), (dur, 0.0)]) * (0.6 + 0.4 * np.abs(dsp.smooth(n, rng, 0.2, periodic=False)))
-    out += wind * 0.06 * g
-    ir = dsp.make_ir(4.0, rng, stereo=True, predelay=0.03, hf_ratio=0.35)
-    out = dsp.reverb(out, ir, wet=0.5, dry=0.75)
-    out = dsp.pad_to(out, n)
-    return dsp.fade(dsp.highpass(out, 35, 2), 0.3, 3.0)
+    rel = 47.0  # the release
+    ch = _chant_drone(rng, rel + 1.5, dsp.hz("D2"), ["o", "u", "o", "a", "o", "u"], voices=4,
+                      level_pts=[(0, 0), (3, 0.0), (8, 0.7), (30, 0.9), (44, 1.0), (rel, 1.0), (rel + 1.5, 0)])
+    ch2 = _chant_drone(rng, rel + 1.5, dsp.hz("A2", -6), ["u", "o", "a", "o"], voices=2,
+                       level_pts=[(0, 0), (12, 0.0), (18, 0.6), (rel, 0.9), (rel + 1.5, 0)])
+    hi = _chant_drone(rng, rel + 1.5, dsp.hz("D4", 8), ["a", "o", "a", "u"], voices=1, table=V.VF, scale=1.0,
+                      breath=0.6, level_pts=[(0, 0), (20, 0.0), (26, 0.5), (rel, 0.8), (rel + 1.5, 0)])
+    dsp.place(out, _nrm(ch) * 0.32 + _nrm(ch2) * 0.15 + _nrm(hi) * 0.06, 0.0)
+    tt = 6.0  # the wooden fish keeps the chant's pulse, quickening toward the release
+    per = 0.62
+    while tt < rel - 0.2:
+        dsp.place(out, dsp.pan(_mokugyo(rng, rng.uniform(0.8, 1.0)), 0.25) * 0.22, tt)
+        tt += per
+        per = max(0.36, per * 0.995)
+    for tb, f0, v in ((0.5, 196.0, 1.0), (14.0, 196.0, 0.8), (28.0, 220.0, 0.85), (38.0, 233.1, 0.9)):
+        b = _bowl(rng, f0, 14.0, v)
+        dsp.place(out, np.vstack([b, np.roll(b, ns(0.004))]) * 0.22, tb)
+        rn = ins.rin(rng, f0 * 5.62, 6.0, 0.6)
+        dsp.place(out, dsp.pan(rn, 0.4) * 0.12, tb + 0.02)
+    m = ns(rel - 24.0)  # light rising: glassy partials climbing out of the drone, denser and brighter
+    tt2 = np.arange(m) / SR
+    shim = np.zeros(m)
+    for k in range(9):
+        f_start = dsp.hz("D5") * 2 ** (k / 4.0)
+        f = f_start * 2 ** (tt2 / (m / SR) * rng.uniform(0.6, 1.1))
+        g = np.clip(f / 9000.0, 0, 1)
+        shim += np.sin(TAU * np.cumsum(f) / SR + rng.random() * 6) * (1 - g) * (0.5 + 0.5 * np.sin(TAU * rng.uniform(0.3, 0.9) * tt2) ** 2)
+    shim *= dsp.env_pts(m, [(0, 0), (m / SR * 0.6, 0.5), (m / SR, 1.0)]) ** 1.5
+    dsp.place(out, np.vstack([shim, np.roll(shim, ns(0.011))]) / (np.max(np.abs(shim)) + 1e-9) * 0.07, 24.0)
+    sw = np.clip((t - 20.0) / (rel - 20.0), 0, 1) ** 2 * (t < rel)  # the low swell under it all
+    sub = dsp.sub_rumble(n, 36.71, rng=rng, am_rate=5.0, am_depth=0.4)
+    out += np.vstack([sub, sub]) * 0.06 * sw
+    # the release: the chant stops dead; a wide F major chord of light (the jingle's key), bowls, then stillness
+    chord = ["F3", "C4", "A4", "E5", "G5", "C6", "A6"]
+    m = ns(dur - rel)
+    pad = ins.strings([J.hz(x) for x in chord], dur - rel, rng, env=dsp.env_pts(m, [(0, 0), (0.4, 1.0), (4.0, 0.7), (dur - rel, 0)]),
+                      voices=3, detune=6, vib_depth=4, vib_rate=4.8, bright=0.35)
+    dsp.place(out, _nrm(pad) * 0.3, rel)
+    for k, nm in enumerate(("F5", "A5", "C6", "F6")):
+        dsp.place(out, dsp.pan(ins.vibraphone(J.hz(nm), 7.0, rng, vel=0.5, depth=0.0, hard=0.3), -0.4 + 0.27 * k) * 0.25, rel + 0.05 + 0.12 * k)
+    b = _bowl(rng, 174.6, dur - rel, 1.0)
+    dsp.place(out, np.vstack([b, np.roll(b, ns(0.005))]) * 0.28, rel)
+    rn = ins.rin(rng, 1175.0, 9.0, 0.9)
+    dsp.place(out, dsp.pan(rn, 0.3) * 0.2, rel + 5.0)
+    ir = dsp.make_ir(4.5, rng, stereo=True, predelay=0.04, hf_ratio=0.35)
+    out = dsp.pad_to(dsp.reverb(out, ir, wet=0.42, dry=0.85), n)
+    return dsp.fade(dsp.highpass(out, 28, 2), 0.5, 4.0)
