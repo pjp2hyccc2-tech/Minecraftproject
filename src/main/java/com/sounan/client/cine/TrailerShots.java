@@ -219,16 +219,20 @@ final class TrailerShots {
         void setup(Minecraft mc) {
             // the game's bag lies down in the stream, out of sight from the bank: for the film it lies on the bank,
             // where the beam finds it
-            Trailer.server(l -> l.setBlock(new BlockPos(-163, 183, -170), com.sounan.registry.ModBlocks.LOST_BAG.get().defaultBlockState()
-                    .setValue(com.sounan.block.FacingBlock.FACING, net.minecraft.core.Direction.WEST), 3));
+            Trailer.server(l -> {
+                BlockPos at = new BlockPos(-164, TerrainData.get().height(-164, -170) + 1, -170);
+                boolean ok = l.setBlock(at, com.sounan.registry.ModBlocks.LOST_BAG.get().defaultBlockState()
+                        .setValue(com.sounan.block.FacingBlock.FACING, net.minecraft.core.Direction.WEST), 3);
+                com.sounan.Sounan.LOGGER.info("[sounan] trailer: bag placed at {}: {} -> {}", at.toShortString(), ok, l.getBlockState(at));
+            });
         }
 
         @Override
         void frame(float t, Frame f) {
             float k = easeSine(seg(t, 0.0f, 3.5f));
-            double x = lerp(-166.3f, -165.3f, k), z = lerp(-166.6f, -167.5f, k);
+            double x = lerp(-166.6f, -165.9f, k), z = lerp(-166.5f, -167.3f, k);
             f.cam = eye(x, z, 1.55);
-            Vec3 bag = new Vec3(-162.5, 183.3, -169.5);
+            Vec3 bag = new Vec3(-163.5, groundAt(-163.5, -169.5) + 0.25, -169.5);
             Vec3 stream = new Vec3(x - 0.5, f.cam.y - 2.4, z - 5.0);
             Vec3 at = lerp(stream, bag, easeSine(seg(t, 0.3f, 2.2f)));
             f.yaw = yawTo(f.cam, at) + 1.5f * noise(t * 0.7f, 6.0f);
