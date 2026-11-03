@@ -31,7 +31,7 @@
 #define BLK_FLOOR_CAVITY 12007  // the cavity behind the mirror: wet, black
 #define BLK_GRANITE     12008   // vestibule floor, granite counter tops
 #define BLK_STEEL       12009   // stainless: the kitchen line, sinks, tables, hood
-#define BLK_METAL_OUT   12010   // painted / galvanised metal outside: guardrails, racks, dumpsters
+#define BLK_METAL_OUT   12010   // painted / galvanised metal: guardrails, racks, dumpsters, steel doors, lockers
 #define BLK_WINDOW      12011   // shop windows: rain droplets, reflections
 #define BLK_MIRROR      12012   // the dark mirror over the women's sinks
 #define BLK_MIRROR_CRACKED 12013
@@ -47,6 +47,7 @@
 #define BLK_FROST       12023   // the walk-in fridge frost
 #define BLK_STEEL_WALL  12024   // the stainless wall behind the cooking line (a wall)
 #define BLK_WALL        12025   // plain walls (wallpaper, wainscot, facade, concrete, pillars)
+#define BLK_PORCELAIN   12026   // toilets, urinals, sinks
 
 // full wall blocks: they stop the lamps' light (lib/emitters.glsl wall tiles)
 bool isWallBlock(int id) { return id == BLK_WALL || id == BLK_STEEL_WALL || id == BLK_WALL_TILE; }
@@ -108,7 +109,7 @@ int materialOfBlock(int id) {
     if (id == BLK_MIRROR || id == BLK_MIRROR_CRACKED) return MAT_MIRROR;
     if (id == BLK_MIRROR_PLAIN) return MAT_MIRROR_PLAIN;
     if (id == BLK_GLASS_SMALL)  return MAT_GLASS_SMALL;
-    if (id == BLK_WALL_TILE)    return MAT_WALL_TILE;
+    if (id == BLK_WALL_TILE || id == BLK_PORCELAIN) return MAT_WALL_TILE;
     if (id == BLK_VINYL)        return MAT_VINYL;
     if (id == BLK_VARNISH)      return MAT_VARNISH;
     if (id == BLK_MUD)          return MAT_MUD;
