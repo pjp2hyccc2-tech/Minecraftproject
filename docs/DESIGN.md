@@ -12,7 +12,7 @@ sound, the feeling of being watched — not gore.
 
 ## 1. Story
 
-Present day, the night of 2 → 3 November. **ファミリーレストラン「ひだまり」** stands on a dark stretch of the national
+Present day, a week of nights: **十一月三日（火）〜九日（月）**. **ファミリーレストラン「ひだまり」** stands on a dark stretch of the national
 highway (国道), right at a curve where people keep dying (魔のカーブ). Since the restaurant stopped running 24 hours, the
 closing crew keeps reporting things: **the automatic door they locked opens by itself with its chime, the taps run with
 nobody there, the menus on the tables are found scattered over the floor**, call buttons ring at empty tables, plates
@@ -35,22 +35,58 @@ The dead of HIDAMARI (their names appear on the photos; the medium tells their s
 | 鏡の女 the woman in the mirror | `mirror_woman` | 白石 玲子 (31) | a regular who collapsed in the women's restroom in 2015 and was found in the morning with the tap still running. She is on *the other side* of the mirror. |
 | 店長 the manager | `manager` | 森田 浩一 (47) | ran the 24-hour store alone at night for years; died of overwork at his desk in 2019 (過労死). After that the store stopped opening at night. He still watches the security monitors — and he still closes the store. |
 
-**Flow**
-1. **Intro** (≈ 40 s, skippable after the first time): black, lines of text one by one (date, place, the report), then
-   the parking lot: rain has just stopped, the pole sign flickers, the medium stands by her car. Dialogue (subtitles
-   with her portrait), she hands over: 霊写機 (10 film), 懐中電灯, お札 ×3, 店の鍵. Objective appears.
-2. **Investigation** (free order): photograph the five spirits — visitor, waitress, chef, child, mirror woman.
-   Photos can be handed to the medium at any time (she reads each name and tells its story).
-3. **Closing time** (after the fifth valid photo): the store PA chimes 「本日の営業は、終了いたしました」, every light in the
-   store comes on by itself, the store music plays warped, the call display shows 「閉店」. The manager wakes and
-   hunts with the security cameras. Photograph him.
-4. **Back to the medium** with all six names → **除霊 (exorcism)**, an in-world sequence: she walks in to table 7,
-   lays the six photos on the table between candles and chants; one by one each spirit stands at the table, its photo
-   burns, it fades into light; the lights flicker on; the automatic door opens and closes one last time with its chime
-   (the visitor leaving); 「……ありがとうございました」 in the waitress's voice. Dawn breaks. Ending text, credits.
-5. **Endings**: **送り (good)** — all six sent; text varies with how many お札 you used (0 used = 「完璧な夜」).
-   **相席 (bad)** — caught with no お札 left: you sit at table 7, the waitress puts a glass of water in front of you:
-   「いらっしゃいませ。……お一人様ですね」. 「その夜から、ひだまりの七番テーブルの呼び出しボタンは、二度鳴るようになった。」
+**Flow — seven nights** (`game/Nights`, `game/Week`; the user asked for a week, one spirit a night, the first night only
+watching the 霊障)
+1. **Intro** (the first night only; ≈ 40 s, skippable after the first time): black, the first night's card
+   「一日目の夜」「十一月三日（火）」, four lines of text (the place, the reports, "a medium hired you — every night, for
+   seven nights"), then the parking lot: rain has just stopped, the pole sign flickers, the medium stands by her car.
+   Dialogue (subtitles with her portrait), she hands over: 霊写機 (10 film), 懐中電灯, お札 ×3 (**for the whole week**),
+   店の鍵 — and tonight's task: photograph nothing, go and see what happens in there.
+2. **Every night** begins the same way: the restaurant is reset (`Fixtures.resetAll`), the player stands at `spawn` by
+   the medium's car, the camera's film topped up to 10 (「フィルムは足しておいたわ」). The screen holds black with the
+   **title card** (「二日目の夜」 + 「十一月四日（水）」), the lot fades in under it, the medium speaks the night's opening
+   lines (hints about tonight's signs; the player is held still; SPACE skips). Then the night is the player's: they go
+   in and work, and **return to the medium to end the night** — she reads the photo's name, tells that spirit's story,
+   says goodnight → black → the next night's card.
+3. **Night 1 — 観察の夜**: no spirit manifests and none can be photographed (a shot uses film and shows nothing — now
+   and then a ghost overlay). The director stages the 霊障 around the player at a steady, readable pace (§3.12).
+   Objective **「霊障を確かめる n/5」**. A phenomenon counts as **witnessed** when it happens within 18 blocks of the
+   player and the player is in the same room or has a line of sight to it (sound alone in the same room counts;
+   lasting ones — taps running, a glass on a table, scattered menus, the turned bear, footprints — count while they
+   last; the PA and the store speakers count anywhere inside). Each kind counts once; the HUD shows a short line
+   (「記録：閉めたはずの自動ドアが開いた」) and the report note's list ticks it. After five: 「霊媒師のもとへ戻る」; at
+   the car she explains: there are six of them; one a night; tomorrow, the one who comes through the door at two.
+4. **Nights 2–7: one spirit a night** — 2 来店者, 3 給仕, 4 かくれんぼの子, 5 鏡の女, 6 料理長, 7 店長. Only tonight's
+   spirit exists (the bound ones are gone, the later ones dormant). **It does not appear at once**: it shows itself
+   (fading in) only after the player has been inside 60–90 s (rolled each night) **and** has witnessed two of its signs
+   (after 4 minutes one sign is enough, after 6 none). The director plays mostly its signs — where the player can
+   witness them, else (a lead) the nearest place they can happen — and a few quiet general ones. So each night is:
+   notice the signs → work out where it is → a valid photo (§3.1 unchanged) without being noticed. Objective:
+   「異変を探る」 → 「<role>を撮影する」 → with its photo 「霊媒師のもとへ戻る」.
+
+   | night | spirit | its signs | then |
+   |---|---|---|---|
+   | 2 十一月四日（水） | visitor | the 2:00 cue 90–150 s after the player first went in (a motorbike far away, tyres screaming, an impact, silence; heard everywhere), the outer and inner auto doors opening for nobody with the chime, wet footprints toward table 7, table 7's call button. Before the cue, once: the register phone or table 7's button | he arrives 13 s after the cue (his cycle, §5) and again every 2–3 min until photographed |
+   | 3 十一月五日（木） | waitress | glasses of water appearing on empty tables, 「いらっしゃいませ」 from the dark, a tray clattering | she begins her rounds (incl. the bow when an auto door opens) |
+   | 4 十一月六日（金） | child | menus scattered off a table, giggles right behind the player, a ball bouncing / the toy squeak in the kids' corner, the bear turned to face you | 「もういいかい」 from nowhere: her hide-and-seek begins |
+   | 5 十一月七日（土） | mirror woman | the women's taps running (needed: she comes once you have heard the water), sobbing from the mirror, the occupied stall knocking | she is in the cavity behind the mirror |
+   | 6 十一月八日（日） | chef | a plate smashing in the kitchen, the gas range igniting by itself, chopping at his board that stops when you come near | he is at his board |
+   | 7 十一月九日（月） | manager | **closing time** 7 s after the player comes in: the PA chime and 「本日の営業は、終了いたしました」, every light in the store on, the store music warped, the call display 「閉店」; then a security camera's LED turning red, keys jingling in the corridor | he wakes and closes the store (§5 phase 2); the cameras are his eyes |
+5. **Caught** (§3.8): you wake by the car, お札 −1, 霊障 +1, and the night goes on with its spirit back at its routine.
+   Caught with none left: 相席.
+6. **The last night**: after the manager's photo the store goes quiet; back to the medium with it → she reads his name
+   and story → **除霊 (exorcism)** with all six photos, an in-world sequence: she walks in to table 7, lays the six
+   photos on the table between candles and chants; one by one each spirit stands at the table, its photo burns, it
+   fades into light; the lights flicker on; the automatic door opens and closes one last time with its chime (the
+   visitor leaving); 「……ありがとうございました」 in the waitress's voice. Dawn breaks. Ending text, credits.
+7. **Endings**: **送り (good)** — all six sent; text varies with how many お札 were used over the week (0 used =
+   「完璧な夜」). **相席 (bad)** — caught with no お札 left: you sit at table 7, the waitress puts a glass of water in
+   front of you: 「いらっしゃいませ。……お一人様ですね」. 「その夜から、ひだまりの七番テーブルの呼び出しボタンは、二度鳴る
+   ようになった。」
+8. **Save and quit** resumes at the start of the current night (title card, her lines; the photos, notes and お札 are
+   kept; the night's signs and its spirit start again). The album's 「七夜」 page shows the week: each night's date and
+   who was sent on it. Debug: `/reisatsu debug night <1..7>` jumps to the start of a night (the nights before it done),
+   `debug manifest`, `debug talk`, `debug closing` (night 7's closing time where you stand).
 
 The medium's rules (撮影の心得; shown in the intro dialogue, in the HUD hint list and on her note):
 一、霊に気付かれてはならない。気付かれた霊は、写真に写らない。
@@ -197,8 +233,9 @@ the register drawer, a staff locker, the walk-in fridge) · `key_office` (in the
   and is also kept in the album.
 
 ### 3.2 Album 霊撮帳 (key **J**)
-A notebook GUI: six silhouette slots (filled with the photo and the red name once captured), all shots taken (empty and
-failed ones too), the notes found, the medium's rules. Clicking a photo shows it large.
+A notebook GUI: six silhouette slots (filled with the photo and the red name once captured, each labelled with its
+night — 「二日目・送った」), all shots taken (empty and failed ones too), the notes found, the medium's rules, and the
+week (「七夜」: every night's date and who was sent on it). Clicking a photo shows it large.
 
 ### 3.3 Awareness (stealth)
 Every spirit keeps an awareness 0..1 of the player:
@@ -245,8 +282,9 @@ lights the finder image — and makes you conspicuous).
 
 ### 3.8 Caught, お札 and the medium
 Caught = the spirit's jump scare (full-screen face, 0.6 s, `game.jumpscare`) → black → `game.caught` → you wake at
-`wake` beside the car; the medium has burnt an お札 (`item.ofuda_burn`, 「……間に合ってよかった」). お札 −1, 霊障 +1, the
-spirit returns to its routine. **Caught with no お札 left = 相席 ending.** The HUD shows the お札 count.
+`wake` beside the car; the medium has burnt an お札 (`item.ofuda_burn`, 「……間に合ってよかった」). お札 −1 (three for the
+whole week), 霊障 +1, the spirit returns to its routine and the night goes on. **Caught with no お札 left = 相席 ending.**
+The HUD shows the お札 count.
 
 ### 3.9 Power: the breaker panel 分電盤 (`breaker_panel`)
 Right-click opens a small GUI with switches (big clunks): `dining` (dining + waiting + vestibule lights), `kitchen`,
@@ -272,8 +310,12 @@ everything easier to see — for you and for them. Poltergeist events can trip a
 restroom: 「鏡　拭いても曇る」「3番個室　開かない」) · `medium` 霊媒師のメモ (the rules, given at the start).
 
 ### 3.12 Director (poltergeist, 霊障)
-Server-side pacing by area, fear, 霊障 level and time since the last event; never spam, never two big events within 20
-s, quiet stretches matter. Events (each also feeds the fear and the HUD's witness list in the report note):
+Server-side pacing by night (§1 Flow): **night 1** one phenomenon every 25–45 s around the player (40–70 s once five
+were seen), never two big ones within 15 s, chosen where the player can witness it — near their area, about one time
+in three behind them — preferring kinds not seen yet; **nights 2–7** a sign of the night's spirit every 20–32 s until it
+shows (then only now and then), a quiet general one every 60–120 s. Nothing on top of a chase, nothing during the
+medium's scenes, nothing before the player has gone in. Witnessing (§1 Flow 3) is `Director.canWitness`; every kind
+of the report's list also ticks the report note. Events (`/reisatsu debug event <id>`):
 the outer auto door opens by itself with the chime · taps turn on (kitchen, restrooms) · **menus fly off a table and
 scatter** (flutter particles, `menu_scattered` decals) · call buttons ring at empty tables (the call display shows the
 number) · chairs slide / fall · lights flicker, a tube bursts, a circuit trips · the store music starts (warped) · the
@@ -282,11 +324,16 @@ on to static · the hand dryer roars in an empty restroom · the drink bar pours
 kitchen · knocking from inside the walk-in fridge / the occupied stall · the stuffed bear has turned to face you ·
 glasses of water appear on empty tables · wet footprints from the door to table 7 · the menu board outside reads
 「まだ　いますか」 · a car passes on the wet road · 2:00: a motorbike far away, tyres screaming, an impact, silence —
-then the door opens (the visitor arrives).
+then the door opens (the visitor arrives). The spirits' signs: 「いらっしゃいませ」 from the dark (`greet`), a tray
+clattering (`tray`), a giggle right behind you (`giggle`), a ball / the toy squeak (`ball`), sobbing from the mirror
+(`sob`), the women's taps (`taps_w`), the gas lighting itself (`gas`), chopping that stops as you come near (`chop`),
+keys in the corridor (`keys`), a camera's red LED (`camera`). In a dark room "the lights flicker" means the dead tubes
+stutter on for a moment.
 
 ### 3.13 HUD
-Bottom right: film left, お札 left (icons). Top left: objective (`霊を撮影する 2/5`, later `店長を撮影する`, `霊媒師の
-もとへ戻る`). The awareness eye. The breath gauge while holding. Subtitles for voices and important sounds (bottom
+Bottom right: film left, お札 left (icons). Top left: tonight's objective (`霊障を確かめる 3/5`; `異変を探る`, then
+`料理長を撮影する`; `霊媒師のもとへ戻る`) and under it, for a few seconds, `記録：…` when something that counts tonight was
+witnessed. The night's title card (black, then the lot fading in under it). The awareness eye. The breath gauge while holding. Subtitles for voices and important sounds (bottom
 centre). Area name when entering a room the first time (small, fading). Controls hint after the intro.
 
 ### 3.14 Controls
@@ -327,7 +374,7 @@ per spirit below, **always 1.0 in the finder**, plus brief flickers to higher al
 | `medium_car` | (the car) | 1.6×1.5 | normal | old dark-green kei car (軽自動車), wet, a dim dome light inside, a small omamori hanging from the mirror | static (no AI); 0 CLOSED, 1 DOOR_OPEN |
 
 ### Behaviour (server) and photo windows
-* **visitor** — arrives every 3–5 min (first at 2:00 with the motorbike/crash sound cue): spawns at `visitor_spawn`,
+* **visitor** — (night 2) arrives every 2–3 min (first at 2:00 with the motorbike/crash sound cue): spawns at `visitor_spawn`,
   walks the `visitor_path` (the outer and inner auto doors open with the chime), sits at `seat_7` (SIT), presses
   `button_7` (PRESS) every 30–60 s, waits 2–3 min, fades; the chair is left pulled out and the footprints dry slowly.
   Sight cone 50°, range ×0.8. Noticed → the auto doors lock, he stands and LUNGEs (fast, short range 8). Photo window:
@@ -342,7 +389,7 @@ per spirit below, **always 1.0 in the finder**, plus brief flickers to higher al
   PLATE at `chef_pass` (6 s, head bowed: cone 30° downward, range 3, rings the pass bell). Hearing ×1.5 (noise in the
   kitchen). Noticed → CHASE inside the kitchen and corridor only (fast), roars, slams the cleaver. Photo window:
   **through the pass window from the dining room while he PLATEs**, or from the side at the stove.
-* **child** — when you first enter the customer area: 「もういいかい」 from nowhere. Plays hide-and-seek: picks one of
+* **child** — when she shows herself (night 4): 「もういいかい」 from nowhere. Plays hide-and-seek: picks one of
   `child_hides`, runs there (running feet, a chair scrapes), HIDEs. Every 6–10 s she PEEKs for 2 s (cone 70°, range 9):
   **if she sees you during a peek: FOUND 「みーつけた」** — not a capture: she giggles, runs to a new hide and **calls the
   nearest other spirit to your position** (its awareness +0.5). Every few minutes she COUNTs at `child_count` (blind,
@@ -360,7 +407,8 @@ per spirit below, **always 1.0 in the finder**, plus brief flickers to higher al
   circuit off he is blind, gets up, walks to the breaker and turns it back on (STAND/WALK, LOOK). Photo window (phase
   1): his left profile through the office window, or at the breaker. Phase 2 (closing time): he patrols
   `manager_route` (WALK, LOOK, BOW at the entrance 「本日の営業は、終了いたしました」), cameras still his eyes, hearing ×1.3;
-  photo window: BOW, LOOK away, or catching him at the breaker after you cut the cameras.
+  photo window: BOW, LOOK away, or catching him at the breaker after you cut the cameras. On the last night he wakes
+  straight into phase 2 once closing time is over.
 * **medium** — stands at `medium`, faces the player, TALKs when right-clicked: hints for the next objective, accepts
   photos (reads the name, tells the story: §1), PRAYs during the exorcism.
 
