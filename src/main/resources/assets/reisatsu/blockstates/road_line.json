@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "reisatsu:block/road_line"
+    },
+    "axis=x": {
+      "model": "reisatsu:block/road_line",
+      "y": 90
+    }
+  }
+}

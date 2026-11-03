@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/chevron_sign"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/chevron_sign",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/chevron_sign",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/chevron_sign",
+      "y": 270
+    }
+  }
+}

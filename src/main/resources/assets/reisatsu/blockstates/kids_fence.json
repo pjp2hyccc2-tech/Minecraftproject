@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/kids_fence"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/kids_fence",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/kids_fence",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/kids_fence",
+      "y": 270
+    }
+  }
+}

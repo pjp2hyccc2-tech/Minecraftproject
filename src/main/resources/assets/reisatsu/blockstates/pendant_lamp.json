@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "reisatsu:block/pendant_lamp"
+    },
+    "lit=true": {
+      "model": "reisatsu:block/pendant_lamp_lit"
+    }
+  }
+}

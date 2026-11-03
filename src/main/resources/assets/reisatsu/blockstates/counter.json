@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/counter"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/counter",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/counter",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/counter",
+      "y": 270
+    }
+  }
+}

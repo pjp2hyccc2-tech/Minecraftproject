@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,part=pole": {
+      "model": "reisatsu:block/utility_pole_pole"
+    },
+    "facing=north,part=top": {
+      "model": "reisatsu:block/utility_pole_top"
+    },
+    "facing=east,part=pole": {
+      "model": "reisatsu:block/utility_pole_pole",
+      "y": 90
+    },
+    "facing=east,part=top": {
+      "model": "reisatsu:block/utility_pole_top",
+      "y": 90
+    },
+    "facing=south,part=pole": {
+      "model": "reisatsu:block/utility_pole_pole",
+      "y": 180
+    },
+    "facing=south,part=top": {
+      "model": "reisatsu:block/utility_pole_top",
+      "y": 180
+    },
+    "facing=west,part=pole": {
+      "model": "reisatsu:block/utility_pole_pole",
+      "y": 270
+    },
+    "facing=west,part=top": {
+      "model": "reisatsu:block/utility_pole_top",
+      "y": 270
+    }
+  }
+}

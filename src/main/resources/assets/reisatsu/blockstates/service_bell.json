@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/service_bell"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/service_bell",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/service_bell",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/service_bell",
+      "y": 270
+    }
+  }
+}

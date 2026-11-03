@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/cleaning_cart"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/cleaning_cart",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/cleaning_cart",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/cleaning_cart",
+      "y": 270
+    }
+  }
+}

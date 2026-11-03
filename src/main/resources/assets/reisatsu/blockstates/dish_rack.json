@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/dish_rack"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/dish_rack",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/dish_rack",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/dish_rack",
+      "y": 270
+    }
+  }
+}

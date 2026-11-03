@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/bulletin_board"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/bulletin_board",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/bulletin_board",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/bulletin_board",
+      "y": 270
+    }
+  }
+}

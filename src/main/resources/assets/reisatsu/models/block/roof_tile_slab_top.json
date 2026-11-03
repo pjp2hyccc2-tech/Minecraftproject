@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "reisatsu:block/roof_tile",
+    "top": "reisatsu:block/roof_tile",
+    "side": "reisatsu:block/roof_tile"
+  }
+}

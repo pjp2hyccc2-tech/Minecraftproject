@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "reisatsu:block/wallpaper",
+    "north": "reisatsu:block/facade_brick",
+    "south": "reisatsu:block/wallpaper",
+    "east": "reisatsu:block/wallpaper",
+    "west": "reisatsu:block/wallpaper",
+    "up": "reisatsu:block/wallpaper",
+    "down": "reisatsu:block/wallpaper"
+  }
+}

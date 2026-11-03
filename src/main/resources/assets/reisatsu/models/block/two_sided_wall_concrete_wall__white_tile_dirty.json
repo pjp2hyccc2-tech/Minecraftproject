@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "reisatsu:block/white_tile_dirty",
+    "north": "reisatsu:block/concrete_wall",
+    "south": "reisatsu:block/white_tile_dirty",
+    "east": "reisatsu:block/white_tile_dirty",
+    "west": "reisatsu:block/white_tile_dirty",
+    "up": "reisatsu:block/white_tile_dirty",
+    "down": "reisatsu:block/white_tile_dirty"
+  }
+}

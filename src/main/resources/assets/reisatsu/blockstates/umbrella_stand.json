@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/umbrella_stand"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/umbrella_stand",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/umbrella_stand",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/umbrella_stand",
+      "y": 270
+    }
+  }
+}
