@@ -75,10 +75,13 @@ public class PropBlock extends FacingBlock {
         this.inside = b.inside;
         this.animate = b.animate;
         this.tick = b.tick;
-        this.customCollision = b.collisionBox != null;
+        this.customCollision = !b.collisionBoxes.isEmpty();
         if (customCollision) {
-            double[] c = b.collisionBox;
-            for (Direction d : Direction.Plane.HORIZONTAL) collisionShapes[d.get2DDataValue()] = rotate(c[0], c[1], c[2], c[3], c[4], c[5], d);
+            for (Direction d : Direction.Plane.HORIZONTAL) {
+                VoxelShape shape = Shapes.empty();
+                for (double[] c : b.collisionBoxes) shape = Shapes.or(shape, rotate(c[0], c[1], c[2], c[3], c[4], c[5], d));
+                collisionShapes[d.get2DDataValue()] = shape;
+            }
         }
         BlockState s = defaultBlockState();
         for (Property<?> p : b.extra) s = defaultValue(s, p);
@@ -154,7 +157,7 @@ public class PropBlock extends FacingBlock {
         final String id;
         final Properties properties;
         double[] box = {0, 0, 0, 16, 16, 16};
-        double[] collisionBox;
+        final List<double[]> collisionBoxes = new ArrayList<>();
         final List<Property<?>> extra = new ArrayList<>();
         boolean collide = true;
         boolean seeThrough;
@@ -174,9 +177,9 @@ public class PropBlock extends FacingBlock {
             return this;
         }
 
-        /** A collision box different from the outline (pixels, facing north). */
+        /** A collision box different from the outline (pixels, facing north); several calls make a union. */
         public Builder collision(double x1, double y1, double z1, double x2, double y2, double z2) {
-            collisionBox = new double[]{x1, y1, z1, x2, y2, z2};
+            collisionBoxes.add(new double[]{x1, y1, z1, x2, y2, z2});
             return this;
         }
 

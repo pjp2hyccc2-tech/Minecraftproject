@@ -89,16 +89,20 @@ public final class Site {
         return Math.abs(dx) > Math.abs(dz) ? net.minecraft.core.Direction.Axis.Z : net.minecraft.core.Direction.Axis.X;
     }
 
-    /** Integer hash noise (deterministic, seed independent). */
+    /** Integer hash (deterministic, seed independent; a 64-bit finaliser, so neighbouring inputs are unrelated). */
     public static int hash(int x, int z, int salt) {
-        int h = x * 374761393 + z * 668265263 + salt * 1442695041;
-        h = (h ^ (h >>> 13)) * 1274126177;
-        return h ^ (h >>> 16);
+        long k = x * 0x9E3779B97F4A7C15L ^ z * 0xC2B2AE3D27D4EB4FL ^ salt * 0x165667B19E3779F9L;
+        k ^= k >>> 33;
+        k *= 0xFF51AFD7ED558CCDL;
+        k ^= k >>> 33;
+        k *= 0xC4CEB9FE1A85EC53L;
+        k ^= k >>> 33;
+        return (int) k;
     }
 
     /** 0..1 */
     public static double rand(int x, int z, int salt) {
-        return (hash(x, z, salt) & 0xFFFFFF) / (double) 0x1000000;
+        return (hash(x, z, salt) >>> 8) / (double) (1 << 24);
     }
 
     /** Smooth value noise 0..1 with the given cell size. */

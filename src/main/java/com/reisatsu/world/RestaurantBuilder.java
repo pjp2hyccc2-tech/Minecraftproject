@@ -34,6 +34,11 @@ public final class RestaurantBuilder {
     public static final int FLOOR = Layout.FEET_Y - 1, Y = Layout.FEET_Y, CEIL = Layout.FEET_Y + 4;
     static final Direction N = Direction.NORTH, S = Direction.SOUTH, E = Direction.EAST, W = Direction.WEST;
 
+    /** The breaker panel, on the corridor side of the wall between the staff room and the office. */
+    public static final BlockPos BREAKER = new BlockPos(7, Y + 1, 8);
+    /** The pass window segment that carries the pickup bell. */
+    public static final int PASS_BELL_X = 24;
+
     /** Downlights over the register on the night circuit: always on (unless burst). */
     public static final Set<BlockPos> NIGHT_LIGHTS = Set.of(new BlockPos(12, CEIL, 24), new BlockPos(13, CEIL, 23));
     /** Soffit downlights under the front eave (x positions at z 31). */
@@ -113,7 +118,8 @@ public final class RestaurantBuilder {
     static BlockState floorOf(String room, int x, int z) {
         return switch (room) {
             case "vestibule" -> st(ModBlocks.VESTIBULE_FLOOR);
-            case "waiting", "dining", "staff", "office" -> st(ModBlocks.DINING_FLOOR);
+            case "waiting", "dining" -> st(ModBlocks.DINING_FLOOR);
+            case "staff", "office" -> st(ModBlocks.DINING_FLOOR_WORN);
             case "kitchen", "fridge", "corridor", "storage" -> st(ModBlocks.KITCHEN_FLOOR);
             case "mens", "womens" -> st(ModBlocks.RESTROOM_FLOOR);
             case "cavity" -> st(ModBlocks.RESTROOM_FLOOR_DARK);
@@ -125,29 +131,65 @@ public final class RestaurantBuilder {
         return switch (room) {
             case "fridge" -> st(ModBlocks.STAINLESS);
             case "cavity" -> st(ModBlocks.CEILING_TILE_STAINED);
-            case "staff", "office", "corridor", "storage", "kitchen" -> chance(x, CEIL, z, 3, 0.22) ? st(ModBlocks.CEILING_TILE_STAINED) : st(ModBlocks.CEILING_TILE);
-            default -> chance(x, CEIL, z, 3, 0.10) ? st(ModBlocks.CEILING_TILE_STAINED) : st(ModBlocks.CEILING_TILE);
+            default -> stainedCeiling(room, x, z) ? st(ModBlocks.CEILING_TILE_STAINED) : st(ModBlocks.CEILING_TILE);
         };
+    }
+
+    // ------------------------------------------------------------------------------------------------ damage
+    /** Where the roof leaks: water stains spread on the ceiling around these and run down the walls nearby. */
+    static final int[][] LEAKS = {{6, 9}, {35, 4}, {28, 20}, {11, 19}, {3, 13}, {12, 4}};
+
+    static double leakDistance(int x, int z) {
+        double best = 99;
+        for (int[] l : LEAKS) best = Math.min(best, Math.sqrt((x - l[0]) * (x - l[0]) + (z - l[1]) * (z - l[1])));
+        return best;
+    }
+
+    /** Ceiling tiles: rings around the leaks, and a few small clustered patches elsewhere (none in rows). */
+    static boolean stainedCeiling(String room, int x, int z) {
+        double d = leakDistance(x, z);
+        if (d < 1.1) return true;
+        if (d < 2.0) return Site.rand(x, z, 301) < 0.4;
+        double threshold = switch (room) {
+            case "kitchen", "corridor", "storage", "mens", "womens" -> 0.78;
+            case "staff", "office" -> 0.80;
+            default -> 0.84;
+        };
+        return Site.noise(x + 41.0, z + 17.0, 2.6, 302) > threshold && Site.rand(x, z, 303) < 0.8;
+    }
+
+    /** A damaged wall face (stained wallpaper / dirty tiles): patches along the wall, water runs down below a leak. */
+    static boolean damagedWall(String room, int wx, int y, int wz, int nx, int nz, double threshold) {
+        double d = leakDistance(nx, nz);
+        int side = (nx - wx) * 3 + (nz - wz) * 7;
+        if (d < 2.4) {
+            double p = y >= Y + 2 ? 0.75 : y == Y + 1 ? 0.45 : 0.2;
+            if (Site.rand(wx * 5 + side, wz * 3 + y * 11, 311) < p) return true;
+        }
+        boolean alongX = wz != nz;
+        double along = alongX ? wx : wz;
+        double across = alongX ? wz : wx;
+        double n = Site.noise(along + side * 31.0 + across * 7.0, y * 1.9, 2.3, 312 + room.hashCode() % 7);
+        return n > threshold && Site.rand(wx + side, wz * 13 + y, 313) < 0.85;
     }
 
     /** The finish of a wall face seen from a room cell (nx, nz) at height y; room null = outside. */
     static Props.Face face(String room, int nx, int y, int nz, int wx, int wz) {
         if (room == null) return y == Y ? Props.Face.FACADE_BRICK : Props.Face.EXTERIOR_WALL;
         boolean low = y == Y;
-        int salt = (wx * 3 + wz * 5) ^ (nx * 11 + nz * 7);
         return switch (room) {
             case "dining", "waiting", "vestibule" -> low ? Props.Face.WAINSCOT
-                    : chance(wx, y, wz, 40 + salt, 0.07) ? Props.Face.WALLPAPER_STAINED : Props.Face.WALLPAPER;
+                    : damagedWall(room, wx, y, wz, nx, nz, 0.84) ? Props.Face.WALLPAPER_STAINED : Props.Face.WALLPAPER;
             case "staff", "office" -> low ? Props.Face.WAINSCOT
-                    : chance(wx, y, wz, 41 + salt, 0.35) ? Props.Face.WALLPAPER_STAINED : Props.Face.WALLPAPER;
-            case "corridor" -> low ? Props.Face.WHITE_TILE_DIRTY
-                    : chance(wx, y, wz, 42 + salt, 0.40) ? Props.Face.WALLPAPER_STAINED : Props.Face.WALLPAPER;
+                    : damagedWall(room, wx, y, wz, nx, nz, 0.79) ? Props.Face.WALLPAPER_STAINED : Props.Face.WALLPAPER;
+            case "corridor" -> low ? (damagedWall(room, wx, y, wz, nx, nz, 0.78) ? Props.Face.WHITE_TILE_DIRTY : Props.Face.WHITE_TILE)
+                    : damagedWall(room, wx, y, wz, nx, nz, 0.78) ? Props.Face.WALLPAPER_STAINED : Props.Face.WALLPAPER;
             case "storage" -> Props.Face.CONCRETE_WALL;
             case "kitchen" -> (nz == 1 && nx >= 19 && nx <= 33) || (nx == 39 && nz <= 7 && y <= Y + 2) ? Props.Face.STAINLESS
-                    : (low || chance(wx, y, wz, 43 + salt, 0.30)) ? Props.Face.WHITE_TILE_DIRTY : Props.Face.WHITE_TILE;
+                    : damagedWall(room, wx, y, wz, nx, nz, low ? 0.68 : 0.75) ? Props.Face.WHITE_TILE_DIRTY : Props.Face.WHITE_TILE;
             case "fridge" -> Props.Face.STAINLESS;
-            case "mens", "womens" -> chance(wx, y, wz, 44 + salt, 0.10) ? Props.Face.WHITE_TILE_DIRTY : Props.Face.WHITE_TILE;
-            case "cavity" -> chance(wx, y, wz, 45 + salt, 0.15) ? Props.Face.WALLPAPER_STAINED : Props.Face.WHITE_TILE_DIRTY;
+            case "mens", "womens" -> damagedWall(room, wx, y, wz, nx, nz, 0.80) ? Props.Face.WHITE_TILE_DIRTY : Props.Face.WHITE_TILE;
+            case "cavity" -> damagedWall(room, wx, y, wz, nx, nz, 0.62) ? Props.Face.WALLPAPER_STAINED : Props.Face.WHITE_TILE_DIRTY;
             default -> Props.Face.CONCRETE_WALL;
         };
     }
@@ -276,8 +318,10 @@ public final class RestaurantBuilder {
                 wallColumn(s, x, z, Y + 2, Y + 3);
             }
             case 'P' -> {
-                s.set(x, Y, z, f(ModBlocks.PASS_SHELF, N).setValue(Props.LIT, Circuit.KITCHEN.startOn()));
-                s.set(x, Y + 1, z, air);
+                // counter-height wall, the pass shelf with its heat lamp (one segment carries the pickup bell), open above
+                wallColumn(s, x, z, Y, Y);
+                if (x == PASS_BELL_X) s.set(x, Y + 1, z, f(ModBlocks.PASS_BELL, N));
+                else s.set(x, Y + 1, z, f(ModBlocks.PASS_SHELF, N).setValue(Props.LIT, Circuit.KITCHEN.startOn()));
                 s.set(x, Y + 2, z, air);
                 wallColumn(s, x, z, Y + 3, Y + 3);
             }
@@ -297,11 +341,7 @@ public final class RestaurantBuilder {
                 s.set(x, Y + 2, z, f(ModBlocks.MIRROR, S));
                 wallColumn(s, x, z, Y + 3, Y + 3);
             }
-            case 'E' -> {
-                wallColumn(s, x, z, Y, Y);
-                s.set(x, Y + 1, z, f(ModBlocks.BREAKER_PANEL, S));
-                wallColumn(s, x, z, Y + 2, Y + 3);
-            }
+            case 'E' -> wallColumn(s, x, z, Y, Y + 3);   // the breaker panel hangs on this wall, on the corridor side
             default -> wallColumn(s, x, z, Y, Y + 3);
         }
     }
@@ -312,10 +352,10 @@ public final class RestaurantBuilder {
             door(s, ModBlocks.STAFF_DOOR, x, z, N, DoorHingeSide.LEFT, false, null);
         } else if (x == 11 && z == 7) {
             s.set(x, FLOOR, z, st(ModBlocks.KITCHEN_FLOOR));
-            door(s, ModBlocks.OFFICE_DOOR, x, z, N, DoorHingeSide.RIGHT, false, lockedState(true));
+            door(s, ModBlocks.OFFICE_DOOR, x, z, N, DoorHingeSide.LEFT, false, lockedState(true));
         } else if (x == 14 && z == 9) {
             s.set(x, FLOOR, z, st(ModBlocks.KITCHEN_FLOOR));
-            door(s, ModBlocks.STAFF_DOOR, x, z, E, DoorHingeSide.RIGHT, false, null);
+            door(s, ModBlocks.STAFF_DOOR, x, z, E, DoorHingeSide.LEFT, false, null);
             // an open transom above the kitchen's back door: the chef (2.2 high) chases through it into the corridor
             s.set(x, Y + 2, z, Blocks.AIR.defaultBlockState());
         } else if (x == 3 && z == 10) {
@@ -326,7 +366,7 @@ public final class RestaurantBuilder {
             door(s, ModBlocks.RESTROOM_DOOR_M, x, z, N, DoorHingeSide.LEFT, false, null);
         } else if (x == 10 && z == 22) {
             s.set(x, FLOOR, z, st(ModBlocks.RESTROOM_FLOOR));
-            door(s, ModBlocks.RESTROOM_DOOR_W, x, z, N, DoorHingeSide.RIGHT, false, null);
+            door(s, ModBlocks.RESTROOM_DOOR_W, x, z, N, DoorHingeSide.LEFT, false, null);
         } else {
             door(s, ModBlocks.STAFF_DOOR, x, z, N, DoorHingeSide.LEFT, false, null);
         }
@@ -476,7 +516,7 @@ public final class RestaurantBuilder {
             for (int z = 27; z <= 29; z++) s.set(x, Y, z, f(ModBlocks.KIDS_MAT, N));
         s.set(10, Y, 28, f(ModBlocks.TOY_SHELF, E));
         s.set(10, Y, 29, f(ModBlocks.TOY_SHELF, E));
-        s.set(10, Y + 1, 28, f(ModBlocks.NOTE_PAPER, E));       // the crayon drawing (note "drawing")
+        s.set(9, Y, 27, f(ModBlocks.NOTE_PAPER, E));            // the crayon drawing, dropped by the toy shelves (note "drawing")
         s.set(13, Y, 29, f(ModBlocks.STUFFED_BEAR, N));
         s.set(13, Y, 26, f(ModBlocks.KIDS_FENCE, N));
         s.set(14, Y, 26, f(ModBlocks.KIDS_FENCE, N));
@@ -533,17 +573,16 @@ public final class RestaurantBuilder {
         }
         // the drink bar on the north wall (x 15..19) with its alcove, closed by a pillar at x 21
         for (int x = 15; x <= 19; x++) s.set(x, Y, 11, f(ModBlocks.COUNTER, S));
-        s.set(15, Y + 1, 11, f(ModBlocks.COFFEE_MACHINE, S));
+        s.set(15, Y + 1, 11, f(ModBlocks.CUP_SHELF, S));
         s.set(16, Y + 1, 11, f(ModBlocks.ICE_MACHINE, S));
         s.set(17, Y + 1, 11, f(ModBlocks.DRINK_BAR, S));
         s.set(18, Y + 1, 11, f(ModBlocks.DRINK_BAR, S));
-        s.set(19, Y + 1, 11, f(ModBlocks.SOUP_WARMER, S));
-        s.set(15, Y + 2, 11, f(ModBlocks.CUP_SHELF, S));
-        s.set(16, Y + 2, 11, f(ModBlocks.CUP_SHELF, S));
+        s.set(19, Y + 1, 11, f(ModBlocks.COFFEE_MACHINE, S));
         for (int y = Y; y < CEIL; y++) s.set(21, y, 11, st(ModBlocks.PILLAR));
         // the server station by the swing doors
         s.set(32, Y, 11, f(ModBlocks.SERVER_STATION, S));
-        s.set(33, Y, 11, f(ModBlocks.SERVER_STATION, S));
+        s.set(33, Y, 11, f(ModBlocks.COUNTER, S));
+        s.set(33, Y + 1, 11, f(ModBlocks.SOUP_WARMER, S));
         s.set(34, Y, 11, f(ModBlocks.KITCHEN_TRASH, S));
         s.set(31, Y, 11, f(ModBlocks.CLEANING_CART, S));
         // corners: plants
@@ -580,7 +619,7 @@ public final class RestaurantBuilder {
         Object[][] line = {
                 {20, ModBlocks.KITCHEN_COUNTER}, {21, ModBlocks.GAS_RANGE}, {22, ModBlocks.GAS_RANGE}, {23, ModBlocks.GRIDDLE},
                 {24, ModBlocks.KITCHEN_COUNTER}, {25, ModBlocks.GAS_RANGE}, {26, ModBlocks.GAS_RANGE}, {27, ModBlocks.KITCHEN_COUNTER},
-                {28, ModBlocks.FRYER}, {29, ModBlocks.FRYER}, {30, ModBlocks.KITCHEN_COUNTER}, {31, ModBlocks.POT_SHELF},
+                {28, ModBlocks.FRYER}, {29, ModBlocks.FRYER}, {30, ModBlocks.KITCHEN_COUNTER}, {31, ModBlocks.KITCHEN_COUNTER},
                 {32, ModBlocks.KITCHEN_COUNTER}};
         for (Object[] o : line) {
             @SuppressWarnings("unchecked") RegistryObject<? extends Block> b = (RegistryObject<? extends Block>) o[1];
@@ -595,7 +634,10 @@ public final class RestaurantBuilder {
         // west part: counters and shelves along the wall (the fire inspection record lies on the counter)
         s.set(15, Y, 5, f(ModBlocks.KITCHEN_COUNTER, E));
         s.set(15, Y, 6, f(ModBlocks.KITCHEN_COUNTER, E));
-        s.set(15, Y, 7, f(ModBlocks.POT_SHELF, E));
+        s.set(15, Y, 7, f(ModBlocks.KITCHEN_COUNTER, E));
+        s.set(15, Y + 1, 7, f(ModBlocks.POT_SHELF, E));
+        s.set(15, Y + 1, 6, f(ModBlocks.POT_SHELF, E));
+        s.set(32, Y + 1, 1, f(ModBlocks.POT_SHELF, S));
         s.set(15, Y + 1, 5, f(ModBlocks.NOTE_PAPER, E));          // note "fire"
         s.set(18, Y, 9, f(ModBlocks.PREP_TABLE, N));
         s.set(19, Y, 9, f(ModBlocks.PREP_TABLE, N));
@@ -612,13 +654,15 @@ public final class RestaurantBuilder {
         s.set(39, Y, 5, f(ModBlocks.KITCHEN_COUNTER, W));
         s.set(39, Y, 6, f(ModBlocks.DISH_RACK, W));
         s.set(39, Y, 7, f(ModBlocks.DISH_RACK, W));
-        for (int x = 33; x <= 37; x++) s.set(x, Y, 9, f(ModBlocks.POT_SHELF, N));
+        for (int x = 33; x <= 37; x++) {
+            s.set(x, Y, 9, f(ModBlocks.KITCHEN_COUNTER, N));
+            s.set(x, Y + 1, 9, f(ModBlocks.POT_SHELF, N));
+        }
         s.set(32, Y, 9, f(ModBlocks.KITCHEN_TRASH, N));
         s.set(38, Y, 9, f(ModBlocks.CARDBOARD_BOXES, N));
         s.set(39, Y, 9, f(ModBlocks.CARDBOARD_BOXES, W));
         s.set(39, Y + 1, 9, f(ModBlocks.CARDBOARD_BOXES, W));
         // the pass: the bell on the shelf (the shelves are part of the wall line)
-        s.set(24, Y + 1, 10, f(ModBlocks.PASS_BELL, N));
         s.set(16, Y + 3, 9, f(ModBlocks.EXIT_SIGN, E).setValue(Props.HANGING, true));
     }
 
@@ -650,7 +694,7 @@ public final class RestaurantBuilder {
         s.set(3, Y, 3, f(ModBlocks.FOLDING_CHAIR, E));
         s.set(3, Y, 4, f(ModBlocks.FOLDING_CHAIR, E));
         s.set(5, Y, 4, f(ModBlocks.FOLDING_CHAIR, W));
-        s.set(4, Y + 1, 3, f(ModBlocks.NOTE_PAPER, N));           // the handover notebook (note "handover")
+        s.set(6, Y + 1, 5, f(ModBlocks.NOTE_PAPER, W));           // the handover notebook, on the counter (note "handover")
         s.set(6, Y, 1, f(ModBlocks.CRT_TV, S));
         s.set(5, Y + 1, 6, f(ModBlocks.TIME_RECORDER, N));
         s.set(6, Y + 1, 3, f(ModBlocks.BULLETIN_BOARD, W));        // the 2009 news clipping (note "clipping")
@@ -664,7 +708,8 @@ public final class RestaurantBuilder {
         for (int z = 5; z <= 6; z++)
             for (int y = Y + 1; y <= Y + 2; y++) s.set(8, y, z, f(ModBlocks.SECURITY_MONITORS, E).setValue(Props.ON, cams));
         s.set(8, Y + 1, 3, f(ModBlocks.PC, E));
-        s.set(8, Y + 1, 4, f(ModBlocks.NOTE_PAPER, E));           // the manager's work diary (note "diary")
+        s.set(11, Y, 1, f(ModBlocks.COUNTER, S));
+        s.set(11, Y + 1, 1, f(ModBlocks.NOTE_PAPER, S));          // the manager's work diary, on the sideboard (note "diary")
         s.set(9, Y, 6, f(ModBlocks.OFFICE_CHAIR, W));
         s.set(12, Y, 1, f(ModBlocks.FILING_CABINET, S));
         s.set(13, Y, 1, f(ModBlocks.FILING_CABINET, S));
@@ -678,10 +723,12 @@ public final class RestaurantBuilder {
         s.set(5, Y + 1, 9, f(ModBlocks.CARDBOARD_BOXES, N));
         s.set(8, Y, 9, f(ModBlocks.CLEANING_CART, N));
         s.set(1, Y + 3, 8, f(ModBlocks.EXIT_SIGN, E));
+        s.set(BREAKER.getX(), BREAKER.getY(), BREAKER.getZ(), f(ModBlocks.BREAKER_PANEL, S));
         // ---- storage
         for (int z = 12; z <= 15; z++) {
-            s.set(1, Y, z, f(ModBlocks.POT_SHELF, E));
-            s.set(1, Y + 1, z, f(ModBlocks.CARDBOARD_BOXES, E));
+            s.set(1, Y, z, f(ModBlocks.CARDBOARD_BOXES, E));
+            s.set(1, Y + 1, z, f(ModBlocks.POT_SHELF, E));
+            s.set(1, Y + 2, z, f(ModBlocks.POT_SHELF, E));
         }
         s.set(5, Y, 12, f(ModBlocks.CARDBOARD_BOXES, W));
         s.set(5, Y, 13, f(ModBlocks.CARDBOARD_BOXES, W));

@@ -97,6 +97,8 @@ public final class ModBlocks {
 
     // ================================================================================================ surfaces
     public static final RegistryObject<Block> DINING_FLOOR = cube("dining_floor", MapColor.COLOR_BROWN, VINYL);
+    /** The staff room's and the office's floor: the dining floor, worn through. */
+    public static final RegistryObject<Block> DINING_FLOOR_WORN = cube("dining_floor_worn", MapColor.COLOR_BROWN, VINYL);
     public static final RegistryObject<Block> KITCHEN_FLOOR = cube("kitchen_floor", MapColor.TERRACOTTA_RED, KITCHEN);
     public static final RegistryObject<Block> RESTROOM_FLOOR = cube("restroom_floor", MapColor.QUARTZ, TILE);
     public static final RegistryObject<Block> RESTROOM_FLOOR_DARK = cube("restroom_floor_dark", MapColor.COLOR_GRAY, TILE);
@@ -174,21 +176,23 @@ public final class ModBlocks {
 
     // ================================================================================================ dining
     public static final RegistryObject<PropBlock> BOOTH_SEAT = prop("booth_seat", MapColor.COLOR_RED, SoundType.WOOL,
-            b -> b.box(0, 0, 0, 16, 16, 16).collision(0, 0, 0, 16, 7, 16));
+            b -> b.box(0, 0, 1, 16, 16, 16).collision(0, 0, 1, 16, 7.5, 13).collision(0, 0, 11, 16, 16, 16));
     public static final RegistryObject<PropBlock> BOOTH_PARTITION = prop("booth_partition", MapColor.NONE, SoundType.GLASS,
-            b -> b.box(0, 0, 12, 16, 16, 16));
+            b -> b.box(0, 0, 12, 16, 16, 15.5));
+    /** The table top is at 12 px: things on it (menu stand, call button, glasses) are blocks above with models from y -4. */
     public static final RegistryObject<PropBlock> RESTAURANT_TABLE = prop("restaurant_table", MapColor.COLOR_BROWN, SoundType.WOOD,
-            b -> b.box(0, 0, 0, 16, 16, 16).collision(0, 13, 0, 16, 16, 16));
+            b -> b.box(0, 0, 0, 16, 12, 16).collision(0, 10.5, 0, 16, 12, 16).collision(6.5, 0, 6.5, 9.5, 10.5, 9.5));
     public static final RegistryObject<PropBlock> RESTAURANT_CHAIR = prop("restaurant_chair", MapColor.COLOR_BROWN, SoundType.WOOD,
-            b -> b.box(2, 0, 2, 14, 16, 14).collision(2, 0, 2, 14, 9, 14).props(Props.FALLEN).inside(Behaviours::chairBump));
+            b -> b.box(3, 0, 2.5, 13, 15.5, 13).collision(3, 0, 2.5, 13, 9, 13).collision(3, 9, 11.5, 13, 15.5, 13)
+                    .props(Props.FALLEN).inside(Behaviours::chairBump));
     public static final RegistryObject<PropBlock> CALL_BUTTON = litProp("call_button", MapColor.QUARTZ, SoundType.STONE, when(Props.LIT, 3),
-            b -> b.box(5, 0, 5, 11, 3, 11).props(Props.LIT).noCollision().seeThrough().use(Behaviours::callButton));
+            b -> b.box(5.5, -4, 9.5, 10.5, -1, 13).props(Props.LIT).noCollision().seeThrough().use(Behaviours::callButton));
     public static final RegistryObject<PropBlock> MENU_STAND = prop("menu_stand", MapColor.COLOR_BROWN, SoundType.WOOD,
-            b -> b.box(3, 0, 4, 13, 9, 12).noCollision().seeThrough());
+            b -> b.box(3.5, -4, 8.4, 13, 5, 14.5).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> MENU_SCATTERED = prop("menu_scattered", MapColor.COLOR_ORANGE, PAPER,
             b -> b.box(0, 0, 0, 16, 1, 16).props(Props.VARIANT).noCollision().seeThrough().inside(Behaviours::menus));
     public static final RegistryObject<PropBlock> WATER_GLASS = prop("water_glass", MapColor.NONE, SoundType.GLASS,
-            b -> b.box(3, 0, 3, 13, 7, 13).props(Props.GLASSES).noCollision().seeThrough());
+            b -> b.box(3, -4, 3, 13, 0, 13).props(Props.GLASSES).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> BROKEN_PLATE = prop("broken_plate", MapColor.QUARTZ, SHARDS,
             b -> b.box(0, 0, 0, 16, 1, 16).noCollision().seeThrough().inside(Behaviours::shards));
     public static final RegistryObject<PropBlock> REGISTER = prop("register", MapColor.COLOR_GRAY, SoundType.METAL,
@@ -202,9 +206,9 @@ public final class ModBlocks {
     public static final RegistryObject<PropBlock> RESERVATION_BOOK = prop("reservation_book", MapColor.COLOR_RED, PAPER,
             b -> b.box(2, 0, 3, 14, 2, 13).noCollision().seeThrough().use(Behaviours::note));
     public static final RegistryObject<PropBlock> CAPSULE_MACHINE = prop("capsule_machine", MapColor.COLOR_RED, SoundType.METAL,
-            b -> b.box(2, 0, 3, 14, 16, 13));
+            b -> b.box(1.5, 0, 2.2, 14.5, 23, 13));
     public static final RegistryObject<PropBlock> WAITING_BENCH = prop("waiting_bench", MapColor.COLOR_RED, SoundType.WOOL,
-            b -> b.box(0, 0, 2, 16, 16, 16).collision(0, 0, 2, 16, 8, 16));
+            b -> b.box(0, 0, 3, 16, 7.5, 13));
     public static final RegistryObject<PropBlock> MAGAZINE_RACK = prop("magazine_rack", MapColor.COLOR_BROWN, SoundType.WOOD,
             b -> b.box(1, 0, 6, 15, 16, 16));
     public static final RegistryObject<PropBlock> UMBRELLA_STAND = prop("umbrella_stand", MapColor.METAL, SoundType.METAL,
@@ -225,17 +229,17 @@ public final class ModBlocks {
     public static final RegistryObject<PropBlock> CALL_DISPLAY = litProp("call_display", MapColor.COLOR_BLACK, SoundType.METAL, s -> 4,
             b -> b.box(0, 4, 13, 16, 14, 16).props(Props.NUMBER, Props.CLOSED).noCollision());
     public static final RegistryObject<PropBlock> PLANTER = prop("planter", MapColor.PLANT, SoundType.AZALEA_LEAVES,
-            b -> b.box(0, 0, 1, 16, 24, 15));
+            b -> b.box(0, 0, 2.5, 16, 24, 13.5));
     public static final RegistryObject<PropBlock> KIDS_MAT = prop("kids_mat", MapColor.COLOR_LIGHT_BLUE, SOFT,
             b -> b.box(0, 0, 0, 16, 1, 16).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> TOY_SHELF = prop("toy_shelf", MapColor.COLOR_YELLOW, SoundType.WOOD,
-            b -> b.box(0, 0, 4, 16, 16, 16));
+            b -> b.box(1, 0, 6, 15, 11.5, 13));
     public static final RegistryObject<PropBlock> STUFFED_BEAR = prop("stuffed_bear", MapColor.COLOR_BROWN, SoundType.WOOL,
             b -> b.box(3, 0, 3, 13, 11, 13).noCollision().seeThrough().use(Behaviours::bear));
     public static final RegistryObject<PropBlock> KIDS_FENCE = prop("kids_fence", MapColor.COLOR_YELLOW, SoundType.WOOD,
-            b -> b.box(0, 0, 7, 16, 12, 9));
+            b -> b.box(0, 0, 7, 16, 11, 9));
     public static final RegistryObject<PropBlock> HIGH_CHAIR = prop("high_chair", MapColor.WOOD, SoundType.WOOD,
-            b -> b.box(3, 0, 3, 13, 16, 13));
+            b -> b.box(2.5, 0, 1.5, 13.5, 16, 12.5));
 
     // ================================================================================================ kitchen
     public static final RegistryObject<PropBlock> GAS_RANGE = litProp("gas_range", MapColor.METAL, SoundType.METAL, when(Props.LIT, 9),
@@ -245,25 +249,28 @@ public final class ModBlocks {
     public static final RegistryObject<PropBlock> GRIDDLE = prop("griddle", MapColor.METAL, SoundType.METAL, b -> b);
     public static final RegistryObject<PropBlock> KITCHEN_COUNTER = prop("kitchen_counter", MapColor.METAL, SoundType.METAL, b -> b);
     public static final RegistryObject<PropBlock> EXHAUST_HOOD = prop("exhaust_hood", MapColor.METAL, SoundType.METAL,
-            b -> b.box(0, 4, 0, 16, 16, 16).noCollision());
+            b -> b.box(0, 5, 0, 16, 16, 16).noCollision());
+    /** A wall shelf (the wall on its back): hang it at chest height. */
     public static final RegistryObject<PropBlock> POT_SHELF = prop("pot_shelf", MapColor.METAL, SoundType.METAL,
-            b -> b.box(0, 0, 4, 16, 16, 16));
+            b -> b.box(0, 3, 8, 16, 13.5, 16));
     public static final RegistryObject<PropBlock> DISH_RACK = prop("dish_rack", MapColor.METAL, SoundType.METAL,
-            b -> b.box(0, 0, 2, 16, 16, 16));
+            b -> b.box(1, 0, 2, 15, 7.5, 14));
     public static final RegistryObject<PropBlock> KITCHEN_TRASH = prop("kitchen_trash", MapColor.COLOR_GRAY, SoundType.METAL,
             b -> b.box(2, 0, 2, 14, 14, 14));
     public static final RegistryObject<PropBlock> PREP_TABLE = prop("prep_table", MapColor.METAL, SoundType.METAL,
-            b -> b.box(0, 0, 0, 16, 16, 16).collision(0, 13, 0, 16, 16, 16));
+            b -> b.box(0, 0, 0, 16, 16, 16).collision(0, 14, 0, 16, 16, 16).collision(0, 0, 0, 16, 14, 2).collision(0, 0, 14, 16, 14, 16));
     public static final RegistryObject<PropBlock> CUTTING_BOARD = prop("cutting_board", MapColor.WOOD, SoundType.WOOD,
             b -> b.box(1, 0, 3, 15, 3, 13).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> KITCHEN_SINK = prop("kitchen_sink", MapColor.METAL, SoundType.METAL,
             b -> b.props(Props.RUNNING).use(Behaviours::tap).animate(Behaviours::tapWater));
     public static final RegistryObject<PropBlock> DISHWASHER = prop("dishwasher", MapColor.METAL, SoundType.METAL,
             b -> b.props(Props.RUNNING).animate(Behaviours::steam));
+    /** The pass: a shelf at counter height with the heat lamp over it, set into the pass window (one block high opening). */
     public static final RegistryObject<PropBlock> PASS_SHELF = litProp("pass_shelf", MapColor.METAL, SoundType.METAL, when(Props.LIT, 8),
-            b -> b.props(Props.LIT).seeThrough());
+            b -> b.collision(0, 0, 0, 16, 1.5, 16).collision(0, 13, 3, 16, 16, 13).props(Props.LIT).seeThrough());
+    /** The pickup bell with its own segment of the pass shelf (it takes one shelf position in the pass window). */
     public static final RegistryObject<PropBlock> PASS_BELL = prop("pass_bell", MapColor.GOLD, SoundType.METAL,
-            b -> b.box(5, 0, 5, 11, 4, 11).noCollision().seeThrough().use(Behaviours.tell("pass_bell", ModSounds.FIXTURE_PASS_BELL, 16)));
+            b -> b.box(0, 0, 0, 16, 5.3, 16).collision(0, 0, 0, 16, 1.5, 16).seeThrough().use(Behaviours.tell("pass_bell", ModSounds.FIXTURE_PASS_BELL, 16)));
     public static final RegistryObject<PropBlock> WALKIN_SHELF = prop("walkin_shelf", MapColor.METAL, SoundType.METAL,
             b -> b.box(0, 0, 2, 16, 16, 16));
     public static final RegistryObject<PropBlock> FROST = prop("frost", MapColor.ICE, SoundType.GLASS,
@@ -275,9 +282,9 @@ public final class ModBlocks {
     public static final RegistryObject<PropBlock> TIME_RECORDER = prop("time_recorder", MapColor.SAND, SoundType.METAL,
             b -> b.box(3, 2, 10, 13, 14, 16).noCollision().use(Behaviours.tell("time_recorder", ModSounds.FIXTURE_TIME_CARD, 6)));
     public static final RegistryObject<PropBlock> STAFF_TABLE = prop("staff_table", MapColor.SAND, SoundType.WOOD,
-            b -> b.box(0, 0, 0, 16, 16, 16).collision(0, 13, 0, 16, 16, 16));
+            b -> b.box(0, 0, 0, 16, 12, 16).collision(0, 10.5, 0, 16, 12, 16).collision(1, 0, 1, 15, 10.5, 15));
     public static final RegistryObject<PropBlock> FOLDING_CHAIR = prop("folding_chair", MapColor.METAL, SoundType.METAL,
-            b -> b.box(2, 0, 2, 14, 16, 14).collision(2, 0, 2, 14, 9, 14).inside(Behaviours::chairBump));
+            b -> b.box(3, 0, 3, 13, 15, 13.5).collision(3, 0, 3, 13, 9, 13.5).inside(Behaviours::chairBump));
     public static final RegistryObject<PropBlock> BULLETIN_BOARD = prop("bulletin_board", MapColor.WOOD, PAPER,
             b -> b.box(0, 0, 15, 16, 16, 16).noCollision().seeThrough().use(Behaviours::note));
     public static final RegistryObject<PropBlock> CARDBOARD_BOXES = prop("cardboard_boxes", MapColor.WOOD, SoundType.WOOL, b -> b);
@@ -288,32 +295,34 @@ public final class ModBlocks {
     public static final RegistryObject<PropBlock> SAFE = prop("safe", MapColor.COLOR_BLACK, SoundType.METAL,
             b -> b.box(2, 0, 3, 14, 12, 15));
     public static final RegistryObject<PropBlock> CRT_TV = litProp("crt_tv", MapColor.COLOR_BLACK, SoundType.METAL, when(Props.ON, 5),
-            b -> b.box(1, 0, 2, 15, 16, 15).props(Props.ON).use(Behaviours::tv));
+            b -> b.box(1, 0, 3, 15, 16, 15).props(Props.ON).use(Behaviours::tv));
+    /** The desk top is at 12 px; the pc on it is a block above with a model from y -4. */
     public static final RegistryObject<PropBlock> OFFICE_DESK = prop("office_desk", MapColor.COLOR_GRAY, SoundType.WOOD,
-            b -> b.box(0, 0, 0, 16, 16, 16).collision(0, 0, 0, 16, 16, 16));
+            b -> b.box(0, 0, 0, 16, 12, 16));
     public static final RegistryObject<PropBlock> OFFICE_CHAIR = prop("office_chair", MapColor.COLOR_BLACK, SoundType.WOOL,
             b -> b.box(2, 0, 2, 14, 16, 14).collision(2, 0, 2, 14, 9, 14));
     public static final RegistryObject<PropBlock> PC = litProp("pc", MapColor.COLOR_BLACK, SoundType.METAL, s -> 4,
-            b -> b.box(2, 0, 4, 14, 12, 13).seeThrough());
+            b -> b.box(3, -4, 1, 14.7, 4.5, 15).seeThrough());
     public static final RegistryObject<PropBlock> SECURITY_MONITORS = litProp("security_monitors", MapColor.COLOR_BLACK, SoundType.METAL,
             when(Props.ON, 5), b -> b.box(0, 0, 4, 16, 16, 16).props(Props.ON, Props.ALERT));
     public static final RegistryObject<PropBlock> SECURITY_CAMERA = prop("security_camera", MapColor.COLOR_BLACK, SoundType.METAL,
             b -> b.box(4, 9, 4, 12, 16, 12).props(Props.ON, Props.SEEN).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> BREAKER_PANEL = prop("breaker_panel", MapColor.COLOR_GRAY, SoundType.METAL,
-            b -> b.props(Props.OPEN).use(Behaviours::breaker));
+            b -> b.box(2, 2, 13, 14, 16, 16).props(Props.OPEN).use(Behaviours::breaker));
 
     // ================================================================================================ restrooms
     public static final RegistryObject<PropBlock> RESTROOM_SINK = prop("restroom_sink", MapColor.QUARTZ, TILE,
-            b -> b.props(Props.RUNNING).use(Behaviours::tap).animate(Behaviours::tapWater));
+            b -> b.box(0, 6, 3, 16, 16, 16).collision(0, 6, 3, 16, 13.5, 16).props(Props.RUNNING).use(Behaviours::tap).animate(Behaviours::tapWater));
     public static final RegistryObject<PropBlock> MIRROR = prop("mirror", MapColor.NONE, SoundType.GLASS,
             b -> b.props(Props.CRACKED).seeThrough());
     public static final RegistryObject<PropBlock> RESTROOM_MIRROR = prop("restroom_mirror", MapColor.QUARTZ, SoundType.GLASS,
             b -> b.box(1, 1, 15, 15, 15, 16).noCollision());
     public static final RegistryObject<PropBlock> TOILET = prop("toilet", MapColor.QUARTZ, TILE,
-            b -> b.box(3, 0, 2, 13, 14, 16).collision(3, 0, 2, 13, 9, 16).use(Behaviours::toilet));
+            b -> b.box(3.8, 0, 1.8, 14, 15.2, 16).collision(3.8, 0, 1.8, 14, 9, 16).collision(3.8, 0, 12, 14, 15.2, 16).use(Behaviours::toilet));
     public static final RegistryObject<PropBlock> URINAL = prop("urinal", MapColor.QUARTZ, TILE,
             b -> b.box(3, 2, 10, 13, 16, 16));
-    public static final RegistryObject<PropBlock> STALL_WALL = prop("stall_wall", MapColor.SAND, SoundType.WOOD, b -> b);
+    /** A partition panel through the middle of its block (along the facing's left-right axis). */
+    public static final RegistryObject<PropBlock> STALL_WALL = prop("stall_wall", MapColor.SAND, SoundType.WOOD, b -> b.box(0, 0, 6.75, 16, 16, 9.25));
     public static final RegistryObject<PropBlock> HAND_DRYER = prop("hand_dryer", MapColor.QUARTZ, SoundType.METAL,
             b -> b.box(3, 3, 9, 13, 13, 16).props(Props.RUNNING).noCollision().use(Behaviours::handDryer));
     public static final RegistryObject<PropBlock> PAPER_TOWEL = prop("paper_towel", MapColor.QUARTZ, SoundType.METAL,
@@ -347,14 +356,18 @@ public final class ModBlocks {
             b -> b.box(6, 0, 6, 10, 16, 10).props(Props.LAMP_PART, Props.LIT));
     public static final RegistryObject<PropBlock> UTILITY_POLE = prop("utility_pole", MapColor.STONE, SoundType.STONE,
             b -> b.box(5, 0, 5, 11, 16, 11).props(Props.POLE_PART));
+    /** World-only: a span of the power lines between two utility poles (the same four wires as the pole's top). */
+    public static final RegistryObject<PropBlock> POWER_WIRE = prop("power_wire", MapColor.COLOR_BLACK, SoundType.METAL,
+            b -> b.box(0, 11, 0, 16, 13, 16).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> GUARDRAIL = prop("guardrail", MapColor.METAL, SoundType.METAL,
-            b -> b.box(0, 0, 6, 16, 14, 10).collision(0, 0, 6, 16, 24, 10));
+            b -> b.box(0, 0, 6, 16, 13.5, 10.5).collision(0, 0, 6, 16, 24, 10.5));
     public static final RegistryObject<PropBlock> CHEVRON_SIGN = prop("chevron_sign", MapColor.COLOR_YELLOW, SoundType.METAL,
-            b -> b.box(1, 0, 7, 15, 16, 9));
+            b -> b.box(2, 0, 7.5, 14, 13, 9.5));
+    /** Two blocks high (pole and mirror in one model). */
     public static final RegistryObject<PropBlock> CURVE_MIRROR = prop("curve_mirror", MapColor.COLOR_ORANGE, SoundType.METAL,
-            b -> b.box(1, 0, 6, 15, 16, 10));
+            b -> b.box(2, 0, 5, 14, 30.5, 10.5).collision(6, 0, 6, 10, 24, 10));
     public static final RegistryObject<PropBlock> TRAFFIC_LIGHT = litProp("traffic_light", MapColor.COLOR_YELLOW, SoundType.METAL, when(Props.LIT, 8),
-            b -> b.box(3, 0, 4, 13, 16, 12).props(Props.LIT));
+            b -> b.box(0, 5, 4, 16, 16, 10).props(Props.LIT));
     public static final RegistryObject<PropBlock> FLOWER_OFFERING = prop("flower_offering", MapColor.PLANT, SoundType.GRASS,
             b -> b.box(2, 0, 2, 14, 10, 14).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> NOTE_PAPER = prop("note_paper", MapColor.QUARTZ, PAPER,

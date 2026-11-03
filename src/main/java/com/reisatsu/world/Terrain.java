@@ -139,9 +139,8 @@ public final class Terrain {
             if (s.contains(x, z)) s.set(x, GROUND + 1, z, f(ModBlocks.CHEVRON_SIGN, Site.inward(x, z)));
         }
         if (s.contains(66, 59)) {
-            s.set(66, GROUND + 1, 59, Blocks.IRON_BARS.defaultBlockState());
-            s.set(66, GROUND + 2, 59, Blocks.IRON_BARS.defaultBlockState());
-            s.set(66, GROUND + 3, 59, f(ModBlocks.CURVE_MIRROR, Direction.WEST));
+            s.set(66, GROUND + 1, 59, f(ModBlocks.CURVE_MIRROR, Direction.WEST));
+            s.set(66, GROUND + 2, 59, Blocks.AIR.defaultBlockState());
         }
         if (s.contains(76, 52)) s.set(76, GROUND + 1, 52, f(ModBlocks.FLOWER_OFFERING, Direction.NORTH));
         lamp(s, ROAD_LAMPS[0][0], ROAD_LAMPS[0][1], Direction.NORTH);
@@ -278,15 +277,16 @@ public final class Terrain {
     static final int POLE_X_NORTH = 86;
     static final int[] POLES_Z_NORTH = {20, -2, -24, -46, -68};
 
+    /** The pole models run their wires along their own north-south axis: a line along x faces east, along z north. */
     static void poles(ChunkSink s) {
         int top = GROUND + 9;
         for (int i = 0; i < POLES_X.length; i++) {
-            pole(s, POLES_X[i], POLE_Z, Direction.SOUTH);
-            if (i + 1 < POLES_X.length) wire(s, POLES_X[i] + 1, POLES_X[i + 1] - 1, top, POLE_Z, Direction.Axis.X);
+            pole(s, POLES_X[i], POLE_Z, Direction.EAST);
+            if (i + 1 < POLES_X.length) wire(s, POLES_X[i] + 2, POLES_X[i + 1] - 2, top, POLE_Z, Direction.Axis.X);
         }
         for (int i = 0; i < POLES_Z_NORTH.length; i++) {
-            pole(s, POLE_X_NORTH, POLES_Z_NORTH[i], Direction.WEST);
-            if (i + 1 < POLES_Z_NORTH.length) wire(s, POLES_Z_NORTH[i + 1] + 1, POLES_Z_NORTH[i] - 1, top, POLE_X_NORTH, Direction.Axis.Z);
+            pole(s, POLE_X_NORTH, POLES_Z_NORTH[i], Direction.NORTH);
+            if (i + 1 < POLES_Z_NORTH.length) wire(s, POLES_Z_NORTH[i + 1] + 2, POLES_Z_NORTH[i] - 2, top, POLE_X_NORTH, Direction.Axis.Z);
         }
     }
 
@@ -298,14 +298,12 @@ public final class Terrain {
         s.set(x, GROUND + 9, z, p.setValue(Props.POLE_PART, Props.PolePart.TOP));
     }
 
+    /** The four wires between two poles (the poles' own models carry them one block out on each side). */
     static void wire(ChunkSink s, int a, int b, int y, int c, Direction.Axis axis) {
-        BlockState chain = Blocks.CHAIN.defaultBlockState().setValue(ChainBlock.AXIS, axis);
+        BlockState w = f(ModBlocks.POWER_WIRE, axis == Direction.Axis.X ? Direction.EAST : Direction.NORTH);
         for (int t = a; t <= b; t++) {
             int x = axis == Direction.Axis.X ? t : c, z = axis == Direction.Axis.X ? c : t;
-            // a slight sag toward the middle of the span
-            int mid = (a + b) / 2;
-            int sag = Math.abs(t - mid) < (b - a) / 4 ? 1 : 0;
-            if (s.contains(x, z)) s.set(x, y - sag, z, chain);
+            if (s.contains(x, z)) s.set(x, y, z, w);
         }
     }
 
