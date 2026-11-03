@@ -134,13 +134,15 @@ def visitor_visor(rng, i=1):
         dsp.place(y, _hit(rng, [(rng.uniform(2500, 4500), 0.01, 1.0), (rng.uniform(5000, 8000), 0.006, 0.5)], vel=rng.uniform(0.1, 0.3),
                           hard=1.0, dur=0.03, noise=0.6), t)
         t += rng.uniform(0.03, 0.08)
-    m = ns(0.06)
-    cr = rng.standard_normal(m) * np.exp(-np.arange(m) / (0.003 * SR))
-    cr = dsp.highpass(cr, 1800, 2) + dsp.resbank(cr, [(1650, 12, 1.0), (3300, 14, 0.7), (5100, 16, 0.4)]) * 0.6
-    dsp.place(y, cr * 1.4, t + 0.05)
-    run = ins.crackle(0.25, rng, 900, env=dsp.env_pts(ns(0.25), [(0, 1), (0.25, 0)]), hp=3000, decay=0.0002)
-    dsp.place(y, _nrm(run) * 0.35, t + 0.06)
-    dsp.place(y, _hit(rng, [(880, 0.08, 1.0), (1700, 0.05, 0.6), (2900, 0.03, 0.3)], vel=0.4, hard=0.9, dur=0.25), t + 0.05)
+    shell = [(880, 0.12, 1.0), (1700, 0.08, 0.7), (2900, 0.05, 0.4), (4300, 0.03, 0.25)]  # the helmet shell rings
+    for k, (dt, v) in enumerate(((0.05, 1.0), (0.19, 0.7))):  # the crack runs, stops, runs again
+        m = ns(0.08)
+        cr = rng.standard_normal(m) * np.exp(-np.arange(m) / (0.004 * SR))
+        cr = dsp.highpass(cr, 1500, 2) + dsp.resbank(cr, [(1650, 12, 1.0), (3300, 14, 0.7), (5100, 16, 0.4)]) * 0.6
+        dsp.place(y, cr * 1.4 * v, t + dt)
+        run = ins.crackle(0.3, rng, 1600, env=dsp.env_pts(ns(0.3), [(0, 1), (0.3, 0)]), hp=2500, decay=0.0003)
+        dsp.place(y, _nrm(run) * 0.5 * v, t + dt + 0.005)
+        dsp.place(y, _hit(rng, shell, vel=0.7 * v, hard=0.95, dur=0.4, noise=0.3), t + dt)
     return _fin(_rev(y, rng, 0.12, 0.05), 200)
 
 
