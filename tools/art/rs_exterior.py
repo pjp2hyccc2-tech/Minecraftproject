@@ -932,9 +932,13 @@ A_SWF = Atlas('swing_door_frame')
 
 
 def swing_door_frame():
-    m = Model('swing_door_frame', A_SWF, display=DISP_FRONT)
-    for x0 in (0, 15.25):
-        m.box([x0, 0, 6], [x0 + 0.75, 16, 10], M.STEEL_M)
+    """Lower half of the kitchen swing doors (the leaves are drawn by the world's renderer in the block centre plane):
+    a stainless threshold plate and the door header at the top of the 2-high opening (y 30..32 reaches into the upper
+    half, whose own model is invisible). No jambs: the same model serves the left and the right leaf."""
+    m = Model('swing_door_frame', A_SWF, display=disp(gui=(30, 225, 0), gui_scale=0.4, gui_t=(0, -3, 0)))
+    m.box([0, 0, 4], [16, 0.3, 12], M.STEEL_M)
+    m.box([0, 30, 5], [16, 32, 11], M.STEEL_M)
+    m.box([0, 29.6, 6], [16, 30, 10], M.custom('rubber_strip', lambda w, h, f: blank(w, h, '#1a1a1a')))
     return m
 
 

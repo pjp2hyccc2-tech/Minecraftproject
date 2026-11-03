@@ -459,8 +459,30 @@ def scene_finder():
     bg = I.fromarray(booth.astype(np.uint8)).convert('RGBA').resize((1024, 576))
     fi = I.open(os.path.join(TEX_ROOT, 'gui/finder.png')).convert('RGBA').resize((1024, 576), I.NEAREST)
     bg.alpha_composite(fi)
-    meter = I.open(os.path.join(TEX_ROOT, 'gui/finder_meter.png')).convert('RGBA').resize((256, 128), I.NEAREST)
-    bg.alpha_composite(meter, (736, 424))
+    # what the game draws on top (client/Finder.java at GUI scale 2): face frame corners, focus ring, meter, film count
+    from PIL import ImageDraw as D
+    w, h, gs = 1024, 576, 2
+    ph = int(h * 0.92)
+    pw = int(ph * 4 / 3)
+    px_, py_ = (w - pw) // 2, (h - ph) // 2
+    fx, fy = int(pw * 0.1), int(ph * 0.1)
+    dr = D.Draw(bg)
+    c = (232, 238, 240, 90)
+    for (cx, cy, sx, sy) in ((px_ + fx, py_ + fy, 1, 1), (px_ + pw - fx, py_ + fy, -1, 1), (px_ + fx, py_ + ph - fy, 1, -1),
+                             (px_ + pw - fx, py_ + ph - fy, -1, -1)):
+        dr.line([(cx, cy), (cx + sx * 20, cy)], fill=c, width=2)
+        dr.line([(cx, cy), (cx, cy + sy * 20)], fill=c, width=2)
+    r = int(ph * 0.14)
+    dr.ellipse([w // 2 - r, h // 2 - r, w // 2 + r, h // 2 + r], outline=(224, 40, 24, 232), width=2)
+    meter = I.open(os.path.join(TEX_ROOT, 'gui/finder_meter.png')).convert('RGBA').resize((96 * gs, 48 * gs), I.NEAREST)
+    mx, my = px_ + fx, py_ + ph - fy - 50 * gs
+    bg.alpha_composite(meter, (mx, my))
+    import math as _m
+    ang = _m.radians(-60 + 120 * 0.72)
+    pvx, pvy = mx + 48 * gs, my + 48 * gs - 6 * gs
+    dr.line([(pvx, pvy), (pvx + _m.sin(ang) * 34 * gs, pvy - _m.cos(ang) * 34 * gs)], fill=(232, 48, 32, 240), width=2)
+    dr.text((px_ + pw - fx - 90, py_ + ph - fy + 6), 'のこり 7枚', fill=(224, 232, 224, 230),
+            font=__import__('common').font(__import__('common').FONT_SANS_JP_MED, 16))
     # the ejected photo: frame + the booth view shrunk as "the photo" + the red name on the margin
     frame_ = I.open(os.path.join(TEX_ROOT, 'gui/photo_frame.png')).convert('RGBA')
     photo = I.fromarray(booth.astype(np.uint8)).convert('RGBA').resize((112, 84))

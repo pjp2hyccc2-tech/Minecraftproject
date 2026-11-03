@@ -483,15 +483,19 @@ def facade_brick():
 
 @tex('brick_sill')
 def brick_sill():
-    a = facade_brick()
+    """Side of the 10 px brick sill. The world's model shows the TOP 10 rows (uv 0..10) on its sides: rows 0..2 the
+    concrete sill (lit edge, face), row 3 the drip shadow, rows 4..9 brick courses whose mortar line (row 9) sits on the
+    facade_brick below (its row 0 is a brick top). Rows 10..15 continue the bricks (full-block use)."""
+    base = facade_brick()
+    a = blank(16, 16)
+    # bricks: shift the facade pattern so that the sill's row 9 is a mortar row (facade rows 3, 7, 11, 15 are mortar)
+    for y in range(16):
+        a[y] = base[(y + 10) % 16]
     n = wrapn(2201, beta=1.2, sx=6)
-    conc = from_idx(3.6 + n * 0.4, CONCRETE)
-    a[0:9] = conc[0:9]
-    a[6] = from_idx(np.full(16, 5.4) + n[6] * 0.3, CONCRETE)    # sill top edge (seen on a 10 px slab)
-    a[7:9] = from_idx(np.full((2, 16), 3.4) + n[7:9] * 0.3, CONCRETE)
-    a[9] = from_idx(np.full(16, 1.2), CONCRETE)                 # drip shadow under the sill
-    tint(a[7:10], '#3a3020', 0.15)
-    a[0] = from_idx(np.full(16, 5.0) + n[0] * 0.3, CONCRETE)
+    a[0] = from_idx(np.full(16, 5.4) + n[0] * 0.3, CONCRETE)
+    a[1:3] = from_idx(np.full((2, 16), 3.8) + n[1:3] * 0.35, CONCRETE)
+    a[3] = from_idx(np.full(16, 1.0), CONCRETE)
+    tint(a[1:4], '#3a3020', 0.12)
     return a
 
 

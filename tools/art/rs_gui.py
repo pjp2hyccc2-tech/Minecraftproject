@@ -4,9 +4,9 @@ note paper, locker slits, the HIDAMARI sun. (gui/jumpscare_* and gui/medium_port
 vignette and grain are the MEIKON/SOUNAN images.)
 
 Layout facts the game relies on (also in the art report):
-  finder 512x288   : 4:3 capture frame lines x 96..415, y 24..263; centre focus circle centred (256, 144), r 17,
-                     inside the clean region x 232..280, y 120..168 (tint that region to turn it red)
-  finder_meter     : needle pivot (64, 58), scale from -60 deg (left, 0) to +60 deg (right, max), 0 deg = straight up
+  finder 512x288   : eyepiece mask around the game's 4:3 photo window (x 80..432, y 12..276 = height 0.92, centred),
+                     bright-line corners 6 px inside it, parallax marks; the focus circle / face frame are drawn by code
+  finder_meter     : needle pivot (64, 56) (= dial bottom - 6 at the game's 96x48 size), scale -60..+60 deg
   photo_frame      : photo window x 8..119, y 8..91 (112x84) is fully transparent; name margin y 96..152
   icons 128x32     : 16x16 cells, row 0: film, お札, eye closed, eye half, eye open, eye alert, breath, breath (gasp)
                      row 1: no film, burnt お札, camera, flashlight, key, note, star, empty star
@@ -193,61 +193,51 @@ def title_logo():
 # ================================================================================================ finder
 @gui('finder', (512, 288))
 def finder():
+    """Optical finder overlay, stretched to the screen. The window matches the game's 4:3 photo window (height
+    0.92 of the screen, centred: x 80..432, y 12..276 here); the game draws the focus circle, the 80 % face frame,
+    the film count, the zoom scale and the 霊感計 itself, so the texture keeps only the eyepiece mask, the bright-line
+    corners and the parallax marks."""
     W, H = 512, 288
     S = 2
     w, h = W * S, H * S
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32) / S
-    # rounded window, the darkness outside, a soft inner falloff
-    x0, y0, x1, y1, rad = 14, 10, W - 14, H - 10, 26
+    x0, y0, x1, y1, rad = 80, 12, 432, 276, 16
     dx = np.maximum(np.maximum(x0 + rad - xx, xx - (x1 - rad)), 0)
     dy = np.maximum(np.maximum(y0 + rad - yy, yy - (y1 - rad)), 0)
-    d = np.hypot(dx, dy) - rad                       # >0 outside the rounded rect
+    d = np.hypot(dx, dy) - rad                       # >0 outside the rounded window
     inside_edge = np.minimum(np.minimum(xx - x0, x1 - xx), np.minimum(yy - y0, y1 - yy))
-    alpha = np.where(d > 0, 1.0, np.clip(1 - inside_edge / 34.0, 0, 1) ** 2.2 * 0.78)
+    alpha = np.where(d > 0, 0.95, np.clip(1 - inside_edge / 30.0, 0, 1) ** 2.4 * 0.62)
     out = np.zeros((h, w, 4), np.float32)
-    out[..., :3] = 4
+    n = blur(rng(15301).normal(0, 1, (h, w)), 1.5)
+    out[..., :3] = 5 + n[..., None] * 1.5
     out[..., 3] = alpha * 255
-    # eyepiece rim: a faint lighter ring just inside the window edge
-    rim = (d > -2.2) & (d < -0.8)
-    out[rim, :3] = 40
-    out[rim, 3] = 210
+    # the eyepiece: a dim lit rim just outside the window, the body's grain further out
+    rim = (d > 0.3) & (d < 2.4)
+    out[rim, :3] = 46
+    out[rim, 3] = 235
+    far = d > 2.4
+    out[far, :3] += np.clip(blur((yy < H * 0.5).astype(np.float32), 30 * S), 0, 1)[far][:, None] * 6
     img = Image.new('L', (w, h), 0)
     dr = ImageDraw.Draw(img)
     lw = S
 
     def L(pts):
         dr.line([(p[0] * S, p[1] * S) for p in pts], fill=255, width=lw)
-    # bright-line frame: corner brackets of the 4:3 capture area
-    fx0, fy0, fx1, fy1 = 96, 24, 415, 263
+    # bright-line corners at 6 px inside the window, parallax marks near the top centre
     arm = 22
-    for (cx, cy, sx, sy) in ((fx0, fy0, 1, 1), (fx1, fy0, -1, 1), (fx0, fy1, 1, -1), (fx1, fy1, -1, -1)):
+    for (cx, cy, sx, sy) in ((x0 + 6, y0 + 6, 1, 1), (x1 - 7, y0 + 6, -1, 1), (x0 + 6, y1 - 7, 1, -1), (x1 - 7, y1 - 7, -1, -1)):
         L([(cx, cy + sy * arm), (cx, cy), (cx + sx * arm, cy)])
-    # parallax correction marks (short ticks inside the top corners)
-    for (cx, cy, sx) in ((fx0 + 10, fy0 + 12, 1), (fx1 - 10, fy0 + 12, -1)):
-        L([(cx, cy), (cx + sx * 9, cy)])
-        L([(cx, cy), (cx, cy + 9)])
-    # thin dotted 4:3 outline
-    for t in range(fx0 + arm + 6, fx1 - arm - 4, 8):
-        L([(t, fy0), (t + 2, fy0)])
-        L([(t, fy1), (t + 2, fy1)])
-    for t in range(fy0 + arm + 6, fy1 - arm - 4, 8):
-        L([(fx0, t), (fx0, t + 2)])
-        L([(fx1, t), (fx1, t + 2)])
-    # centre focus circle + tiny cross (alone inside x 232..280, y 120..168)
-    cx, cy, cr = 256, 144, 17
-    dr.ellipse([(cx - cr) * S, (cy - cr) * S, (cx + cr) * S, (cy + cr) * S], outline=255, width=lw)
-    L([(cx - 4, cy), (cx - 1, cy)])
-    L([(cx + 1, cy), (cx + 4, cy)])
-    L([(cx, cy - 4), (cx, cy - 1)])
-    L([(cx, cy + 1), (cx, cy + 4)])
-    # the frame counter window at the bottom (film count drawn by code next to it) and the meter shelf
-    L([(fx0 + 4, fy1 + 10), (fx0 + 40, fy1 + 10)])
+    pyy = y0 + (y1 - y0) / 10
+    L([(W / 2 - 30, pyy), (W / 2 - 18, pyy)])
+    L([(W / 2 + 18, pyy), (W / 2 + 30, pyy)])
+    L([(W / 2 - 30, pyy), (W / 2 - 30, pyy + 5)])
+    L([(W / 2 + 30, pyy), (W / 2 + 30, pyy + 5)])
     lines = np.asarray(img, np.float32) / 255.0
     lines = np.maximum(lines, blur(lines, 1.2 * S) * 0.6)
     lc = np.array([236, 240, 228], np.float32)
     la = lines[..., None]
     out[..., :3] = out[..., :3] * (1 - la) + lc * la
-    out[..., 3] = np.maximum(out[..., 3], lines * 225)
+    out[..., 3] = np.maximum(out[..., 3], lines * 215)
     return downsample(out, S)
 
 
@@ -257,8 +247,8 @@ def finder_meter():
     W, H = 128 * S, 64 * S
     im = Image.new('RGBA', (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
-    px_, py_ = 64 * S, 58 * S
-    R_ = 54 * S
+    px_, py_ = 64 * S, 56 * S
+    R_ = 52 * S
     # housing: dark bezel, a cream face (semicircle), glass glare
     d.rounded_rectangle([2 * S, 2 * S, W - 3 * S, H - 3 * S], radius=10 * S, fill=(24, 22, 20, 235),
                         outline=(80, 74, 66, 255), width=2 * S)
