@@ -340,6 +340,21 @@ def figure_mesh(atlas, kind, x, y, z, yaw_deg, light, alpha):
     tb = solid("fig_body_%d" % kind, look["body"])
     tl = solid("fig_legs_%d" % kind, look["legs"])
     th = solid("fig_head_%d" % kind, look["head"])
+    # the front of the head: a face (dark sockets with a pale glint, a mouth) - through the
+    # finder the player must be able to tell whether a face shows
+    tf = "fig_face_%d" % kind
+    if tf not in atlas.rects:
+        rng = np.random.default_rng(kind)
+        tile = np.zeros((16, 16, 4), np.uint8)
+        base = np.array(look["head"], np.float32)
+        tile[..., :3] = np.clip(base[None, None] * (0.88 + rng.random((16, 16, 1)) * 0.18), 0, 255)
+        tile[..., 3] = 255
+        dark = np.clip(base * 0.12, 0, 255)
+        for (ex, ey) in ((3, 6), (10, 6)):
+            tile[ey:ey + 3, ex:ex + 3, :3] = dark
+            tile[ey + 1, ex + 1, :3] = (205, 205, 200)
+        tile[11:13, 5:11, :3] = np.clip(base * 0.25, 0, 255)
+        atlas._load = (lambda orig, nm, tl_: (lambda n: tl_ if n == nm else orig(n)))(atlas._load, tf, tile)
     q = []
     q += box_quads(-0.12 * s, 0.0, -0.10, 0.12 * s, 0.75 * s, 0.10, tl, rect_of)
     q += box_quads(-0.24 * s, 0.75 * s, -0.13, 0.24 * s, 1.45 * s, 0.13, tb, rect_of)
@@ -348,7 +363,7 @@ def figure_mesh(atlas, kind, x, y, z, yaw_deg, light, alpha):
         q += box_quads(-0.20 * s, 0.70 * s, 0.13, 0.20 * s, 1.25 * s, 0.15, ta, rect_of)
     q += box_quads(-0.36 * s, 0.80 * s, -0.09, -0.24 * s, 1.42 * s, 0.09, tb, rect_of)
     q += box_quads(0.24 * s, 0.80 * s, -0.09, 0.36 * s, 1.42 * s, 0.09, tb, rect_of)
-    q += box_quads(-0.17 * s, 1.45 * s, -0.17 * s, 0.17 * s, 1.80 * s, 0.17 * s, th, rect_of)
+    q += box_quads(-0.17 * s, 1.45 * s, -0.17 * s, 0.17 * s, 1.80 * s, 0.17 * s, th, rect_of, face_tex={(0, 0, 1): tf})
     a = math.radians(yaw_deg)
     ca, sa = math.cos(a), math.sin(a)
     out = []
@@ -367,10 +382,73 @@ def figure_mesh(atlas, kind, x, y, z, yaw_deg, light, alpha):
     return body, quads_to_arrays(eyes, light, alpha)
 
 
+HELD_MODELS = {FLASHLIGHT: "flashlight_on"}
+
+
+def _rot_xyz(rx, ry, rz):
+    """JOML Quaternionf.rotationXYZ as a 3x3 matrix (Rx * Ry * Rz)"""
+    return rot("x", rx)[:3, :3] @ rot("y", ry)[:3, :3] @ rot("z", rz)[:3, :3]
+
+
+def held_item_mesh(atlas, item, side, light):
+    """the art's 3D item model (forge:separate_transforms 'base') in first person, in view space
+    like ItemInHandRenderer + ItemRenderer: the arm offset (0.56, -0.52, -0.72), the model's
+    firstperson display transform (translation / 16, rotation XYZ, scale), centred by -0.5.
+    Faces with forge_data block_light 15 get a full lightmap (Forge bakes it into the quad;
+    Embeddium merges it with the computed light). None if the model is missing."""
+    name = HELD_MODELS.get(item)
+    if name is None:
+        return None
+    path = os.path.join(mcscene.ASSETS, "models", "item", name + ".json")
+    if not os.path.isfile(path):
+        return None
+    import json
+    with open(path, encoding="utf-8") as fh:
+        m = json.load(fh)
+    base = m.get("base", m)
+    texvars = {"#" + k: v for k, v in base.get("textures", {}).items()}
+    disp = base.get("display", {}).get("firstperson_righthand" if side > 0 else "firstperson_lefthand", {})
+    sgn = 1.0 if side > 0 else -1.0
+    rx, ry, rz = disp.get("rotation", [0, 0, 0])
+    if side < 0:
+        ry, rz = -ry, -rz
+    tx, ty, tz = (v / 16.0 for v in disp.get("translation", [0, 0, 0]))
+    s = disp.get("scale", [1, 1, 1])
+    R = _rot_xyz(rx, ry, rz)
+    T = np.array([sgn * 0.56 + sgn * tx, -0.52 + ty, -0.72 + tz])
+    P, N, C, U0, U1 = [], [], [], [], []
+    for e in base.get("elements", []):
+        for face, fd in e.get("faces", {}).items():
+            ref = fd.get("texture", "")
+            for _ in range(4):
+                ref = texvars.get(ref, ref)
+            tn = "../" + ref.split(":")[-1]                 # textures/block/../item/...
+            rect = atlas.rect(tn)
+            uv = fd.get("uv") or mcscene._default_uv(face, e["from"], e["to"])
+            corners, st = mcscene._face_corners(face, e["from"], e["to"])
+            bright = fd.get("forge_data", {}).get("block_light", 0) >= 15
+            lm = (248.0 / 256.0, 248.0 / 256.0) if bright else light
+            n = R @ np.array(mcscene.FACES[face], np.float64)
+            quad = []
+            for c, (s_, t_) in zip(corners, st):
+                u = (uv[0] + (uv[2] - uv[0]) * s_) / 16.0
+                v = (uv[1] + (uv[3] - uv[1]) * t_) / 16.0
+                q = np.array([(c[0] / 16.0 - 0.5) * s[0], (c[1] / 16.0 - 0.5) * s[1], (c[2] / 16.0 - 0.5) * s[2]])
+                quad.append((R @ q + T, (rect[0] + (rect[2] - rect[0]) * u, rect[1] + (rect[3] - rect[1]) * v)))
+            for i in (0, 1, 2, 0, 2, 3):
+                P.append(quad[i][0]); N.append(n); C.append((1.0, 1.0, 1.0, 1.0)); U0.append(quad[i][1]); U1.append(lm)
+    f = lambda a, k: np.array(a, np.float32).reshape(-1, k)
+    return dict(pos=f(P, 3), nrm=f(N, 3), col=f(C, 4), uv0=f(U0, 2), uv1=f(U1, 2))
+
+
 def hand_mesh(atlas, item, side, light):
-    """the held flashlight in view space (Iris draws it with its own projection)"""
+    """the held flashlight in view space (Iris draws it with its own projection): the art's
+    model when it exists, else a dark box with a lens"""
     if item != FLASHLIGHT:
         return None
+    real = held_item_mesh(atlas, item, side, light)
+    if real is not None:
+        return real
     sx = 1.0 if side > 0 else -1.0
     x0, x1, y0, y1, z0, z1 = 0.20, 0.30, -0.36, -0.27, -0.62, -0.30
     if sx < 0:
@@ -848,11 +926,28 @@ SHOTS = {
     # the dark dining room: exit signs, the drink bar, the cake case, sodium through the windows
     "r_dining_dark": shot(21.5, 14.5, -35.0, 8.0, fear=0.2),
     "r_dining_beam": shot(21.5, 14.5, -35.0, 8.0, fear=0.2, held=FLASHLIGHT),
+    # the tour's 11_flashlight / 62_closing: by the drink bar with the flashlight on (dark / all lit)
+    "r_flashlight_bar": shot(16.5, 13.5, -100.0, 6.0, fear=0.3, held=FLASHLIGHT),
+    "r_flashlight_lit": shot(16.5, 13.5, -100.0, 6.0, fear=0.3, held=FLASHLIGHT, circuits=dict(dining=True)),
     "r_dining_bar": shot(24.5, 16.5, 132.0, 10.0, fear=0.2),
     "r_register": shot(19.5, 23.5, 95.0, 8.0, fear=0.2),
     # the roof sign outside, falling in through the blinds onto the booths by the windows
     "r_blinds": shot(24.5, 24.5, -15.0, 28.0, fear=0.2),
     "r_dining_lit": shot(21.5, 14.5, -35.0, 8.0, fear=0.0, circuits=dict(dining=True)),
+    # the dark dining hall like the world tour's dining_west_off; table 7 with its call button ringing
+    "r_dining_west": shot(15.5, 12.5, -40.0, 10.0, fear=0.2),
+    "r_table7": shot(30.5, 24.5, -35.0, 16.0, fear=0.2),
+    # the exorcism at table 7 (every light on): the medium from behind, the player's spot (34, 23)
+    "r_exorcism": shot(34.5, 23.5, 0.0, 8.0, circuits=dict(dining=True), spirits=[(MEDIUM, 34.5, 65, 27.5, 0.0, 1.0)]),
+    # the intro: from the spawn (4, 41) toward the medium by her car (-1, 39) under her soft light
+    "r_intro": shot(4.5, 41.5, 112.0, 4.0, fear=0.1, spirits=[(MEDIUM, -0.5, 65, 39.5, 90.0, 1.0)]),
+    # the world tour's ext_lot / ext_front: the lot and the façade from the road side
+    "r_ext_lot": shot(-6.5, 47.5, -140.0, 4.0, fear=0.1),
+    "r_ext_front": shot(20.5, 46.5, 180.0, -6.0, fear=0.1),
+    "r_ext_overview": shot(20.5, 70.5, 180.0, 32.0, y=88.0, fear=0.1),
+    "r_lamp_foot": shot(20.5, 43.5, 0.0, 28.0, fear=0.1),
+    # the lot between the sodium lamps, looking toward the road
+    "r_lot_mid": shot(12.5, 41.5, -40.0, 6.0, fear=0.1),
     # the wet lot at night: the pole sign, the vending machines, the sodium lamps, puddles
     "r_lot": shot(28.5, 44.5, 150.0, 4.0, fear=0.1),
     "r_lot_sign": shot(26.5, 38.5, -70.0, -6.0, fear=0.1),

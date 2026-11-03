@@ -226,7 +226,9 @@ def build(circuits=None, puddle_seed=7):
         w.set(x0 + 2, 65, 28, prop("booth_seat", facing="west"))
         w.set(x0 + 2, 65, 29, prop("booth_seat", facing="west"))
         w.set(x0 + 1, 66, 28, prop("menu_stand", facing="south"))
-        w.set(x0 + 1, 66, 29, prop("call_button", state={"lit": "false"}))
+        lit_button = x0 == 32            # the visitor's table: its call button rings
+        w.set(x0 + 1, 66, 29, prop("call_button", "call_button_lit" if lit_button else "call_button",
+                                   state={"lit": "true" if lit_button else "false"}))
         w.set(x0 + 2, 66, 27, prop("booth_partition", facing="east"))
         if c["dining"]:
             w.set(x0 + 1, 68, 28, prop("pendant_lamp", "pendant_lamp_lit", light=12, state={"lit": "true"}))
@@ -288,13 +290,17 @@ def build(circuits=None, puddle_seed=7):
     for t in range(8):
         w.set(16 + t, 72, 31, Block("roof_sign", {"tile": str(t), "lit": "true" if on else "false"}, facing="south",
                                     model="roof_sign_tile_%d%s" % (t, "_lit" if on else ""), light=12 if on else 0))
-    # sodium lamps on the lot and along the road (heads at y 71)
-    for (lx, lz) in ((-8, 41), (16, 49), (34, 49), (48, 40), (58, 49)):
-        for y in range(65, 71):
-            w.set(lx, y, lz, Block("street_lamp", {"part": "pole", "lit": "true" if on else "false"}, facing="north",
+    # sodium lamps on the lot and along the road (world: ExteriorBuilder.LOT_LAMPS, Terrain.ROAD_LAMPS,
+    # heads at Terrain.LAMP_Y = 70)
+    for (lx, lz, face) in ((-8, 40, "east"), (4, 49, "north"), (20, 49, "north"), (36, 49, "north"), (48, 40, "west"),
+                           (58, 49, "south")):
+        for y in range(65, 70):
+            w.set(lx, y, lz, Block("street_lamp", {"part": "pole", "lit": "true" if on else "false"}, facing=face,
                                    model="street_lamp_pole_lit" if on else "street_lamp_pole"))
-        w.set(lx, 71, lz, Block("street_lamp", {"part": "head", "lit": "true" if on else "false"}, facing="north",
+        w.set(lx, 70, lz, Block("street_lamp", {"part": "head", "lit": "true" if on else "false"}, facing=face,
                                 model="street_lamp_head_lit" if on else "street_lamp_head", light=14 if on else 0))
+    # the medium waits by her car (marker medium -1, 39): an invisible level-11 light over her spot
+    w.set(-1, 67, 39, Block("light", light=11, opaque=False))
     for x in range(-2, 5):
         w.set(x, 65, 47, cube("hedge", opaque=False))
         w.set(x, 66, 47, cube("hedge", opaque=False))

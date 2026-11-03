@@ -121,10 +121,10 @@ vec3 dripRipples(vec3 N, vec3 wp, float amount) {
 //  playerPos: camera-relative position lm    : normalised lightmap (x block, y sky)
 //  ao       : vertex ambient occlusion emission: linear HDR colour emitted by the surface
 //  mat      : material code (MAT_*)    wet   : 0..1 wetness under the open sky
-//  twoSided : 1 = thin leaves / particles
+//  twoSided : 1 = thin leaves / particles   fillK : the fill for unexplained light (lampsAt)
 //  glow     : out, share of the colour that comes from lamps (screen-space lamp shadows)
 vec3 shadeSurface(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, float ao, vec3 emission,
-                  int mat, float wet, float dither, bool receiveShadow, float twoSided, out float glow) {
+                  int mat, float wet, float dither, bool receiveShadow, float twoSided, float fillK, out float glow) {
     vec3 worldPos = playerPos + cameraPosition;
     vec3 V = -normalize(playerPos + vec3(0.0, 1e-4, 0.0));
     float aoC = ao * ao * (3.0 - 2.0 * ao);
@@ -137,7 +137,7 @@ vec3 shadeSurface(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, float ao, vec3 e
     // ---- the restaurant: every lamp in its own colour ----------------------------------
     vec3 diffuse, spec, domPos;
     float domW;
-    lampsAt(worldPos, N, V, lm.x * 15.0, surf.x, surf.z > 0.5 || surf.w > 0.0 ? f0 : -1.0, twoSided,
+    lampsAt(worldPos, N, V, lm.x * 15.0, surf.x, surf.z > 0.5 || surf.w > 0.0 ? f0 : -1.0, twoSided, fillK,
             diffuse, spec, domPos, domW);
     vec3 sky = skyAmbientN(N) * (lm.y * lm.y);
     vec3 lampPart = albedo * diffuse * aoC * (1.0 - surf.z * 0.85);

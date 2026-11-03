@@ -58,6 +58,7 @@ bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos) {
     vec4 tab = tableFetch(column);
     float best = 0.0;
     lampPos = vec3(0.0);
+    bool openAir = openSky(cellP) > 0.5;
     for (int k = 0; k < 4; k++) {
         float v = tab[k];
         if (abs(v) < 0.5) continue;
@@ -65,10 +66,11 @@ bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos) {
         if (!emitterCasts(L.type) || L.walled) continue;
         vec3 md = abs(floor(cellP) + 0.5 - (L.block + 0.5));
         float X = L.level - (md.x + md.y + md.z);
-        float vis = (1.0 - smoothstep(A + 0.6, A + 2.2, X)) * smoothstep(0.3, 1.6, X);
+        bool open = openAir && !L.covered;
+        float vis = lampVis(X, A, open);
         vec3 d = L.pos - wp;
         float dist = length(d);
-        float w = vis * lampFalloff(L, dist) * lampPattern(L.type, -d / max(dist, 1e-3)) * saturate(dot(N, d / max(dist, 1e-3)))
+        float w = vis * lampFalloff(L, dist, open) * lampPattern(L.type, -d / max(dist, 1e-3)) * saturate(dot(N, d / max(dist, 1e-3)))
                 * EM_GAIN[clamp(L.type, 0, EM_COUNT - 1)];
         if (w > best) {
             best = w;

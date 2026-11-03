@@ -32,6 +32,7 @@ flat out int blockY;
 flat out vec2 midUv;
 flat out vec2 halfUv;
 flat out vec3 faceN;
+flat out int markedFace;    // drawn full-bright by the art (forge_data): its glowing face
 out float worldY;
 out float lightLevel;
 #endif
@@ -54,7 +55,8 @@ void main() {
     // the lamp's own light measured on its faces (+1 = its level). Faces drawn full-bright
     // (Forge forge_data block_light 15 / sky_light 15: the glowing panel of a model) say
     // nothing about the level: 0 = unknown (the design level is used)
-    lightLevel = (lmv.x > 0.985 && lmv.y > 0.985) ? 0.0 : lmv.x * 15.0;
+    markedFace = (lmv.x > 0.985 && lmv.y > 0.985) ? 1 : 0;
+    lightLevel = markedFace == 1 ? 0.0 : lmv.x * 15.0;
     ivec2 org = emapOrigin();
     int type = emitterTypeOfBlock(id);
     kind = 0;
@@ -150,6 +152,7 @@ flat in int blockY;
 flat in vec2 midUv;
 flat in vec2 halfUv;
 flat in vec3 faceN;
+flat in int markedFace;
 in float worldY;
 in float lightLevel;
 #endif
@@ -162,7 +165,7 @@ void main() {
         for (int i = 0; i < 5; i++) {
             vec2 o = i == 0 ? vec2(0.0) : vec2((i & 1) == 0 ? -0.5 : 0.5, i < 3 ? -0.5 : 0.5);
             vec4 tx = textureLod(gtexture, midUv + o * halfUv, 0.0);
-            if (tx.a > 0.1) glowing = max(glowing, emitterSurfaceMask(etype, tx.rgb, faceN));
+            if (tx.a > 0.1) glowing = max(glowing, emitterSurfaceMask(etype, tx.rgb, faceN, markedFace == 1));
         }
         if (glowing < 0.25) discard;
         float lvl = lightLevel > 0.5 ? min(lightLevel, 15.0) : EM_LEVEL[clamp(etype, 0, EM_COUNT - 1)];
