@@ -23,6 +23,16 @@ class JavaSyntax(Exception):
     pass
 
 
+PY_KEYWORDS = {'raise', 'lambda', 'pass', 'in', 'is', 'not', 'and', 'or', 'from', 'global', 'with', 'yield', 'del',
+               'def', 'class', 'import', 'as', 'assert', 'except', 'finally', 'try', 'elif', 'None', 'nonlocal',
+               'async', 'await', 'print', 'len', 'min', 'max', 'abs', 'sin', 'cos', 'exp', 'sqrt', 'round', 'type',
+               'id', 'list', 'dict', 'set', 'str', 'int', 'float', 'map', 'range', 'sum', 'all', 'any', 'next', 'iter'}
+
+
+def pyname(n):
+    return n + '_' if n in PY_KEYWORDS else n
+
+
 def tokenize(src):
     pos = 0
     out = []
@@ -101,7 +111,7 @@ class Parser:
             typ = self.take()[1]
             lines = []
             while True:
-                name = self.take()[1]
+                name = pyname(self.take()[1])
                 if self.at('='):
                     self.take('=')
                     e = self.expr()
@@ -244,7 +254,7 @@ class Parser:
                 return ('True' if name == 'true' else 'False'), None
             if self.at('('):
                 return f'{name}({self.args()})', None
-            return name, name
+            return pyname(name), name
         if tok[1] == '(':
             e = self.expr()
             self.take(')')
