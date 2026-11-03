@@ -54,7 +54,8 @@ def _ceil(v):
 
 
 class Atlas:
-    def __init__(self, name, kind='block', cutout=False, opaque=False, fixed=None, base=None, pad=0):
+    def __init__(self, name, kind='block', cutout=False, opaque=False, fixed=None, base=None, pad=0, frames=1,
+                 frametime=2, interpolate=False):
         """fixed=(W, H): explicit layout (regions placed with add_at, base painter for the whole texture)."""
         self.name, self.kind = name, kind
         self.path = f'{kind}/{name}'
@@ -67,9 +68,12 @@ class Atlas:
         if fixed:
             self.W, self.H = fixed
         self.cutout, self.opaque = cutout, opaque
+        self.frames = frames
         ATLASES[self.path] = self
-        REGISTRY[self.path] = dict(fn=self.render, size=None, cutout=cutout, opaque=opaque, frames=1, tile=False,
+        REGISTRY[self.path] = dict(fn=self.render, size=None, cutout=cutout, opaque=opaque, frames=frames, tile=False,
                                    name=self.path)
+        if frames > 1:
+            REGISTRY[self.path]['mcmeta'] = {'animation': {'frametime': frametime, 'interpolate': interpolate}}
 
     # ---------------------------------------------------------------- regions
     def add(self, key, w, h, painter):
@@ -147,14 +151,19 @@ class Atlas:
     # ---------------------------------------------------------------- painting
     def render(self):
         self.pack()
+        if self.frames > 1:
+            return [self._render_frame(i) for i in range(self.frames)]
+        return self._render_frame(0)
+
+    def _render_frame(self, fi):
         out = np.zeros((self.H, self.W, 4), np.float32)
         if self.base is not None:
-            b = np.asarray(self.base(self.W, self.H), np.float32)
+            b = np.asarray(self.base(self.W, self.H) if self.frames == 1 else self.base(self.W, self.H, fi), np.float32)
             out[:b.shape[0], :b.shape[1]] = b
         for r in self.regions.values():
             if r.painter is None:
                 continue
-            a = np.asarray(r.painter(r.w, r.h), np.float32)
+            a = np.asarray(r.painter(r.w, r.h) if self.frames == 1 else r.painter(r.w, r.h, fi), np.float32)
             if a.shape[:2] != (r.h, r.w):
                 raise ValueError(f'{self.name}:{r.key} painter returned {a.shape[:2]}, expected {(r.h, r.w)}')
             out[r.y:r.y + r.h, r.x:r.x + r.w] = a

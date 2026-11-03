@@ -300,7 +300,7 @@ def m_wood(w, h, palette, seed, along=None, base=None, amp=0.55, lines=0.9, knot
     return out
 
 
-def m_brushed(w, h, palette, seed, along='x', base=None, amp=0.45, scratches=0.04, smudge=0.0):
+def m_brushed(w, h, palette, seed, along='x', base=None, amp=0.32, scratches=0.03, smudge=0.0):
     """Brushed metal: fine streaks along an axis, a few scratches, optional greasy smudges."""
     sx, sy = (14.0, 1.0) if along == 'x' else (1.0, 14.0)
     n = noise(w, h, seed, beta=0.7, sx=sx, sy=sy, wrap=False)
@@ -315,7 +315,8 @@ def m_brushed(w, h, palette, seed, along='x', base=None, amp=0.45, scratches=0.0
         for k in range(ln):
             px(out, x0 + dx * k, y0 + dy * k, palette[min(len(palette) - 1, int(base) + 2)], 0.5)
     if smudge:
-        grime(out, seed + 3, strength=smudge, color='#4a3a22', beta=1.6)
+        n2 = noise(w, h, seed + 3, beta=1.8, wrap=False)
+        tint(out, '#4a3a22', np.clip((n2 - 0.5) * smudge * 0.6, 0, 0.35))
     return out
 
 
@@ -369,10 +370,10 @@ def m_granite(w, h, palette, seed, base=None):
     base = (len(palette) - 1) * 0.45 if base is None else base
     idx = base + n * 0.9
     out = from_idx(idx, palette)
-    m = r.random((h, w)) < 0.07
-    out[m] = C('#8a8780')
-    m2 = r.random((h, w)) < 0.05
-    out[m2] = C('#5b4a3e')
+    m = r.random((h, w)) < 0.035
+    out[m] = C('#6e6c66')
+    m2 = r.random((h, w)) < 0.025
+    out[m2] = C('#4e4038')
     return out
 
 
