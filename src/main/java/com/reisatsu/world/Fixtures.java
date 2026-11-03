@@ -593,6 +593,11 @@ public final class Fixtures {
         WorldTicker.timer(level, pos, Props.RUNNING, 100);
     }
 
+    /** Switches a boolean property of a block off again after a while (the breaker panel's lid...). */
+    public static void closeLater(ServerLevel level, BlockPos pos, BooleanProperty prop, int ticks) {
+        WorldTicker.timer(level, pos, prop, ticks);
+    }
+
     /** A locker door swings open and shut (someone stepped in or out). */
     public static void flapLocker(ServerLevel level, BlockPos lower) {
         setBool(level, lower, Props.OPEN, true);

@@ -197,6 +197,18 @@ public final class WorldTour {
             switch (stage) {
                 case 1 -> {
                     if (mc.getOverlay() != null) return;
+                    try {
+                        int n = Preview.prepare(mc);
+                        log("preview pack: " + n + " stand-in assets for missing art");
+                    } catch (Exception e) {
+                        log("preview pack failed: " + e);
+                        Reisatsu.LOGGER.error("[reisatsu] preview pack", e);
+                    }
+                    stage = 4;
+                    wait = 40;
+                }
+                case 4 -> {
+                    if (mc.getOverlay() != null) return;
                     createWorld(mc);
                     stage = 2;
                 }
@@ -326,6 +338,210 @@ public final class WorldTour {
             stage = 9;
             log("finished");
             mc.stop();
+        }
+    }
+
+    // ================================================================================================ CI preview pack
+    /**
+     * CI only (standalone tour): a resource pack generated at runtime into {@code run/resourcepacks} with stand-in
+     * vanilla textures for every REISATSU texture that does not exist yet and plain box models (the blocks' own
+     * shapes) for every prop model the art pass has not delivered, so layout screenshots are readable before the art
+     * is merged. Assets that exist are never shadowed. Nothing of this is in the repository.
+     */
+    static final class Preview {
+        static final String ID = "reisatsu_ci_preview";
+
+        private Preview() {}
+
+        /** Stand-in vanilla texture for a REISATSU texture or model name. */
+        static String vanilla(String n) {
+            String[][] exact = {
+                    {"dining_floor", "spruce_planks"}, {"kitchen_floor", "red_terracotta"}, {"restroom_floor", "calcite"},
+                    {"restroom_floor_dark", "polished_deepslate"}, {"vestibule_floor", "polished_andesite"}, {"entrance_mat", "black_wool"},
+                    {"wallpaper", "white_terracotta"}, {"wallpaper_stained", "light_gray_terracotta"}, {"wainscot", "dark_oak_planks"},
+                    {"white_tile", "quartz_bricks"}, {"white_tile_dirty", "polished_diorite"}, {"ceiling_tile", "white_wool"},
+                    {"ceiling_tile_stained", "smooth_sandstone"}, {"ceiling_light", "light_gray_concrete"}, {"ceiling_light_lit", "glowstone"},
+                    {"downlight", "light_gray_concrete"}, {"downlight_lit", "glowstone"}, {"exterior_wall", "smooth_sandstone"},
+                    {"facade_brick", "bricks"}, {"brick_sill", "bricks"}, {"roof_tile", "orange_terracotta"}, {"fascia", "orange_concrete"},
+                    {"shop_window", "glass"}, {"asphalt", "black_concrete_powder"}, {"parking_line", "white_concrete"},
+                    {"road_line", "yellow_concrete"}, {"curb", "smooth_stone"}, {"sidewalk", "stone_bricks"}, {"puddle", "light_blue_stained_glass"},
+                    {"rice_paddy", "mud"}, {"hedge", "azalea_leaves"}, {"concrete_wall", "light_gray_concrete"}, {"granite_counter", "polished_blackstone"},
+                    {"stainless", "iron_block"}, {"pillar", "stripped_dark_oak_log"}, {"auto_door_panel", "glass"}, {"swing_door", "iron_trapdoor"},
+                    {"booth_seat", "red_wool"}, {"booth_partition", "white_stained_glass"}, {"restaurant_table", "dark_oak_planks"},
+                    {"restaurant_chair", "spruce_planks"}, {"call_button", "white_concrete"}, {"menu_stand", "orange_wool"},
+                    {"menu_scattered", "orange_wool"}, {"water_glass", "glass"}, {"broken_plate", "white_concrete"}, {"register", "gray_concrete"},
+                    {"service_bell", "gold_block"}, {"counter", "stripped_oak_log"}, {"cake_case", "white_stained_glass"},
+                    {"business_phone", "smooth_sandstone"}, {"reservation_book", "red_wool"}, {"capsule_machine", "red_concrete"},
+                    {"waiting_bench", "red_wool"}, {"magazine_rack", "oak_planks"}, {"umbrella_stand", "iron_block"}, {"notice_board", "brown_wool"},
+                    {"drink_bar", "light_gray_concrete"}, {"coffee_machine", "black_concrete"}, {"ice_machine", "iron_block"},
+                    {"cup_shelf", "iron_block"}, {"soup_warmer", "iron_block"}, {"server_station", "dark_oak_planks"}, {"call_display", "black_concrete"},
+                    {"planter", "azalea_leaves"}, {"kids_mat", "light_blue_wool"}, {"toy_shelf", "yellow_concrete"}, {"stuffed_bear", "brown_wool"},
+                    {"kids_fence", "yellow_concrete"}, {"high_chair", "oak_planks"}, {"gas_range", "iron_block"}, {"fryer", "iron_block"},
+                    {"griddle", "iron_block"}, {"kitchen_counter", "iron_block"}, {"exhaust_hood", "iron_block"}, {"pot_shelf", "iron_block"},
+                    {"dish_rack", "iron_block"}, {"kitchen_trash", "gray_concrete"}, {"prep_table", "iron_block"}, {"cutting_board", "oak_planks"},
+                    {"kitchen_sink", "iron_block"}, {"dishwasher", "iron_block"}, {"pass_shelf", "iron_block"}, {"pass_bell", "gold_block"},
+                    {"walkin_shelf", "iron_block"}, {"frost", "packed_ice"}, {"locker", "light_gray_concrete"}, {"time_recorder", "smooth_sandstone"},
+                    {"staff_table", "birch_planks"}, {"folding_chair", "gray_concrete"}, {"bulletin_board", "oak_planks"},
+                    {"cardboard_boxes", "stripped_oak_wood"}, {"cleaning_cart", "yellow_concrete"}, {"filing_cabinet", "gray_concrete"},
+                    {"safe", "black_concrete"}, {"crt_tv", "black_concrete"}, {"office_desk", "gray_concrete"}, {"office_chair", "black_wool"},
+                    {"pc", "black_concrete"}, {"security_monitors", "black_concrete"}, {"security_camera", "black_concrete"},
+                    {"breaker_panel", "gray_concrete"}, {"restroom_sink", "white_concrete"}, {"mirror", "black_stained_glass"},
+                    {"restroom_mirror", "light_blue_stained_glass"}, {"toilet", "white_concrete"}, {"urinal", "white_concrete"},
+                    {"stall_wall", "birch_planks"}, {"hand_dryer", "white_concrete"}, {"paper_towel", "white_concrete"},
+                    {"vending_machine", "white_concrete"}, {"pole_sign", "orange_concrete"}, {"roof_sign", "orange_concrete"},
+                    {"menu_board", "black_concrete"}, {"bike_rack", "iron_block"}, {"trash_station", "gray_concrete"}, {"ac_unit", "white_concrete"},
+                    {"gas_cylinder", "gray_concrete"}, {"dumpster", "green_concrete"}, {"wheel_stop", "smooth_stone"},
+                    {"outdoor_planter", "azalea_leaves"}, {"street_lamp", "gray_concrete"}, {"utility_pole", "smooth_stone"},
+                    {"guardrail", "iron_block"}, {"chevron_sign", "yellow_concrete"}, {"curve_mirror", "orange_concrete"},
+                    {"traffic_light", "black_concrete"}, {"flower_offering", "pink_wool"}, {"note_paper", "white_wool"},
+                    {"auto_door_rail", "iron_block"}, {"swing_door_frame", "iron_block"}, {"exit_sign", "lime_concrete"},
+                    {"pendant_lamp", "orange_stained_glass"}, {"window_blind", "white_wool"}, {"door_switch", "gray_concrete"}};
+            String best = null;
+            int len = -1;
+            for (String[] e : exact) {
+                if (n.equals(e[0])) return e[1];
+                if (n.startsWith(e[0] + "_") && e[0].length() > len) {
+                    best = e[1];
+                    len = e[0].length();
+                }
+            }
+            if (n.endsWith("_bottom") || n.endsWith("_top")) {
+                boolean bottom = n.endsWith("_bottom");
+                String door = n.contains("occupied") ? "crimson_door" : n.startsWith("office") ? "spruce_door" : n.startsWith("restroom")
+                        ? "birch_door" : n.startsWith("stall") ? "jungle_door" : "iron_door";
+                return door + (bottom ? "_bottom" : "_top");
+            }
+            return best != null ? best : "white_concrete";
+        }
+
+        /** The glowing stand-in of a lit / switched-on model. */
+        static String litVanilla(String n, String base) {
+            if (n.contains("pole_sign_tile") || n.contains("roof_sign")) return "ochre_froglight_side";
+            if (n.contains("street_lamp_head")) return "ochre_froglight_top";
+            if (n.contains("traffic_light")) return "yellow_concrete";
+            if (n.contains("call_button")) return "red_concrete";
+            if (n.contains("pendant_lamp")) return "shroomlight";
+            if (n.contains("security_monitors") || n.contains("crt_tv")) return "light_blue_concrete";
+            if (n.contains("gas_range")) return "blue_concrete";
+            if (n.contains("pass_shelf")) return "orange_concrete";
+            return base;
+        }
+
+        static boolean exists(net.minecraft.server.packs.resources.ResourceManager rm, String path) {
+            return rm.getResource(new net.minecraft.resources.ResourceLocation(Reisatsu.MODID, path)).isPresent();
+        }
+
+        static int prepare(Minecraft mc) throws IOException {
+            var rm = mc.getResourceManager();
+            Path pack = mc.getResourcePackDirectory().resolve(ID);
+            if (Files.exists(pack)) {
+                try (var walk = Files.walk(pack)) {
+                    walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> p.toFile().delete());
+                }
+            }
+            Files.createDirectories(pack);
+            Files.writeString(pack.resolve("pack.mcmeta"), "{\"pack\":{\"pack_format\":15,\"description\":\"REISATSU CI preview (stand-in art)\"}}");
+            java.util.Set<String> textures = new java.util.TreeSet<>();
+            java.util.Map<String, net.minecraft.world.level.block.Block> models = new java.util.TreeMap<>();
+            textures.add("auto_door_panel");
+            textures.add("swing_door");
+            for (var e : net.minecraftforge.registries.ForgeRegistries.BLOCKS.getEntries()) {
+                if (!e.getKey().location().getNamespace().equals(Reisatsu.MODID)) continue;
+                String id = e.getKey().location().getPath();
+                var bs = rm.getResource(new net.minecraft.resources.ResourceLocation(Reisatsu.MODID, "blockstates/" + id + ".json"));
+                if (bs.isEmpty()) continue;
+                com.google.gson.JsonObject json;
+                try (var r = bs.get().openAsReader()) {
+                    json = com.google.gson.JsonParser.parseReader(r).getAsJsonObject();
+                }
+                for (var v : json.getAsJsonObject("variants").entrySet()) {
+                    com.google.gson.JsonElement el = v.getValue();
+                    String model = (el.isJsonArray() ? el.getAsJsonArray().get(0) : el).getAsJsonObject().get("model").getAsString();
+                    if (!model.startsWith(Reisatsu.MODID + ":block/")) continue;
+                    models.putIfAbsent(model.substring((Reisatsu.MODID + ":block/").length()), e.getValue());
+                }
+            }
+            int written = 0;
+            for (var e : models.entrySet()) {
+                String name = e.getKey();
+                String path = "models/block/" + name + ".json";
+                var res = rm.getResource(new net.minecraft.resources.ResourceLocation(Reisatsu.MODID, path));
+                if (res.isPresent()) {
+                    try (var r = res.get().openAsReader()) {
+                        var json = com.google.gson.JsonParser.parseReader(r).getAsJsonObject();
+                        if (json.has("textures")) {
+                            for (var t : json.getAsJsonObject("textures").entrySet()) {
+                                String v = t.getValue().getAsString();
+                                if (v.startsWith(Reisatsu.MODID + ":block/")) textures.add(v.substring((Reisatsu.MODID + ":block/").length()));
+                            }
+                        }
+                    }
+                    continue;
+                }
+                writeModel(pack, name, e.getValue());
+                written++;
+            }
+            for (String t : textures) {
+                if (exists(rm, "textures/block/" + t + ".png")) continue;
+                String v = vanilla(t);
+                if (t.endsWith("_lit")) v = litVanilla(t, v);
+                var src = rm.getResource(new net.minecraft.resources.ResourceLocation("minecraft", "textures/block/" + v + ".png"));
+                if (src.isEmpty()) src = rm.getResource(new net.minecraft.resources.ResourceLocation("minecraft", "textures/block/white_concrete.png"));
+                Path out = pack.resolve("assets/" + Reisatsu.MODID + "/textures/block/" + t + ".png");
+                Files.createDirectories(out.getParent());
+                try (var in = src.get().open()) {
+                    Files.copy(in, out, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                }
+                written++;
+            }
+            var repo = mc.getResourcePackRepository();
+            repo.reload();
+            String packId = "file/" + ID;
+            if (repo.getPack(packId) != null) {
+                List<String> ids = new ArrayList<>(repo.getSelectedIds());
+                if (!ids.contains(packId)) ids.add(packId);
+                repo.setSelected(ids);
+                mc.options.updateResourcePacks(repo);
+            }
+            return written;
+        }
+
+        /** A box model of the block's own shape (facing north), textured with a vanilla stand-in. */
+        static void writeModel(Path pack, String name, net.minecraft.world.level.block.Block block) throws IOException {
+            var state = block.defaultBlockState();
+            if (state.hasProperty(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING)) {
+                state = state.setValue(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING, net.minecraft.core.Direction.NORTH);
+            }
+            var outline = state.getShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE, net.minecraft.core.BlockPos.ZERO);
+            var coll = state.getCollisionShape(net.minecraft.world.level.EmptyBlockGetter.INSTANCE, net.minecraft.core.BlockPos.ZERO);
+            var shape = coll.isEmpty() ? outline : coll;
+            List<net.minecraft.world.phys.AABB> boxes = shape.isEmpty() ? List.of(new net.minecraft.world.phys.AABB(0.25, 0, 0.25, 0.75, 0.5, 0.75)) : shape.toAabbs();
+            String base = vanilla(name);
+            boolean lit = name.endsWith("_lit") || name.endsWith("_on") || name.contains("_on_") || name.contains("_lit_");
+            String tex = lit ? litVanilla(name, base) : base;
+            if (name.startsWith("pole_sign_pole") || name.startsWith("street_lamp_pole")) tex = "gray_concrete";
+            StringBuilder sb = new StringBuilder();
+            sb.append("{\"parent\":\"minecraft:block/block\",");
+            if (tex.contains("glass") || tex.contains("leaves") || tex.contains("ice")) sb.append("\"render_type\":\"minecraft:translucent\",");
+            sb.append("\"textures\":{\"particle\":\"minecraft:block/").append(tex).append("\",\"t\":\"minecraft:block/").append(tex).append("\"},");
+            sb.append("\"elements\":[");
+            boolean first = true;
+            for (var b : boxes) {
+                if (!first) sb.append(",");
+                first = false;
+                sb.append(String.format(Locale.ROOT, "{\"from\":[%.3f,%.3f,%.3f],\"to\":[%.3f,%.3f,%.3f],\"shade\":%s,\"faces\":{",
+                        b.minX * 16, b.minY * 16, b.minZ * 16, b.maxX * 16, b.maxY * 16, b.maxZ * 16, lit ? "false" : "true"));
+                String[] faces = {"north", "south", "east", "west", "up", "down"};
+                for (int i = 0; i < faces.length; i++) {
+                    if (i > 0) sb.append(",");
+                    sb.append("\"").append(faces[i]).append("\":{\"texture\":\"#t\"}");
+                }
+                sb.append("}}");
+            }
+            sb.append("]}");
+            Path out = pack.resolve("assets/" + Reisatsu.MODID + "/models/block/" + name + ".json");
+            Files.createDirectories(out.getParent());
+            Files.writeString(out, sb.toString(), StandardCharsets.UTF_8);
         }
     }
 }

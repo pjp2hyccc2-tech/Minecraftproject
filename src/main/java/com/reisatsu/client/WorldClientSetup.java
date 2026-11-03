@@ -56,7 +56,7 @@ public final class WorldClientSetup {
 
         @Override
         public boolean isFoggyAt(int x, int y) {
-            return true;
+            return false;
         }
 
         @Override
@@ -79,6 +79,27 @@ public final class WorldClientSetup {
         @Override
         public boolean tickRain(ClientLevel level, int ticks, Camera camera) {
             return true;
+        }
+    }
+
+    /**
+     * The restaurant's night fog: dark blue-grey, starting near and closing at mid distance (the road vanishes into it
+     * both ways; the building stays readable from anywhere on the lot). The game may tighten it further (fear).
+     */
+    @Mod.EventBusSubscriber(modid = Reisatsu.MODID, value = Dist.CLIENT)
+    public static final class Fog {
+        private Fog() {}
+
+        @SubscribeEvent(priority = net.minecraftforge.eventbus.api.EventPriority.HIGH)
+        public static void fog(net.minecraftforge.client.event.ViewportEvent.RenderFog event) {
+            net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+            if (mc.level == null || mc.level.dimension() != com.reisatsu.world.Layout.DIMENSION) return;
+            if (ShaderCompat.active()) return;
+            if (event.getMode() != net.minecraft.client.renderer.FogRenderer.FogMode.FOG_TERRAIN) return;
+            float far = Math.min(event.getFarPlaneDistance(), 88.0f);
+            event.setNearPlaneDistance(Math.min(10.0f, far * 0.2f));
+            event.setFarPlaneDistance(far);
+            event.setCanceled(true);
         }
     }
 }

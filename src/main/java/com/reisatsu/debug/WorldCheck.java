@@ -201,6 +201,7 @@ public final class WorldCheck {
         for (String name : STANDING) {
             for (Layout.Marker m : Layout.markers(name)) {
                 if (name.equals("medium_car")) continue;
+                if (m.pos().equals(Layout.marker("seat_7").pos())) continue;   // the visitor's seat on the bench
                 if (!walkable(level, m.pos())) {
                     bad++;
                     log.accept("  not walkable: " + name + " " + m.pos().toShortString() + " feet=" + level.getBlockState(m.pos()).getBlock()
@@ -376,6 +377,7 @@ public final class WorldCheck {
                 if (route.equals("visitor_path") && b.equals(Layout.marker("seat_7").pos())) continue;
                 all++;
                 z.moveTo(a.getX() + 0.5, a.getY(), a.getZ() + 0.5, 0, 0);
+                z.setOnGround(true);
                 Path path = z.getNavigation().createPath(b, 0);
                 if (path != null && path.canReach()) ok++;
                 else log.accept("  zombie path " + route + " " + a.toShortString() + " -> " + b.toShortString() + " "

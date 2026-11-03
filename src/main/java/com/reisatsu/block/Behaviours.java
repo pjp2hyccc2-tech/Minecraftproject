@@ -127,6 +127,7 @@ public final class Behaviours {
                 level.setBlock(pos, s.setValue(Props.OPEN, true), 3);
                 sound(level, pos, ModSounds.FIXTURE_LOCKER, 0.5f);
             }
+            if (level instanceof ServerLevel sl) Fixtures.closeLater(sl, pos, Props.OPEN, 200);
             interact(player, "breaker", pos);
         }
         return done(level);
