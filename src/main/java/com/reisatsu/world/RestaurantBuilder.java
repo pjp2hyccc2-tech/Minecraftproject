@@ -36,6 +36,8 @@ public final class RestaurantBuilder {
 
     /** The breaker panel, on the corridor side of the wall between the staff room and the office. */
     public static final BlockPos BREAKER = new BlockPos(7, Y + 1, 8);
+    /** The sun logo (roof-sign tile 0) on the entrance canopy. */
+    public static final BlockPos CANOPY_LOGO = new BlockPos(3, CEIL + 1, 33);
     /** The pass window segment that carries the pickup bell. */
     public static final int PASS_BELL_X = 24;
 
@@ -470,6 +472,9 @@ public final class RestaurantBuilder {
                 s.set(x, CEIL, z, edge ? st(ModBlocks.FASCIA) : st(ModBlocks.CEILING_TILE));
                 if (z >= 32) s.set(x, CEIL + 1, z, st(ModBlocks.ROOF_TILE_SLAB).setValue(BlockStateProperties.SLAB_TYPE, SlabType.BOTTOM));
             }
+        // the sun logo standing on the canopy's front edge
+        s.set(CANOPY_LOGO.getX(), CANOPY_LOGO.getY(), CANOPY_LOGO.getZ(), f(ModBlocks.ROOF_SIGN, S).setValue(Props.TILE8, 0)
+                .setValue(Props.LIT, Circuit.SIGN.startOn()));
         s.set(3, CEIL, 32, light(ModBlocks.DOWNLIGHT, Circuit.SIGN.startOn()));
         s.set(4, CEIL, 32, light(ModBlocks.DOWNLIGHT, Circuit.SIGN.startOn()));
         for (int y = Y; y < CEIL; y++) {
@@ -630,7 +635,6 @@ public final class RestaurantBuilder {
         // the prep island; the chef's board faces him (he stands at z 6, his back to the pass window)
         for (int x = 22; x <= 28; x++) s.set(x, Y, 5, f(ModBlocks.PREP_TABLE, S));
         s.set(25, Y + 1, 5, f(ModBlocks.CUTTING_BOARD, S));
-        s.set(27, Y + 1, 5, Blocks.CAULDRON.defaultBlockState());
         // west part: counters and shelves along the wall (the fire inspection record lies on the counter)
         s.set(15, Y, 5, f(ModBlocks.KITCHEN_COUNTER, E));
         s.set(15, Y, 6, f(ModBlocks.KITCHEN_COUNTER, E));

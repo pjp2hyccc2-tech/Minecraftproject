@@ -55,13 +55,14 @@ public final class ModBlocks {
         return new ForgeSoundType(volume, 1.0f, base::getBreakSound, step, base::getPlaceSound, base::getHitSound, base::getFallSound);
     }
 
-    static final SoundType VINYL = steps(1.0f, ModSounds.PLAYER_STEP_VINYL, SoundType.WOOD);
-    static final SoundType SOFT = steps(0.45f, ModSounds.PLAYER_STEP_VINYL, SoundType.WOOL);
-    static final SoundType TILE = steps(1.0f, ModSounds.PLAYER_STEP_TILE, SoundType.STONE);
-    static final SoundType KITCHEN = steps(1.0f, ModSounds.PLAYER_STEP_KITCHEN, SoundType.STONE);
-    static final SoundType WET = steps(1.0f, ModSounds.PLAYER_STEP_WET, SoundType.STONE);
-    static final SoundType SHARDS = steps(1.0f, ModSounds.PLAYER_STEP_GLASS, SoundType.GLASS);
-    static final SoundType PAPER = steps(1.0f, ModSounds.PLAYER_STEP_PAPER, SoundType.WOOL);
+    // the floor types are the sound worker's (ModSounds, step volume 4.0); mats muffle the vinyl step to 40 %
+    static final SoundType VINYL = ModSounds.SOUND_TYPE_VINYL;
+    static final SoundType SOFT = steps(1.6f, ModSounds.PLAYER_STEP_VINYL, SoundType.WOOL);
+    static final SoundType TILE = ModSounds.SOUND_TYPE_TILE;
+    static final SoundType KITCHEN = ModSounds.SOUND_TYPE_KITCHEN;
+    static final SoundType WET = ModSounds.SOUND_TYPE_WET;
+    static final SoundType SHARDS = ModSounds.SOUND_TYPE_GLASS;
+    static final SoundType PAPER = ModSounds.SOUND_TYPE_PAPER;
 
     // ------------------------------------------------------------------------------------------------ properties
     private static BlockBehaviour.Properties p(MapColor color, SoundType sound) {

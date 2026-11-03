@@ -238,6 +238,7 @@ public final class ExteriorBuilder {
     public static List<BlockPos> signLights() {
         List<BlockPos> out = new ArrayList<>(signTiles());
         for (int t = 0; t < 8; t++) out.add(new BlockPos(16 + t, RestaurantBuilder.CEIL + 3, 31));
+        out.add(RestaurantBuilder.CANOPY_LOGO);
         for (int[] l : LOT_LAMPS) out.add(new BlockPos(l[0], Terrain.LAMP_Y, l[1]));
         for (int[] l : Terrain.ROAD_LAMPS) out.add(new BlockPos(l[0], Terrain.LAMP_Y, l[1]));
         for (int x : RestaurantBuilder.SOFFIT_X) out.add(new BlockPos(x, RestaurantBuilder.CEIL, 31));
