@@ -105,13 +105,13 @@ Minecraft Java 版 **Forge 1.20.1** 用の、ステルス撮影ホラー MOD で
 
 | 項目 | 内容 |
 |---|---|
-| `flashReduction` | 点滅・フラッシュ・グリッチを抑える（光過敏の方向け） |
-| `jumpscares` | 全画面のジャンプスケア画像を表示する |
-| `screenEffects` | 恐怖の画面効果（ビネット・ノイズ・揺れ）の強さ 0.0〜1.5 |
-| `installShaderPack` | ReisatsuShaders を自動で導入・選択する |
-| `acoustics` | 部屋の残響と遮蔽（壁の向こうの音がこもる） |
+| `[accessibility] flashReduction` | 点滅・フラッシュ・グリッチを抑える（光過敏の方向け） |
+| `[accessibility] jumpscares` | 全画面のジャンプスケア画像を表示する |
+| `[accessibility] screenEffects` | 恐怖の画面効果（ビネット・ノイズ・揺れ）の強さ 0.0〜1.5 |
+| `[shaders] installShaderPack` | ReisatsuShaders を自動で導入・選択する |
+| `[sound] acoustics` | 部屋の残響と遮蔽（壁の向こうの音がこもる） |
 
-`config/reisatsu-common.toml`: `spiritSpeed`（追ってくる速さ）、`awarenessRate`（気付かれる速さ）、`autoStart`
+`config/reisatsu-common.toml` の `[game]`: `spiritSpeed`（追ってくる速さ）、`awarenessRate`（気付かれる速さ）、`autoStart`
 
 ## 開発者向け
 
