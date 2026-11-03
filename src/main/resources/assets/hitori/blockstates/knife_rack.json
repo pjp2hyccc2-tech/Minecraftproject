@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,has_knife=false": {
+      "model": "hitori:block/knife_rack"
+    },
+    "facing=north,has_knife=true": {
+      "model": "hitori:block/knife_rack_has_knife"
+    },
+    "facing=east,has_knife=false": {
+      "model": "hitori:block/knife_rack",
+      "y": 90
+    },
+    "facing=east,has_knife=true": {
+      "model": "hitori:block/knife_rack_has_knife",
+      "y": 90
+    },
+    "facing=south,has_knife=false": {
+      "model": "hitori:block/knife_rack",
+      "y": 180
+    },
+    "facing=south,has_knife=true": {
+      "model": "hitori:block/knife_rack_has_knife",
+      "y": 180
+    },
+    "facing=west,has_knife=false": {
+      "model": "hitori:block/knife_rack",
+      "y": 270
+    },
+    "facing=west,has_knife=true": {
+      "model": "hitori:block/knife_rack_has_knife",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "hitori:block/cardboard_box"
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "hitori:block/cardboard_box",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "hitori:block/cardboard_box",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "hitori:block/cardboard_box",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "shelf": "true"
+      },
+      "apply": {
+        "model": "hitori:block/oshiire_shelf_board"
+      }
+    }
+  ]
+}

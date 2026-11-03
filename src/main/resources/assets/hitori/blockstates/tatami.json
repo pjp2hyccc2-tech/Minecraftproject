@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "hitori:block/tatami"
+    },
+    "axis=x": {
+      "model": "hitori:block/tatami",
+      "y": 90
+    }
+  }
+}

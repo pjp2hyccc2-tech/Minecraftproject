@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,ringing=false": {
+      "model": "hitori:block/intercom"
+    },
+    "facing=north,ringing=true": {
+      "model": "hitori:block/intercom_ringing"
+    },
+    "facing=east,ringing=false": {
+      "model": "hitori:block/intercom",
+      "y": 90
+    },
+    "facing=east,ringing=true": {
+      "model": "hitori:block/intercom_ringing",
+      "y": 90
+    },
+    "facing=south,ringing=false": {
+      "model": "hitori:block/intercom",
+      "y": 180
+    },
+    "facing=south,ringing=true": {
+      "model": "hitori:block/intercom_ringing",
+      "y": 180
+    },
+    "facing=west,ringing=false": {
+      "model": "hitori:block/intercom",
+      "y": 270
+    },
+    "facing=west,ringing=true": {
+      "model": "hitori:block/intercom_ringing",
+      "y": 270
+    }
+  }
+}

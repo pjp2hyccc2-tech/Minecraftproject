@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,on=false": {
+      "model": "hitori:block/light_switch"
+    },
+    "facing=north,on=true": {
+      "model": "hitori:block/light_switch_on"
+    },
+    "facing=east,on=false": {
+      "model": "hitori:block/light_switch",
+      "y": 90
+    },
+    "facing=east,on=true": {
+      "model": "hitori:block/light_switch_on",
+      "y": 90
+    },
+    "facing=south,on=false": {
+      "model": "hitori:block/light_switch",
+      "y": 180
+    },
+    "facing=south,on=true": {
+      "model": "hitori:block/light_switch_on",
+      "y": 180
+    },
+    "facing=west,on=false": {
+      "model": "hitori:block/light_switch",
+      "y": 270
+    },
+    "facing=west,on=true": {
+      "model": "hitori:block/light_switch_on",
+      "y": 270
+    }
+  }
+}

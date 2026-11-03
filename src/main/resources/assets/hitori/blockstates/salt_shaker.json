@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/salt_shaker"
+    },
+    "facing=east": {
+      "model": "hitori:block/salt_shaker",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/salt_shaker",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/salt_shaker",
+      "y": 270
+    }
+  }
+}

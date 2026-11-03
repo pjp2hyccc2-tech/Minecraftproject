@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/microwave"
+    },
+    "facing=east": {
+      "model": "hitori:block/microwave",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/microwave",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/microwave",
+      "y": 270
+    }
+  }
+}

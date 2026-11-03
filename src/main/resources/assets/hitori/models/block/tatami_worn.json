@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "hitori:block/tatami_worn",
+    "side": "hitori:block/tatami_worn",
+    "bottom": "hitori:block/oshiire_floor"
+  }
+}
