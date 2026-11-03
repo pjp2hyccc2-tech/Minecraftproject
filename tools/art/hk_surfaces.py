@@ -257,9 +257,12 @@ def _bath_tiles(seed, size, floor=False):
     gn = wrapn(seed + 2, beta=1.2)
     gi = np.clip((3.4 if not floor else 2.4) + gn * 0.8, 0, 4)
     a[grout] = from_idx(gi, gcol)[grout]
-    # black mould in the grout lines (patches of near-black grout)
-    mould = (wrapn(seed + 3, beta=1.0) > (0.9 if not floor else 0.4)) & grout
+    # black mould in the grout: scattered short runs where the grout stays wet (fine noise, so a tiled wall shows
+    # no diagonal band of it), denser on the floor
+    mn = wrapn(seed + 3, beta=0.3) + (r.random((16, 16)) - 0.5) * 0.6
+    mould = (mn > (1.25 if not floor else 0.6)) & grout
     a[mould] = C('#1a1e1c')
+    dl(a, -0.06, (mn > 0.8) & grout & ~mould)
     # soap scum / limescale haze
     haze = wrapn(seed + 4, beta=2.0) > 0.7
     tint(a, '#dfe6e2', 0.12, haze & ~grout)
@@ -267,14 +270,7 @@ def _bath_tiles(seed, size, floor=False):
         wet = (r.random((16, 16)) < 0.06) & ~grout
         dl(a, 0.1, wet)
         grime(a, seed + 5, strength=0.12, color='#2c3830', beta=1.2)
-    else:
-        # one cracked tile
-        for (cx, cy) in ((9, 4), (10, 5), (10, 6)):
-            if not grout[cy, cx]:
-                a[cy, cx] = C('#3a4448')
-        # a rust stain bleeding down a grout line (from the old tap above)
-        st = (x == 7) & (wrapn(seed + 6, beta=0.6, sy=1, sx=6) > -0.2)
-        tint(a, '#7a4a2a', 0.25, st)
+    # (no cracked tile or rust run here: a wall of these repeats every 16 px, and one-off marks would form a grid)
     return a
 
 

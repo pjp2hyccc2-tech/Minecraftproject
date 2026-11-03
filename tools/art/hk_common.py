@@ -46,7 +46,7 @@ def painted(key, palette, base=None, amp=0.3, beta=1.6, bev=True, wear_amt=0.0, 
     """Smooth painted / plastic surface with soft noise and pixel bevel."""
     def fn(w, h, face):
         n = noise(w, h, M._seed(key, w, h, face) + seed, beta=beta, wrap=False)
-        b = (len(palette) - 1) * 0.6 if base is None else base
+        b = float(round((len(palette) - 1) * 0.6)) if base is None else base   # a bin centre: no two-tone blotches
         a = from_idx(b + n * amp, palette)
         return M._finish(a, w, h, face, bev, wear_amt, M._seed(key, w, h, face))
     return Mat(key, fn)
