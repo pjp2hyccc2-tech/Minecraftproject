@@ -1,0 +1,164 @@
+title screen (world tour, shaders=false)
+preview pack: 0 stand-in assets for missing art, 0 art files from ci/art_preview
+world creation requested
+in world, 159 steps
+step rules dim=minecraft:overworld pos=0, -60, 1
+step enter dim=minecraft:overworld pos=0, -60, 1
+step ensure_built dim=hitori:shirakaba pos=30, 70, 8
+step go_ext_street_west dim=hitori:shirakaba pos=30, 70, 8
+shot world_ext_street_west
+step go_ext_front dim=hitori:shirakaba pos=-19, 65, 21
+shot world_ext_front
+step go_ext_lamp dim=hitori:shirakaba pos=21, 65, 25
+shot world_ext_lamp
+step go_ext_vending dim=hitori:shirakaba pos=28, 65, 22
+shot world_ext_vending
+step go_ext_park dim=hitori:shirakaba pos=4, 65, 22
+shot world_ext_park
+step go_ext_side_path dim=hitori:shirakaba pos=47, 65, 21
+shot world_ext_side_path
+step go_ext_stairs dim=hitori:shirakaba pos=-3, 65, 15
+shot world_ext_stairs
+step go_ext_corridor dim=hitori:shirakaba pos=-10, 65, 0
+shot world_ext_corridor
+step go_ext_corridor_door dim=hitori:shirakaba pos=-1, 69, -2
+shot world_ext_corridor_door
+step go_ext_balcony dim=hitori:shirakaba pos=22, 69, -3
+shot world_ext_balcony
+step go_ext_balcony_view dim=hitori:shirakaba pos=31, 70, 15
+shot world_ext_balcony_view
+step go_ext_overview dim=hitori:shirakaba pos=25, 70, 15
+shot world_ext_overview
+step go_ext_overview_ne dim=hitori:shirakaba pos=22, 90, 46
+shot world_ext_overview_ne
+step go_peephole dim=hitori:shirakaba pos=58, 86, -15
+shot world_peephole
+step nv_true dim=hitori:shirakaba pos=24, 68, -1
+step go_ext_street_west_nv dim=hitori:shirakaba pos=24, 68, -1
+shot world_ext_street_west_nv
+step go_ext_front_nv dim=hitori:shirakaba pos=-19, 65, 21
+shot world_ext_front_nv
+step go_ext_lamp_nv dim=hitori:shirakaba pos=21, 65, 25
+shot world_ext_lamp_nv
+step go_ext_vending_nv dim=hitori:shirakaba pos=28, 65, 22
+shot world_ext_vending_nv
+step go_ext_park_nv dim=hitori:shirakaba pos=4, 65, 22
+shot world_ext_park_nv
+step go_ext_side_path_nv dim=hitori:shirakaba pos=47, 65, 21
+shot world_ext_side_path_nv
+step go_ext_stairs_nv dim=hitori:shirakaba pos=-3, 65, 15
+shot world_ext_stairs_nv
+step go_ext_corridor_nv dim=hitori:shirakaba pos=-10, 65, 0
+shot world_ext_corridor_nv
+step go_ext_corridor_door_nv dim=hitori:shirakaba pos=-1, 69, -2
+shot world_ext_corridor_door_nv
+step go_ext_balcony_nv dim=hitori:shirakaba pos=22, 69, -3
+shot world_ext_balcony_nv
+step go_ext_balcony_view_nv dim=hitori:shirakaba pos=31, 70, 15
+shot world_ext_balcony_view_nv
+step go_ext_overview_nv dim=hitori:shirakaba pos=25, 70, 15
+shot world_ext_overview_nv
+step go_ext_overview_ne_nv dim=hitori:shirakaba pos=22, 90, 46
+shot world_ext_overview_ne_nv
+step nv_false dim=hitori:shirakaba pos=58, 86, -15
+step go_genkan_start dim=hitori:shirakaba pos=58, 86, -15
+shot world_genkan_start
+step go_hall_start dim=hitori:shirakaba pos=26, 70, 2
+shot world_hall_start
+step go_dk_start dim=hitori:shirakaba pos=26, 70, 1
+shot world_dk_start
+step go_dk_table_start dim=hitori:shirakaba pos=27, 70, 6
+shot world_dk_table_start
+step go_toilet_start dim=hitori:shirakaba pos=26, 70, 7
+shot world_toilet_start
+step go_bath_start dim=hitori:shirakaba pos=29, 70, 2
+shot world_bath_start
+step go_washroom_start dim=hitori:shirakaba pos=31, 70, 2
+shot world_washroom_start
+step go_tatami_start dim=hitori:shirakaba pos=30, 70, 5
+shot world_tatami_start
+step go_tatami_tv_start dim=hitori:shirakaba pos=27, 70, 12
+shot world_tatami_tv_start
+step go_closet_front_start dim=hitori:shirakaba pos=24, 70, 10
+shot world_closet_front_start
+step go_western_start dim=hitori:shirakaba pos=26, 70, 11
+shot world_western_start
+step go_western_desk_start dim=hitori:shirakaba pos=29, 70, 7
+shot world_western_desk_start
+step go_western_closet_start dim=hitori:shirakaba pos=30, 70, 8
+shot world_western_closet_start
+step go_curtains_start dim=hitori:shirakaba pos=30, 70, 9
+shot world_curtains_start
+step go_genkan_on dim=hitori:shirakaba pos=25, 70, 10
+shot world_genkan_on
+step go_hall_on dim=hitori:shirakaba pos=26, 70, 2
+shot world_hall_on
+step go_dk_on dim=hitori:shirakaba pos=26, 70, 1
+shot world_dk_on
+step go_dk_table_on dim=hitori:shirakaba pos=27, 70, 6
+shot world_dk_table_on
+step go_toilet_on dim=hitori:shirakaba pos=26, 70, 7
+shot world_toilet_on
+step go_bath_on dim=hitori:shirakaba pos=29, 70, 2
+shot world_bath_on
+step go_washroom_on dim=hitori:shirakaba pos=31, 70, 2
+shot world_washroom_on
+step go_tatami_on dim=hitori:shirakaba pos=30, 70, 5
+shot world_tatami_on
+step go_tatami_tv_on dim=hitori:shirakaba pos=27, 70, 12
+shot world_tatami_tv_on
+step go_closet_front_on dim=hitori:shirakaba pos=24, 70, 10
+shot world_closet_front_on
+step go_western_on dim=hitori:shirakaba pos=26, 70, 11
+shot world_western_on
+step go_western_desk_on dim=hitori:shirakaba pos=29, 70, 7
+shot world_western_desk_on
+step go_western_closet_on dim=hitori:shirakaba pos=30, 70, 8
+shot world_western_closet_on
+step go_curtains_on dim=hitori:shirakaba pos=30, 70, 9
+shot world_curtains_on
+step go_genkan_off dim=hitori:shirakaba pos=25, 70, 10
+shot world_genkan_off
+step go_hall_off dim=hitori:shirakaba pos=26, 70, 2
+shot world_hall_off
+step go_dk_off dim=hitori:shirakaba pos=26, 70, 1
+shot world_dk_off
+step go_dk_table_off dim=hitori:shirakaba pos=27, 70, 6
+shot world_dk_table_off
+step go_toilet_off dim=hitori:shirakaba pos=26, 70, 7
+shot world_toilet_off
+step go_bath_off dim=hitori:shirakaba pos=29, 70, 2
+shot world_bath_off
+step go_washroom_off dim=hitori:shirakaba pos=31, 70, 2
+shot world_washroom_off
+step go_tatami_off dim=hitori:shirakaba pos=30, 70, 5
+shot world_tatami_off
+step go_tatami_tv_off dim=hitori:shirakaba pos=27, 70, 12
+shot world_tatami_tv_off
+step go_closet_front_off dim=hitori:shirakaba pos=24, 70, 10
+shot world_closet_front_off
+step go_western_off dim=hitori:shirakaba pos=26, 70, 11
+shot world_western_off
+step go_western_desk_off dim=hitori:shirakaba pos=29, 70, 7
+shot world_western_desk_off
+step go_western_closet_off dim=hitori:shirakaba pos=30, 70, 8
+shot world_western_closet_off
+step go_curtains_off dim=hitori:shirakaba pos=30, 70, 9
+shot world_curtains_off
+step go_closet_inside dim=hitori:shirakaba pos=25, 70, 10
+shot world_closet_inside
+step go_closet_inside_up dim=hitori:shirakaba pos=23, 70, 11
+shot world_closet_inside_up
+step nv_true dim=hitori:shirakaba pos=23, 70, 11
+step go_closet_inside_nv dim=hitori:shirakaba pos=23, 70, 11
+shot world_closet_inside_nv
+step go_closet_inside_up_nv dim=hitori:shirakaba pos=23, 69, 11
+shot world_closet_inside_up_nv
+step nv_false dim=hitori:shirakaba pos=23, 69, 11
+step go_closet_peek dim=hitori:shirakaba pos=23, 69, 11
+shot world_closet_peek
+step go_closet_open dim=hitori:shirakaba pos=23, 69, 10
+shot world_closet_open
+step go_bath_full dim=hitori:shirakaba pos=26, 70, 11
+shot world_bath_full
+finished
