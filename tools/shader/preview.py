@@ -839,6 +839,8 @@ SHOTS = {
     "r_lot": shot(28.5, 44.5, 150.0, 4.0, fear=0.1),
     "r_lot_sign": shot(26.5, 38.5, -70.0, -6.0, fear=0.1),
     "r_lot_vending": shot(13.5, 40.5, 155.0, 10.0, fear=0.1),
+    # the same through the finder: the lights must keep their faces (no blown-out boxes)
+    "r_lot_finder": shot(13.5, 40.5, 155.0, 10.0, fear=0.1, held=FINDER),
     # the kitchen under its fluorescent tubes: steel, the blue flames, the heat lamp
     "r_kitchen": shot(31.5, 7.5, 125.0, 12.0, fear=0.1, circuits=dict(kitchen=True)),
     # the women's restroom: the dark mirror over the sinks, the cavity and the woman behind it
@@ -996,6 +998,7 @@ def main():
             buf = r.read_float(idx)[::-1, :, :3]
             m = max(float(np.nanmax(buf)), 1e-6)
             write_png(os.path.join(args.out, "%s_ct%d.png" % (name, idx)), np.clip(buf / m * 255.0, 0, 255).astype(np.uint8))
+            np.save(os.path.join(args.out, "%s_ct%d.npy" % (name, idx)), buf)
             print("    colortex%d max %.4f" % (idx, m))
         if args.dump_emap and folder == HIDAMARI:
             em = r.read_shadow_color()

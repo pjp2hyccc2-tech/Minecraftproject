@@ -129,8 +129,8 @@ void main() {
 
     // ---- bloom source: emissive surfaces (lamps, signs, embers, the spirits in the finder)
     float fm = finderMode();
-    float thr = mix(1.10, 0.55, fm);
-    vec3 bloom = color * aux.r * 0.85 + max(color - vec3(thr), vec3(0.0)) * mix(0.30, 0.60, fm);
+    float thr = mix(1.10, 0.90, fm);
+    vec3 bloom = color * aux.r * 0.85 + max(color - vec3(thr), vec3(0.0)) * 0.30;
     bloom = min(bloom, vec3(32.0));
 
     /* RENDERTARGETS: 0,3,9 */

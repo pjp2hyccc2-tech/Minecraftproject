@@ -106,7 +106,7 @@ const int EM_PATTERN[EM_COUNT] = int[EM_COUNT](
 
 // how bright the lamp's own glowing texels are (surface emission, x texture colour)
 const float EM_SURF[EM_COUNT] = float[EM_COUNT](
-    0.0, 3.2, 3.2, 3.6, 3.0, 2.6, 2.4, 3.2, 3.0, 5.0, 4.0, 1.7, 1.2, 3.0, 3.0, 1.6,
+    0.0, 3.2, 3.2, 3.6, 3.0, 2.6, 2.0, 3.2, 3.0, 5.0, 4.0, 1.7, 1.2, 3.0, 3.0, 1.6,
     1.3, 1.6, 1.4, 2.6, 2.2, 0.9, 3.2, 1.8, 1.6);
 
 // vanilla light levels of the design (used when the shadow pass cannot measure them)
