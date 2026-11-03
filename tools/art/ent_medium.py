@@ -52,7 +52,7 @@ class Medium(Spec):
                                                        faces=('top', 'bottom', 'right', 'left', 'back'))])
         pin = Part('pin', (0, 0, 1.0), rot=(0, 0, 0.5), cubes=[Cube((-2.25, -0.25, -0.25), (4.5, 0.5, 0.5), 'pin', tag='pin')])
         bun.add(pin)
-        lids = card('lids', (0, -3.0, -2.58), (-2.0, -0.5, 0), (4, 1, 0), 'lids')
+        lids = card('lids', (0, -3.5, -2.58), (-2.25, -0.5, 0), (4.5, 1, 0), 'lids')
         mouth = card('mouth', (0, -1.75, -2.58), (-1.0, 0, 0), (2, 1, 0), 'mouth')
         head.add(bun, lids, mouth)
         neck.add(head)
@@ -204,29 +204,30 @@ class Medium(Spec):
         face = [
             'hhhhh5hhhhh',
             'hh5555555hh',
-            'h55w555w55h',
+            'h555w5w555h',
             'h4ggg5ggg4h',
-            'h4LeL4LeL4h',
-            'h3434443433',
+            'h3LeeL4LeeL',
+            'h4K4454K4h4',
             '34444554443',
-            '3#44455444#',
-            '3#4mllllm4#3',
-            '3344#44#443',
-            'h33444444 33',
+            '3#4#n5n#4#3',
+            '3#44mlm44#3',
+            '33#44444#33',
+            'h334444433h',
             'hh33333333h',
         ]
-        face[8] = '3#4mllll m4#'[:11]
-        face[8] = '3#4mllllm#3'
-        face[10] = 'h334444433h'
-        leg = {'h': None, '3': (SKIN, 3.0), '4': (SKIN, 4.0), '5': (SKIN, 4.8), '#': (SKIN, 2.0), 'w': (SKIN, 3.6),
-               'g': (HAIR, 2.2), 'L': (SKIN, 2.6), 'e': C('#1c1512'), 'm': (SKIN, 2.2), 'l': C('#7a4f4a')}
+        face[4] = 'hLeeL4LeeLh'
+        face[5] = 'hK44454 44Kh'[:11]
+        face[5] = 'hK4445444Kh'
+        leg = {'h': None, '3': (SKIN, 3.0), '4': (SKIN, 4.0), '5': (SKIN, 4.8), '#': (SKIN, 2.2), 'w': (SKIN, 3.4),
+               'g': (HAIR, 2.0), 'L': (SKIN, 2.4), 'e': C('#241a16'), 'm': (SKIN, 2.0), 'l': C('#7d5049'),
+               'K': (SKIN, 2.8), 'n': (SKIN, 2.0)}
         pt.pattern(f, face, leg)
         for x in (2, 3, 7, 8):                                 # forehead lines
             f.dl(x, 2, -0.05)
-        f.set(8, 7, P(SKIN, 1.5))                             # a mole by her nose
+        f.set(9, 6, P(SKIN, 1.6))                             # a mole by her nose
         ef = EF('head')['front']
         ef.set(3, 4, '#2a2420')                               # a little life in her eyes
-        ef.set(7, 4, '#2a2420')
+        ef.set(8, 4, '#2a2420')
         for n in ('right', 'left'):
             fc = fs[n]                                        # 10 x 12, xf = 0 at the face
             for y in range(4, fc.h):
@@ -249,10 +250,10 @@ class Medium(Spec):
             if n in ('front', 'back'):
                 fc.set(0, 0, C('#8c2d3a'))                    # a red bead at the end of the hairpin
         # ---------------------------------------------------------------- blink lids, talking mouth
-        lf = F('lids')['front']                               # 8 x 2
+        lf = F('lids')['front']                               # 9 x 2 over face cols 1..9, rows 4..5
         for x in range(lf.w):
-            if x in (1, 2, 3, 5, 6, 7):
-                lf.set(x, 0, P(SKIN, 3.2))
+            if x != 4:
+                lf.set(x, 0, P(SKIN, 3.0 if x in (0, 3, 5, 8) else 3.4))
                 lf.set(x, 1, P(SKIN, 2.4))
         mf = F('mouth')['front']                              # 4 x 2
         for x in range(mf.w):
