@@ -438,7 +438,7 @@ public final class Story {
             Hiding.exit(p, false);
             GameManager.lowerCamera(p);
             GameManager.event(p, GameManager.EV_FADE, 40, "");
-            GameManager.teleport(p, level, spot.center(), spot.yaw(), 8.0f);
+            GameManager.teleport(p, level, spot.center(), spot.yaw(), 14.0f);
             ps.locked = true;
             ps.lockPos = spot.center();
             GameManager.event(p, GameManager.EV_EXORCISM, 0, "");
@@ -490,7 +490,8 @@ public final class Story {
                 int local = t - exoStageAt;
                 int i = local / 150;
                 int k = local % 150;
-                if (m != null && local == 40) m.setAnimPose(Medium.PRAY);
+                // she stays on her knees at the table end, praying, so the table and its photos stay in view
+                if (m != null && m.pose() != Medium.KNEEL) m.setAnimPose(Medium.KNEEL);
                 if (i < SpiritKind.ALL.length) {
                     SpiritKind kind = SpiritKind.ALL[i];
                     List<Layout.Marker> spots = Layout.markers("exorcism_spirits");

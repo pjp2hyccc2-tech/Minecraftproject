@@ -712,16 +712,19 @@ public final class GameManager {
         data.ofudaUsed++;
         data.reishou = Math.min(3, data.reishou + 1);
         data.setDirty();
+        // you come to by the car, the medium in front of you
         Layout.Marker w = Layout.marker("wake");
-        teleport(p, level, w.center(), w.yaw(), 0.0f);
+        Medium medium = Spirits.medium(level);
+        Vec3 face = medium != null ? medium.position() : Layout.marker("medium").center();
+        float yaw = (float) (Mth.atan2(face.z - w.center().z, face.x - w.center().x) * Mth.RAD_TO_DEG) - 90.0f;
+        teleport(p, level, w.center(), yaw, 4.0f);
         ps.resetAfterWake();
         p.removeEffect(MobEffects.DARKNESS);
         p.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0, true, false, false));
         level.sendParticles(ModParticles.PAPER_ASH.get(), p.getX(), p.getY() + 1.2, p.getZ(), 24, 0.4, 0.5, 0.4, 0.02);
         level.playSound(null, p.getX(), p.getY(), p.getZ(), ModSounds.ITEM_OFUDA_BURN.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
         event(p, EV_WAKE, count(p, ModItems.OFUDA.get()), "");
-        Medium m = Spirits.medium(level);
-        if (m != null) m.talk(60);
+        if (medium != null) medium.talk(60);
         Story.say(p, "medium", 70, "dialogue.reisatsu.wake." + Math.min(3, data.ofudaUsed));
         savePlayer(p);
     }
