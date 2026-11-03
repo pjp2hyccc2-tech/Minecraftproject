@@ -473,21 +473,27 @@ void main() {
         float front = smoothstep(edge - 0.12, edge, n + 0.25) * (1.0 - keep);   // the dissolving edge
         vec3 pale = vec3(0.62, 0.72, 0.86);
         vec3 cold = vec3(0.55, 0.78, 1.00);
+        // a ghost gives back little of the light that falls on it: the beam goes half through
+        color *= 0.45;
         emission = pale * (rim * 0.030 + front * 0.06) * (0.4 + 0.6 * vis);
         if (fm > 0.5) {
-            float g = 0.10 + 0.90 * rim + front * 0.8;
-            emission += cold * g * 0.22 + mix(lin, vec3(luma(lin)), 0.6) * cold * 0.10;
-            color = mix(color, color * vec3(0.75, 0.88, 1.15), 0.5);
+            // the finder sees them: a cold glow strongest at the outline and the dissolving
+            // edges, the figure itself pale and cold, its features still readable
+            float g = rim * 0.85 + front * 1.2;
+            vec3 inner = mix(lin, vec3(luma(lin)), 0.65) * cold;
+            emission += cold * g * 0.30 + inner * (0.10 + 0.05 * sin(t * 1.7 + wp.y * 3.0)) + cold * 0.012;
+            // in the finder the glow is what you see: light falling on it barely adds
+            color = color * vec3(0.70, 0.85, 1.10) * 0.45;
         }
         color += emission;
     #ifndef TRANSLUCENT
-        color += handLightsForward(lin, playerPos, Ngeo, 0.0, vec2(0.6, 0.03));
+        color += handLightsForward(lin, playerPos, Ngeo, 0.0, vec2(0.6, 0.03)) * 0.45;
     #endif
         alpha = vis * keep * (fm > 0.5 ? 1.0 : 0.92 + 0.08 * rim);
         emissive = saturate(maxOf(emission) * 3.0) * fm;
         mat = MAT_SPIRIT;
         // the mask for composite: haze where it stands (even unseen), chroma split, the trail
-        float glowAmt = fm * (0.25 + 0.75 * rim) * keep;
+        float glowAmt = fm * (0.06 + 0.94 * rim * rim + front) * keep;
         spiritOut = vec4(1.0, glowAmt, vis, (1.0 - vis) * 0.85 + 0.15);
     }
   #endif

@@ -107,8 +107,6 @@ void main() {
         vec4 fog = blurredFog(uv, depth);
         float T = fog.a;
         T = mix(T, pow(T, 0.45), aux.r);             // lamps glow on, deep into the mist
-        // a faint spirit is not a surface: the mist behind it still shows (a ghostly shape)
-        T = mix(T, sqrt(T), sp.r * (1.0 - sp.b) * 0.6);
         color = color * T + fog.rgb;
 #ifdef DUST_MOTES
         if (anyHandLight()) {
@@ -124,7 +122,7 @@ void main() {
     vec4 hist = vec4(0.0);
 #ifdef AFTERIMAGE_ON
     vec3 prev = texture(colortex9, texcoord).rgb;
-    float decay = exp(-max(frameTime, 0.0) / 0.20);
+    float decay = exp(-clamp(frameTime, 0.0, 0.25) / 0.11);
     vec3 now = vec3(0.55, 0.80, 1.00) * sp.g;
     hist = vec4(max(now, prev * decay * finderMode()), 1.0);
 #endif

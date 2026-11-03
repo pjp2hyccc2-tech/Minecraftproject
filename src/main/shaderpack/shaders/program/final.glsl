@@ -187,9 +187,11 @@ void main() {
     }
     // ---- the finder: barrel distortion, focus breathing --------------------------------
     if (fm > 0.5) {
+        // normalised so the corners stay inside the picture (the photo is grabbed from it)
         vec2 c = uv - 0.5;
         vec2 ca2 = c * vec2(aspectRatio, 1.0);
-        uv = 0.5 + c * (0.965 + 0.085 * dot(ca2, ca2));
+        float rMax2 = 0.25 * (aspectRatio * aspectRatio + 1.0);
+        uv = 0.5 + c * (1.0 + 0.085 * dot(ca2, ca2)) / (1.0 + 0.085 * rMax2 + 0.004);
         float hunt = 0.0;
     #ifndef FLASH_REDUCTION
         // an old lens hunting for focus: the picture swells and softens, settles, swells
@@ -237,10 +239,11 @@ void main() {
         color += (b1 * 0.6 + b2 * 0.8) * vec3(1.0, 0.52, 0.40) * 0.45 * BLOOM_STRENGTH;
     }
   #ifdef AFTERIMAGE_ON
-    // the spirits' cold glow lingers in the finder
+    // the spirits' cold glow lingers in the finder: a faint outline where they just were
     if (fm > 0.5) {
         vec3 trail = texture(colortex9, uv).rgb;
-        color += trail * 0.30;
+        float here = texture(colortex8, uv).g;
+        color += max(trail - vec3(0.55, 0.80, 1.00) * here, vec3(0.0)) * 0.16;
     }
   #endif
 #endif
@@ -254,7 +257,7 @@ void main() {
     // the eyes open in the dark restaurant, close a little under the sign and the lamps
     float eyeBlock = float(eyeBrightnessSmooth.x) / 240.0;
     exposure *= mix(1.45, 0.95, smoothstep(0.10, 0.80, eyeBlock));
-    exposure *= mix(1.0, 1.20, fm);                // the finder is a bright optical finder
+    exposure *= mix(1.0, 1.65, fm);                // the finder: a bright optical finder, the eye pressed to it
 #endif
     exposure *= 1.0 - 0.92 * saturate(darknessFactor * 0.55 + darknessLightFactor * 1.5);
 #ifndef WORLD_HIDAMARI

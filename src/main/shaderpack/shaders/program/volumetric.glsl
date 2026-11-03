@@ -26,12 +26,28 @@ void main() {
     // opaque surface (depthtex1: before the translucents)
     int mat = int(floor(texture(colortex5, texcoord).a * 255.0 + 0.5));
     if (mat == MAT_WINDOW || mat == MAT_GLASS_SMALL) depth = texture(depthtex1, texcoord).r;
+#ifdef WORLD_HIDAMARI
+    vec4 sp = texture(colortex8, texcoord);
+    float spiritVis = 1.0;
+    float spiritDepth = depth;
+    if (sp.r > 0.5 && sp.b < 0.99) {
+        spiritVis = sp.b;
+        depth = behindSpiritDepth(texcoord, depth);
+    }
+#endif
     if (isEyeInWater == 0 && !isHandDepth(depth)) {
         bool sky = depth >= 1.0;
         vec3 P = viewToPlayer(screenToView(texcoord, sky ? 1.0 : depth));
         float len = max(length(P), 1e-4);
         vec3 rd = P / len;
         float dist = sky ? 4096.0 : len;
+#ifdef WORLD_HIDAMARI
+        // a partly visible spirit: the air in front of it, mixed with the air behind it
+        if (spiritVis < 1.0) {
+            float ds = length(screenToView(texcoord, spiritDepth));
+            dist = mix(dist, ds, spiritVis);
+        }
+#endif
         float dither = bayer4(gl_FragCoord.xy);
 #ifdef VOLUMETRICS_ON
         res = fogMarch(rd, dist, dither);

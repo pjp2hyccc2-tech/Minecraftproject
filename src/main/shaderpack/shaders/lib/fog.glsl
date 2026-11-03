@@ -194,6 +194,27 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
 }
 #endif
 
+// ---- behind a faint spirit -------------------------------------------------------------------
+// A spirit writes depth even when the eye cannot see it. Where one covers the pixel, what is
+// behind it (the air, the beam on the wall) is estimated from the nearest pixels left and right
+// of it that no spirit covers - otherwise an invisible spirit would leave a clear silhouette in
+// the mist and in the beam.
+float behindSpiritDepth(vec2 uv, float depth) {
+    vec2 px = 1.0 / vec2(viewWidth, viewHeight);
+    float best = depth;
+    for (int s = -1; s <= 1; s += 2) {
+        for (int i = 1; i <= 6; i++) {
+            vec2 u = uv + vec2(float(s) * float(i * i) * 7.0, 0.0) * px;
+            if (u.x < 0.0 || u.x > 1.0) break;
+            if (texture(colortex8, u).r < 0.5) {
+                best = max(best, texture(depthtex0, u).r);
+                break;
+            }
+        }
+    }
+    return best;
+}
+
 // ---- the visible beam --------------------------------------------------------------------
 // distance interval [t0, t1] where the view ray (from the camera, unit rd) is inside the
 // light's cone widened to tan(half angle) = tanA. (0, 0) if it misses.

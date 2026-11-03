@@ -692,7 +692,7 @@ class Renderer:
             "shadowModelView": smv, "shadowModelViewInverse": np.linalg.inv(smv).astype(np.float32), "shadowProjection": sproj,
             "cameraPosition": tuple(cam), "sunPosition": tuple(sun), "moonPosition": tuple(moon), "shadowLightPosition": tuple(light),
             "fogColor": (0.02, 0.025, 0.03), "viewWidth": float(w), "viewHeight": float(h), "aspectRatio": w / h,
-            "near": 0.05, "far": 192.0, "frameTimeCounter": t, "frameTime": 1.0 / 60.0, "rainStrength": shot.get("fear", 0.0),
+            "near": 0.05, "far": 192.0, "frameTimeCounter": t, "frameTime": shot.get("frameTime", 1.0 / 30.0), "rainStrength": shot.get("fear", 0.0),
             "thunderStrength": shot.get("danger", 0.0), "nightVision": 1.0 if finder else 0.0,
             "blindness": shot.get("flash", 0.0), "darknessFactor": shot.get("darkness", 0.0),
             "darknessLightFactor": shot.get("darkness", 0.0) * 0.3,
@@ -773,7 +773,7 @@ class Renderer:
         hand_proj = np.diag([1.0, 1.0, 0.125, 1.0]).astype(np.float32) @ perspective(70.0, w / h, 0.05, 192.0 * 4)
         hl = ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0)
         for item, side in ((held, 1), (held2, -1)):
-            hm = hand_mesh(self.atlas_obj, item, side, hl)
+            hm = None if finder else hand_mesh(self.atlas_obj, item, side, hl)   # the mod hides the hand in the finder
             if hm is not None:
                 self.upload_atlas()
                 self.gbuffer_draw("gbuffers_hand", U, hm, np.eye(4, dtype=np.float32), hand_proj, (0, 0, 0), extra={"currentRenderedItemId": item})
@@ -841,18 +841,21 @@ SHOTS = {
     "r_kitchen": shot(31.5, 7.5, 125.0, 12.0, fear=0.1, circuits=dict(kitchen=True)),
     # the women's restroom: the dark mirror over the sinks, the cavity and the woman behind it
     "r_restroom": shot(10.5, 20.5, 180.0, 6.0, fear=0.35, spirits=[(MIRROR_WOMAN, 10.5, 65, 13.5, 0.0, 0.25)]),
+    "r_trail": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, spirits=[(WAITRESS, 23.2, 65, 18.3, 270.0, 1.0)],
+                    sequence=dict(frames=8, move=(-0.22, 0.0, 0.0), dt=1.0 / 30.0)),
     "r_restroom_finder": shot(10.5, 20.5, 180.0, 6.0, fear=0.35, held=FINDER, spirits=[(MIRROR_WOMAN, 10.5, 65, 13.5, 0.0, 1.0)]),
     # the finder (reishi) on the waitress between the tables, the flash frame
-    "r_finder": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 1.0)]),
-    "r_flash": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, flash=1.0, spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 1.0)]),
-    "r_flash_decay": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, flash=0.35, spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 1.0)]),
+    "r_finder": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 1.0)]),
+    "r_finder_lamp": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, held2=FLASHLIGHT, spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 1.0)]),
+    "r_flash": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, flash=1.0, spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 1.0)]),
+    "r_flash_decay": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, flash=0.35, spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 1.0)]),
     # the naked eye: the waitress faint, the visitor invisible (only the haze)
     "r_spirit_eye": shot(21.5, 14.5, -20.0, 6.0, fear=0.4, held=FLASHLIGHT,
-                         spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 0.3), (VISITOR, 23.5, 65, 18.0, 160.0, 0.0)]),
+                         spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 0.3), (VISITOR, 20.6, 65, 17.6, 160.0, 0.0)]),
     # fear, danger, caught
     "r_fear": shot(21.5, 14.5, -35.0, 8.0, fear=0.95, danger=0.15, held=FLASHLIGHT, t=131.7),
-    "r_danger": shot(21.5, 14.5, -35.0, 8.0, fear=0.8, danger=1.0, held=FLASHLIGHT, t=128.31,
-                     spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 0.9)]),
+    "r_danger": shot(21.5, 14.5, -35.0, 8.0, fear=0.8, danger=1.0, held=FLASHLIGHT, t=126.02,
+                     spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 0.9)]),
     "r_caught": shot(21.5, 14.5, -35.0, 8.0, fear=0.9, darkness=0.65, held=FLASHLIGHT),
     # the visitor's profile through the south window, from the lot (a photo window)
     "r_window_visitor": shot(31.5, 35.5, 160.0, 4.0, fear=0.3, spirits=[(VISITOR, 33.0, 65, 28.5, 90.0, 1.0)], held=FINDER),
@@ -913,6 +916,7 @@ def main():
     ap.add_argument("--timing", action="store_true", help="print the time of every pass (llvmpipe)")
     ap.add_argument("--dump-emap", action="store_true", help="also write the emitter map of each shot")
     ap.add_argument("--t", type=float, default=None, help="frameTimeCounter for every shot (flicker phases)")
+    ap.add_argument("--dump", default="", help="comma separated colortex indices to dump after the frame (rgb, scaled to max)")
     ap.add_argument("-D", action="append", default=[])
     args = ap.parse_args()
     if args.check:
@@ -963,13 +967,34 @@ def main():
         r.upload_atlas()
         timing = {} if args.timing else None
         t0 = time.time()
-        img, st = r.render(sh, wd, meshes, figures, timing)
+        seq = sh.get("sequence")
+        if seq:
+            # frames with the spirits moving: colortex9 (the afterimage) is kept between them
+            r._hist_ok = False
+            base = list(sh.get("spirits", []))
+            for f in range(seq["frames"]):
+                figs = []
+                for (kind, x, y, z, yaw, alpha) in base:
+                    mx, my, mz = (v * (f - seq["frames"] + 1) for v in seq["move"])
+                    bl, sl = wd.light_at(int(math.floor(x + mx)), y + 1, int(math.floor(z + mz)))
+                    body, eyes = figure_mesh(atlas, kind, x + mx, y + my, z + mz, yaw, ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0), alpha)
+                    figs.append(dict(id=kind, body=body, eyes=eyes, translucent=True))
+                r.upload_atlas()
+                sh2 = dict(sh, t=sh.get("t", 123.4) + f * seq["dt"])
+                img, st = r.render(sh2, wd, meshes, figs, timing, history_frames=2 if f > 0 else 1)
+        else:
+            img, st = r.render(sh, wd, meshes, figures, timing)
         p = os.path.join(args.out, name + ".png")
         write_png(p, img)
         paths.append(p)
         print("%-18s %5.2fs  mean %6.2f  black %5.1f%%  hdr max %8.3f  nan %d" % (name, time.time() - t0, st["mean"], st["black%"], st["hdr_max"], st["nan"]))
         if timing:
             print("    " + "  ".join("%s %.0fms" % (k, v * 1000) for k, v in timing.items()))
+        for idx in [int(v) for v in args.dump.split(",") if v.strip()]:
+            buf = r.read_float(idx)[::-1, :, :3]
+            m = max(float(np.nanmax(buf)), 1e-6)
+            write_png(os.path.join(args.out, "%s_ct%d.png" % (name, idx)), np.clip(buf / m * 255.0, 0, 255).astype(np.uint8))
+            print("    colortex%d max %.4f" % (idx, m))
         if args.dump_emap and folder == HIDAMARI:
             em = r.read_shadow_color()
             write_png(os.path.join(args.out, name + "_emap.png"), np.ascontiguousarray(em[::-1, :, :3]))

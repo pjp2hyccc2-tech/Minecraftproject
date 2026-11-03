@@ -91,12 +91,14 @@ void main() {
         if (mat != MAT_NONE && mat != MAT_SPIRIT) {
             vec4 nm = texture(colortex6, texcoord);
             vec3 N = octDecode(nm.rg);
-            vec3 viewP = screenToView(texcoord, depth);
+            vec4 spiritMask = texture(colortex8, texcoord);
+            float behindSpirit = 1.0 - spiritMask.r * spiritMask.b;   // a faint spirit in front: most of the light reaches us
+            // what is behind a faint spirit is lit where it really is, not at the spirit's depth
+            float sd = spiritMask.r > 0.5 ? behindSpiritDepth(texcoord, depth) : depth;
+            vec3 viewP = screenToView(texcoord, sd);
             vec3 P = viewToPlayer(viewP);
             vec3 Nv = mat3(gbufferModelView) * N;
             float dither = ign(gl_FragCoord.xy);
-            vec4 spiritMask = texture(colortex8, texcoord);
-            float behindSpirit = 1.0 - spiritMask.r * spiritMask.b;   // a faint spirit in front: most of the light reaches us
 
 #ifdef LAMP_SHADOWS_ON
             // ---- screen-space shadow of the strongest lamp -----------------------------------
