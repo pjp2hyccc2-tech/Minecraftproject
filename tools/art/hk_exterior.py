@@ -126,7 +126,7 @@ def _vend_display(w, h):
 def _vend_front(w, h):
     """Body front (14 x 28): white, the display window (covered by the lit element), the button row, the coin panel
     on the right (as seen), the dispenser flap at the bottom, a 'recycle' box shadow, stickers."""
-    a = from_idx(4.4 + noise(w, h, 13211, beta=1.6, wrap=False) * 0.2,
+    a = from_idx(4.0 + noise(w, h, 13211, beta=1.6, wrap=False) * 0.2,
                  ramp(['#8a8e92', '#a2a6aa', '#b8bcc0', '#cccfd2', '#dcdfe0', '#e8eaea'], 6))
     bevel(a, 0.05, -0.08)
     # brand-less blue panel at the top
@@ -154,7 +154,7 @@ def vending_machine_small():
     A_VEND.add('front', 14, 28, _vend_front)
     A_VEND.add('display', 10, 12, _vend_display)
     m = Model('vending_machine_small', A_VEND, display=disp(gui=(15, 200, 0), gui_scale=0.4, gui_t=(0, -3, 0)))
-    BODY = painted('vend_body', ramp(['#2a4a9a', '#3458aa', '#3e66ba', '#4a74c8'], 4), base=1.8)
+    BODY = painted('vend_body', ramp(['#2a4a9a', '#3458aa', '#3e66ba', '#4a74c8'], 4), base=2.0, amp=0.22, wear_amt=0.03)
     m.box([1, 0, 3], [15, 28, 15], BODY, faces={'north': 'front'})
     # the display window under its glass, glowing (texture cols 0..9 = model x 15..5)
     m.box([4.5, 13.5, 2.9], [14.5, 25.5, 3.0], None, faces={'north': 'display'}, glow=('north',))
@@ -270,7 +270,7 @@ A_MAIL = Atlas('mailboxes')
 def _mailbox_front(kind):
     def fn(w, h):
         """One box door (6 x 5): grey-green steel, the mail flap at the top, a name card slot, a dial lock."""
-        a = from_idx(3.6 + noise(w, h, 13501 + kind, beta=1.6, wrap=False) * 0.2,
+        a = from_idx(3.0 + noise(w, h, 13501 + kind, beta=1.6, wrap=False) * 0.2,
                      ramp(['#4e5850', '#5e6860', '#6e7870', '#7e8880', '#8e9890'], 5))
         bevel(a, 0.06, -0.08)
         hline(a, 1, w - 2, 1, '#1e2420')                      # mail slot

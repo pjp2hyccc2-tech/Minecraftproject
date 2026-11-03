@@ -194,7 +194,7 @@ PINKPL = ramp(['#8a5a62', '#a46e76', '#bc848a', '#d09a9e', '#e0b0b2', '#ecc4c4']
 
 def bath_stool():
     m = Model('bath_stool', A_STOOL, display=DISP_SMALL)
-    P = painted('stool_pl', PINKPL, base=3.4, amp=0.2)
+    P = painted('stool_pl', PINKPL, base=3.0, amp=0.2)
     m.box([4, 5, 4], [12, 6.2, 11], P, faces={'up': M.custom('stool_top', _stool_top)})
     for (lx, lz) in ((4.3, 4.3), (10.7, 4.3), (4.3, 9.7), (10.7, 9.7)):
         m.box([lx, 0, lz], [lx + 1.0, 5, lz + 1.0], P)
@@ -203,7 +203,7 @@ def bath_stool():
 
 
 def _stool_top(w, h, face):
-    a = from_idx(3.6 + noise(w, h, 7301, beta=1.6, wrap=False) * 0.2, PINKPL)
+    a = from_idx(4.0 + noise(w, h, 7301, beta=1.6, wrap=False) * 0.2, PINKPL)
     rect(a, w // 2 - 1, h // 2 - 2, w // 2, h // 2 + 1, PINKPL[1])                # the grip slot
     bevel(a, 0.05, -0.05)
     tint(a, '#8a8070', 0.1)
@@ -219,7 +219,7 @@ YELLOWPL = ramp(['#8a6a1a', '#a88222', '#c49a2c', '#d8b23a', '#e6c656', '#f0d878
 def bucket():
     """The yellow plastic bath basin (湯桶)."""
     m = Model('bucket', A_BUCK, display=DISP_SMALL)
-    P = painted('buck_pl', YELLOWPL, base=3.4, amp=0.2)
+    P = painted('buck_pl', YELLOWPL, base=3.0, amp=0.2)
     IN = painted('buck_in', YELLOWPL, base=2.2, amp=0.2)
     disc_strips(m, 8, 8, 3.6, 0, 3.6, P, bottom=P, top_spec=IN, step=1.2)
     disc_strips(m, 8, 8, 4.0, 3.2, 3.8, P, step=1.6)
@@ -253,7 +253,7 @@ register_anim('block/washing_swirl', (16, 16), 8, _swirl_frame, frametime=2)
 def _wash_panel(running):
     def fn(w, h):
         """Back control panel (13 x 4): two timer dials and the selector, a little label strip."""
-        a = from_idx(3.6 + noise(w, h, 7401, beta=1.6, wrap=False) * 0.2, CREAMPL)
+        a = from_idx(4.0 + noise(w, h, 7401, beta=1.6, wrap=False) * 0.2, CREAMPL)
         bevel(a, 0.05, -0.06)
         for cx in (2, 9):
             rect(a, cx, 1, cx + 2, 2, '#e8e4d8')
@@ -269,7 +269,7 @@ def washing_machine(running):
     key = 'panel_on' if running else 'panel'
     A_WASH.add(key, 13, 4, _wash_panel(running))
     m = Model(name, A_WASH, display=DISP_FRONT)
-    BODY = painted('wash_body', WASHBODY, base=3.6, amp=0.2, wear_amt=0.04)
+    BODY = painted('wash_body', WASHBODY, base=4.0, amp=0.2, wear_amt=0.04)
     LID = painted('wash_lid', CREAMPL, base=4.2, amp=0.2)
     m.box([1.5, 0, 4], [14.5, 12.5, 15], BODY, faces={'north': M.custom('wash_front', _wash_front)})
     m.box([1.5, 12.5, 13], [14.5, 16.5, 15], BODY, faces={'north': key})          # raised panel at the back
@@ -289,7 +289,7 @@ def washing_machine(running):
 
 
 def _wash_front(w, h, face):
-    a = from_idx(3.6 + noise(w, h, 7411, beta=1.6, wrap=False) * 0.2, WASHBODY)
+    a = from_idx(4.0 + noise(w, h, 7411, beta=1.6, wrap=False) * 0.2, WASHBODY)
     bevel(a, 0.05, -0.06)
     if w >= 10:
         # a faded badge, a rust bloom at the foot, a sticker with the instructions

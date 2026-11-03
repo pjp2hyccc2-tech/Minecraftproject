@@ -20,7 +20,7 @@ CABINET = ramp(['#7a6a52', '#8e7e64', '#a29276', '#b4a488', '#c4b498', '#d2c4a8'
 
 def _cab_doors(w, h, face):
     """Cream cabinet front: two doors with a gap, small chrome pulls, grime along the bottom and around the pulls."""
-    a = from_idx(3.6 + noise(w, h, 8001 + w, beta=1.6, wrap=False) * 0.22, CABINET)
+    a = from_idx(4.0 + noise(w, h, 8001 + w, beta=1.6, wrap=False) * 0.22, CABINET)
     bevel(a, 0.05, -0.07)
     if w >= 8 and h >= 6:
         vline(a, w // 2, 1, h - 2, CABINET[1])
@@ -32,7 +32,7 @@ def _cab_doors(w, h, face):
 
 
 CAB = mat('cab_doors', _cab_doors)
-CAB_SIDE = painted('cab_side', CABINET, base=3.4, amp=0.2)
+CAB_SIDE = painted('cab_side', CABINET, base=3.0, amp=0.2)
 COUNTER_ST = M.brushed('counter_st', STAINLESS, base=4.2)
 
 
@@ -137,7 +137,7 @@ def gas_stove(lit_):
     name = 'gas_stove' + ('_lit' if lit_ else '')
     m = Model(name, A_GAS, render_type='translucent' if lit_ else None, display=DISP_FRONT)
     # the gas stand (ガス台): an open steel shelf frame with a few pots underneath
-    STAND = painted('gas_stand', CREAMPL, base=3.6, amp=0.2)
+    STAND = painted('gas_stand', CREAMPL, base=4.0, amp=0.2)
     for (lx, lz) in ((1, 2), (14, 2), (1, 14), (14, 14)):
         m.box([lx, 0, lz], [lx + 1, 10, lz + 1], STAND)
     m.box([1, 9, 2], [15, 10, 15], STAND)
@@ -184,7 +184,7 @@ FRIDGE = ramp(['#8a8670', '#a29e86', '#b6b29a', '#c8c4ac', '#d6d2ba', '#e2dec6']
 
 def _fridge_door(kind):
     def fn(w, h):
-        a = from_idx(3.8 + noise(w, h, 8301 + h, beta=1.6, wrap=False) * 0.2, FRIDGE)
+        a = from_idx(4.0 + noise(w, h, 8301 + h, beta=1.6, wrap=False) * 0.2, FRIDGE)
         bevel(a, 0.06, -0.08, 0.03, -0.04)
         if kind == 'main':
             # magnets: a red ladybug, a yellow takeout flyer, a photo (two people, faded), a blue round one
@@ -223,7 +223,7 @@ def fridge_old(open_):
     A_FRIDGE.add('door_main', 12, 10, _fridge_door('main'))
     A_FRIDGE.add('door_freezer', 12, 5, _fridge_door('freezer'))
     m = Model(name, A_FRIDGE, display=DISP_FRONT)
-    BODY = painted('fridge_body', FRIDGE, base=3.4, amp=0.2, wear_amt=0.03)
+    BODY = painted('fridge_body', FRIDGE, base=4.0, amp=0.2, wear_amt=0.03)
     HANDLE = M.brushed('fridge_handle', STEELW, base=4.6)
     m.box([2, 0.6, 3], [14, 16, 15.5], BODY)
     m.box([2.5, 0, 3.5], [13.5, 0.6, 15], solid('fridge_kick', '#2a2a28'))
@@ -283,7 +283,7 @@ A_COOK = Atlas('rice_cooker')
 
 def _cooker_side(w, h, face):
     """Showa rice cooker: white body with an orange flower print band, chrome lid."""
-    a = from_idx(4.6 + noise(w, h, 8501 + w, beta=1.6, wrap=False) * 0.2, CREAMPL)
+    a = from_idx(5.0 + noise(w, h, 8501 + w, beta=1.6, wrap=False) * 0.2, CREAMPL)
     if face != 'h' and h >= 4:
         hline(a, 0, w - 1, 1, '#e8a03a')
         for xx in range(0, w, 3):
@@ -390,7 +390,7 @@ A_MW = Atlas('microwave')
 
 def _mw_front(w, h):
     """Old microwave (11 x 7): the dark mesh window on the left, the two dials on the right, the door handle."""
-    a = from_idx(4.2 + noise(w, h, 8701, beta=1.6, wrap=False) * 0.2, CREAMPL)
+    a = from_idx(4.0 + noise(w, h, 8701, beta=1.6, wrap=False) * 0.2, CREAMPL)
     bevel(a, 0.05, -0.07)
     rect(a, 1, 1, 6, 5, '#1a1a1a')
     x, y = grid(w, h)
@@ -407,7 +407,7 @@ def _mw_front(w, h):
 def microwave():
     A_MW.add('front', 11, 7, _mw_front)
     m = Model('microwave', A_MW, display=DISP_FRONT)
-    m.box([2.5, 0.4, 4], [13.5, 7.4, 12.5], painted('mw_body', CREAMPL, base=3.6), faces={'north': 'front'})
+    m.box([2.5, 0.4, 4], [13.5, 7.4, 12.5], painted('mw_body', CREAMPL, base=4.0, amp=0.2), faces={'north': 'front'})
     for (fx, fz) in ((3, 4.5), (12.5, 4.5), (3, 11.5), (12.5, 11.5)):
         m.box([fx, 0, fz], [fx + 0.5, 0.4, fz + 0.5], solid('mw_foot', '#1a1a1a'))
     return m
@@ -508,8 +508,7 @@ def drawer(open_):
     m = Model(name, A_DRAW, display=DISP_FRONT)
     m.box([0, 0, 2], [16, 13, 15.5], CAB_SIDE, faces={'north': {'r': M.custom('drawer_doors', _cab_doors)}})
     m.box([0, 0, 1.5], [16, 0.8, 2.2], solid('kick', '#2a2620'))
-    m.box([0, 13, 1.2], [16, 14, 16], woodmat('counter_board', ramp(['#5a5246', '#6a6256', '#7a7266', '#8a8276',
-                                                                     '#9a9286'], 5), base=2.6))
+    m.box([0, 13, 1.2], [16, 14, 16], COUNTER_ST)        # the 流し台 set's one stainless top, as over the sink
     dz = -7.0 if open_ else 0.0
     m.box([1, 9.5, 1.6 + dz], [15, 12.5, 2.2 + dz], CAB_SIDE, faces={'north': 'front'})
     if open_:

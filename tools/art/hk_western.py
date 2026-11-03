@@ -16,6 +16,9 @@ from hk_common import (STAINLESS, STEELW, CREAMPL, GREYPL, CHARCOAL, PAPER, PALE
                        painted, woodmat, disc_strips, cord, register_anim, ref)
 
 WOODGRAIN = ramp(['#4e3a24', '#62492e', '#765838', '#896742', '#9b774c', '#ab8656', '#b99461'], 7)   # print veneer
+# the student desk's and the shoe cabinet's printed laminate: the same browns in finer steps, so the grain reads as
+# grain and the panels do not break into two-tone patches
+WOODLAM = ramp(['#5a432a', '#665032', '#725a3a', '#7e6442', '#8a6e4a', '#967852', '#a2825a', '#ae8c62'], 8)
 
 
 # ================================================================================================ desk, chair
@@ -23,7 +26,7 @@ A_DESK = Atlas('desk')
 
 
 def _desk_drawers(w, h, face):
-    a = m_wood(w, h, WOODGRAIN, 9001 + w, along='x', base=3.6, amp=0.35)
+    a = m_wood(w, h, WOODLAM, 9001 + w, along='x', base=3.0, amp=0.3, lines=0.7)
     bevel(a, 0.05, -0.07)
     if w >= 5 and h >= 9:
         for yy in (3, 7):
@@ -36,8 +39,8 @@ def _desk_drawers(w, h, face):
 
 def desk():
     m = Model('desk', A_DESK, display=DISP_FRONT)
-    TOP = woodmat('desk_top', WOODGRAIN, base=3.8, amp=0.4, wear_amt=0.05)
-    SIDE = woodmat('desk_side', WOODGRAIN, base=3.2, amp=0.35)
+    TOP = woodmat('desk_top', WOODLAM, base=5.0, amp=0.35, wear_amt=0.05)
+    SIDE = woodmat('desk_side', WOODLAM, base=4.0, amp=0.3)
     m.box([0, 11, 1], [16, 12, 15], TOP)
     m.box([0.5, 0, 2], [1.5, 11, 14.5], SIDE)                                  # left panel leg (model west)
     m.box([10, 0, 2], [15.5, 11, 14.5], SIDE, faces={'north': M.custom('desk_drawers', _desk_drawers)})
@@ -355,7 +358,7 @@ def _shelf_front(w, h, face):
 
 def shelf():
     m = Model('shelf', A_SHELF, display=DISP_FRONT)
-    SIDE = painted('shelf_side', ramp(['#a8a498', '#bcb8ac', '#ccc8bc', '#dad6ca', '#e4e0d4'], 5), base=3.4)
+    SIDE = painted('shelf_side', ramp(['#a8a498', '#bcb8ac', '#ccc8bc', '#dad6ca', '#e4e0d4'], 5), base=3.0, amp=0.2)
     m.box([2, 0, 4], [14, 16, 12], SIDE, faces={'north': M.custom('shelf_front', _shelf_front)})
     return m
 
@@ -513,7 +516,7 @@ A_SHOE = Atlas('shoe_cabinet')
 
 
 def _shoecab_front(w, h, face):
-    a = m_wood(w, h, WOODGRAIN, 9801 + w, along='y', base=3.4, amp=0.35)
+    a = m_wood(w, h, WOODLAM, 9801 + w, along='y', base=3.0, amp=0.3, lines=0.7)
     bevel(a, 0.05, -0.07)
     if w >= 10 and h >= 10:
         vline(a, w // 2, 1, h - 2, WOODGRAIN[1])
@@ -526,10 +529,10 @@ def _shoecab_front(w, h, face):
 def shoe_cabinet():
     """下駄箱: wood-grain shoe cabinet; on top a key tray, a dead plant in a pot, a pile of flyers."""
     m = Model('shoe_cabinet', A_SHOE, display=DISP_FRONT)
-    SIDE = woodmat('shoecab_side', WOODGRAIN, base=3.2)
+    SIDE = woodmat('shoecab_side', WOODLAM, base=3.0, amp=0.3)
     m.box([1, 0.8, 5], [15, 13, 15.5], SIDE, faces={'north': M.custom('shoecab_front', _shoecab_front)})
     m.box([1, 0, 5.5], [15, 0.8, 15], solid('shoecab_kick', '#1a1208'))
-    m.box([0.6, 13, 4.6], [15.4, 13.8, 15.8], woodmat('shoecab_top', WOODGRAIN, base=3.8))
+    m.box([0.6, 13, 4.6], [15.4, 13.8, 15.8], woodmat('shoecab_top', WOODLAM, base=4.0, amp=0.3))
     m.box([2.5, 13.8, 7], [5.5, 14.3, 9.5], solid('key_tray', '#8a8a86'))
     m.box([3.2, 14.3, 7.6], [4.2, 14.5, 8.4], solid('key', '#c8a858'))
     m.box([10.5, 13.8, 9.5], [13.0, 15.8, 12.0], solid('plant_pot', '#8a4a2a'))
@@ -630,7 +633,7 @@ def breaker_panel(open_):
     A_BRK.add('inside', 10, 9, _breakers)
     A_BRK.add('lid', 10, 9, _brk_lid)
     m = Model(name, A_BRK, display=DISP_WALL)
-    BODY = painted('brk_body', CREAMPL, base=3.6)
+    BODY = painted('brk_body', CREAMPL, base=4.0, amp=0.2)
     m.box([3, 3.5, 13.5], [13, 12.5, 16], BODY, faces={'north': 'inside' if open_ else 'lid'})
     # the indicator lamp (always faintly lit while there is power)
     m.box([11.0, 11.0, 13.4], [11.6, 11.6, 13.5], lit('brk_led', '#ff3a2a'), glow=('north',))
@@ -668,7 +671,7 @@ def intercom(ringing):
     name = 'intercom' + ('_ringing' if ringing else '')
     A_ICOM.add('face', 4, 7, _icom_face)
     m = Model(name, A_ICOM, display=DISP_WALL)
-    m.box([6, 4, 14.5], [10, 11, 16], painted('icom_body', CREAMPL, base=3.6), faces={'north': 'face'})
+    m.box([6, 4, 14.5], [10, 11, 16], painted('icom_body', CREAMPL, base=4.0, amp=0.2), faces={'north': 'face'})
     if ringing:
         m.extra_tex['led'] = ref('block/intercom_led')
         m.box([8.6, 9.8, 14.4], [9.2, 10.4, 14.5], None, faces={'north': {'r': '#led', 'sub': (0, 0, 16, 16)}},
