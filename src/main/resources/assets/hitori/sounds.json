@@ -109,6 +109,16 @@
       }
     ]
   },
+  "doll.drag_loop": {
+    "subtitle": "subtitles.hitori.doll.drag_loop",
+    "sounds": [
+      {
+        "name": "hitori:doll/drag_loop",
+        "stream": true,
+        "attenuation_distance": 12
+      }
+    ]
+  },
   "camera.mic_hiss": {
     "sounds": [
       {
@@ -221,6 +231,677 @@
       {
         "name": "hitori:ritual/burn_loop",
         "attenuation_distance": 10
+      }
+    ]
+  },
+  "voice.first_oni": {
+    "subtitle": "subtitles.hitori.voice.first_oni",
+    "sounds": [
+      {
+        "name": "hitori:voice/first_oni"
+      }
+    ]
+  },
+  "voice.mitsuketa": {
+    "subtitle": "subtitles.hitori.voice.mitsuketa",
+    "sounds": [
+      {
+        "name": "hitori:voice/mitsuketa"
+      }
+    ]
+  },
+  "voice.next_oni": {
+    "subtitle": "subtitles.hitori.voice.next_oni",
+    "sounds": [
+      {
+        "name": "hitori:voice/next_oni"
+      }
+    ]
+  },
+  "voice.watashi_kachi": {
+    "subtitle": "subtitles.hitori.voice.watashi_kachi",
+    "sounds": [
+      {
+        "name": "hitori:voice/watashi_kachi"
+      }
+    ]
+  },
+  "voice.count": {
+    "subtitle": "subtitles.hitori.voice.count",
+    "sounds": [
+      {
+        "name": "hitori:voice/count",
+        "stream": true
+      }
+    ]
+  },
+  "door.front_open": {
+    "subtitle": "subtitles.hitori.door.front_open",
+    "sounds": [
+      {
+        "name": "hitori:door/front_open",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "door.front_close": {
+    "subtitle": "subtitles.hitori.door.front_close",
+    "sounds": [
+      {
+        "name": "hitori:door/front_close",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "door.interior_open": {
+    "subtitle": "subtitles.hitori.door.interior_open",
+    "sounds": [
+      {
+        "name": "hitori:door/interior_open",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "door.interior_close": {
+    "subtitle": "subtitles.hitori.door.interior_close",
+    "sounds": [
+      {
+        "name": "hitori:door/interior_close",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "door.fusuma": {
+    "subtitle": "subtitles.hitori.door.fusuma",
+    "sounds": [
+      {
+        "name": "hitori:door/fusuma_1",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "hitori:door/fusuma_2",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "hitori:door/fusuma_3",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "door.fusuma_crack": {
+    "subtitle": "subtitles.hitori.door.fusuma_crack",
+    "sounds": [
+      {
+        "name": "hitori:door/fusuma_crack",
+        "attenuation_distance": 4
+      }
+    ]
+  },
+  "door.bath_fold": {
+    "subtitle": "subtitles.hitori.door.bath_fold",
+    "sounds": [
+      {
+        "name": "hitori:door/bath_fold",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "door.locked": {
+    "subtitle": "subtitles.hitori.door.locked",
+    "sounds": [
+      {
+        "name": "hitori:door/locked",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "fixture.switch": {
+    "subtitle": "subtitles.hitori.fixture.switch",
+    "sounds": [
+      {
+        "name": "hitori:fixture/switch_1",
+        "attenuation_distance": 6
+      },
+      {
+        "name": "hitori:fixture/switch_2",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "fixture.pull_cord": {
+    "subtitle": "subtitles.hitori.fixture.pull_cord",
+    "sounds": [
+      {
+        "name": "hitori:fixture/pull_cord",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "fixture.breaker_off": {
+    "subtitle": "subtitles.hitori.fixture.breaker_off",
+    "sounds": [
+      {
+        "name": "hitori:fixture/breaker_off",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.breaker_on": {
+    "subtitle": "subtitles.hitori.fixture.breaker_on",
+    "sounds": [
+      {
+        "name": "hitori:fixture/breaker_on",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.tv_on": {
+    "subtitle": "subtitles.hitori.fixture.tv_on",
+    "sounds": [
+      {
+        "name": "hitori:fixture/tv_on",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.tv_channel": {
+    "subtitle": "subtitles.hitori.fixture.tv_channel",
+    "sounds": [
+      {
+        "name": "hitori:fixture/tv_channel",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.tv_voice": {
+    "subtitle": "subtitles.hitori.fixture.tv_voice",
+    "sounds": [
+      {
+        "name": "hitori:fixture/tv_voice_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "hitori:fixture/tv_voice_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "hitori:fixture/tv_voice_3",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.intercom": {
+    "subtitle": "subtitles.hitori.fixture.intercom",
+    "sounds": [
+      {
+        "name": "hitori:fixture/intercom",
+        "attenuation_distance": 24,
+        "preload": true
+      }
+    ]
+  },
+  "fixture.knock_door": {
+    "subtitle": "subtitles.hitori.fixture.knock_door",
+    "sounds": [
+      {
+        "name": "hitori:fixture/knock_door_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "hitori:fixture/knock_door_2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "hitori:fixture/knock_door_3",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "fixture.knock_closet": {
+    "subtitle": "subtitles.hitori.fixture.knock_closet",
+    "sounds": [
+      {
+        "name": "hitori:fixture/knock_closet_1",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "hitori:fixture/knock_closet_2",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "hitori:fixture/knock_closet_3",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "fixture.thing_fall": {
+    "subtitle": "subtitles.hitori.fixture.thing_fall",
+    "sounds": [
+      {
+        "name": "hitori:fixture/thing_fall_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:fixture/thing_fall_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:fixture/thing_fall_3",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.dish_break": {
+    "subtitle": "subtitles.hitori.fixture.dish_break",
+    "sounds": [
+      {
+        "name": "hitori:fixture/dish_break",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "fixture.lamp_swing": {
+    "subtitle": "subtitles.hitori.fixture.lamp_swing",
+    "sounds": [
+      {
+        "name": "hitori:fixture/lamp_swing",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "fixture.water_slosh": {
+    "subtitle": "subtitles.hitori.fixture.water_slosh",
+    "sounds": [
+      {
+        "name": "hitori:fixture/water_slosh_1",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "hitori:fixture/water_slosh_2",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "hitori:fixture/water_slosh_3",
+        "attenuation_distance": 10
+      }
+    ]
+  },
+  "fixture.washing_start": {
+    "subtitle": "subtitles.hitori.fixture.washing_start",
+    "sounds": [
+      {
+        "name": "hitori:fixture/washing_start",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.creak": {
+    "subtitle": "subtitles.hitori.fixture.creak",
+    "sounds": [
+      {
+        "name": "hitori:fixture/creak_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:fixture/creak_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:fixture/creak_3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:fixture/creak_4",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.footsteps_ceiling": {
+    "subtitle": "subtitles.hitori.fixture.footsteps_ceiling",
+    "sounds": [
+      {
+        "name": "hitori:fixture/footsteps_ceiling_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "hitori:fixture/footsteps_ceiling_2",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "phone.vibrate": {
+    "subtitle": "subtitles.hitori.phone.vibrate",
+    "sounds": [
+      {
+        "name": "hitori:phone/vibrate",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "phone.ring_own": {
+    "subtitle": "subtitles.hitori.phone.ring_own",
+    "sounds": [
+      {
+        "name": "hitori:phone/ring_own"
+      }
+    ]
+  },
+  "phone.notify": {
+    "subtitle": "subtitles.hitori.phone.notify",
+    "sounds": [
+      {
+        "name": "hitori:phone/notify"
+      }
+    ]
+  },
+  "phone.tap": {
+    "sounds": [
+      {
+        "name": "hitori:phone/tap"
+      }
+    ]
+  },
+  "camera.place": {
+    "subtitle": "subtitles.hitori.camera.place",
+    "sounds": [
+      {
+        "name": "hitori:camera/place",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "camera.app_open": {
+    "sounds": [
+      {
+        "name": "hitori:camera/app_open"
+      }
+    ]
+  },
+  "camera.app_close": {
+    "sounds": [
+      {
+        "name": "hitori:camera/app_close"
+      }
+    ]
+  },
+  "camera.switch": {
+    "sounds": [
+      {
+        "name": "hitori:camera/switch"
+      }
+    ]
+  },
+  "camera.glitch": {
+    "subtitle": "subtitles.hitori.camera.glitch",
+    "sounds": [
+      {
+        "name": "hitori:camera/glitch_1"
+      },
+      {
+        "name": "hitori:camera/glitch_2"
+      },
+      {
+        "name": "hitori:camera/glitch_3"
+      }
+    ]
+  },
+  "camera.fall": {
+    "subtitle": "subtitles.hitori.camera.fall",
+    "sounds": [
+      {
+        "name": "hitori:camera/fall",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "laptop.open": {
+    "subtitle": "subtitles.hitori.laptop.open",
+    "sounds": [
+      {
+        "name": "hitori:laptop/open"
+      }
+    ]
+  },
+  "laptop.fan": {
+    "sounds": [
+      {
+        "name": "hitori:laptop/fan"
+      }
+    ]
+  },
+  "item.lighter": {
+    "subtitle": "subtitles.hitori.item.lighter",
+    "sounds": [
+      {
+        "name": "hitori:item/lighter",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "item.paper": {
+    "subtitle": "subtitles.hitori.item.paper",
+    "sounds": [
+      {
+        "name": "hitori:item/paper_1"
+      },
+      {
+        "name": "hitori:item/paper_2"
+      }
+    ]
+  },
+  "item.cup": {
+    "subtitle": "subtitles.hitori.item.cup",
+    "sounds": [
+      {
+        "name": "hitori:item/cup",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "doll.step": {
+    "subtitle": "subtitles.hitori.doll.step",
+    "sounds": [
+      {
+        "name": "hitori:doll/step_1",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "hitori:doll/step_2",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "hitori:doll/step_3",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "hitori:doll/step_4",
+        "attenuation_distance": 10
+      }
+    ]
+  },
+  "doll.crawl": {
+    "subtitle": "subtitles.hitori.doll.crawl",
+    "sounds": [
+      {
+        "name": "hitori:doll/crawl_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "hitori:doll/crawl_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "hitori:doll/crawl_3",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "doll.drip": {
+    "subtitle": "subtitles.hitori.doll.drip",
+    "sounds": [
+      {
+        "name": "hitori:doll/drip_1",
+        "attenuation_distance": 6
+      },
+      {
+        "name": "hitori:doll/drip_2",
+        "attenuation_distance": 6
+      },
+      {
+        "name": "hitori:doll/drip_3",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "doll.rice": {
+    "subtitle": "subtitles.hitori.doll.rice",
+    "sounds": [
+      {
+        "name": "hitori:doll/rice_1",
+        "attenuation_distance": 6
+      },
+      {
+        "name": "hitori:doll/rice_2",
+        "attenuation_distance": 6
+      },
+      {
+        "name": "hitori:doll/rice_3",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "doll.giggle": {
+    "subtitle": "subtitles.hitori.doll.giggle",
+    "sounds": [
+      {
+        "name": "hitori:doll/giggle_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:doll/giggle_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:doll/giggle_3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "hitori:doll/giggle_4",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "doll.voice_mitsuketa": {
+    "subtitle": "subtitles.hitori.doll.voice_mitsuketa",
+    "sounds": [
+      {
+        "name": "hitori:doll/voice_mitsuketa",
+        "attenuation_distance": 12,
+        "preload": true
+      }
+    ]
+  },
+  "doll.voice_doko": {
+    "subtitle": "subtitles.hitori.doll.voice_doko",
+    "sounds": [
+      {
+        "name": "hitori:doll/voice_doko_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "hitori:doll/voice_doko_2",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "doll.voice_tsugi": {
+    "subtitle": "subtitles.hitori.doll.voice_tsugi",
+    "sounds": [
+      {
+        "name": "hitori:doll/voice_tsugi"
+      }
+    ]
+  },
+  "doll.knife_drag": {
+    "subtitle": "subtitles.hitori.doll.knife_drag",
+    "sounds": [
+      {
+        "name": "hitori:doll/knife_drag_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "hitori:doll/knife_drag_2",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "doll.knife_stab": {
+    "subtitle": "subtitles.hitori.doll.knife_stab",
+    "sounds": [
+      {
+        "name": "hitori:doll/knife_stab",
+        "attenuation_distance": 12,
+        "preload": true
+      }
+    ]
+  },
+  "doll.shriek": {
+    "subtitle": "subtitles.hitori.doll.shriek",
+    "sounds": [
+      {
+        "name": "hitori:doll/shriek",
+        "attenuation_distance": 24,
+        "preload": true
+      }
+    ]
+  },
+  "doll.breath": {
+    "subtitle": "subtitles.hitori.doll.breath",
+    "sounds": [
+      {
+        "name": "hitori:doll/breath_1",
+        "attenuation_distance": 6
+      },
+      {
+        "name": "hitori:doll/breath_2",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "woman.whisper": {
+    "subtitle": "subtitles.hitori.woman.whisper",
+    "sounds": [
+      {
+        "name": "hitori:woman/whisper_1",
+        "attenuation_distance": 6
+      },
+      {
+        "name": "hitori:woman/whisper_2",
+        "attenuation_distance": 6
+      },
+      {
+        "name": "hitori:woman/whisper_3",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "woman.breath": {
+    "subtitle": "subtitles.hitori.woman.breath",
+    "sounds": [
+      {
+        "name": "hitori:woman/breath",
+        "attenuation_distance": 4
+      }
+    ]
+  },
+  "whisper.name": {
+    "subtitle": "subtitles.hitori.whisper.name",
+    "sounds": [
+      {
+        "name": "hitori:whisper/name_1"
+      },
+      {
+        "name": "hitori:whisper/name_2"
       }
     ]
   }

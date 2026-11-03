@@ -130,7 +130,8 @@ def drop_on(rng, surface="wood", vel=1.0):
     """A drop of water landing on a surface (no pool): tatami (a dull pat), wood (a tick), tile (a crisp tick),
     metal (a ping)."""
     if surface == "tatami":
-        y = burst(rng, 0.02, 300, 2500, 0.0004, 0.003) + 0.5 * burst(rng, 0.015, 2000, 7000, 0.0002, 0.0012)
+        y = burst(rng, 0.02, 300, 2500, 0.0004, 0.003)
+        y = y + 0.5 * dsp.pad_to(burst(rng, 0.015, 2000, 7000, 0.0002, 0.0012), len(y))
     elif surface == "wood":
         y = ins.modal_hit(rng, [(1900, 0.012, 1.0), (3300, 0.008, 0.6), (900, 0.015, 0.4)], hardness=0.6, vel=1.0,
                           dur=0.05, noise=0.6)
