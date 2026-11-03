@@ -5,15 +5,25 @@ import com.reisatsu.client.gui.AlbumScreen;
 import com.reisatsu.client.gui.BreakerScreen;
 import com.reisatsu.client.gui.EndingScreen;
 import com.reisatsu.client.gui.NoteScreen;
+import com.reisatsu.debug.WorldTour;
 import com.reisatsu.entity.Spirit;
+import com.reisatsu.entity.SpiritKind;
+import com.reisatsu.entity.Visitor;
 import com.reisatsu.game.GameData;
+import com.reisatsu.game.GameManager;
+import com.reisatsu.game.Spirits;
+import com.reisatsu.world.Circuit;
+import com.reisatsu.world.FixtureEvents;
+import com.reisatsu.world.Fixtures;
 import com.reisatsu.world.Layout;
 import net.minecraft.FileUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.GameRules;
@@ -25,22 +35,21 @@ import net.minecraft.world.level.levelgen.presets.WorldPresets;
 import net.minecraft.world.phys.Vec3;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
  * CI only ({@code -Dreisatsu.shots=true}, Xvfb + software GL): a scripted tour saved to {@code run/screenshots/}.
- * First the world's own camera positions ({@code com.reisatsu.debug.WorldTour.shots()}, by reflection), then the
- * game: the intro and the medium, the HUD, the finder, the spirits seen with the eye and through the finder, a photo
- * ejecting and developed with its name, the album, a note, the breaker, the locker, a jump scare, closing time, the
- * exorcism, both endings. Log: {@code run/reisatsu_autoshots.txt}.
+ * The intro, then the world's own camera positions ({@link WorldTour#shots()}, {@code world_<name>.png}, HUD hidden),
+ * then the game in the real restaurant: the HUD and the finder, each spirit at work where it lives (with the eye and
+ * through the finder), a pose sweep, a photo ejecting and developing, the album, notes, the breaker, a locker, fear,
+ * a jump scare and waking, closing time, the exorcism, both endings. Log: {@code run/reisatsu_autoshots.txt}.
  */
 public final class AutoShots {
     private static final boolean ENABLED = Boolean.getBoolean("reisatsu.shots");
@@ -77,7 +86,7 @@ public final class AutoShots {
 
     static void tick(Minecraft mc) {
         if (!ENABLED || stage == 0 || stage == 9) return;
-        if (++ticks > 20 * 60 * (SHADERS ? 45 : 32)) {
+        if (++ticks > 20 * 60 * (SHADERS ? 60 : 42)) {
             log("global timeout");
             finish(mc);
             return;
@@ -164,20 +173,33 @@ public final class AutoShots {
         if (mc.player != null) mc.player.connection.sendCommand(command);
     }
 
-    private static String dim(Minecraft mc) {
-        var sp = mc.getSingleplayerServer();
-        return sp != null && sp.getLevel(Layout.DIMENSION) != null ? "reisatsu:hidamari" : "minecraft:overworld";
+    /** Runs on the integrated server's thread, in the restaurant's level. */
+    private static void server(Minecraft mc, Consumer<ServerLevel> action) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        if (server == null) return;
+        server.execute(() -> {
+            ServerLevel level = GameManager.level(server);
+            if (level != null) action.accept(level);
+        });
+    }
+
+    private static void server(Minecraft mc, BiConsumer<ServerLevel, ServerPlayer> action) {
+        MinecraftServer server = mc.getSingleplayerServer();
+        if (server == null || mc.player == null) return;
+        java.util.UUID id = mc.player.getUUID();
+        server.execute(() -> {
+            ServerLevel level = GameManager.level(server);
+            ServerPlayer p = server.getPlayerList().getPlayer(id);
+            if (level != null && p != null) action.accept(level, p);
+        });
     }
 
     private static void at(Minecraft mc, double x, double y, double z, float yaw, float pitch) {
-        cmd(mc, String.format(Locale.ROOT, "execute in %s run tp @s %.2f %.2f %.2f %.1f %.1f", dim(mc), x, y, z, yaw, pitch));
+        cmd(mc, String.format(Locale.ROOT, "execute in %s run tp @s %.2f %.2f %.2f %.1f %.1f", Layout.DIMENSION.location(), x, y, z, yaw, pitch));
     }
 
-    /** At a marker, looking along its facing (or a given yaw), with an offset. */
-    private static void atMarker(Minecraft mc, String marker, double dx, double dz, float yaw, float pitch) {
-        Layout.Marker m = Layout.marker(marker);
-        Vec3 c = m.center();
-        at(mc, c.x + dx, c.y, c.z + dz, yaw, pitch);
+    private static void at(Minecraft mc, double x, double z, float yaw, float pitch) {
+        at(mc, x, Layout.FEET_Y, z, yaw, pitch);
     }
 
     private static void hold(Minecraft mc, String item) {
@@ -188,13 +210,13 @@ public final class AutoShots {
         cmd(mc, String.format(Locale.ROOT, "reisatsu debug fear %.2f %.2f 4000", fear, danger));
     }
 
-    /** Turns the camera onto the nearest entity of a kind. */
-    private static void face(Minecraft mc, Class<? extends Entity> kind, float heightFrac) {
+    /** Turns the camera onto the nearest spirit (heightFrac of its height). */
+    private static void face(Minecraft mc, float heightFrac) {
         if (mc.player == null || mc.level == null) return;
         Entity best = null;
         double bd = Double.MAX_VALUE;
         for (Entity e : mc.level.entitiesForRendering()) {
-            if (!kind.isInstance(e)) continue;
+            if (!(e instanceof Spirit)) continue;
             double d = e.distanceTo(mc.player);
             if (d < bd) {
                 bd = d;
@@ -202,7 +224,7 @@ public final class AutoShots {
             }
         }
         if (best == null) {
-            log("  no " + kind.getSimpleName() + " in view range");
+            log("  no spirit in view range");
             return;
         }
         double dx = best.getX() - mc.player.getX(), dz = best.getZ() - mc.player.getZ();
@@ -213,7 +235,14 @@ public final class AutoShots {
         mc.player.yRotO = yaw;
         mc.player.setXRot(pitch);
         mc.player.xRotO = pitch;
-        log(String.format(Locale.ROOT, "  %s %.1f blocks away", kind.getSimpleName(), bd));
+        log(String.format(Locale.ROOT, "  %s %.1f blocks away", best.getType().getDescriptionId(), bd));
+    }
+
+    private static void clearSpirits(Minecraft mc) {
+        server(mc, (ServerLevel level) -> {
+            Spirits.paused = true;
+            Spirits.removeAll(level);
+        });
     }
 
     // ================================================================================================ the tour
@@ -223,7 +252,7 @@ public final class AutoShots {
             cmd(mc, "gamerule sendCommandFeedback false");
             cmd(mc, "gamerule doMobSpawning false");
         }, 5);
-        // the intro plays by itself on a new world
+        // the intro plays by itself on a new world, at the real spawn with the medium and her car
         if (!SHADERS) {
             add("intro_text_wait", mc -> dynamicWait = Math.max(0, 70 - ClientState.introTicks), 0);
             snap("01_intro_text");
@@ -239,27 +268,41 @@ public final class AutoShots {
             cmd(mc, "reisatsu debug peaceful true");
             fear(mc, 0.3f, 0.0f);
         }, 40);
+        snap("05_after_intro");
         worldTour();
-        // the HUD in the dining room
+        // ---- the HUD and the finder in the real rooms
+        add("lights_start", mc -> server(mc, (ServerLevel level) -> Fixtures.resetAll(level)), 40);
         scene("10_hud_dining", mc -> {
             hold(mc, "reisatsu:reisha_camera{film:10}");
-            atMarker(mc, "table_12", 0.0, 3.0, 160.0f, 6.0f);
-        }, 60);
+            at(mc, 16.5, 13.5, -100.0f, 6.0f);
+        }, 70);
         scene("11_flashlight", mc -> hold(mc, "reisatsu:flashlight_on"), 20);
         scene("12_finder_dining", mc -> hold(mc, "reisatsu:reisha_camera_finder{film:10}"), 30);
-        scene("13_finder_kitchen", mc -> atMarker(mc, "chef_pass", 0.0, 3.0, 180.0f, 4.0f), 40);
-        scene("14_finder_restroom", mc -> atMarker(mc, "sink_w", 0.5, 2.5, 180.0f, 4.0f), 40);
-        scene("15_finder_outside", mc -> atMarker(mc, "spawn", 0.0, 0.0, 180.0f, 0.0f), 40);
-        // the spirits: with the eye and through the finder
+        scene("13_finder_kitchen", mc -> at(mc, 25.5, 8.5, 180.0f, 8.0f), 50);
+        scene("14_finder_restroom", mc -> at(mc, 10.5, 19.5, 180.0f, 0.0f), 50);
+        scene("15_finder_outside", mc -> at(mc, 4.5, 41.5, 180.0f, 0.0f), 50);
+        add("finder_down", mc -> hold(mc, "reisatsu:reisha_camera{film:10}"), 10);
+        // ---- each spirit at work where it lives: with the eye, then through the finder
+        inSitu("chef", SpiritKind.CHEF, 24.5, 13.5, 180.0f, 6.0f);
+        inSitu("waitress", SpiritKind.WAITRESS, 32.5, 17.5, 180.0f, 4.0f);
+        inSitu("child", SpiritKind.CHILD, 9.5, 27.5, -90.0f, 12.0f);
+        inSitu("mirror_woman", SpiritKind.MIRROR_WOMAN, 10.5, 19.5, 180.0f, 2.0f);
+        inSitu("manager", SpiritKind.MANAGER, 12.5, 5.5, 70.0f, 10.0f);
+        inSitu("visitor", SpiritKind.VISITOR, 34.5, 24.5, 14.0f, 14.0f);
+        // ---- a pose sweep in the dining room's north aisle, lights on
+        add("sweep_lights", mc -> {
+            clearSpirits(mc);
+            server(mc, (ServerLevel level) -> Fixtures.setCircuit(level, Circuit.DINING, true));
+        }, 20);
         String[][] poses = {
-                {"visitor", "0", "1", "3", "4"}, {"waitress", "0", "1", "2", "4"}, {"chef", "0", "2", "3", "5"},
-                {"child", "1", "2", "3", "4"}, {"mirror_woman", "0", "1", "2", "3"}, {"manager", "0", "2", "3", "5"}};
-        int n = 20;
+                {"visitor", "1", "4"}, {"waitress", "0", "2"}, {"chef", "0", "5"},
+                {"child", "2", "6"}, {"mirror_woman", "1", "3"}, {"manager", "1", "5"}};
+        int n = 40;
         for (String[] p : poses) {
             String id = p[0];
-            add("spirit_" + id, mc -> {
+            add("sweep_" + id, mc -> {
                 cmd(mc, "kill @e[type=reisatsu:" + id + "]");
-                atMarker(mc, "table_12", 0.0, 3.0, 0.0f, 8.0f);
+                at(mc, 16.5, 13.5, -90.0f, 6.0f);
                 hold(mc, "reisatsu:reisha_camera{film:10}");
             }, 30);
             add("spawn_" + id, mc -> cmd(mc, "reisatsu debug spawn " + id + " 4"), 20);
@@ -270,17 +313,17 @@ public final class AutoShots {
                     cmd(mc, "reisatsu debug pose " + id + " " + pose);
                     cmd(mc, "reisatsu debug face " + id);
                     hold(mc, "reisatsu:reisha_camera{film:10}");
-                }, 14);
-                add("face_" + id + "_" + pose, mc -> face(mc, Spirit.class, 0.6f), 4);
+                }, 24);
+                add("face_" + id + "_" + pose, mc -> face(mc, 0.6f), 4);
                 snap(String.format(Locale.ROOT, "%02d_%s_eye_p%s", k, id, pose));
                 add("finder_" + id + "_" + pose, mc -> hold(mc, "reisatsu:reisha_camera_finder{film:10}"), 16);
                 snap(String.format(Locale.ROOT, "%02d_%s_finder_p%s", k, id, pose));
             }
             add("clear_" + id, mc -> cmd(mc, "kill @e[type=reisatsu:" + id + "]"), 5);
         }
-        // a photo: the waitress bowing, unaware, facing us
+        // ---- a photo: the waitress bowing, unaware, facing us
         add("photo_setup", mc -> {
-            atMarker(mc, "table_12", 0.0, 3.0, 0.0f, 8.0f);
+            at(mc, 16.5, 13.5, -90.0f, 6.0f);
             hold(mc, "reisatsu:reisha_camera_finder{film:10}");
             cmd(mc, "reisatsu debug spawn waitress 5");
         }, 25);
@@ -288,13 +331,16 @@ public final class AutoShots {
             cmd(mc, "reisatsu debug pose waitress 2");
             cmd(mc, "reisatsu debug face waitress");
         }, 10);
-        add("photo_face", mc -> face(mc, Spirit.class, 0.85f), 6);
+        add("photo_face", mc -> face(mc, 0.85f), 6);
         add("photo_shutter", mc -> Finder.shutter(mc), 14);
         snap("50_photo_eject");
         add("photo_develop", mc -> {
         }, 90);
         snap("51_photo_named");
-        add("photo_lower", mc -> hold(mc, "reisatsu:reisha_camera{film:9}"), 20);
+        add("photo_lower", mc -> {
+            hold(mc, "reisatsu:reisha_camera{film:9}");
+            cmd(mc, "kill @e[type=reisatsu:waitress]");
+        }, 20);
         if (!SHADERS) {
             scene("52_album", mc -> mc.setScreen(new AlbumScreen()), 12);
             add("album_close", mc -> mc.setScreen(null), 4);
@@ -305,26 +351,31 @@ public final class AutoShots {
             scene("55_breaker", mc -> mc.setScreen(new BreakerScreen(0b1101110)), 12);
             add("breaker_close", mc -> mc.setScreen(null), 4);
         }
-        scene("56_locker", mc -> {
-            atMarker(mc, "lockers", 0.0, 0.0, Layout.marker("lockers").yaw(), 0.0f);
-            ClientState.lockerFacing = Layout.marker("lockers").facing().get2DDataValue();
-        }, 30);
-        add("locker_out", mc -> ClientState.lockerFacing = -1, 5);
-        // fear and danger on screen
+        // ---- a staff locker: in through the world's own block behaviour
+        add("locker_go", mc -> {
+            Layout.Marker l = Layout.marker("film_2");
+            Vec3 front = Vec3.atBottomCenterOf(l.pos().relative(l.facing()));
+            at(mc, front.x, front.y, front.z, l.facing().getOpposite().toYRot(), 0.0f);
+        }, 40);
+        scene("56_locker", mc -> server(mc, (ServerLevel level, ServerPlayer p) -> {
+            if (FixtureEvents.LISTENER.hide(p, Layout.marker("film_2").pos())) Fixtures.flapLocker(level, Layout.marker("film_2").pos());
+        }), 30);
+        add("locker_out", mc -> server(mc, (ServerLevel level, ServerPlayer p) -> FixtureEvents.LISTENER.unhide(p, Layout.marker("film_2").pos())), 20);
+        // ---- fear and danger on screen
         scene("57_fear_high", mc -> {
-            atMarker(mc, "table_12", 0.0, 3.0, 40.0f, 2.0f);
+            at(mc, 16.5, 13.5, -60.0f, 2.0f);
             hold(mc, "reisatsu:flashlight_on");
             fear(mc, 0.92f, 0.2f);
         }, 50);
         scene("58_danger_high", mc -> fear(mc, 0.95f, 0.95f), 30);
         add("calm", mc -> fear(mc, 0.3f, 0.0f), 20);
         if (!SHADERS) {
-            // being taken
+            // ---- being taken: the real jump scare art, then waking by the car
             add("caught_prep", mc -> {
                 cmd(mc, "gamemode adventure");
                 cmd(mc, "reisatsu debug peaceful false");
             }, 10);
-            add("caught", mc -> cmd(mc, "reisatsu debug caught waitress"), 4);
+            add("caught", mc -> cmd(mc, "reisatsu debug caught chef"), 4);
             snap("60_jumpscare");
             add("caught_wait", mc -> {
             }, 76);
@@ -332,17 +383,19 @@ public final class AutoShots {
             add("caught_done", mc -> {
                 cmd(mc, "gamemode creative");
                 cmd(mc, "reisatsu debug peaceful true");
-            }, 40);
+            }, 60);
+            snap("61_wake_car");
         }
-        // closing time
+        // ---- closing time
+        add("closing_spirits", mc -> server(mc, (ServerLevel level) -> Spirits.paused = false), 5);
         scene("62_closing", mc -> {
-            atMarker(mc, "table_12", 0.0, 3.0, 160.0f, 4.0f);
+            at(mc, 16.5, 13.5, -100.0f, 4.0f);
             cmd(mc, "reisatsu debug closing");
         }, 60);
         add("closing_wait", mc -> {
         }, 160);
         snap("63_closing_manager");
-        // the exorcism
+        // ---- the exorcism at table 7
         add("exorcism", mc -> cmd(mc, "reisatsu debug exorcism"), 120);
         snap("64_exorcism_walk");
         add("exorcism_wait", mc -> dynamicWait = 20 * 34, 0);
@@ -374,66 +427,57 @@ public final class AutoShots {
         }
     }
 
-    /** The world worker's camera positions, by reflection (any record/class with a name and a position). */
+    /** One spirit alone, spawned at home and left to its routine; seen with the eye, then through the finder. */
+    private static void inSitu(String id, SpiritKind kind, double x, double z, float yaw, float pitch) {
+        add("situ_" + id, mc -> {
+            clearSpirits(mc);
+            hold(mc, "reisatsu:reisha_camera{film:10}");
+            at(mc, x, z, yaw, pitch);
+            server(mc, (ServerLevel level) -> {
+                Spirit s = Spirits.spawnAtHome(level, kind);
+                if (s instanceof Visitor v) v.seatNow();
+                if (s == null) Reisatsu.LOGGER.warn("[reisatsu] autoshots: {} did not spawn at home", id);
+            });
+        }, 90);
+        snap("30_situ_" + id + "_eye");
+        add("situ_finder_" + id, mc -> hold(mc, "reisatsu:reisha_camera_finder{film:10}"), 20);
+        snap("31_situ_" + id + "_finder");
+        add("situ_down_" + id, mc -> hold(mc, "reisatsu:reisha_camera{film:10}"), 6);
+    }
+
+    /** The world's camera positions with its lighting setups, the HUD hidden, as a spectator (no collisions). */
     private static void worldTour() {
-        try {
-            Class<?> c = Class.forName("com.reisatsu.debug.WorldTour");
-            Method m = c.getMethod("shots");
-            Object list = m.invoke(null);
-            if (!(list instanceof List<?> l)) {
-                log("WorldTour.shots() did not return a list");
-                return;
+        List<WorldTour.Shot> shots = WorldTour.shots();
+        add("tour_begin", mc -> {
+            clearSpirits(mc);
+            cmd(mc, "gamemode spectator");
+            mc.options.hideGui = true;
+        }, 10);
+        boolean nv = false;
+        WorldTour.Shot last = null;
+        for (WorldTour.Shot s : shots) {
+            final boolean wantNv = s.nightVision();
+            if (wantNv != nv) {
+                nv = wantNv;
+                add("nv_" + nv, mc -> cmd(mc, wantNv ? "effect give @s night_vision 99999 0 true" : "effect clear @s night_vision"), 5);
             }
-            int i = 0;
-            for (Object o : l) {
-                String name = String.valueOf(read(o, "name", "id", "label"));
-                Object pos = read(o, "pos", "position", "at");
-                double x, y, z;
-                if (pos instanceof Vec3 v) {
-                    x = v.x;
-                    y = v.y;
-                    z = v.z;
-                } else if (pos instanceof BlockPos b) {
-                    x = b.getX() + 0.5;
-                    y = b.getY();
-                    z = b.getZ() + 0.5;
-                } else {
-                    x = num(read(o, "x"));
-                    y = num(read(o, "y"));
-                    z = num(read(o, "z"));
-                }
-                float yaw = (float) num(read(o, "yaw"));
-                float pitch = (float) num(read(o, "pitch"));
-                final double fx = x, fy = y, fz = z;
-                String shot = String.format(Locale.ROOT, "w%02d_%s", i++, name.replaceAll("[^a-zA-Z0-9_]", "_"));
-                scene(shot, mc -> at(mc, fx, fy, fz, yaw, pitch), 60);
-            }
-            log("world tour: " + i + " shots");
-        } catch (ClassNotFoundException e) {
-            log("no WorldTour (the world is not merged)");
-        } catch (Throwable t) {
-            log("WorldTour failed: " + t);
+            double dist = last == null ? 99 : Math.sqrt(Math.pow(s.x() - last.x(), 2) + Math.pow(s.y() - last.y(), 2) + Math.pow(s.z() - last.z(), 2));
+            int settle = (int) Math.min(110, 30 + dist * 1.5);
+            if (s.lights() != WorldTour.Lights.KEEP) settle = Math.max(settle, 70);
+            add("go_world_" + s.name(), mc -> {
+                if (s.lights() != WorldTour.Lights.KEEP) server(mc, (ServerLevel level) -> s.apply(level));
+                at(mc, s.x(), s.y(), s.z(), s.yaw(), s.pitch());
+            }, settle);
+            snap("world_" + s.name());
+            last = s;
         }
-    }
-
-    private static Object read(Object o, String... names) {
-        for (String n : names) {
-            try {
-                Method m = o.getClass().getMethod(n);
-                return m.invoke(o);
-            } catch (Exception ignored) {
-            }
-            try {
-                Field f = o.getClass().getField(n);
-                return f.get(o);
-            } catch (Exception ignored) {
-            }
-        }
-        return null;
-    }
-
-    private static double num(Object o) {
-        return o instanceof Number n ? n.doubleValue() : 0.0;
+        add("tour_end", mc -> {
+            cmd(mc, "effect clear @s night_vision");
+            cmd(mc, "gamemode creative");
+            mc.options.hideGui = false;
+            server(mc, (ServerLevel level) -> Spirits.paused = false);
+        }, 10);
+        log("world tour: " + shots.size() + " shots");
     }
 
     private static void shot(Minecraft mc, String name) {

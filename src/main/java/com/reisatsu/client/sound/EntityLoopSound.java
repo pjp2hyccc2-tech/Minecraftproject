@@ -8,20 +8,25 @@ import net.minecraft.world.entity.Entity;
 
 import java.util.function.Predicate;
 
-/** A looping sound that follows an entity (the bride's humming); fades out while {@code active} is false. */
+/** A looping sound that follows an entity (a spirit's pressure hum, the chef's chopping); fades out while {@code active} is false. */
 public class EntityLoopSound extends AbstractTickableSoundInstance {
     private final Entity entity;
     private final Predicate<Entity> active;
     private final float maxVolume;
 
     public EntityLoopSound(SoundEvent event, Entity entity, float maxVolume, Predicate<Entity> active) {
+        this(event, entity, maxVolume, active, false);
+    }
+
+    /** immediate: starts at full volume (a loop that must be heard from its first beat, e.g. the chef's chopping). */
+    public EntityLoopSound(SoundEvent event, Entity entity, float maxVolume, Predicate<Entity> active, boolean immediate) {
         super(event, SoundSource.HOSTILE, RandomSource.create());
         this.entity = entity;
         this.active = active;
         this.maxVolume = maxVolume;
         this.looping = true;
         this.delay = 0;
-        this.volume = 0.001f;
+        this.volume = immediate && active.test(entity) ? maxVolume : 0.001f;
         this.x = entity.getX();
         this.y = entity.getY() + 1.7;
         this.z = entity.getZ();

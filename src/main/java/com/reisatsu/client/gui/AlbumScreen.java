@@ -77,17 +77,23 @@ public class AlbumScreen extends Screen {
             g.fill(bx + bw / 2 - 2, by, bx + bw / 2 + 2, by + bh, 0xFFB8AA90);
         }
         int ink = 0xFF2A2018;
+        // the notebook texture has its own pages (left 14..252, right 262..498 of 512) and the 霊撮帳 heading
+        boolean tex = Tex.has(ALBUM);
         int pad = bw / 22;
-        int lx = bx + pad, rx = bx + bw / 2 + pad, top = by + pad;
-        int pageW = bw / 2 - pad * 2;
-        g.drawString(font, I18n.get("gui.reisatsu.album"), lx, top, ink, false);
+        int lx = tex ? bx + bw * 26 / 512 : bx + pad;
+        int rx = tex ? bx + bw * 274 / 512 : bx + bw / 2 + pad;
+        int top = tex ? by + bh * 20 / 320 : by + pad;
+        int pageW = tex ? bw * 216 / 512 : bw / 2 - pad * 2;
+        if (!tex) g.drawString(font, I18n.get("gui.reisatsu.album"), lx, top, ink, false);
         // ---- the six
         int cols = 3, rows = 2;
-        int cellW = pageW / cols, cellH = (bh - pad * 3 - 12) / rows;
-        int photoH = Math.min(cellH - 22, cellW * 160 / 128 - 4);
+        int gridTop = tex ? by + bh * 62 / 320 : top + 14;
+        int gridBottom = by + bh - (tex ? bh * 16 / 320 : pad);
+        int cellW = pageW / cols, cellH = (gridBottom - gridTop) / rows;
+        int photoH = Math.min(cellH - 14, cellW * 160 / 128 - 4);
         for (int i = 0; i < SpiritKind.ALL.length; i++) {
             SpiritKind k = SpiritKind.ALL[i];
-            int cx = lx + (i % cols) * cellW, cy = top + 14 + (i / cols) * cellH;
+            int cx = lx + (i % cols) * cellW, cy = gridTop + (i / cols) * cellH;
             int pw = photoH * 128 / 160;
             int px = cx + (cellW - pw) / 2;
             GameData.Photo p = bestOf(k);

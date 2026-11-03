@@ -227,7 +227,8 @@ public final class ClientEvents {
         event.setBlue(0.050f);
     }
 
-    @SubscribeEvent
+    /** The game tightens the world's night fog with fear (the world's handler runs first and cancels the event). */
+    @SubscribeEvent(receiveCanceled = true)
     public static void fog(ViewportEvent.RenderFog event) {
         Minecraft mc = Minecraft.getInstance();
         if (!inRestaurant() || event.getType() != FogType.NONE || ShaderCompat.active()) return;
@@ -235,7 +236,8 @@ public final class ClientEvents {
         boolean outside = Layout.roomAt(mc.player.blockPosition()) == null;
         float far = (outside ? 56.0f : 40.0f) - 14.0f * ClientState.fearShown - 6.0f * ClientState.dangerShown;
         if (event.getMode() == FogRenderer.FogMode.FOG_SKY) far *= 1.5f;
-        event.setNearPlaneDistance(far * 0.12f);
+        far = Math.min(far, event.getFarPlaneDistance());
+        event.setNearPlaneDistance(Math.min(event.getNearPlaneDistance(), far * 0.12f));
         event.setFarPlaneDistance(far);
         event.setCanceled(true);
     }
@@ -257,7 +259,10 @@ public final class ClientEvents {
             event.setCanceled(true);
             return;
         }
-        boolean hideBar = ClientState.locked() || ClientState.hiding() || Finder.active(mc) || ClientState.exorcismStage >= 0;
+        // nothing of the HUD on the black screens (jump scare, being taken, waking) and in cinematic moments
+        boolean black = ClientState.jumpscareTicks >= 0 || ClientState.caughtTicks >= 0 || ClientState.wakeTicks >= 0
+                || ClientState.flag(com.reisatsu.game.GameManager.F_CAUGHT) || ClientState.introTicks >= 0 || ClientState.fadeTicks >= 0;
+        boolean hideBar = black || ClientState.locked() || ClientState.hiding() || Finder.active(mc) || ClientState.exorcismStage >= 0;
         if (hideBar && (id.equals(VanillaGuiOverlay.HOTBAR.id()) || id.equals(VanillaGuiOverlay.ITEM_NAME.id())
                 || id.equals(VanillaGuiOverlay.RECORD_OVERLAY.id()))) {
             event.setCanceled(true);

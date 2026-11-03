@@ -49,8 +49,10 @@ public class Manager extends Spirit {
         return SpiritKind.MANAGER;
     }
 
+    /** His chair: a quarter block back from the marker, so the desk is ~0.75 ahead of him (his model's SIT reaches it). */
     public static Vec3 deskSpot() {
-        return Layout.marker("manager_desk").center();
+        Layout.Marker d = Layout.marker("manager_desk");
+        return d.center().subtract(Vec3.atLowerCornerOf(d.facing().getNormal()).scale(0.25));
     }
 
     public boolean phase2() {
@@ -225,8 +227,8 @@ public class Manager extends Spirit {
             case S_TO_DESK -> {
                 setAnimPose(WALK);
                 Layout.Marker d = Layout.marker("manager_desk");
-                if (walkTo(d.center(), walkSpeed()) || subTicks > 20 * 30) {
-                    Vec3 c = d.center();
+                if (walkTo(deskSpot(), walkSpeed()) || subTicks > 20 * 30) {
+                    Vec3 c = deskSpot();
                     moveTo(c.x, c.y, c.z, d.yaw(), 0.0f);
                     faceYaw(d.yaw());
                     setAnimPose(SIT);
@@ -239,7 +241,7 @@ public class Manager extends Spirit {
                 setAnimPose(SIT);
                 Layout.Marker d = Layout.marker("manager_desk");
                 faceYaw(d.yaw());
-                if (subTicks % 120 == 20) play(ModSounds.MANAGER_TYPING.get(), 0.5f, 1.0f);
+                // the typing is a client loop while he sits (HorrorAudio.tickWork)
                 if (random.nextInt(700) == 0) play(ModSounds.MANAGER_SIGH.get(), 0.5f, 1.0f);
                 if (!Fixtures.circuitOn(level, Circuit.CAMERAS) && subTicks > 40) {
                     sub = S_TO_BREAKER;
@@ -249,7 +251,8 @@ public class Manager extends Spirit {
             case S_TO_BREAKER -> {
                 setAnimPose(WALK);
                 Layout.Marker b = Layout.marker("breaker");
-                Vec3 spot = new Vec3(b.pos().getX() + 0.5, floorY(), b.pos().getZ() + 0.5).add(Vec3.atLowerCornerOf(b.facing().getNormal()).scale(1.0));
+                Vec3 spot = Layout.has("breaker_stand") ? Layout.marker("breaker_stand").center()
+                        : new Vec3(b.pos().getX() + 0.5, floorY(), b.pos().getZ() + 0.5).add(Vec3.atLowerCornerOf(b.facing().getNormal()).scale(1.0));
                 if (walkTo(spot, walkSpeed()) || subTicks > 20 * 30) {
                     faceTowards(b.center());
                     sub = S_AT_BREAKER;

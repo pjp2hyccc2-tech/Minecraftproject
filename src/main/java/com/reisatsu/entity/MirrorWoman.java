@@ -123,6 +123,19 @@ public class MirrorWoman extends Spirit {
         GameManager.onNoticed(p, this);
     }
 
+    /** Standing in the mirror's wall, palms on the pane (the pane is the mirror block's far 1 px, toward the women's room). */
+    private static Vec3 pressSpot() {
+        Layout.Marker home = Layout.marker("mirror_woman");
+        if (!Layout.has("mirror")) return home.center();
+        net.minecraft.core.Direction f = home.facing();
+        BlockPos m = Layout.marker("mirror").pos();
+        double pane = (f.getAxis() == net.minecraft.core.Direction.Axis.Z ? m.getZ() : m.getX()) + 0.5
+                + (f.getAxisDirection() == net.minecraft.core.Direction.AxisDirection.POSITIVE ? 1 : -1) * (0.5 - 1.0 / 16.0);
+        Vec3 c = home.center();
+        double along = pane - (f.getAxisDirection() == net.minecraft.core.Direction.AxisDirection.POSITIVE ? 1 : -1) * 0.45;
+        return f.getAxis() == net.minecraft.core.Direction.Axis.Z ? new Vec3(c.x, c.y, along) : new Vec3(along, c.y, c.z);
+    }
+
     @Override
     protected void interrupted() {
         setTaps(false);
@@ -144,9 +157,14 @@ public class MirrorWoman extends Spirit {
     @Override
     protected void routine(ServerLevel level) {
         Layout.Marker home = Layout.marker("mirror_woman");
-        if (horizontalDistance(home.center()) > 0.2) {
-            Vec3 c = home.center();
-            moveTo(c.x, c.y, c.z, home.yaw(), 0.0f);
+        // at home in the cavity; for PRESS she rushes to the glass (her model's palms land ~0.45 ahead of her)
+        Vec3 want = sub == S_PRESS ? pressSpot() : home.center();
+        double d = horizontalDistance(want);
+        if (d > 0.02) {
+            double step = sub == S_PRESS ? 0.35 : d > 3.0 ? d : 0.08;
+            Vec3 c = position();
+            Vec3 to = d <= step ? want : c.add(new Vec3(want.x - c.x, 0.0, want.z - c.z).normalize().scale(step));
+            moveTo(to.x, want.y, to.z, home.yaw(), getXRot());
         }
         subTicks++;
         switch (sub) {

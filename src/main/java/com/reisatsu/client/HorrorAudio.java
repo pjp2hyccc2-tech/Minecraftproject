@@ -2,6 +2,8 @@ package com.reisatsu.client;
 
 import com.reisatsu.client.sound.EntityLoopSound;
 import com.reisatsu.client.sound.LoopSound;
+import com.reisatsu.entity.Chef;
+import com.reisatsu.entity.Manager;
 import com.reisatsu.entity.Spirit;
 import com.reisatsu.game.GameData;
 import com.reisatsu.game.GameManager;
@@ -29,6 +31,7 @@ public final class HorrorAudio {
     private static LoopSound road, dining, kitchen, restroom, back, fridge, silence, closingBed;
     private static LoopSound dread, tension, danger, chase, safe, closingMusic, store, storeWrong, chant;
     private static final Map<Integer, EntityLoopSound> NEAR = new HashMap<>();
+    private static final Map<Integer, EntityLoopSound> WORK = new HashMap<>();
     private static float heartbeatIn = 40;
     private static int breathIn = 60;
     private static int whisperIn = 600;
@@ -55,6 +58,8 @@ public final class HorrorAudio {
         dread = tension = danger = chase = safe = closingMusic = store = storeWrong = chant = null;
         for (EntityLoopSound s : NEAR.values()) Minecraft.getInstance().getSoundManager().stop(s);
         NEAR.clear();
+        for (EntityLoopSound s : WORK.values()) Minecraft.getInstance().getSoundManager().stop(s);
+        WORK.clear();
         exorcismMusic = false;
         storeAge = -1;
     }
@@ -133,7 +138,12 @@ public final class HorrorAudio {
             exorcismMusic = true;
             ClientPacketHandler.ui(ModSounds.MUSIC_EXORCISM.get(), 0.8f, 1.0f);
         }
-        if (caught || intro || exorcism) return;
+        if (caught || intro || exorcism) {
+            for (EntityLoopSound s : WORK.values()) mc.getSoundManager().stop(s);
+            WORK.clear();
+            return;
+        }
+        tickWork(mc);
 
         // ---- the body
         heartbeatIn -= 1.0f;
@@ -161,6 +171,36 @@ public final class HorrorAudio {
             whisperIn = 500 + RAND.nextInt(700);
         }
         tickNear(mc);
+    }
+
+    /**
+     * The seamless work loops (docs §8): the chef's chopping — started on a cleaver hit (his model's hits fall on
+     * {@code tickCount % 10 == 7}; the 4 s loop is 80 ticks, so it stays in step) — and the manager's typing at his desk.
+     * They keep running silently while the work pauses, so the rhythm never slips.
+     */
+    private static void tickWork(Minecraft mc) {
+        for (Entity e : mc.level.entitiesForRendering()) {
+            boolean chef = e instanceof Chef, manager = e instanceof Manager;
+            if (!chef && !manager) continue;
+            if (e.distanceTo(mc.player) > 26) continue;
+            EntityLoopSound s = WORK.get(e.getId());
+            if (s != null && mc.getSoundManager().isActive(s)) continue;
+            java.util.function.Predicate<Entity> on = chef
+                    ? en -> !en.isRemoved() && ((Chef) en).pose() == Chef.CHOP && !((Chef) en).flag(Spirit.F_BOUND)
+                    : en -> !en.isRemoved() && ((Manager) en).pose() == Manager.SIT;
+            if (!on.test(e)) continue;
+            if (chef && e.tickCount % 10 != 7) continue;
+            s = new EntityLoopSound(chef ? ModSounds.CHEF_CHOP.get() : ModSounds.MANAGER_TYPING.get(), e, chef ? 0.9f : 0.45f, on, true);
+            mc.getSoundManager().play(s);
+            WORK.put(e.getId(), s);
+        }
+        WORK.entrySet().removeIf(en -> {
+            if (en.getValue().entity().isRemoved() || en.getValue().entity().distanceTo(mc.player) > 34) {
+                mc.getSoundManager().stop(en.getValue());
+                return true;
+            }
+            return false;
+        });
     }
 
     /** The pressure hum near a spirit (heard through walls, even when nothing is seen). */

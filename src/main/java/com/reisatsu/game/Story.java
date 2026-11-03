@@ -111,14 +111,27 @@ public final class Story {
         reset();
         Hiding.clearSeats(level);
         for (Entity e : level.getEntities((Entity) null, Spirits.AREA, en -> en.getTags().contains(TAG_PROP))) e.discard();
-        for (int n = 1; n <= 3; n++) {
-            if (!Layout.has("film_" + n)) continue;
-            Vec3 c = Layout.marker("film_" + n).center().add(0, 0.95, 0);
-            pickup(level, c, new ItemStack(ModItems.FILM_PACK.get()), "reisatsu_film_" + n);
+        // film pack 1 is in the register drawer and film pack 2 in a staff locker (GameFixtureListener gives them);
+        // film pack 3 lies on the walk-in fridge's floor, the office key on the staff room table
+        if (Layout.has("film_3")) {
+            BlockPos at = Layout.marker("film_3").pos();
+            pickup(level, new Vec3(at.getX() + 0.5, surfaceY(level, at), at.getZ() + 0.5), new ItemStack(ModItems.FILM_PACK.get()), "reisatsu_film_3");
         }
         if (Layout.has("key_office")) {
-            pickup(level, Layout.marker("key_office").center().add(0, 0.95, 0), new ItemStack(ModItems.OFFICE_KEY.get()), "reisatsu_office_key");
+            BlockPos at = Layout.marker("key_office").pos();
+            pickup(level, new Vec3(at.getX() + 0.5, surfaceY(level, at), at.getZ() + 0.5), new ItemStack(ModItems.OFFICE_KEY.get()), "reisatsu_office_key");
         }
+    }
+
+    /** The height something put down at this block rests at: on the block's own shape, or on the one below. */
+    static double surfaceY(ServerLevel level, BlockPos pos) {
+        net.minecraft.world.phys.shapes.VoxelShape own = level.getBlockState(pos).getCollisionShape(level, pos);
+        if (!own.isEmpty() && own.max(net.minecraft.core.Direction.Axis.Y) < 1.0) return pos.getY() + own.max(net.minecraft.core.Direction.Axis.Y);
+        if (!own.isEmpty()) return pos.getY() + 1.0;
+        BlockPos below = pos.below();
+        net.minecraft.world.phys.shapes.VoxelShape under = level.getBlockState(below).getCollisionShape(level, below);
+        if (!under.isEmpty() && under.max(net.minecraft.core.Direction.Axis.Y) < 1.0) return below.getY() + under.max(net.minecraft.core.Direction.Axis.Y);
+        return pos.getY();
     }
 
     private static void pickup(ServerLevel level, Vec3 at, ItemStack stack, String tag) {
@@ -629,15 +642,17 @@ public final class Story {
         if (t == 2) {
             p.removeEffect(MobEffects.DARKNESS);
             GameManager.event(p, GameManager.EV_FADE, 80, "");
-            Entity s = Hiding.seat(level, seat.center(), seat.yaw());
+            // seated on the booth bench: eyes at a sitting height
+            Entity s = Hiding.seat(level, seat.center().add(0, -0.4, 0), seat.yaw());
             p.teleportTo(level, seat.center().x, seat.center().y, seat.center().z, seat.yaw(), 18.0f);
             if (s != null) p.startRiding(s, true);
             ps.lockPos = null;
             for (Spirit sp : Spirits.all(level)) if (sp.mode() != Spirit.Mode.BOUND) sp.discard();
         }
         if (t == 60) {
-            Vec3 table = Layout.marker("table_7").center();
-            Vec3 side = table.add(table.subtract(seat.center()).normalize().scale(1.2)).add(0, 0, 0);
+            // she serves from the aisle end of the table
+            Layout.Marker tm = Layout.marker("table_7");
+            Vec3 side = tm.center().add(Vec3.atLowerCornerOf(tm.facing().getNormal()).scale(0.95));
             Spirit w = Spirits.spawnAt(level, SpiritKind.WAITRESS, side, 0);
             if (w != null) {
                 w.faceTowards(seat.center().add(0, 1.2, 0));
@@ -645,10 +660,12 @@ public final class Story {
                 w.freeze(Waitress.SERVE);
             }
         }
-        if (t == 90) Fixtures.placeWaterGlass(level, 7);
-        if (t == 92) level.playSound(null, p.getX(), p.getY(), p.getZ(), ModSounds.FIXTURE_GLASS_SET.get(), SoundSource.NEUTRAL, 0.9f, 1.0f);
+        // the glass leaves her hand at SERVE tick 24
+        if (t == 84) Fixtures.placeWaterGlass(level, 7);
+        if (t == 85) level.playSound(null, p.getX(), p.getY(), p.getZ(), ModSounds.FIXTURE_GLASS_SET.get(), SoundSource.NEUTRAL, 0.9f, 1.0f);
         if (t == 110) {
-            GameManager.privateSound(p, ModSounds.WAITRESS_GREET.get(), p.getEyePosition().add(0.6, 0.2, 0.0), 0.9f, 0.92f);
+            // 「いらっしゃいませ。……お一人様ですね」 (game.ending_bad carries the whole line)
+            GameManager.privateSound(p, ModSounds.GAME_ENDING_BAD.get(), p.getEyePosition().add(0.6, 0.2, 0.0), 0.9f, 1.0f);
             say(p, "waitress", 110, "dialogue.reisatsu.waitress.single");
         }
         if (t == 240) Fixtures.ringCallButton(level, 7);

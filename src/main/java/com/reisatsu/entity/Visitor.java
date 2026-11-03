@@ -153,6 +153,18 @@ public class Visitor extends Spirit {
         stayTicks = Math.max(stayTicks, 20 * 40);
     }
 
+    /** Already seated at table 7 (the tour, debugging): presses the button a few seconds later. */
+    public void seatNow() {
+        stage = S_SEATED;
+        stageTicks = 0;
+        Layout.Marker seat = Layout.marker("seat_7");
+        moveTo(seat.center().x, seat.center().y, seat.center().z, seat.yaw(), 0.0f);
+        faceYaw(seat.yaw());
+        setAnimPose(SIT);
+        stayTicks = 20 * 150;
+        nextPress = 20 * 3;
+    }
+
     @Override
     protected void resumeRoutine() {
         if (stage == S_SEATED) {
@@ -218,11 +230,12 @@ public class Visitor extends Spirit {
     }
 
     private void seated(ServerLevel level) {
+        // his model presses the button at PRESS tick 14
+        if (pose() == PRESS && poseTicks() == 14) Fixtures.ringCallButton(level, 7);
         if (pose() == PRESS && poseTicks() > 30) setAnimPose(SIT);
         if (pose() != SIT && pose() != PRESS) setAnimPose(SIT);
         if (--nextPress <= 0) {
             setAnimPose(PRESS);
-            Fixtures.ringCallButton(level, 7);
             nextPress = 20 * (30 + random.nextInt(30));
         }
         if (--stayTicks <= 0) {

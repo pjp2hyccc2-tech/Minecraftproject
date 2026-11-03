@@ -44,12 +44,8 @@ public final class Hiding {
         ps.hiddenFacing = facing;
         Vec3 c = Vec3.atBottomCenterOf(lower);
         Entity seat = seat(level, c, facing.toYRot());
-        if (seat != null) {
-            p.teleportTo(c.x, c.y, c.z);
-            p.startRiding(seat, true);
-        } else {
-            p.teleportTo(level, c.x, c.y, c.z, facing.toYRot(), 0.0f);
-        }
+        GameManager.teleport(p, level, c, facing.toYRot(), 0.0f);
+        if (seat != null) p.startRiding(seat, true);
         p.setYRot(facing.toYRot());
         p.setYHeadRot(facing.toYRot());
         ps.lastYaw = facing.toYRot();
@@ -70,7 +66,7 @@ public final class Hiding {
         p.stopRiding();
         if (v != null && v.getTags().contains(SEAT_TAG)) v.discard();
         Vec3 out = Vec3.atBottomCenterOf(at.relative(f));
-        p.teleportTo(out.x, out.y, out.z);
+        GameManager.teleport(p, p.serverLevel(), out, p.getYRot(), p.getXRot());
         if (sound && p.level() instanceof ServerLevel level) {
             level.playSound(null, out.x, out.y + 1, out.z, ModSounds.FIXTURE_LOCKER.get(), SoundSource.BLOCKS, p.isShiftKeyDown() ? 0.5f : 0.9f, 0.95f);
             NoiseSystem.emit(level, out.add(0, 1, 0), p.isShiftKeyDown() ? 3.0f : 6.0f, "locker", p);

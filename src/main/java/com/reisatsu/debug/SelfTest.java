@@ -11,6 +11,7 @@ import com.reisatsu.game.GameData;
 import com.reisatsu.game.GameManager;
 import com.reisatsu.game.NoiseSystem;
 import com.reisatsu.game.PlayerState;
+import com.reisatsu.game.Sight;
 import com.reisatsu.game.Spirits;
 import com.reisatsu.game.Story;
 import com.reisatsu.item.GameItem;
@@ -28,7 +29,6 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,14 +55,21 @@ public final class SelfTest {
     private static Spirit probe;
     private static int ofudaBefore;
     private static int stageTicks;
+    private static final int STAGE_WORLD = 50;
+    private static int worldStage;
+    /** The test lane: where the camera stands and where the spirit stands (clear line of sight, chosen at runtime). */
+    private static Vec3 laneEye, laneSpirit;
+    private static float laneYaw;
 
     private SelfTest() {}
 
     public static void onStarted(MinecraftServer server) {
         if (!ENABLED) return;
-        stage = 0;
+        stage = STAGE_WORLD;
+        worldStage = 0;
         wait = 40;
         log("selftest starting");
+        WorldCheck.dumpLayout(Path.of("reisatsu-layout.txt"));
     }
 
     public static void check(boolean ok, String what) {
@@ -101,6 +108,7 @@ public final class SelfTest {
             GameData data = GameData.get(server);
             stageTicks++;
             switch (stage) {
+                case STAGE_WORLD -> world(level);
                 case 0 -> setup(server, level, data);
                 case 1 -> shots(level, data);
                 case 2 -> awarenessStart(level, data);
@@ -114,6 +122,8 @@ public final class SelfTest {
                 case 10 -> submit(level, data);
                 case 11 -> exorcismWait(level, data);
                 case 12 -> endingAndReset(server, level, data);
+                case 20 -> fixtures(level, data);
+                case 21 -> lockerResult(level, data);
                 default -> finish(server);
             }
         } catch (Throwable e) {
@@ -135,11 +145,23 @@ public final class SelfTest {
         fake.setXRot(0.0f);
     }
 
+    // ------------------------------------------------------------------------------------------------ the world's own checks
+    private static void world(ServerLevel level) {
+        if (worldStage == 0) log("---- the world's checks (WorldCheck)");
+        int w = WorldCheck.run(level, worldStage++, SelfTest::log, SelfTest::check);
+        if (w < 0) {
+            log("---- the game");
+            next(0, 10);
+        } else {
+            wait = w;
+        }
+    }
+
     // ------------------------------------------------------------------------------------------------ 0: start
     private static void setup(MinecraftServer server, ServerLevel level, GameData data) {
         log("level " + level.dimension().location() + (Greybox.fallback(server) ? " (greybox stand-in: the world's dimension is not merged yet)" : ""));
-        worldCheck(server);
         Greybox.ensure(level);
+        com.reisatsu.world.Fixtures.resetAll(level);
         for (Layout.Marker m : List.of(Layout.marker("spawn"), Layout.marker("table_7"), Layout.marker("manager_desk"))) {
             for (int dx = -2; dx <= 2; dx++) for (int dz = -2; dz <= 2; dz++)
                 level.setChunkForced((m.pos().getX() >> 4) + dx, (m.pos().getZ() >> 4) + dz, true);
@@ -164,9 +186,77 @@ public final class SelfTest {
         Spirits.ensure(level, data);
         check(Spirits.medium(level) != null, "the medium waits in the lot");
         Spirits.removeAll(level);
+        int film3 = level.getEntities((net.minecraft.world.entity.Entity) null, Spirits.AREA, e -> e.getTags().contains("reisatsu_film_3")).size();
+        int key = level.getEntities((net.minecraft.world.entity.Entity) null, Spirits.AREA, e -> e.getTags().contains("reisatsu_office_key")).size();
+        check(film3 == 1, "film pack 3 lies in the walk-in fridge (" + film3 + ")");
+        check(key == 1, "the office key lies in the staff room (" + key + ")");
         GameManager.debugPeaceful = false;
+        lane(level);
         kindIdx = 0;
-        next(1, 10);
+        next(20, 10);
+    }
+
+    /** A straight, clear lane in the dining room: the camera at one end, the spirit 7 blocks away facing it. */
+    private static void lane(ServerLevel level) {
+        double[][] candidates = {
+                {16.5, 13.5, 23.5, 13.5}, {24.5, 13.5, 31.5, 13.5}, {36.5, 14.5, 36.5, 21.5}, {17.5, 26.5, 24.5, 26.5},
+                {16.5, 16.5, 16.5, 23.5}};
+        for (double[] c : candidates) {
+            Vec3 eye = new Vec3(c[0], Layout.FEET_Y, c[1]);
+            Vec3 at = new Vec3(c[2], Layout.FEET_Y, c[3]);
+            if (Sight.clear(level, eye.add(0, 1.62, 0), at.add(0, 1.55, 0)) && Sight.clear(level, eye.add(0, 1.62, 0), at.add(0, 0.9, 0))) {
+                laneEye = eye;
+                laneSpirit = at;
+                laneYaw = (float) (Mth.atan2(at.z - eye.z, at.x - eye.x) * Mth.RAD_TO_DEG) - 90.0f;
+                log(String.format(Locale.ROOT, "test lane %.1f,%.1f -> %.1f,%.1f", c[0], c[1], c[2], c[3]));
+                return;
+            }
+            log(String.format(Locale.ROOT, "lane %.1f,%.1f -> %.1f,%.1f is blocked", c[0], c[1], c[2], c[3]));
+        }
+        Layout.Marker t = Layout.marker("table_12");
+        laneEye = new Vec3(t.pos().getX() + 0.5, Layout.FEET_Y, t.pos().getZ() + 3.5);
+        laneSpirit = laneEye.add(0, 0, 6);
+        laneYaw = 0.0f;
+        check(false, "a clear test lane in the dining room");
+    }
+
+    // ------------------------------------------------------------------------------------------------ 20-21: the restaurant's things
+    /** The register drawer gives film pack 1, the locker at film_2 hides you and gives film pack 2, through the world's blocks. */
+    private static void fixtures(ServerLevel level, GameData data) {
+        int before = GameManager.count(fake, ModItems.FILM_PACK.get());
+        BlockPos reg = Layout.marker("register").pos();
+        use(level, reg);
+        check(GameManager.count(fake, ModItems.FILM_PACK.get()) == before + 1, "opening the register drawer finds film pack 1");
+        use(level, reg); // shut it again
+        use(level, reg);
+        check(GameManager.count(fake, ModItems.FILM_PACK.get()) == before + 1, "the drawer gives it only once");
+        BlockPos locker = Layout.marker("film_2").pos();
+        Vec3 front = Vec3.atBottomCenterOf(locker.relative(Layout.marker("film_2").facing()));
+        place(front, Layout.marker("film_2").facing().getOpposite().toYRot());
+        use(level, locker);
+        PlayerState ps = GameManager.state(fake);
+        check(ps.hiding(), "right-clicking a locker hides you in it");
+        check(fake.blockPosition().equals(locker), "inside the locker's block (the world's own test for stepping out)");
+        check(GameManager.count(fake, ModItems.FILM_PACK.get()) == before + 2, "film pack 2 is in that locker");
+        next(21, 10);
+    }
+
+    private static void lockerResult(ServerLevel level, GameData data) {
+        PlayerState ps = GameManager.state(fake);
+        BlockPos locker = Layout.marker("film_2").pos();
+        check(ps.hiding() && fake.isPassenger(), "still hidden a moment later");
+        use(level, locker);
+        check(!ps.hiding() && !fake.isPassenger(), "right-clicking from inside steps out");
+        check(fake.blockPosition().equals(locker.relative(Layout.marker("film_2").facing())), "standing in front of the locker");
+        Layout.Marker spawn = Layout.marker("spawn");
+        place(spawn.center(), spawn.yaw());
+        next(1, 5);
+    }
+
+    /** Right-clicks a block as the fake player (the world's block behaviours run). */
+    private static void use(ServerLevel level, BlockPos pos) {
+        net.minecraft.world.phys.BlockHitResult hit = new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(pos), net.minecraft.core.Direction.UP, pos, false);
+        level.getBlockState(pos).use(level, fake, net.minecraft.world.InteractionHand.MAIN_HAND, hit);
     }
 
     // ------------------------------------------------------------------------------------------------ 1: shots
@@ -190,11 +280,9 @@ public final class SelfTest {
             place(standAt, 180.0f);
             spiritYaw = mw.yaw();
         } else {
-            Layout.Marker t = Layout.marker("table_12");
-            Vec3 base = new Vec3(t.pos().getX() + 0.5, Layout.FEET_Y, t.pos().getZ() + 3.5);
-            place(base, 0.0f); // facing south (+z)
-            at = base.add(0, 0, 6);
-            spiritYaw = 180.0f; // facing the camera (north)
+            place(laneEye, laneYaw);
+            at = laneSpirit;
+            spiritYaw = laneYaw + 180.0f; // facing the camera
         }
         Spirit s = Spirits.spawnAt(level, kind, at, spiritYaw);
         check(s != null, kind.id + " spawns");
@@ -246,15 +334,17 @@ public final class SelfTest {
     }
 
     // ------------------------------------------------------------------------------------------------ 2-5: awareness
+    private static Vec3 along(double blocks) {
+        return laneEye.add(laneSpirit.subtract(laneEye).normalize().scale(blocks));
+    }
+
     private static void awarenessStart(ServerLevel level, GameData data) {
-        Layout.Marker t = Layout.marker("table_12");
-        Vec3 base = new Vec3(t.pos().getX() + 0.5, Layout.FEET_Y, t.pos().getZ() + 3.5);
-        place(base, 0.0f);
-        probe = Spirits.spawnAt(level, SpiritKind.MANAGER, base.add(0, 0, 3.0), 180.0f);
+        place(laneEye, laneYaw);
+        probe = Spirits.spawnAt(level, SpiritKind.MANAGER, along(3.0), laneYaw + 180.0f);
         if (probe != null) {
             probe.debugStill = true;
             probe.setAnimPose(Manager.STAND);
-            probe.faceYaw(180.0f);
+            probe.faceYaw(laneYaw + 180.0f);
         }
         next(3, 60);
     }
@@ -268,13 +358,11 @@ public final class SelfTest {
     }
 
     private static void noiseStart(ServerLevel level, GameData data) {
-        Layout.Marker t = Layout.marker("table_12");
-        Vec3 base = new Vec3(t.pos().getX() + 0.5, Layout.FEET_Y, t.pos().getZ() + 3.5);
-        place(base, 0.0f);
-        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, base.add(0, 0, 4.0), 0.0f); // facing away
+        place(laneEye, laneYaw);
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, along(4.0), laneYaw); // facing away
         if (probe != null) {
             probe.debugStill = true;
-            probe.faceYaw(0.0f);
+            probe.faceYaw(laneYaw);
         }
         next(5, 3);
     }
@@ -296,8 +384,7 @@ public final class SelfTest {
     // ------------------------------------------------------------------------------------------------ 6-7: caught
     private static void caughtStart(ServerLevel level, GameData data) {
         ofudaBefore = GameManager.count(fake, ModItems.OFUDA.get());
-        Layout.Marker t = Layout.marker("table_12");
-        place(new Vec3(t.pos().getX() + 0.5, Layout.FEET_Y, t.pos().getZ() + 3.5), 0.0f);
+        place(laneEye, laneYaw);
         probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, fake.position().add(0, 0, 0.5), 180.0f);
         if (probe != null) GameManager.caught(fake, probe);
         check(GameManager.state(fake).caught(), "touched by a hunting spirit = caught");
@@ -353,7 +440,10 @@ public final class SelfTest {
     }
 
     private static void exorcismWait(ServerLevel level, GameData data) {
-        if (data.phase == GameData.PHASE_EXORCISM && stageTicks % 200 == 1) log("exorcism running (" + stageTicks + " ticks)");
+        if (data.phase == GameData.PHASE_EXORCISM && stageTicks % 200 == 1) {
+            Medium m = Spirits.medium(level);
+            log("exorcism running (" + stageTicks + " ticks), the medium at " + (m == null ? "-" : m.blockPosition().toShortString()));
+        }
         if (data.phase == GameData.PHASE_ENDING || stageTicks > 20 * 400) {
             check(data.phase == GameData.PHASE_ENDING && data.ending == GameData.ENDING_GOOD, "the exorcism ends at dawn: 送り");
             next(12, 10);
@@ -368,28 +458,6 @@ public final class SelfTest {
         Spirits.removeAll(level);
         check(data.captured == 0 && data.photos.isEmpty() && data.phase == GameData.PHASE_IDLE, "a reset clears the progress");
         finish(server);
-    }
-
-    // ------------------------------------------------------------------------------------------------ the world's own check
-    private static void worldCheck(MinecraftServer server) {
-        try {
-            Class<?> c = Class.forName("com.reisatsu.debug.WorldCheck");
-            for (Method m : c.getMethods()) {
-                if (!java.lang.reflect.Modifier.isStatic(m.getModifiers()) || m.getParameterCount() != 1) continue;
-                Class<?> pt = m.getParameterTypes()[0];
-                Object arg = pt.isInstance(server) ? server : pt.isInstance(GameManager.level(server)) ? GameManager.level(server) : null;
-                if (arg == null) continue;
-                Object r = m.invoke(null, arg);
-                log("WorldCheck." + m.getName() + " → " + r);
-                if (r instanceof Boolean b) check(b, "the world's own check");
-                return;
-            }
-            log("WorldCheck has no static (MinecraftServer|ServerLevel) method");
-        } catch (ClassNotFoundException e) {
-            log("no WorldCheck (the world is not merged)");
-        } catch (Throwable t) {
-            check(false, "WorldCheck threw " + t);
-        }
     }
 
     private static void finish(MinecraftServer server) {

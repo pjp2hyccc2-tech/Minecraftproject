@@ -116,6 +116,12 @@ public class Child extends Spirit {
         return hideIdx >= 0 && hideIdx < hides.size() ? hides.get(hideIdx).center() : Layout.marker("child_count").center();
     }
 
+    /** Where she counts: her face ~0.3 blocks from the pillar (her model's COUNT pose leans on it). */
+    private static Vec3 countSpot() {
+        Layout.Marker c = Layout.marker("child_count");
+        return c.center().add(Vec3.atLowerCornerOf(c.facing().getNormal()).scale(0.2));
+    }
+
     /** She never hunts: being seen means 「みーつけた」. */
     @Override
     protected void onAwarenessFull(ServerPlayer p) {
@@ -175,8 +181,8 @@ public class Child extends Spirit {
             case S_WAIT -> {
                 Layout.Marker c = Layout.marker("child_count");
                 setAnimPose(COUNT);
-                if (horizontalDistance(c.center()) > 0.3) {
-                    Vec3 cc = c.center();
+                if (horizontalDistance(countSpot()) > 0.1) {
+                    Vec3 cc = countSpot();
                     moveTo(cc.x, cc.y, cc.z, c.yaw(), 0.0f);
                 }
                 faceYaw(c.yaw());
@@ -240,7 +246,9 @@ public class Child extends Spirit {
                 Layout.Marker c = Layout.marker("child_count");
                 setAnimPose(RUN);
                 if (subTicks % 6 == 0) play(ModSounds.CHILD_RUN.get(), 0.5f, 1.0f);
-                if (walkTo(c.center(), walkSpeed()) || subTicks > 20 * 20) {
+                if (walkTo(countSpot(), walkSpeed()) || subTicks > 20 * 20) {
+                    Vec3 cc = countSpot();
+                    moveTo(cc.x, cc.y, cc.z, c.yaw(), 0.0f);
                     faceYaw(c.yaw());
                     sub = S_COUNT;
                     subTicks = 0;

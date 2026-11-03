@@ -67,7 +67,6 @@ public class EndingScreen extends Screen {
         if (ticks == 1) {
             HorrorAudio.stopAll();
             ClientPacketHandler.ui(good() ? ModSounds.MUSIC_ENDING_GOOD.get() : ModSounds.MUSIC_ENDING_BAD.get(), 0.85f, 1.0f);
-            if (!good()) ClientPacketHandler.ui(ModSounds.GAME_ENDING_BAD.get(), 0.8f, 1.0f);
         }
         if (!good() && (ticks == 330 || ticks == 352)) ClientPacketHandler.ui(ModSounds.FIXTURE_CALL_BUTTON.get(), 0.7f, 0.97f);
         if (ticks == cardAt()) ClientPacketHandler.ui(ModSounds.GAME_TITLE_HIT.get(), 0.9f, 1.0f);

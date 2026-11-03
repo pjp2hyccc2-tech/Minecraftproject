@@ -6,6 +6,7 @@ import com.reisatsu.registry.ModSounds;
 import com.reisatsu.world.Fixtures;
 import com.reisatsu.world.Layout;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
@@ -25,6 +26,7 @@ public class Chef extends Spirit {
     private int sub = S_TO_BOARD;
     private int subTicks;
     private int chopFor = 20 * 30;
+    private float lookSide = 1.0f;
     private int nextLook = 20 * 8;
     private int lookTicks;
 
@@ -174,8 +176,9 @@ public class Chef extends Spirit {
                     // the head turns slowly over the shoulder; the body stays at the board
                     lookTicks--;
                     setAnimPose(LOOK);
-                    float turn = Math.min(1.0f, poseTicks() / 18.0f);
-                    setYHeadRot(b.yaw() + 155.0f * turn * (random.nextInt(40) == 0 ? 0.97f : 1.0f));
+                    // his model turns the head ~160 degrees over the shoulder on its own, toward the side of netHeadYaw:
+                    // the side where you are (and his sight cone goes with it)
+                    setYHeadRot(b.yaw() + lookSide * 150.0f);
                     if (lookTicks == 0) {
                         setYHeadRot(b.yaw());
                         setAnimPose(CHOP);
@@ -184,10 +187,11 @@ public class Chef extends Spirit {
                 } else {
                     setAnimPose(CHOP);
                     setYHeadRot(b.yaw());
-                    if (subTicks % 80 == 1) play(ModSounds.CHEF_CHOP.get(), 1.0f, 0.96f + random.nextFloat() * 0.08f);
+                    // the chopping itself is a client loop in step with the cleaver (HorrorAudio.tickWork)
                     if (--nextLook <= 0) {
                         play(ModSounds.CHEF_CHOP_STOP.get(), 1.0f, 1.0f);
                         lookTicks = 40 + random.nextInt(21);
+                        lookSide = sideToward(level);
                     }
                 }
                 if (subTicks > chopFor && lookTicks == 0) {
@@ -227,7 +231,8 @@ public class Chef extends Spirit {
                 }
             }
             case S_PLATE -> {
-                if (subTicks == 20 * 6 - 10) {
+                // his model taps the bell at pose tick 100
+                if (pose() == PLATE && poseTicks() == 100) {
                     Vec3 bell = Layout.has("pass_bell") ? Layout.marker("pass_bell").center() : position();
                     playAt(bell, ModSounds.FIXTURE_PASS_BELL.get(), 1.0f, 1.0f);
                 }
@@ -240,6 +245,14 @@ public class Chef extends Spirit {
             default -> {
             }
         }
+    }
+
+    /** +1 when the nearest player is on his right (positive head yaw), -1 on his left; random when nobody is near. */
+    private float sideToward(ServerLevel level) {
+        ServerPlayer p = nearestPlayer(level, 18.0);
+        if (p == null) return random.nextBoolean() ? 1.0f : -1.0f;
+        float toward = (float) (Mth.atan2(p.getZ() - getZ(), p.getX() - getX()) * Mth.RAD_TO_DEG) - 90.0f;
+        return Mth.wrapDegrees(toward - getYRot()) >= 0.0f ? 1.0f : -1.0f;
     }
 
     @Override

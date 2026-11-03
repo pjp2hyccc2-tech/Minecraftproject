@@ -201,7 +201,8 @@ public class Waitress extends Spirit {
                     faceTowards(table.add(0, 0.6, 0));
                     setAnimPose(SERVE);
                 }
-                if (subTicks == 28) {
+                // the glass leaves her hand at SERVE tick 24
+                if (pose() == SERVE && poseTicks() == 24) {
                     Fixtures.placeWaterGlass(level, serveTable);
                     play(ModSounds.FIXTURE_GLASS_SET.get(), 0.6f, 1.0f);
                     if (random.nextInt(3) == 0) {
