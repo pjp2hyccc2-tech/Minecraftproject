@@ -468,6 +468,12 @@ Manager.consts = {
 SPEC = Manager
 
 
+import ent_scene as SC  # noqa: E402
+POSE_SCENES = {0: SC.desk()}
+WALKING = (2, 5)
+NAKED_ALPHA = 0.85
+
+
 # ================================================================================================ previews
 def previews(b, ER, rows_sel=None):
     import ent_scene as SC
@@ -513,8 +519,8 @@ def previews(b, ER, rows_sel=None):
     ims.append(('finder: profile through the office window', b.view(0, 60, size=(300, 240), eye=(-3.2, 1.55, -0.3),
                                                                     target=(0, 1.2, -0.3), finder=True, scene=dk, fov=45)))
     ims.append(('naked eye a=0.85: CHASE', b.view([(0, 5)], 204, size=(300, 240), eye=(0.3, 1.62, 5.0), target=(0, 1.2, 0),
-                                                  night=True, alpha=0.85, limb=run, scene=sc, fov=50)))
+                                                  night=True, alpha=0.85, eyes_gain=1.0, limb=run, scene=sc, fov=50)))
     ims.append(('naked eye: BOW', b.view([(0, 1), (100, 3)], 140, size=(300, 240), eye=(1.5, 1.62, 4.0), target=(0, 0.9, 0),
-                                         night=True, alpha=0.85, scene=sc, fov=50)))
+                                         night=True, alpha=0.85, eyes_gain=1.0, scene=sc, fov=50)))
     rows.append(('night', ims))
     return rows
