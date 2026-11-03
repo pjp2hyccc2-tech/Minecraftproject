@@ -104,8 +104,9 @@ public final class HorrorAudio {
         if (dng - lastDanger > 0.3f) ClientState.stingerTicks = Math.max(ClientState.stingerTicks, 0);
         lastDanger = dng;
         silence.target = (dng > 0.5f && dng < 0.95f) || ClientState.scareTicks >= 0 ? 0.5f : 0.0f;
-        // the CRT's static at the TV: always there once it is on (unless the world plays it already)
-        boolean worldStatic = worldTv != null && mc.getSoundManager().isActive(worldTv);
+        // the CRT's static at the TV: always there once it is on. In 203 the world's ambience plays it from the TV's
+        // block state; only the greybox stand-in needs ours (and never doubled)
+        boolean worldStatic = mc.level.dimension() == Layout.DIMENSION || worldTv != null && mc.getSoundManager().isActive(worldTv);
         if (ClientState.flag(GameManager.F_TV) && Layout.has("tv") && !worldStatic) {
             if (tvStatic == null || !mc.getSoundManager().isActive(tvStatic)) {
                 Vec3 at = Layout.marker("tv").center().add(0.0, 0.7, 0.0);

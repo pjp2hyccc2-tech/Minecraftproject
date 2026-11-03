@@ -68,10 +68,10 @@ public class PrintoutScreen extends Screen {
         int ink = 0xFF2A2622, faint = 0xFF7A7268, red = 0xFFA0201A;
         int x = 12, y = 5;
         g.drawString(font, I18n.get("printout.hitori.site"), x, y, faint, false);
-        y = 20;
+        // under the print header's rule (paper y 24)
+        y = 29;
         y = wrap(g, I18n.get("printout.hitori.title"), x, y, PW - 24, red) + 2;
-        g.drawString(font, I18n.get("printout.hitori.post"), x, y, faint, false);
-        y += 14;
+        y = wrap(g, I18n.get("printout.hitori.post"), x, y, PW - 24, faint) + 4;
         switch (page) {
             case 0 -> {
                 g.drawString(font, I18n.get("printout.hitori.need"), x, y, ink, false);

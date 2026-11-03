@@ -689,6 +689,9 @@ public final class GameManager {
 
     // ================================================================================================ found
     /** The doll found you: its face, black, the 鬼 ending (or, at a debug / test, nothing more). */
+    /** Ticks from the doll's lunge to the jump scare's cut. */
+    public static final int LUNGE_CUT = 6;
+
     public static void caughtByDoll(ServerPlayer p, @Nullable OniDoll doll) {
         PlayerState ps = state(p);
         if (ps.caught() || ps.endingTicks >= 0) return;
@@ -697,7 +700,11 @@ public final class GameManager {
         ps.breathHolding = false;
         ps.appCamera = 0;
         event(p, EV_APP, 0, "");
-        event(p, EV_JUMPSCARE, 0, "");
+        // you turn to it: it springs (the model's LUNGE: crouch 0-2, spring, the knife down at 6-8) - cut at 6
+        if (doll != null && !(p instanceof FakePlayer)) {
+            p.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, doll.position().add(0.0, 0.35, 0.0));
+        }
+        Director.laterPublic(LUNGE_CUT, () -> event(p, EV_JUMPSCARE, 0, ""));
         Hitori.LOGGER.info("[hitori] {} was found by the doll", p.getGameProfile().getName());
         Endings.begin(p.serverLevel(), p, GameData.ENDING_ONI);
     }

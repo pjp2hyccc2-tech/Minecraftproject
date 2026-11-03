@@ -76,6 +76,8 @@ public class OniDoll extends PathfinderMob implements Animated {
     public static final int FLOAT = 0, SIT = 1, CRAWL = 2, WALK = 3, STAND = 4, TURN = 5, PEEK = 6, LUNGE = 7, LIMP = 8, BURN = 9;
     // synced flags
     public static final int F_KNIFE = 1, F_WET = 2, F_ON_CAMERA = 4, F_SEEN = 8, F_MOVING = 16, F_AT_FUSUMA = 32;
+    /** Your eyes are on it: it holds still in whatever pose it was in, its pose time held (the models freeze exactly). */
+    public static final int F_FROZEN = 64;
 
     public enum State { DORMANT, TUB, SEARCH, INVESTIGATE, CHECK, FUSUMA, STANDOFF, OPENING, WAIT, HUNT, LIMP, BURN, SCRIPTED }
 
@@ -105,6 +107,8 @@ public class OniDoll extends PathfinderMob implements Animated {
     private int blackoutAsked = -1;
     /** Burning: ticks until the fire has done its work. */
     private int burnTicks;
+    /** The lunge's goal (OPENING): the model springs 0.56 blocks by itself, the entity carries the rest. */
+    @Nullable private Vec3 lungeTo;
     /** Debug / self test: perceives, but does not move by itself. */
     public boolean debugStill;
     /** Observation this tick (server). */
@@ -155,7 +159,7 @@ public class OniDoll extends PathfinderMob implements Animated {
 
     @Override
     public float poseTime(float partialTick) {
-        return tickCount - poseStart + partialTick;
+        return tickCount - poseStart + (flag(F_FROZEN) ? 0.0f : partialTick);
     }
 
     @Override
@@ -209,11 +213,20 @@ public class OniDoll extends PathfinderMob implements Animated {
     }
 
     // ================================================================================================ places
-    /** Where it floats in the tub (0 or 1: the tub's two blocks). */
+    /** Where it floats in the full tub (0 or 1: the tub's two blocks): FLOAT has its back at the water's surface. */
     public static Vec3 tubSpot(int i) {
+        return tubAt(i, 10.5 / 16.0);
+    }
+
+    /** The drained tub's floor (block Y + 2/16): BURN and LIMP lie at the entity origin, and you would stand here. */
+    public static Vec3 tubFloor(int i) {
+        return tubAt(i, 2.0 / 16.0);
+    }
+
+    private static Vec3 tubAt(int i, double dy) {
         List<Layout.Marker> tub = Layout.markers("bathtub");
         Layout.Marker m = tub.get(Math.min(i, tub.size() - 1));
-        return new Vec3(m.pos().getX() + 0.5, m.pos().getY() + 0.32, m.pos().getZ() + 0.5);
+        return new Vec3(m.pos().getX() + 0.5, m.pos().getY() + dy, m.pos().getZ() + 0.5);
     }
 
     /** The floor just outside the tub. */
@@ -333,7 +346,11 @@ public class OniDoll extends PathfinderMob implements Animated {
         super.tick();
         setOnGround(true);
         fallDistance = 0;
-        if (level().isClientSide) return;
+        if (level().isClientSide) {
+            // frozen: the pose's clock stands still with it
+            if (flag(F_FROZEN)) poseStart++;
+            return;
+        }
         ServerLevel level = (ServerLevel) level();
         stateTicks++;
         observe(level);
@@ -377,8 +394,7 @@ public class OniDoll extends PathfinderMob implements Animated {
             case HUNT -> {
                 if (running) tickHunt(level, data);
             }
-            case LIMP -> {
-            }
+            case LIMP -> tickLimp(level);
             case BURN -> tickBurn(level);
         }
         ambient(level);
@@ -445,7 +461,7 @@ public class OniDoll extends PathfinderMob implements Animated {
     private double speed(GameData data) {
         if (seenByEyes) return 0.0;
         double mul = HitoriConfig.dollSpeed();
-        if (seenByCamera) return 0.035 * mul;
+        if (seenByCamera) return 0.022 * mul;  // the model's planted WALK is 0.015 b/t: in stop-motion a little slide is fine
         return (0.085 + 0.035 * tension(data)) * mul;
     }
 
@@ -462,10 +478,7 @@ public class OniDoll extends PathfinderMob implements Animated {
     /** Moves toward a point at the current speed with the moving pose; true when there. */
     private boolean go(Vec3 to, GameData data) {
         double sp = speed(data);
-        if (sp <= 0.0) {
-            if (pose() == CRAWL || pose() == WALK) setAnimPose(STAND);
-            return false;
-        }
+        if (sp <= 0.0) return false;  // looked at: it holds the pose it was caught in
         if (turnTicks <= 0) setAnimPose(movePose());
         return walkTo(to, sp);
     }
@@ -660,6 +673,7 @@ public class OniDoll extends PathfinderMob implements Animated {
         } else {
             setState(State.OPENING);
             setAnimPose(LUNGE);
+            lungeTo = p.position();
             Apt.setClosetFusuma(level, 2);
             playAt(fusumaCentre(), ModSounds.DOOR_FUSUMA.get(), 1.2f, 0.85f);
             GameManager.caughtByDoll(p, this);
@@ -691,6 +705,16 @@ public class OniDoll extends PathfinderMob implements Animated {
 
     private void tickOpening(ServerLevel level) {
         setAnimPose(LUNGE);
+        // LUNGE: crouched 0-2, springs from 2 (0.56 blocks in the model), the knife down at 6-8; the entity carries the
+        // rest of the way to you over the spring
+        if (lungeTo != null && stateTicks >= 2 && stateTicks <= 6) {
+            double rest = horizontalDistance(lungeTo) - 0.56 - 0.35;
+            if (rest > 0.0) {
+                double dx = lungeTo.x - getX(), dz = lungeTo.z - getZ(), d = Math.sqrt(dx * dx + dz * dz);
+                double step = Math.min(rest, rest / Math.max(1, 7 - stateTicks));
+                setPos(getX() + dx / d * step, getY(), getZ() + dz / d * step);
+            }
+        }
     }
 
     /** A noise it heard: suspicion of the hiding place, or a walk over to look. */
@@ -820,15 +844,13 @@ public class OniDoll extends PathfinderMob implements Animated {
             else startFusuma(data, 200);
             return;
         }
-        if (seenByEyes) {
-            if (turnTicks <= 0) setAnimPose(STAND);
-            return;
-        }
+        if (seenByEyes) return;
         go(p.position(), data);
         if (!seenByCamera) lookHead(p.getEyePosition());
         if (horizontalDistance(p.position()) < 0.75 && Math.abs(p.getY() - getY()) < 1.6) {
             setState(State.OPENING);
             setAnimPose(LUNGE);
+            lungeTo = p.position();
             GameManager.caughtByDoll(p, this);
         }
     }
@@ -846,6 +868,14 @@ public class OniDoll extends PathfinderMob implements Animated {
             }
         }
         return best;
+    }
+
+    /** Collapsing (the model: the knife flies out of its hand at 3.5, it lands on its back at 9). */
+    private void tickLimp(ServerLevel level) {
+        if (stateTicks == 4 && hasKnife()) {
+            setKnife(false);
+            play(ModSounds.FIXTURE_THING_FALL.get(), 0.7f, 1.35f);
+        }
     }
 
     private void tickBurn(ServerLevel level) {
@@ -913,8 +943,9 @@ public class OniDoll extends PathfinderMob implements Animated {
     private void sync(ServerLevel level) {
         setFlag(F_ON_CAMERA, seenByCamera);
         setFlag(F_SEEN, seenByEyes);
+        setFlag(F_FROZEN, seenByEyes && movesFreely() && pose() != TURN && pose() != LUNGE);
         float g = switch (state) {
-            case OPENING, HUNT -> 0.9f;
+            case OPENING, HUNT -> 0.5f;
             case FUSUMA, STANDOFF -> 0.35f + suspicion * 0.4f;
             case BURN -> 0.8f;
             case LIMP, DORMANT -> 0.0f;

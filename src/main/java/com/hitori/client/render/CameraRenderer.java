@@ -18,7 +18,8 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * 定点カメラ (docs/DESIGN.md §5): the little action cam on its tripod, looking along its yaw / pitch, the red REC LED
- * blinking (its eyes layer). Not drawn while you are looking through it. Lies on its side when knocked over.
+ * and the rear screen on its eyes layer (drawn every frame: the model blinks the LED). Not drawn while you are looking
+ * through it. Knocked over, the model tips onto its side by itself (FixedCamera is Animated: FALLEN).
  */
 public class CameraRenderer extends EntityRenderer<FixedCamera> {
     private static final ResourceLocation TEXTURE = Hitori.id("textures/entity/camera.png");
@@ -48,16 +49,12 @@ public class CameraRenderer extends EntityRenderer<FixedCamera> {
         if (Minecraft.getInstance().getCameraEntity() == e) return;
         ps.pushPose();
         ps.mulPose(Axis.YP.rotationDegrees(180.0f - e.getYRot()));
-        if (e.fallen()) {
-            ps.translate(0.0, 0.08, 0.0);
-            ps.mulPose(Axis.ZP.rotationDegrees(88.0f));
-        }
         ps.scale(-1.0f, -1.0f, 1.0f);
         ps.translate(0.0, -1.501, 0.0);
+        // the model tips over by itself (FALLEN) and blinks its REC LED inside the eyes layer
         model.setupAnim(e, 0.0f, 0.0f, e.tickCount + partial, 0.0f, e.getXRot());
         model.renderToBuffer(ps, buf.getBuffer(RenderType.entityCutoutNoCull(TEXTURE)), light, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
-        boolean blink = ((e.tickCount + e.getId() * 7) / 12) % 2 == 0;
-        if (blink && Tex.has(EYES)) {
+        if (Tex.has(EYES)) {
             model.renderToBuffer(ps, buf.getBuffer(RenderType.eyes(EYES)), 0xF000F0, OverlayTexture.NO_OVERLAY, 1.0f, 1.0f, 1.0f, 1.0f);
         }
         ps.popPose();

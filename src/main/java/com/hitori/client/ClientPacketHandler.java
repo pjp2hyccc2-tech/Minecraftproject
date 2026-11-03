@@ -79,6 +79,7 @@ public final class ClientPacketHandler {
                 ClientState.caughtTicks = 0;
             }
             case GameManager.EV_ENDING -> {
+                PhoneUi.reset();
                 ClientState.jumpscareTicks = -1;
                 CameraApp.forceClose();
                 Peek.reset();
@@ -131,6 +132,7 @@ public final class ClientPacketHandler {
                 if (mc.screen instanceof EndingScreen) mc.setScreen(null);
             }
             case GameManager.EV_MORNING -> {
+                PhoneUi.reset();
                 ClientState.morningTicks = 0;
                 ClientState.morningKind = e.arg();
                 if (e.arg() == 0) ui(ModSounds.GAME_MORNING.get(), 1.0f, 1.0f);

@@ -305,6 +305,18 @@ public final class HitoriCommand {
         OniDoll doll;
         if (where.equals("tub")) {
             doll = Doll.spawnInTub(level, data);
+        } else if (where.startsWith("cam")) {
+            // on the floor in front of camera n, facing it (in its feed)
+            int n = where.length() > 3 ? Integer.parseInt(where.substring(3)) : 1;
+            com.hitori.entity.FixedCamera cam = Cameras.entity(level, n);
+            if (cam == null) return 0;
+            Vec3 at = inView(level, cam);
+            doll = at == null ? null : Doll.spawnAt(level, data, at, OniDoll.yawTo(at, cam.position()));
+            if (doll != null) {
+                doll.setKnife(true);
+                doll.setState(OniDoll.State.SCRIPTED);
+                doll.setAnimPose(OniDoll.STAND);
+            }
         } else if (where.startsWith("hide")) {
             int i = where.length() > 4 ? Integer.parseInt(where.substring(4)) : 0;
             Layout.Marker m = Layout.markers("doll_hides").get(Math.min(i, Layout.markers("doll_hides").size() - 1));
@@ -320,6 +332,24 @@ public final class HitoriCommand {
             }
         }
         return doll != null ? 1 : 0;
+    }
+
+    /** A floor spot 1.6-3 blocks out along the camera's view that it sees, or null. */
+    @javax.annotation.Nullable
+    private static Vec3 inView(ServerLevel level, com.hitori.entity.FixedCamera cam) {
+        Vec3 eye = cam.getEyePosition();
+        Vec3 f = Vec3.directionFromRotation(0.0f, cam.getYRot());
+        for (double d = 3.0; d >= 1.6; d -= 0.35) {
+            Vec3 p = eye.add(f.scale(d));
+            net.minecraft.core.BlockPos b = net.minecraft.core.BlockPos.containing(p.x, Layout.FEET_Y + 1, p.z);
+            for (int i = 0; i < 5 && level.getBlockState(b.below()).getCollisionShape(level, b.below()).isEmpty(); i++) b = b.below();
+            if (!level.getBlockState(b).getCollisionShape(level, b).isEmpty()) continue;
+            net.minecraft.core.BlockPos under = b.below();
+            double floor = under.getY() + level.getBlockState(under).getCollisionShape(level, under).max(net.minecraft.core.Direction.Axis.Y);
+            Vec3 at = new Vec3(p.x, floor, p.z);
+            if (com.hitori.game.Watch.cameraSees(cam, at.add(0.0, 0.3, 0.0))) return at;
+        }
+        return null;
     }
 
     private static int hide(CommandContext<CommandSourceStack> c, String where) throws CommandSyntaxException {
@@ -339,7 +369,7 @@ public final class HitoriCommand {
         for (Layout.Marker m : Layout.markers("cam_suggest")) {
             if (n > Cameras.MAX) break;
             Vec3 at = m.center();
-            data.cameras.add(new GameData.CamSpot(n++, at.x, at.y, at.z, m.yaw(), 18.0f, false));
+            data.cameras.add(new GameData.CamSpot(n++, at.x, at.y, at.z, m.yaw(), 26.0f, false));
         }
         data.flag("app_opened");
         data.setDirty();

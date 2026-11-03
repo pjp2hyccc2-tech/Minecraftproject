@@ -320,7 +320,7 @@ public final class Ritual {
                 GameManager.thought(p, Apt.bathWater(level) > 0 ? "thought.hitori.draining" : "thought.hitori.drained");
                 return;
             }
-            if (held == Kind.LIGHTER) burnAt(p, d, level, OniDoll.tubSpot(0).add(0.0, -0.25, 0.0));
+            if (held == Kind.LIGHTER) burnAt(p, d, level, OniDoll.tubFloor(0));
             else if (GameManager.has(p, ModItems.RITUAL_DOLL.get())) GameManager.thought(p, "thought.hitori.need_lighter");
         }
     }
@@ -330,7 +330,8 @@ public final class Ritual {
         Kind held = GameItem.kindOf(p.getMainHandItem());
         if (held == Kind.LIGHTER) {
             Layout.Marker m = Layout.marker("kitchen_sink");
-            burnAt(p, d, level, new Vec3(m.pos().getX() + 0.5, m.pos().getY() + 0.62, m.pos().getZ() + 0.5));
+            // on the sink's counter (14/16), lying on its back at the entity origin
+            burnAt(p, d, level, new Vec3(m.pos().getX() + 0.5, m.pos().getY() + 14.0 / 16.0, m.pos().getZ() + 0.5));
         } else if (GameManager.has(p, ModItems.RITUAL_DOLL.get())) {
             GameManager.thought(p, "thought.hitori.need_lighter");
         }

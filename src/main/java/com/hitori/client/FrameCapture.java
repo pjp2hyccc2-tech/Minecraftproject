@@ -251,7 +251,7 @@ public final class FrameCapture {
                     return mc.getConnection() == null ? null : mc.getConnection().getPlayerInfo(self);
                 }
             };
-            Vec3 at = OniDoll.tubSpot(0).add(0.0, -0.1, 0.0);
+            Vec3 at = OniDoll.tubFloor(0);
             float yaw = 0.0f;
             if (lens != null) {
                 double dx = lens.getX() - at.x, dz = lens.getZ() - at.z;
@@ -272,6 +272,11 @@ public final class FrameCapture {
 
     public static boolean capturing() {
         return job != null;
+    }
+
+    /** The twin in the tub is you, but nobody's name floats over it. */
+    public static boolean isTwin(Entity e) {
+        return twin != null && e == twin;
     }
 
     public static void tick(Minecraft mc) {

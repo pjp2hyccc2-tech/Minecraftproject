@@ -61,9 +61,9 @@ public class WomanRenderer extends MobRenderer<Woman, EntityModel<Woman>> {
         return RenderType.entityTranslucent(TEXTURE);
     }
 
-    /** Only through a camera (the app, or the endings' last feeds). */
+    /** Only through a camera (the app, or the endings' last feeds); GONE plays its 4-tick vanish, then nothing. */
     public static boolean visible(Woman w) {
-        return Minecraft.getInstance().getCameraEntity() instanceof FixedCamera && w.pose() != Woman.GONE;
+        return Minecraft.getInstance().getCameraEntity() instanceof FixedCamera && (w.pose() != Woman.GONE || w.poseTime(0.0f) < 4.0f);
     }
 
     @Override

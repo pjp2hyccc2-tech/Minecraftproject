@@ -396,7 +396,7 @@ public final class Director {
             Vec3 away = at.add(at.subtract(lens).normalize());
             w.stand(at, away, Woman.STAND);
         } else {
-            w.stand(at, lens, Woman.FACE);
+            w.stand(at, lens, Woman.FACE, true);
         }
         Recording.event(level, "woman", at.add(0.0, 1.0, 0.0));
     }
@@ -433,19 +433,21 @@ public final class Director {
         Vec3 lens = cam.getEyePosition();
         Vec3 floorLens = new Vec3(lens.x, home.y, lens.z);
         switch (w.stage) {
-            case 1 -> w.stand(home, lens, Woman.FACE);
-            case 2 -> w.stand(home.lerp(floorLens, 0.45), lens, Woman.FACE);
-            case 3 -> w.stand(home.lerp(floorLens, 0.72), lens, Woman.CLOSE);
+            case 1 -> w.stand(home, lens, Woman.FACE, true);
+            case 2 -> w.stand(home.lerp(floorLens, 0.45), lens, Woman.FACE, true);
+            case 3 -> w.stand(home.lerp(floorLens, 0.72), lens, Woman.CLOSE, true);
             default -> {
-                // right in front of the lens: her face fills the feed, a whisper, and she is gone
-                Vec3 close = floorLens.add(Vec3.directionFromRotation(0.0f, cam.getYRot()).scale(0.75));
-                w.stand(close, lens, Woman.CLOSE);
+                // right in front of the lens: her eye a hand's width from it (level, her eye 0.41 out and 1.49 up from
+                // her feet - off the floor if the camera hangs high), a whisper, and she is gone
+                Vec3 look = Vec3.directionFromRotation(0.0f, cam.getYRot());
+                Vec3 close = new Vec3(lens.x + look.x * 0.76, Math.max(home.y, lens.y - 1.49), lens.z + look.z * 0.76);
+                w.stand(close, lens, Woman.CLOSE, true);
                 GameManager.privateSound(p, ModSounds.WOMAN_WHISPER.get(), p.getEyePosition(), 1.0f, 1.0f);
                 GameManager.say(p, "woman", "say.hitori.woman", 60);
                 boolean closet = Cameras.room(cam.position()).equals("closet") || nearestToCloset(level) == cam;
                 GameManager.event(p, GameManager.EV_SCARE, closet ? 2 : 3, "");
                 GameManager.addFear(p, closet ? 0.4f : 0.25f);
-                w.lifeTicks = 12;
+                w.lifeTicks = 18;  // GONE at 10, its vanish takes 4 ticks
                 Woman ww = w;
                 later(10, () -> ww.setAnimPose(Woman.GONE));
             }

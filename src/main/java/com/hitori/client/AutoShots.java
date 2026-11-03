@@ -335,9 +335,11 @@ public final class AutoShots {
         }, 30);
         scene("18_camera_placed", mc -> {
             if (Layout.has("cam_suggest")) {
-                Layout.Marker m = Layout.marker("cam_suggest");
+                // in front of the tatami room's camera, looking up at it
+                List<Layout.Marker> l = Layout.markers("cam_suggest");
+                Layout.Marker m = l.get(Math.min(2, l.size() - 1));
                 Vec3 c = m.center();
-                at(mc, c.x - m.facing().getStepX() * 1.8, Layout.FEET_Y, c.z - m.facing().getStepZ() * 1.8, m.yaw(), 30.0f);
+                at(mc, c.x + m.facing().getStepX() * 2.2, Layout.FEET_Y, c.z + m.facing().getStepZ() * 2.2, m.facing().getOpposite().toYRot(), -28.0f);
             }
         }, 30);
         scene("19_tv", mc -> {
@@ -417,7 +419,7 @@ public final class AutoShots {
         add("laptop_app", mc -> CameraApp.open(0), 24);
         snap("32_closet_laptop");
         // ---- every camera feed, the doll in its poses
-        String[][] poses = {{"hide0", "1"}, {"hide1", "2"}, {"hide2", "4"}, {"hide3", "6"}};
+        String[][] poses = {{"cam1", "1"}, {"cam2", "2"}, {"cam3", "4"}, {"cam4", "6"}};
         for (int c = 1; c <= 4; c++) {
             int cam = c;
             String[] pz = poses[c - 1];
@@ -430,7 +432,7 @@ public final class AutoShots {
             snap("33_cam" + c + "_pose" + pz[1]);
         }
         add("crawl", mc -> {
-            cmd(mc, "hitori debug doll spawn hide1");
+            cmd(mc, "hitori debug doll spawn cam2");
             cmd(mc, "hitori debug doll pose 2");
             CameraApp.select(2);
         }, 30);
@@ -462,6 +464,8 @@ public final class AutoShots {
         // ---- feed glitches
         scene("39_glitch_noise", mc -> CameraApp.glitch(0), 2);
         scene("40_glitch_blackout", mc -> CameraApp.glitch(2), 6);
+        add("blackout_end", mc -> {
+        }, 34);
         add("freeze", mc -> CameraApp.glitch(1), 5);
         snap("41_glitch_freeze");
         scene("42_glitch_stamp", mc -> CameraApp.glitch(3), 4);

@@ -206,7 +206,7 @@ PHONE = {
 }
 
 PRINTOUT = {
-    "site": ("http://hon-kowa.net/occult/1031/  ― 2/6", "http://hon-kowa.net/occult/1031/  - 2/6"),
+    "site": ("http://hon-kowa.net/occult/1031/", "http://hon-kowa.net/occult/1031/"),
     "title": ("【検証】ひとりかくれんぼ やり方まとめ【閲覧注意】", "[TESTED] Hitori kakurenbo: how to do it [VIEWER DISCRETION]"),
     "post": ("1 名前：本当にあった怖い名無し　2026/10/31(土) 02:13", "1 Name: Anonymous  2026/10/31 (Sat) 02:13"),
     "need": ("■ 用意するもの", "■ What you need"),

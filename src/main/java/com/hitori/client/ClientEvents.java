@@ -226,7 +226,7 @@ public final class ClientEvents {
         Minecraft mc = Minecraft.getInstance();
         if (mc.getCameraEntity() instanceof FixedCamera cam) {
             // a camera does not shake with you; a fallen one lies on its side
-            if (cam.fallen()) event.setRoll(event.getRoll() + 72.0f);
+            if (cam.fallen()) event.setRoll(event.getRoll() + cam.feedRoll((float) event.getPartialTick()));
             return;
         }
         float strength = (float) HitoriConfig.screenEffects() * (HitoriConfig.flashReduction() ? 0.4f : 1.0f);
@@ -273,6 +273,11 @@ public final class ClientEvents {
         event.setNearPlaneDistance(Math.min(event.getNearPlaneDistance(), far * 0.15f));
         event.setFarPlaneDistance(far);
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void nameTag(net.minecraftforge.client.event.RenderNameTagEvent event) {
+        if (FrameCapture.isTwin(event.getEntity())) event.setResult(net.minecraftforge.eventbus.api.Event.Result.DENY);
     }
 
     // ================================================================================================ HUD and the frame grab

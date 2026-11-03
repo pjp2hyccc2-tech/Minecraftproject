@@ -98,12 +98,27 @@ public class Woman extends PathfinderMob implements Animated {
         entityData.set(DATA_CAMERA, camera);
     }
 
-    /** Stands at a point facing a point (the lens, or the wall). */
+    /** Stands at a point facing a point (the lens, or the wall), level. */
     public void stand(Vec3 at, Vec3 face, int pose) {
+        stand(at, face, pose, false);
+    }
+
+    /**
+     * Stands at a point facing a point; {@code pitchToward}: her head pitched toward it as well (the model's FACE /
+     * CLOSE look into the lens: + = down; her eye is about 1.49 above her feet when level).
+     */
+    public void stand(Vec3 at, Vec3 face, int pose, boolean pitchToward) {
         double dx = face.x - at.x, dz = face.z - at.z;
         float yaw = (float) (Math.atan2(dz, dx) * 180.0 / Math.PI) - 90.0f;
-        moveTo(at.x, at.y, at.z, yaw, 0.0f);
+        float pitch = 0.0f;
+        if (pitchToward) {
+            double h = Math.sqrt(dx * dx + dz * dz);
+            double dy = face.y - (at.y + 1.49);
+            pitch = net.minecraft.util.Mth.clamp((float) -(Math.atan2(dy, Math.max(0.2, h)) * 180.0 / Math.PI), -40.0f, 60.0f);
+        }
+        moveTo(at.x, at.y, at.z, yaw, pitch);
         yRotO = yaw;
+        xRotO = pitch;
         yBodyRot = yaw;
         yBodyRotO = yaw;
         setYHeadRot(yaw);

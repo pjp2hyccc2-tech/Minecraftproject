@@ -63,6 +63,7 @@ public final class Endings {
             PlayerState ps = GameManager.state(q);
             ps.appCamera = 0;
             ps.breathHolding = false;
+            ps.ringTicks = -1;  // a call still ringing stops
             GameManager.event(q, GameManager.EV_APP, 0, "");
             if (ending != GameData.ENDING_SOTO) {
                 Hiding.exitQuietly(q, ps);
@@ -103,8 +104,8 @@ public final class Endings {
 
     // ------------------------------------------------------------------------------------------------ 鬼
     private static void oni(ServerLevel level, GameData d, @Nullable ServerPlayer p) {
-        if (t == 16) all(level, GameManager.EV_CAUGHT, 0, "");
-        if (t == 34 && p != null) {
+        if (t == GameManager.LUNGE_CUT + 16) all(level, GameManager.EV_CAUGHT, 0, "");
+        if (t == 40 && p != null) {
             GameManager.privateSound(p, ModSounds.DOLL_VOICE_TSUGI.get(), p.getEyePosition(), 1.0f, 1.0f);
             GameManager.say(p, "doll", "say.hitori.tsugi", 70);
         }
@@ -127,7 +128,7 @@ public final class Endings {
             Layout.Marker door = Layout.marker("door_front");
             BlockPos out = door.pos().relative(door.facing(), 2);
             Hiding.exitQuietly(p, ps);
-            GameManager.teleport(p, level, new Vec3(out.getX() + 0.5, Layout.FEET_Y, out.getZ() + 0.5), 90.0f, 0.0f);
+            GameManager.teleport(p, level, new Vec3(out.getX() + 0.5, out.getY(), out.getZ() + 0.5), 90.0f, 0.0f);
             GameManager.thought(p, "thought.hitori.soto_1");
         }
         if (t > 20) {

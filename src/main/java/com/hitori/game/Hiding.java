@@ -132,10 +132,17 @@ public final class Hiding {
     }
 
     /** The eye at the gap of the fusuma (from the {@code closet_peek} marker). */
+    /**
+     * The eye at the crack: the fusuma panels stand in the closet cells' front edge, the crack opens at the row's end to
+     * the left of closet_peek's facing (a quarter block wide): just behind it, crouched.
+     */
     public static Vec3 peekEye() {
         Layout.Marker m = Layout.marker("closet_peek");
         Direction f = m.facing();
-        return new Vec3(m.pos().getX() + 0.5 + f.getStepX() * 0.42, m.pos().getY() + 1.15, m.pos().getZ() + 0.5 + f.getStepZ() * 0.42);
+        Direction left = f.getCounterClockWise();
+        double side = 0.5 - 0.125;
+        return new Vec3(m.pos().getX() + 0.5 + f.getStepX() * 0.33 + left.getStepX() * side, m.pos().getY() + 1.15,
+                m.pos().getZ() + 0.5 + f.getStepZ() * 0.33 + left.getStepZ() * side);
     }
 
     public static float peekYaw() {

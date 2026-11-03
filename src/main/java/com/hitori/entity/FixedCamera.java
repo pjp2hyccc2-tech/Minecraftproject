@@ -33,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
  * Never saved with the chunk: the game keeps the cameras in its own data ({@code game/Cameras}) and spawns them.
  * A client-only instance (never added to a level) is the "virtual camera" of the endings and the peek eye.
  */
-public class FixedCamera extends LivingEntity {
+public class FixedCamera extends LivingEntity implements Animated {
     private static final EntityDataAccessor<Integer> DATA_NUMBER = SynchedEntityData.defineId(FixedCamera.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_POSE = SynchedEntityData.defineId(FixedCamera.class, EntityDataSerializers.INT);
     public static final int POSE_IDLE = 0, POSE_FALLEN = 1;
@@ -41,6 +41,8 @@ public class FixedCamera extends LivingEntity {
 
     /** Client-only stand-in (virtual camera / peek eye): not in any level, moved by hand. */
     public boolean clientOnly;
+    /** Tick the current pose began (client: the model's clock). */
+    private int poseStart = -1000;
 
     public FixedCamera(EntityType<? extends FixedCamera> type, Level level) {
         super(type, level);
@@ -79,6 +81,34 @@ public class FixedCamera extends LivingEntity {
 
     public boolean fallen() {
         return camPose() == POSE_FALLEN;
+    }
+
+    // ---- Animated (the model: IDLE, FALLEN tipping over in ~5 ticks with a bounce)
+    @Override
+    public int pose() {
+        return camPose();
+    }
+
+    @Override
+    public float poseTime(float partialTick) {
+        return tickCount - poseStart + partialTick;
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        // a camera that arrives already fallen (rejoining) lies there; one knocked over now tips over
+        if (DATA_POSE.equals(key)) poseStart = tickCount <= 1 ? -1000 : tickCount;
+    }
+
+    /** The feed's roll while the camera falls and after (degrees): 83 on its side, ramping in with the fall. */
+    public float feedRoll(float partialTick) {
+        if (!fallen()) return 0.0f;
+        float pt = Math.max(0.0f, poseTime(partialTick));
+        float c = net.minecraft.util.Mth.clamp(pt / 5.0f, 0.0f, 1.0f);
+        float fall = c * c * c;
+        float bounce = pt > 5.0f ? (float) Math.exp(-0.5f * (pt - 5.0f)) * net.minecraft.util.Mth.sin((pt - 5.0f) * 1.5f) : 0.0f;
+        return 83.0f * fall - 8.0f * bounce;
     }
 
     /** Points it (body, head and view) in one go, without interpolation. */
