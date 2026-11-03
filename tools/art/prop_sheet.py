@@ -12,6 +12,8 @@ for _n in ("register","register_open","service_bell","business_phone","business_
     RR.SUPPORT[_n] = "counter"
 for _n in ("cutting_board",):
     RR.SUPPORT[_n] = "prep_table"
+for _n in ("pc",):
+    RR.SUPPORT[_n] = "office_desk"
 for _n in ("pass_bell",):
     RR.SUPPORT[_n] = "counter"
 

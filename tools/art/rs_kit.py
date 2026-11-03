@@ -131,6 +131,13 @@ class Atlas:
         _, self.W, self.H, pos = best
         for r in regs:
             r.x, r.y = pos[r.key]
+        self._meta()
+
+    def _meta(self):
+        """Animated atlases: frames are W x H (not square), so the mcmeta must say so."""
+        if self.frames > 1 and self.W is not None:
+            REGISTRY[self.path]['mcmeta']['animation']['width'] = self.W
+            REGISTRY[self.path]['mcmeta']['animation']['height'] = self.H
 
     def uv(self, key, sub=None, size=None):
         """UV rect (model units 0..16) of a region; sub = texel sub-rect (a, b, c, d) inside it;
@@ -151,6 +158,7 @@ class Atlas:
     # ---------------------------------------------------------------- painting
     def render(self):
         self.pack()
+        self._meta()
         if self.frames > 1:
             return [self._render_frame(i) for i in range(self.frames)]
         return self._render_frame(0)

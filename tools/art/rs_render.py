@@ -25,8 +25,9 @@ def tex(ref):
         if name in G.REGISTRY:
             arr = G.render(name).astype(np.float64)
             spec = G.REGISTRY[name]
-            if spec['frames'] > 1 or (spec.get('mcmeta') and arr.shape[0] > arr.shape[1]):
-                arr = arr[:arr.shape[1]]          # first animation frame
+            if spec['frames'] > 1:
+                fh = arr.shape[0] // spec['frames']
+                arr = arr[:fh]                    # first animation frame
         else:
             p = os.path.join(TEX_ROOT, name + '.png')
             if os.path.isfile(p):
