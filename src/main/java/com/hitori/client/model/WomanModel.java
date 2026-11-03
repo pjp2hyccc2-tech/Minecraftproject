@@ -345,8 +345,9 @@ public class WomanModel<T extends Mob & Animated> extends HierarchicalModel<T> {
         this.blend(mem, poseTicks, blend, ageInTicks);
         // the skirt and the hair hang by their own weight; the lower curtain and the long back hair swing late
         flop(mem, 0, this.skirt, skirtFlop, 0.0F, 1.0F, 0.0F, 0.9F, 0.7F, t, this.root, this.body);
-        flop(mem, 3, this.hairBack, hairFlop * 0.8F, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
-        flop(mem, 6, this.hairBack2, hairFlop, 0.0F, 1.0F, 0.0F, 0.45F, 0.25F, t, this.root, this.body, this.neck, this.head, this.hairBack);
+        // the back hair lies on the back of her head (mostly rigid), then hangs and drapes over her back (never through it)
+        flop(mem, 3, this.hairBack, hairFlop * 0.25F, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
+        flop(mem, 6, this.hairBack2, hairFlop * 0.85F, 0.0F, 1.0F, 0.12F, 0.45F, 0.25F, t, this.root, this.body, this.neck, this.head, this.hairBack);
         flop(mem, 9, this.hairFront2, frontFlop, 0.0F, 1.0F, 0.0F, 0.45F, 0.25F, t, this.root, this.body, this.neck, this.head, this.hairFront);
         flop(mem, 12, this.hairR, sideFlop, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
         flop(mem, 15, this.hairL, sideFlop, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
