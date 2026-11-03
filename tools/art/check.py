@@ -34,7 +34,8 @@ PROPERTY_WORDS = {'on', 'channel', 'lit', 'swing', 'closed', 'water', 'lid', 'ru
 
 # ---------------------------------------------------------------------------------------------- expectations
 VANILLA_DOORS = ['front_door', 'interior_door', 'toilet_door', 'bath_door', 'balcony_door']
-WORLD_EXTRA_TEXTURES = []
+# textures only the world's own models use (gen_assets.two_face_door: the genkan side of 203's steel door)
+WORLD_EXTRA_TEXTURES = ['front_door_inner_bottom', 'front_door_inner_top']
 DOOR_ITEM_SPRITES = VANILLA_DOORS + ['fusuma', 'oshiire_fusuma']
 
 

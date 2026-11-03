@@ -95,11 +95,37 @@ def vanilla_door(tex, hinge='left'):
                       'east': {'uv': [16, 0, 0, 16] if left else [0, 0, 16, 16], 'texture': '#b'}}}]}
 
 
-def door(S, name, x, y, z, facing, hinge='left'):
-    """A closed vanilla-style door (blockstate y rotation of gen_assets: east 0, south 90, west 180, north 270)."""
+def two_face_door(outer, inner, hinge='left', opened=False):
+    """The world's front_door model (gen_assets.two_face_door): the vanilla 3 px panel with #outer on its west face
+    (outside when closed) and #inner on its east face. Opened, the panel's faces swap (the blockstate turns the
+    panel a quarter the other way round its hinge), so #outer goes east and #inner west."""
+    left = (hinge == 'left') != opened
+    ou = [0, 0, 16, 16] if left else [16, 0, 0, 16]
+    iu = [16, 0, 0, 16] if left else [0, 0, 16, 16]
+    w, e = ('#i', '#o') if opened else ('#o', '#i')
+    to, ti = 'hitori:block/' + outer, 'hitori:block/' + inner
+    return {'textures': {'o': to, 'i': ti, 'particle': to}, 'render_type': 'minecraft:cutout', 'elements': [{
+        'from': [0, 0, 0], 'to': [3, 16, 16],
+        'faces': {'west': {'uv': ou, 'texture': w}, 'east': {'uv': iu, 'texture': e},
+                  'north': {'uv': [0, 0, 3, 16], 'texture': '#o'}, 'south': {'uv': [13, 0, 16, 16], 'texture': '#o'},
+                  'up': {'uv': [0, 0, 3, 16], 'texture': '#o'}, 'down': {'uv': [13, 0, 16, 16], 'texture': '#o'}}}]}
+
+
+def door(S, name, x, y, z, facing, hinge='left', opened=False):
+    """A vanilla-style door (blockstate y rotation of gen_assets: east 0, south 90, west 180, north 270; opened +90
+    for a left hinge, +270 for a right one). front_door has two faces (the world's two_face_door); unit_door is the
+    world's door of the other flats (apartment_door_metal on both halves)."""
     deg = {'east': 0, 'south': 90, 'west': 180, 'north': 270}[facing]
+    if opened:
+        deg = (deg + (90 if hinge == 'left' else 270)) % 360
     for k, half in enumerate(('bottom', 'top')):
-        S.extra.append((vanilla_door(f'{name}_{half}', hinge), place_deg(x, y + k, z, deg)))
+        if name == 'front_door':
+            m = two_face_door(f'front_door_{half}', f'front_door_inner_{half}', hinge, opened)
+        elif name == 'unit_door':
+            m = vanilla_door('apartment_door_metal', hinge)
+        else:
+            m = vanilla_door(f'{name}_{half}', hinge)
+        S.extra.append((m, place_deg(x, y + k, z, deg)))
 
 
 def stairs_model(tex):
@@ -214,8 +240,9 @@ def apartment(S, x0=0, x1=11, z0=0, z1=13, ceiling=True, tatami_axis=None):
             # wall-ish cells: build 3 high, each face facing a room gets that room's wall texture
             openings = {'d': 2, 'D': 2, 'f': 2, 'W': 2}
             hole = openings.get(ch, 0)
+            lo = -1 if ch == 'D' else 0             # the front door stands on the genkan's level, a step down
             for y in range(-1, 4):
-                if y >= 0 and y < hole:
+                if lo <= y < lo + hole:
                     continue
                 faces = {}
                 for f, (dx, _, dz) in NB.items():
@@ -227,14 +254,16 @@ def apartment(S, x0=0, x1=11, z0=0, z1=13, ceiling=True, tatami_axis=None):
                     if nrm is None:
                         faces[f] = H + (OUTSIDE if nb is None else 'plaster_wall')
                     else:
-                        t = nrm.get('lower') if (y == 0 and nrm.get('lower')) else nrm['wall']
+                        t = nrm.get('lower') if (y == nrm.get('low', 0) and nrm.get('lower')) else nrm['wall']
                         faces[f] = H + t
                 S.cube(x, y, z, H + 'plaster_wall', **faces)
     # floors under the wall openings
     for z in range(z0, z1 + 1):
         for x in range(x0, x1 + 1):
-            if cell(x, z) in 'dDfW':
+            if cell(x, z) in 'dfW':
                 S.cube(x, -1, z, H + 'old_flooring')
+            elif cell(x, z) == 'D':
+                S.cube(x, -2, z, H + 'genkan_tile')
 
 
 def balcony_pane(S, x, y, z):
@@ -436,8 +465,10 @@ def scene_genkan():
     umbrella, the intercom and the breaker panel high on the wall; the hall's mirror."""
     S = full203()
     S.light((4.5, 2.6, 2.5), (1.0, 0.9, 0.75), 0.7, 3.0)
-    eye, tgt = (4.7, 1.62, 2.7), (2.0, -0.1, 0.6)
-    return pair(S.render(eye, tgt, fov=78), S.render(eye, tgt, night=True, exposure=1.6, fov=78), 'scene_genkan')
+    S.light((2.6, 1.3, 1.6), (1.0, 0.92, 0.8), 0.5, 2.0)          # the genkan's bare bulb
+    # standing on the genkan tiles with your back to the step, facing the door (its inner face: the chain is on)
+    eye, tgt = (3.45, 0.66, 2.8), (1.9, 0.05, 0.2)
+    return pair(S.render(eye, tgt, fov=80), S.render(eye, tgt, night=True, exposure=1.6, fov=80), 'scene_genkan')
 
 
 def scene_exterior():
@@ -480,8 +511,8 @@ def scene_exterior():
             S.cube(x, y, -3, H + 'concrete')
     for ux, k in doors2.items():
         if xa <= ux <= xb:
-            door(S, 'front_door', ux, 0, 0, 'north')
-            door(S, 'front_door', ux, -5, 0, 'north')
+            door(S, 'front_door' if k == 2 else 'unit_door', ux, 0, 0, 'south')     # 203's own door, outside north
+            door(S, 'unit_door', ux, -5, 0, 'south')
             S.model(f'nameplate_{4 + k}', ux + 1, 1, -1, 'south')
             S.model(f'nameplate_{k}', ux + 1, -4, -1, 'south')
             for wx in (ux + 4, ux + 5):
@@ -614,10 +645,11 @@ def scene_doors():
         S.cube(x, -1, -1, H + 'old_flooring')
         for y in range(0, 3):
             S.cube(x, y, 1, H + 'plaster_wall', north=H + ('wood_wainscot' if y == 0 else 'plaster_wall'))
-    names = ['front_door', 'interior_door', 'toilet_door', 'bath_door']
-    for i, d in enumerate(names):
-        for k, half in enumerate(('bottom', 'top')):
-            S.extra.append((vanilla_door(f'{d}_{half}'), place_deg(i * 1.5 - 0.5, k, 0, 270)))
+    # 203's steel door from the corridor (its outer face) and from the genkan (its inner face), then the others
+    entries = [('front_door', 'south', 13 / 16), ('front_door', 'north', 0), ('interior_door', 'north', 0),
+               ('toilet_door', 'north', 0), ('bath_door', 'north', 0)]
+    for i, (d, f, dz) in enumerate(entries):
+        door(S, d, i * 1.2 - 0.9, 0, dz, f)
     balcony_pane(S, 6.5, 0, -0.55)
     S.model('fusuma_lower_0', 7.5, 0, -0.45, 'north') if False else None
     for k, (nm, x) in enumerate((('fusuma', 7.0), ('oshiire_fusuma', 8.0))):

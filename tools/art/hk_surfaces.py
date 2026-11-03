@@ -698,7 +698,88 @@ def front_door_bottom():
     return a
 
 
-WOODPRINT = ramp(['#5a3c22', '#6e4a2b', '#805734', '#91653e', '#a17348', '#ae8052', '#ba8d5e'], 7)
+# The genkan side of 203's door (the world's two_face_door: #inner on the panel's other face). Same layout rule as the
+# outer face - hinge left, handle right, and everything that goes through the leaf (peephole, lever spindle, the
+# newspaper slot) on the same texture columns as outside. With 203's hinge on the left the inner face is seen
+# mirrored, so nothing here may read as text.
+@door_tex('front_door_inner_top')
+def front_door_inner_top():
+    """Upper half, inside: the peephole's eyepiece, the door chain hooked (sagging from its slide rail to the jamb
+    on the latch side - it is 3 a.m. and you are in), a garbage-day sheet taped up long ago (yellowed paper, the
+    colour-coded rows of 燃える/燃えない/資源/びん, the tape gone brown) and a coat hook."""
+    a = _steel_leaf(4121, True)
+    x, y = xy()
+    # cleaner than outside, but greasy around the handle side where hands go
+    dl(a, -0.03, (x >= 10) & (y >= 9) & (wrapn(4122, beta=1.2) > 0.2))
+    # the eyepiece: a wider chrome ring around a dark lens, a glint, the little swing cover's hinge above
+    for (cx, cy, c) in ((11, 9, '#9aa0a2'), (13, 9, '#6e7476'), (12, 8, '#c4c9cc'), (12, 10, '#5e6466'),
+                        (11, 8, '#b4babc'), (13, 8, '#8a9092'), (11, 10, '#7a8082'), (13, 10, '#4e5456')):
+        px(a, cx, cy, c)
+    px(a, 12, 9, '#141618')
+    px(a, 12, 7, '#7a8084')
+    # the chain's slide rail (a chrome plate with a dark slot) and the chain hooked across to the jamb (x 15)
+    rect(a, 8, 11, 11, 12, '#a4aaac')
+    hline(a, 8, 11, 11, '#d4d8d8')
+    hline(a, 9, 10, 12, '#2a2c2e')
+    px(a, 10, 12, '#e6eaea')                     # the knob in the slot
+    for (cx, cy) in ((11, 13), (12, 13), (13, 14), (14, 13), (15, 12)):
+        px(a, cx, cy, '#c2c8ca' if (cx % 2) else '#7c8284')
+    # the garbage-day sheet: yellowed paper, four colour rows (a dot and a ruled line each), brown tape corners
+    rect(a, 3, 2, 8, 8, '#ddd6bc')
+    vline(a, 8, 3, 8, '#c4bca0')
+    hline(a, 3, 8, 8, '#c8c0a4')
+    for yy, c in zip((3, 4, 5, 7), ('#b8503e', '#4a74b0', '#4a9452', '#c0983a')):
+        px(a, 4, yy, c)
+        hline(a, 5, 7, yy, '#9a927e')
+    hline(a, 5, 6, 6, '#b4ac94')
+    for (cx, cy) in ((3, 2), (8, 2)):
+        px(a, cx, cy, '#b49a62')
+    px(a, 8, 8, '#a89a7c')                       # the lower corner curling off the steel
+    # a small coat hook screwed on near the hinge, its shadow
+    px(a, 2, 12, '#3a3c3a')
+    px(a, 2, 13, '#8e9496')
+    px(a, 3, 13, '#6a7072')
+    px(a, 3, 14, '#4a5052')
+    return a
+
+
+@door_tex('front_door_inner_bottom')
+def front_door_inner_bottom():
+    """Lower half, inside: the lever and its tall escutcheon with the deadbolt's thumb-turn turned upright (locked),
+    the steel newspaper box behind the slot with the flyer's corner showing, scuffs from shoes, the rubber seal."""
+    a = _steel_leaf(4131, False)
+    x, y = xy()
+    # the escutcheon (same spindle as the outer lever) and the lever pointing toward the hinge
+    rect(a, 12, 1, 13, 7, '#2a2c2c')
+    vline(a, 13, 1, 7, '#3e4242')
+    rect(a, 9, 2, 13, 3, '#b8bec0')
+    hline(a, 9, 12, 2, '#e0e4e4')
+    px(a, 9, 3, '#7a8084')
+    px(a, 13, 3, '#8a9092')
+    # the thumb-turn below it, upright = locked
+    px(a, 12, 5, '#d4d8d8')
+    px(a, 12, 6, '#9aa0a2')
+    px(a, 13, 6, '#2a2c2c')
+    # the newspaper box behind the slot (x 4..10 y 6..8 outside): a steel pocket, open at its top, a flyer in it
+    rect(a, 3, 5, 11, 10, '#59614f')
+    hline(a, 3, 11, 5, '#7e8873')
+    vline(a, 11, 5, 10, '#454c3e')
+    hline(a, 3, 11, 10, '#3a4034')
+    hline(a, 4, 10, 6, '#16181a')                # the dark mouth of the box
+    rect(a, 6, 4, 7, 6, '#e6dfc8')               # the flyer's corner standing up out of it
+    px(a, 7, 4, '#cfc6ac')
+    px(a, 6, 6, '#bfb69c')
+    dl(a, -0.06, (y == 11) & (x >= 4) & (x <= 11))   # the box's shadow on the leaf
+    # scuffs where shoes hit it, the rubber seal along the bottom
+    sc = (wrapn(4132, beta=1.0) > 0.45) & (y >= 12) & (y <= 14) & (x >= 2) & (x <= 13)
+    dl(a, -0.08, sc)
+    hline(a, 1, 15, 15, '#232624')
+    px(a, 6, 13, '#3c3f3a')
+    px(a, 10, 14, '#41443f')
+    return a
+
+
+WOODPRINT =ramp(['#5a3c22', '#6e4a2b', '#805734', '#91653e', '#a17348', '#ae8052', '#ba8d5e'], 7)
 
 
 def _wood_leaf(seed, top):
