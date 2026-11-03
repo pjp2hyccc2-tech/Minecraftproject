@@ -7,7 +7,7 @@ ROOT=$(cd "$HERE/../../.." && pwd)
 OUT=$(mktemp -d)
 javac --release 17 -Xlint:all -Xlint:-processing -d "$OUT" \
   $(find "$HERE/stubs" -name '*.java') \
-  "$ROOT/src/main/java/com/sounan/entity/Animated.java" \
-  $(find "$ROOT/src/main/java/com/sounan/client/model" -name '*.java') "$@" 2>&1 | grep -v "^Picked up" || true
-ls "$OUT/com/sounan/client/model" 2>/dev/null | sed 's/^/compiled: /'
+  "$ROOT/src/main/java/com/reisatsu/entity/Animated.java" \
+  $(find "$ROOT/src/main/java/com/reisatsu/client/model" -name '*.java') "$@" 2>&1 | grep -v "^Picked up" || true
+ls "$OUT/com/reisatsu/client/model" 2>/dev/null | sed 's/^/compiled: /'
 rm -rf "$OUT"

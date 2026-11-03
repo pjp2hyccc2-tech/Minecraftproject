@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline check of the SounanShaders pack (adapted from the HuntCraft lint tool).
+"""Offline check of the ReisatsuShaders pack (adapted from the HuntCraft lint tool).
 
 1. glslangValidator compile of every program stub of every dimension folder: the Iris-style
    absolute #include directives are expanded and the macros the loader provides
@@ -273,7 +273,7 @@ def main():
     for s in stale:
         print("stubs:", s)
     print("stubs: %s" % ("OK" if not stale else "%d problem(s) - run tools/shader/build_pack.py" % len(stale)))
-    tmp = keep or tempfile.mkdtemp(prefix="sounanshader_")
+    tmp = keep or tempfile.mkdtemp(prefix="reisatsushader_")
     try:
         failures = compile_all(exe, tmp, "--quick" in sys.argv)
     finally:

@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - uniforms shared by every program
+//  ReisatsuShaders - uniforms shared by every program
 //  (shadowtex0 is declared as sampler2DShadow in lib/shadow.glsl, only where it is sampled)
 // =====================================================================================
 
@@ -35,9 +35,9 @@ uniform float aspectRatio;
 uniform float near;
 uniform float far;
 uniform float frameTimeCounter;
-uniform float rainStrength;      // sounan:kaerazu -> FEAR 0..1   (elsewhere: rain)
-uniform float thunderStrength;   // sounan:kaerazu -> DANGER 0..1 (elsewhere: thunder)
-uniform float nightVision;       // sounan:kaerazu -> > 0 while the phone camera is on
+uniform float rainStrength;      // reisatsu:kaerazu -> FEAR 0..1   (elsewhere: rain)
+uniform float thunderStrength;   // reisatsu:kaerazu -> DANGER 0..1 (elsewhere: thunder)
+uniform float nightVision;       // reisatsu:kaerazu -> > 0 while the phone camera is on
 uniform float blindness;
 uniform float darknessFactor;    // vanilla Darkness: being captured
 uniform float darknessLightFactor;

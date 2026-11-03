@@ -124,7 +124,7 @@ def check_model(path, problems, label):
         texs |= model_textures(p)
     for t in texs:
         ns, rel = t.split(':', 1) if ':' in t else ('minecraft', t)
-        if ns != 'sounan':
+        if ns != 'reisatsu':
             continue
         if not os.path.isfile(os.path.join(TEX_ROOT, rel + '.png')):
             problems.append(f'TEXREF   {label} -> {t} does not exist')
@@ -200,7 +200,7 @@ def main():
             problems.append(f'LOADER   models/item/{name}.json is not forge:separate_transforms')
     # monster models
     for mid in monsters:
-        java = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'sounan', 'client', 'model', mid.capitalize() + 'Model.java')
+        java = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'reisatsu', 'client', 'model', mid.capitalize() + 'Model.java')
         if not os.path.isfile(java):
             problems.append(f'MISSING  client/model/{mid.capitalize()}Model.java')
     print(f'checked {len(exp)} textures ({sum(r.startswith("block/") for r in exp)} block, {sum(r.startswith("item/") for r in exp)} item, '

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_bottom_top",
-  "textures": {
-    "top": "sounan:block/moss_floor",
-    "side": "sounan:block/forest_floor_side",
-    "bottom": "sounan:block/forest_dirt"
-  }
-}

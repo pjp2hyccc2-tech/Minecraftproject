@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SounanShaders offline harness: Mesa compile/link check + Iris-like preview renders.
+"""ReisatsuShaders offline harness: Mesa compile/link check + Iris-like preview renders.
 
   python3 tools/shader/preview.py --check
         compile AND link every program of every dimension folder with Mesa (llvmpipe, the
@@ -20,10 +20,10 @@
 
   python3 tools/shader/preview.py --shots t_forest_deep,t_fear,...
         shots named t_* are taken on the REAL mountain at the CI tour's viewpoints: a 72x72
-        piece of the baked terrain (src/main/resources/data/sounan/terrain/terrain.bin.gz or
-        $SOUNAN_TERRAIN) decorated with a port of com.sounan.world.Decorator (cedars, boulders,
+        piece of the baked terrain (src/main/resources/data/reisatsu/terrain/terrain.bin.gz or
+        $REISATSU_TERRAIN) decorated with a port of com.reisatsu.world.Decorator (cedars, boulders,
         fallen logs, ferns; no POI structures), a peeking monster behind a trunk ahead.
-        The repo's block textures (or $SOUNAN_TEXTURES) replace the procedural tiles when present.
+        The repo's block textures (or $REISATSU_TEXTURES) replace the procedural tiles when present.
 
 This is a development aid, not a substitute for the CI client run.
 """
@@ -47,7 +47,7 @@ import build_pack  # noqa: E402
 
 ROOT = lint.ROOT
 ATTRIBS = {"mc_Entity": 10, "mc_midTexCoord": 11}
-MOUNTAIN = "sounan_kaerazu"
+MOUNTAIN = "reisatsu_kaerazu"
 
 # item / entity ids (item.properties, entity.properties)
 FLASHLIGHT, FLASH_LOW, PHONE_LIGHT, CAMERA, FLARE = 10001, 10002, 10003, 10004, 10005
@@ -274,8 +274,8 @@ TILES = {}
 ATLAS_N = 8          # 8x8 tiles of 16 px
 
 # the real block textures (from the repo, once the art is merged) replace the procedural tiles
-TEXTURE_DIR = os.environ.get("SOUNAN_TEXTURES") or os.path.normpath(
-    os.path.join(ROOT, "..", "..", "resources", "assets", "sounan", "textures", "block"))
+TEXTURE_DIR = os.environ.get("REISATSU_TEXTURES") or os.path.normpath(
+    os.path.join(ROOT, "..", "..", "resources", "assets", "reisatsu", "textures", "block"))
 TILE_FILES = {"bark": "cedar_log", "log_top": "cedar_log_top", "leaves": "cedar_leaves", "floor_top": "forest_floor_top",
               "floor_side": "forest_floor_side", "dirt": "forest_dirt", "moss": "moss_floor", "rock": "mountain_rock",
               "stones": "river_stones", "planks": "weathered_planks", "tin": "tin_roof", "concrete": "concrete_old",
@@ -787,8 +787,8 @@ class Scene:
 
 
 # ---- the real mountain: tools/terrain's baked terrain + a port of the chunk decorator -------
-TERRAIN_FILE = os.environ.get("SOUNAN_TERRAIN") or os.path.normpath(
-    os.path.join(ROOT, "..", "..", "resources", "data", "sounan", "terrain", "terrain.bin.gz"))
+TERRAIN_FILE = os.environ.get("REISATSU_TERRAIN") or os.path.normpath(
+    os.path.join(ROOT, "..", "..", "resources", "data", "reisatsu", "terrain", "terrain.bin.gz"))
 M64 = (1 << 64) - 1
 
 
@@ -800,7 +800,7 @@ def _mix64(z):
 
 
 def jhash(x, z, salt):
-    """com.sounan.world.Decorator.hash (Java int)"""
+    """com.reisatsu.world.Decorator.hash (Java int)"""
     v = (x * 0x9E3779B97F4A7C15 + z * 0xC2B2AE3D27D4EB4F + salt * 0x165667B19E3779F9 + 0x2545F4914F6CDD1D) & M64
     r = _mix64(v) & 0xFFFFFFFF
     return r - (1 << 32) if r >= (1 << 31) else r
@@ -1483,7 +1483,7 @@ def mc_dir(yaw, pitch):
     return (-math.sin(y) * math.cos(p), -math.sin(p), math.cos(y) * math.cos(p))
 
 
-# the CI tour's viewpoints on the real mountain (com.sounan.client.AutoShots)
+# the CI tour's viewpoints on the real mountain (com.reisatsu.client.AutoShots)
 TERRAIN_SHOTS = {
     "t_start_dark": dict(at=(-198.5, -209.5), yaw=155.0, pitch=4.0, fear=0.3, held=0),
     "t_start_beam": dict(at=(-198.5, -209.5), yaw=155.0, pitch=4.0, fear=0.3, held=FLASHLIGHT),
@@ -1559,7 +1559,7 @@ def run_check():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
-    ap.add_argument("--out", default="/tmp/sounan_preview")
+    ap.add_argument("--out", default="/tmp/reisatsu_preview")
     ap.add_argument("--size", default="960x540")
     ap.add_argument("--shots", default="")
     ap.add_argument("--timing", action="store_true", help="print the time of every pass (llvmpipe)")

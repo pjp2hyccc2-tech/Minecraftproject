@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "sounan:block/tin_roof",
-    "top": "sounan:block/tin_roof",
-    "side": "sounan:block/tin_roof"
-  }
-}

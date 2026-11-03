@@ -1,7 +1,7 @@
 // =====================================================================================
-//  SounanShaders  (SOUNAN - lost on Kaerazu-yama at night)  -  user options
+//  ReisatsuShaders  (REISATSU - lost on Kaerazu-yama at night)  -  user options
 //  Iris / Oculus / OptiFine discover "#define NAME value // [list]" and "#define FLAG".
-//  Every option is shared by all dimension folders (root, sounan_kaerazu, world-1, world1).
+//  Every option is shared by all dimension folders (root, reisatsu_kaerazu, world-1, world1).
 // =====================================================================================
 
 // ---- image ---------------------------------------------------------------------------
@@ -62,7 +62,7 @@ const float eyeBrightnessHalflife = 3.0;
 const float wetnessHalflife = 250.0;
 const float drynessHalflife = 120.0;
 
-#ifdef SOUNAN_MOUNTAIN
+#ifdef REISATSU_MOUNTAIN
     // Kaerazu-yama is frozen at 18000 (midnight), so the tilt alone places the moon: -30 puts
     // it 60 degrees up in the south (downhill, the way out). The canopy gaps let slanted shafts
     // through, and looking down the mountain they glow against the fog (forward scattering).

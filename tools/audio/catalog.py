@@ -1,4 +1,4 @@
-"""The complete 遭難 ―SOUNAN― sound list (docs/DESIGN.md section 7, plus the
+"""The complete 遭難 ―REISATSU― sound list (docs/DESIGN.md section 7, plus the
 extra events listed at the end) with generator, level target, attenuation,
 loop flag, Vorbis quality and subtitles for every event."""
 from collections import namedtuple
@@ -11,8 +11,8 @@ import sfx_monsters as MO
 import sfx_phone as P
 import sfx_player as PL
 
-# event : sound event id (registered as sounan:<event>)
-# path  : file path under assets/sounan/sounds (variants get _1.._n)
+# event : sound event id (registered as reisatsu:<event>)
+# path  : file path under assets/reisatsu/sounds (variants get _1.._n)
 # count : number of variants
 # ch    : 1 = mono (positional), 2 = stereo (beds / music / UI)
 # fn    : generator(rng, index) -> numpy signal

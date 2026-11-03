@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - composite: the air -> colortex2 (rgb in-scattered light, a transmittance)
+//  ReisatsuShaders - composite: the air -> colortex2 (rgb in-scattered light, a transmittance)
 //   * fogMarch: drifting 3D-noise height fog, moonlight shafts through the canopy gaps
 //     (shadow map), ambient fog light, the flare's red glow
 //   * beamMarch per hand: the flashlight / phone / IR cone clipped to the view ray, noisy

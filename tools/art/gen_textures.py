@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""遭難 ―SOUNAN― procedural texture generator.
+"""遭難 ―REISATSU― procedural texture generator.
 
 Generates every block / item / GUI texture listed in docs/DESIGN.md section 5 (entity textures are
 made by gen_entities.py together with the Java models; gui/trail_map comes from tools/terrain) as
@@ -24,7 +24,7 @@ import common  # noqa: E402
 from common import REGISTRY, TEX_ROOT, PREVIEW, finalize, to_array  # noqa: E402
 import legacy  # noqa: E402
 
-# textures inherited from MEIKON (exact reproductions), registered first so SOUNAN modules may override
+# textures inherited from MEIKON (exact reproductions), registered first so REISATSU modules may override
 REGISTRY.update(legacy.load())
 
 import s_nature  # noqa: E402,F401  cedar, forest floor, rock, stones, leaves
@@ -75,14 +75,14 @@ def build_previews(results):
     blocks = groups.get('block', [])
     if blocks:
         made.append(preview.contact_sheet(blocks, os.path.join(PREVIEW, 'sheet_blocks.png'),
-                                          cell=112, cols=12, title='SOUNAN blocks (x7)'))
+                                          cell=112, cols=12, title='REISATSU blocks (x7)'))
         made.append(preview.contact_sheet(blocks, os.path.join(PREVIEW, 'sheet_blocks_night.png'),
-                                          cell=112, cols=12, night=True, title='SOUNAN blocks (x7, night tint)'))
+                                          cell=112, cols=12, night=True, title='REISATSU blocks (x7, night tint)'))
     items = groups.get('item', [])
     small_items = [(l, a) for l, a in items if a.shape[0] <= 16]
     if small_items:
         made.append(preview.contact_sheet(small_items, os.path.join(PREVIEW, 'sheet_items.png'),
-                                          cell=128, cols=8, title='SOUNAN items (x8)'))
+                                          cell=128, cols=8, title='REISATSU items (x8)'))
     skins = [(l, a) for l, a in items if a.shape[0] > 16]
     if skins:
         made.append(preview.contact_sheet(skins, os.path.join(PREVIEW, 'sheet_item_skins.png'),
@@ -90,7 +90,7 @@ def build_previews(results):
     gui = groups.get('gui', [])
     if gui:
         made.append(preview.contact_sheet(gui, os.path.join(PREVIEW, 'sheet_gui.png'),
-                                          cell=256, cols=4, title='SOUNAN gui'))
+                                          cell=256, cols=4, title='REISATSU gui'))
     if tiles:
         made.append(preview.tile_preview(tiles, os.path.join(PREVIEW, 'tiles.png'), cols=5))
         made.append(preview.tile_preview(tiles, os.path.join(PREVIEW, 'tiles_night.png'), cols=5, night=True))

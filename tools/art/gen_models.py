@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Writes the custom-shaped prop block models and the 3D held item models of SOUNAN.
+"""Writes the custom-shaped prop block models and the 3D held item models of REISATSU.
 
   models/block/<prop>.json   (facing north; blockstates rotate them by `facing`)  <- PROPS below
   models/item/<item>.json    (forge:separate_transforms: 3D model in hand, 16x16 sprite in the GUI) <- s_held.py
@@ -17,7 +17,7 @@ from common import MODEL_ROOT  # noqa: E402
 import s_props  # noqa: E402
 from s_props import REG  # noqa: E402
 
-NS = 'sounan'
+NS = 'reisatsu'
 MODELS = {}       # name -> dict  (block models)
 ITEM_MODELS = {}  # name -> dict
 

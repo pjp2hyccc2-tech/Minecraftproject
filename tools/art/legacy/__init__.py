@@ -1,6 +1,6 @@
-"""MEIKON texture generators kept only to reproduce the textures SOUNAN inherited.
+"""MEIKON texture generators kept only to reproduce the textures REISATSU inherited.
 
-`load()` imports the old modules into a scratch registry and returns {sounan name: spec} for the
+`load()` imports the old modules into a scratch registry and returns {reisatsu name: spec} for the
 textures listed in KEEP (old name -> new name). Nothing else from MEIKON is generated.
 """
 import os

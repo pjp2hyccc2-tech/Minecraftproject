@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - fog
+//  ReisatsuShaders - fog
 //   fogDensity()      extinction per block (mountain: drifting 3D-noise height fog that
 //                     pools below the eye - in hollows, gullies, the stream valley)
 //   fogMarch()        the view ray through the fog: ambient fog light, moonlight shafts

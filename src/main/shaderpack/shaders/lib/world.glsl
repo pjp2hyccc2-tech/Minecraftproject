@@ -1,10 +1,10 @@
 // =====================================================================================
-//  SounanShaders - per-world palette, fear / danger, celestial light
-//  The stub folders define SOUNAN_MOUNTAIN / DIM_NETHER / DIM_END; nothing = overworld
+//  ReisatsuShaders - per-world palette, fear / danger, celestial light
+//  The stub folders define REISATSU_MOUNTAIN / DIM_NETHER / DIM_END; nothing = overworld
 //  (and any other dimension: the lobby, mod dimensions ...).
 // =====================================================================================
 
-#if defined SOUNAN_MOUNTAIN
+#if defined REISATSU_MOUNTAIN
     #define WORLD_MOUNTAIN
     #define HAS_CELESTIAL_LIGHT
 #elif defined DIM_NETHER
@@ -30,7 +30,7 @@
 #endif
 
 // ---- the mod's contract (docs/DESIGN.md section 8) --------------------------------------
-// Only inside sounan:kaerazu the mod drives rainStrength = fear and thunderStrength = danger.
+// Only inside reisatsu:kaerazu the mod drives rainStrength = fear and thunderStrength = danger.
 // Nothing weather-like (rain, wetness, lightning, darker clouds) may come from them there.
 #ifdef WORLD_MOUNTAIN
 float fear()       { return saturate(rainStrength); }

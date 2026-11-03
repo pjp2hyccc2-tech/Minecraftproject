@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - composite1: the fog goes onto the picture, fluids, bloom bright-pass
+//  ReisatsuShaders - composite1: the fog goes onto the picture, fluids, bloom bright-pass
 //   colortex2 (in-scatter, transmittance) is blurred with a 4x4 depth-aware filter that
 //   cancels the Bayer dither of the march; colour = colour * T + in-scatter.
 //   colortex0 -> colortex0 (fogged), colortex3 (bloom source)

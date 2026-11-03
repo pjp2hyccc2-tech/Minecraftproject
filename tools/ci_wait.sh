@@ -27,16 +27,16 @@ echo "=== STATUS: $(git show origin/$RB:STATUS 2>/dev/null) (for $(git show orig
 if [ "$JOB" = "build" ]; then
   git show origin/$RB:errors.txt 2>/dev/null | head -250
   git show origin/$RB:build.log 2>/dev/null | grep -E "BUILD (SUCCESSFUL|FAILED)|What went wrong" -A4 | head -16
-  git show origin/$RB:meikon-selftest.txt 2>/dev/null | tail -60
-  git show origin/$RB:meikon_autoshots.txt 2>/dev/null | tail -40
+  git show origin/$RB:reisatsu-selftest.txt 2>/dev/null | tail -60
+  git show origin/$RB:reisatsu_autoshots.txt 2>/dev/null | tail -40
 elif [ "$JOB" = "trailer" ]; then
-  git show origin/$RB:meikon_trailer.txt 2>/dev/null | tail -60
+  git show origin/$RB:reisatsu_trailer.txt 2>/dev/null | tail -60
   git show origin/$RB:trailer-grep.txt 2>/dev/null | grep -i -E "error|exception|fail" | head -30
   git ls-tree -r --name-only origin/$RB 2>/dev/null | grep -E "\.(mp4|jpg)$" | tr '\n' ' '; echo
   exit 0
 else
   git show origin/$RB:lint.txt 2>/dev/null | tail -40
-  git show origin/$RB:meikon_autoshots.txt 2>/dev/null | tail -30
+  git show origin/$RB:reisatsu_autoshots.txt 2>/dev/null | tail -30
   git show origin/$RB:shaders-grep.txt 2>/dev/null | grep -i -E "error|exception|fail|compil" | head -40
 fi
 echo "=== screenshots:"; git ls-tree --name-only origin/$RB:screenshots 2>/dev/null | tr '\n' ' '; echo

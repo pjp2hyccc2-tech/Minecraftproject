@@ -1,4 +1,4 @@
-"""Voice synthesis for SOUNAN.
+"""Voice synthesis for REISATSU.
 
 * ``voice``   - additive glottal-pulse source (band-limited harmonics whose
                 amplitudes follow a cascade formant envelope evaluated at every

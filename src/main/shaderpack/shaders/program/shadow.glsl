@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - shadow map pass (the moon). Translucents are not drawn here
+//  ReisatsuShaders - shadow map pass (the moon). Translucents are not drawn here
 //  (shadowTranslucent=false), so water and glass cast no shadow. The canopy sways in the
 //  shadow map too, so the moonlight patches and shafts shift slowly with the wind.
 // =====================================================================================

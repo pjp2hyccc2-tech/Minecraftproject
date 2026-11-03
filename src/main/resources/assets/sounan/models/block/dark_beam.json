@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "side": "sounan:block/dark_beam_side",
-    "end": "sounan:block/dark_beam_top"
-  }
-}

@@ -1,4 +1,4 @@
-"""Instrument / physical-ish sound sources for SOUNAN."""
+"""Instrument / physical-ish sound sources for REISATSU."""
 import numpy as np
 from scipy import signal
 

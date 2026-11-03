@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""遭難 ―SOUNAN― sound generator.
+"""遭難 ―REISATSU― sound generator.
 
 Synthesises every sound effect and music cue of the mod from scratch
 (numpy / scipy, no samples), encodes them to OGG Vorbis with ffmpeg and writes
@@ -33,7 +33,7 @@ import voice  # noqa: E402
 from catalog import CATALOG, EXTRAS, files  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
-ASSETS = os.path.join(ROOT, "src", "main", "resources", "assets", "sounan")
+ASSETS = os.path.join(ROOT, "src", "main", "resources", "assets", "reisatsu")
 SOUND_DIR = os.path.join(ASSETS, "sounds")
 FFMPEG = os.environ.get("FFMPEG", "/usr/local/bin/ffmpeg")
 STREAM_MIN_SEC = 8.0
@@ -186,7 +186,7 @@ def write_sounds_json(durations):
     for ent in CATALOG:
         sounds = []
         for path, _ in files(ent):
-            s = {"name": f"sounan:{path}"}
+            s = {"name": f"reisatsu:{path}"}
             if durations.get(path, 0.0) > STREAM_MIN_SEC:
                 s["stream"] = True
             if ent.att is not None and ent.ch == 1:
@@ -196,7 +196,7 @@ def write_sounds_json(durations):
             sounds.append(s)
         item = {}
         if ent.ja is not None:
-            item["subtitle"] = f"subtitles.sounan.{ent.event}"
+            item["subtitle"] = f"subtitles.reisatsu.{ent.event}"
         item["sounds"] = sounds
         data[ent.event] = item
     with open(os.path.join(ASSETS, "sounds.json"), "w", encoding="utf-8") as f:
@@ -205,8 +205,8 @@ def write_sounds_json(durations):
 
 
 def write_subtitles():
-    ja = {f"subtitles.sounan.{e.event}": e.ja for e in CATALOG if e.ja is not None}
-    en = {f"subtitles.sounan.{e.event}": e.en for e in CATALOG if e.en is not None}
+    ja = {f"subtitles.reisatsu.{e.event}": e.ja for e in CATALOG if e.ja is not None}
+    en = {f"subtitles.reisatsu.{e.event}": e.en for e in CATALOG if e.en is not None}
     for name, d in [("subtitles_ja.json", ja), ("subtitles_en.json", en)]:
         with open(os.path.join(HERE, name), "w", encoding="utf-8") as f:
             json.dump(d, f, ensure_ascii=False, indent=2)
@@ -317,7 +317,7 @@ def report(spec_dir=None, pattern=None):
     with open(CACHE, "w", encoding="utf-8") as f:
         json.dump(cache, f)
     with open(os.path.join(HERE, "report.txt"), "w", encoding="utf-8") as f:
-        f.write("SOUNAN sound report (measured on the decoded OGG files)\n\n")
+        f.write("REISATSU sound report (measured on the decoded OGG files)\n\n")
         f.write("\n".join(lines) + "\n")
     return durations, total
 

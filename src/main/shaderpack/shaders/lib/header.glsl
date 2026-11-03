@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - common header (include order matters)
+//  ReisatsuShaders - common header (include order matters)
 // =====================================================================================
 #include "/lib/settings.glsl"
 #include "/lib/uniforms.glsl"

@@ -5,15 +5,15 @@ license="${mod_license}"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
-displayName="遭難 -SOUNAN-"
+displayName="霊撮 -REISATSU-"
 authors="${mod_authors}"
 description='''
-夜の帰らず山で遭難した。
-手元には圏外のスマホと懐中電灯だけ。失くしたバッグを見つけ、山を抜けろ。
-木の陰から覗くもの、背後を歩くもの、灯りを持って呼ぶもの――
-近づいてはいけない。振り返ってはいけない。返事をしてはいけない。
+国道沿いのファミリーレストラン「ひだまり」。閉店後に、閉めたはずの自動ドアが開き、誰もいない水道から水が流れ、
+テーブルのメニューが床にばらまかれる――。
+霊媒師から渡された古い写真機を手に、夜の店内へ。霊たちに気付かれずに、そのすべてを写真に収めろ。
 
-A Japanese mountain survival horror. Lost at night with a dead phone and a flashlight: find your bag and get off the mountain alive.
+A Japanese stealth photography horror. A family restaurant by a deadly curve is haunted after closing: photograph
+every spirit without being noticed, and hand the evidence to the medium.
 '''
 
 [[dependencies.${mod_id}]]

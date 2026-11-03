@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the blockstates, simple block models and item models of SOUNAN (assets/sounan/...).
+"""Generates the blockstates, simple block models and item models of REISATSU (assets/reisatsu/...).
 
 Prop block models and 3D held item models are made by the art pass (tools/art) and are never overwritten here.
 Run from anywhere: python3 tools/gen_assets.py
@@ -7,8 +7,8 @@ Run from anywhere: python3 tools/gen_assets.py
 import json
 import os
 
-ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", "sounan"))
-NS = "sounan"
+ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "main", "resources", "assets", "reisatsu"))
+NS = "reisatsu"
 
 # made by the art pass (tools/art): never written here
 ART_BLOCK_MODELS = {"lost_bag", "lost_bag_open", "memo", "memo_wall", "logbook", "notice_board", "signpost", "jizo", "hokora",

@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - final: lens, bloom, exposure, tone curve, grading and - in the mountain -
+//  ReisatsuShaders - final: lens, bloom, exposure, tone curve, grading and - in the mountain -
 //  everything fear (rainStrength), danger (thunderStrength), the camera and capture do:
 //    fear   : heartbeat-pulsed vignette (rate 72 -> 180 bpm), tunnel vision (peripheral
 //             blur + darkening), chromatic aberration, desaturation, and at high fear faint

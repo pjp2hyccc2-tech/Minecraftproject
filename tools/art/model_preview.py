@@ -45,7 +45,7 @@ def render_block(model, yaw=-35.0, pitch=28.0, size=256, ground=True, bg=(46, 48
                             -math.cos(math.radians(yaw)) * math.cos(math.radians(pitch))])
     cv = R.Canvas(size, size, R.look_at(eye, c), ortho=0.95, bg=bg)
     if ground:
-        g = tex_lookup('sounan:block/forest_floor_top')
+        g = tex_lookup('reisatsu:block/forest_floor_top')
         for gx in (-1, 0, 1):
             for gz in (-1, 0, 1):
                 pts = np.array([(gx, 0, gz), (gx + 1, 0, gz), (gx + 1, 0, gz + 1), (gx, 0, gz + 1)], float)

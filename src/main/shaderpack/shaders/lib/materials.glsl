@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - ids from block.properties / entity.properties, emission masks,
+//  ReisatsuShaders - ids from block.properties / entity.properties, emission masks,
 //  surface gloss and the wind in the canopy
 //  (item ids live in lib/playerlight.glsl)
 // =====================================================================================

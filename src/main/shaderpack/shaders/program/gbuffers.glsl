@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - every lit gbuffers program
+//  ReisatsuShaders - every lit gbuffers program
 //  The stub selects the variant:
 //    PROG_TERRAIN  PROG_WATER (translucent terrain)  PROG_BLOCK  PROG_ENTITIES  PROG_HAND
 //    PROG_TEXTURED (particles)  PROG_BASIC (lines)  PROG_EYES  PROG_GLINT  PROG_BEACON

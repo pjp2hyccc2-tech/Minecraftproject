@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - gentle bloom blur
+//  ReisatsuShaders - gentle bloom blur
 //   BLOOM_H (composite2): horizontal 9 taps of colortex3 at mip 2 -> colortex4
 //   BLOOM_V (composite3): vertical 9 taps of colortex4            -> colortex3
 // =====================================================================================

@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - sky gradient, analytic moon (reflections), fog colour
+//  ReisatsuShaders - sky gradient, analytic moon (reflections), fog colour
 // =====================================================================================
 
 vec3 skyGradient(vec3 dir) {

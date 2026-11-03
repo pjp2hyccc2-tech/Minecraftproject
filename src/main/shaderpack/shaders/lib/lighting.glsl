@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - surface lighting
+//  ReisatsuShaders - surface lighting
 //  Forward (every lit gbuffers program): block light (flames, sodium lamps), the cold moon
 //  (shadow mapped through the canopy), sky ambient.
 //  The hand lights (flashlight, phone, flare ...) are added once per pixel by the deferred

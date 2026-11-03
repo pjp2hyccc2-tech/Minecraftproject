@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - deferred (after opaque terrain / entities / the solid hand, before
+//  ReisatsuShaders - deferred (after opaque terrain / entities / the solid hand, before
 //  translucents)
 //   * the hand lights on every opaque surface, once per pixel: position from depth,
 //     normal / albedo / gloss from colortex6 / colortex5. Flashlight: hot spot, soft edge,

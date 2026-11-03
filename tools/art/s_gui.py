@@ -112,11 +112,11 @@ def title_logo():
     out[..., :3] = col * canvas[..., None]
     out[..., 3] = np.maximum(canvas, halo) * 255
     out[..., :3] = np.where(canvas[..., None] > 0, out[..., :3] / np.maximum(canvas[..., None], 1e-6), np.array([8, 6, 6]))
-    # "SOUNAN" in spaced capitals with thin rules: ― S O U N A N ―
+    # "REISATSU" in spaced capitals with thin rules: ― S O U N A N ―
     img = Image.new('L', (W, H), 0)
     d = ImageDraw.Draw(img)
     fnt = font(FONT_SERIF_JP_BOLD, 26 * S)
-    label = '  '.join('SOUNAN')
+    label = '  '.join('REISATSU')
     tw = d.textlength(label, font=fnt)
     ty = int(208 * S)
     d.text(((W - tw) / 2, ty), label, fill=255, font=fnt)

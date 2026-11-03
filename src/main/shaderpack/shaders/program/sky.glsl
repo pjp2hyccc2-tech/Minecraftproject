@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - vanilla sky geometry
+//  ReisatsuShaders - vanilla sky geometry
 //   PROG_SKYBASIC   : sky disc / sunset fan / void / stars. The gradient is painted by the
 //                     deferred pass for every empty pixel, so only (dim) stars are kept,
 //                     and none at all over the mountain (the fog and the canopy hide them).

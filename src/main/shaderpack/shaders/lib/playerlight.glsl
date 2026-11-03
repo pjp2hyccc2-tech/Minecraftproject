@@ -1,5 +1,5 @@
 // =====================================================================================
-//  SounanShaders - the lights the player carries, in either hand
+//  ReisatsuShaders - the lights the player carries, in either hand
 //    heldItemId  (main hand, drawn on the right)   heldItemId2 (off hand, on the left)
 //  flashlight / low flashlight / phone light / phone camera IR: spot lights from the hand,
 //  slightly below and to the side of the eye, aimed along the view; the flare: a red point
@@ -8,11 +8,11 @@
 // =====================================================================================
 
 // item.properties (heldItemId / heldItemId2 / currentRenderedItemId)
-#define ITEM_FLASHLIGHT   10001   // sounan:flashlight_on
-#define ITEM_FLASH_LOW    10002   // sounan:flashlight_low   (dying battery: dim, orange, stutters)
-#define ITEM_PHONE_LIGHT  10003   // sounan:phone_light      (wide, weak, cold)
-#define ITEM_CAMERA       10004   // sounan:phone_camera     (night-vision camcorder + IR illuminator)
-#define ITEM_FLARE        10005   // sounan:flare_lit        (flickering red point light)
+#define ITEM_FLASHLIGHT   10001   // reisatsu:flashlight_on
+#define ITEM_FLASH_LOW    10002   // reisatsu:flashlight_low   (dying battery: dim, orange, stutters)
+#define ITEM_PHONE_LIGHT  10003   // reisatsu:phone_light      (wide, weak, cold)
+#define ITEM_CAMERA       10004   // reisatsu:phone_camera     (night-vision camcorder + IR illuminator)
+#define ITEM_FLARE        10005   // reisatsu:flare_lit        (flickering red point light)
 #define ITEM_HANDLIGHT    10010   // vanilla torches / lanterns held in a hand
 
 #define LIGHT_NONE  0

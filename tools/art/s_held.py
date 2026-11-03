@@ -7,7 +7,7 @@ held_preview.py, which simulates vanilla 1.20.1 ItemInHandRenderer / ItemInHandL
 """
 from s_items import HELD_REG
 
-NS = 'sounan'
+NS = 'reisatsu'
 
 
 def _uv(item, reg, sub=None, flip=False, tex_size=16):
