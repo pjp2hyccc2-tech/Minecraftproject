@@ -95,6 +95,7 @@ public final class RestaurantBuilder {
     public static void build(BlockSink s) {
         if (!s.touches(-2, -2, 42, 34)) return;
         shell(s);
+        facade(s);
         roof(s);
         canopy(s);
         vestibule(s);
@@ -315,6 +316,8 @@ public final class RestaurantBuilder {
         } else if (x == 14 && z == 9) {
             s.set(x, FLOOR, z, st(ModBlocks.KITCHEN_FLOOR));
             door(s, ModBlocks.STAFF_DOOR, x, z, E, DoorHingeSide.RIGHT, false, null);
+            // an open transom above the kitchen's back door: the chef (2.2 high) chases through it into the corridor
+            s.set(x, Y + 2, z, Blocks.AIR.defaultBlockState());
         } else if (x == 3 && z == 10) {
             s.set(x, FLOOR, z, st(ModBlocks.KITCHEN_FLOOR));
             door(s, ModBlocks.STAFF_DOOR, x, z, S, DoorHingeSide.LEFT, false, null);
@@ -327,6 +330,31 @@ public final class RestaurantBuilder {
         } else {
             door(s, ModBlocks.STAFF_DOOR, x, z, N, DoorHingeSide.LEFT, false, null);
         }
+    }
+
+    // ================================================================================================ facade details
+    /** Brick piers between the window groups (south front x, east front z). */
+    public static final int[] PIERS_X = {14, 20, 26, 32};
+    public static final int[] PIERS_Z = {17, 23};
+    /** Small windows in the plain walls: {x1, z1, x2, z2, y1, y2}. */
+    static final int[][] SMALL_WINDOWS = {
+            {3, 0, 4, 0, Y + 1, Y + 2},     // staff room, north wall
+            {10, 0, 11, 0, Y + 1, Y + 2},   // office, north wall
+            {35, 0, 37, 0, Y + 2, Y + 2},   // kitchen, over the dish pit sinks
+            {40, 5, 40, 6, Y + 2, Y + 2},   // kitchen, east wall
+            {0, 18, 0, 19, Y + 2, Y + 2},   // men's restroom, west wall (high)
+            {0, 12, 0, 13, Y + 2, Y + 2}};  // storage, west wall (high)
+
+    static void facade(BlockSink s) {
+        TwoSidedWallBlock w = (TwoSidedWallBlock) ModBlocks.TWO_SIDED_WALL.get();
+        for (int x : PIERS_X)
+            for (int y = Y + 1; y <= CEIL; y++) s.set(x, y, 30, w.of(N, y == CEIL ? Props.Face.EXTERIOR_WALL : Props.Face.WALLPAPER, Props.Face.FACADE_BRICK));
+        for (int z : PIERS_Z)
+            for (int y = Y + 1; y <= CEIL; y++) s.set(40, y, z, w.of(W, y == CEIL ? Props.Face.EXTERIOR_WALL : Props.Face.WALLPAPER, Props.Face.FACADE_BRICK));
+        for (int[] win : SMALL_WINDOWS)
+            for (int x = win[0]; x <= win[2]; x++)
+                for (int z = win[1]; z <= win[3]; z++)
+                    for (int y = win[4]; y <= win[5]; y++) s.set(x, y, z, st(ModBlocks.SHOP_WINDOW));
     }
 
     // ================================================================================================ roof
@@ -473,6 +501,11 @@ public final class RestaurantBuilder {
         s.set(tx, Y + 3, tz, light(ModBlocks.PENDANT_LAMP, lit));
     }
 
+    static boolean isPier(int v, int[] piers) {
+        for (int p : piers) if (p == v) return true;
+        return false;
+    }
+
     static void centreTable(BlockSink s, int x0, int z) {
         for (int k = 0; k <= 1; k++) {
             s.set(x0 + k, Y, z, f(ModBlocks.RESTAURANT_TABLE, N));
@@ -520,6 +553,7 @@ public final class RestaurantBuilder {
         s.set(39, Y, 28, f(ModBlocks.OUTDOOR_PLANTER, W));
         // window blinds (top row closed; lowered further at some windows, open around tables 5..7)
         for (int x = 9; x <= 39; x++) {
+            if (isPier(x, PIERS_X)) continue;
             boolean open = x >= 27 && x <= 35;
             s.set(x, Y + 3, 29, f(ModBlocks.WINDOW_BLIND, N).setValue(Props.CLOSED, !open));
             if (!open && x >= 15 && (x % 7 == 1 || x % 7 == 2 || x % 7 == 3)) {
@@ -527,6 +561,7 @@ public final class RestaurantBuilder {
             }
         }
         for (int z = 12; z <= 28; z++) {
+            if (isPier(z, PIERS_Z)) continue;
             s.set(39, Y + 3, z, f(ModBlocks.WINDOW_BLIND, W).setValue(Props.CLOSED, true));
             if (z % 6 == 0 || z % 6 == 1) s.set(39, Y + 2, z, f(ModBlocks.WINDOW_BLIND, W).setValue(Props.CLOSED, true));
         }
@@ -634,7 +669,7 @@ public final class RestaurantBuilder {
         s.set(12, Y, 1, f(ModBlocks.FILING_CABINET, S));
         s.set(13, Y, 1, f(ModBlocks.FILING_CABINET, S));
         s.set(13, Y, 3, f(ModBlocks.SAFE, W));
-        s.set(10, Y + 1, 1, f(ModBlocks.BULLETIN_BOARD, S));       // the shift schedule
+        s.set(13, Y + 1, 4, f(ModBlocks.BULLETIN_BOARD, W));       // the shift schedule
         s.set(13, Y, 6, f(ModBlocks.CARDBOARD_BOXES, W));
         s.set(13, Y, 5, f(ModBlocks.CARDBOARD_BOXES, W));
         // ---- corridor
@@ -729,7 +764,7 @@ public final class RestaurantBuilder {
                 {36, 26}, {24, 12}, {30, 12}, {17, 20}};
         int[][] kitchen = {{22, 3}, {28, 3}, {34, 3}, {22, 7}, {28, 7}, {34, 7}, {17, 7}, {16, 2}};
         int[][] back = {{3, 8}, {9, 9}, {12, 8}, {3, 3}, {5, 5}, {11, 3}, {3, 13}};
-        int[][] rest = {{3, 19}, {10, 19}};
+        int[][] rest = {{3, 19}, {10, 19}, {2, 21}, {12, 20}};
         for (int[][] set : new int[][][]{dining, kitchen, back, rest}) for (int[] p : set) CEILING_LIGHTS.add(new BlockPos(p[0], CEIL, p[1]));
         int[][] down = {{4, 28}, {3, 24}, {7, 24}, {11, 27}, {12, 24}, {13, 23}, {17, 12}};
         for (int[] p : down) DOWNLIGHTS.add(new BlockPos(p[0], CEIL, p[1]));

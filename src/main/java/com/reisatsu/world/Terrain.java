@@ -117,10 +117,19 @@ public final class Terrain {
                     if (Site.noise(x, z, 3, 42) > 0.6) s.set(x, GROUND + 1, z, ModBlocks.PUDDLE.get().defaultBlockState());
                 } else {
                     if (!farmRoad(x, z) || r < 20) {
-                        s.set(x, GROUND + 1, z, ((FacingBlock) ModBlocks.GUARDRAIL.get()).defaultBlockState()
-                                .setValue(FacingBlock.FACING, Site.inward(x, z)));
+                        s.set(x, GROUND + 1, z, f(ModBlocks.GUARDRAIL, Site.inward(x, z)));
                     }
                 }
+            }
+        }
+        // close the corners of the guardrail's staircase on the curve so it reads as one continuous rail
+        for (int x = s.minX; x <= s.maxX; x++) {
+            for (int z = s.minZ; z <= s.maxZ; z++) {
+                double r = Site.rho(x, z);
+                if (r < Site.RHO_END || r >= Site.RHO_END + 0.75 || x + 0.5 < Site.CX || z + 0.5 < Site.CZ) continue;
+                if (rail(x - 1, z) && rail(x, z - 1) && !rail(x - 1, z - 1)) s.set(x, GROUND + 1, z, f(ModBlocks.GUARDRAIL, Site.inward(x, z)));
+                else if (rail(x - 1, z) && rail(x, z + 1) && !rail(x - 1, z + 1)) s.set(x, GROUND + 1, z, f(ModBlocks.GUARDRAIL, Site.inward(x, z)));
+                else if (rail(x + 1, z) && rail(x, z - 1) && !rail(x + 1, z - 1)) s.set(x, GROUND + 1, z, f(ModBlocks.GUARDRAIL, Site.inward(x, z)));
             }
         }
         // the curve: chevrons outside the guardrail, the curve mirror, the flowers, a sodium lamp over the crash site
@@ -139,6 +148,12 @@ public final class Terrain {
         lamp(s, ROAD_LAMPS[1][0], ROAD_LAMPS[1][1], Direction.SOUTH);
         lamp(s, ROAD_LAMPS[2][0], ROAD_LAMPS[2][1], Direction.SOUTH);
         lamp(s, ROAD_LAMPS[3][0], ROAD_LAMPS[3][1], Direction.WEST);
+    }
+
+    /** A guardrail cell of the ring (not the farm road gap). */
+    static boolean rail(int x, int z) {
+        double r = Site.rho(x, z);
+        return r >= Site.RHO_RAIL && r < Site.RHO_END && !farmRoad(x, z);
     }
 
     static BlockState f(net.minecraftforge.registries.RegistryObject<? extends net.minecraft.world.level.block.Block> b, Direction d) {

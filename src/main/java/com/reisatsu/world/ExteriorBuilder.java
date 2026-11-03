@@ -71,7 +71,7 @@ public final class ExteriorBuilder {
                 s.set(x, G, z, top);
                 for (int y = G + 1; y <= G + 4; y++) s.set(x, y, z, air);
                 boolean paved = top.is(ModBlocks.ASPHALT.get()) || top.is(ModBlocks.SIDEWALK.get());
-                if (paved && Site.noise(x, z, 5, 72) > 0.66 && Site.rand(x, z, 73) < 0.9) s.set(x, G + 1, z, st(ModBlocks.PUDDLE));
+                if (paved && Site.noise(x, z, 4, 72) > 0.76 && Site.rand(x, z, 73) < 0.85) s.set(x, G + 1, z, st(ModBlocks.PUDDLE));
             }
         }
     }

@@ -310,7 +310,7 @@ public final class WorldCheck {
         }
         check.accept(bes == 6, "the door block entities exist (" + bes + "/6)");
         // the shell: walls, windows, ceiling
-        check.accept(level.getBlockState(new BlockPos(20, 67, 30)).is(ModBlocks.SHOP_WINDOW.get()), "shop windows on the south front");
+        check.accept(level.getBlockState(new BlockPos(21, 67, 30)).is(ModBlocks.SHOP_WINDOW.get()), "shop windows on the south front");
         check.accept(level.getBlockState(new BlockPos(40, 67, 20)).is(ModBlocks.SHOP_WINDOW.get()), "shop windows on the east front");
         check.accept(level.getBlockState(new BlockPos(20, 69, 20)).is(ModBlocks.CEILING_TILE.get())
                 || level.getBlockState(new BlockPos(20, 69, 20)).is(ModBlocks.CEILING_TILE_STAINED.get()), "suspended ceiling at y 69");
@@ -386,6 +386,18 @@ public final class WorldCheck {
         }
         z.discard();
         check.accept(ok == all, "a zombie finds a path for every route segment (" + ok + "/" + all + ")");
+        // the chef is 2.2 high: a tall thin mob must get from his board through the back door into the corridor
+        RestaurantDoorBlock.setBoth(level, new BlockPos(14, 65, 9), true, false);
+        net.minecraft.world.entity.monster.EnderMan tall = EntityType.ENDERMAN.create(level);
+        if (tall != null) {
+            BlockPos a = Layout.marker("chef_board").pos();
+            tall.moveTo(a.getX() + 0.5, a.getY(), a.getZ() + 0.5, 0, 0);
+            tall.setOnGround(true);
+            Path path = tall.getNavigation().createPath(new BlockPos(11, 65, 8), 0);
+            check.accept(path != null && path.canReach(), "a 2.9-high mob gets from the chef's board into the corridor");
+            tall.discard();
+        }
+        RestaurantDoorBlock.setBoth(level, new BlockPos(14, 65, 9), false, false);
         Fixtures.setAutoDoorsEnabled(level, false);
     }
 
