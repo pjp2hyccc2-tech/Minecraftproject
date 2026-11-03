@@ -89,7 +89,7 @@ const vec3 EM_COLOR[EM_COUNT] = vec3[EM_COUNT](
 // The TV is the room's light after three: dim, but it reaches the closet across the tatami.
 const float EM_GAIN[EM_COUNT] = float[EM_COUNT](
     0.0, 2.0, 2.0, 2.0, 2.0, 0.60, 0.60, 0.60, 0.60, 1.0, 1.0, 1.0, 1.0,
-    11.0, 9.0, 9.0, 3.5, 26.0, 3.0, 0.35, 0.50, 0.90, 0.15, 0.0, 0.0, 1.4, 1.6, 2.5);
+    8.0, 6.5, 6.5, 3.5, 26.0, 3.0, 0.35, 0.50, 0.90, 0.15, 0.0, 0.0, 1.4, 1.6, 2.5);
 
 // radius of the glowing part: the soft core of the falloff, widens the highlights
 const float EM_SIZE[EM_COUNT] = float[EM_COUNT](
@@ -229,25 +229,25 @@ vec3 lampSwing(vec3 blockPos, float t) {
 
 // ---- the glowing surface of a lamp (gbuffers, shadow pass) ------------------------------------
 // Which texels of a lamp model glow - never the whole model: the housings round the light (the
-// TV's cabinet, the shade's frame, the vending machine's case) are as bright as any lamp in a
-// texture, so brightness alone says little.
+// TV's cabinet and its chrome antenna, the shade's white cord, the ring's base plate, the
+// vending machine's case) are as bright as any lamp in a texture, so brightness alone says little.
 //  * marked: the art draws the glowing faces of its lamp models full-bright (forge_data
 //    block_light / sky_light 15, baked into the quad): on such a face every lit texel glows (a
 //    screen's picture, the shade's paper), the darkest ones do not.
-//  * unmarked faces glow only where the colour is the lamp's own: its hue, saturated and
-//    bright, or a white hotter than any housing. c: texture colour (sRGB), N: world normal
+//  * every lit lamp model of the art marks its glowing faces, so an unmarked face of a lamp does
+//    not glow - only a pure red or green LED does anywhere. (The masks below decide which texels
+//    of a marked face glow.) c: texture colour (sRGB), N: world normal
 float emitterSurfaceMask(int type, vec3 c, vec3 N, bool marked) {
     float l = luma(c);
     float mx = maxOf(c);
     float ch = mx - minOf(c);           // absolute chroma: dark colours count less
+    if (!marked && type != EM_LED) return 0.0;
     float strict;
     if (emitterIsTv(type)) {
-        // the screen: the static's greys (or the picture), not the dark cabinet, not the chrome knobs
-        strict = smoothstep(0.20, 0.32, l) * (1.0 - smoothstep(0.08, 0.14, ch)) * (1.0 - smoothstep(0.90, 0.97, l));
-        // a marked face: every texel of the picture glows, even its dark parts - but not a brown
-        // wood-grain bezel that shares the face, nor the chrome knobs
-        float pic = smoothstep(0.03, 0.12, l) * (1.0 - smoothstep(0.05, 0.10, ch)) * (1.0 - smoothstep(0.86, 0.95, l));
-        return marked ? max(strict, pic) : strict;
+        // the screen: every texel of the picture glows, even its darkest parts (the dark room of
+        // channel 1 is mostly black) - but not a brown wood-grain bezel sharing the face. The
+        // art's static and pictures stay below a chroma of 0.11
+        return smoothstep(0.0, 0.04, l) * (1.0 - smoothstep(0.13, 0.22, ch));
     } else if (type == EM_RING) {
         // the milky diffuser on the bottom face, not its rim or the ceiling round it
         strict = smoothstep(-0.4, -0.6, N.y) * smoothstep(0.78, 0.88, l) * (1.0 - smoothstep(0.05, 0.10, c.r - c.b));
@@ -280,7 +280,7 @@ float emitterSurfaceMask(int type, vec3 c, vec3 N, bool marked) {
         strict = smoothstep(0.38, 0.72, l + ch * 0.30);
     }
     // a marked face: every lit texel glows by its own colour
-    return marked ? max(strict, smoothstep(0.30, 0.65, l + 0.5 * ch)) : strict;
+    return max(strict, smoothstep(0.30, 0.65, l + 0.5 * ch));
 }
 
 // the small indicator lights the art marks full-bright on blocks that are not lamps (the
@@ -612,7 +612,10 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
             float sizeAngle = EM_SIZE[clamp(L.type, 0, EM_COUNT - 1)] / max(dist, 0.3);
             spec += E * ggxSpec(N, V, l, rough, sizeAngle) * fresnelSchlick(f0, dot(normalize(l + V), V));
         }
-        float w = maxOf(E) * saturate(ndl);
+        // the strongest lamp casts the screen-space shadows (deferred) - not a lamp outside
+        // lighting a room: its light comes in through the windows and the curtains
+        // (curtainTransmission), which a shadow ray through the picture cannot tell apart
+        float w = (openAir || L.covered) ? maxOf(E) * saturate(ndl) : 0.0;
         if (w > best) {
             best = w;
             domPos = L.pos;

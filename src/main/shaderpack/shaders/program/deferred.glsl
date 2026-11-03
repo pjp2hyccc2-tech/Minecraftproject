@@ -29,9 +29,18 @@ in vec2 texcoord;
 float viewZ(float depth) {
     return -gbufferProjection[3][2] / (depth * 2.0 - 1.0 + gbufferProjection[2][2]);
 }
+// how much the depth buffer at uv hides the point at view depth qz (0..1)
+float occludes(vec2 uv, float qz, float bias, float thickness) {
+    float d = textureLod(depthtex0, uv, 0.0).r;
+    if (isHandDepth(d) || d >= 1.0) return 0.0;
+    float delta = viewZ(d) - qz;                             // > 0: something in front of the point
+    return smoothstep(bias, bias * 2.5, delta) * (1.0 - smoothstep(thickness, thickness * 1.5, delta));
+}
 // march from the surface toward a light through the depth buffer. Returns 1 = lit.
 // stop: how far short of the light the march ends (the lamp's own shade / cabinet is no shadow)
 // strict: a ray that leaves the picture or turns behind the camera counts as blocked
+// Thin things (a lamp's cord, a pull string, a rail: under ~0.1 block across) cast no shadow:
+// one depth layer cannot tell a wall far behind such a line from the line's own body.
 float screenShadow(vec3 viewP, vec3 lightView, float dither, float maxLen, float thickness, float stop, bool strict) {
     vec3 d = lightView - viewP;
     float len = length(d);
@@ -47,30 +56,39 @@ float screenShadow(vec3 viewP, vec3 lightView, float dither, float maxLen, float
         if (q.z > -near * 1.2) { if (strict) occ = 1.0; break; }
         vec3 sc = viewToScreen(q);
         if (sc.x < 0.0 || sc.x > 1.0 || sc.y < 0.0 || sc.y > 1.0) { if (strict) occ = 1.0; break; }
-        float d0 = textureLod(depthtex0, sc.xy, 0.0).r;
-        if (isHandDepth(d0) || d0 >= 1.0) continue;
-        float delta = viewZ(d0) - q.z;                       // > 0: something in front of the sample
-        occ = max(occ, smoothstep(bias, bias * 2.5, delta) * (1.0 - smoothstep(thickness, thickness * 1.5, delta)));
+        float o = occludes(sc.xy, q.z, bias, thickness);
+        if (o > 0.0) {
+            // 0.07 blocks to either side, at the occluder's distance
+            float oz = -viewZ(textureLod(depthtex0, sc.xy, 0.0).r);
+            vec2 w = 0.035 * vec2(gbufferProjection[0][0], gbufferProjection[1][1]) / max(oz, near);
+            float h = max(occludes(sc.xy + vec2(w.x, 0.0), q.z, bias, thickness), occludes(sc.xy - vec2(w.x, 0.0), q.z, bias, thickness));
+            float v = max(occludes(sc.xy + vec2(0.0, w.y), q.z, bias, thickness), occludes(sc.xy - vec2(0.0, w.y), q.z, bias, thickness));
+            occ = max(occ, o * h * v);
+        }
         if (occ > 0.99) break;
     }
     return 1.0 - occ;
 }
 
 #ifdef EMITTERS_ON
-// the lamp that gives a surface most of its light (cheap version of lampsAt)
-bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos, out float lampSize) {
+// the lamp that gives a surface most of its light (cheap version of lampsAt). lampStop: how far
+// short of it a shadow ray stops - its own shade or cabinet is no shadow, nor the pull cord that
+// hangs ~0.8 below a pendant's shade (a thin line in front of the wall would cast a wide band
+// in screen space)
+bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos, out float lampStop) {
     vec3 cellP = wp + N * 0.5;
     ivec2 column = ivec2(floor(cellP.xz));
     vec4 tab = tableFetch(column);
     float best = 0.0;
     lampPos = vec3(0.0);
-    lampSize = 0.3;
+    lampStop = 0.55;
     bool openAir = openSky(cellP) > 0.5;
     for (int k = 0; k < 4; k++) {
         float v = tab[k];
         if (abs(v) < 0.5) continue;
         Lamp L = tableUnpack(v, column);
         if (!emitterCasts(L.type) || L.walled) continue;
+        if (!openAir && !L.covered) continue;            // outside, lighting a room: through windows
         vec3 md = abs(floor(cellP) + 0.5 - (L.block + 0.5));
         float X = L.level - (md.x + md.y + md.z);
         bool open = openAir && !L.covered;
@@ -82,7 +100,8 @@ bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos, out float lampSize
         if (w > best) {
             best = w;
             lampPos = L.pos;
-            lampSize = EM_SIZE[clamp(L.type, 0, EM_COUNT - 1)];
+            bool pendant = L.type == EM_HANGING || L.type == EM_HANGING_SWING;
+            lampStop = max(0.25, EM_SIZE[clamp(L.type, 0, EM_COUNT - 1)] + 0.25) + (pendant ? 0.45 : 0.0);
         }
     }
     return best > 0.0;
@@ -130,15 +149,16 @@ void main() {
   #endif
             if (doShadow) {
                 vec3 lampPos;
-                float lampSize;
-                if (dominantLamp(P + cameraPosition, N, nm.b * 15.0, lampPos, lampSize)) {
+                float stop;
+                if (dominantLamp(P + cameraPosition, N, nm.b * 15.0, lampPos, stop)) {
                     vec3 lv = playerToView(lampPos - cameraPosition);
-                    float stop = max(0.25, lampSize + 0.25);
                     if (enclosed > 0.5) {
                         float sh = screenShadow(viewP + Nv * 0.02, lv, dither, 3.0, 2.0, stop, true);
                         color *= 1.0 - (1.0 - sh) * saturate(share * 1.15);
                     } else {
-                        float sh = screenShadow(viewP + Nv * 0.03, lv, dither, 6.0, 1.4, stop, false);
+                        // occluders count up to 0.8 blocks deep: the furniture, the doll - not a cord
+                        // or a pull string hanging in front of a wall that is far behind it
+                        float sh = screenShadow(viewP + Nv * 0.03, lv, dither, 6.0, 0.8, stop, false);
                         color *= 1.0 - (1.0 - sh) * share * 0.85;
                     }
                 }

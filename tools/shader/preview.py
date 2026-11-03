@@ -996,6 +996,8 @@ SHOTS = {
     # ---- the rain: through the balcony door, the curtains drawn (sodium through them), the street --
     "window_rain": shot(25.9, 11.2, -12.0, 2.0, fear=0.2, state=dict(tv=False)),
     "curtains_sodium": shot(25.6, 10.4, 18.0, 6.0, fear=0.2, state=dict(curtains=True, tv=False)),
+    # close to the balcony door where the curtain is open: the drops running down, the street lamp in them
+    "window_close": shot(26.45, 12.25, 8.0, 2.0, fear=0.2),
     "street": shot(20.5, 21.5, -112.0, -6.0, y=66.62, fear=0.1),
     "corridor": shot(20.5, -2.0, -90.0, 4.0, fear=0.2),
     # ---- the hand lights: the phone's LED in the dark hall, the lighter in the kitchen -----------------

@@ -422,15 +422,16 @@ void main() {
         mat = m > 0.4 ? MAT_EMITTER : mat;
     }
     #ifdef WORLD_SHIRAKABA
-    // the bathtub, filled: the water surface is the face looking up from inside the tub,
-    // below its rim (the rim's top is at the top of the block)
+    // the bathtub, filled: the water surface is the face looking up from inside the tub, between
+    // its floor (2/16) and its rim (12/16): the art's water stands at 10.5/16 (full) or 6.5/16 (half)
     if (id == BLK_BATH_WATER && Ngeo.y > 0.9) {
       #ifdef PROG_BLOCK
         float hIn = fract(wp.y - 1e-3);
       #else
         float hIn = wp.y - floor(blockCenter.y - 0.5 + 1e-3);
       #endif
-        if (hIn > 0.22 && hIn < 0.94) bathWater = true;
+        // (the water's texture is dark; the white enamel of the plug's chain is not water)
+        if (hIn > 0.25 && hIn < 0.71 && luma(albedo.rgb) < 0.40) bathWater = true;
     }
     // the street's asphalt drawn near-black for vanilla's bright light: under the street lamp
     // it needs the albedo of real old asphalt (~0.035) for the sodium pool to show
@@ -445,6 +446,12 @@ void main() {
         N = normalize(N + vec3(cos(u * TAU), 0.0, sin(u * TAU)) * 0.25 * (1.0 - abs(N.y)));
     }
     if (mat == MAT_FROSTED) backK = 0.65;
+    // the sashes of the windows and doors share the glass's texture: only the translucent texels
+    // are glass, the opaque ones are the frame (aluminium, painted wood)
+    if ((mat == MAT_GLASS_RAIN || mat == MAT_FROSTED) && texAlpha > 0.97) {
+        mat = MAT_PLASTIC;
+        backK = 0.0;
+    }
     #endif
   #endif
   #if defined PROG_TEXTURED || defined PROG_BASIC
@@ -586,6 +593,9 @@ void main() {
                 N = normalize(Ngeo + (tu * dr.x + vec3(0.0, 1.0, 0.0) * dr.y) * 0.60 * cover);
             }
     #endif
+            // the art's own streaks (its animated glass draws the running water a little opaque):
+            // water too - they catch the light like the drops
+            cover = max(cover, 0.8 * smoothstep(0.28, 0.65, texAlpha));
             float NdotV = saturate(abs(dot(N, V)));
             float F = 0.04 + 0.96 * pow(1.0 - NdotV, 5.0);
             vec3 tint = mix(vec3(0.80, 0.88, 0.86), lin, 0.35);
