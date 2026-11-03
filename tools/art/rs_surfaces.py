@@ -12,7 +12,7 @@ from rs_lib import (blank, from_idx, noise, dl, dl_field, tint, over, rect, px, 
                     sun_logo, sun_small, upscale_nn, downsample, bitmap, m_wood, m_brushed, m_granite, m_concrete,
                     WOOD_FLOOR, WOOD_DARK, WOOD_LIGHT, ORANGE, BROWN, CREAM, STEEL, ALU, CHROME, GREYPAINT,
                     WHITEPLASTIC, BEIGE, GRANITE, CONCRETE, ASPHALT, PAPERW, TERRACOTTA, BRICK, STUCCO, GREEN_LEAF,
-                    RUBBER, FONT_IPAG, FONT_SANS_JP_BOLD, FONT_SANS_JP_BLACK)
+                    RUBBER, FONT_IPAG, FONT_SANS_JP_BOLD, FONT_SANS_JP_BLACK, FONT_SANS_JP_MED)
 
 T = 16
 
@@ -27,50 +27,48 @@ def wrapn(seed, beta=1.0, sx=1.0, sy=1.0, w=16, h=16):
 
 # ================================================================================================ floors
 def _floor_planks(seed, worn=False):
+    """Wood-look vinyl: 4 printed planks per block along x, bevelled grooves, staggered joints, glossy, scuffed."""
     r = rng(seed)
-    a = np.zeros((16, 16, 4), np.float32)
-    grain = wrapn(seed + 1, beta=0.8, sx=10, sy=1)
-    fine = wrapn(seed + 2, beta=0.3)
+    grain = wrapn(seed + 1, beta=0.7, sx=12, sy=1)
     x, y = grid(16, 16)
-    tones = [0.25, -0.35, 0.1, -0.1]
+    tones = [0.35, -0.3, 0.05, -0.15]
     joints = [3, 11, 7, 14]
     idx = np.zeros((16, 16))
     for k in range(4):
         rows = slice(k * 4, k * 4 + 4)
-        base = 3.2 + tones[k]
-        # a printed "board" on each side of the joint gets its own tone
-        side = (x[rows] >= joints[k]).astype(float)
-        idx[rows] = base + grain[rows] * 0.75 + fine[rows] * 0.18 + (side - 0.5) * (0.35 if k % 2 else -0.3)
-        # printed grain arcs
-        arc = np.sin((x[rows] + joints[k] * 3) * 0.55 + (y[rows] - k * 4) * 1.4) * 0.22
-        idx[rows] += arc
-    # bevelled plank edges: groove at the bottom row of each plank, light top row
+        right = (x[rows] >= joints[k]).astype(float)
+        idx[rows] = 3.15 + tones[k] + (right - 0.5) * (0.4 if k % 2 else -0.35) + grain[rows] * 0.55
+        # printed grain: thin darker lines that drift across the plank
+        gl = np.abs(np.sin((x[rows] * 0.35 + joints[k]) + (y[rows] - k * 4) * 2.1)) < 0.18
+        idx[rows] -= gl * 0.55
     for k in range(4):
-        idx[k * 4 + 3, :] -= 1.25
-        idx[k * 4, :] += 0.45
+        idx[k * 4 + 3, :] = 0.9 + grain[k * 4 + 3] * 0.2     # groove
+        idx[k * 4, :] += 0.5                                   # bevel highlight
         jx = joints[k]
-        idx[k * 4:k * 4 + 3, jx] -= 1.15
-        idx[k * 4:k * 4 + 3, (jx + 1) % 16] += 0.3
-    a[:] = from_idx(idx, WOOD_FLOOR)
-    # sheen (glossy vinyl): a soft diagonal band of slightly lighter pixels
-    band = (np.abs(((x - y * 0.6) % 16) - 8) < 1.2) & (r.random((16, 16)) < 0.5)
-    dl(a, 0.025, band)
-    # scuffs: short grey streaks and dark heel marks
-    for _ in range(3 if not worn else 7):
+        idx[k * 4:k * 4 + 3, jx] = 1.2
+        idx[k * 4:k * 4 + 3, (jx + 1) % 16] += 0.35
+    a = from_idx(idx, WOOD_FLOOR)
+    # gloss: sparse highlight pixels on the plank tops
+    dl(a, 0.03, (r.random((16, 16)) < 0.06) & ((y.astype(int) % 4) == 1))
+    # scuffs (pale streaks) and heel marks (dark)
+    for _ in range(2 if not worn else 6):
         sx, sy = int(r.integers(0, 16)), int(r.integers(0, 16))
-        ln = int(r.integers(2, 4))
-        for k in range(ln):
-            p = (sx + k) % 16, sy
-            a[p[1], p[0], :3] = a[p[1], p[0], :3] * 0.7 + np.array([150, 132, 112]) * 0.3
-    for _ in range(2 if not worn else 5):
+        if sy % 4 == 3:
+            sy -= 1
+        for kk in range(int(r.integers(2, 4))):
+            p = (sx + kk) % 16
+            a[sy, p, :3] = a[sy, p, :3] * 0.72 + np.array([168, 146, 120]) * 0.28
+    for _ in range(2 if not worn else 4):
         sx, sy = int(r.integers(0, 16)), int(r.integers(0, 16))
-        a[sy, sx, :3] *= 0.72
+        a[sy, sx, :3] *= 0.75
     if worn:
-        # finish worn off along a walking path: dull, lighter, grey-ish patch
-        wp = wrapn(seed + 9, beta=1.6)
-        m = (wp > 0.3) & ((y.astype(int) % 4) != 3)
-        a[m, :3] = a[m, :3] * 0.78 + np.array([156, 128, 98]) * 0.22
-        grime(a, seed + 11, strength=0.18, color='#3a2a1c', beta=1.5)
+        # finish worn off: dull, paler, greyer in the middle of the planks, grime in the grooves
+        wp = wrapn(seed + 9, beta=1.7)
+        m = (wp > 0.0) & ((y.astype(int) % 4) != 3)
+        a[m, :3] = a[m, :3] * 0.8 + np.array([150, 124, 96]) * 0.2
+        g = (y.astype(int) % 4) == 3
+        a[g, :3] *= 0.7
+        grime(a, seed + 11, strength=0.15, color='#3a2a1c', beta=1.5)
     return a
 
 
@@ -128,33 +126,28 @@ MOSAIC = pal('#7e807b', '#9da09a', '#b5b7b1', '#c6c8c2', '#d4d5cf', '#e0e1db')
 def _mosaic(seed, dark=False):
     r = rng(seed)
     a = np.zeros((16, 16, 4), np.float32)
-    grout = C('#77796f') if not dark else C('#0e0d0b')
-    a[:] = grout
-    choice = [5, 4, 4, 3, 5, 4, 2, 5, 4, 3, 5, 4, 1, 4, 5, 3]
+    a[:] = C('#8f918a') if not dark else C('#0c0b09')
+    tones = r.choice([5, 5, 4, 4, 4, 3, 3, 2], size=(4, 4))
     for ty in range(4):
         for tx in range(4):
-            k = choice[(ty * 4 + tx * 3 + int(r.integers(0, 3))) % 16]
-            col = MOSAIC[k].copy()
+            col = MOSAIC[int(tones[ty, tx])].copy()
             x0, y0 = tx * 4, ty * 4
             for yy in range(3):
                 for xx in range(3):
                     c = col.copy()
-                    if xx == 0 and yy == 0:
-                        c = lighten_arr(c[None], 0.05)[0]
-                    if xx == 2 or yy == 2:
-                        c = lighten_arr(c[None], -0.03)[0]
+                    if yy == 0:
+                        c = lighten_arr(c[None], 0.03)[0]
+                    if yy == 2:
+                        c = lighten_arr(c[None], -0.025)[0]
                     a[y0 + yy, x0 + xx] = c
-    n = wrapn(seed + 1, beta=1.4)
     if not dark:
-        tint(a, '#8a7a5a', np.clip(n * 0.08 + 0.05, 0, 0.2)[..., None][..., 0] if False else 0.06)
-        grime(a, seed + 2, strength=0.12, color='#5a5040', beta=1.6)
+        tint(a, '#8a7a5a', 0.05)
+        grime(a, seed + 2, strength=0.10, color='#5a5040', beta=1.6)
         return a
-    # the cavity: stained black, mould, wet sheen
+    n = wrapn(seed + 1, beta=1.4)
     tint(a, '#2d2a22', 0.55)
     st = np.clip((n + 0.2) * 0.45, 0, 0.75)
-    for yy in range(16):
-        for xx in range(16):
-            a[yy, xx, :3] = a[yy, xx, :3] * (1 - st[yy, xx]) + np.array([12, 11, 9]) * st[yy, xx]
+    a[..., :3] = a[..., :3] * (1 - st[..., None]) + np.array([12, 11, 9]) * st[..., None]
     mould = wrapn(seed + 3, beta=0.9) > 1.1
     a[mould] = C('#0b0d08')
     wet = (r.random((16, 16)) < 0.08) & ~mould
@@ -188,27 +181,19 @@ def vestibule_floor():
     return a
 
 
-@tex('entrance_mat', cutout=False)
+@tex('entrance_mat')
 def entrance_mat():
     a = np.zeros((16, 16, 4), np.float32)
     n = wrapn(1501, beta=1.0)
-    a[:] = from_idx(2.0 + n * 0.4, RUBBER)
+    a[:] = from_idx(1.8 + n * 0.35, RUBBER)
     x, y = grid(16, 16)
-    # raised border, ribbed field
     border = (x < 1) | (x > 14) | (y < 1) | (y > 14)
-    a[border] = from_idx(3.3 + n[border] * 0.3, RUBBER)
+    a[border] = from_idx(3.2 + n[border] * 0.3, RUBBER)
     rib = ((y.astype(int) % 2) == 0) & ~border
-    dl(a, 0.03, rib)
-    # the sun logo, printed, worn by feet
-    logo = sun_logo(12, ss=8, colors=dict(ray='#c8621c', ray2='#d27a2a', disc='#d99a2c', disc_hi='#e6b24e',
-                                          line='#2a160b', outline='#5a2a10'))
-    logo = logo.copy()
-    logo[..., 3] = np.where(logo[..., 3] > 110, 235, 0)
-    worn_m = (wrapn(1502, beta=0.6)[2:14, 2:14] > 0.9)
-    logo[worn_m, 3] = 0
+    dl(a, 0.025, rib)
+    logo = sun_small(12, legend={'r': '#b9581c', 'y': '#c98a26', 'h': '#d8a444', 'l': '#2a160b', 'c': '#b8603e'})
     over(a, logo, 2, 2)
-    dl(a, -0.05, (y > 11) & ~border)
-    grime(a, 1503, strength=0.18, color='#3a3328', beta=1.2)
+    grime(a, 1503, strength=0.16, color='#3a3328', beta=1.2)
     return a
 
 
@@ -235,25 +220,23 @@ def wallpaper_stained():
     a = wallpaper()
     r = rng(1611)
     x, y = grid(16, 16)
-    n = fnoise(16, 16, 1612, beta=1.6)
-    # water stain from the top: blotch + tide line, drips running down
-    d = (y / 16.0) * 1.6 + n * 0.28 - 0.35 + np.abs(x - 8.5) / 16.0 * 0.6
-    inside = d < 0.55
-    tide = (d >= 0.55) & (d < 0.68)
-    tint(a, '#8a6a3a', 0.30, inside)
-    tint(a, '#5a3e1e', 0.55, tide)
-    for dx in (4, 9, 12):
-        top = int(np.argmax(~inside[:, dx]))
-        ln = int(r.integers(4, 11))
+    n = fnoise(16, 16, 1612, beta=1.8)
+    # a water stain hanging from the top edge: pale brown inside, dark tide line, two drips, mould dots
+    d = np.hypot((x - 9.0) / 7.5, (y + 1.5) / 9.0) + n * 0.12
+    inside = d < 1.0
+    tide = (d >= 0.88) & (d < 1.0)
+    tint(a, '#9a7844', 0.22, inside)
+    tint(a, '#7a5a30', 0.18, inside & (d < 0.55))
+    tint(a, '#5e3f1c', 0.5, tide)
+    for dx, ln in ((5, 6), (11, 4)):
+        top = int(np.argmax(~inside[:, dx])) - 1
         for k in range(ln):
             yy = top + k
-            if yy < 16:
-                tint(a, '#6a4a26', 0.35 * (1 - k / ln) + 0.1, (x == dx) & (y == yy))
-    # mould dots
-    for (mx, my) in ((2, 2), (3, 3), (13, 1), (12, 2), (6, 1), (14, 4)):
-        tint(a, '#1c2418', 0.65, (x == mx) & (y == my))
-    for (mx, my) in ((3, 2), (13, 2), (5, 1)):
-        tint(a, '#34402c', 0.4, (x == mx) & (y == my))
+            if 0 <= yy < 16:
+                tint(a, '#6a4a26', 0.42 * (1 - k / ln) + 0.08, (x == dx) & (y == yy))
+    for (mx, my, c) in ((3, 1, '#1c2418'), (4, 2, '#1c2418'), (3, 2, '#34402c'), (13, 3, '#1c2418'),
+                        (14, 2, '#34402c'), (7, 0, '#2a3324'), (8, 1, '#1c2418')):
+        tint(a, c, 0.6, (x == mx) & (y == my))
     return a
 
 
@@ -352,12 +335,16 @@ def ceiling_tile():
 def ceiling_tile_stained():
     a = _ceiling_base(1901)
     x, y = grid(16, 16)
-    n = fnoise(16, 16, 1911, beta=1.7)
-    d = np.hypot(x - 9.5, y - 8.5) / 6.5 + n * 0.25
-    tint(a, '#9a7a42', 0.28, d < 1.0)
-    tint(a, '#6a4a22', 0.45, (d >= 0.82) & (d < 1.0))
-    tint(a, '#7e5f30', 0.30, (d >= 0.45) & (d < 0.55))
-    tint(a, '#4a3216', 0.35, d < 0.22)
+    n = fnoise(16, 16, 1911, beta=2.0)
+    d = np.hypot(x - 8.8, (y - 8.2) * 1.15) / 6.2 + n * 0.10
+    tint(a, '#a07c40', 0.22, d < 1.0)
+    tint(a, '#8a6630', 0.18, d < 0.7)
+    tint(a, '#5e3e18', 0.45, (d >= 0.86) & (d < 1.0))
+    tint(a, '#6e4e24', 0.32, (d >= 0.55) & (d < 0.64))
+    tint(a, '#4a3014', 0.30, d < 0.22)
+    # sagging, darker centre with a few mould specks
+    for (mx, my) in ((8, 8), (9, 9), (7, 9)):
+        a[my, mx, :3] *= 0.8
     return a
 
 
@@ -545,15 +532,15 @@ def roof_tile():
 def fascia():
     x, y = grid(16, 16)
     n = wrapn(2401, beta=1.2, sx=4)
-    a = from_idx(4.2 + n * 0.3, ORANGE)
+    a = from_idx(4.2 + n * 0.25, ORANGE)
     a[0] = C('#3a1f10')
     a[1] = from_idx(np.full(16, 5.5), ORANGE)
     a[10:12] = from_idx(np.full((2, 16), 5.0) + n[10:12] * 0.2, CREAM)
     dl(a[11:12], -0.03)
     a[15] = from_idx(np.full(16, 2.0), ORANGE)
-    # dirt drips from the roof edge, faded paint
-    st = wrapn(2402, beta=0.8, sx=1, sy=8)
-    tint(a, '#4a2a18', 0.22, (st > 0.75) & (y > 1) & (y < 10))
+    # faint dirt streaks from the roof edge, sun-faded paint
+    st = wrapn(2402, beta=0.6, sx=1, sy=14)
+    tint(a, '#5a3420', 0.12, (st > 0.9) & (y > 1) & (y < 10))
     tint(a, '#c9a080', 0.08)
     return a
 
@@ -562,45 +549,41 @@ def fascia():
 def shop_window():
     r = rng(2501)
     x, y = grid(16, 16)
-    a = blank(16, 16, C('#6f8a8e', 64))
+    a = blank(16, 16, C('#6f8a8e', 62))
     n = wrapn(2502, beta=1.2, sx=1, sy=5)
-    a[..., 3] = np.clip(60 + n * 8, 40, 90)
+    a[..., 3] = np.clip(58 + n * 7, 40, 86)
     a[..., :3] = a[..., :3] + n[..., None] * 4
-    # mullions (left/right): aluminium
     for xx, v in ((0, '#9aa0a3'), (15, '#7c8285')):
         a[:, xx] = C(v)
     a[:, 1, :3] = a[:, 1, :3] * 0.8
-    a[:, 1, 3] = 120
-    # raindrops: bright head + darker body, some with a trail
-    for _ in range(9):
-        dx, dy = int(r.integers(2, 14)), int(r.integers(0, 16))
-        a[dy, dx] = C('#dfe8ea', 200)
-        if dy + 1 < 16:
-            a[dy + 1, dx] = C('#40565a', 150)
-        if r.random() < 0.4:
-            for k in range(2, int(r.integers(3, 7))):
+    a[:, 1, 3] = 110
+    # raindrops: small, a few with short trails
+    for _ in range(7):
+        dx, dy = int(r.integers(3, 13)), int(r.integers(0, 15))
+        a[dy, dx] = C('#c9d6d8', 150)
+        a[dy + 1, dx] = C('#3d5155', 120)
+        if r.random() < 0.35:
+            for k in range(2, int(r.integers(3, 6))):
                 if dy - k >= 0:
-                    a[dy - k, dx] = C('#b5c6c9', 110)
-    # condensation haze near the bottom
-    a[13:16, 2:15, 3] = np.minimum(255, a[13:16, 2:15, 3] + np.array([[18], [26], [34]]))
-    a[13:16, 2:15, :3] = a[13:16, 2:15, :3] * 0.8 + 255 * 0.2
+                    a[dy - k, dx] = C('#9fb2b5', 92)
+    a[14:16, 2:15, 3] = np.minimum(255, a[14:16, 2:15, 3] + np.array([[16], [26]]))
+    a[14:16, 2:15, :3] = a[14:16, 2:15, :3] * 0.85 + 255 * 0.15
     return a
 
 
 @tex('asphalt')
 def asphalt():
     r = rng(2601)
-    n = wrapn(2602, beta=0.9)
+    n = wrapn(2602, beta=1.1)
     fine = wrapn(2603, beta=0.0)
-    a = from_idx(2.4 + n * 0.45 + fine * 0.5, ASPHALT)
-    agg = r.random((16, 16)) < 0.08
-    a[agg] = C('#56565b')
-    agg2 = r.random((16, 16)) < 0.05
-    a[agg2] = C('#0f0f11')
-    # wet sheen: slightly cooler, a few specular glints
+    a = from_idx(2.3 + n * 0.35 + fine * 0.35, ASPHALT)
+    agg = r.random((16, 16)) < 0.06
+    a[agg] = C('#46464b')
+    agg2 = r.random((16, 16)) < 0.04
+    a[agg2] = C('#121214')
     tint(a, '#1c2228', 0.15)
-    gl = r.random((16, 16)) < 0.02
-    a[gl] = C('#6c7278')
+    gl = r.random((16, 16)) < 0.015
+    a[gl] = C('#5d646a')
     return a
 
 
@@ -695,17 +678,16 @@ def sidewalk():
 @tex('puddle')
 def puddle():
     r = rng(3001)
-    x, y = grid(16, 16)
-    n = wrapn(3002, beta=1.5)
-    a = blank(16, 16, C('#1b2329', 168))
-    a[..., :3] += n[..., None] * 5
-    # ripples: two faint rings
-    for (cx, cy, rr) in ((5.5, 6.5, 3.0), (11.5, 11.5, 2.2)):
-        ring = ring_mask(16, 16, cx, cy, rr - 0.5, rr + 0.5)
-        a[ring, :3] = a[ring, :3] * 0.6 + np.array([90, 104, 112]) * 0.4
-        a[ring, 3] = 190
-    gl = r.random((16, 16)) < 0.04
-    a[gl] = C('#7d8c94', 200)
+    n = wrapn(3002, beta=1.6)
+    n2 = wrapn(3003, beta=0.8, sx=3, sy=1)
+    a = blank(16, 16, C('#1a2127', 172))
+    a[..., :3] += (n[..., None] * 4 + n2[..., None] * 3)
+    a[..., 3] = np.clip(172 + n * 10, 150, 200)
+    # a few glints and floating grit
+    gl = r.random((16, 16)) < 0.025
+    a[gl] = C('#76858d', 205)
+    gr = r.random((16, 16)) < 0.02
+    a[gr] = C('#2c2a24', 210)
     return a
 
 
@@ -715,20 +697,21 @@ def rice_paddy():
     x, y = grid(16, 16)
     n = wrapn(3102, beta=1.2)
     mud = ramp(['#14100c', '#1d1711', '#271f17', '#31281e', '#3c3226'], 5)
-    a = from_idx(2.2 + n * 0.6, mud)
-    # standing water in the low parts
+    a = from_idx(2.0 + n * 0.6, mud)
     w = wrapn(3103, beta=1.6)
-    wm = w > 0.7
-    a[wm] = C('#1a2026')
-    dl(a, 0.05, wm & (r.random((16, 16)) < 0.15))
-    # stubble hills in rows (4 px spacing), each a tuft of 2-3 pale stalks
-    stub = ramp(['#4a3c22', '#66532f', '#83703e', '#9c8a50'], 4)
-    for gy in range(1, 16, 4):
-        for gx in range(1 + (gy // 4) % 2, 16, 4):
-            pts = [(gx, gy), (gx + 1, gy), (gx, gy - 1), (gx + 1, gy + 1)]
-            for i, (sx, sy) in enumerate(pts):
-                if r.random() < 0.85:
-                    a[sy % 16, sx % 16] = stub[min(3, 3 - i if i < 3 else 1)]
+    wm = w > 0.6
+    a[wm] = C('#181d22')
+    dl(a, 0.06, wm & (r.random((16, 16)) < 0.12))
+    # rows of cut stubble hills (every 4 px), a few pale stalks each; some hills flattened
+    stub = ramp(['#3a3020', '#514428', '#695832', '#7d6a3c'], 4)
+    for gy in range(2, 16, 4):
+        for gx in range(1, 16, 4):
+            if r.random() < 0.15:
+                continue
+            a[gy % 16, gx % 16] = stub[3]
+            a[(gy - 1) % 16, gx % 16] = stub[2]
+            if r.random() < 0.7:
+                a[gy % 16, (gx + 1) % 16] = stub[1]
             a[(gy + 1) % 16, gx % 16] = stub[0]
     return a
 
@@ -800,16 +783,16 @@ def stainless():
     r = rng(3501)
     x, y = grid(16, 16)
     n = wrapn(3502, beta=0.7, sx=14, sy=1)
-    a = from_idx(4.2 + n * 0.5, STEEL)
-    a[:, 0] = from_idx(np.full(16, 2.2), STEEL)     # panel seam
-    a[:, 1] = from_idx(np.full(16, 5.6), STEEL)
-    for _ in range(6):
-        sx, sy = int(r.integers(2, 14)), int(r.integers(0, 16))
-        for k in range(int(r.integers(2, 5))):
-            px(a, (sx + k) % 16, sy, STEEL[6], 0.6)
+    a = from_idx(4.2 + n * 0.45, STEEL)
+    a[:, 0] = from_idx(np.full(16, 2.2), STEEL)
+    a[:, 1] = from_idx(np.full(16, 5.4), STEEL)
+    for _ in range(3):
+        sx, sy = int(r.integers(2, 13)), int(r.integers(0, 16))
+        for k in range(int(r.integers(2, 4))):
+            px(a, (sx + k) % 16, sy, STEEL[6], 0.35)
     g = wrapn(3503, beta=1.6)
-    tint(a, '#5a4a30', 0.18, g > 0.6)
-    specks(a, 3504, 0.03, '#4c3a20', 0.5)
+    tint(a, '#5a4a30', 0.16, g > 0.6)
+    specks(a, 3504, 0.02, '#4c3a20', 0.45)
     return a
 
 
@@ -854,8 +837,8 @@ def plate(w, h, bg='#ecebe4', border='#3a3a3a'):
     return p
 
 
-def jp_text(s, size=9, spec=FONT_IPAG):
-    return text_mask(s, size, spec, binary=True)
+def jp_text(s, size=9, spec=FONT_SANS_JP_BOLD, ss=1, thr=0.5):
+    return text_mask(s, size, spec, binary=True, ss=ss, threshold=thr)
 
 
 def _steel_door(seed, base, kick=True):
@@ -905,9 +888,25 @@ def staff_door_bottom():
     return big
 
 
+def wood_panel(w, h, palette, seed, base=3.3, amp=0.5):
+    """Door / panel wood: continuous vertical grain lines (per-column tone + slow wiggle), gentle mottling."""
+    r = rng(seed)
+    col = np.cumsum(r.normal(0, 0.45, w))
+    col = (col - col.mean()) / (col.std() + 1e-6)
+    n = noise(w, h, seed + 1, beta=1.6, wrap=False)
+    x, y = grid(w, h)
+    wig = np.sin(y * 0.35 + r.random() * 6) * 0.8
+    xi = np.clip(np.round(x + wig * (n > 0)).astype(int), 0, w - 1)
+    idx = base + col[xi] * amp + n * 0.2
+    dark = (np.abs(np.sin((x + wig) * 1.1 + r.random() * 6)) < 0.1)
+    idx -= dark * 0.6
+    return from_idx(idx, palette)
+
+
 def _wood_door_16(seed, palette=WOOD_LIGHT, base=3.4):
-    a = m_wood(16, 16, palette, seed, along='y', base=base, amp=0.45)
+    a = wood_panel(16, 16, palette, seed, base=base)
     frame(a, 0, 0, 15, 15, palette[1])
+    dl(a[:, 1:2], 0.03)
     return a
 
 
@@ -926,8 +925,8 @@ def office_door_top():
         px(big, 13 + k, 11 - k, '#3f4b52')
         px(big, 14 + k, 11 - k, '#2c353a')
     # 「事務所」 plate
-    p = plate(30, 12, bg='#f0eee6', border='#4a3a2a')
-    stamp_center(p, jp_text('事務所', 9), 15, 6, '#151515')
+    p = plate(30, 13, bg='#f0eee6', border='#4a3a2a')
+    stamp_center(p, jp_text('事務所', 9), 15, 6.5, '#151515')
     over(big, p, 1, 17)
     return big
 
@@ -1027,10 +1026,11 @@ def _back_door(half):
         return big
     a[15, :] = a[14, :]
     big = x2(a)
-    # weathered sticker 「関係者以外立入禁止」 reduced to a red-bordered notice
-    p = plate(16, 10, bg='#e8e4d6', border='#a3241c')
-    stamp_center(p, jp_text('禁止', 8), 8, 5, '#a3241c')
-    over(big, p, 8, 14)
+    # weathered plate 「通用口」 (service entrance)
+    p = plate(30, 12, bg='#e8e4d6', border='#3a3a36')
+    stamp_center(p, jp_text('通用口', 9), 15, 6, '#202020')
+    tint(p, '#8a7a50', 0.15)
+    over(big, p, 1, 12)
     return big
 
 
@@ -1069,9 +1069,9 @@ def _fridge_door(half):
     dm2 = disc_mask(32, 32, 8.5, 9.5, 3.0)
     big[dm2] = C('#f0f0ea')
     line(big, 8, 9, 10, 7, '#c0281c')
-    p = plate(20, 10, bg='#2d5aa0', border='#1d3a6a')
-    stamp_center(p, jp_text('冷蔵室', 7), 10, 5, '#f2f2f2')
-    over(big, p, 8, 18)
+    p = plate(30, 12, bg='#2d5aa0', border='#1d3a6a')
+    stamp_center(p, jp_text('冷蔵室', 10, FONT_IPAG, ss=4, thr=0.45), 15, 6, '#f2f2f2')
+    over(big, p, 1, 17)
     return big
 
 
@@ -1103,7 +1103,7 @@ def _stall_door(half, occupied):
             stamp_center(p, jp_text('使用中', 9), 14, 6, '#ffffff')
         else:
             rect(p, 1, 1, 26, 11, '#2b62b8')
-            stamp_center(p, jp_text('空き', 9), 14, 6, '#ffffff')
+            stamp_center(p, jp_text('空き', 10), 14, 6.5, '#ffffff')
         over(big, p, 2, 10)
         return big
     a[0, :] = a[1, :]
@@ -1174,12 +1174,10 @@ def auto_door_panel():
     over(a, logo, 3, 17)
     # 「自動ドア」 sticker at hand height: white panel, red glyphs 2x2 (6 px tall pixel kana / kanji)
     sticker = blank(12, 15, '#f2f0ea')
-    for i, ch in enumerate('自動'):
-        stamp_mask(sticker, bitmap(GLYPH_JIDO[ch]), i * 6 + (1 if i == 0 else 0), 1, '#c8281c')
-    for i, ch in enumerate('ドア'):
-        stamp_mask(sticker, bitmap(GLYPH_JIDO[ch]), i * 6 + (1 if i == 0 else 0), 8, '#c8281c')
-    hline(sticker, 0, 11, 14, '#c8281c')
-    over(a, sticker, 2, 28)
+    stamp_mask(sticker, text_mask('自動', 6, FONT_SANS_JP_BOLD, binary=True), 1, 1, '#b8241a')
+    stamp_mask(sticker, text_mask('ドア', 6, FONT_SANS_JP_BOLD, binary=True), 1, 8, '#b8241a')
+    hline(sticker, 0, 11, 14, '#b8241a')
+    over(a, sticker, 2, 27)
     return a
 
 

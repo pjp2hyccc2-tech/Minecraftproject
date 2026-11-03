@@ -628,7 +628,35 @@ SUN_PIX = {
          '..r.....r..',
          '.....r.....'],
 }
-SUN_LEGEND = {'r': '#ee7a22', 'y': '#f9b232', 'h': '#ffd56c', 'l': '#5a2c12', 'o': '#7a3510'}
+SUN_PIX[12] = ['.....rr.....',
+               '.r........r.',
+               '....yyyy....',
+               '...yhhyyy...',
+               '..yhhyyyyy..',
+               'r.yylyylyy.r',
+               'r.yyyyyyyy.r',
+               '..yclyylcy..',
+               '...yyllyy...',
+               '....yyyy....',
+               '.r........r.',
+               '.....rr.....']
+SUN_PIX[16] = ['.......rr.......',
+               '.r.....rr.....r.',
+               '..r..........r..',
+               '......yyyy......',
+               '....yhhyyyyy....',
+               '...yhhyyyyyyy...',
+               '...yhyyyyyyyy...',
+               'rr.yylyyyylyy.rr',
+               'rr.ylylyylyly.rr',
+               '...ycyyyyyycy...',
+               '...yylyyyylyy...',
+               '....yyllllyy....',
+               '......yyyy......',
+               '..r..........r..',
+               '.r.....rr.....r.',
+               '.......rr.......']
+SUN_LEGEND = {'r': '#ee7a22', 'y': '#f9b232', 'h': '#ffd56c', 'l': '#5a2c12', 'o': '#e89a2a', 'c': '#f08060'}
 
 
 def sun_small(n, legend=None):
