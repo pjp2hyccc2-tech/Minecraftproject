@@ -54,6 +54,7 @@ public final class SelfTest {
     private static int kindIdx;
     private static Spirit probe;
     private static int ofudaBefore;
+    private static int reishouBefore;
     private static int stageTicks;
     private static final int STAGE_WORLD = 50;
     private static int worldStage;
@@ -119,7 +120,7 @@ public final class SelfTest {
                 case 32 -> camStart(level, data);
                 case 33 -> camWatch(level, data);
                 case 34 -> camOffResult(level, data);
-                case 35 -> breathResult(level, data);
+                case 35 -> breathWatch(level, data);
                 case 36 -> heldResult(level, data);
                 case 4 -> noiseStart(level, data);
                 case 5 -> noiseResult(level, data);
@@ -408,14 +409,22 @@ public final class SelfTest {
         // §3.5: at high fear your breathing is heard close by...
         GameManager.state(fake).forceFear = 0.95f;
         probe.setAwareness(fake, 0.0f);
-        next(35, 70);
+        next(35, 0);
     }
 
-    private static void breathResult(ServerLevel level, GameData data) {
+    /** Watched tick by tick: once it has heard you it turns, sees you and would take you (which would end the checks). */
+    private static void breathWatch(ServerLevel level, GameData data) {
         float a = probe.awarenessOf(fake);
-        check(a > 0.05f, String.format(Locale.ROOT, "...but it hears your panicked breathing 3 blocks behind it (%.2f)", a));
-        // ...unless you hold it
-        probe.setAwareness(fake, 0.0f);
+        if (a <= 0.05f && stageTicks <= 90) return;
+        check(a > 0.05f, String.format(Locale.ROOT, "...but it hears your panicked breathing 3 blocks behind it (%.2f after %d ticks)", a, stageTicks));
+        // ...unless you hold it: a fresh pair of ears, back turned
+        probe.discard();
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, along(3.0), laneYaw);
+        if (probe != null) {
+            probe.debugStill = true;
+            probe.setAnimPose(com.reisatsu.entity.Waitress.STAND);
+            probe.faceYaw(laneYaw);
+        }
         PlayerState ps = GameManager.state(fake);
         ps.breathHolding = true;
         ps.breathTicks = 0;
@@ -424,14 +433,15 @@ public final class SelfTest {
     }
 
     private static void heldResult(ServerLevel level, GameData data) {
-        float a = probe.awarenessOf(fake);
+        float a = probe == null ? -1 : probe.awarenessOf(fake);
         check(a == 0.0f, String.format(Locale.ROOT, "holding your breath, it hears nothing (%.2f)", a));
         PlayerState ps = GameManager.state(fake);
         ps.breathHolding = false;
         ps.breathTicks = 0;
         ps.forceFear = 0.3f;
         ps.forceTicks = 40;
-        probe.discard();
+        if (probe != null) probe.discard();
+        check(GameManager.huntable(fake), "still huntable (nothing took you)");
         next(32, 5);
     }
 
@@ -500,6 +510,7 @@ public final class SelfTest {
     // ------------------------------------------------------------------------------------------------ 6-7: caught
     private static void caughtStart(ServerLevel level, GameData data) {
         ofudaBefore = GameManager.count(fake, ModItems.OFUDA.get());
+        reishouBefore = data.reishou;
         place(laneEye, laneYaw);
         probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, fake.position().add(0, 0, 0.5), 180.0f);
         if (probe != null) GameManager.caught(fake, probe);
@@ -512,7 +523,7 @@ public final class SelfTest {
         check(!ps.caught(), "you wake up");
         check(GameManager.count(fake, ModItems.OFUDA.get()) == ofudaBefore - 1, "the medium burnt one お札 (" + GameManager.count(fake, ModItems.OFUDA.get()) + " left)");
         check(fake.position().distanceTo(Layout.marker("wake").center()) < 2.0, "you wake by the car");
-        check(data.reishou == 1, "霊障 +1 (" + data.reishou + ")");
+        check(data.reishou == Math.min(3, reishouBefore + 1), "霊障 +1 (" + reishouBefore + " → " + data.reishou + ")");
         Spirits.removeAll(level);
         next(8, 5);
     }
