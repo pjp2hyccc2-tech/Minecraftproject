@@ -110,6 +110,35 @@ class Built:
         return img
 
 
+def turnarounds(b, mod):
+    """One row per pose: front, 3/4, side, back and a dim night view (as the naked eye sees it, or lit for the
+    living), at a representative pose time; walking poses get a walk cycle."""
+    import ent_scene as SC
+    spec = b.spec
+    if not getattr(mod, 'TURNAROUND', True):
+        return []
+    scenes = getattr(mod, 'POSE_SCENES', {})
+    walking = getattr(mod, 'WALKING', ())
+    alpha = getattr(mod, 'NAKED_ALPHA', 1.0)
+    rows = []
+    for name, pid in spec.poses:
+        sc = scenes.get(pid, SC.dining())
+        limb = (lambda tt: (tt * 0.6, 0.9)) if pid in walking else None
+        ev = [(0, pid)]
+        t = 140.0
+        ims = []
+        for (yv, lab) in ((0, 'front'), (-40, '3/4'), (-90, 'side'), (180, 'back')):
+            ims.append((lab, b.view(ev, t, yaw_view=yv, pitch_view=8, scene=sc, limb=limb, size=(170, 230))))
+        hgt = spec.height
+        ims.append(('night (naked eye)' if alpha < 1 else 'night', b.view(ev, t, size=(230, 230), scene=sc, limb=limb,
+                    eye=(0.9, 1.62, 3.4 + hgt), target=(0.0, hgt * 0.55, 0.0), night=True, alpha=alpha, fov=50,
+                    eyes_gain=min(1.0, alpha * 2.0))))
+        ims.append(('finder', b.view(ev, t, size=(230, 230), scene=sc, limb=limb, eye=(0.9, 1.62, 3.4 + hgt),
+                    target=(0.0, hgt * 0.55, 0.0), finder=True, fov=50)))
+        rows.append((f'{name} ({pid}) turnaround', ims))
+    return rows
+
+
 def follow(st, slot, target, speed, t):
     last = st.ft[slot]
     if last < 0 or t < last or t - last > 40.0:
@@ -137,7 +166,7 @@ def main():
               f'{nparts} parts, {len(spec.cubes())} cubes')
         if '--no-preview' not in sys.argv:
             os.makedirs(PREVIEW, exist_ok=True)
-            rows = mod.previews(b, ER, rows_sel)
+            rows = mod.previews(b, ER, rows_sel) + turnarounds(b, mod)
             p = ER.sheet(rows, os.path.join(PREVIEW, f'ent_{eid}.png'))
             print('preview:', p)
 

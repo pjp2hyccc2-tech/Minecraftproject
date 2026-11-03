@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_column",
   "textures": {
-    "all": "reisatsu:block/pillar"
+    "side": "reisatsu:block/pillar",
+    "end": "reisatsu:block/pillar_top"
   }
 }

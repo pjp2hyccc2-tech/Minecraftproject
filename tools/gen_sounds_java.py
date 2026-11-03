@@ -29,6 +29,8 @@ lines = [
     "",
     "import com.reisatsu.Reisatsu;",
     "import net.minecraft.sounds.SoundEvent;",
+    "import net.minecraft.world.level.block.SoundType;",
+    "import net.minecraftforge.common.util.ForgeSoundType;",
     "import net.minecraftforge.registries.DeferredRegister;",
     "import net.minecraftforge.registries.ForgeRegistries;",
     "import net.minecraftforge.registries.RegistryObject;",
@@ -40,6 +42,28 @@ lines = [
 ]
 for e in events:
     lines.append(f'    public static final RegistryObject<SoundEvent> {const(e)} = reg("{e}");')
+# floor sound types (DESIGN 10: "the blocks' SoundTypes use the player.step_* sounds")
+TYPES = [("TILE", "PLAYER_STEP_TILE", "STONE", "restroom / vestibule tiles, white tiles"),
+         ("VINYL", "PLAYER_STEP_VINYL", "WOOD", "the wood-look vinyl of the dining room"),
+         ("KITCHEN", "PLAYER_STEP_KITCHEN", "STONE", "the kitchen's quarry tiles"),
+         ("WET", "PLAYER_STEP_WET", "STONE", "wet asphalt, parking lines, the sidewalk"),
+         ("GLASS", "PLAYER_STEP_GLASS", "GLASS", "broken plates / glass decals"),
+         ("PAPER", "PLAYER_STEP_PAPER", "WOOL", "scattered menus")]
+if all(t[1] in [const(e) for e in events] for t in TYPES):
+    lines += [
+        "",
+        "    // Floor sound types: step and fall use the floor's footstep, break / place / hit come from a vanilla type.",
+        "    // Vanilla plays step sounds at 0.15 x the type's volume; 4.0 keeps footsteps well above the quiet room beds.",
+    ]
+    for name, ev, base, what in TYPES:
+        lines.append(f"    /** {what} */")
+        lines.append(f"    public static final ForgeSoundType SOUND_TYPE_{name} = floor({ev}, SoundType.{base});")
+    lines += [
+        "",
+        "    private static ForgeSoundType floor(RegistryObject<SoundEvent> step, SoundType base) {",
+        "        return new ForgeSoundType(4.0f, 1.0f, base::getBreakSound, step, base::getPlaceSound, base::getHitSound, step);",
+        "    }",
+    ]
 lines += [
     "",
     "    private ModSounds() {}",

@@ -1,10 +1,16 @@
 {
   "variants": {
-    "lit=false": {
+    "lit=false,fascia=false": {
       "model": "reisatsu:block/downlight"
     },
-    "lit=true": {
+    "lit=false,fascia=true": {
+      "model": "reisatsu:block/downlight_fascia"
+    },
+    "lit=true,fascia=false": {
       "model": "reisatsu:block/downlight_lit"
+    },
+    "lit=true,fascia=true": {
+      "model": "reisatsu:block/downlight_fascia_lit"
     }
   }
 }

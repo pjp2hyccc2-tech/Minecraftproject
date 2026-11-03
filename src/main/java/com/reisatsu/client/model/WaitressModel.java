@@ -135,6 +135,14 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
+        // resetPose restores only positions and rotations: scales and visibility are reset here
+        for (ModelPart p : this.all) {
+            p.xScale = 1.0F;
+            p.yScale = 1.0F;
+            p.zScale = 1.0F;
+            p.visible = true;
+            p.skipDraw = false;
+        }
         // hidden while the entity is invisible (the eyes layer draws this model too, so it hides as well)
         this.root.visible = !entity.isInvisible();
         if (!this.root.visible) {

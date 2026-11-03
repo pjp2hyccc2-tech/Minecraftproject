@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "reisatsu:block/rice_paddy"
+    "top": "reisatsu:block/rice_paddy",
+    "side": "reisatsu:block/rice_paddy_side",
+    "bottom": "reisatsu:block/rice_paddy_side"
   }
 }

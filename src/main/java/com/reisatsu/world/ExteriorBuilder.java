@@ -27,12 +27,12 @@ public final class ExteriorBuilder {
     static final int G = Terrain.GROUND, Y = Layout.FEET_Y;
     static final Direction N = Direction.NORTH, S = Direction.SOUTH, E = Direction.EAST, W = Direction.WEST;
 
-    /** Pole sign: pole column and the two layers of its 4x4 lit box. */
-    public static final int SIGN_POLE_X = 46, SIGN_Z_BACK = 48, SIGN_Z_FRONT = 49, SIGN_X0 = 45, SIGN_Y0 = Y + 8;
+    /** Pole sign: the pole column and the 4x4 lit box on it (one layer facing the road; its backs face the lot). */
+    public static final int SIGN_POLE_X = 46, SIGN_Z_FRONT = 49, SIGN_X0 = 45, SIGN_Y0 = Y + 8;
     /** The lot's entrance from the road (no curb). */
     public static final int ENTRANCE_X1 = 38, ENTRANCE_X2 = 45;
     /** Lamps of the lot (pole positions) and their facing. */
-    static final int[][] LOT_LAMPS = {{-8, 41, 1}, {16, 49, 2}, {34, 49, 2}, {48, 40, 3}};
+    static final int[][] LOT_LAMPS = {{-8, 40, 1}, {4, 49, 2}, {20, 49, 2}, {36, 49, 2}, {48, 40, 3}};
 
     static BlockState st(RegistryObject<? extends Block> b) {
         return b.get().defaultBlockState();
@@ -71,7 +71,7 @@ public final class ExteriorBuilder {
                 s.set(x, G, z, top);
                 for (int y = G + 1; y <= G + 4; y++) s.set(x, y, z, air);
                 boolean paved = top.is(ModBlocks.ASPHALT.get()) || top.is(ModBlocks.SIDEWALK.get());
-                if (paved && Site.noise(x, z, 5, 72) > 0.66 && Site.rand(x, z, 73) < 0.9) s.set(x, G + 1, z, st(ModBlocks.PUDDLE));
+                if (paved && Site.noise(x, z, 4, 72) > 0.76 && Site.rand(x, z, 73) < 0.85) s.set(x, G + 1, z, st(ModBlocks.PUDDLE));
             }
         }
     }
@@ -143,7 +143,7 @@ public final class ExteriorBuilder {
         s.set(40, Y, 31, f(ModBlocks.OUTDOOR_PLANTER, S));
         s.set(41, Y, 31, f(ModBlocks.OUTDOOR_PLANTER, S));
         // the customers' bicycle rack
-        for (int x = -7; x <= -5; x++) s.set(x, Y, 32, f(ModBlocks.BIKE_RACK, S));
+        for (int x = -7; x <= -5; x++) s.set(x, Y, 31, f(ModBlocks.BIKE_RACK, S));
     }
 
     // ------------------------------------------------------------------------------------------------ sides
@@ -157,7 +157,7 @@ public final class ExteriorBuilder {
         s.set(-1, Y + 3, 7, st(ModBlocks.STAINLESS));
         s.set(-1, Y + 3, 9, st(ModBlocks.STAINLESS));
         s.set(-1, Y + 3, 8, st(ModBlocks.DOWNLIGHT).setValue(Props.LIT, Circuit.SIGN.startOn()));
-        s.set(-1, Y, 2, f(ModBlocks.BIKE_RACK, E));                              // the staff bicycle
+        s.set(-2, Y, 3, f(ModBlocks.BIKE_RACK, N));                              // the staff bicycle along the wall
         s.set(-6, Y, 12, f(ModBlocks.AC_UNIT, E));
         s.set(-6, Y, 13, f(ModBlocks.AC_UNIT, E));
         // east: hedge, the east walk with the sill ledge under the windows, the kitchen's outdoor units
@@ -204,55 +204,45 @@ public final class ExteriorBuilder {
         s.set(36, Y, -2, f(ModBlocks.KITCHEN_TRASH, S));
         s.set(37, Y, -2, f(ModBlocks.KITCHEN_TRASH, S));
         s.set(12, Y, -9, f(ModBlocks.TRASH_STATION, S));
-        // lights under the eave (outside lighting)
-        s.set(12, Y + 4, -1, st(ModBlocks.DOWNLIGHT).setValue(Props.LIT, Circuit.SIGN.startOn()));
-        s.set(33, Y + 4, -1, st(ModBlocks.DOWNLIGHT).setValue(Props.LIT, Circuit.SIGN.startOn()));
+        // (the yard's lights are set into the fascia: RestaurantBuilder.FASCIA_LIGHTS)
     }
 
     // ------------------------------------------------------------------------------------------------ pole sign
     static void poleSign(BlockSink s) {
-        if (!s.touches(SIGN_X0, SIGN_Z_BACK, SIGN_X0 + 3, SIGN_Z_FRONT)) return;
+        if (!s.touches(SIGN_X0, SIGN_Z_FRONT, SIGN_X0 + 3, SIGN_Z_FRONT)) return;
         BlockState pole = f(ModBlocks.POLE_SIGN, S).setValue(Props.SIGN_PART, Props.SignPart.POLE);
         for (int y = Y; y < SIGN_Y0; y++) s.set(SIGN_POLE_X, y, SIGN_Z_FRONT, pole);
         for (BlockPos p : signTiles()) {
             int t = tileOf(p);
-            Direction face = p.getZ() == SIGN_Z_FRONT ? S : N;
-            s.set(p.getX(), p.getY(), p.getZ(), f(ModBlocks.POLE_SIGN, face).setValue(Props.SIGN_PART, Props.SignPart.TILE)
+            s.set(p.getX(), p.getY(), p.getZ(), f(ModBlocks.POLE_SIGN, S).setValue(Props.SIGN_PART, Props.SignPart.TILE)
                     .setValue(Props.TILE16, t).setValue(Props.LIT, Circuit.SIGN.startOn()));
         }
     }
 
-    /** The 32 tile positions of the box (front layer faces the road, back layer the lot). */
+    /** The 16 tile positions of the box (facing the road: column 0 at the west end, row 0 at the top). */
     public static List<BlockPos> signTiles() {
         List<BlockPos> out = new ArrayList<>();
         for (int row = 0; row < 4; row++)
-            for (int col = 0; col < 4; col++) {
-                int y = SIGN_Y0 + 3 - row;
-                out.add(new BlockPos(SIGN_X0 + col, y, SIGN_Z_FRONT));          // faces south: column 0 at the west end
-                out.add(new BlockPos(SIGN_X0 + 3 - col, y, SIGN_Z_BACK));       // faces north: column 0 at the east end
-            }
+            for (int col = 0; col < 4; col++) out.add(new BlockPos(SIGN_X0 + col, SIGN_Y0 + 3 - row, SIGN_Z_FRONT));
         return out;
     }
 
-    /** Tile index 0..15 (row-major from the top-left as seen by the viewer) of a sign tile position. */
+    /** Tile index 0..15 (row-major from the top-left as seen from the road) of a sign tile position. */
     public static int tileOf(BlockPos p) {
-        int row = SIGN_Y0 + 3 - p.getY();
-        int col = p.getZ() == SIGN_Z_FRONT ? p.getX() - SIGN_X0 : SIGN_X0 + 3 - p.getX();
-        return row * 4 + col;
+        return (SIGN_Y0 + 3 - p.getY()) * 4 + (p.getX() - SIGN_X0);
     }
 
     /** Every light of the SIGN circuit: the pole sign tiles, the roof sign, the lot and road lamps, canopy and yard lights. */
     public static List<BlockPos> signLights() {
         List<BlockPos> out = new ArrayList<>(signTiles());
         for (int t = 0; t < 8; t++) out.add(new BlockPos(16 + t, RestaurantBuilder.CEIL + 3, 31));
-        for (int[] l : LOT_LAMPS) out.add(new BlockPos(l[0], G + 7, l[1]));
-        int[][] road = {{77, 56}, {58, 49}, {-34, 49}, {87, 20}};
-        for (int[] l : road) out.add(new BlockPos(l[0], G + 7, l[1]));
+        out.add(RestaurantBuilder.CANOPY_LOGO);
+        for (int[] l : LOT_LAMPS) out.add(new BlockPos(l[0], Terrain.LAMP_Y, l[1]));
+        for (int[] l : Terrain.ROAD_LAMPS) out.add(new BlockPos(l[0], Terrain.LAMP_Y, l[1]));
+        out.addAll(RestaurantBuilder.FASCIA_LIGHTS);
         out.add(new BlockPos(3, RestaurantBuilder.CEIL, 32));
         out.add(new BlockPos(4, RestaurantBuilder.CEIL, 32));
         out.add(new BlockPos(-1, Y + 3, 8));
-        out.add(new BlockPos(12, Y + 4, -1));
-        out.add(new BlockPos(33, Y + 4, -1));
         return out;
     }
 }

@@ -25,7 +25,7 @@ final class AcousticsPresets {
     static {
         //                 dens   diff   gain    gHF    gLF   decay  dHF   dLF   rGain  rDelay  lGain  lDelay eTime  eDepth mTime mDepth airHF   hfRef  lfRef  slot
         // 客席: a big low room, vinyl booths and acoustic ceiling tiles - medium, soft, the highs die first
-        def("dining",     0.85f, 0.90f, 0.316f, 0.55f, 1.0f, 0.85f, 0.50f, 1.1f, 0.22f, 0.012f, 0.85f, 0.018f, 0.25f, 0.00f, 0.25f, 0.00f, 0.994f, 5000f, 250f, 1.0f);
+        def("dining",     0.85f, 0.90f, 0.316f, 0.55f, 1.0f, 0.90f, 0.50f, 1.1f, 0.28f, 0.012f, 1.40f, 0.018f, 0.25f, 0.00f, 0.25f, 0.00f, 0.994f, 5000f, 250f, 1.0f);
         // 厨房: stainless and quarry tiles - bright, hard, short, a slight flutter between the steel walls
         def("kitchen",    0.45f, 0.75f, 0.316f, 0.90f, 0.9f, 0.70f, 0.95f, 0.9f, 0.55f, 0.006f, 1.25f, 0.009f, 0.10f, 0.08f, 0.25f, 0.02f, 0.994f, 5000f, 250f, 1.0f);
         // トイレ: glazed tiles everywhere - very reflective, grainy small-room density

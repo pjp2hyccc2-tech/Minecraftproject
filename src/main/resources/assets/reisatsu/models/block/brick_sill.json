@@ -3,7 +3,7 @@
   "textures": {
     "particle": "reisatsu:block/brick_sill",
     "side": "reisatsu:block/brick_sill",
-    "top": "reisatsu:block/concrete_wall"
+    "top": "reisatsu:block/brick_sill_top"
   },
   "elements": [
     {

@@ -103,10 +103,10 @@ public final class WorldTour {
     /** Inside: every room. */
     public static List<Shot> interior() {
         List<Shot> l = new ArrayList<>();
-        l.add(s("vestibule", 7.5, 27.5, 110, 8));
+        l.add(s("vestibule", 6.5, 28.0, 83, 10));
         l.add(s("waiting", 1.5, 24.5, -90, 6));
         l.add(s("register", 8.5, 25.5, -125, 12));
-        l.add(s("kids_corner", 11.5, 25.5, 10, 16));
+        l.add(s("kids_corner", 9.6, 25.4, -38, 20));
         l.add(s("dining_west", 15.5, 12.5, -40, 10));
         l.add(s("dining_east", 37.5, 26.5, 130, 8));
         l.add(s("dining_booths", 22.5, 26.5, -88, 8));
@@ -360,8 +360,8 @@ public final class WorldTour {
                     {"restroom_floor_dark", "polished_deepslate"}, {"vestibule_floor", "polished_andesite"}, {"entrance_mat", "black_wool"},
                     {"wallpaper", "white_terracotta"}, {"wallpaper_stained", "light_gray_terracotta"}, {"wainscot", "dark_oak_planks"},
                     {"white_tile", "quartz_bricks"}, {"white_tile_dirty", "polished_diorite"}, {"ceiling_tile", "white_wool"},
-                    {"ceiling_tile_stained", "smooth_sandstone"}, {"ceiling_light", "light_gray_concrete"}, {"ceiling_light_lit", "glowstone"},
-                    {"downlight", "light_gray_concrete"}, {"downlight_lit", "glowstone"}, {"exterior_wall", "smooth_sandstone"},
+                    {"ceiling_tile_stained", "sandstone_top"}, {"ceiling_light", "light_gray_concrete"}, {"ceiling_light_lit", "glowstone"},
+                    {"downlight", "light_gray_concrete"}, {"downlight_lit", "glowstone"}, {"exterior_wall", "sandstone_top"},
                     {"facade_brick", "bricks"}, {"brick_sill", "bricks"}, {"roof_tile", "orange_terracotta"}, {"fascia", "orange_concrete"},
                     {"shop_window", "glass"}, {"asphalt", "black_concrete_powder"}, {"parking_line", "white_concrete"},
                     {"road_line", "yellow_concrete"}, {"curb", "smooth_stone"}, {"sidewalk", "stone_bricks"}, {"puddle", "light_blue_stained_glass"},
@@ -371,7 +371,7 @@ public final class WorldTour {
                     {"restaurant_chair", "spruce_planks"}, {"call_button", "white_concrete"}, {"menu_stand", "orange_wool"},
                     {"menu_scattered", "orange_wool"}, {"water_glass", "glass"}, {"broken_plate", "white_concrete"}, {"register", "gray_concrete"},
                     {"service_bell", "gold_block"}, {"counter", "stripped_oak_log"}, {"cake_case", "white_stained_glass"},
-                    {"business_phone", "smooth_sandstone"}, {"reservation_book", "red_wool"}, {"capsule_machine", "red_concrete"},
+                    {"business_phone", "sandstone_top"}, {"reservation_book", "red_wool"}, {"capsule_machine", "red_concrete"},
                     {"waiting_bench", "red_wool"}, {"magazine_rack", "oak_planks"}, {"umbrella_stand", "iron_block"}, {"notice_board", "brown_wool"},
                     {"drink_bar", "light_gray_concrete"}, {"coffee_machine", "black_concrete"}, {"ice_machine", "iron_block"},
                     {"cup_shelf", "iron_block"}, {"soup_warmer", "iron_block"}, {"server_station", "dark_oak_planks"}, {"call_display", "black_concrete"},
@@ -380,9 +380,9 @@ public final class WorldTour {
                     {"griddle", "iron_block"}, {"kitchen_counter", "iron_block"}, {"exhaust_hood", "iron_block"}, {"pot_shelf", "iron_block"},
                     {"dish_rack", "iron_block"}, {"kitchen_trash", "gray_concrete"}, {"prep_table", "iron_block"}, {"cutting_board", "oak_planks"},
                     {"kitchen_sink", "iron_block"}, {"dishwasher", "iron_block"}, {"pass_shelf", "iron_block"}, {"pass_bell", "gold_block"},
-                    {"walkin_shelf", "iron_block"}, {"frost", "packed_ice"}, {"locker", "light_gray_concrete"}, {"time_recorder", "smooth_sandstone"},
+                    {"walkin_shelf", "iron_block"}, {"frost", "packed_ice"}, {"locker", "light_gray_concrete"}, {"time_recorder", "sandstone_top"},
                     {"staff_table", "birch_planks"}, {"folding_chair", "gray_concrete"}, {"bulletin_board", "oak_planks"},
-                    {"cardboard_boxes", "stripped_oak_wood"}, {"cleaning_cart", "yellow_concrete"}, {"filing_cabinet", "gray_concrete"},
+                    {"cardboard_boxes", "stripped_oak_log"}, {"cleaning_cart", "yellow_concrete"}, {"filing_cabinet", "gray_concrete"},
                     {"safe", "black_concrete"}, {"crt_tv", "black_concrete"}, {"office_desk", "gray_concrete"}, {"office_chair", "black_wool"},
                     {"pc", "black_concrete"}, {"security_monitors", "black_concrete"}, {"security_camera", "black_concrete"},
                     {"breaker_panel", "gray_concrete"}, {"restroom_sink", "white_concrete"}, {"mirror", "black_stained_glass"},
@@ -519,6 +519,8 @@ public final class WorldTour {
             String base = vanilla(name);
             boolean lit = name.endsWith("_lit") || name.endsWith("_on") || name.contains("_on_") || name.contains("_lit_");
             String tex = lit ? litVanilla(name, base) : base;
+            if (Minecraft.getInstance().getResourceManager().getResource(
+                    new net.minecraft.resources.ResourceLocation("minecraft", "textures/block/" + tex + ".png")).isEmpty()) tex = "white_concrete";
             if (name.startsWith("pole_sign_pole") || name.startsWith("street_lamp_pole")) tex = "gray_concrete";
             StringBuilder sb = new StringBuilder();
             sb.append("{\"parent\":\"minecraft:block/block\",");

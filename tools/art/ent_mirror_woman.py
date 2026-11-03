@@ -473,6 +473,12 @@ MirrorWoman.consts = {
 SPEC = MirrorWoman
 
 
+import ent_scene as SC  # noqa: E402
+POSE_SCENES = {0: SC.mirror(), 1: SC.mirror(), 2: SC.mirror(), 3: SC.mirror(), 4: SC.mirror()}
+WALKING = ()
+NAKED_ALPHA = 0.25
+
+
 # ================================================================================================ previews
 def previews(b, ER, rows_sel=None):
     import ent_scene as SC
@@ -510,7 +516,7 @@ def previews(b, ER, rows_sel=None):
     rows.append(('SCREAM (3): head back, mouth too wide, clawed hands', ims))
     ims = []
     eye = (0.2, 1.62, 3.2)
-    ims.append(('naked eye a=0.25', b.view(1, 60, size=(260, 260), eye=eye, target=(0, 1.3, 0), night=True, alpha=0.25,
+    ims.append(('naked eye a=0.25', b.view(1, 60, size=(260, 260), eye=eye, target=(0, 1.3, 0), night=True, alpha=0.25, eyes_gain=0.5,
                                            scene=sc, fov=50, flash=False, amb=0.35)))
     ims.append(('finder: BOWED (photo)', b.view(0, 40, size=(260, 260), eye=eye, target=(0, 1.1, 0), finder=True, scene=sc, fov=50)))
     ims.append(('finder: PRESS', b.view([(0, 1), (100, 2)], 130, size=(260, 260), eye=(0.1, 1.55, 2.0), target=(0, 1.35, 0),

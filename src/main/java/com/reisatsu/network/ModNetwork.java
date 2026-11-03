@@ -22,7 +22,16 @@ public final class ModNetwork {
     private ModNetwork() {}
 
     public static void register() {
-        // messages are added by the game (see C2S / S2C)
+        toClient(S2C.State.class, S2C.State::encode, S2C.State::decode, S2C.State::handle);
+        toClient(S2C.Event.class, S2C.Event::encode, S2C.Event::decode, S2C.Event::handle);
+        toClient(S2C.PhotoResult.class, S2C.PhotoResult::encode, S2C.PhotoResult::decode, S2C.PhotoResult::handle);
+        toClient(S2C.Album.class, S2C.Album::encode, S2C.Album::decode, S2C.Album::handle);
+        toClient(S2C.Note.class, S2C.Note::encode, S2C.Note::decode, S2C.Note::handle);
+        toClient(S2C.Dialogue.class, S2C.Dialogue::encode, S2C.Dialogue::decode, S2C.Dialogue::handle);
+        toClient(S2C.Breaker.class, S2C.Breaker::encode, S2C.Breaker::decode, S2C.Breaker::handle);
+        toClient(S2C.Sound.class, S2C.Sound::encode, S2C.Sound::decode, S2C.Sound::handle);
+        toServer(C2S.Action.class, C2S.Action::encode, C2S.Action::decode, C2S.Action::handle);
+        toServer(C2S.Shutter.class, C2S.Shutter::encode, C2S.Shutter::decode, C2S.Shutter::handle);
     }
 
     private static <M> void toServer(Class<M> type, BiConsumer<M, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, M> decoder,

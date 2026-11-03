@@ -1,18 +1,37 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,hanging=false": {
       "model": "reisatsu:block/note_paper"
     },
-    "facing=east": {
+    "facing=north,hanging=true": {
+      "model": "reisatsu:block/note_paper",
+      "x": 90
+    },
+    "facing=east,hanging=false": {
       "model": "reisatsu:block/note_paper",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,hanging=true": {
+      "model": "reisatsu:block/note_paper",
+      "x": 90,
+      "y": 90
+    },
+    "facing=south,hanging=false": {
       "model": "reisatsu:block/note_paper",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,hanging=true": {
       "model": "reisatsu:block/note_paper",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west,hanging=false": {
+      "model": "reisatsu:block/note_paper",
+      "y": 270
+    },
+    "facing=west,hanging=true": {
+      "model": "reisatsu:block/note_paper",
+      "x": 90,
       "y": 270
     }
   }

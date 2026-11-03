@@ -664,6 +664,12 @@ this.lockL.xRot = this.lockL.xRot + Mth.sin(t * 0.07F + 1.1F) * 0.05F;
 SPEC = Waitress
 
 
+import ent_scene as SC  # noqa: E402
+POSE_SCENES = {1: SC.dining(table=True)}
+WALKING = (0, 5)
+NAKED_ALPHA = 0.3
+
+
 # ================================================================================================ previews
 def previews(b, ER, rows_sel=None):
     import ent_scene as SC
@@ -718,6 +724,6 @@ def previews(b, ER, rows_sel=None):
     ims.append(('finder: NOTICE', b.view([(0, 3), (100, 4)], 120, size=(300, 260), eye=(0.2, 1.62, 3.0),
                                          target=(0, 1.4, 0), finder=True, scene=sc, fov=50)))
     ims.append(('night: BOW at the door', b.view([(0, 3), (100, 2)], 150, size=(300, 260), eye=(2.4, 1.62, 4.0),
-                                                 target=(0, 0.9, 0), night=True, alpha=0.3, scene=sc, fov=50)))
+                                                 target=(0, 0.9, 0), night=True, alpha=0.3, eyes_gain=0.6, scene=sc, fov=50)))
     rows.append(('in the restaurant at night: naked eye / through the finder', ims))
     return rows
