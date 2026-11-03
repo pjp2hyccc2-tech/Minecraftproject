@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
-"""Checks tools/audio/catalog.py against docs/DESIGN.md section 8: the same event ids, variant counts, channel
-(M/S) and attenuation distances.  Prints every mismatch; exit code 1 if there is any."""
+"""Checks tools/audio/catalog.py against docs/DESIGN.md section 8: the same event ids, variant counts, channels
+(M/S), attenuation distances and loop flags.  Prints every mismatch; exit code 1 if there is any.
+
+Section 8 is prose: "Beds (S, loops): `amb.apartment` (60 s: ...), ...", "Positional loops (M): `fixture.fridge` (8)",
+"Music (S): ...", "One-shots (M unless noted; att): `ritual.cut` (scissors through fabric, 8), `door.fusuma` ×3
+(paper door sliding, 8), `door.front_open` / `door.front_close` (steel apartment door, chain, 16), ...".  Each
+paragraph sets the default channel layout; a parenthesis may override it (S / M), carry an attenuation distance (the
+last bare number; "N s" is a duration, "×N" inside the parenthesis describes the content) and say "loop" /
+"no loop"."""
 import os
 import re
 import sys
@@ -12,69 +19,67 @@ from catalog import CATALOG  # noqa: E402
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sec = open(os.path.join(ROOT, "docs", "DESIGN.md"), encoding="utf-8").read().split("## 8. Sounds", 1)[1].split("## 9.", 1)[0]
 
-want = {}  # event -> dict(count, ch, att)
+PARAS = [("Beds", dict(ch=2, loop=True)), ("Positional loops", dict(ch=1, loop=True)),
+         ("Music", dict(ch=2, loop=True)), ("One-shots", dict(ch=1, loop=False))]
+GROUP = re.compile(r"((?:`[a-z_]+\.[a-z_0-9]+`\s*(?:/\s*)?)+)\s*(?:×(\d+))?\s*(?:\(([^()]*)\))?")
 
 
-def put(ev, **kw):
-    want.setdefault(ev, {}).update({k: v for k, v in kw.items() if v is not None})
-
-
-section = None
-prose = {}
-for line in sec.splitlines():
-    s = line.strip()
-    if s.startswith("Ambient beds"):
-        section = "beds"
-    elif s.startswith("Positional loops"):
-        section = "ploops"
-    elif s.startswith("Music"):
-        section = "music"
-    elif s.startswith("Restaurant one-shots"):
-        section = "rest"
-    elif s.startswith("Camera and items"):
-        section = "cam"
-    elif s.startswith("Player (M)"):
-        section = "player"
-    elif s.startswith("Spirits (M)"):
-        section = "spirits"
-    elif s.startswith("Game (S)"):
-        section = "game"
-    if s.startswith("|") and "`" in s and not s.startswith("| event"):
-        cells = [c.strip() for c in s.strip("|").split("|")]
-        evs = re.findall(r"`([a-z_]+\.[a-z_0-9]+)`", cells[0])
-        if section in ("beds", "music"):
-            for ev in evs:
-                put(ev, count=1, ch=2)
+def paragraphs(text):
+    """{heading: paragraph text} for the four lists (each runs until the next heading or a blank line)."""
+    out = {}
+    cur = None
+    for line in text.splitlines():
+        s = line.strip()
+        hit = [h for h, _ in PARAS if s.startswith(h + " (")]
+        if hit:
+            cur = hit[0]
+            out[cur] = s.split(":", 1)[1] if ":" in s else ""
             continue
-        counts = [int(x) for x in re.findall(r"\d+", cells[1])]
-        third = cells[2]
-        for k, ev in enumerate(evs):
-            c = counts[k] if k < len(counts) else counts[-1]
-            if section == "cam":
-                ch = 2 if third.startswith("S") else 1
-                att = int(re.findall(r"att (\d+)", third)[0]) if re.findall(r"att (\d+)", third) else None
-                put(ev, count=c, ch=ch, att=att)
-            elif third == "S":
-                put(ev, count=c, ch=2)
-            else:
-                put(ev, count=c, ch=1, att=int(third))
-    elif section in ("ploops", "player", "game") and not s.startswith("|"):
-        prose[section] = prose.get(section, "") + " " + s
+        if not s:
+            cur = None
+            continue
+        if cur:
+            out[cur] += " " + s
+    return out
 
-for section, text in prose.items():
-    for m in re.finditer(r"`([a-z_]+\.[a-z_0-9]+)`\s*(\(([^)]*)\)|×(\d+))?", text):
-        ev, inner, times = m.group(1), m.group(3), m.group(4)
-        if section == "ploops":
-            if inner and inner.startswith("S"):
-                put(ev, count=1, ch=2)
-            elif inner and "one-shots" in inner:
-                put(ev, count=int(re.findall(r"×(\d+)", inner)[0]), ch=1, att=int(re.findall(r", (\d+)", inner)[0]))
-            elif inner:
-                put(ev, count=1, ch=1, att=int(re.findall(r"^(\d+)", inner)[0]))
-        elif section == "player":
-            put(ev, count=int(times) if times else 1, ch=1)
+
+def parse_spec(spec, default):
+    """(channels, attenuation, loop) from the text inside a parenthesis."""
+    ch, loop = default["ch"], default["loop"]
+    att = None
+    if spec is None:
+        return ch, att, loop
+    head = spec.split(":", 1)[0]
+    first = head.split(",")[0].strip()
+    if re.match(r"^S\b", first):
+        ch = 2
+    elif re.match(r"^M\b", first):
+        ch = 1
+    if "no loop" in head:
+        loop = False
+    elif re.search(r"\bloop\b", head):
+        loop = True
+    if ch == 1:
+        m = re.search(r"\batt (\d+)", head)
+        if m:
+            att = int(m.group(1))
         else:
-            put(ev, count=int(times) if times else 1, ch=2)
+            nums = [int(x.group(1)) for x in re.finditer(r"(?<![×\d.])(\d+)(?!\s*s\b)(?![\d.])", head)]
+            if nums:
+                att = nums[-1]
+    return ch, att, loop
+
+
+want = {}
+for head, default in PARAS:
+    text = paragraphs(sec).get(head, "")
+    for m in GROUP.finditer(text):
+        evs = re.findall(r"`([a-z_]+\.[a-z_0-9]+)`", m.group(1))
+        count = int(m.group(2)) if m.group(2) else 1
+        ch, att, loop = parse_spec(m.group(3), default)
+        for ev in evs:
+            lp = loop or ev.endswith("_loop")
+            want[ev] = dict(count=count, ch=ch, att=att, loop=lp)
 
 have = {e.event: e for e in CATALOG}
 bad = 0
@@ -84,14 +89,17 @@ for ev, w in want.items():
         print(f"MISSING in catalog: {ev}")
         bad += 1
         continue
-    if w.get("count") is not None and e.count != w["count"]:
+    if e.count != w["count"]:
         print(f"{ev}: count {e.count} != design {w['count']}")
         bad += 1
-    if w.get("ch") is not None and e.ch != w["ch"]:
+    if e.ch != w["ch"]:
         print(f"{ev}: channels {e.ch} != design {w['ch']}")
         bad += 1
-    if w.get("att") is not None and e.att != w["att"]:
+    if w["att"] is not None and e.att != w["att"]:
         print(f"{ev}: attenuation {e.att} != design {w['att']}")
+        bad += 1
+    if e.loop != w["loop"]:
+        print(f"{ev}: loop {e.loop} != design {w['loop']}")
         bad += 1
 for ev in have:
     if ev not in want:

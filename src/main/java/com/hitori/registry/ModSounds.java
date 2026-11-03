@@ -125,6 +125,21 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> GAME_TITLE_HIT = reg("game.title_hit");
     public static final RegistryObject<SoundEvent> GAME_MORNING = reg("game.morning");
 
+    // Floor sound types: step and fall use the floor's footstep, break / place / hit come from a vanilla type.
+    // Vanilla plays step sounds at 0.15 x the type's volume; 4.0 keeps footsteps well above the quiet room beds.
+    /** tatami mats (tatami, tatami_worn) */
+    public static final ForgeSoundType SOUND_TYPE_TATAMI = floor(PLAYER_STEP_TATAMI, SoundType.WOOL);
+    /** old varnished floorboards, vinyl, the closet's plywood */
+    public static final ForgeSoundType SOUND_TYPE_FLOOR = floor(PLAYER_STEP_FLOOR, SoundType.WOOD);
+    /** bath tiles, the genkan's tiles */
+    public static final ForgeSoundType SOUND_TYPE_TILE = floor(PLAYER_STEP_TILE, SoundType.STONE);
+    /** the wet outdoor corridor and street, a wet bathroom floor */
+    public static final ForgeSoundType SOUND_TYPE_WET = floor(PLAYER_STEP_WET, SoundType.STONE);
+
+    private static ForgeSoundType floor(RegistryObject<SoundEvent> step, SoundType base) {
+        return new ForgeSoundType(4.0f, 1.0f, base::getBreakSound, step, base::getPlaceSound, base::getHitSound, step);
+    }
+
     private ModSounds() {}
 
     private static RegistryObject<SoundEvent> reg(String name) {
