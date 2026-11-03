@@ -192,11 +192,14 @@ def advance(st, pose, pt):
     """Python twin of the Java advance(): the clock that holds while the pose time holds."""
     if st.clockPose == -2:
         st.clock = pt
-    else:
-        d = pt - st.clockPt if (pose == st.clockPose and pt >= st.clockPt) else pt
-        st.clock += min(40.0, max(0.0, d))
+        st.clockPt = pt
+    elif pose != st.clockPose:
+        st.clock += min(40.0, max(0.0, pt))
+        st.clockPt = pt
+    elif pt > st.clockPt:
+        st.clock += min(40.0, pt - st.clockPt)
+        st.clockPt = pt
     st.clockPose = pose
-    st.clockPt = pt
     return st.clock
 
 
@@ -462,12 +465,16 @@ STATE_JAVA = '''
     private static float advance(State s, int pose, float pt) {
         if (s.clockPose == -2) {
             s.clock = pt;
-        } else {
-            float d = pose == s.clockPose && pt >= s.clockPt ? pt - s.clockPt : pt;
-            s.clock += Mth.clamp(d, 0.0F, 40.0F);
+            s.clockPt = pt;
+        } else if (pose != s.clockPose) {
+            s.clock += Mth.clamp(pt, 0.0F, 40.0F);
+            s.clockPt = pt;
+        } else if (pt > s.clockPt) {
+            s.clock += Math.min(40.0F, pt - s.clockPt);
+            s.clockPt = pt;
         }
+        // (a pose time that steps back within a pose - a held camera frame drawn after a live one - passes no time)
         s.clockPose = pose;
-        s.clockPt = pt;
         return s.clock;
     }
 

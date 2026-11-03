@@ -20,7 +20,8 @@ import net.minecraft.world.entity.Entity;
 /**
  * 定点カメラ (the fixed camera): a small black action camera clamped on a mini tripod, the lens barrel off centre on
  * the front (the camera looks along the entity's facing), the red REC LED on top and the rear screen showing the
- * live view (both on the eyes layer: the LED blinks in real time, ~1.4 s on / 0.6 s off).
+ * live view (both on the eyes layer: the LED part blinks in real time, ~1.4 s on / 0.6 s off - draw the eyes layer
+ * every frame). The camera tilts in its clamp to the entity pitch (headPitch, + = looking down).
  * Pose ids (read through instanceof Animated; anything else draws IDLE): 0 IDLE, 1 FALLEN (knocked over by
  * something: tips over to its right in ~5 ticks with a bounce at ticks 5-9, the camera twisting in its clamp;
  * it ends on its side, rolled 83 degrees: roll the feed's view by the same angle, e.g. ViewportEvent.ComputeCameraAngles
@@ -125,8 +126,9 @@ public class CameraModel<T extends Entity> extends HierarchicalModel<T> {
         float yaw = netHeadYaw * 0.017453292F;
         float pitch = headPitch * 0.017453292F;
 
-        // IDLE: still; the REC LED blinks in real time
+        // IDLE: still; the REC LED blinks in real time; the camera tilts in its clamp to the entity pitch (headPitch)
         this.led.visible = (ageInTicks % 40.0F) < 28.0F;
+        this.cam.xRot = Mth.clamp(pitch, -1.2F, 1.2F);
         if (pose == FALLEN) {
             // knocked over: tips to its right with gravity, hits the floor at tick 5, bounces, the camera twisting in its clamp
             float fall = easeIn(Mth.clamp(pt / 5.0F, 0.0F, 1.0F));
@@ -321,12 +323,16 @@ public class CameraModel<T extends Entity> extends HierarchicalModel<T> {
     private static float advance(State s, int pose, float pt) {
         if (s.clockPose == -2) {
             s.clock = pt;
-        } else {
-            float d = pose == s.clockPose && pt >= s.clockPt ? pt - s.clockPt : pt;
-            s.clock += Mth.clamp(d, 0.0F, 40.0F);
+            s.clockPt = pt;
+        } else if (pose != s.clockPose) {
+            s.clock += Mth.clamp(pt, 0.0F, 40.0F);
+            s.clockPt = pt;
+        } else if (pt > s.clockPt) {
+            s.clock += Math.min(40.0F, pt - s.clockPt);
+            s.clockPt = pt;
         }
+        // (a pose time that steps back within a pose - a held camera frame drawn after a live one - passes no time)
         s.clockPose = pose;
-        s.clockPt = pt;
         return s.clock;
     }
 

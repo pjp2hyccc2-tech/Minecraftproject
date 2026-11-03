@@ -22,12 +22,14 @@ import net.minecraft.world.entity.Mob;
  * 鬼（人形）(the oni doll): the cheap white plush rabbit after the ritual - soaked grey, one button eye torn out and
  * hanging by its thread, drooping ears, the belly sewn shut with crude red stitches, the stab wound on its chest
  * bulging with rice, red thread wound round and round its body, the kitchen knife bound into its right paw.
- * The whole animation runs on the doll's own clock = its pose time accumulated across poses (limb swing, ageInTicks
- * and head yaw/pitch are ignored, except that the water drips fall in real time): HOLD THE POSE TIME and the doll
- * is perfectly still (seen directly), STEP IT and it moves in stop-motion (seen by a camera); glitch 0..0.5 snaps
- * joints the wrong way for a few ticks, glitch 0.5..1 also drops frames (at 1 the pose only changes in whole
- * 3-tick frames). Floppy parts (ears, the hanging eye, the loose thread, limp limbs) are damped springs on the same
- * clock, so they too freeze and step with it.
+ * The whole animation runs on the doll's own clock = its pose time accumulated across poses (a pose time stepping
+ * back within a pose passes no time; limb swing, ageInTicks and head pitch are ignored, except that the water drips
+ * fall in real time): HOLD THE POSE TIME and the doll is perfectly still (seen directly), STEP IT and it moves in
+ * stop-motion (seen by a camera); glitch 0..0.5 snaps joints the wrong way for a few ticks, glitch 0.5..1 also
+ * drops frames (at 1 the pose only changes in whole 3-tick frames). Floppy parts (ears, the hanging eye, the loose
+ * thread, limp limbs) are damped springs on the same clock, so they too freeze and step with it. The head yaw
+ * (netHeadYaw, clamped +-80 degrees) is followed on the same clock: SIT, WALK, CRAWL and PEEK turn the head part
+ * of the way, STAND turns the whole doll (its head lies on its side); TURN, LUNGE, LIMP, BURN, FLOAT ignore it.
  * Pose ids: 0 FLOAT (face down in the water, limp, bobbing, every ~23 s an arm jerks; the knife is hidden; put the
  * entity at the water surface), 1 SIT (slumped against a wall behind it, head lolling, nodding off and snapping
  * awake every 13 s; the knife lying on the floor in its paw),
@@ -252,6 +254,8 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
         float j2 = jolt(t, 2.0F, glitch);
         float j3 = jolt(t, 3.0F, glitch);
         float j4 = jolt(t, 4.0F, glitch);
+        // the head yaw the game gives it (toward you, after you looked away and back): followed on the doll's own clock
+        float look = chase(mem, 42, Mth.clamp(Mth.wrapDegrees(netHeadYaw), -80.0F, 80.0F) * 0.017453292F, 0.7F, 0.8F, t);
 
         if (pose == FLOAT) {
             // face down in the bath water, limp; the rice-heavy body hangs below the surface, ears spread on the water
@@ -308,6 +312,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.head.zRot = 0.6F + loll + 0.5F * droop + j1 * 0.4F;
             this.head.xRot = 0.48F + Mth.sin(t * 0.017F + 1.0F) * 0.05F + 0.22F * droop;
             this.head.x = 0.35F;
+            this.head.yRot = look * 0.6F;
             this.armR.zRot = 0.55F;
             this.armR.xRot = -0.35F;
             this.armL.zRot = -0.45F;
@@ -351,7 +356,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.head.z = -1.9F;
             this.head.xRot = -1.42F + 0.08F * pull + j1 * 0.25F;
             this.head.zRot = 0.45F + j2 * 0.5F;
-            this.head.yRot = -Mth.sin(u * 6.2831855F) * 0.15F;
+            this.head.yRot = -Mth.sin(u * 6.2831855F) * 0.15F + look * 0.5F;
             this.legR.zRot = 0.22F;
             this.legL.zRot = -0.2F;
             legFlop = 0.7F;
@@ -407,6 +412,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             armZ = 0.35F;
             this.head.zRot = chase(mem, 40, -this.body.zRot * 1.4F + 0.3F, 0.45F, 0.22F, t) + j1 * 0.5F;
             this.head.xRot = 0.42F + chase(mem, 41, lf * 0.35F - tug * lf * 0.75F, 0.55F, 0.25F, t);
+            this.head.yRot = look * 0.5F;
             earFlop = 0.82F;
             grains = 1.0F;
             blend = 5.0F;
@@ -431,6 +437,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.head.zRot = 0.78F * out + j1 * 0.25F;
             this.head.x = 0.4F * out;
             this.head.xRot = 0.1F;
+            this.head.yRot = look * 0.4F;
             this.armR.xRot = -0.18F;
             this.knife.xRot = -0.95F;
             armFlop = 0.5F;
@@ -549,8 +556,12 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.armR.zRot = 0.08F;
             this.knife.xRot = -1.06F;
             this.armL.zRot = -0.12F;
+            // its head lies on its side, so it does not turn the head to you: the whole doll has turned a little
+            this.body.yRot = look * 0.6F;
             armFlop = 0.15F;
             earFlop = 0.92F;
+            // snaps upright out of a crawl or a walk (the game stops it so when you look), unwinds slowly out of TURN
+            blend = prev == TURN ? 10.0F : 3.0F;
         }
         // glitch: joints snap the wrong way for a few ticks
         this.armR.zRot = this.armR.zRot + j2 * 0.7F;
@@ -849,12 +860,16 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
     private static float advance(State s, int pose, float pt) {
         if (s.clockPose == -2) {
             s.clock = pt;
-        } else {
-            float d = pose == s.clockPose && pt >= s.clockPt ? pt - s.clockPt : pt;
-            s.clock += Mth.clamp(d, 0.0F, 40.0F);
+            s.clockPt = pt;
+        } else if (pose != s.clockPose) {
+            s.clock += Mth.clamp(pt, 0.0F, 40.0F);
+            s.clockPt = pt;
+        } else if (pt > s.clockPt) {
+            s.clock += Math.min(40.0F, pt - s.clockPt);
+            s.clockPt = pt;
         }
+        // (a pose time that steps back within a pose - a held camera frame drawn after a live one - passes no time)
         s.clockPose = pose;
-        s.clockPt = pt;
         return s.clock;
     }
 

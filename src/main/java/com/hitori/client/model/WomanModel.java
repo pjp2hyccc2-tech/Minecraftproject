@@ -576,12 +576,16 @@ public class WomanModel<T extends Mob & Animated> extends HierarchicalModel<T> {
     private static float advance(State s, int pose, float pt) {
         if (s.clockPose == -2) {
             s.clock = pt;
-        } else {
-            float d = pose == s.clockPose && pt >= s.clockPt ? pt - s.clockPt : pt;
-            s.clock += Mth.clamp(d, 0.0F, 40.0F);
+            s.clockPt = pt;
+        } else if (pose != s.clockPose) {
+            s.clock += Mth.clamp(pt, 0.0F, 40.0F);
+            s.clockPt = pt;
+        } else if (pt > s.clockPt) {
+            s.clock += Math.min(40.0F, pt - s.clockPt);
+            s.clockPt = pt;
         }
+        // (a pose time that steps back within a pose - a held camera frame drawn after a live one - passes no time)
         s.clockPose = pose;
-        s.clockPt = pt;
         return s.clock;
     }
 

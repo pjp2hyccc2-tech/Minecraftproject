@@ -30,7 +30,8 @@ class Camera(Spec):
     poses = [('IDLE', 0), ('FALLEN', 1)]
     doc = """定点カメラ (the fixed camera): a small black action camera clamped on a mini tripod, the lens barrel off centre on
     the front (the camera looks along the entity's facing), the red REC LED on top and the rear screen showing the
-    live view (both on the eyes layer: the LED blinks in real time, ~1.4 s on / 0.6 s off).
+    live view (both on the eyes layer: the LED part blinks in real time, ~1.4 s on / 0.6 s off - draw the eyes layer
+    every frame). The camera tilts in its clamp to the entity pitch (headPitch, + = looking down).
     Pose ids (read through instanceof Animated; anything else draws IDLE): 0 IDLE, 1 FALLEN (knocked over by
     something: tips over to its right in ~5 ticks with a bounce at ticks 5-9, the camera twisting in its clamp;
     it ends on its side, rolled 83 degrees: roll the feed's view by the same angle, e.g. ViewportEvent.ComputeCameraAngles
@@ -135,8 +136,9 @@ class Camera(Spec):
         return pt.img, pt.eyes
 
     anim = '''
-// IDLE: still; the REC LED blinks in real time
+// IDLE: still; the REC LED blinks in real time; the camera tilts in its clamp to the entity pitch (headPitch)
 this.led.visible = (ageInTicks % 40.0F) < 28.0F;
+this.cam.xRot = Mth.clamp(pitch, -1.2F, 1.2F);
 if (pose == FALLEN) {
     // knocked over: tips to its right with gravity, hits the floor at tick 5, bounces, the camera twisting in its clamp
     float fall = easeIn(Mth.clamp(pt / 5.0F, 0.0F, 1.0F));
