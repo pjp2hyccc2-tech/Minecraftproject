@@ -1,0 +1,780 @@
+[03Nov2026 11:17:35.997] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, MOD_DEV, --assetIndex, 5, --assetsDir, /home/runner/.gradle/caches/forge_gradle/assets, --gameDir, ., --fml.forgeVersion, 47.3.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --width, 1280, --height, 720]
+[03Nov2026 11:17:36.001] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.21 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[03Nov2026 11:17:36.088] [main/WARN] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/fml.toml is not correct. Correcting
+[03Nov2026 11:17:36.090] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[03Nov2026 11:17:36.090] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[03Nov2026 11:17:36.091] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[03Nov2026 11:17:36.106] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[03Nov2026 11:17:36.243] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
+[03Nov2026 11:17:36.400] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.5
+[03Nov2026 11:17:37.112] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.5 got version 4.5
+[03Nov2026 11:17:37.208] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=CLIENT
+[03Nov2026 11:17:37.255] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: llvmpipe (LLVM 21.1.8, 256 bits) GL version 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3, Mesa
+[03Nov2026 11:17:37.530] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[03Nov2026 11:17:37.532] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[03Nov2026 11:17:37.533] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar is missing mods.toml file
+[03Nov2026 11:17:37.534] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar is missing mods.toml file
+[03Nov2026 11:17:37.725] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 3 dependencies adding them to mods collection
+[03Nov2026 11:17:39.474] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[03Nov2026 11:17:39.512] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, /home/runner/.gradle/caches/forge_gradle/assets, --assetIndex, 5, --width, 1280, --height, 720]
+[03Nov2026 11:17:39.663] [main/INFO] [Embeddium/]: Loaded configuration file for Embeddium: 51 options available, 3 override(s) found
+[03Nov2026 11:17:39.665] [main/INFO] [Embeddium-GraphicsAdapterProbe/]: Searching for graphics cards...
+[03Nov2026 11:17:39.667] [main/WARN] [Embeddium-GraphicsAdapterProbe/]: No graphics cards were found. Either you have no hardware devices supporting 3D acceleration, or something has gone terribly wrong!
+[03Nov2026 11:17:39.671] [main/WARN] [Embeddium-Workarounds/]: Unable to determine desktop session type because the environment variable XDG_SESSION_TYPE is not set! Your user session may not be configured correctly.
+[03Nov2026 11:17:40.222] [main/INFO] [mixin/]: Remapping refMap embeddium-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.228] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.232] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.236] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.240] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.244] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.251] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.253] [main/INFO] [mixin/]: Remapping refMap sodiumCompatibility-oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.258] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.262] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.266] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.270] [main/INFO] [mixin/]: Remapping refMap oculus-mixins-refmap.json using /home/runner/work/Minecraftproject/Minecraftproject/build/createSrgToMcp/output.srg
+[03Nov2026 11:17:40.896] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.world.sky.WorldRendererMixin' as rule 'mixin.features.render.world.sky' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.899] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.world.sky.ClientWorldMixin' as rule 'mixin.features.render.world.sky' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.900] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.world.sky.BackgroundRendererMixin' as rule 'mixin.features.render.world.sky' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.906] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.gui.font.GlyphRendererMixin' as rule 'mixin.features.render.gui.font' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.906] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.gui.font.FontSetMixin' as rule 'mixin.features.render.gui.font' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.909] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.shadows.EntityRenderDispatcherMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.912] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.remove_streams.ModelPartMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.912] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.remove_streams.HierarchicalModelMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.912] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.fast_render.ModelPartMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.913] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.fast_render.CuboidMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:40.913] [main/WARN] [Embeddium/]: Force-disabling mixin 'features.render.entity.cull.EntityRendererMixin' as rule 'mixin.features.render.entity' (added by mods [oculus]) disables it and children
+[03Nov2026 11:17:41.191] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.3.5).
+[03Nov2026 11:17:45.335] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 188 Datafixer optimizations took 259 milliseconds
+[03Nov2026 11:17:47.529] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[03Nov2026 11:17:47.530] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[03Nov2026 11:17:47.544] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[03Nov2026 11:17:47.550] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[03Nov2026 11:17:47.682] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.1 build 7
+[03Nov2026 11:17:47.772] [Render thread/ERROR] [Embeddium-MixinTaintDetector/]: Mod mixin into Embeddium internals detected. This instance is now tainted. The Embeddium team does not provide any guarantee of support for issues encountered while such mods are installed.
+[03Nov2026 11:17:47.773] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gui.SodiumGameOptions, which may cause instability.
+[03Nov2026 11:17:47.810] [Render thread/INFO] [Embeddium-PostlaunchChecks/]: OpenGL Vendor: Mesa
+[03Nov2026 11:17:47.810] [Render thread/INFO] [Embeddium-PostlaunchChecks/]: OpenGL Renderer: llvmpipe (LLVM 21.1.8, 256 bits)
+[03Nov2026 11:17:47.810] [Render thread/INFO] [Embeddium-PostlaunchChecks/]: OpenGL Version: 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3
+[03Nov2026 11:17:48.236] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+[03Nov2026 11:17:48.238] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+[03Nov2026 11:17:48.407] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+[03Nov2026 11:17:49.274] [Render thread/INFO] [Oculus/]: Using shaderpack: ReisatsuShaders.zip
+[03Nov2026 11:17:49.415] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.3.0, for MC 1.20.1 with MCP 20230612.114412
+[03Nov2026 11:17:49.421] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.3.0 Initialized
+[03Nov2026 11:17:49.471] [modloading-worker-0/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI, which may cause instability.
+[03Nov2026 11:17:49.619] [modloading-worker-0/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] 霊撮: the automatic door opens. Nobody is there.
+[03Nov2026 11:17:51.887] [Render thread/INFO] [Oculus/]: Hardware information:
+[03Nov2026 11:17:51.888] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 7763 64-Core Processor
+[03Nov2026 11:17:51.888] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+[03Nov2026 11:17:51.888] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+[03Nov2026 11:17:52.300] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.vertex.VertexFormatDescriptionImpl, which may cause instability.
+[03Nov2026 11:17:52.315] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.vertex.buffer.SodiumBufferBuilder, which may cause instability.
+[03Nov2026 11:17:52.367] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.SodiumWorldRenderer, which may cause instability.
+[03Nov2026 11:17:52.572] [Render thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: []
+[03Nov2026 11:17:52.927] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+	at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:69) ~[text2speech-1.17.9.jar:?]
+	at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?]
+	at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?]
+	at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+libflite.so: cannot open shared object file: No such file or directory
+libflite.so: cannot open shared object file: No such file or directory
+Native library (linux-x86-64/libflite.so) not found in resource path (/home/runner/work/Minecraftproject/Minecraftproject/build/classes/java/main:/home/runner/work/Minecraftproject/Minecraftproject/build/resources/main:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/deobf_dependencies/maven/modrinth/oculus/1.20.1-1.7.0_mapped_official_1.20.1/oculus-1.20.1-1.7.0_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/deobf_dependencies/maven/modrinth/embeddium/0.3.31+mc1.20.1_mapped_official_1.20.1/embeddium-0.3.31+mc1.20.1_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/minecraft_repo/versions/1.20.1/client-extra.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlearlydisplay/1.20.1-47.3.0/91e33682894f35862e9ce29d633e3258120952f0/fmlearlydisplay-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlloader/1.20.1-47.3.0/547850469c8a336b4c60cb8619f6cd421e9e5f55/fmlloader-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarSelector/0.3.19/376cc9c8ea60720cf027c01fc033de915699801c/JarJarSelector-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarMetadata/0.3.19/83feaa9b770e6ac0e96ee4fc23fa89325c5fe2/JarJarMetadata-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre/60458f877d055d0c9114d9e1a2efb737b4bc282c/guava-31.1-jre.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/ca.weblite/java-objc-bridge/1.1/1227f9e0666314f9de41477e3ec277e542ed7f7b/java-objc-bridge-1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/7.0.1/3b4972a0cdb135853dba219be61a79b22cff1309/forgespi-7.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/24.0.1/13c5c75c4206580aa4d683bffee658caae6c9f43/annotations-24.0.1.jar:/home/runner/.gradle/caches/forge_gradle/mcp_repo/net/minecraft/mapping/1.20.1/mapping-1.20.1-mapping.zip:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/8.0.4/272d240aa73f42195b2a68e2ebd8b701ecf41f63/accesstransformers-8.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.0.5/699143dd438431d06b57416944f7cedbe52e1475/eventbus-6.0.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/10.0.9/6d9443f56f50bb85cea383686ff9c867391458b/modlauncher-10.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/5.1.6/62fab3c3d59d37f8e15af311cb638c6f6123423/coremods-5.1.6.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.openjdk.nashorn/nashorn-core/15.3/43977e804697048fc8d81d333a36c17d07a5b3dd/nashorn-core-15.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.7/e86dda4696d3c185fcc95d8d311904e7ce38a53f/asm-commons-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.7/c0655519f24d92af2202cb681cd7c1569df6ead6/asm-util-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.7/e4a258b7eb96107106c0599f0061cfc1832fe07a/asm-analysis-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.7/e446a17b175bfb733b87c5c2560ccb4e57d69f1a/asm-tree-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.7/73d7b3086e14beb604ced229c302feff6449723/asm-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.9.1/e92af8ab33e428461927b484e90bb155a4f3a052/antlr4-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.9.1/428664f05d2b7f7b7610204b5aa7c1763f62011a/antlr4-runtime-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.4/51d6cefb2b55ee55ee26b16391212fb2c7dfb4f4/toml-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.4/510f174abbf1c947494db50ef2445683bd52c230/core-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.8.5/4433f50c07debefaed0553bd0068f4f48d449313/maven-artifact-3.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.3/a01aaa6ddaea9ec07ec4f209487b7a46a526283a/typetools-0.6.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.2.0/96d02cd3b384ff015a8fef4223bcb4ccf1717c95/terminalconsoleappender-1.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.12.1/4382ab1382c7b6f379377ed5f665dc2f6e1218bc/jline-reader-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.12.1/c777448314e050d980a6b697c140f3bfe9eb7416/jline-terminal-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.2.2/54f5efc19bca95d709d9a37d19ffcbba3d21c1a6/oshi-core-6.2.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/71.1/9e7d3304c23f9ba5cb71915f7cce23231a57a445/icu4j-71.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/4.0.43/2ff9d747a77570a07a60d32ac77eb6162ad2a2d9/authlib-4.0.43.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/6.0.8/3ba4a30557a9b057760af4011f909ba619fc5125/datafixerupper-6.0.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.1.1/832b8e6674a9b325a5175a3a6267dfaf34c85139/logging-1.1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.17.9/3cad216e3a7f0c19b4b394388bc9ffc446f13b14/text2speech-1.17.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.82.Final/644041d1fa96a5d3130a29e8978630d716d76e38/netty-handler-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.82.Final/b77200379acb345a9ffdece1c605e591ac3e4e0a/netty-codec-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/476409d6255001ca53a55f65b01c13822f8dc93a/netty-transport-native-epoll-4.1.82.Final-linux-aarch_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/c7350a71920f3ae9142945e25fed4846cce53374/netty-transport-native-epoll-4.1.82.Final-linux-x86_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.82.Final/e7c7dd18deac93105797f30057c912651ea76521/netty-transport-classes-epoll-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.82.Final/3e895b35ca1b8a0eca56cacff4c2dde5d2c6abce/netty-transport-native-unix-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.82.Final/38f665ae8dcd29032eea31245ba7806bed2e0fa8/netty-resolver-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.82.Final/22d148e85c3f5ebdacc0ce1f5aabb1d420f73f3/netty-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.9/bb7ea75ecdb216654237830b3a96d87ad91f8cc5/fastutil-8.5.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.15/7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d/httpcore-4.4.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.19.0/3b6eeb4de4c49c0fe38a4ee27188ff5fee44d0bb/log4j-core-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.19.0/5c04bfdd63ce9dceb2e284b81e96b6a70010ee10/log4j-slf4j2-impl-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/cbac1b8d30cb4795149c1ef540f912671a8616d0/lwjgl-glfw-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/81716978214ecbda15050ca394b06ef61501a49e/lwjgl-glfw-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/a817bcf213db49f710603677457567c37d53e103/lwjgl-jemalloc-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/33dbb017b6ed6b25f993ad9d56741a49e7937718/lwjgl-jemalloc-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/2623a6b8ae1dfcd880738656a9f0243d2e6840bd/lwjgl-openal-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/f906b6439f6daa66001182ea7727e3467a93681b/lwjgl-openal-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/831a5533a21a5f4f81bbc51bb13e9899319b5411/lwjgl-opengl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/ab9ab6fde3743e3550fa5d46d785ecb45b047d99/lwjgl-opengl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/b119297cf8ed01f247abe8685857f8e7fcf5980f/lwjgl-stb-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/3ee7aec8686e52867677110415566a5342a80230/lwjgl-stb-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/ff1914111ef2e3e0110ef2dabc8d8cdaad82347/lwjgl-tinyfd-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/a35110b9471bea8cde826ab297550ee8c22f5035/lwjgl-tinyfd-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/ae58664f88e18a9bb2c77b063833ca7aaec484cb/lwjgl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/1de885aba434f934201b99f2f1afb142036ac189/lwjgl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.machinezoo.noexception/noexception/1.7.1/b65330c98e38a1f915fa54a6e5eca496505e3f0a/noexception-1.7.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.30/e606eac955f55ecf1d8edcccba04eb8ac98088dd/slf4j-simple-1.7.30.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.1/f48d81adce2abf5ad3cfe463df517952749e03bc/slf4j-api-2.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/srgutils/0.4.11/fbad1341ffdb47d276bbdc40ecb06da49e053e74/srgutils-0.4.11.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.3.0/cf43b5391de623b36fe066a21127baef82c64022/plexus-utils-3.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.12.0/d5692f0526415fcc6de94bb5bfbd3afd9dd3b3e5/checker-qual-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.11.0/c5a0ace696d3f8b1c1d8cc036d8c03cc0cbe6b69/error_prone_annotations-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/ST4/4.3/92f2c1ad8d84abcbeead6cf7f2c53a04166293c2/ST4-4.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr-runtime/3.5.2/cd9cd41361c155f3af0f653009dcecb08d8b4afd/antlr-runtime-3.5.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.abego.treelayout/org.abego.treelayout.core/1.0.3/457216e8e6578099ae63667bb1e4439235892028/org.abego.treelayout.core-1.0.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.glassfish/javax.json/1.0.4/3178f73569fd7a1e5ffc464e680f7a8cc784b85a/javax.json-1.0.4.jar)
+	at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:307) ~[jna-5.12.1.jar:5.12.1 (b0)]
+	at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)]
+	at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)]
+	at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?]
+	... 21 more
+	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+		at com.sun.jna.Native.open(Native Method) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:197) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+		at com.sun.jna.Native.open(Native Method) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:210) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+	Suppressed: java.io.IOException: Native library (linux-x86-64/libflite.so) not found in resource path (/home/runner/work/Minecraftproject/Minecraftproject/build/classes/java/main:/home/runner/work/Minecraftproject/Minecraftproject/build/resources/main:/home/runner/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.20.1-47.3.0_mapped_official_1.20.1/forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/deobf_dependencies/maven/modrinth/oculus/1.20.1-1.7.0_mapped_official_1.20.1/oculus-1.20.1-1.7.0_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/deobf_dependencies/maven/modrinth/embeddium/0.3.31+mc1.20.1_mapped_official_1.20.1/embeddium-0.3.31+mc1.20.1_mapped_official_1.20.1.jar:/home/runner/.gradle/caches/forge_gradle/minecraft_repo/versions/1.20.1/client-extra.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlearlydisplay/1.20.1-47.3.0/91e33682894f35862e9ce29d633e3258120952f0/fmlearlydisplay-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.3.0/d7ebc62120f202109e300e084ca1a31a7b946a62/javafmllanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.3.0/1bf3e845ea0ce750096da8c71c8364b188ab74d4/lowcodelanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.3.0/6093682e943ddccbabf70539319d7f2fe64db2e7/mclanguage-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.3.0/3b6be96aba3e323f3c918e8ef6a96312d82d76ad/fmlcore-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlloader/1.20.1-47.3.0/547850469c8a336b4c60cb8619f6cd421e9e5f55/fmlloader-1.20.1-47.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarSelector/0.3.19/376cc9c8ea60720cf027c01fc033de915699801c/JarJarSelector-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarMetadata/0.3.19/83feaa9b770e6ac0e96ee4fc23fa89325c5fe2/JarJarMetadata-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre/60458f877d055d0c9114d9e1a2efb737b4bc282c/guava-31.1-jre.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/ca.weblite/java-objc-bridge/1.1/1227f9e0666314f9de41477e3ec277e542ed7f7b/java-objc-bridge-1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/7.0.1/3b4972a0cdb135853dba219be61a79b22cff1309/forgespi-7.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/24.0.1/13c5c75c4206580aa4d683bffee658caae6c9f43/annotations-24.0.1.jar:/home/runner/.gradle/caches/forge_gradle/mcp_repo/net/minecraft/mapping/1.20.1/mapping-1.20.1-mapping.zip:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/8.0.4/272d240aa73f42195b2a68e2ebd8b701ecf41f63/accesstransformers-8.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.0.5/699143dd438431d06b57416944f7cedbe52e1475/eventbus-6.0.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/10.0.9/6d9443f56f50bb85cea383686ff9c867391458b/modlauncher-10.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/5.1.6/62fab3c3d59d37f8e15af311cb638c6f6123423/coremods-5.1.6.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.openjdk.nashorn/nashorn-core/15.3/43977e804697048fc8d81d333a36c17d07a5b3dd/nashorn-core-15.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.7/e86dda4696d3c185fcc95d8d311904e7ce38a53f/asm-commons-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.7/c0655519f24d92af2202cb681cd7c1569df6ead6/asm-util-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.7/e4a258b7eb96107106c0599f0061cfc1832fe07a/asm-analysis-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.7/e446a17b175bfb733b87c5c2560ccb4e57d69f1a/asm-tree-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.7/73d7b3086e14beb604ced229c302feff6449723/asm-9.7.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.9.1/e92af8ab33e428461927b484e90bb155a4f3a052/antlr4-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.9.1/428664f05d2b7f7b7610204b5aa7c1763f62011a/antlr4-runtime-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.4/51d6cefb2b55ee55ee26b16391212fb2c7dfb4f4/toml-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.4/510f174abbf1c947494db50ef2445683bd52c230/core-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.8.5/4433f50c07debefaed0553bd0068f4f48d449313/maven-artifact-3.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.3/a01aaa6ddaea9ec07ec4f209487b7a46a526283a/typetools-0.6.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.2.0/96d02cd3b384ff015a8fef4223bcb4ccf1717c95/terminalconsoleappender-1.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.12.1/4382ab1382c7b6f379377ed5f665dc2f6e1218bc/jline-reader-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.12.1/c777448314e050d980a6b697c140f3bfe9eb7416/jline-terminal-3.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.2.2/54f5efc19bca95d709d9a37d19ffcbba3d21c1a6/oshi-core-6.2.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/71.1/9e7d3304c23f9ba5cb71915f7cce23231a57a445/icu4j-71.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/4.0.43/2ff9d747a77570a07a60d32ac77eb6162ad2a2d9/authlib-4.0.43.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/6.0.8/3ba4a30557a9b057760af4011f909ba619fc5125/datafixerupper-6.0.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.1.1/832b8e6674a9b325a5175a3a6267dfaf34c85139/logging-1.1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.17.9/3cad216e3a7f0c19b4b394388bc9ffc446f13b14/text2speech-1.17.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.82.Final/644041d1fa96a5d3130a29e8978630d716d76e38/netty-handler-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.82.Final/b77200379acb345a9ffdece1c605e591ac3e4e0a/netty-codec-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/476409d6255001ca53a55f65b01c13822f8dc93a/netty-transport-native-epoll-4.1.82.Final-linux-aarch_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/c7350a71920f3ae9142945e25fed4846cce53374/netty-transport-native-epoll-4.1.82.Final-linux-x86_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.82.Final/e7c7dd18deac93105797f30057c912651ea76521/netty-transport-classes-epoll-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.82.Final/3e895b35ca1b8a0eca56cacff4c2dde5d2c6abce/netty-transport-native-unix-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.82.Final/38f665ae8dcd29032eea31245ba7806bed2e0fa8/netty-resolver-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.82.Final/22d148e85c3f5ebdacc0ce1f5aabb1d420f73f3/netty-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.9/bb7ea75ecdb216654237830b3a96d87ad91f8cc5/fastutil-8.5.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.15/7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d/httpcore-4.4.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.19.0/3b6eeb4de4c49c0fe38a4ee27188ff5fee44d0bb/log4j-core-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.19.0/5c04bfdd63ce9dceb2e284b81e96b6a70010ee10/log4j-slf4j2-impl-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/cbac1b8d30cb4795149c1ef540f912671a8616d0/lwjgl-glfw-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.1/81716978214ecbda15050ca394b06ef61501a49e/lwjgl-glfw-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/a817bcf213db49f710603677457567c37d53e103/lwjgl-jemalloc-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.1/33dbb017b6ed6b25f993ad9d56741a49e7937718/lwjgl-jemalloc-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/2623a6b8ae1dfcd880738656a9f0243d2e6840bd/lwjgl-openal-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.1/f906b6439f6daa66001182ea7727e3467a93681b/lwjgl-openal-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/831a5533a21a5f4f81bbc51bb13e9899319b5411/lwjgl-opengl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.1/ab9ab6fde3743e3550fa5d46d785ecb45b047d99/lwjgl-opengl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/b119297cf8ed01f247abe8685857f8e7fcf5980f/lwjgl-stb-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.1/3ee7aec8686e52867677110415566a5342a80230/lwjgl-stb-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/ff1914111ef2e3e0110ef2dabc8d8cdaad82347/lwjgl-tinyfd-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.1/a35110b9471bea8cde826ab297550ee8c22f5035/lwjgl-tinyfd-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/ae58664f88e18a9bb2c77b063833ca7aaec484cb/lwjgl-3.3.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.1/1de885aba434f934201b99f2f1afb142036ac189/lwjgl-3.3.1-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.machinezoo.noexception/noexception/1.7.1/b65330c98e38a1f915fa54a6e5eca496505e3f0a/noexception-1.7.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.30/e606eac955f55ecf1d8edcccba04eb8ac98088dd/slf4j-simple-1.7.30.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.1/f48d81adce2abf5ad3cfe463df517952749e03bc/slf4j-api-2.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/srgutils/0.4.11/fbad1341ffdb47d276bbdc40ecb06da49e053e74/srgutils-0.4.11.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.3.0/cf43b5391de623b36fe066a21127baef82c64022/plexus-utils-3.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.12.0/d5692f0526415fcc6de94bb5bfbd3afd9dd3b3e5/checker-qual-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.11.0/c5a0ace696d3f8b1c1d8cc036d8c03cc0cbe6b69/error_prone_annotations-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/ST4/4.3/92f2c1ad8d84abcbeead6cf7f2c53a04166293c2/ST4-4.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr-runtime/3.5.2/cd9cd41361c155f3af0f653009dcecb08d8b4afd/antlr-runtime-3.5.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.abego.treelayout/org.abego.treelayout.core/1.0.3/457216e8e6578099ae63667bb1e4439235892028/org.abego.treelayout.core-1.0.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.glassfish/javax.json/1.0.4/3178f73569fd7a1e5ffc464e680f7a8cc784b85a/javax.json-1.0.4.jar)
+		at com.sun.jna.Native.extractFromResourcePath(Native.java:1145) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:281) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+		at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+		at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+[03Nov2026 11:17:52.955] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
+[03Nov2026 11:17:52.985] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/reisatsu-client.toml is not correct. Correcting
+[03Nov2026 11:17:52.986] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key accessibility was corrected from null to its default, SimpleCommentedConfig:{}. 
+[03Nov2026 11:17:52.987] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key accessibility.flashReduction was corrected from null to its default, false. 
+[03Nov2026 11:17:52.987] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key accessibility.jumpscares was corrected from null to its default, true. 
+[03Nov2026 11:17:52.988] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key accessibility.screenEffects was corrected from null to its default, 1.0. 
+[03Nov2026 11:17:52.989] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders was corrected from null to its default, SimpleCommentedConfig:{}. 
+[03Nov2026 11:17:52.989] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders.installShaderPack was corrected from null to its default, true. 
+[03Nov2026 11:17:52.990] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key sound was corrected from null to its default, SimpleCommentedConfig:{}. 
+[03Nov2026 11:17:52.990] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key sound.acoustics was corrected from null to its default, true. 
+[03Nov2026 11:17:52.997] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/forge-client.toml is not correct. Correcting
+[03Nov2026 11:17:52.998] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client was corrected from null to its default, SimpleCommentedConfig:{}. 
+[03Nov2026 11:17:52.998] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.alwaysSetupTerrainOffThread was corrected from null to its default, false. 
+[03Nov2026 11:17:52.998] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.experimentalForgeLightPipelineEnabled was corrected from null to its default, false. 
+[03Nov2026 11:17:52.998] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.showLoadWarnings was corrected from null to its default, true. 
+[03Nov2026 11:17:52.998] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.useCombinedDepthStencilAttachment was corrected from null to its default, false. 
+[03Nov2026 11:17:52.998] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.compressLanIPv6Addresses was corrected from null to its default, true. 
+[03Nov2026 11:17:52.998] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.calculateAllNormals was corrected from null to its default, false. 
+[03Nov2026 11:17:52.999] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.stabilizeDirectionGetNearest was corrected from null to its default, true. 
+[03Nov2026 11:17:53.003] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/reisatsu-common.toml is not correct. Correcting
+[03Nov2026 11:17:53.004] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game was corrected from null to its default, SimpleCommentedConfig:{}. 
+[03Nov2026 11:17:53.004] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.spiritSpeed was corrected from null to its default, 1.0. 
+[03Nov2026 11:17:53.004] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.awarenessRate was corrected from null to its default, 1.0. 
+[03Nov2026 11:17:53.004] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key game.autoStart was corrected from null to its default, true. 
+[03Nov2026 11:17:53.260] [Worker-Main-3/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
+[03Nov2026 11:17:54.483] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [ReisatsuShaders] copied ReisatsuShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/ReisatsuShaders.zip; Oculus pack already selected: ReisatsuShaders.zip (reloading updated pack)
+[03Nov2026 11:17:54.520] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[03Nov2026 11:17:54.539] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+[03Nov2026 11:17:54.898] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.3.0 Target: 47.4.28
+[03Nov2026 11:17:55.346] [Render thread/INFO] [Oculus/]: Using shaderpack: ReisatsuShaders.zip
+[03Nov2026 11:17:58.550] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[03Nov2026 11:17:58.550] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[03Nov2026 11:17:58.574] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:283) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at com.mojang.blaze3d.audio.Library.init(Library.java:153) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundEngine.loadLibrary(SoundEngine.java:104) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundEngine.reload(SoundEngine.java:96) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:125) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:40) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.server.packs.resources.SimplePreparableReloadListener.lambda$reload$1(SimplePreparableReloadListener.java:13) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:718) ~[?:?]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?]
+	at net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$new$3(SimpleReloadInstance.java:69) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:156) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:23) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:130) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:115) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1106) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:718) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:218) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1.jar:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:569) ~[?:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.3.0.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar:?]
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[bootstraplauncher-1.1.2.jar:?]
+[03Nov2026 11:17:58.789] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/blocks.png-atlas
+[03Nov2026 11:17:58.883] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[03Nov2026 11:17:58.884] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[03Nov2026 11:17:58.885] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[03Nov2026 11:17:58.887] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[03Nov2026 11:17:58.894] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[03Nov2026 11:17:58.894] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[03Nov2026 11:17:58.895] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[03Nov2026 11:17:58.895] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[03Nov2026 11:17:59.150] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[03Nov2026 11:17:59.324] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[03Nov2026 11:17:59.326] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[03Nov2026 11:17:59.326] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[03Nov2026 11:17:59.354] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+[03Nov2026 11:17:59.409] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+[03Nov2026 11:17:59.415] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+[03Nov2026 11:18:09.134] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.device.GLRenderDevice$ImmediateDrawCommandList, which may cause instability.
+[03Nov2026 11:18:09.151] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: title screen (shaders=true)
+[03Nov2026 11:18:10.205] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.vertex.serializers.VertexSerializerRegistryImpl, which may cause instability.
+[03Nov2026 11:18:11.718] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 00_title
+[03Nov2026 11:18:13.201] [Render thread/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[03Nov2026 11:18:13.333] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1271 advancements
+[03Nov2026 11:18:13.873] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Starting integrated minecraft server version 1.20.1
+[03Nov2026 11:18:13.873] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[03Nov2026 11:18:14.049] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/ReisatsuCI/serverconfig/forge-server.toml is not correct. Correcting
+[03Nov2026 11:18:14.049] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[03Nov2026 11:18:14.049] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[03Nov2026 11:18:14.049] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[03Nov2026 11:18:14.049] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[03Nov2026 11:18:14.050] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[03Nov2026 11:18:14.050] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[03Nov2026 11:18:14.050] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[03Nov2026 11:18:14.050] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[03Nov2026 11:18:14.930] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[03Nov2026 11:18:15.811] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[03Nov2026 11:18:15.812] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：0%
+[03Nov2026 11:18:16.096] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：1%
+[03Nov2026 11:18:16.481] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：17%
+[03Nov2026 11:18:16.959] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: スポーン地点を準備中：58%
+[03Nov2026 11:18:17.316] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[03Nov2026 11:18:17.318] [Render thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 2380 ms
+[03Nov2026 11:18:17.416] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing view distance to 8, from 10
+[03Nov2026 11:18:17.420] [Server thread/INFO] [net.minecraft.client.server.IntegratedServer/]: Changing simulation distance to 8, from 0
+[03Nov2026 11:18:17.485] [Render thread/WARN] [io.netty.util.internal.SystemPropertyUtil/]: Unable to parse the boolean system property 'java.net.preferIPv6Addresses':system - using the default value: false
+[03Nov2026 11:18:17.698] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: world creation requested
+[03Nov2026 11:18:17.949] [Netty Local Client IO #0/INFO] [net.minecraftforge.network.NetworkHooks/]: Connected to a modded server.
+[03Nov2026 11:18:18.106] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Dev[local:E:91f488c7] logged in with entity id 1 at (-3.5, -60.0, -6.5)
+[03Nov2026 11:18:18.188] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+[03Nov2026 11:18:18.188] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+[03Nov2026 11:18:18.208] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Devがゲームに参加しました
+[03Nov2026 11:18:18.261] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+[03Nov2026 11:18:18.274] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+[03Nov2026 11:18:19.942] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] Dev arrives at HIDAMARI (replay=false)
+[03Nov2026 11:18:20.006] [Server thread/WARN] [net.minecraft.server.MinecraftServer/]: Can't keep up! Is the server overloaded? Running 2037ms or 40 ticks behind
+[03Nov2026 11:18:20.072] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=middle,side=right] but failed at location BlockPos{x=4, y=66, z=30}
+[03Nov2026 11:18:20.072] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=top,side=left] but failed at location BlockPos{x=3, y=67, z=26}
+[03Nov2026 11:18:20.072] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=middle,side=left] but failed at location BlockPos{x=3, y=66, z=26}
+[03Nov2026 11:18:20.072] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=top,side=right] but failed at location BlockPos{x=4, y=67, z=26}
+[03Nov2026 11:18:20.072] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=middle,side=right] but failed at location BlockPos{x=4, y=66, z=26}
+[03Nov2026 11:18:20.072] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=top,side=left] but failed at location BlockPos{x=3, y=67, z=30}
+[03Nov2026 11:18:20.086] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=middle,side=left] but failed at location BlockPos{x=3, y=66, z=30}
+[03Nov2026 11:18:20.086] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=top,side=right] but failed at location BlockPos{x=4, y=67, z=30}
+[03Nov2026 11:18:20.155] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:swing_door}[facing=south,half=upper,side=left,swing=0] but failed at location BlockPos{x=29, y=66, z=10}
+[03Nov2026 11:18:20.155] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:swing_door}[facing=south,half=upper,side=right,swing=0] but failed at location BlockPos{x=30, y=66, z=10}
+[03Nov2026 11:18:22.280] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.RenderSectionManager, which may cause instability.
+[03Nov2026 11:18:22.360] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.compile.tasks.ChunkBuilderMeshingTask, which may cause instability.
+[03Nov2026 11:18:22.464] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.vertex.format.ChunkMeshFormats, which may cause instability.
+[03Nov2026 11:18:22.468] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.vertex.format.ChunkMeshAttribute, which may cause instability.
+[03Nov2026 11:18:22.482] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.attribute.GlVertexFormat$Builder, which may cause instability.
+[03Nov2026 11:18:22.508] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.attribute.GlVertexAttributeFormat, which may cause instability.
+[03Nov2026 11:18:22.516] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.DefaultChunkRenderer, which may cause instability.
+[03Nov2026 11:18:22.563] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.ShaderChunkRenderer, which may cause instability.
+[03Nov2026 11:18:22.598] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.compile.ChunkBuildBuffers, which may cause instability.
+[03Nov2026 11:18:22.608] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.vertex.builder.ChunkMeshBufferBuilder, which may cause instability.
+[03Nov2026 11:18:22.611] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.compile.buffers.BakedChunkModelBuilder, which may cause instability.
+[03Nov2026 11:18:22.634] [Render thread/WARN] [mixin/]: Error loading class: net/fabricmc/fabric/api/blockview/v2/FabricBlockView (java.lang.ClassNotFoundException: net.fabricmc.fabric.api.blockview.v2.FabricBlockView)
+[03Nov2026 11:18:22.638] [Render thread/WARN] [mixin/]: Error loading class: net/fabricmc/fabric/api/rendering/data/v1/RenderAttachedBlockView (java.lang.ClassNotFoundException: net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView)
+[03Nov2026 11:18:22.654] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.model.light.smooth.SmoothLightPipeline, which may cause instability.
+[03Nov2026 11:18:22.665] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.model.light.flat.FlatLightPipeline, which may cause instability.
+[03Nov2026 11:18:22.709] [Render thread/INFO] [ChunkBuilder/]: Started 1 worker threads
+[03Nov2026 11:18:22.763] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] ReisatsuShaders を更新しました。
+[03Nov2026 11:18:23.290] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='reisatsu', name='hidamari'}
+[03Nov2026 11:18:23.291] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+[03Nov2026 11:18:23.304] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='reisatsu', name='hidamari'}
+[03Nov2026 11:18:24.007] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+[03Nov2026 11:18:24.211] [Render thread/INFO] [com.mojang.blaze3d.platform.GlDebug/]: OpenGL debug message: id=1, source=SHADER COMPILER, type=OTHER, severity=HIGH, message='0:1113(17): warning: `eLevel' used uninitialized'
+[03Nov2026 11:18:24.220] [Render thread/WARN] [net.irisshaders.iris.gl.shader.GlShader/]: Shader compilation log for prepare1.fsh: 0:1113(17): warning: `eLevel' used uninitialized
+
+[03Nov2026 11:18:33.562] [Render thread/INFO] [ChunkBuilder/]: Stopping worker threads
+[03Nov2026 11:18:33.566] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.shader.GlProgram, which may cause instability.
+[03Nov2026 11:18:33.580] [Render thread/INFO] [ChunkBuilder/]: Started 1 worker threads
+[03Nov2026 11:18:33.589] [Render thread/INFO] [ChunkBuilder/]: Stopping worker threads
+[03Nov2026 11:18:33.591] [Render thread/INFO] [ChunkBuilder/]: Started 1 worker threads
+[03Nov2026 11:18:33.608] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 2 advancements
+[03Nov2026 11:18:34.049] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.gl.shader.ShaderType, which may cause instability.
+[03Nov2026 11:18:41.942] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.chunk.region.RenderRegion$DeviceResources, which may cause instability.
+[03Nov2026 11:18:46.704] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: world tour: 38 shots
+[03Nov2026 11:18:46.711] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: in world, 255 steps
+[03Nov2026 11:18:50.563] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step rules pos=4, 65, 41 shaders=true
+[03Nov2026 11:18:50.567] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームルール「sendCommandFeedback」がfalseに設定されました］
+[03Nov2026 11:18:50.567] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームルール「doMobSpawning」がfalseに設定されました］
+[03Nov2026 11:18:50.572] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step skip_intro pos=4, 65, 41 shaders=true
+[03Nov2026 11:18:52.153] [Render thread/WARN] [Embeddium-MixinTaintDetector/]: Mod(s) [oculus] are modifying Embeddium class me.jellysquid.mods.sodium.client.render.immediate.model.BakedModelEncoder, which may cause instability.
+[03Nov2026 11:18:58.613] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step settle pos=4, 65, 41 shaders=true
+[03Nov2026 11:19:07.479] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 05_after_intro
+[03Nov2026 11:19:08.251] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step tour_begin pos=4, 65, 41 shaders=true
+[03Nov2026 11:19:08.253] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームモードをスペクテイターモードに変更しました］
+[03Nov2026 11:19:09.051] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_road_approach pos=4, 65, 41 shaders=true
+[03Nov2026 11:19:09.130] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] restaurant reset (6131 blocks restored)
+[03Nov2026 11:19:09.138] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-26.500000, 65.000000, 53.500000にテレポートさせました］
+[03Nov2026 11:19:29.519] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_road_approach
+[03Nov2026 11:19:29.523] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_front pos=-27, 65, 53 shaders=true
+[03Nov2026 11:19:29.525] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを20.500000, 65.000000, 46.500000にテレポートさせました］
+[03Nov2026 11:19:54.282] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_front
+[03Nov2026 11:19:54.285] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_entrance pos=20, 65, 46 shaders=true
+[03Nov2026 11:19:54.288] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを4.500000, 65.000000, 37.500000にテレポートさせました］
+[03Nov2026 11:20:09.528] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_entrance
+[03Nov2026 11:20:10.498] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_vending pos=4, 65, 37 shaders=true
+[03Nov2026 11:20:10.499] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを10.500000, 65.000000, 34.500000にテレポートさせました］
+[03Nov2026 11:20:20.963] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_vending
+[03Nov2026 11:20:20.966] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_sign pos=10, 65, 34 shaders=true
+[03Nov2026 11:20:20.968] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを37.500000, 65.000000, 40.500000にテレポートさせました］
+[03Nov2026 11:20:32.376] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_sign
+[03Nov2026 11:20:32.379] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_lot pos=37, 65, 40 shaders=true
+[03Nov2026 11:20:32.380] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-6.500000, 65.000000, 47.500000にテレポートさせました］
+[03Nov2026 11:20:54.318] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_lot
+[03Nov2026 11:20:55.112] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_window_table7 pos=-7, 65, 47 shaders=true
+[03Nov2026 11:20:55.113] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを34.500000, 65.000000, 36.500000にテレポートさせました］
+[03Nov2026 11:21:19.751] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_window_table7
+[03Nov2026 11:21:19.755] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_curve pos=34, 65, 36 shaders=true
+[03Nov2026 11:21:19.756] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを52.500000, 65.000000, 54.500000にテレポートさせました］
+[03Nov2026 11:21:32.560] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_curve
+[03Nov2026 11:21:33.293] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_flowers pos=52, 65, 54 shaders=true
+[03Nov2026 11:21:33.293] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを72.500000, 65.000000, 48.500000にテレポートさせました］
+[03Nov2026 11:21:43.063] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_flowers
+[03Nov2026 11:21:43.643] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_curve_mirror pos=72, 65, 48 shaders=true
+[03Nov2026 11:21:43.644] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを61.500000, 65.000000, 53.500000にテレポートさせました］
+[03Nov2026 11:21:51.178] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_curve_mirror
+[03Nov2026 11:21:51.834] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_traffic_light pos=61, 65, 53 shaders=true
+[03Nov2026 11:21:51.835] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-18.500000, 65.000000, 54.500000にテレポートさせました］
+[03Nov2026 11:22:09.030] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_traffic_light
+[03Nov2026 11:22:09.033] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_back_yard pos=-19, 65, 54 shaders=true
+[03Nov2026 11:22:09.033] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを38.500000, 65.000000, -8.500000にテレポートさせました］
+[03Nov2026 11:22:31.074] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_back_yard
+[03Nov2026 11:22:31.782] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_staff_path pos=38, 65, -9 shaders=true
+[03Nov2026 11:22:31.783] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを-2.500000, 65.000000, 28.500000にテレポートさせました］
+[03Nov2026 11:22:55.492] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_staff_path
+[03Nov2026 11:22:55.495] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_east_side pos=-3, 65, 28 shaders=true
+[03Nov2026 11:22:55.496] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを44.500000, 65.000000, 31.500000にテレポートさせました］
+[03Nov2026 11:23:17.244] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_east_side
+[03Nov2026 11:23:18.046] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_overview pos=44, 65, 31 shaders=true
+[03Nov2026 11:23:18.047] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを20.500000, 88.000000, 72.500000にテレポートさせました］
+[03Nov2026 11:23:37.615] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_overview
+[03Nov2026 11:23:38.282] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_overview_curve pos=20, 88, 72 shaders=true
+[03Nov2026 11:23:38.283] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを30.500000, 92.000000, 92.500000にテレポートさせました］
+[03Nov2026 11:23:49.120] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_overview_curve
+[03Nov2026 11:23:49.758] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_vestibule_off pos=30, 92, 92 shaders=true
+[03Nov2026 11:23:49.789] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] restaurant reset (6129 blocks restored)
+[03Nov2026 11:23:49.796] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを6.500000, 65.000000, 28.000000にテレポートさせました］
+[03Nov2026 11:24:15.985] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_vestibule_off
+[03Nov2026 11:24:15.988] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_waiting_off pos=6, 65, 28 shaders=true
+[03Nov2026 11:24:15.989] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを1.500000, 65.000000, 24.500000にテレポートさせました］
+[03Nov2026 11:24:25.959] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_waiting_off
+[03Nov2026 11:24:25.962] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_register_off pos=1, 65, 24 shaders=true
+[03Nov2026 11:24:25.963] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを8.500000, 65.000000, 25.500000にテレポートさせました］
+[03Nov2026 11:24:36.706] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_register_off
+[03Nov2026 11:24:37.654] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_kids_corner_off pos=8, 65, 25 shaders=true
+[03Nov2026 11:24:37.655] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを9.600000, 65.000000, 25.400000にテレポートさせました］
+[03Nov2026 11:24:45.937] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_kids_corner_off
+[03Nov2026 11:24:46.922] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_dining_west_off pos=9, 65, 25 shaders=true
+[03Nov2026 11:24:46.923] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを15.500000, 65.000000, 12.500000にテレポートさせました］
+[03Nov2026 11:24:59.249] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_dining_west_off
+[03Nov2026 11:24:59.252] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_dining_east_off pos=15, 65, 12 shaders=true
+[03Nov2026 11:24:59.253] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを37.500000, 65.000000, 26.500000にテレポートさせました］
+[03Nov2026 11:25:15.716] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_dining_east_off
+[03Nov2026 11:25:16.541] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_dining_booths_off pos=37, 65, 26 shaders=true
+[03Nov2026 11:25:16.542] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを22.500000, 65.000000, 26.500000にテレポートさせました］
+[03Nov2026 11:25:28.551] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_dining_booths_off
+[03Nov2026 11:25:29.423] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_table7_off pos=22, 65, 26 shaders=true
+[03Nov2026 11:25:29.424] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを31.500000, 65.000000, 25.500000にテレポートさせました］
+[03Nov2026 11:25:39.144] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_table7_off
+[03Nov2026 11:25:39.147] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_drink_bar_off pos=31, 65, 25 shaders=true
+[03Nov2026 11:25:39.148] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを19.500000, 65.000000, 15.500000にテレポートさせました］
+[03Nov2026 11:25:53.069] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_drink_bar_off
+[03Nov2026 11:25:53.072] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_pass_window_off pos=19, 65, 15 shaders=true
+[03Nov2026 11:25:53.073] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを24.500000, 65.000000, 14.500000にテレポートさせました］
+[03Nov2026 11:26:00.556] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_pass_window_off
+[03Nov2026 11:26:00.559] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_kitchen_line_off pos=24, 65, 14 shaders=true
+[03Nov2026 11:26:00.560] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを25.500000, 65.000000, 8.500000にテレポートさせました］
+[03Nov2026 11:26:07.803] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_kitchen_line_off
+[03Nov2026 11:26:07.808] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_kitchen_dish_pit_off pos=25, 65, 8 shaders=true
+[03Nov2026 11:26:07.808] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを31.500000, 65.000000, 6.500000にテレポートさせました］
+[03Nov2026 11:26:14.600] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_kitchen_dish_pit_off
+[03Nov2026 11:26:14.603] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_fridge_off pos=31, 65, 6 shaders=true
+[03Nov2026 11:26:14.606] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを17.500000, 65.000000, 3.500000にテレポートさせました］
+[03Nov2026 11:26:25.444] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_fridge_off
+[03Nov2026 11:26:25.446] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_corridor_off pos=17, 65, 3 shaders=true
+[03Nov2026 11:26:25.448] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを13.500000, 65.000000, 8.500000にテレポートさせました］
+[03Nov2026 11:26:35.826] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_corridor_off
+[03Nov2026 11:26:35.829] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_staff_room_off pos=13, 65, 8 shaders=true
+[03Nov2026 11:26:35.829] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを5.500000, 65.000000, 5.500000にテレポートさせました］
+[03Nov2026 11:26:46.646] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_staff_room_off
+[03Nov2026 11:26:47.542] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_office_off pos=5, 65, 5 shaders=true
+[03Nov2026 11:26:47.542] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを12.500000, 65.000000, 5.500000にテレポートさせました］
+[03Nov2026 11:26:59.077] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_office_off
+[03Nov2026 11:26:59.080] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_office_window_off pos=12, 65, 5 shaders=true
+[03Nov2026 11:26:59.082] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを9.500000, 65.000000, 9.500000にテレポートさせました］
+[03Nov2026 11:27:10.174] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_office_window_off
+[03Nov2026 11:27:11.244] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_storage_off pos=9, 65, 9 shaders=true
+[03Nov2026 11:27:11.245] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを3.500000, 65.000000, 11.500000にテレポートさせました］
+[03Nov2026 11:27:20.428] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_storage_off
+[03Nov2026 11:27:21.301] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_mens_off pos=3, 65, 11 shaders=true
+[03Nov2026 11:27:21.302] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを3.500000, 65.000000, 21.500000にテレポートさせました］
+[03Nov2026 11:27:32.079] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_mens_off
+[03Nov2026 11:27:32.990] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_womens_off pos=3, 65, 21 shaders=true
+[03Nov2026 11:27:32.991] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを11.500000, 65.000000, 21.500000にテレポートさせました］
+[03Nov2026 11:27:43.716] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_womens_off
+[03Nov2026 11:27:43.719] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_mirror_off pos=11, 65, 21 shaders=true
+[03Nov2026 11:27:43.722] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを10.500000, 65.000000, 19.500000にテレポートさせました］
+[03Nov2026 11:27:52.455] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_mirror_off
+[03Nov2026 11:27:52.458] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_cavity_off pos=10, 65, 19 shaders=true
+[03Nov2026 11:27:52.459] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを11.500000, 65.000000, 11.500000にテレポートさせました］
+[03Nov2026 11:28:02.208] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_cavity_off
+[03Nov2026 11:28:02.211] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step tour_end pos=11, 65, 11 shaders=true
+[03Nov2026 11:28:02.211] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームモードをクリエイティブモードに変更しました］
+[03Nov2026 11:28:03.747] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームモードをスペクテイターモードに変更しました］
+[03Nov2026 11:28:03.747] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pano_begin pos=11, 65, 11 shaders=true
+[03Nov2026 11:28:03.767] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] restaurant reset (6129 blocks restored)
+[03Nov2026 11:28:16.942] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_0 pos=11, 65, 11 shaders=true
+[03Nov2026 11:28:16.942] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 41.500000にテレポートさせました］
+[03Nov2026 11:28:39.873] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_0
+[03Nov2026 11:28:39.875] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_1 pos=16, 65, 41 shaders=true
+[03Nov2026 11:28:39.876] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 41.500000にテレポートさせました］
+[03Nov2026 11:28:46.720] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_1
+[03Nov2026 11:28:47.508] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_2 pos=16, 65, 41 shaders=true
+[03Nov2026 11:28:47.509] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 41.500000にテレポートさせました］
+[03Nov2026 11:28:53.145] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_2
+[03Nov2026 11:28:53.148] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_3 pos=16, 65, 41 shaders=true
+[03Nov2026 11:28:53.148] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 41.500000にテレポートさせました］
+[03Nov2026 11:28:59.297] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_3
+[03Nov2026 11:29:00.048] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_4 pos=16, 65, 41 shaders=true
+[03Nov2026 11:29:00.049] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 41.500000にテレポートさせました］
+[03Nov2026 11:29:05.490] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_4
+[03Nov2026 11:29:05.493] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_5 pos=16, 65, 41 shaders=true
+[03Nov2026 11:29:05.493] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 41.500000にテレポートさせました］
+[03Nov2026 11:29:11.535] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_5
+[03Nov2026 11:29:12.249] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pano_end pos=16, 65, 41 shaders=true
+[03Nov2026 11:29:12.249] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：ゲームモードをクリエイティブモードに変更しました］
+[03Nov2026 11:29:12.927] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step lights_start pos=16, 65, 41 shaders=true
+[03Nov2026 11:29:12.986] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] restaurant reset (6129 blocks restored)
+[03Nov2026 11:29:21.164] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_10_hud_dining pos=16, 65, 41 shaders=true
+[03Nov2026 11:29:21.166] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:29:21.167] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:29:36.919] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 10_hud_dining
+[03Nov2026 11:29:36.922] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_11_flashlight pos=16, 65, 13 shaders=true
+[03Nov2026 11:29:36.924] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[懐中電灯（点灯）]に置換しました］
+[03Nov2026 11:29:42.217] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 11_flashlight
+[03Nov2026 11:29:43.159] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_12_finder_dining pos=16, 65, 13 shaders=true
+[03Nov2026 11:29:43.160] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:29:50.633] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 12_finder_dining
+[03Nov2026 11:29:50.637] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_13_finder_kitchen pos=16, 65, 13 shaders=true
+[03Nov2026 11:29:50.639] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを25.500000, 65.000000, 8.500000にテレポートさせました］
+[03Nov2026 11:30:00.295] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 13_finder_kitchen
+[03Nov2026 11:30:00.954] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_14_finder_restroom pos=25, 65, 8 shaders=true
+[03Nov2026 11:30:00.955] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを10.500000, 65.000000, 19.500000にテレポートさせました］
+[03Nov2026 11:30:13.918] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 14_finder_restroom
+[03Nov2026 11:30:13.920] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_15_finder_outside pos=10, 65, 19 shaders=true
+[03Nov2026 11:30:13.921] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを4.500000, 65.000000, 41.500000にテレポートさせました］
+[03Nov2026 11:30:28.750] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 15_finder_outside
+[03Nov2026 11:30:29.798] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_down pos=4, 65, 41 shaders=true
+[03Nov2026 11:30:29.799] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:30:30.795] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:30:30.795] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_chef pos=4, 65, 41 shaders=true
+[03Nov2026 11:30:30.795] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを24.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:30:47.467] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   chef at 25.50 65.00 6.50 yaw -180 pose 0
+[03Nov2026 11:30:47.467] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_chef pos=24, 65, 13 shaders=true
+[03Nov2026 11:30:47.469] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_chef_eye
+[03Nov2026 11:30:48.100] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_chef pos=24, 65, 13 shaders=true
+[03Nov2026 11:30:48.101] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:30:52.078] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_chef_finder
+[03Nov2026 11:30:52.081] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_chef pos=24, 65, 13 shaders=true
+[03Nov2026 11:30:52.082] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:30:52.744] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:30:52.744] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを35.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:30:52.744] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_waitress pos=24, 65, 13 shaders=true
+[03Nov2026 11:31:09.532] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   waitress at 32.50 65.00 12.50 yaw -180 pose 3
+[03Nov2026 11:31:09.532] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_waitress pos=35, 65, 13 shaders=true
+[03Nov2026 11:31:09.534] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_waitress_eye
+[03Nov2026 11:31:09.537] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_waitress pos=35, 65, 13 shaders=true
+[03Nov2026 11:31:09.538] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:31:13.566] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_waitress_finder
+[03Nov2026 11:31:14.280] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_waitress pos=35, 65, 13 shaders=true
+[03Nov2026 11:31:14.281] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:31:14.948] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_child pos=35, 65, 13 shaders=true
+[03Nov2026 11:31:14.948] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:31:14.949] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを9.500000, 65.000000, 27.500000にテレポートさせました］
+[03Nov2026 11:31:40.206] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   child at 12.50 65.00 27.30 yaw -180 pose 1
+[03Nov2026 11:31:40.206] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_child pos=9, 65, 27 shaders=true
+[03Nov2026 11:31:40.208] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_child_eye
+[03Nov2026 11:31:40.211] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_child pos=9, 65, 27 shaders=true
+[03Nov2026 11:31:40.212] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:31:46.243] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_child_finder
+[03Nov2026 11:31:47.299] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_child pos=9, 65, 27 shaders=true
+[03Nov2026 11:31:47.300] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:31:47.303] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_mirror_woman pos=9, 65, 27 shaders=true
+[03Nov2026 11:31:47.304] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:31:47.305] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを10.500000, 65.000000, 19.500000にテレポートさせました］
+[03Nov2026 11:32:09.561] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   mirror_woman at 10.50 65.00 14.50 yaw 0 pose 0
+[03Nov2026 11:32:09.562] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_mirror_woman pos=10, 65, 19 shaders=true
+[03Nov2026 11:32:10.402] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_mirror_woman_eye
+[03Nov2026 11:32:10.406] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_mirror_woman pos=10, 65, 19 shaders=true
+[03Nov2026 11:32:10.407] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:32:15.791] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_mirror_woman_finder
+[03Nov2026 11:32:15.794] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_mirror_woman pos=10, 65, 19 shaders=true
+[03Nov2026 11:32:15.795] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:32:16.763] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_manager pos=10, 65, 19 shaders=true
+[03Nov2026 11:32:16.763] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:32:16.764] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを11.500000, 65.000000, 2.500000にテレポートさせました］
+[03Nov2026 11:32:40.707] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   manager at 9.75 65.00 6.50 yaw 90 pose 0
+[03Nov2026 11:32:40.708] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_manager pos=11, 65, 2 shaders=true
+[03Nov2026 11:32:40.709] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_manager_eye
+[03Nov2026 11:32:41.649] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_manager pos=11, 65, 2 shaders=true
+[03Nov2026 11:32:41.650] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:32:47.347] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_manager_finder
+[03Nov2026 11:32:47.351] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_manager pos=11, 65, 2 shaders=true
+[03Nov2026 11:32:47.353] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:32:48.362] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_visitor pos=11, 65, 2 shaders=true
+[03Nov2026 11:32:48.363] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:32:48.364] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを34.500000, 65.000000, 24.500000にテレポートさせました］
+[03Nov2026 11:33:09.686] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   visitor at 33.50 65.00 28.50 yaw -90 pose 1
+[03Nov2026 11:33:09.686] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_visitor pos=34, 65, 24 shaders=true
+[03Nov2026 11:33:09.690] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_visitor_eye
+[03Nov2026 11:33:10.518] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_visitor pos=34, 65, 24 shaders=true
+[03Nov2026 11:33:10.519] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:33:15.506] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_visitor_finder
+[03Nov2026 11:33:15.509] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_visitor pos=34, 65, 24 shaders=true
+[03Nov2026 11:33:15.510] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:33:16.410] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_lights pos=34, 65, 24 shaders=true
+[03Nov2026 11:33:21.935] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_visitor pos=34, 65, 24 shaders=true
+[03Nov2026 11:33:21.936] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:33:21.936] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:33:30.896] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_visitor pos=16, 65, 13 shaders=true
+[03Nov2026 11:33:36.901] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_visitor_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:33:36.901] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:33:43.914] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.visitor 4.0 blocks away
+[03Nov2026 11:33:43.915] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_visitor_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:33:44.918] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 40_visitor_eye_p1
+[03Nov2026 11:33:44.921] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_visitor_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:33:44.922] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:33:50.338] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 40_visitor_finder_p1
+[03Nov2026 11:33:51.661] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_visitor_4 pos=16, 65, 13 shaders=true
+[03Nov2026 11:33:51.662] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:33:58.744] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.visitor 4.0 blocks away
+[03Nov2026 11:33:58.745] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_visitor_4 pos=16, 65, 13 shaders=true
+[03Nov2026 11:33:58.748] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 41_visitor_eye_p4
+[03Nov2026 11:33:59.812] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_visitor_4 pos=16, 65, 13 shaders=true
+[03Nov2026 11:33:59.813] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:34:05.116] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 41_visitor_finder_p4
+[03Nov2026 11:34:05.118] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_visitor pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:06.240] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_waitress pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:06.240] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:34:06.241] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:34:15.325] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_waitress pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:21.335] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_waitress_0 pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:21.336] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:34:28.383] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.waitress 4.0 blocks away
+[03Nov2026 11:34:28.383] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_waitress_0 pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:29.384] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 42_waitress_eye_p0
+[03Nov2026 11:34:29.387] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_waitress_0 pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:29.390] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:34:34.731] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 42_waitress_finder_p0
+[03Nov2026 11:34:34.735] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_waitress_2 pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:34.735] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:34:42.884] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.waitress 4.0 blocks away
+[03Nov2026 11:34:42.884] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_waitress_2 pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:42.888] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 43_waitress_eye_p2
+[03Nov2026 11:34:43.943] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_waitress_2 pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:43.944] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:34:48.177] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 43_waitress_finder_p2
+[03Nov2026 11:34:49.292] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_waitress pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:49.296] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_chef pos=16, 65, 13 shaders=true
+[03Nov2026 11:34:49.296] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:34:49.297] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:34:59.625] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_chef pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:05.664] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_chef_0 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:05.665] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:35:12.722] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.chef 4.0 blocks away
+[03Nov2026 11:35:12.722] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_chef_0 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:12.726] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 44_chef_eye_p0
+[03Nov2026 11:35:13.782] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_chef_0 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:13.783] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:35:19.083] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 44_chef_finder_p0
+[03Nov2026 11:35:19.086] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_chef_5 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:19.087] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:35:26.206] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.chef 4.0 blocks away
+[03Nov2026 11:35:26.206] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_chef_5 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:27.206] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 45_chef_eye_p5
+[03Nov2026 11:35:27.208] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_chef_5 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:27.209] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:35:32.562] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 45_chef_finder_p5
+[03Nov2026 11:35:33.674] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_chef pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:33.678] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_child pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:33.679] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:35:33.679] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:35:42.732] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_child pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:48.769] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_child_2 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:48.772] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:35:57.013] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.child 4.0 blocks away
+[03Nov2026 11:35:57.014] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_child_2 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:57.018] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 46_child_eye_p2
+[03Nov2026 11:35:58.071] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_child_2 pos=16, 65, 13 shaders=true
+[03Nov2026 11:35:58.072] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:36:03.361] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 46_child_finder_p2
+[03Nov2026 11:36:03.364] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_child_6 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:03.367] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:36:10.525] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.child 4.0 blocks away
+[03Nov2026 11:36:10.525] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_child_6 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:11.529] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 47_child_eye_p6
+[03Nov2026 11:36:11.531] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_child_6 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:11.533] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:36:16.919] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 47_child_finder_p6
+[03Nov2026 11:36:16.922] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_child pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:18.046] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_mirror_woman pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:18.046] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:36:18.047] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:36:27.170] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_mirror_woman pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:33.261] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_mirror_woman_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:33.262] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:36:41.390] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.mirror_woman 4.0 blocks away
+[03Nov2026 11:36:41.391] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_mirror_woman_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:41.394] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 48_mirror_woman_eye_p1
+[03Nov2026 11:36:41.398] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_mirror_woman_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:41.398] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:36:46.810] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 48_mirror_woman_finder_p1
+[03Nov2026 11:36:47.948] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_mirror_woman_3 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:47.950] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:36:55.390] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.mirror_woman 4.0 blocks away
+[03Nov2026 11:36:55.390] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_mirror_woman_3 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:56.407] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 49_mirror_woman_eye_p3
+[03Nov2026 11:36:56.410] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_mirror_woman_3 pos=16, 65, 13 shaders=true
+[03Nov2026 11:36:56.411] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:37:01.821] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 49_mirror_woman_finder_p3
+[03Nov2026 11:37:01.824] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_mirror_woman pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:02.950] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_manager pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:02.950] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:37:02.951] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:37:12.200] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_manager pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:18.377] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_manager_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:18.378] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:37:25.534] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.manager 4.0 blocks away
+[03Nov2026 11:37:25.534] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_manager_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:26.560] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 50_manager_eye_p1
+[03Nov2026 11:37:26.563] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_manager_1 pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:26.563] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:37:32.039] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 50_manager_finder_p1
+[03Nov2026 11:37:33.178] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_manager_5 pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:33.178] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:37:40.413] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.manager 4.0 blocks away
+[03Nov2026 11:37:40.414] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_manager_5 pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:40.418] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 51_manager_eye_p5
+[03Nov2026 11:37:41.488] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_manager_5 pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:41.489] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:37:46.899] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 51_manager_finder_p5
+[03Nov2026 11:37:46.901] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_manager pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:48.038] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_setup pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:48.038] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:37:48.038] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機（ファインダー）]に置換しました］
+[03Nov2026 11:37:55.923] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_pose pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:57.000] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.waitress 5.0 blocks away
+[03Nov2026 11:37:57.001] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_face pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:58.082] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_shutter pos=16, 65, 13 shaders=true
+[03Nov2026 11:37:58.084] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] Dev photographed the waitress (★3)
+[03Nov2026 11:38:02.484] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 50_photo_eject
+[03Nov2026 11:38:03.648] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_develop pos=16, 65, 13 shaders=true
+[03Nov2026 11:38:32.978] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 51_photo_named
+[03Nov2026 11:38:32.981] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_lower pos=16, 65, 13 shaders=true
+[03Nov2026 11:38:32.982] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[霊写機]に置換しました］
+[03Nov2026 11:38:39.203] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step locker_go pos=16, 65, 13 shaders=true
+[03Nov2026 11:38:39.203] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを2.500000, 65.000000, 4.500000にテレポートさせました］
+[03Nov2026 11:38:48.473] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_56_locker pos=2, 65, 4 shaders=true
+[03Nov2026 11:38:57.990] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 56_locker
+[03Nov2026 11:38:57.994] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step locker_out pos=1, 65, 4 shaders=true
+[03Nov2026 11:39:03.487] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_57_fear_high pos=2, 65, 4 shaders=true
+[03Nov2026 11:39:03.488] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:39:03.489] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devのスロットを[懐中電灯（点灯）]に置換しました］
+[03Nov2026 11:39:20.554] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 57_fear_high
+[03Nov2026 11:39:21.769] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_58_danger_high pos=16, 65, 13 shaders=true
+[03Nov2026 11:39:32.428] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 58_danger_high
+[03Nov2026 11:39:32.431] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step calm pos=16, 65, 13 shaders=true
+[03Nov2026 11:39:39.333] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step closing_spirits pos=16, 65, 13 shaders=true
+[03Nov2026 11:39:40.453] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_62_closing pos=16, 65, 13 shaders=true
+[03Nov2026 11:39:40.453] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：Devを16.500000, 65.000000, 13.500000にテレポートさせました］
+[03Nov2026 11:39:40.454] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] closing time
+[03Nov2026 11:39:47.928] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] night 7: the manager is there (3 signs witnessed)
+[03Nov2026 11:40:01.377] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 62_closing
+[03Nov2026 11:40:01.380] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step closing_wait pos=16, 65, 13 shaders=true
+[03Nov2026 11:40:56.788] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 63_closing_manager
+[03Nov2026 11:40:57.999] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step exorcism pos=16, 65, 13 shaders=true
+[03Nov2026 11:40:58.042] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] the exorcism begins
+[03Nov2026 11:41:42.159] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 64_exorcism_walk
+[03Nov2026 11:41:42.162] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step exorcism_wait pos=34, 65, 23 shaders=true
+[03Nov2026 11:42:34.024] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] dawn: all six sent on (ofuda used 0)
+[03Nov2026 11:43:06.045] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 65_exorcism_table
+[03Nov2026 11:43:07.297] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step exorcism_wait2 pos=34, 65, 23 shaders=true
+[03Nov2026 11:43:14.558] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 66_exorcism_spirit
+[03Nov2026 11:43:14.561] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step exorcism_wait3 pos=34, 65, 23 shaders=true
+[03Nov2026 11:43:29.080] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 67_exorcism_release
+[03Nov2026 11:43:30.305] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: finished
+[03Nov2026 11:43:31.510] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!
+[03Nov2026 11:43:31.521] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Dev lost connection: 切断されました
+[03Nov2026 11:43:31.521] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Devがゲームを退出しました
+[03Nov2026 11:43:31.525] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Stopping singleplayer server as player logged out
+[03Nov2026 11:43:31.569] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[03Nov2026 11:43:31.569] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[03Nov2026 11:43:31.570] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[03Nov2026 11:43:32.437] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ReisatsuCI]'/minecraft:overworld
+[03Nov2026 11:43:32.463] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ReisatsuCI]'/reisatsu:hidamari
+[03Nov2026 11:43:32.477] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ReisatsuCI]'/minecraft:the_nether
+[03Nov2026 11:43:32.478] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ReisatsuCI]'/minecraft:the_end
+[03Nov2026 11:43:32.504] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (ReisatsuCI): All chunks are saved
+[03Nov2026 11:43:32.505] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (hidamari): All chunks are saved
+[03Nov2026 11:43:32.505] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[03Nov2026 11:43:32.505] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[03Nov2026 11:43:32.505] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved
+[03Nov2026 11:43:33.137] [Render thread/INFO] [ChunkBuilder/]: Stopping worker threads
