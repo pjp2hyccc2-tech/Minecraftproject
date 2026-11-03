@@ -133,21 +133,16 @@ float emitterFlicker(int type, vec3 blockPos, float t) {
     float h = hash13(floor(blockPos) * vec3(0.731, 1.37, 0.513) + 0.17);
 #ifdef LIGHT_FLICKER
     if (type == EM_FLUO_BROKEN) {
-        // a dying tube: long dark or dim stretches, then bursts of violent stutter,
-        // sometimes it catches and holds for a while
-        float slow = vnoise1(t * 0.23 + h * 31.0);
-        float phase = vnoise1(t * 0.61 + h * 17.0);
-        float burst = smoothstep(0.42, 0.62, phase);
-        float slot = floor(t * mix(9.0, 23.0, h));
-        float on = step(0.45, hash11(slot * 1.31 + h * 97.0));
-        float hold = smoothstep(0.72, 0.80, slow);                 // it holds: steady on
-        float dark = 1.0 - smoothstep(0.18, 0.30, slow);           // it is out
-        float f = mix(0.06 + 0.10 * hash11(slot + 3.0), 1.0, on);
-        f = mix(0.10 + 0.05 * sin(t * 6.1 + h * 9.0), f, burst);  // between bursts: the dim ends glow
-        f = mix(f, 1.0, hold);
-        f = mix(f, 0.02, dark);
+        // the world's ticker switches a broken tube on and off (lit); while it is on, the tube
+        // itself is unstable: a fast strobing shimmer, the brightness hunting, now and then a
+        // sag where only the glowing ends are left
+        float hunt = vnoise1(t * 3.7 + h * 31.0);
+        float strobe = 0.5 + 0.5 * sin(t * TAU * (13.0 + 6.0 * h) + vnoise1(t * 2.3) * 6.0);
+        float slot = floor(t * 9.0);
+        float sag = step(0.86, hash11(slot * 1.31 + h * 97.0)) * (0.5 + 0.3 * hash11(slot + 3.0));
+        float f = (0.80 + 0.20 * hunt) * (0.90 + 0.10 * strobe) * (1.0 - sag);
       #ifdef FLASH_REDUCTION
-        f = mix(0.55, f, 0.30);
+        f = mix(0.85, f, 0.35);
       #endif
         return f;
     }
@@ -157,28 +152,16 @@ float emitterFlicker(int type, vec3 blockPos, float t) {
         return 1.0 - 0.025 * vnoise1(t * 13.0 + h * 40.0) - dip;
     }
     if (type == EM_POLE || type == EM_ROOFSIGN) {
-        // old box sign: steady, now and then one tube buzzes and drops out for a beat
-        float slot = floor(t * 10.0);
-        float zone = hash11(floor(blockPos.y * 0.5) + h * 7.0 + floor(t * 0.13) * 3.3);
-        float tube = step(0.72, zone);
-        float drop = tube * step(0.55, hash11(slot * 2.13 + h * 11.0));
-      #ifdef FLASH_REDUCTION
-        drop *= 0.3;
-      #endif
-        return 1.0 - 0.70 * drop - 0.04 * vnoise1(t * 17.0 + h * 5.0);
+        // old box sign: the ticker makes its failing row stutter; here only the tubes' buzz
+        return 1.0 - 0.05 * vnoise1(t * 17.0 + h * 5.0) - 0.03 * vnoise1(t * 41.0 + h * 13.0);
     }
     if (type == EM_TRAFFIC) {
-        // blinking amber: ~1 Hz, incandescent ramps
-        float x = fract(t * 0.95 + h);
-        float on = smoothstep(0.0, 0.05, x) * (1.0 - smoothstep(0.50, 0.58, x));
-      #ifdef FLASH_REDUCTION
-        on = mix(0.35, 1.0, on);
-      #endif
-        return on;
+        // the ticker blinks it (lit on / off every 15 ticks): steady while on
+        return 1.0;
     }
     if (type == EM_SODIUM) {
-        // one lamp in four is dying: it fades out, glows red-dim, restrikes
-        if (h > 0.75) {
+        // one lamp in five is dying: now and then it fades out, glows red-dim, restrikes
+        if (h > 0.80) {
             float c = fract(t / 47.0 + h * 3.0);
             float out_ = smoothstep(0.62, 0.70, c) * (1.0 - smoothstep(0.86, 0.97, c));
             return 1.0 - 0.88 * out_;

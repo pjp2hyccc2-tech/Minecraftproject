@@ -259,28 +259,37 @@ def build(circuits=None, puddle_seed=7):
             w.set(x, 64, z, cube("vestibule_floor"))
 
     # ---- outside: the vending machines, the pole sign, the street lamps, a hedge -----------------------
-    for x in (6, 7):
+    # (positions as in the world's ExteriorBuilder / Terrain)
+    for x in (7, 8):
         w.set(x, 65, 31, Block("vending_machine", {"half": "lower"}, facing="south", model="vending_machine_lower", light=12))
         w.set(x, 66, 31, Block("vending_machine", {"half": "upper"}, facing="south", model="vending_machine_upper", light=12))
     on = c["sign"]
-    # the pole sign by the road: a pole, a 4x4 box sign high up
+    # the pole sign by the road: a pole, a 4x4 box sign high up, two faces (road / lot)
     for y in range(65, 73):
-        w.set(44, y, 48, Block("pole_sign", {"part": "pole", "tile": "0", "lit": "true" if on else "false"}, model="pole_sign_pole"))
+        w.set(46, y, 49, Block("pole_sign", {"part": "pole", "tile": "0", "lit": "true" if on else "false"}, facing="south",
+                               model="pole_sign_pole_lit" if on else "pole_sign_pole"))
     for i in range(4):
         for j in range(4):
-            w.set(43 + i, 73 + j, 48, Block("pole_sign", {"part": "tile", "tile": str(i + 4 * j), "lit": "true" if on else "false"},
-                                           facing="south", model="pole_sign_tile_lit", light=15 if on else 0))
-    for (lx, lz) in ((14, 38), (34, 44), (52, 59)):
-        for y in range(65 if lz != 59 else 66, 72):
-            w.set(lx, y, lz, Block("street_lamp", {"part": "pole", "lit": "true" if on else "false"}, model="street_lamp_pole"))
-        w.set(lx, 72, lz, Block("street_lamp", {"part": "head", "lit": "true" if on else "false"}, facing="north",
-                                model="street_lamp_head_lit", light=14 if on else 0))
+            for z, face in ((49, "south"), (48, "north")):
+                t = i + 4 * (3 - j)
+                w.set(45 + i if z == 49 else 48 - i, 73 + j, z,
+                      Block("pole_sign", {"part": "tile", "tile": str(t), "lit": "true" if on else "false"},
+                            facing=face, model="pole_sign_tile_%d%s" % (t, "_lit" if on else ""), light=15 if on else 0))
+    # the roof sign over the shop windows (warm letters; its light leaks in through the blinds)
+    for t in range(8):
+        w.set(16 + t, 72, 31, Block("roof_sign", {"tile": str(t), "lit": "true" if on else "false"}, facing="south",
+                                    model="roof_sign_tile_%d%s" % (t, "_lit" if on else ""), light=12 if on else 0))
+    # sodium lamps on the lot and along the road (heads at y 71)
+    for (lx, lz) in ((-8, 41), (16, 49), (34, 49), (48, 40), (58, 49)):
+        for y in range(65, 71):
+            w.set(lx, y, lz, Block("street_lamp", {"part": "pole", "lit": "true" if on else "false"}, facing="north",
+                                   model="street_lamp_pole_lit" if on else "street_lamp_pole"))
+        w.set(lx, 71, lz, Block("street_lamp", {"part": "head", "lit": "true" if on else "false"}, facing="north",
+                                model="street_lamp_head_lit" if on else "street_lamp_head", light=14 if on else 0))
     for x in range(-2, 5):
         w.set(x, 65, 47, cube("hedge", opaque=False))
         w.set(x, 66, 47, cube("hedge", opaque=False))
     for x in range(46, 62):
         w.set(x, 65, 49, prop("guardrail", facing="south"))
-    w.set(60, 70, 59, Block("traffic_light", {"lit": "true"}, model="traffic_light_lit", light=8))
-    for y in range(65, 70):
-        w.set(60, y, 59, Block("street_lamp", {"part": "pole", "lit": "false"}, model="street_lamp_pole"))
+    w.set(-28, 70, 49, Block("traffic_light", {"lit": "true"}, model="traffic_light_lit", light=8))
     return w

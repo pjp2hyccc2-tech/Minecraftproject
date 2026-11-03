@@ -275,6 +275,47 @@ def _rotate_point(p, rot):
     return (x + o[0], y + o[1], z + o[2])
 
 
+def _full_faces(tex_of, uv_side=None):
+    faces = {}
+    for f in FACES:
+        faces[f] = {"texture": tex_of(f), "cullface": f}
+        if uv_side and f in ("north", "south", "east", "west"):
+            faces[f]["uv"] = uv_side
+    return faces
+
+
+# vanilla parent models the world's generated models use (elements with texture variables)
+VANILLA_PARENTS = {
+    "block/cube": {"elements": [{"from": [0, 0, 0], "to": [16, 16, 16], "faces": _full_faces(lambda f: "#" + f)}]},
+    "block/cube_all": {"elements": [{"from": [0, 0, 0], "to": [16, 16, 16], "faces": _full_faces(lambda f: "#all")}]},
+    "block/leaves": {"render_type": "minecraft:cutout_mipped",
+                     "elements": [{"from": [0, 0, 0], "to": [16, 16, 16], "faces": _full_faces(lambda f: "#all")}]},
+    "block/cube_bottom_top": {"elements": [{"from": [0, 0, 0], "to": [16, 16, 16], "faces": _full_faces(
+        lambda f: "#top" if f == "up" else ("#bottom" if f == "down" else "#side"))}]},
+    "block/cube_column": {"elements": [{"from": [0, 0, 0], "to": [16, 16, 16], "faces": _full_faces(
+        lambda f: "#end" if f in ("up", "down") else "#side")}]},
+    "block/carpet": {"elements": [{"from": [0, 0, 0], "to": [16, 1, 16], "faces": dict(
+        _full_faces(lambda f: "#wool", uv_side=[0, 15, 16, 16]), up={"texture": "#wool"})}]},
+    "block/slab": {"elements": [{"from": [0, 0, 0], "to": [16, 8, 16], "faces": dict(_full_faces(
+        lambda f: "#top" if f == "up" else ("#bottom" if f == "down" else "#side"), uv_side=[0, 8, 16, 16]), up={"texture": "#top"})}]},
+    "block/slab_top": {"elements": [{"from": [0, 8, 0], "to": [16, 16, 16], "faces": dict(_full_faces(
+        lambda f: "#top" if f == "up" else ("#bottom" if f == "down" else "#side"), uv_side=[0, 0, 16, 8]), down={"texture": "#bottom"})}]},
+    "block/stairs": {"elements": [
+        {"from": [0, 0, 0], "to": [16, 8, 16], "faces": _full_faces(lambda f: "#top" if f == "up" else ("#bottom" if f == "down" else "#side"))},
+        {"from": [8, 8, 0], "to": [16, 16, 16], "faces": _full_faces(lambda f: "#top" if f == "up" else ("#bottom" if f == "down" else "#side"))}]},
+    "block/door_bottom_left": {"render_type": "minecraft:cutout",
+                               "elements": [{"from": [0, 0, 0], "to": [3, 16, 16], "faces": _full_faces(lambda f: "#bottom")}]},
+    "block/door_top_left": {"render_type": "minecraft:cutout",
+                            "elements": [{"from": [0, 0, 0], "to": [3, 16, 16], "faces": _full_faces(lambda f: "#top")}]},
+}
+for _k in ("inner_stairs", "outer_stairs"):
+    VANILLA_PARENTS["block/" + _k] = VANILLA_PARENTS["block/stairs"]
+for _a, _b in (("door_bottom_right", "door_bottom_left"), ("door_bottom_left_open", "door_bottom_left"),
+               ("door_bottom_right_open", "door_bottom_left"), ("door_top_right", "door_top_left"),
+               ("door_top_left_open", "door_top_left"), ("door_top_right_open", "door_top_left")):
+    VANILLA_PARENTS["block/" + _a] = VANILLA_PARENTS["block/" + _b]
+
+
 class Models:
     def __init__(self, model_dir, atlas, extra=None):
         self.dir = model_dir
@@ -288,8 +329,33 @@ class Models:
         if os.path.isfile(path):
             with open(path, encoding="utf-8") as fh:
                 self.real.add(name)
-                return json.load(fh)
+                m = json.load(fh)
+            return self._resolve(m)
         return self.extra.get(name)
+
+    def _resolve(self, m, depth=0):
+        """follow the parent chain: elements / render_type from the first parent that has them,
+        texture variables merged (the child wins)"""
+        if "elements" in m or depth > 6:
+            return m
+        parent = m.get("parent", "")
+        pm = None
+        if parent.startswith("reisatsu:"):
+            path = os.path.join(self.dir, parent.split("/")[-1] + ".json")
+            if os.path.isfile(path):
+                with open(path, encoding="utf-8") as fh:
+                    pm = self._resolve(json.load(fh), depth + 1)
+        else:
+            pm = VANILLA_PARENTS.get(parent.replace("minecraft:", ""))
+        if pm is None:
+            return m
+        out = dict(pm)
+        tex = dict(pm.get("textures", {}))
+        tex.update(m.get("textures", {}))
+        out["textures"] = tex
+        if "render_type" in m:
+            out["render_type"] = m["render_type"]
+        return out
 
     def quads(self, name, cube_tex=None):
         """-> (list of quads, render layer). quad = dict(pos[4] (0..1 block units), normal,
