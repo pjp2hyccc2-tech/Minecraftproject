@@ -76,7 +76,7 @@ void main() {
 #ifdef SPIRIT_HAZE_ON
     if (splitAmt > 0.0) {
         // the spirit's colours do not quite line up (strongest at its edges, where the mask changes)
-        vec2 dir = vec2(1.0, 0.25) * px * (2.5 + 2.5 * fear() + 3.0 * finderMode());
+        vec2 dir = vec2(1.0, 0.25) * px * (2.0 + 2.0 * fear() + 1.2 * finderMode());
         float edge = abs(texture(colortex8, uv + dir * 2.0).r - texture(colortex8, uv - dir * 2.0).r);
         float k = splitAmt * (0.35 + 0.65 * edge) * (0.25 + 0.75 * max(sp.b, finderMode()));
         vec3 cr = texture(colortex0, uv + dir * 1.5).rgb;
