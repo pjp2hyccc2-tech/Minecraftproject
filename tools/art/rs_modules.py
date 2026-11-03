@@ -5,3 +5,4 @@ import rs_waiting  # noqa: F401  register counter, waiting, vestibule, drink bar
 import rs_kitchen  # noqa: F401  kitchen line, dish pit, pass, walk-in fridge
 import rs_back  # noqa: F401  staff room, office, corridor, storage
 import rs_restroom  # noqa: F401  restrooms and the dark mirror
+import rs_exterior  # noqa: F401  exterior, signs, road, door hardware

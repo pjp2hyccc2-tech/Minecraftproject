@@ -69,6 +69,13 @@ class LitCanvas(R.Canvas):
         pc = R.apply(self.V, world_pts)
         if (-pc[:, 2] < self.near).all():
             return
+        if not double:
+            nn_ = np.cross(pc[1] - pc[0], pc[2] - pc[0])
+            if self.ortho:
+                if nn_[2] >= 0:
+                    return
+            elif np.dot(nn_, pc[0]) <= 0:
+                return
         n = np.cross(world_pts[1] - world_pts[0], world_pts[2] - world_pts[0])
         nn = np.linalg.norm(n)
         n = n / nn if nn > 1e-12 else np.array([0, 1.0, 0])
@@ -208,7 +215,7 @@ def draw_model(cv, model, M=None, emissive_ok=True):
         n_alpha_mode = mode
         if mode == 'cutout' and t[..., 3].min() < 250 and 'cutout' not in rt:
             n_alpha_mode = 'cutout'          # solid models ignore alpha in game; keep it visible here
-        cv.quad(pts, uvs, t, shade=1.0 if glow else s, mode=n_alpha_mode, emissive=glow)
+        cv.quad(pts, uvs, t, shade=1.0 if glow else s, mode=n_alpha_mode, emissive=glow, double=False)
 
 
 def place(x, y, z, facing='north'):
