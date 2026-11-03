@@ -173,6 +173,24 @@ public final class ClientPacketHandler {
     }
 
     /** Eyes closed while counting: the screen goes black; with a shader pack, the blindness channel. */
+    private static boolean ownDarkness;
+
+    /**
+     * Caught: the shader's {@code darknessFactor} channel (a hidden darkness effect on you) - with a shader pack only,
+     * and never while a last feed is being captured (vanilla darkens its lightmap by the player's darkness).
+     */
+    static void syncDarkness(Minecraft mc) {
+        if (mc.player == null) return;
+        boolean want = ClientState.inGame() && ClientState.caughtTicks >= 0 && !FrameCapture.capturing() && ShaderCompat.active();
+        if (want && !ownDarkness) {
+            mc.player.forceAddEffect(new MobEffectInstance(MobEffects.DARKNESS, 20 * 60, 0, false, false, false), null);
+            ownDarkness = true;
+        } else if (!want && ownDarkness) {
+            mc.player.removeEffectNoUpdate(MobEffects.DARKNESS);
+            ownDarkness = false;
+        }
+    }
+
     static void eyes(boolean closed) {
         Minecraft mc = Minecraft.getInstance();
         ClientState.eyesTicks = closed ? 0 : -1;

@@ -311,6 +311,8 @@ CREDITS = [
 ]
 
 BLOCK_NAMES = {
+    "genkan_step": ("上がり框", "Entrance Step"), "two_sided_wall": ("壁", "Wall"), "unit_door": ("よその部屋のドア", "Neighbour's Door"),
+    "power_wire": ("電線", "Power Line"), "laundry_hanging": ("洗濯物", "Hanging Laundry"), "trash_bag": ("ゴミ袋", "Trash Bag"),
     "tatami": ("畳", "Tatami"), "tatami_worn": ("すり切れた畳", "Worn Tatami"), "old_flooring": ("古いフローリング", "Old Flooring"),
     "vinyl_floor": ("クッションフロア", "Cushion Floor"), "genkan_tile": ("玄関タイル", "Entrance Tile"), "bath_tile_floor": ("浴室の床", "Bath Floor Tile"),
     "bath_tile_wall": ("浴室のタイル", "Bath Wall Tile"), "plaster_wall": ("砂壁", "Plaster Wall"), "plaster_wall_stained": ("染みのある砂壁", "Stained Plaster Wall"),

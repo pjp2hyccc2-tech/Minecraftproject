@@ -88,6 +88,7 @@ public final class ClientEvents {
         CameraApp.tick(mc);
         FrameCapture.tick(mc);
         Peek.tick(mc);
+        ClientPacketHandler.syncDarkness(mc);
         if (!inGame()) {
             HorrorAudio.tick(mc);
             return;
