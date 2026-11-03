@@ -75,7 +75,7 @@ public final class SelfTest {
     private static boolean worldDone;
 
     /** A test step: run once, then wait; or wait until a condition holds (then check it). */
-    private record T(String name, Runnable run, int wait, BooleanSupplier until, int timeout, String what) {}
+    private record T(String name, Runnable run, int pause, BooleanSupplier until, int timeout, String what) {}
 
     private SelfTest() {}
 
@@ -144,7 +144,7 @@ public final class SelfTest {
                     check(true, t.what() + " (" + untilTicks + " ticks)");
                     untilTicks = 0;
                     index++;
-                    wait = t.wait();
+                    wait = t.pause();
                 } else if (++untilTicks > t.timeout()) {
                     check(false, t.what() + " (timed out after " + t.timeout() + " ticks)");
                     untilTicks = 0;
@@ -154,7 +154,7 @@ public final class SelfTest {
             }
             index++;
             t.run().run();
-            wait = t.wait();
+            wait = t.pause();
         } catch (Throwable e) {
             check(false, "exception at " + (index > 0 && index <= STEPS.size() ? STEPS.get(index - 1).name() : "stage " + stage) + ": " + e);
             Hitori.LOGGER.error("[hitori-selftest] exception", e);
