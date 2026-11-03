@@ -277,10 +277,18 @@ public final class SelfTest {
         fake.setXRot(pitch);
     }
 
-    /** A free spot next to the doll with a clear view of it (avoiding walls). */
+    /** A free spot next to the doll with a clear view of it (avoiding walls); a spot in front of it if there is none. */
     private static Vec3 besideDoll(double dist) {
+        Vec3 at = spotBesideDoll(dist);
+        if (at != null) return at;
         OniDoll d = Doll.get(level);
-        if (d == null) return fake.position();
+        return d == null ? fake.position() : new Vec3(d.getX() + dist, d.getY(), d.getZ());
+    }
+
+    /** A free spot next to the doll with a clear view of it, or null. */
+    private static Vec3 spotBesideDoll(double dist) {
+        OniDoll d = Doll.get(level);
+        if (d == null) return null;
         double[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {0.7, 0.7}, {-0.7, 0.7}, {0.7, -0.7}, {-0.7, -0.7}};
         for (double k : new double[]{dist, dist * 0.7, dist * 1.3}) {
             for (double[] dv : dirs) {
@@ -291,7 +299,7 @@ public final class SelfTest {
                 if (com.hitori.game.Sight.clear(level, at.add(0, 1.62, 0), d.position().add(0, 0.3, 0))) return at;
             }
         }
-        return new Vec3(d.getX() + dist, d.getY(), d.getZ());
+        return null;
     }
 
     private static void restart() {
@@ -524,7 +532,14 @@ public final class SelfTest {
             OniDoll d = Doll.get(level);
             GameManager.debugPeaceful = true;
             Hiding.exitQuietly(fake, ps());
-            place(besideDoll(2.5), 90.0f, 10.0f);
+            Vec3 at = spotBesideDoll(2.5);
+            if (at == null) {
+                // its first stop is by the tub, too cramped to stand beside it with a clear view of it: the test sets it
+                // down in the hall (still searching, on its way to the next stop) and stands there with it
+                d.moveTo(27.5, Layout.FEET_Y, 6.5, d.getYRot(), 0.0f);
+                at = besideDoll(2.5);
+            }
+            place(at, 90.0f, 10.0f);
             faceDoll();
             log("doll " + d.describe());
         }, 3);

@@ -145,6 +145,16 @@ public final class Hiding {
                 m.pos().getZ() + 0.5 + f.getStepZ() * 0.33 + left.getStepZ() * side);
     }
 
+    /** The middle of the crack's slit, at the panels' back face (where the TV's light comes through). */
+    public static Vec3 crackCentre() {
+        Layout.Marker m = Layout.marker("closet_peek");
+        Direction f = m.facing();
+        Direction left = f.getCounterClockWise();
+        double side = 0.5 - 0.125;
+        return new Vec3(m.pos().getX() + 0.5 + f.getStepX() * 0.375 + left.getStepX() * side, m.pos().getY() + 1.0,
+                m.pos().getZ() + 0.5 + f.getStepZ() * 0.375 + left.getStepZ() * side);
+    }
+
     public static float peekYaw() {
         return Layout.marker("closet_peek").yaw();
     }

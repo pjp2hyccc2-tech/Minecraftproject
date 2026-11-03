@@ -218,16 +218,21 @@ public final class HorrorOverlay {
             g.fill(0, 0, w, h / 7, 0xC8060606);
             g.fill(0, h / 7, w, h / 7 + 2, 0x60282420);
         }
-        // the gap of the fusuma: the TV's flicker in a thin vertical line, when you face it
+        // the gap of the fusuma: the TV's flicker in a thin vertical line where the crack really is
         Minecraft mc = Minecraft.getInstance();
         if (oshiire && mc.player != null && com.hitori.world.Layout.has("closet_peek")) {
-            float base = com.hitori.world.Layout.marker("closet_peek").yaw();
-            float d = Mth.wrapDegrees(mc.player.getYRot() - base);
-            if (Math.abs(d) < 45.0f) {
-                int x = (int) (w / 2.0f - d / 45.0f * w * 0.6f);
-                float flick = ClientState.flag(GameManager.F_TV) ? 0.35f + 0.25f * (float) Math.abs(Math.sin(t * 1.3f) * Math.cos(t * 0.37f)) : 0.08f;
-                g.fill(x, h / 6, x + 1, h - h / 8, argb(flick, 0xBFD4FF));
-                g.fill(x - 2, h / 6, x + 3, h - h / 8, argb(flick * 0.25f, 0x8FA8E0));
+            net.minecraft.world.phys.Vec3 eye = mc.player.getEyePosition();
+            net.minecraft.world.phys.Vec3 crack = com.hitori.game.Hiding.crackCentre();
+            float to = (float) (Mth.atan2(crack.z - eye.z, crack.x - eye.x) * Mth.RAD_TO_DEG) - 90.0f;
+            float d = Mth.wrapDegrees(to - mc.player.getYRot());
+            double tanH = Math.tan(Math.toRadians(mc.options.fov().get() / 2.0)) * w / (double) h;
+            if (Math.abs(d) < 75.0f) {
+                int x = (int) (w / 2.0 + Math.tan(Math.toRadians(d)) / tanH * w / 2.0);
+                if (x > -4 && x < w + 4) {
+                    float flick = ClientState.flag(GameManager.F_TV) ? 0.35f + 0.25f * (float) Math.abs(Math.sin(t * 1.3f) * Math.cos(t * 0.37f)) : 0.08f;
+                    g.fill(x, h / 6, x + 1, h - h / 8, argb(flick, 0xBFD4FF));
+                    g.fill(x - 2, h / 6, x + 3, h - h / 8, argb(flick * 0.25f, 0x8FA8E0));
+                }
             }
         }
     }
