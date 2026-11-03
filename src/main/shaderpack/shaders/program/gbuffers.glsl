@@ -284,7 +284,7 @@ void main() {
     // one on a block that is not a lamp) and the sky only out in the open
     bool marked = false;
     #ifdef WORLD_HIDAMARI
-    marked = lm.x > 0.985 && lm.y > 0.985 && id != BLK_FLAME && id != BLK_LAMP && id != BLK_GLOW && id != BLK_LAVA;
+    marked = lm.x > 0.985 && lm.y > 0.985 && id != BLK_FLAME && id != BLK_CANDLE && id != BLK_LAMP && id != BLK_GLOW && id != BLK_LAVA;
     if (marked) {
         float own = etype > EM_NONE ? max(EM_LEVEL[clamp(etype, 0, EM_COUNT - 1)] - 1.0, 0.0) : 12.0;
         lm = vec2(own / 15.0, openSky(wp + Ngeo * 0.3));
@@ -293,6 +293,9 @@ void main() {
     #endif
     if (id == BLK_FLAME) {
         emissive = flameMask(albedo.rgb);
+        emission = lin * emissive * 3.2;
+    } else if (id == BLK_CANDLE) {
+        emissive = candleMask(albedo.rgb);
         emission = lin * emissive * 3.2;
     } else if (id == BLK_LAMP) {
         emissive = paperMask(albedo.rgb) * 0.85;
@@ -331,6 +334,11 @@ void main() {
         emission = lin * m * 1.6 * LIGHT_STRENGTH;
         mat = m > 0.4 ? MAT_EMITTER : mat;
     }
+    #ifdef WORLD_HIDAMARI
+    // the art's asphalt is painted near-black for vanilla's bright light; under the lamps it
+    // needs the albedo of real old asphalt (~0.035) for the sodium pools to show on the lot
+    if (mat == MAT_ASPHALT) lin *= 1.8;
+    #endif
   #endif
   #if defined PROG_TEXTURED || defined PROG_BASIC
     // particles / lines are camera-facing: light them from every side

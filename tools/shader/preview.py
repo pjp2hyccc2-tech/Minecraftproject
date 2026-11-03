@@ -944,6 +944,8 @@ SHOTS = {
     # the world tour's ext_lot / ext_front: the lot and the façade from the road side
     "r_ext_lot": shot(-6.5, 47.5, -140.0, 4.0, fear=0.1),
     "r_ext_front": shot(20.5, 46.5, 180.0, -6.0, fear=0.1),
+    "r_ext_overview": shot(20.5, 70.5, 180.0, 32.0, y=88.0, fear=0.1),
+    "r_lamp_foot": shot(20.5, 43.5, 0.0, 28.0, fear=0.1),
     # the lot between the sodium lamps, looking toward the road
     "r_lot_mid": shot(12.5, 41.5, -40.0, 6.0, fear=0.1),
     # the wet lot at night: the pole sign, the vending machines, the sodium lamps, puddles

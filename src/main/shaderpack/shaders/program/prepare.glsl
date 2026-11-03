@@ -61,6 +61,7 @@ vec4 airListTexel(int slot) {
     float eN[AIR_WORK];
     int eType[AIR_WORK];
     int eLevel[AIR_WORK];
+    for (int e = 0; e < AIR_WORK; e++) { eSum[e] = vec3(0.0); eN[e] = 1.0; eType[e] = 0; eLevel[e] = 0; }
     int nE = 0;
     for (int r = 0; r < 6; r++) {
         int zg = cc.y - 30 + r * 12;
@@ -72,7 +73,7 @@ vec4 airListTexel(int slot) {
             for (int k = 0; k < 4; k++) {
                 float v = zt[k];
                 if (abs(v) < 0.5) continue;
-                int c = int(abs(v) + 0.5);
+                int c = tableCode(v);
                 int type = c & 31;
                 if (!emitterOutdoorType(type) || !emitterCasts(type)) continue;
                 int level = (c >> 5) & 15;
@@ -192,7 +193,7 @@ void main() {
             for (int k = 0; k < 4; k++) {
                 float v = zt[k];
                 if (abs(v) < 0.5) continue;
-                int c = int(abs(v) + 0.5);
+                int c = tableCode(v);
                 int type = c & 31;
                 int level = (c >> 5) & 15;
                 int yrel = (c >> 9) & 31;
@@ -210,7 +211,7 @@ void main() {
         for (int i = 0; i < KEEP; i++) {
             float v = bestE[i];
             if (abs(v) < 0.5) continue;
-            int c = int(abs(v) + 0.5);
+            int c = tableCode(v);
             int dx = ((c >> 14) & 31) - 15;
             int dz = ((c >> 19) & 31) - 15;
             bool walled = wallBetween(cell, cell + ivec2(dx, dz));

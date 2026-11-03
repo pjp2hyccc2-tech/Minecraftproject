@@ -6,7 +6,8 @@
 
 // ---- block.properties (mc_Entity.x) -----------------------------------------------------
 // vanilla light sources and nature
-#define BLK_FLAME     10001   // torches, candles, campfires (bright texels glow)
+#define BLK_FLAME     10001   // torches, campfires, fire (bright texels glow)
+#define BLK_CANDLE    10005   // candles (the exorcism's): only the flame on the wick glows, not the white wax
 #define BLK_LAMP      10002   // lanterns (the glass glows)
 #define BLK_GLOW      10003   // glowstone, sea lantern, froglights ... (whole block glows)
 #define BLK_LAVA      10004
@@ -174,6 +175,11 @@ float flameMask(vec3 albedoSrgb) {
     float l = luma(albedoSrgb);
     float sat = maxOf(albedoSrgb) - minOf(albedoSrgb);
     return smoothstep(0.42, 0.80, l + sat * 0.45);
+}
+// a candle: the warm, saturated wick flame - the wax is white and must stay wax
+float candleMask(vec3 albedoSrgb) {
+    float sat = maxOf(albedoSrgb) - minOf(albedoSrgb);
+    return smoothstep(0.45, 0.70, maxOf(albedoSrgb)) * smoothstep(0.30, 0.50, sat) * step(albedoSrgb.b, albedoSrgb.r);
 }
 float paperMask(vec3 albedoSrgb) {
     return smoothstep(0.30, 0.62, luma(albedoSrgb));

@@ -106,7 +106,7 @@ const int EM_PATTERN[EM_COUNT] = int[EM_COUNT](
 
 // how bright the lamp's own glowing texels are (surface emission, x texture colour)
 const float EM_SURF[EM_COUNT] = float[EM_COUNT](
-    0.0, 3.2, 3.2, 3.6, 3.0, 2.6, 2.0, 3.2, 3.0, 5.0, 4.0, 1.7, 1.2, 3.0, 3.0, 1.6,
+    0.0, 3.2, 3.2, 3.6, 3.0, 2.6, 1.6, 3.2, 3.0, 5.0, 4.0, 1.7, 1.2, 3.0, 3.0, 1.6,
     1.3, 1.6, 1.4, 2.6, 2.2, 0.9, 3.2, 1.8, 1.6);
 
 // vanilla light levels of the design (used when the shadow pass cannot measure them)
@@ -117,7 +117,7 @@ const float EM_LEVEL[EM_COUNT] = float[EM_COUNT](
 bool emitterCasts(int type) { return type > EM_NONE && type < EM_COUNT && type != EM_LED && type != EM_SCREEN; }
 int emitterTypeOfBlock(int id) {
     if (id > BLK_EMIT_BASE && id <= BLK_EMIT_MAX) return id - BLK_EMIT_BASE;
-    if (id == BLK_FLAME) return EM_FLAME;
+    if (id == BLK_FLAME || id == BLK_CANDLE) return EM_FLAME;
     if (id == BLK_LAMP)  return EM_LANTERN;
     if (id == BLK_GLOW)  return EM_GLOWBLOCK;
     return EM_NONE;
@@ -415,6 +415,13 @@ float tablePack(int type, int level, int yrel, int dx, int dz, bool walled) {
     int c = type | (level << 5) | (yrel << 9) | ((dx + 15) << 14) | ((dz + 15) << 19);
     return walled ? -float(c) : float(c);
 }
+// the packed integer back from its float (exact up to 2^24). Never round with + 0.5: above 2^23
+// a float cannot hold x.5, the sum rounds to even and every odd code gains one - the type bits
+// change (a sodium lamp south of a column read as the traffic light, an exit sign as a vending
+// machine, a heat lamp as the gas flames)
+int tableCode(float v) {
+    return int(abs(v) + 0.25);
+}
 
 struct Lamp {
     vec3  pos;       // world position the light leaves from
@@ -427,7 +434,7 @@ struct Lamp {
 
 Lamp tableUnpack(float v, ivec2 column) {
     Lamp L;
-    int c = int(abs(v) + 0.5);
+    int c = tableCode(v);
     L.type = c & 31;
     L.level = float((c >> 5) & 15);
     int yrel = (c >> 9) & 31;
@@ -601,13 +608,17 @@ float airS2[AIR_LAMPS];       // squared soft core
 float airReach[AIR_LAMPS];
 bool  airCovered[AIR_LAMPS];
 
+// a sodium head is a small, hot source high above the lot: in the low mist it makes a halo, it
+// does not light up the whole sky (its in-scatter is scaled down from its surface light)
+const float SODIUM_AIR = 0.10;
 void airAdd(int slot, Lamp L, vec3 rd, float tEnd, float w, float gainMul) {
     int ti = clamp(L.type, 0, EM_COUNT - 1);
     vec3 o = L.pos - cameraPosition;
     float tc = dot(o, rd);
     vec3 toClose = rd * clamp(tc, 0.0, tEnd) - o;
     airBlock[slot] = L.block;
-    airRad[slot] = lampRadiance(L) * gainMul * lampPatternAir(L.type, toClose / max(length(toClose), 1e-3));
+    airRad[slot] = lampRadiance(L) * gainMul * lampPatternAir(L.type, toClose / max(length(toClose), 1e-3))
+                 * (L.type == EM_SODIUM ? SODIUM_AIR : 1.0);
     airW[slot] = w;
     airTc[slot] = tc;
     airH2[slot] = max(dot(o, o) - tc * tc, 0.0);
