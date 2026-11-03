@@ -22,7 +22,13 @@ public final class ModNetwork {
     private ModNetwork() {}
 
     public static void register() {
-        // messages are added by the game (see C2S / S2C)
+        toClient(S2C.State.class, S2C.State::encode, S2C.State::decode, S2C.State::handle);
+        toClient(S2C.Event.class, S2C.Event::encode, S2C.Event::decode, S2C.Event::handle);
+        toClient(S2C.Say.class, S2C.Say::encode, S2C.Say::decode, S2C.Say::handle);
+        toClient(S2C.Sound.class, S2C.Sound::encode, S2C.Sound::decode, S2C.Sound::handle);
+        toClient(S2C.Capture.class, S2C.Capture::encode, S2C.Capture::decode, S2C.Capture::handle);
+        toServer(C2S.Action.class, C2S.Action::encode, C2S.Action::decode, C2S.Action::handle);
+        toServer(C2S.Name.class, C2S.Name::encode, C2S.Name::decode, C2S.Name::handle);
     }
 
     private static <M> void toServer(Class<M> type, BiConsumer<M, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, M> decoder,
