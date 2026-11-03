@@ -51,6 +51,8 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
     private final ModelPart lockR;
     private final ModelPart lockL;
     private final ModelPart mouth;
+    private final ModelPart jaw;
+    private final ModelPart glare;
     private final ModelPart rightArm;
     private final ModelPart rightForearm;
     private final ModelPart rightHand;
@@ -78,6 +80,8 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
         this.lockR = this.head.getChild("lock_r");
         this.lockL = this.head.getChild("lock_l");
         this.mouth = this.head.getChild("mouth");
+        this.jaw = this.head.getChild("jaw");
+        this.glare = this.head.getChild("glare");
         this.rightArm = this.body.getChild("right_arm");
         this.rightForearm = this.rightArm.getChild("right_forearm");
         this.rightHand = this.rightForearm.getChild("right_hand");
@@ -91,33 +95,35 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
         this.rightShin = this.rightLeg.getChild("right_shin");
         this.leftLeg = root.getChild("left_leg");
         this.leftShin = this.leftLeg.getChild("left_shin");
-        this.all = new ModelPart[] {this.body, this.skirt, this.neck, this.head, this.bun, this.lockR, this.lockL, this.mouth, this.rightArm, this.rightForearm, this.rightHand, this.heldGlass, this.leftArm, this.leftForearm, this.leftHand, this.tray, this.glass, this.rightLeg, this.rightShin, this.leftLeg, this.leftShin};
+        this.all = new ModelPart[] {this.body, this.skirt, this.neck, this.head, this.bun, this.lockR, this.lockL, this.mouth, this.jaw, this.glare, this.rightArm, this.rightForearm, this.rightHand, this.heldGlass, this.leftArm, this.leftForearm, this.leftHand, this.tray, this.glass, this.rightLeg, this.rightShin, this.leftLeg, this.leftShin};
     }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-        PartDefinition pBody = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(24, 12).addBox(-3.5F, -8.5F, -1.75F, 7.0F, 8.5F, 3.5F, EnumSet.of(Direction.DOWN, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)).texOffs(10, 21).addBox(-1.5F, -3.5F, 1.85F, 3.0F, 1.5F, 0.5F), PartPose.offset(0.0F, 12.0F, 0.0F));
-        pBody.addOrReplaceChild("skirt", CubeListBuilder.create().texOffs(24, 0).addBox(-4.0F, 0.0F, -2.25F, 8.0F, 7.0F, 4.5F), PartPose.offset(0.0F, -0.5F, 0.0F));
-        PartDefinition pNeck = pBody.addOrReplaceChild("neck", CubeListBuilder.create().texOffs(30, 31).addBox(-1.0F, -1.5F, -1.0F, 2.0F, 1.5F, 2.0F, EnumSet.of(Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, -8.5F, 0.0F));
-        PartDefinition pHead = pNeck.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -7.0F, -3.0F, 6.0F, 7.0F, 6.0F), PartPose.offset(0.0F, -1.5F, 0.0F));
-        pHead.addOrReplaceChild("bun", CubeListBuilder.create().texOffs(46, 25).addBox(-1.75F, -1.5F, 0.0F, 3.5F, 3.0F, 2.0F, EnumSet.of(Direction.DOWN, Direction.UP, Direction.WEST, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, -4.5F, 3.0F));
-        pHead.addOrReplaceChild("lock_r", CubeListBuilder.create().texOffs(59, 0).addBox(-0.25F, 0.0F, -0.25F, 0.5F, 4.5F, 0.5F), PartPose.offset(-2.75F, -4.0F, -2.6F));
-        pHead.addOrReplaceChild("lock_l", CubeListBuilder.create().texOffs(61, 0).addBox(-0.25F, 0.0F, -0.25F, 0.5F, 4.0F, 0.5F), PartPose.offset(2.75F, -4.0F, -2.6F));
-        pHead.addOrReplaceChild("mouth", CubeListBuilder.create().texOffs(0, 21).addBox(-2.5F, 0.0F, 0.0F, 5.0F, 3.0F, 0.0F, EnumSet.of(Direction.NORTH)), PartPose.offset(0.0F, -2.0F, -3.1F));
-        PartDefinition pRightArm = pBody.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(45, 18).addBox(-1.0F, -0.5F, -1.0F, 2.0F, 5.0F, 2.0F), PartPose.offset(-4.6F, -8.0F, 0.0F));
-        PartDefinition pRightForearm = pRightArm.addOrReplaceChild("right_forearm", CubeListBuilder.create().texOffs(53, 18).addBox(-0.9F, 0.0F, -0.9F, 2.0F, 4.5F, 2.0F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, 4.5F, 0.0F));
-        PartDefinition pRightHand = pRightForearm.addOrReplaceChild("right_hand", CubeListBuilder.create().texOffs(57, 25).addBox(-0.9F, 0.0F, -0.65F, 2.0F, 2.5F, 1.5F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, 4.5F, 0.0F));
-        pRightHand.addOrReplaceChild("held_glass", CubeListBuilder.create().texOffs(18, 13).addBox(-0.75F, -1.5F, -0.75F, 1.5F, 2.5F, 1.5F), PartPose.offset(0.1F, 2.0F, -0.6F));
-        PartDefinition pLeftArm = pBody.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(30, 24).addBox(-1.0F, -0.5F, -1.0F, 2.0F, 5.0F, 2.0F), PartPose.offset(4.6F, -8.0F, 0.0F));
-        PartDefinition pLeftForearm = pLeftArm.addOrReplaceChild("left_forearm", CubeListBuilder.create().texOffs(38, 25).addBox(-0.9F, 0.0F, -0.9F, 2.0F, 4.5F, 2.0F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, 4.5F, 0.0F));
-        PartDefinition pLeftHand = pLeftForearm.addOrReplaceChild("left_hand", CubeListBuilder.create().texOffs(57, 29).addBox(-0.9F, 0.0F, -0.65F, 2.0F, 2.5F, 1.5F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, 4.5F, 0.0F));
-        PartDefinition pTray = pLeftHand.addOrReplaceChild("tray", CubeListBuilder.create().texOffs(0, 24).addBox(-3.75F, -0.5F, -3.75F, 7.5F, 0.5F, 7.5F), PartPose.offset(0.1F, 2.3F, 0.1F));
-        pTray.addOrReplaceChild("glass", CubeListBuilder.create().texOffs(18, 17).addBox(-0.75F, -2.5F, -0.75F, 1.5F, 2.5F, 1.5F), PartPose.offset(-1.0F, -0.5F, 0.5F));
-        PartDefinition pRightLeg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(49, 0).addBox(-1.2F, 0.0F, -1.2F, 2.5F, 6.0F, 2.5F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(-1.4F, 12.0F, 0.0F));
-        pRightLeg.addOrReplaceChild("right_shin", CubeListBuilder.create().texOffs(0, 13).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 5.0F, 2.5F, EnumSet.of(Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)).texOffs(46, 30).addBox(-1.0F, 5.0F, -2.5F, 2.0F, 1.0F, 3.5F), PartPose.offset(0.05F, 6.0F, 0.0F));
-        PartDefinition pLeftLeg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(49, 9).addBox(-1.2F, 0.0F, -1.2F, 2.5F, 6.0F, 2.5F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(1.4F, 12.0F, 0.0F));
-        pLeftLeg.addOrReplaceChild("left_shin", CubeListBuilder.create().texOffs(9, 13).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 5.0F, 2.5F, EnumSet.of(Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)).texOffs(0, 32).addBox(-1.0F, 5.0F, -2.5F, 2.0F, 1.0F, 3.5F), PartPose.offset(0.05F, 6.0F, 0.0F));
+        PartDefinition pBody = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 12).addBox(-3.25F, -7.5F, -1.75F, 6.5F, 7.5F, 3.5F, EnumSet.of(Direction.DOWN, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)).texOffs(53, 28).addBox(-1.5F, -2.5F, 1.85F, 3.0F, 1.5F, 0.5F), PartPose.offset(0.0F, 10.5F, 0.0F));
+        pBody.addOrReplaceChild("skirt", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 0.0F, -2.25F, 8.0F, 7.0F, 4.5F), PartPose.offset(0.0F, -0.5F, 0.0F));
+        PartDefinition pNeck = pBody.addOrReplaceChild("neck", CubeListBuilder.create().texOffs(35, 26).addBox(-1.0F, -1.5F, -1.0F, 2.0F, 1.5F, 2.0F, EnumSet.of(Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, -7.5F, 0.0F));
+        PartDefinition pHead = pNeck.addOrReplaceChild("head", CubeListBuilder.create().texOffs(25, 0).addBox(-3.0F, -6.5F, -2.75F, 6.0F, 6.5F, 5.5F), PartPose.offset(0.0F, -1.5F, 0.0F));
+        pHead.addOrReplaceChild("bun", CubeListBuilder.create().texOffs(20, 12).addBox(-1.75F, -1.5F, 0.0F, 3.5F, 3.0F, 2.0F, EnumSet.of(Direction.DOWN, Direction.UP, Direction.WEST, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, -4.0F, 2.75F));
+        pHead.addOrReplaceChild("lock_r", CubeListBuilder.create().texOffs(42, 12).addBox(-0.25F, 0.0F, -0.25F, 0.5F, 4.5F, 0.5F), PartPose.offset(-2.6F, -3.6F, -2.45F));
+        pHead.addOrReplaceChild("lock_l", CubeListBuilder.create().texOffs(44, 12).addBox(-0.25F, 0.0F, -0.25F, 0.5F, 3.5F, 0.5F), PartPose.offset(2.6F, -3.6F, -2.45F));
+        pHead.addOrReplaceChild("mouth", CubeListBuilder.create().texOffs(43, 26).addBox(-2.5F, 0.0F, 0.0F, 5.0F, 2.0F, 0.0F, EnumSet.of(Direction.NORTH)), PartPose.offset(0.0F, -1.5F, -2.83F));
+        pHead.addOrReplaceChild("jaw", CubeListBuilder.create().texOffs(20, 17).addBox(-2.5F, 0.0F, 0.0F, 5.0F, 1.0F, 0.0F, EnumSet.of(Direction.NORTH)), PartPose.offset(0.0F, -1.0F, -2.9F));
+        pHead.addOrReplaceChild("glare", CubeListBuilder.create().texOffs(43, 28).addBox(-2.5F, -0.5F, 0.0F, 5.0F, 1.5F, 0.0F, EnumSet.of(Direction.NORTH)), PartPose.offset(0.0F, -4.0F, -2.85F));
+        PartDefinition pRightArm = pBody.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(8, 23).addBox(-1.0F, -0.5F, -1.0F, 2.0F, 5.0F, 2.0F), PartPose.offset(-4.35F, -7.0F, 0.0F));
+        PartDefinition pRightForearm = pRightArm.addOrReplaceChild("right_forearm", CubeListBuilder.create().texOffs(58, 0).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 4.5F, 1.5F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, 4.5F, 0.0F));
+        PartDefinition pRightHand = pRightForearm.addOrReplaceChild("right_hand", CubeListBuilder.create().texOffs(58, 20).addBox(-0.75F, 0.0F, -0.5F, 1.5F, 2.5F, 1.0F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, 4.5F, 0.0F));
+        pRightHand.addOrReplaceChild("held_glass", CubeListBuilder.create().texOffs(58, 12).addBox(-0.75F, -1.5F, -0.75F, 1.5F, 2.5F, 1.5F), PartPose.offset(0.0F, 2.0F, -0.5F));
+        PartDefinition pLeftArm = pBody.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(16, 26).addBox(-1.0F, -0.5F, -1.0F, 2.0F, 5.0F, 2.0F), PartPose.offset(4.35F, -7.0F, 0.0F));
+        PartDefinition pLeftForearm = pLeftArm.addOrReplaceChild("left_forearm", CubeListBuilder.create().texOffs(58, 6).addBox(-0.75F, 0.0F, -0.75F, 1.5F, 4.5F, 1.5F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, 4.5F, 0.0F));
+        PartDefinition pLeftHand = pLeftForearm.addOrReplaceChild("left_hand", CubeListBuilder.create().texOffs(58, 24).addBox(-0.75F, 0.0F, -0.5F, 1.5F, 2.5F, 1.0F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(0.0F, 4.5F, 0.0F));
+        PartDefinition pTray = pLeftHand.addOrReplaceChild("tray", CubeListBuilder.create().texOffs(20, 18).addBox(-3.75F, -0.5F, -3.75F, 7.5F, 0.5F, 7.5F), PartPose.offset(0.0F, 1.2F, 0.0F));
+        pTray.addOrReplaceChild("glass", CubeListBuilder.create().texOffs(58, 16).addBox(-0.75F, -2.5F, -0.75F, 1.5F, 2.5F, 1.5F), PartPose.offset(-1.0F, -0.5F, 0.6F));
+        PartDefinition pRightLeg = root.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(48, 0).addBox(-1.25F, 0.0F, -1.25F, 2.5F, 6.5F, 2.5F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(-1.3F, 10.5F, 0.0F));
+        pRightLeg.addOrReplaceChild("right_shin", CubeListBuilder.create().texOffs(50, 18).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, EnumSet.of(Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)).texOffs(31, 12).addBox(-1.0F, 6.0F, -2.5F, 2.0F, 1.0F, 3.5F), PartPose.offset(0.0F, 6.5F, 0.0F));
+        PartDefinition pLeftLeg = root.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(48, 9).addBox(-1.25F, 0.0F, -1.25F, 2.5F, 6.5F, 2.5F, EnumSet.of(Direction.UP, Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)), PartPose.offset(1.3F, 10.5F, 0.0F));
+        pLeftLeg.addOrReplaceChild("left_shin", CubeListBuilder.create().texOffs(0, 23).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, EnumSet.of(Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH)).texOffs(24, 26).addBox(-1.0F, 6.0F, -2.5F, 2.0F, 1.0F, 3.5F), PartPose.offset(0.0F, 6.5F, 0.0F));
         return LayerDefinition.create(mesh, 64, 64);
     }
 
@@ -156,20 +162,17 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
         float breath = Mth.sin(t * 0.055F);
         float look = Mth.clamp(yaw, -1.1F, 1.1F);
         float lookP = Mth.clamp(pitch, -0.5F, 0.6F);
-        // the head never straightens: a 30 degree tilt, with a slow drift and rare ticks the wrong way
-        float tilt = 0.5F + Mth.sin(t * 0.021F) * 0.04F - twitch(t, 97.0F, 13.0F) * 0.18F;
+        // the head never straightens: a 30 degree tilt with a slow drift; every few seconds it ticks upright for an instant
+        float tilt = 0.52F + Mth.sin(t * 0.021F) * 0.04F - twitch(t, 97.0F, 13.0F) * 0.22F;
         float jit = glitch * noise(t * 1.7F);
         float jit2 = glitch * noise(t * 2.3F + 40.0F);
-        // smooth, unnatural constants
         this.tray.visible = true;
         this.glass.visible = true;
         this.heldGlass.visible = false;
         this.mouth.visible = false;
+        this.jaw.visible = false;
         this.mouth.yScale = 0.01F;
-        this.lockR.zRot = 0.0F;
-        this.lockL.zRot = 0.0F;
-        float hipX = 0.0F;
-        float hipZ = 0.0F;
+        this.glare.visible = false;
 
         if (pose == WALK) {
             float a = Math.min(1.0F, limbSwingAmount * 1.5F);
@@ -181,102 +184,108 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
             this.rightShin.xRot = Math.max(0.0F, Mth.sin(c - 1.2F)) * 0.55F * a;
             this.leftShin.xRot = Math.max(0.0F, -Mth.sin(c - 1.2F)) * 0.55F * a;
             this.body.xRot = 0.03F;
-            this.skirt.xRot = -0.03F + s * 0.025F * a;
-            // the free arm hangs stiff, a tiny pendulum
-            this.rightArm.xRot = s * 0.07F * a + 0.02F;
+            this.skirt.xRot = -0.03F + s * 0.03F * a;
+            this.rightArm.xRot = s * 0.07F * a + 0.03F;
             this.rightArm.zRot = 0.05F;
-            this.rightForearm.xRot = -0.12F;
-            // tray carried at the shoulder on the flat left hand, perfectly level
-            this.leftArm.xRot = -0.3F;
-            this.leftArm.yRot = 0.0F;
-            this.leftArm.zRot = -0.42F;
-            this.leftForearm.xRot = -2.25F;
-            this.leftForearm.zRot = 0.4F;
-            this.leftHand.xRot = 0.0F;
+            this.rightForearm.xRot = -0.15F;
+            // the tray on the flat left palm beside her head
+            this.leftArm.xRot = -0.25F;
+            this.leftArm.zRot = -0.8F;
+            this.leftForearm.zRot = -2.3F;
+            this.leftForearm.xRot = -0.1F;
             this.head.zRot = tilt * 0.8F + jit * 0.4F;
             this.head.yRot = look * 0.8F;
-            this.head.xRot = lookP * 0.6F + 0.08F;
+            this.head.xRot = lookP * 0.6F + 0.06F;
         } else if (pose == SERVE) {
-            // bends at the hips, takes the glass off the tray with the right hand and sets it on the table
-            float bend = span(pt, 0.0F, 12.0F);
-            float reach = span(pt, 6.0F, 14.0F);
-            float lower = span(pt, 14.0F, 24.0F);
-            float back = span(pt, 26.0F, 36.0F);
-            this.body.xRot = 0.62F * bend + breath * 0.01F;
-            this.skirt.xRot = -0.5F * bend;
-            this.neck.xRot = 0.1F * bend;
-            this.head.xRot = 0.35F * bend + lookP * 0.3F;
+            // bends, takes the glass off the tray with the right hand and sets it on the table (released at pt 24)
+            float bend = span(pt, 0.0F, 10.0F);
+            float k1 = span(pt, 4.0F, 12.0F);
+            float k2 = span(pt, 13.0F, 23.0F);
+            float k3 = span(pt, 25.0F, 35.0F);
+            this.body.xRot = 0.5F * bend + breath * 0.008F;
+            this.skirt.xRot = -0.42F * bend;
+            this.neck.xRot = 0.12F * bend;
+            this.head.xRot = 0.3F * bend + lookP * 0.3F;
             this.head.zRot = tilt * 0.9F + jit * 0.4F;
-            this.head.yRot = look * 0.4F;
-            // tray: held out to the side on the left hand, kept level against the bend
-            this.leftArm.xRot = -0.25F - 0.62F * bend;
-            this.leftArm.zRot = -0.45F;
-            this.leftForearm.xRot = -2.1F + 0.62F * bend;
-            this.leftForearm.zRot = 0.42F;
-            this.leftHand.xRot = 0.0F;
-            // right hand: to the tray glass, then down to the table in front of her
-            this.rightArm.xRot = -1.05F * reach + (-0.55F) * lower * (1.0F - back) + 0.3F * back;
-            this.rightArm.zRot = -0.5F * reach * (1.0F - lower) + 0.06F;
-            this.rightArm.yRot = -0.35F * reach * (1.0F - lower);
-            this.rightForearm.xRot = -1.25F * reach * (1.0F - lower) - 0.5F * lower * (1.0F - back);
-            this.rightHand.xRot = 0.35F * lower;
-            boolean inHand = pt >= 12.0F && pt < 24.0F;
-            this.heldGlass.visible = inHand;
+            this.head.yRot = look * 0.35F;
+            // tray held low at her left side, out of the way of her face
+            this.leftArm.xRot = 0.787F * bend;
+            this.leftArm.yRot = -0.199F * bend;
+            this.leftArm.zRot = -0.289F * bend;
+            this.leftForearm.xRot = -2.027F * bend - 0.1F * (1.0F - bend);
+            // right hand: rest -> the glass on the tray -> down to the table -> back to the side
+            float rx = Mth.lerp(k1, 0.0F, -0.925F);
+            float rz = Mth.lerp(k1, 0.05F, 0.157F);
+            float ry = Mth.lerp(k1, 0.0F, -1.2F);
+            float rf = Mth.lerp(k1, -0.15F, -1.855F);
+            rx = Mth.lerp(k2, rx, -0.452F);
+            rz = Mth.lerp(k2, rz, -0.274F);
+            ry = Mth.lerp(k2, ry, -0.315F);
+            rf = Mth.lerp(k2, rf, -1.156F);
+            this.rightArm.xRot = Mth.lerp(k3, rx, -0.2F);
+            this.rightArm.zRot = Mth.lerp(k3, rz, 0.06F);
+            this.rightArm.yRot = Mth.lerp(k3, ry, 0.0F);
+            this.rightForearm.xRot = Mth.lerp(k3, rf, -0.3F);
+            this.heldGlass.visible = pt >= 12.0F && pt < 24.0F;
             this.glass.visible = pt < 12.0F;
-            this.rightLeg.xRot = 0.0F;
-            this.leftLeg.xRot = 0.0F;
         } else if (pose == BOW) {
-            // a 90 degree bow, held: the tray stays level in the hanging left hand; loose strands fall forward;
-            // near the end the head slowly lifts to look at the door while the body stays folded
+            // a 90 degree bow, held; the tray stays level by her left knee; loose strands fall forward;
+            // after 34 ticks the head slowly lifts to stare at the door while the body stays folded
             float down = easeOut(pt / 14.0F);
-            float lift = span(pt, 34.0F, 70.0F);
-            this.body.xRot = 1.57F * down + Mth.sin(pt * 0.05F) * 0.01F;
-            this.skirt.xRot = -1.35F * down;
-            this.neck.xRot = 0.1F * down - 0.85F * lift;
-            this.head.xRot = 0.15F * down - 0.75F * lift;
-            this.head.zRot = 0.08F * down + tilt * 0.6F * lift + jit * 0.3F;
+            float lift = span(pt, 34.0F, 72.0F);
+            this.body.xRot = 1.5F * down + Mth.sin(pt * 0.05F) * 0.01F;
+            this.skirt.xRot = -1.3F * down;
+            this.neck.xRot = 0.1F * down - 0.8F * lift;
+            this.head.xRot = 0.12F * down - 0.75F * lift;
+            this.head.zRot = 0.06F * down + tilt * 0.7F * lift + jit * 0.3F;
             this.head.yRot = look * 0.3F * lift;
-            this.rightArm.xRot = -1.45F * down;
-            this.rightArm.zRot = 0.1F;
-            this.rightForearm.xRot = -0.1F;
-            this.leftArm.xRot = -1.57F * down - 0.2F;
-            this.leftArm.zRot = -0.25F;
-            this.leftForearm.xRot = -1.25F;
-            this.leftForearm.zRot = 0.0F;
-            this.leftHand.xRot = 0.0F;
+            this.rightArm.xRot = 0.348F * down;
+            this.rightArm.zRot = -0.448F * down + 0.05F;
+            this.rightForearm.xRot = -1.586F * down;
+            this.leftArm.xRot = 0.047F * down;
+            this.leftArm.zRot = 0.381F * down;
+            this.leftForearm.xRot = -1.866F * down;
         } else if (pose == STAND) {
-            // waiting: the tray held flat before her in both hands, head tilted 30 degrees, tracking you without
-            // straightening; motionless but for a shallow breath
+            // waiting: the tray flat before her in both hands, head tilted 30 degrees, tracking you without straightening
             this.body.xRot = 0.02F + breath * 0.008F;
             this.head.zRot = tilt + jit * 0.5F;
             this.head.yRot = look * 0.95F;
             this.head.xRot = lookP * 0.7F + 0.05F;
-            this.neck.zRot = tilt * 0.15F;
-            this.rightArm.xRot = -0.55F;
-            this.rightArm.zRot = 0.18F;
-            this.rightArm.yRot = 0.15F;
-            this.rightForearm.xRot = -0.8F;
-            this.leftArm.xRot = -0.55F;
-            this.leftArm.zRot = -0.18F;
-            this.leftArm.yRot = -0.15F;
-            this.leftForearm.xRot = -0.8F;
-            this.leftHand.xRot = 0.0F;
+            this.neck.zRot = tilt * 0.12F;
+            this.rightArm.xRot = 0.103F;
+            this.rightArm.zRot = -0.183F;
+            this.rightArm.yRot = -0.181F;
+            this.rightForearm.xRot = -1.445F;
+            this.leftArm.xRot = 0.103F;
+            this.leftArm.zRot = 0.183F;
+            this.leftArm.yRot = 0.181F;
+            this.leftForearm.xRot = -1.445F;
+            this.tray.x = -2.4F;
         } else if (pose == NOTICE) {
-            // the head rolls over sideways to 90 degrees in three jerks, the polite mouth splits open
+            // the head rolls over sideways to 90 degrees in three jerks, the polite mouth splits open, the hollows light up
             float roll = jerky(pt / 14.0F, 3.0F);
             float open = span(pt, 5.0F, 12.0F);
             this.head.zRot = tilt + (1.6F - tilt) * roll + jit * 0.6F;
             this.head.yRot = look;
             this.head.xRot = lookP * 0.5F;
             this.neck.zRot = 0.25F * roll;
+            float o = open * (1.0F + noise(t * 0.9F) * 0.08F);
             this.mouth.visible = open > 0.01F;
-            this.mouth.yScale = Math.max(0.01F, open * (0.9F + noise(t * 0.9F) * 0.08F));
+            this.jaw.visible = open > 0.01F;
+            this.mouth.yScale = Math.max(0.01F, o);
+            this.jaw.y = this.jaw.y + 2.0F * o;
+            this.glare.visible = pt > 3.0F;
             this.body.xRot = 0.04F;
-            this.rightArm.xRot = -0.35F * open;
-            this.rightArm.zRot = 0.12F;
-            this.leftArm.xRot = -0.55F;
-            this.leftArm.zRot = -0.18F;
-            this.leftForearm.xRot = -0.8F;
+            this.rightArm.xRot = 0.103F - 0.4F * open;
+            this.rightArm.zRot = -0.183F;
+            this.rightArm.yRot = -0.181F;
+            this.rightForearm.xRot = -1.445F + 1.2F * open;
+            this.leftArm.xRot = 0.103F;
+            this.leftArm.zRot = 0.183F;
+            this.leftArm.yRot = 0.181F;
+            this.leftForearm.xRot = -1.445F;
+            this.tray.x = -2.4F;
+            blend = 2.0F;
         } else {
             // CHASE: fast and stiff, knees barely bending, arms straight out, the head lolled over sideways, mouth open
             float a = Math.min(1.0F, limbSwingAmount * 1.3F);
@@ -299,21 +308,19 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
             this.head.zRot = 1.35F + Mth.sin(t * 0.13F) * 0.06F + jit;
             this.head.yRot = look * 0.6F;
             this.head.xRot = lookP * 0.4F - 0.08F;
+            float o = 0.9F + Mth.sin(t * 0.4F) * 0.06F;
             this.mouth.visible = true;
-            this.mouth.yScale = 0.85F + Mth.sin(t * 0.4F) * 0.05F;
+            this.jaw.visible = true;
+            this.mouth.yScale = o;
+            this.jaw.y = this.jaw.y + 2.0F * o;
+            this.glare.visible = true;
             blend = 4.0F;
         }
-        // breath in the chest, glitch jolts at the joints
-        this.body.y = 12.0F;
         this.neck.zRot = this.neck.zRot + jit2 * 0.25F;
         this.rightArm.zRot = this.rightArm.zRot + jit * 0.2F;
-        if (pose == NOTICE) {
-            blend = 2.0F;
-        }
         this.blend(st, poseTicks, blend, ageInTicks);
         // after the blend: the tray stays level on her palm, the glasses stand upright, loose strands hang down
         level(this.tray, this.body, this.leftArm, this.leftForearm, this.leftHand);
-        this.tray.zRot = this.tray.zRot + (pose == NOTICE ? 0.3F * span(pt, 5.0F, 12.0F) : 0.0F);
         level(this.heldGlass, this.body, this.rightArm, this.rightForearm, this.rightHand);
         level(this.lockR, this.body, this.neck, this.head);
         level(this.lockL, this.body, this.neck, this.head);

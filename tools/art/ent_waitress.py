@@ -49,46 +49,50 @@ class Waitress(Spec):
 
     def build(self):
         r = self.root
-        body = Part('body', (0, 12, 0))
-        body.cube(Cube((-3.5, -8.5, -1.75), (7, 8.5, 3.5), 'torso', tag='torso',
+        # proportions: 29 px tall, legs 13.5 (hip joint at y 10.5), knee-length A-line skirt, slender arms
+        body = Part('body', (0, 10.5, 0))
+        body.cube(Cube((-3.25, -7.5, -1.75), (6.5, 7.5, 3.5), 'torso', tag='torso',
                        faces=('top', 'right', 'front', 'left', 'back')))
-        body.cube(Cube((-1.5, -3.5, 1.85), (3, 1.5, 0.5), 'bow', tag='bow'))
+        body.cube(Cube((-1.5, -2.5, 1.85), (3, 1.5, 0.5), 'bow', tag='bow'))
         skirt = Part('skirt', (0, -0.5, 0), cubes=[Cube((-4, 0, -2.25), (8, 7, 4.5), 'skirt', tag='skirt')])
-        neck = Part('neck', (0, -8.5, 0), cubes=[Cube((-1, -1.5, -1), (2, 1.5, 2), 'skin', tag='neck',
+        neck = Part('neck', (0, -7.5, 0), cubes=[Cube((-1, -1.5, -1), (2, 1.5, 2), 'skin', tag='neck',
                                                       faces=('right', 'front', 'left', 'back'))])
-        head = Part('head', (0, -1.5, 0), cubes=[Cube((-3, -7, -3), (6, 7, 6), 'head', tag='head')])
-        bun = Part('bun', (0, -4.5, 3), cubes=[Cube((-1.75, -1.5, 0), (3.5, 3, 2), 'bun', tag='bun',
-                                                     faces=('top', 'bottom', 'right', 'left', 'back'))])
-        lock_r = Part('lock_r', (-2.75, -4, -2.6), cubes=[Cube((-0.25, 0, -0.25), (0.5, 4.5, 0.5), 'hair', tag='lock_r')])
-        lock_l = Part('lock_l', (2.75, -4, -2.6), cubes=[Cube((-0.25, 0, -0.25), (0.5, 4, 0.5), 'hair', tag='lock_l')])
-        mouth = card('mouth', (0, -2.0, -3.1), (-2.5, 0, 0), (5, 3, 0), 'mouth')
-        head.add(bun, lock_r, lock_l, mouth)
+        head = Part('head', (0, -1.5, 0), cubes=[Cube((-3, -6.5, -2.75), (6, 6.5, 5.5), 'head', tag='head')])
+        bun = Part('bun', (0, -4.0, 2.75), cubes=[Cube((-1.75, -1.5, 0), (3.5, 3, 2), 'bun', tag='bun',
+                                                       faces=('top', 'bottom', 'right', 'left', 'back'))])
+        lock_r = Part('lock_r', (-2.6, -3.6, -2.45), cubes=[Cube((-0.25, 0, -0.25), (0.5, 4.5, 0.5), 'hair', tag='lock_r')])
+        lock_l = Part('lock_l', (2.6, -3.6, -2.45), cubes=[Cube((-0.25, 0, -0.25), (0.5, 3.5, 0.5), 'hair', tag='lock_l')])
+        # the split mouth: a dark gap (stretched by yScale) behind a jaw card (lower lip + chin) that slides down
+        mouth = card('mouth', (0, -1.5, -2.83), (-2.5, 0, 0), (5, 2, 0), 'mouth')
+        jaw = card('jaw', (0, -1.0, -2.9), (-2.5, 0, 0), (5, 1, 0), 'jaw')
+        glare = card('glare', (0, -4.0, -2.85), (-2.5, -0.5, 0), (5, 1.5, 0), 'glare')
+        head.add(bun, lock_r, lock_l, mouth, jaw, glare)
         neck.add(head)
         arms = {}
         for side, pre in ((-1, 'right'), (1, 'left')):
-            arm = Part(f'{pre}_arm', (side * 4.6, -8, 0), cubes=[Cube((-1, -0.5, -1), (2, 5, 2), 'arm', tag=f'{pre}_upper')])
-            fore = Part(f'{pre}_forearm', (0, 4.5, 0), cubes=[Cube((-0.9, 0, -0.9), (2, 4.5, 2), 'skin', tag=f'{pre}_fore',
+            arm = Part(f'{pre}_arm', (side * 4.35, -7.0, 0), cubes=[Cube((-1, -0.5, -1), (2, 5, 2), 'arm', tag=f'{pre}_upper')])
+            fore = Part(f'{pre}_forearm', (0, 4.5, 0), cubes=[Cube((-0.75, 0, -0.75), (1.5, 4.5, 1.5), 'skin', tag=f'{pre}_fore',
                                                                      faces=('right', 'front', 'left', 'back', 'bottom'))])
-            hand = Part(f'{pre}_hand', (0, 4.5, 0), cubes=[Cube((-0.9, 0, -0.65), (2, 2.5, 1.5), 'hand', tag=f'{pre}_hand',
+            hand = Part(f'{pre}_hand', (0, 4.5, 0), cubes=[Cube((-0.75, 0, -0.5), (1.5, 2.5, 1), 'hand', tag=f'{pre}_hand',
                                                                   faces=('right', 'front', 'left', 'back', 'bottom'))])
             fore.add(hand)
             arm.add(fore)
             arms[pre] = (arm, fore, hand)
-        # the tray rests on the flat left hand (palm up when the forearm is raised)
-        tray = Part('tray', (0.1, 2.3, 0.1), cubes=[Cube((-3.75, -0.5, -3.75), (7.5, 0.5, 7.5), 'tray', tag='tray')])
-        glass = Part('glass', (-1.0, -0.5, 0.5), cubes=[Cube((-0.75, -2.5, -0.75), (1.5, 2.5, 1.5), 'glass', tag='glass')])
+        # the tray rests on the flat left hand (palm up when the forearm is raised); it is levelled after the blend
+        tray = Part('tray', (0.0, 1.2, 0.0), cubes=[Cube((-3.75, -0.5, -3.75), (7.5, 0.5, 7.5), 'tray', tag='tray')])
+        glass = Part('glass', (-1.0, -0.5, 0.6), cubes=[Cube((-0.75, -2.5, -0.75), (1.5, 2.5, 1.5), 'glass', tag='glass')])
         tray.add(glass)
         arms['left'][2].add(tray)
-        held = Part('held_glass', (0.1, 2.0, -0.6), cubes=[Cube((-0.75, -1.5, -0.75), (1.5, 2.5, 1.5), 'glass', tag='held_glass')])
+        held = Part('held_glass', (0.0, 2.0, -0.5), cubes=[Cube((-0.75, -1.5, -0.75), (1.5, 2.5, 1.5), 'glass', tag='held_glass')])
         arms['right'][2].add(held)
         body.add(skirt, neck, arms['right'][0], arms['left'][0])
         legs = []
         for side, pre in ((-1, 'right'), (1, 'left')):
-            leg = Part(f'{pre}_leg', (side * 1.4, 12, 0), cubes=[Cube((-1.2, 0, -1.2), (2.5, 6, 2.5), 'leg', tag=f'{pre}_thigh',
-                                                                       faces=('right', 'front', 'left', 'back', 'bottom'))])
-            shin = Part(f'{pre}_shin', (0.05, 6, 0), cubes=[Cube((-1, 0, -1), (2, 5, 2.5), 'leg', tag=f'{pre}_shin',
-                                                                faces=('right', 'front', 'left', 'back')),
-                                                           Cube((-1, 5, -2.5), (2, 1, 3.5), 'foot', tag=f'{pre}_foot')])
+            leg = Part(f'{pre}_leg', (side * 1.3, 10.5, 0), cubes=[Cube((-1.25, 0, -1.25), (2.5, 6.5, 2.5), 'leg', tag=f'{pre}_thigh',
+                                                                         faces=('right', 'front', 'left', 'back', 'bottom'))])
+            shin = Part(f'{pre}_shin', (0, 6.5, 0), cubes=[Cube((-1, 0, -1), (2, 6, 2), 'leg', tag=f'{pre}_shin',
+                                                               faces=('right', 'front', 'left', 'back')),
+                                                          Cube((-1, 6, -2.5), (2, 1, 3.5), 'foot', tag=f'{pre}_foot')])
             leg.add(shin)
             legs.append(leg)
         r.add(body, *legs)
@@ -100,7 +104,6 @@ class Waitress(Spec):
         img, eyes = Img(W, H), Img(W, H)
         n3 = Noise3(4411, 3.0)
         n3b = Noise3(4412, 1.2)
-        rr = rng(4410)
 
         def F(tag):
             return faces(img, self.cube(tag), S)
@@ -108,8 +111,11 @@ class Waitress(Spec):
         def EF(tag):
             return faces(eyes, self.cube(tag), S)
 
-        def base(tag, palette, mid, amp=0.6, grad=0.0, top=0.5, seed_scale=None, fine=0.35, wet=None):
-            """Shaded base over every face of a cube from a palette, 3D noise + light from above + AO below."""
+        def nz(f, x, y, a=0.45, b=0.3):
+            pp = f.positions()[y, x][None]
+            return n3(pp)[0] * a + n3b(pp)[0] * b
+
+        def base(tag, palette, mid, amp=0.6, top=0.5, fine=0.35):
             pa = pal_arr(palette)
             fs = F(tag)
             for n, f in fs.items():
@@ -117,166 +123,150 @@ class Waitress(Spec):
                     continue
                 Pp = f.positions()
                 nrm = f.normal()
-                v = mid + n3(Pp) * amp + n3b(Pp) * fine
-                v = v + nrm[1] * (-top)                         # up-facing lighter
-                v = v - grad * np.clip((Pp[..., 1] - 6.0) / 18.0, 0, 1)
-                if wet is not None:
-                    v = v - wet(Pp)
+                v = mid + n3(Pp) * amp + n3b(Pp) * fine - nrm[1] * top
                 k = np.clip(np.round(v), 0, len(pa) - 1).astype(int)
                 f.view()[:] = pa[k]
             return fs
 
-        # ---------------------------------------------------------------- skin (arms, neck, hands)
-        def ao_y(Pp, y0, y1, amt):
-            return amt * np.clip((Pp[..., 1] - y0) / (y1 - y0), 0, 1)
+        def pattern(f, rows, legend, ox=0, oy=0, jitter=True):
+            """legend: char -> (palette, index) | colour | None. Palette entries get a little 3D noise."""
+            for y, row in enumerate(rows):
+                for x, ch in enumerate(row):
+                    e = legend.get(ch)
+                    if e is None:
+                        continue
+                    if isinstance(e, tuple):
+                        pal_, i = e
+                        v = i + (nz(f, ox + x, oy + y) if jitter else 0.0)
+                        f.set(ox + x, oy + y, P(pal_, v))
+                    else:
+                        f.set(ox + x, oy + y, e)
 
+        # ---------------------------------------------------------------- skin (neck, forearms, hands)
         for tag in ('neck', 'right_fore', 'left_fore', 'right_hand', 'left_hand'):
-            base(tag, SKIN, 4.3, amp=0.35, fine=0.3, top=0.6)
-        # neck: shadow under the chin
+            base(tag, SKIN, 4.4, amp=0.3, fine=0.25, top=0.6)
         for n, f in F('neck').items():
             for x in range(f.w):
-                f.dl(x, 0, -0.10)
+                f.dl(x, 0, -0.12)
                 f.dl(x, 1, -0.05)
-        # hands: knuckles, finger gaps, pale nails at the tips
         for pre in ('right', 'left'):
-            fs = F(f'{pre}_hand')
+            fs = F(f'{pre}_hand')                          # 3 wide x 5 long: fingers together, pale nails
             for n in ('front', 'back'):
                 f = fs[n]
-                for x in (1, 3):
-                    for y in range(2, f.h):
-                        f.dl(x, y, -0.07)
+                for y in range(2, f.h):
+                    f.dl(1, y, -0.06)
                 for x in range(f.w):
-                    f.dl(x, 1, -0.04)
-                    f.set(x, f.h - 1, P(SKIN, 5) if x % 2 == 0 else P(SKIN, 4))
-            fb = fs['bottom']
-            for x in range(fb.w):
-                for y in range(fb.h):
-                    fb.set(x, y, P(SKIN, 5) if x % 2 == 0 else P(SKIN, 4))
+                    f.dl(x, 1, -0.05)
+                    f.set(x, f.h - 1, P(SKIN, 5))
             for n in ('right', 'left'):
                 f = fs[n]
                 for y in range(f.h):
-                    f.dl(0, y, -0.05)
-        # forearms: wrist line, a bruise on the right forearm (the accident)
-        for pre in ('right', 'left'):
+                    f.dl(0, y, -0.04)
+            fs['bottom'].fill(P(SKIN, 5))
             fs = F(f'{pre}_fore')
             for n in ('front', 'back', 'left', 'right'):
                 f = fs[n]
                 for x in range(f.w):
                     f.dl(x, f.h - 1, -0.05)
-        f = F('right_fore')['right']
-        for (x, y, d) in ((1, 3, -0.12), (2, 3, -0.15), (2, 4, -0.12), (1, 4, -0.08), (3, 4, -0.06)):
+        f = F('right_fore')['right']                       # a bruise (the accident) on the right forearm
+        for (x, y, d) in ((0, 3, -0.10), (1, 3, -0.15), (1, 4, -0.13), (2, 4, -0.07), (1, 5, -0.06)):
             f.dl(x, y, d)
             px = f.get(x, y)
-            f.set(x, y, np.array([px[0] * 0.92, px[1] * 0.9, px[2] * 1.05, 255], np.float32))
+            f.set(x, y, np.array([px[0] * 0.9, px[1] * 0.9, px[2] * 1.06, 255], np.float32))
 
-        # ---------------------------------------------------------------- upper arms: short puffed brown sleeves
+        # ---------------------------------------------------------------- upper arms: puffed brown sleeves
         for pre in ('right', 'left'):
             fs = base(f'{pre}_upper', DRESS, 3.2, amp=0.5, top=0.6)
             for n in ('front', 'back', 'left', 'right'):
-                f = fs[n]
+                f = fs[n]                                  # 4 x 10
                 for y in range(f.h):
                     for x in range(f.w):
-                        if y >= 5:                      # skin below the sleeve
-                            Pp = f.positions()[y, x]
-                            v = 4.2 + n3(Pp[None])[0] * 0.35
-                            f.set(x, y, P(SKIN, v))
-                        elif y == 4:                    # white cuff band
+                        if y >= 6:
+                            f.set(x, y, P(SKIN, 4.2 + nz(f, x, y, 0.3, 0.2) - (0.6 if y == 6 else 0)))
+                        elif y == 5:
                             f.set(x, y, P(WHITE, 3 if x % 3 else 2))
-                        elif y == 3:
-                            f.dl(x, y, -0.06)
-                for x in range(f.w):                    # gathered puff at the top
+                        elif y == 4:
+                            f.dl(x, y, -0.08)
+                for x in range(f.w):
                     if x % 2 == 0:
-                        f.dl(x, 1, 0.05)
-                        f.dl(x, 2, -0.05)
-            fb = fs['bottom']
-            fb.fill(P(SKIN, 3))
+                        f.dl(x, 1, 0.06)
+                        f.dl(x, 2, -0.04)
+            fs['bottom'].fill(P(SKIN, 3))
 
-        # ---------------------------------------------------------------- torso: dress, bib apron, collar, badge
+        # ---------------------------------------------------------------- torso (13 x 15 front)
         fs = base('torso', DRESS, 3.0, amp=0.5, top=0.6)
-        apron = pal_arr(APRON)
-        f = fs['front']                                    # 14 x 17
-        Pf = f.positions()
-        for y in range(f.h):
-            for x in range(f.w):
-                bib = 3 <= x <= 10 and y >= 4
-                strap = (x in (3, 4) or x in (9, 10)) and y < 4
-                if bib or strap:
-                    v = 4.0 + n3(Pf[y, x][None])[0] * 0.5 + n3b(Pf[y, x][None])[0] * 0.3
-                    if x in (3, 10):
-                        v -= 0.8                           # bib edge shade
-                    if y >= 14:
-                        v -= 0.4
-                    f.set(x, y, apron[int(np.clip(round(v), 0, 6))])
-        # waist band of the apron (the bib ends at the waist ties)
-        for x in range(f.w):
-            f.set(x, 15, P(APRON, 2.6 if 1 <= x <= 12 else 1.5))
-            f.set(x, 16, P(APRON, 3.2) if 1 <= x <= 12 else P(DRESS, 2))
-        # round white collar flaps around the neck opening
-        collar = ['..wwwwww..wwwwww..',
-                  ]
-        for x in range(f.w):
-            f.set(x, 0, P(WHITE, 4))
-        for (x, y) in ((1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (8, 1), (9, 1), (10, 1), (11, 1), (12, 1),
-                       (2, 2), (3, 2), (4, 2), (9, 2), (10, 2), (11, 2), (3, 3), (10, 3)):
-            f.set(x, y, P(WHITE, 4 if y < 2 else 3))
-        for (x, y) in ((5, 2), (8, 2), (4, 3), (9, 3), (1, 2), (12, 2)):
-            f.set(x, y, P(WHITE, 1))
-        f.set(6, 1, P(DRESS, 1))                           # V of the dress under the collar
-        f.set(7, 1, P(DRESS, 1))
-        f.set(6, 2, P(DRESS, 2))
-        f.set(7, 2, P(DRESS, 2))
-        # name badge 「小野寺」 on her left chest (front texture right side)
-        bx0, by0, bw, bh = 7, 5, 5, 3
-        for y in range(by0, by0 + bh):
-            for x in range(bx0, bx0 + bw):
-                edge = y in (by0, by0 + bh - 1) or x in (bx0, bx0 + bw - 1)
-                f.set(x, y, P(WHITE, 2) if edge else P(WHITE, 5))
-        for x in (bx0 + 1, bx0 + 2, bx0 + 3):
-            f.set(x, by0 + 1, '#3a3330' if x != bx0 + 2 else '#5a4e48')
-        f.set(bx0 + 4, by0 + 1, '#c45a1e')                 # the little sun logo dot
-        # stains: a dark smear on the apron bib (road water), grime at the right side
-        for (x, y, d) in ((4, 9, -0.10), (5, 9, -0.12), (5, 10, -0.14), (6, 10, -0.08), (4, 10, -0.06), (5, 11, -0.07)):
-            f.dl(x, y, d)
-        # back: apron straps cross, ties at the waist
-        fb = fs['back']
-        for y in range(fb.h):
-            for x in range(fb.w):
-                d1 = abs((x - 2) - y * 0.62)
-                d2 = abs((fb.w - 3 - x) - y * 0.62)
-                if (d1 < 0.8 or d2 < 0.8) and y < 14:
-                    fb.set(x, y, P(APRON, 3.6 + n3(fb.positions()[y, x][None])[0] * 0.5))
-        for x in range(fb.w):
-            fb.set(x, 15, P(APRON, 2.5))
-            fb.set(x, 16, P(APRON, 3.2))
-        for y in range(fb.h):                              # zip line
-            fb.dl(fb.w // 2, y, -0.06)
-        # sides: the apron band continues
+        D, A, Wt = DRESS, APRON, WHITE
+        leg = {'d': (D, 2.8), 'D': (D, 1.6), 'a': (A, 4.2), 'A': (A, 2.6), 'e': (A, 5.2), 'w': (Wt, 4.4),
+               'W': (Wt, 2.3), 'v': (D, 0.6), 'b': (A, 3.0), 'B': (A, 3.6), 'k': C('#ece9e0'), 'K': C('#a9a59c'),
+               'n': C('#2f2926'), 'o': C('#c45a1e'), 'p': (A, 3.4)}
+        front = [
+            'dwwwwvvvwwwwd',
+            'dwwwWvvvWwwwd',
+            'ddWwadvdawWdd',
+            'dddAadddaAddd',
+            'dddAaaaaKKKKK',
+            'dddAaaaaKknno',
+            'dddAaaaaKKKKK',
+            'dddAaaaaaaaAd',
+            'dddAaaaaaaaAd',
+            'dddAaaeaaaaAd',
+            'dddAaaaaaaaAd',
+            'DbbbbbbbbbbbD',
+            'DBBBBBBBBBBBD',
+            'ddApaaaaaapAd',
+            'dDApaaaaaapAD',
+        ]
+        pattern(fs['front'], front, leg)
+        f = fs['front']
+        for (x, y, dd) in ((4, 8, -0.10), (5, 8, -0.12), (5, 9, -0.14), (4, 9, -0.06), (6, 9, -0.05)):
+            f.dl(x, y, dd)                                  # a dark water stain on the bib
+        back = [
+            'dddddddddddd d',
+            'dAddddddddAdd',
+            'ddAddddddAddd',
+            'dddAddddAdddd',
+            'ddddAddAddddd',
+            'dddddAAdddddd',
+            'ddddAddAddddd',
+            'dddAddddAdddd',
+            'ddAddddddAddd',
+            'dAddddddddAdd',
+            'ddddddDdddddd',
+            'DbbbbbbbbbbbD',
+            'DBBBBBBBBBBBD',
+            'dddddddDddddd',
+            'ddddddDdddddd',
+        ]
+        back[0] = 'ddddddddddddd'
+        pattern(fs['back'], back, leg)
         for n in ('left', 'right'):
-            fsd = fs[n]
-            for x in range(fsd.w):
-                fsd.set(x, 15, P(APRON, 2.5))
-                fsd.set(x, 16, P(APRON, 3.0))
-                fsd.dl(x, 0, 0.04)
-            for y in range(fsd.h):                         # side seam
-                fsd.dl(fsd.w // 2, y, -0.05)
-        ft = fs['top']
-        for y in range(ft.h):
-            for x in range(ft.w):
-                if x in (3, 4, 9, 10):
-                    ft.set(x, y, P(APRON, 4))
-                elif 5 <= x <= 8 and 2 <= y <= 4:
-                    ft.set(x, y, P(WHITE, 3))
-        # the apron bow at the back of the waist
+            f = fs[n]                                      # 7 x 15
+            for x in range(f.w):
+                f.set(x, 11, P(A, 3.0))
+                f.set(x, 12, P(A, 3.6))
+            for y in range(f.h):
+                f.dl(f.w // 2, y, -0.05)
+            for x in range(f.w):
+                f.dl(x, 0, 0.05)
+        top = fs['top']                                    # 13 x 7: collar ring and apron straps over the shoulders
+        for y in range(top.h):
+            for x in range(top.w):
+                if x in (3, 9):
+                    top.set(x, y, P(A, 4.6))
+                elif 4 <= x <= 8 and 1 <= y <= 5:
+                    top.set(x, y, P(Wt, 3.6) if (x in (4, 8) or y in (1, 5)) else P(SKIN, 2))
         bfs = faces(img, self.cube('bow'), S)
         for n, fc in bfs.items():
             for y in range(fc.h):
                 for x in range(fc.w):
-                    v = 3.8 + n3(fc.positions()[y, x][None])[0] * 0.6
-                    if n == 'back' and (x == fc.w // 2 or x == fc.w // 2 - 1):
-                        v = 2.4                            # knot
-                    fc.set(x, y, P(APRON, v))
+                    v = 3.9 + nz(fc, x, y, 0.6, 0.2)
+                    if n == 'back' and x in (fc.w // 2 - 1, fc.w // 2):
+                        v = 2.4
+                    if n == 'back' and y == fc.h - 1:
+                        v -= 0.8
+                    fc.set(x, y, P(A, v))
 
-        # ---------------------------------------------------------------- skirt
+        # ---------------------------------------------------------------- skirt (16 x 14 front): apron over brown
         pa = pal_arr(DRESS)
         fs = F('skirt')
         for n, fc in fs.items():
@@ -284,37 +274,37 @@ class Waitress(Spec):
             for y in range(fc.h):
                 for x in range(fc.w):
                     pp = Pp[y, x]
-                    fold = math.sin((pp[0] * 1.9 + pp[2] * 1.9) + n3(pp[None], 2.0)[0] * 1.2)
-                    v = 2.8 + fold * 0.7 + n3b(pp[None])[0] * 0.3
+                    fold = math.sin((pp[0] * 1.7 + pp[2] * 1.7) + n3(pp[None], 2.0)[0] * 1.3)
+                    v = 2.9 + fold * 0.75 + n3b(pp[None])[0] * 0.3
                     if n == 'top':
-                        v = 1.2
+                        v = 1.0
                     if n == 'bottom':
-                        v = 0.6
-                    if y == fc.h - 1 and n not in ('top', 'bottom'):
-                        v -= 0.8                           # hem
+                        v = 0.4
+                    if y >= fc.h - 1 and n not in ('top', 'bottom'):
+                        v -= 0.9
                     fc.set(x, y, pa[int(np.clip(round(v), 0, 5))])
-        f = fs['front']                                    # 16 x 14: the apron skirt
+        apron = pal_arr(APRON)
+        f = fs['front']
         Pf = f.positions()
         for y in range(0, 12):
             for x in range(2, 14):
                 pp = Pf[y, x]
-                fold = math.sin(pp[0] * 1.6 + n3(pp[None], 2.0)[0])
-                v = 4.0 + fold * 0.6 + n3b(pp[None])[0] * 0.3
+                fold = math.sin(pp[0] * 1.5 + n3(pp[None], 2.0)[0] * 1.1)
+                v = 4.1 + fold * 0.55 + n3b(pp[None])[0] * 0.3
                 if x in (2, 13):
-                    v -= 0.9
+                    v -= 1.0
                 if y == 11:
-                    v -= 1.2                               # apron hem stitch
+                    v -= 1.3
                 f.set(x, y, apron[int(np.clip(round(v), 0, 6))])
-        for y in range(3, 7):                              # pocket
-            f.dl(4, y, -0.10)
-            f.dl(8, y, -0.10)
-        for x in range(4, 9):
-            f.dl(x, 3, -0.12)
-            f.dl(x, 6, -0.06)
-        f.set(6, 2, P(STEEL, 3))                           # order pad pen clip in the pocket
-        f.set(6, 3, P(STEEL, 4))
-        # road grime: dark wet smears rising from the hem on her right side (texture left)
-        for n in ('front', 'right'):
+        for y in range(3, 8):                              # the order-pad pocket, a pen clip
+            f.dl(4, y, -0.12)
+            f.dl(9, y, -0.12)
+        for x in range(4, 10):
+            f.dl(x, 3, -0.14)
+            f.dl(x, 7, -0.07)
+        f.set(7, 2, P(STEEL, 3))
+        f.set(7, 3, P(STEEL, 5))
+        for n in ('front', 'right'):                       # road grime rising from the hem on her right side
             fc = fs[n]
             Pp = fc.positions()
             for y in range(fc.h):
@@ -322,59 +312,44 @@ class Waitress(Spec):
                     g = n3(Pp[y, x][None] * 1.7 + 30.0)[0] + (y / fc.h) * 0.9 - (0.55 if n == 'front' else 0.2) \
                         - (x / fc.w) * (0.6 if n == 'front' else 0.0)
                     if g > 0.55:
-                        fc.dl(x, y, -0.07 - 0.06 * min(1.0, g - 0.55))
+                        fc.dl(x, y, -0.07 - 0.07 * min(1.0, g - 0.55))
 
-        # ---------------------------------------------------------------- legs: stockings, one shoe, a torn stocking
+        # ---------------------------------------------------------------- legs
         for pre in ('right', 'left'):
             for tag in (f'{pre}_thigh', f'{pre}_shin'):
                 fs = base(tag, STOCK, 2.8, amp=0.35, fine=0.25, top=0.4)
-                for n in ('front', 'back', 'left', 'right'):
-                    fc = fs[n]
-                    for y in range(fc.h):          # sheen down the middle of the shin
-                        if n == 'front':
-                            fc.dl(fc.w // 2, y, 0.03)
-            # knee
-            fk = F(f'{pre}_thigh')['front']
-            for x in range(fk.w):
-                fk.dl(x, fk.h - 1, 0.03)
-        # left: the stocking has runs and a hole at the knee
-        fk = F('left_shin')['front']
-        for (x, y) in ((1, 0), (2, 0), (1, 1), (2, 1), (3, 1)):
+                fc = fs['front']
+                for y in range(fc.h):
+                    fc.dl(fc.w // 2, y, 0.035)
+        fk = F('left_shin')['front']                       # torn stocking: a hole at the knee, a long run
+        for (x, y) in ((1, 0), (2, 0), (1, 1), (2, 1)):
             fk.set(x, y, P(SKIN, 3))
         fk.set(2, 2, P(SKIN, 2))
         for y in range(2, fk.h):
-            fk.dl(3, y, 0.07)
-        ft = F('left_thigh')['front']
-        for y in range(4, ft.h):
-            ft.dl(1, y, 0.07)
-        # feet: right has its black pump, left is only the dirty stocking
-        fs = F('right_foot')
+            fk.dl(2, y, 0.08)
+        fs = F('right_foot')                               # the remaining black pump
         for n, fc in fs.items():
             for y in range(fc.h):
                 for x in range(fc.w):
-                    v = 1.6 + n3(fc.positions()[y, x][None])[0] * 0.5
-                    if n == 'top':
-                        v = 2.5 if not (y >= fc.h - 3) else 1.6
+                    v = 1.7 + nz(fc, x, y, 0.5, 0.2)
                     fc.set(x, y, P(SHOE, v))
-        ftop = fs['top']                                   # the instep in stocking above the pump opening
+        ftop = fs['top']
         for y in range(0, 3):
             for x in range(ftop.w):
-                ftop.set(x, y, P(STOCK, 2.5))
-        fs = F('left_foot')
+                ftop.set(x, y, P(STOCK, 2.6))
+        fs['front'].set(1, 0, P(SHOE, 4))
+        fs = F('left_foot')                                # stocking only, filthy sole
         for n, fc in fs.items():
             for y in range(fc.h):
                 for x in range(fc.w):
-                    v = 2.4 + n3(fc.positions()[y, x][None])[0] * 0.4
-                    fc.set(x, y, P(STOCK, v))
-            if n in ('bottom',):
-                fc.fill(P(SHOE, 3))
+                    fc.set(x, y, P(STOCK, 2.4 + nz(fc, x, y, 0.4, 0.2)))
+        fs['bottom'].fill(P(SHOE, 3))
         for n in ('front', 'left', 'right', 'back'):
             fc = fs[n]
             for x in range(fc.w):
-                fc.set(x, fc.h - 1, P(STOCK, 0))           # filthy sole edge
-        fs['front'].set(1, 0, P(STOCK, 1))                 # toes
+                fc.set(x, fc.h - 1, P(STOCK, 0))
 
-        # ---------------------------------------------------------------- head
+        # ---------------------------------------------------------------- head (face 12 x 13)
         fs = F('head')
         hair = pal_arr(HAIR)
         for n, fc in fs.items():
@@ -382,115 +357,93 @@ class Waitress(Spec):
             for y in range(fc.h):
                 for x in range(fc.w):
                     pp = Pp[y, x]
-                    strand = math.sin(pp[0] * 5.0 + n3(pp[None], 1.5)[0] * 2.0)
-                    v = 2.0 + strand * 0.7 + n3b(pp[None])[0] * 0.4
-                    if n == 'top':
-                        v += 0.6
+                    strand = math.sin(pp[0] * 4.0 + pp[2] * 1.5 + n3(pp[None], 1.5)[0] * 2.0)
+                    v = 2.0 + strand * 0.75 + n3b(pp[None])[0] * 0.35 + (0.5 if n == 'top' else 0.0)
                     fc.set(x, y, hair[int(np.clip(round(v), 0, 5))])
-        # the face (front, 12 x 14)
-        f = fs['front']
-        sk = pal_arr(SKIN)
+        sk = {'h': None, '#': (SKIN, 1), '2': (SKIN, 2), '3': (SKIN, 3), '4': (SKIN, 4), '5': (SKIN, 5),
+              '6': (SKIN, 6), 'A': C('#070607'), 'X': C('#000000'), 'm': C('#2a1716'), 't': C('#bfb8a8'),
+              'T': C('#948d7e'), 'l': C('#4d2d2b'), 'L': C('#64403b'), 'H': (HAIR, 3), 'b': (SKIN, 2.2),
+              'a': C('#2b2c30')}
         face = [
             'hhhhhhhhhhhh',
-            'hhhhhhhhhhhh',
-            'hhhhHhhhhhhh',
-            'hh5666666hhh',
-            'h545566655hh',
-            'h4AAA44AAA4h',
-            'h3AXA33AXA3h',
-            '4433344433#4',
-            '#44445544444',
-            '33#3444443#3',
-            '2mttttttttm2',
+            'hhHHHHHHHHhh',
+            'h5566666655h',
+            'h4bb4554bb4h',
+            'h3AAA44AAA3h',
+            'h2AXA33AXA2h',
+            'h33a3443a33h',
+            '4444455444#4',
+            'm#34455443#m',
+            '3m33#44#33m3',
+            '2mtTtTtTtTm2',
             '22lLLLLLLl22',
             '#3334444333#',
-            '##33333333##',
         ]
-        leg = {'h': None, 'H': None, '#': P(SKIN, 1), '2': P(SKIN, 2), '3': P(SKIN, 3), '4': P(SKIN, 4),
-               '5': P(SKIN, 5), '6': P(SKIN, 6), 'A': C('#050405'), 'X': C('#000000'),
-               'm': C('#2a1716'), 't': C('#b9b2a2'), 'l': C('#4a2c2a'), 'L': C('#5f3a37')}
-        for y, row in enumerate(face):
-            for x, ch in enumerate(row):
-                c = leg.get(ch)
-                if c is not None:
-                    f.set(x, y, c)
-        # hairline: soft side part and the fringe pulled back into the net
-        for (x, y) in ((3, 2), (4, 2), (5, 2), (6, 2), (7, 2), (8, 2), (9, 2)):
-            f.set(x, y, P(HAIR, 3 if x in (4, 5) else 2))
-        for (x, y) in ((1, 3), (2, 3), (9, 3), (10, 3), (11, 3), (0, 4), (11, 4), (0, 5), (11, 5), (0, 6), (11, 6)):
+        pattern(fs['front'], face, sk, jitter=False)
+        f = fs['front']
+        for (x, y) in ((0, 2), (11, 2), (0, 3), (11, 3), (0, 4), (11, 4)):
             f.set(x, y, P(HAIR, 2))
-        # eye hollows: deeper rims, sunken sockets
-        for (x, y) in ((2, 4), (3, 4), (4, 4), (7, 4), (8, 4), (9, 4)):
-            f.set(x, y, P(SKIN, 3))
-        for (x, y) in ((1, 5), (5, 5), (6, 5), (10, 5), (1, 6), (5, 6), (6, 6), (10, 6), (2, 7), (3, 7), (4, 7), (7, 7), (8, 7), (9, 7)):
-            f.dl(x, y, -0.06)
-        # teeth gaps in the too-wide smile, the corners pulled up into the cheeks
-        for x in (3, 5, 7, 9):
-            f.set(x, 10, C('#9d9686'))
-        for (x, y) in ((0, 9), (11, 9), (0, 10), (11, 10)):
-            f.set(x, y, P(SKIN, 2))
-        f.set(1, 9, C('#3a2321'))
-        f.set(10, 9, C('#3a2321'))
-        f.set(0, 8, P(SKIN, 3))
-        f.set(11, 8, P(SKIN, 3))
-        # cheek dimples of the fixed smile
-        f.dl(1, 8, -0.08)
-        f.dl(10, 8, -0.08)
-        # eyes layer: tiny dim pinpoints deep in the hollows
+        for (x, y) in ((1, 4), (10, 4), (1, 6), (10, 6), (5, 6), (6, 6)):
+            f.dl(x, y, -0.07)
         ef = EF('head')['front']
-        ef.set(3, 6, '#5e6268')
-        ef.set(8, 6, '#5e6268')
-        # sides: hair pulled back over the ears, the ear, temple skin
+        ef.set(3, 5, '#565a60')
+        ef.set(8, 5, '#565a60')
         for n in ('right', 'left'):
-            fc = fs[n]                                     # 12 x 14, x = back->front on 'right', front->back on 'left'
+            fc = fs[n]                                     # 11 x 13, xf = 0 at the face edge
             for y in range(fc.h):
                 for x in range(fc.w):
-                    xf = (fc.w - 1 - x) if n == 'right' else x      # 0 = front edge
-                    skin = (y >= 6 and xf <= 3) or (y >= 9 and xf <= 6) or (y >= 11 and xf <= 8)
+                    xf = (fc.w - 1 - x) if n == 'right' else x
+                    skin = (y >= 5 and xf <= 2) or (y >= 7 and xf <= 4) or (y >= 10 and xf <= 6) or (y == 12 and xf <= 7)
                     if skin:
-                        v = 3.6 - (0.8 if y >= 12 else 0) - (0.4 if xf >= 5 else 0)
-                        fc.set(x, y, P(SKIN, v))
-            for (ex, ey) in ((5, 6), (6, 6), (5, 7), (6, 7), (5, 8), (6, 8)):     # the ear
+                        fc.set(x, y, P(SKIN, 3.3 - 0.25 * xf - (0.6 if y == 12 else 0) + nz(fc, x, y, 0.2, 0.1)))
+            for (ex, ey, v) in ((5, 5, 2.6), (6, 5, 2.2), (5, 6, 2.9), (6, 6, 1.6), (5, 7, 2.7), (6, 7, 2.1), (5, 8, 2.4)):
                 x = (fc.w - 1 - ex) if n == 'right' else ex
-                fc.set(x, ey, P(SKIN, 3 if (ex, ey) != (6, 7) else 2))
+                fc.set(x, ey, P(SKIN, v))
+            for y in range(1, 5):                          # hair combed back: streaks toward the bun
+                for x in range(fc.w):
+                    if (x + y * 2) % 5 == 0:
+                        fc.dl(x, y, 0.05)
         fb = fs['bottom']
         for y in range(fb.h):
             for x in range(fb.w):
                 if y >= 4:
                     fb.set(x, y, P(SKIN, 2))
-        # ---------------------------------------------------------------- bun in a net
         fs = F('bun')
         for n, fc in fs.items():
             for y in range(fc.h):
                 for x in range(fc.w):
-                    v = 2.2 + n3(fc.positions()[y, x][None], 1.0)[0] * 0.8
-                    netl = (x + y) % 3 == 0 or (x - y) % 3 == 0
-                    fc.set(x, y, P(HAIR, v + (1.5 if netl else 0)) if not netl else C('#3f3a3a'))
+                    netl = ((x + y) % 4 == 0 or (x - y) % 4 == 0) and (x + 2 * y) % 3 != 0
+                    fc.set(x, y, C('#3b3634') if netl else P(HAIR, 2.0 + nz(fc, x, y, 0.8, 0.2)))
         for tag in ('lock_r', 'lock_l'):
-            fs = F(tag)
-            for n, fc in fs.items():
+            for n, fc in F(tag).items():
                 for y in range(fc.h):
                     for x in range(fc.w):
                         fc.set(x, y, P(HAIR, 2 + (1 if y % 3 == 0 else 0)))
 
-        # ---------------------------------------------------------------- mouth card (opened in NOTICE / CHASE)
-        f = F('mouth')['front']                            # 10 x 6
+        # ---------------------------------------------------------------- mouth: dark gap + jaw (lower lip, chin)
+        f = F('mouth')['front']                            # 10 x 4, stretched downwards by yScale
         for y in range(f.h):
             for x in range(f.w):
-                cx = (x + 0.5) / f.w - 0.5
-                inside = abs(cx) < 0.5 - 0.06 * y
-                if inside:
-                    v = '#060203' if y >= 1 else '#24100f'
-                    f.set(x, y, v)
-        for x in range(1, f.w - 1):                        # upper teeth row hanging at the top
-            f.set(x, 0, '#b9b2a2' if x % 2 else '#9d9686')
-        for x in range(2, f.w - 2):                        # lower lip at the bottom of the stretched mouth
-            f.set(x, f.h - 1, '#4a2c2a')
-        f.set(1, f.h - 2, '#4a2c2a')
-        f.set(f.w - 2, f.h - 2, '#4a2c2a')
+                cx = abs((x + 0.5) / f.w - 0.5) * 2
+                if cx < 0.96 - 0.12 * y:
+                    edge = cx > 0.74 - 0.12 * y
+                    f.set(x, y, C('#2d1212') if edge else (C('#080203') if y > 0 else C('#1c0a0a')))
+        for x in range(1, f.w - 1):
+            f.set(x, 0, C('#bfb8a8') if x % 2 else C('#948d7e'))
+        j = F('jaw')['front']                              # 10 x 2: the lower lip and the chin, moved down
+        jrows = ['mlLLLLLLlm', '3334444333']
+        jl = {'m': C('#2a1716'), 'l': C('#4d2d2b'), 'L': C('#64403b'), '3': (SKIN, 3), '4': (SKIN, 4)}
+        pattern(j, jrows, jl, jitter=False)
+        # glare card: base fully transparent, the eyes layer lights two pinpoints when she notices you
+        g = F('glare')['front']                            # 10 x 3
+        eg = EF('glare')['front']
+        for (x, y) in ((2, 1), (7, 1)):
+            eg.set(x, y, '#ffe9e0')
+        for (x, y) in ((1, 1), (3, 1), (2, 0), (2, 2), (6, 1), (8, 1), (7, 0), (7, 2)):
+            eg.set(x, y, '#5a2a26')
 
         # ---------------------------------------------------------------- tray + glasses
-        fs = F('tray')                                     # 15 x 15 disc, rim 1 texel
+        fs = F('tray')
         for n, fc in fs.items():
             if n in ('top', 'bottom'):
                 for y in range(fc.h):
@@ -501,11 +454,11 @@ class Waitress(Spec):
                             fc.clear(x, y)
                             continue
                         if n == 'top':
-                            v = 3.5 + 1.6 * math.exp(-((dx + 0.15) ** 2 + (dy + 0.18) ** 2) / 0.012) - 0.6 * rad
+                            v = 3.4 + 1.7 * math.exp(-((dx + 0.15) ** 2 + (dy + 0.18) ** 2) / 0.012) - 0.6 * rad
                             if rad > 0.43:
                                 v = 5.2 - (dy + 0.5) * 2.0
                             if 0.33 < rad < 0.37:
-                                v -= 0.8                   # pressed ring
+                                v -= 0.8
                         else:
                             v = 2.0 + (0.6 if rad > 0.43 else 0.0)
                         fc.set(x, y, P(STEEL, v))
@@ -514,8 +467,7 @@ class Waitress(Spec):
                     for x in range(fc.w):
                         fc.set(x, y, P(STEEL, 4 + (0.8 if x == fc.w // 3 else 0)))
         for tag in ('glass', 'held_glass'):
-            fs = F(tag)
-            for n, fc in fs.items():
+            for n, fc in F(tag).items():
                 for y in range(fc.h):
                     for x in range(fc.w):
                         if n == 'top':
@@ -528,13 +480,12 @@ class Waitress(Spec):
                             water = y >= 1
                             ice = water and y <= 2 and (x + y) % 2 == 0
                             c = C('#e8f5f8') if ice else (C('#a9cdd8') if water else C('#dfeef2'))
-                            c[3] = 205 if ice else (150 if water else 110)
+                            c[3] = 210 if ice else (160 if water else 120)
                             if x == 0 and n == 'front':
                                 c = C('#f4fbfd')
-                                c[3] = 230         # bright edge
+                                c[3] = 235
                         fc.set(x, y, c)
-            ef = EF(tag)['front']
-            ef.set(0, 1, '#2c3438')                        # faint glint in the ice
+            EF(tag)['front'].set(0, 1, '#2c3438')
         return img, eyes
 
     # ================================================================================================ animation
@@ -542,20 +493,17 @@ class Waitress(Spec):
 float breath = Mth.sin(t * 0.055F);
 float look = Mth.clamp(yaw, -1.1F, 1.1F);
 float lookP = Mth.clamp(pitch, -0.5F, 0.6F);
-// the head never straightens: a 30 degree tilt, with a slow drift and rare ticks the wrong way
-float tilt = 0.5F + Mth.sin(t * 0.021F) * 0.04F - twitch(t, 97.0F, 13.0F) * 0.18F;
+// the head never straightens: a 30 degree tilt with a slow drift; every few seconds it ticks upright for an instant
+float tilt = 0.52F + Mth.sin(t * 0.021F) * 0.04F - twitch(t, 97.0F, 13.0F) * 0.22F;
 float jit = glitch * noise(t * 1.7F);
 float jit2 = glitch * noise(t * 2.3F + 40.0F);
-// smooth, unnatural constants
 this.tray.visible = true;
 this.glass.visible = true;
 this.heldGlass.visible = false;
 this.mouth.visible = false;
+this.jaw.visible = false;
 this.mouth.yScale = 0.01F;
-this.lockR.zRot = 0.0F;
-this.lockL.zRot = 0.0F;
-float hipX = 0.0F;
-float hipZ = 0.0F;
+this.glare.visible = false;
 
 if (pose == WALK) {
     float a = Math.min(1.0F, limbSwingAmount * 1.5F);
@@ -567,102 +515,108 @@ if (pose == WALK) {
     this.rightShin.xRot = Math.max(0.0F, Mth.sin(c - 1.2F)) * 0.55F * a;
     this.leftShin.xRot = Math.max(0.0F, -Mth.sin(c - 1.2F)) * 0.55F * a;
     this.body.xRot = 0.03F;
-    this.skirt.xRot = -0.03F + s * 0.025F * a;
-    // the free arm hangs stiff, a tiny pendulum
-    this.rightArm.xRot = s * 0.07F * a + 0.02F;
+    this.skirt.xRot = -0.03F + s * 0.03F * a;
+    this.rightArm.xRot = s * 0.07F * a + 0.03F;
     this.rightArm.zRot = 0.05F;
-    this.rightForearm.xRot = -0.12F;
-    // tray carried at the shoulder on the flat left hand, perfectly level
-    this.leftArm.xRot = -0.3F;
-    this.leftArm.yRot = 0.0F;
-    this.leftArm.zRot = -0.42F;
-    this.leftForearm.xRot = -2.25F;
-    this.leftForearm.zRot = 0.4F;
-    this.leftHand.xRot = 0.0F;
+    this.rightForearm.xRot = -0.15F;
+    // the tray on the flat left palm beside her head
+    this.leftArm.xRot = -0.25F;
+    this.leftArm.zRot = -0.8F;
+    this.leftForearm.zRot = -2.3F;
+    this.leftForearm.xRot = -0.1F;
     this.head.zRot = tilt * 0.8F + jit * 0.4F;
     this.head.yRot = look * 0.8F;
-    this.head.xRot = lookP * 0.6F + 0.08F;
+    this.head.xRot = lookP * 0.6F + 0.06F;
 } else if (pose == SERVE) {
-    // bends at the hips, takes the glass off the tray with the right hand and sets it on the table
-    float bend = span(pt, 0.0F, 12.0F);
-    float reach = span(pt, 6.0F, 14.0F);
-    float lower = span(pt, 14.0F, 24.0F);
-    float back = span(pt, 26.0F, 36.0F);
-    this.body.xRot = 0.62F * bend + breath * 0.01F;
-    this.skirt.xRot = -0.5F * bend;
-    this.neck.xRot = 0.1F * bend;
-    this.head.xRot = 0.35F * bend + lookP * 0.3F;
+    // bends, takes the glass off the tray with the right hand and sets it on the table (released at pt 24)
+    float bend = span(pt, 0.0F, 10.0F);
+    float k1 = span(pt, 4.0F, 12.0F);
+    float k2 = span(pt, 13.0F, 23.0F);
+    float k3 = span(pt, 25.0F, 35.0F);
+    this.body.xRot = 0.5F * bend + breath * 0.008F;
+    this.skirt.xRot = -0.42F * bend;
+    this.neck.xRot = 0.12F * bend;
+    this.head.xRot = 0.3F * bend + lookP * 0.3F;
     this.head.zRot = tilt * 0.9F + jit * 0.4F;
-    this.head.yRot = look * 0.4F;
-    // tray: held out to the side on the left hand, kept level against the bend
-    this.leftArm.xRot = -0.25F - 0.62F * bend;
-    this.leftArm.zRot = -0.45F;
-    this.leftForearm.xRot = -2.1F + 0.62F * bend;
-    this.leftForearm.zRot = 0.42F;
-    this.leftHand.xRot = 0.0F;
-    // right hand: to the tray glass, then down to the table in front of her
-    this.rightArm.xRot = -1.05F * reach + (-0.55F) * lower * (1.0F - back) + 0.3F * back;
-    this.rightArm.zRot = -0.5F * reach * (1.0F - lower) + 0.06F;
-    this.rightArm.yRot = -0.35F * reach * (1.0F - lower);
-    this.rightForearm.xRot = -1.25F * reach * (1.0F - lower) - 0.5F * lower * (1.0F - back);
-    this.rightHand.xRot = 0.35F * lower;
-    boolean inHand = pt >= 12.0F && pt < 24.0F;
-    this.heldGlass.visible = inHand;
+    this.head.yRot = look * 0.35F;
+    // tray held low at her left side, out of the way of her face
+    this.leftArm.xRot = 0.787F * bend;
+    this.leftArm.yRot = -0.199F * bend;
+    this.leftArm.zRot = -0.289F * bend;
+    this.leftForearm.xRot = -2.027F * bend - 0.1F * (1.0F - bend);
+    // right hand: rest -> the glass on the tray -> down to the table -> back to the side
+    float rx = Mth.lerp(k1, 0.0F, -0.925F);
+    float rz = Mth.lerp(k1, 0.05F, 0.157F);
+    float ry = Mth.lerp(k1, 0.0F, -1.2F);
+    float rf = Mth.lerp(k1, -0.15F, -1.855F);
+    rx = Mth.lerp(k2, rx, -0.452F);
+    rz = Mth.lerp(k2, rz, -0.274F);
+    ry = Mth.lerp(k2, ry, -0.315F);
+    rf = Mth.lerp(k2, rf, -1.156F);
+    this.rightArm.xRot = Mth.lerp(k3, rx, -0.2F);
+    this.rightArm.zRot = Mth.lerp(k3, rz, 0.06F);
+    this.rightArm.yRot = Mth.lerp(k3, ry, 0.0F);
+    this.rightForearm.xRot = Mth.lerp(k3, rf, -0.3F);
+    this.heldGlass.visible = pt >= 12.0F && pt < 24.0F;
     this.glass.visible = pt < 12.0F;
-    this.rightLeg.xRot = 0.0F;
-    this.leftLeg.xRot = 0.0F;
 } else if (pose == BOW) {
-    // a 90 degree bow, held: the tray stays level in the hanging left hand; loose strands fall forward;
-    // near the end the head slowly lifts to look at the door while the body stays folded
+    // a 90 degree bow, held; the tray stays level by her left knee; loose strands fall forward;
+    // after 34 ticks the head slowly lifts to stare at the door while the body stays folded
     float down = easeOut(pt / 14.0F);
-    float lift = span(pt, 34.0F, 70.0F);
-    this.body.xRot = 1.57F * down + Mth.sin(pt * 0.05F) * 0.01F;
-    this.skirt.xRot = -1.35F * down;
-    this.neck.xRot = 0.1F * down - 0.85F * lift;
-    this.head.xRot = 0.15F * down - 0.75F * lift;
-    this.head.zRot = 0.08F * down + tilt * 0.6F * lift + jit * 0.3F;
+    float lift = span(pt, 34.0F, 72.0F);
+    this.body.xRot = 1.5F * down + Mth.sin(pt * 0.05F) * 0.01F;
+    this.skirt.xRot = -1.3F * down;
+    this.neck.xRot = 0.1F * down - 0.8F * lift;
+    this.head.xRot = 0.12F * down - 0.75F * lift;
+    this.head.zRot = 0.06F * down + tilt * 0.7F * lift + jit * 0.3F;
     this.head.yRot = look * 0.3F * lift;
-    this.rightArm.xRot = -1.45F * down;
-    this.rightArm.zRot = 0.1F;
-    this.rightForearm.xRot = -0.1F;
-    this.leftArm.xRot = -1.57F * down - 0.2F;
-    this.leftArm.zRot = -0.25F;
-    this.leftForearm.xRot = -1.25F;
-    this.leftForearm.zRot = 0.0F;
-    this.leftHand.xRot = 0.0F;
+    this.rightArm.xRot = 0.348F * down;
+    this.rightArm.zRot = -0.448F * down + 0.05F;
+    this.rightForearm.xRot = -1.586F * down;
+    this.leftArm.xRot = 0.047F * down;
+    this.leftArm.zRot = 0.381F * down;
+    this.leftForearm.xRot = -1.866F * down;
 } else if (pose == STAND) {
-    // waiting: the tray held flat before her in both hands, head tilted 30 degrees, tracking you without
-    // straightening; motionless but for a shallow breath
+    // waiting: the tray flat before her in both hands, head tilted 30 degrees, tracking you without straightening
     this.body.xRot = 0.02F + breath * 0.008F;
     this.head.zRot = tilt + jit * 0.5F;
     this.head.yRot = look * 0.95F;
     this.head.xRot = lookP * 0.7F + 0.05F;
-    this.neck.zRot = tilt * 0.15F;
-    this.rightArm.xRot = -0.55F;
-    this.rightArm.zRot = 0.18F;
-    this.rightArm.yRot = 0.15F;
-    this.rightForearm.xRot = -0.8F;
-    this.leftArm.xRot = -0.55F;
-    this.leftArm.zRot = -0.18F;
-    this.leftArm.yRot = -0.15F;
-    this.leftForearm.xRot = -0.8F;
-    this.leftHand.xRot = 0.0F;
+    this.neck.zRot = tilt * 0.12F;
+    this.rightArm.xRot = 0.103F;
+    this.rightArm.zRot = -0.183F;
+    this.rightArm.yRot = -0.181F;
+    this.rightForearm.xRot = -1.445F;
+    this.leftArm.xRot = 0.103F;
+    this.leftArm.zRot = 0.183F;
+    this.leftArm.yRot = 0.181F;
+    this.leftForearm.xRot = -1.445F;
+    this.tray.x = -2.4F;
 } else if (pose == NOTICE) {
-    // the head rolls over sideways to 90 degrees in three jerks, the polite mouth splits open
+    // the head rolls over sideways to 90 degrees in three jerks, the polite mouth splits open, the hollows light up
     float roll = jerky(pt / 14.0F, 3.0F);
     float open = span(pt, 5.0F, 12.0F);
     this.head.zRot = tilt + (1.6F - tilt) * roll + jit * 0.6F;
     this.head.yRot = look;
     this.head.xRot = lookP * 0.5F;
     this.neck.zRot = 0.25F * roll;
+    float o = open * (1.0F + noise(t * 0.9F) * 0.08F);
     this.mouth.visible = open > 0.01F;
-    this.mouth.yScale = Math.max(0.01F, open * (0.9F + noise(t * 0.9F) * 0.08F));
+    this.jaw.visible = open > 0.01F;
+    this.mouth.yScale = Math.max(0.01F, o);
+    this.jaw.y = this.jaw.y + 2.0F * o;
+    this.glare.visible = pt > 3.0F;
     this.body.xRot = 0.04F;
-    this.rightArm.xRot = -0.35F * open;
-    this.rightArm.zRot = 0.12F;
-    this.leftArm.xRot = -0.55F;
-    this.leftArm.zRot = -0.18F;
-    this.leftForearm.xRot = -0.8F;
+    this.rightArm.xRot = 0.103F - 0.4F * open;
+    this.rightArm.zRot = -0.183F;
+    this.rightArm.yRot = -0.181F;
+    this.rightForearm.xRot = -1.445F + 1.2F * open;
+    this.leftArm.xRot = 0.103F;
+    this.leftArm.zRot = 0.183F;
+    this.leftArm.yRot = 0.181F;
+    this.leftForearm.xRot = -1.445F;
+    this.tray.x = -2.4F;
+    blend = 2.0F;
 } else {
     // CHASE: fast and stiff, knees barely bending, arms straight out, the head lolled over sideways, mouth open
     float a = Math.min(1.0F, limbSwingAmount * 1.3F);
@@ -685,24 +639,20 @@ if (pose == WALK) {
     this.head.zRot = 1.35F + Mth.sin(t * 0.13F) * 0.06F + jit;
     this.head.yRot = look * 0.6F;
     this.head.xRot = lookP * 0.4F - 0.08F;
+    float o = 0.9F + Mth.sin(t * 0.4F) * 0.06F;
     this.mouth.visible = true;
-    this.mouth.yScale = 0.85F + Mth.sin(t * 0.4F) * 0.05F;
+    this.jaw.visible = true;
+    this.mouth.yScale = o;
+    this.jaw.y = this.jaw.y + 2.0F * o;
+    this.glare.visible = true;
     blend = 4.0F;
 }
-// breath in the chest, glitch jolts at the joints
-this.body.y = 12.0F;
 this.neck.zRot = this.neck.zRot + jit2 * 0.25F;
 this.rightArm.zRot = this.rightArm.zRot + jit * 0.2F;
-if (pose == NOTICE) {
-    blend = 2.0F;
-}
 '''
-
-
-Waitress.post = '''
+    post = '''
 // after the blend: the tray stays level on her palm, the glasses stand upright, loose strands hang down
 level(this.tray, this.body, this.leftArm, this.leftForearm, this.leftHand);
-this.tray.zRot = this.tray.zRot + (pose == NOTICE ? 0.3F * span(pt, 5.0F, 12.0F) : 0.0F);
 level(this.heldGlass, this.body, this.rightArm, this.rightForearm, this.rightHand);
 level(this.lockR, this.body, this.neck, this.head);
 level(this.lockL, this.body, this.neck, this.head);
