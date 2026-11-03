@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Contract checker for the HITORI art (docs/DESIGN.md §7 / §7.1).
+"""Contract checker for the HITORI art (docs/DESIGN.md §7, model / state names per REISATSU DESIGN §7.1).
 
 Verifies that
-  * every texture the world's plain block models need exists (Surfaces and structure, door halves, lit panels),
-  * every prop block model / state-variant name of §7.1 exists, with a particle texture, valid elements, rotations,
-    render types and texture references, and that every furniture id of §7 is covered by the expectations below,
-  * the item sprites, item models and the four 3D held models (forge:separate_transforms) exist,
-  * the GUI textures exist with the sizes §7 gives (the spirits' jumpscare_* / medium_portrait are not ours),
+  * every texture the world's plain block models need exists (the Surfaces of §7, the door halves <id>_bottom/_top),
+  * every prop / door art model and state-variant name exists (boolean p -> <id> / <id>_<p>; int -> <id>_<n>;
+    half / part first), with a particle texture, valid elements, rotations, render types and texture references,
+    and that every prop id of §7 is covered by an expectation below,
+  * the item sprites, item models and the 3D held models (forge:separate_transforms) exist,
+  * the GUI textures exist with their sizes (gui/jumpscare_* belong to the models worker),
   * the particle definitions of §7 exist and point at existing textures,
   * block / item textures are multiples of 16 (mip levels), animated textures have consistent .mcmeta frames,
     cutout textures have binary alpha, and nothing unexpected / orphaned sits in our texture folders.
@@ -27,102 +28,74 @@ from common import ROOT, TEX_ROOT, MODEL_ROOT  # noqa: E402
 
 DESIGN = os.path.join(ROOT, 'docs', 'DESIGN.md')
 ASSETS = os.path.dirname(TEX_ROOT)
-NOT_OURS_GUI = re.compile(r'^gui/(jumpscare_.*|medium_portrait)$')
+NOT_OURS_GUI = re.compile(r'^gui/jumpscare_.*$')
+PROPERTY_WORDS = {'on', 'channel', 'lit', 'swing', 'closed', 'water', 'lid', 'running', 'open', 'has_knife',
+                  'present', 'ringing', 'unit', 'half', 'part', 'axis'}
 
 # ---------------------------------------------------------------------------------------------- expectations
-# Surfaces and structure: textures used by the world's plain models (id -> extra textures beyond block/<id>)
-SURFACE_EXTRA = {
-    'ceiling_light': ['ceiling_light_lit'],
-    'downlight': ['downlight_lit'],
-    'brick_sill': ['brick_sill_top'],
-    'curb': ['curb_top'],
-    'pillar': ['pillar_top'],
-    'rice_paddy': ['rice_paddy_side'],
-    'dining_floor': ['dining_floor_worn'],
-}
-SURFACE_MODELS = {'pendant_lamp': ['pendant_lamp', 'pendant_lamp_lit'],
-                  'exit_sign': ['exit_sign', 'exit_sign_hanging'],
-                  'window_blind': ['window_blind', 'window_blind_closed']}
-VANILLA_DOORS = ['staff_door', 'office_door', 'restroom_door_m', 'restroom_door_w', 'back_door', 'fridge_door',
-                 'stall_door']
+VANILLA_DOORS = ['front_door', 'interior_door', 'toilet_door', 'bath_door', 'balcony_door']
+# textures only the world's own models use (gen_assets.two_face_door: the genkan side of 203's steel door)
+WORLD_EXTRA_TEXTURES = ['front_door_inner_bottom', 'front_door_inner_top']
+DOOR_ITEM_SPRITES = VANILLA_DOORS + ['fusuma', 'oshiire_fusuma']
 
 
 def bools(id_, *props):
-    """Model names for boolean properties (in §7 order): <id>, <id>_<p1>, <id>_<p1>_<p2>, ... (true ones)."""
-    out = {id_}
+    """<id>, <id>_<p1>, <id>_<p1>_<p2>, ... for the true ones (in §7 order)."""
     names = [id_]
     for p in props:
         names = names + [n + '_' + p for n in names]
-    out |= set(names)
-    return out
+    return set(names)
 
 
 def expected_models():
     E = {}
-    E['auto_door'] = {'auto_door_rail'}
-    E['door_switch'] = bools('door_switch', 'on')
-    E['swing_door'] = {'swing_door_frame'}
-    E['booth_seat'] = {'booth_seat'}
-    E['booth_partition'] = {'booth_partition'}
-    E['restaurant_table'] = {'restaurant_table'}
-    E['restaurant_chair'] = bools('restaurant_chair', 'fallen')
-    E['call_button'] = bools('call_button', 'lit')
-    E['menu_stand'] = {'menu_stand'}
-    E['menu_scattered'] = {f'menu_scattered_{v}' for v in range(4)}
-    E['water_glass'] = {f'water_glass_{v}' for v in range(1, 5)}
-    E['broken_plate'] = {'broken_plate'}
-    E['register'] = bools('register', 'open')
-    E['service_bell'] = {'service_bell'}
-    E['counter'] = {'counter'}
-    E['cake_case'] = {'cake_case'}
-    E['business_phone'] = bools('business_phone', 'ringing')
-    E['reservation_book'] = {'reservation_book'}
-    E['capsule_machine'] = {'capsule_machine'}
-    E['waiting_bench'] = {'waiting_bench'}
-    for i in ('magazine_rack', 'umbrella_stand', 'notice_board', 'coffee_machine', 'ice_machine', 'cup_shelf',
-              'soup_warmer', 'server_station', 'planter', 'kids_mat', 'toy_shelf', 'stuffed_bear', 'kids_fence',
-              'high_chair', 'griddle', 'kitchen_counter', 'exhaust_hood', 'pot_shelf', 'dish_rack', 'kitchen_trash',
-              'prep_table', 'cutting_board', 'pass_bell', 'walkin_shelf', 'time_recorder', 'staff_table',
-              'folding_chair', 'bulletin_board', 'cardboard_boxes', 'cleaning_cart', 'filing_cabinet', 'safe',
-              'office_desk', 'office_chair', 'pc', 'restroom_mirror', 'toilet', 'urinal', 'stall_wall',
-              'paper_towel', 'bike_rack', 'trash_station', 'ac_unit', 'gas_cylinder', 'dumpster', 'wheel_stop',
-              'outdoor_planter', 'guardrail', 'chevron_sign', 'curve_mirror', 'flower_offering', 'note_paper'):
+    plain = ['chabudai', 'zabuton', 'tv_stand', 'pull_switch', 'futon_folded', 'cardboard_box', 'altar_shelf',
+             'shower', 'bath_stool', 'bucket', 'mirror_small', 'toilet_seat', 'rice_bag', 'rice_cooker',
+             'salt_shaker', 'cup_glass', 'microwave', 'dining_table', 'dining_chair', 'desk', 'desk_chair',
+             'printout', 'shelf', 'camera_bag', 'poster', 'shoe_cabinet', 'shoes', 'umbrella', 'calendar',
+             'wall_clock', 'laundry_pole', 'ac_outdoor_unit', 'vending_machine_small', 'mailboxes', 'bicycle',
+             'stairs_rail', 'vacancy_sign', 'swing_set', 'puddle', 'rain_window']
+    for i in plain:
         E[i] = {i}
-    E['frost'] = {'frost', 'frost_wall'}
-    E['drink_bar'] = bools('drink_bar', 'pouring')
-    E['call_display'] = {f'call_display_{n}' for n in range(18)} | {'call_display_closed'}
-    E['gas_range'] = bools('gas_range', 'lit')
-    E['fryer'] = bools('fryer', 'on')
+    E['crt_tv'] = {'crt_tv'} | {f'crt_tv_on_{c}' for c in range(3)} | {'crt_tv_on'} | {f'crt_tv_{c}' for c in range(3)}
+    E['hanging_lamp'] = bools('hanging_lamp', 'lit', 'swing')
+    E['fluorescent_ring'] = bools('fluorescent_ring', 'lit')
+    E['light_switch'] = bools('light_switch', 'on')
+    E['curtain'] = bools('curtain', 'closed')
+    E['bathtub'] = {f'bathtub_{p}_{w}' for p in ('head', 'foot') for w in range(3)} | \
+        {f'bathtub_{p}_lid' for p in ('head', 'foot')} | \
+        {f'bathtub_{p}_lid_{w}' for p in ('head', 'foot') for w in range(3)}
+    E['bath_tap'] = bools('bath_tap', 'running')
+    E['washing_machine'] = bools('washing_machine', 'running')
+    E['washbasin'] = bools('washbasin', 'running')
     E['kitchen_sink'] = bools('kitchen_sink', 'running')
-    E['dishwasher'] = bools('dishwasher', 'running')
-    E['pass_shelf'] = bools('pass_shelf', 'lit')
-    E['locker'] = {'locker_lower', 'locker_lower_open', 'locker_upper', 'locker_upper_open'}
-    E['crt_tv'] = bools('crt_tv', 'on')
-    E['security_monitors'] = bools('security_monitors', 'on', 'alert')
-    E['security_camera'] = bools('security_camera', 'on', 'seen')
+    E['gas_stove'] = bools('gas_stove', 'lit')
+    E['fridge_old'] = bools('fridge_old', 'open')
+    E['knife_rack'] = bools('knife_rack', 'has_knife')
+    E['drawer'] = bools('drawer', 'open')
+    E['laptop_block'] = bools('laptop_block', 'open', 'on')
+    E['sewing_box'] = bools('sewing_box', 'open')
+    E['bed'] = {'bed', 'bed_head', 'bed_foot'}
+    E['plush_doll'] = bools('plush_doll', 'present')
+    E['desk_lamp'] = bools('desk_lamp', 'lit')
     E['breaker_panel'] = bools('breaker_panel', 'open')
-    E['restroom_sink'] = bools('restroom_sink', 'running')
-    E['mirror'] = bools('mirror', 'cracked')
-    E['hand_dryer'] = bools('hand_dryer', 'running')
-    E['vending_machine'] = {'vending_machine_lower', 'vending_machine_upper'}
-    E['pole_sign'] = {'pole_sign_pole', 'pole_sign_pole_lit'} | {f'pole_sign_tile_{t}' for t in range(16)} | \
-        {f'pole_sign_tile_{t}_lit' for t in range(16)}
-    E['roof_sign'] = {f'roof_sign_tile_{t}' for t in range(8)} | {f'roof_sign_tile_{t}_lit' for t in range(8)}
-    E['menu_board'] = {'menu_board_0', 'menu_board_1'}
-    E['street_lamp'] = {'street_lamp_pole', 'street_lamp_pole_lit', 'street_lamp_head', 'street_lamp_head_lit'}
-    E['utility_pole'] = {'utility_pole_pole', 'utility_pole_top'}
-    E['traffic_light'] = bools('traffic_light', 'lit')
-    for k, v in SURFACE_MODELS.items():
-        E[k] = set(v)
+    E['intercom'] = bools('intercom', 'ringing')
+    E['street_lamp_old'] = bools('street_lamp_old', 'lit')
+    E['utility_pole'] = {'utility_pole', 'utility_pole_top'}
+    E['nameplate'] = {f'nameplate_{u}' for u in range(8)}
+    for d in ('fusuma', 'oshiire_fusuma'):
+        E[d] = {f'{d}_{h}_{o}' for h in ('lower', 'upper') for o in range(3)}
     return E
 
 
-ITEMS = ['reisha_camera', 'reisha_camera_finder', 'film_pack', 'evidence_photo', 'flashlight', 'flashlight_on', 'ofuda',
-         'shop_key', 'office_key']
-HELD = ['reisha_camera', 'reisha_camera_finder', 'flashlight', 'flashlight_on']
-DOOR_ITEM_SPRITES = VANILLA_DOORS + ['auto_door', 'swing_door']
-SPIRITS = ['visitor', 'waitress', 'chef', 'child', 'mirror_woman', 'manager']
-PARTICLES = ['menu_flutter', 'water_drop', 'wet_print', 'ember', 'spirit_mote', 'frost_breath', 'paper_ash']
+ITEMS = ['plush', 'plush_open', 'plush_rice', 'ritual_doll', 'scissors', 'rice_scoop', 'red_thread', 'nail_clipper',
+         'knife', 'salt', 'cup_water', 'salt_water', 'fixed_camera', 'laptop', 'phone', 'lighter', 'printout',
+         'phone_light']
+HELD = ['knife', 'laptop', 'phone', 'salt_water', 'ritual_doll', 'lighter', 'fixed_camera', 'phone_light']
+PARTICLES = ['rice_grain', 'stuffing', 'water_drip', 'salt_spray', 'ember', 'smoke', 'tv_static_mote']
+GUI_SIZES = {'title_logo': (512, 256), 'cctv': (512, 288), 'laptop_frame': (512, 288), 'phone_frame': (512, 288),
+             'fusuma_slit': (512, 288), 'closet_dark': (512, 288), 'printout': (256, 320), 'icons': (128, 32),
+             'name_field': (192, 36), 'vignette': (256, 256), 'grain': (256, 256)}
 
 
 # ---------------------------------------------------------------------------------------------- DESIGN parsing
@@ -132,51 +105,37 @@ def section(text, start, stop):
     return text[i:j]
 
 
+def ids_in(par):
+    out = []
+    for i in re.findall(r'`([a-z0-9_]+)`', par):
+        if i.startswith('_') or i in PROPERTY_WORDS:
+            continue
+        out.append(i)
+    return out
+
+
 def design_ids():
     text = open(DESIGN, encoding='utf-8').read()
     s7 = section(text, '## 7. Registry ids', '## 8.')
-    blocks = section(s7, '### Blocks', '### 7.1')
-    groups = {}
-    cur = None
-    for line in blocks.splitlines():
-        for head in ('Surfaces and structure', 'Doors', 'Furniture and fixtures'):
-            if line.startswith(head):
-                cur = head
-        if cur and line.startswith('| `'):
-            cols = [c.strip() for c in line.strip('|').split('|')]
-            first = re.sub(r'\([^)]*\)', '', cols[0])
-            for i in re.findall(r'`([a-z0-9_]+)`', first):
-                groups.setdefault(cur, []).append(i)
+    blocks = section(s7, '### Blocks', '### Items')
+    surf = section(blocks, 'Surfaces (', 'Doors (')
+    doors = section(blocks, 'Doors (', 'Props (')
+    props = section(blocks, 'Props (', None)
+    items = section(s7, '### Items', '### Entities')
     gui = section(s7, '### GUI', '### Particles')
-    sizes = {}
-    for m in re.finditer(r'`([a-z0-9_<>.]+)`\s*(\d+)\s*[×x]\s*(\d+)|`([a-z0-9_<>.]+)`\s*(\d+)²', gui):
-        if m.group(1):
-            sizes[m.group(1)] = (int(m.group(2)), int(m.group(3)))
-        else:
-            sizes[m.group(4)] = (int(m.group(5)), int(m.group(5)))
-    for m in re.finditer(r'`([a-z_]+)`, `([a-z_]+)` (\d+)²', gui):
-        sizes[m.group(1)] = sizes[m.group(2)] = (int(m.group(3)), int(m.group(3)))
     parts = section(s7, '### Particles', None)
-    pids = re.findall(r'`([a-z_]+)` \(', parts)
-    return groups, sizes, pids
-
-
-def gui_expectations(sizes):
-    exp = {}
-    for k, v in sizes.items():
-        if k.startswith('jumpscare') or k == 'medium_portrait':
-            continue
-        if k == 'photo_name_<spirit>':
-            for s in SPIRITS:
-                exp[f'gui/photo_name_{s}'] = v
-        elif k == 'photo_ghost_1..3':
-            for i in (1, 2, 3):
-                exp[f'gui/photo_ghost_{i}'] = v
-        else:
-            exp[f'gui/{k}'] = v
-    for n in ('vignette', 'grain', 'paper'):
-        exp.setdefault(f'gui/{n}', (256, 256))
-    return exp
+    door_ids = [i for i in ids_in(doors) if not i.endswith('_bottom') and not i.endswith('_top') and i != 'id']
+    gui_sizes = {}
+    for m in re.finditer(r'`([a-z_]+)`\s*(\d+)\s*[×x]\s*(\d+)', gui):
+        gui_sizes[m.group(1)] = (int(m.group(2)), int(m.group(3)))
+    for m in re.finditer(r'`([a-z_]+)`\s*(\d+)²', gui):
+        gui_sizes[m.group(1)] = (int(m.group(2)), int(m.group(2)))
+    gui_ids = ids_in(gui)
+    item_par = items.split('3D held models')[0]
+    held_par = items.split('3D held models')[1] if '3D held models' in items else ''
+    return dict(surfaces=ids_in(surf), doors=door_ids, props=ids_in(props), items=ids_in(item_par),
+                held=[i for i in ids_in(held_par) if i not in ('forge',)], gui=gui_ids, gui_sizes=gui_sizes,
+                particles=ids_in(parts))
 
 
 # ---------------------------------------------------------------------------------------------- model checks
@@ -271,6 +230,9 @@ def check_body(label, body, problems, used):
     rt = body.get('render_type')
     if rt and rt not in ('minecraft:solid', 'minecraft:cutout', 'minecraft:cutout_mipped', 'minecraft:translucent'):
         problems.append(f'RENDER   {label}: render_type {rt}')
+    if not body.get('elements'):
+        if 'elements' not in body:
+            problems.append(f'ELEMENTS {label}: no elements')
     for el in body.get('elements', []):
         for c in el['from'] + el['to']:
             if not -16 <= c <= 32:
@@ -278,6 +240,8 @@ def check_body(label, body, problems, used):
         rot = el.get('rotation')
         if rot and rot['angle'] not in (-45, -22.5, 0, 22.5, 45):
             problems.append(f'ROTATION {label}: angle {rot["angle"]}')
+        if rot and rot.get('axis') not in ('x', 'y', 'z'):
+            problems.append(f'ROTATION {label}: axis {rot.get("axis")}')
         for face, fd in el['faces'].items():
             ref = fd['texture']
             if ref.startswith('#') and ref[1:] not in texs:
@@ -290,34 +254,47 @@ def check_body(label, body, problems, used):
 def main():
     problems = []
     used = set()
-    groups, gui_sizes, pids = design_ids()
+    D = design_ids()
     E = expected_models()
-    # every id of the furniture / doors tables is covered by an expectation (or is a vanilla door)
-    for id_ in groups.get('Furniture and fixtures', []) + groups.get('Doors', []):
+    # ---- DESIGN coverage: every prop / door id is covered, and our lists match §7
+    for id_ in D['props']:
+        if id_ not in E:
+            problems.append(f'UNCOVERED §7 prop {id_} has no model expectation in check.py')
+    for id_ in D['doors']:
         if id_ not in E and id_ not in VANILLA_DOORS:
-            problems.append(f'UNCOVERED §7 id {id_} has no model expectation in check.py')
-    for id_ in SURFACE_MODELS:
-        if id_ not in groups.get('Surfaces and structure', []):
-            problems.append(f'DESIGN   {id_} no longer listed in Surfaces and structure')
+            problems.append(f'UNCOVERED §7 door {id_}')
+    for id_ in VANILLA_DOORS:
+        if id_ not in D['doors']:
+            problems.append(f'DESIGN   door {id_} no longer listed in §7')
+    for it in D['items']:
+        if it not in ITEMS:
+            problems.append(f'UNCOVERED §7 item {it}')
+    for it in D['held']:
+        if it not in HELD:
+            problems.append(f'UNCOVERED §7 held model {it}')
+    for p in D['particles']:
+        if p not in PARTICLES:
+            problems.append(f'UNCOVERED §7 particle {p}')
+    for g in D['gui']:
+        if not g.startswith('jumpscare') and g not in GUI_SIZES:
+            problems.append(f'UNCOVERED §7 gui {g}')
+    for g, sz in D['gui_sizes'].items():
+        if g in GUI_SIZES and GUI_SIZES[g] != sz:
+            problems.append(f'DESIGN   gui {g} is {sz} in §7 but {GUI_SIZES[g]} here')
     # ---- textures for the world's plain models
     tex_exp = {}
-    for id_ in groups.get('Surfaces and structure', []):
-        if id_ in SURFACE_MODELS:
-            continue
-        tex_exp[f'block/{id_}'] = None
-        for e in SURFACE_EXTRA.get(id_, []):
-            tex_exp[f'block/{e}'] = None
+    for id_ in D['surfaces']:
+        tex_exp[f'block/{id_}'] = (16, 16)
     for d in VANILLA_DOORS:
-        tex_exp[f'block/{d}_bottom'] = None
-        tex_exp[f'block/{d}_top'] = None
-    tex_exp['block/stall_door_occupied_bottom'] = None
-    tex_exp['block/stall_door_occupied_top'] = None
-    tex_exp['block/auto_door_panel'] = (16, 48)
-    tex_exp['block/swing_door'] = (16, 32)
+        tex_exp[f'block/{d}_bottom'] = (16, 16)
+        tex_exp[f'block/{d}_top'] = (16, 16)
+    for t in WORLD_EXTRA_TEXTURES:
+        tex_exp[f'block/{t}'] = (16, 16)
     world_textures = set(k.split('/', 1)[1] for k in tex_exp)
     for it in ITEMS + DOOR_ITEM_SPRITES:
         tex_exp[f'item/{it}'] = (16, 16)
-    tex_exp.update(gui_expectations(gui_sizes))
+    for g, sz in GUI_SIZES.items():
+        tex_exp[f'gui/{g}'] = sz
     for rel, size in sorted(tex_exp.items()):
         p = os.path.join(TEX_ROOT, rel + '.png')
         if not os.path.isfile(p):
@@ -326,7 +303,7 @@ def main():
         im = Image.open(p)
         if im.mode != 'RGBA':
             problems.append(f'MODE     {rel}.png is {im.mode}')
-        if size and im.size != tuple(size):
+        if size and im.size != tuple(size) and not os.path.isfile(p + '.mcmeta'):
             problems.append(f'SIZE     {rel}.png is {im.size[0]}x{im.size[1]}, expected {size[0]}x{size[1]}')
     # ---- prop block models
     nmodels = 0
@@ -338,18 +315,22 @@ def main():
                 continue
             nmodels += 1
             check_body(f'models/block/{n}', m, problems, used)
-    # models we wrote that nobody expects (typos / stale names)
     expected_names = set().union(*E.values())
-    bdir = os.path.join(MODEL_ROOT, 'block')
     try:
-        import rs_modules  # noqa: F401
-        import rs_kit
-        ours = set(rs_kit.MODELS)
+        import hk_modules  # noqa: F401
+        import hk_kit
+        ours = set(hk_kit.MODELS)
     except Exception as e:  # pragma: no cover
         print('warning: generators not importable:', e)
         ours = set()
     for n in sorted(ours - expected_names):
-        problems.append(f'EXTRA    models/block/{n}.json is not a §7.1 state model')
+        problems.append(f'EXTRA    models/block/{n}.json is not a §7 state model')
+    bdir = os.path.join(MODEL_ROOT, 'block')
+    if os.path.isdir(bdir):
+        for f in sorted(os.listdir(bdir)):
+            n = f[:-5]
+            if f.endswith('.json') and n in ours and n not in expected_names:
+                pass
     # ---- items
     for it in ITEMS:
         p = os.path.join(MODEL_ROOT, 'item', it + '.json')
@@ -373,8 +354,6 @@ def main():
             if not os.path.isfile(tex_path(lay)[1]):
                 problems.append(f'TEXREF   models/item/{it}.json -> {lay} missing')
     # ---- particles
-    if sorted(pids) != sorted(PARTICLES):
-        problems.append(f'DESIGN   particle ids changed: {pids}')
     for pid in PARTICLES:
         p = os.path.join(ASSETS, 'particles', pid + '.json')
         if not os.path.isfile(p):
@@ -411,6 +390,11 @@ def main():
                             problems.append(f'ANIM     {rel}.png {w}x{h} not a multiple of the frame {fw}x{fh}')
                         if fw % 16 or fh % 16:
                             problems.append(f'MIPS     {rel}.png frame {fw}x{fh} is not a multiple of 16')
+                        nfr = (w // fw) * (h // fh)
+                        for fr in an.get('frames', []):
+                            idx = fr['index'] if isinstance(fr, dict) else fr
+                            if idx >= nfr:
+                                problems.append(f'ANIM     {rel}.png frame index {idx} >= {nfr}')
                     elif w % 16 or h % 16:
                         problems.append(f'MIPS     {rel}.png is {w}x{h} (not a multiple of 16: lowers the atlas mip level)')
                 if rel in cutouts:
@@ -436,14 +420,14 @@ def main():
                     if rel not in used:
                         problems.append(f'ORPHAN   textures/{rel}.png is not listed by a particle definition')
     nm = sum(len(v) for v in E.values())
-    print(f'checked {len(tex_exp)} contract textures, {nm} §7.1 block models ({nmodels} present), {len(ITEMS)} item models '
-          f'({len(HELD)} held 3D), {len(PARTICLES)} particles; texture files: ' +
-          ', '.join(f'{k} {v}' for k, v in sorted(counts.items())))
+    print(f'checked {len(tex_exp)} contract textures, {nm} art block models ({nmodels} present) for '
+          f'{len(E)} §7 prop/door ids, {len(ITEMS)} item models ({len(HELD)} held 3D), {len(PARTICLES)} particles; '
+          f'texture files: ' + ', '.join(f'{k} {v}' for k, v in sorted(counts.items())))
     if problems:
         print('\n'.join(problems))
         print(f'FAILED: {len(problems)} problem(s)')
         return False
-    print('OK: every §7/§7.1 texture and model exists, models are consistent, textures are mip-safe and none is orphaned')
+    print('OK: every §7 texture and model exists, models are consistent, textures are mip-safe and none is orphaned')
     return True
 
 

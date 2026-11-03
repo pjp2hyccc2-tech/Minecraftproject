@@ -1,3 +1,6 @@
 {
-  "parent": "hitori:block/printout"
+ "parent": "minecraft:item/generated",
+ "textures": {
+  "layer0": "hitori:item/printout"
+ }
 }

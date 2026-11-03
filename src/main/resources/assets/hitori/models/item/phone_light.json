@@ -1,0 +1,286 @@
+{
+ "loader": "forge:separate_transforms",
+ "base": {
+  "textures": {
+   "t": "hitori:item/held/phone",
+   "particle": "hitori:item/held/phone"
+  },
+  "elements": [
+   {
+    "from": [
+     6.0,
+     4.0,
+     7.6
+    ],
+    "to": [
+     10.0,
+     11.0,
+     8.4
+    ],
+    "faces": {
+     "north": {
+      "texture": "#t",
+      "uv": [
+       0.0,
+       7.0,
+       4.0,
+       10.5
+      ]
+     },
+     "south": {
+      "texture": "#t",
+      "uv": [
+       8.0,
+       0.0,
+       16.0,
+       7.0
+      ],
+      "forge_data": {
+       "block_light": 15,
+       "sky_light": 15,
+       "ambient_occlusion": false
+      }
+     },
+     "east": {
+      "texture": "#t",
+      "uv": [
+       4.0,
+       7.0,
+       4.8,
+       10.5
+      ]
+     },
+     "west": {
+      "texture": "#t",
+      "uv": [
+       4.0,
+       7.0,
+       4.8,
+       10.5
+      ]
+     },
+     "up": {
+      "texture": "#t",
+      "uv": [
+       5.0,
+       7.0,
+       9.0,
+       7.4
+      ]
+     },
+     "down": {
+      "texture": "#t",
+      "uv": [
+       5.0,
+       7.0,
+       9.0,
+       7.4
+      ]
+     }
+    }
+   },
+   {
+    "from": [
+     8.2,
+     9.6,
+     7.5
+    ],
+    "to": [
+     9.4,
+     10.6,
+     7.6
+    ],
+    "faces": {
+     "north": {
+      "texture": "#t",
+      "uv": [
+       0.0,
+       10.5,
+       1.2,
+       11.0
+      ],
+      "forge_data": {
+       "block_light": 15,
+       "sky_light": 15,
+       "ambient_occlusion": false
+      }
+     },
+     "south": {
+      "texture": "#t",
+      "uv": [
+       0.0,
+       10.5,
+       1.2,
+       11.0
+      ]
+     },
+     "east": {
+      "texture": "#t",
+      "uv": [
+       3.0,
+       10.5,
+       3.1,
+       11.0
+      ]
+     },
+     "west": {
+      "texture": "#t",
+      "uv": [
+       3.0,
+       10.5,
+       3.1,
+       11.0
+      ]
+     },
+     "up": {
+      "texture": "#t",
+      "uv": [
+       13.0,
+       7.0,
+       14.2,
+       7.05
+      ]
+     },
+     "down": {
+      "texture": "#t",
+      "uv": [
+       13.0,
+       7.0,
+       14.2,
+       7.05
+      ]
+     }
+    }
+   }
+  ],
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     -8,
+     -12,
+     0
+    ],
+    "translation": [
+     -1.0,
+     3.0,
+     -1.5
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "firstperson_lefthand": {
+    "rotation": [
+     -8,
+     -12,
+     0
+    ],
+    "translation": [
+     -1.0,
+     3.0,
+     -1.5
+    ],
+    "scale": [
+     0.85,
+     0.85,
+     0.85
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     70,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3.5,
+     0.5
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "thirdperson_lefthand": {
+    "rotation": [
+     70,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3.5,
+     0.5
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   },
+   "head": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     6,
+     -4
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   }
+  }
+ },
+ "perspectives": {
+  "gui": {
+   "parent": "minecraft:item/generated",
+   "textures": {
+    "layer0": "hitori:item/phone_light"
+   }
+  }
+ }
+}
