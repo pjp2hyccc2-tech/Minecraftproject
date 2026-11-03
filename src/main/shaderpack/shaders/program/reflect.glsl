@@ -76,6 +76,31 @@ vec3 reflectionFallback(vec3 Rw, float outside, vec2 uv) {
     return mix(room, sky, outside);
 }
 
+// rough wet ground: the far lights (the sign, the lamps down the road) smeared into long
+// streaks toward the viewer - the blurred screen where the reflected direction meets the far
+// scene, stretched vertically. A glossy screen-space environment for what the trace misses.
+vec3 glossyFar(vec3 viewP, vec3 Rv, float rough, float spreadK) {
+    vec3 sum = vec3(0.0);
+    float wsum = 0.0;
+    for (int i = 0; i < 3; i++) {
+        float dist = 14.0 + 16.0 * float(i);
+        vec3 fp = viewP + Rv * dist;
+        if (fp.z > -1.0) continue;
+        vec3 sc = viewToScreen(fp);
+        if (sc.x < 0.0 || sc.x > 1.0 || sc.y < 0.0 || sc.y > 1.0) continue;
+        float lod = 3.0 + rough * 5.0;
+        float sp = spreadK * (0.05 + 0.08 * float(i));
+        vec3 c = textureLod(colortex0, sc.xy, lod).rgb * 0.4
+               + textureLod(colortex0, sc.xy + vec2(0.0, sp), lod + 0.5).rgb * 0.3
+               + textureLod(colortex0, sc.xy - vec2(0.0, sp), lod + 0.5).rgb * 0.3;
+        vec2 e = min(sc.xy, 1.0 - sc.xy);
+        float w = smoothstep(0.0, 0.10, min(e.x, e.y));
+        sum += c * w;
+        wsum += 1.0;
+    }
+    return wsum > 0.0 ? sum / wsum : vec3(0.0);
+}
+
 void main() {
     vec3 color = texture(colortex0, texcoord).rgb;
 #ifdef REFLECTIONS
@@ -84,16 +109,13 @@ void main() {
         vec4 alb = texture(colortex5, texcoord);
         int mat = int(floor(alb.a * 255.0 + 0.5));
         vec4 nm = texture(colortex6, texcoord);
-        float wet = 0.0;
-  #if defined WORLD_HIDAMARI && defined WET_SURFACES
-        wet = smoothstep(0.80, 0.95, nm.a) * float(mat == MAT_ASPHALT || mat == MAT_PAVER || mat == MAT_MUD || mat == MAT_WET || mat == MAT_ROOF || mat == MAT_METAL_OUT);
-  #endif
+        vec3 N = octDecode(nm.rg);
+        vec3 viewP = screenToView(texcoord, depth);
+        vec3 P = viewToPlayer(viewP);
+        vec3 wp = P + cameraPosition;
+        float wet = surfaceWetness(wp, N, nm.a, mat);
         vec4 surf = materialSurface(mat, wet);
         if (surf.w > 0.0) {
-            vec3 N = octDecode(nm.rg);
-            vec3 viewP = screenToView(texcoord, depth);
-            vec3 P = viewToPlayer(viewP);
-            vec3 wp = P + cameraPosition;
             float puddle = puddleAmount(wp, mat, N) * wet;
             float rough = mix(surf.x, 0.05, puddle);
             vec3 albedo = toLinear(alb.rgb);
@@ -111,9 +133,6 @@ void main() {
             vec3 V = normalize(viewP);
             vec3 Nv = normalize(mat3(gbufferModelView) * N);
             vec3 Rv = reflect(V, Nv);
-            // rough surfaces: jitter the ray a little (the blur below smooths the noise)
-            vec2 jr = (vec2(ign(gl_FragCoord.xy), ign(gl_FragCoord.yx + 7.0)) - 0.5) * rough * 0.18;
-            Rv = normalize(Rv + vec3(jr, 0.0));
             float NdotV = saturate(dot(Nv, -V));
             vec3 Rw = mat3(gbufferModelViewInverse) * Rv;
             float outside = 1.0;
@@ -123,12 +142,16 @@ void main() {
             vec2 hitUv;
             float hitT;
             vec3 refl = reflectionFallback(Rw, outside, texcoord);
+            bool roughWet = mat == MAT_ASPHALT || mat == MAT_PAVER || mat == MAT_MUD || mat == MAT_WET;
+            if (roughWet && Rv.z < 0.2) {
+                refl = max(refl, glossyFar(viewP, Rv, rough, rough * (1.0 - puddle) * 3.0));
+            }
             if (Rv.z < 0.35 && traceScreen(viewP + Nv * 0.02, Rv, dither, hitUv, hitT)) {
                 // blur with roughness and distance; wet asphalt streaks vertically
-                float lod = clamp(rough * 9.0 * saturate(hitT / 3.0 + 0.15), 0.0, 6.0);
+                float lod = clamp(rough * 11.0 * saturate(hitT / 3.0 + 0.2), 0.0, 6.0);
                 vec3 hc = textureLod(colortex0, hitUv, lod).rgb;
                 if (mat == MAT_ASPHALT || mat == MAT_PAVER || mat == MAT_MUD || mat == MAT_WET) {
-                    float spread = rough * (1.0 - puddle) * 0.045 * saturate(hitT / 6.0 + 0.2);
+                    float spread = rough * (1.0 - puddle) * 0.07 * saturate(hitT / 6.0 + 0.25);
                     hc = hc * 0.30
                        + textureLod(colortex0, hitUv + vec2(0.0, spread), lod).rgb * 0.22
                        + textureLod(colortex0, hitUv - vec2(0.0, spread), lod).rgb * 0.22

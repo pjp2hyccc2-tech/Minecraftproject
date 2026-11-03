@@ -50,6 +50,19 @@ float handLightFogSigma() {
 }
 
 // ---- wet ground after the rain ---------------------------------------------------------------
+// how wet a surface is: out under the open sky (sky light, and nothing above it in the emitter
+// map's cover tile - the canopy and the eaves keep a dry band). wp: world position, N: normal
+float surfaceWetness(vec3 wp, vec3 N, float skyLight, int mat) {
+#if defined WORLD_HIDAMARI && defined WET_SURFACES
+    if (mat == MAT_EMITTER || mat == MAT_NONE || mat == MAT_SPIRIT) return 0.0;
+    float w = smoothstep(0.80, 0.95, skyLight);
+    if (w <= 0.0) return 0.0;
+    return w * openSky(wp + N * 0.3 + vec3(0.0, 0.05, 0.0));
+#else
+    return 0.0;
+#endif
+}
+
 // 0..1: dry .. standing water, for a surface under the open sky. Puddles collect in shallow
 // dips (slow noise); the rest is damp. Same value in gbuffers and composite.
 float puddleAmount(vec3 wp, int mat, vec3 N) {

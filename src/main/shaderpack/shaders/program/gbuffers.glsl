@@ -357,7 +357,7 @@ void main() {
     #else
     if (mat != MAT_EMITTER && mat != MAT_NONE) {
     #endif
-        wet = smoothstep(0.80, 0.95, lm.y) * openSky(wp + Ngeo * 0.3 + vec3(0.0, 0.05, 0.0));
+        wet = surfaceWetness(wp, Ngeo, lm.y, mat);
         if (wet > 0.0) {
             if (mat == MAT_DIFFUSE && wet > 0.5) mat = MAT_WET;
             puddle = puddleAmount(wp, mat, Ngeo) * wet;

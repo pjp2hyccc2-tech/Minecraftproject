@@ -125,41 +125,36 @@ int materialOfBlock(int id) {
 // is worth tracing (0 = none). wet: 0..1 how wet the surface is out under the open sky.
 vec4 materialSurface(int m, float wet) {
     vec4 s = vec4(1.0, 0.0, 0.0, 0.0);
-    if      (m == MAT_ASPHALT)     s = vec4(0.42, 0.030, 0.0, 0.85);
-    else if (m == MAT_PAVER)       s = vec4(0.48, 0.028, 0.0, 0.70);
+#ifndef WET_SURFACES
+    wet = 0.0;
+#endif
+    // outside: rough and dull when dry, glossy black when wet
+    if      (m == MAT_ASPHALT)     s = mix(vec4(0.80, 0.025, 0.0, 0.08), vec4(0.22, 0.030, 0.0, 0.90), wet);
+    else if (m == MAT_PAVER)       s = mix(vec4(0.85, 0.025, 0.0, 0.05), vec4(0.30, 0.030, 0.0, 0.75), wet);
+    else if (m == MAT_MUD)         s = mix(vec4(0.90, 0.020, 0.0, 0.00), vec4(0.26, 0.025, 0.0, 0.70), wet);
+    else if (m == MAT_WET)         s = mix(vec4(0.85, 0.025, 0.0, 0.00), vec4(0.40, 0.030, 0.0, 0.40), wet);
+    else if (m == MAT_ROOF)        s = mix(vec4(0.55, 0.040, 0.0, 0.15), vec4(0.30, 0.040, 0.0, 0.45), wet);
+    else if (m == MAT_METAL_OUT)   s = mix(vec4(0.45, 0.060, 0.2, 0.20), vec4(0.25, 0.060, 0.2, 0.60), wet);
     else if (m == MAT_PUDDLE)      s = vec4(0.03, 0.020, 0.0, 1.00);
+    // the restaurant's glossy floors and fittings
     else if (m == MAT_FLOOR_WOOD)  s = vec4(0.30, 0.040, 0.0, 0.75);
     else if (m == MAT_FLOOR_TILE)  s = vec4(0.27, 0.040, 0.0, 0.75);
     else if (m == MAT_FLOOR_MOSAIC) s = vec4(0.20, 0.045, 0.0, 0.80);
     else if (m == MAT_CAVITY)      s = vec4(0.10, 0.030, 0.0, 0.90);
     else if (m == MAT_GRANITE)     s = vec4(0.16, 0.045, 0.0, 0.85);
     else if (m == MAT_STEEL)       s = vec4(0.24, 0.600, 1.0, 0.80);
-    else if (m == MAT_METAL_OUT)   s = vec4(0.36, 0.060, 0.2, 0.55);
     else if (m == MAT_WINDOW)      s = vec4(0.03, 0.040, 0.0, 1.00);
     else if (m == MAT_MIRROR)      s = vec4(0.06, 0.400, 0.0, 1.00);   // smoked glass: a dark, neutral mirror
     else if (m == MAT_MIRROR_PLAIN) s = vec4(0.03, 0.850, 0.0, 1.00);
     else if (m == MAT_WALL_TILE)   s = vec4(0.16, 0.045, 0.0, 0.70);
     else if (m == MAT_VINYL)       s = vec4(0.45, 0.040, 0.0, 0.0);
     else if (m == MAT_VARNISH)     s = vec4(0.38, 0.035, 0.0, 0.45);
-    else if (m == MAT_MUD)         s = vec4(0.32, 0.025, 0.0, 0.65);
     else if (m == MAT_PLASTIC)     s = vec4(0.30, 0.045, 0.0, 0.0);
     else if (m == MAT_GLASS_SMALL) s = vec4(0.10, 0.040, 0.0, 0.40);
-    else if (m == MAT_ROOF)        s = vec4(0.40, 0.040, 0.0, 0.40);
     else if (m == MAT_FROST)       s = vec4(0.55, 0.030, 0.0, 0.0);
     else if (m == MAT_EMITTER)     s = vec4(0.35, 0.040, 0.0, 0.0);
     else if (m == MAT_SPIRIT)      s = vec4(0.60, 0.030, 0.0, 0.0);
     else if (m == MAT_FOLIAGE)     s = vec4(0.70, 0.025, 0.0, 0.0);
-    else if (m == MAT_WET)         s = vec4(0.55, 0.030, 0.0, 0.35);
-#ifdef WET_SURFACES
-    // after the rain: everything under the open sky is wetter, smoother, more reflective
-    if (wet > 0.0 && s.z < 0.5) {
-        s.x = mix(s.x, min(s.x, 0.30), wet);
-        s.y = mix(s.y, max(s.y, 0.025), wet);
-        s.w = max(s.w, 0.55 * wet);
-    }
-#else
-    if (m == MAT_ASPHALT || m == MAT_PAVER || m == MAT_MUD || m == MAT_WET) { s.x = max(s.x, 0.7); s.w *= 0.3; }
-#endif
     return s;
 }
 

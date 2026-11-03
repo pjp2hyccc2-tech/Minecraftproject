@@ -114,10 +114,7 @@ void main() {
             if (anyHandLight()) {
                 vec3 albedo = toLinear(alb.rgb);
                 vec3 wp = P + cameraPosition;
-                float wet = 0.0;
-#if defined WORLD_HIDAMARI && defined WET_SURFACES
-                wet = smoothstep(0.80, 0.95, nm.a) * float(mat == MAT_ASPHALT || mat == MAT_PAVER || mat == MAT_MUD || mat == MAT_WET || mat == MAT_ROOF || mat == MAT_METAL_OUT);
-#endif
+                float wet = surfaceWetness(P + cameraPosition, N, nm.a, mat);
                 vec4 surf = materialSurface(mat, wet);
                 float puddle = puddleAmount(wp, mat, N) * wet;
                 vec2 gloss = vec2(mix(surf.x, 0.06, puddle), (surf.w > 0.0 || surf.z > 0.5) ? surf.y : -1.0);
