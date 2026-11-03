@@ -117,10 +117,19 @@ public final class Terrain {
                     if (Site.noise(x, z, 3, 42) > 0.6) s.set(x, GROUND + 1, z, ModBlocks.PUDDLE.get().defaultBlockState());
                 } else {
                     if (!farmRoad(x, z) || r < 20) {
-                        s.set(x, GROUND + 1, z, ((FacingBlock) ModBlocks.GUARDRAIL.get()).defaultBlockState()
-                                .setValue(FacingBlock.FACING, Site.inward(x, z)));
+                        s.set(x, GROUND + 1, z, f(ModBlocks.GUARDRAIL, Site.inward(x, z)));
                     }
                 }
+            }
+        }
+        // close the corners of the guardrail's staircase on the curve so it reads as one continuous rail
+        for (int x = s.minX; x <= s.maxX; x++) {
+            for (int z = s.minZ; z <= s.maxZ; z++) {
+                double r = Site.rho(x, z);
+                if (r < Site.RHO_END || r >= Site.RHO_END + 0.75 || x + 0.5 < Site.CX || z + 0.5 < Site.CZ) continue;
+                if (rail(x - 1, z) && rail(x, z - 1) && !rail(x - 1, z - 1)) s.set(x, GROUND + 1, z, f(ModBlocks.GUARDRAIL, Site.inward(x, z)));
+                else if (rail(x - 1, z) && rail(x, z + 1) && !rail(x - 1, z + 1)) s.set(x, GROUND + 1, z, f(ModBlocks.GUARDRAIL, Site.inward(x, z)));
+                else if (rail(x + 1, z) && rail(x, z - 1) && !rail(x + 1, z - 1)) s.set(x, GROUND + 1, z, f(ModBlocks.GUARDRAIL, Site.inward(x, z)));
             }
         }
         // the curve: chevrons outside the guardrail, the curve mirror, the flowers, a sodium lamp over the crash site
@@ -130,27 +139,37 @@ public final class Terrain {
             if (s.contains(x, z)) s.set(x, GROUND + 1, z, f(ModBlocks.CHEVRON_SIGN, Site.inward(x, z)));
         }
         if (s.contains(66, 59)) {
-            s.set(66, GROUND + 1, 59, Blocks.IRON_BARS.defaultBlockState());
-            s.set(66, GROUND + 2, 59, Blocks.IRON_BARS.defaultBlockState());
-            s.set(66, GROUND + 3, 59, f(ModBlocks.CURVE_MIRROR, Direction.WEST));
+            s.set(66, GROUND + 1, 59, f(ModBlocks.CURVE_MIRROR, Direction.WEST));
+            s.set(66, GROUND + 2, 59, Blocks.AIR.defaultBlockState());
         }
         if (s.contains(76, 52)) s.set(76, GROUND + 1, 52, f(ModBlocks.FLOWER_OFFERING, Direction.NORTH));
-        lamp(s, 77, 56, Direction.NORTH);
-        lamp(s, 58, 49, Direction.SOUTH);
-        lamp(s, -34, 49, Direction.SOUTH);
-        lamp(s, 87, 20, Direction.WEST);
+        lamp(s, ROAD_LAMPS[0][0], ROAD_LAMPS[0][1], Direction.NORTH);
+        lamp(s, ROAD_LAMPS[1][0], ROAD_LAMPS[1][1], Direction.SOUTH);
+        lamp(s, ROAD_LAMPS[2][0], ROAD_LAMPS[2][1], Direction.SOUTH);
+        lamp(s, ROAD_LAMPS[3][0], ROAD_LAMPS[3][1], Direction.WEST);
+    }
+
+    /** A guardrail cell of the ring (not the farm road gap). */
+    static boolean rail(int x, int z) {
+        double r = Site.rho(x, z);
+        return r >= Site.RHO_RAIL && r < Site.RHO_END && !farmRoad(x, z);
     }
 
     static BlockState f(net.minecraftforge.registries.RegistryObject<? extends net.minecraft.world.level.block.Block> b, Direction d) {
         return b.get().defaultBlockState().setValue(FacingBlock.FACING, d);
     }
 
+    /** Height of the lamp heads (the light source). */
+    public static final int LAMP_Y = GROUND + 6;
+    /** Road lamps (pole positions). */
+    public static final int[][] ROAD_LAMPS = {{77, 56}, {58, 49}, {-34, 49}, {87, 20}};
+
     /** A sodium street lamp: a pole and a lit head on top (SIGN circuit). */
     public static void lamp(BlockSink s, int x, int z, Direction facing) {
         if (!s.contains(x, z)) return;
         BlockState pole = f(ModBlocks.STREET_LAMP, facing).setValue(Props.LAMP_PART, Props.LampPart.POLE);
-        for (int y = GROUND + 1; y <= GROUND + 6; y++) s.set(x, y, z, pole);
-        s.set(x, GROUND + 7, z, pole.setValue(Props.LAMP_PART, Props.LampPart.HEAD).setValue(Props.LIT, Circuit.SIGN.startOn()));
+        for (int y = GROUND + 1; y < LAMP_Y; y++) s.set(x, y, z, pole);
+        s.set(x, LAMP_Y, z, pole.setValue(Props.LAMP_PART, Props.LampPart.HEAD).setValue(Props.LIT, Circuit.SIGN.startOn()));
     }
 
     // ------------------------------------------------------------------------------------------------ hill
@@ -258,15 +277,16 @@ public final class Terrain {
     static final int POLE_X_NORTH = 86;
     static final int[] POLES_Z_NORTH = {20, -2, -24, -46, -68};
 
+    /** The pole models run their wires along their own north-south axis: a line along x faces east, along z north. */
     static void poles(ChunkSink s) {
         int top = GROUND + 9;
         for (int i = 0; i < POLES_X.length; i++) {
-            pole(s, POLES_X[i], POLE_Z, Direction.SOUTH);
-            if (i + 1 < POLES_X.length) wire(s, POLES_X[i] + 1, POLES_X[i + 1] - 1, top, POLE_Z, Direction.Axis.X);
+            pole(s, POLES_X[i], POLE_Z, Direction.EAST);
+            if (i + 1 < POLES_X.length) wire(s, POLES_X[i] + 2, POLES_X[i + 1] - 2, top, POLE_Z, Direction.Axis.X);
         }
         for (int i = 0; i < POLES_Z_NORTH.length; i++) {
-            pole(s, POLE_X_NORTH, POLES_Z_NORTH[i], Direction.WEST);
-            if (i + 1 < POLES_Z_NORTH.length) wire(s, POLES_Z_NORTH[i + 1] + 1, POLES_Z_NORTH[i] - 1, top, POLE_X_NORTH, Direction.Axis.Z);
+            pole(s, POLE_X_NORTH, POLES_Z_NORTH[i], Direction.NORTH);
+            if (i + 1 < POLES_Z_NORTH.length) wire(s, POLES_Z_NORTH[i + 1] + 2, POLES_Z_NORTH[i] - 2, top, POLE_X_NORTH, Direction.Axis.Z);
         }
     }
 
@@ -278,14 +298,12 @@ public final class Terrain {
         s.set(x, GROUND + 9, z, p.setValue(Props.POLE_PART, Props.PolePart.TOP));
     }
 
+    /** The four wires between two poles (the poles' own models carry them one block out on each side). */
     static void wire(ChunkSink s, int a, int b, int y, int c, Direction.Axis axis) {
-        BlockState chain = Blocks.CHAIN.defaultBlockState().setValue(ChainBlock.AXIS, axis);
+        BlockState w = f(ModBlocks.POWER_WIRE, axis == Direction.Axis.X ? Direction.EAST : Direction.NORTH);
         for (int t = a; t <= b; t++) {
             int x = axis == Direction.Axis.X ? t : c, z = axis == Direction.Axis.X ? c : t;
-            // a slight sag toward the middle of the span
-            int mid = (a + b) / 2;
-            int sag = Math.abs(t - mid) < (b - a) / 4 ? 1 : 0;
-            if (s.contains(x, z)) s.set(x, y - sag, z, chain);
+            if (s.contains(x, z)) s.set(x, y, z, w);
         }
     }
 

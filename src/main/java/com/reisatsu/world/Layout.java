@@ -177,7 +177,7 @@ public final class Layout {
         m("chef_board", 25, 6, N);
         m("chef_stove", 25, 2, N);
         m("chef_pass", 24, 9, S);
-        m("pass_bell", 24, FEET_Y + 1, 10, N);
+        m("pass_bell", 24, FEET_Y + 1, 10, N);   // the bell's own segment of the pass shelf, in the pass window
         // ---- the mirror woman
         m("mirror_woman", 10, 14, S);
         for (int y = FEET_Y + 1; y <= FEET_Y + 2; y++) for (int x = 9; x <= 11; x++) m("mirror", x, y, 16, S);
@@ -191,8 +191,8 @@ public final class Layout {
         int[][] mr = {{10, 5}, {11, 6}, {11, 8}, {13, 8}, {16, 8}, {22, 8}, {28, 8}, {29, 9}, {29, 11}, {24, 13}, {16, 15}, {16, 24},
                 {9, 24}, {5, 24}, {12, 25}, {22, 26}, {32, 26}, {36, 20}, {34, 12}, {30, 11}, {30, 8}, {20, 7}, {13, 9}, {11, 8}};
         for (int[] p : mr) m("manager_route", p[0], p[1], S);
-        m("breaker", 7, FEET_Y + 1, 7, S);
-        m("breaker_stand", 7, 8, N);
+        m("breaker", 7, FEET_Y + 1, 8, S);       // on the corridor wall (the wall cell E of the plan is behind it)
+        m("breaker_stand", 7, 9, N);
         int[][] cams = {{14, 25}, {15, 12}, {38, 12}, {37, 27}, {39, 8}, {13, 9}, {7, 28}};
         Direction[] camf = {W, S, W, W, W, W, W};
         for (int i = 0; i < cams.length; i++) m("cameras", cams[i][0], FEET_Y + 3, cams[i][1], camf[i]);
@@ -217,7 +217,7 @@ public final class Layout {
         m("fridge_door", 17, 4, N);
         m("stuffed_bear", 13, 29, N);
         m("menu_board", 1, 32, S);
-        m("curve_mirror", 66, FEET_Y + 2, 59, W);
+        m("curve_mirror", 66, 59, W);           // a two-block model: pole and mirror
         m("flowers", 76, 52, N);
         m("film_1", 12, FEET_Y + 1, 23, W);
         m("film_2", 1, 4, E);
@@ -226,11 +226,11 @@ public final class Layout {
         // ---- notes (§3.11): note_paper blocks or the book / boards that hold them; report + medium are handed over
         m("note_report", -1, 39, E);
         m("note_medium", -1, 39, E);
-        m("note_handover", 4, FEET_Y + 1, 3, N);
+        m("note_handover", 6, FEET_Y + 1, 5, W);
         m("note_clipping", 6, FEET_Y + 1, 3, W);
         m("note_reservation", 11, FEET_Y + 1, 23, S);
-        m("note_diary", 8, FEET_Y + 1, 4, E);
-        m("note_drawing", 10, FEET_Y + 1, 28, E);
+        m("note_diary", 11, FEET_Y + 1, 1, S);
+        m("note_drawing", 9, 27, E);
         m("note_flyer", 1, FEET_Y + 1, 28, E);
         m("note_fire", 15, FEET_Y + 1, 5, E);
         m("note_cleaning", 12, FEET_Y + 1, 17, S);

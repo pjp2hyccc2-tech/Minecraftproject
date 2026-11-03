@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "reisatsu:block/stall_door_bottom"
+    "layer0": "reisatsu:item/stall_door"
   }
 }

@@ -161,8 +161,9 @@ def art(name):
     return name
 
 
-def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True):
-    """A facing prop drawn by an art model. extras: [(property, [values])]; name_fn(dict) -> model name."""
+def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True, x_fn=None):
+    """A facing prop drawn by an art model. extras: [(property, [values])]; name_fn(dict) -> model name;
+    x_fn(dict) -> x rotation (a floor decal turned up against the wall behind it: x 90 puts the model's bottom on the south)."""
     if name_fn is None:
         def name_fn(kv):
             n = name
@@ -176,7 +177,7 @@ def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True):
         for combo in itertools.product(*[vals for _, vals in extras]):
             kv = dict(zip(props, combo))
             key = ",".join([f"facing={f}"] + [f"{p}={v}" for p, v in kv.items()])
-            variants[key] = var(art(name_fn(kv)), y if rotate else 0)
+            variants[key] = var(art(name_fn(kv)), y if rotate else 0, x_fn(kv) if x_fn else 0)
     bs(name, variants)
     default = {p: vals[0] if vals[0] not in ("true",) else "false" for p, vals in extras}
     for p, vals in extras:
@@ -191,10 +192,17 @@ B = ["false", "true"]
 def main():
     listing = "--list" in sys.argv
     # ---- surfaces and structure (world models)
-    for n in ("dining_floor", "kitchen_floor", "restroom_floor", "restroom_floor_dark", "vestibule_floor", "wallpaper", "wallpaper_stained",
-              "wainscot", "white_tile", "white_tile_dirty", "ceiling_tile", "ceiling_tile_stained", "exterior_wall", "facade_brick", "roof_tile",
-              "fascia", "asphalt", "sidewalk", "rice_paddy", "concrete_wall", "granite_counter", "stainless", "pillar"):
+    for n in ("dining_floor", "dining_floor_worn", "kitchen_floor", "restroom_floor", "restroom_floor_dark", "vestibule_floor", "wallpaper",
+              "wallpaper_stained", "wainscot", "white_tile", "white_tile_dirty", "ceiling_tile", "ceiling_tile_stained", "exterior_wall",
+              "facade_brick", "roof_tile", "fascia", "asphalt", "sidewalk", "concrete_wall", "granite_counter", "stainless"):
         cube_all(n)
+    model("pillar", {"parent": "minecraft:block/cube_column", "textures": {"side": t("pillar"), "end": t("pillar_top")}})
+    bs("pillar", {"": var("pillar")})
+    item_parent("pillar", "pillar")
+    model("rice_paddy", {"parent": "minecraft:block/cube_bottom_top",
+                         "textures": {"top": t("rice_paddy"), "side": t("rice_paddy_side"), "bottom": t("rice_paddy_side")}})
+    bs("rice_paddy", {"": var("rice_paddy")})
+    item_parent("rice_paddy", "rice_paddy")
     cube_all("shop_window", render_type="minecraft:translucent")
     model("hedge", {"parent": "minecraft:block/leaves", "render_type": "minecraft:cutout_mipped", "textures": {"all": t("hedge")}})
     bs("hedge", {"": var("hedge")})
@@ -212,14 +220,19 @@ def main():
     bs("ceiling_light", {f"lit={lit},broken={br}": var("ceiling_light_lit" if lit == "true" else "ceiling_light") for lit in B for br in B})
     item_parent("ceiling_light", "ceiling_light_lit")
     panel_light("downlight")
-    bs("downlight", {f"lit={lit}": var("downlight_lit" if lit == "true" else "downlight") for lit in B})
+    for suffix, tex in (("", "downlight"), ("_lit", "downlight_lit")):     # set into the eave's fascia band outside
+        model("downlight_fascia" + suffix, {"parent": "minecraft:block/cube",
+                                            "textures": {"particle": t("fascia"), "down": t(tex), "up": t("fascia"), "north": t("fascia"),
+                                                         "south": t("fascia"), "east": t("fascia"), "west": t("fascia")}})
+    bs("downlight", {f"lit={lit},fascia={fa}": var(("downlight_fascia" if fa == "true" else "downlight") + ("_lit" if lit == "true" else ""))
+                     for lit in B for fa in B})
     item_parent("downlight", "downlight_lit")
     bs("pendant_lamp", {f"lit={lit}": var(art("pendant_lamp_lit" if lit == "true" else "pendant_lamp")) for lit in B})
     item_parent("pendant_lamp", "pendant_lamp_lit")
     facing_prop("exit_sign", [("hanging", B)])
     stairs_slab("roof_tile", "roof_tile")
-    low_block("brick_sill", 10, "brick_sill", "concrete_wall")
-    low_block("curb", 8, "curb", "curb")
+    low_block("brick_sill", 10, "brick_sill", "brick_sill_top")
+    low_block("curb", 8, "curb", "curb_top")
     line_block("parking_line")
     line_block("road_line")
     facing_prop("window_blind", [("closed", B)], item="window_blind_closed")
@@ -248,7 +261,7 @@ def main():
                     v[f"facing={f},side={side},part={part},open={op}"] = var(art("auto_door_rail") if part == "top" else "world_invisible",
                                                                              y if part == "top" else 0)
     bs("auto_door", v)
-    flat_item("auto_door", t("auto_door_panel"))
+    flat_item("auto_door", f"{NS}:item/auto_door")
     facing_prop("door_switch", [("on", B)])
     v = {}
     for f, y in FACING_Y.items():
@@ -258,14 +271,25 @@ def main():
                     v[f"facing={f},half={half},side={side},swing={sw}"] = var(art("swing_door_frame") if half == "lower" else "world_invisible",
                                                                              y if half == "lower" else 0)
     bs("swing_door", v)
-    flat_item("swing_door", t("swing_door"))
+    flat_item("swing_door", f"{NS}:item/swing_door")
     for d in ("staff_door", "office_door", "restroom_door_m", "restroom_door_w", "back_door", "fridge_door"):
         bs(d, door(d))
-        flat_item(d, t(d + "_bottom"))
+        flat_item(d, f"{NS}:item/{d}")
     sv = door("stall_door", extra=("vacant", "occupied=false"))
     sv.update(door("stall_door", textures=(t("stall_door_occupied_bottom"), t("stall_door_occupied_top")), extra=("occupied", "occupied=true")))
     bs("stall_door", sv)
-    flat_item("stall_door", t("stall_door_bottom"))
+    flat_item("stall_door", f"{NS}:item/stall_door")
+    # the power lines between the utility poles: the same four wires as the art's pole top (texture and UVs), a full block long
+    wires = []
+    for x0 in (-10.25, -3.25, 18.75, 25.75):
+        wires.append({"from": [x0, 12.2, 0], "to": [x0 + 0.5, 12.6, 16], "faces": {
+            "north": {"uv": [4.0, 13.25, 4.1667, 13.35], "texture": "#t"}, "south": {"uv": [4.0, 13.25, 4.1667, 13.35], "texture": "#t"},
+            "east": {"uv": [0.0, 13.0, 16.0, 13.1], "texture": "#t"}, "west": {"uv": [0.0, 13.0, 16.0, 13.1], "texture": "#t"},
+            "up": {"uv": [0.0, 0.0, 0.1667, 12.0], "texture": "#t"}, "down": {"uv": [0.0, 0.0, 0.1667, 12.0], "texture": "#t"}}})
+    model("power_wire", {"parent": "minecraft:block/block", "textures": {"t": t("utility_pole"), "particle": t("utility_pole")},
+                         "elements": wires})
+    bs("power_wire", {f"facing={f}": var("power_wire", y) for f, y in FACING_Y.items()})
+    item_parent("power_wire", "power_wire")
 
     # ---- furniture and fixtures (art models, facing north at rest)
     plain = ["booth_seat", "booth_partition", "restaurant_table", "menu_stand", "broken_plate", "service_bell", "counter", "cake_case",
@@ -275,9 +299,11 @@ def main():
              "pass_bell", "walkin_shelf", "frost", "time_recorder", "staff_table", "folding_chair", "bulletin_board", "cardboard_boxes",
              "cleaning_cart", "filing_cabinet", "safe", "office_desk", "office_chair", "pc", "restroom_mirror", "toilet", "urinal", "stall_wall",
              "paper_towel", "bike_rack", "trash_station", "ac_unit", "gas_cylinder", "dumpster", "wheel_stop", "outdoor_planter", "guardrail",
-             "chevron_sign", "curve_mirror", "flower_offering", "note_paper"]
+             "chevron_sign", "curve_mirror", "flower_offering"]
     for n in plain:
         facing_prop(n)
+    # a note lies on a counter, or is taped to the wall behind it (hanging: the decal turned up, x 90)
+    facing_prop("note_paper", [("hanging", B)], name_fn=lambda kv: "note_paper", x_fn=lambda kv: 90 if kv["hanging"] == "true" else 0)
     facing_prop("restaurant_chair", [("fallen", B)])
     facing_prop("call_button", [("lit", B)])
     facing_prop("register", [("open", B)])
