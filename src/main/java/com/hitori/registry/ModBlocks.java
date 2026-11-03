@@ -37,7 +37,8 @@ import java.util.function.UnaryOperator;
 /**
  * All blocks of the apartment and its street (owner: world; docs/DESIGN.md §7). Block items are registered here too.
  * World-only blocks (not in §7, models by {@code tools/gen_assets.py} from existing textures): {@code two_sided_wall},
- * {@code genkan_step}, {@code unit_door}, {@code power_wire}.
+ * {@code genkan_step}, {@code unit_door}, {@code power_wire}, {@code laundry_hanging}, {@code trash_bag}. {@code printout} has no
+ * block item (hitori:printout is the game's item).
  */
 public final class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Hitori.MODID);
@@ -88,6 +89,11 @@ public final class ModBlocks {
 
     private static RegistryObject<PropBlock> prop(String id, MapColor color, SoundType sound, UnaryOperator<PropBlock.Builder> cfg) {
         return block(id, () -> cfg.apply(PropBlock.builder(id, prop(color, sound))).build());
+    }
+
+    /** A prop registered without a block item (its id is also one of the game's items). */
+    private static RegistryObject<PropBlock> propNoItem(String id, MapColor color, SoundType sound, UnaryOperator<PropBlock.Builder> cfg) {
+        return BLOCKS.register(id, () -> cfg.apply(PropBlock.builder(id, prop(color, sound))).build());
     }
 
     private static RegistryObject<PropBlock> litProp(String id, MapColor color, SoundType sound, ToIntFunction<BlockState> light,
@@ -248,7 +254,8 @@ public final class ModBlocks {
                     .use(Behaviours.tell("laptop", null, 0)));
     public static final RegistryObject<PropBlock> SEWING_BOX = prop("sewing_box", MapColor.COLOR_RED, SoundType.WOOD,
             b -> b.box(3, 0, 4, 13, 5, 12).props(Props.OPEN).noCollision().seeThrough().use(Behaviours::sewingBox));
-    public static final RegistryObject<PropBlock> PRINTOUT = prop("printout", MapColor.QUARTZ, SoundType.WOOL,
+    /** The printout lying on the desk; no block item: hitori:printout is the game's item (the paper in your hand). */
+    public static final RegistryObject<PropBlock> PRINTOUT = propNoItem("printout", MapColor.QUARTZ, SoundType.WOOL,
             b -> b.box(3, 0, 3, 13, 1, 13).noCollision().seeThrough().use(Behaviours::printout));
     public static final RegistryObject<PropBlock> BED = prop("bed", MapColor.COLOR_LIGHT_BLUE, SoundType.WOOL,
             b -> b.box(0, 0, 0, 16, 9, 16).props(Props.PART));

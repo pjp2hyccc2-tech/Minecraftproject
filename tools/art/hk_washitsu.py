@@ -19,35 +19,29 @@ from hk_common import (TEAK, LACQUER, KEYAKI, PALEWOOD, DARKWOOD, CREAMPL, GREYP
 A_CHAB = Atlas('chabudai')
 
 
-CHAB = ramp(['#20100a', '#2e170f', '#3e1f14', '#4f281a', '#603220', '#723d27', '#84492f', '#965637'], 8)
+CHAB = ramp(['#1e110b', '#2c1910', '#3b2216', '#4b2c1b', '#5b3621', '#6b4128', '#7b4c30', '#8d5938'], 8)
 
 
 def _chab_top(w, h):
-    """The round lacquered top seen from above: reddish keyaki grain under worn lacquer, a sheen across it, a lit rim,
-    pale cup rings and scratches from years of meals."""
-    r = rng(5101)
+    """The round top seen from above: two glued boards of zelkova under old varnish - smooth warm brown with a
+    straight, gently waving grain in fine dark lines, the glue seam, a broad gloss band where the lamp catches the
+    varnish, the rim lit on one side; one pale cup ring from years of tea."""
     x, y = grid(w, h)
     cx, cy = w / 2, h / 2
     d = np.hypot(x + 0.5 - cx, y + 0.5 - cy)
-    n = noise(w, h, 5102, beta=0.8, sx=8, sy=1, wrap=False)
-    t = y + 1.6 * np.sin(x * 0.5 + 0.8) + noise(w, h, 5103, beta=1.8, wrap=False) * 1.4
-    lines = np.abs(np.sin(t * 0.9)) < 0.2
-    a = from_idx(3.8 + n * 0.45 - lines * 1.1, CHAB)
-    # lacquer sheen: a diagonal soft highlight band
-    band = np.exp(-(((x - y) + 3.0) / 3.0) ** 2)
-    dl(a, 0.0)
-    a[..., :3] = a[..., :3] * (1 + band[..., None] * 0.28)
-    # the rim: lit top-left half, dark bottom-right half
+    n = noise(w, h, 5102, beta=2.0, wrap=False)
+    t = y + 0.8 * np.sin(x * 0.38 + 0.6) + noise(w, h, 5103, beta=2.4, wrap=False) * 0.5
+    lines = (((t / 3.4) % 1.0) < 0.2) & (noise(w, h, 5104, beta=1.2, wrap=False) > -0.2)
+    a = from_idx(3.85 + n * 0.18 - lines * 0.5, CHAB)
+    dl(a, -0.05, y == int(h * 0.55))                      # the seam between the two boards
+    # the gloss: a broad diagonal band and the lamp's soft spot in it
+    band = np.exp(-(((x - y) + 2.5) / 3.6) ** 2) * 0.3 + np.exp(-((x - 5.0) ** 2 + (y - 4.0) ** 2) / 5.0) * 0.18
+    a[..., :3] = np.clip(a[..., :3] * (1 + band[..., None]), 0, 255)
     rim = (d > cx - 1.1) & (d <= cx + 0.2)
-    dl(a, 0.06, rim & ((x + y) < w))
+    dl(a, 0.07, rim & ((x + y) < w))
     dl(a, -0.08, rim & ((x + y) >= w))
-    for (rx, ry, rr) in ((4.5, 5.0, 1.8), (9.5, 9.5, 1.5)):
-        ring = (np.abs(np.hypot(x + 0.5 - rx, y + 0.5 - ry) - rr) < 0.45)
-        tint(a, '#c09068', 0.3, ring)
-    for _ in range(4):
-        sx, sy = int(r.integers(3, w - 4)), int(r.integers(3, h - 4))
-        for k in range(3):
-            px(a, sx + k, sy + (k // 2), '#a0603c', 0.5)
+    ring = (np.abs(np.hypot(x + 0.5 - 9.6, y + 0.5 - 9.4) - 1.6) < 0.42)
+    tint(a, '#b88a62', 0.22, ring)
     return a
 
 
@@ -518,20 +512,30 @@ light_switch(True)
 
 # ================================================================================================ curtain
 A_CUR = Atlas('curtain')
-CURT = ramp(['#3a2a1e', '#4e3828', '#634834', '#77583f', '#896a4c', '#9a7a5a'], 6)
+CURT = ramp(['#56301e', '#6e3f27', '#864f30', '#9a603a', '#ab7044', '#b97f50', '#c48e5e'], 7)
 
 
 def _curtain_cloth(w, h, face):
-    """Faded rust-orange Showa curtain print: round flowers in a lattice, sun-bleached, the pleats shading."""
+    """A 1970s curtain gone pale in the sun: faded terracotta cloth printed with big round cream flowers (a dark
+    eye, four petals and the diagonals between them) and small olive leaves, rows offset by half; soft vertical
+    shading of the cloth hanging, the hem's stitched band at the bottom."""
     x, y = grid(w, h)
-    n = noise(w, h, 5901 + w, beta=1.5, wrap=False)
-    a = from_idx(3.2 + n * 0.25, CURT)
-    if face != 'h':
-        flower = ((x % 6 == 2) & (y % 6 == 2)) | ((x % 6 == 5) & (y % 6 == 5))
-        petal = (((x % 6 == 1) | (x % 6 == 3)) & (y % 6 == 2)) | ((x % 6 == 2) & ((y % 6 == 1) | (y % 6 == 3)))
-        tint(a, '#b88a5a', 0.3, petal)
-        tint(a, '#d8b07a', 0.4, flower)
-        tint(a, '#c8b498', 0.14)            # sun-faded
+    n = noise(w, h, 5901 + w, beta=1.6, wrap=False)
+    a = from_idx(3.4 + n * 0.22 + 0.25 * np.cos((x + 0.5) / max(w, 1) * np.pi * 2) * (w >= 6), CURT)
+    if face == 'v' and w >= 4:
+        for row in range(-1, h // 6 + 2):
+            fy = row * 6 + 2
+            for fx in ((w // 2,) if row % 2 == 0 else (w // 2 - 3, w // 2 + 3)):
+                for dx, dy, c, al in ((0, 0, '#5a2e1a', 0.85),
+                                      (1, 0, '#dcc092', 0.7), (-1, 0, '#dcc092', 0.7), (0, 1, '#dcc092', 0.7),
+                                      (0, -1, '#dcc092', 0.7), (1, 1, '#c8a274', 0.45), (-1, -1, '#c8a274', 0.45),
+                                      (1, -1, '#c8a274', 0.45), (-1, 1, '#c8a274', 0.45),
+                                      (2, 2, '#8a8648', 0.55), (-2, -2, '#8a8648', 0.55)):
+                    xx, yy = fx + dx, fy + dy
+                    if 0 <= xx < w and 0 <= yy < h:
+                        tint(a, c, al, (x == xx) & (y == yy))
+        tint(a, '#cdb79a', 0.16)                 # sun-faded
+        dl(a, -0.06, y == h - 2)                 # the hem's stitching
     return a
 
 
@@ -540,11 +544,10 @@ def curtain(closed):
     CL = mat('cur_cloth', _curtain_cloth)
     m = Model(name, A_CUR, display=DISP_WALL)
     if closed:
-        # four pleats across the window: alternating deep / shallow folds
-        for i in range(4):
-            x0 = i * 4
-            m.box([x0, 0, 13.0], [x0 + 2, 16, 14.0], CL, skip=('up', 'down'))
-            m.box([x0 + 2, 0, 13.8], [x0 + 4, 16, 14.8], CL, skip=('up', 'down'))
+        # drawn across the window: two wide hanging panels, each ending in a deep fold
+        for x0 in (0, 8):
+            m.box([x0, 0, 13.3], [x0 + 6, 16, 14.0], CL, skip=('up', 'down'))
+            m.box([x0 + 6, 0, 13.7], [x0 + 8, 16, 14.7], CL, skip=('up', 'down'))
     else:
         # gathered at the west side of the window
         m.box([0, 0, 12.0], [2, 16, 14.0], CL, skip=('up', 'down'))

@@ -154,6 +154,39 @@ def door(name, textures=None, render_type="minecraft:cutout"):
     bs(name, variants)
 
 
+def two_face_door(name, outer, inner):
+    """A door whose two faces differ (203's steel door: the 「二〇三」 plaque outside; the chain, the peephole's eyepiece
+    and the thumb-turn inside). Same shape as the vanilla door models: a 3 px panel along the model's west edge, which
+    faces outside while the door is shut; opened, the blockstate turns the panel about its hinge so its west face lies
+    against the jamb, hence the two textures swap sides (the UVs stay, so the handle stays at the free end)."""
+    for half, o, i in (("bottom", outer[0], inner[0]), ("top", outer[1], inner[1])):
+        for hinge in ("left", "right"):
+            for opened in (False, True):
+                left = (hinge == "left") != opened
+                ou = [0, 0, 16, 16] if left else [16, 0, 0, 16]
+                iu = [16, 0, 0, 16] if left else [0, 0, 16, 16]
+                faces = {"west": {"uv": ou, "texture": "#inner" if opened else "#outer"},
+                         "east": {"uv": iu, "texture": "#outer" if opened else "#inner"},
+                         "north": {"uv": [0, 0, 3, 16], "texture": "#outer"}, "south": {"uv": [13, 0, 16, 16], "texture": "#outer"},
+                         "up": {"uv": [0, 0, 3, 16], "texture": "#outer"}, "down": {"uv": [13, 0, 16, 16], "texture": "#outer"}}
+                model(f"{name}_{half}_{hinge}" + ("_open" if opened else ""), {
+                    "parent": "minecraft:block/block", "render_type": "minecraft:cutout",
+                    "textures": {"outer": t(o), "inner": t(i), "particle": t(o)},
+                    "elements": [{"from": [0, 0, 0], "to": [3, 16, 16], "faces": faces}]})
+    variants = {}
+    base_y = {"east": 0, "south": 90, "west": 180, "north": 270}
+    for f in ("east", "north", "south", "west"):
+        for half in ("lower", "upper"):
+            for hinge in ("left", "right"):
+                for opened in ("false", "true"):
+                    part = ("bottom" if half == "lower" else "top") + "_" + hinge + ("_open" if opened == "true" else "")
+                    y = base_y[f]
+                    if opened == "true":
+                        y = (y + (90 if hinge == "left" else 270)) % 360
+                    variants[f"facing={f},half={half},hinge={hinge},open={opened}"] = var(f"{name}_{part}", y)
+    bs(name, variants)
+
+
 def balcony_door():
     """The aluminium sliding glass door: closed on the outer track, open slid 12 px toward +x on the inner track."""
     for half, tex in (("lower", "balcony_door_bottom"), ("upper", "balcony_door_top")):
@@ -179,7 +212,7 @@ def balcony_door():
 
 
 # ------------------------------------------------------------------------------------------------ art props
-def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True, x_fn=None):
+def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True, x_fn=None, has_item=True):
     """A facing prop drawn by an art model. extras: [(property, [values])]; name_fn(dict) -> model name."""
     if name_fn is None:
         def name_fn(kv):
@@ -200,7 +233,8 @@ def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True, x_fn=None
     for p, vals in extras:
         if "false" in vals:
             default[p] = "false"
-    item_parent(name, item or name_fn(default))
+    if has_item:  # False for blocks registered without a block item (their id is one of the game's items)
+        item_parent(name, item or name_fn(default))
 
 
 def shelf_prop(name):
@@ -277,7 +311,7 @@ def main():
     facing_prop("rain_window")
 
     # ---- doors
-    door("front_door")  # the art's plaque 「二〇三」 reads from both faces of the vanilla model
+    two_face_door("front_door", ("front_door_bottom", "front_door_top"), ("front_door_inner_bottom", "front_door_inner_top"))
     door("interior_door")
     door("toilet_door")
     door("bath_door", render_type="minecraft:translucent")
@@ -296,11 +330,12 @@ def main():
 
     # ---- props (art models, facing north at rest)
     plain = ["chabudai", "zabuton", "tv_stand", "pull_switch", "altar_shelf", "shower", "bath_stool", "bucket", "mirror_small", "toilet_seat",
-             "rice_bag", "rice_cooker", "salt_shaker", "cup_glass", "microwave", "dining_table", "dining_chair", "desk", "desk_chair", "printout",
+             "rice_bag", "rice_cooker", "salt_shaker", "cup_glass", "microwave", "dining_table", "dining_chair", "desk", "desk_chair",
              "shelf", "camera_bag", "poster", "shoe_cabinet", "shoes", "umbrella", "calendar", "wall_clock", "laundry_pole", "ac_outdoor_unit",
              "vending_machine_small", "mailboxes", "bicycle", "stairs_rail", "vacancy_sign", "swing_set"]
     for n in plain:
         facing_prop(n)
+    facing_prop("printout", has_item=False)  # hitori:printout is the game's item (the paper you carry)
     shelf_prop("futon_folded")
     shelf_prop("cardboard_box")
     facing_prop("crt_tv", [("on", B), ("channel", ["0", "1", "2"])],
