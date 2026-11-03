@@ -1,0 +1,39 @@
+title screen (preview=false, only=[18_lunge, 14_cam_hall, 13_cam_tub, 16_slit_doll, 12_peek, 17_turn, 15_cam_woman])
+world creation requested
+in hitori:shirakaba, shaders true, iris clock ok (net.irisshaders.iris.uniforms.SystemTimeUniforms, lastStartTime OptionalLong), gui scale 3.0, window 1920x804, cameras 4
+7 shots, 23.5 s
+set-up 12_peek (4.0 s, 0 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.52 thunder 0.04, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+pause partial tick: getter true, field realPartialTick, pause field pausePartialTick
+item-in-hand renderer true
+client clock: timer lastMs / partialTick
+  first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.52 thunder 0.04, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  12_peek at 1.00 s: the fusuma opens a crack
+filmed 12_peek: 120 frames in 150.2 s (1173 ms/frame)
+set-up 13_cam_tub (3.5 s, 0 actors, view CAM1)
+  end of set-up: view FixedCamera eye 31, 72, 2 sky 8 block 4, rain 0.55 thunder 0.06, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.280E+2); Blindness 0.0; NightVision 1.0; 
+  first frame: view FixedCamera eye 31, 72, 2 sky 8 block 4, rain 0.55 thunder 0.06, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.280E+2); Blindness 0.0; NightVision 1.0; 
+filmed 13_cam_tub: 105 frames in 123.4 s (1092 ms/frame)
+set-up 14_cam_hall (4.0 s, 1 actors, view CAM2)
+  end of set-up: view FixedCamera eye 26, 70, 1 sky 7 block 4, rain 0.60 thunder 0.09, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+  first frame: view FixedCamera eye 27, 70, 1 sky 6 block 3, rain 0.60 thunder 0.09, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  9.600E+1); Blindness 0.0; NightVision 1.0; 
+filmed 14_cam_hall: 120 frames in 160.2 s (1252 ms/frame)
+set-up 15_cam_woman (3.5 s, 1 actors, view CAM3)
+  end of set-up: view FixedCamera eye 27, 72, 12 sky 7 block 4, rain 0.60 thunder 0.05, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+  first frame: view FixedCamera eye 26, 71, 11 sky 7 block 5, rain 0.60 thunder 0.05, effects [effect.minecraft.invisibility] iris EyeBrightness ( 8.000E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+filmed 15_cam_woman: 105 frames in 146.0 s (1292 ms/frame)
+set-up 16_slit_doll (3.5 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.72 thunder 0.32, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.72 thunder 0.32, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+filmed 16_slit_doll: 105 frames in 137.9 s (1221 ms/frame)
+set-up 17_turn (3.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.80 thunder 0.44, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.80 thunder 0.44, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+filmed 17_turn: 90 frames in 121.0 s (1235 ms/frame)
+set-up 18_lunge (2.0 s, 1 actors, view eyes)
+  end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.85 thunder 0.43, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.85 thunder 0.43, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+  18_lunge at 0.20 s: the fusuma flung open
+filmed 18_lunge: 60 frames in 99.5 s (1463 ms/frame)
+all shots done; writing 1 frames
+finished

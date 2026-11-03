@@ -1,0 +1,111 @@
+59:[03Nov2026 21:18:00.620] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+60:[03Nov2026 21:18:00.623] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+61:[03Nov2026 21:18:00.792] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+1 option changed by user)
+62:[03Nov2026 21:18:01.599] [Render thread/INFO] [Oculus/]: Using shaderpack: HitoriShaders.zip
+66:[03Nov2026 21:18:01.957] [modloading-worker-0/INFO] [com.hitori.Hitori/]: [hitori] ひとりかくれんぼ: the first oni is me.
+67:[03Nov2026 21:18:04.319] [Render thread/INFO] [Oculus/]: Hardware information:
+68:[03Nov2026 21:18:04.320] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 7763 64-Core Processor
+69:[03Nov2026 21:18:04.320] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+70:[03Nov2026 21:18:04.320] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+75:[03Nov2026 21:18:05.085] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] model OniDollModel registered
+76:[03Nov2026 21:18:05.087] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] model WomanModel registered
+77:[03Nov2026 21:18:05.088] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] model CameraModel registered
+79:[03Nov2026 21:18:05.617] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/hitori-client.toml is not correct. Correcting
+97:[03Nov2026 21:18:05.638] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/hitori-common.toml is not correct. Correcting
+107:[03Nov2026 21:18:07.488] [Render thread/INFO] [com.hitori.Hitori/]: [HitoriShaders] copied HitoriShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/HitoriShaders.zip; Oculus pack already selected: HitoriShaders.zip (reloading updated pack)
+108:[03Nov2026 21:18:07.538] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+1 option changed by user)
+110:[03Nov2026 21:18:08.368] [Render thread/INFO] [Oculus/]: Using shaderpack: HitoriShaders.zip
+113:[03Nov2026 21:18:10.924] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+114:java.lang.IllegalStateException: Failed to open OpenAL device
+161:[03Nov2026 21:18:11.649] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+162:[03Nov2026 21:18:11.696] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+163:[03Nov2026 21:18:11.826] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+165:[03Nov2026 21:18:21.758] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: title screen (preview=false, only=[18_lunge, 14_cam_hall, 13_cam_tub, 16_slit_doll, 12_peek, 17_turn, 15_cam_woman])
+171:[03Nov2026 21:18:26.788] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/HitoriTrailer/serverconfig/forge-server.toml is not correct. Correcting
+173:[03Nov2026 21:18:26.789] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+174:[03Nov2026 21:18:26.790] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+192:[03Nov2026 21:18:30.919] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: world creation requested
+196:[03Nov2026 21:18:31.562] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+197:[03Nov2026 21:18:31.563] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+198:[03Nov2026 21:18:31.669] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+199:[03Nov2026 21:18:31.682] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+200:[03Nov2026 21:18:33.135] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3246 blocks restored)
+201:[03Nov2026 21:18:33.178] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] Dev begins the night in room 203
+219:[03Nov2026 21:18:37.349] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] HitoriShaders を更新しました。
+220:[03Nov2026 21:18:37.646] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='hitori', name='shirakaba'}
+221:[03Nov2026 21:18:37.646] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+222:[03Nov2026 21:18:37.658] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='hitori', name='shirakaba'}
+223:[03Nov2026 21:18:38.460] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+238:[03Nov2026 21:19:38.929] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: 4 cameras
+240:[03Nov2026 21:19:46.315] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: in hitori:shirakaba, shaders true, iris clock ok (net.irisshaders.iris.uniforms.SystemTimeUniforms, lastStartTime OptionalLong), gui scale 3.0, window 1920x804, cameras 4
+241:[03Nov2026 21:19:46.328] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: 7 shots, 23.5 s
+243:[03Nov2026 21:19:46.334] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: set-up 12_peek (4.0 s, 0 actors, view eyes)
+246:[03Nov2026 21:19:46.347] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:23
+247:[03Nov2026 21:20:20.309] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.52 thunder 0.04, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+248:[03Nov2026 21:20:21.408] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: pause partial tick: getter true, field realPartialTick, pause field pausePartialTick
+249:[03Nov2026 21:20:21.409] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: item-in-hand renderer true
+251:[03Nov2026 21:20:21.454] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:overworld
+252:[03Nov2026 21:20:21.462] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_nether
+253:[03Nov2026 21:20:21.462] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/hitori:shirakaba
+254:[03Nov2026 21:20:21.465] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_end
+255:[03Nov2026 21:20:22.454] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: client clock: timer lastMs / partialTick
+256:[03Nov2026 21:20:30.771] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.52 thunder 0.04, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+257:[03Nov2026 21:21:02.672] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   12_peek at 1.00 s: the fusuma opens a crack
+258:[03Nov2026 21:22:50.482] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: filmed 12_peek: 120 frames in 150.2 s (1173 ms/frame)
+260:[03Nov2026 21:22:50.485] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: set-up 13_cam_tub (3.5 s, 0 actors, view CAM1)
+263:[03Nov2026 21:22:50.562] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step bath done at 02:25
+264:[03Nov2026 21:23:21.816] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   end of set-up: view FixedCamera eye 31, 72, 2 sky 8 block 4, rain 0.55 thunder 0.06, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.280E+2); Blindness 0.0; NightVision 1.0; 
+266:[03Nov2026 21:23:22.888] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:overworld
+267:[03Nov2026 21:23:22.893] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_nether
+268:[03Nov2026 21:23:22.896] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/hitori:shirakaba
+269:[03Nov2026 21:23:22.899] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_end
+270:[03Nov2026 21:23:31.920] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   first frame: view FixedCamera eye 31, 72, 2 sky 8 block 4, rain 0.55 thunder 0.06, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.280E+2); Blindness 0.0; NightVision 1.0; 
+271:[03Nov2026 21:25:25.226] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: filmed 13_cam_tub: 105 frames in 123.4 s (1092 ms/frame)
+275:[03Nov2026 21:25:25.241] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: set-up 14_cam_hall (4.0 s, 1 actors, view CAM2)
+276:[03Nov2026 21:25:59.425] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   end of set-up: view FixedCamera eye 26, 70, 1 sky 7 block 4, rain 0.60 thunder 0.09, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+278:[03Nov2026 21:26:00.639] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:overworld
+279:[03Nov2026 21:26:00.642] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_nether
+280:[03Nov2026 21:26:00.645] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/hitori:shirakaba
+281:[03Nov2026 21:26:00.648] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_end
+282:[03Nov2026 21:26:11.038] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   first frame: view FixedCamera eye 27, 70, 1 sky 6 block 3, rain 0.60 thunder 0.09, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  9.600E+1); Blindness 0.0; NightVision 1.0; 
+283:[03Nov2026 21:28:39.676] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: filmed 14_cam_hall: 120 frames in 160.2 s (1252 ms/frame)
+287:[03Nov2026 21:28:39.681] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: set-up 15_cam_woman (3.5 s, 1 actors, view CAM3)
+288:[03Nov2026 21:29:24.630] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   end of set-up: view FixedCamera eye 27, 72, 12 sky 7 block 4, rain 0.60 thunder 0.05, effects [effect.minecraft.invisibility] iris EyeBrightness ( 6.400E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+290:[03Nov2026 21:29:25.939] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:overworld
+291:[03Nov2026 21:29:25.947] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_nether
+292:[03Nov2026 21:29:25.948] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/hitori:shirakaba
+293:[03Nov2026 21:29:25.952] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_end
+294:[03Nov2026 21:29:36.667] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   first frame: view FixedCamera eye 26, 71, 11 sky 7 block 5, rain 0.60 thunder 0.05, effects [effect.minecraft.invisibility] iris EyeBrightness ( 8.000E+1  1.120E+2); Blindness 0.0; NightVision 1.0; 
+295:[03Nov2026 21:31:50.671] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: filmed 15_cam_woman: 105 frames in 146.0 s (1292 ms/frame)
+296:[03Nov2026 21:31:50.674] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: set-up 16_slit_doll (3.5 s, 1 actors, view eyes)
+300:[03Nov2026 21:32:26.269] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.72 thunder 0.32, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+302:[03Nov2026 21:32:27.487] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:overworld
+303:[03Nov2026 21:32:27.491] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_nether
+304:[03Nov2026 21:32:27.491] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/hitori:shirakaba
+305:[03Nov2026 21:32:27.494] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_end
+306:[03Nov2026 21:32:37.746] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.72 thunder 0.32, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+307:[03Nov2026 21:34:44.208] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: filmed 16_slit_doll: 105 frames in 137.9 s (1221 ms/frame)
+310:[03Nov2026 21:34:44.211] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: set-up 17_turn (3.0 s, 1 actors, view eyes)
+312:[03Nov2026 21:35:19.189] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.80 thunder 0.44, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+314:[03Nov2026 21:35:20.390] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:overworld
+315:[03Nov2026 21:35:20.393] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_nether
+316:[03Nov2026 21:35:20.396] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/hitori:shirakaba
+317:[03Nov2026 21:35:20.401] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_end
+318:[03Nov2026 21:35:30.644] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.80 thunder 0.44, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+319:[03Nov2026 21:37:20.224] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: filmed 17_turn: 90 frames in 121.0 s (1235 ms/frame)
+320:[03Nov2026 21:37:20.226] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: set-up 18_lunge (2.0 s, 1 actors, view eyes)
+324:[03Nov2026 21:37:59.260] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   end of set-up: view LocalPlayer eye 23, 71, 10 sky 5 block 3, rain 0.85 thunder 0.43, effects [effect.minecraft.invisibility] iris EyeBrightness ( 4.800E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+326:[03Nov2026 21:38:00.537] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:overworld
+327:[03Nov2026 21:38:00.541] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_nether
+328:[03Nov2026 21:38:00.542] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/hitori:shirakaba
+329:[03Nov2026 21:38:00.544] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_end
+330:[03Nov2026 21:38:11.771] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   first frame: view LocalPlayer eye 23, 70, 10 sky 5 block 2, rain 0.85 thunder 0.43, effects [effect.minecraft.invisibility] iris EyeBrightness ( 3.200E+1  8.000E+1); Blindness 0.0; NightVision 0.0; 
+331:[03Nov2026 21:38:18.478] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer:   18_lunge at 0.20 s: the fusuma flung open
+332:[03Nov2026 21:39:38.736] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: filmed 18_lunge: 60 frames in 99.5 s (1463 ms/frame)
+333:[03Nov2026 21:39:38.738] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: all shots done; writing 1 frames
+334:[03Nov2026 21:39:40.362] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] trailer: finished
+342:[03Nov2026 21:39:43.156] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:overworld
+343:[03Nov2026 21:39:43.178] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_nether
+344:[03Nov2026 21:39:43.181] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/hitori:shirakaba
+345:[03Nov2026 21:39:43.235] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriTrailer]'/minecraft:the_end
+346:[03Nov2026 21:39:43.271] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (HitoriTrailer): All chunks are saved
