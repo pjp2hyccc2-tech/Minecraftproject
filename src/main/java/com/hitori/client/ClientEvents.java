@@ -79,6 +79,7 @@ public final class ClientEvents {
         if (event.phase != TickEvent.Phase.END) return;
         Minecraft mc = Minecraft.getInstance();
         AutoShots.tick(mc);
+        com.hitori.client.cine.Trailer.tick(mc);
         if (mc.level == null || mc.player == null) return;
         if (!mc.isPaused()) {
             ClientState.tick();
@@ -206,6 +207,7 @@ public final class ClientEvents {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void fov(ViewportEvent.ComputeFov event) {
+        if (com.hitori.client.cine.Trailer.active()) return;
         if (AutoShots.overridesFov()) {
             if (event.usedConfiguredFov()) event.setFOV(AutoShots.fovOverride());
             return;
@@ -223,7 +225,7 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void angles(ViewportEvent.ComputeCameraAngles event) {
-        if (!inGame() || AutoShots.active()) return;
+        if (!inGame() || AutoShots.active() || com.hitori.client.cine.Trailer.active()) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.getCameraEntity() instanceof FixedCamera cam) {
             // a camera does not shake with you; a fallen one lies on its side
@@ -332,7 +334,10 @@ public final class ClientEvents {
 
     @SubscribeEvent
     public static void screenInit(ScreenEvent.Init.Post event) {
-        if (event.getScreen() instanceof TitleScreen title) AutoShots.onTitle(title);
+        if (event.getScreen() instanceof TitleScreen title) {
+            AutoShots.onTitle(title);
+            com.hitori.client.cine.Trailer.onTitle();
+        }
     }
 
     @SubscribeEvent

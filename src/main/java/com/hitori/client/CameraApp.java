@@ -425,9 +425,46 @@ public final class CameraApp {
         // the device around the feed
         if (device == 0) laptopFrame(g, font, w, h, x0, y0, x1, y1, room);
         else phoneFrame(g, font, w, h, x0, y0, x1, y1);
+        if (filmFrame) return;
         String hint = I18n.get("hud.hitori.app_keys");
         g.drawString(font, hint, (w - font.width(hint)) / 2, h - 11, 0x90B0B0B0, false);
     }
+
+    /**
+     * The trailer ({@code com.hitori.client.cine}): the app's window drawn over a feed the film poses by itself — CAM
+     * {@code filmNumber}, IR or not, a noise burst — with nothing ticking, nothing sent and no sound; the key hint under
+     * the window is left out. The app's own state is put back afterwards.
+     */
+    public static void renderForFilm(GuiGraphics g, Font font, int w, int h, float partial, int filmNumber, boolean filmIr, float burst) {
+        boolean o = open, i = ir;
+        int d = device, n = number, nt = noiseTicks, st = switchTicks, bt = blackoutTicks, ft = freezeTicks, sj = stampJumpTicks;
+        float nz = noise;
+        open = true;
+        device = 0;
+        number = filmNumber;
+        ir = filmIr;
+        noise = burst;
+        noiseTicks = burst > 0.5f ? 0 : -1;
+        switchTicks = blackoutTicks = freezeTicks = stampJumpTicks = -1;
+        filmFrame = true;
+        try {
+            render(g, font, w, h, partial);
+        } finally {
+            filmFrame = false;
+            open = o;
+            ir = i;
+            device = d;
+            number = n;
+            noiseTicks = nt;
+            switchTicks = st;
+            blackoutTicks = bt;
+            freezeTicks = ft;
+            stampJumpTicks = sj;
+            noise = nz;
+        }
+    }
+
+    private static boolean filmFrame;
 
     static String roomOf(Vec3 at) {
         Layout.Room r = Layout.roomAt(BlockPos.containing(at.x, at.y + 0.2, at.z));

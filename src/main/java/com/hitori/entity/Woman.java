@@ -69,17 +69,28 @@ public class Woman extends PathfinderMob implements Animated {
 
     @Override
     public int pose() {
-        return entityData.get(DATA_POSE);
+        return puppetPose >= 0 ? puppetPose : entityData.get(DATA_POSE);
     }
 
     @Override
     public float poseTime(float partialTick) {
-        return tickCount - poseStart + partialTick;
+        return puppetPose >= 0 ? puppetPoseTime : tickCount - poseStart + partialTick;
     }
 
     @Override
     public float glitch(float partialTick) {
+        if (puppetPose >= 0) return puppetGlitch;
         return pose() == CLOSE ? 0.6f : 0.15f;
+    }
+
+    // client-side film actors (com.hitori.client.cine): the pose, how far into it and the glitch, set every frame
+    private int puppetPose = -1;
+    private float puppetPoseTime, puppetGlitch;
+
+    public void puppetPose(int pose, float ticks, float glitch) {
+        puppetPose = pose;
+        puppetPoseTime = ticks;
+        puppetGlitch = glitch;
     }
 
     public void setAnimPose(int pose) {

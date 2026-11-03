@@ -154,17 +154,28 @@ public class OniDoll extends PathfinderMob implements Animated {
 
     @Override
     public int pose() {
-        return entityData.get(DATA_POSE);
+        return puppetPose >= 0 ? puppetPose : entityData.get(DATA_POSE);
     }
 
     @Override
     public float poseTime(float partialTick) {
+        if (puppetPose >= 0) return puppetPoseTime;
         return tickCount - poseStart + (flag(F_FROZEN) ? 0.0f : partialTick);
     }
 
     @Override
     public float glitch(float partialTick) {
-        return entityData.get(DATA_GLITCH);
+        return puppetPose >= 0 ? puppetGlitch : entityData.get(DATA_GLITCH);
+    }
+
+    // client-side film actors (com.hitori.client.cine): the pose, how far into it and the glitch, set every frame
+    private int puppetPose = -1;
+    private float puppetPoseTime, puppetGlitch;
+
+    public void puppetPose(int pose, float ticks, float glitch) {
+        puppetPose = pose;
+        puppetPoseTime = ticks;
+        puppetGlitch = glitch;
     }
 
     public int flags() {
