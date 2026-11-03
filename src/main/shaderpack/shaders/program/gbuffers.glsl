@@ -418,7 +418,7 @@ void main() {
             vec3 tint = mix(vec3(0.80, 0.88, 0.86), lin, 0.35);
             color = shadeSurface(tint * 0.05, N, playerPos, lm, 1.0, vec3(0.0), MAT_WINDOW, 0.0, dither, true, 0.0, glow);
             color += handLightsForward(vec3(0.0), playerPos, N, 0.0, vec2(0.04, 0.04)) * (0.3 + cover * 1.5);
-            alpha = clamp(max(albedo.a * 0.55, 0.10) + F * 0.5 + cover * 0.12, 0.0, 0.85);
+            alpha = clamp(max(albedo.a * 0.40, 0.08) + F * 0.5 + cover * 0.12, 0.0, 0.85);
         } else if (mat == MAT_MIRROR) {
             // ---- the dark mirror: smoked glass over the cavity, smudges, cracks ------------
             vec2 pc = planeCoords(wp, Ngeo);

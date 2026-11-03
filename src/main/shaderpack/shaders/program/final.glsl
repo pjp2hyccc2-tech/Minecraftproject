@@ -100,8 +100,13 @@ vec3 grade(vec3 c, float F, float D, float fm) {
 #else
     c *= mix(shadowTint, vec3(1.0), smoothstep(0.0, 0.42, l));
 #endif
-    c = max((c - 0.40) * contrast + 0.40, vec3(0.0));
-    return c;
+    // contrast about 0.40 that keeps black at black: a straight line here clipped everything
+    // under ~6/255 to zero and flattened the dark rooms (the booths and pillars must stay
+    // barely readable against the dark)
+    c = max(c, vec3(0.0));
+    vec3 below = 0.40 * pow(c / 0.40, vec3(contrast));
+    vec3 above = (c - 0.40) * contrast + 0.40;
+    return mix(below, above, step(0.40, c));
 }
 
 // the floor of the darkness (added after the vignette: the corners never go pure black)
@@ -326,6 +331,12 @@ void main() {
     grain *= 0.6;
 #endif
     color += grainN * grain * (1.0 - 0.6 * luma(color));
+    // the grain must not dig holes into the floor of the darkness either
+    float floorK = 0.5 * (1.0 - 0.9 * darknessFactor);
+#ifdef WORLD_HIDAMARI
+    floorK *= 1.0 - smoothstep(0.55, 1.0, C);
+#endif
+    color = max(color, liftColor(D) * floorK);
 
     color += (bayer8(gl_FragCoord.xy) - 0.5) / 255.0;
     if (any(isnan(color))) color = vec3(0.0);

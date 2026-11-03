@@ -81,10 +81,10 @@ const vec3 EM_COLOR[EM_COUNT] = vec3[EM_COUNT](
 
 // intensity I of the light cast: irradiance E = I / (d^2 + size^2) (before LIGHT_STRENGTH).
 // Roughly photometric ratios: a sodium street lamp (I 15) lights the lot 7 blocks below as
-// much as a fluorescent panel (12) a dining table 4 blocks below; an exit sign (0.3) is a dim
+// much as a fluorescent panel (12) a dining table 4 blocks below; an exit sign (0.4) is a dim
 // green pool, the standby glow of the drink bar (0.45) a pale cyan wash.
 const float EM_GAIN[EM_COUNT] = float[EM_COUNT](
-    0.0, 12.0, 12.0, 8.0, 4.5, 0.30, 3.0, 9.0, 14.0, 50.0, 2.5, 0.45, 0.80, 1.6, 0.50, 0.35,
+    0.0, 12.0, 12.0, 8.0, 4.5, 0.40, 3.0, 9.0, 14.0, 50.0, 2.5, 0.45, 0.80, 1.6, 0.50, 0.35,
     0.30, 0.35, 0.22, 0.15, 0.0, 0.0, 1.2, 1.6, 2.5);
 
 // radius of the glowing part: the soft core of the falloff, widens the highlights
