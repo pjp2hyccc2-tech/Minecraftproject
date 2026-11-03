@@ -1,0 +1,224 @@
+59:[03Nov2026 16:52:42.580] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+60:[03Nov2026 16:52:42.583] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+61:[03Nov2026 16:52:42.765] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+62:[03Nov2026 16:52:43.629] [Render thread/INFO] [Oculus/]: Using shaderpack: HitoriShaders.zip
+66:[03Nov2026 16:52:43.877] [modloading-worker-0/INFO] [com.hitori.Hitori/]: [hitori] ひとりかくれんぼ: the first oni is me.
+67:[03Nov2026 16:52:45.453] [Render thread/INFO] [Oculus/]: Hardware information:
+68:[03Nov2026 16:52:45.454] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 7763 64-Core Processor
+69:[03Nov2026 16:52:45.454] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+70:[03Nov2026 16:52:45.454] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+75:[03Nov2026 16:52:46.502] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+76:com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+99:Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+108:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+135:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+190:[03Nov2026 16:52:46.549] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/hitori-client.toml is not correct. Correcting
+195:[03Nov2026 16:52:46.556] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders was corrected from null to its default, SimpleCommentedConfig:{}. 
+196:[03Nov2026 16:52:46.556] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders.installShaderPack was corrected from null to its default, true. 
+208:[03Nov2026 16:52:46.570] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/hitori-common.toml is not correct. Correcting
+214:[03Nov2026 16:52:48.312] [Render thread/INFO] [com.hitori.Hitori/]: [HitoriShaders] copied HitoriShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/HitoriShaders.zip; Oculus pack already selected: HitoriShaders.zip (reloading updated pack)
+216:[03Nov2026 16:52:48.373] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+218:[03Nov2026 16:52:49.268] [Render thread/INFO] [Oculus/]: Using shaderpack: HitoriShaders.zip
+221:[03Nov2026 16:52:51.787] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+222:java.lang.IllegalStateException: Failed to open OpenAL device
+265:[03Nov2026 16:52:52.916] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+269:[03Nov2026 16:52:53.137] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+270:[03Nov2026 16:52:53.225] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+271:[03Nov2026 16:52:53.311] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+273:[03Nov2026 16:53:03.818] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: title screen (world tour, shaders=true)
+275:[03Nov2026 16:53:06.472] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources, file/hitori_ci_preview
+276:[03Nov2026 16:53:06.476] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: preview pack: 0 stand-in assets for missing art, 0 art files from ci/art_preview
+280:[03Nov2026 16:53:07.884] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+281:java.lang.IllegalStateException: Failed to open OpenAL device
+324:[03Nov2026 16:53:08.015] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+332:[03Nov2026 16:53:12.571] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/HitoriCI/serverconfig/forge-server.toml is not correct. Correcting
+334:[03Nov2026 16:53:12.572] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+335:[03Nov2026 16:53:12.572] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+352:[03Nov2026 16:53:15.997] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: world creation requested
+355:[03Nov2026 16:53:16.547] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+356:[03Nov2026 16:53:16.547] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+358:[03Nov2026 16:53:16.656] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+359:[03Nov2026 16:53:16.663] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+380:[03Nov2026 16:53:23.266] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ModelViewMat in the specified shader program.
+381:[03Nov2026 16:53:23.266] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ProjMat in the specified shader program.
+382:[03Nov2026 16:53:23.266] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named ColorModulator in the specified shader program.
+383:[03Nov2026 16:53:23.266] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogStart in the specified shader program.
+384:[03Nov2026 16:53:23.266] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogEnd in the specified shader program.
+385:[03Nov2026 16:53:23.266] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader clouds could not find uniform named FogColor in the specified shader program.
+387:[03Nov2026 16:53:30.548] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: in world, 159 steps
+389:[03Nov2026 16:53:32.569] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step rules dim=minecraft:overworld pos=4, -60, -5
+392:[03Nov2026 16:53:32.920] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step enter dim=minecraft:overworld pos=4, -60, -5
+393:[03Nov2026 16:53:33.793] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='hitori', name='shirakaba'}
+394:[03Nov2026 16:53:33.794] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+395:[03Nov2026 16:53:33.810] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='hitori', name='shirakaba'}
+398:[03Nov2026 16:53:34.366] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:overworld
+399:[03Nov2026 16:53:34.534] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:the_end
+400:[03Nov2026 16:53:34.537] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:the_nether
+401:[03Nov2026 16:53:34.537] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/hitori:shirakaba
+402:[03Nov2026 16:53:34.909] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+407:[03Nov2026 16:54:29.664] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step ensure_built dim=hitori:shirakaba pos=30, 70, 8
+408:[03Nov2026 16:54:29.763] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3252 blocks restored)
+409:[03Nov2026 16:54:43.582] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_street_west dim=hitori:shirakaba pos=30, 70, 8
+410:[03Nov2026 16:54:43.631] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+412:[03Nov2026 16:55:04.320] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_street_west
+413:[03Nov2026 16:55:04.323] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_front dim=hitori:shirakaba pos=-19, 65, 21
+415:[03Nov2026 16:55:25.949] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_front
+416:[03Nov2026 16:55:26.643] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_lamp dim=hitori:shirakaba pos=21, 65, 25
+418:[03Nov2026 16:55:34.418] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_lamp
+419:[03Nov2026 16:55:34.422] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_vending dim=hitori:shirakaba pos=28, 65, 22
+421:[03Nov2026 16:55:47.047] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_vending
+422:[03Nov2026 16:55:47.731] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_park dim=hitori:shirakaba pos=4, 65, 22
+424:[03Nov2026 16:56:04.484] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_park
+425:[03Nov2026 16:56:04.488] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_side_path dim=hitori:shirakaba pos=47, 65, 21
+427:[03Nov2026 16:56:22.495] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_side_path
+428:[03Nov2026 16:56:22.499] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_stairs dim=hitori:shirakaba pos=-3, 65, 15
+430:[03Nov2026 16:56:33.212] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_stairs
+431:[03Nov2026 16:56:33.216] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_corridor dim=hitori:shirakaba pos=-10, 65, 0
+433:[03Nov2026 16:56:44.631] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_corridor
+434:[03Nov2026 16:56:44.636] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_corridor_door dim=hitori:shirakaba pos=-1, 69, -2
+436:[03Nov2026 16:57:00.377] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_corridor_door
+437:[03Nov2026 16:57:01.261] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_balcony dim=hitori:shirakaba pos=22, 69, -3
+439:[03Nov2026 16:57:15.730] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_balcony
+440:[03Nov2026 16:57:15.734] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_balcony_view dim=hitori:shirakaba pos=31, 70, 15
+442:[03Nov2026 16:57:23.043] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_balcony_view
+443:[03Nov2026 16:57:23.047] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_overview dim=hitori:shirakaba pos=25, 70, 15
+445:[03Nov2026 16:57:39.906] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_overview
+446:[03Nov2026 16:57:39.910] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_overview_ne dim=hitori:shirakaba pos=22, 90, 46
+448:[03Nov2026 16:57:59.421] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_overview_ne
+449:[03Nov2026 16:57:59.425] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_peephole dim=hitori:shirakaba pos=58, 86, -15
+451:[03Nov2026 16:58:21.942] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_peephole
+452:[03Nov2026 16:58:21.946] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step nv_true dim=hitori:shirakaba pos=24, 68, -1
+454:[03Nov2026 16:58:22.805] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_street_west_nv dim=hitori:shirakaba pos=24, 68, -1
+456:[03Nov2026 16:58:43.203] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_street_west_nv
+457:[03Nov2026 16:58:43.921] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_front_nv dim=hitori:shirakaba pos=-19, 65, 21
+459:[03Nov2026 16:59:02.343] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_front_nv
+460:[03Nov2026 16:59:02.346] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_lamp_nv dim=hitori:shirakaba pos=21, 65, 25
+462:[03Nov2026 16:59:11.044] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_lamp_nv
+463:[03Nov2026 16:59:11.047] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_vending_nv dim=hitori:shirakaba pos=28, 65, 22
+465:[03Nov2026 16:59:24.173] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_vending_nv
+466:[03Nov2026 16:59:24.176] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_park_nv dim=hitori:shirakaba pos=4, 65, 22
+468:[03Nov2026 16:59:42.470] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_park_nv
+469:[03Nov2026 16:59:42.474] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_side_path_nv dim=hitori:shirakaba pos=47, 65, 21
+471:[03Nov2026 17:00:01.578] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_side_path_nv
+472:[03Nov2026 17:00:01.581] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_stairs_nv dim=hitori:shirakaba pos=-3, 65, 15
+474:[03Nov2026 17:00:11.993] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_stairs_nv
+475:[03Nov2026 17:00:12.714] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_corridor_nv dim=hitori:shirakaba pos=-10, 65, 0
+477:[03Nov2026 17:00:23.432] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_corridor_nv
+478:[03Nov2026 17:00:24.310] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_corridor_door_nv dim=hitori:shirakaba pos=-1, 69, -2
+480:[03Nov2026 17:00:40.888] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_corridor_door_nv
+481:[03Nov2026 17:00:40.891] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_balcony_nv dim=hitori:shirakaba pos=22, 69, -3
+483:[03Nov2026 17:00:56.099] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_balcony_nv
+484:[03Nov2026 17:00:56.987] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_balcony_view_nv dim=hitori:shirakaba pos=31, 70, 15
+486:[03Nov2026 17:01:04.043] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_balcony_view_nv
+487:[03Nov2026 17:01:04.046] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_overview_nv dim=hitori:shirakaba pos=25, 70, 15
+489:[03Nov2026 17:01:21.262] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_overview_nv
+490:[03Nov2026 17:01:21.266] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_ext_overview_ne_nv dim=hitori:shirakaba pos=22, 90, 46
+492:[03Nov2026 17:01:42.648] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_ext_overview_ne_nv
+493:[03Nov2026 17:01:42.652] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step nv_false dim=hitori:shirakaba pos=58, 86, -15
+495:[03Nov2026 17:01:43.311] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_genkan_start dim=hitori:shirakaba pos=58, 86, -15
+496:[03Nov2026 17:01:43.338] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+498:[03Nov2026 17:01:57.150] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_genkan_start
+499:[03Nov2026 17:01:57.727] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_hall_start dim=hitori:shirakaba pos=26, 70, 2
+501:[03Nov2026 17:02:02.885] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_hall_start
+502:[03Nov2026 17:02:03.515] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_dk_start dim=hitori:shirakaba pos=26, 70, 1
+504:[03Nov2026 17:02:09.852] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_dk_start
+505:[03Nov2026 17:02:09.855] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_dk_table_start dim=hitori:shirakaba pos=27, 70, 6
+507:[03Nov2026 17:02:15.322] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_dk_table_start
+508:[03Nov2026 17:02:15.326] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_toilet_start dim=hitori:shirakaba pos=26, 70, 7
+510:[03Nov2026 17:02:21.484] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_toilet_start
+511:[03Nov2026 17:02:21.489] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_bath_start dim=hitori:shirakaba pos=29, 70, 2
+513:[03Nov2026 17:02:26.909] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_bath_start
+514:[03Nov2026 17:02:26.912] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_washroom_start dim=hitori:shirakaba pos=31, 70, 2
+516:[03Nov2026 17:02:32.839] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_washroom_start
+517:[03Nov2026 17:02:32.842] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_tatami_start dim=hitori:shirakaba pos=30, 70, 5
+519:[03Nov2026 17:02:40.267] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_tatami_start
+520:[03Nov2026 17:02:40.915] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_tatami_tv_start dim=hitori:shirakaba pos=27, 70, 12
+522:[03Nov2026 17:02:46.542] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_tatami_tv_start
+523:[03Nov2026 17:02:47.150] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_front_start dim=hitori:shirakaba pos=24, 70, 10
+525:[03Nov2026 17:02:52.218] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_front_start
+527:[03Nov2026 17:02:52.869] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_start dim=hitori:shirakaba pos=26, 70, 11
+528:[03Nov2026 17:03:01.016] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_start
+529:[03Nov2026 17:03:01.019] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_desk_start dim=hitori:shirakaba pos=29, 70, 7
+531:[03Nov2026 17:03:08.324] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_desk_start
+532:[03Nov2026 17:03:09.103] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_closet_start dim=hitori:shirakaba pos=30, 70, 8
+534:[03Nov2026 17:03:15.766] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_closet_start
+535:[03Nov2026 17:03:15.769] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_curtains_start dim=hitori:shirakaba pos=30, 70, 9
+537:[03Nov2026 17:03:22.574] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_curtains_start
+538:[03Nov2026 17:03:22.577] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_genkan_on dim=hitori:shirakaba pos=25, 70, 10
+540:[03Nov2026 17:03:37.535] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_genkan_on
+541:[03Nov2026 17:03:37.538] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_hall_on dim=hitori:shirakaba pos=26, 70, 2
+543:[03Nov2026 17:03:45.616] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_hall_on
+544:[03Nov2026 17:03:45.621] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_dk_on dim=hitori:shirakaba pos=26, 70, 1
+546:[03Nov2026 17:03:54.960] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_dk_on
+547:[03Nov2026 17:03:55.860] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_dk_table_on dim=hitori:shirakaba pos=27, 70, 6
+549:[03Nov2026 17:04:04.132] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_dk_table_on
+550:[03Nov2026 17:04:04.135] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_toilet_on dim=hitori:shirakaba pos=26, 70, 7
+552:[03Nov2026 17:04:11.339] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_toilet_on
+553:[03Nov2026 17:04:12.026] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_bath_on dim=hitori:shirakaba pos=29, 70, 2
+555:[03Nov2026 17:04:19.112] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_bath_on
+556:[03Nov2026 17:04:19.116] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_washroom_on dim=hitori:shirakaba pos=31, 70, 2
+558:[03Nov2026 17:04:25.974] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_washroom_on
+559:[03Nov2026 17:04:26.692] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_tatami_on dim=hitori:shirakaba pos=30, 70, 5
+561:[03Nov2026 17:04:36.609] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_tatami_on
+562:[03Nov2026 17:04:36.612] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_tatami_tv_on dim=hitori:shirakaba pos=27, 70, 12
+564:[03Nov2026 17:04:44.761] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_tatami_tv_on
+565:[03Nov2026 17:04:44.764] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_front_on dim=hitori:shirakaba pos=24, 70, 10
+567:[03Nov2026 17:04:52.162] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_front_on
+568:[03Nov2026 17:04:52.954] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_on dim=hitori:shirakaba pos=26, 70, 11
+570:[03Nov2026 17:05:00.882] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_on
+571:[03Nov2026 17:05:00.889] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_desk_on dim=hitori:shirakaba pos=29, 70, 7
+573:[03Nov2026 17:05:08.210] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_desk_on
+574:[03Nov2026 17:05:08.214] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_closet_on dim=hitori:shirakaba pos=30, 70, 8
+576:[03Nov2026 17:05:15.744] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_closet_on
+577:[03Nov2026 17:05:15.748] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_curtains_on dim=hitori:shirakaba pos=30, 70, 9
+579:[03Nov2026 17:05:23.800] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_curtains_on
+581:[03Nov2026 17:05:24.573] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_genkan_off dim=hitori:shirakaba pos=25, 70, 10
+582:[03Nov2026 17:05:36.330] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_genkan_off
+583:[03Nov2026 17:05:36.333] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_hall_off dim=hitori:shirakaba pos=26, 70, 2
+585:[03Nov2026 17:05:42.133] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_hall_off
+586:[03Nov2026 17:05:42.136] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_dk_off dim=hitori:shirakaba pos=26, 70, 1
+588:[03Nov2026 17:05:48.557] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_dk_off
+589:[03Nov2026 17:05:49.179] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_dk_table_off dim=hitori:shirakaba pos=27, 70, 6
+591:[03Nov2026 17:05:54.092] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_dk_table_off
+592:[03Nov2026 17:05:54.682] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_toilet_off dim=hitori:shirakaba pos=26, 70, 7
+594:[03Nov2026 17:06:00.218] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_toilet_off
+595:[03Nov2026 17:06:00.768] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_bath_off dim=hitori:shirakaba pos=29, 70, 2
+597:[03Nov2026 17:06:05.586] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_bath_off
+598:[03Nov2026 17:06:06.185] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_washroom_off dim=hitori:shirakaba pos=31, 70, 2
+600:[03Nov2026 17:06:11.529] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_washroom_off
+601:[03Nov2026 17:06:11.532] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_tatami_off dim=hitori:shirakaba pos=30, 70, 5
+603:[03Nov2026 17:06:20.954] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_tatami_off
+604:[03Nov2026 17:06:20.957] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_tatami_tv_off dim=hitori:shirakaba pos=27, 70, 12
+606:[03Nov2026 17:06:28.647] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_tatami_tv_off
+607:[03Nov2026 17:06:28.650] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_front_off dim=hitori:shirakaba pos=24, 70, 10
+609:[03Nov2026 17:06:35.943] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_front_off
+610:[03Nov2026 17:06:35.946] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_off dim=hitori:shirakaba pos=26, 70, 11
+612:[03Nov2026 17:06:43.173] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_off
+613:[03Nov2026 17:06:43.877] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_desk_off dim=hitori:shirakaba pos=29, 70, 7
+615:[03Nov2026 17:06:50.294] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_desk_off
+616:[03Nov2026 17:06:50.297] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_western_closet_off dim=hitori:shirakaba pos=30, 70, 8
+618:[03Nov2026 17:06:55.858] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_western_closet_off
+619:[03Nov2026 17:06:56.519] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_curtains_off dim=hitori:shirakaba pos=30, 70, 9
+621:[03Nov2026 17:07:03.889] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_curtains_off
+622:[03Nov2026 17:07:03.893] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_inside dim=hitori:shirakaba pos=25, 70, 10
+624:[03Nov2026 17:07:17.487] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_inside
+625:[03Nov2026 17:07:18.185] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_inside_up dim=hitori:shirakaba pos=23, 70, 11
+627:[03Nov2026 17:07:24.032] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_inside_up
+628:[03Nov2026 17:07:24.035] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step nv_true dim=hitori:shirakaba pos=23, 70, 11
+630:[03Nov2026 17:07:24.741] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_inside_nv dim=hitori:shirakaba pos=23, 70, 11
+632:[03Nov2026 17:07:30.755] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_inside_nv
+633:[03Nov2026 17:07:30.759] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_inside_up_nv dim=hitori:shirakaba pos=23, 69, 11
+635:[03Nov2026 17:07:37.456] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_inside_up_nv
+636:[03Nov2026 17:07:37.459] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step nv_false dim=hitori:shirakaba pos=23, 69, 11
+638:[03Nov2026 17:07:38.153] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_peek dim=hitori:shirakaba pos=23, 69, 11
+640:[03Nov2026 17:07:50.731] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_peek
+641:[03Nov2026 17:07:50.735] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_closet_open dim=hitori:shirakaba pos=23, 69, 10
+643:[03Nov2026 17:08:05.325] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_closet_open
+644:[03Nov2026 17:08:06.074] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: step go_bath_full dim=hitori:shirakaba pos=26, 70, 11
+646:[03Nov2026 17:08:21.243] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: shot world_bath_full
+647:[03Nov2026 17:08:21.247] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] world tour: finished
+655:[03Nov2026 17:08:22.906] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:overworld
+656:[03Nov2026 17:08:22.938] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:the_end
+657:[03Nov2026 17:08:22.939] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:the_nether
+658:[03Nov2026 17:08:22.940] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/hitori:shirakaba
+659:[03Nov2026 17:08:22.969] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (HitoriCI): All chunks are saved
