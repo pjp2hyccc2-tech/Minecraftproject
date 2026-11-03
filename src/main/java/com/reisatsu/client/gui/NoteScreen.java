@@ -97,8 +97,9 @@ public class NoteScreen extends Screen {
             y += lineH;
         }
         if (lines.size() > visible) {
-            g.drawCenteredString(font, Component.translatable("gui.reisatsu.scroll", scroll + 1, Math.max(1, lines.size() - visible + 1)),
-                    width / 2, py + ph - 18, 0x6A5442);
+            int pages = (lines.size() + visible - 3) / Math.max(1, visible - 1);
+            int page = scroll >= lines.size() - visible ? pages : Math.min(pages, scroll / Math.max(1, visible - 1) + 1);
+            g.drawCenteredString(font, Component.translatable("gui.reisatsu.scroll", page, Math.max(1, pages)), width / 2, py + ph - 18, 0x6A5442);
         }
         super.render(g, mouseX, mouseY, partial);
     }
