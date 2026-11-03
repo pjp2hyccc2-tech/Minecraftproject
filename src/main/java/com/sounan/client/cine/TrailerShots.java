@@ -83,6 +83,9 @@ final class TrailerShots {
         int setupTicks = 300;
         /** Drive the shader clock from the film's virtual clock (off: the pack runs on real time; diagnostics). */
         boolean irisClock = true;
+        /** Where to wait during the set-up when it should not be the first camera position (the shader pack settles its
+         *  indoor / outdoor look on the light at the eye there and keeps it for the whole shot). */
+        Vec3 setupAt = null;
         final List<Trailer.Puppet> puppets = new ArrayList<>();
 
         Shot(String name, float duration) {
@@ -347,6 +350,13 @@ final class TrailerShots {
 
         Hut() {
             super("hut", 5.5f);
+        }
+
+        @Override
+        void prepare() {
+            // the shot is about the inside: let the pack settle on the hut's light, not the night outside the door
+            PoiLayout L = PoiLayout.get();
+            setupAt = new Vec3(L.hut.x2() - 2.5, L.hut.floorY() + 1 + 1.27, L.hut.cz() + 0.5);
         }
 
         @Override
