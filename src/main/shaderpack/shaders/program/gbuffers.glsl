@@ -224,7 +224,7 @@ void main() {
     } else {
         eyes = lin * 1.8;
     }
-    eyes *= glcolor.a * (1.0 + 1.2 * fm);
+    eyes *= glcolor.a * (1.0 + 0.6 * fm);
   #else
     eyes = lin * 2.2 + mix(lin, vec3(0.9), 0.5) * handLightEyeshine(playerPos) * 0.4;
   #endif
@@ -278,6 +278,18 @@ void main() {
   #if defined PROG_TERRAIN || defined PROG_WATER || defined PROG_BLOCK
     mat = materialOfBlock(id);
     int etype = emitterTypeOfBlock(id);
+    // the art's glowing faces are drawn full-bright (forge_data block_light / sky_light 15,
+    // baked into the quad): in the restaurant nothing else has a full lightmap. That lightmap
+    // says nothing about the light around the face - it gets its lamp's own level (a middling
+    // one on a block that is not a lamp) and the sky only out in the open
+    bool marked = false;
+    #ifdef WORLD_HIDAMARI
+    marked = lm.x > 0.985 && lm.y > 0.985 && id != BLK_FLAME && id != BLK_LAMP && id != BLK_GLOW && id != BLK_LAVA;
+    if (marked) {
+        float own = etype > EM_NONE ? max(EM_LEVEL[clamp(etype, 0, EM_COUNT - 1)] - 1.0, 0.0) : 7.0;
+        lm = vec2(own / 15.0, openSky(wp + Ngeo * 0.3));
+    }
+    #endif
     if (id == BLK_FLAME) {
         emissive = flameMask(albedo.rgb);
         emission = lin * emissive * 3.2;
@@ -293,7 +305,8 @@ void main() {
     } else if (etype > EM_NONE) {
         // the restaurant's lamps: the glowing texels in the lamp's colour, flickering with it
         vec3 blockPos = floor(wp - N * 0.02);
-        float m = emitterSurfaceMask(etype, albedo.rgb, N);
+        float m = emitterSurfaceMask(etype, albedo.rgb, N, marked);
+        if (etype == EM_CAKE && !marked) m *= smoothstep(0.5, 0.8, albedo.a);   // not the glass panes
         float f = emitterFlicker(etype, blockPos, frameTimeCounter) * dangerStutter(etype, blockPos, frameTimeCounter);
         int ti = clamp(etype, 0, EM_COUNT - 1);
         vec3 tint = mix(lin, lin * EM_COLOR[ti] * 1.25, 0.45);
@@ -308,6 +321,13 @@ void main() {
         }
         emissive = m * saturate(f * 1.2);
         emission = tint * m * EM_SURF[ti] * f * LIGHT_STRENGTH;
+        mat = m > 0.4 ? MAT_EMITTER : mat;
+    } else if (marked) {
+        // an indicator light on a block that is not a lamp: the door sensor, a ringing phone,
+        // the dishwasher, the hand dryer, a security camera's power LED
+        float m = indicatorMask(albedo.rgb);
+        emissive = m;
+        emission = lin * m * 1.6 * LIGHT_STRENGTH;
         mat = m > 0.4 ? MAT_EMITTER : mat;
     }
   #endif
@@ -337,10 +357,19 @@ void main() {
     receiveShadow = false;
     int item = currentRenderedItemId;
     if (item == ITEM_FLASHLIGHT) {
-        // the lens glows - only on the face that looks forward, along the beam (in first
-        // person it faces away; the cream head and the body are not lights)
+        // a dark metal torch of which only the lens glows. The art draws the lens face
+        // full-bright (forge_data: a full lightmap); without that, the bright texels of the
+        // face that looks along the beam. In first person the lens looks away from us: what
+        // shows is the head, the collar and the knurled grip - the art's light chrome is
+        // darkened to anodised metal, a dull sheen catching the lamps on its edges
         vec3 Nv = mat3(gbufferModelView) * N;
-        float lens = smoothstep(0.55, 0.85, luma(albedo.rgb) + 0.25 * chroma(albedo.rgb)) * smoothstep(0.5, 0.8, -Nv.z);
+        bool lensFace = lm.x > 0.985 && lm.y > 0.985;
+        float bright = smoothstep(0.55, 0.85, luma(albedo.rgb) + 0.25 * chroma(albedo.rgb));
+        float lens = bright * (lensFace ? 1.0 : smoothstep(0.5, 0.8, -Nv.z));
+        float chrome = smoothstep(0.20, 0.50, luma(lin)) * (1.0 - lens);
+        lin *= mix(1.0, 0.20, chrome);
+        if (lensFace) lm = vec2(0.3, 0.0);              // its own light says nothing of the room's
+        mat = MAT_METAL_OUT;                              // shading only: the hand writes no material
         emissive = lens;
         emission = lin * lens * FLASHLIGHT_COLOR * 3.0;
     } else if (item == ITEM_HANDLIGHT) {
@@ -478,24 +507,29 @@ void main() {
         // a ghost gives back little of the light that falls on it: the beam goes half through
         color *= 0.45;
         emission = pale * (rim * 0.030 + front * 0.06) * (0.4 + 0.6 * vis);
+        float rimF = pow(1.0 - ndv, 3.2);                 // the outline only: a thin, clean rim
         if (fm > 0.5) {
-            // the finder sees them: a cold glow strongest at the outline and the dissolving
-            // edges, the figure itself pale and cold, its features still readable
-            float g = rim * 0.85 + front * 1.2;
-            vec3 inner = mix(lin, vec3(luma(lin)), 0.65) * cold;
-            emission += cold * g * 0.30 + inner * (0.10 + 0.05 * sin(t * 1.7 + wp.y * 3.0)) + cold * 0.012;
-            // in the finder the glow is what you see: light falling on it barely adds
-            color = color * vec3(0.70, 0.85, 1.10) * 0.45;
+            // the finder sees them: the figure lit by its own cold light, which keeps the
+            // texture's contrast - the player must judge whether the face shows (dark sockets
+            // stay dark, a hand over the eyes, the cracked visor) - a clean pale rim at the
+            // outline and the dissolving edges glowing a little; no flat cold wash over it
+            vec3 body = mix(lin, vec3(luma(lin)), 0.30) * vec3(0.84, 0.93, 1.05);
+            emission = body * (0.50 + 0.04 * sin(t * 1.7 + wp.y * 3.0))
+                     + pale * (rimF * 0.20 + front * 0.08) + cold * 0.010;   // (black clothes: a dim cold shape)
+            // light falling on it barely adds
+            color = color * vec3(0.70, 0.85, 1.10) * 0.30;
         }
         color += emission;
     #ifndef TRANSLUCENT
         color += handLightsForward(lin, playerPos, Ngeo, 0.0, vec2(0.6, 0.03)) * 0.45;
     #endif
         alpha = vis * keep * (fm > 0.5 ? 1.0 : 0.92 + 0.08 * rim);
-        emissive = saturate(maxOf(emission) * 3.0) * fm;
+        // only the rim blooms: a glow over the body would wash the face out
+        emissive = saturate((rimF * 0.20 + front * 0.08) * 4.0) * fm;
         mat = MAT_SPIRIT;
         // the mask for composite: haze where it stands (even unseen), chroma split, the trail
-        float glowAmt = fm * (0.06 + 0.94 * rim * rim + front) * keep;
+        // (the trail follows the outline, not the whole body)
+        float glowAmt = fm * (0.02 + 0.90 * rimF + 0.8 * front) * keep;
         spiritOut = vec4(1.0, glowAmt, vis, (1.0 - vis) * 0.85 + 0.15);
     }
   #endif

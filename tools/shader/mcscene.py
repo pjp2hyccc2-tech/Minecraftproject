@@ -537,6 +537,8 @@ class World:
         """-> {layer: arrays} with indexed quads. layers: solid (incl. cutout), translucent"""
         acc = {"solid": [], "translucent": []}
         for (x, y, z), b in self.grid.items():
+            if b.name == "light":
+                continue                    # minecraft:light - invisible, only its light level
             quads, layer = models.quads(b.model or b.name, b.cube)
             if b.layer_override:
                 layer = b.layer_override

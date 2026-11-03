@@ -5,7 +5,8 @@
 //  separable: TABLE_Z finds the best 4 along z (from the emitter map's 4 lamp layers),
 //  TABLE_X the best 6 of those along x, walks the wall tiles from the column to each of them
 //  (lamps behind a wall are flagged and ranked last) and keeps 4.
-//  Score = level - |dx| - |dz| - a vertical penalty (distance from the camera's height band).
+//  Score = level - |dx| - |dz| - a vertical penalty (distance from the camera's height band),
+//  + OUTDOOR_REACH for the lamps outside (they light the open lot farther than vanilla does).
 //    out: colortex7 texel (x, z) = 4 packed lamps (lib/emitters.glsl tablePack)
 //  prepare1 also writes the frame's list of outdoor lamps for the air (row 0 right of the
 //  table, airListTexel; read by lib/emitters.glsl airLampsGather).
@@ -172,7 +173,9 @@ void main() {
                 if (yrel < 0 || yrel > 31) continue;
                 int level = emapLampLevel(t);
                 if (level <= 0) level = int(EM_LEVEL[type]);
-                float score = float(level) - abs(float(dz)) - tableVerticalPenalty(float(by));
+                // the lamps outside reach farther over the open lot (lib/emitters.glsl OUTDOOR_REACH)
+                float score = float(level) - abs(float(dz)) - tableVerticalPenalty(float(by))
+                            + (emitterOutdoorType(type) ? OUTDOOR_REACH : 0.0);
                 if (score <= 0.0) continue;
                 // tiny bias: brighter lamps first on equal score
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, 0, dz, false));
@@ -194,7 +197,8 @@ void main() {
                 int level = (c >> 5) & 15;
                 int yrel = (c >> 9) & 31;
                 int dz = ((c >> 19) & 31) - 15;
-                float score = float(level) - abs(float(dz)) - abs(float(dx)) - tableVerticalPenalty(float(yrel + refY));
+                float score = float(level) - abs(float(dz)) - abs(float(dx)) - tableVerticalPenalty(float(yrel + refY))
+                            + (emitterOutdoorType(type) ? OUTDOOR_REACH : 0.0);
                 if (score <= 0.0) continue;
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, dx, dz, false));
             }
