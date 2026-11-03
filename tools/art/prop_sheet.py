@@ -8,14 +8,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import hk_modules  # noqa
 import hk_kit
 import hk_render as RR
-for _n in ("register","register_open","service_bell","business_phone","business_phone_ringing","reservation_book","drink_bar","drink_bar_pouring","coffee_machine","ice_machine","cup_shelf","soup_warmer"):
-    RR.SUPPORT[_n] = "counter"
-for _n in ("cutting_board",):
-    RR.SUPPORT[_n] = "prep_table"
-for _n in ("pc",):
-    RR.SUPPORT[_n] = "office_desk"
-for _n in ():
-    RR.SUPPORT[_n] = "counter"
 
 out = sys.argv[1]
 names = []

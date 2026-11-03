@@ -228,13 +228,13 @@ def fridge_old(open_):
     m.box([2, 11, 2.3], [14, 16, 3], BODY, faces={'north': 'door_freezer'})
     m.box([3.0, 11.5, 1.6], [3.8, 15, 2.3], HANDLE)
     if not open_:
-        m.box([2, 0.6, 2.3], [14, 10.8, 3], BODY, faces={'north': {'r': 'door_main', 'sub': (0, 0, 12, 10.2)}})
+        m.box([2, 0.8, 2.3], [14, 10.8, 3], BODY, faces={'north': {'r': 'door_main', 'sub': (0, 0, 12, 10)}})
         m.box([3.0, 5, 1.6], [3.8, 10, 2.3], HANDLE)
     else:
         IN = mat('fridge_in', _fridge_inside)
         # the open cavity front (lit inside) and the door standing open toward the north on its west hinge
         m.box([2.5, 1.0, 2.95], [13.5, 10.6, 3.0], None, faces={'north': IN}, glow=('north',))
-        m.box([12.6, 0.6, -9.2], [13.4, 10.8, 2.6], BODY, faces={'east': {'r': 'door_main', 'sub': (0, 0, 12, 10.2)},
+        m.box([12.6, 0.8, -9.4], [13.4, 10.8, 2.6], BODY, faces={'east': {'r': 'door_main', 'sub': (0, 0, 12, 10)},
                                                                   'west': IN}, glow=('west',))
         m.box([13.4, 5, -8.2], [14.1, 10, -7.4], HANDLE)
     return m
