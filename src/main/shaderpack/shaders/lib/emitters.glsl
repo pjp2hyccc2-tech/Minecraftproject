@@ -420,7 +420,7 @@ float tablePack(int type, int level, int yrel, int dx, int dz, bool walled) {
 // change (a sodium lamp south of a column read as the traffic light, an exit sign as a vending
 // machine, a heat lamp as the gas flames)
 int tableCode(float v) {
-    return int(abs(v) + 0.25);
+    return int(abs(v) + 0.5);       // EXPERIMENT (CI hang bisect): the old rounding
 }
 
 struct Lamp {
