@@ -1,17 +1,39 @@
 // =====================================================================================
 //  ReisatsuShaders - sky gradient, analytic moon (reflections), fog colour
+//  HIDAMARI: an overcast night just after rain - a low ceiling of dark clouds, faintly lit
+//  from below by the town (an orange glow on the horizon, strongest west-south-west), no
+//  moon, no stars.
 // =====================================================================================
+
+#ifdef WORLD_HIDAMARI
+// the low cloud ceiling: slow drifting fbm on a plane ~300 blocks up
+float cloudDeck(vec3 dir) {
+    if (dir.y <= 0.0) return 0.5;
+    vec2 p = dir.xz / (dir.y + 0.06) * 2.2 + vec2(0.020, 0.006) * frameTimeCounter;
+    float n = fbm2(p * 0.9) * 0.70 + fbm2(p * 2.7 + 7.3) * 0.30;
+    return n;
+}
+#endif
 
 vec3 skyGradient(vec3 dir) {
     float up = dir.y;
     float h = saturate(up);
-#if defined WORLD_MOUNTAIN
-    // a cold blue-grey night sky; the high moon lights the haze around it
-    vec3 c = mix(SKY_HORIZON, SKY_ZENITH, smoothstep(0.0, 0.75, h));
-    float m = saturate(dot(dir, moonDirW()));
-    c += MOON_LIGHT * (pow(m, 5.0) * 0.010 + pow(m, 48.0) * 0.045 + pow(m, 600.0) * 0.20);
-    c = mix(c, FOG_AMBIENT, smoothstep(0.05, -0.25, up));
-    return c * (1.0 - 0.35 * fear());
+#if defined WORLD_HIDAMARI
+    vec3 c = mix(SKY_HORIZON, SKY_ZENITH, smoothstep(0.0, 0.55, h));
+    // the town: an orange glow low on the horizon, in one direction, under the clouds
+    vec3 hd = normalize(vec3(dir.x, 0.0, dir.z) + 1e-5);
+    float toward = saturate(dot(hd, TOWN_DIR) * 0.5 + 0.5);
+    float band = exp(-max(up, 0.0) * 9.0) * smoothstep(-0.12, 0.02, up);
+    vec3 glow = TOWN_GLOW * (0.25 + 1.75 * pow(toward, 3.0)) * band;
+    // the cloud base catches the glow: brighter where the clouds hang lower (dense)
+    float cl = cloudDeck(dir);
+    float lit = smoothstep(0.35, 0.75, cl);
+    c *= 0.80 + 0.45 * lit;
+    c += TOWN_GLOW * pow(toward, 2.0) * lit * exp(-max(up, 0.0) * 3.5) * 0.35;
+    c += glow;
+    // below the horizon: dark fields, the mist
+    c = mix(c, FOG_AMBIENT * 0.8, smoothstep(0.02, -0.20, up));
+    return c * (1.0 - 0.25 * fear());
 #elif defined WORLD_OVERWORLD
     float day = dayFactor();
     float rain = rainAmount();
@@ -37,13 +59,13 @@ vec3 skyGradient(vec3 dir) {
 
 // colour of distant fog for a world-space view direction (reflections, fallbacks)
 vec3 fogColorFor(vec3 dir) {
-    float eyeSky = eyeSkyFactor();
-#if defined WORLD_MOUNTAIN
-    vec3 fc = mix(FOG_TUNNEL, FOG_AMBIENT, eyeSky);
-    float vdl = saturate(dot(dir, lightDirW()));
-    fc += MOON_LIGHT * pow(vdl, 4.0) * 0.010 * eyeSky;
-    return fc * (1.0 - 0.30 * fear());
+#if defined WORLD_HIDAMARI
+    vec3 hd = normalize(vec3(dir.x, 0.0, dir.z) + 1e-5);
+    float toward = saturate(dot(hd, TOWN_DIR) * 0.5 + 0.5);
+    vec3 fc = FOG_AMBIENT + TOWN_GLOW * pow(toward, 3.0) * 0.45 * exp(-max(dir.y, 0.0) * 4.0);
+    return fc * (1.0 - 0.25 * fear());
 #elif defined WORLD_OVERWORLD
+    float eyeSky = eyeSkyFactor();
     vec3 d = normalize(vec3(dir.x, max(dir.y, 0.0) * 0.20 + 0.03, dir.z));
     vec3 fc = skyGradient(d) * 0.92;
     return mix(fc * 0.10 + MIN_LIGHT * 0.5, fc, mix(0.25, 1.0, eyeSky));
@@ -54,17 +76,13 @@ vec3 fogColorFor(vec3 dir) {
 #endif
 }
 
-// analytic moon disc for reflections (the stream, puddles, glass)
+// analytic moon disc for reflections (water, glass) - none over the overcast restaurant
 vec3 moonReflection(vec3 dir) {
 #ifdef HAS_CELESTIAL_LIGHT
     float m = dot(dir, moonDirW());
     float disc = smoothstep(0.99935, 0.99965, m);
     float halo = pow(saturate(m), 220.0);
-  #ifdef WORLD_MOUNTAIN
-    return vec3(0.78, 0.86, 1.00) * (disc * 2.0 + halo * 0.12) * (1.0 - 0.35 * fear());
-  #else
     return vec3(0.70, 0.78, 0.95) * (disc * 1.6 + halo * 0.15) * (1.0 - dayFactor());
-  #endif
 #else
     return vec3(0.0);
 #endif

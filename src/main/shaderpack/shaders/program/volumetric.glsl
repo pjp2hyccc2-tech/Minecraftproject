@@ -1,10 +1,10 @@
 // =====================================================================================
 //  ReisatsuShaders - composite: the air -> colortex2 (rgb in-scattered light, a transmittance)
-//   * fogMarch: drifting 3D-noise height fog, moonlight shafts through the canopy gaps
-//     (shadow map), ambient fog light, the flare's red glow
-//   * beamMarch per hand: the flashlight / phone / IR cone clipped to the view ray, noisy
-//     wisps drifting through it, dust motes
-//  Dithered (4x4 Bayer); composite1 blurs it with a matching 4x4 depth-aware filter.
+//   * fogMarch: the low mist over the wet lot, dust indoors (the emitter map's cover tile
+//     tells which), the glow of every lamp in the air (the light table), the flash
+//   * beamMarch per hand: the flashlight's cone clipped to the view ray, wisps drifting
+//     through it (dust motes are added sharp in composite2)
+//  Dithered (4x4 Bayer); composite2 blurs it with a matching 4x4 depth-aware filter.
 // =====================================================================================
 #include "/lib/header.glsl"
 

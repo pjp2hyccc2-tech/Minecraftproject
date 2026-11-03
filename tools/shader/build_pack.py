@@ -49,19 +49,34 @@ PROGRAMS = {
     "gbuffers_water": ("program/gbuffers.glsl", ["PROG_WATER"]),
     "deferred": ("program/deferred.glsl", []),
     "composite": ("program/volumetric.glsl", []),
-    "composite1": ("program/atmosphere.glsl", []),
-    "composite2": ("program/bloom.glsl", ["BLOOM_H"]),
-    "composite3": ("program/bloom.glsl", ["BLOOM_V"]),
+    "composite1": ("program/reflect.glsl", []),
+    "composite2": ("program/atmosphere.glsl", []),
+    "composite3": ("program/bloom.glsl", ["BLOOM_H"]),
+    "composite4": ("program/bloom.glsl", ["BLOOM_V"]),
     "final": ("program/final.glsl", []),
 }
 
-# folder -> (dimension define or None, has a shadow pass)
-FOLDERS = {
-    "": (None, True),
-    "reisatsu_hidamari": ("REISATSU_HIDAMARI", True),
-    "world-1": ("DIM_NETHER", False),
-    "world1": ("DIM_END", False),
+# programs only some folders have (the restaurant's light table)
+FOLDER_PROGRAMS = {
+    "prepare": ("program/prepare.glsl", ["TABLE_Z"]),
+    "prepare1": ("program/prepare.glsl", ["TABLE_X"]),
 }
+
+# folder -> (dimension define or None, has a shadow pass, extra programs)
+FOLDERS = {
+    "": (None, True, []),
+    "reisatsu_hidamari": ("REISATSU_HIDAMARI", True, ["prepare", "prepare1"]),
+    "world-1": ("DIM_NETHER", False, []),
+    "world1": ("DIM_END", False, []),
+}
+
+
+def programs_of(folder):
+    """ordered program -> (source, defines) of one folder"""
+    progs = dict(PROGRAMS)
+    for extra in FOLDERS[folder][2]:
+        progs[extra] = FOLDER_PROGRAMS[extra]
+    return progs
 
 
 def stub(stage, dim, defines, source):
@@ -76,8 +91,8 @@ def stub(stage, dim, defines, source):
 def expected_files():
     """relative path (to shaders/) -> content"""
     out = {}
-    for folder, (dim, has_shadow) in FOLDERS.items():
-        for prog, (source, defines) in PROGRAMS.items():
+    for folder, (dim, has_shadow, _extra) in FOLDERS.items():
+        for prog, (source, defines) in programs_of(folder).items():
             if prog == "shadow" and not has_shadow:
                 continue
             for ext, stage in (("vsh", "VERTEX_SHADER"), ("fsh", "FRAGMENT_SHADER")):

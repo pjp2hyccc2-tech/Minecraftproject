@@ -12,8 +12,12 @@ uniform sampler2D colortex3;
 uniform sampler2D colortex4;
 uniform sampler2D colortex5;
 uniform sampler2D colortex6;
+uniform sampler2D colortex7;
+uniform sampler2D colortex8;
+uniform sampler2D colortex9;
 uniform sampler2D depthtex0;
 uniform sampler2D depthtex1;
+uniform sampler2D shadowcolor0;
 
 uniform mat4 gbufferModelView;
 uniform mat4 gbufferModelViewInverse;
@@ -35,14 +39,16 @@ uniform float aspectRatio;
 uniform float near;
 uniform float far;
 uniform float frameTimeCounter;
-uniform float rainStrength;      // reisatsu:kaerazu -> FEAR 0..1   (elsewhere: rain)
-uniform float thunderStrength;   // reisatsu:kaerazu -> DANGER 0..1 (elsewhere: thunder)
-uniform float nightVision;       // reisatsu:kaerazu -> > 0 while the phone camera is on
-uniform float blindness;
-uniform float darknessFactor;    // vanilla Darkness: being captured
+uniform float frameTime;
+uniform float rainStrength;      // reisatsu:hidamari -> FEAR 0..1   (elsewhere: rain)
+uniform float thunderStrength;   // reisatsu:hidamari -> DANGER 0..1 (elsewhere: thunder)
+uniform float nightVision;       // reisatsu:hidamari -> > 0 while the camera finder is raised
+uniform float blindness;         // reisatsu:hidamari -> the camera FLASH 1..0 (never darkens)
+uniform float darknessFactor;    // vanilla Darkness: being caught
 uniform float darknessLightFactor;
 
 uniform int frameCounter;
+uniform int worldTime;
 uniform int isEyeInWater;
 uniform int heldItemId;          // main hand (item.properties)
 uniform int heldItemId2;         // off hand
@@ -50,6 +56,7 @@ uniform int heldBlockLightValue;
 uniform int heldBlockLightValue2;
 uniform int renderStage;
 uniform int entityId;
+uniform int blockEntityId;
 uniform int currentRenderedItemId;
 uniform int moonPhase;
 
