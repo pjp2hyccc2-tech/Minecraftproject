@@ -2,41 +2,41 @@ REISATSU sound report (measured on the decoded OGG files)
 
 file                              dur s ch   peak     TP    RMS   LUFS   Mmax crest  cent rough     KB  notes
 -------------------------------------------------------------------------------------------------------------
-amb/night_road                    60.00  2  -15.9  -15.8  -36.8  -33.1  -24.0  20.9  2382  0.12  765.0  loop seam hf x0.85 (interior median x1.03, seam rank 25%)
-amb/dining                        40.00  2  -28.8  -28.8  -43.1  -41.1  -39.9  14.3   408  0.18  506.7  loop seam hf x1.10 (interior median x1.05, seam rank 65%)
-amb/kitchen                       40.00  2  -23.6  -23.5  -37.4  -36.1  -34.8  13.9   244  0.23  447.6  loop seam hf x0.69 (interior median x1.05, seam rank 18%)
-amb/restroom                      30.00  2  -29.7  -29.7  -44.3  -40.2  -38.9  14.6  1782  0.13  358.3  loop seam hf x0.74 (interior median x0.93, seam rank 15%); binaural 237.0/243.0Hz(d6.0)
-amb/back                          30.00  2  -28.8  -28.6  -41.4  -39.1  -38.2  12.6   716  0.20  582.4  loop seam hf x0.53 (interior median x0.99, seam rank 8%)
-amb/fridge                        20.00  2  -18.9  -18.8  -32.5  -29.1  -27.1  13.6  1551  0.11  242.0  loop seam hf x0.95 (interior median x1.07, seam rank 38%)
-amb/silence                       20.00  2  -31.9  -31.8  -47.1  -48.0  -45.9  15.3   652  0.10  262.9  loop seam hf x1.21 (interior median x1.00, seam rank 82%); binaural 221.5/226.5Hz(d5.0)
-amb/closing                       40.00  2  -19.8  -19.8  -33.7  -31.1  -29.5  13.9  1055  0.36  962.6  loop seam hf x2.94 (interior median x1.01, seam rank 62%); binaural 127.0/133.0Hz(d6.0)
-amb/fluorescent                    8.00  1  -11.7  -11.4  -27.5  -27.2  -26.8  15.8  1859  0.43  128.2  loop seam hf x0.58 (interior median x0.99, seam rank 38%)
-amb/vending                        8.00  1  -13.7  -13.7  -26.6  -27.1  -26.6  12.9   724  0.14   72.3  loop seam hf x1.19 (interior median x0.87, seam rank 72%)
-amb/sign_buzz                      8.00  1  -10.2  -10.0  -25.4  -25.2  -24.7  15.2  1574  0.33  126.6  loop seam hf x0.04 (interior median x0.66, seam rank 0%)
+amb/night_road                    60.00  2  -15.9  -15.8  -36.8  -33.1  -24.0  20.9  2382  0.12  765.0  loop seam hf x0.85 (interior median x1.03, seam rank 25%, -1 dB vs the file's typical HF)
+amb/dining                        40.00  2  -28.8  -28.8  -43.1  -41.1  -39.9  14.3   408  0.18  506.7  loop seam hf x1.10 (interior median x1.05, seam rank 65%, -0 dB vs the file's typical HF)
+amb/kitchen                       40.00  2  -23.6  -23.5  -37.4  -36.1  -34.8  13.9   244  0.23  447.6  loop seam hf x0.69 (interior median x1.05, seam rank 18%, -1 dB vs the file's typical HF)
+amb/restroom                      30.00  2  -29.7  -29.7  -44.3  -40.2  -38.9  14.6  1782  0.13  358.3  loop seam hf x0.74 (interior median x0.93, seam rank 15%, -1 dB vs the file's typical HF); binaural 237.0/243.0Hz(d6.0)
+amb/back                          30.00  2  -28.8  -28.6  -41.4  -39.1  -38.2  12.6   716  0.20  582.4  loop seam hf x0.53 (interior median x0.99, seam rank 8%, -4 dB vs the file's typical HF)
+amb/fridge                        20.00  2  -18.9  -18.8  -32.5  -29.1  -27.1  13.6  1551  0.11  242.0  loop seam hf x0.95 (interior median x1.07, seam rank 38%, -1 dB vs the file's typical HF)
+amb/silence                       20.00  2  -31.9  -31.8  -47.1  -48.0  -45.9  15.3   652  0.10  262.9  loop seam hf x1.21 (interior median x1.00, seam rank 82%, +0 dB vs the file's typical HF); binaural 221.5/226.5Hz(d5.0)
+amb/closing                       40.00  2  -19.8  -19.8  -33.7  -31.1  -29.5  13.9  1055  0.36  962.6  loop seam hf x2.94 (interior median x1.01, seam rank 62%, +5 dB vs the file's typical HF); binaural 127.0/133.0Hz(d6.0)
+amb/fluorescent                    8.00  1  -11.7  -11.4  -27.5  -27.2  -26.8  15.8  1859  0.43  128.2  loop seam hf x0.58 (interior median x0.99, seam rank 38%, -24 dB vs the file's typical HF)
+amb/vending                        8.00  1  -13.7  -13.7  -26.6  -27.1  -26.6  12.9   724  0.14   72.3  loop seam hf x1.19 (interior median x0.87, seam rank 72%, +1 dB vs the file's typical HF)
+amb/sign_buzz                      8.00  1  -10.2  -10.0  -25.4  -25.2  -24.7  15.2  1574  0.33  126.6  loop seam hf x0.04 (interior median x0.66, seam rank 0%, -23 dB vs the file's typical HF)
 amb/drip_1                         0.22  1   -6.0   -6.0  -23.1  -22.4  -22.4  17.1  1492  0.08    5.0  
 amb/drip_2                         0.20  1   -5.9   -5.9  -23.2  -21.6  -21.6  17.3  2017  0.09    4.9  
 amb/drip_3                         0.16  1   -7.0   -6.7  -29.8  -26.7  -26.7  22.9  4826  0.18    4.9  
 amb/drip_4                         0.67  1   -5.5   -5.5  -27.0  -27.4  -25.5  21.5  1480  0.67    6.6  
-amb/gutter                         8.00  1   -4.9   -4.9  -24.9  -25.2  -20.2  20.0   654  0.63   74.3  loop seam hf x0.76 (interior median x1.05, seam rank 12%)
-fixture/faucet_loop                6.00  1   -9.4   -9.3  -23.7  -21.2  -20.5  14.3  4792  0.10   54.5  loop seam hf x0.88 (interior median x1.01, seam rank 25%)
-fixture/hand_dryer                 5.00  1   -3.7   -3.3  -16.8  -14.2  -13.5  13.1  4724  0.09   45.9  loop seam hf x0.94 (interior median x0.97, seam rank 45%)
-fixture/fryer_loop                 8.00  1   -4.6   -4.1  -29.7  -26.8  -24.5  25.1  5138  0.36   81.4  loop seam hf x0.80 (interior median x0.94, seam rank 35%)
-fixture/gas_loop                   6.00  1   -9.6   -9.5  -24.3  -23.2  -21.2  14.8  1628  0.12   56.5  loop seam hf x1.20 (interior median x1.00, seam rank 92%)
-fixture/dishwasher                 8.00  1   -8.9   -8.6  -23.4  -21.2  -19.7  14.5  3050  0.13   72.6  loop seam hf x1.25 (interior median x1.01, seam rank 72%)
-fixture/tv_static                  6.00  1  -11.1  -10.9  -25.0  -22.2  -20.9  13.9  4905  0.11   54.2  loop seam hf x0.87 (interior median x0.95, seam rank 30%)
-fixture/monitor_static             6.00  1  -14.9  -14.9  -29.6  -28.1  -26.3  14.6  3222  0.12   59.3  loop seam hf x1.08 (interior median x0.89, seam rank 75%)
-fixture/phone_ring                 6.00  1  -11.3  -11.2  -22.6  -18.0  -17.0  11.3  1280  0.07   22.2  loop seam hf x0.00 (interior median x0.00, seam rank 0%)
-spirit/near                        8.00  1   -7.1   -7.1  -21.7  -26.1  -22.4  14.6    80  0.53   46.6  loop seam hf x0.79 (interior median x1.00, seam rank 12%)
-camera/sense                       6.00  2  -13.5  -13.3  -30.0  -24.1  -21.3  16.5  3992  0.12   96.3  loop seam hf x1.12 (interior median x1.03, seam rank 65%)
-music/dread                       64.00  2  -17.3  -17.3  -28.8  -29.0  -25.7  11.5    75  0.13  620.8  loop seam hf x0.97 (interior median x1.01, seam rank 48%); binaural 129.0/135.0Hz(d6.0), 129.0/121.6Hz(d7.4)
-music/tension                     32.00  2  -14.8  -14.8  -30.2  -29.0  -26.2  15.4   267  0.27  538.4  loop seam hf x1.15 (interior median x0.99, seam rank 68%)
-music/danger                      16.00  2  -15.7  -15.7  -28.6  -27.0  -26.6  12.9   391  0.19  289.6  loop seam hf x0.79 (interior median x1.00, seam rank 10%)
-music/chase                       16.00  2   -5.8   -5.8  -20.4  -20.0  -17.1  14.6   169  0.16  320.7  loop seam hf x0.80 (interior median x0.99, seam rank 18%)
-music/safe                        40.00  2  -14.7  -14.5  -35.1  -30.0  -23.7  20.4   819  0.11  714.2  loop seam hf x0.61 (interior median x1.05, seam rank 0%)
-music/title                       48.00  2  -14.5  -14.5  -31.8  -27.0  -22.3  17.4   799  0.12  496.4  loop seam hf x2.30 (interior median x1.03, seam rank 100%); binaural 117.0/123.0Hz(d6.0)
-music/store                       32.00  2  -12.4  -12.4  -26.7  -24.0  -20.2  14.3   726  0.22  582.9  loop seam hf x1.04 (interior median x0.98, seam rank 60%)
-music/store_wrong                 32.00  2  -14.0  -14.0  -27.5  -25.0  -19.9  13.5   571  0.07  581.5  loop seam hf x1.05 (interior median x1.05, seam rank 48%)
-music/closing                     32.00  2  -16.4  -16.4  -27.7  -25.0  -22.2  11.3   652  0.10  584.8  loop seam hf x0.79 (interior median x0.96, seam rank 12%)
+amb/gutter                         8.00  1   -4.9   -4.9  -24.9  -25.2  -20.2  20.0   654  0.63   74.3  loop seam hf x0.76 (interior median x1.05, seam rank 12%, -11 dB vs the file's typical HF)
+fixture/faucet_loop                6.00  1   -9.4   -9.3  -23.7  -21.2  -20.5  14.3  4792  0.10   54.5  loop seam hf x0.88 (interior median x1.01, seam rank 25%, -3 dB vs the file's typical HF)
+fixture/hand_dryer                 5.00  1   -3.7   -3.3  -16.8  -14.2  -13.5  13.1  4724  0.09   45.9  loop seam hf x0.94 (interior median x0.97, seam rank 45%, -1 dB vs the file's typical HF)
+fixture/fryer_loop                 8.00  1   -4.6   -4.1  -29.7  -26.8  -24.5  25.1  5138  0.36   81.4  loop seam hf x0.80 (interior median x0.94, seam rank 35%, -5 dB vs the file's typical HF)
+fixture/gas_loop                   6.00  1   -9.6   -9.5  -24.3  -23.2  -21.2  14.8  1628  0.12   56.5  loop seam hf x1.20 (interior median x1.00, seam rank 92%, -2 dB vs the file's typical HF)
+fixture/dishwasher                 8.00  1   -8.9   -8.6  -23.4  -21.2  -19.7  14.5  3050  0.13   72.6  loop seam hf x1.25 (interior median x1.01, seam rank 72%, -1 dB vs the file's typical HF)
+fixture/tv_static                  6.00  1  -11.1  -10.9  -25.0  -22.2  -20.9  13.9  4905  0.11   54.2  loop seam hf x0.87 (interior median x0.95, seam rank 30%, -3 dB vs the file's typical HF)
+fixture/monitor_static             6.00  1  -14.9  -14.9  -29.6  -28.1  -26.3  14.6  3222  0.12   59.3  loop seam hf x1.08 (interior median x0.89, seam rank 75%, -4 dB vs the file's typical HF)
+fixture/phone_ring                 6.00  1  -11.3  -11.2  -22.6  -18.0  -17.0  11.3  1280  0.07   22.2  loop seam hf x0.00 (interior median x0.00, seam rank 0%, +0 dB vs the file's typical HF)
+spirit/near                        8.00  1   -7.1   -7.1  -21.7  -26.1  -22.4  14.6    80  0.53   46.6  loop seam hf x0.79 (interior median x1.00, seam rank 12%, +1 dB vs the file's typical HF)
+camera/sense                       6.00  2  -13.5  -13.3  -30.0  -24.1  -21.3  16.5  3992  0.12   96.3  loop seam hf x1.12 (interior median x1.03, seam rank 65%, -4 dB vs the file's typical HF)
+music/dread                       64.00  2  -17.3  -17.3  -28.8  -29.0  -25.7  11.5    75  0.13  620.8  loop seam hf x0.97 (interior median x1.01, seam rank 48%, +32 dB vs the file's typical HF); binaural 129.0/135.0Hz(d6.0), 129.0/121.6Hz(d7.4)
+music/tension                     32.00  2  -14.8  -14.8  -30.2  -29.0  -26.2  15.4   267  0.27  538.4  loop seam hf x1.15 (interior median x0.99, seam rank 68%, +2 dB vs the file's typical HF)
+music/danger                      16.00  2  -15.7  -15.7  -28.6  -27.0  -26.6  12.9   391  0.19  289.6  loop seam hf x0.79 (interior median x1.00, seam rank 10%, -1 dB vs the file's typical HF)
+music/chase                       16.00  2   -5.8   -5.8  -20.4  -20.0  -17.1  14.6   169  0.16  320.7  loop seam hf x0.80 (interior median x0.99, seam rank 18%, -3 dB vs the file's typical HF)
+music/safe                        40.00  2  -14.7  -14.5  -35.1  -30.0  -23.7  20.4   819  0.11  714.2  loop seam hf x0.61 (interior median x1.05, seam rank 0%, -4 dB vs the file's typical HF)
+music/title                       48.00  2  -14.5  -14.5  -31.8  -27.0  -22.3  17.4   799  0.12  496.4  loop seam hf x2.30 (interior median x1.03, seam rank 100%, -21 dB vs the file's typical HF); binaural 117.0/123.0Hz(d6.0)
+music/store                       32.00  2  -12.4  -12.4  -26.7  -24.0  -20.2  14.3   726  0.22  582.9  loop seam hf x1.04 (interior median x0.98, seam rank 60%, +3 dB vs the file's typical HF)
+music/store_wrong                 32.00  2  -14.0  -14.0  -27.5  -25.0  -19.9  13.5   571  0.07  581.5  loop seam hf x1.05 (interior median x1.05, seam rank 48%, -1 dB vs the file's typical HF)
+music/closing                     32.00  2  -16.4  -16.4  -27.7  -25.0  -22.2  11.3   652  0.10  584.8  loop seam hf x0.79 (interior median x0.96, seam rank 12%, -2 dB vs the file's typical HF)
 music/exorcism                    60.00  2   -6.8   -6.8  -26.6  -24.0  -13.2  19.8   329  0.13  889.0  
 music/ending_good                 50.00  2  -11.4  -11.3  -27.5  -25.1  -21.2  16.1   411  0.32  864.7  binaural 488.3/482.4Hz(d5.9)
 music/ending_bad                  30.00  2  -13.9  -13.9  -32.9  -27.0  -21.3  19.0   884  0.10  446.5  
@@ -184,8 +184,8 @@ waitress/greet_3                   1.86  1   -2.0   -2.0  -16.1  -15.7  -14.4  1
 waitress/water                     1.83  1   -3.8   -3.8  -19.9  -19.7  -17.5  16.1   588  0.20   12.9  
 waitress/hum                       9.71  1   -3.9   -3.9  -16.1  -16.7  -14.4  12.1   277  0.22   43.1  
 waitress/tray                      0.84  1   -1.9   -1.8  -17.7  -17.8  -15.8  15.7   753  0.24   10.7  
-chef/chop_1                        4.00  1   -2.0   -1.9  -26.9  -27.9  -25.3  24.9   536  1.75   29.1  loop seam hf x17.62 (interior median x1.03, seam rank 100%) CLICK?
-chef/chop_2                        4.00  1   -2.1   -1.9  -27.2  -27.2  -22.7  25.1   635  0.77   22.6  loop seam hf x0.00 (interior median x0.93, seam rank 0%)
+chef/chop_1                        4.00  1   -2.2   -2.2  -26.9  -27.8  -24.5  24.7   534  1.83   29.2  loop seam hf x82.20 (interior median x0.98, seam rank 100%, -20 dB vs the file's typical HF)
+chef/chop_2                        4.00  1   -2.1   -2.0  -27.2  -27.1  -22.7  25.0   607  0.73   22.6  loop seam hf x0.00 (interior median x0.82, seam rank 0%, -119 dB vs the file's typical HF)
 chef/chop_stop                     1.34  1   -1.0   -1.0  -23.7  -24.1  -21.4  22.6   405  1.57    9.9  
 chef/breath_1                      3.47  1   -3.5   -3.4  -21.3  -20.1  -16.9  17.8   985  0.44   35.0  
 chef/breath_2                      5.00  1   -4.4   -4.4  -21.7  -20.9  -16.7  17.3   982  0.47   49.4  
@@ -225,7 +225,7 @@ manager/closed                     3.73  1   -2.5   -2.5  -19.4  -20.1  -17.6  1
 manager/customer_1                 1.30  1   -3.0   -3.0  -19.0  -19.2  -17.6  16.0   450  0.75   10.5  
 manager/customer_2                 1.61  1   -3.4   -3.3  -19.0  -18.4  -15.5  15.6  1084  0.46   17.4  
 manager/sigh                       2.94  1   -4.6   -4.6  -21.6  -20.7  -16.4  17.0   767  0.39   15.4  
-manager/typing                     6.00  1   -6.8   -6.7  -32.8  -30.9  -27.8  26.0  1609  1.86   43.9  loop seam hf x0.00 (interior median x1.08, seam rank 0%)
+manager/typing                     6.00  1   -6.8   -6.7  -32.8  -30.9  -27.8  26.0  1609  1.86   43.9  loop seam hf x0.00 (interior median x1.08, seam rank 0%, -143 dB vs the file's typical HF)
 manager/chair                      1.25  1   -3.9   -3.8  -26.2  -26.2  -21.9  22.3   896  0.33   13.6  
 medium/voice_1                     0.51  1   -4.1   -4.0  -20.9  -20.4  -20.3  16.8   480  0.45    5.7  
 medium/voice_2                     0.78  1   -4.0   -4.0  -17.2  -16.5  -15.9  13.2   325  0.39    7.0  
@@ -234,7 +234,7 @@ medium/voice_4                     0.91  1   -4.6   -4.6  -20.7  -20.1  -18.8  1
 medium/voice_5                     0.50  1   -4.0   -3.9  -14.6  -14.8  -14.5  10.6   227  0.35    5.5  
 medium/voice_6                     0.80  1   -3.9   -3.9  -18.9  -18.6  -17.5  15.0   428  0.37    7.1  
 medium/bell                        7.00  1   -5.9   -5.9  -23.1  -17.0  -12.5  17.1  1594  0.01   17.3  
-medium/chant                       8.00  1   -3.2   -3.2  -18.8  -18.9  -16.8  15.5   532  0.30   52.3  loop seam hf x11.61 (interior median x1.05, seam rank 100%) CLICK?
+medium/chant                       8.00  1   -3.2   -3.2  -18.8  -18.9  -16.8  15.5   532  0.30   52.3  loop seam hf x11.61 (interior median x1.05, seam rank 100%, -62 dB vs the file's typical HF)
 medium/clap                        0.78  1   -2.4   -1.7  -28.7  -26.4  -26.1  26.2  4097  0.80    6.8  
 spirit/whisper_1                   1.80  1   -4.0   -3.9  -23.9  -21.6  -18.5  19.9  1530  0.52   14.9  
 spirit/whisper_2                   2.07  1   -4.5   -4.5  -25.7  -21.4  -18.7  21.2  2441  0.40   17.1  
@@ -274,7 +274,8 @@ Level summary (decoded files)
   one-shots  235 files  LUFS-I  -36.1 ..   -9.8   max momentary  -31.0 ..   -8.9   RMS  -36.8 ..  -12.8 dBFS
 
 Loop seams: the click measure at the wrap point compared with the same measure at 40 interior points
-of the file (a seam ranked above 98% of them with hf > 3 is flagged CLICK?).
+of the file; a seam ranked above 98% of them with hf > 3 whose HF energy is also above the file's typical
+level is flagged CLICK? (in a silent gap the local ratio only measures codec noise).
 Columns: peak = sample peak dBFS, TP = true peak dBTP (4x oversampled), LUFS = BS.1770 integrated,
 Mmax = max momentary (400 ms) loudness, crest = peak - RMS, cent = spectral centroid Hz,
 rough = RMS amplitude-modulation depth in the 30-150 Hz roughness band (noise ~0.07-0.1,

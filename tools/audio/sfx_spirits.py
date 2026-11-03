@@ -290,7 +290,7 @@ def _chop(rng, vel=1.0, veg=True):
 
 
 def chef_chop(rng, i=1):
-    """A 4 s loop segment of the cleaver's rhythm on the board (seamless; it starts on a chop)."""
+    """A 4 s loop segment of the cleaver's rhythm on the board (seamless; a chop 30 ms after the start)."""
     L = 4.0
     n = ns(L)
     y = np.zeros(n)
@@ -304,7 +304,8 @@ def chef_chop(rng, i=1):
                 times.append(b0 + dt)
                 vels.append(1.0 if k == 0 else 0.7)
     for t0, v in zip(times, vels):
-        dsp.place(y, _chop(rng, v * rng.uniform(0.9, 1.05)), t0 + rng.normal(0, 0.004) + 0.005, circular=True)
+        dsp.place(y, _chop(rng, v * rng.uniform(0.9, 1.05)), t0 + float(np.clip(rng.normal(0, 0.004), -0.008, 0.008)) + 0.03,
+                  circular=True)  # the seam falls in a decay, 30 ms before a chop
     y = dsp.circ_reverb(y, dsp.make_ir(0.2, rng, predelay=0.003, hf_ratio=0.8), wet=0.06, dry=1.0)
     return dsp.dc_block(y, circular=True)
 

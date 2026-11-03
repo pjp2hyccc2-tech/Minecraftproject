@@ -36,7 +36,7 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 ASSETS = os.path.join(ROOT, "src", "main", "resources", "assets", "reisatsu")
 SOUND_DIR = os.path.join(ASSETS, "sounds")
 FFMPEG = os.environ.get("FFMPEG", "/usr/local/bin/ffmpeg")
-STREAM_MIN_SEC = 8.0
+STREAM_MIN_SEC = 10.0  # beds and music; positional one-shots stay static (Minecraft has ~8 streaming channels)
 TP_CEILING = -1.0
 
 
@@ -248,8 +248,15 @@ def _stats_cached(cache, path, fp, ent):
         inner = [analyze.seam_local(np.concatenate([x[:, p:], x[:, :p]], axis=1))[0]
                  for p in np.linspace(n // 20, n - n // 20, 40).astype(int)]
         pct = 100.0 * np.mean(np.array(inner) < hf)
-        notes.append(f"loop seam hf x{hf:.2f} (interior median x{np.median(inner):.2f}, seam rank {pct:.0f}%)"
-                     + (" CLICK?" if pct >= 98 and hf > 3 else ""))
+        w = 32
+
+        def hfe(seg):
+            return float(np.sum(np.diff(seg, n=2, axis=1) ** 2))
+        seam_abs = hfe(np.concatenate([x[:, -w:], x[:, :w]], axis=1))
+        typical = np.median([hfe(x[:, p - w:p + w]) for p in np.linspace(w, n - w, 400).astype(int)])
+        abs_db = 10 * np.log10((seam_abs + 1e-20) / (typical + 1e-20))
+        notes.append(f"loop seam hf x{hf:.2f} (interior median x{np.median(inner):.2f}, seam rank {pct:.0f}%, "
+                     f"{abs_db:+.0f} dB vs the file's typical HF)" + (" CLICK?" if pct >= 98 and hf > 3 and abs_db > 0 else ""))
     if ent.ch == 2 and (ent.event.startswith("music.") or ent.loop):
         bp = analyze.binaural_pairs(x)
         if bp:
@@ -319,7 +326,8 @@ def report(spec_dir=None, pattern=None):
                      f"{min(mm):6.1f} .. {max(mm):6.1f}   RMS {min(rm):6.1f} .. {max(rm):6.1f} dBFS")
     lines.append("")
     lines.append("Loop seams: the click measure at the wrap point compared with the same measure at 40 interior points")
-    lines.append("of the file (a seam ranked above 98% of them with hf > 3 is flagged CLICK?).")
+    lines.append("of the file; a seam ranked above 98% of them with hf > 3 whose HF energy is also above the file's typical")
+    lines.append("level is flagged CLICK? (in a silent gap the local ratio only measures codec noise).")
     lines.append("Columns: peak = sample peak dBFS, TP = true peak dBTP (4x oversampled), LUFS = BS.1770 integrated,")
     lines.append("Mmax = max momentary (400 ms) loudness, crest = peak - RMS, cent = spectral centroid Hz,")
     lines.append("rough = RMS amplitude-modulation depth in the 30-150 Hz roughness band (noise ~0.07-0.1,")

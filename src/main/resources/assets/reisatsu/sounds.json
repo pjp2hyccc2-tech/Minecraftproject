@@ -767,7 +767,6 @@
     "sounds": [
       {
         "name": "reisatsu:fixture/motorbike",
-        "stream": true,
         "attenuation_distance": 96
       }
     ]
@@ -1279,7 +1278,6 @@
     "sounds": [
       {
         "name": "reisatsu:waitress/hum",
-        "stream": true,
         "attenuation_distance": 12
       }
     ]
@@ -1399,7 +1397,6 @@
     "sounds": [
       {
         "name": "reisatsu:child/count",
-        "stream": true,
         "attenuation_distance": 24
       }
     ]
