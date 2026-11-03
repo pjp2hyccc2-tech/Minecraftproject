@@ -124,10 +124,10 @@ HandLight makeHandLight(int item, float side) {
         aim = 9.0;
         L.tanOuter = 0.80;                      // ~39 degree half angle
         L.range = 16.0;
-        L.halfDist = 2.4;
+        L.halfDist = 2.0;
         L.hot = 0.46;
         L.fog = 1.0;
-        L.color = PHONE_LED_COLOR * 5.5 * dangerFlicker(t) * BEAM_STRENGTH;
+        L.color = PHONE_LED_COLOR * 2.6 * dangerFlicker(t) * BEAM_STRENGTH;
     } else if (item == ITEM_LIGHTER) {
         L.type = LIGHT_POINT;
         originV = vec3(0.24 * side, -0.20, -0.42);
@@ -192,10 +192,10 @@ HandLight makeIrLight() {
     L.up = toPlayer * vec3(0.0, 1.0, 0.0);
     L.tanOuter = 1.05;
     L.range = 16.0;
-    L.halfDist = 3.2;
+    L.halfDist = 2.6;
     L.hot = 0.55;
     L.fog = 0.0;
-    L.color = IR_COLOR * 4.0 * cctvIrMode();
+    L.color = IR_COLOR * 1.3 * cctvIrMode();
     return L;
 }
 

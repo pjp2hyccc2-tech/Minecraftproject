@@ -171,7 +171,7 @@ float feedPresence() {
         vec4 m = textureLod(colortex8, p, 7.0);
         s += m.r + m.g * 1.6;
     }
-    return saturate(s * 2.5);
+    return saturate(s * 1.1);
 }
 
 vec3 cctvFeed(vec2 uv0, float F, float D, out bool outside) {
@@ -257,13 +257,13 @@ vec3 cctvFeed(vec2 uv0, float F, float D, out bool outside) {
     col += (n1 + n2) * amp;
     if (ir < 0.5) col += vec3(n2, -n1, n1 * 0.5) * amp * 0.5;   // chroma noise in colour mode
     col += (hash12(vec2(line, frame * 0.5)) - 0.5) * 0.018 * CCTV_NOISE;
-    float spark = step(0.99965 - 0.0008 * glitch, hash12(gl_FragCoord.xy * 0.77 + frame * vec2(1.7, 9.3)));
-    col += spark * 0.35;
-    // noise blocks on hard glitches
-    if (glitch > 0.4) {
-        vec2 blk = floor(gl_FragCoord.xy / vec2(24.0, lineH * 4.0));
-        float on = step(0.93, hash12(blk + bandSeed * 3.1)) * step(0.5, burst);
-        col = mix(col, vec3(hash12(gl_FragCoord.xy + frame)), on * 0.65);
+    float spark = step(0.99985 - 0.0002 * glitch, hash12(gl_FragCoord.xy * 0.77 + frame * vec2(1.7, 9.3)));
+    col += spark * 0.30;
+    // a few noise blocks on the hardest glitches
+    if (glitch > 0.6) {
+        vec2 blk = floor(gl_FragCoord.xy / vec2(32.0, lineH * 4.0));
+        float on = step(0.985, hash12(blk + bandSeed * 3.1)) * step(0.75, burst);
+        col = mix(col, vec3(hash12(gl_FragCoord.xy + frame)), on * 0.55);
     }
     // ---- scanlines, the rolling bar's glow ---------------------------------------------------
 #ifdef CCTV_SCANLINES
@@ -288,8 +288,8 @@ vec3 eyelids(vec2 q, float exposure) {
     float t = frameTimeCounter;
     vec3 avg = textureLod(colortex0, vec2(0.5), 7.0).rgb * 0.6 + textureLod(colortex0, vec2(0.5), 9.0).rgb * 0.4;
     float through = luma(avg) * exposure;
-    // blood-red transmission, brighter toward the middle of the lid
-    vec3 lid = vec3(1.0, 0.16, 0.07) * through * 0.55 * (1.0 - 0.45 * dot(q, q));
+    // blood-red transmission (a few per cent, almost only red), brighter toward the middle of the lid
+    vec3 lid = vec3(1.0, 0.085, 0.040) * (through / (1.0 + through * 1.5)) * 0.16 * (1.0 - 0.45 * dot(q, q));
     vec3 c = toSrgb(toneCurve(lid, 0.0));
     c += vec3(0.010, 0.009, 0.012);                      // eigengrau
 #ifdef PHOSPHENES
@@ -302,7 +302,7 @@ vec3 eyelids(vec2 q, float exposure) {
     float ring = smoothstep(0.08, 0.0, abs(n2 - 0.62)) * smoothstep(0.4, 0.7, n3);
     vec3 hue = mix(vec3(0.55, 0.40, 0.85), vec3(0.45, 0.75, 0.50), smoothstep(0.3, 0.7, n2));
     hue = mix(hue, vec3(0.85, 0.70, 0.35), smoothstep(0.6, 0.9, n3));
-    c += hue * (blob * 0.016 + ring * 0.010);
+    c += hue * (blob * 0.024 + ring * 0.014);
     // now and then a spark
     vec2 cell = floor(q * 14.0);
     float h = hash12(cell + floor(t * 1.5) * 0.37);
@@ -399,10 +399,11 @@ void main() {
     exposure *= mix(1.7, 1.0, dayFactor());
 #endif
 #ifdef WORLD_SHIRAKABA
-    // the eyes open in the dark apartment, close a little under the lamps; in the closet they do
-    // not adapt (the slit of light stays the only bright thing)
+    // the eyes open in the dark apartment, close a little under the lamps; shut in the closet they
+    // are wide open - whatever leaks through the fusuma's gap glares (the closet itself is lightless:
+    // the vanilla light level in there says nothing, the fusuma may let it through)
     float eyeBlock = float(eyeBrightnessSmooth.x) / 240.0;
-    exposure *= mix(mix(1.50, 0.95, smoothstep(0.10, 0.80, eyeBlock)), 0.80, closet);
+    exposure *= mix(mix(1.50, 0.95, smoothstep(0.10, 0.80, eyeBlock)), 2.10, closet);
 #endif
     exposure *= 1.0 - 0.92 * saturate(darknessFactor * 0.55 + darknessLightFactor * 1.5);
 #ifndef WORLD_SHIRAKABA

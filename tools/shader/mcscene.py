@@ -1,4 +1,5 @@
 """A small Minecraft-like block world for the HitoriShaders preview (tools/shader/preview.py).
+(Stand-in textures for room 203: tools/shader/hitori_textures.py.)
 
 * Assets: the art's block models (assets/hitori/models/block/*.json: elements, uv, face
   rotation, element rotation, forge_data full-bright faces, render_type) and textures
@@ -86,6 +87,13 @@ def _noise(rng, shape, scale):
 
 def procedural_tile(name, rng):
     """16x16 RGBA uint8 stand-ins for textures the art has not drawn (yet)"""
+    try:
+        import hitori_textures
+        t = hitori_textures.tile(name, rng)
+        if t is not None:
+            return t
+    except ImportError:
+        pass
     y, x = np.mgrid[0:16, 0:16]
     a = np.full((16, 16), 255.0)
     t = np.zeros((16, 16, 3))

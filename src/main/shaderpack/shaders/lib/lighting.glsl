@@ -151,7 +151,9 @@ vec3 shadeSurface(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, float ao, vec3 e
             diffuse, spec, domPos, domW);
     vec3 sky = skyAmbientN(N) * (lm.y * lm.y);
     vec3 lampPart = albedo * diffuse * aoC * (1.0 - surf.z * 0.85);
-    vec3 color = lampPart + albedo * (sky + MIN_LIGHT) * aoC;
+    // the closet: shut in the dark, the eyes get no floor of light in there
+    float floorK = 1.0 - 0.85 * closetAt(worldPos + N * 0.45);
+    vec3 color = lampPart + albedo * (sky + MIN_LIGHT * floorK) * aoC;
     color += spec * specTint * (0.4 + 0.6 * aoC);
     glow = saturate(luma(lampPart) / max(luma(color), 1e-5)) * saturate(domW);
     return color + emission;

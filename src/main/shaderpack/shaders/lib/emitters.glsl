@@ -66,7 +66,7 @@ vec3 facingDir(int f) {
 // colour of the light (linear, roughly unit luminance-ish)
 const vec3 EM_COLOR[EM_COUNT] = vec3[EM_COUNT](
     vec3(0.0),
-    vec3(0.58, 0.72, 1.00), vec3(0.58, 0.72, 1.00), vec3(0.58, 0.72, 1.00), vec3(0.58, 0.72, 1.00),   // static: cold blue-white
+    vec3(0.50, 0.68, 1.00), vec3(0.50, 0.68, 1.00), vec3(0.50, 0.68, 1.00), vec3(0.50, 0.68, 1.00),   // static: cold blue-white
     vec3(0.45, 0.54, 0.80), vec3(0.45, 0.54, 0.80), vec3(0.45, 0.54, 0.80), vec3(0.45, 0.54, 0.80),   // a dark room
     vec3(0.72, 0.74, 0.86), vec3(0.72, 0.74, 0.86), vec3(0.72, 0.74, 0.86), vec3(0.72, 0.74, 0.86),   // a face
     vec3(0.80, 0.97, 0.92),     // ring fluorescent: cold daylight with the green spike
@@ -88,7 +88,7 @@ const vec3 EM_COLOR[EM_COUNT] = vec3[EM_COUNT](
 // intensity I of the light cast: irradiance E = I / (d^2 + size^2) (before LIGHT_STRENGTH).
 // The TV is the room's light after three: dim, but it reaches the closet across the tatami.
 const float EM_GAIN[EM_COUNT] = float[EM_COUNT](
-    0.0, 2.4, 2.4, 2.4, 2.4, 0.70, 0.70, 0.70, 0.70, 1.2, 1.2, 1.2, 1.2,
+    0.0, 2.0, 2.0, 2.0, 2.0, 0.60, 0.60, 0.60, 0.60, 1.0, 1.0, 1.0, 1.0,
     11.0, 9.0, 9.0, 3.5, 26.0, 3.0, 0.35, 0.50, 0.90, 0.15, 0.0, 0.0, 1.4, 1.6, 2.5);
 
 // radius of the glowing part: the soft core of the falloff, widens the highlights

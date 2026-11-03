@@ -437,7 +437,7 @@ void main() {
     if (mat == MAT_ASPHALT) lin *= 1.8;
     // the closet: a little light from behind for paper and cloth (the fusuma glow faintly
     // where the TV lights their other side), the frosted glass and the curtains much more
-    if (mat == MAT_PAPER) backK = 0.10;
+    if (mat == MAT_PAPER) backK = 0.03;
     if (mat == MAT_CURTAIN) {
         float u = (wp.x + wp.z) * 3.1;
         float fold = 0.5 + 0.5 * sin(u * TAU + 1.7 * sin(u * 1.3));
@@ -592,6 +592,19 @@ void main() {
             vec3 Nf = dot(N, V) < 0.0 ? -N : N;          // the side we look at
             color = shadeSurface(tint * 0.05, Nf, playerPos, lm, 1.0, vec3(0.0), MAT_GLASS_RAIN, 0.0, dither, true, 0.0, 0.0, fillK, glow);
             color += handLightsForward(vec3(0.0), playerPos, Nf, 0.0, vec2(0.04, 0.04)) * (0.3 + cover * 1.5);
+    #if defined RAIN_ON_GLASS && defined EMITTERS_ON
+            if (cover > 0.01) {
+                // a drop is a lens: it gathers the light falling on the glass from the far side (the
+                // street lamp outside, the room's light seen from out there) into a bright crescent
+                vec3 gf = Ngeo * sign(dot(Ngeo, -V));    // the glass, facing away from us
+                vec3 dfs, spc, dp;
+                float dw;
+                lampsAt(wp, -gf, V, lm.x * 15.0, 0.5, -1.0, 0.0, 0.0, 0.0, dfs, spc, dp, dw);
+                float lens = smoothstep(0.15, 0.9, cover) * (0.6 + 0.4 * saturate(-N.y * 3.0 + 0.5));
+                color += dfs * lens * 0.55;
+                emissive = max(emissive, saturate(luma(dfs * lens) * 3.0));
+            }
+    #endif
             alpha = clamp(max(albedo.a * 0.40, 0.08) + F * 0.5 + cover * 0.10, 0.0, 0.85);
         } else if (mat == MAT_FROSTED) {
             // ---- frosted glass: milky, glowing with what lights it from behind -------------
