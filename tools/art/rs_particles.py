@@ -81,11 +81,12 @@ def water_drop(i):
 
 @particle('wet_print', 2, 16)
 def wet_print(i):
-    """A wet shoe print (flat on the ground, fades): dark translucent, tread marks."""
+    """A wet shoe print (flat on the ground, fades): dark translucent, tread marks. The game draws it on a 0.6 : 1
+    quad, so the print fills the sprite's width (it is squeezed to a shoe's proportions)."""
     a = blank(16, 16)
     x, y = grid(16, 16)
-    sole = ((x - 7.5) / 3.2) ** 2 + ((y - 5.5) / 4.6) ** 2 < 1.0
-    heel = ((x - 7.5) / 2.6) ** 2 + ((y - 12.0) / 2.4) ** 2 < 1.0
+    sole = ((x - 7.5) / 6.6) ** 2 + ((y - 5.2) / 5.0) ** 2 < 1.0
+    heel = ((x - 7.5) / 5.4) ** 2 + ((y - 12.4) / 2.8) ** 2 < 1.0
     m = sole | heel
     a[m] = C('#0e1418', 150)
     tread = m & ((y.astype(int) % 2) == 0)
