@@ -231,9 +231,9 @@ public final class HitoriCommand {
                             };
                             if (k == GameData.ENDING_ONI) {
                                 ServerLevel level = p.serverLevel();
-                                OniDoll d = Doll.get(level);
-                                if (d != null) d.lungeAt(p.position());
-                                GameManager.caughtByDoll(p, d);
+                                OniDoll near = Doll.get(level);
+                                if (near != null) near.lungeAt(p.position());
+                                GameManager.caughtByDoll(p, near);
                             } else {
                                 Endings.begin(p.serverLevel(), p, k);
                             }
