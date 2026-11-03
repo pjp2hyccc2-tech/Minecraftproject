@@ -515,7 +515,7 @@ public final class AutoShots {
             cmd(mc, "hitori debug peaceful false");
             cmd(mc, "gamemode adventure");
             cmd(mc, "hitori debug ending oni");
-        }, 4);
+        }, GameManager.LUNGE_CUT + 5);
         snap("60_jumpscare");
         add("oni_wait", mc -> {
         }, 180);
@@ -656,7 +656,11 @@ public final class AutoShots {
                     } catch (Throwable ignored) {
                     }
                 });
-                cmd(mc, Boolean.TRUE.equals(nv) ? "effect give @s night_vision 99999 0 true" : "effect clear @s night_vision");
+                boolean night = Boolean.TRUE.equals(nv);
+                server(mc, (level, p) -> {
+                    if (night) p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 99999, 0, false, false));
+                    else p.removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION);
+                });
                 cmd(mc, String.format(Locale.ROOT, "execute in %s run tp @s %.2f %.2f %.2f %.1f %.1f", Layout.DIMENSION.location(),
                         ((Number) x).doubleValue(), ((Number) y).doubleValue(), ((Number) z).doubleValue(),
                         yaw == null ? 0.0f : ((Number) yaw).floatValue(), pitch == null ? 0.0f : ((Number) pitch).floatValue()));
@@ -664,9 +668,10 @@ public final class AutoShots {
             snap("world_" + name);
         }
         add("tour_end", mc -> {
-            cmd(mc, "effect clear @s night_vision");
+            server(mc, (level, p) -> p.removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION));
             cmd(mc, "gamemode creative");
             mc.options.hideGui = false;
+            mc.gui.getChat().clearMessages(false);
         }, 10);
         log("world tour: " + shots.size() + " shots");
     }

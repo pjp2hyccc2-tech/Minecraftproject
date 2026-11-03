@@ -347,7 +347,7 @@ public final class SelfTest {
             BlockPos below = mk.pos().below();
             Vec3 hit = new Vec3(mk.pos().getX() + 0.5, mk.pos().getY(), mk.pos().getZ() + 0.5);
             fake.setYRot(mk.yaw());
-            fake.setXRot(15.0f);
+            fake.setXRot(Cameras.suggestedPitch(level, Vec3.atBottomCenterOf(mk.pos()), mk.facing()));
             ItemStack cam = new ItemStack(ModItems.FIXED_CAMERA.get());
             hold(cam);
             UseOnContext ctx = new UseOnContext(fake, InteractionHand.MAIN_HAND, new BlockHitResult(hit, Direction.UP, below, false));

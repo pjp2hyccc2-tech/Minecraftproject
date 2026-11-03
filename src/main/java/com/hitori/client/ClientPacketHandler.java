@@ -67,6 +67,7 @@ public final class ClientPacketHandler {
             case GameManager.EV_JUMPSCARE -> {
                 CameraApp.forceClose();
                 Peek.reset();
+                PhoneUi.reset();
                 ClientState.jumpscareKind = e.arg();
                 ClientState.jumpscareTicks = 0;
                 ClientState.caughtTicks = -1;
@@ -75,6 +76,7 @@ public final class ClientPacketHandler {
                 else ui(ModSounds.GAME_STINGER.get(), 1.0f, 1.0f);
             }
             case GameManager.EV_CAUGHT -> {
+                PhoneUi.reset();
                 ClientState.jumpscareTicks = -1;
                 ClientState.caughtTicks = 0;
             }

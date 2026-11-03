@@ -329,6 +329,17 @@ public class OniDoll extends PathfinderMob implements Animated {
         return state == State.BURN;
     }
 
+    /** It springs at you (LUNGE): the model's spring carries 0.56 blocks, the entity the rest. */
+    public void lungeAt(Vec3 at) {
+        setState(State.OPENING);
+        setAnimPose(LUNGE);
+        lungeTo = at;
+        float yaw = yawTo(position(), at);
+        setYRot(yaw);
+        yBodyRot = yaw;
+        setYHeadRot(yaw);
+    }
+
     public void script(Vec3 at, float yaw, int pose) {
         setState(State.SCRIPTED);
         moveTo(at.x, at.y, at.z, yaw, 0.0f);
@@ -397,6 +408,8 @@ public class OniDoll extends PathfinderMob implements Animated {
             case LIMP -> tickLimp(level);
             case BURN -> tickBurn(level);
         }
+        // what it did not listen for is not heard later (no backlog of the noises made while it floated)
+        if (state != State.SEARCH && state != State.INVESTIGATE && state != State.CHECK && state != State.FUSUMA) lastNoise = NoiseSystem.lastId();
         ambient(level);
         sync(level);
     }
@@ -671,9 +684,7 @@ public class OniDoll extends PathfinderMob implements Animated {
             GameManager.event(p, GameManager.EV_STINGER, 1, "");
             Recording.event(level, "doll_fusuma", fusumaCentre());
         } else {
-            setState(State.OPENING);
-            setAnimPose(LUNGE);
-            lungeTo = p.position();
+            lungeAt(p.position());
             Apt.setClosetFusuma(level, 2);
             playAt(fusumaCentre(), ModSounds.DOOR_FUSUMA.get(), 1.2f, 0.85f);
             GameManager.caughtByDoll(p, this);
@@ -848,9 +859,7 @@ public class OniDoll extends PathfinderMob implements Animated {
         go(p.position(), data);
         if (!seenByCamera) lookHead(p.getEyePosition());
         if (horizontalDistance(p.position()) < 0.75 && Math.abs(p.getY() - getY()) < 1.6) {
-            setState(State.OPENING);
-            setAnimPose(LUNGE);
-            lungeTo = p.position();
+            lungeAt(p.position());
             GameManager.caughtByDoll(p, this);
         }
     }

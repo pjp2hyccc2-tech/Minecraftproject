@@ -153,6 +153,27 @@ public final class Cameras {
         level.playSound(null, e.getX(), e.getY(), e.getZ(), ModSounds.CAMERA_FALL.get(), SoundSource.BLOCKS, 0.9f, 1.0f);
     }
 
+    /**
+     * A pitch that frames what a suggested spot faces (the cameras hang high in the corners): aimed at the floor 60 %
+     * of the way to the wall it looks at - steep in the little bathroom, shallow down the hall.
+     */
+    public static float suggestedPitch(ServerLevel level, Vec3 feet, Direction facing) {
+        Vec3 eye = feet.add(0.0, 0.25, 0.0);
+        double dist = 6.0;
+        for (double d = 0.5; d <= 6.0; d += 0.25) {
+            BlockPos b = BlockPos.containing(eye.x + facing.getStepX() * d, eye.y, eye.z + facing.getStepZ() * d);
+            if (!level.getBlockState(b).getCollisionShape(level, b).isEmpty()) {
+                dist = d;
+                break;
+            }
+        }
+        double ahead = Math.max(0.8, dist * 0.6);
+        BlockPos b = BlockPos.containing(eye.x + facing.getStepX() * ahead, eye.y, eye.z + facing.getStepZ() * ahead);
+        for (int i = 0; i < 6 && level.getBlockState(b.below()).getCollisionShape(level, b.below()).isEmpty(); i++) b = b.below();
+        double drop = eye.y - (b.getY() + 0.4);
+        return (float) Mth.clamp(Math.toDegrees(Math.atan2(drop, ahead)), 10.0, 70.0);
+    }
+
     // ------------------------------------------------------------------------------------------------ the app
     /** The client opened / switched / closed the camera app (number 0 = closed; device 0 laptop, 1 phone). */
     public static void app(ServerPlayer p, PlayerState ps, int number, int device) {

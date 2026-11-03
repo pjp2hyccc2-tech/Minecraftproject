@@ -231,7 +231,9 @@ public final class HitoriCommand {
                             };
                             if (k == GameData.ENDING_ONI) {
                                 ServerLevel level = p.serverLevel();
-                                GameManager.caughtByDoll(p, Doll.get(level));
+                                OniDoll d = Doll.get(level);
+                                if (d != null) d.lungeAt(p.position());
+                                GameManager.caughtByDoll(p, d);
                             } else {
                                 Endings.begin(p.serverLevel(), p, k);
                             }
@@ -369,7 +371,7 @@ public final class HitoriCommand {
         for (Layout.Marker m : Layout.markers("cam_suggest")) {
             if (n > Cameras.MAX) break;
             Vec3 at = m.center();
-            data.cameras.add(new GameData.CamSpot(n++, at.x, at.y, at.z, m.yaw(), 26.0f, false));
+            data.cameras.add(new GameData.CamSpot(n++, at.x, at.y, at.z, m.yaw(), Cameras.suggestedPitch(level, at, m.facing()), false));
         }
         data.flag("app_opened");
         data.setDirty();
@@ -397,6 +399,14 @@ public final class HitoriCommand {
         if (level == null) return 0;
         GameData data = GameData.get(c.getSource().getServer());
         if (!data.started) GameManager.startGame(p);
+        // whatever the hands were doing (cutting, sewing, counting) stops
+        PlayerState ps0 = GameManager.state(p);
+        ps0.action = null;
+        ps0.lockPos = null;
+        if (ps0.eyesClosed) {
+            ps0.eyesClosed = false;
+            GameManager.event(p, GameManager.EV_EYES, 0, "");
+        }
         data.steps = 0;
         for (Step s : Step.ALL) {
             if (s.ordinal() >= target.ordinal()) break;

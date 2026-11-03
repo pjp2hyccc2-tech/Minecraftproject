@@ -202,7 +202,7 @@ public class EndingScreen extends Screen {
             String rk = "ending.hitori.good.rules." + Math.min(3, broken);
             line(g, I18n.get(rk), 290, 110, cy, broken == 0 ? 0x8A5A10 : col, broken == 0 ? 1.4f : 1.0f);
             if (ticks > 400) {
-                g.flush();
+                HorrorOverlay.under(g);
                 g.fill(0, 0, width, height, HorrorOverlay.argb(Mth.clamp((t - 400) / 30.0f, 0.0f, 1.0f), 0x000000));
                 line(g, I18n.get("ending.hitori.good.afternoon"), 410, 60, cy, 0xC8C0B4, 1.2f);
             }
@@ -290,7 +290,7 @@ public class EndingScreen extends Screen {
         }
         if (pt < 40) HorrorOverlay.centered(g, font, I18n.get("ending.hitori.good.playback"), width / 2, height / 2, HorrorOverlay.argb(Mth.clamp(pt / 15.0f, 0, 1), 0xD0D0D0), 1.0f);
         if (ticks >= cardAt) {
-            g.flush();
+            HorrorOverlay.under(g);
             g.fill(0, 0, width, height, 0xFF000000);
         }
     }
