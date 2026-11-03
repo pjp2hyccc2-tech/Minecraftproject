@@ -47,6 +47,8 @@ public final class GameFixtureListener implements FixtureEvents.Listener {
             case "menu_board" -> GameManager.event(player, GameManager.EV_THOUGHT, 0,
                     data.happened("menu_board") ? "thought.reisatsu.menu_board_2" : "thought.reisatsu.menu_board");
             case "time_recorder" -> GameManager.event(player, GameManager.EV_THOUGHT, 0, "thought.reisatsu.time_recorder");
+            // a paper without a note: the cavity's blank twin of the cleaning checklist
+            case "note_paper" -> GameManager.event(player, GameManager.EV_THOUGHT, 0, "thought.reisatsu.note_blank");
             default -> {
             }
         }
