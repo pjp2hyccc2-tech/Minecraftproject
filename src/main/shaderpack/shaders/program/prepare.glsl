@@ -61,6 +61,7 @@ vec4 airListTexel(int slot) {
     float eN[AIR_WORK];
     int eType[AIR_WORK];
     int eLevel[AIR_WORK];
+    for (int e = 0; e < AIR_WORK; e++) { eSum[e] = vec3(0.0); eN[e] = 1.0; eType[e] = 0; eLevel[e] = 0; }
     int nE = 0;
     for (int r = 0; r < 6; r++) {
         int zg = cc.y - 30 + r * 12;

@@ -411,16 +411,20 @@ float tableVerticalPenalty(float y) {
     return max(abs(y + 0.5 - ref) - 2.5, 0.0) * 0.6;
 }
 
+// The 24-bit code is stored doubled (an even integer below 2^25: exact in a float). Read back
+// with int(x + 0.5): above 2^23 a float cannot hold x.5 and the sum rounds to even - an odd code
+// stored as itself would gain one there (its type bits change: a sodium lamp south of a column
+// read as the traffic light, an exit sign as a vending machine, a heat lamp as the gas flames),
+// an even one comes back as it was. (Keep this exact decode expression: int(abs(v) + 0.25) made
+// the CI's llvmpipe - Mesa 26 / LLVM 21 - hang at the first frame in the world.)
 float tablePack(int type, int level, int yrel, int dx, int dz, bool walled) {
     int c = type | (level << 5) | (yrel << 9) | ((dx + 15) << 14) | ((dz + 15) << 19);
-    return walled ? -float(c) : float(c);
+    float f = float(c * 2);
+    return walled ? -f : f;
 }
-// the packed integer back from its float (exact up to 2^24). Never round with + 0.5: above 2^23
-// a float cannot hold x.5, the sum rounds to even and every odd code gains one - the type bits
-// change (a sodium lamp south of a column read as the traffic light, an exit sign as a vending
-// machine, a heat lamp as the gas flames)
+// the packed integer back from its float
 int tableCode(float v) {
-    return int(abs(v) + 0.5);       // EXPERIMENT (CI hang bisect): the old rounding
+    return int(abs(v) + 0.5) >> 1;
 }
 
 struct Lamp {
