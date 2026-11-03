@@ -314,6 +314,15 @@ private static float frames(float x, float g) {
     return (i + s) * 3.0F;
 }
 
+/** A flick every `period` ticks: up in two ticks, back down over four (t must be >= 0). */
+private static float flick(float t, float period, float phase) {
+    float m = (t + phase) % period;
+    if (m < 2.0F) {
+        return m * 0.5F;
+    }
+    return m < 6.0F ? 1.0F - (m - 2.0F) / 4.0F : 0.0F;
+}
+
 /** A joint snapping the wrong way: -1..1 during random 3-tick windows (more of them at higher g), else 0. */
 private static float jolt(float t, float seed, float g) {
     float i = (float) Mth.floor(t / 3.0F);
@@ -343,7 +352,7 @@ if (pose == FACE) {
     this.body.xRot = 0.03F;
     this.body.zRot = Mth.sin(t * 0.017F) * 0.012F;
     this.neck.xRot = 0.12F;
-    this.head.xRot = 0.3F + twitch(t, 151.0F, 40.0F) * 0.12F;
+    this.head.xRot = 0.3F + flick(t, 151.0F, 40.0F) * 0.12F;
     this.head.zRot = 0.26F + j1 * 0.4F;
     this.head.yRot = yaw * 0.5F;
     this.armR.xRot = -0.06F;
@@ -352,7 +361,7 @@ if (pose == FACE) {
     this.armL.zRot = -0.06F;
     this.foreR.xRot = -0.1F;
     this.foreL.xRot = -0.08F;
-    curl = 0.12F + twitch(t, 97.0F, 13.0F) * 0.5F;
+    curl = 0.12F + flick(t, 97.0F, 13.0F) * 0.5F;
     spread = 0.14F;
 } else if (pose == CLOSE) {
     // leaning toward the lens from the hips, the neck stretched long, her face and one reaching hand aimed down the
@@ -400,12 +409,12 @@ if (pose == FACE) {
     this.body.xRot = 0.02F;
     this.neck.xRot = 0.22F;
     this.head.xRot = 0.28F;
-    this.head.zRot = 0.07F + twitch(t, 131.0F, 17.0F) * 0.3F + j1 * 0.4F;
+    this.head.zRot = 0.07F + flick(t, 131.0F, 17.0F) * 0.3F + j1 * 0.4F;
     this.armR.zRot = 0.035F;
     this.armL.zRot = -0.035F;
     this.foreR.xRot = -0.04F;
     this.foreL.xRot = -0.04F;
-    curl = 0.3F + twitch(t, 83.0F, 29.0F) * 0.45F;
+    curl = 0.3F + flick(t, 83.0F, 29.0F) * 0.45F;
 }
 this.armR.zRot = this.armR.zRot + j2 * 0.5F;
 this.armL.zRot = this.armL.zRot - j3 * 0.5F;
@@ -441,12 +450,12 @@ this.f4l.zRot = spread * 1.5F;
     post = '''
 // the skirt and the hair hang by their own weight; the lower curtain and the long back hair swing late
 flop(mem, 0, this.skirt, skirtFlop, 0.0F, 1.0F, 0.0F, 0.9F, 0.7F, t, this.root, this.body);
-flop(mem, 2, this.hairBack, hairFlop * 0.8F, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
-flop(mem, 4, this.hairBack2, hairFlop, 0.0F, 1.0F, 0.0F, 0.45F, 0.25F, t, this.root, this.body, this.neck, this.head, this.hairBack);
-flop(mem, 6, this.hairFront2, frontFlop, 0.0F, 1.0F, 0.0F, 0.45F, 0.25F, t, this.root, this.body, this.neck, this.head, this.hairFront);
-flop(mem, 8, this.hairR, sideFlop, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
-flop(mem, 10, this.hairL, sideFlop, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
-flop(mem, 12, this.armL, armFlop, 0.0F, 1.0F, 0.0F, 0.6F, 0.4F, t, this.root, this.body);
+flop(mem, 3, this.hairBack, hairFlop * 0.8F, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
+flop(mem, 6, this.hairBack2, hairFlop, 0.0F, 1.0F, 0.0F, 0.45F, 0.25F, t, this.root, this.body, this.neck, this.head, this.hairBack);
+flop(mem, 9, this.hairFront2, frontFlop, 0.0F, 1.0F, 0.0F, 0.45F, 0.25F, t, this.root, this.body, this.neck, this.head, this.hairFront);
+flop(mem, 12, this.hairR, sideFlop, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
+flop(mem, 15, this.hairL, sideFlop, 0.0F, 1.0F, 0.0F, 0.5F, 0.3F, t, this.root, this.body, this.neck, this.head);
+flop(mem, 18, this.armL, armFlop, 0.0F, 1.0F, 0.0F, 0.6F, 0.4F, t, this.root, this.body);
 // the upper curtain stays on the face, falling away only when her head tips back
 float hx = this.body.xRot + this.neck.xRot + this.head.xRot;
 this.hairFront.xRot = Math.max(0.0F, -hx - 0.15F) * 0.9F;

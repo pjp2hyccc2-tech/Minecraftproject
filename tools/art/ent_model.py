@@ -230,15 +230,24 @@ def flop(st, slot, part, fl, gx, gy, gz, w, z, t, *chain):
     h = h / max(1e-4, float(np.linalg.norm(h)))
     d = r + (h - r) * fl
     d = d / max(1e-4, float(np.linalg.norm(d)))
-    ax = math.asin(max(-1.0, min(1.0, d[2])))
-    az = math.atan2(-d[0], d[1])
-    if st.st[slot + 1] >= 0.0:
-        dd = az - st.sx[slot + 1]
-        dd -= 2 * math.pi * math.floor((dd + math.pi) / (2 * math.pi))
-        az = st.sx[slot + 1] + dd
-    bx = chase(st, slot, ax, w, z, t)
-    bz = chase(st, slot + 1, az, w, z, t)
-    e = np.array([-math.sin(bz) * math.cos(bx), math.cos(bz) * math.cos(bx), math.sin(bx)])
+    e = np.array(st.sx[slot:slot + 3], float)
+    last = st.st[slot]
+    if last < 0.0 or t < last or t - last > 40.0:
+        e = d.copy()
+        st.sv[slot:slot + 3] = [0.0, 0.0, 0.0]
+    elif t > last:
+        dt = t - last
+        n = min(160, max(1, int(math.ceil(dt * 4.0))))
+        h = dt / n
+        u = np.array(st.sv[slot:slot + 3], float)
+        for _ in range(n):
+            u += (w * w * (d - e) - 2.0 * z * w * u) * h
+            u -= float(u @ e) * e
+            e = e + u * h
+            e /= max(1e-4, float(np.linalg.norm(e)))
+        st.sv[slot:slot + 3] = list(u)
+    st.sx[slot:slot + 3] = list(e)
+    st.st[slot] = t
     v = np.cross(r, e)
     k = 1.0 / max(1e-3, 1.0 + float(r @ e))
     Vx = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
@@ -355,9 +364,9 @@ STATE_JAVA = '''
         float clock;
         int clockPose = -2;
         float clockPt;
-        final float[] sx = new float[24];
-        final float[] sv = new float[24];
-        final float[] st = new float[] {-1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F};
+        final float[] sx = new float[48];
+        final float[] sv = new float[48];
+        final float[] st = new float[] {-1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F};
     }
 
     private State state(Entity entity, int pose, float age) {
@@ -462,7 +471,7 @@ STATE_JAVA = '''
         return s.clock;
     }
 
-    /** A damped spring per entity (slot 0..23): chases `target` with inertia and overshoot (w: angular frequency per
+    /** A damped spring per entity (slot 0..47): chases `target` with inertia and overshoot (w: angular frequency per
      *  tick, z: damping ratio), integrated in at most 160 sub-steps of 1/4 tick on the clock `t`; it restarts at the
      *  target after a gap of more than 40 ticks or when time runs backwards, and holds while `t` holds. */
     private static float chase(State s, int slot, float target, float w, float z, float t) {
@@ -488,9 +497,10 @@ STATE_JAVA = '''
     }
 
     /** Plush physics: a part extending along its +y leans from its posed direction toward the model-space direction
-     *  (gx, gy, gz) (gravity = 0, 1, 0; keep gy >= 0.3) by `flop` (0 stiff .. 1 hanging) and follows with inertia
-     *  (springs in slots `slot` and `slot + 1`): it lags, swings and settles whenever its ancestors (`chain`, root side
-     *  first) move. The correction is the smallest rotation onto the posed rotation, so the part keeps its twist. */
+     *  (gx, gy, gz) (gravity = 0, 1, 0) by `flop` (0 stiff .. 1 hanging) and follows with inertia: the direction (in its
+     *  parent's frame) is a spherical pendulum (slots `slot` .. `slot + 2`), so it lags, swings and settles
+     *  whenever its ancestors (`chain`, root side first) move. The correction is the smallest rotation onto the posed
+     *  rotation, so the part keeps its twist: author rest poses within ~120 degrees of where the part will hang. */
     private static void flop(State s, int slot, ModelPart part, float flop, float gx, float gy, float gz, float w, float z, float t,
                              ModelPart... chain) {
         float pz = Mth.cos(part.zRot), qz = Mth.sin(part.zRot), py = Mth.cos(part.yRot), qy = Mth.sin(part.yRot);
@@ -516,17 +526,49 @@ STATE_JAVA = '''
         float hl = Math.max(1.0E-4F, Mth.sqrt(hx * hx + hy * hy + hz * hz));
         float dx = Mth.lerp(flop, rx, hx / hl), dy = Mth.lerp(flop, ry, hy / hl), dz = Mth.lerp(flop, rz, hz / hl);
         float dl = Math.max(1.0E-4F, Mth.sqrt(dx * dx + dy * dy + dz * dz));
-        float ax = (float) Math.asin(Mth.clamp(dz / dl, -1.0F, 1.0F));
-        float az = (float) Math.atan2(-dx, dy);
-        if (s.st[slot + 1] >= 0.0F) {
-            // no long way round: the sideways angle continues from where its spring is
-            float d = az - s.sx[slot + 1];
-            d -= Mth.TWO_PI * (float) Mth.floor((d + Mth.PI) / Mth.TWO_PI);
-            az = s.sx[slot + 1] + d;
+        // a spherical pendulum toward that direction: a damped spring whose state stays a unit vector (no angles, so
+        // no singular direction, and it can never whip through the centre); slots slot .. slot + 2
+        dx /= dl;
+        dy /= dl;
+        dz /= dl;
+        float ex = s.sx[slot], ey = s.sx[slot + 1], ez = s.sx[slot + 2];
+        float last = s.st[slot];
+        if (last < 0.0F || t < last || t - last > 40.0F) {
+            ex = dx;
+            ey = dy;
+            ez = dz;
+            s.sv[slot] = 0.0F;
+            s.sv[slot + 1] = 0.0F;
+            s.sv[slot + 2] = 0.0F;
+        } else if (t > last) {
+            float dt = t - last;
+            int n = Math.min(160, Math.max(1, (int) Math.ceil(dt * 4.0F)));
+            float h = dt / (float) n;
+            float ux = s.sv[slot], uy = s.sv[slot + 1], uz = s.sv[slot + 2];
+            for (int i = 0; i < n; i++) {
+                ux += (w * w * (dx - ex) - 2.0F * z * w * ux) * h;
+                uy += (w * w * (dy - ey) - 2.0F * z * w * uy) * h;
+                uz += (w * w * (dz - ez) - 2.0F * z * w * uz) * h;
+                float rad = ux * ex + uy * ey + uz * ez;
+                ux -= rad * ex;
+                uy -= rad * ey;
+                uz -= rad * ez;
+                ex += ux * h;
+                ey += uy * h;
+                ez += uz * h;
+                float el = Math.max(1.0E-4F, Mth.sqrt(ex * ex + ey * ey + ez * ez));
+                ex /= el;
+                ey /= el;
+                ez /= el;
+            }
+            s.sv[slot] = ux;
+            s.sv[slot + 1] = uy;
+            s.sv[slot + 2] = uz;
         }
-        float bx = chase(s, slot, ax, w, z, t);
-        float bz = chase(s, slot + 1, az, w, z, t);
-        float ex = -Mth.sin(bz) * Mth.cos(bx), ey = Mth.cos(bz) * Mth.cos(bx), ez = Mth.sin(bx);
+        s.sx[slot] = ex;
+        s.sx[slot + 1] = ey;
+        s.sx[slot + 2] = ez;
+        s.st[slot] = t;
         // D = the smallest rotation taking r onto e: I + [v]x + [v]x^2 / (1 + r.e), v = r x e; then N = D * P
         float vx = ry * ez - rz * ey, vy = rz * ex - rx * ez, vz = rx * ey - ry * ex;
         float k = 1.0F / Math.max(1.0E-3F, 1.0F + rx * ex + ry * ey + rz * ez);
@@ -746,9 +788,9 @@ class State:
         self.clock = 0.0
         self.clockPose = -2
         self.clockPt = 0.0
-        self.sx = [0.0] * 24
-        self.sv = [0.0] * 24
-        self.st = [-1.0] * 24
+        self.sx = [0.0] * 48
+        self.sv = [0.0] * 48
+        self.st = [-1.0] * 48
 
 
 def ease(x):

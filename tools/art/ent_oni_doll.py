@@ -61,10 +61,10 @@ class OniDoll(Spec):
     at 90 degrees), 5 TURN (the head turns 180 degrees round to the viewer in three jerks at pose ticks 6, 13 and 20 -
     leave the body facing away from the viewer), 6 PEEK (leans its head and left ear out past a door frame on its
     left: the frame edge belongs ~0.17 blocks to its left; the head emerges in three little starts over 30 ticks),
-    7 LUNGE (crouch 0-2, springs from tick 2: ~0.56 blocks forward and ~0.2 up by tick 6 on its own (carry the
+    7 LUNGE (crouch 0-2, the knife raised over 0-4, springs from tick 2: ~0.56 blocks forward and ~0.2 up by tick 6 on its own (carry the
     entity on to the camera), the knife raised and the mouth seam torn open, the knife comes down at ticks 6-8:
     cut to the jump scare at ~6-7), 8 LIMP (shrieks and spasms 0-3, the knife flies out of its
-    paw at tick 3 - drop the knife item there - falls on its back by tick 9 with a plush bounce, rice pours from the
+    paw and vanishes at tick 3.5 - drop the knife item there - falls on its back by tick 9 with a plush bounce, rice pours from the
     wound), 9 BURN (lying on its back: thrashing, then curling up and shrinking over ~200 ticks while burnt patches
     glowing on the eyes layer spread over it).
     The eyes layer carries the button-eye glints, the knife edge, the drips and the embers of BURN."""
@@ -111,9 +111,10 @@ class OniDoll(Spec):
                                                                   tag='eye_button', uv_of='eye_r')]))
         ears = []
         for side, pre in ((-1, 'r'), (1, 'l')):
-            ear = Part(f'ear_{pre}', (side * 1.3, -4.25, 0.25), rot=(0.15, 0, -side * 2.62),
+            # drooping at rest (down the sides of the head): flop() then never has to turn an ear through 180 degrees
+            ear = Part(f'ear_{pre}', (side * 1.3, -4.25, 0.25), rot=(0.2, 0, -side * 0.75),
                        cubes=[Cube((-0.875, 0, -0.25), (1.75, 2.25, 0.5), tag=f'ear_{pre}')])
-            tip = Part(f'ear_{pre}_tip', (0, 2.25, 0), rot=(0, 0, -side * 0.5),
+            tip = Part(f'ear_{pre}_tip', (0, 2.25, 0), rot=(0, 0, -side * 0.25),
                        cubes=[Cube((-0.875, 0, -0.25), (1.75, 2.5, 0.5), tag=f'ear_{pre}_tip')])
             ear.add(tip)
             ears.append(ear)
@@ -529,7 +530,7 @@ private static float sweep(float u) {
     if (u < 0.5F) {
         return Mth.lerp(ease(u / 0.5F), 2.75F, 0.55F);
     }
-    return Mth.lerp(easeOut((u - 0.5F) / 0.5F), 0.55F, 2.75F);
+    return Mth.lerp(ease((u - 0.5F) / 0.5F), 0.55F, 2.75F);
 }
 
 /** The crawling arm's height (u = 0..1): down on the floor while pulling, lifted while swinging forward. */
@@ -644,11 +645,12 @@ if (pose == FLOAT) {
     this.armL.zRot = -sweep(u);
     this.armR.xRot = reach(uR);
     this.armR.zRot = sweep(uR);
-    this.pawL.xRot = u < 0.5F ? -0.5F : 0.3F;
-    this.pawR.xRot = uR < 0.5F ? -0.5F : 0.3F;
+    // paws flat and clawing on the boards while pulling, curled under while swinging forward
+    this.pawL.xRot = Mth.lerp(span(u, 0.42F, 0.62F) - span(u, 0.9F, 1.0F), -0.5F, 0.3F);
+    this.pawR.xRot = Mth.lerp(span(uR, 0.42F, 0.62F) - span(uR, 0.9F, 1.0F), -0.5F, 0.3F);
     // the knife: raised point-down while the arm swings forward, stabbed into the boards at the plant, then
     // scraped along the floor, flat and pointing ahead, while the doll hauls itself up to it
-    float stabbing = uR < 0.5F ? 1.0F - span(uR, 0.06F, 0.2F) : span(uR, 0.62F, 0.95F);
+    float stabbing = uR < 0.5F ? 1.0F - span(uR, 0.04F, 0.3F) : span(uR, 0.62F, 0.95F);
     knifeAim = 1.0F;
     kgx = -0.3F;
     kgy = Mth.lerp(stabbing, 0.06F, 0.6F);
@@ -708,8 +710,8 @@ if (pose == FLOAT) {
     armFlop = 0.3F;
     armW = 0.7F;
     armZ = 0.35F;
-    this.head.zRot = chase(mem, 20, -this.body.zRot * 1.4F + 0.3F, 0.45F, 0.22F, t) + j1 * 0.5F;
-    this.head.xRot = 0.42F + chase(mem, 21, lf * 0.35F, 0.55F, 0.25F, t);
+    this.head.zRot = chase(mem, 40, -this.body.zRot * 1.4F + 0.3F, 0.45F, 0.22F, t) + j1 * 0.5F;
+    this.head.xRot = 0.42F + chase(mem, 41, lf * 0.35F, 0.55F, 0.25F, t);
     earFlop = 0.82F;
     grains = 1.0F;
     blend = 5.0F;
@@ -745,7 +747,7 @@ if (pose == FLOAT) {
     float crouch = span(pt, 0.0F, 2.0F) * (1.0F - span(pt, 2.0F, 3.5F));
     float leap = easeOut(Mth.clamp((pt - 2.0F) / 4.0F, 0.0F, 1.0F));
     float arc = Mth.sin(Mth.clamp((pt - 2.0F) / 8.0F, 0.0F, 1.0F) * 3.1415927F);
-    float raise = span(pt, 0.5F, 3.5F);
+    float raise = span(pt, 0.0F, 4.0F);
     float stab = span(pt, 6.0F, 8.0F);
     this.body.y = 21.0F + crouch * 1.4F - arc * 3.2F;
     this.body.z = -leap * 9.0F;
@@ -770,7 +772,7 @@ if (pose == FLOAT) {
     earGy = 0.7F;
     earGz = 1.0F * leap;
     earSpread = 0.35F;
-    blend = 2.0F;
+    blend = 3.0F;
 } else if (pose == LIMP) {
     // the salt water: a shrieking spasm, the knife flung out of its paw, then it falls on its back with a soft
     // bounce and lies limp, rice pouring from the wound
@@ -791,8 +793,8 @@ if (pose == FLOAT) {
     this.legL.xRot = -0.35F * spasm - 0.15F * fall;
     this.legR.zRot = 0.35F * fall;
     this.legL.zRot = -0.3F * fall;
-    this.knife.visible = pt < 3.0F;
-    this.knife.xRot = -2.5F * span(pt, 0.5F, 3.0F);
+    this.knife.visible = pt < 3.5F;
+    this.knife.xRot = -1.8F * span(pt, 0.0F, 3.5F);
     armFlop = 0.7F * fall;
     armW = 0.6F;
     armZ = 0.3F;
@@ -802,15 +804,15 @@ if (pose == FLOAT) {
     jawOpen = spasm + 0.3F * fall;
     earFlop = 0.6F + 0.3F * fall;
     grains = pt < 40.0F ? 1.0F : 0.0F;
-    blend = 2.0F;
+    blend = 4.0F;
 } else if (pose == BURN) {
     // on its back in the fire: thrashing, then curling up as it burns and shrinks, twitching less and less
     float thrash = 1.0F - span(pt, 12.0F, 100.0F);
     float curl = span(pt, 10.0F, 130.0F);
     float shrink = span(pt, 20.0F, 220.0F);
     float tw = twitch(t, 13.0F, 0.0F) + twitch(t, 17.0F, 5.0F) * 0.7F + twitch(t, 37.0F, 11.0F) * 0.5F;
-    float n1 = noise(t * 1.9F) * thrash;
-    float n2 = noise(t * 2.3F + 30.0F) * thrash;
+    float n1 = noise(t * 0.32F) * thrash;
+    float n2 = noise(t * 0.41F + 30.0F) * thrash;
     this.body.xRot = -1.45F + 0.25F * curl + n1 * 0.12F;
     this.body.y = 22.62F + 0.25F * shrink;
     this.body.zRot = n2 * 0.15F + tw * 0.05F;
@@ -832,8 +834,8 @@ if (pose == FLOAT) {
     this.footR.xRot = 0.8F * curl;
     this.footL.xRot = 0.8F * curl;
     // the ears curl like burning paper
-    this.earRTip.zRot = 0.5F + 2.0F * curl;
-    this.earLTip.zRot = -0.5F - 2.0F * curl;
+    this.earRTip.zRot = 0.25F + 1.9F * curl;
+    this.earLTip.zRot = -0.25F - 1.9F * curl;
     earFlop = 0.6F * (1.0F - curl);
     jawOpen = (1.0F - span(pt, 30.0F, 70.0F)) * (0.75F + 0.25F * Mth.sin(t * 0.9F)) + 0.25F * curl;
     this.knife.visible = false;
@@ -871,16 +873,16 @@ this.emberF.visible = burn > 80.0F;
     post = '''
 // plush physics after the blend: ears, the hanging eye, the loose thread end and limp limbs swing on springs
 flop(mem, 0, this.earR, earFlop, earGx - earSpread, earGy, earGz, 0.42F, 0.24F, t, this.root, this.body, this.head);
-flop(mem, 2, this.earRTip, Math.min(1.0F, earFlop * 1.12F), earGx - earSpread * 1.2F, earGy, earGz, 0.58F, 0.2F, t, this.root, this.body, this.head, this.earR);
-flop(mem, 4, this.earL, earFlop, earGx + earSpread, earGy, earGz, 0.42F, 0.24F, t, this.root, this.body, this.head);
-flop(mem, 6, this.earLTip, Math.min(1.0F, earFlop * 1.12F), earGx + earSpread * 1.2F, earGy, earGz, 0.58F, 0.2F, t, this.root, this.body, this.head, this.earL);
-flop(mem, 8, this.eyeThread, 0.97F, 0.0F, 1.0F, 0.0F, 0.6F, 0.1F, t, this.root, this.body, this.head);
-flop(mem, 10, this.threadEnd, 0.94F, 0.0F, 1.0F, 0.0F, 0.5F, 0.14F, t, this.root, this.body, this.torso);
-flop(mem, 12, this.armR, armFlop, 0.0F, 1.0F, 0.0F, armW, armZ, t, this.root, this.body);
-flop(mem, 14, this.armL, armFlop, 0.0F, 1.0F, 0.0F, armW, armZ, t, this.root, this.body);
-flop(mem, 16, this.legR, legFlop, 0.0F, 0.45F, legGz, legW, legZ, t, this.root, this.body);
-flop(mem, 18, this.legL, legFlop, 0.0F, 0.45F, legGz, legW, legZ, t, this.root, this.body);
-flop(mem, 22, this.knife, knifeAim, kgx, kgy, kgz, 1.3F, 0.8F, t, this.root, this.body, this.armR, this.pawR);
+flop(mem, 3, this.earRTip, Math.min(1.0F, earFlop * 1.12F), earGx - earSpread * 1.2F, earGy, earGz, 0.58F, 0.2F, t, this.root, this.body, this.head, this.earR);
+flop(mem, 6, this.earL, earFlop, earGx + earSpread, earGy, earGz, 0.42F, 0.24F, t, this.root, this.body, this.head);
+flop(mem, 9, this.earLTip, Math.min(1.0F, earFlop * 1.12F), earGx + earSpread * 1.2F, earGy, earGz, 0.58F, 0.2F, t, this.root, this.body, this.head, this.earL);
+flop(mem, 12, this.eyeThread, 0.97F, 0.0F, 1.0F, 0.0F, 0.55F, 0.16F, t, this.root, this.body, this.head);
+flop(mem, 15, this.threadEnd, 0.94F, 0.0F, 1.0F, 0.0F, 0.5F, 0.14F, t, this.root, this.body, this.torso);
+flop(mem, 18, this.armR, armFlop, 0.0F, 1.0F, 0.0F, armW, armZ, t, this.root, this.body);
+flop(mem, 21, this.armL, armFlop, 0.0F, 1.0F, 0.0F, armW, armZ, t, this.root, this.body);
+flop(mem, 24, this.legR, legFlop, 0.0F, 0.45F, legGz, legW, legZ, t, this.root, this.body);
+flop(mem, 27, this.legL, legFlop, 0.0F, 0.45F, legGz, legW, legZ, t, this.root, this.body);
+flop(mem, 33, this.knife, knifeAim, kgx, kgy, kgz, 1.3F, 0.8F, t, this.root, this.body, this.armR, this.pawR);
 // water drips (real time: water keeps falling even while the doll holds still) and rice grains from the wound
 level(this.dripA, this.root, this.body, this.torso);
 level(this.dripB, this.root, this.body, this.armL, this.pawL);
@@ -925,6 +927,26 @@ def previews(b, ER, rows_sel=None):
     import ent_scene as SC
     rows = []
     sel = (lambda k: rows_sel is None or k in rows_sel)
+    if sel('situ'):
+        ims = []
+        ims.append(('CAM1 浴室: in the bath', b.view([(0, 0)], 420, size=(250, 200), eye=(1.2, 1.55, 1.6), target=(0.0, 0.0, 0.1),
+                                                   look='ir', scene=SC.bathtub(), fov=62, label='CAM1  浴室',
+                                                   stamp='2026/11/03  03:17:42')))
+        for k, tt in enumerate((331, 334, 337)):
+            ims.append((f'CAM3 廊下: WALK, frame {k + 1}', b.view([(0, 3)], tt, size=(200, 200), eye=(0.9, 1.7, 2.2),
+                                                              target=(0.0, 0.25, -0.2 * k), look='ir', scene=SC.flooring(),
+                                                              fov=60, glitch=lambda t_: 1.0, pos=(0.0, 0.0, -0.17 * k),
+                                                              label='CAM3  廊下', stamp=f'2026/11/03  03:52:{11 + k:02d}')))
+        ims.append(('through the fusuma slit', b.view(4, 140, size=(250, 200), eye=(0.15, 0.62, 2.4), target=(0.0, 0.32, 0.0),
+                                                     look='night', scene=SC.tatami(), fov=50, tv=(-1.8, 0.5, 0.6),
+                                                     pose_fn=None)))
+        ims.append(('CAM2 和室: waiting, facing the wall', b.view(1, 140, size=(250, 200), eye=(-1.0, 1.7, -1.6), target=(0.0, 0.25, 0.0),
+                                                                look='ir', scene=SC.wall_behind(dist=-0.45), fov=60,
+                                                                entity_yaw=180.0, label='CAM2  和室', stamp='2026/11/03  04:21:05')))
+        ims.append(('CAM4 玄関: coming for the lens', b.view([(0, 2)], 326, size=(250, 200), eye=(0.0, 0.5, 1.4), target=(0.0, 0.2, 0.0),
+                                                           look='ir', scene=SC.flooring(), fov=64, label='CAM4  玄関',
+                                                           stamp='2026/11/03  04:58:40')))
+        rows.append(('鬼 in situ: on the camera feeds (IR, stop-motion), and through the fusuma gap by the TV light', ims))
     if sel('hero'):
         ims = []
         ims.append(('STAND 3/4', b.view(4, 140, yaw_view=-30, pitch_view=8, size=(230, 260), ortho=0.36, center_y=0.3, scene=SC.tatami())))
@@ -938,7 +960,7 @@ def previews(b, ER, rows_sel=None):
                                               scene=SC.tatami(), fov=55)))
         ims.append(('IR feed', b.view(4, 140, size=(260, 260), eye=(0.9, 1.5, 1.4), target=(0.0, 0.25, 0.0), look='ir',
                                       scene=SC.tatami(), fov=60, label='CAM2  和室')))
-        rows.append(('鬼（人形）: STAND (4) - upright, perfectly still, the neck broken over its left shoulder', ims))
+        rows.append(('鬼（人形）: STAND (4) - upright, perfectly still, the head turned over on its neck at 90 degrees', ims))
     if sel('float'):
         ims = []
         for tt in (0, 20, 40, 60, 80):

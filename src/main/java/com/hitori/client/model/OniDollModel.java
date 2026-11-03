@@ -37,10 +37,10 @@ import net.minecraft.world.entity.Mob;
  * at 90 degrees), 5 TURN (the head turns 180 degrees round to the viewer in three jerks at pose ticks 6, 13 and 20 -
  * leave the body facing away from the viewer), 6 PEEK (leans its head and left ear out past a door frame on its
  * left: the frame edge belongs ~0.17 blocks to its left; the head emerges in three little starts over 30 ticks),
- * 7 LUNGE (crouch 0-2, springs from tick 2: ~0.56 blocks forward and ~0.2 up by tick 6 on its own (carry the
+ * 7 LUNGE (crouch 0-2, the knife raised over 0-4, springs from tick 2: ~0.56 blocks forward and ~0.2 up by tick 6 on its own (carry the
  * entity on to the camera), the knife raised and the mouth seam torn open, the knife comes down at ticks 6-8:
  * cut to the jump scare at ~6-7), 8 LIMP (shrieks and spasms 0-3, the knife flies out of its
- * paw at tick 3 - drop the knife item there - falls on its back by tick 9 with a plush bounce, rice pours from the
+ * paw and vanishes at tick 3.5 - drop the knife item there - falls on its back by tick 9 with a plush bounce, rice pours from the
  * wound), 9 BURN (lying on its back: thrashing, then curling up and shrinking over ~200 ticks while burnt patches
  * glowing on the eyes layer spread over it).
  * The eyes layer carries the button-eye glints, the knife edge, the drips and the embers of BURN.
@@ -166,12 +166,12 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
         pHead.addOrReplaceChild("maw", CubeListBuilder.create().texOffs(0, 23).addBox(-1.0F, 0.0F, 0.0F, 2.0F, 0.5F, 0.0F, EnumSet.of(Direction.NORTH)), PartPose.offset(0.0F, -0.75F, -2.575F));
         PartDefinition pEyeThread = pHead.addOrReplaceChild("eye_thread", CubeListBuilder.create().texOffs(31, 4).addBox(-0.125F, 0.0F, 0.0F, 0.25F, 1.0F, 0.0F, EnumSet.of(Direction.NORTH)), PartPose.offset(1.25F, -2.25F, -2.175F));
         pEyeThread.addOrReplaceChild("eye_button", CubeListBuilder.create().texOffs(28, 22).addBox(-0.625F, 0.0F, -0.125F, 1.25F, 1.25F, 0.25F), PartPose.offset(0.0F, 1.0F, 0.0F));
-        PartDefinition pEarR = pHead.addOrReplaceChild("ear_r", CubeListBuilder.create().texOffs(12, 13).addBox(-0.875F, 0.0F, -0.25F, 1.75F, 2.25F, 0.5F), PartPose.offsetAndRotation(-1.3F, -4.25F, 0.25F, 0.15F, 0.0F, 2.62F));
-        PartDefinition pEarRTip = pEarR.addOrReplaceChild("ear_r_tip", CubeListBuilder.create().texOffs(0, 17).addBox(-0.875F, 0.0F, -0.25F, 1.75F, 2.5F, 0.5F), PartPose.offsetAndRotation(0.0F, 2.25F, 0.0F, 0.0F, 0.0F, 0.5F));
+        PartDefinition pEarR = pHead.addOrReplaceChild("ear_r", CubeListBuilder.create().texOffs(12, 13).addBox(-0.875F, 0.0F, -0.25F, 1.75F, 2.25F, 0.5F), PartPose.offsetAndRotation(-1.3F, -4.25F, 0.25F, 0.2F, 0.0F, 0.75F));
+        PartDefinition pEarRTip = pEarR.addOrReplaceChild("ear_r_tip", CubeListBuilder.create().texOffs(0, 17).addBox(-0.875F, 0.0F, -0.25F, 1.75F, 2.5F, 0.5F), PartPose.offsetAndRotation(0.0F, 2.25F, 0.0F, 0.0F, 0.0F, 0.25F));
         PartDefinition pDripC = pEarRTip.addOrReplaceChild("drip_c", CubeListBuilder.create(), PartPose.offset(0.0F, 2.5F, 0.0F));
         pDripC.addOrReplaceChild("drip_c_fall", CubeListBuilder.create().texOffs(31, 3).addBox(-0.125F, 0.0F, -0.125F, 0.25F, 0.5F, 0.25F), PartPose.ZERO);
-        PartDefinition pEarL = pHead.addOrReplaceChild("ear_l", CubeListBuilder.create().texOffs(5, 17).addBox(-0.875F, 0.0F, -0.25F, 1.75F, 2.25F, 0.5F), PartPose.offsetAndRotation(1.3F, -4.25F, 0.25F, 0.15F, 0.0F, -2.62F));
-        pEarL.addOrReplaceChild("ear_l_tip", CubeListBuilder.create().texOffs(0, 20).addBox(-0.875F, 0.0F, -0.25F, 1.75F, 2.5F, 0.5F), PartPose.offsetAndRotation(0.0F, 2.25F, 0.0F, 0.0F, 0.0F, -0.5F));
+        PartDefinition pEarL = pHead.addOrReplaceChild("ear_l", CubeListBuilder.create().texOffs(5, 17).addBox(-0.875F, 0.0F, -0.25F, 1.75F, 2.25F, 0.5F), PartPose.offsetAndRotation(1.3F, -4.25F, 0.25F, 0.2F, 0.0F, -0.75F));
+        pEarL.addOrReplaceChild("ear_l_tip", CubeListBuilder.create().texOffs(0, 20).addBox(-0.875F, 0.0F, -0.25F, 1.75F, 2.5F, 0.5F), PartPose.offsetAndRotation(0.0F, 2.25F, 0.0F, 0.0F, 0.0F, -0.25F));
         pHead.addOrReplaceChild("ember_c", CubeListBuilder.create().texOffs(20, 22).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 0.0F, EnumSet.of(Direction.NORTH)), PartPose.offsetAndRotation(2.55F, -2.2F, 0.0F, 0.0F, 1.5708F, 0.0F));
         pHead.addOrReplaceChild("ember_d", CubeListBuilder.create().texOffs(24, 22).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 0.0F, EnumSet.of(Direction.NORTH)), PartPose.offsetAndRotation(-0.7F, -3.2F, -2.18F, 0.0F, 0.0F, 0.4F));
         PartDefinition pArmR = pBody.addOrReplaceChild("arm_r", CubeListBuilder.create().texOffs(27, 12).addBox(-0.625F, -0.25F, -0.625F, 1.25F, 2.25F, 1.25F), PartPose.offsetAndRotation(-2.375F, -3.0F, 0.0F, 0.0F, 0.0F, 0.1F));
@@ -327,11 +327,12 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.armL.zRot = -sweep(u);
             this.armR.xRot = reach(uR);
             this.armR.zRot = sweep(uR);
-            this.pawL.xRot = u < 0.5F ? -0.5F : 0.3F;
-            this.pawR.xRot = uR < 0.5F ? -0.5F : 0.3F;
+            // paws flat and clawing on the boards while pulling, curled under while swinging forward
+            this.pawL.xRot = Mth.lerp(span(u, 0.42F, 0.62F) - span(u, 0.9F, 1.0F), -0.5F, 0.3F);
+            this.pawR.xRot = Mth.lerp(span(uR, 0.42F, 0.62F) - span(uR, 0.9F, 1.0F), -0.5F, 0.3F);
             // the knife: raised point-down while the arm swings forward, stabbed into the boards at the plant, then
             // scraped along the floor, flat and pointing ahead, while the doll hauls itself up to it
-            float stabbing = uR < 0.5F ? 1.0F - span(uR, 0.06F, 0.2F) : span(uR, 0.62F, 0.95F);
+            float stabbing = uR < 0.5F ? 1.0F - span(uR, 0.04F, 0.3F) : span(uR, 0.62F, 0.95F);
             knifeAim = 1.0F;
             kgx = -0.3F;
             kgy = Mth.lerp(stabbing, 0.06F, 0.6F);
@@ -391,8 +392,8 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             armFlop = 0.3F;
             armW = 0.7F;
             armZ = 0.35F;
-            this.head.zRot = chase(mem, 20, -this.body.zRot * 1.4F + 0.3F, 0.45F, 0.22F, t) + j1 * 0.5F;
-            this.head.xRot = 0.42F + chase(mem, 21, lf * 0.35F, 0.55F, 0.25F, t);
+            this.head.zRot = chase(mem, 40, -this.body.zRot * 1.4F + 0.3F, 0.45F, 0.22F, t) + j1 * 0.5F;
+            this.head.xRot = 0.42F + chase(mem, 41, lf * 0.35F, 0.55F, 0.25F, t);
             earFlop = 0.82F;
             grains = 1.0F;
             blend = 5.0F;
@@ -428,7 +429,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             float crouch = span(pt, 0.0F, 2.0F) * (1.0F - span(pt, 2.0F, 3.5F));
             float leap = easeOut(Mth.clamp((pt - 2.0F) / 4.0F, 0.0F, 1.0F));
             float arc = Mth.sin(Mth.clamp((pt - 2.0F) / 8.0F, 0.0F, 1.0F) * 3.1415927F);
-            float raise = span(pt, 0.5F, 3.5F);
+            float raise = span(pt, 0.0F, 4.0F);
             float stab = span(pt, 6.0F, 8.0F);
             this.body.y = 21.0F + crouch * 1.4F - arc * 3.2F;
             this.body.z = -leap * 9.0F;
@@ -453,7 +454,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             earGy = 0.7F;
             earGz = 1.0F * leap;
             earSpread = 0.35F;
-            blend = 2.0F;
+            blend = 3.0F;
         } else if (pose == LIMP) {
             // the salt water: a shrieking spasm, the knife flung out of its paw, then it falls on its back with a soft
             // bounce and lies limp, rice pouring from the wound
@@ -474,8 +475,8 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.legL.xRot = -0.35F * spasm - 0.15F * fall;
             this.legR.zRot = 0.35F * fall;
             this.legL.zRot = -0.3F * fall;
-            this.knife.visible = pt < 3.0F;
-            this.knife.xRot = -2.5F * span(pt, 0.5F, 3.0F);
+            this.knife.visible = pt < 3.5F;
+            this.knife.xRot = -1.8F * span(pt, 0.0F, 3.5F);
             armFlop = 0.7F * fall;
             armW = 0.6F;
             armZ = 0.3F;
@@ -485,15 +486,15 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             jawOpen = spasm + 0.3F * fall;
             earFlop = 0.6F + 0.3F * fall;
             grains = pt < 40.0F ? 1.0F : 0.0F;
-            blend = 2.0F;
+            blend = 4.0F;
         } else if (pose == BURN) {
             // on its back in the fire: thrashing, then curling up as it burns and shrinks, twitching less and less
             float thrash = 1.0F - span(pt, 12.0F, 100.0F);
             float curl = span(pt, 10.0F, 130.0F);
             float shrink = span(pt, 20.0F, 220.0F);
             float tw = twitch(t, 13.0F, 0.0F) + twitch(t, 17.0F, 5.0F) * 0.7F + twitch(t, 37.0F, 11.0F) * 0.5F;
-            float n1 = noise(t * 1.9F) * thrash;
-            float n2 = noise(t * 2.3F + 30.0F) * thrash;
+            float n1 = noise(t * 0.32F) * thrash;
+            float n2 = noise(t * 0.41F + 30.0F) * thrash;
             this.body.xRot = -1.45F + 0.25F * curl + n1 * 0.12F;
             this.body.y = 22.62F + 0.25F * shrink;
             this.body.zRot = n2 * 0.15F + tw * 0.05F;
@@ -515,8 +516,8 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.footR.xRot = 0.8F * curl;
             this.footL.xRot = 0.8F * curl;
             // the ears curl like burning paper
-            this.earRTip.zRot = 0.5F + 2.0F * curl;
-            this.earLTip.zRot = -0.5F - 2.0F * curl;
+            this.earRTip.zRot = 0.25F + 1.9F * curl;
+            this.earLTip.zRot = -0.25F - 1.9F * curl;
             earFlop = 0.6F * (1.0F - curl);
             jawOpen = (1.0F - span(pt, 30.0F, 70.0F)) * (0.75F + 0.25F * Mth.sin(t * 0.9F)) + 0.25F * curl;
             this.knife.visible = false;
@@ -552,16 +553,16 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
         this.blend(mem, poseTicks, blend, ageInTicks);
         // plush physics after the blend: ears, the hanging eye, the loose thread end and limp limbs swing on springs
         flop(mem, 0, this.earR, earFlop, earGx - earSpread, earGy, earGz, 0.42F, 0.24F, t, this.root, this.body, this.head);
-        flop(mem, 2, this.earRTip, Math.min(1.0F, earFlop * 1.12F), earGx - earSpread * 1.2F, earGy, earGz, 0.58F, 0.2F, t, this.root, this.body, this.head, this.earR);
-        flop(mem, 4, this.earL, earFlop, earGx + earSpread, earGy, earGz, 0.42F, 0.24F, t, this.root, this.body, this.head);
-        flop(mem, 6, this.earLTip, Math.min(1.0F, earFlop * 1.12F), earGx + earSpread * 1.2F, earGy, earGz, 0.58F, 0.2F, t, this.root, this.body, this.head, this.earL);
-        flop(mem, 8, this.eyeThread, 0.97F, 0.0F, 1.0F, 0.0F, 0.6F, 0.1F, t, this.root, this.body, this.head);
-        flop(mem, 10, this.threadEnd, 0.94F, 0.0F, 1.0F, 0.0F, 0.5F, 0.14F, t, this.root, this.body, this.torso);
-        flop(mem, 12, this.armR, armFlop, 0.0F, 1.0F, 0.0F, armW, armZ, t, this.root, this.body);
-        flop(mem, 14, this.armL, armFlop, 0.0F, 1.0F, 0.0F, armW, armZ, t, this.root, this.body);
-        flop(mem, 16, this.legR, legFlop, 0.0F, 0.45F, legGz, legW, legZ, t, this.root, this.body);
-        flop(mem, 18, this.legL, legFlop, 0.0F, 0.45F, legGz, legW, legZ, t, this.root, this.body);
-        flop(mem, 22, this.knife, knifeAim, kgx, kgy, kgz, 1.3F, 0.8F, t, this.root, this.body, this.armR, this.pawR);
+        flop(mem, 3, this.earRTip, Math.min(1.0F, earFlop * 1.12F), earGx - earSpread * 1.2F, earGy, earGz, 0.58F, 0.2F, t, this.root, this.body, this.head, this.earR);
+        flop(mem, 6, this.earL, earFlop, earGx + earSpread, earGy, earGz, 0.42F, 0.24F, t, this.root, this.body, this.head);
+        flop(mem, 9, this.earLTip, Math.min(1.0F, earFlop * 1.12F), earGx + earSpread * 1.2F, earGy, earGz, 0.58F, 0.2F, t, this.root, this.body, this.head, this.earL);
+        flop(mem, 12, this.eyeThread, 0.97F, 0.0F, 1.0F, 0.0F, 0.55F, 0.16F, t, this.root, this.body, this.head);
+        flop(mem, 15, this.threadEnd, 0.94F, 0.0F, 1.0F, 0.0F, 0.5F, 0.14F, t, this.root, this.body, this.torso);
+        flop(mem, 18, this.armR, armFlop, 0.0F, 1.0F, 0.0F, armW, armZ, t, this.root, this.body);
+        flop(mem, 21, this.armL, armFlop, 0.0F, 1.0F, 0.0F, armW, armZ, t, this.root, this.body);
+        flop(mem, 24, this.legR, legFlop, 0.0F, 0.45F, legGz, legW, legZ, t, this.root, this.body);
+        flop(mem, 27, this.legL, legFlop, 0.0F, 0.45F, legGz, legW, legZ, t, this.root, this.body);
+        flop(mem, 33, this.knife, knifeAim, kgx, kgy, kgz, 1.3F, 0.8F, t, this.root, this.body, this.armR, this.pawR);
         // water drips (real time: water keeps falling even while the doll holds still) and rice grains from the wound
         level(this.dripA, this.root, this.body, this.torso);
         level(this.dripB, this.root, this.body, this.armL, this.pawL);
@@ -704,7 +705,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
         if (u < 0.5F) {
             return Mth.lerp(ease(u / 0.5F), 2.75F, 0.55F);
         }
-        return Mth.lerp(easeOut((u - 0.5F) / 0.5F), 0.55F, 2.75F);
+        return Mth.lerp(ease((u - 0.5F) / 0.5F), 0.55F, 2.75F);
     }
 
     /** The crawling arm's height (u = 0..1): down on the floor while pulling, lifted while swinging forward. */
@@ -727,9 +728,9 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
         float clock;
         int clockPose = -2;
         float clockPt;
-        final float[] sx = new float[24];
-        final float[] sv = new float[24];
-        final float[] st = new float[] {-1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F};
+        final float[] sx = new float[48];
+        final float[] sv = new float[48];
+        final float[] st = new float[] {-1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F};
     }
 
     private State state(Entity entity, int pose, float age) {
@@ -834,7 +835,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
         return s.clock;
     }
 
-    /** A damped spring per entity (slot 0..23): chases `target` with inertia and overshoot (w: angular frequency per
+    /** A damped spring per entity (slot 0..47): chases `target` with inertia and overshoot (w: angular frequency per
      *  tick, z: damping ratio), integrated in at most 160 sub-steps of 1/4 tick on the clock `t`; it restarts at the
      *  target after a gap of more than 40 ticks or when time runs backwards, and holds while `t` holds. */
     private static float chase(State s, int slot, float target, float w, float z, float t) {
@@ -860,9 +861,10 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
     }
 
     /** Plush physics: a part extending along its +y leans from its posed direction toward the model-space direction
-     *  (gx, gy, gz) (gravity = 0, 1, 0; keep gy >= 0.3) by `flop` (0 stiff .. 1 hanging) and follows with inertia
-     *  (springs in slots `slot` and `slot + 1`): it lags, swings and settles whenever its ancestors (`chain`, root side
-     *  first) move. The correction is the smallest rotation onto the posed rotation, so the part keeps its twist. */
+     *  (gx, gy, gz) (gravity = 0, 1, 0) by `flop` (0 stiff .. 1 hanging) and follows with inertia: the direction (in its
+     *  parent's frame) is a spherical pendulum (slots `slot` .. `slot + 2`), so it lags, swings and settles
+     *  whenever its ancestors (`chain`, root side first) move. The correction is the smallest rotation onto the posed
+     *  rotation, so the part keeps its twist: author rest poses within ~120 degrees of where the part will hang. */
     private static void flop(State s, int slot, ModelPart part, float flop, float gx, float gy, float gz, float w, float z, float t,
                              ModelPart... chain) {
         float pz = Mth.cos(part.zRot), qz = Mth.sin(part.zRot), py = Mth.cos(part.yRot), qy = Mth.sin(part.yRot);
@@ -888,17 +890,49 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
         float hl = Math.max(1.0E-4F, Mth.sqrt(hx * hx + hy * hy + hz * hz));
         float dx = Mth.lerp(flop, rx, hx / hl), dy = Mth.lerp(flop, ry, hy / hl), dz = Mth.lerp(flop, rz, hz / hl);
         float dl = Math.max(1.0E-4F, Mth.sqrt(dx * dx + dy * dy + dz * dz));
-        float ax = (float) Math.asin(Mth.clamp(dz / dl, -1.0F, 1.0F));
-        float az = (float) Math.atan2(-dx, dy);
-        if (s.st[slot + 1] >= 0.0F) {
-            // no long way round: the sideways angle continues from where its spring is
-            float d = az - s.sx[slot + 1];
-            d -= Mth.TWO_PI * (float) Mth.floor((d + Mth.PI) / Mth.TWO_PI);
-            az = s.sx[slot + 1] + d;
+        // a spherical pendulum toward that direction: a damped spring whose state stays a unit vector (no angles, so
+        // no singular direction, and it can never whip through the centre); slots slot .. slot + 2
+        dx /= dl;
+        dy /= dl;
+        dz /= dl;
+        float ex = s.sx[slot], ey = s.sx[slot + 1], ez = s.sx[slot + 2];
+        float last = s.st[slot];
+        if (last < 0.0F || t < last || t - last > 40.0F) {
+            ex = dx;
+            ey = dy;
+            ez = dz;
+            s.sv[slot] = 0.0F;
+            s.sv[slot + 1] = 0.0F;
+            s.sv[slot + 2] = 0.0F;
+        } else if (t > last) {
+            float dt = t - last;
+            int n = Math.min(160, Math.max(1, (int) Math.ceil(dt * 4.0F)));
+            float h = dt / (float) n;
+            float ux = s.sv[slot], uy = s.sv[slot + 1], uz = s.sv[slot + 2];
+            for (int i = 0; i < n; i++) {
+                ux += (w * w * (dx - ex) - 2.0F * z * w * ux) * h;
+                uy += (w * w * (dy - ey) - 2.0F * z * w * uy) * h;
+                uz += (w * w * (dz - ez) - 2.0F * z * w * uz) * h;
+                float rad = ux * ex + uy * ey + uz * ez;
+                ux -= rad * ex;
+                uy -= rad * ey;
+                uz -= rad * ez;
+                ex += ux * h;
+                ey += uy * h;
+                ez += uz * h;
+                float el = Math.max(1.0E-4F, Mth.sqrt(ex * ex + ey * ey + ez * ez));
+                ex /= el;
+                ey /= el;
+                ez /= el;
+            }
+            s.sv[slot] = ux;
+            s.sv[slot + 1] = uy;
+            s.sv[slot + 2] = uz;
         }
-        float bx = chase(s, slot, ax, w, z, t);
-        float bz = chase(s, slot + 1, az, w, z, t);
-        float ex = -Mth.sin(bz) * Mth.cos(bx), ey = Mth.cos(bz) * Mth.cos(bx), ez = Mth.sin(bx);
+        s.sx[slot] = ex;
+        s.sx[slot + 1] = ey;
+        s.sx[slot + 2] = ez;
+        s.st[slot] = t;
         // D = the smallest rotation taking r onto e: I + [v]x + [v]x^2 / (1 + r.e), v = r x e; then N = D * P
         float vx = ry * ez - rz * ey, vy = rz * ex - rx * ez, vz = rx * ey - ry * ex;
         float k = 1.0F / Math.max(1.0E-3F, 1.0F + rx * ex + ry * ey + rz * ez);
