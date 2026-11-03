@@ -1,0 +1,344 @@
+59:[03Nov2026 16:15:24.656] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+60:[03Nov2026 16:15:24.659] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+61:[03Nov2026 16:15:24.860] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+62:[03Nov2026 16:15:25.802] [Render thread/INFO] [Oculus/]: Using shaderpack: ReisatsuShaders.zip
+66:[03Nov2026 16:15:26.094] [modloading-worker-0/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] 霊撮: the automatic door opens. Nobody is there.
+67:[03Nov2026 16:15:27.773] [Render thread/INFO] [Oculus/]: Hardware information:
+68:[03Nov2026 16:15:27.773] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 7763 64-Core Processor
+69:[03Nov2026 16:15:27.773] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+70:[03Nov2026 16:15:27.773] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1019-azure)
+75:[03Nov2026 16:15:28.824] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+76:com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+99:Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+108:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+135:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+190:[03Nov2026 16:15:28.896] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/reisatsu-client.toml is not correct. Correcting
+195:[03Nov2026 16:15:28.906] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders was corrected from null to its default, SimpleCommentedConfig:{}. 
+196:[03Nov2026 16:15:28.907] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders.installShaderPack was corrected from null to its default, true. 
+208:[03Nov2026 16:15:28.935] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/reisatsu-common.toml is not correct. Correcting
+214:[03Nov2026 16:15:31.146] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [ReisatsuShaders] copied ReisatsuShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/ReisatsuShaders.zip; Oculus pack already selected: ReisatsuShaders.zip (reloading updated pack)
+215:[03Nov2026 16:15:31.263] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+218:[03Nov2026 16:15:32.013] [Render thread/INFO] [Oculus/]: Using shaderpack: ReisatsuShaders.zip
+221:[03Nov2026 16:15:35.108] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+222:java.lang.IllegalStateException: Failed to open OpenAL device
+265:[03Nov2026 16:15:35.731] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+269:[03Nov2026 16:15:35.961] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+270:[03Nov2026 16:15:36.029] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+271:[03Nov2026 16:15:36.091] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+273:[03Nov2026 16:15:45.758] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: title screen (shaders=true)
+275:[03Nov2026 16:15:48.341] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 00_title
+280:[03Nov2026 16:15:50.727] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/ReisatsuCI/serverconfig/forge-server.toml is not correct. Correcting
+282:[03Nov2026 16:15:50.728] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+283:[03Nov2026 16:15:50.728] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+300:[03Nov2026 16:15:54.311] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: world creation requested
+303:[03Nov2026 16:15:54.787] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+304:[03Nov2026 16:15:54.787] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+306:[03Nov2026 16:15:54.867] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+307:[03Nov2026 16:15:54.891] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+308:[03Nov2026 16:15:56.366] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] Dev arrives at HIDAMARI (replay=false)
+309:[03Nov2026 16:15:56.516] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=middle,side=right] but failed at location BlockPos{x=4, y=66, z=30}
+310:[03Nov2026 16:15:56.517] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=top,side=left] but failed at location BlockPos{x=3, y=67, z=26}
+311:[03Nov2026 16:15:56.517] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=middle,side=left] but failed at location BlockPos{x=3, y=66, z=26}
+312:[03Nov2026 16:15:56.517] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=top,side=right] but failed at location BlockPos{x=4, y=67, z=26}
+313:[03Nov2026 16:15:56.517] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=middle,side=right] but failed at location BlockPos{x=4, y=66, z=26}
+314:[03Nov2026 16:15:56.517] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=top,side=left] but failed at location BlockPos{x=3, y=67, z=30}
+315:[03Nov2026 16:15:56.517] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=middle,side=left] but failed at location BlockPos{x=3, y=66, z=30}
+316:[03Nov2026 16:15:56.518] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:auto_door}[facing=south,open=false,part=top,side=right] but failed at location BlockPos{x=4, y=67, z=30}
+317:[03Nov2026 16:15:56.703] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:swing_door}[facing=south,half=upper,side=left,swing=0] but failed at location BlockPos{x=29, y=66, z=10}
+318:[03Nov2026 16:15:56.704] [Server thread/WARN] [net.minecraft.world.level.chunk.LevelChunk/]: Tried to load a block entity for block Block{reisatsu:swing_door}[facing=south,half=upper,side=right,swing=0] but failed at location BlockPos{x=30, y=66, z=10}
+335:[03Nov2026 16:16:00.061] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] ReisatsuShaders を更新しました。
+336:[03Nov2026 16:16:00.759] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='reisatsu', name='hidamari'}
+337:[03Nov2026 16:16:00.759] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+338:[03Nov2026 16:16:00.771] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='reisatsu', name='hidamari'}
+339:[03Nov2026 16:16:01.537] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+348:[03Nov2026 16:16:24.454] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: world tour: 38 shots
+349:[03Nov2026 16:16:24.460] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: in world, 255 steps
+351:[03Nov2026 16:16:28.332] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step rules pos=4, 65, 41 shaders=true
+353:[03Nov2026 16:16:28.341] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step skip_intro pos=4, 65, 41 shaders=true
+355:[03Nov2026 16:16:36.464] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step settle pos=4, 65, 41 shaders=true
+356:[03Nov2026 16:16:45.555] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 05_after_intro
+357:[03Nov2026 16:16:46.327] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step tour_begin pos=4, 65, 41 shaders=true
+359:[03Nov2026 16:16:47.115] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_road_approach pos=4, 65, 41 shaders=true
+360:[03Nov2026 16:16:47.197] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] restaurant reset (6132 blocks restored)
+362:[03Nov2026 16:17:07.494] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_road_approach
+363:[03Nov2026 16:17:07.498] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_front pos=-27, 65, 53 shaders=true
+365:[03Nov2026 16:17:33.223] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_front
+366:[03Nov2026 16:17:33.227] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_entrance pos=20, 65, 46 shaders=true
+368:[03Nov2026 16:17:47.697] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_entrance
+369:[03Nov2026 16:17:48.589] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_vending pos=4, 65, 37 shaders=true
+371:[03Nov2026 16:17:58.479] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_vending
+372:[03Nov2026 16:17:58.482] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_sign pos=10, 65, 34 shaders=true
+374:[03Nov2026 16:18:10.260] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_sign
+375:[03Nov2026 16:18:10.264] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_lot pos=37, 65, 40 shaders=true
+377:[03Nov2026 16:18:33.116] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_lot
+378:[03Nov2026 16:18:33.119] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_window_table7 pos=-7, 65, 47 shaders=true
+380:[03Nov2026 16:18:57.793] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_window_table7
+381:[03Nov2026 16:18:58.767] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_curve pos=34, 65, 36 shaders=true
+383:[03Nov2026 16:19:12.307] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_curve
+384:[03Nov2026 16:19:12.995] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_flowers pos=52, 65, 54 shaders=true
+386:[03Nov2026 16:19:23.374] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_flowers
+387:[03Nov2026 16:19:23.995] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_curve_mirror pos=72, 65, 48 shaders=true
+389:[03Nov2026 16:19:31.897] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_curve_mirror
+390:[03Nov2026 16:19:31.900] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_traffic_light pos=61, 65, 53 shaders=true
+392:[03Nov2026 16:19:50.861] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_traffic_light
+393:[03Nov2026 16:19:50.864] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_back_yard pos=-19, 65, 54 shaders=true
+395:[03Nov2026 16:20:12.212] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_back_yard
+396:[03Nov2026 16:20:12.215] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_staff_path pos=38, 65, -9 shaders=true
+398:[03Nov2026 16:20:35.067] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_staff_path
+399:[03Nov2026 16:20:35.070] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_east_side pos=-3, 65, 28 shaders=true
+401:[03Nov2026 16:20:56.208] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_east_side
+402:[03Nov2026 16:20:56.211] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_overview pos=44, 65, 31 shaders=true
+404:[03Nov2026 16:21:21.213] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_overview
+405:[03Nov2026 16:21:22.011] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_ext_overview_curve pos=20, 88, 72 shaders=true
+407:[03Nov2026 16:21:33.346] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_ext_overview_curve
+408:[03Nov2026 16:21:33.352] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_vestibule_off pos=30, 92, 92 shaders=true
+409:[03Nov2026 16:21:33.404] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] restaurant reset (6129 blocks restored)
+411:[03Nov2026 16:21:57.814] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_vestibule_off
+412:[03Nov2026 16:21:58.596] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_waiting_off pos=6, 65, 28 shaders=true
+414:[03Nov2026 16:22:08.182] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_waiting_off
+415:[03Nov2026 16:22:08.185] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_register_off pos=1, 65, 24 shaders=true
+417:[03Nov2026 16:22:17.877] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_register_off
+418:[03Nov2026 16:22:18.742] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_kids_corner_off pos=8, 65, 25 shaders=true
+420:[03Nov2026 16:22:26.129] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_kids_corner_off
+421:[03Nov2026 16:22:26.131] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_dining_west_off pos=9, 65, 25 shaders=true
+423:[03Nov2026 16:22:38.606] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_dining_west_off
+424:[03Nov2026 16:22:38.609] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_dining_east_off pos=15, 65, 12 shaders=true
+426:[03Nov2026 16:22:54.327] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_dining_east_off
+427:[03Nov2026 16:22:54.331] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_dining_booths_off pos=37, 65, 26 shaders=true
+429:[03Nov2026 16:23:06.361] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_dining_booths_off
+430:[03Nov2026 16:23:06.366] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_table7_off pos=22, 65, 26 shaders=true
+432:[03Nov2026 16:23:16.514] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_table7_off
+433:[03Nov2026 16:23:17.351] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_drink_bar_off pos=31, 65, 25 shaders=true
+435:[03Nov2026 16:23:30.213] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_drink_bar_off
+436:[03Nov2026 16:23:30.216] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_pass_window_off pos=19, 65, 15 shaders=true
+438:[03Nov2026 16:23:37.136] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_pass_window_off
+439:[03Nov2026 16:23:37.790] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_kitchen_line_off pos=24, 65, 14 shaders=true
+441:[03Nov2026 16:23:44.931] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_kitchen_line_off
+442:[03Nov2026 16:23:44.936] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_kitchen_dish_pit_off pos=25, 65, 8 shaders=true
+444:[03Nov2026 16:23:51.555] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_kitchen_dish_pit_off
+445:[03Nov2026 16:23:51.557] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_fridge_off pos=31, 65, 6 shaders=true
+447:[03Nov2026 16:24:02.353] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_fridge_off
+448:[03Nov2026 16:24:02.356] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_corridor_off pos=17, 65, 3 shaders=true
+450:[03Nov2026 16:24:12.589] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_corridor_off
+451:[03Nov2026 16:24:12.592] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_staff_room_off pos=13, 65, 8 shaders=true
+453:[03Nov2026 16:24:23.417] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_staff_room_off
+454:[03Nov2026 16:24:23.420] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_office_off pos=5, 65, 5 shaders=true
+456:[03Nov2026 16:24:33.289] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_office_off
+457:[03Nov2026 16:24:34.283] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_office_window_off pos=12, 65, 5 shaders=true
+459:[03Nov2026 16:24:45.059] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_office_window_off
+460:[03Nov2026 16:24:45.061] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_storage_off pos=9, 65, 9 shaders=true
+462:[03Nov2026 16:24:55.092] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_storage_off
+463:[03Nov2026 16:24:55.979] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_mens_off pos=3, 65, 11 shaders=true
+465:[03Nov2026 16:25:06.792] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_mens_off
+466:[03Nov2026 16:25:07.704] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_womens_off pos=3, 65, 21 shaders=true
+468:[03Nov2026 16:25:17.758] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_womens_off
+469:[03Nov2026 16:25:18.654] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_mirror_off pos=11, 65, 21 shaders=true
+471:[03Nov2026 16:25:27.015] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_mirror_off
+472:[03Nov2026 16:25:27.018] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_world_cavity_off pos=10, 65, 19 shaders=true
+474:[03Nov2026 16:25:37.161] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot world_cavity_off
+475:[03Nov2026 16:25:37.164] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step tour_end pos=11, 65, 11 shaders=true
+477:[03Nov2026 16:25:37.993] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pano_begin pos=11, 65, 11 shaders=true
+479:[03Nov2026 16:25:38.030] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] restaurant reset (6129 blocks restored)
+480:[03Nov2026 16:25:51.038] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_0 pos=11, 65, 11 shaders=true
+482:[03Nov2026 16:26:15.541] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_0
+483:[03Nov2026 16:26:15.544] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_1 pos=16, 65, 41 shaders=true
+485:[03Nov2026 16:26:22.785] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_1
+486:[03Nov2026 16:26:22.788] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_2 pos=16, 65, 41 shaders=true
+488:[03Nov2026 16:26:29.217] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_2
+489:[03Nov2026 16:26:29.220] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_3 pos=16, 65, 41 shaders=true
+491:[03Nov2026 16:26:36.018] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_3
+492:[03Nov2026 16:26:36.021] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_4 pos=16, 65, 41 shaders=true
+494:[03Nov2026 16:26:41.895] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_4
+495:[03Nov2026 16:26:41.899] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_pano_5 pos=16, 65, 41 shaders=true
+497:[03Nov2026 16:26:49.187] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot pano_5
+498:[03Nov2026 16:26:49.190] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pano_end pos=16, 65, 41 shaders=true
+500:[03Nov2026 16:26:51.220] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step lights_start pos=16, 65, 41 shaders=true
+501:[03Nov2026 16:26:51.266] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] restaurant reset (6129 blocks restored)
+502:[03Nov2026 16:27:01.185] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_10_hud_dining pos=16, 65, 41 shaders=true
+505:[03Nov2026 16:27:17.166] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 10_hud_dining
+506:[03Nov2026 16:27:17.169] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_11_flashlight pos=16, 65, 13 shaders=true
+508:[03Nov2026 16:27:22.535] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 11_flashlight
+509:[03Nov2026 16:27:23.499] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_12_finder_dining pos=16, 65, 13 shaders=true
+511:[03Nov2026 16:27:30.743] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 12_finder_dining
+512:[03Nov2026 16:27:30.746] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_13_finder_kitchen pos=16, 65, 13 shaders=true
+514:[03Nov2026 16:27:40.563] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 13_finder_kitchen
+515:[03Nov2026 16:27:41.220] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_14_finder_restroom pos=25, 65, 8 shaders=true
+517:[03Nov2026 16:27:53.931] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 14_finder_restroom
+518:[03Nov2026 16:27:53.934] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_15_finder_outside pos=10, 65, 19 shaders=true
+520:[03Nov2026 16:28:07.845] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 15_finder_outside
+521:[03Nov2026 16:28:08.821] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_down pos=4, 65, 41 shaders=true
+524:[03Nov2026 16:28:09.771] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_chef pos=4, 65, 41 shaders=true
+526:[03Nov2026 16:28:25.815] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   chef at 25.50 65.00 6.50 yaw -180 pose 0
+527:[03Nov2026 16:28:25.815] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_chef pos=24, 65, 13 shaders=true
+528:[03Nov2026 16:28:25.817] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_chef_eye
+529:[03Nov2026 16:28:25.820] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_chef pos=24, 65, 13 shaders=true
+531:[03Nov2026 16:28:29.595] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_chef_finder
+532:[03Nov2026 16:28:30.262] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_chef pos=24, 65, 13 shaders=true
+536:[03Nov2026 16:28:30.881] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_waitress pos=24, 65, 13 shaders=true
+537:[03Nov2026 16:28:48.286] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   waitress at 32.50 65.00 12.50 yaw -180 pose 3
+538:[03Nov2026 16:28:48.286] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_waitress pos=35, 65, 13 shaders=true
+539:[03Nov2026 16:28:48.288] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_waitress_eye
+540:[03Nov2026 16:28:48.292] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_waitress pos=35, 65, 13 shaders=true
+542:[03Nov2026 16:28:52.426] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_waitress_finder
+543:[03Nov2026 16:28:53.154] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_waitress pos=35, 65, 13 shaders=true
+545:[03Nov2026 16:28:53.158] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_child pos=35, 65, 13 shaders=true
+548:[03Nov2026 16:29:15.160] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   child at 12.50 65.00 27.30 yaw -180 pose 1
+549:[03Nov2026 16:29:15.160] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_child pos=9, 65, 27 shaders=true
+550:[03Nov2026 16:29:15.976] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_child_eye
+551:[03Nov2026 16:29:15.979] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_child pos=9, 65, 27 shaders=true
+553:[03Nov2026 16:29:21.165] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_child_finder
+554:[03Nov2026 16:29:21.168] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_child pos=9, 65, 27 shaders=true
+557:[03Nov2026 16:29:22.086] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_mirror_woman pos=9, 65, 27 shaders=true
+559:[03Nov2026 16:29:43.614] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   mirror_woman at 10.50 65.00 14.50 yaw 0 pose 0
+560:[03Nov2026 16:29:43.615] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_mirror_woman pos=10, 65, 19 shaders=true
+561:[03Nov2026 16:29:43.617] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_mirror_woman_eye
+562:[03Nov2026 16:29:44.465] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_mirror_woman pos=10, 65, 19 shaders=true
+564:[03Nov2026 16:29:49.665] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_mirror_woman_finder
+565:[03Nov2026 16:29:49.669] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_mirror_woman pos=10, 65, 19 shaders=true
+567:[03Nov2026 16:29:50.612] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_manager pos=10, 65, 19 shaders=true
+570:[03Nov2026 16:30:12.044] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   manager at 9.75 65.00 6.50 yaw 90 pose 0
+571:[03Nov2026 16:30:12.044] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_manager pos=11, 65, 2 shaders=true
+572:[03Nov2026 16:30:12.046] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_manager_eye
+573:[03Nov2026 16:30:12.882] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_manager pos=11, 65, 2 shaders=true
+575:[03Nov2026 16:30:17.982] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_manager_finder
+576:[03Nov2026 16:30:17.985] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_manager pos=11, 65, 2 shaders=true
+578:[03Nov2026 16:30:18.880] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_visitor pos=11, 65, 2 shaders=true
+581:[03Nov2026 16:30:40.233] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   visitor at 33.50 65.00 28.50 yaw -90 pose 1
+582:[03Nov2026 16:30:40.233] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_where_visitor pos=34, 65, 24 shaders=true
+583:[03Nov2026 16:30:40.236] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 30_situ_visitor_eye
+584:[03Nov2026 16:30:40.239] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_finder_visitor pos=34, 65, 24 shaders=true
+586:[03Nov2026 16:30:45.239] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 31_situ_visitor_finder
+587:[03Nov2026 16:30:46.115] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step situ_down_visitor pos=34, 65, 24 shaders=true
+589:[03Nov2026 16:30:46.966] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_lights pos=34, 65, 24 shaders=true
+590:[03Nov2026 16:30:52.518] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_visitor pos=34, 65, 24 shaders=true
+593:[03Nov2026 16:31:01.272] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_visitor pos=16, 65, 13 shaders=true
+594:[03Nov2026 16:31:07.135] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_visitor_1 pos=16, 65, 13 shaders=true
+596:[03Nov2026 16:31:13.941] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.visitor 4.0 blocks away
+597:[03Nov2026 16:31:13.941] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_visitor_1 pos=16, 65, 13 shaders=true
+598:[03Nov2026 16:31:14.907] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 40_visitor_eye_p1
+599:[03Nov2026 16:31:14.910] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_visitor_1 pos=16, 65, 13 shaders=true
+601:[03Nov2026 16:31:20.099] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 40_visitor_finder_p1
+602:[03Nov2026 16:31:20.102] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_visitor_4 pos=16, 65, 13 shaders=true
+604:[03Nov2026 16:31:27.987] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.visitor 4.0 blocks away
+605:[03Nov2026 16:31:27.988] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_visitor_4 pos=16, 65, 13 shaders=true
+606:[03Nov2026 16:31:27.992] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 41_visitor_eye_p4
+607:[03Nov2026 16:31:29.014] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_visitor_4 pos=16, 65, 13 shaders=true
+609:[03Nov2026 16:31:33.106] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 41_visitor_finder_p4
+610:[03Nov2026 16:31:34.309] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_visitor pos=16, 65, 13 shaders=true
+611:[03Nov2026 16:31:34.313] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_waitress pos=16, 65, 13 shaders=true
+614:[03Nov2026 16:31:44.285] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_waitress pos=16, 65, 13 shaders=true
+615:[03Nov2026 16:31:50.144] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_waitress_0 pos=16, 65, 13 shaders=true
+617:[03Nov2026 16:31:57.058] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.waitress 4.0 blocks away
+618:[03Nov2026 16:31:57.058] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_waitress_0 pos=16, 65, 13 shaders=true
+619:[03Nov2026 16:31:57.062] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 42_waitress_eye_p0
+620:[03Nov2026 16:31:58.095] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_waitress_0 pos=16, 65, 13 shaders=true
+622:[03Nov2026 16:32:03.242] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 42_waitress_finder_p0
+623:[03Nov2026 16:32:03.246] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_waitress_2 pos=16, 65, 13 shaders=true
+625:[03Nov2026 16:32:10.185] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.waitress 4.0 blocks away
+626:[03Nov2026 16:32:10.185] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_waitress_2 pos=16, 65, 13 shaders=true
+627:[03Nov2026 16:32:11.157] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 43_waitress_eye_p2
+628:[03Nov2026 16:32:11.160] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_waitress_2 pos=16, 65, 13 shaders=true
+630:[03Nov2026 16:32:16.429] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 43_waitress_finder_p2
+631:[03Nov2026 16:32:17.529] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_waitress pos=16, 65, 13 shaders=true
+632:[03Nov2026 16:32:17.533] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_chef pos=16, 65, 13 shaders=true
+635:[03Nov2026 16:32:26.408] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_chef pos=16, 65, 13 shaders=true
+636:[03Nov2026 16:32:32.270] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_chef_0 pos=16, 65, 13 shaders=true
+638:[03Nov2026 16:32:40.371] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.chef 4.0 blocks away
+639:[03Nov2026 16:32:40.371] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_chef_0 pos=16, 65, 13 shaders=true
+640:[03Nov2026 16:32:40.375] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 44_chef_eye_p0
+641:[03Nov2026 16:32:41.399] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_chef_0 pos=16, 65, 13 shaders=true
+643:[03Nov2026 16:32:46.537] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 44_chef_finder_p0
+644:[03Nov2026 16:32:46.540] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_chef_5 pos=16, 65, 13 shaders=true
+646:[03Nov2026 16:32:53.563] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.chef 4.0 blocks away
+647:[03Nov2026 16:32:53.564] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_chef_5 pos=16, 65, 13 shaders=true
+648:[03Nov2026 16:32:54.533] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 45_chef_eye_p5
+649:[03Nov2026 16:32:54.536] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_chef_5 pos=16, 65, 13 shaders=true
+651:[03Nov2026 16:32:59.728] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 45_chef_finder_p5
+652:[03Nov2026 16:32:59.731] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_chef pos=16, 65, 13 shaders=true
+653:[03Nov2026 16:33:00.814] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_child pos=16, 65, 13 shaders=true
+656:[03Nov2026 16:33:09.647] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_child pos=16, 65, 13 shaders=true
+657:[03Nov2026 16:33:15.488] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_child_2 pos=16, 65, 13 shaders=true
+659:[03Nov2026 16:33:23.359] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.child 4.0 blocks away
+660:[03Nov2026 16:33:23.359] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_child_2 pos=16, 65, 13 shaders=true
+661:[03Nov2026 16:33:23.364] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 46_child_eye_p2
+662:[03Nov2026 16:33:23.367] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_child_2 pos=16, 65, 13 shaders=true
+664:[03Nov2026 16:33:28.607] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 46_child_finder_p2
+665:[03Nov2026 16:33:29.694] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_child_6 pos=16, 65, 13 shaders=true
+667:[03Nov2026 16:33:36.851] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.child 4.0 blocks away
+668:[03Nov2026 16:33:36.852] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_child_6 pos=16, 65, 13 shaders=true
+669:[03Nov2026 16:33:37.827] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 47_child_eye_p6
+670:[03Nov2026 16:33:37.830] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_child_6 pos=16, 65, 13 shaders=true
+672:[03Nov2026 16:33:43.031] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 47_child_finder_p6
+673:[03Nov2026 16:33:43.034] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_child pos=16, 65, 13 shaders=true
+674:[03Nov2026 16:33:44.115] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_mirror_woman pos=16, 65, 13 shaders=true
+677:[03Nov2026 16:33:52.954] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_mirror_woman pos=16, 65, 13 shaders=true
+678:[03Nov2026 16:33:58.820] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_mirror_woman_1 pos=16, 65, 13 shaders=true
+680:[03Nov2026 16:34:05.672] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.mirror_woman 4.0 blocks away
+681:[03Nov2026 16:34:05.673] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_mirror_woman_1 pos=16, 65, 13 shaders=true
+682:[03Nov2026 16:34:06.646] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 48_mirror_woman_eye_p1
+683:[03Nov2026 16:34:06.649] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_mirror_woman_1 pos=16, 65, 13 shaders=true
+685:[03Nov2026 16:34:11.877] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 48_mirror_woman_finder_p1
+686:[03Nov2026 16:34:12.972] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_mirror_woman_3 pos=16, 65, 13 shaders=true
+688:[03Nov2026 16:34:19.892] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.mirror_woman 4.0 blocks away
+689:[03Nov2026 16:34:19.893] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_mirror_woman_3 pos=16, 65, 13 shaders=true
+690:[03Nov2026 16:34:19.896] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 49_mirror_woman_eye_p3
+691:[03Nov2026 16:34:20.923] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_mirror_woman_3 pos=16, 65, 13 shaders=true
+693:[03Nov2026 16:34:26.063] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 49_mirror_woman_finder_p3
+694:[03Nov2026 16:34:26.066] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_mirror_woman pos=16, 65, 13 shaders=true
+695:[03Nov2026 16:34:27.153] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step sweep_manager pos=16, 65, 13 shaders=true
+698:[03Nov2026 16:34:36.291] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step spawn_manager pos=16, 65, 13 shaders=true
+700:[03Nov2026 16:34:42.104] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_manager_1 pos=16, 65, 13 shaders=true
+701:[03Nov2026 16:34:48.958] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.manager 4.0 blocks away
+702:[03Nov2026 16:34:48.959] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_manager_1 pos=16, 65, 13 shaders=true
+703:[03Nov2026 16:34:49.930] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 50_manager_eye_p1
+704:[03Nov2026 16:34:49.933] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_manager_1 pos=16, 65, 13 shaders=true
+706:[03Nov2026 16:34:55.190] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 50_manager_finder_p1
+707:[03Nov2026 16:34:55.193] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step pose_manager_5 pos=16, 65, 13 shaders=true
+709:[03Nov2026 16:35:03.085] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.manager 4.0 blocks away
+710:[03Nov2026 16:35:03.085] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step face_manager_5 pos=16, 65, 13 shaders=true
+711:[03Nov2026 16:35:03.088] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 51_manager_eye_p5
+712:[03Nov2026 16:35:04.126] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step finder_manager_5 pos=16, 65, 13 shaders=true
+714:[03Nov2026 16:35:08.284] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 51_manager_finder_p5
+715:[03Nov2026 16:35:09.362] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step clear_manager pos=16, 65, 13 shaders=true
+716:[03Nov2026 16:35:09.365] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_setup pos=16, 65, 13 shaders=true
+719:[03Nov2026 16:35:17.685] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_pose pos=16, 65, 13 shaders=true
+720:[03Nov2026 16:35:18.731] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots:   entity.reisatsu.waitress 5.0 blocks away
+721:[03Nov2026 16:35:18.732] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_face pos=16, 65, 13 shaders=true
+722:[03Nov2026 16:35:19.766] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_shutter pos=16, 65, 13 shaders=true
+723:[03Nov2026 16:35:19.770] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] Dev photographed the waitress (★3)
+724:[03Nov2026 16:35:24.153] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 50_photo_eject
+725:[03Nov2026 16:35:25.251] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_develop pos=16, 65, 13 shaders=true
+726:[03Nov2026 16:35:53.484] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 51_photo_named
+727:[03Nov2026 16:35:53.487] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step photo_lower pos=16, 65, 13 shaders=true
+729:[03Nov2026 16:35:59.394] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step locker_go pos=16, 65, 13 shaders=true
+731:[03Nov2026 16:36:08.583] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_56_locker pos=2, 65, 4 shaders=true
+732:[03Nov2026 16:36:16.688] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 56_locker
+733:[03Nov2026 16:36:17.606] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step locker_out pos=1, 65, 4 shaders=true
+734:[03Nov2026 16:36:22.882] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_57_fear_high pos=2, 65, 4 shaders=true
+737:[03Nov2026 16:36:39.630] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 57_fear_high
+738:[03Nov2026 16:36:39.634] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_58_danger_high pos=16, 65, 13 shaders=true
+739:[03Nov2026 16:36:49.968] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 58_danger_high
+740:[03Nov2026 16:36:51.179] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step calm pos=16, 65, 13 shaders=true
+741:[03Nov2026 16:36:57.800] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step closing_spirits pos=16, 65, 13 shaders=true
+742:[03Nov2026 16:36:58.934] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step go_62_closing pos=16, 65, 13 shaders=true
+744:[03Nov2026 16:36:58.936] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] closing time
+745:[03Nov2026 16:37:06.270] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] night 7: the manager is there (3 signs witnessed)
+746:[03Nov2026 16:37:18.986] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 62_closing
+747:[03Nov2026 16:37:18.989] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step closing_wait pos=16, 65, 13 shaders=true
+748:[03Nov2026 16:38:12.887] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 63_closing_manager
+749:[03Nov2026 16:38:14.082] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step exorcism pos=16, 65, 13 shaders=true
+750:[03Nov2026 16:38:14.104] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] the exorcism begins
+751:[03Nov2026 16:38:57.988] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 64_exorcism_walk
+752:[03Nov2026 16:38:57.991] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step exorcism_wait pos=34, 65, 23 shaders=true
+753:[03Nov2026 16:39:50.119] [Server thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] dawn: all six sent on (ofuda used 0)
+754:[03Nov2026 16:40:21.432] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 65_exorcism_table
+755:[03Nov2026 16:40:22.667] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step exorcism_wait2 pos=34, 65, 23 shaders=true
+756:[03Nov2026 16:40:30.011] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 66_exorcism_spirit
+757:[03Nov2026 16:40:30.014] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: step exorcism_wait3 pos=34, 65, 23 shaders=true
+758:[03Nov2026 16:40:44.852] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: shot 67_exorcism_release
+759:[03Nov2026 16:40:46.083] [Render thread/INFO] [com.reisatsu.Reisatsu/]: [reisatsu] autoshots: finished
+767:[03Nov2026 16:40:48.151] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ReisatsuCI]'/minecraft:overworld
+768:[03Nov2026 16:40:48.172] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ReisatsuCI]'/minecraft:the_nether
+769:[03Nov2026 16:40:48.173] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ReisatsuCI]'/reisatsu:hidamari
+770:[03Nov2026 16:40:48.188] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[ReisatsuCI]'/minecraft:the_end
+771:[03Nov2026 16:40:48.207] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (ReisatsuCI): All chunks are saved
