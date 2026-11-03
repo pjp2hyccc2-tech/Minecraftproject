@@ -482,6 +482,31 @@ Furniture and fixtures (custom block models; `facing` unless noted)
 | `flower_offering` | wrapped bouquet, a can of coffee and a small toy motorbike at the guardrail |
 | `note_paper` | a sheet of paper (decal; note id from the block entity / marker) |
 
+### 7.1 Who makes which block model, and their names
+
+* **world** (`tools/gen_assets.py`) writes every **blockstate** and the models of the plain shapes: full cubes
+  (`cube_all` / `cube_column` / `cube_bottom_top` / `orientable`), vanilla-parented shapes (slab, stairs, carpet for the
+  1 px layers `entrance_mat` and `puddle`, leaves for `hedge`, doors) and every block **item** model. That covers:
+  all of "Surfaces and structure" except `pendant_lamp`, `exit_sign`, `window_blind` (art), and the vanilla-style
+  doors `staff_door`, `office_door`, `restroom_door_m`, `restroom_door_w`, `back_door`, `fridge_door`, `stall_door`
+  (textures `<id>_bottom` / `<id>_top`, and `stall_door_occupied_bottom` / `_top`).
+  `ceiling_light` / `downlight`: cubes whose bottom face is the panel (`<id>` / `<id>_lit` textures; `ceiling_tile` on
+  the other faces).
+* **art** writes every other block model (`models/block/<name>.json`, facing **north**). Names for the visual states
+  (the blockstate maps to them; provide every name even if two are identical — a child model with a `parent` is fine):
+  boolean property `p` → `<id>` (false) and `<id>_<p>` (true); several booleans in the order of §7 → `<id>_<p1>_<p2>`
+  for the true ones (`security_monitors`, `security_monitors_on`, `security_monitors_on_alert`; `security_camera`,
+  `security_camera_on`, `security_camera_on_seen`); integer property → `<id>_<value>` (`water_glass_1..4`,
+  `menu_scattered_0..3`, `menu_board_0`/`_1`, `call_display_0..17` plus `call_display_closed`); `half` / `part` →
+  `<id>_<part>` first, then boolean suffixes (`locker_lower`, `locker_upper_open`, `vending_machine_lower`,
+  `street_lamp_head_lit`, `utility_pole_pole`, `utility_pole_top`, `pole_sign_pole`, `pole_sign_tile_<t>` /
+  `pole_sign_tile_<t>_lit`, `roof_sign_tile_<t>` / `_lit`); `exit_sign` / `exit_sign_hanging`; `mirror` /
+  `mirror_cracked`; `restaurant_chair` / `restaurant_chair_fallen`.
+* The two moving doors are drawn by the world's block entity renderers: `auto_door` (texture `auto_door_panel`
+  16×48: aluminium frame, glass (translucent), the sun-logo decal and the 「自動ドア」 sticker; static block model
+  `auto_door_rail` for the top part's rail/header, art) and `swing_door` (texture `swing_door` 16×32 with the
+  porthole; block model `swing_door_frame`, art).
+
 ### Items (`assets/reisatsu/textures/item/<id>.png`, 16×16)
 `reisha_camera`, `reisha_camera_finder`, `film_pack`, `evidence_photo`, `flashlight`, `flashlight_on`, `ofuda`,
 `shop_key`, `office_key`. 3D held models (`forge:separate_transforms`): `reisha_camera` (boxy old instant camera,
