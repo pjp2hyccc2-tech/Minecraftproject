@@ -53,17 +53,17 @@ public final class ModBlocks {
     }
 
     // ------------------------------------------------------------------------------------------------ sound types
-    /** Floors step with the sound worker's footsteps (played at volume × 0.15 by vanilla, hence 4.0). */
+    /** Footsteps of the softer floors (the sound worker's floor types are in ModSounds; vanilla plays steps at volume × 0.15). */
     private static SoundType steps(Supplier<SoundEvent> step, SoundType base, float volume) {
         return new ForgeSoundType(volume, 1.0f, base::getBreakSound, step, base::getPlaceSound, base::getHitSound, step);
     }
 
-    static final SoundType TATAMI = steps(ModSounds.PLAYER_STEP_TATAMI, SoundType.WOOL, 4.0f);
-    static final SoundType FLOOR = steps(ModSounds.PLAYER_STEP_FLOOR, SoundType.WOOD, 4.0f);
+    static final SoundType TATAMI = ModSounds.SOUND_TYPE_TATAMI;
+    static final SoundType FLOOR = ModSounds.SOUND_TYPE_FLOOR;
     /** The cushion floor of the DK and the washroom: the flooring step, softer. */
     static final SoundType VINYL = steps(ModSounds.PLAYER_STEP_FLOOR, SoundType.WOOD, 2.6f);
-    static final SoundType TILE = steps(ModSounds.PLAYER_STEP_TILE, SoundType.STONE, 4.0f);
-    static final SoundType WET = steps(ModSounds.PLAYER_STEP_WET, SoundType.STONE, 4.0f);
+    static final SoundType TILE = ModSounds.SOUND_TYPE_TILE;
+    static final SoundType WET = ModSounds.SOUND_TYPE_WET;
     /** Cushions and futons muffle the tatami step. */
     static final SoundType SOFT = steps(ModSounds.PLAYER_STEP_TATAMI, SoundType.WOOL, 1.6f);
 
@@ -122,8 +122,8 @@ public final class ModBlocks {
     public static final RegistryObject<Block> OSHIIRE_FLOOR = cube("oshiire_floor", MapColor.WOOD, FLOOR);
     public static final RegistryObject<Block> APARTMENT_SIDING = cube("apartment_siding", MapColor.COLOR_GRAY, SoundType.METAL);
     public static final RegistryObject<Block> APARTMENT_DOOR_METAL = cube("apartment_door_metal", MapColor.COLOR_GRAY, SoundType.METAL);
-    public static final RegistryObject<Block> CORRIDOR_CONCRETE = cube("corridor_concrete", MapColor.STONE, TILE);
-    public static final RegistryObject<Block> CONCRETE = cube("concrete", MapColor.STONE, TILE);
+    public static final RegistryObject<Block> CORRIDOR_CONCRETE = cube("corridor_concrete", MapColor.STONE, WET);
+    public static final RegistryObject<Block> CONCRETE = cube("concrete", MapColor.STONE, WET);
     public static final RegistryObject<Block> ASPHALT_WET = cube("asphalt_wet", MapColor.COLOR_BLACK, WET);
     public static final RegistryObject<Block> BLOCK_WALL = cube("block_wall", MapColor.STONE, SoundType.STONE);
     public static final RegistryObject<Block> ROOF_SLATE = cube("roof_slate", MapColor.COLOR_GRAY, SoundType.STONE);

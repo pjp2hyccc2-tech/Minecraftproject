@@ -154,6 +154,37 @@ def door(name, textures=None, render_type="minecraft:cutout"):
     bs(name, variants)
 
 
+def two_face_door(name, outer, inner):
+    """A door whose two faces differ (203's steel door: the 「203」 plate outside, the chain and the peephole inside).
+    Same shape as the vanilla door models (a 3 px panel along the model's west edge, which faces outside when the door
+    is closed); the handle side follows the hinge."""
+    for half, o, i in (("bottom", outer[0], inner[0]), ("top", outer[1], inner[1])):
+        for hinge in ("left", "right"):
+            for opened in (False, True):
+                left = (hinge == "left") != opened
+                ou = [0, 0, 16, 16] if left else [16, 0, 0, 16]
+                iu = [16, 0, 0, 16] if left else [0, 0, 16, 16]
+                faces = {"west": {"uv": ou, "texture": "#outer"}, "east": {"uv": iu, "texture": "#inner"},
+                         "north": {"uv": [0, 0, 3, 16], "texture": "#outer"}, "south": {"uv": [13, 0, 16, 16], "texture": "#outer"},
+                         "up": {"uv": [0, 0, 3, 16], "texture": "#outer"}, "down": {"uv": [13, 0, 16, 16], "texture": "#outer"}}
+                model(f"{name}_{half}_{hinge}" + ("_open" if opened else ""), {
+                    "parent": "minecraft:block/block", "render_type": "minecraft:cutout",
+                    "textures": {"outer": t(o), "inner": t(i), "particle": t(o)},
+                    "elements": [{"from": [0, 0, 0], "to": [3, 16, 16], "faces": faces}]})
+    variants = {}
+    base_y = {"east": 0, "south": 90, "west": 180, "north": 270}
+    for f in ("east", "north", "south", "west"):
+        for half in ("lower", "upper"):
+            for hinge in ("left", "right"):
+                for opened in ("false", "true"):
+                    part = ("bottom" if half == "lower" else "top") + "_" + hinge + ("_open" if opened == "true" else "")
+                    y = base_y[f]
+                    if opened == "true":
+                        y = (y + (90 if hinge == "left" else 270)) % 360
+                    variants[f"facing={f},half={half},hinge={hinge},open={opened}"] = var(f"{name}_{part}", y)
+    bs(name, variants)
+
+
 def balcony_door():
     """The aluminium sliding glass door: closed on the outer track, open slid 12 px toward +x on the inner track."""
     for half, tex in (("lower", "balcony_door_bottom"), ("upper", "balcony_door_top")):
@@ -275,7 +306,7 @@ def main():
     facing_prop("rain_window")
 
     # ---- doors
-    door("front_door")
+    two_face_door("front_door", ("front_door_bottom", "front_door_top"), ("front_door_inner_bottom", "front_door_inner_top"))
     door("interior_door")
     door("toilet_door")
     door("bath_door", render_type="minecraft:translucent")

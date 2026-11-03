@@ -232,7 +232,7 @@ public final class WorldTour {
                     if (mc.getOverlay() != null) return;
                     try {
                         int n = Preview.prepare(mc);
-                        log("preview pack: " + n + " stand-in assets for missing art");
+                        log("preview pack: " + (n % 1000) + " stand-in assets for missing art, " + (n / 1000) + " art files from ci/art_preview");
                     } catch (Exception e) {
                         log("preview pack failed: " + e);
                         Hitori.LOGGER.error("[hitori] preview pack", e);
@@ -468,6 +468,24 @@ public final class WorldTour {
             }
             Files.createDirectories(pack);
             Files.writeString(pack.resolve("pack.mcmeta"), "{\"pack\":{\"pack_format\":15,\"description\":\"HITORI CI preview (stand-in art)\"}}");
+            // a snapshot of the art branch's block assets (ci/art_preview, CI only) goes in first
+            int copied = 0;
+            Path snapshot = Path.of("..", "ci", "art_preview", "assets");
+            if (Files.isDirectory(snapshot)) {
+                try (var walk = Files.walk(snapshot)) {
+                    for (Path src : (Iterable<Path>) walk::iterator) {
+                        if (!Files.isRegularFile(src)) continue;
+                        Path rel = snapshot.relativize(src);
+                        if (rm.getResource(new net.minecraft.resources.ResourceLocation(Hitori.MODID,
+                                rel.toString().replace('\\', '/').replaceFirst("^" + Hitori.MODID + "/", ""))).isPresent()) continue;
+                        Path out = pack.resolve("assets").resolve(rel);
+                        Files.createDirectories(out.getParent());
+                        Files.copy(src, out, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                        copied++;
+                    }
+                }
+            }
+            final Path packAssets = pack.resolve("assets/" + Hitori.MODID);
             java.util.Set<String> textures = new java.util.TreeSet<>();
             java.util.Map<String, net.minecraft.world.level.block.Block> models = new java.util.TreeMap<>();
             for (var e : net.minecraftforge.registries.ForgeRegistries.BLOCKS.getEntries()) {
@@ -488,8 +506,9 @@ public final class WorldTour {
             for (var e : models.entrySet()) {
                 String name = e.getKey();
                 var res = rm.getResource(new net.minecraft.resources.ResourceLocation(Hitori.MODID, "models/block/" + name + ".json"));
-                if (res.isPresent()) {
-                    try (var r = res.get().openAsReader()) {
+                Path snap = packAssets.resolve("models/block/" + name + ".json");
+                if (res.isPresent() || Files.exists(snap)) {
+                    try (var r = res.isPresent() ? res.get().openAsReader() : Files.newBufferedReader(snap, StandardCharsets.UTF_8)) {
                         var json = com.google.gson.JsonParser.parseReader(r).getAsJsonObject();
                         if (json.has("textures")) {
                             for (var t : json.getAsJsonObject("textures").entrySet()) {
@@ -504,7 +523,7 @@ public final class WorldTour {
                 written++;
             }
             for (String t : textures) {
-                if (exists(rm, "textures/block/" + t + ".png")) continue;
+                if (exists(rm, "textures/block/" + t + ".png") || Files.exists(packAssets.resolve("textures/block/" + t + ".png"))) continue;
                 String v = vanilla(t);
                 if (t.endsWith("_lit")) v = litVanilla(t, v);
                 var src = rm.getResource(new net.minecraft.resources.ResourceLocation("minecraft", "textures/block/" + v + ".png"));
@@ -525,7 +544,7 @@ public final class WorldTour {
                 repo.setSelected(ids);
                 mc.options.updateResourcePacks(repo);
             }
-            return written;
+            return written + copied * 1000;
         }
 
         /** A box model of the block's own shape (facing north), textured with a vanilla stand-in. */
