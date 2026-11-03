@@ -3,6 +3,7 @@
 LitCanvas extends render3d.Canvas with a normal buffer, an emissive mask and a deferred point-light pass, so props can
 be judged both in neutral light and at night lit only by the restaurant's light sources (emissive faces stay bright).
 """
+import fnmatch
 import json
 import math
 import os
@@ -257,9 +258,14 @@ def orbit_eye(target, yaw, pitch, dist):
 
 
 SUPPORT = {}     # prop name -> model drawn in the block below (table / counter) in previews
+SUPPORT_PATTERNS = [('crt_tv*', 'tv_stand'), ('laptop_block*', 'desk'), ('sewing_box*', 'desk'), ('printout', 'desk'),
+                    ('desk_lamp*', 'desk'), ('salt_shaker', 'drawer'), ('cup_glass', 'drawer'),
+                    ('rice_cooker', 'drawer'), ('microwave', 'fridge_old'), ('plush_doll*', 'shelf'),
+                    ('hanging_lamp*', ''), ('bath_tap*', ''), ('shower', ''), ('fusuma*', ''), ('oshiire_fusuma*', ''),
+                    ('pull_switch', ''), ('futon_folded', '')]
 
 
-def render_prop(name, yaw=-35.0, pitch=26.0, size=224, floor='hitori:block/dining_floor', zoom=1.0, extent=None,
+def render_prop(name, yaw=-35.0, pitch=26.0, size=224, floor='hitori:block/old_flooring', zoom=1.0, extent=None,
                 bg=(46, 48, 54)):
     m = model_json(name)
     lo = np.array([0, 0, 0.0])
@@ -268,8 +274,13 @@ def render_prop(name, yaw=-35.0, pitch=26.0, size=224, floor='hitori:block/dinin
         lo = np.minimum(lo, np.array(el['from']) / 16)
         hi = np.maximum(hi, np.array(el['to']) / 16)
     sup = SUPPORT.get(name)
-    if sup is None and lo[1] < -0.01:
-        sup = 'restaurant_table'
+    if sup is None:
+        for pat, s_ in SUPPORT_PATTERNS:
+            if fnmatch.fnmatch(name, pat):
+                sup = s_
+                break
+    if sup is None and lo[1] < -0.01 and lo[1] > -0.5:
+        sup = 'desk'
     if sup:
         lo = np.array([lo[0], -1.0, lo[2]])
         hi = np.array([hi[0], max(hi[1], 0.5), hi[2]])
