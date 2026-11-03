@@ -7,3 +7,4 @@ import rs_back  # noqa: F401  staff room, office, corridor, storage
 import rs_restroom  # noqa: F401  restrooms and the dark mirror
 import rs_exterior  # noqa: F401  exterior, signs, road, door hardware
 import rs_items  # noqa: F401  item sprites and 3D held models
+import rs_gui  # noqa: F401  GUI textures
