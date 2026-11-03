@@ -474,7 +474,7 @@ public final class Trailer {
         // the eyes: shut = blindness on the view (the pack's eyelids), opening = its last second running out
         eyes(p, F.eyes);
         for (Puppet pp : shot.puppets) pp.apply(partial, ageTicks);
-        if (shot.irisClock) IrisClock.set(shotIndex * 97.0f + t);
+        if (shot.irisClock) IrisClock.set(shot.clockBase + t);
         mc.getToasts().clear();
     }
 

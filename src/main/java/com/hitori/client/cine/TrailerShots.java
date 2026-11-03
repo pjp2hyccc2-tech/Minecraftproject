@@ -229,6 +229,8 @@ final class TrailerShots {
         Vec3 setupAt = null;
         /** Preview key times (null: start, middle, end). */
         float[] keys = null;
+        /** The shader clock at the shot's t = 0 (the pack's flicker, rain and feed noise run on it); fixed per shot. */
+        float clockBase;
         final Dress set = new Dress();
         final List<Trailer.Puppet> puppets = new ArrayList<>();
         final List<Event> events = new ArrayList<>();
@@ -236,6 +238,7 @@ final class TrailerShots {
         Shot(String name, float duration) {
             this.name = name;
             this.duration = duration;
+            this.clockBase = Integer.parseInt(name.substring(0, 2)) * 97.0f;
         }
 
         void reset() {
@@ -492,8 +495,8 @@ final class TrailerShots {
         @Override
         void setup(Minecraft mc) {
             // the inner area of the tub (both its blocks): x 32 + 1.5..14.5 px, z 1 + 1.5 px .. 2 + 14.5 px
-            water = Trailer.display(ModBlocks.PUDDLE.get().defaultBlockState(), null, "none", v(32.09375, 70.3, 1.09375), 0.0f, 0.0f, 0.0f,
-                    new Vec3(0.8125, 1.0, 1.8125), Vec3.ZERO);
+            water = Trailer.display(net.minecraft.world.level.block.Blocks.LIGHT_BLUE_STAINED_GLASS.defaultBlockState(), null, "none",
+                    v(32.09375, 70.3, 1.09375), 0.0f, 0.0f, 0.0f, new Vec3(0.8125, 0.004, 1.8125), Vec3.ZERO);
             puppets.add(water);
         }
 
@@ -582,8 +585,8 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             float k = easeSine(seg(t, 0.0f, 5.0f));
-            Vec3 from = lerp(v(31.82, 72.3, 2.78), v(31.95, 71.88, 2.32), k);
-            Vec3 at = lerp(v(32.48, 70.62, 1.55), v(32.5, 70.62, 1.5), k);
+            Vec3 from = lerp(v(31.82, 72.3, 2.8), v(31.96, 71.82, 2.36), k);
+            Vec3 at = lerp(v(32.48, 70.62, 1.66), v(32.5, 70.62, 1.62), k);
             f.look(from, at);
             f.breathe(t, 0.3f, 16.0f);
             f.hide = CAM1;
@@ -677,8 +680,8 @@ final class TrailerShots {
             double x = 30.95 + 0.62 * easeSine(seg(t, 0.0f, 1.4f));
             double z = 5.15 - 2.45 * k;
             Vec3 from = v(x, 71.62, z);
-            Vec3 door = v(31.6, 71.1, 2.2);
-            Vec3 tub = v(32.45, 70.68, 1.5);
+            Vec3 door = v(31.6, 71.1, 2.0);
+            Vec3 tub = v(32.45, 70.66, 2.35);
             f.look(from, lerp(door, tub, easeSine(seg(t, 1.3f, 3.0f))));
             f.walking(t, 1.6f, 1.0f - seg(t, 2.4f, 3.0f));
             f.shake(0.15f + 0.25f * seg(t, 3.0f, 3.8f), t, 22.0f);
@@ -690,8 +693,8 @@ final class TrailerShots {
             f.fov = 60.0f;
             f.fear = lerp(0.38f, 0.48f, seg(t, 2.5f, 4.0f));
             if (d != null) {
-                Vec3 p = OniDoll.tubSpot(0);
-                d.at(p.x, p.y, p.z + 0.08).look(150.0f, 150.0f, 0.0f).walk(0.0f, 0.0f);
+                Vec3 p = OniDoll.tubSpot(1);
+                d.at(p.x, p.y, p.z - 0.05).look(-30.0f, -30.0f, 0.0f).walk(0.0f, 0.0f);
                 doll(d).puppetPose(OniDoll.FLOAT, t * 20.0f + 520.0f, 0.0f);
             }
         }
@@ -733,7 +736,7 @@ final class TrailerShots {
             float[] bot = Trailer.project(mc, f, v(23.9, 70.08, 10.12), w, h);
             if (top == null || bot == null) return;
             float flick = clamp01(0.62f + 0.22f * noise(t * 9.0f, 3.0f) + 0.16f * noise(t * 23.0f, 7.0f));
-            float[][] layers = {{4.5f, 0.07f}, {1.8f, 0.22f}, {0.55f, 0.95f}};
+            float[][] layers = {{8.0f, 0.06f}, {2.6f, 0.2f}, {0.85f, 1.0f}};
             for (float[] l : layers) {
                 float hw = l[0] * 0.5f;
                 int a = Math.round(255.0f * clamp01(l[1] * flick));
@@ -812,6 +815,7 @@ final class TrailerShots {
             set.tv = true;
             set.doors("tatami_dk", "tatami_hall");
             setupAt = v(27.3, 71.63, 1.4);
+            clockBase = 587.81f;
         }
 
         @Override
@@ -845,7 +849,7 @@ final class TrailerShots {
             f.fear = 0.6f;
             f.danger = lerp(0.15f, 0.3f, seg(t, 0.0f, 4.0f));
             float h = held(t);
-            f.burst = Math.abs(t - 2.62f) < 0.05f ? 0.7f : 0.0f;
+            f.burst = t > 2.42f && t < 2.52f ? 0.7f : 0.0f;
             if (d != null) {
                 // dragging itself toward the lens: 0.034 blocks a tick of its own clock
                 double z = 6.75 - 0.034 * 20.0 * h * SPEED;
@@ -858,14 +862,15 @@ final class TrailerShots {
     /** 15: the camera app, CAM3 和室, IR: the woman standing in the corner by the pillar, head bowed; one short tear of the
      *  feed. (The camera is set a little nearer to her than its spot in the SE corner.) */
     static final class CamWoman extends Shot {
-        static final float TEAR0 = 2.0f, TEAR1 = 2.13f;
+        static final float TEAR0 = 2.22f, TEAR1 = 2.34f;
         Trailer.Puppet w;
 
         CamWoman() {
             super("15_cam_woman", 3.5f);
             set.tv = true;
             setupAt = v(26.6, 71.63, 11.9);
-            keys = new float[]{0.5f, 2.05f, 3.4f};
+            keys = new float[]{0.5f, 2.28f, 3.4f};
+            clockBase = 588.01f;
         }
 
         @Override
@@ -965,9 +970,10 @@ final class TrailerShots {
     }
 
     /** 18: the fusuma flung open, the doll lunging into the lens until its face fills the frame (the laptop in your hands,
-     *  its screen's glow on the face). */
+     *  its screen's glow on the face). The spring is held at its nearest frame (tick 6, the mouth torn open, the knife up)
+     *  while the body carries it on to the lens. */
     static final class Lunge extends Shot {
-        static final float OPEN = 0.2f, SLID = 0.34f, SPRING = 0.5f;
+        static final float OPEN = 0.2f, SLID = 0.34f, SPRING = 0.5f, HOLD = 6.2f;
         Trailer.Puppet d;
 
         Lunge() {
@@ -986,11 +992,16 @@ final class TrailerShots {
 
         @Override
         void frame(float t, Frame f) {
-            float pt = Math.max(0.0f, t - SPRING) * 20.0f;
-            float hit = seg(pt, 2.0f, 7.5f);
+            float pt = Math.min(HOLD, Math.max(0.0f, t - SPRING) * 20.0f);
+            float spring = seg(pt, 2.0f, 6.0f);
+            float hit = seg(t, SPRING + 0.1f, SPRING + 0.42f);
             float creep = easeSine(seg(t, 0.95f, 2.0f));
-            f.look(v(23.2, 70.9, 10.2), lerp(v(24.6, 70.45, 10.3), v(23.9, 70.62, 10.22), easeSine(hit)));
-            f.shake(0.25f + 1.6f * hit * (1.0f - 0.6f * creep) + 0.6f * seg(t, OPEN, SLID), t, 32.0f);
+            float carry = hit * hit * (3.0f - 2.0f * hit);
+            double x = 24.6 - 0.48 * carry - 0.05 * creep;
+            double y = 70.0 + 0.1 * carry;
+            Vec3 face = v(x - 0.56 * spring, y + 0.45 + 0.2 * spring, 10.2);
+            f.look(v(23.2, 70.9, 10.2), lerp(v(24.6, 70.5, 10.2), face, easeSine(seg(t, SPRING, SPRING + 0.4f))));
+            f.shake(0.25f + 1.4f * hit * (1.0f - 0.65f * creep) + 0.6f * seg(t, OPEN, SLID), t, 32.0f);
             f.breathe(t, 0.6f, 33.0f);
             f.main = Held.LAPTOP;
             f.fov = 54.0f;
@@ -1005,12 +1016,8 @@ final class TrailerShots {
                 }
             }
             if (d != null) {
-                // the model springs ~0.56 blocks by itself; the body carries it on to the lens, then it creeps closer
-                float carry = hit * hit * (3.0f - 2.0f * hit);
-                double x = 24.6 - 0.62 * carry - 0.07 * creep;
-                double y = 70.0 + 0.12 * carry;
-                d.at(x, y, 10.2).look(90.0f, 90.0f, -10.0f * carry).walk(0.0f, 0.0f);
-                doll(d).puppetPose(OniDoll.LUNGE, pt, 0.25f);
+                d.at(x, y, 10.2).look(90.0f, 90.0f, -8.0f * carry).walk(0.0f, 0.0f);
+                doll(d).puppetPose(OniDoll.LUNGE, pt, 0.2f);
             }
         }
     }
