@@ -290,7 +290,7 @@ public final class ModBlocks {
     public static final RegistryObject<PropBlock> VENDING_MACHINE_SMALL = litProp("vending_machine_small", MapColor.QUARTZ, SoundType.METAL, s -> 11,
             b -> b.box(1, 0, 2, 15, 16, 16).collision(1, 0, 2, 15, 24, 16));
     /** Mounted on the north side of a pole block (at facing north), facing away from it. */
-    public static final RegistryObject<PropBlock> STREET_LAMP_OLD = litProp("street_lamp_old", MapColor.METAL, SoundType.METAL, when(Props.LIT, 15),
+    public static final RegistryObject<PropBlock> STREET_LAMP_OLD = litProp("street_lamp_old", MapColor.METAL, SoundType.METAL, when(Props.LIT, 12),
             b -> b.box(4, 2, 0, 12, 10, 16).props(Props.LIT).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> UTILITY_POLE = prop("utility_pole", MapColor.STONE, SoundType.STONE,
             b -> b.box(5, 0, 5, 11, 16, 11).props(Props.TOP));

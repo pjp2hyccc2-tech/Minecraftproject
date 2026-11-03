@@ -547,7 +547,7 @@ public final class ApartmentBuilder {
         for (int yy = y; yy <= y + 2; yy++) {
             s.set(24, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, true));
             s.set(25, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, true));
-            s.set(26, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, false));
+            s.set(26, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, true));
         }
         // ---- the 押し入れ: two-high fusuma in the closet's column, futons and a box on the middle shelf
         for (int z = 10; z <= 12; z++) halves(s, f(ModBlocks.OSHIIRE_FUSUMA, E).setValue(Props.OPEN3, 0), 23, y, z);
@@ -571,7 +571,7 @@ public final class ApartmentBuilder {
         s.set(29, y, 12, f(ModBlocks.BED, N).setValue(Props.PART, Props.Part.FOOT));
         s.set(29, y + 1, 7, f(ModBlocks.POSTER, S));
         for (int yy = y; yy <= y + 2; yy++) {
-            s.set(30, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, true));
+            s.set(30, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, false));
             s.set(31, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, true));
         }
         s.set(31, y + 2, 7, f(ModBlocks.POSTER, S));
