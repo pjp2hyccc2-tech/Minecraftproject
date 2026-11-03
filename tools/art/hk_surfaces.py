@@ -51,7 +51,7 @@ IGUSA_SUN = ramp(['#4e4630', '#62593b', '#776d46', '#8a7f52', '#9b905e', '#aa9f6
 HERI = pal('#120f0b', '#1c1812', '#28221a', '#352d22', '#4a4030')
 VARNISH = ramp(['#140b06', '#1f1209', '#2a190d', '#362111', '#432a16', '#51331c', '#5f3d22', '#6e4729'], 8)
 CUSHION = ramp(['#8a7a5e', '#9e8e70', '#b0a082', '#c0b192', '#cdbf9f', '#d8cbac'], 6)
-PLASTER = ramp(['#7b6f58', '#8e826a', '#a0947b', '#afa389', '#bcb096', '#c7bca2', '#d1c7ad'], 7)
+PLASTER = ramp(['#857a63', '#958a72', '#a3987f', '#b0a58b', '#bbb096', '#c5bba1', '#cec4ab'], 7)
 CEDAR = ramp(['#4e3420', '#64432a', '#7a5334', '#8d6340', '#9e734c', '#ad8258', '#bb9166'], 7)
 PLYWOOD = ramp(['#7a6040', '#8e7250', '#a1845e', '#b2956c', '#c1a47a', '#ceb288'], 6)
 BATH_BLUE = ramp(['#4f6f7c', '#628392', '#7698a6', '#8aabb8', '#9dbcc8', '#afcbd5', '#c0d8e0'], 7)
@@ -255,13 +255,13 @@ def _bath_tiles(seed, size, floor=False):
     dl(a, 0.06, (tx == 0) & (ty == 0) & ~grout)
     dl(a, 0.03, (ty == 0) & ~grout)
     dl(a, -0.04, ((tx == size - 2) | (ty == size - 2)) & ~grout)
-    gcol = ramp(['#1c201f', '#272c2b', '#333938', '#414846', '#505755'], 5)
+    gcol = ramp(['#2a2f2e', '#363c3b', '#444a49', '#535a58', '#646b69'], 5)
     gn = wrapn(seed + 2, beta=1.2)
-    gi = np.clip((2.9 if not floor else 2.2) + gn * 1.0, 0, 4)
+    gi = np.clip((3.4 if not floor else 2.4) + gn * 0.8, 0, 4)
     a[grout] = from_idx(gi, gcol)[grout]
     # black mould in the grout lines (patches of near-black grout)
-    mould = (wrapn(seed + 3, beta=1.0) > (0.6 if not floor else 0.3)) & grout
-    a[mould] = C('#121514')
+    mould = (wrapn(seed + 3, beta=1.0) > (0.9 if not floor else 0.4)) & grout
+    a[mould] = C('#1a1e1c')
     # soap scum / limescale haze
     haze = wrapn(seed + 4, beta=2.0) > 0.7
     tint(a, '#dfe6e2', 0.12, haze & ~grout)
@@ -292,19 +292,20 @@ def bath_tile_floor():
 
 # ================================================================================================ walls
 def _plaster(seed):
-    """Old beige sand-textured wall (京壁): fine granular grain, faint mottling, a few dark grains."""
+    """Old beige sand-textured wall (京壁): a soft, fine granular grain (no big specks: walls are seen large), faint
+    mottling, a few darker grains."""
     r = rng(seed)
     x, y = xy()
-    n = wrapn(seed, beta=1.7)
+    n = wrapn(seed, beta=1.9)
     fine = wrapn(seed + 1, beta=0.0)
-    idx = 4.0 + n * 0.32 + fine * 0.38
+    idx = 3.9 + n * 0.22 + fine * 0.2
     a = from_idx(idx, PLASTER)
-    # sand grains: lit / shadow pairs (relief from the top-left)
-    for _ in range(18):
+    # sand grains: a lit / shadow pair here and there (relief from the top-left), low contrast
+    for _ in range(10):
         gx, gy = int(r.integers(0, 16)), int(r.integers(0, 16))
-        wdl(a, gx, gy, 0.035)
-        wdl(a, gx + 1, gy + 1, -0.045)
-    specks(a, seed + 2, 0.02, '#6a5c44', 0.55)
+        wdl(a, gx, gy, 0.02)
+        wdl(a, gx + 1, gy + 1, -0.025)
+    specks(a, seed + 2, 0.012, '#8a7c62', 0.4)
     tint(a, '#a8905a', 0.05)
     return a
 

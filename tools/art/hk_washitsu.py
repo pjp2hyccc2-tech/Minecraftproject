@@ -581,11 +581,11 @@ def futon_folded():
     BLANKET = mat('futon_blanket', _futon(ramp(['#3a2c22', '#4a382c', '#5a4636', '#6a5442', '#7a624e'], 5), 6021,
                                           '#8a7058'))
     SHEET = mat('futon_sheet', _futon(PAPER, 6031, '#d4cfc1'))
-    m.box([1, 1, 1.5], [15, 4.5, 14.5], BLUE)
-    m.box([0.5, 1.2, 1], [15.5, 3.8, 1.6], BLUE)                            # the front fold bulging out
-    m.box([1.5, 4.5, 2], [14.5, 7.5, 14.5], PINK)
-    m.box([2, 7.5, 2.5], [14, 9.5, 14], BLANKET)
-    m.box([2.5, 9.5, 3], [13.5, 10.5, 13.5], SHEET)
+    m.box([1, 1, 2.6], [15, 4.5, 14.5], BLUE)
+    m.box([0.5, 1.2, 2.0], [15.5, 3.8, 2.6], BLUE)                          # the front fold bulging out
+    m.box([1.5, 4.5, 3], [14.5, 7.5, 14.5], PINK)
+    m.box([2, 7.5, 3.5], [14, 9.5, 14], BLANKET)
+    m.box([2.5, 9.5, 4], [13.5, 10.5, 13.5], SHEET)
     # a buckwheat pillow on top
     m.box([4, 10.5, 5], [11, 12.5, 9.5], mat('futon_pillow', _futon(ramp(['#8a8270', '#a09884', '#b4ac98',
                                                                        '#c4bca8'], 4), 6041, '#7a7262')))
@@ -728,16 +728,15 @@ def _fusuma_picture(oshiire=False):
         lat = ((x + y) % 4 == 0) | ((x - y) % 4 == 0)
         tint(a, '#9a8e70', 0.16, lat)
         # a strip of yellowed tape repairing a tear
-        rect(a, 8, 12, 12, 13, '#d8c48a')
-        tint(a[12:14, 8:13], '#a08a50', 0.2)
+        tint(a[12:14, 8:13], '#c8b47a', 0.35)
         # an old sticker of a white rabbit (from someone before you), half peeled
-        sticker = ['.#.#.', '.#.#.', '#####', '#k#k#', '##p##', '.###.']
+        sticker = ['#.#', '#.#', '###', 'k#k', '#p#']
         for j, row in enumerate(sticker):
             for i, ch in enumerate(row):
-                c = {'#': '#ece8e0', 'k': '#2a2a2a', 'p': '#d89090'}.get(ch)
+                c = {'#': '#e2ded4', 'k': '#4a4846', 'p': '#c8989a'}.get(ch)
                 if c:
-                    px(a, 4 + i, 6 + j, c)
-        px(a, 8, 11, '#c8c0b0')
+                    px(a, 4 + i, 19 + j, c, 0.55)
+        px(a, 7, 23, '#c8c0b0')
     # yellowed / dirty toward the foot of the panel, and the hand grime band at pull height
     yel = np.clip((y - H * 0.7) / (H * 0.3), 0, 1)
     tint(a, '#a08a58', yel * 0.18)
@@ -763,9 +762,11 @@ def _panel_face(oshiire, half, back=False):
             # the inside of the closet doors: plain brown lining paper with old newspaper patches
             b = from_idx(2.6 + noise(14, 30, 6401, beta=1.4, wrap=False) * 0.3, PAPER)
             tint(b, '#8a7a5a', 0.35)
-            rect(b, 2, 9, 7, 14, '#c8c0a8')
-            for yy in range(10, 14):
-                hline(b, 3, 6, yy, '#8a8476')
+            patch = np.zeros((30, 14), bool)
+            patch[9:13, 2:6] = True
+            tint(b, '#b8b098', 0.22, patch)
+            for yy in range(10, 12):
+                hline(b, 3, 4, yy, '#6a6456')
             pic = b
         if half == 'upper':
             a[1:16, 1:15] = pic[0:15]
@@ -782,6 +783,25 @@ def _panel_face(oshiire, half, back=False):
                 px(a, 2 + dx, 3 + dy, c)
         return a
     return fn
+
+
+def _tenbukuro(w, h):
+    """The small upper cupboard's fusuma (16 x 16 face): plain worn paper in its black frame, a little round pull."""
+    a = blank(w, h, '#151110')
+    b = from_idx(4.2 + noise(14, 15, 6501, beta=1.6, wrap=False) * 0.3, FUSUMA_PAPER)
+    tint(b, '#a08a58', 0.12)
+    a[1:16, 1:15] = b
+    hline(a, 0, 15, 0, '#2a2220')
+    vline(a, 0, 0, 15, '#2a2220')
+    vline(a, 15, 0, 15, '#0e0a08')
+    vline(a, 8, 1, 15, '#2a2220')
+    for (dx, dy, c) in ((0, 0, '#b8943e'), (0, 1, '#2a1c0e')):
+        px(a, 3 + dx, 8 + dy, c)
+        px(a, 12 + dx, 8 + dy, c)
+    return a
+
+
+A_OSH.add('tenbukuro', 16, 16, _tenbukuro)
 
 
 def _fusuma_models(oshiire):
@@ -817,6 +837,12 @@ def _fusuma_models(oshiire):
             else:
                 lz0, lz1 = (0, 3.6) if oshiire else (6.5, 10.5)
                 m.box([0, 15.2, lz0], [16, 16, lz1], SILL)
+                if oshiire:
+                    # the 天袋 above: a small fixed fusuma closing the futon shelf (overflows into the block above)
+                    m.box([0, 16, 0.25], [16, 31.2, 1.75], FRAME,
+                          faces={'north': {'r': 'tenbukuro', 'sub': (0, 0.8, 16, 16)},
+                                 'south': {'r': 'upper_back', 'sub': (0, 0.8, 16, 16), 'flip': 'h'}})
+                    m.box([0, 31.2, 0], [16, 32, 3.6], SILL)
     return
 
 
