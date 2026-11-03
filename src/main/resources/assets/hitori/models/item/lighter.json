@@ -1,0 +1,413 @@
+{
+ "loader": "forge:separate_transforms",
+ "base": {
+  "textures": {
+   "t": "hitori:item/held/lighter",
+   "particle": "hitori:item/held/lighter"
+  },
+  "elements": [
+   {
+    "from": [
+     7.0,
+     4.0,
+     7.4
+    ],
+    "to": [
+     9.2,
+     9.5,
+     8.6
+    ],
+    "faces": {
+     "north": {
+      "texture": "#t",
+      "uv": [
+       0.0,
+       0.0,
+       2.2,
+       5.5
+      ]
+     },
+     "south": {
+      "texture": "#t",
+      "uv": [
+       0.0,
+       0.0,
+       2.2,
+       5.5
+      ]
+     },
+     "east": {
+      "texture": "#t",
+      "uv": [
+       3.0,
+       0.0,
+       4.2,
+       5.5
+      ]
+     },
+     "west": {
+      "texture": "#t",
+      "uv": [
+       3.0,
+       0.0,
+       4.2,
+       5.5
+      ]
+     },
+     "up": {
+      "texture": "#t",
+      "uv": [
+       8.0,
+       0.0,
+       10.2,
+       1.2
+      ]
+     },
+     "down": {
+      "texture": "#t",
+      "uv": [
+       8.0,
+       0.0,
+       10.2,
+       1.2
+      ]
+     }
+    }
+   },
+   {
+    "from": [
+     7.0,
+     9.5,
+     7.4
+    ],
+    "to": [
+     9.2,
+     10.2,
+     8.6
+    ],
+    "faces": {
+     "north": {
+      "texture": "#t",
+      "uv": [
+       0.0,
+       6.0,
+       2.2,
+       6.7
+      ]
+     },
+     "south": {
+      "texture": "#t",
+      "uv": [
+       0.0,
+       6.0,
+       2.2,
+       6.7
+      ]
+     },
+     "east": {
+      "texture": "#t",
+      "uv": [
+       3.0,
+       6.0,
+       4.2,
+       6.7
+      ]
+     },
+     "west": {
+      "texture": "#t",
+      "uv": [
+       3.0,
+       6.0,
+       4.2,
+       6.7
+      ]
+     },
+     "up": {
+      "texture": "#t",
+      "uv": [
+       5.0,
+       0.0,
+       7.2,
+       1.2
+      ]
+     },
+     "down": {
+      "texture": "#t",
+      "uv": [
+       5.0,
+       0.0,
+       7.2,
+       1.2
+      ]
+     }
+    }
+   },
+   {
+    "from": [
+     7.1,
+     10.2,
+     7.5
+    ],
+    "to": [
+     9.1,
+     11.6,
+     8.5
+    ],
+    "faces": {
+     "north": {
+      "texture": "#t",
+      "uv": [
+       11.0,
+       0.0,
+       13.0,
+       1.4
+      ]
+     },
+     "south": {
+      "texture": "#t",
+      "uv": [
+       11.0,
+       0.0,
+       13.0,
+       1.4
+      ]
+     },
+     "east": {
+      "texture": "#t",
+      "uv": [
+       13.0,
+       0.0,
+       14.0,
+       1.4
+      ]
+     },
+     "west": {
+      "texture": "#t",
+      "uv": [
+       13.0,
+       0.0,
+       14.0,
+       1.4
+      ]
+     },
+     "up": {
+      "texture": "#t",
+      "uv": [
+       5.0,
+       6.0,
+       7.0,
+       7.0
+      ]
+     },
+     "down": {
+      "texture": "#t",
+      "uv": [
+       5.0,
+       6.0,
+       7.0,
+       7.0
+      ]
+     }
+    }
+   },
+   {
+    "from": [
+     7.6,
+     10.6,
+     7.3
+    ],
+    "to": [
+     8.6,
+     11.4,
+     8.7
+    ],
+    "faces": {
+     "north": {
+      "texture": "#t",
+      "uv": [
+       9.0,
+       6.0,
+       10.0,
+       6.8
+      ]
+     },
+     "south": {
+      "texture": "#t",
+      "uv": [
+       9.0,
+       6.0,
+       10.0,
+       6.8
+      ]
+     },
+     "east": {
+      "texture": "#t",
+      "uv": [
+       7.0,
+       6.0,
+       8.4,
+       6.8
+      ]
+     },
+     "west": {
+      "texture": "#t",
+      "uv": [
+       7.0,
+       6.0,
+       8.4,
+       6.8
+      ]
+     },
+     "up": {
+      "texture": "#t",
+      "uv": [
+       14.0,
+       0.0,
+       15.0,
+       1.4
+      ]
+     },
+     "down": {
+      "texture": "#t",
+      "uv": [
+       14.0,
+       0.0,
+       15.0,
+       1.4
+      ]
+     }
+    }
+   }
+  ],
+  "display": {
+   "firstperson_righthand": {
+    "rotation": [
+     0,
+     -20,
+     0
+    ],
+    "translation": [
+     0.0,
+     3.5,
+     -0.5
+    ],
+    "scale": [
+     0.9,
+     0.9,
+     0.9
+    ]
+   },
+   "firstperson_lefthand": {
+    "rotation": [
+     0,
+     -20,
+     0
+    ],
+    "translation": [
+     0.0,
+     3.5,
+     -0.5
+    ],
+    "scale": [
+     0.9,
+     0.9,
+     0.9
+    ]
+   },
+   "thirdperson_righthand": {
+    "rotation": [
+     70,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3.0,
+     0.5
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "thirdperson_lefthand": {
+    "rotation": [
+     70,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     3.0,
+     0.5
+    ],
+    "scale": [
+     0.55,
+     0.55,
+     0.55
+    ]
+   },
+   "ground": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     2,
+     0
+    ],
+    "scale": [
+     0.5,
+     0.5,
+     0.5
+    ]
+   },
+   "fixed": {
+    "rotation": [
+     0,
+     180,
+     0
+    ],
+    "translation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.8,
+     0.8,
+     0.8
+    ]
+   },
+   "head": {
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "translation": [
+     0,
+     6,
+     -4
+    ],
+    "scale": [
+     0.6,
+     0.6,
+     0.6
+    ]
+   }
+  },
+  "render_type": "minecraft:translucent"
+ },
+ "perspectives": {
+  "gui": {
+   "parent": "minecraft:item/generated",
+   "textures": {
+    "layer0": "hitori:item/lighter"
+   }
+  }
+ }
+}
