@@ -177,7 +177,7 @@ PLAN = ['##D#########',
         '#kkkhh######',
         '#kkkhhdyyyy#',
         '##ff#f#yyyy#',
-        '#jjjjj#yyyy#',
+        '##jjjV#yyy##',
         '#Ojjjj#yyyc#',
         '#Ojjjj#yyyc#',
         '#Ojjjj#yyyc#',
@@ -335,7 +335,9 @@ def furnish203(S, tv_on=True, lamp_lit=False, laptop_on=True):
     S.model('dining_chair', 4, 0, 5, 'west')
     S.model('dining_chair', 3, 0, 6, 'north')
     S.model('wall_clock', 2, 2, 4, 'south')
-    S.model('cardboard_box', 2, 0, 7, 'north')
+    S.model('calendar', 1, 2, 4, 'east')
+    S.model('cardboard_box', 4, 0, 4, 'west')
+    wmodel(S, 'trash_bag', 4, 0, 7, 'west')
     S.model('fluorescent_ring', 2, 2, 5, 'north')
     # tatami room
     S.model('tv_stand', 5, 0, 9, 'west')
@@ -347,9 +349,8 @@ def furnish203(S, tv_on=True, lamp_lit=False, laptop_on=True):
     S.model('pull_switch', 3, 1, 11, 'north')
     S.model('altar_shelf', 5, 0, 12, 'west')
     for yy in (0, 1, 2):
-        S.model('curtain_closed', 2, yy, 12, 'north')
-        S.model('curtain_closed', 3, yy, 12, 'north')
-        S.model('curtain', 4, yy, 12, 'north')
+        for x in (2, 3, 4):
+            S.model('curtain_closed', x, yy, 12, 'north')
     for z in (10, 11, 12):
         halves(S, 'oshiire_fusuma', 1, z, 'east')
     S.model('futon_folded', 1, 2, 10, 'east')
@@ -370,16 +371,23 @@ def furnish203(S, tv_on=True, lamp_lit=False, laptop_on=True):
     S.model('bed_head', 7, 0, 11, 'north')
     S.model('bed_foot', 7, 0, 12, 'north')
     S.model('poster', 7, 1, 7, 'south')
+    S.model('poster', 9, 2, 7, 'south')
     S.model('fluorescent_ring_lit', 8, 2, 9, 'north')
     for yy in (0, 1, 2):
-        S.model('curtain_closed', 8, yy, 12, 'north')
+        S.model('curtain', 8, yy, 12, 'north')
         S.model('curtain_closed', 9, yy, 12, 'north')
+    # washing hung up indoors on a rainy night (部屋干し)
+    S.model('laundry_pole', 8, 2, 11, 'north')
+    S.model('laundry_pole', 9, 2, 11, 'north')
+    wmodel(S, 'laundry_hanging', 8, 1, 11, 'north')
+    wmodel(S, 'laundry_hanging', 9, 1, 11, 'south')
     for z in (10, 11, 12):
         halves(S, 'oshiire_fusuma', 10, z, 'west')
 
 
 # ================================================================================================ scenes
 def full203(**kw):
+    vanilla_standins()
     S = Scene()
     apartment(S, 0, 11, 0, 13)
     furnish203(S, **kw)
@@ -453,11 +461,16 @@ def scene_western():
     """The western room: the L of desks (printout, sewing box, the lit desk lamp, the laptop with the camera app),
     the chair, the colour box with the plush rabbit, the pipe bed, the camera bag, the poster."""
     S = full203()
-    S.light((9.55, 1.2, 8.5), (0.6, 0.8, 0.7), 1.0, 1.3)
-    S.light((10.4, 1.35, 7.3), (1.0, 0.95, 0.85), 1.1, 1.6)
-    S.light((8.5, 1.2, 14.6), (1.0, 0.6, 0.28), 0.8, 3.0)
-    eye, tgt = (9.45, 1.6, 12.4), (8.4, 0.8, 7.4)
-    return pair(S.render(eye, tgt, fov=76), S.render(eye, tgt, night=True, exposure=1.5, fov=76), 'scene_western')
+    S.light((9.55, 1.2, 8.5), (0.6, 0.8, 0.7), 1.0, 1.3)              # the laptop
+    S.light((10.4, 1.35, 7.3), (1.0, 0.95, 0.85), 1.1, 1.6)           # the desk lamp
+    S.light((8.5, 2.6, 9.0), (1.0, 0.97, 0.9), 0.9, 3.0)              # the ring light (on at the start)
+    S.light((8.5, 1.2, 14.6), (1.0, 0.6, 0.28), 0.8, 3.0)             # the street lamp through the curtain's gap
+    # from beside the bed toward the desks; then from the desks toward the window (the washing hung up indoors)
+    eye, tgt = (7.6, 1.5, 9.4), (10.3, 0.9, 7.6)
+    out = pair(S.render(eye, tgt, fov=82), S.render(eye, tgt, night=True, exposure=1.5, fov=82), 'scene_western')
+    eye2, tgt2 = (9.2, 1.62, 7.7), (7.6, 0.6, 11.6)
+    pair(S.render(eye2, tgt2, fov=82), S.render(eye2, tgt2, night=True, exposure=1.5, fov=82), 'scene_western_bed')
+    return out
 
 
 def scene_genkan():
@@ -471,91 +484,294 @@ def scene_genkan():
     return pair(S.render(eye, tgt, fov=80), S.render(eye, tgt, night=True, exposure=1.6, fov=80), 'scene_genkan')
 
 
-def scene_exterior():
-    """コーポ白樺 from the street at night: grey siding, the outdoor corridor on the second floor with its doors,
-    nameplates and the vacancy sign on 202, the rusty stairs, mailboxes, the street lamp on its pole, the vending
-    machine, wet asphalt with puddles, a block wall across the street."""
-    S = Scene()
-    xa, xb = -14, 14
-    doors2 = {-20 + 11 * k: k for k in range(4)}            # 2F doors at local x -20, -9, 2, 13 (201..204)
-    openings = set()
-    for ux, k in doors2.items():
-        for y in (0, 1):
-            openings.add((ux, y))
-        for y in (-5, -4):
-            openings.add((ux, y))
-        for wx in (ux + 4, ux + 5):
-            openings.add((wx, 1))
-            openings.add((wx, -4))
+# ================================================================================================ the building
+# コーポ白樺 as the world's ApartmentBuilder / Terrain build it, in this file's local coordinates (x = X - 22,
+# y = Y - 70): four units a floor (201..204 over 101..104), the corridor along the north side, the balconies on the
+# south side over the yard, the street south of the yard with its poles, wires and the old street lamp before 203.
+UNITS_X0 = (-22, -11, 0, 11)            # each unit's west wall (world x 0, 11, 22, 33)
+ROW0, ROW13 = '##D#########', '##WWW###WW##'
+F1, F2, G2 = -5, 0, -1                  # feet: ground floor, upper floor, upper genkan = corridor walk
+BX1, BX2 = -22, 22
+POLES_X = (-30, -13, 4, 21)             # utility poles on the street's north edge (world x -8, 9, 26, 43), z 18
+
+
+def vanilla_standins():
+    """Flat stand-ins for the vanilla textures of the world's own models (previews only - no vanilla jar here)."""
+    def flat(c, n, seed):
+        rgb = np.array([int(c[i:i + 2], 16) for i in (1, 3, 5)], float)
+        a = np.empty((16, 16, 4))
+        a[..., 3] = 255
+        a[..., :3] = rgb * (1 + np.random.default_rng(seed).normal(0, n, (16, 16, 1)))
+        return np.clip(a, 0, 255)
+    for k, (name, c) in enumerate((('iron_block', '#c4c6c8'), ('white_wool', '#e2e0d8'), ('light_blue_wool', '#6a9ec4'),
+                                   ('gray_wool', '#4c5054'), ('white_concrete_powder', '#d4d4cc'),
+                                   ('yellow_concrete_powder', '#d8b43a'), ('black_concrete', '#0c0d0f'),
+                                   ('scene_rail', '#3e3834'), ('scene_post', '#3a3a40'), ('scene_step', '#6e5440'),
+                                   ('scene_pot', '#7a4426'), ('scene_dead', '#6a5a3e'))):
+        RR._TEX.setdefault('block/' + name, flat(c, 0.06, 900 + k))
+
+
+def world_model(name):
+    """A model the world's tools/gen_assets.py writes: from this tree once merged, else from origin/hk-world."""
+    import json
+    import subprocess
+    rel = 'src/main/resources/assets/hitori/models/block/' + name + '.json'
+    p = os.path.join(os.path.dirname(TEX_ROOT), 'models', 'block', name + '.json')
+    if os.path.isfile(p):
+        return json.load(open(p))
+    try:
+        out = subprocess.run(['git', 'show', 'origin/hk-world:' + rel], capture_output=True, text=True,
+                             cwd=os.path.dirname(os.path.abspath(__file__)), timeout=20)
+        return json.loads(out.stdout) if out.returncode == 0 else None
+    except Exception:
+        return None
+
+
+def _box(fr, to, t):
+    return {'from': fr, 'to': to, 'faces': {f: {'texture': t} for f in FACES}}
+
+
+# vanilla blocks the world uses, as simple shapes: iron bars (balcony railings, downpipes), polished deepslate walls
+# (the posts), the stairs' steel steps, a potted dead bush
+RAILING = {'textures': {'r': 'minecraft:block/scene_rail'}, 'elements': [
+    _box([0, 14.6, 7.2], [16, 16, 8.8], '#r'), _box([0, 0.4, 7.6], [16, 1.4, 8.4], '#r')] +
+    [_box([x, 1.4, 7.7], [x + 0.7, 14.6, 8.3], '#r') for x in (1.0, 3.3, 5.6, 7.9, 10.2, 12.5, 14.8)]}
+DOWNPIPE = {'textures': {'r': 'minecraft:block/scene_rail'}, 'elements': [_box([6.5, 0, 6.5], [9.5, 16, 9.5], '#r')]}
+POST = {'textures': {'p': 'minecraft:block/scene_post'}, 'elements': [_box([5, 0, 5], [11, 16, 11], '#p')]}
+STEP = {'textures': {'s': 'minecraft:block/scene_step'}, 'elements': [
+    _box([0, 7, 0], [16, 8, 16], '#s'), _box([8, 15, 0], [16, 16, 16], '#s'), _box([8, 8, 0], [9, 15, 16], '#s'),
+    _box([0, 0, 0], [16, 1, 1], '#s'), _box([0, 0, 15], [16, 1, 16], '#s')]}
+DEAD_PLANT = {'textures': {'p': 'minecraft:block/scene_pot', 'd': 'minecraft:block/scene_dead'}, 'elements': [
+    _box([5, 0, 5], [11, 6, 11], '#p'),
+    {'from': [8, 6, 4], 'to': [8, 14, 12], 'rotation': {'axis': 'y', 'angle': 45, 'origin': [8, 8, 8]},
+     'faces': {'east': {'texture': '#d'}, 'west': {'texture': '#d'}}}]}
+
+
+def wmodel(S, name, x, y, z, facing='north'):
+    m = world_model(name)
+    if m is not None:
+        S.extra.append((m, place_deg(x, y, z, ROT[facing])))
+
+
+def building(S, xa=BX1, xb=BX2, north=True, south=True):
+    """The shell of コーポ白樺 between local x xa..xb: the corridor façade with its doors and windows, the balcony
+    façade with its sliding doors (curtains drawn behind them), slabs, balconies, the corridor, the roof."""
+    sid, con, cc = H + 'apartment_siding', H + 'concrete', H + 'corridor_concrete'
+    for x in range(max(xa, BX1), min(xb, BX2) + 1):
+        u = max(i for i, x0 in enumerate(UNITS_X0) if x0 <= x) if x < BX2 else 3
+        col = x - UNITS_X0[u]
+        end = x in (BX1, BX2)
+        n_ch, s_ch = ('#', '#') if end else (ROW0[col], ROW13[col])
+        # openings of the two façades: 2F walls y 0..3 over its slab at -1, 1F walls -5..-2 over the footing at -6;
+        # the upper front door stands on the genkan's level (-1, 0), the windows are rain_window blocks in the wall
+        n_open, n_win, s_open = set(), set(), set()
+        if n_ch == 'D':
+            n_open |= {G2, G2 + 1, F1, F1 + 1}
+        if not end and col == 1:
+            n_win |= {G2 + 2, F1 + 2}
+        if not end and col in (7, 9, 10):
+            n_win |= {F2 + 2, F1 + 2}
+        if s_ch == 'W':
+            s_open |= {F2, F2 + 1, F1, F1 + 1}
+        for y in range(F1 - 1, 4):
+            t = con if y == F1 - 1 else sid
+            if north and y not in n_open and y not in n_win:
+                S.cube(x, y, 0, t)
+            if south and y not in s_open:
+                S.cube(x, y, 13, t)
+        if north:
+            for y in n_win:
+                S.model('rain_window', x, y, 0, 'north')
+    # the building's ends (gable walls, end windows of the DK / the western room)
+    for x in (BX1, BX2):
+        if not (xa <= x <= xb):
+            continue
+        for z in range(1, 13):
+            for y in range(F1 - 1, 4):
+                S.cube(x, y, z, sid if y >= F1 else con)
+    # rooms behind the glass: floors, a back wall, ceilings, the curtains (202 upstairs is empty)
+    for x0 in UNITS_X0:
+        for feet in (F1, F2):
+            for col in (2, 3, 4, 8, 9):
+                x = x0 + col
+                if not (xa <= x <= xb) or not south:
+                    continue
+                fl = H + ('tatami' if col < 6 else 'old_flooring')
+                for z in (10, 11, 12):
+                    S.cube(x, feet - 1, z, fl)
+                    S.cube(x, feet + 3, z, H + 'ceiling_board')
+                for y in range(feet, feet + 3):
+                    S.cube(x, y, 9, H + 'plaster_wall')
+                if x0 == 0 and feet == F2:
+                    closed = col != 8
+                elif x0 == -11 and feet == F2:
+                    continue
+                else:
+                    closed = True
+                for y in range(feet, feet + 3):
+                    S.model('curtain_closed' if closed else 'curtain', x, y, 12, 'north')
+                S.extra.append((BALCONY_DOOR_LOWER, place_deg(x, feet, 13, 0)))
+                S.extra.append((BALCONY_DOOR_UPPER, place_deg(x, feet + 1, 13, 0)))
+    if south:
+        for x in range(max(xa, BX1), min(xb, BX2) + 1):
+            for z in (14, 15):
+                S.cube(x, F1 - 1, z, con)
+                S.cube(x, F2 - 1, z, con)
+                S.cube(x, 3, z, cc)
+            S.cube(x, 3, 16, cc)
+            S.extra.append((RAILING, place_deg(x, F2, 15, 0)))
+            S.cube(x, F1, 15, H + 'block_wall')
+        for x in (-22, -11, 0, 11, 22):
+            if xa <= x <= xb:
+                for z in (14, 15):
+                    for y in (F2, F2 + 1):
+                        S.cube(x, y, z, sid)
+                    for y in (F1, F1 + 1):
+                        S.cube(x, y, z, H + 'block_wall')
+        for x0 in UNITS_X0:
+            if xa <= x0 + 10 <= xb:
+                if x0 != -11:
+                    S.model('ac_outdoor_unit', x0 + 10, F2, 14, 'south')
+                S.model('ac_outdoor_unit', x0 + 10, F1, 14, 'south')
+    if north:
+        for x in range(max(xa, BX1 - 1), min(xb, BX2) + 1):
+            for z in (-3, -2, -1):
+                S.cube(x, G2 - 1, z, cc, down=con)
+                S.cube(x, F1 - 1, z, con)
+            for z in (-4, -3, -2, -1):
+                S.cube(x, 3, z, cc)
+            S.cube(x, G2, -3, sid)
+        for x in list(range(-23, 23, 7)) + [22]:
+            if xa <= x <= xb:
+                for y in range(F1, G2 - 1):
+                    S.extra.append((POST, place_deg(x, y, -3, 0)))
+        for x0 in UNITS_X0:
+            if xa <= x0 + 4 <= xb:
+                S.model('fluorescent_ring_lit', x0 + 4, 2, -2, 'north')
+                S.model('fluorescent_ring_lit', x0 + 4, G2 - 2, -2, 'north')
+    # the roof: slate slabs in courses from the eaves (z -4, 16) to the ridge (z 6), the ridge cap
+    top, bottom = slab_model('roof_slate', top=True), slab_model('roof_slate')
+    for x in range(max(xa, BX1 - 2), min(xb, BX2 + 2) + 1):
+        for z in range(-4, 17):
+            i = z + 4 if z <= 6 else 16 - z
+            S.extra.append((bottom if i % 2 == 0 else top, place_deg(x, 4 + i // 2, z, 0)))
+        S.cube(x, 9, 6, H + 'roof_slate')
+        for z in range(1, 13):
+            if x in (BX1, BX2):
+                i = z + 4 if z <= 6 else 16 - z
+                for y in range(4, 4 + i // 2):
+                    S.cube(x, y, z, sid)
+
+
+BALCONY_DOOR_LOWER = {'textures': {'p': H + 'balcony_door_bottom'}, 'render_type': 'minecraft:translucent',
+                      'elements': [_box([0, 0, 7.5], [16, 16, 8.5], '#p'), _box([0, 0, 7], [16, 0.5, 10.5], '#p')]}
+BALCONY_DOOR_UPPER = {'textures': {'p': H + 'balcony_door_top'}, 'render_type': 'minecraft:translucent',
+                      'elements': [_box([0, 0, 7.5], [16, 16, 8.5], '#p'), _box([0, 15.5, 7], [16, 16, 10.5], '#p')]}
+
+
+def street(S, xa, xb, za=14, zb=27):
+    """The ground south of the building: the yard's concrete, the wet asphalt street (z 19..24) with puddles, the
+    poles on its north edge with their wires, the old street lamp before 203, the vending machine by the gate, a
+    neighbour's block wall across the street."""
     for x in range(xa, xb + 1):
-        for y in range(-6, 3):
-            if (x, y) in openings:
-                continue
-            S.cube(x, y, 0, H + 'apartment_siding')
-        S.cube(x, -6, 0, H + 'concrete')
-        # the eave and roof over the corridor
-        for z in range(-3, 3):
-            S.cube(x, 3, z, H + 'roof_slate', down=H + 'ceiling_board_stained' if z < 0 else H + 'roof_slate')
-        # 2F corridor slab with its siding parapet; the covered walkway below
-        for z in (-3, -2, -1):
-            S.cube(x, -1, z, H + 'corridor_concrete', down=H + 'concrete', north=H + 'concrete')
-        S.cube(x, 0, -3, H + 'apartment_siding', up=H + 'concrete')
-        for z in range(-5, 0):
-            S.cube(x, -6, z, H + 'corridor_concrete' if z > -4 else H + 'concrete')
-        for z in range(-12, -5):
-            S.cube(x, -6, z, H + 'asphalt_wet')
-        for y in (-5, -4):
-            S.cube(x, y, -13, H + 'block_wall')
-    for x in range(xa, xb + 1, 5):
-        for y in range(-5, -1):
-            S.cube(x, y, -3, H + 'concrete')
-    for ux, k in doors2.items():
-        if xa <= ux <= xb:
-            door(S, 'front_door' if k == 2 else 'unit_door', ux, 0, 0, 'south')     # 203's own door, outside north
-            door(S, 'unit_door', ux, -5, 0, 'south')
-            S.model(f'nameplate_{4 + k}', ux + 1, 1, -1, 'south')
-            S.model(f'nameplate_{k}', ux + 1, -4, -1, 'south')
-            for wx in (ux + 4, ux + 5):
-                S.model('rain_window', wx, 1, 0, 'north')
-                S.model('rain_window', wx, -4, 0, 'north')
-                S.cube(wx, 1, 1, H + 'plaster_wall')
-                S.cube(wx, -4, 1, H + 'plaster_wall')
-    S.model('vacancy_sign', -9, 0, -1, 'south')
-    S.model('mailboxes', -13, -4, -1, 'south')
-    S.model('mailboxes', -12, -4, -1, 'south')
-    S.model('bicycle', -6, -5, -2, 'east')
-    S.model('bicycle', -4, -5, -2, 'east')
-    S.model('ac_outdoor_unit', 7, -5, -1, 'north')
-    # stairs at the west end, rising toward the west along the corridor line, with the rusty rail on the outside
-    st = stairs_model('corridor_concrete')
-    for k in range(5):
-        S.extra.append((st, place_deg(xa - 1 - k, -5 + k, -2, 270)))
-        S.model('stairs_rail', xa - 1 - k, -5 + k, -3, 'west')
-    # the utility pole across the street, its street lamp leaning over the road toward the building
-    for y in range(-5, 3):
-        S.model('utility_pole', 3, y, -11, 'north')
-    S.model('utility_pole_top', 3, 3, -11, 'north')
-    S.model('street_lamp_old_lit', 3, 2, -10, 'south')
-    S.model('vending_machine_small', 10, -5, -4, 'north')
-    for (px_, pz_) in ((0, -8), (1, -8), (-4, -7), (6, -9), (7, -9)):
-        S.model('puddle', px_, -5, pz_, 'north')
-    S.light((3.5, 1.9, -8.6), (1.0, 0.62, 0.28), 7.0, 6.0)        # sodium lamp
-    S.light((10.5, -3.6, -4.8), (0.75, 0.88, 1.0), 2.6, 2.4)      # vending machine
-    S.light((3.0, 2.5, -2.0), (0.85, 0.95, 1.0), 1.2, 2.6)        # the corridor's one working light
-    S.light((6.5, 1.4, 0.4), (0.5, 0.7, 1.0), 0.7, 1.0)           # TV glow in 203's kitchen window
-    eye = (-2.0, -3.4, -12.2)
-    tgt = (2.5, -0.6, 0.0)
-    day = S.render(eye, tgt, fov=78, w=960, h=540)
-    night = S.render(eye, tgt, fov=78, w=960, h=540, night=True, exposure=1.7, ambient=(0.02, 0.024, 0.036),
-                     fog=((0.04, 0.05, 0.07), 34.0))
-    # on the corridor in front of 203, looking west toward 202 (the vacancy sign) and the stairs
-    eye2 = (3.6, 1.62, -1.9)
-    tgt2 = (-6.0, 0.9, -1.2)
-    cday = S.render(eye2, tgt2, fov=74, w=960, h=540)
-    cnight = S.render(eye2, tgt2, fov=74, w=960, h=540, night=True, exposure=1.8, ambient=(0.02, 0.024, 0.036),
-                      fog=((0.04, 0.05, 0.07), 30.0))
+        for z in range(za, zb + 1):
+            t = 'asphalt_wet' if 19 <= z <= 24 else ('concrete' if z <= 18 else 'concrete')
+            S.cube(x, F1 - 1, z, H + t)
+        for y in (F1, F1 + 1):
+            if (x * 5) % 13 != 0:
+                S.cube(x, y, 26, H + 'block_wall')
+    for (px_, pz_) in ((1, 20), (2, 20), (-3, 22), (7, 21), (8, 21), (12, 23), (-9, 19), (-8, 23)):
+        if xa <= px_ <= xb:
+            S.model('puddle', px_, F1, pz_, 'north')
+    for i, x in enumerate(POLES_X):
+        if xa - 2 <= x <= xb + 2:
+            for y in range(F1, 4):
+                S.model('utility_pole', x, y, 18, 'east')
+            S.model('utility_pole_top', x, 4, 18, 'east')
+        if i + 1 < len(POLES_X):
+            for wx in range(x + 1, POLES_X[i + 1]):
+                if xa <= wx <= xb:
+                    wmodel(S, 'power_wire', wx, 4, 18, 'east')
+    S.model('street_lamp_old_lit', 4, 1, 17, 'north')
+    if xa <= -22 <= xb:
+        S.model('vending_machine_small', -22, F1, 18, 'south')
+
+
+def balcony203(S):
+    """203's balcony as furnish203 leaves it: the laundry pole, the forgotten washing, a dead plant, puddles."""
+    for x in range(2, 9):
+        S.model('laundry_pole', x, F2 + 2, 14, 'north')
+    wmodel(S, 'laundry_hanging', 5, F2 + 1, 14, 'north')
+    wmodel(S, 'laundry_hanging', 7, F2 + 1, 14, 'south')
+    S.extra.append((DEAD_PLANT, place_deg(1, F2, 14, 0)))
+    S.model('puddle', 5, F2, 15, 'north')
+    S.model('puddle', 9, F2, 14, 'north')
+
+
+def corridor_side(S, xa, xb):
+    """The corridor's furniture: the doors (203's steel door, the others' unit doors), nameplates, 202's vacancy
+    sign, 201's broken umbrella and rubbish, puddles blown in by the rain, the stairs at the west end."""
+    for u, x0 in enumerate(UNITS_X0):
+        if not (xa <= x0 + 2 <= xb):
+            continue
+        door(S, 'front_door' if x0 == 0 else 'unit_door', x0 + 2, G2, 0, 'south')
+        door(S, 'unit_door', x0 + 2, F1, 0, 'south')
+        S.model(f'nameplate_{4 + u}', x0 + 3, G2 + 1, -1, 'north')
+        S.model(f'nameplate_{u}', x0 + 3, F1 + 1, -1, 'north')
+    if xa <= -10 <= xb:
+        S.model('vacancy_sign', -10, G2 + 1, -1, 'north')
+    if xa <= -21 <= xb:
+        S.model('umbrella', -21, G2, -1, 'north')
+        wmodel(S, 'trash_bag', -19, G2, -1, 'north')
+    for (px_, pz_) in ((-4, -2), (-3, -2), (6, -2), (-15, -2), (9, -1)):
+        if xa <= px_ <= xb:
+            S.model('puddle', px_, G2, pz_, 'north')
+    # the steel stairs at the west end rising east to the landing, rails both sides
+    for i in range(4):
+        x, y = -27 + i, F1 + i
+        if xa - 6 <= x <= xb:
+            for z in (-2, -1):
+                S.extra.append((STEP, place_deg(x, y, z, 90)))
+            S.model('stairs_rail', x, y, -3, 'east')
+            S.model('stairs_rail', x, y, 0, 'east')
+    S.model('stairs_rail', -23, G2, 0, 'north')
+
+
+def scene_exterior():
+    """コーポ白樺 at 3 a.m. from the street: the balconies (203's with its washing and the street lamp before it, the
+    western room's curtain open a crack on its lit lamp), the air conditioners, the poles and wires, the vending
+    machine, the wet asphalt; then the upstairs corridor in front of 203, looking west toward 202 and the stairs."""
+    vanilla_standins()
+    S = Scene()
+    building(S, -22, 22, north=False)
+    street(S, -24, 24)
+    balcony203(S)
+    S.light((4.0, 1.05, 16.6), (1.0, 0.62, 0.28), 3.0, 6.5)          # the sodium lamp (under its shade)
+    S.light((4.0, -4.6, 18.8), (1.0, 0.6, 0.3), 0.9, 3.5)            # its pool on the asphalt (the world's light 9)
+    S.light((-22.0, -4.0, 19.2), (0.75, 0.88, 1.0), 2.2, 2.6)        # the vending machine
+    S.light((8.6, 1.4, 11.2), (1.0, 0.95, 0.85), 1.6, 2.6)           # 203's western room: the lamp is on
+    S.light((3.0, 0.9, 12.6), (0.5, 0.68, 1.0), 0.7, 1.2)            # the TV behind the tatami room's curtains
+    S.light((14.0, 1.0, 11.0), (0.5, 0.66, 1.0), 0.5, 1.6)           # a TV's glow behind 204's
+    eye, tgt = (-1.5, F1 + 1.8, 25.2), (4.5, -0.3, 13.0)
+    day = S.render(eye, tgt, fov=70, w=960, h=540)
+    night = S.render(eye, tgt, fov=70, w=960, h=540, night=True, exposure=1.7, ambient=(0.016, 0.02, 0.03),
+                     fog=((0.03, 0.035, 0.05), 40.0))
+    out = pair(day, night, 'scene_exterior')
+    # the corridor upstairs, in front of 203's door, looking west toward 202 (the vacancy sign) and the stairs
+    C = Scene()
+    building(C, -24, 14, south=False)
+    corridor_side(C, -24, 14)
+    for x in range(-24, 15):
+        for z in range(-8, -3):
+            C.cube(x, F1 - 1, z, H + 'concrete')
+    for x0 in UNITS_X0:
+        C.light((x0 + 4.5, 2.3, -1.5), (0.85, 0.95, 1.0), 1.7, 3.6)    # the fluorescent ring over each door
+    eye2, tgt2 = (6.0, G2 + 1.62, -2.2), (-6.0, 0.2, -0.6)
+    cday = C.render(eye2, tgt2, fov=74, w=960, h=540)
+    cnight = C.render(eye2, tgt2, fov=74, w=960, h=540, night=True, exposure=1.7, ambient=(0.016, 0.02, 0.03),
+                      fog=((0.03, 0.035, 0.05), 30.0))
     pair(cday, cnight, 'scene_corridor')
-    return pair(day, night, 'scene_exterior')
+    return out
 
 
 def scene_camera_app():
