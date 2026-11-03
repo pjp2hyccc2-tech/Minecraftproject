@@ -18,17 +18,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * source events or tasks given to the {@code SoundEngineExecutor}), never on the client thread.
  * <p>
  * One auxiliary effect slot holds an EAX reverb (fallback: the standard reverb) whose parameters follow the listener's
- * room; two low-pass filter objects are reused for every source (EFX copies a filter's parameters into the source
- * when it is attached). The slot's "send auto" is off, so the wet path is attenuated exactly like the dry path
- * (Minecraft's per-source linear distance model). Objects belong to an AL context: when Minecraft re-creates its
- * context (device change, sound reload) everything is created again.
+ * room; two low-pass filter objects and one band-pass filter object are reused for every source (EFX copies a filter's
+ * parameters into the source when it is attached): the direct path is low-passed (occlusion, the closet) or, for the
+ * camera microphone, band-passed. The slot's "send auto" is off, so the wet path is attenuated exactly like the dry
+ * path (Minecraft's per-source linear distance model). For sounds heard "at the body" while the listener is a camera,
+ * the source's max distance is scaled (so it fades with its distance to the body, not to the camera) and its radius
+ * set (AL_EXT_SOURCE_RADIUS: heard all around rather than from the camera's direction); both are restored afterwards.
+ * Objects belong to an AL context: when Minecraft re-creates its context (device change, sound reload) everything is
+ * created again.
  */
 final class AcousticsEfx {
     private static long context;
     private static volatile boolean usable;
     private static boolean eax;
     private static int sends;
-    private static int slot, effect, direct, send;
+    private static int slot, effect, direct, send, band;
+    private static boolean radiusExt;
+    /** AL_MAX_DISTANCE (core AL 1.0). */
+    static final int AL_MAX_DISTANCE = 0x1023;
+    /** AL_SOURCE_RADIUS (AL_EXT_SOURCE_RADIUS). */
+    private static final int AL_SOURCE_RADIUS = 0x1031;
+    /** EFX band-pass filter (efx.h): type and parameters. */
+    private static final int AL_FILTER_BANDPASS = 0x0003, AL_BANDPASS_GAIN = 0x0001, AL_BANDPASS_GAINLF = 0x0002,
+            AL_BANDPASS_GAINHF = 0x0003;
     private static List<Field> intFields;
     private static Field sourceField;
     private static Field aliveField;
@@ -51,7 +63,7 @@ final class AcousticsEfx {
     private static void init(long ctx) {
         context = ctx;
         usable = false;
-        slot = effect = direct = send = 0;
+        slot = effect = direct = send = band = 0;
         long device = ALC10.alcGetContextsDevice(ctx);
         if (device == 0L || !ALC10.alcIsExtensionPresent(device, "ALC_EXT_EFX")) {
             info = "off (no ALC_EXT_EFX on this device)";
@@ -69,7 +81,8 @@ final class AcousticsEfx {
         effect = EXTEfx.alGenEffects();
         direct = EXTEfx.alGenFilters();
         send = EXTEfx.alGenFilters();
-        if (AL10.alGetError() != AL10.AL_NO_ERROR || slot == 0 || effect == 0 || direct == 0 || send == 0) {
+        band = EXTEfx.alGenFilters();
+        if (AL10.alGetError() != AL10.AL_NO_ERROR || slot == 0 || effect == 0 || direct == 0 || send == 0 || band == 0) {
             release();
             info = "off (could not create EFX objects)";
             Hitori.LOGGER.warn("[hitori] acoustics: could not create the EFX objects, staying off");
@@ -88,6 +101,13 @@ final class AcousticsEfx {
         }
         EXTEfx.alFilteri(direct, EXTEfx.AL_FILTER_TYPE, EXTEfx.AL_FILTER_LOWPASS);
         EXTEfx.alFilteri(send, EXTEfx.AL_FILTER_TYPE, EXTEfx.AL_FILTER_LOWPASS);
+        EXTEfx.alFilteri(band, EXTEfx.AL_FILTER_TYPE, AL_FILTER_BANDPASS);
+        if (AL10.alGetError() != AL10.AL_NO_ERROR) {  // no band-pass: the microphone falls back to a low-pass
+            EXTEfx.alDeleteFilters(band);
+            band = 0;
+        }
+        radiusExt = AL10.alIsExtensionPresent("AL_EXT_SOURCE_RADIUS");
+        AL10.alGetError();
         EXTEfx.alAuxiliaryEffectSloti(slot, EXTEfx.AL_EFFECTSLOT_AUXILIARY_SEND_AUTO, AL10.AL_FALSE);
         if (AL10.alGetError() != AL10.AL_NO_ERROR) {
             release();
@@ -97,7 +117,8 @@ final class AcousticsEfx {
         }
         usable = true;
         syncReverb();
-        info = (eax ? "EAX reverb" : "standard reverb") + ", " + sends + " send" + (sends == 1 ? "" : "s");
+        info = (eax ? "EAX reverb" : "standard reverb") + ", " + sends + " send" + (sends == 1 ? "" : "s")
+                + (band != 0 ? ", band-pass" : "") + (radiusExt ? ", source radius" : "");
         Hitori.LOGGER.info("[hitori] acoustics: OpenAL EFX ready ({}): room reverb and occlusion on", info);
     }
 
@@ -107,8 +128,9 @@ final class AcousticsEfx {
             if (effect != 0) EXTEfx.alDeleteEffects(effect);
             if (direct != 0) EXTEfx.alDeleteFilters(direct);
             if (send != 0) EXTEfx.alDeleteFilters(send);
+            if (band != 0) EXTEfx.alDeleteFilters(band);
         } finally {
-            slot = effect = direct = send = 0;
+            slot = effect = direct = send = band = 0;
             usable = false;
             AL10.alGetError();
         }
@@ -209,28 +231,49 @@ final class AcousticsEfx {
         return AL10.alIsSource(source);
     }
 
-    /** Direct path: low-pass (occlusion); auxiliary send 0: our room reverb through its own low-pass. */
-    static void applySource(int source, Acoustics.Params p) {
-        EXTEfx.alFilterf(direct, EXTEfx.AL_LOWPASS_GAIN, clamp(p.directGain(), 0f, 1f));
-        EXTEfx.alFilterf(direct, EXTEfx.AL_LOWPASS_GAINHF, clamp(p.directHF(), 0f, 1f));
-        AL10.alSourcei(source, EXTEfx.AL_DIRECT_FILTER, direct);
+    /** The source's AL_MAX_DISTANCE as Minecraft set it (read when the source starts), 0 if it has none. */
+    static float maxDistance(int source) {
+        float d = AL10.alGetSourcef(source, AL_MAX_DISTANCE);
+        AL10.alGetError();
+        return d > 0f && d < 1.0e6f ? d : 0f;
+    }
+
+    /**
+     * Direct path: low-pass (occlusion, the closet) or band-pass (the camera microphone: {@code lfGain < 1});
+     * auxiliary send 0: our room reverb through its own low-pass; the body path's distance and radius overrides.
+     */
+    static void applySource(int source, Acoustics.Params p, float origMax) {
+        if (p.lfGain() < 0.999f && band != 0) {
+            EXTEfx.alFilterf(band, AL_BANDPASS_GAIN, clamp(p.directGain(), 0f, 1f));
+            EXTEfx.alFilterf(band, AL_BANDPASS_GAINLF, clamp(p.lfGain(), 0f, 1f));
+            EXTEfx.alFilterf(band, AL_BANDPASS_GAINHF, clamp(p.directHF(), 0f, 1f));
+            AL10.alSourcei(source, EXTEfx.AL_DIRECT_FILTER, band);
+        } else {
+            EXTEfx.alFilterf(direct, EXTEfx.AL_LOWPASS_GAIN, clamp(p.directGain(), 0f, 1f));
+            EXTEfx.alFilterf(direct, EXTEfx.AL_LOWPASS_GAINHF, clamp(p.directHF(), 0f, 1f));
+            AL10.alSourcei(source, EXTEfx.AL_DIRECT_FILTER, direct);
+        }
         EXTEfx.alFilterf(send, EXTEfx.AL_LOWPASS_GAIN, clamp(p.sendGain(), 0f, 1f));
         EXTEfx.alFilterf(send, EXTEfx.AL_LOWPASS_GAINHF, clamp(p.sendHF(), 0f, 1f));
         AL11.alSource3i(source, EXTEfx.AL_AUXILIARY_SEND_FILTER, slot, 0, send);
+        if (origMax > 0f) AL10.alSourcef(source, AL_MAX_DISTANCE, clamp(origMax * p.maxScale(), origMax * 0.1f, 1.0e5f));
+        if (radiusExt) AL10.alSourcef(source, AL_SOURCE_RADIUS, clamp(p.radius(), 0f, 64f));
         checkErrors();
     }
 
-    /** A moving / looping source's new occlusion, if its channel still lives. */
-    static void update(Channel channel, int source, Acoustics.Params p) {
+    /** A moving / looping source's new parameters, if its channel still lives. */
+    static void update(Channel channel, int source, Acoustics.Params p, float origMax) {
         if (!ready() || !alive(channel, source)) return;
-        applySource(source, p);
+        applySource(source, p, origMax);
     }
 
-    /** Back to a plain source (acoustics switched off while it plays). */
-    static void detach(Channel channel, int source) {
+    /** Back to a plain source (acoustics switched off while it plays): no filters, no send, its own max distance. */
+    static void detach(Channel channel, int source, float origMax) {
         if (!ready() || !alive(channel, source)) return;
         AL10.alSourcei(source, EXTEfx.AL_DIRECT_FILTER, EXTEfx.AL_FILTER_NULL);
         AL11.alSource3i(source, EXTEfx.AL_AUXILIARY_SEND_FILTER, EXTEfx.AL_EFFECTSLOT_NULL, 0, EXTEfx.AL_FILTER_NULL);
+        if (origMax > 0f) AL10.alSourcef(source, AL_MAX_DISTANCE, origMax);
+        if (radiusExt) AL10.alSourcef(source, AL_SOURCE_RADIUS, 0f);
         checkErrors();
     }
 

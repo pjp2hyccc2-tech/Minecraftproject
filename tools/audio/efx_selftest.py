@@ -8,6 +8,11 @@ measures what comes out:
   * every preset of AcousticsPresets.java loads without an AL error, and its reverb tail decays at about the
     preset's decay time (RT60 fitted on the rendered tail);
   * the occlusion filter really removes high frequencies (-3 dB HF per block, capped at -24 dB);
+  * the closet (Acoustics.CLOSET_HF / CLOSET_GAIN) takes about 18 dB off the 6-12 kHz band and ~3 dB overall;
+  * the camera microphone (band-pass filter, Acoustics.MIC_LF / MIC_HF) cuts under ~200 Hz and over ~6 kHz by about
+    12 dB and leaves the voice band alone;
+  * the body path of camera listening: scaling AL_MAX_DISTANCE by d_camera / d_body makes a source as loud as it
+    would be at its distance to the body; AL_SOURCE_RADIUS is accepted;
   * with send-auto off the wet (reverb) path fades with distance exactly like the dry path, so a sound beyond
     its attenuation distance is silent in the reverb too.
 
@@ -36,6 +41,8 @@ AL_DIRECT_FILTER, AL_AUXILIARY_SEND_FILTER = 0x20005, 0x20006
 AL_EFFECT_TYPE, AL_EFFECT_REVERB, AL_EFFECT_EAXREVERB = 0x8001, 0x0001, 0x8000
 AL_EFFECTSLOT_EFFECT, AL_EFFECTSLOT_GAIN, AL_EFFECTSLOT_AUXILIARY_SEND_AUTO = 0x1, 0x2, 0x3
 AL_FILTER_TYPE, AL_FILTER_LOWPASS, AL_LOWPASS_GAIN, AL_LOWPASS_GAINHF = 0x8001, 0x1, 0x1, 0x2
+AL_FILTER_BANDPASS, AL_BANDPASS_GAIN, AL_BANDPASS_GAINLF, AL_BANDPASS_GAINHF = 0x3, 0x1, 0x2, 0x3
+AL_SOURCE_RADIUS = 0x1031
 EAX = dict(DENSITY=0x1, DIFFUSION=0x2, GAIN=0x3, GAINHF=0x4, GAINLF=0x5, DECAY_TIME=0x6, DECAY_HFRATIO=0x7,
            DECAY_LFRATIO=0x8, REFLECTIONS_GAIN=0x9, REFLECTIONS_DELAY=0xA, LATE_REVERB_GAIN=0xC, LATE_REVERB_DELAY=0xD,
            ECHO_TIME=0xF, ECHO_DEPTH=0x10, MODULATION_TIME=0x11, MODULATION_DEPTH=0x12, AIR_ABSORPTION_GAINHF=0x13,
@@ -46,6 +53,15 @@ ORDER = [("DENSITY", 0, 1), ("DIFFUSION", 0, 1), ("GAIN", 0, 1), ("GAINHF", 0, 1
          ("REFLECTIONS_DELAY", 0, 0.3), ("LATE_REVERB_GAIN", 0, 10), ("LATE_REVERB_DELAY", 0, 0.1),
          ("ECHO_TIME", 0.075, 0.25), ("ECHO_DEPTH", 0, 1), ("MODULATION_TIME", 0.04, 4), ("MODULATION_DEPTH", 0, 1),
          ("AIR_ABSORPTION_GAINHF", 0.892, 1), ("HFREFERENCE", 1000, 20000), ("LFREFERENCE", 20, 1000)]
+
+
+def constants():
+    """The filter constants of Acoustics.java (CLOSET_HF = 0.28f, ...)."""
+    src = open(os.path.join(ROOT, "src/main/java/com/hitori/client/sound/Acoustics.java"), encoding="utf-8").read()
+    out = {}
+    for m in re.finditer(r"\b([A-Z_]+) = ([0-9.]+)f", src):
+        out[m.group(1)] = float(m.group(2))
+    return out
 
 
 def presets():
@@ -198,7 +214,7 @@ def main():
     imp[0] = 1.0
     print("\npreset        AL   RT60 measured / preset decay   wet/dry energy")
     P = presets()
-    for key in ("dining", "kitchen", "restroom", "small_hard", "small_soft", "corridor", "tiny_dead", "medium", "outside", "off"):
+    for key in ("tiny_dead", "closet", "restroom", "small_soft", "small_hard", "corridor", "medium", "outside", "off"):
         e1 = load(P[key])
         al.run(0.1)  # OpenAL Soft applies new reverb settings to what enters the reverb after its next update;
         # sounds already ringing keep decaying with the settings they entered under (in game: tails started in the
@@ -212,7 +228,7 @@ def main():
         ok = e1 == AL_NO_ERROR and e2 == AL_NO_ERROR
         if key == "off":
             ok = ok and wet_e < 1e-6 * dry_e
-        elif key not in ("outside", "tiny_dead"):
+        elif key not in ("outside", "tiny_dead", "closet"):
             ok = ok and 0.5 * P[key][5] < r < 1.6 * P[key][5]
         print(f"{key:12s} {'ok' if e1 == e2 == 0 else 'ERR'}   {r:5.2f} s / {P[key][5]:4.2f} s            {10 * np.log10(wet_e / (dry_e + 1e-30) + 1e-30):+6.1f} dB   {'ok' if ok else 'CHECK'}")
         if not ok:
@@ -239,6 +255,59 @@ def main():
         print(f"{blocks:4d}    {ghf:5.3f}        {d_hi:+6.1f} dB                  {d_lo:+5.1f} dB")
         if blocks == 8 and not (d_hi < -15 and d_lo > -3):
             bad.append("occlusion filter")
+    Kc = constants()
+    band = al.gen(al.genFilters)
+    al.filteri(band, AL_FILTER_TYPE, AL_FILTER_BANDPASS)
+    if al.err() != AL_NO_ERROR:
+        bad.append("band-pass filter")
+
+    def bands(y):
+        S = np.abs(np.fft.rfft(y)) ** 2
+        f = np.fft.rfftfreq(len(y), 1 / SR)
+        return {k: 10 * np.log10(S[(f > a) & (f < b)].mean()) for k, (a, b) in
+                dict(sub=(40, 150), low=(150, 300), voice=(500, 3000), pres=(3000, 5000), hi=(6000, 12000)).items()}
+
+    src, _ = source(noise)
+    ref = bands(al.run(1.0)[0])
+    L.alSourceStop(src)
+    src, _ = source(noise, gain_hf=Kc["CLOSET_HF"], gain=Kc["CLOSET_GAIN"])
+    clo = bands(al.run(1.0)[0])
+    L.alSourceStop(src)
+    print("\ncloset (GAINHF %.2f, gain %.3f):  " % (Kc["CLOSET_HF"], Kc["CLOSET_GAIN"])
+          + "  ".join(f"{k} {clo[k] - ref[k]:+5.1f} dB" for k in ref))
+    tilt = (clo["hi"] - ref["hi"]) - (clo["sub"] - ref["sub"])
+    print(f"   6-12 kHz relative to the low band: {tilt:+.1f} dB (design: -18 dB HF), overall {clo['sub'] - ref['sub']:+.1f} dB")
+    if not (-20.0 < tilt < -16.0 and -4.0 < clo["sub"] - ref["sub"] < -2.0):
+        bad.append("closet filter")
+    src, _ = source(noise, efx=False)
+    L.alSourcei(src, AL_DIRECT_FILTER, 0)
+    al.filterf(band, AL_BANDPASS_GAIN, Kc["MIC_GAIN"])
+    al.filterf(band, AL_BANDPASS_GAINLF, Kc["MIC_LF"])
+    al.filterf(band, AL_BANDPASS_GAINHF, Kc["MIC_HF"])
+    L.alSourcei(src, AL_DIRECT_FILTER, band)
+    e3 = al.err()
+    mic = bands(al.run(1.0)[0])
+    L.alSourceStop(src)
+    print("camera mic (band-pass LF %.2f, HF %.2f): " % (Kc["MIC_LF"], Kc["MIC_HF"])
+          + "  ".join(f"{k} {mic[k] - ref[k]:+5.1f} dB" for k in ref) + ("" if e3 == 0 else f"  AL error 0x{e3:x}"))
+    if e3 != 0 or not (mic["sub"] - ref["sub"] < -12 and mic["hi"] - ref["hi"] < -11 and mic["voice"] - ref["voice"] > -2.5):
+        bad.append("camera mic filter")
+    # body path: a source 8 blocks from the camera listener but 2 from the body, max distance 16 scaled by 8 / 2,
+    # must be as loud as an unscaled source 2 blocks away (gain 1 - 2/16)
+    print("\nbody path (camera at 8, body at 2, attenuation 16):")
+    lvl = {}
+    for name, d, md in (("unscaled at 2", 2.0, 16.0), ("scaled at 8", 8.0, 16.0 * 8.0 / 2.0), ("unscaled at 8", 8.0, 16.0)):
+        src, _ = source(noise, pos=(0.0, 0.0, -d), max_dist=md, efx=False)
+        L.alSourcef(src, AL_SOURCE_RADIUS, d)
+        e4 = al.err()
+        y = al.run(1.0)
+        L.alSourceStop(src)
+        lvl[name] = 10 * np.log10(np.mean(y ** 2))
+        print(f"   {name:14s} {lvl[name] - lvl['unscaled at 2']:+6.2f} dB" + ("" if e4 == 0 else f"  AL error 0x{e4:x}"))
+        if e4 != 0:
+            bad.append("AL_SOURCE_RADIUS")
+    if abs(lvl["scaled at 8"] - lvl["unscaled at 2"]) > 1.0:
+        bad.append("body path distance scaling")
     # distance: with send-auto off the reverb fades exactly like the dry sound
     load(P["restroom"])
     al.run(0.1)
