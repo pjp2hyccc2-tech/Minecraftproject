@@ -293,6 +293,13 @@ this.omamori.xRot = Mth.sin(t * 0.07F + 1.0F) * 0.05F;
 SPEC = MediumCar
 
 
+import ent_scene as SC  # noqa: E402
+POSE_SCENES = {0: SC.lot(), 1: SC.lot()}
+WALKING = ()
+NAKED_ALPHA = 1.0
+TURNAROUND = False
+
+
 # ================================================================================================ previews
 def previews(b, ER, rows_sel=None):
     import ent_scene as SC

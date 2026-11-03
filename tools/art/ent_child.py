@@ -555,6 +555,12 @@ Child.consts = {
 SPEC = Child
 
 
+import ent_scene as SC  # noqa: E402
+POSE_SCENES = {1: SC.pillar_near()}
+WALKING = (0,)
+NAKED_ALPHA = 0.0
+
+
 # ================================================================================================ previews
 def previews(b, ER, rows_sel=None):
     import ent_scene as SC
