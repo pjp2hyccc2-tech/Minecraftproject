@@ -337,6 +337,11 @@ float blindTransmission(vec3 P, vec3 L) {
 //  negative when a wall stands between the column and the lamp. 0 = empty.
 int tableRefY() { return int(floor(cameraPosition.y)) - 12; }
 const float TABLE_REACH = 15.0;
+// the outdoor lamps of the air, one list for the whole frame (prepare1), in colortex7 row 0
+// right of the table: texel AIR_LIST_X + i = (block - emap origin / table ref y as floats,
+// type), texel AIR_LIST_X + AIR_OUT + i = (blocks merged into it, level, weight, 0)
+#define AIR_LIST_X 128
+#define AIR_OUT 12
 // a column keeps a lamp while level - |dx| - |dz| - this > 0 (prepare.glsl): lamps far above
 // or below the camera's band reach fewer of the surfaces that are seen
 float tableVerticalPenalty(float y) {
@@ -396,6 +401,15 @@ float lampPattern(int type, vec3 dir) {
     if (p == 1) return pow(saturate(-dir.y), 0.8);                       // a panel in the ceiling
     if (p == 2) return 0.18 + 0.82 * pow(saturate(-dir.y * 0.8 + 0.2), 1.2); // a shade
     if (p == 3) return 0.10 + 0.90 * pow(saturate(-dir.y * 0.9 + 0.1), 0.7); // a street lamp
+    return 1.0;
+}
+// the same pattern for the light in the air, with soft edges: in the mist a sharp cut-off
+// draws a dome over the whole sky through the lamp's head
+float lampPatternAir(int type, vec3 dir) {
+    int p = EM_PATTERN[clamp(type, 0, EM_COUNT - 1)];
+    if (p == 1) return smoothstep(-0.15, 0.85, -dir.y);
+    if (p == 2) return 0.18 + 0.82 * smoothstep(-0.45, 0.90, -dir.y);
+    if (p == 3) return 0.08 + 0.92 * smoothstep(-0.35, 0.75, -dir.y);
     return 1.0;
 }
 // colour of a lamp right now (flicker, danger stutter)
@@ -478,27 +492,64 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
 
 // ---- the lamps in the mist -----------------------------------------------------------------
 // Light scattered toward the eye by the air along a view ray (camera relative, unit rd).
-// The lamps are gathered ONCE per ray - from the table at eight columns along it, merged - and
-// each is faded out before it would drop out of those columns' lists (a continuous margin), so
-// the glow has no seams; looking them up per march segment made rings wherever a lamp's
-// closest approach crossed a segment boundary. airLampsSegment() then integrates the inverse-
-// square falloff of every gathered lamp analytically over one segment (no shadows: the mist
-// is thin indoors, the lamps outside stand in the open; walls drop a lamp from the columns
-// behind them).
-#define AIR_LAMPS 8
+// The lamps are gathered ONCE per ray (looking them up per march segment made rings wherever a
+// lamp's closest approach crossed a segment boundary): the outdoor ones from the frame's own
+// list (prepare1: the same for every pixel, signs merged - lists that change from ray to ray
+// drew walls and wedges of light across the sky), the indoor ones from the table at eight
+// columns along the ray, where walls are known, each faded out before it would drop out of
+// those columns' lists. airLampsSegment() integrates the inverse-square falloff of every
+// gathered lamp analytically over one segment (no shadows: the mist is thin indoors, the lamps
+// outside stand in the open).
+#define AIR_LAMPS 18
 #define AIR_COLUMNS 8
 int   airN = 0;
 vec3  airBlock[AIR_LAMPS];
 vec3  airRad[AIR_LAMPS];      // radiance x emission pattern toward the ray
-float airW[AIR_LAMPS];        // fade-out before the lamp leaves the table
+float airW[AIR_LAMPS];        // fade-out (before a lamp leaves the lists)
 float airTc[AIR_LAMPS];       // where along the ray it comes closest
 float airH2[AIR_LAMPS];       // squared distance of the ray from it
 float airS2[AIR_LAMPS];       // squared soft core
 float airReach[AIR_LAMPS];
 bool  airCovered[AIR_LAMPS];
 
+void airAdd(int slot, Lamp L, vec3 rd, float tEnd, float w, float gainMul) {
+    int ti = clamp(L.type, 0, EM_COUNT - 1);
+    vec3 o = L.pos - cameraPosition;
+    float tc = dot(o, rd);
+    vec3 toClose = rd * clamp(tc, 0.0, tEnd) - o;
+    airBlock[slot] = L.block;
+    airRad[slot] = lampRadiance(L) * gainMul * lampPatternAir(L.type, toClose / max(length(toClose), 1e-3));
+    airW[slot] = w;
+    airTc[slot] = tc;
+    airH2[slot] = max(dot(o, o) - tc * tc, 0.0);
+    airS2[slot] = sq(EM_SIZE[ti]) + 0.12 + (gainMul > 1.0 ? 0.6 : 0.0);
+    airReach[slot] = L.level + 1.0 + (gainMul > 1.0 ? 2.0 : 0.0);
+    airCovered[slot] = L.covered;
+}
+
 void airLampsGather(vec3 rd, float tEnd) {
     airN = 0;
+    // ---- outdoors: the frame's list (the same for every pixel: no seams) ------------------
+    ivec2 org = emapOrigin();
+    float refY = float(tableRefY());
+    for (int i = 0; i < AIR_OUT; i++) {
+        vec4 a = texelFetch(colortex7, ivec2(AIR_LIST_X + i, 0), 0);
+        int type = int(a.w + 0.5);
+        if (type <= 0) break;                            // packed: the rest is empty
+        vec4 b = texelFetch(colortex7, ivec2(AIR_LIST_X + AIR_OUT + i, 0), 0);
+        if (b.z <= 0.0 || airN >= AIR_LAMPS) continue;
+        Lamp L;
+        L.type = type;
+        L.level = b.y;
+        L.covered = false;
+        L.walled = false;
+        L.block = vec3(float(org.x) + a.x, refY + a.y, float(org.y) + a.z);
+        L.pos = L.block + vec3(0.5, 0.5 + EM_YOFF[clamp(type, 0, EM_COUNT - 1)], 0.5);
+        airAdd(airN, L, rd, tEnd, b.z, max(b.x, 1.0));
+        airN++;
+    }
+    // ---- indoors: along the ray, from the columns it crosses (walls respected) ------------
+    int nOut = airN;
     for (int k = 0; k < AIR_COLUMNS; k++) {
         vec3 p = cameraPosition + rd * (tEnd * pow((float(k) + 0.5) / float(AIR_COLUMNS), 1.5));
         ivec2 column = ivec2(floor(p.xz));
@@ -507,46 +558,34 @@ void airLampsGather(vec3 rd, float tEnd) {
             float v = tab[j];
             if (v < 0.5) continue;                       // empty, or walled off from here
             Lamp L = tableUnpack(v, column);
-            if (!emitterCasts(L.type)) continue;
+            if (!L.covered || !emitterCasts(L.type)) continue;
             vec2 dc = abs(L.block.xz + 0.5 - p.xz);
             float w = smoothstep(0.0, 3.0, L.level - dc.x - dc.y - tableVerticalPenalty(L.block.y));
             if (w <= 0.0) continue;
             int slot = -1;
             for (int i = 0; i < AIR_LAMPS; i++) {
-                if (i < airN && all(lessThan(abs(airBlock[i] - L.block), vec3(0.5)))) slot = i;
+                if (i >= nOut && i < airN && all(lessThan(abs(airBlock[i] - L.block), vec3(0.5)))) slot = i;
             }
             if (slot >= 0) { airW[slot] = max(airW[slot], w); continue; }
-            int ti = clamp(L.type, 0, EM_COUNT - 1);
-            vec3 o = L.pos - cameraPosition;
-            float tc = dot(o, rd);
-            float h2 = max(dot(o, o) - tc * tc, 0.0);
-            vec3 rad = lampRadiance(L);
-            float importance = w * luma(rad) / (h2 + 1.0);
             if (airN >= AIR_LAMPS) {
-                // full: replace the weakest if this one matters more
-                int weakest = 0;
+                // full: replace the weakest indoor lamp if this one matters more
+                vec3 o = L.pos - cameraPosition;
+                float tc = dot(o, rd);
+                float imp = w * EM_GAIN[clamp(L.type, 0, EM_COUNT - 1)] / (max(dot(o, o) - tc * tc, 0.0) + 1.0);
+                int weakest = -1;
                 float wi = 1e9;
                 for (int i = 0; i < AIR_LAMPS; i++) {
-                    float imp = airW[i] * luma(airRad[i]) / (airH2[i] + 1.0);
-                    if (imp < wi) { wi = imp; weakest = i; }
+                    if (i < nOut) continue;
+                    float im = airW[i] * luma(airRad[i]) / (airH2[i] + 1.0);
+                    if (im < wi) { wi = im; weakest = i; }
                 }
-                if (importance <= wi) continue;
+                if (weakest < 0 || imp <= wi) continue;
                 slot = weakest;
             } else {
                 slot = airN;
                 airN++;
             }
-            // its emission pattern toward the closest point of the ray (a street lamp's head
-            // hides the sky above it)
-            vec3 toClose = rd * clamp(tc, 0.0, tEnd) - o;
-            airBlock[slot] = L.block;
-            airRad[slot] = rad * lampPattern(L.type, toClose / max(length(toClose), 1e-3));
-            airW[slot] = w;
-            airTc[slot] = tc;
-            airH2[slot] = h2;
-            airS2[slot] = sq(EM_SIZE[ti]) + 0.12;
-            airReach[slot] = L.level + 1.0;
-            airCovered[slot] = L.covered;
+            airAdd(slot, L, rd, tEnd, w, 1.0);
         }
     }
 }
@@ -560,12 +599,14 @@ vec3 airLampsSegment(float t0, float t1, float sigma, float pointCovered) {
         float same = airCovered[i] ? pointCovered : 1.0 - pointCovered;
         if (same <= 0.01) continue;
         float tc = airTc[i];
+        // the reach of the lamp: fade with the distance of the closest point of the segment
+        float dmin2 = airH2[i] + sq(max(max(t0 - tc, tc - t1), 0.0));
+        float reach = airReach[i];
+        if (dmin2 >= reach * reach) continue;            // out of its reach (most of them)
+        float fade = 1.0 - smoothstep(reach * 0.45, reach, sqrt(dmin2));
         float h = sqrt(airH2[i] + airS2[i]);
         // integral of I / (d^2 + s^2) along the segment
         float I = (atan((t1 - tc) / h) - atan((t0 - tc) / h)) / h;
-        // the reach of the lamp: fade with the distance of the closest point of the segment
-        float dmin = sqrt(airH2[i] + sq(max(max(t0 - tc, tc - t1), 0.0)));
-        float fade = 1.0 - smoothstep(airReach[i] * 0.45, airReach[i], dmin);
         S += airRad[i] * (airW[i] * max(I, 0.0) * fade * same);
     }
     return S * sigma;
