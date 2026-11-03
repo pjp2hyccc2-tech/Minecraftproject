@@ -138,7 +138,7 @@ final class TrailerShots {
     }
 
     // =========================================================================================== shots
-    /** A: out of the moonlit sky, down through a gap in the cedar crowns, onto the trail in the fog. */
+    /** A: the moon through a gap in the cedar crowns; the camera sinks and tilts down onto the trail in the fog. */
     static final class Descent extends Shot {
         Descent() {
             super("descent", 8.0f);
@@ -147,13 +147,13 @@ final class TrailerShots {
 
         @Override
         void frame(float t, Frame f) {
-            double x = -92.5, z = -86.5;
-            double g = ground(x, z);
-            float k = easeSine(seg(t, 0.2f, 7.7f));
-            f.cam = new Vec3(x + 0.3 * noise(t * 0.2f, 1.0f), lerp((float) (g + 34.0), (float) (g + 1.62), k), z + 0.3 * noise(t * 0.17f, 2.0f));
-            f.yaw = lerpAngle(-4.0f, -50.0f, easeSine(seg(t, 2.2f, 7.9f)));
-            f.pitch = lerp(-48.0f, 3.0f, easeSine(seg(t, 0.6f, 7.4f)));
-            f.fov = 56.0f;
+            float k = easeSine(seg(t, 0.3f, 7.8f));
+            double x = lerp(-92.5f, -91.6f, k), z = lerp(-86.5f, -85.7f, k);
+            f.cam = eye(x, z, lerp(1.25f, 1.62f, k));
+            f.cam = f.cam.add(0.06 * noise(t * 0.4f, 1.0f), 0.0, 0.06 * noise(t * 0.37f, 2.0f));
+            f.yaw = lerpAngle(-6.0f, -50.0f, easeSine(seg(t, 1.8f, 7.9f))) + 0.8f * noise(t * 0.3f, 3.0f);
+            f.pitch = lerp(-50.0f, 2.0f, k);
+            f.fov = 58.0f;
             f.fear = 0.12f;
         }
     }
@@ -171,8 +171,8 @@ final class TrailerShots {
             float up = easeSine(seg(t, 1.3f, 3.1f));
             float breath = (float) Math.sin(t * 2.4);
             f.cam = new Vec3(x, g + lerp(0.34f, 1.05f, up) + 0.015 * breath, z + 0.15 * up);
-            f.yaw = lerpAngle(-62.0f, -34.0f, up);
-            f.pitch = lerp(-76.0f, 7.0f, up) + 1.2f * breath * (1.0f - up);
+            f.yaw = lerpAngle(-14.0f, -34.0f, up);
+            f.pitch = lerp(-64.0f, 7.0f, up) + 1.2f * breath * (1.0f - up);
             f.roll = lerp(16.0f, 0.0f, up);
             f.hand = t > 2.1f;
             f.held = t < 2.1f ? NONE : (t < 3.05f ? FLASHLIGHT_OFF : FLASHLIGHT_ON);
@@ -254,9 +254,9 @@ final class TrailerShots {
             f.cam = eye(-51.5, cz, 1.62);
             Vec3 lamp = new Vec3(-51.5, groundAt(-51.5, -21.5) + 1.7, -21.5);
             f.yaw = yawTo(f.cam, lamp) + 1.2f * noise(t * 0.5f, 9.0f);
-            f.pitch = pitchTo(f.cam, lamp) + 2.0f + 0.8f * noise(t * 0.4f, 10.0f);
+            f.pitch = pitchTo(f.cam, lamp) + 5.0f + 0.8f * noise(t * 0.4f, 10.0f);
             f.hand = true;
-            f.held = FLASHLIGHT_OFF;
+            f.held = FLASHLIGHT_ON;
             f.handSwayPitch = 1.0f * noise(t * 0.7f, 11.0f);
             f.fov = lerp(50.0f, 41.0f, easeSine(seg(t, 0.5f, 5.5f)));
             f.fear = 0.3f;
