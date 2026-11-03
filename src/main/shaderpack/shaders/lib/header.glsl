@@ -6,6 +6,7 @@
 #include "/lib/common.glsl"
 #include "/lib/world.glsl"
 #include "/lib/materials.glsl"
+#include "/lib/emitters.glsl"
 #include "/lib/shadow.glsl"
 #include "/lib/playerlight.glsl"
 #include "/lib/lighting.glsl"
