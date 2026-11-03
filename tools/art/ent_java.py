@@ -359,7 +359,7 @@ def compile_anim(body_src, post_src, helpers_src, part_names, consts, extra_glob
         lines.append(f'{k} = {v}')
     lines += translate_helpers(helpers_src or '')
     lines.append('def setup_anim(__parts, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, '
-                 'pose, pt, glitch, st, prev, partial, __blend_cb):')
+                 'pose, pt, glitch, mem, prev, partial, __blend_cb):')
     for n in part_names:
         lines.append(f'    {n} = __parts[{n!r}]')
     lines.append('    blend = 8.0')

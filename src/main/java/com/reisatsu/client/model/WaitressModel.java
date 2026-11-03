@@ -145,8 +145,8 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
         float pt = Math.max(0.0F, entity.poseTime(partial));
         float glitch = Mth.clamp(entity.glitch(partial), 0.0F, 1.0F);
         final float poseTicks = pt;
-        State st = this.state(entity, pose, ageInTicks);
-        int prev = st.prev;
+        State mem = this.state(entity, pose, ageInTicks);
+        int prev = mem.prev;
         float blend = 8.0F;
         float t = ageInTicks;
         if (glitch > 0.0F) {
@@ -318,7 +318,7 @@ public class WaitressModel<T extends Mob & Animated> extends HierarchicalModel<T
         }
         this.neck.zRot = this.neck.zRot + jit2 * 0.25F;
         this.rightArm.zRot = this.rightArm.zRot + jit * 0.2F;
-        this.blend(st, poseTicks, blend, ageInTicks);
+        this.blend(mem, poseTicks, blend, ageInTicks);
         // after the blend: the tray stays level on her palm, the glasses stand upright, loose strands hang down
         level(this.tray, this.body, this.leftArm, this.leftForearm, this.leftHand);
         level(this.heldGlass, this.body, this.rightArm, this.rightForearm, this.rightHand);

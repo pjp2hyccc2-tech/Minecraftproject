@@ -514,12 +514,12 @@ def java_source(spec):
         A('        float pt = Math.max(0.0F, entity.poseTime(partial));')
         A('        float glitch = Mth.clamp(entity.glitch(partial), 0.0F, 1.0F);')
     A('        final float poseTicks = pt;')
-    A('        State st = this.state(entity, pose, ageInTicks);')
-    A('        int prev = st.prev;')
+    A('        State mem = this.state(entity, pose, ageInTicks);')
+    A('        int prev = mem.prev;')
     A('        float blend = 8.0F;')
     for l in (PROLOGUE + spec.anim).strip('\n').splitlines():
         A(('        ' + l) if l.strip() else '')
-    A('        this.blend(st, poseTicks, blend, ageInTicks);')
+    A('        this.blend(mem, poseTicks, blend, ageInTicks);')
     for l in spec.post.strip('\n').splitlines():
         A(('        ' + l) if l.strip() else '')
     A('    }')

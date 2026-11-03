@@ -409,8 +409,8 @@ if (pose == CHOP || pose == LOOK) {
         // the body stays dead still; only the head comes round, slowly, much too far, over the shoulder
         float side = yaw < -0.05F ? -1.0F : 1.0F;
         float turn = ease(pt / 34.0F);
-        float st = jerky(pt / 34.0F, 5.0F);
-        float tt = Mth.lerp(0.35F, turn, st);
+        float stp = jerky(pt / 34.0F, 5.0F);
+        float tt = Mth.lerp(0.35F, turn, stp);
         this.neck.yRot = side * 0.4F * tt;
         this.head.yRot = side * 2.4F * tt;
         this.head.xRot = 0.3F - 0.45F * tt;

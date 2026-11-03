@@ -140,8 +140,8 @@ public class VisitorModel<T extends Mob & Animated> extends HierarchicalModel<T>
         float pt = Math.max(0.0F, entity.poseTime(partial));
         float glitch = Mth.clamp(entity.glitch(partial), 0.0F, 1.0F);
         final float poseTicks = pt;
-        State st = this.state(entity, pose, ageInTicks);
-        int prev = st.prev;
+        State mem = this.state(entity, pose, ageInTicks);
+        int prev = mem.prev;
         float blend = 8.0F;
         float t = ageInTicks;
         if (glitch > 0.0F) {
@@ -298,7 +298,7 @@ public class VisitorModel<T extends Mob & Animated> extends HierarchicalModel<T>
         this.helmet.zRot = this.helmet.zRot + jit * 0.35F;
         this.helmet.xRot = this.helmet.xRot + jit2 * 0.2F;
         this.rightForearm.xRot = this.rightForearm.xRot + jit2 * 0.6F;
-        this.blend(st, poseTicks, blend, ageInTicks);
+        this.blend(mem, poseTicks, blend, ageInTicks);
         // drops: the falling parts are levelled so they fall straight down from the gloves and the chin bar
         level(this.dripL, this.body, this.leftArm, this.leftForearm, this.leftHand);
         level(this.dripR, this.body, this.rightArm, this.rightForearm, this.rightHand);
