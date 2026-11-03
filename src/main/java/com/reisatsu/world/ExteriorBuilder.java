@@ -105,6 +105,13 @@ public final class ExteriorBuilder {
         }
         // a lane arrow: two short lines at the entrance
         for (int z = 44; z <= 46; z++) setLine(s, 41, z, line);
+        // the medium waits by her car in the glow of its dome light: an invisible light over her spot, so the
+        // intro (and waking up beside the car) is readable in the dark lot
+        Layout.Marker m = Layout.marker("medium");
+        int lx = m.pos().getX(), lz = m.pos().getZ();
+        if (s.contains(lx, lz)) {
+            s.set(lx, Y + 2, lz, Blocks.LIGHT.defaultBlockState().setValue(net.minecraft.world.level.block.LightBlock.LEVEL, 11));
+        }
     }
 
     static void setLine(BlockSink s, int x, int z, BlockState line) {
