@@ -28,8 +28,9 @@ import net.minecraft.world.entity.Mob;
  * joints the wrong way for a few ticks, glitch 0.5..1 also drops frames (at 1 the pose only changes in whole
  * 3-tick frames). Floppy parts (ears, the hanging eye, the loose thread, limp limbs) are damped springs on the same
  * clock, so they too freeze and step with it.
- * Pose ids: 0 FLOAT (face down in the water, limp, bobbing; the knife is hidden; put the entity at the water
- * surface), 1 SIT (slumped against a wall behind it, head lolling, the knife lying on the floor in its paw),
+ * Pose ids: 0 FLOAT (face down in the water, limp, bobbing, every ~23 s an arm jerks; the knife is hidden; put the
+ * entity at the water surface), 1 SIT (slumped against a wall behind it, head lolling, nodding off and snapping
+ * awake every 13 s; the knife lying on the floor in its paw),
  * 2 CRAWL (dragging itself on its arms, legs and ears trailing; one pull every 8 ticks, ~0.28 blocks each, so
  * move it at ~0.035 blocks/tick; the knife strikes the floor at clock 16n + 9), 3 WALK (stiff marionette steps
  * with a step every 11 ticks covering ~0.2 blocks (~0.018 blocks/tick), swaying as if on strings, the knife dragging
@@ -279,6 +280,11 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             earGy = 0.35F;
             earGz = -0.75F;
             earSpread = 0.85F;
+            // something moves in the water: every ~23 s its left arm jerks and the head rolls a little
+            float tw = flick(t, 460.0F, 230.0F);
+            this.armL.zRot = this.armL.zRot - 0.6F * tw;
+            this.pawL.xRot = -0.9F * tw;
+            this.head.zRot = this.head.zRot + 0.18F * tw;
             this.knife.visible = false;
             drips = 0.0F;
             blend = 10.0F;
@@ -296,8 +302,11 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.legL.yRot = -0.2F;
             this.footR.xRot = 0.25F;
             this.footL.xRot = 0.3F;
-            this.head.zRot = 0.6F + loll + j1 * 0.4F;
-            this.head.xRot = 0.48F + Mth.sin(t * 0.017F + 1.0F) * 0.05F;
+            // nodding off: the head sinks further and further for four seconds, then snaps back up
+            float nod = (t + 37.0F) % 260.0F;
+            float droop = nod < 200.0F ? span(nod, 120.0F, 198.0F) : 1.0F - span(nod, 200.0F, 202.5F);
+            this.head.zRot = 0.6F + loll + 0.5F * droop + j1 * 0.4F;
+            this.head.xRot = 0.48F + Mth.sin(t * 0.017F + 1.0F) * 0.05F + 0.22F * droop;
             this.head.x = 0.35F;
             this.armR.zRot = 0.55F;
             this.armR.xRot = -0.35F;
@@ -363,7 +372,11 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             float u = cyc - (float) Mth.floor(cyc);
             float right = u < 0.5F ? 1.0F : 0.0F;
             float s = u < 0.5F ? u * 2.0F : u * 2.0F - 1.0F;
-            float lf = lift(s);
+            // every step a little different; now and then a string tugs the head up and hoists it higher
+            float step = (float) Mth.floor(t / 11.0F);
+            float tug = hash(step * 3.7F + 1.0F) < 0.34F ? 1.0F : 0.0F;
+            float la = lift(s);
+            float lf = la * (0.85F + 0.3F * hash(step * 1.3F + 7.0F)) * (1.0F + 0.35F * tug);
             float side = right * 2.0F - 1.0F;
             float land = wobble((s - 0.64F) * 11.0F, 1.3F, 0.55F);
             this.body.y = 21.0F - lf * 1.1F + land * 0.25F;
@@ -379,13 +392,13 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.footR.xRot = right > 0.5F ? 1.0F * lf : 0.0F;
             this.footL.xRot = right > 0.5F ? 0.0F : 1.0F * lf;
             // the strings on the wrists: the arm opposite the lifted leg is jerked up and dropped with it
-            this.armL.zRot = -0.12F - (right > 0.5F ? 1.5F * lf : 0.0F);
-            this.armL.xRot = right > 0.5F ? -0.3F * lf : 0.05F;
-            this.armR.zRot = 0.1F + (right > 0.5F ? 0.0F : 1.25F * lf);
-            this.armR.xRot = 0.3F - (right > 0.5F ? 0.0F : 0.5F * lf);
+            this.armL.zRot = -0.12F - (right > 0.5F ? 1.5F * la : 0.0F);
+            this.armL.xRot = right > 0.5F ? -0.3F * la : 0.05F;
+            this.armR.zRot = 0.1F + (right > 0.5F ? 0.0F : 1.25F * la);
+            this.armR.xRot = 0.3F - (right > 0.5F ? 0.0F : 0.5F * la);
             this.knife.xRot = 0.8F;
             // the blade trails behind on the floor, except while its arm is jerked up on the string
-            knifeAim = 1.0F - (right > 0.5F ? 0.0F : lf);
+            knifeAim = 1.0F - (right > 0.5F ? 0.0F : la);
             kgx = -0.12F;
             kgy = 0.82F;
             kgz = 0.56F;
@@ -393,7 +406,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             armW = 0.7F;
             armZ = 0.35F;
             this.head.zRot = chase(mem, 40, -this.body.zRot * 1.4F + 0.3F, 0.45F, 0.22F, t) + j1 * 0.5F;
-            this.head.xRot = 0.42F + chase(mem, 41, lf * 0.35F, 0.55F, 0.25F, t);
+            this.head.xRot = 0.42F + chase(mem, 41, lf * 0.35F - tug * lf * 0.75F, 0.55F, 0.25F, t);
             earFlop = 0.82F;
             grains = 1.0F;
             blend = 5.0F;
@@ -422,6 +435,7 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             this.knife.xRot = -0.95F;
             armFlop = 0.5F;
             earFlop = 0.88F;
+            earGx = 0.9F * flick(t, 130.0F, 50.0F);
             blend = 4.0F;
         } else if (pose == LUNGE) {
             // the jump scare: a crouch, then it springs at your face, knife raised over its head, the mouth seam tearing
@@ -676,6 +690,15 @@ public class OniDollModel<T extends Mob & Animated> extends HierarchicalModel<T>
             return 0.0F;
         }
         return hash(i + seed * 7.1F) * 2.0F - 1.0F;
+    }
+
+    /** A flick every `period` ticks: up in two ticks, back down over four (t must be >= 0). */
+    private static float flick(float t, float period, float phase) {
+        float m = (t + phase) % period;
+        if (m < 2.0F) {
+            return m * 0.5F;
+        }
+        return m < 6.0F ? 1.0F - (m - 2.0F) / 4.0F : 0.0F;
     }
 
     /** One marionette step (s = 0..1): yanked up fast, hangs in the air, drops like a dead weight. */

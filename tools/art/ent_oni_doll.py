@@ -52,8 +52,9 @@ class OniDoll(Spec):
     joints the wrong way for a few ticks, glitch 0.5..1 also drops frames (at 1 the pose only changes in whole
     3-tick frames). Floppy parts (ears, the hanging eye, the loose thread, limp limbs) are damped springs on the same
     clock, so they too freeze and step with it.
-    Pose ids: 0 FLOAT (face down in the water, limp, bobbing; the knife is hidden; put the entity at the water
-    surface), 1 SIT (slumped against a wall behind it, head lolling, the knife lying on the floor in its paw),
+    Pose ids: 0 FLOAT (face down in the water, limp, bobbing, every ~23 s an arm jerks; the knife is hidden; put the
+    entity at the water surface), 1 SIT (slumped against a wall behind it, head lolling, nodding off and snapping
+    awake every 13 s; the knife lying on the floor in its paw),
     2 CRAWL (dragging itself on its arms, legs and ears trailing; one pull every 8 ticks, ~0.28 blocks each, so
     move it at ~0.035 blocks/tick; the knife strikes the floor at clock 16n + 9), 3 WALK (stiff marionette steps
     with a step every 11 ticks covering ~0.2 blocks (~0.018 blocks/tick), swaying as if on strings, the knife dragging
@@ -171,16 +172,34 @@ class OniDoll(Spec):
             ys, xs = np.mgrid[0:f.h, 0:f.w]
             return np.minimum(np.minimum(xs, f.w - 1 - xs), np.minimum(ys, f.h - 1 - ys))
 
+        # wet plush mats into clumps: a jittered 3D grid of clump centres (rest pose, model pixels)
+        from scipy.spatial import cKDTree
+        cr = np.random.default_rng(4242)
+        g = np.mgrid[-4.0:4.01:0.9, 10.0:25.01:0.9, -4.0:3.01:0.9].reshape(3, -1).T
+        seeds = g + cr.uniform(-0.38, 0.38, g.shape)
+        seed_tone = cr.normal(0, 0.35, len(seeds))
+        tree = cKDTree(seeds)
+
+        def clumps(Pp):
+            """(light-top / dark-bottom gradient inside each clump, crevice darkness between them, per-clump tone)"""
+            q = Pp.reshape(-1, 3)
+            dd, ii = tree.query(q, k=2)
+            rel = (q[:, 1] - seeds[ii[:, 0], 1]) / 0.6
+            grad = -np.clip(rel, -1, 1)
+            crev = np.clip(1.0 - (dd[:, 1] - dd[:, 0]) / 0.22, 0, 1)
+            sh = Pp.shape[:-1]
+            return grad.reshape(sh), crev.reshape(sh), seed_tone[ii[:, 0]].reshape(sh)
+
         def fur_v(f, base, wet, puff):
-            """Wet plush value (palette index): soaked heavier toward the bottom, matted clumps, puffy cushion edges."""
+            """Wet plush value (palette index): soaked heavier toward the bottom, matted into clumps that catch the
+            light on top and go dark underneath and between, puffy cushion edges."""
             Pp = f.positions()
             nrm = f.normal()
             y = Pp[..., 1]
             wetness = (0.3 + 0.7 * np.clip((y - 13.0) / 11.0, 0, 1) ** 1.4) * wet + 0.15 * pt.n3b(Pp * 0.6 + 5.0)
-            clump = pt.n3(Pp * 1.7)
+            grad, crev, tone = clumps(Pp)
             fine = pt.n3c(Pp * 3.2)
-            v = base - wetness * 2.4 + clump * 0.6 + fine * 0.18 - nrm[1] * 0.45
-            v = np.where(clump < -0.5, v - 0.55, v)
+            v = base - wetness * 2.4 + grad * 0.55 - crev * 1.1 + tone + fine * 0.15 - nrm[1] * 0.45
             e = edge_dist(f)
             v = v - puff * np.select([e == 0, e == 1, e == 2], [1.05, 0.45, 0.15], 0.0)
             for (cx, cy, cz, rad, k) in ((0, 17.5, 0, 2.0, 1.1), (-2.2, 18.0, 0, 1.1, 0.8), (2.2, 18.0, 0, 1.1, 0.8),
@@ -503,6 +522,15 @@ private static float jolt(float t, float seed, float g) {
     return hash(i + seed * 7.1F) * 2.0F - 1.0F;
 }
 
+/** A flick every `period` ticks: up in two ticks, back down over four (t must be >= 0). */
+private static float flick(float t, float period, float phase) {
+    float m = (t + phase) % period;
+    if (m < 2.0F) {
+        return m * 0.5F;
+    }
+    return m < 6.0F ? 1.0F - (m - 2.0F) / 4.0F : 0.0F;
+}
+
 /** One marionette step (s = 0..1): yanked up fast, hangs in the air, drops like a dead weight. */
 private static float lift(float s) {
     if (s < 0.16F) {
@@ -597,6 +625,11 @@ if (pose == FLOAT) {
     earGy = 0.35F;
     earGz = -0.75F;
     earSpread = 0.85F;
+    // something moves in the water: every ~23 s its left arm jerks and the head rolls a little
+    float tw = flick(t, 460.0F, 230.0F);
+    this.armL.zRot = this.armL.zRot - 0.6F * tw;
+    this.pawL.xRot = -0.9F * tw;
+    this.head.zRot = this.head.zRot + 0.18F * tw;
     this.knife.visible = false;
     drips = 0.0F;
     blend = 10.0F;
@@ -614,8 +647,11 @@ if (pose == FLOAT) {
     this.legL.yRot = -0.2F;
     this.footR.xRot = 0.25F;
     this.footL.xRot = 0.3F;
-    this.head.zRot = 0.6F + loll + j1 * 0.4F;
-    this.head.xRot = 0.48F + Mth.sin(t * 0.017F + 1.0F) * 0.05F;
+    // nodding off: the head sinks further and further for four seconds, then snaps back up
+    float nod = (t + 37.0F) % 260.0F;
+    float droop = nod < 200.0F ? span(nod, 120.0F, 198.0F) : 1.0F - span(nod, 200.0F, 202.5F);
+    this.head.zRot = 0.6F + loll + 0.5F * droop + j1 * 0.4F;
+    this.head.xRot = 0.48F + Mth.sin(t * 0.017F + 1.0F) * 0.05F + 0.22F * droop;
     this.head.x = 0.35F;
     this.armR.zRot = 0.55F;
     this.armR.xRot = -0.35F;
@@ -681,7 +717,11 @@ if (pose == FLOAT) {
     float u = cyc - (float) Mth.floor(cyc);
     float right = u < 0.5F ? 1.0F : 0.0F;
     float s = u < 0.5F ? u * 2.0F : u * 2.0F - 1.0F;
-    float lf = lift(s);
+    // every step a little different; now and then a string tugs the head up and hoists it higher
+    float step = (float) Mth.floor(t / 11.0F);
+    float tug = hash(step * 3.7F + 1.0F) < 0.34F ? 1.0F : 0.0F;
+    float la = lift(s);
+    float lf = la * (0.85F + 0.3F * hash(step * 1.3F + 7.0F)) * (1.0F + 0.35F * tug);
     float side = right * 2.0F - 1.0F;
     float land = wobble((s - 0.64F) * 11.0F, 1.3F, 0.55F);
     this.body.y = 21.0F - lf * 1.1F + land * 0.25F;
@@ -697,13 +737,13 @@ if (pose == FLOAT) {
     this.footR.xRot = right > 0.5F ? 1.0F * lf : 0.0F;
     this.footL.xRot = right > 0.5F ? 0.0F : 1.0F * lf;
     // the strings on the wrists: the arm opposite the lifted leg is jerked up and dropped with it
-    this.armL.zRot = -0.12F - (right > 0.5F ? 1.5F * lf : 0.0F);
-    this.armL.xRot = right > 0.5F ? -0.3F * lf : 0.05F;
-    this.armR.zRot = 0.1F + (right > 0.5F ? 0.0F : 1.25F * lf);
-    this.armR.xRot = 0.3F - (right > 0.5F ? 0.0F : 0.5F * lf);
+    this.armL.zRot = -0.12F - (right > 0.5F ? 1.5F * la : 0.0F);
+    this.armL.xRot = right > 0.5F ? -0.3F * la : 0.05F;
+    this.armR.zRot = 0.1F + (right > 0.5F ? 0.0F : 1.25F * la);
+    this.armR.xRot = 0.3F - (right > 0.5F ? 0.0F : 0.5F * la);
     this.knife.xRot = 0.8F;
     // the blade trails behind on the floor, except while its arm is jerked up on the string
-    knifeAim = 1.0F - (right > 0.5F ? 0.0F : lf);
+    knifeAim = 1.0F - (right > 0.5F ? 0.0F : la);
     kgx = -0.12F;
     kgy = 0.82F;
     kgz = 0.56F;
@@ -711,7 +751,7 @@ if (pose == FLOAT) {
     armW = 0.7F;
     armZ = 0.35F;
     this.head.zRot = chase(mem, 40, -this.body.zRot * 1.4F + 0.3F, 0.45F, 0.22F, t) + j1 * 0.5F;
-    this.head.xRot = 0.42F + chase(mem, 41, lf * 0.35F, 0.55F, 0.25F, t);
+    this.head.xRot = 0.42F + chase(mem, 41, lf * 0.35F - tug * lf * 0.75F, 0.55F, 0.25F, t);
     earFlop = 0.82F;
     grains = 1.0F;
     blend = 5.0F;
@@ -740,6 +780,7 @@ if (pose == FLOAT) {
     this.knife.xRot = -0.95F;
     armFlop = 0.5F;
     earFlop = 0.88F;
+    earGx = 0.9F * flick(t, 130.0F, 50.0F);
     blend = 4.0F;
 } else if (pose == LUNGE) {
     // the jump scare: a crouch, then it springs at your face, knife raised over its head, the mouth seam tearing
@@ -993,6 +1034,22 @@ def previews(b, ER, rows_sel=None):
             ims.append((f'tick {k}', b.view([(0, 3)], 330 + k, yaw_view=-60, pitch_view=10, size=(130, 160), ortho=0.42, center_y=0.3,
                                             glitch=lambda tt: 1.0, scene=SC.flooring())))
         rows.append(('stop-motion (glitch 1.0, WALK): the pose changes only in whole 3-tick frames', ims))
+    if sel('events'):
+        ims = []
+        for tt in (226, 231, 233, 238):
+            ims.append((f'FLOAT t {tt}', b.view([(0, 0)], float(tt), yaw_view=-30, pitch_view=55, size=(160, 150), ortho=0.45,
+                                                center_y=0.0, scene=SC.bathtub())))
+        for tt in (100, 160, 163, 166):
+            ims.append((f'SIT t {tt}', b.view([(0, 1)], float(tt), yaw_view=-15, pitch_view=8, size=(150, 150), ortho=0.36,
+                                              center_y=0.25, scene=SC.wall_behind())))
+        rows.append(('rare events on the running clock: FLOAT - an arm jerks in the water (t 230); SIT - nodding off, '
+                     'snapping awake (t 163)', ims))
+        ims = []
+        for k in range(10):
+            tt = 22.0 * 2 + k * 3.0
+            ims.append((f'WALK t {int(tt)}', b.view([(0, 3)], tt, yaw_view=-90, pitch_view=6, size=(130, 160), ortho=0.42,
+                                                   center_y=0.32, scene=SC.flooring())))
+        rows.append(('WALK over four steps: every step a little different, a string tugging the head up now and then', ims))
     if sel('turn'):
         ims = []
         for ptv in (0, 4, 7, 10, 14, 17, 21, 26, 45):
