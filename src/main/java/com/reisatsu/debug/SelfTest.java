@@ -130,6 +130,7 @@ public final class SelfTest {
                 case 10 -> submit(level, data);
                 case 11 -> exorcismWait(level, data);
                 case 12 -> endingAndReset(server, level, data);
+                case 13 -> badEnding(server, level, data);
                 case 20 -> fixtures(level, data);
                 case 21 -> lockerResult(level, data);
                 default -> finish(server);
@@ -572,6 +573,35 @@ public final class SelfTest {
         com.reisatsu.world.Fixtures.resetAll(level);
         Spirits.removeAll(level);
         check(data.captured == 0 && data.photos.isEmpty() && data.phase == GameData.PHASE_IDLE, "a reset clears the progress");
+        // ---- a second night for the other ending: no お札 left, and the waitress takes you
+        data.started = true;
+        data.phase = GameData.PHASE_INVESTIGATE;
+        data.introSeen = true;
+        data.setDirty();
+        GameManager.debugPeaceful = false;
+        Spirits.paused = true;
+        for (int i = 0; i < fake.getInventory().getContainerSize(); i++) {
+            if (fake.getInventory().getItem(i).is(ModItems.OFUDA.get())) fake.getInventory().setItem(i, net.minecraft.world.item.ItemStack.EMPTY);
+        }
+        place(laneEye, laneYaw);
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, fake.position().add(0, 0, 0.5), 180.0f);
+        if (probe != null) GameManager.caught(fake, probe);
+        check(GameManager.state(fake).caught(), "the second night: taken again, with no お札 left");
+        next(13, GameManager.CAUGHT_TICKS + 330);
+    }
+
+    /** 相席: you stay at table 7; the waitress sets down a glass of water for one. */
+    private static void badEnding(MinecraftServer server, ServerLevel level, GameData data) {
+        check(data.phase == GameData.PHASE_ENDING && data.ending == GameData.ENDING_BAD, "no お札: the 相席 ending (phase " + data.phase + ", ending " + data.ending + ")");
+        check(fake.isPassenger() && fake.position().distanceTo(Layout.marker("seat_7").center()) < 1.0, "seated at table 7 (" + fake.blockPosition().toShortString() + ")");
+        boolean serving = false;
+        for (Spirit sp : Spirits.all(level)) if (sp.kind() == SpiritKind.WAITRESS && sp.pose() == com.reisatsu.entity.Waitress.SERVE) serving = true;
+        check(serving, "the waitress serves the table");
+        Story.endingDone(fake);
+        check(!data.started && !fake.isPassenger(), "the night is over, you are back");
+        data.resetProgress();
+        com.reisatsu.world.Fixtures.resetAll(level);
+        Spirits.removeAll(level);
         finish(server);
     }
 
