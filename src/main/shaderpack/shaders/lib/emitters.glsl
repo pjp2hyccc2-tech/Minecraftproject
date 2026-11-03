@@ -337,6 +337,12 @@ float blindTransmission(vec3 P, vec3 L) {
 //  negative when a wall stands between the column and the lamp. 0 = empty.
 int tableRefY() { return int(floor(cameraPosition.y)) - 12; }
 const float TABLE_REACH = 15.0;
+// a column keeps a lamp while level - |dx| - |dz| - this > 0 (prepare.glsl): lamps far above
+// or below the camera's band reach fewer of the surfaces that are seen
+float tableVerticalPenalty(float y) {
+    float ref = cameraPosition.y - 0.6;
+    return max(abs(y + 0.5 - ref) - 2.5, 0.0) * 0.6;
+}
 
 float tablePack(int type, int level, int yrel, int dx, int dz, bool walled) {
     int c = type | (level << 5) | (yrel << 9) | ((dx + 15) << 14) | ((dz + 15) << 19);
@@ -471,35 +477,96 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
 }
 
 // ---- the lamps in the mist -----------------------------------------------------------------
-// light scattered toward the eye by the air on the segment [t0, t1] of the view ray (camera
-// relative, unit rd), sigma: scattering per block. Analytic integral of the inverse-square
-// falloff (no shadows: the mist is thin indoors, the lamps outside stand in the open).
-vec3 lampsInScatter(vec3 rd, float t0, float t1, float sigma, float pointCovered) {
-    vec3 mid = cameraPosition + rd * (0.5 * (t0 + t1));
-    ivec2 column = ivec2(floor(mid.xz));
-    vec4 tab = tableFetch(column);
+// Light scattered toward the eye by the air along a view ray (camera relative, unit rd).
+// The lamps are gathered ONCE per ray - from the table at eight columns along it, merged - and
+// each is faded out before it would drop out of those columns' lists (a continuous margin), so
+// the glow has no seams; looking them up per march segment made rings wherever a lamp's
+// closest approach crossed a segment boundary. airLampsSegment() then integrates the inverse-
+// square falloff of every gathered lamp analytically over one segment (no shadows: the mist
+// is thin indoors, the lamps outside stand in the open; walls drop a lamp from the columns
+// behind them).
+#define AIR_LAMPS 8
+#define AIR_COLUMNS 8
+int   airN = 0;
+vec3  airBlock[AIR_LAMPS];
+vec3  airRad[AIR_LAMPS];      // radiance x emission pattern toward the ray
+float airW[AIR_LAMPS];        // fade-out before the lamp leaves the table
+float airTc[AIR_LAMPS];       // where along the ray it comes closest
+float airH2[AIR_LAMPS];       // squared distance of the ray from it
+float airS2[AIR_LAMPS];       // squared soft core
+float airReach[AIR_LAMPS];
+bool  airCovered[AIR_LAMPS];
+
+void airLampsGather(vec3 rd, float tEnd) {
+    airN = 0;
+    for (int k = 0; k < AIR_COLUMNS; k++) {
+        vec3 p = cameraPosition + rd * (tEnd * pow((float(k) + 0.5) / float(AIR_COLUMNS), 1.5));
+        ivec2 column = ivec2(floor(p.xz));
+        vec4 tab = tableFetch(column);
+        for (int j = 0; j < 4; j++) {
+            float v = tab[j];
+            if (v < 0.5) continue;                       // empty, or walled off from here
+            Lamp L = tableUnpack(v, column);
+            if (!emitterCasts(L.type)) continue;
+            vec2 dc = abs(L.block.xz + 0.5 - p.xz);
+            float w = smoothstep(0.0, 3.0, L.level - dc.x - dc.y - tableVerticalPenalty(L.block.y));
+            if (w <= 0.0) continue;
+            int slot = -1;
+            for (int i = 0; i < AIR_LAMPS; i++) {
+                if (i < airN && all(lessThan(abs(airBlock[i] - L.block), vec3(0.5)))) slot = i;
+            }
+            if (slot >= 0) { airW[slot] = max(airW[slot], w); continue; }
+            int ti = clamp(L.type, 0, EM_COUNT - 1);
+            vec3 o = L.pos - cameraPosition;
+            float tc = dot(o, rd);
+            float h2 = max(dot(o, o) - tc * tc, 0.0);
+            vec3 rad = lampRadiance(L);
+            float importance = w * luma(rad) / (h2 + 1.0);
+            if (airN >= AIR_LAMPS) {
+                // full: replace the weakest if this one matters more
+                int weakest = 0;
+                float wi = 1e9;
+                for (int i = 0; i < AIR_LAMPS; i++) {
+                    float imp = airW[i] * luma(airRad[i]) / (airH2[i] + 1.0);
+                    if (imp < wi) { wi = imp; weakest = i; }
+                }
+                if (importance <= wi) continue;
+                slot = weakest;
+            } else {
+                slot = airN;
+                airN++;
+            }
+            // its emission pattern toward the closest point of the ray (a street lamp's head
+            // hides the sky above it)
+            vec3 toClose = rd * clamp(tc, 0.0, tEnd) - o;
+            airBlock[slot] = L.block;
+            airRad[slot] = rad * lampPattern(L.type, toClose / max(length(toClose), 1e-3));
+            airW[slot] = w;
+            airTc[slot] = tc;
+            airH2[slot] = h2;
+            airS2[slot] = sq(EM_SIZE[ti]) + 0.12;
+            airReach[slot] = L.level + 1.0;
+            airCovered[slot] = L.covered;
+        }
+    }
+}
+
+// the gathered lamps' light scattered on the segment [t0, t1]; sigma: scattering per block
+vec3 airLampsSegment(float t0, float t1, float sigma, float pointCovered) {
     vec3 S = vec3(0.0);
-    for (int k = 0; k < 4; k++) {
-        float v = tab[k];
-        if (abs(v) < 0.5) continue;
-        Lamp L = tableUnpack(v, column);
-        if (!emitterCasts(L.type) || L.walled) continue;
+    for (int i = 0; i < AIR_LAMPS; i++) {
+        if (i >= airN) break;
         // indoor lamps light indoor air, outdoor lamps the open air
-        float same = L.covered ? pointCovered : 1.0 - pointCovered;
+        float same = airCovered[i] ? pointCovered : 1.0 - pointCovered;
         if (same <= 0.01) continue;
-        int ti = clamp(L.type, 0, EM_COUNT - 1);
-        vec3 o = L.pos - cameraPosition;
-        float tc = dot(o, rd);
-        float h2 = max(dot(o, o) - tc * tc, 0.0);
-        float s2 = sq(EM_SIZE[ti]) + 0.12;
-        float h = sqrt(h2 + s2);
+        float tc = airTc[i];
+        float h = sqrt(airH2[i] + airS2[i]);
         // integral of I / (d^2 + s^2) along the segment
         float I = (atan((t1 - tc) / h) - atan((t0 - tc) / h)) / h;
         // the reach of the lamp: fade with the distance of the closest point of the segment
-        float dmin = sqrt(h2 + sq(max(max(t0 - tc, tc - t1), 0.0)));
-        float reach = L.level + 1.0;
-        float fade = 1.0 - smoothstep(reach * 0.45, reach * 1.0, dmin);
-        S += lampRadiance(L) * I * fade * same;
+        float dmin = sqrt(airH2[i] + sq(max(max(t0 - tc, tc - t1), 0.0)));
+        float fade = 1.0 - smoothstep(airReach[i] * 0.45, airReach[i], dmin);
+        S += airRad[i] * (airW[i] * max(I, 0.0) * fade * same);
     }
     return S * sigma;
 }

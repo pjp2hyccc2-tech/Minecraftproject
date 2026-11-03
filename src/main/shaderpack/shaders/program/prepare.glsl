@@ -39,11 +39,6 @@ void consider(float score, float enc) {
     bestE[i] = enc;
 }
 
-// lamps far above or below the camera's band reach fewer of the surfaces that are seen
-float verticalPenalty(int y) {
-    float ref = cameraPosition.y - 0.6;
-    return max(abs(float(y) + 0.5 - ref) - 2.5, 0.0) * 0.6;
-}
 
 void main() {
     ivec2 cell = ivec2(gl_FragCoord.xy);
@@ -67,7 +62,7 @@ void main() {
                 if (yrel < 0 || yrel > 31) continue;
                 int level = emapLampLevel(t);
                 if (level <= 0) level = int(EM_LEVEL[type]);
-                float score = float(level) - abs(float(dz)) - verticalPenalty(by);
+                float score = float(level) - abs(float(dz)) - tableVerticalPenalty(float(by));
                 if (score <= 0.0) continue;
                 // tiny bias: brighter lamps first on equal score
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, 0, dz, false));
@@ -89,7 +84,7 @@ void main() {
                 int level = (c >> 5) & 15;
                 int yrel = (c >> 9) & 31;
                 int dz = ((c >> 19) & 31) - 15;
-                float score = float(level) - abs(float(dz)) - abs(float(dx)) - verticalPenalty(yrel + refY);
+                float score = float(level) - abs(float(dz)) - abs(float(dx)) - tableVerticalPenalty(float(yrel + refY));
                 if (score <= 0.0) continue;
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, dx, dz, false));
             }

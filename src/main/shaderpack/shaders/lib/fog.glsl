@@ -55,6 +55,18 @@ float fogDensity(vec3 wp, float noiseAmt) {
 
 // light the air scatters toward the eye without the lamps: the cloud dome and the town glow
 // outside, almost nothing inside. Radiance an infinitely deep fog bank converges to.
+#ifdef WORLD_HIDAMARI
+// the haze between the eye and the overcast sky: a layer ~SKY_HAZE_DEPTH deep plus the
+// mist column above the eye - thick toward the horizon, thin overhead (fogAnalytic's sky)
+const float SKY_HAZE_DEPTH = 64.0;
+float skyOpticalDepth(vec3 rd) {
+    float h0 = max(cameraPosition.y - 65.0, 0.0);
+    float mistColumn = 0.060 * exp(-h0 * 0.42) / 0.42;
+    float tau = (0.0125 * SKY_HAZE_DEPTH + mistColumn) / max(rd.y, 0.004);
+    return tau * (1.0 + 0.25 * fear() + 0.20 * danger()) * FOG_DENSITY;
+}
+#endif
+
 vec3 fogAmbientLightO(vec3 rd, float outside) {
 #if defined WORLD_HIDAMARI
     return mix(FOG_INDOOR, fogColorFor(rd), outside);
@@ -103,9 +115,13 @@ vec4 fogAnalytic(vec3 rd, float dist) {
     float outside = airOutside(mid);
     float sigma = fogDensityO(mid, 0.0, outside);
     float T = exp(-sigma * d) * farFade(d) * closeInTransmittance(d);
+#ifdef WORLD_HIDAMARI
+    if (dist > 4000.0) T = exp(-skyOpticalDepth(rd)) * closeInTransmittance(d);
+#endif
     vec3 S = fogAmbientLightO(rd, outside) * (1.0 - T);
 #ifdef EMITTERS_ON
-    S += lampsInScatter(rd, 0.0, min(d, 40.0), sigma, 1.0 - outside) * 0.08;
+    airLampsGather(rd, min(d, 40.0));
+    S += airLampsSegment(0.0, min(d, 40.0), sigma, 1.0 - outside) * 0.08;
 #endif
     for (int i = 0; i < HAND_LIGHTS; i++) {
         HandLight L = handLight(i);
@@ -144,6 +160,9 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
     bool pt1 = P1.type == LIGHT_POINT;
     bool pt2 = P2.type == LIGHT_FLASH;
 
+#ifdef EMITTERS_ON
+    airLampsGather(rd, marchEnd);
+#endif
     vec3 S = vec3(0.0);
     float T = 1.0;
     const float N = float(VOLUMETRIC_SAMPLES);
@@ -168,7 +187,7 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
         // light that the lamps / the flash scatter on this segment (already integrated)
         vec3 seg = vec3(0.0);
 #ifdef EMITTERS_ON
-        seg += lampsInScatter(rd, tPrev, tNext, sigma, 1.0 - outside) * 0.08;
+        seg += airLampsSegment(tPrev, tNext, sigma, 1.0 - outside) * 0.08;
 #endif
         if (pt0) seg += pointLightInScatter(P0, rd, tPrev, tNext, sigma);
         if (pt1) seg += pointLightInScatter(P1, rd, tPrev, tNext, sigma);
@@ -178,9 +197,17 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
         tPrev = tNext;
     }
     vec3 amb = fogAmbientLightO(rd, lastOutside);
+    vec3 Sm = S;                     // the air of the march (mist, lamp glow, the flash)
+    float Tm = T;
+    bool skyRay = dist > 4000.0;
     // beyond the march: smooth fog
     if (dist > marchEnd) {
         float rest = min(dist, 4096.0) - marchEnd;
+#ifdef WORLD_HIDAMARI
+        // toward the sky: only the haze under the cloud ceiling - deep toward the horizon,
+        // shallow overhead, where the lit cloud base shows through
+        if (skyRay) rest = max(min(rest, SKY_HAZE_DEPTH / max(rd.y, 0.004)) - marchEnd, 0.0);
+#endif
         vec3 q = cameraPosition + rd * (marchEnd + min(rest, 32.0) * 0.5);
         float sigma = fogDensityO(q, 0.0, lastOutside);
         float st = exp(-sigma * rest);
@@ -188,7 +215,12 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
         T *= st;
     }
     float fade = farFade(dist) * closeInTransmittance(dist);
-    S = mix(amb, S, fade);           // what fades out becomes fog
+#ifdef WORLD_HIDAMARI
+    if (skyRay) fade = closeInTransmittance(dist);
+#endif
+    // what fades out becomes the air of its direction: the march's mist and lamp glow, then
+    // fog - the same as the sky beside it (no seam where the far ground meets the sky)
+    S = mix(Sm + Tm * amb, S, fade);
     T *= fade;
     return vec4(S, T);
 }
