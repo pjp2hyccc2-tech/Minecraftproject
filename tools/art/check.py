@@ -342,9 +342,9 @@ def main():
     expected_names = set().union(*E.values())
     bdir = os.path.join(MODEL_ROOT, 'block')
     try:
-        import rs_modules  # noqa: F401
-        import rs_kit
-        ours = set(rs_kit.MODELS)
+        import hk_modules  # noqa: F401
+        import hk_kit
+        ours = set(hk_kit.MODELS)
     except Exception as e:  # pragma: no cover
         print('warning: generators not importable:', e)
         ours = set()

@@ -12,9 +12,9 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from common import PREVIEW, MODEL_ROOT  # noqa: E402
-import rs_render  # noqa: E402
+import hk_render  # noqa: E402
 
-tex_lookup = rs_render.tex
+tex_lookup = hk_render.tex
 
 
 def load_model(kind, name):
@@ -42,21 +42,21 @@ GROUPS = {
 
 
 def main(args):
-    import rs_modules  # noqa: F401
-    import rs_kit
-    names = sorted(rs_kit.MODELS)
+    import hk_modules  # noqa: F401
+    import hk_kit
+    names = sorted(hk_kit.MODELS)
     for n in ('register', 'register_open', 'service_bell', 'business_phone', 'business_phone_ringing',
               'reservation_book', 'drink_bar', 'drink_bar_pouring', 'coffee_machine', 'ice_machine', 'cup_shelf',
               'soup_warmer'):
-        rs_render.SUPPORT[n] = 'counter'
-    rs_render.SUPPORT['cutting_board'] = 'prep_table'
-    rs_render.SUPPORT['pc'] = 'office_desk'
+        hk_render.SUPPORT[n] = 'counter'
+    hk_render.SUPPORT['cutting_board'] = 'prep_table'
+    hk_render.SUPPORT['pc'] = 'office_desk'
     out = []
     for g, pats in GROUPS.items():
         if args and not any(fnmatch.fnmatch(g, a) for a in args):
             continue
         sel = [n for n in names if any(fnmatch.fnmatch(n, p) for p in pats)]
-        out.append(rs_render.props_sheet(sel, os.path.join(PREVIEW, f'props_{g}.png'), views=((-35, 26), (145, 22)),
+        out.append(hk_render.props_sheet(sel, os.path.join(PREVIEW, f'props_{g}.png'), views=((-35, 26), (145, 22)),
                                          cols=8, cell=200, title=f'HITORI props: {g} (front 3/4, back 3/4)'))
     return out
 

@@ -18,15 +18,15 @@ from PIL import Image, ImageDraw
 
 import render3d as R  # noqa: E402
 from common import PREVIEW, font, FONT_LABEL  # noqa: E402
-import rs_modules  # noqa: E402,F401
-import rs_kit  # noqa: E402
-import rs_render  # noqa: E402
+import hk_modules  # noqa: E402,F401
+import hk_kit  # noqa: E402
+import hk_render  # noqa: E402
 
-tex_lookup = rs_render.tex
+tex_lookup = hk_render.tex
 
 
 def load_model(kind, name):
-    m = rs_kit.ITEM_MODELS[name]
+    m = hk_kit.ITEM_MODELS[name]
     return m() if callable(m) else m
 
 
