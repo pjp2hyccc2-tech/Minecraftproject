@@ -119,6 +119,8 @@ public final class SelfTest {
                 case 32 -> camStart(level, data);
                 case 33 -> camWatch(level, data);
                 case 34 -> camOffResult(level, data);
+                case 35 -> breathResult(level, data);
+                case 36 -> heldResult(level, data);
                 case 4 -> noiseStart(level, data);
                 case 5 -> noiseResult(level, data);
                 case 6 -> caughtStart(level, data);
@@ -380,6 +382,11 @@ public final class SelfTest {
     }
 
     private static void awayStart(ServerLevel level, GameData data) {
+        // calm (a panicked player's breathing carries: tested next)
+        PlayerState ps = GameManager.state(fake);
+        ps.forceFear = 0.3f;
+        ps.forceDanger = 0.0f;
+        ps.forceTicks = 600;
         place(laneEye, laneYaw);
         probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, along(3.0), laneYaw); // her back to you
         if (probe != null) {
@@ -393,7 +400,37 @@ public final class SelfTest {
     private static void awayResult(ServerLevel level, GameData data) {
         float a = probe == null ? -1 : probe.awarenessOf(fake);
         check(a == 0.0f && probe != null && !probe.hunting(), String.format(Locale.ROOT, "a spirit with its back to you does not see you (%.2f)", a));
-        if (probe != null) probe.discard();
+        if (probe == null) {
+            next(32, 5);
+            return;
+        }
+        // §3.5: at high fear your breathing is heard close by...
+        GameManager.state(fake).forceFear = 0.95f;
+        probe.setAwareness(fake, 0.0f);
+        next(35, 70);
+    }
+
+    private static void breathResult(ServerLevel level, GameData data) {
+        float a = probe.awarenessOf(fake);
+        check(a > 0.05f, String.format(Locale.ROOT, "...but it hears your panicked breathing 3 blocks behind it (%.2f)", a));
+        // ...unless you hold it
+        probe.setAwareness(fake, 0.0f);
+        PlayerState ps = GameManager.state(fake);
+        ps.breathHolding = true;
+        ps.breathTicks = 0;
+        ps.breathGauge = 1.0f;
+        next(36, 40);
+    }
+
+    private static void heldResult(ServerLevel level, GameData data) {
+        float a = probe.awarenessOf(fake);
+        check(a == 0.0f, String.format(Locale.ROOT, "holding your breath, it hears nothing (%.2f)", a));
+        PlayerState ps = GameManager.state(fake);
+        ps.breathHolding = false;
+        ps.breathTicks = 0;
+        ps.forceFear = 0.3f;
+        ps.forceTicks = 40;
+        probe.discard();
         next(32, 5);
     }
 
