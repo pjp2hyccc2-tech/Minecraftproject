@@ -286,8 +286,9 @@ void main() {
     #ifdef WORLD_HIDAMARI
     marked = lm.x > 0.985 && lm.y > 0.985 && id != BLK_FLAME && id != BLK_LAMP && id != BLK_GLOW && id != BLK_LAVA;
     if (marked) {
-        float own = etype > EM_NONE ? max(EM_LEVEL[clamp(etype, 0, EM_COUNT - 1)] - 1.0, 0.0) : 7.0;
+        float own = etype > EM_NONE ? max(EM_LEVEL[clamp(etype, 0, EM_COUNT - 1)] - 1.0, 0.0) : 12.0;
         lm = vec2(own / 15.0, openSky(wp + Ngeo * 0.3));
+        lampFillScale = 0.0;
     }
     #endif
     if (id == BLK_FLAME) {
