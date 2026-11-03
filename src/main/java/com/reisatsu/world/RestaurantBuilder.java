@@ -36,6 +36,11 @@ public final class RestaurantBuilder {
 
     /** Downlights over the register on the night circuit: always on (unless burst). */
     public static final Set<BlockPos> NIGHT_LIGHTS = Set.of(new BlockPos(12, CEIL, 24), new BlockPos(13, CEIL, 23));
+    /** Soffit downlights under the front eave (x positions at z 31). */
+    public static final int[] SOFFIT_X = {12, 20, 28, 36};
+    /** Downpipes {x, z, skipBottom}: the building's corners and the canopy's sides. */
+    static final int[][] DOWNPIPES = {{-1, -1, 0}, {41, -1, 0}, {-1, 31, 1}, {41, 31, 1}};
+
     /** Ceiling lights placed broken (they flicker whenever their circuit is on). */
     public static final Set<BlockPos> BROKEN_LIGHTS = Set.of(new BlockPos(3, CEIL, 8), new BlockPos(10, CEIL, 19), new BlockPos(3, CEIL, 19));
 
@@ -354,6 +359,15 @@ public final class RestaurantBuilder {
         }
         s.set(25, top + 2, -1, Blocks.IRON_BARS.defaultBlockState());
         s.set(26, top + 2, -1, Blocks.IRON_BARS.defaultBlockState());
+        // soffit lights under the front eave (outside lighting, the SIGN circuit)
+        for (int x : SOFFIT_X) s.set(x, CEIL, 31, light(ModBlocks.DOWNLIGHT, Circuit.SIGN.startOn()));
+        // downpipes from the gutters at the corners and beside the canopy
+        for (int[] p : DOWNPIPES) {
+            for (int y = Y; y <= CEIL; y++) {
+                if (y == Y && p[2] == 1) continue;
+                s.post(p[0], y, p[1], Blocks.IRON_BARS.defaultBlockState());
+            }
+        }
     }
 
     interface RingCell {

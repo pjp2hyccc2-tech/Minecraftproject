@@ -32,7 +32,7 @@ public final class ExteriorBuilder {
     /** The lot's entrance from the road (no curb). */
     public static final int ENTRANCE_X1 = 38, ENTRANCE_X2 = 45;
     /** Lamps of the lot (pole positions) and their facing. */
-    static final int[][] LOT_LAMPS = {{-8, 41, 1}, {16, 49, 2}, {34, 49, 2}, {48, 40, 3}};
+    static final int[][] LOT_LAMPS = {{-8, 40, 1}, {4, 49, 2}, {20, 49, 2}, {36, 49, 2}, {48, 40, 3}};
 
     static BlockState st(RegistryObject<? extends Block> b) {
         return b.get().defaultBlockState();
@@ -245,9 +245,9 @@ public final class ExteriorBuilder {
     public static List<BlockPos> signLights() {
         List<BlockPos> out = new ArrayList<>(signTiles());
         for (int t = 0; t < 8; t++) out.add(new BlockPos(16 + t, RestaurantBuilder.CEIL + 3, 31));
-        for (int[] l : LOT_LAMPS) out.add(new BlockPos(l[0], G + 7, l[1]));
-        int[][] road = {{77, 56}, {58, 49}, {-34, 49}, {87, 20}};
-        for (int[] l : road) out.add(new BlockPos(l[0], G + 7, l[1]));
+        for (int[] l : LOT_LAMPS) out.add(new BlockPos(l[0], Terrain.LAMP_Y, l[1]));
+        for (int[] l : Terrain.ROAD_LAMPS) out.add(new BlockPos(l[0], Terrain.LAMP_Y, l[1]));
+        for (int x : RestaurantBuilder.SOFFIT_X) out.add(new BlockPos(x, RestaurantBuilder.CEIL, 31));
         out.add(new BlockPos(3, RestaurantBuilder.CEIL, 32));
         out.add(new BlockPos(4, RestaurantBuilder.CEIL, 32));
         out.add(new BlockPos(-1, Y + 3, 8));

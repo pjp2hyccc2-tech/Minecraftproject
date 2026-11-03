@@ -135,22 +135,27 @@ public final class Terrain {
             s.set(66, GROUND + 3, 59, f(ModBlocks.CURVE_MIRROR, Direction.WEST));
         }
         if (s.contains(76, 52)) s.set(76, GROUND + 1, 52, f(ModBlocks.FLOWER_OFFERING, Direction.NORTH));
-        lamp(s, 77, 56, Direction.NORTH);
-        lamp(s, 58, 49, Direction.SOUTH);
-        lamp(s, -34, 49, Direction.SOUTH);
-        lamp(s, 87, 20, Direction.WEST);
+        lamp(s, ROAD_LAMPS[0][0], ROAD_LAMPS[0][1], Direction.NORTH);
+        lamp(s, ROAD_LAMPS[1][0], ROAD_LAMPS[1][1], Direction.SOUTH);
+        lamp(s, ROAD_LAMPS[2][0], ROAD_LAMPS[2][1], Direction.SOUTH);
+        lamp(s, ROAD_LAMPS[3][0], ROAD_LAMPS[3][1], Direction.WEST);
     }
 
     static BlockState f(net.minecraftforge.registries.RegistryObject<? extends net.minecraft.world.level.block.Block> b, Direction d) {
         return b.get().defaultBlockState().setValue(FacingBlock.FACING, d);
     }
 
+    /** Height of the lamp heads (the light source). */
+    public static final int LAMP_Y = GROUND + 6;
+    /** Road lamps (pole positions). */
+    public static final int[][] ROAD_LAMPS = {{77, 56}, {58, 49}, {-34, 49}, {87, 20}};
+
     /** A sodium street lamp: a pole and a lit head on top (SIGN circuit). */
     public static void lamp(BlockSink s, int x, int z, Direction facing) {
         if (!s.contains(x, z)) return;
         BlockState pole = f(ModBlocks.STREET_LAMP, facing).setValue(Props.LAMP_PART, Props.LampPart.POLE);
-        for (int y = GROUND + 1; y <= GROUND + 6; y++) s.set(x, y, z, pole);
-        s.set(x, GROUND + 7, z, pole.setValue(Props.LAMP_PART, Props.LampPart.HEAD).setValue(Props.LIT, Circuit.SIGN.startOn()));
+        for (int y = GROUND + 1; y < LAMP_Y; y++) s.set(x, y, z, pole);
+        s.set(x, LAMP_Y, z, pole.setValue(Props.LAMP_PART, Props.LampPart.HEAD).setValue(Props.LIT, Circuit.SIGN.startOn()));
     }
 
     // ------------------------------------------------------------------------------------------------ hill
