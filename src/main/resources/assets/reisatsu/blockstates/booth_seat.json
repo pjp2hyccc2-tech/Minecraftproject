@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/booth_seat"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/booth_seat",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/booth_seat",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/booth_seat",
+      "y": 270
+    }
+  }
+}

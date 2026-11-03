@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "reisatsu:block/restroom_door_w_bottom"
+  }
+}

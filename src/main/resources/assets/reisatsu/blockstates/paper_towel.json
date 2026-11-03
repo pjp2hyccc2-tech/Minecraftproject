@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/paper_towel"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/paper_towel",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/paper_towel",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/paper_towel",
+      "y": 270
+    }
+  }
+}

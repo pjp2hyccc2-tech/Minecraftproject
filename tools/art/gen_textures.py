@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""遭難 ―REISATSU― procedural texture generator.
+"""霊撮 ―REISATSU― procedural texture generator.
 
-Generates every block / item / GUI texture listed in docs/DESIGN.md section 5 (entity textures are
-made by gen_entities.py together with the Java models; gui/trail_map comes from tools/terrain) as
-deterministic pixel art, then writes contact sheets / tiling previews to tools/art/preview/ and runs
-check.py.
+Generates every block / item / GUI / particle texture of docs/DESIGN.md §7 (entity textures, gui/jumpscare_* and
+gui/medium_portrait belong to the spirits worker) as deterministic pixel art, writes contact sheets / tiling previews
+to tools/art/preview/ and runs check.py.
 
 usage:  python3 tools/art/gen_textures.py [--only GLOB[,GLOB..]] [--no-preview] [--no-check]
 """
@@ -22,20 +21,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import common  # noqa: E402
 from common import REGISTRY, TEX_ROOT, PREVIEW, finalize, to_array  # noqa: E402
-import legacy  # noqa: E402
 
-# textures inherited from MEIKON (exact reproductions), registered first so REISATSU modules may override
-REGISTRY.update(legacy.load())
-
-import s_nature  # noqa: E402,F401  cedar, forest floor, rock, stones, leaves
-import s_town  # noqa: E402,F401  village / road / tunnel materials, doors, decals
-import s_props  # noqa: E402,F401  prop block model textures
-import s_items  # noqa: E402,F401  16x16 item sprites + held-model skins
-import s_gui  # noqa: E402,F401  title logo, faces overlay, phone frame / wallpapers / icons
-import s_jumpscare  # noqa: E402,F401  painted full-screen jumpscare faces
+import rs_modules  # noqa: E402,F401  (imports every texture / model module)
 import preview  # noqa: E402
 
 MCMETA = {"animation": {"frametime": 3, "interpolate": True}}
+ANIM = {}   # texture name -> mcmeta dict (set by modules for animated textures)
 
 
 def render(name):
@@ -54,9 +45,10 @@ def save(name, arr):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     Image.fromarray(arr, 'RGBA').save(path, optimize=True)
     spec = REGISTRY[name]
-    if spec['frames'] > 1:
+    meta = spec.get('mcmeta')
+    if spec['frames'] > 1 or meta:
         with open(path + '.mcmeta', 'w', encoding='utf-8') as f:
-            json.dump(MCMETA, f, indent=2)
+            json.dump(meta or MCMETA, f, indent=2)
             f.write('\n')
     return path
 
@@ -74,10 +66,16 @@ def build_previews(results):
     made = []
     blocks = groups.get('block', [])
     if blocks:
-        made.append(preview.contact_sheet(blocks, os.path.join(PREVIEW, 'sheet_blocks.png'),
-                                          cell=112, cols=12, title='REISATSU blocks (x7)'))
-        made.append(preview.contact_sheet(blocks, os.path.join(PREVIEW, 'sheet_blocks_night.png'),
-                                          cell=112, cols=12, night=True, title='REISATSU blocks (x7, night tint)'))
+        surf = [(l, a) for l, a in blocks if REGISTRY['block/' + l]['tile']]
+        props = [(l, a) for l, a in blocks if not REGISTRY['block/' + l]['tile']]
+        if surf:
+            made.append(preview.contact_sheet(surf, os.path.join(PREVIEW, 'sheet_surfaces.png'), cell=112, cols=10,
+                                              title='REISATSU surfaces / doors (x7)'))
+            made.append(preview.contact_sheet(surf, os.path.join(PREVIEW, 'sheet_surfaces_night.png'), cell=112,
+                                              cols=10, night=True, title='REISATSU surfaces (night tint)'))
+        if props:
+            made.append(preview.contact_sheet(props, os.path.join(PREVIEW, 'sheet_prop_atlases.png'), cell=192,
+                                              cols=8, title='REISATSU prop atlases'))
     items = groups.get('item', [])
     small_items = [(l, a) for l, a in items if a.shape[0] <= 16]
     if small_items:
@@ -91,9 +89,14 @@ def build_previews(results):
     if gui:
         made.append(preview.contact_sheet(gui, os.path.join(PREVIEW, 'sheet_gui.png'),
                                           cell=256, cols=4, title='REISATSU gui'))
+    parts = groups.get('particle', [])
+    if parts:
+        made.append(preview.contact_sheet(parts, os.path.join(PREVIEW, 'sheet_particles.png'),
+                                          cell=96, cols=10, title='REISATSU particles'))
     if tiles:
-        made.append(preview.tile_preview(tiles, os.path.join(PREVIEW, 'tiles.png'), cols=5))
-        made.append(preview.tile_preview(tiles, os.path.join(PREVIEW, 'tiles_night.png'), cols=5, night=True))
+        tl = [(l, a) for l, a in tiles if a.shape[0] == 16 and a.shape[1] == 16]
+        made.append(preview.tile_preview(tl, os.path.join(PREVIEW, 'tiles.png'), cols=6))
+        made.append(preview.tile_preview(tl, os.path.join(PREVIEW, 'tiles_night.png'), cols=6, night=True))
     return made
 
 

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/note_paper"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/note_paper",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/note_paper",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/note_paper",
+      "y": 270
+    }
+  }
+}

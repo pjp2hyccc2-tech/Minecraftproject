@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/staff_table"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/staff_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/staff_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/staff_table",
+      "y": 270
+    }
+  }
+}

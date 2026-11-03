@@ -461,13 +461,18 @@ def parse(script):
     return toks
 
 
-def timeline(script, rng, table=VF, scale=1.0, tempo=1.0, bw=1.6, f1=1.12, voiced=False, slur=0.0):
+def timeline(script, rng, table=VF, scale=1.0, tempo=1.0, bw=1.6, f1=1.12, voiced=False, slur=0.0, durs=None,
+             gains=None, pauses=None):
     """Builds formant keys, amplitude keys and consonant events for a line.
     Returns dict(vkeys, vamp, namp, cons, t_end, syl) where vamp is the
     voiced (speech) / vowel (whisper) amplitude, namp the unvoiced-vowel
     noise amplitude (devoiced vowels in speech), syl the syllable list
-    [(t_onset, t_vowel_end, word_index, vowel)]."""
+    [(t_onset, t_vowel_end, word_index, vowel)].
+    durs   : optional vowel duration (s) for every syllable token, in order (else random)
+    gains  : optional loudness (0..1) for every syllable token
+    pauses : optional dict {token index of ',' or '.': seconds}"""
     toks = parse(script)
+    syl_k = 0
 
     def S(v, **kw):
         st = fs(v, table, scale, bw=kw.get("bw", bw), f1=kw.get("f1", f1))
@@ -490,7 +495,10 @@ def timeline(script, rng, table=VF, scale=1.0, tempo=1.0, bw=1.6, f1=1.12, voice
         if k0 in (",", "."):
             vamp += [(t + 0.025, 0.0)]
             namp += [(t + 0.025, 0.0)]
-            t += (rng.uniform(0.18, 0.32) if k0 == "," else rng.uniform(0.35, 0.6)) * tempo
+            if pauses is not None and idx in pauses:
+                t += pauses[idx]
+            else:
+                t += (rng.uniform(0.18, 0.32) if k0 == "," else rng.uniform(0.35, 0.6)) * tempo
             vamp += [(t, 0.0)]
             namp += [(t, 0.0)]
             word += 1
@@ -517,6 +525,10 @@ def timeline(script, rng, table=VF, scale=1.0, tempo=1.0, bw=1.6, f1=1.12, voice
         nxt = toks[idx + 1] if idx + 1 < len(toks) else (".",)
         devoiced = v in "iu" and c in _UNVOICED and (len(nxt) == 1 or nxt[0] in _UNVOICED or nxt[0] in (",", ".", "q"))
         vdur = rng.uniform(0.075, 0.125) * tempo * (0.6 if devoiced else 1.0)
+        if durs is not None:
+            vdur = durs[syl_k] * tempo * (0.6 if devoiced else 1.0)
+        sg = 1.0 if gains is None else float(gains[syl_k])
+        syl_k += 1
         t_on = t
         if c in ("k", "t", "p", "g", "d", "b", "ky", "gy", "ch", "py", "by"):
             vamp += [(t + 0.012, 0.0 if c not in ("g", "d", "b", "gy", "by") else 0.15 * vg)]
@@ -572,13 +584,13 @@ def timeline(script, rng, table=VF, scale=1.0, tempo=1.0, bw=1.6, f1=1.12, voice
         vkeys.append((t + 0.025, S(v)))
         if devoiced and voiced:
             vamp += [(t + 0.01, 0.0)]
-            namp += [(t, 0.0), (t + 0.02, 0.55), (t + vdur - 0.01, 0.4), (t + vdur + 0.02, 0.0)]
+            namp += [(t, 0.0), (t + 0.02, 0.55 * sg), (t + vdur - 0.01, 0.4 * sg), (t + vdur + 0.02, 0.0)]
         else:
-            vamp += [(t + 0.02, 1.0 if not devoiced else 0.45)]
+            vamp += [(t + 0.02, (1.0 if not devoiced else 0.45) * sg)]
         t += vdur
         vkeys.append((t, S(v)))
         if not (devoiced and voiced):
-            vamp += [(t - 0.01, 0.85 if not devoiced else 0.35)]
+            vamp += [(t - 0.01, (0.85 if not devoiced else 0.35) * sg)]
         syl.append((t_on, t, word, v))
         prev_v = v
     t_end = t + 0.18
@@ -839,4 +851,101 @@ def call_oi(rng, dur_o=0.95, dur_i=0.40, f0=215.0, rise=1.12, end_drop=0.86, bre
     m = ns(0.24)
     br = vt_noise(m, [(0, i_)], dsp.env_pts(m, [(0, 0.0), (0.04, 1.0), (0.24, 0.0)]) ** 2, rng, tilt_db=0.0, bw=1.3)
     dsp.place(y, br * np.std(y[amp > 0.3]) * 0.22, t_end - 0.06)
+    return y
+
+
+# --------------------------------------------------------------------------
+# lines with explicit timing and intonation (REISATSU's Japanese voice lines)
+# --------------------------------------------------------------------------
+def speak_line(script, rng, pitch, durs, table=VF, scale=1.0, f0=230.0, gains=None, pauses=None, smooth_hz=14.0,
+               breath=0.25, jitter=0.01, shimmer=0.06, tilt=-8.0, subharm=0.0, slur=0.0, cons_gain=1.0, fmax=7500.0,
+               vibrato=0.0, vib_rate=5.5, tempo=1.0, wander=0.3, hiss=1.0, bw=1.0, f1=1.0):
+    """A Japanese line with explicit timing and intonation, so that it is roughly recognisable.
+
+    script : romaji syllables ('i ra q sha i ma se'); ',' '.' pauses, 'q' geminate closure, '-' long vowel,
+             'N' moraic nasal
+    pitch  : one entry per syllable token (not for , . q - N): semitones above f0, or (start, end) to glide
+    durs   : vowel duration (s) of every syllable token
+    Returns (signal, f0 track)."""
+    tl = timeline(script, rng, table, scale, tempo, bw=bw, f1=f1, voiced=True, slur=slur, durs=durs, gains=gains,
+                  pauses=pauses)
+    n = ns(tl["t_end"])
+    vamp = np.maximum(dsp.lowpass0(dsp.env_pts(n, sorted(tl["vamp"], key=lambda p: p[0])), 45.0), 0)
+    namp = np.maximum(dsp.lowpass0(dsp.env_pts(n, sorted(tl["namp"], key=lambda p: p[0])), 45.0), 0)
+    pts = []
+    for k, (ta, tb, w, v) in enumerate(tl["syl"]):
+        p = pitch[k]
+        a, b = (float(p), float(p)) if np.isscalar(p) else (float(p[0]), float(p[1]))
+        pts.append((ta + 0.01, a))
+        pts.append((max(ta + 0.02, tb - 0.01), b))
+    if not pts:
+        pts = [(0.0, 0.0)]
+    pts = [(0.0, pts[0][1])] + pts + [(tl["t_end"], pts[-1][1])]
+    st = dsp.env_pts(n, sorted(pts, key=lambda q: q[0]))
+    st = dsp.lowpass0(st, smooth_hz)
+    if wander > 0:
+        st = st + wander * dsp.smooth(n, rng, 3.0)
+    ff = f0 * 2.0 ** (st / 12.0)
+    if vibrato > 0:
+        ff = ff * dsp.cents(vibrato * np.sin(TAU * vib_rate * np.arange(n) / SR + rng.random() * 6))
+    y = voice(ff, vamp, tl["vkeys"], rng, tilt=tilt, fmax=fmax, jitter=jitter, shimmer=shimmer, breath=breath,
+              subharm=subharm, loud_comp=0.75)
+    if namp.max() > 0:
+        y = y + vt_noise(n, tl["vkeys"], namp, rng, tilt_db=1.0, bw=1.4) * 0.35
+    y = y + consonants(n, tl["cons"], rng, scale, hiss) * 0.45 * cons_gain
+    return y, ff
+
+
+def whisper_line(script, rng, durs, table=VF, scale=1.0, gains=None, pauses=None, intensity=1.0, hiss=1.0,
+                 close=0.0, voicing=0.0, f0=None, bw=1.3, f1=1.12, tilt_db=1.5, air=0.15, declination=0.3):
+    """whisper() with explicit syllable timing."""
+    tl = timeline(script, rng, table, scale, 1.0, bw=bw, f1=f1, voiced=False, durs=durs, gains=gains, pauses=pauses)
+    n = ns(tl["t_end"])
+    amp = dsp.env_pts(n, sorted(tl["vamp"], key=lambda p: p[0]))
+    amp = np.maximum(dsp.lowpass0(amp, 60.0), 0)
+    amp *= np.linspace(1.0, 1.0 - 0.45 * declination, n) * (1.0 + 0.2 * dsp.smooth(n, rng, 4.0))
+    body = vt_noise(n, tl["vkeys"], amp, rng, tilt_db=tilt_db, bw=1.0, hp=280.0)
+    if voicing > 0:
+        ff = np.full(n, f0 or (230.0 if table is VF else 120.0)) * dsp.cents(
+            np.linspace(40, -160, n) + 30 * dsp.smooth(n, rng, 3.0))
+        vv = voice(ff, amp, tl["vkeys"], rng, tilt=-13.0, fmax=5000, jitter=0.03, shimmer=0.2, breath=1.2,
+                   loud_comp=0.6)
+        body = body + vv / (np.std(vv) + 1e-9) * np.std(body) * voicing
+    if air > 0:
+        hf = dsp.bandpass(rng.standard_normal(n), 5000, 11000, 2) * amp
+        body = body + hf / (np.std(hf) + 1e-9) * np.std(body) * air
+    out = body + consonants(n, tl["cons"], rng, scale, hiss, close) * 0.9
+    return out * intensity
+
+
+def hum(rng, notes, table=VF, scale=1.0, vowel="m", breath=0.3, tilt=-11.0, jitter=0.012, shimmer=0.08,
+        vibrato=18.0, vib_rate=5.2, scoop=60.0, off_key=None, legato=0.06, fmax=5000.0, tail=0.4):
+    """Humming a tune with the mouth closed ('m') or half open ('u').
+    notes = [(t_start, dur, freq_hz, vel)].  off_key(k) -> cents for note k (wrong notes)."""
+    total = max(t + d for t, d, f, v in notes) + tail
+    n = ns(total)
+    tt = np.arange(n) / SR
+    lf = np.full(n, np.nan)
+    amp = np.zeros(n)
+    for k, (t0, d, f, v) in enumerate(notes):
+        c = off_key(k) if off_key else 0.0
+        i0, i1 = ns(t0), min(n, ns(t0 + d))
+        m = i1 - i0
+        if m <= 0:
+            continue
+        x = np.arange(m) / SR
+        sc = -scoop * np.exp(-x / 0.05)
+        lf[i0:i1] = np.log2(f) + (c + sc) / 1200.0
+        e = np.minimum(1.0, x / 0.04) * np.minimum(1.0, (d - x) / max(legato, 0.02)) * v
+        amp[i0:i1] = np.maximum(amp[i0:i1], np.clip(e, 0, None))
+    # hold pitch through gaps
+    idx = np.nonzero(~np.isnan(lf))[0]
+    lf = np.interp(np.arange(n), idx, lf[idx])
+    lf = dsp.lowpass0(lf, 18.0)
+    vib = vibrato * np.sin(TAU * vib_rate * tt + rng.random() * 6) * np.clip((tt - 0.2) / 0.5, 0, 1)
+    ff = 2.0 ** lf * dsp.cents(vib + 8.0 * dsp.smooth(n, rng, 2.0))
+    amp = dsp.lowpass0(amp, 30.0)
+    keys = [(0, fs(vowel, table, scale)), (total, fs(vowel, table, scale))]
+    y = voice(ff, np.maximum(amp, 0), keys, rng, tilt=tilt, fmax=fmax, jitter=jitter, shimmer=shimmer,
+              breath=breath, loud_comp=0.7)
     return y

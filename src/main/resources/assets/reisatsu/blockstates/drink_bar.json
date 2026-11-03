@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,pouring=false": {
+      "model": "reisatsu:block/drink_bar"
+    },
+    "facing=north,pouring=true": {
+      "model": "reisatsu:block/drink_bar_pouring"
+    },
+    "facing=east,pouring=false": {
+      "model": "reisatsu:block/drink_bar",
+      "y": 90
+    },
+    "facing=east,pouring=true": {
+      "model": "reisatsu:block/drink_bar_pouring",
+      "y": 90
+    },
+    "facing=south,pouring=false": {
+      "model": "reisatsu:block/drink_bar",
+      "y": 180
+    },
+    "facing=south,pouring=true": {
+      "model": "reisatsu:block/drink_bar_pouring",
+      "y": 180
+    },
+    "facing=west,pouring=false": {
+      "model": "reisatsu:block/drink_bar",
+      "y": 270
+    },
+    "facing=west,pouring=true": {
+      "model": "reisatsu:block/drink_bar_pouring",
+      "y": 270
+    }
+  }
+}
