@@ -26,7 +26,7 @@ BROWN = ramp(['#1e0f08', '#33190d', '#4a2513', '#5f321a', '#744022', '#8a512d'],
 CREAM = ramp(['#8d8068', '#a99b80', '#c0b296', '#d3c6a8', '#e2d6b9', '#ece3c9', '#f4edd8'], 7)
 SUNY = ramp(['#9a4a0a', '#c8670c', '#e98a14', '#f6a520', '#fcc03a', '#ffd767', '#ffe9a0'], 7)
 # materials
-VINYL_RED = ramp(['#230806', '#3a0f0b', '#521812', '#68221a', '#7b2d22', '#8e3a2c', '#a24a39'], 7)
+VINYL_RED = ramp(['#1e0a07', '#33130d', '#4a1c14', '#5e261a', '#712f20', '#843a28', '#974834'], 7)
 STEEL = ramp(['#2f3234', '#44484b', '#5a5f62', '#70767a', '#878d90', '#9ea4a7', '#b5babc', '#cbcfd0'], 8)
 ALU = ramp(['#4c5054', '#666b70', '#80868b', '#9aa0a4', '#b3b8bb', '#c9cdcf', '#dcdfe0'], 7)
 CHROME = ramp(['#1d2023', '#3a3f44', '#646b71', '#949ba0', '#c4c9cc', '#eef0f1'], 6)
@@ -321,12 +321,12 @@ def m_brushed(w, h, palette, seed, along='x', base=None, amp=0.45, scratches=0.0
 
 def m_vinyl(w, h, palette, seed, base=None, sheen=0.9, cracks=0.0):
     """Leatherette: soft mottling, a broad sheen band, fine grain, optional cracks."""
-    n = noise(w, h, seed, beta=1.6, wrap=False)
+    n = noise(w, h, seed, beta=2.2, wrap=False)
     g = noise(w, h, seed + 1, beta=0.2, wrap=False)
     base = (len(palette) - 1) * 0.5 if base is None else base
     y = (np.arange(h)[:, None] + 0.5) / max(h, 1)
     band = np.exp(-((y - 0.3) / 0.22) ** 2) * sheen
-    idx = base + n * 0.6 + g * 0.25 + band
+    idx = base + n * 0.35 + g * 0.12 + band
     out = from_idx(idx, palette)
     if cracks:
         r = rng(seed + 9)

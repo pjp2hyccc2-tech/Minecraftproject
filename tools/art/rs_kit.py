@@ -77,8 +77,9 @@ class Atlas:
             return key
         if self.fixed:
             raise ValueError(f'{self.name}: fixed atlas, use add_at')
+        if self.W is not None:
+            raise RuntimeError(f'{self.name}: region {key} added after the atlas was packed')
         self.regions[key] = Region(key, w, h, painter)
-        self.W = self.H = None
         return key
 
     def add_at(self, key, x, y, w, h, painter=None):
@@ -204,7 +205,8 @@ class Model:
             fw, fh = face_dims(fr, to, f)
             if fw <= 1e-6 or fh <= 1e-6:
                 continue
-            out.append((f, spec, fw, fh, f in glow or glow == 'all', cull.get(f) if isinstance(cull, dict) else None))
+            c = cull.get(f) if isinstance(cull, dict) else None
+            out.append(self._resolve(f, spec, fw, fh, f in glow or glow == 'all', c, uniq))
         self.els.append((fr, to, out, rot, shade, name, uniq))
         return self
 
@@ -236,61 +238,60 @@ class Model:
             else:
                 fw, fh = to[0] - fr[0], to[2] - fr[2]
             glow = kw.get('glow', ())
-            out.append((f, s, abs(fw), abs(fh), f in glow or glow == 'all', None))
+            out.append(self._resolve(f, s, abs(fw), abs(fh), f in glow or glow == 'all', None, kw.get('uniq')))
         self.els.append((fr, to, out, kw.get('rot'), kw.get('shade', True), kw.get('name'), kw.get('uniq')))
         return self
 
-    # ---------------------------------------------------------------- json
-    def _face_json(self, f, spec, fw, fh, glow, cull, uniq, tex_vars):
-        sub = None
-        flip = None
-        frot = 0
-        g = glow
+    # ---------------------------------------------------------------- face specs
+    def _resolve(self, f, spec, fw, fh, glow, cull, uniq):
+        """Normalise a face spec now (atlas regions are registered at definition time, never while writing)."""
+        d = {'face': f, 'sub': None, 'flip': None, 'rot': 0, 'glow': glow, 'cull': cull}
         if isinstance(spec, dict):
-            sub = spec.get('sub')
-            flip = spec.get('flip')
-            frot = spec.get('rot', 0)
-            g = g or spec.get('glow', False)
-            cull = spec.get('cull', cull)
+            d['sub'] = spec.get('sub')
+            d['flip'] = spec.get('flip')
+            d['rot'] = spec.get('rot', 0)
+            d['glow'] = glow or spec.get('glow', False)
+            d['cull'] = spec.get('cull', cull)
             spec = spec['r']
         if isinstance(spec, tuple) and len(spec) == 2 and isinstance(spec[0], Atlas):
-            atlas, key = spec
+            d['atlas'], d['key'] = spec
         elif isinstance(spec, Mat):
-            atlas = self.atlas
-            # rotated faces (90/270) are painted with swapped dims
-            dims = (fh, fw) if frot in (90, 270) else (fw, fh)
-            key = atlas.face_region(spec, dims[0], dims[1], f, uniq)
-            fw, fh = dims
-            if sub is None:
-                sub = (0, 0, fw, fh)
+            dims = (fh, fw) if d['rot'] in (90, 270) else (fw, fh)
+            d['atlas'] = self.atlas
+            d['key'] = self.atlas.face_region(spec, dims[0], dims[1], f, uniq)
+            if d['sub'] is None:
+                d['sub'] = (0, 0, dims[0], dims[1])
         elif isinstance(spec, str) and spec.startswith('#'):
-            d = {'texture': spec, 'uv': list(sub) if sub else [0, 0, 16, 16]}
-            if frot:
-                d['rotation'] = frot
-            if g:
-                d['forge_data'] = glow_data()
-            if cull:
-                d['cullface'] = cull
-            return d
+            d['ref'] = spec
         else:
-            atlas, key = self.atlas, spec
-        if atlas.path not in tex_vars:
-            tex_vars[atlas.path] = f't{len(tex_vars)}' if tex_vars else 't'
-        uv = atlas.uv(key, sub=sub)
-        if flip in ('h', True):
-            uv = [uv[2], uv[1], uv[0], uv[3]]
-        elif flip == 'v':
-            uv = [uv[0], uv[3], uv[2], uv[1]]
-        elif flip == 'hv':
-            uv = [uv[2], uv[3], uv[0], uv[1]]
-        d = {'texture': '#' + tex_vars[atlas.path], 'uv': uv}
-        if frot:
-            d['rotation'] = frot
-        if g:
-            d['forge_data'] = glow_data()
-        if cull:
-            d['cullface'] = cull
+            d['atlas'], d['key'] = self.atlas, spec
+            if spec not in self.atlas.regions:
+                raise KeyError(f'{self.name}: region {spec} not in atlas {self.atlas.name}')
         return d
+
+    def _face_json(self, d, tex_vars):
+        if 'ref' in d:
+            j = {'texture': d['ref'], 'uv': list(d['sub']) if d['sub'] else [0, 0, 16, 16]}
+        else:
+            atlas = d['atlas']
+            if atlas.path not in tex_vars:
+                tex_vars[atlas.path] = f't{len(tex_vars)}' if tex_vars else 't'
+            uv = atlas.uv(d['key'], sub=d['sub'])
+            flip = d['flip']
+            if flip in ('h', True):
+                uv = [uv[2], uv[1], uv[0], uv[3]]
+            elif flip == 'v':
+                uv = [uv[0], uv[3], uv[2], uv[1]]
+            elif flip == 'hv':
+                uv = [uv[2], uv[3], uv[0], uv[1]]
+            j = {'texture': '#' + tex_vars[atlas.path], 'uv': uv}
+        if d['rot']:
+            j['rotation'] = d['rot']
+        if d['glow']:
+            j['forge_data'] = glow_data()
+        if d['cull']:
+            j['cullface'] = d['cull']
+        return j
 
     def to_json(self):
         tex_vars = {}
@@ -299,8 +300,8 @@ class Model:
         elements = []
         for fr, to, faces, rot, shade, name, uniq in self.els:
             fj = {}
-            for (f, spec, fw, fh, glow, cull) in faces:
-                fj[f] = self._face_json(f, spec, fw, fh, glow, cull, uniq, tex_vars)
+            for d in faces:
+                fj[d['face']] = self._face_json(d, tex_vars)
             if not fj:
                 continue
             e = {'from': [round(v, 4) for v in fr], 'to': [round(v, 4) for v in to], 'faces': fj}
