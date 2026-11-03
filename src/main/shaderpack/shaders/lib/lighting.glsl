@@ -72,13 +72,14 @@ float puddleAmount(vec3 wp, int mat, vec3 N) {
 // fine bumps of wet asphalt / pavers (world normal perturbation), flat where water stands
 vec3 wetMicroNormal(vec3 N, vec3 wp, int mat, float puddle) {
     if (N.y < 0.7) return N;
-    float s = mat == MAT_ASPHALT ? 0.20 : (mat == MAT_PAVER ? 0.12 : (mat == MAT_MUD ? 0.16 : 0.0));
+    float s = mat == MAT_ASPHALT ? 0.10 : (mat == MAT_PAVER ? 0.06 : (mat == MAT_MUD ? 0.08 : 0.0));
     if (s <= 0.0) return N;
-    vec2 p = wp.xz * 9.0;
+    // fine aggregate: high frequency, small slopes (breaks a reflection into streaks)
+    vec2 p = wp.xz * 21.0;
     float h0 = vnoise2(p);
     float hx = vnoise2(p + vec2(0.35, 0.0));
     float hz = vnoise2(p + vec2(0.0, 0.35));
-    vec3 n = normalize(N + vec3(h0 - hx, 0.0, h0 - hz) * s * 2.6 * (1.0 - puddle));
+    vec3 n = normalize(N + vec3(h0 - hx, 0.0, h0 - hz) * s * (1.0 - puddle));
     return n;
 }
 

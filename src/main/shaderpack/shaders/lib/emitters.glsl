@@ -9,7 +9,8 @@
 //     tiles of 128 x 128 texels, one texel per block column. Tiles 0..3 hold the lit lamps
 //     (block.properties ids 11001.., see EM_*) of 4 height layers, every face of a lamp
 //     block snapped onto the block's footprint (at_midBlock); tile 4 holds the height of the
-//     topmost surface of every column (roof / sky cover).
+//     topmost surface of every column (roof / sky cover); tiles 5 / 6 the full wall blocks at
+//     y 66 / 67 (a column is a wall where both are set: doorways stay open).
 //  2. prepare  (TABLE_Z): per column, the best 4 lamps along z within reach (separable
 //     Manhattan distance - exactly how vanilla light spreads)
 //     prepare1 (TABLE_X): the same along x  ->  colortex7: the 4 lamps that can light each
@@ -77,15 +78,18 @@ const vec3 EM_COLOR[EM_COUNT] = vec3[EM_COUNT](
     vec3(1.00, 0.62, 0.32),     // lanterns
     vec3(1.00, 0.80, 0.55));    // glowing blocks
 
-// strength of the light cast on surfaces (direct, before LIGHT_STRENGTH)
+// intensity I of the light cast: irradiance E = I / (d^2 + size^2) (before LIGHT_STRENGTH).
+// Roughly photometric ratios: a sodium street lamp (I 15) lights the lot 7 blocks below as
+// much as a fluorescent panel (12) a dining table 4 blocks below; an exit sign (0.3) is a dim
+// green pool, the standby glow of the drink bar (0.45) a pale cyan wash.
 const float EM_GAIN[EM_COUNT] = float[EM_COUNT](
-    0.0, 3.4, 3.4, 2.6, 2.2, 0.55, 3.0, 6.0, 4.0, 6.5, 1.6, 0.85, 1.5, 1.5, 1.4, 0.75,
-    0.55, 0.65, 0.5, 0.32, 0.0, 0.0, 1.6, 1.8, 2.2);
+    0.0, 12.0, 12.0, 8.0, 4.5, 0.30, 3.0, 9.0, 6.0, 50.0, 2.5, 0.45, 0.80, 1.6, 0.50, 0.35,
+    0.30, 0.35, 0.22, 0.15, 0.0, 0.0, 1.2, 1.6, 2.5);
 
-// radius of the glowing part (soft core of the falloff, widens the highlights)
+// radius of the glowing part: the soft core of the falloff, widens the highlights
 const float EM_SIZE[EM_COUNT] = float[EM_COUNT](
-    0.5, 0.55, 0.55, 0.22, 0.30, 0.35, 0.55, 0.75, 0.6, 0.25, 0.20, 0.45, 0.45, 0.30, 0.30, 0.35,
-    0.40, 0.40, 0.30, 0.35, 0.05, 0.10, 0.12, 0.20, 0.50);
+    0.5, 0.60, 0.60, 0.35, 0.35, 0.35, 0.80, 0.70, 0.60, 0.40, 0.25, 0.60, 0.50, 0.30, 0.30, 0.35,
+    0.45, 0.45, 0.30, 0.40, 0.05, 0.10, 0.15, 0.20, 0.50);
 
 // where the light leaves the block, relative to the block centre (y): ceiling panels and
 // downlights shine from their bottom face, a street lamp head from below its housing
@@ -101,7 +105,7 @@ const int EM_PATTERN[EM_COUNT] = int[EM_COUNT](
 
 // how bright the lamp's own glowing texels are (surface emission, x texture colour)
 const float EM_SURF[EM_COUNT] = float[EM_COUNT](
-    0.0, 3.2, 3.2, 3.6, 3.0, 2.6, 2.4, 3.2, 3.0, 5.0, 4.0, 1.7, 2.4, 3.0, 3.0, 1.6,
+    0.0, 3.2, 3.2, 3.6, 3.0, 2.6, 2.4, 3.2, 3.0, 5.0, 4.0, 1.7, 1.2, 3.0, 3.0, 1.6,
     1.3, 1.6, 1.4, 2.6, 2.2, 0.9, 3.2, 1.8, 1.6);
 
 // vanilla light levels of the design (used when the shadow pass cannot measure them)
@@ -117,9 +121,9 @@ int emitterTypeOfBlock(int id) {
     if (id == BLK_GLOW)  return EM_GLOWBLOCK;
     return EM_NONE;
 }
-// lamps that hang over the lot and the road (their light belongs to the open air)
+// lamps that stand outside (their light belongs to the open air, the mist over the lot)
 bool emitterOutdoorType(int type) {
-    return type == EM_POLE || type == EM_ROOFSIGN || type == EM_SODIUM || type == EM_TRAFFIC;
+    return type == EM_POLE || type == EM_ROOFSIGN || type == EM_SODIUM || type == EM_TRAFFIC || type == EM_VENDING;
 }
 
 // ---- flicker ---------------------------------------------------------------------------
@@ -240,8 +244,12 @@ float emitterSurfaceMask(int type, vec3 albedoSrgb, vec3 N) {
 //  alpha test nor blending of translucent geometry can change a value) -------------------------
 //  lamp tiles : r = type / 255, g = (block y - 32) / 255, b = (128 + measured level) / 255
 //  cover tile : r / g = height of the topmost surface in 1/16 blocks (hi / lo byte), b = 64 / 255
+//  wall tiles : b = 32 / 255
 const int EMAP_TILE = 128;
 const int EMAP_COVER = 4;          // tile index of the cover heights
+const int EMAP_WALL_LO = 5;        // full wall blocks at y 66
+const int EMAP_WALL_HI = 6;        // full wall blocks at y 67
+const int EMAP_WALL_Y = 66;
 
 ivec2 emapOrigin() { return ivec2(floor(cameraPosition.xz)) - ivec2(EMAP_TILE / 2); }
 ivec2 emapTileOffset(int tile) { return ivec2(tile % 4, tile / 4) * EMAP_TILE; }
@@ -254,6 +262,7 @@ int emapLayer(int blockY) {
 }
 bool emapLampMarker(vec4 t) { float b = floor(t.b * 255.0 + 0.5); return b >= 128.0 && b <= 143.0 && t.a > 0.5; }
 bool emapCoverMarker(vec4 t) { return abs(t.b * 255.0 - 64.0) < 0.5 && t.a > 0.5; }
+bool emapWallMarker(vec4 t) { return abs(t.b * 255.0 - 32.0) < 0.5 && t.a > 0.5; }
 int emapLampLevel(vec4 t) { return int(floor(t.b * 255.0 + 0.5)) - 128; }
 float emapCoverHeight(vec4 t) { return (floor(t.r * 255.0 + 0.5) * 256.0 + floor(t.g * 255.0 + 0.5)) / 16.0; }
 
@@ -271,16 +280,42 @@ float openSky(vec3 worldPos) {
     return h < -999.0 ? 1.0 : smoothstep(h - 0.05, h + 0.25, worldPos.y);
 }
 
+// a wall stands in this column (map coordinates): full blocks at y 66 and 67
+bool wallColumn(ivec2 c) {
+    if (c.x < 0 || c.y < 0 || c.x >= EMAP_TILE || c.y >= EMAP_TILE) return false;
+    return emapWallMarker(texelFetch(shadowcolor0, emapTileOffset(EMAP_WALL_LO) + c, 0))
+        && emapWallMarker(texelFetch(shadowcolor0, emapTileOffset(EMAP_WALL_HI) + c, 0));
+}
+// walk the columns between two (map coordinates): is there a wall in between?
+bool wallBetween(ivec2 a, ivec2 b) {
+    if (a == b) return false;
+    vec2 p = vec2(a) + 0.5;
+    vec2 d = vec2(b - a);
+    vec2 stp = sign(d);
+    vec2 inv = 1.0 / max(abs(d), vec2(1e-5));
+    vec2 tMax = (0.5) * inv;                 // from a cell centre to its border: half a cell
+    vec2 tDelta = inv;
+    ivec2 c = a;
+    for (int i = 0; i < 32; i++) {
+        if (tMax.x < tMax.y) { c.x += int(stp.x); tMax.x += tDelta.x; }
+        else { c.y += int(stp.y); tMax.y += tDelta.y; }
+        if (c == b) return false;
+        if (wallColumn(c)) return true;
+        if (min(tMax.x, tMax.y) > 1.0 + 1e-4) return false;
+    }
+    return false;
+}
+
 // ---- the light table (colortex7) ----------------------------------------------------------
 //  texel (x, z) in [0, 128)^2 = block column emapOrigin() + (x, z); rgba = 4 lamps, each an
 //  integer in a float: type (5 bits) | level (4) | y - tableRefY (5) | dx + 15 (5) | dz + 15 (5),
-//  negative when the lamp has something above it (indoors). 0 = empty.
+//  negative when a wall stands between the column and the lamp. 0 = empty.
 int tableRefY() { return int(floor(cameraPosition.y)) - 12; }
 const float TABLE_REACH = 15.0;
 
-float tablePack(int type, int level, int yrel, int dx, int dz, bool covered) {
+float tablePack(int type, int level, int yrel, int dx, int dz, bool walled) {
     int c = type | (level << 5) | (yrel << 9) | ((dx + 15) << 14) | ((dz + 15) << 19);
-    return covered ? -float(c) : float(c);
+    return walled ? -float(c) : float(c);
 }
 
 struct Lamp {
@@ -288,7 +323,8 @@ struct Lamp {
     vec3  block;     // world position of the lamp block (min corner)
     int   type;
     float level;     // vanilla light level of the lamp
-    bool  covered;   // indoors
+    bool  covered;   // indoors (its light belongs to indoor air)
+    bool  walled;    // a wall stands between the lamp and the column it was read for
 };
 
 Lamp tableUnpack(float v, ivec2 column) {
@@ -299,7 +335,8 @@ Lamp tableUnpack(float v, ivec2 column) {
     int yrel = (c >> 9) & 31;
     int dx = ((c >> 14) & 31) - 15;
     int dz = ((c >> 19) & 31) - 15;
-    L.covered = v < 0.0;
+    L.walled = v < 0.0;
+    L.covered = !emitterOutdoorType(L.type);
     L.block = vec3(float(column.x + dx), float(tableRefY() + yrel), float(column.y + dz));
     int ti = clamp(L.type, 0, EM_COUNT - 1);
     L.pos = L.block + vec3(0.5, 0.5 + EM_YOFF[ti], 0.5);
@@ -314,12 +351,13 @@ vec4 tableFetch(ivec2 column) {
 }
 
 // ---- light of one lamp at a point ---------------------------------------------------------
-// distance falloff: a soft core of the lamp's size, inverse square, gone at its reach
+// distance falloff: inverse square with a soft core of the lamp's size, gone at its reach
+// (vanilla's light level ends there too)
 float lampFalloff(Lamp L, float d) {
     int ti = clamp(L.type, 0, EM_COUNT - 1);
-    float r0 = 0.9 + EM_SIZE[ti] * 1.6;
+    float s = EM_SIZE[ti];
     float reach = L.level + 1.0;
-    return (1.0 - smoothstep(reach * 0.45, reach, d)) / (1.0 + sq(d / r0));
+    return (1.0 - smoothstep(reach * 0.55, reach * 1.05, d)) / (d * d + s * s + 0.12);
 }
 // angular emission pattern. dir: unit vector from the lamp to the point
 float lampPattern(int type, vec3 dir) {
@@ -374,8 +412,9 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
         float wb = exp(-abs(X - A) * 0.9) * step(A - 1.5, X) * step(0.5, X);
         bounceC += colNow * wb;
         bounceW += wb;
-        // direct light: only if the vanilla level says the path is free
-        float vis = (1.0 - smoothstep(A + 0.6, A + 2.2, X)) * smoothstep(-0.5, 0.8, X);
+        // direct light: only if no wall stands in between and the vanilla level says the path is free
+        if (L.walled) continue;
+        float vis = (1.0 - smoothstep(A + 0.6, A + 2.2, X)) * smoothstep(0.3, 1.6, X);
         if (vis <= 0.0) continue;
         vec3 d = L.pos - wp;
         float dist = length(d);
@@ -398,7 +437,7 @@ void lampsAt(vec3 wp, vec3 N, vec3 V, float A, float rough, float f0, float twoS
     }
     // light that went round corners and off the walls: coloured by the lamp it came from
     float lv = A / 15.0;
-    float bounceF = 0.050 * lv * sqrt(lv) + 0.012 * lv;
+    float bounceF = 0.10 * lv * lv + 0.010 * lv;
     vec3 bc = bounceW > 1e-3 ? bounceC / bounceW : vec3(0.80, 0.80, 0.78);
     diffuse += bc * bounceF * LIGHT_STRENGTH;
     domW = best / max(maxOf(diffuse), 1e-4);
@@ -417,7 +456,7 @@ vec3 lampsInScatter(vec3 rd, float t0, float t1, float sigma, float pointCovered
         float v = tab[k];
         if (abs(v) < 0.5) continue;
         Lamp L = tableUnpack(v, column);
-        if (!emitterCasts(L.type)) continue;
+        if (!emitterCasts(L.type) || L.walled) continue;
         // indoor lamps light indoor air, outdoor lamps the open air
         float same = L.covered ? pointCovered : 1.0 - pointCovered;
         if (same <= 0.01) continue;
@@ -425,14 +464,15 @@ vec3 lampsInScatter(vec3 rd, float t0, float t1, float sigma, float pointCovered
         vec3 o = L.pos - cameraPosition;
         float tc = dot(o, rd);
         float h2 = max(dot(o, o) - tc * tc, 0.0);
-        float r0 = 0.6 + EM_SIZE[ti];
-        float h = sqrt(h2 + r0 * r0);
+        float s2 = sq(EM_SIZE[ti]) + 0.12;
+        float h = sqrt(h2 + s2);
+        // integral of I / (d^2 + s^2) along the segment
         float I = (atan((t1 - tc) / h) - atan((t0 - tc) / h)) / h;
         // the reach of the lamp: fade with the distance of the closest point of the segment
         float dmin = sqrt(h2 + sq(max(max(t0 - tc, tc - t1), 0.0)));
         float reach = L.level + 1.0;
-        float fade = 1.0 - smoothstep(reach * 0.35, reach * 0.9, dmin);
-        S += lampRadiance(L) * (I * r0 * r0) * fade * same;
+        float fade = 1.0 - smoothstep(reach * 0.45, reach * 1.0, dmin);
+        S += lampRadiance(L) * I * fade * same;
     }
     return S * sigma;
 }

@@ -9,6 +9,8 @@
 //        2 px thin sign fills its texel; faces without glowing texels (the pole under the
 //        sign, a lamp's housing) are dropped in the fragment shader.
 //      tile 4: the height of the topmost surface of every column (what is under a roof).
+//      tiles 5 / 6: full wall blocks at y 66 / 67 (their side faces snapped onto the footprint
+//        like the lamps): lamps behind a wall do not light this side.
 // =====================================================================================
 #define PROGRAM_SHADOW
 #include "/lib/header.glsl"
@@ -23,7 +25,7 @@ in vec3 at_midBlock;
 out vec2 texcoord;
 out vec4 glcolor;
 #ifdef WORLD_HIDAMARI
-flat out int kind;          // 0 dropped, 1 lamp, 2 cover
+flat out int kind;          // 0 dropped, 1 lamp, 2 cover, 3 wall
 flat out int etype;
 flat out int blockY;
 flat out vec2 midUv;
@@ -47,7 +49,11 @@ void main() {
     midUv = mc_midTexCoord.xy;
     halfUv = abs(texcoord - mc_midTexCoord.xy);
     worldY = wp.y;
-    lightLevel = normalizeLightmap((gl_TextureMatrix[1] * gl_MultiTexCoord1).xy).x * 15.0;
+    vec2 lmv = normalizeLightmap((gl_TextureMatrix[1] * gl_MultiTexCoord1).xy);
+    // the lamp's own light measured on its faces (+1 = its level). Faces drawn full-bright
+    // (Forge forge_data block_light 15 / sky_light 15: the glowing panel of a model) say
+    // nothing about the level: 0 = unknown (the design level is used)
+    lightLevel = (lmv.x > 0.985 && lmv.y > 0.985) ? 0.0 : lmv.x * 15.0;
     ivec2 org = emapOrigin();
     int type = emitterTypeOfBlock(id);
     kind = 0;
@@ -59,6 +65,9 @@ void main() {
         bool hasMid = dot(at_midBlock, at_midBlock) > 1e-6;
         vec3 center = hasMid ? wp + at_midBlock / 64.0 : floor(wp - n * 0.02) + 0.5;
         ivec3 blk = ivec3(floor(center));
+        // a face on the block's boundary was lit from the neighbour (level - 1), an inner face
+        // of a model from the lamp's own cell (level)
+        if (lightLevel > 0.0) lightLevel += abs(dot(wp - center, n)) > 0.45 ? 1.0 : 0.0;
         ivec2 c = blk.xz - org;
         blockY = blk.y;
         if (c.x >= 0 && c.y >= 0 && c.x < EMAP_TILE && c.y < EMAP_TILE) {
@@ -69,8 +78,23 @@ void main() {
             depth = 1.0 - float(blk.y) / 256.0 - lightLevel * 1e-4;
             kind = 1;
         }
+    } else if (abs(n.y) < 0.5) {
+        // side faces: only those of full wall blocks at y 66 / 67 matter (the wall tiles);
+        // in a top-down view they are lines anyway
+        bool hasMid = dot(at_midBlock, at_midBlock) > 1e-6;
+        if (isWallBlock(id) && hasMid) {
+            ivec3 blk = ivec3(floor(wp + at_midBlock / 64.0));
+            ivec2 c = blk.xz - org;
+            if ((blk.y == EMAP_WALL_Y || blk.y == EMAP_WALL_Y + 1) && c.x >= 0 && c.y >= 0 && c.x < EMAP_TILE && c.y < EMAP_TILE) {
+                int corner = gl_VertexID & 3;
+                vec2 cxz = vec2(c) + vec2((corner == 1 || corner == 2) ? 1.0 : 0.0, corner >= 2 ? 1.0 : 0.0);
+                texel = vec2(emapTileOffset(blk.y == EMAP_WALL_Y ? EMAP_WALL_LO : EMAP_WALL_HI)) + cxz;
+                depth = 0.5;
+                kind = 3;
+            }
+        }
     } else {
-        // everything else: the cover heights (clamped to the tile: nothing spills over)
+        // top / bottom faces: the cover heights (clamped to the tile: nothing spills over)
         vec2 c = clamp(wp.xz - vec2(org), vec2(0.0), vec2(float(EMAP_TILE)));
         texel = vec2(emapTileOffset(EMAP_COVER)) + c;
         depth = 1.0 - wp.y / 256.0;
@@ -127,9 +151,12 @@ void main() {
             if (tx.a > 0.1) glowing = max(glowing, emitterSurfaceMask(etype, tx.rgb, faceN));
         }
         if (glowing < 0.25) discard;
-        float lvl = lightLevel > 0.5 ? min(lightLevel + 1.0, 15.0) : EM_LEVEL[clamp(etype, 0, EM_COUNT - 1)];
+        float lvl = lightLevel > 0.5 ? min(lightLevel, 15.0) : EM_LEVEL[clamp(etype, 0, EM_COUNT - 1)];
         /* RENDERTARGETS: 0 */
         gl_FragData[0] = vec4(float(etype) / 255.0, float(clamp(blockY - 32, 0, 255)) / 255.0, (128.0 + floor(lvl + 0.5)) / 255.0, 1.0);
+    } else if (kind == 3) {
+        /* RENDERTARGETS: 0 */
+        gl_FragData[0] = vec4(0.0, 0.0, 32.0 / 255.0, 1.0);
     } else {
         vec4 c = texture(gtexture, texcoord) * glcolor;
         if (c.a < 0.1) discard;

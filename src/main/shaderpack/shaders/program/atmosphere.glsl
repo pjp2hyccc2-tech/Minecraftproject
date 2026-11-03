@@ -87,6 +87,8 @@ void main() {
 
     vec4 aux = texture(colortex1, uv);
     float depth = texture(depthtex0, uv).r;
+    int frontMat = int(floor(texture(colortex5, uv).a * 255.0 + 0.5));
+    if (frontMat == MAT_WINDOW || frontMat == MAT_GLASS_SMALL) depth = texture(depthtex1, uv).r;
     bool sky = depth >= 1.0;
     bool hand = isHandDepth(depth) || aux.b > 0.75;
 

@@ -76,7 +76,7 @@ const vec3 FLAME_DEEP = vec3(1.00, 0.42, 0.16);
     const vec3  SKY_AMBIENT  = vec3(0.115, 0.135, 0.175) * 0.030;   // the cloud dome over the lot
     const vec3  TOWN_GLOW    = vec3(1.00, 0.46, 0.17) * 0.020;      // light pollution on the horizon
     const vec3  TOWN_DIR     = vec3(-0.92, 0.0, 0.38);              // west-south-west
-    const vec3  MIN_LIGHT    = vec3(0.40, 0.46, 0.60) * 0.0032;     // never quite black
+    const vec3  MIN_LIGHT    = vec3(0.40, 0.46, 0.60) * 0.0055;     // never quite black (dark-adapted eyes)
     const vec3  SKY_ZENITH   = vec3(0.0042, 0.0050, 0.0068);
     const vec3  SKY_HORIZON  = vec3(0.0110, 0.0118, 0.0140);
     // radiance of deep mist over the lot (the dark blue-grey of the design)

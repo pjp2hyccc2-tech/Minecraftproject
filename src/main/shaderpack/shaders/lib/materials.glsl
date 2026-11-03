@@ -45,6 +45,11 @@
 #define BLK_ROOF        12021   // glazed roof tiles: wet
 #define BLK_AUTODOOR    12022   // the automatic door (block entity: aluminium + glass)
 #define BLK_FROST       12023   // the walk-in fridge frost
+#define BLK_STEEL_WALL  12024   // the stainless wall behind the cooking line (a wall)
+#define BLK_WALL        12025   // plain walls (wallpaper, wainscot, facade, concrete, pillars)
+
+// full wall blocks: they stop the lamps' light (lib/emitters.glsl wall tiles)
+bool isWallBlock(int id) { return id == BLK_WALL || id == BLK_STEEL_WALL || id == BLK_WALL_TILE; }
 
 // ---- entity.properties (entityId) -------------------------------------------------------
 #define ENT_VISITOR    20001
@@ -97,7 +102,7 @@ int materialOfBlock(int id) {
     if (id == BLK_FLOOR_MOSAIC) return MAT_FLOOR_MOSAIC;
     if (id == BLK_FLOOR_CAVITY) return MAT_CAVITY;
     if (id == BLK_GRANITE)      return MAT_GRANITE;
-    if (id == BLK_STEEL)        return MAT_STEEL;
+    if (id == BLK_STEEL || id == BLK_STEEL_WALL) return MAT_STEEL;
     if (id == BLK_METAL_OUT)    return MAT_METAL_OUT;
     if (id == BLK_WINDOW || id == BLK_GLASS || id == BLK_AUTODOOR) return MAT_WINDOW;
     if (id == BLK_MIRROR || id == BLK_MIRROR_CRACKED) return MAT_MIRROR;
@@ -131,8 +136,8 @@ vec4 materialSurface(int m, float wet) {
     else if (m == MAT_STEEL)       s = vec4(0.24, 0.600, 1.0, 0.80);
     else if (m == MAT_METAL_OUT)   s = vec4(0.36, 0.060, 0.2, 0.55);
     else if (m == MAT_WINDOW)      s = vec4(0.03, 0.040, 0.0, 1.00);
-    else if (m == MAT_MIRROR)      s = vec4(0.06, 0.400, 1.0, 1.00);
-    else if (m == MAT_MIRROR_PLAIN) s = vec4(0.03, 0.850, 1.0, 1.00);
+    else if (m == MAT_MIRROR)      s = vec4(0.06, 0.400, 0.0, 1.00);   // smoked glass: a dark, neutral mirror
+    else if (m == MAT_MIRROR_PLAIN) s = vec4(0.03, 0.850, 0.0, 1.00);
     else if (m == MAT_WALL_TILE)   s = vec4(0.16, 0.045, 0.0, 0.70);
     else if (m == MAT_VINYL)       s = vec4(0.45, 0.040, 0.0, 0.0);
     else if (m == MAT_VARNISH)     s = vec4(0.38, 0.035, 0.0, 0.45);
@@ -160,7 +165,7 @@ vec4 materialSurface(int m, float wet) {
 
 // a material that darkens when wet (porous): asphalt, pavers, mud, concrete, brick ...
 float wetDarkening(int m) {
-    if (m == MAT_ASPHALT || m == MAT_PAVER || m == MAT_MUD) return 0.55;
+    if (m == MAT_ASPHALT || m == MAT_PAVER || m == MAT_MUD) return 0.72;
     if (m == MAT_WET || m == MAT_ROOF) return 0.75;
     if (m == MAT_DIFFUSE) return 0.78;
     return 1.0;

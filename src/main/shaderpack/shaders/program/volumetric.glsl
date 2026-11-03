@@ -22,6 +22,10 @@ in vec2 texcoord;
 void main() {
     vec4 res = vec4(0.0, 0.0, 0.0, 1.0);
     float depth = texture(depthtex0, texcoord).r;
+    // through clear glass (shop windows, glasses) the air goes on behind it: march to the
+    // opaque surface (depthtex1: before the translucents)
+    int mat = int(floor(texture(colortex5, texcoord).a * 255.0 + 0.5));
+    if (mat == MAT_WINDOW || mat == MAT_GLASS_SMALL) depth = texture(depthtex1, texcoord).r;
     if (isEyeInWater == 0 && !isHandDepth(depth)) {
         bool sky = depth >= 1.0;
         vec3 P = viewToPlayer(screenToView(texcoord, sky ? 1.0 : depth));

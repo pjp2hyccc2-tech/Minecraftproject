@@ -62,10 +62,10 @@ bool dominantLamp(vec3 wp, vec3 N, float A, out vec3 lampPos) {
         float v = tab[k];
         if (abs(v) < 0.5) continue;
         Lamp L = tableUnpack(v, column);
-        if (!emitterCasts(L.type)) continue;
+        if (!emitterCasts(L.type) || L.walled) continue;
         vec3 md = abs(floor(cellP) + 0.5 - (L.block + 0.5));
         float X = L.level - (md.x + md.y + md.z);
-        float vis = (1.0 - smoothstep(A + 0.6, A + 2.2, X)) * smoothstep(-0.5, 0.8, X);
+        float vis = (1.0 - smoothstep(A + 0.6, A + 2.2, X)) * smoothstep(0.3, 1.6, X);
         vec3 d = L.pos - wp;
         float dist = length(d);
         float w = vis * lampFalloff(L, dist) * lampPattern(L.type, -d / max(dist, 1e-3)) * saturate(dot(N, d / max(dist, 1e-3)))

@@ -7,23 +7,19 @@
         Catches what glslang cannot: vertex/fragment interface mismatches, driver quirks.
 
   python3 tools/shader/preview.py [--out DIR] [--size 960x540] [--shots a,b] [-D NAME=VALUE]
-        renders a small voxel night forest on Kaerazu-yama (tall cedar trunks under conical
-        canopies with gaps, ferns, a fog hollow with a stream, a hut with a tin roof, a
-        concrete road tunnel through a hill, a peeking monster with an eyes layer) through
-        the real pipeline - shadow pass, sky, gbuffers (terrain, entities, eyes, the solid
-        hand), deferred, translucents, composite..composite3, final - emulating what
-        Iris/Oculus do (ping-pong buffers, RENDERTARGETS, buffer formats / clear colours from
-        the directives, per-program blending, the squeezed hand depth, mipmap directives,
-        celestial / shadow matrices, uniforms incl. both held items).
+        renders the restaurant HIDAMARI (tools/shader/hidamari_scene.py: the floor plan of
+        docs/DESIGN.md with the art's block models and textures where they exist) through the
+        real pipeline - shadow pass (the emitter map), prepare / prepare1 (the light table),
+        sky, gbuffers (terrain as indexed quads with mc_Entity / mc_midTexCoord / at_midBlock,
+        spirits as translucent entities with their eyes layer, the hand), deferred, translucents,
+        composite..composite4, final - emulating what Iris/Oculus do (ping-pong buffers,
+        RENDERTARGETS, buffer formats / clear colours from the directives, per-buffer blending,
+        the squeezed hand depth, mipmap directives, uniforms incl. both held items and the mod's
+        channels: fear, danger, the finder, the flash, caught).
         Writes one PNG per shot plus contact.png, and prints buffer statistics (NaN / black).
-        --timing prints the llvmpipe time of every pass.
-
-  python3 tools/shader/preview.py --shots t_forest_deep,t_fear,...
-        shots named t_* are taken on the REAL mountain at the CI tour's viewpoints: a 72x72
-        piece of the baked terrain (src/main/resources/data/reisatsu/terrain/terrain.bin.gz or
-        $REISATSU_TERRAIN) decorated with a port of com.reisatsu.world.Decorator (cedars, boulders,
-        fallen logs, ferns; no POI structures), a peeking monster behind a trunk ahead.
-        The repo's block textures (or $REISATSU_TEXTURES) replace the procedural tiles when present.
+        --timing prints the llvmpipe time of every pass. --list shows the shots.
+        Assets: $REISATSU_ASSETS (an assets/reisatsu dir, e.g. extracted from the art branch:
+        git archive origin/rs-art src/main/resources/assets | tar -x -C /tmp/art) or the repo's.
 
 This is a development aid, not a substitute for the CI client run.
 """
@@ -34,7 +30,6 @@ import re
 import sys
 sys.dont_write_bytecode = True
 import time
-from collections import deque
 
 import numpy as np
 
@@ -44,14 +39,16 @@ import glctx  # noqa: E402
 from glctx import gl  # noqa: E402
 import lint  # noqa: E402
 import build_pack  # noqa: E402
+import mcscene  # noqa: E402
+import hidamari_scene  # noqa: E402
 
 ROOT = lint.ROOT
-ATTRIBS = {"mc_Entity": 10, "mc_midTexCoord": 11}
-MOUNTAIN = "reisatsu_hidamari"
+ATTRIBS = {"mc_Entity": 10, "mc_midTexCoord": 11, "at_midBlock": 12}
+HIDAMARI = "reisatsu_hidamari"
 
 # item / entity ids (item.properties, entity.properties)
-FLASHLIGHT, FLASH_LOW, PHONE_LIGHT, CAMERA, FLARE = 10001, 10002, 10003, 10004, 10005
-NOZOKI, UTSURU = 20001, 20006
+FLASHLIGHT, FINDER = 10001, 10004
+VISITOR, WAITRESS, CHEF, CHILD, MIRROR_WOMAN, MANAGER, MEDIUM = 20001, 20002, 20003, 20004, 20005, 20006, 20010
 
 # =====================================================================================
 #  pack loading
@@ -197,7 +194,7 @@ class Program:
             self.targets = [0]
         self.mipmaps = [int(x) for x in re.findall(r"const\s+bool\s+colortex(\d+)MipmapEnabled\s*=\s*true", active)]
         self.consts = {}
-        for name_, val in re.findall(r"const\s+(?:int|float)\s+(shadowDistance|sunPathRotation|shadowMapResolution)\s*=\s*([-\d.]+)", active):
+        for name_, val in re.findall(r"const\s+(?:int|float)\s+(shadowDistance|sunPathRotation|shadowMapResolution)\s*=\s*([-\d.]+)", "".join(preprocess(vs))):
             self.consts[name_] = float(val)
         self._loc = {}
 
@@ -266,770 +263,119 @@ def sky_angle(world_time):
     return (d0 * 2.0 + d1) / 3.0
 
 
+
+
 # =====================================================================================
-#  test scene: a slope of Kaerazu-yama at night
+#  meshes that are not blocks: spirits, the medium, the hand
 # =====================================================================================
 
-TILES = {}
-ATLAS_N = 8          # 8x8 tiles of 16 px
-
-# the real block textures (from the repo, once the art is merged) replace the procedural tiles
-TEXTURE_DIR = os.environ.get("REISATSU_TEXTURES") or os.path.normpath(
-    os.path.join(ROOT, "..", "..", "resources", "assets", "reisatsu", "textures", "block"))
-TILE_FILES = {"bark": "cedar_log", "log_top": "cedar_log_top", "leaves": "cedar_leaves", "floor_top": "forest_floor_top",
-              "floor_side": "forest_floor_side", "dirt": "forest_dirt", "moss": "moss_floor", "rock": "mountain_rock",
-              "stones": "river_stones", "planks": "weathered_planks", "tin": "tin_roof", "concrete": "concrete_old",
-              "asphalt": "asphalt", "ribbon": "cedar_log_ribbon", "trail": "trail_top", "lamp": "tunnel_lamp_lit"}
-
-
-def real_tile(name):
-    """16x16 RGBA uint8 of the repo texture for a tile, or None"""
-    f = TILE_FILES.get(name)
-    if not f:
-        return None
-    path = os.path.join(TEXTURE_DIR, f + ".png")
-    if not os.path.isfile(path) or os.path.getsize(path) == 0:
-        return None
-    from PIL import Image
-    try:
-        im = Image.open(path).convert("RGBA")
-    except Exception:
-        return None
-    if im.size != (16, 16):
-        im = im.crop((0, 0, im.size[0], im.size[0])).resize((16, 16), Image.NEAREST)
-    return np.asarray(im, np.uint8)
+def box_quads(x0, y0, z0, x1, y1, z1, tex, rect_of, face_tex=None):
+    """axis-aligned box -> list of (normal, 4 corners, uv rect)"""
+    ft = face_tex or {}
+    faces = {
+        (1, 0, 0): [(x1, y1, z1), (x1, y0, z1), (x1, y0, z0), (x1, y1, z0)],
+        (-1, 0, 0): [(x0, y1, z0), (x0, y0, z0), (x0, y0, z1), (x0, y1, z1)],
+        (0, 0, 1): [(x0, y1, z1), (x0, y0, z1), (x1, y0, z1), (x1, y1, z1)],
+        (0, 0, -1): [(x1, y1, z0), (x1, y0, z0), (x0, y0, z0), (x0, y1, z0)],
+        (0, 1, 0): [(x0, y1, z0), (x0, y1, z1), (x1, y1, z1), (x1, y1, z0)],
+        (0, -1, 0): [(x0, y0, z1), (x0, y0, z0), (x1, y0, z0), (x1, y0, z1)],
+    }
+    out = []
+    for n, cs in faces.items():
+        out.append((n, cs, rect_of(ft.get(n, tex))))
+    return out
 
 
-def make_atlas(seed=7):
-    """procedural 16x16 pixel-art-ish tiles. Returns uint8 RGBA (128x128)."""
-    rng = np.random.default_rng(seed)
-    atlas = np.zeros((16 * ATLAS_N, 16 * ATLAS_N, 4), np.uint8)
-    names = ["bark", "log_top", "leaves", "floor_top", "floor_side", "dirt", "moss", "rock",
-             "stones", "water", "planks", "tin", "concrete", "asphalt", "ribbon", "fern",
-             "skin", "hair", "eyes", "torch_body", "lens", "moon", "trail", "phone",
-             "flare", "lamp"]
-    y, x = np.mgrid[0:16, 0:16]
-
-    def noise(scale=1.0):
-        return rng.random((16, 16)) * scale
-
-    for i, n in enumerate(names):
-        tx, ty = i % ATLAS_N, i // ATLAS_N
-        TILES[n] = (tx, ty)
-        a = np.full((16, 16), 255.0)
-        if n == "bark":          # reddish-brown fibrous vertical bark, dark
-            base = np.array([92, 58, 44])
-            g = 0.75 + 0.35 * np.sin(x * 1.9 + rng.random((1, 16)) * 6.0) * 0.5 + noise(0.25)
-            t = base[None, None] * g[..., None]
-        elif n == "log_top":
-            r = np.sqrt((x - 7.5) ** 2 + (y - 7.5) ** 2)
-            t = np.array([120, 88, 60])[None, None] * (0.8 + 0.2 * np.sin(r * 1.8))[..., None]
-        elif n == "leaves":      # dense dark blue-green needles, cutout
-            base = np.array([34, 52, 46])
-            t = base[None, None] * (0.6 + noise(0.8))[..., None]
-            holes = rng.random((16, 16)) < 0.22
-            a[holes] = 0
-        elif n == "floor_top":   # dead brown needles, a few leaves, moss specks
-            base = np.array([86, 62, 42])
-            t = base[None, None] * (0.6 + noise(0.6))[..., None]
-            leaf = rng.random((16, 16)) < 0.06
-            t[leaf] = np.array([120, 70, 34])
-            moss = rng.random((16, 16)) < 0.05
-            t[moss] = np.array([60, 66, 36])
-        elif n == "floor_side":
-            base = np.array([70, 52, 38]); t = base[None, None] * (0.65 + noise(0.5))[..., None]
-            t[y < 4] = (np.array([86, 62, 42])[None, None] * (0.6 + noise(0.6))[..., None])[y < 4]
-        elif n == "dirt":
-            base = np.array([58, 42, 32]); t = base[None, None] * (0.6 + noise(0.6))[..., None]
-        elif n == "moss":
-            base = np.array([58, 66, 38]); t = base[None, None] * (0.6 + noise(0.6))[..., None]
-        elif n == "rock":        # dark grey wet andesite
-            base = np.array([84, 86, 88]); t = base[None, None] * (0.65 + noise(0.45))[..., None]
-            crack = (np.abs(x - 5 - y * 0.4) < 0.6); t[crack] *= 0.5
-        elif n == "stones":      # rounded river stones
-            cells = rng.random((4, 4, 3))
-            cx, cy = x // 4, y // 4
-            t = (np.array([90, 88, 84])[None, None] * (0.6 + 0.6 * cells[cy, cx, :1]))
-            edge = ((x % 4) == 0) | ((y % 4) == 0); t[edge] *= 0.45
-        elif n == "water":
-            t = np.zeros((16, 16, 3)) + 170 * (0.9 + noise(0.1))[..., None]; a[:] = 190
-        elif n == "planks":      # sun-bleached grey old wood
-            base = np.array([120, 114, 104]); g = 0.8 + noise(0.3)
-            t = base[None, None] * g[..., None]; t[(y % 4) == 0] *= 0.55
-        elif n == "tin":         # rusted corrugated iron, ribs vertical
-            rib = 0.75 + 0.25 * np.sin(x * 1.6)
-            t = np.array([118, 76, 52])[None, None] * (rib * (0.7 + noise(0.4)))[..., None]
-        elif n == "concrete":
-            base = np.array([118, 118, 114]); t = base[None, None] * (0.7 + noise(0.3))[..., None]
-            streak = (x % 5 == 2); t[streak] *= 0.75
-        elif n == "asphalt":
-            base = np.array([46, 46, 48]); t = base[None, None] * (0.7 + noise(0.5))[..., None]
-        elif n == "ribbon":      # bark with a faded pink tape band
-            base = np.array([92, 58, 44])
-            t = base[None, None] * (0.75 + noise(0.3))[..., None]
-            band = (y >= 6) & (y <= 9)
-            t[band] = np.array([214, 112, 156])[None, None] * (0.85 + noise(0.15))[..., None][band]
-        elif n == "fern":        # cutout fronds
-            t = np.zeros((16, 16, 3)) + np.array([52, 74, 40])
-            t = t * (0.6 + noise(0.6))[..., None]
-            frond = (np.abs(x - 7.5) < (16 - y) * 0.45) & ((x + y) % 3 != 0) & (y > 1)
-            a[:] = 0; a[frond] = 255
-        elif n == "skin":        # grey-white skin
-            base = np.array([176, 172, 164]); t = base[None, None] * (0.88 + noise(0.12))[..., None]
-        elif n == "hair":
-            t = np.zeros((16, 16, 3)) + 14 * (0.8 + noise(0.4))[..., None]
-        elif n == "eyes":        # eyes layer: only eye texels opaque
-            t = np.zeros((16, 16, 3)) + np.array([30, 30, 30])
-            a[:] = 255
-        elif n == "torch_body":
-            t = np.zeros((16, 16, 3)) + np.array([40, 40, 44]) * (0.8 + noise(0.3))[..., None]
-        elif n == "lens":
-            t = np.zeros((16, 16, 3)) + np.array([250, 240, 210])
-        elif n == "moon":
-            d = np.sqrt((x - 7.5) ** 2 + (y - 7.5) ** 2)
-            v = np.clip(1.0 - d / 7.5, 0, 1) > 0
-            t = np.zeros((16, 16, 3)) + (200 * (0.8 + noise(0.2)))[..., None] * v[..., None]
-        elif n == "trail":
-            base = np.array([96, 74, 52]); t = base[None, None] * (0.65 + noise(0.5))[..., None]
-        elif n == "phone":
-            t = np.zeros((16, 16, 3)) + np.array([20, 20, 22])
-            scr = (x > 2) & (x < 13) & (y > 2) & (y < 13); t[scr] = np.array([60, 90, 70])
-        elif n == "flare":
-            t = np.zeros((16, 16, 3)) + np.array([180, 30, 24]) * (0.8 + noise(0.3))[..., None]
-            tip = y < 4; t[tip] = np.array([255, 230, 200])
-        elif n == "lamp":
-            t = np.zeros((16, 16, 3)) + np.array([60, 58, 54])
-            glass = (x > 3) & (x < 12) & (y > 4) & (y < 12); t[glass] = np.array([250, 170, 70])
-        atlas[ty * 16:(ty + 1) * 16, tx * 16:(tx + 1) * 16, :3] = np.clip(t, 0, 255).astype(np.uint8)
-        atlas[ty * 16:(ty + 1) * 16, tx * 16:(tx + 1) * 16, 3] = np.clip(a, 0, 255).astype(np.uint8)
-        real = real_tile(n)
-        if real is not None:
-            REAL_TILES.add(n)
-            atlas[ty * 16:(ty + 1) * 16, tx * 16:(tx + 1) * 16] = real
-            if n == "leaves":                    # cutout: binary alpha like the alpha test
-                atlas[ty * 16:(ty + 1) * 16, tx * 16:(tx + 1) * 16, 3] = np.where(real[..., 3] > 25, 255, 0)
-    return atlas
+def quads_to_arrays(quads, light, alpha=1.0, color=(1.0, 1.0, 1.0)):
+    P, N, C, U0, U1 = [], [], [], [], []
+    for n, cs, r in quads:
+        uvs = [(r[0], r[1]), (r[0], r[3]), (r[2], r[3]), (r[2], r[1])]
+        for i in (0, 1, 2, 0, 2, 3):
+            P.append(cs[i]); N.append(n); C.append((color[0], color[1], color[2], alpha)); U0.append(uvs[i]); U1.append(light)
+    f = lambda a, k: np.array(a, np.float32).reshape(-1, k)
+    return dict(pos=f(P, 3), nrm=f(N, 3), col=f(C, 4), uv0=f(U0, 2), uv1=f(U1, 2))
 
 
-REAL_TILES = set()
-
-
-# block type: (tile(s), mc_Entity id, opaque, emission, layer, shape)
-#   tile: name or dict(top=..., side=..., bottom=...)
-#   layer: "solid" (incl. cutout) | "translucent"     shape: None (cube) | box tuple | "cross"
-AIR, BARK, LEAVES, FLOOR, DIRT, MOSS, ROCK, STONES, WATER, PLANKS, TIN, CONCRETE, ASPHALT, RIBBON, FERN, TRAIL, LAMP = range(17)
-BLOCKS = {
-    BARK: (dict(top="log_top", side="bark", bottom="log_top"), 0, True, 0, "solid", None),
-    LEAVES: ("leaves", 10011, False, 0, "solid", None),
-    FLOOR: (dict(top="floor_top", side="floor_side", bottom="dirt"), 0, True, 0, "solid", None),
-    DIRT: ("dirt", 0, True, 0, "solid", None),
-    MOSS: (dict(top="moss", side="floor_side", bottom="dirt"), 0, True, 0, "solid", None),
-    ROCK: ("rock", 10032, True, 0, "solid", None),
-    STONES: ("stones", 10032, True, 0, "solid", None),
-    WATER: ("water", 10020, False, 0, "translucent", (0.0, 0.0, 0.0, 1.0, 0.875, 1.0)),
-    PLANKS: ("planks", 0, True, 0, "solid", None),
-    TIN: ("tin", 10031, True, 0, "solid", None),
-    CONCRETE: ("concrete", 10032, True, 0, "solid", None),
-    ASPHALT: ("asphalt", 10032, True, 0, "solid", None),
-    RIBBON: (dict(top="log_top", side="ribbon", bottom="log_top"), 10033, True, 0, "solid", None),
-    FERN: ("fern", 10010, False, 0, "solid", "cross"),
-    TRAIL: (dict(top="trail", side="dirt", bottom="dirt"), 0, True, 0, "solid", None),
-    LAMP: ("lamp", 10002, False, 14, "solid", (0.25, 0.2, 0.7, 0.75, 0.8, 1.0)),
+# simple box figures for the spirits (the real ones are the spirits worker's models)
+SPIRIT_LOOK = {
+    VISITOR: dict(body=(14, 14, 16), legs=(30, 34, 52), head=(22, 22, 24), h=1.9),       # leather, jeans, helmet
+    WAITRESS: dict(body=(92, 58, 38), legs=(92, 58, 38), head=(176, 174, 168), apron=(214, 120, 40), h=1.8),
+    CHEF: dict(body=(220, 216, 204), legs=(60, 56, 50), head=(26, 20, 18), h=2.2),
+    CHILD: dict(body=(150, 190, 220), legs=(150, 190, 220), head=(230, 200, 60), h=1.1),
+    MIRROR_WOMAN: dict(body=(225, 225, 220), legs=(30, 30, 34), head=(14, 14, 16), h=1.8),
+    MANAGER: dict(body=(220, 222, 224), legs=(40, 40, 46), head=(150, 146, 140), h=1.85),
+    MEDIUM: dict(body=(60, 36, 70), legs=(40, 30, 46), head=(190, 170, 150), h=1.6),
 }
 
 
-def lcg(seed):
-    s = [seed & 0xFFFFFFFF]
+def figure_mesh(atlas, kind, x, y, z, yaw_deg, light, alpha):
+    """a standing box figure at feet (x, y, z) facing yaw (0 = south +z)"""
+    look = SPIRIT_LOOK[kind]
+    h = look["h"]
+    s = h / 1.8
 
-    def r():
-        s[0] = (1103515245 * s[0] + 12345) & 0x7FFFFFFF
-        return s[0] / 0x7FFFFFFF
-    return r
+    def rect_of(name):
+        return atlas.rect(name)
 
-
-class Scene:
-    """voxel scene, world coordinates = index + origin"""
-
-    def __init__(self, size=(64, 48, 64), origin=(0, 58, 0)):
-        self.sx, self.sy, self.sz = size
-        self.origin = np.array(origin)
-        self.b = np.zeros((self.sx, self.sy, self.sz), np.int16)
-        self.ground = np.zeros((self.sx, self.sz), np.int32)
-        self.trunks = []
-        self.build()
-
-    def set(self, x, y, z, t):
-        o = self.origin
-        X, Y, Z = x - o[0], y - o[1], z - o[2]
-        if 0 <= X < self.sx and 0 <= Y < self.sy and 0 <= Z < self.sz:
-            self.b[X, Y, Z] = t
-
-    def get(self, x, y, z):
-        o = self.origin
-        X, Y, Z = x - o[0], y - o[1], z - o[2]
-        if 0 <= X < self.sx and 0 <= Y < self.sy and 0 <= Z < self.sz:
-            return int(self.b[X, Y, Z])
-        return AIR
-
-    def fill(self, x0, y0, z0, x1, y1, z1, t):
-        for x in range(x0, x1 + 1):
-            for y in range(y0, y1 + 1):
-                for z in range(z0, z1 + 1):
-                    self.set(x, y, z, t)
-
-    def height(self, x, z):
-        """surface height (the top solid block) of the slope"""
-        h = 74.0 - 0.085 * z + 1.0 * math.sin(x * 0.21 + z * 0.13) + 0.7 * math.sin(z * 0.31 - x * 0.07)
-        # the fog hollow with the stream
-        d = math.hypot((x - 40) / 11.0, (z - 46) / 8.0)
-        h -= 5.5 * max(0.0, 1.0 - d * d) if d < 1 else 0.0
-        # the stream gully running along x through the hollow
-        if abs(z - 47) <= 1 and x >= 22:
-            h = min(h, 74.0 - 0.085 * 47 - 6.5)
-        return int(round(h))
-
-    def build(self):
-        rnd = lcg(20261102)
-        # ---- terrain --------------------------------------------------------------------
-        for x in range(self.sx):
-            for z in range(self.sz):
-                h = self.height(x, z)
-                self.ground[x, z] = h
-                for y in range(self.origin[1], h):
-                    self.set(x, y, z, DIRT)
-                top = FLOOR
-                if abs(z - 47) <= 2 and x >= 22:
-                    top = STONES
-                elif rnd() < 0.12:
-                    top = MOSS
-                self.set(x, h, z, top)
-        # the stream: water over the stones in the gully
-        for x in range(22, self.sx):
-            for z in (46, 47, 48):
-                h = self.ground[x, z]
-                if z == 47 or h <= self.ground[x, 47] + 0:
-                    self.set(x, h + 1, z, WATER)
-        # a faded trail across the slope
-        for z in range(0, 40):
-            x = int(30 + 3 * math.sin(z * 0.15))
-            for dx in (0, 1):
-                self.set(x + dx, self.ground[x + dx, z], z, TRAIL)
-        # ---- the hill with the road tunnel (x 0..13) -------------------------------------
-        for x in range(0, 14):
-            for z in range(0, 44):
-                h = self.ground[x, z]
-                top = h + 12 - max(0, z - 34)
-                for y in range(h + 1, max(top, h + 1) + 1):
-                    self.set(x, y, z, ROCK)
-        tunnel_floor = self.ground[6, 30]
-        self.tunnel_floor = tunnel_floor
-        for z in range(8, 44):
-            for x in range(3, 11):
-                for y in range(tunnel_floor + 1, tunnel_floor + 6):
-                    self.set(x, y, z, AIR)
-                self.set(x, tunnel_floor, z, ASPHALT)
-                for y in range(self.origin[1], tunnel_floor):
-                    self.set(x, y, z, DIRT)
-            for y in range(tunnel_floor, tunnel_floor + 7):
-                self.set(2, y, z, CONCRETE)
-                self.set(11, y, z, CONCRETE)
-            for x in range(2, 12):
-                self.set(x, tunnel_floor + 6, z, CONCRETE)
-        self.fill(2, tunnel_floor, 7, 11, tunnel_floor + 6, 7, CONCRETE)      # the dead end
-        self.set(10, tunnel_floor + 4, 18, LAMP)                             # a dead sodium lamp
-        # ---- the hut (x 46..51, z 16..21) -------------------------------------------------
-        hx0, hx1, hz0, hz1 = 46, 51, 16, 21
-        hb = max(self.ground[x, z] for x in range(hx0, hx1 + 1) for z in range(hz0, hz1 + 1))
-        self.hut_floor = hb
-        for x in range(hx0, hx1 + 1):
-            for z in range(hz0, hz1 + 1):
-                for y in range(self.ground[x, z], hb + 1):
-                    self.set(x, y, z, PLANKS)
-                edge = x in (hx0, hx1) or z in (hz0, hz1)
-                for y in range(hb + 1, hb + 4):
-                    self.set(x, y, z, PLANKS if edge else AIR)
-        for y in range(hb + 1, hb + 3):
-            self.set(48, y, hz0, AIR)            # the door, facing north (uphill)
-            self.set(49, y, hz0, AIR)
-        for x in range(hx0 - 1, hx1 + 2):
-            for z in range(hz0 - 1, hz1 + 2):
-                self.set(x, hb + 4, z, TIN)
-        # ---- cedars -------------------------------------------------------------------------
-        def free(x, z):
-            if x < 15 or x > self.sx - 2 or z < 1 or z > self.sz - 2:
-                return False
-            if hx0 - 2 <= x <= hx1 + 2 and hz0 - 2 <= z <= hz1 + 2:
-                return False
-            if abs(z - 47) <= 2 and x >= 21:
-                return False
-            if (x - 40) ** 2 / 81.0 + (z - 46) ** 2 / 36.0 < 1.0 and (x + z) % 3 != 0:
-                return False
-            if 29 <= x <= 32 and z < 40 and abs(x - (30 + 3 * math.sin(z * 0.15))) < 1.5:
-                return False
-            # keep the view from the forest camera (30.5, 9.5) open in front
-            dx, dz = x + 0.5 - 30.5, z + 0.5 - 9.5
-            if dx * dx + dz * dz < 4.5 * 4.5:
-                return False
-            if dz > 0 and abs(dx) < 1.2 + dz * 0.12 and dz < 13:
-                return False
-            return True
-        # hand-placed trunks framing the forest view: a field of trunks receding into the fog
-        manual = [(27, 15), (34, 14), (25, 20), (36, 19), (33, 24), (28, 27), (23, 26), (38, 29), (31, 33), (26, 36), (35, 38)]
-        spots = list(manual)
-        for gx in range(15, self.sx, 5):
-            for gz in range(0, self.sz, 5):
-                x = gx + int(rnd() * 4)
-                z = gz + int(rnd() * 4)
-                if free(x, z) and all((x - a) ** 2 + (z - b) ** 2 > 9 for a, b in spots):
-                    spots.append((x, z))
-        self.monster_trunk = (33, 24)
-        for i, (x, z) in enumerate(spots):
-            g = self.ground[x, z]
-            trunk_h = 9 + int(rnd() * 5)
-            top = g + trunk_h
-            ribbon = (x, z) == (28, 27)
-            for y in range(g + 1, top + 1):
-                self.set(x, y, z, RIBBON if (ribbon and y == g + 2) else BARK)
-            self.trunks.append((x, g, z, top))
-            # a narrow dark cone of needles, with gaps
-            levels = 8
-            for k in range(levels):
-                yy = top - 2 + k
-                rad = 2.0 * (1.0 - k / levels) + 0.35
-                for dx in range(-3, 4):
-                    for dz in range(-3, 4):
-                        if dx == 0 and dz == 0 and yy <= top:
-                            continue
-                        if dx * dx + dz * dz <= rad * rad and rnd() > 0.22:
-                            if self.get(x + dx, yy, z + dz) == AIR:
-                                self.set(x + dx, yy, z + dz, LEAVES)
-        # ---- ferns ----------------------------------------------------------------------------
-        for x in range(15, self.sx):
-            for z in range(0, self.sz):
-                if rnd() < 0.10:
-                    g = self.ground[x, z]
-                    if self.get(x, g, z) in (FLOOR, MOSS) and self.get(x, g + 1, z) == AIR:
-                        self.set(x, g + 1, z, FERN)
-
-    def inside(self, x, y, z):
-        return 0 <= x < self.sx and 0 <= y < self.sy and 0 <= z < self.sz
-
-    def opaque(self, x, y, z):
-        if not self.inside(x, y, z):
-            return False
-        t = self.b[x, y, z]
-        return t != 0 and BLOCKS[t][2]
-
-    def compute_light(self):
-        sx, sy, sz = self.sx, self.sy, self.sz
-        op = np.zeros_like(self.b, dtype=bool)
-        for t, d in BLOCKS.items():
-            if d[2]:
-                op |= self.b == t
-        leaf = self.b == LEAVES
-        sky = np.zeros((sx, sy, sz), np.int8)
-        q = deque()
-        for x in range(sx):
-            for z in range(sz):
-                lvl = 15
-                for y in range(sy - 1, -1, -1):
-                    if op[x, y, z]:
-                        break
-                    if leaf[x, y, z]:
-                        lvl -= 1
-                    sky[x, y, z] = max(lvl, 0)
-                    if lvl > 1:
-                        q.append((x, y, z))
-        self._bfs(sky, q, op, leaf)
-        blk = np.zeros((sx, sy, sz), np.int8)
-        q = deque()
-        for t, d in BLOCKS.items():
-            if d[3] > 0:
-                for (x, y, z) in zip(*np.nonzero(self.b == t)):
-                    blk[x, y, z] = max(blk[x, y, z], d[3])
-                    q.append((x, y, z))
-        self._bfs(blk, q, op, leaf)
-        self.sky, self.blk = sky, blk
-
-    def _bfs(self, L, q, op, leaf):
-        sx, sy, sz = L.shape
-        while q:
-            x, y, z = q.popleft()
-            base = L[x, y, z] - 1
-            if base <= 0:
-                continue
-            for dx, dy, dz in ((1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)):
-                X, Y, Z = x + dx, y + dy, z + dz
-                if 0 <= X < sx and 0 <= Y < sy and 0 <= Z < sz and not op[X, Y, Z]:
-                    nl = base - (1 if leaf[X, Y, Z] else 0)
-                    if L[X, Y, Z] < nl:
-                        L[X, Y, Z] = nl
-                        q.append((X, Y, Z))
-
-    def light_at(self, x, y, z):
-        if not self.inside(x, y, z):
-            return 0, 15
-        return int(self.blk[x, y, z]), int(self.sky[x, y, z])
-
-    def mesh(self):
-        """-> dict layer -> arrays (world positions etc.)"""
-        faces = {"solid": [], "translucent": []}
-        crosses = []
-        dirs = [((1, 0, 0), "side"), ((-1, 0, 0), "side"), ((0, 1, 0), "top"), ((0, -1, 0), "bottom"), ((0, 0, 1), "side"), ((0, 0, -1), "side")]
-        for (x, y, z) in zip(*np.nonzero(self.b)):
-            t = int(self.b[x, y, z])
-            tile, bid, opq, emit, layer, shape = BLOCKS[t]
-            if shape == "cross":
-                crosses.append((x, y, z, tile, bid))
-                continue
-            box = shape
-            x0, y0, z0, x1, y1, z1 = box if box else (0, 0, 0, 1, 1, 1)
-            for (n, kind) in dirs:
-                nx, ny, nz = x + n[0], y + n[1], z + n[2]
-                if box is None:
-                    if self.opaque(nx, ny, nz):
-                        continue
-                    if self.inside(nx, ny, nz) and self.b[nx, ny, nz] == t and t != LEAVES:
-                        continue
-                elif layer == "translucent" and self.inside(nx, ny, nz) and self.b[nx, ny, nz] == t:
-                    if n[1] == 0:
-                        continue
-                tname = tile if isinstance(tile, str) else tile[kind]
-                faces[layer].append((x, y, z, n, tname, bid, (x0, y0, z0, x1, y1, z1), box is not None))
-        out = {}
-        for layer, fl in faces.items():
-            out[layer] = self._build_arrays(fl)
-        cr = self._cross_arrays(crosses)
-        out["solid"] = {k: np.concatenate([out["solid"][k], cr[k]]) for k in out["solid"]}
-        return out
-
-    def _cross_arrays(self, crosses):
-        P, N, Cc, U0, U1, E, M = [], [], [], [], [], [], []
-        o = self.origin
-        for (x, y, z, tname, bid) in crosses:
-            tx, ty = TILES[tname]
-            u0, v0, u1, v1 = tx / ATLAS_N, ty / ATLAS_N, (tx + 1) / ATLAS_N, (ty + 1) / ATLAS_N
-            mid = ((u0 + u1) / 2, (v0 + v1) / 2)
-            bl, sl = self.light_at(x, y, z)
-            lu, lv = (bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0
-            wx, wy, wz = x + o[0], y + o[1], z + o[2]
-            for (ax, az, bx, bz, n) in ((0.15, 0.15, 0.85, 0.85, (0.707, 0, -0.707)), (0.15, 0.85, 0.85, 0.15, (0.707, 0, 0.707))):
-                cs = [(wx + ax, wy, wz + az), (wx + bx, wy, wz + bz), (wx + bx, wy + 0.9, wz + bz), (wx + ax, wy + 0.9, wz + az)]
-                uvs = [(u0, v1), (u1, v1), (u1, v0), (u0, v0)]
-                for i in (0, 1, 2, 0, 2, 3):
-                    P.append(cs[i]); N.append(n); Cc.append((1, 1, 1, 1)); U0.append(uvs[i]); U1.append((lu, lv))
-                    E.append((bid, 0, 0, 0)); M.append((mid[0], mid[1], 0, 1))
-        f = lambda a, k: np.array(a, np.float32).reshape(-1, k)
-        return dict(pos=f(P, 3), nrm=f(N, 3), col=f(Cc, 4), uv0=f(U0, 2), uv1=f(U1, 2), ent=f(E, 4), mid=f(M, 4))
-
-    def _build_arrays(self, fl):
-        P, N, Cc, U0, U1, E, M = [], [], [], [], [], [], []
-        o = self.origin
-        for (x, y, z, n, tname, bid, bb, is_box) in fl:
-            x0, y0, z0, x1, y1, z1 = bb
-            n = np.array(n)
-            ax = int(np.argmax(np.abs(n)))
-            if ax == 0:
-                xf = x1 if n[0] > 0 else x0
-                corners = [(xf, y0, z0), (xf, y0, z1), (xf, y1, z1), (xf, y1, z0)]
-            elif ax == 1:
-                yf = y1 if n[1] > 0 else y0
-                corners = [(x0, yf, z0), (x1, yf, z0), (x1, yf, z1), (x0, yf, z1)]
-            else:
-                zf = z1 if n[2] > 0 else z0
-                corners = [(x0, y0, zf), (x1, y0, zf), (x1, y1, zf), (x0, y1, zf)]
-            tx, ty = TILES[tname]
-            u0, v0, u1, v1 = tx / ATLAS_N, ty / ATLAS_N, (tx + 1) / ATLAS_N, (ty + 1) / ATLAS_N
-            mid = ((u0 + u1) / 2, (v0 + v1) / 2)
-            fc = (x + n[0], y + n[1], z + n[2])
-            verts = []
-            for (cx, cy, cz) in corners:
-                if ax == 1:
-                    uu, vv = (cx - x0) / max(x1 - x0, 1e-6), (cz - z0) / max(z1 - z0, 1e-6)
-                elif ax == 0:
-                    uu, vv = (cz - z0) / max(z1 - z0, 1e-6), 1 - (cy - y0) / max(y1 - y0, 1e-6)
-                else:
-                    uu, vv = (cx - x0) / max(x1 - x0, 1e-6), 1 - (cy - y0) / max(y1 - y0, 1e-6)
-                uv = (u0 + (u1 - u0) * uu, v0 + (v1 - v0) * vv)
-                if is_box:
-                    bl, sl = self.light_at(x, y, z)
-                    ao = 1.0
-                else:
-                    s = [1 if c > 0.5 else -1 for c in (cx - x, cy - y, cz - z)]
-                    others = [i for i in range(3) if i != ax]
-                    a1, a2 = others
-                    c1 = list(fc); c1[a1] += s[a1]
-                    c2 = list(fc); c2[a2] += s[a2]
-                    c3 = list(fc); c3[a1] += s[a1]; c3[a2] += s[a2]
-                    cells = [fc, tuple(c1), tuple(c2), tuple(c3)]
-                    occ = [self.opaque(*c) for c in cells]
-                    if occ[1] and occ[2]:
-                        occ[3] = True
-                    lights = [self.light_at(*c) for c, oc in zip(cells, occ) if not oc]
-                    if not lights:
-                        lights = [self.light_at(*fc)]
-                    bl = sum(l[0] for l in lights) / len(lights)
-                    sl = sum(l[1] for l in lights) / len(lights)
-                    ao = sum(0.2 if oc else 1.0 for oc in occ) / 4.0
-                wp = (cx + o[0] + x, cy + o[1] + y, cz + o[2] + z)
-                verts.append((wp, uv, (bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0, ao))
-            p0, p1, p2 = (np.array(verts[i][0]) for i in range(3))
-            if np.dot(np.cross(p1 - p0, p2 - p0), n) < 0:
-                verts = verts[::-1]
-            tint = (0.24, 0.42, 0.70) if bid == 10020 else (1.0, 1.0, 1.0)
-            for i in (0, 1, 2, 0, 2, 3):
-                wp, uv, lu, lv, ao = verts[i]
-                P.append(wp); N.append(n); Cc.append((tint[0], tint[1], tint[2], ao)); U0.append(uv); U1.append((lu, lv))
-                E.append((bid, 0, 0, 0)); M.append((mid[0], mid[1], 0, 1))
-        f = lambda a, k: np.array(a, np.float32).reshape(-1, k)
-        return dict(pos=f(P, 3), nrm=f(N, 3), col=f(Cc, 4), uv0=f(U0, 2), uv1=f(U1, 2), ent=f(E, 4), mid=f(M, 4))
-
-
-
-# ---- the real mountain: tools/terrain's baked terrain + a port of the chunk decorator -------
-TERRAIN_FILE = os.environ.get("REISATSU_TERRAIN") or os.path.normpath(
-    os.path.join(ROOT, "..", "..", "resources", "data", "reisatsu", "terrain", "terrain.bin.gz"))
-M64 = (1 << 64) - 1
-
-
-def _mix64(z):
-    z &= M64
-    z = ((z ^ (z >> 30)) * 0xbf58476d1ce4e5b9) & M64
-    z = ((z ^ (z >> 27)) * 0x94d049bb133111eb) & M64
-    return z ^ (z >> 31)
-
-
-def jhash(x, z, salt):
-    """com.reisatsu.world.Decorator.hash (Java int)"""
-    v = (x * 0x9E3779B97F4A7C15 + z * 0xC2B2AE3D27D4EB4F + salt * 0x165667B19E3779F9 + 0x2545F4914F6CDD1D) & M64
-    r = _mix64(v) & 0xFFFFFFFF
-    return r - (1 << 32) if r >= (1 << 31) else r
-
-
-def jrand(x, z, salt):
-    return ((jhash(x, z, salt) & 0xFFFFFFFF) >> 1) / 2147483648.0
-
-
-class Terrain:
-    def __init__(self, path=TERRAIN_FILE):
-        import gzip
-        import struct
-        raw = gzip.open(path).read()
-        assert raw[:4] == b"SNTR", "bad terrain magic"
-        self.size, self.org = struct.unpack(">Hh", raw[4:8])
-        n = self.size
-        planes = np.frombuffer(raw[8:8 + 5 * n * n], np.uint8).reshape(5, n, n)
-        self.h, self.surf, self.trees, self.water, self.area = (p.astype(np.int32) for p in planes)
-
-    def _get(self, plane, x, z, outside):
-        i, j = x - self.org, z - self.org
-        if 0 <= i < self.size and 0 <= j < self.size:
-            return int(plane[j, i])
-        return outside
-
-    def height(self, x, z): return self._get(self.h, x, z, 236)
-    def surface(self, x, z): return self._get(self.surf, x, z, 3)
-    def tree(self, x, z): return self._get(self.trees, x, z, 0)
-    def wat(self, x, z): return self._get(self.water, x, z, 0)
-
-
-class TerrainScene(Scene):
-    """a 72x72 piece of Kaerazu-yama around (cx, cz), decorated like MountainGenerator"""
-    SURF = {0: FLOOR, 1: MOSS, 2: TRAIL, 3: ROCK, 4: STONES, 5: STONES, 6: ASPHALT, 7: DIRT, 8: ROCK}
-
-    def __init__(self, terrain, cx, cz, half=36):
-        self.t = terrain
-        self.x0, self.z0 = int(cx) - half, int(cz) - half
-        hs = [terrain.height(x, z) for x in range(self.x0, self.x0 + 2 * half) for z in range(self.z0, self.z0 + 2 * half)]
-        y0 = min(hs) - 4
-        super().__init__(size=(2 * half, max(hs) + 26 - y0, 2 * half), origin=(self.x0, y0, self.z0))
-
-    def build(self):
-        t, o = self.t, self.origin
-        X0, Z0, X1, Z1 = self.x0, self.z0, self.x0 + self.sx - 1, self.z0 + self.sz - 1
-        for i in range(self.sx):
-            for k in range(self.sz):
-                x, z = X0 + i, Z0 + k
-                h = t.height(x, z)
-                self.ground[i, k] = h
-                for y in range(o[1], h):
-                    self.set(x, y, z, DIRT if y >= h - 3 and t.surface(x, z) != 3 else ROCK)
-                self.set(x, h, z, self.SURF.get(t.surface(x, z), FLOOR))
-                for y in range(h + 1, t.wat(x, z) + 1):
-                    self.set(x, y, z, WATER)
-
-        def soft(x, y, z, b):
-            if X0 <= x <= X1 and Z0 <= z <= Z1 and self.get(x, y, z) == AIR:
-                self.set(x, y, z, b)
-        # cedars (Decorator.collectTrees / makeTree / trunk / crown)
-        trees = []
-        for gx in range((X0 - 4) // 3, (X1 + 4) // 3 + 1):
-            for gz in range((Z0 - 4) // 3, (Z1 + 4) // 3 + 1):
-                x = gx * 3 + jhash(gx, gz, 1) % 3
-                z = gz * 3 + jhash(gx, gz, 2) % 3
-                d = t.tree(x, z) / 255.0
-                if d <= 0.0 or jrand(gx, gz, 3) > d * 0.66:
-                    continue
-                if t.surface(x, z) not in (0, 1, 8, 3, 7) or t.wat(x, z) > 0:
-                    continue
-                base = t.height(x, z)
-                hh = 14 + jhash(x, z, 11) % 8
-                crown = base + int(hh * 0.46) + jhash(x, z, 12) % 3
-                trees.append((x, z, base, hh, crown, 2.0 + jrand(x, z, 13) * 1.1))
-        for (x, z, base, hh, crown, rad) in trees:
-            if X0 <= x <= X1 and Z0 <= z <= Z1:
-                for y in range(base + 1, base + hh + 1):
-                    self.set(x, y, z, BARK)
-                self.trunks.append((x - o[0], base, z - o[2], base + hh))
-        for (x, z, base, hh, crown, rad) in trees:
-            top = base + hh + 1
-            span = max(1, top - crown)
-            for y in range(crown, top + 1):
-                rel = (y - crown) / span
-                r = rad * (1.0 - rel) ** 0.85 + 0.35
-                if y == crown:
-                    r *= 0.7
-                ri = int(math.ceil(r))
-                for dx in range(-ri, ri + 1):
-                    for dz in range(-ri, ri + 1):
-                        xx, zz = x + dx, z + dz
-                        jit = (jrand(xx * 7 + y, zz * 13 - y, 17) - 0.5) * 0.9
-                        if dx * dx + dz * dz > r * r + jit or jrand(xx + y * 31, zz, 19) < 0.05:
-                            continue
-                        soft(xx, y, zz, LEAVES)
-        # boulders, fallen logs
-        for gx in range((X0 - 3) // 11, (X1 + 3) // 11 + 1):
-            for gz in range((Z0 - 3) // 11, (Z1 + 3) // 11 + 1):
-                if jrand(gx, gz, 31) > 0.2:
-                    continue
-                cx, cz = gx * 11 + jhash(gx, gz, 32) % 11, gz * 11 + jhash(gx, gz, 33) % 11
-                if t.tree(cx, cz) < 60 or t.wat(cx, cz) > 0 or t.surface(cx, cz) == 2:
-                    continue
-                r = 1 + jhash(gx, gz, 34) % 2
-                base = t.height(cx, cz)
-                for dx in range(-r, r + 1):
-                    for dz in range(-r, r + 1):
-                        x, z = cx + dx, cz + dz
-                        if t.surface(x, z) == 2:
-                            continue
-                        hh = r + 1 - max(abs(dx), abs(dz)) - (1 if jrand(x, z, 35) < 0.4 else 0)
-                        for y in range(t.height(x, z) + 1, base + hh + 1):
-                            soft(x, y, z, ROCK)
-        for gx in range((X0 - 8) // 14, (X1 + 8) // 14 + 1):
-            for gz in range((Z0 - 8) // 14, (Z1 + 8) // 14 + 1):
-                if jrand(gx, gz, 41) > 0.24:
-                    continue
-                sx_, sz_ = gx * 14 + jhash(gx, gz, 42) % 14, gz * 14 + jhash(gx, gz, 43) % 14
-                if t.tree(sx_, sz_) < 80:
-                    continue
-                along_x = (jhash(gx, gz, 44) & 1) == 0
-                for kk in range(4 + jhash(gx, gz, 45) % 4):
-                    x, z = sx_ + (kk if along_x else 0), sz_ + (0 if along_x else kk)
-                    if t.surface(x, z) == 2 or t.wat(x, z) > 0:
-                        break
-                    soft(x, t.height(x, z) + 1, z, BARK)
-        # undergrowth: ferns (large ferns as two), dead bushes
-        for x in range(X0, X1 + 1):
-            for z in range(Z0, Z1 + 1):
-                if t.wat(x, z) > 0 or t.surface(x, z) not in (0, 1, 7):
-                    continue
-                y = t.height(x, z) + 1
-                if self.get(x, y, z) != AIR or (t.tree(x, z) == 0 and t.surface(x, z) == 7):
-                    continue
-                r = jrand(x, z, 51)
-                if r < 0.08:
-                    self.set(x, y, z, FERN)
-                    if 0.06 <= r < 0.075 and self.get(x, y + 1, z) == AIR:
-                        self.set(x, y + 1, z, FERN)
-
-
-def quad_arrays(quads, light):
-    """quads: list of (normal, 4 corners, tile name); light: (lu, lv)"""
-    P, N, Cc, U0, U1 = [], [], [], [], []
-    for n, cs, tname in quads:
-        tx, ty = TILES[tname]
-        uvs = [(tx / ATLAS_N, (ty + 1) / ATLAS_N), (tx / ATLAS_N, ty / ATLAS_N), ((tx + 1) / ATLAS_N, ty / ATLAS_N), ((tx + 1) / ATLAS_N, (ty + 1) / ATLAS_N)]
-        for i in (0, 1, 2, 0, 2, 3):
-            P.append(cs[i]); N.append(n); Cc.append((1, 1, 1, 1)); U0.append(uvs[i]); U1.append(light)
-    f = lambda a, k: np.array(a, np.float32).reshape(-1, k)
-    return dict(pos=f(P, 3), nrm=f(N, 3), col=f(Cc, 4), uv0=f(U0, 2), uv1=f(U1, 2))
-
-
-def box_quads(wmin, wmax, tiles):
-    (x0, y0, z0), (x1, y1, z1) = wmin, wmax
-    return [
-        ((1, 0, 0), [(x1, y0, z0), (x1, y1, z0), (x1, y1, z1), (x1, y0, z1)], tiles["side"]),
-        ((-1, 0, 0), [(x0, y0, z1), (x0, y1, z1), (x0, y1, z0), (x0, y0, z0)], tiles["side"]),
-        ((0, 0, 1), [(x1, y0, z1), (x1, y1, z1), (x0, y1, z1), (x0, y0, z1)], tiles.get("front", tiles["side"])),
-        ((0, 0, -1), [(x0, y0, z0), (x0, y1, z0), (x1, y1, z0), (x1, y0, z0)], tiles.get("north", tiles["side"])),
-        ((0, 1, 0), [(x0, y1, z0), (x0, y1, z1), (x1, y1, z1), (x1, y1, z0)], tiles["top"]),
-    ]
-
-
-def monster_meshes(scene, trunk, far=None):
-    """a 覗き peeking from behind a trunk toward the camera (-z): tall thin grey body hidden
-    behind the trunk, the head tilted out past its edge, an eyes layer; plus a second pair of
-    eyes far off to the side, outside the beam. Returns (body arrays, eyes arrays)."""
-    tx, tz = trunk
-    bx, bz = tx + 0.5, tz + 1.45
-    g = scene.ground[tx - scene.origin[0], tz - scene.origin[2]] + 1
-    cell = (tx - scene.origin[0], g - scene.origin[1] + 1, tz + 1 - scene.origin[2])
-    bl, sl = scene.light_at(*cell)
-    light = ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0)
-    quads = box_quads((bx - 0.3, g, bz - 0.3), (bx + 0.3, g + 2.15, bz + 0.3), {"side": "skin", "top": "hair"})
-    # PEEK_LEFT: the head leans out past the left edge of the trunk (the camera's side)
-    hx, hz = tx - 0.24, tz + 0.55
-    quads += box_quads((hx - 0.22, g + 2.0, hz - 0.22), (hx + 0.22, g + 2.46, hz + 0.22), {"side": "hair", "north": "skin", "top": "hair"})
-    quads += box_quads((tx - 0.10, g + 1.3, tz + 0.02), (tx + 0.05, g + 1.62, tz + 0.12), {"side": "skin", "top": "skin"})   # fingers on the bark
-    body = quad_arrays(quads, light)
-    ez = hz - 0.225
+    def solid(name, rgb):
+        if name not in atlas.rects:
+            tile = np.zeros((16, 16, 4), np.uint8)
+            rng = np.random.default_rng(abs(hash(name)) % 1000)
+            tile[..., :3] = np.clip(np.array(rgb)[None, None] * (0.85 + rng.random((16, 16, 1)) * 0.25), 0, 255)
+            tile[..., 3] = 255
+            atlas._load = (lambda orig, nm, tl: (lambda n: tl if n == nm else orig(n)))(atlas._load, name, tile)
+        return name
+    tb = solid("fig_body_%d" % kind, look["body"])
+    tl = solid("fig_legs_%d" % kind, look["legs"])
+    th = solid("fig_head_%d" % kind, look["head"])
+    q = []
+    q += box_quads(-0.12 * s, 0.0, -0.10, 0.12 * s, 0.75 * s, 0.10, tl, rect_of)
+    q += box_quads(-0.24 * s, 0.75 * s, -0.13, 0.24 * s, 1.45 * s, 0.13, tb, rect_of)
+    if "apron" in look:
+        ta = solid("fig_apron_%d" % kind, look["apron"])
+        q += box_quads(-0.20 * s, 0.70 * s, 0.13, 0.20 * s, 1.25 * s, 0.15, ta, rect_of)
+    q += box_quads(-0.36 * s, 0.80 * s, -0.09, -0.24 * s, 1.42 * s, 0.09, tb, rect_of)
+    q += box_quads(0.24 * s, 0.80 * s, -0.09, 0.36 * s, 1.42 * s, 0.09, tb, rect_of)
+    q += box_quads(-0.17 * s, 1.45 * s, -0.17 * s, 0.17 * s, 1.80 * s, 0.17 * s, th, rect_of)
+    a = math.radians(yaw_deg)
+    ca, sa = math.cos(a), math.sin(a)
+    out = []
+    for n, cs, r in q:
+        n2 = (n[0] * ca + n[2] * sa, n[1], -n[0] * sa + n[2] * ca)
+        cs2 = [(x + p[0] * ca + p[2] * sa, y + p[1], z - p[0] * sa + p[2] * ca) for p in cs]
+        out.append((n2, cs2, r))
+    body = quads_to_arrays(out, light, alpha)
+    # the eyes layer: two small glints on the face
+    ez = 0.175 * s
     eyes = []
-    for ex in (hx - 0.19, hx + 0.03):
-        eyes.append(((0, 0, -1), [(ex, g + 2.22, ez), (ex, g + 2.32, ez), (ex + 0.16, g + 2.32, ez), (ex + 0.16, g + 2.22, ez)], "eyes"))
-    # a second one far off in the dark: only its eyes
-    fx, fz = far if far else (tx - 10.5, tz + 7.6)
-    if not (0 <= int(fx) - scene.origin[0] < scene.sx and 0 <= int(fz) - scene.origin[2] < scene.sz):
-        fx, fz = tx + 0.5, tz + 0.5
-    fg = scene.ground[int(fx) - scene.origin[0], int(fz) - scene.origin[2]] + 1
-    for ex in (fx - 0.19, fx + 0.03):
-        eyes.append(((0, 0, -1), [(ex, fg + 2.2, fz), (ex, fg + 2.3, fz), (ex + 0.16, fg + 2.3, fz), (ex + 0.16, fg + 2.2, fz)], "eyes"))
-    return body, quad_arrays(eyes, light)
+    for ex in (-0.09 * s, 0.04 * s):
+        cs = [(ex, 1.66 * s, ez), (ex, 1.62 * s, ez), (ex + 0.05 * s, 1.62 * s, ez), (ex + 0.05 * s, 1.66 * s, ez)]
+        cs2 = [(x + p[0] * ca + p[2] * sa, y + p[1], z - p[0] * sa + p[2] * ca) for p in cs]
+        eyes.append(((sa, 0.0, ca), cs2, rect_of(solid("fig_eye_%d" % kind, (230, 120, 60) if kind == CHEF else (200, 210, 220)))))
+    return body, quads_to_arrays(eyes, light, alpha)
 
 
-def ghost_mesh(scene, x, z):
-    """写るもの: a translucent pale hiker only the phone camera sees (entities_translucent)"""
-    g = scene.ground[int(x) - scene.origin[0], int(z) - scene.origin[2]] + 1
-    cell = (int(x) - scene.origin[0], g - scene.origin[1] + 1, int(z) - scene.origin[2])
-    bl, sl = scene.light_at(*cell)
-    quads = box_quads((x - 0.3, g, z - 0.25), (x + 0.3, g + 1.8, z + 0.25), {"side": "skin", "top": "skin"})
-    arr = quad_arrays(quads, ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0))
-    arr["col"][:, 3] = 0.45
-    return arr
-
-
-def hand_mesh(item, side, light):
-    """the held item in view space (Iris draws it with its own projection)"""
-    sx = 1.0 if side > 0 else -1.0
-    if item in (FLASHLIGHT, FLASH_LOW):
-        x0, x1, y0, y1, z0, z1 = 0.20, 0.30, -0.36, -0.27, -0.62, -0.30
-        tiles = {"side": "torch_body", "top": "torch_body", "front": "torch_body"}
-        lens = "lens"
-    elif item in (PHONE_LIGHT, CAMERA):
-        x0, x1, y0, y1, z0, z1 = 0.10, 0.24, -0.32, -0.12, -0.46, -0.44
-        tiles = {"side": "phone", "top": "phone", "front": "phone"}
-        lens = None
-    elif item == FLARE:
-        x0, x1, y0, y1, z0, z1 = 0.26, 0.31, -0.44, -0.24, -0.55, -0.50
-        tiles = {"side": "flare", "top": "flare", "front": "flare"}
-        lens = None
-    else:
+def hand_mesh(atlas, item, side, light):
+    """the held flashlight in view space (Iris draws it with its own projection)"""
+    if item != FLASHLIGHT:
         return None
+    sx = 1.0 if side > 0 else -1.0
+    x0, x1, y0, y1, z0, z1 = 0.20, 0.30, -0.36, -0.27, -0.62, -0.30
     if sx < 0:
         x0, x1 = -x1, -x0
-    quads = box_quads((x0, y0, z0), (x1, y1, z1), tiles)
-    if lens:
-        quads.append(((0, 0, -1), [(x0, y0, z0 - 0.001), (x0, y1, z0 - 0.001), (x1, y1, z0 - 0.001), (x1, y0, z0 - 0.001)], lens))
-    return quad_arrays(quads, light)
+
+    def solid(name, rgb):
+        if name not in atlas.rects:
+            tile = np.zeros((16, 16, 4), np.uint8)
+            tile[..., :3] = rgb
+            tile[..., 3] = 255
+            atlas._load = (lambda orig, nm, tl: (lambda n: tl if n == nm else orig(n)))(atlas._load, name, tile)
+        return atlas.rect(name)
+    body = solid("hand_torch", (40, 40, 44))
+    lens = solid("hand_lens", (250, 240, 210))
+    q = box_quads(x0, y0, z0, x1, y1, z1, "hand_torch", lambda n: body)
+    q.append(((0, 0, -1), [(x1, y1, z0 - 0.001), (x1, y0, z0 - 0.001), (x0, y0, z0 - 0.001), (x0, y1, z0 - 0.001)], lens))
+    return quads_to_arrays(q, light)
 
 
 # =====================================================================================
@@ -1038,7 +384,7 @@ def hand_mesh(item, side, light):
 
 GLFMT = {"RGBA16F": glctx.GL_RGBA16F, "RGBA8": glctx.GL_RGBA8, "RGBA16": 0x805B, "RGB16F": 0x881B,
          "R11F_G11F_B10F": 0x8C3A, "RGBA32F": 0x8814}
-UNITS = {"gtexture": 0, "noisetex": 1, "depthtex0": 2, "depthtex1": 3, "shadowtex0": 4}
+UNITS = {"gtexture": 0, "noisetex": 1, "depthtex0": 2, "depthtex1": 3, "shadowtex0": 4, "shadowcolor0": 20}
 
 
 def tex2d(w, h, ifmt, fmt, typ, data=None, filt=glctx.GL_LINEAR, wrap=glctx.GL_CLAMP_TO_EDGE):
@@ -1065,11 +411,22 @@ def full_quad():
     return FULL_QUAD
 
 
+def read_blend_overrides():
+    """blend.<program>.<buffer>=off from shaders.properties"""
+    props = mcscene.read_props(os.path.join(ROOT, "shaders.properties"))
+    off = {}
+    for k, v in props.items():
+        m = re.match(r"blend\.(\w+)\.colortex(\d+)$", k)
+        if m and v.strip() == "off":
+            off.setdefault(m.group(1), set()).add(int(m.group(2)))
+    return off
+
+
 class Renderer:
-    def __init__(self, folder, w, h, overrides):
+    def __init__(self, folder, w, h, overrides, atlas):
         self.folder, self.w, self.h = folder, w, h
         self.progs = {}
-        for n in build_pack.PROGRAMS:
+        for n in build_pack.programs_of(folder):
             try:
                 p = Program(folder, n, overrides)
             except FileNotFoundError:
@@ -1077,35 +434,49 @@ class Renderer:
             if p.errors:
                 raise RuntimeError("%s/%s failed:\n%s" % (folder or "root", n, "\n".join(p.errors)))
             self.progs[n] = p
-        any_prog = self.progs["final"]
-        self.shadow_res = int(any_prog.consts.get("shadowMapResolution", 2048))
-        self.shadow_dist = any_prog.consts.get("shadowDistance", 48.0)
-        self.sun_path = any_prog.consts.get("sunPathRotation", 0.0)
+        sp = self.progs.get("shadow")
+        consts = sp.consts if sp else {}
+        self.shadow_res = int(consts.get("shadowMapResolution", 2048))
+        self.shadow_dist = consts.get("shadowDistance", 64.0)
+        self.sun_path = consts.get("sunPathRotation", 0.0)
         fmts, self.clears = buffer_directives()
         self.formats = {i: GLFMT[f] for i, f in fmts.items()}
         self.units = dict(UNITS)
         for i in sorted(self.formats):
             self.units["colortex%d" % i] = 5 + i
+        self.blend_off = read_blend_overrides()
         # colour buffers (ping-pong) + depth
         self.tex = {i: [tex2d(w, h, f, glctx.GL_RGBA, glctx.GL_FLOAT), tex2d(w, h, f, glctx.GL_RGBA, glctx.GL_FLOAT)] for i, f in self.formats.items()}
         self.cur = {i: 0 for i in self.formats}
         self.depth0 = tex2d(w, h, glctx.GL_DEPTH_COMPONENT32F, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT, filt=glctx.GL_NEAREST)
         self.depth1 = tex2d(w, h, glctx.GL_DEPTH_COMPONENT32F, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT, filt=glctx.GL_NEAREST)
+        self.depth_fbo = glctx.gen_framebuffer()
         self.out_tex = tex2d(w, h, glctx.GL_RGBA8, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE)
         sr = self.shadow_res
         self.shadow_depth = tex2d(sr, sr, glctx.GL_DEPTH_COMPONENT32F, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT)
-        gl.glTexParameteri(glctx.GL_TEXTURE_2D, glctx.GL_TEXTURE_COMPARE_MODE, glctx.GL_COMPARE_REF_TO_TEXTURE)
-        gl.glTexParameteri(glctx.GL_TEXTURE_2D, glctx.GL_TEXTURE_COMPARE_FUNC, glctx.GL_LEQUAL)
-        self.shadow_color = tex2d(sr, sr, glctx.GL_RGBA8, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE)
+        if folder != HIDAMARI:
+            gl.glTexParameteri(glctx.GL_TEXTURE_2D, glctx.GL_TEXTURE_COMPARE_MODE, glctx.GL_COMPARE_REF_TO_TEXTURE)
+            gl.glTexParameteri(glctx.GL_TEXTURE_2D, glctx.GL_TEXTURE_COMPARE_FUNC, glctx.GL_LEQUAL)
+        self.shadow_color = tex2d(sr, sr, glctx.GL_RGBA8, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE, filt=glctx.GL_NEAREST)
         self.fbo = glctx.gen_framebuffer()
-        # the loader's noise texture: random RGB, alpha 255, linear, repeating (like Iris)
         rng = np.random.default_rng(3)
         nz = rng.integers(0, 256, (256, 256, 4), dtype=np.uint8)
         nz[..., 3] = 255
         self.noise = tex2d(256, 256, glctx.GL_RGBA8, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE, nz, wrap=glctx.GL_REPEAT)
-        atlas = make_atlas()
-        self.atlas = tex2d(16 * ATLAS_N, 16 * ATLAS_N, glctx.GL_RGBA8, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE, np.ascontiguousarray(atlas), filt=glctx.GL_NEAREST)
+        self.atlas_obj = atlas
+        self.atlas = None
+        self.upload_atlas()
         self._keep = []
+
+    def upload_atlas(self):
+        a = self.atlas_obj
+        if self.atlas is None:
+            self.atlas = tex2d(a.SIZE, a.SIZE, glctx.GL_RGBA8, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE,
+                               np.ascontiguousarray(a.img), filt=glctx.GL_NEAREST)
+        else:
+            gl.glBindTexture(glctx.GL_TEXTURE_2D, self.atlas)
+            gl.glTexImage2D(glctx.GL_TEXTURE_2D, 0, glctx.GL_RGBA8, a.SIZE, a.SIZE, 0, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE,
+                            np.ascontiguousarray(a.img).ctypes.data)
 
     # ---- framebuffer helpers ----------------------------------------------------------
     def bind_targets(self, targets, write_alt, depth=None):
@@ -1129,11 +500,10 @@ class Renderer:
         gl.glUseProgram(prog.id)
         for name, unit in self.units.items():
             loc = prog.loc(name)
-            if loc < 0:
-                continue
-            gl.glUniform1i(loc, unit)
+            if loc >= 0:
+                gl.glUniform1i(loc, unit)
         binds = {"gtexture": self.atlas, "noisetex": self.noise, "depthtex0": self.depth0, "depthtex1": self.depth1,
-                 "shadowtex0": self.shadow_depth}
+                 "shadowtex0": self.shadow_depth, "shadowcolor0": self.shadow_color}
         for i in self.formats:
             binds["colortex%d" % i] = self.tex[i][self.cur[i]]
         for name, unit in self.units.items():
@@ -1193,30 +563,36 @@ class Renderer:
             gl.glTexCoordPointer(2, glctx.GL_FLOAT, 0, arrs[key].ctypes.data)
         gl.glClientActiveTexture(glctx.GL_TEXTURE0)
         for name, loc in ATTRIBS.items():
-            key = "ent" if name == "mc_Entity" else "mid"
+            key = {"mc_Entity": "ent", "mc_midTexCoord": "mid", "at_midBlock": "midblock"}[name]
             if key in arrs:
                 gl.glEnableVertexAttribArray(loc)
-                gl.glVertexAttribPointer(loc, 4, glctx.GL_FLOAT, 0, 0, arrs[key].ctypes.data)
+                comps = 3 if key == "midblock" else 4
+                gl.glVertexAttribPointer(loc, comps, glctx.GL_FLOAT, 0, 0, arrs[key].ctypes.data)
             else:
                 gl.glDisableVertexAttribArray(loc)
                 gl.glVertexAttrib4f(loc, 0.0, 0.0, 0.0, 1.0)
-        gl.glDrawArrays(glctx.GL_TRIANGLES, 0, len(pos))
+        if "idx" in arrs:
+            idx = arrs["idx"]
+            gl.glDrawElements(glctx.GL_TRIANGLES, len(idx), glctx.GL_UNSIGNED_INT, idx.ctypes.data)
+        else:
+            gl.glDrawArrays(glctx.GL_TRIANGLES, 0, len(pos))
         for name, loc in ATTRIBS.items():
             gl.glDisableVertexAttribArray(loc)
         self._keep = keep
 
     def gbuffer_draw(self, prog_name, U, arrs, mv, proj, cam, blend=None, extra=None):
-        """blend: None = off; ('translucent', off_buffers) or ('additive',)"""
+        """blend: None = off; 'translucent' or 'additive' (per-buffer 'off' from shaders.properties)"""
         p = self.progs[prog_name]
         self.bind_targets(p.targets, write_alt=False, depth=self.depth0)
+        off = self.blend_off.get(prog_name, set())
         for k in range(len(p.targets)):
             gl.glDisablei(glctx.GL_BLEND, k)
-        if blend and blend[0] == "translucent":
+        if blend == "translucent":
             gl.glBlendFuncSeparate(glctx.GL_SRC_ALPHA, glctx.GL_ONE_MINUS_SRC_ALPHA, glctx.GL_ONE, glctx.GL_ONE_MINUS_SRC_ALPHA)
             for k, t in enumerate(p.targets):
-                if t not in blend[1]:
+                if t not in off:
                     gl.glEnablei(glctx.GL_BLEND, k)
-        elif blend and blend[0] == "additive":
+        elif blend == "additive":
             gl.glBlendFuncSeparate(glctx.GL_SRC_ALPHA, glctx.GL_ONE, glctx.GL_ZERO, glctx.GL_ONE)
             for k in range(len(p.targets)):
                 gl.glEnablei(glctx.GL_BLEND, k)
@@ -1251,8 +627,7 @@ class Renderer:
             gl.glFramebufferTexture2D(glctx.GL_FRAMEBUFFER, glctx.GL_COLOR_ATTACHMENT0 + i, glctx.GL_TEXTURE_2D, 0, 0)
         gl.glFramebufferTexture2D(glctx.GL_FRAMEBUFFER, glctx.GL_COLOR_ATTACHMENT0, glctx.GL_TEXTURE_2D, self.out_tex, 0)
         gl.glFramebufferTexture2D(glctx.GL_FRAMEBUFFER, glctx.GL_DEPTH_ATTACHMENT, glctx.GL_TEXTURE_2D, 0, 0)
-        arr = (glctx.U * 1)(glctx.GL_COLOR_ATTACHMENT0)
-        gl.glDrawBuffers(1, arr)
+        gl.glDrawBuffers(1, (glctx.U * 1)(glctx.GL_COLOR_ATTACHMENT0))
         gl.glViewport(0, 0, self.w, self.h)
         gl.glDisable(glctx.GL_DEPTH_TEST)
         gl.glDisable(glctx.GL_BLEND)
@@ -1265,6 +640,13 @@ class Renderer:
         gl.glReadPixels(0, 0, self.w, self.h, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE, buf.ctypes.data)
         return buf[::-1, :, :3].copy()
 
+    def copy_depth(self):
+        d = np.zeros((self.h, self.w), np.float32)
+        gl.glBindTexture(glctx.GL_TEXTURE_2D, self.depth0)
+        gl.glGetTexImage(glctx.GL_TEXTURE_2D, 0, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT, d.ctypes.data)
+        gl.glBindTexture(glctx.GL_TEXTURE_2D, self.depth1)
+        gl.glTexImage2D(glctx.GL_TEXTURE_2D, 0, glctx.GL_DEPTH_COMPONENT32F, self.w, self.h, 0, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT, d.ctypes.data)
+
     def read_float(self, idx):
         t = self.tex[idx][self.cur[idx]]
         buf = np.zeros((self.h, self.w, 4), np.float32)
@@ -1272,13 +654,21 @@ class Renderer:
         gl.glGetTexImage(glctx.GL_TEXTURE_2D, 0, glctx.GL_RGBA, glctx.GL_FLOAT, buf.ctypes.data)
         return buf
 
+    def read_shadow_color(self):
+        sr = self.shadow_res
+        buf = np.zeros((sr, sr, 4), np.uint8)
+        gl.glBindTexture(glctx.GL_TEXTURE_2D, self.shadow_color)
+        gl.glGetTexImage(glctx.GL_TEXTURE_2D, 0, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE, buf.ctypes.data)
+        return buf
+
     # ---- one frame --------------------------------------------------------------------
-    def render(self, shot, scene, meshes, monster, moon_quad, timing=None):
+    def render(self, shot, world, meshes, figures, timing=None, history_frames=1):
         w, h = self.w, self.h
         cam = np.array(shot["eye"], np.float64)
         fwd = np.array(shot["look"], np.float64)
         view = look_rot(fwd)
-        proj = perspective(70.0, w / h, 0.05, 192.0 * 4)
+        fov = shot.get("fov", 70.0)
+        proj = perspective(fov, w / h, 0.05, 192.0 * 4)
         world_time = shot.get("time", 18000)
         sa = sky_angle(world_time)
         celestial = view @ rot("y", -90.0) @ rot("z", self.sun_path) @ rot("x", sa * 360.0)
@@ -1292,21 +682,22 @@ class Renderer:
         smv[:3, 3] = smv[:3, :3] @ (-light_w * 100.0)
         sd = self.shadow_dist
         sproj = ortho(-sd, sd, -sd, sd, 0.05, 256.0)
-        ecell = (cam - scene.origin).astype(int)
-        bl, sl = scene.light_at(*ecell)
+        bl, sl = world.light_at(*[int(math.floor(v)) for v in cam])
         held, held2 = shot.get("held", 0), shot.get("held2", 0)
         t = shot.get("t", 123.4)
+        finder = FINDER in (held, held2)
         U = {
             "gbufferModelView": view, "gbufferModelViewInverse": np.linalg.inv(view).astype(np.float32),
             "gbufferProjection": proj, "gbufferProjectionInverse": np.linalg.inv(proj).astype(np.float32),
             "shadowModelView": smv, "shadowModelViewInverse": np.linalg.inv(smv).astype(np.float32), "shadowProjection": sproj,
             "cameraPosition": tuple(cam), "sunPosition": tuple(sun), "moonPosition": tuple(moon), "shadowLightPosition": tuple(light),
             "fogColor": (0.02, 0.025, 0.03), "viewWidth": float(w), "viewHeight": float(h), "aspectRatio": w / h,
-            "near": 0.05, "far": 192.0, "frameTimeCounter": t, "rainStrength": shot.get("fear", 0.0),
-            "thunderStrength": shot.get("danger", 0.0), "nightVision": 1.0 if CAMERA in (held, held2) else 0.0,
-            "blindness": 0.0, "darknessFactor": shot.get("darkness", 0.0), "darknessLightFactor": shot.get("darkness", 0.0) * 0.4,
-            "frameCounter": int(t * 60), "isEyeInWater": 0, "heldItemId": held, "heldItemId2": held2,
-            "heldBlockLightValue": 0, "heldBlockLightValue2": 0, "renderStage": 0, "entityId": 0,
+            "near": 0.05, "far": 192.0, "frameTimeCounter": t, "frameTime": 1.0 / 60.0, "rainStrength": shot.get("fear", 0.0),
+            "thunderStrength": shot.get("danger", 0.0), "nightVision": 1.0 if finder else 0.0,
+            "blindness": shot.get("flash", 0.0), "darknessFactor": shot.get("darkness", 0.0),
+            "darknessLightFactor": shot.get("darkness", 0.0) * 0.3,
+            "frameCounter": int(t * 60), "worldTime": int(world_time), "isEyeInWater": 0, "heldItemId": held, "heldItemId2": held2,
+            "heldBlockLightValue": 0, "heldBlockLightValue2": 0, "renderStage": 0, "entityId": 0, "blockEntityId": 0,
             "currentRenderedItemId": 0, "moonPhase": 0, "eyeBrightnessSmooth": (bl * 16, sl * 16), "entityColor": (0.0, 0.0, 0.0, 0.0),
         }
         T = timing if timing is not None else {}
@@ -1317,9 +708,11 @@ class Renderer:
             return time.time()
 
         tm = time.time()
-        # ---- clear (to the directive clear colours) ----------------------------------------
+        # ---- clear (to the directive clear colours; colortex9 is kept between frames) -------------
         gl.glBindFramebuffer(glctx.GL_FRAMEBUFFER, self.fbo)
         for i in self.formats:
+            if i == 9 and history_frames > 1 and getattr(self, "_hist_ok", False):
+                continue
             c = self.clears.get(i, (0.0, 0.0, 0.0, 0.0))
             for k in (0, 1):
                 self.cur[i] = k
@@ -1338,65 +731,67 @@ class Renderer:
             gl.glDrawBuffers(1, (glctx.U * 1)(glctx.GL_COLOR_ATTACHMENT0))
             gl.glViewport(0, 0, self.shadow_res, self.shadow_res)
             gl.glEnable(glctx.GL_DEPTH_TEST)
-            gl.glDepthFunc(glctx.GL_LESS)
+            gl.glDepthFunc(glctx.GL_LEQUAL)
             gl.glDepthMask(1)
             gl.glDisable(glctx.GL_BLEND)
-            gl.glClearColor(1, 1, 1, 1)
+            cc = (0.0, 0.0, 0.0, 0.0) if self.folder == HIDAMARI else (1.0, 1.0, 1.0, 1.0)
+            gl.glClearColor(*cc)
             gl.glClear(glctx.GL_COLOR_BUFFER_BIT | glctx.GL_DEPTH_BUFFER_BIT)
             gl.glUseProgram(sp.id)
             self.bind_samplers(sp)
             self.set_uniforms(sp, U)
             self.load_matrices(smv, sproj)
             self.draw_arrays(meshes["solid"], cam)
-            if shot.get("monster", True):
-                self.draw_arrays(monster[0], cam)
+            self.draw_arrays(meshes["translucent"], cam)
         tm = mark("shadow", tm)
-        # ---- sky objects ----------------------------------------------------------------
-        st = self.progs["gbuffers_skytextured"]
-        self.bind_targets(st.targets, write_alt=False, depth=self.depth0)
-        gl.glClear(glctx.GL_DEPTH_BUFFER_BIT)
-        gl.glDisable(glctx.GL_DEPTH_TEST)
-        gl.glDepthMask(0)
-        gl.glEnable(glctx.GL_BLEND)
-        gl.glBlendFuncSeparate(glctx.GL_SRC_ALPHA, glctx.GL_ONE, glctx.GL_ONE, glctx.GL_ZERO)
-        self.bind_samplers(st)
-        U2 = dict(U)
-        U2["renderStage"] = 5
-        self.set_uniforms(st, U2)
-        self.load_matrices(np.eye(4, dtype=np.float32), proj)
-        self.draw_arrays(moon_quad(moon), (0, 0, 0))
-        gl.glDisable(glctx.GL_BLEND)
+        # ---- prepare: the light table ----------------------------------------------------------------
+        for name in ("prepare", "prepare1"):
+            if name in self.progs:
+                self.fullscreen(name, U)
+        tm = mark("prepare", tm)
         # ---- opaque terrain + entities + eyes + the solid hand --------------------------------
+        self.bind_targets([0], write_alt=False, depth=self.depth0)
+        gl.glClear(glctx.GL_DEPTH_BUFFER_BIT)
         gl.glDepthMask(1)
         gl.glEnable(glctx.GL_DEPTH_TEST)
         gl.glDepthFunc(glctx.GL_LEQUAL)
         self.gbuffer_draw("gbuffers_terrain", U, meshes["solid"], view, proj, cam)
-        if shot.get("monster", True):
-            self.gbuffer_draw("gbuffers_entities", U, monster[0], view, proj, cam, extra={"entityId": NOZOKI})
-            gl.glDepthMask(0)
-            self.gbuffer_draw("gbuffers_spidereyes", U, monster[1], view, proj, cam, blend=("additive",), extra={"entityId": NOZOKI})
+        for fig in figures:
+            if fig["translucent"]:
+                continue
+            self.gbuffer_draw("gbuffers_entities", U, fig["body"], view, proj, cam, extra={"entityId": fig["id"]})
+        # the spirits: translucent entities (alpha = what the naked eye sees; 1 in the finder)
+        for fig in figures:
+            if not fig["translucent"]:
+                continue
             gl.glDepthMask(1)
-        if shot.get("ghost"):
-            self.gbuffer_draw("gbuffers_entities_translucent", U, ghost_mesh(scene, *shot["ghost"]), view, proj, cam,
-                              blend=("translucent", ()), extra={"entityId": UTSURU})
+            self.gbuffer_draw("gbuffers_entities_translucent", U, fig["body"], view, proj, cam, blend="translucent",
+                              extra={"entityId": fig["id"]})
+            gl.glDepthMask(0)
+            self.gbuffer_draw("gbuffers_spidereyes", U, fig["eyes"], view, proj, cam, blend="additive", extra={"entityId": fig["id"]})
+            gl.glDepthMask(1)
         hand_proj = np.diag([1.0, 1.0, 0.125, 1.0]).astype(np.float32) @ perspective(70.0, w / h, 0.05, 192.0 * 4)
-        light = ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0)
+        hl = ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0)
         for item, side in ((held, 1), (held2, -1)):
-            hm = hand_mesh(item, side, light)
+            hm = hand_mesh(self.atlas_obj, item, side, hl)
             if hm is not None:
+                self.upload_atlas()
                 self.gbuffer_draw("gbuffers_hand", U, hm, np.eye(4, dtype=np.float32), hand_proj, (0, 0, 0), extra={"currentRenderedItemId": item})
         tm = mark("gbuffers", tm)
         # ---- deferred ---------------------------------------------------------------------
         self.fullscreen("deferred", U)
         tm = mark("deferred", tm)
+        # ---- depthtex1: the depth before the translucents (Iris copies it here) ---------------
+        self.copy_depth()
         # ---- translucents -----------------------------------------------------------------
         gl.glEnable(glctx.GL_DEPTH_TEST)
-        self.gbuffer_draw("gbuffers_water", U, meshes["translucent"], view, proj, cam, blend=("translucent", (1,)))
+        self.gbuffer_draw("gbuffers_water", U, meshes["translucent"], view, proj, cam, blend="translucent")
         tm = mark("translucent", tm)
         # ---- composite chain + final ------------------------------------------------------
-        for name in ("composite", "composite1", "composite2", "composite3"):
+        for name in ("composite", "composite1", "composite2", "composite3", "composite4"):
             self.fullscreen(name, U)
             tm = mark(name, tm)
+        self._hist_ok = True
         stats = {}
         c0 = self.read_float(0)
         stats["nan"] = int(np.isnan(c0).sum() + np.isinf(c0).sum())
@@ -1410,72 +805,9 @@ class Renderer:
         return img, stats
 
 
-def moon_quad_factory():
-    def build(moon_view):
-        tx, ty = TILES["moon"]
-        m = np.array(moon_view, np.float64)
-        d = m / np.linalg.norm(m)
-        up = np.array([0, 1, 0.0]) if abs(d[1]) < 0.9 else np.array([1, 0, 0.0])
-        s = np.cross(d, up); s /= np.linalg.norm(s)
-        u = np.cross(s, d)
-        c = d * 100.0
-        k = 20.0
-        cs = [c - s * k - u * k, c + s * k - u * k, c + s * k + u * k, c - s * k + u * k]
-        uvs = [(tx / ATLAS_N, (ty + 1) / ATLAS_N), ((tx + 1) / ATLAS_N, (ty + 1) / ATLAS_N), ((tx + 1) / ATLAS_N, ty / ATLAS_N), (tx / ATLAS_N, ty / ATLAS_N)]
-        idx = (0, 1, 2, 0, 2, 3)
-        return dict(pos=np.array([cs[i] for i in idx], np.float32), nrm=np.tile(np.array([[0, 0, 1]], np.float32), (6, 1)),
-                    col=np.ones((6, 4), np.float32), uv0=np.array([uvs[i] for i in idx], np.float32), uv1=np.ones((6, 2), np.float32) * (248 / 256))
-    return build
-
-
-def eye_at(scene, x, z, dy=1.62):
-    return (x, scene.ground[int(x) - scene.origin[0], int(z) - scene.origin[2]] + 1 + dy, z)
-
-
-def make_shots(scene):
-    M = MOUNTAIN
-    fz = 9.5
-    forest_eye = eye_at(scene, 30.5, fz)
-    tunnel_eye = (6.5, scene.tunnel_floor + 1 + 1.62, 30.5)
-    rim = eye_at(scene, 39.5, 36.5)
-    hut_eye = eye_at(scene, 48.5, 8.5)
-    down = (0.0, -0.17, 1.0)
-    return {
-        # the forest, looking down the mountain (south, toward the moon)
-        "m_beam": dict(folder=M, eye=forest_eye, look=down, fear=0.15, held=FLASHLIGHT),
-        "m_dark": dict(folder=M, eye=forest_eye, look=down, fear=0.15, held=0),
-        "m_shafts": dict(folder=M, eye=forest_eye, look=(0.15, 0.28, 1.0), fear=0.1, held=0, monster=False),
-        "m_hollow": dict(folder=M, eye=rim, look=(0.05, -0.30, 1.0), fear=0.2, held=FLASHLIGHT, monster=False),
-        "m_hollow_dark": dict(folder=M, eye=rim, look=(0.05, -0.30, 1.0), fear=0.2, held=0, monster=False),
-        "m_eyes_dark": dict(folder=M, eye=forest_eye, look=(0.10, -0.06, 1.0), fear=0.45, held=0),
-        "m_eyes_beam": dict(folder=M, eye=forest_eye, look=(2.26, -3.4, 15.0), fear=0.45, held=FLASHLIGHT),
-        "m_fear": dict(folder=M, eye=forest_eye, look=down, fear=0.95, held=FLASHLIGHT, t=131.7),
-        "m_danger": dict(folder=M, eye=forest_eye, look=down, fear=0.8, danger=1.0, held=FLASHLIGHT, t=128.31),
-        "m_danger_lit": dict(folder=M, eye=forest_eye, look=down, fear=0.8, danger=0.8, held=FLASHLIGHT, t=126.02),
-        "m_camera": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=CAMERA, held2=FLASHLIGHT, ghost=(30.6, 18.5)),
-        "m_ghost_eye": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=FLASHLIGHT, ghost=(30.6, 18.5)),
-        "m_low": dict(folder=M, eye=forest_eye, look=down, fear=0.4, held=FLASH_LOW, t=124.0),
-        "m_phone": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=PHONE_LIGHT),
-        "m_flare": dict(folder=M, eye=forest_eye, look=down, fear=0.3, held=FLASHLIGHT, held2=FLARE),
-        "m_tunnel": dict(folder=M, eye=tunnel_eye, look=(0.0, -0.05, -1.0), fear=0.5, held=FLASHLIGHT, monster=False),
-        "m_hut": dict(folder=M, eye=hut_eye, look=(0.0, -0.12, 1.0), fear=0.3, held2=FLASHLIGHT, monster=False),
-        "m_wall": dict(folder=M, eye=eye_at(scene, 48.5, 12.0), look=(0.0, -0.05, 1.0), fear=0.0, held=FLASHLIGHT, monster=False, t=100.0),
-        "m_darkness": dict(folder=M, eye=forest_eye, look=down, fear=0.9, darkness=0.9, held=FLASHLIGHT),
-        "m_stream": dict(folder=M, eye=eye_at(scene, 36.5, 43.5), look=(0.25, -0.55, 1.0), fear=0.2, held=FLASHLIGHT, monster=False),
-        "m_moon": dict(folder=M, eye=rim, look=(0.0, 1.55, 1.0), fear=0.1, held=0, monster=False),
-        "m_low2": dict(folder=M, eye=forest_eye, look=down, fear=0.4, held=FLASH_LOW, t=127.5),
-        # other dimensions (root programs etc.)
-        "o_day": dict(folder="", eye=forest_eye, look=down, time=6000, held=0, monster=False),
-        "o_day_up": dict(folder="", eye=forest_eye, look=(0.15, 0.28, 1.0), time=6000, held=0),
-        "o_day_hollow": dict(folder="", eye=rim, look=(0.05, -0.30, 1.0), time=6000, held=0),
-        "o_day_top": dict(folder="", eye=(40.0, 130.0, 30.0), look=(0.0, -1.0, 0.001), time=6000, held=0),
-        "o_day_monster": dict(folder="", eye=forest_eye, look=(2.26, -3.4, 15.0), time=6000, held=0),
-        "o_day_monster_close": dict(folder="", eye=eye_at(scene, 31.5, 19.5), look=(1.0, -0.5, 4.5), time=6000, held=0),
-        "o_night": dict(folder="", eye=forest_eye, look=down, time=18000, held=FLASHLIGHT, monster=False),
-        "n_nether": dict(folder="world-1", eye=forest_eye, look=down, held=FLASHLIGHT, monster=False),
-        "e_end": dict(folder="world1", eye=forest_eye, look=down, held=0, monster=False),
-    }
-
+# =====================================================================================
+#  shots
+# =====================================================================================
 
 def mc_dir(yaw, pitch):
     """Minecraft yaw / pitch (degrees; yaw 0 = south +Z, pitch > 0 = down) -> look vector"""
@@ -1483,36 +815,51 @@ def mc_dir(yaw, pitch):
     return (-math.sin(y) * math.cos(p), -math.sin(p), math.cos(y) * math.cos(p))
 
 
-# the CI tour's viewpoints on the real mountain (com.reisatsu.client.AutoShots)
-TERRAIN_SHOTS = {
-    "t_start_dark": dict(at=(-198.5, -209.5), yaw=155.0, pitch=4.0, fear=0.3, held=0),
-    "t_start_beam": dict(at=(-198.5, -209.5), yaw=155.0, pitch=4.0, fear=0.3, held=FLASHLIGHT),
-    "t_ribbons": dict(at=(-95.5, -88.5), yaw=-45.0, pitch=2.0, fear=0.3, held=FLASHLIGHT),
-    "t_forest_deep": dict(at=(-42.5, -44.5), yaw=-40.0, pitch=0.0, fear=0.3, held=FLASHLIGHT),
-    "t_forest_dark": dict(at=(-42.5, -44.5), yaw=-40.0, pitch=0.0, fear=0.3, held=0),
-    "t_fear": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.92, danger=0.15, held=FLASHLIGHT, t=131.7),
-    "t_danger": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.95, danger=0.9, held=FLASHLIGHT, t=126.02),
-    "t_phone": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=PHONE_LIGHT),
-    "t_flare": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=FLARE),
-    "t_low": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=FLASH_LOW, t=127.5),
-    "t_camera": dict(at=(-60.5, -60.5), yaw=45.0, pitch=0.0, fear=0.3, held=CAMERA),
-    "t_shafts": dict(at=(-60.5, -60.5), yaw=0.0, pitch=-18.0, fear=0.1, held=0),
-    "t_shafts2": dict(at=(-42.5, -44.5), yaw=10.0, pitch=-8.0, fear=0.1, held=0),
+EYE = 65 + 1.62
+
+
+def shot(x, z, yaw, pitch, **kw):
+    d = dict(eye=(x, kw.pop("y", EYE), z), look=mc_dir(yaw, pitch), folder=HIDAMARI)
+    d.update(kw)
+    return d
+
+
+# circuits: the start of the game (dining off, kitchen off, restroom on, sign on, register night lights)
+START = {}
+SHOTS = {
+    # the dark dining room: exit signs, the drink bar, the cake case, sodium through the windows
+    "r_dining_dark": shot(21.5, 14.5, -35.0, 8.0, fear=0.2),
+    "r_dining_beam": shot(21.5, 14.5, -35.0, 8.0, fear=0.2, held=FLASHLIGHT),
+    "r_dining_bar": shot(24.5, 16.5, 132.0, 10.0, fear=0.2),
+    "r_register": shot(19.5, 23.5, 95.0, 8.0, fear=0.2),
+    "r_dining_lit": shot(21.5, 14.5, -35.0, 8.0, fear=0.0, circuits=dict(dining=True)),
+    # the wet lot at night: the pole sign, the vending machines, the sodium lamps, puddles
+    "r_lot": shot(28.5, 44.5, 150.0, 4.0, fear=0.1),
+    "r_lot_sign": shot(26.5, 38.5, -70.0, -6.0, fear=0.1),
+    "r_lot_vending": shot(13.5, 40.5, 155.0, 10.0, fear=0.1),
+    # the kitchen under its fluorescent tubes: steel, the blue flames, the heat lamp
+    "r_kitchen": shot(31.5, 7.5, 125.0, 12.0, fear=0.1, circuits=dict(kitchen=True)),
+    # the women's restroom: the dark mirror over the sinks, the cavity and the woman behind it
+    "r_restroom": shot(10.5, 20.5, 180.0, 6.0, fear=0.35, spirits=[(MIRROR_WOMAN, 10.5, 65, 13.5, 0.0, 0.25)]),
+    "r_restroom_finder": shot(10.5, 20.5, 180.0, 6.0, fear=0.35, held=FINDER, spirits=[(MIRROR_WOMAN, 10.5, 65, 13.5, 0.0, 1.0)]),
+    # the finder (reishi) on the waitress between the tables, the flash frame
+    "r_finder": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 1.0)]),
+    "r_flash": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, flash=1.0, spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 1.0)]),
+    "r_flash_decay": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, flash=0.35, spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 1.0)]),
+    # the naked eye: the waitress faint, the visitor invisible (only the haze)
+    "r_spirit_eye": shot(21.5, 14.5, -20.0, 6.0, fear=0.4, held=FLASHLIGHT,
+                         spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 0.3), (VISITOR, 23.5, 65, 18.0, 160.0, 0.0)]),
+    # fear, danger, caught
+    "r_fear": shot(21.5, 14.5, -35.0, 8.0, fear=0.95, danger=0.15, held=FLASHLIGHT, t=131.7),
+    "r_danger": shot(21.5, 14.5, -35.0, 8.0, fear=0.8, danger=1.0, held=FLASHLIGHT, t=128.31,
+                     spirits=[(WAITRESS, 26.5, 65, 22.0, 200.0, 0.9)]),
+    "r_caught": shot(21.5, 14.5, -35.0, 8.0, fear=0.9, darkness=0.65, held=FLASHLIGHT),
+    # the visitor's profile through the south window, from the lot (a photo window)
+    "r_window_visitor": shot(31.5, 35.5, 160.0, 4.0, fear=0.3, spirits=[(VISITOR, 33.0, 65, 28.5, 90.0, 1.0)], held=FINDER),
+    # other dimensions: the root programs on the same place by day / the overworld at night
+    "o_day": dict(shot(28.5, 44.5, 150.0, 4.0), folder="", time=6000),
+    "o_night": dict(shot(28.5, 44.5, 150.0, 4.0, held=FLASHLIGHT), folder="", time=18000),
 }
-
-
-def terrain_monster_trunk(scene, eye, look):
-    """a trunk 8..16 blocks ahead, within 20 degrees of the view, for the peeking monster"""
-    best = None
-    f = np.array([look[0], look[2]]) / max(math.hypot(look[0], look[2]), 1e-6)
-    for (x, g, z, top) in scene.trunks:
-        wx, wz = x + scene.origin[0] + 0.5, z + scene.origin[2] + 0.5
-        d = np.array([wx - eye[0], wz - eye[2]])
-        dist = float(np.linalg.norm(d))
-        if 8.0 <= dist <= 16.0 and float(np.dot(d / dist, f)) > math.cos(math.radians(20)):
-            if best is None or abs(dist - 11.0) < best[0]:
-                best = (abs(dist - 11.0), (x + scene.origin[0], z + scene.origin[2]))
-    return best[1] if best else None
 
 
 def write_png(path, img):
@@ -1541,7 +888,7 @@ def run_check():
     total = 0
     for folder in build_pack.FOLDERS:
         for flip in (False, True):
-            for name in build_pack.PROGRAMS:
+            for name in build_pack.programs_of(folder):
                 try:
                     p = Program(folder, name, {}, flip)
                 except FileNotFoundError:
@@ -1559,70 +906,73 @@ def run_check():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--list", action="store_true")
     ap.add_argument("--out", default="/tmp/reisatsu_preview")
     ap.add_argument("--size", default="960x540")
     ap.add_argument("--shots", default="")
     ap.add_argument("--timing", action="store_true", help="print the time of every pass (llvmpipe)")
+    ap.add_argument("--dump-emap", action="store_true", help="also write the emitter map of each shot")
+    ap.add_argument("--t", type=float, default=None, help="frameTimeCounter for every shot (flicker phases)")
     ap.add_argument("-D", action="append", default=[])
     args = ap.parse_args()
     if args.check:
         return run_check()
+    if args.list:
+        print("\n".join(SHOTS))
+        return 0
     overrides = dict(d.split("=", 1) for d in args.D)
     w, h = (int(v) for v in args.size.split("x"))
     os.makedirs(args.out, exist_ok=True)
     ver, ren = glctx.init()
     print("GL:", ver, "|", ren)
-    make_atlas()                                  # fills TILES
-    print("textures: %d real (%s), the rest procedural" % (len(REAL_TILES), TEXTURE_DIR))
-    names = args.shots.split(",") if args.shots else None
-    scenes = {}
+    atlas = mcscene.Atlas(os.path.join(mcscene.ASSETS, "textures", "block"))
+    models = mcscene.Models(os.path.join(mcscene.ASSETS, "models", "block"), atlas, extra=hidamari_scene.STANDINS)
+    ids = mcscene.BlockIds()
+    names = args.shots.split(",") if args.shots else list(SHOTS)
+    worlds = {}
 
-    def get_scene(key):
-        if key not in scenes:
+    def get_world(circuits):
+        key = tuple(sorted((circuits or {}).items()))
+        if key not in worlds:
             t0 = time.time()
-            if key == "test":
-                sc = Scene()
-            else:
-                sc = TerrainScene(Terrain(), key[0], key[1])
-            sc.compute_light()
-            meshes = sc.mesh()
-            scenes[key] = (sc, meshes)
-            print("scene %s: %d solid / %d translucent vertices (%.1fs)" % (key, len(meshes["solid"]["pos"]), len(meshes["translucent"]["pos"]), time.time() - t0))
-        return scenes[key]
+            wd = hidamari_scene.build(circuits)
+            wd.compute_light()
+            meshes = wd.mesh(models, ids)
+            worlds[key] = (wd, meshes)
+            print("world %s: %d solid / %d translucent quads (%.1fs); %d real models, %d real textures (%s)" % (
+                dict(key), len(meshes["solid"]["idx"]) // 6, len(meshes["translucent"]["idx"]) // 6, time.time() - t0,
+                len(models.real), len(atlas.real), mcscene.ASSETS))
+        return worlds[key]
 
-    test_scene = get_scene("test")[0] if (names is None or any(not n.startswith("t_") for n in names)) else None
-    shots = make_shots(test_scene) if test_scene is not None else {}
-    if names is None:
-        names = list(shots)
     renderers = {}
     paths = []
-    moon_quad = moon_quad_factory()
     for name in names:
-        if name in TERRAIN_SHOTS:
-            ts = TERRAIN_SHOTS[name]
-            sc, meshes = get_scene(ts["at"])
-            eye = eye_at(sc, ts["at"][0], ts["at"][1])
-            shot = dict(ts, folder=MOUNTAIN, eye=eye, look=mc_dir(ts["yaw"], ts["pitch"]))
-            mt = terrain_monster_trunk(sc, eye, shot["look"])
-            shot["monster"] = mt is not None
-            monster = monster_meshes(sc, mt) if mt else (None, None)
-        else:
-            shot = dict(shots[name])
-            sc, meshes = get_scene("test")
-            monster = monster_meshes(sc, sc.monster_trunk, far=(22.5, 31.6))
-        folder = shot["folder"]
+        sh = dict(SHOTS[name])
+        if args.t is not None:
+            sh["t"] = args.t
+        wd, meshes = get_world(sh.get("circuits"))
+        figures = []
+        for (kind, x, y, z, yaw, alpha) in sh.get("spirits", []):
+            bl, sl = wd.light_at(int(math.floor(x)), y + 1, int(math.floor(z)))
+            body, eyes = figure_mesh(atlas, kind, x, y, z, yaw, ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0), alpha)
+            figures.append(dict(id=kind, body=body, eyes=eyes, translucent=kind != MEDIUM))
+        folder = sh["folder"]
         if folder not in renderers:
-            renderers[folder] = Renderer(folder, w, h, overrides)
+            renderers[folder] = Renderer(folder, w, h, overrides, atlas)
         r = renderers[folder]
+        r.upload_atlas()
         timing = {} if args.timing else None
         t0 = time.time()
-        img, st = r.render(shot, sc, meshes, monster, moon_quad, timing)
+        img, st = r.render(sh, wd, meshes, figures, timing)
         p = os.path.join(args.out, name + ".png")
         write_png(p, img)
         paths.append(p)
-        print("%-14s %5.2fs  mean %6.2f  black %5.1f%%  hdr max %8.3f  nan %d" % (name, time.time() - t0, st["mean"], st["black%"], st["hdr_max"], st["nan"]))
+        print("%-18s %5.2fs  mean %6.2f  black %5.1f%%  hdr max %8.3f  nan %d" % (name, time.time() - t0, st["mean"], st["black%"], st["hdr_max"], st["nan"]))
         if timing:
             print("    " + "  ".join("%s %.0fms" % (k, v * 1000) for k, v in timing.items()))
+        if args.dump_emap and folder == HIDAMARI:
+            em = r.read_shadow_color()
+            write_png(os.path.join(args.out, name + "_emap.png"), np.ascontiguousarray(em[::-1, :, :3]))
     if len(paths) > 1:
         contact_sheet(paths, os.path.join(args.out, "contact.png"))
     return 0
