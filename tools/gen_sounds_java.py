@@ -42,13 +42,12 @@ lines = [
 ]
 for e in events:
     lines.append(f'    public static final RegistryObject<SoundEvent> {const(e)} = reg("{e}");')
-# floor sound types (DESIGN 10: "the blocks' SoundTypes use the player.step_* sounds")
-TYPES = [("TILE", "PLAYER_STEP_TILE", "STONE", "restroom / vestibule tiles, white tiles"),
-         ("VINYL", "PLAYER_STEP_VINYL", "WOOD", "the wood-look vinyl of the dining room"),
-         ("KITCHEN", "PLAYER_STEP_KITCHEN", "STONE", "the kitchen's quarry tiles"),
-         ("WET", "PLAYER_STEP_WET", "STONE", "wet asphalt, parking lines, the sidewalk"),
-         ("GLASS", "PLAYER_STEP_GLASS", "GLASS", "broken plates / glass decals"),
-         ("PAPER", "PLAYER_STEP_PAPER", "WOOL", "scattered menus")]
+# floor sound types (optional, for the world's blocks: socked feet on the apartment's floors use the player.step_*
+# sounds; break / place / hit stay vanilla)
+TYPES = [("TATAMI", "PLAYER_STEP_TATAMI", "WOOL", "tatami mats (tatami, tatami_worn)"),
+         ("FLOOR", "PLAYER_STEP_FLOOR", "WOOD", "old varnished floorboards, vinyl, the closet's plywood"),
+         ("TILE", "PLAYER_STEP_TILE", "STONE", "bath tiles, the genkan's tiles"),
+         ("WET", "PLAYER_STEP_WET", "STONE", "the wet outdoor corridor and street, a wet bathroom floor")]
 if all(t[1] in [const(e) for e in events] for t in TYPES):
     lines += [
         "",

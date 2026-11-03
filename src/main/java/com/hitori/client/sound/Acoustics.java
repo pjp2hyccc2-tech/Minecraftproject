@@ -13,6 +13,7 @@ import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundEngineExecutor;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
@@ -31,28 +32,43 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executor;
 
 /**
- * 音MOD: the restaurant's acoustics (docs/DESIGN.md §10), a small built-in version of what sound-physics mods do.
+ * 音MOD: the acoustics of コーポ白樺 203 (docs/DESIGN.md §10), a small built-in version of what sound-physics mods do.
  * <ul>
  * <li><b>Room reverb</b>: one OpenAL EFX auxiliary slot with an EAX reverb whose preset follows the listener's room
- * ({@link Layout#roomAt}: dining, kitchen, restroom, small_hard, small_soft, corridor, tiny_dead, medium; outside =
- * only a faint facade slap), cross-faded over 0.5 s. Sounds that start in another room than the listener's get half
+ * ({@link Layout#roomAt}: {@code tiny_dead} the 押し入れ, {@code restroom} the tiled bath and toilet, {@code small_soft}
+ * the tatami and western rooms, {@code small_hard} the genkan / DK / washroom, {@code corridor} the hall; outside = a
+ * slap back from the street), cross-faded over 0.5 s. Sounds that start in another room than the listener's get half
  * the send.</li>
- * <li><b>Occlusion</b>: every new positional sound gets a low-pass on its direct path from a block ray march between
- * the listener and the sound (opaque blocks -3 dB HF each, closed doors half, cap -24 dB); looping and moving sounds are
- * re-evaluated every 4 ticks.</li>
+ * <li><b>Occlusion</b>: every positional sound gets a low-pass on its direct path from a block ray march between the
+ * listener and the sound (opaque blocks −3 dB HF each, shut doors half, the paper fusuma less, cap −24 dB); looping and
+ * moving sounds are re-evaluated every 4 ticks.</li>
+ * <li><b>Closet</b> ({@link AcousticsState#enclosure()}): hiding in the 押し入れ, everything outside it is low-passed
+ * hard (−18 dB in the 6-12 kHz band, −3 dB overall, measured), what touches the fusuma less, the player's own sounds
+ * stay dry and close; the room preset becomes the dead {@code closet}. The apartment's non-positional beds
+ * ({@code amb.apartment}, {@code amb.bath}, {@code amb.outside}) are muffled the same way.</li>
+ * <li><b>Camera listening</b> ({@link AcousticsState#cameraView()}): with the camera app open the listener is the
+ * camera entity (Minecraft does that by itself once the game sets the camera entity). Sounds nearer the camera than
+ * the player's body get the microphone's band-limit (−12 dB under ~200 Hz and over ~6 kHz, measured) and
+ * {@code camera.mic_hiss} plays; sounds nearer the body (the doll at the fusuma while you watch another room) are heard
+ * as at the body: muffled, their fall-off rescaled to their distance to the body, spread around the listener.</li>
  * </ul>
  * Threads: the level is read only on the client thread (when a sound is played: {@link PlaySoundEvent}, and in the
  * client tick); OpenAL is touched only on the sound engine's thread (Forge's source events, which carry the
- * {@link Channel}, and tasks handed to the engine's {@link SoundEngineExecutor}). Relative / non-attenuated sounds
- * (music, beds, UI) and every dimension but {@code hitori:hidamari} are left alone. Client config
- * {@code sound.acoustics} switches it off. Fail-safe: no EFX = nothing happens; any exception disables the engine for
- * the session with one log line, sound keeps working. Press F3 to see its state ({@code -Dhitori.acoustics.debug=true}
- * also logs every room change).
+ * {@link Channel}, and tasks handed to the engine's {@link SoundEngineExecutor}). Relative sounds other than those beds
+ * (music, UI, the player's own voice) and every dimension but {@code hitori:shirakaba} are left alone. Client config
+ * {@code sound.acoustics} ({@link HitoriConfig#acoustics()}) switches it off. Fail-safe: no EFX = nothing happens; any
+ * exception disables the engine for the session with one log line, sound keeps working. Press F3 to see its state
+ * ({@code -Dhitori.acoustics.debug=true} also logs every room change).
+ * <p>
+ * Game API: {@link #setState(AcousticsState)} (optional: the closet / camera state; without it the engine reads
+ * {@code com.hitori.client.ClientState} reflectively or observes by itself), {@link #setMicHiss(boolean)} (default on:
+ * the engine plays {@code camera.mic_hiss} during camera view; turn it off if the game plays it itself).
  */
 @Mod.EventBusSubscriber(modid = Hitori.MODID, value = Dist.CLIENT)
 public final class Acoustics {
@@ -64,39 +80,69 @@ public final class Acoustics {
     private static final int MAX_TRACKS = 128;
     /** Send level of a sound that started in another room than the listener's. */
     private static final float OTHER_ROOM_SEND = 0.5f;
-    /** Occlusion per block unit (an opaque block = 1, a closed door = 0.5): high-frequency loss (§10: 3 dB) ... */
+    /** Occlusion per block unit (an opaque block = 1, a shut door = 0.5): high-frequency loss (§10: 3 dB) ... */
     static final float HF_DB_PER_BLOCK = 3.0f;
     /** ... a small broadband loss on top (capped at 6 dB) ... */
     static final float DB_PER_BLOCK = 1.2f;
     /** ... and the reverb send, which reaches us around the obstacle, loses half as much. */
     static final float SEND_HF_DB_PER_BLOCK = 1.5f;
+
+    /** Closet, shut in: outside sounds' GAINHF (OpenAL Soft's 5 kHz shelf: 0.28 = −18 dB at 6-12 kHz, measured by
+     *  tools/audio/efx_selftest.py, relative to the low band) and gain (−3 dB). */
+    static final float CLOSET_HF = 0.28f, CLOSET_GAIN = 0.708f;
+    /** Sounds touching the hiding place (a knock on the fusuma, the doll right outside it): half the closet loss. */
+    static final float BOUNDARY_HF = 0.53f, BOUNDARY_GAIN = 0.89f;
+    /** Within this distance of the body a sound is the player's own: dry and close. */
+    static final double OWN_RADIUS = 1.0, BOUNDARY_RADIUS = 2.3;
+    static final float OWN_SEND = 0.3f;
+    /** Camera microphone: band-pass shelves (LF reference 250 Hz, HF reference 5 kHz) and gain. */
+    static final float MIC_LF = 0.30f, MIC_HF = 0.40f, MIC_GAIN = 1.0f;
+    /** Sounds heard at the body during camera view: muffled (attention on the screen), mostly dry. */
+    static final float BODY_HF = 0.5f, BODY_GAIN = 0.8f, BODY_SEND = 0.25f;
+    /** Only sounds this close to the body take the body path during camera view. */
+    static final double BODY_RADIUS = 14.0;
+    /** The apartment's non-positional beds, muffled with the closet / camera view. */
+    private static final Set<String> WORLD_BEDS = Set.of("amb.apartment", "amb.bath", "amb.outside");
     /** Mods that do the same job: if one is loaded this engine stays out of its way. */
     private static final String[] OTHER_ACOUSTICS_MODS = {"sound_physics_remastered", "soundphysics"};
 
-    /** Occlusion and send of one source. */
-    public record Params(float directGain, float directHF, float sendGain, float sendHF, float occlusion, String room) {
+    static final int PATH_ROOM = 0, PATH_MIC = 1, PATH_BODY = 2, PATH_BED = 3;
+
+    /**
+     * Filters and sends of one source. lfGain < 1 = band-pass (the microphone), maxScale / radius = the body path's
+     * distance rescaling and spread.
+     */
+    public record Params(float directGain, float directHF, float sendGain, float sendHF, float occlusion, String room,
+                         float lfGain, float maxScale, float radius, int path) {
         boolean differs(Params o) {
-            return o == null || Math.abs(directHF - o.directHF) > 0.02f || Math.abs(directGain - o.directGain) > 0.02f
-                    || Math.abs(sendGain - o.sendGain) > 0.03f || Math.abs(sendHF - o.sendHF) > 0.03f;
+            return o == null || o.path != path || Math.abs(directHF - o.directHF) > 0.02f
+                    || Math.abs(directGain - o.directGain) > 0.02f || Math.abs(sendGain - o.sendGain) > 0.03f
+                    || Math.abs(sendHF - o.sendHF) > 0.03f || Math.abs(lfGain - o.lfGain) > 0.02f
+                    || Math.abs(maxScale - o.maxScale) > 0.05f * Math.max(1f, o.maxScale) || Math.abs(radius - o.radius) > 0.5f;
         }
     }
 
-    /** A playing positional source (created on the sound thread, then owned by the client thread). */
+    /** A playing source (created on the sound thread, then owned by the client thread). */
     private static final class Track {
         final SoundInstance instance;
         final Channel channel;
         final int source;
+        final boolean bed;
+        final float origMax;
         Params params;
 
-        Track(SoundInstance instance, Channel channel, int source, Params params) {
+        Track(SoundInstance instance, Channel channel, int source, boolean bed, float origMax, Params params) {
             this.instance = instance;
             this.channel = channel;
             this.source = source;
+            this.bed = bed;
+            this.origMax = origMax;
             this.params = params;
         }
     }
 
     private static volatile boolean broken;
+    private static volatile boolean restorePending;
     private static volatile String failure;
     private static volatile Executor soundExecutor;
     private static volatile boolean active;
@@ -116,6 +162,8 @@ public final class Acoustics {
     private static int fadeTick = FADE_TICKS;
     private static boolean presetDirty = true;
     private static String listenerRoom;
+    private static String bodyRoom;
+    private static boolean forceUpdate;
     private static int tick;
     private static boolean triedEngine;
     private static Boolean otherMod;
@@ -123,17 +171,42 @@ public final class Acoustics {
     private Acoustics() {}
 
     // ------------------------------------------------------------------------------------------------------------
+    // game API
+
+    /** The game's closet / camera state (polled every client tick on the client thread); null = fall back. */
+    public static void setState(AcousticsState state) {
+        AcousticsModes.api = state;
+    }
+
+    /** Whether the engine itself plays {@code camera.mic_hiss} while the camera view is active (default true). */
+    public static void setMicHiss(boolean on) {
+        AcousticsModes.micHiss = on;
+    }
+
+    /** The closet enclosure the engine is using this tick (0..1). */
+    public static float enclosure() {
+        return AcousticsModes.enclosure();
+    }
+
+    /** Whether the engine is in camera listening this tick. */
+    public static boolean cameraListening() {
+        return AcousticsModes.cameraView();
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
     // client thread
 
-    /** A sound is about to play: compute its occlusion and send while we may still read the level. */
+    /** A sound is about to play: compute its filters and send while we may still read the level. */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPlaySound(PlaySoundEvent event) {
         if (broken || !active) return;
         try {
             SoundInstance s = event.getSound();
-            if (s == null || s.isRelative() || s.getAttenuation() != SoundInstance.Attenuation.LINEAR) return;
+            if (s == null) return;
+            boolean bed = isWorldBed(s);
+            if (!bed && (s.isRelative() || s.getAttenuation() != SoundInstance.Attenuation.LINEAR)) return;
             captureExecutor(event.getEngine());
-            Params p = compute(s.getX(), s.getY(), s.getZ(), null);
+            Params p = compute(s.getX(), s.getY(), s.getZ(), null, bed);
             if (p != null) PENDING.put(s, p);
         } catch (Throwable t) {
             fail("play", t);
@@ -142,16 +215,35 @@ public final class Acoustics {
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || broken) return;
+        if (event.phase != TickEvent.Phase.END) return;
+        Minecraft mc = Minecraft.getInstance();
+        boolean inDim = mc.level != null && Layout.DIMENSION.equals(mc.level.dimension());
+        boolean modesChanged = false;
         try {
-            tickClient();
+            modesChanged = AcousticsModes.tick(mc, inDim);
+        } catch (Throwable t) {
+            Hitori.LOGGER.debug("[hitori] acoustics: listening modes unavailable this tick", t);
+        }
+        if (broken) {
+            if (restorePending) {
+                restorePending = false;
+                try {
+                    detachAll();
+                } catch (Throwable ignored) {
+                    // already disabled
+                }
+            }
+            return;
+        }
+        try {
+            if (modesChanged) forceUpdate = true;
+            tickClient(mc, inDim);
         } catch (Throwable t) {
             fail("tick", t);
         }
     }
 
-    private static void tickClient() {
-        Minecraft mc = Minecraft.getInstance();
+    private static void tickClient(Minecraft mc, boolean inDim) {
         tick++;
         if (soundExecutor == null && !triedEngine) {
             triedEngine = true;
@@ -159,11 +251,11 @@ public final class Acoustics {
         }
         ClientLevel level = mc.level;
         if (otherMod == null) otherMod = otherAcousticsMod();
-        boolean want = HitoriConfig.acoustics() && !otherMod && level != null && Layout.DIMENSION.equals(level.dimension());
+        boolean want = HitoriConfig.acoustics() && !otherMod && level != null && inDim;
         if (!want) {
             if (active) {
                 active = false;
-                listenerRoom = null;
+                listenerRoom = bodyRoom = null;
                 setPreset("off", true);
                 detachAll();
             }
@@ -175,12 +267,18 @@ public final class Acoustics {
         Vec3 ear = listenerPos(mc);
         Layout.Room room = Layout.roomAt(BlockPos.containing(ear));
         listenerRoom = room == null ? null : room.key();
+        Layout.Room broom = mc.player == null ? room : Layout.roomAt(BlockPos.containing(mc.player.getEyePosition()));
+        bodyRoom = broom == null ? null : broom.key();
         String key = room == null ? "outside" : room.acoustics();
+        if (AcousticsModes.enclosure() >= 0.5f && !AcousticsModes.cameraView()) key = "closet";
         if (!AcousticsPresets.known(key)) key = "medium";
         if (!key.equals(presetKey)) setPreset(key, "off".equals(presetKey));
         advanceFade();
         flushPreset();
-        if (tick % UPDATE_INTERVAL == 0) updateTracks(mc, ear);
+        if (forceUpdate || tick % UPDATE_INTERVAL == 0) {
+            updateTracks(mc, forceUpdate);
+            forceUpdate = false;
+        }
     }
 
     private static void setPreset(String key, boolean immediate) {
@@ -209,7 +307,7 @@ public final class Acoustics {
         ex.execute(Acoustics::syncTask);
     }
 
-    private static void updateTracks(Minecraft mc, Vec3 ear) {
+    private static void updateTracks(Minecraft mc, boolean force) {
         Track fresh;
         while ((fresh = FRESH.poll()) != null) TRACKS.add(fresh);
         while (TRACKS.size() > MAX_TRACKS) TRACKS.remove(0);
@@ -222,14 +320,15 @@ public final class Acoustics {
                 it.remove();
                 continue;
             }
-            Params np = compute(t.instance.getX(), t.instance.getY(), t.instance.getZ(), t.params);
+            Params np = compute(t.instance.getX(), t.instance.getY(), t.instance.getZ(), force ? null : t.params, t.bed);
             if (np == null || !np.differs(t.params)) continue;
             t.params = np;
             Channel ch = t.channel;
             int src = t.source;
+            float om = t.origMax;
             ex.execute(() -> {
                 try {
-                    AcousticsEfx.update(ch, src, np);
+                    AcousticsEfx.update(ch, src, np, om);
                 } catch (Throwable e) {
                     fail("update", e);
                 }
@@ -245,9 +344,10 @@ public final class Acoustics {
             for (Track t : TRACKS) {
                 Channel ch = t.channel;
                 int src = t.source;
+                float om = t.origMax;
                 ex.execute(() -> {
                     try {
-                        AcousticsEfx.detach(ch, src);
+                        AcousticsEfx.detach(ch, src, om);
                     } catch (Throwable e) {
                         fail("detach", e);
                     }
@@ -258,32 +358,90 @@ public final class Acoustics {
         PENDING.clear();
     }
 
-    /** Occlusion and send for a sound at (x, y, z), smoothed toward the previous value for moving sources. */
-    private static Params compute(double x, double y, double z, Params prev) {
+    /**
+     * Filters and send for a sound at (x, y, z) (bed: one of the apartment's non-positional beds), smoothed toward
+     * the previous value for moving sources.
+     */
+    private static Params compute(double x, double y, double z, Params prev, boolean bed) {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
         if (level == null) return null;
+        float enc = AcousticsModes.enclosure();
+        boolean cam = AcousticsModes.cameraView();
+        if (bed) {  // around the body: only the closet and the attention on the camera feed muffle it
+            float hf = 1f, g = 1f;
+            if (enc > 0f) {
+                hf *= lerp(1f, CLOSET_HF, enc);
+                g *= lerp(1f, CLOSET_GAIN, enc);
+            }
+            if (cam) {
+                hf *= BODY_HF;
+                g *= BODY_GAIN;
+            }
+            return new Params(g, hf, 0f, 1f, 0f, null, 1f, 1f, 0f, PATH_BED);
+        }
         Vec3 ear = listenerPos(mc);
-        float occ = AcousticsOcclusion.march(level, ear, new Vec3(x, y, z));
-        if (prev != null) occ = prev.occlusion() + (occ - prev.occlusion()) * 0.6f;
+        Vec3 body = mc.player != null ? mc.player.getEyePosition() : ear;
+        Vec3 src = new Vec3(x, y, z);
+        double dEar = src.distanceTo(ear);
+        double dBody = src.distanceTo(body);
+        int path = !cam ? PATH_ROOM : (dBody < dEar && dBody < BODY_RADIUS ? PATH_BODY : PATH_MIC);
+        Vec3 from = path == PATH_BODY ? body : ear;
+        float occ = AcousticsOcclusion.march(level, from, src);
+        if (prev != null && prev.path() == path) occ = prev.occlusion() + (occ - prev.occlusion()) * 0.6f;
         lastOcclusion = occ;
-        String room = roomNear(BlockPos.containing(x, y, z));
-        float roomSend = Objects.equals(room, listenerRoom) ? 1f : OTHER_ROOM_SEND;
+        String room = roomNear(BlockPos.containing(x, y, z), path == PATH_BODY ? bodyRoom : listenerRoom);
         float o = Math.min(occ, AcousticsOcclusion.CAP);
-        return new Params(db(-DB_PER_BLOCK * Math.min(o, 5f)), db(-HF_DB_PER_BLOCK * o), roomSend * db(-SEND_HF_DB_PER_BLOCK * o),
-                db(-SEND_HF_DB_PER_BLOCK * o), occ, room);
+        float gain = db(-DB_PER_BLOCK * Math.min(o, 5f));
+        float hf = db(-HF_DB_PER_BLOCK * o);
+        float sendHF = db(-SEND_HF_DB_PER_BLOCK * o);
+        float send = (Objects.equals(room, path == PATH_BODY ? bodyRoom : listenerRoom) ? 1f : OTHER_ROOM_SEND) * sendHF;
+        float lf = 1f, maxScale = 1f, radius = 0f;
+        if (path != PATH_MIC && enc > 0f) {  // shut in a hiding place: where is the sound, seen from the body?
+            if (dBody < OWN_RADIUS) {
+                send *= lerp(1f, OWN_SEND, enc);
+            } else if (room != null && room.equals(bodyRoom) && "closet".equals(bodyRoom)) {
+                send *= lerp(1f, 0.5f, enc);
+            } else if (dBody < BOUNDARY_RADIUS) {
+                hf *= lerp(1f, BOUNDARY_HF, enc);
+                gain *= lerp(1f, BOUNDARY_GAIN, enc);
+            } else {
+                hf *= lerp(1f, CLOSET_HF, enc);
+                gain *= lerp(1f, CLOSET_GAIN, enc);
+                send *= lerp(1f, 0.5f, enc);
+            }
+        }
+        if (path == PATH_MIC) {
+            lf = MIC_LF;
+            hf *= MIC_HF;
+            gain *= MIC_GAIN;
+        } else if (path == PATH_BODY) {
+            if (dBody >= OWN_RADIUS) {
+                hf *= BODY_HF;
+                gain *= BODY_GAIN;
+            }
+            send *= BODY_SEND;
+            maxScale = (float) Math.max(1.0, dEar / Math.max(dBody, 0.25));
+            radius = (float) Math.max(1.0, dEar);
+        }
+        return new Params(gain, hf, send, sendHF, occ, room, lf, maxScale, radius, path);
     }
 
-    /** The room of a sound; one emitted by a block set into a wall (a door, a wall fixture) belongs to the room it faces
-     *  (the listener's, if it borders it). */
-    private static String roomNear(BlockPos p) {
+    private static boolean isWorldBed(SoundInstance s) {
+        ResourceLocation id = s.getLocation();
+        return id != null && Hitori.MODID.equals(id.getNamespace()) && WORLD_BEDS.contains(id.getPath());
+    }
+
+    /** The room of a sound; one emitted by a block set into a wall (a door, a fusuma, a wall fixture) belongs to the
+     *  room it faces (the given one, if it borders it). */
+    private static String roomNear(BlockPos p, String prefer) {
         Layout.Room r = Layout.roomAt(p);
         if (r != null) return r.key();
         String found = null;
         for (int[] d : new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {
             Layout.Room n = Layout.roomAt(p.offset(d[0], 0, d[1]));
             if (n == null) continue;
-            if (n.key().equals(listenerRoom)) return n.key();
+            if (n.key().equals(prefer)) return n.key();
             if (found == null) found = n.key();
         }
         return found;
@@ -317,8 +475,9 @@ public final class Acoustics {
             if (p == null || !AcousticsEfx.ready()) return;
             int source = AcousticsEfx.sourceOf(channel);
             if (source == 0) return;
-            AcousticsEfx.applySource(source, p);
-            FRESH.add(new Track(s, channel, source, p));
+            float origMax = p.path() == PATH_BED ? 0f : AcousticsEfx.maxDistance(source);
+            AcousticsEfx.applySource(source, p, origMax);
+            FRESH.add(new Track(s, channel, source, p.path() == PATH_BED, origMax, p));
         } catch (Throwable t) {
             fail("source", t);
         }
@@ -385,13 +544,13 @@ public final class Acoustics {
     private static void fail(String where, Throwable t) {
         if (broken) return;
         broken = true;
+        restorePending = true;
         failure = where + ": " + t;
-        Hitori.LOGGER.warn("[hitori] acoustics disabled after an error in {} (sound keeps working without room reverb and occlusion)", where, t);
+        Hitori.LOGGER.warn("[hitori] acoustics disabled after an error in {} (sound keeps working without room reverb, occlusion, closet and camera filters)", where, t);
         Executor ex = soundExecutor;
         if (ex != null) {
             try {
-                float[] off = AcousticsPresets.get("off");
-                AcousticsEfx.wanted = off;
+                AcousticsEfx.wanted = AcousticsPresets.get("off");
                 ex.execute(() -> {
                     try {
                         if (AcousticsEfx.usable()) AcousticsEfx.syncReverb();
@@ -409,14 +568,21 @@ public final class Acoustics {
         return (float) Math.pow(10.0, v / 20.0);
     }
 
-    /** One line for the F3 screen: the preset, EFX state, tracked sources, the last occlusion. */
+    private static float lerp(float a, float b, float t) {
+        return a + (b - a) * t;
+    }
+
+    /** One line for the F3 screen: the preset, the listening mode, EFX state, tracked sources, the last occlusion. */
     public static String status() {
-        if (broken) return "disabled (" + failure + ")";
-        if (!HitoriConfig.acoustics()) return "off (config sound.acoustics = false)";
-        if (Boolean.TRUE.equals(otherMod)) return "off (another acoustics mod is installed)";
-        if (!active) return "idle (outside the restaurant's dimension)";
-        return String.format(Locale.ROOT, "%s%s, %s, %d tracked, last occlusion %.1f", presetKey,
-                fadeTick < FADE_TICKS ? " (fading)" : "", AcousticsEfx.info, TRACKS.size(), lastOcclusion);
+        String mode = (AcousticsModes.cameraView() ? "camera" : "ears")
+                + (AcousticsModes.enclosure() > 0f ? String.format(Locale.ROOT, ", closet %.1f", AcousticsModes.enclosure()) : "")
+                + " [" + AcousticsModes.source() + "]";
+        if (broken) return "disabled (" + failure + "), " + mode;
+        if (!HitoriConfig.acoustics()) return "off (config sound.acoustics = false), " + mode;
+        if (Boolean.TRUE.equals(otherMod)) return "off (another acoustics mod is installed), " + mode;
+        if (!active) return "idle (outside hitori:shirakaba)";
+        return String.format(Locale.ROOT, "%s%s, %s, %s, %d tracked, last occlusion %.1f", presetKey,
+                fadeTick < FADE_TICKS ? " (fading)" : "", mode, AcousticsEfx.info, TRACKS.size(), lastOcclusion);
     }
 
     @SubscribeEvent
