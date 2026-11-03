@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/cup_glass"
+    },
+    "facing=east": {
+      "model": "hitori:block/cup_glass",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/cup_glass",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/cup_glass",
+      "y": 270
+    }
+  }
+}

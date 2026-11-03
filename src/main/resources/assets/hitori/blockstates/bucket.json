@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/bucket"
+    },
+    "facing=east": {
+      "model": "hitori:block/bucket",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/bucket",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/bucket",
+      "y": 270
+    }
+  }
+}

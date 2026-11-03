@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hitori:block/roof_slate_slab"
+    },
+    "type=top": {
+      "model": "hitori:block/roof_slate_slab_top"
+    },
+    "type=double": {
+      "model": "hitori:block/roof_slate"
+    }
+  }
+}

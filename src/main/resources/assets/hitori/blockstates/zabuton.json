@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/zabuton"
+    },
+    "facing=east": {
+      "model": "hitori:block/zabuton",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/zabuton",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/zabuton",
+      "y": 270
+    }
+  }
+}

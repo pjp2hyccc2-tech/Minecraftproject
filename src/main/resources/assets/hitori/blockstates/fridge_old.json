@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,open=false,on=false": {
+      "model": "hitori:block/fridge_old"
+    },
+    "facing=north,open=false,on=true": {
+      "model": "hitori:block/fridge_old"
+    },
+    "facing=north,open=true,on=false": {
+      "model": "hitori:block/fridge_old_open"
+    },
+    "facing=north,open=true,on=true": {
+      "model": "hitori:block/fridge_old_open"
+    },
+    "facing=east,open=false,on=false": {
+      "model": "hitori:block/fridge_old",
+      "y": 90
+    },
+    "facing=east,open=false,on=true": {
+      "model": "hitori:block/fridge_old",
+      "y": 90
+    },
+    "facing=east,open=true,on=false": {
+      "model": "hitori:block/fridge_old_open",
+      "y": 90
+    },
+    "facing=east,open=true,on=true": {
+      "model": "hitori:block/fridge_old_open",
+      "y": 90
+    },
+    "facing=south,open=false,on=false": {
+      "model": "hitori:block/fridge_old",
+      "y": 180
+    },
+    "facing=south,open=false,on=true": {
+      "model": "hitori:block/fridge_old",
+      "y": 180
+    },
+    "facing=south,open=true,on=false": {
+      "model": "hitori:block/fridge_old_open",
+      "y": 180
+    },
+    "facing=south,open=true,on=true": {
+      "model": "hitori:block/fridge_old_open",
+      "y": 180
+    },
+    "facing=west,open=false,on=false": {
+      "model": "hitori:block/fridge_old",
+      "y": 270
+    },
+    "facing=west,open=false,on=true": {
+      "model": "hitori:block/fridge_old",
+      "y": 270
+    },
+    "facing=west,open=true,on=false": {
+      "model": "hitori:block/fridge_old_open",
+      "y": 270
+    },
+    "facing=west,open=true,on=true": {
+      "model": "hitori:block/fridge_old_open",
+      "y": 270
+    }
+  }
+}

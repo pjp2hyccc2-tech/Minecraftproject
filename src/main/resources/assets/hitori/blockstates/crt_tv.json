@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=north,on=false,channel=0": {
+      "model": "hitori:block/crt_tv"
+    },
+    "facing=north,on=false,channel=1": {
+      "model": "hitori:block/crt_tv"
+    },
+    "facing=north,on=false,channel=2": {
+      "model": "hitori:block/crt_tv"
+    },
+    "facing=north,on=true,channel=0": {
+      "model": "hitori:block/crt_tv_on_0"
+    },
+    "facing=north,on=true,channel=1": {
+      "model": "hitori:block/crt_tv_on_1"
+    },
+    "facing=north,on=true,channel=2": {
+      "model": "hitori:block/crt_tv_on_2"
+    },
+    "facing=east,on=false,channel=0": {
+      "model": "hitori:block/crt_tv",
+      "y": 90
+    },
+    "facing=east,on=false,channel=1": {
+      "model": "hitori:block/crt_tv",
+      "y": 90
+    },
+    "facing=east,on=false,channel=2": {
+      "model": "hitori:block/crt_tv",
+      "y": 90
+    },
+    "facing=east,on=true,channel=0": {
+      "model": "hitori:block/crt_tv_on_0",
+      "y": 90
+    },
+    "facing=east,on=true,channel=1": {
+      "model": "hitori:block/crt_tv_on_1",
+      "y": 90
+    },
+    "facing=east,on=true,channel=2": {
+      "model": "hitori:block/crt_tv_on_2",
+      "y": 90
+    },
+    "facing=south,on=false,channel=0": {
+      "model": "hitori:block/crt_tv",
+      "y": 180
+    },
+    "facing=south,on=false,channel=1": {
+      "model": "hitori:block/crt_tv",
+      "y": 180
+    },
+    "facing=south,on=false,channel=2": {
+      "model": "hitori:block/crt_tv",
+      "y": 180
+    },
+    "facing=south,on=true,channel=0": {
+      "model": "hitori:block/crt_tv_on_0",
+      "y": 180
+    },
+    "facing=south,on=true,channel=1": {
+      "model": "hitori:block/crt_tv_on_1",
+      "y": 180
+    },
+    "facing=south,on=true,channel=2": {
+      "model": "hitori:block/crt_tv_on_2",
+      "y": 180
+    },
+    "facing=west,on=false,channel=0": {
+      "model": "hitori:block/crt_tv",
+      "y": 270
+    },
+    "facing=west,on=false,channel=1": {
+      "model": "hitori:block/crt_tv",
+      "y": 270
+    },
+    "facing=west,on=false,channel=2": {
+      "model": "hitori:block/crt_tv",
+      "y": 270
+    },
+    "facing=west,on=true,channel=0": {
+      "model": "hitori:block/crt_tv_on_0",
+      "y": 270
+    },
+    "facing=west,on=true,channel=1": {
+      "model": "hitori:block/crt_tv_on_1",
+      "y": 270
+    },
+    "facing=west,on=true,channel=2": {
+      "model": "hitori:block/crt_tv_on_2",
+      "y": 270
+    }
+  }
+}

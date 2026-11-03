@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/camera_bag"
+    },
+    "facing=east": {
+      "model": "hitori:block/camera_bag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/camera_bag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/camera_bag",
+      "y": 270
+    }
+  }
+}

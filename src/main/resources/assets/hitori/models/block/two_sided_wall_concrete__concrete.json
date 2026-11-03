@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "hitori:block/concrete",
+    "north": "hitori:block/concrete",
+    "south": "hitori:block/concrete",
+    "east": "hitori:block/concrete",
+    "west": "hitori:block/concrete",
+    "up": "hitori:block/concrete",
+    "down": "hitori:block/concrete"
+  }
+}

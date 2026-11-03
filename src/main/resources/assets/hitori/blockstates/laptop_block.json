@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,open=false,on=false": {
+      "model": "hitori:block/laptop_block"
+    },
+    "facing=north,open=false,on=true": {
+      "model": "hitori:block/laptop_block_on"
+    },
+    "facing=north,open=true,on=false": {
+      "model": "hitori:block/laptop_block_open"
+    },
+    "facing=north,open=true,on=true": {
+      "model": "hitori:block/laptop_block_open_on"
+    },
+    "facing=east,open=false,on=false": {
+      "model": "hitori:block/laptop_block",
+      "y": 90
+    },
+    "facing=east,open=false,on=true": {
+      "model": "hitori:block/laptop_block_on",
+      "y": 90
+    },
+    "facing=east,open=true,on=false": {
+      "model": "hitori:block/laptop_block_open",
+      "y": 90
+    },
+    "facing=east,open=true,on=true": {
+      "model": "hitori:block/laptop_block_open_on",
+      "y": 90
+    },
+    "facing=south,open=false,on=false": {
+      "model": "hitori:block/laptop_block",
+      "y": 180
+    },
+    "facing=south,open=false,on=true": {
+      "model": "hitori:block/laptop_block_on",
+      "y": 180
+    },
+    "facing=south,open=true,on=false": {
+      "model": "hitori:block/laptop_block_open",
+      "y": 180
+    },
+    "facing=south,open=true,on=true": {
+      "model": "hitori:block/laptop_block_open_on",
+      "y": 180
+    },
+    "facing=west,open=false,on=false": {
+      "model": "hitori:block/laptop_block",
+      "y": 270
+    },
+    "facing=west,open=false,on=true": {
+      "model": "hitori:block/laptop_block_on",
+      "y": 270
+    },
+    "facing=west,open=true,on=false": {
+      "model": "hitori:block/laptop_block_open",
+      "y": 270
+    },
+    "facing=west,open=true,on=true": {
+      "model": "hitori:block/laptop_block_open_on",
+      "y": 270
+    }
+  }
+}

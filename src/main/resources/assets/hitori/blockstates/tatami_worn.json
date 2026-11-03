@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "hitori:block/tatami_worn"
+    },
+    "axis=x": {
+      "model": "hitori:block/tatami_worn",
+      "y": 90
+    }
+  }
+}

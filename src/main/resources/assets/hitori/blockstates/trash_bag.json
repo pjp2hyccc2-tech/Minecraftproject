@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/trash_bag"
+    },
+    "facing=east": {
+      "model": "hitori:block/trash_bag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/trash_bag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/trash_bag",
+      "y": 270
+    }
+  }
+}

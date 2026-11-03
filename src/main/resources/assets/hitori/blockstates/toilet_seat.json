@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/toilet_seat"
+    },
+    "facing=east": {
+      "model": "hitori:block/toilet_seat",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/toilet_seat",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/toilet_seat",
+      "y": 270
+    }
+  }
+}
