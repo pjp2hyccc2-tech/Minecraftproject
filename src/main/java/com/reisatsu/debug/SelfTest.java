@@ -116,6 +116,9 @@ public final class SelfTest {
                 case 3 -> awarenessWatch(level, data);
                 case 30 -> awayStart(level, data);
                 case 31 -> awayResult(level, data);
+                case 32 -> camStart(level, data);
+                case 33 -> camWatch(level, data);
+                case 34 -> camOffResult(level, data);
                 case 4 -> noiseStart(level, data);
                 case 5 -> noiseResult(level, data);
                 case 6 -> caughtStart(level, data);
@@ -341,12 +344,13 @@ public final class SelfTest {
         return laneEye.add(laneSpirit.subtract(laneEye).normalize().scale(blocks));
     }
 
+    /** Sight alone: the waitress (no security cameras, unlike the manager) 3 blocks away, facing you, in the dark. */
     private static void awarenessStart(ServerLevel level, GameData data) {
         place(laneEye, laneYaw);
-        probe = Spirits.spawnAt(level, SpiritKind.MANAGER, along(3.0), laneYaw + 180.0f);
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, along(3.0), laneYaw + 180.0f);
         if (probe != null) {
             probe.debugStill = true;
-            probe.setAnimPose(Manager.STAND);
+            probe.setAnimPose(com.reisatsu.entity.Waitress.STAND);
             probe.faceYaw(laneYaw + 180.0f);
         }
         maxAware = 0.0f;
@@ -377,10 +381,10 @@ public final class SelfTest {
 
     private static void awayStart(ServerLevel level, GameData data) {
         place(laneEye, laneYaw);
-        probe = Spirits.spawnAt(level, SpiritKind.MANAGER, along(3.0), laneYaw); // its back to you
+        probe = Spirits.spawnAt(level, SpiritKind.WAITRESS, along(3.0), laneYaw); // her back to you
         if (probe != null) {
             probe.debugStill = true;
-            probe.setAnimPose(Manager.STAND);
+            probe.setAnimPose(com.reisatsu.entity.Waitress.STAND);
             probe.faceYaw(laneYaw);
         }
         next(31, 40);
@@ -390,6 +394,44 @@ public final class SelfTest {
         float a = probe == null ? -1 : probe.awarenessOf(fake);
         check(a == 0.0f && probe != null && !probe.hunting(), String.format(Locale.ROOT, "a spirit with its back to you does not see you (%.2f)", a));
         if (probe != null) probe.discard();
+        next(32, 5);
+    }
+
+    // ------------------------------------------------------------------------------------------------ 32-34: the security cameras
+    /** The manager at his desk, far away in the office, watches the dining room through its cameras (circuit on). */
+    private static void camStart(ServerLevel level, GameData data) {
+        place(laneEye, laneYaw);
+        Layout.Marker d = Layout.marker("manager_desk");
+        probe = Spirits.spawnAt(level, SpiritKind.MANAGER, Manager.deskSpot(), d.yaw());
+        if (probe != null) {
+            probe.debugStill = true;
+            probe.setAnimPose(Manager.SIT);
+        }
+        maxAware = 0.0f;
+        next(33, 0);
+    }
+
+    private static void camWatch(ServerLevel level, GameData data) {
+        if (probe == null) {
+            check(false, "the manager spawns at his desk");
+            next(4, 5);
+            return;
+        }
+        float a = probe.awarenessOf(fake);
+        maxAware = Math.max(maxAware, a);
+        if (a >= 0.5f || stageTicks > 100) {
+            check(a >= 0.5f, String.format(Locale.ROOT, "the manager at his desk sees you through a security camera (%.2f after %d ticks)", maxAware, stageTicks));
+            probe.setAwareness(fake, 0.0f);
+            com.reisatsu.world.Fixtures.setCircuit(level, com.reisatsu.world.Circuit.CAMERAS, false);
+            next(34, 40);
+        }
+    }
+
+    private static void camOffResult(ServerLevel level, GameData data) {
+        float a = probe == null ? -1 : probe.awarenessOf(fake);
+        check(a == 0.0f, String.format(Locale.ROOT, "with the cameras' circuit off he sees nothing from there (%.2f)", a));
+        if (probe != null) probe.discard();
+        com.reisatsu.world.Fixtures.setCircuit(level, com.reisatsu.world.Circuit.CAMERAS, true);
         next(4, 5);
     }
 
