@@ -152,28 +152,29 @@ def _dark_room_frame(i):
     w, h = 16, 12
     a = blank(16, 16, '#000000')
     x, y = grid(w, h)
-    img = np.zeros((h, w, 3)) + np.array([18, 24, 26])
+    img = np.zeros((h, w, 3)) + np.array([34, 42, 44])
     # floor (tatami lines in perspective) in the lower half
     floor = y >= 5
-    img[floor] = (34, 38, 30)
+    img[floor] = (62, 68, 54)
     for k in range(3):
         xx = 3 + k * 5 + (y - 5) * (k - 1) * 0.5
-        img[floor & (np.abs(x - xx) < 0.6)] = (20, 22, 18)
+        img[floor & (np.abs(x - xx) < 0.6)] = (30, 32, 26)
     # back wall with the closet fusuma (two pale panels) on the left
-    img[(y < 5) & (x < 7)] = (52, 56, 52)
-    img[(y < 5) & (x == 3)] = (26, 28, 26)
-    img[(y < 5) & (x >= 7)] = (28, 32, 34)
-    # the low table: a dark ellipse
+    img[(y < 5) & (x < 7)] = (96, 102, 96)
+    img[(y < 5) & (x == 3)] = (40, 42, 40)
+    img[(y < 5) & (x >= 7)] = (46, 52, 56)
+    # the low table: a dark ellipse with a lit rim
     tab = ((x + 0.5 - 9.0) / 3.0) ** 2 + ((y + 0.5 - 8.0) / 1.4) ** 2 < 1
-    img[tab] = (10, 10, 10)
+    img[tab] = (14, 14, 14)
+    img[tab & (y == 7)] = (70, 60, 56)
     # the TV's own glow in the right corner (a bright square = the screen you are looking at)
-    img[(x >= 13) & (x <= 14) & (y >= 3) & (y <= 4)] = (150, 160, 170)
-    # a figure in the doorway on frames 5..8: a thin pale-faced silhouette
+    img[(x >= 13) & (x <= 14) & (y >= 3) & (y <= 4)] = (190, 200, 210)
+    # a figure in the doorway on frames 5..8: a thin black silhouette with a pale face
     if 5 <= i <= 8:
-        img[(x == 6) & (y >= 2) & (y <= 7)] = (8, 8, 8)
-        img[(x == 6) & (y == 2)] = (90, 90, 86)
+        img[(x >= 5) & (x <= 6) & (y >= 2) & (y <= 7)] = (6, 6, 6)
+        img[(x == 6) & (y == 2)] = (150, 150, 144)
     nz = r.random((h, w))
-    img += (nz[..., None] - 0.5) * 34
+    img += (nz[..., None] - 0.5) * 40
     # a slow rolling bar
     bar = np.abs(((y + i) % 12) - 3) < 1
     img[bar] *= 1.25
@@ -205,9 +206,15 @@ def _face_frame(i):
     mouth = ((x + 0.5 - fx) / (0.9 * scale)) ** 2 + ((y + 0.5 - (fy + 2.2 * scale)) / (1.1 * scale)) ** 2 < 1
     hair = (((x + 0.5 - fx) / (4.4 * scale)) ** 2 + ((y + 0.5 - (fy - 0.6)) / (5.6 * scale)) ** 2 < 1) & ~face
     img = base.copy()
-    img = np.where(face, img * (1 - strength) + 200 * strength, img)
-    img = np.where(hair, img * (1 - strength) + 12 * strength, img)
-    img = np.where(eyes | mouth, img * (1 - strength) + 6 * strength, img)
+    shade_ = np.clip(1.0 - (y - (fy - 3)) / 10.0, 0.55, 1.0) - np.abs(x + 0.5 - fx) / 12.0
+    face_v = 170 * shade_ + (nz - 0.5) * 60
+    img = np.where(face, img * (1 - strength) + face_v * strength, img)
+    img = np.where(hair, img * (1 - strength) + (10 + nz * 20) * strength, img)
+    img = np.where(eyes | mouth, img * (1 - strength) + 4 * strength, img)
+    # one eye glints (the TV light caught in it)
+    gx, gy = int(fx + 1.4 * scale), int(fy - 0.8 * scale)
+    if strength > 0.8 and 0 <= gx < w and 0 <= gy < h:
+        img[gy, gx] = 200
     corner, vig = _crt_mask(w, h)
     img = img * (0.6 + 0.4 * vig)
     col = np.stack([img * 0.95, img * 0.98, img * 1.04], -1)

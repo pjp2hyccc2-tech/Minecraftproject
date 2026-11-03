@@ -522,13 +522,19 @@ def _puddle_frame(i):
     edge = shape & ~(np.roll(shape, 1, 0) & np.roll(shape, -1, 0) & np.roll(shape, 1, 1) & np.roll(shape, -1, 1))
     a[edge] = C('#2a3238', 150)
     r = rng(13802)
-    drops = [(r.uniform(3, 13), r.uniform(3, 13), int(r.integers(0, 16))) for _ in range(9)]
+    drops = [(int(r.integers(3, 13)), int(r.integers(3, 13)), int(r.integers(0, 16))) for _ in range(10)]
+    RINGS = {0: [(0, 0)], 1: [(0, -1), (-1, 0), (1, 0), (0, 1)],
+             2: [(0, -2), (-1, -1), (1, -1), (-2, 0), (2, 0), (-1, 1), (1, 1), (0, 2)],
+             3: [(-1, -3), (0, -3), (1, -3), (-3, -1), (3, -1), (-3, 0), (3, 0), (-3, 1), (3, 1), (-1, 3), (0, 3),
+                 (1, 3), (-2, -2), (2, -2), (-2, 2), (2, 2)]}
     for (cx, cy, t0) in drops:
         age = (i - t0) % 16
-        if age < 4:
-            rr = 0.4 + age * 0.9
-            ring = (np.abs(np.hypot(x + 0.5 - cx, y + 0.5 - cy) - rr) < 0.45) & shape
-            a[ring] = C('#8a9aa6', 230 - age * 45)
+        if age in RINGS:
+            al = (240, 200, 150, 90)[age]
+            for (dx, dy) in RINGS[age]:
+                xx, yy = cx + dx, cy + dy
+                if 0 <= xx < w and 0 <= yy < h and shape[yy, xx]:
+                    a[yy, xx] = C('#9aaab6', al)
     return a
 
 
