@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""遭難 ―REISATSU― sound generator.
+"""霊撮 ―REISATSU― sound generator.
 
 Synthesises every sound effect and music cue of the mod from scratch
 (numpy / scipy, no samples), encodes them to OGG Vorbis with ffmpeg and writes
 ``sounds.json``, the subtitle tables and a measurement report.
 
     python3 tools/audio/gen_sounds.py               # everything
-    python3 tools/audio/gen_sounds.py --only 'nozoki/*' --spec /tmp/spec
+    python3 tools/audio/gen_sounds.py --only 'door/*' --spec /tmp/spec
     python3 tools/audio/gen_sounds.py --report-only # re-measure existing files
 
 Output is deterministic: every file uses its own fixed seed (crc32 of its
@@ -30,7 +30,7 @@ import numpy as np  # noqa: E402
 import analyze  # noqa: E402
 import dsp  # noqa: E402
 import voice  # noqa: E402
-from catalog import CATALOG, EXTRAS, files  # noqa: E402
+from catalog import CATALOG, EXTRAS, files, resolve  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 ASSETS = os.path.join(ROOT, "src", "main", "resources", "assets", "reisatsu")
@@ -134,7 +134,7 @@ def _render(job):
     ent = entry_for(event)
     t0 = time.time()
     rng = dsp.rng_for(path)
-    x = ent.fn(rng, idx)
+    x = resolve(ent)(rng, idx)
     out = os.path.join(SOUND_DIR, path + ".ogg")
     if ent.norm[0] == "dense":
         # the decoded (true) peak of a saturated signal overshoots after Vorbis
@@ -182,10 +182,14 @@ def _render(job):
 
 
 def write_sounds_json(durations):
+    """sounds.json for every event that has its files (positional sounds get their attenuation distance; files
+    longer than 8 s stream; diegetic events carry their subtitle)."""
     data = {}
     for ent in CATALOG:
         sounds = []
         for path, _ in files(ent):
+            if not os.path.exists(os.path.join(SOUND_DIR, path + ".ogg")):
+                continue
             s = {"name": f"reisatsu:{path}"}
             if durations.get(path, 0.0) > STREAM_MIN_SEC:
                 s["stream"] = True
@@ -194,8 +198,10 @@ def write_sounds_json(durations):
             if ent.extra.get("preload"):
                 s["preload"] = True
             sounds.append(s)
+        if not sounds:
+            continue
         item = {}
-        if ent.ja is not None:
+        if ent.ja is not None and ent.extra.get("sub", True):
             item["subtitle"] = f"subtitles.reisatsu.{ent.event}"
         item["sounds"] = sounds
         data[ent.event] = item
@@ -262,6 +268,7 @@ def report(spec_dir=None, pattern=None):
     lines.append(hdr)
     lines.append("-" * len(hdr))
     durations = {}
+    missing = []
     groups = {}
     worst_tp = -100.0
     for ent in CATALOG:
@@ -269,6 +276,7 @@ def report(spec_dir=None, pattern=None):
             fp = os.path.join(SOUND_DIR, path + ".ogg")
             if not os.path.exists(fp):
                 lines.append(f"{path:32s} MISSING")
+                missing.append(path)
                 continue
             st, notes = _stats_cached(cache, path, fp, ent)
             notes = list(notes)
@@ -291,7 +299,8 @@ def report(spec_dir=None, pattern=None):
                                         f"{path}  dur={st['dur']:.2f}s TP={st['tp_db']:.1f} LUFS={st['lufs']:.1f} rough={st['rough']:.2f}",
                                         fmax=12000 if ent.ch == 1 else 8000)
     lines.append("-" * len(hdr))
-    lines.append(f"{len(durations)} files, total {total / 1024 / 1024:.2f} MB, worst true peak {worst_tp:.2f} dBTP")
+    lines.append(f"{len(durations)} files, total {total / 1024 / 1024:.2f} MB, worst true peak {worst_tp:.2f} dBTP"
+                 + (f", {len(missing)} MISSING" if missing else ""))
     lines.append("")
     lines.append("Level summary (decoded files)")
     for g in ("beds", "music", "jumpscare", "one-shots"):
@@ -313,7 +322,7 @@ def report(spec_dir=None, pattern=None):
     lines.append("would show as >> 3.  binaural = detected carrier pairs (a tone in one ear only, its partner 2-10 Hz")
     lines.append("away in the other ear); faint pairs buried in the wind / tunnel noise are not always detected.")
     lines.append("")
-    lines.append("Extra events (not in DESIGN.md section 7): " + ", ".join(EXTRAS))
+    lines.append("Extra events (not in DESIGN.md section 8): " + (", ".join(EXTRAS) if EXTRAS else "none"))
     with open(CACHE, "w", encoding="utf-8") as f:
         json.dump(cache, f)
     with open(os.path.join(HERE, "report.txt"), "w", encoding="utf-8") as f:
@@ -344,7 +353,7 @@ def main():
     t0 = time.time()
     if not args.report_only:
         todo = jobs(args.only)
-        weight = {"music/": 9, "amb/forest": 7, "amb/insects": 6, "amb/": 3, "game/jumpscare": 4, "oyama/": 3}
+        weight = {"music/": 9, "amb/night_road": 7, "amb/": 3, "game/jumpscare": 4, "fixture/crash": 3}
         todo.sort(key=lambda j: -max([w for k, w in weight.items() if j[1].startswith(k)] + [1]))
         print(f"rendering {len(todo)} files with {args.jobs} worker(s)...")
         if args.jobs > 1:

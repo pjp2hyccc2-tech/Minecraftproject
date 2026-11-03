@@ -24,3 +24,4 @@ run-data
 logs
 *.log
 __pycache__/
+tools/audio/.stats_cache.json

@@ -1,0 +1,529 @@
+{
+  "door.auto_open": {
+    "subtitle": "subtitles.reisatsu.door.auto_open",
+    "sounds": [
+      {
+        "name": "reisatsu:door/auto_open",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "door.auto_close": {
+    "subtitle": "subtitles.reisatsu.door.auto_close",
+    "sounds": [
+      {
+        "name": "reisatsu:door/auto_close",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "door.chime": {
+    "subtitle": "subtitles.reisatsu.door.chime",
+    "sounds": [
+      {
+        "name": "reisatsu:door/chime_1",
+        "attenuation_distance": 32,
+        "preload": true
+      },
+      {
+        "name": "reisatsu:door/chime_2",
+        "attenuation_distance": 32,
+        "preload": true
+      }
+    ]
+  },
+  "door.chime_wrong": {
+    "subtitle": "subtitles.reisatsu.door.chime_wrong",
+    "sounds": [
+      {
+        "name": "reisatsu:door/chime_wrong_1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "reisatsu:door/chime_wrong_2",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "door.swing": {
+    "subtitle": "subtitles.reisatsu.door.swing",
+    "sounds": [
+      {
+        "name": "reisatsu:door/swing_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:door/swing_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:door/swing_3",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "door.open": {
+    "subtitle": "subtitles.reisatsu.door.open",
+    "sounds": [
+      {
+        "name": "reisatsu:door/open_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:door/open_2",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "door.close": {
+    "subtitle": "subtitles.reisatsu.door.close",
+    "sounds": [
+      {
+        "name": "reisatsu:door/close_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:door/close_2",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "door.fridge_open": {
+    "subtitle": "subtitles.reisatsu.door.fridge_open",
+    "sounds": [
+      {
+        "name": "reisatsu:door/fridge_open",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "door.fridge_close": {
+    "subtitle": "subtitles.reisatsu.door.fridge_close",
+    "sounds": [
+      {
+        "name": "reisatsu:door/fridge_close",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "door.stall_bang": {
+    "subtitle": "subtitles.reisatsu.door.stall_bang",
+    "sounds": [
+      {
+        "name": "reisatsu:door/stall_bang_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "reisatsu:door/stall_bang_2",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "door.locked": {
+    "subtitle": "subtitles.reisatsu.door.locked",
+    "sounds": [
+      {
+        "name": "reisatsu:door/locked",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "door.unlock": {
+    "subtitle": "subtitles.reisatsu.door.unlock",
+    "sounds": [
+      {
+        "name": "reisatsu:door/unlock",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "door.switch": {
+    "subtitle": "subtitles.reisatsu.door.switch",
+    "sounds": [
+      {
+        "name": "reisatsu:door/switch",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "fixture.call_button": {
+    "subtitle": "subtitles.reisatsu.fixture.call_button",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/call_button_1",
+        "attenuation_distance": 24,
+        "preload": true
+      },
+      {
+        "name": "reisatsu:fixture/call_button_2",
+        "attenuation_distance": 24,
+        "preload": true
+      }
+    ]
+  },
+  "fixture.call_display": {
+    "subtitle": "subtitles.reisatsu.fixture.call_display",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/call_display",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "fixture.service_bell": {
+    "subtitle": "subtitles.reisatsu.fixture.service_bell",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/service_bell",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "fixture.pass_bell": {
+    "subtitle": "subtitles.reisatsu.fixture.pass_bell",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/pass_bell",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "fixture.register_drawer": {
+    "subtitle": "subtitles.reisatsu.fixture.register_drawer",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/register_drawer",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.phone_voice": {
+    "subtitle": "subtitles.reisatsu.fixture.phone_voice",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/phone_voice_1"
+      },
+      {
+        "name": "reisatsu:fixture/phone_voice_2"
+      }
+    ]
+  },
+  "fixture.faucet_on": {
+    "subtitle": "subtitles.reisatsu.fixture.faucet_on",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/faucet_on",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.faucet_off": {
+    "subtitle": "subtitles.reisatsu.fixture.faucet_off",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/faucet_off",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.drink_pour": {
+    "subtitle": "subtitles.reisatsu.fixture.drink_pour",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/drink_pour_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:fixture/drink_pour_2",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.ice_drop": {
+    "subtitle": "subtitles.reisatsu.fixture.ice_drop",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/ice_drop_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:fixture/ice_drop_2",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.gas_ignite": {
+    "subtitle": "subtitles.reisatsu.fixture.gas_ignite",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/gas_ignite",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.breaker_off": {
+    "subtitle": "subtitles.reisatsu.fixture.breaker_off",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/breaker_off",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "fixture.breaker_on": {
+    "subtitle": "subtitles.reisatsu.fixture.breaker_on",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/breaker_on",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "fixture.light_flicker": {
+    "subtitle": "subtitles.reisatsu.fixture.light_flicker",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/light_flicker_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:fixture/light_flicker_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:fixture/light_flicker_3",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.light_burst": {
+    "subtitle": "subtitles.reisatsu.fixture.light_burst",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/light_burst_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "reisatsu:fixture/light_burst_2",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.time_card": {
+    "subtitle": "subtitles.reisatsu.fixture.time_card",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/time_card",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "fixture.locker": {
+    "subtitle": "subtitles.reisatsu.fixture.locker",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/locker_1",
+        "attenuation_distance": 8
+      },
+      {
+        "name": "reisatsu:fixture/locker_2",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "fixture.chair_scrape": {
+    "subtitle": "subtitles.reisatsu.fixture.chair_scrape",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/chair_scrape_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "reisatsu:fixture/chair_scrape_2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "reisatsu:fixture/chair_scrape_3",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.chair_fall": {
+    "subtitle": "subtitles.reisatsu.fixture.chair_fall",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/chair_fall_1",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "reisatsu:fixture/chair_fall_2",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "fixture.plate_break": {
+    "subtitle": "subtitles.reisatsu.fixture.plate_break",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/plate_break_1",
+        "attenuation_distance": 32,
+        "preload": true
+      },
+      {
+        "name": "reisatsu:fixture/plate_break_2",
+        "attenuation_distance": 32,
+        "preload": true
+      },
+      {
+        "name": "reisatsu:fixture/plate_break_3",
+        "attenuation_distance": 32,
+        "preload": true
+      }
+    ]
+  },
+  "fixture.glass_set": {
+    "subtitle": "subtitles.reisatsu.fixture.glass_set",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/glass_set_1",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "reisatsu:fixture/glass_set_2",
+        "attenuation_distance": 10
+      }
+    ]
+  },
+  "fixture.menu_scatter": {
+    "subtitle": "subtitles.reisatsu.fixture.menu_scatter",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/menu_scatter_1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "reisatsu:fixture/menu_scatter_2",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.pa_chime": {
+    "subtitle": "subtitles.reisatsu.fixture.pa_chime",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/pa_chime"
+      }
+    ]
+  },
+  "fixture.pa_voice": {
+    "subtitle": "subtitles.reisatsu.fixture.pa_voice",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/pa_voice_1"
+      },
+      {
+        "name": "reisatsu:fixture/pa_voice_2"
+      },
+      {
+        "name": "reisatsu:fixture/pa_voice_3"
+      }
+    ]
+  },
+  "fixture.car_pass": {
+    "subtitle": "subtitles.reisatsu.fixture.car_pass",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/car_pass_1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "reisatsu:fixture/car_pass_2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "reisatsu:fixture/car_pass_3",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "fixture.motorbike": {
+    "subtitle": "subtitles.reisatsu.fixture.motorbike",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/motorbike",
+        "stream": true,
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "fixture.crash": {
+    "subtitle": "subtitles.reisatsu.fixture.crash",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/crash",
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "fixture.toilet_flush": {
+    "subtitle": "subtitles.reisatsu.fixture.toilet_flush",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/toilet_flush",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.stall_knock": {
+    "subtitle": "subtitles.reisatsu.fixture.stall_knock",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/stall_knock_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:fixture/stall_knock_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:fixture/stall_knock_3",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.fridge_knock": {
+    "subtitle": "subtitles.reisatsu.fixture.fridge_knock",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/fridge_knock_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:fixture/fridge_knock_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:fixture/fridge_knock_3",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.ball_bounce": {
+    "subtitle": "subtitles.reisatsu.fixture.ball_bounce",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/ball_bounce",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.toy_squeak": {
+    "subtitle": "subtitles.reisatsu.fixture.toy_squeak",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/toy_squeak",
+        "attenuation_distance": 8
+      }
+    ]
+  }
+}

@@ -1,0 +1,282 @@
+REISATSU sound report (measured on the decoded OGG files)
+
+file                              dur s ch   peak     TP    RMS   LUFS   Mmax crest  cent rough     KB  notes
+-------------------------------------------------------------------------------------------------------------
+amb/night_road                   MISSING
+amb/dining                       MISSING
+amb/kitchen                      MISSING
+amb/restroom                     MISSING
+amb/back                         MISSING
+amb/fridge                       MISSING
+amb/silence                      MISSING
+amb/closing                      MISSING
+amb/fluorescent                  MISSING
+amb/vending                      MISSING
+amb/sign_buzz                    MISSING
+amb/drip_1                       MISSING
+amb/drip_2                       MISSING
+amb/drip_3                       MISSING
+amb/drip_4                       MISSING
+amb/gutter                       MISSING
+fixture/faucet_loop              MISSING
+fixture/hand_dryer               MISSING
+fixture/fryer_loop               MISSING
+fixture/gas_loop                 MISSING
+fixture/dishwasher               MISSING
+fixture/tv_static                MISSING
+fixture/monitor_static           MISSING
+fixture/phone_ring               MISSING
+spirit/near                      MISSING
+camera/sense                     MISSING
+music/dread                      MISSING
+music/tension                    MISSING
+music/danger                     MISSING
+music/chase                      MISSING
+music/safe                       MISSING
+music/title                      MISSING
+music/store                      MISSING
+music/store_wrong                MISSING
+music/closing                    MISSING
+music/exorcism                   MISSING
+music/ending_good                MISSING
+music/ending_bad                 MISSING
+door/auto_open                     1.37  1   -3.2   -3.2  -16.8  -16.5  -14.5  13.6   323  0.47   13.1  
+door/auto_close                    1.95  1   -2.9   -2.9  -18.8  -18.9  -17.0  15.8   263  0.51   17.7  
+door/chime_1                       2.08  1   -2.0   -2.0  -16.3  -13.9  -11.0  14.3   740  0.08    9.0  
+door/chime_2                       2.05  1   -1.9   -1.9  -16.9  -14.7  -11.7  15.0   745  0.10    9.0  
+door/chime_wrong_1                 4.52  1   -1.9   -1.9  -18.3  -17.0  -12.9  16.4   621  0.17   17.1  
+door/chime_wrong_2                 5.06  1   -1.9   -1.9  -16.4  -13.9   -8.9  14.5   917  0.07   20.3  
+door/swing_1                       1.61  1   -2.9   -2.9  -25.1  -26.9  -23.6  22.2   210  0.74   11.0  
+door/swing_2                       1.81  1   -2.9   -2.9  -24.1  -25.0  -21.5  21.2   179  0.50   11.9  
+door/swing_3                       1.22  1   -3.1   -3.1  -24.4  -26.8  -23.1  21.3   221  0.91   10.7  
+door/open_1                        0.79  1   -4.7   -4.7  -31.6  -30.6  -29.0  26.9  1003  0.87   10.9  
+door/open_2                        1.00  1   -4.7   -4.3  -30.0  -29.7  -27.0  25.3   815  0.82   12.0  
+door/close_1                       0.67  1   -3.0   -3.0  -24.4  -24.1  -24.0  21.4   234  1.64    7.3  
+door/close_2                       0.67  1   -5.6   -5.6  -27.0  -26.2  -26.1  21.4   440  1.64    8.2  
+door/fridge_open                   1.86  1   -3.0   -2.9  -27.6  -29.5  -21.4  24.6  1132  0.18   19.1  
+door/fridge_close                  1.02  1   -2.0   -2.0  -19.1  -20.4  -18.7  17.0   132  1.04   10.7  
+door/stall_bang_1                  0.32  1   -1.4   -1.4  -18.0  -19.6  -19.6  16.5   244  0.51    6.5  
+door/stall_bang_2                  0.32  1   -1.0   -1.0  -16.7  -18.4  -18.4  15.7   172  0.41    6.7  
+door/locked                        0.66  1   -5.4   -5.1  -29.3  -28.7  -28.5  24.0  1411  1.02    9.2  
+door/unlock                        0.62  1   -4.2   -4.2  -24.5  -22.2  -20.6  20.3  4948  0.56    9.9  
+door/switch                        0.40  1   -4.2   -4.2  -31.7  -30.6  -30.6  27.5  1780  2.78    6.8  
+fixture/call_button_1              0.86  1   -1.8   -1.7  -14.8  -13.6  -10.4  13.1  1618  0.07    9.0  
+fixture/call_button_2              0.87  1   -1.7   -1.6  -16.0  -14.5  -11.3  14.3  1733  0.07    9.1  
+fixture/call_display               1.48  1   -1.5   -1.5  -14.1  -13.3   -9.3  12.6  1166  0.08    9.4  
+fixture/service_bell               3.04  1   -2.0   -1.7  -22.4  -17.2  -10.9  20.4  4234  0.01   11.6  
+fixture/pass_bell                  2.28  1   -2.1   -1.3  -22.9  -19.1  -12.8  20.8  4449  0.01    9.5  
+fixture/register_drawer            0.92  1   -2.9   -2.8  -21.1  -18.9  -17.7  18.2  1587  0.40   11.1  
+fixture/phone_voice_1              6.20  2   -3.1   -3.0  -24.2  -20.0  -15.7  21.1  1279  0.38   63.4  
+fixture/phone_voice_2              7.00  2   -3.5   -3.5  -25.3  -21.1  -14.8  21.8  1293  0.41   70.7  
+fixture/faucet_on                  2.00  1   -3.4   -3.4  -27.7  -25.2  -22.6  24.2  3554  0.45   20.2  
+fixture/faucet_off                 2.38  1   -4.2   -4.2  -23.8  -21.5  -16.2  19.6  2515  0.57   12.8  
+fixture/drink_pour_1               2.63  1   -4.8   -4.8  -27.4  -24.1  -22.6  22.6  3431  0.30   27.6  
+fixture/drink_pour_2               2.77  1   -4.1   -4.1  -21.7  -18.9  -17.9  17.6  3555  0.22   28.6  
+fixture/ice_drop_1                 1.22  1   -3.0   -3.0  -25.8  -23.7  -20.6  22.8  2066  1.52   14.8  
+fixture/ice_drop_2                 0.60  1   -3.4   -3.2  -25.2  -22.1  -21.6  21.8  1932  1.82    8.5  
+fixture/gas_ignite                 2.60  1   -3.6   -3.6  -36.8  -36.1  -31.0  33.2  1793  0.27   25.5  
+fixture/breaker_off                3.66  1   -1.4   -1.3  -28.0  -30.1  -20.1  26.6   305  0.02   26.2  
+fixture/breaker_on                 3.60  1   -1.3   -1.2  -28.1  -31.5  -21.7  26.8   370  0.46   39.6  
+fixture/light_flicker_1            1.05  1   -4.1   -3.9  -19.9  -20.8  -19.7  15.8   400  0.53   15.3  
+fixture/light_flicker_2            1.55  1   -4.2   -4.0  -18.8  -19.4  -17.5  14.6   421  0.81   19.0  
+fixture/light_flicker_3            0.77  1   -4.3   -4.3  -18.2  -18.7  -17.8  13.9   419  0.33   11.9  
+fixture/light_burst_1              1.30  1   -1.0   -1.0  -27.8  -27.7  -21.8  26.7  2059  0.69   17.3  
+fixture/light_burst_2              1.75  1   -1.1   -1.0  -27.2  -24.5  -20.3  26.1  2359  0.70   22.2  
+fixture/time_card                  1.10  1   -2.9   -2.8  -27.3  -26.0  -23.9  24.4   826  0.87   12.5  
+fixture/locker_1                   0.64  1   -3.0   -2.9  -25.6  -26.0  -23.0  22.6   656  0.48    9.4  
+fixture/locker_2                   0.32  1   -3.0   -3.0  -21.1  -22.2  -22.2  18.1   298  0.18    6.0  
+fixture/chair_scrape_1             0.67  1   -2.4   -2.4  -22.1  -20.2  -19.7  19.6  1115  0.38    8.5  
+fixture/chair_scrape_2             1.21  1   -2.4   -2.3  -22.4  -21.1  -20.4  20.0  1167  0.39   12.6  
+fixture/chair_scrape_3             1.04  1   -1.9   -1.8  -23.5  -23.1  -20.4  21.6  1078  0.32   10.7  
+fixture/chair_fall_1               0.78  1   -1.1   -1.0  -22.3  -21.4  -21.2  21.3   226  1.24   10.4  
+fixture/chair_fall_2               0.85  1   -1.4   -1.3  -21.6  -21.1  -20.0  20.2   249  0.80   10.2  
+fixture/plate_break_1              2.09  1   -2.0   -1.3  -29.2  -28.0  -20.4  27.2  4590  0.34   22.7  
+fixture/plate_break_2              2.23  1   -2.0   -2.0  -30.1  -30.4  -20.4  28.1  5811  0.43   24.2  
+fixture/plate_break_3              2.29  1   -1.7   -1.2  -30.3  -28.7  -21.4  28.6  4818  0.38   24.4  
+fixture/glass_set_1                0.56  1   -3.9   -3.9  -22.9  -21.0  -20.2  19.0  1475  0.46    7.8  
+fixture/glass_set_2                0.63  1   -4.3   -4.3  -21.6  -19.3  -18.1  17.3  1637  0.34    8.1  
+fixture/menu_scatter_1             1.49  1   -3.3   -3.3  -29.1  -25.8  -23.2  25.8  3447  0.48   16.8  
+fixture/menu_scatter_2             1.39  1   -2.1   -2.1  -27.3  -23.8  -21.2  25.2  3371  0.66   15.9  
+fixture/pa_chime                   4.55  2   -2.0   -2.0  -16.9   -9.5   -6.1  14.9  1245  0.15   61.4  
+fixture/pa_voice_1                 7.27  2   -3.0   -3.0  -18.0  -14.2  -11.6  15.0   740  0.13   98.3  
+fixture/pa_voice_2                 5.70  2   -3.0   -3.0  -20.0  -15.9  -12.7  17.0   726  0.52   76.4  
+fixture/pa_voice_3                 4.63  2   -2.8   -2.8  -19.1  -15.5  -12.8  16.3   702  0.55   63.1  
+fixture/car_pass_1                 7.00  1   -2.8   -2.4  -25.3  -19.7  -14.5  22.5  3575  0.12   63.3  
+fixture/car_pass_2                 7.00  1   -2.0   -2.0  -24.4  -18.4  -12.5  22.4  3743  0.13   63.1  
+fixture/car_pass_3                 7.00  1   -2.1   -2.0  -22.3  -17.6  -11.9  20.2  3620  0.13   64.0  
+fixture/motorbike                  8.20  1   -2.0   -2.0  -16.2  -16.4  -11.5  14.2   380  0.07   55.6  
+fixture/crash                      6.50  1   -1.2   -1.2  -21.2  -19.8  -13.6  20.0   805  0.27   44.2  
+fixture/toilet_flush               5.50  1   -2.1   -2.1  -22.2  -16.8  -14.8  20.1  3143  0.17   48.1  
+fixture/stall_knock_1              0.67  1   -2.0   -2.0  -23.4  -25.1  -24.8  21.4   242  1.42    6.0  
+fixture/stall_knock_2              0.93  1   -2.1   -2.1  -24.0  -25.3  -23.4  21.9   259  1.47    7.1  
+fixture/stall_knock_3              1.49  1   -2.1   -2.0  -25.6  -28.1  -23.9  23.5   334  0.44   12.7  
+fixture/fridge_knock_1             1.46  1   -3.0   -3.0  -19.2  -20.6  -20.0  16.2   111  0.90    9.2  
+fixture/fridge_knock_2             2.06  1   -3.1   -3.1  -20.4  -20.6  -20.0  17.3   111  1.40    9.3  
+fixture/fridge_knock_3             1.64  1   -3.0   -3.0  -18.8  -20.7  -18.4  15.8   113  0.51   13.1  
+fixture/ball_bounce                2.89  1   -3.1   -3.1  -27.3  -27.5  -23.7  24.2   401  1.04   18.3  
+fixture/toy_squeak                 0.80  1   -3.9   -3.8  -19.9  -17.8  -17.1  16.0  2765  0.29    9.6  
+camera/raise                     MISSING
+camera/lower                     MISSING
+camera/shutter_1                 MISSING
+camera/shutter_2                 MISSING
+camera/charge                    MISSING
+camera/eject                     MISSING
+camera/empty                     MISSING
+camera/zoom                      MISSING
+camera/load                      MISSING
+photo/develop                    MISSING
+photo/name                       MISSING
+photo/fail                       MISSING
+item/flashlight_on               MISSING
+item/flashlight_off              MISSING
+item/flashlight_flicker_1        MISSING
+item/flashlight_flicker_2        MISSING
+item/flashlight_flicker_3        MISSING
+item/ofuda_burn                  MISSING
+item/key                         MISSING
+item/paper_1                     MISSING
+item/paper_2                     MISSING
+player/heartbeat                 MISSING
+player/breath_fear_1             MISSING
+player/breath_fear_2             MISSING
+player/breath_fear_3             MISSING
+player/breath_hold               MISSING
+player/gasp_1                    MISSING
+player/gasp_2                    MISSING
+player/step_tile_1               MISSING
+player/step_tile_2               MISSING
+player/step_tile_3               MISSING
+player/step_tile_4               MISSING
+player/step_vinyl_1              MISSING
+player/step_vinyl_2              MISSING
+player/step_vinyl_3              MISSING
+player/step_vinyl_4              MISSING
+player/step_kitchen_1            MISSING
+player/step_kitchen_2            MISSING
+player/step_kitchen_3            MISSING
+player/step_kitchen_4            MISSING
+player/step_wet_1                MISSING
+player/step_wet_2                MISSING
+player/step_wet_3                MISSING
+player/step_wet_4                MISSING
+player/step_glass_1              MISSING
+player/step_glass_2              MISSING
+player/step_glass_3              MISSING
+player/step_paper_1              MISSING
+player/step_paper_2              MISSING
+visitor/step_1                   MISSING
+visitor/step_2                   MISSING
+visitor/step_3                   MISSING
+visitor/step_4                   MISSING
+visitor/breath_1                 MISSING
+visitor/breath_2                 MISSING
+visitor/visor                    MISSING
+visitor/drip_1                   MISSING
+visitor/drip_2                   MISSING
+visitor/whisper_1                MISSING
+visitor/whisper_2                MISSING
+waitress/step_1                  MISSING
+waitress/step_2                  MISSING
+waitress/step_3                  MISSING
+waitress/greet_1                 MISSING
+waitress/greet_2                 MISSING
+waitress/greet_3                 MISSING
+waitress/water                   MISSING
+waitress/hum                     MISSING
+waitress/tray                    MISSING
+chef/chop_1                      MISSING
+chef/chop_2                      MISSING
+chef/chop_stop                   MISSING
+chef/breath_1                    MISSING
+chef/breath_2                    MISSING
+chef/sizzle                      MISSING
+chef/roar                        MISSING
+chef/step_1                      MISSING
+chef/step_2                      MISSING
+chef/step_3                      MISSING
+chef/scrape                      MISSING
+child/giggle_1                   MISSING
+child/giggle_2                   MISSING
+child/giggle_3                   MISSING
+child/giggle_4                   MISSING
+child/count                      MISSING
+child/moui                       MISSING
+child/madada                     MISSING
+child/mitsuketa                  MISSING
+child/run_1                      MISSING
+child/run_2                      MISSING
+child/run_3                      MISSING
+child/hum                        MISSING
+child/whisper                    MISSING
+mirror/sob_1                     MISSING
+mirror/sob_2                     MISSING
+mirror/whisper                   MISSING
+mirror/knock_1                   MISSING
+mirror/knock_2                   MISSING
+mirror/squeak_1                  MISSING
+mirror/squeak_2                  MISSING
+mirror/scream                    MISSING
+manager/step_1                   MISSING
+manager/step_2                   MISSING
+manager/step_3                   MISSING
+manager/keys                     MISSING
+manager/welcome                  MISSING
+manager/closed                   MISSING
+manager/customer_1               MISSING
+manager/customer_2               MISSING
+manager/sigh                     MISSING
+manager/typing                   MISSING
+manager/chair                    MISSING
+medium/voice_1                   MISSING
+medium/voice_2                   MISSING
+medium/voice_3                   MISSING
+medium/voice_4                   MISSING
+medium/voice_5                   MISSING
+medium/voice_6                   MISSING
+medium/bell                      MISSING
+medium/chant                     MISSING
+medium/clap                      MISSING
+spirit/whisper_1                 MISSING
+spirit/whisper_2                 MISSING
+spirit/whisper_3                 MISSING
+spirit/whisper_4                 MISSING
+spirit/whisper_5                 MISSING
+spirit/whisper_6                 MISSING
+spirit/notice_1                  MISSING
+spirit/notice_2                  MISSING
+spirit/notice_3                  MISSING
+spirit/bound                     MISSING
+spirit/vanish                    MISSING
+game/jumpscare_1                 MISSING
+game/jumpscare_2                 MISSING
+game/jumpscare_3                 MISSING
+game/stinger_1                   MISSING
+game/stinger_2                   MISSING
+game/stinger_3                   MISSING
+game/stinger_4                   MISSING
+game/riser_1                     MISSING
+game/riser_2                     MISSING
+game/caught                      MISSING
+game/wake                        MISSING
+game/captured                    MISSING
+game/closing                     MISSING
+game/title_hit                   MISSING
+game/release                     MISSING
+game/dawn                        MISSING
+game/ending_bad                  MISSING
+-------------------------------------------------------------------------------------------------------------
+75 files, total 1.60 MB, worst true peak -1.00 dBTP, 187 MISSING
+
+Level summary (decoded files)
+  one-shots   75 files  LUFS-I  -36.1 ..   -9.5   max momentary  -31.0 ..   -6.1   RMS  -36.8 ..  -14.1 dBFS
+
+Columns: peak = sample peak dBFS, TP = true peak dBTP (4x oversampled), LUFS = BS.1770 integrated,
+Mmax = max momentary (400 ms) loudness, crest = peak - RMS, cent = spectral centroid Hz,
+rough = RMS amplitude-modulation depth in the 30-150 Hz roughness band (noise ~0.07-0.1,
+clean tones ~0, screams/AM 0.2+).  Loop seam (decoded file, wrap end->start): hf = 2nd-difference
+energy across the seam / median of the windows just before the end and just after the start;
+step = |x[0]-x[-1]| / median local sample step.  ~1 = as smooth as the surrounding material, a click
+would show as >> 3.  binaural = detected carrier pairs (a tone in one ear only, its partner 2-10 Hz
+away in the other ear); faint pairs buried in the wind / tunnel noise are not always detected.
+
+Extra events (not in DESIGN.md section 8): none
