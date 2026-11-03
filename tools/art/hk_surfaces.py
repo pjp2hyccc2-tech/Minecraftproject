@@ -643,22 +643,30 @@ def _steel_leaf(seed, top):
 
 @door_tex('front_door_top')
 def front_door_top():
+    """Upper half: a weathered vertical wooden plaque (表札) with the room number in kanji, 「二〇三」 stacked - each
+    of the three characters is left-right symmetric, so it reads the same from both faces of a vanilla door (which
+    mirrors its texture on one side); the peephole; a sticker; rust at the top corner."""
     a = _steel_leaf(4101, True)
-    # the nameplate card holder: a dark frame with a cream card and the room number in 3x5 digits ("203")
-    rect(a, 1, 1, 15, 9, '#2a2c26')
-    rect(a, 2, 2, 14, 8, '#d8d2bc')
-    hline(a, 2, 14, 2, '#ece6d0')
-    vline(a, 14, 2, 8, '#b8b29c')
-    stamp_mask(a, text35('203', gap=1), 3, 3, '#1e1a16')
+    rect(a, 5, 1, 9, 15, '#2a1c12')
+    plaque = from_idx(np.full((13, 3), 3.6) + wrapn(4102, beta=1.4, w=16, h=16)[:13, :3] * 0.4,
+                      ramp(['#6a5236', '#806446', '#967856', '#a88a64', '#b89a72', '#c6a880'], 6))
+    a[2:15, 6:9] = plaque
+    INK = '#1a120c'
+    # 二 (rows 2..4), 〇 (rows 6..8), 三 (rows 10..14), 3 px wide, centred on x 7
+    for (x, y) in ((7, 2), (6, 4), (7, 4), (8, 4),
+                   (6, 6), (7, 6), (8, 6), (6, 7), (8, 7), (6, 8), (7, 8), (8, 8),
+                   (6, 10), (7, 10), (8, 10), (7, 12), (6, 14), (7, 14), (8, 14)):
+        px(a, x, y, INK)
+    px(a, 7, 7, '#a88a64')
     # the peephole: chrome ring, dark lens with a glint
-    px(a, 8, 10, '#1a1c1e')
-    px(a, 7, 10, '#a8aeb0')
-    px(a, 9, 10, '#7a8084')
-    px(a, 8, 9, '#c8cdd0')
-    px(a, 8, 11, '#6a7074')
-    # a faded sticker below (NHK-style seal of an inspection, unreadable) and rust at the top corner
-    rect(a, 4, 13, 6, 14, '#a89a7a')
-    px(a, 5, 13, '#8a3a2a')
+    px(a, 12, 9, '#1a1c1e')
+    px(a, 11, 9, '#a8aeb0')
+    px(a, 13, 9, '#7a8084')
+    px(a, 12, 8, '#c8cdd0')
+    px(a, 12, 10, '#6a7074')
+    # a faded sticker (an old inspection seal) and rust at the top corner
+    rect(a, 11, 12, 13, 13, '#a89a7a')
+    px(a, 12, 12, '#8a3a2a')
     px(a, 14, 1, '#6a3a1a')
     px(a, 13, 1, '#7a4a28')
     return a
@@ -687,46 +695,6 @@ def front_door_bottom():
     for xx in (3, 4, 9, 13):
         px(a, xx, 15, '#5a2e14')
     px(a, 4, 14, '#7a4020')
-    return a
-
-
-@door_tex('front_door_inner_top')
-def front_door_inner_top():
-    a = _steel_leaf(4121, True)
-    # peephole, the door chain's slide rail and the chain hanging (latch side right)
-    px(a, 8, 10, '#1a1c1e')
-    px(a, 8, 9, '#c8cdd0')
-    px(a, 7, 10, '#a8aeb0')
-    rect(a, 11, 12, 14, 13, '#9ca2a4')
-    hline(a, 11, 14, 12, '#d0d4d4')
-    for (cx, cy) in ((12, 14), (12, 15)):
-        px(a, cx, cy, '#b8bec0')
-    # a garbage-day schedule sheet taped up (pale paper, coloured rows)
-    rect(a, 3, 3, 8, 8, '#e4e0d0')
-    for yy, c in zip((4, 5, 6, 7), ('#c84a3a', '#3a7ac8', '#3aa04a', '#c8a03a')):
-        px(a, 4, yy, c)
-        hline(a, 5, 7, yy, '#8a8678')
-    px(a, 3, 3, '#c8c4b0')
-    px(a, 8, 3, '#c8c4b0')
-    return a
-
-
-@door_tex('front_door_inner_bottom')
-def front_door_inner_bottom():
-    a = _steel_leaf(4131, False)
-    # lever, thumb-turn of the deadbolt above it, the chain end
-    rect(a, 12, 1, 13, 6, '#2a2c2c')
-    rect(a, 9, 3, 13, 4, '#b8bec0')
-    hline(a, 9, 12, 3, '#e0e4e4')
-    rect(a, 12, 0, 13, 1, '#c8ccce')
-    px(a, 12, 0, '#eef0f0')
-    # the mail box behind the slot (a steel box with a lid)
-    rect(a, 3, 5, 11, 9, '#5f6758')
-    hline(a, 3, 11, 5, '#828b78')
-    hline(a, 3, 11, 9, '#3c4238')
-    rect(a, 5, 6, 9, 6, '#121314')
-    rect(a, 1, 13, 15, 15, '#7e8486')
-    hline(a, 1, 15, 13, '#a6acae')
     return a
 
 
@@ -932,13 +900,14 @@ DOOR_ROWS = ['....KKKKKKKK....',
 
 @item('front_door')
 def front_door_item():
-    L = {'K': '#1e221c', 'f': '#3c4238', 'F': '#5f6758', 's': '#717a69', 'p': '#d8d2bc', 'o': '#1a1c1e',
+    L = {'K': '#1e221c', 'f': '#3c4238', 'F': '#5f6758', 's': '#717a69', 'p': '#717a69', 'o': '#1a1c1e',
          'm': '#121314', 'H': '#d8dcdc', 'h': '#8a9092', 'k': '#8e9496'}
-    rows = [r.replace('pppp', 'pppp') for r in DOOR_ROWS]
-    a = _icon(rows, L)
-    px(a, 7, 3, '#2a2620')
-    px(a, 9, 3, '#2a2620')
-    px(a, 8, 4, '#2a2620')
+    a = _icon(DOOR_ROWS, L)
+    rect(a, 6, 2, 7, 7, '#2a1c12')
+    for yy in (2, 4, 6):
+        px(a, 6, yy, '#a88a64')
+        px(a, 7, yy, '#a88a64')
+    px(a, 9, 4, '#1a1c1e')
     return a
 
 

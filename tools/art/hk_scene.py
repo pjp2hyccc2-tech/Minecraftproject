@@ -553,9 +553,51 @@ def scene_camera_app():
     return pair(feed, lap, 'scene_camera_app')
 
 
+def scene_title():
+    """The title screen as it might look: the logo over a dim, slightly blurred night view of the tatami room."""
+    from PIL import ImageFilter
+    S = full203(lamp_lit=False)
+    S.light(*TV_LIGHT)
+    S.light(*SODIUM)
+    eye, tgt = (4.55, 1.55, 12.45), (1.9, 0.55, 9.0)
+    bg = S.render(eye, tgt, w=960, h=540, night=True, exposure=1.1)
+    im = Image.fromarray(bg.astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.6))
+    bg = np.asarray(im, np.float32) * 0.75
+    logo = Image.open(os.path.join(TEX_ROOT, 'gui', 'title_logo.png')).convert('RGBA').resize((768, 384), Image.BILINEAR)
+    lg = np.asarray(logo, np.float32)
+    x0, y0 = (960 - 768) // 2, 40
+    a = lg[..., 3:4] / 255.0
+    bg[y0:y0 + 384, x0:x0 + 768] = bg[y0:y0 + 384, x0:x0 + 768] * (1 - a) + lg[..., :3] * a
+    return save(bg, 'scene_title')
+
+
+def scene_doors():
+    """Every vanilla-style door of 203 side by side (as the world's door_* models draw them), seen from the hall, with
+    the fusuma and the closet fusuma beside them."""
+    S = Scene()
+    for x in range(-1, 9):
+        S.cube(x, -1, 0, H + 'old_flooring')
+        S.cube(x, -1, -1, H + 'old_flooring')
+        for y in range(0, 3):
+            S.cube(x, y, 1, H + 'plaster_wall', north=H + ('wood_wainscot' if y == 0 else 'plaster_wall'))
+    names = ['front_door', 'interior_door', 'toilet_door', 'bath_door']
+    for i, d in enumerate(names):
+        for k, half in enumerate(('bottom', 'top')):
+            S.extra.append((vanilla_door(f'{d}_{half}'), place_deg(i * 1.5 - 0.5, k, 0, 270)))
+    balcony_pane(S, 6.5, 0, -0.55)
+    S.model('fusuma_lower_0', 7.5, 0, -0.45, 'north') if False else None
+    for k, (nm, x) in enumerate((('fusuma', 7.0), ('oshiire_fusuma', 8.0))):
+        S.model(f'{nm}_lower_0', x, 0, 0, 'north')
+        S.model(f'{nm}_upper_0', x, 1, 0, 'north')
+    S.light((3.5, 2.6, -2.5), (1.0, 0.92, 0.8), 1.4, 5.0)
+    eye, tgt = (3.6, 1.2, -5.6), (3.6, 0.95, 0.5)
+    return pair(S.render(eye, tgt, w=960, h=420, fov=62), S.render(eye, tgt, w=960, h=420, fov=62, night=True,
+                                                                  exposure=1.5), 'scene_doors')
+
+
 SCENES = {'tatami': scene_tatami, 'peek': scene_peek, 'closet': scene_closet, 'bath': scene_bath,
           'kitchen': scene_kitchen, 'western': scene_western, 'genkan': scene_genkan, 'exterior': scene_exterior,
-          'camera_app': scene_camera_app}
+          'camera_app': scene_camera_app, 'title': scene_title, 'doors': scene_doors}
 
 
 def main(args):

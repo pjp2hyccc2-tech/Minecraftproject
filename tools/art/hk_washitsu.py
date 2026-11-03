@@ -518,7 +518,7 @@ light_switch(True)
 
 # ================================================================================================ curtain
 A_CUR = Atlas('curtain')
-CURT = ramp(['#3a1c0c', '#562a12', '#6e3a1a', '#844a24', '#97582e', '#a86838'], 6)
+CURT = ramp(['#3a2a1e', '#4e3828', '#634834', '#77583f', '#896a4c', '#9a7a5a'], 6)
 
 
 def _curtain_cloth(w, h, face):
@@ -529,9 +529,9 @@ def _curtain_cloth(w, h, face):
     if face != 'h':
         flower = ((x % 6 == 2) & (y % 6 == 2)) | ((x % 6 == 5) & (y % 6 == 5))
         petal = (((x % 6 == 1) | (x % 6 == 3)) & (y % 6 == 2)) | ((x % 6 == 2) & ((y % 6 == 1) | (y % 6 == 3)))
-        tint(a, '#c8945a', 0.35, petal)
-        tint(a, '#e0b070', 0.45, flower)
-        tint(a, '#d8b080', 0.12)            # sun-faded
+        tint(a, '#b88a5a', 0.3, petal)
+        tint(a, '#d8b07a', 0.4, flower)
+        tint(a, '#c8b498', 0.14)            # sun-faded
     return a
 
 
