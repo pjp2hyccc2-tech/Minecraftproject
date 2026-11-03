@@ -666,7 +666,7 @@ def security_camera(on, seen):
     name = 'security_camera' + ('_on' if on else '') + ('_seen' if seen else '')
     m = Model(name, A_CAM, display=disp(gui=(-30, 225, 0), gui_scale=1.0, gui_t=(0, -4, 0)), ao=False)
     W_ = M.plastic('cam_white', WHITEPLASTIC, base=4.4)
-    DOME = M.glass('dome', '#1a1e22', 215)
+    DOME = M.custom('dome', lambda w, h, f: _dome(w, h, f))
     m.box([4.5, 15, 4.5], [11.5, 16, 11.5], W_)
     m.box([5, 13.5, 5], [11, 15, 11], DOME)
     m.box([5.75, 12.5, 5.75], [10.25, 13.5, 10.25], DOME)
@@ -680,6 +680,14 @@ def security_camera(on, seen):
         LED = solid('cam_dark', '#2a2a2a')
     m.box([9.5, 14, 4.9], [10.3, 14.6, 5.1], LED, only=('north', 'down'), glow=('north', 'down') if (on or seen) else ())
     return m
+
+
+def _dome(w, h, face):
+    a = blank(w, h, '#15191c')
+    if w >= 3:
+        px(a, 1, 0 if face == 'h' else 1, '#4a5660')
+        px(a, 2, 0 if face == 'h' else 1, '#2e363c')
+    return a
 
 
 def _lens(w, h):

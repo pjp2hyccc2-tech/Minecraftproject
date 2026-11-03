@@ -210,7 +210,53 @@ def tex_path(ref):
     return ns, os.path.join(TEX_ROOT, rel + '.png')
 
 
+_ALPHA = {}
+
+
+def tex_alpha(path):
+    if path not in _ALPHA:
+        a = np.asarray(Image.open(path).convert('RGBA'))[..., 3]
+        meta = path + '.mcmeta'
+        if os.path.isfile(meta):
+            an = load(meta).get('animation', {})
+            fh = an.get('height', min(a.shape))
+            a = a[:fh]
+        _ALPHA[path] = a
+    return _ALPHA[path]
+
+
+def check_alpha(label, body, problems):
+    """A solid model (no render_type) must not sample transparent texels: they would render opaque."""
+    rt = body.get('render_type', '')
+    if rt in ('minecraft:cutout', 'minecraft:cutout_mipped', 'minecraft:translucent'):
+        return
+    texs = body.get('textures', {})
+    for el in body.get('elements', []):
+        for face, fd in el['faces'].items():
+            ref = fd['texture']
+            seen = 0
+            while ref.startswith('#') and seen < 5:
+                ref = texs.get(ref[1:], '')
+                seen += 1
+            ns, p = tex_path(ref)
+            if ns != 'reisatsu' or not os.path.isfile(p):
+                continue
+            a = tex_alpha(p)
+            h, w = a.shape
+            uv = fd.get('uv') or [0, 0, 16, 16]
+            u0, u1 = sorted((uv[0], uv[2]))
+            v0, v1 = sorted((uv[1], uv[3]))
+            x0 = int(np.floor(u0 / 16 * w + 0.02))
+            y0 = int(np.floor(v0 / 16 * h + 0.02))
+            x1 = max(x0 + 1, int(np.ceil(u1 / 16 * w - 0.02)))
+            y1 = max(y0 + 1, int(np.ceil(v1 / 16 * h - 0.02)))
+            if (a[y0:y1, x0:x1] < 250).any():
+                problems.append(f'SOLIDA   {label}: face {face} samples transparent texels but the model is solid')
+                return
+
+
 def check_body(label, body, problems, used):
+    check_alpha(label, body, problems)
     texs = body.get('textures', {})
     for k, v in texs.items():
         if v.startswith('#'):

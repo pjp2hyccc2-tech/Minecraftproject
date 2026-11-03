@@ -386,8 +386,126 @@ def scene_road():
                 'scene_road')
 
 
+def vanilla_door(half_tex, hinge='left'):
+    """minecraft:block/door_bottom_left / _right geometry (closed, facing east -> panel at x 0..3) with the given
+    texture: the west face shows the texture as is for hinge=left (mirrored for hinge=right)."""
+    t = 'reisatsu:block/' + half_tex
+    left = hinge == 'left'
+    return {'textures': {'b': t, 'particle': t}, 'elements': [{
+        'from': [0, 0, 0], 'to': [3, 16, 16],
+        'faces': {'down': {'uv': [13, 0, 16, 16], 'texture': '#b'},
+                  'up': {'uv': [13, 0, 16, 16], 'texture': '#b'},
+                  'north': {'uv': [3, 0, 0, 16], 'texture': '#b'},
+                  'south': {'uv': [0, 0, 3, 16], 'texture': '#b'},
+                  'west': {'uv': [0, 0, 16, 16] if left else [16, 0, 0, 16], 'texture': '#b'},
+                  'east': {'uv': [16, 0, 0, 16] if left else [0, 0, 16, 16], 'texture': '#b'}}}]}
+
+
+def scene_doors():
+    """The vanilla-style doors in a corridor wall (seen from the corridor side), the auto door panels and the kitchen
+    swing doors as the block entity renderers would draw them."""
+    S = Scene()
+    room_shell(S, -6, 6, -2, 1, floor='reisatsu:block/kitchen_floor', wall='reisatsu:block/wallpaper',
+               lower='reisatsu:block/wainscot', ceiling='reisatsu:block/ceiling_tile', open_sides=('north',))
+    doors = ['staff_door', 'office_door', 'restroom_door_m', 'restroom_door_w', 'back_door', 'fridge_door', 'stall_door',
+             'stall_door_occupied']
+    extra = []
+    for i, d in enumerate(doors):
+        x = -6 + i * 1.6
+        for half, y in (('bottom', 0), ('top', 1)):
+            m = vanilla_door(f'{d}_{half}')
+            # facing east, closed: panel at x 0..3 of its block, front (west face) toward -x; turn it to face north
+            extra.append((m, RR.place(0, 0, 0, 'north') @ np.eye(4), (x, y, 1.0)))
+    S.extra = extra
+    S.light((0.0, 3.0, -1.0), (1.0, 0.95, 0.85), 2.0, 5.0)
+    eye = (-0.5, 1.62, -3.6)
+    tgt = (-0.5, 1.0, 1.5)
+    cv = RR.LitCanvas(1280, 540, R.look_at(eye, tgt), fov=75, bg=(16, 18, 24))
+    for (x, y, z), (d, mode) in S.cubes.items():
+        for f in FACES:
+            dx, dy, dz = NB[f]
+            if (x + dx, y + dy, z + dz) in S.cubes:
+                continue
+            pts = np.array(R._face_corners((0, 0, 0), (16, 16, 16), f), float) / 16 + [x, y, z]
+            uv = R._uv_corners(R._default_uv((0, 0, 0), (16, 16, 16), f))
+            cv.quad(pts, uv, RR.tex(d[f]), shade=R.FACE_SHADE[f], mode=mode, double=False)
+    for i, d in enumerate(doors):
+        x = -6 + i * 1.6
+        for half, y in (('bottom', 0), ('top', 1)):
+            m = vanilla_door(f'{d}_{half}')
+            # rotate the east-facing door (panel at x 0..3, texture readable on its west face) so its readable face
+            # looks north toward the camera: rotate by -90 about y around the block centre
+            M = RR.place(x, y, 0.8, 'west') if False else RR.place(x, y, 0.8, 'north')
+            rot = R.affine(None, [x + 0.5, y + 0.5, 0.8 + 0.5]) @ R.affine(R.rot_y(-math.pi / 2)) @ \
+                R.affine(None, [-0.5, -0.5, -0.5])
+            RR.draw_model(cv, m, rot)
+    # auto door panels (16x48 drawn on 1x3 quads) and a swing door (16x32 on 1x2)
+    for k, x in enumerate((5.0, 6.0)):
+        pts = np.array([(x + 1, 3, 1.4), (x, 3, 1.4), (x, 0, 1.4), (x + 1, 0, 1.4)], float)
+        cv.quad(pts, R._uv_corners([0, 0, 16, 16]), RR.tex('reisatsu:block/auto_door_panel'), shade=0.9,
+                mode='translucent')
+    pts = np.array([(4.6, 2, 1.2), (3.6, 2, 1.2), (3.6, 0, 1.2), (4.6, 0, 1.2)], float)
+    cv.quad(pts, R._uv_corners([0, 0, 16, 16]), RR.tex('reisatsu:block/swing_door'), shade=0.9, mode='translucent')
+    cv.finish()
+    return save(np.clip(cv.color, 0, 255), 'scene_doors')
+
+
+def scene_finder():
+    """The camera finder HUD (finder + 霊感計 + a developed instant photo with a red name) over the booth at night."""
+    from PIL import Image as I
+    from common import TEX_ROOT
+    import scipy.ndimage as nd
+    booth = scene_booth_night()
+    bg = I.fromarray(booth.astype(np.uint8)).convert('RGBA').resize((1024, 576))
+    fi = I.open(os.path.join(TEX_ROOT, 'gui/finder.png')).convert('RGBA').resize((1024, 576), I.NEAREST)
+    bg.alpha_composite(fi)
+    meter = I.open(os.path.join(TEX_ROOT, 'gui/finder_meter.png')).convert('RGBA').resize((256, 128), I.NEAREST)
+    bg.alpha_composite(meter, (736, 424))
+    # the ejected photo: frame + the booth view shrunk as "the photo" + the red name on the margin
+    frame_ = I.open(os.path.join(TEX_ROOT, 'gui/photo_frame.png')).convert('RGBA')
+    photo = I.fromarray(booth.astype(np.uint8)).convert('RGBA').resize((112, 84))
+    ph = np.asarray(photo, np.float32)
+    ph[..., :3] = ph[..., :3] * 0.85 + np.array([40, 26, 10]) * 0.6 + 18
+    card = I.new('RGBA', (128, 160), (0, 0, 0, 0))
+    card.paste(I.fromarray(np.clip(ph, 0, 255).astype(np.uint8)), (8, 8))
+    card.alpha_composite(frame_)
+    name = I.open(os.path.join(TEX_ROOT, 'gui/photo_name_visitor.png')).convert('RGBA')
+    card.alpha_composite(name, (0, 108))
+    card = card.resize((256, 320), I.NEAREST).rotate(-6, expand=True, resample=I.BICUBIC)
+    bg.alpha_composite(card, (40, 200))
+    out = np.asarray(bg.convert('RGB'))
+    return save(out, 'scene_finder_hud')
+
+
+def scene_booth_night():
+    S = Scene()
+    room_shell(S, -3, 6, -2, 3, open_sides=('north', 'east'))
+    for x in range(-4, 8):
+        S.cube(x, 0, 4, 'reisatsu:block/wainscot')
+        for y in (1, 2, 3):
+            S.cube(x, y, 4, 'reisatsu:block/shop_window', mode='translucent')
+    for x in range(-3, 7):
+        for y in (2, 3):
+            S.model('window_blind', x, y, 3, 'north')
+    for z in (1, 2):
+        S.model('booth_seat', 0, 0, z, 'east')
+        S.model('booth_seat', 3, 0, z, 'west')
+        S.model('booth_partition', 0, 1, z, 'east')
+        S.model('booth_partition', 3, 1, z, 'west')
+        S.model('restaurant_table', 1, 0, z)
+        S.model('restaurant_table', 2, 0, z)
+    S.model('menu_stand', 1, 1, 2, 'east')
+    S.model('call_button_lit', 2, 1, 2, 'west')
+    S.model('water_glass_1', 1, 1, 1)
+    S.model('pendant_lamp_lit', 1, 3, 2)
+    S.light((1.5, 3.4, 2.5), (1.0, 0.72, 0.42), 2.6, 1.6)
+    S.light((1.0, 2.0, 6.0), (1.0, 0.55, 0.2), 1.4, 4.0)
+    return S.render((4.6, 1.62, -1.0), (1.6, 0.9, 2.2), night=True, exposure=1.25)
+
+
 SCENES = {'booth': scene_booth, 'kitchen': scene_kitchen, 'register': scene_register, 'restroom': scene_restroom,
-          'exterior': scene_exterior, 'staff_room': scene_back, 'office': scene_office, 'road': scene_road}
+          'exterior': scene_exterior, 'staff_room': scene_back, 'office': scene_office, 'road': scene_road,
+          'doors': scene_doors, 'finder': scene_finder}
 
 
 def main(args):

@@ -417,7 +417,7 @@ def _lock_front(w, h, face):
 
 
 def umbrella_stand():
-    m = Model('umbrella_stand', A_UMB)
+    m = Model('umbrella_stand', A_UMB, render_type='translucent')
     m.box([0.5, 0, 5], [15.5, 8, 11], M.STEEL_M, faces={'north': M.custom('lockfront', _lock_front)})
     m.box([0.5, 8, 5], [15.5, 8.5, 11], M.GREY_DARK)
     m.box([0.5, 0.5, 4.5], [15.5, 1.5, 11.5], M.custom('tray', lambda w, h, f: blank(w, h, '#2a2a2c')))
