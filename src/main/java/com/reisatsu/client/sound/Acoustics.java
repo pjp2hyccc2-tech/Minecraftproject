@@ -64,6 +64,14 @@ public final class Acoustics {
     private static final int MAX_TRACKS = 128;
     /** Send level of a sound that started in another room than the listener's. */
     private static final float OTHER_ROOM_SEND = 0.5f;
+    /** Occlusion per block unit (an opaque block = 1, a closed door = 0.5): high-frequency loss (§10: 3 dB) ... */
+    static final float HF_DB_PER_BLOCK = 3.0f;
+    /** ... a small broadband loss on top (capped at 6 dB) ... */
+    static final float DB_PER_BLOCK = 1.2f;
+    /** ... and the reverb send, which reaches us around the obstacle, loses half as much. */
+    static final float SEND_HF_DB_PER_BLOCK = 1.5f;
+    /** Mods that do the same job: if one is loaded this engine stays out of its way. */
+    private static final String[] OTHER_ACOUSTICS_MODS = {"sound_physics_remastered", "soundphysics"};
 
     /** Occlusion and send of one source. */
     public record Params(float directGain, float directHF, float sendGain, float sendHF, float occlusion, String room) {
@@ -110,6 +118,7 @@ public final class Acoustics {
     private static String listenerRoom;
     private static int tick;
     private static boolean triedEngine;
+    private static Boolean otherMod;
 
     private Acoustics() {}
 
@@ -149,7 +158,8 @@ public final class Acoustics {
             captureExecutor(engineOf(mc.getSoundManager()));
         }
         ClientLevel level = mc.level;
-        boolean want = ReisatsuConfig.acoustics() && level != null && Layout.DIMENSION.equals(level.dimension());
+        if (otherMod == null) otherMod = otherAcousticsMod();
+        boolean want = ReisatsuConfig.acoustics() && !otherMod && level != null && Layout.DIMENSION.equals(level.dimension());
         if (!want) {
             if (active) {
                 active = false;
@@ -257,11 +267,26 @@ public final class Acoustics {
         float occ = AcousticsOcclusion.march(level, ear, new Vec3(x, y, z));
         if (prev != null) occ = prev.occlusion() + (occ - prev.occlusion()) * 0.6f;
         lastOcclusion = occ;
-        Layout.Room r = Layout.roomAt(BlockPos.containing(x, y, z));
-        String room = r == null ? null : r.key();
+        String room = roomNear(BlockPos.containing(x, y, z));
         float roomSend = Objects.equals(room, listenerRoom) ? 1f : OTHER_ROOM_SEND;
         float o = Math.min(occ, AcousticsOcclusion.CAP);
-        return new Params(db(-1.2f * Math.min(o, 5f)), db(-3f * o), roomSend * db(-1.5f * o), db(-1.5f * o), occ, room);
+        return new Params(db(-DB_PER_BLOCK * Math.min(o, 5f)), db(-HF_DB_PER_BLOCK * o), roomSend * db(-SEND_HF_DB_PER_BLOCK * o),
+                db(-SEND_HF_DB_PER_BLOCK * o), occ, room);
+    }
+
+    /** The room of a sound; one emitted by a block set into a wall (a door, a wall fixture) belongs to the room it faces
+     *  (the listener's, if it borders it). */
+    private static String roomNear(BlockPos p) {
+        Layout.Room r = Layout.roomAt(p);
+        if (r != null) return r.key();
+        String found = null;
+        for (int[] d : new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {
+            Layout.Room n = Layout.roomAt(p.offset(d[0], 0, d[1]));
+            if (n == null) continue;
+            if (n.key().equals(listenerRoom)) return n.key();
+            if (found == null) found = n.key();
+        }
+        return found;
     }
 
     private static Vec3 listenerPos(Minecraft mc) {
@@ -329,6 +354,20 @@ public final class Acoustics {
         }
     }
 
+    private static boolean otherAcousticsMod() {
+        try {
+            for (String id : OTHER_ACOUSTICS_MODS) {
+                if (net.minecraftforge.fml.ModList.get().isLoaded(id)) {
+                    Reisatsu.LOGGER.info("[reisatsu] acoustics: {} is installed, leaving room reverb and occlusion to it", id);
+                    return true;
+                }
+            }
+        } catch (Throwable ignored) {
+            // no mod list: assume we are alone
+        }
+        return false;
+    }
+
     private static SoundEngine engineOf(SoundManager manager) {
         try {
             for (Field f : SoundManager.class.getDeclaredFields()) {
@@ -374,6 +413,7 @@ public final class Acoustics {
     public static String status() {
         if (broken) return "disabled (" + failure + ")";
         if (!ReisatsuConfig.acoustics()) return "off (config sound.acoustics = false)";
+        if (Boolean.TRUE.equals(otherMod)) return "off (another acoustics mod is installed)";
         if (!active) return "idle (outside the restaurant's dimension)";
         return String.format(Locale.ROOT, "%s%s, %s, %d tracked, last occlusion %.1f", presetKey,
                 fadeTick < FADE_TICKS ? " (fading)" : "", AcousticsEfx.info, TRACKS.size(), lastOcclusion);

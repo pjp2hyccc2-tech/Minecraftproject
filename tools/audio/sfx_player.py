@@ -153,7 +153,7 @@ def _shoe(rng, floor, weight=1.0, heel=1.0, toe=0.7, pace=1.0, scuff=0.3, dur=0.
 
 
 def step_tile(rng, i=1):
-    y = _shoe(rng, "tile", weight=1.0, heel=1.0, toe=[0.6, 0.75, 0.5, 0.7][i - 1], scuff=0.35)
+    y = _shoe(rng, "tile", weight=1.0, heel=1.0, toe=[0.6, 0.75, 0.5, 0.7][i - 1], scuff=0.16)
     if i == 4:  # a squeak of a rubber sole on glaze
         sq = ins.creak(0.07, rng, [(0, 400), (0.07, 700)], [(0, 0), (0.01, 0.6), (0.07, 0)],
                        modes=[(2300, 20, 1.0), (4600, 25, 0.4)], tonal=0.6)

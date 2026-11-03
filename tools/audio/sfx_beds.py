@@ -170,8 +170,8 @@ def dining(rng, i=1):
     n = ns(L)
     out = np.zeros((2, n))
     for c in range(2):  # room tone of a big room with absorbent tiles
-        r = dsp.colored(n, rng, -3.5, lo=40, hi=3000)
-        out[c] += r / np.std(r) * 0.03
+        r = dsp.colored(n, rng, -4.5, lo=40, hi=2200)
+        out[c] += r / np.std(r) * 0.022
     cake, g1 = _compressor(L, n, rng, [(5.5, 29.0)], level=1.0, rattle=0.35)  # the cake case, cycling
     out += dsp.pan(_nrm(cake), 0.55) * 0.12
     bar, g2 = _compressor(L, n, rng, [(21.0, 45.5)], level=1.0, rattle=0.25)  # the drink bar, out of phase with it
@@ -184,13 +184,14 @@ def dining(rng, i=1):
     out += dsp.pan(_nrm(gur), 0.45) * 0.025
     exit_ = _hum(L, n, rng, 100.0, ((1, 0.4), (3, 0.3), (5, 0.12)))  # the green exit sign
     out += dsp.pan(_nrm(exit_), 0.2) * 0.006
-    out += _clock(L, n, rng, pan=-0.45, vel=1.0) * 0.03
+    clock = _clock(L, n, rng, pan=-0.45, vel=1.0) * 0.2
     for _ in range(3):  # the building cooling: a tick in the ceiling, a creak in a booth
         h = ins.modal_hit(rng, [(rng.uniform(600, 1800), 0.04, 1.0), (rng.uniform(2000, 3500), 0.03, 0.6)], hardness=0.8,
                           vel=1.0, dur=0.12)
         _place_circ(out, dsp.pan(h, rng.uniform(-0.9, 0.9)) * 0.012, rng.uniform(0, L))
     ir = _room(rng, 0.9, predelay=0.012, hf=0.5)
     out = dsp.circ_reverb(out, ir, wet=0.35, dry=0.9)
+    out += dsp.circ_reverb(clock, ir, wet=0.15, dry=1.0)  # the clock stays crisp: it is the loudest thing here
     out += dsp.binaural(200.0, 6.0, n, L=L, rng=rng) * 0.0025 * _lfo(n, 2, rng, 0.3, 1.0)[None, :]  # theta under the hum
     return dsp.dc_block(out, circular=True)
 

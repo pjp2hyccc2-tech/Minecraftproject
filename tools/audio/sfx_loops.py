@@ -169,12 +169,14 @@ def hand_dryer(rng, i=1):
     t = np.arange(n) / SR
     fm = dsp.loop_freq(380.0, L) * (1 + 0.004 * np.sin(TAU * dsp.loop_freq(0.6, L) * t))
     ph = dsp.periodic_phase(fm)
-    whine = np.sin(TAU * ph) + 0.6 * np.sin(2 * TAU * ph + 0.3) + 0.45 * np.sin(3 * TAU * ph + 1.1) + 0.3 * np.sin(5 * TAU * ph)
-    blade = dsp.nb_noise(fm * 7.0, 40, rng, periodic_fix=True)
-    air = dsp.colored(n, rng, -1.0, lo=150, hi=12000)
-    air = _cr(air, lambda x: dsp.peq(x, 2600, 0.8, 4.0))
+    whine = (np.sin(TAU * ph) + 0.7 * np.sin(2 * TAU * ph + 0.3) + 0.55 * np.sin(3 * TAU * ph + 1.1)
+             + 0.35 * np.sin(4 * TAU * ph + 0.5) + 0.3 * np.sin(6 * TAU * ph + 2.0) + 0.15 * np.sin(8 * TAU * ph))
+    blade = dsp.nb_noise(fm * 7.0, 40, rng, periodic_fix=True) + 0.5 * dsp.nb_noise(fm * 14.0, 60, rng, periodic_fix=True)
+    air = dsp.colored(n, rng, -2.5, lo=180, hi=9000)  # the jet: strongest in the low mids, rolling off up top
+    air = _cr(air, lambda x: dsp.peq(x, 1800, 0.7, 5.0))
+    air = _cr(air, lambda x: dsp.lowpass(x, 7000, 2))
     rattle = dsp.colored(n, rng, 0.0, lo=3000, hi=9000) * (0.6 + 0.4 * np.cos(TAU * dsp.loop_freq(fm.mean() / 4.0, L) * t))
-    y = _nrm(whine) * 0.25 + blade / np.std(blade) * 0.1 + air / np.std(air) * 0.5 + rattle / np.std(rattle) * 0.04
+    y = _nrm(whine) * 0.32 + blade / np.std(blade) * 0.1 + air / np.std(air) * 0.38 + rattle / np.std(rattle) * 0.03
     y *= 1 + 0.05 * dsp.smooth(n, rng, 6.0)
     return _fin_loop(y, rng, 0.12, 0.05)
 

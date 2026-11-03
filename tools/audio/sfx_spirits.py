@@ -607,12 +607,22 @@ def mirror_squeak(rng, i=1):
     y = np.zeros(ns(d + 0.6))
     for h, (t0, off) in enumerate(((0.0, 1.0), (0.12, 0.88))):  # two hands
         rate = dsp.env_pts(m, [(0, 420 * off), (d * 0.3, 760 * off), (d * 0.7, 610 * off), (d, 380 * off)])
-        rate = rate * (1 + 0.15 * dsp.smooth(m, rng, 8.0, periodic=False))
-        fp = ins.friction_pulses(d, rng, rate, dsp.env_pts(m, [(0, 0), (0.05, 1.0), (d * 0.8, 0.8), (d, 0)]), jitter=0.12)
+        rate = rate * (1 + 0.25 * dsp.smooth(m, rng, 6.0, periodic=False) + 0.08 * dsp.smooth(m, rng, 30.0, periodic=False))
+        grip = np.zeros(m)  # skin grabs and lets go: squeaks in bursts, silent slides between them
+        tt = rng.uniform(0.0, 0.05)
+        while tt < d:
+            ln = rng.uniform(0.05, 0.22)
+            a, b = ns(tt), min(m, ns(tt + ln))
+            grip[a:b] = rng.uniform(0.5, 1.0)
+            tt += ln + rng.uniform(0.02, 0.12)
+        grip = dsp.lowpass0(grip, 60.0)
+        env = dsp.env_pts(m, [(0, 0), (0.05, 1.0), (d * 0.8, 0.8), (d, 0)]) * grip
+        fp = ins.friction_pulses(d, rng, rate, env, jitter=0.18)
         body = dsp.resbank(fp, [(f, 18, a) for f, _, a in MIRROR])
-        sq = sum(a * dsp.nb_noise(rate * k, 20 * k, rng) for k, a in ((1, 1.0), (2, 0.5), (3, 0.25)))
-        sq *= dsp.env_pts(m, [(0, 0), (0.08, 1.0), (d * 0.85, 0.7), (d, 0)])
-        dsp.place(y, _nrm(body) * 0.4 + sq * 0.04, t0)
+        sq = sum(a * dsp.nb_noise(rate * k, 35 * k, rng) for k, a in ((1, 1.0), (2, 0.45), (3, 0.2)))
+        sq *= env
+        slide = dsp.bandpass(rng.standard_normal(m), 1500, 7000, 2) * dsp.env_pts(m, [(0, 0), (0.05, 1), (d, 0)]) * (1.1 - grip)
+        dsp.place(y, _nrm(body) * 0.4 + sq * 0.04 + slide * 0.015, t0)
     return _fin(_rev(y, rng, 0.25, 0.1), 150)
 
 

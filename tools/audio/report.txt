@@ -3,7 +3,7 @@ REISATSU sound report (measured on the decoded OGG files)
 file                              dur s ch   peak     TP    RMS   LUFS   Mmax crest  cent rough     KB  notes
 -------------------------------------------------------------------------------------------------------------
 amb/night_road                    60.00  2  -15.9  -15.8  -36.8  -33.1  -24.0  20.9  2382  0.12  765.0  loop seam hf x0.85 (interior median x1.03, seam rank 25%, -1 dB vs the file's typical HF)
-amb/dining                        40.00  2  -28.8  -28.8  -43.1  -41.1  -39.9  14.3   408  0.18  506.7  loop seam hf x1.10 (interior median x1.05, seam rank 65%, -0 dB vs the file's typical HF)
+amb/dining                        40.00  2  -24.9  -24.8  -42.6  -41.1  -39.3  17.7   266  0.33  481.1  loop seam hf x1.31 (interior median x0.93, seam rank 100%, +0 dB vs the file's typical HF)
 amb/kitchen                       40.00  2  -23.6  -23.5  -37.4  -36.1  -34.8  13.9   244  0.23  447.6  loop seam hf x0.69 (interior median x1.05, seam rank 18%, -1 dB vs the file's typical HF)
 amb/restroom                      30.00  2  -29.7  -29.7  -44.3  -40.2  -38.9  14.6  1782  0.13  358.3  loop seam hf x0.74 (interior median x0.93, seam rank 15%, -1 dB vs the file's typical HF); binaural 237.0/243.0Hz(d6.0)
 amb/back                          30.00  2  -28.8  -28.6  -41.4  -39.1  -38.2  12.6   716  0.20  582.4  loop seam hf x0.53 (interior median x0.99, seam rank 8%, -4 dB vs the file's typical HF)
@@ -19,7 +19,7 @@ amb/drip_3                         0.16  1   -7.0   -6.7  -29.8  -26.7  -26.7  2
 amb/drip_4                         0.67  1   -5.5   -5.5  -27.0  -27.4  -25.5  21.5  1480  0.67    6.6  
 amb/gutter                         8.00  1   -4.9   -4.9  -24.9  -25.2  -20.2  20.0   654  0.63   74.3  loop seam hf x0.76 (interior median x1.05, seam rank 12%, -11 dB vs the file's typical HF)
 fixture/faucet_loop                6.00  1   -9.4   -9.3  -23.7  -21.2  -20.5  14.3  4792  0.10   54.5  loop seam hf x0.88 (interior median x1.01, seam rank 25%, -3 dB vs the file's typical HF)
-fixture/hand_dryer                 5.00  1   -3.7   -3.3  -16.8  -14.2  -13.5  13.1  4724  0.09   45.9  loop seam hf x0.94 (interior median x0.97, seam rank 45%, -1 dB vs the file's typical HF)
+fixture/hand_dryer                 5.00  1   -1.9   -1.9  -15.8  -14.2  -13.5  13.9  1980  0.13   47.2  loop seam hf x0.78 (interior median x0.95, seam rank 28%, -2 dB vs the file's typical HF)
 fixture/fryer_loop                 8.00  1   -4.6   -4.1  -29.7  -26.8  -24.5  25.1  5138  0.36   81.4  loop seam hf x0.80 (interior median x0.94, seam rank 35%, -5 dB vs the file's typical HF)
 fixture/gas_loop                   6.00  1   -9.6   -9.5  -24.3  -23.2  -21.2  14.8  1628  0.12   56.5  loop seam hf x1.20 (interior median x1.00, seam rank 92%, -2 dB vs the file's typical HF)
 fixture/dishwasher                 8.00  1   -8.9   -8.6  -23.4  -21.2  -19.7  14.5  3050  0.13   72.6  loop seam hf x1.25 (interior median x1.01, seam rank 72%, -1 dB vs the file's typical HF)
@@ -143,10 +143,10 @@ player/breath_fear_3               2.76  1   -6.8   -6.7  -24.4  -22.3  -18.3  1
 player/breath_hold                 2.96  1   -7.3   -7.3  -27.6  -25.7  -19.1  20.3   944  0.22   13.9  
 player/gasp_1                      1.19  1   -3.3   -3.2  -19.5  -19.4  -17.2  16.2   758  0.41    8.6  
 player/gasp_2                      1.48  1   -3.2   -3.2  -20.3  -19.2  -16.5  17.2   755  0.37    9.7  
-player/step_tile_1                 0.25  1   -6.1   -6.1  -24.2  -24.8  -24.8  18.1   553  0.69    5.7  
-player/step_tile_2                 0.26  1   -6.1   -6.1  -25.9  -26.4  -26.4  19.8   549  0.92    5.5  
-player/step_tile_3                 0.26  1   -5.8   -5.8  -24.1  -24.8  -24.8  18.3   583  0.80    5.5  
-player/step_tile_4                 0.28  1   -6.4   -6.3  -24.7  -25.4  -25.4  18.3   526  0.72    5.5  
+player/step_tile_1                 0.25  1   -6.1   -6.1  -24.3  -24.9  -24.9  18.2   392  0.77    5.6  
+player/step_tile_2                 0.26  1   -6.1   -6.1  -25.9  -26.5  -26.5  19.8   416  0.99    5.4  
+player/step_tile_3                 0.29  1   -5.8   -5.8  -24.5  -25.3  -25.3  18.7   392  0.80    5.4  
+player/step_tile_4                 0.25  1   -6.4   -6.3  -24.3  -25.1  -25.1  17.9   446  0.80    5.4  
 player/step_vinyl_1                0.25  1   -8.1   -8.1  -24.7  -26.1  -26.1  16.6   188  1.17    5.0  
 player/step_vinyl_2                0.29  1   -7.9   -7.9  -27.8  -29.1  -29.1  19.9   208  1.27    5.5  
 player/step_vinyl_3                0.28  1   -8.0   -8.0  -23.7  -25.0  -25.0  15.6   190  1.23    5.5  
@@ -213,8 +213,8 @@ mirror/sob_2                       6.26  1   -4.0   -4.0  -23.7  -23.0  -18.2  1
 mirror/whisper                     2.02  1   -5.6   -5.2  -23.5  -21.2  -17.1  17.9  1681  0.36   18.4  
 mirror/knock_1                     0.89  1   -2.1   -2.1  -24.4  -25.3  -22.8  22.3   327  1.53    8.3  
 mirror/knock_2                     0.87  1   -2.1   -2.1  -23.4  -24.2  -23.3  21.3   336  1.45    7.7  
-mirror/squeak_1                    1.50  1   -8.2   -8.1  -22.0  -19.3  -17.9  13.9  1996  0.25   16.0  
-mirror/squeak_2                    1.20  1   -9.1   -8.9  -23.6  -20.8  -19.5  14.5  1967  0.24   13.3  
+mirror/squeak_1                    1.46  1   -8.4   -8.3  -24.4  -22.0  -20.7  16.1  1958  0.25   16.2  
+mirror/squeak_2                    1.19  1   -8.3   -8.2  -23.2  -20.3  -18.9  15.0  1985  0.28   13.8  
 mirror/scream                      2.29  1   -3.1   -1.4  -23.7  -21.3  -18.7  20.6  2125  0.36   24.3  
 manager/step_1                     0.22  1   -5.2   -5.1  -26.4  -26.3  -26.3  21.2  1168  0.55    5.2  
 manager/step_2                     0.30  1   -5.0   -4.9  -27.0  -27.1  -27.1  22.0  1104  0.82    5.8  
@@ -265,7 +265,7 @@ game/release                       5.50  2   -1.8   -1.8  -19.7  -14.9  -10.0  1
 game/dawn                          7.00  2   -5.4   -5.4  -21.2  -18.0  -14.1  15.8   410  0.36   92.4  
 game/ending_bad                    7.50  2   -2.5   -2.5  -21.6  -18.5  -14.5  19.1   592  0.30   77.8  
 -------------------------------------------------------------------------------------------------------------
-262 files, total 16.45 MB, worst true peak -1.00 dBTP
+262 files, total 16.43 MB, worst true peak -1.00 dBTP
 
 Level summary (decoded files)
   beds        12 files  LUFS-I  -48.0 ..  -25.2   max momentary  -45.9 ..  -20.2   RMS  -47.1 ..  -24.9 dBFS
