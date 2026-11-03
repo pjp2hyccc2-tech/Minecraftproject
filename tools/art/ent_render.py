@@ -1,4 +1,4 @@
-"""Preview rendering of the spirit models (offline, not shipped).
+"""Preview rendering of the HITORI entity models (offline, not shipped).
 
 `mc` mode reproduces how the game draws a translucent entity: parts in ModelPart order (children in Java HashMap
 order), every polygon in Cube order, no sorting, depth test LEQUAL with depth writes, colour = texel * alpha,
@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw
 
 import render3d as R
 from ent_model import render_children
-from common import font, FONT_LABEL
+from common import font, FONT_LABEL, FONT_SANS_JP_REG
 
 FACE_ORDER = ('down', 'up', 'west', 'north', 'east', 'south')      # ModelPart.Cube polygon order
 DIR_TO_FACE = {'down': 'top', 'up': 'bottom', 'west': 'right', 'north': 'front', 'east': 'left', 'south': 'back'}
@@ -229,7 +229,7 @@ def finder_post(img, seed=5):
 
 # ------------------------------------------------------------------------------------------------ sheets
 def sheet(rows, out, bg=(18, 16, 18)):
-    f = font(FONT_LABEL, 12)
+    f = font(FONT_SANS_JP_REG, 12)
     W = max(sum(im.shape[1] + 4 for _, im in r[1]) for r in rows) + 8
     H = sum(max(im.shape[0] for _, im in r[1]) + 34 for r in rows) + 8
     img = Image.new('RGB', (W, H), bg)
@@ -248,3 +248,71 @@ def sheet(rows, out, bg=(18, 16, 18)):
         y += rh + 18
     img.save(out)
     return out
+
+
+# ------------------------------------------------------------------------------------------------ HITORI looks
+def tv_light(tv=(-2.6, 0.55, 1.4), power=1.0, amb=0.05, reach=3.2):
+    """A `sky` function for draw_entity: the CRT TV as the only light (cool, from one side, falling off)."""
+    tvp = np.asarray(tv, float)
+
+    def fn(n, pos):
+        L = tvp - pos
+        d = float(np.linalg.norm(L)) + 1e-6
+        lam = max(0.0, float(n @ (L / d)))
+        return (amb + power * (0.25 + 0.75 * lam) / (1.0 + (d / reach) ** 2)) / max(0.4, R.entity_shade(n))
+    return fn
+
+
+def tv_post(cv, tint=(0.62, 0.8, 1.18), gain=1.0, side=-1.0):
+    """The dark apartment lit by the TV: everything blue-grey and dim, brighter toward the TV side."""
+    h, w = cv.h, cv.w
+    ys, xs = np.mgrid[0:h, 0:w]
+    ramp = 0.55 + 0.45 * np.clip(0.5 + side * (xs - w / 2) / w, 0, 1)
+    r = np.hypot((xs - w / 2) / (w / 2), (ys - h / 2) / (h / 2))
+    vig = np.clip(1.1 - 0.45 * r ** 2, 0, 1)
+    cv.color = cv.color * (ramp * vig * gain)[..., None] * np.asarray(tint)
+
+
+def ir_light(cv, power=1.9, reach=2.3, amb=0.04):
+    """IR night vision: grey levels from the scene's luminance, lit only by the camera's own illuminator."""
+    d = np.where(np.isfinite(cv.depth), cv.depth, 1e3)
+    lum = cv.color @ np.array([0.36, 0.44, 0.20])
+    lit = amb + power / (1.0 + (d / reach) ** 2)
+    v = lum * lit
+    cv.color = np.stack([v, v, v], -1)
+
+
+def ir_post(img, seed=3, label='CAM1  浴室', stamp='2026/11/03  03:21:07', barrel=0.06):
+    """The camera app's IR look (stand-in for the shader + overlay): grey-green, noisy, scanlined, slightly
+    fisheyed, vignetted, with the CCTV text."""
+    from PIL import Image as _I, ImageDraw as _D
+    from common import font as _font, FONT_SANS_JP_MED
+    a = np.clip(img.astype(np.float64) / 255.0, 0, None)
+    lum = a.mean(-1)
+    h, w = lum.shape
+    ys, xs = np.mgrid[0:h, 0:w].astype(np.float64)
+    nx, ny = (xs - w / 2) / (w / 2), (ys - h / 2) / (h / 2)
+    rr = nx * nx + ny * ny
+    sx = (nx * (1 - barrel * rr)) * (w / 2) + w / 2
+    sy = (ny * (1 - barrel * rr)) * (h / 2) + h / 2
+    from scipy import ndimage as _nd
+    lum = _nd.map_coordinates(lum, [sy, sx], order=1, mode='constant', cval=0.0)
+    lum = np.clip(lum, 0, 2.0)
+    lum = lum / (1 + lum * 0.35) * 1.25
+    rng_ = np.random.default_rng(seed)
+    lum = lum + rng_.normal(0, 0.055, (h, w)) * (0.5 + lum)
+    lum = lum * (0.93 + 0.07 * (ys % 2))                       # interlace
+    lum = lum * (0.96 + 0.04 * np.sin(ys * 0.35))              # slow scanline
+    lum = lum * np.clip(1.15 - 0.55 * rr, 0, 1)
+    rgb = np.clip(lum, 0, 1.2)[..., None] * np.array([0.80, 1.0, 0.84])
+    out = np.clip(rgb * 255, 0, 255).astype(np.uint8)
+    im = _I.fromarray(out, 'RGB')
+    if label:
+        dr = _D.Draw(im)
+        fs = max(9, h // 18)
+        f = _font(FONT_SANS_JP_MED, fs)
+        dr.text((6, 4), label, fill=(225, 235, 225), font=f)
+        dr.text((6, h - fs - 6), stamp, fill=(225, 235, 225), font=f)
+        dr.ellipse((w - fs * 3 - 8, 6, w - fs * 3 - 8 + fs * 0.7, 6 + fs * 0.7), fill=(235, 40, 40))
+        dr.text((w - fs * 2 - 6, 4), 'REC', fill=(225, 235, 225), font=f)
+    return np.asarray(im, np.float64)
