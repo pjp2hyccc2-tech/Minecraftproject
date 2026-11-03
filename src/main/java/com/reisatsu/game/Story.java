@@ -1,7 +1,6 @@
 package com.reisatsu.game;
 
 import com.reisatsu.Reisatsu;
-import com.reisatsu.entity.Child;
 import com.reisatsu.entity.Manager;
 import com.reisatsu.entity.Medium;
 import com.reisatsu.entity.MediumCar;
@@ -40,14 +39,16 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The night's story beats (docs/DESIGN.md §1 Flow): the intro by the medium's car, handing her the photos, closing
- * time, the exorcism at table 7, and the two endings.
+ * The story beats (docs/DESIGN.md §1 Flow): the intro by the medium's car (the first night), the medium (hints, the
+ * photos handed to her, the end of each night), closing time (the last night), the exorcism at table 7, and the two
+ * endings. The nights themselves are {@link Nights}.
  */
 public final class Story {
-    public static final int INTRO_TEXT = 220;
+    /** The intro's black screen: the first night's card, then four lines of text (HorrorOverlay.intro). */
+    public static final int INTRO_TEXT = 236;
     public static final int INTRO_FADE = 40;
     /** The medium's lines in the parking lot and how long each stays (ticks). */
-    private static final int[] INTRO_LINES = {66, 70, 74, 74, 80, 76, 82, 74, 82, 70};
+    private static final int[] INTRO_LINES = {66, 62, 74, 74, 80, 76, 82, 86, 82, 104};
     public static final int INTRO_END;
     private static final String TAG_PROP = "reisatsu_prop";
     private static final Map<UUID, Long> TALK_BUSY = new HashMap<>();
@@ -106,18 +107,23 @@ public final class Story {
     }
 
     // ================================================================================================ the world at the start
-    /** A new night: props of an earlier one removed, the film packs and the office key back in their places. */
+    /** A new week: props of an earlier one removed, the film packs and the office key back in their places. */
     public static void resetWorld(ServerLevel level) {
+        resetWorld(level, null);
+    }
+
+    /** A new night: props removed; film pack 3 and the office key back in their places unless taken this week. */
+    public static void resetWorld(ServerLevel level, @javax.annotation.Nullable GameData data) {
         reset();
         Hiding.clearSeats(level);
         for (Entity e : level.getEntities((Entity) null, Spirits.AREA, en -> en.getTags().contains(TAG_PROP))) e.discard();
         // film pack 1 is in the register drawer and film pack 2 in a staff locker (GameFixtureListener gives them);
         // film pack 3 lies on the walk-in fridge's floor, the office key on the staff room table
-        if (Layout.has("film_3")) {
+        if (Layout.has("film_3") && (data == null || (data.filmTaken & (1 << 3)) == 0)) {
             BlockPos at = Layout.marker("film_3").pos();
             pickup(level, new Vec3(at.getX() + 0.5, surfaceY(level, at), at.getZ() + 0.5), new ItemStack(ModItems.FILM_PACK.get()), "reisatsu_film_3");
         }
-        if (Layout.has("key_office")) {
+        if (Layout.has("key_office") && (data == null || !data.officeKeyTaken)) {
             BlockPos at = Layout.marker("key_office").pos();
             pickup(level, new Vec3(at.getX() + 0.5, surfaceY(level, at), at.getZ() + 0.5), new ItemStack(ModItems.OFFICE_KEY.get()), "reisatsu_office_key");
         }
@@ -225,7 +231,10 @@ public final class Story {
         ps.lockPos = null;
         ps.hintIn = 50;
         boolean first = data.phase == GameData.PHASE_INTRO || data.phase == GameData.PHASE_IDLE;
-        if (first) data.phase = GameData.PHASE_INVESTIGATE;
+        if (first) {
+            data.phase = GameData.PHASE_INVESTIGATE;
+            Nights.beginFirst(data);
+        }
         data.introSeen = true;
         data.notes.add("report");
         data.notes.add("medium");
@@ -240,7 +249,10 @@ public final class Story {
     }
 
     public static void skipIntro(ServerPlayer p, PlayerState ps, GameData data) {
-        if (ps.introTicks < 0) return;
+        if (ps.introTicks < 0) {
+            Nights.skip(p);
+            return;
+        }
         if (!data.introSeen && !p.isCreative() && ps.introTicks < INTRO_TEXT) return;
         GameManager.event(p, GameManager.EV_INTRO, -1, "");
         finishIntro(p, data);
@@ -265,19 +277,17 @@ public final class Story {
     }
 
     public static void onEnterRoom(ServerLevel level, ServerPlayer p, PlayerState ps, GameData data, String from, String to) {
-        if (data.phase != GameData.PHASE_INVESTIGATE && data.phase != GameData.PHASE_CLOSING) return;
-        boolean customers = to.equals("dining") || to.equals("waiting") || to.equals("vestibule");
-        if (customers && !data.isCaptured(SpiritKind.CHILD) && data.once("child_moui")) {
-            // 「もういいかい」 from nowhere: the child's game begins
-            GameManager.privateSound(p, ModSounds.CHILD_MOUI.get(), p.getEyePosition().add(level.random.nextGaussian() * 3, 1.5, level.random.nextGaussian() * 3), 0.8f, 1.0f);
-            say(p, "child", 60, "dialogue.reisatsu.child.moui");
-            if (Spirits.get(level, SpiritKind.CHILD) instanceof Child c) c.startGame(p);
-            GameManager.addFear(p, 0.12f);
-        }
+        if (!Nights.nightPhase(data)) return;
         if (to.equals("fridge") && data.once("thought_fridge")) GameManager.event(p, GameManager.EV_THOUGHT, 0, "thought.reisatsu.fridge");
-        if (to.equals("womens") && data.once("thought_womens")) GameManager.event(p, GameManager.EV_THOUGHT, 0, "thought.reisatsu.womens");
+        if (to.equals("womens") && womensTapRunning(level) && data.once("thought_womens")) GameManager.event(p, GameManager.EV_THOUGHT, 0, "thought.reisatsu.womens");
         if (to.equals("kitchen") && data.once("thought_kitchen")) GameManager.event(p, GameManager.EV_THOUGHT, 0, "thought.reisatsu.kitchen");
         if (to.equals("office") && data.once("thought_office")) GameManager.event(p, GameManager.EV_THOUGHT, 0, "thought.reisatsu.office");
+    }
+
+    private static boolean womensTapRunning(ServerLevel level) {
+        if (!Layout.has("sink_w")) return false;
+        for (Layout.Marker m : Layout.markers("sink_w")) if (Fixtures.isTapRunning(level, m.pos())) return true;
+        return false;
     }
 
     // ================================================================================================ the medium
@@ -299,7 +309,9 @@ public final class Story {
         }
         List<String> keys = new ArrayList<>();
         List<Integer> ticks = new ArrayList<>();
+        boolean endNight = false;
         if (!handed.isEmpty()) {
+            // she reads each name and tells the story
             for (SpiritKind k : handed) {
                 data.submitted |= k.bit();
                 for (int l = 1; l <= 4; l++) {
@@ -309,18 +321,31 @@ public final class Story {
                 GameManager.event(p, GameManager.EV_SUBMIT, k.ordinal(), "");
             }
             data.setDirty();
-            if (data.allSubmitted()) {
+            SpiritKind tonight = Week.spirit(data.night);
+            if (data.allCaptured() && data.allSubmitted()) {
                 keys.add("dialogue.reisatsu.ready.1");
                 ticks.add(70);
                 keys.add("dialogue.reisatsu.ready.2");
                 ticks.add(70);
+            } else if (tonight != null && data.isSubmitted(tonight) && data.night < Week.NIGHTS) {
+                // ...and says goodnight
+                keys.add("dialogue.reisatsu.end." + data.night);
+                ticks.add(110);
+                endNight = true;
             }
-        } else if (data.allCaptured() && data.allSubmitted()) {
+        } else if (data.allCaptured() && data.allSubmitted() && data.phase == GameData.PHASE_RETURN) {
             keys.add("dialogue.reisatsu.ready.1");
             ticks.add(70);
             keys.add("dialogue.reisatsu.ready.2");
             ticks.add(70);
             exorcismIn = 150;
+        } else if (data.night == 1 && data.nightStage == GameData.NS_RETURN) {
+            // the first night is over: six of them; one a night, beginning with the one who comes at two
+            for (int l = 1; l <= 4; l++) {
+                keys.add("dialogue.reisatsu.end.1." + l);
+                ticks.add(new int[]{60, 96, 92, 120}[l - 1]);
+            }
+            endNight = true;
         } else {
             hint(data, keys, ticks, p.serverLevel());
         }
@@ -328,50 +353,59 @@ public final class Story {
         m.talk(total);
         TALK_BUSY.put(p.getUUID(), now + Math.min(total, 200));
         if (!handed.isEmpty() && data.allSubmitted() && data.allCaptured()) exorcismIn = total + 10;
+        if (endNight) Nights.end(p.serverLevel(), data, total);
         Camera.syncAlbum(p);
         GameManager.syncState(p, ps, data);
     }
 
+    /** What she says when you come back without what tonight needs. */
     private static void hint(GameData data, List<String> keys, List<Integer> ticks, ServerLevel level) {
-        switch (data.phase) {
-            case GameData.PHASE_CLOSING -> {
-                keys.add("dialogue.reisatsu.hint.closing");
-                ticks.add(90);
-                keys.add("dialogue.reisatsu.hint.manager");
-                ticks.add(100);
+        SpiritKind k = Week.spirit(data.night);
+        if (data.night == 1) {
+            int left = Math.max(1, Week.OBSERVE_GOAL - data.signs.size());
+            keys.add("dialogue.reisatsu.hint.n1.left." + left);
+            ticks.add(70);
+            keys.add("dialogue.reisatsu.hint.n1");
+            ticks.add(100);
+            return;
+        }
+        if (k == null) return;
+        switch (data.nightStage) {
+            case GameData.NS_WORK -> {
+                keys.add("dialogue.reisatsu.hint.wait." + k.id);
+                ticks.add(110);
             }
-            case GameData.PHASE_RETURN -> {
-                keys.add("dialogue.reisatsu.hint.return");
-                ticks.add(90);
+            case GameData.NS_HUNT -> {
+                if (k == SpiritKind.MANAGER) {
+                    keys.add("dialogue.reisatsu.hint.closing");
+                    ticks.add(90);
+                }
+                keys.add("dialogue.reisatsu.hint." + k.id);
+                ticks.add(110);
             }
             default -> {
-                int left = 5 - data.capturedCount(SpiritKind.FIVE);
-                keys.add(left == 5 ? "dialogue.reisatsu.hint.start" : "dialogue.reisatsu.hint.left." + Math.max(1, left));
-                ticks.add(80);
-                List<SpiritKind> open = new ArrayList<>();
-                for (SpiritKind k : SpiritKind.ALL) if (!data.isCaptured(k)) open.add(k);
-                if (!open.isEmpty()) {
-                    SpiritKind k = open.get(level.random.nextInt(open.size()));
-                    keys.add("dialogue.reisatsu.hint." + k.id);
-                    ticks.add(110);
-                }
+                keys.add("dialogue.reisatsu.hint.return");
+                ticks.add(90);
             }
         }
     }
 
     // ================================================================================================ captures, closing time
     static void onCaptured(ServerLevel level, ServerPlayer p, GameData data, SpiritKind kind) {
-        GameManager.event(p, GameManager.EV_OBJECTIVE, 0, "");
-        if (data.phase == GameData.PHASE_INVESTIGATE && data.capturedCount(SpiritKind.FIVE) == 5 && pendingClosing < 0 && closingTicks < 0) {
-            pendingClosing = 20 * 5; // let the photo develop first
-        }
+        Nights.onCaptured(level, data, kind);
+        for (ServerPlayer o : GameManager.players(level)) if (GameManager.inGame(o)) GameManager.event(o, GameManager.EV_OBJECTIVE, 0, "");
+        // the last night: the store goes quiet once he is in the photo
         if (kind == SpiritKind.MANAGER && data.phase == GameData.PHASE_CLOSING) returnIn = 20 * 6;
     }
 
+    /** Is the closing sequence (PA, lights, music) still playing? */
+    public static boolean closingRunning() {
+        return closingTicks >= 0 || pendingClosing > 0;
+    }
+
+    /** Closing time (the last night): the PA, every light on, the store music warped, 「閉店」; the manager wakes after. */
     public static void startClosing(ServerLevel level, GameData data) {
-        if (data.happened("closing") && data.phase != GameData.PHASE_INVESTIGATE) return;
-        data.once("closing");
-        data.once("store_music");
+        if (closingTicks >= 0 || !data.tonight("closing")) return;
         data.closingAt = data.playTicks;
         data.phase = GameData.PHASE_CLOSING;
         data.setDirty();
@@ -391,6 +425,8 @@ public final class Story {
         if (t == 30) {
             Fixtures.allLightsOn(level);
             Fixtures.setCallDisplay(level, 0, true);
+            // every light in the store comes on at once: seen from anywhere inside (and through the windows)
+            Director.happenInside(level, "lights", 40);
         }
         if (t == 50) {
             for (ServerPlayer p : GameManager.players(level)) {
@@ -398,11 +434,15 @@ public final class Story {
                 GameManager.privateSound(p, ModSounds.MANAGER_CLOSED.get(), p.getEyePosition().add(0, 2, 0), 1.0f, 0.96f);
                 say(p, "pa", 90, "dialogue.reisatsu.pa.closed");
             }
+            Director.happenInside(level, "pa", 60);
         }
-        if (t == 120) Fixtures.setDevice(level, "store_music", true);
+        if (t == 120) {
+            Fixtures.setDevice(level, "store_music", true);
+            Director.happenInside(level, "music", 60);
+        }
         if (t == 140) {
+            // a world saved after he woke: he is up again at once
             if (Spirits.get(level, SpiritKind.MANAGER) instanceof Manager m) m.closingTime();
-            else returnIn = 60;
             for (ServerPlayer p : GameManager.players(level)) if (GameManager.inGame(p)) GameManager.event(p, GameManager.EV_OBJECTIVE, 0, "");
             closingTicks = -1;
         }
@@ -414,7 +454,6 @@ public final class Story {
         data.phase = GameData.PHASE_RETURN;
         data.setDirty();
         Fixtures.setDevice(level, "store_music", false);
-        data.done.remove("store_music");
         for (ServerPlayer p : GameManager.players(level)) {
             if (!GameManager.inGame(p)) continue;
             GameManager.event(p, GameManager.EV_OBJECTIVE, 0, "");

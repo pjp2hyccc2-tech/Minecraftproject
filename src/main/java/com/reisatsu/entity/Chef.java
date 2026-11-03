@@ -1,5 +1,6 @@
 package com.reisatsu.entity;
 
+import com.reisatsu.game.Director;
 import com.reisatsu.game.GameManager;
 import com.reisatsu.registry.ModParticles;
 import com.reisatsu.registry.ModSounds;
@@ -209,6 +210,7 @@ public class Chef extends Spirit {
                     setAnimPose(STOVE);
                     Fixtures.setDevice(level, "gas_range", true);
                     play(ModSounds.FIXTURE_GAS_IGNITE.get(), 1.0f, 1.0f);
+                    Director.happen(level, "gas", 20 * 8, position().add(0, 1.2, 0));
                 }
             }
             case S_STOVE -> {

@@ -14,10 +14,12 @@ import com.reisatsu.game.Camera;
 import com.reisatsu.game.Director;
 import com.reisatsu.game.GameData;
 import com.reisatsu.game.GameManager;
+import com.reisatsu.game.Nights;
 import com.reisatsu.game.NoiseSystem;
 import com.reisatsu.game.PlayerState;
 import com.reisatsu.game.Spirits;
 import com.reisatsu.game.Story;
+import com.reisatsu.game.Week;
 import com.reisatsu.item.GameItem;
 import com.reisatsu.registry.ModItems;
 import com.reisatsu.world.Circuit;
@@ -38,7 +40,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Locale;
 
-/** /reisatsu start | leave | reset | status | debug ... */
+/** /reisatsu start | leave | reset | status | debug ... (debug night n: jump to the start of night n of the week) */
 public final class ReisatsuCommand {
     private static final SuggestionProvider<CommandSourceStack> SPIRITS = (c, b) ->
             SharedSuggestionProvider.suggest(Arrays.stream(SpiritKind.ALL).map(k -> k.id), b);
@@ -73,15 +75,17 @@ public final class ReisatsuCommand {
                         Story.resetWorld(level);
                     }
                     Director.reset();
-                    c.getSource().sendSuccess(() -> Component.literal("reisatsu: the night is reset"), true);
+                    Nights.reset();
+                    c.getSource().sendSuccess(() -> Component.literal("reisatsu: the week is reset"), true);
                     return 1;
                 }))
                 .then(Commands.literal("status").executes(c -> {
                     GameData data = GameData.get(c.getSource().getServer());
                     ServerPlayer p = c.getSource().getPlayerOrException();
                     PlayerState ps = GameManager.state(p);
-                    String s = String.format(Locale.ROOT, "started=%s phase=%d captured=%s submitted=%s ofudaUsed=%d reishou=%d fear=%.2f danger=%.2f aware=%.2f room=%s photos=%d",
-                            data.started, data.phase, Integer.toBinaryString(data.captured), Integer.toBinaryString(data.submitted),
+                    String s = String.format(Locale.ROOT, "started=%s night=%d stage=%d phase=%d signs=%s inside=%ds captured=%s submitted=%s ofudaUsed=%d reishou=%d fear=%.2f danger=%.2f aware=%.2f room=%s photos=%d",
+                            data.started, data.night, data.nightStage, data.phase, data.signs, data.enteredAt < 0 ? -1 : (data.playTicks - data.enteredAt) / 20,
+                            Integer.toBinaryString(data.captured), Integer.toBinaryString(data.submitted),
                             data.ofudaUsed, data.reishou, ps.fear, ps.danger, ps.aware, ps.room, data.photos.size());
                     c.getSource().sendSuccess(() -> Component.literal(s), false);
                     return 1;
@@ -208,17 +212,32 @@ public final class ReisatsuCommand {
                             NoiseSystem.emit(p.serverLevel(), p.position(), FloatArgumentType.getFloat(c, "radius"), "debug", p);
                             return 1;
                         })))
-                        .then(Commands.literal("closing").executes(c -> {
+                        .then(Commands.literal("night").then(Commands.argument("night", IntegerArgumentType.integer(1, Week.NIGHTS)).executes(c -> {
                             ServerLevel level = GameManager.level(c.getSource().getServer());
                             if (level == null) return 0;
-                            GameData data = GameData.get(c.getSource().getServer());
-                            for (SpiritKind k : SpiritKind.FIVE) data.captured |= k.bit();
-                            data.phase = GameData.PHASE_INVESTIGATE;
-                            for (SpiritKind k : SpiritKind.FIVE) {
-                                Spirit s = Spirits.get(level, k);
-                                if (s != null) s.discard();
-                            }
-                            Story.startClosing(level, data);
+                            Nights.jump(level, GameData.get(c.getSource().getServer()), IntegerArgumentType.getInteger(c, "night"));
+                            return 1;
+                        })))
+                        .then(Commands.literal("manifest").executes(c -> {
+                            ServerLevel level = GameManager.level(c.getSource().getServer());
+                            if (level == null) return 0;
+                            Nights.manifest(level, GameData.get(c.getSource().getServer()));
+                            return 1;
+                        }))
+                        .then(Commands.literal("talk").executes(c -> {
+                            ServerPlayer p = c.getSource().getPlayerOrException();
+                            ServerLevel level = GameManager.level(c.getSource().getServer());
+                            var m = level == null ? null : Spirits.medium(level);
+                            if (m == null) return 0;
+                            Story.skipDialogue(p);
+                            Story.talk(p, m);
+                            return 1;
+                        }))
+                        .then(Commands.literal("closing").executes(c -> {
+                            // the last night's closing time, right here (the five before it done)
+                            ServerLevel level = GameManager.level(c.getSource().getServer());
+                            if (level == null) return 0;
+                            Nights.debugClosing(level, GameData.get(c.getSource().getServer()));
                             return 1;
                         }))
                         .then(Commands.literal("exorcism").executes(c -> {
@@ -230,6 +249,7 @@ public final class ReisatsuCommand {
                                 data.submitted |= k.bit();
                             }
                             for (Spirit s : Spirits.all(level)) s.discard();
+                            Nights.debugLastNight(data);
                             Story.startExorcism(level, data);
                             return 1;
                         }))
@@ -249,8 +269,13 @@ public final class ReisatsuCommand {
                                     return 1;
                                 })))
                         .then(Commands.literal("skipintro").executes(c -> {
+                            // the intro, or the medium's lines at the start / end of a night
                             ServerPlayer p = c.getSource().getPlayerOrException();
                             GameData data = GameData.get(c.getSource().getServer());
+                            if (Nights.inOpening() || Nights.inEnding()) {
+                                Nights.skip(p, true);
+                                return 1;
+                            }
                             GameManager.event(p, GameManager.EV_INTRO, -1, "");
                             Story.finishIntro(p, data);
                             return 1;

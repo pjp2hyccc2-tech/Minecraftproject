@@ -13,6 +13,8 @@ public final class ClientState {
     // ---- synced (S2C.State)
     public static float fear, danger, aware, breath = 1.0f;
     public static int flags, film, ofuda, captured, submitted, phase, reishou, circuits;
+    /** The night of the week (1..7), its stage (GameData.NS_*), what was witnessed tonight. */
+    public static int night = 1, nightStage, signs;
 
     // ---- smoothed
     public static float fearShown, dangerShown, awareShown, fearPrev, dangerPrev;
@@ -43,6 +45,12 @@ public final class ClientState {
     public static int releaseTicks = -1;
     public static int submitTicks = -1, submitKind = -1;
     public static int glitchTicks = -1;
+    /** The night's title card (night, ticks), the blackout between nights, the 「記録：…」 line. */
+    public static int nightCard = -1, nightCardTicks = -1;
+    public static int blackoutTicks = -1, blackoutFade = 30;
+    public static String witnessKey = "";
+    public static int witnessTicks = -1;
+    public static int manifestTicks = -1;
     public static float shake;
     public static int shakeTicks;
     public static int subliminal, subliminalKind;
@@ -52,6 +60,9 @@ public final class ClientState {
     public static final List<String> NOTES = new ArrayList<>();
 
     private ClientState() {}
+
+    /** How long the title card stays (it holds the screen black first, then the lot fades in under it). */
+    public static final int NIGHT_CARD_END = 170;
 
     public static boolean flag(int f) {
         return (flags & f) != 0;
@@ -83,7 +94,12 @@ public final class ClientState {
     /** Input is taken away (intro, being caught, cinematic moments, the ending). */
     public static boolean locked() {
         return flag(GameManager.F_INTRO) || flag(GameManager.F_CAUGHT) || flag(GameManager.F_LOCKED) || flag(GameManager.F_ENDING)
-                || jumpscareTicks >= 0 || caughtTicks >= 0 || (introTicks >= 0 && introTicks < 400);
+                || jumpscareTicks >= 0 || caughtTicks >= 0 || (introTicks >= 0 && introTicks < 400) || blackoutTicks >= 0;
+    }
+
+    /** The screen is black (between nights, or the first part of a night's card). */
+    public static boolean black() {
+        return blackoutTicks >= 0 || (nightCardTicks >= 0 && nightCardTicks < 60);
     }
 
     public static boolean hiding() {
@@ -118,6 +134,11 @@ public final class ClientState {
         if (releaseTicks >= 0 && ++releaseTicks > 80) releaseTicks = -1;
         if (submitTicks >= 0 && ++submitTicks > 90) submitTicks = -1;
         if (glitchTicks >= 0 && ++glitchTicks > 16) glitchTicks = -1;
+        if (nightCardTicks >= 0 && ++nightCardTicks > NIGHT_CARD_END) nightCardTicks = -1;
+        // the blackout holds until the next card (or gives up after 15 s)
+        if (blackoutTicks >= 0 && ++blackoutTicks > 300) blackoutTicks = -1;
+        if (witnessTicks >= 0 && ++witnessTicks > 110) witnessTicks = -1;
+        if (manifestTicks >= 0 && ++manifestTicks > 80) manifestTicks = -1;
         if (shakeTicks > 0 && --shakeTicks == 0) shake = 0.0f;
     }
 
@@ -129,6 +150,9 @@ public final class ClientState {
         introTicks = jumpscareTicks = caughtTicks = wakeTicks = areaTicks = thoughtTicks = hintTicks = closingTicks = -1;
         stingerTicks = noticedTicks = objectiveTicks = fadeTicks = dawnTicks = screamTicks = lockerFacing = -1;
         exorcismStage = exorcismTicks = releaseTicks = submitTicks = glitchTicks = -1;
+        nightCard = nightCardTicks = blackoutTicks = witnessTicks = manifestTicks = -1;
+        night = 1;
+        nightStage = signs = 0;
         shake = 0;
         shakeTicks = 0;
         PHOTOS.clear();

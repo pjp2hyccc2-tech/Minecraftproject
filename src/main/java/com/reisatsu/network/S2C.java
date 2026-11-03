@@ -15,9 +15,9 @@ import java.util.function.Supplier;
 public final class S2C {
     private S2C() {}
 
-    /** The player's nerves and the night's progress, five times a second. */
+    /** The player's nerves and the week's progress (the night, its stage, what was witnessed tonight), five times a second. */
     public record State(float fear, float danger, float aware, int flags, int film, int ofuda, int captured, int submitted,
-                        int phase, int reishou, float breath, int closingMask) {
+                        int phase, int reishou, float breath, int closingMask, int night, int nightStage, int signs) {
         public void encode(FriendlyByteBuf buf) {
             buf.writeFloat(fear);
             buf.writeFloat(danger);
@@ -31,11 +31,15 @@ public final class S2C {
             buf.writeVarInt(reishou);
             buf.writeFloat(breath);
             buf.writeVarInt(closingMask);
+            buf.writeVarInt(night);
+            buf.writeVarInt(nightStage);
+            buf.writeVarInt(signs);
         }
 
         public static State decode(FriendlyByteBuf buf) {
             return new State(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
-                    buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readFloat(), buf.readVarInt());
+                    buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readFloat(), buf.readVarInt(),
+                    buf.readVarInt(), buf.readVarInt(), buf.readVarInt());
         }
 
         public void handle(Supplier<NetworkEvent.Context> ctx) {

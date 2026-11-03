@@ -6,6 +6,7 @@ import com.reisatsu.ReisatsuConfig;
 import com.reisatsu.entity.SpiritKind;
 import com.reisatsu.game.GameData;
 import com.reisatsu.game.GameManager;
+import com.reisatsu.game.Week;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -250,16 +251,24 @@ public final class HorrorOverlay {
         overlays(mc, g, font, w, h, partial, t);
     }
 
+    /**
+     * Tonight's objective (docs §1 Flow): night 1 「霊障を確かめる n/5」; later nights 「異変を探る」 until the spirit
+     * shows, then 「<role>を撮影する」; with its photo 「霊媒師のもとへ戻る」; at the end 「除霊を見届ける」.
+     */
     private static String objectiveText() {
         int phase = ClientState.phase;
-        return switch (phase) {
-            case GameData.PHASE_INVESTIGATE -> I18n.get("objective.reisatsu.investigate", ClientState.capturedFive());
-            case GameData.PHASE_CLOSING -> ClientState.isCaptured(SpiritKind.MANAGER) ? I18n.get("objective.reisatsu.return")
-                    : I18n.get("objective.reisatsu.manager");
-            case GameData.PHASE_RETURN -> I18n.get("objective.reisatsu.return");
-            case GameData.PHASE_EXORCISM -> I18n.get("objective.reisatsu.exorcism");
-            default -> "";
-        };
+        if (phase == GameData.PHASE_EXORCISM) return I18n.get("objective.reisatsu.exorcism");
+        if (phase != GameData.PHASE_INVESTIGATE && phase != GameData.PHASE_CLOSING && phase != GameData.PHASE_RETURN) return "";
+        int stage = ClientState.nightStage;
+        if (stage == GameData.NS_OPENING || stage == GameData.NS_ENDING) return "";
+        if (stage == GameData.NS_RETURN || phase == GameData.PHASE_RETURN) return I18n.get("objective.reisatsu.return");
+        if (ClientState.night <= 1) {
+            return I18n.get("objective.reisatsu.observe", Math.min(ClientState.signs, Week.OBSERVE_GOAL), Week.OBSERVE_GOAL);
+        }
+        SpiritKind k = Week.spirit(ClientState.night);
+        if (k == null) return "";
+        if (stage == GameData.NS_WORK) return I18n.get("objective.reisatsu.signs");
+        return I18n.get("objective.reisatsu.photo." + k.id);
     }
 
     private static void objective(GuiGraphics g, Font font, int w, int h, float partial) {
@@ -272,9 +281,19 @@ public final class HorrorOverlay {
         g.drawString(font, text, x + 1, y, argb(0.92f, flash > 0 ? 0xFFF0C8 : 0xE8E0D0), false);
         // photos the medium has not seen yet
         int unsubmitted = ClientState.captured & ~ClientState.submitted;
+        int ly = y + 13;
         if (unsubmitted != 0 && ClientState.phase != GameData.PHASE_EXORCISM) {
             String sub = I18n.get("objective.reisatsu.hand_in", Integer.bitCount(unsubmitted));
-            g.drawString(font, sub, x + 1, y + 13, argb(0.6f, 0xC8C0B0), false);
+            g.drawString(font, sub, x + 1, ly, argb(0.6f, 0xC8C0B0), false);
+            ly += 12;
+        }
+        // 「記録：…」 — something seen tonight that counts
+        if (ClientState.witnessTicks >= 0 && !ClientState.witnessKey.isEmpty()) {
+            float k = ClientState.witnessTicks + partial;
+            float a = k < 10 ? k / 10.0f : k > 85 ? Math.max(0.0f, (110 - k) / 25.0f) : 1.0f;
+            String line = I18n.get("hud.reisatsu.witness", I18n.get(ClientState.witnessKey));
+            g.fill(x - 4, ly - 2, x + font.width(line) + 6, ly + 10, argb(a * 0.35f, 0x050505));
+            g.drawString(font, line, x + 1, ly, argb(a * 0.92f, 0xE0C890), false);
         }
     }
 
@@ -387,7 +406,37 @@ public final class HorrorOverlay {
                 centered(g, font, I18n.get("hud.reisatsu.ofuda_burnt", ClientState.wakeOfuda), w / 2, h / 2 - 6, argb(ta, 0xD8C8A0), 1.3f);
             }
         }
+        if (ClientState.blackoutTicks >= 0) {
+            float k = ClientState.blackoutTicks + partial;
+            g.fill(0, 0, w, h, argb(Mth.clamp(k / ClientState.blackoutFade, 0.0f, 1.0f), 0x000000));
+        }
+        if (ClientState.nightCardTicks >= 0 && ClientState.nightCard > 0) nightCard(g, font, w, h, ClientState.nightCardTicks + partial);
         if (ClientState.introTicks >= 0) intro(g, font, w, h, ClientState.introTicks + partial);
+        else if (ClientState.flag(GameManager.F_SKIPPABLE)) {
+            String sk = I18n.get("hud.reisatsu.skip");
+            g.drawString(font, sk, w - font.width(sk) - 10, h - 16, argb(0.55f, 0xB8B0A8), false);
+        }
+    }
+
+    /** A new night: black, its title and date; the lot fades in under them (docs §1 Flow). */
+    private static void nightCard(GuiGraphics g, Font font, int w, int h, float k) {
+        float black = k < 60 ? 1.0f : Math.max(0.0f, 1.0f - (k - 60) / 50.0f);
+        if (black > 0.0f) g.fill(0, 0, w, h, argb(black, 0x000000));
+        int end = ClientState.NIGHT_CARD_END;
+        float a = k < 12 ? 0.0f : k < 34 ? (k - 12) / 22.0f : k > end - 35 ? Math.max(0.0f, (end - k) / 35.0f) : 1.0f;
+        drawCard(g, font, w, h, ClientState.nightCard, a);
+    }
+
+    /** 「一日目の夜」 large, 「十一月三日（火）」 under it. */
+    static void drawCard(GuiGraphics g, Font font, int w, int h, int night, float a) {
+        if (a <= 0.01f) return;
+        String title = I18n.get("night.reisatsu." + night + ".title");
+        String date = I18n.get("night.reisatsu." + night + ".date");
+        int cy = h / 2 - 16;
+        centered(g, font, title, w / 2, cy - 8, argb(a * 0.95f, 0xE8E0D0), 2.4f);
+        int lw = (int) (font.width(title) * 1.2f) + 12;
+        g.fill(w / 2 - lw / 2, cy + 18, w / 2 + lw / 2, cy + 19, argb(a * 0.45f, 0xB01818));
+        centered(g, font, date, w / 2, cy + 26, argb(a * 0.8f, 0xB8B0A4), 1.3f);
     }
 
     private static void intro(GuiGraphics g, Font font, int w, int h, float k) {
@@ -395,11 +444,17 @@ public final class HorrorOverlay {
         int fade = com.reisatsu.game.Story.INTRO_FADE;
         float black = k < textEnd ? 1.0f : Math.max(0.0f, 1.0f - (k - textEnd) / fade);
         if (black > 0.0f) g.fill(0, 0, w, h, argb(black, 0x000000));
+        // the first night's card, then four lines of text
         for (int i = 0; i < 5; i++) {
-            float local = k - (8 + i * 42);
-            if (local < 0 || local > 44) continue;
-            float a = local < 10 ? local / 10.0f : local > 34 ? (44 - local) / 10.0f : 1.0f;
-            String text = I18n.get("intro.reisatsu." + (i + 1));
+            float start = i == 0 ? 8 : 68 + (i - 1) * 40, len = i == 0 ? 58 : 44;
+            float local = k - start;
+            if (local < 0 || local > len) continue;
+            float a = local < 10 ? local / 10.0f : local > len - 10 ? (len - local) / 10.0f : 1.0f;
+            if (i == 0) {
+                drawCard(g, font, w, h, 1, a);
+                continue;
+            }
+            String text = I18n.get("intro.reisatsu." + i);
             String[] lines = text.split("\n");
             int y = h / 2 - lines.length * 7;
             for (String l : lines) {

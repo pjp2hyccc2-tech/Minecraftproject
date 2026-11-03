@@ -72,7 +72,7 @@ public final class HorrorAudio {
         if (mc.isPaused() || mc.screen instanceof com.reisatsu.client.gui.EndingScreen) return;
         float fear = ClientState.fearShown;
         float dng = ClientState.dangerShown;
-        boolean intro = ClientState.introTicks >= 0 && ClientState.introTicks < com.reisatsu.game.Story.INTRO_TEXT;
+        boolean intro = (ClientState.introTicks >= 0 && ClientState.introTicks < com.reisatsu.game.Story.INTRO_TEXT) || ClientState.black();
         boolean caught = ClientState.flag(GameManager.F_CAUGHT) || ClientState.jumpscareTicks >= 0 || ClientState.caughtTicks >= 0;
         boolean hunted = ClientState.flag(GameManager.F_HUNTED);
         boolean closing = ClientState.phase == GameData.PHASE_CLOSING;

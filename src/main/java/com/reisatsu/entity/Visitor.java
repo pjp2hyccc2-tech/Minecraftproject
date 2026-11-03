@@ -2,7 +2,9 @@ package com.reisatsu.entity;
 
 import com.reisatsu.game.Director;
 import com.reisatsu.game.GameData;
+import com.reisatsu.game.Nights;
 import com.reisatsu.game.Spirits;
+import com.reisatsu.game.Week;
 import com.reisatsu.registry.ModSounds;
 import com.reisatsu.world.Fixtures;
 import com.reisatsu.world.Layout;
@@ -17,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 /**
- * 来店者 三浦健司: every few minutes the door opens for him (the first time at two o'clock, after the crash far away).
+ * 来店者 三浦健司 (night 2): every few minutes the door opens for him (the first time at two o'clock, after the crash far away).
  * He limps in from the road, dripping, sits at table 7, presses the call button and waits; then he is gone, the
  * chair left pulled out, the wet footprints drying. Invisible to the eye. Noticed: the doors lock, he LUNGEs (short).
  * Photo windows: walking in, and seated — his profile shows through the south window from the parking lot.
@@ -45,20 +47,25 @@ public class Visitor extends Spirit {
         return SpiritKind.VISITOR;
     }
 
-    /** Arrivals: the first at "two o'clock" after the crash cue, then every 3–5 minutes. */
+    /**
+     * Arrivals on his night (docs §1 Flow): the first at "two o'clock" — the crash far away 90–150 s after the player
+     * first went inside, he comes 13 s later — then every 2–3 minutes until his photo is taken.
+     */
     public static void schedule(ServerLevel level, GameData data) {
-        if (data.isCaptured(SpiritKind.VISITOR)) return;
+        if (Week.spirit(data.night) != SpiritKind.VISITOR || data.isCaptured(SpiritKind.VISITOR)) return;
+        if (data.nightStage != GameData.NS_WORK && data.nightStage != GameData.NS_HUNT) return;
         if (Spirits.get(level, SpiritKind.VISITOR) != null) return;
         if (data.visitorNext == -1) {
-            data.visitorNext = data.playTicks + 20 * 100;
+            if (data.enteredAt < 0) return; // two o'clock comes once the player is inside
+            data.visitorNext = data.enteredAt + 20L * (90 + level.random.nextInt(61)) + 20 * 13;
             data.setDirty();
         }
-        if (data.visitorNext == -2) { // he was here when the world was saved
+        if (data.visitorNext == -2) { // he was here and is gone without leaving (a reset)
             data.visitorNext = data.playTicks + 20 * 20;
             data.setDirty();
         }
         long until = data.visitorNext - data.playTicks;
-        if (data.visitorArrivals == 0 && until <= 20 * 13 && data.once("crash_cue")) Director.crashCue(level);
+        if (data.visitorArrivals == 0 && until <= 20 * 13 && data.tonight("crash_cue")) Director.crashCue(level);
         if (until <= 0) {
             Layout.Marker m = Layout.marker("visitor_spawn");
             Spirit s = Spirits.spawnAt(level, SpiritKind.VISITOR, m.center(), m.yaw());
@@ -67,6 +74,7 @@ public class Visitor extends Spirit {
                 data.visitorArrivals++;
                 data.visitorNext = -2;
                 data.setDirty();
+                Nights.shown(level, data, SpiritKind.VISITOR);
             }
         }
     }
@@ -153,6 +161,17 @@ public class Visitor extends Spirit {
         stayTicks = Math.max(stayTicks, 20 * 40);
     }
 
+    /** Debug / self test: walking in from this point of his path (the doors, the footprints still to come). */
+    public void walkFrom(int index) {
+        List<Layout.Marker> path = Layout.markers("visitor_path");
+        pathIdx = Math.max(0, Math.min(index, path.size() - 1));
+        stage = S_ARRIVE;
+        stageTicks = 0;
+        Vec3 at = path.get(pathIdx).center();
+        moveTo(at.x, at.y, at.z, path.get(pathIdx).yaw(), 0.0f);
+        lastPos = null;
+    }
+
     /** Already seated at table 7 (the tour, debugging): presses the button a few seconds later. */
     public void seatNow() {
         stage = S_SEATED;
@@ -206,7 +225,7 @@ public class Visitor extends Spirit {
         }
         Vec3 target = path.get(pathIdx).center();
         if (walkTo(target, walkSpeed())) pathIdx++;
-        // the doors open for him, with their chime
+        // the doors open for him, with their chime (GameFixtureListener: the door opening by itself is witnessed)
         if (!outerOpened && position().distanceToSqr(Layout.marker("door_outer").center()) < 6.5) {
             outerOpened = true;
             Fixtures.openAutoDoor(level, "outer", 50);
@@ -226,12 +245,18 @@ public class Visitor extends Spirit {
             double rx = Mth.cos(yaw * Mth.DEG_TO_RAD) * side, rz = Mth.sin(yaw * Mth.DEG_TO_RAD) * side;
             Fixtures.wetFootprint(level, position().add(rx, 0.02, rz), yaw);
             play(ModSounds.VISITOR_STEP.get(), 0.55f, 0.9f + random.nextFloat() * 0.15f);
+            // the footprints stay a while: whoever sees them has seen him come in
+            Director.happen(level, "prints", 20 * 60, position().add(0, 0.2, 0));
         }
     }
 
     private void seated(ServerLevel level) {
         // his model presses the button at PRESS tick 14
-        if (pose() == PRESS && poseTicks() == 14) Fixtures.ringCallButton(level, 7);
+        if (pose() == PRESS && poseTicks() == 14) {
+            Fixtures.ringCallButton(level, 7);
+            Director.happen(level, "call", 40, net.minecraft.world.phys.Vec3.atCenterOf(Layout.marker("button_7").pos()),
+                    net.minecraft.world.phys.Vec3.atCenterOf(Layout.marker("call_display").pos()).add(0, -0.6, 0));
+        }
         if (pose() == PRESS && poseTicks() > 30) setAnimPose(SIT);
         if (pose() != SIT && pose() != PRESS) setAnimPose(SIT);
         if (--nextPress <= 0) {
@@ -248,7 +273,7 @@ public class Visitor extends Spirit {
     private void leave(ServerLevel level) {
         play(ModSounds.SPIRIT_VANISH.get(), 0.6f, 1.0f);
         GameData data = GameData.get(level.getServer());
-        data.visitorNext = data.playTicks + 20 * (180 + random.nextInt(120));
+        data.visitorNext = data.playTicks + 20 * (110 + random.nextInt(60));
         data.setDirty();
         discard();
     }

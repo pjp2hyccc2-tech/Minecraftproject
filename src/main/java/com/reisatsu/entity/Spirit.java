@@ -501,6 +501,13 @@ public abstract class Spirit extends PathfinderMob implements Animated {
         fadeSpeed = 1.0f / 40.0f;
     }
 
+    /** It shows itself for the night (docs §1 Flow): fading in where it stands. */
+    public void manifest() {
+        entityData.set(DATA_FADE, 0.0f);
+        fadeTarget = 1.0f;
+        fadeSpeed = 1.0f / 40.0f;
+    }
+
     /** Fades away into light (its photo has burnt). */
     public void release() {
         fadeTarget = 0.0f;

@@ -48,21 +48,21 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The night at HIDAMARI on the server: starting and leaving (your own inventory, position and mode are kept and given
+ * The week at HIDAMARI on the server: starting and leaving (your own inventory, position and mode are kept and given
  * back), the player's nerves and body (fear, danger, footsteps, breath, the finder's night vision), being caught,
- * the medium, notes, syncing. The story beats live in {@link Story}, the camera in {@link Camera}, the poltergeist in
- * {@link Director}, the spirits' presence in {@link Spirits}.
+ * the medium, notes, syncing. The nights live in {@link Nights}, the story beats in {@link Story}, the camera in
+ * {@link Camera}, the poltergeist and what you witness of it in {@link Director}, the spirits' presence in {@link Spirits}.
  */
 public final class GameManager {
     // S2C.Event types
     public static final int EV_INTRO = 1, EV_JUMPSCARE = 2, EV_CAUGHT = 3, EV_WAKE = 4, EV_AREA = 5, EV_SUBTITLE = 6, EV_HINT = 7,
             EV_CLOSING = 8, EV_STINGER = 9, EV_ENDING = 10, EV_LEFT = 11, EV_DAWN = 12, EV_FADE = 13, EV_SHAKE = 14, EV_OBJECTIVE = 15,
             EV_CAPTURED = 16, EV_LOCKER = 17, EV_SCREAM = 18, EV_NOTICED = 19, EV_GLITCH = 20, EV_EXORCISM = 21, EV_SUBMIT = 22,
-            EV_FLICKER = 23, EV_THOUGHT = 24, EV_CREDITS = 25;
+            EV_FLICKER = 23, EV_THOUGHT = 24, EV_CREDITS = 25, EV_NIGHT = 26, EV_BLACKOUT = 27, EV_WITNESS = 28, EV_MANIFEST = 29;
     // S2C.State flags
     public static final int F_INGAME = 1, F_INTRO = 2, F_CAUGHT = 4, F_ENDING = 8, F_HIDING = 16, F_BREATH = 32, F_HUNTED = 64,
             F_CLOSING = 128, F_STORE_MUSIC = 256, F_LOCKED = 512, F_NEAR_MEDIUM = 1024, F_OUTSIDE = 2048, F_EXORCISM = 4096,
-            F_PEACEFUL = 8192, F_FINDER = 16384, F_HINT = 32768;
+            F_PEACEFUL = 8192, F_FINDER = 16384, F_HINT = 32768, F_SKIPPABLE = 65536;
 
     public static final int CAUGHT_TICKS = 70;
     private static final Map<UUID, PlayerState> STATES = new HashMap<>();
@@ -263,7 +263,13 @@ public final class GameManager {
             Layout.Marker w = Layout.marker("wake");
             teleport(p, level, w.center(), w.yaw(), 0.0f);
         }
-        if (data.phase == GameData.PHASE_INTRO) Story.finishIntro(p, data);
+        if (data.phase == GameData.PHASE_INTRO) {
+            Story.finishIntro(p, data);
+        } else if (Nights.needsResume(data)) {
+            // save and quit: the current night starts again (photos, お札 and notes kept)
+            ServerLevel level = level(p.server);
+            if (level != null) Nights.start(level, data, data.night, true);
+        }
         if (data.phase == GameData.PHASE_ENDING && data.ending != GameData.ENDING_NONE) {
             // the night ended while they were away: show them the end
             ps.endingTicks = 0;
@@ -303,10 +309,11 @@ public final class GameManager {
         data.setDirty();
         Greybox.ensure(level);
         Fixtures.ensureBuilt(level);
+        Nights.reset();
+        Director.reset();
         if (replay) {
             Fixtures.resetAll(level);
             Spirits.removeAll(level);
-            Director.reset();
         }
         Story.resetWorld(level);
         if (!p.getPersistentData().contains("reisatsu_return")) saveReturn(p);
@@ -428,6 +435,7 @@ public final class GameManager {
         if (data.started && anyone) {
             if (running(level)) data.playTicks++;
             if (level.getGameTime() % 20 == 0) Spirits.ensure(level, data);
+            Nights.tick(level, data);
             Story.tick(level, data);
             if (running(level)) Director.tick(level, data);
             FlashlightLight.tick(level);
@@ -832,22 +840,24 @@ public final class GameManager {
         if (ps.hiding()) flags |= F_HIDING;
         if (ps.breathHolding) flags |= F_BREATH;
         if (ps.aware >= 1.0f) flags |= F_HUNTED;
-        if (data.phase == GameData.PHASE_CLOSING || data.happened("closing")) flags |= F_CLOSING;
-        if (data.happened("store_music") && data.phase <= GameData.PHASE_RETURN) flags |= F_STORE_MUSIC;
+        ServerLevel level = p.serverLevel();
+        boolean here = isGameLevel(level);
+        if (data.phase == GameData.PHASE_CLOSING || (data.happenedTonight("closing") && data.phase <= GameData.PHASE_RETURN)) flags |= F_CLOSING;
+        if (here && Fixtures.deviceOn(level, "store_music") && data.phase <= GameData.PHASE_RETURN) flags |= F_STORE_MUSIC;
         if (ps.locked) flags |= F_LOCKED;
+        if (Nights.skippable()) flags |= F_SKIPPABLE;
         if (data.phase == GameData.PHASE_EXORCISM) flags |= F_EXORCISM;
         if (debugPeaceful) flags |= F_PEACEFUL;
         if (ps.finderUp) flags |= F_FINDER;
-        ServerLevel level = p.serverLevel();
-        Medium m = isGameLevel(level) ? Spirits.medium(level) : null;
+        Medium m = here ? Spirits.medium(level) : null;
         if (m != null && m.distanceTo(p) < 12.0) flags |= F_NEAR_MEDIUM;
         if ("outside".equals(ps.room)) flags |= F_OUTSIDE;
         int circuits = 0;
-        if (isGameLevel(level)) {
+        if (here) {
             for (Circuit c : Circuit.values()) if (Fixtures.circuitOn(level, c)) circuits |= 1 << c.ordinal();
         }
         ModNetwork.send(p, new S2C.State(ps.fear, ps.danger, ps.aware, flags, GameItem.film(camera(p)), count(p, ModItems.OFUDA.get()),
-                data.captured, data.submitted, data.phase, data.reishou, ps.breathGauge, circuits));
+                data.captured, data.submitted, data.phase, data.reishou, ps.breathGauge, circuits, data.night, data.nightStage, data.signs.size()));
     }
 
     public static void onServerStopping(MinecraftServer server) {
@@ -863,5 +873,6 @@ public final class GameManager {
         NoiseSystem.clear();
         Director.reset();
         Story.reset();
+        Nights.reset();
     }
 }
