@@ -605,7 +605,7 @@ def phone_ring_own(rng, i=1):
     n = ns(L)
     y = np.zeros(n)
     step = 0.155
-    t = 0.0
+    t = 0.03  # the first note just after the seam
     for k, nm in enumerate(RINGTONE):
         if nm:
             K.place(y, ins.marimba(dsp.hz(nm), rng, vel=0.9, bright=0.7, hard=0.7), t, L=L)

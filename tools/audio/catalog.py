@@ -48,11 +48,11 @@ CATALOG = [
     # ------------------------------------------------------------ positional loops (mono)
     e("fixture.fridge", 1, 1, f"{A}:fridge", 8, ("lufs", -31, -10), "冷蔵庫が唸る", "Fridge hums", loop=True),
     e("fixture.clock", 1, 1, f"{A}:clock", 8, ("peak", -12), "時計が時を刻む", "Clock ticks", loop=True, seam="start"),
-    e("fixture.tap_bath", 1, 1, f"{A}:tap_bath", 12, ("lufs", -21, -4), "浴槽に水が溜まっていく", "The bathtub fills", loop=True),
+    e("fixture.tap_bath", 1, 1, f"{A}:tap_bath", 12, ("lufs", -21, -4), "浴槽に水が溜まっていく", "The bathtub fills", loop=True, stream=False),
     e("fixture.tap", 1, 1, f"{A}:tap", 10, ("lufs", -23, -5), "蛇口から水が流れる", "Tap runs", loop=True),
-    e("fixture.washing_machine", 1, 1, f"{A}:washing_machine", 14, ("lufs", -23, -5), "洗濯機が回っている", "Washing machine churns", loop=True, seam="start"),
+    e("fixture.washing_machine", 1, 1, f"{A}:washing_machine", 14, ("lufs", -23, -5), "洗濯機が回っている", "Washing machine churns", loop=True, seam="start", stream=False),
     e("fixture.rain_window", 1, 1, f"{A}:rain_window", 10, ("lufs", -30, -9), "雨粒が窓ガラスを叩く", "Rain taps the glass", loop=True),
-    e("doll.drag_loop", 1, 1, f"{D}:drag_loop", 12, ("lufs", -23, -4), "何かが床を這いずる", "Something drags itself across the floor", loop=True),
+    e("doll.drag_loop", 1, 1, f"{D}:drag_loop", 12, ("lufs", -23, -4), "何かが床を這いずる", "Something drags itself across the floor", loop=True, stream=False),
     e("camera.mic_hiss", 1, 2, f"{A}:mic_hiss", None, ("lufs", -37, -16), "カメラのマイクのノイズ", "Camera mic hiss", loop=True, sub=False),
     # ------------------------------------------------------------ music (stereo)
     e("music.dread", 1, 2, f"{MU}:dread", None, ("lufs", -31, -6), "不穏な音楽", "Dread", loop=True, q=6, sub=False),
@@ -82,7 +82,7 @@ CATALOG = [
     e("voice.mitsuketa", 1, 2, f"{VO}:mitsuketa", None, ("lufs", -19, -3), "「みーちゃん、みつけた」", "\"Mii-chan... found you.\""),
     e("voice.next_oni", 1, 2, f"{VO}:next_oni", None, ("lufs", -20, -3), "「次は、みーちゃんが鬼だから」", "\"Next, Mii-chan is 'it'.\""),
     e("voice.watashi_kachi", 1, 2, f"{VO}:watashi_kachi", None, ("lufs", -19, -3), "「わたしの勝ち」", "\"I win.\""),
-    e("voice.count", 1, 2, f"{VO}:count", None, ("lufs", -23, -4), "「いち、に、さん……じゅう」", "\"One, two, three... ten.\""),
+    e("voice.count", 1, 2, f"{VO}:count", None, ("lufs", -23, -4), "「いち、に、さん……じゅう」", "\"One, two, three... ten.\"", stream=False),
     # ------------------------------------------------------------ doors (mono)
     e("door.front_open", 1, 1, f"{H}:front_open", 16, ("peak", -3), "玄関の鉄扉が開く", "Steel front door opens"),
     e("door.front_close", 1, 1, f"{H}:front_close", 16, ("peak", -1.5), "玄関の鉄扉が閉まる", "Steel front door slams shut"),

@@ -76,7 +76,6 @@
     "sounds": [
       {
         "name": "hitori:fixture/tap_bath",
-        "stream": true,
         "attenuation_distance": 12
       }
     ]
@@ -95,7 +94,6 @@
     "sounds": [
       {
         "name": "hitori:fixture/washing_machine",
-        "stream": true,
         "attenuation_distance": 14
       }
     ]
@@ -114,7 +112,6 @@
     "sounds": [
       {
         "name": "hitori:doll/drag_loop",
-        "stream": true,
         "attenuation_distance": 12
       }
     ]
@@ -342,8 +339,7 @@
     "subtitle": "subtitles.hitori.voice.count",
     "sounds": [
       {
-        "name": "hitori:voice/count",
-        "stream": true
+        "name": "hitori:voice/count"
       }
     ]
   },
