@@ -418,7 +418,7 @@ void main() {
     } else if ((marked && id != BLK_DARK_LED) || id == BLK_INDICATOR) {
         // an indicator light on a block that is not a lamp: the breaker's lamp, the rice
         // cooker's "keep warm", the washing machine's panel
-        float m = indicatorMask(albedo.rgb);
+        float m = marked ? indicatorMask(albedo.rgb) : ledMask(albedo.rgb);
         emissive = m;
         emission = lin * m * 1.6 * LIGHT_STRENGTH;
         mat = m > 0.4 ? MAT_EMITTER : mat;

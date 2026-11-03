@@ -14,6 +14,7 @@
 Usage: python3 tools/shader/lint.py [--keep DIR] [--quick]
 Exit code 1 on any failure (or if glslangValidator is missing).
 """
+import json
 import os
 import re
 import shutil
@@ -254,10 +255,57 @@ def check_consistency():
                         if any(b > 127 for b in line):
                             problems.append("%s:%d: non-ASCII character" % (os.path.relpath(path, ROOT), n))
                             break
+    problems += block_id_overlaps()
     for p in problems:
         print("consistency:", p)
     print("consistency: %s" % ("OK" if not problems else "%d problem(s)" % len(problems)))
     return len(problems)
+
+
+def block_id_overlaps():
+    """block.properties: no hitori block state may match two ids - Oculus 1.7.0 walks its id map in
+    hash order, so overlapping lines resolve at random (in the CI tour the lit TV took the line of
+    the TV switched off). States come from the mod's blockstates (variants)."""
+    import itertools
+    bs_dir = os.path.join(ROOT, "..", "..", "resources", "assets", "hitori", "blockstates")
+    if not os.path.isdir(bs_dir):
+        return []
+    states = {}
+    for f in sorted(os.listdir(bs_dir)):
+        if not f.endswith(".json"):
+            continue
+        with open(os.path.join(bs_dir, f), encoding="utf-8") as fh:
+            j = json.load(fh)
+        pv = {}
+        for key in j.get("variants", {}):
+            for kv in filter(None, key.split(",")):
+                k, v = kv.split("=", 1)
+                pv.setdefault(k, set()).add(v)
+        states[f[:-5]] = pv
+    entries = []
+    txt = open(os.path.join(ROOT, "block.properties"), encoding="utf-8").read().replace("\\\n", " ")
+    for line in txt.splitlines():
+        line = line.strip()
+        if not line.startswith("block.") or "=" not in line:
+            continue
+        key, val = line.split("=", 1)
+        for tok in val.split():
+            parts = tok.split(":")
+            if parts[0] == "hitori" and len(parts) >= 2:
+                entries.append((parts[1], dict(p.split("=", 1) for p in parts[2:] if "=" in p), key))
+    problems = []
+    for name, pv in states.items():
+        mine = [(c, k) for n, c, k in entries if n == name]
+        if len({k for _c, k in mine}) < 2:
+            continue
+        keys = sorted(pv)
+        for combo in itertools.product(*[sorted(pv[k]) for k in keys]):
+            st = dict(zip(keys, combo))
+            ids = {k for c, k in mine if all(st.get(a) == b for a, b in c.items())}
+            if len(ids) > 1:
+                problems.append("block.properties: hitori:%s %s matches %s" % (name, st, " and ".join(sorted(ids))))
+                break
+    return problems
 
 
 def main():

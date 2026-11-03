@@ -237,9 +237,10 @@ vec3 cctvFeed(vec2 uv0, float F, float D, out bool outside) {
     vec3 b0b = texture(colortex3, uv).rgb;
     vec3 b1 = textureLod(colortex3, uv, 3.0).rgb;
     col += (b0b * 0.8 + b1 * 0.9) * (0.55 * BLOOM_STRENGTH);
-    // ---- gain: the camera opens up the dark - and the darker, the noisier ------------------
+    // ---- gain: the camera opens up the dark - and the darker, the noisier; it also closes down
+    //      when its own IR LEDs blow out a wall right in front of it (a camera in a closet) -----
     float avg = luma(textureLod(colortex0, vec2(0.5), 8.0).rgb);
-    float gain = clamp(0.11 / max(avg, 1e-4), 1.2, 9.0) * BRIGHTNESS;
+    float gain = clamp(0.11 / max(avg, 1e-4), 0.35, 9.0) * BRIGHTNESS;
     col *= gain;
     float noisy = smoothstep(1.5, 9.0, gain);
     // ---- the sensor: IR monochrome / dull colour --------------------------------------------

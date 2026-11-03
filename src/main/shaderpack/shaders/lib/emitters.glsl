@@ -283,9 +283,16 @@ float emitterSurfaceMask(int type, vec3 c, vec3 N, bool marked) {
     return max(strict, smoothstep(0.30, 0.65, l + 0.5 * ch));
 }
 
+// a small LED drawn into an ordinary texture (the rice cooker's keep-warm lamp, the microwave's,
+// the washing machine's): only a pure, bright red or green texel - not the orange trim or a
+// coloured label next to it
+float ledMask(vec3 c) {
+    return max(smoothstep(0.35, 0.55, c.r - max(c.g, c.b)) * smoothstep(0.55, 0.80, c.r),
+               smoothstep(0.25, 0.45, c.g - max(c.r, c.b)) * smoothstep(0.45, 0.70, c.g));
+}
 // the small indicator lights the art marks full-bright on blocks that are not lamps (the
-// breaker's lamp, the rice cooker, the washing machine's panel): their coloured texels glow,
-// the grey panels round them do not
+// breaker's lamp, the luminous light switches): their coloured texels glow, the grey panels round
+// them do not
 float indicatorMask(vec3 c) {
     return max(smoothstep(0.35, 0.55, maxOf(c) - minOf(c)) * smoothstep(0.60, 0.85, maxOf(c)), smoothstep(0.92, 0.97, luma(c)));
 }
