@@ -1,8 +1,79 @@
 {
-  "parent": "minecraft:block/door_bottom_left",
+  "parent": "minecraft:block/block",
   "render_type": "minecraft:cutout",
   "textures": {
-    "bottom": "hitori:block/front_door_bottom",
-    "top": "hitori:block/front_door_top"
-  }
+    "outer": "hitori:block/front_door_bottom",
+    "inner": "hitori:block/front_door_inner_bottom",
+    "particle": "hitori:block/front_door_bottom"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        3,
+        16,
+        16
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#outer"
+        },
+        "east": {
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ],
+          "texture": "#inner"
+        },
+        "north": {
+          "uv": [
+            0,
+            0,
+            3,
+            16
+          ],
+          "texture": "#outer"
+        },
+        "south": {
+          "uv": [
+            13,
+            0,
+            16,
+            16
+          ],
+          "texture": "#outer"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            3,
+            16
+          ],
+          "texture": "#outer"
+        },
+        "down": {
+          "uv": [
+            13,
+            0,
+            16,
+            16
+          ],
+          "texture": "#outer"
+        }
+      }
+    }
+  ]
 }
