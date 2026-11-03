@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/shelf"
+    },
+    "facing=east": {
+      "model": "hitori:block/shelf",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/shelf",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/shelf",
+      "y": 270
+    }
+  }
+}

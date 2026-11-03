@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/wall_clock"
+    },
+    "facing=east": {
+      "model": "hitori:block/wall_clock",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/wall_clock",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/wall_clock",
+      "y": 270
+    }
+  }
+}

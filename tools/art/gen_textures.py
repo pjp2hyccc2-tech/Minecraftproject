@@ -22,7 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import common  # noqa: E402
 from common import REGISTRY, TEX_ROOT, PREVIEW, finalize, to_array  # noqa: E402
 
-import rs_modules  # noqa: E402,F401  (imports every texture / model module)
+import hk_modules  # noqa: E402,F401  (imports every texture / model module)
 import preview  # noqa: E402
 
 MCMETA = {"animation": {"frametime": 3, "interpolate": True}}

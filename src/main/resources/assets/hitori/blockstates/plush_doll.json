@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,present=false": {
+      "model": "hitori:block/plush_doll"
+    },
+    "facing=north,present=true": {
+      "model": "hitori:block/plush_doll_present"
+    },
+    "facing=east,present=false": {
+      "model": "hitori:block/plush_doll",
+      "y": 90
+    },
+    "facing=east,present=true": {
+      "model": "hitori:block/plush_doll_present",
+      "y": 90
+    },
+    "facing=south,present=false": {
+      "model": "hitori:block/plush_doll",
+      "y": 180
+    },
+    "facing=south,present=true": {
+      "model": "hitori:block/plush_doll_present",
+      "y": 180
+    },
+    "facing=west,present=false": {
+      "model": "hitori:block/plush_doll",
+      "y": 270
+    },
+    "facing=west,present=true": {
+      "model": "hitori:block/plush_doll_present",
+      "y": 270
+    }
+  }
+}

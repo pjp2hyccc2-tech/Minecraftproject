@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=north,half=lower,open=0": {
+      "model": "hitori:block/oshiire_fusuma_lower_0"
+    },
+    "facing=north,half=lower,open=1": {
+      "model": "hitori:block/oshiire_fusuma_lower_1"
+    },
+    "facing=north,half=lower,open=2": {
+      "model": "hitori:block/oshiire_fusuma_lower_2"
+    },
+    "facing=north,half=upper,open=0": {
+      "model": "hitori:block/oshiire_fusuma_upper_0"
+    },
+    "facing=north,half=upper,open=1": {
+      "model": "hitori:block/oshiire_fusuma_upper_1"
+    },
+    "facing=north,half=upper,open=2": {
+      "model": "hitori:block/oshiire_fusuma_upper_2"
+    },
+    "facing=east,half=lower,open=0": {
+      "model": "hitori:block/oshiire_fusuma_lower_0",
+      "y": 90
+    },
+    "facing=east,half=lower,open=1": {
+      "model": "hitori:block/oshiire_fusuma_lower_1",
+      "y": 90
+    },
+    "facing=east,half=lower,open=2": {
+      "model": "hitori:block/oshiire_fusuma_lower_2",
+      "y": 90
+    },
+    "facing=east,half=upper,open=0": {
+      "model": "hitori:block/oshiire_fusuma_upper_0",
+      "y": 90
+    },
+    "facing=east,half=upper,open=1": {
+      "model": "hitori:block/oshiire_fusuma_upper_1",
+      "y": 90
+    },
+    "facing=east,half=upper,open=2": {
+      "model": "hitori:block/oshiire_fusuma_upper_2",
+      "y": 90
+    },
+    "facing=south,half=lower,open=0": {
+      "model": "hitori:block/oshiire_fusuma_lower_0",
+      "y": 180
+    },
+    "facing=south,half=lower,open=1": {
+      "model": "hitori:block/oshiire_fusuma_lower_1",
+      "y": 180
+    },
+    "facing=south,half=lower,open=2": {
+      "model": "hitori:block/oshiire_fusuma_lower_2",
+      "y": 180
+    },
+    "facing=south,half=upper,open=0": {
+      "model": "hitori:block/oshiire_fusuma_upper_0",
+      "y": 180
+    },
+    "facing=south,half=upper,open=1": {
+      "model": "hitori:block/oshiire_fusuma_upper_1",
+      "y": 180
+    },
+    "facing=south,half=upper,open=2": {
+      "model": "hitori:block/oshiire_fusuma_upper_2",
+      "y": 180
+    },
+    "facing=west,half=lower,open=0": {
+      "model": "hitori:block/oshiire_fusuma_lower_0",
+      "y": 270
+    },
+    "facing=west,half=lower,open=1": {
+      "model": "hitori:block/oshiire_fusuma_lower_1",
+      "y": 270
+    },
+    "facing=west,half=lower,open=2": {
+      "model": "hitori:block/oshiire_fusuma_lower_2",
+      "y": 270
+    },
+    "facing=west,half=upper,open=0": {
+      "model": "hitori:block/oshiire_fusuma_upper_0",
+      "y": 270
+    },
+    "facing=west,half=upper,open=1": {
+      "model": "hitori:block/oshiire_fusuma_upper_1",
+      "y": 270
+    },
+    "facing=west,half=upper,open=2": {
+      "model": "hitori:block/oshiire_fusuma_upper_2",
+      "y": 270
+    }
+  }
+}

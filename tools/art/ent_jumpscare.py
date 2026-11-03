@@ -1,11 +1,10 @@
-"""Full-screen jump scare faces of the spirits (gui/jumpscare_<id>.png, 256x256, opaque, on black) and the medium's
-dialogue portrait (gui/medium_portrait.png, 64x64).
+"""Full-screen jump scares of HITORI (gui/jumpscare_doll.png, gui/jumpscare_woman.png: 256x256, opaque, on black).
 
 Each face is painted as a relief: a height field (skull, sockets, mouth...) with albedo, wetness and emission layers,
 lit by the camera flash with cast shadows, wet specular and subsurface in the shadows, then put through a photographic
 post (grain, chromatic aberration, vignette, crushed blacks). Designed to match the models' features and palettes.
 The relief helpers are copied from SOUNAN's s_jumpscare.py (the art worker owns that file).
-usage: python3 tools/art/ent_jumpscare.py [id ...]
+usage: python3 tools/art/ent_jumpscare.py [doll|woman ...]
 """
 import math
 import os
@@ -508,84 +507,6 @@ def mouth_hole(R, u, v, cx, cy, rx, ry, lip=(150, 120, 122), lipw=0.025, teeth=N
     return inside
 
 
-def js_child_p():
-    """'Mi-tsu-ke-ta' - right in front of you and a little below: the hat brim, the black fringe over the eyes with one
-    eye looking out between two strands, the mouth a wide black O."""
-    R = Relief(5101)
-    U0, V0 = R.u, R.v
-    U, V = rot_uv(U0, V0, 0.2, 0.0, 0.0)
-    zoom = 1.9
-    u, v = (U + 0.1) / zoom, (V - 0.05) / zoom
-    f = Face(w=0.66, h=0.76, eye_x=0.24, eye_y=-0.08, socket=0.07, brow=0.02, nose_len=0.17, nose=0.05, mouth_y=0.33,
-             mouth_w=0.12, lips=0.02, cheek=0.06, hollow=0.0, chin=0.04)
-    H, M, ft = face_height(u, v, f)
-    for sx in (-1, 1):                                       # round child cheeks
-        H += g2(u, v, sx * 0.32, 0.14, 0.2, 0.18) * 0.07
-    R.H, R.M = H, M
-    R.A = skin(R, (208, 207, 200), 0.07, 5102, blotch_col=(188, 182, 182), blotch=0.3, veins=0.25, vein_col=(130, 140, 162))
-    R.paint(g2(u, v, 0, 0.62, 0.4, 0.18) * 0.25, (150, 150, 155))         # under the jaw
-    R.SSS = M * 0.55
-    R.WET = M * 0.3
-    R.ROUGH[:] = 24.0
-    R.paint(ft['nostril'] * 0.75, (110, 100, 104))
-    # the mouth: a wide black O, gums and four small teeth at the top
-    inside = mouth_hole(R, u, v, 0.0, 0.36, 0.165, 0.19, lip=(178, 150, 154), lipw=0.022, depth=0.22)
-    for tx in (-0.075, -0.025, 0.025, 0.075):
-        tooth = inside & (np.abs(u - tx) < 0.019) & (v < 0.215 - 0.6 * (u - tx) ** 2 + 0.01 * abs(tx) * 10) & (v > 0.16)
-        R.A[tooth] = [0.74, 0.72, 0.66]
-        R.H[tooth] += 0.05
-        R.WET[tooth] = 1.2
-    gum = inside & (v < 0.2) & (v > 0.17)
-    R.paint(gum * 0.6, (120, 60, 66))
-    tongue = inside & (ell(u, v, 0.0, 0.5, 0.11, 0.06) > 0)
-    R.paint(tongue * 0.35, (90, 40, 46))
-    # the black bob: a straight fringe ending in strand tips over the eyes, the sides down past the jaw
-    rr = rng(5104)
-    tips = np.zeros_like(u)
-    for k in range(60):
-        x0 = rr.uniform(-0.75, 0.75)
-        ln = rr.uniform(0.0, 0.07)
-        w_ = rr.uniform(0.006, 0.014)
-        tips = np.maximum(tips, ((np.abs(u - x0) < w_ * (1 - np.clip((v - 0.0) / (ln + 1e-3), 0, 1))) & (v > -0.02) & (v < ln)).astype(np.float32))
-    gap = np.clip(1 - np.abs(u - 0.2) / (0.035 + 0.03 * np.clip((v + 0.25) * 2.5, 0, 1)), 0, 1) * (v > -0.32)
-    fringe = np.clip((v < 0.0).astype(np.float32) + tips, 0, 1) * (1 - np.clip(gap * 2.0, 0, 1))
-    side_w = 0.5 + 0.03 * np.sin(v * 20)
-    sides = ((np.abs(u) > side_w) & (v < 0.64)).astype(np.float32)
-    mask = blur(np.clip(fringe + sides, 0, 1), 0.8)
-    flow = 1.5708 + 0.25 * np.tanh(u * 2.0) * (v < -0.2)
-    hair_mass(R, mask, 5103, flow_angle=flow, col=(10, 10, 12), sheen=1.4)
-    R.H = R.H + mask * (0.06 + 0.03 * np.sin(u * 140))
-    # the one eye in the gap of the fringe: dark, wet, a single point of light; strands still over it
-    e = ell(u, v, 0.2, -0.085, 0.05, 0.036)
-    inside_e = (e > 0) & (gap > 0.2)
-    R.A = np.where(inside_e[..., None], np.array([0.05, 0.04, 0.04]), R.A)
-    R.A = np.where((inside_e & (np.abs(u - 0.2) > 0.032))[..., None], np.array([0.55, 0.52, 0.48]), R.A)
-    R.WET = np.where(inside_e, 2.5, R.WET)
-    R.ROUGH = np.where(inside_e, 180.0, R.ROUGH)
-    R.SSS = np.where(inside_e, 0.0, R.SSS)
-    pin = ((u - 0.212) ** 2 + (v + 0.097) ** 2) < 0.009 ** 2
-    R.E[pin] = [1.8, 1.8, 1.8]
-    strand = (np.abs(u - 0.2 + 0.4 * (v + 0.1)) < 0.006) & (v > -0.2) & (v < 0.0)
-    R.A[strand] = [0.03, 0.03, 0.035]
-    # the hat brim: yellow, at the lens, out of focus
-    brim = (V < -0.62 + 0.12 * U ** 2)
-    R.A[brim] = [0.8, 0.62, 0.13]
-    R.H[brim] = 0.9
-    R.M[brim] = 1.0
-    R.WET[brim] = 0.1
-    R.SSS[brim] = 0.0
-    under = brim & (V > -0.74 + 0.12 * U ** 2)
-    R.A[under] = [0.42, 0.32, 0.07]
-    key = ((0.35, 0.5, 1.0), (1.0, 0.97, 0.92), 1.25, 1.0)            # the flash held low and to the right
-    fill = ((-0.9, -0.2, 0.4), (0.4, 0.5, 0.7), 0.1, 1.0)
-    col = lit(R, key, fill)
-    bl = blur_rgb(col, 8.0)
-    bm = blur((V < -0.62 + 0.12 * U ** 2).astype(np.float32), 6)[..., None]
-    col = col * (1 - bm) + bl * bm
-    col = flash_spot(col, 0.56, 0.5, 0.62, 0.66, floor=0.12)
-    return to_rgb(post(col, 5109, grain=0.075, ca=2.4, vign=1.1, gamma=1.15, tint=(0.95, 1.0, 1.05), crush=0.045))
-
-
 def blur_rgb(c, s):
     return np.stack([blur(c[..., k], s) for k in range(3)], -1)
 
@@ -658,348 +579,332 @@ def wet_hair(R, m, col=(8, 8, 10), sheen=1.1, seed=1):
     R.SSS = R.SSS * (1 - m)
 
 
-def js_waitress_p():
-    """Her head rolled over onto her shoulder at the lens: the hollows for eyes with a pinpoint deep inside, the polite
-    smile stretched past the cheeks and split open; her hair pulled back into the net; a loose strand across."""
-    R = Relief(4101)
-    U0, V0 = R.u, R.v
-    roll = -1.4
-    U, V = rot_uv(U0, V0, roll, 0.0, 0.0)
-    zoom = 1.9
-    u, v = (U + 0.02) / zoom, (V + 0.33) / zoom
-    f = Face(w=0.58, h=0.8, eye_x=0.23, eye_y=-0.12, socket=0.16, brow=0.03, nose_len=0.24, nose=0.08, mouth_y=0.4,
-             mouth_w=0.36, lips=0.012, cheek=0.08, hollow=0.02, chin=0.04)
-    H, M, ft = face_height(u, v, f)
-    R.H, R.M = H, M
-    R.A = skin(R, (196, 196, 188), 0.08, 4102, veins=0.4, vein_col=(120, 132, 156), blotch_col=(172, 168, 162), blotch=0.3)
-    R.SSS = M * 0.6
-    R.WET = M * 0.35
-    R.ROUGH[:] = 30.0
-    R.paint(ft['nostril'] * 0.7, (110, 106, 108))
-    for ex in (-0.23, 0.23):
-        R.paint(g2(u, v, ex, -0.12, 0.17, 0.12) * 0.5, (96, 96, 104))
-        R.paint(g2(u, v, ex, -0.06, 0.12, 0.05) * 0.5, (70, 70, 80))
-        hollow_eye(R, u, v, ex, -0.12, 0.105, 0.075, depth=0.14, pin=0.7, ang=0.1 if ex > 0 else -0.1)
-    grin(R, u, v, cy=0.47, width=0.4, rise=0.95, open_=0.17, seed=4103, lip=(122, 96, 102))
-    # hair: dark, pulled back hard from the hairline into the net
-    hairline = smoothstep(0.03, -0.03, v + 0.5 - 0.42 * u ** 2 + 0.02 * np.sin(u * 40))
-    outside = smoothstep(-0.01, 0.04, -ell(u, v, 0, 0, 0.58, 0.8)) * (v < 0.3)
-    hm = np.clip(hairline + outside, 0, 1)
-    hair_mass(R, hm, 4104, flow_angle=-1.5708 + 1.1 * np.tanh(u * 2.0), col=(18, 13, 12), sheen=0.7)
-    strand = strand_mask(4105, 1, lambda r: (0.42, -0.8), 2.25, (1.0, 1.1), width=(2.5, 3.5), droop=0.25,
-                         curl=0.3, clump=(3, 4))
-    wet_hair(R, strand * 0.9, col=(14, 11, 10), sheen=0.3)
-    key = ((0.95, -0.55, 0.55), (1.0, 0.97, 0.93), 1.45, 1.0)          # the flash held off to one side
-    fill = ((-0.8, 0.4, 0.4), (0.45, 0.55, 0.72), 0.08, 1.0)
-    col = lit(R, key, fill, amb=0.03)
-    col = flash_spot(col, 0.6, 0.45, 0.58, 0.6, floor=0.06)
-    return to_rgb(post(col, 4109, grain=0.08, ca=2.6, vign=1.15, gamma=1.18, tint=(0.95, 1.0, 1.05), crush=0.05))
+# ================================================================================================ shared
+def polyline_dist(u, v, pts):
+    """Distance from every pixel to a polyline (u, v coordinates) and the position along it (0..1)."""
+    pts = np.asarray(pts, np.float32)
+    seg = np.hypot(*(pts[1:] - pts[:-1]).T)
+    total = float(seg.sum())
+    best = np.full(u.shape, 9.0, np.float32)
+    along = np.zeros(u.shape, np.float32)
+    acc = 0.0
+    for i in range(len(pts) - 1):
+        a, b = pts[i], pts[i + 1]
+        ab = b - a
+        L2 = float(ab @ ab)
+        t = np.clip(((u - a[0]) * ab[0] + (v - a[1]) * ab[1]) / L2, 0, 1)
+        d = np.hypot(u - (a[0] + ab[0] * t), v - (a[1] + ab[1] * t))
+        closer = d < best
+        best = np.where(closer, d, best)
+        along = np.where(closer, (acc + t * seg[i]) / total, along)
+        acc += seg[i]
+    return best, along
 
 
-def js_visitor_p():
-    """The cracked visor a hand's breadth away: the flash blooming on the smoked glass, a web of cracks, and through
-    the missing shard one wide eye in wet skin, staring."""
-    R = Relief(4201)
-    U, V = rot_uv(R.u, R.v, -0.18, 0.0, 0.0)
-    # visor: a gently curved dark glass filling the frame; the white shell at the corners
-    visor = ell(U, V, 0.0, 0.0, 1.35, 0.92) > 0
-    R.H = np.where(visor, 0.6 + 0.25 * np.clip(ell(U, V, 0.0, 0.0, 1.35, 0.92), 0, 1), 0.3)
-    R.M[:] = 1.0
-    R.A[:] = [0.75, 0.73, 0.68]
-    R.A[visor] = [0.03, 0.035, 0.045]
-    seal = (ell(U, V, 0.0, 0.0, 1.35, 0.92) > -0.06) & ~visor
-    R.A[seal] = [0.02, 0.02, 0.02]
-    R.WET[:] = 0.6
-    R.WET[visor] = 3.0
-    R.ROUGH[:] = 30.0
-    R.ROUGH[visor] = 220.0
-    R.SSS[:] = 0.0
-    # the missing shard: an irregular hole, the face behind it
-    hole_f = ell(U, V, -0.18, 0.1, 0.46, 0.33, 0.3) + 0.08 * noise(4202, 0.9)
-    hole = hole_f > 0
-    f = Face(w=0.62, h=0.86, eye_x=0.25, eye_y=-0.06)
-    fu, fv = (U - 0.1) / 1.6, (V - 0.18) / 1.6
-    Hf, Mf, ftf = face_height(fu, fv, f)
-    R.H = np.where(hole, Hf * 0.6, R.H)
-    skin_a = skin(R, (176, 168, 160), 0.08, 4203, blotch_col=(160, 150, 150), blotch=0.3, veins=0.3, vein_col=(110, 120, 150))
-    R.A = np.where(hole[..., None], skin_a, R.A)
-    R.WET = np.where(hole, 1.4, R.WET)
-    R.ROUGH = np.where(hole, 50.0, R.ROUGH)
-    R.SSS = np.where(hole, 0.05, R.SSS)
-    ex = -0.25 * 1.6 + 0.1
-    eyeball(R, U, V, ex, -0.06 * 1.6 + 0.18, 0.16, 0.06, 0.018, (214, 204, 194), (52, 38, 30), depth=0.02)
-    eyem = (ell(U, V, ex, -0.06 * 1.6 + 0.18, 0.14, 0.14) > 0) & hole
-    rid = 1 - np.abs(noise(4204, 1.3))
-    veins = np.clip((rid - 0.9) * 10, 0, 1) * eyem * (ell(U, V, ex, -0.06 * 1.6 + 0.18, 0.15, 0.15) < 0.75)
-    R.paint(veins * 0.7, (150, 46, 44))
-    R.paint(np.clip(ell(U, V, ex, 0.12, 0.22, 0.12), 0, 1) * hole * 0.35, (150, 130, 126))   # the lower lid
-    edge = np.clip(1 - np.abs(hole_f) / 0.025, 0, 1)
-    R.A = R.A * (1 - edge[..., None]) + np.array([0.75, 0.82, 0.86]) * edge[..., None]
-    R.H = R.H + edge * 0.1
-    # cracks from the impact point, catching the flash
-    cm = crack_mask(4205, 0.42, -0.32, n_rad=16, rings=(0.1, 0.22, 0.4, 0.62, 0.85), reach=(0.6, 1.5), width=4)
-    cm = cm * visor * (1 - hole)
-    R.A = R.A * (1 - cm[..., None] * 0.9) + np.array([0.7, 0.78, 0.82]) * cm[..., None] * 0.9
-    R.H = R.H + cm * 0.02
-    R.WET = R.WET * (1 - cm) + cm * 0.3
-    frost = blur((ell(U, V, 0.42, -0.32, 0.12, 0.1) > 0).astype(np.float32), 3) * visor
-    R.paint(frost * 0.7, (150, 160, 166))
-    # water beading on the visor
-    rr = rng(4206)
-    for k in range(70):
-        x, y = rr.uniform(-1, 1), rr.uniform(-1, 1)
-        rad = rr.uniform(0.008, 0.022)
-        dm = (((U - x) ** 2 + (V - y) ** 2) < rad ** 2) & visor
-        R.H[dm] += 0.05
-        R.WET[dm] = 4.0
-        R.A[dm] = R.A[dm] * 0.7 + 0.08
-    key = ((0.25, -0.35, 1.0), (1.0, 0.98, 0.95), 1.2, 1.0)
-    col = lit(R, key, ((-0.6, 0.5, 0.6), (0.4, 0.5, 0.7), 0.1, 1.0), amb=0.04)
-    col = col + R.E
-    yy, xx = np.mgrid[0:N, 0:N]
-    glare = np.exp(-(((xx - N * 0.62) / (N * 0.07)) ** 2 + ((yy - N * 0.3) / (N * 0.05)) ** 2)) * visor
-    col = col + glare[..., None] * np.array([1.6, 1.6, 1.7])
-    col = bloom(col, thr=0.9, radius=16, strength=0.9)
-    col = flash_spot(col, 0.5, 0.48, 0.7, 0.7, floor=0.18)
-    return to_rgb(post(col, 4209, grain=0.07, ca=2.6, vign=1.1, gamma=1.12, tint=(0.93, 0.99, 1.07), crush=0.04))
+def button(R, u, v, cx, cy, rx, ry, ang, lift, seed, thread=(0.16, 0.08, 0.07), glint=(-0.35, -0.38)):
+    """A glossy black four-hole button set into (or hanging in front of) the relief: a domed disc with a raised rim,
+    four sunken holes, a dark thread through them and a painted wet glint (specular alone is too fickle here)."""
+    e = ell(u, v, cx, cy, rx, ry, ang)
+    inside = e > 0
+    base = np.where(inside, lift + 0.025 * np.sqrt(np.clip(e, 0, 1)), 0)
+    rim = inside & (e < 0.2)
+    base = base + rim * 0.01
+    R.H = np.where(inside, base, R.H)
+    c, s = math.cos(ang), math.sin(ang)
+    col = np.zeros(u.shape + (3,), np.float32) + np.array([0.03, 0.03, 0.036])
+    col = np.where(rim[..., None], np.array([0.07, 0.07, 0.08]), col)
+    holes = np.zeros(u.shape, bool)
+    for (hx, hy) in ((-0.28, -0.28), (0.28, -0.28), (-0.28, 0.28), (0.28, 0.28)):
+        px, py = cx + (hx * rx) * c - (hy * ry) * s, cy + (hx * rx) * s + (hy * ry) * c
+        holes |= ((u - px) ** 2 + (v - py) ** 2) < (0.12 * rx) ** 2
+    R.H = np.where(holes & inside, R.H - 0.012, R.H)
+    col[holes & inside] = [0.004, 0.004, 0.005]
+    for (a, b) in (((-0.28, -0.28), (0.28, 0.28)), ((0.28, -0.28), (-0.28, 0.28))):
+        ax_, ay_ = cx + (a[0] * rx) * c - (a[1] * ry) * s, cy + (a[0] * rx) * s + (a[1] * ry) * c
+        bx_, by_ = cx + (b[0] * rx) * c - (b[1] * ry) * s, cy + (b[0] * rx) * s + (b[1] * ry) * c
+        d, _ = polyline_dist(u, v, [(ax_, ay_), (bx_, by_)])
+        th = (d < 0.045 * rx) & inside
+        col[th] = thread
+        R.H = np.where(th, R.H + 0.004, R.H)
+    R.A = np.where(inside[..., None], col, R.A)
+    R.M = np.maximum(R.M, inside.astype(np.float32))
+    R.WET = np.where(inside, 1.6, R.WET)
+    R.ROUGH = np.where(inside, 160.0, R.ROUGH)
+    R.SSS = np.where(inside, 0.0, R.SSS)
+    gx, gy = cx + glint[0] * rx, cy + glint[1] * ry
+    gl = ell(u, v, gx, gy, rx * 0.32, ry * 0.16, -0.7) > 0
+    R.E = np.where((gl & inside)[..., None], np.array([0.75, 0.8, 0.88]), R.E)
+    gl2 = (((u - (cx + 0.42 * rx)) ** 2 + (v - (cy + 0.45 * ry)) ** 2) < (0.07 * rx) ** 2) & inside
+    R.E = np.where(gl2[..., None], np.array([0.25, 0.27, 0.3]), R.E)
+    return inside
 
 
-def js_chef_p():
-    """The burnt face looming over you under the sooty toque: charcoal skin split by cracks that glow, ember eyes,
-    teeth bared with no lips left, the throat glowing as he roars; smoke; the cleaver's edge."""
-    R = Relief(4301)
-    U, V = rot_uv(R.u, R.v, 0.08, 0.0, 0.0)
-    zoom = 1.6
-    u, v = U / zoom, (V - 0.2) / zoom
-    f = Face(w=0.66, h=0.84, eye_x=0.25, eye_y=-0.12, socket=0.17, brow=0.09, nose_len=0.22, nose=0.06, mouth_y=0.36,
-             mouth_w=0.22, lips=0.0, cheek=0.08, hollow=0.05, chin=0.06, jaw_drop=0.1)
-    H, M, ft = face_height(u, v, f)
-    pts = np.stack([u * 5.5, v * 5.5, np.zeros_like(u)], -1)
-    import ent_chef
-    cr = ent_chef.voronoi_cracks(pts, 101, 1.0)
-    crack = np.clip(1 - cr / 0.05, 0, 1)
-    cr2 = ent_chef.voronoi_cracks(pts * 2.3 + 5.0, 7, 1.0)
-    fine = np.clip(1 - cr2 / 0.05, 0, 1)
-    hot = np.clip(noise(4302, 1.2) * 0.9, 0, 1)
-    R.H = H - crack * 0.04 - fine * 0.015 + noise(4303, 0.6) * 0.012
-    R.M = M
-    char = 0.06 + 0.04 * np.clip(noise(4304, 0.8), -1, 1) - fine * 0.03
-    R.A = np.stack([char * 1.15, char, char * 0.9], -1)
-    R.WET = M * 0.35
-    R.ROUGH[:] = 22.0
-    R.SSS[:] = 0.0
-    em = crack * np.clip((hot - 0.15) * 2.0, 0, 1) * M
-    R.E = np.stack([em * 1.4, em * 0.45, em * 0.08], -1)
-    # sockets with ember eyes
-    for ex in (-0.25, 0.25):
-        e = ell(u, v, ex, -0.12, 0.1, 0.07)
-        ins = e > 0
-        R.H = np.where(ins, R.H - 0.1 * np.sqrt(np.clip(e, 0, 1)), R.H)
-        R.A[ins] = [0.01, 0.005, 0.0]
-        core = np.exp(-(((u - ex) / 0.03) ** 2 + ((v + 0.12) / 0.025) ** 2))
-        glow = np.exp(-(((u - ex) / 0.08) ** 2 + ((v + 0.12) / 0.06) ** 2))
-        R.E += np.stack([core * 3.0 + glow * 0.9, core * 2.4 + glow * 0.35, core * 1.0 + glow * 0.05], -1)
-    # the nose burnt to a stub; the mouth open with the teeth bared, the throat glowing
-    R.paint(ft['nostril'] * 1.0, (4, 2, 2))
-    inside = mouth_hole(R, u, v, 0.0, 0.43, 0.26, 0.17, lip=(30, 18, 14), lipw=0.02, depth=0.2)
-    rt = rng(4305)
-    tx = -0.21
-    while tx < 0.21:
-        tw = rt.uniform(0.018, 0.026)
-        if rt.random() > 0.12:
-            top = inside & (np.abs(u - tx) < tw * 0.85) & (v < 0.42 - 0.14 * 0.55 + rt.uniform(0.0, 0.03))
-            R.A[top] = np.array([0.42, 0.36, 0.22]) * rt.uniform(0.6, 1.0)
-            R.H[top] += 0.05
-            bot = inside & (np.abs(u - tx - 0.01) < tw * 0.75) & (v > 0.42 + 0.14 * 0.5 - rt.uniform(0.0, 0.03))
-            R.A[bot] = np.array([0.36, 0.3, 0.18]) * rt.uniform(0.5, 0.9)
-        tx += tw * 2 + rt.uniform(0.0, 0.006)
-    throat = np.exp(-((u / 0.12) ** 2 + ((v - 0.44) / 0.07) ** 2)) * inside
-    R.E += np.stack([throat * 1.6, throat * 0.5, throat * 0.05], -1)
-    # the toque's sooty band across the top
-    band = V < -0.6 + 0.05 * np.sin(U * 3)
-    pleat = 0.5 + 0.5 * np.sin(U * 40)
-    R.A[band] = (np.array([0.62, 0.6, 0.56])[None, :] * (0.65 + 0.35 * pleat[band][:, None]))
-    R.H[band] = 0.85
-    R.M[band] = 1.0
-    R.E[band] = 0.0
-    soot = band & (V > -0.72)
-    R.A[soot] *= 0.35
-    # the cleaver's edge entering bottom right
-    blade = (U + V * 0.55 > 1.05) & (V > 0.25)
-    R.A[blade] = [0.3, 0.32, 0.34]
-    R.H[blade] = 0.95
-    R.M[blade] = 1.0
-    R.E[blade] = 0.0
-    R.WET[blade] = 2.0
-    R.ROUGH[blade] = 120.0
-    edge_l = blade & (U + V * 0.55 < 1.1)
-    R.A[edge_l] = [0.85, 0.86, 0.86]
-    key = ((-0.45, -0.35, 1.0), (0.75, 0.8, 0.9), 1.1, 1.0)
-    col = lit(R, key, None, amb=0.04)
-    col = col + R.E * M[..., None]
-    col = bloom(col, thr=0.55, radius=12, strength=0.9)
-    smoke = np.clip(noise(4306, 1.6) * 0.5 + 0.3, 0, 1) * np.clip(-V, 0, 1) * 0.25
-    col = col * (1 - smoke[..., None]) + smoke[..., None] * np.array([0.25, 0.24, 0.23])
-    col = flash_spot(col, 0.5, 0.5, 0.7, 0.72, floor=0.25)
-    return to_rgb(post(col, 4309, grain=0.07, ca=2.0, vign=1.0, gamma=1.08, tint=(1.05, 0.98, 0.9), crush=0.04))
+def motion_blur(img, mask, dx, dy, steps=14):
+    """Smears the masked layer along (dx, dy) pixels (a quick moving object)."""
+    acc = np.zeros_like(img)
+    macc = np.zeros(mask.shape, np.float32)
+    for k in range(steps):
+        f = k / (steps - 1) - 0.5
+        sh = (int(round(dy * f)), int(round(dx * f)))
+        acc += np.roll(img * mask[..., None], sh, (0, 1))
+        macc += np.roll(mask, sh, (0, 1))
+    return acc / steps, macc / steps
 
 
-def js_mirror_woman_p():
-    """Right behind the glass: two heavy curtains of wet hair, the grey face between them, one eye wide under a heavy
-    lid (the other lost under a clump), the mouth stretched far too long in a scream; the glass cracking."""
-    R = Relief(4501)
-    U, V = rot_uv(R.u, R.v, -0.05, 0.0, 0.0)
-    zoom = 1.45
-    u, v = (U + 0.02) / zoom, (V - 0.04) / zoom
-    f = Face(w=0.56, h=0.86, eye_x=0.21, eye_y=-0.2, socket=0.13, brow=0.03, nose_len=0.22, nose=0.07, mouth_y=0.22,
-             mouth_w=0.2, lips=0.01, cheek=0.04, hollow=0.07, chin=0.03, jaw_drop=0.2)
-    H, M, ft = face_height(u, v, f)
-    R.H, R.M = H, M
-    R.A = skin(R, (148, 158, 166), 0.1, 4502, veins=0.7, vein_col=(66, 80, 118), blotch_col=(118, 128, 140), blotch=0.45)
-    R.SSS = M * 0.15
-    R.WET = M * 1.3
-    R.ROUGH[:] = 60.0
-    R.paint(ft['nostril'] * 0.8, (54, 60, 72))
-    ex = 0.21
-    R.paint(g2(u, v, ex, -0.2, 0.15, 0.11) * 0.55, (64, 68, 82))
-    eyeball(R, u, v, ex, -0.2, 0.085, 0.04, 0.012, (200, 196, 188), (34, 30, 28), depth=0.015)
-    em = ell(u, v, ex, -0.2, 0.085, 0.085) > 0
-    rid = 1 - np.abs(noise(4503, 1.3))
-    R.paint(np.clip((rid - 0.9) * 10, 0, 1) * em * 0.8, (160, 56, 56))
-    almond = ell(u, v, ex, -0.2, 0.085, 0.05)                 # lids close over the ball: an almond, not a disc
-    lids = (ell(u, v, ex, -0.2, 0.1, 0.1) > 0) & (almond < 0)
-    skin_here = skin(R, (148, 158, 166), 0.1, 4502)
-    R.A = np.where(lids[..., None], skin_here * 0.82, R.A)
-    R.H = np.where(lids, R.H + 0.03, R.H)
-    R.WET = np.where(lids, 1.0, R.WET)
-    R.ROUGH = np.where(lids, 60.0, R.ROUGH)
-    upper = (almond > -0.12) & (almond < 0.04) & (v < -0.2)
-    R.paint(upper * 0.9, (20, 22, 28))
-    mouth_hole(R, u, v, 0.02, 0.4, 0.13, 0.3, lip=(62, 76, 116), lipw=0.02, depth=0.26)
-    # the hair: two heavy wet curtains, ragged inner edges, a clump over her right eye, loose strands across
-    edge_l = -0.3 + 0.05 * np.sin(v * 13) + 0.03 * np.sin(v * 37 + 1.0)
-    edge_r = 0.4 + 0.04 * np.sin(v * 11 + 2.0) + 0.03 * np.sin(v * 31)
-    curtains = ((u < edge_l) | (u > edge_r) | (v < -0.48 + 0.1 * u)).astype(np.float32)
-    clump = strand_mask(4504, 9, lambda r: (r.uniform(-0.55, -0.15), -1.1), 1.5708, (1.6, 2.2), width=(4.0, 8.0),
-                        droop=0.85, curl=0.06, clump=(4, 7))
-    loose = strand_mask(4507, 5, lambda r: (r.uniform(-0.1, 0.5), -1.1), 1.6, (1.3, 2.1), width=(1.5, 2.5), droop=0.8,
-                        curl=0.15, clump=(2, 3))
-    hm = np.clip(blur(curtains, 2.0) + clump + loose * 0.85, 0, 1)
-    wet_hair(R, hm, col=(5, 6, 8), sheen=0.5)
-    key = ((0.35, -0.35, 1.0), (0.82, 0.9, 1.0), 1.2, 1.0)
-    col = lit(R, key, ((-0.7, 0.3, 0.5), (0.35, 0.45, 0.6), 0.1, 1.0), amb=0.05)
-    cm = crack_mask(4505, -0.6, -0.5, n_rad=8, rings=(0.12, 0.3), reach=(0.6, 1.3), width=2)
-    col = col * (1 - cm[..., None] * 0.2) + cm[..., None] * np.array([0.6, 0.68, 0.75]) * 0.35
-    col = flash_spot(col, 0.55, 0.45, 0.62, 0.7, floor=0.12)
-    return to_rgb(post(col, 4509, grain=0.075, ca=2.6, vign=1.1, gamma=1.15, tint=(0.88, 0.97, 1.1), crush=0.045))
-
-
-def js_manager_p():
-    """'O-kyaku-sama...': his grey face too close, the glasses' glare blanking one eye, the other bloodshot behind the
-    cracked lens, black rings, a dry open mouth; the fluorescent light flickering green."""
-    R = Relief(4601)
-    U, V = rot_uv(R.u, R.v, 0.14, 0.0, 0.0)
-    zoom = 1.8
-    u, v = (U - 0.04) / zoom, (V - 0.02) / zoom
-    f = Face(w=0.62, h=0.88, eye_x=0.25, eye_y=-0.14, socket=0.15, brow=0.06, nose_len=0.27, nose=0.11, mouth_y=0.42,
-             mouth_w=0.2, lips=0.02, cheek=0.03, hollow=0.08, chin=0.05, jaw_drop=0.03)
-    H, M, ft = face_height(u, v, f)
-    R.H, R.M = H, M
-    R.A = skin(R, (150, 152, 140), 0.14, 4602, blotch_col=(118, 112, 104), blotch=0.55, veins=0.35, pores=0.08)
-    stub = np.clip(noise(4603, 0.05) - 0.3, 0, 1) * smoothstep(0.22, 0.32, v + 0.1 * np.abs(u)) * (np.abs(u) < 0.55)
-    R.paint(stub * 0.6, (60, 64, 66))
-    R.paint(np.clip(noise(4610, 0.3) - 0.8, 0, 1) * 0.8, (190, 196, 196))      # sweat beads
-    R.SSS = M * 0.5
-    R.WET = M * 0.9
-    R.ROUGH[:] = 40.0
-    R.paint(ft['nostril'] * 0.9, (60, 50, 50))
-    for ex in (-0.25, 0.25):
-        R.paint(np.clip(g2(u, v, ex, -0.05, 0.16, 0.09) * 1.4, 0, 1), (22, 16, 26))   # black rings under the eyes
-        R.H -= g2(u, v, ex, -0.05, 0.14, 0.07) * 0.03
-        eyeball(R, u, v, ex, -0.14, 0.075, 0.035, 0.014, (190, 176, 160), (50, 40, 34), depth=0.01)
-        em = ell(u, v, ex, -0.14, 0.075, 0.075) > 0
-        R.paint(np.clip(noise(4604 + int(ex * 10), 1.3) - 0.45, 0, 1) * em, (170, 70, 66))
-        R.paint((ell(u, v, ex, -0.19, 0.09, 0.03) > 0) * 0.7, (110, 100, 96))  # heavy lids
-    mouth_hole(R, u, v, 0.0, 0.44, 0.15, 0.022, lip=(96, 76, 74), lipw=0.012, depth=0.08)
+# ================================================================================================ 鬼（人形）the doll
+def js_doll():
+    """'みつけた' - the fusuma slides open and it is right there, inches from your face: the soaked plush face filling
+    the view, the sewn-on button eye shining, the torn socket with its dirty stuffing, the other button swinging on
+    its thread across the cheek, the mouth seam ripped open over rice grains like teeth, red thread biting into it,
+    and the kitchen knife coming down out of the top of the frame. Lit from below by the laptop on your knees, rimmed
+    by the TV's static behind it."""
+    R = Relief(7101)
+    r = rng(7101)
+    U, V = rot_uv(R.u, R.v, 0.22, 0.0, 0.0)
+    zoom = 1.08
+    u, v = (U + 0.06) / zoom, (V - 0.1) / zoom
+    # ---------------------------------------------------------------- the head: a soaked pillow of plush
+    shape = ell(u, v, 0.0, 0.06, 1.02, 0.98)
+    dome = np.clip(shape, 0, 1)
+    M = smoothstep(-0.02, 0.03, shape)
+    H = np.sqrt(dome) * 0.4
     for sx in (-1, 1):
-        R.paint(g2(u, v, sx * 0.2, 0.34, 0.03, 0.14, sx * -0.3) * 0.5, (80, 82, 78))  # deep folds
-    # thinning hair combed over the top
-    scalp = smoothstep(0.02, -0.02, v + 0.62 - 0.25 * u ** 2)
-    R.paint(scalp * 0.5, (120, 116, 106))
-    comb = np.clip(np.sin((v + u * 0.25) * 160) * 0.5 + 0.2, 0, 1) * scalp * (np.abs(u) > 0.1)
-    R.paint(comb * 0.85, (36, 33, 30))
-    # glasses: thick dark frames, the left lens (image right) cracked, the right lens blanked by the glare
-    frames = np.zeros_like(u)
-    for ex in (-0.25, 0.25):
-        e = ell(u, v, ex, -0.14, 0.2, 0.13)
-        frames = np.maximum(frames, np.clip(1 - np.abs(e) / 0.12, 0, 1))
-    bridge = (np.abs(v + 0.16) < 0.02) & (np.abs(u) < 0.08)
-    frames = np.maximum(frames, bridge.astype(np.float32))
-    temple = (np.abs(v + 0.18) < 0.018) & (np.abs(u) > 0.43)
-    frames = np.maximum(frames, temple.astype(np.float32))
-    R.A = R.A * (1 - frames[..., None]) + np.array([0.03, 0.03, 0.035]) * frames[..., None]
-    R.H = R.H + frames * 0.12
-    R.WET = np.where(frames > 0.5, 1.5, R.WET)
-    lens_r = ell(u, v, 0.25, -0.14, 0.185, 0.115) > 0
-    cm = crack_mask(4606, 0.25 * zoom + 0.04, -0.14 * zoom + 0.05, n_rad=9, rings=(0.06, 0.13), reach=(0.15, 0.3), width=2)
-    cm = cm * lens_r
-    lens_l = ell(u, v, -0.25, -0.14, 0.185, 0.115) > 0
-    key = ((0.55, -0.8, 0.6), (0.82, 1.0, 0.86), 1.2, 1.0)              # the fluorescent tube above, to one side
-    fill = ((0.2, 0.2, 1.0), (0.5, 0.65, 0.85), 0.3, 1.0)               # the monitors' glow in front
-    col = lit(R, key, fill, amb=0.05)
-    col = col * (1 - cm[..., None] * 0.4) + cm[..., None] * np.array([0.85, 0.92, 0.95])
-    yy, xx = np.mgrid[0:N, 0:N]
-    glare = np.clip(1 - np.abs((u + 0.25) * 0.8 + (v + 0.14) * 0.6 + 0.02) / 0.09, 0, 1) * lens_l
-    glare = np.maximum(glare, lens_l * 0.55)
-    col = col * (1 - glare[..., None] * 0.7) + glare[..., None] * np.array([1.2, 1.35, 1.5])
-    col = bloom(col, thr=0.9, radius=12, strength=0.8)
-    col = flash_spot(col, 0.5, 0.45, 0.68, 0.72, floor=0.15)
-    return to_rgb(post(col, 4609, grain=0.075, ca=2.2, vign=1.1, gamma=1.12, tint=(0.9, 1.04, 0.95), crush=0.045))
+        H += g2(u, v, sx * 0.45, 0.26, 0.34, 0.3) * 0.05
+    H -= g2(u, v, 0.0, -0.55, 0.02, 0.42) * 0.02                         # the centre seam
+    wn = r.normal(0, 1, (N, N)).astype(np.float32)
+    fib = ndimage.gaussian_filter(wn, (9.0, 1.4), mode='wrap')            # wet fibres hanging down
+    fib = np.tanh(fib / (fib.std() + 1e-6))
+    clump = np.clip(blur(noise(7102, 1.5), 3.0), -1.5, 1.5)
+    H += fib * 0.004 + clump * 0.022
+    R.H, R.M = H, M
+    base = np.array([0.6, 0.61, 0.585], np.float32)
+    A = base[None, None, :] * (0.86 + 0.07 * fib[..., None] + 0.11 * clump[..., None])
+    A = np.where((clump < -0.95)[..., None], A * 0.72, A)                 # crevices between matted clumps
+    stain = np.clip((blur(noise(7104, 1.8), 4.0) - 0.45) * 1.1, 0, 0.5)
+    A = A * (1 - stain[..., None]) + np.array([0.4, 0.32, 0.2]) * stain[..., None]
+    for ex in (-0.36, 0.36):                                              # dirty water run down from both eyes
+        tear = g2(u, v, ex + 0.03, 0.24, 0.035, 0.28) * (v > 0.0)
+        A = A * (1 - 0.5 * tear[..., None]) + np.array([0.25, 0.21, 0.15]) * 0.5 * tear[..., None]
+    R.A = A
+    R.WET = M * (0.08 + 0.16 * np.clip(fib, 0, 1) + 0.1 * np.clip(clump, 0, 1))
+    R.ROUGH[:] = 9.0
+    R.SSS[:] = 0.0
+    # ---------------------------------------------------------------- the muzzle, the stitched nose
+    for sx in (-1, 1):
+        puff = g2(u, v, sx * 0.14, 0.37, 0.17, 0.12)
+        R.H = R.H + puff * 0.08
+        R.paint(puff * 0.5, (196, 194, 184))
+    nose = (v > 0.21) & (v < 0.29) & (np.abs(u) < 0.075 * (0.29 - v) / 0.08)
+    R.paint(nose.astype(np.float32), (118, 58, 60))
+    R.H = np.where(nose, R.H + 0.012, R.H)
+    d, _ = polyline_dist(u, v, [(0.0, 0.28), (0.005, 0.41)])
+    R.paint((d < 0.007).astype(np.float32), (84, 40, 42))
+    # ---------------------------------------------------------------- the mouth seam torn open over rice teeth
+    jag = 0.05 * np.sin(u * 47.0) + 0.04 * noise(7105, 0.6)
+    mo = ell(u, v, 0.04, 0.5, 0.28, 0.08, 0.14) + jag
+    inside = mo > 0
+    R.H = np.where(inside, R.H - 0.13 * np.sqrt(np.clip(mo, 0, 1)) - 0.02, R.H)
+    R.A = np.where(inside[..., None], np.array([0.03, 0.012, 0.012]), R.A)
+    R.WET = np.where(inside, 0.9, R.WET)
+    for row, (vy, k) in enumerate(((0.448, 13), (0.556, 11))):
+        for i in range(k):
+            gx = -0.21 + i * 0.46 / (k - 1) + r.normal(0, 0.008)
+            gy = vy + 0.013 * math.sin(gx * 9.0) + r.normal(0, 0.005) + 0.04 * gx
+            gr = ell(u, v, gx, gy, 0.02, 0.012, r.normal(1.57, 0.5))
+            g = gr > 0
+            R.H = np.where(g, R.H + 0.04 * np.sqrt(np.clip(gr, 0, 1)) + 0.01, R.H)
+            R.A = np.where(g[..., None], np.array([0.9, 0.87, 0.78]) * r.uniform(0.85, 1.0), R.A)
+            R.WET = np.where(g, 1.8, R.WET)
+            R.ROUGH = np.where(g, 120.0, R.ROUGH)
+    for i in range(6):                                                   # loose grains spilling down the chin
+        gx, gy = 0.24 + r.normal(0, 0.05), 0.62 + i * 0.05 + r.normal(0, 0.02)
+        gr = ell(u, v, gx, gy, 0.018, 0.011, r.uniform(0, 3))
+        g = gr > 0
+        R.H = np.where(g, R.H + 0.03, R.H)
+        R.A = np.where(g[..., None], np.array([0.88, 0.84, 0.74]), R.A)
+        R.WET = np.where(g, 1.6, R.WET)
+    for (a, b) in (((-0.25, 0.46), (-0.31, 0.55)), ((0.31, 0.53), (0.37, 0.6)), ((0.32, 0.52), (0.35, 0.64))):
+        d, _ = polyline_dist(u, v, [a, b])                               # frayed ends of the old mouth stitch
+        R.paint((d < 0.006).astype(np.float32), (70, 34, 34))
+    # ---------------------------------------------------------------- the sewn-on button, the torn socket
+    R.H = R.H - np.clip(1.0 - np.abs(ell(u, v, -0.36, -0.1, 0.17, 0.17)) / 0.2, 0, 1) * 0.02
+    surf = float(R.H[N // 2, N // 2])
+    button(R, u, v, -0.36, -0.1, 0.15, 0.15, 0.2, surf + 0.02, 7106)
+    so = ell(u, v, 0.36, -0.1, 0.15, 0.135, -0.2) + 0.14 * noise(7107, 0.8)
+    hole = so > 0
+    R.H = np.where(hole, R.H - 0.18 * np.sqrt(np.clip(so, 0, 1)) - 0.03, R.H)
+    R.A = np.where(hole[..., None], np.array([0.015, 0.012, 0.012]), R.A)
+    R.WET = np.where(hole, 0.3, R.WET)
+    ring = (so < 0) & (so > -0.55)
+    fl = blur(noise(7108, 1.2), 4.0)
+    tuftw = np.clip((fl + 0.2) * 2.0, 0, 1) * ring * np.clip(1.0 + so / 0.55, 0, 1) ** 0.5
+    fluff = blur(np.clip(noise(7109, 0.6), -1, 1), 1.2)
+    R.H = R.H + tuftw * (0.045 + 0.015 * fluff)
+    tc = np.array([0.78, 0.76, 0.7])[None, None, :] * (0.85 + 0.15 * fluff[..., None])
+    R.A = R.A * (1 - tuftw[..., None]) + tc * tuftw[..., None]
+    R.WET = R.WET * (1 - tuftw) + 0.05 * tuftw
+    for k in range(10):                                                 # frayed threads round the hole
+        a = k / 10 * 6.283 + r.normal(0, 0.3)
+        pts = [(0.36 + math.cos(a) * 0.14, -0.1 + math.sin(a) * 0.125)]
+        for s_ in range(3):
+            a += r.normal(0, 0.5)
+            pts.append((pts[-1][0] + math.cos(a) * 0.035, pts[-1][1] + math.sin(a) * 0.035))
+        d, _ = polyline_dist(u, v, pts)
+        R.paint((d < 0.0045).astype(np.float32), (36, 30, 28))
+    # ---------------------------------------------------------------- the other button, hanging on its thread
+    path = [(0.37, 0.02), (0.4, 0.15), (0.43, 0.3), (0.465, 0.41)]
+    d, al = polyline_dist(u, v, path)
+    th = d < 0.006
+    R.H = np.where(th, np.maximum(R.H, surf + 0.02 + 0.08 * al), R.H)
+    R.A = np.where(th[..., None], np.array([0.12, 0.1, 0.09]), R.A)
+    R.WET = np.where(th, 1.0, R.WET)
+    R.M = np.maximum(R.M, th.astype(np.float32))
+    button(R, u, v, 0.48, 0.5, 0.12, 0.09, 0.55, surf + 0.1, 7110, glint=(-0.3, -0.45))
+    # ---------------------------------------------------------------- red thread wound tight below the mouth
+    for (a, b) in (((-1.2, 0.68), (1.2, 0.88)), ((-1.2, 0.97), (1.2, 0.74))):
+        d, _ = polyline_dist(u, v, [a, ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 0.02), b])
+        pinch = np.clip(1 - d / 0.05, 0, 1) * M
+        R.H = R.H - pinch * 0.04
+        t_ = (d < 0.012) & (M > 0.5)
+        R.H = np.where(t_, R.H + 0.03, R.H)
+        tw = 0.8 + 0.2 * np.sin((u + v) * 140.0)
+        R.A = np.where(t_[..., None], np.array([0.72, 0.08, 0.06]) * tw[..., None], R.A)
+        R.WET = np.where(t_, 0.9, R.WET)
+        R.ROUGH = np.where(t_, 60.0, R.ROUGH)
+    # ---------------------------------------------------------------- drops of bath water
+    for i in range(46):
+        dx, dy = r.uniform(-0.85, 0.85), r.uniform(-0.75, 0.9)
+        rad = r.uniform(0.006, 0.015)
+        e = ell(u, v, dx, dy, rad, rad * 1.25)
+        dm = (e > 0) & (M > 0.5)
+        R.H = np.where(dm, R.H + 0.02 * np.sqrt(np.clip(e, 0, 1)), R.H)
+        R.WET = np.where(dm, 2.6, R.WET)
+        R.ROUGH = np.where(dm, 300.0, R.ROUGH)
+        R.E = np.where((dm & (e > 0.6))[..., None], np.array([0.25, 0.27, 0.3]), R.E)
+    # ---------------------------------------------------------------- light: the laptop from below, the TV behind
+    key = ((-0.2, 0.62, 0.76), (0.85, 0.92, 1.0), 1.55, 1.0)
+    rim = ((0.8, -0.5, 0.25), (0.45, 0.6, 1.0), 0.6, 1.0)
+    col = lit(R, key, rim, amb=0.06, amb_col=(0.5, 0.58, 0.75))
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    col = col * (0.55 + 0.6 * np.clip((yy / N) * 1.15, 0, 1))[..., None]   # the screen light falls off upward
+    # ---------------------------------------------------------------- the knife coming down out of the frame
+    ku, kv = R.u, R.v
+    tip = np.array([0.26, -0.3])
+    heel = np.array([0.98, -1.12])
+    axis = heel - tip
+    L = float(np.linalg.norm(axis))
+    ax = axis / L
+    nrm = np.array([ax[1], -ax[0]])                                       # toward the edge side (lower left)
+    rel_u, rel_v = ku - tip[0], kv - tip[1]
+    along = (rel_u * ax[0] + rel_v * ax[1]) / L
+    across = rel_u * nrm[0] + rel_v * nrm[1]
+    bw = 0.2                                                              # santoku: straight spine, edge curving up
+    edge_w = bw * np.sqrt(np.clip(along / 0.35, 0, 1))
+    blade = (along > 0) & (along < 1.0) & (across > -0.012) & (across < edge_w)
+    hd = (along >= 0.96) & (along < 1.45) & (across > 0.02) & (across < 0.12)
+    sh = np.clip(across / np.maximum(edge_w, 1e-3), 0, 1)
+    steel = np.array([0.58, 0.63, 0.68])[None, None, :] * (0.5 + 0.7 * (1 - sh[..., None]) ** 1.5)
+    bevel = blade & (sh > 0.78)
+    steel = np.where(bevel[..., None], np.array([1.2, 1.25, 1.32]), steel)
+    spine = blade & (across < 0.008)
+    steel = np.where(spine[..., None], np.array([0.85, 0.9, 0.95]), steel)
+    for k_ in range(5):                                                   # water beads on the steel
+        bu, bv = 0.3 + 0.12 * k_ + r.normal(0, 0.03), 0.06 + r.normal(0, 0.03)
+        bead = blade & (((along - bu) / 0.02) ** 2 + ((across - bv) / 0.012) ** 2 < 1)
+        steel = np.where(bead[..., None], np.array([1.1, 1.15, 1.2]), steel)
+    hcol = np.array([0.05, 0.045, 0.045])[None, None, :] * np.ones((N, N, 1))
+    for rv in (1.08, 1.2, 1.32):
+        rivet = hd & (((along - rv) / 0.02) ** 2 + ((across - 0.07) / 0.012) ** 2 < 1)
+        hcol = np.where(rivet[..., None], np.array([0.7, 0.72, 0.75]), hcol)
+    kimg = np.where(blade[..., None], steel, np.where(hd[..., None], hcol, 0.0))
+    kmask = (blade | hd).astype(np.float32)
+    kimg, kmask2 = motion_blur(kimg, kmask, -22.0, 20.0, steps=12)
+    col = col * (1 - kmask2[..., None]) + kimg
+    col = bloom(col, thr=0.85, radius=9, strength=0.45)
+    out = post(col, 7119, grain=0.055, ca=2.2, vign=1.0, gamma=1.0, tint=(0.92, 0.98, 1.06), crush=0.03, gain=1.1)
+    return to_rgb(out)
 
-FACES = {'waitress': js_waitress_p, 'visitor': js_visitor_p, 'chef': js_chef_p, 'child': js_child_p,
-         'mirror_woman': js_mirror_woman_p, 'manager': js_manager_p}
+
+# ================================================================================================ 女 the woman
+def js_woman():
+    """On the camera feed, right at the lens: her grey face pressed close behind the wet black hair, the one eye in the
+    parting blazing white in the infrared, the mouth a little open, the long grey fingers reaching in from below to
+    cover the lens, out of focus. Already in the feed's IR monochrome (grey-green, noise, interlace)."""
+    R = Relief(7201)
+    r = rng(7201)
+    U, V = rot_uv(R.u, R.v, -0.14, 0.0, 0.0)
+    rr = U * U + V * V
+    U, V = U * (1 - 0.2 * rr), V * (1 - 0.2 * rr)                         # pressed against a wide lens
+    zoom = 1.2
+    u, v = (U + 0.02) / zoom, (V + 0.04) / zoom
+    f = Face(w=0.56, h=0.9, eye_x=0.21, eye_y=-0.16, socket=0.24, brow=0.06, nose_len=0.25, nose=0.16, mouth_y=0.36,
+             mouth_w=0.17, lips=0.02, cheek=0.08, hollow=0.13, chin=0.05, jaw_drop=0.05)
+    H, M, ft = face_height(u, v, f)
+    R.H, R.M = H, M
+    R.A = skin(R, (200, 205, 208), 0.08, 7202, veins=0.7, vein_col=(110, 120, 142), blotch_col=(168, 172, 178), blotch=0.4)
+    R.SSS = M * 0.1
+    R.WET = M * 0.7
+    R.ROUGH[:] = 45.0
+    R.paint(ft['nostril'] * 0.9, (60, 64, 70))
+    for sx in (-1, 1):
+        R.paint(g2(u, v, sx * 0.21, -0.16, 0.16, 0.12) * 0.55, (88, 90, 98))      # dark sunken rings
+    ex, ey = 0.21, -0.16
+    eyeball(R, u, v, ex, ey, 0.08, 0.045, 0.016, (210, 206, 200), (160, 166, 170), depth=0.015)
+    almond = ell(u, v, ex, ey, 0.08, 0.056)
+    lids = (ell(u, v, ex, ey, 0.1, 0.1) > 0) & (almond < 0)
+    R.A = np.where(lids[..., None], R.A * 0.7, R.A)
+    R.H = np.where(lids, R.H + 0.02, R.H)
+    eye_core = ((u - ex) ** 2 + (v - ey) ** 2) < 0.034 ** 2
+    R.E[eye_core] = [3.0, 3.1, 3.0]                                     # the eyeshine in the infrared
+    mouth_hole(R, u, v, 0.02, 0.41, 0.1, 0.055, lip=(90, 96, 110), lipw=0.018, depth=0.16)
+    # the hair: two heavy curtains with a ragged parting over her left eye, clumps and loose strands across
+    edge_l = -0.1 + 0.05 * np.sin(v * 12) + 0.03 * np.sin(v * 31 + 1.0) + 0.06 * np.clip(-v, 0, 1)
+    edge_r = 0.42 + 0.04 * np.sin(v * 10 + 2.0) + 0.03 * np.sin(v * 27)
+    curtains = ((u < edge_l) | (u > edge_r) | (v < -0.36 + 0.08 * u)).astype(np.float32)
+    clump = strand_mask(7203, 8, lambda r_: (r_.uniform(-0.6, -0.12), -1.1), 1.5708, (1.7, 2.3), width=(5.0, 9.0),
+                        droop=0.9, curl=0.06, clump=(4, 7))
+    loose = strand_mask(7204, 8, lambda r_: (r_.uniform(0.0, 0.5), -1.1), 1.6, (1.5, 2.3), width=(1.4, 2.6), droop=0.85,
+                        curl=0.12, clump=(2, 3))
+    hm = np.clip(blur(curtains, 2.5) + clump + loose * 0.85, 0, 1)
+    wet_hair(R, hm, col=(10, 11, 13), sheen=0.9)
+    keep = ((np.abs(u - ex) < 0.055) & (np.abs(v - ey) < 0.05)).astype(np.float32)
+    R.E = R.E * (1 - np.clip(hm, 0, 1) * (1 - keep))[..., None]
+    # the fingers reaching for the lens from below, too long, out of focus
+    fingers = np.zeros((N, N), bool)
+    for i, (x0, ang, ln) in enumerate(((-0.92, -1.05, 1.0), (-0.7, -1.15, 1.18), (-0.47, -1.28, 1.22), (-0.24, -1.4, 1.1),
+                                        (-1.05, -0.78, 0.7))):
+        pts = [(x0, 1.2)]
+        a = ang
+        for s_ in range(6):
+            a += 0.05 * (1 if i % 2 else -1)
+            pts.append((pts[-1][0] + math.cos(a) * ln / 6, pts[-1][1] + math.sin(a) * ln / 6))
+        fingers |= finger(R, pts, 0.06, 0.7, (186, 190, 194), nail_col=(36, 34, 40), seed=7205 + i, nail_len=0.13,
+                          knuckles=(0.42, 0.72))
+    key = ((0.42, -0.5, 0.76), (1.0, 1.0, 1.0), 1.45, 1.0)                 # the camera's IR illuminator, above and aside
+    col = lit(R, key, ((-0.6, 0.2, 0.7), (0.6, 0.6, 0.6), 0.12, 1.0), amb=0.04)
+    col = flash_spot(col, 0.55, 0.42, 0.48, 0.58, floor=0.07)
+    fing = blur(fingers.astype(np.float32), 4.0)
+    col = col * (1 - fing[..., None]) + blur_rgb(col, 7.0) * fing[..., None]   # the near fingers out of focus
+    col = bloom(col, thr=1.4, radius=16, strength=1.2)
+    lum = col.mean(-1)
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float32)
+    lum = np.clip(lum, 0, 2.0)
+    lum = lum / (1 + lum * 0.3) * 1.25
+    lum = lum * (0.92 + 0.08 * (yy % 4 < 2))                              # interlace
+    lum = lum + r.normal(0, 0.055, (N, N)) * (0.35 + lum)
+    tear = (np.abs(yy - 300) < 5) * 0.12                                  # a torn line in the feed
+    lum = np.roll(lum, 0, 1) + tear
+    rgb = np.clip(lum, 0, 1.3)[..., None] * np.array([0.8, 1.0, 0.85])
+    out = post(rgb, 7209, grain=0.045, ca=1.4, vign=1.2, gamma=1.05, tint=(1.0, 1.0, 1.0), crush=0.05)
+    return to_rgb(out)
 
 
-def medium_portrait(size=64):
-    """The medium's dialogue portrait: her own model, head and shoulders, warm low light, a dark plum ground."""
-    import ent_gen as G
-    import render3d as R3
-    import ent_render as ER
-    from ent_model import entity_world
-    mod, spec = G.load('medium')
-    b = G.Built(spec, mod)
-    b.anim.timeline([(0, 0)], 30.0, head=lambda tt: (-12.0, 4.0))
-    eye = np.array([-0.55, 1.42, 1.6])
-    tgt = np.array([0.0, 1.22, 0.0])
-    k = 4
-    cv = ER.Canvas(size * k, size * k, R3.look_at(eye, tgt), ortho=0.36, bg=(0, 0, 0))
-    yy, xx = np.mgrid[0:size * k, 0:size * k]
-    rad = np.hypot((xx - size * k * 0.45) / (size * k * 0.7), (yy - size * k * 0.38) / (size * k * 0.7))
-    ground = np.clip(1.0 - rad, 0, 1)
-    cv.color[:] = (np.array([22, 14, 24])[None, None, :] + ground[..., None] * np.array([46, 30, 40]))
-    M = entity_world(0.0)
-    ER.draw_entity(cv, b.spec, b.tex, None, M, eye, alpha=1.0, light=1.05,
-                   sky=lambda n, p: 0.85 + 0.25 * max(0.0, float(n @ np.array([0.5, 0.3, 0.8]) / 1.0)))
-    ER.draw_entity_eyes(cv, b.spec, b.eyes, M, 0.4)
-    col = np.clip(cv.color, 0, 255)
-    warm = col * np.array([1.06, 0.98, 0.9])
-    img = Image.fromarray(np.clip(warm, 0, 255).astype(np.uint8)).resize((size, size), Image.BOX)
-    a = np.asarray(img).astype(np.float32)
-    a[0, :] = a[-1, :] = [12, 9, 12]
-    a[:, 0] = a[:, -1] = [12, 9, 12]
-    a[1, 1:-1] = a[1, 1:-1] * 0.7 + np.array([90, 70, 60]) * 0.3
-    return np.clip(a, 0, 255).astype(np.uint8)
+FACES = {'doll': js_doll, 'woman': js_woman}
 
 
 def main():
-    ids = [a for a in sys.argv[1:] if not a.startswith('-')] or list(FACES) + ['portrait']
+    ids = [a for a in sys.argv[1:] if not a.startswith('-')] or list(FACES)
     sheet = []
-    if 'portrait' in ids:
-        ids.remove('portrait')
-        pr = medium_portrait()
-        print(save_gui('medium_portrait', pr))
-        big = np.asarray(Image.fromarray(pr).resize((256, 256), Image.NEAREST))
-        sheet.append(('medium_portrait (64x64, shown 4x)', big))
     for eid in ids:
         rgb = FACES[eid]()
         p = save_gui('jumpscare_' + eid, rgb)
@@ -1010,9 +915,9 @@ def main():
     d = ImageDraw.Draw(img)
     for i, (eid, rgb) in enumerate(sheet):
         img.paste(Image.fromarray(rgb), (8 + i * 264, 8))
-        d.text((10 + i * 264, 268), eid, fill=(220, 210, 200), font=font(FONT_LABEL, 12))
+        d.text((10 + i * 264, 268), 'jumpscare_' + eid + '.png', fill=(220, 210, 200), font=font(FONT_LABEL, 12))
     os.makedirs(PREVIEW, exist_ok=True)
-    out = os.path.join(PREVIEW, 'ent_jumpscares_wip.png' if len(sheet) < len(FACES) + 1 else 'ent_jumpscares.png')
+    out = os.path.join(PREVIEW, 'ent_jumpscares.png')
     img.save(out)
     print(out)
 

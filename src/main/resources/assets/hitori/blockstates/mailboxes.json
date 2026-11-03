@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/mailboxes"
+    },
+    "facing=east": {
+      "model": "hitori:block/mailboxes",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/mailboxes",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/mailboxes",
+      "y": 270
+    }
+  }
+}

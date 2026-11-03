@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/umbrella"
+    },
+    "facing=east": {
+      "model": "hitori:block/umbrella",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/umbrella",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/umbrella",
+      "y": 270
+    }
+  }
+}

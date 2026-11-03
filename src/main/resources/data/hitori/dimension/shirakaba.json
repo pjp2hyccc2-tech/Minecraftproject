@@ -1,0 +1,7 @@
+{
+  "type": "hitori:shirakaba",
+  "generator": {
+    "type": "hitori:shirakaba",
+    "biome_source": { "type": "minecraft:fixed", "biome": "hitori:shirakaba" }
+  }
+}
