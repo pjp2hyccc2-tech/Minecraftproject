@@ -732,14 +732,16 @@ public final class Trailer {
             lookup();
             if (timer == null) return;
             try {
-                // Iris adds the time since lastStartTime when the frame begins: make that one virtual frame, so
-                // frameTimeCounter lands on the virtual clock and frameTime-smoothed values (eye brightness) move
-                // at film speed
-                long frameNs = 1_000_000_000L / FPS;
-                counter.setFloat(timer, (seconds - 1.0f / FPS) % 3600.0f);
+                // Iris adds the time since lastStartTime when the frame begins. That frame start is taken at the top of
+                // Minecraft's frame, before this render-tick hook runs, so faking "one frame ago" from here could come
+                // out negative, and a negative frame time poisons Iris' smoothed values (eyeBrightnessSmooth went NaN,
+                // so the pack thought every shot was indoors: black fog, no moonlit mist). Instead the frame start is
+                // cleared: the frame adds nothing, frameTimeCounter stays exactly on the film clock, and the smoothed
+                // values hold what they settled on during the set-up.
+                counter.setFloat(timer, seconds % 3600.0f);
                 if (lastStart != null) {
-                    if (lastStart.getType() == OptionalLong.class) lastStart.set(timer, OptionalLong.of(System.nanoTime() - frameNs));
-                    else if (lastStart.getType() == long.class) lastStart.setLong(timer, System.nanoTime() - frameNs);
+                    if (lastStart.getType() == OptionalLong.class) lastStart.set(timer, OptionalLong.empty());
+                    else if (lastStart.getType() == long.class) lastStart.setLong(timer, 0L);
                 }
             } catch (Exception e) {
                 status = "failed: " + e;

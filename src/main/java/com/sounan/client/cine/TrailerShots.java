@@ -33,8 +33,7 @@ final class TrailerShots {
 
     static List<Shot> all() {
         return List.of(new Descent(), new Wake(), new Walk(), new Bag(), new LampFar(), new Peek(), new Behind(), new Hut(),
-                new Village(), new CameraGhost(), new Bridge(), new Loom(), new Turn(), new Tunnel(), new Rush(), new Face(),
-                lampFarNoClock());
+                new Village(), new CameraGhost(), new Bridge(), new Loom(), new Turn(), new Tunnel(), new Rush(), new Face());
     }
 
     // =========================================================================================== frame / shot
