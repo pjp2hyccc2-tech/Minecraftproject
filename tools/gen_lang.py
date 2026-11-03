@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Writes assets/reisatsu/lang/ja_jp.json and en_us.json (merging the sound subtitles from tools/audio/)."""
+"""Writes assets/reisatsu/lang/ja_jp.json and en_us.json for the game (owner: game).
+
+Block names of docs/DESIGN.md §7 are listed here; the sound subtitles come from tools/audio/subtitles_{ja,en}.json
+(sound worker) when present. Run: python3 tools/gen_lang.py
+"""
 import json
 import os
 
@@ -7,356 +11,526 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "src", "main", "resources", "assets", "reisatsu", "lang"))
 NS = "reisatsu"
 
-BLOCKS = {
-    "cedar_log": ("杉の丸太", "Cedar Log"), "cedar_log_ribbon": ("目印テープの杉", "Cedar with Marking Tape"),
-    "cedar_log_shimenawa": ("御神木", "Sacred Cedar"), "cedar_leaves": ("杉の葉", "Cedar Needles"),
-    "forest_floor": ("杉の落ち葉", "Forest Floor"), "forest_dirt": ("腐葉土", "Forest Soil"), "moss_floor": ("苔", "Moss"),
-    "trail": ("踏み跡", "Old Trail"), "mountain_rock": ("岩", "Mountain Rock"), "mossy_rock": ("苔むした岩", "Mossy Rock"),
-    "river_stones": ("沢の石", "River Stones"), "fallen_leaves": ("落ち葉", "Fallen Leaves"),
-    "weathered_planks": ("色褪せた板", "Weathered Planks"), "dark_planks": ("黒ずんだ床板", "Dark Planks"),
-    "old_plaster": ("崩れた土壁", "Crumbling Plaster"), "tin_roof": ("錆びたトタン", "Rusted Tin"),
-    "tin_roof_stairs": ("錆びたトタン屋根", "Rusted Tin Roof"), "tin_roof_slab": ("錆びたトタンのハーフ", "Rusted Tin Slab"),
-    "blue_tarp": ("ブルーシート", "Blue Tarp"), "concrete_old": ("古いコンクリート", "Old Concrete"),
-    "concrete_moss": ("苔むしたコンクリート", "Mossy Concrete"), "asphalt": ("ひび割れたアスファルト", "Cracked Asphalt"),
-    "steel_lattice": ("鉄塔の鉄骨", "Pylon Lattice"), "tatami_old": ("古い畳", "Old Tatami"), "old_planks": ("古びた床板", "Old Floorboards"),
-    "rotten_planks": ("朽ちた板", "Rotten Planks"), "dark_beam": ("黒い柱", "Dark Beam"), "plaster_wall": ("漆喰壁", "Plaster Wall"),
-    "shoji_torn": ("破れ障子", "Torn Shoji"), "futon": ("湿った布団", "Damp Futon"), "stone_lantern": ("石灯籠", "Stone Lantern"),
-    "blood_stain": ("血痕", "Blood Stain"), "footprints": ("裸足の足跡", "Bare Footprints"), "hair_strands": ("髪の毛", "Hair"),
-    "shimenawa": ("注連縄", "Shimenawa"), "hut_door": ("小屋の戸", "Hut Door"), "house_door": ("古い引き戸", "Old Sliding Door"),
-    "iron_gate": ("隧道の鉄門", "Tunnel Gate"), "lost_bag": ("失くしたバッグ", "Lost Backpack"), "memo": ("メモ", "Note"),
-    "memo_wall": ("打ち付けられたメモ", "Nailed Note"), "logbook": ("登山者ノート", "Hikers' Logbook"),
-    "notice_board": ("掲示板", "Notice Board"), "signpost": ("道標", "Trail Sign"), "jizo": ("地蔵", "Jizo Statue"),
-    "hokora": ("山の祠", "Mountain Shrine"), "wara_ningyo": ("藁人形", "Straw Doll"), "rope_anchor": ("ロープ場の杭", "Climbing Stake"),
-    "climbing_rope": ("垂らしたロープ", "Hanging Rope"), "public_phone": ("公衆電話", "Public Phone"), "bus_stop": ("バス停", "Bus Stop"),
-    "tunnel_lamp": ("隧道の灯り", "Tunnel Lamp"), "guardrail": ("ガードレール", "Guardrail"), "key_hook": ("鍵掛け", "Key Board"),
-    "car_door": ("自分の車", "Your Car"), "omiki_bottle": ("御神酒の徳利", "Sake Bottle"),
-}
-
 ITEMS = {
-    "flashlight": ("懐中電灯", "Flashlight"), "flashlight_on": ("懐中電灯（点灯）", "Flashlight (on)"),
-    "flashlight_low": ("懐中電灯（電池切れ間近）", "Flashlight (low battery)"), "phone": ("スマホ", "Smartphone"),
-    "phone_light": ("スマホ（ライト）", "Smartphone (torch)"), "phone_camera": ("スマホ（カメラ）", "Smartphone (camera)"),
-    "battery": ("予備電池", "Spare Batteries"), "power_bank": ("モバイルバッテリー", "Power Bank"), "bear_bell": ("熊鈴", "Bear Bell"),
-    "rope": ("ロープ", "Rope"), "trail_map": ("登山地図", "Trail Map"), "flare": ("発煙筒", "Emergency Flare"),
-    "flare_lit": ("発煙筒（燃焼中）", "Emergency Flare (burning)"), "omamori": ("お守り", "Omamori"), "hut_key": ("古い鍵", "Old Key"),
-    "omiki": ("御神酒", "Offering Sake"), "memo": ("メモ", "Note"),
+    "reisha_camera": ("霊写機", "Reisha-ki (Spirit Camera)"),
+    "reisha_camera_finder": ("霊写機（ファインダー）", "Reisha-ki (raised)"),
+    "film_pack": ("フィルムパック", "Film Pack"),
+    "evidence_photo": ("霊の写真", "Spirit Photograph"),
+    "flashlight": ("懐中電灯", "Flashlight"),
+    "flashlight_on": ("懐中電灯（点灯）", "Flashlight (on)"),
+    "ofuda": ("お札", "Ofuda"),
+    "shop_key": ("店の鍵", "Shop Key"),
+    "office_key": ("事務所の鍵", "Office Key"),
 }
 ITEM_DESC = {
-    "flashlight": ("右クリックで点灯／消灯。電池は減っていく。灯りを向けてはいけないものもいる。",
-                   "Right-click to switch on/off. The batteries drain. Some things must not be lit."),
-    "phone": ("右クリックで開く（Pキーでも）。スニーク+右クリックでライト。圏外。",
-              "Right-click (or P) to open. Sneak + right-click: torch. No signal."),
-    "battery": ("右クリックで懐中電灯の電池を交換する。", "Right-click to put fresh batteries in the flashlight."),
-    "power_bank": ("右クリックでスマホを充電する（+60%）。", "Right-click to charge the phone (+60%)."),
-    "bear_bell": ("右クリックで鳴らす。覗くものは鈴の音を嫌い、背中のものも離れていく。大きな音が出る。",
-                  "Right-click to ring. The peeking things hate it, the one behind you lets go. It is loud."),
-    "rope": ("崖の杭に結べば、下へ降りられる。", "Tie it to the climbers' stake at the cliff to climb down."),
-    "trail_map": ("右クリックで広げる。濡れて、端が破れている。", "Right-click to unfold. Wet, torn at one edge."),
-    "flare": ("右クリックで点火。四十秒間、赤い火が燃える。御山様は火を嫌う。",
-              "Right-click to ignite: forty seconds of red fire. The mountain hates fire."),
-    "omamori": ("祖母がくれたお守り。一度だけ、身代わりになってくれる。", "Your grandmother's charm. It takes your place, once."),
-    "hut_key": ("「旧隧道」と書かれた木札が付いている。", "A wooden tag reads \"Old Tunnel\"."),
-    "omiki": ("祠に供える酒。", "Sake to offer at a shrine."),
-    "memo": ("拾ったメモ。スマホのメモ（Jキー）で読み返せる。", "A note you found. Read it again in the phone's notes (J)."),
+    "reisha_camera": ("右クリックで構える。左クリックで撮影、ホイールでズーム。", "Right-click to raise. Left-click: shutter. Scroll: zoom."),
+    "film_pack": ("右クリックで霊写機に装填する（+5枚）。", "Right-click to load it into the camera (+5)."),
+    "evidence_photo": ("霊媒師に渡せば、名を読んでくれる。", "Hand it to the medium: she will read the name."),
+    "flashlight": ("右クリックで点灯／消灯。灯りは、あちらにも見える。", "Right-click: on / off. They can see the light too."),
+    "ofuda": ("捕まった時、一度だけ身代わりになる。", "When they take you, it takes your place. Once."),
+    "shop_key": ("入口横の鍵スイッチを回す鍵。裏口も開く。", "Turns the key switch by the entrance. Opens the back door too."),
+    "office_key": ("「事務所」と書かれた札が付いている。", "The tag reads \"Office\"."),
 }
-ENTITIES = {"nozoki": ("覗き", "Nozoki"), "yobigoe": ("呼び声", "Yobigoe"), "ushiro": ("後ろ", "Ushiro"),
-            "koyanushi": ("小屋主", "Koyanushi"), "oyamasama": ("御山様", "Oyama-sama"), "utsurumono": ("写るもの", "Utsurumono")}
-AREAS = {"rakuraku": ("滑落地点", "Where You Fell", "KATSURAKU"), "sawa": ("沢", "The Stream", "SAWA"),
-         "gake": ("崖", "The Cliff", "GAKE"), "sugi": ("杉の森", "Cedar Forest", "SUGI NO MORI"),
-         "haison": ("廃村 帰野", "Kaerino, Abandoned", "HAISON"), "hokora": ("山の祠", "Mountain Shrine", "HOKORA"),
-         "tsuribashi": ("吊り橋", "Suspension Bridge", "TSURIBASHI"), "koya": ("避難小屋", "Emergency Hut", "HINAN-GOYA"),
-         "tetto": ("鉄塔", "Power Pylon", "TETTŌ"), "tunnel": ("旧帰野隧道", "Old Kaerino Tunnel", "KYŪ KAERINO ZUIDŌ"),
-         "tozanguchi": ("登山口", "Trailhead", "TOZANGUCHI")}
+CAMERA_FILM = ("のこり %s枚", "%s shots left")
 
-COMMON = {
-    "itemGroup.reisatsu": ("遭難 ―REISATSU―", "REISATSU: Lost on the Mountain"),
-    "key.categories.reisatsu": ("遭難", "REISATSU"),
-    "key.reisatsu.phone": ("スマホを開く", "Open phone"),
-    "key.reisatsu.memo": ("メモを読む", "Read notes"),
-    "gui.reisatsu.scroll": ("%s / %s　（ホイールでめくる）", "%s / %s (scroll)"),
-    "reisatsu.shaders.installed": ("影MOD「ReisatsuShaders」をインストールして有効にしました。（Oculus / Iris）",
-                                 "Installed and enabled the ReisatsuShaders shader pack (Oculus / Iris)."),
-    "reisatsu.shaders.updated": ("ReisatsuShaders を更新しました。", "ReisatsuShaders was updated."),
-    "reisatsu.shaders.optifine": ("ReisatsuShaders を OptiFine に設定しました。次回の起動から有効になります。",
-                                "ReisatsuShaders was set for OptiFine; it will be active from the next launch."),
-    # ---- intro
-    "intro.reisatsu.1": ("十一月二日　午後四時四十分　帰らず山・下山道", "November 2nd, 4:40 p.m. — the trail down Kaerazu-yama"),
-    "intro.reisatsu.2": ("――おーい", "— Hey! Over here —"),
-    "intro.reisatsu.3": ("誰かに呼ばれた気がして、道を外れた", "Someone called. You stepped off the trail."),
-    "intro.reisatsu.4": ("足元が、崩れた", "The ground gave way."),
-    "hint.reisatsu.controls": ("懐中電灯: 右クリックで点灯\nスマホ: P キー　／　メモ: J キー\nスニーク: 足音を殺す", "Flashlight: right-click\nPhone: P   Notes: J\nSneak: walk silently"),
-    # ---- HUD
-    "hud.reisatsu.checkpoint": ("――少しだけ、息が落ち着いた", "— your breathing slows, a little"),
-    "hud.reisatsu.omamori": ("お守りが、身代わりになった", "The omamori took your place"),
-    "hud.reisatsu.date": ("%s月%s日", "%s/%s"),
-    "hud.reisatsu.camera_help": ("右クリック:撮影　スニーク+右クリック:戻る", "Right-click: photo   Sneak + right-click: back"),
-    # ---- thoughts
-    "thought.reisatsu.wake": ("……っ、痛……。ここ、どこだ……？　バッグがない", "...ugh. Where... am I? My bag is gone."),
-    "thought.reisatsu.fog": ("霧が濃すぎる……前が見えない", "The fog is too thick... I can't see anything."),
-    "thought.reisatsu.flash_dead": ("……電池が切れた", "...the batteries are dead."),
-    "thought.reisatsu.flash_low": ("ライトが暗くなってきた……電池がもたない", "The light is dimming... the batteries won't last."),
-    "thought.reisatsu.flash_empty": ("点かない。電池が空だ", "Nothing. The batteries are empty."),
-    "thought.reisatsu.phone_dead": ("スマホの電源が……落ちた", "The phone... just died."),
-    "thought.reisatsu.battery_full": ("まだ電池は残っている", "There is still charge left."),
-    "thought.reisatsu.battery": ("電池を入れ替えた", "Fresh batteries."),
-    "thought.reisatsu.charged": ("スマホを充電した", "Phone charged."),
-    "thought.reisatsu.flare_out": ("発煙筒が燃え尽きた", "The flare has burned out."),
-    "thought.reisatsu.signal": ("……電波が、入った！", "...one bar. Signal!"),
-    "thought.reisatsu.old_bag": ("……自分のじゃない。随分古いバッグだ。中は空っぽだ", "...not mine. An old bag, long empty."),
-    "thought.reisatsu.bag_empty": ("もう何も残っていない", "Nothing left in it."),
-    "thought.reisatsu.bag": ("あった……！　落ちた時に転がっていったんだ", "There it is...! It must have rolled down when I fell."),
-    "thought.reisatsu.hokora_done": ("霧が晴れている。通れそうだ", "The fog has cleared. I can get through."),
-    "thought.reisatsu.fog_lift": ("霧が……晴れていく", "The fog... is lifting."),
-    "thought.reisatsu.hokora_need": ("御神酒を供えないと……村に残っていたはずだ", "I need to offer sake... there was some in the village."),
-    "thought.reisatsu.hokora": ("古い祠だ。何か供えるものがあれば……", "An old shrine. If only I had something to offer..."),
-    "thought.reisatsu.roped": ("ロープを結んだ。これで降りられる", "Rope tied. I can climb down now."),
-    "thought.reisatsu.need_rope": ("古い杭だ。ロープがあれば、ここから降りられそうだ", "An old stake. With a rope I could climb down here."),
-    "thought.reisatsu.key": ("鍵だ……「旧隧道」と書いた札が付いている", "A key... the tag says \"Old Tunnel\"."),
-    "thought.reisatsu.unlocked": ("開いた……", "It opened..."),
-    "thought.reisatsu.locked": ("鎖と南京錠で閉ざされている。鍵が要る", "Chained and padlocked. I need a key."),
-    "thought.reisatsu.omiki": ("お酒……御神酒だ。祠に供えるものかもしれない", "Sake... an offering. Maybe for a shrine."),
-    "thought.reisatsu.payphone_dead": ("受話器からは、何も聞こえない", "Nothing on the line."),
-    "thought.reisatsu.wake_1": ("……夢？　いや……", "...a dream? No..."),
-    "thought.reisatsu.wake_2": ("また、ここに戻ってきた……", "Back here again..."),
-    "thought.reisatsu.wake_3": ("何日経った……？　スマホの日付がおかしい", "How many days...? The date on the phone is wrong."),
-    "thought.reisatsu.wake_4": ("もう、自分が誰だったか……思い出せなくなりそうだ", "I can barely remember who I was..."),
-    "thought.reisatsu.ushiro": ("……振り返ってはいけない気がする", "...I feel I must not look back."),
-    "thought.reisatsu.ushiro_gone": ("……気配が、消えた", "...it's gone."),
-    "thought.reisatsu.light": ("あれは……救助の人？", "Is that... a rescuer?"),
-    "thought.reisatsu.watched": ("……見られている", "...something is watching."),
-    "thought.reisatsu.sleeper": ("奥で、誰かが寝ている……", "Someone is sleeping in there..."),
-    "thought.reisatsu.tunnel": ("真っ暗だ……出口は、まだ見えない", "Pitch black... no sign of the exit."),
-    "thought.reisatsu.run": ("――走れ！", "— RUN!"),
-    "thought.reisatsu.car": ("車だ……！", "My car...!"),
-    "thought.reisatsu.fall": ("……っ！　落ちたら、ただでは済まない", "...! A fall like that would kill me."),
-    # ---- signs
-    "sign.reisatsu.fork": ("↓ 帰野（廃村）2.1km\n← 近道　（後から手書きで書き足されている）",
-                         "↓ Kaerino (abandoned) 2.1 km\n← Shortcut (written on later, by hand)"),
-    "sign.reisatsu.shrine": ("← 山の祠\n祠の先　霧多し", "← Mountain shrine\nheavy fog beyond the shrine"),
-    "sign.reisatsu.hut": ("→ 避難小屋\n← 鉄塔巡視路", "→ Emergency hut\n← Pylon patrol path"),
-    "sign.reisatsu.tunnel": ("→ 旧帰野隧道\n登山口まで 1.2km", "→ Old Kaerino tunnel\n1.2 km to the trailhead"),
-    "sign.reisatsu.start": ("この先　崖　立入禁止", "Cliffs ahead — keep out"),
-    "sign.reisatsu.trailhead": ("帰らず山　登山口\n入山届は必ず提出してください", "Kaerazu-yama trailhead\nAlways file a climbing plan"),
-    "sign.reisatsu.bus_stop": ("帰野　バス停\n帰野線　一日一往復　最終 17:10\n（平成十年　廃止）",
-                             "Kaerino bus stop\none bus a day, last 17:10\n(discontinued 1998)"),
-    "sign.reisatsu.generic": ("文字が掠れて読めない", "The writing has worn away."),
-    # ---- phone
-    "phone.reisatsu.title": ("スマホ", "Phone"),
-    "phone.reisatsu.no_signal": ("圏外", "No signal"),
-    "phone.reisatsu.date": ("%s月%s日(%s)", "%s/%s (%s)"),
-    "phone.reisatsu.app.map": ("地図", "Map"), "phone.reisatsu.app.camera": ("カメラ", "Camera"),
-    "phone.reisatsu.app.light": ("ライト", "Torch"), "phone.reisatsu.app.messages": ("メッセージ", "Messages"),
-    "phone.reisatsu.app.call": ("電話", "Phone"), "phone.reisatsu.app.memo": ("メモ", "Notes"),
-    "phone.reisatsu.help": ("右クリック / Backspace: 戻る　Esc: 閉じる", "Right-click / Backspace: back   Esc: close"),
-    "phone.reisatsu.map.nodata": ("地図データがありません（オフライン）", "No map data (offline)"),
-    "phone.reisatsu.poi.bag": ("沢", "Stream"), "phone.reisatsu.poi.village": ("帰野", "Kaerino"),
-    "phone.reisatsu.poi.shrine": ("祠", "Shrine"), "phone.reisatsu.poi.hut": ("避難小屋", "Hut"),
-    "phone.reisatsu.poi.pylon": ("鉄塔", "Pylon"), "phone.reisatsu.poi.tunnel_n": ("旧隧道", "Old tunnel"),
-    "phone.reisatsu.poi.parking": ("登山口P", "Trailhead P"),
-    "phone.reisatsu.who.mom": ("お母さん", "Mom"), "phone.reisatsu.who.kenta": ("健太", "Kenta"),
-    "phone.reisatsu.who.work": ("佐藤課長", "Mr. Sato (work)"), "phone.reisatsu.who.unknown": ("非通知", "Unknown"),
-    "phone.reisatsu.msg.mom.1": ("明日、帰らず山に行くんだって？気をつけてね", "You're going up Kaerazu-yama tomorrow? Be careful."),
-    "phone.reisatsu.msg.mom.2": ("大丈夫、日帰りだから。夕方には下りるよ", "It's a day hike. I'll be down by evening."),
-    "phone.reisatsu.msg.mom.3": ("いってらっしゃい。下りたら連絡してね", "Have a good hike. Text me when you're down."),
-    "phone.reisatsu.msg.mom.4": ("まだ山？", "Still on the mountain?"),
-    "phone.reisatsu.msg.mom.5": ("電話出て", "Pick up."),
-    "phone.reisatsu.msg.mom.6": ("警察に相談しました。返事して", "I called the police. Answer me."),
-    "phone.reisatsu.msg.mom.7": ("どこにいるの", "Where are you"),
-    "phone.reisatsu.msg.mom.8": ("今朝から捜索隊が山に入ってくれています。お願い、返事して",
-                               "A search team went up this morning. Please, answer."),
-    "phone.reisatsu.msg.mom.9": ("捜索が打ち切られました。でも、お母さんは待ってるからね", "They called off the search. But I'm still waiting."),
-    "phone.reisatsu.msg.mom.10": ("今日、あなたの部屋を少しだけ片付けました。ごめんね", "I tidied your room a little today. I'm sorry."),
-    "phone.reisatsu.msg.mom.11": ("あれから三年。今日も山に向かって名前を呼びました。返事、してくれないね",
-                                "Three years now. I called your name toward the mountain again today. You never answer."),
-    "phone.reisatsu.msg.kenta.1": ("帰らず山ってマジ？あそこ地元じゃ夜は絶対入るなって言われてるぞ",
-                                 "Kaerazu-yama, seriously? The locals say never go up there at night."),
-    "phone.reisatsu.msg.kenta.2": ("迷信だろｗ", "superstition lol"),
-    "phone.reisatsu.msg.kenta.3": ("名前呼ばれても返事すんなよ。マジで", "If something calls your name, don't answer. I mean it."),
-    "phone.reisatsu.msg.kenta.4": ("おい、大丈夫か？おばさんから連絡きたぞ", "Hey, you okay? Your mom called me."),
-    "phone.reisatsu.msg.kenta.5": ("今から車で向かう。登山口で待ってる", "Driving up now. I'll wait at the trailhead."),
-    "phone.reisatsu.msg.kenta.6": ("登山口にお前の車、まだあった。ごめん。俺があのとき止めてれば",
-                                 "Your car's still at the trailhead. I'm sorry. I should have stopped you."),
-    "phone.reisatsu.msg.kenta.7": ("結婚するよ。お前にも来てほしかった", "I'm getting married. I wish you could come."),
-    "phone.reisatsu.msg.work.1": ("明日の会議資料、どうなってる？", "Where are the slides for tomorrow's meeting?"),
-    "phone.reisatsu.msg.work.2": ("ご家族から事情を伺いました。こちらのことは気にせず……", "Your family told us. Don't worry about work..."),
-    "phone.reisatsu.msg.unknown.1": ("みつけた", "found you"),
-    "phone.reisatsu.notification": ("通知", "Notification"),
-    "phone.reisatsu.buzz.messages": ("新着メッセージがあります", "New messages"),
-    "phone.reisatsu.buzz.found": ("非通知：みつけた", "Unknown: found you"),
-    "phone.reisatsu.buzz.behind": ("非通知：うしろ", "Unknown: behind you"),
-    "phone.reisatsu.buzz.come": ("非通知：こっちだよ", "Unknown: over here"),
-    "phone.reisatsu.memo.empty": ("メモはまだない", "No notes yet"),
-    "phone.reisatsu.call.ringing": ("呼び出し中", "Calling"),
-    "phone.reisatsu.call.end": ("終了", "End"),
-    "phone.reisatsu.call.no_signal": ("圏外です", "No service"),
-    "phone.reisatsu.call.hint": ("電波のある場所でしか通話できません", "Calls only work where there is signal"),
-    "call.reisatsu.110.1": ("はい、110番です。事件ですか、事故ですか", "Police emergency. What is the emergency?"),
-    "call.reisatsu.110.2": ("山で遭難……ですね。今いる場所は分かりますか", "Lost on a mountain... Do you know where you are?"),
-    "call.reisatsu.110.3": ("帰らず山……？　少々お待ちください", "Kaerazu-yama...? Please hold."),
-    "call.reisatsu.110.4": ("…………", "............"),
-    "call.reisatsu.110.5": ("……もしもし。今、どこにいますか", "...hello. Where are you right now?"),
-    "call.reisatsu.110.6": ("もっと奥まで来られますか。こちらから、呼びますから", "Can you come further in? We'll call out to you."),
-    "call.reisatsu.110.7": ("おーい", "Hey! Over here!"),
-    "call.reisatsu.119.1": ("119番消防です。火事ですか、救急ですか", "Fire and ambulance. Fire, or medical?"),
-    "call.reisatsu.119.2": ("遭難ですね。落ち着いてください。お名前は", "You're lost. Stay calm. Your name?"),
-    "call.reisatsu.119.3": ("%sさん、ですね", "%s, right."),
-    "call.reisatsu.119.4": ("そこから動かないでください。今、迎えが行きます", "Don't move. Someone is coming for you."),
-    "call.reisatsu.119.5": ("……灯りを持った者が、迎えに行きます", "...someone with a light is coming for you."),
-    "call.reisatsu.119.6": ("ついて来てくださいね", "Follow them, won't you."),
-    "call.reisatsu.mom.1": ("……もしもし？　もしもし！？", "...hello? HELLO?"),
-    "call.reisatsu.mom.2": ("%s？　あなたなの？　どこにいるの！？", "%s? Is that you? Where are you?!"),
-    "call.reisatsu.mom.3": ("声が遠いの。ねえ、聞こえる？", "You sound so far away. Can you hear me?"),
-    "call.reisatsu.mom.4": ("……ずっと、待ってたのに", "...I waited so long."),
-    "call.reisatsu.mom.5": ("……ねえ。後ろ、見て", "...hey. Look behind you."),
-    "call.reisatsu.mom.6": ("――つまらない", "— boring."),
-    "call.reisatsu.900.1": ("……もしもし", "...hello"),
-    "call.reisatsu.900.2": ("――%sさん？", "— %s?"),
-    "call.reisatsu.900.3": ("やっと、繋がった", "Finally, we're connected."),
-    "call.reisatsu.900.4": ("今、帰野にいるのね。……ああ、見えるよ", "You're in Kaerino now. ...yes, I can see you."),
-    "call.reisatsu.900.5": ("ここの人たちは、みんな山に行ったよ", "Everyone here went up the mountain."),
-    "call.reisatsu.900.6": ("あなたも、もうすぐ", "You too, soon."),
-    # ---- endings
-    "ending.reisatsu.title": ("遭難", "REISATSU"),
-    "ending.reisatsu.good.1": ("――木々の向こうに、街灯の明かりが見えた", "— past the trees, the light of a street lamp."),
-    "ending.reisatsu.good.2": ("駐車場。見慣れた、自分の車", "The parking lot. Your own car."),
-    "ending.reisatsu.good.3": ("エンジンが、かかった", "The engine starts."),
-    "ending.reisatsu.good.4": ("スマホが震えた。電波が戻ったのだ", "The phone buzzes. Signal again."),
-    "ending.reisatsu.good.5a": ("十一月三日　午前五時十二分。……一晩で、山を下りられた",
-                              "November 3rd, 5:12 a.m. ...one night, and you made it down."),
-    "ending.reisatsu.good.5b": ("画面の日付は　%s　を示していた", "The date on the screen read %s."),
-    "ending.reisatsu.good.6a": ("東の空が、白み始めている", "The eastern sky is turning pale."),
-    "ending.reisatsu.good.6b": ("あの山にいたのは、一晩だけのはずなのに", "It was supposed to be one night on that mountain."),
-    "ending.reisatsu.good.7": ("……ふと、バックミラーを見た", "...you glance at the rear-view mirror."),
-    "ending.reisatsu.date": ("%s年%s月%s日", "%3$s/%2$s/%1$s"),
-    "ending.reisatsu.bad.1": ("霧が、すべてを包んでいく", "The fog swallows everything."),
-    "ending.reisatsu.bad.2": ("誰かが呼んでいる。もう、怖くはなかった", "Someone is calling. You are not afraid anymore."),
-    "ending.reisatsu.bad.3": ("――もう、どこにも行かなくていい", "— you never have to leave."),
-    "ending.reisatsu.bad.4": ("数年後。ある登山者のスマホに、一枚の写真が残されていた",
-                            "Years later, a hiker's phone held one strange photograph."),
-    "ending.reisatsu.bad.5": ("霧の木立に立つ、見覚えのある人影", "A familiar figure, standing among the foggy cedars."),
-    "ending.reisatsu.bad.6": ("行方不明者　%s　――捜索は打ち切られている", "Missing person: %s — the search was called off."),
-    "ending.reisatsu.end_good": ("END 1 ― 下山", "END 1 — Down the Mountain"),
-    "ending.reisatsu.end_good_company": ("END 2 ― 同行者", "END 2 — Company"),
-    "ending.reisatsu.end_bad": ("END 3 ― 神隠し", "END 3 — Spirited Away"),
-    "ending.reisatsu.continue": ("クリックで戻る", "Click to return"),
-    # ---- config
-    "reisatsu.configuration.title": ("遭難 設定", "REISATSU settings"),
+ENTITIES = {
+    "visitor": ("来店者", "The Visitor"), "waitress": ("給仕", "The Waitress"), "chef": ("料理長", "The Chef"),
+    "child": ("かくれんぼの子", "The Hiding Child"), "mirror_woman": ("鏡の女", "The Woman in the Mirror"),
+    "manager": ("店長", "The Manager"), "medium": ("霊媒師 八雲トキ", "Yakumo Toki, the Medium"), "medium_car": ("霊媒師の車", "The Medium's Car"),
+}
+TRUE_NAMES = {
+    "visitor": ("三浦 健司", "Kenji Miura"), "waitress": ("小野寺 千夏", "Chinatsu Onodera"), "chef": ("権藤 剛", "Tsuyoshi Gondo"),
+    "child": ("春日 ゆうか", "Yuka Kasuga"), "mirror_woman": ("白石 玲子", "Reiko Shiraishi"), "manager": ("森田 浩一", "Koichi Morita"),
+}
+AREAS = {
+    "vestibule": ("風除室", "Vestibule"), "waiting": ("待合・レジ", "Waiting Area & Register"), "dining": ("客席", "Dining Hall"),
+    "kitchen": ("厨房", "Kitchen"), "fridge": ("冷蔵室", "Walk-in Fridge"), "corridor": ("通路", "Back Corridor"),
+    "staff": ("休憩室", "Staff Room"), "office": ("事務所", "Office"), "storage": ("倉庫", "Storeroom"),
+    "mens": ("男子トイレ", "Men's Restroom"), "womens": ("女子トイレ", "Women's Restroom"), "cavity": ("鏡の向こう", "Behind the Mirror"),
+}
+CIRCUITS = {
+    "dining": ("客席", "Dining"), "kitchen": ("厨房", "Kitchen"), "restroom": ("トイレ", "Restrooms"), "back": ("バックヤード", "Back"),
+    "sign": ("看板", "Signs"), "cameras": ("防犯カメラ", "Cameras"), "door": ("自動ドア", "Auto Doors"),
+}
+RULES = [
+    ("一、霊に気付かれてはならない。気付かれた霊は、写真に写らない。", "I. Do not let a spirit notice you. A spirit that has noticed you will not show in a photograph."),
+    ("一、霊は光と音に敏い。灯りは控え、足音を殺すこと。", "II. They are keen to light and sound. Keep your light low and your steps silent."),
+    ("一、ファインダー越しにしか見えないものがいる。", "III. Some can only be seen through the finder."),
+    ("一、顔が写らなければ、名は浮かばない。", "IV. If the face is not in the photo, no name will rise."),
+    ("一、気付かれたら、逃げなさい。隠れなさい。お札が身代わりになるのは三度まで。",
+     "V. If they notice you: run. Hide. The ofuda will take your place three times, no more."),
+]
+PHENOMENA = {
+    "door": ("施錠した自動ドアが、チャイムと共にひとりでに開く", "The locked automatic door opens by itself, with its chime"),
+    "taps": ("誰もいない厨房やトイレで、水道から水が流れている", "Taps running in the empty kitchen and restrooms"),
+    "menus": ("テーブルのメニューが、床一面にばらまかれている", "The menus found scattered all over the floor"),
+    "call": ("誰もいない席の呼び出しボタンが鳴る（特に七番）", "Call buttons ringing at empty tables (table 7, mostly)"),
+    "chair": ("椅子が動いている。倒れている", "Chairs moved, knocked over"),
+    "lights": ("照明の明滅、割れる蛍光灯、落ちるブレーカー", "Flickering lights, bursting tubes, a tripping breaker"),
+    "plate": ("無人の厨房で皿が割れる", "Plates smashing in the empty kitchen"),
+    "music": ("止めたはずの店内の音楽が流れる", "The store music playing, though it was switched off"),
+    "pa": ("店内放送のチャイムと、聞き取れない声", "The PA chime, and a voice nobody can make out"),
+    "phone": ("レジの電話が鳴る。出ると「……二時に……一名で……」", "The register phone rings. On the line: \"...at two... a table for one...\""),
+    "tv": ("休憩室のテレビが勝手につく", "The staff room TV switching itself on"),
+    "dryer": ("誰もいないトイレで、ハンドドライヤーが鳴る", "Hand dryers roaring in empty restrooms"),
+    "drink": ("ドリンクバーが勝手に注がれる", "The drink bar pouring by itself"),
+    "knock": ("冷蔵室や、使用中の個室の中から、ノックの音", "Knocking from inside the walk-in fridge and the occupied stall"),
+    "bear": ("キッズコーナーのぬいぐるみが、こちらを向いている", "The stuffed bear in the kids' corner, turned to face you"),
+    "glass": ("誰もいないテーブルに、水の入ったグラス", "Glasses of water on empty tables"),
+    "prints": ("入口から七番テーブルまで続く、濡れた足跡", "Wet footprints from the door to table 7"),
+    "board": ("店の前の黒板に「まだ　いますか」", "The board outside: \"ARE YOU STILL HERE\""),
+    "crash": ("午前二時、遠くでバイクの音。急ブレーキ。衝突音。静寂", "2 a.m.: a motorbike far away. Screeching tyres. An impact. Silence."),
 }
 
 NOTES = {
-    1: (("濡れた手帳の切れ端", "十月二十八日。午後、下山道で誰かに呼ばれた。「おーい、こっちだ」と。救助の人かと思って、道を外れた。\n"
-                       "それが間違いだった。\n\nここには道がない。沢の音だけが聞こえる。\n\n――佐伯"),
-        ("Torn page from a wet notebook", "October 28th. On the way down someone called me. \"Hey! Over here!\" I thought it was a "
-                                          "rescuer, so I left the trail.\nThat was the mistake.\n\nThere is no trail here. Only the "
-                                          "sound of the stream.\n\n— Saeki")),
-    2: (("沢沿いの書き付け", "沢に沿って下れば、いつか里に出る。山ではそう教わった。\nでも、この沢は下るほど山の奥へ入っていく気がする。\n\n"
-                     "背中のほうで、誰かが同じ歩幅で歩いている。\n振り返る勇気はない。"),
-        ("Scribbled by the stream", "Follow a stream downhill and you reach a village. That is what they teach you.\nBut this stream "
-                                    "seems to lead deeper into the mountain.\n\nSomeone behind me walks in step with me.\nI don't "
-                                    "dare look back.")),
-    3: (("崖下の紙片", "ロープ場の杭は古いが、まだ使える。降りたら、もう登っては戻れない。\n\n下に着いたとき、上から誰かが覗いていた。\n"
-                  "私の顔をしていた。"),
-        ("Scrap below the cliff", "The climbers' stake is old but it holds. Once down, there is no climbing back.\n\nWhen I reached the "
-                                  "bottom someone was looking down at me from the top.\nIt had my face.")),
-    4: (("テープのこと", "ピンクの目印テープを辿っている。古いもの、新しいもの。\n\n新しいテープは、誰が結んだのだろう。\nこの山には、私しかいないはずなのに。\n\n"
-                   "テープが一本、私の手首に結ばれていた。\nいつ？"),
-        ("About the tapes", "I am following the pink marking tapes. Old ones, new ones.\n\nWho tied the new ones?\nThere should be "
-                            "no one on this mountain but me.\n\nThere was a tape tied around my wrist.\nWhen?")),
-    5: (("行き止まり", "テープを辿ってはいけなかった。ここで道は終わっている。\n\n木の根元に、靴が並べてある。左右揃えて、きちんと。何足も。\n\n"
-                  "私の靴も、ここに並べることになるのだろうか。"),
-        ("Dead end", "I should not have followed the tapes. The path ends here.\n\nShoes are lined up at the foot of the tree. Neatly, in "
-                     "pairs. Many pairs.\n\nWill mine be set here too?")),
-    6: (("見られている", "木の陰から、誰かが覗いている。首を傾けて、片目だけで。\n灯りを向けると、笑った。だから、もう向けない。目も合わせない。\n\n"
-                   "近づかなければ、何もしてこない。\n……今のところは。"),
-        ("Watched", "Something peeks from behind the trees. Head tilted, one eye.\nWhen I shone my light on it, it smiled. So I don't "
-                    "anymore. I don't meet its eye.\n\nIf I don't go near, it does nothing.\n...so far.")),
-    7: (("子供の作文", "「やまのひと」　三ねん　やまだ はるか\n\nおばあちゃんが言ってた。夜の山で名前をよばれても、へんじしちゃだめ。\n"
-                  "ライトをもった人によばれても、ついていっちゃだめ。\n\nやまのひとは、さみしいから、つれていくんだって。"),
-        ("A child's composition", "\"The mountain people\" - Haruka Yamada, 3rd grade\n\nGrandma said if something calls your name on the "
-                                  "mountain at night, don't answer.\nIf someone with a light calls you, don't follow.\n\nThe "
-                                  "mountain people are lonely, so they take you with them.")),
-    8: (("最後の村人", "この村の者は、皆、山に呼ばれていった。\n最初は年寄り。次に子供たち。夫は、灯りを持った誰かに呼ばれて出ていったきりだ。\n\n"
-                  "今夜は私の番だ。外で、夫の声が私の名前を呼んでいる。\n答えてはいけない。答えては――"),
-        ("The last villager", "Everyone in this village was called into the mountain.\nThe old ones first. Then the children. My husband "
-                              "went out after someone with a light and never came back.\n\nTonight it is my turn. Outside, my "
-                              "husband's voice is calling my name.\nI must not answer. I must not—")),
-    9: (("祠のこと", "祠の先は、霧が晴れない。何度進んでも、気がつくと祠の前に戻っている。\n\n村の古い決まりを思い出した。\n"
-                 "「祠の前を通る者は、御神酒を供えよ」\n\n村の家に、酒が残っていたはずだ。\n……あの家には、何かが寝ている。"),
-        ("About the shrine", "Beyond the shrine the fog never clears. However far I walk, I end up back at the shrine.\n\nI remembered the "
-                             "village rule:\n\"Whoever passes the shrine must offer sake.\"\n\nThere was sake left in one of the "
-                             "houses.\n...something sleeps in that house.")),
-    10: (("登山者ノート", "1987.10.3　雨。小屋に先客あり。奥で寝ているようなので、静かに出た。\n\n"
-                    "1993.11.2　鍵は旧隧道の門のものらしい。誰か持っていってくれ。\n\n"
-                    "1998.10.29　佐伯。小屋の奥で、何かが寝ている。息が湿っている。鍵を取る。起こしてはいけない。屈んで歩け。\n\n"
-                    "2011.8.15　（文字が震えていて読めない）\n\n2026.11.3　%1$s　ここまで来た。"),
-         ("Hikers' logbook", "1987.10.3 Rain. Someone already here, asleep at the back. Left quietly.\n\n1993.11.2 The key is for the old "
-                             "tunnel gate, I think. Someone take it.\n\n1998.10.29 Saeki. Something is sleeping at the back. Its "
-                             "breath is wet. Taking the key. Don't wake it. Crouch.\n\n2011.8.15 (the handwriting shakes too much to "
-                             "read)\n\n2026.11.3 %1$s - made it this far.")),
-    11: (("鉄塔の下で", "ここなら電波が入る。家に電話した。妻が出た。\n「どこにいるの」と泣いていた。山の名前を言った。\n\n"
-                   "そのあと、受話器の向こうで妻が言った。\n「もう、来なくていいよ。ずっと、そこにいればいいのに」\n\n妻の声じゃなかった。"),
-         ("Under the pylon", "There is signal here. I called home. My wife answered.\nShe was crying, asking where I was. I told her the "
-                             "mountain's name.\n\nThen, on the line, she said:\n\"You don't have to come back. You could just stay "
-                             "there forever.\"\n\nIt wasn't her voice.")),
-    12: (("出口", "トンネルの向こうに、出口の光が見える。\nなのに、いくら歩いても、光は近づかない。\n\n後ろで、大きな何かが四つ足で這ってくる音がする。\n\n"
-                "火を。火を焚け。御山様は、火を嫌う――"),
-         ("The exit", "At the far end of the tunnel I can see the light of the exit.\nBut however far I walk, it gets no closer.\n\nBehind "
-                      "me, something huge is crawling on all fours.\n\nFire. Light a fire. The mountain hates fire—")),
-    13: (("帰らず山　入山の心得", "帰野地区自治会\n夜の帰らず山に立ち入る者は、以下を必ず守ること。\n\n"
-                        "一、夜の山で、灯りを持つ者に呼ばれても、決してついて行ってはならない。\n\n"
-                        "一、木の陰から覗くものと、目を合わせてはならない。灯りを向けてもならない。\n\n"
-                        "一、背中に気配を感じたら、決して振り返らず、そのまま歩き続けること。\n\n"
-                        "一、小屋の主を起こしてはならない。小屋では音を立てず、屈んで歩くこと。\n\n"
-                        "一、祠の前を通る者は、御神酒を供えること。供えぬ者は霧に迷う。\n\n"
-                        "一、御山様に会ったなら、火を焚け。御山様は火を嫌う。\n\n山に呼ばれた者は、帰らない。"),
-         ("Kaerazu-yama: rules for entering the mountain", "Kaerino district association\nAnyone entering Kaerazu-yama at night must keep "
-                                                           "these rules.\n\nI. If someone carrying a light calls you on the mountain at "
-                                                           "night, never follow.\n\nII. Never meet the eyes of what peeks from behind the "
-                                                           "trees. Never shine a light on it.\n\nIII. If you feel something at your back, "
-                                                           "never turn around. Keep walking.\n\nIV. Never wake the master of a hut. Make no "
-                                                           "sound inside, and crouch.\n\nV. Whoever passes the shrine must offer sake. "
-                                                           "Those who do not lose their way in the fog.\n\nVI. If you meet Oyama-sama, "
-                                                           "light a fire. Oyama-sama hates fire.\n\nThose the mountain calls do not "
-                                                           "come back.")),
-    14: (("遭難者慰霊", "帰らず山にて消息を絶った方々\n\n昭和六十二年　十月　（苔に覆われて読めない）\n平成五年　十一月　（同上）\n"
-                   "平成十年　十月　佐伯 和也\n平成二十三年　八月　（名札が削られている）\n令和八年　十一月　%1$s\n\n――御霊の安らかならんことを"),
-         ("In memory of the lost", "Those who disappeared on Kaerazu-yama\n\nOctober 1987 (covered in moss)\nNovember 1993 (likewise)\n"
-                                   "October 1998 - Kazuya Saeki\nAugust 2011 (the name has been scratched off)\nNovember 2026 - %1$s\n\n"
-                                   "- may they rest in peace")),
+    "report": (
+        ("業務報告書（閉店後）",
+         "ファミリーレストラン ひだまり　国道店\n報告者：閉店作業担当（深夜）\n\n"
+         "閉店作業中、および閉店後の店内で、下記の現象が繰り返し報告されている。防犯カメラの映像には、いずれも人の姿は映っていない。\n\n"
+         "本部への報告は、これで三度目になる。対応をお願いします。\nもう、夜のシフトに入りたがる者はいません。"),
+        ("Incident report (after closing)",
+         "Family restaurant HIDAMARI, highway branch\nFiled by: closing crew (night)\n\n"
+         "During and after closing, the following phenomena keep being reported inside the restaurant. In none of them does the "
+         "security footage show a person.\n\nThis is our third report to head office. Please do something.\n"
+         "Nobody wants the night shift any more.")),
+    "handover": (
+        ("引き継ぎノート（深夜帯）",
+         "H21.11.5　7番の呼び出し、誰もいないのに鳴る。故障？　業者呼びます　――森田\n"
+         "H21.12.2　業者さん「異常なし」とのこと\n"
+         "H22.3.14　7番、また鳴った。2時ちょうど\n"
+         "H24.8.1　新人さんへ：トイレの水が流れていても、気にしないでください\n"
+         "H27.6.20　女子トイレ3番、使用中のまま開かない。中には誰もいない（はず）\n"
+         "H27.7.3　鏡のこと、新人には言わないで\n"
+         "H30.2.9　権藤さんの包丁、絶対動かさないこと。動かしても、次の日には元の場所に戻ってる\n"
+         "R1.10.31　店長、今月お休みゼロです。誰か代わってあげて\n"
+         "R1.11.2　店長が事務所で寝てる。起こさないでおきます\n"
+         "R1.11.3　\n"
+         "R2.4.1　本日より深夜営業を休止します。閉店は午前1時\n"
+         "R4.11.3　閉店後、自動ドアが開いた。チャイムも鳴った。誰もいなかった\n"
+         "R8.10.30　もう誰も、夜のシフトに入りたがらない"),
+        ("Handover notebook (night shift)",
+         "Nov 5, 2009 - Table 7's call button rings with nobody there. Faulty? Calling the repairman. - Morita\n"
+         "Dec 2, 2009 - Repairman says: \"nothing wrong\"\n"
+         "Mar 14, 2010 - Table 7 rang again. Two o'clock sharp.\n"
+         "Aug 1, 2012 - To the new staff: if the restroom taps are running, don't worry about it.\n"
+         "Jun 20, 2015 - Women's stall 3 stays \"occupied\" and won't open. Nobody is in there (I think).\n"
+         "Jul 3, 2015 - Don't tell the new ones about the mirror.\n"
+         "Feb 9, 2018 - NEVER move Mr. Gondo's knife. If you do, it is back in its place the next day.\n"
+         "Oct 31, 2019 - The manager hasn't had a day off all month. Somebody cover for him.\n"
+         "Nov 2, 2019 - The manager is asleep in the office. Letting him sleep.\n"
+         "Nov 3, 2019 - \n"
+         "Apr 1, 2020 - From today: no more night opening. We close at 1 a.m.\n"
+         "Nov 3, 2022 - After closing the automatic door opened. The chime rang. Nobody was there.\n"
+         "Oct 30, 2026 - Nobody wants the night shift any more.")),
+    "clipping": (
+        ("新聞の切り抜き",
+         "国道で２人死亡　バイクと歩行者\n（平成21年11月4日　地域面）\n\n"
+         "3日午前2時ごろ、国道の通称「魔のカーブ」で、バイクがガードレールに衝突し、運転していた三浦健司さん（24）が死亡した。"
+         "事故を目撃し、近くのファミリーレストランから駆け寄った同店従業員の小野寺千夏さん（19）が、後続のトラックにはねられ、まもなく死亡した。\n\n"
+         "現場は見通しの悪いカーブで、過去にも死亡事故が相次いでいる。三浦さんは、同店で待ち合わせをしていた交際相手に会いに向かう途中だった。"),
+        ("Newspaper clipping",
+         "Two dead on the highway - motorcyclist and pedestrian\n(regional page, November 4, 2009)\n\n"
+         "At about 2 a.m. on the 3rd, a motorcycle hit the guardrail on the stretch of highway known locally as \"the devil's curve\", "
+         "killing its rider, Kenji Miura (24). Chinatsu Onodera (19), an employee of the nearby family restaurant who saw the accident "
+         "and ran out to help, was struck by a following truck and died shortly after.\n\n"
+         "The curve has poor visibility and has seen a string of fatal accidents. Mr. Miura was on his way to meet his girlfriend, "
+         "who was waiting for him at the restaurant.")),
+    "reservation": (
+        ("予約台帳",
+         "11/2　19:00　4名様　タナカ様\n11/2　20:30　2名様　（キャンセル）\n11/3　2:00　1名様　ミウラ様\n\n"
+         "（ページをめくる。どの日付にも、同じ一行がある）\n\n"
+         "2:00　1名様　ミウラ様\n2:00　1名様　ミウラ様\n2:00　1名様　ミウラ様\n2:00　1名様　ミウラ様\n\n"
+         "深夜営業をやめた年のページにも。今年のページにも。\n全部、同じ筆跡で。"),
+        ("Reservation book",
+         "11/2  19:00  party of 4  Tanaka\n11/2  20:30  party of 2  (cancelled)\n11/3  2:00  party of 1  Miura\n\n"
+         "(You turn the pages. Every date has the same line.)\n\n"
+         "2:00  party of 1  Miura\n2:00  party of 1  Miura\n2:00  party of 1  Miura\n2:00  party of 1  Miura\n\n"
+         "On the pages from the year the night opening stopped. On this year's pages.\nAll in the same handwriting.")),
+    "diary": (
+        ("店長の業務日誌",
+         "業務日誌　森田\n\n"
+         "10/24　夜勤の欠員、今週も自分で埋める。三十六時間目\n"
+         "10/27　本部に人を頼んだ。「検討します」\n"
+         "10/29　眠い。モニターを見ていると、客席に誰かいる気がする。誰もいない\n"
+         "10/31　7番の呼び出しが鳴る。誰もいない。いらっしゃいませ\n"
+         "11/1　いらっしゃいませ　いらっしゃいませ　いらっしゃいませ\n"
+         "11/2　閉店作業。閉店作業。まだ閉められない。お客様がまだいる\n"
+         "11/3　本日の営業は、終了いたしました\n"
+         "11/3　本日の営業は、終了いたしました\n"
+         "11/3　ほんじつの　えいぎょうは　しゅうりょう　いたしました"),
+        ("The manager's log",
+         "Shift log - Morita\n\n"
+         "10/24 - Covering the night gaps myself again this week. Hour thirty-six.\n"
+         "10/27 - Asked head office for staff. \"We'll look into it.\"\n"
+         "10/29 - Tired. Watching the monitors I keep thinking someone is in the dining hall. Nobody is.\n"
+         "10/31 - Table 7's call button rings. Nobody there. Welcome.\n"
+         "11/1 - welcome welcome welcome\n"
+         "11/2 - Closing up. Closing up. I can't close yet. There are still customers.\n"
+         "11/3 - We are now closed for the day.\n"
+         "11/3 - We are now closed for the day.\n"
+         "11/3 - we are now closed for the day")),
+    "drawing": (
+        ("子供の絵",
+         "（クレヨンの絵。オレンジ色の屋根のお店。にこにこ顔のお日さま）\n\n"
+         "（テーブルの下に、小さな女の子。黄色い帽子。両手で顔をかくしている）\n\n"
+         "（女の子のまわりだけ、黒く塗りつぶされている）\n\n"
+         "もういいよ\n\nゆうか　5さい\n\n（裏に、大人の字で）　見つけてあげて"),
+        ("A child's drawing",
+         "(Crayon. A shop with an orange roof. A smiling sun.)\n\n"
+         "(Under a table, a little girl. A yellow hat. Both hands over her face.)\n\n"
+         "(Only around the girl, everything is coloured black.)\n\n"
+         "READY!\n\nyuka  age 5\n\n(On the back, in an adult's hand:) Please find her.")),
+    "flyer": (
+        ("迷子のお知らせ",
+         "情報をお寄せください\n\n春日 ゆうか ちゃん（5歳）\n\n"
+         "平成13年11月2日 午後8時ごろ、当店「ひだまり」の店内で行方がわからなくなりました。\n"
+         "黄色い帽子、水色のスモック（名札「ゆうか」）、赤い靴。\nご家族と、かくれんぼをしていたとのことです。\n\n"
+         "お心当たりの方は、店員またはお近くの交番まで。\n\n（色褪せて、角が破れている。誰も剥がそうとしなかったらしい）"),
+        ("MISSING CHILD",
+         "Have you seen her?\n\nYuka Kasuga (age 5)\n\n"
+         "Went missing inside this restaurant, HIDAMARI, at about 8 p.m. on November 2, 2001.\n"
+         "Yellow hat, pale blue smock (name tag \"Yuka\"), red shoes.\nShe was playing hide-and-seek with her family.\n\n"
+         "Please tell our staff or the nearest police box.\n\n(Faded, a corner torn. Nobody seems to have wanted to take it down.)")),
+    "fire": (
+        ("消防点検記録",
+         "消防用設備等点検結果報告書（控）\n\n"
+         "平成8年10月　点検　厨房フライヤー上部の排気ダクト、油脂付着多量。要清掃\n"
+         "平成8年10月　店長回答　繁忙のため次回対応\n"
+         "平成8年11月3日　（赤字で）厨房にて火災。料理長1名死亡\n"
+         "平成9年1月　点検　ダクト交換済。異常なし\n"
+         "平成23年　点検　夜間、厨房でまな板を叩く音がするとの申し送りあり（設備とは無関係）\n"
+         "令和元年　点検　異常なし。※料理長の包丁には触れないこと（店長）"),
+        ("Fire inspection record",
+         "Fire equipment inspection report (copy)\n\n"
+         "Oct 1996 - inspection: exhaust duct above the fryer heavily coated with grease. Cleaning required.\n"
+         "Oct 1996 - manager's reply: too busy, next time.\n"
+         "Nov 3, 1996 - (in red) Kitchen fire. Head chef, 1 dead.\n"
+         "Jan 1997 - inspection: duct replaced. No faults.\n"
+         "2011 - inspection: staff report the sound of chopping in the kitchen at night (not equipment related).\n"
+         "2019 - inspection: no faults. NB: do not touch the head chef's knife (manager).")),
+    "cleaning": (
+        ("清掃チェック表（女子トイレ）",
+         "床／便器／洗面台／鏡／ペーパー補充\n\n"
+         "11/1　済　済　済　済　済　（佐藤）\n"
+         "11/2　済　済　済　鏡、拭いても曇る　済　（佐藤）\n"
+         "11/3　済　済　水が止まらない　鏡、内側から曇っている　済　（佐藤）\n"
+         "11/4　3番個室　開かない。中から鍵。ノックしても返事なし\n"
+         "11/5　鏡に手の跡。内側から\n"
+         "11/6　"),
+        ("Cleaning checklist (women's restroom)",
+         "Floor / toilets / sinks / mirror / paper\n\n"
+         "11/1 - done done done done done (Sato)\n"
+         "11/2 - done done done mirror: still fogged after wiping done (Sato)\n"
+         "11/3 - done done the water won't stop mirror: fogged FROM THE INSIDE done (Sato)\n"
+         "11/4 - stall 3 won't open. Locked from inside. No answer when I knock.\n"
+         "11/5 - handprints on the mirror. On the inside.\n"
+         "11/6 - ")),
+    "medium": (
+        ("霊媒師のメモ",
+         "撮影の心得　――　八雲\n\n" + "\n".join(r[0] for r in RULES) + "\n\n"
+         "写真は、私のところへ持ってくること。名を読んで、送ってあげます。\n"
+         "息を止めれば（V）、気配は消せる。ただし、長くはもたないわ。\n"
+         "店の中のことは、店の者が書き残しているはずよ。"),
+        ("The medium's notes",
+         "On photographing them - Yakumo\n\n" + "\n".join(r[1] for r in RULES) + "\n\n"
+         "Bring the photographs to me. I will read their names and send them on.\n"
+         "Hold your breath (V) and your presence fades. Not for long.\n"
+         "The staff will have written down what happens in there. Read it.")),
+}
+
+INTRO = [
+    ("十一月二日　深夜", "November 2nd, late at night"),
+    ("国道沿いのファミリーレストラン「ひだまり」\n店の前のカーブでは、事故が絶えない",
+     "HIDAMARI, a family restaurant on the national highway.\nAt the curve in front of it, people keep dying."),
+    ("深夜営業をやめてから、閉店作業の店員が\nおかしなものを見るようになった", "Since it stopped opening at night,\nthe closing crew keep seeing things."),
+    ("閉めたはずの自動ドアが開く。誰もいない水道から水が流れる。\nテーブルのメニューが、床にばらまかれている",
+     "The door they locked opens by itself. Taps run with nobody there.\nThe menus are found scattered across the floor."),
+    ("霊媒師に雇われて、あなたはここに来た", "A medium hired you. You have come here."),
+]
+
+DIALOGUE = {
+    # the medium, in the parking lot
+    "intro.1": ("……来てくれたのね。霊媒師の、八雲トキです", "...you came. I am Yakumo Toki. A medium."),
+    "intro.2": ("この店には、帰れない人たちがいる。……六人", "There are people in there who cannot go home. ...Six of them."),
+    "intro.3": ("私が入れば、あの人たちは隠れてしまう。だから、あなたに頼むの", "If I go in, they will hide from me. That is why I need you."),
+    "intro.4": ("これを。霊写機――目に見えないものを写す、古い写真機よ", "Take this. The reisha-ki - an old camera that photographs what the eye cannot see."),
+    "intro.5": ("霊の顔が写れば、写真の白い余白に、その人の名が赤く浮かぶ", "If a spirit's face is in the photo, its name rises in red on the white margin."),
+    "intro.6": ("名がわかれば、私が送ってあげられる。写真は、私のところへ持ってきて",
+                "With the names I can send them on. Bring the photographs to me."),
+    "intro.7": ("いいこと。霊に気付かれてはいけない。気付かれた霊は、写真に写らないの",
+                "Listen. They must not notice you. A spirit that has noticed you will not show in a photograph."),
+    "intro.8": ("お札を三枚。……身代わりになってくれるのは、三度までよ", "Three ofuda. ...They will take your place three times. No more."),
+    "intro.9": ("懐中電灯と、店の鍵。入口の横の鍵スイッチを回せば、自動ドアが動くわ",
+                "A flashlight, and the shop key. Turn the key switch by the entrance and the automatic doors will work."),
+    "intro.10": ("灯りは控えて、足音を殺しなさい。……行ってらっしゃい", "Keep your light low. Kill your footsteps. ...Go on."),
+    # handing her the photos
+    "submit.visitor.1": ("……三浦、健司さん。二十四歳", "...Kenji Miura. Twenty-four."),
+    "submit.visitor.2": ("平成二十一年の、今夜。恋人に会いに、夜中の二時に、バイクでこの店へ向かっていた",
+                         "Tonight, in 2009. He was riding here at two in the morning to meet his girlfriend."),
+    "submit.visitor.3": ("店の前のカーブで……。それから毎晩二時に、扉が開くの", "At the curve out front... Since then, every night at two, the door opens."),
+    "submit.visitor.4": ("七番テーブルで呼び出しボタンを押して……まだ、待っているのね", "He presses the call button at table 7... still waiting for her."),
+    "submit.waitress.1": ("小野寺、千夏さん。十九歳", "Chinatsu Onodera. Nineteen."),
+    "submit.waitress.2": ("あの夜の夜勤だった子。店の前で事故があって、助けようと道路へ飛び出した",
+                          "She was on the night shift that night. When the crash happened she ran out onto the road to help."),
+    "submit.waitress.3": ("……後ろから来たトラックに", "...the truck behind him."),
+    "submit.waitress.4": ("今でも夜勤を続けているの。誰にも見えないお客様に、お冷やを出して",
+                          "She is still working the night shift. Serving water to customers nobody else can see."),
+    "submit.chef.1": ("権藤、剛さん。五十二歳。この店の料理長", "Tsuyoshi Gondo. Fifty-two. The head chef."),
+    "submit.chef.2": ("平成八年。厨房の油火事で亡くなった。顔も、手も、焼けてしまって", "1996. He died in a grease fire in the kitchen. His face, his hands, all burnt."),
+    "submit.chef.3": ("ダクトの掃除を、何度も頼んでいたそうよ", "He had asked them to clean the duct, again and again."),
+    "submit.chef.4": ("それでもまだ、まな板の前に立っているのね", "And still he stands at his board."),
+    "submit.child.1": ("春日、ゆうかちゃん。五歳", "Yuka Kasuga. Five years old."),
+    "submit.child.2": ("平成十三年。この店で、かくれんぼをしている最中にいなくなった", "2001. She disappeared in this restaurant, in the middle of a game of hide-and-seek."),
+    "submit.child.3": ("……見つからなかったの。誰にも", "...nobody ever found her."),
+    "submit.child.4": ("あの子はまだ遊んでいる。上手に隠れて、誰かが見つけてくれるのを、待ってる",
+                       "She is still playing. Hiding so well, waiting for someone to find her."),
+    "submit.mirror_woman.1": ("白石、玲子さん。三十一歳", "Reiko Shiraishi. Thirty-one."),
+    "submit.mirror_woman.2": ("平成二十七年。常連さんだった。女子トイレで倒れて、朝まで誰も気付かなかった",
+                              "2015. A regular. She collapsed in the women's restroom, and nobody noticed until morning."),
+    "submit.mirror_woman.3": ("見つかった時、蛇口は流れたままだったそうよ", "When they found her, the tap was still running."),
+    "submit.mirror_woman.4": ("今は、鏡の向こう側にいる。……ずっと、誰かに気付いてほしかったのね",
+                              "Now she is on the other side of the mirror. ...All she wanted was for someone to notice."),
+    "submit.manager.1": ("森田、浩一さん。四十七歳。……店長さんね", "Koichi Morita. Forty-seven. ...The manager."),
+    "submit.manager.2": ("何年も、夜をひとりで回していた。令和元年、事務所の机で", "For years he ran the nights alone. In 2019, at his desk in the office..."),
+    "submit.manager.3": ("過労死だった。……それから、この店は夜を閉めるようになった", "Worked to death. ...After that, the store stopped opening at night."),
+    "submit.manager.4": ("でもあの人は、まだ店を閉め続けているのね", "But he is still closing the store. Every night."),
+    "ready.1": ("……六人、揃ったわね", "...All six. We have them all."),
+    "ready.2": ("行きましょう。七番テーブルへ", "Come. To table 7."),
+    # hints
+    "hint.start": ("目に見えなくても、ファインダー越しなら見えるものがいる", "What the eye cannot see, the finder sometimes can."),
+    "hint.left.1": ("あと、ひとり……", "One more..."),
+    "hint.left.2": ("あと、ふたり", "Two more."),
+    "hint.left.3": ("あと、三人", "Three more."),
+    "hint.left.4": ("あと、四人", "Four more."),
+    "hint.visitor": ("二時になると、扉が開く。七番のお客さんの横顔は、南の窓から見えるはずよ",
+                     "At two the door opens. You should see table 7's customer in profile through the south window."),
+    "hint.waitress": ("扉が開くと、あの子は入口でお辞儀をする。お辞儀の間は、目を閉じているわ",
+                      "When a door opens she goes to bow at the entrance. While she bows, her eyes are closed."),
+    "hint.chef": ("料理長は、仕上げの時に下を向く。デシャップの窓から覗いてごらんなさい",
+                  "When the chef plates, he looks down. Try the pass window."),
+    "hint.child": ("あの子は隠れている時、両手で目を覆っている。……見つけてあげて", "When she hides, she covers her eyes. ...Find her."),
+    "hint.mirror_woman": ("女子トイレの鏡。水が流れている間、あの人は俯いて泣いている。息を殺して",
+                          "The mirror in the women's restroom. While the water runs she bows and weeps. Hold your breath."),
+    "hint.manager": ("店長さんは、防犯カメラで見ている。カメラの電気を切れば、見えなくなるわ",
+                     "The manager watches through the security cameras. Cut their power and he is blind."),
+    "hint.closing": ("店長さんが起きたわね。……閉店の時間よ", "The manager is awake. ...It is closing time."),
+    "hint.return": ("全員の写真が揃ったら、私に渡して", "When you have all of their photographs, give them to me."),
+    # waking after being caught
+    "wake.1": ("……間に合ってよかった", "...I got to you in time."),
+    "wake.2": ("お札が燃えたわ。……気を付けて", "An ofuda has burnt. ...Be careful."),
+    "wake.3": ("もう、お札はないわ。次は、助けられない", "There are no ofuda left. Next time I cannot save you."),
+    # the exorcism
+    "exorcism.begin": ("……始めましょう", "...Let us begin."),
+    "release.visitor": ("三浦さん。……もう、待たなくていいのよ", "Mr. Miura. ...You don't have to wait any more."),
+    "release.waitress": ("千夏さん。お仕事は、もうおしまい", "Chinatsu. Your shift is over."),
+    "release.chef": ("権藤さん。火は、もう消えたわ", "Mr. Gondo. The fire is out now."),
+    "release.child": ("ゆうかちゃん。……みーつけた", "Yuka. ...Found you."),
+    "release.mirror_woman": ("玲子さん。ちゃんと、気付いたわよ", "Reiko. We noticed you. We did."),
+    "release.manager": ("森田さん。……お疲れさまでした", "Mr. Morita. ...Thank you for all your hard work."),
+    # other voices
+    "waitress.greet": ("いらっしゃいませ", "Welcome."),
+    "waitress.water": ("お冷やを、どうぞ", "Some water for you."),
+    "waitress.thanks": ("……ありがとうございました", "...Thank you very much."),
+    "waitress.single": ("いらっしゃいませ。……お一人様ですね", "Welcome. ...A table for one, isn't it."),
+    "manager.closed": ("本日の営業は、終了いたしました", "We are now closed for the day."),
+    "manager.customer": ("お客様……", "Excuse me... sir..."),
+    "pa.closed": ("本日の営業は、終了いたしました", "We are now closed for the day."),
+    "pa.mumble": ("（店内放送：聞き取れない）", "(PA: unintelligible)"),
+    "phone.1": ("……ザ……二時に……", "...kssh... at two..."),
+    "phone.2": ("……一名で……", "...a table for one..."),
+    "child.moui": ("もういいかい", "Ready or not?"),
+    "child.mitsuketa": ("みーつけた", "Found you!"),
+    "child.count": ("いーち、にーい、さーん、しーい……", "One... two... three... four..."),
+    "child.whisper": ("こっちだよ", "Over here."),
+    "visitor.whisper": ("……まだかな", "...is she coming?"),
+}
+
+THOUGHTS = {
+    "film_loaded": ("フィルムを装填した", "Film loaded."),
+    "film_found": ("フィルムパックだ", "A film pack."),
+    "office_key": ("「事務所」の札が付いた鍵だ", "A key tagged \"Office\"."),
+    "menu_board": ("黒板。「本日のおすすめ」……", "The board: \"Today's special\"..."),
+    "menu_board_2": ("「まだ　いますか」", "\"ARE YOU STILL HERE\""),
+    "time_recorder": ("タイムカード。森田、の欄だけ、毎日打刻されている", "Time cards. Only Morita's is punched. Every single day."),
+    "fridge": ("……息が白い", "...your breath clouds."),
+    "womens": ("水の音がする", "The sound of running water."),
+    "kitchen": ("焦げた油の匂いが、まだ残っている", "The smell of burnt oil still hangs here."),
+    "office": ("モニターの光だけが、部屋を照らしている", "Only the monitors light the room."),
+    "quiet": ("……静かになった", "...it has gone quiet."),
+}
+
+BLOCK_NAMES = {
+    "dining_floor": ("客席の床", "Dining Floor"), "kitchen_floor": ("厨房の床", "Kitchen Floor"), "restroom_floor": ("トイレの床", "Restroom Floor"),
+    "restroom_floor_dark": ("黒ずんだタイル", "Stained Tiles"), "vestibule_floor": ("風除室の床", "Vestibule Floor"), "entrance_mat": ("玄関マット", "Entrance Mat"),
+    "wallpaper": ("壁紙", "Wallpaper"), "wallpaper_stained": ("染みのある壁紙", "Stained Wallpaper"), "wainscot": ("腰板", "Wainscot"),
+    "white_tile": ("白タイル", "White Tile"), "white_tile_dirty": ("汚れた白タイル", "Dirty White Tile"), "ceiling_tile": ("天井板", "Ceiling Tile"),
+    "ceiling_tile_stained": ("染みのある天井板", "Stained Ceiling Tile"), "ceiling_light": ("天井照明", "Ceiling Light"), "downlight": ("ダウンライト", "Downlight"),
+    "pendant_lamp": ("ペンダントライト", "Pendant Lamp"), "exit_sign": ("誘導灯", "Exit Sign"), "exterior_wall": ("外壁", "Exterior Wall"),
+    "facade_brick": ("煉瓦", "Facade Brick"), "brick_sill": ("煉瓦の窓台", "Brick Sill"), "roof_tile": ("屋根瓦", "Roof Tiles"),
+    "roof_tile_stairs": ("屋根瓦の階段", "Roof Tile Stairs"), "roof_tile_slab": ("屋根瓦のハーフ", "Roof Tile Slab"), "fascia": ("破風", "Fascia"),
+    "shop_window": ("窓ガラス", "Shop Window"), "window_blind": ("ブラインド", "Window Blind"), "asphalt": ("アスファルト", "Asphalt"),
+    "parking_line": ("駐車線", "Parking Line"), "road_line": ("センターライン", "Road Line"), "curb": ("縁石", "Curb"), "sidewalk": ("歩道", "Sidewalk"),
+    "puddle": ("水たまり", "Puddle"), "rice_paddy": ("田んぼ", "Rice Paddy"), "hedge": ("生垣", "Hedge"), "concrete_wall": ("コンクリート壁", "Concrete Wall"),
+    "granite_counter": ("御影石の天板", "Granite Counter"), "stainless": ("ステンレス", "Stainless Steel"), "pillar": ("柱", "Pillar"),
+    "auto_door": ("自動ドア", "Automatic Door"), "door_switch": ("自動ドアの鍵スイッチ", "Door Key Switch"), "swing_door": ("スイングドア", "Swing Door"),
+    "staff_door": ("従業員用扉", "Staff Door"), "office_door": ("事務所の扉", "Office Door"), "restroom_door_m": ("男子トイレの扉", "Men's Room Door"),
+    "restroom_door_w": ("女子トイレの扉", "Women's Room Door"), "back_door": ("裏口", "Back Door"), "fridge_door": ("冷蔵室の扉", "Walk-in Door"),
+    "stall_door": ("個室の扉", "Stall Door"), "booth_seat": ("ボックス席", "Booth Seat"), "booth_partition": ("仕切り", "Booth Partition"),
+    "restaurant_table": ("テーブル", "Table"), "restaurant_chair": ("椅子", "Chair"), "call_button": ("呼び出しボタン", "Call Button"),
+    "menu_stand": ("メニュースタンド", "Menu Stand"), "menu_scattered": ("散らばったメニュー", "Scattered Menus"), "water_glass": ("お冷や", "Glass of Water"),
+    "broken_plate": ("割れた皿", "Broken Plate"), "register": ("レジ", "Register"), "service_bell": ("呼び鈴", "Service Bell"), "counter": ("カウンター", "Counter"),
+    "cake_case": ("ケーキケース", "Cake Case"), "business_phone": ("店の電話", "Business Phone"), "reservation_book": ("予約台帳", "Reservation Book"),
+    "capsule_machine": ("カプセルトイ", "Capsule Toys"), "waiting_bench": ("待合ベンチ", "Waiting Bench"), "magazine_rack": ("マガジンラック", "Magazine Rack"),
+    "umbrella_stand": ("傘立て", "Umbrella Stand"), "notice_board": ("掲示板", "Notice Board"), "drink_bar": ("ドリンクバー", "Drink Bar"),
+    "coffee_machine": ("コーヒーマシン", "Coffee Machine"), "ice_machine": ("製氷機", "Ice Machine"), "cup_shelf": ("カップ棚", "Cup Shelf"),
+    "soup_warmer": ("スープジャー", "Soup Warmer"), "server_station": ("サービスステーション", "Server Station"),
+    "call_display": ("呼び出し表示器", "Call Display"), "planter": ("プランター", "Planter"), "kids_mat": ("キッズマット", "Kids' Mat"),
+    "toy_shelf": ("おもちゃ棚", "Toy Shelf"), "stuffed_bear": ("くまのぬいぐるみ", "Stuffed Bear"), "kids_fence": ("キッズフェンス", "Kids' Fence"),
+    "high_chair": ("子供椅子", "High Chair"), "gas_range": ("ガスレンジ", "Gas Range"), "fryer": ("フライヤー", "Fryer"), "griddle": ("グリドル", "Griddle"),
+    "kitchen_counter": ("調理台", "Kitchen Counter"), "exhaust_hood": ("排気フード", "Exhaust Hood"), "pot_shelf": ("鍋棚", "Pot Shelf"),
+    "dish_rack": ("食器ラック", "Dish Rack"), "kitchen_trash": ("厨房のゴミ箱", "Kitchen Bin"), "prep_table": ("作業台", "Prep Table"),
+    "cutting_board": ("まな板", "Cutting Board"), "kitchen_sink": ("シンク", "Kitchen Sink"), "dishwasher": ("食洗機", "Dishwasher"),
+    "pass_shelf": ("デシャップ台", "Pass Shelf"), "pass_bell": ("デシャップベル", "Pass Bell"), "walkin_shelf": ("冷蔵室の棚", "Walk-in Shelf"),
+    "frost": ("霜", "Frost"), "locker": ("ロッカー", "Locker"), "time_recorder": ("タイムレコーダー", "Time Clock"), "staff_table": ("休憩室のテーブル", "Staff Table"),
+    "folding_chair": ("パイプ椅子", "Folding Chair"), "bulletin_board": ("掲示板（休憩室）", "Bulletin Board"), "cardboard_boxes": ("段ボール", "Cardboard Boxes"),
+    "cleaning_cart": ("清掃カート", "Cleaning Cart"), "filing_cabinet": ("キャビネット", "Filing Cabinet"), "safe": ("金庫", "Safe"),
+    "crt_tv": ("ブラウン管テレビ", "CRT TV"), "office_desk": ("事務机", "Office Desk"), "office_chair": ("事務椅子", "Office Chair"), "pc": ("パソコン", "PC"),
+    "security_monitors": ("防犯モニター", "Security Monitors"), "security_camera": ("防犯カメラ", "Security Camera"), "breaker_panel": ("分電盤", "Breaker Panel"),
+    "restroom_sink": ("洗面台", "Restroom Sink"), "mirror": ("鏡", "Mirror"), "restroom_mirror": ("鏡", "Mirror"), "toilet": ("便器", "Toilet"),
+    "urinal": ("小便器", "Urinal"), "stall_wall": ("個室の壁", "Stall Wall"), "hand_dryer": ("ハンドドライヤー", "Hand Dryer"),
+    "paper_towel": ("ペーパータオル", "Paper Towels"), "vending_machine": ("自動販売機", "Vending Machine"), "pole_sign": ("ポールサイン", "Pole Sign"),
+    "roof_sign": ("屋上看板", "Roof Sign"), "menu_board": ("黒板", "Menu Board"), "bike_rack": ("駐輪場", "Bike Rack"), "trash_station": ("ゴミステーション", "Trash Station"),
+    "ac_unit": ("室外機", "A/C Unit"), "gas_cylinder": ("ガスボンベ", "Gas Cylinder"), "dumpster": ("ゴミコンテナ", "Dumpster"), "wheel_stop": ("車止め", "Wheel Stop"),
+    "outdoor_planter": ("植木鉢", "Planter"), "street_lamp": ("街灯", "Street Lamp"), "utility_pole": ("電柱", "Utility Pole"), "guardrail": ("ガードレール", "Guardrail"),
+    "chevron_sign": ("矢印標識", "Chevron Sign"), "curve_mirror": ("カーブミラー", "Curve Mirror"), "traffic_light": ("信号機", "Traffic Light"),
+    "flower_offering": ("献花", "Flowers"), "note_paper": ("メモ", "Note"),
+}
+
+COMMON = {
+    "itemGroup.reisatsu": ("霊撮 ―REISATSU―", "REISATSU"),
+    "key.categories.reisatsu": ("霊撮", "REISATSU"),
+    "key.reisatsu.breath": ("息を止める（長押し）", "Hold your breath"),
+    "key.reisatsu.album": ("霊撮帳", "Album"),
+    "reisatsu.shaders.installed": ("影MOD「ReisatsuShaders」をインストールして有効にしました。（Oculus / Iris）",
+                                   "Installed and enabled the ReisatsuShaders shader pack (Oculus / Iris)."),
+    "reisatsu.shaders.updated": ("ReisatsuShaders を更新しました。", "ReisatsuShaders was updated."),
+    "reisatsu.shaders.optifine": ("ReisatsuShaders を OptiFine に設定しました。次回の起動から有効になります。",
+                                  "ReisatsuShaders was set for OptiFine; it will be active from the next launch."),
+    "objective.reisatsu.investigate": ("霊を撮影する　%s/5", "Photograph the spirits  %s/5"),
+    "objective.reisatsu.manager": ("店長を撮影する", "Photograph the manager"),
+    "objective.reisatsu.return": ("霊媒師のもとへ戻る", "Return to the medium"),
+    "objective.reisatsu.exorcism": ("除霊を見届ける", "Witness the exorcism"),
+    "objective.reisatsu.hand_in": ("写真を霊媒師に渡せる（%s枚）", "Photos to give the medium: %s"),
+    "hud.reisatsu.film_left": ("のこり %s枚", "%s left"),
+    "hud.reisatsu.no_film": ("フィルムがない", "No film"),
+    "hud.reisatsu.meter": ("霊感計", "SPIRIT"),
+    "hud.reisatsu.closed": ("閉店", "CLOSED"),
+    "hud.reisatsu.run": ("――逃げて　%s", "- RUN  %s"),
+    "hud.reisatsu.ofuda_burnt": ("お札が、燃えた　（残り %s枚）", "An ofuda burnt  (%s left)"),
+    "hud.reisatsu.skip": ("SPACE：スキップ", "SPACE: skip"),
+    "hint.reisatsu.controls": ("右クリック：霊写機を構える／下ろす\n構えて左クリック：撮影　ホイール：ズーム\nスニーク：足音を殺す　V（長押し）：息を止める\nJ：霊撮帳　右クリック：調べる",
+                               "Right-click: raise / lower the camera\nRaised: left-click = shutter, scroll = zoom\nSneak: silent steps   V (hold): hold your breath\nJ: album   Right-click: interact"),
+    "gui.reisatsu.album": ("霊撮帳", "Spirit Album"),
+    "gui.reisatsu.tab_shots": ("写真", "Photos"),
+    "gui.reisatsu.tab_notes": ("メモ", "Notes"),
+    "gui.reisatsu.tab_rules": ("心得", "Rules"),
+    "gui.reisatsu.no_shots": ("まだ一枚も撮っていない", "No photos yet."),
+    "gui.reisatsu.no_notes": ("まだ何も見つけていない", "Nothing found yet."),
+    "gui.reisatsu.rules_title": ("撮影の心得", "On photographing them"),
+    "gui.reisatsu.photo": ("写真", "Photograph"),
+    "gui.reisatsu.photo_failed": ("……ぶれて、何も写っていない。気付かれていた", "...a smear. It had noticed you."),
+    "gui.reisatsu.photo_empty": ("何も写っていない……はず", "Nothing in it... surely."),
+    "gui.reisatsu.breaker": ("分電盤", "Breaker Panel"),
+    "gui.reisatsu.scroll": ("%s / %s　（ホイールでめくる）", "%s / %s (scroll)"),
+    "note.reisatsu.report.list": ("報告されている現象（☑＝自分で確かめたもの）", "Reported phenomena (☑ = seen for yourself)"),
+    "speaker.reisatsu.medium": ("八雲", "Yakumo"),
+    "speaker.reisatsu.pa": ("店内放送", "PA"),
+    "speaker.reisatsu.phone": ("電話", "Phone"),
+    "ending.reisatsu.title": ("霊撮", "REISATSU"),
+    "ending.reisatsu.good.1": ("東の空が、白んでいく", "The eastern sky turns pale."),
+    "ending.reisatsu.good.2": ("国道を、始発のトラックが通り過ぎていく", "The first trucks of the morning roll by on the highway."),
+    "ending.reisatsu.good.3": ("ひだまりの看板の灯りが、静かに消えた", "The light of the HIDAMARI sign quietly goes out."),
+    "ending.reisatsu.good.ofuda.0": ("――完璧な夜。一枚のお札も燃やさずに、六人を送った", "- A perfect night. Six sent on, and not one ofuda burnt."),
+    "ending.reisatsu.good.ofuda.1": ("お札が一枚、灰になった。それでも、六人は帰っていった", "One ofuda turned to ash. Still, all six went home."),
+    "ending.reisatsu.good.ofuda.2": ("お札が二枚、灰になった。……危ない夜だった", "Two ofuda turned to ash. ...It was a close night."),
+    "ending.reisatsu.good.ofuda.3": ("最後のお札まで燃えた。朝を迎えられたのは、運が良かっただけかもしれない",
+                                     "Every last ofuda burnt. Maybe you only saw the morning by luck."),
+    "ending.reisatsu.good.5": ("その日から、誰もいないのに自動ドアのチャイムが鳴ることは、なくなった",
+                               "From that day on, the entrance chime never rang for nobody again."),
+    "ending.reisatsu.bad.1": ("……気が付くと、七番テーブルに座っていた", "...when you come to, you are sitting at table 7."),
+    "ending.reisatsu.bad.2": ("「いらっしゃいませ。……お一人様ですね」", "\"Welcome. ...A table for one, isn't it.\""),
+    "ending.reisatsu.bad.3": ("目の前に、氷の入った水が置かれる", "A glass of ice water is set down in front of you."),
+    "ending.reisatsu.bad.4": ("その夜から、ひだまりの七番テーブルの呼び出しボタンは、二度鳴るようになった。",
+                              "From that night on, the call button at table 7 of HIDAMARI rings twice."),
+    "ending.reisatsu.end_good": ("送り　―完―", "SENT ON - THE END"),
+    "ending.reisatsu.end_bad": ("相席　―完―", "SHARED TABLE - THE END"),
+    "ending.reisatsu.continue": ("クリックで続ける", "Click to continue"),
+    "credits.reisatsu.1": ("霊撮 ―REISATSU―", "REISATSU"),
+    "credits.reisatsu.2": ("", ""),
+    "credits.reisatsu.3": ("ファミリーレストラン ひだまり　国道店", "Family restaurant HIDAMARI, highway branch"),
+    "credits.reisatsu.4": ("", ""),
+    "credits.reisatsu.5": ("来店者　三浦 健司", "The visitor - Kenji Miura"),
+    "credits.reisatsu.6": ("給仕　小野寺 千夏", "The waitress - Chinatsu Onodera"),
+    "credits.reisatsu.7": ("料理長　権藤 剛", "The chef - Tsuyoshi Gondo"),
+    "credits.reisatsu.8": ("かくれんぼの子　春日 ゆうか", "The hiding child - Yuka Kasuga"),
+    "credits.reisatsu.9": ("鏡の女　白石 玲子", "The woman in the mirror - Reiko Shiraishi"),
+    "credits.reisatsu.10": ("店長　森田 浩一", "The manager - Koichi Morita"),
+    "credits.reisatsu.11": ("霊媒師　八雲 トキ", "The medium - Yakumo Toki"),
+    "credits.reisatsu.12": ("", ""),
+    "credits.reisatsu.13": ("この物語はフィクションです", "This story is fiction."),
+    "credits.reisatsu.14": ("夜の国道では、どうか安全運転を", "On the highway at night, please drive safely."),
+    "credits.reisatsu.15": ("", ""),
+    "credits.reisatsu.16": ("ご来店、ありがとうございました", "Thank you for dining with us."),
 }
 
 
 def main():
-    os.makedirs(OUT, exist_ok=True)
     ja, en = {}, {}
-    for k, (j, e) in COMMON.items():
-        ja[k], en[k] = j, e
-    for k, (j, e) in BLOCKS.items():
-        ja[f"block.{NS}.{k}"], en[f"block.{NS}.{k}"] = j, e
-    for k, (j, e) in ITEMS.items():
-        ja[f"item.{NS}.{k}"], en[f"item.{NS}.{k}"] = j, e
-    for k, (j, e) in ITEM_DESC.items():
-        ja[f"item.{NS}.{k}.desc"], en[f"item.{NS}.{k}.desc"] = j, e
-    for k, (j, e) in ENTITIES.items():
-        ja[f"entity.{NS}.{k}"], en[f"entity.{NS}.{k}"] = j, e
-        ja[f"item.{NS}.{k}_spawn_egg"] = f"{j}のスポーンエッグ"
-        en[f"item.{NS}.{k}_spawn_egg"] = f"{e} Spawn Egg"
-    for k, (j, e, roman) in AREAS.items():
-        ja[f"area.{NS}.{k}"], en[f"area.{NS}.{k}"] = j, e
-        ja[f"area.{NS}.{k}.sub"] = roman
-        en[f"area.{NS}.{k}.sub"] = roman
-    for i, ((tj, bj), (te, be)) in NOTES.items():
-        ja[f"note.{NS}.{i}.title"], ja[f"note.{NS}.{i}.body"] = tj, bj
-        en[f"note.{NS}.{i}.title"], en[f"note.{NS}.{i}.body"] = te, be
+
+    def put(key, pair):
+        ja[key], en[key] = pair
+
+    for k, v in COMMON.items():
+        put(k, v)
+    for k, v in ITEMS.items():
+        put(f"item.{NS}.{k}", v)
+    for k, v in ITEM_DESC.items():
+        put(f"item.{NS}.{k}.desc", v)
+    put(f"item.{NS}.reisha_camera.film", CAMERA_FILM)
+    put(f"item.{NS}.flashlight.desc", ITEM_DESC["flashlight"])
+    for k, v in ENTITIES.items():
+        put(f"entity.{NS}.{k}", v)
+    for k, (j, e) in TRUE_NAMES.items():
+        put(f"spirit.{NS}.{k}.name", (j, e))
+        put(f"speaker.{NS}.{k}", ("", ""))
+    for k, v in AREAS.items():
+        put(f"area.{NS}.{k}", v)
+    for k, v in CIRCUITS.items():
+        put(f"circuit.{NS}.{k}", v)
+    for i, r in enumerate(RULES):
+        put(f"rule.{NS}.{i + 1}", r)
+    for k, v in PHENOMENA.items():
+        put(f"phenomenon.{NS}.{k}", v)
+    for k, ((tj, bj), (te, be)) in NOTES.items():
+        put(f"note.{NS}.{k}.title", (tj, te))
+        put(f"note.{NS}.{k}.body", (bj, be))
+    for i, v in enumerate(INTRO):
+        put(f"intro.{NS}.{i + 1}", v)
+    for k, v in DIALOGUE.items():
+        put(f"dialogue.{NS}.{k}", v)
+    for k, v in THOUGHTS.items():
+        put(f"thought.{NS}.{k}", v)
+    for k, v in BLOCK_NAMES.items():
+        put(f"block.{NS}.{k}", v)
     for lang, d in (("ja", ja), ("en", en)):
         sub = os.path.join(HERE, "audio", f"subtitles_{lang}.json")
         if os.path.exists(sub):
             with open(sub, encoding="utf-8") as f:
                 d.update(json.load(f))
-    with open(os.path.join(OUT, "ja_jp.json"), "w", encoding="utf-8") as f:
-        json.dump(dict(sorted(ja.items())), f, ensure_ascii=False, indent=2)
-    with open(os.path.join(OUT, "en_us.json"), "w", encoding="utf-8") as f:
-        json.dump(dict(sorted(en.items())), f, ensure_ascii=False, indent=2)
+    os.makedirs(OUT, exist_ok=True)
+    for lang, d in (("ja_jp", ja), ("en_us", en)):
+        with open(os.path.join(OUT, f"{lang}.json"), "w", encoding="utf-8") as f:
+            json.dump(dict(sorted(d.items())), f, ensure_ascii=False, indent=2)
     missing = sorted(set(ja) ^ set(en))
     print(f"ja {len(ja)} keys, en {len(en)} keys, mismatched: {missing[:10]}")
 
