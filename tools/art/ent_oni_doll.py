@@ -363,10 +363,12 @@ class OniDoll(Spec):
         f.set(1, 0, P(BUTTON, 5))
         f.set(0, 1, P(BUTTON, 4))
         pt.pattern(fe['back'], ['.ccc.', 'ccccc', 'ccccc', 'ccccc', '.ccc.'], {'c': (BUTTON, 1), '.': 'CLEAR'}, jitter=False)
-        ee = EF('eye_r')['front']
-        ee.set(1, 1, C('#6c6e72'))
-        ee.set(2, 1, C('#2a2b2e'))
-        ee.set(1, 2, C('#232427'))
+        ee = EF('eye_r')['front']                                # the glints: a dim glossy core, a bright wet highlight
+        for (x, y) in ((1, 1), (2, 1), (3, 1), (1, 2), (2, 2), (3, 2), (1, 3), (2, 3), (3, 3)):
+            ee.set(x, y, C('#26272b'))
+        ee.set(1, 1, C('#9a9ca2'))
+        ee.set(2, 1, C('#4a4c50'))
+        ee.set(1, 2, C('#3c3e42'))
         for n, fc in F('eye_thread').items():
             for y in range(fc.h):
                 fc.set(0, y, C('#1a1514') if y % 2 else C('#2c2422'))

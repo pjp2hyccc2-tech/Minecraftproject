@@ -127,11 +127,11 @@ def door_frame(light=1.0, side=1.0, edge=0.17):
 
 
 def corner(light=1.0):
-    """A room corner right in front of the entity (it stands facing the wall)."""
+    """A room corner right in front of the entity (at yaw 0 it faces +z, into the corner)."""
     def sc(cv):
         ER.floor(cv, 3, light=light, tex=TATAMI)
-        ER.box(cv, (-1.5, 0.0, -0.75), (1.5, 2.6, -0.45), WALL, light=light)
-        ER.box(cv, (-0.75, 0.0, -1.5), (-0.45, 2.6, 0.5), WALL, light=light)
+        ER.box(cv, (-1.5, 0.0, 0.42), (1.5, 2.6, 0.72), WALL, light=light)
+        ER.box(cv, (0.42, 0.0, -1.5), (0.72, 2.6, 0.42), WALL, light=light)
     return sc
 
 
@@ -142,10 +142,11 @@ def closet(light=1.0):
     return sc
 
 
-def shelf(light=1.0, top=0.0):
+def shelf(light=1.0, top=0.0, wall=True):
     """A shelf board under the entity (the camera stands on it); the board top is the entity origin."""
     def sc(cv):
         ER.floor(cv, 3, y=-0.9, light=light, tex=FLOOR)
         ER.box(cv, (-0.5, top - 0.06, -0.35), (0.5, top, 0.35), SHELF, light=light)
-        ER.box(cv, (-0.5, -0.9, -0.42), (0.5, 0.9, -0.35), WALL, light=light)
+        if wall:
+            ER.box(cv, (-0.5, -0.9, -0.42), (0.5, 0.9, -0.35), WALL, light=light)
     return sc
