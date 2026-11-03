@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/outdoor_planter"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/outdoor_planter",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/outdoor_planter",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/outdoor_planter",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,running=false": {
+      "model": "reisatsu:block/hand_dryer"
+    },
+    "facing=north,running=true": {
+      "model": "reisatsu:block/hand_dryer_running"
+    },
+    "facing=east,running=false": {
+      "model": "reisatsu:block/hand_dryer",
+      "y": 90
+    },
+    "facing=east,running=true": {
+      "model": "reisatsu:block/hand_dryer_running",
+      "y": 90
+    },
+    "facing=south,running=false": {
+      "model": "reisatsu:block/hand_dryer",
+      "y": 180
+    },
+    "facing=south,running=true": {
+      "model": "reisatsu:block/hand_dryer_running",
+      "y": 180
+    },
+    "facing=west,running=false": {
+      "model": "reisatsu:block/hand_dryer",
+      "y": 270
+    },
+    "facing=west,running=true": {
+      "model": "reisatsu:block/hand_dryer_running",
+      "y": 270
+    }
+  }
+}

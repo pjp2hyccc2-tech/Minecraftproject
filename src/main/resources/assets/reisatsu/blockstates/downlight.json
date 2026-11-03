@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "reisatsu:block/downlight"
+    },
+    "lit=true": {
+      "model": "reisatsu:block/downlight_lit"
+    }
+  }
+}

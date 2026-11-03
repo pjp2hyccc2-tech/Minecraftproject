@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "reisatsu:block/road_line",
+    "side": "reisatsu:block/asphalt",
+    "bottom": "reisatsu:block/asphalt"
+  }
+}

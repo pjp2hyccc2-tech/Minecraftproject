@@ -79,6 +79,7 @@ public final class Fixtures {
             for (int cz = -1; cz <= 3; cz++) level.getChunk(cx, cz);
         for (BlockPos p : AUTO_DOORS) ensureEntity(level, p);
         for (BlockPos p : SWING_DOORS) ensureEntity(level, p);
+        autoDoorsEnabled(level);
     }
 
     static void ensureEntity(ServerLevel level, BlockPos p) {
@@ -108,6 +109,7 @@ public final class Fixtures {
         }
         for (BlockPos p : SWING_DOORS) ensureEntity(level, p);
         for (Circuit c : Circuit.values()) applyCircuit(level, c);
+        autoDoorsEnabled(level);
         com.reisatsu.Reisatsu.LOGGER.info("[reisatsu] restaurant reset ({} blocks restored)", sink.changed);
     }
 
@@ -153,12 +155,15 @@ public final class Fixtures {
         BlockPos sw = Layout.marker("door_switch").pos();
         setBool(level, sw, Props.ON, on);
         if (changed) sound(level, sw, ModSounds.DOOR_SWITCH, 0.9f, on ? 1.0f : 0.85f);
+        autoDoorsEnabled(level);
     }
 
     public static boolean autoDoorsEnabled(ServerLevel level) {
         if (!here(level)) return false;
         WorldData d = data(level);
-        return d.keySwitch && d.on(Circuit.DOOR) && !d.doorsLocked;
+        boolean on = d.keySwitch && d.on(Circuit.DOOR) && !d.doorsLocked;
+        com.reisatsu.block.AutoDoorBlock.passableForMobs = on;
+        return on;
     }
 
     /** Locked doors stay shut whatever happens (the visitor's fury); unlocking restores the previous mode. */
@@ -167,6 +172,7 @@ public final class Fixtures {
         WorldData d = data(level);
         d.doorsLocked = locked;
         d.setDirty();
+        autoDoorsEnabled(level);
         if (locked) {
             for (String door : new String[]{"outer", "inner"}) {
                 AutoDoorBlockEntity be = doorEntity(level, door);
@@ -374,6 +380,7 @@ public final class Fixtures {
         d.circuits.put(circuit, on);
         d.setDirty();
         applyCircuit(level, circuit);
+        autoDoorsEnabled(level);
         if (changed) {
             BlockPos panel = Layout.marker("breaker").pos();
             sound(level, panel, on ? ModSounds.FIXTURE_BREAKER_ON : ModSounds.FIXTURE_BREAKER_OFF, 1.0f, 1.0f);

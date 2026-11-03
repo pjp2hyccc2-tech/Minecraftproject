@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "reisatsu:block/parking_line"
+    },
+    "axis=x": {
+      "model": "reisatsu:block/parking_line",
+      "y": 90
+    }
+  }
+}

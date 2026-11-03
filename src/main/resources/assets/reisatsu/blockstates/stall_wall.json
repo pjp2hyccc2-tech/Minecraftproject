@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "reisatsu:block/stall_wall"
+    },
+    "facing=east": {
+      "model": "reisatsu:block/stall_wall",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reisatsu:block/stall_wall",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "reisatsu:block/stall_wall",
+      "y": 270
+    }
+  }
+}

@@ -87,12 +87,16 @@ public class AutoDoorBlock extends HorizontalDirectionalBlock implements EntityB
         return true;
     }
 
+    /**
+     * True while the doors would open for anything that comes near (key switch on, DOOR circuit on, not locked).
+     * Kept up to date by {@link Fixtures}; the pathfinder only sees a region cache, not the level.
+     */
+    public static volatile boolean passableForMobs;
+
     /** Mobs plan their way through: the doors open for them when they come near (unless switched off or locked). */
     @Override
     public @Nullable BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
-        if (state.getValue(Props.OPEN)) return BlockPathTypes.OPEN;
-        if (level instanceof Level l && !l.isClientSide && l instanceof net.minecraft.server.level.ServerLevel sl
-                && Fixtures.autoDoorsEnabled(sl)) return BlockPathTypes.OPEN;
+        if (state.getValue(Props.OPEN) || passableForMobs) return BlockPathTypes.OPEN;
         return BlockPathTypes.BLOCKED;
     }
 
