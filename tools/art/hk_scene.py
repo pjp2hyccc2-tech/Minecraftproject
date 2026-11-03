@@ -282,7 +282,7 @@ def halves(S, name, x, z, facing, op=0):
     S.model(f'{name}_upper_{op}', x, 1, z, facing)
 
 
-def furnish203(S, tv_on=True, lamp_lit=False, laptop_on=True):
+def furnish203(S, tv_on=True, lamp_lit=False, laptop_on=True, closet_open=0):
     """Room 203 furnished as the world's ApartmentBuilder.furnish203 does (local x = X - 22, y = Y - 70)."""
     # doors and openings
     door(S, 'front_door', 2, -1, 0, 'south')
@@ -352,10 +352,12 @@ def furnish203(S, tv_on=True, lamp_lit=False, laptop_on=True):
         for x in (2, 3, 4):
             S.model('curtain_closed', x, yy, 12, 'north')
     for z in (10, 11, 12):
-        halves(S, 'oshiire_fusuma', 1, z, 'east')
+        halves(S, 'oshiire_fusuma', 1, z, 'east', closet_open)
     S.model('futon_folded', 1, 2, 10, 'east')
     S.model('futon_folded', 1, 2, 11, 'east')
     S.model('cardboard_box', 1, 2, 12, 'east')
+    for z in (10, 11, 12):
+        wmodel(S, 'oshiire_shelf_board', 1, 2, z, 'east')       # the world's middle shelf under them (shelf=true)
     # western room
     for x in (8, 9, 10):
         S.model('desk', x, 0, 7, 'south')
@@ -383,6 +385,11 @@ def furnish203(S, tv_on=True, lamp_lit=False, laptop_on=True):
     wmodel(S, 'laundry_hanging', 9, 1, 11, 'south')
     for z in (10, 11, 12):
         halves(S, 'oshiire_fusuma', 10, z, 'west')
+    # the western closet's shelf: a box and a futon on their boards
+    S.model('cardboard_box', 10, 2, 10, 'west')
+    S.model('futon_folded', 10, 2, 12, 'west')
+    for z in (10, 12):
+        wmodel(S, 'oshiire_shelf_board', 10, 2, z, 'west')
 
 
 # ================================================================================================ scenes
@@ -413,10 +420,16 @@ def scene_tatami():
 
 def scene_peek():
     """From inside the 押し入れ, crouched: the night view toward the TV, then the same through the fusuma_slit."""
-    S = full203()
+    # the game's peek: the closet's fusuma at open 1 (Hiding: setClosetFusuma 1), the client eye at Hiding.peekEye()
+    # (the closet_peek marker + 0.92 east, 1.15 up, the row's middle) facing the marker's east, a little toward the TV;
+    # the slit overlay then masks all but the screen's middle
+    S = full203(closet_open=1)
     S.light(*TV_LIGHT)
     S.light(*SODIUM)
-    eye, tgt = (1.5, 1.05, 11.0), (5.2, 0.85, 9.6)
+    yaw, pitch = math.radians(-104), math.radians(4)
+    eye = (1.92, 1.15, 10.5)
+    d = (-math.sin(yaw) * math.cos(pitch), -math.sin(pitch), math.cos(yaw) * math.cos(pitch))
+    tgt = tuple(e + 4 * k for e, k in zip(eye, d))
     night = S.render(eye, tgt, night=True, exposure=1.45, fov=70)
     return pair(night, overlay(night, 'fusuma_slit'), 'scene_peek')
 
