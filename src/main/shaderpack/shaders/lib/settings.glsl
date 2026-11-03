@@ -1,7 +1,7 @@
 // =====================================================================================
-//  HitoriShaders  (HITORI - the family restaurant HIDAMARI at night)  -  user options
+//  HitoriShaders  (HITORI KAKURENBO - room 203 of Kopo Shirakaba, 3 a.m., rain) - user options
 //  Iris / Oculus / OptiFine discover "#define NAME value // [list]" and "#define FLAG".
-//  Every option is shared by all dimension folders (root, hitori_hidamari, world-1, world1).
+//  Every option is shared by all dimension folders (root, hitori_shirakaba, world-1, world1).
 // =====================================================================================
 
 // ---- image ---------------------------------------------------------------------------
@@ -14,21 +14,32 @@
 #define PAREIDOLIA
 //#define FLASH_REDUCTION
 
-// ---- the restaurant's lights -----------------------------------------------------------
+// ---- the apartment's lights ------------------------------------------------------------
 #define COLORED_LIGHT
 #define LIGHT_STRENGTH 1.0          // [0.5 0.75 1.0 1.25 1.5 2.0]
+#define TV_STRENGTH 1.0             // [0.5 0.75 1.0 1.25 1.5 2.0]
 #define LIGHT_SHADOWS
 #define LIGHT_FLICKER
+#define TV_STATIC
 
-// ---- reflections and wet surfaces --------------------------------------------------------
+// ---- rain, water and reflections -------------------------------------------------------------
 #define REFLECTIONS
 #define SSR_STEPS 14                // [8 10 14 20 28]
 #define WET_SURFACES
-#define GLASS_DROPLETS
+#define RAIN_ON_GLASS
+#define RAIN_STREAKS
+#define WATER_RIPPLES
 
-// ---- spirits and the finder ----------------------------------------------------------------
-#define SPIRIT_HAZE
-#define AFTERIMAGE
+// ---- the camera app (CCTV) -----------------------------------------------------------------
+#define CCTV_NOISE 1.0              // [0.0 0.25 0.5 0.75 1.0 1.25 1.5 2.0]
+#define CCTV_FISHEYE 1.0            // [0.0 0.5 1.0 1.5 2.0]
+#define CCTV_SCANLINES
+#define CCTV_INTERLACE
+#define CCTV_GLITCH
+
+// ---- eyes closed, apparitions ----------------------------------------------------------------
+#define PHOSPHENES
+#define APPARITION_HAZE
 
 // ---- atmosphere ----------------------------------------------------------------------
 #define FOG_DENSITY 1.0             // [0.5 0.75 1.0 1.25 1.5 2.0]
@@ -37,12 +48,11 @@
 #define FOG_NOISE
 #define DUST_MOTES
 
-// ---- the flashlight ------------------------------------------------------------------
+// ---- the phone's light and the lighter -------------------------------------------------------
 #define BEAM_STRENGTH 1.0           // [0.5 0.75 1.0 1.25 1.5 2.0]
 #define BEAM_FOG 1.0                // [0.0 0.5 0.75 1.0 1.25 1.5 2.0]
 #define BEAM_SAMPLES 8              // [4 6 8 12 16]
 #define BEAM_SHADOWS
-#define LENS_COOKIE
 
 // ---- sun and shadow (other dimensions) ---------------------------------------------------
 #define SHADOWS
@@ -53,16 +63,16 @@
 //  pipeline directives (read by the shader loader)
 // =====================================================================================
 /*
-const int colortex0Format = RGBA16F;    // HDR scene colour (forward lit; deferred adds the hand lights and the flash)
-const int colortex1Format = RGBA8;      // aux: r emissive, g block-light share, b class (hand / cloud), a coverage
-const int colortex2Format = RGBA16F;    // volumetrics: rgb in-scattered light, a transmittance (composite -> composite2)
+const int colortex0Format = RGBA16F;    // HDR scene colour (forward lit; deferred adds the hand lights and the IR illuminator)
+const int colortex1Format = RGBA8;      // aux: r emissive, g lamp share, b class (hand / cloud), a coverage
+const int colortex2Format = RGBA16F;    // volumetrics: rgb in-scatter, a transmittance (composite -> composite2); then the previous frame (composite2 -> final)
 const int colortex3Format = RGBA16F;    // bloom
 const int colortex4Format = RGBA16F;    // bloom (temp)
 const int colortex5Format = RGBA8;      // albedo (sRGB) + a: material code / 255 (0 = no deferred light)
 const int colortex6Format = RGBA16;     // octahedral normal (rg), block light (b), sky light (a)
-const int colortex7Format = RGBA32F;    // hitori:hidamari - the light table (prepare -> every lit program)
-const int colortex8Format = RGBA8;      // spirits: r body, g finder glow, b eye alpha, a haze
-const int colortex9Format = RGBA16F;    // the finder's afterimage (kept between frames)
+const int colortex7Format = RGBA32F;    // hitori:shirakaba - the light table (prepare -> every lit program)
+const int colortex8Format = RGBA8;      // entities: r the doll, g the woman, b eye glint, a haze
+const int colortex9Format = RGBA16F;    // the previous frame's picture (kept between frames: interlace, camera lag)
 */
 const vec4 colortex0ClearColor = vec4(0.0, 0.0, 0.0, 0.0);
 const vec4 colortex1ClearColor = vec4(0.0, 0.0, 0.0, 0.0);
@@ -81,8 +91,8 @@ const float eyeBrightnessHalflife = 3.0;
 const float wetnessHalflife = 250.0;
 const float drynessHalflife = 120.0;
 
-#ifdef HITORI_HIDAMARI
-    // The restaurant's sky is overcast: no moon light, no shadow map. The shadow pass draws
+#ifdef HITORI_SHIRAKABA
+    // The apartment's sky is overcast: no moon light, no shadow map. The shadow pass draws
     // the top-down emitter map instead (lib/emitters.glsl): 4 x 4 tiles of 128 x 128 blocks
     // around the camera, one texel per block. Fixed size - not a user option here.
     const int shadowMapResolution = 512;

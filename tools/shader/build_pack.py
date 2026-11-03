@@ -7,7 +7,8 @@ shaders/program/*.glsl and shaders/lib/*.glsl; a stub only #defines the dimensio
 program variant and #includes the shared source.
 
   (root)            every dimension not listed below (overworld, mod dimensions ...)
-  hitori_hidamari/  hitori:hidamari  -> #define HITORI_HIDAMARI (the restaurant: fear / danger / finder / flash)
+  hitori_shirakaba/ hitori:shirakaba -> #define HITORI_SHIRAKABA (the apartment: fear / danger / the camera
+                                        app / eyes closed / caught, the light table of prepare / prepare1)
   world-1/          the Nether       -> #define DIM_NETHER (no shadow pass)
   world1/           the End          -> #define DIM_END    (no shadow pass)
 
@@ -56,7 +57,7 @@ PROGRAMS = {
     "final": ("program/final.glsl", []),
 }
 
-# programs only some folders have (the restaurant's light table)
+# programs only some folders have (the apartment's light table)
 FOLDER_PROGRAMS = {
     "prepare": ("program/prepare.glsl", ["TABLE_Z"]),
     "prepare1": ("program/prepare.glsl", ["TABLE_X"]),
@@ -65,7 +66,7 @@ FOLDER_PROGRAMS = {
 # folder -> (dimension define or None, has a shadow pass, extra programs)
 FOLDERS = {
     "": (None, True, []),
-    "hitori_hidamari": ("HITORI_HIDAMARI", True, ["prepare", "prepare1"]),
+    "hitori_shirakaba": ("HITORI_SHIRAKABA", True, ["prepare", "prepare1"]),
     "world-1": ("DIM_NETHER", False, []),
     "world1": ("DIM_END", False, []),
 }

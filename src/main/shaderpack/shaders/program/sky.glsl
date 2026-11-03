@@ -2,8 +2,8 @@
 //  HitoriShaders - vanilla sky geometry
 //   PROG_SKYBASIC   : sky disc / sunset fan / void / stars. The gradient is painted by the
 //                     deferred pass for every empty pixel, so only (dim) stars are kept -
-//                     none over the overcast restaurant.
-//   PROG_SKYTEXTURED: sun and moon. None over the restaurant (overcast, no moon disc);
+//                     none over the rainy town.
+//   PROG_SKYTEXTURED: sun and moon. None over the apartment (rain clouds, no moon disc);
 //                     elsewhere a cold moon and a pale, joyless sun.
 //  Sky objects are written into the black-cleared colortex0 and added to the gradient by
 //  the deferred pass.
@@ -42,8 +42,8 @@ void main() {
 #endif
 
 #ifdef PROG_SKYTEXTURED
-  #if defined WORLD_HIDAMARI
-    // the clouds hide the moon (and there is no sun at 18000)
+  #if defined WORLD_SHIRAKABA
+    // the rain clouds hide the moon (and there is no sun at 18000)
     discard;
   #endif
     vec4 tex = texture(gtexture, texcoord);

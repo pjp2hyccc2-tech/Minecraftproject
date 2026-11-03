@@ -40,10 +40,10 @@ uniform float near;
 uniform float far;
 uniform float frameTimeCounter;
 uniform float frameTime;
-uniform float rainStrength;      // hitori:hidamari -> FEAR 0..1   (elsewhere: rain)
-uniform float thunderStrength;   // hitori:hidamari -> DANGER 0..1 (elsewhere: thunder)
-uniform float nightVision;       // hitori:hidamari -> > 0 while the camera finder is raised
-uniform float blindness;         // hitori:hidamari -> the camera FLASH 1..0 (never darkens)
+uniform float rainStrength;      // hitori:shirakaba -> FEAR 0..1   (elsewhere: rain)
+uniform float thunderStrength;   // hitori:shirakaba -> DANGER 0..1 (elsewhere: thunder)
+uniform float nightVision;       // hitori:shirakaba -> > 0 while the camera app shows a feed (CCTV)
+uniform float blindness;         // hitori:shirakaba -> EYES CLOSED 1..0 (counting; the jump scare cut)
 uniform float darknessFactor;    // vanilla Darkness: being caught
 uniform float darknessLightFactor;
 

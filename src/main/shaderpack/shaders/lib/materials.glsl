@@ -6,118 +6,134 @@
 
 // ---- block.properties (mc_Entity.x) -----------------------------------------------------
 // vanilla light sources and nature
-#define BLK_FLAME     10001   // torches, candles, campfires (bright texels glow)
+#define BLK_FLAME     10001   // torches, campfires, fire - the burning doll (bright texels glow)
 #define BLK_LAMP      10002   // lanterns (the glass glows)
 #define BLK_GLOW      10003   // glowstone, sea lantern, froglights ... (whole block glows)
 #define BLK_LAVA      10004
+#define BLK_CANDLE    10005   // candles: only the flame on the wick glows, not the white wax
 #define BLK_PLANT     10010   // grass, flowers: top vertices sway
-#define BLK_LEAVES    10011   // the hedges (and vanilla leaves): a slight sway
+#define BLK_LEAVES    10011   // hedges, leaves: a slight sway
 #define BLK_HANGING   10012   // vines: bottom vertices sway
-#define BLK_SWAY_SOFT 10013   // bouquets, outdoor planters: the upper part stirs
+#define BLK_SWAY_SOFT 10013   // potted plants on the balcony: the upper part stirs
 #define BLK_WATER     10020
 #define BLK_GLASS     10021   // vanilla glass, ice
 
-// the restaurant's light sources: BLK_EMIT_BASE + emitter type (lib/emitters.glsl)
+// the apartment's light sources: BLK_EMIT_BASE + emitter type (lib/emitters.glsl)
 #define BLK_EMIT_BASE 11000
 #define BLK_EMIT_MAX  11031
 
-// the restaurant's surfaces
-#define BLK_ASPHALT     12001   // asphalt, parking / road lines: wet, puddled
-#define BLK_PAVER       12002   // sidewalk, curb: wet
-#define BLK_PUDDLE      12003   // the 1 px water film: a black mirror
-#define BLK_FLOOR_WOOD  12004   // dining floor (vinyl planks): glossy
-#define BLK_FLOOR_TILE  12005   // kitchen quarry tiles: glossy, greasy
-#define BLK_FLOOR_MOSAIC 12006  // restroom mosaic: glossy
-#define BLK_FLOOR_CAVITY 12007  // the cavity behind the mirror: wet, black
-#define BLK_GRANITE     12008   // vestibule floor, granite counter tops
-#define BLK_STEEL       12009   // stainless: the kitchen line, sinks, tables, hood
-#define BLK_METAL_OUT   12010   // painted / galvanised metal: guardrails, racks, dumpsters, steel doors, lockers
-#define BLK_WINDOW      12011   // shop windows: rain droplets, reflections
-#define BLK_MIRROR      12012   // the dark mirror over the women's sinks
-#define BLK_MIRROR_CRACKED 12013
-#define BLK_MIRROR_PLAIN 12014  // an ordinary mirror (men's restroom)
-#define BLK_GLASS_SMALL 12015   // glasses of water, frosted partitions, small glass
-#define BLK_WALL_TILE   12016   // glossy white wall tiles
-#define BLK_VINYL       12017   // booth vinyl, padded benches: a soft sheen
-#define BLK_VARNISH     12018   // varnished wood: tables, counters, wainscot
-#define BLK_MUD         12019   // the harvested rice paddies: wet mud
-#define BLK_PLASTIC     12020   // laminated menus, call buttons, capsule machines: sheen
-#define BLK_ROOF        12021   // glazed roof tiles: wet
-#define BLK_AUTODOOR    12022   // the automatic door (block entity: aluminium + glass)
-#define BLK_FROST       12023   // the walk-in fridge frost
-#define BLK_STEEL_WALL  12024   // the stainless wall behind the cooking line (a wall)
-#define BLK_WALL        12025   // plain walls (wallpaper, wainscot, facade, concrete, pillars)
-#define BLK_PORCELAIN   12026   // toilets, urinals, sinks
-#define BLK_BLIND_CLOSED 12027  // window blinds (the emitter map's blind tile: slats for the light from outside)
-#define BLK_BLIND_OPEN  12028
+// the apartment's and the street's surfaces
+#define BLK_ASPHALT      12001   // the wet street: puddled, glossy
+#define BLK_CONCRETE     12002   // corridor, concrete, utility poles out in the rain: wet
+#define BLK_PUDDLE       12003   // the 1 px water film: a black mirror with rain rings
+#define BLK_FLOOR_VARNISH 12004  // old varnished flooring: soft reflections
+#define BLK_VINYL_FLOOR  12005   // the kitchen's cushion floor: a faint sheen
+#define BLK_GENKAN_TILE  12006   // small dark tiles in the genkan: glossy
+#define BLK_BATH_TILE    12007   // the bathroom's pale blue tiles: wet gloss (floor)
+#define BLK_BATH_WALL    12008   // the bathroom's tiles on the walls: wet gloss, a wall
+#define BLK_TATAMI       12009   // tatami: matte rush, a faint sheen along the weave
+#define BLK_WALL         12010   // plaster, wallpaper, wainscot: walls (they stop the lamps' light)
+#define BLK_CEILING      12011   // the old ceiling boards
+#define BLK_OSHIIRE_FLOOR 12012  // the closet's bare plywood floor (marks the closet: emitter map tile 8)
+#define BLK_SIDING       12013   // the building's corrugated siding: wet painted metal, a wall
+#define BLK_METAL_OUT    12014   // painted / galvanised metal out in the rain: steel doors, rails, mailboxes
+#define BLK_BLOCK_WALL   12015   // the concrete block garden wall: wet, a wall
+#define BLK_ROOF         12016   // slate roof: wet
+#define BLK_RAIN_GLASS   12017   // windows and the balcony doors: rain on the glass, reflections
+#define BLK_FROSTED      12018   // frosted glass: the bathroom's folding door, small windows
+#define BLK_MIRROR       12019   // the mirrors over the washbasin and in the hall
+#define BLK_GLASS_SMALL  12020   // the cup, glass jars
+#define BLK_VARNISH      12021   // varnished furniture: the low table, the desk, shelves
+#define BLK_PLASTIC      12022   // plastic: switches, the laptop, the bucket, the stool
+#define BLK_PORCELAIN    12023   // the toilet, the washbasin, the bathtub's enamel
+#define BLK_ENAMEL       12024   // enamelled steel: the old fridge, the washing machine, the stove
+#define BLK_STEEL        12025   // stainless: the kitchen sink, the knife rack
+#define BLK_CHROME       12026   // chrome: taps, the shower
+#define BLK_FABRIC       12027   // futon, cushions, the bed, the camera bag
+#define BLK_PAPER        12028   // fusuma (open), the printout, posters, the calendar
+#define BLK_CURTAIN_CLOSED 12029 // curtains drawn: the street lamp glows through their folds (tile 7)
+#define BLK_CURTAIN_OPEN 12030
+#define BLK_SHUT         12031   // closed doors and fusuma: a wall for the lamps' light (walls tiles)
+#define BLK_BATH_WATER   12032   // the bathtub filled (water 1 / 2): dark still water
+#define BLK_CRT_OFF      12033   // the TV switched off: dark curved glass
+#define BLK_TREE_DARK    12034   // (unused slot)
+#define BLK_SHUT_PAPER   12035   // a shut fusuma (closet or room): a wall of paper and wood
+#define BLK_INDICATOR    12036   // blocks with a small indicator light (breaker panel, rice cooker ...)
 
-// full wall blocks: they stop the lamps' light (lib/emitters.glsl wall tiles)
-bool isWallBlock(int id) { return id == BLK_WALL || id == BLK_STEEL_WALL || id == BLK_WALL_TILE; }
+// full wall blocks: they stop the lamps' light (lib/emitters.glsl wall tiles at y 70 / 71)
+bool isWallBlock(int id) {
+    return id == BLK_WALL || id == BLK_BATH_WALL || id == BLK_SIDING || id == BLK_BLOCK_WALL
+        || id == BLK_SHUT || id == BLK_SHUT_PAPER;
+}
 
 // ---- entity.properties (entityId) -------------------------------------------------------
-#define ENT_VISITOR    20001
-#define ENT_WAITRESS   20002
-#define ENT_CHEF       20003
-#define ENT_CHILD      20004
-#define ENT_MIRROR     20005
-#define ENT_MANAGER    20006
-#define ENT_MEDIUM     20010
-#define ENT_CAR        20011
-#define ENT_LIGHTNING  20020
-
-bool isSpirit(int id) { return id >= ENT_VISITOR && id <= ENT_MANAGER; }
+#define ENT_DOLL       30001   // the oni: the soaked plush rabbit with the knife
+#define ENT_WOMAN      30002   // camera-only apparition
+#define ENT_CAMERA     30003   // a fixed camera (its red REC LED: eyes layer)
+#define ENT_LIGHTNING  30020
 
 // ---- material codes (colortex5.a * 255): what deferred / composite know of a pixel --------
 #define MAT_NONE        0     // sky, the hand, no deferred lighting
 #define MAT_DIFFUSE     1
 #define MAT_FOLIAGE     2
 #define MAT_ASPHALT     3
-#define MAT_PAVER       4
-#define MAT_FLOOR_WOOD  5
-#define MAT_FLOOR_TILE  6
-#define MAT_FLOOR_MOSAIC 7
-#define MAT_GRANITE     8
+#define MAT_CONCRETE    4
+#define MAT_FLOOR_VARNISH 5
+#define MAT_VINYL_FLOOR 6
+#define MAT_GENKAN_TILE 7
+#define MAT_BATH_TILE   8
 #define MAT_STEEL       9
 #define MAT_METAL_OUT   10
-#define MAT_WINDOW      11
+#define MAT_GLASS_RAIN  11
 #define MAT_MIRROR      12
-#define MAT_MIRROR_PLAIN 13
+#define MAT_FROSTED     13
 #define MAT_PUDDLE      14
-#define MAT_WALL_TILE   15
+#define MAT_PORCELAIN   15
 #define MAT_EMITTER     16
-#define MAT_SPIRIT      17
-#define MAT_MUD         18
-#define MAT_VINYL       19
-#define MAT_VARNISH     20
+#define MAT_DOLL        17
+#define MAT_TATAMI      18
+#define MAT_VARNISH     19
+#define MAT_WOMAN       20
 #define MAT_WET         21    // anything out under the open sky (walls, roofs, props): damp
-#define MAT_CAVITY      22
+#define MAT_CHROME      22
 #define MAT_PLASTIC     23
 #define MAT_GLASS_SMALL 24
 #define MAT_ROOF        25
-#define MAT_FROST       26
+#define MAT_WATER       26    // the bath water
+#define MAT_CRT_GLASS   27
+#define MAT_CURTAIN     28
+#define MAT_PAPER       29
+#define MAT_ENAMEL      30
+#define MAT_FABRIC      31
+#define MAT_WALL        32
 
 int materialOfBlock(int id) {
-    if (id == BLK_ASPHALT)      return MAT_ASPHALT;
-    if (id == BLK_PAVER)        return MAT_PAVER;
+    if (id == BLK_ASPHALT)       return MAT_ASPHALT;
+    if (id == BLK_CONCRETE || id == BLK_BLOCK_WALL) return MAT_CONCRETE;
     if (id == BLK_PUDDLE || id == BLK_WATER) return MAT_PUDDLE;
-    if (id == BLK_FLOOR_WOOD)   return MAT_FLOOR_WOOD;
-    if (id == BLK_FLOOR_TILE)   return MAT_FLOOR_TILE;
-    if (id == BLK_FLOOR_MOSAIC) return MAT_FLOOR_MOSAIC;
-    if (id == BLK_FLOOR_CAVITY) return MAT_CAVITY;
-    if (id == BLK_GRANITE)      return MAT_GRANITE;
-    if (id == BLK_STEEL || id == BLK_STEEL_WALL) return MAT_STEEL;
-    if (id == BLK_METAL_OUT)    return MAT_METAL_OUT;
-    if (id == BLK_WINDOW || id == BLK_GLASS || id == BLK_AUTODOOR) return MAT_WINDOW;
-    if (id == BLK_MIRROR || id == BLK_MIRROR_CRACKED) return MAT_MIRROR;
-    if (id == BLK_MIRROR_PLAIN) return MAT_MIRROR_PLAIN;
-    if (id == BLK_GLASS_SMALL)  return MAT_GLASS_SMALL;
-    if (id == BLK_WALL_TILE || id == BLK_PORCELAIN) return MAT_WALL_TILE;
-    if (id == BLK_VINYL)        return MAT_VINYL;
-    if (id == BLK_VARNISH)      return MAT_VARNISH;
-    if (id == BLK_MUD)          return MAT_MUD;
-    if (id == BLK_PLASTIC)      return MAT_PLASTIC;
-    if (id == BLK_ROOF)         return MAT_ROOF;
-    if (id == BLK_FROST)        return MAT_FROST;
+    if (id == BLK_FLOOR_VARNISH) return MAT_FLOOR_VARNISH;
+    if (id == BLK_VINYL_FLOOR)   return MAT_VINYL_FLOOR;
+    if (id == BLK_GENKAN_TILE)   return MAT_GENKAN_TILE;
+    if (id == BLK_BATH_TILE || id == BLK_BATH_WALL) return MAT_BATH_TILE;
+    if (id == BLK_TATAMI)        return MAT_TATAMI;
+    if (id == BLK_WALL || id == BLK_CEILING || id == BLK_OSHIIRE_FLOOR || id == BLK_SHUT) return MAT_WALL;
+    if (id == BLK_SIDING || id == BLK_METAL_OUT) return MAT_METAL_OUT;
+    if (id == BLK_ROOF)          return MAT_ROOF;
+    if (id == BLK_RAIN_GLASS || id == BLK_GLASS) return MAT_GLASS_RAIN;
+    if (id == BLK_FROSTED)       return MAT_FROSTED;
+    if (id == BLK_MIRROR)        return MAT_MIRROR;
+    if (id == BLK_GLASS_SMALL)   return MAT_GLASS_SMALL;
+    if (id == BLK_VARNISH)       return MAT_VARNISH;
+    if (id == BLK_PLASTIC || id == BLK_INDICATOR) return MAT_PLASTIC;
+    if (id == BLK_PORCELAIN)     return MAT_PORCELAIN;
+    if (id == BLK_ENAMEL)        return MAT_ENAMEL;
+    if (id == BLK_STEEL)         return MAT_STEEL;
+    if (id == BLK_CHROME)        return MAT_CHROME;
+    if (id == BLK_FABRIC)        return MAT_FABRIC;
+    if (id == BLK_PAPER || id == BLK_SHUT_PAPER) return MAT_PAPER;
+    if (id == BLK_CURTAIN_CLOSED || id == BLK_CURTAIN_OPEN) return MAT_CURTAIN;
+    if (id == BLK_BATH_WATER)    return MAT_PORCELAIN;   // the tub; its water surface is found in gbuffers
+    if (id == BLK_CRT_OFF)       return MAT_CRT_GLASS;
     if (id == BLK_PLANT || id == BLK_LEAVES || id == BLK_HANGING || id == BLK_SWAY_SOFT) return MAT_FOLIAGE;
     if (id > BLK_EMIT_BASE && id <= BLK_EMIT_MAX) return MAT_EMITTER;
     return MAT_DIFFUSE;
@@ -125,47 +141,48 @@ int materialOfBlock(int id) {
 
 // surface response of a material: x = roughness (0 mirror .. 1 matte), y = specular F0,
 // z = metal (tints the reflection with the albedo), w = how much screen-space reflection
-// is worth tracing (0 = none). wet: 0..1 how wet the surface is out under the open sky.
+// is worth tracing (0 = none). wet: 0..1 how wet the surface is out in the rain.
 vec4 materialSurface(int m, float wet) {
     vec4 s = vec4(1.0, 0.0, 0.0, 0.0);
 #ifndef WET_SURFACES
     wet = 0.0;
 #endif
-    // outside: rough and dull when dry, glossy black when wet
-    if      (m == MAT_ASPHALT)     s = mix(vec4(0.80, 0.025, 0.0, 0.08), vec4(0.22, 0.030, 0.0, 0.90), wet);
-    else if (m == MAT_PAVER)       s = mix(vec4(0.85, 0.025, 0.0, 0.05), vec4(0.30, 0.030, 0.0, 0.75), wet);
-    else if (m == MAT_MUD)         s = mix(vec4(0.90, 0.020, 0.0, 0.00), vec4(0.26, 0.025, 0.0, 0.70), wet);
+    // outside: rough and dull when dry, glossy black in the rain
+    if      (m == MAT_ASPHALT)     s = mix(vec4(0.80, 0.025, 0.0, 0.08), vec4(0.20, 0.030, 0.0, 0.92), wet);
+    else if (m == MAT_CONCRETE)    s = mix(vec4(0.85, 0.025, 0.0, 0.05), vec4(0.30, 0.030, 0.0, 0.75), wet);
     else if (m == MAT_WET)         s = mix(vec4(0.85, 0.025, 0.0, 0.00), vec4(0.40, 0.030, 0.0, 0.40), wet);
-    else if (m == MAT_ROOF)        s = mix(vec4(0.55, 0.040, 0.0, 0.15), vec4(0.30, 0.040, 0.0, 0.45), wet);
-    else if (m == MAT_METAL_OUT)   s = mix(vec4(0.45, 0.060, 0.2, 0.20), vec4(0.25, 0.060, 0.2, 0.60), wet);
+    else if (m == MAT_ROOF)        s = mix(vec4(0.55, 0.040, 0.0, 0.15), vec4(0.28, 0.040, 0.0, 0.50), wet);
+    else if (m == MAT_METAL_OUT)   s = mix(vec4(0.45, 0.060, 0.2, 0.20), vec4(0.22, 0.060, 0.2, 0.65), wet);
     else if (m == MAT_PUDDLE)      s = vec4(0.03, 0.020, 0.0, 1.00);
-    // the restaurant's glossy floors and fittings
-    else if (m == MAT_FLOOR_WOOD)  s = vec4(0.30, 0.040, 0.0, 0.75);
-    else if (m == MAT_FLOOR_TILE)  s = vec4(0.27, 0.040, 0.0, 0.75);
-    else if (m == MAT_FLOOR_MOSAIC) s = vec4(0.20, 0.045, 0.0, 0.80);
-    else if (m == MAT_CAVITY)      s = vec4(0.10, 0.030, 0.0, 0.90);
-    else if (m == MAT_GRANITE)     s = vec4(0.16, 0.045, 0.0, 0.85);
+    // the apartment: matte tatami and walls, soft old varnish, wet bathroom tiles
+    else if (m == MAT_TATAMI)      s = vec4(0.62, 0.035, 0.0, 0.10);
+    else if (m == MAT_FLOOR_VARNISH) s = vec4(0.30, 0.045, 0.0, 0.70);
+    else if (m == MAT_VINYL_FLOOR) s = vec4(0.40, 0.040, 0.0, 0.40);
+    else if (m == MAT_GENKAN_TILE) s = vec4(0.18, 0.045, 0.0, 0.80);
+    else if (m == MAT_BATH_TILE)   s = vec4(0.10, 0.050, 0.0, 0.85);
+    else if (m == MAT_PORCELAIN)   s = vec4(0.10, 0.050, 0.0, 0.65);
+    else if (m == MAT_ENAMEL)      s = vec4(0.22, 0.050, 0.0, 0.45);
     else if (m == MAT_STEEL)       s = vec4(0.24, 0.600, 1.0, 0.80);
-    else if (m == MAT_WINDOW)      s = vec4(0.03, 0.040, 0.0, 1.00);
-    else if (m == MAT_MIRROR)      s = vec4(0.06, 0.400, 0.0, 1.00);   // smoked glass: a dark, neutral mirror
-    else if (m == MAT_MIRROR_PLAIN) s = vec4(0.03, 0.850, 0.0, 1.00);
-    else if (m == MAT_WALL_TILE)   s = vec4(0.16, 0.045, 0.0, 0.70);
-    else if (m == MAT_VINYL)       s = vec4(0.45, 0.040, 0.0, 0.0);
-    else if (m == MAT_VARNISH)     s = vec4(0.38, 0.035, 0.0, 0.45);
-    else if (m == MAT_PLASTIC)     s = vec4(0.30, 0.045, 0.0, 0.0);
+    else if (m == MAT_CHROME)      s = vec4(0.08, 0.800, 1.0, 0.85);
+    else if (m == MAT_WATER)       s = vec4(0.02, 0.020, 0.0, 1.00);
+    else if (m == MAT_CRT_GLASS)   s = vec4(0.06, 0.050, 0.0, 0.90);
+    else if (m == MAT_MIRROR)      s = vec4(0.03, 0.850, 0.0, 1.00);
+    else if (m == MAT_GLASS_RAIN)  s = vec4(0.03, 0.040, 0.0, 1.00);
+    else if (m == MAT_FROSTED)     s = vec4(0.45, 0.040, 0.0, 0.25);
+    else if (m == MAT_VARNISH)     s = vec4(0.38, 0.035, 0.0, 0.40);
+    else if (m == MAT_PLASTIC)     s = vec4(0.32, 0.045, 0.0, 0.0);
     else if (m == MAT_GLASS_SMALL) s = vec4(0.10, 0.040, 0.0, 0.40);
-    else if (m == MAT_FROST)       s = vec4(0.55, 0.030, 0.0, 0.0);
     else if (m == MAT_EMITTER)     s = vec4(0.35, 0.040, 0.0, 0.0);
-    else if (m == MAT_SPIRIT)      s = vec4(0.60, 0.030, 0.0, 0.0);
+    else if (m == MAT_DOLL)        s = vec4(0.55, 0.030, 0.0, 0.0);   // soaked plush: a dull wet sheen
     else if (m == MAT_FOLIAGE)     s = vec4(0.70, 0.025, 0.0, 0.0);
     return s;
 }
 
-// a material that darkens when wet (porous): asphalt, pavers, mud, concrete, brick ...
+// a material that darkens when wet (porous): asphalt, concrete, block walls ...
 float wetDarkening(int m) {
-    if (m == MAT_ASPHALT || m == MAT_PAVER || m == MAT_MUD) return 0.72;
+    if (m == MAT_ASPHALT || m == MAT_CONCRETE) return 0.70;
     if (m == MAT_WET || m == MAT_ROOF) return 0.75;
-    if (m == MAT_DIFFUSE) return 0.78;
+    if (m == MAT_DIFFUSE || m == MAT_WALL) return 0.78;
     return 1.0;
 }
 
@@ -175,17 +192,22 @@ float flameMask(vec3 albedoSrgb) {
     float sat = maxOf(albedoSrgb) - minOf(albedoSrgb);
     return smoothstep(0.42, 0.80, l + sat * 0.45);
 }
+// a candle: the warm, saturated wick flame - the wax is white and must stay wax
+float candleMask(vec3 albedoSrgb) {
+    float sat = maxOf(albedoSrgb) - minOf(albedoSrgb);
+    return smoothstep(0.45, 0.70, maxOf(albedoSrgb)) * smoothstep(0.30, 0.50, sat) * step(albedoSrgb.b, albedoSrgb.r);
+}
 float paperMask(vec3 albedoSrgb) {
     return smoothstep(0.30, 0.62, luma(albedoSrgb));
 }
 
 // ---- wind ------------------------------------------------------------------------------
 #if defined VERTEX_SHADER && defined WAVING_PLANTS
-// After the rain the air is almost still: slow, faint swells
+// a wet night with a little wind in the rain: slow swells
 float windSwell(vec3 wp) {
-#ifdef WORLD_HIDAMARI
-    float s = vnoise1(frameTimeCounter * 0.11 + wp.x * 0.02 + wp.z * 0.015);
-    return 0.35 + 0.65 * smoothstep(0.30, 0.90, s);
+#ifdef WORLD_SHIRAKABA
+    float s = vnoise1(frameTimeCounter * 0.13 + wp.x * 0.02 + wp.z * 0.015);
+    return 0.45 + 0.75 * smoothstep(0.30, 0.90, s);
 #else
     return 1.0 + rainAmount() * 1.2;
 #endif
@@ -203,8 +225,8 @@ vec3 windSway(vec3 wp, float amp) {
 // hInBlock: height of the vertex inside its block 0..1 (at_midBlock)
 vec3 wavingOffset(int id, vec3 wp, vec2 uv, vec2 midUv, float skyLight, float hInBlock) {
     float exposed = 0.15 + 0.85 * skyLight;
-#ifdef WORLD_HIDAMARI
-    const float K = 0.45;          // still air after the rain: "very slight"
+#ifdef WORLD_SHIRAKABA
+    const float K = 0.60;          // a little wind in the rain
 #else
     const float K = 1.0;
 #endif

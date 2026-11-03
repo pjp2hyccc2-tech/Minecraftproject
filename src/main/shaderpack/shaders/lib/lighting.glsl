@@ -1,9 +1,10 @@
 // =====================================================================================
 //  HitoriShaders - surface lighting
-//  Forward (every lit gbuffers program): the restaurant's lamps (lib/emitters.glsl) or, in
-//  other dimensions, warm block light and the sun / moon; sky ambient; wet surfaces.
-//  The hand lights (flashlight) and the camera flash are added once per pixel by the
-//  deferred pass for opaque surfaces; translucents and particles call handLightsForward().
+//  Forward (every lit gbuffers program): the apartment's lamps and the TV (lib/emitters.glsl)
+//  or, in other dimensions, warm block light and the sun / moon; sky ambient; the rain.
+//  The hand lights (the phone's LED, the lighter, a screen) and the camera's IR illuminator
+//  are added once per pixel by the deferred pass for opaque surfaces; translucents and
+//  particles call handLightsForward().
 // =====================================================================================
 
 // 0 = indoors / underground, 1 = under the open sky (smoothed sky light at the eye)
@@ -40,7 +41,7 @@ vec3 flameColor(float level, float flick) {
 
 // extinction of the air the hand light crosses on its way out (per block)
 float handLightFogSigma() {
-#if defined WORLD_HIDAMARI
+#if defined WORLD_SHIRAKABA
     return 0.010 * FOG_DENSITY;
 #elif defined WORLD_NETHER
     return 0.020 * FOG_DENSITY;
@@ -49,30 +50,31 @@ float handLightFogSigma() {
 #endif
 }
 
-// ---- wet ground after the rain ---------------------------------------------------------------
+// ---- out in the rain ------------------------------------------------------------------------
 // how wet a surface is: out under the open sky (sky light, and nothing above it in the emitter
-// map's cover tile - the canopy and the eaves keep a dry band). wp: world position, N: normal
+// map's cover tile - the outdoor corridor's roof, the eaves and the balcony above keep it dry).
+// wp: world position, N: normal
 float surfaceWetness(vec3 wp, vec3 N, float skyLight, int mat) {
-#if defined WORLD_HIDAMARI && defined WET_SURFACES
-    if (mat == MAT_EMITTER || mat == MAT_NONE || mat == MAT_SPIRIT) return 0.0;
+#if defined WORLD_SHIRAKABA && defined WET_SURFACES
+    if (mat == MAT_EMITTER || mat == MAT_NONE || mat == MAT_DOLL || mat == MAT_WOMAN) return 0.0;
     float w = smoothstep(0.80, 0.95, skyLight);
     if (w <= 0.0) return 0.0;
-    return w * openSky(wp + N * 0.3 + vec3(0.0, 0.05, 0.0));
+    // walls catch less rain than the ground
+    return w * openSky(wp + N * 0.3 + vec3(0.0, 0.05, 0.0)) * (0.55 + 0.45 * smoothstep(0.2, 0.8, N.y));
 #else
     return 0.0;
 #endif
 }
 
 // 0..1: dry .. standing water, for a surface under the open sky. Puddles collect in shallow
-// dips (slow noise); the rest is damp. Same value in gbuffers and composite.
+// dips (slow noise); the rest is wet. Same value in gbuffers and composite.
 float puddleAmount(vec3 wp, int mat, vec3 N) {
 #ifdef WET_SURFACES
     if (N.y < 0.7) return 0.0;
     float base = 0.0;
-    if (mat == MAT_ASPHALT) base = 0.62;
-    else if (mat == MAT_PAVER) base = 0.50;
-    else if (mat == MAT_MUD) base = 0.70;
-    else if (mat == MAT_WET || mat == MAT_ROOF) base = 0.38;
+    if (mat == MAT_ASPHALT) base = 0.58;
+    else if (mat == MAT_CONCRETE) base = 0.56;
+    else if (mat == MAT_WET || mat == MAT_ROOF) base = 0.42;
     else return 0.0;
     vec2 p = wp.xz;
     float n = vnoise2(p * 0.115 + 3.1) * 0.62 + vnoise2(p * 0.37 + 11.7) * 0.28 + vnoise2(p * 1.3) * 0.10;
@@ -82,49 +84,57 @@ float puddleAmount(vec3 wp, int mat, vec3 N) {
 #endif
 }
 
-// fine bumps of wet asphalt / pavers (world normal perturbation), flat where water stands
+// fine bumps of wet asphalt / concrete (world normal perturbation), flat where water stands
 vec3 wetMicroNormal(vec3 N, vec3 wp, int mat, float puddle) {
     if (N.y < 0.7) return N;
-    float s = mat == MAT_ASPHALT ? 0.10 : (mat == MAT_PAVER ? 0.06 : (mat == MAT_MUD ? 0.08 : 0.0));
+    float s = mat == MAT_ASPHALT ? 0.10 : (mat == MAT_CONCRETE ? 0.06 : 0.0);
     if (s <= 0.0) return N;
     // fine aggregate: high frequency, small slopes (breaks a reflection into streaks)
     vec2 p = wp.xz * 21.0;
     float h0 = vnoise2(p);
     float hx = vnoise2(p + vec2(0.35, 0.0));
     float hz = vnoise2(p + vec2(0.0, 0.35));
-    vec3 n = normalize(N + vec3(h0 - hx, 0.0, h0 - hz) * s * (1.0 - puddle));
-    return n;
+    return normalize(N + vec3(h0 - hx, 0.0, h0 - hz) * s * (1.0 - puddle));
 }
 
-// ripples of drips falling into standing water: rings expanding from random points
-vec3 dripRipples(vec3 N, vec3 wp, float amount) {
+// rings of rain drops falling into standing water: small rings expanding from random points,
+// many at once (light rain), each cell its own rhythm. amount 0..1, rate: drops per cell
+vec3 rainRipples(vec3 N, vec3 wp, float amount, float rate) {
+#ifdef WATER_RIPPLES
     if (amount <= 0.0) return N;
     vec2 g = vec2(0.0);
     float t = frameTimeCounter;
-    for (int i = 0; i < 2; i++) {
-        vec2 cell = floor(wp.xz * 0.9 + float(i) * 0.5);
+    for (int i = 0; i < 3; i++) {
+        float sc = 2.1 + float(i) * 0.9;
+        vec2 q = wp.xz * sc + float(i) * 3.7;
+        vec2 cell = floor(q);
         vec2 h = hash22(cell + float(i) * 7.1);
-        float period = 2.5 + 3.5 * h.y;
-        float ph = fract(t / period + h.x);
-        vec2 c = (cell + 0.2 + 0.6 * hash22(cell * 1.7 + floor(t / period + h.x) * 3.3)) / 0.9 - float(i) * 0.5 / 0.9;
-        vec2 d = wp.xz - c;
+        float period = (0.9 + 1.6 * h.y) / rate;
+        float cyc = t / period + h.x;
+        float ph = fract(cyc);
+        vec2 c = cell + 0.2 + 0.6 * hash22(cell * 1.7 + floor(cyc) * 3.3);
+        vec2 d = q - c;
         float r = length(d);
-        float front = ph * 0.9;
-        float ring = sin((r - front) * 38.0) * exp(-sq((r - front) * 9.0)) * (1.0 - ph) * (1.0 - ph);
-        g += d / max(r, 1e-3) * ring;
+        float front = ph * 0.55;
+        float ring = sin((r - front) * 34.0) * exp(-sq((r - front) * 10.0)) * sq(1.0 - ph);
+        g += d / max(r, 1e-3) * ring * sc;
     }
-    return normalize(N + vec3(g.x, 0.0, g.y) * 0.10 * amount);
+    return normalize(N + vec3(g.x, 0.0, g.y) * 0.035 * amount);
+#else
+    return N;
+#endif
 }
 
 // ---- forward lighting ------------------------------------------------------------------
 //  albedo   : linear colour            N     : world normal (normalised)
 //  playerPos: camera-relative position lm    : normalised lightmap (x block, y sky)
 //  ao       : vertex ambient occlusion emission: linear HDR colour emitted by the surface
-//  mat      : material code (MAT_*)    wet   : 0..1 wetness under the open sky
-//  twoSided : 1 = thin leaves / particles
+//  mat      : material code (MAT_*)    wet   : 0..1 wetness in the rain
+//  twoSided : 1 = thin leaves / particles   backK : light from behind that comes through
+//  fillK    : the fill for unexplained light (lampsAt)
 //  glow     : out, share of the colour that comes from lamps (screen-space lamp shadows)
 vec3 shadeSurface(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, float ao, vec3 emission,
-                  int mat, float wet, float dither, bool receiveShadow, float twoSided, out float glow) {
+                  int mat, float wet, float dither, bool receiveShadow, float twoSided, float backK, float fillK, out float glow) {
     vec3 worldPos = playerPos + cameraPosition;
     vec3 V = -normalize(playerPos + vec3(0.0, 1e-4, 0.0));
     float aoC = ao * ao * (3.0 - 2.0 * ao);
@@ -134,10 +144,10 @@ vec3 shadeSurface(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, float ao, vec3 e
     glow = 0.0;
 
 #ifdef EMITTERS_ON
-    // ---- the restaurant: every lamp in its own colour ----------------------------------
+    // ---- the apartment: every lamp in its own colour, the TV's flicker ----------------------
     vec3 diffuse, spec, domPos;
     float domW;
-    lampsAt(worldPos, N, V, lm.x * 15.0, surf.x, surf.z > 0.5 || surf.w > 0.0 ? f0 : -1.0, twoSided,
+    lampsAt(worldPos, N, V, lm.x * 15.0, surf.x, surf.z > 0.5 || surf.w > 0.0 ? f0 : -1.0, twoSided, backK, fillK,
             diffuse, spec, domPos, domW);
     vec3 sky = skyAmbientN(N) * (lm.y * lm.y);
     vec3 lampPart = albedo * diffuse * aoC * (1.0 - surf.z * 0.85);
@@ -151,8 +161,8 @@ vec3 shadeSurface(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, float ao, vec3 e
     float level = saturate(lm.x * (0.95 + 0.05 * flick));
     float flameF = flameFalloff(level) * flick;
     vec3 flame = flameColor(level, flick) * flameF * FLAME_GAIN;
-  #ifdef WORLD_HIDAMARI
-    flame *= vec3(0.86, 0.92, 1.0);         // the restaurant without coloured light: colder
+  #ifdef WORLD_SHIRAKABA
+    flame *= vec3(0.86, 0.92, 1.0);         // the apartment without coloured light: colder
   #endif
 
     // ---- moon / sun --------------------------------------------------------------------
@@ -179,7 +189,7 @@ vec3 shadeSurface(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, float ao, vec3 e
   #endif
 
     vec3 amb = MIN_LIGHT + worldAmbient() + skyAmbientN(N) * (lm.y * lm.y);
-  #ifndef WORLD_HIDAMARI
+  #ifndef WORLD_SHIRAKABA
     amb += vec3(0.10, 0.11, 0.13) * nightVision;      // a night-vision potion elsewhere
   #endif
     vec3 color = albedo * (direct + (flame + amb) * aoC);
@@ -198,7 +208,7 @@ vec3 shadeSurface(vec3 albedo, vec3 N, vec3 playerPos, vec2 lm, float ao, vec3 e
 #endif
 }
 
-// ---- hand lights + flash, forward (translucents, particles, the hand itself) ---------------
+// ---- hand lights + the IR illuminator, forward (translucents, particles, the hand itself) ---
 vec3 handLightsForward(vec3 albedo, vec3 P, vec3 N, float foliage, vec2 gloss) {
     vec3 sum = vec3(0.0);
     if (!anyHandLight()) return sum;
@@ -207,8 +217,7 @@ vec3 handLightsForward(vec3 albedo, vec3 P, vec3 N, float foliage, vec2 gloss) {
         HandLight L = handLight(i);
         if (L.type == LIGHT_NONE) continue;
   #ifdef PROG_HAND
-        // the held items: never lit by the flashlight's own beam (its body sits right at the
-        // beam's origin), only by the flash and a held flame
+        // the held items: never lit by the phone's own LED (its body sits at the beam's origin)
         if (L.type == LIGHT_SPOT) continue;
   #endif
         vec3 spec;
