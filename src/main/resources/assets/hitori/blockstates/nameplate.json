@@ -1,0 +1,124 @@
+{
+  "variants": {
+    "facing=north,unit=0": {
+      "model": "hitori:block/nameplate_0"
+    },
+    "facing=north,unit=1": {
+      "model": "hitori:block/nameplate_1"
+    },
+    "facing=north,unit=2": {
+      "model": "hitori:block/nameplate_2"
+    },
+    "facing=north,unit=3": {
+      "model": "hitori:block/nameplate_3"
+    },
+    "facing=north,unit=4": {
+      "model": "hitori:block/nameplate_4"
+    },
+    "facing=north,unit=5": {
+      "model": "hitori:block/nameplate_5"
+    },
+    "facing=north,unit=6": {
+      "model": "hitori:block/nameplate_6"
+    },
+    "facing=north,unit=7": {
+      "model": "hitori:block/nameplate_7"
+    },
+    "facing=east,unit=0": {
+      "model": "hitori:block/nameplate_0",
+      "y": 90
+    },
+    "facing=east,unit=1": {
+      "model": "hitori:block/nameplate_1",
+      "y": 90
+    },
+    "facing=east,unit=2": {
+      "model": "hitori:block/nameplate_2",
+      "y": 90
+    },
+    "facing=east,unit=3": {
+      "model": "hitori:block/nameplate_3",
+      "y": 90
+    },
+    "facing=east,unit=4": {
+      "model": "hitori:block/nameplate_4",
+      "y": 90
+    },
+    "facing=east,unit=5": {
+      "model": "hitori:block/nameplate_5",
+      "y": 90
+    },
+    "facing=east,unit=6": {
+      "model": "hitori:block/nameplate_6",
+      "y": 90
+    },
+    "facing=east,unit=7": {
+      "model": "hitori:block/nameplate_7",
+      "y": 90
+    },
+    "facing=south,unit=0": {
+      "model": "hitori:block/nameplate_0",
+      "y": 180
+    },
+    "facing=south,unit=1": {
+      "model": "hitori:block/nameplate_1",
+      "y": 180
+    },
+    "facing=south,unit=2": {
+      "model": "hitori:block/nameplate_2",
+      "y": 180
+    },
+    "facing=south,unit=3": {
+      "model": "hitori:block/nameplate_3",
+      "y": 180
+    },
+    "facing=south,unit=4": {
+      "model": "hitori:block/nameplate_4",
+      "y": 180
+    },
+    "facing=south,unit=5": {
+      "model": "hitori:block/nameplate_5",
+      "y": 180
+    },
+    "facing=south,unit=6": {
+      "model": "hitori:block/nameplate_6",
+      "y": 180
+    },
+    "facing=south,unit=7": {
+      "model": "hitori:block/nameplate_7",
+      "y": 180
+    },
+    "facing=west,unit=0": {
+      "model": "hitori:block/nameplate_0",
+      "y": 270
+    },
+    "facing=west,unit=1": {
+      "model": "hitori:block/nameplate_1",
+      "y": 270
+    },
+    "facing=west,unit=2": {
+      "model": "hitori:block/nameplate_2",
+      "y": 270
+    },
+    "facing=west,unit=3": {
+      "model": "hitori:block/nameplate_3",
+      "y": 270
+    },
+    "facing=west,unit=4": {
+      "model": "hitori:block/nameplate_4",
+      "y": 270
+    },
+    "facing=west,unit=5": {
+      "model": "hitori:block/nameplate_5",
+      "y": 270
+    },
+    "facing=west,unit=6": {
+      "model": "hitori:block/nameplate_6",
+      "y": 270
+    },
+    "facing=west,unit=7": {
+      "model": "hitori:block/nameplate_7",
+      "y": 270
+    }
+  }
+}

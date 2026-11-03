@@ -1,0 +1,964 @@
+{
+  "variants": {
+    "facing=north,inner=plaster_wall,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__plaster_wall"
+    },
+    "facing=east,inner=plaster_wall,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__plaster_wall",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__plaster_wall",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__plaster_wall",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__plaster_wall_stained"
+    },
+    "facing=east,inner=plaster_wall,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__plaster_wall_stained",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__plaster_wall_stained",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__plaster_wall_stained",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__wallpaper_old"
+    },
+    "facing=east,inner=plaster_wall,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__wallpaper_old",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__wallpaper_old",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__wallpaper_old",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__wood_wainscot"
+    },
+    "facing=east,inner=plaster_wall,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__wood_wainscot",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__wood_wainscot",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__wood_wainscot",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__bath_tile_wall"
+    },
+    "facing=east,inner=plaster_wall,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__bath_tile_wall",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__bath_tile_wall",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__bath_tile_wall",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__oshiire_floor"
+    },
+    "facing=east,inner=plaster_wall,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__oshiire_floor",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__oshiire_floor",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__oshiire_floor",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__apartment_siding"
+    },
+    "facing=east,inner=plaster_wall,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__apartment_siding",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__apartment_siding",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__apartment_siding",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__concrete"
+    },
+    "facing=east,inner=plaster_wall,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__concrete",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__concrete",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_plaster_wall__concrete",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall_stained,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__plaster_wall"
+    },
+    "facing=east,inner=plaster_wall_stained,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__plaster_wall",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall_stained,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__plaster_wall",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall_stained,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__plaster_wall",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall_stained,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__plaster_wall_stained"
+    },
+    "facing=east,inner=plaster_wall_stained,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__plaster_wall_stained",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall_stained,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__plaster_wall_stained",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall_stained,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__plaster_wall_stained",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall_stained,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__wallpaper_old"
+    },
+    "facing=east,inner=plaster_wall_stained,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__wallpaper_old",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall_stained,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__wallpaper_old",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall_stained,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__wallpaper_old",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall_stained,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__wood_wainscot"
+    },
+    "facing=east,inner=plaster_wall_stained,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__wood_wainscot",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall_stained,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__wood_wainscot",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall_stained,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__wood_wainscot",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall_stained,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__bath_tile_wall"
+    },
+    "facing=east,inner=plaster_wall_stained,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__bath_tile_wall",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall_stained,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__bath_tile_wall",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall_stained,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__bath_tile_wall",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall_stained,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__oshiire_floor"
+    },
+    "facing=east,inner=plaster_wall_stained,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__oshiire_floor",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall_stained,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__oshiire_floor",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall_stained,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__oshiire_floor",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall_stained,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__apartment_siding"
+    },
+    "facing=east,inner=plaster_wall_stained,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__apartment_siding",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall_stained,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__apartment_siding",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall_stained,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__apartment_siding",
+      "y": 270
+    },
+    "facing=north,inner=plaster_wall_stained,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__concrete"
+    },
+    "facing=east,inner=plaster_wall_stained,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__concrete",
+      "y": 90
+    },
+    "facing=south,inner=plaster_wall_stained,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__concrete",
+      "y": 180
+    },
+    "facing=west,inner=plaster_wall_stained,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_plaster_wall_stained__concrete",
+      "y": 270
+    },
+    "facing=north,inner=wallpaper_old,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__plaster_wall"
+    },
+    "facing=east,inner=wallpaper_old,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__plaster_wall",
+      "y": 90
+    },
+    "facing=south,inner=wallpaper_old,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__plaster_wall",
+      "y": 180
+    },
+    "facing=west,inner=wallpaper_old,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__plaster_wall",
+      "y": 270
+    },
+    "facing=north,inner=wallpaper_old,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__plaster_wall_stained"
+    },
+    "facing=east,inner=wallpaper_old,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__plaster_wall_stained",
+      "y": 90
+    },
+    "facing=south,inner=wallpaper_old,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__plaster_wall_stained",
+      "y": 180
+    },
+    "facing=west,inner=wallpaper_old,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__plaster_wall_stained",
+      "y": 270
+    },
+    "facing=north,inner=wallpaper_old,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__wallpaper_old"
+    },
+    "facing=east,inner=wallpaper_old,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__wallpaper_old",
+      "y": 90
+    },
+    "facing=south,inner=wallpaper_old,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__wallpaper_old",
+      "y": 180
+    },
+    "facing=west,inner=wallpaper_old,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__wallpaper_old",
+      "y": 270
+    },
+    "facing=north,inner=wallpaper_old,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__wood_wainscot"
+    },
+    "facing=east,inner=wallpaper_old,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__wood_wainscot",
+      "y": 90
+    },
+    "facing=south,inner=wallpaper_old,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__wood_wainscot",
+      "y": 180
+    },
+    "facing=west,inner=wallpaper_old,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__wood_wainscot",
+      "y": 270
+    },
+    "facing=north,inner=wallpaper_old,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__bath_tile_wall"
+    },
+    "facing=east,inner=wallpaper_old,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__bath_tile_wall",
+      "y": 90
+    },
+    "facing=south,inner=wallpaper_old,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__bath_tile_wall",
+      "y": 180
+    },
+    "facing=west,inner=wallpaper_old,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__bath_tile_wall",
+      "y": 270
+    },
+    "facing=north,inner=wallpaper_old,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__oshiire_floor"
+    },
+    "facing=east,inner=wallpaper_old,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__oshiire_floor",
+      "y": 90
+    },
+    "facing=south,inner=wallpaper_old,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__oshiire_floor",
+      "y": 180
+    },
+    "facing=west,inner=wallpaper_old,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__oshiire_floor",
+      "y": 270
+    },
+    "facing=north,inner=wallpaper_old,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__apartment_siding"
+    },
+    "facing=east,inner=wallpaper_old,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__apartment_siding",
+      "y": 90
+    },
+    "facing=south,inner=wallpaper_old,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__apartment_siding",
+      "y": 180
+    },
+    "facing=west,inner=wallpaper_old,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__apartment_siding",
+      "y": 270
+    },
+    "facing=north,inner=wallpaper_old,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__concrete"
+    },
+    "facing=east,inner=wallpaper_old,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__concrete",
+      "y": 90
+    },
+    "facing=south,inner=wallpaper_old,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__concrete",
+      "y": 180
+    },
+    "facing=west,inner=wallpaper_old,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_wallpaper_old__concrete",
+      "y": 270
+    },
+    "facing=north,inner=wood_wainscot,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__plaster_wall"
+    },
+    "facing=east,inner=wood_wainscot,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__plaster_wall",
+      "y": 90
+    },
+    "facing=south,inner=wood_wainscot,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__plaster_wall",
+      "y": 180
+    },
+    "facing=west,inner=wood_wainscot,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__plaster_wall",
+      "y": 270
+    },
+    "facing=north,inner=wood_wainscot,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__plaster_wall_stained"
+    },
+    "facing=east,inner=wood_wainscot,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__plaster_wall_stained",
+      "y": 90
+    },
+    "facing=south,inner=wood_wainscot,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__plaster_wall_stained",
+      "y": 180
+    },
+    "facing=west,inner=wood_wainscot,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__plaster_wall_stained",
+      "y": 270
+    },
+    "facing=north,inner=wood_wainscot,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__wallpaper_old"
+    },
+    "facing=east,inner=wood_wainscot,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__wallpaper_old",
+      "y": 90
+    },
+    "facing=south,inner=wood_wainscot,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__wallpaper_old",
+      "y": 180
+    },
+    "facing=west,inner=wood_wainscot,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__wallpaper_old",
+      "y": 270
+    },
+    "facing=north,inner=wood_wainscot,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__wood_wainscot"
+    },
+    "facing=east,inner=wood_wainscot,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__wood_wainscot",
+      "y": 90
+    },
+    "facing=south,inner=wood_wainscot,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__wood_wainscot",
+      "y": 180
+    },
+    "facing=west,inner=wood_wainscot,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__wood_wainscot",
+      "y": 270
+    },
+    "facing=north,inner=wood_wainscot,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__bath_tile_wall"
+    },
+    "facing=east,inner=wood_wainscot,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__bath_tile_wall",
+      "y": 90
+    },
+    "facing=south,inner=wood_wainscot,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__bath_tile_wall",
+      "y": 180
+    },
+    "facing=west,inner=wood_wainscot,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__bath_tile_wall",
+      "y": 270
+    },
+    "facing=north,inner=wood_wainscot,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__oshiire_floor"
+    },
+    "facing=east,inner=wood_wainscot,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__oshiire_floor",
+      "y": 90
+    },
+    "facing=south,inner=wood_wainscot,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__oshiire_floor",
+      "y": 180
+    },
+    "facing=west,inner=wood_wainscot,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__oshiire_floor",
+      "y": 270
+    },
+    "facing=north,inner=wood_wainscot,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__apartment_siding"
+    },
+    "facing=east,inner=wood_wainscot,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__apartment_siding",
+      "y": 90
+    },
+    "facing=south,inner=wood_wainscot,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__apartment_siding",
+      "y": 180
+    },
+    "facing=west,inner=wood_wainscot,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__apartment_siding",
+      "y": 270
+    },
+    "facing=north,inner=wood_wainscot,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__concrete"
+    },
+    "facing=east,inner=wood_wainscot,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__concrete",
+      "y": 90
+    },
+    "facing=south,inner=wood_wainscot,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__concrete",
+      "y": 180
+    },
+    "facing=west,inner=wood_wainscot,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_wood_wainscot__concrete",
+      "y": 270
+    },
+    "facing=north,inner=bath_tile_wall,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__plaster_wall"
+    },
+    "facing=east,inner=bath_tile_wall,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__plaster_wall",
+      "y": 90
+    },
+    "facing=south,inner=bath_tile_wall,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__plaster_wall",
+      "y": 180
+    },
+    "facing=west,inner=bath_tile_wall,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__plaster_wall",
+      "y": 270
+    },
+    "facing=north,inner=bath_tile_wall,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__plaster_wall_stained"
+    },
+    "facing=east,inner=bath_tile_wall,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__plaster_wall_stained",
+      "y": 90
+    },
+    "facing=south,inner=bath_tile_wall,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__plaster_wall_stained",
+      "y": 180
+    },
+    "facing=west,inner=bath_tile_wall,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__plaster_wall_stained",
+      "y": 270
+    },
+    "facing=north,inner=bath_tile_wall,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__wallpaper_old"
+    },
+    "facing=east,inner=bath_tile_wall,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__wallpaper_old",
+      "y": 90
+    },
+    "facing=south,inner=bath_tile_wall,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__wallpaper_old",
+      "y": 180
+    },
+    "facing=west,inner=bath_tile_wall,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__wallpaper_old",
+      "y": 270
+    },
+    "facing=north,inner=bath_tile_wall,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__wood_wainscot"
+    },
+    "facing=east,inner=bath_tile_wall,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__wood_wainscot",
+      "y": 90
+    },
+    "facing=south,inner=bath_tile_wall,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__wood_wainscot",
+      "y": 180
+    },
+    "facing=west,inner=bath_tile_wall,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__wood_wainscot",
+      "y": 270
+    },
+    "facing=north,inner=bath_tile_wall,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__bath_tile_wall"
+    },
+    "facing=east,inner=bath_tile_wall,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__bath_tile_wall",
+      "y": 90
+    },
+    "facing=south,inner=bath_tile_wall,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__bath_tile_wall",
+      "y": 180
+    },
+    "facing=west,inner=bath_tile_wall,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__bath_tile_wall",
+      "y": 270
+    },
+    "facing=north,inner=bath_tile_wall,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__oshiire_floor"
+    },
+    "facing=east,inner=bath_tile_wall,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__oshiire_floor",
+      "y": 90
+    },
+    "facing=south,inner=bath_tile_wall,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__oshiire_floor",
+      "y": 180
+    },
+    "facing=west,inner=bath_tile_wall,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__oshiire_floor",
+      "y": 270
+    },
+    "facing=north,inner=bath_tile_wall,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__apartment_siding"
+    },
+    "facing=east,inner=bath_tile_wall,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__apartment_siding",
+      "y": 90
+    },
+    "facing=south,inner=bath_tile_wall,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__apartment_siding",
+      "y": 180
+    },
+    "facing=west,inner=bath_tile_wall,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__apartment_siding",
+      "y": 270
+    },
+    "facing=north,inner=bath_tile_wall,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__concrete"
+    },
+    "facing=east,inner=bath_tile_wall,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__concrete",
+      "y": 90
+    },
+    "facing=south,inner=bath_tile_wall,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__concrete",
+      "y": 180
+    },
+    "facing=west,inner=bath_tile_wall,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_bath_tile_wall__concrete",
+      "y": 270
+    },
+    "facing=north,inner=oshiire_floor,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__plaster_wall"
+    },
+    "facing=east,inner=oshiire_floor,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__plaster_wall",
+      "y": 90
+    },
+    "facing=south,inner=oshiire_floor,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__plaster_wall",
+      "y": 180
+    },
+    "facing=west,inner=oshiire_floor,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__plaster_wall",
+      "y": 270
+    },
+    "facing=north,inner=oshiire_floor,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__plaster_wall_stained"
+    },
+    "facing=east,inner=oshiire_floor,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__plaster_wall_stained",
+      "y": 90
+    },
+    "facing=south,inner=oshiire_floor,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__plaster_wall_stained",
+      "y": 180
+    },
+    "facing=west,inner=oshiire_floor,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__plaster_wall_stained",
+      "y": 270
+    },
+    "facing=north,inner=oshiire_floor,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__wallpaper_old"
+    },
+    "facing=east,inner=oshiire_floor,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__wallpaper_old",
+      "y": 90
+    },
+    "facing=south,inner=oshiire_floor,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__wallpaper_old",
+      "y": 180
+    },
+    "facing=west,inner=oshiire_floor,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__wallpaper_old",
+      "y": 270
+    },
+    "facing=north,inner=oshiire_floor,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__wood_wainscot"
+    },
+    "facing=east,inner=oshiire_floor,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__wood_wainscot",
+      "y": 90
+    },
+    "facing=south,inner=oshiire_floor,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__wood_wainscot",
+      "y": 180
+    },
+    "facing=west,inner=oshiire_floor,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__wood_wainscot",
+      "y": 270
+    },
+    "facing=north,inner=oshiire_floor,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__bath_tile_wall"
+    },
+    "facing=east,inner=oshiire_floor,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__bath_tile_wall",
+      "y": 90
+    },
+    "facing=south,inner=oshiire_floor,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__bath_tile_wall",
+      "y": 180
+    },
+    "facing=west,inner=oshiire_floor,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__bath_tile_wall",
+      "y": 270
+    },
+    "facing=north,inner=oshiire_floor,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__oshiire_floor"
+    },
+    "facing=east,inner=oshiire_floor,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__oshiire_floor",
+      "y": 90
+    },
+    "facing=south,inner=oshiire_floor,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__oshiire_floor",
+      "y": 180
+    },
+    "facing=west,inner=oshiire_floor,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__oshiire_floor",
+      "y": 270
+    },
+    "facing=north,inner=oshiire_floor,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__apartment_siding"
+    },
+    "facing=east,inner=oshiire_floor,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__apartment_siding",
+      "y": 90
+    },
+    "facing=south,inner=oshiire_floor,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__apartment_siding",
+      "y": 180
+    },
+    "facing=west,inner=oshiire_floor,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__apartment_siding",
+      "y": 270
+    },
+    "facing=north,inner=oshiire_floor,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__concrete"
+    },
+    "facing=east,inner=oshiire_floor,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__concrete",
+      "y": 90
+    },
+    "facing=south,inner=oshiire_floor,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__concrete",
+      "y": 180
+    },
+    "facing=west,inner=oshiire_floor,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_oshiire_floor__concrete",
+      "y": 270
+    },
+    "facing=north,inner=apartment_siding,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__plaster_wall"
+    },
+    "facing=east,inner=apartment_siding,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__plaster_wall",
+      "y": 90
+    },
+    "facing=south,inner=apartment_siding,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__plaster_wall",
+      "y": 180
+    },
+    "facing=west,inner=apartment_siding,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__plaster_wall",
+      "y": 270
+    },
+    "facing=north,inner=apartment_siding,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__plaster_wall_stained"
+    },
+    "facing=east,inner=apartment_siding,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__plaster_wall_stained",
+      "y": 90
+    },
+    "facing=south,inner=apartment_siding,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__plaster_wall_stained",
+      "y": 180
+    },
+    "facing=west,inner=apartment_siding,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__plaster_wall_stained",
+      "y": 270
+    },
+    "facing=north,inner=apartment_siding,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__wallpaper_old"
+    },
+    "facing=east,inner=apartment_siding,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__wallpaper_old",
+      "y": 90
+    },
+    "facing=south,inner=apartment_siding,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__wallpaper_old",
+      "y": 180
+    },
+    "facing=west,inner=apartment_siding,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__wallpaper_old",
+      "y": 270
+    },
+    "facing=north,inner=apartment_siding,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__wood_wainscot"
+    },
+    "facing=east,inner=apartment_siding,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__wood_wainscot",
+      "y": 90
+    },
+    "facing=south,inner=apartment_siding,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__wood_wainscot",
+      "y": 180
+    },
+    "facing=west,inner=apartment_siding,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__wood_wainscot",
+      "y": 270
+    },
+    "facing=north,inner=apartment_siding,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__bath_tile_wall"
+    },
+    "facing=east,inner=apartment_siding,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__bath_tile_wall",
+      "y": 90
+    },
+    "facing=south,inner=apartment_siding,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__bath_tile_wall",
+      "y": 180
+    },
+    "facing=west,inner=apartment_siding,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__bath_tile_wall",
+      "y": 270
+    },
+    "facing=north,inner=apartment_siding,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__oshiire_floor"
+    },
+    "facing=east,inner=apartment_siding,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__oshiire_floor",
+      "y": 90
+    },
+    "facing=south,inner=apartment_siding,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__oshiire_floor",
+      "y": 180
+    },
+    "facing=west,inner=apartment_siding,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__oshiire_floor",
+      "y": 270
+    },
+    "facing=north,inner=apartment_siding,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__apartment_siding"
+    },
+    "facing=east,inner=apartment_siding,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__apartment_siding",
+      "y": 90
+    },
+    "facing=south,inner=apartment_siding,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__apartment_siding",
+      "y": 180
+    },
+    "facing=west,inner=apartment_siding,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__apartment_siding",
+      "y": 270
+    },
+    "facing=north,inner=apartment_siding,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__concrete"
+    },
+    "facing=east,inner=apartment_siding,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__concrete",
+      "y": 90
+    },
+    "facing=south,inner=apartment_siding,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__concrete",
+      "y": 180
+    },
+    "facing=west,inner=apartment_siding,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_apartment_siding__concrete",
+      "y": 270
+    },
+    "facing=north,inner=concrete,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_concrete__plaster_wall"
+    },
+    "facing=east,inner=concrete,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_concrete__plaster_wall",
+      "y": 90
+    },
+    "facing=south,inner=concrete,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_concrete__plaster_wall",
+      "y": 180
+    },
+    "facing=west,inner=concrete,outer=plaster_wall": {
+      "model": "hitori:block/two_sided_wall_concrete__plaster_wall",
+      "y": 270
+    },
+    "facing=north,inner=concrete,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_concrete__plaster_wall_stained"
+    },
+    "facing=east,inner=concrete,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_concrete__plaster_wall_stained",
+      "y": 90
+    },
+    "facing=south,inner=concrete,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_concrete__plaster_wall_stained",
+      "y": 180
+    },
+    "facing=west,inner=concrete,outer=plaster_wall_stained": {
+      "model": "hitori:block/two_sided_wall_concrete__plaster_wall_stained",
+      "y": 270
+    },
+    "facing=north,inner=concrete,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_concrete__wallpaper_old"
+    },
+    "facing=east,inner=concrete,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_concrete__wallpaper_old",
+      "y": 90
+    },
+    "facing=south,inner=concrete,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_concrete__wallpaper_old",
+      "y": 180
+    },
+    "facing=west,inner=concrete,outer=wallpaper_old": {
+      "model": "hitori:block/two_sided_wall_concrete__wallpaper_old",
+      "y": 270
+    },
+    "facing=north,inner=concrete,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_concrete__wood_wainscot"
+    },
+    "facing=east,inner=concrete,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_concrete__wood_wainscot",
+      "y": 90
+    },
+    "facing=south,inner=concrete,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_concrete__wood_wainscot",
+      "y": 180
+    },
+    "facing=west,inner=concrete,outer=wood_wainscot": {
+      "model": "hitori:block/two_sided_wall_concrete__wood_wainscot",
+      "y": 270
+    },
+    "facing=north,inner=concrete,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_concrete__bath_tile_wall"
+    },
+    "facing=east,inner=concrete,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_concrete__bath_tile_wall",
+      "y": 90
+    },
+    "facing=south,inner=concrete,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_concrete__bath_tile_wall",
+      "y": 180
+    },
+    "facing=west,inner=concrete,outer=bath_tile_wall": {
+      "model": "hitori:block/two_sided_wall_concrete__bath_tile_wall",
+      "y": 270
+    },
+    "facing=north,inner=concrete,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_concrete__oshiire_floor"
+    },
+    "facing=east,inner=concrete,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_concrete__oshiire_floor",
+      "y": 90
+    },
+    "facing=south,inner=concrete,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_concrete__oshiire_floor",
+      "y": 180
+    },
+    "facing=west,inner=concrete,outer=oshiire_floor": {
+      "model": "hitori:block/two_sided_wall_concrete__oshiire_floor",
+      "y": 270
+    },
+    "facing=north,inner=concrete,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_concrete__apartment_siding"
+    },
+    "facing=east,inner=concrete,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_concrete__apartment_siding",
+      "y": 90
+    },
+    "facing=south,inner=concrete,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_concrete__apartment_siding",
+      "y": 180
+    },
+    "facing=west,inner=concrete,outer=apartment_siding": {
+      "model": "hitori:block/two_sided_wall_concrete__apartment_siding",
+      "y": 270
+    },
+    "facing=north,inner=concrete,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_concrete__concrete"
+    },
+    "facing=east,inner=concrete,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_concrete__concrete",
+      "y": 90
+    },
+    "facing=south,inner=concrete,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_concrete__concrete",
+      "y": 180
+    },
+    "facing=west,inner=concrete,outer=concrete": {
+      "model": "hitori:block/two_sided_wall_concrete__concrete",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,lit=false,swing=false": {
+      "model": "hitori:block/hanging_lamp"
+    },
+    "facing=north,lit=false,swing=true": {
+      "model": "hitori:block/hanging_lamp_swing"
+    },
+    "facing=north,lit=true,swing=false": {
+      "model": "hitori:block/hanging_lamp_lit"
+    },
+    "facing=north,lit=true,swing=true": {
+      "model": "hitori:block/hanging_lamp_lit_swing"
+    },
+    "facing=east,lit=false,swing=false": {
+      "model": "hitori:block/hanging_lamp",
+      "y": 90
+    },
+    "facing=east,lit=false,swing=true": {
+      "model": "hitori:block/hanging_lamp_swing",
+      "y": 90
+    },
+    "facing=east,lit=true,swing=false": {
+      "model": "hitori:block/hanging_lamp_lit",
+      "y": 90
+    },
+    "facing=east,lit=true,swing=true": {
+      "model": "hitori:block/hanging_lamp_lit_swing",
+      "y": 90
+    },
+    "facing=south,lit=false,swing=false": {
+      "model": "hitori:block/hanging_lamp",
+      "y": 180
+    },
+    "facing=south,lit=false,swing=true": {
+      "model": "hitori:block/hanging_lamp_swing",
+      "y": 180
+    },
+    "facing=south,lit=true,swing=false": {
+      "model": "hitori:block/hanging_lamp_lit",
+      "y": 180
+    },
+    "facing=south,lit=true,swing=true": {
+      "model": "hitori:block/hanging_lamp_lit_swing",
+      "y": 180
+    },
+    "facing=west,lit=false,swing=false": {
+      "model": "hitori:block/hanging_lamp",
+      "y": 270
+    },
+    "facing=west,lit=false,swing=true": {
+      "model": "hitori:block/hanging_lamp_swing",
+      "y": 270
+    },
+    "facing=west,lit=true,swing=false": {
+      "model": "hitori:block/hanging_lamp_lit",
+      "y": 270
+    },
+    "facing=west,lit=true,swing=true": {
+      "model": "hitori:block/hanging_lamp_lit_swing",
+      "y": 270
+    }
+  }
+}

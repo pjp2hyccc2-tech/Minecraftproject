@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/rain_window"
+    },
+    "facing=east": {
+      "model": "hitori:block/rain_window",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/rain_window",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/rain_window",
+      "y": 270
+    }
+  }
+}

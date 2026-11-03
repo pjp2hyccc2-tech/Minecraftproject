@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/bicycle"
+    },
+    "facing=east": {
+      "model": "hitori:block/bicycle",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/bicycle",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/bicycle",
+      "y": 270
+    }
+  }
+}

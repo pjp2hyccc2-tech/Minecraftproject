@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/laundry_pole"
+    },
+    "facing=east": {
+      "model": "hitori:block/laundry_pole",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/laundry_pole",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/laundry_pole",
+      "y": 270
+    }
+  }
+}

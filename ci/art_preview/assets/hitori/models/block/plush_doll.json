@@ -1,0 +1,137 @@
+{
+ "parent": "minecraft:block/block",
+ "render_type": "minecraft:translucent",
+ "textures": {
+  "t": "hitori:block/plush_doll",
+  "particle": "hitori:block/plush_doll"
+ },
+ "display": {
+  "gui": {
+   "rotation": [
+    30,
+    225,
+    0
+   ],
+   "translation": [
+    0,
+    2,
+    0
+   ],
+   "scale": [
+    0.9,
+    0.9,
+    0.9
+   ]
+  },
+  "ground": {
+   "rotation": [
+    0,
+    0,
+    0
+   ],
+   "translation": [
+    0,
+    3,
+    0
+   ],
+   "scale": [
+    0.25,
+    0.25,
+    0.25
+   ]
+  },
+  "fixed": {
+   "rotation": [
+    0,
+    0,
+    0
+   ],
+   "translation": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.5,
+    0.5,
+    0.5
+   ]
+  },
+  "thirdperson_righthand": {
+   "rotation": [
+    75,
+    45,
+    0
+   ],
+   "translation": [
+    0,
+    2.5,
+    0
+   ],
+   "scale": [
+    0.375,
+    0.375,
+    0.375
+   ]
+  },
+  "firstperson_righthand": {
+   "rotation": [
+    0,
+    45,
+    0
+   ],
+   "translation": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.4,
+    0.4,
+    0.4
+   ]
+  },
+  "firstperson_lefthand": {
+   "rotation": [
+    0,
+    225,
+    0
+   ],
+   "translation": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    0.4,
+    0.4,
+    0.4
+   ]
+  }
+ },
+ "elements": [
+  {
+   "from": [
+    5.5,
+    0.01,
+    6.5
+   ],
+   "to": [
+    10.5,
+    0.03,
+    10.5
+   ],
+   "faces": {
+    "up": {
+     "texture": "#t",
+     "uv": [
+      0.0,
+      5.0,
+      5.0,
+      9.0
+     ]
+    }
+   }
+  }
+ ]
+}

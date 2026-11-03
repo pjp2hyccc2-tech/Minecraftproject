@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/vacancy_sign"
+    },
+    "facing=east": {
+      "model": "hitori:block/vacancy_sign",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/vacancy_sign",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/vacancy_sign",
+      "y": 270
+    }
+  }
+}

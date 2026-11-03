@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "hitori:block/wood_wainscot",
+    "north": "hitori:block/plaster_wall_stained",
+    "south": "hitori:block/wood_wainscot",
+    "east": "hitori:block/wood_wainscot",
+    "west": "hitori:block/wood_wainscot",
+    "up": "hitori:block/wood_wainscot",
+    "down": "hitori:block/wood_wainscot"
+  }
+}

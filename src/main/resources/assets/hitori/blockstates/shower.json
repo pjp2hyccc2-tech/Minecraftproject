@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/shower"
+    },
+    "facing=east": {
+      "model": "hitori:block/shower",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/shower",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/shower",
+      "y": 270
+    }
+  }
+}

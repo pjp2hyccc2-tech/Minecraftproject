@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,running=false": {
+      "model": "hitori:block/washbasin"
+    },
+    "facing=north,running=true": {
+      "model": "hitori:block/washbasin_running"
+    },
+    "facing=east,running=false": {
+      "model": "hitori:block/washbasin",
+      "y": 90
+    },
+    "facing=east,running=true": {
+      "model": "hitori:block/washbasin_running",
+      "y": 90
+    },
+    "facing=south,running=false": {
+      "model": "hitori:block/washbasin",
+      "y": 180
+    },
+    "facing=south,running=true": {
+      "model": "hitori:block/washbasin_running",
+      "y": 180
+    },
+    "facing=west,running=false": {
+      "model": "hitori:block/washbasin",
+      "y": 270
+    },
+    "facing=west,running=true": {
+      "model": "hitori:block/washbasin_running",
+      "y": 270
+    }
+  }
+}

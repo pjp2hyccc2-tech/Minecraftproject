@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hitori:block/pull_switch"
+    },
+    "facing=east": {
+      "model": "hitori:block/pull_switch",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hitori:block/pull_switch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hitori:block/pull_switch",
+      "y": 270
+    }
+  }
+}

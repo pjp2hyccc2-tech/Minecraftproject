@@ -1,0 +1,184 @@
+{
+  "variants": {
+    "facing=north,part=head,water=0,lid=false": {
+      "model": "hitori:block/bathtub_head_0"
+    },
+    "facing=north,part=head,water=0,lid=true": {
+      "model": "hitori:block/bathtub_head_lid"
+    },
+    "facing=north,part=head,water=1,lid=false": {
+      "model": "hitori:block/bathtub_head_1"
+    },
+    "facing=north,part=head,water=1,lid=true": {
+      "model": "hitori:block/bathtub_head_lid"
+    },
+    "facing=north,part=head,water=2,lid=false": {
+      "model": "hitori:block/bathtub_head_2"
+    },
+    "facing=north,part=head,water=2,lid=true": {
+      "model": "hitori:block/bathtub_head_lid"
+    },
+    "facing=north,part=foot,water=0,lid=false": {
+      "model": "hitori:block/bathtub_foot_0"
+    },
+    "facing=north,part=foot,water=0,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid"
+    },
+    "facing=north,part=foot,water=1,lid=false": {
+      "model": "hitori:block/bathtub_foot_1"
+    },
+    "facing=north,part=foot,water=1,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid"
+    },
+    "facing=north,part=foot,water=2,lid=false": {
+      "model": "hitori:block/bathtub_foot_2"
+    },
+    "facing=north,part=foot,water=2,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid"
+    },
+    "facing=east,part=head,water=0,lid=false": {
+      "model": "hitori:block/bathtub_head_0",
+      "y": 90
+    },
+    "facing=east,part=head,water=0,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 90
+    },
+    "facing=east,part=head,water=1,lid=false": {
+      "model": "hitori:block/bathtub_head_1",
+      "y": 90
+    },
+    "facing=east,part=head,water=1,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 90
+    },
+    "facing=east,part=head,water=2,lid=false": {
+      "model": "hitori:block/bathtub_head_2",
+      "y": 90
+    },
+    "facing=east,part=head,water=2,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 90
+    },
+    "facing=east,part=foot,water=0,lid=false": {
+      "model": "hitori:block/bathtub_foot_0",
+      "y": 90
+    },
+    "facing=east,part=foot,water=0,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 90
+    },
+    "facing=east,part=foot,water=1,lid=false": {
+      "model": "hitori:block/bathtub_foot_1",
+      "y": 90
+    },
+    "facing=east,part=foot,water=1,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 90
+    },
+    "facing=east,part=foot,water=2,lid=false": {
+      "model": "hitori:block/bathtub_foot_2",
+      "y": 90
+    },
+    "facing=east,part=foot,water=2,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 90
+    },
+    "facing=south,part=head,water=0,lid=false": {
+      "model": "hitori:block/bathtub_head_0",
+      "y": 180
+    },
+    "facing=south,part=head,water=0,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 180
+    },
+    "facing=south,part=head,water=1,lid=false": {
+      "model": "hitori:block/bathtub_head_1",
+      "y": 180
+    },
+    "facing=south,part=head,water=1,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 180
+    },
+    "facing=south,part=head,water=2,lid=false": {
+      "model": "hitori:block/bathtub_head_2",
+      "y": 180
+    },
+    "facing=south,part=head,water=2,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 180
+    },
+    "facing=south,part=foot,water=0,lid=false": {
+      "model": "hitori:block/bathtub_foot_0",
+      "y": 180
+    },
+    "facing=south,part=foot,water=0,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 180
+    },
+    "facing=south,part=foot,water=1,lid=false": {
+      "model": "hitori:block/bathtub_foot_1",
+      "y": 180
+    },
+    "facing=south,part=foot,water=1,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 180
+    },
+    "facing=south,part=foot,water=2,lid=false": {
+      "model": "hitori:block/bathtub_foot_2",
+      "y": 180
+    },
+    "facing=south,part=foot,water=2,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 180
+    },
+    "facing=west,part=head,water=0,lid=false": {
+      "model": "hitori:block/bathtub_head_0",
+      "y": 270
+    },
+    "facing=west,part=head,water=0,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 270
+    },
+    "facing=west,part=head,water=1,lid=false": {
+      "model": "hitori:block/bathtub_head_1",
+      "y": 270
+    },
+    "facing=west,part=head,water=1,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 270
+    },
+    "facing=west,part=head,water=2,lid=false": {
+      "model": "hitori:block/bathtub_head_2",
+      "y": 270
+    },
+    "facing=west,part=head,water=2,lid=true": {
+      "model": "hitori:block/bathtub_head_lid",
+      "y": 270
+    },
+    "facing=west,part=foot,water=0,lid=false": {
+      "model": "hitori:block/bathtub_foot_0",
+      "y": 270
+    },
+    "facing=west,part=foot,water=0,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 270
+    },
+    "facing=west,part=foot,water=1,lid=false": {
+      "model": "hitori:block/bathtub_foot_1",
+      "y": 270
+    },
+    "facing=west,part=foot,water=1,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 270
+    },
+    "facing=west,part=foot,water=2,lid=false": {
+      "model": "hitori:block/bathtub_foot_2",
+      "y": 270
+    },
+    "facing=west,part=foot,water=2,lid=true": {
+      "model": "hitori:block/bathtub_foot_lid",
+      "y": 270
+    }
+  }
+}

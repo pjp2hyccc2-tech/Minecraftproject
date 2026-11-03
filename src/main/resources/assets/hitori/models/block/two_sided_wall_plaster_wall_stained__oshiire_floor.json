@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "hitori:block/oshiire_floor",
+    "north": "hitori:block/plaster_wall_stained",
+    "south": "hitori:block/oshiire_floor",
+    "east": "hitori:block/oshiire_floor",
+    "west": "hitori:block/oshiire_floor",
+    "up": "hitori:block/oshiire_floor",
+    "down": "hitori:block/oshiire_floor"
+  }
+}
