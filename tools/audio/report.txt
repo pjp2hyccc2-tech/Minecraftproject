@@ -25,7 +25,7 @@ fixture/gas_loop                   6.00  1   -9.6   -9.5  -24.3  -23.2  -21.2  1
 fixture/dishwasher                 8.00  1   -8.9   -8.6  -23.4  -21.2  -19.7  14.5  3050  0.13   72.6  loop seam hf x1.25 (interior median x1.01, seam rank 72%)
 fixture/tv_static                  6.00  1  -11.1  -10.9  -25.0  -22.2  -20.9  13.9  4905  0.11   54.2  loop seam hf x0.87 (interior median x0.95, seam rank 30%)
 fixture/monitor_static             6.00  1  -14.9  -14.9  -29.6  -28.1  -26.3  14.6  3222  0.12   59.3  loop seam hf x1.08 (interior median x0.89, seam rank 75%)
-fixture/phone_ring                 6.00  1   -1.4   -1.4  -12.1   -7.6   -6.6  10.7  1280  0.07   23.1  loop seam hf x0.00 (interior median x0.00, seam rank 0%)
+fixture/phone_ring                 6.00  1  -11.3  -11.2  -22.6  -18.0  -17.0  11.3  1280  0.07   22.2  loop seam hf x0.00 (interior median x0.00, seam rank 0%)
 spirit/near                        8.00  1   -7.1   -7.1  -21.7  -26.1  -22.4  14.6    80  0.53   46.6  loop seam hf x0.79 (interior median x1.00, seam rank 12%)
 camera/sense                       6.00  2  -13.5  -13.3  -30.0  -24.1  -21.3  16.5  3992  0.12   96.3  loop seam hf x1.12 (interior median x1.03, seam rank 65%)
 music/dread                       64.00  2  -17.3  -17.3  -28.8  -29.0  -25.7  11.5    75  0.13  620.8  loop seam hf x0.97 (interior median x1.01, seam rank 48%); binaural 129.0/135.0Hz(d6.0), 129.0/121.6Hz(d7.4)
@@ -44,8 +44,8 @@ door/auto_open                     1.37  1   -3.2   -3.2  -16.8  -16.5  -14.5  1
 door/auto_close                    1.95  1   -2.9   -2.9  -18.8  -18.9  -17.0  15.8   263  0.51   17.7  
 door/chime_1                       2.08  1   -2.0   -2.0  -16.3  -13.9  -11.0  14.3   740  0.08    9.0  
 door/chime_2                       2.05  1   -1.9   -1.9  -16.9  -14.7  -11.7  15.0   745  0.10    9.0  
-door/chime_wrong_1                 4.52  1   -1.9   -1.9  -18.3  -17.0  -12.9  16.4   621  0.17   17.1  
-door/chime_wrong_2                 5.06  1   -1.9   -1.9  -16.4  -13.9   -8.9  14.5   917  0.07   20.3  
+door/chime_wrong_1                 4.52  1   -5.0   -5.0  -21.3  -20.0  -15.9  16.3   621  0.17   16.9  
+door/chime_wrong_2                 5.06  1   -4.9   -4.9  -19.4  -16.9  -11.9  14.5   917  0.06   20.1  
 door/swing_1                       1.61  1   -2.9   -2.9  -25.1  -26.9  -23.6  22.2   210  0.74   11.0  
 door/swing_2                       1.81  1   -2.9   -2.9  -24.1  -25.0  -21.5  21.2   179  0.50   11.9  
 door/swing_3                       1.22  1   -3.1   -3.1  -24.4  -26.8  -23.1  21.3   221  0.91   10.7  
@@ -60,10 +60,10 @@ door/stall_bang_2                  0.32  1   -1.0   -1.0  -16.7  -18.4  -18.4  1
 door/locked                        0.66  1   -5.4   -5.1  -29.3  -28.7  -28.5  24.0  1411  1.02    9.2  
 door/unlock                        0.62  1   -4.2   -4.2  -24.5  -22.2  -20.6  20.3  4948  0.56    9.9  
 door/switch                        0.40  1   -4.2   -4.2  -31.7  -30.6  -30.6  27.5  1780  2.78    6.8  
-fixture/call_button_1              0.86  1   -1.8   -1.7  -14.8  -13.6  -10.4  13.1  1618  0.07    9.0  
-fixture/call_button_2              0.87  1   -1.7   -1.6  -16.0  -14.5  -11.3  14.3  1733  0.07    9.1  
-fixture/call_display               1.48  1   -1.5   -1.5  -14.1  -13.3   -9.3  12.6  1166  0.08    9.4  
-fixture/service_bell               3.04  1   -2.0   -1.7  -22.4  -17.2  -10.9  20.4  4234  0.01   11.6  
+fixture/call_button_1              0.86  1   -4.9   -4.8  -17.9  -16.6  -13.4  13.0  1619  0.07    9.0  
+fixture/call_button_2              0.87  1   -4.8   -4.8  -19.0  -17.5  -14.3  14.2  1730  0.07    9.1  
+fixture/call_display               1.48  1   -4.5   -4.5  -17.1  -16.3  -12.3  12.6  1165  0.08    9.4  
+fixture/service_bell               3.04  1   -4.0   -3.8  -24.4  -19.2  -12.9  20.3  4239  0.01   11.6  
 fixture/pass_bell                  2.28  1   -2.1   -1.3  -22.9  -19.1  -12.8  20.8  4449  0.01    9.5  
 fixture/register_drawer            0.92  1   -2.9   -2.8  -21.1  -18.9  -17.7  18.2  1587  0.40   11.1  
 fixture/phone_voice_1              6.20  2   -3.1   -3.0  -24.2  -20.0  -15.7  21.1  1279  0.38   63.4  
@@ -97,7 +97,7 @@ fixture/glass_set_1                0.56  1   -3.9   -3.9  -22.9  -21.0  -20.2  1
 fixture/glass_set_2                0.63  1   -4.3   -4.3  -21.6  -19.3  -18.1  17.3  1637  0.34    8.1  
 fixture/menu_scatter_1             1.49  1   -3.3   -3.3  -29.1  -25.8  -23.2  25.8  3447  0.48   16.8  
 fixture/menu_scatter_2             1.39  1   -2.1   -2.1  -27.3  -23.8  -21.2  25.2  3371  0.66   15.9  
-fixture/pa_chime                   4.55  2   -2.0   -2.0  -16.9   -9.5   -6.1  14.9  1245  0.15   61.4  
+fixture/pa_chime                   4.55  2  -11.5  -11.5  -26.4  -19.0  -15.6  14.9  1246  0.15   60.6  
 fixture/pa_voice_1                 7.19  2   -2.9   -2.9  -18.3  -14.4  -12.3  15.4   724  0.13   97.0  
 fixture/pa_voice_2                 5.63  2   -3.3   -3.3  -20.3  -16.2  -13.0  17.0   727  0.49   75.4  
 fixture/pa_voice_3                 4.46  2   -3.1   -3.1  -19.3  -15.8  -13.4  16.2   626  0.53   59.9  
@@ -119,10 +119,10 @@ camera/raise                       0.48  2   -5.9   -5.9  -23.9  -17.9  -17.9  1
 camera/lower                       0.54  2   -5.9   -5.6  -25.0  -18.7  -18.5  19.1  4164  0.24   11.7  
 camera/shutter_1                   0.32  1   -3.6   -1.4  -23.4  -22.8  -22.8  19.8  2135  0.73    5.9  
 camera/shutter_2                   0.31  1   -1.0   -1.0  -21.3  -21.0  -21.0  20.2  1506  0.91    6.0  
-camera/charge                      2.60  2   -7.8   -7.8  -15.3   -8.6   -7.1   7.4  6849  0.14   30.4  
-camera/eject                       1.32  2   -5.0   -4.9  -14.9  -11.1  -10.6   9.9  1403  0.08   23.0  
+camera/charge                      2.60  2  -26.2  -26.2  -33.7  -27.0  -25.5   7.4  6851  0.14   29.6  
+camera/eject                       1.32  2  -14.7  -14.6  -24.8  -21.0  -20.5  10.1  1406  0.08   22.7  
 camera/empty                       0.33  2   -4.7   -4.7  -28.6  -25.2  -25.2  23.8  1864  0.17    6.9  
-camera/zoom                        0.16  2  -12.2  -12.1  -21.0  -16.6  -16.6   8.8  1520  0.15    6.2  
+camera/zoom                        0.16  2  -17.0  -16.9  -25.9  -21.5  -21.5   8.9  1517  0.17    6.1  
 camera/load                        2.30  2   -4.7   -4.6  -27.7  -23.9  -20.2  23.1  2259  0.57   26.0  
 photo/develop                      3.90  2  -11.2  -11.0  -29.5  -22.0  -18.9  18.3  9248  0.09   58.8  
 photo/name                         3.40  2   -4.0   -3.8  -27.5  -21.8  -19.2  23.5  2802  0.35   47.4  
@@ -247,30 +247,31 @@ spirit/notice_2                    0.87  1   -1.1   -1.1  -12.8   -9.8   -8.9  1
 spirit/notice_3                    1.18  1   -1.2   -1.1  -13.3  -11.4  -10.4  12.1  1435  0.28   13.8  
 spirit/bound                       5.06  1   -2.7   -2.6  -24.8  -19.8  -17.0  22.1  1987  0.16   36.7  
 spirit/vanish                      4.53  1   -4.0   -4.0  -24.1  -19.5  -15.6  20.1   962  0.34   41.0  
-game/jumpscare_1                 MISSING
-game/jumpscare_2                 MISSING
-game/jumpscare_3                 MISSING
-game/stinger_1                   MISSING
-game/stinger_2                   MISSING
-game/stinger_3                   MISSING
-game/stinger_4                   MISSING
-game/riser_1                     MISSING
-game/riser_2                     MISSING
-game/caught                      MISSING
-game/wake                        MISSING
-game/captured                    MISSING
-game/closing                     MISSING
-game/title_hit                   MISSING
-game/release                     MISSING
-game/dawn                        MISSING
-game/ending_bad                  MISSING
+game/jumpscare_1                   2.20  2   -1.3   -1.1  -10.2   -6.1   -5.4   8.8  2108  0.16   40.0  
+game/jumpscare_2                   2.40  2   -1.4   -1.1   -8.4   -5.0   -4.1   7.0  1325  0.19   43.8  
+game/jumpscare_3                   1.70  2   -1.0   -1.0   -9.3   -5.7   -4.7   8.3  1936  0.22   33.5  
+game/stinger_1                     3.97  2   -1.1   -1.1  -17.5  -14.7  -10.1  16.4   734  0.14   61.2  
+game/stinger_2                     4.99  2   -1.4   -1.4  -17.7  -14.6   -9.7  16.3   318  0.24   69.4  
+game/stinger_3                     3.39  2   -1.3   -1.3  -17.8  -14.6   -9.9  16.4   941  0.16   51.3  
+game/stinger_4                     4.63  2   -1.5   -1.5  -15.7  -16.1  -10.7  14.2    63  0.26   47.0  
+game/riser_1                       5.20  2   -1.7   -1.7  -22.5  -18.6  -12.7  20.8  1338  0.15   75.8  
+game/riser_2                       4.30  2   -1.3   -1.1  -18.8  -14.3   -8.9  17.4  1754  0.11   64.2  
+game/caught                        3.00  2   -1.9   -1.4  -21.4  -13.7   -9.3  19.5  3563  0.17   38.9  
+game/wake                          6.00  2   -3.0   -3.0  -22.3  -22.0  -16.9  19.3   178  0.13   72.8  
+game/captured                      4.50  2   -6.3   -6.3  -19.2  -16.7  -14.3  12.9   318  0.24   47.7  
+game/closing                       7.00  2   -1.1   -1.1  -18.4  -18.8  -11.7  17.3   119  0.20  113.3  
+game/title_hit                     6.00  2   -1.5   -1.5  -18.2  -19.0  -12.7  16.8    50  0.28   44.8  
+game/release                       5.50  2   -1.8   -1.8  -19.7  -14.9  -10.0  17.8   970  0.16   55.7  
+game/dawn                          7.00  2   -5.4   -5.4  -21.2  -18.0  -14.1  15.8   410  0.36   92.4  
+game/ending_bad                    7.50  2   -2.5   -2.5  -21.6  -18.5  -14.5  19.1   592  0.30   77.8  
 -------------------------------------------------------------------------------------------------------------
-245 files, total 15.45 MB, worst true peak -1.00 dBTP, 17 MISSING
+262 files, total 16.45 MB, worst true peak -1.00 dBTP
 
 Level summary (decoded files)
   beds        12 files  LUFS-I  -48.0 ..  -25.2   max momentary  -45.9 ..  -20.2   RMS  -47.1 ..  -24.9 dBFS
   music       12 files  LUFS-I  -30.0 ..  -20.0   max momentary  -26.6 ..  -13.2   RMS  -35.1 ..  -20.4 dBFS
-  one-shots  221 files  LUFS-I  -36.1 ..   -7.6   max momentary  -31.0 ..   -6.1   RMS  -36.8 ..  -12.1 dBFS
+  jumpscare    3 files  LUFS-I   -6.1 ..   -5.0   max momentary   -5.4 ..   -4.1   RMS  -10.2 ..   -8.4 dBFS
+  one-shots  235 files  LUFS-I  -36.1 ..   -9.8   max momentary  -31.0 ..   -8.9   RMS  -36.8 ..  -12.8 dBFS
 
 Loop seams: the click measure at the wrap point compared with the same measure at 40 interior points
 of the file (a seam ranked above 98% of them with hf > 3 is flagged CLICK?).

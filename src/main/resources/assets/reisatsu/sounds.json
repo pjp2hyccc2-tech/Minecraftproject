@@ -1731,5 +1731,116 @@
         "attenuation_distance": 12
       }
     ]
+  },
+  "game.jumpscare": {
+    "subtitle": "subtitles.reisatsu.game.jumpscare",
+    "sounds": [
+      {
+        "name": "reisatsu:game/jumpscare_1",
+        "preload": true
+      },
+      {
+        "name": "reisatsu:game/jumpscare_2",
+        "preload": true
+      },
+      {
+        "name": "reisatsu:game/jumpscare_3",
+        "preload": true
+      }
+    ]
+  },
+  "game.stinger": {
+    "subtitle": "subtitles.reisatsu.game.stinger",
+    "sounds": [
+      {
+        "name": "reisatsu:game/stinger_1",
+        "preload": true
+      },
+      {
+        "name": "reisatsu:game/stinger_2",
+        "preload": true
+      },
+      {
+        "name": "reisatsu:game/stinger_3",
+        "preload": true
+      },
+      {
+        "name": "reisatsu:game/stinger_4",
+        "preload": true
+      }
+    ]
+  },
+  "game.riser": {
+    "sounds": [
+      {
+        "name": "reisatsu:game/riser_1"
+      },
+      {
+        "name": "reisatsu:game/riser_2"
+      }
+    ]
+  },
+  "game.caught": {
+    "subtitle": "subtitles.reisatsu.game.caught",
+    "sounds": [
+      {
+        "name": "reisatsu:game/caught"
+      }
+    ]
+  },
+  "game.wake": {
+    "subtitle": "subtitles.reisatsu.game.wake",
+    "sounds": [
+      {
+        "name": "reisatsu:game/wake"
+      }
+    ]
+  },
+  "game.captured": {
+    "subtitle": "subtitles.reisatsu.game.captured",
+    "sounds": [
+      {
+        "name": "reisatsu:game/captured"
+      }
+    ]
+  },
+  "game.closing": {
+    "subtitle": "subtitles.reisatsu.game.closing",
+    "sounds": [
+      {
+        "name": "reisatsu:game/closing"
+      }
+    ]
+  },
+  "game.title_hit": {
+    "sounds": [
+      {
+        "name": "reisatsu:game/title_hit"
+      }
+    ]
+  },
+  "game.release": {
+    "subtitle": "subtitles.reisatsu.game.release",
+    "sounds": [
+      {
+        "name": "reisatsu:game/release"
+      }
+    ]
+  },
+  "game.dawn": {
+    "subtitle": "subtitles.reisatsu.game.dawn",
+    "sounds": [
+      {
+        "name": "reisatsu:game/dawn"
+      }
+    ]
+  },
+  "game.ending_bad": {
+    "subtitle": "subtitles.reisatsu.game.ending_bad",
+    "sounds": [
+      {
+        "name": "reisatsu:game/ending_bad"
+      }
+    ]
   }
 }
