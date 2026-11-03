@@ -224,7 +224,9 @@ void main() {
     } else {
         eyes = lin * 1.8;
     }
-    eyes *= glcolor.a * (1.0 + 0.6 * fm);
+    // through the finder the eyes glow brighter - the chef's embers most (they are his face),
+    // the others' glints less (a glint blooming over a face hides it)
+    eyes *= glcolor.a * (1.0 + (entityId == ENT_CHEF ? 1.2 : 0.6) * fm);
   #else
     eyes = lin * 2.2 + mix(lin, vec3(0.9), 0.5) * handLightEyeshine(playerPos) * 0.4;
   #endif
@@ -366,15 +368,14 @@ void main() {
     receiveShadow = false;
     int item = currentRenderedItemId;
     if (item == ITEM_FLASHLIGHT) {
-        // a dark metal torch of which only the lens glows. The art draws the lens face
-        // full-bright (forge_data: a full lightmap); without that, the bright texels of the
-        // face that looks along the beam. In first person the lens looks away from us: what
-        // shows is the head, the collar and the knurled grip - the art's light chrome is
+        // a dark metal torch of which only the lens glows: the bright texels of the face that
+        // looks along the beam (the art's lens face; in first person it looks away from us).
+        // What shows is the head, the collar and the knurled grip - the art's light chrome is
         // darkened to anodised metal, a dull sheen catching the lamps on its edges
         vec3 Nv = mat3(gbufferModelView) * N;
-        bool lensFace = lm.x > 0.985 && lm.y > 0.985;
+        bool lensFace = lm.x > 0.985 && lm.y > 0.985;   // drawn full-bright by the art (forge_data)
         float bright = smoothstep(0.55, 0.85, luma(albedo.rgb) + 0.25 * chroma(albedo.rgb));
-        float lens = bright * (lensFace ? 1.0 : smoothstep(0.5, 0.8, -Nv.z));
+        float lens = bright * smoothstep(0.5, 0.8, -Nv.z);
         float chrome = smoothstep(0.20, 0.50, luma(lin)) * (1.0 - lens);
         lin *= mix(1.0, 0.20, chrome);
         if (lensFace) lm = vec2(0.3, 0.0);              // its own light says nothing of the room's
