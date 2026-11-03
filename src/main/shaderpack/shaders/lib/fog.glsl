@@ -120,8 +120,20 @@ vec4 fogAnalytic(vec3 rd, float dist) {
 #endif
     vec3 S = fogAmbientLightO(rd, outside) * (1.0 - T);
 #ifdef EMITTERS_ON
-    airLampsGather(rd, min(d, 40.0));
-    S += airLampsSegment(0.0, min(d, 40.0), sigma, 1.0 - outside) * 0.08;
+    // the lamps' glow: three segments, each with its own air (the mist low down, the haze
+    // above it, indoors or out)
+    float tEnd = min(d, 40.0);
+    airLampsGather(rd, tEnd);
+    float Tl = 1.0;
+    for (int i = 0; i < 3; i++) {
+        float a = tEnd * float(i) / 3.0;
+        float b = tEnd * float(i + 1) / 3.0;
+        vec3 q = cameraPosition + rd * (0.5 * (a + b));
+        float o = airOutside(q);
+        float sg = fogDensityO(q, 0.0, o);
+        S += Tl * airLampsSegment(a, b, sg, 1.0 - o) * 0.08;
+        Tl *= exp(-sg * (b - a));
+    }
 #endif
     for (int i = 0; i < HAND_LIGHTS; i++) {
         HandLight L = handLight(i);
