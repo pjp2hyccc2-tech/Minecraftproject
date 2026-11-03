@@ -296,8 +296,8 @@ def _board_face(msg):
         dm[(((xx - 10) / 9.0) ** 2 + ((yy - 5) / 4.2) ** 2) < 1.0] = 0.3
         dm[(((xx - 10) / 6.0) ** 2 + ((yy - 4.5) / 2.6) ** 2) < 1.0] = 0.9
         over(a, chalk(dm, 12306, '#e8c070'), 4, 41)
-        pm = text_mask('¥780', 9, FONT_SANS_BOLD, binary=False, ss=4)
-        over(a, chalk(pm, 12307), 27, 44)
+        pm = text_mask('¥780', 8, FONT_SANS_BOLD, binary=False, ss=4)
+        over(a, chalk(pm, 12307), 26, 45)
     else:
         # 「まだ　いますか」: big, uneven, as if written by a shaking hand; everything else wiped
         l1 = text_mask('まだ', 16, FONT_SANS_JP_MED, binary=False, ss=4)

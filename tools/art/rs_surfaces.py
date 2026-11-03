@@ -539,10 +539,9 @@ def fascia():
     a[10:12] = from_idx(np.full((2, 16), 5.0) + n[10:12] * 0.2, CREAM)
     dl(a[11:12], -0.03)
     a[15] = from_idx(np.full(16, 2.0), ORANGE)
-    # faint dirt streaks from the roof edge, sun-faded paint
-    st = wrapn(2402, beta=0.6, sx=1, sy=14)
-    tint(a, '#5a3420', 0.12, (st > 0.9) & (y > 1) & (y < 10))
+    # sun-faded paint, grime collected along the lower edge of the band
     tint(a, '#c9a080', 0.08)
+    tint(a, '#4a2a18', 0.10, (y >= 12) & (y < 15))
     return a
 
 
@@ -772,10 +771,10 @@ def granite_counter():
     # wrap-safe: rebuild with tileable noise
     r = rng(3401)
     n = wrapn(3402, beta=0.5)
-    a = from_idx(2.4 + n * 0.9, GRANITE)
-    a[r.random((16, 16)) < 0.07] = C('#8a8780')
-    a[r.random((16, 16)) < 0.04] = C('#5d4a3c')
-    a[r.random((16, 16)) < 0.03] = C('#b5b2a8')
+    a = from_idx(2.4 + n * 0.7, GRANITE)
+    a[r.random((16, 16)) < 0.04] = C('#6e6c66')
+    a[r.random((16, 16)) < 0.03] = C('#4e4038')
+    a[r.random((16, 16)) < 0.012] = C('#a8a59c')
     return a
 
 
