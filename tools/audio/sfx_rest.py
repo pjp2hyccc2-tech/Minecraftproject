@@ -477,7 +477,7 @@ def faucet_on(rng, i=1):
     m = ns(1.35)
     w = _water_stream(m, rng, flow=1.0, splash=0.8, sink=SINK_STEEL)
     w *= dsp.env_pts(m, [(0, 0), (0.15, 0.6), (0.4, 1.0), (m / SR, 1.0)])
-    dsp.place(y, _nrm(w) * 0.55, 0.6)
+    dsp.place(y, _nrm(w) * 1.0, 0.6)
     return dsp.fade(_near(y, rng)[:ns(2.0)], 0.0, 0.08)
 
 
@@ -555,7 +555,7 @@ def gas_ignite(rng, i=1):
     m = ns(1.8)
     roar = dsp.colored(m, rng, -2.0, lo=120, hi=4000) * (1 + 0.25 * dsp.smooth(m, rng, 12.0))
     roar *= dsp.env_pts(m, [(0, 0), (0.06, 1.0), (0.3, 0.55), (1.8, 0.5)])
-    dsp.place(y, roar / np.std(roar) * 0.12, t0)
+    dsp.place(y, roar / np.std(roar) * 0.55, t0)
     return dsp.fade(_near(y, rng)[:ns(2.6)], 0.0, 0.3)
 
 
@@ -578,11 +578,11 @@ def breaker_off(rng, i=1):
     tt = np.arange(n) / SR
     buzz = _fluor_buzz(n, rng, level=1.0) * (tt < t0 + 0.012)  # the lights' hum cut dead
     y += buzz * 0.12
-    f = 760 * np.exp(-np.clip(tt - t0, 0, None) / 0.9) + 35  # fans and compressors spinning down
+    f = 760 * np.exp(-np.clip(tt - t0, 0, None) / 1.1) + 35  # fans and compressors spinning down
     wh = np.sin(TAU * np.cumsum(f) / SR) + 0.3 * np.sin(TAU * np.cumsum(f * 2.02) / SR)
     wh *= np.clip((tt - t0) / 0.01, 0, 1) * np.exp(-np.clip(tt - t0, 0, None) / 1.1) * (tt > t0)
-    y += wh * 0.12
-    y += dsp.lowpass(rng.standard_normal(n), 800, 2) * np.exp(-np.clip(tt - t0, 0, None) / 0.8) * (tt > t0) * 0.04
+    y += wh * 0.34
+    y += dsp.lowpass(rng.standard_normal(n), 800, 2) * np.exp(-np.clip(tt - t0, 0, None) / 0.8) * (tt > t0) * 0.06
     return _fin(_near(y, rng), 25)
 
 

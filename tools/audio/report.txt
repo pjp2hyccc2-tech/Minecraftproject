@@ -68,14 +68,14 @@ fixture/pass_bell                  2.28  1   -2.1   -1.3  -22.9  -19.1  -12.8  2
 fixture/register_drawer            0.92  1   -2.9   -2.8  -21.1  -18.9  -17.7  18.2  1587  0.40   11.1  
 fixture/phone_voice_1              6.20  2   -3.1   -3.0  -24.2  -20.0  -15.7  21.1  1279  0.38   63.4  
 fixture/phone_voice_2              7.00  2   -3.5   -3.5  -25.3  -21.1  -14.8  21.8  1293  0.41   70.7  
-fixture/faucet_on                  2.00  1   -3.4   -3.4  -27.7  -25.2  -22.6  24.2  3554  0.45   20.2  
+fixture/faucet_on                  2.00  1   -3.4   -3.4  -24.2  -21.7  -20.3  20.8  3813  0.33   20.2  
 fixture/faucet_off                 2.38  1   -4.2   -4.2  -23.8  -21.5  -16.2  19.6  2515  0.57   12.8  
 fixture/drink_pour_1               2.63  1   -4.8   -4.8  -27.4  -24.1  -22.6  22.6  3431  0.30   27.6  
 fixture/drink_pour_2               2.77  1   -4.1   -4.1  -21.7  -18.9  -17.9  17.6  3555  0.22   28.6  
 fixture/ice_drop_1                 1.22  1   -3.0   -3.0  -25.8  -23.7  -20.6  22.8  2066  1.52   14.8  
 fixture/ice_drop_2                 0.60  1   -3.4   -3.2  -25.2  -22.1  -21.6  21.8  1932  1.82    8.5  
-fixture/gas_ignite                 2.60  1   -3.6   -3.6  -36.8  -36.1  -31.0  33.2  1793  0.27   25.5  
-fixture/breaker_off                3.66  1   -1.4   -1.3  -28.0  -30.1  -20.1  26.6   305  0.02   26.2  
+fixture/gas_ignite                 2.60  1   -3.6   -3.6  -26.6  -24.5  -20.0  23.0  1712  0.28   26.2  
+fixture/breaker_off                3.66  1   -1.0   -1.0  -24.8  -25.2  -17.9  23.7   471  0.01   25.0  
 fixture/breaker_on                 3.60  1   -1.3   -1.2  -28.1  -31.5  -21.7  26.8   370  0.46   39.6  
 fixture/light_flicker_1            1.05  1   -4.1   -3.9  -19.9  -20.8  -19.7  15.8   400  0.53   15.3  
 fixture/light_flicker_2            1.55  1   -4.2   -4.0  -18.8  -19.4  -17.5  14.6   421  0.81   19.0  
@@ -265,13 +265,13 @@ game/release                       5.50  2   -1.8   -1.8  -19.7  -14.9  -10.0  1
 game/dawn                          7.00  2   -5.4   -5.4  -21.2  -18.0  -14.1  15.8   410  0.36   92.4  
 game/ending_bad                    7.50  2   -2.5   -2.5  -21.6  -18.5  -14.5  19.1   592  0.30   77.8  
 -------------------------------------------------------------------------------------------------------------
-262 files, total 16.43 MB, worst true peak -1.00 dBTP
+262 files, total 16.42 MB, worst true peak -1.00 dBTP
 
 Level summary (decoded files)
   beds        12 files  LUFS-I  -48.0 ..  -25.2   max momentary  -45.9 ..  -20.2   RMS  -47.1 ..  -24.9 dBFS
   music       12 files  LUFS-I  -30.0 ..  -20.0   max momentary  -26.6 ..  -13.2   RMS  -35.1 ..  -20.4 dBFS
   jumpscare    3 files  LUFS-I   -6.1 ..   -5.0   max momentary   -5.4 ..   -4.1   RMS  -10.2 ..   -8.4 dBFS
-  one-shots  235 files  LUFS-I  -36.1 ..   -9.8   max momentary  -31.0 ..   -8.9   RMS  -36.8 ..  -12.8 dBFS
+  one-shots  235 files  LUFS-I  -32.6 ..   -9.8   max momentary  -30.6 ..   -8.9   RMS  -34.2 ..  -12.8 dBFS
 
 Loop seams: the click measure at the wrap point compared with the same measure at 40 interior points
 of the file; a seam ranked above 98% of them with hf > 3 whose HF energy is also above the file's typical
