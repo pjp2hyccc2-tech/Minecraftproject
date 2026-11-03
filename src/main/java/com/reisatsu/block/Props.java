@@ -26,6 +26,8 @@ public final class Props {
     public static final BooleanProperty HANGING = BooleanProperty.create("hanging");
     public static final BooleanProperty OCCUPIED = BooleanProperty.create("occupied");
     public static final BooleanProperty LOCKED = BooleanProperty.create("locked");
+    /** A downlight set into the eave's fascia band (fascia sides) instead of a ceiling (ceiling-tile sides). */
+    public static final BooleanProperty FASCIA = BooleanProperty.create("fascia");
 
     public static final IntegerProperty MESSAGE = IntegerProperty.create("message", 0, 1);
     public static final IntegerProperty NUMBER = IntegerProperty.create("number", 0, 17);

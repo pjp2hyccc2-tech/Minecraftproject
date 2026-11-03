@@ -45,6 +45,16 @@ public final class RestaurantBuilder {
     public static final Set<BlockPos> NIGHT_LIGHTS = Set.of(new BlockPos(12, CEIL, 24), new BlockPos(13, CEIL, 23));
     /** Soffit downlights under the front eave (x positions at z 31). */
     public static final int[] SOFFIT_X = {12, 20, 28, 36};
+    /** The soffit downlights replace the fascia blocks at these x (z 31). */
+    public static final int SOFFIT_Y = CEIL + 1;
+    /** Every downlight set into the fascia band: over the front walk, and two over the back yard. */
+    public static final List<BlockPos> FASCIA_LIGHTS = new ArrayList<>();
+
+    static {
+        for (int x : SOFFIT_X) FASCIA_LIGHTS.add(new BlockPos(x, SOFFIT_Y, 31));
+        FASCIA_LIGHTS.add(new BlockPos(12, SOFFIT_Y, -1));
+        FASCIA_LIGHTS.add(new BlockPos(33, SOFFIT_Y, -1));
+    }
     /** Downpipes {x, z, skipBottom}: the building's corners and the canopy's sides. */
     static final int[][] DOWNPIPES = {{-1, -1, 0}, {41, -1, 0}, {-1, 31, 1}, {41, 31, 1}};
 
@@ -429,8 +439,9 @@ public final class RestaurantBuilder {
         }
         s.set(25, top + 2, -1, Blocks.IRON_BARS.defaultBlockState());
         s.set(26, top + 2, -1, Blocks.IRON_BARS.defaultBlockState());
-        // soffit lights under the front eave (outside lighting, the SIGN circuit)
-        for (int x : SOFFIT_X) s.set(x, CEIL, 31, light(ModBlocks.DOWNLIGHT, Circuit.SIGN.startOn()));
+        // downlights set into the fascia, shining on the front walk and the back yard (outside lighting, the SIGN circuit)
+        for (BlockPos p : FASCIA_LIGHTS)
+            s.set(p.getX(), p.getY(), p.getZ(), light(ModBlocks.DOWNLIGHT, Circuit.SIGN.startOn()).setValue(Props.FASCIA, true));
         // downpipes from the gutters at the corners and beside the canopy
         for (int[] p : DOWNPIPES) {
             for (int y = Y; y <= CEIL; y++) {
@@ -762,8 +773,8 @@ public final class RestaurantBuilder {
         s.set(5, Y + 1, 21, f(ModBlocks.PAPER_TOWEL, W));
         // ---- women's: the sink counter under the dark mirror, three stalls along the west wall (the third occupied)
         for (int x = 9; x <= 11; x++) s.set(x, Y, 17, f(ModBlocks.RESTROOM_SINK, S));
-        s.set(12, Y, 17, st(ModBlocks.GRANITE_COUNTER));
-        s.set(12, Y + 1, 17, f(ModBlocks.NOTE_PAPER, S));        // the cleaning checklist (note "cleaning")
+        // the cleaning checklist (note "cleaning"), taped to the wall beside the mirror
+        s.set(12, Y + 1, 17, f(ModBlocks.NOTE_PAPER, S).setValue(Props.HANGING, true));
         womensStalls(s, false);
         s.set(13, Y + 1, 19, f(ModBlocks.HAND_DRYER, W));
         s.set(13, Y + 1, 18, f(ModBlocks.PAPER_TOWEL, W));
@@ -794,7 +805,7 @@ public final class RestaurantBuilder {
         if (!s.touches(6, 10, 14, 16)) return;
         // the mirror image of the women's restroom, dead and decayed (z' = 32 - z)
         for (int x = 9; x <= 11; x++) s.set(x, Y, 15, f(ModBlocks.RESTROOM_SINK, N));
-        s.set(12, Y, 15, st(ModBlocks.GRANITE_COUNTER));
+        s.set(12, Y + 1, 15, f(ModBlocks.NOTE_PAPER, N).setValue(Props.HANGING, true));   // its blank twin
         womensStalls(s, true);
         s.set(13, Y + 1, 13, f(ModBlocks.HAND_DRYER, W));
         s.set(13, Y + 1, 14, f(ModBlocks.PAPER_TOWEL, W));

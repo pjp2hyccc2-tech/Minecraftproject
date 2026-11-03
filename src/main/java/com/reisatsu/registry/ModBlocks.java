@@ -116,12 +116,12 @@ public final class ModBlocks {
     public static final RegistryObject<LightBlock> CEILING_LIGHT = block("ceiling_light",
             () -> new LightBlock.Panel(lit(p(MapColor.QUARTZ, SoundType.GLASS), s -> LightBlock.level(s, 13))));
     public static final RegistryObject<LightBlock> DOWNLIGHT = block("downlight",
-            () -> new LightBlock(lit(p(MapColor.QUARTZ, SoundType.GLASS), s -> LightBlock.level(s, 11)), false, Shapes.block()));
+            () -> new LightBlock.Down(lit(p(MapColor.QUARTZ, SoundType.GLASS), s -> LightBlock.level(s, s.getValue(Props.FASCIA) ? 13 : 11))));
     public static final RegistryObject<LightBlock> PENDANT_LAMP = block("pendant_lamp",
             () -> new LightBlock(lit(prop(MapColor.COLOR_ORANGE, SoundType.GLASS).noCollission(), s -> LightBlock.level(s, 12)), false,
                     Block.box(4, 6, 4, 12, 16, 12)));
     public static final RegistryObject<PropBlock> EXIT_SIGN = litProp("exit_sign", MapColor.COLOR_GREEN, SoundType.GLASS, s -> 7,
-            b -> b.box(1, 4, 13, 15, 12, 16).props(Props.HANGING).noCollision().seeThrough());
+            b -> b.box(2, 8, 14, 14, 14, 16).altBox(Props.HANGING, 2, 6, 7, 14, 16, 9).noCollision().seeThrough());
     public static final RegistryObject<Block> EXTERIOR_WALL = cube("exterior_wall", MapColor.SAND, SoundType.STONE);
     public static final RegistryObject<Block> FACADE_BRICK = cube("facade_brick", MapColor.TERRACOTTA_BROWN, SoundType.STONE);
     public static final RegistryObject<LowBlock> BRICK_SILL = block("brick_sill", () -> new LowBlock(p(MapColor.TERRACOTTA_BROWN, SoundType.STONE), 10));
@@ -372,5 +372,5 @@ public final class ModBlocks {
     public static final RegistryObject<PropBlock> FLOWER_OFFERING = prop("flower_offering", MapColor.PLANT, SoundType.GRASS,
             b -> b.box(2, 0, 2, 14, 10, 14).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> NOTE_PAPER = prop("note_paper", MapColor.QUARTZ, PAPER,
-            b -> b.box(3, 0, 3, 13, 1, 13).noCollision().seeThrough().use(Behaviours::note));
+            b -> b.box(3, 0, 3, 13, 1, 13).altBox(Props.HANGING, 3, 1, 15, 13, 15, 16).noCollision().seeThrough().use(Behaviours::note));
 }

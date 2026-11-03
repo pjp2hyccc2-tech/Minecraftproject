@@ -61,6 +61,8 @@ public class PropBlock extends FacingBlock {
     private final Tick tick;
     private final VoxelShape[] collisionShapes = new VoxelShape[4];
     private final boolean customCollision;
+    private final BooleanProperty altWhen;
+    private final VoxelShape[] altShapes = new VoxelShape[4];
 
     public static Builder builder(String id, Properties properties) {
         return new Builder(id, properties);
@@ -83,9 +85,20 @@ public class PropBlock extends FacingBlock {
                 collisionShapes[d.get2DDataValue()] = shape;
             }
         }
+        this.altWhen = b.altWhen;
+        if (altWhen != null) {
+            double[] a = b.altBox;
+            for (Direction d : Direction.Plane.HORIZONTAL) altShapes[d.get2DDataValue()] = rotate(a[0], a[1], a[2], a[3], a[4], a[5], d);
+        }
         BlockState s = defaultBlockState();
         for (Property<?> p : b.extra) s = defaultValue(s, p);
         registerDefaultState(s);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
+        if (altWhen != null && state.getValue(altWhen)) return altShapes[state.getValue(FACING).get2DDataValue()];
+        return super.getShape(state, level, pos, ctx);
     }
 
     private static BlockState defaultValue(BlockState s, Property<?> p) {
@@ -161,6 +174,8 @@ public class PropBlock extends FacingBlock {
         final List<Property<?>> extra = new ArrayList<>();
         boolean collide = true;
         boolean seeThrough;
+        BooleanProperty altWhen;
+        double[] altBox;
         Use use;
         Inside inside;
         Animate animate;
@@ -184,7 +199,15 @@ public class PropBlock extends FacingBlock {
         }
 
         public Builder props(Property<?>... ps) {
-            extra.addAll(List.of(ps));
+            for (Property<?> p : ps) if (!extra.contains(p)) extra.add(p);
+            return this;
+        }
+
+        /** The outline while a boolean property is true (e.g. a note taped to the wall, a hanging exit sign); adds the property. */
+        public Builder altBox(BooleanProperty when, double x1, double y1, double z1, double x2, double y2, double z2) {
+            props(when);
+            altWhen = when;
+            altBox = new double[]{x1, y1, z1, x2, y2, z2};
             return this;
         }
 

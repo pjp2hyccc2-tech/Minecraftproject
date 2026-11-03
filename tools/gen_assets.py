@@ -161,8 +161,9 @@ def art(name):
     return name
 
 
-def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True):
-    """A facing prop drawn by an art model. extras: [(property, [values])]; name_fn(dict) -> model name."""
+def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True, x_fn=None):
+    """A facing prop drawn by an art model. extras: [(property, [values])]; name_fn(dict) -> model name;
+    x_fn(dict) -> x rotation (a floor decal turned up against the wall behind it: x 90 puts the model's bottom on the south)."""
     if name_fn is None:
         def name_fn(kv):
             n = name
@@ -176,7 +177,7 @@ def facing_prop(name, extras=(), name_fn=None, item=None, rotate=True):
         for combo in itertools.product(*[vals for _, vals in extras]):
             kv = dict(zip(props, combo))
             key = ",".join([f"facing={f}"] + [f"{p}={v}" for p, v in kv.items()])
-            variants[key] = var(art(name_fn(kv)), y if rotate else 0)
+            variants[key] = var(art(name_fn(kv)), y if rotate else 0, x_fn(kv) if x_fn else 0)
     bs(name, variants)
     default = {p: vals[0] if vals[0] not in ("true",) else "false" for p, vals in extras}
     for p, vals in extras:
@@ -219,7 +220,12 @@ def main():
     bs("ceiling_light", {f"lit={lit},broken={br}": var("ceiling_light_lit" if lit == "true" else "ceiling_light") for lit in B for br in B})
     item_parent("ceiling_light", "ceiling_light_lit")
     panel_light("downlight")
-    bs("downlight", {f"lit={lit}": var("downlight_lit" if lit == "true" else "downlight") for lit in B})
+    for suffix, tex in (("", "downlight"), ("_lit", "downlight_lit")):     # set into the eave's fascia band outside
+        model("downlight_fascia" + suffix, {"parent": "minecraft:block/cube",
+                                            "textures": {"particle": t("fascia"), "down": t(tex), "up": t("fascia"), "north": t("fascia"),
+                                                         "south": t("fascia"), "east": t("fascia"), "west": t("fascia")}})
+    bs("downlight", {f"lit={lit},fascia={fa}": var(("downlight_fascia" if fa == "true" else "downlight") + ("_lit" if lit == "true" else ""))
+                     for lit in B for fa in B})
     item_parent("downlight", "downlight_lit")
     bs("pendant_lamp", {f"lit={lit}": var(art("pendant_lamp_lit" if lit == "true" else "pendant_lamp")) for lit in B})
     item_parent("pendant_lamp", "pendant_lamp_lit")
@@ -293,9 +299,11 @@ def main():
              "pass_bell", "walkin_shelf", "frost", "time_recorder", "staff_table", "folding_chair", "bulletin_board", "cardboard_boxes",
              "cleaning_cart", "filing_cabinet", "safe", "office_desk", "office_chair", "pc", "restroom_mirror", "toilet", "urinal", "stall_wall",
              "paper_towel", "bike_rack", "trash_station", "ac_unit", "gas_cylinder", "dumpster", "wheel_stop", "outdoor_planter", "guardrail",
-             "chevron_sign", "curve_mirror", "flower_offering", "note_paper"]
+             "chevron_sign", "curve_mirror", "flower_offering"]
     for n in plain:
         facing_prop(n)
+    # a note lies on a counter, or is taped to the wall behind it (hanging: the decal turned up, x 90)
+    facing_prop("note_paper", [("hanging", B)], name_fn=lambda kv: "note_paper", x_fn=lambda kv: 90 if kv["hanging"] == "true" else 0)
     facing_prop("restaurant_chair", [("fallen", B)])
     facing_prop("call_button", [("lit", B)])
     facing_prop("register", [("open", B)])

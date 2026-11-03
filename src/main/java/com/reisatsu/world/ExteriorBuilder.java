@@ -204,9 +204,7 @@ public final class ExteriorBuilder {
         s.set(36, Y, -2, f(ModBlocks.KITCHEN_TRASH, S));
         s.set(37, Y, -2, f(ModBlocks.KITCHEN_TRASH, S));
         s.set(12, Y, -9, f(ModBlocks.TRASH_STATION, S));
-        // lights under the eave (outside lighting)
-        s.set(12, Y + 4, -1, st(ModBlocks.DOWNLIGHT).setValue(Props.LIT, Circuit.SIGN.startOn()));
-        s.set(33, Y + 4, -1, st(ModBlocks.DOWNLIGHT).setValue(Props.LIT, Circuit.SIGN.startOn()));
+        // (the yard's lights are set into the fascia: RestaurantBuilder.FASCIA_LIGHTS)
     }
 
     // ------------------------------------------------------------------------------------------------ pole sign
@@ -241,12 +239,10 @@ public final class ExteriorBuilder {
         out.add(RestaurantBuilder.CANOPY_LOGO);
         for (int[] l : LOT_LAMPS) out.add(new BlockPos(l[0], Terrain.LAMP_Y, l[1]));
         for (int[] l : Terrain.ROAD_LAMPS) out.add(new BlockPos(l[0], Terrain.LAMP_Y, l[1]));
-        for (int x : RestaurantBuilder.SOFFIT_X) out.add(new BlockPos(x, RestaurantBuilder.CEIL, 31));
+        out.addAll(RestaurantBuilder.FASCIA_LIGHTS);
         out.add(new BlockPos(3, RestaurantBuilder.CEIL, 32));
         out.add(new BlockPos(4, RestaurantBuilder.CEIL, 32));
         out.add(new BlockPos(-1, Y + 3, 8));
-        out.add(new BlockPos(12, Y + 4, -1));
-        out.add(new BlockPos(33, Y + 4, -1));
         return out;
     }
 }

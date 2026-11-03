@@ -103,10 +103,10 @@ public final class WorldTour {
     /** Inside: every room. */
     public static List<Shot> interior() {
         List<Shot> l = new ArrayList<>();
-        l.add(s("vestibule", 7.5, 27.5, 110, 8));
+        l.add(s("vestibule", 6.5, 28.0, 83, 10));
         l.add(s("waiting", 1.5, 24.5, -90, 6));
         l.add(s("register", 8.5, 25.5, -125, 12));
-        l.add(s("kids_corner", 11.5, 25.5, 10, 16));
+        l.add(s("kids_corner", 9.6, 25.4, -38, 20));
         l.add(s("dining_west", 15.5, 12.5, -40, 10));
         l.add(s("dining_east", 37.5, 26.5, 130, 8));
         l.add(s("dining_booths", 22.5, 26.5, -88, 8));
