@@ -27,11 +27,12 @@ ALL_FACES = ('top', 'bottom', 'right', 'front', 'left', 'back')
 
 
 class Cube:
-    def __init__(self, origin, size, mat=None, grow=0.0, mirror=False, tag=None, faces=None):
+    def __init__(self, origin, size, mat=None, grow=0.0, mirror=False, tag=None, faces=None, uv_of=None):
         self.origin = tuple(float(v) for v in origin)
         self.size = tuple(float(v) for v in size)
         for v in self.size:
-            assert abs(v * 2 - round(v * 2)) < 1e-9, f'cube sizes must be multiples of 0.5: {size}'
+            assert abs(v * 4 - round(v * 4)) < 1e-9, f'cube sizes must be multiples of 0.25: {size}'
+        self.uv_of = uv_of      # tag of another cube of the same size whose texture region this one reuses
         self.mat = mat
         self.grow = grow
         self.mirror = mirror
@@ -152,7 +153,8 @@ def render_children(part):
 
 # ------------------------------------------------------------------------------------------------ UV packing
 def pack(root, tex_w, tex_h=None):
-    cubes = [c for p in root.walk() for c in p.cubes]
+    allc = [c for p in root.walk() for c in p.cubes]
+    cubes = [c for c in allc if c.uv_of is None]
     order = sorted(cubes, key=lambda c: (-math.ceil(c.footprint[1]), -math.ceil(c.footprint[0])))
     W = tex_w
     for H in ([tex_h] if tex_h else [32, 64, 128, 256]):
@@ -176,8 +178,75 @@ def pack(root, tex_w, tex_h=None):
                 ok = False
                 break
         if ok:
+            by = {c.tag: c for c in cubes if c.tag}
+            for c in allc:
+                if c.uv_of is not None:
+                    src = by[c.uv_of]
+                    assert src.size == c.size, f'shared uv {c.tag} -> {c.uv_of}: sizes differ'
+                    c.uv = src.uv
             return W, H
-    raise ValueError('textures do not fit')
+    raise ValueError(f'textures do not fit in {W} wide (used {sum(math.ceil(c.footprint[0]) * math.ceil(c.footprint[1]) for c in cubes)} of {W * (tex_h or 256)})')
+
+
+def advance(st, pose, pt):
+    """Python twin of the Java advance(): the clock that holds while the pose time holds."""
+    if st.clockPose == -2:
+        st.clock = pt
+    else:
+        d = pt - st.clockPt if (pose == st.clockPose and pt >= st.clockPt) else pt
+        st.clock += min(40.0, max(0.0, d))
+    st.clockPose = pose
+    st.clockPt = pt
+    return st.clock
+
+
+def chase(st, slot, target, w, z, t):
+    """Python twin of the Java chase()."""
+    last = st.st[slot]
+    if last < 0.0 or t < last or t - last > 40.0:
+        st.sx[slot] = target
+        st.sv[slot] = 0.0
+    elif t > last:
+        dt = t - last
+        n = min(160, max(1, int(math.ceil(dt * 4.0))))
+        h = dt / n
+        x, v = st.sx[slot], st.sv[slot]
+        for _ in range(n):
+            v += (w * w * (target - x) - 2.0 * z * w * v) * h
+            x += v * h
+        st.sx[slot], st.sv[slot] = x, v
+    st.st[slot] = t
+    return st.sx[slot]
+
+
+def flop(st, slot, part, fl, gx, gy, gz, w, z, t, *chain):
+    """Python twin of the Java flop()."""
+    P = R.rot_z(part.zRot) @ R.rot_y(part.yRot) @ R.rot_x(part.xRot)
+    r = P[:, 1]
+    M = np.eye(3)
+    for p in chain:
+        M = M @ (R.rot_z(p.zRot) @ R.rot_y(p.yRot) @ R.rot_x(p.xRot))
+    h = M.T @ np.array([gx, gy, gz], float)
+    h = h / max(1e-4, float(np.linalg.norm(h)))
+    d = r + (h - r) * fl
+    d = d / max(1e-4, float(np.linalg.norm(d)))
+    ax = math.asin(max(-1.0, min(1.0, d[2])))
+    az = math.atan2(-d[0], d[1])
+    if st.st[slot + 1] >= 0.0:
+        dd = az - st.sx[slot + 1]
+        dd -= 2 * math.pi * math.floor((dd + math.pi) / (2 * math.pi))
+        az = st.sx[slot + 1] + dd
+    bx = chase(st, slot, ax, w, z, t)
+    bz = chase(st, slot + 1, az, w, z, t)
+    e = np.array([-math.sin(bz) * math.cos(bx), math.cos(bz) * math.cos(bx), math.sin(bx)])
+    v = np.cross(r, e)
+    k = 1.0 / max(1e-3, 1.0 + float(r @ e))
+    Vx = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
+    D = np.eye(3) + Vx + (np.outer(v, v) - float(v @ v) * np.eye(3)) * k
+    N = D @ P
+    part.yRot = math.asin(max(-1.0, min(1.0, -N[2, 0])))
+    part.xRot = math.atan2(N[2, 1], N[2, 2])
+    part.zRot = math.atan2(N[1, 0], N[0, 0])
 
 
 def level(target, *chain):
@@ -283,6 +352,12 @@ STATE_JAVA = '''
         float[] last;
         final float[] fv = new float[8];
         final float[] ft = new float[] {-1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F};
+        float clock;
+        int clockPose = -2;
+        float clockPt;
+        final float[] sx = new float[24];
+        final float[] sv = new float[24];
+        final float[] st = new float[] {-1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F, -1.0F};
     }
 
     private State state(Entity entity, int pose, float age) {
@@ -371,6 +446,98 @@ STATE_JAVA = '''
         }
         s.ft[slot] = t;
         return s.fv[slot];
+    }
+
+    /** The animation clock: pose time accumulated across pose changes, so it stands still while the game holds the
+     *  pose time (frozen under the player's eyes) and steps when the pose time steps (stop-motion). */
+    private static float advance(State s, int pose, float pt) {
+        if (s.clockPose == -2) {
+            s.clock = pt;
+        } else {
+            float d = pose == s.clockPose && pt >= s.clockPt ? pt - s.clockPt : pt;
+            s.clock += Mth.clamp(d, 0.0F, 40.0F);
+        }
+        s.clockPose = pose;
+        s.clockPt = pt;
+        return s.clock;
+    }
+
+    /** A damped spring per entity (slot 0..23): chases `target` with inertia and overshoot (w: angular frequency per
+     *  tick, z: damping ratio), integrated in at most 160 sub-steps of 1/4 tick on the clock `t`; it restarts at the
+     *  target after a gap of more than 40 ticks or when time runs backwards, and holds while `t` holds. */
+    private static float chase(State s, int slot, float target, float w, float z, float t) {
+        float last = s.st[slot];
+        if (last < 0.0F || t < last || t - last > 40.0F) {
+            s.sx[slot] = target;
+            s.sv[slot] = 0.0F;
+        } else if (t > last) {
+            float dt = t - last;
+            int n = Math.min(160, Math.max(1, (int) Math.ceil(dt * 4.0F)));
+            float h = dt / (float) n;
+            float x = s.sx[slot];
+            float v = s.sv[slot];
+            for (int i = 0; i < n; i++) {
+                v += (w * w * (target - x) - 2.0F * z * w * v) * h;
+                x += v * h;
+            }
+            s.sx[slot] = x;
+            s.sv[slot] = v;
+        }
+        s.st[slot] = t;
+        return s.sx[slot];
+    }
+
+    /** Plush physics: a part extending along its +y leans from its posed direction toward the model-space direction
+     *  (gx, gy, gz) (gravity = 0, 1, 0; keep gy >= 0.3) by `flop` (0 stiff .. 1 hanging) and follows with inertia
+     *  (springs in slots `slot` and `slot + 1`): it lags, swings and settles whenever its ancestors (`chain`, root side
+     *  first) move. The correction is the smallest rotation onto the posed rotation, so the part keeps its twist. */
+    private static void flop(State s, int slot, ModelPart part, float flop, float gx, float gy, float gz, float w, float z, float t,
+                             ModelPart... chain) {
+        float pz = Mth.cos(part.zRot), qz = Mth.sin(part.zRot), py = Mth.cos(part.yRot), qy = Mth.sin(part.yRot);
+        float px = Mth.cos(part.xRot), qx = Mth.sin(part.xRot);
+        float p00 = pz * py, p01 = pz * qy * qx - qz * px, p02 = pz * qy * px + qz * qx;
+        float p10 = qz * py, p11 = qz * qy * qx + pz * px, p12 = qz * qy * px - pz * qx;
+        float p20 = -qy, p21 = py * qx, p22 = py * px;
+        float rx = p01, ry = p11, rz = p21;
+        float m00 = 1.0F, m01 = 0.0F, m02 = 0.0F, m10 = 0.0F, m11 = 1.0F, m12 = 0.0F, m20 = 0.0F, m21 = 0.0F, m22 = 1.0F;
+        for (ModelPart p : chain) {
+            float cz = Mth.cos(p.zRot), sz = Mth.sin(p.zRot), cy = Mth.cos(p.yRot), sy = Mth.sin(p.yRot);
+            float cx = Mth.cos(p.xRot), sx = Mth.sin(p.xRot);
+            float r00 = cz * cy, r01 = cz * sy * sx - sz * cx, r02 = cz * sy * cx + sz * sx;
+            float r10 = sz * cy, r11 = sz * sy * sx + cz * cx, r12 = sz * sy * cx - cz * sx;
+            float r20 = -sy, r21 = cy * sx, r22 = cy * cx;
+            float n00 = m00 * r00 + m01 * r10 + m02 * r20, n01 = m00 * r01 + m01 * r11 + m02 * r21, n02 = m00 * r02 + m01 * r12 + m02 * r22;
+            float n10 = m10 * r00 + m11 * r10 + m12 * r20, n11 = m10 * r01 + m11 * r11 + m12 * r21, n12 = m10 * r02 + m11 * r12 + m12 * r22;
+            float n20 = m20 * r00 + m21 * r10 + m22 * r20, n21 = m20 * r01 + m21 * r11 + m22 * r21, n22 = m20 * r02 + m21 * r12 + m22 * r22;
+            m00 = n00; m01 = n01; m02 = n02; m10 = n10; m11 = n11; m12 = n12; m20 = n20; m21 = n21; m22 = n22;
+        }
+        // the hang direction in the parent frame (transpose(M) * g), mixed with the posed direction
+        float hx = m00 * gx + m10 * gy + m20 * gz, hy = m01 * gx + m11 * gy + m21 * gz, hz = m02 * gx + m12 * gy + m22 * gz;
+        float hl = Math.max(1.0E-4F, Mth.sqrt(hx * hx + hy * hy + hz * hz));
+        float dx = Mth.lerp(flop, rx, hx / hl), dy = Mth.lerp(flop, ry, hy / hl), dz = Mth.lerp(flop, rz, hz / hl);
+        float dl = Math.max(1.0E-4F, Mth.sqrt(dx * dx + dy * dy + dz * dz));
+        float ax = (float) Math.asin(Mth.clamp(dz / dl, -1.0F, 1.0F));
+        float az = (float) Math.atan2(-dx, dy);
+        if (s.st[slot + 1] >= 0.0F) {
+            // no long way round: the sideways angle continues from where its spring is
+            float d = az - s.sx[slot + 1];
+            d -= Mth.TWO_PI * (float) Mth.floor((d + Mth.PI) / Mth.TWO_PI);
+            az = s.sx[slot + 1] + d;
+        }
+        float bx = chase(s, slot, ax, w, z, t);
+        float bz = chase(s, slot + 1, az, w, z, t);
+        float ex = -Mth.sin(bz) * Mth.cos(bx), ey = Mth.cos(bz) * Mth.cos(bx), ez = Mth.sin(bx);
+        // D = the smallest rotation taking r onto e: I + [v]x + [v]x^2 / (1 + r.e), v = r x e; then N = D * P
+        float vx = ry * ez - rz * ey, vy = rz * ex - rx * ez, vz = rx * ey - ry * ex;
+        float k = 1.0F / Math.max(1.0E-3F, 1.0F + rx * ex + ry * ey + rz * ez);
+        float d00 = 1.0F - (vy * vy + vz * vz) * k, d01 = -vz + vx * vy * k, d02 = vy + vx * vz * k;
+        float d10 = vz + vx * vy * k, d11 = 1.0F - (vx * vx + vz * vz) * k, d12 = -vx + vy * vz * k;
+        float d20 = -vy + vx * vz * k, d21 = vx + vy * vz * k, d22 = 1.0F - (vx * vx + vy * vy) * k;
+        float n00 = d00 * p00 + d01 * p10 + d02 * p20, n10 = d10 * p00 + d11 * p10 + d12 * p20;
+        float n20 = d20 * p00 + d21 * p10 + d22 * p20, n21 = d20 * p01 + d21 * p11 + d22 * p21, n22 = d20 * p02 + d21 * p12 + d22 * p22;
+        part.yRot = (float) Math.asin(Mth.clamp(-n20, -1.0F, 1.0F));
+        part.xRot = (float) Math.atan2(n21, n22);
+        part.zRot = (float) Math.atan2(n10, n00);
     }
 '''
 
@@ -526,7 +693,7 @@ def java_source(spec):
     A('        State mem = this.state(entity, pose, ageInTicks);')
     A('        int prev = mem.prev;')
     A('        float blend = 8.0F;')
-    for l in (PROLOGUE + spec.anim).strip('\n').splitlines():
+    for l in ((spec.prologue or PROLOGUE) + spec.anim).strip('\n').splitlines():
         A(('        ' + l) if l.strip() else '')
     A('        this.blend(mem, poseTicks, blend, ageInTicks);')
     for l in spec.post.strip('\n').splitlines():
@@ -576,6 +743,12 @@ class State:
         self.last = None
         self.fv = [0.0] * 8
         self.ft = [-1.0] * 8
+        self.clock = 0.0
+        self.clockPose = -2
+        self.clockPt = 0.0
+        self.sx = [0.0] * 24
+        self.sv = [0.0] * 24
+        self.st = [-1.0] * 24
 
 
 def ease(x):
@@ -685,6 +858,7 @@ class Spec:
     anim = ''
     post = ''
     helpers = ''
+    prologue = None      # Java run before anim (default PROLOGUE: ageInTicks as the clock, glitch = missing frames)
 
     consts = {}
 
