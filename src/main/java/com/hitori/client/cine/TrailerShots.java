@@ -983,8 +983,8 @@ final class TrailerShots {
     }
 
     /** 18: the fusuma flung open, the doll lunging into the lens until its face fills the frame (the laptop in your hands,
-     *  its screen's glow on the face). The spring is held at its nearest frame (tick 6, the mouth torn open, the knife up)
-     *  while the body carries it on to the lens. */
+     *  its screen's glow on the face, the lens closing in with it). The spring is held at its nearest frame (tick 6, the
+     *  mouth torn open, the knife up) while the body carries it on. */
     static final class Lunge extends Shot {
         static final float OPEN = 0.2f, SLID = 0.34f, SPRING = 0.5f, HOLD = 6.2f;
         Trailer.Puppet d;
@@ -994,7 +994,7 @@ final class TrailerShots {
             set.tv = true;
             set.fusuma = 1;
             setupAt = v(23.42, 71.62, 10.4);
-            keys = new float[]{0.8f, 1.0f, 1.95f};
+            keys = new float[]{0.75f, 0.95f, 1.95f};
             event(OPEN, "the fusuma flung open", () -> fusumaRow(2), l -> Fixtures.setClosetFusuma(l, 2));
         }
 
@@ -1009,17 +1009,19 @@ final class TrailerShots {
             float hit = seg(t, SPRING + 0.1f, SPRING + 0.42f);
             float creep = easeSine(seg(t, 0.95f, 2.0f));
             float carry = hit * hit * (3.0f - 2.0f * hit);
-            // carried on until the face (its pose's spring included) is ~0.3 from the lens, level with it: the head
-            // fills the picture; then it creeps the last few hundredths
-            double x = 24.6 - 0.266 * carry - 0.03 * creep;
-            double y = 70.0 + 0.2 * carry;
+            // its spring and a little carry bring the face to ~0.47 from the lens, just past the laptop's screen and
+            // above it (the screen's glow is the only light on it: nearer, the face would be behind the light), the view
+            // tipped down ~28 degrees onto it; the lens closes in (54 -> 35 degrees) until the head fills the picture,
+            // then the face creeps on and the lens tightens a little more
+            double x = 24.6 - 0.15 * carry - 0.02 * creep;
+            double y = 70.0 + 0.03 * carry;
             double[] lf = lungeFace(pt);
             Vec3 face = v(x - lf[0], y + lf[1], 10.2);
             f.look(v(23.2, 70.9, 10.2), lerp(v(24.6, 70.5, 10.2), face, easeSine(seg(t, SPRING, SPRING + 0.4f))));
-            f.shake(0.25f + 1.4f * hit * (1.0f - 0.65f * creep) + 0.6f * seg(t, OPEN, SLID), t, 32.0f);
+            f.shake(0.2f + 1.0f * hit * (1.0f - 0.7f * creep) + 0.6f * seg(t, OPEN, SLID), t, 32.0f);
             f.breathe(t, 0.6f, 33.0f);
             f.main = Held.LAPTOP;
-            f.fov = 54.0f;
+            f.fov = 54.0f - 19.0f * easeSine(seg(t, SPRING + 0.05f, SPRING + 0.45f)) - 2.0f * creep;
             f.fear = 0.85f;
             f.danger = lerp(0.5f, 0.72f, seg(t, OPEN, 0.9f));
             if (t >= OPEN - 0.001f) {
