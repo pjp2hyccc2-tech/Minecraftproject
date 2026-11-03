@@ -406,9 +406,8 @@ def hanging_lamp(lit_, swing=False):
     # frame corner posts standing proud
     for (cx, cz) in ((3, 3), (12.4, 3), (3, 12.4), (12.4, 12.4)):
         m.box([cx - 0.2, 3.6, cz - 0.2], [cx + 0.8, 9.2, cz + 0.8], WOOD, rot=rot)
-    # the pull cord (紐) hanging from the tube to below the block, a wooden bead at its end
-    m.box([7.9, -5, 7.9], [8.1, 4, 8.1], solid('lamp_pull', '#d8d0bc'), rot=rot)
-    m.box([7.5, -6.5, 7.5], [8.5, -5, 8.5], solid('lamp_bead', '#7a4a28'), rot=rot)
+    # the pull cord (紐) from the tube down to the bottom of the block (the pull_switch block below continues it)
+    m.box([7.9, 0, 7.9], [8.1, 4, 8.1], solid('lamp_pull', '#d8d0bc'), rot=rot)
     return m
 
 
@@ -458,13 +457,16 @@ A_PULL = Atlas('pull_switch')
 
 
 def pull_switch():
+    """The light's pull cord (紐スイッチ) in the block below the hanging lamp: the cord coming down from the lamp
+    above and, at reach height, its little plastic ornament (a faded pink bear's head from the previous tenant)."""
     m = Model('pull_switch', A_PULL, display=disp(gui=(20, 225, 0), gui_scale=0.6, gui_t=(0, -1, 0)))
-    m.box([6.5, 14.5, 6.5], [9.5, 16, 9.5], painted('pull_box', CREAMPL, base=4.5))
-    m.box([7.9, 3, 7.9], [8.1, 14.5, 8.1], solid('pull_cord', '#e8e2d0'))
-    # the little plastic ornament at the end (a faded pink bear's head, from the previous tenant)
+    m.box([7.9, 3.4, 7.9], [8.1, 16, 8.1], solid('pull_cord', '#d8d0bc'))
+    m.box([7.6, 3.0, 7.6], [8.4, 3.4, 8.4], solid('pull_knot', '#a89a80'))
     m.box([7.2, 1.2, 7.2], [8.8, 3.0, 8.8], solid('pull_orn', '#c88a8a'))
     m.box([7.1, 2.6, 7.6], [7.5, 3.2, 8.4], solid('pull_orn', '#c88a8a'))
     m.box([8.5, 2.6, 7.6], [8.9, 3.2, 8.4], solid('pull_orn', '#c88a8a'))
+    m.box([7.5, 1.9, 7.15], [7.8, 2.2, 7.2], solid('pull_eye', '#2a2020'), only=('north',))
+    m.box([8.2, 1.9, 7.15], [8.5, 2.2, 7.2], solid('pull_eye', '#2a2020'), only=('north',))
     return m
 
 
@@ -573,9 +575,10 @@ def _futon(pal_, seed, flowers='#e8e0d0'):
 
 
 def futon_folded():
+    """A stack of folded futons, a blanket, a sheet and a buckwheat pillow, starting 1 px up so they rest on the
+    world's oshiire_shelf_board (top at y 1) on the closet shelf."""
     m = Model('futon_folded', A_FUTON, display=DISP_FRONT)
-    BOARD = woodmat('futon_board', ramp(['#7a6040', '#8e7250', '#a1845e', '#b2956c', '#c1a47a'], 5), base=2.6)
-    m.box([0, 0, 0], [16, 1, 16], BOARD)                                     # the closet's middle shelf (中段)
+    # (no board: on the closet shelf the world adds its oshiire_shelf_board (y -1..1) under it)
     BLUE = mat('futon_blue', _futon(FUT_BLUE, 6001))
     PINK = mat('futon_pink', _futon(FUT_PINK, 6011, '#f0e4dc'))
     BLANKET = mat('futon_blanket', _futon(ramp(['#3a2c22', '#4a382c', '#5a4636', '#6a5442', '#7a624e'], 5), 6021,

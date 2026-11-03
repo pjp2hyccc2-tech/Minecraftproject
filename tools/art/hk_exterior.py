@@ -45,24 +45,15 @@ def _towel(w, h, face):
 
 
 def laundry_pole():
-    """An aluminium laundry pole across the balcony: a towel folded over it and a pinch hanger with socks, left out
-    in the rain."""
-    m = Model('laundry_pole', A_LAUN, render_type='cutout', display=DISP_FRONT)
+    """An aluminium laundry pole across the balcony (blocks join along x), with plastic clothespins clipped on and,
+    off-centre, one forgotten grey sock - little enough that a row of these does not read as a pattern."""
+    m = Model('laundry_pole', A_LAUN, display=DISP_FRONT)
     POLE = M.brushed('laun_pole', STEELW, base=4.6)
     m.box([0, 13, 7.6], [16, 13.8, 8.4], POLE)
-    T = mat('laun_towel', _towel)
-    m.box([1.5, 6, 7.0], [7.5, 13.8, 7.6], T)
-    m.box([1.5, 8, 8.4], [7.5, 13.8, 9.0], T)
-    m.box([1.5, 13.8, 7.0], [7.5, 14.2, 9.0], T)
-    # pinch hanger: hook, square frame, clips, two socks and a pair of shorts
-    PL = solid('laun_hanger', '#d8d4c8')
-    m.box([11.2, 13.8, 7.8], [11.8, 15.0, 8.2], PL)
-    m.box([9.0, 12.0, 7.8], [14.0, 12.4, 8.2], PL)
-    for xx in (9.2, 11.4, 13.6):
-        m.box([xx - 0.2, 11.0, 7.7], [xx + 0.2, 12.0, 8.3], solid('laun_clip', '#c8a0b0'))
-    m.box([8.8, 7.5, 7.7], [9.6, 11.0, 8.3], solid('sock_grey', '#6a6a6e'))
-    m.box([13.2, 8.0, 7.7], [14.0, 11.0, 8.3], solid('sock_grey', '#6a6a6e'))
-    m.box([10.6, 7.0, 7.7], [12.4, 11.0, 8.3], solid('shorts', '#2a3a5a'))
+    for (xx, c) in ((3.2, '#c8a0b0'), (12.6, '#9ac0d0')):
+        m.box([xx - 0.3, 12.2, 7.5], [xx + 0.3, 14.2, 8.5], solid('laun_clip' + c[1:], c))
+    m.box([12.3, 10.0, 7.65], [12.9, 12.2, 8.35], solid('sock_grey', '#5a5a5e'))
+    m.box([12.3, 9.4, 7.65], [13.6, 10.0, 8.35], solid('sock_grey', '#5a5a5e'))
     return m
 
 
@@ -193,8 +184,8 @@ def street_lamp_old(lit_):
     m.box([7.3, 9.6, 8.5], [8.7, 11.0, 21.0], ARM)                                 # the arm
     m.box([7.0, 11.4, 3.5], [9.0, 12.4, 5.5], solid('sl_sensor', '#2a2a2a'))       # photocell
     # the clamp around the pole (pole centred at z 24, 6 px wide)
-    for (x0, z0, x1, z1) in ((4.5, 20.5, 11.5, 21.0), (4.5, 27.0, 11.5, 27.5), (4.5, 20.5, 5.0, 27.5),
-                             (11.0, 20.5, 11.5, 27.5)):
+    for (x0, z0, x1, z1) in ((4.1, 20.1, 11.9, 20.5), (4.1, 27.5, 11.9, 27.9), (4.1, 20.5, 4.5, 27.5),
+                             (11.5, 20.5, 11.9, 27.5)):
         m.box([x0, 8.5, z0], [x1, 11.5, z1], ARM)
     return m
 
@@ -245,18 +236,24 @@ def _pole_tag(w, h, face):
 
 
 def utility_pole_top():
-    """The pole's top: a steel crossarm with four white insulators, a grey pole transformer and wire stubs."""
+    """The pole's top: a steel crossarm with white insulators where the world's power wires (x 5.5..10.5 at rest,
+    y 10.6..12.7) meet it, a grey pole transformer hanging on the south side."""
     m = Model('utility_pole_top', A_POLE, display=DISP_TALL)
     _pole_body(m)
     ARM = M.brushed('pole_arm', ramp(['#3a3c3e', '#4a4c4e', '#5a5c5e', '#6a6c6e'], 4), base=2.4)
     INS = M.plastic('pole_ins', ramp(['#9a9890', '#b8b6ae', '#d4d2ca', '#ecebe4'], 4), base=2.8)
-    m.box([-12, 10, 7.2], [28, 11.4, 8.8], ARM)
-    for xx in (-10.25, -3.25, 18.75, 25.75):
-        m.box([xx - 0.6, 11.4, 7.4], [xx + 1.1, 13.2, 8.6], INS)
+    m.box([-2, 11.0, 7.0], [18, 12.0, 9.0], ARM)
+    m.box([-2, 9.2, 7.3], [18, 9.9, 8.7], ARM)
+    for xc in (5.65, 10.35):
+        m.box([xc - 0.7, 12.0, 7.3], [xc + 0.7, 13.6, 8.7], INS)
+    for xc in (6.95, 9.15):
+        m.box([xc - 0.55, 9.9, 7.4], [xc + 0.55, 10.6, 8.6], INS)
+    for xc in (-1.2, 17.2):
+        m.box([xc - 0.6, 12.0, 7.4], [xc + 0.6, 13.4, 8.6], INS)
     # the transformer drum hanging on the south side
     TR = painted('pole_trans', ramp(['#6a6e70', '#7c8082', '#8e9294', '#a0a4a6', '#b0b4b6'], 5), base=2.8)
-    m.box([5.0, 1.5, 11.5], [11.0, 8.5, 16.0], TR)
-    m.box([4.6, 8.5, 11.2], [11.4, 9.2, 16.4], TR)
+    m.box([5.0, 1.5, 11.8], [11.0, 8.5, 16.0], TR)
+    m.box([4.6, 8.5, 11.5], [11.4, 9.2, 16.4], TR)
     for xx in (6.0, 9.4):
         m.box([xx, 9.2, 13.0], [xx + 0.6, 10.4, 13.6], INS)
     return m
@@ -392,18 +389,17 @@ A_RAIL = Atlas('stairs_rail')
 
 
 def stairs_rail():
-    """A rusty steel balustrade segment that rises one block per block toward the north (alongside vanilla-style
-    stairs facing north); consecutive blocks join seamlessly. Centred in x."""
-    m = Model('stairs_rail', A_RAIL, display=disp(gui=(20, 90, 0), gui_scale=0.45))
+    """A rusty steel balustrade segment along the facing edge of its block (at rest: the north edge, running along x):
+    a handrail at y 7..8.4, a mid rail, and balusters reaching down to y -8, so a rail block placed one block above a
+    stair step (beside the stairs) stands on the step; on a landing (placed at floor level) the balusters disappear
+    into the floor. Blocks next to each other join into one rail."""
+    m = Model('stairs_rail', A_RAIL, display=disp(gui=(20, 160, 0), gui_scale=0.6, gui_t=(0, 2, 0)))
     PAINT = rusty('rail_paint', base=3.0, rust=0.15)
-    L = 16 * math.sqrt(2)
-    # top handrail and bottom rail along the slope (+45 about x: rising toward -z)
-    for yc in (22.0, 8.0):
-        m.box([7.4, yc - 0.5, 8 - L / 2], [8.6, yc + 0.5, 8 + L / 2], PAINT, rot=('x', 45.0, [8, yc, 8]))
-    # balusters every 4 px, between the two rails
-    for z in (2.0, 6.0, 10.0, 14.0):
-        yb = 8.0 + (8.0 - z)
-        m.box([7.6, yb, z - 0.3], [8.4, yb + 14.0, z + 0.3], PAINT)
+    z0, z1 = 1.0, 2.2
+    m.box([0, 7.0, z0 - 0.2], [16, 8.4, z1 + 0.2], PAINT)                       # handrail (a flat steel bar)
+    m.box([0, 1.5, z0 + 0.2], [16, 2.1, z1 - 0.2], PAINT)                       # mid rail
+    for x in (1.5, 5.5, 9.5, 13.5):
+        m.box([x - 0.35, -8.0, z0 + 0.25], [x + 0.35, 7.0, z1 - 0.25], PAINT)  # balusters
     return m
 
 

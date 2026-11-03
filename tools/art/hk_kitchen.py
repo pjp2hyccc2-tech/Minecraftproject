@@ -41,17 +41,19 @@ A_SINK = Atlas('kitchen_sink')
 
 
 def _sink_top(w, h, face):
-    """Stainless sink top seen from above (16 x 12): the basin (deeper, darker), the drain basket, water spots."""
+    """Stainless sink top seen from above (16 x 15): the basin on the left (as seen from the front: model east), the
+    ribbed drainboard on the right where the glass stands, water spots, the drain basket."""
     a = m_brushed(w, h, STAINLESS, 8101, along='x', base=4.4)
     if w >= 12:
         x, y = grid(w, h)
-        basin = (x >= 2) & (x <= w - 3) & (y >= 2) & (y <= h - 3)
+        basin = (x >= 1) & (x <= 9) & (y >= 2) & (y <= h - 3)
         a[basin] = m_brushed(w, h, STAINLESS, 8102, along='x', base=2.6)[basin]
         dl(a, -0.06, basin & (y == 2))
         dl(a, 0.04, basin & (y == h - 3))
-        cx, cy = w // 2 + 3, h // 2
-        rect(a, cx - 1, cy - 1, cx, cy, '#3a3e40')
-        px(a, cx - 1, cy - 1, '#6a6e70')
+        rect(a, 4, h // 2 - 1, 5, h // 2, '#3a3e40')
+        px(a, 4, h // 2 - 1, '#6a6e70')
+        ribs = (x >= 11) & (x <= w - 2) & (y >= 2) & (y <= h - 3) & ((y % 2) == 0)
+        dl(a, -0.04, ribs)
         specks(a, 8103, 0.04, '#c8cccc', 0.8)
     return a
 
@@ -63,18 +65,19 @@ def kitchen_sink(running):
     m.box([0, 0, 1.5], [16, 0.8, 2.2], solid('kick', '#2a2620'))
     m.box([0, 13, 1.2], [16, 14, 16], COUNTER_ST, faces={'up': M.custom('sink_top', _sink_top)})
     # wall-mounted faucet: body on the wall, a swivel spout over the basin, two handles
-    m.box([6, 15, 15.2], [11, 16.2, 16], CHROME)
-    m.box([8.0, 15.2, 9.0], [9.0, 16.0, 15.2], CHROME)
-    m.box([8.1, 14.4, 9.0], [8.9, 15.2, 9.8], CHROME)
-    for hx in (5.5, 10.5):
+    # wall-mounted faucet over the basin (basin: model x 1..10; the ribbed drainboard: x 11..15)
+    m.box([3.0, 15, 15.2], [8.0, 16.2, 16], CHROME)
+    m.box([5.0, 15.2, 9.0], [6.0, 16.0, 15.2], CHROME)
+    m.box([5.1, 14.4, 9.0], [5.9, 15.2, 9.8], CHROME)
+    for hx in (2.5, 7.5):
         m.box([hx, 15.8, 14.6], [hx + 1, 16.8, 15.6], solid('sink_handle', '#d8dcde'))
-    # a sponge and a detergent bottle on the counter's back edge
-    m.box([2.0, 14, 13.0], [4.4, 15.0, 14.6], solid('sponge', '#e8c83a'))
-    m.box([2.0, 14.6, 13.0], [4.4, 15.0, 14.6], solid('sponge_green', '#3a8a4a'))
-    m.box([12.5, 14, 13.2], [14.0, 18.0, 14.8], solid('deterg', '#7ab8d8'))
-    m.box([12.9, 18, 13.6], [13.6, 18.8, 14.4], solid('deterg_cap', '#e8e4dc'))
+    # a sponge and a detergent bottle at the back of the drainboard
+    m.box([11.2, 14, 12.6], [13.6, 15.0, 14.2], solid('sponge', '#e8c83a'))
+    m.box([11.2, 14.6, 12.6], [13.6, 15.0, 14.2], solid('sponge_green', '#3a8a4a'))
+    m.box([14.0, 14, 13.2], [15.5, 18.0, 14.8], solid('deterg', '#7ab8d8'))
+    m.box([14.4, 18, 13.6], [15.1, 18.8, 14.4], solid('deterg_cap', '#e8e4dc'))
     if running:
-        stream(m, 8.5, 9.4, 14.4, 14.0 - 2.4)
+        stream(m, 5.5, 9.4, 14.4, 14.0 - 2.4)
     return m
 
 
@@ -341,12 +344,13 @@ A_CUP = Atlas('cup_glass')
 
 
 def cup_glass():
-    """A plain drinking glass (コップ) on the counter: clear, a slight green tint, a lit rim."""
+    """A plain drinking glass (コップ) standing on a counter / the table (top 14 px: the model starts at y -2), off to
+    the east side so on the sink it stands on the drainboard, not over the basin."""
     m = Model('cup_glass', A_CUP, render_type='translucent', display=DISP_SMALL)
     GL = M.glass('cup_gl', '#c8dcd8', 86)
     y0 = -2.0
-    m.box([7, y0, 7], [9.5, y0 + 3.6, 9.5], GL, skip=('up',))
-    m.box([7.2, y0 + 0.01, 7.2], [9.3, y0 + 0.4, 9.3], M.glass('cup_base', '#d8ece8', 150), only=('up',))
+    m.box([11.6, y0, 7.8], [14.1, y0 + 3.6, 10.3], GL, skip=('up',))
+    m.box([11.8, y0 + 0.01, 8.0], [13.9, y0 + 0.4, 10.1], M.glass('cup_base', '#d8ece8', 150), only=('up',))
     return m
 
 
@@ -433,16 +437,18 @@ def _check_cloth(w, h, face):
 
 
 def dining_table():
+    """The small Showa dining table under a red gingham vinyl cloth, 14 px high like the counters (a glass on it
+    stands at y -2 in the block above)."""
     m = Model('dining_table', A_TABLE, display=DISP_FRONT)
     CL = mat('check_cloth', _check_cloth)
     LEG = M.brushed('table_leg', STEELW, base=4.2)
-    m.box([1, 11, 2], [15, 12, 14], CL)
-    m.box([0.6, 10, 1.6], [15.4, 11, 2.0], CL)                      # the cloth hanging over the edges
-    m.box([0.6, 10, 14.0], [15.4, 11, 14.4], CL)
-    m.box([0.6, 10, 2.0], [1.0, 11, 14.0], CL)
-    m.box([15.0, 10, 2.0], [15.4, 11, 14.0], CL)
+    m.box([1, 13, 2], [15, 14, 14], CL)
+    m.box([0.6, 12, 1.6], [15.4, 13, 2.0], CL)                      # the cloth hanging over the edges
+    m.box([0.6, 12, 14.0], [15.4, 13, 14.4], CL)
+    m.box([0.6, 12, 2.0], [1.0, 13, 14.0], CL)
+    m.box([15.0, 12, 2.0], [15.4, 13, 14.0], CL)
     for (lx, lz) in ((2, 3), (13, 3), (2, 12), (13, 12)):
-        m.box([lx, 0, lz], [lx + 1, 10, lz + 1], LEG)
+        m.box([lx, 0, lz], [lx + 1, 12, lz + 1], LEG)
     return m
 
 

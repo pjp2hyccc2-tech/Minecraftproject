@@ -985,3 +985,42 @@ def balcony_door_item():
     for (xx, yy) in ((7, 3), (8, 4), (9, 5), (7, 8), (8, 9)):
         px(a, xx, yy, '#d8e8ee')
     return a
+
+
+FUSUMA_ICON = ['....KKKKKKKK....',
+               '....KppppppK....',
+               '....KpbpppbK....',
+               '....KppbpbpK....',
+               '....KppppppK....',
+               '....KmmmmmmK....',
+               '....KppppppK....',
+               '....KgppppcK....',
+               '....KhppppcK....',
+               '....KppppppK....',
+               '....KwwwwwwK....',
+               '....KpwwwwpK....',
+               '....KwppppwK....',
+               '....KppppppK....',
+               '....KyyyyyyK....',
+               '....KKKKKKKK....']
+
+
+@item('fusuma')
+def fusuma_item():
+    """A fusuma panel: black lacquered frame, cream paper with the faint birds, mist and flowing water, the pull."""
+    L = {'K': '#151110', 'p': '#e2dcc8', 'b': '#8a8a84', 'm': '#d4c494', 'g': '#b8943e', 'h': '#2a1c0e',
+         'c': '#d0c9b3', 'w': '#9aa8aa', 'y': '#c8b88e'}
+    return _icon(FUSUMA_ICON, L)
+
+
+@item('oshiire_fusuma')
+def oshiire_fusuma_item():
+    """The closet's fusuma: plainer worn paper, a taped repair, the faded rabbit sticker."""
+    L = {'K': '#151110', 'p': '#d6cfb8', 'b': '#d6cfb8', 'm': '#d6cfb8', 'g': '#b8943e', 'h': '#2a1c0e',
+         'c': '#d6cfb8', 'w': '#d6cfb8', 'y': '#b8a878'}
+    a = _icon(FUSUMA_ICON, L)
+    for (x, y, c) in ((6, 9, '#ece8e0'), (8, 9, '#ece8e0'), (6, 10, '#ece8e0'), (7, 10, '#ece8e0'),
+                      (8, 10, '#ece8e0'), (6, 11, '#4a4846'), (7, 11, '#ece8e0'), (8, 11, '#4a4846')):
+        px(a, x, y, c)
+    rect(a, 7, 3, 10, 3, '#c8b47a')
+    return a

@@ -64,7 +64,8 @@ class Scene:
                     continue
                 pts = np.array(R._face_corners((0, 0, 0), (16, 16, 16), f), float) / 16 + [x, y, z]
                 uv = R._uv_corners(R._default_uv((0, 0, 0), (16, 16, 16), f))
-                cv.quad(pts, uv, RR.tex(t), shade=R.FACE_SHADE[f], mode=mode, double=False)
+                cv.quad(pts, uv, t if isinstance(t, np.ndarray) else RR.tex(t), shade=R.FACE_SHADE[f], mode=mode,
+                        double=False)
         for name, x, y, z, facing in self.models:
             RR.draw_model(cv, RR.model_json(name), RR.place(x, y, z, facing))
         for m, M in self.extra:
@@ -155,17 +156,19 @@ PLAN = ['##D#########',
         '#Ojjjj#yyyc#',
         '#Ojjjj#yyyc#',
         '##WWW###WW##']
+# finishes as the world's ApartmentBuilder gives them (genkan / hall / toilet: wainscot low, sand plaster above;
+# DK, washroom, tatami: plaster; the bath: tiles; the western room: the old floral wallpaper; closets: plywood)
 ROOMS = {
-    'g': dict(floor='genkan_tile', wall='plaster_wall', ceil='ceiling_board', low=-1),
-    'h': dict(floor='old_flooring', wall='plaster_wall', ceil='ceiling_board'),
-    't': dict(floor='bath_tile_floor', wall='plaster_wall_stained', lower='bath_tile_wall', ceil='ceiling_board_stained'),
+    'g': dict(floor='genkan_tile', wall='plaster_wall', lower='wood_wainscot', ceil='ceiling_board', low=-1),
+    'h': dict(floor='old_flooring', wall='plaster_wall', lower='wood_wainscot', ceil='ceiling_board'),
+    't': dict(floor='bath_tile_floor', wall='plaster_wall', lower='wood_wainscot', ceil='ceiling_board_stained'),
     'b': dict(floor='bath_tile_floor', wall='bath_tile_wall', ceil='ceiling_board_stained'),
-    'w': dict(floor='vinyl_floor', wall='wallpaper_old', ceil='ceiling_board'),
-    'k': dict(floor='vinyl_floor', wall='plaster_wall_stained', ceil='ceiling_board_stained'),
-    'y': dict(floor='old_flooring', wall='wallpaper_old', lower='wood_wainscot', ceil='ceiling_board'),
+    'w': dict(floor='vinyl_floor', wall='plaster_wall_stained', ceil='ceiling_board'),
+    'k': dict(floor='vinyl_floor', wall='plaster_wall', ceil='ceiling_board_stained'),
+    'y': dict(floor='old_flooring', wall='wallpaper_old', ceil='ceiling_board'),
     'j': dict(floor='tatami', wall='plaster_wall', ceil='ceiling_board'),
     'O': dict(floor='oshiire_floor', wall='oshiire_floor', ceil='oshiire_floor'),
-    'c': dict(floor='old_flooring', wall='oshiire_floor', ceil='ceiling_board'),
+    'c': dict(floor='oshiire_floor', wall='oshiire_floor', ceil='oshiire_floor'),
 }
 OUTSIDE = 'apartment_siding'
 
@@ -192,7 +195,16 @@ def apartment(S, x0=0, x1=11, z0=0, z1=13, ceiling=True, tatami_axis=None):
                 rm = rm or ROOMS['j']
                 low = rm.get('low', 0)
                 ft = H + rm['floor']
-                S.cube(x, low - 1, z, ft)
+                if rm['floor'] == 'tatami':
+                    # mats two blocks long: the north row (z 9) and the south row's east part run along x
+                    col = x
+                    axis_x = (z == 9) or (z == 12 and col >= 2)
+                    worn = ((x * 7 + z * 13) % 5) == 0
+                    t = RR.tex(H + ('tatami_worn' if worn else 'tatami'))
+                    top = np.rot90(t, -1).copy() if axis_x else t
+                    S.cube(x, low - 1, z, t, up=top)
+                else:
+                    S.cube(x, low - 1, z, ft)
                 if low < 0:
                     # the step down: the step's riser shows flooring from the hall side
                     pass
@@ -225,201 +237,207 @@ def apartment(S, x0=0, x1=11, z0=0, z1=13, ceiling=True, tatami_axis=None):
                 S.cube(x, -1, z, H + 'old_flooring')
 
 
-# ================================================================================================ scenes
-def scene_tatami():
-    """The tatami room seen from the balcony side: the closet on the left with its fusuma, the chabudai and cushions,
-    the TV glowing on its stand (right), the fusuma to the DK at the back, the hanging lamp."""
-    S = Scene()
-    apartment(S, 0, 7, 7, 13)
-    for z in (10, 11, 12):
-        S.model('oshiire_fusuma_lower_1' if z == 11 else 'oshiire_fusuma_lower_0', 1, 0, z, 'east')
-        S.model('oshiire_fusuma_upper_1' if z == 11 else 'oshiire_fusuma_upper_0', 1, 1, z, 'east')
-        S.model('futon_folded', 1, 2, z, 'east')
-    S.model('fusuma_lower_0', 2, 0, 8, 'north')
-    S.model('fusuma_upper_0', 2, 1, 8, 'north')
-    S.model('fusuma_lower_1', 3, 0, 8, 'south')
-    S.model('fusuma_upper_1', 3, 1, 8, 'south')
-    S.model('fusuma_lower_0', 5, 0, 8, 'north')
-    S.model('fusuma_upper_0', 5, 1, 8, 'north')
+def balcony_pane(S, x, y, z):
+    """The world's sliding balcony door (closed): a glass pane on the wall's centre plane (texture
+    balcony_door_bottom / _top)."""
+    for k, half in enumerate(('bottom', 'top')):
+        t = 'hitori:block/balcony_door_' + half
+        m = {'textures': {'p': t, 'particle': t}, 'render_type': 'minecraft:translucent', 'elements': [{
+            'from': [0, 0, 9], 'to': [16, 16, 10],
+            'faces': {f: {'uv': [0, 0, 16, 16], 'texture': '#p'} for f in ('north', 'south')}}]}
+        S.extra.append((m, place_deg(x, y + k, z, 0)))
+
+
+def halves(S, name, x, z, facing, op=0):
+    S.model(f'{name}_lower_{op}', x, 0, z, facing)
+    S.model(f'{name}_upper_{op}', x, 1, z, facing)
+
+
+def furnish203(S, tv_on=True, lamp_lit=False, laptop_on=True):
+    """Room 203 furnished as the world's ApartmentBuilder.furnish203 does (local x = X - 22, y = Y - 70)."""
+    # doors and openings
+    door(S, 'front_door', 2, -1, 0, 'south')
+    door(S, 'toilet_door', 6, 0, 2, 'east')
+    door(S, 'interior_door', 6, 0, 5, 'east')
+    door(S, 'interior_door', 6, 0, 7, 'east')
+    door(S, 'bath_door', 9, 0, 3, 'north')
+    for x in (2, 3, 5):
+        halves(S, 'fusuma', x, 8, 'north')
+    for x in (2, 3, 4, 8, 9):
+        balcony_pane(S, x, 0, 13)
+        S.model('rain_window', x, 2, 13, 'north')
+    # genkan
+    S.model('shoe_cabinet', 1, -1, 2, 'east')
+    S.model('umbrella', 1, -1, 1, 'east')
+    S.model('shoes', 2, -1, 2, 'north')
+    S.model('shoes', 2, -1, 1, 'west')
+    S.model('intercom', 1, 0, 2, 'east')
+    S.model('breaker_panel', 1, 1, 1, 'east')
+    # hall, toilet
+    S.model('mirror_small', 4, 1, 3, 'east')
+    S.model('calendar', 5, 1, 6, 'west')
+    S.model('toilet_seat', 7, 0, 1, 'south')
+    # bath
+    S.model('bathtub_head_2', 10, 0, 1, 'north')
+    S.model('bathtub_foot_2', 10, 0, 2, 'north')
+    S.model('bath_tap', 10, 1, 1, 'south')
+    S.model('shower', 9, 1, 1, 'east')
+    S.model('bath_stool', 9, 0, 1, 'east')
+    S.model('bucket', 9, 0, 2, 'north')
+    S.model('rain_window', 10, 2, 0, 'north')
+    # washroom
+    S.model('washing_machine', 7, 0, 4, 'south')
+    S.model('washbasin', 10, 0, 5, 'west')
+    S.model('mirror_small', 10, 1, 5, 'west')
+    # DK
+    S.model('fridge_old', 1, 0, 4, 'east')
+    S.model('microwave', 1, 1, 4, 'east')
+    S.model('kitchen_sink', 1, 0, 5, 'east')
+    S.model('cup_glass', 1, 1, 5, 'east')
+    S.model('gas_stove', 1, 0, 6, 'east')
+    S.model('knife_rack_has_knife', 1, 1, 6, 'east')
+    S.model('drawer', 1, 0, 7, 'east')
+    S.model('rice_cooker', 1, 1, 7, 'east')
+    S.model('drawer', 2, 0, 4, 'south')
+    S.model('salt_shaker', 2, 1, 4, 'south')
+    S.model('rice_bag', 3, 0, 4, 'south')
+    S.model('dining_table', 3, 0, 5, 'north')
+    S.model('cup_glass', 3, 1, 5, 'north')
+    S.model('dining_chair', 4, 0, 5, 'west')
+    S.model('dining_chair', 3, 0, 6, 'north')
+    S.model('wall_clock', 2, 2, 4, 'south')
+    S.model('cardboard_box', 2, 0, 7, 'north')
+    S.model('fluorescent_ring', 2, 2, 5, 'north')
+    # tatami room
     S.model('tv_stand', 5, 0, 9, 'west')
-    S.model('crt_tv_on_0', 5, 1, 9, 'west')
-    S.model('chabudai', 3, 0, 10, 'north')
-    S.model('zabuton', 3, 0, 11, 'north')
-    S.model('zabuton', 2, 0, 10, 'east')
+    S.model('crt_tv_on_0' if tv_on else 'crt_tv', 5, 1, 9, 'west')
+    S.model('chabudai', 3, 0, 11, 'north')
+    S.model('zabuton', 3, 0, 10, 'south')
+    S.model('zabuton', 4, 0, 11, 'west')
+    S.model('hanging_lamp_lit' if lamp_lit else 'hanging_lamp', 3, 2, 11, 'north')
+    S.model('pull_switch', 3, 1, 11, 'north')
     S.model('altar_shelf', 5, 0, 12, 'west')
-    S.model('hanging_lamp', 3, 2, 10, 'north')
-    for x in (2, 3, 4):
-        S.model('curtain_closed', x, 0, 12, 'north')
-        S.model('curtain_closed', x, 1, 12, 'north')
-    S.model('light_switch', 4, 1, 9, 'south') if False else None
-    for x in (2, 3, 4):
-        door(S, 'balcony_door', x, 0, 13, 'north')
-    S.light((4.9, 0.85, 9.5), (0.55, 0.72, 1.0), 2.4, 1.8)            # the TV screen
-    S.light((3.0, 1.0, 14.5), (1.0, 0.6, 0.28), 1.1, 3.0)            # sodium light through the curtains
-    eye = (4.55, 1.55, 12.45)
-    tgt = (1.9, 0.55, 9.0)
-    day = S.render(eye, tgt)
-    night = S.render(eye, tgt, night=True, exposure=1.35)
-    return pair(day, night, 'scene_tatami')
+    for yy in (0, 1, 2):
+        S.model('curtain_closed', 2, yy, 12, 'north')
+        S.model('curtain_closed', 3, yy, 12, 'north')
+        S.model('curtain', 4, yy, 12, 'north')
+    for z in (10, 11, 12):
+        halves(S, 'oshiire_fusuma', 1, z, 'east')
+    S.model('futon_folded', 1, 2, 10, 'east')
+    S.model('futon_folded', 1, 2, 11, 'east')
+    S.model('cardboard_box', 1, 2, 12, 'east')
+    # western room
+    for x in (8, 9, 10):
+        S.model('desk', x, 0, 7, 'south')
+    S.model('desk', 10, 0, 8, 'west')
+    S.model('printout', 8, 1, 7, 'south')
+    S.model('sewing_box', 9, 1, 7, 'south')
+    S.model('desk_lamp_lit', 10, 1, 7, 'west')
+    S.model('laptop_block_open_on' if laptop_on else 'laptop_block_open', 10, 1, 8, 'west')
+    S.model('desk_chair', 9, 0, 8, 'east')
+    S.model('camera_bag', 7, 0, 9, 'east')
+    S.model('shelf', 7, 0, 10, 'east')
+    S.model('plush_doll_present', 7, 1, 10, 'east')
+    S.model('bed_head', 7, 0, 11, 'north')
+    S.model('bed_foot', 7, 0, 12, 'north')
+    S.model('poster', 7, 1, 7, 'south')
+    S.model('fluorescent_ring_lit', 8, 2, 9, 'north')
+    for yy in (0, 1, 2):
+        S.model('curtain_closed', 8, yy, 12, 'north')
+        S.model('curtain_closed', 9, yy, 12, 'north')
+    for z in (10, 11, 12):
+        halves(S, 'oshiire_fusuma', 10, z, 'west')
+
+
+# ================================================================================================ scenes
+def full203(**kw):
+    S = Scene()
+    apartment(S, 0, 11, 0, 13)
+    furnish203(S, **kw)
+    return S
+
+
+TV_LIGHT = ((4.75, 0.85, 9.5), (0.55, 0.72, 1.0), 2.6, 2.0)
+SODIUM = ((3.0, 1.2, 14.6), (1.0, 0.6, 0.28), 1.0, 3.0)
+
+
+def scene_tatami():
+    """The tatami room as furnished by the world: from the balcony corner (the DK fusuma at the back, the closet on
+    the left, the TV glowing on the right) and from in front of the TV toward the closet."""
+    S = full203()
+    S.light(*TV_LIGHT)
+    S.light(*SODIUM)
+    eye, tgt = (4.55, 1.55, 12.45), (1.9, 0.55, 9.0)
+    pair(S.render(eye, tgt), S.render(eye, tgt, night=True, exposure=1.35), 'scene_tatami')
+    eye2, tgt2 = (5.35, 1.6, 10.15), (1.4, 0.75, 11.6)
+    return pair(S.render(eye2, tgt2, fov=74), S.render(eye2, tgt2, fov=74, night=True, exposure=1.4),
+                'scene_tatami_closet')
 
 
 def scene_peek():
-    """From inside the 押し入れ, crouched: the view through the cracked fusuma toward the TV (the fusuma_slit overlay
-    over the night render), and the same view without the overlay."""
-    S = Scene()
-    apartment(S, 0, 7, 7, 13)
-    S.model('tv_stand', 5, 0, 9, 'west')
-    S.model('crt_tv_on_0', 5, 1, 9, 'west')
-    S.model('chabudai', 3, 0, 10, 'north')
-    S.model('zabuton', 3, 0, 11, 'north')
-    S.model('fusuma_lower_0', 2, 0, 8, 'north')
-    S.model('fusuma_upper_0', 2, 1, 8, 'north')
-    S.model('fusuma_lower_0', 3, 0, 8, 'south')
-    S.model('fusuma_upper_0', 3, 1, 8, 'south')
-    S.model('hanging_lamp', 3, 2, 10, 'north')
-    S.light((4.9, 0.85, 9.5), (0.55, 0.72, 1.0), 2.4, 1.8)
-    S.light((3.0, 1.0, 14.5), (1.0, 0.6, 0.28), 0.8, 3.0)
-    eye = (1.45, 1.05, 11.2)
-    tgt = (5.0, 0.75, 9.6)
-    night = S.render(eye, tgt, night=True, exposure=1.4, fov=70)
-    peek = overlay(night, 'fusuma_slit')
-    return pair(night, peek, 'scene_peek')
+    """From inside the 押し入れ, crouched: the night view toward the TV, then the same through the fusuma_slit."""
+    S = full203()
+    S.light(*TV_LIGHT)
+    S.light(*SODIUM)
+    eye, tgt = (1.5, 1.05, 11.0), (5.2, 0.85, 9.6)
+    night = S.render(eye, tgt, night=True, exposure=1.45, fov=70)
+    return pair(night, overlay(night, 'fusuma_slit'), 'scene_peek')
 
 
 def scene_closet():
-    """Inside the closet looking up/out: the futon edge above, the box, the cracked fusuma's light, with the
-    closet_dark vignette composited."""
-    S = Scene()
-    apartment(S, 0, 6, 8, 13)
-    for z in (10, 11, 12):
-        S.model('oshiire_fusuma_lower_1' if z == 11 else 'oshiire_fusuma_lower_0', 1, 0, z, 'east')
-        S.model('oshiire_fusuma_upper_1' if z == 11 else 'oshiire_fusuma_upper_0', 1, 1, z, 'east')
-        S.model('futon_folded', 1, 2, z, 'east')
-    S.model('cardboard_box', 1, 0, 12, 'east')
-    S.model('tv_stand', 5, 0, 9, 'west')
-    S.model('crt_tv_on_0', 5, 1, 9, 'west')
-    S.light((1.95, 1.0, 11.0), (0.5, 0.62, 0.85), 0.5, 0.45)       # the slit of TV light at the crack
-    eye = (1.3, 1.0, 10.15)
-    tgt = (1.9, 1.15, 11.6)
+    """Inside the closet: the shelf board and futon edge above, the box on the shelf, the light of the crack on the
+    fusuma; day, and night with the closet_dark vignette."""
+    S = full203()
+    S.light((1.95, 1.0, 11.0), (0.5, 0.62, 0.85), 0.5, 0.45)
+    eye, tgt = (1.35, 1.0, 10.25), (1.75, 1.35, 11.7)
     day = S.render(eye, tgt, fov=80)
     night = S.render(eye, tgt, night=True, exposure=1.6, fov=80)
     return pair(day, overlay(night, 'closet_dark'), 'scene_closet')
 
 
 def scene_bath():
-    """The bathroom from the washroom doorway: the deep tiled tub full of dark water (lid half rolled), the tap and
-    shower above it, stool and basin, the frosted window with rain."""
-    S = Scene()
-    apartment(S, 6, 11, 0, 6)
-    S.model('bathtub_head_2', 10, 0, 1, 'east')
-    S.model('bathtub_foot_2', 9, 0, 1, 'east')
-    S.model('bath_tap_running', 10, 1, 1, 'west') if False else S.model('bath_tap', 10, 1, 1, 'north')
-    S.model('shower', 9, 1, 1, 'north')
-    S.model('bath_stool', 9, 0, 2, 'north')
-    S.model('bucket', 10, 0, 2, 'north')
-    S.cube(11, 1, 1, H + 'bath_tile_wall', west=None)
-    S.model('rain_window', 11, 1, 1, 'west')
-    S.model('washing_machine', 7, 0, 4, 'south')
-    S.model('washbasin', 8, 0, 4, 'south')
-    S.model('mirror_small', 8, 1, 4, 'south')
-    S.light((10.5, 2.6, 1.5), (0.85, 0.9, 1.0), 0.7, 2.0)
-    S.light((12.0, 1.5, 1.5), (1.0, 0.62, 0.3), 0.6, 2.0)
-    eye = (9.35, 1.62, 3.35)
-    tgt = (10.3, 0.25, 1.0)
-    day = S.render(eye, tgt, fov=84)
-    night = S.render(eye, tgt, night=True, exposure=1.6, fov=84)
-    eye2 = (8.25, 1.6, 5.55)
-    tgt2 = (10.0, 0.4, 1.4)
-    wash = S.render(eye2, tgt2, fov=74)
-    pair(wash, S.render(eye2, tgt2, night=True, exposure=1.6, fov=74), 'scene_washroom')
-    return pair(day, night, 'scene_bath')
+    """The bathroom from its doorway (the deep tiled tub full along the east wall, the tap above it, the shower, stool
+    and basin) and the washroom (twin-tub washer, the washbasin and its mirror)."""
+    S = full203()
+    S.extra = [e for e in S.extra if 'bath_door' not in e[0]['textures']['b']] if False else S.extra
+    S.light((10.0, 2.6, 1.5), (0.85, 0.9, 1.0), 0.8, 2.2)
+    S.light((10.5, 2.5, -0.6), (1.0, 0.62, 0.3), 0.7, 2.0)
+    eye, tgt = (9.5, 1.62, 2.75), (10.4, 0.35, 0.9)
+    pair(S.render(eye, tgt, fov=86), S.render(eye, tgt, night=True, exposure=1.6, fov=86), 'scene_bath')
+    S.light((8.5, 2.6, 4.5), (0.9, 0.95, 1.0), 0.6, 2.5)
+    eye2, tgt2 = (7.4, 1.6, 5.6), (10.0, 0.7, 4.3)
+    return pair(S.render(eye2, tgt2, fov=78), S.render(eye2, tgt2, night=True, exposure=1.6, fov=78),
+                'scene_washroom')
 
 
 def scene_kitchen():
-    """The DK: fridge (microwave on top), sink and gas stove along the north wall, the drawer cabinet with the rice
-    cooker, rice bag, the gingham table and chairs."""
-    S = Scene()
-    apartment(S, 0, 6, 3, 9)
-    S.model('fridge_old', 1, 0, 4, 'south')
-    S.model('microwave', 1, 1, 4, 'south')
-    S.model('kitchen_sink', 2, 0, 4, 'south')
-    S.model('gas_stove_lit', 3, 0, 4, 'south')
-    S.model('knife_rack_has_knife', 2, 1, 4, 'south')
-    S.model('drawer', 1, 0, 5, 'east')
-    S.model('rice_cooker', 1, 1, 5, 'east')
-    S.model('salt_shaker', 2, 1, 4, 'south') if False else None
-    S.model('cup_glass', 2, 1, 4, 'south') if False else None
-    S.model('rice_bag', 1, 0, 6, 'east')
-    S.model('dining_table', 2, 0, 6, 'north')
-    S.model('dining_chair', 3, 0, 6, 'west')
-    S.model('dining_chair', 2, 0, 7, 'north')
-    S.model('fluorescent_ring', 2, 2, 5, 'north')
-    S.model('pull_switch', 2, 2, 6, 'north') if False else None
-    S.light((3.4, 1.0, 4.5), (0.4, 0.6, 1.0), 0.8, 1.0)        # the gas flame
-    S.light((2.5, 2.6, 5.5), (0.9, 0.95, 1.0), 0.25, 3.0)       # dim spill
-    eye = (3.6, 1.6, 8.0)
-    tgt = (1.7, 0.7, 4.3)
-    day = S.render(eye, tgt)
-    night = S.render(eye, tgt, night=True, exposure=1.5)
-    return pair(day, night, 'scene_kitchen')
+    """The DK: fridge (microwave on top), sink with the glass on its drainboard, the gas stove and knife holder,
+    the drawer cabinet with the rice cooker along the west wall; the gingham table and chairs, rice bag, clock."""
+    S = full203()
+    S.light((2.0, 2.6, 5.5), (0.9, 0.95, 1.0), 0.35, 3.0)
+    S.light((4.6, 1.0, 9.5), (0.55, 0.72, 1.0), 0.6, 2.5)
+    eye, tgt = (3.55, 1.6, 7.75), (1.3, 0.8, 4.6)
+    return pair(S.render(eye, tgt, fov=76), S.render(eye, tgt, night=True, exposure=1.5, fov=76), 'scene_kitchen')
 
 
 def scene_western():
-    """The western room: the desk against the east wall (laptop with the camera app, printout, sewing box, lamp),
-    the chair, the colour box with the plush rabbit, the pipe bed, the camera bag, a poster."""
-    S = Scene()
-    apartment(S, 5, 11, 6, 13)
-    S.model('desk', 10, 0, 8, 'west')
-    S.model('laptop_block_open_on', 10, 1, 8, 'west')
-    S.model('desk_lamp_lit', 10, 1, 9, 'west') if False else None
-    S.model('desk', 10, 0, 9, 'west')
-    S.model('printout', 10, 1, 9, 'west')
-    S.model('sewing_box_open', 10, 1, 9, 'west') if False else None
-    S.model('desk_chair', 9, 0, 8, 'east')
-    S.model('shelf', 7, 0, 7, 'south')
-    S.model('plush_doll_present', 7, 1, 7, 'south')
-    S.model('bed_head', 7, 0, 10, 'north')
-    S.model('bed_foot', 7, 0, 11, 'north')
-    S.model('camera_bag', 8, 0, 9, 'south')
-    S.model('poster', 6, 1, 9, 'east') if False else None
-    S.model('poster', 7, 1, 7, 'south') if False else None
-    S.model('desk_lamp_lit', 10, 1, 10, 'west') if False else None
-    S.model('sewing_box', 10, 1, 9, 'west') if False else None
-    S.model('fluorescent_ring', 8, 2, 9, 'north')
-    S.light((9.55, 1.2, 8.5), (0.6, 0.8, 0.7), 1.0, 1.3)        # laptop screen
-    S.light((8.5, 1.0, 14.5), (1.0, 0.6, 0.28), 0.8, 3.0)
-    eye = (7.6, 1.6, 12.4)
-    tgt = (10.0, 0.8, 8.0)
-    day = S.render(eye, tgt)
-    night = S.render(eye, tgt, night=True, exposure=1.5)
-    return pair(day, night, 'scene_western')
+    """The western room: the L of desks (printout, sewing box, the lit desk lamp, the laptop with the camera app),
+    the chair, the colour box with the plush rabbit, the pipe bed, the camera bag, the poster."""
+    S = full203()
+    S.light((9.55, 1.2, 8.5), (0.6, 0.8, 0.7), 1.0, 1.3)
+    S.light((10.4, 1.35, 7.3), (1.0, 0.95, 0.85), 1.1, 1.6)
+    S.light((8.5, 1.2, 14.6), (1.0, 0.6, 0.28), 0.8, 3.0)
+    eye, tgt = (9.45, 1.6, 12.4), (8.4, 0.8, 7.4)
+    return pair(S.render(eye, tgt, fov=76), S.render(eye, tgt, night=True, exposure=1.5, fov=76), 'scene_western')
 
 
 def scene_genkan():
-    """The genkan from the hall: the steel front door (peephole, mail slot), the shoe cabinet, shoes on the tiles a
-    step down, the wet umbrella, the breaker panel high up, the intercom; the doors along the hall."""
-    S = Scene()
-    apartment(S, 0, 7, 0, 6)
-    door(S, 'front_door', 2, -1, 0, 'south') if False else None
-    S.extra.append((vanilla_door('front_door_inner_bottom'), place_deg(2, -1, 0, 270)))
-    S.extra.append((vanilla_door('front_door_inner_top'), place_deg(2, 0, 0, 270)))
-    S.model('shoe_cabinet', 1, -1, 1, 'east')
-    S.model('shoes', 2, -1, 1, 'north')
-    S.model('umbrella', 3, -1, 1, 'north')
-    S.model('breaker_panel', 3, 2, 1, 'north') if False else None
-    S.model('breaker_panel', 1, 1, 2, 'east')
-    S.model('intercom', 4, 1, 1, 'east') if False else None
-    S.model('calendar', 6, 1, 4, 'west') if False else None
-    S.model('mirror_small', 6, 1, 4, 'west') if False else None
-    door(S, 'toilet_door', 6, 0, 2, 'east')
-    door(S, 'interior_door', 6, 0, 5, 'east')
-    S.light((4.5, 2.6, 3.0), (1.0, 0.9, 0.75), 0.6, 3.0)
-    S.light((2.5, 0.5, -0.5), (1.0, 0.62, 0.3), 0.3, 1.5)
-    eye = (4.75, 1.62, 2.75)
-    tgt = (2.2, -0.2, 0.4)
-    day = S.render(eye, tgt, fov=74)
-    night = S.render(eye, tgt, night=True, exposure=1.6, fov=74)
-    return pair(day, night, 'scene_genkan')
+    """The genkan from the hall: the steel front door, shoe cabinet, shoes on the tiles a step down, the wet
+    umbrella, the intercom and the breaker panel high on the wall; the hall's mirror."""
+    S = full203()
+    S.light((4.5, 2.6, 2.5), (1.0, 0.9, 0.75), 0.7, 3.0)
+    eye, tgt = (4.7, 1.62, 2.7), (2.0, -0.1, 0.6)
+    return pair(S.render(eye, tgt, fov=78), S.render(eye, tgt, night=True, exposure=1.6, fov=78), 'scene_genkan')
 
 
 def scene_exterior():
@@ -512,16 +530,10 @@ def scene_exterior():
 def scene_camera_app():
     """The camera app: the bathtub seen by a fixed camera in grey-green IR (desaturated, noisy) under the cctv
     overlay, and the laptop frame with the same feed in its viewport."""
-    S = Scene()
-    apartment(S, 6, 11, 0, 6)
-    S.model('bathtub_head_2', 10, 0, 1, 'east')
-    S.model('bathtub_foot_2', 9, 0, 1, 'east')
-    S.model('bath_tap', 10, 1, 1, 'north')
-    S.model('shower', 9, 1, 1, 'north')
-    S.model('bath_stool', 9, 0, 2, 'north')
-    S.light((9.6, 2.2, 3.6), (1.0, 1.0, 1.0), 1.6, 2.5)          # the IR illuminator of the camera
-    eye = (9.2, 2.6, 3.7)
-    tgt = (10.0, 0.4, 1.2)
+    S = full203()
+    S.light((9.6, 2.2, 3.0), (1.0, 1.0, 1.0), 1.8, 2.5)          # the IR illuminator of the camera
+    eye = (9.3, 2.55, 2.85)
+    tgt = (10.3, 0.4, 1.0)
     img = S.render(eye, tgt, fov=82, night=True, exposure=1.8)
     lum = img @ np.array([0.3, 0.59, 0.11])
     rng_ = np.random.default_rng(5)

@@ -35,7 +35,7 @@ PROPERTY_WORDS = {'on', 'channel', 'lit', 'swing', 'closed', 'water', 'lid', 'ru
 # ---------------------------------------------------------------------------------------------- expectations
 VANILLA_DOORS = ['front_door', 'interior_door', 'toilet_door', 'bath_door', 'balcony_door']
 WORLD_EXTRA_TEXTURES = ['front_door_inner_bottom', 'front_door_inner_top']     # optional inner face of the front door
-DOOR_ITEM_SPRITES = VANILLA_DOORS
+DOOR_ITEM_SPRITES = VANILLA_DOORS + ['fusuma', 'oshiire_fusuma']
 
 
 def bools(id_, *props):
