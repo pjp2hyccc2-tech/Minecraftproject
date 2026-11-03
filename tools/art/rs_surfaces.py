@@ -225,9 +225,9 @@ def wallpaper_stained():
     d = np.hypot((x - 9.0) / 7.5, (y + 1.5) / 9.0) + n * 0.12
     inside = d < 1.0
     tide = (d >= 0.88) & (d < 1.0)
-    tint(a, '#9a7844', 0.22, inside)
-    tint(a, '#7a5a30', 0.18, inside & (d < 0.55))
-    tint(a, '#5e3f1c', 0.5, tide)
+    tint(a, '#9a7844', 0.16, inside)
+    tint(a, '#7a5a30', 0.12, inside & (d < 0.55))
+    tint(a, '#6a4a24', 0.32, tide)
     for dx, ln in ((5, 6), (11, 4)):
         top = int(np.argmax(~inside[:, dx])) - 1
         for k in range(ln):
@@ -268,7 +268,7 @@ def _wall_tiles(seed, dirty=False):
     n = wrapn(seed + 1, beta=1.2)
     a[:] = from_idx(4.3 + n * 0.3, WHITEPLASTIC)
     grout = (xi % 4 == 3) | (yi % 4 == 3)
-    a[grout] = C('#b3b3aa') if not dirty else C('#3d362c')
+    a[grout] = C('#b3b3aa') if not dirty else C('#7a6e5c')
     # glossy: highlight at tile top-left, shade bottom-right
     dl(a, 0.05, (xi % 4 == 0) & (yi % 4 == 0))
     dl(a, -0.025, ((xi % 4 == 2) | (yi % 4 == 2)) & ~grout)
@@ -282,8 +282,9 @@ def _wall_tiles(seed, dirty=False):
         for (cx, cy) in ((5, 4), (6, 5), (6, 6)):
             a[cy, cx] = C('#2c261e')
         a[8, 12] = C('#8a8478')
-        grime(a, seed + 3, strength=0.25, color='#4a3b25', bottom=0.25, beta=1.4)
-        specks(a, seed + 4, 0.02, '#3a2c18', 0.6)
+        grime(a, seed + 3, strength=0.18, color='#4a3b25', bottom=0.2, beta=1.4)
+        specks(a, seed + 4, 0.01, '#3a2c18', 0.5)
+        dl(a, -0.06, grout & (wrapn(seed + 5, beta=1.2) > 0.4))
     return a
 
 
@@ -576,11 +577,11 @@ def asphalt():
     r = rng(2601)
     n = wrapn(2602, beta=1.1)
     fine = wrapn(2603, beta=0.0)
-    a = from_idx(2.3 + n * 0.35 + fine * 0.35, ASPHALT)
-    agg = r.random((16, 16)) < 0.06
-    a[agg] = C('#46464b')
-    agg2 = r.random((16, 16)) < 0.04
-    a[agg2] = C('#121214')
+    a = from_idx(2.3 + n * 0.3 + fine * 0.22, ASPHALT)
+    agg = r.random((16, 16)) < 0.05
+    a[agg] = C('#3c3c41')
+    agg2 = r.random((16, 16)) < 0.03
+    a[agg2] = C('#151517')
     tint(a, '#1c2228', 0.15)
     gl = r.random((16, 16)) < 0.015
     a[gl] = C('#5d646a')

@@ -425,11 +425,12 @@ def umbrella_stand():
     CLEAR = M.glass('umb_clear', '#e8f0f2', 120)
     YEL = M.fabric('umb_yellow', ramp(['#7a5a08', '#a87e10', '#d8a818', '#f0c830'], 4))
     for (x, mat, top, hook) in ((2.5, NAVY, 17, True), (6.5, CLEAR, 18, True), (10.5, YEL, 14, False)):
-        m.box([x, 8, 7], [x + 2, top, 9], mat)
-        m.box([x + 0.75, top, 7.75], [x + 1.25, top + 1.5, 8.25], M.custom('shaft', lambda w, h, f: blank(w, h, '#3a3a3a')))
+        m.box([x + 0.25, 8, 7.25], [x + 1.75, top - 3, 8.75], mat)                    # furled canopy
+        m.box([x + 0.5, top - 3, 7.5], [x + 1.5, top - 1, 8.5], mat)
+        m.box([x + 0.75, top - 1, 7.75], [x + 1.25, top + 1.5, 8.25], M.custom('shaft', lambda w, h, f: blank(w, h, '#3a3a3a')))
         if hook:
-            m.box([x + 0.5, top + 1.5, 7.5], [x + 2.5, top + 2.2, 8.5], solid('handle', '#5a3a1e'))
-            m.box([x + 1.9, top + 0.8, 7.5], [x + 2.5, top + 1.5, 8.5], solid('handle', '#5a3a1e'))
+            m.box([x + 0.5, top + 1.5, 7.6], [x + 2.5, top + 2.1, 8.4], solid('handle', '#5a3a1e'))
+            m.box([x + 1.9, top + 0.8, 7.6], [x + 2.5, top + 1.5, 8.4], solid('handle', '#5a3a1e'))
     return m
 
 

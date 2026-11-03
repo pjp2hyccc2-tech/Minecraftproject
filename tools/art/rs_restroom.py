@@ -71,8 +71,8 @@ def _smoked(cracked):
         st = (np.abs((x * 0.8 + y) % 13 - 6) < 0.6)
         a[st, :3] += 18
         a[st, 3] = 140
-        spots = r.random((h, w)) < 0.03
-        a[spots] = C('#56646a', 150)
+        spots = r.random((h, w)) < 0.012
+        a[spots] = C('#3e4a50', 140)
         # two old palm prints, faint
         for (cx, cy) in ((4.5, 7.5), (11.5, 6.5)):
             palm = disc_mask(w, h, cx, cy + 1.2, 1.5, 1.8)

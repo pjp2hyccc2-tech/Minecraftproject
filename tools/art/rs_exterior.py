@@ -629,7 +629,7 @@ def _pole_conc(w, h, face):
     return a
 
 
-def _pole_ad(w, h):
+def _pole_ad_unused(w, h):
     """電柱広告: a vertical yellow advert plate (a clinic) with red/black lettering."""
     a = blank(w, h, '#f0c828')
     rect(a, 0, 0, w - 1, 1, '#1e4aa8')
@@ -647,8 +647,6 @@ def utility_pole(part):
     for ang in (0, 45):
         m.box([5.5, 0, 5.5], [10.5, 16, 10.5], P, rot=('y', ang, [8, 0, 8]) if ang else None, skip=('up', 'down'))
     if part == 'pole':
-        A_UPOLE.add('ad', 8, 22, _pole_ad)
-        m.box([4.5, 2, 5.4], [11.5, 13, 5.5], None, faces={'north': 'ad'})
         for y, side in ((4, 1), (10, -1)):
             x0 = 10.5 if side > 0 else 3.5
             m.box([x0, y, 7.5], [x0 + 2, y + 0.6, 8.5], M.CHROME_M)                       # step bolts

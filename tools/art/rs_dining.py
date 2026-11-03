@@ -570,22 +570,27 @@ A_BLIND = Atlas('window_blind', cutout=True)
 
 
 def _slats(closed):
+    """Venetian blind: 4 slats per block (3 px slat with a lit top edge and a shaded underside, 1 px gap when
+    open); ladder strings; nicotine-yellowed; one bent slat."""
     def fn(w, h):
         a = blank(w, h)
         for y in range(h):
-            if closed or y % 2 == 0:
-                a[y, :] = C('#d6cfbc' if y % 2 == 0 else '#bdb5a0')
-                if y % 2 == 0:
-                    dl(a[y:y + 1], 0.03)
-            else:
+            k = y % 4
+            if k == 3 and not closed:
                 for x in (3, 12):
-                    a[y, x] = C('#cfc8b4')
+                    a[y, x] = C('#b8b09a')
+                continue
+            a[y, :] = C(['#cdc6b2', '#c2bba6', '#a9a28e', '#8f8876'][k])
+        for x in (3, 12):
+            for y in range(h):
+                if a[y, x, 3] > 0 and y % 4 != 3:
+                    a[y, x] = C('#b3ab96')
         n = noise(w, h, 5701, beta=1.4, wrap=False)
         m = a[..., 3] > 0
-        tint(a, '#8a7a50', np.clip(n * 0.06 + 0.06, 0, 0.2), m)
-        # a bent slat
+        tint(a, '#8a7448', np.clip(n * 0.06 + 0.08, 0, 0.2), m)
         if not closed:
-            a[6, 9:13] = C('#9d9580')
+            a[6, 8:13] = C('#7d7664')
+            a[7, 8:13, 3] = 0
         return a
     return fn
 
