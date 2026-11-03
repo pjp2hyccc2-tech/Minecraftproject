@@ -13,13 +13,24 @@ TOKEN = re.compile(r'\s*(?:(//[^\n]*)|(/\*.*?\*/)|(\d+\.\d*[fF]?|\d*\.\d+[fF]?|\
 
 MAP_CALLS = {'Mth.sin': 'sin', 'Mth.cos': 'cos', 'Mth.abs': 'abs', 'Mth.clamp': 'clamp', 'Mth.lerp': 'lerp',
              'Mth.floor': 'floor_i', 'Mth.sqrt': 'sqrt', 'Mth.frac': 'frac', 'Math.min': 'min', 'Math.max': 'max',
-             'Math.abs': 'abs', 'Mth.wrapDegrees': 'wrap_deg'}
+             'Math.abs': 'abs', 'Mth.wrapDegrees': 'wrap_deg', 'Math.exp': 'exp', 'Math.signum': 'signum',
+             'Math.atan2': 'atan2', 'Math.sqrt': 'sqrt', 'Math.pow': 'pow_'}
 MAP_CONST = {'Mth.PI': 'PI', 'Mth.HALF_PI': 'HALF_PI', 'Mth.TWO_PI': 'TWO_PI'}
 TYPES = ('float', 'int', 'boolean', 'ModelPart')
 
 
 class JavaSyntax(Exception):
     pass
+
+
+PY_KEYWORDS = {'raise', 'lambda', 'pass', 'in', 'is', 'not', 'and', 'or', 'from', 'global', 'with', 'yield', 'del',
+               'def', 'class', 'import', 'as', 'assert', 'except', 'finally', 'try', 'elif', 'None', 'nonlocal',
+               'async', 'await', 'print', 'len', 'min', 'max', 'abs', 'sin', 'cos', 'exp', 'sqrt', 'round', 'type',
+               'id', 'list', 'dict', 'set', 'str', 'int', 'float', 'map', 'range', 'sum', 'all', 'any', 'next', 'iter'}
+
+
+def pyname(n):
+    return n + '_' if n in PY_KEYWORDS else n
 
 
 def tokenize(src):
@@ -100,7 +111,7 @@ class Parser:
             typ = self.take()[1]
             lines = []
             while True:
-                name = self.take()[1]
+                name = pyname(self.take()[1])
                 if self.at('='):
                     self.take('=')
                     e = self.expr()
@@ -243,7 +254,7 @@ class Parser:
                 return ('True' if name == 'true' else 'False'), None
             if self.at('('):
                 return f'{name}({self.args()})', None
-            return name, name
+            return pyname(name), name
         if tok[1] == '(':
             e = self.expr()
             self.take(')')
@@ -300,8 +311,21 @@ import math
 PI = math.pi
 HALF_PI = math.pi / 2
 TWO_PI = math.pi * 2
-def sin(x): return math.sin(x)
-def cos(x): return math.cos(x)
+_SIN = [math.sin(i * math.pi * 2.0 / 65536.0) for i in range(65536)]
+def _toint(x):
+    if x != x:
+        return 0
+    if x >= 2147483647.0:
+        return 2147483647
+    if x <= -2147483648.0:
+        return -2147483648
+    return int(x)
+def sin(x): return _SIN[_toint(x * 10430.378) & 65535]
+def cos(x): return _SIN[_toint(x * 10430.378 + 16384.0) & 65535]
+def exp(x): return math.exp(max(-80.0, min(80.0, x)))
+def signum(x): return 1.0 if x > 0 else (-1.0 if x < 0 else 0.0)
+def atan2(a, b): return math.atan2(a, b)
+def pow_(a, b): return math.pow(a, b)
 def sqrt(x): return math.sqrt(max(0.0, x))
 def clamp(v, lo, hi): return lo if v < lo else (hi if v > hi else v)
 def lerp(d, a, b): return a + d * (b - a)
@@ -326,17 +350,26 @@ def jmod(a, b):
 '''
 
 
-def compile_anim(body_src, helpers_src, part_names):
-    """Returns a python function setup(parts: dict, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch)."""
+def compile_anim(body_src, post_src, helpers_src, part_names, consts, extra_globals=None):
+    """Returns a python function setup(parts, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch,
+    pose, pt, glitch, st, prev, partial, blend_cb) running the translated Java body, then blend_cb(blend) (the
+    template's pose blend), then the translated post-blend code - the same order as the Java setupAnim."""
     lines = [PRELUDE]
+    for k, v in consts.items():
+        lines.append(f'{k} = {v}')
     lines += translate_helpers(helpers_src or '')
-    lines.append('def setup_anim(__parts, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch):')
+    lines.append('def setup_anim(__parts, entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, '
+                 'pose, pt, glitch, mem, prev, partial, __blend_cb):')
     for n in part_names:
         lines.append(f'    {n} = __parts[{n!r}]')
+    lines.append('    blend = 8.0')
     lines += translate_body(body_src, 1)
+    lines.append('    __blend_cb(blend)')
+    if post_src and post_src.strip():
+        lines += translate_body(post_src, 1)
     lines.append('    return None')
     code = '\n'.join(lines)
-    ns = {}
+    ns = dict(extra_globals or {})
     try:
         exec(compile(code, '<anim>', 'exec'), ns)
     except SyntaxError as e:

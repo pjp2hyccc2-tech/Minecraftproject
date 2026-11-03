@@ -1,50 +1,87 @@
-"""Shared part builders and Java animation snippets for the monster specs."""
+"""Shared builders and painting tools for the spirit specs."""
+import math
+
+import numpy as np
+
+from common import C
 from ent_model import Part, Cube
-
-# Java helpers available to every model (static, pure functions; translated for the previews)
-HELPERS = '''
-/** Smoothstep 0..1. */
-private static float ease(float x) {
-    float c = Mth.clamp(x, 0.0F, 1.0F);
-    return c * c * (3.0F - 2.0F * c);
-}
-
-/** 1 -> 0 over 3 ticks once every period ticks (phase shifted): sudden twitches. t must be >= 0. */
-private static float twitch(float t, float period, float phase) {
-    float m = (t + phase) % period;
-    return m < 3.0F ? 1.0F - m / 3.0F : 0.0F;
-}
-
-/** Stepped progress: holds still, then lurches to the next step (jerky motion), x in 0..1. */
-private static float jerky(float x, float steps) {
-    float c = Mth.clamp(x, 0.0F, 1.0F) * steps;
-    float i = (float) Mth.floor(c);
-    float f = c - i;
-    float s = f < 0.55F ? 0.0F : ease((f - 0.55F) / 0.45F);
-    return Math.min(1.0F, (i + s) / steps);
-}
-
-/** Curls a two-segment finger. */
-private static void curl(ModelPart a, ModelPart b, float c1, float c2) {
-    a.xRot = c1;
-    b.xRot = c2;
-}
-'''
+from ent_paint import Img, faces, Noise3
 
 
-def hand(prefix, side, palm=(3, 3, 1), seg=(3, 3), fingers=3, thumb=True, mat='skin', nail='nail', spread=1.0):
-    """A palm with `fingers` two-segment fingers hanging along +y and an optional thumb.
-    side = -1 for the right hand (-x), +1 for the left."""
-    pw, ph, pd = palm
-    h = Part(f'{prefix}_hand', (0, 0, 0), cubes=[Cube((-pw / 2, 0, -pd / 2), palm, mat, tag=f'{prefix}_palm')])
-    xs = [(-(fingers - 1) / 2 + i) * spread for i in range(fingers)]
-    for i, fx in enumerate(xs):
-        f1 = Part(f'{prefix}_finger{i + 1}', (fx, ph, 0), cubes=[Cube((-0.5, 0, -0.5), (1, seg[0], 1), mat, tag=f'{prefix}_f{i + 1}a')])
-        f2 = Part(f'{prefix}_finger{i + 1}b', (0, seg[0], 0), cubes=[Cube((-0.5, 0, -0.5), (1, seg[1], 1), nail, tag=f'{prefix}_f{i + 1}b')])
-        f1.add(f2)
-        h.add(f1)
-    if thumb:
-        t = Part(f'{prefix}_thumb', (-side * pw / 2, 1, -0.3), (0, 0, side * 0.5),
-                 cubes=[Cube((-0.5, 0, -0.5), (1, max(2, seg[0]), 1), nail, tag=f'{prefix}_thumb')])
-        h.add(t)
-    return h
+def card(name, pivot, origin, size, mat, tag=None, faces=('front',), rot=(0, 0, 0)):
+    """A flat card (depth 0) with a single polygon: mouths, cracks, glasses, hair curtains. One polygon only, so it
+    never doubles up over itself when the model is translucent (NO_CULL still shows it from behind)."""
+    return Part(name, pivot, rot, cubes=[Cube(origin, size, mat, tag=tag or name, faces=faces)])
+
+
+def pal_arr(hexes):
+    return np.array([C(h) for h in hexes], np.float32)
+
+
+def P(hexes, i):
+    return C(hexes[int(max(0, min(len(hexes) - 1, round(i))))])
+
+
+class Painter:
+    """Hi-res texture + eyes layer for a spec, with shading helpers working on 3D texel positions."""
+
+    def __init__(self, spec, seed):
+        self.spec = spec
+        self.S = spec.px
+        self.img = Img(spec.tex_w * self.S, spec.tex_h * self.S)
+        self.eyes = Img(spec.tex_w * self.S, spec.tex_h * self.S)
+        self.n3 = Noise3(seed, 3.0)
+        self.n3b = Noise3(seed + 1, 1.2)
+        self.n3c = Noise3(seed + 2, 6.0)
+
+    def F(self, tag):
+        return faces(self.img, self.spec.cube(tag), self.S)
+
+    def EF(self, tag):
+        return faces(self.eyes, self.spec.cube(tag), self.S)
+
+    def nz(self, f, x, y, a=0.45, b=0.3):
+        pp = f.positions()[int(y), int(x)][None]
+        return float(self.n3(pp)[0] * a + self.n3b(pp)[0] * b)
+
+    def base(self, tag, palette, mid, amp=0.6, top=0.5, fine=0.35, fn=None, which=None):
+        """Shades every face of a cube from a dark->light palette: 3D noise, up-facing lighter, plus fn(P, nrm)
+        (an extra offset array) if given."""
+        pa = pal_arr(palette)
+        fs = self.F(tag)
+        for n, f in fs.items():
+            if f.w <= 0 or f.h <= 0 or (which and n not in which):
+                continue
+            Pp = f.positions()
+            nrm = f.normal()
+            v = mid + self.n3(Pp) * amp + self.n3b(Pp) * fine - nrm[1] * top
+            if fn is not None:
+                v = v + fn(Pp, nrm, n)
+            k = np.clip(np.round(v), 0, len(pa) - 1).astype(int)
+            f.view()[:] = pa[k]
+        return fs
+
+    def pattern(self, f, rows, legend, ox=0, oy=0, jitter=True, a=0.45, b=0.3):
+        """legend: char -> (palette, index) | colour array | 'CLEAR' | None."""
+        for y, row in enumerate(rows):
+            for x, ch in enumerate(row):
+                e = legend.get(ch)
+                if e is None:
+                    continue
+                if isinstance(e, str) and e == 'CLEAR':
+                    f.clear(ox + x, oy + y)
+                elif isinstance(e, tuple):
+                    pal_, i = e
+                    v = i + (self.nz(f, ox + x, oy + y, a, b) if jitter else 0.0)
+                    f.set(ox + x, oy + y, P(pal_, v))
+                else:
+                    f.set(ox + x, oy + y, e)
+
+    def each(self, f, fn):
+        for y in range(f.h):
+            for x in range(f.w):
+                fn(x, y)
+
+
+def lerp(a, b, t):
+    return a + (b - a) * t
