@@ -1,4 +1,320 @@
 {
+  "amb.night_road": {
+    "subtitle": "subtitles.reisatsu.amb.night_road",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/night_road",
+        "stream": true
+      }
+    ]
+  },
+  "amb.dining": {
+    "subtitle": "subtitles.reisatsu.amb.dining",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/dining",
+        "stream": true
+      }
+    ]
+  },
+  "amb.kitchen": {
+    "subtitle": "subtitles.reisatsu.amb.kitchen",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/kitchen",
+        "stream": true
+      }
+    ]
+  },
+  "amb.restroom": {
+    "subtitle": "subtitles.reisatsu.amb.restroom",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/restroom",
+        "stream": true
+      }
+    ]
+  },
+  "amb.back": {
+    "subtitle": "subtitles.reisatsu.amb.back",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/back",
+        "stream": true
+      }
+    ]
+  },
+  "amb.fridge": {
+    "subtitle": "subtitles.reisatsu.amb.fridge",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/fridge",
+        "stream": true
+      }
+    ]
+  },
+  "amb.silence": {
+    "sounds": [
+      {
+        "name": "reisatsu:amb/silence",
+        "stream": true
+      }
+    ]
+  },
+  "amb.closing": {
+    "subtitle": "subtitles.reisatsu.amb.closing",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/closing",
+        "stream": true
+      }
+    ]
+  },
+  "amb.fluorescent": {
+    "subtitle": "subtitles.reisatsu.amb.fluorescent",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/fluorescent",
+        "attenuation_distance": 10
+      }
+    ]
+  },
+  "amb.vending": {
+    "subtitle": "subtitles.reisatsu.amb.vending",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/vending",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "amb.sign_buzz": {
+    "subtitle": "subtitles.reisatsu.amb.sign_buzz",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/sign_buzz",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "amb.drip": {
+    "subtitle": "subtitles.reisatsu.amb.drip",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/drip_1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:amb/drip_2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:amb/drip_3",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "reisatsu:amb/drip_4",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "amb.gutter": {
+    "subtitle": "subtitles.reisatsu.amb.gutter",
+    "sounds": [
+      {
+        "name": "reisatsu:amb/gutter",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.faucet_loop": {
+    "subtitle": "subtitles.reisatsu.fixture.faucet_loop",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/faucet_loop",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.hand_dryer": {
+    "subtitle": "subtitles.reisatsu.fixture.hand_dryer",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/hand_dryer",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "fixture.fryer_loop": {
+    "subtitle": "subtitles.reisatsu.fixture.fryer_loop",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/fryer_loop",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.gas_loop": {
+    "subtitle": "subtitles.reisatsu.fixture.gas_loop",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/gas_loop",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.dishwasher": {
+    "subtitle": "subtitles.reisatsu.fixture.dishwasher",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/dishwasher",
+        "attenuation_distance": 14
+      }
+    ]
+  },
+  "fixture.tv_static": {
+    "subtitle": "subtitles.reisatsu.fixture.tv_static",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/tv_static",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "fixture.monitor_static": {
+    "subtitle": "subtitles.reisatsu.fixture.monitor_static",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/monitor_static",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "fixture.phone_ring": {
+    "subtitle": "subtitles.reisatsu.fixture.phone_ring",
+    "sounds": [
+      {
+        "name": "reisatsu:fixture/phone_ring",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "spirit.near": {
+    "subtitle": "subtitles.reisatsu.spirit.near",
+    "sounds": [
+      {
+        "name": "reisatsu:spirit/near",
+        "attenuation_distance": 8
+      }
+    ]
+  },
+  "camera.sense": {
+    "subtitle": "subtitles.reisatsu.camera.sense",
+    "sounds": [
+      {
+        "name": "reisatsu:camera/sense"
+      }
+    ]
+  },
+  "music.dread": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/dread",
+        "stream": true
+      }
+    ]
+  },
+  "music.tension": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/tension",
+        "stream": true
+      }
+    ]
+  },
+  "music.danger": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/danger",
+        "stream": true
+      }
+    ]
+  },
+  "music.chase": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/chase",
+        "stream": true
+      }
+    ]
+  },
+  "music.safe": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/safe",
+        "stream": true
+      }
+    ]
+  },
+  "music.title": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/title",
+        "stream": true
+      }
+    ]
+  },
+  "music.store": {
+    "subtitle": "subtitles.reisatsu.music.store",
+    "sounds": [
+      {
+        "name": "reisatsu:music/store",
+        "stream": true
+      }
+    ]
+  },
+  "music.store_wrong": {
+    "subtitle": "subtitles.reisatsu.music.store_wrong",
+    "sounds": [
+      {
+        "name": "reisatsu:music/store_wrong",
+        "stream": true
+      }
+    ]
+  },
+  "music.closing": {
+    "subtitle": "subtitles.reisatsu.music.closing",
+    "sounds": [
+      {
+        "name": "reisatsu:music/closing",
+        "stream": true
+      }
+    ]
+  },
+  "music.exorcism": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/exorcism",
+        "stream": true
+      }
+    ]
+  },
+  "music.ending_good": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/ending_good",
+        "stream": true
+      }
+    ]
+  },
+  "music.ending_bad": {
+    "sounds": [
+      {
+        "name": "reisatsu:music/ending_bad",
+        "stream": true
+      }
+    ]
+  },
   "door.auto_open": {
     "subtitle": "subtitles.reisatsu.door.auto_open",
     "sounds": [

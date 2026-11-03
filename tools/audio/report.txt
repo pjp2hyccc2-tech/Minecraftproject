@@ -2,44 +2,44 @@ REISATSU sound report (measured on the decoded OGG files)
 
 file                              dur s ch   peak     TP    RMS   LUFS   Mmax crest  cent rough     KB  notes
 -------------------------------------------------------------------------------------------------------------
-amb/night_road                   MISSING
-amb/dining                       MISSING
-amb/kitchen                      MISSING
-amb/restroom                     MISSING
-amb/back                         MISSING
-amb/fridge                       MISSING
-amb/silence                      MISSING
-amb/closing                      MISSING
-amb/fluorescent                  MISSING
-amb/vending                      MISSING
-amb/sign_buzz                    MISSING
-amb/drip_1                       MISSING
-amb/drip_2                       MISSING
-amb/drip_3                       MISSING
-amb/drip_4                       MISSING
-amb/gutter                       MISSING
-fixture/faucet_loop              MISSING
-fixture/hand_dryer               MISSING
-fixture/fryer_loop               MISSING
-fixture/gas_loop                 MISSING
-fixture/dishwasher               MISSING
-fixture/tv_static                MISSING
-fixture/monitor_static           MISSING
-fixture/phone_ring               MISSING
-spirit/near                      MISSING
-camera/sense                     MISSING
-music/dread                      MISSING
-music/tension                    MISSING
-music/danger                     MISSING
-music/chase                      MISSING
-music/safe                       MISSING
-music/title                      MISSING
-music/store                      MISSING
-music/store_wrong                MISSING
-music/closing                    MISSING
-music/exorcism                   MISSING
-music/ending_good                MISSING
-music/ending_bad                 MISSING
+amb/night_road                    60.00  2  -15.9  -15.8  -36.8  -33.1  -24.0  20.9  2382  0.12  765.0  loop seam hf x0.85 (interior median x1.03, seam rank 25%)
+amb/dining                        40.00  2  -28.8  -28.8  -43.1  -41.1  -39.9  14.3   408  0.18  506.7  loop seam hf x1.10 (interior median x1.05, seam rank 65%)
+amb/kitchen                       40.00  2  -23.6  -23.5  -37.4  -36.1  -34.8  13.9   244  0.23  447.6  loop seam hf x0.69 (interior median x1.05, seam rank 18%)
+amb/restroom                      30.00  2  -29.7  -29.7  -44.3  -40.2  -38.9  14.6  1782  0.13  358.3  loop seam hf x0.74 (interior median x0.93, seam rank 15%); binaural 237.0/243.0Hz(d6.0)
+amb/back                          30.00  2  -28.8  -28.6  -41.4  -39.1  -38.2  12.6   716  0.20  582.4  loop seam hf x0.53 (interior median x0.99, seam rank 8%)
+amb/fridge                        20.00  2  -18.9  -18.8  -32.5  -29.1  -27.1  13.6  1551  0.11  242.0  loop seam hf x0.95 (interior median x1.07, seam rank 38%)
+amb/silence                       20.00  2  -31.9  -31.8  -47.1  -48.0  -45.9  15.3   652  0.10  262.9  loop seam hf x1.21 (interior median x1.00, seam rank 82%); binaural 221.5/226.5Hz(d5.0)
+amb/closing                       40.00  2  -19.8  -19.8  -33.7  -31.1  -29.5  13.9  1055  0.36  962.6  loop seam hf x2.94 (interior median x1.01, seam rank 62%); binaural 127.0/133.0Hz(d6.0)
+amb/fluorescent                    8.00  1  -11.7  -11.4  -27.5  -27.2  -26.8  15.8  1859  0.43  128.2  loop seam hf x0.58 (interior median x0.99, seam rank 38%)
+amb/vending                        8.00  1  -13.7  -13.7  -26.6  -27.1  -26.6  12.9   724  0.14   72.3  loop seam hf x1.19 (interior median x0.87, seam rank 72%)
+amb/sign_buzz                      8.00  1  -10.2  -10.0  -25.4  -25.2  -24.7  15.2  1574  0.33  126.6  loop seam hf x0.04 (interior median x0.66, seam rank 0%)
+amb/drip_1                         0.22  1   -6.0   -6.0  -23.1  -22.4  -22.4  17.1  1492  0.08    5.0  
+amb/drip_2                         0.20  1   -5.9   -5.9  -23.2  -21.6  -21.6  17.3  2017  0.09    4.9  
+amb/drip_3                         0.16  1   -7.0   -6.7  -29.8  -26.7  -26.7  22.9  4826  0.18    4.9  
+amb/drip_4                         0.67  1   -5.5   -5.5  -27.0  -27.4  -25.5  21.5  1480  0.67    6.6  
+amb/gutter                         8.00  1   -4.9   -4.9  -24.9  -25.2  -20.2  20.0   654  0.63   74.3  loop seam hf x0.76 (interior median x1.05, seam rank 12%)
+fixture/faucet_loop                6.00  1   -9.4   -9.3  -23.7  -21.2  -20.5  14.3  4792  0.10   54.5  loop seam hf x0.88 (interior median x1.01, seam rank 25%)
+fixture/hand_dryer                 5.00  1   -3.7   -3.3  -16.8  -14.2  -13.5  13.1  4724  0.09   45.9  loop seam hf x0.94 (interior median x0.97, seam rank 45%)
+fixture/fryer_loop                 8.00  1   -4.6   -4.1  -29.7  -26.8  -24.5  25.1  5138  0.36   81.4  loop seam hf x0.80 (interior median x0.94, seam rank 35%)
+fixture/gas_loop                   6.00  1   -9.6   -9.5  -24.3  -23.2  -21.2  14.8  1628  0.12   56.5  loop seam hf x1.20 (interior median x1.00, seam rank 92%)
+fixture/dishwasher                 8.00  1   -8.9   -8.6  -23.4  -21.2  -19.7  14.5  3050  0.13   72.6  loop seam hf x1.25 (interior median x1.01, seam rank 72%)
+fixture/tv_static                  6.00  1  -11.1  -10.9  -25.0  -22.2  -20.9  13.9  4905  0.11   54.2  loop seam hf x0.87 (interior median x0.95, seam rank 30%)
+fixture/monitor_static             6.00  1  -14.9  -14.9  -29.6  -28.1  -26.3  14.6  3222  0.12   59.3  loop seam hf x1.08 (interior median x0.89, seam rank 75%)
+fixture/phone_ring                 6.00  1   -1.4   -1.4  -12.1   -7.6   -6.6  10.7  1280  0.07   23.1  loop seam hf x0.00 (interior median x0.00, seam rank 0%)
+spirit/near                        8.00  1   -8.3   -8.3  -20.8  -26.0  -22.3  12.4    57  0.50   44.1  loop seam hf x1.37 (interior median x1.00, seam rank 98%)
+camera/sense                       6.00  2  -13.5  -13.3  -30.0  -24.1  -21.3  16.5  3992  0.12   96.3  loop seam hf x1.12 (interior median x1.03, seam rank 65%)
+music/dread                       64.00  2  -17.3  -17.3  -28.8  -29.0  -25.7  11.5    75  0.13  620.8  loop seam hf x0.97 (interior median x1.01, seam rank 48%); binaural 129.0/135.0Hz(d6.0), 129.0/121.6Hz(d7.4)
+music/tension                     32.00  2  -14.8  -14.8  -30.2  -29.0  -26.2  15.4   267  0.27  538.4  loop seam hf x1.15 (interior median x0.99, seam rank 68%)
+music/danger                      16.00  2  -15.7  -15.7  -28.6  -27.0  -26.6  12.9   391  0.19  289.6  loop seam hf x0.79 (interior median x1.00, seam rank 10%)
+music/chase                       16.00  2   -5.8   -5.8  -20.4  -20.0  -17.1  14.6   169  0.16  320.7  loop seam hf x0.80 (interior median x0.99, seam rank 18%)
+music/safe                        40.00  2  -14.7  -14.5  -35.1  -30.0  -23.7  20.4   819  0.11  714.2  loop seam hf x0.61 (interior median x1.05, seam rank 0%)
+music/title                       48.00  2  -14.5  -14.5  -31.8  -27.0  -22.3  17.4   799  0.12  496.4  loop seam hf x2.30 (interior median x1.03, seam rank 100%); binaural 117.0/123.0Hz(d6.0)
+music/store                       32.00  2  -12.4  -12.4  -26.7  -24.0  -20.2  14.3   726  0.22  582.9  loop seam hf x1.04 (interior median x0.98, seam rank 60%)
+music/store_wrong                 32.00  2  -14.0  -14.0  -27.5  -25.0  -19.9  13.5   571  0.07  581.5  loop seam hf x1.05 (interior median x1.05, seam rank 48%)
+music/closing                     32.00  2  -16.4  -16.4  -27.7  -25.0  -22.2  11.3   652  0.10  584.8  loop seam hf x0.79 (interior median x0.96, seam rank 12%)
+music/exorcism                    60.00  2   -6.8   -6.8  -26.6  -24.0  -13.2  19.8   329  0.13  889.0  
+music/ending_good                 50.00  2  -11.4  -11.3  -27.5  -25.1  -21.2  16.1   411  0.32  864.7  binaural 488.3/482.4Hz(d5.9)
+music/ending_bad                  30.00  2  -13.9  -13.9  -32.9  -27.0  -21.3  19.0   884  0.10  446.5  
 door/auto_open                     1.37  1   -3.2   -3.2  -16.8  -16.5  -14.5  13.6   323  0.47   13.1  
 door/auto_close                    1.95  1   -2.9   -2.9  -18.8  -18.9  -17.0  15.8   263  0.51   17.7  
 door/chime_1                       2.08  1   -2.0   -2.0  -16.3  -13.9  -11.0  14.3   740  0.08    9.0  
@@ -265,11 +265,15 @@ game/release                     MISSING
 game/dawn                        MISSING
 game/ending_bad                  MISSING
 -------------------------------------------------------------------------------------------------------------
-75 files, total 1.60 MB, worst true peak -1.00 dBTP, 187 MISSING
+113 files, total 13.38 MB, worst true peak -1.00 dBTP, 149 MISSING
 
 Level summary (decoded files)
-  one-shots   75 files  LUFS-I  -36.1 ..   -9.5   max momentary  -31.0 ..   -6.1   RMS  -36.8 ..  -14.1 dBFS
+  beds        12 files  LUFS-I  -48.0 ..  -25.2   max momentary  -45.9 ..  -20.2   RMS  -47.1 ..  -24.9 dBFS
+  music       12 files  LUFS-I  -30.0 ..  -20.0   max momentary  -26.6 ..  -13.2   RMS  -35.1 ..  -20.4 dBFS
+  one-shots   89 files  LUFS-I  -36.1 ..   -7.6   max momentary  -31.0 ..   -6.1   RMS  -36.8 ..  -12.1 dBFS
 
+Loop seams: the click measure at the wrap point compared with the same measure at 40 interior points
+of the file (a seam ranked above 98% of them with hf > 3 is flagged CLICK?).
 Columns: peak = sample peak dBFS, TP = true peak dBTP (4x oversampled), LUFS = BS.1770 integrated,
 Mmax = max momentary (400 ms) loudness, crest = peak - RMS, cent = spectral centroid Hz,
 rough = RMS amplitude-modulation depth in the 30-150 Hz roughness band (noise ~0.07-0.1,

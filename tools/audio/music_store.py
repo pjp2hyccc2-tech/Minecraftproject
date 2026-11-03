@@ -171,7 +171,7 @@ def closing(rng, i=1):
         dsp.place(tick, dsp.pan(c, -0.55), k * beat + 0.003, circular=True)
     tick = dsp.circ_reverb(tick, dsp.make_ir(0.9, rng, stereo=True, predelay=0.01), wet=0.4, dry=0.9)
     out += _nrm(tick) * 0.07
-    return dsp.dc_block(out, circular=True)
+    return np.roll(dsp.dc_block(out, circular=True), ns(0.04), axis=-1)  # the seam sits just before the downbeat
 
 
 # --------------------------------------------------------------------------

@@ -898,7 +898,9 @@ def organ(chords, dur, rng, bars=(6, 2, 8, 4, 0, 2, 0, 0, 0), leslie=0.75, lesli
                 acc += a * np.sin(TAU * fv * r * tt + rng.random() * 6)
         if click > 0:
             k = ns(0.006)
-            acc[:k] += dsp.bandpass(rng.standard_normal(k), 1500, 7000, 2) * np.exp(-np.arange(k) / (0.0012 * SR)) * click * len(fr)
+            ck = dsp.bandpass(rng.standard_normal(k), 1500, 7000, 2) * np.exp(-np.arange(k) / (0.0012 * SR))
+            ck *= np.minimum(1.0, np.arange(k) / (0.001 * SR))
+            acc[:k] += ck * click * len(fr)
         seg = acc * env * lvl
         for c in range(2 if stereo else 1):
             lfo = np.sin(TAU * (leslie * (t[i0:i1]) + lph + 0.25 * c))

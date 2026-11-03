@@ -1,10 +1,9 @@
-"""amb.* looping beds.  Everything is built circularly (periodic FFT noise,
-loop-quantised oscillators and LFOs, events placed modulo the loop length,
-circular reverb / filters), so every loop seam is sample-continuous.
+"""amb.* looping beds (stereo).  Everything is built circularly (periodic FFT noise, loop-quantised oscillators and
+LFOs, events placed modulo the loop length, circular reverb / filters), so every loop seam is sample-continuous.
 
-The night forest is *quiet*: beds sit far below the one-shots, with faint
-psychoacoustic undercurrents (binaural wind tones, a sub-audible 30-40 Hz
-swell, edge-of-hearing ringing) rather than anything overtly musical."""
+The closed restaurant at night is *quiet*: these beds sit far below the one-shots (-48 .. -29 LUFS) - compressor hum,
+a ticking clock, drips - with faint undercurrents from the psychoacoustic palette (binaural theta tones riding the
+machines' hum, a sub-audible swell, edge-of-hearing ringing) rather than anything overtly musical."""
 import numpy as np
 
 import dsp
@@ -21,11 +20,8 @@ def _norm01(x):
     return (x - x.min()) / (x.max() - x.min() + 1e-12)
 
 
-def _gusts(n, rng, base=None, rate=0.12, mix=0.6, floor=0.08, power=2.2):
-    g = dsp.smooth(n, rng, rate)
-    if base is not None:
-        g = mix * base + (1 - mix) * g
-    return floor + (1 - floor) * _norm01(g) ** power
+def _nrm(x):
+    return x / (np.max(np.abs(x)) + 1e-12)
 
 
 def _cr(x, fn, pre=2.0):
@@ -36,204 +32,16 @@ def _place_circ(buf, x, t):
     return dsp.place(buf, x, t, circular=True)
 
 
-# --------------------------------------------------------------------------
-# amb.forest - 60 s: canopy wind swells, far stream, a rare creak
-# --------------------------------------------------------------------------
-def forest(rng, i=1):
-    L = 60.0
-    n = ns(L)
-    out = np.zeros((2, n))
-    weather = dsp.smooth(n, rng, 0.05)
-    gsum = np.zeros(n)
-    for k in range(6):
-        p = -0.95 + 1.9 * k / 5 + rng.uniform(-0.08, 0.08)
-        g = _gusts(n, rng, weather, rate=0.11, mix=0.55, floor=0.06, power=2.4)
-        gsum += g / 6
-        dark = dsp.colored(n, rng, -4.0, lo=160, hi=1500)
-        bright = dsp.colored(n, rng, -1.5, lo=1100, hi=6500)  # dead-needle hiss high in the cedars
-        flutter = 0.55 + 0.45 * np.abs(dsp.smooth(n, rng, 22.0))  # needles fluttering: foliage, not static
-        s = dark * g * (1.0 - 0.35 * g) + bright * flutter * g ** 1.7 * 0.5
-        out += dsp.pan(s, p) * 0.22
-    # low air over the ridges
-    low = dsp.colored(n, rng, -6.0, lo=22, hi=110)
-    out += np.vstack([low, np.roll(low, ns(0.4))]) * 0.18 * (0.5 + 0.5 * gsum)
-    # far stream in the gully (left, behind the trees)
-    st = ins.water_texture(n, rng, L=L, density=140, noise=0.6, splash=0.15)
-    st = _cr(st, lambda x: dsp.lowpass(x, 1500, 2))
-    out += dsp.pan(st / (np.std(st) + 1e-9), -0.55) * 0.045
-    # rare deep creak of a trunk, far
-    for t0, p in ((rng.uniform(12, 20), rng.uniform(-0.8, -0.2)), (rng.uniform(38, 48), rng.uniform(0.2, 0.8))):
-        d = rng.uniform(1.6, 2.4)
-        c = ins.creak(d, rng, [(0, 9), (d * 0.45, 26), (d, 8)], [(0, 0), (0.3, 0.8), (d * 0.8, 0.6), (d, 0)],
-                      pitch=0.42, jitter=0.35, q_scale=1.3, tonal=0.25)
-        c = dsp.lowpass(c, 1400, 2)
-        _place_circ(out, dsp.pan(c / (np.max(np.abs(c)) + 1e-9), p) * 0.07, t0)
-    # needle / leaf drops: a few faint ticks
-    for _ in range(9):
-        g = ins.crunch(0.06, rng, lambda t: 600 * np.exp(-t / 0.01), lo=1500, hi=7000)
-        _place_circ(out, dsp.pan(g, rng.uniform(-1, 1)) * 0.012, rng.uniform(0, L))
-    # subliminal: binaural wind tone (theta 5.5 Hz) riding the gusts, and a sub swell - added dry,
-    # after the circular reverb (which would give each steady line a random gain per ear)
-    bt = dsp.binaural(421.0, 5.5, n, L=L, rng=rng) * (0.25 + 0.75 * gsum ** 1.5)[None, :]
-    sub = dsp.sub_rumble(n, 33.0, L=L, rng=rng, am_rate=6.0, am_depth=0.5) * _lfo(n, 2, rng, 0.0, 1.0, 3.0)
-    ir = dsp.make_ir(1.5, rng, stereo=True, predelay=0.015, hf_ratio=0.45)
-    out = dsp.circ_reverb(out, ir, wet=0.38, dry=0.85) + bt * 0.02 + np.vstack([sub, sub]) * 0.03
-    return dsp.dc_block(out, circular=True)
+def _tone(f, L, n, rng):
+    return np.sin(TAU * (dsp.loop_freq(f, L) * np.arange(n) / SR + rng.random()))
 
 
-# --------------------------------------------------------------------------
-# amb.insects - 40 s autumn chorus (鈴虫, エンマコオロギ, カンタン, カネタタキ, ツヅレサセコオロギ)
-# --------------------------------------------------------------------------
-def _bouts(rng, L, sing, pause, start=None):
-    """Random singing bouts over the loop: [(t0, t1)]."""
-    t = start if start is not None else -rng.uniform(0, sing[1])
-    out = []
-    while t < L:
-        d = rng.uniform(*sing)
-        out.append((t, t + d))
-        t += d + rng.uniform(*pause)
-    return out
-
-
-def _species_events(rng, sp, L):
-    """List of (t, phrase) for one individual of a species over the loop."""
-    ev = []
-    f = sp["f"] * rng.uniform(0.96, 1.04)
-    if sp["kind"] == "trill":
-        for t0, t1 in _bouts(rng, L, sp["sing"], sp["pause"]):
-            d = t1 - t0
-            pulses = int(d * sp["rate"])
-            env = np.sin(np.pi * np.linspace(0, 1, 64)) ** 0.6 * (0.8 + 0.2 * np.sin(np.linspace(0, 9, 64)))
-            ph = ins.insect_phrase(rng, f, pulses, sp["rate"] * rng.uniform(0.97, 1.03), sp["duty"], sp["drop"], env)
-            ev.append((t0, ph))
-        return ev
-    period = sp["period"] * rng.uniform(0.9, 1.1)
-    for t0, t1 in _bouts(rng, L, sp["sing"], sp["pause"]):
-        t = t0
-        while t < t1:
-            ph = sp["make"](rng, f)
-            ev.append((t, ph))
-            t += period * rng.uniform(1 - sp["jit"], 1 + sp["jit"])
-    return ev
-
-
-def _suzumushi(rng, f):
-    p = rng.integers(9, 14)
-    return ins.insect_phrase(rng, f, p, rng.uniform(35, 40), 0.78, 0.015, env=[0.35, 0.9, 1.0, 0.85, 0.5], shape=1.1)
-
-
-def _emma(rng, f):
-    a = ins.insect_phrase(rng, f, rng.integers(3, 5), 28, 0.55, 0.03, env=[0.7, 1.0, 0.9])
-    b = ins.insect_phrase(rng, f * 0.99, rng.integers(5, 9), 31, 0.65, 0.025, env=[1.0, 0.9, 0.6, 0.3])
-    y = np.zeros(len(a) + ns(0.05) + len(b))
-    dsp.place(y, a, 0)
-    dsp.place(y, b, len(a) / SR + 0.05)
-    return y
-
-
-def _kanetataki(rng, f):
-    return ins.insect_phrase(rng, f, 1, 90, 0.85, 0.04, shape=2.0, harm=0.0)
-
-
-def _tsuzure(rng, f):
-    return ins.insect_phrase(rng, f, 3, 24, 0.5, 0.03, env=[0.8, 1.0, 0.8])
-
-
-SPECIES = {
-    "suzumushi": dict(kind="phrase", f=4400, make=_suzumushi, period=1.05, jit=0.08, sing=(8, 22), pause=(1.5, 6)),
-    "emma": dict(kind="phrase", f=4750, make=_emma, period=1.9, jit=0.25, sing=(10, 30), pause=(2, 7)),
-    "kantan": dict(kind="trill", f=2900, rate=46, duty=0.62, drop=0.02, sing=(6, 13), pause=(5, 11)),
-    "kanetataki": dict(kind="phrase", f=7300, make=_kanetataki, period=0.36, jit=0.12, sing=(2, 5), pause=(3, 7)),
-    "tsuzure": dict(kind="phrase", f=5200, make=_tsuzure, period=0.27, jit=0.05, sing=(5, 14), pause=(2, 6)),
-}
-
-
-def insects(rng, i=1):
-    L = 40.0
-    n = ns(L)
-    out = np.zeros((2, n))
-    cast = ["suzumushi"] * 5 + ["emma"] * 4 + ["kantan"] * 1 + ["kanetataki"] * 3 + ["tsuzure"] * 3
-    for sp_name in cast:
-        sp = SPECIES[sp_name]
-        d = rng.uniform(1.0, 4.0)
-        tr = np.zeros(n)
-        for t0, ph in _species_events(rng, sp, L):
-            _place_circ(tr, ph, t0)
-        fc = 15000.0 / d ** 0.85
-        tr = _cr(tr, lambda x: dsp.lowpass(x, fc, 2), 0.2)
-        gain = (1.0 / d) * {"kanetataki": 0.55, "kantan": 0.9, "tsuzure": 0.7}.get(sp_name, 1.0)
-        out += dsp.pan(tr, rng.uniform(-0.85, 0.85)) * gain
-    # a very faint floor so the silence after the chorus stops is *heard*
-    fl = np.vstack([dsp.colored(n, rng, -3.0, lo=200, hi=6000) for _ in range(2)])
-    out += fl * 0.004
-    bt = dsp.binaural(333.0, 6.0, n, L=L, rng=rng) * 0.006 * _lfo(n, 3, rng, 0.3, 1.0)[None, :]  # theta under the chorus
-    ir = dsp.make_ir(1.1, rng, stereo=True, predelay=0.012, hf_ratio=0.5)
-    out = dsp.circ_reverb(out, ir, wet=0.3, dry=0.85) + bt
-    return dsp.dc_block(out, circular=True)
-
-
-# --------------------------------------------------------------------------
-# amb.wind_ridge - 40 s: strong cold wind, whistling in the steel lattice,
-# power-line corona buzz
-# --------------------------------------------------------------------------
-def wind_ridge(rng, i=1):
-    L = 40.0
-    n = ns(L)
-    out = np.zeros((2, n))
-    base = dsp.smooth(n, rng, 0.1)
-    for c in range(2):
-        g = _gusts(n, rng, base, rate=0.25, mix=0.7, floor=0.3, power=1.4)
-        roar = dsp.colored(n, rng, -5.0, lo=40, hi=900)
-        body = dsp.colored(n, rng, -3.0, lo=250, hi=3500)
-        hiss = dsp.colored(n, rng, -0.5, lo=2500, hi=9000)
-        y = roar * g * 0.9 + body * g ** 1.5 * 0.55 + hiss * g ** 2.2 * 0.18
-        # lattice whistles (aeolian tones; pitch follows wind speed), a 6 Hz binaural split
-        for f0, bw, lv in ((410, 7, 0.35), (566, 9, 0.48), (812, 11, 0.32), (1180, 14, 0.2), (1640, 18, 0.11)):
-            fr = (f0 + (3.0 if c else -3.0)) * (0.82 + 0.36 * g) * (1 + 0.006 * dsp.smooth(n, rng, 1.5))
-            w = dsp.nb_noise(fr, bw, rng, periodic_fix=True)
-            y += w * lv * np.clip((g - 0.45) / 0.55, 0, 1) ** 1.8
-        howl = dsp.nb_noise(np.full(n, 205.0 + 8 * c) * (0.9 + 0.2 * g), 22, rng, periodic_fix=True)
-        y += howl * 0.25 * np.clip((g - 0.6) / 0.4, 0, 1) ** 2
-        out[c] = y
-    # high-voltage line: 100 Hz corona hum + crackling buzz
-    t = np.arange(n) / SR
-    hum = sum(a * np.sin(TAU * f * t + rng.random() * 6) for f, a in ((100, 1.0), (200, 0.5), (300, 0.35), (500, 0.15)))
-    buzz = dsp.colored(n, rng, 0.0, lo=1500, hi=8000) * (0.5 + 0.5 * np.cos(TAU * 100 * t)) ** 6
-    crk = ins.crackle(L, rng, 25, hp=2500)
-    corona = buzz * 0.01 + crk / (np.max(np.abs(crk)) + 1e-9) * 0.03
-    out += np.vstack([corona * 0.8, corona])
-    gr = _norm01(dsp.smooth(n, rng, 0.1))
-    tones = dsp.binaural(566.0, 6.0, n, L=L, rng=rng) * (0.2 + 0.8 * gr) * 0.04  # a pure lattice tone, 6 Hz apart
-    tones += np.vstack([hum * 0.012 * 0.8, hum * 0.012])
-    # the lattice flexing: a few metallic groans / pings
-    for _ in range(3):
-        d = rng.uniform(0.6, 1.2)
-        gr = ins.creak(d, rng, [(0, 30), (d / 2, 70), (d, 25)], [(0, 0), (0.1, 0.7), (d, 0)],
-                       modes=[(f, 25, a) for f, a in ((430, 1.0), (980, 0.7), (1730, 0.5), (2620, 0.3))], tonal=0.6)
-        _place_circ(out, dsp.pan(gr / (np.max(np.abs(gr)) + 1e-9), rng.uniform(-0.7, 0.7)) * 0.05, rng.uniform(0, L))
-    ir = dsp.make_ir(0.9, rng, stereo=True, predelay=0.008)
-    out = dsp.circ_reverb(out, ir, wet=0.18, dry=0.95) + tones
-    return dsp.dc_block(out, circular=True)
-
-
-# --------------------------------------------------------------------------
-# amb.tunnel - 40 s: low hum, air movement, sub resonance, far drips
-# --------------------------------------------------------------------------
-def _tunnel_ir(rng, rt=3.6, dur=4.5):
-    ir = dsp.make_ir(rt, rng, stereo=True, predelay=0.02, hf_ratio=0.35, lf_ratio=1.4, dur=dur)
-    n = ir.shape[1]
-    fl = np.zeros(n)
-    t, a = 0.0262, 0.5
-    while t < 1.2:  # flutter echo between the walls
-        fl[ns(t)] += a
-        t += 0.0262 * rng.uniform(0.995, 1.005)
-        a *= 0.9
-    fl = dsp.lowpass(fl, 3000, 2)
-    ir = ir + np.vstack([fl, np.roll(fl, 7)]) * np.sqrt(np.sum(ir[0] ** 2)) / (np.sqrt(np.sum(fl ** 2)) + 1e-9) * 0.35
-    return ir / np.sqrt(np.sum(ir ** 2, axis=1, keepdims=True))
+def _hum(L, n, rng, f, harm):
+    return sum(a * _tone(f * k, L, n, rng) for k, a in harm)
 
 
 def _drip(rng, f0, vel=1.0):
+    """A water drop: the rising Minnaert chirp of the bubble it traps, a tiny splash."""
     tau = rng.uniform(0.012, 0.025)
     m = ns(0.12)
     t = np.arange(m) / SR
@@ -244,150 +52,334 @@ def _drip(rng, f0, vel=1.0):
     return y * vel
 
 
-def tunnel(rng, i=1):
-    L = 40.0
-    n = ns(L)
+def _room(rng, rt, stereo=True, predelay=0.012, hf=0.45):
+    return dsp.make_ir(rt, rng, stereo=stereo, predelay=predelay, hf_ratio=hf)
+
+
+def _compressor(L, n, rng, on_spans, f=50.0, level=1.0, rattle=0.3):
+    """A hermetic refrigeration compressor cycling: 100 Hz hum with harmonics while on, a start surge, a stop shudder."""
+    t = np.arange(n) / SR
+    gate = np.zeros(n)
+    for a, b in on_spans:
+        ia, ib = ns(a), ns(b)
+        idx = np.arange(ia, ib) % n
+        gate[idx] = 1.0
+    gate = _cr(gate, lambda x: dsp.lowpass0(x, 3.0))
+    hum = _hum(L, n, rng, f, ((1, 0.3), (2, 1.0), (3, 0.25), (4, 0.45), (6, 0.18), (8, 0.08)))
+    mech = dsp.colored(n, rng, -2.5, lo=80, hi=1500) * rattle
+    y = (_nrm(hum) * 0.8 + mech / np.std(mech) * 0.15) * gate
+    for a, b in on_spans:  # start clunk + surge, stop shudder + click
+        m = ns(0.5)
+        tt = np.arange(m) / SR
+        surge = np.sin(TAU * np.cumsum(60 + 40 * np.exp(-tt / 0.08)) / SR) * dsp.env_ad(m, 0.01, 0.15)
+        _place_circ(y, surge * 0.5, a)
+        _place_circ(y, ins.modal_hit(rng, [(310, 0.05, 1.0), (720, 0.04, 0.6), (1300, 0.03, 0.3)], hardness=0.5,
+                                     vel=0.4, dur=0.15), a)
+        sh = dsp.lowpass(rng.standard_normal(m), 300, 2) * dsp.env_ad(m, 0.02, 0.12)
+        _place_circ(y, sh * 0.6, b)
+        _place_circ(y, ins.modal_hit(rng, [(1900, 0.03, 1.0), (3100, 0.02, 0.5)], hardness=1.0, vel=0.15, dur=0.08), b + 0.3)
+    return y * level, gate
+
+
+def _clock(L, n, rng, pan=-0.5, vel=1.0, period=1.0):
+    """A quartz wall clock: a light plastic tick every second."""
     out = np.zeros((2, n))
-    sub = dsp.sub_rumble(n, 31.0, L=L, rng=rng, am_rate=5.0, am_depth=0.35, drive=2.0)
-    tones = np.vstack([sub, sub]) * 0.4 * _lfo(n, 3, rng, 0.55, 1.0)
-    moan = np.zeros((2, n))
+    k = 0
+    t = 0.37
+    while t < L - 1e-6:
+        c = ins.modal_hit(rng, [(2100, 0.025, 1.0), (3400, 0.018, 0.6), (5600, 0.01, 0.3), (900, 0.03, 0.3)],
+                          size=1.0, hardness=1.0, vel=vel * (1.0 if k % 2 == 0 else 0.82), dur=0.07, noise=0.35)
+        _place_circ(out, dsp.pan(c, pan), t)
+        t += period
+        k += 1
+    return out
+
+
+# --------------------------------------------------------------------------
+# amb.night_road - 60 s: wet road hiss, far traffic swells, gutters dripping, a far dog, wind in the wires
+# --------------------------------------------------------------------------
+def night_road(rng, i=1):
+    L = 60.0
+    n = ns(L)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    weather = _norm01(dsp.smooth(n, rng, 0.05))
+    for c in range(2):  # the wet world's own hiss + low air
+        h = dsp.colored(n, rng, -1.0, lo=500, hi=9000)
+        a = dsp.colored(n, rng, -5.0, lo=30, hi=400)
+        out[c] += h / np.std(h) * 0.025 + a / np.std(a) * 0.04 * (0.5 + 0.5 * weather)
+    for k in range(6):  # traffic swelling and fading on wet asphalt, near and far
+        far = k >= 2
+        tm = rng.uniform(0, L)
+        dur = rng.uniform(9, 16) if far else rng.uniform(6, 9)
+        m = ns(dur)
+        x = np.linspace(-1, 1, m)
+        g = 1.0 / (1.0 + (x * (3.0 if far else 5.0)) ** 2)
+        sp = dsp.colored(m, rng, -1.0, lo=200, hi=9000)
+        lp = (1500 if far else 3500) + (2000 if far else 6000) * g
+        sp = dsp.tv_filter(sp, lp, 0.7, "lp", block=256)
+        eng = dsp.lowpass(rng.standard_normal(m), 250, 2) * 0.6
+        car = (sp / np.std(sp) + eng / np.std(eng) * 0.3) * g * (0.06 if far else 0.16)
+        pn = np.linspace(-0.9, 0.9, m) * (1 if rng.random() < 0.5 else -1)
+        _place_circ(out, dsp.pan(car, pn), tm - dur / 2)
+    drips = np.zeros((2, n))  # gutters and the canopy: a few drip streams, each with its own pulse
+    for s in range(4):
+        per = rng.uniform(0.8, 2.6)
+        pn = rng.uniform(-0.8, 0.8)
+        f0 = rng.uniform(600, 1200)
+        dist = rng.uniform(1.0, 3.0)
+        tt = rng.uniform(0, per)
+        while tt < L:
+            d = _drip(rng, f0 * rng.uniform(0.95, 1.05), rng.uniform(0.6, 1.0) / dist)
+            d = dsp.lowpass(d, 9000 / dist, 2)
+            _place_circ(drips, dsp.pan(d, pn), tt)
+            tt += per * rng.uniform(0.85, 1.25)
+    for _ in range(60):  # stray drops into puddles
+        d = _drip(rng, rng.uniform(500, 1400), rng.uniform(0.2, 0.6))
+        _place_circ(drips, dsp.pan(dsp.lowpass(d, 5000, 2), rng.uniform(-1, 1)), rng.uniform(0, L))
+    out += _nrm(drips) * 0.09
+    t0 = rng.uniform(15, 45)  # a dog, very far away, three barks
+    for k in range(3):
+        from voice import scream
+        b, _ = scream(0.16, rng, [(0, 520), (0.03, 760), (0.16, 480)], [(0, 0), (0.01, 1.0), (0.16, 0)], vowel="a",
+                      chaos_pts=[(0, 3.7), (0.16, 3.8)], breath=0.5, rasp=0.6, scale=0.8, oq=0.5)
+        b = dsp.lowpass(dsp.highpass(b, 300, 2), 2200, 2)
+        bf = dsp.far(b, rng, rt60=2.8, wet=1.0, dry=0.2, lp=1800, predelay=0.08, taps=[(0.45, 0.4, 1200)])
+        _place_circ(out, dsp.pan(_nrm(bf), 0.75) * 0.05, t0 + k * rng.uniform(0.45, 0.7))
+    gust = _norm01(dsp.smooth(n, rng, 0.12)) ** 2.0  # wind in the wires: aeolian tones with the gusts
     for c in range(2):
-        fr = np.full(n, 64.0 + 2.5 * c) * (1 + 0.03 * dsp.smooth(n, rng, 0.2))
-        moan[c] = dsp.nb_noise(fr, 5, rng, periodic_fix=True) + 0.4 * dsp.nb_noise(fr * 2.01, 7, rng, periodic_fix=True)
-    out += moan * 0.22 * _lfo(n, 2, rng, 0.2, 1.0, 2.0)
-    air = np.vstack([dsp.colored(n, rng, -5.5, lo=25, hi=500) for _ in range(2)])
-    out += air * 0.35 * (0.4 + 0.6 * _lfo(n, 4, rng))[None, :]
-    hiss = np.vstack([dsp.colored(n, rng, -1.0, lo=1500, hi=7000) for _ in range(2)])
-    out += hiss * 0.012 * _lfo(n, 3, rng, 0.3, 1.0)[None, :]
-    bt = dsp.binaural(107.0, 4.5, n, L=L, rng=rng)  # 104.75 / 109.25 Hz, clear of the 31 Hz harmonics
-    tones += bt * 0.05 * _lfo(n, 2, rng, 0.2, 1.0, 2.0)[None, :]
-    ir = _tunnel_ir(rng)
-    drips = np.zeros((2, n))
-    t = rng.uniform(0.5, 2.0)
-    while t < L - 0.2:
-        d = rng.uniform(1.0, 3.5)
-        dp = _drip(rng, rng.uniform(600, 1400), 1.0 / d)
-        dp = dsp.lowpass(dp, 9000 / d, 2)
-        _place_circ(drips, dsp.pan(dp, rng.uniform(-0.9, 0.9)), t)
-        t += rng.uniform(1.8, 5.5)
-    drips = dsp.circ_reverb(drips, ir, wet=1.0, dry=0.25)
-    out += drips * 0.35
-    out = dsp.circ_reverb(out, ir, wet=0.25, dry=0.9) + tones
+        for f0, bw, lv in ((330, 6, 0.5), (470, 8, 0.35), (690, 10, 0.2)):
+            fr = (f0 + (2.0 if c else -2.0)) * (0.9 + 0.2 * gust)
+            w = dsp.nb_noise(fr, bw, rng, periodic_fix=True)
+            out[c] += w * lv * 0.03 * np.clip((gust - 0.3) / 0.7, 0, 1) ** 1.5
+        wn = dsp.colored(n, rng, -4.0, lo=100, hi=2500)
+        out[c] += wn / np.std(wn) * 0.05 * (0.3 + 0.7 * gust)
+    ir = _room(rng, 1.6, predelay=0.03, hf=0.35)
+    out = dsp.circ_reverb(out, ir, wet=0.3, dry=0.9)
+    tones = dsp.binaural(296.0, 5.5, n, L=L, rng=rng) * 0.004 * (0.3 + 0.7 * gust)[None, :]
+    sub = dsp.sub_rumble(n, 33.0, L=L, rng=rng, am_rate=5.0, am_depth=0.4) * _lfo(n, 2, rng, 0.0, 1.0, 3.0)
+    out += tones + np.vstack([sub, sub]) * 0.02
     return dsp.dc_block(out, circular=True)
 
 
 # --------------------------------------------------------------------------
-# amb.village - 40 s: loose tin, a shutter, a detuned wind chime far away
+# amb.dining - 40 s: the closed dining hall
 # --------------------------------------------------------------------------
-def _tin_rattle(rng, d, vel=1.0, size=1.0):
-    y = np.zeros(ns(d + 1.0))
-    t = 0.0
-    while t < d:
-        v = vel * rng.uniform(0.25, 1.0) * np.sin(np.pi * t / d) ** 0.5
-        h = ins.modal_hit(rng, ins.TIN, size=size * rng.uniform(0.9, 1.1), hardness=0.7, vel=v, dur=0.9, noise=0.4)
-        dsp.place(y, h, t)
-        t += rng.uniform(0.025, 0.09)
-    return y
+def dining(rng, i=1):
+    L = 40.0
+    n = ns(L)
+    out = np.zeros((2, n))
+    for c in range(2):  # room tone of a big room with absorbent tiles
+        r = dsp.colored(n, rng, -3.5, lo=40, hi=3000)
+        out[c] += r / np.std(r) * 0.03
+    cake, g1 = _compressor(L, n, rng, [(5.5, 29.0)], level=1.0, rattle=0.35)  # the cake case, cycling
+    out += dsp.pan(_nrm(cake), 0.55) * 0.12
+    bar, g2 = _compressor(L, n, rng, [(21.0, 45.5)], level=1.0, rattle=0.25)  # the drink bar, out of phase with it
+    out += dsp.pan(_nrm(bar), -0.65) * 0.08
+    gur = np.zeros(n)  # refrigerant gurgling after the stops
+    for t0 in (29.3, 5.8):
+        m = ns(4.0)
+        w = ins.water_texture(m, rng, density=60, r_range=(2.0, 7.0), noise=0.05, splash=0.0)
+        _place_circ(gur, dsp.lowpass(w, 2500, 2) * dsp.env_pts(m, [(0, 0), (0.3, 1), (4.0, 0)]), t0)
+    out += dsp.pan(_nrm(gur), 0.45) * 0.025
+    exit_ = _hum(L, n, rng, 100.0, ((1, 0.4), (3, 0.3), (5, 0.12)))  # the green exit sign
+    out += dsp.pan(_nrm(exit_), 0.2) * 0.006
+    out += _clock(L, n, rng, pan=-0.45, vel=1.0) * 0.03
+    for _ in range(3):  # the building cooling: a tick in the ceiling, a creak in a booth
+        h = ins.modal_hit(rng, [(rng.uniform(600, 1800), 0.04, 1.0), (rng.uniform(2000, 3500), 0.03, 0.6)], hardness=0.8,
+                          vel=1.0, dur=0.12)
+        _place_circ(out, dsp.pan(h, rng.uniform(-0.9, 0.9)) * 0.012, rng.uniform(0, L))
+    ir = _room(rng, 0.9, predelay=0.012, hf=0.5)
+    out = dsp.circ_reverb(out, ir, wet=0.35, dry=0.9)
+    out += dsp.binaural(200.0, 6.0, n, L=L, rng=rng) * 0.0025 * _lfo(n, 2, rng, 0.3, 1.0)[None, :]  # theta under the hum
+    return dsp.dc_block(out, circular=True)
 
 
-def _shutter(rng, d=1.4):
-    y = np.zeros(ns(d + 1.2))
-    t = 0.0
-    while t < d:
+# --------------------------------------------------------------------------
+# amb.kitchen - 40 s: the big compressor, the exhaust fan idling, a drip in the sink, stainless ticking as it cools
+# --------------------------------------------------------------------------
+def kitchen(rng, i=1):
+    L = 40.0
+    n = ns(L)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    comp = _hum(L, n, rng, 50.0, ((1, 0.6), (2, 1.0), (3, 0.4), (4, 0.5), (5, 0.15), (6, 0.25), (8, 0.1)))
+    comp *= 1 + 0.05 * _tone(0.5, L, n, rng)
+    rum = dsp.colored(n, rng, -4.0, lo=30, hi=400)
+    out += np.vstack([_nrm(comp) * 0.16 + rum / np.std(rum) * 0.07] * 2) * np.array([[0.85], [1.0]])
+    blade = dsp.loop_freq(37.5, L)  # the hood's fan idling (6 blades at 375 rpm)
+    fan = dsp.colored(n, rng, -2.0, lo=120, hi=3500) * (1 + 0.25 * np.cos(TAU * blade * t))
+    fan += dsp.nb_noise(np.full(n, blade * 4), 4.0, rng, periodic_fix=True) * 0.6
+    rattle = ins.friction_pulses(L, rng, blade, 0.3, jitter=0.15)
+    rattle = _cr(rattle, lambda x: dsp.resbank(x, [(820, 15, 1.0), (1650, 18, 0.6), (2600, 20, 0.3)]))
+    out += dsp.pan(fan / np.std(fan) * 0.06 + _nrm(rattle) * 0.01, 0.3)
+    sink = np.zeros(n)  # the tap at the dish pit drips into the steel sink
+    tt = 0.8
+    while tt < L - 0.1:
+        d = _drip(rng, rng.uniform(1050, 1150), rng.uniform(0.8, 1.0))
+        d = d + dsp.resbank(d, [(410, 30, 0.6), (990, 40, 0.5), (1720, 50, 0.4), (2580, 60, 0.3)]) * 0.4
+        _place_circ(sink, d, tt)
+        tt += rng.uniform(3.2, 3.9)
+    out += dsp.pan(_nrm(sink), 0.75) * 0.05
+    for _ in range(14):  # stainless steel ticking as it cools
+        h = ins.modal_hit(rng, [(rng.uniform(1200, 2600), 0.15, 1.0), (rng.uniform(3000, 5200), 0.1, 0.6)],
+                          hardness=1.0, vel=rng.uniform(0.3, 1.0), dur=0.25, noise=0.3)
+        _place_circ(out, dsp.pan(h, rng.uniform(-0.9, 0.9)) * 0.012, rng.uniform(0, L))
+    pilot = dsp.colored(n, rng, -1.0, lo=800, hi=6000)  # pilot flames, barely
+    out += dsp.pan(pilot / np.std(pilot), -0.4) * 0.004
+    ir = _room(rng, 0.75, predelay=0.006, hf=0.9)
+    out = dsp.circ_reverb(out, ir, wet=0.3, dry=0.9)
+    out += dsp.binaural(150.0, 5.0, n, L=L, rng=rng) * 0.003 * _lfo(n, 2, rng, 0.3, 1.0)[None, :]
+    return dsp.dc_block(out, circular=True)
+
+
+# --------------------------------------------------------------------------
+# amb.restroom - 30 s: tiled room tone, water in the pipes, a slow drip, the ventilation fan
+# --------------------------------------------------------------------------
+def restroom(rng, i=1):
+    L = 30.0
+    n = ns(L)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    blade = dsp.loop_freq(142.0, L)
+    fan = dsp.colored(n, rng, -1.5, lo=200, hi=5000)
+    fan = _cr(fan, lambda x: dsp.peq(x, 1100, 1.2, 5.0))
+    fan += dsp.nb_noise(np.full(n, blade), 3.0, rng, periodic_fix=True) * 0.8
+    out += dsp.pan(fan / np.std(fan), 0.2) * 0.035
+    pipe = np.zeros(n)  # somewhere in the walls water moves: a rush, a gurgle
+    for t0, d in ((4.0, 5.5), (19.0, 3.5)):
+        m = ns(d)
+        w = ins.water_texture(m, rng, density=160, r_range=(2.0, 9.0), noise=0.6, splash=0.1)
+        w = dsp.resbank(w, [(180, 6, 1.0), (390, 8, 0.6), (620, 10, 0.4)]) * 0.5 + dsp.lowpass(w, 900, 2)
+        _place_circ(pipe, w * dsp.env_pts(m, [(0, 0), (d * 0.3, 1), (d, 0)]), t0)
+    out += dsp.pan(_nrm(pipe), -0.5) * 0.05
+    drip = np.zeros(n)
+    tt = 1.1
+    while tt < L - 0.1:
+        d = _drip(rng, rng.uniform(820, 880), rng.uniform(0.85, 1.0))
+        d = d + dsp.resbank(d, [(520, 20, 0.5), (1310, 25, 0.35), (2150, 30, 0.25)]) * 0.3  # into the ceramic basin
+        _place_circ(drip, d, tt)
+        tt += rng.uniform(2.5, 3.0)
+    out += dsp.pan(_nrm(drip), 0.55) * 0.06
+    tone = _hum(L, n, rng, 50.0, ((2, 1.0), (4, 0.3), (6, 0.15)))  # the lights over the mirror
+    out += np.vstack([tone, tone]) * 0.004
+    ir = _room(rng, 1.4, predelay=0.006, hf=0.85)
+    out = dsp.circ_reverb(out, ir, wet=0.55, dry=0.85)
+    out += dsp.binaural(240.0, 6.0, n, L=L, rng=rng) * 0.003 * _lfo(n, 2, rng, 0.2, 1.0)[None, :]
+    return dsp.dc_block(out, circular=True)
+
+
+# --------------------------------------------------------------------------
+# amb.back - 30 s: corridor / office: 50 Hz ballast hum with harmonics, PC fans, the breaker panel's buzz
+# --------------------------------------------------------------------------
+def back(rng, i=1):
+    L = 30.0
+    n = ns(L)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    bal = _hum(L, n, rng, 50.0, ((1, 0.3), (2, 1.0), (4, 0.45), (6, 0.5), (8, 0.2), (10, 0.15), (12, 0.08)))
+    bal = np.tanh(1.5 * _nrm(bal))
+    zzz = dsp.colored(n, rng, 0.0, lo=2500, hi=8000) * (0.5 + 0.5 * np.cos(TAU * dsp.loop_freq(100.0, L) * t)) ** 8
+    flick = np.ones(n)  # the corridor tube that flickers
+    for _ in range(4):
+        t0 = rng.uniform(0, L)
         for k in range(rng.integers(2, 5)):
-            h = ins.modal_hit(rng, ins.METAL, size=rng.uniform(1.6, 2.4), hardness=0.6, vel=rng.uniform(0.2, 0.7), dur=0.5)
-            dsp.place(y, h, t + k * rng.uniform(0.006, 0.02))
-        boom = ins.modal_hit(rng, ins.TIN, size=1.8, hardness=0.3, vel=0.6, dur=1.0, noise=0.2)
-        dsp.place(y, dsp.lowpass(boom, 900, 2), t)
-        t += rng.uniform(0.09, 0.22)
-    return y
-
-
-def village(rng, i=1):
-    L = 40.0
-    n = ns(L)
-    out = np.zeros((2, n))
-    base = dsp.smooth(n, rng, 0.12)
-    gl = None
-    for c in range(2):
-        g = _gusts(n, rng, base, rate=0.2, mix=0.75, floor=0.12, power=1.8)
-        gl = g if c == 0 else (gl + g) / 2
-        body = dsp.colored(n, rng, -4.5, lo=70, hi=2200)
-        y = body * g * 0.35
-        for f0, bw, lv in ((330, 12, 0.18), (505, 16, 0.12), (742, 20, 0.07)):
-            fr = f0 * (0.88 + 0.24 * g) * (1 + 0.01 * dsp.smooth(n, rng, 1.0))
-            y += dsp.nb_noise(fr, bw, rng, periodic_fix=True) * lv * np.clip((g - 0.5) / 0.5, 0, 1) ** 2
-        out[c] = y
-    # events follow the gust peaks
-    peaks = [k for k in range(ns(1.0), n - ns(1.0), ns(0.5)) if gl[k] > 0.55]
-    ts = sorted(rng.choice(peaks, size=min(9, len(peaks)), replace=False) / SR) if peaks else []
-    for k, t0 in enumerate(ts):
-        if k % 3 == 2:
-            s = _shutter(rng, rng.uniform(0.8, 1.6))
-            p = 0.65
-            g = 0.16
-        else:
-            s = _tin_rattle(rng, rng.uniform(0.3, 0.9), size=rng.choice([0.9, 1.2]))
-            p = -0.6 if k % 2 else 0.25
-            g = 0.2
-        s = dsp.lowpass(s, 5000, 2)
-        _place_circ(out, dsp.pan(s / (np.max(np.abs(s)) + 1e-9), p + rng.uniform(-0.15, 0.15)) * g, t0)
-    # far, sour wind chime
-    base_f = rng.uniform(2300, 2700)
-    for t0 in sorted(rng.uniform(0, L, 6)):
-        ch = np.zeros(ns(3.5))
-        for k in range(rng.integers(1, 4)):
-            dsp.place(ch, ins.furin(rng, base_f * dsp.cents(rng.uniform(-60, 60)), rng.uniform(0.4, 1.0), detune=35), k * rng.uniform(0.12, 0.3))
-        ch = dsp.lowpass(ch, 4500, 2)
-        _place_circ(out, dsp.pan(ch, 0.85) * 0.05, t0)
-    # rusted bus-stop sign creaking on its pole
-    for t0 in rng.uniform(0, L, 2):
-        d = rng.uniform(0.8, 1.4)
-        cr = ins.creak(d, rng, [(0, 25), (d / 2, 55), (d, 20)], [(0, 0), (0.15, 0.8), (d, 0)],
-                       modes=[(f, 30, a) for f, a in ((610, 1.0), (1290, 0.6), (2050, 0.35))], tonal=0.7, jitter=0.2)
-        _place_circ(out, dsp.pan(cr / (np.max(np.abs(cr)) + 1e-9), -0.3) * 0.03, t0)
-    sub = dsp.sub_rumble(n, 36.71, L=L, rng=rng, am_rate=6.5, am_depth=0.5)
-    tones = np.vstack([sub, sub]) * 0.02 * _lfo(n, 2, rng, 0.0, 1.0, 2.0)
-    tones += dsp.binaural(200.0, 5.5, n, L=L, rng=rng) * 0.02 * _lfo(n, 2, rng, 0.2, 1.0)[None, :]
-    ir = dsp.make_ir(1.7, rng, stereo=True, predelay=0.02, hf_ratio=0.4)
-    out = dsp.circ_reverb(out, ir, wet=0.32, dry=0.85) + tones
+            d = rng.uniform(0.03, 0.12)
+            idx = (ns(t0) + np.arange(ns(d))) % n
+            flick[idx] = rng.uniform(0.2, 0.6)
+            t0 += d + rng.uniform(0.03, 0.15)
+    flick = _cr(flick, lambda x: dsp.lowpass0(x, 200.0))
+    out += dsp.pan((bal * 0.07 + zzz / np.std(zzz) * 0.012) * flick, -0.2)
+    pc_b = dsp.loop_freq(175.0, L)  # the office PC: fan blade tone, bearing whine, airflow
+    pc = dsp.nb_noise(np.full(n, pc_b), 4.0, rng, periodic_fix=True) + 0.4 * _tone(2950.0, L, n, rng)
+    pc += dsp.colored(n, rng, -1.5, lo=300, hi=6000) * 0.8
+    out += dsp.pan(pc / np.std(pc), 0.6) * 0.02
+    brk = _hum(L, n, rng, 100.0, ((1, 1.0), (2, 0.3), (3, 0.4))) * (1 + 0.3 * dsp.smooth(n, rng, 0.3))
+    out += dsp.pan(_nrm(brk), -0.7) * 0.012
+    for _ in range(2):  # a relay in the security system
+        h = ins.modal_hit(rng, [(2500, 0.02, 1.0), (4100, 0.015, 0.5)], hardness=1.0, vel=1.0, dur=0.05)
+        _place_circ(out, dsp.pan(h, 0.5) * 0.01, rng.uniform(0, L))
+    ir = _room(rng, 0.8, predelay=0.006, hf=0.6)
+    out = dsp.circ_reverb(out, ir, wet=0.35, dry=0.9)
+    out += dsp.binaural(176.0, 5.0, n, L=L, rng=rng) * 0.003 * _lfo(n, 2, rng, 0.2, 1.0)[None, :]
     return dsp.dc_block(out, circular=True)
 
 
 # --------------------------------------------------------------------------
-# amb.silence - 20 s near-silence: hiss, faint ringing, ear pressure
+# amb.fridge - 20 s: inside the walk-in: the evaporator fans, the compressor through the wall, ice crackling
+# --------------------------------------------------------------------------
+def fridge(rng, i=1):
+    L = 20.0
+    n = ns(L)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    for c, (fb, pn) in enumerate(((dsp.loop_freq(118.0, L), -0.5), (dsp.loop_freq(124.0, L), 0.5))):
+        fan = dsp.colored(n, rng, -1.0, lo=150, hi=7000)
+        fan = _cr(fan, lambda x: dsp.peq(x, 900, 1.0, 4.0))
+        fan *= 1 + 0.15 * np.cos(TAU * fb / 5.0 * t)
+        fan += dsp.nb_noise(np.full(n, fb), 3.0, rng, periodic_fix=True) * 1.2
+        fan += dsp.nb_noise(np.full(n, fb * 2), 4.0, rng, periodic_fix=True) * 0.5
+        out += dsp.pan(fan / np.std(fan), pn) * 0.2
+    comp = _hum(L, n, rng, 50.0, ((1, 0.5), (2, 1.0), (3, 0.3), (4, 0.4), (6, 0.15)))
+    out += np.vstack([comp, comp]) / np.max(np.abs(comp)) * 0.1
+    ice = ins.crackle(L, rng, 14, hp=2500, decay=0.0005)
+    out += dsp.pan(ice / (np.max(np.abs(ice)) + 1e-9), 0.3) * 0.08
+    for _ in range(6):  # frost cracking on the coils
+        h = ins.modal_hit(rng, [(rng.uniform(2500, 5000), 0.02, 1.0), (rng.uniform(5000, 8000), 0.01, 0.5)], hardness=1.0,
+                          vel=1.0, dur=0.05, noise=0.6)
+        _place_circ(out, dsp.pan(h, rng.uniform(-0.8, 0.8)) * 0.05, rng.uniform(0, L))
+    ir = _room(rng, 0.12, predelay=0.002, hf=0.5)
+    out = dsp.circ_reverb(out, ir, wet=0.15, dry=1.0)
+    return dsp.dc_block(out, circular=True)
+
+
+# --------------------------------------------------------------------------
+# amb.silence - 20 s near-silence: room-tone hiss, faint high ringing, ear pressure
 # --------------------------------------------------------------------------
 def silence(rng, i=1):
     L = 20.0
     n = ns(L)
     t = np.arange(n) / SR
     out = np.vstack([dsp.colored(n, rng, -2.0, lo=300, hi=9000) for _ in range(2)]) * 0.02
-    # ringing at the edge of hearing, different in each ear
     for c, (f, f2) in enumerate(((11250.0, 13020.0), (11870.0, 12460.0))):
         fq, fq2 = dsp.loop_freq(f, L), dsp.loop_freq(f2, L)
         ring = np.sin(TAU * fq * t) + 0.4 * np.sin(TAU * fq2 * t + 1.0)
         out[c] += ring * 0.006 * _lfo(n, 3 + c, rng, 0.4, 1.0)
-    # ear pressure: sub swell + muffled low noise breathing in
     sub = dsp.sub_rumble(n, 24.0, L=L, rng=rng, am_rate=0.5, am_depth=0.3, drive=1.4)
     prs = dsp.colored(n, rng, -6.0, lo=20, hi=140)
     sw = _lfo(n, 2, rng, 0.25, 1.0, 1.5)
     out += np.vstack([sub, sub]) * 0.12 * sw + np.vstack([prs, np.roll(prs, ns(0.3))]) * 0.06 * sw
-    out += dsp.binaural(224.0, 5.0, n, L=L, rng=rng) * 0.004 * sw[None, :]  # theta at the threshold of hearing
+    out += dsp.binaural(224.0, 5.0, n, L=L, rng=rng) * 0.004 * sw[None, :]
     return dsp.dc_block(out, circular=True)
 
 
 # --------------------------------------------------------------------------
-# amb.stream - 20 s mono (positional): mountain stream over stones
+# amb.closing - 40 s: every light's hum at once, the store music bleeding through the walls, PA hiss
 # --------------------------------------------------------------------------
-def stream(rng, i=1):
-    L = 20.0
+def closing(rng, i=1):
+    import jingle as J
+    L = 40.0
     n = ns(L)
-    y = ins.water_texture(n, rng, L=L, density=300, r_range=(0.6, 5.0), noise=0.55, splash=0.4)
-    for _ in range(40):  # low gurgles under the stones
-        b = ins.bubble(rng, rng.uniform(7, 16), rng.uniform(0.3, 1.0))
-        _place_circ(y, b * 0.8, rng.uniform(0, L))
-    y = _cr(y, lambda x: dsp.peq(x, 420, 0.8, 4.0))
-    y = _cr(y, lambda x: dsp.highpass(x, 70, 2))
-    ir = dsp.make_ir(0.7, rng, predelay=0.006)
-    y = dsp.circ_reverb(y, ir, wet=0.18, dry=0.9)
-    return dsp.dc_block(y, circular=True)
+    t = np.arange(n) / SR
+    out = np.zeros((2, n))
+    for c in range(2):  # a hall full of ballasts: the hum thickens, comb-filtered by the room
+        h = _hum(L, n, rng, 50.0, ((2, 1.0), (4, 0.5), (6, 0.6), (8, 0.25), (10, 0.3), (14, 0.12), (18, 0.08)))
+        z = dsp.colored(n, rng, 0.0, lo=2000, hi=9000) * (0.5 + 0.5 * np.cos(TAU * dsp.loop_freq(100.0, L) * t + c)) ** 6
+        out[c] += _nrm(h) * 0.1 + z / np.std(z) * 0.02
+    beat = 0.5  # the bossa, slightly flat, through a wall (20 bars = 40 s)
+    back = J.bossa_backing(rng, 20, beat, detune_keys=-40)
+    mel = np.zeros((2, n))
+    J.place_notes(mel, J.MELODY + [(b + 32, nm, d) for b, nm, d in J.MELODY[:15]], beat,
+                  lambda f, d, k: dsp.pan(ins.vibraphone(f * dsp.cents(-40), d + 1.0, rng, vel=0.7, depth=0.2,
+                                                         release=d + 0.4), 0.1), rng=rng)
+    mus = _nrm(back) * 0.8 + _nrm(mel)
+    mus = _cr(mus, lambda x: dsp.lowpass(x, 420, 3))
+    mus = _cr(mus, lambda x: dsp.highpass(x, 70, 2))
+    out += _nrm(mus) * 0.12
+    hiss = np.vstack([dsp.colored(n, rng, -1.0, lo=400, hi=7000) for _ in range(2)])
+    out += hiss * 0.012 * _lfo(n, 2, rng, 0.7, 1.0)[None, :]
+    ir = _room(rng, 1.1, predelay=0.012, hf=0.5)
+    out = dsp.circ_reverb(out, ir, wet=0.35, dry=0.9)
+    sub = dsp.sub_rumble(n, 43.65, L=L, rng=rng, am_rate=6.0, am_depth=0.4) * _lfo(n, 2, rng, 0.0, 1.0, 2.0)
+    out += np.vstack([sub, sub]) * 0.04 + dsp.binaural(130.0, 6.0, n, L=L, rng=rng) * 0.004
+    return dsp.dc_block(out, circular=True)

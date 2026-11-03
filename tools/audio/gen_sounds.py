@@ -244,7 +244,12 @@ def _stats_cached(cache, path, fp, ent):
     notes = []
     if ent.loop:
         hf, step = analyze.seam_local(x)
-        notes.append(f"loop seam hf x{hf:.2f} step x{step:.2f}")
+        n = x.shape[-1]
+        inner = [analyze.seam_local(np.concatenate([x[:, p:], x[:, :p]], axis=1))[0]
+                 for p in np.linspace(n // 20, n - n // 20, 40).astype(int)]
+        pct = 100.0 * np.mean(np.array(inner) < hf)
+        notes.append(f"loop seam hf x{hf:.2f} (interior median x{np.median(inner):.2f}, seam rank {pct:.0f}%)"
+                     + (" CLICK?" if pct >= 98 and hf > 3 else ""))
     if ent.ch == 2 and (ent.event.startswith("music.") or ent.loop):
         bp = analyze.binaural_pairs(x)
         if bp:
@@ -313,6 +318,8 @@ def report(spec_dir=None, pattern=None):
         lines.append(f"  {g:10s} {len(items):3d} files  LUFS-I {min(lu):6.1f} .. {max(lu):6.1f}   max momentary "
                      f"{min(mm):6.1f} .. {max(mm):6.1f}   RMS {min(rm):6.1f} .. {max(rm):6.1f} dBFS")
     lines.append("")
+    lines.append("Loop seams: the click measure at the wrap point compared with the same measure at 40 interior points")
+    lines.append("of the file (a seam ranked above 98% of them with hf > 3 is flagged CLICK?).")
     lines.append("Columns: peak = sample peak dBFS, TP = true peak dBTP (4x oversampled), LUFS = BS.1770 integrated,")
     lines.append("Mmax = max momentary (400 ms) loudness, crest = peak - RMS, cent = spectral centroid Hz,")
     lines.append("rough = RMS amplitude-modulation depth in the 30-150 Hz roughness band (noise ~0.07-0.1,")
