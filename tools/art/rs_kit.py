@@ -419,8 +419,22 @@ DISP_TALL = disp(gui=(30, 225, 0), gui_scale=0.5, gui_t=(0, -1.5, 0))   # parts 
 
 
 # ------------------------------------------------------------------------------------------------ writing
-def write_models(root=MODEL_ROOT):
+def write_particles(root=MODEL_ROOT):
+    import rs_particles
+    proot = os.path.join(os.path.dirname(root), 'particles')
+    os.makedirs(proot, exist_ok=True)
     out = []
+    for pid, d in sorted(rs_particles.PARTICLES.items()):
+        p = os.path.join(proot, pid + '.json')
+        with open(p, 'w', encoding='utf-8') as f:
+            json.dump(d, f, indent=2)
+            f.write('\n')
+        out.append(p)
+    return out
+
+
+def write_models(root=MODEL_ROOT):
+    out = write_particles(root)
     for name in sorted(MODELS):
         m = MODELS[name]
         data = m.to_json() if isinstance(m, Model) else m

@@ -18,7 +18,8 @@ def main():
     out = rs_kit.write_models()
     nb = len(rs_kit.MODELS)
     ni = len(rs_kit.ITEM_MODELS)
-    print(f'wrote {nb} block models, {ni} item models')
+    import rs_particles
+    print(f'wrote {nb} block models, {ni} item models, {len(rs_particles.PARTICLES)} particle definitions')
     return out
 
 
