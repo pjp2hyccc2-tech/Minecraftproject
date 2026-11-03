@@ -32,6 +32,7 @@ public final class Stealth {
     }
 
     public static float range(ServerPlayer p, Spirit s) {
+        if (s.fixedRange() > 0.0f) return s.fixedRange();
         boolean lit = lit(p) || beamOn(p, s.sightOrigin(), 60.0);
         float r = lit ? 14.0f : 6.0f;
         if (p.isShiftKeyDown()) r *= 0.6f;
@@ -60,6 +61,24 @@ public final class Stealth {
         double perSec = (closeness / 0.5) * (0.35 + 0.65 * centrality) / 1.2;
         perSec *= ReisatsuConfig.awarenessRate() * (1.0 + 0.15 * GameManager.reishou(p));
         if (beamOn(p, eye, 25.0)) perSec *= 1.6;
+        return (float) (perSec / 20.0);
+    }
+
+    /**
+     * Awareness per tick from an eye that is not a spirit's own (a security camera): cone, fixed range, line of sight,
+     * no light needed. Hidden players are not seen.
+     */
+    public static float rateFrom(Vec3 eye, Vec3 dir, float half, float range, ServerPlayer p) {
+        if (GameManager.state(p).hiding()) return 0.0f;
+        Vec3 head = p.getEyePosition();
+        Vec3 to = head.subtract(eye);
+        double d = to.length();
+        if (d > range || d < 1e-3) return 0.0f;
+        double angle = Math.toDegrees(Math.acos(Mth.clamp(to.scale(1.0 / d).dot(dir), -1.0, 1.0)));
+        if (angle > half) return 0.0f;
+        if (!Sight.clear(p.level(), eye, head)) return 0.0f;
+        double perSec = ((1.0 - d / range) / 0.5) * (0.35 + 0.65 * (1.0 - angle / half)) / 1.2;
+        perSec *= ReisatsuConfig.awarenessRate() * (1.0 + 0.15 * GameManager.reishou(p));
         return (float) (perSec / 20.0);
     }
 

@@ -207,8 +207,23 @@ public abstract class Spirit extends PathfinderMob implements Animated {
         return 1.0f;
     }
 
+    /** Hearing for a noise at this position (the chef hears the kitchen best). */
+    public float hearingMulAt(Vec3 pos) {
+        return hearingMul();
+    }
+
+    /** A hard sight range that ignores light and sneaking (0 = the usual 6 / 14). */
+    public float fixedRange() {
+        return 0.0f;
+    }
+
     /** Hears a player's breathing within this many blocks (0 = never). */
     public float breathRange() {
+        return 0.0f;
+    }
+
+    /** Other eyes than its own (the manager's security cameras): awareness per tick. */
+    protected float extraSight(ServerLevel level, ServerPlayer p) {
         return 0.0f;
     }
 
@@ -356,6 +371,7 @@ public abstract class Spirit extends PathfinderMob implements Animated {
             if (!GameManager.huntable(p)) continue;
             if (distanceToSqr(p) > 34 * 34) continue;
             float add = seeing ? Stealth.sightRate(this, p) : 0.0f;
+            add += extraSight(level, p);
             float br = breathRange();
             if (br > 0 && !GameManager.state(p).breathHeld() && distanceTo(p) < br) add += 0.012f;
             if (add > 0) {
@@ -372,7 +388,7 @@ public abstract class Spirit extends PathfinderMob implements Animated {
 
     /** A noise reached it: awareness of whoever made it, and it turns (and maybe walks) toward the sound. */
     protected void hear(ServerLevel level, NoiseSystem.Noise n) {
-        double hearing = hearingMul();
+        double hearing = hearingMulAt(n.pos());
         if (hearing <= 0.0) return;
         double r = n.radius() * hearing;
         double d = n.pos().distanceTo(position().add(0.0, 1.0, 0.0));
