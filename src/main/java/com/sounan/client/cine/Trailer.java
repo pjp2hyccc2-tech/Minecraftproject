@@ -219,7 +219,7 @@ public final class Trailer {
             shot.prepare();
             F.reset();
             shot.frame(0.0f, F);
-            Vec3 c = F.cam;
+            Vec3 c = shot.setupAt != null ? shot.setupAt : F.cam;
             cmd(mc, String.format(Locale.ROOT, "execute in sounan:kaerazu run tp @s %.3f %.3f %.3f %.2f %.2f", c.x, c.y - 1.62, c.z, F.yaw, F.pitch));
             cmd(mc, "item replace entity @s weapon.mainhand with " + heldId(F.held));
             // the server keeps the shot's opening fear / danger, so the set-up ends on the values the film starts with
