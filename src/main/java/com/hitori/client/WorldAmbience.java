@@ -148,7 +148,7 @@ public final class WorldAmbience {
         }
     }
 
-    /** A light rain where the sky is open (the vanilla rain is off; the shader pack draws it on the windows). */
+    /** Raindrops splashing where the sky is open (the vanilla rain is off; the shader pack draws it on the windows). */
     private static void rain(ClientLevel level, Vec3 ear, RandomSource r) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.particles().get() == net.minecraft.client.ParticleStatus.MINIMAL) return;
@@ -160,8 +160,7 @@ public final class WorldAmbience {
             double y = Math.max(top, ear.y - 4) + r.nextDouble() * 8;
             p.set(x, y, z);
             if (!level.canSeeSky(p)) continue;
-            level.addParticle(ParticleTypes.FALLING_WATER, x, y, z, 0, 0, 0);
-            if (r.nextInt(3) == 0) level.addParticle(ParticleTypes.RAIN, x, top + 0.02, z, 0, 0, 0);
+            level.addParticle(ParticleTypes.RAIN, x, top + 0.02, z, 0, 0, 0);
         }
     }
 

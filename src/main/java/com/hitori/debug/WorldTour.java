@@ -55,7 +55,11 @@ public final class WorldTour {
         /** The ritual's darkness: every light off, only the TV (static) on. */
         DARK,
         /** Hiding: dark, the TV on, the closet's fusuma cracked open. */
-        PEEK
+        PEEK,
+        /** The closet's fusuma wide open (the room dark, the TV on). */
+        OPEN,
+        /** The bath full and its tap running, the bathroom's light on. */
+        BATH
     }
 
     public record Shot(String name, double x, double y, double z, float yaw, float pitch, Lights lights, boolean nightVision) {
@@ -83,6 +87,14 @@ public final class WorldTour {
                     Fixtures.setTv(level, true);
                     Fixtures.setClosetFusuma(level, 1);
                 }
+                case OPEN -> Fixtures.setClosetFusuma(level, 2);
+                case BATH -> {
+                    Fixtures.setLights(level, "bath", true);
+                    Fixtures.setLights(level, "washroom", true);
+                    Fixtures.setDoor(level, "bath", true);
+                    Fixtures.setBathWater(level, 2);
+                    Fixtures.setBathTap(level, true);
+                }
                 default -> {
                 }
             }
@@ -108,7 +120,7 @@ public final class WorldTour {
         l.add(s("ext_side_path", -2.5, 65, 15.5, 175, -6));
         l.add(s("ext_stairs", -9.5, 65, 0.5, -60, -16));
         l.add(s("ext_corridor", -0.5, 69, -1.5, -88, 2));
-        l.add(s("ext_corridor_door", 22.5, 69, -2.2, 35, 6));
+        l.add(s("ext_corridor_door", 22.3, 69, -2.3, -42, 8));
         l.add(s("ext_balcony", 26.5, 70, 15.2, 165, 4));
         l.add(s("ext_balcony_view", 25.5, 70, 15.2, 10, 6));
         l.add(s("ext_overview", 22.5, 90, 46.5, 180, 32));
@@ -148,7 +160,7 @@ public final class WorldTour {
         List<Shot> ext = exterior();
         for (int i = 0; i < ext.size(); i++) out.add(i == 0 ? with(ext.get(i), Lights.START, false, "") : ext.get(i));
         out.add(peephole());
-        for (Shot s : ext) if (!s.name().startsWith("ext_overview")) out.add(with(s, Lights.KEEP, true, "_nv"));
+        for (Shot s : ext) out.add(with(s, Lights.KEEP, true, "_nv"));
         List<Shot> in = interior();
         for (int i = 0; i < in.size(); i++) out.add(with(in.get(i), i == 0 ? Lights.START : Lights.KEEP, false, "_start"));
         for (int i = 0; i < in.size(); i++) out.add(with(in.get(i), i == 0 ? Lights.ALL_ON : Lights.KEEP, false, "_on"));
@@ -156,7 +168,8 @@ public final class WorldTour {
         out.add(new Shot("closet_inside", 23.5, 70, 11.5, -90, 6, Lights.DARK, false));
         out.add(new Shot("closet_inside_up", 23.5, 70, 11.5, -90, -55, Lights.KEEP, false));
         out.add(new Shot("closet_peek", 23.62, 69.7, 10.1, -95, 4, Lights.PEEK, false));
-        out.add(new Shot("closet_open", 26.4, 70, 11.0, 90, 4, Lights.KEEP, false));
+        out.add(new Shot("closet_open", 26.4, 70, 11.0, 90, 4, Lights.OPEN, false));
+        out.add(new Shot("bath_full", 31.3, 70, 2.7, -145, 30, Lights.BATH, false));
         return out;
     }
 

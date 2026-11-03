@@ -251,6 +251,24 @@ def main():
                          "elements": wires})
     bs("power_wire", {f"facing={f}": var("power_wire", y) for f, y in FACING_Y.items()})
     item_parent("power_wire", "power_wire")
+    # clutter the art list does not have (world models from vanilla textures; art may replace them under the same names)
+    def box(frm, to, tex, uv=None):
+        return {"from": frm, "to": to, "faces": {f: ({"texture": tex, "uv": uv} if uv else {"texture": tex})
+                                                 for f in ("north", "south", "east", "west", "up", "down")}}
+    model("laundry_hanging", {"parent": "minecraft:block/block", "textures": {
+        "bar": "minecraft:block/iron_block", "towel": "minecraft:block/white_wool", "shirt": "minecraft:block/light_blue_wool",
+        "sock": "minecraft:block/gray_wool", "particle": "minecraft:block/white_wool"},
+        "elements": [box([2, 15, 7.6], [14, 15.6, 8.4], "#bar"), box([7.6, 15.6, 7.8], [8.4, 16, 8.2], "#bar"),
+                     box([2.5, 4, 7.85], [7.2, 15, 8.15], "#towel"), box([8.6, 6, 7.65], [13.6, 15, 7.95], "#shirt"),
+                     box([7.8, 11.5, 7.65], [14.4, 15, 7.95], "#shirt"), box([5, 1, 8.2], [6.2, 6.5, 8.6], "#sock")]})
+    bs("laundry_hanging", {f"facing={f}": var("laundry_hanging", y) for f, y in FACING_Y.items()})
+    item_parent("laundry_hanging", "laundry_hanging")
+    model("trash_bag", {"parent": "minecraft:block/block", "textures": {
+        "bag": "minecraft:block/white_concrete_powder", "tie": "minecraft:block/yellow_concrete_powder", "particle": "minecraft:block/white_concrete_powder"},
+        "elements": [box([3, 0, 3], [13, 7, 13], "#bag"), box([4, 7, 4], [12, 9, 12], "#bag"), box([6.5, 9, 6.5], [9.5, 10.5, 9.5], "#tie"),
+                     box([5.5, 10.5, 7], [7, 12, 8.5], "#tie"), box([9, 10.5, 7.5], [10.5, 12, 9], "#tie")]})
+    bs("trash_bag", {f"facing={f}": var("trash_bag", y) for f, y in FACING_Y.items()})
+    item_parent("trash_bag", "trash_bag")
     # art-modelled surfaces
     bs("puddle", {"": var(art("puddle"))})
     item_parent("puddle", "puddle")

@@ -95,6 +95,30 @@ public final class Fixtures {
                 if (be != null) level.setBlockEntity(be);
             }
         }
+        nameSign(level);
+    }
+
+    /** 「コーポ白樺」 on the sign over the mailboxes. */
+    static void nameSign(ServerLevel level) {
+        BlockPos p = ApartmentBuilder.NAME_SIGN;
+        if (!loaded(level, p)) return;
+        BlockState s = level.getBlockState(p);
+        if (!(s.getBlock() instanceof net.minecraft.world.level.block.SignBlock)) return;
+        BlockEntity be = level.getBlockEntity(p);
+        if (be == null && s.getBlock() instanceof EntityBlock eb) {
+            be = eb.newBlockEntity(p, s);
+            if (be != null) level.setBlockEntity(be);
+        }
+        if (be instanceof net.minecraft.world.level.block.entity.SignBlockEntity sign) {
+            net.minecraft.world.level.block.entity.SignText text = new net.minecraft.world.level.block.entity.SignText()
+                    .setMessage(1, net.minecraft.network.chat.Component.literal("コーポ白樺"))
+                    .setMessage(2, net.minecraft.network.chat.Component.literal("CORPO SHIRAKABA"))
+                    .setColor(net.minecraft.world.item.DyeColor.LIGHT_GRAY);
+            sign.setText(text, true);
+            sign.setWaxed(true);
+            sign.setChanged();
+            level.sendBlockUpdated(p, s, s, 3);
+        }
     }
 
     /** Restores room 203 to the evening's start state (lights on in the western room, TV off, bath empty, the plush on
@@ -108,6 +132,7 @@ public final class Fixtures {
         ApartmentBuilder.build(sink);
         sink.finish();
         for (String room : Layout.LIGHT_ROOMS) applyRoom(level, room);
+        nameSign(level);
         Hitori.LOGGER.info("[hitori] apartment reset ({} blocks restored)", sink.changed);
     }
 

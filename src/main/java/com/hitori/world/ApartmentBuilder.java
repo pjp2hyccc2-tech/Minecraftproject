@@ -469,7 +469,13 @@ public final class ApartmentBuilder {
             s.set(-6, F1, 6, f(ModBlocks.BICYCLE, W));
             s.set(-7, F1, 9, f(ModBlocks.BICYCLE, E));
         }
-        // a couple of potted plants left to die and rubbish bags at the corner
+        // the rubbish point by the stairs, a bag left in front of 201
+        s.set(-2, F1, 3, f(ModBlocks.TRASH_BAG, W));
+        s.set(-2, F1, 4, f(ModBlocks.TRASH_BAG, S));
+        s.set(3, G2, -1, f(ModBlocks.TRASH_BAG, N));
+        // the building's name over the mailboxes (its text is written by Fixtures.ensureBuilt)
+        s.set(Site.BX1 - 1, F1 + 2, 1, Blocks.DARK_OAK_WALL_SIGN.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, W));
+        // a couple of potted plants left to die
         s.set(-1, F1, 12, Blocks.POTTED_DEAD_BUSH.defaultBlockState());
         s.set(45, F1, -4, Blocks.POTTED_DEAD_BUSH.defaultBlockState());
     }
@@ -526,7 +532,9 @@ public final class ApartmentBuilder {
         s.set(26, y, 5, f(ModBlocks.DINING_CHAIR, W));
         s.set(25, y, 6, f(ModBlocks.DINING_CHAIR, N));
         s.set(24, y + 2, 4, f(ModBlocks.WALL_CLOCK, S));
-        s.set(24, y, 7, f(ModBlocks.CARDBOARD_BOX, N));
+        s.set(26, y, 4, f(ModBlocks.CARDBOARD_BOX, W));
+        s.set(26, y, 7, f(ModBlocks.TRASH_BAG, W));
+        s.set(23, y + 2, 4, f(ModBlocks.CALENDAR, E));
         // ---- the tatami room
         s.set(27, y, 9, f(ModBlocks.TV_STAND, W));
         s.set(27, y + 1, 9, f(ModBlocks.CRT_TV, W));
@@ -566,12 +574,20 @@ public final class ApartmentBuilder {
             s.set(30, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, true));
             s.set(31, yy, 12, f(ModBlocks.CURTAIN, N).setValue(Props.CLOSED, true));
         }
+        s.set(31, y + 2, 7, f(ModBlocks.POSTER, S));
+        // washing hung up indoors on a rainy night (部屋干し)
+        s.set(30, y + 2, 11, f(ModBlocks.LAUNDRY_POLE, N));
+        s.set(31, y + 2, 11, f(ModBlocks.LAUNDRY_POLE, N));
+        s.set(30, y + 1, 11, f(ModBlocks.LAUNDRY_HANGING, N));
+        s.set(31, y + 1, 11, f(ModBlocks.LAUNDRY_HANGING, S));
         // the western closet: sliding doors in its own column, boxes on the shelf above
         for (int z = 10; z <= 12; z++) halves(s, f(ModBlocks.OSHIIRE_FUSUMA, W).setValue(Props.OPEN3, 0), 32, y, z);
         s.set(32, y + 2, 10, f(ModBlocks.CARDBOARD_BOX, W).setValue(Props.SHELF, true));
         s.set(32, y + 2, 12, f(ModBlocks.FUTON_FOLDED, W).setValue(Props.SHELF, true));
         // ---- the balcony: the laundry pole, a forgotten towel, the air conditioner, a dead plant
         for (int x = 24; x <= 30; x++) s.set(x, y + 2, 14, f(ModBlocks.LAUNDRY_POLE, N));
+        s.set(26, y + 1, 14, f(ModBlocks.LAUNDRY_HANGING, N));
+        s.set(29, y + 1, 14, f(ModBlocks.LAUNDRY_HANGING, N));
         s.set(23, y, 14, Blocks.POTTED_DEAD_BUSH.defaultBlockState());
         s.set(27, y, 15, st(ModBlocks.PUDDLE));
         s.set(31, y, 14, st(ModBlocks.PUDDLE));
@@ -610,6 +626,9 @@ public final class ApartmentBuilder {
     }
 
     /** Every lamp of 203 with its room (for the circuits). */
+    /** The sign with the building's name. */
+    public static final BlockPos NAME_SIGN = new BlockPos(Site.BX1 - 1, F1 + 2, 1);
+
     public static List<BlockPos> lamps203() {
         List<BlockPos> out = new ArrayList<>();
         for (String room : Layout.LIGHT_ROOMS) for (Layout.Marker m : Layout.markers("lights_" + room)) out.add(m.pos());

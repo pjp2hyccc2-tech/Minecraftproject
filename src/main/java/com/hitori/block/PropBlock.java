@@ -63,6 +63,8 @@ public class PropBlock extends FacingBlock {
     private final boolean customCollision;
     private final BooleanProperty altWhen;
     private final VoxelShape[] altShapes = new VoxelShape[4];
+    private final BooleanProperty dampenWhen;
+    private final int dampen;
 
     public static Builder builder(String id, Properties properties) {
         return new Builder(id, properties);
@@ -85,6 +87,8 @@ public class PropBlock extends FacingBlock {
                 collisionShapes[d.get2DDataValue()] = shape;
             }
         }
+        this.dampenWhen = b.dampenWhen;
+        this.dampen = b.dampen;
         this.altWhen = b.altWhen;
         if (altWhen != null) {
             double[] a = b.altBox;
@@ -138,7 +142,15 @@ public class PropBlock extends FacingBlock {
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
-        return true;
+        return dampenWhen == null || !state.getValue(dampenWhen);
+    }
+
+    /** Drawn curtains dim the light coming through (the street lamp behind them). */
+    @Override
+    @SuppressWarnings("deprecation")
+    public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        if (dampenWhen != null && state.getValue(dampenWhen)) return dampen;
+        return super.getLightBlock(state, level, pos);
     }
 
     @Override
@@ -176,6 +188,8 @@ public class PropBlock extends FacingBlock {
         boolean seeThrough;
         BooleanProperty altWhen;
         double[] altBox;
+        BooleanProperty dampenWhen;
+        int dampen;
         Use use;
         Inside inside;
         Animate animate;
@@ -208,6 +222,14 @@ public class PropBlock extends FacingBlock {
             props(when);
             altWhen = when;
             altBox = new double[]{x1, y1, z1, x2, y2, z2};
+            return this;
+        }
+
+        /** While a boolean property is true the block dims light passing through it by this much (adds the property). */
+        public Builder dampen(BooleanProperty when, int amount) {
+            props(when);
+            dampenWhen = when;
+            dampen = amount;
             return this;
         }
 

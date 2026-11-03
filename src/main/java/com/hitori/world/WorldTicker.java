@@ -46,7 +46,7 @@ public final class WorldTicker {
     private static int fill;
 
     /** Lamps outside that never work properly. */
-    static final BlockPos[] DYING = {new BlockPos(Site.UNIT_X0[1] + 4, 72, -2), new BlockPos(54, Site.GROUND + 5, 26)};
+    public static final BlockPos[] DYING = {new BlockPos(Site.UNIT_X0[1] + 4, 72, -2), new BlockPos(54, Site.GROUND + 5, 26)};
 
     static void clear() {
         FLICKERS.clear();

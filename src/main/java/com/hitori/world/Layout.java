@@ -233,7 +233,7 @@ public final class Layout {
         // corners where the woman stands, each facing the nearest camera suggestion
         m("woman_spots", 24, 9, S);                    // tatami room, by the pier (cam 3)
         m("woman_spots", 26, 7, N);                    // the hall's south end (cam 2)
-        m("woman_spots", 31, 1, S);                    // the bathroom's corner (cam 1)
+        m("woman_spots", 32, 1, W);                    // standing in the bathtub (cam 1)
         m("woman_spots", 23, g, 1, E);                 // the genkan's corner by the door (cam 4)
         m("woman_spots", 30, 12, N);                   // the western room's curtains
         m("woman_spots", 24, 7, N);                    // the DK by the fusuma

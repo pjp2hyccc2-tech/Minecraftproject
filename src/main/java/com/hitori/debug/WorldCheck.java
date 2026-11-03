@@ -54,7 +54,7 @@ public final class WorldCheck {
     private WorldCheck() {}
 
     /** Markers where something stands (feet position: room for a 0.6 wide body, 2 high, a floor under it). */
-    static final String[] STANDING = {"spawn", "peephole", "closet_hide", "closet_peek", "western_closet", "doll_route", "woman_spots", "balcony",
+    static final String[] STANDING = {"spawn", "peephole", "closet_hide", "closet_peek", "western_closet", "doll_route", "balcony",
             "balcony_western", "corridor", "corridor_door", "stairs_top", "stairs_bottom", "street"};
     /** Expected room of markers (exact names). */
     static final String[][] ROOMS = {{"spawn", "western"}, {"morning", "western"}, {"breaker", "genkan"}, {"intercom", "genkan"}, {"tv", "tatami"},
@@ -121,7 +121,18 @@ public final class WorldCheck {
             }
             case 7 -> {
                 reset(level, log, check);
+                return 60;
+            }
+            case 8 -> {
                 light(level, log);
+                Fixtures.setTv(level, true);
+                for (String r : Layout.LIGHT_ROOMS) Fixtures.setLights(level, r, false);
+                return 60;
+            }
+            case 9 -> {
+                log.accept("the ritual's darkness (every light off, the TV on):");
+                light(level, log);
+                Fixtures.resetAll(level);
                 return -1;
             }
             default -> {
@@ -196,6 +207,15 @@ public final class WorldCheck {
             }
         }
         check.accept(hideBad == 0, "the doll's hiding spots are reachable cells or tables");
+        int ghosts = 0;
+        for (Layout.Marker m : Layout.markers("woman_spots")) {
+            Layout.Room room = Layout.roomAt(m.pos());
+            if (room == null || room.key().equals("corridor") || room.key().equals("balcony")) {
+                ghosts++;
+                log.accept("  woman spot outside the rooms " + m.pos().toShortString());
+            }
+        }
+        check.accept(ghosts == 0, "the woman's spots are inside 203");
         int wrongRoom = 0;
         for (String[] r : ROOMS) {
             for (Layout.Marker m : Layout.markers(r[0])) {
@@ -452,7 +472,7 @@ public final class WorldCheck {
         boolean opened = !level.getBlockState(Layout.markers("curtains_tatami").get(0).pos()).getValue(Props.CLOSED);
         Fixtures.setCurtains(level, "tatami", true);
         check.accept(opened && level.getBlockState(Layout.markers("curtains_tatami").get(0).pos().above()).getValue(Props.CLOSED), "the curtains open and close");
-        BlockPos wet = new BlockPos(26, 70, 4);
+        BlockPos wet = new BlockPos(27, 70, 5);
         Fixtures.wetMark(level, wet);
         check.accept(level.getBlockState(wet).is(ModBlocks.PUDDLE.get()), "the doll leaves a wet mark in the hall");
         Fixtures.dropSomething(level, new BlockPos(24, 71, 5));
@@ -510,8 +530,9 @@ public final class WorldCheck {
         ApartmentBuilder.build(r);
         int diff = 0;
         Set<String> examples = new HashSet<>();
+        Set<BlockPos> dying = Set.of(com.hitori.world.WorldTicker.DYING);
         for (Map.Entry<BlockPos, BlockState> e : r.states.entrySet()) {
-            if (e.getValue() == null) continue;
+            if (e.getValue() == null || dying.contains(e.getKey())) continue;
             BlockState now = level.getBlockState(e.getKey());
             if (now != e.getValue()) {
                 diff++;

@@ -100,6 +100,11 @@ public final class ModBlocks {
                 .isSuffocating((s, l, pos) -> false).pushReaction(PushReaction.BLOCK);
     }
 
+    /** Sliding doors: their collision depends on the neighbouring panel (no shape cache). */
+    private static BlockBehaviour.Properties sliding(MapColor color, SoundType sound) {
+        return door(color, sound).dynamicShape();
+    }
+
     // ================================================================================================ surfaces
     public static final RegistryObject<TatamiBlock> TATAMI_FLOOR = block("tatami", () -> new TatamiBlock(p(MapColor.COLOR_YELLOW, TATAMI)));
     public static final RegistryObject<TatamiBlock> TATAMI_WORN = block("tatami_worn", () -> new TatamiBlock(p(MapColor.COLOR_YELLOW, TATAMI)));
@@ -148,11 +153,11 @@ public final class ModBlocks {
     public static final RegistryObject<HitoriDoorBlock> UNIT_DOOR = block("unit_door",
             () -> new HitoriDoorBlock(door(MapColor.COLOR_GRAY, SoundType.METAL), BlockSetType.IRON, HitoriDoorBlock.Kind.UNIT));
     public static final RegistryObject<SlidingDoorBlock> FUSUMA = block("fusuma",
-            () -> new SlidingDoorBlock(door(MapColor.SAND, SoundType.WOOD), SlidingDoorBlock.Kind.ROOM));
+            () -> new SlidingDoorBlock(sliding(MapColor.SAND, SoundType.WOOD), SlidingDoorBlock.Kind.ROOM));
     public static final RegistryObject<SlidingDoorBlock> OSHIIRE_FUSUMA = block("oshiire_fusuma",
-            () -> new SlidingDoorBlock(door(MapColor.SAND, SoundType.WOOD), SlidingDoorBlock.Kind.CLOSET));
+            () -> new SlidingDoorBlock(sliding(MapColor.SAND, SoundType.WOOD), SlidingDoorBlock.Kind.CLOSET));
     public static final RegistryObject<BalconyDoorBlock> BALCONY_DOOR = block("balcony_door",
-            () -> new BalconyDoorBlock(door(MapColor.NONE, SoundType.GLASS)));
+            () -> new BalconyDoorBlock(sliding(MapColor.NONE, SoundType.GLASS)));
 
     // ================================================================================================ the tatami room
     /** The ritual table: low (6 px) but not to be walked over (10 px collision). */
@@ -175,7 +180,7 @@ public final class ModBlocks {
     public static final RegistryObject<PropBlock> LIGHT_SWITCH = prop("light_switch", MapColor.QUARTZ, SoundType.STONE,
             b -> b.box(5, 3, 15, 11, 11, 16).props(Props.ON).noCollision().seeThrough().use(Behaviours::lightSwitch));
     public static final RegistryObject<PropBlock> CURTAIN = prop("curtain", MapColor.COLOR_GRAY, SoundType.WOOL,
-            b -> b.box(0, 0, 14, 16, 16, 16).props(Props.CLOSED).noCollision().use(Behaviours::curtain));
+            b -> b.box(0, 0, 14, 16, 16, 16).props(Props.CLOSED).dampen(Props.CLOSED, 3).noCollision().use(Behaviours::curtain));
     /** shelf = true: lying on the closet's middle shelf (the blockstate adds the shelf board under it). */
     public static final RegistryObject<PropBlock> FUTON_FOLDED = prop("futon_folded", MapColor.WOOL, SOFT,
             b -> b.box(1, 0, 1, 15, 8, 15).props(Props.SHELF));
@@ -301,6 +306,12 @@ public final class ModBlocks {
             b -> b.box(1, 2, 15, 15, 14, 16).noCollision().seeThrough());
     public static final RegistryObject<PropBlock> SWING_SET = prop("swing_set", MapColor.METAL, SoundType.METAL,
             b -> b.box(0, 0, 0, 16, 16, 16).collision(0, 0, 6, 2, 24, 10).collision(14, 0, 6, 16, 24, 10));
+    /** World-only (model from vanilla cloth textures): a towel and a shirt drying on a hanger (部屋干し, and on the balcony). */
+    public static final RegistryObject<PropBlock> LAUNDRY_HANGING = prop("laundry_hanging", MapColor.WOOL, SoundType.WOOL,
+            b -> b.box(1, 2, 6, 15, 16, 10).noCollision().seeThrough());
+    /** World-only (model from vanilla textures): a tied plastic rubbish bag. */
+    public static final RegistryObject<PropBlock> TRASH_BAG = prop("trash_bag", MapColor.SNOW, SoundType.WOOL,
+            b -> b.box(3, 0, 3, 13, 10, 13).collision(3, 0, 3, 13, 6, 13).use(Behaviours.tell("trash_bag", null, 3)));
     /** World-only: a span of the wires between two utility poles. */
     public static final RegistryObject<PropBlock> POWER_WIRE = prop("power_wire", MapColor.COLOR_BLACK, SoundType.METAL,
             b -> b.box(0, 10, 0, 16, 14, 16).noCollision().seeThrough());
