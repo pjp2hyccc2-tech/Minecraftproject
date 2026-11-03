@@ -115,9 +115,9 @@ def smoke(i):
     """Grey smoke puff growing and thinning with age (lit from the top-left)."""
     r = rng(12501 + i)
     rad = 2.0 + i * 0.6
-    a = soft(S, S, 4, 4, rad, '#5a5a5c', 1.0, 210 - i * 40)
+    a = soft(S, S, 4, 4, rad, '#7a7a7c', 0.9, 225 - i * 40)
     x, y = grid(S, S)
-    hl = soft(S, S, 3.4, 3.2, rad * 0.6, '#8a8a8c', 1.4, 120 - i * 20)
+    hl = soft(S, S, 3.4, 3.2, rad * 0.6, '#a8a8aa', 1.3, 140 - i * 25)
     a = over(a, hl)
     for _ in range(3):
         xx, yy = int(r.integers(1, 7)), int(r.integers(1, 7))

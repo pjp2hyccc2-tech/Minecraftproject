@@ -110,8 +110,6 @@ def _tatami(seed, worn=False):
         # a faint spill mark (soft, no hard edge so the tiling does not show) and a tiny old cigarette burn
         sp = wrapn(seed + 6, beta=2.2)
         tint(a, '#4a3a20', np.clip((sp - 0.6) * 0.3, 0, 0.18) * ((x > 1) & (x < 14)))
-        a[12, 5] = C('#2a1e12')
-        a[11, 5] = C('#4e4028')
     return a
 
 
@@ -326,11 +324,11 @@ def plaster_wall_stained():
     inside = f > 0.15
     tide = (f > 0.15) & (f < 0.32)
     tint(a, '#8f7040', 0.14, inside)
-    tint(a, '#73552c', 0.12, f > 0.9)
-    tint(a, '#5a3e1e', 0.3, tide)
+    tint(a, '#73552c', 0.1, f > 0.9)
+    tint(a, '#5a3e1e', 0.2, tide)
     # drip runs (vertical, periodic so they continue across blocks)
     runs = wrapn(2613, beta=0.6, sx=1, sy=14)
-    tint(a, '#5a3e1e', 0.2, (runs > 1.0))
+    tint(a, '#5a3e1e', 0.13, (runs > 1.1))
     for _ in range(5):
         mx, my = int(r.integers(0, 16)), int(r.integers(0, 16))
         a[my, mx, :3] = a[my, mx, :3] * 0.6 + np.array([58, 58, 44]) * 0.4
@@ -525,10 +523,9 @@ def corridor_concrete():
     a = from_idx(3.0 + n * 0.4 + fine * 0.3, CORRIDOR)
     worn = wrapn(3304, beta=1.8) > 0.45
     a[worn] = from_idx(3.6 + n[worn] * 0.4 + fine[worn] * 0.4, CONCRETE)
-    # two short hairline cracks (short, so the tiling does not draw lines across the corridor)
-    for (cx, cy, dx, dy) in ((3, 4, 1, 1), (11, 11, 1, -1)):
-        for k in range(4):
-            wpx(a, cx + k * dx, cy + (k // 2) * dy, '#30352f')
+    # one faint hairline crack (low contrast, so the tiling does not draw a pattern down the corridor)
+    for k in range(4):
+        wpx(a, 3 + k, 4 + (k // 2), '#4a504a')
     damp = wrapn(3305, beta=1.9) > 0.55
     tint(a, '#1c201e', 0.25, damp)
     specks(a, 3306, 0.03, '#9a9e96', 0.4)
