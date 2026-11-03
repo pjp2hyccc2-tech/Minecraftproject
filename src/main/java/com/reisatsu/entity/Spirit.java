@@ -694,19 +694,27 @@ public abstract class Spirit extends PathfinderMob implements Animated {
         float shown = Math.round(aware * 20.0f) / 20.0f;
         if (mode == Mode.HUNT || mode == Mode.NOTICE) shown = 1.0f;
         if (entityData.get(DATA_AWARE) != shown) entityData.set(DATA_AWARE, shown);
-        // the stutter: low in the routine, strong when it has noticed you; brief spikes
+        // the stutter (docs §5, read by the models): none in the routine, 0.3..0.6 when someone near is badly afraid,
+        // 0.8..1 once it has noticed you and while it hunts; brief spikes now and then
         float g = switch (mode) {
             case NOTICE, BOUND -> 1.0f;
-            case HUNT -> 0.7f;
-            case INVESTIGATE -> 0.3f;
-            case EXORCISM -> 0.0f;
-            default -> 0.08f + aware * 0.3f;
+            case HUNT -> 0.85f;
+            case INVESTIGATE -> 0.35f;
+            case EXORCISM, FROZEN -> 0.0f;
+            default -> aware * 0.3f;
         };
+        if (mode == Mode.ROUTINE || mode == Mode.INVESTIGATE || mode == Mode.RETURN) {
+            ServerPlayer np = level() instanceof ServerLevel sl ? nearestPlayer(sl, 14.0) : null;
+            if (np != null) {
+                float fear = GameManager.state(np).fear;
+                if (fear > 0.6f) g = Math.max(g, 0.3f + (fear - 0.6f) * 0.75f);
+            }
+        }
         if (spikeTicks > 0) {
             spikeTicks--;
-            g = Math.max(g, 0.85f);
-        } else if (mode != Mode.EXORCISM && random.nextInt(260) == 0) {
-            spikeTicks = 2 + random.nextInt(4);
+            g = Math.max(g, 0.7f);
+        } else if (mode != Mode.EXORCISM && mode != Mode.FROZEN && random.nextInt(420) == 0) {
+            spikeTicks = 2 + random.nextInt(3);
         }
         if (Math.abs(entityData.get(DATA_GLITCH) - g) > 0.02f) entityData.set(DATA_GLITCH, g);
     }

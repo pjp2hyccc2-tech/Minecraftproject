@@ -24,8 +24,13 @@ public final class AlphaBuffers implements MultiBufferSource {
     @Override
     public VertexConsumer getBuffer(RenderType type) {
         VertexConsumer v = inner.getBuffer(type);
+        if (type == additive) {
+            // the glow ignores the body's alpha: its colour is scaled instead, k = min(1, 2 alpha)
+            float k = Math.min(1.0f, 2.0f * alpha);
+            return k >= 0.999f ? v : new Faded(v, k, true);
+        }
         if (alpha >= 0.999f) return v;
-        return new Faded(v, alpha, type == additive);
+        return new Faded(v, alpha, false);
     }
 
     private static final class Faded implements VertexConsumer {

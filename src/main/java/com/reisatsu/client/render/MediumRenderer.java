@@ -20,7 +20,7 @@ public class MediumRenderer extends MobRenderer<Medium, EntityModel<Medium>> {
     private final boolean placeholder;
 
     public MediumRenderer(EntityRendererProvider.Context ctx) {
-        super(ctx, pick(ctx), 0.4f);
+        super(ctx, pick(ctx), 0.35f);
         placeholder = !Models.has("Medium");
         final RenderType eyes = RenderType.eyes(EYES);
         addLayer(new EyesLayer<Medium, EntityModel<Medium>>(this) {
