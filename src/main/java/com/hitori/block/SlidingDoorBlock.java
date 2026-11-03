@@ -211,17 +211,19 @@ public class SlidingDoorBlock extends HorizontalDirectionalBlock {
         if (kind == Kind.CLOSET) {
             if (isInside(state, lower, player.position())) {
                 FixtureEvents.LISTENER.unhide(sp, lower);
+                boolean letOut = !isInside(state, lower, player.position());
+                // the game let the player out (it plays the slide and the noise): the doors stand open behind them
                 setRow(level, lower, 2);
-                slideSound(level, lower, 2, careful);
-                noise(level, lower, careful ? 3.0f : 6.0f, sp);
+                if (!letOut) {
+                    slideSound(level, lower, 2, careful);
+                    noise(level, lower, careful ? 3.0f : 6.0f, sp);
+                }
                 FixtureEvents.LISTENER.interact(sp, "closet_fusuma", lower);
                 return InteractionResult.SUCCESS;
             }
             if (FixtureEvents.LISTENER.hide(sp, lower) && isInside(state, lower, player.position())) {
-                // the game took the player in: the doors slide shut behind them
+                // the game took the player in (with the slide and the noise): the doors are shut behind them
                 setRow(level, lower, 0);
-                slideSound(level, lower, 0, careful);
-                noise(level, lower, careful ? 3.0f : 6.0f, sp);
                 return InteractionResult.SUCCESS;
             }
         }

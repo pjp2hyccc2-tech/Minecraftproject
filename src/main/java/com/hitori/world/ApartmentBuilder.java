@@ -352,9 +352,9 @@ public final class ApartmentBuilder {
                 s.post(x, y, z, step);
                 for (int yy = y + 1; yy < 73; yy++) s.set(x, yy, z, air());
             }
-            // the rails on both sides
-            s.set(x, y + 1, -3, f(ModBlocks.STAIRS_RAIL, S));
-            s.set(x, y + 1, 0, f(ModBlocks.STAIRS_RAIL, N));
+            // the rails on both sides (the art's rail rises toward its model's north: facing east it climbs with the steps)
+            s.set(x, y, -3, f(ModBlocks.STAIRS_RAIL, E));
+            s.set(x, y, 0, f(ModBlocks.STAIRS_RAIL, E));
         }
     }
 
@@ -586,8 +586,8 @@ public final class ApartmentBuilder {
         s.set(32, y + 2, 12, f(ModBlocks.FUTON_FOLDED, W).setValue(Props.SHELF, true));
         // ---- the balcony: the laundry pole, a forgotten towel, the air conditioner, a dead plant
         for (int x = 24; x <= 30; x++) s.set(x, y + 2, 14, f(ModBlocks.LAUNDRY_POLE, N));
-        s.set(26, y + 1, 14, f(ModBlocks.LAUNDRY_HANGING, N));
-        s.set(29, y + 1, 14, f(ModBlocks.LAUNDRY_HANGING, N));
+        s.set(27, y + 1, 14, f(ModBlocks.LAUNDRY_HANGING, N));
+        s.set(29, y + 1, 14, f(ModBlocks.LAUNDRY_HANGING, S));
         s.set(23, y, 14, Blocks.POTTED_DEAD_BUSH.defaultBlockState());
         s.set(27, y, 15, st(ModBlocks.PUDDLE));
         s.set(31, y, 14, st(ModBlocks.PUDDLE));

@@ -247,10 +247,13 @@ public final class Terrain {
             pole(s, POLES_X[i], POLE_Z);
             if (i + 1 < POLES_X.length) wire(s, POLES_X[i] + 1, POLES_X[i + 1] - 1, POLE_TOP, POLE_Z);
         }
-        // the old street lamp on the pole in front of 203, lighting the balconies (and leaking through the curtains)
+        // the old street lamp on the pole in front of 203, lighting the balconies (and leaking through the curtains);
+        // its pool of light on the wet asphalt (an invisible light: the lamp itself is too high to reach the street)
         if (s.contains(LAMP_X, POLE_Z - 1)) s.set(LAMP_X, LAMP_Y, POLE_Z - 1, f(ModBlocks.STREET_LAMP_OLD, Direction.NORTH).setValue(Props.LIT, true));
+        if (s.contains(LAMP_X, POLE_Z + 2)) s.set(LAMP_X, GROUND + 1, POLE_Z + 2, Blocks.LIGHT.defaultBlockState().setValue(BlockStateProperties.LEVEL, 9));
         // a lamp at the far end of the street too, and the vending machine by the gate
         if (s.contains(-24, POLE_Z - 1)) s.set(-24, LAMP_Y, POLE_Z - 1, f(ModBlocks.STREET_LAMP_OLD, Direction.NORTH).setValue(Props.LIT, true));
+        if (s.contains(-24, POLE_Z + 2)) s.set(-24, GROUND + 1, POLE_Z + 2, Blocks.LIGHT.defaultBlockState().setValue(BlockStateProperties.LEVEL, 8));
         if (s.contains(0, POLE_Z)) {
             s.set(0, GROUND + 1, POLE_Z, f(ModBlocks.VENDING_MACHINE_SMALL, Direction.SOUTH));
             s.set(0, GROUND + 2, POLE_Z, Blocks.AIR.defaultBlockState());

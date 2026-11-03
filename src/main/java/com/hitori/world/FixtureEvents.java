@@ -32,11 +32,13 @@ public final class FixtureEvents {
         default void noise(ServerLevel level, Vec3 pos, float radius, String cause, @Nullable Entity source) {}
 
         /** A player right-clicked a closet's sliding door from outside: hide them at spot (the closet cell behind that
-         *  panel: one of closet_hide, or the western closet's column; feet position) and return true; the world then
-         *  slides the doors shut. Return false to refuse: the doors just open or shut. The game moves the player. */
+         *  panel: one of closet_hide, or the western closet's column; feet position) and return true. The game moves the
+         *  player (and plays the slide); once the player is inside, the world shuts the doors. Return false to refuse:
+         *  the doors just open or shut like any sliding door (also when the player was not moved in). */
         default boolean hide(ServerPlayer player, BlockPos spot) { return true; }
 
-        /** A hidden player right-clicked the doors from inside: the world slides them open; the game lets the player out. */
+        /** A hidden player right-clicked the doors from inside: the game lets the player out (and plays the slide); the
+         *  world leaves the doors open behind them. If nobody moves the player, the doors just slide open. */
         default void unhide(ServerPlayer player, BlockPos spot) {}
 
         /** The front door was opened from inside (a rule during the ritual). */

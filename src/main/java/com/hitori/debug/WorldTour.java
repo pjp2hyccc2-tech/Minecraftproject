@@ -121,10 +121,10 @@ public final class WorldTour {
         l.add(s("ext_stairs", -9.5, 65, 0.5, -60, -16));
         l.add(s("ext_corridor", -0.5, 69, -1.5, -88, 2));
         l.add(s("ext_corridor_door", 22.3, 69, -2.3, -42, 8));
-        l.add(s("ext_balcony", 26.5, 70, 15.2, 165, 4));
+        l.add(s("ext_balcony", 31.4, 70, 15.3, 128, 6));
         l.add(s("ext_balcony_view", 25.5, 70, 15.2, 10, 6));
         l.add(s("ext_overview", 22.5, 90, 46.5, 180, 32));
-        l.add(s("ext_overview_ne", 58.5, 88, -14.5, 130, 30));
+        l.add(s("ext_overview_ne", 58.5, 86, -14.5, 61, 20));
         return l;
     }
 
@@ -148,7 +148,7 @@ public final class WorldTour {
         l.add(s("closet_front", 26.4, 70, 11.0, 90, 4));
         l.add(s("western", 29.4, 70, 7.4, -48, 12));
         l.add(s("western_desk", 30.0, 70, 8.6, -108, 18));
-        l.add(s("western_closet", 30.4, 70, 11.6, -90, 6));
+        l.add(s("western_closet", 30.3, 70, 9.3, -42, 10));
         l.add(s("curtains", 25.5, 70, 10.2, 0, 4));
         return l;
     }
@@ -167,6 +167,8 @@ public final class WorldTour {
         for (int i = 0; i < in.size(); i++) out.add(with(in.get(i), i == 0 ? Lights.DARK : Lights.KEEP, false, "_off"));
         out.add(new Shot("closet_inside", 23.5, 70, 11.5, -90, 6, Lights.DARK, false));
         out.add(new Shot("closet_inside_up", 23.5, 70, 11.5, -90, -55, Lights.KEEP, false));
+        out.add(new Shot("closet_inside_nv", 23.4, 69.7, 11.8, -60, 12, Lights.KEEP, true));
+        out.add(new Shot("closet_inside_up_nv", 23.5, 69.7, 11.5, 180, -60, Lights.KEEP, true));
         out.add(new Shot("closet_peek", 23.62, 69.7, 10.1, -95, 4, Lights.PEEK, false));
         out.add(new Shot("closet_open", 26.4, 70, 11.0, 90, 4, Lights.OPEN, false));
         out.add(new Shot("bath_full", 31.3, 70, 2.7, -145, 30, Lights.BATH, false));

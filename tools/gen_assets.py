@@ -154,37 +154,6 @@ def door(name, textures=None, render_type="minecraft:cutout"):
     bs(name, variants)
 
 
-def two_face_door(name, outer, inner):
-    """A door whose two faces differ (203's steel door: the 「203」 plate outside, the chain and the peephole inside).
-    Same shape as the vanilla door models (a 3 px panel along the model's west edge, which faces outside when the door
-    is closed); the handle side follows the hinge."""
-    for half, o, i in (("bottom", outer[0], inner[0]), ("top", outer[1], inner[1])):
-        for hinge in ("left", "right"):
-            for opened in (False, True):
-                left = (hinge == "left") != opened
-                ou = [0, 0, 16, 16] if left else [16, 0, 0, 16]
-                iu = [16, 0, 0, 16] if left else [0, 0, 16, 16]
-                faces = {"west": {"uv": ou, "texture": "#outer"}, "east": {"uv": iu, "texture": "#inner"},
-                         "north": {"uv": [0, 0, 3, 16], "texture": "#outer"}, "south": {"uv": [13, 0, 16, 16], "texture": "#outer"},
-                         "up": {"uv": [0, 0, 3, 16], "texture": "#outer"}, "down": {"uv": [13, 0, 16, 16], "texture": "#outer"}}
-                model(f"{name}_{half}_{hinge}" + ("_open" if opened else ""), {
-                    "parent": "minecraft:block/block", "render_type": "minecraft:cutout",
-                    "textures": {"outer": t(o), "inner": t(i), "particle": t(o)},
-                    "elements": [{"from": [0, 0, 0], "to": [3, 16, 16], "faces": faces}]})
-    variants = {}
-    base_y = {"east": 0, "south": 90, "west": 180, "north": 270}
-    for f in ("east", "north", "south", "west"):
-        for half in ("lower", "upper"):
-            for hinge in ("left", "right"):
-                for opened in ("false", "true"):
-                    part = ("bottom" if half == "lower" else "top") + "_" + hinge + ("_open" if opened == "true" else "")
-                    y = base_y[f]
-                    if opened == "true":
-                        y = (y + (90 if hinge == "left" else 270)) % 360
-                    variants[f"facing={f},half={half},hinge={hinge},open={opened}"] = var(f"{name}_{part}", y)
-    bs(name, variants)
-
-
 def balcony_door():
     """The aluminium sliding glass door: closed on the outer track, open slid 12 px toward +x on the inner track."""
     for half, tex in (("lower", "balcony_door_bottom"), ("upper", "balcony_door_top")):
@@ -273,10 +242,12 @@ def main():
                                   "elements": [{"from": [0, -1, 0], "to": [16, 1, 16], "faces": {
                                       f: {"texture": "#t", "uv": [0, 0, 16, 2] if f not in ("up", "down") else [0, 0, 16, 16]}
                                       for f in ("north", "south", "east", "west", "up", "down")}}]})
-    # the wires between the utility poles: four thin black lines along the block (north-south at rest)
+    # the wires between the utility poles: four thin black lines along the block (north-south at rest), on the
+    # insulators of the art's utility_pole_top (its crossarm at model x -10, -3, 19, 26, insulator tops at y 13.2);
+    # each span reaches half a block into its neighbours so the last one meets the pole
     wires = []
-    for x0, y0 in ((5.5, 12.4), (10.2, 12.4), (6.8, 10.6), (9.0, 10.6)):
-        wires.append({"from": [x0, y0, 0], "to": [x0 + 0.3, y0 + 0.3, 16], "shade": False, "faces": {
+    for x0 in (-10.15, -3.15, 18.85, 25.85):
+        wires.append({"from": [x0, 13.0, -8], "to": [x0 + 0.3, 13.3, 24], "shade": False, "faces": {
             f: {"uv": [0, 0, 1, 1], "texture": "#t"} for f in ("north", "south", "east", "west", "up", "down")}})
     model("power_wire", {"parent": "minecraft:block/block", "textures": {"t": "minecraft:block/black_concrete", "particle": "minecraft:block/black_concrete"},
                          "elements": wires})
@@ -306,7 +277,7 @@ def main():
     facing_prop("rain_window")
 
     # ---- doors
-    two_face_door("front_door", ("front_door_bottom", "front_door_top"), ("front_door_inner_bottom", "front_door_inner_top"))
+    door("front_door")  # the art's plaque 「二〇三」 reads from both faces of the vanilla model
     door("interior_door")
     door("toilet_door")
     door("bath_door", render_type="minecraft:translucent")
