@@ -145,7 +145,7 @@ HandLight makeHandLight(int item, float side) {
         L.halfDist = laptop ? 0.85 : 0.45;
         L.fog = 0.15;
         float content = 0.92 + 0.08 * vnoise1(t * 2.7 + side);
-        L.color = SCREEN_COLOR * (laptop ? 1.10 : 0.35) * content;
+        L.color = SCREEN_COLOR * (laptop ? 0.55 : 0.22) * content;
         dirV = normalize(vec3(0.0, 0.25, 1.0));  // toward the face
     } else if (item == ITEM_HANDLIGHT) {
         L.type = LIGHT_POINT;

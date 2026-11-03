@@ -66,7 +66,7 @@ vec3 facingDir(int f) {
 // colour of the light (linear, roughly unit luminance-ish)
 const vec3 EM_COLOR[EM_COUNT] = vec3[EM_COUNT](
     vec3(0.0),
-    vec3(0.50, 0.68, 1.00), vec3(0.50, 0.68, 1.00), vec3(0.50, 0.68, 1.00), vec3(0.50, 0.68, 1.00),   // static: cold blue-white
+    vec3(0.42, 0.62, 1.00), vec3(0.42, 0.62, 1.00), vec3(0.42, 0.62, 1.00), vec3(0.42, 0.62, 1.00),   // static: cold blue-white
     vec3(0.45, 0.54, 0.80), vec3(0.45, 0.54, 0.80), vec3(0.45, 0.54, 0.80), vec3(0.45, 0.54, 0.80),   // a dark room
     vec3(0.72, 0.74, 0.86), vec3(0.72, 0.74, 0.86), vec3(0.72, 0.74, 0.86), vec3(0.72, 0.74, 0.86),   // a face
     vec3(0.80, 0.97, 0.92),     // ring fluorescent: cold daylight with the green spike
@@ -241,7 +241,10 @@ float emitterSurfaceMask(int type, vec3 c, vec3 N, bool marked) {
     if (emitterIsTv(type)) {
         // the screen: the static's greys (or the picture), not the dark cabinet, not the chrome knobs
         strict = smoothstep(0.20, 0.32, l) * (1.0 - smoothstep(0.08, 0.14, ch)) * (1.0 - smoothstep(0.90, 0.97, l));
-        return marked ? max(strict, smoothstep(0.03, 0.12, l)) : strict;
+        // a marked face: every texel of the picture glows, even its dark parts - but not a brown
+        // wood-grain bezel that shares the face, nor the chrome knobs
+        float pic = smoothstep(0.03, 0.12, l) * (1.0 - smoothstep(0.05, 0.10, ch)) * (1.0 - smoothstep(0.86, 0.95, l));
+        return marked ? max(strict, pic) : strict;
     } else if (type == EM_RING) {
         // the milky diffuser on the bottom face, not its rim or the ceiling round it
         strict = smoothstep(-0.4, -0.6, N.y) * smoothstep(0.78, 0.88, l) * (1.0 - smoothstep(0.05, 0.10, c.r - c.b));
@@ -648,7 +651,7 @@ bool  airCovered[AIR_LAMPS];
 
 // a sodium head is a small, hot source above the street: in the rain haze it makes a halo, it
 // does not light up the whole sky (its in-scatter is scaled down from its surface light)
-const float SODIUM_AIR = 0.12;
+const float SODIUM_AIR = 0.24;
 void airAdd(int slot, Lamp L, vec3 rd, float tEnd, float w, float gainMul) {
     int ti = clamp(L.type, 0, EM_COUNT - 1);
     vec3 o = L.pos - cameraPosition;

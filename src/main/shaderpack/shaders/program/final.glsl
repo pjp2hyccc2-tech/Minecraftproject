@@ -198,7 +198,7 @@ vec3 cctvFeed(vec2 uv0, float F, float D, out bool outside) {
     // ---- the picture's lines: 2 px lines, interlaced fields, sync jitter, tearing ---------
     float lineH = max(floor(viewHeight / 540.0 + 0.5), 1.0) * 2.0;
     float line = floor(gl_FragCoord.y / lineH);
-    float jitter = (hash12(vec2(line, frame)) - 0.5) * 0.0009;
+    float jitter = (hash12(vec2(line, frame)) - 0.5) * 0.00045;
     // tearing: bands of lines torn sideways
     float bandSeed = floor(t * 9.0);
     float b0 = hash11(bandSeed * 1.9 + 3.0);
@@ -209,7 +209,7 @@ vec3 cctvFeed(vec2 uv0, float F, float D, out bool outside) {
     // the slow rolling bar of a cheap feed: a band creeping up the picture, a slight warp in it
     float roll = fract(uv.y * 0.9 - t * 0.07);
     float rollBand = exp(-sq((roll - 0.5) * 9.0));
-    uv.x += rollBand * 0.0012 * sin(uv.y * 80.0 + t * 3.0);
+    uv.x += rollBand * rollBand * 0.0006 * sin(uv.y * 80.0 + t * 3.0);
     outside = uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0;
     uv = clamp(uv, vec2(0.001), vec2(0.999));
     // interlace: every other line comes from the previous field (the last frame): whatever
@@ -252,9 +252,12 @@ vec3 cctvFeed(vec2 uv0, float F, float D, out bool outside) {
     // ---- noise: grain (heavier in the dark and at high gain), line noise, sparkles ---------
     float n1 = hash12(gl_FragCoord.xy + frame * vec2(13.37, 7.91)) - 0.5;
     float n2 = hash12(gl_FragCoord.xy * 1.31 + frame * vec2(3.17, 11.31)) - 0.5;
+    // the sensor's noise is not pixel-fine: the video's compression smears it into small blotches
+    vec2 bp = floor(gl_FragCoord.xy / vec2(2.0, lineH * 0.5));
+    float n3 = hash12(bp + frame * vec2(5.11, 2.93)) - 0.5;
     float lum = luma(col);
-    float amp = CCTV_NOISE * (0.040 + 0.085 * noisy + 0.05 * glitch) * (1.0 - 0.55 * lum);
-    col += (n1 + n2) * amp;
+    float amp = CCTV_NOISE * (0.055 + 0.10 * noisy + 0.05 * glitch) * (1.0 - 0.55 * lum);
+    col += (n1 * 0.7 + n2 * 0.5 + n3 * 0.8) * amp;
     if (ir < 0.5) col += vec3(n2, -n1, n1 * 0.5) * amp * 0.5;   // chroma noise in colour mode
     col += (hash12(vec2(line, frame * 0.5)) - 0.5) * 0.018 * CCTV_NOISE;
     float spark = step(0.99985 - 0.0002 * glitch, hash12(gl_FragCoord.xy * 0.77 + frame * vec2(1.7, 9.3)));
@@ -403,7 +406,9 @@ void main() {
     // are wide open - whatever leaks through the fusuma's gap glares (the closet itself is lightless:
     // the vanilla light level in there says nothing, the fusuma may let it through)
     float eyeBlock = float(eyeBrightnessSmooth.x) / 240.0;
-    exposure *= mix(mix(1.50, 0.95, smoothstep(0.10, 0.80, eyeBlock)), 2.10, closet);
+    // (a phone or the laptop glowing in the hand: the eyes adapt to the screen instead)
+    float handGlow = (isLightItem(heldItemId) || isLightItem(heldItemId2)) ? 1.0 : 0.0;
+    exposure *= mix(mix(1.50, 0.95, smoothstep(0.10, 0.80, eyeBlock)), mix(2.10, 1.05, handGlow), closet);
 #endif
     exposure *= 1.0 - 0.92 * saturate(darknessFactor * 0.55 + darknessLightFactor * 1.5);
 #ifndef WORLD_SHIRAKABA

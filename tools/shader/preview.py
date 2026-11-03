@@ -323,7 +323,7 @@ def _solid_tile(atlas, name, rgb, noise=0.18, seed=0, painter=None):
 
 
 def _place(quads, x, y, z, yaw_deg):
-    a = math.radians(yaw_deg)
+    a = -math.radians(yaw_deg)          # Minecraft yaw: the front (+z) turns to (-sin yaw, 0, cos yaw)
     ca, sa = math.cos(a), math.sin(a)
     out = []
     for n, cs, r in quads:
@@ -961,6 +961,10 @@ SHOTS = {
     "tv_room_doll": shot(26.9, 12.5, 118.0, 16.0, fear=0.55, figures=[DOLL_TATAMI]),
     # before three: the hanging lamp on, the TV off
     "lit_room": shot(26.9, 12.5, 118.0, 16.0, state=dict(tv=False, lights=("tatami",))),
+    # the TV without any vanilla light of its own (robustness), its other channels (a dark room, a face)
+    "tv_nolight": shot(24.8, 11.7, -118.0, 10.0, y=71.25, fear=0.3, state=dict(tv_light=0)),
+    "tv_channel1": shot(24.8, 11.7, -118.0, 10.0, y=71.25, fear=0.3, state=dict(tv_channel=1)),
+    "tv_channel2": shot(24.8, 11.7, -118.0, 10.0, y=71.25, fear=0.3, state=dict(tv_channel=2)),
     # ---- the closet: the crack of the fusuma - the only bright thing; shut, with the laptop ------
     "closet_crack": shot(23.45, 10.55, -100.0, 4.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=1)),
     "closet_shut_laptop": shot(23.5, 11.5, -90.0, 22.0, y=EYE_CROUCH, fear=0.55, held=LAPTOP, state=dict(fusuma=0)),
@@ -970,6 +974,13 @@ SHOTS = {
     "cctv_tatami": shot(27.6, 12.6, 108.0, 16.0, y=71.1, cctv=True, fear=0.5, figures=[DOLL_TATAMI]),
     "cctv_bath": shot(31.35, 2.8, -140.0, 42.0, y=72.3, cctv=True, fear=0.6,
                       figures=[(DOLL, 32.45, 70.86, 1.6, 90.0, "float"), (WOMAN, 31.25, 70.0, 1.2, 160.0, "stand")]),
+    "cctv_woman": shot(27.6, 12.6, 108.0, 14.0, y=71.1, cctv=True, fear=0.6, t=130.9,
+                       figures=[(WOMAN, 24.45, 70.0, 9.45, -45.0, "stand")]),
+    "cctv_glitch": shot(27.6, 12.6, 108.0, 16.0, y=71.1, cctv=True, fear=0.8, danger=0.9, t=131.62,
+                        figures=[(DOLL, 26.2, 70.0, 11.8, -50.0, "stand")]),
+    # the doll moving between two frames (stop-motion): the interlaced fields comb its outline
+    "cctv_motion": shot(27.6, 12.6, 108.0, 16.0, y=71.1, cctv=True, fear=0.6, figures=[DOLL_TATAMI],
+                        sequence=dict(frames=3, move=(0.10, 0.0, 0.06), dt=1.0 / 30.0)),
     "cctv_lit": shot(27.6, 12.6, 108.0, 16.0, y=71.1, cctv=True, fear=0.2, state=dict(tv=False, lights=("tatami",))),
     # ---- eyes closed at the TV (counting to ten); in the dark ------------------------------------------
     "eyes_tv": shot(26.1, 9.6, -90.0, 6.0, y=71.2, fear=0.5, eyes=1.0),
