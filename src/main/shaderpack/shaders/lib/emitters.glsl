@@ -395,9 +395,11 @@ float blindTransmission(vec3 P, vec3 L) {
 
 // ---- the light table (colortex7) ----------------------------------------------------------
 //  texel (x, z) in [0, 128)^2 = block column emapOrigin() + (x, z); rgba = 4 lamps, each an
-//  integer in a float: type (5 bits) | level (4) | y - tableRefY (5) | dx + 15 (5) | dz + 15 (5),
+//  integer (stored doubled, tablePack): type (5 bits) | level (4) | y - tableRefY (5) | dx + 15 (5) | dz + 15 (5),
 //  negative when a wall stands between the column and the lamp. 0 = empty.
-int tableRefY() { return int(floor(cameraPosition.y)) - 12; }
+//  The 32-block height band starts 12 below the camera, at most at y 58: the world's lamps stand
+//  between y 62 and 76 (the pole sign) and stay in the band when the camera is high over the lot.
+int tableRefY() { return min(int(floor(cameraPosition.y)) - 12, 58); }
 const float TABLE_REACH = 15.0;
 // the outdoor lamps of the air, one list for the whole frame (prepare1), in colortex7 row 0
 // right of the table: texel AIR_LIST_X + i = (block - emap origin / table ref y as floats,
