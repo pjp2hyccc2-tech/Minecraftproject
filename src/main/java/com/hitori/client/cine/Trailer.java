@@ -648,8 +648,13 @@ public final class Trailer {
         ps.translate(side * -0.10f * r, 0.30f * r, 0.12f * r);
         ps.mulPose(Axis.XP.rotationDegrees(-38.0f * r));
         ps.mulPose(Axis.ZP.rotationDegrees(side * 12.0f * r));
+        int light = event.getPackedLight();
+        if (F.handLight > 0) {
+            light = net.minecraft.client.renderer.LightTexture.pack(Math.max(net.minecraft.client.renderer.LightTexture.block(light), F.handLight),
+                    net.minecraft.client.renderer.LightTexture.sky(light));
+        }
         hands(mc).renderItem(mc.player, stack, right ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND,
-                !right, ps, event.getMultiBufferSource(), event.getPackedLight());
+                !right, ps, event.getMultiBufferSource(), light);
         ps.popPose();
     }
 

@@ -105,6 +105,8 @@ final class TrailerShots {
         /** The film draws the main hand: the knife lifted (0..1), the walk's sway. */
         boolean customHand;
         float raise, handBob, handBobX;
+        /** The least block light on the film's own main hand (0 = the light where you stand). */
+        int handLight;
         /** A black band where a fusuma panel still covers the crack (world z range on the panels' back face). */
         double maskZ0, maskZ1;
 
@@ -127,6 +129,7 @@ final class TrailerShots {
             burst = 0.0f;
             customHand = false;
             raise = handBob = handBobX = 0.0f;
+            handLight = 0;
             maskZ0 = maskZ1 = 0.0;
         }
 
@@ -664,7 +667,16 @@ final class TrailerShots {
             set.tv = true;
             set.bath = 2;
             set.doors("bath", "washroom");
-            keys = new float[]{0.3f, 2.2f, 3.95f};
+            keys = new float[]{2.2f, 3.4f, 3.95f};
+            event(0.0f, "the doorway's light on the tub", () -> {
+                ClientLevel level = Minecraft.getInstance().level;
+                for (BlockPos p : new BlockPos[]{new BlockPos(32, 72, 2), new BlockPos(31, 72, 2), new BlockPos(32, 72, 1)}) {
+                    if (level == null || !level.getBlockState(p).isAir()) continue;
+                    Trailer.clientBlock(p, net.minecraft.world.level.block.Blocks.LIGHT.defaultBlockState()
+                            .setValue(net.minecraft.world.level.block.LightBlock.LEVEL, 10));
+                    break;
+                }
+            }, null);
         }
 
         @Override
@@ -689,6 +701,7 @@ final class TrailerShots {
             f.main = Held.KNIFE;
             f.customHand = true;
             f.raise = seg(t, 3.0f, 3.75f);
+            f.handLight = 11;
             f.hide = CAM1;
             f.fov = 60.0f;
             f.fear = lerp(0.38f, 0.48f, seg(t, 2.5f, 4.0f));
@@ -981,7 +994,7 @@ final class TrailerShots {
             set.tv = true;
             set.fusuma = 1;
             setupAt = v(23.42, 71.62, 10.4);
-            keys = new float[]{0.1f, 0.7f, 1.6f};
+            keys = new float[]{0.8f, 1.0f, 1.95f};
             event(OPEN, "the fusuma flung open", () -> fusumaRow(2), l -> Fixtures.setClosetFusuma(l, 2));
         }
 
@@ -993,13 +1006,15 @@ final class TrailerShots {
         @Override
         void frame(float t, Frame f) {
             float pt = Math.min(HOLD, Math.max(0.0f, t - SPRING) * 20.0f);
-            float spring = seg(pt, 2.0f, 6.0f);
             float hit = seg(t, SPRING + 0.1f, SPRING + 0.42f);
             float creep = easeSine(seg(t, 0.95f, 2.0f));
             float carry = hit * hit * (3.0f - 2.0f * hit);
-            double x = 24.6 - 0.48 * carry - 0.05 * creep;
-            double y = 70.0 + 0.1 * carry;
-            Vec3 face = v(x - 0.56 * spring, y + 0.45 + 0.2 * spring, 10.2);
+            // carried on until the face (its pose's spring included) is ~0.3 from the lens, level with it: the head
+            // fills the picture; then it creeps the last few hundredths
+            double x = 24.6 - 0.266 * carry - 0.03 * creep;
+            double y = 70.0 + 0.2 * carry;
+            double[] lf = lungeFace(pt);
+            Vec3 face = v(x - lf[0], y + lf[1], 10.2);
             f.look(v(23.2, 70.9, 10.2), lerp(v(24.6, 70.5, 10.2), face, easeSine(seg(t, SPRING, SPRING + 0.4f))));
             f.shake(0.25f + 1.4f * hit * (1.0f - 0.65f * creep) + 0.6f * seg(t, OPEN, SLID), t, 32.0f);
             f.breathe(t, 0.6f, 33.0f);
@@ -1020,6 +1035,26 @@ final class TrailerShots {
                 doll(d).puppetPose(OniDoll.LUNGE, pt, 0.2f);
             }
         }
+    }
+
+    /** OniDollModel's LUNGE at pose tick pt: the face (between the head's front and its snout) as {forward, up} from
+     *  the entity's feet, blocks - the body's spring, arc and lean and the head's tilt, as the model poses them. */
+    static double[] lungeFace(float pt) {
+        float crouch = smooth(pt / 2.0f) * (1.0f - smooth((pt - 2.0f) / 1.5f));
+        float c = 1.0f - clamp01((pt - 2.0f) / 4.0f);
+        float leap = 1.0f - c * c * c;
+        double arc = Math.sin(clamp01((pt - 2.0f) / 8.0f) * Math.PI);
+        float stab = smooth((pt - 6.0f) / 2.0f);
+        double by = 21.0 + crouch * 1.4 - arc * 3.2, bz = -leap * 9.0;
+        double bx = -0.3 * crouch + 0.5 * leap - 0.25 * stab, net = bx - 0.35 * leap + 0.15 * crouch;
+        double hy = by - 3.5 * Math.cos(bx), hz = bz - 3.5 * Math.sin(bx);
+        double fy = hy - 1.5 * Math.cos(net) + 2.5 * Math.sin(net), fz = hz - 1.5 * Math.sin(net) - 2.5 * Math.cos(net);
+        return new double[]{-fz / 16.0, (24.0 - fy) / 16.0};
+    }
+
+    static float smooth(float x) {
+        x = clamp01(x);
+        return x * x * (3.0f - 2.0f * x);
     }
 
     /** Where the night's camera n looks from, and how it is aimed (its spot, facing, pitch). */
