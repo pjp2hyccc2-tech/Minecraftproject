@@ -153,6 +153,18 @@ def load_source(folder, prog, ext, overrides, flip=False):
     return lines[:1] + header + lines[1:]
 
 
+def buffer_sizes(w, h):
+    """size.buffer.colortexN=W H from shaders.properties (absolute texels, or a scale <= 1)"""
+    sizes = {}
+    with open(os.path.join(ROOT, "shaders.properties"), encoding="utf-8") as fh:
+        for line in fh:
+            m = re.match(r"\s*size\.buffer\.colortex(\d+)\s*=\s*([\d.]+)\s+([\d.]+)", line)
+            if m:
+                a, b = float(m.group(2)), float(m.group(3))
+                sizes[int(m.group(1))] = (int(a * w) if a <= 1.0 else int(a), int(b * h) if b <= 1.0 else int(b))
+    return sizes
+
+
 def buffer_directives():
     """colortexN formats and clear colours from lib/settings.glsl"""
     fmts, clears = {}, {}
@@ -446,7 +458,10 @@ class Renderer:
             self.units["colortex%d" % i] = 5 + i
         self.blend_off = read_blend_overrides()
         # colour buffers (ping-pong) + depth
-        self.tex = {i: [tex2d(w, h, f, glctx.GL_RGBA, glctx.GL_FLOAT), tex2d(w, h, f, glctx.GL_RGBA, glctx.GL_FLOAT)] for i, f in self.formats.items()}
+        self.sizes = {i: (w, h) for i in self.formats}
+        self.sizes.update({i: v for i, v in buffer_sizes(w, h).items() if i in self.formats})
+        self.tex = {i: [tex2d(*self.sizes[i], f, glctx.GL_RGBA, glctx.GL_FLOAT), tex2d(*self.sizes[i], f, glctx.GL_RGBA, glctx.GL_FLOAT)]
+                    for i, f in self.formats.items()}
         self.cur = {i: 0 for i in self.formats}
         self.depth0 = tex2d(w, h, glctx.GL_DEPTH_COMPONENT32F, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT, filt=glctx.GL_NEAREST)
         self.depth1 = tex2d(w, h, glctx.GL_DEPTH_COMPONENT32F, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT, filt=glctx.GL_NEAREST)
@@ -494,7 +509,9 @@ class Renderer:
         st = gl.glCheckFramebufferStatus(glctx.GL_FRAMEBUFFER)
         if st != glctx.GL_FRAMEBUFFER_COMPLETE:
             raise RuntimeError("framebuffer incomplete 0x%x" % st)
-        gl.glViewport(0, 0, self.w, self.h)
+        # like Iris: a pass renders at the size of its targets (size.buffer)
+        vw, vh = self.sizes[targets[0]] if targets else (self.w, self.h)
+        gl.glViewport(0, 0, vw, vh)
 
     def bind_samplers(self, prog, mip=()):
         gl.glUseProgram(prog.id)
@@ -649,7 +666,8 @@ class Renderer:
 
     def read_float(self, idx):
         t = self.tex[idx][self.cur[idx]]
-        buf = np.zeros((self.h, self.w, 4), np.float32)
+        bw, bh = self.sizes[idx]
+        buf = np.zeros((bh, bw, 4), np.float32)
         gl.glBindTexture(glctx.GL_TEXTURE_2D, t)
         gl.glGetTexImage(glctx.GL_TEXTURE_2D, 0, glctx.GL_RGBA, glctx.GL_FLOAT, buf.ctypes.data)
         return buf
