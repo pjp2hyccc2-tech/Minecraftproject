@@ -487,7 +487,7 @@ public final class AutoShots {
             cmd(mc, "reisatsu debug event pa");
         }, 40);
         snap("07_witness_done");
-        add("night_1_car", mc -> at(mc, 0.5, 39.5, 90.0f, 6.0f), 50);
+        add("night_1_car", mc -> at(mc, 1.8, 39.6, 90.0f, 2.0f), 50);
         add("night_1_talk", mc -> cmd(mc, "reisatsu debug talk"), 46);
         snap("08_night_end");
         add("night_1_end_skip", mc -> cmd(mc, "reisatsu debug skipintro"), 36);

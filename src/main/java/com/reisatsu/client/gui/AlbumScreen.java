@@ -115,10 +115,11 @@ public class AlbumScreen extends Screen {
             String fitted = font.plainSubstrByWidth(label, cellW - 2);
             g.drawString(font, fitted, cx + (cellW - font.width(fitted)) / 2, cy + photoH + 3, lc, false);
             if ((ClientState.submitted & k.bit()) != 0) g.drawString(font, "✓", px + pw - 6, cy + 2, 0xFF2E6A2E, false);
-            // its night of the week
+            // its night of the week (full size: kanji do not survive scaling down)
             int n = Week.nightOf(k);
-            String nl = I18n.get("night.reisatsu." + n + ".short") + ((ClientState.submitted & k.bit()) != 0 ? "・" + I18n.get("gui.reisatsu.sent") : "");
-            small(nl, cx + cellW / 2, cy + photoH + 14, (ClientState.submitted & k.bit()) != 0 ? 0xFF4A3A2A : 0xFF8A7A68, g);
+            String nl = font.plainSubstrByWidth(I18n.get("night.reisatsu." + n + ".short")
+                    + ((ClientState.submitted & k.bit()) != 0 ? "・" + I18n.get("gui.reisatsu.sent") : ""), cellW - 2);
+            g.drawString(font, nl, cx + (cellW - font.width(nl)) / 2, cy + photoH + 14, (ClientState.submitted & k.bit()) != 0 ? 0xFF4A3A2A : 0xFF9A8A78, false);
         }
         // ---- the right page: tabs
         String[] tabs = {I18n.get("gui.reisatsu.tab_shots"), I18n.get("gui.reisatsu.tab_notes"), I18n.get("gui.reisatsu.tab_rules"),
@@ -193,14 +194,6 @@ public class AlbumScreen extends Screen {
             hits.add(new Hit(x, y - 1, x + w, y + 10, () -> minecraft.setScreen(new NoteScreen(nid, "", this))));
             y += 13;
         }
-    }
-
-    private void small(String text, int cx, int y, int color, GuiGraphics g) {
-        g.pose().pushPose();
-        g.pose().translate(cx, y, 0);
-        g.pose().scale(0.75f, 0.75f, 1.0f);
-        g.drawString(font, text, -font.width(text) / 2, 0, color, false);
-        g.pose().popPose();
     }
 
     /** The week: each night's date and what happened on it (sent on / tonight / not yet). */
