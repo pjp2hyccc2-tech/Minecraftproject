@@ -430,12 +430,15 @@ def grin(R, u, v, cy=0.36, width=0.47, rise=1.25, open_=0.14, teeth=(0.75, 0.72,
     rt = rng(seed)
     tx = -width + 0.04
     while tx < width - 0.04:
-        tw = rt.uniform(0.022, 0.032)
-        ln = rt.uniform(0.028, 0.045) * (0.6 + 0.4 * (1 - (tx / width) ** 2))
-        tooth = inside & (np.abs(u - tx) < tw * 0.85) & (curve < ln)
-        R.A[tooth] = np.asarray(teeth) * rt.uniform(0.8, 1.05)
+        tw = rt.uniform(0.02, 0.034)
+        ln = rt.uniform(0.026, 0.05) * (0.55 + 0.45 * (1 - (tx / width) ** 2))
+        tooth = inside & ((((u - tx) / (tw * 0.92)) ** 2 + ((curve - ln * 0.35) / (ln * 0.75)) ** 2) < 1.0)
+        tint = np.asarray(teeth) * rt.uniform(0.72, 1.02) * np.array([1.0, rt.uniform(0.95, 1.0), rt.uniform(0.82, 0.95)])
+        R.A[tooth] = tint
         R.H[tooth] += 0.1
         R.WET[tooth] = 1.2
+        gumline = inside & (np.abs(u - tx) < tw * 0.95) & (curve < 0.006)
+        R.A[gumline] = [0.32, 0.18, 0.18]
         if lower_teeth and abs(tx) < width * 0.6:
             low = inside & (np.abs(u - tx - tw) < tw * 0.7) & (curve > gap - rt.uniform(0.02, 0.035))
             R.A[low] = np.asarray(teeth) * rt.uniform(0.6, 0.85)
@@ -662,8 +665,8 @@ def js_waitress_p():
     U0, V0 = R.u, R.v
     roll = -1.4
     U, V = rot_uv(U0, V0, roll, 0.0, 0.0)
-    zoom = 1.7
-    u, v = (U - 0.02) / zoom, (V + 0.3) / zoom
+    zoom = 1.9
+    u, v = (U + 0.02) / zoom, (V + 0.33) / zoom
     f = Face(w=0.58, h=0.8, eye_x=0.23, eye_y=-0.12, socket=0.16, brow=0.03, nose_len=0.24, nose=0.08, mouth_y=0.4,
              mouth_w=0.36, lips=0.012, cheek=0.08, hollow=0.02, chin=0.04)
     H, M, ft = face_height(u, v, f)
@@ -683,14 +686,14 @@ def js_waitress_p():
     outside = smoothstep(-0.01, 0.04, -ell(u, v, 0, 0, 0.58, 0.8)) * (v < 0.3)
     hm = np.clip(hairline + outside, 0, 1)
     hair_mass(R, hm, 4104, flow_angle=-1.5708 + 1.1 * np.tanh(u * 2.0), col=(18, 13, 12), sheen=0.7)
-    strand = strand_mask(4105, 2, lambda r: (r.uniform(0.3, 0.5), -0.75), 2.3, (0.9, 1.2), width=(1.2, 2.0), droop=0.2,
-                         curl=0.4, clump=(2, 4))
-    wet_hair(R, strand, col=(14, 11, 10), sheen=0.6)
-    key = ((0.45, -0.3, 1.0), (1.0, 0.97, 0.93), 1.3, 1.0)
-    fill = ((-0.8, 0.4, 0.4), (0.45, 0.55, 0.72), 0.12, 1.0)
-    col = lit(R, key, fill)
-    col = flash_spot(col, 0.55, 0.47, 0.6, 0.62, floor=0.1)
-    return to_rgb(post(col, 4109, grain=0.075, ca=2.4, vign=1.1, gamma=1.15, tint=(0.95, 1.0, 1.05), crush=0.045))
+    strand = strand_mask(4105, 1, lambda r: (0.42, -0.8), 2.25, (1.0, 1.1), width=(2.5, 3.5), droop=0.25,
+                         curl=0.3, clump=(3, 4))
+    wet_hair(R, strand * 0.9, col=(14, 11, 10), sheen=0.3)
+    key = ((0.95, -0.55, 0.55), (1.0, 0.97, 0.93), 1.45, 1.0)          # the flash held off to one side
+    fill = ((-0.8, 0.4, 0.4), (0.45, 0.55, 0.72), 0.08, 1.0)
+    col = lit(R, key, fill, amb=0.03)
+    col = flash_spot(col, 0.6, 0.45, 0.58, 0.6, floor=0.06)
+    return to_rgb(post(col, 4109, grain=0.08, ca=2.6, vign=1.15, gamma=1.18, tint=(0.95, 1.0, 1.05), crush=0.05))
 
 
 def js_visitor_p():
