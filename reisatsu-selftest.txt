@@ -1,0 +1,326 @@
+selftest starting
+---- the world's checks (WorldCheck)
+restaurant chunks generated and forced in 1124 ms
+PASS every marker of DESIGN §2 exists (98 names)
+PASS waitress_route has at least 10 points
+PASS child_hides has at least 6 spots
+PASS standing markers are walkable (0 bad)
+PASS child hiding spots are reachable cells
+PASS markers are in their rooms (0 wrong)
+PASS seat_7 is a booth_seat at 33, 65, 28
+PASS register is a register at 12, 66, 23
+PASS phone is a business_phone at 14, 66, 23
+PASS call_display is a call_display at 13, 68, 23
+PASS door_switch is a door_switch at 5, 66, 31
+PASS door_outer is a auto_door at 3, 65, 30
+PASS door_inner is a auto_door at 3, 65, 26
+PASS breaker is a breaker_panel at 7, 66, 8
+PASS pass_bell is a pass_bell at 24, 66, 10
+PASS tv is a crt_tv at 6, 65, 1
+PASS hand_dryer_w is a hand_dryer at 13, 66, 19
+PASS hand_dryer_m is a hand_dryer at 5, 66, 20
+PASS stuffed_bear is a stuffed_bear at 13, 65, 29
+PASS menu_board is a menu_board at 1, 65, 32
+PASS curve_mirror is a curve_mirror at 66, 65, 59
+PASS flowers is a flower_offering at 76, 65, 52
+PASS fridge_door is a fridge_door at 17, 65, 4
+PASS stall_occupied is a stall_door at 8, 65, 21
+PASS mirror: 6/6 are mirror
+PASS sink_w: 3/3 are restroom_sink
+PASS sink_m: 2/2 are restroom_sink
+PASS sink_kitchen: 2/2 are kitchen_sink
+PASS cameras: 7/7 are security_camera
+PASS monitors: 4/4 are security_monitors
+PASS lockers: 4/4 are locker
+PASS drink_bar: 2/2 are drink_bar
+PASS fryer: 2/2 are fryer
+PASS gas_range: 4/4 are gas_range
+PASS 17 tables with their call buttons (17 tables, 17 buttons)
+PASS every found note has its paper / book / board (8/8)
+PASS the door block entities exist (6/6)
+PASS shop windows on the south front
+PASS shop windows on the east front
+PASS suspended ceiling at y 69
+PASS dining floor at y 64
+PASS the lot is asphalt at y 64
+PASS the road's centre line at z 54
+PASS the pole sign's top-left tile
+PASS barriers along the back of the property (56)
+PASS visitor_path is connected (10 points, grid search)
+PASS waitress_route is connected (12 points, grid search)
+PASS manager_route is connected (24 points, grid search)
+PASS a zombie finds a path for every route segment (42/42)
+PASS a 2.9-high mob gets from the chef's board into the corridor
+PASS the women's tap turns on and off
+PASS the kitchen tap runs
+PASS circuit dining switches its lights (20, 69, 15)
+PASS circuit kitchen switches its lights (22, 69, 3)
+PASS circuit restroom switches its lights (10, 69, 19)
+PASS circuit back switches its lights (3, 69, 3)
+PASS circuit sign switches its lights (45, 76, 49)
+PASS circuit cameras switches cameras and monitors
+PASS circuit door powers the automatic doors
+PASS allLightsOn lights every light, burst ones too
+PASS a burst tube stays dark
+PASS every device switches (12/12)
+PASS the menus of table 7 scatter (2 on the floor)
+PASS two glasses of water on table 7
+PASS call button 7 rings and the call display shows 7
+PASS clearTable puts table 7 back
+PASS chairs are pulled out at table 7 and table 12
+PASS chairsNear finds the chairs of table 15 (4)
+PASS a chair falls over
+PASS the mirror cracks
+PASS the menu board asks 「まだ　いますか」
+PASS the bear turns
+PASS the third stall can be freed and occupied
+PASS a camera's LED turns red
+PASS the monitors show REC
+PASS the call display shows 閉店
+PASS a plate smashes in the kitchen
+PASS a wet footprint appears
+PASS the staff door opens and closes
+PASS the office door is locked
+PASS the back door is locked
+PASS store speakers (7)
+PASS the key switch enables the automatic doors
+PASS the outer doors open for a mob in front of them
+PASS a swing door swings open when a mob walks into it
+PASS the outer doors close again once the sensor is clear
+PASS the swing door flaps shut
+PASS openAutoDoor opens the inner doors even while switched off
+PASS locking shuts the doors at once
+PASS locked doors stay shut when the game opens them
+PASS resetAll restores every block of the restaurant (19441 checked, 0 differ, 20 ms)
+PASS resetAll restores circuits, the key switch and the doors
+PASS the third stall is occupied at the start
+light levels (block/sky): register=6/8 waiting bench=3/4 vestibule=6/9 drink bar=4/0 table 7 aisle=2/10 dining centre=0/1 kitchen board=0/0 corridor=7/6 womens=7/2 cavity=1/0 lot spawn=3/15 under the sign=4/15 entrance=7/14 flowers=5/15
+---- the game
+level reisatsu:hidamari
+PASS the medium's camera holds 10 film
+PASS a flashlight
+PASS three お札
+PASS the shop key
+PASS the report and the medium's note are in the album
+PASS the medium waits in the lot
+PASS film pack 3 lies in the walk-in fridge (1)
+PASS the office key lies in the staff room (1)
+test lane 16.5,13.5 -> 23.5,13.5
+PASS opening the register drawer finds film pack 1
+PASS the drawer gives it only once
+PASS right-clicking a locker hides you in it
+PASS inside the locker's block (the world's own test for stepping out)
+PASS film pack 2 is in that locker
+PASS still hidden a moment later
+PASS right-clicking from inside steps out
+PASS standing in front of the locker
+PASS visitor spawns
+PASS visitor: unaware, facing the camera → captured (visitor: captured, ★3)
+PASS visitor: it has noticed you → blurred (visitor: it had noticed you)
+PASS visitor: back turned → no name (visitor: the face does not show (180°))
+PASS visitor: through glass → captured (visitor: captured)
+PASS visitor: behind a wall → nothing (visitor: no line of sight)
+PASS waitress spawns
+PASS waitress: unaware, facing the camera → captured (waitress: captured, ★3)
+PASS waitress: it has noticed you → blurred (waitress: it had noticed you)
+PASS waitress: back turned → no name (waitress: the face does not show (180°))
+PASS waitress: through glass → captured (waitress: captured)
+PASS waitress: behind a wall → nothing (waitress: no line of sight)
+PASS chef spawns
+PASS chef: unaware, facing the camera → captured (chef: captured, ★3)
+PASS chef: it has noticed you → blurred (chef: it had noticed you)
+PASS chef: back turned → no name (chef: the face does not show (180°))
+PASS chef: through glass → captured (chef: captured)
+PASS chef: behind a wall → nothing (chef: no line of sight)
+PASS child spawns
+PASS child: unaware, facing the camera → captured (child: captured, ★3)
+PASS child: it has noticed you → blurred (child: it had noticed you)
+PASS child: back turned → no name (child: the face does not show (180°))
+PASS child: through glass → captured (child: captured)
+PASS child: behind a wall → nothing (child: no line of sight)
+PASS mirror_woman spawns
+PASS mirror_woman: unaware, facing the camera → captured (mirror_woman: captured, ★3)
+PASS mirror_woman: it has noticed you → blurred (mirror_woman: it had noticed you)
+PASS mirror_woman: back turned → no name (mirror_woman: the face does not show (167°))
+PASS mirror_woman: through the mirror glass ✓
+PASS manager spawns
+PASS manager: unaware, facing the camera → captured (manager: captured, ★3)
+PASS manager: it has noticed you → blurred (manager: it had noticed you)
+PASS manager: back turned → no name (manager: the face does not show (180°))
+PASS manager: through glass → captured (manager: captured)
+PASS manager: behind a wall → nothing (manager: no line of sight)
+PASS a spirit that sees you (3 blocks, in the dark) notices you (after 25 ticks, awareness 1.00, NOTICE)
+PASS you are still huntable
+PASS a spirit with its back to you does not see you (0.00)
+PASS ...but it hears your panicked breathing 3 blocks behind it (0.13 after 34 ticks)
+PASS holding your breath, it hears nothing (0.00)
+PASS still huntable (nothing took you)
+PASS the manager at his desk sees you through a security camera (0.51 after 17 ticks)
+PASS with the cameras' circuit off he sees nothing from there (0.00)
+PASS a sprinting step behind a spirit raises its awareness (0.45)
+PASS it turns to investigate the noise (INVESTIGATE)
+PASS touched by a hunting spirit = caught
+PASS you wake up
+PASS the medium burnt one お札 (2 left)
+PASS you wake by the car
+PASS 霊障 +1 (0 → 1)
+-- night 1 begins
+PASS night 1: the title card, by the car (stage 0)
+PASS held still at the spawn while the medium speaks
+PASS she tops the film up to 10
+-- night 1: her opening lines
+PASS after her lines (18 s) the night is yours
+-- night 1: nothing shows itself
+PASS night 1: no spirit in the restaurant (0)
+-- the witness rule
+PASS witness rule: the same room (the occupied stall from the sinks)
+PASS witness rule: not through a wall from another room (the men's room)
+PASS witness rule: not beyond 18 blocks, even in the same room
+PASS witness rule: another room in plain sight counts ((20.5, 66.6, 24.5))
+-- night 1: near and far
+PASS a plate smashing in the far kitchen is not witnessed from the women's restroom
+PASS the hand dryer roaring in the same restroom is witnessed (report ticked)
+-- night 1: the director's pace
+night 1 staged: [726 call, 1586 flicker, 2386 music, 2986 drink]
+PASS five kinds witnessed in the dining room after 129 s ([dryer, call, lights, music, drink])
+PASS one phenomenon every 25-45 s (gaps 30..43 s)
+PASS the report's list holds what was witnessed ([door, dryer, call, lights, music, drink])
+-- night 1: a photo of nothing
+PASS a photo of the 霊障 uses film and captures nothing (10 → 9)
+-- night 1: back to the medium
+PASS she explains: six of them, one a night (the night ends)
+-- night 2 begins
+PASS night 2 begins by the car (held for the card)
+PASS the film is topped up (10)
+PASS the photos and the お札 are kept (1 photos, 2 お札)
+PASS nothing is in the restaurant yet (0)
+-- night 2: before two o'clock
+PASS night 2: nobody comes before two o'clock
+-- night 2: the crash, then the door
+PASS the 2:00 cue is heard ([crash])
+-- night 2: he comes in
+PASS the doors open for nobody, wet footprints come in ([crash, door, prints])
+-- night 2: table 7
+PASS he presses table 7's call button
+-- night 2: his photo
+visitor photographed from 36.5, 27.5 (★3)
+PASS night 2: the visitor's photo (back to the medium, stage 3)
+-- night 2: to the medium
+PASS she reads 三浦 健司 and says goodnight
+-- night 3 begins
+PASS night 3 begins by the car (held for the card)
+PASS the film is topped up (10)
+PASS the photos and the お札 are kept (2 photos, 2 お札)
+PASS nothing is in the restaurant yet (0)
+-- night 3: inside
+-- night 3: her signs
+PASS waitress: two of its signs witnessed ([glass, greet] after 47 s of signs; staged [423 glass, 963 greet])
+-- night 3: she shows herself
+PASS waitress shows itself (after 100 s inside, signs [glass, greet])
+-- night 3: save and quit
+PASS a world loaded mid-night resumes it
+PASS ...at the start of night 3 (stage 0, signs [])
+PASS the waitress is dormant again, photos and お札 kept
+-- night 3 again: inside
+-- night 3 again: her signs
+PASS waitress: two of its signs witnessed ([glass, greet] after 41 s of signs; staged [402 glass, 842 greet])
+-- night 3 again: she shows herself
+PASS waitress shows itself (after 100 s inside, signs [glass, greet])
+-- night 3: caught
+PASS night 3: the waitress takes you
+PASS you wake by the car, an お札 burnt (1 left)
+PASS the night goes on, the waitress back at her work
+-- night 3: her photo (the bow)
+waitress photographed from 3.5, 25.5 (★3)
+PASS night 3: the waitress's photo, bowing
+-- night 3: to the medium
+PASS she reads 小野寺 千夏 and says goodnight
+-- night 4 begins
+PASS night 4 begins by the car (held for the card)
+PASS the film is topped up (10)
+PASS the photos and the お札 are kept (3 photos, 1 お札)
+PASS nothing is in the restaurant yet (0)
+-- night 4: inside
+-- night 4: her signs
+PASS child: two of its signs witnessed ([bear, menus] after 44 s of signs; staged [403 bear, 903 menus])
+-- night 4: もういいかい
+PASS child shows itself (after 100 s inside, signs [bear, menus])
+-- night 4: she hides
+PASS she runs off and hides (22, 65, 28)
+-- night 4: her photo (hiding)
+child photographed from 22.5, 26.0 (★3)
+PASS night 4: the child's photo, hands over her eyes
+-- night 4: to the medium
+PASS she reads 春日 ゆうか and says goodnight
+-- night 5 begins
+PASS night 5 begins by the car (held for the card)
+PASS the film is topped up (10)
+PASS the photos and the お札 are kept (4 photos, 1 お札)
+PASS nothing is in the restaurant yet (0)
+-- night 5: the women's restroom
+-- night 5: her signs
+PASS mirror_woman: two of its signs witnessed ([knock, sob, taps] after 77 s of signs; staged [323 knock_stall, 923 sob, 1183 flicker, 1563 taps_w])
+-- night 5: behind the mirror
+PASS mirror_woman shows itself (after 100 s inside, signs [knock, sob, taps])
+-- night 5: her photo (through the mirror)
+mirror_woman photographed from 9.5, 19.0 (★3)
+PASS night 5: her photo through the mirror, bowed
+-- night 5: to the medium
+PASS she reads 白石 玲子 and says goodnight
+-- night 6 begins
+PASS night 6 begins by the car (held for the card)
+PASS the film is topped up (10)
+PASS the photos and the お札 are kept (5 photos, 1 お札)
+PASS nothing is in the restaurant yet (0)
+-- night 6: the kitchen
+-- night 6: chopping that stops
+PASS chopping at the board, far off
+PASS ...it stops as you come near ([chop])
+-- night 6: his signs
+PASS chef: two of its signs witnessed ([chop, gas] after 20 s of signs; staged [4 chop, 443 gas])
+-- night 6: at his board
+PASS chef shows itself (after 102 s inside, signs [chop, gas])
+-- night 6: his photo (through the pass window)
+chef photographed from 24.5, 12.5 (★3)
+PASS night 6: the chef's photo, plating
+-- night 6: to the medium
+PASS she reads 権藤 剛 and says goodnight
+-- night 7 begins
+PASS night 7 begins by the car (held for the card)
+PASS the film is topped up (10)
+PASS the photos and the お札 are kept (6 photos, 1 お札)
+PASS nothing is in the restaurant yet (0)
+-- night 7: closing time
+PASS night 7 begins as closing time (7 s after coming in)
+-- night 7: the store closes
+PASS every light on, the store music playing
+PASS the call display reads 「閉店」
+PASS its signs witnessed ([lights, pa, music])
+-- night 7: the manager wakes
+PASS manager shows itself (after 100 s inside, signs [lights, pa, music])
+PASS he closes the store (patrolling)
+-- night 7: his photo
+manager photographed from 9.1, 9.4 (★3)
+PASS night 7: the manager's photo — all six
+-- night 7: it goes quiet
+PASS ...the music stops: back to the medium
+-- night 7: to the medium
+PASS she takes the last photo: all six names
+-- the exorcism
+exorcism running (801 ticks), the medium at 10, 65, 25
+exorcism running (1201 ticks), the medium at 34, 65, 27
+exorcism running (1601 ticks), the medium at 34, 65, 27
+exorcism running (2001 ticks), the medium at 34, 65, 27
+exorcism running (2401 ticks), the medium at 34, 65, 27
+PASS the exorcism ends at dawn: 送り (お札 used: 2)
+-- the week is over
+PASS the week is over
+PASS a reset clears the week
+-- 相席: caught with no お札
+PASS another week: taken, with no お札 left
+-- 相席
+PASS no お札: the 相席 ending (phase 6, ending 2)
+PASS seated at table 7 (33, 64, 28)
+PASS the waitress serves the table
+PASS the night is over, you are back
+SELFTEST RESULT: PASS

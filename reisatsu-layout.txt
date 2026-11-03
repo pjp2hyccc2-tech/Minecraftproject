@@ -1,0 +1,111 @@
+room vestibule 風除室 AABB[1.0, 64.0, 27.0] -> [8.0, 69.0, 30.0] small_hard
+room waiting 待合・レジ AABB[1.0, 64.0, 23.0] -> [15.0, 69.0, 26.0] medium
+room waiting 待合・レジ AABB[9.0, 64.0, 26.0] -> [15.0, 69.0, 30.0] medium
+room dining 客席 AABB[15.0, 64.0, 11.0] -> [40.0, 69.0, 30.0] dining
+room fridge 冷蔵室 AABB[15.0, 64.0, 1.0] -> [19.0, 69.0, 4.0] tiny_dead
+room kitchen 厨房 AABB[15.0, 64.0, 1.0] -> [40.0, 69.0, 10.0] kitchen
+room corridor 通路 AABB[1.0, 64.0, 8.0] -> [14.0, 69.0, 10.0] corridor
+room staff 休憩室 AABB[1.0, 64.0, 1.0] -> [7.0, 69.0, 7.0] small_soft
+room office 事務所 AABB[8.0, 64.0, 1.0] -> [14.0, 69.0, 7.0] small_soft
+room storage 倉庫 AABB[1.0, 64.0, 11.0] -> [6.0, 69.0, 16.0] small_hard
+room mens 男子トイレ AABB[1.0, 64.0, 17.0] -> [6.0, 69.0, 22.0] restroom
+room womens 女子トイレ AABB[7.0, 64.0, 17.0] -> [14.0, 69.0, 22.0] restroom
+room cavity 鏡の向こう AABB[7.0, 64.0, 11.0] -> [14.0, 69.0, 16.0] restroom
+spawn: 4, 65, 41/north
+medium: -1, 65, 39/east
+medium_car: -3, 65, 36/north
+wake: 0, 65, 37/north
+visitor_spawn: 40, 65, 47/north
+door_outer: 3, 65, 30/south
+door_inner: 3, 65, 26/south
+door_switch: 5, 66, 31/south
+table_1: 16, 65, 28/north
+table_2: 19, 65, 28/north
+table_3: 22, 65, 28/north
+table_4: 25, 65, 28/north
+table_5: 28, 65, 28/north
+table_6: 31, 65, 28/north
+table_7: 34, 65, 28/north
+table_8: 38, 65, 24/west
+table_9: 38, 65, 21/west
+table_10: 38, 65, 18/west
+table_11: 38, 65, 15/west
+table_12: 19, 65, 15/north
+table_13: 25, 65, 15/north
+table_14: 31, 65, 15/north
+table_15: 19, 65, 22/north
+table_16: 25, 65, 22/north
+table_17: 31, 65, 22/north
+button_1: 16, 66, 28/north
+button_2: 19, 66, 28/north
+button_3: 22, 66, 28/north
+button_4: 25, 66, 28/north
+button_5: 28, 66, 28/north
+button_6: 31, 66, 28/north
+button_7: 34, 66, 28/north
+button_8: 38, 66, 24/west
+button_9: 38, 66, 21/west
+button_10: 38, 66, 18/west
+button_11: 38, 66, 15/west
+button_12: 20, 66, 15/north
+button_13: 26, 66, 15/north
+button_14: 32, 66, 15/north
+button_15: 20, 66, 22/north
+button_16: 26, 66, 22/north
+button_17: 32, 66, 22/north
+seat_7: 33, 65, 28/east
+call_display: 13, 68, 23/south
+register: 12, 66, 23/west
+phone: 14, 66, 23/west
+visitor_path: 4, 65, 35/north 4, 65, 32/north 4, 65, 28/north 4, 65, 24/north 9, 65, 24/east 14, 65, 25/east 20, 65, 26/east 27, 65, 26/east 33, 65, 27/east 33, 65, 28/east
+waitress_route: 16, 65, 13/east 21, 65, 12/east 27, 65, 13/east 33, 65, 13/east 36, 65, 15/south 36, 65, 20/south 36, 65, 25/south 31, 65, 26/west 24, 65, 26/west 17, 65, 26/west 16, 65, 21/north 16, 65, 16/north
+waitress_station: 32, 65, 12/north
+waitress_bow: 6, 65, 25/west
+child_count: 12, 65, 27/north
+child_hides: 22, 65, 28/north 9, 65, 29/east 13, 65, 23/west 20, 65, 11/south 26, 65, 19/north 2, 65, 14/east 5, 65, 18/south
+chef_board: 25, 65, 6/north
+chef_stove: 25, 65, 2/north
+chef_pass: 24, 65, 9/south
+pass_bell: 24, 66, 10/north
+mirror_woman: 10, 65, 14/south
+mirror: 9, 66, 16/south 10, 66, 16/south 11, 66, 16/south 9, 67, 16/south 10, 67, 16/south 11, 67, 16/south
+sink_w: 9, 65, 17/south 10, 65, 17/south 11, 65, 17/south
+sink_m: 1, 65, 19/east 1, 65, 20/east
+sink_kitchen: 35, 65, 1/south 36, 65, 1/south
+manager_desk: 9, 65, 6/west
+manager_route: 10, 65, 5/south 11, 65, 6/south 11, 65, 8/south 13, 65, 8/south 16, 65, 8/south 22, 65, 8/south 28, 65, 8/south 29, 65, 9/south 29, 65, 11/south 24, 65, 13/south 16, 65, 15/south 16, 65, 24/south 9, 65, 24/south 5, 65, 24/south 12, 65, 25/south 22, 65, 26/south 32, 65, 26/south 36, 65, 20/south 34, 65, 12/south 30, 65, 11/south 30, 65, 8/south 20, 65, 7/south 13, 65, 9/south 11, 65, 8/south
+breaker: 7, 66, 8/south
+breaker_stand: 7, 65, 9/north
+cameras: 14, 68, 25/west 15, 68, 12/south 38, 68, 12/west 37, 68, 27/west 39, 68, 8/west 13, 68, 9/west 7, 68, 28/west
+monitors: 8, 66, 5/east 8, 66, 6/east 8, 67, 5/east 8, 67, 6/east
+lockers: 1, 65, 1/east 1, 65, 2/east 1, 65, 3/east 1, 65, 4/east
+stall_occupied: 8, 65, 21/west
+tv: 6, 65, 1/south
+hand_dryer_w: 13, 66, 19/west
+hand_dryer_m: 5, 66, 20/west
+drink_bar: 17, 66, 11/south 18, 66, 11/south
+fryer: 28, 65, 1/south 29, 65, 1/south
+gas_range: 25, 65, 1/south 26, 65, 1/south 21, 65, 1/south 22, 65, 1/south
+dishwasher: 39, 65, 3/west
+fridge_door: 17, 65, 4/north
+stuffed_bear: 13, 65, 29/north
+menu_board: 1, 65, 32/south
+curve_mirror: 66, 65, 59/west
+flowers: 76, 65, 52/north
+film_1: 12, 66, 23/west
+film_2: 1, 65, 4/east
+film_3: 17, 65, 2/north
+key_office: 4, 66, 4/north
+note_report: -1, 65, 39/east
+note_medium: -1, 65, 39/east
+note_handover: 6, 66, 5/west
+note_clipping: 6, 66, 3/west
+note_reservation: 11, 66, 23/south
+note_diary: 11, 66, 1/south
+note_drawing: 9, 65, 27/east
+note_flyer: 1, 66, 28/east
+note_fire: 15, 66, 5/east
+note_cleaning: 12, 66, 17/south
+exorcism_medium: 34, 65, 27/south
+exorcism_spirits: 33, 65, 27/south 35, 65, 27/south 32, 65, 26/south 36, 65, 26/south 31, 65, 27/south 37, 65, 27/south
+exorcism_player: 34, 65, 23/south
