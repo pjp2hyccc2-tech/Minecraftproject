@@ -39,6 +39,10 @@ public final class PoiLayout {
     public final Direction ropeFacing;
     /** Column of the climbing rope below the anchor and its top / bottom Y. */
     public final int ropeX, ropeZ, ropeTopY, ropeBottomY;
+    /** The last column of high ground before the drop (the rope lies against its face) and that ground's height. */
+    public final int ropeEdgeX, ropeEdgeZ, ropeEdgeH;
+    /** Where versions before 1.0.1 started the rope (one above the stake's ground): cleaned up on old saves. */
+    public final int ropeLegacyTopY;
     public final List<House> houses;
     public final BlockPos omiki;
     public final BlockPos villageSleeper;
@@ -83,18 +87,25 @@ public final class PoiLayout {
         ropeFacing = rf;
         int rx = ra.x(), rz = ra.z();
         int topH = t.height(rx, rz);
-        int bx = rx, bz = rz;
+        int bx = rx, bz = rz, ex = rx, ez = rz;
         for (int k = 1; k < 8; k++) {
             int cx = rx + rf.getStepX() * k, cz = rz + rf.getStepZ() * k;
             if (t.height(cx, cz) <= topH - 5) {
                 bx = cx;
                 bz = cz;
+                ex = cx - rf.getStepX();
+                ez = cz - rf.getStepZ();
                 break;
             }
         }
         ropeX = bx;
         ropeZ = bz;
-        ropeTopY = topH + 1;
+        ropeEdgeX = ex;
+        ropeEdgeZ = ez;
+        ropeEdgeH = t.height(ex, ez);
+        // the rope starts level with the top of the edge, against its face: you walk to the edge and step onto it
+        ropeTopY = ropeEdgeH;
+        ropeLegacyTopY = topH + 1;
         ropeBottomY = t.height(bx, bz) + 1;
 
         // village houses: (x1, z1, x2, z2, door, kind)

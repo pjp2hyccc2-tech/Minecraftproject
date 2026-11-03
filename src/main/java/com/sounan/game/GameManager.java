@@ -291,9 +291,11 @@ public final class GameManager {
         if (bag.hasProperty(LostBagBlock.OPEN)) level.setBlock(L.bag, bag.setValue(LostBagBlock.OPEN, false), 3);
         BlockState anchor = level.getBlockState(L.ropeAnchor);
         if (anchor.hasProperty(RopeAnchorBlock.ROPED)) level.setBlock(L.ropeAnchor, anchor.setValue(RopeAnchorBlock.ROPED, false), 3);
-        for (int y = L.ropeTopY; y >= L.ropeBottomY; y--) {
+        for (int y = Math.max(L.ropeLegacyTopY, L.ropeTopY); y >= L.ropeBottomY; y--) {
             BlockPos rp = new BlockPos(L.ropeX, y, L.ropeZ);
             if (level.getBlockState(rp).is(ModBlocks.CLIMBING_ROPE.get())) level.setBlock(rp, Blocks.AIR.defaultBlockState(), 3);
+            BlockPos edge = new BlockPos(L.ropeEdgeX, y, L.ropeEdgeZ);
+            if (y > L.ropeEdgeH && level.getBlockState(edge).is(ModBlocks.MOUNTAIN_ROCK.get())) level.setBlock(edge, Blocks.AIR.defaultBlockState(), 3);
         }
         if (level.getBlockState(L.omiki).isAir()) level.setBlock(L.omiki, ModBlocks.OMIKI_BOTTLE.get().defaultBlockState(), 3);
         BlockState hok = level.getBlockState(L.hokora);
@@ -435,6 +437,12 @@ public final class GameManager {
             tickCapture(level, p, ps, data);
             syncTimer(p, ps, data);
             return;
+        }
+
+        // a rope tied with a version before 1.0.1 hangs from too high, held by a rock pillar on the edge: re-hang it once
+        if (data.roped && !ropeChecked && p.tickCount % 40 == 0 && p.blockPosition().distManhattan(L.ropeAnchor) < 96) {
+            ropeChecked = true;
+            hangRope(level, L);
         }
 
         // ---- where am I
@@ -964,13 +972,41 @@ public final class GameManager {
         return best;
     }
 
-    /** The climbing rope down the cliff face below the stake. */
+    /**
+     * The climbing rope down the cliff face below the stake. It starts level with the top of the cliff edge, against the
+     * edge's face, so you walk to the edge and step onto it. Idempotent: it also clears what versions before 1.0.1 left
+     * there (a rope starting one block above the stake's ground, held up by a rock pillar built on the edge itself —
+     * the pillar blocked the way and the rope seemed buried in the ground).
+     */
+    /** Set once the rope of this session has been checked against the current rope layout. */
+    private static boolean ropeChecked;
+
     public static void hangRope(ServerLevel level, PoiLayout L) {
         Direction f = L.ropeFacing;
+        BlockState air = Blocks.AIR.defaultBlockState();
+        // what the old versions left above the edge
+        for (int y = Math.max(L.ropeLegacyTopY, L.ropeTopY + 3); y > L.ropeTopY; y--) {
+            BlockPos rp = new BlockPos(L.ropeX, y, L.ropeZ);
+            if (level.getBlockState(rp).is(ModBlocks.CLIMBING_ROPE.get())) level.setBlock(rp, air, 3);
+            BlockPos edge = new BlockPos(L.ropeEdgeX, y, L.ropeEdgeZ);
+            if (y > L.ropeEdgeH && level.getBlockState(edge).is(ModBlocks.MOUNTAIN_ROCK.get())) level.setBlock(edge, air, 3);
+        }
+        // headroom: the edge and the air above the rope's top are free to walk into
+        for (int y = L.ropeTopY + 1; y <= L.ropeTopY + 2; y++) {
+            BlockPos rp = new BlockPos(L.ropeX, y, L.ropeZ);
+            BlockState cur = level.getBlockState(rp);
+            if (!cur.isAir() && (cur.canBeReplaced() || !cur.isSolid())) level.setBlock(rp, air, 3);
+            BlockPos edge = new BlockPos(L.ropeEdgeX, y, L.ropeEdgeZ);
+            BlockState e = level.getBlockState(edge);
+            if (!e.isAir() && (e.canBeReplaced() || !e.isSolid())) level.setBlock(edge, air, 3);
+        }
         for (int y = L.ropeTopY; y >= L.ropeBottomY; y--) {
             BlockPos rp = new BlockPos(L.ropeX, y, L.ropeZ);
             BlockPos behind = rp.relative(f.getOpposite());
-            if (!level.getBlockState(behind).isSolid()) level.setBlock(behind, ModBlocks.MOUNTAIN_ROCK.get().defaultBlockState(), 3);
+            // only below the edge: a hollow in the cliff face gets rock so the rope has something to lie on
+            if (y <= L.ropeEdgeH && !level.getBlockState(behind).isSolid()) {
+                level.setBlock(behind, ModBlocks.MOUNTAIN_ROCK.get().defaultBlockState(), 3);
+            }
             BlockState cur = level.getBlockState(rp);
             if (cur.isAir() || cur.canBeReplaced()) {
                 level.setBlock(rp, ModBlocks.CLIMBING_ROPE.get().defaultBlockState().setValue(LadderBlock.FACING, f), 3);

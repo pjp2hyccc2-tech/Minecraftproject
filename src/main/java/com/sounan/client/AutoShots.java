@@ -265,6 +265,16 @@ public final class AutoShots {
         scene("04_start_flashlight", mc -> hold(mc, "sounan:flashlight_on"), 20);
         scene("05_bag", mc -> at(mc, L.bag.getX() - 3.5, L.bag.getZ() + 3.5, -135.0f, 25.0f), 80);
         scene("06_cliff_edge", mc -> at(mc, L.ropeAnchor.getX() - 1.5, L.ropeAnchor.getZ() - 2.5, -20.0f, 40.0f), 80);
+        // the rope tied: from the edge you look down along it (it starts level with the edge, nothing in the way)
+        scene("06_rope_edge", mc -> {
+            net.minecraft.server.MinecraftServer server = mc.getSingleplayerServer();
+            if (server != null) server.execute(() -> {
+                net.minecraft.server.level.ServerLevel level = server.getLevel(com.sounan.registry.ModDimensions.KAERAZU);
+                if (level != null) com.sounan.game.GameManager.hangRope(level, L);
+            });
+            float yaw = L.ropeFacing.toYRot();
+            at(mc, L.ropeEdgeX + 0.5 - L.ropeFacing.getStepX() * 1.0, L.ropeEdgeZ + 0.5 - L.ropeFacing.getStepZ() * 1.0, yaw, 55.0f);
+        }, 80);
         scene("07_forest_ribbons", mc -> at(mc, -95.5, -88.5, -45.0f, 2.0f), 90);
         scene("08_forest_deep", mc -> at(mc, -42.5, -44.5, -40.0f, 0.0f), 90);
         scene("09_dead_end", mc -> {

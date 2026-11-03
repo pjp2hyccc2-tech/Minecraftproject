@@ -208,6 +208,22 @@ public final class SelfTest {
             if (level.getBlockState(new BlockPos(L.ropeX, y, L.ropeZ)).is(ModBlocks.CLIMBING_ROPE.get())) rope++;
         }
         check(rope >= L.ropeTopY - L.ropeBottomY - 1, "the rope hangs down the cliff (" + rope + " blocks)");
+        {
+            // you can walk to the edge and step onto the rope: its top is level with the edge, the edge is free to stand
+            // on, the rope lies against the edge's face, and nothing stands on the edge above it
+            BlockPos top = new BlockPos(L.ropeX, L.ropeTopY, L.ropeZ);
+            BlockPos edgeGround = new BlockPos(L.ropeEdgeX, L.ropeEdgeH, L.ropeEdgeZ);
+            boolean walkable = level.getBlockState(edgeGround).isSolid()
+                    && !level.getBlockState(edgeGround.above()).blocksMotion()
+                    && !level.getBlockState(edgeGround.above(2)).blocksMotion();
+            boolean free = !level.getBlockState(top.above()).blocksMotion() && !level.getBlockState(top.above(2)).blocksMotion();
+            log("rope top " + top + " edge " + edgeGround + " edge above: " + level.getBlockState(edgeGround.above()) + " / "
+                    + level.getBlockState(edgeGround.above(2)) + ", over the rope: " + level.getBlockState(top.above()));
+            check(level.getBlockState(top).is(ModBlocks.CLIMBING_ROPE.get()), "the rope starts level with the cliff edge");
+            check(walkable, "the cliff edge next to the rope is free to stand on (no rock on it)");
+            check(free, "the air over the rope's top is free, so you can step onto it from the edge");
+            check(level.getBlockState(top.relative(L.ropeFacing.getOpposite())).isSolid(), "the rope's top lies against the cliff face");
+        }
         GameManager.interact(fake, L.hokora, "hokora");
         check(!data.offered, "the shrine wants an offering first");
         GameManager.interact(fake, L.omiki, "omiki");
