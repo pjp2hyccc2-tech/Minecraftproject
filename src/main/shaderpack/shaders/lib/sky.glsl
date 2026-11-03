@@ -1,15 +1,15 @@
 // =====================================================================================
 //  HitoriShaders - sky gradient, analytic moon (reflections), fog colour
-//  HIDAMARI: an overcast night just after rain - a low ceiling of dark clouds, faintly lit
-//  from below by the town (an orange glow on the horizon, strongest west-south-west), no
-//  moon, no stars.
+//  SHIRAKABA: 3 a.m., light rain over a quiet suburb - a low ceiling of rain clouds, dull
+//  orange-grey from the town's lights under them (strongest toward the station), no moon, no
+//  stars; the rain veils the horizon.
 // =====================================================================================
 
-#ifdef WORLD_HIDAMARI
-// the low cloud ceiling: slow drifting fbm on a plane ~300 blocks up
+#ifdef WORLD_SHIRAKABA
+// the low rain clouds: slow drifting fbm on a plane ~200 blocks up
 float cloudDeck(vec3 dir) {
     if (dir.y <= 0.0) return 0.5;
-    vec2 p = dir.xz / (dir.y + 0.06) * 2.2 + vec2(0.020, 0.006) * frameTimeCounter;
+    vec2 p = dir.xz / (dir.y + 0.06) * 2.0 + vec2(0.030, 0.010) * frameTimeCounter;
     float n = fbm2(p * 0.9) * 0.70 + fbm2(p * 2.7 + 7.3) * 0.30;
     return n;
 }
@@ -18,20 +18,20 @@ float cloudDeck(vec3 dir) {
 vec3 skyGradient(vec3 dir) {
     float up = dir.y;
     float h = saturate(up);
-#if defined WORLD_HIDAMARI
+#if defined WORLD_SHIRAKABA
     vec3 c = mix(SKY_HORIZON, SKY_ZENITH, smoothstep(0.0, 0.55, h));
-    // the town: an orange glow low on the horizon, in one direction, under the clouds
+    // the town under the clouds: a dull orange glow low all round, more toward the station
     vec3 hd = normalize(vec3(dir.x, 0.0, dir.z) + 1e-5);
     float toward = saturate(dot(hd, TOWN_DIR) * 0.5 + 0.5);
-    float band = exp(-max(up, 0.0) * 9.0) * smoothstep(-0.12, 0.02, up);
-    vec3 glow = TOWN_GLOW * (0.25 + 1.75 * pow(toward, 3.0)) * band;
+    float band = exp(-max(up, 0.0) * 7.0) * smoothstep(-0.12, 0.02, up);
+    vec3 glow = TOWN_GLOW * (0.55 + 1.45 * pow(toward, 3.0)) * band;
     // the cloud base catches the glow: brighter where the clouds hang lower (dense)
     float cl = cloudDeck(dir);
     float lit = smoothstep(0.35, 0.75, cl);
-    c *= 0.80 + 0.45 * lit;
-    c += TOWN_GLOW * pow(toward, 2.0) * lit * exp(-max(up, 0.0) * 3.5) * 0.35;
+    c *= 0.82 + 0.40 * lit;
+    c += TOWN_GLOW * (0.4 + 0.6 * pow(toward, 2.0)) * lit * exp(-max(up, 0.0) * 3.0) * 0.40;
     c += glow;
-    // below the horizon: dark fields, the mist
+    // below the horizon: the dark town, the rain haze
     c = mix(c, FOG_AMBIENT * 0.8, smoothstep(0.02, -0.20, up));
     return c * (1.0 - 0.25 * fear());
 #elif defined WORLD_OVERWORLD
@@ -59,10 +59,10 @@ vec3 skyGradient(vec3 dir) {
 
 // colour of distant fog for a world-space view direction (reflections, fallbacks)
 vec3 fogColorFor(vec3 dir) {
-#if defined WORLD_HIDAMARI
+#if defined WORLD_SHIRAKABA
     vec3 hd = normalize(vec3(dir.x, 0.0, dir.z) + 1e-5);
     float toward = saturate(dot(hd, TOWN_DIR) * 0.5 + 0.5);
-    vec3 fc = FOG_AMBIENT + TOWN_GLOW * pow(toward, 3.0) * 0.45 * exp(-max(dir.y, 0.0) * 4.0);
+    vec3 fc = FOG_AMBIENT + TOWN_GLOW * (0.3 + 0.7 * pow(toward, 3.0)) * 0.45 * exp(-max(dir.y, 0.0) * 4.0);
     return fc * (1.0 - 0.25 * fear());
 #elif defined WORLD_OVERWORLD
     float eyeSky = eyeSkyFactor();
@@ -76,7 +76,7 @@ vec3 fogColorFor(vec3 dir) {
 #endif
 }
 
-// analytic moon disc for reflections (water, glass) - none over the overcast restaurant
+// analytic moon disc for reflections (water, glass) - none over the rainy town
 vec3 moonReflection(vec3 dir) {
 #ifdef HAS_CELESTIAL_LIGHT
     float m = dot(dir, moonDirW());

@@ -1,14 +1,16 @@
 // =====================================================================================
-//  HitoriShaders - prepare / prepare1 (hitori:hidamari): the light table
+//  HitoriShaders - prepare / prepare1 (hitori:shirakaba): the light table
 //  For every block column of the 128 x 128 window around the camera: the 4 lamps that can
 //  reach it, best first. Vanilla light spreads by Manhattan distance, so the search is
 //  separable: TABLE_Z finds the best 4 along z (from the emitter map's 4 lamp layers),
 //  TABLE_X the best 6 of those along x, walks the wall tiles from the column to each of them
-//  (lamps behind a wall are flagged and ranked last) and keeps 4.
-//  Score = level - |dx| - |dz| - a vertical penalty (distance from the camera's height band).
+//  (lamps behind a wall or a shut fusuma are flagged and ranked last) and keeps 4.
+//  Score = level - |dx| - |dz| - a vertical penalty (distance from the camera's storey),
+//  + OUTDOOR_REACH for the lamps outside (they light the open street farther than vanilla does).
 //    out: colortex7 texel (x, z) = 4 packed lamps (lib/emitters.glsl tablePack)
 //  prepare1 also writes the frame's list of outdoor lamps for the air (row 0 right of the
-//  table, airListTexel; read by lib/emitters.glsl airLampsGather).
+//  table, airListTexel; read by lib/emitters.glsl airLampsGather / outdoorLampsAt).
+//  Every loop has a constant bound and every array is initialised before it is read.
 // =====================================================================================
 #include "/lib/header.glsl"
 
@@ -41,25 +43,27 @@ void consider(float score, float enc) {
     bestE[i] = enc;
 }
 
-#if defined WORLD_HIDAMARI && defined TABLE_X
+#if defined WORLD_SHIRAKABA && defined TABLE_X
 // ---- the outdoor lamps of the air: one list for the whole frame ---------------------------
-// The glow of the lamps in the mist must not depend on which lamps the columns along a ray
-// happen to list (that drew walls and wedges of light across the sky): the outdoor lamps
+// The glow of the lamps in the rain must not depend on which lamps the columns along a ray
+// happen to list (that draws walls and wedges of light across the sky): the outdoor lamps
 // within ~40 blocks are gathered here once - from the z-lines (TABLE_Z) of six rows of
-// columns, overlapping, deduplicated - a sign's blocks merged into a few bright entries, and
-// ranked by how much they matter from the camera. The weakest kept ones fade out before they
-// would drop off the list. Every texel of the list computes the same list and writes its part.
+// columns, overlapping, deduplicated - neighbouring blocks of one lamp merged, ranked by how
+// much they matter from the camera. The weakest kept ones fade out before they would drop off
+// the list. Every texel of the list computes the same list and writes its part.
 #define AIR_WORK 24
 #define AIR_SEEN 64
 vec4 airListTexel(int slot) {
     ivec2 cc = ivec2(floor(cameraPosition.xz)) - emapOrigin();
     int refY = tableRefY();
     int seen[AIR_SEEN];
+    for (int q = 0; q < AIR_SEEN; q++) seen[q] = -1;
     int nSeen = 0;
     vec3 eSum[AIR_WORK];
     float eN[AIR_WORK];
     int eType[AIR_WORK];
     int eLevel[AIR_WORK];
+    for (int e = 0; e < AIR_WORK; e++) { eSum[e] = vec3(0.0); eN[e] = 1.0; eType[e] = 0; eLevel[e] = 0; }
     int nE = 0;
     for (int r = 0; r < 6; r++) {
         int zg = cc.y - 30 + r * 12;
@@ -71,7 +75,7 @@ vec4 airListTexel(int slot) {
             for (int k = 0; k < 4; k++) {
                 float v = zt[k];
                 if (abs(v) < 0.5) continue;
-                int c = int(abs(v) + 0.5);
+                int c = tableCode(v);
                 int type = c & 31;
                 if (!emitterOutdoorType(type) || !emitterCasts(type)) continue;
                 int level = (c >> 5) & 15;
@@ -86,13 +90,13 @@ vec4 airListTexel(int slot) {
                 if (dup) continue;
                 if (nSeen < AIR_SEEN) { seen[nSeen] = key; nSeen++; }
                 vec3 pb = vec3(float(x), float(yrel), float(z));
-                // a sign is many blocks: its neighbours of one type become one bright entry
+                // a lamp of several blocks (a tall vending machine): its blocks become one entry
                 int m = -1;
                 for (int e = 0; e < AIR_WORK; e++) {
                     if (e >= nE) break;
                     if (eType[e] != type) continue;
                     vec3 d = abs(eSum[e] / eN[e] - pb);
-                    if (max(d.x, max(d.y, d.z)) < 2.6) { m = e; break; }
+                    if (max(d.x, max(d.y, d.z)) < 1.6) { m = e; break; }
                 }
                 if (m >= 0) {
                     eSum[m] += pb;
@@ -118,7 +122,7 @@ vec4 airListTexel(int slot) {
         vec3 d = wpos - cameraPosition;
         // gone before the edge of the gathered window
         float edge = 1.0 - smoothstep(30.0, 39.0, max(abs(p.x - float(cc.x)), abs(p.z - float(cc.y))));
-        imp[e] = EM_GAIN[clamp(eType[e], 0, EM_COUNT - 1)] * eN[e] / (dot(d, d) + 100.0) * edge;
+        imp[e] = lampGain(eType[e]) * eN[e] / (dot(d, d) + 100.0) * edge;
     }
     // the best AIR_OUT, strongest first; the best one left out sets the fade
     int pick = -1;
@@ -148,7 +152,7 @@ vec4 airListTexel(int slot) {
 void main() {
     ivec2 cell = ivec2(gl_FragCoord.xy);
     vec4 outv = vec4(0.0);
-#ifdef WORLD_HIDAMARI
+#ifdef WORLD_SHIRAKABA
   #ifdef TABLE_X
     if (cell.y == 0 && cell.x >= AIR_LIST_X && cell.x < AIR_LIST_X + 2 * AIR_OUT) {
         outv = airListTexel(cell.x - AIR_LIST_X);
@@ -165,14 +169,17 @@ void main() {
             for (int layer = 0; layer < 4; layer++) {
                 vec4 t = texelFetch(shadowcolor0, emapTileOffset(layer) + ivec2(cell.x, z), 0);
                 if (!emapLampMarker(t)) continue;
-                int type = int(floor(t.r * 255.0 + 0.5));
+                int type = int(emapByte(t.r));
                 if (!emitterCasts(type)) continue;
-                int by = int(floor(t.g * 255.0 + 0.5)) + 32;
+                int by = int(emapByte(t.g)) + 32;
                 int yrel = by - refY;
                 if (yrel < 0 || yrel > 31) continue;
                 int level = emapLampLevel(t);
-                if (level <= 0) level = int(EM_LEVEL[type]);
-                float score = float(level) - abs(float(dz)) - tableVerticalPenalty(float(by));
+                if (level <= 0) level = int(EM_LEVEL[clamp(type, 0, EM_COUNT - 1)]);
+                level = clamp(level, 0, 15);
+                // the lamps outside reach farther over the open street (lib/emitters.glsl OUTDOOR_REACH)
+                float score = float(level) - abs(float(dz)) - tableVerticalPenalty(float(by))
+                            + (emitterOutdoorType(type) ? OUTDOOR_REACH : 0.0);
                 if (score <= 0.0) continue;
                 // tiny bias: brighter lamps first on equal score
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, 0, dz, false));
@@ -189,12 +196,13 @@ void main() {
             for (int k = 0; k < 4; k++) {
                 float v = zt[k];
                 if (abs(v) < 0.5) continue;
-                int c = int(abs(v) + 0.5);
+                int c = tableCode(v);
                 int type = c & 31;
                 int level = (c >> 5) & 15;
                 int yrel = (c >> 9) & 31;
                 int dz = ((c >> 19) & 31) - 15;
-                float score = float(level) - abs(float(dz)) - abs(float(dx)) - tableVerticalPenalty(float(yrel + refY));
+                float score = float(level) - abs(float(dz)) - abs(float(dx)) - tableVerticalPenalty(float(yrel + refY))
+                            + (emitterOutdoorType(type) ? OUTDOOR_REACH : 0.0);
                 if (score <= 0.0) continue;
                 consider(score + float(level) * 0.001, tablePack(type, level, yrel, dx, dz, false));
             }
@@ -206,7 +214,7 @@ void main() {
         for (int i = 0; i < KEEP; i++) {
             float v = bestE[i];
             if (abs(v) < 0.5) continue;
-            int c = int(abs(v) + 0.5);
+            int c = tableCode(v);
             int dx = ((c >> 14) & 31) - 15;
             int dz = ((c >> 19) & 31) - 15;
             bool walled = wallBetween(cell, cell + ivec2(dx, dz));

@@ -7,19 +7,20 @@
         Catches what glslang cannot: vertex/fragment interface mismatches, driver quirks.
 
   python3 tools/shader/preview.py [--out DIR] [--size 960x540] [--shots a,b] [-D NAME=VALUE]
-        renders the restaurant HIDAMARI (tools/shader/hidamari_scene.py: the floor plan of
-        docs/DESIGN.md with the art's block models and textures where they exist) through the
-        real pipeline - shadow pass (the emitter map), prepare / prepare1 (the light table),
-        sky, gbuffers (terrain as indexed quads with mc_Entity / mc_midTexCoord / at_midBlock,
-        spirits as translucent entities with their eyes layer, the hand), deferred, translucents,
-        composite..composite4, final - emulating what Iris/Oculus do (ping-pong buffers,
-        RENDERTARGETS, buffer formats / clear colours from the directives, per-buffer blending,
-        the squeezed hand depth, mipmap directives, uniforms incl. both held items and the mod's
-        channels: fear, danger, the finder, the flash, caught).
+        renders Kopo Shirakaba room 203 and its street (tools/shader/apartment_scene.py: the floor
+        plan of docs/DESIGN.md with the art's block models and textures where they exist, stand-ins
+        from hitori_textures.py where not) through the real pipeline - shadow pass (the emitter
+        map), prepare / prepare1 (the light table), sky, gbuffers (terrain as indexed quads with
+        mc_Entity / mc_midTexCoord / at_midBlock, the doll / the woman / the cameras as entities
+        with their eyes layers, the hand), deferred, translucents, composite..composite4, final -
+        emulating what Iris/Oculus do (ping-pong buffers, RENDERTARGETS, buffer formats / clear
+        colours from the directives, per-buffer blending, the squeezed hand depth, mipmap
+        directives, uniforms incl. both held items and the mod's channels: fear, danger, the
+        camera app (nightVision), eyes closed (blindness), caught).
         Writes one PNG per shot plus contact.png, and prints buffer statistics (NaN / black).
         --timing prints the llvmpipe time of every pass. --list shows the shots.
         Assets: $HITORI_ASSETS (an assets/hitori dir, e.g. extracted from the art branch:
-        git archive origin/rs-art src/main/resources/assets | tar -x -C /tmp/art) or the repo's.
+        git archive origin/hk-art src/main/resources/assets | tar -x -C /tmp/art) or the repo's.
 
 This is a development aid, not a substitute for the CI client run.
 """
@@ -40,15 +41,15 @@ from glctx import gl  # noqa: E402
 import lint  # noqa: E402
 import build_pack  # noqa: E402
 import mcscene  # noqa: E402
-import hidamari_scene  # noqa: E402
+import apartment_scene  # noqa: E402
 
 ROOT = lint.ROOT
 ATTRIBS = {"mc_Entity": 10, "mc_midTexCoord": 11, "at_midBlock": 12}
-HIDAMARI = "hitori_hidamari"
+SHIRAKABA = "hitori_shirakaba"
 
 # item / entity ids (item.properties, entity.properties)
-FLASHLIGHT, FINDER = 10001, 10004
-VISITOR, WAITRESS, CHEF, CHILD, MIRROR_WOMAN, MANAGER, MEDIUM = 20001, 20002, 20003, 20004, 20005, 20006, 20010
+PHONE, PHONE_LIGHT, LIGHTER, LAPTOP, KNIFE = 10001, 10002, 10003, 10004, 10005
+DOLL, WOMAN, CAMERA = 30001, 30002, 30003
 
 # =====================================================================================
 #  pack loading
@@ -278,7 +279,7 @@ def sky_angle(world_time):
 
 
 # =====================================================================================
-#  meshes that are not blocks: spirits, the medium, the hand
+#  meshes that are not blocks: the doll, the woman, the cameras, the hand
 # =====================================================================================
 
 def box_quads(x0, y0, z0, x1, y1, z1, tex, rect_of, face_tex=None):
@@ -308,86 +309,198 @@ def quads_to_arrays(quads, light, alpha=1.0, color=(1.0, 1.0, 1.0)):
     return dict(pos=f(P, 3), nrm=f(N, 3), col=f(C, 4), uv0=f(U0, 2), uv1=f(U1, 2))
 
 
-# simple box figures for the spirits (the real ones are the spirits worker's models)
-SPIRIT_LOOK = {
-    VISITOR: dict(body=(14, 14, 16), legs=(30, 34, 52), head=(22, 22, 24), h=1.9),       # leather, jeans, helmet
-    WAITRESS: dict(body=(92, 58, 38), legs=(92, 58, 38), head=(176, 174, 168), apron=(214, 120, 40), h=1.8),
-    CHEF: dict(body=(220, 216, 204), legs=(60, 56, 50), head=(26, 20, 18), h=2.2),
-    CHILD: dict(body=(150, 190, 220), legs=(150, 190, 220), head=(230, 200, 60), h=1.1),
-    MIRROR_WOMAN: dict(body=(225, 225, 220), legs=(30, 30, 34), head=(14, 14, 16), h=1.8),
-    MANAGER: dict(body=(220, 222, 224), legs=(40, 40, 46), head=(150, 146, 140), h=1.85),
-    MEDIUM: dict(body=(60, 36, 70), legs=(40, 30, 46), head=(190, 170, 150), h=1.6),
-}
+# box figures for the entities (the real ones are the models worker's): the doll, the woman, a camera
+def _solid_tile(atlas, name, rgb, noise=0.18, seed=0, painter=None):
+    if name not in atlas.rects:
+        rng = np.random.default_rng(seed)
+        tile = np.zeros((16, 16, 4), np.uint8)
+        tile[..., :3] = np.clip(np.array(rgb, np.float32)[None, None] * (1.0 - noise / 2 + rng.random((16, 16, 1)) * noise), 0, 255)
+        tile[..., 3] = 255
+        if painter:
+            painter(tile)
+        atlas._load = (lambda orig, nm, tl: (lambda n: tl if n == nm else orig(n)))(atlas._load, name, tile)
+    return name
 
 
-def figure_mesh(atlas, kind, x, y, z, yaw_deg, light, alpha):
-    """a standing box figure at feet (x, y, z) facing yaw (0 = south +z)"""
-    look = SPIRIT_LOOK[kind]
-    h = look["h"]
-    s = h / 1.8
-
-    def rect_of(name):
-        return atlas.rect(name)
-
-    def solid(name, rgb):
-        if name not in atlas.rects:
-            tile = np.zeros((16, 16, 4), np.uint8)
-            rng = np.random.default_rng(abs(hash(name)) % 1000)
-            tile[..., :3] = np.clip(np.array(rgb)[None, None] * (0.85 + rng.random((16, 16, 1)) * 0.25), 0, 255)
-            tile[..., 3] = 255
-            atlas._load = (lambda orig, nm, tl: (lambda n: tl if n == nm else orig(n)))(atlas._load, name, tile)
-        return name
-    tb = solid("fig_body_%d" % kind, look["body"])
-    tl = solid("fig_legs_%d" % kind, look["legs"])
-    th = solid("fig_head_%d" % kind, look["head"])
-    q = []
-    q += box_quads(-0.12 * s, 0.0, -0.10, 0.12 * s, 0.75 * s, 0.10, tl, rect_of)
-    q += box_quads(-0.24 * s, 0.75 * s, -0.13, 0.24 * s, 1.45 * s, 0.13, tb, rect_of)
-    if "apron" in look:
-        ta = solid("fig_apron_%d" % kind, look["apron"])
-        q += box_quads(-0.20 * s, 0.70 * s, 0.13, 0.20 * s, 1.25 * s, 0.15, ta, rect_of)
-    q += box_quads(-0.36 * s, 0.80 * s, -0.09, -0.24 * s, 1.42 * s, 0.09, tb, rect_of)
-    q += box_quads(0.24 * s, 0.80 * s, -0.09, 0.36 * s, 1.42 * s, 0.09, tb, rect_of)
-    q += box_quads(-0.17 * s, 1.45 * s, -0.17 * s, 0.17 * s, 1.80 * s, 0.17 * s, th, rect_of)
-    a = math.radians(yaw_deg)
+def _place(quads, x, y, z, yaw_deg):
+    a = -math.radians(yaw_deg)          # Minecraft yaw: the front (+z) turns to (-sin yaw, 0, cos yaw)
     ca, sa = math.cos(a), math.sin(a)
     out = []
-    for n, cs, r in q:
+    for n, cs, r in quads:
         n2 = (n[0] * ca + n[2] * sa, n[1], -n[0] * sa + n[2] * ca)
         cs2 = [(x + p[0] * ca + p[2] * sa, y + p[1], z - p[0] * sa + p[2] * ca) for p in cs]
         out.append((n2, cs2, r))
-    body = quads_to_arrays(out, light, alpha)
-    # the eyes layer: two small glints on the face
-    ez = 0.175 * s
-    eyes = []
-    for ex in (-0.09 * s, 0.04 * s):
-        cs = [(ex, 1.66 * s, ez), (ex, 1.62 * s, ez), (ex + 0.05 * s, 1.62 * s, ez), (ex + 0.05 * s, 1.66 * s, ez)]
-        cs2 = [(x + p[0] * ca + p[2] * sa, y + p[1], z - p[0] * sa + p[2] * ca) for p in cs]
-        eyes.append(((sa, 0.0, ca), cs2, rect_of(solid("fig_eye_%d" % kind, (230, 120, 60) if kind == CHEF else (200, 210, 220)))))
-    return body, quads_to_arrays(eyes, light, alpha)
+    return out
+
+
+def figure_mesh(atlas, kind, x, y, z, yaw_deg, light, alpha=1.0, pose="stand"):
+    """an entity at feet (x, y, z) facing yaw (0 = south +z) -> (body arrays, eyes arrays)"""
+    rect_of = atlas.rect
+    q, e = [], []
+    if kind == DOLL:
+        # the soaked plush rabbit: grey-white fur with the red thread wound round it, button eyes,
+        # the knife bigger than its arm; floating face down (pose float) or standing
+        def thread(tile):
+            for yy in (4, 9, 13):
+                tile[yy, :, :3] = (150, 24, 24)
+        fur = _solid_tile(atlas, "fig_doll_fur", (176, 172, 164), 0.20, 1, thread)
+        head = _solid_tile(atlas, "fig_doll_head", (184, 180, 172), 0.16, 2)
+        blade = _solid_tile(atlas, "fig_knife", (196, 200, 204), 0.06, 3)
+        btn = _solid_tile(atlas, "fig_doll_button", (210, 214, 220), 0.0, 4)
+        q += box_quads(-0.15, 0.00, -0.10, 0.15, 0.30, 0.10, fur, rect_of)
+        q += box_quads(-0.13, 0.30, -0.12, 0.13, 0.54, 0.12, head, rect_of)
+        q += box_quads(-0.11, 0.54, -0.03, -0.05, 0.76, 0.02, head, rect_of)
+        q += box_quads(0.05, 0.50, -0.03, 0.11, 0.66, 0.02, head, rect_of)             # one ear drooping
+        q += box_quads(-0.24, 0.10, -0.04, -0.15, 0.26, 0.04, fur, rect_of)
+        q += box_quads(0.15, 0.10, -0.04, 0.24, 0.26, 0.04, fur, rect_of)
+        q += box_quads(0.22, -0.05, 0.02, 0.25, 0.35, 0.05, blade, rect_of)            # the knife
+        for ex in (-0.075, 0.035):
+            e.append(((0, 0, 1), [(ex, 0.46, 0.121), (ex, 0.42, 0.121), (ex + 0.04, 0.42, 0.121), (ex + 0.04, 0.46, 0.121)], rect_of(btn)))
+        if pose == "float":
+            # lying face down in the water: rotate the figure onto its front
+            def lay(qs):
+                out = []
+                for n, cs, r in qs:
+                    n2 = (n[0], -n[2], n[1])
+                    cs2 = [(p[0], -p[2] * 1.0 + 0.0, p[1] - 0.30) for p in cs]
+                    cs2 = [(c[0], c[1], c[2]) for c in cs2]
+                    out.append((n2, cs2, r))
+                return out
+            q, e = lay(q), lay(e)
+    elif kind == WOMAN:
+        dress = _solid_tile(atlas, "fig_woman_dress", (204, 202, 194), 0.14, 5)
+        hair = _solid_tile(atlas, "fig_woman_hair", (14, 13, 14), 0.10, 6)
+        skin = _solid_tile(atlas, "fig_woman_skin", (150, 152, 150), 0.10, 7)
+        q += box_quads(-0.20, 0.00, -0.12, 0.20, 1.30, 0.12, dress, rect_of)
+        q += box_quads(-0.09, 0.00, -0.06, 0.09, 0.08, 0.10, skin, rect_of)
+        q += box_quads(-0.30, 0.55, -0.07, -0.20, 1.28, 0.07, skin, rect_of)           # too-long arms
+        q += box_quads(0.20, 0.55, -0.07, 0.30, 1.28, 0.07, skin, rect_of)
+        q += box_quads(-0.15, 1.30, -0.15, 0.15, 1.62, 0.15, hair, rect_of)            # the head under the hair
+        q += box_quads(-0.18, 0.90, -0.17, 0.18, 1.60, 0.19, hair, rect_of)            # wet hair hanging over the face
+    elif kind == CAMERA:
+        body = _solid_tile(atlas, "fig_cam_body", (26, 26, 28), 0.10, 8)
+        leg = _solid_tile(atlas, "fig_cam_leg", (40, 40, 42), 0.05, 9)
+        led = _solid_tile(atlas, "fig_cam_led", (235, 50, 40), 0.0, 10)
+        q += box_quads(-0.07, 0.10, -0.05, 0.07, 0.20, 0.05, body, rect_of)
+        q += box_quads(-0.01, 0.0, -0.01, 0.01, 0.10, 0.01, leg, rect_of)
+        e.append(((0, 0, 1), [(0.04, 0.185, 0.051), (0.04, 0.17, 0.051), (0.055, 0.17, 0.051), (0.055, 0.185, 0.051)], rect_of(led)))
+    body_arr = quads_to_arrays(_place(q, x, y, z, yaw_deg), light, alpha)
+    eyes_arr = quads_to_arrays(_place(e, x, y, z, yaw_deg), light, alpha) if e else None
+    return body_arr, eyes_arr
+
+
+HELD_MODELS = {PHONE: "phone", PHONE_LIGHT: "phone", LIGHTER: "lighter", LAPTOP: "laptop", KNIFE: "knife"}
+
+
+def _rot_xyz(rx, ry, rz):
+    """JOML Quaternionf.rotationXYZ as a 3x3 matrix (Rx * Ry * Rz)"""
+    return rot("x", rx)[:3, :3] @ rot("y", ry)[:3, :3] @ rot("z", rz)[:3, :3]
+
+
+def held_item_mesh(atlas, item, side, light):
+    """the art's 3D item model (forge:separate_transforms 'base') in first person, in view space
+    like ItemInHandRenderer + ItemRenderer: the arm offset (0.56, -0.52, -0.72), the model's
+    firstperson display transform (translation / 16, rotation XYZ, scale), centred by -0.5.
+    Faces with forge_data block_light 15 get a full lightmap. None if the model is missing."""
+    name = HELD_MODELS.get(item)
+    if name is None:
+        return None
+    path = os.path.join(mcscene.ASSETS, "models", "item", name + ".json")
+    if not os.path.isfile(path):
+        return None
+    import json
+    with open(path, encoding="utf-8") as fh:
+        m = json.load(fh)
+    base = m.get("base", m)
+    texvars = {"#" + k: v for k, v in base.get("textures", {}).items()}
+    disp = base.get("display", {}).get("firstperson_righthand" if side > 0 else "firstperson_lefthand", {})
+    sgn = 1.0 if side > 0 else -1.0
+    rx, ry, rz = disp.get("rotation", [0, 0, 0])
+    if side < 0:
+        ry, rz = -ry, -rz
+    tx, ty, tz = (v / 16.0 for v in disp.get("translation", [0, 0, 0]))
+    sc = disp.get("scale", [1, 1, 1])
+    R = _rot_xyz(rx, ry, rz)
+    T = np.array([sgn * 0.56 + sgn * tx, -0.52 + ty, -0.72 + tz])
+    P, N, C, U0, U1 = [], [], [], [], []
+    for el in base.get("elements", []):
+        for face, fd in el.get("faces", {}).items():
+            ref = fd.get("texture", "")
+            for _ in range(4):
+                ref = texvars.get(ref, ref)
+            tn = "../" + ref.split(":")[-1]
+            rect = atlas.rect(tn)
+            uv = fd.get("uv") or mcscene._default_uv(face, el["from"], el["to"])
+            corners, st = mcscene._face_corners(face, el["from"], el["to"])
+            bright = fd.get("forge_data", {}).get("block_light", 0) >= 15
+            lm = (248.0 / 256.0, 248.0 / 256.0) if bright else light
+            n = R @ np.array(mcscene.FACES[face], np.float64)
+            quad = []
+            for c, (s_, t_) in zip(corners, st):
+                u = (uv[0] + (uv[2] - uv[0]) * s_) / 16.0
+                v = (uv[1] + (uv[3] - uv[1]) * t_) / 16.0
+                qq = np.array([(c[0] / 16.0 - 0.5) * sc[0], (c[1] / 16.0 - 0.5) * sc[1], (c[2] / 16.0 - 0.5) * sc[2]])
+                quad.append((R @ qq + T, (rect[0] + (rect[2] - rect[0]) * u, rect[1] + (rect[3] - rect[1]) * v)))
+            for i in (0, 1, 2, 0, 2, 3):
+                P.append(quad[i][0]); N.append(n); C.append((1.0, 1.0, 1.0, 1.0)); U0.append(quad[i][1]); U1.append(lm)
+    f = lambda a_, k: np.array(a_, np.float32).reshape(-1, k)
+    return dict(pos=f(P, 3), nrm=f(N, 3), col=f(C, 4), uv0=f(U0, 2), uv1=f(U1, 2))
 
 
 def hand_mesh(atlas, item, side, light):
-    """the held flashlight in view space (Iris draws it with its own projection)"""
-    if item != FLASHLIGHT:
-        return None
+    """the held item in view space (Iris draws it with its own projection): the art's model when it
+    exists, else a stand-in: the phone (its screen drawn full-bright, toward the eye), the open
+    laptop, the lighter with its flame, the knife"""
+    real = held_item_mesh(atlas, item, side, light)
+    if real is not None:
+        return real
     sx = 1.0 if side > 0 else -1.0
-    x0, x1, y0, y1, z0, z1 = 0.20, 0.30, -0.36, -0.27, -0.62, -0.30
-    if sx < 0:
-        x0, x1 = -x1, -x0
+    full = (248.0 / 256.0, 248.0 / 256.0)
 
     def solid(name, rgb):
-        if name not in atlas.rects:
-            tile = np.zeros((16, 16, 4), np.uint8)
-            tile[..., :3] = rgb
-            tile[..., 3] = 255
-            atlas._load = (lambda orig, nm, tl: (lambda n: tl if n == nm else orig(n)))(atlas._load, name, tile)
-        return atlas.rect(name)
-    body = solid("hand_torch", (40, 40, 44))
-    lens = solid("hand_lens", (250, 240, 210))
-    q = box_quads(x0, y0, z0, x1, y1, z1, "hand_torch", lambda n: body)
-    q.append(((0, 0, -1), [(x1, y1, z0 - 0.001), (x1, y0, z0 - 0.001), (x0, y0, z0 - 0.001), (x0, y1, z0 - 0.001)], lens))
-    return quads_to_arrays(q, light)
+        return atlas.rect(_solid_tile(atlas, name, rgb, 0.04, 11))
+
+    quads = []                      # (normal, corners, rect, lightmap)
+
+    def boxq(x0, y0, z0, x1, y1, z1, rect, lm, screen_face=None, screen_rect=None):
+        if sx < 0:
+            x0, x1 = -x1, -x0
+        for n, cs, r in box_quads(x0, y0, z0, x1, y1, z1, "x", lambda _n: rect):
+            if screen_face is not None and n == screen_face:
+                quads.append((n, cs, screen_rect, full))
+            else:
+                quads.append((n, cs, r, lm))
+    if item in (PHONE, PHONE_LIGHT):
+        body = solid("hand_phone", (30, 30, 34))
+        scr = atlas.rect(_solid_tile(atlas, "hand_phone_screen", (92, 130, 190), 0.10, 12))
+        boxq(0.16, -0.40, -0.48, 0.25, -0.24, -0.46, body, light, (0, 0, 1), scr)
+        if item == PHONE_LIGHT:
+            led = solid("hand_phone_led", (250, 250, 245))
+            boxq(0.225, -0.27, -0.485, 0.24, -0.255, -0.48, led, full)
+    elif item == LAPTOP:
+        body = solid("hand_laptop", (60, 60, 64))
+        scr = atlas.rect("laptop_screen")
+        boxq(-0.26, -0.52, -0.70, 0.26, -0.50, -0.34, body, light)
+        boxq(-0.26, -0.50, -0.71, 0.26, -0.18, -0.69, body, light, (0, 0, 1), scr)
+    elif item == LIGHTER:
+        body = solid("hand_lighter", (170, 40, 36))
+        flame = solid("hand_flame", (255, 200, 90))
+        boxq(0.20, -0.36, -0.46, 0.25, -0.26, -0.43, body, light)
+        boxq(0.215, -0.26, -0.452, 0.235, -0.215, -0.438, flame, full)
+    elif item == KNIFE:
+        blade = solid("hand_blade", (200, 204, 208))
+        handle = solid("hand_handle", (40, 30, 24))
+        boxq(0.22, -0.42, -0.50, 0.25, -0.34, -0.47, handle, light)
+        boxq(0.225, -0.34, -0.52, 0.245, -0.12, -0.50, blade, light)
+    else:
+        return None
+    P, N, C, U0, U1 = [], [], [], [], []
+    for n, cs, r, lm in quads:
+        uvs = [(r[0], r[1]), (r[0], r[3]), (r[2], r[3]), (r[2], r[1])]
+        for i in (0, 1, 2, 0, 2, 3):
+            P.append(cs[i]); N.append(n); C.append((1.0, 1.0, 1.0, 1.0)); U0.append(uvs[i]); U1.append(lm)
+    f = lambda a_, k: np.array(a_, np.float32).reshape(-1, k)
+    return dict(pos=f(P, 3), nrm=f(N, 3), col=f(C, 4), uv0=f(U0, 2), uv1=f(U1, 2))
 
 
 # =====================================================================================
@@ -469,7 +582,7 @@ class Renderer:
         self.out_tex = tex2d(w, h, glctx.GL_RGBA8, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE)
         sr = self.shadow_res
         self.shadow_depth = tex2d(sr, sr, glctx.GL_DEPTH_COMPONENT32F, glctx.GL_DEPTH_COMPONENT, glctx.GL_FLOAT)
-        if folder != HIDAMARI:
+        if folder != SHIRAKABA:
             gl.glTexParameteri(glctx.GL_TEXTURE_2D, glctx.GL_TEXTURE_COMPARE_MODE, glctx.GL_COMPARE_REF_TO_TEXTURE)
             gl.glTexParameteri(glctx.GL_TEXTURE_2D, glctx.GL_TEXTURE_COMPARE_FUNC, glctx.GL_LEQUAL)
         self.shadow_color = tex2d(sr, sr, glctx.GL_RGBA8, glctx.GL_RGBA, glctx.GL_UNSIGNED_BYTE, filt=glctx.GL_NEAREST)
@@ -703,7 +816,7 @@ class Renderer:
         bl, sl = world.light_at(*[int(math.floor(v)) for v in cam])
         held, held2 = shot.get("held", 0), shot.get("held2", 0)
         t = shot.get("t", 123.4)
-        finder = FINDER in (held, held2)
+        cctv = bool(shot.get("cctv", False))
         U = {
             "gbufferModelView": view, "gbufferModelViewInverse": np.linalg.inv(view).astype(np.float32),
             "gbufferProjection": proj, "gbufferProjectionInverse": np.linalg.inv(proj).astype(np.float32),
@@ -711,8 +824,8 @@ class Renderer:
             "cameraPosition": tuple(cam), "sunPosition": tuple(sun), "moonPosition": tuple(moon), "shadowLightPosition": tuple(light),
             "fogColor": (0.02, 0.025, 0.03), "viewWidth": float(w), "viewHeight": float(h), "aspectRatio": w / h,
             "near": 0.05, "far": 192.0, "frameTimeCounter": t, "frameTime": shot.get("frameTime", 1.0 / 30.0), "rainStrength": shot.get("fear", 0.0),
-            "thunderStrength": shot.get("danger", 0.0), "nightVision": 1.0 if finder else 0.0,
-            "blindness": shot.get("flash", 0.0), "darknessFactor": shot.get("darkness", 0.0),
+            "thunderStrength": shot.get("danger", 0.0), "nightVision": 1.0 if cctv else 0.0,
+            "blindness": shot.get("eyes", 0.0), "darknessFactor": shot.get("darkness", 0.0),
             "darknessLightFactor": shot.get("darkness", 0.0) * 0.3,
             "frameCounter": int(t * 60), "worldTime": int(world_time), "isEyeInWater": 0, "heldItemId": held, "heldItemId2": held2,
             "heldBlockLightValue": 0, "heldBlockLightValue2": 0, "renderStage": 0, "entityId": 0, "blockEntityId": 0,
@@ -752,7 +865,7 @@ class Renderer:
             gl.glDepthFunc(glctx.GL_LEQUAL)
             gl.glDepthMask(1)
             gl.glDisable(glctx.GL_BLEND)
-            cc = (0.0, 0.0, 0.0, 0.0) if self.folder == HIDAMARI else (1.0, 1.0, 1.0, 1.0)
+            cc = (0.0, 0.0, 0.0, 0.0) if self.folder == SHIRAKABA else (1.0, 1.0, 1.0, 1.0)
             gl.glClearColor(*cc)
             gl.glClear(glctx.GL_COLOR_BUFFER_BIT | glctx.GL_DEPTH_BUFFER_BIT)
             gl.glUseProgram(sp.id)
@@ -775,23 +888,18 @@ class Renderer:
         gl.glDepthFunc(glctx.GL_LEQUAL)
         self.gbuffer_draw("gbuffers_terrain", U, meshes["solid"], view, proj, cam)
         for fig in figures:
-            if fig["translucent"]:
-                continue
-            self.gbuffer_draw("gbuffers_entities", U, fig["body"], view, proj, cam, extra={"entityId": fig["id"]})
-        # the spirits: translucent entities (alpha = what the naked eye sees; 1 in the finder)
-        for fig in figures:
-            if not fig["translucent"]:
-                continue
-            gl.glDepthMask(1)
-            self.gbuffer_draw("gbuffers_entities_translucent", U, fig["body"], view, proj, cam, blend="translucent",
+            prog = "gbuffers_entities_translucent" if fig["translucent"] else "gbuffers_entities"
+            self.gbuffer_draw(prog, U, fig["body"], view, proj, cam, blend="translucent" if fig["translucent"] else None,
                               extra={"entityId": fig["id"]})
-            gl.glDepthMask(0)
-            self.gbuffer_draw("gbuffers_spidereyes", U, fig["eyes"], view, proj, cam, blend="additive", extra={"entityId": fig["id"]})
-            gl.glDepthMask(1)
+            if fig["eyes"] is not None:
+                gl.glDepthMask(0)
+                self.gbuffer_draw("gbuffers_spidereyes", U, fig["eyes"], view, proj, cam, blend="additive", extra={"entityId": fig["id"]})
+                gl.glDepthMask(1)
         hand_proj = np.diag([1.0, 1.0, 0.125, 1.0]).astype(np.float32) @ perspective(70.0, w / h, 0.05, 192.0 * 4)
         hl = ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0)
         for item, side in ((held, 1), (held2, -1)):
-            hm = None if finder else hand_mesh(self.atlas_obj, item, side, hl)   # the mod hides the hand in the finder
+            # a camera feed shows no hand (the camera entity is not the player)
+            hm = None if cctv else hand_mesh(self.atlas_obj, item, side, hl)
             if hm is not None:
                 self.upload_atlas()
                 self.gbuffer_draw("gbuffers_hand", U, hm, np.eye(4, dtype=np.float32), hand_proj, (0, 0, 0), extra={"currentRenderedItemId": item})
@@ -833,57 +941,77 @@ def mc_dir(yaw, pitch):
     return (-math.sin(y) * math.cos(p), -math.sin(p), math.cos(y) * math.cos(p))
 
 
-EYE = 65 + 1.62
+EYE = 70 + 1.62          # standing in room 203
+EYE_CROUCH = 70 + 1.20   # crouched in the closet
 
 
 def shot(x, z, yaw, pitch, **kw):
-    d = dict(eye=(x, kw.pop("y", EYE), z), look=mc_dir(yaw, pitch), folder=HIDAMARI)
+    d = dict(eye=(x, kw.pop("y", EYE), z), look=mc_dir(yaw, pitch), folder=SHIRAKABA)
     d.update(kw)
     return d
 
 
-# circuits: the start of the game (dining off, kitchen off, restroom on, sign on, register night lights)
-START = {}
+# the world's state per shot (apartment_scene.build): tv / tv_channel / tv_light / fusuma / curtains /
+# bath / street / lights / laptop / desk_lamp / swing. Entities: (kind, x, y, z, yaw, pose).
+# Placements as the world builds them: the TV on its stand at (27, 70..71, 9) facing west, the closet
+# x 23 z 10..12 (its fusuma in its own column's east edge; a crack opens at z 10.0..10.25), the
+# hanging lamp (25, 72, 11), curtains z 12 (x 24, 25 drawn, 26 open), the tub (32, 70, 1..2), the
+# street lamp (26, 71, 17) in front of the balconies, the vending machine (0, 65, 18).
+DOLL_TATAMI = (DOLL, 24.9, 70.0, 10.3, -60.0, "stand")
 SHOTS = {
-    # the dark dining room: exit signs, the drink bar, the cake case, sodium through the windows
-    "r_dining_dark": shot(21.5, 14.5, -35.0, 8.0, fear=0.2),
-    "r_dining_beam": shot(21.5, 14.5, -35.0, 8.0, fear=0.2, held=FLASHLIGHT),
-    "r_dining_bar": shot(24.5, 16.5, 132.0, 10.0, fear=0.2),
-    "r_register": shot(19.5, 23.5, 95.0, 8.0, fear=0.2),
-    # the roof sign outside, falling in through the blinds onto the booths by the windows
-    "r_blinds": shot(24.5, 24.5, -15.0, 28.0, fear=0.2),
-    "r_dining_lit": shot(21.5, 14.5, -35.0, 8.0, fear=0.0, circuits=dict(dining=True)),
-    # the wet lot at night: the pole sign, the vending machines, the sodium lamps, puddles
-    "r_lot": shot(28.5, 44.5, 150.0, 4.0, fear=0.1),
-    "r_lot_sign": shot(26.5, 38.5, -70.0, -6.0, fear=0.1),
-    "r_lot_vending": shot(13.5, 40.5, 155.0, 10.0, fear=0.1),
-    # the same through the finder: the lights must keep their faces (no blown-out boxes)
-    "r_lot_finder": shot(13.5, 40.5, 155.0, 10.0, fear=0.1, held=FINDER),
-    # the kitchen under its fluorescent tubes: steel, the blue flames, the heat lamp
-    "r_kitchen": shot(31.5, 7.5, 125.0, 12.0, fear=0.1, circuits=dict(kitchen=True)),
-    # the women's restroom: the dark mirror over the sinks, the cavity and the woman behind it
-    "r_restroom": shot(10.5, 20.5, 180.0, 6.0, fear=0.35, spirits=[(MIRROR_WOMAN, 10.5, 65, 13.5, 0.0, 0.25)]),
-    "r_trail": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, spirits=[(WAITRESS, 23.2, 65, 18.3, 270.0, 1.0)],
-                    sequence=dict(frames=8, move=(-0.22, 0.0, 0.0), dt=1.0 / 30.0)),
-    "r_restroom_finder": shot(10.5, 20.5, 180.0, 6.0, fear=0.35, held=FINDER, spirits=[(MIRROR_WOMAN, 10.5, 65, 13.5, 0.0, 1.0)]),
-    # the finder (reishi) on the waitress between the tables, the flash frame
-    "r_finder": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 1.0)]),
-    "r_finder_lamp": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, held2=FLASHLIGHT, spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 1.0)]),
-    "r_flash": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, flash=1.0, spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 1.0)]),
-    "r_flash_decay": shot(21.5, 14.5, -20.0, 6.0, fear=0.3, held=FINDER, flash=0.35, spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 1.0)]),
-    # the naked eye: the waitress faint, the visitor invisible (only the haze)
-    "r_spirit_eye": shot(21.5, 14.5, -20.0, 6.0, fear=0.4, held=FLASHLIGHT,
-                         spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 0.3), (VISITOR, 20.6, 65, 17.6, 160.0, 0.0)]),
-    # fear, danger, caught
-    "r_fear": shot(21.5, 14.5, -35.0, 8.0, fear=0.95, danger=0.15, held=FLASHLIGHT, t=131.7),
-    "r_danger": shot(21.5, 14.5, -35.0, 8.0, fear=0.8, danger=1.0, held=FLASHLIGHT, t=126.02,
-                     spirits=[(WAITRESS, 23.2, 65, 18.3, 200.0, 0.9)]),
-    "r_caught": shot(21.5, 14.5, -35.0, 8.0, fear=0.9, darkness=0.65, held=FLASHLIGHT),
-    # the visitor's profile through the south window, from the lot (a photo window)
-    "r_window_visitor": shot(31.5, 35.5, 160.0, 4.0, fear=0.3, spirits=[(VISITOR, 33.0, 65, 28.5, 90.0, 1.0)], held=FINDER),
-    # other dimensions: the root programs on the same place by day / the overworld at night
-    "o_day": dict(shot(28.5, 44.5, 150.0, 4.0), folder="", time=6000),
-    "o_night": dict(shot(28.5, 44.5, 150.0, 4.0, held=FLASHLIGHT), folder="", time=18000),
+    # ---- after three: the tatami room lit only by the TV's static ------------------------------
+    "tv_room": shot(26.9, 12.4, 112.0, 14.0, fear=0.25),
+    "tv_room_tv": shot(24.6, 11.6, -112.0, 8.0, y=71.25, fear=0.3),
+    "tv_room_doll": shot(26.9, 12.4, 112.0, 14.0, fear=0.55, figures=[DOLL_TATAMI]),
+    # before three: the hanging lamp on, the TV off
+    "lit_room": shot(26.9, 12.4, 112.0, 14.0, state=dict(tv=False, lights=("tatami",))),
+    "lamp_swing": shot(26.9, 12.4, 112.0, 14.0, fear=0.5, t=124.1, state=dict(tv=False, lights=("tatami",), swing=True)),
+    # the TV without any vanilla light of its own (robustness), its other channels (a dark room, a face)
+    "tv_nolight": shot(24.6, 11.6, -112.0, 8.0, y=71.25, fear=0.3, state=dict(tv_light=0)),
+    "tv_channel1": shot(24.6, 11.6, -112.0, 8.0, y=71.25, fear=0.3, state=dict(tv_channel=1)),
+    "tv_channel2": shot(24.6, 11.6, -112.0, 8.0, y=71.25, fear=0.3, state=dict(tv_channel=2)),
+    # ---- the closet: the crack of the fusuma - the only bright thing; shut, with the laptop ------
+    "closet_crack": shot(23.46, 10.22, -101.0, 2.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=1)),
+    "closet_peek": shot(23.5, 10.5, -90.0, 2.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=1)),
+    "closet_shut_laptop": shot(23.4, 11.5, -90.0, 22.0, y=EYE_CROUCH, fear=0.55, held=LAPTOP, state=dict(fusuma=0)),
+    "closet_dark": shot(23.4, 11.5, -90.0, 6.0, y=EYE_CROUCH, fear=0.55, state=dict(fusuma=0)),
+    # ---- the bathroom: the deep tub filled; its light on, then dark with the phone's LED --------------
+    "bath": shot(31.3, 2.75, -150.0, 38.0, fear=0.4, state=dict(bath=2, lights=("bath",))),
+    "bath_phone": shot(31.3, 2.75, -150.0, 38.0, fear=0.5, held=PHONE_LIGHT, state=dict(bath=2)),
+    # ---- the camera app: IR feeds -------------------------------------------------------------------
+    "cctv_tatami": shot(27.5, 12.5, 106.0, 20.0, y=72.3, cctv=True, fear=0.5, figures=[DOLL_TATAMI]),
+    "cctv_bath": shot(31.3, 2.6, -138.0, 46.0, y=72.4, cctv=True, fear=0.6,
+                      figures=[(DOLL, 32.5, 70.66, 1.8, 90.0, "float"), (WOMAN, 31.45, 70.0, 1.25, 0.0, "stand")]),
+    "cctv_woman": shot(27.5, 12.5, 106.0, 16.0, y=72.3, cctv=True, fear=0.6, t=130.9,
+                       figures=[(WOMAN, 24.45, 70.0, 9.45, -45.0, "stand")]),
+    "cctv_glitch": shot(27.5, 12.5, 106.0, 20.0, y=72.3, cctv=True, fear=0.8, danger=0.9, t=131.62,
+                        figures=[(DOLL, 26.2, 70.0, 11.6, -50.0, "stand")]),
+    # the doll moving between two frames (stop-motion): the interlaced fields comb its outline
+    "cctv_motion": shot(27.5, 12.5, 106.0, 20.0, y=72.3, cctv=True, fear=0.6, figures=[DOLL_TATAMI],
+                        sequence=dict(frames=3, move=(0.10, 0.0, 0.06), dt=1.0 / 30.0)),
+    "cctv_lit": shot(27.5, 12.5, 106.0, 20.0, y=72.3, cctv=True, fear=0.2, state=dict(tv=False, lights=("tatami",))),
+    # ---- eyes closed at the TV (counting to ten); in the dark ------------------------------------------
+    "eyes_tv": shot(25.9, 9.5, -90.0, 4.0, y=71.2, fear=0.5, eyes=1.0),
+    "eyes_dark": shot(25.9, 9.5, -90.0, 4.0, y=71.2, fear=0.5, eyes=1.0, state=dict(tv=False)),
+    # ---- the rain: through the balcony door, the curtains drawn (sodium through them), the street --
+    "window_rain": shot(25.9, 11.2, -12.0, 2.0, fear=0.2, state=dict(tv=False)),
+    "curtains_sodium": shot(25.6, 10.4, 18.0, 6.0, fear=0.2, state=dict(curtains=True, tv=False)),
+    # close to the balcony door where the curtain is open: the drops running down, the street lamp in them
+    "window_close": shot(26.45, 12.25, 8.0, 2.0, fear=0.2),
+    "street": shot(20.5, 21.5, -112.0, -6.0, y=66.62, fear=0.1),
+    "corridor": shot(20.5, -2.0, -90.0, 4.0, fear=0.2),
+    # ---- the hand lights: the phone's LED in the dark hall, the lighter in the kitchen -----------------
+    "phone_hall": shot(26.5, 7.4, 180.0, 10.0, fear=0.35, held=PHONE_LIGHT),
+    "lighter_dk": shot(25.4, 6.2, 80.0, 18.0, fear=0.35, held=LIGHTER),
+    # the entities in the lit room (checking the stand-ins): the doll, the woman, a camera
+    "figures_lit": shot(26.9, 12.4, 112.0, 14.0, state=dict(tv=False, lights=("tatami",)),
+                        figures=[DOLL_TATAMI, (WOMAN, 24.6, 70.0, 11.2, -110.0, "stand"), (CAMERA, 25.4, 70.4, 11.4, 60.0, "stand")]),
+    # ---- fear, danger, caught ---------------------------------------------------------------------
+    "fear_danger": shot(26.9, 12.4, 112.0, 14.0, fear=0.95, danger=1.0, t=126.02, figures=[DOLL_TATAMI]),
+    "caught": shot(26.9, 12.4, 112.0, 14.0, fear=0.9, darkness=0.65, figures=[DOLL_TATAMI]),
+    # other dimensions: the root programs on the same street by day / at night
+    "o_day": dict(shot(20.5, 21.5, -112.0, -6.0, y=66.62), folder="", time=6000),
+    "o_night": dict(shot(20.5, 21.5, -112.0, -6.0, y=66.62), folder="", time=18000),
 }
 
 
@@ -952,16 +1080,16 @@ def main():
     ver, ren = glctx.init()
     print("GL:", ver, "|", ren)
     atlas = mcscene.Atlas(os.path.join(mcscene.ASSETS, "textures", "block"))
-    models = mcscene.Models(os.path.join(mcscene.ASSETS, "models", "block"), atlas, extra=hidamari_scene.STANDINS)
+    models = mcscene.Models(os.path.join(mcscene.ASSETS, "models", "block"), atlas, extra=apartment_scene.STANDINS)
     ids = mcscene.BlockIds()
     names = args.shots.split(",") if args.shots else list(SHOTS)
     worlds = {}
 
-    def get_world(circuits):
-        key = tuple(sorted((circuits or {}).items()))
+    def get_world(state):
+        key = tuple(sorted((state or {}).items()))
         if key not in worlds:
             t0 = time.time()
-            wd = hidamari_scene.build(circuits)
+            wd = apartment_scene.build(state)
             wd.compute_light()
             meshes = wd.mesh(models, ids)
             worlds[key] = (wd, meshes)
@@ -976,12 +1104,12 @@ def main():
         sh = dict(SHOTS[name])
         if args.t is not None:
             sh["t"] = args.t
-        wd, meshes = get_world(sh.get("circuits"))
+        wd, meshes = get_world(sh.get("state"))
         figures = []
-        for (kind, x, y, z, yaw, alpha) in sh.get("spirits", []):
-            bl, sl = wd.light_at(int(math.floor(x)), y + 1, int(math.floor(z)))
-            body, eyes = figure_mesh(atlas, kind, x, y, z, yaw, ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0), alpha)
-            figures.append(dict(id=kind, body=body, eyes=eyes, translucent=kind != MEDIUM))
+        for (kind, x, y, z, yaw, pose) in sh.get("figures", []):
+            bl, sl = wd.light_at(int(math.floor(x)), int(math.floor(y)) + 1, int(math.floor(z)))
+            body, eyes = figure_mesh(atlas, kind, x, y, z, yaw, ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0), 1.0, pose)
+            figures.append(dict(id=kind, body=body, eyes=eyes, translucent=False))
         folder = sh["folder"]
         if folder not in renderers:
             renderers[folder] = Renderer(folder, w, h, overrides, atlas)
@@ -990,17 +1118,20 @@ def main():
         timing = {} if args.timing else None
         t0 = time.time()
         seq = sh.get("sequence")
+        if seq is None and sh.get("cctv"):
+            # a feed shows last frame's field on every other line: render a frame before (a still scene)
+            seq = dict(frames=2, move=(0.0, 0.0, 0.0), dt=1.0 / 30.0)
         if seq:
-            # frames with the spirits moving: colortex9 (the afterimage) is kept between them
+            # frames with the figures moving: colortex9 (the previous frame) is kept between them
             r._hist_ok = False
-            base = list(sh.get("spirits", []))
+            base = list(sh.get("figures", []))
             for f in range(seq["frames"]):
                 figs = []
-                for (kind, x, y, z, yaw, alpha) in base:
+                for (kind, x, y, z, yaw, pose) in base:
                     mx, my, mz = (v * (f - seq["frames"] + 1) for v in seq["move"])
-                    bl, sl = wd.light_at(int(math.floor(x + mx)), y + 1, int(math.floor(z + mz)))
-                    body, eyes = figure_mesh(atlas, kind, x + mx, y + my, z + mz, yaw, ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0), alpha)
-                    figs.append(dict(id=kind, body=body, eyes=eyes, translucent=True))
+                    bl, sl = wd.light_at(int(math.floor(x + mx)), int(math.floor(y)) + 1, int(math.floor(z + mz)))
+                    body, eyes = figure_mesh(atlas, kind, x + mx, y + my, z + mz, yaw, ((bl * 16 + 8) / 256.0, (sl * 16 + 8) / 256.0), 1.0, pose)
+                    figs.append(dict(id=kind, body=body, eyes=eyes, translucent=False))
                 r.upload_atlas()
                 sh2 = dict(sh, t=sh.get("t", 123.4) + f * seq["dt"])
                 img, st = r.render(sh2, wd, meshes, figs, timing, history_frames=2 if f > 0 else 1)
@@ -1018,7 +1149,7 @@ def main():
             write_png(os.path.join(args.out, "%s_ct%d.png" % (name, idx)), np.clip(buf / m * 255.0, 0, 255).astype(np.uint8))
             np.save(os.path.join(args.out, "%s_ct%d.npy" % (name, idx)), buf)
             print("    colortex%d max %.4f" % (idx, m))
-        if args.dump_emap and folder == HIDAMARI:
+        if args.dump_emap and folder == SHIRAKABA:
             em = r.read_shadow_color()
             write_png(os.path.join(args.out, name + "_emap.png"), np.ascontiguousarray(em[::-1, :, :3]))
     if len(paths) > 1:

@@ -1,14 +1,15 @@
 // =====================================================================================
-//  HitoriShaders - composite2: the air goes onto the picture, the spirits' traces,
-//  the finder's afterimage, bloom bright-pass
+//  HitoriShaders - composite2: the air goes onto the picture, the rain, the haze round the
+//  woman on a feed, the frame history, bloom bright-pass
 //   * colortex2 (in-scatter, transmittance) is blurred with a 4x4 depth-aware filter that
 //     cancels the Bayer dither of the march; colour = colour * T + in-scatter.
-//   * where a spirit stands (colortex8) the picture wavers like heat haze - even when the
-//     eye cannot see it (keep it subtle: the player should ALMOST see something) - and its
-//     colours split.
-//   * the finder's afterimage: the spirits' cold glow fades slowly in colortex9 (kept
-//     between frames), so a moving spirit drags a short trail.
-//   colortex0 -> colortex0 (fogged), colortex3 (bloom source), colortex9 (afterimage)
+//   * the dust in the phone's light (sharp, after the blur), the rain falling outside where the
+//     street lamp catches it.
+//   * on a camera feed the air wavers where the woman stands (colortex8) - only a camera sees her.
+//   * the picture is kept for the next frame (colortex9) and last frame's is handed to final
+//     (colortex2, free after this pass): the feed's interlaced fields and its lag.
+//   colortex0 -> colortex0 (fogged), colortex3 (bloom source), colortex9 (this frame),
+//   colortex2 (the previous frame)
 // =====================================================================================
 #include "/lib/header.glsl"
 
@@ -52,43 +53,31 @@ void main() {
     vec2 uv = texcoord;
     vec2 px = 1.0 / vec2(viewWidth, viewHeight);
     float t = frameTimeCounter;
+    vec4 prevFrame = texture(colortex9, texcoord);
 
-    // ---- the spirits: heat haze where one stands, a colour split around it ----------------
-    vec4 sp = texture(colortex8, uv);
+    // ---- the woman on a feed: the air round her wavers ---------------------------------------
+#ifdef APPARITION_HAZE_ON
     float hazeAmt = 0.0;
-    float splitAmt = 0.0;
-#ifdef SPIRIT_HAZE_ON
-    // dilate a little: the air around the body wavers too
-    vec4 s1 = texture(colortex8, uv + vec2(6.0, 0.0) * px);
-    vec4 s2 = texture(colortex8, uv - vec2(6.0, 0.0) * px);
-    vec4 s3 = texture(colortex8, uv + vec2(0.0, 6.0) * px);
-    vec4 s4 = texture(colortex8, uv - vec2(0.0, 6.0) * px);
-    hazeAmt = max(sp.a, (s1.a + s2.a + s3.a + s4.a) * 0.18) * max(max(sp.r, s1.r), max(s2.r, max(s3.r, s4.r)));
-    if (hazeAmt > 0.0) {
-        vec2 q = uv * vec2(aspectRatio, 1.0) * 26.0;
-        vec2 w = vec2(vnoise2(q + vec2(0.0, -t * 1.7)), vnoise2(q * 1.3 + vec2(5.1, -t * 2.1))) - 0.5;
-        uv += w * hazeAmt * 0.0042 * (1.0 + 0.6 * fear());
+    if (cctv() > 0.5) {
+        vec4 s0 = texture(colortex8, uv);
+        vec4 s1 = texture(colortex8, uv + vec2(7.0, 0.0) * px);
+        vec4 s2 = texture(colortex8, uv - vec2(7.0, 0.0) * px);
+        vec4 s3 = texture(colortex8, uv + vec2(0.0, 7.0) * px);
+        vec4 s4 = texture(colortex8, uv - vec2(0.0, 7.0) * px);
+        hazeAmt = max(s0.a, (s1.a + s2.a + s3.a + s4.a) * 0.22);
+        if (hazeAmt > 0.0) {
+            vec2 q = uv * vec2(aspectRatio, 1.0) * 30.0;
+            vec2 w = vec2(vnoise2(q + vec2(0.0, -t * 1.9)), vnoise2(q * 1.3 + vec2(5.1, -t * 2.3))) - 0.5;
+            uv += w * hazeAmt * 0.0050 * (1.0 + 0.6 * fear());
+        }
     }
-    splitAmt = max(sp.r, max(max(s1.r, s2.r), max(s3.r, s4.r)));
 #endif
 
     vec3 color = texture(colortex0, uv).rgb;
-#ifdef SPIRIT_HAZE_ON
-    if (splitAmt > 0.0) {
-        // the spirit's colours do not quite line up (strongest at its edges, where the mask changes)
-        vec2 dir = vec2(1.0, 0.25) * px * (2.0 + 2.0 * fear() + 1.2 * finderMode());
-        float edge = abs(texture(colortex8, uv + dir * 2.0).r - texture(colortex8, uv - dir * 2.0).r);
-        float k = splitAmt * (0.35 + 0.65 * edge) * (0.25 + 0.75 * max(sp.b, finderMode()));
-        vec3 cr = texture(colortex0, uv + dir * 1.5).rgb;
-        vec3 cb = texture(colortex0, uv - dir * 1.5).rgb;
-        color = mix(color, vec3(cr.r, color.g, cb.b), saturate(k));
-    }
-#endif
-
     vec4 aux = texture(colortex1, uv);
     float depth = texture(depthtex0, uv).r;
     int frontMat = int(floor(texture(colortex5, uv).a * 255.0 + 0.5));
-    if (frontMat == MAT_WINDOW || frontMat == MAT_GLASS_SMALL) depth = texture(depthtex1, uv).r;
+    if (frontMat == MAT_GLASS_RAIN || frontMat == MAT_GLASS_SMALL) depth = texture(depthtex1, uv).r;
     bool sky = depth >= 1.0;
     bool hand = isHandDepth(depth) || aux.b > 0.75;
 
@@ -106,36 +95,32 @@ void main() {
     } else if (!hand) {
         vec4 fog = blurredFog(uv, depth);
         float T = fog.a;
-        T = mix(T, pow(T, 0.45), aux.r);             // lamps glow on, deep into the mist
+        T = mix(T, pow(T, 0.45), aux.r);             // lamps glow on, deep into the haze
         color = color * T + fog.rgb;
+        vec3 P = viewToPlayer(screenToView(uv, sky ? 1.0 : depth));
+        float len = max(length(P), 1e-4);
+        float dist = sky ? 4096.0 : len;
 #ifdef DUST_MOTES
-        if (anyHandLight()) {
-            vec3 P = viewToPlayer(screenToView(uv, sky ? 1.0 : depth));
-            float len = max(length(P), 1e-4);
-            color += handLightMotes(P / len, sky ? 4096.0 : len);
-        }
+        if (anyHandLight()) color += handLightMotes(P / len, dist);
+#endif
+#ifdef RAIN_STREAKS_ON
+        color += rainStreaks(P / len, dist) * mix(1.0, T, 0.5);
 #endif
     }
     color = max(color, vec3(0.0));
+    // the lighter's flame on its hood (the art's lighter has none)
+    color += lighterFlameSprite(texcoord);
 
-    // ---- the finder's afterimage --------------------------------------------------------
-    vec4 hist = vec4(0.0);
-#ifdef AFTERIMAGE_ON
-    vec3 prev = texture(colortex9, texcoord).rgb;
-    float decay = exp(-clamp(frameTime, 0.0, 0.25) / 0.11);
-    vec3 now = vec3(0.55, 0.80, 1.00) * sp.g;
-    hist = vec4(max(now, prev * decay * finderMode()), 1.0);
-#endif
-
-    // ---- bloom source: emissive surfaces (lamps, signs, embers, the spirits in the finder)
-    float fm = finderMode();
-    float thr = mix(1.10, 0.90, fm);
-    vec3 bloom = color * aux.r * 0.85 + max(color - vec3(thr), vec3(0.0)) * 0.30;
+    // ---- bloom source: emissive surfaces (the TV's screen, the lamps, the REC LED) -------------
+    float cam = cctv();
+    float thr = mix(1.10, 0.55, cam);                // a camera's sensor blooms early
+    vec3 bloom = color * aux.r * mix(0.85, 1.10, cam) + max(color - vec3(thr), vec3(0.0)) * mix(0.30, 0.55, cam);
     bloom = min(bloom, vec3(32.0));
 
-    /* RENDERTARGETS: 0,3,9 */
+    /* RENDERTARGETS: 0,3,9,2 */
     gl_FragData[0] = vec4(color, 1.0);
     gl_FragData[1] = vec4(bloom, 1.0);
-    gl_FragData[2] = hist;
+    gl_FragData[2] = vec4(color, 1.0);
+    gl_FragData[3] = prevFrame;
 }
 #endif

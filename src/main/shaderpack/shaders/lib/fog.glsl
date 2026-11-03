@@ -1,16 +1,18 @@
 // =====================================================================================
-//  HitoriShaders - fog
-//   fogDensity()      extinction per block. HIDAMARI: outside a blue-grey haze and a low,
-//                     drifting mist over the wet lot and the fields (rain just stopped);
-//                     inside (under a roof: the emitter map's cover tile) a little dust
-//   fogMarch()        the view ray through the air: ambient fog light, every lamp's glow in
-//                     the mist (analytic in-scatter of the light table), the flash
-//   beamMarch()       the flashlight's cone clipped to the ray: the visible beam, dust motes
+//  HitoriShaders - the air
+//   fogDensity()      extinction per block. SHIRAKABA: outside a grey rain haze, thicker low
+//                     over the wet street; inside (under a roof: the emitter map's cover tile)
+//                     the old apartment's still, dusty air; almost nothing in the closet
+//   fogMarch()        the view ray through the air: ambient haze light, every lamp's glow in
+//                     the air (analytic in-scatter of the light table: the TV's blue in the dust,
+//                     the sodium halo in the rain), a held flame
+//   beamMarch()       the phone's LED cone clipped to the ray: the visible beam, dust motes
+//   rainStreaks()     the rain falling outside, seen where the street lamp lights it
 // =====================================================================================
 
 // 1 = the point is under the open sky (outside), 0 = under a roof
 float airOutside(vec3 wp) {
-#ifdef WORLD_HIDAMARI
+#ifdef WORLD_SHIRAKABA
     return openSky(wp);
 #else
     return 1.0;
@@ -19,22 +21,24 @@ float airOutside(vec3 wp) {
 
 // extinction per block. noiseAmt 0 = smooth (cheap), 1 = full drifting wisps
 float fogDensityO(vec3 wp, float noiseAmt, float outside) {
-#if defined WORLD_HIDAMARI
-    // the mist hugs the wet ground (the lot is at y 65), thins out above the roofs
+#if defined WORLD_SHIRAKABA
+    // the rain's haze over the street (ground y 65), a little denser low down
     float h = wp.y - 65.0;
-    float mist = 0.060 * exp(-max(h, 0.0) * 0.42) * smoothstep(-6.0, -0.5, h + 0.5);
-    float haze = 0.0125;
+    float mist = 0.030 * exp(-max(h, 0.0) * 0.30);
+    float haze = 0.0150;
     float n = 1.0;
   #ifdef FOG_NOISE
     if (noiseAmt > 0.0) {
-        vec3 wind = vec3(0.16, 0.01, 0.07) * frameTimeCounter;     // creeping across the lot
-        vec3 q = (wp + wind) * vec3(0.10, 0.24, 0.10);
+        vec3 wind = vec3(0.30, -0.10, 0.12) * frameTimeCounter;     // the rain's veils drifting
+        vec3 q = (wp + wind) * vec3(0.12, 0.20, 0.12);
         float v = tnoise3(q) * 0.62 + tnoise3(q * 2.37 + vec3(17.0, 3.0, 11.0)) * 0.38;
-        n = mix(1.0, 0.15 + 1.70 * smoothstep(0.25, 0.85, v), noiseAmt);
+        n = mix(1.0, 0.35 + 1.30 * smoothstep(0.25, 0.85, v), noiseAmt);
     }
   #endif
-    float outdoor = (haze + mist * n) * (1.0 + 0.25 * fear() + 0.20 * danger());
-    float indoor = 0.0040 * (0.6 + 0.4 * n);               // dust in the closed restaurant
+    float outdoor = (haze + mist * n) * (1.0 + 0.20 * fear() + 0.15 * danger());
+    // the rooms: still air with dust in it - only a bright light shows it
+    float indoor = 0.0032 * (0.7 + 0.3 * n);
+    indoor *= 1.0 - 0.75 * closetAt(wp);
     return mix(indoor, outdoor, outside) * FOG_DENSITY;
 #elif defined WORLD_OVERWORLD
     float day = dayFactor();
@@ -53,22 +57,22 @@ float fogDensity(vec3 wp, float noiseAmt) {
     return fogDensityO(wp, noiseAmt, airOutside(wp));
 }
 
-// light the air scatters toward the eye without the lamps: the cloud dome and the town glow
-// outside, almost nothing inside. Radiance an infinitely deep fog bank converges to.
-#ifdef WORLD_HIDAMARI
-// the haze between the eye and the overcast sky: a layer ~SKY_HAZE_DEPTH deep plus the
-// mist column above the eye - thick toward the horizon, thin overhead (fogAnalytic's sky)
+#ifdef WORLD_SHIRAKABA
+// the haze between the eye and the overcast: a layer ~SKY_HAZE_DEPTH deep plus the mist column
+// above the eye - thick toward the horizon, thin overhead (fogAnalytic's sky)
 const float SKY_HAZE_DEPTH = 64.0;
 float skyOpticalDepth(vec3 rd) {
     float h0 = max(cameraPosition.y - 65.0, 0.0);
-    float mistColumn = 0.060 * exp(-h0 * 0.42) / 0.42;
-    float tau = (0.0125 * SKY_HAZE_DEPTH + mistColumn) / max(rd.y, 0.004);
-    return tau * (1.0 + 0.25 * fear() + 0.20 * danger()) * FOG_DENSITY;
+    float mistColumn = 0.030 * exp(-h0 * 0.30) / 0.30;
+    float tau = (0.0150 * SKY_HAZE_DEPTH + mistColumn) / max(rd.y, 0.004);
+    return tau * (1.0 + 0.20 * fear() + 0.15 * danger()) * FOG_DENSITY;
 }
 #endif
 
+// light the air scatters toward the eye without the lamps: the cloud dome and the town glow
+// outside, almost nothing inside. Radiance an infinitely deep fog bank converges to.
 vec3 fogAmbientLightO(vec3 rd, float outside) {
-#if defined WORLD_HIDAMARI
+#if defined WORLD_SHIRAKABA
     return mix(FOG_INDOOR, fogColorFor(rd), outside);
 #else
     return fogColorFor(rd);
@@ -78,10 +82,10 @@ vec3 fogAmbientLight(vec3 rd) {
     return fogAmbientLightO(rd, airOutside(cameraPosition));
 }
 
-// vanilla Darkness (being caught) - and Blindness outside the restaurant, where it is
-// still the vanilla effect. In HIDAMARI blindness is the flash: never close in for it.
+// vanilla Darkness (being caught) - and Blindness outside the apartment's world, where it is
+// still the vanilla effect. In SHIRAKABA blindness is the eyes closing: final does that.
 float closeInTransmittance(float dist) {
-#ifdef WORLD_HIDAMARI
+#ifdef WORLD_SHIRAKABA
     float closeIn = darknessFactor * 0.85;
 #else
     float closeIn = max(darknessFactor * 0.85, blindness);
@@ -96,16 +100,15 @@ float farFade(float dist) {
     return 1.0 - smoothstep(far * 0.72, far * 0.98, dist);
 }
 
-// in-scatter of a point light (the flash, a held torch) on the segment [t0, t1] of the view
-// ray: closed form of its 1 / (d^2 + r^2) falloff
+// in-scatter of a point light (a flame, a screen) on the segment [t0, t1] of the view ray:
+// closed form of its 1 / (1 + (d / halfDist)^2) falloff
 vec3 pointLightInScatter(HandLight L, vec3 rd, float t0, float t1, float sigma) {
     float tc = dot(L.pos, rd);
     float h2 = max(dot(L.pos, L.pos) - tc * tc, 0.0);
-    float r2 = L.type == LIGHT_FLASH ? 0.06 : L.halfDist * L.halfDist;
+    float r2 = L.halfDist * L.halfDist;
     float h = sqrt(h2 + r2);
     float I = (atan((min(t1, L.range) - tc) / h) - atan((t0 - tc) / h)) / h;
-    float k = L.type == LIGHT_FLASH ? 1.0 : r2;
-    return L.color * max(I, 0.0) * k * sigma * L.fog * 0.10;
+    return L.color * max(I, 0.0) * r2 * sigma * L.fog * 0.10;
 }
 
 // cheap analytic fog (no volumetrics): rgb in-scatter, a transmittance
@@ -115,13 +118,12 @@ vec4 fogAnalytic(vec3 rd, float dist) {
     float outside = airOutside(mid);
     float sigma = fogDensityO(mid, 0.0, outside);
     float T = exp(-sigma * d) * farFade(d) * closeInTransmittance(d);
-#ifdef WORLD_HIDAMARI
+#ifdef WORLD_SHIRAKABA
     if (dist > 4000.0) T = exp(-skyOpticalDepth(rd)) * closeInTransmittance(d);
 #endif
     vec3 S = fogAmbientLightO(rd, outside) * (1.0 - T);
 #ifdef EMITTERS_ON
-    // the lamps' glow: three segments, each with its own air (the mist low down, the haze
-    // above it, indoors or out)
+    // the lamps' glow: three segments, each with its own air (indoors or out)
     float tEnd = min(d, 40.0);
     airLampsGather(rd, tEnd);
     float Tl = 1.0;
@@ -137,7 +139,7 @@ vec4 fogAnalytic(vec3 rd, float dist) {
 #endif
     for (int i = 0; i < HAND_LIGHTS; i++) {
         HandLight L = handLight(i);
-        if (L.type != LIGHT_POINT && L.type != LIGHT_FLASH) continue;
+        if (L.type != LIGHT_POINT && L.type != LIGHT_SCREEN) continue;
         S += pointLightInScatter(L, rd, 0.0, min(d, L.range), sigma);
     }
     return vec4(S, T);
@@ -148,8 +150,8 @@ vec4 fogAnalytic(vec3 rd, float dist) {
 // rd: unit view direction (player space), dist: distance to the surface (large for sky)
 // returns rgb in-scattered light, a transmittance
 vec4 fogMarch(vec3 rd, float dist, float dither) {
-#if defined WORLD_HIDAMARI
-    const float FAR_MARCH = 56.0;
+#if defined WORLD_SHIRAKABA
+    const float FAR_MARCH = 48.0;
 #elif defined WORLD_OVERWORLD
     const float FAR_MARCH = 96.0;
 #else
@@ -164,13 +166,11 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
     vec3 shaftLight = celestialLight() * phase * mix(0.25, 0.08, dayFactor()) * (1.0 + rainAmount());
 #endif
 
-    // point lights carried by the player (the flash, a torch)
+    // point lights carried by the player (a flame, a screen)
     HandLight P0 = handLight(0);
     HandLight P1 = handLight(1);
-    HandLight P2 = handLight(2);
-    bool pt0 = P0.type == LIGHT_POINT;
-    bool pt1 = P1.type == LIGHT_POINT;
-    bool pt2 = P2.type == LIGHT_FLASH;
+    bool pt0 = P0.type == LIGHT_POINT || P0.type == LIGHT_SCREEN;
+    bool pt1 = P1.type == LIGHT_POINT || P1.type == LIGHT_SCREEN;
 
 #ifdef EMITTERS_ON
     airLampsGather(rd, marchEnd);
@@ -196,26 +196,25 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
 #endif
         float st = exp(-sigma * ds);
         S += T * L * (1.0 - st);
-        // light that the lamps / the flash scatter on this segment (already integrated)
+        // light that the lamps / a held flame scatter on this segment (already integrated)
         vec3 seg = vec3(0.0);
 #ifdef EMITTERS_ON
         seg += airLampsSegment(tPrev, tNext, sigma, 1.0 - outside) * 0.08;
 #endif
         if (pt0) seg += pointLightInScatter(P0, rd, tPrev, tNext, sigma);
         if (pt1) seg += pointLightInScatter(P1, rd, tPrev, tNext, sigma);
-        if (pt2) seg += pointLightInScatter(P2, rd, tPrev, tNext, sigma);
         S += T * seg * (0.5 + 0.5 * st);
         T *= st;
         tPrev = tNext;
     }
     vec3 amb = fogAmbientLightO(rd, lastOutside);
-    vec3 Sm = S;                     // the air of the march (mist, lamp glow, the flash)
+    vec3 Sm = S;                     // the air of the march (haze, lamp glow)
     float Tm = T;
     bool skyRay = dist > 4000.0;
     // beyond the march: smooth fog
     if (dist > marchEnd) {
         float rest = min(dist, 4096.0) - marchEnd;
-#ifdef WORLD_HIDAMARI
+#ifdef WORLD_SHIRAKABA
         // toward the sky: only the haze under the cloud ceiling - deep toward the horizon,
         // shallow overhead, where the lit cloud base shows through
         if (skyRay) rest = max(min(rest, SKY_HAZE_DEPTH / max(rd.y, 0.004)) - marchEnd, 0.0);
@@ -227,37 +226,15 @@ vec4 fogMarch(vec3 rd, float dist, float dither) {
         T *= st;
     }
     float fade = farFade(dist) * closeInTransmittance(dist);
-#ifdef WORLD_HIDAMARI
+#ifdef WORLD_SHIRAKABA
     if (skyRay) fade = closeInTransmittance(dist);
 #endif
-    // what fades out becomes the air of its direction: the march's mist and lamp glow, then
-    // fog - the same as the sky beside it (no seam where the far ground meets the sky)
+    // what fades out becomes the air of its direction (no seam where the far ground meets the sky)
     S = mix(Sm + Tm * amb, S, fade);
     T *= fade;
     return vec4(S, T);
 }
 #endif
-
-// ---- behind a faint spirit -------------------------------------------------------------------
-// A spirit writes depth even when the eye cannot see it. Where one covers the pixel, what is
-// behind it (the air, the beam on the wall) is estimated from the nearest pixels left and right
-// of it that no spirit covers - otherwise an invisible spirit would leave a clear silhouette in
-// the mist and in the beam.
-float behindSpiritDepth(vec2 uv, float depth) {
-    vec2 px = 1.0 / vec2(viewWidth, viewHeight);
-    float best = depth;
-    for (int s = -1; s <= 1; s += 2) {
-        for (int i = 1; i <= 6; i++) {
-            vec2 u = uv + vec2(float(s) * float(i * i) * 7.0, 0.0) * px;
-            if (u.x < 0.0 || u.x > 1.0) break;
-            if (texture(colortex8, u).r < 0.5) {
-                best = max(best, texture(depthtex0, u).r);
-                break;
-            }
-        }
-    }
-    return best;
-}
 
 // ---- the visible beam --------------------------------------------------------------------
 // distance interval [t0, t1] where the view ray (from the camera, unit rd) is inside the
@@ -305,15 +282,15 @@ vec2 coneInterval(HandLight L, vec3 rd, float tanA, float tMax) {
 }
 
 #ifdef DUST_MOTES
-// dust floating in the beam (the closed restaurant) / fine droplets (the wet air outside):
-// one speck per lattice cell, gently bobbing, visited with a 3D DDA along the ray
+// dust floating in the phone's light (the still air of the rooms) / fine droplets (the rain
+// outside): one speck per lattice cell, gently drifting, visited with a 3D DDA along the ray
 vec3 dustMotes(HandLight L, vec3 rd, float tA, float tB, float pixelAngle) {
-    const float CELL = 0.55;
-    tA = max(tA, 0.30);
-    tB = min(tB, 6.5);
+    const float CELL = 0.45;
+    tA = max(tA, 0.25);
+    tB = min(tB, 5.5);
     if (tB <= tA) return vec3(0.0);
     float indoor = 1.0 - airOutside(cameraPosition);
-    float fill = mix(0.06, 0.26, indoor);            // fraction of cells holding a speck
+    float fill = mix(0.08, 0.30, indoor);            // fraction of cells holding a speck
     float tm = frameTimeCounter;
     vec3 ro = cameraPosition;
     vec3 p = ro + rd * tA;
@@ -328,11 +305,12 @@ vec3 dustMotes(HandLight L, vec3 rd, float tA, float tB, float pixelAngle) {
         vec3 h = hash33(cell + 0.37);
         if (h.x < fill) {
             vec3 m = (cell + 0.22 + 0.56 * hash33(cell * 1.31 + 7.7)) * CELL;
-            m += vec3(sin(tm * 0.31 + h.y * 6.28), sin(tm * 0.23 + h.z * 6.28) * 0.7, sin(tm * 0.27 + h.x * 9.0)) * 0.10;
+            // dust drifts slowly, sinking; droplets outside fall
+            m += vec3(sin(tm * 0.21 + h.y * 6.28), sin(tm * 0.17 + h.z * 6.28) * 0.6 - 0.05 * tm * (1.0 - indoor), sin(tm * 0.19 + h.x * 9.0)) * 0.10;
             vec3 rel = m - ro;
             float along = dot(rel, rd);
             float perp = length(rel - rd * along);
-            const float R = 0.006;                    // speck radius in blocks
+            const float R = 0.005;                    // speck radius in blocks
             float size = max(R, along * pixelAngle * 0.8);
             float spr = exp(-sq(perp / size)) * sq(R / size);
             if (spr > 1e-4) {
@@ -349,20 +327,20 @@ vec3 dustMotes(HandLight L, vec3 rd, float tA, float tB, float pixelAngle) {
         else if (tNext.y <= tNext.z) { cell.y += stp.y; tNext.y += tDelta.y; }
         else { cell.z += stp.z; tNext.z += tDelta.z; }
     }
-    return sum * mix(0.05, 0.12, indoor);
+    return sum * mix(0.06, 0.14, indoor);
 }
 #endif
 
-// what the air sees of a spot light: the near beam dominates (a cone coming out of the lens,
+// what the air sees of a spot light: the near beam dominates (a cone coming out of the LED,
 // low and to the side), plus a fainter shaft reaching out toward the hot spot
 vec3 beamFogReach(HandLight L, vec3 P, out float dist) {
     vec3 d = P - L.pos;
     dist = length(d);
     if (dist > L.range) return vec3(0.0);
-    float prof = spotProfileD(L, d / max(dist, 1e-4), false);
-    float nearF = 1.0 / (1.0 + sq(dist / 1.1));
+    float prof = spotProfile(L, d / max(dist, 1e-4));
+    float nearF = 1.0 / (1.0 + sq(dist / 0.9));
     float farF = lightFalloff(L, dist);
-    return L.color * prof * (nearF * 0.85 + farF * 0.07);
+    return L.color * prof * (nearF * 0.85 + farF * 0.08);
 }
 
 // the beam of one spot light along the view ray up to dist: rgb in-scattered light
@@ -395,16 +373,16 @@ vec3 beamMarch(HandLight L, vec3 rd, float dist, float dither) {
 #else
         float sigma = fogDensity(p + cameraPosition, 0.0);
 #endif
-#ifdef WORLD_HIDAMARI
-        // indoors the beam still shows in the dust (thin air, but a bright lamp)
-        sigma = max(sigma, 0.0065 * FOG_DENSITY);
+#ifdef WORLD_SHIRAKABA
+        // indoors the beam still shows in the dust (thin air, but a light right at the eye)
+        sigma = max(sigma, 0.0060 * FOG_DENSITY);
 #endif
         // light lost on the way out of the lamp and back to the eye
         float T = exp(-sigma0 * (t + dl));
         S += E * sigma * T * (tb - ta);
     }
     S *= 0.40 * L.fog * BEAM_FOG;
-    // a dense wisp right at the lens must not blow the picture out: soft limit
+    // a dense wisp right at the LED must not blow the picture out: soft limit
     return S / (1.0 + maxOf(S) * 0.8);
 }
 
@@ -416,8 +394,52 @@ vec3 handLightMotes(vec3 rd, float dist) {
     for (int i = 0; i < 2; i++) {
         HandLight L = handLight(i);
         if (L.type != LIGHT_SPOT) continue;
-        vec2 iv = coneInterval(L, rd, L.tanOuter * 1.1, min(dist - 0.05, 6.5));
+        vec2 iv = coneInterval(L, rd, L.tanOuter * 1.1, min(dist - 0.05, 5.5));
         if (iv.y > iv.x) sum += dustMotes(L, rd, iv.x, iv.y, pixelAngle) * L.fog;
+    }
+    return sum;
+}
+#endif
+
+#ifdef RAIN_STREAKS_ON
+// ---- the rain outside -----------------------------------------------------------------------
+// Light rain falling past three cylinders round the eye (1.7, 3.6 and 7.5 blocks away): thin
+// streaks (a drop smeared by its fall), anchored to the world - they do not turn with the view -
+// slanting a little in the wind. They show only where light catches them: the street lamp, the
+// vending machine, a lit window; dark rain is invisible. rd: unit view direction, dist: distance
+// to what the pixel shows (beyond clear glass: what is behind it).
+vec3 rainStreaks(vec3 rd, float dist) {
+    vec3 sum = vec3(0.0);
+    float pixelAngle = 2.0 / (gbufferProjection[1][1] * viewHeight);
+    float t = frameTimeCounter;
+    float horiz = length(rd.xz);
+    if (horiz < 0.08) return sum;                      // straight up / down: no streaks
+    float az = atan(rd.x, rd.z);
+    for (int k = 0; k < 3; k++) {
+        float R = k == 0 ? 1.7 : (k == 1 ? 3.6 : 7.5);
+        float tk = R / horiz;                          // where the ray meets the cylinder
+        if (tk >= dist - 0.05 || tk > 24.0) continue;
+        vec3 p = cameraPosition + rd * tk;
+        if (airOutside(p) < 0.5) continue;
+        // world-anchored coordinates on the cylinder: arc length and height
+        float u = az * R + p.y * 0.08;                 // the wind slants the rain
+        float cellW = 0.055 * (1.0 + 0.6 * float(k));
+        float ci = floor(u / cellW);
+        vec2 h = hash22(vec2(ci, float(k) * 17.0 + 3.0));
+        if (h.x > 0.42) continue;                      // no drop in this lane
+        float cu = (ci + 0.2 + 0.6 * h.y) * cellW;
+        float wPix = pixelAngle * tk * 0.9;            // ~1 px wide at any distance
+        float across = exp(-sq((u - cu) / max(wPix, 1e-4)));
+        if (across < 0.02) continue;
+        float period = 2.2 + 1.3 * h.x;
+        float v = p.y + t * 7.5 + h.y * 37.0;
+        float ph = fract(v / period);
+        float len = 0.28 + 0.10 * h.y;                 // a streak: the drop's fall in one frame
+        float along = smoothstep(0.0, 0.06, ph) * (1.0 - smoothstep(len / period * 0.7, len / period, ph));
+        if (along <= 0.0) continue;
+        vec3 E = outdoorLampsAt(p) * 0.020 + skyAmbientN(vec3(0.0, 1.0, 0.0)) * 0.6;
+        float fade = exp(-0.016 * tk);
+        sum += E * across * along * fade * (1.0 - 0.25 * float(k));
     }
     return sum;
 }
