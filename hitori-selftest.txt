@@ -1,0 +1,117 @@
+world check starting
+apartment chunks generated and forced in 1428 ms
+PASS every marker of DESIGN §2 exists (84 names)
+PASS list sizes: bathtub 2, closet_hide 3, closet_fusuma 3, cam_suggest 4
+PASS doll_route ≥ 10, doll_hides ≥ 6, woman_spots ≥ 4
+PASS standing markers are walkable (0 bad)
+PASS the doll's hiding spots are reachable cells or tables
+PASS the woman's spots are inside 203
+PASS markers are in their rooms (0 wrong)
+PASS tv: 1/1 crt_tv
+PASS table: 1/1 chabudai
+PASS bathtub: 2/2 bathtub
+PASS bath_tap: 1/1 bath_tap
+PASS washbasin: 1/1 washbasin
+PASS kitchen_sink: 1/1 kitchen_sink
+PASS rice: 1/1 rice_bag
+PASS salt: 1/1 salt_shaker
+PASS cup: 1/1 cup_glass
+PASS knife: 1/1 knife_rack
+PASS lighter: 1/1 drawer
+PASS scissors: 1/1 sewing_box
+PASS thread: 1/1 sewing_box
+PASS nail_clipper: 1/1 mirror_small
+PASS plush_shelf: 1/1 plush_doll
+PASS camera_bag: 1/1 camera_bag
+PASS laptop: 1/1 laptop_block
+PASS printout: 1/1 printout
+PASS breaker: 1/1 breaker_panel
+PASS intercom: 1/1 intercom
+PASS morning: 1/1 desk_chair
+PASS door_front: 1/1 front_door
+PASS closet_fusuma: 3/3 oshiire_fusuma
+PASS door_western_closet: 3/3 oshiire_fusuma
+PASS door_toilet: 1/1 toilet_door
+PASS door_washroom: 1/1 interior_door
+PASS door_western: 1/1 interior_door
+PASS door_bath: 1/1 bath_door
+PASS door_tatami_dk: 2/2 fusuma
+PASS door_tatami_hall: 1/1 fusuma
+PASS door_balcony_tatami: 3/3 balcony_door
+PASS door_balcony_western: 2/2 balcony_door
+PASS curtains_tatami: 3/3 curtain
+PASS curtains_western: 2/2 curtain
+PASS fridge: 1/1 fridge_old
+PASS gas_stove: 1/1 gas_stove
+PASS washing_machine: 1/1 washing_machine
+PASS desk_lamp: 1/1 desk_lamp
+PASS wall_clock: 1/1 wall_clock
+PASS hanging_lamp: 1/1 hanging_lamp
+PASS closet_futons: 3/3 filled
+PASS street_lamp: 1/1 street_lamp_old
+PASS vending_machine: 1/1 vending_machine_small
+PASS swing: 1/1 swing_set
+PASS unit_204: 1/1 unit_door
+PASS switch_genkan: 1/1 light_switch
+PASS lights_genkan: 1/1 fluorescent_ring
+PASS switch_genkan controls genkan
+PASS switch_hall: 1/1 light_switch
+PASS lights_hall: 2/2 fluorescent_ring
+PASS switch_hall controls hall
+PASS switch_toilet: 1/1 light_switch
+PASS lights_toilet: 1/1 fluorescent_ring
+PASS switch_toilet controls toilet
+PASS switch_bath: 1/1 light_switch
+PASS lights_bath: 1/1 fluorescent_ring
+PASS switch_bath controls bath
+PASS switch_washroom: 1/1 light_switch
+PASS lights_washroom: 1/1 fluorescent_ring
+PASS switch_washroom controls washroom
+PASS switch_dk: 1/1 light_switch
+PASS lights_dk: 1/1 fluorescent_ring
+PASS switch_dk controls dk
+PASS switch_tatami: 1/1 pull_switch
+PASS lights_tatami: 1/1 hanging_lamp
+PASS switch_tatami controls tatami
+PASS switch_western: 1/1 light_switch
+PASS lights_western: 1/1 fluorescent_ring
+PASS switch_western controls western
+PASS the knife is on its rack and the plush on its shelf
+PASS the genkan's tiles at y 68
+PASS the genkan's wooden half step at x 25
+PASS the hall's flooring at y 69
+PASS tatami in the tatami room
+PASS the ceiling boards at y 73
+PASS walls stand
+PASS the roof's ridge
+PASS the outdoor corridor's slab at y 68
+PASS the steel stairs at the west end
+PASS the street is wet asphalt at y 64
+PASS the street lamp in front of 203 is lit
+PASS nameplates 101..204 by every door (8/8)
+PASS invisible walls behind the property (58)
+PASS doll_route is a connected loop (16 points)
+PASS the closets, the balcony and the corridor are reachable from the spawn
+PASS every room's lights follow its switch (8/8)
+PASS the breaker cuts every light and the TV, and brings them back (dark=true back=true)
+PASS the TV changes channel and turns off
+PASS the kitchen tap and the washbasin run and stop
+PASS both halves of the tub fill and empty; the lid goes on
+PASS the 押し入れ's fusuma shut / crack / open (open: the north end is free, the panels stack) truetruetrue
+PASS every door opens and shuts (10/10)
+PASS every device switches (9/9)
+PASS the knife, the plush, the lighter and the laptop leave and come back
+PASS the curtains open and close
+PASS the doll leaves a wet mark in the hall
+PASS lightsIn lists the lamps
+PASS the bath tap runs
+PASS after 11.5 s the tub is half full (water 1)
+PASS after 21.5 s the tub is full (water 2)
+PASS the hanging lamp has stopped swinging
+PASS the DK's flicker ended and its lamp is back to its switch
+PASS resetAll restores every block of the building (16877 checked, 0 differ, 37 ms)
+PASS resetAll restores the evening's start (breaker on, only the western room lit, TV off, bath empty, closet shut, plush and knife in place)
+light levels (block/sky): western (lit)=11/7 desk=10/6 tatami=4/7 closet=1/6 dk=2/2 hall=3/3 bath=3/7 genkan=6/9 corridor=9/12 balcony=8/12 under the lamp=8/15 street=0/15
+the ritual's darkness (every light off, the TV on):
+light levels (block/sky): western (lit)=6/7 desk=7/6 tatami=5/7 closet=2/6 dk=2/2 hall=3/3 bath=3/7 genkan=6/9 corridor=9/12 balcony=8/12 under the lamp=8/15 street=0/15
+SELFTEST RESULT: PASS
