@@ -1,0 +1,300 @@
+title screen (shaders=true)
+shot 00_title
+world creation requested
+world tour: 76 shots
+in world, 287 steps
+step rules pos=30, 70, 8 shaders=true
+step intro_end pos=30, 70, 8 shaders=true
+shot 03_spawn_hud
+step prep_lights pos=30, 70, 8 shaders=true
+step tour_begin pos=30, 70, 8 shaders=true
+step go_world_ext_street_west pos=30, 70, 8 shaders=true
+shot world_ext_street_west
+step go_world_ext_front pos=-19, 65, 21 shaders=true
+shot world_ext_front
+step go_world_ext_lamp pos=21, 65, 25 shaders=true
+shot world_ext_lamp
+step go_world_ext_vending pos=28, 65, 22 shaders=true
+shot world_ext_vending
+step go_world_ext_park pos=4, 65, 22 shaders=true
+shot world_ext_park
+step go_world_ext_side_path pos=47, 65, 21 shaders=true
+shot world_ext_side_path
+step go_world_ext_stairs pos=-3, 65, 15 shaders=true
+shot world_ext_stairs
+step go_world_ext_corridor pos=-10, 65, 0 shaders=true
+shot world_ext_corridor
+step go_world_ext_corridor_door pos=-1, 69, -2 shaders=true
+shot world_ext_corridor_door
+step go_world_ext_balcony pos=22, 69, -3 shaders=true
+shot world_ext_balcony
+step go_world_ext_balcony_view pos=31, 70, 15 shaders=true
+shot world_ext_balcony_view
+step go_world_ext_overview pos=25, 70, 15 shaders=true
+shot world_ext_overview
+step go_world_ext_overview_ne pos=22, 90, 46 shaders=true
+shot world_ext_overview_ne
+step go_world_peephole pos=58, 86, -15 shaders=true
+shot world_peephole
+step go_world_genkan_start pos=24, 68, -1 shaders=true
+shot world_genkan_start
+step go_world_hall_start pos=26, 70, 2 shaders=true
+shot world_hall_start
+step go_world_dk_start pos=26, 70, 1 shaders=true
+shot world_dk_start
+step go_world_dk_table_start pos=27, 70, 6 shaders=true
+shot world_dk_table_start
+step go_world_toilet_start pos=26, 70, 7 shaders=true
+shot world_toilet_start
+step go_world_bath_start pos=29, 70, 2 shaders=true
+shot world_bath_start
+step go_world_washroom_start pos=31, 70, 2 shaders=true
+shot world_washroom_start
+step go_world_tatami_start pos=30, 70, 5 shaders=true
+shot world_tatami_start
+step go_world_tatami_tv_start pos=27, 70, 12 shaders=true
+shot world_tatami_tv_start
+step go_world_closet_front_start pos=24, 70, 10 shaders=true
+shot world_closet_front_start
+step go_world_western_start pos=26, 70, 11 shaders=true
+shot world_western_start
+step go_world_western_desk_start pos=29, 70, 7 shaders=true
+shot world_western_desk_start
+step go_world_western_closet_start pos=30, 70, 8 shaders=true
+shot world_western_closet_start
+step go_world_curtains_start pos=30, 70, 9 shaders=true
+shot world_curtains_start
+step go_world_genkan_on pos=25, 70, 10 shaders=true
+shot world_genkan_on
+step go_world_hall_on pos=26, 70, 2 shaders=true
+shot world_hall_on
+step go_world_dk_on pos=26, 70, 1 shaders=true
+shot world_dk_on
+step go_world_dk_table_on pos=27, 70, 6 shaders=true
+shot world_dk_table_on
+step go_world_toilet_on pos=26, 70, 7 shaders=true
+shot world_toilet_on
+step go_world_bath_on pos=29, 70, 2 shaders=true
+shot world_bath_on
+step go_world_washroom_on pos=31, 70, 2 shaders=true
+shot world_washroom_on
+step go_world_tatami_on pos=30, 70, 5 shaders=true
+shot world_tatami_on
+step go_world_tatami_tv_on pos=27, 70, 12 shaders=true
+shot world_tatami_tv_on
+step go_world_closet_front_on pos=24, 70, 10 shaders=true
+shot world_closet_front_on
+step go_world_western_on pos=26, 70, 11 shaders=true
+shot world_western_on
+step go_world_western_desk_on pos=29, 70, 7 shaders=true
+shot world_western_desk_on
+step go_world_western_closet_on pos=30, 70, 8 shaders=true
+shot world_western_closet_on
+step go_world_curtains_on pos=30, 70, 9 shaders=true
+shot world_curtains_on
+step go_world_genkan_off pos=25, 70, 10 shaders=true
+shot world_genkan_off
+step go_world_hall_off pos=26, 70, 2 shaders=true
+shot world_hall_off
+step go_world_dk_off pos=26, 70, 1 shaders=true
+shot world_dk_off
+step go_world_dk_table_off pos=27, 70, 6 shaders=true
+shot world_dk_table_off
+step go_world_toilet_off pos=26, 70, 7 shaders=true
+shot world_toilet_off
+step go_world_bath_off pos=29, 70, 2 shaders=true
+shot world_bath_off
+step go_world_washroom_off pos=31, 70, 2 shaders=true
+shot world_washroom_off
+step go_world_tatami_off pos=30, 70, 5 shaders=true
+shot world_tatami_off
+step go_world_tatami_tv_off pos=27, 70, 12 shaders=true
+shot world_tatami_tv_off
+step go_world_closet_front_off pos=24, 70, 10 shaders=true
+shot world_closet_front_off
+step go_world_western_off pos=26, 70, 11 shaders=true
+shot world_western_off
+step go_world_western_desk_off pos=29, 70, 7 shaders=true
+shot world_western_desk_off
+step go_world_western_closet_off pos=30, 70, 8 shaders=true
+shot world_western_closet_off
+step go_world_curtains_off pos=30, 70, 9 shaders=true
+shot world_curtains_off
+step go_world_closet_inside pos=25, 70, 10 shaders=true
+shot world_closet_inside
+step go_world_closet_inside_up pos=23, 70, 11 shaders=true
+shot world_closet_inside_up
+step go_world_closet_peek pos=23, 70, 11 shaders=true
+shot world_closet_peek
+step go_world_closet_open pos=23, 69, 10 shaders=true
+shot world_closet_open
+step go_world_bath_full pos=26, 70, 11 shaders=true
+shot world_bath_full
+step tour_end pos=31, 70, 2 shaders=true
+step go_10_plush pos=31, 70, 2 shaders=true
+shot 10_plush
+step plush_take pos=31, 70, 10 shaders=true
+shot 11_plush_taken
+step cut_setup pos=31, 70, 10 shaders=true
+step cut pos=25, 70, 10 shaders=true
+shot 12_cut
+step rice pos=25, 70, 10 shaders=true
+step rice_go pos=25, 70, 6 shaders=true
+shot 13_rice
+step nails pos=25, 70, 6 shaders=true
+step nails_go pos=25, 70, 6 shaders=true
+shot 14_nails
+step sew pos=25, 70, 6 shaders=true
+step sew_go pos=25, 70, 10 shaders=true
+shot 15_sew
+step go_16_bath pos=25, 70, 10 shaders=true
+shot 16_bath
+step salt pos=31, 70, 1 shaders=true
+step salt_go pos=24, 70, 5 shaders=true
+shot 17_salt
+step cameras pos=24, 70, 5 shaders=true
+step go_18_camera_placed pos=24, 70, 5 shaders=true
+shot 18_camera_placed
+step go_19_tv pos=25, 70, 12 shaders=true
+shot 19_tv
+step ritual pos=24, 70, 9 shaders=true
+step three_card pos=24, 70, 9 shaders=true
+shot 20_three_am
+step three_done pos=24, 70, 9 shaders=true
+step first_oni pos=24, 70, 9 shaders=true
+step first_oni_say pos=25, 70, 9 shaders=true
+shot 22_first_oni
+step tub_setup pos=25, 70, 9 shaders=true
+  doll 1.5 blocks away
+step tub_face pos=31, 70, 1 shaders=true
+shot 23_doll_in_tub
+step go_24_lights_off pos=31, 70, 1 shaders=true
+shot 24_lights_off
+step count_setup pos=25, 70, 8 shaders=true
+step count_go pos=25, 70, 9 shaders=true
+shot 25_eyes_closed
+step count_wait pos=25, 70, 9 shaders=true
+step stab_setup pos=25, 70, 9 shaders=true
+  doll 1.8 blocks away
+step stab_face pos=31, 70, 1 shaders=true
+step stab_go pos=31, 70, 1 shaders=true
+shot 26_stab
+step hide_setup pos=31, 70, 1 shaders=true
+step hide_go pos=31, 70, 1 shaders=true
+step hide_look pos=23, 70, 10 shaders=true
+shot 30_closet
+step peek_go pos=23, 70, 10 shaders=true
+shot 31_peek
+step peek_stop pos=23, 70, 10 shaders=true
+step laptop pos=23, 70, 10 shaders=true
+step laptop_app pos=23, 70, 10 shaders=true
+shot 32_closet_laptop
+step feed_1 pos=23, 70, 10 shaders=true
+step feed_log_1 pos=23, 70, 10 shaders=true
+  phase=3 steps=111111111111111111 doll=SCRIPTED pose=1 susp=0.85 eyes=false cam=true route=-1 tub=2526 at 32.5 70.7 2.5 cams=4
+shot 33_cam1_pose1
+step feed_2 pos=23, 70, 10 shaders=true
+step feed_log_2 pos=23, 70, 10 shaders=true
+  phase=3 steps=111111111111111111 doll=SCRIPTED pose=2 susp=0.00 eyes=false cam=true route=-1 tub=1800 at 27.5 70.0 4.5 cams=4
+shot 33_cam2_pose2
+step feed_3 pos=23, 70, 10 shaders=true
+step feed_log_3 pos=23, 70, 10 shaders=true
+  phase=3 steps=111111111111111111 doll=SCRIPTED pose=4 susp=0.00 eyes=false cam=true route=-1 tub=1800 at 24.5 70.0 12.5 cams=4
+shot 33_cam3_pose4
+step feed_4 pos=23, 70, 10 shaders=true
+step feed_log_4 pos=23, 70, 10 shaders=true
+  phase=3 steps=111111111111111111 doll=SCRIPTED pose=6 susp=0.00 eyes=false cam=true route=-1 tub=1800 at 23.5 69.9 2.5 cams=4
+shot 33_cam4_pose6
+step crawl pos=23, 70, 10 shaders=true
+shot 34_cam_crawl
+step lunge_pose pos=23, 70, 10 shaders=true
+shot 35_cam_lunge
+step float_tub pos=23, 70, 10 shaders=true
+shot 36_cam_tub_float
+step woman pos=23, 70, 10 shaders=true
+shot 37_woman_0
+step woman_away_1 pos=23, 70, 10 shaders=true
+step woman_back_1 pos=23, 70, 10 shaders=true
+shot 37_woman_1
+step woman_away_2 pos=23, 70, 10 shaders=true
+step woman_back_2 pos=23, 70, 10 shaders=true
+shot 37_woman_2
+step woman_away_3 pos=23, 70, 10 shaders=true
+step woman_back_3 pos=23, 70, 10 shaders=true
+shot 37_woman_3
+step woman_away_4 pos=23, 70, 10 shaders=true
+step woman_back_4 pos=23, 70, 10 shaders=true
+shot 38_woman_scare
+step woman_clear pos=23, 70, 10 shaders=true
+step go_39_glitch_noise pos=23, 70, 10 shaders=true
+shot 39_glitch_noise
+step go_40_glitch_blackout pos=23, 70, 10 shaders=true
+shot 40_glitch_blackout
+step blackout_end pos=23, 70, 10 shaders=true
+step freeze pos=23, 70, 10 shaders=true
+shot 41_glitch_freeze
+step go_42_glitch_stamp pos=23, 70, 10 shaders=true
+shot 42_glitch_stamp
+step app_close pos=23, 70, 10 shaders=true
+step phone pos=23, 70, 10 shaders=true
+step phone_app pos=25, 70, 9 shaders=true
+shot 43_phone_app
+step phone_app_close pos=25, 70, 9 shaders=true
+step phone_msg pos=25, 70, 9 shaders=true
+shot 44_phone_message
+step phone_call pos=25, 70, 9 shaders=true
+shot 45_phone_call
+step phone_light pos=25, 70, 9 shaders=true
+shot 47_phone_light
+step go_48_fear_high pos=25, 70, 9 shaders=true
+shot 48_fear_high
+step go_49_danger_high pos=25, 70, 9 shaders=true
+shot 49_danger_high
+step calm pos=25, 70, 9 shaders=true
+step finish_setup pos=25, 70, 9 shaders=true
+step finish_go pos=25, 70, 9 shaders=true
+  doll 1.8 blocks away
+step finish_face pos=27, 70, 11 shaders=true
+shot 50_found
+step oni pos=27, 70, 11 shaders=true
+shot 60_jumpscare
+step oni_wait pos=27, 70, 11 shaders=true
+step oni_screen pos=27, 70, 11 shaders=true
+shot 61_ending_oni
+step oni_feed pos=27, 70, 11 shaders=true
+shot 62_ending_oni_feed
+step good_setup pos=27, 70, 11 shaders=true
+step good_start pos=27, 70, 11 shaders=true
+step record_app pos=30, 70, 8 shaders=true
+step record_open pos=30, 70, 8 shaders=true
+step record_cam2 pos=30, 70, 8 shaders=true
+step record_cam3 pos=30, 70, 8 shaders=true
+step record_cam4 pos=30, 70, 8 shaders=true
+step record_close pos=30, 70, 8 shaders=true
+step good pos=30, 70, 8 shaders=true
+shot 63_morning
+step good_wait pos=30, 70, 8 shaders=true
+step good_text pos=30, 70, 8 shaders=true
+shot 64_ending_good
+step good_play pos=30, 70, 8 shaders=true
+shot 65_playback
+step good_final pos=30, 70, 8 shaders=true
+shot 66_playback_fusuma
+step good_card pos=30, 70, 8 shaders=true
+shot 67_ending_card
+step mikan_setup pos=30, 70, 8 shaders=true
+step mikan_start pos=30, 70, 8 shaders=true
+step mikan pos=30, 70, 8 shaders=true
+step mikan_screen pos=30, 70, 8 shaders=true
+shot 68_ending_mikan
+step soto_setup pos=30, 70, 8 shaders=true
+step soto_start pos=30, 70, 8 shaders=true
+step soto pos=30, 70, 8 shaders=true
+shot 69_soto_corridor
+step soto_map pos=24, 69, -2 shaders=true
+shot 70_soto_map
+step soto_wait pos=24, 69, -2 shaders=true
+step soto_screen pos=24, 69, -2 shaders=true
+shot 71_ending_soto
+step end pos=24, 69, -2 shaders=true
+finished

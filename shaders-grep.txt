@@ -1,0 +1,396 @@
+59:[04Nov2026 12:55:07.660] [Render thread/INFO] [Oculus/]: Debug functionality is disabled.
+60:[04Nov2026 12:55:07.662] [Render thread/INFO] [Oculus/]: OpenGL 4.5 detected, enabling DSA.
+61:[04Nov2026 12:55:07.791] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+62:[04Nov2026 12:55:08.223] [Render thread/INFO] [Oculus/]: Using shaderpack: HitoriShaders.zip
+66:[04Nov2026 12:55:08.373] [modloading-worker-0/INFO] [com.hitori.Hitori/]: [hitori] ひとりかくれんぼ: the first oni is me.
+67:[04Nov2026 12:55:09.489] [Render thread/INFO] [Oculus/]: Hardware information:
+68:[04Nov2026 12:55:09.490] [Render thread/INFO] [Oculus/]: CPU: 4x AMD EPYC 9V45 96-Core Processor
+69:[04Nov2026 12:55:09.490] [Render thread/INFO] [Oculus/]: GPU: llvmpipe (LLVM 21.1.8, 256 bits) (Supports OpenGL 4.5 (Core Profile) Mesa 26.0.8-1ubuntu0.3)
+70:[04Nov2026 12:55:09.490] [Render thread/INFO] [Oculus/]: OS: Linux (7.0.0-1017-azure)
+75:[04Nov2026 12:55:09.998] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] model OniDollModel registered
+76:[04Nov2026 12:55:10.000] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] model WomanModel registered
+77:[04Nov2026 12:55:10.000] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] model CameraModel registered
+78:[04Nov2026 12:55:10.272] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+79:com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+102:Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+111:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+138:	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+193:[04Nov2026 12:55:10.327] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/hitori-client.toml is not correct. Correcting
+198:[04Nov2026 12:55:10.330] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders was corrected from null to its default, SimpleCommentedConfig:{}. 
+199:[04Nov2026 12:55:10.330] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key shaders.installShaderPack was corrected from null to its default, true. 
+211:[04Nov2026 12:55:10.339] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/run/config/hitori-common.toml is not correct. Correcting
+220:[04Nov2026 12:55:11.240] [Render thread/INFO] [com.hitori.Hitori/]: [HitoriShaders] copied HitoriShaders.zip to /home/runner/work/Minecraftproject/Minecraftproject/run/shaderpacks/HitoriShaders.zip; Oculus pack already selected: HitoriShaders.zip (reloading updated pack)
+221:[04Nov2026 12:55:11.268] [Render thread/INFO] [Oculus/]: Profile: MEDIUM (+0 options changed by user)
+224:[04Nov2026 12:55:11.675] [Render thread/INFO] [Oculus/]: Using shaderpack: HitoriShaders.zip
+227:[04Nov2026 12:55:13.263] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+228:java.lang.IllegalStateException: Failed to open OpenAL device
+271:[04Nov2026 12:55:13.577] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+275:[04Nov2026 12:55:13.688] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+276:[04Nov2026 12:55:13.718] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+277:[04Nov2026 12:55:13.764] [Realms Notification Availability checker #1/INFO] [com.mojang.realmsclient.client.RealmsClient/]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+279:[04Nov2026 12:55:20.492] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: title screen (shaders=true)
+281:[04Nov2026 12:55:23.077] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 00_title
+286:[04Nov2026 12:55:24.377] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./saves/HitoriCI/serverconfig/forge-server.toml is not correct. Correcting
+288:[04Nov2026 12:55:24.377] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+289:[04Nov2026 12:55:24.377] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+304:[04Nov2026 12:55:26.576] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: world creation requested
+308:[04Nov2026 12:55:27.062] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='minecraft', name='overworld'}
+309:[04Nov2026 12:55:27.062] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+310:[04Nov2026 12:55:27.140] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='minecraft', name='overworld'}
+311:[04Nov2026 12:55:27.167] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+312:[04Nov2026 12:55:28.017] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3246 blocks restored)
+313:[04Nov2026 12:55:28.062] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] Dev begins the night in room 203
+330:[04Nov2026 12:55:30.533] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] HitoriShaders を更新しました。
+331:[04Nov2026 12:55:30.717] [Render thread/INFO] [Oculus/]: Reloading pipeline on dimension change: NamespacedId{namespace='minecraft', name='overworld'} => NamespacedId{namespace='hitori', name='shirakaba'}
+332:[04Nov2026 12:55:30.718] [Render thread/INFO] [Oculus/]: Destroying pipeline NamespacedId{namespace='minecraft', name='overworld'}
+333:[04Nov2026 12:55:30.736] [Render thread/INFO] [Oculus/]: Creating pipeline for dimension NamespacedId{namespace='hitori', name='shirakaba'}
+334:[04Nov2026 12:55:31.048] [Render thread/INFO] [Oculus/]: Starting custom uniform resolving
+343:[04Nov2026 12:55:48.223] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: world tour: 76 shots
+344:[04Nov2026 12:55:48.226] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: in world, 287 steps
+345:[04Nov2026 12:55:48.240] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step rules pos=30, 70, 8 shaders=true
+349:[04Nov2026 12:55:48.878] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step intro_end pos=30, 70, 8 shaders=true
+351:[04Nov2026 12:55:57.577] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 03_spawn_hud
+352:[04Nov2026 12:55:57.988] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step prep_lights pos=30, 70, 8 shaders=true
+353:[04Nov2026 12:55:58.375] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step tour_begin pos=30, 70, 8 shaders=true
+355:[04Nov2026 12:55:59.206] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_street_west pos=30, 70, 8 shaders=true
+356:[04Nov2026 12:55:59.213] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+358:[04Nov2026 12:56:08.076] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_street_west
+359:[04Nov2026 12:56:08.079] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_front pos=-19, 65, 21 shaders=true
+361:[04Nov2026 12:56:19.608] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_front
+362:[04Nov2026 12:56:19.991] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_lamp pos=21, 65, 25 shaders=true
+364:[04Nov2026 12:56:28.818] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_lamp
+365:[04Nov2026 12:56:29.198] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_vending pos=28, 65, 22 shaders=true
+367:[04Nov2026 12:56:38.062] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_vending
+368:[04Nov2026 12:56:38.436] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_park pos=4, 65, 22 shaders=true
+370:[04Nov2026 12:56:47.268] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_park
+371:[04Nov2026 12:56:47.620] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_side_path pos=47, 65, 21 shaders=true
+373:[04Nov2026 12:56:56.629] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_side_path
+374:[04Nov2026 12:56:56.995] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_stairs pos=-3, 65, 15 shaders=true
+376:[04Nov2026 12:57:05.792] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_stairs
+377:[04Nov2026 12:57:06.157] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_corridor pos=-10, 65, 0 shaders=true
+379:[04Nov2026 12:57:15.187] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_corridor
+380:[04Nov2026 12:57:15.192] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_corridor_door pos=-1, 69, -2 shaders=true
+382:[04Nov2026 12:57:24.376] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_corridor_door
+383:[04Nov2026 12:57:24.848] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_balcony pos=22, 69, -3 shaders=true
+385:[04Nov2026 12:57:33.735] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_balcony
+386:[04Nov2026 12:57:33.738] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_balcony_view pos=31, 70, 15 shaders=true
+388:[04Nov2026 12:57:42.977] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_balcony_view
+389:[04Nov2026 12:57:42.980] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_overview pos=25, 70, 15 shaders=true
+391:[04Nov2026 12:57:52.130] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_overview
+392:[04Nov2026 12:57:52.505] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_ext_overview_ne pos=22, 90, 46 shaders=true
+394:[04Nov2026 12:58:01.355] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_ext_overview_ne
+395:[04Nov2026 12:58:01.708] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_peephole pos=58, 86, -15 shaders=true
+397:[04Nov2026 12:58:10.597] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_peephole
+398:[04Nov2026 12:58:11.026] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_genkan_start pos=24, 68, -1 shaders=true
+399:[04Nov2026 12:58:11.038] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+401:[04Nov2026 12:58:19.766] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_genkan_start
+402:[04Nov2026 12:58:20.090] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_hall_start pos=26, 70, 2 shaders=true
+404:[04Nov2026 12:58:28.986] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_hall_start
+405:[04Nov2026 12:58:29.337] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_dk_start pos=26, 70, 1 shaders=true
+407:[04Nov2026 12:58:38.237] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_dk_start
+408:[04Nov2026 12:58:38.582] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_dk_table_start pos=27, 70, 6 shaders=true
+410:[04Nov2026 12:58:47.474] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_dk_table_start
+411:[04Nov2026 12:58:47.807] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_toilet_start pos=26, 70, 7 shaders=true
+413:[04Nov2026 12:58:56.861] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_toilet_start
+414:[04Nov2026 12:58:57.172] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_bath_start pos=29, 70, 2 shaders=true
+416:[04Nov2026 12:59:06.239] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_bath_start
+417:[04Nov2026 12:59:06.242] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_washroom_start pos=31, 70, 2 shaders=true
+419:[04Nov2026 12:59:15.465] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_washroom_start
+420:[04Nov2026 12:59:15.468] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_tatami_start pos=30, 70, 5 shaders=true
+422:[04Nov2026 12:59:24.514] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_tatami_start
+423:[04Nov2026 12:59:24.867] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_tatami_tv_start pos=27, 70, 12 shaders=true
+425:[04Nov2026 12:59:33.733] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_tatami_tv_start
+426:[04Nov2026 12:59:34.076] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_closet_front_start pos=24, 70, 10 shaders=true
+428:[04Nov2026 12:59:43.002] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_closet_front_start
+429:[04Nov2026 12:59:43.343] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_start pos=26, 70, 11 shaders=true
+431:[04Nov2026 12:59:52.505] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_start
+432:[04Nov2026 12:59:52.507] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_desk_start pos=29, 70, 7 shaders=true
+434:[04Nov2026 13:00:01.527] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_desk_start
+435:[04Nov2026 13:00:01.962] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_closet_start pos=30, 70, 8 shaders=true
+437:[04Nov2026 13:00:10.824] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_closet_start
+438:[04Nov2026 13:00:11.259] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_curtains_start pos=30, 70, 9 shaders=true
+440:[04Nov2026 13:00:20.167] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_curtains_start
+441:[04Nov2026 13:00:20.169] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_genkan_on pos=25, 70, 10 shaders=true
+443:[04Nov2026 13:00:29.277] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_genkan_on
+444:[04Nov2026 13:00:29.688] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_hall_on pos=26, 70, 2 shaders=true
+446:[04Nov2026 13:00:38.735] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_hall_on
+447:[04Nov2026 13:00:38.738] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_dk_on pos=26, 70, 1 shaders=true
+449:[04Nov2026 13:00:48.159] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_dk_on
+450:[04Nov2026 13:00:48.166] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_dk_table_on pos=27, 70, 6 shaders=true
+452:[04Nov2026 13:00:57.362] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_dk_table_on
+453:[04Nov2026 13:00:57.364] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_toilet_on pos=26, 70, 7 shaders=true
+455:[04Nov2026 13:01:06.514] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_toilet_on
+456:[04Nov2026 13:01:06.517] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_bath_on pos=29, 70, 2 shaders=true
+458:[04Nov2026 13:01:15.516] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_bath_on
+459:[04Nov2026 13:01:15.934] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_washroom_on pos=31, 70, 2 shaders=true
+461:[04Nov2026 13:01:24.926] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_washroom_on
+462:[04Nov2026 13:01:24.928] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_tatami_on pos=30, 70, 5 shaders=true
+464:[04Nov2026 13:01:34.241] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_tatami_on
+465:[04Nov2026 13:01:34.243] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_tatami_tv_on pos=27, 70, 12 shaders=true
+467:[04Nov2026 13:01:43.291] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_tatami_tv_on
+468:[04Nov2026 13:01:43.713] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_closet_front_on pos=24, 70, 10 shaders=true
+470:[04Nov2026 13:01:52.791] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_closet_front_on
+471:[04Nov2026 13:01:52.793] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_on pos=26, 70, 11 shaders=true
+473:[04Nov2026 13:02:02.089] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_on
+474:[04Nov2026 13:02:02.092] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_desk_on pos=29, 70, 7 shaders=true
+476:[04Nov2026 13:02:11.160] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_desk_on
+477:[04Nov2026 13:02:11.584] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_closet_on pos=30, 70, 8 shaders=true
+479:[04Nov2026 13:02:20.338] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_closet_on
+480:[04Nov2026 13:02:20.768] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_curtains_on pos=30, 70, 9 shaders=true
+482:[04Nov2026 13:02:29.570] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_curtains_on
+484:[04Nov2026 13:02:29.985] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_genkan_off pos=25, 70, 10 shaders=true
+485:[04Nov2026 13:02:38.751] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_genkan_off
+486:[04Nov2026 13:02:39.072] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_hall_off pos=26, 70, 2 shaders=true
+488:[04Nov2026 13:02:48.163] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_hall_off
+489:[04Nov2026 13:02:48.529] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_dk_off pos=26, 70, 1 shaders=true
+491:[04Nov2026 13:02:57.381] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_dk_off
+492:[04Nov2026 13:02:57.738] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_dk_table_off pos=27, 70, 6 shaders=true
+494:[04Nov2026 13:03:06.501] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_dk_table_off
+495:[04Nov2026 13:03:06.849] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_toilet_off pos=26, 70, 7 shaders=true
+497:[04Nov2026 13:03:15.759] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_toilet_off
+498:[04Nov2026 13:03:16.083] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_bath_off pos=29, 70, 2 shaders=true
+500:[04Nov2026 13:03:25.011] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_bath_off
+501:[04Nov2026 13:03:25.356] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_washroom_off pos=31, 70, 2 shaders=true
+503:[04Nov2026 13:03:34.415] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_washroom_off
+504:[04Nov2026 13:03:34.756] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_tatami_off pos=30, 70, 5 shaders=true
+506:[04Nov2026 13:03:43.602] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_tatami_off
+507:[04Nov2026 13:03:44.042] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_tatami_tv_off pos=27, 70, 12 shaders=true
+509:[04Nov2026 13:03:53.038] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_tatami_tv_off
+510:[04Nov2026 13:03:53.041] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_closet_front_off pos=24, 70, 10 shaders=true
+512:[04Nov2026 13:04:02.054] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_closet_front_off
+513:[04Nov2026 13:04:02.456] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_off pos=26, 70, 11 shaders=true
+515:[04Nov2026 13:04:11.266] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_off
+516:[04Nov2026 13:04:11.648] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_desk_off pos=29, 70, 7 shaders=true
+518:[04Nov2026 13:04:20.757] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_desk_off
+519:[04Nov2026 13:04:20.759] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_western_closet_off pos=30, 70, 8 shaders=true
+521:[04Nov2026 13:04:30.000] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_western_closet_off
+522:[04Nov2026 13:04:30.002] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_curtains_off pos=30, 70, 9 shaders=true
+524:[04Nov2026 13:04:39.060] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_curtains_off
+525:[04Nov2026 13:04:39.449] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_closet_inside pos=25, 70, 10 shaders=true
+527:[04Nov2026 13:04:48.373] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_closet_inside
+528:[04Nov2026 13:04:48.769] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_closet_inside_up pos=23, 70, 11 shaders=true
+530:[04Nov2026 13:04:57.713] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_closet_inside_up
+532:[04Nov2026 13:04:57.715] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_closet_peek pos=23, 70, 11 shaders=true
+533:[04Nov2026 13:05:06.754] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_closet_peek
+534:[04Nov2026 13:05:07.108] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_closet_open pos=23, 69, 10 shaders=true
+536:[04Nov2026 13:05:15.974] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_closet_open
+537:[04Nov2026 13:05:16.375] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_world_bath_full pos=26, 70, 11 shaders=true
+539:[04Nov2026 13:05:25.334] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot world_bath_full
+541:[04Nov2026 13:05:25.769] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step tour_end pos=31, 70, 2 shaders=true
+542:[04Nov2026 13:05:25.804] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step bath done at 02:21
+543:[04Nov2026 13:05:25.807] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:21
+544:[04Nov2026 13:05:26.174] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_10_plush pos=31, 70, 2 shaders=true
+545:[04Nov2026 13:05:26.202] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step bath done at 02:21
+546:[04Nov2026 13:05:26.202] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:21
+547:[04Nov2026 13:05:32.203] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 10_plush
+548:[04Nov2026 13:05:32.587] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step plush_take pos=31, 70, 10 shaders=true
+549:[04Nov2026 13:05:32.939] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 11_plush_taken
+550:[04Nov2026 13:05:33.418] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step cut_setup pos=31, 70, 10 shaders=true
+551:[04Nov2026 13:05:33.457] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step bath done at 02:21
+552:[04Nov2026 13:05:33.457] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:21
+553:[04Nov2026 13:05:37.821] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step cut pos=25, 70, 10 shaders=true
+555:[04Nov2026 13:05:40.804] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step cut done at 02:22
+556:[04Nov2026 13:05:43.306] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 12_cut
+557:[04Nov2026 13:05:43.308] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step rice pos=25, 70, 10 shaders=true
+558:[04Nov2026 13:05:43.357] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step bath done at 02:22
+559:[04Nov2026 13:05:43.357] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:22
+560:[04Nov2026 13:05:47.952] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step rice_go pos=25, 70, 6 shaders=true
+561:[04Nov2026 13:05:50.452] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step rice done at 02:22
+562:[04Nov2026 13:05:51.276] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 13_rice
+563:[04Nov2026 13:05:51.610] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step nails pos=25, 70, 6 shaders=true
+564:[04Nov2026 13:05:51.653] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step bath done at 02:22
+565:[04Nov2026 13:05:51.656] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:22
+566:[04Nov2026 13:05:54.427] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step nails_go pos=25, 70, 6 shaders=true
+567:[04Nov2026 13:05:56.603] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step nails done at 02:23
+568:[04Nov2026 13:05:56.854] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 14_nails
+569:[04Nov2026 13:05:57.191] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step sew pos=25, 70, 6 shaders=true
+570:[04Nov2026 13:05:57.203] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step bath done at 02:23
+571:[04Nov2026 13:05:57.203] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:23
+572:[04Nov2026 13:06:00.418] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step sew_go pos=25, 70, 10 shaders=true
+573:[04Nov2026 13:06:05.402] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step sew done at 02:23
+574:[04Nov2026 13:06:09.421] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 15_sew
+575:[04Nov2026 13:06:09.424] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_16_bath pos=25, 70, 10 shaders=true
+576:[04Nov2026 13:06:09.455] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step bath done at 02:24
+577:[04Nov2026 13:06:09.455] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:24
+578:[04Nov2026 13:06:15.721] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 16_bath
+579:[04Nov2026 13:06:15.725] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step salt pos=31, 70, 1 shaders=true
+582:[04Nov2026 13:06:15.752] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:24
+583:[04Nov2026 13:06:20.241] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step salt_go pos=24, 70, 5 shaders=true
+584:[04Nov2026 13:06:21.701] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step salt done at 02:24
+585:[04Nov2026 13:06:22.508] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 17_salt
+586:[04Nov2026 13:06:22.862] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step cameras pos=24, 70, 5 shaders=true
+587:[04Nov2026 13:06:22.907] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:25
+588:[04Nov2026 13:06:22.907] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step cameras done at 02:25
+589:[04Nov2026 13:06:27.209] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_18_camera_placed pos=24, 70, 5 shaders=true
+590:[04Nov2026 13:06:32.412] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 18_camera_placed
+591:[04Nov2026 13:06:32.414] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_19_tv pos=25, 70, 12 shaders=true
+592:[04Nov2026 13:06:32.452] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step tv done at 02:29
+593:[04Nov2026 13:06:38.439] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 19_tv
+594:[04Nov2026 13:06:38.838] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step ritual pos=24, 70, 9 shaders=true
+596:[04Nov2026 13:06:43.217] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step three_card pos=24, 70, 9 shaders=true
+597:[04Nov2026 13:06:49.409] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 20_three_am
+598:[04Nov2026 13:06:49.412] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step three_done pos=24, 70, 9 shaders=true
+599:[04Nov2026 13:06:49.801] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step first_oni pos=24, 70, 9 shaders=true
+601:[04Nov2026 13:06:52.766] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step first_oni_say pos=25, 70, 9 shaders=true
+602:[04Nov2026 13:06:55.712] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 22_first_oni
+603:[04Nov2026 13:06:56.107] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step tub_setup pos=25, 70, 9 shaders=true
+604:[04Nov2026 13:06:56.158] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step lights done at 03:01
+605:[04Nov2026 13:07:01.926] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots:   doll 1.5 blocks away
+606:[04Nov2026 13:07:01.927] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step tub_face pos=31, 70, 1 shaders=true
+607:[04Nov2026 13:07:02.271] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 23_doll_in_tub
+608:[04Nov2026 13:07:02.621] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_24_lights_off pos=31, 70, 1 shaders=true
+609:[04Nov2026 13:07:07.033] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 24_lights_off
+610:[04Nov2026 13:07:07.458] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step count_setup pos=25, 70, 8 shaders=true
+611:[04Nov2026 13:07:11.995] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step count_go pos=25, 70, 9 shaders=true
+612:[04Nov2026 13:07:19.478] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 25_eyes_closed
+613:[04Nov2026 13:07:19.480] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step count_wait pos=25, 70, 9 shaders=true
+614:[04Nov2026 13:07:22.453] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step count done at 03:01
+615:[04Nov2026 13:07:46.750] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step stab_setup pos=25, 70, 9 shaders=true
+616:[04Nov2026 13:07:51.220] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots:   doll 1.8 blocks away
+617:[04Nov2026 13:07:51.221] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step stab_face pos=31, 70, 1 shaders=true
+618:[04Nov2026 13:07:51.223] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step stab_go pos=31, 70, 1 shaders=true
+619:[04Nov2026 13:07:51.224] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step stab done at 03:02
+620:[04Nov2026 13:07:51.898] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 26_stab
+621:[04Nov2026 13:07:51.901] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step hide_setup pos=31, 70, 1 shaders=true
+622:[04Nov2026 13:07:56.705] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step hide_go pos=31, 70, 1 shaders=true
+623:[04Nov2026 13:07:56.753] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] step hide done at 03:03
+624:[04Nov2026 13:08:01.046] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step hide_look pos=23, 70, 10 shaders=true
+625:[04Nov2026 13:08:01.740] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 30_closet
+626:[04Nov2026 13:08:01.742] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step peek_go pos=23, 70, 10 shaders=true
+627:[04Nov2026 13:08:05.163] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 31_peek
+628:[04Nov2026 13:08:05.566] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step peek_stop pos=23, 70, 10 shaders=true
+629:[04Nov2026 13:08:05.941] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step laptop pos=23, 70, 10 shaders=true
+631:[04Nov2026 13:08:06.309] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step laptop_app pos=23, 70, 10 shaders=true
+632:[04Nov2026 13:08:10.182] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 32_closet_laptop
+633:[04Nov2026 13:08:10.184] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step feed_1 pos=23, 70, 10 shaders=true
+634:[04Nov2026 13:08:14.775] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step feed_log_1 pos=23, 70, 10 shaders=true
+635:[04Nov2026 13:08:14.776] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots:   phase=3 steps=111111111111111111 doll=SCRIPTED pose=1 susp=0.85 eyes=false cam=true route=-1 tub=2526 at 32.5 70.7 2.5 cams=4
+636:[04Nov2026 13:08:14.777] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 33_cam1_pose1
+637:[04Nov2026 13:08:15.174] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step feed_2 pos=23, 70, 10 shaders=true
+638:[04Nov2026 13:08:19.947] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step feed_log_2 pos=23, 70, 10 shaders=true
+639:[04Nov2026 13:08:19.948] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots:   phase=3 steps=111111111111111111 doll=SCRIPTED pose=2 susp=0.00 eyes=false cam=true route=-1 tub=1800 at 27.5 70.0 4.5 cams=4
+640:[04Nov2026 13:08:19.949] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 33_cam2_pose2
+641:[04Nov2026 13:08:20.320] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step feed_3 pos=23, 70, 10 shaders=true
+642:[04Nov2026 13:08:24.561] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step feed_log_3 pos=23, 70, 10 shaders=true
+643:[04Nov2026 13:08:24.562] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots:   phase=3 steps=111111111111111111 doll=SCRIPTED pose=4 susp=0.00 eyes=false cam=true route=-1 tub=1800 at 24.5 70.0 12.5 cams=4
+644:[04Nov2026 13:08:24.977] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 33_cam3_pose4
+645:[04Nov2026 13:08:24.979] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step feed_4 pos=23, 70, 10 shaders=true
+646:[04Nov2026 13:08:29.677] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step feed_log_4 pos=23, 70, 10 shaders=true
+647:[04Nov2026 13:08:29.678] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots:   phase=3 steps=111111111111111111 doll=SCRIPTED pose=6 susp=0.00 eyes=false cam=true route=-1 tub=1800 at 23.5 69.9 2.5 cams=4
+648:[04Nov2026 13:08:29.679] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 33_cam4_pose6
+649:[04Nov2026 13:08:30.029] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step crawl pos=23, 70, 10 shaders=true
+650:[04Nov2026 13:08:34.482] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 34_cam_crawl
+651:[04Nov2026 13:08:34.850] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step lunge_pose pos=23, 70, 10 shaders=true
+652:[04Nov2026 13:08:36.907] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 35_cam_lunge
+653:[04Nov2026 13:08:36.911] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step float_tub pos=23, 70, 10 shaders=true
+654:[04Nov2026 13:08:41.522] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 36_cam_tub_float
+655:[04Nov2026 13:08:41.898] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman pos=23, 70, 10 shaders=true
+656:[04Nov2026 13:08:46.188] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 37_woman_0
+657:[04Nov2026 13:08:46.632] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_away_1 pos=23, 70, 10 shaders=true
+658:[04Nov2026 13:08:46.988] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_back_1 pos=23, 70, 10 shaders=true
+659:[04Nov2026 13:08:50.801] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 37_woman_1
+660:[04Nov2026 13:08:50.804] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_away_2 pos=23, 70, 10 shaders=true
+661:[04Nov2026 13:08:51.529] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_back_2 pos=23, 70, 10 shaders=true
+662:[04Nov2026 13:08:55.373] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 37_woman_2
+663:[04Nov2026 13:08:55.375] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_away_3 pos=23, 70, 10 shaders=true
+664:[04Nov2026 13:08:55.743] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_back_3 pos=23, 70, 10 shaders=true
+665:[04Nov2026 13:08:59.632] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 37_woman_3
+666:[04Nov2026 13:08:59.634] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_away_4 pos=23, 70, 10 shaders=true
+667:[04Nov2026 13:09:00.344] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_back_4 pos=23, 70, 10 shaders=true
+668:[04Nov2026 13:09:00.346] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 38_woman_scare
+669:[04Nov2026 13:09:00.785] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step woman_clear pos=23, 70, 10 shaders=true
+670:[04Nov2026 13:09:05.385] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_39_glitch_noise pos=23, 70, 10 shaders=true
+671:[04Nov2026 13:09:05.387] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 39_glitch_noise
+672:[04Nov2026 13:09:05.827] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_40_glitch_blackout pos=23, 70, 10 shaders=true
+673:[04Nov2026 13:09:05.831] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 40_glitch_blackout
+674:[04Nov2026 13:09:06.267] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step blackout_end pos=23, 70, 10 shaders=true
+675:[04Nov2026 13:09:11.178] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step freeze pos=23, 70, 10 shaders=true
+676:[04Nov2026 13:09:11.611] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 41_glitch_freeze
+677:[04Nov2026 13:09:12.047] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_42_glitch_stamp pos=23, 70, 10 shaders=true
+678:[04Nov2026 13:09:12.050] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 42_glitch_stamp
+679:[04Nov2026 13:09:12.483] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step app_close pos=23, 70, 10 shaders=true
+680:[04Nov2026 13:09:12.860] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step phone pos=23, 70, 10 shaders=true
+681:[04Nov2026 13:09:12.860] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] phase 3 at 03:05
+683:[04Nov2026 13:09:17.252] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step phone_app pos=25, 70, 9 shaders=true
+684:[04Nov2026 13:09:21.266] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 43_phone_app
+685:[04Nov2026 13:09:21.268] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step phone_app_close pos=25, 70, 9 shaders=true
+686:[04Nov2026 13:09:22.113] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step phone_msg pos=25, 70, 9 shaders=true
+687:[04Nov2026 13:09:25.007] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 44_phone_message
+688:[04Nov2026 13:09:25.435] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step phone_call pos=25, 70, 9 shaders=true
+689:[04Nov2026 13:09:28.324] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 45_phone_call
+690:[04Nov2026 13:09:28.327] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step phone_light pos=25, 70, 9 shaders=true
+691:[04Nov2026 13:09:29.225] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 47_phone_light
+692:[04Nov2026 13:09:29.228] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_48_fear_high pos=25, 70, 9 shaders=true
+693:[04Nov2026 13:09:35.451] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 48_fear_high
+694:[04Nov2026 13:09:35.454] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step go_49_danger_high pos=25, 70, 9 shaders=true
+695:[04Nov2026 13:09:39.953] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 49_danger_high
+696:[04Nov2026 13:09:40.384] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step calm pos=25, 70, 9 shaders=true
+697:[04Nov2026 13:09:43.159] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step finish_setup pos=25, 70, 9 shaders=true
+698:[04Nov2026 13:09:47.774] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step finish_go pos=25, 70, 9 shaders=true
+699:[04Nov2026 13:09:50.842] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots:   doll 1.8 blocks away
+700:[04Nov2026 13:09:50.843] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step finish_face pos=27, 70, 11 shaders=true
+701:[04Nov2026 13:09:51.238] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 50_found
+702:[04Nov2026 13:09:51.241] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step oni pos=27, 70, 11 shaders=true
+704:[04Nov2026 13:09:51.241] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] Dev was found by the doll
+705:[04Nov2026 13:09:51.241] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] ending 2 at 04:01
+706:[04Nov2026 13:09:53.213] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 60_jumpscare
+707:[04Nov2026 13:09:53.215] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step oni_wait pos=27, 70, 11 shaders=true
+708:[04Nov2026 13:10:20.241] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step oni_screen pos=27, 70, 11 shaders=true
+709:[04Nov2026 13:10:20.627] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 61_ending_oni
+710:[04Nov2026 13:10:20.629] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step oni_feed pos=27, 70, 11 shaders=true
+711:[04Nov2026 13:10:21.061] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 62_ending_oni_feed
+712:[04Nov2026 13:10:21.464] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step good_setup pos=27, 70, 11 shaders=true
+714:[04Nov2026 13:10:21.473] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3293 blocks restored)
+715:[04Nov2026 13:10:21.474] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：hitori: the night is reset］
+716:[04Nov2026 13:10:24.210] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step good_start pos=27, 70, 11 shaders=true
+717:[04Nov2026 13:10:24.222] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+718:[04Nov2026 13:10:24.223] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] Dev begins the night in room 203
+719:[04Nov2026 13:10:28.707] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step record_app pos=30, 70, 8 shaders=true
+721:[04Nov2026 13:10:29.047] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step record_open pos=30, 70, 8 shaders=true
+722:[04Nov2026 13:10:39.784] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step record_cam2 pos=30, 70, 8 shaders=true
+723:[04Nov2026 13:10:50.194] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step record_cam3 pos=30, 70, 8 shaders=true
+724:[04Nov2026 13:11:00.890] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step record_cam4 pos=30, 70, 8 shaders=true
+725:[04Nov2026 13:11:11.464] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step record_close pos=30, 70, 8 shaders=true
+726:[04Nov2026 13:11:11.825] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step good pos=30, 70, 8 shaders=true
+727:[04Nov2026 13:11:11.825] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] ending 1 at 04:02
+728:[04Nov2026 13:11:16.499] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 63_morning
+729:[04Nov2026 13:11:16.941] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step good_wait pos=30, 70, 8 shaders=true
+730:[04Nov2026 13:11:34.754] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step good_text pos=30, 70, 8 shaders=true
+731:[04Nov2026 13:11:35.164] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 64_ending_good
+732:[04Nov2026 13:11:35.166] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step good_play pos=30, 70, 8 shaders=true
+733:[04Nov2026 13:11:35.595] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 65_playback
+734:[04Nov2026 13:11:35.597] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step good_final pos=30, 70, 8 shaders=true
+735:[04Nov2026 13:11:36.020] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 66_playback_fusuma
+736:[04Nov2026 13:11:36.022] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step good_card pos=30, 70, 8 shaders=true
+737:[04Nov2026 13:11:36.449] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 67_ending_card
+738:[04Nov2026 13:11:36.452] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step mikan_setup pos=30, 70, 8 shaders=true
+739:[04Nov2026 13:11:36.462] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+740:[04Nov2026 13:11:36.462] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：hitori: the night is reset］
+741:[04Nov2026 13:11:39.711] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step mikan_start pos=30, 70, 8 shaders=true
+742:[04Nov2026 13:11:39.718] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+743:[04Nov2026 13:11:39.718] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] Dev begins the night in room 203
+744:[04Nov2026 13:11:44.269] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step mikan pos=30, 70, 8 shaders=true
+745:[04Nov2026 13:11:44.269] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] ending 4 at 03:00
+746:[04Nov2026 13:12:08.205] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step mikan_screen pos=30, 70, 8 shaders=true
+747:[04Nov2026 13:12:08.548] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 68_ending_mikan
+748:[04Nov2026 13:12:08.552] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step soto_setup pos=30, 70, 8 shaders=true
+749:[04Nov2026 13:12:08.560] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+750:[04Nov2026 13:12:08.560] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ［Dev：hitori: the night is reset］
+751:[04Nov2026 13:12:11.632] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step soto_start pos=30, 70, 8 shaders=true
+752:[04Nov2026 13:12:11.640] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] apartment reset (3291 blocks restored)
+753:[04Nov2026 13:12:11.640] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] Dev begins the night in room 203
+754:[04Nov2026 13:12:16.271] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step soto pos=30, 70, 8 shaders=true
+755:[04Nov2026 13:12:16.272] [Server thread/INFO] [com.hitori.Hitori/]: [hitori] ending 3 at 03:00
+756:[04Nov2026 13:12:32.797] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 69_soto_corridor
+757:[04Nov2026 13:12:33.296] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step soto_map pos=24, 69, -2 shaders=true
+758:[04Nov2026 13:12:33.300] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 70_soto_map
+759:[04Nov2026 13:12:33.793] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step soto_wait pos=24, 69, -2 shaders=true
+760:[04Nov2026 13:14:06.592] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step soto_screen pos=24, 69, -2 shaders=true
+761:[04Nov2026 13:14:07.062] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: shot 71_ending_soto
+762:[04Nov2026 13:14:07.066] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: step end pos=24, 69, -2 shaders=true
+763:[04Nov2026 13:14:07.541] [Render thread/INFO] [com.hitori.Hitori/]: [hitori] autoshots: finished
+771:[04Nov2026 13:14:08.478] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:overworld
+772:[04Nov2026 13:14:08.513] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:the_end
+773:[04Nov2026 13:14:08.514] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/minecraft:the_nether
+774:[04Nov2026 13:14:08.515] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[HitoriCI]'/hitori:shirakaba
+775:[04Nov2026 13:14:08.575] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (HitoriCI): All chunks are saved
