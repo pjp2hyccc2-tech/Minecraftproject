@@ -11,14 +11,15 @@ echo "eula=true" > eula.txt
 printf 'level-type=minecraft\\:flat\nonline-mode=false\nspawn-protection=0\nmax-tick-time=-1\n' > server.properties
 mkdir -p mods && cp "../$JAR" mods/
 rm -f in && mkfifo in
-( tail -f in | java -Xmx2G @libraries/net/minecraftforge/forge/${FORGE}/unix_args.txt nogui > server.log 2>&1 ) &
-exec 3>in
+exec 3<>in
+java -Xmx2G @libraries/net/minecraftforge/forge/${FORGE}/unix_args.txt nogui < in > server.log 2>&1 &
+JPID=$!
 for i in $(seq 1 180); do
   if grep -q "Done (" server.log 2>/dev/null; then break; fi
   if grep -q -E "Crash report|Failed to start|ModLoadingException" server.log 2>/dev/null; then break; fi
   sleep 2
 done
-grep -q "Done (" server.log || { echo "SERVER DID NOT START"; tail -60 server.log; exec 3>&-; exit 1; }
+grep -q "Done (" server.log || { echo "SERVER DID NOT START"; tail -60 server.log; kill $JPID; exit 1; }
 send() { echo "$1" >&3; sleep "${2:-1}"; }
 send "forceload add -16 -16 16 16" 3
 send "gamerule doMobSpawning false"
@@ -35,15 +36,13 @@ send "setblock 6 -56 0 minecraft:redstone_block" 5
 send "summon satsujinki:contestant 3.5 -60 4.5" 4
 send "execute if entity @e[type=satsujinki:corpse]" 1
 send "execute if entity @e[type=satsujinki:gib]" 1
-send "execute store result score #c dummy if entity @e[type=satsujinki:contestant]" 1
 send "execute if entity @e[type=satsujinki:contestant]" 1
 send "stop" 1
 exec 3>&-
 for i in $(seq 1 60); do
-  if ! pgrep -f "unix_args.txt nogui" > /dev/null; then break; fi
+  if ! kill -0 $JPID 2>/dev/null; then break; fi
   sleep 2
 done
-pkill -f "tail -f in" || true
 cp server.log ../prod-server.log
 echo "----- mod list"
 grep -i -E "satsujinki" server.log | head -5
