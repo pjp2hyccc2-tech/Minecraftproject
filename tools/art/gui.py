@@ -212,7 +212,7 @@ def stamps():
         r = np.random.RandomState(hash(key) % 1000)
         a = np.array(m).astype(np.float32)
         holes = np.array(Image.fromarray((r.rand(H, W) * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(1.2))).astype(np.float32)
-        a[holes > 178] = 0
+        a[holes > 192] = 0
         m = roughen(Image.fromarray(a.astype(np.uint8)), 3, 0.25, 1)
         img = colorize(m, (230, 20, 30), (170, 0, 12), 4, gloss=False)
         save(img, f'gui/stamp_{key}.png')

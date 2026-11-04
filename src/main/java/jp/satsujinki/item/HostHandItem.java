@@ -108,7 +108,7 @@ public class HostHandItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return true;
+        return false;
     }
 
     @Override

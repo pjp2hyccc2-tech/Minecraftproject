@@ -53,6 +53,15 @@ jobs:
           set -o pipefail
           timeout 1500 ./gradlew runGameTestServer --console=plain 2>&1 | tee gametest.log
 
+      - name: Production server smoke test (release jar)
+        id: prod
+        if: steps.build.outcome == 'success' && env.RUN_PROD == '1'
+        continue-on-error: true
+        run: |
+          chmod +x ci/prod-server-test.sh
+          set -o pipefail
+          timeout 900 bash ci/prod-server-test.sh 2>&1 | tee prod.log
+
       - name: Client autotest (screenshots)
         id: client
         if: steps.build.outcome == 'success' && env.RUN_CLIENT == '1'
@@ -72,8 +81,9 @@ jobs:
         run: |
           mkdir -p out/screenshots
           echo "${GITHUB_SHA}" > out/SOURCE_SHA
-          echo "build=${{ steps.build.outcome }} gametest=${{ steps.gametest.outcome }} client=${{ steps.client.outcome }}" > out/STATUS
+          echo "build=${{ steps.build.outcome }} gametest=${{ steps.gametest.outcome }} prod=${{ steps.prod.outcome }} client=${{ steps.client.outcome }}" > out/STATUS
           cp build.log out/ 2>/dev/null || true
+          cp prod.log prod-server.log out/ 2>/dev/null || true
           grep -E "error:|warning: \[removal\]|\.java:[0-9]+: (error|warning)" -A3 build.log > out/errors.txt 2>/dev/null || true
           tail -c 300000 gametest.log > out/gametest.log 2>/dev/null || true
           tail -c 400000 client.log > out/client.log 2>/dev/null || true

@@ -97,7 +97,7 @@ public class HostTerminalScreen extends Screen {
         for (int i = 0; i < entries.size(); i++) {
             int col = i % 2, row = i / 2;
             int x = this.left + 10 + col * 120;
-            int y = this.top + 48 + row * 22;
+            int y = this.top + 46 + row * 20;
             final int idx = i;
             Button b = Button.builder(Component.literal(String.format("%,d", entries.get(i).price())), btn -> ModNetwork.sendToServer(new BuyPacket(idx)))
                     .bounds(x + 70, y, 46, 18).build();
@@ -161,13 +161,13 @@ public class HostTerminalScreen extends Screen {
         for (int i = 0; i < this.shopStacks.size(); i++) {
             int col = i % 2, row = i / 2;
             int x = this.left + 10 + col * 120;
-            int y = this.top + 48 + row * 22;
+            int y = this.top + 46 + row * 20;
             ItemStack st = this.shopStacks.get(i);
             g.renderItem(st, x, y + 1);
+            g.renderItemDecorations(this.font, st, x, y + 1);
             String name = st.getHoverName().getString();
             if (this.font.width(name) > 50) name = this.font.plainSubstrByWidth(name, 46) + "…";
             g.drawString(this.font, name, x + 18, y + 5, 0xFFE0D0D0, false);
-            if (st.getCount() > 1) g.drawString(this.font, "x" + st.getCount(), x + 18, y + 13, 0xFF908080, false);
         }
     }
 
@@ -175,7 +175,7 @@ public class HostTerminalScreen extends Screen {
         for (int i = 0; i < this.shopStacks.size(); i++) {
             int col = i % 2, row = i / 2;
             int x = this.left + 10 + col * 120;
-            int y = this.top + 48 + row * 22;
+            int y = this.top + 46 + row * 20;
             if (mouseX >= x && mouseX < x + 68 && mouseY >= y && mouseY < y + 18) {
                 g.renderTooltip(this.font, Component.translatable("satsujinki.shop.desc." + ShopCatalog.ENTRIES.get(i).id()), mouseX, mouseY);
             }

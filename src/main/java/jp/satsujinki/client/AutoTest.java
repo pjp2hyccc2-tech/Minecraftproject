@@ -171,6 +171,7 @@ public final class AutoTest {
             cmd(sp, "weather clear");
             sp.getAbilities().flying = true;
             sp.onUpdateAbilities();
+            sp.setNoGravity(true);
             ServerLevel lvl = sp.serverLevel();
             int gy = lvl.getHeight(Heightmap.Types.MOTION_BLOCKING, 0, 0);
             center = new BlockPos(0, gy, 0);
