@@ -354,11 +354,24 @@ public class ContestantEntity extends PathfinderMob {
                 if (p != null) HostHandItem.forgetPlayer(p);
                 release(null, 0.0F);
             } else {
-                Vec3 target = p.getEyePosition().add(p.getLookAngle().scale(2.4D)).subtract(0.0D, getBbHeight() * 0.6D, 0.0D);
+                // Hold point in front of the host's face. Looking up lifts the victim higher, so it can be
+                // raised over a mixer rim or a railing even from the ground.
+                Vec3 look = p.getLookAngle();
+                Vec3 target = p.getEyePosition().add(look.scale(2.4D)).subtract(0.0D, getBbHeight() * 0.6D - Math.max(0.0D, look.y) * 1.2D, 0.0D);
                 Vec3 d = target.subtract(position());
                 this.setNoGravity(true);
-                this.setDeltaMovement(d.scale(0.45D));
                 this.fallDistance = 0.0F;
+                Vec3 step = d.scale(0.5D);
+                if (step.lengthSqr() > 0.81D) step = step.normalize().scale(0.9D);
+                if (step.lengthSqr() > 1.0E-6D && level().noCollision(this, getBoundingBox().move(step))) {
+                    // The host's grip: glide straight toward the hand while the way is clear (never into blocks;
+                    // a step is shorter than a full block plus the body width, so walls can't be passed through).
+                    this.setPos(getX() + step.x, getY() + step.y, getZ() + step.z);
+                    this.setDeltaMovement(Vec3.ZERO);
+                } else {
+                    // Blocked: slide along whatever is in the way.
+                    this.setDeltaMovement(d.scale(0.45D));
+                }
                 this.getLookControl().setLookAt(p, 60.0F, 60.0F);
                 this.hasImpulse = true;
             }

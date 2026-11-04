@@ -207,16 +207,20 @@ public final class AutoTest {
         }), 30);
         shot("03_grabbed", true);
 
-        add("carry_to_mixer", mc -> server(mc, sp -> look(sp, new Vec3(mixer.getX() + 0.5D, mixer.getY() + 7.0D, mixer.getZ() - 1.5D),
-                new Vec3(mixer.getX() + 0.5D, mixer.getY() + 1.0D, mixer.getZ() + 0.5D))), 25);
+        // Hover over the jar looking 50 degrees down, so the hand (eye + look * 2.4) is right above its middle.
+        add("carry_to_mixer", mc -> server(mc, sp -> {
+            Vec3 eye = new Vec3(mixer.getX() + 0.5D, mixer.getY() + 7.92D, mixer.getZ() + 0.5D - 1.54D);
+            double pitch = Math.toRadians(50.0D);
+            look(sp, eye, eye.add(0.0D, -Math.sin(pitch) * 10.0D, Math.cos(pitch) * 10.0D));
+            if (sp.serverLevel().getBlockEntity(mixer) instanceof MixerBlockEntity be) be.setRunning(true, sp);
+        }), 30);
         add("drop_into_mixer", mc -> server(mc, sp -> {
             HostHandItem.letGo(sp, 0.0F);
-            if (sp.serverLevel().getBlockEntity(mixer) instanceof MixerBlockEntity be) be.setRunning(true, sp);
             look(sp, new Vec3(mixer.getX() + 0.5D, mixer.getY() + 4.5D, mixer.getZ() - 5.5D), new Vec3(mixer.getX() + 0.5D, mixer.getY() + 1.5D, mixer.getZ() + 0.5D));
         }), 14);
         shot("04_mixer_grinding", true);
         add("wait_mixer", mc -> {
-        }, 10);
+        }, 18);
         shot("05_mixer_kill", true);
         add("feed_mixer", mc -> server(mc, sp -> {
             for (int i = 0; i < 4; i++) {
@@ -272,7 +276,7 @@ public final class AutoTest {
         shot("15_spikes", true);
 
         add("round_start", mc -> server(mc, sp -> {
-            look(sp, new Vec3(center.getX() + 0.5D, center.getY() + 6.0D, center.getZ() - 9.0D), Vec3.atCenterOf(center));
+            look(sp, new Vec3(center.getX() + 2.5D, center.getY() + 8.5D, center.getZ() - 11.0D), Vec3.atCenterOf(center));
             DeathGameManager.start(sp, center, 6);
         }), 20);
         shot("16_round_intro", true);

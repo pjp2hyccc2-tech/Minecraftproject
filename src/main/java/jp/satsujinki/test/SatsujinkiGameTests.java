@@ -68,6 +68,24 @@ public final class SatsujinkiGameTests {
         });
     }
 
+    /** A victim left standing on the glass rim of a running mixer is sucked in by the funnel and ground up. */
+    @GameTest(template = "arena", timeoutTicks = 300)
+    public static void mixerFunnelSucksInVictimOnRim(GameTestHelper h) {
+        ServerLevel level = h.getLevel();
+        BlockPos core = h.absolutePos(new BlockPos(6, 1, 6));
+        Structures.build(level, Structures.mixer(core), null);
+        if (!(level.getBlockEntity(core) instanceof MixerBlockEntity be)) {
+            h.fail("mixer block entity missing");
+            return;
+        }
+        ContestantEntity c = ContestantEntity.spawnAt(level, Vec3.atBottomCenterOf(core.offset(-2, 4, 0)), ContestantType.YANKEE);
+        be.setRunning(true, null);
+        h.succeedWhen(() -> {
+            if (c != null && c.isAlive()) h.fail("contestant is still standing on the rim");
+            if (be.getKills() < 1) h.fail("mixer kill not counted");
+        });
+    }
+
     @GameTest(template = "arena", timeoutTicks = 300)
     public static void pressCrushesContestant(GameTestHelper h) {
         ServerLevel level = h.getLevel();

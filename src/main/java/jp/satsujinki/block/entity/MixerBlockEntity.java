@@ -69,6 +69,12 @@ public class MixerBlockEntity extends TrapBlockEntity {
         return new AABB(p.getX() - 1.0D, p.getY() + 1.0D, p.getZ() - 1.0D, p.getX() + 2.0D, p.getY() + 4.5D, p.getZ() + 2.0D);
     }
 
+    /** The column of air above the jar where thrown victims get sucked in. */
+    public AABB funnel() {
+        BlockPos p = this.worldPosition;
+        return new AABB(p.getX() - 2.0D, p.getY() + 3.5D, p.getZ() - 2.0D, p.getX() + 3.0D, p.getY() + 9.0D, p.getZ() + 3.0D);
+    }
+
     @Override
     public AABB getRenderBoundingBox() {
         BlockPos p = this.worldPosition;
@@ -103,6 +109,17 @@ public class MixerBlockEntity extends TrapBlockEntity {
                 }
             }
             this.grind.keySet().retainAll(seen);
+            // Suction funnel above the rim: anything thrown over (or left standing on) the jar is dragged to the
+            // middle and drops onto the blades, so tossing victims in from a distance actually works.
+            for (LivingEntity e : sl.getEntitiesOfClass(LivingEntity.class, funnel(), ContestantEntity::isTrapVictim)) {
+                if (e instanceof ContestantEntity c && c.isHeld()) continue;
+                if (e.getY() < this.worldPosition.getY() + 3.9D) continue;
+                double dx = cx - e.getX(), dz = cz - e.getZ();
+                Vec3 v = e.getDeltaMovement();
+                e.setDeltaMovement(v.x * 0.55D + dx * 0.2D, Math.min(v.y, 0.15D) - 0.03D, v.z * 0.55D + dz * 0.2D);
+                e.hasImpulse = true;
+                e.fallDistance = 0.0F;
+            }
         } else {
             this.grind.clear();
             if (this.blood > 0.0F && sl.getGameTime() % 20L == 0L) {
