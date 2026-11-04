@@ -27,7 +27,7 @@ Minecraft Java 版 **Forge 1.20.1** 用の、一人称ホラー MOD です。
 
 ## 導入
 
-1. `hitori-1.0.0.jar` を `.minecraft/mods` フォルダに入れる
+1. `hitori-1.0.1.jar` を `.minecraft/mods` フォルダに入れる
 2. 影を使う場合は Oculus と Embeddium も同じフォルダに入れる
 3. 起動すると専用シェーダー **HitoriShaders** が `shaderpacks` フォルダに自動で入り、ほかのシェーダーを選んでいなければ自動で有効になります
    （`config/hitori-client.toml` の `installShaderPack = false` で止められます）

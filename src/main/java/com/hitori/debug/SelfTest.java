@@ -347,7 +347,7 @@ public final class SelfTest {
         d.setDirty();
     }
 
-    private static void placeCameras() {
+    private static int placeCameras() {
         GameData d = data();
         int n = 0;
         for (Layout.Marker mk : Layout.markers("cam_suggest")) {
@@ -358,10 +358,14 @@ public final class SelfTest {
             fake.setXRot(Cameras.suggestedPitch(level, Vec3.atBottomCenterOf(mk.pos()), mk.facing()));
             ItemStack cam = new ItemStack(ModItems.FIXED_CAMERA.get());
             hold(cam);
-            UseOnContext ctx = new UseOnContext(fake, InteractionHand.MAIN_HAND, new BlockHitResult(hit, Direction.UP, below, false));
-            if (Cameras.place(fake, ctx)) n++;
+            // the real click (adventure mode, as in the game): the server's own use-item-on-block path, Forge's event and all
+            BlockHitResult click = new BlockHitResult(hit, Direction.UP, below, false);
+            int before = d.cameras.size();
+            fake.gameMode.useItemOn(fake, level, fake.getMainHandItem(), InteractionHand.MAIN_HAND, click);
+            if (d.cameras.size() > before) n++;
         }
         log("cameras placed: " + n + " (data " + d.cameras.size() + ")");
+        return n;
     }
 
     // ================================================================================================ the playthrough
@@ -427,8 +431,9 @@ public final class SelfTest {
             check(GameManager.count(fake, ModItems.FIXED_CAMERA.get()) == 4, "four cameras from the bag");
             interact("laptop", "laptop");
             check(has(ModItems.LAPTOP.get()), "the laptop from the desk");
-            placeCameras();
-            check(data().cameras.size() >= 2, "cameras placed at the suggested spots (" + data().cameras.size() + ")");
+            check(fake.gameMode.getGameModeForPlayer() == GameType.ADVENTURE, "placing cameras in adventure mode");
+            int placed = placeCameras();
+            check(placed >= 2 && data().cameras.size() >= 2, "cameras placed at the suggested spots with a real right-click (" + placed + ")");
             check(Cameras.all(level).size() == data().cameras.size(), "a camera entity for each");
             FixedCamera c1 = Cameras.entity(level, 1);
             check(c1 != null && c1.number() == 1, "numbered in placement order (CAM1)");

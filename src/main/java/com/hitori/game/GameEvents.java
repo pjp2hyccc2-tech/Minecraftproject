@@ -4,10 +4,14 @@ import com.hitori.Hitori;
 import com.hitori.command.HitoriCommand;
 import com.hitori.debug.SelfTest;
 import com.hitori.item.GameItem;
+import com.hitori.registry.ModItems;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -92,6 +96,34 @@ public final class GameEvents {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
         if (Ritual.rightClickBlock(p, event.getHand(), event.getPos())) {
             event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+        }
+    }
+
+    /**
+     * Placing a fixed camera on a block face. The night is played in adventure mode, where Minecraft never calls
+     * {@code Item#useOn} for a player who may not build (Forge answers PASS on both sides), so the camera's own useOn only
+     * works in survival / creative. For everyone else the same steps run here, on both sides: the block reacts first (a
+     * door, a switch) unless you sneak, then the client swings and the server places the camera (or says why not).
+     */
+    @SubscribeEvent
+    public static void placeCamera(PlayerInteractEvent.RightClickBlock event) {
+        Player p = event.getEntity();
+        if (!event.getItemStack().is(ModItems.FIXED_CAMERA.get()) || p.getAbilities().mayBuild) return;
+        if (!p.isSecondaryUseActive()) {
+            BlockState state = event.getLevel().getBlockState(event.getPos());
+            InteractionResult used = state.use(event.getLevel(), p, event.getHand(), event.getHitVec());
+            if (used.consumesAction()) {
+                event.setCanceled(true);
+                event.setCancellationResult(used);
+                return;
+            }
+        }
+        event.setCanceled(true);
+        if (p instanceof ServerPlayer sp) {
+            boolean placed = GameManager.inGame(sp) && Cameras.place(sp, new UseOnContext(sp, event.getHand(), event.getHitVec()));
+            event.setCancellationResult(placed ? InteractionResult.SUCCESS : InteractionResult.FAIL);
+        } else {
             event.setCancellationResult(InteractionResult.SUCCESS);
         }
     }
