@@ -1,0 +1,104 @@
+name: Build Satsujinki mod
+
+on:
+  push:
+    branches: [ satsujinki-mod ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: satsujinki-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      CI_FLAGS_FILE: ci/flags.env
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Read CI flags
+        run: |
+          mkdir -p ci-out
+          if [ -f "$CI_FLAGS_FILE" ]; then cat "$CI_FLAGS_FILE" >> "$GITHUB_ENV"; fi
+
+      - name: Build jar
+        id: build
+        run: |
+          set -o pipefail
+          ./gradlew build --stacktrace --console=plain 2>&1 | tee ci-out/build.log
+
+      - name: Upload jar artifact
+        if: steps.build.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: satsujinki-jar
+          path: build/libs/*.jar
+
+      - name: Dev API reference dump
+        if: always() && env.API_DUMP == '1'
+        run: |
+          MCJAR=$(find ~/.gradle/caches -name "forge-*_mapped_official_*.jar" ! -name "*sources*" | head -1)
+          echo "MC jar: $MCJAR" | tee ci-out/api-dump.txt
+          CP=$(find ~/.gradle/caches/modules-2 -name '*.jar' | tr '\n' ':')
+          for c in $(cat ci/api-classes.txt); do
+            echo "=================== $c" >> ci-out/api-dump.txt
+            javap -cp "$MCJAR:$CP" -public "$c" >> ci-out/api-dump.txt 2>&1 || true
+          done
+          wc -l ci-out/api-dump.txt
+
+      - name: Server GameTests
+        id: gametest
+        if: steps.build.outcome == 'success' && env.RUN_GAMETEST == '1'
+        run: |
+          set -o pipefail
+          timeout 25m ./gradlew runGameTestServer --console=plain 2>&1 | tee ci-out/gametest.log
+
+      - name: Client screenshot autotest
+        id: clienttest
+        if: steps.build.outcome == 'success' && env.RUN_CLIENT == '1'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb mesa-utils libgl1-mesa-dri > /dev/null
+          export LIBGL_ALWAYS_SOFTWARE=1
+          mkdir -p run
+          echo "lang:ja_jp" > run/options.txt
+          echo "guiScale:2" >> run/options.txt
+          echo "renderDistance:6" >> run/options.txt
+          echo "onboardAccessibility:false" >> run/options.txt
+          echo "tutorialStep:none" >> run/options.txt
+          echo "skipMultiplayerWarning:true" >> run/options.txt
+          echo "joinedFirstServer:true" >> run/options.txt
+          set -o pipefail
+          timeout 30m xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runClient -Pautotest --console=plain 2>&1 | tee ci-out/client.log || true
+          mkdir -p ci-out/screenshots
+          cp run/screenshots/*.png ci-out/screenshots/ 2>/dev/null || true
+          ls -la ci-out/screenshots
+
+      - name: Publish CI output branch
+        if: always()
+        run: |
+          cp build/libs/*.jar ci-out/ 2>/dev/null || true
+          cp run/logs/latest.log ci-out/run-latest.log 2>/dev/null || true
+          cp -r run/crash-reports ci-out/ 2>/dev/null || true
+          cp -r run/logs ci-out/runlogs 2>/dev/null || true
+          echo "sha=${GITHUB_SHA} build=${{ steps.build.outcome }} gametest=${{ steps.gametest.outcome }} client=${{ steps.clienttest.outcome }}" > ci-out/STATUS.txt
+          cd ci-out
+          git init -q
+          git config user.name "satsujinki-ci"
+          git config user.email "satsujinki-ci@users.noreply.github.com"
+          git checkout -q -b ci-output
+          git add -A
+          git commit -q -m "CI output for ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ci-output

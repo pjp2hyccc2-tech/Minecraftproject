@@ -1,0 +1,26 @@
+# gradle
+build/
+.gradle/
+out/
+bin/
+classes/
+
+# forge run dirs
+run/
+run-data/
+runs/
+
+# ide
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+eclipse/
+
+# ci scratch
+ci-out/
+logs/
