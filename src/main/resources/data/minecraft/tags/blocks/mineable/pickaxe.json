@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "satsujinki:mixer_core",
+    "satsujinki:mixer_casing",
+    "satsujinki:mixer_glass",
+    "satsujinki:press_head",
+    "satsujinki:spike_bed",
+    "satsujinki:saw",
+    "satsujinki:host_terminal",
+    "satsujinki:execution_tiles",
+    "satsujinki:bloody_tiles",
+    "satsujinki:rusted_plate"
+  ]
+}

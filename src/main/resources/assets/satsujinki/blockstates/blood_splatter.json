@@ -1,0 +1,148 @@
+{
+  "variants": {
+    "dried=false,variant=0": [
+      {
+        "model": "satsujinki:block/blood_splatter_0",
+        "y": 0
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_0",
+        "y": 90
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_0",
+        "y": 180
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_0",
+        "y": 270
+      }
+    ],
+    "dried=true,variant=0": [
+      {
+        "model": "satsujinki:block/blood_splatter_0_dried",
+        "y": 0
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_0_dried",
+        "y": 90
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_0_dried",
+        "y": 180
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_0_dried",
+        "y": 270
+      }
+    ],
+    "dried=false,variant=1": [
+      {
+        "model": "satsujinki:block/blood_splatter_1",
+        "y": 0
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_1",
+        "y": 90
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_1",
+        "y": 180
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_1",
+        "y": 270
+      }
+    ],
+    "dried=true,variant=1": [
+      {
+        "model": "satsujinki:block/blood_splatter_1_dried",
+        "y": 0
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_1_dried",
+        "y": 90
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_1_dried",
+        "y": 180
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_1_dried",
+        "y": 270
+      }
+    ],
+    "dried=false,variant=2": [
+      {
+        "model": "satsujinki:block/blood_splatter_2",
+        "y": 0
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_2",
+        "y": 90
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_2",
+        "y": 180
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_2",
+        "y": 270
+      }
+    ],
+    "dried=true,variant=2": [
+      {
+        "model": "satsujinki:block/blood_splatter_2_dried",
+        "y": 0
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_2_dried",
+        "y": 90
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_2_dried",
+        "y": 180
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_2_dried",
+        "y": 270
+      }
+    ],
+    "dried=false,variant=3": [
+      {
+        "model": "satsujinki:block/blood_splatter_3",
+        "y": 0
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_3",
+        "y": 90
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_3",
+        "y": 180
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_3",
+        "y": 270
+      }
+    ],
+    "dried=true,variant=3": [
+      {
+        "model": "satsujinki:block/blood_splatter_3_dried",
+        "y": 0
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_3_dried",
+        "y": 90
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_3_dried",
+        "y": 180
+      },
+      {
+        "model": "satsujinki:block/blood_splatter_3_dried",
+        "y": 270
+      }
+    ]
+  }
+}

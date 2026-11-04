@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "satsujinki:press_kit"
+    },
+    "title": {
+      "translate": "advancements.satsujinki.press.title"
+    },
+    "description": {
+      "translate": "advancements.satsujinki.press.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "satsujinki:first_blood"
+}

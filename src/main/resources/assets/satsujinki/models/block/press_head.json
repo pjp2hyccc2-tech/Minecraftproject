@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "satsujinki:block/press_head_top",
+    "bottom": "satsujinki:block/press_head_bottom",
+    "side": "satsujinki:block/press_head_side"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "blood=0": {
+      "model": "satsujinki:block/spike_bed"
+    },
+    "blood=1": {
+      "model": "satsujinki:block/spike_bed_blood_1"
+    },
+    "blood=2": {
+      "model": "satsujinki:block/spike_bed_blood_2"
+    }
+  }
+}

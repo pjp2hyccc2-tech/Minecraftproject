@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "satsujinki:block/saw_side",
+    "north": "satsujinki:block/saw_side",
+    "south": "satsujinki:block/saw_side",
+    "east": "satsujinki:block/saw_side",
+    "west": "satsujinki:block/saw_side",
+    "up": "satsujinki:block/saw_top",
+    "down": "satsujinki:block/mixer_casing_top"
+  }
+}

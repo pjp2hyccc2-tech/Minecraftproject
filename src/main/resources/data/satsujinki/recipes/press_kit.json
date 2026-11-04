@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "satsujinki:press_head"
+    },
+    {
+      "item": "satsujinki:spike_bed"
+    },
+    {
+      "item": "satsujinki:spike_bed"
+    },
+    {
+      "item": "satsujinki:rusted_plate"
+    },
+    {
+      "item": "satsujinki:rusted_plate"
+    }
+  ],
+  "result": {
+    "item": "satsujinki:press_kit",
+    "count": 1
+  }
+}

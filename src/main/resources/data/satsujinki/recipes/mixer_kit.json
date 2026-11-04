@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "satsujinki:mixer_core"
+    },
+    {
+      "item": "satsujinki:mixer_casing"
+    },
+    {
+      "item": "satsujinki:mixer_casing"
+    },
+    {
+      "item": "satsujinki:mixer_glass"
+    },
+    {
+      "item": "satsujinki:mixer_glass"
+    },
+    {
+      "item": "satsujinki:mixer_glass"
+    }
+  ],
+  "result": {
+    "item": "satsujinki:mixer_kit",
+    "count": 1
+  }
+}

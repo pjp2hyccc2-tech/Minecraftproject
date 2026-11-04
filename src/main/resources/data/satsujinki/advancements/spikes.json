@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "satsujinki:spike_bed"
+    },
+    "title": {
+      "translate": "advancements.satsujinki.spikes.title"
+    },
+    "description": {
+      "translate": "advancements.satsujinki.spikes.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "satsujinki:first_blood"
+}

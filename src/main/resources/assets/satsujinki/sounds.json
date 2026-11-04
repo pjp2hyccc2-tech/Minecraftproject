@@ -1,0 +1,473 @@
+{
+  "mixer.start": {
+    "sounds": [
+      {
+        "name": "satsujinki:mixer/start",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.mixer_start"
+  },
+  "mixer.loop": {
+    "sounds": [
+      {
+        "name": "satsujinki:mixer/loop",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.mixer_loop"
+  },
+  "mixer.grind": {
+    "sounds": [
+      {
+        "name": "satsujinki:mixer/grind_1",
+        "attenuation_distance": 28
+      },
+      {
+        "name": "satsujinki:mixer/grind_2",
+        "attenuation_distance": 28
+      },
+      {
+        "name": "satsujinki:mixer/grind_3",
+        "attenuation_distance": 28
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.mixer_grind"
+  },
+  "mixer.stop": {
+    "sounds": [
+      {
+        "name": "satsujinki:mixer/stop",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.mixer_stop"
+  },
+  "press.charge": {
+    "sounds": [
+      {
+        "name": "satsujinki:press/charge",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.press_charge"
+  },
+  "press.slam": {
+    "sounds": [
+      {
+        "name": "satsujinki:press/slam_1",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "satsujinki:press/slam_2",
+        "attenuation_distance": 40
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.press_slam"
+  },
+  "press.retract": {
+    "sounds": [
+      {
+        "name": "satsujinki:press/retract",
+        "attenuation_distance": 20
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.press_retract"
+  },
+  "saw.loop": {
+    "sounds": [
+      {
+        "name": "satsujinki:saw/loop",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.saw_loop"
+  },
+  "saw.cut": {
+    "sounds": [
+      {
+        "name": "satsujinki:saw/cut_1",
+        "attenuation_distance": 28
+      },
+      {
+        "name": "satsujinki:saw/cut_2",
+        "attenuation_distance": 28
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.saw_cut"
+  },
+  "guillotine.drop": {
+    "sounds": [
+      {
+        "name": "satsujinki:guillotine/drop",
+        "attenuation_distance": 20
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.guillotine_drop"
+  },
+  "guillotine.chop": {
+    "sounds": [
+      {
+        "name": "satsujinki:guillotine/chop",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.guillotine_chop"
+  },
+  "guillotine.lock": {
+    "sounds": [
+      {
+        "name": "satsujinki:guillotine/lock",
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.guillotine_lock"
+  },
+  "gore.splat": {
+    "sounds": [
+      {
+        "name": "satsujinki:gore/splat_1"
+      },
+      {
+        "name": "satsujinki:gore/splat_2"
+      },
+      {
+        "name": "satsujinki:gore/splat_3"
+      },
+      {
+        "name": "satsujinki:gore/splat_4"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.gore_splat"
+  },
+  "gore.crunch": {
+    "sounds": [
+      {
+        "name": "satsujinki:gore/crunch_1"
+      },
+      {
+        "name": "satsujinki:gore/crunch_2"
+      },
+      {
+        "name": "satsujinki:gore/crunch_3"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.gore_crunch"
+  },
+  "gore.squelch": {
+    "sounds": [
+      {
+        "name": "satsujinki:gore/squelch_1"
+      },
+      {
+        "name": "satsujinki:gore/squelch_2"
+      },
+      {
+        "name": "satsujinki:gore/squelch_3"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.gore_squelch"
+  },
+  "gore.spray": {
+    "sounds": [
+      {
+        "name": "satsujinki:gore/spray"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.gore_spray"
+  },
+  "gore.gib_land": {
+    "sounds": [
+      {
+        "name": "satsujinki:gore/gib_1"
+      },
+      {
+        "name": "satsujinki:gore/gib_2"
+      },
+      {
+        "name": "satsujinki:gore/gib_3"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.gore_gib"
+  },
+  "gore.impale": {
+    "sounds": [
+      {
+        "name": "satsujinki:gore/impale_1"
+      },
+      {
+        "name": "satsujinki:gore/impale_2"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.gore_impale"
+  },
+  "npc.scream_male": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/scream_m_1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "satsujinki:voice/scream_m_2",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "satsujinki:voice/scream_m_3",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.scream"
+  },
+  "npc.scream_female": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/scream_f_1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "satsujinki:voice/scream_f_2",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "satsujinki:voice/scream_f_3",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.scream"
+  },
+  "npc.panic_male": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/panic_m_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "satsujinki:voice/panic_m_2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "satsujinki:voice/panic_m_3",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.panic"
+  },
+  "npc.panic_female": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/panic_f_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "satsujinki:voice/panic_f_2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "satsujinki:voice/panic_f_3",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.panic"
+  },
+  "npc.beg_male": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/beg_m_1"
+      },
+      {
+        "name": "satsujinki:voice/beg_m_2"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.beg"
+  },
+  "npc.beg_female": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/beg_f_1"
+      },
+      {
+        "name": "satsujinki:voice/beg_f_2"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.beg"
+  },
+  "npc.hurt_male": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/hurt_m_1"
+      },
+      {
+        "name": "satsujinki:voice/hurt_m_2"
+      },
+      {
+        "name": "satsujinki:voice/hurt_m_3"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.hurt"
+  },
+  "npc.hurt_female": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/hurt_f_1"
+      },
+      {
+        "name": "satsujinki:voice/hurt_f_2"
+      },
+      {
+        "name": "satsujinki:voice/hurt_f_3"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.hurt"
+  },
+  "npc.death_male": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/death_m_1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "satsujinki:voice/death_m_2",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.death"
+  },
+  "npc.death_female": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/death_f_1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "satsujinki:voice/death_f_2",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.death"
+  },
+  "npc.fight": {
+    "sounds": [
+      {
+        "name": "satsujinki:voice/fight_1"
+      },
+      {
+        "name": "satsujinki:voice/fight_2"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.fight"
+  },
+  "npc.spawn": {
+    "sounds": [
+      {
+        "name": "satsujinki:misc/spawn"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.spawn"
+  },
+  "host.grab": {
+    "sounds": [
+      {
+        "name": "satsujinki:host/grab"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.grab"
+  },
+  "host.throw": {
+    "sounds": [
+      {
+        "name": "satsujinki:host/throw"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.throw"
+  },
+  "host.remote": {
+    "sounds": [
+      {
+        "name": "satsujinki:host/remote"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.remote"
+  },
+  "ui.kill": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/kill"
+      }
+    ]
+  },
+  "ui.combo": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/combo"
+      }
+    ]
+  },
+  "ui.rankup": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/rankup"
+      }
+    ]
+  },
+  "ui.announce": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/announce"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.announce"
+  },
+  "ui.countdown": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/countdown"
+      }
+    ]
+  },
+  "ui.start": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/start"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.start"
+  },
+  "ui.gameover": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/gameover"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.gameover"
+  },
+  "ui.buy": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/buy"
+      }
+    ]
+  },
+  "ui.r18": {
+    "sounds": [
+      {
+        "name": "satsujinki:ui/r18"
+      }
+    ]
+  },
+  "mop.clean": {
+    "sounds": [
+      {
+        "name": "satsujinki:misc/mop"
+      }
+    ],
+    "subtitle": "subtitles.satsujinki.mop"
+  },
+  "music.deathgame": {
+    "sounds": [
+      {
+        "name": "satsujinki:music/deathgame",
+        "stream": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "satsujinki:host_hand"
+    },
+    "title": {
+      "translate": "advancements.satsujinki.root.title"
+    },
+    "description": {
+      "translate": "advancements.satsujinki.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "satsujinki:textures/block/bloody_tiles.png"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

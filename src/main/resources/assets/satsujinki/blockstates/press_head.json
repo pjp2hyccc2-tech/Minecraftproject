@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "satsujinki:block/press_head"
+    },
+    "powered=true": {
+      "model": "satsujinki:block/press_head"
+    }
+  }
+}

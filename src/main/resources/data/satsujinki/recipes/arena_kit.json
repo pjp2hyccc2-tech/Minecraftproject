@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "satsujinki:host_terminal"
+    },
+    {
+      "item": "satsujinki:execution_tiles"
+    },
+    {
+      "item": "satsujinki:execution_tiles"
+    },
+    {
+      "item": "satsujinki:rusted_plate"
+    },
+    {
+      "item": "satsujinki:rusted_plate"
+    }
+  ],
+  "result": {
+    "item": "satsujinki:arena_kit",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "satsujinki:mixer",
+    "satsujinki:press",
+    "satsujinki:saw",
+    "satsujinki:guillotine",
+    "satsujinki:spikes"
+  ]
+}

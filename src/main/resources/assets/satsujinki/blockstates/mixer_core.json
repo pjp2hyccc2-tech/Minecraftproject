@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "satsujinki:block/mixer_core"
+    },
+    "powered=true": {
+      "model": "satsujinki:block/mixer_core"
+    }
+  }
+}
