@@ -1,0 +1,90 @@
+2026-11-04 05:06:17,104 main WARN Advanced terminal features are not available in this environment
+[05:06:17] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserver, --fml.forgeVersion, 47.2.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, nogui]
+[05:06:17] [main/INFO] [cp.mo.mo.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.21 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[05:06:17] [main/WARN] [ne.mi.fm.lo.FMLConfig/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/prodserver/config/fml.toml is not correct. Correcting
+[05:06:17] [main/INFO] [ne.mi.fm.lo.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[05:06:17] [main/INFO] [ne.mi.fm.lo.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
+[05:06:17] [main/INFO] [ne.mi.fm.lo.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserver
+[05:06:17] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/work/Minecraftproject/Minecraftproject/prodserver/libraries/org/spongepowered/mixin/0.8.5/mixin-0.8.5.jar%2365!/ Service=ModLauncher Env=SERVER
+[05:06:17] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/work/Minecraftproject/Minecraftproject/prodserver/libraries/net/minecraftforge/fmlcore/1.20.1-47.2.0/fmlcore-1.20.1-47.2.0.jar is missing mods.toml file
+[05:06:17] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/work/Minecraftproject/Minecraftproject/prodserver/libraries/net/minecraftforge/javafmllanguage/1.20.1-47.2.0/javafmllanguage-1.20.1-47.2.0.jar is missing mods.toml file
+[05:06:17] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/work/Minecraftproject/Minecraftproject/prodserver/libraries/net/minecraftforge/lowcodelanguage/1.20.1-47.2.0/lowcodelanguage-1.20.1-47.2.0.jar is missing mods.toml file
+[05:06:17] [main/WARN] [ne.mi.fm.lo.mo.ModFileParser/LOADING]: Mod file /home/runner/work/Minecraftproject/Minecraftproject/prodserver/libraries/net/minecraftforge/mclanguage/1.20.1-47.2.0/mclanguage-1.20.1-47.2.0.jar is missing mods.toml file
+[05:06:17] [main/INFO] [ne.mi.fm.lo.mo.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[05:06:19] [main/INFO] [cp.mo.mo.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserver' with arguments [nogui]
+[05:06:25] [modloading-worker-0/INFO] [ne.mi.co.ForgeMod/FORGEMOD]: Forge mod loading, version 47.2.0, for MC 1.20.1 with MCP 20230612.114412
+[05:06:25] [modloading-worker-0/INFO] [ne.mi.co.MinecraftForge/FORGE]: MinecraftForge v47.2.0 Initialized
+[05:06:25] [modloading-worker-0/INFO] [jp.sa.Satsujinki/]: 殺人喜 -SATSUJINKI- loaded. R18: violence and gore ahead.
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/prodserver/config/satsujinki-common.toml is not correct. Correcting
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key gameplay was corrected from null to its default, SimpleCommentedConfig:{}. 
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key gameplay.bloodDecals was corrected from null to its default, true. 
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key gameplay.corpseSeconds was corrected from null to its default, 90. 
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key gameplay.starterKit was corrected from null to its default, true. 
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key gameplay.roundSeconds was corrected from null to its default, 300. 
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key gameplay.startingPoints was corrected from null to its default, 1500. 
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key gameplay.maxGibsPerKill was corrected from null to its default, 18. 
+[05:06:26] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[05:06:26] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.2.0 Target: 47.4.28
+[05:06:27] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[05:06:27] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/work/Minecraftproject/Minecraftproject/prodserver/libraries/net/minecraft/server/1.20.1-20230612.114412/server-1.20.1-20230612.114412-srg.jar%23103!/assets/.mcassetsroot' uses unexpected schema
+[05:06:27] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/work/Minecraftproject/Minecraftproject/prodserver/libraries/net/minecraft/server/1.20.1-20230612.114412/server-1.20.1-20230612.114412-srg.jar%23103!/data/.mcassetsroot' uses unexpected schema
+[05:06:28] [main/ERROR] [minecraft/DedicatedServerProperties]: No key layers in MapLike[{}]
+[05:06:29] [main/INFO] [minecraft/RecipeManager]: Loaded 7 recipes
+[05:06:29] [main/INFO] [minecraft/AdvancementList]: Loaded 1286 advancements
+[05:06:30] [Server thread/INFO] [minecraft/DedicatedServer]: Starting minecraft server version 1.20.1
+[05:06:30] [Server thread/INFO] [minecraft/DedicatedServer]: Loading properties
+[05:06:30] [Server thread/INFO] [minecraft/DedicatedServer]: Default game type: SURVIVAL
+[05:06:30] [Server thread/INFO] [minecraft/MinecraftServer]: Generating keypair
+[05:06:30] [Server thread/INFO] [minecraft/DedicatedServer]: Starting Minecraft server on *:25565
+[05:06:30] [Server thread/INFO] [minecraft/ServerConnectionListener]: Using epoll channel type
+[05:06:30] [Server thread/WARN] [minecraft/DedicatedServer]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[05:06:30] [Server thread/WARN] [minecraft/DedicatedServer]: The server will make no attempt to authenticate usernames. Beware.
+[05:06:30] [Server thread/WARN] [minecraft/DedicatedServer]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[05:06:30] [Server thread/WARN] [minecraft/DedicatedServer]: To change this, set "online-mode" to "true" in the server.properties file.
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/forge-server.toml is not correct. Correcting
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[05:06:30] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[05:06:30] [Server thread/INFO] [minecraft/DedicatedServer]: Preparing level "world"
+[05:06:31] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[05:06:31] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[05:06:31] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[05:06:32] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 1%
+[05:06:32] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 24%
+[05:06:33] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 41%
+[05:06:33] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 49%
+[05:06:34] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 97%
+[05:06:34] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 3019 ms
+[05:06:34] [Server thread/INFO] [minecraft/DedicatedServer]: Done (3.892s)! For help, type "help"
+[05:06:34] [Server thread/INFO] [ne.mi.se.pe.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[05:06:35] [Server thread/INFO] [minecraft/MinecraftServer]: Marked [-1, -1] chunks in minecraft:overworld from [-1, -1] to [1, 1] to be force loaded
+[05:06:38] [Server thread/INFO] [minecraft/MinecraftServer]: Gamerule doMobSpawning is now set to: false
+[05:06:39] [Server thread/INFO] [minecraft/MinecraftServer]: Changed the block at 0, -61, 0
+[05:06:40] [Server thread/INFO] [minecraft/MinecraftServer]: Summoned new Contestant
+[05:06:41] [Server thread/INFO] [minecraft/MinecraftServer]: Changed the block at 0, -62, 0
+[05:06:41] [Server thread/INFO] [minecraft/LivingEntity]: Named entity ContestantEntity['No.605 岡田 和也'/1, l='ServerLevel[world]', x=0.50, y=-60.00, z=0.50] died: No.605 岡田 和也 was sawn in half
+[05:06:45] [Server thread/INFO] [minecraft/MinecraftServer]: Changed the block at 6, -61, 0
+[05:06:46] [Server thread/INFO] [minecraft/MinecraftServer]: Changed the block at 6, -57, 0
+[05:06:47] [Server thread/INFO] [minecraft/MinecraftServer]: Summoned new Contestant
+[05:06:49] [Server thread/INFO] [minecraft/MinecraftServer]: Changed the block at 6, -56, 0
+[05:06:50] [Server thread/INFO] [minecraft/LivingEntity]: Named entity ContestantEntity['No.344 藤田 大輔'/10, l='ServerLevel[world]', x=6.50, y=-60.81, z=0.50] died: No.344 藤田 大輔 was pressed flat
+[05:06:54] [Server thread/INFO] [minecraft/MinecraftServer]: Summoned new Contestant
+[05:06:58] [Server thread/INFO] [minecraft/MinecraftServer]: Test passed, count: 3
+[05:06:59] [Server thread/INFO] [minecraft/MinecraftServer]: Test passed, count: 10
+[05:07:00] [Server thread/INFO] [minecraft/MinecraftServer]: Test passed, count: 1
+[05:07:01] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping the server
+[05:07:01] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[05:07:01] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[05:07:01] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[05:07:02] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[05:07:02] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[05:07:02] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[05:07:02] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[05:07:02] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[05:07:02] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[05:07:02] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved

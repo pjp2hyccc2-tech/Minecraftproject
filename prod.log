@@ -1,0 +1,7 @@
+----- mod list
+[05:06:25] [modloading-worker-0/INFO] [jp.sa.Satsujinki/]: 殺人喜 -SATSUJINKI- loaded. R18: violence and gore ahead.
+[05:06:26] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/Minecraftproject/Minecraftproject/prodserver/config/satsujinki-common.toml is not correct. Correcting
+----- checks
+[05:06:58] [Server thread/INFO] [minecraft/MinecraftServer]: Test passed, count: 3
+[05:06:59] [Server thread/INFO] [minecraft/MinecraftServer]: Test passed, count: 10
+[05:07:00] [Server thread/INFO] [minecraft/MinecraftServer]: Test passed, count: 1
