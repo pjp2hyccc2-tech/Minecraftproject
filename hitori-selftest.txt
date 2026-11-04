@@ -1,0 +1,235 @@
+selftest starting
+level hitori:shirakaba
+---- the world's checks (WorldCheck)
+apartment chunks generated and forced in 1488 ms
+PASS every marker of DESIGN §2 exists (84 names)
+PASS list sizes: bathtub 2, closet_hide 3, closet_fusuma 3, cam_suggest 4
+PASS doll_route ≥ 10, doll_hides ≥ 6, woman_spots ≥ 4
+PASS standing markers are walkable (0 bad)
+PASS the doll's hiding spots are reachable cells or tables
+PASS the woman's spots are inside 203
+PASS markers are in their rooms (0 wrong)
+PASS tv: 1/1 crt_tv
+PASS table: 1/1 chabudai
+PASS bathtub: 2/2 bathtub
+PASS bath_tap: 1/1 bath_tap
+PASS washbasin: 1/1 washbasin
+PASS kitchen_sink: 1/1 kitchen_sink
+PASS rice: 1/1 rice_bag
+PASS salt: 1/1 salt_shaker
+PASS cup: 1/1 cup_glass
+PASS knife: 1/1 knife_rack
+PASS lighter: 1/1 drawer
+PASS scissors: 1/1 sewing_box
+PASS thread: 1/1 sewing_box
+PASS nail_clipper: 1/1 mirror_small
+PASS plush_shelf: 1/1 plush_doll
+PASS camera_bag: 1/1 camera_bag
+PASS laptop: 1/1 laptop_block
+PASS printout: 1/1 printout
+PASS breaker: 1/1 breaker_panel
+PASS intercom: 1/1 intercom
+PASS morning: 1/1 desk_chair
+PASS door_front: 1/1 front_door
+PASS closet_fusuma: 3/3 oshiire_fusuma
+PASS door_western_closet: 3/3 oshiire_fusuma
+PASS door_toilet: 1/1 toilet_door
+PASS door_washroom: 1/1 interior_door
+PASS door_western: 1/1 interior_door
+PASS door_bath: 1/1 bath_door
+PASS door_tatami_dk: 2/2 fusuma
+PASS door_tatami_hall: 1/1 fusuma
+PASS door_balcony_tatami: 3/3 balcony_door
+PASS door_balcony_western: 2/2 balcony_door
+PASS curtains_tatami: 3/3 curtain
+PASS curtains_western: 2/2 curtain
+PASS fridge: 1/1 fridge_old
+PASS gas_stove: 1/1 gas_stove
+PASS washing_machine: 1/1 washing_machine
+PASS desk_lamp: 1/1 desk_lamp
+PASS wall_clock: 1/1 wall_clock
+PASS hanging_lamp: 1/1 hanging_lamp
+PASS closet_futons: 3/3 filled
+PASS street_lamp: 1/1 street_lamp_old
+PASS vending_machine: 1/1 vending_machine_small
+PASS swing: 1/1 swing_set
+PASS unit_204: 1/1 unit_door
+PASS switch_genkan: 1/1 light_switch
+PASS lights_genkan: 1/1 fluorescent_ring
+PASS switch_genkan controls genkan
+PASS switch_hall: 1/1 light_switch
+PASS lights_hall: 2/2 fluorescent_ring
+PASS switch_hall controls hall
+PASS switch_toilet: 1/1 light_switch
+PASS lights_toilet: 1/1 fluorescent_ring
+PASS switch_toilet controls toilet
+PASS switch_bath: 1/1 light_switch
+PASS lights_bath: 1/1 fluorescent_ring
+PASS switch_bath controls bath
+PASS switch_washroom: 1/1 light_switch
+PASS lights_washroom: 1/1 fluorescent_ring
+PASS switch_washroom controls washroom
+PASS switch_dk: 1/1 light_switch
+PASS lights_dk: 1/1 fluorescent_ring
+PASS switch_dk controls dk
+PASS switch_tatami: 1/1 pull_switch
+PASS lights_tatami: 1/1 hanging_lamp
+PASS switch_tatami controls tatami
+PASS switch_western: 1/1 light_switch
+PASS lights_western: 1/1 fluorescent_ring
+PASS switch_western controls western
+PASS the knife is on its rack and the plush on its shelf
+PASS the genkan's tiles at y 68
+PASS the genkan's wooden half step at x 25
+PASS the hall's flooring at y 69
+PASS tatami in the tatami room
+PASS the ceiling boards at y 73
+PASS walls stand
+PASS the roof's ridge
+PASS the outdoor corridor's slab at y 68
+PASS the steel stairs at the west end
+PASS the street is wet asphalt at y 64
+PASS the street lamp in front of 203 is lit
+PASS nameplates 101..204 by every door (8/8)
+PASS invisible walls behind the property (58)
+PASS doll_route is a connected loop (16 points)
+PASS the closets, the balcony and the corridor are reachable from the spawn
+PASS every room's lights follow its switch (8/8)
+PASS the breaker cuts every light and the TV, and brings them back (dark=true back=true)
+PASS the TV changes channel and turns off
+PASS the kitchen tap and the washbasin run and stop
+PASS both halves of the tub fill and empty; the lid goes on
+PASS the 押し入れ's fusuma shut / crack / open (open: the north end is free, the panels stack) truetruetrue
+PASS every door opens and shuts (10/10)
+PASS every device switches (9/9)
+PASS the knife, the plush, the lighter and the laptop leave and come back
+PASS the curtains open and close
+PASS the doll leaves a wet mark in the hall
+PASS lightsIn lists the lamps
+PASS the bath tap runs
+PASS after 11.5 s the tub is half full (water 1)
+PASS after 21.5 s the tub is full (water 2)
+PASS the hanging lamp has stopped swinging
+PASS the DK's flicker ended and its lamp is back to its switch
+PASS resetAll restores every block of the building (16877 checked, 0 differ, 20 ms)
+PASS resetAll restores the evening's start (breaker on, only the western room lit, TV off, bath empty, closet shut, plush and knife in place)
+light levels (block/sky): western (lit)=11/7 desk=10/6 tatami=4/7 closet=1/6 dk=2/2 hall=3/3 bath=3/7 genkan=6/9 corridor=9/12 balcony=8/12 under the lamp=8/15 street=0/15
+the ritual's darkness (every light off, the TV on):
+light levels (block/sky): western (lit)=6/7 desk=7/6 tatami=5/7 closet=2/6 dk=2/2 hall=3/3 bath=3/7 genkan=6/9 corridor=9/12 balcony=8/12 under the lamp=8/15 street=0/15
+---- the game
+PASS the night starts in phase 0 (preparation)
+PASS the clock starts at 02:20 (02:20)
+PASS your phone is in your pocket
+PASS the HUD's first step: take the plush
+PASS adventure mode
+PASS the plush from the western room's shelf
+PASS step 1 (plush) done
+PASS the shelf gives it only once
+PASS scissors and red thread from the sewing box
+PASS the printout from the desk
+PASS the scissors at the low table: cutting it open (a timed action)
+PASS cut: the plush is open, step 2 done (59 ticks)
+PASS the rice bag with the open plush: filling it
+PASS rice: filled, step 3 done (49 ticks)
+PASS the nail clipper from the washroom
+PASS using the clipper with the plush: clipping
+PASS nails: clippings in it, step 4 done (43 ticks)
+PASS sewing it shut with the red thread
+PASS sew: the ritual doll, step 5 done (99 ticks)
+PASS bath: the tub fills, step 6 done (399 ticks)
+PASS a cup of water at the sink
+PASS salt: salt water, step 7 done (29 ticks)
+PASS four cameras from the bag
+PASS the laptop from the desk
+PASS placing cameras in adventure mode
+cameras placed: 4 (data 4)
+PASS cameras placed at the suggested spots with a real right-click (4)
+PASS a camera entity for each
+PASS numbered in placement order (CAM1)
+PASS the camera app on the laptop shows CAM1
+PASS cameras: step 8 done (0 ticks)
+PASS tv: step 9 done (0 ticks)
+PASS the whole preparation is done
+PASS the HUD waits for 3:00
+PASS three o'clock: phase 1 (36 ticks)
+PASS it is 3:00 (03:00)
+PASS step 10: the doll is named
+PASS the name is on the doll
+PASS step 11: 「最初の鬼は…」 three times (0 ticks)
+PASS the doll into the full tub
+PASS step 12 done
+PASS it floats in the tub (the oni_doll entity)
+PASS step 13: every light off (0 ticks)
+PASS at the TV: eyes closed, counting
+PASS step 14: counted to ten (209 ticks)
+PASS the kitchen knife from the rack
+PASS step 15: to the bathroom with the knife (0 ticks)
+PASS 「みつけた」: the stab
+PASS step 16: the knife is in the doll now
+PASS step 17: 「次は〇〇が鬼だから」
+PASS phase 2: it is the oni now
+PASS it wakes, still floating in the tub
+PASS a mouthful of salt water
+PASS one sip less in the cup
+PASS into the 押し入れ through the world's hide()
+PASS hidden, the fusuma shut
+PASS step 18: hidden with salt water in the mouth (0 ticks)
+PASS peeking: the fusuma opens a crack
+PASS peeking makes a soft noise (2)
+PASS and closes again
+PASS it leaves the tub when nobody watches (0 ticks)
+PASS it searches (moving along its route) (110 ticks)
+doll SEARCH pose=2 susp=0.85 eyes=false cam=false route=1 tub=0 at 27.5 70.0 6.5
+PASS seen directly: your eyes are on it
+PASS frozen while you look at it (moved 0.000)
+PASS back into the closet
+PASS a noise from the closet raises its suspicion (1.00)
+PASS and it comes to the fusuma (STANDOFF)
+PASS at 1.0 with salt water in your mouth it stops at the fusuma (STANDOFF)
+PASS and does not open it
+PASS light from the gap while it faces it raises its suspicion (0.17)
+PASS out of the closet: phase 3
+PASS it stops searching and waits
+PASS salt water still in the mouth
+PASS step: found it (0 ticks)
+PASS spat on it: it shrieks and goes limp
+PASS the mouth is empty
+PASS spitting it out at the end breaks no rule ([])
+PASS 「私の勝ち」 three times (0 ticks)
+PASS picking it up
+PASS the doll in your hands (spat on)
+PASS no doll entity any more
+PASS the lighter from the drawer
+PASS the lighter at the kitchen sink
+PASS it burns in the sink
+PASS the fire has done its work: step done, the good ending (179 ticks)
+PASS the good ending reaches its screen (116 ticks)
+PASS the lights came on
+PASS the night's recording log has the stab
+PASS after the ending screen: the night is over (good)
+PASS oni: hidden
+PASS at 1.0 without salt water it opens the fusuma: found
+PASS the 鬼 ending
+PASS the fusuma is open
+PASS the 鬼 ending ran its staging
+PASS the front door opened during the ritual: 外へ (a rule broken)
+PASS out in the corridor (24.5 -1.5)
+PASS the corridor goes on forever (x 30.0)
+PASS 外へ: the ending screen
+PASS dawn without an end: 未完
+PASS the doll on the balcony, looking in
+cameras placed: 4 (data 4)
+PASS the woman in a camera's feed (CAM1)
+PASS the first look finds her as she was placed, facing the wall (stage 0)
+PASS closer every time you come back to her feed (stage 4)
+PASS and then she is gone
+PASS the director's events run (19/19)
+PASS 3:33: a call from your own number
+PASS the phone vibrates audibly (7)
+PASS the silent switch
+PASS the phone's light: the held item becomes phone_light
+PASS and back
+PASS the night's data saves and loads (phase, steps, name, cameras)
+PASS save and quit: the doll comes back where it was
+PASS reset: a fresh night
+SELFTEST RESULT: PASS

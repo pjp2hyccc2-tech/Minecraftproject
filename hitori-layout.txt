@@ -1,0 +1,96 @@
+room closet 押し入れ AABB[23.0, 69.0, 10.0] -> [24.0, 73.0, 13.0] tiny_dead
+room western_closet クローゼット AABB[32.0, 69.0, 10.0] -> [33.0, 73.0, 13.0] tiny_dead
+room genkan 玄関 AABB[23.0, 68.0, 1.0] -> [26.0, 73.0, 3.0] small_hard
+room hall 廊下 AABB[26.0, 69.0, 1.0] -> [28.0, 73.0, 8.0] corridor
+room toilet トイレ AABB[29.0, 69.0, 1.0] -> [30.0, 73.0, 3.0] restroom
+room bath 浴室 AABB[31.0, 69.0, 1.0] -> [33.0, 73.0, 3.0] restroom
+room washroom 脱衣所 AABB[29.0, 69.0, 4.0] -> [33.0, 73.0, 6.0] small_hard
+room dk DK AABB[23.0, 69.0, 4.0] -> [26.0, 73.0, 8.0] small_hard
+room tatami 和室 AABB[24.0, 69.0, 9.0] -> [28.0, 73.0, 13.0] small_soft
+room western 洋室 AABB[29.0, 69.0, 7.0] -> [33.0, 73.0, 13.0] small_soft
+room balcony ベランダ AABB[23.0, 69.0, 14.0] -> [33.0, 74.0, 16.0] outside
+room corridor 外廊下 AABB[-1.0, 68.0, -2.0] -> [45.0, 73.0, 0.0] outside
+spawn: 30, 70, 8/east
+morning: 31, 70, 8/east
+door_front: 24, 69, 0/north
+peephole: 24, 69, -1/north
+breaker: 23, 71, 1/east
+intercom: 23, 70, 2/east
+tv: 27, 71, 9/west
+table: 25, 70, 11/north
+hanging_lamp: 25, 72, 11/north
+bathtub: 32, 70, 1/west 32, 70, 2/west
+bath_tap: 32, 71, 1/south
+washbasin: 32, 70, 5/west
+kitchen_sink: 23, 70, 5/east
+rice: 25, 70, 4/south
+salt: 24, 71, 4/south
+cup: 23, 71, 5/east
+knife: 23, 71, 6/east
+lighter: 23, 70, 7/east
+scissors: 31, 71, 7/south
+thread: 31, 71, 7/south
+nail_clipper: 32, 71, 5/west
+plush_shelf: 29, 71, 10/east
+camera_bag: 29, 70, 9/east
+laptop: 32, 71, 8/west
+printout: 30, 71, 7/south
+phone: 30, 71, 7/south
+fridge: 23, 70, 4/east
+microwave: 23, 71, 4/east
+gas_stove: 23, 70, 6/east
+rice_cooker: 23, 71, 7/east
+washing_machine: 29, 70, 4/south
+desk_lamp: 32, 71, 7/west
+wall_clock: 24, 72, 4/south
+altar_shelf: 27, 70, 12/west
+mirror: 26, 71, 3/east
+calendar: 27, 71, 6/west
+switch_genkan: 25, 71, 1/south
+switch_hall: 26, 71, 1/south
+switch_toilet: 27, 71, 3/west
+switch_washroom: 27, 71, 4/west
+switch_bath: 30, 71, 4/south
+switch_dk: 25, 71, 4/south
+switch_western: 29, 71, 8/east
+switch_tatami: 25, 71, 11/north
+lights_genkan: 24, 72, 1/north
+lights_hall: 26, 72, 3/north 27, 72, 6/north
+lights_toilet: 29, 72, 1/north
+lights_bath: 32, 72, 2/north
+lights_washroom: 30, 72, 5/north
+lights_dk: 24, 72, 5/north
+lights_tatami: 25, 72, 11/north
+lights_western: 30, 72, 10/north
+door_toilet: 28, 70, 2/east
+door_washroom: 28, 70, 5/east
+door_western: 28, 70, 7/east
+door_bath: 31, 70, 3/south
+door_tatami_dk: 24, 70, 8/north 25, 70, 8/north
+door_tatami_hall: 27, 70, 8/north
+door_western_closet: 32, 70, 10/west 32, 70, 11/west 32, 70, 12/west
+door_balcony_tatami: 24, 70, 13/north 25, 70, 13/north 26, 70, 13/north
+door_balcony_western: 30, 70, 13/north 31, 70, 13/north
+curtains_tatami: 24, 70, 12/north 25, 70, 12/north 26, 70, 12/north
+curtains_western: 30, 70, 12/north 31, 70, 12/north
+closet_hide: 23, 70, 10/east 23, 70, 11/east 23, 70, 12/east
+closet_fusuma: 23, 70, 10/east 23, 70, 11/east 23, 70, 12/east
+closet_peek: 23, 70, 10/east
+closet_futons: 23, 72, 10/east 23, 72, 11/east 23, 72, 12/east
+western_closet: 32, 70, 11/west
+cam_suggest: 31, 72, 2/east 27, 72, 1/south 27, 72, 12/west 26, 72, 2/west
+doll_route: 31, 70, 2/north 30, 70, 5/north 27, 70, 4/north 24, 70, 6/north 24, 70, 9/north 26, 70, 12/north 26, 70, 10/north 25, 70, 7/north 27, 70, 7/north 29, 70, 7/north 30, 70, 11/north 31, 70, 9/north 27, 70, 6/north 29, 70, 2/north 26, 70, 1/north 24, 69, 1/north
+doll_hides: 25, 70, 11/west 30, 70, 4/west 31, 70, 2/south 25, 70, 14/north 24, 69, 2/east 25, 70, 5/north 32, 70, 10/west 29, 70, 2/south 24, 70, 7/south
+woman_spots: 24, 70, 9/south 26, 70, 7/north 32, 70, 1/west 23, 69, 1/east 30, 70, 12/north 24, 70, 7/north
+balcony: 25, 70, 14/north
+balcony_western: 30, 70, 14/north
+corridor: 0, 69, -2/east 3, 69, -2/east 6, 69, -2/east 9, 69, -2/east 12, 69, -2/east 15, 69, -2/east 18, 69, -2/east 21, 69, -2/east 24, 69, -2/east 27, 69, -2/east 30, 69, -2/east 33, 69, -2/east 36, 69, -2/east 39, 69, -2/east 42, 69, -2/east
+corridor_door: 24, 69, -2/south
+stairs_top: -1, 69, -2/west
+stairs_bottom: -7, 65, -2/east
+street: 26, 65, 21/north
+street_lamp: 26, 71, 17/north
+vending_machine: 0, 65, 18/south
+swing: 56, 65, 23/west
+unit_204: 35, 69, 0/north
+unit_202: 13, 69, 0/north
