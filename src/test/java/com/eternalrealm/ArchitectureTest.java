@@ -67,15 +67,69 @@ public class ArchitectureTest {
     }
 
     private static void collect(Path file, List<String> forbidden, List<String> violations) throws IOException {
-        List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i);
+        String code = stripComments(Files.readString(file, StandardCharsets.UTF_8));
+        String[] lines = code.split("\n", -1);
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
             for (String reference : forbidden) {
                 if (line.contains(reference)) {
                     violations.add(file + ":" + (i + 1) + " -> " + reference + "   [" + line.trim() + "]");
                 }
             }
         }
+    }
+
+    /**
+     * Removes {@code //} and {@code /* *\/} comments (documentation may mention any package) while keeping string
+     * literals and line breaks, so reported line numbers stay correct.
+     */
+    static String stripComments(String source) {
+        StringBuilder out = new StringBuilder(source.length());
+        int i = 0;
+        while (i < source.length()) {
+            char c = source.charAt(i);
+            char next = i + 1 < source.length() ? source.charAt(i + 1) : '\0';
+            if (c == '/' && next == '/') {
+                while (i < source.length() && source.charAt(i) != '\n') {
+                    i++;
+                }
+            } else if (c == '/' && next == '*') {
+                i += 2;
+                while (i < source.length() && !(source.charAt(i) == '*' && i + 1 < source.length() && source.charAt(i + 1) == '/')) {
+                    if (source.charAt(i) == '\n') {
+                        out.append('\n');
+                    }
+                    i++;
+                }
+                i += 2;
+            } else if (c == '"' || c == '\'') {
+                out.append(c);
+                i++;
+                while (i < source.length() && source.charAt(i) != c && source.charAt(i) != '\n') {
+                    if (source.charAt(i) == '\\' && i + 1 < source.length()) {
+                        out.append(source.charAt(i++));
+                    }
+                    out.append(source.charAt(i++));
+                }
+                if (i < source.length()) {
+                    out.append(source.charAt(i++));
+                }
+            } else {
+                out.append(c);
+                i++;
+            }
+        }
+        return out.toString();
+    }
+
+    @Test
+    public void commentStrippingKeepsCodeAndLineNumbers() {
+        String source = "import a.b; // net.minecraft.client.X\n/* com.eternalrealm.ui\n */ String s = \"// not a comment\";\n";
+        String stripped = stripComments(source);
+        assertTrue(stripped.contains("import a.b;"));
+        assertTrue(stripped.contains("\"// not a comment\""));
+        assertTrue(!stripped.contains("net.minecraft.client") && !stripped.contains("com.eternalrealm.ui"));
+        assertTrue(stripped.split("\n", -1).length == source.split("\n", -1).length);
     }
 
     private static boolean isUnder(Path file, String directoryName) {
