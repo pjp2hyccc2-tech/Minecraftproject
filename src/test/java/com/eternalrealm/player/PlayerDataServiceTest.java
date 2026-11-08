@@ -473,4 +473,80 @@ public class PlayerDataServiceTest {
             loadFailures.add(incidentId);
         }
     }
+
+    // ------------------------------------------------------------------ Phase 3
+
+    @Test
+    public void firstJobChoiceIsFreeAndChangesCostGoldAboveTheThreshold() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        com.eternalrealm.job.JobRules rules = com.eternalrealm.job.JobRules.defaults();
+        PlayerDataService.JobChange first = service.chooseJob(ALICE, com.eternalrealm.job.JobType.MAGE, rules);
+        assertEquals(PlayerDataService.JobChangeResult.OK, first.result());
+        assertTrue(first.firstChoice());
+        assertEquals(PlayerDataService.JobChangeResult.SAME_JOB,
+                service.chooseJob(ALICE, com.eternalrealm.job.JobType.MAGE, rules).result());
+        service.setLevel(ALICE, 20);
+        PlayerDataService.JobChange poor = service.chooseJob(ALICE, com.eternalrealm.job.JobType.KNIGHT, rules);
+        assertEquals(PlayerDataService.JobChangeResult.NOT_ENOUGH_GOLD, poor.result());
+        assertEquals(2000L, poor.cost());
+        service.grantGold(ALICE, 2500);
+        PlayerDataService.JobChange paid = service.chooseJob(ALICE, com.eternalrealm.job.JobType.KNIGHT, rules);
+        assertEquals(PlayerDataService.JobChangeResult.OK, paid.result());
+        assertFalse(paid.firstChoice());
+        assertEquals(500L, service.gold(ALICE));
+        assertEquals("knight", service.snapshot(ALICE).orElseThrow().jobId());
+        assertEquals(PlayerDataService.JobChangeResult.NOT_READY,
+                service.chooseJob(BOB, com.eternalrealm.job.JobType.KNIGHT, rules).result());
+    }
+
+    @Test
+    public void skillInvestmentIsValidatedAndPersisted() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.chooseJob(ALICE, com.eternalrealm.job.JobType.PRIEST, com.eternalrealm.job.JobRules.defaults());
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.NO_POINTS,
+                service.investSkill(ALICE, "priest_heal").orElseThrow());
+        service.setLevel(ALICE, 10); // 3 points
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.OK, service.investSkill(ALICE, "priest_heal").orElseThrow());
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.WRONG_JOB,
+                service.investSkill(ALICE, "mage_fireball").orElseThrow());
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.LOCKED,
+                service.investSkill(ALICE, "priest_blessing").orElseThrow());
+        assertEquals(1, service.snapshot(ALICE).orElseThrow().investment("priest_heal"));
+        assertEquals(2, service.snapshot(ALICE).orElseThrow().unspentSkillPoints());
+        service.onPlayerLeave(ALICE);
+        settle();
+        assertEquals(1, (int) stored(ALICE).skillInvestments().get("priest_heal"));
+        assertEquals("priest", stored(ALICE).jobId());
+        assertTrue(service.investSkill(ALICE, "priest_heal").isEmpty());
+    }
+
+    @Test
+    public void skillsOfAnotherJobAreRefundedOnLoad() throws Exception {
+        java.time.Instant t = clock.instant();
+        characters.stored.put(InMemoryRepositories.Characters.key(ALICE, SEASON), new CharacterRecord(ALICE, SEASON, 20, 0, 999, com.eternalrealm.character.StatBlock.ZERO, t, t,
+                "mage", java.util.Map.of("priest_heal", 2), 50L, java.util.Map.of()));
+        joinAndLoad(ALICE, "Alice");
+        assertTrue(service.snapshot(ALICE).orElseThrow().skillInvestments().isEmpty());
+        assertEquals(50L, service.gold(ALICE));
+    }
+
+    @Test
+    public void goldDeathPenaltyAndExtensions() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        assertEquals(Long.valueOf(300L), service.grantGold(ALICE, 300).orElseThrow());
+        assertFalse(service.spendGold(ALICE, 301));
+        assertTrue(service.spendGold(ALICE, 100));
+        assertEquals(200L, service.gold(ALICE));
+        service.grantExperience(ALICE, 50, com.eternalrealm.character.ExperienceSource.ADMIN);
+        assertEquals(5L, service.applyDeathPenalty(ALICE, 0.05));
+        assertEquals(45L, service.snapshot(ALICE).orElseThrow().experience());
+        assertTrue(service.setExtension(ALICE, "quests", "{\"q\":1}"));
+        assertEquals("{\"q\":1}", service.extension(ALICE, "quests").orElseThrow());
+        assertFalse(service.setExtension(BOB, "quests", "{}"));
+        assertTrue(service.grantGold(BOB, 5).isEmpty());
+        service.onPlayerLeave(ALICE);
+        settle();
+        assertEquals("{\"q\":1}", stored(ALICE).extensions().get("quests"));
+        assertEquals(200L, stored(ALICE).gold());
+    }
 }

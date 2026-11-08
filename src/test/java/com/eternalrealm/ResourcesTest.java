@@ -41,7 +41,7 @@ public class ResourcesTest {
 
     /** Registry names of the weapon items (ERItems); kept here because this test runs without Forge. */
     private static final List<String> WEAPON_ITEMS =
-            List.of("iron_longsword", "iron_greatsword", "iron_twin_blades", "iron_spear");
+            List.of("iron_longsword", "iron_greatsword", "iron_twin_blades", "iron_spear", "staff", "longbow");
 
     @Test
     public void gameTestStructuresArePresent() {
@@ -99,5 +99,41 @@ public class ResourcesTest {
     private static Set<String> keys(Path langFile) throws IOException {
         JsonElement root = JsonParser.parseString(Files.readString(langFile, StandardCharsets.UTF_8));
         return new TreeSet<>(root.getAsJsonObject().keySet());
+    }
+
+    @Test
+    public void everyJobTextIsTranslated() throws IOException {
+        Set<String> english = keys(RESOURCES.resolve("assets/eternalrealm/lang/en_us.json"));
+        Set<String> japanese = keys(RESOURCES.resolve("assets/eternalrealm/lang/ja_jp.json"));
+        List<String> required = new java.util.ArrayList<>();
+        for (com.eternalrealm.job.JobType job : com.eternalrealm.job.JobType.values()) {
+            required.add(job.translationKey());
+            required.add(job.descriptionKey());
+        }
+        for (com.eternalrealm.job.JobRole role : com.eternalrealm.job.JobRole.values()) {
+            required.add(role.translationKey());
+        }
+        for (com.eternalrealm.job.SkillDefinition skill : com.eternalrealm.job.Jobs.allSkills().values()) {
+            required.add(skill.translationKey());
+            required.add(skill.descriptionKey());
+        }
+        for (com.eternalrealm.combat.DamageType type : com.eternalrealm.combat.DamageType.values()) {
+            required.add(type.translationKey());
+        }
+        for (com.eternalrealm.job.SkillTree.InvestResult result : com.eternalrealm.job.SkillTree.InvestResult.values()) {
+            required.add(result.translationKey());
+        }
+        for (int slot = 1; slot <= 4; slot++) {
+            required.add("key.eternalrealm.job_skill_" + slot);
+        }
+        for (String effect : List.of("attack_up", "defense_up", "flame_weapon", "bleed")) {
+            required.add("effect.eternalrealm." + effect);
+            Path icon = RESOURCES.resolve("assets/eternalrealm/textures/mob_effect/" + effect + ".png");
+            assertTrue("missing effect icon " + icon, Files.isRegularFile(icon));
+        }
+        for (String key : required) {
+            assertTrue("en: " + key, english.contains(key));
+            assertTrue("ja: " + key, japanese.contains(key));
+        }
     }
 }

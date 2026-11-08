@@ -1,6 +1,5 @@
 package com.eternalrealm.network.forge;
 
-import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.combat.CombatStats;
 
 import java.util.Objects;
@@ -14,7 +13,9 @@ import java.util.function.Consumer;
  * packets are never received there anyway.</p>
  */
 public final class ClientboundHandlers {
-    private static volatile Consumer<CharacterSnapshot> characterSnapshotHandler = snapshot -> {
+    private static volatile Consumer<CharacterSnapshotPacket> characterSnapshotHandler = snapshot -> {
+    };
+    private static volatile java.util.function.BiConsumer<String, String> uiDataHandler = (channel, json) -> {
     };
     private static volatile Consumer<CombatStats> combatStatsHandler = stats -> {
     };
@@ -26,8 +27,12 @@ public final class ClientboundHandlers {
     private ClientboundHandlers() {
     }
 
-    public static void setCharacterSnapshotHandler(Consumer<CharacterSnapshot> handler) {
+    public static void setCharacterSnapshotHandler(Consumer<CharacterSnapshotPacket> handler) {
         characterSnapshotHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    public static void setUiDataHandler(java.util.function.BiConsumer<String, String> handler) {
+        uiDataHandler = Objects.requireNonNull(handler, "handler");
     }
 
     public static void setCombatStatsHandler(Consumer<CombatStats> handler) {
@@ -42,8 +47,12 @@ public final class ClientboundHandlers {
         damageNumberHandler = Objects.requireNonNull(handler, "handler");
     }
 
-    static void onCharacterSnapshot(CharacterSnapshot snapshot) {
+    static void onCharacterSnapshot(CharacterSnapshotPacket snapshot) {
         characterSnapshotHandler.accept(snapshot);
+    }
+
+    static void onUiData(String channel, String json) {
+        uiDataHandler.accept(channel, json);
     }
 
     static void onCombatStats(CombatStats stats) {

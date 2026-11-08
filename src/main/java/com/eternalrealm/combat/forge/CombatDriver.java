@@ -9,6 +9,16 @@ import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.combat.CombatTuning;
 import com.eternalrealm.combat.Combatant;
 import com.eternalrealm.combat.DamageCalculator;
+import com.eternalrealm.combat.DamageType;
+import com.eternalrealm.combat.SkillBinding;
+import com.eternalrealm.job.ComposedStats;
+import com.eternalrealm.job.JobType;
+import com.eternalrealm.job.Jobs;
+import com.eternalrealm.job.SkillDefinition;
+import com.eternalrealm.job.SkillEffect;
+import com.eternalrealm.job.SkillTree;
+import com.eternalrealm.job.forge.PlayerStats;
+import com.eternalrealm.job.forge.SkillEffectsExecutor;
 import com.eternalrealm.combat.DefenseEvent;
 import com.eternalrealm.combat.GuardResult;
 import com.eternalrealm.combat.HitGeometry;
@@ -84,7 +94,7 @@ public final class CombatDriver {
         int lastSequence;
         long lastSentTick = Long.MIN_VALUE / 4;
         double lastSentStamina = -1.0;
-        int lastSentCooldown = -1;
+        final boolean[] lastSentCooling = new boolean[Combatant.SKILL_SLOTS];
     }
 
     public CombatService service() {
@@ -126,7 +136,7 @@ public final class CombatDriver {
             try {
                 syncEquipment(player, combatant);
                 for (CombatEvent event : combatant.tick(now)) {
-                    handleEvent(player, combatant, event);
+                    handleEvent(player, combatant.stats(), event);
                 }
                 resyncStatus(player, combatant, now);
             } catch (RuntimeException e) {
@@ -145,8 +155,16 @@ public final class CombatDriver {
                 continue;
             }
             try {
-                CombatStats stats = CombatStats.derive(snapshot.get().totalStats(), snapshot.get().level(), tuning);
+                CharacterSnapshot character = snapshot.get();
+                ComposedStats composed = PlayerStats.compose(player, character);
+                CombatStats stats = CombatStats.derive(composed.total(), character.level(), tuning,
+                        composed.modifiers());
                 Combatant combatant = service.register(playerId, stats, now());
+                SkillBinding[] bindings = SkillTree.bindings(JobType.fromStored(character.jobId()), character.level(),
+                        character.skillInvestments());
+                for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
+                    combatant.setJobSkill(slot, bindings[slot]);
+                }
                 StatEffects.apply(player, stats);
                 ERNetwork.sendToPlayer(player, new CombatStatsPacket(stats));
                 sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.NONE);
@@ -156,11 +174,32 @@ public final class CombatDriver {
         }
     }
 
-    private void handleEvent(ServerPlayer player, Combatant combatant, CombatEvent event) {
+    /**
+     * Hit frames become damage (melee volume or projectiles) with the damage type of the weapon or of the job skill;
+     * job skills also run their effects for the frame (afflictions go to what the frame damaged).
+     */
+    public static void handleEvent(ServerPlayer player, CombatStats stats, CombatEvent event) {
         if (event instanceof CombatEvent.Hit hit) {
-            CombatHits.execute(player, combatant.stats(), hit, player.getRandom()::nextDouble);
+            SkillDefinition skill = Jobs.skillOfAction(hit.action().id()).orElse(null);
+            DamageType type = skill != null ? skill.damageType() : hit.weapon().type().damageType();
+            List<SkillEffect> effects = skill != null ? skill.effectsAt(hit.frameIndex()) : List.of();
+            List<SkillEffect.Afflict> afflictions = SkillEffectsExecutor.afflictions(effects);
+            List<CombatHits.HitTarget> targets = List.of();
+            if (hit.frame().damaging()) {
+                if (hit.frame().isProjectile()) {
+                    CombatProjectiles.launch(player, stats, hit, type, afflictions, player.getRandom()::nextDouble);
+                } else {
+                    targets = CombatHits.execute(player, stats, hit, type, player.getRandom()::nextDouble);
+                    Afflictions.apply(player, targets, afflictions);
+                }
+            }
+            if (!effects.isEmpty()) {
+                SkillEffectsExecutor.apply(player, stats, effects, targets);
+            }
         } else if (event instanceof CombatEvent.ActionStarted start) {
             CombatEffects.actionStarted(player, start);
+            Jobs.skillOfAction(start.action().id()).ifPresent(skill ->
+                    SkillEffectsExecutor.apply(player, stats, skill.effectsAt(SkillEffect.ON_START), List.of()));
         }
     }
 
@@ -267,6 +306,7 @@ public final class CombatDriver {
         if (source.getEntity() != null) {
             result = DamageCalculator.reduce(result, combatant.stats().damageReduction());
         }
+        result *= ERMobEffects.defenseMultiplier(player);
         return (float) result;
     }
 
@@ -357,13 +397,17 @@ public final class CombatDriver {
         NetState state = net(player.getUUID());
         long now = now();
         double stamina = combatant == null ? 0.0 : combatant.stamina();
-        int cooldown = combatant == null ? 0 : combatant.skillCooldownRemaining(now);
-        int cooldownTotal = combatant == null ? 0 : combatant.skillCooldownTotal();
+        int[] cooldowns = new int[Combatant.SKILL_SLOTS];
+        int[] totals = new int[Combatant.SKILL_SLOTS];
+        for (int slot = 0; slot < Combatant.SKILL_SLOTS; slot++) {
+            cooldowns[slot] = combatant == null ? 0 : combatant.skillCooldownRemaining(slot, now);
+            totals[slot] = combatant == null ? 0 : combatant.skillCooldownTotal(slot);
+            state.lastSentCooling[slot] = cooldowns[slot] > 0;
+        }
         ERNetwork.sendToPlayer(player, new CombatStatusPacket(state.lastSequence, answersRequest, outcome,
-                (float) stamina, cooldown, cooldownTotal, event));
+                (float) stamina, cooldowns, totals, event));
         state.lastSentTick = now;
         state.lastSentStamina = stamina;
-        state.lastSentCooldown = cooldown;
     }
 
     private void resyncStatus(ServerPlayer player, Combatant combatant, long now) {
@@ -371,9 +415,10 @@ public final class CombatDriver {
         if (now - state.lastSentTick < STATUS_RESYNC_TICKS) {
             return;
         }
-        int cooldown = combatant.skillCooldownRemaining(now);
-        boolean changed = Math.abs(combatant.stamina() - state.lastSentStamina) > 1.0e-6
-                || (cooldown > 0) != (state.lastSentCooldown > 0);
+        boolean changed = Math.abs(combatant.stamina() - state.lastSentStamina) > 1.0e-6;
+        for (int slot = 0; slot < Combatant.SKILL_SLOTS && !changed; slot++) {
+            changed = (combatant.skillCooldownRemaining(slot, now) > 0) != state.lastSentCooling[slot];
+        }
         if (changed) {
             sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.NONE);
         }

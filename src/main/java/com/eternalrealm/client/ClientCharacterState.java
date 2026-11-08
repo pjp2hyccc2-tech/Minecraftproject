@@ -1,6 +1,8 @@
 package com.eternalrealm.client;
 
 import com.eternalrealm.character.CharacterSnapshot;
+import com.eternalrealm.character.StatBlock;
+import com.eternalrealm.network.forge.CharacterSnapshotPacket;
 
 import java.util.Optional;
 
@@ -10,6 +12,7 @@ import java.util.Optional;
  */
 public final class ClientCharacterState {
     private static CharacterSnapshot snapshot;
+    private static StatBlock bonusStats = StatBlock.ZERO;
 
     private ClientCharacterState() {
     }
@@ -18,11 +21,19 @@ public final class ClientCharacterState {
         return Optional.ofNullable(snapshot);
     }
 
-    public static void apply(CharacterSnapshot newSnapshot) {
-        snapshot = newSnapshot;
+    /** Stats the job and the equipment add on top of the snapshot's own totals. */
+    public static StatBlock bonusStats() {
+        return bonusStats;
+    }
+
+    public static void apply(CharacterSnapshotPacket packet) {
+        snapshot = packet.snapshot();
+        bonusStats = packet.bonusStats();
+        ClientCombatState.onCharacter(snapshot);
     }
 
     public static void clear() {
         snapshot = null;
+        bonusStats = StatBlock.ZERO;
     }
 }

@@ -18,6 +18,7 @@ import com.eternalrealm.persistence.file.FileAccountRepository;
 import com.eternalrealm.persistence.file.FileCharacterRepository;
 import com.eternalrealm.player.PlayerDataService;
 import com.eternalrealm.season.SeasonId;
+import com.eternalrealm.server.GameServices;
 import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.SyncQueue;
 import com.mojang.logging.LogUtils;
@@ -107,8 +108,12 @@ public final class ServerBootstrap {
                         ERServerConfig.COMBAT_ACTION_PER_SECOND.get()),
                 ERServerConfig.combatTuning());
 
+        TokenBucketRateLimiter<UUID> uiLimiter = TokenBucketRateLimiter.systemClock(
+                ERServerConfig.UI_ACTION_BURST.get(), ERServerConfig.UI_ACTION_PER_SECOND.get());
+        GameServices game = new GameServices(ERServerConfig.jobRules());
+
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
-                allocateLimiter, violations, floods, syncQueue, combat);
+                allocateLimiter, violations, floods, syncQueue, combat, uiLimiter, game);
     }
 
     public static void onServerTick(TickEvent.ServerTickEvent event) {
@@ -214,6 +219,7 @@ public final class ServerBootstrap {
             context.playerData().setAutosaveInterval(Duration.ofSeconds(ERServerConfig.AUTOSAVE_INTERVAL_SECONDS.get()));
             context.backupTrigger().setInterval(Duration.ofMinutes(ERServerConfig.BACKUP_INTERVAL_MINUTES.get()));
             context.combat().setTuning(ERServerConfig.combatTuning());
+            context.game().setJobRules(ERServerConfig.jobRules());
             if (!context.playerData().season().value().equals(ERServerConfig.SEASON_ID.get())) {
                 LOG.warn("season.currentSeasonId was changed; it only takes effect after a restart");
             }

@@ -2,6 +2,7 @@ package com.eternalrealm.config;
 
 import com.eternalrealm.character.CharacterRules;
 import com.eternalrealm.character.PowerExperienceCurve;
+import com.eternalrealm.job.JobRules;
 import com.eternalrealm.combat.CombatTuning;
 import com.eternalrealm.season.SeasonId;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -20,6 +21,12 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.IntValue MAX_POINTS_PER_REQUEST;
     public static final ForgeConfigSpec.LongValue EXP_CURVE_BASE;
     public static final ForgeConfigSpec.DoubleValue EXP_CURVE_EXPONENT;
+    public static final ForgeConfigSpec.IntValue SKILL_POINT_INTERVAL;
+    public static final ForgeConfigSpec.DoubleValue DEATH_EXP_PENALTY;
+    public static final ForgeConfigSpec.IntValue JOB_FREE_CHANGE_BELOW_LEVEL;
+    public static final ForgeConfigSpec.LongValue JOB_CHANGE_GOLD_PER_LEVEL;
+    public static final ForgeConfigSpec.IntValue UI_ACTION_BURST;
+    public static final ForgeConfigSpec.DoubleValue UI_ACTION_PER_SECOND;
 
     public static final ForgeConfigSpec.BooleanValue MOB_KILL_EXP_ENABLED;
     public static final ForgeConfigSpec.DoubleValue MOB_KILL_EXP_PER_MAX_HEALTH;
@@ -76,6 +83,16 @@ public final class ERServerConfig {
         EXP_CURVE_BASE = builder.defineInRange("curveBase", 100L, PowerExperienceCurve.MIN_BASE, PowerExperienceCurve.MAX_BASE);
         EXP_CURVE_EXPONENT = builder.defineInRange("curveExponent", 1.5, PowerExperienceCurve.MIN_EXPONENT, PowerExperienceCurve.MAX_EXPONENT);
         builder.pop();
+        SKILL_POINT_INTERVAL = builder.comment("One skill point every N levels: points = (level - 1) / N.")
+                .defineInRange("skillPointInterval", CharacterRules.DEFAULT_SKILL_POINT_INTERVAL, 1, CharacterRules.MAX_LEVEL);
+        DEATH_EXP_PENALTY = builder.comment("Fraction of the EXP needed for the next level lost on death (never costs a level).")
+                .defineInRange("deathExpPenalty", 0.05, 0.0, 1.0);
+        builder.comment("Jobs").push("job");
+        JOB_FREE_CHANGE_BELOW_LEVEL = builder.comment("Changing the job is free below this level (the first choice is always free).")
+                .defineInRange("freeChangeBelowLevel", 10, 1, 101);
+        JOB_CHANGE_GOLD_PER_LEVEL = builder.comment("Otherwise a change costs goldPerLevel * level gold.")
+                .defineInRange("changeGoldPerLevel", 100L, 0L, 1_000_000L);
+        builder.pop();
         builder.comment("INTERIM experience source until the monster system exists:",
                         "killing a hostile vanilla mob grants round(maxHealth * expPerMaxHealth) EXP.")
                 .push("interimMobKillExp");
@@ -120,6 +137,9 @@ public final class ERServerConfig {
                 .defineInRange("combatActionBurst", 20, 1, 200);
         COMBAT_ACTION_PER_SECOND = builder.comment("Sustained combat actions per second.")
                 .defineInRange("combatActionPerSecond", 20.0, 1.0, 200.0);
+        UI_ACTION_BURST = builder.comment("Screen requests (journal, menus) a client may send in a burst.")
+                .defineInRange("uiActionBurst", 20, 1, 200);
+        UI_ACTION_PER_SECOND = builder.defineInRange("uiActionPerSecond", 8.0, 0.5, 100.0);
         builder.pop();
 
         builder.comment("How character stats turn into combat values (docs/COMBAT_SYSTEM.md). Reloadable.",
@@ -158,7 +178,12 @@ public final class ERServerConfig {
 
     public static CharacterRules characterRules() {
         return new CharacterRules(LEVEL_CAP.get(), STAT_POINTS_PER_LEVEL.get(), BASE_STAT_VALUE.get(),
-                MAX_POINTS_PER_REQUEST.get(), new PowerExperienceCurve(EXP_CURVE_BASE.get(), EXP_CURVE_EXPONENT.get()));
+                MAX_POINTS_PER_REQUEST.get(), new PowerExperienceCurve(EXP_CURVE_BASE.get(), EXP_CURVE_EXPONENT.get()),
+                SKILL_POINT_INTERVAL.get());
+    }
+
+    public static JobRules jobRules() {
+        return new JobRules(JOB_FREE_CHANGE_BELOW_LEVEL.get(), JOB_CHANGE_GOLD_PER_LEVEL.get());
     }
 
     public static CombatTuning combatTuning() {

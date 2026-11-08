@@ -1,6 +1,10 @@
 package com.eternalrealm.client;
 
+import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.combat.CombatRules;
+import com.eternalrealm.combat.SkillBinding;
+import com.eternalrealm.job.JobType;
+import com.eternalrealm.job.SkillTree;
 import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.combat.Combatant;
 import com.eternalrealm.combat.DefenseEvent;
@@ -82,8 +86,21 @@ public final class ClientCombatState {
         stats = newStats;
         if (combatant == null) {
             combatant = new Combatant(newStats);
+            ClientCharacterState.snapshot().ifPresent(ClientCombatState::onCharacter);
         } else {
             combatant.setStats(newStats);
+        }
+    }
+
+    /** Job skill slots follow the character's job, level and invested points (same rules as the server). */
+    static void onCharacter(CharacterSnapshot character) {
+        if (combatant == null) {
+            return;
+        }
+        SkillBinding[] bindings = SkillTree.bindings(JobType.fromStored(character.jobId()), character.level(),
+                character.skillInvestments());
+        for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
+            combatant.setJobSkill(slot, bindings[slot]);
         }
     }
 
@@ -105,7 +122,11 @@ public final class ClientCombatState {
         if (upToDate && !costPending) {
             // No request of ours is still unanswered, so the server's numbers already include all our actions.
             combatant.setStamina(status.stamina());
-            combatant.setSkillCooldown(tick, status.cooldown(), status.cooldownTotal());
+            int[] cooldowns = status.cooldowns();
+            int[] totals = status.cooldownTotals();
+            for (int slot = 0; slot < Combatant.SKILL_SLOTS; slot++) {
+                combatant.setSkillCooldown(slot, tick, cooldowns[slot], totals[slot]);
+            }
         }
         if (status.event() == DefenseEvent.GUARD_BROKEN) {
             combatant.stagger(tick, CombatRules.GUARD_BREAK_STAGGER_TICKS);

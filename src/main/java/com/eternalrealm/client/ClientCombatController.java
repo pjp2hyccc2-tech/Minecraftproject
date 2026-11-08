@@ -3,6 +3,8 @@ package com.eternalrealm.client;
 import com.eternalrealm.combat.ActionKind;
 import com.eternalrealm.combat.CombatEvent;
 import com.eternalrealm.combat.CombatRequest;
+import com.eternalrealm.job.Jobs;
+import com.eternalrealm.job.SkillEffect;
 import com.eternalrealm.combat.Combatant;
 import com.eternalrealm.combat.HitShape;
 import com.eternalrealm.combat.RequestOutcome;
@@ -101,6 +103,13 @@ public final class ClientCombatController {
                 request(minecraft, player, local, CombatRequest.SKILL, now, weapon);
             }
         }
+        for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
+            while (ClientKeyMappings.jobSkill(slot).consumeClick()) {
+                if (canAct) {
+                    request(minecraft, player, local, CombatRequest.jobSkill(slot), now, weapon);
+                }
+            }
+        }
 
         if (local != null) {
             for (CombatEvent event : local.tick(now)) {
@@ -189,8 +198,30 @@ public final class ClientCombatController {
             case SKILL -> {
                 player.swing(InteractionHand.MAIN_HAND);
                 player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0F, 0.55F);
+                Jobs.skillOfAction(start.action().id()).ifPresent(skill -> {
+                    for (SkillEffect effect : skill.effectsAt(SkillEffect.ON_START)) {
+                        if (effect instanceof SkillEffect.Dash dash) {
+                            applyDash(player, dash);
+                        }
+                    }
+                });
             }
         }
+    }
+
+    /**
+     * Skill dashes along the facing. On the ground friction leaves about 2.2× the initial speed as distance; in the
+     * air there is far less friction, so the impulse is much smaller.
+     */
+    private static void applyDash(LocalPlayer player, SkillEffect.Dash dash) {
+        double yaw = Math.toRadians(player.getYRot());
+        double direction = dash.backwards() ? -1.0 : 1.0;
+        double x = -Math.sin(yaw) * direction;
+        double z = Math.cos(yaw) * direction;
+        double speed = player.onGround() ? dash.distance() / 2.2 : dash.distance() / 9.0;
+        speed = Math.min(speed, 4.0);
+        Vec3 motion = player.getDeltaMovement();
+        player.setDeltaMovement(x * speed, player.onGround() ? Math.max(motion.y, 0.1) : motion.y, z * speed);
     }
 
     /** Dodge towards the movement input (relative to the facing), backwards without input. */

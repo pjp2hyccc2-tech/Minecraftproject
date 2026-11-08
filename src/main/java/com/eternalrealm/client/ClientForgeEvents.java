@@ -2,7 +2,7 @@ package com.eternalrealm.client;
 
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.ui.hud.DamageNumberRenderer;
-import com.eternalrealm.ui.screen.CharacterScreen;
+import com.eternalrealm.ui.screen.JournalScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,7 +32,7 @@ public final class ClientForgeEvents {
         Minecraft minecraft = Minecraft.getInstance();
         while (ClientKeyMappings.OPEN_CHARACTER.consumeClick()) {
             if (minecraft.player != null && minecraft.screen == null) {
-                minecraft.setScreen(new CharacterScreen());
+                JournalScreen.open();
             }
         }
     }
@@ -65,5 +65,6 @@ public final class ClientForgeEvents {
         // Never show one world's/server's character in the next one.
         ClientCharacterState.clear();
         ClientCombatState.clear();
+        ClientUiState.clear();
     }
 }

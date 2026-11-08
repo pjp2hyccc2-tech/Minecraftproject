@@ -14,6 +14,9 @@ import com.eternalrealm.core.IncidentIds;
 import com.eternalrealm.core.PeriodicTrigger;
 import com.eternalrealm.core.concurrent.KeyedSerialExecutor;
 import com.eternalrealm.core.data.DataAccessException;
+import com.eternalrealm.job.JobRules;
+import com.eternalrealm.job.JobType;
+import com.eternalrealm.job.SkillTree;
 import com.eternalrealm.season.SeasonId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,9 +189,21 @@ public final class PlayerDataService {
             character = PlayerCharacter.createNew(playerId, season, clock.instant());
             LOG.info("Created a new character for {} ({}) in season {}", session.name(), playerId, season);
         }
+        if (resetInvalidSkills(character)) {
+            LOG.info("Skill points of {} were refunded because they no longer fit the job", playerId);
+        }
         active.put(playerId, character);
         session.markActive();
         listener.onCharacterReady(playerId);
+    }
+
+    /** Skills of another job, locked skills or levels above the maximum are refunded (job module rules). */
+    private boolean resetInvalidSkills(PlayerCharacter character) {
+        JobType job = JobType.fromStored(character.jobId());
+        if (SkillTree.isValid(job, character.level(), character.skillInvestments())) {
+            return false;
+        }
+        return character.resetSkills();
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -291,11 +306,139 @@ public final class PlayerDataService {
     public void updateRules(CharacterRules newRules) {
         this.rules = Objects.requireNonNull(newRules, "newRules");
         for (Map.Entry<UUID, PlayerCharacter> entry : active.entrySet()) {
-            if (entry.getValue().reconcile(newRules)) {
+            if (entry.getValue().reconcile(newRules) | resetInvalidSkills(entry.getValue())) {
                 LOG.info("Character of {} was adjusted to the reloaded rules", entry.getKey());
             }
             listener.onCharacterChanged(entry.getKey());
         }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    // Jobs, skills, gold, death penalty, module data (Phase 3)
+    // ------------------------------------------------------------------------------------------------------------
+
+    public enum JobChangeResult {
+        OK,
+        SAME_JOB,
+        NOT_ENOUGH_GOLD,
+        NOT_READY
+    }
+
+    /**
+     * @param cost        gold paid
+     * @param firstChoice the character had no job before (the platform layer hands out the starter kit)
+     */
+    public record JobChange(JobChangeResult result, long cost, boolean firstChoice) {
+    }
+
+    /** Chooses or changes the job, paying the change cost; invested skill points are refunded. */
+    public JobChange chooseJob(UUID playerId, JobType job, JobRules jobRules) {
+        Objects.requireNonNull(job, "job");
+        if (!job.isChosen()) {
+            throw new IllegalArgumentException("cannot choose " + job);
+        }
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return new JobChange(JobChangeResult.NOT_READY, 0L, false);
+        }
+        JobType current = JobType.fromStored(character.jobId());
+        if (current == job) {
+            return new JobChange(JobChangeResult.SAME_JOB, 0L, false);
+        }
+        long cost = jobRules.changeCost(current, character.level());
+        if (!character.spendGold(cost)) {
+            return new JobChange(JobChangeResult.NOT_ENOUGH_GOLD, cost, false);
+        }
+        character.changeJob(job.id());
+        LOG.info("{} changed job {} -> {} (cost {} gold)", playerId, current.id(), job.id(), cost);
+        listener.onCharacterChanged(playerId);
+        return new JobChange(JobChangeResult.OK, cost, !current.isChosen());
+    }
+
+    /** Invests one skill point. @return empty if the data is not loaded */
+    public Optional<SkillTree.InvestResult> investSkill(UUID playerId, String skillId) {
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return Optional.empty();
+        }
+        SkillTree.InvestResult result = SkillTree.canInvest(JobType.fromStored(character.jobId()), character.level(),
+                character.skillInvestments(), character.unspentSkillPoints(rules), skillId);
+        if (result == SkillTree.InvestResult.OK) {
+            character.investSkillPoint(skillId, rules);
+            listener.onCharacterChanged(playerId);
+        }
+        return Optional.of(result);
+    }
+
+    /** Refunds stat and skill points (oblivion elixir). @return {@code false} if nothing was refunded */
+    public boolean resetAllPoints(UUID playerId) {
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return false;
+        }
+        boolean changed = character.resetAllocation() | character.resetSkills();
+        if (changed) {
+            listener.onCharacterChanged(playerId);
+        }
+        return changed;
+    }
+
+    /** @return the gold actually added (saturating), or empty if the data is not loaded */
+    public Optional<Long> grantGold(UUID playerId, long amount) {
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return Optional.empty();
+        }
+        long added = character.addGold(amount);
+        if (added > 0) {
+            listener.onCharacterChanged(playerId);
+        }
+        return Optional.of(added);
+    }
+
+    /** @return {@code false} if the data is not loaded or the balance does not cover {@code amount} */
+    public boolean spendGold(UUID playerId, long amount) {
+        PlayerCharacter character = active.get(playerId);
+        if (character == null || !character.spendGold(amount)) {
+            return false;
+        }
+        if (amount > 0) {
+            listener.onCharacterChanged(playerId);
+        }
+        return true;
+    }
+
+    public long gold(UUID playerId) {
+        PlayerCharacter character = active.get(playerId);
+        return character == null ? 0L : character.gold();
+    }
+
+    /** @return EXP lost (0 if the data is not loaded) */
+    public long applyDeathPenalty(UUID playerId, double fraction) {
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return 0L;
+        }
+        long lost = character.applyDeathPenalty(fraction, rules);
+        if (lost > 0) {
+            listener.onCharacterChanged(playerId);
+        }
+        return lost;
+    }
+
+    /** Season data of another module; saved with the character. Ignored if the data is not loaded. */
+    public boolean setExtension(UUID playerId, String key, String json) {
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return false;
+        }
+        character.setExtension(key, json);
+        return true;
+    }
+
+    public Optional<String> extension(UUID playerId, String key) {
+        PlayerCharacter character = active.get(playerId);
+        return character == null ? Optional.empty() : character.extension(key);
     }
 
     // ------------------------------------------------------------------------------------------------------------

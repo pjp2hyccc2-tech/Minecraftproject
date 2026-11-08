@@ -2,6 +2,8 @@ package com.eternalrealm.player.forge;
 
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.server.ServerContext;
+import com.eternalrealm.server.UiData;
+import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,6 +34,10 @@ public final class PlayerConnectionEvents {
             return;
         }
         context.get().playerData().onPlayerJoin(player.getUUID(), player.getGameProfile().getName());
+        JsonObject jobRules = new JsonObject();
+        jobRules.addProperty("freeBelow", context.get().game().jobRules().freeChangeBelowLevel());
+        jobRules.addProperty("goldPerLevel", context.get().game().jobRules().goldPerLevel());
+        UiData.send(player, "job_rules", jobRules);
     }
 
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
@@ -42,6 +48,7 @@ public final class PlayerConnectionEvents {
             UUID playerId = player.getUUID();
             context.playerData().onPlayerLeave(playerId);
             context.allocateLimiter().forget(playerId);
+            context.uiLimiter().forget(playerId);
             context.violations().forget(playerId);
             context.floods().forget(playerId);
             context.syncQueue().forget(playerId);

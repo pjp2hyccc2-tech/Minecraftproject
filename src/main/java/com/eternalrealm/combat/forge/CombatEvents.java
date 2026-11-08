@@ -15,8 +15,18 @@ public final class CombatEvents {
     private CombatEvents() {
     }
 
-    /** Dodge invulnerability and parries negate the attack entirely (no damage, no hurt animation). */
+    /**
+     * Players never hurt each other outside PvP matches (ETERNAL REALM is cooperative; vanilla attacks, arrows and
+     * the mod's attacks alike). Dodge invulnerability and parries negate the attack entirely (no damage, no hurt
+     * animation).
+     */
     public static void onLivingAttack(LivingAttackEvent event) {
+        if (event.getEntity() instanceof ServerPlayer victim
+                && event.getSource().getEntity() instanceof ServerPlayer attacker
+                && attacker != victim && !PvpRules.canHurt(attacker, victim)) {
+            event.setCanceled(true);
+            return;
+        }
         if (event.getEntity() instanceof ServerPlayer player) {
             ServerContext.current().ifPresent(context -> {
                 if (context.combat().avoid(player, event.getSource())) {

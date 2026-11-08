@@ -37,12 +37,15 @@ public final class ServerContext {
     private final ViolationTracker floods;
     private final SyncQueue syncQueue;
     private final CombatDriver combat;
+    private final TokenBucketRateLimiter<UUID> uiLimiter;
+    private final GameServices game;
 
     public ServerContext(MinecraftServer server, Path dataDirectory, MainThreadQueue mainThread,
                          KeyedSerialExecutor<UUID> ioExecutor, PlayerDataService playerData,
                          SnapshotBackupService backups, PeriodicTrigger backupTrigger,
                          TokenBucketRateLimiter<UUID> allocateLimiter, ViolationTracker violations,
-                         ViolationTracker floods, SyncQueue syncQueue, CombatDriver combat) {
+                         ViolationTracker floods, SyncQueue syncQueue, CombatDriver combat,
+                         TokenBucketRateLimiter<UUID> uiLimiter, GameServices game) {
         this.server = Objects.requireNonNull(server, "server");
         this.dataDirectory = Objects.requireNonNull(dataDirectory, "dataDirectory");
         this.mainThread = Objects.requireNonNull(mainThread, "mainThread");
@@ -55,6 +58,8 @@ public final class ServerContext {
         this.floods = Objects.requireNonNull(floods, "floods");
         this.syncQueue = Objects.requireNonNull(syncQueue, "syncQueue");
         this.combat = Objects.requireNonNull(combat, "combat");
+        this.uiLimiter = Objects.requireNonNull(uiLimiter, "uiLimiter");
+        this.game = Objects.requireNonNull(game, "game");
     }
 
     public static Optional<ServerContext> current() {
@@ -138,5 +143,14 @@ public final class ServerContext {
 
     public CombatDriver combat() {
         return combat;
+    }
+
+    /** Rate limit of screen requests (journal, menus). */
+    public TokenBucketRateLimiter<UUID> uiLimiter() {
+        return uiLimiter;
+    }
+
+    public GameServices game() {
+        return game;
     }
 }

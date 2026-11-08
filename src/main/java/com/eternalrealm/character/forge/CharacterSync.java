@@ -1,6 +1,7 @@
 package com.eternalrealm.character.forge;
 
 import com.eternalrealm.network.forge.CharacterSnapshotPacket;
+import com.eternalrealm.job.forge.PlayerStats;
 import com.eternalrealm.network.forge.ERNetwork;
 import com.eternalrealm.server.ServerContext;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,8 +28,8 @@ public final class CharacterSync {
             if (player == null) {
                 continue;
             }
-            context.playerData().snapshot(playerId)
-                    .ifPresent(snapshot -> ERNetwork.sendToPlayer(player, new CharacterSnapshotPacket(snapshot)));
+            context.playerData().snapshot(playerId).ifPresent(snapshot -> ERNetwork.sendToPlayer(player,
+                    new CharacterSnapshotPacket(snapshot, PlayerStats.compose(player, snapshot).bonus())));
         }
     }
 }

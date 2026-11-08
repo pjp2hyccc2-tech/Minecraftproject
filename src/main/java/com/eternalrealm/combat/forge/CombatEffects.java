@@ -2,9 +2,10 @@ package com.eternalrealm.combat.forge;
 
 import com.eternalrealm.combat.ActionKind;
 import com.eternalrealm.combat.CombatEvent;
-import com.eternalrealm.combat.DamageRoll;
 import com.eternalrealm.combat.HitGeometry;
 import com.eternalrealm.combat.HitShape;
+import com.eternalrealm.combat.WeaponType;
+import com.eternalrealm.combat.AttackOrigin;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,6 +13,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Server-side sounds and particles. They are broadcast to nearby players, which is how other players see and hear
@@ -29,8 +31,14 @@ final class CombatEffects {
         float volume = 0.8F;
         switch (kind) {
             case LIGHT -> {
-                boolean thrust = start.action().frames().get(0).shape().kind() == HitShape.Kind.LINE;
-                sound = thrust ? SoundEvents.TRIDENT_THROW : SoundEvents.PLAYER_ATTACK_SWEEP;
+                if (start.weapon().type() == WeaponType.BOW) {
+                    sound = SoundEvents.ARROW_SHOOT;
+                } else if (start.weapon().type() == WeaponType.STAFF) {
+                    sound = SoundEvents.EVOKER_CAST_SPELL;
+                } else {
+                    boolean thrust = start.action().frames().get(0).shape().kind() == HitShape.Kind.LINE;
+                    sound = thrust ? SoundEvents.TRIDENT_THROW : SoundEvents.PLAYER_ATTACK_SWEEP;
+                }
                 pitch = 1.0F + 0.08F * Math.max(0, start.comboStep());
                 volume = 0.6F;
             }
@@ -66,6 +74,14 @@ final class CombatEffects {
         ServerLevel level = attacker.serverLevel();
         HitShape shape = hit.frame().shape();
         double y = attacker.getY() + attacker.getBbHeight() * 0.5;
+        if (shape.offsetForward() > 0.0) {
+            Vec3 eye = attacker.getEyePosition();
+            double[] center = HitGeometry.circleCenter(shape,
+                    new AttackOrigin(eye.x, eye.y, eye.z, attacker.getYRot(), attacker.getXRot()));
+            level.sendParticles(ParticleTypes.CRIT, center[0], attacker.getY() + 0.5, center[1], 30,
+                    shape.reach() * 0.5, 0.2, shape.reach() * 0.5, 0.05);
+            return;
+        }
         switch (shape.kind()) {
             case ARC -> {
                 double[] look = HitGeometry.look(attacker.getYRot(), 0.0);
@@ -92,11 +108,10 @@ final class CombatEffects {
     }
 
     /** Impact feedback on a damaged target, for everyone (including the attacker). */
-    static void targetHit(ServerPlayer attacker, LivingEntity target, DamageRoll roll, CombatEvent.Hit hit) {
+    static void targetHit(ServerPlayer attacker, LivingEntity target, boolean critical, ActionKind kind) {
         ServerLevel level = attacker.serverLevel();
-        ActionKind kind = hit.action().kind();
         SoundEvent sound;
-        if (roll.critical()) {
+        if (critical) {
             sound = SoundEvents.PLAYER_ATTACK_CRIT;
         } else if (kind == ActionKind.HEAVY || kind == ActionKind.SKILL) {
             sound = SoundEvents.PLAYER_ATTACK_KNOCKBACK;
@@ -106,7 +121,7 @@ final class CombatEffects {
         level.playSound(null, target.getX(), target.getY(), target.getZ(), sound, SoundSource.PLAYERS, 0.9F,
                 0.9F + level.getRandom().nextFloat() * 0.2F);
         double y = target.getY() + target.getBbHeight() * 0.6;
-        if (roll.critical()) {
+        if (critical) {
             level.sendParticles(ParticleTypes.CRIT, target.getX(), y, target.getZ(), 12, 0.3, 0.3, 0.3, 0.2);
         }
         if (kind == ActionKind.SKILL) {

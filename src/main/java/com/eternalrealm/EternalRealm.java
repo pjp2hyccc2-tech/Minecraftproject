@@ -5,7 +5,10 @@ import com.eternalrealm.character.forge.CharacterCommands;
 import com.eternalrealm.character.forge.InterimKillExperience;
 import com.eternalrealm.combat.forge.CombatEvents;
 import com.eternalrealm.combat.forge.ERCreativeTabs;
+import com.eternalrealm.combat.forge.EREntities;
 import com.eternalrealm.combat.forge.ERItems;
+import com.eternalrealm.combat.forge.ERMobEffects;
+import com.eternalrealm.job.forge.JobActions;
 import com.eternalrealm.config.ERClientConfig;
 import com.eternalrealm.config.ERServerConfig;
 import com.eternalrealm.core.ModInfo;
@@ -37,7 +40,10 @@ public final class EternalRealm {
 
         ERNetwork.register();
         ERItems.register(modBus);
+        ERMobEffects.register(modBus);
+        EREntities.register(modBus);
         ERCreativeTabs.register(modBus);
+        JobActions.register();
 
         modBus.addListener(ServerBootstrap::onConfigReloading);
         forgeBus.addListener(ServerBootstrap::onServerAboutToStart);
@@ -48,6 +54,7 @@ public final class EternalRealm {
         forgeBus.addListener(PlayerConnectionEvents::onPlayerLoggedOut);
         forgeBus.addListener(EventPriority.LOWEST, InterimKillExperience::onLivingDeath);
         forgeBus.addListener(CharacterCommands::onRegisterCommands);
+        forgeBus.addListener(JobActions::onRegisterCommands);
         forgeBus.addListener(CombatEvents::onLivingAttack);
         forgeBus.addListener(CombatEvents::onLivingHurt);
         forgeBus.addListener(CombatEvents::onKnockBack);

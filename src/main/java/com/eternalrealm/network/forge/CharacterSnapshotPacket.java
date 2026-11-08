@@ -14,13 +14,16 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
- * S2C: the authoritative state of the receiving player's own character (HUD, character screen).
+ * S2C: the authoritative state of the receiving player's own character (HUD, journal), plus the stats the job and the
+ * equipment add on top of it.
  */
-public record CharacterSnapshotPacket(CharacterSnapshot snapshot) {
-    static final int MAX_BYTES = 512;
+public record CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonusStats) {
+    static final int MAX_BYTES = 4096;
+    static final int MAX_SKILLS = 64;
 
     public CharacterSnapshotPacket {
         Objects.requireNonNull(snapshot, "snapshot");
+        Objects.requireNonNull(bonusStats, "bonusStats");
     }
 
     public void encode(FriendlyByteBuf buffer) {
@@ -32,6 +35,15 @@ public record CharacterSnapshotPacket(CharacterSnapshot snapshot) {
         buffer.writeVarInt(snapshot.unspentStatPoints());
         writeStats(buffer, snapshot.allocatedStats());
         writeStats(buffer, snapshot.totalStats());
+        buffer.writeUtf(snapshot.jobId(), 32);
+        buffer.writeVarLong(snapshot.gold());
+        buffer.writeVarInt(snapshot.unspentSkillPoints());
+        buffer.writeVarInt(snapshot.skillInvestments().size());
+        snapshot.skillInvestments().forEach((id, points) -> {
+            buffer.writeUtf(id, 64);
+            buffer.writeVarInt(points);
+        });
+        writeStats(buffer, bonusStats);
     }
 
     public static CharacterSnapshotPacket decode(FriendlyByteBuf buffer) {
@@ -45,8 +57,20 @@ public record CharacterSnapshotPacket(CharacterSnapshot snapshot) {
             int unspent = buffer.readVarInt();
             StatBlock allocated = readStats(buffer);
             StatBlock total = readStats(buffer);
+            String jobId = buffer.readUtf(32);
+            long gold = buffer.readVarLong();
+            int skillPoints = buffer.readVarInt();
+            int skillCount = buffer.readVarInt();
+            if (skillCount < 0 || skillCount > MAX_SKILLS) {
+                throw new DecoderException("Too many skills: " + skillCount);
+            }
+            Map<String, Integer> skills = new java.util.LinkedHashMap<>();
+            for (int i = 0; i < skillCount; i++) {
+                skills.put(buffer.readUtf(64), buffer.readVarInt());
+            }
+            StatBlock bonus = readStats(buffer);
             return new CharacterSnapshotPacket(new CharacterSnapshot(season, level, levelCap, experience,
-                    experienceToNext, unspent, allocated, total));
+                    experienceToNext, unspent, allocated, total, jobId, gold, skillPoints, skills), bonus);
         } catch (IllegalArgumentException e) {
             throw new DecoderException("Invalid CharacterSnapshotPacket: " + e.getMessage(), e);
         }
@@ -54,7 +78,7 @@ public record CharacterSnapshotPacket(CharacterSnapshot snapshot) {
 
     /** Client thread (via consumerMainThread). */
     public static void handle(CharacterSnapshotPacket packet, Supplier<NetworkEvent.Context> context) {
-        ClientboundHandlers.onCharacterSnapshot(packet.snapshot());
+        ClientboundHandlers.onCharacterSnapshot(packet);
     }
 
     private static void writeStats(FriendlyByteBuf buffer, StatBlock stats) {

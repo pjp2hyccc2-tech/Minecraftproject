@@ -18,6 +18,22 @@ public final class ClientKeyMappings {
     public static final KeyMapping HEAVY_ATTACK = key("heavy_attack", GLFW.GLFW_KEY_R);
     public static final KeyMapping DODGE = key("dodge", GLFW.GLFW_KEY_LEFT_ALT);
     public static final KeyMapping WEAPON_SKILL = key("weapon_skill", GLFW.GLFW_KEY_Z);
+    /** Job skill slots 1..4 (4 = the ultimate). */
+    public static final KeyMapping JOB_SKILL_1 = key("job_skill_1", GLFW.GLFW_KEY_V);
+    public static final KeyMapping JOB_SKILL_2 = key("job_skill_2", GLFW.GLFW_KEY_G);
+    public static final KeyMapping JOB_SKILL_3 = key("job_skill_3", GLFW.GLFW_KEY_B);
+    public static final KeyMapping JOB_SKILL_4 = key("job_skill_4", GLFW.GLFW_KEY_H);
+
+    /** Index 0 unused; 1..4 = the job skill slots. */
+    public static KeyMapping jobSkill(int slot) {
+        return switch (slot) {
+            case 1 -> JOB_SKILL_1;
+            case 2 -> JOB_SKILL_2;
+            case 3 -> JOB_SKILL_3;
+            case 4 -> JOB_SKILL_4;
+            default -> throw new IllegalArgumentException("slot " + slot);
+        };
+    }
 
     private ClientKeyMappings() {
     }

@@ -68,7 +68,7 @@ public final class CombatGameTests {
         float frontBefore = front.getHealth();
         float behindBefore = behind.getHealth();
 
-        int damaged = CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99);
+        int damaged = swing(attacker, firstHit(SWORD));
 
         check(damaged == 1, "expected exactly one target, got " + damaged);
         // 6 base attack x 1.0 attack multiplier x 1.0 frame multiplier; iron golems have no armor
@@ -88,7 +88,7 @@ public final class CombatGameTests {
             }
         }
         float before = target.getHealth();
-        check(CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99) == 0, "hit through a wall");
+        check(swing(attacker, firstHit(SWORD)) == 0, "hit through a wall");
         check(target.getHealth() == before, "the golem behind the wall took damage");
 
         for (int x = 3; x <= 5; x++) {
@@ -96,7 +96,7 @@ public final class CombatGameTests {
                 helper.setBlock(new BlockPos(x, y, 5), net.minecraft.world.level.block.Blocks.AIR);
             }
         }
-        check(CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99) == 1, "control: no hit without the wall");
+        check(swing(attacker, firstHit(SWORD)) == 1, "control: no hit without the wall");
         helper.succeed();
     }
 
@@ -105,8 +105,8 @@ public final class CombatGameTests {
         IronGolem target = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 6)));
         FakePlayer attacker = fighter(helper, "er_gt_combo", SWORD);
         float before = target.getHealth();
-        CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99);
-        CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99); // same tick: vanilla would ignore it
+        swing(attacker, firstHit(SWORD));
+        swing(attacker, firstHit(SWORD)); // same tick: vanilla would ignore it
         check(Math.abs(before - target.getHealth() - 12.0F) < EPS,
                 "two hits should deal 12, dealt " + (before - target.getHealth()));
         helper.succeed();
@@ -119,7 +119,7 @@ public final class CombatGameTests {
         pig.setDeltaMovement(Vec3.ZERO);
         float before = pig.getHealth();
         String stages = diagnose(helper, attacker, pig, firstHit(SWORD));
-        int damaged = CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99);
+        int damaged = swing(attacker, firstHit(SWORD));
         Vec3 motion = pig.getDeltaMovement();
         String state = " [damaged=" + damaged + ", health " + before + "->" + pig.getHealth() + ", motion=" + motion
                 + ", pig=" + pig.getBoundingBox() + ", attackerEye=" + attacker.getEyePosition() + ", " + stages + "]";
@@ -278,6 +278,11 @@ public final class CombatGameTests {
 
     private static CombatStats withHealthBonus(double bonus) {
         return new CombatStats(1.0, bonus, 0.0, 1.0, 0.0, 1.5, 100.0, 1.0);
+    }
+
+    /** Executes a melee hit frame with neutral stats and no critical hit; @return targets damaged */
+    static int swing(FakePlayer attacker, CombatEvent.Hit hit) {
+        return CombatHits.execute(attacker, PLAIN, hit, com.eternalrealm.combat.DamageType.PHYSICAL, () -> 0.99).size();
     }
 
     private static CombatEvent.Hit firstHit(WeaponProfile weapon) {

@@ -5,7 +5,10 @@ import com.eternalrealm.network.forge.ClientboundHandlers;
 import com.eternalrealm.ui.hud.CharacterHudOverlay;
 import com.eternalrealm.ui.hud.CombatHudOverlay;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import com.eternalrealm.combat.forge.EREntities;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,6 +30,14 @@ public final class ClientModEvents {
         ClientboundHandlers.setCombatStatsHandler(ClientCombatState::onStats);
         ClientboundHandlers.setCombatStatusHandler(ClientCombatState::onStatus);
         ClientboundHandlers.setDamageNumberHandler(ClientCombatState::onDamageNumber);
+        ClientboundHandlers.setUiDataHandler(ClientUiState::accept);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(EREntities.MAGIC_PROJECTILE.get(),
+                context -> new ThrownItemRenderer<>(context, 1.25F, true));
+        event.registerEntityRenderer(EREntities.SKILL_ARROW.get(), SkillArrowRenderer::new);
     }
 
     @SubscribeEvent
@@ -41,5 +52,9 @@ public final class ClientModEvents {
         event.register(ClientKeyMappings.HEAVY_ATTACK);
         event.register(ClientKeyMappings.DODGE);
         event.register(ClientKeyMappings.WEAPON_SKILL);
+        event.register(ClientKeyMappings.JOB_SKILL_1);
+        event.register(ClientKeyMappings.JOB_SKILL_2);
+        event.register(ClientKeyMappings.JOB_SKILL_3);
+        event.register(ClientKeyMappings.JOB_SKILL_4);
     }
 }

@@ -18,12 +18,38 @@ import java.util.UUID;
 public final class StatEffects {
     static final UUID MAX_HEALTH_MODIFIER_ID = UUID.fromString("6f6b0b8e-9b2e-4c55-9c62-6a1d2f4b3e01");
     private static final String MAX_HEALTH_MODIFIER_NAME = "eternalrealm.max_health";
+    static final UUID MOVE_SPEED_MODIFIER_ID = UUID.fromString("2d8f1c44-7b39-4f3e-a0f1-5c2e9b7d4a12");
+    private static final String MOVE_SPEED_MODIFIER_NAME = "eternalrealm.move_speed";
 
     private StatEffects() {
     }
 
     /** @return whether the max health changed */
     public static boolean apply(ServerPlayer player, CombatStats stats) {
+        applyMoveSpeed(player, stats.moveSpeedBonus());
+        return applyMaxHealth(player, stats);
+    }
+
+    /** Job/equipment movement speed bonus as a multiplicative modifier (not saved: re-applied when stats load). */
+    private static void applyMoveSpeed(ServerPlayer player, double bonus) {
+        AttributeInstance speed = player.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed == null) {
+            return;
+        }
+        AttributeModifier current = speed.getModifier(MOVE_SPEED_MODIFIER_ID);
+        if (current != null && current.getAmount() == bonus) {
+            return;
+        }
+        if (current != null) {
+            speed.removeModifier(MOVE_SPEED_MODIFIER_ID);
+        }
+        if (bonus != 0.0) {
+            speed.addTransientModifier(new AttributeModifier(MOVE_SPEED_MODIFIER_ID, MOVE_SPEED_MODIFIER_NAME, bonus,
+                    AttributeModifier.Operation.MULTIPLY_BASE));
+        }
+    }
+
+    private static boolean applyMaxHealth(ServerPlayer player, CombatStats stats) {
         AttributeInstance maxHealth = player.getAttribute(Attributes.MAX_HEALTH);
         if (maxHealth == null) {
             return false;

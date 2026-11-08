@@ -3,6 +3,7 @@ package com.eternalrealm.ui.hud;
 import com.eternalrealm.client.ClientCombatState;
 import com.eternalrealm.client.ClientKeyMappings;
 import com.eternalrealm.combat.Combatant;
+import com.eternalrealm.combat.SkillBinding;
 import com.eternalrealm.combat.DefenseEvent;
 import com.eternalrealm.combat.HeavyAttack;
 import com.eternalrealm.combat.WeaponProfile;
@@ -131,6 +132,39 @@ public final class CombatHudOverlay implements IGuiOverlay {
         graphics.drawCenteredString(font, Component.translatable(key), centerX, centerY - 30, (alpha << 24) | color);
     }
 
+    /** Four job skill boxes: key, cooldown seconds or skill initials, locked slots dimmed. */
+    private static void renderJobSkills(GuiGraphics graphics, Font font, Combatant local, long now, int left,
+                                        int bottom) {
+        int size = 22;
+        int top = bottom - size;
+        for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
+            int x = left + (slot - 1) * (size + 2);
+            SkillBinding binding = local.jobSkill(slot);
+            graphics.fill(x, top, x + size, top + size, binding == null ? 0x50000000 : PANEL);
+            Component key = ClientKeyMappings.jobSkill(slot).getTranslatedKeyMessage();
+            graphics.drawString(font, key, x + 2, top + 2, binding == null ? 0x606060 : 0xE8C66A);
+            if (binding == null) {
+                continue;
+            }
+            int remaining = local.skillCooldownRemaining(slot, now);
+            int total = local.skillCooldownTotal(slot);
+            if (remaining > 0 && total > 0) {
+                double ratio = Math.min(1.0, (double) remaining / total);
+                int shadeTop = top + size - (int) Math.round(size * ratio);
+                graphics.fill(x, shadeTop, x + size, top + size, COOLDOWN_SHADE);
+                String seconds = remaining >= 200 ? Integer.toString(remaining / 20)
+                        : String.format(Locale.ROOT, "%.1f", remaining / 20.0);
+                graphics.drawString(font, seconds, x + size - font.width(seconds) - 1, top + size - font.lineHeight,
+                        0xFFFFFF);
+            } else {
+                String initials = Component.translatable("skill.eternalrealm." + binding.action().id()).getString();
+                String shown = initials.isEmpty() ? "?" : initials.substring(0, Math.min(2, initials.length()));
+                graphics.drawString(font, shown, x + size - font.width(shown) - 1, top + size - font.lineHeight,
+                        0x7CFC7C);
+            }
+        }
+    }
+
     private static void renderSkill(GuiGraphics graphics, Font font, Combatant local, WeaponProfile weapon, long now,
                                     int screenHeight) {
         Component name = Component.translatable("hud.eternalrealm.combat.skill",
@@ -153,6 +187,8 @@ public final class CombatHudOverlay implements IGuiOverlay {
         }
         graphics.drawString(font, name, left + 4, top + 3, 0xFFFFFF);
         graphics.drawString(font, state, left + 4, top + 4 + font.lineHeight, remaining > 0 ? 0xB0B0B0 : 0x7CFC7C);
+
+        renderJobSkills(graphics, font, local, now, left + width + 4, top + height);
 
         int step = local.currentComboStep();
         if (step >= 0) {
