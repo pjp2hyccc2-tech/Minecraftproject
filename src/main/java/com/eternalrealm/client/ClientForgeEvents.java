@@ -37,6 +37,7 @@ public final class ClientForgeEvents {
             }
         }
         com.eternalrealm.ui.dialogue.ClientDialogue.tick();
+        com.eternalrealm.client.telegraph.ClientTelegraphs.tick();
         KeyConflicts.resolveOnce();
     }
 
@@ -63,6 +64,7 @@ public final class ClientForgeEvents {
 
     @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
+        com.eternalrealm.client.telegraph.TelegraphRenderer.render(event);
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
             DamageNumberRenderer.render(event);
         }
@@ -87,5 +89,6 @@ public final class ClientForgeEvents {
         CombatAnimations.clear();
         CameraShake.clear();
         com.eternalrealm.ui.dialogue.ClientDialogue.clear();
+        com.eternalrealm.client.telegraph.ClientTelegraphs.clear();
     }
 }

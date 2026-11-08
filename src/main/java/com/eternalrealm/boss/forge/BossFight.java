@@ -13,6 +13,7 @@ import com.eternalrealm.boss.Point;
 import com.eternalrealm.boss.TargetSnapshot;
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.combat.forge.ERParticles;
+import com.eternalrealm.combat.forge.Telegraphs;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
 import com.eternalrealm.monster.MonsterSpawn;
@@ -66,7 +67,8 @@ public final class BossFight {
     private static final double ARENA_RANGE = 48.0;
     private static final SplittableRandom RANDOM = new SplittableRandom();
 
-    private record Telegraph(BossAbility ability, BossShape shape, long until) {
+    /** A charging ability area; {@code markerId} is its ground marker on the clients ({@link Telegraphs}). */
+    private record Telegraph(BossAbility ability, BossShape shape, long until, int markerId) {
     }
 
     private static final class Bolt {
@@ -351,12 +353,20 @@ public final class BossFight {
                 boss.playAnimation(animationFor(started.ability().kind()));
             }
         } else if (command instanceof BossCommand.Telegraph telegraph) {
-            telegraphs.add(new Telegraph(telegraph.ability(), telegraph.shape(), now + telegraph.durationTicks()));
+            int marker = Telegraphs.show(level, BossTelegraphs.marker(telegraph.ability(), telegraph.shape(),
+                    telegraph.durationTicks(), body.getY()));
+            telegraphs.add(new Telegraph(telegraph.ability(), telegraph.shape(), now + telegraph.durationTicks(), marker));
             if (boss != null) {
                 boss.setTelegraphing(true);
             }
         } else if (command instanceof BossCommand.Cancelled cancelled) {
-            telegraphs.removeIf(t -> t.ability().equals(cancelled.ability()));
+            telegraphs.removeIf(t -> {
+                if (!t.ability().equals(cancelled.ability())) {
+                    return false;
+                }
+                Telegraphs.cancel(level, t.markerId());
+                return true;
+            });
             if (boss != null) {
                 boss.setTelegraphing(false);
             }
@@ -412,7 +422,13 @@ public final class BossFight {
 
     private void execute(BossCommand.Execute execute, List<ServerPlayer> targets) {
         BossShape shape = execute.shape();
-        telegraphs.removeIf(t -> t.ability().equals(execute.ability()) && t.shape().equals(shape));
+        telegraphs.removeIf(t -> {
+            if (!t.ability().equals(execute.ability()) || !t.shape().equals(shape)) {
+                return false;
+            }
+            Telegraphs.fire(level, t.markerId());
+            return true;
+        });
         List<ServerPlayer> hit = new ArrayList<>();
         for (ServerPlayer player : targets) {
             if (Math.abs(player.getY() - body.getY()) <= BossRules.VERTICAL_TOLERANCE + 2.0
@@ -469,9 +485,8 @@ public final class BossFight {
         while (iterator.hasNext()) {
             Telegraph telegraph = iterator.next();
             if (now > telegraph.until() + 5) {
+                Telegraphs.cancel(level, telegraph.markerId());
                 iterator.remove();
-            } else if (now % 4 == 0) {
-                drawShape(telegraph.shape(), ParticleTypes.FLAME, 1);
             }
         }
     }
@@ -582,6 +597,7 @@ public final class BossFight {
     private void defeat() {
         defeated = true;
         brain.tick(now, 0.0, new BossPosition(body.getX(), body.getY(), body.getZ(), body.getYRot()), List.of());
+        telegraphs.forEach(t -> Telegraphs.cancel(level, t.markerId()));
         telegraphs.clear();
         bolts.clear();
         bar.setProgress(0.0F);

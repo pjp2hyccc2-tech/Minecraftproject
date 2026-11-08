@@ -26,6 +26,9 @@ public final class ClientboundHandlers {
     private static volatile Consumer<DamageNumberPacket> damageNumberHandler = number -> {
     };
 
+    private static volatile Consumer<TelegraphPacket> telegraphHandler = telegraph -> {
+    };
+
     private ClientboundHandlers() {
     }
 
@@ -47,6 +50,14 @@ public final class ClientboundHandlers {
 
     public static void setCombatStatusHandler(Consumer<CombatStatusPacket> handler) {
         combatStatusHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    public static void setTelegraphHandler(Consumer<TelegraphPacket> handler) {
+        telegraphHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    static void onTelegraph(TelegraphPacket packet) {
+        telegraphHandler.accept(packet);
     }
 
     public static void setDamageNumberHandler(Consumer<DamageNumberPacket> handler) {

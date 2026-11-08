@@ -47,6 +47,7 @@ public final class ClientModEvents {
             }
         });
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
+        ClientboundHandlers.setTelegraphHandler(com.eternalrealm.client.telegraph.ClientTelegraphs::accept);
         com.eternalrealm.item.forge.EquipmentStacks.setViewerLevel(() -> ClientCharacterState.snapshot()
                 .map(com.eternalrealm.character.CharacterSnapshot::level).orElse(1));
     }
@@ -74,6 +75,8 @@ public final class ClientModEvents {
         event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "combat_hud", new CombatHudOverlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "party_hud", new com.eternalrealm.ui.hud.PartyHudOverlay());
         event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), "dialogue_box", new com.eternalrealm.ui.dialogue.DialogueOverlay());
+        event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), "danger_warning",
+                new com.eternalrealm.client.telegraph.DangerOverlay());
     }
 
     @SubscribeEvent
