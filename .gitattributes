@@ -9,3 +9,4 @@ gradlew text eol=lf
 # Generated resources always use LF
 src/generated/**/.cache/cache text eol=lf
 src/generated/**/*.json text eol=lf
+*.ogg binary

@@ -62,14 +62,19 @@ def main():
     parser.add_argument("--only", nargs="*", default=None)
     parser.add_argument("--metadata", action="store_true")
     parser.add_argument("--analyze", action="store_true")
+    parser.add_argument("--jobs", type=int, default=2)
     args = parser.parse_args()
 
     write_metadata()
     if args.metadata:
         return
-    from eraudio import build  # noqa: E402  (heavy imports only when rendering)
+    from eraudio import build, selftest  # noqa: E402  (heavy imports only when rendering)
     started = time.time()
-    build.build_all(SOUNDS_DIR, only=args.only, analyze_dir=ANALYSIS_DIR if args.analyze else None)
+    err = selftest.run()
+    print(f"loop self-test: loop render vs steady state of the repeated piece, max relative error {err:.1e}")
+    if err > 1e-6:
+        raise SystemExit("loop self-test failed: looping renders would not repeat seamlessly")
+    build.build_all(SOUNDS_DIR, ANALYSIS_DIR, only=args.only, plots=args.analyze, jobs=args.jobs)
     build.report_sizes(SOUNDS_DIR, MUSIC_BUDGET, SFX_BUDGET)
     print(f"done in {time.time() - started:.0f} s")
 
