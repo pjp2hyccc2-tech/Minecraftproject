@@ -49,3 +49,18 @@ Forge runs the game on a module layer in which the `jdk.random` module is not re
 generator algorithm" at server start (seen in the GameTest run of 00c9b91). Pure modules take a `RandomGenerator`
 parameter; the Forge layer passes `java.util.SplittableRandom` (or `java.util.Random`/`ThreadLocalRandom`), which live in
 `java.base`. Never name an algorithm from `jdk.random`.
+
+## D-ENUM: extensible enums are created at client setup, never lazily (2026-11-08)
+Forge's `IExtensibleEnum.create` (e.g. `HumanoidModel.ArmPose`) adds a value at runtime, but every `switch` over that
+enum compiled into vanilla code uses a switch map sized to `values()` when the map is first used. A value created after
+`HumanoidModel` first posed an arm (our lazily created attack pose) had no slot and crashed every frame
+(`ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 10`). Create such values once in
+`FMLClientSetupEvent#enqueueWork` (main thread, before any model renders) and fall back to a vanilla value otherwise.
+
+## D-DIALOGUE: dialogues are read at the player's pace; follow-ups wait for "dialogue.done" (2026-11-08)
+Timed chat lines (2 s apart) were too fast to read. The server now sends a whole dialogue to the client: conversations
+(NPC/quest talks, prologue) open a window that waits for a click per line; ambient lines (areas, bosses, news) use a box
+above the hotbar advanced with a key, so nothing blocks combat. What a conversation leads to (accepting the quest,
+completing a talk objective, opening a shop) runs on the server when the client reports `dialogue.done {id}` (read or
+skipped). A follow-up is dropped on logout or after 15 minutes: the player simply talks to the NPC again, so no quest
+state can be lost or duplicated. Service NPCs talk once per story progress and session so shopping stays one click.
