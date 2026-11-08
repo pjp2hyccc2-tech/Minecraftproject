@@ -94,10 +94,11 @@ public final class CombatGameTests {
         FakePlayer attacker = fighter(helper, "er_gt_knockback", SWORD);
         pig.setDeltaMovement(Vec3.ZERO);
         float before = pig.getHealth();
+        String stages = diagnose(helper, attacker, pig, firstHit(SWORD));
         int damaged = CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99);
         Vec3 motion = pig.getDeltaMovement();
         String state = " [damaged=" + damaged + ", health " + before + "->" + pig.getHealth() + ", motion=" + motion
-                + ", pig=" + pig.getBoundingBox() + ", attackerEye=" + attacker.getEyePosition() + "]";
+                + ", pig=" + pig.getBoundingBox() + ", attackerEye=" + attacker.getEyePosition() + ", " + stages + "]";
         check(damaged == 1, "a small mob in front must be hit" + state);
         double horizontal = Math.sqrt(motion.x * motion.x + motion.z * motion.z);
         double expected = SWORD.combo().get(0).frames().get(0).knockback(); // 0.25 instead of vanilla's 0.4
@@ -205,6 +206,29 @@ public final class CombatGameTests {
     }
 
     // ------------------------------------------------------------------ helpers
+
+    /** Which stage of hit detection accepts/rejects {@code target} (for failure messages). */
+    private static String diagnose(GameTestHelper helper, FakePlayer attacker, net.minecraft.world.entity.LivingEntity target,
+                                   CombatEvent.Hit hit) {
+        Vec3 eye = attacker.getEyePosition();
+        net.minecraft.world.phys.AABB box = target.getBoundingBox();
+        boolean valid = CombatHits.isValidTarget(attacker, target);
+        boolean shape = com.eternalrealm.combat.HitGeometry.contains(hit.frame().shape(),
+                new com.eternalrealm.combat.AttackOrigin(eye.x, eye.y, eye.z, attacker.getYRot(), attacker.getXRot()),
+                new com.eternalrealm.combat.Box(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ));
+        StringBuilder rays = new StringBuilder();
+        for (Vec3 point : new Vec3[]{box.getCenter(), new Vec3(box.getCenter().x, box.maxY, box.minZ)}) {
+            net.minecraft.world.phys.BlockHitResult result = helper.getLevel().clip(new net.minecraft.world.level.ClipContext(
+                    eye, point, net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                    net.minecraft.world.level.ClipContext.Fluid.NONE, attacker));
+            rays.append(result.getType()).append('@').append(result.getBlockPos()).append('=')
+                    .append(helper.getLevel().getBlockState(result.getBlockPos())).append(' ');
+        }
+        int inQuery = helper.getLevel().getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class,
+                attacker.getBoundingBox().inflate(hit.frame().shape().reach() + 2.0), entity -> entity == target).size();
+        return "valid=" + valid + " shape=" + shape + " query=" + inQuery + " yaw=" + attacker.getYRot()
+                + " pitch=" + attacker.getXRot() + " rays=" + rays.toString().trim();
+    }
 
     private static CombatStats withHealthBonus(double bonus) {
         return new CombatStats(1.0, bonus, 0.0, 1.0, 0.0, 1.5, 100.0, 1.0);
