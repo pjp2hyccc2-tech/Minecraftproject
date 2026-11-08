@@ -84,7 +84,8 @@ def flow_section(title, width, named_images, scale, box, gap=8, label=True, labe
             y += box + gap + (label_h if label else 0)
         s.add(cell(im, scale, box), x, y)
         if label:
-            short = name if len(name) <= 18 else name[:17] + "."
+            lim = max(10, box // 6)
+            short = name if len(name) <= lim else name[:lim - 1] + "."
             s.text(short, x, y + box + 1, 10)
         x += box + gap
     return s

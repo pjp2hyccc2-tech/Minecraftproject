@@ -183,9 +183,9 @@ def main() -> int:
     for eid in ("attack_up", "defense_up", "flame_weapon", "bleed"):
         p = os.path.join(TEX, "mob_effect", f"{eid}.png")
         if os.path.exists(p):
-            old.append((eid + " (existing)", Image.open(p).convert("RGBA")))
-    secs.append(preview.flow_section("Mob effects 18x18 (x4)", W, [(n, c.image()) for n, c in effect_imgs] + old, 4, 72,
-                                     gap=8))
+            old.append((eid + "*", Image.open(p).convert("RGBA")))
+    secs.append(preview.flow_section("Mob effects 18x18 (x4), * = existing icons for comparison", W,
+                                     [(n, c.image()) for n, c in effect_imgs] + old, 4, 90, gap=12))
     out = os.path.join(HERE, "preview.png")
     preview.stack(secs, out, args.sections)
     print(f"preview: {os.path.relpath(out, ROOT)}")
