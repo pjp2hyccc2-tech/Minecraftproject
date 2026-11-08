@@ -24,6 +24,9 @@ public final class AstoriaTreeFeature extends Feature<VariantConfig> {
         FeatureKit.Bounds bounds = FeatureKit.Bounds.of(level, origin);
         int x = origin.getX();
         int z = origin.getZ();
+        if (FeatureKit.nearTower(x, z)) {
+            return false;
+        }
         if (!FeatureKit.dry(level, x, z) || !bounds.fits(x, z, variant.equals("giant") ? 12 : 6)) {
             return false;
         }

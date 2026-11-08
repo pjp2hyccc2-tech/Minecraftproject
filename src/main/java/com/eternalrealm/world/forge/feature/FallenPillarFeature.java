@@ -31,6 +31,9 @@ public final class FallenPillarFeature extends Feature<VariantConfig> {
         FeatureKit.Bounds bounds = FeatureKit.Bounds.of(level, origin);
         int x0 = origin.getX();
         int z0 = origin.getZ();
+        if (FeatureKit.nearTower(x0, z0)) {
+            return false;
+        }
         if (!FeatureKit.dry(level, x0, z0) || !bounds.fits(x0, z0, 11)) {
             return false;
         }

@@ -1,5 +1,6 @@
 package com.eternalrealm.world.forge.feature;
 
+import com.eternalrealm.world.gen.AstoriaLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -19,6 +20,8 @@ public final class FeatureKit {
     /** Blocks a feature may reach beyond the chunk it is placed in (the region allows up to 16). */
     public static final int MARGIN = 12;
     private static final int FLAGS = Block.UPDATE_CLIENTS;
+    /** Tower plaza (octagon radius 24) plus the reach of the largest decoration. */
+    private static final double TOWER_KEEP_OUT = 40.0;
 
     private FeatureKit() {
     }
@@ -42,11 +45,29 @@ public final class FeatureKit {
         }
     }
 
+    /**
+     * True if a feature placed at (x, z) could reach the dark tower's plaza. Decorations stay away from it: neighbouring
+     * chunks are decorated after the tower is drawn, and the d8 entrance keeps the plaza as world generation left it.
+     */
+    public static boolean nearTower(int x, int z) {
+        double dx = x - AstoriaLayout.TOWER_X;
+        double dz = z - AstoriaLayout.TOWER_Z;
+        return dx * dx + dz * dz <= TOWER_KEEP_OUT * TOWER_KEEP_OUT;
+    }
+
+    /**
+     * Sets a block inside the bounds. Blocks with a block entity (bee nests of trees in neighbouring chunks, campfires)
+     * are never overwritten: world generation would keep their stale block entity data.
+     */
     public static boolean set(WorldGenLevel level, Bounds bounds, int x, int y, int z, BlockState state) {
         if (!bounds.contains(x, y, z)) {
             return false;
         }
-        level.setBlock(new BlockPos(x, y, z), state, FLAGS);
+        BlockPos pos = new BlockPos(x, y, z);
+        if (level.getBlockState(pos).hasBlockEntity()) {
+            return false;
+        }
+        level.setBlock(pos, state, FLAGS);
         return true;
     }
 
@@ -55,8 +76,7 @@ public final class FeatureKit {
         if (!bounds.contains(x, y, z) || !isOpen(get(level, x, y, z))) {
             return false;
         }
-        level.setBlock(new BlockPos(x, y, z), state, FLAGS);
-        return true;
+        return set(level, bounds, x, y, z, state);
     }
 
     public static BlockState get(WorldGenLevel level, int x, int y, int z) {

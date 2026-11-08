@@ -34,6 +34,9 @@ public final class FloatingIslandFeature extends Feature<VariantConfig> {
         FeatureKit.Bounds bounds = FeatureKit.Bounds.of(level, origin);
         int x0 = origin.getX();
         int z0 = origin.getZ();
+        if (FeatureKit.nearTower(x0, z0)) {
+            return false;
+        }
         int radius = 5 + random.nextInt(5);
         if (!bounds.fits(x0, z0, 12)) {
             return false;

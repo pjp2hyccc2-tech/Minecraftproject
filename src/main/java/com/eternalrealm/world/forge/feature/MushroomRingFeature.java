@@ -24,6 +24,9 @@ public final class MushroomRingFeature extends Feature<NoneFeatureConfiguration>
         FeatureKit.Bounds bounds = FeatureKit.Bounds.of(level, origin);
         int x0 = origin.getX();
         int z0 = origin.getZ();
+        if (FeatureKit.nearTower(x0, z0)) {
+            return false;
+        }
         double radius = 3.0 + random.nextInt(3);
         if (!FeatureKit.dry(level, x0, z0) || !bounds.fits(x0, z0, (int) radius + 2)) {
             return false;

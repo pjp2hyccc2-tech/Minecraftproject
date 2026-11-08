@@ -4,6 +4,7 @@ import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.world.forge.AstoriaBiomeSource;
 import com.eternalrealm.world.forge.AstoriaDimension;
 import com.eternalrealm.world.forge.AstoriaTravel;
+import com.eternalrealm.world.forge.DarkTowerShape;
 import com.eternalrealm.world.forge.HubBuilder;
 import com.eternalrealm.world.forge.HubLayout;
 import com.eternalrealm.world.forge.LandmarkBuilder;
@@ -168,6 +169,11 @@ public final class WorldGameTests {
                 check(AstoriaTravel.areaAt(pos.getX(), pos.getZ()) == Landmarks.area(id), id + " spot outside its area");
             }
         }
+        // the dark tower itself is drawn by world generation: its wall stands 101 blocks above the plaza (not a floor level)
+        int towerFloor = Landmarks.entrance(astoria, "d8").getY() - 1;
+        BlockPos wall = new BlockPos(DarkTowerShape.CENTER_X, towerFloor + 101, DarkTowerShape.CENTER_Z + 11);
+        check(!astoria.getBlockState(wall).isAir(), "the dark tower wall is missing at " + wall);
+        check(astoria.getBlockState(wall.north(3)).isAir(), "the dark tower should be hollow at " + wall.north(3));
         helper.succeed();
     }
 

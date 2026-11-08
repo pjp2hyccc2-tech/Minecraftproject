@@ -29,6 +29,9 @@ public final class MagmaVentFeature extends Feature<NoneFeatureConfiguration> {
         FeatureKit.Bounds bounds = FeatureKit.Bounds.of(level, origin);
         int x0 = origin.getX();
         int z0 = origin.getZ();
+        if (FeatureKit.nearTower(x0, z0)) {
+            return false;
+        }
         int radius = 3 + random.nextInt(3);
         int height = 3 + random.nextInt(4);
         if (!FeatureKit.dry(level, x0, z0) || !bounds.fits(x0, z0, radius + 2)

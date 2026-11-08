@@ -33,6 +33,9 @@ public final class PoolFeature extends Feature<VariantConfig> {
         FeatureKit.Bounds bounds = FeatureKit.Bounds.of(level, origin);
         int x0 = origin.getX();
         int z0 = origin.getZ();
+        if (FeatureKit.nearTower(x0, z0)) {
+            return false;
+        }
         double radius = lava ? 2.5 + random.nextDouble() * 2.0 : 3.5 + random.nextDouble() * 2.5;
         int reach = (int) Math.ceil(radius) + 3;
         if (!FeatureKit.dry(level, x0, z0) || !bounds.fits(x0, z0, reach)

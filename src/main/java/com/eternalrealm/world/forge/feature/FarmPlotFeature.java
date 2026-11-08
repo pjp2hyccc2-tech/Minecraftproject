@@ -32,6 +32,9 @@ public final class FarmPlotFeature extends Feature<NoneFeatureConfiguration> {
         FeatureKit.Bounds bounds = FeatureKit.Bounds.of(level, origin);
         int x0 = origin.getX();
         int z0 = origin.getZ();
+        if (FeatureKit.nearTower(x0, z0)) {
+            return false;
+        }
         int halfX = 4;
         int halfZ = 3 + random.nextInt(2);
         if (!FeatureKit.dry(level, x0, z0) || !bounds.fits(x0, z0, 8) || FeatureKit.roughness(level, x0, z0, 5) > 2) {
