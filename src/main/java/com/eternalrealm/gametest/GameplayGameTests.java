@@ -24,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -93,8 +92,8 @@ public final class GameplayGameTests {
 
     @GameTest(template = ARENA)
     public static void equipmentDataSurvivesTheStack(GameTestHelper helper) {
-        EquipmentData data = EquipmentData.of(EquipmentBase.weapon(WeaponType.STAFF, ItemTier.FROST), ItemRarity.EPIC,
-                List.of());
+        EquipmentData data = com.eternalrealm.item.EquipmentGenerator.roll(
+                EquipmentBase.weapon(WeaponType.STAFF, ItemTier.FROST), ItemRarity.EPIC, new java.util.SplittableRandom(7));
         ItemStack stack = EquipmentStacks.create(data);
         ItemStack copy = ItemStack.of(stack.save(new net.minecraft.nbt.CompoundTag()));
         EquipmentData read = EquipmentStacks.read(copy).orElseThrow(() -> new GameTestAssertException("no data"));
