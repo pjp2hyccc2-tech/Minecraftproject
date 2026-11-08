@@ -28,7 +28,7 @@ LAKE = dict(cx=28.0, cz=126.0, a=124.0, b=33.0, n=4.0, water_y=-2)   # harbour l
 RIVER_PTS = [(127, -86), (124, -62), (129, -34), (126, -8), (122, 22), (127, 52), (125, 80), (124, 100)]
 RIVER_HALF = 4.0
 WATER_Y = -2
-WATERFALL = dict(x0=121, x1=131, top_y=61, lip_z=-112, pool=(126, -96), pool_r=11)
+WATERFALL = dict(x0=118, x1=133, top_y=61, lip_z=-106, pool=(126, -96), pool_r=11)
 MOUNTAIN = dict(cx=136.0, cz=-150.0)
 
 FOOTPRINT_CORNER_R = 40  # rounded footprint corners (outside = void)

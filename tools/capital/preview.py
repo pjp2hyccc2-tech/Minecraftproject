@@ -415,8 +415,8 @@ def shade(scene, O, D, sun, clip=None, ambient_boost=1.0, fog=900.0, exposure=1.
             So = P[cand] + n[cand] * 1e-3
             sr = scene.trace(So, np.broadcast_to(sun, (cand.size, 3)).copy(), shadow=True, max_t=700.0)
             lit[cand] = sr["trans"] * ndl[cand][:, None]
-        amb = (0.10 + 0.62 * sk ** 1.4)[:, None] * (SKY_TOP * 0.55 + SKY_HOR * 0.45)[None, :] * ambient_boost
-        blk = (bl ** 2.0)[:, None] * np.array([1.0, 0.72, 0.42])[None, :] * 1.5 * warm
+        amb = (0.035 + 0.66 * sk ** 2.4)[:, None] * (SKY_TOP * 0.55 + SKY_HOR * 0.45)[None, :] * ambient_boost
+        blk = (bl ** 2.2)[:, None] * np.array([1.0, 0.70, 0.40])[None, :] * 1.7 * warm
         light = amb * ao[:, None] + lit * SUN_COL[None, :] * 1.35 + blk * (0.6 + 0.4 * ao[:, None])
         emit = scene.emit[v].astype(np.float32)[:, None] / 15.0
         cc = base * light * edge[:, None] + base * emit * 1.2
@@ -477,7 +477,10 @@ def render(scene, name, pos, look, size=(1280, 720), fov=60.0, sun=None, clip=No
     w_, h_ = int(size[0] * scale), int(size[1] * scale)
     t0 = time.time()
     O, D = camera_rays(pos, look, w_, h_, fov)
-    sun = sun if sun is not None else sun_dir()
+    if sun is None:
+        sun = sun_dir()
+    elif isinstance(sun, tuple):
+        sun = sun_dir(*sun)
     rgb = shade(scene, O, D, sun, clip=clip, width=w_, height=h_, **kw)
     img = Image.fromarray((rgb.reshape(h_, w_, 3) * 255).astype(np.uint8))
     if label:
@@ -544,14 +547,16 @@ def views():
     """Named preview cameras: name -> kwargs for render()."""
     from .castle import plan as P
     return {
-        "plaza_north": dict(pos=(-6, 9, 40), look=(4, 52, -120), fov=70, sun=sun_dir(34, -160),
+        "plaza_north": dict(pos=(-5, 6, 30), look=(3, 56, -120), fov=64, sun=sun_dir(34, -160), fog=2400,
                             label="From the plaza looking north at the castle (cf. concept art 1)"),
-        "aerial_south": dict(pos=(-150, 150, 230), look=(10, 30, -110), fov=55, sun=sun_dir(40, -150),
+        "aerial_south": dict(pos=(-120, 118, 150), look=(10, 36, -110), fov=58, sun=sun_dir(40, -150), fog=2600,
                              label="Aerial view from over the lake (cf. design board main view)"),
-        "aerial_castle": dict(pos=(-95, 105, -10), look=(0, 50, -140), fov=60, sun=sun_dir(42, -150),
+        "aerial_castle": dict(pos=(-95, 105, -10), look=(0, 50, -140), fov=60, sun=sun_dir(42, -150), fog=2400,
                               label="The castle from the south-west"),
-        "castle_east": dict(pos=(150, 70, -60), look=(20, 50, -140), fov=60, sun=sun_dir(30, -20),
-                            label="The castle and the waterfall from the east"),
+        "castle_east": dict(pos=(160, 64, -30), look=(40, 50, -140), fov=62, sun=sun_dir(36, -165), fog=2400,
+                            label="The castle from the east (river, waterfall cirque, gardens)"),
+        "waterfall": dict(pos=(96, 30, -40), look=(126, 34, -108), fov=66, sun=sun_dir(40, -160), fog=2400,
+                          label="The great waterfall north-east of the castle"),
         "great_hall": dict(**P.VIEW_GREAT_HALL),
         "throne_room": dict(**P.VIEW_THRONE),
         "star_gate": dict(**P.VIEW_STAR_GATE),
@@ -573,3 +578,34 @@ def render_all(w, names=None, scale=1.0):
     for n in sel:
         kw = dict(vs[n])
         render(scene, n, scale=scale, **kw)
+
+
+def plan_slice(w, y, box, name="slice", scale=6):
+    """Top-down plan of the blocks at height y (and the first non-air block below, darkened) in a box
+    (x0, z0, x1, z1): a quick check of interior layouts."""
+    x0, z0, x1, z1 = box
+    pal = w.palette
+    mats = [material(s) for s in pal]
+    col = np.array([m["top"] for m in mats], np.float32)
+    kind = np.array([m["kind"] != "air" for m in mats])
+    sub = w.a[x0 - X0:x1 - X0 + 1, z0 - Z0:z1 - Z0 + 1, :y - Y0 + 1]
+    vis = kind[sub]
+    top = np.where(vis.any(axis=2), sub.shape[2] - 1 - np.argmax(vis[:, :, ::-1], axis=2), 0)
+    ids = np.take_along_axis(sub, top[:, :, None], axis=2)[:, :, 0]
+    c = col[ids]
+    depth = (sub.shape[2] - 1 - top).astype(np.float32)
+    c = c * np.clip(1.0 - depth * 0.08, 0.35, 1.0)[:, :, None]
+    img = Image.fromarray(np.clip(c.transpose(1, 0, 2), 0, 255).astype(np.uint8)).resize(
+        ((x1 - x0 + 1) * scale, (z1 - z0 + 1) * scale), Image.NEAREST)
+    d = ImageDraw.Draw(img)
+    for gx in range(x0, x1 + 1):
+        if gx % 10 == 0:
+            d.line([((gx - x0) * scale, 0), ((gx - x0) * scale, img.size[1])], fill=(255, 0, 0), width=1)
+            d.text(((gx - x0) * scale + 2, 2), str(gx), fill=(255, 60, 60), font=_font(10))
+    for gz in range(z0, z1 + 1):
+        if gz % 10 == 0:
+            d.line([(0, (gz - z0) * scale), (img.size[0], (gz - z0) * scale)], fill=(255, 0, 0), width=1)
+            d.text((2, (gz - z0) * scale + 2), str(gz), fill=(255, 60, 60), font=_font(10))
+    p = os.path.join(OUT_DIR, f"{name}.png")
+    img.save(p)
+    return p

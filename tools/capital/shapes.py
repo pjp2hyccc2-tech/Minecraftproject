@@ -223,6 +223,15 @@ def octagon_offsets(r: int):
     return dx, dz, m
 
 
+def octagon_ring(r: int):
+    """Boundary offsets (dx, dz) of the filled octagon of radius r."""
+    dx, dz, m = octagon_offsets(r)
+    pad = np.pad(m, 1)
+    core = pad[:-2, 1:-1] & pad[2:, 1:-1] & pad[1:-1, :-2] & pad[1:-1, 2:]
+    b = m & ~core
+    return dx[b], dz[b]
+
+
 def octagon_prism(t, cx, cz, r, y0, y1, state, hollow=False):
     dx, dz, m = octagon_offsets(r)
     if hollow:

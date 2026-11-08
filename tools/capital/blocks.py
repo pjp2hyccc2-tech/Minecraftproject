@@ -336,6 +336,9 @@ for _w in WOODS:
 
 # Some convenient aliases for materials (``stairs("castle")`` etc.)
 ALIASES = {
+    "polished_blackstone_brick": "polished_blackstone_bricks", "castle_brick": "castle_bricks",
+    "royal_roof_tile": "royal_roof_tiles", "pale_roof_tile": "pale_roof_tiles", "nether_brick": "nether_bricks",
+    "end_stone_brick": "end_stone_bricks", "prismarine_brick": "prismarine_bricks",
     "castle": "castle_bricks", "smooth_castle": "smooth_castle_stone", "roof": "royal_roof_tiles",
     "royal_roof": "royal_roof_tiles", "pale_roof": "pale_roof_tiles", "gold": "gilded_trim",
     "gilded": "gilded_trim", "quartz": "quartz_block", "stone_brick": "stone_bricks", "brick": "bricks",
@@ -465,12 +468,18 @@ def _mat(material: str) -> tuple:
 
 def S(name: str, **props) -> str:
     """Generic state: ``S('oak_door', facing='north', half='upper')``; booleans/ints are converted."""
-    p = {k: (str(v).lower() if isinstance(v, bool) else str(v)) for k, v in props.items() if v is not None}
+    p = {k: (str(bool(v)).lower() if type(v).__name__ in ("bool", "bool_") else str(v))
+         for k, v in props.items() if v is not None}
     return canon(fmt(full_id(name), p))
 
 
 def full(material: str) -> str:
-    return canon(_mat(material)[0])
+    """Full block of a material family (or any plain block id)."""
+    m = ALIASES.get(material, material)
+    key = m.split(":", 1)[1] if ":" in m else m
+    if key in MATERIALS:
+        return canon(MATERIALS[key][0])
+    return canon(full_id(m))
 
 
 def stairs(material: str, facing="north", half="bottom", shape="straight") -> str:

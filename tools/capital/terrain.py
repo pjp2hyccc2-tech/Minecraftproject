@@ -80,7 +80,8 @@ def compute(T: Terrain):
     steep = np.where(front, 7.5, steep)
     ledge = fbm2(X, Z, 9.0, 2, seed_of("ledge")) * 2.5
     cliff = L.PLATEAU_Y + dP * steep + ledge * (dP < 0)
-    cliff = np.where(cliff > L.PLATEAU_Y - 3, np.minimum(cliff, L.PLATEAU_Y), np.floor(cliff / 3.0) * 3.0 + 1)
+    cliff = np.where(cliff > L.PLATEAU_Y - 3, np.minimum(cliff, L.PLATEAU_Y),
+                     cliff + fbm2(X, Z, 5.0, 2, seed_of("crag")) * 2.0)
     hP = np.where(dP >= 0, float(L.PLATEAU_Y), np.clip(cliff, 0, L.PLATEAU_Y))
     plateau_top = dP >= 0
     H = np.maximum(H, hP)
@@ -93,8 +94,13 @@ def compute(T: Terrain):
     mf = np.power(mdx ** 2.4 + mdz ** 2.4, 1 / 2.4)
     dM = (1.0 - mf) * 40.0
     ridges = 1.0 - np.abs(fbm2(X, Z, 26.0, 4, seed_of("ridges")))
-    hM = np.where(dM > 0, 66.0 * smoothstep(0.0, 13.0, dM) + 32.0 * ridges * smoothstep(6.0, 34.0, dM), 0.0)
-    hM = np.where((hM > 4) & (hM < 64), np.floor(hM / 6.0) * 6.0 + 3.0 * smoothstep(0, 6, hM % 6.0), hM)
+    crag = fbm2(X, Z, 9.0, 3, seed_of("massif-crag"))
+    hM = np.where(dM > 0, 62.0 * smoothstep(0.0, 16.0, dM + crag * 4.0) +
+                  58.0 * ridges * smoothstep(4.0, 34.0, dM) + crag * 5.0 * smoothstep(0.0, 8.0, dM), 0.0)
+    step_h = 6.0 + 3.0 * value2(X, Z, 23.0, seed_of("terr"))
+    hM = np.where((hM > 4) & (hM < 66), np.floor(hM / step_h) * step_h + step_h * 0.6 *
+                  smoothstep(0, step_h, hM % step_h), hM)
+    hM = np.where(hM > 92, 92 + (hM - 92) * 0.45, hM)       # round off the summits
     hM *= smoothstep(L.EDGE_BAND - 6, L.EDGE_BAND + 10, edge)
     H = np.maximum(H, hM)
 
@@ -102,16 +108,20 @@ def compute(T: Terrain):
     WF = L.WATERFALL
     wx0, wx1, lip = WF["x0"], WF["x1"], WF["lip_z"]
     pcx, pcz = WF["pool"]
-    pool = ((X - pcx) / 12.5) ** 2 + ((Z - pcz) / 10.5) ** 2 <= 1.0
+    pool = ((X - pcx) / 14.5) ** 2 + ((Z - pcz) / 10.5) ** 2 <= 1.0
     wall_zone = (X >= wx0 - 8) & (X <= wx1 + 8) & (Z >= lip - 6) & (Z <= lip)
     H = np.where(wall_zone, np.maximum(H, 66.0), H)
+    # open the cirque towards the city (south-west): lower the massif's flank in front of the fall
+    front = (Z > lip) & (X < wx1 + 4) & (X > 100) & ~pool
+    flank = np.clip((Z - lip) * 2.2 + (wx0 - X) * 0.0, 0, 80)
+    H = np.where(front, np.minimum(H, np.maximum(0.0, 64.0 - flank * 1.6)), H)
     valley = ((X - 126) / 8.5) ** 2 + ((Z - (lip - 13)) / 8.0) ** 2 <= 1.0
     valley_rim = ((X - 126) / 12.5) ** 2 + ((Z - (lip - 13)) / 12.0) ** 2 <= 1.0
     H = np.where(valley_rim & ~valley, np.maximum(H, 64.0), H)
     chan = (X >= wx0) & (X <= wx1) & (Z > lip - 8) & (Z <= lip)
     H = np.where(valley | chan, WF["top_y"] - 2.0, H)
     H = np.where(chan & (Z == lip), WF["top_y"] - 1.0, H)
-    pdist = np.sqrt(((X - pcx) / 12.5) ** 2 + ((Z - pcz) / 10.5) ** 2)
+    pdist = np.sqrt(((X - pcx) / 14.5) ** 2 + ((Z - pcz) / 10.5) ** 2)
     H = np.where(pool & (Z > lip), -8.0 + 5.0 * pdist, H)
 
     # --- lake
@@ -203,14 +213,16 @@ def write_columns(w, T: Terrain):
         X = T.X[xs:xe][:, :, None]
         Z = T.Z[xs:xe][:, :, None]
         Y = ys[None, None, :]
-        # strata index: horizontal bands warped by noise
-        warp = fbm2(T.X[xs:xe], T.Z[xs:xe], 34.0, 2, seed)[:, :, None] * 3.0
-        band = np.floor((Y + warp) / 2.0).astype(np.int64)
-        u = hash2(band, np.zeros_like(band), seed + 1)
+        # rock: irregular 3D blobs (value noise on a squashed lattice) instead of regular strata
+        warp = fbm2(T.X[xs:xe], T.Z[xs:xe], 34.0, 2, seed)[:, :, None] * 4.0
+        bx = np.floor((X + warp) / 5.0).astype(np.int64)
+        by = np.floor((Y + warp * 0.7) / 3.0).astype(np.int64)
+        bz = np.floor((Z - warp) / 5.0).astype(np.int64)
+        u = hash3(bx, by, bz, seed + 1)
         speck = hash3(X, Y, Z, seed + 2)
-        ri = np.where(u < 0.38, 0, np.where(u < 0.58, 1, np.where(u < 0.76, 2, np.where(u < 0.87, 3,
-                                                                                    np.where(u < 0.97, 4, 5)))))
-        ri = np.where(speck < 0.08, 0, ri)
+        # mostly mid-grey stone/andesite with pale (diorite/calcite) and tuff veins
+        ri = np.where(u < 0.46, 0, np.where(u < 0.72, 2, np.where(u < 0.82, 4, np.where(u < 0.93, 3, 1))))
+        ri = np.where(speck < 0.07, 2, np.where(speck > 0.96, 0, ri))
         rock = rock_ids[ri]
         out = np.full(Hs.shape[:2] + (NY,), AIR_I, np.uint16)
         below = Y <= Hs
@@ -246,6 +258,37 @@ def write_columns(w, T: Terrain):
         out = np.where(fp, out, np.uint16(0))
         w.a[xs:xe] = out
     return T
+
+
+# ============================================================================== cliff dressing
+def cliff_dressing(w, T: Terrain):
+    """Vines hanging down cliff faces, moss patches and grassy ledges (deterministic patches)."""
+    H = T.H
+    seed = seed_of("cliff")
+    moss_ids = [w.idx(B.S("mossy_cobblestone")), w.idx(B.S("moss_block"))]
+    for (dx, dz, side) in ((1, 0, "west"), (-1, 0, "east"), (0, 1, "north"), (0, -1, "south")):
+        # columns whose neighbour (x+dx, z+dz) is much lower: the face looks towards the neighbour
+        Hn = np.roll(np.roll(H, -dx, axis=0), -dz, axis=1)
+        drop = H - Hn
+        cand = (drop >= 4) & (T.kind == K_ROCK) | (drop >= 4) & (T.H > 10) & (T.kind != K_BED)
+        cand &= T.water == -999
+        xi, zi = np.nonzero(cand)
+        for i, j in zip(xi, zi):
+            x, z = int(T.X[i, j]), int(T.Z[i, j])
+            nx, nz = x + dx, z + dz
+            if not (X0 <= nx <= X1 and Z0 <= nz <= Z1):
+                continue
+            top, bot = int(H[i, j]), int(Hn[i, j]) + 1
+            p = value2(x, z, 7.0, seed)
+            if p > 0.62:
+                ln = int((p - 0.62) * 40) + 2
+                for y in range(top, max(bot, top - ln) - 1, -1):
+                    if w.get_idx(nx, y, nz) == AIR_I:
+                        w.set(nx, y, nz, B.S("vine", **{side: True}))
+            elif p < 0.22:
+                for y in range(max(bot, top - 10), top + 1):
+                    if hash3(x, y, z, seed + 1) < 0.5:
+                        w.set_idx_many([x], [y], [z], moss_ids[int(hash3(x, y, z, seed + 2) * 2)])
 
 
 # ============================================================================== vegetation
@@ -673,6 +716,7 @@ def build(w) -> Terrain:
     lake_bridge(w, T)
     river_bridge(w, T)
     waterfall(w, T)
+    cliff_dressing(w, T)
     vegetation(w, T)
     avenue_lamps(w, T)
     floating_islands(w, T)

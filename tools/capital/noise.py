@@ -17,7 +17,8 @@ def hash2(x, z, seed: int = 0):
     with np.errstate(over="ignore"):
         x = np.asarray(x, np.int64).astype(np.uint64)
         z = np.asarray(z, np.int64).astype(np.uint64)
-        h = (x * np.uint64(374761393) + z * np.uint64(668265263) + np.uint64(seed) * np.uint64(2246822519)) & M32
+        sd = np.uint64(int(seed) & 0xFFFFFFFF)
+        h = (x * np.uint64(374761393) + z * np.uint64(668265263) + sd * np.uint64(2246822519)) & M32
         h = ((h ^ (h >> np.uint64(13))) * np.uint64(1274126177)) & M32
         h = h ^ (h >> np.uint64(16))
         return (h & M32).astype(np.float64) / 4294967296.0
