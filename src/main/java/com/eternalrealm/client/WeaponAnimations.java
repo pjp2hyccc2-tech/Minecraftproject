@@ -20,10 +20,22 @@ import java.util.Optional;
  * distinct slashes, thrusts, overhead blows, spins and casts instead of vanilla's single swing.
  */
 public final class WeaponAnimations {
-    /** Created lazily on the client (extensible enum). Two-handed so it may pose both arms. */
-    private static HumanoidModel.ArmPose actionPose;
+    /**
+     * The custom two-handed action pose (extensible enum). It must exist before {@link HumanoidModel} first runs its
+     * arm-pose {@code switch}: the compiler's switch map is sized to {@code ArmPose.values()} at that moment, so a value
+     * added later has no slot and every frame that poses it crashes (ArrayIndexOutOfBoundsException in poseRightArm).
+     * {@link #init()} therefore creates it once during client setup, and {@link #armPose} never creates it late.
+     */
+    private static volatile HumanoidModel.ArmPose actionPose;
 
     private WeaponAnimations() {
+    }
+
+    /** Called from client setup (enqueued on the main thread), before any humanoid model is rendered. */
+    public static void init() {
+        if (actionPose == null) {
+            actionPose = HumanoidModel.ArmPose.create("ETERNALREALM_ACTION", true, WeaponAnimations::poseArms);
+        }
     }
 
     // ------------------------------------------------------------------ third person
@@ -40,9 +52,7 @@ public final class WeaponAnimations {
                 && (anim.get().motion() == CombatAnimations.Motion.CHARGE || anim.get().motion() == CombatAnimations.Motion.SHOOT)) {
             return HumanoidModel.ArmPose.BOW_AND_ARROW;
         }
-        if (actionPose == null) {
-            actionPose = HumanoidModel.ArmPose.create("ETERNALREALM_ACTION", true, WeaponAnimations::poseArms);
-        }
+        // Never create the pose here (see actionPose); without it the vanilla pose is used rather than crashing.
         return actionPose;
     }
 

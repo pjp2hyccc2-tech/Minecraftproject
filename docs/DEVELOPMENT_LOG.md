@@ -169,3 +169,16 @@
 - 未実装: PvPアリーナ、プレイヤー間の直接トレード（経済モジュールに実装はあるが画面がない）
 - 既知の制約: 最終レイドは設計上10〜20人（`dungeons.ignorePartySize` で少人数可）、看板の文字なし（世界生成）、
   入口の初回建築で1〜3秒サーバーが止まる
+
+## 2026-11-08 — 0.5.1: 剣を振るとクライアントが落ちる不具合の修正
+
+### 不具合
+- 実機で剣を振った瞬間にクライアントがクラッシュ（`ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 10`、
+  `HumanoidModel.poseRightArm`）。
+- 原因: 攻撃モーション用の腕ポーズ（Forge の拡張 enum `HumanoidModel.ArmPose`）を、最初に攻撃した時点で遅延生成していた。
+  `HumanoidModel` の `switch` が使う対応表はその時点の `ArmPose.values()`（バニラ10個）の大きさで作られるため、
+  後から足した11個目（序数10）は表に入らず、そのポーズで描画するたびに落ちる。
+
+### 修正
+- `WeaponAnimations.init()` でクライアント初期化時（`FMLClientSetupEvent` の `enqueueWork`、メインスレッド）に一度だけ生成し、
+  描画中には決して生成しない（未生成ならバニラのポーズで描画）。
