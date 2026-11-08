@@ -51,6 +51,7 @@ public final class EternalRealm {
         com.eternalrealm.combat.forge.ERParticles.register(modBus);
         EREntities.register(modBus);
         EREntityTypes.register(modBus);
+        com.eternalrealm.sound.ERSounds.register(modBus);
         ERCreativeTabs.register(modBus);
         JobActions.register();
         RankingCommands.register();

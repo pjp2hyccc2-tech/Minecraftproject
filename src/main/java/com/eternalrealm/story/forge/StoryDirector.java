@@ -117,6 +117,9 @@ public final class StoryDirector {
     public void startEnding(List<String> raidNames) {
         heroes = List.copyOf(raidNames);
         endingStart = now;
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            com.eternalrealm.sound.forge.MusicContexts.jingle(player, "ending");
+        }
     }
 
     public void tick(long tick) {

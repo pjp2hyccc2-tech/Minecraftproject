@@ -91,6 +91,12 @@ public final class DungeonService {
         return Optional.empty();
     }
 
+    /** The boss fight the player is part of right now. */
+    public Optional<BossFight> fightFor(ServerPlayer player) {
+        DungeonInstance instance = byMember.get(player.getUUID());
+        return instance == null ? Optional.empty() : instance.fight().filter(fight -> !fight.isOver());
+    }
+
     public boolean isInDungeon(UUID playerId) {
         return byMember.containsKey(playerId);
     }
@@ -338,6 +344,7 @@ public final class DungeonService {
                 context.playerData().grantGold(member, stats.goldMax() * BOSS_REWARD_FACTOR / 2);
             }
             reward(context, player, instance);
+            com.eternalrealm.sound.forge.MusicContexts.jingle(player, "victory");
             context.game().quests().event(player, new GameEvent.DungeonCleared(instance.contentId));
             context.game().quests().event(player, new GameEvent.BossDefeated(bossId));
             context.game().rankings().onDungeonClear(player, instance.run.members().size());

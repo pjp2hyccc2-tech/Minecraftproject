@@ -117,8 +117,8 @@ public final class LootDrops {
         killer.sendSystemMessage(Component.translatable("message.eternalrealm.loot.rare", stack.getDisplayName())
                 .withStyle(ChatFormatting.GRAY));
         level.playSound(null, victim.getX(), victim.getY(), victim.getZ(),
-                rarity == ItemRarity.LEGENDARY ? SoundEvents.UI_TOAST_CHALLENGE_COMPLETE : SoundEvents.AMETHYST_BLOCK_RESONATE,
-                SoundSource.PLAYERS, 0.8F, 1.2F);
+                rarity == ItemRarity.LEGENDARY ? com.eternalrealm.sound.ERSounds.LOOT_LEGENDARY_DROP.get()
+                        : com.eternalrealm.sound.ERSounds.LOOT_RARE_DROP.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
         if (rarity == ItemRarity.LEGENDARY) {
             killer.server.getPlayerList().broadcastSystemMessage(Component.translatable(
                     "message.eternalrealm.loot.legendary_broadcast", killer.getDisplayName(), stack.getDisplayName())

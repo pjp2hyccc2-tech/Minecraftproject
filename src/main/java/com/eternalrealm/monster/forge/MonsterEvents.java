@@ -100,6 +100,8 @@ public final class MonsterEvents {
         long gold = Math.round(stats.rollGold(RANDOM) * (1.0 + goldBonus));
         if (gold > 0) {
             context.playerData().grantGold(killer.getUUID(), gold);
+            killer.playNotifySound(com.eternalrealm.sound.ERSounds.LOOT_GOLD_PICKUP.get(), net.minecraft.sounds.SoundSource.PLAYERS,
+                    0.4F, 1.0F);
         }
         killer.displayClientMessage(Component.translatable("message.eternalrealm.monster.reward",
                 shares.getOrDefault(killer.getUUID(), 0L), gold).withStyle(ChatFormatting.YELLOW), true);

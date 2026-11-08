@@ -166,43 +166,43 @@ public final class SkillEffectsExecutor {
                 }
             }
             case "heal", "blessing", "sanctuary" -> {
-                burst(level, ERParticles.HEAL.get(), x, y, z, 30, 2.5, SoundEvents.AMETHYST_BLOCK_CHIME, caster);
+                burst(level, ERParticles.HEAL.get(), x, y, z, 30, 2.5, com.eternalrealm.sound.ERSounds.SKILL_HEAL.get(), caster);
                 extra(level, ERParticles.HOLY.get(), x, y + 0.6, z, 16, 1.5);
             }
             case "war_cry" -> {
-                burst(level, ParticleTypes.ANGRY_VILLAGER, x, y + 0.8, z, 8, 1.0, SoundEvents.RAVAGER_ROAR, caster);
+                burst(level, ParticleTypes.ANGRY_VILLAGER, x, y + 0.8, z, 8, 1.0, com.eternalrealm.sound.ERSounds.SKILL_BUFF.get(), caster);
                 extra(level, ERParticles.SPARK.get(), x, y + 0.4, z, 24, 2.0);
             }
             case "iron_wall" -> {
-                burst(level, ERParticles.HOLY.get(), x, y, z, 30, 1.2, SoundEvents.ANVIL_PLACE, caster);
+                burst(level, ERParticles.HOLY.get(), x, y, z, 30, 1.2, com.eternalrealm.sound.ERSounds.SKILL_HOLY_CHIME.get(), caster);
                 extra(level, ParticleTypes.ENCHANTED_HIT, x, y, z, 12, 1.0);
             }
             case "smoke" -> {
-                burst(level, ParticleTypes.LARGE_SMOKE, x, y, z, 50, 2.0, SoundEvents.FIRE_EXTINGUISH, caster);
+                burst(level, ParticleTypes.LARGE_SMOKE, x, y, z, 50, 2.0, com.eternalrealm.sound.ERSounds.SKILL_SHADOW_WHOOSH.get(), caster);
                 extra(level, ERParticles.SHADOW.get(), x, y, z, 30, 1.8);
             }
             case "shadow" -> burst(level, ERParticles.SHADOW.get(), x, y, z, 28, 0.6,
-                    SoundEvents.ENDERMAN_TELEPORT, caster);
+                    com.eternalrealm.sound.ERSounds.SKILL_SHADOW_WHOOSH.get(), caster);
             case "flame_blade" -> {
-                burst(level, ERParticles.EMBER.get(), x, y, z, 30, 0.8, SoundEvents.FIRECHARGE_USE, caster);
+                burst(level, ERParticles.EMBER.get(), x, y, z, 30, 0.8, com.eternalrealm.sound.ERSounds.SKILL_FIRE_CAST.get(), caster);
                 extra(level, ParticleTypes.FLAME, x, y, z, 10, 0.6);
             }
             case "judgment", "slam_small" -> burst(level, ParticleTypes.EXPLOSION, x, caster.getY() + 0.2, z,
                     "judgment".equals(kind) ? 12 : 3, "judgment".equals(kind) ? 3.0 : 1.0,
-                    SoundEvents.GENERIC_EXPLODE, caster);
+                    com.eternalrealm.sound.ERSounds.SKILL_FIRE_EXPLOSION.get(), caster);
             case "judgment_charge", "meteor_cast" -> burst(level, ERParticles.RUNE.get(), x, y, z, 40, 1.2,
-                    SoundEvents.BEACON_POWER_SELECT, caster);
+                    com.eternalrealm.sound.ERSounds.SKILL_HOLY_CHIME.get(), caster);
             case "arrow_rain" -> burst(level, ParticleTypes.CRIT, x, y + 2.0, z, 10, 1.0,
-                    SoundEvents.ARROW_SHOOT, caster);
+                    com.eternalrealm.sound.ERSounds.SKILL_ARROW_VOLLEY.get(), caster);
             case "blade_storm" -> {
-                burst(level, ERParticles.SLASH.get(), x, y, z, 14, 2.0, SoundEvents.PLAYER_ATTACK_SWEEP, caster);
+                burst(level, ERParticles.SLASH.get(), x, y, z, 14, 2.0, com.eternalrealm.sound.ERSounds.SKILL_HEAVY_SLASH.get(), caster);
                 extra(level, ParticleTypes.SWEEP_ATTACK, x, y, z, 6, 2.0);
             }
             case "rift", "arcane_slash" -> {
-                burst(level, ERParticles.RUNE.get(), x, y, z, 30, 1.5, SoundEvents.ILLUSIONER_CAST_SPELL, caster);
+                burst(level, ERParticles.RUNE.get(), x, y, z, 30, 1.5, com.eternalrealm.sound.ERSounds.SKILL_MAGIC_BOLT.get(), caster);
                 extra(level, ParticleTypes.REVERSE_PORTAL, x, y, z, 20, 1.5);
             }
-            default -> burst(level, ERParticles.RUNE.get(), x, y, z, 20, 1.0, SoundEvents.EVOKER_CAST_SPELL, caster);
+            default -> burst(level, ERParticles.RUNE.get(), x, y, z, 20, 1.0, com.eternalrealm.sound.ERSounds.SKILL_MAGIC_BOLT.get(), caster);
         }
     }
 

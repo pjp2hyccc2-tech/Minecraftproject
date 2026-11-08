@@ -235,7 +235,7 @@ final class DungeonInstance {
                     setDoor(layout.doors().get(open.room()), false);
                 }
                 tellAll(Component.translatable(DungeonRunEvent.OpenDoor.MESSAGE_KEY).withStyle(ChatFormatting.GREEN), true);
-                playAll(SoundEvents.IRON_DOOR_OPEN, 1.0F, 0.8F);
+                playAll(com.eternalrealm.sound.ERSounds.DUNGEON_DOOR_OPEN.get(), 1.0F, 1.0F);
             } else if (event instanceof DungeonRunEvent.StartBoss start) {
                 startBoss(start.bossId());
             } else if (event instanceof DungeonRunEvent.Cleared cleared) {
@@ -282,7 +282,7 @@ final class DungeonInstance {
                         body.getZ(), 8, 0.3, 0.4, 0.3, 0.02);
             }
         }
-        playAll(SoundEvents.EVOKER_PREPARE_SUMMON, 0.8F, 1.0F);
+        playAll(com.eternalrealm.sound.ERSounds.DUNGEON_WAVE_START.get(), 0.9F, 1.0F);
     }
 
     /** A wave monster of this instance died or vanished. */

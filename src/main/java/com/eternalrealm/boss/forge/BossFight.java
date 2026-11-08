@@ -319,7 +319,7 @@ public final class BossFight {
             }
             tell(targets, Component.translatable("message.eternalrealm.boss.phase_changed", body.getDisplayName(),
                     phase.phaseIndex() + 1).withStyle(ChatFormatting.LIGHT_PURPLE), true);
-            sound(SoundEvents.ENDER_DRAGON_GROWL, 1.0F, 0.8F);
+            sound(com.eternalrealm.sound.ERSounds.BOSS_PHASE_CHANGE.get(), 1.0F, 1.0F);
             burst(ERParticles.RUNE.get(), body.position().add(0, 1.5, 0), 40, 2.0);
             int phaseNumber = phase.phaseIndex() + 1;
             ServerContext.current().ifPresent(context -> {
@@ -334,7 +334,7 @@ public final class BossFight {
         } else if (command instanceof BossCommand.AbilityStarted started) {
             tell(targets, Component.translatable("message.eternalrealm.boss.ability", body.getDisplayName(),
                     Component.translatable(started.ability().translationKey())).withStyle(ChatFormatting.RED), true);
-            sound(SoundEvents.EVOKER_PREPARE_ATTACK, 1.0F, 0.8F);
+            sound(com.eternalrealm.sound.ERSounds.BOSS_TELEGRAPH.get(), 1.0F, 1.0F);
             if (boss != null) {
                 boss.setAiFrozen(true);
                 topThreat(targets).ifPresent(target -> boss.faceTowards(target.getX(), target.getZ()));
@@ -387,7 +387,7 @@ public final class BossFight {
             }
             tell(targets, Component.translatable("message.eternalrealm.boss.enraged", body.getDisplayName())
                     .withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD), false);
-            sound(SoundEvents.RAVAGER_ROAR, 1.2F, 0.7F);
+            sound(com.eternalrealm.sound.ERSounds.BOSS_ROAR.get(), 1.2F, 1.0F);
             burst(ParticleTypes.ANGRY_VILLAGER, body.position().add(0, 2, 0), 20, 1.5);
         } else if (command instanceof BossCommand.Heal heal) {
             health = Math.min(maxHealth, health + maxHealth * heal.fraction());

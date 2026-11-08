@@ -31,30 +31,23 @@ final class CombatEffects {
         float volume = 0.8F;
         switch (kind) {
             case LIGHT -> {
-                if (start.weapon().type() == WeaponType.BOW) {
-                    sound = SoundEvents.ARROW_SHOOT;
-                } else if (start.weapon().type() == WeaponType.STAFF) {
-                    sound = SoundEvents.EVOKER_CAST_SPELL;
-                } else {
-                    boolean thrust = start.action().frames().get(0).shape().kind() == HitShape.Kind.LINE;
-                    sound = thrust ? SoundEvents.TRIDENT_THROW : SoundEvents.PLAYER_ATTACK_SWEEP;
-                }
-                pitch = 1.0F + 0.08F * Math.max(0, start.comboStep());
+                sound = com.eternalrealm.sound.ERSounds.weaponSwing(start.weapon().type()).get();
+                pitch = 1.0F + 0.06F * Math.max(0, start.comboStep());
                 volume = 0.6F;
             }
             case HEAVY -> {
-                sound = SoundEvents.PLAYER_ATTACK_SWEEP;
-                pitch = 0.7F;
+                sound = com.eternalrealm.sound.ERSounds.SKILL_HEAVY_SLASH.get();
+                pitch = 1.0F;
             }
             case SKILL -> {
-                sound = SoundEvents.PLAYER_ATTACK_SWEEP;
-                pitch = 0.55F;
+                sound = com.eternalrealm.sound.ERSounds.SKILL_SLASH.get();
+                pitch = 1.0F;
                 volume = 1.0F;
             }
             case DODGE -> {
-                sound = SoundEvents.PLAYER_ATTACK_NODAMAGE;
-                pitch = 1.6F;
-                volume = 0.5F;
+                sound = com.eternalrealm.sound.ERSounds.COMBAT_DODGE.get();
+                pitch = 1.0F;
+                volume = 0.6F;
             }
             default -> {
                 return;
@@ -134,15 +127,15 @@ final class CombatEffects {
     }
 
     static void dodged(ServerPlayer player) {
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_ATTACK_NODAMAGE,
-                SoundSource.PLAYERS, 0.6F, 1.8F);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                com.eternalrealm.sound.ERSounds.COMBAT_DODGE.get(), SoundSource.PLAYERS, 0.8F, 1.0F);
         player.serverLevel().sendParticles(ParticleTypes.CLOUD, player.getX(), player.getY() + 0.3, player.getZ(),
                 6, 0.3, 0.1, 0.3, 0.02);
     }
 
     static void parried(ServerPlayer player) {
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SHIELD_BLOCK,
-                SoundSource.PLAYERS, 1.0F, 1.6F);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                com.eternalrealm.sound.ERSounds.COMBAT_PARRY.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ANVIL_LAND,
                 SoundSource.PLAYERS, 0.25F, 1.9F);
         double[] look = HitGeometry.look(player.getYRot(), 0.0);
@@ -151,8 +144,8 @@ final class CombatEffects {
     }
 
     static void guarded(ServerPlayer player) {
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SHIELD_BLOCK,
-                SoundSource.PLAYERS, 0.8F, 1.0F);
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                com.eternalrealm.sound.ERSounds.COMBAT_GUARD.get(), SoundSource.PLAYERS, 0.9F, 1.0F);
     }
 
     static void guardBroken(ServerPlayer player) {

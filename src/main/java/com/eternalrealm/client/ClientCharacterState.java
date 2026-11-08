@@ -27,6 +27,10 @@ public final class ClientCharacterState {
     }
 
     public static void apply(CharacterSnapshotPacket packet) {
+        CharacterSnapshot previous = snapshot;
+        if (previous != null && packet.snapshot().level() > previous.level()) {
+            com.eternalrealm.client.sound.MusicDirector.playJingle("level_up");
+        }
         snapshot = packet.snapshot();
         bonusStats = packet.bonusStats();
         ClientCombatState.onCharacter(snapshot);

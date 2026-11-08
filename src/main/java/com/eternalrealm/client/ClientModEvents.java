@@ -34,6 +34,12 @@ public final class ClientModEvents {
             ClientUiState.accept(channel, json);
             if ("open".equals(channel)) {
                 ClientUiState.get("open").ifPresent(com.eternalrealm.ui.screen.JournalScreen::openRequested);
+            } else if ("music".equals(channel)) {
+                ClientUiState.get("music").ifPresent(data -> com.eternalrealm.client.sound.MusicDirector.setContext(
+                        ClientUiState.stringOr(data, "context", "none")));
+            } else if ("jingle".equals(channel)) {
+                ClientUiState.get("jingle").ifPresent(data -> com.eternalrealm.client.sound.MusicDirector.playJingle(
+                        ClientUiState.stringOr(data, "id", "")));
             }
         });
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);

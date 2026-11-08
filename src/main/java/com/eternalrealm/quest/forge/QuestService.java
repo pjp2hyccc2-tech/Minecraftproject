@@ -189,6 +189,7 @@ public final class QuestService {
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.PLAYER_LEVELUP,
                 SoundSource.PLAYERS, 0.8F, 1.6F);
         rankings.onQuestCompleted(player);
+        com.eternalrealm.sound.forge.MusicContexts.jingle(player, "quest_complete");
         sendView(player);
     }
 

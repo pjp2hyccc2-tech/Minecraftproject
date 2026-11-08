@@ -183,7 +183,8 @@ public final class BlacksmithMenu {
         EquipmentStacks.write(stack, result.item());
         boolean success = result.outcome() == Enhancement.Outcome.SUCCESS;
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                success ? SoundEvents.ANVIL_USE : SoundEvents.ANVIL_LAND, SoundSource.PLAYERS, 0.8F, success ? 1.2F : 0.7F);
+                success ? com.eternalrealm.sound.ERSounds.ENHANCE_SUCCESS.get() : com.eternalrealm.sound.ERSounds.ENHANCE_FAIL.get(),
+                SoundSource.PLAYERS, 1.0F, 1.0F);
         player.displayClientMessage(Component.translatable(result.outcome().translationKey(),
                 result.item().enhancement()).withStyle(success ? ChatFormatting.GREEN : ChatFormatting.RED), true);
         context.combat().markStatsDirty(player.getUUID());

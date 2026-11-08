@@ -183,21 +183,20 @@ public final class ClientCombatController {
         switch (kind) {
             case DODGE -> {
                 applyDodgeImpulse(player);
-                player.playSound(SoundEvents.PLAYER_ATTACK_NODAMAGE, 0.5F, 1.6F);
+                player.playSound(com.eternalrealm.sound.ERSounds.COMBAT_DODGE.get(), 0.7F, 1.0F);
             }
             case LIGHT -> {
                 player.swing(InteractionHand.MAIN_HAND);
-                boolean thrust = start.action().frames().get(0).shape().kind() == HitShape.Kind.LINE;
-                player.playSound(thrust ? SoundEvents.TRIDENT_THROW : SoundEvents.PLAYER_ATTACK_SWEEP, 0.6F,
-                        1.0F + 0.08F * Math.max(0, start.comboStep()));
+                player.playSound(com.eternalrealm.sound.ERSounds.weaponSwing(start.weapon().type()).get(), 0.6F,
+                        1.0F + 0.06F * Math.max(0, start.comboStep()));
             }
             case HEAVY -> {
                 player.swing(InteractionHand.MAIN_HAND);
-                player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 0.8F, 0.7F);
+                player.playSound(com.eternalrealm.sound.ERSounds.SKILL_HEAVY_SLASH.get(), 0.8F, 1.0F);
             }
             case SKILL -> {
                 player.swing(InteractionHand.MAIN_HAND);
-                player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.0F, 0.55F);
+                player.playSound(com.eternalrealm.sound.ERSounds.SKILL_SLASH.get(), 1.0F, 1.0F);
                 Jobs.skillOfAction(start.action().id()).ifPresent(skill -> {
                     for (SkillEffect effect : skill.effectsAt(SkillEffect.ON_START)) {
                         if (effect instanceof SkillEffect.Dash dash) {

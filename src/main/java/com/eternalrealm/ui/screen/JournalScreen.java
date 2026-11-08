@@ -61,6 +61,7 @@ public abstract class JournalScreen extends Screen {
 
     /** Opens the page that was open last. */
     public static void open() {
+        com.eternalrealm.client.sound.UiSounds.journalOpen();
         Minecraft.getInstance().setScreen(lastTab.factory.get());
     }
 

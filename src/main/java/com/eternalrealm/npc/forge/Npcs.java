@@ -98,6 +98,8 @@ public final class Npcs {
         event.setCancellationResult(InteractionResult.SUCCESS);
         if (event.getEntity() instanceof ServerPlayer player && event.getTarget() instanceof Villager villager
                 && event.getHand() == net.minecraft.world.InteractionHand.MAIN_HAND) {
+            player.playNotifySound(com.eternalrealm.sound.ERSounds.UI_NPC_TALK.get(),
+                    net.minecraft.sounds.SoundSource.NEUTRAL, 0.8F, 1.0F);
             BiConsumer<ServerPlayer, Villager> handler = HANDLERS.get(role.get());
             if (handler != null) {
                 handler.accept(player, villager);

@@ -162,8 +162,7 @@ public final class WorldService {
             player.sendSystemMessage(Component.translatable(WorldMessages.AREA_DISCOVERED,
                     Component.translatable(area.translationKey()).withStyle(style -> style.withColor(color)))
                     .withStyle(ChatFormatting.AQUA));
-            player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.UI_TOAST_IN, SoundSource.PLAYERS, 1.0F, 1.0F);
+            com.eternalrealm.sound.forge.MusicContexts.jingle(player, "discovery");
             for (BiConsumer<ServerPlayer, AreaDefinition> listener : discoverListeners) {
                 listener.accept(player, area);
             }

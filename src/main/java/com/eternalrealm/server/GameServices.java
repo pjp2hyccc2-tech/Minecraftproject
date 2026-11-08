@@ -102,6 +102,7 @@ public final class GameServices {
     public void onLogout(java.util.UUID playerId) {
         dungeons.onLogout(playerId);
         story.onLogout(playerId);
+        com.eternalrealm.sound.forge.MusicContexts.forget(playerId);
         quests.onLogout(playerId);
         world.onLogout(playerId);
         rankings.onLogout(playerId);
@@ -120,6 +121,8 @@ public final class GameServices {
             world.tickSecond();
             quests.tickSecond();
             market.tickSecond();
+            ServerContext.current().ifPresent(context ->
+                    com.eternalrealm.sound.forge.MusicContexts.tickSecond(context.server(), context));
         }
     }
 
