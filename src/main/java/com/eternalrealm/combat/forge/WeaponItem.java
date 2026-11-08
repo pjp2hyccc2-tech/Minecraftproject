@@ -57,10 +57,17 @@ public final class WeaponItem extends Item {
         return USE_DURATION;
     }
 
-    /** Right click: guard. Both sides decide with the same rules (client: prediction, server: authority). */
+    /**
+     * Right click: guard. Only the server decides (D-035); the client sends the vanilla use packet and shows the guard
+     * once vanilla syncs the "using item" state back. Sneaking + right click skips the guard so the off-hand item can
+     * be used.
+     */
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (player.isSecondaryUseActive()) {
+            return InteractionResultHolder.pass(stack);
+        }
         if (hand != InteractionHand.MAIN_HAND || !GuardGate.tryStartGuard(player, profile)) {
             return InteractionResultHolder.fail(stack);
         }

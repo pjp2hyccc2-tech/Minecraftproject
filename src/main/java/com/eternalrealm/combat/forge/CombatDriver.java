@@ -57,6 +57,8 @@ public final class CombatDriver {
     private static final int PARRY_SLOW_TICKS = 40;
     private static final int PARRY_SLOW_AMPLIFIER = 3;
     private static final float GUARD_KNOCKBACK_FACTOR = 0.5F;
+    /** Vanilla ignores most hits while {@code invulnerableTime} is above this (half of its 20-tick hurt cooldown). */
+    private static final int HURT_COOLDOWN_THRESHOLD = 10;
 
     private final MinecraftServer server;
     private final PlayerDataService playerData;
@@ -144,7 +146,7 @@ public final class CombatDriver {
             }
             try {
                 CombatStats stats = CombatStats.derive(snapshot.get().totalStats(), snapshot.get().level(), tuning);
-                Combatant combatant = service.register(playerId, stats);
+                Combatant combatant = service.register(playerId, stats, now());
                 StatEffects.apply(player, stats);
                 ERNetwork.sendToPlayer(player, new CombatStatsPacket(stats));
                 sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.NONE);
@@ -189,34 +191,38 @@ public final class CombatDriver {
         } else {
             syncEquipment(player, combatant);
             boolean restricted = player.isPassenger() || player.isFallFlying();
-            outcome = combatant.submit(request, now(), WeaponItem.profileOf(player.getMainHandItem()), restricted);
+            boolean usingOtherItem = player.isUsingItem() && !isUsingWeapon(player);
+            outcome = combatant.submit(request, now(), WeaponItem.profileOf(player.getMainHandItem()), restricted,
+                    usingOtherItem);
         }
         net(player.getUUID()).lastSequence = sequence;
         sendStatus(player, combatant, true, outcome, DefenseEvent.NONE);
     }
 
     /**
-     * Right click with a weapon on the server: may the guard start? A refusal is reported to the client, which may
-     * have predicted the guard (it then drops the pose instead of showing a guard that does not protect).
+     * Right click with a weapon on the server: may the guard start? Only the server starts guards (D-035); the client
+     * shows the guard when vanilla syncs the "using item" state back to it.
      */
     public boolean startGuard(ServerPlayer player, WeaponProfile weapon) {
         Combatant combatant = service.get(player.getUUID()).orElse(null);
         if (combatant == null || !player.isAlive()) {
             return false;
         }
-        boolean started = combatant.startGuard(now(), weapon);
-        if (!started) {
-            sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.GUARD_REFUSED);
-        }
-        return started;
+        return combatant.startGuard(now(), weapon);
     }
 
     // ------------------------------------------------------------------ defense
 
-    /** LivingAttackEvent: @return true when the attack is completely avoided (dodge or parry). */
+    /**
+     * LivingAttackEvent: @return true when the attack is completely avoided (dodge or parry).
+     *
+     * <p>For players this event fires before vanilla's creative-invulnerability and hurt-cooldown checks; hits vanilla
+     * would ignore anyway must not trigger parry rewards, so they are left to vanilla.</p>
+     */
     public boolean avoid(ServerPlayer player, DamageSource source) {
         Combatant combatant = service.get(player.getUUID()).orElse(null);
-        if (combatant == null || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+        if (combatant == null || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)
+                || player.getAbilities().invulnerable || player.invulnerableTime > HURT_COOLDOWN_THRESHOLD) {
             return false;
         }
         syncEquipment(player, combatant);
@@ -318,12 +324,23 @@ public final class CombatDriver {
         });
     }
 
+    /**
+     * Leaving the End creates a new player entity without dying. Re-apply the max health bonus and keep the health the
+     * player had (vanilla may have clamped it to the default maximum before the bonus was back).
+     */
+    public void onCloned(ServerPlayer player, float previousHealth) {
+        service.get(player.getUUID()).ifPresent(combatant -> {
+            StatEffects.apply(player, combatant.stats());
+            player.setHealth(Math.min(previousHealth, player.getMaxHealth()));
+        });
+    }
+
     public void onDimensionChanged(ServerPlayer player) {
         service.get(player.getUUID()).ifPresent(Combatant::cancelAction);
     }
 
     public void onPlayerLeft(UUID playerId) {
-        service.remove(playerId);
+        service.remove(playerId, now());
         net.remove(playerId);
         limiter.forget(playerId);
         statsDirty.forget(playerId);

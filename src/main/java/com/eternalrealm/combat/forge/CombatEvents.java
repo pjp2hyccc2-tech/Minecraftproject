@@ -54,6 +54,14 @@ public final class CombatEvents {
         }
     }
 
+    /** Non-death clones (leaving the End): keep the bonus and the health. Deaths are handled by the respawn event. */
+    public static void onClone(PlayerEvent.Clone event) {
+        if (!event.isWasDeath() && event.getEntity() instanceof ServerPlayer player) {
+            float previousHealth = event.getOriginal().getHealth();
+            ServerContext.current().ifPresent(context -> context.combat().onCloned(player, previousHealth));
+        }
+    }
+
     public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             ServerContext.current().ifPresent(context -> context.combat().onDimensionChanged(player));

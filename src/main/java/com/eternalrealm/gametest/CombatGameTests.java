@@ -150,9 +150,9 @@ public final class CombatGameTests {
         ServerContext context = requireContext();
         Zombie zombie = still(helper.spawn(EntityType.ZOMBIE, new BlockPos(4, 2, 6)));
         FakePlayer defender = fighter(helper, "er_gt_dodger", SWORD);
-        Combatant combatant = context.combat().service().register(defender.getUUID(), PLAIN);
+        Combatant combatant = context.combat().service().register(defender.getUUID(), PLAIN, context.combat().now());
         try {
-            RequestOutcome outcome = combatant.submit(CombatRequest.DODGE, context.combat().now(), SWORD, false);
+            RequestOutcome outcome = combatant.submit(CombatRequest.DODGE, context.combat().now(), SWORD, false, false);
             check(outcome == RequestOutcome.ACCEPTED, "dodge was " + outcome);
 
             LivingAttackEvent attack = new LivingAttackEvent(defender, zombie.damageSources().mobAttack(zombie), 4.0F);
@@ -175,7 +175,7 @@ public final class CombatGameTests {
         Zombie behind = still(helper.spawn(EntityType.ZOMBIE, new BlockPos(4, 2, 2)));
         FakePlayer defender = fighter(helper, "er_gt_guard", SWORD);
         UUID id = defender.getUUID();
-        Combatant combatant = context.combat().service().register(id, PLAIN);
+        Combatant combatant = context.combat().service().register(id, PLAIN, context.combat().now());
         defender.startUsingItem(InteractionHand.MAIN_HAND);
         check(context.combat().startGuard(defender, SWORD), "guard should start from idle");
 
@@ -210,6 +210,28 @@ public final class CombatGameTests {
             }
             helper.succeed();
         });
+    }
+
+    /** A raised vanilla shield (or food, a bow...) blocks every combat action, so they cannot be combined. */
+    @GameTest(template = ARENA)
+    public static void noActionsWhileUsingAnotherItem(GameTestHelper helper) {
+        ServerContext context = requireContext();
+        FakePlayer player = fighter(helper, "er_gt_shield", SWORD);
+        player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(net.minecraft.world.item.Items.SHIELD));
+        Combatant combatant = context.combat().service().register(player.getUUID(), PLAIN, context.combat().now());
+        try {
+            player.startUsingItem(InteractionHand.OFF_HAND);
+            check(player.isUsingItem(), "setup: the shield should be raised");
+            context.combat().handleRequest(player, CombatRequest.LIGHT, 1);
+            check(combatant.currentAction().isEmpty(), "an attack was accepted behind a raised shield");
+            player.stopUsingItem();
+            context.combat().handleRequest(player, CombatRequest.LIGHT, 2);
+            check(combatant.currentAction().isPresent(), "control: the attack works once the shield is lowered");
+        } finally {
+            player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+            context.combat().onPlayerLeft(player.getUUID());
+        }
+        helper.succeed();
     }
 
     @GameTest(template = ARENA)

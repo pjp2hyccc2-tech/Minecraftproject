@@ -4,6 +4,7 @@ import com.eternalrealm.combat.CombatRules;
 import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.combat.Combatant;
 import com.eternalrealm.combat.DefenseEvent;
+import com.eternalrealm.combat.RequestOutcome;
 import com.eternalrealm.network.forge.CombatStatusPacket;
 import com.eternalrealm.network.forge.DamageNumberPacket;
 
@@ -27,6 +28,9 @@ public final class ClientCombatState {
     private static Combatant combatant;
     private static long tick;
     private static int lastSentSequence;
+    /** State saved just before the latest sent request, to undo it if the server rejects it. */
+    private static Combatant.Snapshot latestPrediction;
+    private static int latestPredictionSequence;
     private static DefenseEvent popup = DefenseEvent.NONE;
     private static long popupStart;
     private static final Deque<DamageNumber> damageNumbers = new ArrayDeque<>();
@@ -67,6 +71,11 @@ public final class ClientCombatState {
         return ++lastSentSequence;
     }
 
+    static void rememberPrediction(int sequence, Combatant.Snapshot before) {
+        latestPrediction = before;
+        latestPredictionSequence = sequence;
+    }
+
     // ------------------------------------------------------------------ packets (client thread)
 
     public static void onStats(CombatStats newStats) {
@@ -83,21 +92,23 @@ public final class ClientCombatState {
             return;
         }
         boolean upToDate = status.ackSequence() == lastSentSequence;
-        if (status.answersRequest() && upToDate && status.outcome().isRejected()) {
-            combatant.cancelAction(); // the server did not do what we predicted
+        if (status.answersRequest() && upToDate && status.outcome().isRejected()
+                && latestPrediction != null && latestPredictionSequence == status.ackSequence()) {
+            // The server did not do what we predicted for our latest request: undo exactly that prediction.
+            combatant.restore(latestPrediction);
+            latestPrediction = null;
         }
-        if (upToDate) {
+        // A buffered request pays its stamina/cooldown only when it starts, so while one is pending on either side
+        // the server's numbers would refund it; keep the prediction until both sides have started it.
+        boolean costPending = (status.answersRequest() && status.outcome() == RequestOutcome.BUFFERED)
+                || combatant.hasBufferedInput();
+        if (upToDate && !costPending) {
             // No request of ours is still unanswered, so the server's numbers already include all our actions.
             combatant.setStamina(status.stamina());
             combatant.setSkillCooldown(tick, status.cooldown(), status.cooldownTotal());
         }
         if (status.event() == DefenseEvent.GUARD_BROKEN) {
             combatant.stagger(tick, CombatRules.GUARD_BREAK_STAGGER_TICKS);
-        }
-        if (status.event() == DefenseEvent.GUARD_REFUSED) {
-            combatant.stopGuard();
-            ClientCombatController.dropPredictedGuard();
-            return;
         }
         if (status.event() != DefenseEvent.NONE) {
             popup = status.event();
@@ -139,6 +150,7 @@ public final class ClientCombatState {
         stats = null;
         combatant = null;
         lastSentSequence = 0;
+        latestPrediction = null;
         popup = DefenseEvent.NONE;
         damageNumbers.clear();
     }

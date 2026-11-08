@@ -53,6 +53,7 @@ public final class EternalRealm {
         forgeBus.addListener(CombatEvents::onKnockBack);
         forgeBus.addListener(EventPriority.LOWEST, CombatEvents::onLivingDeath);
         forgeBus.addListener(CombatEvents::onRespawn);
+        forgeBus.addListener(CombatEvents::onClone);
         forgeBus.addListener(CombatEvents::onChangedDimension);
 
         LOGGER.info("{} {} loaded (network protocol {})", ModInfo.DISPLAY_NAME,

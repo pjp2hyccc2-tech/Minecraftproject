@@ -1,6 +1,5 @@
 package com.eternalrealm.client;
 
-import com.eternalrealm.combat.forge.GuardGate;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.network.forge.ClientboundHandlers;
 import com.eternalrealm.ui.hud.CharacterHudOverlay;
@@ -28,7 +27,6 @@ public final class ClientModEvents {
         ClientboundHandlers.setCombatStatsHandler(ClientCombatState::onStats);
         ClientboundHandlers.setCombatStatusHandler(ClientCombatState::onStatus);
         ClientboundHandlers.setDamageNumberHandler(ClientCombatState::onDamageNumber);
-        GuardGate.setClientGate(ClientCombatController::tryStartGuard);
     }
 
     @SubscribeEvent

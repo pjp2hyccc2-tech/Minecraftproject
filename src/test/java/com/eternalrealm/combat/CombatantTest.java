@@ -33,7 +33,7 @@ public class CombatantTest {
     }
 
     private RequestOutcome submit(CombatRequest request) {
-        return fighter.submit(request, now, SWORD, false);
+        return fighter.submit(request, now, SWORD, false, false);
     }
 
     /** Runs ticks now+1 .. target, collecting events. */
@@ -146,8 +146,8 @@ public class CombatantTest {
 
     @Test
     public void noWeaponMeansNoActions() {
-        assertEquals(RequestOutcome.REJECTED_NO_WEAPON, fighter.submit(CombatRequest.LIGHT, now, null, false));
-        assertEquals(RequestOutcome.REJECTED_NO_WEAPON, fighter.submit(CombatRequest.SKILL, now, null, false));
+        assertEquals(RequestOutcome.REJECTED_NO_WEAPON, fighter.submit(CombatRequest.LIGHT, now, null, false, false));
+        assertEquals(RequestOutcome.REJECTED_NO_WEAPON, fighter.submit(CombatRequest.SKILL, now, null, false, false));
     }
 
     @Test
@@ -264,7 +264,7 @@ public class CombatantTest {
 
     @Test
     public void dodgeIsRejectedWithoutStaminaOrWhenMobilityIsRestricted() {
-        assertEquals(RequestOutcome.REJECTED_NOT_ALLOWED, fighter.submit(CombatRequest.DODGE, now, SWORD, true));
+        assertEquals(RequestOutcome.REJECTED_NOT_ALLOWED, fighter.submit(CombatRequest.DODGE, now, SWORD, true, false));
         fighter.setStamina(24.0);
         assertEquals(RequestOutcome.REJECTED_STAMINA, submit(CombatRequest.DODGE));
     }
@@ -275,13 +275,61 @@ public class CombatantTest {
         runTo(101);
         assertEquals(RequestOutcome.BUFFERED, submit(CombatRequest.DODGE));
         runTo(120);
-        assertEquals(106, starts().get(1).tick());
+        assertEquals("a buffered dodge starts right after the last hit (103), not at the cancel point (106)",
+                103, starts().get(1).tick());
 
         events.clear();
         submit(CombatRequest.LIGHT); // hit at 123
         runTo(124);
         assertEquals("after the last hit the recovery can be dodge-cancelled", RequestOutcome.ACCEPTED,
                 submit(CombatRequest.DODGE));
+    }
+
+    @Test
+    public void bufferedSkillAndDodgeStartAsSoonAsTheyWouldBeAcceptedDirectly() {
+        submit(CombatRequest.HEAVY_START);
+        runTo(102);
+        submit(CombatRequest.HEAVY_RELEASE); // strike at 108, hit at 111, cancel point at 118
+        runTo(109);
+        assertEquals(RequestOutcome.BUFFERED, submit(CombatRequest.DODGE));
+        runTo(115);
+        CombatEvent.ActionStarted dodge = starts().get(1);
+        assertEquals(ActionKind.DODGE, dodge.action().kind());
+        assertEquals(111, dodge.tick());
+        assertTrue(fighter.isInvulnerable(111));
+    }
+
+    @Test
+    public void nothingCanBeDoneWhileUsingAnotherItem() {
+        for (CombatRequest request : List.of(CombatRequest.LIGHT, CombatRequest.HEAVY_START, CombatRequest.DODGE,
+                CombatRequest.SKILL)) {
+            assertEquals(request.name(), RequestOutcome.REJECTED_BUSY, fighter.submit(request, now, SWORD, false, true));
+        }
+        assertEquals(Combatant.Phase.IDLE, fighter.phase(now));
+        assertEquals(RequestOutcome.ACCEPTED, submit(CombatRequest.LIGHT));
+    }
+
+    @Test
+    public void restoringASnapshotUndoesAPrediction() {
+        submit(CombatRequest.LIGHT);
+        runTo(106);
+        Combatant.Snapshot beforeSecond = fighter.snapshot();
+        submit(CombatRequest.LIGHT); // predicted step 2, then rejected by the server
+        runTo(108);
+        fighter.restore(beforeSecond);
+        runTo(109);
+        assertEquals("the rejected attack's hit (109) never happens", 1, hits().size());
+        events.clear();
+        submit(CombatRequest.LIGHT); // the combo continues from the restored state: step 2 again, not step 3
+        runTo(130);
+        assertEquals(1, starts().get(0).comboStep());
+
+        Combatant.Snapshot idle = fighter.snapshot();
+        submit(CombatRequest.DODGE);
+        assertEquals(75.0, fighter.stamina(), EPS);
+        fighter.restore(idle);
+        assertEquals("stamina comes back with the undo", 100.0, fighter.stamina(), EPS);
+        assertFalse(fighter.isInvulnerable(now));
     }
 
     @Test
@@ -336,7 +384,7 @@ public class CombatantTest {
         Combatant tired = new Combatant(BASE);
         tired.tick(now);
         tired.setStamina(24.0);
-        assertEquals(RequestOutcome.REJECTED_STAMINA, tired.submit(CombatRequest.SKILL, now, SWORD, false));
+        assertEquals(RequestOutcome.REJECTED_STAMINA, tired.submit(CombatRequest.SKILL, now, SWORD, false, false));
     }
 
     // ------------------------------------------------------------------ guard, parry, stagger

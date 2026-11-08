@@ -66,9 +66,11 @@ public final class Combatant {
      *
      * @param currentWeapon      the weapon in the main hand right now, or {@code null}
      * @param mobilityRestricted the fighter cannot dodge (riding, gliding)
+     * @param usingOtherItem     the fighter is using another item (shield, food, bow...): no actions until it stops,
+     *                           so nothing can be combined with e.g. a vanilla shield block
      */
     public RequestOutcome submit(CombatRequest request, long now, WeaponProfile currentWeapon,
-                                 boolean mobilityRestricted) {
+                                 boolean mobilityRestricted, boolean usingOtherItem) {
         Objects.requireNonNull(request, "request");
         updateWeapon(currentWeapon);
         advance(now);
@@ -80,6 +82,9 @@ public final class Combatant {
         }
         if (now < staggerUntil) {
             return RequestOutcome.REJECTED_STAGGERED;
+        }
+        if (usingOtherItem) {
+            return RequestOutcome.REJECTED_BUSY;
         }
         RequestOutcome invalid = validate(request, now, mobilityRestricted);
         if (invalid != null) {
@@ -144,16 +149,20 @@ public final class Combatant {
 
     /** Whether {@code request} may cut the current action short right now instead of being buffered. */
     private boolean canInterrupt(CombatRequest request, long now) {
-        if (now >= active.cancelTick) {
+        return canInterrupt(active, request, now);
+    }
+
+    private static boolean canInterrupt(Active current, CombatRequest request, long now) {
+        if (now >= current.cancelTick) {
             return true;
         }
-        if (!active.allFramesFired()) {
+        if (!current.allFramesFired()) {
             return false;
         }
         // Dodges and skills may cancel the recovery after the last hit, but not chain into themselves.
         return switch (request) {
-            case DODGE -> active.action.kind() != ActionKind.DODGE;
-            case SKILL -> active.action.kind() != ActionKind.SKILL;
+            case DODGE -> current.action.kind() != ActionKind.DODGE;
+            case SKILL -> current.action.kind() != ActionKind.SKILL;
             default -> false;
         };
     }
@@ -280,7 +289,9 @@ public final class Combatant {
                 outbox.add(new CombatEvent.Hit(current.weapon, current.action, index,
                         current.action.frames().get(index), current.damageScale, current.frameTicks[index]));
             }
-            if (buffered != null && now >= current.cancelTick) {
+            // A buffered input starts as soon as it would have been accepted directly: at the cancel point, or for
+            // dodges/skills right after the last hit (otherwise pressing a tick earlier would delay e.g. the i-frames).
+            if (buffered != null && canInterrupt(current, buffered.request, now)) {
                 Buffered next = buffered;
                 buffered = null;
                 startBuffered(next, now);
@@ -472,6 +483,79 @@ public final class Combatant {
         skillCooldownTotal = Math.max(0, totalTicks);
     }
 
+    // ------------------------------------------------------------------ prediction rollback
+
+    /** Copy of the complete state (without pending events), so a client can undo a prediction the server rejected. */
+    public Snapshot snapshot() {
+        return new Snapshot(this);
+    }
+
+    /** Restores a {@link #snapshot()}; time-based transitions since then are re-applied on the next call. */
+    public void restore(Snapshot snapshot) {
+        Objects.requireNonNull(snapshot, "snapshot");
+        weapon = snapshot.weapon;
+        phase = snapshot.phase;
+        active = snapshot.active == null ? null : snapshot.active.copy();
+        charge = snapshot.charge == null ? null : snapshot.charge.copy();
+        buffered = snapshot.buffered == null ? null : snapshot.buffered.copy();
+        nextComboStep = snapshot.nextComboStep;
+        comboExpiresAt = snapshot.comboExpiresAt;
+        stamina = Math.min(snapshot.stamina, stats.maxStamina());
+        lastSpendTick = snapshot.lastSpendTick;
+        skillReadyAt = snapshot.skillReadyAt;
+        skillCooldownTotal = snapshot.skillCooldownTotal;
+        invulnerableUntil = snapshot.invulnerableUntil;
+        staggerUntil = snapshot.staggerUntil;
+        riposteUntil = snapshot.riposteUntil;
+        guarding = snapshot.guarding;
+        guardStartTick = snapshot.guardStartTick;
+        lastGuardStartTick = snapshot.lastGuardStartTick;
+        parryArmed = snapshot.parryArmed;
+    }
+
+    /** Immutable copy of a {@link Combatant}'s state. */
+    public static final class Snapshot {
+        private final WeaponProfile weapon;
+        private final Phase phase;
+        private final Active active;
+        private final Charge charge;
+        private final Buffered buffered;
+        private final int nextComboStep;
+        private final long comboExpiresAt;
+        private final double stamina;
+        private final long lastSpendTick;
+        private final long skillReadyAt;
+        private final int skillCooldownTotal;
+        private final long invulnerableUntil;
+        private final long staggerUntil;
+        private final long riposteUntil;
+        private final boolean guarding;
+        private final long guardStartTick;
+        private final long lastGuardStartTick;
+        private final boolean parryArmed;
+
+        private Snapshot(Combatant source) {
+            weapon = source.weapon;
+            phase = source.phase;
+            active = source.active == null ? null : source.active.copy();
+            charge = source.charge == null ? null : source.charge.copy();
+            buffered = source.buffered == null ? null : source.buffered.copy();
+            nextComboStep = source.nextComboStep;
+            comboExpiresAt = source.comboExpiresAt;
+            stamina = source.stamina;
+            lastSpendTick = source.lastSpendTick;
+            skillReadyAt = source.skillReadyAt;
+            skillCooldownTotal = source.skillCooldownTotal;
+            invulnerableUntil = source.invulnerableUntil;
+            staggerUntil = source.staggerUntil;
+            riposteUntil = source.riposteUntil;
+            guarding = source.guarding;
+            guardStartTick = source.guardStartTick;
+            lastGuardStartTick = source.lastGuardStartTick;
+            parryArmed = source.parryArmed;
+        }
+    }
+
     // ------------------------------------------------------------------ queries
 
     public CombatStats stats() {
@@ -556,6 +640,12 @@ public final class Combatant {
         boolean allFramesFired() {
             return nextFrame >= frameTicks.length;
         }
+
+        Active copy() {
+            Active copy = new Active(weapon, action, comboStep, startTick, cancelTick, endTick, frameTicks, damageScale);
+            copy.nextFrame = nextFrame;
+            return copy;
+        }
     }
 
     private static final class Charge {
@@ -569,6 +659,12 @@ public final class Combatant {
             this.startTick = startTick;
             this.derived = derived;
         }
+
+        Charge copy() {
+            Charge copy = new Charge(weapon, startTick, derived);
+            copy.releaseRequested = releaseRequested;
+            return copy;
+        }
     }
 
     private static final class Buffered {
@@ -577,6 +673,12 @@ public final class Combatant {
 
         Buffered(CombatRequest request) {
             this.request = request;
+        }
+
+        Buffered copy() {
+            Buffered copy = new Buffered(request);
+            copy.released = released;
+            return copy;
         }
     }
 }

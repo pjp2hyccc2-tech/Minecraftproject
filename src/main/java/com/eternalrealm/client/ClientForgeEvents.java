@@ -4,6 +4,7 @@ import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.ui.hud.DamageNumberRenderer;
 import com.eternalrealm.ui.screen.CharacterScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent;
@@ -36,10 +37,17 @@ public final class ClientForgeEvents {
         }
     }
 
-    /** No vanilla attack or block breaking while holding a weapon (e.g. holding the button on a block). */
+    /**
+     * No vanilla attack or block breaking while holding a weapon (e.g. holding the button on a block), and no off-hand
+     * use when right click belongs to the guard (otherwise a refused guard would fall through to e.g. an off-hand
+     * shield). Sneaking + right click still uses the off-hand item.
+     */
     @SubscribeEvent
     public static void onInteractionKey(InputEvent.InteractionKeyMappingTriggered event) {
-        if (event.isAttack() && ClientCombatController.holdsWeapon()) {
+        boolean cancel = (event.isAttack() && ClientCombatController.holdsWeapon())
+                || (event.isUseItem() && event.getHand() == InteractionHand.OFF_HAND
+                && ClientCombatController.blocksOffHandUse());
+        if (cancel) {
             event.setCanceled(true);
             event.setSwingHand(false);
         }

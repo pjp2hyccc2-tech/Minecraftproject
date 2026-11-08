@@ -20,19 +20,35 @@ public class CombatServiceTest {
         CombatService service = new CombatService();
         UUID one = UUID.randomUUID();
         UUID two = UUID.randomUUID();
-        Combatant first = service.register(one, A);
-        first.submit(CombatRequest.DODGE, 0, WeaponProfiles.SPEAR, false);
-        Combatant again = service.register(one, B);
+        Combatant first = service.register(one, A, 0);
+        first.submit(CombatRequest.DODGE, 0, WeaponProfiles.SPEAR, false, false);
+        Combatant again = service.register(one, B, 0);
         assertSame(first, again);
         assertEquals(B, again.stats());
         assertEquals("stamina clamped to the new maximum", 50.0, again.stamina(), 0.0);
-        assertNotSame(first, service.register(two, A));
+        assertNotSame(first, service.register(two, A, 0));
         assertEquals(2, service.size());
         assertTrue(service.get(two).isPresent());
 
-        service.remove(one);
+        service.remove(one, 0);
         assertFalse(service.get(one).isPresent());
         assertEquals(1, service.all().size());
         assertThrows(UnsupportedOperationException.class, () -> service.all().clear());
+    }
+
+    @Test
+    public void skillCooldownSurvivesLeavingAndRejoining() {
+        CombatService service = new CombatService();
+        UUID id = UUID.randomUUID();
+        Combatant fighter = service.register(id, A, 100);
+        fighter.submit(CombatRequest.SKILL, 100, WeaponProfiles.ONE_HANDED_SWORD, false, false); // 160 ticks
+        service.remove(id, 110);
+        Combatant back = service.register(id, A, 150);
+        assertNotSame(fighter, back);
+        assertEquals(110, back.skillCooldownRemaining(150));
+        assertEquals(160, back.skillCooldownTotal());
+
+        service.remove(id, 300); // expired by then: nothing to remember
+        assertEquals(0, service.register(id, A, 301).skillCooldownRemaining(301));
     }
 }

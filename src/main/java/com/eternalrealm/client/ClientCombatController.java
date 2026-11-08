@@ -11,8 +11,10 @@ import com.eternalrealm.combat.forge.WeaponItem;
 import com.eternalrealm.network.forge.CombatActionPacket;
 import com.eternalrealm.network.forge.ERNetwork;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +26,10 @@ import net.minecraft.world.phys.Vec3;
  * <p>While an ETERNAL REALM weapon is in the main hand, left clicks are taken away from vanilla (no vanilla attack,
  * no block breaking) and become light attacks. Each request is first run through the local {@link Combatant}
  * (prediction): only requests the rules allow are sent, and the swing, sounds and dodge movement start immediately.
- * The server answers every request; the answer corrects stamina/cooldowns and undoes rejected predictions.</p>
+ * The server answers every request; a rejection of the latest request restores the state saved just before it.</p>
+ *
+ * <p>The guard is not predicted (D-035): right click sends vanilla's use packet, the server decides, and the local
+ * fighter follows the "using item" state vanilla syncs back.</p>
  */
 public final class ClientCombatController {
     /** Horizontal dodge impulse in blocks/tick: about 2.6 blocks on the ground, a short dash in the air. */
@@ -32,6 +37,8 @@ public final class ClientCombatController {
     private static final double DODGE_SPEED_AIR = 0.35;
 
     private static boolean heavyWasDown;
+    /** Hotbar slot we last told the server about; vanilla only sends slot changes later in the tick. */
+    private static int syncedSlot = -1;
 
     private ClientCombatController() {
     }
@@ -41,6 +48,7 @@ public final class ClientCombatController {
         LocalPlayer player = minecraft.player;
         if (player == null) {
             heavyWasDown = false;
+            syncedSlot = -1;
             return;
         }
         if (minecraft.isPaused()) {
@@ -54,12 +62,7 @@ public final class ClientCombatController {
 
         if (local != null) {
             local.updateWeapon(weapon);
-            boolean usingWeapon = isUsingWeapon(player);
-            if (local.isGuarding() && !usingWeapon) {
-                local.stopGuard();
-            } else if (!local.isGuarding() && usingWeapon) {
-                local.startGuard(now, weapon); // the server started a guard we did not predict: follow it
-            }
+            syncGuard(minecraft, player, local, weapon, now);
         }
 
         if (weapon != null) {
@@ -72,24 +75,25 @@ public final class ClientCombatController {
         }
 
         boolean heavyDown = inGame && ClientKeyMappings.HEAVY_ATTACK.isDown();
+        int heavyPresses = 0;
         while (ClientKeyMappings.HEAVY_ATTACK.consumeClick()) {
-            // edges are taken from isDown(); clicks are only drained
+            heavyPresses++;
         }
         if (heavyDown && !heavyWasDown && canAct) {
             request(minecraft, player, local, CombatRequest.HEAVY_START, now, weapon);
         } else if (!heavyDown && heavyWasDown && local != null) {
             request(minecraft, player, local, CombatRequest.HEAVY_RELEASE, now, weapon);
+        } else if (!heavyDown && !heavyWasDown && heavyPresses > 0 && canAct) {
+            // Pressed and released between two ticks: a tap is a minimum-charge heavy attack.
+            if (request(minecraft, player, local, CombatRequest.HEAVY_START, now, weapon)) {
+                request(minecraft, player, local, CombatRequest.HEAVY_RELEASE, now, weapon);
+            }
         }
         heavyWasDown = heavyDown;
 
         while (ClientKeyMappings.DODGE.consumeClick()) {
             if (canAct) {
-                boolean wasGuarding = isUsingWeapon(player);
-                if (request(minecraft, player, local, CombatRequest.DODGE, now, weapon) && wasGuarding
-                        && minecraft.gameMode != null) {
-                    // Tell the server the guard ended (vanilla release packet) right before the dodge arrives.
-                    minecraft.gameMode.releaseUsingItem(player);
-                }
+                request(minecraft, player, local, CombatRequest.DODGE, now, weapon);
             }
         }
         while (ClientKeyMappings.WEAPON_SKILL.consumeClick()) {
@@ -107,19 +111,61 @@ public final class ClientCombatController {
         }
     }
 
+    /**
+     * Keeps the local guard equal to vanilla's "using the weapon" state (which the server controls), and ends the guard
+     * right away when the use key was released this tick, so an attack clicked in the same tick is not rejected as
+     * "guarding" (vanilla would only send the release later in the tick, after our attack request).
+     */
+    private static void syncGuard(Minecraft minecraft, LocalPlayer player, Combatant local, WeaponProfile weapon,
+                                  long now) {
+        boolean usingWeapon = isUsingWeapon(player);
+        if (usingWeapon && !minecraft.options.keyUse.isDown() && minecraft.gameMode != null) {
+            minecraft.gameMode.releaseUsingItem(player);
+            usingWeapon = false;
+        }
+        if (local.isGuarding() && !usingWeapon) {
+            local.stopGuard();
+        } else if (!local.isGuarding() && usingWeapon) {
+            local.startGuard(now, weapon);
+        }
+    }
+
     /** @return whether the request was sent (the prediction accepted or buffered it) */
     private static boolean request(Minecraft minecraft, LocalPlayer player, Combatant local, CombatRequest request,
                                    long now, WeaponProfile weapon) {
         boolean restricted = player.isPassenger() || player.isFallFlying();
-        RequestOutcome outcome = local.submit(request, now, weapon, restricted);
-        if (outcome == RequestOutcome.ACCEPTED || outcome == RequestOutcome.BUFFERED) {
-            ERNetwork.sendToServer(new CombatActionPacket(request, ClientCombatState.nextSequence()));
-            return true;
+        boolean usingOtherItem = player.isUsingItem() && !isUsingWeapon(player);
+        boolean guarding = isUsingWeapon(player);
+        Combatant.Snapshot before = local.snapshot();
+        RequestOutcome outcome = local.submit(request, now, weapon, restricted, usingOtherItem);
+        if (outcome != RequestOutcome.ACCEPTED && outcome != RequestOutcome.BUFFERED) {
+            if (request != CombatRequest.LIGHT && request != CombatRequest.HEAVY_RELEASE) {
+                outcome.messageKey().ifPresent(key -> player.displayClientMessage(Component.translatable(key), true));
+            }
+            return false;
         }
-        if (request != CombatRequest.LIGHT && request != CombatRequest.HEAVY_RELEASE) {
-            outcome.messageKey().ifPresent(key -> player.displayClientMessage(Component.translatable(key), true));
+        syncSelectedSlot(minecraft, player);
+        if (request == CombatRequest.DODGE && guarding && minecraft.gameMode != null) {
+            // The dodge ends the guard: tell the server (vanilla release packet) before the dodge request arrives.
+            minecraft.gameMode.releaseUsingItem(player);
         }
-        return false;
+        int sequence = ClientCombatState.nextSequence();
+        ClientCombatState.rememberPrediction(sequence, before);
+        ERNetwork.sendToServer(new CombatActionPacket(request, sequence));
+        return true;
+    }
+
+    /**
+     * Vanilla sends a changed hotbar slot only later in the tick; without this the server would judge a request sent
+     * right after scrolling to a weapon with the previously held item.
+     */
+    private static void syncSelectedSlot(Minecraft minecraft, LocalPlayer player) {
+        int selected = player.getInventory().selected;
+        ClientPacketListener connection = minecraft.getConnection();
+        if (selected != syncedSlot && connection != null) {
+            connection.send(new ServerboundSetCarriedItemPacket(selected));
+            syncedSlot = selected;
+        }
     }
 
     /** Predicted start of an action: swing, sound and (for dodges) the movement impulse, all without waiting. */
@@ -172,24 +218,16 @@ public final class ClientCombatController {
                 && player.getUseItem().getItem() instanceof WeaponItem;
     }
 
-    /** The server refused our guard: stop the vanilla item use we predicted (sends the vanilla release packet). */
-    static void dropPredictedGuard() {
-        Minecraft minecraft = Minecraft.getInstance();
-        LocalPlayer player = minecraft.player;
-        if (player != null && minecraft.gameMode != null && isUsingWeapon(player)) {
-            minecraft.gameMode.releaseUsingItem(player);
-        }
-    }
-
     /** True while the player holds an ETERNAL REALM weapon (vanilla attack/mining input is suppressed). */
     public static boolean holdsWeapon() {
         LocalPlayer player = Minecraft.getInstance().player;
         return player != null && WeaponItem.profileOf(player.getMainHandItem()) != null;
     }
 
-    /** Client side of {@code GuardGate}: the predicted state decides like the server will. */
-    public static boolean tryStartGuard(Player player, WeaponProfile weapon) {
-        Combatant local = ClientCombatState.combatant();
-        return local != null && local.startGuard(ClientCombatState.tick(), weapon);
+    /** Right click with a weapon uses the guard; the off-hand item is only used while sneaking. */
+    public static boolean blocksOffHandUse() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        return player != null && !player.isSecondaryUseActive()
+                && WeaponItem.profileOf(player.getMainHandItem()) != null;
     }
 }

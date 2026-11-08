@@ -121,7 +121,7 @@ public final class CombatHudOverlay implements IGuiOverlay {
                 color = 0xFF6655;
             }
             default -> {
-                return; // NONE, GUARD_REFUSED: nothing to show
+                return;
             }
         }
         long age = ClientCombatState.popupAge();
