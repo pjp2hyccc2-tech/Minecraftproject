@@ -1,0 +1,6 @@
+{
+  "type": "eternalrealm:pool",
+  "config": {
+    "variant": "lava"
+  }
+}

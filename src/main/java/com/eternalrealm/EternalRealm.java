@@ -18,6 +18,8 @@ import com.eternalrealm.config.ERServerConfig;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.network.forge.ERNetwork;
 import com.eternalrealm.player.forge.PlayerConnectionEvents;
+import com.eternalrealm.world.forge.AstoriaWorldgen;
+import com.eternalrealm.world.forge.LandmarkBuilder;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -50,6 +52,7 @@ public final class EternalRealm {
         JobActions.register();
         RankingCommands.register();
         SocialUiActions.register();
+        AstoriaWorldgen.register(modBus);
 
         modBus.addListener(ServerBootstrap::onConfigReloading);
         forgeBus.addListener(ServerBootstrap::onServerAboutToStart);
@@ -72,6 +75,7 @@ public final class EternalRealm {
         forgeBus.addListener(CombatEvents::onRespawn);
         forgeBus.addListener(CombatEvents::onClone);
         forgeBus.addListener(CombatEvents::onChangedDimension);
+        forgeBus.addListener(LandmarkBuilder::onServerTick);
 
         LOGGER.info("{} {} loaded (network protocol {})", ModInfo.DISPLAY_NAME,
                 context.getContainer().getModInfo().getVersion(), ERNetwork.PROTOCOL_VERSION);

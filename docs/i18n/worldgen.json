@@ -1,0 +1,190 @@
+{
+  "dimension.eternalrealm.astoria": {
+    "ja": "アストリア",
+    "en": "Astoria"
+  },
+  "biome.eternalrealm.royal_capital": {
+    "ja": "王都の草原",
+    "en": "Royal Capital Meadows"
+  },
+  "biome.eternalrealm.arcelia_plains": {
+    "ja": "アルセリア平原",
+    "en": "Arcelia Plains"
+  },
+  "biome.eternalrealm.arcelia_flower_meadow": {
+    "ja": "花咲く牧草地",
+    "en": "Blooming Meadow"
+  },
+  "biome.eternalrealm.arcelia_farmlands": {
+    "ja": "王国の田園",
+    "en": "Kingdom Farmlands"
+  },
+  "biome.eternalrealm.elder_forest": {
+    "ja": "エルダーの森",
+    "en": "Elder Woods"
+  },
+  "biome.eternalrealm.elder_old_growth": {
+    "ja": "古代樹の原生林",
+    "en": "Ancient Old Growth"
+  },
+  "biome.eternalrealm.elder_mushroom_glade": {
+    "ja": "茸の谷間",
+    "en": "Mushroom Glade"
+  },
+  "biome.eternalrealm.sandria_dunes": {
+    "ja": "サンドリア大砂丘",
+    "en": "Sandria Dunes"
+  },
+  "biome.eternalrealm.sandria_mesa": {
+    "ja": "赤岩の台地",
+    "en": "Red Rock Mesa"
+  },
+  "biome.eternalrealm.sandria_oasis": {
+    "ja": "蜃気楼のオアシス",
+    "en": "Mirage Oasis"
+  },
+  "biome.eternalrealm.nordia_snowfield": {
+    "ja": "ノルディア雪原",
+    "en": "Nordia Snowfield"
+  },
+  "biome.eternalrealm.nordia_taiga": {
+    "ja": "雪の針葉樹林",
+    "en": "Snowbound Taiga"
+  },
+  "biome.eternalrealm.nordia_ice_spikes": {
+    "ja": "氷柱の原",
+    "en": "Ice Spire Plain"
+  },
+  "biome.eternalrealm.nordia_crystal_hollow": {
+    "ja": "氷晶の窪地",
+    "en": "Crystal Hollow"
+  },
+  "biome.eternalrealm.dragonia_ashlands": {
+    "ja": "灰の荒野",
+    "en": "Ashlands"
+  },
+  "biome.eternalrealm.dragonia_basalt_fields": {
+    "ja": "玄武岩の原野",
+    "en": "Basalt Fields"
+  },
+  "biome.eternalrealm.dragonia_caldera": {
+    "ja": "灼熱のカルデラ",
+    "en": "Searing Caldera"
+  },
+  "biome.eternalrealm.celestia_meadow": {
+    "ja": "光の草原",
+    "en": "Luminous Meadow"
+  },
+  "biome.eternalrealm.celestia_cherry_grove": {
+    "ja": "天空の桜林",
+    "en": "Celestial Cherry Grove"
+  },
+  "biome.eternalrealm.celestia_white_woods": {
+    "ja": "白樹の森",
+    "en": "White Woods"
+  },
+  "biome.eternalrealm.abyss_wastes": {
+    "ja": "終焉の荒野",
+    "en": "Wastes of the End"
+  },
+  "biome.eternalrealm.abyss_dead_forest": {
+    "ja": "枯死の森",
+    "en": "Withered Forest"
+  },
+  "biome.eternalrealm.abyss_void_rift": {
+    "ja": "虚無の裂け目",
+    "en": "Void Rift"
+  },
+  "biome.eternalrealm.abyss_spire": {
+    "ja": "塔の影",
+    "en": "Shadow of the Tower"
+  },
+  "hub.eternalrealm.quest_board": {
+    "ja": "クエスト掲示板",
+    "en": "Quest Board"
+  },
+  "hub.eternalrealm.item_shop": {
+    "ja": "道具屋",
+    "en": "Item Shop"
+  },
+  "hub.eternalrealm.blacksmith": {
+    "ja": "鍛冶屋",
+    "en": "Blacksmith"
+  },
+  "hub.eternalrealm.job_master": {
+    "ja": "職業ギルド",
+    "en": "Job Master"
+  },
+  "hub.eternalrealm.auction_house": {
+    "ja": "オークションハウス",
+    "en": "Auction House"
+  },
+  "hub.eternalrealm.mailbox": {
+    "ja": "郵便ポスト",
+    "en": "Mailbox"
+  },
+  "hub.eternalrealm.guild_registrar": {
+    "ja": "ギルド登録所",
+    "en": "Guild Registrar"
+  },
+  "hub.eternalrealm.gatekeeper": {
+    "ja": "門番",
+    "en": "Gatekeeper"
+  },
+  "hub.eternalrealm.arena_master": {
+    "ja": "闘技場",
+    "en": "Arena Master"
+  },
+  "hub.eternalrealm.ranking_board": {
+    "ja": "ランキング掲示板",
+    "en": "Ranking Board"
+  },
+  "hub.eternalrealm.hall_of_fame": {
+    "ja": "栄誉の殿堂",
+    "en": "Hall of Fame"
+  },
+  "hub.eternalrealm.spawn": {
+    "ja": "王都の広場",
+    "en": "Capital Plaza"
+  },
+  "hub.eternalrealm.respawn": {
+    "ja": "女神像",
+    "en": "Goddess Statue"
+  },
+  "landmark.eternalrealm.capital": {
+    "ja": "アルセリア王都",
+    "en": "Arcelia, the Royal Capital"
+  },
+  "landmark.eternalrealm.d1": {
+    "ja": "失われた地下都市の門",
+    "en": "Gate of the Lost Underground City"
+  },
+  "landmark.eternalrealm.d2": {
+    "ja": "古代樹の迷宮の入口",
+    "en": "Entrance to the Labyrinth of the Ancient Tree"
+  },
+  "landmark.eternalrealm.d3": {
+    "ja": "砂塵の神殿の門",
+    "en": "Gate of the Temple of Sand"
+  },
+  "landmark.eternalrealm.d4": {
+    "ja": "凍てつく地下牢の門",
+    "en": "Gate of the Frozen Prison"
+  },
+  "landmark.eternalrealm.d5": {
+    "ja": "氷結の城の門楼",
+    "en": "Gatehouse of the Frozen Castle"
+  },
+  "landmark.eternalrealm.d6": {
+    "ja": "灼熱の火山洞窟の入口",
+    "en": "Mouth of the Scorching Volcanic Cave"
+  },
+  "landmark.eternalrealm.d7": {
+    "ja": "天空の古代遺跡の門",
+    "en": "Gate of the Ancient Sky Ruins"
+  },
+  "landmark.eternalrealm.d8": {
+    "ja": "終焉の塔の大門",
+    "en": "Great Gate of the Tower of the End"
+  }
+}
