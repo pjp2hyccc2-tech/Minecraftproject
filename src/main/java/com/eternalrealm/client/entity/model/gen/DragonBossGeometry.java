@@ -120,21 +120,27 @@ public final class DragonBossGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"b6"};
+    public static final String[] VARIANTS = {"b6", "b6_p1", "b6_p2", "b6_p3"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {};
     /** VISIBLE[variant][toggled part]. */
     public static final boolean[][] VISIBLE = {
             {}, // b6
+            {}, // b6_p1
+            {}, // b6_p2
+            {}, // b6_p3
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {};
+    public static final String[] POSED_PARTS = {"horn_r", "horn_l", "right_wing", "left_wing"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {}, // b6
+            {null, null, null, null}, // b6
+            {null, null, null, null}, // b6_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.3F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.3F}, null, null}, // b6_p2
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}}, // b6_p3
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.5F};
+    public static final float[] SCALES = {1.5F, 1.5F, 1.5F, 1.5F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true};
+    public static final boolean[] GLOWS = {true, true, true, true};
 }

@@ -1,5 +1,6 @@
 """COLOSSUS boss rig: b3 砂塵の巨神 (sandstone giant with nemes headdress, false beard and glowing hieroglyphs) and
 b7 天空の機械神 (mechanical god: visor, antennae, chest reactor and a rotating 8-segment ring on its back)."""
+from boss_forms import cracks, glow_bright, glow_faces, veins
 from ermodel import C, P, Rig, Variant, anim
 from erpaint import lighten, rgb, shade
 
@@ -14,9 +15,13 @@ def side_arm(s):
     fore = P('%s_forearm' % name, (14.5 * s, -7, 0),
              C(x_out - 0.5, -7, -4.5, 8, 12, 9, 'sandstone:forearm', **kw('fore')),
              C(x_out - 1, 3, -5, 9, 8, 10, 'sandstone:fist', **kw('fist')))
+    # the machine god's last form unfolds a cannon on each shoulder
+    cannon = P('cannon_%s' % ('r' if s < 0 else 'l'), (14 * s, -25, 0),
+               C(x_out, -28, -3, 5, 4, 8, 'mech:cannon', **kw('cannon')),
+               C(x_out + 1.5, -27, -7, 2, 2, 4, 'metal:barrel', **kw('barrel')), opt=True)
     return P('%s_arm' % name, (13 * s, -18, 0), C(x_out, -21, -4, 7, 14, 8, 'sandstone:arm', **kw('arm')),
              P('shoulder_%s' % s and ('shoulder_r' if s < 0 else 'shoulder_l'), (14 * s, -22, 0),
-               C(x_out - 1, -24, -5, 9, 5, 10, 'sandstone:shoulder', **kw('shoulder'))),
+               C(x_out - 1, -24, -5, 9, 5, 10, 'sandstone:shoulder', **kw('shoulder')), cannon),
              fore)
 
 
@@ -36,6 +41,9 @@ def geometry():
     torso = P('torso', (0, -1, 0), C(-11, -21, -7, 22, 20, 14, 'sandstone:torso'),
               head, side_arm(-1), side_arm(1),
               P('core', (0, -14, -7), C(-3, -17, -7.6, 6, 6, 1, 'glowcore:core'), opt=True),
+              P('crystal', (0, -12, -7), C(-1.5, -16, -10, 3, 7, 3, 'crystal:crystal'),
+                C(1.5, -13, -9, 2, 4, 2, 'crystal:crystal2', tag='cc'), C(-3.5, -12, -9, 2, 4, 2, 'crystal:crystal2', share='cc'),
+                opt=True),
               P('ring', (0, -12, 10), *ring_segments, opt=True),
               P('back_vents', (0, -12, 7), C(-7, -18, 6.5, 4, 10, 2, 'metal:vent', tag='vent'),
                 C(3, -18, 6.5, 4, 10, 2, 'metal:vent', share='vent', mirror=True), opt=True))
@@ -235,10 +243,77 @@ def variants():
             'visor': {'base': '#60e0ff', 'style': 'glowcore'}, 'antenna': {'base': '#d8c890', 'style': 'metal'},
             'core': {'base': '#60e0ff', 'style': 'glowcore'}, 'ring': {'base': '#d8c890', 'style': 'metal', 'rivets': False},
             'vent': {'base': '#5a626c', 'style': 'mech', 'panel': 2}}
+    pal3.update({'crystal': {'base': '#2e1a44', 'style': 'crystal'}, 'crystal2': {'base': '#3a2252', 'style': 'crystal'},
+                 'ring': {'base': '#c8a868', 'style': 'sandstone'}, 'core': {'base': '#ff8a3a', 'style': 'glowcore'},
+                 'cannon': mech, 'barrel': {'base': '#5a626c', 'style': 'metal'}, 'visor': '#ff8a3a',
+                 'antenna': '#d8b040', 'vent': '#8a6a40'})
+    pal7.update({'crystal': {'base': '#2e1a44', 'style': 'crystal'}, 'crystal2': {'base': '#3a2252', 'style': 'crystal'},
+                 'cannon': {'base': '#9aa2ac', 'style': 'mech', 'panel': 3}, 'barrel': {'base': '#4a525c', 'style': 'metal'},
+                 'nemes': '#d8b040', 'lappet': '#d8b040', 'beard': '#d8b040', 'loin': '#e8e0c8'})
+    for key in ('cannon', 'barrel', 'crystal', 'crystal2', 'core', 'visor', 'antenna', 'vent', 'ring'):
+        pal3.setdefault(key, '#808080')
+    for key in ('nemes', 'lappet', 'beard', 'loin', 'crystal', 'crystal2'):
+        pal7.setdefault(key, '#808080')
+
+    def deco_b3_form(form):
+        # the titan's buried crystal wakes: burning glyphs and cracks, then a halo of stones torn from the temple
+        def paint(p):
+            deco_b3(p)
+            glow_faces(p, 'crystal', (210, 130, 255), every=2)
+            glow_faces(p, 'crystal', (210, 130, 255), index=1, every=2)
+            g = p.face('head', 'front', glow=True)
+            for x in (1, 2, 3, 6, 7, 8):
+                p.face('head', 'front').px(x, 3, (255, 120, 40))
+                g.px(x, 3, (255, 200, 120))
+            cracks(p, ('torso', 'pelvis', 'right_arm', 'left_arm'), (255, 130, 40), (255, 190, 90), every=34 - 6 * form)
+            if form >= 2:
+                cracks(p, ('right_leg', 'left_leg', 'right_shin', 'left_shin', 'right_forearm', 'left_forearm'),
+                       (255, 130, 40), (255, 190, 90), every=30)
+                for k in range(8):
+                    for fc in p.all_faces('ring_s%d' % k, glow=True, sides_only=True):
+                        fc.px(fc.w // 2, fc.h // 2, (255, 170, 80))
+        return paint
+
+    def deco_b7_form(form):
+        # ORDO overloads: warning lights, then a red core and visor, then the cannons come out
+        def paint(p):
+            deco_b7(p)
+            red = (255, 60, 60) if form >= 2 else (255, 170, 60)
+            for part in ('torso', 'right_arm', 'left_arm', 'right_leg', 'left_leg'):
+                for fc in p.all_faces(part, sides_only=True):
+                    gc = p.face(part, fc.face, glow=True)
+                    for x in range(4, fc.w - 2, 5):
+                        for y in range(5, fc.h - 2, 6):
+                            fc.px(x, y, red)
+                            gc.px(x, y, red)
+            if form >= 2:
+                veins(p, ('torso', 'pelvis', 'right_forearm', 'left_forearm'), (200, 40, 50), (255, 120, 120), seed=form)
+                for k in range(8):
+                    for fc in p.all_faces('ring_s%d' % k, glow=True, sides_only=True):
+                        for x in range(0, fc.w, 2):
+                            fc.px(x, fc.h // 2, (255, 110, 110))
+                for fc in p.all_faces('back_vents', glow=True, sides_only=True):
+                    fc.rect(0, 0, fc.w - 1, fc.h - 1, (255, 150, 60))
+            if form >= 3:
+                for part in ('cannon_r', 'cannon_l'):
+                    for fc in p.all_faces(part, index=1, glow=True):
+                        fc.rect(0, 0, fc.w - 1, fc.h - 1, (255, 90, 90))
+        return paint
+    overload = dict(pal7, visor={'base': '#ff4848', 'style': 'glowcore'}, core={'base': '#ff4848', 'style': 'glowcore'})
+    b7_parts = {'visor', 'antenna_r', 'antenna_l', 'core', 'ring', 'back_vents'}
+    b3_parts = {'nemes', 'false_beard', 'loincloth', 'crystal'}
     return [Variant('b3', show={'nemes', 'false_beard', 'loincloth'}, palette=pal3, paint=deco_b3, glow=True,
                     extra=dict(scale=1.4, hitbox=(2.6, 4.8))),
-            Variant('b7', show={'visor', 'antenna_r', 'antenna_l', 'core', 'ring', 'back_vents'}, palette=pal7, paint=deco_b7,
-                    glow=True, extra=dict(scale=1.3, hitbox=(2.4, 4.4)))]
+            Variant('b7', show=b7_parts, palette=pal7, paint=deco_b7,
+                    glow=True, extra=dict(scale=1.3, hitbox=(2.4, 4.4))),
+            Variant('b3_p1', show=b3_parts, palette=pal3, paint=deco_b3_form(1), glow=True, extra=dict(scale=1.4)),
+            Variant('b3_p2', show=b3_parts | {'ring'}, palette=pal3, poses={'ring': dict(scale=(1.5, 1.5, 1.5))},
+                    paint=deco_b3_form(2), glow=True, extra=dict(scale=1.4)),
+            Variant('b7_p1', show=b7_parts, palette=pal7, paint=deco_b7_form(1), glow=True, extra=dict(scale=1.3)),
+            Variant('b7_p2', show=b7_parts, palette=overload, paint=deco_b7_form(2), glow=True, extra=dict(scale=1.3)),
+            Variant('b7_p3', show=b7_parts | {'cannon_r', 'cannon_l'}, palette=overload,
+                    poses={'core': dict(scale=(1.5, 1.5, 1.0))}, paint=deco_b7_form(3), glow=True,
+                    extra=dict(scale=1.3))]
 
 
 def rig():

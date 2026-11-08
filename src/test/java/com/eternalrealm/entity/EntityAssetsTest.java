@@ -104,6 +104,24 @@ public class EntityAssetsTest {
         }
         assertTrue("final boss phase looks", bossTextures.containsAll(List.of("final_p1", "final_p2", "final_p3")));
         assertTrue("shield texture", Files.isRegularFile(TEXTURES.resolve("fx").resolve("boss_shield.png")));
+        assertTrue("aura texture", Files.isRegularFile(TEXTURES.resolve("fx").resolve("boss_aura.png")));
+    }
+
+    /** Every later form of every boss has its own look ({@code <id>_p1} .. {@code <id>_p3}, see ERBoss.lookFor). */
+    @Test
+    public void bossesChangeTheirLookInLaterForms() throws IOException {
+        Set<String> bossTextures = new TreeSet<>();
+        for (String rig : BOSS_RIGS) {
+            bossTextures.addAll(bodyTextures(rig));
+        }
+        for (BossDefinition boss : Bosses.all()) {
+            for (int form = 1; form < Math.min(4, boss.phases().size()); form++) {
+                assertTrue(boss.id() + ": form " + (form + 1) + " has no look of its own",
+                        bossTextures.contains(boss.id() + "_p" + form));
+            }
+            assertFalse(boss.id() + ": no look for a form that does not exist",
+                    bossTextures.contains(boss.id() + "_p" + boss.phases().size()));
+        }
     }
 
     @Test

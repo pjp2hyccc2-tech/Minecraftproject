@@ -155,13 +155,17 @@ public final class KingBossGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"b1", "b8", "final", "final_p1", "final_p2", "final_p3"};
+    public static final String[] VARIANTS = {"b1", "b1_p1", "b8", "b8_p1", "b8_p2", "b8_p3", "final", "final_p1", "final_p2", "final_p3"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {"crown", "helm", "horn_r", "horn_l", "beard", "floating_crown", "spikes_r", "spikes_l", "cape_lower", "core", "halo"};
     /** VISIBLE[variant][toggled part]. */
     public static final boolean[][] VISIBLE = {
             {true, false, false, false, true, false, false, false, true, false, false}, // b1
+            {true, false, false, false, true, false, true, true, true, true, false}, // b1_p1
             {false, true, true, true, false, false, true, true, true, false, false}, // b8
+            {false, true, true, true, false, false, true, true, true, true, false}, // b8_p1
+            {false, true, true, true, false, false, true, true, true, true, true}, // b8_p2
+            {false, true, true, true, false, false, true, true, true, true, true}, // b8_p3
             {true, false, false, false, false, false, true, true, true, false, false}, // final
             {false, false, false, false, false, true, true, true, true, false, false}, // final_p1
             {false, false, false, false, false, true, true, true, true, true, false}, // final_p2
@@ -172,14 +176,18 @@ public final class KingBossGeometry {
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
             {null, null}, // b1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}}, // b1_p1
             {null, null}, // b8
+            {null, null}, // b8_p1
+            {null, null}, // b8_p2
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}}, // b8_p3
             {null, null}, // final
             {null, null}, // final_p1
             {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}}, // final_p2
             {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}}, // final_p3
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.0F, 1.45F, 1.7F, 1.7F, 1.7F, 1.7F};
+    public static final float[] SCALES = {1.0F, 1.0F, 1.45F, 1.45F, 1.45F, 1.45F, 1.7F, 1.7F, 1.7F, 1.7F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true, true, true, true, true, true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true, true, true};
 }

@@ -1,6 +1,7 @@
 """QUEEN boss rig (tall humanoid): b5 氷獄の女王 (floating gown, crystal crown, long hair, ice scepter, ice collar,
 orbiting shards) and b4 凍獄の処刑人 (hooded executioner: legs, leather apron, pauldrons, two-handed axe).
 Two animation sets on one skeleton: the queen glides and casts, the executioner stomps and chops."""
+from boss_forms import cracks, glow_faces, veins
 from ermodel import C, P, Rig, Variant, anim
 from erpaint import human_face, lighten, rgb, shade
 
@@ -15,7 +16,11 @@ def geometry():
                C(3, -24, -3.5, 1, 3, 1, 'crystal:crown', share='c1'), opt=True),
              P('hair', (0, -21, 0), C(-4.5, -21.5, -1, 9, 16, 5, 'hair:hair'), rot=(6, 0, 0), opt=True),
              P('hood', (0, -17, -0.5), C(-4, -21, -4.5, 8, 8, 8, 'cloth:hood', inflate=0.6),
-               C(-2, -25, -2, 4, 4, 4, 'cloth:hood_tip'), opt=True))
+               C(-2, -25, -2, 4, 4, 4, 'cloth:hood_tip'), opt=True),
+             P('ice_horns', (0, -21, -0.5), C(-5, -27, -1, 1, 6, 1, 'crystal:ice_horn', tag='ih'),
+               C(4, -27, -1, 1, 6, 1, 'crystal:ice_horn', share='ih', mirror=True),
+               C(-6, -25, -1, 1, 3, 1, 'crystal:ice_horn2', tag='ih2'),
+               C(5, -25, -1, 1, 3, 1, 'crystal:ice_horn2', share='ih2', mirror=True), opt=True))
     right_arm = P('right_arm', (-7.5, -11, 0), C(-10, -13, -2, 4, 10, 4, 'cloth:sleeve', tag='ua'),
                   P('pauldron_r', (-8, -13, 0), C(-11, -14.5, -3, 6, 4, 6, 'metal:pauldron', tag='paul'), opt=True),
                   P('right_forearm', (-8, -3, 0), C(-10, -3, -2, 4, 9, 4, 'skin:arm', tag='fa'),
@@ -30,8 +35,12 @@ def geometry():
                    P('sleeve_l', (8, 1, 0), C(5, 1, -3, 6, 6, 6, 'cloth:cuff', share='cuff', mirror=True), opt=True)))
     shards = P('shard_ring', (0, -6, 0), C(-14, -9, -1, 2, 5, 2, 'crystal:shard', tag='sh'), C(12, -11, -1, 2, 5, 2, 'crystal:shard', share='sh'),
                C(-1, -10, 12, 2, 5, 2, 'crystal:shard', share='sh'), opt=True)
+    wings = P('ice_wings', (0, -9, 3.5),
+              P('wing_r', (-2, -10, 3.5), C(-15, -24, 3.5, 13, 20, 1, 'crystal:wing', tag='wg'), rot=(0, 25, -12)),
+              P('wing_l', (2, -10, 3.5), C(2, -24, 3.5, 13, 20, 1, 'crystal:wing', share='wg', mirror=True),
+                rot=(0, -25, 12)), opt=True)
     torso = P('torso', (0, 1, 0), C(-6, -13, -3.5, 12, 14, 7, 'cloth:bodice'),
-              head, right_arm, left_arm, shards,
+              head, right_arm, left_arm, shards, wings,
               P('collar', (0, -13, 2), C(-6, -20, 1.5, 12, 7, 1, 'crystal:collar'), rot=(-15, 0, 0), opt=True))
     legs = []
     for s in (-1, 1):
@@ -315,10 +324,67 @@ def variants():
             'axe_tip': {'base': '#9aa8b8', 'style': 'metal'}, 'bodice': {'base': '#4a4040', 'style': 'leather'},
             'waist': {'base': '#3a3030', 'style': 'leather'}, 'pants': '#2e2a2a', 'boots': {'base': '#2a2220', 'style': 'leather'},
             'apron': {'base': '#5a3a26', 'style': 'leather'}}
-    return [Variant('b5', show={'crown', 'hair', 'sleeve_r', 'sleeve_l', 'scepter', 'shard_ring', 'collar', 'gown'},
-                    palette=pal5, paint=deco_b5, glow=True, extra=dict(scale=1.2, hitbox=(1.3, 3.4))),
-            Variant('b4', show={'hood', 'pauldron_r', 'pauldron_l', 'axe', 'right_leg', 'left_leg', 'apron'},
-                    palette=pal4, paint=deco_b4, glow=True, extra=dict(scale=1.35, hitbox=(1.5, 3.8)))]
+    ice = {'wing': {'base': '#c8f0ff', 'style': 'crystal'}, 'ice_horn': {'base': '#bfeaff', 'style': 'crystal'},
+           'ice_horn2': {'base': '#a8dcf8', 'style': 'crystal'}}
+    pal5.update(ice)
+    pal4.update(ice)
+    for key, value in (('crown', '#808080'), ('crown_c', '#808080'), ('hair', '#808080'), ('cuff', '#808080'),
+                       ('staff', '#808080'), ('gem', '#808080'), ('shard', '#808080'), ('collar', '#808080'),
+                       ('gown', '#808080'), ('gown2', '#808080')):
+        pal4.setdefault(key, value)
+    for key in ('hood', 'hood_tip', 'pauldron', 'haft', 'axe', 'axe_tip', 'pants', 'boots', 'apron'):
+        pal5.setdefault(key, '#808080')
+
+    def deco_b5_form(form):
+        # Ingrid's fear of spring hardens: a taller crown, wider shards, wings of ice, a gown turning to frost
+        def paint(p):
+            deco_b5(p)
+            if form >= 2:
+                glow_faces(p, 'wing_r', (170, 230, 255), every=3)
+                for fc in p.all_faces('wing_r', sides_only=True):
+                    if fc.face in ('front', 'back'):
+                        for y in range(0, fc.h, 3):
+                            fc.hline(0, fc.w - 1 - (y // 3) % 4, y, (235, 250, 255))
+            veins(p, ('torso', 'gown', 'gown_lower'), (200, 240, 255), (190, 240, 255), seed=form)
+            if form >= 3:
+                cracks(p, ('gown_lower', 'gown', 'right_arm', 'left_arm'), (235, 250, 255), (210, 245, 255), every=24)
+        return paint
+
+    def deco_b4_form(form):
+        # the frozen verdict: horns of ice break through the hood, frost climbs the axe and the armour
+        def paint(p):
+            deco_b4(p)
+            glow_faces(p, 'ice_horns', (170, 230, 255), every=2)
+            glow_faces(p, 'ice_horns', (170, 230, 255), index=2, every=2)
+            g = p.face('hood', 'front', glow=True)
+            for (x, y) in ((1, 3), (2, 3), (5, 3), (6, 3)):
+                g.px(x, y, (220, 250, 255))
+            for fc in p.all_faces('axe', index=1, glow=True, sides_only=True):
+                for y in range(0, fc.h, 2):
+                    fc.px(min(fc.w - 1, 1 + y % 3), y, (170, 230, 255))
+            veins(p, ('pauldron_r', 'pauldron_l', 'torso'), (150, 210, 240), (170, 230, 255), seed=form)
+            if form >= 2:
+                cracks(p, ('apron', 'right_leg', 'left_leg', 'right_arm', 'left_arm'), (170, 225, 255),
+                       (190, 240, 255), every=26)
+        return paint
+    b5_parts = {'crown', 'hair', 'sleeve_r', 'sleeve_l', 'scepter', 'shard_ring', 'collar', 'gown'}
+    b4_parts = {'hood', 'pauldron_r', 'pauldron_l', 'axe', 'right_leg', 'left_leg', 'apron'}
+    frost = dict(pal5, gown={'base': '#9cc8f0', 'trim': (240, 252, 255)}, gown2={'base': '#a8d4f8', 'trim': (240, 252, 255)},
+                 bodice={'base': '#86b8e8', 'trim': (240, 252, 255)}, waist='#86b8e8')
+    big_crown = {'crown': dict(scale=(1.25, 1.45, 1.25)), 'shard_ring': dict(scale=(1.35, 1.35, 1.35))}
+    return [Variant('b5', show=b5_parts, palette=pal5, paint=deco_b5, glow=True, extra=dict(scale=1.2, hitbox=(1.3, 3.4))),
+            Variant('b4', show=b4_parts, palette=pal4, paint=deco_b4, glow=True, extra=dict(scale=1.35, hitbox=(1.5, 3.8))),
+            Variant('b5_p1', show=b5_parts, palette=pal5, poses=big_crown, paint=deco_b5_form(1), glow=True,
+                    extra=dict(scale=1.2)),
+            Variant('b5_p2', show=b5_parts | {'ice_wings'}, palette=pal5, poses=big_crown, paint=deco_b5_form(2),
+                    glow=True, extra=dict(scale=1.2)),
+            Variant('b5_p3', show=b5_parts | {'ice_wings'}, palette=frost,
+                    poses=dict(big_crown, ice_wings=dict(scale=(1.3, 1.3, 1.0)), crown=dict(scale=(1.35, 1.7, 1.35))),
+                    paint=deco_b5_form(3), glow=True, extra=dict(scale=1.2)),
+            Variant('b4_p1', show=b4_parts | {'ice_horns'}, palette=pal4, paint=deco_b4_form(1), glow=True,
+                    extra=dict(scale=1.35)),
+            Variant('b4_p2', show=b4_parts | {'ice_horns'}, palette=pal4, poses={'ice_horns': dict(scale=(1.2, 1.4, 1.2))},
+                    paint=deco_b4_form(2), glow=True, extra=dict(scale=1.35))]
 
 
 SETS = {
@@ -327,6 +393,10 @@ SETS = {
     'b4': dict(idle='x_idle', walk='x_walk', melee_slam='x_slam', melee_sweep='x_sweep', cast='x_cast', roar='x_roar',
                charge='x_charge', summon='x_summon', phase_change='x_phase', stagger='x_stagger', death='x_death'),
 }
+for _form in ('b5_p1', 'b5_p2', 'b5_p3'):
+    SETS[_form] = SETS['b5']
+for _form in ('b4_p1', 'b4_p2'):
+    SETS[_form] = SETS['b4']
 
 
 def rig():
