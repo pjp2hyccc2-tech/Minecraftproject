@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.Mob;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,24 +30,24 @@ public final class StoryNpcs {
     private StoryNpcs() {
     }
 
-    public static Optional<String> characterOf(Villager npc) {
+    public static Optional<String> characterOf(Mob npc) {
         String id = npc.getPersistentData().getString(CHARACTER);
         return id.isEmpty() ? Optional.empty() : Optional.of(id);
     }
 
     /** Places (or moves back) a quest giver of the quest module at {@code pos}. */
-    public static Optional<Villager> ensure(ServerLevel level, BlockPos pos, NpcDefinition character, float yaw) {
+    public static Optional<Mob> ensure(ServerLevel level, BlockPos pos, NpcDefinition character, float yaw) {
         return ensure(level, pos, character.id(), Component.translatable(character.translationKey()), yaw);
     }
 
     /** Places (or moves back) any story character ({@link com.eternalrealm.story.StoryNpc} id) at {@code pos}. */
-    public static Optional<Villager> ensure(ServerLevel level, BlockPos pos, String characterId, Component name, float yaw) {
-        Optional<Villager> npc = Npcs.ensure(level, pos, NpcRole.STORY, yaw, CHARACTER, characterId);
-        npc.ifPresent(villager -> villager.setCustomName(name.copy().withStyle(ChatFormatting.AQUA)));
+    public static Optional<Mob> ensure(ServerLevel level, BlockPos pos, String characterId, Component name, float yaw) {
+        Optional<Mob> npc = Npcs.ensure(level, pos, NpcRole.STORY, yaw, CHARACTER, characterId);
+        npc.ifPresent(mob -> mob.setCustomName(name.copy().withStyle(ChatFormatting.AQUA)));
         return npc;
     }
 
-    static void talk(ServerPlayer player, Villager npc) {
+    static void talk(ServerPlayer player, Mob npc) {
         String id = characterOf(npc).orElse("");
         player.level().playSound(null, npc.getX(), npc.getY(), npc.getZ(), SoundEvents.VILLAGER_AMBIENT,
                 SoundSource.NEUTRAL, 0.6F, 1.0F);
