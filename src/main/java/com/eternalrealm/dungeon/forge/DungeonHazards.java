@@ -46,7 +46,7 @@ import java.util.UUID;
 public final class DungeonHazards {
     /** {@code data/eternalrealm/damage_type/trap.json}. */
     public static final ResourceKey<DamageType> TRAP_DAMAGE =
-            ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModInfo.MOD_ID, "trap"));
+            ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "trap"));
 
     private final ServerLevel level;
     private final HazardField field;

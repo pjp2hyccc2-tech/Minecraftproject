@@ -91,7 +91,8 @@ public final class AtlasPainter {
                 double z = -EXTENT + (row + 0.5) * blocksPerPixel;
                 double northWest = relief[row * (size + 1) + col];
                 double southEast = relief[(row + 1) * (size + 1) + col + 1];
-                double light = 1.0 + (northWest - southEast) * 2.2;
+                // the slope along the light direction, independent of the resolution
+                double light = 1.0 + (northWest - southEast) / blocksPerPixel * 18.0;
                 pixels[row * size + col] = MapMath.opaque(color(x, z, blocksPerPixel, biomes, light));
             }
         }
@@ -110,7 +111,7 @@ public final class AtlasPainter {
         }
         int toned = MapMath.mix(base, PARCHMENT, 0.16);
         double grain = 1.0 + 0.035 * GRAIN.sample(x / 9.0, z / 9.0);
-        int shaded = MapMath.shade(toned, Math.max(0.7, Math.min(1.25, light)) * grain);
+        int shaded = MapMath.shade(toned, Math.max(0.72, Math.min(1.25, light)) * grain);
         // the exact area rings as dashed ink lines
         for (int ring = 1; ring < AstoriaAreas.COUNT; ring++) {
             double radius = ring * (double) AstoriaAreas.RING_WIDTH;

@@ -21,8 +21,10 @@ import java.util.concurrent.CompletableFuture;
 public final class AtlasTexture {
     public static final int SIZE = 1024;
     private static final Logger LOG = LogUtils.getLogger();
-    private static final Atlas BIOMES = new Atlas(true, new ResourceLocation(ModInfo.MOD_ID, "atlas_biomes"));
-    private static final Atlas RINGS = new Atlas(false, new ResourceLocation(ModInfo.MOD_ID, "atlas_rings"));
+    private static final Atlas BIOMES =
+            new Atlas(true, ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "atlas_biomes"));
+    private static final Atlas RINGS =
+            new Atlas(false, ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "atlas_rings"));
 
     private AtlasTexture() {
     }

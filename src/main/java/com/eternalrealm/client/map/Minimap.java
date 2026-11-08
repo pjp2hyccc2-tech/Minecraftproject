@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 public final class Minimap {
     /** Blocks (and texels) along each side of the texture. */
     public static final int SIZE = 256;
-    public static final ResourceLocation TEXTURE = new ResourceLocation(ModInfo.MOD_ID, "minimap");
+    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "minimap");
     /** View radius in blocks of each zoom step (0 = closest). */
     private static final int[] ZOOM_RADIUS = {32, 48, 64, 96, 128};
     private static final Logger LOG = LogUtils.getLogger();
