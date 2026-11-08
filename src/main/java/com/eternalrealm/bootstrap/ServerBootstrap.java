@@ -120,8 +120,14 @@ public final class ServerBootstrap {
         RankingService rankings = new RankingService(server, playerData, io, clock,
                 new FileRankingRepository(dataDirectory, store), new FileSeasonStateRepository(dataDirectory, store),
                 new FileHallOfFameRepository(dataDirectory, store), ERServerConfig.seasonSchedule(clock.instant()));
+        com.eternalrealm.world.forge.WorldService world = new com.eternalrealm.world.forge.WorldService(server,
+                playerData, io, new com.eternalrealm.persistence.file.FileWorldProgressRepository(dataDirectory, store),
+                clock, season);
+        world.onDiscover((player, area) -> rankings.onAreaDiscovered(player));
         GameServices game = new GameServices(ERServerConfig.jobRules(), new PartyManager(server, playerData),
-                new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season), rankings);
+                new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season), rankings,
+                world, new com.eternalrealm.quest.forge.QuestService(server, playerData, world, rankings, clock),
+                new com.eternalrealm.monster.forge.MonsterSpawner(server));
 
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
                 allocateLimiter, violations, floods, syncQueue, combat, uiLimiter, game);

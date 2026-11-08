@@ -10,5 +10,9 @@ public enum ExperienceSource {
     /** Killing a hostile mob (Phase 1: interim vanilla-mob source, replaced by mob definitions in the monster phase). */
     MOB_KILL,
     /** Internal/system grants (tests, migrations). */
-    SYSTEM
+    SYSTEM,
+    /** Turning in a quest. */
+    QUEST,
+    /** Defeating a dungeon boss or the final boss. */
+    BOSS
 }

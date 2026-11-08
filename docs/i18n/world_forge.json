@@ -1,0 +1,13 @@
+{
+  "screen.eternalrealm.tab.quests": {"ja": "クエスト", "en": "Quests"},
+  "screen.eternalrealm.quest.turn_in": {"ja": "報告", "en": "Turn in"},
+  "screen.eternalrealm.quest.abandon": {"ja": "破棄", "en": "Abandon"},
+  "screen.eternalrealm.quest.accept": {"ja": "受注", "en": "Accept"},
+  "screen.eternalrealm.quest.active": {"ja": "進行中 %s/%s", "en": "Active %s/%s"},
+  "screen.eternalrealm.quest.available": {"ja": "受注できるクエスト", "en": "Available quests"},
+  "screen.eternalrealm.quest.none_active": {"ja": "進行中のクエストはありません。右の一覧から受注しよう。", "en": "No active quests. Accept one from the list on the right."},
+  "screen.eternalrealm.quest.reward_line": {"ja": "Lv%s〜  %s EXP / %s G", "en": "Lv%s+  %s EXP / %s G"},
+  "message.eternalrealm.monster.reward": {"ja": "+%s EXP  +%s G", "en": "+%s EXP  +%s G"},
+  "message.eternalrealm.loot.rare": {"ja": "ドロップ: %s", "en": "Dropped: %s"},
+  "message.eternalrealm.loot.legendary_broadcast": {"ja": "%s が %s を手に入れた！", "en": "%s obtained %s!"}
+}

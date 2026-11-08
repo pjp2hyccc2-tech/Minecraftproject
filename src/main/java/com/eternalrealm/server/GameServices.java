@@ -16,12 +16,44 @@ public final class GameServices {
     private final PartyManager parties;
     private final GuildManager guilds;
     private final RankingService rankings;
+    private final com.eternalrealm.world.forge.WorldService world;
+    private final com.eternalrealm.quest.forge.QuestService quests;
+    private final com.eternalrealm.monster.forge.MonsterSpawner monsters;
 
-    public GameServices(JobRules jobRules, PartyManager parties, GuildManager guilds, RankingService rankings) {
+    public GameServices(JobRules jobRules, PartyManager parties, GuildManager guilds, RankingService rankings,
+                        com.eternalrealm.world.forge.WorldService world, com.eternalrealm.quest.forge.QuestService quests,
+                        com.eternalrealm.monster.forge.MonsterSpawner monsters) {
         this.jobRules = Objects.requireNonNull(jobRules, "jobRules");
         this.parties = Objects.requireNonNull(parties, "parties");
         this.guilds = Objects.requireNonNull(guilds, "guilds");
         this.rankings = Objects.requireNonNull(rankings, "rankings");
+        this.world = Objects.requireNonNull(world, "world");
+        this.quests = Objects.requireNonNull(quests, "quests");
+        this.monsters = Objects.requireNonNull(monsters, "monsters");
+    }
+
+    public com.eternalrealm.world.forge.WorldService world() {
+        return world;
+    }
+
+    public com.eternalrealm.quest.forge.QuestService quests() {
+        return quests;
+    }
+
+    /** A monster of the monster module died: kills count for the killer and the party members who shared the EXP. */
+    public void onMonsterKilled(net.minecraft.server.level.ServerPlayer killer, java.util.Set<java.util.UUID> credited,
+                                com.eternalrealm.monster.MonsterTemplate template,
+                                net.minecraft.world.entity.LivingEntity victim) {
+        int areaId = victim.level() instanceof net.minecraft.server.level.ServerLevel level
+                && com.eternalrealm.world.forge.Realm.isRealm(level)
+                ? com.eternalrealm.world.forge.Realm.areaAt(level, victim.getX(), victim.getZ()).id() : 0;
+        com.eternalrealm.quest.GameEvent event = new com.eternalrealm.quest.GameEvent.MonsterKilled(template.id(), areaId);
+        for (java.util.UUID id : credited) {
+            net.minecraft.server.level.ServerPlayer player = killer.server.getPlayerList().getPlayer(id);
+            if (player != null) {
+                quests.event(player, event);
+            }
+        }
     }
 
     public JobRules jobRules() {
@@ -47,6 +79,8 @@ public final class GameServices {
 
     /** A player leaves: flush what lives in the character before it is saved. */
     public void onLogout(java.util.UUID playerId) {
+        quests.onLogout(playerId);
+        world.onLogout(playerId);
         rankings.onLogout(playerId);
         parties.onLogout(playerId);
     }
@@ -54,9 +88,12 @@ public final class GameServices {
     /** Every server tick (after player data and combat). */
     public void tick(long tick) {
         parties.tick();
+        monsters.tick(tick);
         if (tick % 20 == 0) {
             guilds.tickSecond();
             rankings.tickSecond();
+            world.tickSecond();
+            quests.tickSecond();
         }
     }
 
@@ -64,5 +101,6 @@ public final class GameServices {
     public void shutdown() {
         rankings.flush();
         guilds.flush();
+        world.flush();
     }
 }

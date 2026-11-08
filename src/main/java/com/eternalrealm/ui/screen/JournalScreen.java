@@ -29,6 +29,7 @@ public abstract class JournalScreen extends Screen {
         STATUS("screen.eternalrealm.tab.status", CharacterScreen::new),
         JOB("screen.eternalrealm.tab.job", JobScreen::new),
         SKILLS("screen.eternalrealm.tab.skills", SkillScreen::new),
+        QUESTS("screen.eternalrealm.tab.quests", QuestScreen::new),
         PARTY("screen.eternalrealm.tab.party", PartyScreen::new),
         GUILD("screen.eternalrealm.tab.guild", GuildScreen::new),
         RANKING("screen.eternalrealm.tab.ranking", RankingScreen::new);

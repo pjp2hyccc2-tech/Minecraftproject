@@ -29,8 +29,8 @@ public final class InterimKillExperience {
         if (victim.level().isClientSide()) {
             return;
         }
-        if (!(victim instanceof Enemy)) {
-            return;
+        if (!(victim instanceof Enemy) || com.eternalrealm.monster.forge.MonsterTags.isMonster(victim)) {
+            return; // monsters of the monster module pay their own EXP (MonsterEvents)
         }
         if (!(event.getSource().getEntity() instanceof ServerPlayer killer) || killer instanceof FakePlayer) {
             return;

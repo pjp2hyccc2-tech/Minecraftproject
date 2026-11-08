@@ -932,5 +932,16 @@
   "screen.eternalrealm.outfit.job": "Armor: job outfit",
   "screen.eternalrealm.outfit.tier": "Armor: gear look",
   "message.eternalrealm.outfit.job": "Your armor now shows your job outfit",
-  "message.eternalrealm.outfit.tier": "Your armor now shows its own look"
+  "message.eternalrealm.outfit.tier": "Your armor now shows its own look",
+  "screen.eternalrealm.tab.quests": "Quests",
+  "screen.eternalrealm.quest.turn_in": "Turn in",
+  "screen.eternalrealm.quest.abandon": "Abandon",
+  "screen.eternalrealm.quest.accept": "Accept",
+  "screen.eternalrealm.quest.active": "Active %s/%s",
+  "screen.eternalrealm.quest.available": "Available quests",
+  "screen.eternalrealm.quest.none_active": "No active quests. Accept one from the list on the right.",
+  "screen.eternalrealm.quest.reward_line": "Lv%s+  %s EXP / %s G",
+  "message.eternalrealm.monster.reward": "+%s EXP  +%s G",
+  "message.eternalrealm.loot.rare": "Dropped: %s",
+  "message.eternalrealm.loot.legendary_broadcast": "%s obtained %s!"
 }

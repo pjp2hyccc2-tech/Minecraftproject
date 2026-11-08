@@ -29,6 +29,7 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.DoubleValue UI_ACTION_PER_SECOND;
 
     public static final ForgeConfigSpec.BooleanValue MOB_KILL_EXP_ENABLED;
+    public static final ForgeConfigSpec.BooleanValue MONSTER_SPAWNING;
     public static final ForgeConfigSpec.DoubleValue MOB_KILL_EXP_PER_MAX_HEALTH;
 
     public static final ForgeConfigSpec.ConfigValue<String> SEASON_ID;
@@ -95,12 +96,17 @@ public final class ERServerConfig {
         JOB_CHANGE_GOLD_PER_LEVEL = builder.comment("Otherwise a change costs goldPerLevel * level gold.")
                 .defineInRange("changeGoldPerLevel", 100L, 0L, 1_000_000L);
         builder.pop();
-        builder.comment("INTERIM experience source until the monster system exists:",
-                        "killing a hostile vanilla mob grants round(maxHealth * expPerMaxHealth) EXP.")
+        builder.comment("Experience for hostile VANILLA mobs (the monsters of the game pay their own EXP, gold and loot):",
+                        "killing one grants round(maxHealth * expPerMaxHealth) EXP.")
                 .push("interimMobKillExp");
-        MOB_KILL_EXP_ENABLED = builder.define("enabled", true);
+        MOB_KILL_EXP_ENABLED = builder.define("enabled", false);
         MOB_KILL_EXP_PER_MAX_HEALTH = builder.defineInRange("expPerMaxHealth", 1.0, 0.0, 100.0);
         builder.pop();
+        builder.pop();
+
+        builder.comment("Field monsters of the areas around the capital.").push("monsters");
+        MONSTER_SPAWNING = builder.comment("Spawn the monsters of each area around the players (outside the capital).")
+                .define("spawning", true);
         builder.pop();
 
         builder.comment("Season. Restart required.").push("season");

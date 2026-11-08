@@ -53,6 +53,7 @@ public final class EternalRealm {
         JobActions.register();
         RankingCommands.register();
         SocialUiActions.register();
+        com.eternalrealm.quest.forge.QuestActions.register();
 
         modBus.addListener(ServerBootstrap::onConfigReloading);
         forgeBus.addListener(ServerBootstrap::onServerAboutToStart);
@@ -71,6 +72,15 @@ public final class EternalRealm {
         forgeBus.addListener(CombatEvents::onLivingAttack);
         forgeBus.addListener(CombatEvents::onLivingHurt);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onEquipmentChange);
+        forgeBus.addListener(EventPriority.HIGH, com.eternalrealm.monster.forge.MonsterEvents::onLivingHurt);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onLivingDeath);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onLivingDrops);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onExperienceDrop);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onLivingTick);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onMobGriefing);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onEntityJoin);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onFinalizeSpawn);
+        forgeBus.addListener(com.eternalrealm.quest.forge.QuestActions::onItemPickup);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onLivingHurt);
         forgeBus.addListener(CombatEvents::onKnockBack);
         forgeBus.addListener(EventPriority.LOWEST, CombatEvents::onLivingDeath);
