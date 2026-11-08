@@ -114,13 +114,13 @@ final class ChunkColors {
         }
     }
 
-    /** Colours of a chunk in the current mode (row-major, z then x), or null if not computed. */
+    /**
+     * Colours of a chunk in the current mode (row-major, z then x), or null if not computed. In cave mode a chunk
+     * computed for another height is still shown until it has been recomputed (no flicker on slopes).
+     */
     int[] get(int chunkX, int chunkZ) {
         Cached entry = cache.get(ChunkPos.asLong(chunkX, chunkZ));
-        if (entry == null || entry.cave() != cave || (cave && entry.refY() != refY)) {
-            return null;
-        }
-        return entry.colors();
+        return entry == null || entry.cave() != cave ? null : entry.colors();
     }
 
     /** Dungeons, dimensions with a ceiling and deep caves show the floor at the player's height. */

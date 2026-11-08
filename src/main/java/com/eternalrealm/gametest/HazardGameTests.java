@@ -13,6 +13,7 @@ import com.eternalrealm.monster.MonsterSpawn;
 import com.eternalrealm.monster.Monsters;
 import com.eternalrealm.monster.SpecialMove;
 import com.eternalrealm.monster.forge.MonsterFactory;
+import com.eternalrealm.monster.forge.VanillaSpecialMoves;
 import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.world.forge.MapSync;
 import com.eternalrealm.world.map.MapView;
@@ -25,6 +26,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -140,12 +142,56 @@ public final class HazardGameTests {
         check(moves(level, "sand_husk", 15) == 0, "ordinary monsters use none");
         check(moves(level, "knight_of_the_end", 44) == 1, "monsters of level 30+ use one");
         check(moves(level, "b8_minion", 50) == 0, "boss summons use none");
+        BlockPos at = helper.absolutePos(new BlockPos(4, 2, 4));
+        Mob paladin = MonsterFactory.spawn(level, new MonsterSpawn(Monsters.require("celestial_paladin"), 40),
+                at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0.0F).orElseThrow();
+        check(VanillaSpecialMoves.hasGoal(paladin), "a vanilla-bodied elite gets the special move goal");
+        paladin.discard();
+        Mob slime = MonsterFactory.spawn(level, new MonsterSpawn(Monsters.require("meadow_slime"), 3),
+                at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0.0F).orElseThrow();
+        check(!VanillaSpecialMoves.hasGoal(slime), "an ordinary vanilla-bodied monster gets none");
+        slime.discard();
         ERMonster plain = EREntityTypes.createEnemy(level, "bandit").orElseThrow();
         check(plain.specialMoves().isEmpty(), "a plain body has no moves");
         IronGolem target = still(helper, new BlockPos(4, 2, 4));
         check(!plain.trySpecialMove(target), "a plain body must not use special moves");
         plain.discard();
         helper.succeed();
+    }
+
+    @GameTest(template = ARENA, timeoutTicks = 400)
+    public static void aVanillaBodiedEliteTelegraphsItsMoveToo(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        IronGolem target = still(helper, new BlockPos(4, 2, 6));
+        target.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1000.0);
+        target.setHealth(1000.0F);
+        BlockPos at = helper.absolutePos(new BlockPos(4, 2, 2));
+        Mob paladin = MonsterFactory.spawn(level, new MonsterSpawn(Monsters.require("celestial_paladin"), 40),
+                at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0.0F).orElseThrow();
+        paladin.setTarget(target);
+        long[] startedAt = {-1};
+        float[] healthAtStart = {0.0F};
+        int[] windup = {0};
+        helper.onEachTick(() -> {
+            long now = level.getGameTime();
+            if (startedAt[0] < 0) {
+                com.eternalrealm.combat.Telegraph marker = VanillaSpecialMoves.windingUp(paladin);
+                if (marker != null) {
+                    startedAt[0] = now;
+                    healthAtStart[0] = target.getHealth();
+                    windup[0] = marker.durationTicks();
+                }
+                return;
+            }
+            long since = now - startedAt[0];
+            if (since == windup[0] - 2) {
+                check(target.getHealth() == healthAtStart[0], "hit during the wind-up");
+            } else if (since == windup[0] + 4) {
+                check(target.getHealth() < healthAtStart[0], "the special move did not hit the target in front");
+                paladin.discard();
+                helper.succeed();
+            }
+        });
     }
 
     private static int moves(ServerLevel level, String templateId, int monsterLevel) {

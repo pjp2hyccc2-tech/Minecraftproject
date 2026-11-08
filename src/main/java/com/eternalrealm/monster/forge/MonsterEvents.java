@@ -66,6 +66,8 @@ public final class MonsterEvents {
         double scale = 0.9 + RANDOM.nextDouble() * 0.2;
         if (attacker instanceof com.eternalrealm.entity.ERMonster monster) {
             scale *= monster.hitMultiplier(); // a special move landing hits harder
+        } else {
+            scale *= VanillaSpecialMoves.hitMultiplier(attacker);
         }
         if (attacker instanceof Creeper) {
             scale *= Math.min(1.0, event.getAmount() / 20.0); // falls off with the distance like the explosion

@@ -51,6 +51,23 @@ public class SpecialMovesTest {
     }
 
     @Test
+    public void vanillaBodiesGetMovesTooExceptCreepers() {
+        for (String body : MonsterTemplate.BASE_ENTITY_TYPES) {
+            List<SpecialMove> moves = SpecialMoves.forVanillaBody(body);
+            if (body.equals("minecraft:creeper")) {
+                assertTrue("creepers keep their explosion", moves.isEmpty());
+                continue;
+            }
+            assertEquals(body, 2, moves.size());
+            assertFalse(body, moves.get(0) == moves.get(1));
+        }
+        assertEquals(SpecialMove.VOLLEY, SpecialMoves.forVanillaBody("minecraft:skeleton").get(0));
+        assertEquals(SpecialMove.CLEAVE, SpecialMoves.forVanillaBody("minecraft:vindicator").get(0));
+        assertEquals(Telegraph.Style.FIRE, SpecialMoves.vanillaStyle("minecraft:magma_cube"));
+        assertEquals(Telegraph.Style.DANGER, SpecialMoves.vanillaStyle("minecraft:piglin_brute"));
+    }
+
+    @Test
     public void movesAreReadableBeforeTheyHit() {
         for (SpecialMove move : SpecialMove.values()) {
             assertTrue(move + " wind-up", move.windupTicks() >= SpecialMove.MIN_WINDUP_TICKS);

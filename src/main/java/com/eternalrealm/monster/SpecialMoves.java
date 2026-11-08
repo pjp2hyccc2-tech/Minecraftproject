@@ -14,9 +14,9 @@ import java.util.Set;
  *         dungeons): the first move only, less often ({@link #VETERAN_COOLDOWN_TICKS});</li>
  *     <li>everything else (ordinary monsters below that level, boss summons): none - they fight as before.</li>
  * </ul>
- * Only animated bodies (the {@code entity} rigs) can wind up a move; vanilla-bodied monsters keep their vanilla
- * attacks. Moves match the rig: humanoid fighters cleave and slam, casters drop magic circles and novas, beasts charge,
- * pounce and breathe, golems slam and stomp, fliers strike from the air.
+ * Moves match the body: humanoid fighters cleave and slam, casters drop magic circles and novas, beasts charge,
+ * pounce and breathe, golems slam and stomp, fliers strike from the air ({@link #forBody}). Monsters wearing a vanilla
+ * body use the moves of the closest kind ({@link #forVanillaBody}); creepers keep their explosion as their big move.
  */
 public final class SpecialMoves {
     /** Normal monsters from this level on get their first special move. */
@@ -101,6 +101,35 @@ public final class SpecialMoves {
             case "golem" -> List.of(SpecialMove.SLAM, SpecialMove.STOMP);
             case "flyer" -> List.of(SpecialMove.CIRCLE, SpecialMove.NOVA);
             default -> List.of();
+        };
+    }
+
+    /**
+     * The two moves of a monster wearing a vanilla body ({@code MonsterTemplate#baseEntityType}), or none (creepers).
+     */
+    public static List<SpecialMove> forVanillaBody(String baseEntityType) {
+        return switch (baseEntityType) {
+            case "minecraft:creeper" -> List.of();
+            case "minecraft:skeleton", "minecraft:stray", "minecraft:pillager" ->
+                    List.of(SpecialMove.VOLLEY, SpecialMove.CLEAVE);
+            case "minecraft:evoker", "minecraft:witch", "minecraft:blaze", "minecraft:enderman" ->
+                    List.of(SpecialMove.CIRCLE, SpecialMove.NOVA);
+            case "minecraft:slime", "minecraft:magma_cube" -> List.of(SpecialMove.STOMP, SpecialMove.SLAM);
+            case "minecraft:spider", "minecraft:cave_spider", "minecraft:silverfish", "minecraft:phantom" ->
+                    List.of(SpecialMove.POUNCE, SpecialMove.SWEEP);
+            case "minecraft:ravager" -> List.of(SpecialMove.CHARGE, SpecialMove.STOMP);
+            default -> List.of(SpecialMove.CLEAVE, SpecialMove.SLAM);
+        };
+    }
+
+    /** Colour of a vanilla body's markers. */
+    public static Telegraph.Style vanillaStyle(String baseEntityType) {
+        return switch (baseEntityType) {
+            case "minecraft:blaze", "minecraft:magma_cube" -> Telegraph.Style.FIRE;
+            case "minecraft:stray" -> Telegraph.Style.FROST;
+            case "minecraft:enderman", "minecraft:wither_skeleton" -> Telegraph.Style.DARK;
+            case "minecraft:evoker", "minecraft:witch" -> Telegraph.Style.MAGIC;
+            default -> Telegraph.Style.DANGER;
         };
     }
 

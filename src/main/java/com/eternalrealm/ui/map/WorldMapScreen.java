@@ -278,8 +278,8 @@ public final class WorldMapScreen extends Screen {
             double outer = area.isUnbounded() ? AtlasPainter.EXTENT * 1.5 : area.outerRadius();
             MapDraw.ring(graphics, originX, originY, (float) (area.innerRadius() * ppb), (float) (outer * ppb), 0xB0282830);
         }
-        // area names along the north-east diagonal
-        for (AreaDefinition area : Areas.all()) {
+        // area names along the north-east diagonal (hidden when zoomed out so far that they would overlap)
+        for (AreaDefinition area : viewport.blocksPerPixel() <= 12.0 ? Areas.all() : List.<AreaDefinition>of()) {
             double middle = area.isUnbounded() ? area.innerRadius() + 160.0 : (area.innerRadius() + area.outerRadius()) / 2.0;
             if (area.id() == 1) {
                 middle = 190.0;

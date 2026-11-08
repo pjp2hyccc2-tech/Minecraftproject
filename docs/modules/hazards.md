@@ -47,8 +47,12 @@
 | Lv30以上の通常モンスター（ドラゴニア火山以降、後半のダンジョン） | 1つ目の大技のみ | 約15〜17秒 |
 | それ以外（Lv30未満の通常モンスター、ボスの召喚） | なし（従来どおり） | — |
 
-アニメーション付きの体（`entity` のリグ）を持つモンスターだけ。バニラの体のモンスターは従来どおり。戦闘開始から2.5〜4.5秒は使わない。
-`MonsterFactory` が生成時に回数を設定（NBT `SpecialMoves` に保存）。サーバー設定 `monsters.specialMoves` で無効化できる。
+戦闘開始から2.5〜4.5秒は使わない。サーバー設定 `monsters.specialMoves` で無効化できる。
+- アニメーション付きの体（`entity` のリグ）: `MonsterFactory` が生成時に回数を設定（NBT `SpecialMoves` に保存）し、`ERMonster` が実行。
+- バニラの体（例: ドラゴニアのエリート `dragonkin_berserker`、セレスティアの `celestial_paladin`、Lv30以上の `lava_slime`・`sky_archer`）:
+  `monster.forge.VanillaSpecialMoves` がレベルに入るたびにゴール（優先度1）を付け、同じルール・同じ予告で実行（スロー再生の代わりに
+  立ち止まって溜め、発動時に腕を振る）。技は体の種類から（弓兵: 矢の雨・薙ぎ払い、術士: 魔法陣・爆発、スライム: 踏み鳴らし・叩きつけ、
+  クモ等: 飛びかかり・旋回、ラヴェジャー: 突進・踏み鳴らし、その他: 薙ぎ払い・叩きつけ）。クリーパーは爆発がそのまま大技なので対象外。
 
 ### 予備動作とヒット
 - 開始時に予告を地面に表示し、その方向へ向きを固定。攻撃アニメーションを**スローで再生**（エンティティイベント 72〜119: 攻撃1/攻撃2/詠唱 ×
@@ -86,6 +90,7 @@
 | `dungeon.forge.DungeonHazards` | ワールドでの実行（予告表示・演出・ダメージ・効果）。`DungeonInstance` が建設完了時に作り、進行中だけ動かし、クリア・失敗・終了で止める |
 | `monster.SpecialMove` / `SpecialMoves` | 大技の形・溜め・射程・倍率、対象ルール、体ごとの技、色 |
 | `entity.ERMonster` | `setSpecialMoves(n)`, `specialMoves()`, `trySpecialMove(target)`, `startSpecialMove(move, target)`, `currentSpecialMove()`, `currentSpecialTelegraph()`, `hitMultiplier()`, `animationSpeed(anim)` |
+| `monster.forge.VanillaSpecialMoves` | バニラの体のモンスター用のゴール（`EntityJoinLevelEvent` で付与）、`hasGoal(mob)`, `windingUp(mob)` |
 | `combat.forge.TelegraphFx` | 予告のスタイル別の粒子・音（罠と大技で共用） |
 
 サーバー設定（`eternalrealm-server.toml` の `[monsters]`）: `specialMoves`（既定 true）, `dungeonTraps`（既定 true）。
@@ -96,5 +101,6 @@
   `HazardFieldTest`（予告→満ちた瞬間に発動、範囲外は当たらない、無人なら動かない、予告後は必ず発動、休止、接近型、狙い撃ちの位置と端の寄せ、
   決定性）, `SpecialMovesTest`（ルール、全バリアントに2つの技、溜め時間の下限、属性色、予告の向き・位置）。
 - GameTest `HazardGameTests`: 罠が予告してから当たり、予告の外のゴーレムは無傷／罠のダメージ種別が読み込まれている／エリートの叩きつけが
-  溜め中は当たらず、発動時に予告内の相手だけに当たる／`MonsterFactory` がルールどおりに大技を与える。
+  溜め中は当たらず、発動時に予告内の相手だけに当たる／`MonsterFactory` がルールどおりに大技を与える（バニラの体のエリートにはゴール）／
+  バニラの体のエリート（celestial_paladin）が実際に予告を出し、溜め中は当たらず発動で当たる。
 - **未確認**（実機クライアントが必要）: スロー再生の予備動作の見え方、粒子・音の量、難易度の手触り。
