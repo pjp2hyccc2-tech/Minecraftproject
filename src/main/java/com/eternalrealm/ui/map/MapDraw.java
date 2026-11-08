@@ -24,6 +24,7 @@ public final class MapDraw {
         graphics.flush();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShader(textured ? GameRenderer::getPositionTexShader : GameRenderer::getPositionColorShader);
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.TRIANGLES, textured ? DefaultVertexFormat.POSITION_TEX
