@@ -126,7 +126,35 @@ them): `spawn`, `npc.quest_board`, `npc.item_shop`, `npc.blacksmith`, `npc.job_m
 `npc.mailbox`, `npc.guild_registrar`, `npc.gatekeeper`, `npc.arena_master`, `npc.hall_of_fame`, `story.lilia`,
 `story.nox`, `story.arcelia_knight_captain`, `story.gustav`, `story.laszlo`, `story.wolfram`.
 
-## 5. Export format (format 1)
+## 5. The castle (`castle/`)
+
+Anchors are in `castle/plan.py`; `exterior.py` builds the shell, `interiors.py` the rooms, `parts.py` holds
+round towers, curtain walls, buttressed window bays and pointed vaults.
+
+| Part | Where (x, z; y) | Notes |
+|---|---|---|
+| Grand viaduct stair | x −7..7, z −47 → −88; deck y 1 → 26 | five flights with landings, three arches underneath (walk-through E–W), lamps, banners, statues |
+| Gatehouse | x −7..7, z −89..−99; towers (±11, −93) | pointed passage with raised portcullis, crest panel, belfry spire, guard niches with armour stands |
+| Curtain wall | polygon `WALL_PTS`, top y 41 | crenellated walk, ten round towers with tall cones (`TOWERS`) |
+| Inner terrace | x −58..62, z −110..−172; y 32 | retaining wall, balustrade, front stair, side stairs to the yard and gardens |
+| Great hall 大広間 | x −13..13, z −114..−150 | 5-light windows on the east/west walls (y 39–56), vaulted ceiling with a glazed lantern oculus, banquet tables, high table, twin façade towers and rose window; stair (west aisle, z −126) down to the Star Gate |
+| Star court | x −13..13, z −151..−159 | glass oculus in a star mosaic (skylight of the hall below) |
+| Hall of the Star Gate 星門の間 | centre (0, −155), floor y 8 | domed undercroft, ring gate on a dais (z −163), summoning circle lit by the noon beam |
+| Keep / throne room 玉座の間 | x −17..17, z −160..−188 | throne room y 33–58 with coffered ceiling, east/west windows, stained north window, the king's battle armour; corner turrets and the great spire (tip ≈ y 122) |
+| Chapel 礼拝堂 | x 28..62, z −120..−136 | east window (morning) and west rose window (afternoon), stained lancets, pews, altar |
+| Royal library 王立図書館 | x −58..−30, z −116..−146 | bookcases, gallery, reading tables, Nox's desk; observatory tower (−50, −155) with a spiral stair and telescope |
+| Barracks 騎士団兵舎 | x −89..−69, z −128..−158 (y 26) | Adel's office (log book, tally sign, hidden cake), mess hall, armoury, dormitory; training yard to the south |
+| Gardens | east bailey around (77, −138) | parterres, fountain, domed pavilion |
+
+Castle spots: `castle.gate`, `castle.gate_guard_w`, `castle.gate_guard_e`, `castle.great_hall`, `castle.star_court`,
+`castle.summon` (arrival point on the summoning circle), `castle.throne`, `castle.king`, `castle.library`,
+`castle.observatory`, `castle.chapel`, `castle.barracks`, `castle.garden`; story spots `story.lilia` (in front of
+the Star Gate), `story.nox` (his desk in the library), `story.arcelia_knight_captain` (training yard).
+
+Light: 28 `eternalrealm:light_shaft` emitters (great hall ×10 + oculus, throne room ×6, library ×8, chapel ×2,
+Star Gate oculus). Interiors are lit by chandeliers, sconces, candles and soul lanterns only.
+
+## 6. Export format (format 1)
 
 `manifest.json`: `{"format":1, "build":"<hash>", "tileSize":32, "minY":-32, "maxY":159, "palette":[...],
 "tiles":[{"x":tx,"z":tz,"file":"tiles/<tx>_<tz>.bin"}], "blockEntities":[{"pos":[x,y,z],"nbt":"<SNBT>"}],
@@ -147,13 +175,13 @@ them): `spawn`, `npc.quest_board`, `npc.item_shop`, `npc.blacksmith`, `npc.job_m
   placed pre-settled (level 8 columns, level 1 spill), lakes and the river are still source water.
 - Spot positions are feet positions; yaw: 0 = south, 90 = west, 180 = north, −90 = east.
 
-## 6. Checks and budgets
+## 7. Checks and budgets
 
 `check.py` decodes every tile and checks: canonical/valid palette states, palette indices, void outside the
 footprint, block entities sit on blocks that carry them, armour stands not inside solid blocks, fluid ticks on
 water, all required spots present with a floor and free head room, non-air blocks < 4 000 000, tile bytes < 6 MB.
 
-## 7. Previews
+## 8. Previews
 
 `preview.py` renders `tools/capital/previews/*.png` with a numpy DDA ray caster (sun shadows through glass,
 Minecraft-like sky and block light, AO, fog, clouds, section planes, volumetric shafts for interiors) plus

@@ -195,9 +195,10 @@ def gatehouse(w, T):
     w.fill(-h, py, zf, h, py + 1, zb, B.full("stone_bricks"))
     # towers
     for s in (-1, 1):
-        Pt.round_tower(w, T, s * g["tower_x"], g["tower_z"], g["tower_r"], py, top + 4, cone_h=24,
+        Pt.round_tower(w, T, s * g["tower_x"], g["tower_z"], g["tower_r"], py, top + 10, cone_h=28,
                        floors=(py + 9, py + 17), slit_every=6)
-        deco.kingdom_wall_banner(w, s * g["tower_x"], top - 6, g["tower_z"] + int(g["tower_r"]) + 1, facing="south")
+        for by in (top - 2, top - 4, top - 6, top - 8):
+            deco.kingdom_wall_banner(w, s * g["tower_x"], by, g["tower_z"] + int(g["tower_r"]) + 1, facing="south")
     # passage
     pw = 2 * g["passage"] + 1
     m = S.pointed_arch_mask(pw, 11, sharp=1.1)
@@ -375,7 +376,6 @@ def keep(w, T):
                 if "royal_roof_tile" in w.get(xx, y, zz):
                     w.set(xx, y, zz, B.full(GOLD) if "stairs" not in w.get(xx, y, zz) else
                           B.stairs(GOLD, B.parse(w.get(xx, y, zz))[1]["facing"]))
-    w.spot("castle.keep_top", (0, top + 1, -164), 180.0)
     return tip
 
 
@@ -425,7 +425,8 @@ def great_hall(w, T):
                   depth=2, step=-1)
     w.fill(-12, 44, zs, 12, 44, zs, B.full(CARVED))
     for s in (-1, 1):
-        deco.kingdom_wall_banner(w, 6 * s, y0 + 10, zs + 1, facing="south")
+        for by in (y0 + 14, y0 + 12, y0 + 10):
+            deco.kingdom_wall_banner(w, 6 * s, by, zs + 1, facing="south")
         S.statue_figure(w, 9 * s, P.TY, zs + 2, facing="south", wings=False, material="smooth_castle_stone")
         facade_tower(w, T, 15 * s, zs + 2, y0, eave)
         Pt.round_tower(w, T, (x1 + 1) * s if s > 0 else x0 - 1, zn - 1, 2.6, y0, eave + 18, cone_h=20,
@@ -702,7 +703,7 @@ def barracks(w, T):
                          gable_state=B.S("white_plaster"), ridge_state=B.slab(GOLD))
     for zc in (-136, -150):
         w.fill(-84, ridge - 4, zc, -83, ridge + 2, zc + 1, B.full("stone_bricks"))
-        w.set(-84, ridge + 3, zc, B.S("campfire", lit=False))
+        w.set(-84, ridge + 3, zc, B.S("campfire", lit=True))
     w.spot("castle.barracks", (-79, py + 1, zs - 2), 0.0)
 
 
@@ -861,6 +862,50 @@ def cloisters(w, T):
         w.fill(x, ty + 1, -133, x, ty + 4, -131, AIR)
 
 
+def gargoyle(w, x, y, z, out):
+    """Small grey gargoyle spout projecting from a cornice towards ``out``."""
+    from ..world import DIR_VEC
+    dx, _, dz = DIR_VEC[out]
+    back = {"north": "south", "south": "north", "east": "west", "west": "east"}[out]
+    w.set(x, y, z, B.stairs("stone_bricks", out, "top"))
+    w.set(x + dx, y, z + dz, B.wall("stone_bricks"))
+    w.set(x + 2 * dx, y, z + 2 * dz, B.stairs("stone_bricks", back, "bottom"))
+
+
+def details(w, T):
+    """Gargoyles on the corners, planters and lanterns along the terrace balustrade."""
+    k = P.KEEP
+    for (x, z, o1, o2) in ((k["x0"] - 2, k["z1"] - 2, "west", "north"), (k["x1"] + 2, k["z1"] - 2, "east", "north"),
+                           (k["x0"] - 2, k["z0"] + 2, "west", "south"), (k["x1"] + 2, k["z0"] + 2, "east", "south")):
+        gargoyle(w, x, k["top"] - 3, z + (2 if o2 == "south" else -2) * 0, o1)
+    h = P.HALL
+    for z in (-117, -147):
+        gargoyle(w, h["x1"] + 1, h["eave"] - 2, z, "east")
+        gargoyle(w, h["x0"] - 1, h["eave"] - 2, z, "west")
+    # front bailey: flower beds and cypresses between the curtain wall and the terrace
+    for x in range(-56, 57):
+        for z in range(-106, -98):
+            if abs(x) < 33 or not inside_walls(x, z, 3.5):
+                continue
+            if w.get(x, P.PY, z).split("[")[0] != "minecraft:grass_block":
+                continue
+            if z in (-104, -105) and x % 12 not in (0, 1):
+                w.set(x, P.PY + 1, z, B.S(("cornflower", "white_tulip", "azure_bluet", "poppy")[(x // 3) % 4]))
+            elif z == -103 and x % 12 == 6:
+                deco.tree_cypress(w, x, P.PY, z, seed=x)
+            elif z == -101 and x % 16 == 8:
+                deco.lamp_post(w, x, P.PY, z, height=3)
+    t = P.TERRACE
+    for x in range(t["x0"] + 4, t["x1"] - 3, 8):
+        if abs(x) <= 10:
+            continue
+        w.set(x, P.TY + 2, t["z0"], B.potted("red_tulip" if x % 16 else "azure_bluet"))
+    for x in range(t["x0"] + 8, t["x1"] - 3, 16):
+        if abs(x) <= 12:
+            continue
+        w.set(x, P.TY + 2, t["z0"], B.lantern())
+
+
 def build(w, T):
     terrace(w, T)
     viaduct(w, T)
@@ -875,3 +920,4 @@ def build(w, T):
     yard(w, T)
     gardens(w, T)
     cloisters(w, T)
+    details(w, T)
