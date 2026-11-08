@@ -21,12 +21,14 @@ public final class GameServices {
     private final com.eternalrealm.monster.forge.MonsterSpawner monsters;
     private final com.eternalrealm.dungeon.forge.DungeonService dungeons;
     private final com.eternalrealm.story.forge.StoryDirector story;
+    private final com.eternalrealm.economy.forge.MarketService market;
 
     public GameServices(JobRules jobRules, PartyManager parties, GuildManager guilds, RankingService rankings,
                         com.eternalrealm.world.forge.WorldService world, com.eternalrealm.quest.forge.QuestService quests,
                         com.eternalrealm.monster.forge.MonsterSpawner monsters,
                         com.eternalrealm.dungeon.forge.DungeonService dungeons,
-                        com.eternalrealm.story.forge.StoryDirector story) {
+                        com.eternalrealm.story.forge.StoryDirector story,
+                        com.eternalrealm.economy.forge.MarketService market) {
         this.jobRules = Objects.requireNonNull(jobRules, "jobRules");
         this.parties = Objects.requireNonNull(parties, "parties");
         this.guilds = Objects.requireNonNull(guilds, "guilds");
@@ -36,6 +38,11 @@ public final class GameServices {
         this.monsters = Objects.requireNonNull(monsters, "monsters");
         this.dungeons = Objects.requireNonNull(dungeons, "dungeons");
         this.story = Objects.requireNonNull(story, "story");
+        this.market = Objects.requireNonNull(market, "market");
+    }
+
+    public com.eternalrealm.economy.forge.MarketService market() {
+        return market;
     }
 
     public com.eternalrealm.story.forge.StoryDirector story() {
@@ -112,6 +119,7 @@ public final class GameServices {
             rankings.tickSecond();
             world.tickSecond();
             quests.tickSecond();
+            market.tickSecond();
         }
     }
 
@@ -121,5 +129,6 @@ public final class GameServices {
         rankings.flush();
         guilds.flush();
         world.flush();
+        market.flush();
     }
 }

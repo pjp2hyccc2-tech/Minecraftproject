@@ -129,7 +129,9 @@ public final class ServerBootstrap {
                 world, new com.eternalrealm.quest.forge.QuestService(server, playerData, world, rankings, clock),
                 new com.eternalrealm.monster.forge.MonsterSpawner(server),
                 new com.eternalrealm.dungeon.forge.DungeonService(server),
-                new com.eternalrealm.story.forge.StoryDirector(server, world, playerData));
+                new com.eternalrealm.story.forge.StoryDirector(server, world, playerData),
+                new com.eternalrealm.economy.forge.MarketService(server, playerData, io,
+                        new com.eternalrealm.persistence.file.FileMarketRepository(dataDirectory, store), clock, season));
 
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
                 allocateLimiter, violations, floods, syncQueue, combat, uiLimiter, game);

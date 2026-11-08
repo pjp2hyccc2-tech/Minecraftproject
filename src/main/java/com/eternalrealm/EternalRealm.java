@@ -96,6 +96,8 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onRespawn);
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLogin);
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onRegisterCommands);
+        forgeBus.addListener(com.eternalrealm.economy.forge.MarketCommands::onRegisterCommands);
+        forgeBus.addListener(com.eternalrealm.economy.forge.MarketCommands::onLogin);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onLivingHurt);
         forgeBus.addListener(CombatEvents::onKnockBack);
         forgeBus.addListener(EventPriority.LOWEST, CombatEvents::onLivingDeath);

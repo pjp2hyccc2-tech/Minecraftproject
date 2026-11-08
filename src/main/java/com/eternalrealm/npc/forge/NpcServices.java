@@ -43,7 +43,15 @@ public final class NpcServices {
             StoryNpcs.serviceLine(player, NpcRole.GATEKEEPER);
             com.eternalrealm.dungeon.forge.GatekeeperMenu.open(player);
         });
-        for (NpcRole role : new NpcRole[] {NpcRole.AUCTION, NpcRole.MAILBOX, NpcRole.ARENA_MASTER}) {
+        Npcs.onInteract(NpcRole.AUCTION, (player, npc) -> {
+            StoryNpcs.serviceLine(player, NpcRole.AUCTION);
+            com.eternalrealm.economy.forge.AuctionMenu.open(player);
+        });
+        Npcs.onInteract(NpcRole.MAILBOX, (player, npc) -> {
+            StoryNpcs.serviceLine(player, NpcRole.MAILBOX);
+            com.eternalrealm.economy.forge.AuctionMenu.openMailbox(player);
+        });
+        for (NpcRole role : new NpcRole[] {NpcRole.ARENA_MASTER}) {
             Npcs.onInteract(role, (player, npc) -> {
                 StoryNpcs.serviceLine(player, role);
                 player.displayClientMessage(net.minecraft.network.chat.Component.translatable(
