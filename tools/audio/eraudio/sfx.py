@@ -431,6 +431,48 @@ def phase_change(rng):
     return room(dsp.soft_clip(out * 1.4, 1.2), 2.2, 0.35, "phase"), -1.0
 
 
+def form_sting(rng):
+    """A boss takes its next form: a rising swell, then an orchestral stab (low brass in D minor over a timpani and a
+    crash) that rings out in a big hall."""
+    swell = drums.reverse_swell(0.55, rng, 250, 8000)
+    trombones = I.trombones()
+    horns = I.horns()
+    trumpets = I.trumpets()
+    stab = layer(*[mono(trombones.render(p, 1.1, 1.0, rng)) for p in (38, 45, 50)],
+                 *[0.8 * mono(horns.render(p, 1.1, 0.9, rng)) for p in (53, 57)],
+                 *[0.5 * mono(trumpets.render(p, 0.7, 0.9, rng)) for p in (62, 69)])
+    stab *= env_ar(stab.size, 0, 2.6, 0.02)
+    timpani = drums.timpani(38, 1.0, rng, length=2.4)
+    crash = drums.crash(0.85, rng, length=2.8)
+    boom = drums.boom(0.9, rng, length=1.8, top=70, bottom=30)
+    out = place(3.2, (0.0, swell, 0.45), (0.55, stab, 0.9), (0.55, timpani, 0.8), (0.55, crash, 0.35),
+                (0.55, boom, 0.7))
+    return room(dsp.soft_clip(out * 1.3, 1.2), 2.4, 0.35, "sting"), -1.0
+
+
+def collapse(rng):
+    """A defeated boss collapses and dissolves into light (about five seconds, like the defeat sequence): a falling
+    rumble and tolling bells, a dark choir that resolves into a major chord, and a rising shimmer at the end."""
+    n = int(5.2 * SR)
+    boom = drums.boom(1.0, rng, length=3.0, top=90, bottom=25)
+    rumble = sweep_noise(3.5, 220, 40, rng, 1.5) * env_ar(int(3.5 * SR), 0, 1.6, 0.05)
+    bell = I.Bell("church", decay_scale=0.8)
+    tolls = [(0.0, mono(bell.render(45, 2.4, 0.9, rng)), 0.5), (1.1, mono(bell.render(41, 2.4, 0.8, rng)), 0.45),
+             (2.2, mono(bell.render(38, 2.6, 0.75, rng)), 0.4)]
+    choir = I.choir("bas_o", attack=0.9, release=0.9)
+    dark = layer(*[mono(choir.render(p, 2.2, 0.75, rng, swell=0.8)) for p in (38, 45, 53)])
+    bright_choir = I.choir("sop_a", attack=0.7, release=1.2)
+    light = layer(*[mono(bright_choir.render(p, 2.2, 0.7, rng, swell=0.6)) for p in (62, 66, 69, 74)])
+    glock = I.Bell("glock")
+    sparkle = [(3.3 + k * 0.09, mono(glock.render(p, 0.7, 0.6, rng)), 0.35)
+               for k, p in enumerate((74, 78, 81, 86, 90, 93))]
+    shimmer = crackle(2.0, 60, rng, 6000, 15000, 0.002) * env_ar(int(2.0 * SR), 0, 1.5, 0.6)
+    rise = whoosh(1.4, 600, 5000, rng, 1.2, peak_at=0.85, shape=2.0)
+    out = place(n / SR, (0.0, boom, 0.9), (0.0, rumble, 0.6), *tolls, (0.6, dark, 0.45), (2.8, light, 0.45),
+                *sparkle, (3.2, shimmer, 0.3), (3.6, rise, 0.35))
+    return room(dsp.soft_clip(out * 1.2, 1.2), 2.6, 0.4, "collapse"), -1.0
+
+
 # ------------------------------------------------------------------------------------------------- dungeon
 
 def door_open(rng):
@@ -564,6 +606,7 @@ RENDERERS = {
     "sfx/skill/arrow_volley": arrow_volley, "sfx/skill/magic_bolt": magic_bolt,
     "sfx/combat/guard": guard, "sfx/combat/parry": parry, "sfx/combat/dodge": dodge,
     "sfx/boss/telegraph": telegraph, "sfx/boss/roar": roar, "sfx/boss/phase_change": phase_change,
+    "sfx/boss/form_sting": form_sting, "sfx/boss/collapse": collapse,
     "sfx/dungeon/door_open": door_open, "sfx/dungeon/wave_start": wave_start,
     "sfx/loot/rare_drop": rare_drop, "sfx/loot/legendary_drop": legendary_drop,
     "sfx/enhance/success": enhance_success, "sfx/enhance/fail": enhance_fail,

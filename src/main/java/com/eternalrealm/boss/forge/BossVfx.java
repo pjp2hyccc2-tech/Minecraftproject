@@ -370,9 +370,9 @@ final class BossVfx {
         }
         BossFx.send(audience, 1.4F, 30, theme.rgb(), 0.35F, 14);
         Point at = new Point(center.x, center.y, center.z);
+        sound(at, ERSounds.BOSS_FORM_STING.get(), 2.5F, 1.0F);
         sound(at, ERSounds.BOSS_PHASE_CHANGE.get(), 2.0F, 1.0F);
         sound(at, ERSounds.BOSS_ROAR.get(), 2.0F, 0.85F);
-        sound(at, SoundEvents.WITHER_SPAWN, 0.6F, 1.6F);
     }
 
     /** One beat of the collapse of a defeated boss. */
@@ -386,6 +386,7 @@ final class BossVfx {
                 level.sendParticles(ParticleTypes.LARGE_SMOKE, center.x, center.y, center.z, 20, 0.8, 0.8, 0.8, 0.03);
                 sound(ground, deathSound(), 2.0F, 0.8F);
                 sound(ground, ERSounds.BOSS_ROAR.get(), 2.0F, 0.6F);
+                sound(ground, ERSounds.BOSS_COLLAPSE.get(), 3.0F, 1.0F);
                 BossFx.shake(audience, 1.8F * intensity, 26);
             }
             case FLASH -> {

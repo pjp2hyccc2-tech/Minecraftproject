@@ -121,6 +121,10 @@ SFX = (
         description="フォルマント合成の咆哮"),
     Sfx("boss.phase_change", _v("sfx/boss/phase_change", 1), "ボスの形態変化", "Boss changes phase", "HOSTILE", 64,
         description="重い衝撃＋不協和の鐘と合唱のうねり"),
+    Sfx("boss.form_sting", _v("sfx/boss/form_sting", 1), "ボスが姿を変える", "Boss transforms", "HOSTILE", 64,
+        description="逆再生のうねり→低音金管のスタブ（ニ短調）＋ティンパニとクラッシュ"),
+    Sfx("boss.collapse", _v("sfx/boss/collapse", 1), "ボスが崩れ落ちる", "Boss collapses", "HOSTILE", 64,
+        description="落ちていく地鳴りと弔鐘、暗い合唱が長調に解決し光のきらめきで終わる"),
     # Dungeons
     Sfx("dungeon.door_open", _v("sfx/dungeon/door_open", 1), "扉が開く", "Dungeon door opens", "BLOCKS", 32,
         description="石扉がこすれる音と着地音"),

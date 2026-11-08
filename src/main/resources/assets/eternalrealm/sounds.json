@@ -309,6 +309,24 @@
       }
     ]
   },
+  "boss.form_sting": {
+    "subtitle": "subtitles.eternalrealm.boss.form_sting",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/boss/form_sting",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "boss.collapse": {
+    "subtitle": "subtitles.eternalrealm.boss.collapse",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/boss/collapse",
+        "attenuation_distance": 64
+      }
+    ]
+  },
   "dungeon.door_open": {
     "subtitle": "subtitles.eternalrealm.dungeon.door_open",
     "sounds": [
