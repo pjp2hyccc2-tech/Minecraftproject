@@ -11,7 +11,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/.offline-build"
-PURE_DIRS="core season character player persistence network combat"
+PURE_DIRS="core season character player persistence network combat job skill item economy party guild ranking quest world monster boss dungeon pvp"
 
 find_jar() {
   local pattern="$1" dir found
@@ -42,6 +42,7 @@ rm -rf "$OUT"
 mkdir -p "$OUT/main" "$OUT/test"
 
 mapfile -t MAIN_SOURCES < <(for d in $PURE_DIRS; do
+  [ -d "$ROOT/src/main/java/com/eternalrealm/$d" ] || continue
   find "$ROOT/src/main/java/com/eternalrealm/$d" -name '*.java' -not -path '*/forge/*'
 done | sort)
 mapfile -t TEST_SOURCES < <(find "$ROOT/src/test/java" -name '*.java' | sort)
