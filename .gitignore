@@ -32,3 +32,6 @@ forge*changelog.txt
 # OS
 .DS_Store
 Thumbs.db
+
+# audio generator caches (tools/audio)
+__pycache__/

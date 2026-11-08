@@ -1,0 +1,384 @@
+{
+  "music.title": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/title",
+        "stream": true
+      }
+    ]
+  },
+  "music.area_1": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/area_1",
+        "stream": true
+      }
+    ]
+  },
+  "music.area_2": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/area_2",
+        "stream": true
+      }
+    ]
+  },
+  "music.area_3": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/area_3",
+        "stream": true
+      }
+    ]
+  },
+  "music.area_4": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/area_4",
+        "stream": true
+      }
+    ]
+  },
+  "music.area_5": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/area_5",
+        "stream": true
+      }
+    ]
+  },
+  "music.area_6": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/area_6",
+        "stream": true
+      }
+    ]
+  },
+  "music.area_7": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/area_7",
+        "stream": true
+      }
+    ]
+  },
+  "music.dungeon": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/dungeon",
+        "stream": true
+      }
+    ]
+  },
+  "music.boss": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/boss",
+        "stream": true
+      }
+    ]
+  },
+  "music.final_boss": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/final_boss",
+        "stream": true
+      }
+    ]
+  },
+  "music.ending": {
+    "sounds": [
+      {
+        "name": "eternalrealm:music/ending",
+        "stream": true
+      }
+    ]
+  },
+  "jingle.victory": {
+    "subtitle": "subtitles.eternalrealm.jingle.victory",
+    "sounds": [
+      {
+        "name": "eternalrealm:jingle/victory",
+        "stream": true
+      }
+    ]
+  },
+  "jingle.level_up": {
+    "subtitle": "subtitles.eternalrealm.jingle.level_up",
+    "sounds": [
+      {
+        "name": "eternalrealm:jingle/level_up",
+        "stream": true
+      }
+    ]
+  },
+  "jingle.quest_complete": {
+    "subtitle": "subtitles.eternalrealm.jingle.quest_complete",
+    "sounds": [
+      {
+        "name": "eternalrealm:jingle/quest_complete",
+        "stream": true
+      }
+    ]
+  },
+  "jingle.discovery": {
+    "subtitle": "subtitles.eternalrealm.jingle.discovery",
+    "sounds": [
+      {
+        "name": "eternalrealm:jingle/discovery",
+        "stream": true
+      }
+    ]
+  },
+  "skill.slash": {
+    "subtitle": "subtitles.eternalrealm.skill.slash",
+    "sounds": [
+      "eternalrealm:sfx/skill/slash_1",
+      "eternalrealm:sfx/skill/slash_2"
+    ]
+  },
+  "skill.heavy_slash": {
+    "subtitle": "subtitles.eternalrealm.skill.heavy_slash",
+    "sounds": [
+      "eternalrealm:sfx/skill/heavy_slash"
+    ]
+  },
+  "skill.fire_cast": {
+    "subtitle": "subtitles.eternalrealm.skill.fire_cast",
+    "sounds": [
+      "eternalrealm:sfx/skill/fire_cast"
+    ]
+  },
+  "skill.fire_explosion": {
+    "subtitle": "subtitles.eternalrealm.skill.fire_explosion",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/skill/fire_explosion",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "skill.ice_cast": {
+    "subtitle": "subtitles.eternalrealm.skill.ice_cast",
+    "sounds": [
+      "eternalrealm:sfx/skill/ice_cast"
+    ]
+  },
+  "skill.ice_shatter": {
+    "subtitle": "subtitles.eternalrealm.skill.ice_shatter",
+    "sounds": [
+      "eternalrealm:sfx/skill/ice_shatter"
+    ]
+  },
+  "skill.thunder": {
+    "subtitle": "subtitles.eternalrealm.skill.thunder",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/skill/thunder",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "skill.holy_chime": {
+    "subtitle": "subtitles.eternalrealm.skill.holy_chime",
+    "sounds": [
+      "eternalrealm:sfx/skill/holy_chime"
+    ]
+  },
+  "skill.heal": {
+    "subtitle": "subtitles.eternalrealm.skill.heal",
+    "sounds": [
+      "eternalrealm:sfx/skill/heal"
+    ]
+  },
+  "skill.buff": {
+    "subtitle": "subtitles.eternalrealm.skill.buff",
+    "sounds": [
+      "eternalrealm:sfx/skill/buff"
+    ]
+  },
+  "skill.shadow_whoosh": {
+    "subtitle": "subtitles.eternalrealm.skill.shadow_whoosh",
+    "sounds": [
+      "eternalrealm:sfx/skill/shadow_whoosh"
+    ]
+  },
+  "skill.arrow_release": {
+    "subtitle": "subtitles.eternalrealm.skill.arrow_release",
+    "sounds": [
+      "eternalrealm:sfx/skill/arrow_release"
+    ]
+  },
+  "skill.arrow_volley": {
+    "subtitle": "subtitles.eternalrealm.skill.arrow_volley",
+    "sounds": [
+      "eternalrealm:sfx/skill/arrow_volley"
+    ]
+  },
+  "skill.magic_bolt": {
+    "subtitle": "subtitles.eternalrealm.skill.magic_bolt",
+    "sounds": [
+      "eternalrealm:sfx/skill/magic_bolt"
+    ]
+  },
+  "weapon.swing.one_handed_sword": {
+    "subtitle": "subtitles.eternalrealm.weapon.swing.one_handed_sword",
+    "sounds": [
+      "eternalrealm:sfx/weapon/one_handed_sword_1",
+      "eternalrealm:sfx/weapon/one_handed_sword_2"
+    ]
+  },
+  "weapon.swing.two_handed_sword": {
+    "subtitle": "subtitles.eternalrealm.weapon.swing.two_handed_sword",
+    "sounds": [
+      "eternalrealm:sfx/weapon/two_handed_sword_1",
+      "eternalrealm:sfx/weapon/two_handed_sword_2"
+    ]
+  },
+  "weapon.swing.dual_blades": {
+    "subtitle": "subtitles.eternalrealm.weapon.swing.dual_blades",
+    "sounds": [
+      "eternalrealm:sfx/weapon/dual_blades_1",
+      "eternalrealm:sfx/weapon/dual_blades_2"
+    ]
+  },
+  "weapon.swing.spear": {
+    "subtitle": "subtitles.eternalrealm.weapon.swing.spear",
+    "sounds": [
+      "eternalrealm:sfx/weapon/spear_1",
+      "eternalrealm:sfx/weapon/spear_2"
+    ]
+  },
+  "weapon.swing.staff": {
+    "subtitle": "subtitles.eternalrealm.weapon.swing.staff",
+    "sounds": [
+      "eternalrealm:sfx/weapon/staff_1",
+      "eternalrealm:sfx/weapon/staff_2"
+    ]
+  },
+  "weapon.swing.bow": {
+    "subtitle": "subtitles.eternalrealm.weapon.swing.bow",
+    "sounds": [
+      "eternalrealm:sfx/weapon/bow_1",
+      "eternalrealm:sfx/weapon/bow_2"
+    ]
+  },
+  "combat.guard": {
+    "subtitle": "subtitles.eternalrealm.combat.guard",
+    "sounds": [
+      "eternalrealm:sfx/combat/guard"
+    ]
+  },
+  "combat.parry": {
+    "subtitle": "subtitles.eternalrealm.combat.parry",
+    "sounds": [
+      "eternalrealm:sfx/combat/parry"
+    ]
+  },
+  "combat.dodge": {
+    "subtitle": "subtitles.eternalrealm.combat.dodge",
+    "sounds": [
+      "eternalrealm:sfx/combat/dodge"
+    ]
+  },
+  "boss.telegraph": {
+    "subtitle": "subtitles.eternalrealm.boss.telegraph",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/boss/telegraph",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "boss.roar": {
+    "subtitle": "subtitles.eternalrealm.boss.roar",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/boss/roar",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "boss.phase_change": {
+    "subtitle": "subtitles.eternalrealm.boss.phase_change",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/boss/phase_change",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "dungeon.door_open": {
+    "subtitle": "subtitles.eternalrealm.dungeon.door_open",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/dungeon/door_open",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "dungeon.wave_start": {
+    "subtitle": "subtitles.eternalrealm.dungeon.wave_start",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/dungeon/wave_start",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "loot.rare_drop": {
+    "subtitle": "subtitles.eternalrealm.loot.rare_drop",
+    "sounds": [
+      "eternalrealm:sfx/loot/rare_drop"
+    ]
+  },
+  "loot.legendary_drop": {
+    "subtitle": "subtitles.eternalrealm.loot.legendary_drop",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/loot/legendary_drop",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "loot.gold_pickup": {
+    "subtitle": "subtitles.eternalrealm.loot.gold_pickup",
+    "sounds": [
+      "eternalrealm:sfx/loot/gold_pickup_1",
+      "eternalrealm:sfx/loot/gold_pickup_2",
+      "eternalrealm:sfx/loot/gold_pickup_3"
+    ]
+  },
+  "enhance.success": {
+    "subtitle": "subtitles.eternalrealm.enhance.success",
+    "sounds": [
+      "eternalrealm:sfx/enhance/success"
+    ]
+  },
+  "enhance.fail": {
+    "subtitle": "subtitles.eternalrealm.enhance.fail",
+    "sounds": [
+      "eternalrealm:sfx/enhance/fail"
+    ]
+  },
+  "ui.click": {
+    "sounds": [
+      "eternalrealm:sfx/ui/click"
+    ]
+  },
+  "ui.journal_open": {
+    "subtitle": "subtitles.eternalrealm.ui.journal_open",
+    "sounds": [
+      "eternalrealm:sfx/ui/journal_open"
+    ]
+  },
+  "ui.npc_talk": {
+    "subtitle": "subtitles.eternalrealm.ui.npc_talk",
+    "sounds": [
+      "eternalrealm:sfx/ui/npc_talk_1",
+      "eternalrealm:sfx/ui/npc_talk_2",
+      "eternalrealm:sfx/ui/npc_talk_3"
+    ]
+  }
+}
