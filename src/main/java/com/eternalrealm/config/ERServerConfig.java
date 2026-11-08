@@ -30,6 +30,7 @@ public final class ERServerConfig {
 
     public static final ForgeConfigSpec.BooleanValue MOB_KILL_EXP_ENABLED;
     public static final ForgeConfigSpec.BooleanValue MONSTER_SPAWNING;
+    public static final ForgeConfigSpec.BooleanValue KEEP_INVENTORY;
     public static final ForgeConfigSpec.DoubleValue MOB_KILL_EXP_PER_MAX_HEALTH;
 
     public static final ForgeConfigSpec.ConfigValue<String> SEASON_ID;
@@ -107,6 +108,9 @@ public final class ERServerConfig {
         builder.comment("Field monsters of the areas around the capital.").push("monsters");
         MONSTER_SPAWNING = builder.comment("Spawn the monsters of each area around the players (outside the capital).")
                 .define("spawning", true);
+        KEEP_INVENTORY = builder.comment("Players keep their items on death (the game has its own death penalty).",
+                        "Sets the keepInventory game rule when the server starts.")
+                .define("keepInventory", true);
         builder.pop();
 
         builder.comment("Season. Restart required.").push("season");

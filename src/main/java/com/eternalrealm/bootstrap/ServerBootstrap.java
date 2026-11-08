@@ -127,7 +127,8 @@ public final class ServerBootstrap {
         GameServices game = new GameServices(ERServerConfig.jobRules(), new PartyManager(server, playerData),
                 new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season), rankings,
                 world, new com.eternalrealm.quest.forge.QuestService(server, playerData, world, rankings, clock),
-                new com.eternalrealm.monster.forge.MonsterSpawner(server));
+                new com.eternalrealm.monster.forge.MonsterSpawner(server),
+                new com.eternalrealm.dungeon.forge.DungeonService(server));
 
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
                 allocateLimiter, violations, floods, syncQueue, combat, uiLimiter, game);

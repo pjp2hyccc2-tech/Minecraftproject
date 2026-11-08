@@ -19,10 +19,12 @@ public final class GameServices {
     private final com.eternalrealm.world.forge.WorldService world;
     private final com.eternalrealm.quest.forge.QuestService quests;
     private final com.eternalrealm.monster.forge.MonsterSpawner monsters;
+    private final com.eternalrealm.dungeon.forge.DungeonService dungeons;
 
     public GameServices(JobRules jobRules, PartyManager parties, GuildManager guilds, RankingService rankings,
                         com.eternalrealm.world.forge.WorldService world, com.eternalrealm.quest.forge.QuestService quests,
-                        com.eternalrealm.monster.forge.MonsterSpawner monsters) {
+                        com.eternalrealm.monster.forge.MonsterSpawner monsters,
+                        com.eternalrealm.dungeon.forge.DungeonService dungeons) {
         this.jobRules = Objects.requireNonNull(jobRules, "jobRules");
         this.parties = Objects.requireNonNull(parties, "parties");
         this.guilds = Objects.requireNonNull(guilds, "guilds");
@@ -30,6 +32,11 @@ public final class GameServices {
         this.world = Objects.requireNonNull(world, "world");
         this.quests = Objects.requireNonNull(quests, "quests");
         this.monsters = Objects.requireNonNull(monsters, "monsters");
+        this.dungeons = Objects.requireNonNull(dungeons, "dungeons");
+    }
+
+    public com.eternalrealm.dungeon.forge.DungeonService dungeons() {
+        return dungeons;
     }
 
     public com.eternalrealm.world.forge.WorldService world() {
@@ -79,6 +86,7 @@ public final class GameServices {
 
     /** A player leaves: flush what lives in the character before it is saved. */
     public void onLogout(java.util.UUID playerId) {
+        dungeons.onLogout(playerId);
         quests.onLogout(playerId);
         world.onLogout(playerId);
         rankings.onLogout(playerId);
@@ -89,6 +97,7 @@ public final class GameServices {
     public void tick(long tick) {
         parties.tick();
         monsters.tick(tick);
+        dungeons.tick(tick);
         if (tick % 20 == 0) {
             guilds.tickSecond();
             rankings.tickSecond();
@@ -99,6 +108,7 @@ public final class GameServices {
 
     /** Server stopped: flush what must survive. */
     public void shutdown() {
+        dungeons.shutdown();
         rankings.flush();
         guilds.flush();
         world.flush();

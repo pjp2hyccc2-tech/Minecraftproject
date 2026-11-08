@@ -58,6 +58,12 @@ public final class EternalRealm {
 
         modBus.addListener(ServerBootstrap::onConfigReloading);
         forgeBus.addListener(ServerBootstrap::onServerAboutToStart);
+        forgeBus.addListener((net.minecraftforge.event.server.ServerStartedEvent event) -> {
+            if (com.eternalrealm.config.ERServerConfig.KEEP_INVENTORY.get()) {
+                event.getServer().getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_KEEPINVENTORY)
+                        .set(true, event.getServer());
+            }
+        });
         forgeBus.addListener(ServerBootstrap::onServerStopping);
         forgeBus.addListener(ServerBootstrap::onServerStopped);
         forgeBus.addListener(ServerBootstrap::onServerTick);
@@ -82,6 +88,14 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onEntityJoin);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onFinalizeSpawn);
         forgeBus.addListener(com.eternalrealm.quest.forge.QuestActions::onItemPickup);
+        forgeBus.addListener(EventPriority.HIGH, com.eternalrealm.dungeon.forge.DungeonEvents::onLivingHurt);
+        forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLivingAttack);
+        forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLivingDeath);
+        forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLivingDrops);
+        forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onExperienceDrop);
+        forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onRespawn);
+        forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLogin);
+        forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onRegisterCommands);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onLivingHurt);
         forgeBus.addListener(CombatEvents::onKnockBack);
         forgeBus.addListener(EventPriority.LOWEST, CombatEvents::onLivingDeath);

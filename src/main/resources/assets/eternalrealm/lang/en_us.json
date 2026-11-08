@@ -973,5 +973,22 @@
   "dialogue.eternalrealm.nordia_chieftain.greeting": "This winter will not end. Since the queen awoke, our village only grows colder.",
   "dialogue.eternalrealm.dragonia_blacksmith.greeting": "A blade forged in dragonfire never breaks. But with the Dragon King on a rampage, that's another story.",
   "dialogue.eternalrealm.celestia_oracle.greeting": "The stars foretell it: the gate of the Tower of the End will soon open.",
-  "dialogue.eternalrealm.tower_watcher.greeting": "This is the edge of the world. Atop the tower, the King of the End awaits."
+  "dialogue.eternalrealm.tower_watcher.greeting": "This is the edge of the world. Atop the tower, the King of the End awaits.",
+  "message.eternalrealm.dungeon.leaving": "Returning in %s s",
+  "message.eternalrealm.dungeon.time_limit": "Time limit %s",
+  "message.eternalrealm.dungeon.leader_only": "Only the party leader can start a dungeon",
+  "message.eternalrealm.dungeon.member_offline": "A party member is offline",
+  "message.eternalrealm.dungeon.member_busy": "A party member is already in a dungeon",
+  "message.eternalrealm.dungeon.party_size": "This dungeon takes %s to %s players",
+  "message.eternalrealm.dungeon.locked": "This region is not unlocked yet",
+  "message.eternalrealm.dungeon.preparing": "Preparing %s (%s)...",
+  "message.eternalrealm.dungeon.member_down": "%s is down (%s downs)",
+  "message.eternalrealm.dungeon.reward": "Clear reward: %s",
+  "message.eternalrealm.dungeon.not_inside": "You are not in a dungeon",
+  "message.eternalrealm.boss.ability": "%s uses %s!",
+  "screen.eternalrealm.gate.title": "Gatekeeper - Dungeons",
+  "screen.eternalrealm.gate.level": "Recommended level %s",
+  "screen.eternalrealm.gate.party": "Party %s-%s players",
+  "screen.eternalrealm.gate.difficulty": "Click: normal / right click: hard / shift-click: EX",
+  "screen.eternalrealm.gate.locked": "Locked (defeat the previous region's boss)"
 }

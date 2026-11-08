@@ -23,6 +23,7 @@ public final class NpcServices {
         Npcs.onInteract(NpcRole.GUILD_REGISTRAR, (player, npc) -> openPage(player, "guild"));
         Npcs.onInteract(NpcRole.HALL_OF_FAME, (player, npc) -> openPage(player, "ranking"));
         Npcs.onInteract(NpcRole.STORY, StoryNpcs::talk);
+        Npcs.onInteract(NpcRole.GATEKEEPER, (player, npc) -> com.eternalrealm.dungeon.forge.GatekeeperMenu.open(player));
     }
 
     /** Opens a journal page on the player's client. */

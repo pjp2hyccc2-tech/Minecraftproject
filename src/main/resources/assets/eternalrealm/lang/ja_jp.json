@@ -973,5 +973,22 @@
   "dialogue.eternalrealm.nordia_chieftain.greeting": "この冬は終わらぬ。女王が目覚めてから、村は凍えるばかりだ。",
   "dialogue.eternalrealm.dragonia_blacksmith.greeting": "竜の炎で鍛えた刃は折れん。だが、その竜王が暴れ出したとなりゃ話は別だ。",
   "dialogue.eternalrealm.celestia_oracle.greeting": "星が告げています。終焉の塔の門が、まもなく開くと。",
-  "dialogue.eternalrealm.tower_watcher.greeting": "ここが世界の果てだ。塔の上で、終焉の王が待っている。"
+  "dialogue.eternalrealm.tower_watcher.greeting": "ここが世界の果てだ。塔の上で、終焉の王が待っている。",
+  "message.eternalrealm.dungeon.leaving": "%s秒後に帰還します",
+  "message.eternalrealm.dungeon.time_limit": "制限時間 %s",
+  "message.eternalrealm.dungeon.leader_only": "ダンジョンに挑めるのはパーティーリーダーだけです",
+  "message.eternalrealm.dungeon.member_offline": "オフラインのメンバーがいます",
+  "message.eternalrealm.dungeon.member_busy": "すでに別のダンジョンにいるメンバーがいます",
+  "message.eternalrealm.dungeon.party_size": "このダンジョンは%s〜%s人で挑めます",
+  "message.eternalrealm.dungeon.locked": "この地域はまだ解放されていません",
+  "message.eternalrealm.dungeon.preparing": "%s（%s）の準備中……",
+  "message.eternalrealm.dungeon.member_down": "%s が倒れた（戦闘不能 %s 回）",
+  "message.eternalrealm.dungeon.reward": "攻略報酬: %s",
+  "message.eternalrealm.dungeon.not_inside": "ダンジョンの中にいません",
+  "message.eternalrealm.boss.ability": "%sの%s！",
+  "screen.eternalrealm.gate.title": "門番 ― ダンジョン",
+  "screen.eternalrealm.gate.level": "推奨レベル %s",
+  "screen.eternalrealm.gate.party": "人数 %s〜%s人",
+  "screen.eternalrealm.gate.difficulty": "クリック: ノーマル / 右クリック: ハード / Shift+クリック: EX",
+  "screen.eternalrealm.gate.locked": "未解放（前の地域のボスを倒そう）"
 }

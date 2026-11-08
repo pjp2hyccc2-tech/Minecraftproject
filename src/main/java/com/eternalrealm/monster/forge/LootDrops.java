@@ -79,7 +79,7 @@ public final class LootDrops {
     }
 
     /** A base of the tier: often the killer's job weapon, otherwise any weapon or armor piece of the tier. */
-    static EquipmentBase baseFor(ServerPlayer killer, ItemTier tier) {
+    public static EquipmentBase baseFor(ServerPlayer killer, ItemTier tier) {
         JobType job = ServerContext.current().flatMap(context -> context.playerData().snapshot(killer.getUUID()))
                 .map(CharacterSnapshot::jobId).map(JobType::fromStored).orElse(JobType.NONE);
         if (job.isChosen() && RANDOM.nextDouble() < JOB_WEAPON_SHARE) {
