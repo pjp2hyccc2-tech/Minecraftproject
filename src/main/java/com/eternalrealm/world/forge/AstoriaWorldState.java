@@ -85,6 +85,12 @@ public final class AstoriaWorldState extends SavedData {
         return capitalBuild;
     }
 
+    /** Forget the built blueprint so the capital is built again (operator command). */
+    public void resetCapitalBuild() {
+        capitalBuild = "";
+        setDirty();
+    }
+
     public void markCapitalBuilt(String build, int groundY) {
         capitalBuild = build;
         hubBuilt = true;

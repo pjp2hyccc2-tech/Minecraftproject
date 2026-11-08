@@ -86,6 +86,7 @@ public final class EternalRealm {
         forgeBus.addListener(SocialCommands::onNameFormat);
         forgeBus.addListener(Npcs::onEntityInteract);
         forgeBus.addListener(com.eternalrealm.world.forge.capital.CapitalBuilder::onServerTick);
+        forgeBus.addListener(com.eternalrealm.world.forge.CapitalCommands::onRegisterCommands);
         forgeBus.addListener((net.minecraftforge.event.server.ServerStoppedEvent event) ->
                 com.eternalrealm.world.forge.capital.CapitalBuilder.onServerStopped());
         com.eternalrealm.world.forge.capital.CapitalBuilder.onCompleted(

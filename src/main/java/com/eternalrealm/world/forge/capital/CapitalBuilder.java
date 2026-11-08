@@ -70,6 +70,12 @@ public final class CapitalBuilder {
         return job != null;
     }
 
+    /** Progress of the running build in percent (tiles placed), or -1 without a build. */
+    public static int progressPercent() {
+        Job current = job;
+        return current == null ? -1 : (int) (100L * current.tileIndex / Math.max(1, current.order.size()));
+    }
+
     /** Starts building {@code blueprint} unless this world already has it (or a build is running). */
     public static void ensureStarted(ServerLevel astoria, CapitalBlueprint blueprint, int groundY, BlockPos spawn) {
         if (job != null || blueprint.build().equals(stateBuild(astoria))) {
