@@ -25,7 +25,7 @@ import static org.junit.Assert.fail;
 public class ArchitectureTest {
     private static final Path SOURCE_ROOT = Paths.get("src", "main", "java", "com", "eternalrealm");
     private static final List<String> PURE_MODULES =
-            List.of("core", "season", "character", "player", "persistence", "network", "combat", "job", "skill", "item", "economy", "party", "guild", "ranking", "quest", "world", "monster", "boss", "dungeon", "pvp");
+            List.of("core", "season", "character", "player", "persistence", "network", "combat", "job", "skill", "item", "economy", "party", "guild", "ranking", "quest", "world", "monster", "boss", "dungeon", "pvp", "story");
     private static final List<String> PLATFORM_REFERENCES = List.of(
             "net.minecraft.", "net.minecraftforge.", "com.mojang.", "org.lwjgl.", "io.netty.",
             "com.eternalrealm.bootstrap", "com.eternalrealm.server.", "com.eternalrealm.config",
