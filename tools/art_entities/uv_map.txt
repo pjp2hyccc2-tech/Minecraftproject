@@ -1,0 +1,367 @@
+UV map (rig, part, box index, material, texOffs u v, size w h d, mirror/share)
+== humanoid 128x64
+humanoid     hips             0 cloth:belly        38   43    8  5  4 
+humanoid     chest            0 cloth:tunic        22   31    8  7  4 
+humanoid     head             0 skin               52    0    8  8  8 
+humanoid     hood             0 cloth:hood         84    0    8  8  8 
+humanoid     hood             1 cloth:hood        112   43    4  5  2 
+humanoid     helmet           0 metal:helm         52   16    8  8  8 
+humanoid     helm_crest       0 cloth:plume       102   30    1  4  9 
+humanoid     horn_r           0 bone:horn         108   50    2  5  2 
+humanoid     horn_l           0 bone:horn         116   50    2  5  2 mirror 
+humanoid     leaf_crown       0 leaf:leaves         4   17   10  4 10 
+humanoid     right_arm        0 cloth:sleeve       68   32    4  6  4 
+humanoid     pauldron_r       0 metal:armor         0   43    5  3  6 
+humanoid     right_forearm    0 cloth:sleeve2      84   32    4  6  4 
+humanoid     dagger           0 leather:grip       68   52    1  1  3 
+humanoid     dagger           1 metal:blade        84   49    1  2  5 
+humanoid     blade            0 leather:grip       76   52    1  1  3 
+humanoid     blade            1 metal:guard        38   52    1  4  1 
+humanoid     blade            2 metal:blade         0   31    1  2 10 
+humanoid     greatblade       0 leather:grip       28   52    1  1  4 
+humanoid     greatblade       1 metal:guard        62   50    2  5  1 
+humanoid     greatblade       2 metal:blade         4    0    1  3 14 
+humanoid     club             0 wood:haft          46   32    1  1 10 
+humanoid     club             1 metal:club         84   42    3  3  4 
+humanoid     staff            0 wood:staff          0    0    1 19  1 
+humanoid     staff            1 gem:orb            96   50    3  4  3 
+humanoid     crossbow         0 wood:stock         44   17    2 10  2 
+humanoid     crossbow         1 wood:limb          56   56   10  1  1 
+humanoid     crossbow         2 metal:bolt        122   30    1  9  1 
+humanoid     claws_r          0 bone:claw          46   52    4  3  1 
+humanoid     shackle_r        0 metal:iron          0   52    4  2  4 
+humanoid     shackle_r        1 chain:chain        42   52    1  4  1 
+humanoid     left_arm         0 cloth:sleeve       68   32    4  6  4 mirror share=upperarm
+humanoid     pauldron_l       0 metal:armor         0   43    5  3  6 mirror share=pauldron
+humanoid     left_forearm     0 cloth:sleeve2      84   32    4  6  4 mirror share=forearm
+humanoid     claws_l          0 bone:claw          46   52    4  3  1 mirror share=claw
+humanoid     shackle_l        0 metal:iron          0   52    4  2  4 mirror share=shackle
+humanoid     shackle_l        1 chain:chain        42   52    1  4  1 share=chainlink
+humanoid     shield_l         0 metal:shield       34    0    1  9  8 
+humanoid     hand_flame       0 flame:fire         16   52    3  3  3 
+humanoid     mummy_strips     0 bandage:wrap      124   40    0  5  2 
+humanoid     cape             0 cloth:cape         84   16    8 15  1 
+humanoid     chest_strips     0 bandage:wrap       62   43    2  7  0 
+humanoid     chest_strips     1 bandage:wrap      124   47    2  6  0 
+humanoid     right_leg        0 cloth:pants        22   42    4  6  4 
+humanoid     right_shin       0 leather:boots      68   42    4  6  4 
+humanoid     left_leg         0 cloth:pants        22   42    4  6  4 mirror share=thigh
+humanoid     left_shin        0 leather:boots      68   42    4  6  4 mirror share=shin
+humanoid     robe             0 cloth:robe        102   16    8 10  4 
+humanoid     tail             0 skin:tail          98   43    1  1  6 
+humanoid     tail_tip         0 skin:tail          46   56    3  1  2 
+== beast 64x64
+beast        torso            0 fur:body            0    0    6  6 11 
+beast        head             0 fur:head           38   24    6  6  5 
+beast        snout            0 fur:snout          42   42    3  3  3 
+beast        jaw              0 fur:jaw            38   48    3  1  4 
+beast        ear_r            0 fur:ear            14   51    2  2  1 
+beast        ear_l            0 fur:ear            14   51    2  2  1 mirror share=ear
+beast        horn_r           0 bone:horn          58   48    1  4  1 
+beast        horn_l           0 bone:horn          58   48    1  4  1 mirror share=horn
+beast        lizard_snout     0 scale:snout        24   42    5  2  4 
+beast        mane             0 fur:mane           38    0    7  7  5 
+beast        spines           0 crystal:spine      32   48    1  4  2 
+beast        spines           1 crystal:spine      52   48    1  3  2 
+beast        spines           2 crystal:spine       8   51    1  2  2 
+beast        crest            0 scale:crest        38   12    1  2 10 
+beast        carapace         0 chitin:shell        0   17    7  2 12 
+beast        front_right_leg  0 fur:leg            16   38    2  5  2 
+beast        front_right_paw  0 fur:paw            54   42    2  4  2 
+beast        front_left_leg   0 fur:leg            16   38    2  5  2 mirror share=flu
+beast        front_left_paw   0 fur:paw            54   42    2  4  2 mirror share=fll
+beast        hind_right_leg   0 fur:leg             0   39    2  5  2 
+beast        hind_right_paw   0 fur:paw             0   46    2  4  2 
+beast        hind_left_leg    0 fur:leg             0   39    2  5  2 mirror share=hlu
+beast        hind_left_paw    0 fur:paw             0   46    2  4  2 mirror share=hll
+beast        tail             0 fur:tail            0   31    2  2  6 
+beast        tail2            0 fur:tail2          16   31    2  2  5 
+beast        sting1           0 chitin:tail         8   45    2  2  4 
+beast        sting2           0 chitin:tail         8   45    2  2  4 share=seg
+beast        sting3           0 chitin:tail         8   45    2  2  4 share=seg
+beast        stinger          0 chitin:sting       20   48    3  3  3 
+beast        stinger          1 bone:barb           0   52    1  1  2 
+beast        pincer_r         0 chitin:arm         30   35    2  2  5 
+beast        claw_r           0 chitin:claw        44   35    3  3  4 
+beast        pincer_l         0 chitin:arm         30   35    2  2  5 mirror share=parm
+beast        claw_l           0 chitin:claw        44   35    3  3  4 mirror share=pclaw
+beast        mid_leg_r1       0 chitin:leg         38   53    6  1  1 
+beast        mid_leg_r2       0 chitin:leg         38   53    6  1  1 share=midleg
+beast        mid_leg_l1       0 chitin:leg         38   53    6  1  1 mirror share=midleg
+beast        mid_leg_l2       0 chitin:leg         38   53    6  1  1 mirror share=midleg
+== golem 128x128
+golem        pelvis           0 stone:pelvis        0   46   12  5  7 
+golem        chest            0 stone:body          0    0   18 16 11 
+golem        head             0 stone:head         22   27    8  9  8 
+golem        canopy           0 leaf:canopy        58    0   14  7 12 
+golem        headdress        0 cloth:nemes        58   19   10 10  9 
+golem        ice_crown        0 crystal:ice       118   57    2  4  2 
+golem        ice_crown        1 crystal:ice       118   49    2  6  2 
+golem        ice_crown        2 crystal:ice        20   58    2  4  2 
+golem        rune_halo        0 glowcore:rune      92   60   10  1  1 
+golem        right_arm        0 stone:arm           0   27    5 13  6 
+golem        shoulder_r       0 stone:plate        38   52    7  4  8 
+golem        branch_r         0 bark:branch       118   38    2  9  2 
+golem        crystal_r        0 crystal:ice       106   38    3  8  3 
+golem        right_forearm    0 stone:fist         96   19    7 12  7 
+golem        left_arm         0 stone:arm           0   27    5 13  6 mirror share=arm
+golem        shoulder_l       0 stone:plate        38   52    7  4  8 mirror share=plate
+golem        branch_l         0 bark:branch       118   38    2  9  2 mirror share=branch
+golem        crystal_l        0 crystal:ice       106   38    3  8  3 mirror share=crys
+golem        left_forearm     0 stone:fist         96   19    7 12  7 mirror share=fist
+golem        core             0 glowcore:core      92   52    5  5  1 
+golem        back_spikes      0 stone:spike        68   52    3  6  3 
+golem        back_spikes      1 stone:spike       106   49    3  8  3 
+golem        back_spikes      2 stone:spike        80   52    3  6  3 
+golem        moss_beard       0 leaf:moss           0   58   10  7  0 
+golem        right_leg        0 stone:leg          82   38    6  8  6 
+golem        right_shin       0 stone:foot         54   38    7  7  7 
+golem        left_leg         0 stone:leg          82   38    6  8  6 mirror share=thigh
+golem        left_shin        0 stone:foot         54   38    7  7  7 mirror share=foot
+== flyer 64x64
+flyer        body             0 feather:body       24   12    7  8  4 
+flyer        head             0 skin:face           0    0    6  6  6 
+flyer        crest            0 feather:crest      48    0    1  4  7 
+flyer        hood             0 cloth:hood         24    0    6  6  6 
+flyer        hood             1 cloth:hood         32   50    3  4  2 
+flyer        ice_crown        0 crystal:crown      42   50    1  4  1 
+flyer        ice_crown        1 crystal:crown      16   43    1  6  1 
+flyer        ice_crown        2 crystal:crown      42   55    1  4  1 
+flyer        helm             0 metal:helm          0   12    6  6  6 
+flyer        helm             1 metal:fin          48   11    1  3  6 
+flyer        flame_hair       0 flame:hair          0   24    6  5  6 
+flyer        halo             0 gold:halo          46   56    8  1  1 
+flyer        halo             1 gold:halo          46   58    8  1  1 
+flyer        halo             2 gold:halo          46   41    1  1  7 
+flyer        halo             3 gold:halo          20   42    1  1  7 
+flyer        right_arm        0 skin:arm            0   43    2  6  2 
+flyer        right_forearm    0 skin:forearm        8   43    2  5  2 
+flyer        claws_r          0 bone:claw          28   56    3  2  1 
+flyer        plate_r          0 metal:plate        46   49    3  3  4 
+flyer        left_arm         0 skin:arm            0   43    2  6  2 mirror share=arm
+flyer        left_forearm     0 skin:forearm        8   43    2  5  2 mirror share=forearm
+flyer        claws_l          0 bone:claw          28   56    3  2  1 mirror share=claw
+flyer        plate_l          0 metal:plate        46   49    3  3  4 mirror share=plate
+flyer        right_wing       0 feather:wing       24   24   12  9  0 
+flyer        right_wing_tip   0 feather:wingtip     0   35   10  8  0 
+flyer        left_wing        0 feather:wing       24   24   12  9  0 mirror share=wing
+flyer        left_wing_tip    0 feather:wingtip     0   35   10  8  0 mirror share=tip
+flyer        tail1            0 ghost:tail         46   33    6  5  3 
+flyer        tail2            0 ghost:tail2         8   50    4  4  2 
+flyer        tail3            0 ghost:tail3        14   56    2  4  1 
+flyer        right_leg        0 feather:thigh      36   42    2  5  3 
+flyer        right_talon      0 bone:shin          60   49    1  6  1 
+flyer        right_talon      1 bone:talon          0   56    3  1  4 
+flyer        left_leg         0 feather:thigh      36   42    2  5  3 mirror share=thigh
+flyer        left_talon       0 bone:shin          60   49    1  6  1 mirror share=shin
+flyer        left_talon       1 bone:talon          0   56    3  1  4 mirror share=talon
+flyer        orbit            0 cloud:puff         20   50    3  3  3 
+flyer        orbit            1 cloud:puff         20   50    3  3  3 share=puff
+flyer        orbit            2 cloud:puff         20   50    3  3  3 share=puff
+flyer        core             0 glowcore:core      20   56    3  3  1 
+flyer        robe_tatters     0 ghost:robe         24   33    7  5  4 
+== king 128x128
+king         hips             0 metal:faulds       54   44   14  6  8 
+king         chest            0 metal:cuirass      50    0   16 16 10 
+king         head             0 skin:face          50   26    9  9  9 
+king         crown            0 gold:crown          0   59   10  2 10 
+king         crown            1 gold:crown_spike  120   81    2  3  1 
+king         crown            2 gold:crown_spike  114   80    2  4  1 
+king         crown            3 gold:crown_spike  120   81    2  3  1 share=cs1
+king         crown            4 gold:crown_spike   52   82    1  2  2 
+king         crown            5 gold:crown_spike   52   82    1  2  2 share=cs2
+king         helm             0 metal:helm         86   26    9  9  9 
+king         helm             1 metal:helm_crest    0   71    1  3  9 
+king         horn_r           0 bone:horn          32   81    4  2  2 
+king         horn_r_tip       0 bone:horn_tip     112   58    2  7  2 
+king         horn_l           0 bone:horn          32   81    4  2  2 mirror share=horn
+king         horn_l_tip       0 bone:horn_tip     112   58    2  7  2 mirror share=horntip
+king         beard            0 hair:beard        102   72    7  6  2 
+king         floating_crown   0 gold:fcrown        20   71    8  2  8 
+king         floating_crown   1 gold:fcrown_spike   58   82    1  3  1 
+king         floating_crown   2 gold:fcrown_spike   28   81    1  4  1 
+king         floating_crown   3 gold:fcrown_spike   58   82    1  3  1 share=fs
+king         floating_crown   4 gold:fcrown_spike   58   82    1  3  1 share=fs
+king         right_arm        0 cloth:sleeve       26   27    5 11  6 
+king         pauldron_r       0 metal:pauldron     54   58    8  5  9 
+king         spikes_r         0 metal:spike       120   58    2  6  2 
+king         spikes_r         1 metal:spike       106   80    2  4  2 
+king         spikes_r         2 metal:spike        20   81    2  3  2 
+king         right_forearm    0 metal:gauntlet      0   27    6 10  7 
+king         greatsword       0 leather:grip       80   80    1  1  6 
+king         greatsword       1 gold:guard        120   74    2  6  1 
+king         greatsword       2 metal:blade         0    0    1  3 24 
+king         greatsword       3 gold:pommel        44   81    2  2  2 
+king         left_arm         0 cloth:sleeve       26   27    5 11  6 mirror share=uarm
+king         pauldron_l       0 metal:pauldron     54   58    8  5  9 mirror share=paul
+king         spikes_l         0 metal:spike       120   58    2  6  2 mirror share=sp1
+king         spikes_l         1 metal:spike       106   80    2  4  2 mirror share=sp2
+king         spikes_l         2 metal:spike        20   81    2  3  2 mirror share=sp3
+king         left_forearm     0 metal:gauntlet      0   27    6 10  7 mirror share=gaunt
+king         cape             0 cloth:cape          0   44   14 14  1 
+king         cape_lower       0 cloth:cape2        98   44   14 13  1 
+king         core             0 glowcore:core      94   80    5  5  1 
+king         halo_0           0 metal:halo        120   66    2  7  1 
+king         halo_1           0 metal:halo        120   66    2  7  1 share=hb
+king         halo_2           0 metal:halo        120   66    2  7  1 share=hb
+king         halo_3           0 metal:halo        120   66    2  7  1 share=hb
+king         halo_4           0 metal:halo        120   66    2  7  1 share=hb
+king         halo_5           0 metal:halo        120   66    2  7  1 share=hb
+king         halo_6           0 metal:halo        120   66    2  7  1 share=hb
+king         halo_7           0 metal:halo        120   66    2  7  1 share=hb
+king         right_leg        0 metal:greave       30   44    6  9  6 
+king         right_shin       0 metal:greave2      88   58    6  8  6 
+king         right_shin       1 metal:sabaton      52   72    7  3  7 
+king         left_leg         0 metal:greave       30   44    6  9  6 mirror share=thigh
+king         left_shin        0 metal:greave2      88   58    6  8  6 mirror share=shin
+king         left_shin        1 metal:sabaton      52   72    7  3  7 mirror share=boot
+king         tasset           0 cloth:tasset       80   72   10  7  1 
+== treant 128x128
+treant       trunk            0 bark:trunk         60   34   14 10 12 
+treant       trunk_upper      0 bark:trunk2         0   34   16 16 14 
+treant       head             0 bark:crown          0   96   12  6 12 
+treant       canopy           0 leaf:canopy         0    0   24 12 22 
+treant       canopy           1 leaf:canopy_top    60   56   16  6 14 
+treant       canopy_r         0 leaf:clump          0   64    7  9 11 
+treant       canopy_l         0 leaf:clump          0   64    7  9 11 mirror share=clump
+treant       canopy_back      0 leaf:clump2        48   96   16 10  6 
+treant       antler_r         0 bark:branch        48  112    2 10  2 
+treant       antler_l         0 bark:branch        48  112    2 10  2 mirror share=ant
+treant       right_arm        0 bark:arm           72   76    5 14  6 
+treant       right_arm        1 leaf:tuft          92  109    7  4  8 
+treant       right_forearm    0 bark:arm2          94   76    5 12  5 
+treant       right_claws      0 bark:twig         122    9    1  7  1 
+treant       right_claws      1 bark:twig         122    0    1  8  1 
+treant       right_claws      2 bark:twig         122   17    1  6  1 
+treant       left_arm         0 bark:arm           72   76    5 14  6 mirror share=ua
+treant       left_arm         1 leaf:tuft          92  109    7  4  8 mirror share=tuft
+treant       left_forearm     0 bark:arm2          94   76    5 12  5 mirror share=fa
+treant       left_claws       0 bark:twig         122    9    1  7  1 share=tw1
+treant       left_claws       1 bark:twig         122    0    1  8  1 share=tw2
+treant       left_claws       2 bark:twig         122   17    1  6  1 share=tw3
+treant       moss_beard       0 leaf:moss          56  112   10  8  0 
+treant       mushrooms        0 skin:cap           24  114    3  2  3 
+treant       mushrooms        1 skin:cap2          36  114    2  2  2 
+treant       mushrooms        2 skin:cap           24  114    3  2  3 share=cap
+treant       right_root       0 bark:root          94   93    6  9  7 
+treant       right_foot       0 bark:foot          36   76    8 10 10 
+treant       right_foot       1 bark:toe           76  112    3  3  4 
+treant       right_foot       2 bark:toe            0  114    3  3  4 
+treant       right_foot       3 bark:toe           14  114    2  3  3 
+treant       left_root        0 bark:root          94   93    6  9  7 mirror share=root
+treant       left_foot        0 bark:foot          36   76    8 10 10 mirror share=foot
+treant       left_foot        1 bark:toe           76  112    3  3  4 mirror share=toe1
+treant       left_foot        2 bark:toe            0  114    3  3  4 mirror share=toe2
+treant       left_foot        3 bark:toe           14  114    2  3  3 mirror share=toe3
+== colossus 128x128
+colossus     pelvis           0 sandstone:pelvis   70   61   16  6 10 
+colossus     torso            0 sandstone:torso     0    0   22 20 14 
+colossus     head             0 sandstone:head     70   43   10  9  9 
+colossus     nemes            0 cloth:nemes        72   22   14 12  9 
+colossus     nemes            1 cloth:lappet       50   72    3  9  2 
+colossus     nemes            2 cloth:lappet       50   72    3  9  2 mirror share=lap
+colossus     false_beard      0 gold:beard         96   77    2  5  2 
+colossus     visor            0 glowcore:visor    104   81   10  2  1 
+colossus     antenna_r        0 metal:antenna     122    0    1  7  1 
+colossus     antenna_l        0 metal:antenna     122    0    1  7  1 mirror share=ant
+colossus     right_arm        0 sandstone:arm      72    0    7 14  8 
+colossus     shoulder_r       0 sandstone:shoulder    0   73    9  5 10 
+colossus     right_forearm    0 sandstone:forearm    0   34    8 12  9 
+colossus     right_forearm    1 sandstone:fist      0   55    9  8 10 
+colossus     left_arm         0 sandstone:arm      72    0    7 14  8 mirror share=arm
+colossus     shoulder_l       0 sandstone:shoulder    0   73    9  5 10 mirror share=shoulder
+colossus     left_forearm     0 sandstone:forearm    0   34    8 12  9 mirror share=fore
+colossus     left_forearm     1 sandstone:fist      0   55    9  8 10 mirror share=fist
+colossus     core             0 glowcore:core      82   77    6  6  1 
+colossus     ring_s0          0 mech:ring         104   77    8  2  2 
+colossus     ring_s1          0 mech:ring         104   77    8  2  2 share=rs
+colossus     ring_s2          0 mech:ring         104   77    8  2  2 share=rs
+colossus     ring_s3          0 mech:ring         104   77    8  2  2 share=rs
+colossus     ring_s4          0 mech:ring         104   77    8  2  2 share=rs
+colossus     ring_s5          0 mech:ring         104   77    8  2  2 share=rs
+colossus     ring_s6          0 mech:ring         104   77    8  2  2 share=rs
+colossus     ring_s7          0 mech:ring         104   77    8  2  2 share=rs
+colossus     back_vents       0 metal:vent         38   72    4 10  2 
+colossus     back_vents       1 metal:vent         38   72    4 10  2 mirror share=vent
+colossus     right_leg        0 sandstone:thigh    38   54    8 10  8 
+colossus     right_shin       0 sandstone:shin     34   34    9 11  9 
+colossus     left_leg         0 sandstone:thigh    38   54    8 10  8 mirror share=thigh
+colossus     left_shin        0 sandstone:shin     34   34    9 11  9 mirror share=shin
+colossus     loincloth        0 cloth:loin         60   77   10  9  1 
+== queen 128x128
+queen        hips             0 cloth:waist         0   70   10  5  6 
+queen        torso            0 cloth:bodice       50   21   12 14  7 
+queen        head             0 skin:face          40   42    8  8  8 
+queen        crown            0 crystal:crown     124   64    1  3  1 
+queen        crown            1 crystal:crown     120   64    1  5  1 
+queen        crown            2 crystal:crown_c   124    0    1  8  1 
+queen        crown            3 crystal:crown     120   64    1  5  1 share=c2
+queen        crown            4 crystal:crown     124   64    1  3  1 share=c1
+queen        hair             0 hair:hair          88   21    9 16  5 
+queen        hood             0 cloth:hood         72   42    8  8  8 
+queen        hood             1 cloth:hood_tip     58   70    4  4  4 
+queen        right_arm        0 cloth:sleeve      104   57    4 10  4 
+queen        pauldron_r       0 metal:pauldron     80   58    6  4  6 
+queen        right_forearm    0 skin:arm           40   58    4  9  4 
+queen        sleeve_r         0 cloth:cuff         56   58    6  6  6 
+queen        scepter          0 crystal:staff       0    0    1 26  1 
+queen        scepter          1 crystal:gem        80   68    3  6  3 
+queen        axe              0 wood:haft           4    0    1  1 22 
+queen        axe              1 metal:axe           4   23    2 11  6 
+queen        axe              2 metal:axe_tip      92   68    1  2  1 
+queen        left_arm         0 cloth:sleeve      104   57    4 10  4 mirror share=ua
+queen        pauldron_l       0 metal:pauldron     80   58    6  4  6 mirror share=paul
+queen        left_forearm     0 skin:arm           40   58    4  9  4 mirror share=fa
+queen        sleeve_l         0 cloth:cuff         56   58    6  6  6 mirror share=cuff
+queen        shard_ring       0 crystal:shard     120   57    2  5  2 
+queen        shard_ring       1 crystal:shard     120   57    2  5  2 share=sh
+queen        shard_ring       2 crystal:shard     120   57    2  5  2 share=sh
+queen        collar           0 crystal:collar     32   71   12  7  1 
+queen        right_leg        0 cloth:pants         0   56    5  9  5 
+queen        right_shin       0 leather:boots     104   42    5 10  5 
+queen        left_leg         0 cloth:pants         0   56    5  9  5 mirror share=thigh
+queen        left_shin        0 leather:boots     104   42    5 10  5 mirror share=shin
+queen        gown             0 cloth:gown          0   40   12  8  8 
+queen        gown_lower       0 cloth:gown2        50    0   16  9 12 
+queen        apron            0 leather:apron      20   56    9 13  1 
+== dragon 256x128
+dragon       body             0 scale:body          0    0   16 13 26 
+dragon       body             1 bone:spine        190   55    2  4  3 
+dragon       body             2 bone:spine        190   55    2  4  3 share=sp
+dragon       body             3 bone:spine        190   55    2  4  3 share=sp
+dragon       body             4 bone:spine        190   62    2  3  3 
+dragon       neck1            0 scale:neck        170   37    9  9  9 
+dragon       neck2            0 scale:neck2         0   39    8  8  8 
+dragon       head             0 scale:head        158    0   10  8 11 
+dragon       head             1 scale:snout        54   53    7  5  9 
+dragon       head             2 bone:crest        234   53    2  3  8 
+dragon       horn_r           0 bone:horn           0   55    2  2 10 
+dragon       horn_l           0 bone:horn           0   55    2  2 10 mirror share=horn
+dragon       jaw              0 scale:jaw          84   21    7  2 16 
+dragon       tail1            0 scale:tail        114    0   10  8 12 
+dragon       tail1            1 bone:spine        154   63    2  3  3 
+dragon       tail2            0 scale:tail2       130   37    8  6 12 
+dragon       tail2            1 bone:spine        154   63    2  3  3 share=tsp
+dragon       tail3            0 scale:tail3       206   37    6  4 12 
+dragon       tail_tip         0 scale:tail4       206   53    4  3 10 
+dragon       tail_tip         1 membrane:fin      154   55   10  0  8 
+dragon       right_wing       0 scale:wingbone    200   66   20  2  2 
+dragon       right_wing       1 membrane:membrane  158   19   20  0 18 
+dragon       right_wing_tip   0 scale:wingbone      0   67   18  2  2 
+dragon       right_wing_tip   1 membrane:membrane   54   39   18  0 14 
+dragon       left_wing        0 scale:wingbone    200   66   20  2  2 mirror share=bone
+dragon       left_wing        1 membrane:membrane  158   19   20  0 18 mirror share=mem
+dragon       left_wing_tip    0 scale:wingbone      0   67   18  2  2 mirror share=tipbone
+dragon       left_wing_tip    1 membrane:membrane   54   39   18  0 14 mirror share=tipmem
+dragon       front_right_leg  0 scale:leg          32   39    5 10  6 
+dragon       front_right_leg_shin 0 scale:shin         86   53    5  9  5 
+dragon       front_right_leg_foot 0 scale:foot         24   55    6  3  8 
+dragon       front_left_leg   0 scale:leg          32   39    5 10  6 mirror share=fu
+dragon       front_left_leg_shin 0 scale:shin         86   53    5  9  5 mirror share=fs
+dragon       front_left_leg_foot 0 scale:foot         24   55    6  3  8 mirror share=ff
+dragon       hind_right_leg   0 scale:thigh        84    0    6 12  9 
+dragon       hind_right_leg_shin 0 scale:shin2       106   53    5  9  5 
+dragon       hind_right_leg_foot 0 scale:foot        126   55    6  3  8 
+dragon       hind_left_leg    0 scale:thigh        84    0    6 12  9 mirror share=hu
+dragon       hind_left_leg_shin 0 scale:shin2       106   53    5  9  5 mirror share=hs
+dragon       hind_left_leg_foot 0 scale:foot        126   55    6  3  8 mirror share=hf

@@ -1,0 +1,182 @@
+{
+  "entity.eternalrealm.humanoid_enemy": {
+    "ja": "人型の魔物",
+    "en": "Humanoid Enemy"
+  },
+  "entity.eternalrealm.beast_enemy": {
+    "ja": "獣型の魔物",
+    "en": "Beast Enemy"
+  },
+  "entity.eternalrealm.golem_enemy": {
+    "ja": "ゴーレム型の魔物",
+    "en": "Golem Enemy"
+  },
+  "entity.eternalrealm.flyer_enemy": {
+    "ja": "飛行型の魔物",
+    "en": "Flying Enemy"
+  },
+  "entity.eternalrealm.enemy_bolt": {
+    "ja": "魔弾",
+    "en": "Enemy Bolt"
+  },
+  "entity.eternalrealm.boss_b1": {
+    "ja": "地下都市の盗賊王",
+    "en": "Bandit King of the Undercity"
+  },
+  "entity.eternalrealm.boss_b2": {
+    "ja": "古代樹の守護者",
+    "en": "Guardian of the Ancient Tree"
+  },
+  "entity.eternalrealm.boss_b3": {
+    "ja": "砂塵の巨神",
+    "en": "Colossus of the Sandstorm"
+  },
+  "entity.eternalrealm.boss_b4": {
+    "ja": "凍獄の処刑人",
+    "en": "Executioner of the Frozen Prison"
+  },
+  "entity.eternalrealm.boss_b5": {
+    "ja": "氷獄の女王",
+    "en": "Queen of the Frozen Abyss"
+  },
+  "entity.eternalrealm.boss_b6": {
+    "ja": "灼炎の竜王",
+    "en": "Dragon King of Searing Flame"
+  },
+  "entity.eternalrealm.boss_b7": {
+    "ja": "天空の機械神",
+    "en": "Machine God of the Sky"
+  },
+  "entity.eternalrealm.boss_b8": {
+    "ja": "終焉の門番",
+    "en": "Gatekeeper of the End"
+  },
+  "entity.eternalrealm.boss_final": {
+    "ja": "終焉の王",
+    "en": "King of the End"
+  },
+  "entity.eternalrealm.enemy.bandit": {
+    "ja": "盗賊",
+    "en": "Bandit"
+  },
+  "entity.eternalrealm.enemy.ghoul": {
+    "ja": "グール",
+    "en": "Ghoul"
+  },
+  "entity.eternalrealm.enemy.mummy": {
+    "ja": "ミイラ",
+    "en": "Mummy"
+  },
+  "entity.eternalrealm.enemy.cultist": {
+    "ja": "邪教徒",
+    "en": "Cultist"
+  },
+  "entity.eternalrealm.enemy.prisoner": {
+    "ja": "囚人",
+    "en": "Prisoner"
+  },
+  "entity.eternalrealm.enemy.jailer": {
+    "ja": "看守",
+    "en": "Jailer"
+  },
+  "entity.eternalrealm.enemy.ice_knight": {
+    "ja": "氷の騎士",
+    "en": "Ice Knight"
+  },
+  "entity.eternalrealm.enemy.frost_mage": {
+    "ja": "氷の魔術師",
+    "en": "Frost Mage"
+  },
+  "entity.eternalrealm.enemy.fire_imp": {
+    "ja": "炎の小鬼",
+    "en": "Fire Imp"
+  },
+  "entity.eternalrealm.enemy.dark_knight": {
+    "ja": "暗黒騎士",
+    "en": "Dark Knight"
+  },
+  "entity.eternalrealm.enemy.void_mage": {
+    "ja": "虚無の魔術師",
+    "en": "Void Mage"
+  },
+  "entity.eternalrealm.enemy.shade": {
+    "ja": "亡霊",
+    "en": "Shade"
+  },
+  "entity.eternalrealm.enemy.crossbowman": {
+    "ja": "弩兵",
+    "en": "Crossbowman"
+  },
+  "entity.eternalrealm.enemy.dryad": {
+    "ja": "ドライアド",
+    "en": "Dryad"
+  },
+  "entity.eternalrealm.enemy.wolf": {
+    "ja": "狼",
+    "en": "Wolf"
+  },
+  "entity.eternalrealm.enemy.snow_wolf": {
+    "ja": "雪狼",
+    "en": "Snow Wolf"
+  },
+  "entity.eternalrealm.enemy.cave_rat": {
+    "ja": "洞窟ネズミ",
+    "en": "Cave Rat"
+  },
+  "entity.eternalrealm.enemy.frost_hound": {
+    "ja": "氷牙の猟犬",
+    "en": "Frost Hound"
+  },
+  "entity.eternalrealm.enemy.abyss_hound": {
+    "ja": "深淵の猟犬",
+    "en": "Abyss Hound"
+  },
+  "entity.eternalrealm.enemy.salamander": {
+    "ja": "サラマンダー",
+    "en": "Salamander"
+  },
+  "entity.eternalrealm.enemy.scorpion": {
+    "ja": "大サソリ",
+    "en": "Giant Scorpion"
+  },
+  "entity.eternalrealm.enemy.treant": {
+    "ja": "トレント",
+    "en": "Treant"
+  },
+  "entity.eternalrealm.enemy.sand_golem": {
+    "ja": "砂のゴーレム",
+    "en": "Sand Golem"
+  },
+  "entity.eternalrealm.enemy.ice_golem": {
+    "ja": "氷のゴーレム",
+    "en": "Ice Golem"
+  },
+  "entity.eternalrealm.enemy.lava_golem": {
+    "ja": "溶岩のゴーレム",
+    "en": "Lava Golem"
+  },
+  "entity.eternalrealm.enemy.ruin_construct": {
+    "ja": "遺跡の守護機兵",
+    "en": "Ruin Construct"
+  },
+  "entity.eternalrealm.enemy.harpy": {
+    "ja": "ハーピー",
+    "en": "Harpy"
+  },
+  "entity.eternalrealm.enemy.ice_wraith": {
+    "ja": "氷の怨霊",
+    "en": "Ice Wraith"
+  },
+  "entity.eternalrealm.enemy.storm_spirit": {
+    "ja": "嵐の精霊",
+    "en": "Storm Spirit"
+  },
+  "entity.eternalrealm.enemy.sky_sentinel": {
+    "ja": "天空の哨兵",
+    "en": "Sky Sentinel"
+  },
+  "entity.eternalrealm.enemy.fire_spirit": {
+    "ja": "炎の精霊",
+    "en": "Fire Spirit"
+  }
+}
