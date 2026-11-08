@@ -51,19 +51,47 @@ def _model(parent: str, texture: str, display=None, overrides=None) -> dict:
     return d
 
 
+# Families drawn as a pair in the icon but held one per hand: the icon (inventory, ground, item frame) shows the pair,
+# the hands show the single "<family>_<n>_held" blade (the client draws the second one in the off hand).
+PAIRED = {"twin_blades"}
+ICON_CONTEXTS = ["gui", "ground", "fixed"]
+
+
 def weapon_models(assets: str, tiers: int = 7) -> list[str]:
     written = []
     for family, (item, parent, display) in WEAPON_ITEMS.items():
         overrides = [{"predicate": {"custom_model_data": n}, "model": f"{NS}:item/weapon/{family}_{n}"}
                      for n in range(2, tiers + 1)]
         p = os.path.join(assets, "models", "item", f"{item}.json")
-        write_json(p, _model(parent, f"{NS}:item/{item}", display, overrides))
+        if family in PAIRED:
+            write_json(p, {"parent": f"{NS}:item/weapon/{family}_1", "overrides": overrides})
+        else:
+            write_json(p, _model(parent, f"{NS}:item/{item}", display, overrides))
         written.append(p)
         for n in range(1, tiers + 1):
             p = os.path.join(assets, "models", "item", "weapon", f"{family}_{n}.json")
-            write_json(p, _model(parent, f"{NS}:item/weapon/{family}_{n}", display))
+            if family in PAIRED:
+                written += _paired_models(assets, family, n, parent, display)
+                write_json(p, {
+                    "loader": "forge:separate_transforms",
+                    "gui_light": "front",
+                    "textures": {"particle": f"{NS}:item/weapon/{family}_{n}"},
+                    "base": {"parent": f"{NS}:item/weapon/{family}_{n}_held"},
+                    "perspectives": {ctx: {"parent": f"{NS}:item/weapon/{family}_{n}_icon"} for ctx in ICON_CONTEXTS},
+                })
+            else:
+                write_json(p, _model(parent, f"{NS}:item/weapon/{family}_{n}", display))
             written.append(p)
     return written
+
+
+def _paired_models(assets: str, family: str, n: int, parent: str, display) -> list[str]:
+    out = []
+    for suffix, tex in (("held", f"{family}_{n}_held"), ("icon", f"{family}_{n}")):
+        p = os.path.join(assets, "models", "item", "weapon", f"{family}_{n}_{suffix}.json")
+        write_json(p, _model(parent, f"{NS}:item/weapon/{tex}", display))
+        out.append(p)
+    return out
 
 
 def armor_models(assets: str, tiers: int = 7) -> list[str]:

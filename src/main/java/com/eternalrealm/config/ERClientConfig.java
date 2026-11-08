@@ -15,6 +15,8 @@ public final class ERClientConfig {
     public static final ForgeConfigSpec.BooleanValue COMBAT_HUD;
     public static final ForgeConfigSpec.BooleanValue CAMERA_SHAKE;
     public static final ForgeConfigSpec.BooleanValue WEAPON_ANIMATIONS;
+    public static final ForgeConfigSpec.BooleanValue DIALOGUE_AUTO_ADVANCE;
+    public static final ForgeConfigSpec.IntValue DIALOGUE_TEXT_SPEED;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -29,6 +31,13 @@ public final class ERClientConfig {
         CAMERA_SHAKE = builder.comment("Shake the camera on heavy hits, skills and boss slams").define("cameraShake", true);
         WEAPON_ANIMATIONS = builder.comment("Animate weapons and arms for combo steps, skills and charges (first and third person)")
                 .define("weaponAnimations", true);
+        builder.pop();
+        builder.comment("Dialogue box").push("dialogue");
+        DIALOGUE_AUTO_ADVANCE = builder.comment("Lines in the box above the hotbar (areas, bosses, news) advance by themselves "
+                        + "after a reading pause. Conversations with NPCs always wait for you.")
+                .define("autoAdvanceAmbient", false);
+        DIALOGUE_TEXT_SPEED = builder.comment("Characters per second while a line is being written out (0 = show at once)")
+                .defineInRange("textSpeed", 40, 0, 400);
         builder.pop();
         SPEC = builder.build();
     }

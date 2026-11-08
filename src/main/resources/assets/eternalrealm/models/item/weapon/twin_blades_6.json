@@ -1,6 +1,21 @@
 {
-  "parent": "minecraft:item/handheld",
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
   "textures": {
-    "layer0": "eternalrealm:item/weapon/twin_blades_6"
+    "particle": "eternalrealm:item/weapon/twin_blades_6"
+  },
+  "base": {
+    "parent": "eternalrealm:item/weapon/twin_blades_6_held"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "eternalrealm:item/weapon/twin_blades_6_icon"
+    },
+    "ground": {
+      "parent": "eternalrealm:item/weapon/twin_blades_6_icon"
+    },
+    "fixed": {
+      "parent": "eternalrealm:item/weapon/twin_blades_6_icon"
+    }
   }
 }

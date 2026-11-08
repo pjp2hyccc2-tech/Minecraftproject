@@ -23,6 +23,8 @@ public final class ClientKeyMappings {
     public static final KeyMapping JOB_SKILL_2 = key("job_skill_2", GLFW.GLFW_KEY_G);
     public static final KeyMapping JOB_SKILL_3 = key("job_skill_3", GLFW.GLFW_KEY_B);
     public static final KeyMapping JOB_SKILL_4 = key("job_skill_4", GLFW.GLFW_KEY_H);
+    /** Next line of the dialogue box above the hotbar (the dialogue window itself takes clicks, Space and Enter). */
+    public static final KeyMapping DIALOGUE_NEXT = key("dialogue_next", GLFW.GLFW_KEY_ENTER);
 
     /** Index 0 unused; 1..4 = the job skill slots. */
     public static KeyMapping jobSkill(int slot) {

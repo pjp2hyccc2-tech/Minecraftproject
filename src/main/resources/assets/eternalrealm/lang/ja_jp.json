@@ -1774,5 +1774,11 @@
   "landmark.eternalrealm.d5": "氷結の城の門楼",
   "landmark.eternalrealm.d6": "灼熱の火山洞窟の入口",
   "landmark.eternalrealm.d7": "天空の古代遺跡の門",
-  "landmark.eternalrealm.d8": "終焉の塔の大門"
+  "landmark.eternalrealm.d8": "終焉の塔の大門",
+  "key.eternalrealm.dialogue_next": "会話を進める",
+  "screen.eternalrealm.dialogue": "会話",
+  "dialogue.eternalrealm.hint.modal": "クリック / Space：次へ　Esc：スキップ",
+  "dialogue.eternalrealm.hint.ambient": "[%s] 次へ",
+  "message.eternalrealm.keys.moved": "キー設定：「%s」が ETERNAL REALM の操作と同じキー（%s）だったので %s に変更しました",
+  "message.eternalrealm.keys.unbound": "未割り当て"
 }

@@ -4,14 +4,17 @@ import com.eternalrealm.quest.GameEvent;
 import com.eternalrealm.quest.NpcDefinition;
 import com.eternalrealm.quest.forge.QuestService;
 import com.eternalrealm.server.ServerContext;
+import com.eternalrealm.story.Dialogue;
+import com.eternalrealm.story.DialogueLine;
+import com.eternalrealm.story.Speaker;
+import com.eternalrealm.story.StoryNpc;
 import com.eternalrealm.story.StoryTrigger;
+import com.eternalrealm.story.forge.StoryDirector;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Mob;
 
 import java.util.List;
@@ -49,8 +52,6 @@ public final class StoryNpcs {
 
     static void talk(ServerPlayer player, Mob npc) {
         String id = characterOf(npc).orElse("");
-        player.level().playSound(null, npc.getX(), npc.getY(), npc.getZ(), SoundEvents.VILLAGER_AMBIENT,
-                SoundSource.NEUTRAL, 0.6F, 1.0F);
         ServerContext context = ServerContext.current().orElse(null);
         if (id.isEmpty() || context == null) {
             player.sendSystemMessage(Component.translatable("npc.eternalrealm.greeting", npc.getDisplayName())
@@ -58,36 +59,53 @@ public final class StoryNpcs {
             return;
         }
         QuestService quests = context.game().quests();
+        StoryDirector story = context.game().story();
         for (String ready : quests.readyQuestsOfGiver(player, id)) {
             quests.turnIn(player, ready);
         }
+        // Quest changes happen once the player has read the conversation (dialogue.done).
         Optional<String> talkQuest = quests.questWaitingForTalk(player, id);
         if (talkQuest.isPresent()) {
-            context.game().story().trigger(new StoryTrigger.QuestTalk(id, talkQuest.get()), player, List.of(player));
-            quests.event(player, new GameEvent.NpcTalked(id));
+            story.trigger(new StoryTrigger.QuestTalk(id, talkQuest.get()), player, List.of(player),
+                    () -> quests.event(player, new GameEvent.NpcTalked(id)));
             return;
         }
         Optional<String> offered = quests.nextQuestOfGiver(player, id);
         if (offered.isPresent()) {
-            context.game().story().trigger(new StoryTrigger.QuestTalk(id, offered.get()), player, List.of(player));
-            quests.accept(player, offered.get());
-            quests.event(player, new GameEvent.NpcTalked(id)); // this conversation counts for its "talk to" objective
+            String quest = offered.get();
+            story.trigger(new StoryTrigger.QuestTalk(id, quest), player, List.of(player), () -> {
+                quests.accept(player, quest);
+                quests.event(player, new GameEvent.NpcTalked(id)); // this conversation counts for its "talk to" objective
+            });
             return;
         }
-        if (!context.game().story().trigger(new StoryTrigger.NpcTalk(id, context.game().story().progress()), player,
-                List.of(player))) {
-            player.sendSystemMessage(Component.literal("[").append(npc.getDisplayName()).append("] ")
-                    .append(Component.translatable("dialogue.eternalrealm." + id + ".greeting"))
-                    .withStyle(ChatFormatting.WHITE));
+        if (!story.trigger(new StoryTrigger.NpcTalk(id, story.progress()), player, List.of(player),
+                () -> quests.event(player, new GameEvent.NpcTalked(id)))) {
+            String speaker = StoryNpc.byId(id).map(character -> character.speaker().key()).orElse(Speaker.NARRATOR.key());
+            story.play(player, List.of(new DialogueLine(speaker, "dialogue.eternalrealm." + id + ".greeting")), true, null);
         }
-        quests.event(player, new GameEvent.NpcTalked(id));
     }
 
-    /** Service NPCs say one line of the story before opening their menu. */
-    static void serviceLine(ServerPlayer player, NpcRole role) {
-        ServerContext.current().ifPresent(context -> context.game().story().catalog()
-                .dialogue(new StoryTrigger.NpcTalk(role.id(), context.game().story().progress()))
-                .ifPresent(dialogue -> player.sendSystemMessage(
-                        com.eternalrealm.story.forge.StoryDirector.format(dialogue.first()))));
+    /**
+     * Talking to a service NPC: the first visit at each story progress (per session) plays their line in the dialogue
+     * window and opens the service once the player has read it; later visits open it at once. Sneaking only talks.
+     */
+    static void serviceTalk(ServerPlayer player, NpcRole role, Runnable open) {
+        ServerContext context = ServerContext.current().orElse(null);
+        if (context == null) {
+            open.run();
+            return;
+        }
+        StoryDirector story = context.game().story();
+        int progress = story.progress();
+        Optional<Dialogue> dialogue = story.catalog().dialogue(new StoryTrigger.NpcTalk(role.id(), progress));
+        boolean talkOnly = player.isShiftKeyDown();
+        if (dialogue.isEmpty() || (!talkOnly && !story.firstServiceTalk(player, role.id(), progress))) {
+            if (!talkOnly) {
+                open.run();
+            }
+            return;
+        }
+        story.play(player, dialogue.get().lines(), true, talkOnly ? null : open);
     }
 }

@@ -36,6 +36,8 @@ public final class ClientForgeEvents {
                 JournalScreen.open();
             }
         }
+        com.eternalrealm.ui.dialogue.ClientDialogue.tick();
+        KeyConflicts.resolveOnce();
     }
 
     /**
@@ -67,6 +69,16 @@ public final class ClientForgeEvents {
     }
 
     @SubscribeEvent
+    public static void onRenderHand(net.minecraftforge.client.event.RenderHandEvent event) {
+        DualWield.onRenderHand(event);
+    }
+
+    @SubscribeEvent
+    public static void onRenderPlayerPre(net.minecraftforge.client.event.RenderPlayerEvent.Pre event) {
+        DualWield.onRenderPlayerPre(event);
+    }
+
+    @SubscribeEvent
     public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         // Never show one world's/server's character in the next one.
         ClientCharacterState.clear();
@@ -74,5 +86,6 @@ public final class ClientForgeEvents {
         ClientUiState.clear();
         CombatAnimations.clear();
         CameraShake.clear();
+        com.eternalrealm.ui.dialogue.ClientDialogue.clear();
     }
 }

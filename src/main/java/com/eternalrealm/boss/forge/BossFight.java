@@ -338,7 +338,7 @@ public final class BossFight {
                             Math.max(1, Math.min(4, phaseNumber))), null, targets);
                 } else if (phaseNumber >= 2) {
                     context.game().story().catalog().bossPhaseBark(bossId(), phaseNumber).ifPresent(line ->
-                            tell(targets, com.eternalrealm.story.forge.StoryDirector.format(line), false));
+                            context.game().story().bark(targets, line));
                 }
             });
         } else if (command instanceof BossCommand.AbilityStarted started) {

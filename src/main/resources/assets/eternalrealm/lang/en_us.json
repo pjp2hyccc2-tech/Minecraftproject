@@ -1774,5 +1774,11 @@
   "landmark.eternalrealm.d5": "Gatehouse of the Frozen Castle",
   "landmark.eternalrealm.d6": "Mouth of the Scorching Volcanic Cave",
   "landmark.eternalrealm.d7": "Gate of the Ancient Sky Ruins",
-  "landmark.eternalrealm.d8": "Great Gate of the Tower of the End"
+  "landmark.eternalrealm.d8": "Great Gate of the Tower of the End",
+  "key.eternalrealm.dialogue_next": "Next dialogue line",
+  "screen.eternalrealm.dialogue": "Dialogue",
+  "dialogue.eternalrealm.hint.modal": "Click / Space: next   Esc: skip",
+  "dialogue.eternalrealm.hint.ambient": "[%s] next",
+  "message.eternalrealm.keys.moved": "Controls: \"%s\" used the same key (%s) as an ETERNAL REALM action and was moved to %s",
+  "message.eternalrealm.keys.unbound": "unbound"
 }

@@ -55,6 +55,10 @@ def main() -> int:
             assert c.w == 32 and c.h == 32
             save(c, "item", "weapon", f"{fam}_{n}.png")
             weapon_imgs[(fam, n)] = c
+            if fam in models.PAIRED:
+                held = weapons.held(fam, n)
+                assert held.w == 32 and held.h == 32
+                save(held, "item", "weapon", f"{fam}_{n}_held.png")
         # tier 1 also replaces the original item texture (same file name as before)
         save(weapon_imgs[(fam, 1)], "item", f"{models.WEAPON_ITEMS[fam][0]}.png")
     written += models.weapon_models(ASSETS, weapons.TIERS)
@@ -226,13 +230,27 @@ def check() -> list[str]:
 
     for fam in FAMILIES:
         item = models.WEAPON_ITEMS[fam][0]
+        paired = fam in models.PAIRED
         png(f"textures/item/{item}.png", (32, 32))
-        d = model(f"models/item/{item}.json", f"eternalrealm:item/{item}")
+        d = model(f"models/item/{item}.json", None if paired else f"eternalrealm:item/{item}")
         if d and [o["predicate"]["custom_model_data"] for o in d["overrides"]] != list(range(2, 8)):
             bad.append(f"{item}: overrides must be 2..7")
         for n in range(1, 8):
             png(f"textures/item/weapon/{fam}_{n}.png", (32, 32))
-            model(f"models/item/weapon/{fam}_{n}.json", f"eternalrealm:item/weapon/{fam}_{n}")
+            if not paired:
+                model(f"models/item/weapon/{fam}_{n}.json", f"eternalrealm:item/weapon/{fam}_{n}")
+                continue
+            # icon = the pair, hands = one blade (forge:separate_transforms)
+            png(f"textures/item/weapon/{fam}_{n}_held.png", (32, 32))
+            model(f"models/item/weapon/{fam}_{n}_icon.json", f"eternalrealm:item/weapon/{fam}_{n}")
+            model(f"models/item/weapon/{fam}_{n}_held.json", f"eternalrealm:item/weapon/{fam}_{n}_held")
+            d = model(f"models/item/weapon/{fam}_{n}.json")
+            if d and (d.get("loader") != "forge:separate_transforms"
+                      or d["base"]["parent"] != f"eternalrealm:item/weapon/{fam}_{n}_held"
+                      or any(v["parent"] != f"eternalrealm:item/weapon/{fam}_{n}_icon"
+                             for v in d["perspectives"].values())
+                      or set(d["perspectives"]) != set(models.ICON_CONTEXTS)):
+                bad.append(f"{fam}_{n}: separate_transforms model malformed")
     for slot in armor_icons.SLOTS:
         d = model(f"models/item/armor_{slot}.json", f"eternalrealm:item/armor/{slot}_1")
         if d and [o["predicate"]["custom_model_data"] for o in d["overrides"]] != list(range(2, 8)) + list(range(101, 107)):

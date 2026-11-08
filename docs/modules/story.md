@@ -22,29 +22,35 @@
 
 | トリガー | 呼ぶタイミング | 相手 | 表示 |
 |---|---|---|---|
-| `FirstLogin` | シーズンでの初ログイン（ワールドに入って約3秒後） | 本人 | チャット（序章14行） |
-| `AreaEntered(id)` | 地域に入った。カードは毎回、台詞はその地域が初めてのときだけ | 本人 | タイトル＋チャット |
-| `AreaUnlocked(id)` | 地域がサーバーに解放された（初回撃破の台詞の後）。地域1は台詞なし | 全員 | チャット |
-| `DungeonEntered(id)` | `DungeonRunEvent.Started`。最終レイド（"final"）はメンバーを転送したとき | パーティー | チャット |
-| `BossEncounter(id)` | ボス出現（`StartBoss`） | パーティー | チャット |
-| `bossPhaseBark(id, k)` | `PhaseChanged`（index = k−1 ≥ 1）。b1〜b8 のみ | パーティー | アクションバー |
-| `FinalPhase(k)` | 最終ボスの `PhaseChanged`（index = k−1。k=1 は戦闘開始） | レイド | 1行目を字幕（タイトル）＋全行チャット |
-| `BossDefeated(id, first)` | ボス撃破。`first`＝サーバー初の撃破。first のときは全員にこれだけを出す（星の記憶） | first: 全員／他: パーティー | チャット |
+| `FirstLogin` | シーズンでの初ログイン（ワールドに入って約3秒後） | 本人 | 会話ウィンドウ（序章14行） |
+| `AreaEntered(id)` | 地域に入った。カードは毎回、台詞はその地域が初めてのときだけ | 本人 | タイトル＋会話ボックス |
+| `AreaUnlocked(id)` | 地域がサーバーに解放された（初回撃破の台詞の後）。地域1は台詞なし | 全員 | 会話ボックス |
+| `DungeonEntered(id)` | `DungeonRunEvent.Started`。最終レイド（"final"）はメンバーを転送したとき | パーティー | 会話ボックス |
+| `BossEncounter(id)` | ボス出現（`StartBoss`） | パーティー | 会話ボックス |
+| `bossPhaseBark(id, k)` | `PhaseChanged`（index = k−1 ≥ 1）。b1〜b8 のみ | パーティー | 会話ボックス（1行） |
+| `FinalPhase(k)` | 最終ボスの `PhaseChanged`（index = k−1。k=1 は戦闘開始） | レイド | 会話ボックス |
+| `BossDefeated(id, first)` | ボス撃破。`first`＝サーバー初の撃破。first のときは全員にこれだけを出す（星の記憶） | first: 全員／他: パーティー | 会話ボックス |
 | `Ending` | 最終ボスの初回撃破（`BossDefeated("final", true)` の後） | 全員 | `ending()` の時間軸 |
-| `NpcTalk(npcId, 進行度)` | NPCを右クリック。クエストNPCは話すクエストがないとき | 本人 | 下記 |
-| `QuestTalk(npcId, questId)` | クエストの受注時と TalkTo 目標の達成時 | 本人 | チャット |
-| `DayStarted(day, 長さ, 進行度)` | `SeasonEvent` STARTED / DAY_CHANGED（既存の「DAY n」タイトルの後） | 全員 | チャット |
-| `SeasonEnded(勝利したか)` | `SeasonEvent` ENDED。勝利時はスタッフロール直後にも流す | 全員 | チャット |
+| `NpcTalk(npcId, 進行度)` | NPCを右クリック。クエストNPCは話すクエストがないとき | 本人 | 会話ウィンドウ（下記） |
+| `QuestTalk(npcId, questId)` | クエストの受注時と TalkTo 目標の達成時 | 本人 | 会話ウィンドウ（読み終えてから受注・達成） |
+| `DayStarted(day, 長さ, 進行度)` | `SeasonEvent` STARTED / DAY_CHANGED（既存の「DAY n」タイトルの後） | 全員 | 会話ボックス |
+| `SeasonEnded(勝利したか)` | `SeasonEvent` ENDED。勝利時はスタッフロール直後にも流す | 全員 | 会話ボックス |
 
 ## 3. 表示のしかた
 
-- **チャット**: 1行ずつ `StoryCatalog.LINE_INTERVAL_TICKS`（40tick ≒ 2秒）間隔。`話者名（金色）: 本文（白）`、日本語なら `話者名「本文」` でもよい
-  （本文は鉤括弧なしで保存してある）。語りの行（`isNarration()`）は話者名なしの灰色斜体。翻訳は `Component.translatable(key)`、引数はない。
-- **再生キュー**: プレイヤーごとに1本。再生中の台詞は途中で切らず、新しい台詞は後ろにつなぐ（同じ `Dialogue.id()` が並んでいれば足さない）。
-  優先: `Ending` ＞ 初回撃破・解放 ＞ その他。ログアウトで破棄。ボス戦中でも流す（短い）。
+- **プレイヤーが自分のペースで読む**（0.5.2〜）: サーバーは台詞を1行ずつ時間で流さず、`StoryDirector` が会話をまるごと
+  UIデータ `dialogue`（`{id, modal, lines: [{speaker?, portrait?, text}]}`、キーは翻訳キー）でクライアントへ送る。
+  - **会話ウィンドウ**（`modal`）: NPCとの会話（`NpcTalk`・`QuestTalk`）と序章。画面下に、話者の顔（`textures/gui/portrait/<speaker>.png`
+    があれば）・名前札・1文字ずつ表示される本文。クリック／Space／Enter で「行を最後まで表示 → 次の行」、Esc で残りを飛ばす。
+    ゲームは止めない。ほかの画面が開いている間は待つ。
+  - **会話ボックス**（それ以外）: ホットバーの上の小さな枠。会話キー（初期 Enter）で次へ。戦闘中の台詞は後から読める。
+    `eternalrealm-client.toml` の `dialogue.autoAdvanceAmbient` で自動送りにもできる（会話ウィンドウは常に待つ）。文字速度は `dialogue.textSpeed`。
+  - 読み終えた（または飛ばした）会話はチャット履歴に残す（`[話者] 本文`、語りは灰色斜体）。
+  - **読み終えてから起きること**: クライアントが `dialogue.done {id}` を送ると、その会話に結びついた処理を実行する
+    （クエストの受注、TalkTo 目標の達成、店・鍛冶屋などのメニューを開く）。ログアウトで破棄（もう一度話しかければよい）。15分で期限切れ。
+- **店などのNPC**: 進行度ごとに、そのセッションで最初に話したときだけ台詞を会話ウィンドウで見せ、読み終えたらメニューを開く。
+  2回目以降はすぐメニュー。しゃがみ＋右クリックで「話すだけ」（メニューは開かない）。
 - **タイトル（エリアカード）**: title＝`titleKey`、subtitle＝`subtitleKey`、fadeIn 10 / stay 60 / fadeOut 20 tick。同じ地域は5分以内に出し直さない。
-- **アクションバー（短い一言）**: ボスの叫び（`bossPhaseBark`）と、店などメニューを開くNPCの `NpcTalk` の1行目（メニューを開くと同時に出す）。
-  店のNPCは進行度が変わって最初に話したときだけ全行をチャットにも出す。物語キャラ・クエストNPCは毎回チャット。
 - **エンディング**: `beats` を `atTick` どおりに全員へ（`TITLE` は字幕にも出す）。最後の行から `HOLD_TICKS` 後に `staffRoll` を `creditIntervalTicks`
   ごとに表示（HEADING は金色太字、CREDIT は白、PLAYERS は見出しの後に勝利したレイドのメンバー名を数名ずつ）。続けて `SeasonEnded(true)` の台詞
   （ポストクレジット）。後から入った人向けに再生コマンドを用意してもよい。

@@ -18,9 +18,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
-import java.util.ArrayDeque;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.util.Collection;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,20 +29,29 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Shows the story: dialogues of the story module play line by line ({@link StoryCatalog#LINE_INTERVAL_TICKS} apart) in
- * chat for their audience (the player, the party or everyone), and the ending plays its timed beats and the staff roll
- * for the whole server.
+ * Shows the story. Dialogues go to the client's dialogue box as a whole ({@link #CHANNEL}) and the player reads them at
+ * their own pace: conversations (talking to an NPC, quest talks, the prologue) open the dialogue window and wait for a
+ * click per line; everything else (areas, dungeons, bosses, server news) appears in the box above the hotbar and
+ * advances with the dialogue key. Follow-ups such as accepting a quest or opening a shop run once the player has read
+ * the conversation ({@code dialogue.done}). The ending plays its timed beats and the staff roll for the whole server.
  */
 public final class StoryDirector {
     /** Player extension: the season's prologue was shown. */
     public static final String PROLOGUE_SEEN = "story_prologue";
+    /** UI data channel of dialogues ({@code {id, modal, lines: [{speaker?, portrait?, text}]}}). */
+    public static final String CHANNEL = "dialogue";
+    /** A follow-up waits at most this long for the player to finish reading (then it is dropped). */
+    private static final long PENDING_TTL_TICKS = 20L * 60 * 15;
 
     private final MinecraftServer server;
     private final WorldService world;
     private final com.eternalrealm.player.PlayerDataService playerData;
     private final StoryCatalog catalog = StoryCatalog.standard();
-    private final Map<UUID, Deque<DialogueLine>> queues = new HashMap<>();
-    private final Map<UUID, Long> nextLineAt = new HashMap<>();
+    /** Per player: dialogue id -> what to do once they have read it. */
+    private final Map<UUID, Map<Integer, Pending>> pending = new HashMap<>();
+    /** Per player: service NPC id -> story progress whose line they have heard this session. */
+    private final Map<UUID, Map<String, Integer>> heardServiceLines = new HashMap<>();
+    private int nextDialogueId = 1;
     private final java.util.Set<UUID> checkedLogins = new java.util.HashSet<>();
     private List<String> heroes = List.of();
     private long now;
@@ -63,16 +73,30 @@ public final class StoryDirector {
         return StoryProgress.of(world.progress().defeatedBossIds());
     }
 
+    private record Pending(Runnable action, long expiresAt) {
+    }
+
+    /** Plays the trigger's dialogue, if the story has one (see {@link #trigger(StoryTrigger, ServerPlayer, Collection, Runnable)}). */
+    public boolean trigger(StoryTrigger trigger, ServerPlayer source, Collection<ServerPlayer> party) {
+        return trigger(trigger, source, party, null);
+    }
+
     /**
-     * Plays the trigger's dialogue, if the story has one.
+     * Plays the trigger's dialogue for its audience (the player, the party or everyone). For the player who started a
+     * conversation ({@link #isConversation}) it opens the dialogue window.
      *
      * @param source the player who caused it (may be null for server events)
      * @param party  the party/raid for {@link StoryTrigger.Audience#PARTY}
+     * @param then   runs once {@code source} has read the dialogue, or at once when there is none or the source does not
+     *               see it (may be null)
      * @return whether a dialogue was found
      */
-    public boolean trigger(StoryTrigger trigger, ServerPlayer source, Collection<ServerPlayer> party) {
+    public boolean trigger(StoryTrigger trigger, ServerPlayer source, Collection<ServerPlayer> party, Runnable then) {
         Dialogue dialogue = catalog.dialogue(trigger).orElse(null);
         if (dialogue == null) {
+            if (then != null) {
+                then.run();
+            }
             return false;
         }
         Collection<ServerPlayer> audience = switch (trigger.audience()) {
@@ -80,19 +104,87 @@ public final class StoryDirector {
             case PARTY -> party.isEmpty() && source != null ? List.of(source) : party;
             case SERVER -> server.getPlayerList().getPlayers();
         };
+        boolean scheduled = false;
         for (ServerPlayer player : audience) {
-            play(player, dialogue);
+            boolean own = player == source;
+            play(player, dialogue.lines(), own && isConversation(trigger), own ? then : null);
+            scheduled |= own && then != null;
+        }
+        if (then != null && !scheduled) {
+            then.run();
         }
         return true;
     }
 
-    /** Queues the lines of a dialogue for one player (after what they are already reading). */
+    /** Talks with an NPC and the prologue are read in the dialogue window; the rest is ambient. */
+    static boolean isConversation(StoryTrigger trigger) {
+        return trigger instanceof StoryTrigger.NpcTalk || trigger instanceof StoryTrigger.QuestTalk
+                || trigger instanceof StoryTrigger.FirstLogin;
+    }
+
+    /** Plays a whole dialogue for one player (after what they are already reading). */
     public void play(ServerPlayer player, Dialogue dialogue) {
-        Deque<DialogueLine> queue = queues.computeIfAbsent(player.getUUID(), id -> new ArrayDeque<>());
-        if (queue.isEmpty()) {
-            nextLineAt.put(player.getUUID(), now);
+        play(player, dialogue.lines(), false, null);
+    }
+
+    /**
+     * Sends lines to the player's dialogue box.
+     *
+     * @param modal in the dialogue window (one click per line) rather than the ambient box
+     * @param then  runs when the player has read (or skipped) them; dropped if they log out first (may be null)
+     */
+    public void play(ServerPlayer player, List<DialogueLine> lines, boolean modal, Runnable then) {
+        if (lines.isEmpty()) {
+            if (then != null) {
+                then.run();
+            }
+            return;
         }
-        queue.addAll(dialogue.lines());
+        int id = nextDialogueId++;
+        JsonObject data = new JsonObject();
+        data.addProperty("id", id);
+        data.addProperty("modal", modal);
+        JsonArray array = new JsonArray();
+        for (DialogueLine line : lines) {
+            JsonObject entry = new JsonObject();
+            if (!line.isNarration()) {
+                entry.addProperty("speaker", line.speakerKey());
+                entry.addProperty("portrait", line.speakerKey().substring(line.speakerKey().lastIndexOf('.') + 1));
+            }
+            entry.addProperty("text", line.textKey());
+            array.add(entry);
+        }
+        data.add("lines", array);
+        if (then != null) {
+            pending.computeIfAbsent(player.getUUID(), key -> new HashMap<>()).put(id, new Pending(then, now + PENDING_TTL_TICKS));
+        }
+        com.eternalrealm.server.UiData.send(player, CHANNEL, data);
+    }
+
+    /** One line of battle talk (a boss's bark) in the ambient box of everyone fighting. */
+    public void bark(Collection<ServerPlayer> players, DialogueLine line) {
+        for (ServerPlayer player : players) {
+            play(player, List.of(line), false, null);
+        }
+    }
+
+    /** {@code dialogue.done}: the player closed dialogue {@code id} (read to the end or skipped). */
+    public void onDialogueDone(ServerPlayer player, int id) {
+        Map<Integer, Pending> mine = pending.get(player.getUUID());
+        Pending done = mine == null ? null : mine.remove(id);
+        if (done != null) {
+            done.action().run();
+        }
+    }
+
+    /**
+     * Service NPCs (shop, blacksmith...) say their line once per story progress and session; later visits go straight
+     * to the service. @return whether {@code player} has not heard {@code npcId}'s line at this progress yet (and now has)
+     */
+    public boolean firstServiceTalk(ServerPlayer player, String npcId, int storyProgress) {
+        Map<String, Integer> heard = heardServiceLines.computeIfAbsent(player.getUUID(), key -> new HashMap<>());
+        Integer before = heard.put(npcId, storyProgress);
+        return before == null || before != storyProgress;
     }
 
     /** Once the character is loaded: the first login of the season starts the prologue. */
@@ -108,8 +200,8 @@ public final class StoryDirector {
     }
 
     public void onLogout(UUID playerId) {
-        queues.remove(playerId);
-        nextLineAt.remove(playerId);
+        pending.remove(playerId);
+        heardServiceLines.remove(playerId);
         checkedLogins.remove(playerId);
     }
 
@@ -129,17 +221,9 @@ public final class StoryDirector {
                 checkPrologue(player);
             }
         }
-        for (Map.Entry<UUID, Deque<DialogueLine>> entry : queues.entrySet()) {
-            Deque<DialogueLine> queue = entry.getValue();
-            if (queue.isEmpty() || now < nextLineAt.getOrDefault(entry.getKey(), 0L)) {
-                continue;
-            }
-            ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
-            DialogueLine line = queue.poll();
-            if (player != null && line != null) {
-                player.sendSystemMessage(format(line));
-                nextLineAt.put(entry.getKey(), now + StoryCatalog.LINE_INTERVAL_TICKS);
-            }
+        if (tick % 200 == 7) {
+            pending.values().forEach(mine -> mine.values().removeIf(entry -> entry.expiresAt() < now));
+            pending.values().removeIf(Map::isEmpty);
         }
         if (endingStart >= 0) {
             tickEnding();

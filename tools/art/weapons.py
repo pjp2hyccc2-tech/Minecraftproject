@@ -755,9 +755,19 @@ def tb_mask(tip=TB_TIP, half=1, k=2.0, base=TB_GUARD + 1):
     return am(lambda t, s: base <= t and abs(s) <= half and t <= tip - k * abs(s))
 
 
+def twin_blades_single(tier: int) -> Canvas:
+    """One blade of the pair: what each hand holds (the icon shows both, crossed)."""
+    return [tb1, tb2, tb3, tb4, tb5, tb6, tb7][tier - 1]()
+
+
+def held(family: str, tier: int) -> Canvas:
+    if family == "twin_blades":
+        return twin_blades_single(tier)
+    raise ValueError(family)
+
+
 def twin_blades(tier: int) -> Canvas:
-    d = [tb1, tb2, tb3, tb4, tb5, tb6, tb7][tier - 1]
-    front = d()
+    front = twin_blades_single(tier)
     back = Canvas(N)
     back.a = front.a[:, ::-1].copy()
     out = Canvas(N)

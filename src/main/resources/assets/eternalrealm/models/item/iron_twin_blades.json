@@ -1,8 +1,5 @@
 {
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "eternalrealm:item/iron_twin_blades"
-  },
+  "parent": "eternalrealm:item/weapon/twin_blades_1",
   "overrides": [
     {
       "predicate": {

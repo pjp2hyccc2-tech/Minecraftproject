@@ -56,7 +56,14 @@ public class ResourcesTest {
             Path model = RESOURCES.resolve("assets/eternalrealm/models/item/" + item + ".json");
             assertTrue("missing model " + model, Files.isRegularFile(model));
             JsonObject json = JsonParser.parseString(Files.readString(model, StandardCharsets.UTF_8)).getAsJsonObject();
-            assertEquals("eternalrealm:item/" + item, json.getAsJsonObject("textures").get("layer0").getAsString());
+            if (json.has("textures")) {
+                assertEquals("eternalrealm:item/" + item, json.getAsJsonObject("textures").get("layer0").getAsString());
+            } else {
+                // paired weapons (twin blades): the icon of tier 1 through the separate-transforms parent
+                String icon = textureOf("eternalrealm:item/" + item, 0);
+                assertTrue("missing icon " + icon, Files.isRegularFile(RESOURCES.resolve("assets/eternalrealm/textures/"
+                        + icon.substring("eternalrealm:".length()) + ".png")));
+            }
             Path texture = RESOURCES.resolve("assets/eternalrealm/textures/item/" + item + ".png");
             assertTrue("missing texture " + texture, Files.isRegularFile(texture));
             byte[] png = Files.readAllBytes(texture);
@@ -115,13 +122,21 @@ public class ResourcesTest {
 
     /** The layer0 texture of a model, following eternalrealm parents. */
     private static String textureOf(String model, int depth) throws IOException {
-        assertTrue("model parent chain too deep at " + model, depth < 4);
+        assertTrue("model parent chain too deep at " + model, depth < 6);
         Path file = RESOURCES.resolve("assets/eternalrealm/models/" + model.substring("eternalrealm:".length())
                 + ".json");
         assertTrue("missing model " + file, Files.isRegularFile(file));
         JsonObject json = JsonParser.parseString(Files.readString(file, StandardCharsets.UTF_8)).getAsJsonObject();
         if (json.has("textures") && json.getAsJsonObject("textures").has("layer0")) {
             return json.getAsJsonObject("textures").get("layer0").getAsString();
+        }
+        if ("forge:separate_transforms".equals(json.has("loader") ? json.get("loader").getAsString() : "")) {
+            // icon in the inventory, another model in the hands: both must resolve
+            String held = textureOf(json.getAsJsonObject("base").get("parent").getAsString(), depth + 1);
+            assertTrue("missing held texture " + held, Files.isRegularFile(RESOURCES.resolve("assets/eternalrealm/textures/"
+                    + held.substring("eternalrealm:".length()) + ".png")));
+            return textureOf(json.getAsJsonObject("perspectives").getAsJsonObject("gui").get("parent").getAsString(),
+                    depth + 1);
         }
         String parent = json.get("parent").getAsString();
         assertTrue(model + " has no texture and no mod parent", parent.startsWith("eternalrealm:"));

@@ -39,6 +39,8 @@ public final class ClientModEvents {
             } else if ("music".equals(channel)) {
                 ClientUiState.get("music").ifPresent(data -> com.eternalrealm.client.sound.MusicDirector.setContext(
                         ClientUiState.stringOr(data, "context", "none")));
+            } else if (com.eternalrealm.story.forge.StoryDirector.CHANNEL.equals(channel)) {
+                ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.dialogue.ClientDialogue::accept);
             } else if ("jingle".equals(channel)) {
                 ClientUiState.get("jingle").ifPresent(data -> com.eternalrealm.client.sound.MusicDirector.playJingle(
                         ClientUiState.stringOr(data, "id", "")));
@@ -62,10 +64,16 @@ public final class ClientModEvents {
     }
 
     @SubscribeEvent
+    public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+        DualWield.addLayers(event);
+    }
+
+    @SubscribeEvent
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "character_hud", new CharacterHudOverlay());
         event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "combat_hud", new CombatHudOverlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "party_hud", new com.eternalrealm.ui.hud.PartyHudOverlay());
+        event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), "dialogue_box", new com.eternalrealm.ui.dialogue.DialogueOverlay());
     }
 
     @SubscribeEvent
@@ -78,5 +86,6 @@ public final class ClientModEvents {
         event.register(ClientKeyMappings.JOB_SKILL_2);
         event.register(ClientKeyMappings.JOB_SKILL_3);
         event.register(ClientKeyMappings.JOB_SKILL_4);
+        event.register(ClientKeyMappings.DIALOGUE_NEXT);
     }
 }

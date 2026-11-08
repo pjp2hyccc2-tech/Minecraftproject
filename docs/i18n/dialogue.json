@@ -1,0 +1,8 @@
+{
+  "key.eternalrealm.dialogue_next": {"ja": "会話を進める", "en": "Next dialogue line"},
+  "screen.eternalrealm.dialogue": {"ja": "会話", "en": "Dialogue"},
+  "dialogue.eternalrealm.hint.modal": {"ja": "クリック / Space：次へ　Esc：スキップ", "en": "Click / Space: next   Esc: skip"},
+  "dialogue.eternalrealm.hint.ambient": {"ja": "[%s] 次へ", "en": "[%s] next"},
+  "message.eternalrealm.keys.moved": {"ja": "キー設定：「%s」が ETERNAL REALM の操作と同じキー（%s）だったので %s に変更しました", "en": "Controls: \"%s\" used the same key (%s) as an ETERNAL REALM action and was moved to %s"},
+  "message.eternalrealm.keys.unbound": {"ja": "未割り当て", "en": "unbound"}
+}

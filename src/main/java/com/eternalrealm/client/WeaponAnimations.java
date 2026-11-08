@@ -69,6 +69,9 @@ public final class WeaponAnimations {
         var other = right ? model.leftArm : model.rightArm;
         float side = right ? 1.0F : -1.0F;
         float strike = strikeCurve(p);
+        if (anim.weapon() == WeaponType.DUAL_BLADES && poseTwinBlades(model, anim.motion(), main, other, side, p, strike)) {
+            return;
+        }
         switch (anim.motion()) {
             case SLASH_RIGHT, SLASH_LEFT -> {
                 float dir = anim.motion() == CombatAnimations.Motion.SLASH_RIGHT ? 1.0F : -1.0F;
@@ -127,6 +130,71 @@ public final class WeaponAnimations {
         }
     }
 
+    /**
+     * Twin blades: one blade per hand, so the combo alternates arms (right slash = main-hand blade, left slash = off-hand
+     * blade, each cutting inward), heavy strikes cross both blades, spins spread both arms.
+     * @return false for motions that look the same as with one weapon
+     */
+    private static boolean poseTwinBlades(HumanoidModel<?> model, CombatAnimations.Motion motion,
+                                          net.minecraft.client.model.geom.ModelPart main,
+                                          net.minecraft.client.model.geom.ModelPart other, float side, float p,
+                                          float strike) {
+        float hold = 1.0F - recover(p);
+        switch (motion) {
+            case SLASH_RIGHT, SLASH_LEFT -> {
+                boolean mainStrikes = motion == CombatAnimations.Motion.SLASH_RIGHT;
+                var striker = mainStrikes ? main : other;
+                var guard = mainStrikes ? other : main;
+                float strikerSide = mainStrikes ? side : -side;
+                striker.xRot = -1.45F - 0.25F * windup(p);
+                striker.yRot = strikerSide * Mth.lerp(strike, -0.9F, 0.8F);
+                striker.zRot = strikerSide * Mth.lerp(strike, 0.5F, -0.3F);
+                guard.xRot = -0.85F - 0.15F * windup(p);
+                guard.yRot = -strikerSide * 0.3F;
+                guard.zRot = 0.0F;
+                model.body.yRot = strikerSide * Mth.lerp(strike, -0.35F, 0.35F) * hold;
+                return true;
+            }
+            case OVERHEAD -> {
+                // X-cut: both blades raised, then cross downward
+                main.xRot = Mth.lerp(strike, -2.8F, -0.45F);
+                other.xRot = main.xRot;
+                main.yRot = side * Mth.lerp(strike, -0.35F, 0.55F);
+                other.yRot = -main.yRot;
+                main.zRot = side * Mth.lerp(strike, 0.35F, -0.15F);
+                other.zRot = -main.zRot;
+                model.body.xRot = 0.25F * strike * hold;
+                return true;
+            }
+            case SPIN -> {
+                main.xRot = -0.35F;
+                other.xRot = -0.35F;
+                main.zRot = side * 1.3F;
+                other.zRot = -side * 1.3F;
+                model.body.yRot = (float) (p * Math.PI * 4.0);
+                return true;
+            }
+            case THRUST -> {
+                main.xRot = -1.55F;
+                other.xRot = Mth.lerp(Mth.clamp((p - 0.1F) / 0.5F, 0.0F, 1.0F), -1.0F, -1.55F);
+                main.yRot = side * 0.12F;
+                other.yRot = -side * 0.12F;
+                model.body.yRot = side * Mth.lerp(strike, 0.2F, -0.2F) * hold;
+                return true;
+            }
+            case CHARGE -> {
+                main.xRot = -2.5F;
+                other.xRot = -2.5F;
+                main.zRot = side * 0.45F;
+                other.zRot = -side * 0.45F;
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ first person
 
     /** @return true when the transform was applied (vanilla's equip/swing transforms are then skipped) */
@@ -140,10 +208,7 @@ public final class WeaponAnimations {
         Optional<CombatAnimations.Anim> current = CombatAnimations.of(player);
         if (current.isEmpty()) {
             if (player.isUsingItem() && player.getUsedItemHand() == InteractionHand.MAIN_HAND) {
-                // guard: weapon held across the body
-                pose.translate(side * -0.28F, 0.12F, 0.1F);
-                pose.mulPose(Axis.YP.rotationDegrees(side * 40.0F));
-                pose.mulPose(Axis.ZP.rotationDegrees(side * 70.0F));
+                guard(pose, side); // weapon held across the body
                 return true;
             }
             vanillaSwing(pose, side, swingProcess);
@@ -151,12 +216,65 @@ public final class WeaponAnimations {
         }
         CombatAnimations.Anim anim = current.get();
         float p = anim.progress(ClientCombatState.tick(), partialTick);
+        if (anim.weapon() == WeaponType.DUAL_BLADES && anim.motion() == CombatAnimations.Motion.SLASH_LEFT) {
+            waitingBlade(pose, side, p); // this beat belongs to the off-hand blade
+            return true;
+        }
+        motion(pose, side, anim.motion(), anim.weapon(), p, partialTick);
+        return true;
+    }
+
+    /**
+     * The twin blades' second blade, drawn by {@link DualWield} in the (empty) off hand: it mirrors the main hand and
+     * strikes on the combo's left slashes, cutting inward from its own side.
+     */
+    public static void firstPersonOffhand(PoseStack pose, LocalPlayer player, HumanoidArm arm, float partialTick,
+                                          float equipProcess) {
+        int side = arm == HumanoidArm.RIGHT ? 1 : -1;
+        pose.translate(side * 0.56F, -0.52F + equipProcess * -0.6F, -0.72F);
+        if (!ERClientConfig.WEAPON_ANIMATIONS.get()) {
+            return;
+        }
+        Optional<CombatAnimations.Anim> current = CombatAnimations.of(player);
+        if (current.isEmpty()) {
+            if (player.isUsingItem() && player.getUsedItemHand() == InteractionHand.MAIN_HAND) {
+                guard(pose, side); // both blades crossed in front
+            }
+            return;
+        }
+        CombatAnimations.Anim anim = current.get();
+        float p = anim.progress(ClientCombatState.tick(), partialTick);
+        switch (anim.motion()) {
+            case SLASH_RIGHT -> waitingBlade(pose, side, p);
+            case SLASH_LEFT -> motion(pose, side, CombatAnimations.Motion.SLASH_RIGHT, anim.weapon(), p, partialTick);
+            case THRUST -> motion(pose, side, anim.motion(), anim.weapon(), Math.max(0.0F, p - 0.08F), partialTick);
+            default -> motion(pose, side, anim.motion(), anim.weapon(), p, partialTick);
+        }
+    }
+
+    /** Weapon held across the body (guarding). */
+    private static void guard(PoseStack pose, int side) {
+        pose.translate(side * -0.28F, 0.12F, 0.1F);
+        pose.mulPose(Axis.YP.rotationDegrees(side * 40.0F));
+        pose.mulPose(Axis.ZP.rotationDegrees(side * 70.0F));
+    }
+
+    /** The blade that is not striking this beat: drawn back a little, ready for the next cut. */
+    private static void waitingBlade(PoseStack pose, int side, float p) {
+        float pull = Mth.sin(Math.min(1.0F, p * 1.4F) * Mth.PI);
+        pose.translate(side * 0.06F * pull, -0.08F * pull, 0.1F * pull);
+        pose.mulPose(Axis.ZP.rotationDegrees(side * 12.0F * pull));
+    }
+
+    /** One weapon motion for the hand on {@code side} (1 = right, -1 = left of the screen). */
+    private static void motion(PoseStack pose, int side, CombatAnimations.Motion motion, WeaponType weapon, float p,
+                               float partialTick) {
         float w = windup(p);
         float s = strikeCurve(p);
         float r = recover(p);
-        switch (anim.motion()) {
+        switch (motion) {
             case SLASH_RIGHT, SLASH_LEFT -> {
-                float dir = anim.motion() == CombatAnimations.Motion.SLASH_RIGHT ? 1.0F : -1.0F;
+                float dir = motion == CombatAnimations.Motion.SLASH_RIGHT ? 1.0F : -1.0F;
                 float amount = (1.0F - r);
                 pose.translate(side * dir * Mth.lerp(s, 0.15F, -0.45F) * amount, 0.1F * w * (1 - s), -0.15F * s * amount);
                 pose.mulPose(Axis.ZP.rotationDegrees(side * dir * Mth.lerp(s, 50.0F, -80.0F) * amount));
@@ -187,7 +305,7 @@ public final class WeaponAnimations {
             case CHARGE -> {
                 float charge = CombatAnimations.localChargeRatio();
                 float tremble = charge >= 1.0F ? Mth.sin((ClientCombatState.tick() + partialTick) * 3.0F) * 1.5F : 0.0F;
-                if (anim.weapon() == WeaponType.BOW) {
+                if (weapon == WeaponType.BOW) {
                     pose.translate(side * -0.1F, 0.0F, 0.12F * charge);
                     pose.mulPose(Axis.ZP.rotationDegrees(side * (-20.0F + tremble)));
                 } else {
@@ -207,7 +325,6 @@ public final class WeaponAnimations {
                 pose.mulPose(Axis.ZP.rotationDegrees(side * 25.0F * lean));
             }
         }
-        return true;
     }
 
     /** Vanilla's attack swing (used for clicks without our weapon actions). */
