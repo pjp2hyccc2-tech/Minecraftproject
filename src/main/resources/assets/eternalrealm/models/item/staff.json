@@ -72,5 +72,43 @@
         0.9
       ]
     }
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "eternalrealm:item/weapon/staff_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3
+      },
+      "model": "eternalrealm:item/weapon/staff_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4
+      },
+      "model": "eternalrealm:item/weapon/staff_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5
+      },
+      "model": "eternalrealm:item/weapon/staff_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6
+      },
+      "model": "eternalrealm:item/weapon/staff_6"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7
+      },
+      "model": "eternalrealm:item/weapon/staff_7"
+    }
+  ]
 }

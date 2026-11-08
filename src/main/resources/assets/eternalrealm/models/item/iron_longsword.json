@@ -2,5 +2,43 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "eternalrealm:item/iron_longsword"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "eternalrealm:item/weapon/longsword_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3
+      },
+      "model": "eternalrealm:item/weapon/longsword_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4
+      },
+      "model": "eternalrealm:item/weapon/longsword_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5
+      },
+      "model": "eternalrealm:item/weapon/longsword_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6
+      },
+      "model": "eternalrealm:item/weapon/longsword_6"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7
+      },
+      "model": "eternalrealm:item/weapon/longsword_7"
+    }
+  ]
 }

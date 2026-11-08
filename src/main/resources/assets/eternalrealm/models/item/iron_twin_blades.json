@@ -2,5 +2,43 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "eternalrealm:item/iron_twin_blades"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "eternalrealm:item/weapon/twin_blades_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3
+      },
+      "model": "eternalrealm:item/weapon/twin_blades_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4
+      },
+      "model": "eternalrealm:item/weapon/twin_blades_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5
+      },
+      "model": "eternalrealm:item/weapon/twin_blades_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6
+      },
+      "model": "eternalrealm:item/weapon/twin_blades_6"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7
+      },
+      "model": "eternalrealm:item/weapon/twin_blades_7"
+    }
+  ]
 }

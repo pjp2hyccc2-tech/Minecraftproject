@@ -32,3 +32,7 @@ forge*changelog.txt
 # OS
 .DS_Store
 Thumbs.db
+
+# python bytecode (tools/art generators)
+__pycache__/
+*.pyc

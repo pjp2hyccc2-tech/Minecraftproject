@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/armor/chestplate_1"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "eternalrealm:item/armor/chestplate_2"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3
+      },
+      "model": "eternalrealm:item/armor/chestplate_3"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4
+      },
+      "model": "eternalrealm:item/armor/chestplate_4"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5
+      },
+      "model": "eternalrealm:item/armor/chestplate_5"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6
+      },
+      "model": "eternalrealm:item/armor/chestplate_6"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7
+      },
+      "model": "eternalrealm:item/armor/chestplate_7"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 101
+      },
+      "model": "eternalrealm:item/armor/chestplate_job_knight"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 102
+      },
+      "model": "eternalrealm:item/armor/chestplate_job_assassin"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 103
+      },
+      "model": "eternalrealm:item/armor/chestplate_job_mage"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 104
+      },
+      "model": "eternalrealm:item/armor/chestplate_job_ranger"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 105
+      },
+      "model": "eternalrealm:item/armor/chestplate_job_priest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 106
+      },
+      "model": "eternalrealm:item/armor/chestplate_job_spellblade"
+    }
+  ]
+}
