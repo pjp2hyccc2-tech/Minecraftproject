@@ -2,5 +2,9 @@
   "message.eternalrealm.npc.coming_soon": {
     "ja": "この窓口はまもなく開く予定です",
     "en": "This counter opens soon"
+  },
+  "message.eternalrealm.setup.town": {
+    "ja": "町のNPCを%s人配置しました",
+    "en": "Placed %s town NPCs"
   }
 }

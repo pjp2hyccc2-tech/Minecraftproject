@@ -1642,5 +1642,6 @@
   "screen.eternalrealm.mail.empty": "郵便物はありません",
   "message.eternalrealm.auction.hold_item": "出品するアイテムを手に持ってください",
   "message.eternalrealm.auction.too_complex": "このアイテムは出品できません",
-  "message.eternalrealm.auction.closed": "取引所は準備中です"
+  "message.eternalrealm.auction.closed": "取引所は準備中です",
+  "message.eternalrealm.setup.town": "町のNPCを%s人配置しました"
 }

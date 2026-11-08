@@ -1642,5 +1642,6 @@
   "screen.eternalrealm.mail.empty": "No mail",
   "message.eternalrealm.auction.hold_item": "Hold the item you want to sell",
   "message.eternalrealm.auction.too_complex": "This item cannot be listed",
-  "message.eternalrealm.auction.closed": "The auction house is not open yet"
+  "message.eternalrealm.auction.closed": "The auction house is not open yet",
+  "message.eternalrealm.setup.town": "Placed %s town NPCs"
 }

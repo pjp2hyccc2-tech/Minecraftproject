@@ -132,6 +132,15 @@ public final class JobActions {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         String[] jobIds = Arrays.stream(JobType.values()).filter(JobType::isChosen).map(JobType::id).toArray(String[]::new);
         dispatcher.register(Commands.literal("eternalrealm")
+                .then(Commands.literal("setup").requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("town").executes(ctx -> {
+                            ServerPlayer player = ctx.getSource().getPlayerOrException();
+                            int placed = com.eternalrealm.npc.forge.TownSetup.placeAround(player.serverLevel(),
+                                    player.blockPosition());
+                            ctx.getSource().sendSuccess(() -> Component.translatable(
+                                    "message.eternalrealm.setup.town", placed), true);
+                            return placed;
+                        })))
                 .then(Commands.literal("outfit")
                         .then(Commands.literal("job").executes(ctx -> outfit(ctx.getSource().getPlayerOrException(), false)))
                         .then(Commands.literal("tier").executes(ctx -> outfit(ctx.getSource().getPlayerOrException(), true))))
