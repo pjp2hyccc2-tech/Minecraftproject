@@ -32,6 +32,8 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.BooleanValue MONSTER_SPAWNING;
     public static final ForgeConfigSpec.BooleanValue KEEP_INVENTORY;
     public static final ForgeConfigSpec.BooleanValue IGNORE_PARTY_SIZE;
+    public static final ForgeConfigSpec.BooleanValue SPECIAL_MOVES;
+    public static final ForgeConfigSpec.BooleanValue DUNGEON_TRAPS;
     public static final ForgeConfigSpec.DoubleValue MOB_KILL_EXP_PER_MAX_HEALTH;
 
     public static final ForgeConfigSpec.ConfigValue<String> SEASON_ID;
@@ -115,6 +117,11 @@ public final class ERServerConfig {
         IGNORE_PARTY_SIZE = builder.comment("Let any party size enter dungeons and the final raid (small servers, testing).",
                         "The final raid is designed for 10-20 players.")
                 .define("ignorePartySize", false);
+        SPECIAL_MOVES = builder.comment("Elite monsters (gold name plate) and monsters of level 30 or more use telegraphed",
+                        "special moves (a red ground marker shows where the hit lands).")
+                .define("specialMoves", true);
+        DUNGEON_TRAPS = builder.comment("Dungeon instances have telegraphed traps in their corridors and combat rooms.")
+                .define("dungeonTraps", true);
         builder.pop();
 
         builder.comment("Season. Restart required.").push("season");

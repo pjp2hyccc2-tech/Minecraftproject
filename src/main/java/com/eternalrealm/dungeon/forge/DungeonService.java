@@ -101,6 +101,12 @@ public final class DungeonService {
         return byMember.containsKey(playerId);
     }
 
+    /** The map view of the instance a player belongs to (layout, current room, traps), if any. */
+    public Optional<com.eternalrealm.world.map.MapView.Dungeon> mapView(UUID playerId) {
+        DungeonInstance instance = byMember.get(playerId);
+        return instance == null || instance.isClosed() ? Optional.empty() : Optional.of(instance.mapView());
+    }
+
     // ------------------------------------------------------------------ start
 
     /** The party (or the solo player) enters a dungeon ("d1".."d8") or the final raid ("final"). */
