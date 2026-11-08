@@ -1,6 +1,7 @@
 """KING boss rig: b1 地下都市の盗賊王, b8 終焉の門番, final 終焉の王 (+ phase looks final_p1..final_p3).
 Large armoured humanoid (44 units tall at scale 1) with crown, cape (two segments) and a greatsword; extra parts
 for the final boss: floating crown (p1+), void core and bigger spikes (p2+), blade halo and burnt cape (p3)."""
+from boss_forms import cracks, glow_faces, veins
 from ermodel import C, P, Rig, Variant, anim
 from erpaint import human_face, lighten, mix, rgb, shade
 
@@ -277,12 +278,33 @@ def variants():
                 for y in range(1, fc.h, 5):
                     fc.hline(0, fc.w - 1, y, (90, 60, 40))
     leather = {'base': '#6a4a30', 'style': 'leather'}
-    V.append(Variant('b1', show={'crown', 'beard'}, palette=pal(
+    pal_b1 = pal(
         cuirass={'base': '#7a5a3a', 'style': 'leather'}, pauldron={'base': '#8a8e98', 'style': 'metal'},
         gauntlet=leather, greave=leather, greave2={'base': '#5a3e28', 'style': 'leather'}, faulds=leather,
         sabaton={'base': '#4a3020', 'style': 'leather'}, sleeve='#7a2a24', cape={'base': '#8a1e1e', 'trim': (200, 160, 60)},
-        cape2={'base': '#7a1a1a', 'trim': (200, 160, 60)}, blade={'base': '#a8b0b8', 'style': 'metal'}),
-        paint=deco_b1, glow=True, extra=dict(scale=1.0, hitbox=(1.4, 2.8))))
+        cape2={'base': '#7a1a1a', 'trim': (200, 160, 60)}, blade={'base': '#a8b0b8', 'style': 'metal'},
+        core={'base': '#3a1030', 'style': 'crystal'})
+    V.append(Variant('b1', show={'crown', 'beard'}, palette=pal_b1, paint=deco_b1, glow=True,
+                     extra=dict(scale=1.0, hitbox=(1.4, 2.8))))
+
+    def deco_b1_rage(p):
+        # second form: the black crystal on his chest flares, greed burns in his eyes, the cape is in tatters
+        deco_b1(p)
+        glow_faces(p, 'core', (255, 70, 140))
+        g = p.face('head', 'front', glow=True)
+        g.px(2, 4, (255, 80, 60))
+        g.px(6, 4, (255, 80, 60))
+        veins(p, ('chest', 'right_arm', 'left_arm', 'right_leg', 'left_leg'), (210, 40, 90), (255, 90, 150))
+        cracks(p, ('chest', 'hips'), (240, 70, 120), (255, 120, 170), every=36)
+        for fc in p.all_faces('crown', index=0, glow=True, sides_only=True):
+            for x in range(0, fc.w, 2):
+                fc.px(x, 0, (255, 120, 80))
+        tatter(p, 'cape', depth=3, every=2)
+        tatter(p, 'cape_lower', depth=5)
+    V.append(Variant('b1_p1', show={'crown', 'beard', 'core', 'spikes_r', 'spikes_l'},
+                     palette=dict(pal_b1, spike={'base': '#2a1020', 'style': 'crystal'}),
+                     poses={'spikes_r': dict(scale=(0.8, 0.9, 0.8)), 'spikes_l': dict(scale=(0.8, 0.9, 0.8))},
+                     paint=deco_b1_rage, glow=True, extra=dict(scale=1.0)))
 
     def deco_b8(p):
         hf = p.face('helm', 'front')
@@ -301,13 +323,40 @@ def variants():
         tatter(p, 'cape_lower', depth=4)
         tatter(p, 'cape', depth=2, every=3)
     dark = {'base': '#3c4048', 'style': 'metal'}
-    V.append(Variant('b8', show={'helm', 'horn_r', 'horn_l', 'spikes_r', 'spikes_l'}, palette=pal(
+    pal_b8 = pal(
         helm={'base': '#454a54', 'style': 'metal'}, helm_crest='#2a2e34', horn='#2a2e34', horn_tip='#1a1e24',
         cuirass=dark, pauldron={'base': '#454a54', 'style': 'metal'}, gauntlet=dark, greave=dark, greave2=dark,
         sabaton={'base': '#2a2e34', 'style': 'metal'}, faulds=dark, sleeve='#22262c', spike='#1a1e24',
         cape={'base': '#1e3a3a', 'style': 'cloth'}, cape2={'base': '#162e2e', 'style': 'cloth'}, tasset='#1e3a3a',
-        blade={'base': '#5a6470', 'style': 'metal'}, guard='#2a2e34', pommel='#2a2e34'),
-        paint=deco_b8, glow=True, extra=dict(scale=1.45, hitbox=(1.9, 4.0))))
+        blade={'base': '#5a6470', 'style': 'metal'}, guard='#2a2e34', pommel='#2a2e34',
+        core={'base': '#5ae8d8', 'style': 'glowcore'}, halo={'base': '#1e2a2a', 'style': 'metal'})
+    V.append(Variant('b8', show={'helm', 'horn_r', 'horn_l', 'spikes_r', 'spikes_l'}, palette=pal_b8,
+                     paint=deco_b8, glow=True, extra=dict(scale=1.45, hitbox=(1.9, 4.0))))
+
+    def deco_b8_form(form):
+        # the gatekeeper's oath burns brighter with every form: a void heart, a halo of blades, cracks of light
+        def deco(p):
+            deco_b8(p)
+            glow_faces(p, 'core', (220, 255, 250))
+            veins(p, ('chest', 'right_arm', 'left_arm'), (50, 150, 140), (200, 255, 250), seed=form)
+            if form >= 2:
+                for k in range(8):
+                    for fc in p.all_faces('halo_%d' % k, glow=True, sides_only=True):
+                        fc.vline(fc.w // 2, 0, fc.h - 1, (150, 255, 240))
+                veins(p, ('right_forearm', 'left_forearm', 'right_leg', 'left_leg'), (50, 150, 140), (200, 255, 250),
+                      seed=form + 3)
+            if form >= 3:
+                cracks(p, ('chest', 'hips', 'right_shin', 'left_shin'), (120, 255, 235), (230, 255, 252), every=30)
+                tatter(p, 'cape', depth=3, every=2)
+                tatter(p, 'cape_lower', depth=5)
+        return deco
+    b8_parts = {'helm', 'horn_r', 'horn_l', 'spikes_r', 'spikes_l', 'core'}
+    V.append(Variant('b8_p1', show=b8_parts, palette=pal_b8, paint=deco_b8_form(1), glow=True, extra=dict(scale=1.45)))
+    V.append(Variant('b8_p2', show=b8_parts | {'halo'}, palette=pal_b8, paint=deco_b8_form(2), glow=True,
+                     extra=dict(scale=1.45)))
+    V.append(Variant('b8_p3', show=b8_parts | {'halo'}, palette=pal_b8,
+                     poses={'spikes_r': dict(scale=(1.4, 1.6, 1.4)), 'spikes_l': dict(scale=(1.4, 1.6, 1.4))},
+                     paint=deco_b8_form(3), glow=True, extra=dict(scale=1.45)))
 
     def make_final(phase):
         def deco(p):

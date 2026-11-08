@@ -233,97 +233,119 @@ treant       right_forearm    0 bark:arm2          94   76    5 12  5
 treant       right_claws      0 bark:twig         122    9    1  7  1 
 treant       right_claws      1 bark:twig         122    0    1  8  1 
 treant       right_claws      2 bark:twig         122   17    1  6  1 
+treant       thorns_r         0 crystal:thorn      40  120    2  2  2 
+treant       thorns_r         1 crystal:thorn      68  120    2  2  2 
+treant       thorns_r         2 crystal:thorn      76  120    2  2  2 
 treant       left_arm         0 bark:arm           72   76    5 14  6 mirror share=ua
 treant       left_arm         1 leaf:tuft          92  109    7  4  8 mirror share=tuft
 treant       left_forearm     0 bark:arm2          94   76    5 12  5 mirror share=fa
 treant       left_claws       0 bark:twig         122    9    1  7  1 share=tw1
 treant       left_claws       1 bark:twig         122    0    1  8  1 share=tw2
 treant       left_claws       2 bark:twig         122   17    1  6  1 share=tw3
-treant       moss_beard       0 leaf:moss          56  112   10  8  0 
-treant       mushrooms        0 skin:cap           24  114    3  2  3 
-treant       mushrooms        1 skin:cap2          36  114    2  2  2 
-treant       mushrooms        2 skin:cap           24  114    3  2  3 share=cap
+treant       thorns_l         0 crystal:thorn      40  120    2  2  2 share=th1
+treant       thorns_l         1 crystal:thorn      68  120    2  2  2 share=th2
+treant       thorns_l         2 crystal:thorn      76  120    2  2  2 share=th3
+treant       crystal          0 crystal:crystal    56  112    3  7  3 
+treant       crystal_b        0 crystal:crystal2   38  114    2  4  2 
+treant       crystal_c        0 crystal:crystal2   38  114    2  4  2 share=cs
+treant       moss_beard       0 leaf:moss          68  112   10  8  0 
+treant       mushrooms        0 skin:cap           28  120    3  2  3 
+treant       mushrooms        1 skin:cap2          84  120    2  2  2 
+treant       mushrooms        2 skin:cap           28  120    3  2  3 share=cap
 treant       right_root       0 bark:root          94   93    6  9  7 
 treant       right_foot       0 bark:foot          36   76    8 10 10 
-treant       right_foot       1 bark:toe           76  112    3  3  4 
-treant       right_foot       2 bark:toe            0  114    3  3  4 
-treant       right_foot       3 bark:toe           14  114    2  3  3 
+treant       right_foot       1 bark:toe            0  114    3  3  4 
+treant       right_foot       2 bark:toe           14  114    3  3  4 
+treant       right_foot       3 bark:toe           28  114    2  3  3 
 treant       left_root        0 bark:root          94   93    6  9  7 mirror share=root
 treant       left_foot        0 bark:foot          36   76    8 10 10 mirror share=foot
-treant       left_foot        1 bark:toe           76  112    3  3  4 mirror share=toe1
-treant       left_foot        2 bark:toe            0  114    3  3  4 mirror share=toe2
-treant       left_foot        3 bark:toe           14  114    2  3  3 mirror share=toe3
+treant       left_foot        1 bark:toe            0  114    3  3  4 mirror share=toe1
+treant       left_foot        2 bark:toe           14  114    3  3  4 mirror share=toe2
+treant       left_foot        3 bark:toe           28  114    2  3  3 mirror share=toe3
 == colossus 128x128
 colossus     pelvis           0 sandstone:pelvis   70   61   16  6 10 
 colossus     torso            0 sandstone:torso     0    0   22 20 14 
 colossus     head             0 sandstone:head     70   43   10  9  9 
 colossus     nemes            0 cloth:nemes        72   22   14 12  9 
-colossus     nemes            1 cloth:lappet       50   72    3  9  2 
-colossus     nemes            2 cloth:lappet       50   72    3  9  2 mirror share=lap
-colossus     false_beard      0 gold:beard         96   77    2  5  2 
-colossus     visor            0 glowcore:visor    104   81   10  2  1 
+colossus     nemes            1 cloth:lappet       76   77    3  9  2 
+colossus     nemes            2 cloth:lappet       76   77    3  9  2 mirror share=lap
+colossus     false_beard      0 gold:beard        120   77    2  5  2 
+colossus     visor            0 glowcore:visor      0   88   10  2  1 
 colossus     antenna_r        0 metal:antenna     122    0    1  7  1 
 colossus     antenna_l        0 metal:antenna     122    0    1  7  1 mirror share=ant
 colossus     right_arm        0 sandstone:arm      72    0    7 14  8 
 colossus     shoulder_r       0 sandstone:shoulder    0   73    9  5 10 
+colossus     cannon_r         0 mech:cannon        38   72    5  4  8 
+colossus     cannon_r         1 metal:barrel       52   84    2  2  4 
 colossus     right_forearm    0 sandstone:forearm    0   34    8 12  9 
 colossus     right_forearm    1 sandstone:fist      0   55    9  8 10 
 colossus     left_arm         0 sandstone:arm      72    0    7 14  8 mirror share=arm
 colossus     shoulder_l       0 sandstone:shoulder    0   73    9  5 10 mirror share=shoulder
+colossus     cannon_l         0 mech:cannon        38   72    5  4  8 mirror share=cannon
+colossus     cannon_l         1 metal:barrel       52   84    2  2  4 mirror share=barrel
 colossus     left_forearm     0 sandstone:forearm    0   34    8 12  9 mirror share=fore
 colossus     left_forearm     1 sandstone:fist      0   55    9  8 10 mirror share=fist
-colossus     core             0 glowcore:core      82   77    6  6  1 
-colossus     ring_s0          0 mech:ring         104   77    8  2  2 
-colossus     ring_s1          0 mech:ring         104   77    8  2  2 share=rs
-colossus     ring_s2          0 mech:ring         104   77    8  2  2 share=rs
-colossus     ring_s3          0 mech:ring         104   77    8  2  2 share=rs
-colossus     ring_s4          0 mech:ring         104   77    8  2  2 share=rs
-colossus     ring_s5          0 mech:ring         104   77    8  2  2 share=rs
-colossus     ring_s6          0 mech:ring         104   77    8  2  2 share=rs
-colossus     ring_s7          0 mech:ring         104   77    8  2  2 share=rs
-colossus     back_vents       0 metal:vent         38   72    4 10  2 
-colossus     back_vents       1 metal:vent         38   72    4 10  2 mirror share=vent
+colossus     core             0 glowcore:core      38   84    6  6  1 
+colossus     crystal          0 crystal:crystal   108   77    3  7  3 
+colossus     crystal          1 crystal:crystal2  120   84    2  4  2 
+colossus     crystal          2 crystal:crystal2  120   84    2  4  2 share=cc
+colossus     ring_s0          0 mech:ring          86   87    8  2  2 
+colossus     ring_s1          0 mech:ring          86   87    8  2  2 share=rs
+colossus     ring_s2          0 mech:ring          86   87    8  2  2 share=rs
+colossus     ring_s3          0 mech:ring          86   87    8  2  2 share=rs
+colossus     ring_s4          0 mech:ring          86   87    8  2  2 share=rs
+colossus     ring_s5          0 mech:ring          86   87    8  2  2 share=rs
+colossus     ring_s6          0 mech:ring          86   87    8  2  2 share=rs
+colossus     ring_s7          0 mech:ring          86   87    8  2  2 share=rs
+colossus     back_vents       0 metal:vent         64   77    4 10  2 
+colossus     back_vents       1 metal:vent         64   77    4 10  2 mirror share=vent
 colossus     right_leg        0 sandstone:thigh    38   54    8 10  8 
 colossus     right_shin       0 sandstone:shin     34   34    9 11  9 
 colossus     left_leg         0 sandstone:thigh    38   54    8 10  8 mirror share=thigh
 colossus     left_shin        0 sandstone:shin     34   34    9 11  9 mirror share=shin
-colossus     loincloth        0 cloth:loin         60   77   10  9  1 
+colossus     loincloth        0 cloth:loin         86   77   10  9  1 
 == queen 128x128
-queen        hips             0 cloth:waist         0   70   10  5  6 
+queen        hips             0 cloth:waist        68   71   10  5  6 
 queen        torso            0 cloth:bodice       50   21   12 14  7 
-queen        head             0 skin:face          40   42    8  8  8 
-queen        crown            0 crystal:crown     124   64    1  3  1 
-queen        crown            1 crystal:crown     120   64    1  5  1 
+queen        head             0 skin:face          72   42    8  8  8 
+queen        crown            0 crystal:crown     124   22    1  3  1 
+queen        crown            1 crystal:crown     124   16    1  5  1 
 queen        crown            2 crystal:crown_c   124    0    1  8  1 
-queen        crown            3 crystal:crown     120   64    1  5  1 share=c2
-queen        crown            4 crystal:crown     124   64    1  3  1 share=c1
+queen        crown            3 crystal:crown     124   16    1  5  1 share=c2
+queen        crown            4 crystal:crown     124   22    1  3  1 share=c1
 queen        hair             0 hair:hair          88   21    9 16  5 
-queen        hood             0 cloth:hood         72   42    8  8  8 
-queen        hood             1 cloth:hood_tip     58   70    4  4  4 
-queen        right_arm        0 cloth:sleeve      104   57    4 10  4 
-queen        pauldron_r       0 metal:pauldron     80   58    6  4  6 
-queen        right_forearm    0 skin:arm           40   58    4  9  4 
-queen        sleeve_r         0 cloth:cuff         56   58    6  6  6 
+queen        hood             0 cloth:hood          0   44    8  8  8 
+queen        hood             1 cloth:hood_tip     38   72    4  4  4 
+queen        ice_horns        0 crystal:ice_horn  124    9    1  6  1 
+queen        ice_horns        1 crystal:ice_horn  124    9    1  6  1 mirror share=ih
+queen        ice_horns        2 crystal:ice_horn2  124   26    1  3  1 
+queen        ice_horns        3 crystal:ice_horn2  124   26    1  3  1 mirror share=ih2
+queen        right_arm        0 cloth:sleeve       52   58    4 10  4 
+queen        pauldron_r       0 metal:pauldron    100   71    6  4  6 
+queen        right_forearm    0 skin:arm           68   58    4  9  4 
+queen        sleeve_r         0 cloth:cuff          0   60    6  6  6 
 queen        scepter          0 crystal:staff       0    0    1 26  1 
-queen        scepter          1 crystal:gem        80   68    3  6  3 
+queen        scepter          1 crystal:gem         0   72    3  6  3 
 queen        axe              0 wood:haft           4    0    1  1 22 
-queen        axe              1 metal:axe           4   23    2 11  6 
-queen        axe              2 metal:axe_tip      92   68    1  2  1 
-queen        left_arm         0 cloth:sleeve      104   57    4 10  4 mirror share=ua
-queen        pauldron_l       0 metal:pauldron     80   58    6  4  6 mirror share=paul
-queen        left_forearm     0 skin:arm           40   58    4  9  4 mirror share=fa
-queen        sleeve_l         0 cloth:cuff         56   58    6  6  6 mirror share=cuff
-queen        shard_ring       0 crystal:shard     120   57    2  5  2 
-queen        shard_ring       1 crystal:shard     120   57    2  5  2 share=sh
-queen        shard_ring       2 crystal:shard     120   57    2  5  2 share=sh
-queen        collar           0 crystal:collar     32   71   12  7  1 
-queen        right_leg        0 cloth:pants         0   56    5  9  5 
+queen        axe              1 metal:axe          32   23    2 11  6 
+queen        axe              2 metal:axe_tip     124   30    1  2  1 
+queen        left_arm         0 cloth:sleeve       52   58    4 10  4 mirror share=ua
+queen        pauldron_l       0 metal:pauldron    100   71    6  4  6 mirror share=paul
+queen        left_forearm     0 skin:arm           68   58    4  9  4 mirror share=fa
+queen        sleeve_l         0 cloth:cuff          0   60    6  6  6 mirror share=cuff
+queen        shard_ring       0 crystal:shard      54   72    2  5  2 
+queen        shard_ring       1 crystal:shard      54   72    2  5  2 share=sh
+queen        shard_ring       2 crystal:shard      54   72    2  5  2 share=sh
+queen        wing_r           0 crystal:wing        4   23   13 20  1 
+queen        wing_l           0 crystal:wing        4   23   13 20  1 mirror share=wg
+queen        collar           0 crystal:collar     12   72   12  7  1 
+queen        right_leg        0 cloth:pants       104   57    5  9  5 
 queen        right_shin       0 leather:boots     104   42    5 10  5 
-queen        left_leg         0 cloth:pants         0   56    5  9  5 mirror share=thigh
+queen        left_leg         0 cloth:pants       104   57    5  9  5 mirror share=thigh
 queen        left_shin        0 leather:boots     104   42    5 10  5 mirror share=shin
-queen        gown             0 cloth:gown          0   40   12  8  8 
+queen        gown             0 cloth:gown         32   42   12  8  8 
 queen        gown_lower       0 cloth:gown2        50    0   16  9 12 
-queen        apron            0 leather:apron      20   56    9 13  1 
+queen        apron            0 leather:apron      32   58    9 13  1 
 == dragon 256x128
 dragon       body             0 scale:body          0    0   16 13 26 
 dragon       body             1 bone:spine        190   55    2  4  3 

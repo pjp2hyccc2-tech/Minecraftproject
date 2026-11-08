@@ -11,6 +11,9 @@ public final class EntityTextures {
     private static final Map<String, ResourceLocation> CACHE = new ConcurrentHashMap<>();
     public static final ResourceLocation BOSS_SHIELD =
             new ResourceLocation(ModInfo.MOD_ID, "textures/entity/fx/boss_shield.png");
+    /** Flowing wisps of the aura of later boss forms (scrolled by the energy swirl render type, tiles). */
+    public static final ResourceLocation BOSS_AURA =
+            new ResourceLocation(ModInfo.MOD_ID, "textures/entity/fx/boss_aura.png");
 
     private EntityTextures() {
     }

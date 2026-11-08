@@ -9,7 +9,9 @@ import java.util.Objects;
  * <pre>
  *   t                      telegraph shapes are placed (players see them and can move out)
  *   t + telegraphTicks     execution (damage, summon, teleport, ...) with exactly the shapes shown
- *   t + telegraphTicks + castTicks   the boss is free again; the phase's global cooldown starts
+ *   ...                    patterns of several hits ({@link AbilityKind#extraTicks()}) place and hit their later
+ *                          waves, each with its own warning
+ *   t + telegraphTicks + extraTicks + castTicks   the boss is free again; the phase's global cooldown starts
  * </pre>
  * While an ability runs the boss should stand still (the platform pauses its vanilla movement and melee).
  *
@@ -46,6 +48,11 @@ public record BossAbility(String id, AbilityKind kind, int telegraphTicks, int c
 
     /** Ticks from the start of a use until the boss is free again. */
     public int busyTicks() {
-        return telegraphTicks + castTicks;
+        return lastHitTicks() + castTicks;
+    }
+
+    /** Ticks from the start of a use to its last hit (the first hit for single-hit kinds). */
+    public int lastHitTicks() {
+        return telegraphTicks + kind.extraTicks();
     }
 }

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "eternalrealm:boss_unguardable",
+    "eternalrealm:boss_unavoidable",
+    "eternalrealm:boss_hazard"
+  ]
+}

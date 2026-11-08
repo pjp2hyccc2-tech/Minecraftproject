@@ -47,7 +47,15 @@ public class ERBoss extends Monster {
     private static final EntityDataAccessor<Boolean> DATA_SHIELDED = SynchedEntityData.defineId(ERBoss.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> DATA_ENRAGED = SynchedEntityData.defineId(ERBoss.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(ERBoss.class, EntityDataSerializers.INT);
+    /** Length in ticks of the defeat sequence being played (0: none); see {@link #startDefeat(int, int)}. */
+    private static final EntityDataAccessor<Integer> DATA_DEFEAT_LENGTH = SynchedEntityData.defineId(ERBoss.class, EntityDataSerializers.INT);
+    /** Tick of the defeat sequence at which the body starts to dissolve into light. */
+    private static final EntityDataAccessor<Integer> DATA_DISSOLVE_TICK = SynchedEntityData.defineId(ERBoss.class, EntityDataSerializers.INT);
     private static final int MAX_PHASE = 9;
+    /** Highest phase look the art can have per boss ({@code <id>_p1} .. {@code <id>_p3}). */
+    private static final int MAX_LOOK_PHASE = 3;
+    /** Ticks the white flash of a transformation lasts on the client. */
+    public static final int TRANSFORM_FLASH_TICKS = 24;
 
     public final AnimationState idleAnimation = new AnimationState();
     private final AnimationState[] actionStates = new AnimationState[BossAnimation.values().length];
@@ -60,6 +68,12 @@ public class ERBoss extends Monster {
     private LivingEntity pendingHitTarget;
     private int pendingHitTicks;
     private int deathTicks;
+    private String cachedLook;
+    private int cachedLookPhase = -1;
+    /** Client: tick at which the current phase was received (transformation flash). */
+    private int transformedAt = Integer.MIN_VALUE / 2;
+    /** Client: tick at which the defeat sequence started. */
+    private int defeatStartedAt = Integer.MIN_VALUE / 2;
 
     public ERBoss(EntityType<? extends ERBoss> type, Level level, BossKind kind) {
         super(type, level);
@@ -83,20 +97,34 @@ public class ERBoss extends Monster {
     }
 
     /**
-     * Look (texture and parts) the client uses: the boss id, or {@code final_p1}..{@code final_p3} for the phases of
-     * the final boss.
+     * Look (texture and parts) the client uses: in phase {@code n} (from 1) the boss's form look {@code <id>_p<n>} if
+     * the art has one (the highest available up to {@code n}, at most 3), otherwise the boss id. The final boss has
+     * {@code final_p1}..{@code final_p3}.
      */
     public String lookKey() {
         int phase = getPhase();
-        if (this.kind == BossKind.FINAL && phase > 0) {
-            return "final_p" + Math.min(3, phase);
+        if (phase != this.cachedLookPhase || this.cachedLook == null) {
+            this.cachedLookPhase = phase;
+            this.cachedLook = lookFor(this.kind, phase);
         }
-        return bossId();
+        return this.cachedLook;
     }
 
-    /** Model scale of the current look. */
+    /** The look of {@code kind} in {@code phase} (see {@link #lookKey()}). */
+    public static String lookFor(BossKind kind, int phase) {
+        java.util.List<String> looks = RigData.variants(kind.rig().id());
+        for (int form = Math.min(MAX_LOOK_PHASE, phase); form >= 1; form--) {
+            String candidate = kind.id() + "_p" + form;
+            if (looks.contains(candidate)) {
+                return candidate;
+            }
+        }
+        return kind.id();
+    }
+
+    /** Model scale of the current look; every later form is a little bigger. */
     public float modelScale() {
-        return RigData.scale(this.kind.rig().id(), lookKey());
+        return RigData.scale(this.kind.rig().id(), lookKey()) * (1.0F + 0.04F * Math.min(MAX_LOOK_PHASE, getPhase()));
     }
 
     // -------------------------------------------------------------------------------------------- animations
@@ -203,6 +231,67 @@ public class ERBoss extends Monster {
         return this.entityData.get(DATA_PHASE);
     }
 
+    /**
+     * Starts the defeat sequence (server): the boss stops for good, becomes invulnerable, plays and holds its death
+     * animation, and the clients flash and dissolve it ({@link #dissolve(float)}) from {@code dissolveTick} until
+     * {@code lengthTicks}. The fight removes the body at the end.
+     */
+    public void startDefeat(int lengthTicks, int dissolveTick) {
+        setAiFrozen(true);
+        setTelegraphing(false);
+        setShielded(false);
+        setInvulnerable(true);
+        setTarget(null);
+        setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+        this.entityData.set(DATA_DISSOLVE_TICK, Mth.clamp(dissolveTick, 0, lengthTicks));
+        this.entityData.set(DATA_DEFEAT_LENGTH, Math.max(1, lengthTicks));
+        playAnimation(BossAnimation.DEATH);
+    }
+
+    /** Whether the defeat sequence plays. */
+    public boolean isDefeatPlaying() {
+        return this.entityData.get(DATA_DEFEAT_LENGTH) > 0;
+    }
+
+    /** Client: 0..1 through the defeat sequence (0 when none). */
+    public float defeatProgress(float partialTick) {
+        int length = this.entityData.get(DATA_DEFEAT_LENGTH);
+        if (length <= 0) {
+            return 0.0F;
+        }
+        return Mth.clamp((this.tickCount - this.defeatStartedAt + partialTick) / length, 0.0F, 1.0F);
+    }
+
+    /** Client: 0 until the body starts to dissolve, then rising to 1 when it vanishes. */
+    public float dissolve(float partialTick) {
+        int length = this.entityData.get(DATA_DEFEAT_LENGTH);
+        if (length <= 0) {
+            return 0.0F;
+        }
+        int start = this.entityData.get(DATA_DISSOLVE_TICK);
+        float elapsed = this.tickCount - this.defeatStartedAt + partialTick;
+        return Mth.clamp((elapsed - start) / Math.max(1, length - start), 0.0F, 1.0F);
+    }
+
+    /** Client: 1 right after a transformation, fading to 0 over {@link #TRANSFORM_FLASH_TICKS}. */
+    public float transformFlash(float partialTick) {
+        float elapsed = this.tickCount - this.transformedAt + partialTick;
+        return elapsed < 0.0F || elapsed > TRANSFORM_FLASH_TICKS ? 0.0F : 1.0F - elapsed / TRANSFORM_FLASH_TICKS;
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (!level().isClientSide()) {
+            return;
+        }
+        if (DATA_PHASE.equals(key) && getPhase() > 0 && this.tickCount > 1) {
+            this.transformedAt = this.tickCount;
+        } else if (DATA_DEFEAT_LENGTH.equals(key) && this.entityData.get(DATA_DEFEAT_LENGTH) > 0) {
+            this.defeatStartedAt = this.tickCount;
+        }
+    }
+
     /** While frozen the boss neither moves nor attacks on its own (scripted abilities). */
     public void setAiFrozen(boolean frozen) {
         this.aiFrozen = frozen;
@@ -231,6 +320,8 @@ public class ERBoss extends Monster {
         this.entityData.define(DATA_SHIELDED, false);
         this.entityData.define(DATA_ENRAGED, false);
         this.entityData.define(DATA_PHASE, 0);
+        this.entityData.define(DATA_DEFEAT_LENGTH, 0);
+        this.entityData.define(DATA_DISSOLVE_TICK, 0);
     }
 
     @Override
@@ -274,7 +365,7 @@ public class ERBoss extends Monster {
 
     /** Starts the AI's slam at {@code target}; the hit lands at the slam's impact frame. */
     public boolean startSlam(LivingEntity target) {
-        if (level().isClientSide || this.playing != null || this.aiFrozen || isDeadOrDying()) {
+        if (level().isClientSide || this.playing != null || this.aiFrozen || isDeadOrDying() || isDefeatPlaying()) {
             return false;
         }
         playAnimation(BossAnimation.MELEE_SLAM);
@@ -298,7 +389,8 @@ public class ERBoss extends Monster {
             return;
         }
         if (this.playing != null && --this.playingTicksLeft <= 0) {
-            this.playing = null;
+            this.playing = isDefeatPlaying() ? BossAnimation.DEATH : null; // a defeated boss stays down
+            this.playingTicksLeft = isDefeatPlaying() ? Integer.MAX_VALUE / 2 : 0;
         }
         if (this.pendingHitTarget != null && --this.pendingHitTicks <= 0) {
             LivingEntity target = this.pendingHitTarget;
@@ -323,6 +415,30 @@ public class ERBoss extends Monster {
     }
 
     private void clientTick() {
+        if (isDefeatPlaying()) {
+            float progress = defeatProgress(0.0F);
+            float dissolve = dissolve(0.0F);
+            if (getRandom().nextFloat() < 0.35F + 0.6F * progress) {
+                level().addParticle(ParticleTypes.END_ROD, getRandomX(0.9), getRandomY(), getRandomZ(0.9), 0.0,
+                        0.04 + 0.08 * dissolve, 0.0);
+            }
+            if (dissolve > 0.0F && getRandom().nextFloat() < 0.8F) {
+                level().addParticle(this.kind.themeParticle(), getRandomX(0.8), getRandomY(), getRandomZ(0.8), 0.0,
+                        0.06, 0.0);
+            }
+            return;
+        }
+        int phase = getPhase();
+        if (phase > 0 && getRandom().nextFloat() < 0.12F * phase) {
+            double angle = getRandom().nextDouble() * Math.PI * 2.0;
+            double radius = getBbWidth() * 0.6 + 0.4;
+            level().addParticle(this.kind.themeParticle(), getX() + Math.cos(angle) * radius, getY() + 0.1,
+                    getZ() + Math.sin(angle) * radius, 0.0, 0.03 + 0.02 * phase, 0.0);
+        }
+        if (phase >= 2 && getRandom().nextFloat() < 0.15F * (phase - 1)) {
+            level().addParticle(ParticleTypes.ENCHANT, getRandomX(0.7), getY() + getBbHeight() * getRandom().nextFloat(),
+                    getRandomZ(0.7), 0.0, 0.2, 0.0);
+        }
         if (isDeadOrDying()) {
             for (BossAnimation animation : BossAnimation.values()) {
                 if (animation != BossAnimation.DEATH) {
@@ -380,7 +496,9 @@ public class ERBoss extends Monster {
         }
         if (animation.isAction()) {
             this.actionStates[animation.ordinal()].start(this.tickCount);
-            this.clientTicksLeft[animation.ordinal()] = durationTicks(animation) + 1;
+            // the death animation of a defeat holds its last pose until the body is removed
+            this.clientTicksLeft[animation.ordinal()] = animation == BossAnimation.DEATH ? Integer.MAX_VALUE / 2
+                    : durationTicks(animation) + 1;
         }
     }
 

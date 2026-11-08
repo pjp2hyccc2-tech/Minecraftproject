@@ -1,19 +1,26 @@
 package com.eternalrealm.boss.forge;
 
 import com.eternalrealm.boss.AbilityKind;
+import com.eternalrealm.boss.AbilityLook;
 import com.eternalrealm.boss.BossAbility;
 import com.eternalrealm.boss.BossBrain;
 import com.eternalrealm.boss.BossCommand;
 import com.eternalrealm.boss.BossDefinition;
+import com.eternalrealm.boss.BossMarkers;
 import com.eternalrealm.boss.BossPosition;
 import com.eternalrealm.boss.BossRules;
 import com.eternalrealm.boss.BossShape;
+import com.eternalrealm.boss.BossTexts;
+import com.eternalrealm.boss.DefeatSequence;
 import com.eternalrealm.boss.Difficulty;
 import com.eternalrealm.boss.Point;
 import com.eternalrealm.boss.TargetSnapshot;
 import com.eternalrealm.character.CharacterSnapshot;
+import com.eternalrealm.combat.Telegraph;
 import com.eternalrealm.combat.forge.ERParticles;
 import com.eternalrealm.combat.forge.Telegraphs;
+import com.eternalrealm.entity.BossAnimation;
+import com.eternalrealm.entity.ERBoss;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
 import com.eternalrealm.monster.MonsterSpawn;
@@ -40,6 +47,8 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -58,17 +67,56 @@ import java.util.function.Consumer;
 /**
  * One boss fight: the boss module's {@link BossBrain} drives a body in the arena. Health is the fight's own pool (boss
  * health exceeds vanilla's attribute cap): hits on the body are absorbed into it, threat is collected per player
- * (job threat multipliers), telegraphs are drawn on the ground, abilities hit the players inside their shapes through
- * the normal defense pipeline, volleys fly as particle bolts, adds are summoned and a boss bar shows the fight.
+ * (job threat multipliers). Every attack area is shown as a ground marker ({@link Telegraphs}) for exactly as long as
+ * it charges and hits exactly the players inside it when it fires, through the normal defense pipeline with the
+ * dodge/guard rules of its kind ({@link BossDamage}); safe zones are green markers, pushes and pulls move the
+ * players, hazards linger, charging bosses dash, and {@link BossVfx} adds themed particles, props and lightning.
+ *
+ * <p>Later forms start with a transformation (new look, aura, roar, shockwave, camera shake, title, bark). When the
+ * health pool is empty the boss does not just disappear: it freezes, becomes invulnerable and plays its
+ * {@link DefeatSequence} (collapse, flashes, bursts, a shockwave, a pillar of light, dissolving), and only then is the
+ * body removed and the defeat callback runs (rewards, story, music). The killing blow itself is reported at once
+ * through {@code onKilled}, so time limits and records use the real time of the kill.</p>
  */
 public final class BossFight {
     public static final String TAG = "eternalrealm_boss";
     static final String FIGHT = "er_fight";
+    /** Half size of the arena floor when the caller does not know it (tests). */
+    public static final double DEFAULT_ARENA_HALF_SIZE = 14.5;
     private static final double ARENA_RANGE = 48.0;
     private static final SplittableRandom RANDOM = new SplittableRandom();
 
-    /** A charging ability area; {@code markerId} is its ground marker on the clients ({@link Telegraphs}). */
-    private record Telegraph(BossAbility ability, BossShape shape, long until, int markerId) {
+    /** A charging attack area (or safe spot); {@code markerId} is its ground marker on the clients. */
+    private record Marker(BossAbility ability, BossShape shape, long fireTick, int markerId, boolean safe) {
+    }
+
+    /** A lasting zone that hurts everyone inside every {@code interval} ticks until {@code until}. */
+    private static final class HazardZone {
+        final BossAbility ability;
+        final BossShape shape;
+        final long until;
+        final int interval;
+        final double damage;
+        final int markerId;
+        long nextPulse;
+
+        HazardZone(BossAbility ability, BossShape shape, long until, int interval, long nextPulse, double damage,
+                   int markerId) {
+            this.ability = ability;
+            this.shape = shape;
+            this.until = until;
+            this.interval = interval;
+            this.nextPulse = nextPulse;
+            this.damage = damage;
+            this.markerId = markerId;
+        }
+    }
+
+    /** A charge in progress: the body moves from {@code from} to {@code to} over {@link BossRules#DASH_TICKS}. */
+    private record DashState(Vec3 from, Vec3 to, long start) {
+    }
+
+    private record Scheduled(long tick, String owner, Runnable action) {
     }
 
     private static final class Bolt {
@@ -76,13 +124,15 @@ public final class BossFight {
         final Vec3 step;
         double travelled;
         final double damage;
-        final boolean guardable;
+        final AbilityKind kind;
+        final ParticleOptions particle;
 
-        Bolt(Vec3 position, Vec3 step, double damage, boolean guardable) {
+        Bolt(Vec3 position, Vec3 step, double damage, AbilityKind kind, ParticleOptions particle) {
             this.position = position;
             this.step = step;
             this.damage = damage;
-            this.guardable = guardable;
+            this.kind = kind;
+            this.particle = particle;
         }
     }
 
@@ -93,52 +143,89 @@ public final class BossFight {
     private final ServerBossEvent bar;
     private final Set<UUID> participants;
     private final Map<UUID, Double> threat = new HashMap<>();
-    private final List<Telegraph> telegraphs = new ArrayList<>();
+    private final List<Marker> markers = new ArrayList<>();
+    private final List<HazardZone> hazards = new ArrayList<>();
     private final List<Bolt> bolts = new ArrayList<>();
+    private final List<Scheduled> scheduled = new ArrayList<>();
     private final Set<UUID> shieldAdds = new HashSet<>();
+    private final Set<UUID> adds = new HashSet<>();
+    private final Map<String, AbilityLook> looks = new HashMap<>();
+    private final BossProps props;
+    private final BossVfx vfx;
+    private final Consumer<BossFight> onKilled;
     private final Consumer<BossFight> onDefeated;
     private final double maxHealth;
+    private final double arenaRadius;
+    private final double baseSpeed;
     private double health;
     private boolean shielded;
     private boolean executing;
     private boolean defeated;
     private boolean defeatPending;
+    private boolean dying;
+    private boolean ended;
+    private long killTick = -1;
+    private DefeatSequence sequence;
+    private DashState dash;
     private long now;
+    private java.util.function.Supplier<List<ServerPlayer>> targetOverride;
 
-    private BossFight(ServerLevel level, Mob body, BossBrain brain, Set<UUID> participants,
-                      Consumer<BossFight> onDefeated) {
+    private BossFight(ServerLevel level, Mob body, BossBrain brain, Set<UUID> participants, double arenaHalfSize,
+                      Consumer<BossFight> onKilled, Consumer<BossFight> onDefeated) {
         this.level = level;
         this.body = body;
         this.brain = brain;
         this.participants = Set.copyOf(participants);
+        this.onKilled = onKilled;
         this.onDefeated = onDefeated;
         this.maxHealth = brain.maxHealth();
         this.health = maxHealth;
+        this.arenaRadius = arenaHalfSize * 1.45;
+        AttributeInstance speed = body.getAttribute(Attributes.MOVEMENT_SPEED);
+        this.baseSpeed = speed == null ? 0.0 : speed.getBaseValue() / Math.max(0.1, brain.movementSpeedMultiplier());
+        this.props = new BossProps(level);
+        this.vfx = new BossVfx(level, body, brain.definition().id(), props, this::later);
         this.bar = new ServerBossEvent(body.getDisplayName(), BossEvent.BossBarColor.PURPLE,
                 BossEvent.BossBarOverlay.NOTCHED_10);
         this.bar.setDarkenScreen(true);
     }
 
-    /** Spawns the boss at {@code spawn} and starts the fight. Empty if no body could be built. */
+    /** Spawns the boss at {@code spawn} in an arena of unknown size and starts the fight. */
     public static Optional<BossFight> start(ServerLevel level, BossDefinition definition, Difficulty difficulty,
                                             BlockPos spawn, Set<UUID> participants, Consumer<BossFight> onDefeated) {
+        return start(level, definition, difficulty, spawn, Vec3.atBottomCenterOf(spawn), DEFAULT_ARENA_HALF_SIZE,
+                participants, fight -> {
+                }, onDefeated);
+    }
+
+    /**
+     * Spawns the boss at {@code spawn} and starts the fight. Empty if no body could be built.
+     *
+     * @param arenaCenter   centre of the arena floor (feet height)
+     * @param arenaHalfSize half the width of the (square) arena floor
+     * @param onKilled      the health pool reached 0 (the killing blow); the collapse begins
+     * @param onDefeated    the collapse is over and the body gone: rewards, story, music
+     */
+    public static Optional<BossFight> start(ServerLevel level, BossDefinition definition, Difficulty difficulty,
+                                            BlockPos spawn, Vec3 arenaCenter, double arenaHalfSize,
+                                            Set<UUID> participants, Consumer<BossFight> onKilled,
+                                            Consumer<BossFight> onDefeated) {
         BossBrain brain = new BossBrain(definition, Math.max(1, participants.size()), difficulty, RANDOM);
+        double half = Mth.clamp(arenaHalfSize, 4.0, 64.0);
+        brain.setArena(new Point(arenaCenter.x, arenaCenter.y, arenaCenter.z), half);
         Optional<Mob> body = BossBodies.create(level, definition, brain);
         if (body.isEmpty()) {
             return Optional.empty();
         }
-        BossFight fight = new BossFight(level, body.get(), brain, participants, onDefeated);
+        BossFight fight = new BossFight(level, body.get(), brain, participants, half, onKilled, onDefeated);
         body.get().getPersistentData().putUUID(FIGHT, fight.id);
         body.get().moveTo(spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 180.0F, 0.0F);
         level.addFreshEntity(body.get());
         for (UUID member : participants) {
             ServerPlayer player = level.getServer().getPlayerList().getPlayer(member);
             if (player != null) {
-                player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 50, 20));
-                player.connection.send(new ClientboundSetSubtitleTextPacket(Component.translatable(
-                        difficulty.translationKey()).withStyle(ChatFormatting.GRAY)));
-                player.connection.send(new ClientboundSetTitleTextPacket(body.get().getDisplayName().copy()
-                        .withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD)));
+                title(player, body.get().getDisplayName().copy().withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD),
+                        Component.translatable(difficulty.translationKey()).withStyle(ChatFormatting.GRAY), 50);
             }
         }
         level.playSound(null, spawn, SoundEvents.WITHER_SPAWN, SoundSource.HOSTILE, 0.8F, 0.9F);
@@ -165,11 +252,22 @@ public final class BossFight {
         return participants;
     }
 
+    /** The boss lost: its health pool reached 0 (it may still be collapsing, see {@link #isDying()}). */
     public boolean isDefeated() {
-        return defeated || defeatPending;
+        return defeated || defeatPending || dying;
     }
 
-    /** The body is being killed by the fight itself (its own damage must go through). */
+    /** The defeat sequence plays: the body is still there, frozen and invulnerable. */
+    public boolean isDying() {
+        return dying || defeatPending;
+    }
+
+    /** Tick of the killing blow (-1 before). */
+    public long killTick() {
+        return killTick;
+    }
+
+    /** The body is being removed by the fight itself (its own damage must go through). */
     public boolean isKilling() {
         return defeated;
     }
@@ -178,19 +276,19 @@ public final class BossFight {
         return defeated || !body.isAlive() || body.isRemoved();
     }
 
-    /** Whether hits on the body are ignored now (phase transition, shield). */
+    /** Whether hits on the body are ignored now (phase transition, shield, collapse). */
     public boolean isInvulnerable() {
-        return shielded || brain.isInvulnerable(now);
+        return shielded || dying || brain.isInvulnerable(now);
     }
 
     /** Damage of a vanilla melee hit of the body (abilities bring their own damage). */
     public OptionalDouble meleeDamage(LivingEntity victim) {
-        return executing ? OptionalDouble.empty() : OptionalDouble.of(brain.meleeDamage(now));
+        return executing || dying ? OptionalDouble.empty() : OptionalDouble.of(brain.meleeDamage(now));
     }
 
     /** A hit on the body: taken from the fight's health pool, the attacker gains threat. */
     public void absorb(Entity attacker, double amount) {
-        if (defeated || !(amount > 0.0)) {
+        if (defeated || dying || defeatPending || !(amount > 0.0)) {
             return;
         }
         health = Math.max(0.0, health - amount);
@@ -199,7 +297,8 @@ public final class BossFight {
         }
         bar.setProgress((float) (health / maxHealth));
         if (health <= 0.0) {
-            defeatPending = true; // finished on the next tick, outside the damage event
+            defeatPending = true; // the collapse starts on the next tick, outside the damage event
+            killTick = now;
         }
     }
 
@@ -211,6 +310,7 @@ public final class BossFight {
 
     /** One of the summoned adds died (or vanished). */
     public void onAddGone(UUID entityId) {
+        adds.remove(entityId);
         if (shieldAdds.remove(entityId)) {
             brain.onAddKilled();
         }
@@ -220,11 +320,17 @@ public final class BossFight {
 
     public void tick(long tick) {
         now = tick;
-        if (defeated) {
+        runScheduled();
+        props.tick(now);
+        if (defeated || ended) {
+            return;
+        }
+        if (dying) {
+            tickDefeat();
             return;
         }
         if (defeatPending) {
-            defeat();
+            beginDefeat();
             return;
         }
         if (!body.isAlive() || body.isRemoved()) {
@@ -242,9 +348,12 @@ public final class BossFight {
         for (BossCommand command : brain.tick(now, health / maxHealth, self, snapshots)) {
             handle(command, targets);
         }
-        com.eternalrealm.entity.ERBoss boss = animated();
-        if (brain.currentAbility().isPresent()) {
+        ERBoss boss = animated();
+        if (brain.currentAbility().isPresent() || brain.isTransforming(now) || dash != null) {
             body.getNavigation().stop();
+            if (boss != null) {
+                boss.setAiFrozen(true);
+            }
         } else {
             if (boss != null) {
                 boss.setAiFrozen(false);
@@ -253,11 +362,29 @@ public final class BossFight {
                 topThreat(targets).ifPresent(body::setTarget);
             }
         }
-        drawTelegraphs();
+        stepDash();
+        expireMarkers();
+        tickHazards(targets);
         moveBolts(targets);
     }
 
+    /**
+     * GameTests: fight these players instead of the participants (fake players are not in the player list and cannot
+     * be hurt, but everything else runs for real).
+     */
+    public void overrideTargets(java.util.function.Supplier<List<ServerPlayer>> targets) {
+        this.targetOverride = targets;
+    }
+
+    /** Props (block displays) of the fight alive right now. */
+    public int propCount() {
+        return props.count();
+    }
+
     private List<ServerPlayer> targets() {
+        if (targetOverride != null) {
+            return new ArrayList<>(targetOverride.get());
+        }
         List<ServerPlayer> targets = new ArrayList<>();
         for (UUID member : participants) {
             ServerPlayer player = level.getServer().getPlayerList().getPlayer(member);
@@ -267,6 +394,18 @@ public final class BossFight {
             }
         }
         return targets;
+    }
+
+    /** Participants in this level, wherever they stand (screen effects, titles). */
+    private List<ServerPlayer> audience() {
+        List<ServerPlayer> players = new ArrayList<>();
+        for (UUID member : participants) {
+            ServerPlayer player = level.getServer().getPlayerList().getPlayer(member);
+            if (player != null && player.level() == level) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     private Optional<ServerPlayer> topThreat(List<ServerPlayer> targets) {
@@ -294,95 +433,129 @@ public final class BossFight {
         }
     }
 
-    // ------------------------------------------------------------------ animated body
-
-    private com.eternalrealm.entity.ERBoss animated() {
-        return body instanceof com.eternalrealm.entity.ERBoss boss ? boss : null;
+    private void later(int delay, String owner, Runnable action) {
+        scheduled.add(new Scheduled(now + Math.max(0, delay), owner, action));
     }
 
-    private static com.eternalrealm.entity.BossAnimation animationFor(AbilityKind kind) {
-        if (kind instanceof AbilityKind.CircleAroundBoss || kind instanceof AbilityKind.Ring) {
-            return com.eternalrealm.entity.BossAnimation.MELEE_SLAM;
+    private void runScheduled() {
+        if (scheduled.isEmpty()) {
+            return;
         }
-        if (kind instanceof AbilityKind.Cone) {
-            return com.eternalrealm.entity.BossAnimation.MELEE_SWEEP;
+        List<Scheduled> due = new ArrayList<>();
+        Iterator<Scheduled> iterator = scheduled.iterator();
+        while (iterator.hasNext()) {
+            Scheduled entry = iterator.next();
+            if (entry.tick() <= now) {
+                due.add(entry);
+                iterator.remove();
+            }
+        }
+        for (Scheduled entry : due) {
+            entry.action().run();
+        }
+    }
+
+    // ------------------------------------------------------------------ animated body
+
+    private ERBoss animated() {
+        return body instanceof ERBoss boss ? boss : null;
+    }
+
+    private static BossAnimation animationFor(AbilityKind kind) {
+        if (kind instanceof AbilityKind.Sequence sequence) {
+            return animationFor(sequence.parts().get(0).kind());
+        }
+        if (kind instanceof AbilityKind.CircleAroundBoss || kind instanceof AbilityKind.Ring
+                || kind instanceof AbilityKind.Knockback || kind instanceof AbilityKind.Exaflare) {
+            return BossAnimation.MELEE_SLAM;
+        }
+        if (kind instanceof AbilityKind.Cone || kind instanceof AbilityKind.Crosses) {
+            return BossAnimation.MELEE_SWEEP;
         }
         if (kind instanceof AbilityKind.Line) {
-            return com.eternalrealm.entity.BossAnimation.CHARGE;
+            return BossAnimation.CHARGE;
         }
-        if (kind instanceof AbilityKind.ArenaWide || kind instanceof AbilityKind.Buff) {
-            return com.eternalrealm.entity.BossAnimation.ROAR;
+        if (kind instanceof AbilityKind.ArenaWide || kind instanceof AbilityKind.Buff
+                || kind instanceof AbilityKind.SafeZones || kind instanceof AbilityKind.Charge) {
+            return BossAnimation.ROAR;
         }
         if (kind instanceof AbilityKind.Summon) {
-            return com.eternalrealm.entity.BossAnimation.SUMMON;
+            return BossAnimation.SUMMON;
         }
-        return com.eternalrealm.entity.BossAnimation.CAST;
+        return BossAnimation.CAST;
+    }
+
+    private AbilityLook look(BossAbility ability) {
+        return looks.computeIfAbsent(ability.id(), key -> AbilityLook.of(ability));
     }
 
     // ------------------------------------------------------------------ commands
 
     private void handle(BossCommand command, List<ServerPlayer> targets) {
-        com.eternalrealm.entity.ERBoss boss = animated();
+        ERBoss boss = animated();
         if (command instanceof BossCommand.PhaseChanged phase) {
-            bar.setColor(phase.phaseIndex() >= 2 ? BossEvent.BossBarColor.RED : BossEvent.BossBarColor.PINK);
-            if (boss != null) {
-                boss.setPhase(phase.phaseIndex());
-                boss.playAnimation(com.eternalrealm.entity.BossAnimation.PHASE_CHANGE);
-            }
-            tell(targets, Component.translatable("message.eternalrealm.boss.phase_changed", body.getDisplayName(),
-                    phase.phaseIndex() + 1).withStyle(ChatFormatting.LIGHT_PURPLE), true);
-            sound(com.eternalrealm.sound.ERSounds.BOSS_PHASE_CHANGE.get(), 1.0F, 1.0F);
-            burst(ERParticles.RUNE.get(), body.position().add(0, 1.5, 0), 40, 2.0);
-            int phaseNumber = phase.phaseIndex() + 1;
-            ServerContext.current().ifPresent(context -> {
-                if ("final".equals(bossId())) {
-                    context.game().story().trigger(new com.eternalrealm.story.StoryTrigger.FinalPhase(
-                            Math.max(1, Math.min(4, phaseNumber))), null, targets);
-                } else if (phaseNumber >= 2) {
-                    context.game().story().catalog().bossPhaseBark(bossId(), phaseNumber).ifPresent(line ->
-                            context.game().story().bark(targets, line));
-                }
-            });
+            phaseChanged(phase, targets);
         } else if (command instanceof BossCommand.AbilityStarted started) {
-            tell(targets, Component.translatable("message.eternalrealm.boss.ability", body.getDisplayName(),
-                    Component.translatable(started.ability().translationKey())).withStyle(ChatFormatting.RED), true);
+            BossAbility ability = started.ability();
+            Component hint = ability.kind() instanceof AbilityKind.SafeZones
+                    ? Component.translatable(BossTexts.SAFE_ZONES).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD)
+                    : Component.translatable("message.eternalrealm.boss.ability", body.getDisplayName(),
+                    Component.translatable(ability.translationKey())).withStyle(ChatFormatting.RED);
+            tell(targets, hint, true);
             sound(com.eternalrealm.sound.ERSounds.BOSS_TELEGRAPH.get(), 1.0F, 1.0F);
             if (boss != null) {
                 boss.setAiFrozen(true);
                 topThreat(targets).ifPresent(target -> boss.faceTowards(target.getX(), target.getZ()));
-                boss.playAnimation(animationFor(started.ability().kind()));
+                if (!brain.isTransforming(now)) {
+                    boss.playAnimation(animationFor(ability.kind()));
+                }
             }
         } else if (command instanceof BossCommand.Telegraph telegraph) {
-            int marker = Telegraphs.show(level, BossTelegraphs.marker(telegraph.ability(), telegraph.shape(),
-                    telegraph.durationTicks(), body.getY()));
-            telegraphs.add(new Telegraph(telegraph.ability(), telegraph.shape(), now + telegraph.durationTicks(), marker));
-            if (boss != null) {
-                boss.setTelegraphing(true);
-            }
+            telegraph(telegraph, targets);
+        } else if (command instanceof BossCommand.SafeSpot spot) {
+            int marker = Telegraphs.show(level, BossMarkers.safe(spot.shape(), spot.durationTicks()));
+            markers.add(new Marker(spot.ability(), spot.shape(), now + spot.durationTicks(), marker, true));
+            vfx.safeSpot(spot.ability().id(), spot.shape(), spot.durationTicks());
         } else if (command instanceof BossCommand.Cancelled cancelled) {
-            telegraphs.removeIf(t -> {
-                if (!t.ability().equals(cancelled.ability())) {
+            String owner = cancelled.ability().id();
+            markers.removeIf(marker -> {
+                if (!marker.ability().equals(cancelled.ability())) {
                     return false;
                 }
-                Telegraphs.cancel(level, t.markerId());
+                Telegraphs.cancel(level, marker.markerId());
                 return true;
             });
+            props.remove(owner);
+            scheduled.removeIf(entry -> entry.owner().equals(owner));
             if (boss != null) {
                 boss.setTelegraphing(false);
             }
         } else if (command instanceof BossCommand.Execute execute) {
-            if (boss != null) {
-                boss.setTelegraphing(false);
-            }
             execute(execute, targets);
-        } else if (command instanceof BossCommand.Volley volley) {
-            Vec3 origin = new Vec3(volley.origin().x(), volley.origin().y() + body.getEyeHeight(), volley.origin().z());
-            for (double yaw : volley.yawDegrees()) {
-                double radians = Math.toRadians(yaw);
-                Vec3 step = new Vec3(-Math.sin(radians), 0.0, Math.cos(radians)).scale(volley.speed());
-                bolts.add(new Bolt(origin, step, volley.damage(), volley.ability().kind().guardable()));
+            if (boss != null) {
+                boss.setTelegraphing(markers.stream().anyMatch(marker -> !marker.safe()));
             }
-            sound(SoundEvents.BLAZE_SHOOT, 1.0F, 0.8F);
+        } else if (command instanceof BossCommand.Volley volley) {
+            volley(volley);
+        } else if (command instanceof BossCommand.Displace displace) {
+            displace(displace, targets);
+        } else if (command instanceof BossCommand.Hazard hazard) {
+            AbilityLook look = look(hazard.ability());
+            int marker = Telegraphs.show(level, BossMarkers.marker(look.style(), hazard.shape(), hazard.durationTicks(),
+                    arenaRadius));
+            hazards.add(new HazardZone(hazard.ability(), hazard.shape(), now + hazard.durationTicks(),
+                    hazard.intervalTicks(), now + hazard.intervalTicks(), hazard.damage(), marker));
+        } else if (command instanceof BossCommand.Dash charge) {
+            if (dash != null) {
+                body.setPos(dash.to().x, dash.to().y, dash.to().z);
+            }
+            dash = new DashState(body.position(), new Vec3(charge.to().x(), body.getY(), charge.to().z()), now);
+            if (boss != null) {
+                boss.faceTowards(charge.to().x(), charge.to().z());
+                boss.playAnimation(BossAnimation.CHARGE);
+            }
+            sound(SoundEvents.RAVAGER_ROAR, 1.2F, 1.3F);
+            sound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 1.5F, 0.6F);
         } else if (command instanceof BossCommand.Summon summon) {
             summon(summon);
         } else if (command instanceof BossCommand.Teleport teleport) {
@@ -397,18 +570,22 @@ public final class BossFight {
             } else {
                 body.setGlowingTag(shield.on());
             }
-            tell(targets, Component.translatable(shield.on() ? "message.eternalrealm.boss.shield_up"
-                    : "message.eternalrealm.boss.shield_down", body.getDisplayName()).withStyle(ChatFormatting.AQUA), true);
+            if (!brain.isTransforming(now) || !shield.on()) {
+                tell(targets, Component.translatable(shield.on() ? BossCommand.ShieldChanged.SHIELD_UP_KEY
+                        : BossCommand.ShieldChanged.SHIELD_DOWN_KEY, body.getDisplayName())
+                        .withStyle(ChatFormatting.AQUA), true);
+            }
             sound(shield.on() ? SoundEvents.BEACON_ACTIVATE : SoundEvents.BEACON_DEACTIVATE, 1.0F, 1.0F);
         } else if (command instanceof BossCommand.Enraged) {
             bar.setColor(BossEvent.BossBarColor.RED);
             if (boss != null) {
                 boss.setEnraged(true);
             }
-            tell(targets, Component.translatable("message.eternalrealm.boss.enraged", body.getDisplayName())
+            tell(targets, Component.translatable(BossCommand.Enraged.MESSAGE_KEY, body.getDisplayName())
                     .withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD), false);
             sound(com.eternalrealm.sound.ERSounds.BOSS_ROAR.get(), 1.2F, 1.0F);
             burst(ParticleTypes.ANGRY_VILLAGER, body.position().add(0, 2, 0), 20, 1.5);
+            BossFx.send(targets, 0.8F, 16, 0xFF2010, 0.25F, 12);
         } else if (command instanceof BossCommand.Heal heal) {
             health = Math.min(maxHealth, health + maxHealth * heal.fraction());
             bar.setProgress((float) (health / maxHealth));
@@ -416,45 +593,252 @@ public final class BossFight {
             sound(SoundEvents.ZOMBIE_VILLAGER_CURE, 0.8F, 1.2F);
         } else if (command instanceof BossCommand.Buffed) {
             burst(ERParticles.EMBER.get(), body.position().add(0, 1.5, 0), 30, 1.2);
+            burst(ParticleTypes.ANGRY_VILLAGER, body.position().add(0, 2.0, 0), 8, 1.0);
             sound(SoundEvents.BLAZE_AMBIENT, 1.0F, 0.6F);
+        }
+    }
+
+    private void phaseChanged(BossCommand.PhaseChanged phase, List<ServerPlayer> targets) {
+        int index = phase.phaseIndex();
+        bar.setColor(index == 0 ? BossEvent.BossBarColor.PURPLE
+                : index == 1 ? BossEvent.BossBarColor.PINK : BossEvent.BossBarColor.RED);
+        AttributeInstance speed = body.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null && baseSpeed > 0.0) {
+            speed.setBaseValue(baseSpeed * phase.phase().movementSpeedMultiplier());
+        }
+        ERBoss boss = animated();
+        if (boss != null) {
+            boss.setPhase(index);
+        }
+        if (index == 0) {
+            return;
+        }
+        if (boss != null) {
+            boss.setAiFrozen(true);
+            boss.playAnimation(BossAnimation.PHASE_CHANGE);
+        }
+        List<ServerPlayer> audience = audience();
+        for (ServerPlayer player : audience) {
+            title(player, Component.translatable(BossTexts.TRANSFORM_TITLE, body.getDisplayName())
+                            .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
+                    Component.translatable(BossTexts.TRANSFORM_SUBTITLE, index + 1).withStyle(ChatFormatting.GOLD), 30);
+        }
+        tell(targets, Component.translatable(BossCommand.PhaseChanged.MESSAGE_KEY, body.getDisplayName(), index + 1)
+                .withStyle(ChatFormatting.LIGHT_PURPLE), true);
+        vfx.transformation(index, audience);
+        int phaseNumber = index + 1;
+        ServerContext.current().ifPresent(context -> {
+            if ("final".equals(bossId())) {
+                context.game().story().trigger(new com.eternalrealm.story.StoryTrigger.FinalPhase(
+                        Math.max(1, Math.min(4, phaseNumber))), null, targets);
+            } else {
+                context.game().story().catalog().bossPhaseBark(bossId(), phaseNumber).ifPresent(line ->
+                        context.game().story().bark(targets, line));
+            }
+        });
+    }
+
+    private void telegraph(BossCommand.Telegraph telegraph, List<ServerPlayer> targets) {
+        BossAbility ability = telegraph.ability();
+        AbilityLook look = look(ability);
+        boolean damaging = ability.kind().damaging();
+        Telegraph.Style style = damaging ? look.styleFor(telegraph.hitKind()) : Telegraph.Style.MAGIC;
+        int marker = Telegraphs.show(level, BossMarkers.marker(style, telegraph.shape(), telegraph.durationTicks(),
+                arenaRadius));
+        long fireTick = now + telegraph.durationTicks();
+        markers.add(new Marker(ability, telegraph.shape(), fireTick, marker, false));
+        if (!damaging) {
+            return;
+        }
+        vfx.telegraphed(ability.id(), look, telegraph.hitKind(), telegraph.shape(), now, fireTick);
+        if (telegraph.hitKind() instanceof AbilityKind.Soak) {
+            Point center = telegraph.shape().anchor();
+            targets.stream().min(java.util.Comparator.comparingDouble(player -> player.distanceToSqr(center.x(),
+                    center.y(), center.z()))).ifPresent(marked -> tell(targets, Component.translatable(BossTexts.STACK,
+                    marked.getDisplayName()).withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), true));
+        }
+        ERBoss boss = animated();
+        if (boss != null) {
+            boss.setTelegraphing(true);
         }
     }
 
     private void execute(BossCommand.Execute execute, List<ServerPlayer> targets) {
         BossShape shape = execute.shape();
-        telegraphs.removeIf(t -> {
-            if (!t.ability().equals(execute.ability()) || !t.shape().equals(shape)) {
-                return false;
+        fireMarker(execute.ability(), shape);
+        if (shape instanceof BossShape.Outside outside) {
+            for (BossShape safe : outside.safe()) {
+                fireMarker(execute.ability(), safe);
             }
-            Telegraphs.fire(level, t.markerId());
-            return true;
-        });
+        }
         List<ServerPlayer> hit = new ArrayList<>();
         for (ServerPlayer player : targets) {
-            if (Math.abs(player.getY() - body.getY()) <= BossRules.VERTICAL_TOLERANCE + 2.0
+            if (Math.abs(player.getY() - shape.anchor().y()) <= BossRules.VERTICAL_TOLERANCE + 2.0
                     && shape.contains(player.getX(), player.getY(), player.getZ())) {
                 hit.add(player);
             }
         }
         double damage = execute.damage();
-        AbilityKind kind = execute.ability().kind();
-        if (kind.splitsDamage() && !hit.isEmpty()) {
+        if (execute.splitsDamage() && !hit.isEmpty()) {
             damage /= hit.size();
         }
-        executing = true;
-        try {
-            for (ServerPlayer player : hit) {
-                player.hurt(level.damageSources().mobAttack(body), (float) damage);
+        if (damage > 0.0) {
+            executing = true;
+            try {
+                for (ServerPlayer player : hit) {
+                    BossDamage.hit(level, body, player, execute.hitKind(), damage);
+                }
+            } finally {
+                executing = false;
             }
-        } finally {
-            executing = false;
         }
-        drawShape(shape, ParticleTypes.EXPLOSION, 6);
-        drawShape(shape, ERParticles.EMBER.get(), 2);
-        sound(SoundEvents.GENERIC_EXPLODE, 0.9F, 1.1F);
+        vfx.hit(execute.abilityId(), look(execute.ability()), execute.hitKind(), shape, targets);
+    }
+
+    /** The marker of {@code shape} hits now: it flashes on the clients and goes. */
+    private void fireMarker(BossAbility ability, BossShape shape) {
+        Marker due = null;
+        for (Marker marker : markers) {
+            if (marker.ability().equals(ability) && marker.shape().equals(shape)
+                    && (due == null || marker.fireTick() < due.fireTick())) {
+                due = marker;
+            }
+        }
+        if (due != null) {
+            markers.remove(due);
+            Telegraphs.fire(level, due.markerId());
+        }
+    }
+
+    /** Markers whose hit never came (an effect without a hit, a lost command) fade out shortly after their time. */
+    private void expireMarkers() {
+        Iterator<Marker> iterator = markers.iterator();
+        while (iterator.hasNext()) {
+            Marker marker = iterator.next();
+            if (now > marker.fireTick() + 5) {
+                Telegraphs.cancel(level, marker.markerId());
+                iterator.remove();
+            } else if (now == marker.fireTick() && !marker.ability().kind().damaging()) {
+                Telegraphs.fire(level, marker.markerId()); // summon / teleport spots: the effect happens now
+                iterator.remove();
+            }
+        }
+    }
+
+    private void volley(BossCommand.Volley volley) {
+        AbilityLook look = look(volley.ability());
+        ParticleOptions particle = switch (look.style()) {
+            case FIRE -> ParticleTypes.FLAME;
+            case FROST -> ParticleTypes.SNOWFLAKE;
+            case MAGIC -> ERParticles.RUNE.get();
+            case DANGER -> ParticleTypes.CRIT;
+            default -> ERParticles.SHADOW.get();
+        };
+        fireMarkersDue(volley.ability());
+        Vec3 origin = new Vec3(volley.origin().x(), volley.origin().y() + body.getEyeHeight(), volley.origin().z());
+        for (double yaw : volley.yawDegrees()) {
+            double radians = Math.toRadians(yaw);
+            Vec3 step = new Vec3(-Math.sin(radians), 0.0, Math.cos(radians)).scale(volley.speed());
+            bolts.add(new Bolt(origin, step, volley.damage(), volley.ability().kind(), particle));
+        }
+        sound(look.style() == Telegraph.Style.FIRE ? SoundEvents.BLAZE_SHOOT : SoundEvents.CROSSBOW_SHOOT, 1.0F, 0.8F);
+    }
+
+    /** Fires every marker of {@code ability} that is due now (a volley's fan, summon spots). */
+    private void fireMarkersDue(BossAbility ability) {
+        markers.removeIf(marker -> {
+            if (!marker.ability().equals(ability) || marker.fireTick() > now) {
+                return false;
+            }
+            Telegraphs.fire(level, marker.markerId());
+            return true;
+        });
+    }
+
+    /** Pushes players away from (or pulls them towards) the centre of a blast. */
+    private void displace(BossCommand.Displace displace, List<ServerPlayer> targets) {
+        Point center = displace.center();
+        fireMarkersDue(displace.ability());
+        for (ServerPlayer player : targets) {
+            if (player.isCreative() || player.isSpectator()
+                    || Math.abs(player.getY() - center.y()) > BossRules.VERTICAL_TOLERANCE + 1.0) {
+                continue;
+            }
+            double dx = player.getX() - center.x();
+            double dz = player.getZ() - center.z();
+            double distance = Math.sqrt(dx * dx + dz * dz);
+            if (distance > displace.radius()) {
+                continue;
+            }
+            double nx;
+            double nz;
+            if (distance < 0.3) {
+                double angle = RANDOM.nextDouble() * Math.PI * 2.0;
+                nx = Math.cos(angle);
+                nz = Math.sin(angle);
+            } else {
+                nx = dx / distance;
+                nz = dz / distance;
+            }
+            Vec3 velocity;
+            if (displace.strength() >= 0.0) {
+                velocity = new Vec3(nx * displace.strength(), 0.45, nz * displace.strength());
+            } else {
+                double pull = Math.min(-displace.strength(), Math.max(0.0, distance - 2.0) / 6.5);
+                velocity = new Vec3(-nx * pull, 0.35, -nz * pull);
+            }
+            player.setDeltaMovement(velocity);
+            player.hurtMarked = true;
+        }
+    }
+
+    private void tickHazards(List<ServerPlayer> targets) {
+        Iterator<HazardZone> iterator = hazards.iterator();
+        while (iterator.hasNext()) {
+            HazardZone hazard = iterator.next();
+            if (now >= hazard.until) {
+                Telegraphs.cancel(level, hazard.markerId);
+                iterator.remove();
+                continue;
+            }
+            if (now % 4 == 0) {
+                vfx.hazardTick(look(hazard.ability), hazard.shape);
+            }
+            if (now >= hazard.nextPulse) {
+                hazard.nextPulse += hazard.interval;
+                for (ServerPlayer player : targets) {
+                    if (hazard.shape.contains(player.getX(), player.getY(), player.getZ())) {
+                        BossDamage.hazard(level, body, player, hazard.damage);
+                    }
+                }
+            }
+        }
+    }
+
+    /** Moves a charging boss along its strip, stopping at walls. */
+    private void stepDash() {
+        if (dash == null) {
+            return;
+        }
+        double t = Math.min(1.0, (now - dash.start() + 1) / (double) BossRules.DASH_TICKS);
+        Vec3 target = dash.from().add(dash.to().subtract(dash.from()).scale(t));
+        Vec3 current = body.position();
+        Vec3 move = target.subtract(current);
+        if (level.noCollision(body, body.getBoundingBox().move(move))) {
+            body.setPos(target.x, target.y, target.z);
+            vfx.dashTrail(current, target);
+        } else {
+            t = 1.0; // stopped by a wall
+        }
+        body.setDeltaMovement(Vec3.ZERO);
+        if (t >= 1.0) {
+            dash = null;
+            burst(ParticleTypes.CLOUD, body.position().add(0, 0.3, 0), 16, 0.8);
+        }
     }
 
     private void summon(BossCommand.Summon summon) {
+        fireMarkersDue(brain.currentAbility().orElse(null));
         MonsterTemplate template = Monsters.byId(summon.templateId()).orElse(null);
         for (Point position : summon.positions()) {
             Optional<Mob> add = template == null ? Optional.empty() : MonsterFactory.create(level,
@@ -470,7 +854,10 @@ public final class BossFight {
             mob.moveTo(position.x(), position.y() + 0.1, position.z(), RANDOM.nextFloat() * 360.0F, 0.0F);
             mob.getPersistentData().putUUID(FIGHT, id);
             level.addFreshEntity(mob);
+            adds.add(mob.getUUID());
             burst(ParticleTypes.SOUL, mob.position().add(0, 0.5, 0), 12, 0.5);
+            level.sendParticles(ERParticles.RUNE.get(), position.x(), position.y() + 0.1, position.z(), 10, 0.8, 0.05,
+                    0.8, 0.0);
             if (summon.shieldAdds()) {
                 shieldAdds.add(mob.getUUID());
             }
@@ -480,78 +867,14 @@ public final class BossFight {
 
     // ------------------------------------------------------------------ visuals
 
-    private void drawTelegraphs() {
-        Iterator<Telegraph> iterator = telegraphs.iterator();
-        while (iterator.hasNext()) {
-            Telegraph telegraph = iterator.next();
-            if (now > telegraph.until() + 5) {
-                Telegraphs.cancel(level, telegraph.markerId());
-                iterator.remove();
-            }
-        }
-    }
-
-    /** Particles on the outline of a shape at the floor of the arena. */
-    private void drawShape(BossShape shape, ParticleOptions particle, int density) {
-        double y = body.getY() + 0.15;
-        if (shape instanceof BossShape.Circle circle) {
-            ring(particle, circle.center().x(), y, circle.center().z(), circle.radius(), density);
-        } else if (shape instanceof BossShape.Ring ring) {
-            ring(particle, ring.center().x(), y, ring.center().z(), ring.inner(), density);
-            ring(particle, ring.center().x(), y, ring.center().z(), ring.outer(), density);
-        } else if (shape instanceof BossShape.Cone cone) {
-            double half = Math.toRadians(cone.halfAngleDegrees());
-            double yaw = Math.toRadians(cone.yawDegrees());
-            for (double a = -half; a <= half; a += Math.max(0.05, 1.0 / (cone.range() * density))) {
-                double x = cone.origin().x() - Math.sin(yaw + a) * cone.range();
-                double z = cone.origin().z() + Math.cos(yaw + a) * cone.range();
-                level.sendParticles(particle, x, y, z, 1, 0.0, 0.0, 0.0, 0.0);
-            }
-            for (double d = 0.5; d <= cone.range(); d += 1.0 / density) {
-                for (double edge : new double[] {-half, half}) {
-                    level.sendParticles(particle, cone.origin().x() - Math.sin(yaw + edge) * d, y,
-                            cone.origin().z() + Math.cos(yaw + edge) * d, 1, 0.0, 0.0, 0.0, 0.0);
-                }
-            }
-        } else if (shape instanceof BossShape.Line line) {
-            double dx = line.end().x() - line.origin().x();
-            double dz = line.end().z() - line.origin().z();
-            double length = Math.max(0.001, Math.sqrt(dx * dx + dz * dz));
-            double nx = -dz / length * line.width() * 0.5;
-            double nz = dx / length * line.width() * 0.5;
-            for (double t = 0.0; t <= 1.0; t += 1.0 / (length * density)) {
-                double x = line.origin().x() + dx * t;
-                double z = line.origin().z() + dz * t;
-                level.sendParticles(particle, x + nx, y, z + nz, 1, 0.0, 0.0, 0.0, 0.0);
-                level.sendParticles(particle, x - nx, y, z - nz, 1, 0.0, 0.0, 0.0, 0.0);
-            }
-        } else if (shape instanceof BossShape.Arena arena) {
-            for (int i = 0; i < 24 * density; i++) {
-                double angle = RANDOM.nextDouble() * Math.PI * 2.0;
-                double radius = RANDOM.nextDouble() * 14.0;
-                level.sendParticles(particle, arena.center().x() + Math.cos(angle) * radius, y,
-                        arena.center().z() + Math.sin(angle) * radius, 1, 0.0, 0.0, 0.0, 0.0);
-            }
-        }
-    }
-
-    private void ring(ParticleOptions particle, double x, double y, double z, double radius, int density) {
-        int points = Math.max(8, (int) (radius * 6.0 * density));
-        for (int i = 0; i < points; i++) {
-            double angle = Math.PI * 2.0 * i / points;
-            level.sendParticles(particle, x + Math.cos(angle) * radius, y, z + Math.sin(angle) * radius, 1,
-                    0.0, 0.0, 0.0, 0.0);
-        }
-    }
-
     private void moveBolts(List<ServerPlayer> targets) {
         Iterator<Bolt> iterator = bolts.iterator();
         while (iterator.hasNext()) {
             Bolt bolt = iterator.next();
             bolt.position = bolt.position.add(bolt.step);
             bolt.travelled += bolt.step.length();
-            level.sendParticles(ERParticles.SHADOW.get(), bolt.position.x, bolt.position.y, bolt.position.z, 2,
-                    0.05, 0.05, 0.05, 0.0);
+            level.sendParticles(bolt.particle, bolt.position.x, bolt.position.y, bolt.position.z, 2, 0.05, 0.05, 0.05,
+                    0.0);
             ServerPlayer struck = null;
             for (ServerPlayer player : targets) {
                 if (player.getBoundingBox().inflate(0.4).contains(bolt.position)) {
@@ -562,7 +885,7 @@ public final class BossFight {
             if (struck != null) {
                 executing = true;
                 try {
-                    struck.hurt(level.damageSources().mobAttack(body), (float) bolt.damage);
+                    BossDamage.hit(level, body, struck, bolt.kind, bolt.damage);
                 } finally {
                     executing = false;
                 }
@@ -592,28 +915,109 @@ public final class BossFight {
         }
     }
 
-    // ------------------------------------------------------------------ end
+    private static void title(ServerPlayer player, Component title, Component subtitle, int stay) {
+        player.connection.send(new ClientboundSetTitlesAnimationPacket(8, stay, 16));
+        player.connection.send(new ClientboundSetSubtitleTextPacket(subtitle));
+        player.connection.send(new ClientboundSetTitleTextPacket(title));
+    }
 
-    private void defeat() {
-        defeated = true;
+    // ------------------------------------------------------------------ defeat
+
+    /** The killing blow: everything stops, the boss freezes and starts to collapse. */
+    private void beginDefeat() {
+        defeatPending = false;
+        dying = true;
+        sequence = DefeatSequence.of(bossId());
+        killTick = killTick < 0 ? now : killTick;
         brain.tick(now, 0.0, new BossPosition(body.getX(), body.getY(), body.getZ(), body.getYRot()), List.of());
-        telegraphs.forEach(t -> Telegraphs.cancel(level, t.markerId()));
-        telegraphs.clear();
-        bolts.clear();
+        clearAttacks();
         bar.setProgress(0.0F);
-        body.hurt(level.damageSources().genericKill(), Float.MAX_VALUE);
-        if (body.isAlive()) {
-            body.kill();
+        bar.setColor(BossEvent.BossBarColor.WHITE);
+        ERBoss boss = animated();
+        if (boss != null) {
+            boss.startDefeat(sequence.lengthTicks(), sequence.dissolveTick());
+        } else {
+            body.setNoAi(true);
+            body.setInvulnerable(true);
         }
-        burst(ERParticles.HOLY.get(), body.position().add(0, 1.5, 0), 80, 2.0);
+        body.getNavigation().stop();
+        for (UUID addId : List.copyOf(adds)) { // the boss's power fades: its adds go with it
+            Entity add = level.getEntity(addId);
+            if (add != null && add.isAlive()) {
+                level.sendParticles(ParticleTypes.SOUL, add.getX(), add.getY() + 0.8, add.getZ(), 12, 0.3, 0.4, 0.3,
+                        0.03);
+                add.discard();
+            }
+        }
+        adds.clear();
+        shieldAdds.clear();
+        onKilled.accept(this);
+        tickDefeat();
+    }
+
+    private void tickDefeat() {
+        List<ServerPlayer> audience = audience();
+        if (!body.isAlive() || body.isRemoved()) {
+            finishDefeat(audience);
+            return;
+        }
+        int elapsed = (int) (now - (killTick < 0 ? now : killTick)) - 1;
+        int t = Math.max(0, elapsed);
+        body.setDeltaMovement(Vec3.ZERO);
+        body.getNavigation().stop();
+        for (DefeatSequence.Beat beat : sequence.at(t)) {
+            vfx.defeatBeat(beat, audience);
+        }
+        if (t >= sequence.dissolveTick() && t % 2 == 0) {
+            vfx.dissolving();
+        }
+        if (t >= sequence.lengthTicks()) {
+            finishDefeat(audience);
+        }
+    }
+
+    /** The collapse is over: the body is gone in the light, the defeat flow runs. */
+    private void finishDefeat(List<ServerPlayer> audience) {
+        dying = false;
+        defeated = true;
+        for (ServerPlayer player : audience) {
+            title(player, Component.translatable(BossTexts.DEFEATED_TITLE).withStyle(ChatFormatting.GOLD,
+                    ChatFormatting.BOLD), Component.translatable(BossTexts.DEFEATED_SUBTITLE, body.getDisplayName())
+                    .withStyle(ChatFormatting.YELLOW), 50);
+        }
         sound(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F);
+        if (!body.isRemoved()) {
+            body.discard();
+        }
         end();
         onDefeated.accept(this);
     }
 
-    /** Removes the bar (the fight is over, either way). */
+    /** Removes every marker, hazard, bolt, charge and prop of the fight. */
+    private void clearAttacks() {
+        for (Marker marker : markers) {
+            Telegraphs.cancel(level, marker.markerId());
+        }
+        markers.clear();
+        for (HazardZone hazard : hazards) {
+            Telegraphs.cancel(level, hazard.markerId);
+        }
+        hazards.clear();
+        bolts.clear();
+        dash = null;
+        scheduled.removeIf(entry -> !entry.owner().equals("defeat"));
+        props.clear();
+    }
+
+    /** Removes the bar and everything the fight shows (the fight is over, either way). */
     public void end() {
+        if (ended) {
+            return;
+        }
+        ended = true;
         bar.removeAllPlayers();
         bar.setVisible(false);
+        clearAttacks();
+        scheduled.clear();
     }
 }

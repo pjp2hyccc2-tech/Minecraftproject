@@ -44,11 +44,11 @@ public final class RigData {
             case "beast" -> List.of("wolf", "snow_wolf", "cave_rat", "frost_hound", "abyss_hound", "salamander", "scorpion");
             case "golem" -> List.of("treant", "sand_golem", "ice_golem", "lava_golem", "ruin_construct");
             case "flyer" -> List.of("harpy", "ice_wraith", "storm_spirit", "sky_sentinel", "fire_spirit");
-            case "king" -> List.of("b1", "b8", "final", "final_p1", "final_p2", "final_p3");
-            case "treant" -> List.of("b2");
-            case "colossus" -> List.of("b3", "b7");
-            case "queen" -> List.of("b5", "b4");
-            case "dragon" -> List.of("b6");
+            case "king" -> List.of("b1", "b1_p1", "b8", "b8_p1", "b8_p2", "b8_p3", "final", "final_p1", "final_p2", "final_p3");
+            case "treant" -> List.of("b2", "b2_p1", "b2_p2");
+            case "colossus" -> List.of("b3", "b7", "b3_p1", "b3_p2", "b7_p1", "b7_p2", "b7_p3");
+            case "queen" -> List.of("b5", "b4", "b5_p1", "b5_p2", "b5_p3", "b4_p1", "b4_p2");
+            case "dragon" -> List.of("b6", "b6_p1", "b6_p2", "b6_p3");
             default -> List.of();
         };
     }
@@ -61,15 +61,15 @@ public final class RigData {
             case "humanoid/jailer", "beast/frost_hound", "flyer/sky_sentinel" -> 1.15F;
             case "humanoid/ice_knight", "beast/salamander", "flyer/ice_wraith", "flyer/storm_spirit" -> 1.1F;
             case "humanoid/fire_imp" -> 0.72F;
-            case "humanoid/dark_knight", "beast/scorpion", "golem/ruin_construct", "queen/b5" -> 1.2F;
+            case "humanoid/dark_knight", "beast/scorpion", "golem/ruin_construct", "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> 1.2F;
             case "beast/cave_rat" -> 0.6F;
             case "beast/abyss_hound", "golem/treant" -> 1.25F;
-            case "golem/sand_golem", "golem/lava_golem", "treant/b2", "colossus/b7" -> 1.3F;
-            case "golem/ice_golem", "queen/b4" -> 1.35F;
-            case "king/b8" -> 1.45F;
+            case "golem/sand_golem", "golem/lava_golem", "treant/b2", "treant/b2_p1", "treant/b2_p2", "colossus/b7", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> 1.3F;
+            case "golem/ice_golem", "queen/b4", "queen/b4_p1", "queen/b4_p2" -> 1.35F;
+            case "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> 1.45F;
             case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> 1.7F;
-            case "colossus/b3" -> 1.4F;
-            case "dragon/b6" -> 1.5F;
+            case "colossus/b3", "colossus/b3_p1", "colossus/b3_p2" -> 1.4F;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> 1.5F;
             default -> 1.0F;
         };
     }
@@ -110,12 +110,12 @@ public final class RigData {
             case "beast/scorpion" -> T3_LENGTH;
             case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct" -> T4_LENGTH;
             case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit" -> T5_LENGTH;
-            case "king/b1", "king/b8", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T6_LENGTH;
-            case "treant/b2" -> T7_LENGTH;
-            case "colossus/b3", "colossus/b7" -> T8_LENGTH;
-            case "queen/b5" -> T9_LENGTH;
-            case "queen/b4" -> T10_LENGTH;
-            case "dragon/b6" -> T11_LENGTH;
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T6_LENGTH;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T7_LENGTH;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> T8_LENGTH;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> T9_LENGTH;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> T10_LENGTH;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> T11_LENGTH;
             default -> null;
         };
     }
@@ -128,12 +128,12 @@ public final class RigData {
             case "beast/scorpion" -> T3_IMPACT;
             case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct" -> T4_IMPACT;
             case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit" -> T5_IMPACT;
-            case "king/b1", "king/b8", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T6_IMPACT;
-            case "treant/b2" -> T7_IMPACT;
-            case "colossus/b3", "colossus/b7" -> T8_IMPACT;
-            case "queen/b5" -> T9_IMPACT;
-            case "queen/b4" -> T10_IMPACT;
-            case "dragon/b6" -> T11_IMPACT;
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T6_IMPACT;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T7_IMPACT;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> T8_IMPACT;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> T9_IMPACT;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> T10_IMPACT;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> T11_IMPACT;
             default -> null;
         };
     }

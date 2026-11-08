@@ -1,5 +1,6 @@
 """DRAGON boss rig: b6 灼炎の竜王. Four legs (three segments each), folded membrane wings with a hinged tip, two-part
 neck, horned head with an opening jaw, four tail segments with a fin, spines along the back, glowing chest."""
+from boss_forms import cracks, glow_bright, glow_faces, veins
 from ermodel import C, P, Rig, Variant, anim
 from erpaint import lighten, rgb, shade
 
@@ -265,7 +266,40 @@ def variants():
            'wingbone': {'base': '#5a1810', 'style': 'scale'}, 'membrane': {'base': '#c84a1c', 'vein': (255, 170, 60)},
            'fin': {'base': '#d85a20', 'vein': (255, 180, 60)}, 'horn': {'base': '#2a2220', 'style': 'bone'},
            'crest': {'base': '#2a2220', 'style': 'bone'}, 'spine': {'base': '#2a2220', 'style': 'bone'}}
-    return [Variant('b6', palette=pal, paint=deco, glow=True, extra=dict(scale=1.5, hitbox=(3.6, 3.4)))]
+    def deco_form(form):
+        # Azrag's rage spreads: burning wings, then magma veins, then a body of embers about to burst
+        def paint(p):
+            deco(p)
+            for part in ('right_wing', 'right_wing_tip'):
+                for fc in p.all_faces(part, index=1, glow=True):
+                    for y in range(fc.h):
+                        for x in range(fc.w):
+                            if (x * 3 + y * 5) % (7 - form) == 0:
+                                fc.px(x, y, (255, 140, 40))
+            glow_faces(p, 'horn_r', (255, 120, 40), every=3 if form < 3 else 1)
+            glow_faces(p, 'head', (255, 120, 40), index=2, every=3 if form < 3 else 1)
+            if form >= 2:
+                veins(p, ('body', 'neck1', 'neck2', 'tail1', 'front_right_leg', 'front_left_leg', 'hind_right_leg',
+                          'hind_left_leg'), (255, 120, 30), (255, 170, 60), seed=form)
+            if form >= 3:
+                for part in ('body', 'neck1', 'neck2', 'tail1', 'tail2', 'head'):
+                    glow_bright(p, part, threshold=230)
+                cracks(p, ('body', 'tail1', 'tail2', 'tail3', 'neck1'), (255, 200, 80), (255, 230, 140), every=20)
+        return paint
+    ember = {'base': '#2a1410', 'style': 'magma', 'hot': (255, 150, 40)}
+    burning = dict(pal, membrane={'base': '#ff6a1c', 'vein': (255, 220, 90)}, fin={'base': '#ff7a24', 'vein': (255, 220, 90)})
+    molten = dict(burning, head=ember, snout=ember, neck=ember, neck2=ember, body=ember, tail=ember, tail2=ember,
+                  leg=ember, thigh=ember, jaw={'base': '#3a1810', 'style': 'magma', 'hot': (255, 170, 60)})
+    return [Variant('b6', palette=pal, paint=deco, glow=True, extra=dict(scale=1.5, hitbox=(3.6, 3.4))),
+            Variant('b6_p1', palette=burning, paint=deco_form(1), glow=True, extra=dict(scale=1.5)),
+            Variant('b6_p2', palette=burning, poses={'horn_r': dict(scale=(1.2, 1.2, 1.3)),
+                                                     'horn_l': dict(scale=(1.2, 1.2, 1.3))},
+                    paint=deco_form(2), glow=True, extra=dict(scale=1.5)),
+            Variant('b6_p3', palette=molten, poses={'horn_r': dict(scale=(1.3, 1.3, 1.5)),
+                                                    'horn_l': dict(scale=(1.3, 1.3, 1.5)),
+                                                    'right_wing': dict(scale=(1.15, 1.0, 1.15)),
+                                                    'left_wing': dict(scale=(1.15, 1.0, 1.15))},
+                    paint=deco_form(3), glow=True, extra=dict(scale=1.5))]
 
 
 def rig():

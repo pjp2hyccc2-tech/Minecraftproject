@@ -93,6 +93,10 @@ public final class ERSounds {
     public static final RegistryObject<SoundEvent> BOSS_TELEGRAPH = sound("boss.telegraph");
     public static final RegistryObject<SoundEvent> BOSS_ROAR = sound("boss.roar");
     public static final RegistryObject<SoundEvent> BOSS_PHASE_CHANGE = sound("boss.phase_change");
+    /** Orchestral sting when a boss takes its next form. */
+    public static final RegistryObject<SoundEvent> BOSS_FORM_STING = sound("boss.form_sting");
+    /** A defeated boss collapses and dissolves into light (about five seconds). */
+    public static final RegistryObject<SoundEvent> BOSS_COLLAPSE = sound("boss.collapse");
 
     // ---- Dungeons ----
     /** BLOCKS. */

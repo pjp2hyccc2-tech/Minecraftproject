@@ -1,4 +1,12 @@
 {
+  "subtitles.eternalrealm.boss.collapse": {
+    "ja": "ボスが崩れ落ちる",
+    "en": "Boss collapses"
+  },
+  "subtitles.eternalrealm.boss.form_sting": {
+    "ja": "ボスが姿を変える",
+    "en": "Boss transforms"
+  },
   "subtitles.eternalrealm.boss.phase_change": {
     "ja": "ボスの形態変化",
     "en": "Boss changes phase"

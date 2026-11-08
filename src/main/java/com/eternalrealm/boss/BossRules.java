@@ -32,6 +32,16 @@ public final class BossRules {
     public static final double VOLLEY_MIN_HALF_ANGLE = 5.0;
     /** Largest party a brain accepts (health scales linearly with the party size). */
     public static final int MAX_PARTY_SIZE = 40;
+    /** Safe zones need time to find a green circle and run there. */
+    public static final int SAFE_ZONE_MIN_TELEGRAPH_TICKS = 40;
+    /** A lasting hazard hurts everyone inside it this often ... */
+    public static final int HAZARD_PULSE_TICKS = 10;
+    /** ... with this fraction of the hit that created it. */
+    public static final double HAZARD_DAMAGE_FRACTION = 0.25;
+    /** A charging boss covers its strip in this many ticks; the next charge is aimed after it arrived. */
+    public static final int DASH_TICKS = 4;
+    /** Safe zones and scattered hits keep this far from the arena's edge (when the arena is known). */
+    public static final double ARENA_MARGIN = 1.5;
 
     private BossRules() {
     }

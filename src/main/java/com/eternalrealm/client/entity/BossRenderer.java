@@ -1,5 +1,6 @@
 package com.eternalrealm.client.entity;
 
+import com.eternalrealm.client.entity.layer.BossAuraLayer;
 import com.eternalrealm.client.entity.layer.BossShieldLayer;
 import com.eternalrealm.client.entity.layer.BossVisuals;
 import com.eternalrealm.client.entity.layer.RigGlowLayer;
@@ -13,7 +14,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-/** Renderer of a boss: look texture (phase aware), model scale, emissive state layer and shield shell. */
+/**
+ * Renderer of a boss: look texture (form aware), model scale, emissive state layer, shield shell and the aura of its
+ * later forms (also the transformation flash and the light it dissolves into when defeated).
+ */
 public class BossRenderer extends MobRenderer<ERBoss, BossModel> {
     private final BossRig rig;
     private final RigTables tables;
@@ -24,6 +28,8 @@ public class BossRenderer extends MobRenderer<ERBoss, BossModel> {
         this.tables = ERRigs.of(rig);
         addLayer(new RigGlowLayer<>(this, this::glowTexture, BossVisuals::glowColor));
         addLayer(new BossShieldLayer(this,
+                new BossModel(context.bakeLayer(ERModelLayers.bossShield(rig)), ERRigs.of(rig), walkSpeed)));
+        addLayer(new BossAuraLayer(this,
                 new BossModel(context.bakeLayer(ERModelLayers.bossShield(rig)), ERRigs.of(rig), walkSpeed)));
     }
 
@@ -37,9 +43,15 @@ public class BossRenderer extends MobRenderer<ERBoss, BossModel> {
         return this.tables.glows()[this.tables.indexOf(look)] ? EntityTextures.glow(this.rig.id(), look) : null;
     }
 
+    /** Look scale (bigger in later forms); a dissolving boss shrinks and rises into the light. */
     @Override
     protected void scale(ERBoss boss, PoseStack poseStack, float partialTick) {
         float scale = boss.modelScale();
+        float dissolve = boss.dissolve(partialTick);
+        if (dissolve > 0.0F) {
+            poseStack.translate(0.0F, -dissolve * 0.6F, 0.0F);
+            scale *= 1.0F - 0.55F * dissolve * dissolve;
+        }
         poseStack.scale(scale, scale, scale);
     }
 

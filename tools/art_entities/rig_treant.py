@@ -1,5 +1,6 @@
 """TREANT boss rig: b2 古代樹の守護者. Gnarled trunk with a carved glowing face, a great leaf canopy with
 swaying side clumps, branch arms ending in twig claws, and root legs with splayed root toes."""
+from boss_forms import cracks, glow_faces, veins
 from ermodel import C, P, Rig, Variant, anim
 from erpaint import lighten, rgb, shade
 
@@ -17,10 +18,17 @@ def arm(side):
     fore = P('%s_forearm' % ('right' if s < 0 else 'left'), (10.5 * s, -5, 0),
              C(x0, -5, -3, 5, 12, 5, 'bark:arm2', tag='fa' if s < 0 else None, share=None if s < 0 else 'fa', mirror=s > 0),
              claws)
+    # later forms: black thorns break out of the bark (the crystal's corruption)
+    tx = x0 - 2 if s < 0 else x0 + 5
+    thorns = P('thorns_%s' % ('r' if s < 0 else 'l'), (tx, -14, 0),
+               C(tx, -17, -1, 2, 2, 2, 'crystal:thorn', tag='th1' if s < 0 else None, share=None if s < 0 else 'th1'),
+               C(tx, -12, 1, 2, 2, 2, 'crystal:thorn', tag='th2' if s < 0 else None, share=None if s < 0 else 'th2'),
+               C(tx, -8, -2, 2, 2, 2, 'crystal:thorn', tag='th3' if s < 0 else None, share=None if s < 0 else 'th3'),
+               opt=True)
     return P('%s_arm' % ('right' if s < 0 else 'left'), (9 * s, -17, 0),
              C(x0, -19, -3, 5, 14, 6, 'bark:arm', tag='ua' if s < 0 else None, share=None if s < 0 else 'ua', mirror=s > 0),
              C(x0 - 1, -20, -4, 7, 4, 8, 'leaf:tuft', tag='tuft' if s < 0 else None, share=None if s < 0 else 'tuft', mirror=s > 0),
-             fore, rot=(0, 0, 12 * s * -1))
+             fore, thorns, rot=(0, 0, 12 * s * -1))
 
 
 def root_leg(side):
@@ -43,7 +51,11 @@ def geometry():
     head = P('head', (0, -20, 0), C(-6, -26, -6, 12, 6, 12, 'bark:crown'), canopy,
              P('antler_r', (-5, -26, 0), C(-6, -36, -1, 2, 10, 2, 'bark:branch', tag='ant'), rot=(0, 0, -25)),
              P('antler_l', (5, -26, 0), C(4, -36, -1, 2, 10, 2, 'bark:branch', share='ant', mirror=True), rot=(0, 0, 25)))
-    upper = P('trunk_upper', (0, -4, 0), C(-8, -20, -7, 16, 16, 14, 'bark:trunk2'), head, arm('r'), arm('l'),
+    crystal = P('crystal', (4.5, -7, -7), C(3, -12, -10, 3, 7, 3, 'crystal:crystal'),
+                P('crystal_b', (6.5, -8, -7), C(5.5, -11, -9.5, 2, 4, 2, 'crystal:crystal2', tag='cs'), rot=(0, 0, -30)),
+                P('crystal_c', (2.5, -6, -7), C(1.5, -9, -9, 2, 4, 2, 'crystal:crystal2', share='cs'), rot=(0, 0, 35)),
+                rot=(-15, 0, 0), opt=True)
+    upper = P('trunk_upper', (0, -4, 0), C(-8, -20, -7, 16, 16, 14, 'bark:trunk2'), head, arm('r'), arm('l'), crystal,
               P('moss_beard', (0, -6, -7), C(-5, -6, -7.6, 10, 8, 0, 'leaf:moss')),
               P('mushrooms', (7, -10, 0), C(7.5, -12, -3, 3, 2, 3, 'skin:cap', tag='cap'), C(7.5, -7, 1, 2, 2, 2, 'skin:cap2'),
                 C(-10.5, -14, -1, 3, 2, 3, 'skin:cap', share='cap')))
@@ -198,7 +210,37 @@ def variants():
            'canopy': leaf, 'canopy_top': dict(leaf, base='#4a8a3c'), 'clump': dict(leaf, base='#38703a'),
            'clump2': dict(leaf, base='#346a34'), 'tuft': dict(leaf, base='#4a8a3c'), 'moss': {'base': '#4f7a30', 'style': 'leaf'},
            'cap': {'base': '#d8f0e0', 'style': 'gem'}, 'cap2': {'base': '#c0e8d8', 'style': 'gem'}}
-    return [Variant('b2', palette=pal, paint=deco, glow=True, extra=dict(scale=1.3, hitbox=(2.2, 4.0)))]
+    pal.update({'crystal': {'base': '#2e1a44', 'style': 'crystal'}, 'crystal2': {'base': '#3a2252', 'style': 'crystal'},
+                'thorn': {'base': '#24142e', 'style': 'crystal'}})
+
+    def deco_form(form):
+        # the black crystal in its chest grows: violet veins, then thorns and a withering crown of leaves
+        def paint(p):
+            deco(p)
+            glow_faces(p, 'crystal', (200, 120, 255), every=2)
+            for part in ('crystal_b', 'crystal_c'):
+                glow_faces(p, part, (200, 120, 255), every=2)
+            veins(p, ('trunk_upper', 'trunk'), (120, 60, 170), (210, 150, 255), seed=form)
+            f = p.face('trunk_upper', 'front', glow=True)
+            for (x0, x1) in ((2, 5), (10, 13)):
+                for x in range(x0 + 1, x1):
+                    f.px(x, 4, (230, 170, 255))
+                    f.px(x, 5, (190, 110, 255))
+            if form >= 2:
+                veins(p, ('right_arm', 'left_arm', 'right_root', 'left_root'), (120, 60, 170), (210, 150, 255),
+                      seed=form + 2)
+                cracks(p, ('trunk',), (150, 80, 210), (220, 170, 255), every=30)
+                for k in range(3):
+                    glow_faces(p, 'thorns_r', (180, 100, 255), index=k, every=3)
+        return paint
+    autumn = {'base': '#8a5a26', 'flowers': (160, 60, 120)}
+    pal3 = dict(pal, canopy=autumn, canopy_top=dict(autumn, base='#9a6a2c'), clump=dict(autumn, base='#7a4e22'),
+                clump2=dict(autumn, base='#6e4620'), tuft=dict(autumn, base='#9a6a2c'))
+    return [Variant('b2', palette=pal, paint=deco, glow=True, extra=dict(scale=1.3, hitbox=(2.2, 4.0))),
+            Variant('b2_p1', show={'crystal'}, palette=pal, paint=deco_form(1), glow=True, extra=dict(scale=1.3)),
+            Variant('b2_p2', show={'crystal', 'thorns_r', 'thorns_l'}, palette=pal3,
+                    poses={'crystal': dict(scale=(1.4, 1.5, 1.4))}, paint=deco_form(2), glow=True,
+                    extra=dict(scale=1.3))]
 
 
 def rig():

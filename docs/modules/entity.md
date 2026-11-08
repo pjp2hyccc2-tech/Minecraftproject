@@ -23,7 +23,7 @@
 | `eternalrealm:golem_enemy` | treant, sand_golem, ice_golem, lava_golem, ruin_construct |
 | `eternalrealm:flyer_enemy` | harpy, ice_wraith★, storm_spirit★, sky_sentinel, fire_spirit★ |
 | `eternalrealm:enemy_bolt` | 遠隔攻撃の弾（★のバリアントが発射。属性: 炎/氷/虚無/呪い/雷/自然/矢） |
-| `eternalrealm:boss_b1`..`boss_b8`, `boss_final` | KING: b1, b8, final（フェーズ外見 final_p1〜p3）/ TREANT: b2 / COLOSSUS: b3, b7 / QUEEN: b5, b4 / DRAGON: b6 |
+| `eternalrealm:boss_b1`..`boss_b8`, `boss_final` | KING: b1, b8, final / TREANT: b2 / COLOSSUS: b3, b7 / QUEEN: b5, b4 / DRAGON: b6。形態ごとの外見 `<id>_p1`〜`p3`（b1_p1, b2_p1〜p2, b3_p1〜p2, b4_p1〜p2, b5_p1〜p3, b6_p1〜p3, b7_p1〜p3, b8_p1〜p3, final_p1〜p3） |
 
 ★ = 遠隔（距離6〜14を保ち、見えていればキャストして `EnemyBolt` を撃つ。ダメージ = ATTACK_DAMAGE）。それ以外は近接（2種の攻撃をランダム）。
 バリアントごとに縮尺（当たり判定も追従）、パーツ表示、テクスチャ、発光、音、粒子、火炎耐性（fire_imp, salamander, lava_golem, fire_spirit）、
@@ -39,6 +39,11 @@
 - 単発アニメーションはエンティティイベント（雑魚 64〜、ボス 80〜）でクライアントの `AnimationState` を開始。継続状態（バリアント、予兆、シールド、激昂、フェーズ）は SynchedEntityData。
 - 攻撃の当たり・弾の発射はアニメーションの「インパクト時刻」（`RigData.impact`）に合わせてサーバーで発生。再生中は移動しない。
 - 死亡: バニラの横倒し・赤色を使わず専用の死亡アニメーション → 煙（ボスは爆発・魂の粒子） → 除去。
+- ボス戦での撃破（`startDefeat(長さ, 溶け始め)`）: 体は残ったまま無敵・AI停止、死亡アニメーションを最後の姿勢で保持し、クライアントは光の粒子と白い輝き（オーラ層）を強め、
+  溶け始め以降は縮みながら浮かぶ。体の除去は戦闘側（`BossFight`）が演出の最後に行う。
+- 形態（`setPhase`）: `lookKey()` が `<id>_p<n>`（あるもののうち n 以下で最大、最大3）、モデルは形態ごとに4%大きく（当たり判定は不変）、
+  オーラ層（`BossAuraLayer`: 膨らませたモデルを `boss_aura.png` の流れる模様で加算描画）が形態の色で強まり、発光色も形態色（`BossVisuals.formColor`）へ。
+  形態が変わった直後は白い閃光（`transformFlash`）。形態1以上ではテーマ粒子が足元から立ち上る。
 - QUEEN は2セット（女王: 浮遊・滑走・詠唱 / 処刑人: 斧の振り下ろし・薙ぎ払い）。サソリは専用の攻撃（鋏・毒針）。
 
 ## 4. API（統合側）
@@ -57,7 +62,10 @@ boss.setShielded(true); boss.setEnraged(true); boss.setPhase(2); boss.bossId();
 ```
 
 - `ERMonster`: `setVariant/getVariant`, `variantsOf(rig)`, `startMeleeAttack/startRangedAttack(target)`, `playAnimation(EnemyAnim)`, `isActing()`。
-- `ERBoss`: `playAnimation(BossAnimation)`, `playingAnimation()`, `durationTicks/impactTicks`, `setTelegraphing/setShielded/setEnraged/setPhase`, `setAiFrozen`, `faceTowards(x, z)`, `bossId()`, `lookKey()`。
+- `ERBoss`: `playAnimation(BossAnimation)`, `playingAnimation()`, `durationTicks/impactTicks`, `setTelegraphing/setShielded/setEnraged/setPhase`, `setAiFrozen`, `faceTowards(x, z)`, `bossId()`, `lookKey()`,
+  `lookFor(kind, phase)`, `startDefeat(長さ, 溶け始め)` / `isDefeatPlaying()`、クライアント用 `transformFlash/defeatProgress/dissolve(partialTick)`。
+- 形態の外見は `tools/art_entities/rig_*.py` の `Variant('<id>_p<n>', ...)`（追加パーツ: 樹人の結晶・棘、巨神の胸の結晶・肩の砲台、女王の氷の翼・氷の角）。装飾の共通処理は `boss_forms.py`（光る脈・亀裂・発光）。
+  QUEEN の形態は `SETS` で元のアニメーション組を使う。
 - シールドは見た目のみ（無敵は `BossBrain.isInvulnerable` を見て統合側が適用）。最大HPの既定は1024（バニラ上限）。
 - 雑魚・ボスとも自然デスポーンしない（ピースフルでも消えない）。インスタンス終了時に統合側で除去する。
 - ボス: 落下・窒息・溺死・圧死ダメージ無効、ノックバック耐性1.0、押されない、次元移動しない。

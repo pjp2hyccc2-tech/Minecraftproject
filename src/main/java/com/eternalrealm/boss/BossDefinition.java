@@ -31,7 +31,8 @@ import java.util.regex.Pattern;
  * @param minPlayers           recommended party size, lower end (informational: any party size 1..
  *                             {@link BossRules#MAX_PARTY_SIZE} works)
  * @param maxPlayers           recommended party size, upper end
- * @param phases               in order; the first starts at 1.0, thresholds strictly decreasing
+ * @param phases               in order; the first starts at 1.0, thresholds strictly decreasing; every ability a
+ *                             phase names (rotation, openers, transition) must be in {@code abilities}
  * @param abilities            every ability used by the phases or a difficulty, each id once
  * @param enrageAfterTicks     soft enrage this long after the fight started (more damage, shorter cooldowns)
  * @param summonTemplateIds    monster templates this boss summons (SUMMON and SHIELD adds); owned by the monster module
@@ -66,6 +67,9 @@ public record BossDefinition(String id, String entityType, int level, double bas
         Set<String> referenced = new HashSet<>();
         for (BossPhase phase : phases) {
             requireKnown(id, byId, phase.abilityIds(), referenced);
+            if (phase.hasTransition()) {
+                requireKnown(id, byId, List.of(phase.transitionId()), referenced);
+            }
         }
         for (DifficultyTuning tuning : List.of(normal, hard, ex)) {
             requireKnown(id, byId, tuning.extraAbilityIds(), referenced);
@@ -84,6 +88,9 @@ public record BossDefinition(String id, String entityType, int level, double bas
         }
         if (phases.get(0).startsAtHpFraction() != 1.0) {
             throw new IllegalArgumentException(id + ": the first phase must start at 1.0");
+        }
+        if (phases.get(0).hasTransition()) {
+            throw new IllegalArgumentException(id + ": the first phase has no transition");
         }
         for (int i = 1; i < phases.size(); i++) {
             if (phases.get(i).startsAtHpFraction() >= phases.get(i - 1).startsAtHpFraction()) {
@@ -175,6 +182,22 @@ public record BossDefinition(String id, String entityType, int level, double bas
             }
         }
         return List.copyOf(rotation);
+    }
+
+    /** The ability used during the transition into phase {@code phaseIndex}, if that phase has one. */
+    public Optional<BossAbility> transitionAbility(int phaseIndex) {
+        Check.range("phaseIndex", phaseIndex, 0, phases.size() - 1);
+        BossPhase phase = phases.get(phaseIndex);
+        return phase.hasTransition() ? ability(phase.transitionId()) : Optional.empty();
+    }
+
+    /**
+     * Length of the invulnerable transition into phase {@code phaseIndex} (from index 1): at least
+     * {@link BossRules#PHASE_TRANSITION_TICKS}, longer if its transition ability needs more time.
+     */
+    public int transitionTicks(int phaseIndex) {
+        return Math.max(BossRules.PHASE_TRANSITION_TICKS,
+                transitionAbility(phaseIndex).map(BossAbility::busyTicks).orElse(0));
     }
 
     /** Index of the phase a health fraction belongs to: the last phase whose threshold is at or above it. */

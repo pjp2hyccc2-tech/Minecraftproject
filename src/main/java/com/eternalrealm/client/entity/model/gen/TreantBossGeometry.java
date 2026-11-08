@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-/** Geometry, UV layout and per-variant looks of the treant rig (22 parts, 36 boxes, texture 128x128). */
+/** Geometry, UV layout and per-variant looks of the treant rig (27 parts, 45 boxes, texture 128x128). */
 public final class TreantBossGeometry {
     public static final int TEXTURE_WIDTH = 128;
     public static final int TEXTURE_HEIGHT = 128;
@@ -62,63 +62,86 @@ public final class TreantBossGeometry {
                 .texOffs(122, 0).addBox(-0.5F, 0.0F, -1.0F, 1.0F, 8.0F, 1.0F, new CubeDeformation(inflate))
                 .texOffs(122, 17).addBox(1.5F, 0.0F, -3.0F, 1.0F, 6.0F, 1.0F, new CubeDeformation(inflate)),
                 PartPose.offset(0.0F, 12.0F, 0.0F));
-        PartDefinition p14 = p3.addOrReplaceChild("left_arm", CubeListBuilder.create().mirror(true)
+        p11.addOrReplaceChild("thorns_r", CubeListBuilder.create()
+                .texOffs(40, 120).addBox(0.0F, -3.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate))
+                .texOffs(68, 120).addBox(0.0F, 2.0F, 1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate))
+                .texOffs(76, 120).addBox(0.0F, 6.0F, -2.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offset(-6.0F, 3.0F, 0.0F));
+        PartDefinition p15 = p3.addOrReplaceChild("left_arm", CubeListBuilder.create().mirror(true)
                 .texOffs(72, 76).addBox(-1.0F, -2.0F, -3.0F, 5.0F, 14.0F, 6.0F, new CubeDeformation(inflate))
                 .texOffs(92, 109).addBox(-2.0F, -3.0F, -4.0F, 7.0F, 4.0F, 8.0F, new CubeDeformation(inflate)),
                 PartPose.offsetAndRotation(9.0F, -13.0F, 0.0F, 0.0F, 0.0F, -0.2094F));
-        PartDefinition p15 = p14.addOrReplaceChild("left_forearm", CubeListBuilder.create().mirror(true)
+        PartDefinition p16 = p15.addOrReplaceChild("left_forearm", CubeListBuilder.create().mirror(true)
                 .texOffs(94, 76).addBox(-2.5F, 0.0F, -3.0F, 5.0F, 12.0F, 5.0F, new CubeDeformation(inflate)),
                 PartPose.offset(1.5F, 12.0F, 0.0F));
-        p15.addOrReplaceChild("left_claws", CubeListBuilder.create()
+        p16.addOrReplaceChild("left_claws", CubeListBuilder.create()
                 .texOffs(122, 9).addBox(-2.5F, 0.0F, -3.0F, 1.0F, 7.0F, 1.0F, new CubeDeformation(inflate))
                 .texOffs(122, 0).addBox(-0.5F, 0.0F, -1.0F, 1.0F, 8.0F, 1.0F, new CubeDeformation(inflate))
                 .texOffs(122, 17).addBox(1.5F, 0.0F, -3.0F, 1.0F, 6.0F, 1.0F, new CubeDeformation(inflate)),
                 PartPose.offset(0.0F, 12.0F, 0.0F));
+        p15.addOrReplaceChild("thorns_l", CubeListBuilder.create()
+                .texOffs(40, 120).addBox(0.0F, -3.0F, -1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate))
+                .texOffs(68, 120).addBox(0.0F, 2.0F, 1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate))
+                .texOffs(76, 120).addBox(0.0F, 6.0F, -2.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offset(4.0F, 3.0F, 0.0F));
+        PartDefinition p19 = p3.addOrReplaceChild("crystal", CubeListBuilder.create()
+                .texOffs(56, 112).addBox(-1.5F, -5.0F, -3.0F, 3.0F, 7.0F, 3.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(4.5F, -3.0F, -7.0F, -0.2618F, 0.0F, 0.0F));
+        p19.addOrReplaceChild("crystal_b", CubeListBuilder.create()
+                .texOffs(38, 114).addBox(-1.0F, -3.0F, -2.5F, 2.0F, 4.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(2.0F, -1.0F, 0.0F, 0.0F, 0.0F, -0.5236F));
+        p19.addOrReplaceChild("crystal_c", CubeListBuilder.create()
+                .texOffs(38, 114).addBox(-1.0F, -3.0F, -2.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(-2.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.6109F));
         p3.addOrReplaceChild("moss_beard", CubeListBuilder.create()
-                .texOffs(56, 112).addBox(-5.0F, 0.0F, -0.6F, 10.0F, 8.0F, 0.0F, new CubeDeformation(inflate)),
+                .texOffs(68, 112).addBox(-5.0F, 0.0F, -0.6F, 10.0F, 8.0F, 0.0F, new CubeDeformation(inflate)),
                 PartPose.offset(0.0F, -2.0F, -7.0F));
         p3.addOrReplaceChild("mushrooms", CubeListBuilder.create()
-                .texOffs(24, 114).addBox(0.5F, -2.0F, -3.0F, 3.0F, 2.0F, 3.0F, new CubeDeformation(inflate))
-                .texOffs(36, 114).addBox(0.5F, 3.0F, 1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate))
-                .texOffs(24, 114).addBox(-17.5F, -4.0F, -1.0F, 3.0F, 2.0F, 3.0F, new CubeDeformation(inflate)),
+                .texOffs(28, 120).addBox(0.5F, -2.0F, -3.0F, 3.0F, 2.0F, 3.0F, new CubeDeformation(inflate))
+                .texOffs(84, 120).addBox(0.5F, 3.0F, 1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate))
+                .texOffs(28, 120).addBox(-17.5F, -4.0F, -1.0F, 3.0F, 2.0F, 3.0F, new CubeDeformation(inflate)),
                 PartPose.offset(7.0F, -6.0F, 0.0F));
-        PartDefinition p19 = p2.addOrReplaceChild("right_root", CubeListBuilder.create()
+        PartDefinition p24 = p2.addOrReplaceChild("right_root", CubeListBuilder.create()
                 .texOffs(94, 93).addBox(-3.0F, -1.0F, -3.5F, 6.0F, 9.0F, 7.0F, new CubeDeformation(inflate)),
                 PartPose.offset(-4.0F, 0.0F, 0.0F));
-        p19.addOrReplaceChild("right_foot", CubeListBuilder.create()
+        p24.addOrReplaceChild("right_foot", CubeListBuilder.create()
                 .texOffs(36, 76).addBox(-4.0F, 0.0F, -6.0F, 8.0F, 10.0F, 10.0F, new CubeDeformation(inflate))
-                .texOffs(76, 112).addBox(-5.0F, 7.0F, -9.0F, 3.0F, 3.0F, 4.0F, new CubeDeformation(inflate))
-                .texOffs(0, 114).addBox(-1.0F, 7.0F, -9.5F, 3.0F, 3.0F, 4.0F, new CubeDeformation(inflate))
-                .texOffs(14, 114).addBox(-6.0F, 7.0F, 1.0F, 2.0F, 3.0F, 3.0F, new CubeDeformation(inflate)),
+                .texOffs(0, 114).addBox(-5.0F, 7.0F, -9.0F, 3.0F, 3.0F, 4.0F, new CubeDeformation(inflate))
+                .texOffs(14, 114).addBox(-1.0F, 7.0F, -9.5F, 3.0F, 3.0F, 4.0F, new CubeDeformation(inflate))
+                .texOffs(28, 114).addBox(-6.0F, 7.0F, 1.0F, 2.0F, 3.0F, 3.0F, new CubeDeformation(inflate)),
                 PartPose.offset(0.0F, 8.0F, 0.0F));
-        PartDefinition p21 = p2.addOrReplaceChild("left_root", CubeListBuilder.create().mirror(true)
+        PartDefinition p26 = p2.addOrReplaceChild("left_root", CubeListBuilder.create().mirror(true)
                 .texOffs(94, 93).addBox(-3.0F, -1.0F, -3.5F, 6.0F, 9.0F, 7.0F, new CubeDeformation(inflate)),
                 PartPose.offset(4.0F, 0.0F, 0.0F));
-        p21.addOrReplaceChild("left_foot", CubeListBuilder.create().mirror(true)
+        p26.addOrReplaceChild("left_foot", CubeListBuilder.create().mirror(true)
                 .texOffs(36, 76).addBox(-4.0F, 0.0F, -6.0F, 8.0F, 10.0F, 10.0F, new CubeDeformation(inflate))
-                .texOffs(76, 112).addBox(2.0F, 7.0F, -9.0F, 3.0F, 3.0F, 4.0F, new CubeDeformation(inflate))
-                .texOffs(0, 114).addBox(-1.0F, 7.0F, -9.5F, 3.0F, 3.0F, 4.0F, new CubeDeformation(inflate))
-                .texOffs(14, 114).addBox(4.0F, 7.0F, 1.0F, 2.0F, 3.0F, 3.0F, new CubeDeformation(inflate)),
+                .texOffs(0, 114).addBox(2.0F, 7.0F, -9.0F, 3.0F, 3.0F, 4.0F, new CubeDeformation(inflate))
+                .texOffs(14, 114).addBox(-1.0F, 7.0F, -9.5F, 3.0F, 3.0F, 4.0F, new CubeDeformation(inflate))
+                .texOffs(28, 114).addBox(4.0F, 7.0F, 1.0F, 2.0F, 3.0F, 3.0F, new CubeDeformation(inflate)),
                 PartPose.offset(0.0F, 8.0F, 0.0F));
         return LayerDefinition.create(mesh, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"b2"};
+    public static final String[] VARIANTS = {"b2", "b2_p1", "b2_p2"};
     /** Parts whose visibility depends on the variant. */
-    public static final String[] TOGGLED_PARTS = {};
+    public static final String[] TOGGLED_PARTS = {"thorns_r", "thorns_l", "crystal"};
     /** VISIBLE[variant][toggled part]. */
     public static final boolean[][] VISIBLE = {
-            {}, // b2
+            {false, false, false}, // b2
+            {false, false, true}, // b2_p1
+            {true, true, true}, // b2_p2
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {};
+    public static final String[] POSED_PARTS = {"crystal"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {}, // b2
+            {null}, // b2
+            {null}, // b2_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}}, // b2_p2
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.3F};
+    public static final float[] SCALES = {1.3F, 1.3F, 1.3F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true};
+    public static final boolean[] GLOWS = {true, true, true};
 }
