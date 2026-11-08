@@ -54,6 +54,7 @@ public final class EternalRealm {
         RankingCommands.register();
         SocialUiActions.register();
         com.eternalrealm.quest.forge.QuestActions.register();
+        com.eternalrealm.npc.forge.NpcServices.register();
 
         modBus.addListener(ServerBootstrap::onConfigReloading);
         forgeBus.addListener(ServerBootstrap::onServerAboutToStart);

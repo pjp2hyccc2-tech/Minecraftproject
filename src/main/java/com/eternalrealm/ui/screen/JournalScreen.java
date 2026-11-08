@@ -64,6 +64,17 @@ public abstract class JournalScreen extends Screen {
         Minecraft.getInstance().setScreen(lastTab.factory.get());
     }
 
+    /** The server asked to show a page (talking to a town NPC): {@code {"tab": "quests"}}. */
+    public static void openRequested(com.google.gson.JsonObject request) {
+        String wanted = request.has("tab") ? request.get("tab").getAsString() : "";
+        for (Tab tab : Tab.values()) {
+            if (tab.name().equalsIgnoreCase(wanted)) {
+                open(tab);
+                return;
+            }
+        }
+    }
+
     public static void open(Tab tab) {
         lastTab = tab;
         Minecraft.getInstance().setScreen(tab.factory.get());

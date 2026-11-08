@@ -30,7 +30,12 @@ public final class ClientModEvents {
         ClientboundHandlers.setCombatStatsHandler(ClientCombatState::onStats);
         ClientboundHandlers.setCombatStatusHandler(ClientCombatState::onStatus);
         ClientboundHandlers.setDamageNumberHandler(ClientCombatState::onDamageNumber);
-        ClientboundHandlers.setUiDataHandler(ClientUiState::accept);
+        ClientboundHandlers.setUiDataHandler((channel, json) -> {
+            ClientUiState.accept(channel, json);
+            if ("open".equals(channel)) {
+                ClientUiState.get("open").ifPresent(com.eternalrealm.ui.screen.JournalScreen::openRequested);
+            }
+        });
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
         com.eternalrealm.item.forge.EquipmentStacks.setViewerLevel(() -> ClientCharacterState.snapshot()
                 .map(com.eternalrealm.character.CharacterSnapshot::level).orElse(1));

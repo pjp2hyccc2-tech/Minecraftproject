@@ -48,8 +48,18 @@ public final class Npcs {
      * nearby is moved back into place, duplicates are removed. @return the NPC
      */
     public static Optional<Villager> ensure(ServerLevel level, BlockPos pos, NpcRole role, float yaw) {
+        return ensure(level, pos, role, yaw, null, null);
+    }
+
+    /**
+     * Like {@link #ensure(ServerLevel, BlockPos, NpcRole, float)} for one of several NPCs of a role told apart by a
+     * persistent string ({@code key} = {@code value}), e.g. the story characters.
+     */
+    public static Optional<Villager> ensure(ServerLevel level, BlockPos pos, NpcRole role, float yaw, String key,
+                                            String value) {
         List<Villager> existing = level.getEntitiesOfClass(Villager.class, new AABB(pos).inflate(24.0),
-                villager -> roleOf(villager).filter(r -> r == role).isPresent());
+                villager -> roleOf(villager).filter(r -> r == role).isPresent()
+                        && (key == null || value.equals(villager.getPersistentData().getString(key))));
         Villager npc = existing.isEmpty() ? null : existing.get(0);
         for (int i = 1; i < existing.size(); i++) {
             existing.get(i).discard();
@@ -60,6 +70,9 @@ public final class Npcs {
                 return Optional.empty();
             }
             npc.getPersistentData().putString(TAG, role.id());
+            if (key != null) {
+                npc.getPersistentData().putString(key, value);
+            }
             npc.finalizeSpawn(level, level.getCurrentDifficultyAt(pos), MobSpawnType.STRUCTURE, null, null);
             level.addFreshEntity(npc);
         }

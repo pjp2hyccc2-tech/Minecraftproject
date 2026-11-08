@@ -1,0 +1,122 @@
+{
+  "screen.eternalrealm.shop.title": {
+    "ja": "道具屋",
+    "en": "Item Shop"
+  },
+  "screen.eternalrealm.shop.gold": {
+    "ja": "所持金 %s G",
+    "en": "Gold: %s"
+  },
+  "screen.eternalrealm.shop.sell_hint": {
+    "ja": "自分の持ち物をクリックで売却（装備はShift+クリック）",
+    "en": "Click your own items to sell them (equipment: shift-click)"
+  },
+  "screen.eternalrealm.shop.price": {
+    "ja": "価格 %s G",
+    "en": "Price %s gold"
+  },
+  "screen.eternalrealm.shop.buy_hint": {
+    "ja": "クリックで1個、Shift+クリックで10個購入",
+    "en": "Click: buy 1, shift-click: buy 10"
+  },
+  "message.eternalrealm.shop.not_enough_gold": {
+    "ja": "ゴールドが足りません（%s G 必要）",
+    "en": "Not enough gold (%s needed)"
+  },
+  "message.eternalrealm.shop.bought": {
+    "ja": "%sを%s個購入した（%s G）",
+    "en": "Bought %s ×%s (%s gold)"
+  },
+  "message.eternalrealm.shop.sold": {
+    "ja": "%sを%s個売却した（+%s G）",
+    "en": "Sold %s ×%s (+%s gold)"
+  },
+  "message.eternalrealm.shop.sell_equipment_shift": {
+    "ja": "装備はShift+クリックで売却します",
+    "en": "Shift-click to sell equipment"
+  },
+  "message.eternalrealm.shop.cannot_sell": {
+    "ja": "これは売れません",
+    "en": "This cannot be sold"
+  },
+  "screen.eternalrealm.smith.title": {
+    "ja": "鍛冶屋",
+    "en": "Blacksmith"
+  },
+  "screen.eternalrealm.smith.enhance": {
+    "ja": "強化",
+    "en": "Enhance"
+  },
+  "screen.eternalrealm.smith.reroll": {
+    "ja": "厳選",
+    "en": "Reroll"
+  },
+  "screen.eternalrealm.smith.craft": {
+    "ja": "製作",
+    "en": "Craft"
+  },
+  "screen.eternalrealm.smith.hint": {
+    "ja": "上の項目から依頼を選んでください",
+    "en": "Choose a service above"
+  },
+  "screen.eternalrealm.smith.select": {
+    "ja": "装備を選択",
+    "en": "Choose a piece"
+  },
+  "screen.eternalrealm.smith.select_hint": {
+    "ja": "持ち物の装備をクリックしてください",
+    "en": "Click a piece of equipment in your inventory"
+  },
+  "screen.eternalrealm.smith.chance": {
+    "ja": "成功率 %s%%",
+    "en": "Success chance %s%%"
+  },
+  "screen.eternalrealm.smith.bonus": {
+    "ja": "成功後の基本性能 +%s%%",
+    "en": "Base stats on success: +%s%%"
+  },
+  "screen.eternalrealm.smith.do_enhance": {
+    "ja": "強化する",
+    "en": "Enhance"
+  },
+  "screen.eternalrealm.smith.do_reroll": {
+    "ja": "付加効果を再抽選する",
+    "en": "Reroll the affixes"
+  },
+  "screen.eternalrealm.smith.cost_gold": {
+    "ja": "費用 %s G",
+    "en": "Cost %s gold"
+  },
+  "screen.eternalrealm.smith.cost_item": {
+    "ja": "%s ×%s",
+    "en": "%s ×%s"
+  },
+  "dialogue.eternalrealm.arcelia_knight_captain.greeting": {
+    "ja": "よく来たな、冒険者。王国はいま、終焉の兆しに揺れている。力を貸してくれ。",
+    "en": "Welcome, adventurer. The kingdom trembles at the signs of the End. Lend us your strength."
+  },
+  "dialogue.eternalrealm.elder_forest_sage.greeting": {
+    "ja": "森が泣いておる……古代樹の声が、狂気に染まってしもうた。",
+    "en": "The forest weeps... the voice of the ancient tree has turned to madness."
+  },
+  "dialogue.eternalrealm.sandria_caravan_master.greeting": {
+    "ja": "砂の海を越えてきたのか。神殿の噂なら、俺たちキャラバンが一番詳しいぜ。",
+    "en": "You crossed the sea of sand? If it's the temple you're after, no one knows more than us caravaners."
+  },
+  "dialogue.eternalrealm.nordia_chieftain.greeting": {
+    "ja": "この冬は終わらぬ。女王が目覚めてから、村は凍えるばかりだ。",
+    "en": "This winter will not end. Since the queen awoke, our village only grows colder."
+  },
+  "dialogue.eternalrealm.dragonia_blacksmith.greeting": {
+    "ja": "竜の炎で鍛えた刃は折れん。だが、その竜王が暴れ出したとなりゃ話は別だ。",
+    "en": "A blade forged in dragonfire never breaks. But with the Dragon King on a rampage, that's another story."
+  },
+  "dialogue.eternalrealm.celestia_oracle.greeting": {
+    "ja": "星が告げています。終焉の塔の門が、まもなく開くと。",
+    "en": "The stars foretell it: the gate of the Tower of the End will soon open."
+  },
+  "dialogue.eternalrealm.tower_watcher.greeting": {
+    "ja": "ここが世界の果てだ。塔の上で、終焉の王が待っている。",
+    "en": "This is the edge of the world. Atop the tower, the King of the End awaits."
+  }
+}
