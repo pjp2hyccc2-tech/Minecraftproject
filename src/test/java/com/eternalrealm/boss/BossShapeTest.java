@@ -51,15 +51,16 @@ public class BossShapeTest {
     }
 
     @Test
-    public void lineIsAStripWithHalfTheWidthOnEachSide() {
+    public void lineIsARectangleWithHalfTheWidthOnEachSide() {
         BossShape line = new BossShape.Line(ORIGIN, new Point(0, 64, 20), 4);
         assertTrue(line.contains(0, 64, 10));
         assertTrue(line.contains(2, 64, 10));
         assertFalse(line.contains(2.1, 64, 10));
         assertTrue(line.contains(-2, 64, 0));
-        assertFalse("before the start (rounded cap only within half width)", line.contains(0, 64, -2.1));
-        assertTrue(line.contains(0, 64, 21.9));
-        assertFalse(line.contains(0, 64, 22.1));
+        assertFalse("before the start", line.contains(0, 64, -0.1));
+        assertTrue(line.contains(0, 64, 19.9));
+        assertFalse("square ends like the marker", line.contains(0, 64, 20.1));
+        assertFalse(line.contains(1.9, 64, 20.5));
         assertFalse(line.contains(0, 68, 10));
         assertEquals(20.0, ((BossShape.Line) line).length(), 1e-9);
 

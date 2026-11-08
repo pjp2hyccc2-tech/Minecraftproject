@@ -80,7 +80,10 @@ public sealed interface BossShape permits BossShape.Circle, BossShape.Cone, Boss
         }
     }
 
-    /** Horizontal strip from {@code origin} to {@code end}; {@code width} is the full width (half on each side). */
+    /**
+     * Horizontal strip from {@code origin} to {@code end}; {@code width} is the full width (half on each side). It is
+     * the rectangle the ground marker draws: square ends, nothing beyond them.
+     */
     record Line(Point origin, Point end, double width) implements BossShape {
         public Line {
             Objects.requireNonNull(origin, "origin");
@@ -98,7 +101,9 @@ public sealed interface BossShape permits BossShape.Circle, BossShape.Cone, Boss
             double lengthSquared = segmentX * segmentX + segmentZ * segmentZ;
             double t = lengthSquared == 0.0 ? 0.0
                     : ((x - origin.x()) * segmentX + (z - origin.z()) * segmentZ) / lengthSquared;
-            t = Math.max(0.0, Math.min(1.0, t));
+            if (t < 0.0 || t > 1.0) {
+                return false;
+            }
             double closestX = origin.x() + segmentX * t;
             double closestZ = origin.z() + segmentZ * t;
             double dx = x - closestX;

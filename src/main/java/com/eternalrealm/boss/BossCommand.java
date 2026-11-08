@@ -49,12 +49,20 @@ public sealed interface BossCommand permits BossCommand.PhaseChanged, BossComman
     /**
      * Draw {@code shape} for {@code durationTicks}: a danger zone for damaging kinds, a harmless marker for summon,
      * shield and teleport positions ({@code ability.kind().damaging()} tells which). One command per shape.
+     * {@code hitKind} is the kind that will hit there (the ability's kind or a {@link AbilityKind.Sequence} part).
      */
-    record Telegraph(BossAbility ability, BossShape shape, int durationTicks) implements BossCommand {
+    record Telegraph(BossAbility ability, BossShape shape, int durationTicks, AbilityKind hitKind)
+            implements BossCommand {
         public Telegraph {
             Objects.requireNonNull(ability, "ability");
             Objects.requireNonNull(shape, "shape");
             Check.range("durationTicks", durationTicks, 0, BossAbility.MAX_TICKS);
+            Objects.requireNonNull(hitKind, "hitKind");
+        }
+
+        /** A shape of the ability's own kind. */
+        public Telegraph(BossAbility ability, BossShape shape, int durationTicks) {
+            this(ability, shape, durationTicks, ability.kind());
         }
 
         public String abilityId() {

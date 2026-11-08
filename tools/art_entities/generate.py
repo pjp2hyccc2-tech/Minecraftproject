@@ -293,6 +293,27 @@ def write_fx():
     Image.fromarray(img, 'RGBA').save(os.path.join(d, 'boss_shield.png'), optimize=True)
 
 
+def write_aura():
+    """Aura of later boss forms and the light of a defeated boss (scrolled by the energy swirl render type, so it
+    must tile): soft wisps that flow upward, grey-white so the vertex colour tints them."""
+    size = 64
+    y, x = np.mgrid[0:size, 0:size].astype(float)
+    v = np.zeros((size, size))
+    for (fx, fy, phase, amp) in ((1, 2, 0.3, 1.0), (2, 3, 1.7, 0.6), (3, 1, 2.9, 0.5), (1, 5, 4.1, 0.35)):
+        warp = 1.4 * np.sin(2 * np.pi * (2 * x / size) + fx * 0.7)
+        v += amp * np.sin(2 * np.pi * (fx * x / size + fy * y / size) + phase + warp)
+    v = (v - v.min()) / (v.max() - v.min())
+    v = 0.12 + 0.88 * v ** 3
+    img = np.zeros((size, size, 4), np.uint8)
+    img[..., 0] = np.clip(235 * v + 10, 0, 255)
+    img[..., 1] = np.clip(240 * v + 10, 0, 255)
+    img[..., 2] = np.clip(255 * v, 0, 255)
+    img[..., 3] = 255
+    d = os.path.join(TEX_DIR, 'fx')
+    os.makedirs(d, exist_ok=True)
+    Image.fromarray(img, 'RGBA').save(os.path.join(d, 'boss_aura.png'), optimize=True)
+
+
 def main(argv):
     names = [a for a in argv if not a.startswith('--')]
     rigs = load_rigs(names or None)
@@ -308,6 +329,7 @@ def main(argv):
         write_timings(rigs)
         uv_table(rigs)
         write_fx()
+        write_aura()
     if '--no-preview' in argv:
         return
     all_rows = []

@@ -4,7 +4,10 @@ import com.eternalrealm.entity.BossAnimation;
 import com.eternalrealm.entity.ERBoss;
 import net.minecraft.client.model.geom.ModelPart;
 
-/** Model of a boss rig; the boss's look key (boss id, final boss phase) selects parts and animation set. */
+/**
+ * Model of a boss rig; the boss's look key (boss id or form look) selects parts and animation set. A defeated boss
+ * only plays (and holds) its death animation.
+ */
 public class BossModel extends RigModel<ERBoss> {
     private final float walkSpeed;
 
@@ -17,7 +20,7 @@ public class BossModel extends RigModel<ERBoss> {
     public void setupAnim(ERBoss boss, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
                           float headPitch) {
         int index = prepare(boss.lookKey());
-        if (boss.isDeadOrDying()) {
+        if (boss.isDeadOrDying() || boss.isDefeatPlaying()) {
             animate(boss.animationState(BossAnimation.DEATH), animation(index, BossAnimation.DEATH.ordinal()), ageInTicks);
             return;
         }

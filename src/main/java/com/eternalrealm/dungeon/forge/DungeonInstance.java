@@ -82,6 +82,8 @@ final class DungeonInstance {
     private int clearIndex;
     private long clearOffset;
     private BossFight fight;
+    /** Run events of the killing blow (the clear) held back until the boss has finished collapsing. */
+    private List<DungeonRunEvent> afterCollapse = List.of();
     private long exitAt = -1;
     private long now;
     private boolean closed;
@@ -308,10 +310,26 @@ final class DungeonInstance {
     private void startBoss(String bossId) {
         Set<UUID> present = new HashSet<>(run.presentMembers());
         BlockPos spawn = DungeonLevels.at(origin, layout.bossSpawn());
+        BlockBox floor = layout.bossArena().interior();
+        Vec3 arenaCenter = new Vec3(origin.getX() + (floor.minX() + floor.maxX() + 1) / 2.0, spawn.getY(),
+                origin.getZ() + (floor.minZ() + floor.maxZ() + 1) / 2.0);
+        double arenaHalfSize = Math.min(floor.sizeX(), floor.sizeZ()) / 2.0;
         Optional<BossFight> started = Bosses.byId(bossId).flatMap(definition -> BossFight.start(level, definition,
-                difficulty, spawn, present.isEmpty() ? run.members() : present, defeated -> {
+                difficulty, spawn, arenaCenter, arenaHalfSize, present.isEmpty() ? run.members() : present,
+                killed -> {
+                    // the clock stops at the killing blow; rewards and messages wait for the collapse
+                    List<DungeonRunEvent> events = run.onBossDefeated(now);
+                    if (events.stream().anyMatch(event -> event instanceof DungeonRunEvent.Failed)) {
+                        handle(events);
+                    } else {
+                        afterCollapse = events;
+                    }
+                },
+                defeated -> {
                     service.onBossDefeated(this, defeated);
-                    handle(run.onBossDefeated(now));
+                    List<DungeonRunEvent> events = afterCollapse;
+                    afterCollapse = List.of();
+                    handle(events.isEmpty() ? run.onBossDefeated(now) : events);
                 }));
         if (started.isEmpty()) {
             tellAll(Component.literal("Boss " + bossId + " could not be spawned").withStyle(ChatFormatting.RED), false);

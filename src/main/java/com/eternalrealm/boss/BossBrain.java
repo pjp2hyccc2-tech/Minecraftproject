@@ -343,7 +343,7 @@ public final class BossBrain {
         wave.placed = wave.placer.place(self, targets);
         int ticks = (int) (wave.fireTick - now);
         for (BossShape shape : wave.placed.shapes()) {
-            outbox.add(new BossCommand.Telegraph(current.ability, shape, ticks));
+            outbox.add(new BossCommand.Telegraph(current.ability, shape, ticks, wave.kind));
         }
         for (BossShape safe : wave.placed.safe()) {
             outbox.add(new BossCommand.SafeSpot(current.ability, safe, ticks));

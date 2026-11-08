@@ -44,6 +44,8 @@ public final class ClientModEvents {
             } else if ("jingle".equals(channel)) {
                 ClientUiState.get("jingle").ifPresent(data -> com.eternalrealm.client.sound.MusicDirector.playJingle(
                         ClientUiState.stringOr(data, "id", "")));
+            } else if (com.eternalrealm.client.boss.BossScreenEffects.CHANNEL.equals(channel)) {
+                ClientUiState.get(channel).ifPresent(com.eternalrealm.client.boss.BossScreenEffects::accept);
             }
         });
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
@@ -77,6 +79,8 @@ public final class ClientModEvents {
         event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), "dialogue_box", new com.eternalrealm.ui.dialogue.DialogueOverlay());
         event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), "danger_warning",
                 new com.eternalrealm.client.telegraph.DangerOverlay());
+        event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), "boss_flash",
+                new com.eternalrealm.client.boss.BossScreenEffects());
     }
 
     @SubscribeEvent

@@ -92,19 +92,25 @@ public final class ClientTelegraphs {
         return ACTIVE.values();
     }
 
-    /** Whether the local player stands in a charging marker that will hurt (drives the screen-edge warning). */
+    /**
+     * Whether the local player stands in a charging marker that will hurt (drives the screen-edge warning). Standing in
+     * a charging {@link Telegraph.Style#SAFE} marker is safe, even inside a danger area around it (safe zones).
+     */
     public static boolean localPlayerInDanger() {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || ACTIVE.isEmpty()) {
             return false;
         }
+        boolean danger = false;
         for (Active active : ACTIVE.values()) {
-            if (active.live() && active.telegraph.style() != Telegraph.Style.SAFE
-                    && active.telegraph.contains(player.getX(), player.getY(), player.getZ())) {
-                return true;
+            if (active.live() && active.telegraph.contains(player.getX(), player.getY(), player.getZ())) {
+                if (active.telegraph.style() == Telegraph.Style.SAFE) {
+                    return false;
+                }
+                danger = true;
             }
         }
-        return false;
+        return danger;
     }
 
     /** Copy of the charging markers (for tests and debug views). */
