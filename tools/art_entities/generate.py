@@ -64,7 +64,12 @@ def write_textures(rig, painted):
     d = os.path.join(TEX_DIR, rig.name)
     os.makedirs(d, exist_ok=True)
     for vid, p in painted.items():
-        Image.fromarray(p.img, 'RGBA').save(os.path.join(d, vid + '.png'), optimize=True)
+        body = p.img
+        if rig_variant(rig, vid).extra.get('translucent'):
+            # rendered with RenderType.entityTranslucent: ghosts are see-through, their glow layer stays bright
+            body = body.copy()
+            body[..., 3] = np.where(body[..., 3] > 0, 175, 0).astype(np.uint8)
+        Image.fromarray(body, 'RGBA').save(os.path.join(d, vid + '.png'), optimize=True)
         glow_path = os.path.join(d, vid + '_glow.png')
         if rig_variant(rig, vid).glow:
             g = p.glow.copy()
