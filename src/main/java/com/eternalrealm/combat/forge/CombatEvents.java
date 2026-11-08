@@ -54,7 +54,10 @@ public final class CombatEvents {
 
     public static void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            ServerContext.current().ifPresent(context -> context.combat().onDeath(player));
+            ServerContext.current().ifPresent(context -> {
+                context.combat().onDeath(player);
+                context.game().rankings().onDeath(player);
+            });
         }
     }
 

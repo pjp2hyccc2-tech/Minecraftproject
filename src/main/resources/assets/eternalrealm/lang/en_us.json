@@ -505,5 +505,10 @@
   "message.eternalrealm.guild.help": "Guild: /guild create <tag> <name> to found one, /g <message> to chat",
   "message.eternalrealm.guild.info": "Guild \"%s\" [%s] Lv%s  members %s/%s  master %s",
   "chat.eternalrealm.party": "[Party] %s: %s",
-  "chat.eternalrealm.guild": "[%s] %s: %s"
+  "chat.eternalrealm.guild": "[%s] %s: %s",
+  "message.eternalrealm.season.info": "Season %s: %s (day %s of %s)",
+  "title.eternalrealm.season.day": "DAY %s",
+  "message.eternalrealm.ranking.header": "=== Ranking: %s ===",
+  "message.eternalrealm.ranking.empty": "No records yet",
+  "message.eternalrealm.ranking.time_attack_hint": "See boss time attacks on the journal's ranking page"
 }

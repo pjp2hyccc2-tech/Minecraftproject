@@ -171,6 +171,9 @@ public final class CombatHits {
         }
         attacker.setLastHurtMob(target);
         attacker.causeFoodExhaustion(0.1F);
+        float dealt = amount;
+        com.eternalrealm.server.ServerContext.current()
+                .ifPresent(context -> context.game().rankings().onDamageDealt(attacker, dealt));
         if (melee && attacker.hasEffect(ERMobEffects.FLAME_WEAPON.get())) {
             target.setSecondsOnFire(4);
         }

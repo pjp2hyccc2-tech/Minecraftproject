@@ -47,6 +47,7 @@ public final class PlayerConnectionEvents {
         }
         ServerContext.current().ifPresent(context -> {
             UUID playerId = player.getUUID();
+            context.game().onLogout(playerId); // before the character is saved: it flushes data into it
             context.playerData().onPlayerLeave(playerId);
             context.allocateLimiter().forget(playerId);
             context.uiLimiter().forget(playerId);
@@ -54,7 +55,6 @@ public final class PlayerConnectionEvents {
             context.floods().forget(playerId);
             context.syncQueue().forget(playerId);
             context.combat().onPlayerLeft(playerId);
-            context.game().parties().onLogout(playerId);
         });
     }
 }

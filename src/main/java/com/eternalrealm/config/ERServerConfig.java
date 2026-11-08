@@ -32,6 +32,8 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.DoubleValue MOB_KILL_EXP_PER_MAX_HEALTH;
 
     public static final ForgeConfigSpec.ConfigValue<String> SEASON_ID;
+    public static final ForgeConfigSpec.IntValue SEASON_LENGTH_DAYS;
+    public static final ForgeConfigSpec.ConfigValue<String> SEASON_START;
 
     public static final ForgeConfigSpec.IntValue AUTOSAVE_INTERVAL_SECONDS;
     public static final ForgeConfigSpec.IntValue IO_THREADS;
@@ -104,6 +106,11 @@ public final class ERServerConfig {
         builder.comment("Season. Restart required.").push("season");
         SEASON_ID = builder.comment("Identifier of the current season: lower-case letters, digits, '_' or '-', max 32 characters.")
                 .define("currentSeasonId", "s1", value -> value instanceof String text && SeasonId.isValid(text));
+        SEASON_LENGTH_DAYS = builder.comment("Length of the season in days (14 by design).")
+                .defineInRange("lengthDays", 14, 1, 365);
+        SEASON_START = builder.comment("Start of the season as an ISO-8601 instant, e.g. 2026-11-08T12:00:00Z.",
+                        "Empty: the season starts the first time the server runs with this season id.")
+                .define("startAt", "", value -> value instanceof String text && (text.isEmpty() || isInstant(text)));
         builder.pop();
 
         builder.comment("Persistence").push("persistence");
@@ -195,5 +202,21 @@ public final class ERServerConfig {
 
     public static SeasonId seasonId() {
         return SeasonId.of(SEASON_ID.get());
+    }
+
+    /** The configured schedule; an empty start means "now" (only used when nothing is stored yet). */
+    public static com.eternalrealm.season.SeasonSchedule seasonSchedule(java.time.Instant now) {
+        String start = SEASON_START.get();
+        java.time.Instant at = start.isEmpty() ? now : java.time.Instant.parse(start);
+        return new com.eternalrealm.season.SeasonSchedule(seasonId(), at, SEASON_LENGTH_DAYS.get());
+    }
+
+    private static boolean isInstant(String text) {
+        try {
+            java.time.Instant.parse(text);
+            return true;
+        } catch (java.time.format.DateTimeParseException e) {
+            return false;
+        }
     }
 }

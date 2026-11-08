@@ -408,6 +408,12 @@ public final class PlayerDataService {
         return true;
     }
 
+    /** EXP earned this season (0 if the data is not loaded). */
+    public long totalExperience(UUID playerId) {
+        PlayerCharacter character = active.get(playerId);
+        return character == null ? 0L : character.totalExperience();
+    }
+
     public long gold(UUID playerId) {
         PlayerCharacter character = active.get(playerId);
         return character == null ? 0L : character.gold();

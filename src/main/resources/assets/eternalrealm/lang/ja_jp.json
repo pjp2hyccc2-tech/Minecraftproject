@@ -366,7 +366,7 @@
   "season_status.eternalrealm.preparing": "準備中",
   "season_status.eternalrealm.active": "開催中",
   "season_status.eternalrealm.ended": "終了",
-  "season_status.eternalrealm.archived": "殿堂入り",
+  "season_status.eternalrealm.archived": "記録済み",
   "message.eternalrealm.season.started": "シーズン %1$s が開幕しました！ DAY %2$s / %3$s",
   "message.eternalrealm.season.day_changed": "シーズン %1$s: DAY %2$s / %3$s が始まりました",
   "message.eternalrealm.season.final_day": "最終日です！ シーズン %1$s は DAY %2$s / %3$s で終了します",
@@ -505,5 +505,10 @@
   "message.eternalrealm.guild.help": "ギルド: /guild create <タグ> <名前> で設立、/g <発言> でギルドチャット",
   "message.eternalrealm.guild.info": "ギルド「%s」[%s] Lv%s  メンバー %s/%s  マスター %s",
   "chat.eternalrealm.party": "[パーティー] %s: %s",
-  "chat.eternalrealm.guild": "[%s] %s: %s"
+  "chat.eternalrealm.guild": "[%s] %s: %s",
+  "message.eternalrealm.season.info": "シーズン %s: %s（%s日目 / %s日）",
+  "title.eternalrealm.season.day": "DAY %s",
+  "message.eternalrealm.ranking.header": "=== ランキング: %s ===",
+  "message.eternalrealm.ranking.empty": "まだ記録がありません",
+  "message.eternalrealm.ranking.time_attack_hint": "ボスタイムアタックは冒険の書のランキングページで確認できます"
 }

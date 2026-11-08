@@ -17,6 +17,10 @@ import com.eternalrealm.persistence.file.EmergencyDumpWriter;
 import com.eternalrealm.persistence.file.FileAccountRepository;
 import com.eternalrealm.persistence.file.FileCharacterRepository;
 import com.eternalrealm.persistence.file.FileGuildRepository;
+import com.eternalrealm.persistence.file.FileHallOfFameRepository;
+import com.eternalrealm.persistence.file.FileRankingRepository;
+import com.eternalrealm.persistence.file.FileSeasonStateRepository;
+import com.eternalrealm.ranking.forge.RankingService;
 import com.eternalrealm.social.forge.GuildManager;
 import com.eternalrealm.social.forge.PartyManager;
 import com.eternalrealm.player.PlayerDataService;
@@ -113,8 +117,11 @@ public final class ServerBootstrap {
 
         TokenBucketRateLimiter<UUID> uiLimiter = TokenBucketRateLimiter.systemClock(
                 ERServerConfig.UI_ACTION_BURST.get(), ERServerConfig.UI_ACTION_PER_SECOND.get());
+        RankingService rankings = new RankingService(server, playerData, io, clock,
+                new FileRankingRepository(dataDirectory, store), new FileSeasonStateRepository(dataDirectory, store),
+                new FileHallOfFameRepository(dataDirectory, store), ERServerConfig.seasonSchedule(clock.instant()));
         GameServices game = new GameServices(ERServerConfig.jobRules(), new PartyManager(server, playerData),
-                new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season));
+                new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season), rankings);
 
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
                 allocateLimiter, violations, floods, syncQueue, combat, uiLimiter, game);

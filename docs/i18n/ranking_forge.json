@@ -1,0 +1,11 @@
+{
+  "message.eternalrealm.season.info": {"ja": "シーズン %s: %s（%s日目 / %s日）", "en": "Season %s: %s (day %s of %s)"},
+  "season_status.eternalrealm.preparing": {"ja": "準備中", "en": "Preparing"},
+  "season_status.eternalrealm.active": {"ja": "開催中", "en": "Active"},
+  "season_status.eternalrealm.ended": {"ja": "終了", "en": "Ended"},
+  "season_status.eternalrealm.archived": {"ja": "記録済み", "en": "Archived"},
+  "title.eternalrealm.season.day": {"ja": "DAY %s", "en": "DAY %s"},
+  "message.eternalrealm.ranking.header": {"ja": "=== ランキング: %s ===", "en": "=== Ranking: %s ==="},
+  "message.eternalrealm.ranking.empty": {"ja": "まだ記録がありません", "en": "No records yet"},
+  "message.eternalrealm.ranking.time_attack_hint": {"ja": "ボスタイムアタックは冒険の書のランキングページで確認できます", "en": "See boss time attacks on the journal's ranking page"}
+}
