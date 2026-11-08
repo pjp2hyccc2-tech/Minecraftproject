@@ -17,7 +17,8 @@ import java.util.Optional;
 /** Party page: members with health, invite by name, leave, raid conversion, kick/promote for the leader. */
 public final class PartyScreen extends JournalScreen {
     private EditBox nameBox;
-    private long seenRevision = -1;
+    private String typedName = "";
+    private String seenStructure = "";
     private long lastRequest;
 
     public PartyScreen() {
@@ -29,6 +30,8 @@ public final class PartyScreen extends JournalScreen {
         nameBox = new EditBox(font, left, top + 16, 120, 16, Component.translatable("screen.eternalrealm.party.name"));
         nameBox.setMaxLength(16);
         nameBox.setHint(Component.translatable("screen.eternalrealm.party.name"));
+        nameBox.setValue(typedName);
+        nameBox.setResponder(value -> typedName = value);
         addRenderableWidget(nameBox);
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.party.invite"), b -> {
             String name = nameBox.getValue().trim();
@@ -70,7 +73,22 @@ public final class PartyScreen extends JournalScreen {
                 }
             }
         }
-        seenRevision = ClientUiState.revision();
+        seenStructure = structure();
+    }
+
+    /** Membership, leadership and raid state: the page rebuilds its buttons only when these change. */
+    private static String structure() {
+        Optional<JsonObject> party = ClientUiState.get("party");
+        if (party.isEmpty() || !party.get().has("members")) {
+            return "";
+        }
+        StringBuilder key = new StringBuilder(party.get().has("raid") && party.get().get("raid").getAsBoolean() ? "R" : "P");
+        for (JsonElement element : party.get().getAsJsonArray("members")) {
+            JsonObject member = element.getAsJsonObject();
+            key.append(ClientUiState.stringOr(member, "id", "")).append(member.has("leader")
+                    && member.get("leader").getAsBoolean() ? '*' : ',');
+        }
+        return key.toString();
     }
 
     private void send(String action, String key, String value) {
@@ -90,8 +108,12 @@ public final class PartyScreen extends JournalScreen {
     public void tick() {
         super.tick();
         nameBox.tick();
-        if (ClientUiState.revision() != seenRevision) {
+        if (!structure().equals(seenStructure)) {
+            boolean focused = nameBox.isFocused();
             rebuildWidgets();
+            if (focused) {
+                setFocused(nameBox);
+            }
         }
     }
 

@@ -16,6 +16,7 @@ import java.util.Optional;
 /** Ranking page: category buttons and the top 20 of the selected category, with the player's own rank. */
 public final class RankingScreen extends JournalScreen {
     private static RankingCategory selected = RankingCategory.OVERALL;
+    private boolean requested;
 
     public RankingScreen() {
         super(Tab.RANKING);
@@ -39,18 +40,22 @@ public final class RankingScreen extends JournalScreen {
                 y += 16;
             }
         }
-        select(selected);
+        if (!requested) {
+            request();
+        }
     }
 
     private void select(RankingCategory category) {
-        boolean changed = category != selected;
         selected = category;
+        request();
+        rebuildWidgets();
+    }
+
+    private void request() {
+        requested = true;
         JsonObject args = new JsonObject();
-        args.addProperty("category", category.id());
+        args.addProperty("category", selected.id());
         ERNetwork.sendToServer(new UiActionPacket("ranking.view", args));
-        if (changed) {
-            rebuildWidgets();
-        }
     }
 
     @Override

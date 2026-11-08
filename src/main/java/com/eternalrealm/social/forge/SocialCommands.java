@@ -48,8 +48,10 @@ public final class SocialCommands {
                         .executes(ctx -> withParty(ctx, (parties, player) ->
                                 memberByName(ctx, player).ifPresent(id -> parties.promote(player, id)))))));
         dispatcher.register(Commands.literal("p").then(Commands.argument("message", MessageArgument.message())
-                .executes(ctx -> withParty(ctx, (parties, player) ->
-                        parties.chat(player, MessageArgument.getMessage(ctx, "message").getString())))));
+                .executes(ctx -> {
+                    String message = MessageArgument.getMessage(ctx, "message").getString();
+                    return withParty(ctx, (parties, player) -> parties.chat(player, message));
+                })));
 
         dispatcher.register(Commands.literal("guild")
                 .executes(ctx -> guildInfo(ctx))
@@ -81,8 +83,10 @@ public final class SocialCommands {
                         .executes(ctx -> withGuild(ctx, (guilds, player) ->
                                 guildMember(ctx, guilds, player).ifPresent(id -> guilds.transfer(player, id)))))));
         dispatcher.register(Commands.literal("g").then(Commands.argument("message", MessageArgument.message())
-                .executes(ctx -> withGuild(ctx, (guilds, player) ->
-                        guilds.chat(player, MessageArgument.getMessage(ctx, "message").getString())))));
+                .executes(ctx -> {
+                    String message = MessageArgument.getMessage(ctx, "message").getString();
+                    return withGuild(ctx, (guilds, player) -> guilds.chat(player, message));
+                })));
     }
 
     private static ServerPlayer target(CommandContext<CommandSourceStack> ctx) {

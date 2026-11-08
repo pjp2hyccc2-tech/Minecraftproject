@@ -17,7 +17,8 @@ import java.util.Optional;
 public final class GuildScreen extends JournalScreen {
     private EditBox first;
     private EditBox second;
-    private long seenRevision = -1;
+    private final String[] typed = {"", ""};
+    private String seenGuild;
     private long lastRequest;
 
     public GuildScreen() {
@@ -26,31 +27,36 @@ public final class GuildScreen extends JournalScreen {
 
     @Override
     protected void initPage() {
-        if (seenRevision < 0) {
+        if (seenGuild == null) {
             send("guild.view", new JsonObject());
         }
-        seenRevision = ClientUiState.revision();
+        seenGuild = guildJson();
+        first = null;
+        second = null;
         Optional<JsonObject> guild = ClientUiState.get("guild");
         boolean member = guild.isPresent() && guild.get().has("name");
         if (!member) {
-            first = box(left, top + 40, 60, "screen.eternalrealm.guild.tag", 5);
-            second = box(left + 64, top + 40, 150, "screen.eternalrealm.guild.name", 16);
+            first = box(left, top + 40, 60, "screen.eternalrealm.guild.tag", 5, 0);
+            second = box(left + 64, top + 40, 150, "screen.eternalrealm.guild.name", 16, 1);
             addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.guild.create"), b -> {
                 JsonObject args = new JsonObject();
                 args.addProperty("tag", first.getValue().trim());
                 args.addProperty("name", second.getValue().trim());
                 send("guild.create", args);
+                typed[0] = "";
+                typed[1] = "";
             }).bounds(left + 218, top + 39, 70, 18).build());
             addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.guild.accept"),
                     b -> send("guild.accept", new JsonObject())).bounds(left, top + 64, 90, 18).build());
             return;
         }
-        first = box(left, top + 30, 120, "screen.eternalrealm.party.name", 16);
+        first = box(left, top + 30, 120, "screen.eternalrealm.party.name", 16, 0);
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.party.invite"), b -> {
             JsonObject args = new JsonObject();
             args.addProperty("name", first.getValue().trim());
             send("guild.invite", args);
             first.setValue("");
+            typed[0] = "";
         }).bounds(left + 124, top + 29, 60, 18).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.guild.leave"),
                 b -> send("guild.leave", new JsonObject())).bounds(left, top + PANEL_HEIGHT - 20, 80, 18).build());
@@ -76,11 +82,17 @@ public final class GuildScreen extends JournalScreen {
         }
     }
 
-    private EditBox box(int x, int y, int width, String hint, int max) {
+    private EditBox box(int x, int y, int width, String hint, int max, int slot) {
         EditBox box = new EditBox(font, x, y, width, 16, Component.translatable(hint));
         box.setMaxLength(max);
         box.setHint(Component.translatable(hint));
+        box.setValue(typed[slot]);
+        box.setResponder(value -> typed[slot] = value);
         return addRenderableWidget(box);
+    }
+
+    private static String guildJson() {
+        return ClientUiState.get("guild").map(JsonObject::toString).orElse("");
     }
 
     private void idAction(String action, String id) {
@@ -107,7 +119,7 @@ public final class GuildScreen extends JournalScreen {
         if (second != null) {
             second.tick();
         }
-        if (ClientUiState.revision() != seenRevision) {
+        if (!guildJson().equals(seenGuild)) {
             rebuildWidgets();
         }
     }
