@@ -1,19 +1,50 @@
 package com.eternalrealm;
 
+import com.eternalrealm.bootstrap.ServerBootstrap;
+import com.eternalrealm.character.forge.CharacterCommands;
+import com.eternalrealm.character.forge.InterimKillExperience;
+import com.eternalrealm.config.ERClientConfig;
+import com.eternalrealm.config.ERServerConfig;
 import com.eternalrealm.core.ModInfo;
+import com.eternalrealm.network.forge.ERNetwork;
+import com.eternalrealm.player.forge.PlayerConnectionEvents;
 import com.mojang.logging.LogUtils;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 /**
  * Mod entry point. Only wiring lives here: every system is its own module (see docs/ARCHITECTURE.md).
+ * Client-only wiring is in {@code com.eternalrealm.client} and is loaded by Forge on the client only.
  */
 @Mod(ModInfo.MOD_ID)
 public final class EternalRealm {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public EternalRealm(FMLJavaModLoadingContext context) {
-        LOGGER.info("{} {} loaded", ModInfo.DISPLAY_NAME, context.getContainer().getModInfo().getVersion());
+        IEventBus modBus = context.getModEventBus();
+        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+
+        context.registerConfig(ModConfig.Type.SERVER, ERServerConfig.SPEC);
+        context.registerConfig(ModConfig.Type.CLIENT, ERClientConfig.SPEC);
+
+        ERNetwork.register();
+
+        modBus.addListener(ServerBootstrap::onConfigReloading);
+        forgeBus.addListener(ServerBootstrap::onServerAboutToStart);
+        forgeBus.addListener(ServerBootstrap::onServerStopping);
+        forgeBus.addListener(ServerBootstrap::onServerStopped);
+        forgeBus.addListener(ServerBootstrap::onServerTick);
+        forgeBus.addListener(PlayerConnectionEvents::onPlayerLoggedIn);
+        forgeBus.addListener(PlayerConnectionEvents::onPlayerLoggedOut);
+        forgeBus.addListener(EventPriority.LOWEST, InterimKillExperience::onLivingDeath);
+        forgeBus.addListener(CharacterCommands::onRegisterCommands);
+
+        LOGGER.info("{} {} loaded (network protocol {})", ModInfo.DISPLAY_NAME,
+                context.getContainer().getModInfo().getVersion(), ERNetwork.PROTOCOL_VERSION);
     }
 }

@@ -1,0 +1,55 @@
+name: build
+
+# Compile + unit tests + headless Minecraft server boot with GameTests.
+# This is the automated part of the "完了条件": the mod must load on a dedicated-type server without errors.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Compile, unit tests and mod jar
+        run: ./gradlew build --no-daemon --stacktrace
+
+      - name: Boot a GameTest server with the mod and run all GameTests
+        run: ./gradlew runGameTestServer --no-daemon --stacktrace
+
+      - name: Upload mod jar
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eternalrealm-jar
+          path: build/libs/*.jar
+
+      - name: Upload reports and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-and-logs
+          path: |
+            build/reports/
+            build/test-results/
+            run/logs/
+          if-no-files-found: ignore
