@@ -92,9 +92,10 @@ public final class RankingService {
         boolean ok;
         try {
             manager = SeasonManager.atStartup(seasonStates.load(), configured);
-            Optional<RankingSnapshot> snapshot = rankings.load(manager.seasonId());
+            com.eternalrealm.season.SeasonId seasonId = manager.seasonId();
+            Optional<RankingSnapshot> snapshot = rankings.load(seasonId);
             loadedBoard = snapshot.map(s -> RankingBoard.rebuild(s, RankingRules.defaults()))
-                    .orElseGet(() -> new RankingBoard(manager.seasonId(), RankingRules.defaults()));
+                    .orElseGet(() -> new RankingBoard(seasonId, RankingRules.defaults()));
             if (!manager.isRankingOpen() && manager.status() != com.eternalrealm.season.SeasonStatus.PREPARING) {
                 loadedBoard.freeze();
             }
