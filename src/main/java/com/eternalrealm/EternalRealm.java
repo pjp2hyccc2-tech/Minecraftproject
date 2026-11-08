@@ -10,6 +10,7 @@ import com.eternalrealm.combat.forge.ERItems;
 import com.eternalrealm.combat.forge.ERMobEffects;
 import com.eternalrealm.job.forge.JobActions;
 import com.eternalrealm.social.forge.SocialCommands;
+import com.eternalrealm.npc.forge.Npcs;
 import com.eternalrealm.ranking.forge.RankingCommands;
 import com.eternalrealm.config.ERClientConfig;
 import com.eternalrealm.config.ERServerConfig;
@@ -61,6 +62,7 @@ public final class EternalRealm {
         forgeBus.addListener(SocialCommands::onRegisterCommands);
         forgeBus.addListener(RankingCommands::onRegisterCommands);
         forgeBus.addListener(SocialCommands::onNameFormat);
+        forgeBus.addListener(Npcs::onEntityInteract);
         forgeBus.addListener(CombatEvents::onLivingAttack);
         forgeBus.addListener(CombatEvents::onLivingHurt);
         forgeBus.addListener(CombatEvents::onKnockBack);

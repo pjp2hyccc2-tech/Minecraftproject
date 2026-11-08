@@ -87,7 +87,7 @@ public final class GuildManager {
             return;
         }
         report(founder, service.create(founder.getUUID(), name, tag, now()));
-        founder.refreshDisplayName();
+        refresh(founder.getUUID());
     }
 
     public void invite(ServerPlayer inviter, ServerPlayer invitee) {
@@ -110,7 +110,7 @@ public final class GuildManager {
             return;
         }
         report(player, service.accept(player.getUUID(), invite.get().guildId(), now()));
-        player.refreshDisplayName();
+        refresh(player.getUUID());
     }
 
     public void decline(ServerPlayer player) {
@@ -122,7 +122,7 @@ public final class GuildManager {
     public void leave(ServerPlayer player) {
         if (checkAvailable(player)) {
             report(player, service.leave(player.getUUID()));
-            player.refreshDisplayName();
+            refresh(player.getUUID());
         }
     }
 
@@ -196,6 +196,7 @@ public final class GuildManager {
         ServerPlayer player = server.getPlayerList().getPlayer(id);
         if (player != null) {
             player.refreshDisplayName();
+            NameplateTeams.update(player);
         }
     }
 

@@ -30,6 +30,7 @@ public final class CharacterSync {
             }
             context.playerData().snapshot(playerId).ifPresent(snapshot -> ERNetwork.sendToPlayer(player,
                     new CharacterSnapshotPacket(snapshot, PlayerStats.compose(player, snapshot).bonus())));
+            com.eternalrealm.social.forge.NameplateTeams.update(player);
         }
     }
 }

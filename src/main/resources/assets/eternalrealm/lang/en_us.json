@@ -510,5 +510,17 @@
   "title.eternalrealm.season.day": "DAY %s",
   "message.eternalrealm.ranking.header": "=== Ranking: %s ===",
   "message.eternalrealm.ranking.empty": "No records yet",
-  "message.eternalrealm.ranking.time_attack_hint": "See boss time attacks on the journal's ranking page"
+  "message.eternalrealm.ranking.time_attack_hint": "See boss time attacks on the journal's ranking page",
+  "npc.eternalrealm.quest_board": "Guild Clerk Rina",
+  "npc.eternalrealm.item_shop": "Marco the Merchant",
+  "npc.eternalrealm.blacksmith": "Gald the Smith",
+  "npc.eternalrealm.job_master": "Job Master Celia",
+  "npc.eternalrealm.auction": "Owen of the Exchange",
+  "npc.eternalrealm.mailbox": "Pipi the Postmaster",
+  "npc.eternalrealm.guild_registrar": "Registrar Harold",
+  "npc.eternalrealm.gatekeeper": "Gatekeeper Valk",
+  "npc.eternalrealm.arena_master": "Arena Master Drake",
+  "npc.eternalrealm.hall_of_fame": "Chronicler Sophia",
+  "npc.eternalrealm.story": "Traveller",
+  "npc.eternalrealm.greeting": "%s: \"Welcome, adventurer.\""
 }

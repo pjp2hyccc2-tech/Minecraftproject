@@ -510,5 +510,17 @@
   "title.eternalrealm.season.day": "DAY %s",
   "message.eternalrealm.ranking.header": "=== ランキング: %s ===",
   "message.eternalrealm.ranking.empty": "まだ記録がありません",
-  "message.eternalrealm.ranking.time_attack_hint": "ボスタイムアタックは冒険の書のランキングページで確認できます"
+  "message.eternalrealm.ranking.time_attack_hint": "ボスタイムアタックは冒険の書のランキングページで確認できます",
+  "npc.eternalrealm.quest_board": "冒険者ギルド受付 リーナ",
+  "npc.eternalrealm.item_shop": "道具屋 マルコ",
+  "npc.eternalrealm.blacksmith": "鍛冶師 ガルド",
+  "npc.eternalrealm.job_master": "職業ギルド長 セリア",
+  "npc.eternalrealm.auction": "取引所の番人 オーウェン",
+  "npc.eternalrealm.mailbox": "郵便係 ピピ",
+  "npc.eternalrealm.guild_registrar": "ギルド登録官 ハロルド",
+  "npc.eternalrealm.gatekeeper": "転移門の番人 ヴァルク",
+  "npc.eternalrealm.arena_master": "闘技場の主 ドレイク",
+  "npc.eternalrealm.hall_of_fame": "記録官 ソフィア",
+  "npc.eternalrealm.story": "旅人",
+  "npc.eternalrealm.greeting": "%s「ようこそ、冒険者さん。」"
 }

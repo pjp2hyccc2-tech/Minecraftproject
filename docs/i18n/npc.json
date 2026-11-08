@@ -1,0 +1,14 @@
+{
+  "npc.eternalrealm.quest_board": {"ja": "冒険者ギルド受付 リーナ", "en": "Guild Clerk Rina"},
+  "npc.eternalrealm.item_shop": {"ja": "道具屋 マルコ", "en": "Marco the Merchant"},
+  "npc.eternalrealm.blacksmith": {"ja": "鍛冶師 ガルド", "en": "Gald the Smith"},
+  "npc.eternalrealm.job_master": {"ja": "職業ギルド長 セリア", "en": "Job Master Celia"},
+  "npc.eternalrealm.auction": {"ja": "取引所の番人 オーウェン", "en": "Owen of the Exchange"},
+  "npc.eternalrealm.mailbox": {"ja": "郵便係 ピピ", "en": "Pipi the Postmaster"},
+  "npc.eternalrealm.guild_registrar": {"ja": "ギルド登録官 ハロルド", "en": "Registrar Harold"},
+  "npc.eternalrealm.gatekeeper": {"ja": "転移門の番人 ヴァルク", "en": "Gatekeeper Valk"},
+  "npc.eternalrealm.arena_master": {"ja": "闘技場の主 ドレイク", "en": "Arena Master Drake"},
+  "npc.eternalrealm.hall_of_fame": {"ja": "記録官 ソフィア", "en": "Chronicler Sophia"},
+  "npc.eternalrealm.story": {"ja": "旅人", "en": "Traveller"},
+  "npc.eternalrealm.greeting": {"ja": "%s「ようこそ、冒険者さん。」", "en": "%s: \"Welcome, adventurer.\""}
+}

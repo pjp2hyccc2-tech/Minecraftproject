@@ -73,6 +73,8 @@ public final class JobActions {
                 if (change.firstChoice()) {
                     giveStarterKit(player, job);
                 }
+                player.refreshDisplayName();
+                player.refreshTabListName();
                 return true;
             }
             case SAME_JOB -> player.displayClientMessage(Component.translatable("message.eternalrealm.job.same", name), true);

@@ -176,12 +176,27 @@ public final class SocialCommands {
         return 1;
     }
 
-    /** "[TAG] Name" in chat, death messages and the player list. */
+    /**
+     * "[TAG] ⚔Name": the guild tag and a job emblem in the job's colour, in chat, death messages, the player list
+     * and above the head.
+     */
     public static void onNameFormat(PlayerEvent.NameFormat event) {
-        if (event.getEntity() instanceof ServerPlayer player) {
-            ServerContext.current().flatMap(context -> context.game().guilds().tagOf(player.getUUID()))
-                    .ifPresent(tag -> event.setDisplayname(Component.literal("[" + tag + "] ")
-                            .withStyle(net.minecraft.ChatFormatting.GREEN).append(event.getDisplayname())));
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
+            return;
         }
+        ServerContext.current().ifPresent(context -> {
+            Component name = event.getDisplayname();
+            var job = context.playerData().snapshot(player.getUUID())
+                    .map(snapshot -> com.eternalrealm.job.JobType.fromStored(snapshot.jobId()))
+                    .orElse(com.eternalrealm.job.JobType.NONE);
+            if (job.isChosen()) {
+                name = Component.literal(JobEmblems.symbol(job)).withStyle(JobEmblems.color(job)).append(name);
+            }
+            Optional<String> tag = context.game().guilds().tagOf(player.getUUID());
+            if (tag.isPresent()) {
+                name = Component.literal("[" + tag.get() + "] ").withStyle(net.minecraft.ChatFormatting.GREEN).append(name);
+            }
+            event.setDisplayname(name);
+        });
     }
 }
