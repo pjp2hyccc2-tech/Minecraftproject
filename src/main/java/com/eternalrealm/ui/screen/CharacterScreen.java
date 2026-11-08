@@ -29,12 +29,18 @@ public final class CharacterScreen extends Screen {
     private static final int ROW_HEIGHT = 20;
     /** Shift-click spends up to this many points (the server default limit per request is 10). */
     private static final int SHIFT_AMOUNT = 10;
+    /**
+     * Client-side pacing (max 4 requests/s) stays below the server's default rate limit (5/s, burst 10), so fast
+     * clicking or key repeat on a focused button never produces dropped requests.
+     */
+    private static final long MIN_REQUEST_INTERVAL_MILLIS = 250L;
     private static final int PANEL_BACKGROUND = 0xD0101018;
     private static final int PANEL_BORDER = 0xFF5A4A2A;
 
     private final Map<StatType, Button> plusButtons = new EnumMap<>(StatType.class);
     private int left;
     private int top;
+    private long lastRequestMillis;
 
     public CharacterScreen() {
         super(Component.translatable("screen.eternalrealm.character.title"));
@@ -66,6 +72,11 @@ public final class CharacterScreen extends Screen {
         if (snapshot.isEmpty() || snapshot.get().unspentStatPoints() <= 0) {
             return;
         }
+        long now = System.currentTimeMillis();
+        if (now - lastRequestMillis < MIN_REQUEST_INTERVAL_MILLIS) {
+            return;
+        }
+        lastRequestMillis = now;
         int amount = hasShiftDown() ? Math.min(snapshot.get().unspentStatPoints(), SHIFT_AMOUNT) : 1;
         ERNetwork.sendToServer(new AllocateStatPacket(stat, amount));
     }

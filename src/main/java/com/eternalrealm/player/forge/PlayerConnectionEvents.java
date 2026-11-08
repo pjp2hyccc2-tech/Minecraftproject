@@ -43,6 +43,7 @@ public final class PlayerConnectionEvents {
             context.playerData().onPlayerLeave(playerId);
             context.allocateLimiter().forget(playerId);
             context.violations().forget(playerId);
+            context.floods().forget(playerId);
             context.syncQueue().forget(playerId);
         });
     }

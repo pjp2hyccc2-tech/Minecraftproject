@@ -12,6 +12,7 @@ import com.eternalrealm.network.TokenBucketRateLimiter;
 import com.eternalrealm.network.ViolationTracker;
 import com.eternalrealm.persistence.backup.SnapshotBackupService;
 import com.eternalrealm.persistence.file.AtomicFileStore;
+import com.eternalrealm.persistence.file.EmergencyDumpWriter;
 import com.eternalrealm.persistence.file.FileAccountRepository;
 import com.eternalrealm.persistence.file.FileCharacterRepository;
 import com.eternalrealm.player.PlayerDataService;
@@ -85,18 +86,22 @@ public final class ServerBootstrap {
                 new FileCharacterRepository(dataDirectory, store),
                 io, mainThread, clock, season, rules,
                 Duration.ofSeconds(ERServerConfig.AUTOSAVE_INTERVAL_SECONDS.get()),
-                new ForgePlayerDataListener(server, mainThread, syncQueue));
+                new ForgePlayerDataListener(server, mainThread, syncQueue),
+                new EmergencyDumpWriter(dataDirectory.resolve("emergency"), clock));
         SnapshotBackupService backups = new SnapshotBackupService(dataDirectory, backupDirectory,
                 ERServerConfig.BACKUP_KEEP.get(), clock);
         PeriodicTrigger backupTrigger = new PeriodicTrigger(
                 Duration.ofMinutes(ERServerConfig.BACKUP_INTERVAL_MINUTES.get()), clock);
         TokenBucketRateLimiter<UUID> allocateLimiter = TokenBucketRateLimiter.systemClock(
                 ERServerConfig.ALLOCATE_BURST.get(), ERServerConfig.ALLOCATE_PER_SECOND.get());
+        long violationWindowMillis = ERServerConfig.VIOLATION_WINDOW_SECONDS.get() * 1000L;
         ViolationTracker violations = new ViolationTracker(ERServerConfig.VIOLATION_KICK_THRESHOLD.get(),
-                ERServerConfig.VIOLATION_WINDOW_SECONDS.get() * 1000L, System::currentTimeMillis);
+                violationWindowMillis, System::currentTimeMillis);
+        ViolationTracker floods = new ViolationTracker(ERServerConfig.FLOOD_KICK_THRESHOLD.get(),
+                violationWindowMillis, System::currentTimeMillis);
 
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
-                allocateLimiter, violations, syncQueue);
+                allocateLimiter, violations, floods, syncQueue);
     }
 
     public static void onServerTick(TickEvent.ServerTickEvent event) {
@@ -132,18 +137,30 @@ public final class ServerBootstrap {
         }
     }
 
+    /**
+     * Queues saves right away so they run in parallel with vanilla's world save (and are more likely to be on disk if
+     * the process is killed). The final flush happens in {@link #onServerStopped}.
+     */
     public static void onServerStopping(ServerStoppingEvent event) {
-        if (ServerContext.current().isPresent()) {
-            LOG.info("Server stopping: player data is flushed once all players are disconnected");
-        }
+        ServerContext.current()
+                .filter(context -> context.server() == event.getServer())
+                .ifPresent(context -> {
+                    try {
+                        int queued = context.playerData().saveAllDirty();
+                        LOG.info("Server stopping: queued {} character save(s); final flush follows", queued);
+                    } catch (RuntimeException e) {
+                        LOG.error("Queuing saves on server stop failed", e);
+                    }
+                });
     }
 
     /**
-     * Runs after vanilla disconnected every player (their saves are already queued). Fired even when the server
-     * stops because of a crash.
+     * Final flush. Fired even when the server stops because of a crash. Vanilla does not reliably fire
+     * {@code PlayerLoggedOutEvent} for remote players while stopping (their connections are only closed), so the
+     * flush saves everything that is still loaded instead of relying on logout saves.
      */
     public static void onServerStopped(ServerStoppedEvent event) {
-        ServerContext context = ServerContext.uninstall();
+        ServerContext context = ServerContext.uninstallIfOwnedBy(event.getServer());
         if (context != null) {
             shutdown(context);
         }

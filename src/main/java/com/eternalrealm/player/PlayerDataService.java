@@ -23,12 +23,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -50,8 +48,14 @@ import java.util.concurrent.Executor;
  * <ul>
  *     <li>A failed load never produces a fresh character; the player is rejected via
  *         {@link PlayerDataListener#onLoadFailed}.</li>
- *     <li>Saves are retried. If the save of a player who already left still fails, the record is kept in memory,
- *         preferred over (stale) disk data on the next login and retried by autosave.</li>
+ *     <li>Every save gets a sequence number. Saves are snapshotted on the server thread in program order, so a save
+ *         with a higher number always contains the changes of every lower-numbered save of the same player.
+ *         Failure handling is decided by these numbers, never by wall-clock time.</li>
+ *     <li>Saves are retried. If the newest save of a player who already left still fails, the record is kept in memory,
+ *         preferred over (stale) disk data on the next login and retried by autosave. An older failed save is ignored
+ *         when a newer save of the same player is queued or has succeeded.</li>
+ *     <li>At shutdown, a failed final save is retried once synchronously; what still cannot be saved is handed to the
+ *         {@link EmergencyDump}.</li>
  * </ul>
  */
 public final class PlayerDataService {
@@ -66,19 +70,21 @@ public final class PlayerDataService {
     private final Clock clock;
     private final SeasonId season;
     private final PlayerDataListener listener;
+    private final EmergencyDump emergencyDump;
     private final PeriodicTrigger autosave;
 
     private final PlayerSessionRegistry sessions = new PlayerSessionRegistry();
     private final Map<UUID, PlayerCharacter> active = new HashMap<>();
-    private final Map<UUID, CharacterRecord> unsaved = new HashMap<>();
-    private final Set<UUID> savesInFlight = new HashSet<>();
+    private final Map<UUID, UnsavedRecord> unsaved = new HashMap<>();
+    private final Map<UUID, SaveTracker> saveTrackers = new HashMap<>();
     private final List<PendingSave> pendingSaves = new ArrayList<>();
+    private long nextSaveSequence = 1;
     private CharacterRules rules;
     private boolean shuttingDown;
 
     public PlayerDataService(AccountRepository accounts, CharacterRepository characters, KeyedSerialExecutor<UUID> io,
                              Executor mainThread, Clock clock, SeasonId season, CharacterRules rules,
-                             Duration autosaveInterval, PlayerDataListener listener) {
+                             Duration autosaveInterval, PlayerDataListener listener, EmergencyDump emergencyDump) {
         this.accounts = Objects.requireNonNull(accounts, "accounts");
         this.characters = Objects.requireNonNull(characters, "characters");
         this.io = Objects.requireNonNull(io, "io");
@@ -87,6 +93,7 @@ public final class PlayerDataService {
         this.season = Objects.requireNonNull(season, "season");
         this.rules = Objects.requireNonNull(rules, "rules");
         this.listener = Objects.requireNonNull(listener, "listener");
+        this.emergencyDump = Objects.requireNonNull(emergencyDump, "emergencyDump");
         this.autosave = new PeriodicTrigger(autosaveInterval, clock);
     }
 
@@ -165,10 +172,10 @@ public final class PlayerDataService {
             return;
         }
         PlayerCharacter character;
-        CharacterRecord pending = unsaved.remove(playerId);
+        UnsavedRecord pending = unsaved.remove(playerId);
         if (pending != null) {
             LOG.warn("Using in-memory data of {} because its last save failed", playerId);
-            character = PlayerCharacter.fromRecord(pending, rules);
+            character = PlayerCharacter.fromRecord(pending.record(), rules);
             character.markDirty();
         } else if (outcome.character() != null) {
             character = PlayerCharacter.fromRecord(outcome.character(), rules);
@@ -211,8 +218,9 @@ public final class PlayerDataService {
     }
 
     public Status status() {
+        long inFlight = saveTrackers.values().stream().filter(SaveTracker::inFlight).count();
         return new Status(sessions.size(), sessions.count(SessionState.LOADING), active.size(), unsaved.size(),
-                savesInFlight.size());
+                (int) inFlight);
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -321,18 +329,23 @@ public final class PlayerDataService {
         Instant now = clock.instant();
         for (Map.Entry<UUID, PlayerCharacter> entry : active.entrySet()) {
             PlayerCharacter character = entry.getValue();
-            if (character.isDirty() && !savesInFlight.contains(entry.getKey())) {
+            if (character.isDirty() && !isSaveInFlight(entry.getKey())) {
                 submitSave(character.toRecord(now), character.revision(), character);
                 queued++;
             }
         }
-        for (CharacterRecord record : List.copyOf(unsaved.values())) {
-            if (!savesInFlight.contains(record.playerId())) {
-                submitSave(record, 0L, null);
+        for (UnsavedRecord pending : List.copyOf(unsaved.values())) {
+            if (!isSaveInFlight(pending.record().playerId())) {
+                submitSave(pending.record(), 0L, null);
                 queued++;
             }
         }
         return queued;
+    }
+
+    private boolean isSaveInFlight(UUID playerId) {
+        SaveTracker tracker = saveTrackers.get(playerId);
+        return tracker != null && tracker.inFlight();
     }
 
     /**
@@ -341,10 +354,11 @@ public final class PlayerDataService {
      */
     private CompletableFuture<Boolean> submitSave(CharacterRecord record, long revision, PlayerCharacter owner) {
         UUID playerId = record.playerId();
-        savesInFlight.add(playerId);
+        long sequence = nextSaveSequence++;
+        saveTrackers.computeIfAbsent(playerId, id -> new SaveTracker()).submitted = sequence;
         CompletableFuture<Boolean> future = io.submit(playerId, () -> {
             boolean ok = saveBlocking(record);
-            mainThread.execute(() -> completeSave(record, revision, owner, ok));
+            mainThread.execute(() -> completeSave(record, revision, owner, sequence, ok));
             return ok;
         });
         future.whenComplete((ok, error) -> {
@@ -352,7 +366,7 @@ public final class PlayerDataService {
                 LOG.error("Save task of {} could not run. UNSAVED STATE: {}", playerId, record, error);
             }
         });
-        pendingSaves.add(new PendingSave(record, future));
+        pendingSaves.add(new PendingSave(record, sequence, future));
         return future;
     }
 
@@ -382,31 +396,35 @@ public final class PlayerDataService {
         return false;
     }
 
-    private void completeSave(CharacterRecord record, long revision, PlayerCharacter owner, boolean ok) {
+    private void completeSave(CharacterRecord record, long revision, PlayerCharacter owner, long sequence, boolean ok) {
         UUID playerId = record.playerId();
-        savesInFlight.remove(playerId);
+        SaveTracker tracker = saveTrackers.computeIfAbsent(playerId, id -> new SaveTracker());
+        tracker.completed = Math.max(tracker.completed, sequence);
         PlayerCharacter live = active.get(playerId);
         if (ok) {
             if (owner != null && live == owner) {
                 owner.markSaved(revision);
             }
-            unsaved.remove(playerId, record);
-            return;
+            UnsavedRecord pending = unsaved.get(playerId);
+            if (pending != null && pending.sequence() <= sequence) {
+                // This save was snapshotted after the unsaved one, so it contains its state.
+                unsaved.remove(playerId);
+            }
+        } else if (live == null && sequence == tracker.submitted) {
+            // Nobody holds this state any more and no newer save is queued: keep it in memory.
+            unsaved.put(playerId, new UnsavedRecord(record, sequence));
         }
-        if (live != null) {
-            // The live character still holds this state (or newer) and stays dirty: autosave retries it.
-            return;
-        }
-        // Nobody holds this data any more. Keep it so it is neither lost nor shadowed by stale disk data.
-        CharacterRecord existing = unsaved.get(playerId);
-        if (existing == null || !existing.updatedAt().isAfter(record.updatedAt())) {
-            unsaved.put(playerId, record);
+        // Otherwise: the live character still holds this state (and stays dirty, so autosave retries it), or a
+        // newer save of this player is queued and carries this state plus later changes.
+        if (!tracker.inFlight() && live == null && !sessions.contains(playerId) && !unsaved.containsKey(playerId)) {
+            saveTrackers.remove(playerId);
         }
     }
 
     /**
-     * Flushes everything and waits for the I/O queue. Called on the server thread after the game loop stopped,
-     * so no completion callback will run any more; results are read from the futures directly.
+     * Flushes everything and waits for the I/O queue. Called on the server thread after the game loop stopped, so no
+     * completion callback runs any more: results are read from the futures directly, failed final saves are retried
+     * once synchronously, and whatever still cannot be saved goes to the {@link EmergencyDump}.
      */
     public ShutdownReport shutdown(Duration timeout) {
         if (shuttingDown) {
@@ -418,14 +436,14 @@ public final class PlayerDataService {
                 submitSave(character.toRecord(now), character.revision(), null);
             }
         }
-        for (CharacterRecord record : unsaved.values()) {
-            submitSave(record, 0L, null);
+        for (UnsavedRecord pending : unsaved.values()) {
+            submitSave(pending.record(), 0L, null);
         }
         shuttingDown = true;
         active.clear();
         unsaved.clear();
         sessions.clear();
-        savesInFlight.clear();
+        saveTrackers.clear();
 
         boolean drained;
         try {
@@ -434,29 +452,51 @@ public final class PlayerDataService {
             Thread.currentThread().interrupt();
             drained = false;
         }
+
+        // Only the newest save of each player matters: it contains everything older saves contained.
+        Map<UUID, PendingSave> newest = new HashMap<>();
+        for (PendingSave pendingSave : pendingSaves) {
+            newest.merge(pendingSave.record().playerId(), pendingSave,
+                    (a, b) -> a.sequence() >= b.sequence() ? a : b);
+        }
         int saved = 0;
         int failed = 0;
         int pending = 0;
-        for (PendingSave pendingSave : pendingSaves) {
+        for (PendingSave pendingSave : newest.values()) {
             CompletableFuture<Boolean> future = pendingSave.future();
             if (!future.isDone()) {
+                // Still running on the I/O thread: retrying here could race with it.
                 pending++;
-                LOG.error("Save of {} did not finish before the shutdown timeout. UNSAVED STATE: {}",
-                        pendingSave.record().playerId(), pendingSave.record());
-            } else if (future.isCompletedExceptionally() || !Boolean.TRUE.equals(future.getNow(Boolean.FALSE))) {
-                failed++;
-            } else {
+                LOG.error("Save of {} did not finish before the shutdown timeout", pendingSave.record().playerId());
+                emergencyDump.preserve(pendingSave.record());
+            } else if (!future.isCompletedExceptionally() && Boolean.TRUE.equals(future.getNow(Boolean.FALSE))) {
                 saved++;
+            } else if (retrySynchronously(pendingSave.record())) {
+                saved++;
+            } else {
+                failed++;
+                emergencyDump.preserve(pendingSave.record());
             }
         }
-        ShutdownReport report = new ShutdownReport(pendingSaves.size(), saved, failed, pending, drained);
+        ShutdownReport report = new ShutdownReport(newest.size(), saved, failed, pending, drained);
         pendingSaves.clear();
         if (report.clean()) {
             LOG.info("Player data flushed: {}", report);
         } else {
-            LOG.error("Player data flush incomplete: {} (see UNSAVED STATE entries above)", report);
+            LOG.error("Player data flush incomplete: {} (see the emergency files / UNSAVED STATE entries above)", report);
         }
         return report;
+    }
+
+    private boolean retrySynchronously(CharacterRecord record) {
+        try {
+            characters.save(record);
+            LOG.warn("Saved {} on the final shutdown retry", record.playerId());
+            return true;
+        } catch (DataAccessException | RuntimeException e) {
+            LOG.error("Final shutdown retry for {} failed", record.playerId(), e);
+            return false;
+        }
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -471,7 +511,20 @@ public final class PlayerDataService {
         }
     }
 
-    private record PendingSave(CharacterRecord record, CompletableFuture<Boolean> future) {
+    private record PendingSave(CharacterRecord record, long sequence, CompletableFuture<Boolean> future) {
+    }
+
+    private record UnsavedRecord(CharacterRecord record, long sequence) {
+    }
+
+    /** Sequence numbers of one player's saves (server thread only). */
+    private static final class SaveTracker {
+        private long submitted;
+        private long completed;
+
+        boolean inFlight() {
+            return submitted > completed;
+        }
     }
 
     /** Snapshot of the service state for operators ({@code /er admin status}). */
@@ -479,8 +532,10 @@ public final class PlayerDataService {
     }
 
     /**
-     * @param tracked saves observed during the shutdown window
-     * @param pending saves that had not finished when the timeout elapsed
+     * Per player whose data was saved during the shutdown window.
+     *
+     * @param tracked players with a save in the shutdown window
+     * @param pending players whose save had not finished when the timeout elapsed (preserved via the emergency dump)
      */
     public record ShutdownReport(int tracked, int saved, int failed, int pending, boolean drained) {
         public boolean clean() {

@@ -18,7 +18,8 @@ import java.util.function.Supplier;
  * Checks shared by every client→server packet, applied before any packet-specific logic (server thread):
  * <ol>
  *     <li>the packet has an authenticated sender (never trust identifiers inside the payload),</li>
- *     <li>the sender is within the per-packet rate limit,</li>
+ *     <li>the sender is within the per-packet rate limit (excess requests are dropped and counted as a possible
+ *         flood, not as protocol violations),</li>
  *     <li>the sender's data is loaded (session ACTIVE).</li>
  * </ol>
  */
@@ -43,7 +44,15 @@ public final class ServerPacketGuard {
             return Optional.empty();
         }
         if (!limiter.apply(context).tryAcquire(sender.getUUID())) {
-            violation(context, sender, packetName + ": rate limit exceeded");
+            // Not a protocol violation: legitimate players can click fast. Only a sustained flood disconnects.
+            ViolationTracker.Verdict flood = context.floods().record(sender.getUUID());
+            LOG.debug("Rate limit: dropped {} from {} ({} dropped in current window)", packetName,
+                    sender.getGameProfile().getName(), flood.countInWindow());
+            if (flood.shouldKick()) {
+                LOG.warn("Disconnecting {} ({}): request flood ({} requests dropped in the current window)",
+                        sender.getGameProfile().getName(), sender.getUUID(), flood.countInWindow());
+                sender.connection.disconnect(Component.translatable("disconnect.eternalrealm.violations"));
+            }
             return Optional.empty();
         }
         if (!context.playerData().isActive(sender.getUUID())) {

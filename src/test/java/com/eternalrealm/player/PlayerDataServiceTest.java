@@ -52,6 +52,7 @@ public class PlayerDataServiceTest {
     private final MutableClock clock = MutableClock.startingAt("2026-11-08T00:00:00Z");
     private final ManualExecutor main = new ManualExecutor();
     private final RecordingListener listener = new RecordingListener();
+    private final List<CharacterRecord> emergency = new ArrayList<>();
     private KeyedSerialExecutor<UUID> io;
     private InMemoryRepositories.Characters characters;
     private InMemoryRepositories.Accounts accounts;
@@ -72,7 +73,11 @@ public class PlayerDataServiceTest {
 
     private PlayerDataService newService(AccountRepository accountRepo, com.eternalrealm.character.CharacterRepository characterRepo) {
         return new PlayerDataService(accountRepo, characterRepo, io, main, clock, SEASON, CharacterRules.defaults(),
-                AUTOSAVE, listener);
+                AUTOSAVE, listener, emergency::add);
+    }
+
+    private CharacterRecord stored(UUID player) {
+        return characters.stored.get(InMemoryRepositories.Characters.key(player, SEASON));
     }
 
     /** Lets all I/O finish and runs every resulting server-thread callback. */
@@ -309,13 +314,116 @@ public class PlayerDataServiceTest {
         assertFalse(service.sessionState(BOB).isPresent());
     }
 
+    /**
+     * Regression test for the independent review finding: an autosave that fails while a newer logout save is queued
+     * must not be kept and later written over the newer data (progress rollback).
+     */
     @Test
-    public void shutdownReportsSavesThatKeepFailing() throws Exception {
+    public void olderFailedSaveIsNotResurrectedAfterANewerSaveSucceeded() throws Exception {
         joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 100, ExperienceSource.ADMIN);
+        characters.failNextSaves.set(PlayerDataService.SAVE_ATTEMPTS); // autosave A will fail every attempt
+        clock.advance(AUTOSAVE);
+        service.tick();                                                   // A: totalExperience 100
+        service.grantExperience(ALICE, 5_000, ExperienceSource.ADMIN);
+        service.onPlayerLeave(ALICE);                                     // B: totalExperience 5100, queued behind A
+        settle();
+
+        assertEquals(5_100, stored(ALICE).totalExperience());
+        assertEquals("the stale failed save must not be kept", 0, service.status().unsavedInMemory());
+
+        clock.advance(AUTOSAVE);
+        service.tick();
+        settle();
+        assertEquals("nothing may overwrite the newer data", 5_100, stored(ALICE).totalExperience());
+
+        joinAndLoad(ALICE, "Alice");
+        // 5100 EXP from level 1 = level 7 (100+283+520+800+1118+1470 = 4291, remainder 809); 100 EXP would be level 2.
+        CharacterSnapshot reloaded = service.snapshot(ALICE).orElseThrow();
+        assertEquals(7, reloaded.level());
+        assertEquals(809, reloaded.experience());
+    }
+
+    /**
+     * The window between the older failure's callback and the newer save's completion: a shutdown there must not
+     * re-save the stale failed state after the newer one.
+     */
+    @Test
+    public void shutdownNeverReplaysAStaleFailureWhileANewerSaveIsQueued() throws Exception {
+        // Configure the gate before any save can run: only B (totalExperience 5100) waits at it.
+        characters.saveGateFilter = record -> record.totalExperience() == 5_100;
+        characters.saveGate = new CountDownLatch(1);
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 100, ExperienceSource.ADMIN);
         characters.failNextSaves.set(PlayerDataService.SAVE_ATTEMPTS);
+        clock.advance(AUTOSAVE);
+        service.tick();                                                    // A: 100, fails
+        service.grantExperience(ALICE, 5_000, ExperienceSource.ADMIN);
+        service.onPlayerLeave(ALICE);                                      // B: 5100, held at the gate
+
+        long deadline = System.nanoTime() + 10_000_000_000L;
+        while (main.isEmpty()) {                                           // wait for A's failure callback
+            assertTrue("A did not complete", System.nanoTime() < deadline);
+            Thread.sleep(10);
+        }
+        main.runAll();                                                     // run it while B is still queued
+
+        Thread releaser = new Thread(() -> {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
+            }
+            characters.saveGate.countDown();
+        });
+        releaser.start();
+        PlayerDataService.ShutdownReport report = service.shutdown(Duration.ofSeconds(10));
+        releaser.join();
+
+        assertTrue(report.toString(), report.clean());
+        assertEquals(5_100, stored(ALICE).totalExperience());
+    }
+
+    @Test
+    public void newestFailedSaveIsKeptWhenEveryQueuedSaveFails() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 100, ExperienceSource.ADMIN);
+        characters.failNextSaves.set(2 * PlayerDataService.SAVE_ATTEMPTS); // both A and B fail
+        clock.advance(AUTOSAVE);
+        service.tick();                                                     // A: 100
+        service.grantExperience(ALICE, 5_000, ExperienceSource.ADMIN);
+        service.onPlayerLeave(ALICE);                                       // B: 5100
+        settle();
+        assertEquals(1, service.status().unsavedInMemory());
+
+        clock.advance(AUTOSAVE);
+        service.tick();
+        settle();
+        assertEquals("the newest state (B) must be the one retried", 5_100, stored(ALICE).totalExperience());
+        assertEquals(0, service.status().unsavedInMemory());
+    }
+
+    @Test
+    public void failedFinalSaveIsRetriedOnceAtShutdown() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 300, ExperienceSource.ADMIN);
+        characters.failNextSaves.set(PlayerDataService.SAVE_ATTEMPTS); // the I/O attempts fail, the final retry works
+        PlayerDataService.ShutdownReport report = service.shutdown(Duration.ofSeconds(10));
+        assertTrue(report.toString(), report.clean());
+        assertEquals(300, stored(ALICE).totalExperience());
+        assertTrue(emergency.isEmpty());
+    }
+
+    @Test
+    public void dataThatCannotBeSavedAtShutdownGoesToTheEmergencyDump() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 300, ExperienceSource.ADMIN);
+        characters.failNextSaves.set(PlayerDataService.SAVE_ATTEMPTS + 1);
         PlayerDataService.ShutdownReport report = service.shutdown(Duration.ofSeconds(10));
         assertFalse(report.clean());
         assertEquals(1, report.failed());
+        assertEquals(1, emergency.size());
+        assertEquals(300, emergency.get(0).totalExperience());
     }
 
     @Test

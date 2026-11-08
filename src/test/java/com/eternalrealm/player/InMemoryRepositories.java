@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 /** Thread-safe in-memory repositories with failure injection and gates for ordering tests. */
 final class InMemoryRepositories {
@@ -24,6 +25,8 @@ final class InMemoryRepositories {
         final AtomicInteger failNextSaves = new AtomicInteger();
         volatile boolean failLoads;
         volatile CountDownLatch saveGate;
+        /** Only saves matching this filter wait at {@link #saveGate}. */
+        volatile Predicate<CharacterRecord> saveGateFilter = record -> true;
         volatile CountDownLatch loadGate;
 
         static String key(UUID playerId, SeasonId season) {
@@ -41,7 +44,9 @@ final class InMemoryRepositories {
 
         @Override
         public void save(CharacterRecord record) throws DataAccessException {
-            await(saveGate);
+            if (saveGateFilter.test(record)) {
+                await(saveGate);
+            }
             if (failNextSaves.getAndUpdate(n -> Math.max(0, n - 1)) > 0) {
                 throw new DataAccessException("injected save failure");
             }

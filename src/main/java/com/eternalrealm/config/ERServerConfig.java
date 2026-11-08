@@ -37,6 +37,7 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.DoubleValue ALLOCATE_PER_SECOND;
     public static final ForgeConfigSpec.IntValue VIOLATION_KICK_THRESHOLD;
     public static final ForgeConfigSpec.IntValue VIOLATION_WINDOW_SECONDS;
+    public static final ForgeConfigSpec.IntValue FLOOD_KICK_THRESHOLD;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -92,6 +93,9 @@ public final class ERServerConfig {
         VIOLATION_KICK_THRESHOLD = builder.comment("Protocol violations within the window that disconnect a player; 0 = never.")
                 .defineInRange("violationKickThreshold", 20, 0, 10_000);
         VIOLATION_WINDOW_SECONDS = builder.defineInRange("violationWindowSeconds", 60, 1, 3600);
+        FLOOD_KICK_THRESHOLD = builder.comment("Requests dropped by the rate limits within the window that disconnect a",
+                        "player; 0 = never. Rate-limited requests are NOT protocol violations (fast clicking is legitimate).")
+                .defineInRange("floodKickThreshold", 300, 0, 100_000);
         builder.pop();
 
         SPEC = builder.build();

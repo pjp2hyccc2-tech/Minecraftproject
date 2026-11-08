@@ -14,6 +14,7 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
@@ -27,13 +28,16 @@ import java.util.Optional;
 /**
  * Crash-safe single-file storage with one previous generation.
  *
- * <p><b>Write:</b> content goes to {@code X.tmp} and is fsynced; then {@code X} is renamed to {@code X.prev} and
- * {@code X.tmp} is atomically renamed to {@code X}. A crash at any point leaves either the new file, or the previous
- * generation, intact.</p>
+ * <p><b>Write:</b> the content goes to {@code X.tmp} and is fsynced. The current {@code X} is then <em>copied</em>
+ * (not renamed) to {@code X.prev} via {@code X.prev.tmp}, and finally {@code X.tmp} atomically replaces {@code X}.
+ * Because {@code X} is never renamed away, it exists at every instant after the first write: a crash leaves either the
+ * old or the new {@code X}, and {@code X.prev} is always a complete earlier generation.</p>
  *
- * <p><b>Read:</b> {@code X} is parsed. If it is corrupt it is moved to the quarantine directory (kept for forensics)
- * and {@code X.prev} is used instead. If both are unusable a {@link CorruptDataException} is thrown — never an empty
- * result, which would make callers create fresh data over the player's real progress.</p>
+ * <p><b>Read:</b> only "no such file" means absent. Any other failure (permissions, I/O errors, a path that cannot
+ * be resolved) is a {@link DataAccessException}, so that unavailable storage is never mistaken for a new player.
+ * A corrupt {@code X} is moved to the quarantine directory (kept for forensics) and {@code X.prev} is used instead.
+ * If both are unusable a {@link CorruptDataException} is thrown — never an empty result, which would make callers
+ * create fresh data over the player's real progress.</p>
  */
 public final class AtomicFileStore {
     private static final Logger LOG = LoggerFactory.getLogger(AtomicFileStore.class);
@@ -60,18 +64,16 @@ public final class AtomicFileStore {
         Path dir = target.toAbsolutePath().getParent();
         Path tmp = sibling(target, TMP_SUFFIX);
         Path prev = sibling(target, PREV_SUFFIX);
+        Path prevTmp = sibling(target, PREV_SUFFIX + TMP_SUFFIX);
         try {
             Files.createDirectories(dir);
-            ByteBuffer buffer = ByteBuffer.wrap(content.getBytes(StandardCharsets.UTF_8));
-            try (FileChannel channel = FileChannel.open(tmp, StandardOpenOption.CREATE,
-                    StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
-                while (buffer.hasRemaining()) {
-                    channel.write(buffer);
-                }
-                channel.force(true);
-            }
-            if (Files.exists(target)) {
-                move(target, prev);
+            writeAndSync(tmp, content.getBytes(StandardCharsets.UTF_8));
+            try {
+                Files.copy(target, prevTmp, StandardCopyOption.REPLACE_EXISTING);
+                sync(prevTmp);
+                move(prevTmp, prev);
+            } catch (NoSuchFileException firstWrite) {
+                // There is no current generation yet; nothing to keep.
             }
             move(tmp, target);
             fsyncDirectory(dir);
@@ -82,29 +84,30 @@ public final class AtomicFileStore {
 
     public <T> Optional<T> read(Path target, Parser<T> parser) throws DataAccessException {
         Path prev = sibling(target, PREV_SUFFIX);
-        boolean hasPrimary = Files.exists(target);
-        boolean hasPrev = Files.exists(prev);
-        if (!hasPrimary && !hasPrev) {
-            return Optional.empty();
-        }
         CorruptDataException primaryFailure = null;
-        if (hasPrimary) {
+        byte[] primary = readIfPresent(target);
+        if (primary != null) {
             try {
-                return Optional.of(parser.parse(readUtf8(target)));
+                return Optional.of(parser.parse(decodeUtf8(primary, target)));
             } catch (CorruptDataException e) {
                 primaryFailure = e;
                 LOG.warn("Data file {} is corrupt: {}", target, e.getMessage());
                 quarantine(target);
             }
-        } else {
-            LOG.warn("Data file {} is missing but its previous generation exists; recovering from it", target);
         }
-        if (!hasPrev) {
+        byte[] previous = readIfPresent(prev);
+        if (previous == null) {
+            if (primaryFailure == null) {
+                return Optional.empty();
+            }
             throw new CorruptDataException("Data file " + target + " is corrupt and has no previous generation",
                     primaryFailure);
         }
+        if (primaryFailure == null) {
+            LOG.warn("Data file {} is missing but its previous generation exists; recovering from it", target);
+        }
         try {
-            T value = parser.parse(readUtf8(prev));
+            T value = parser.parse(decodeUtf8(previous, prev));
             LOG.warn("Recovered {} from its previous generation {}", target, prev.getFileName());
             return Optional.of(value);
         } catch (CorruptDataException e) {
@@ -118,16 +121,21 @@ public final class AtomicFileStore {
     }
 
     /**
-     * Reads strictly-decoded UTF-8. Invalid encoding means corruption; any other I/O error is reported as a plain
-     * {@link DataAccessException} (possibly transient) and must not trigger fallback to older data.
+     * @return the file content, or {@code null} only if the file does not exist. Every other failure (including
+     *         "existence cannot be determined") is reported, never treated as absent.
      */
-    private static String readUtf8(Path file) throws DataAccessException {
-        byte[] bytes;
+    private static byte[] readIfPresent(Path file) throws DataAccessException {
         try {
-            bytes = Files.readAllBytes(file);
+            return Files.readAllBytes(file);
+        } catch (NoSuchFileException e) {
+            return null;
         } catch (IOException e) {
             throw new DataAccessException("Failed to read " + file, e);
         }
+    }
+
+    /** Invalid encoding means corruption (the caller may fall back to the previous generation). */
+    private static String decodeUtf8(byte[] bytes, Path file) throws CorruptDataException {
         try {
             return StandardCharsets.UTF_8.newDecoder()
                     .onMalformedInput(CodingErrorAction.REPORT)
@@ -141,7 +149,7 @@ public final class AtomicFileStore {
 
     /**
      * Moves a corrupt file out of the way. If that is impossible we stop: falling back to the previous generation
-     * while the corrupt file stays in place would let the next save rotate the corrupt file over the good backup.
+     * while the corrupt file stays in place would let the next save copy the corrupt file over the good backup.
      */
     private void quarantine(Path file) throws DataAccessException {
         try {
@@ -156,6 +164,23 @@ public final class AtomicFileStore {
 
     static Path sibling(Path target, String suffix) {
         return target.resolveSibling(target.getFileName().toString() + suffix);
+    }
+
+    private static void writeAndSync(Path file, byte[] content) throws IOException {
+        ByteBuffer buffer = ByteBuffer.wrap(content);
+        try (FileChannel channel = FileChannel.open(file, StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
+            while (buffer.hasRemaining()) {
+                channel.write(buffer);
+            }
+            channel.force(true);
+        }
+    }
+
+    private static void sync(Path file) throws IOException {
+        try (FileChannel channel = FileChannel.open(file, StandardOpenOption.WRITE)) {
+            channel.force(true);
+        }
     }
 
     private static void move(Path source, Path target) throws IOException {

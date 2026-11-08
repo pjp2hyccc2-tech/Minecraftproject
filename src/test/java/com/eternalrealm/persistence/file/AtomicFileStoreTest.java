@@ -62,11 +62,27 @@ public class AtomicFileStoreTest {
     }
 
     @Test
-    public void secondWriteKeepsPreviousGeneration() throws Exception {
+    public void secondWriteKeepsPreviousGenerationAsACopy() throws Exception {
         store.write(file, "OK:v1");
         store.write(file, "OK:v2");
         assertEquals("OK:v2", Files.readString(file));
         assertEquals("OK:v1", Files.readString(AtomicFileStore.sibling(file, ".prev")));
+        assertFalse(Files.exists(AtomicFileStore.sibling(file, ".tmp")));
+        assertFalse(Files.exists(AtomicFileStore.sibling(file, ".prev.tmp")));
+    }
+
+    /**
+     * Regression test for the independent review finding: "existence cannot be determined" (here: a parent path that
+     * is a regular file) must be an error, never "no data" — otherwise a fresh character would be created and later
+     * written over the real one.
+     */
+    @Test
+    public void unresolvablePathIsAnErrorNotMissingData() throws Exception {
+        Path notADirectory = dir.resolve("not-a-directory");
+        Files.writeString(notADirectory, "plain file");
+        Path unresolvable = notADirectory.resolve("record.json");
+        DataAccessException error = assertThrows(DataAccessException.class, () -> store.read(unresolvable, PARSER));
+        assertFalse("must not be reported as corruption either", error instanceof CorruptDataException);
     }
 
     @Test

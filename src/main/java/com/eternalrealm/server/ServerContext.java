@@ -33,12 +33,14 @@ public final class ServerContext {
     private final PeriodicTrigger backupTrigger;
     private final TokenBucketRateLimiter<UUID> allocateLimiter;
     private final ViolationTracker violations;
+    private final ViolationTracker floods;
     private final SyncQueue syncQueue;
 
     public ServerContext(MinecraftServer server, Path dataDirectory, MainThreadQueue mainThread,
                          KeyedSerialExecutor<UUID> ioExecutor, PlayerDataService playerData,
                          SnapshotBackupService backups, PeriodicTrigger backupTrigger,
-                         TokenBucketRateLimiter<UUID> allocateLimiter, ViolationTracker violations, SyncQueue syncQueue) {
+                         TokenBucketRateLimiter<UUID> allocateLimiter, ViolationTracker violations,
+                         ViolationTracker floods, SyncQueue syncQueue) {
         this.server = Objects.requireNonNull(server, "server");
         this.dataDirectory = Objects.requireNonNull(dataDirectory, "dataDirectory");
         this.mainThread = Objects.requireNonNull(mainThread, "mainThread");
@@ -48,6 +50,7 @@ public final class ServerContext {
         this.backupTrigger = Objects.requireNonNull(backupTrigger, "backupTrigger");
         this.allocateLimiter = Objects.requireNonNull(allocateLimiter, "allocateLimiter");
         this.violations = Objects.requireNonNull(violations, "violations");
+        this.floods = Objects.requireNonNull(floods, "floods");
         this.syncQueue = Objects.requireNonNull(syncQueue, "syncQueue");
     }
 
@@ -56,18 +59,33 @@ public final class ServerContext {
     }
 
     /** Bootstrap only. */
-    public static void install(ServerContext context) {
+    public static synchronized void install(ServerContext context) {
         if (current != null) {
             throw new IllegalStateException("A ServerContext is already installed");
         }
         current = Objects.requireNonNull(context, "context");
     }
 
-    /** Bootstrap only. @return the context that was installed, or {@code null} */
-    public static ServerContext uninstall() {
+    /** Bootstrap only. Removes whatever context is installed. @return it, or {@code null} */
+    public static synchronized ServerContext uninstall() {
         ServerContext previous = current;
         current = null;
         return previous;
+    }
+
+    /**
+     * Bootstrap only. Removes the installed context only if it belongs to {@code server}, so a late stop event of an
+     * old server can never tear down the context of a newer one.
+     *
+     * @return the removed context, or {@code null}
+     */
+    public static synchronized ServerContext uninstallIfOwnedBy(MinecraftServer server) {
+        ServerContext installed = current;
+        if (installed == null || installed.server != server) {
+            return null;
+        }
+        current = null;
+        return installed;
     }
 
     public MinecraftServer server() {
@@ -104,6 +122,11 @@ public final class ServerContext {
 
     public ViolationTracker violations() {
         return violations;
+    }
+
+    /** Counts packets dropped by rate limits; only a sustained flood disconnects. */
+    public ViolationTracker floods() {
+        return floods;
     }
 
     public SyncQueue syncQueue() {
