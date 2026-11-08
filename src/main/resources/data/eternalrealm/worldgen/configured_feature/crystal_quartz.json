@@ -1,0 +1,6 @@
+{
+  "type": "eternalrealm:crystal_cluster",
+  "config": {
+    "variant": "quartz"
+  }
+}
