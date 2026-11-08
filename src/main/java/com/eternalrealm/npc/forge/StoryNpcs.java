@@ -58,6 +58,9 @@ public final class StoryNpcs {
             return;
         }
         QuestService quests = context.game().quests();
+        for (String ready : quests.readyQuestsOfGiver(player, id)) {
+            quests.turnIn(player, ready);
+        }
         Optional<String> talkQuest = quests.questWaitingForTalk(player, id);
         if (talkQuest.isPresent()) {
             context.game().story().trigger(new StoryTrigger.QuestTalk(id, talkQuest.get()), player, List.of(player));
@@ -68,6 +71,7 @@ public final class StoryNpcs {
         if (offered.isPresent()) {
             context.game().story().trigger(new StoryTrigger.QuestTalk(id, offered.get()), player, List.of(player));
             quests.accept(player, offered.get());
+            quests.event(player, new GameEvent.NpcTalked(id)); // this conversation counts for its "talk to" objective
             return;
         }
         if (!context.game().story().trigger(new StoryTrigger.NpcTalk(id, context.game().story().progress()), player,

@@ -234,6 +234,23 @@ public final class QuestService {
         return java.util.Optional.empty();
     }
 
+    /** Active quests of this giver's area that are ready to be turned in. */
+    public List<String> readyQuestsOfGiver(ServerPlayer player, String npcId) {
+        QuestLogState state = log(player);
+        int giverArea = Npcs.byId(npcId).map(npc -> npc.areaId()).orElse(-1);
+        if (state == null || giverArea < 0) {
+            return List.of();
+        }
+        List<String> ready = new java.util.ArrayList<>();
+        for (String questId : state.activeQuestIds()) {
+            QuestDefinition quest = engine.catalog().byId(questId).orElse(null);
+            if (quest != null && quest.areaId() == giverArea && engine.isReadyToTurnIn(state, questId)) {
+                ready.add(questId);
+            }
+        }
+        return ready;
+    }
+
     /** The next quest this quest giver offers that the player can accept now (main story first). */
     public java.util.Optional<String> nextQuestOfGiver(ServerPlayer player, String npcId) {
         QuestLogState state = log(player);
