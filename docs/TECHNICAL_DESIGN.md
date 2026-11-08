@@ -126,14 +126,18 @@ ARCHITECTURE.md 4.2 を参照。要点:
 
 | コマンド | 内容 |
 |---|---|
-| `./gradlew build` | コンパイル、JUnit、MOD jar（reobf） |
+| `./gradlew build` | コンパイル、JUnit、MOD jar（reobf）。CIは `.github/workflows/eternalrealm.yml` |
 | `./gradlew runGameTestServer` | ヘッドレスサーバーを起動し全GameTestを実行して終了（失敗時は非0） |
 | `./gradlew runClient` / `runServer` | 手動テスト（`run/` に作業ディレクトリ。サーバーは `run/eula.txt` の同意が必要） |
 | `tools/offline-test.sh` | Forgeなしで純粋モジュールをコンパイル・テスト（ネットワーク制限環境用） |
 
+### リソースの注意点
+- `src/main/resources/pack.mcmeta`（pack_format 15）は**必須**。無いとForge 47.x がMODのリソース／データパックを無効にし、翻訳・構造物・データが一切読まれない
+  （ログ: `Missing metadata in pack mod:eternalrealm`）。`ResourcesTest` で検査している。
+
 ## 10. この作業環境の制約（2026-11-08 時点）
 
-- Bash からの外部通信が遮断されており、Forge/Mojang の maven から依存を取得できない。
+- Bash からの外部通信が遮断されており、Forge/Mojang の maven から依存を取得できない。実Forgeでの検証は GitHub Actions で行う（CI成果物のダウンロードも遮断されるため、jarはCIログ経由で受け取る）。
   → Forge依存コードは**実APIでのコンパイル・起動が未実施**。実環境またはCIでの確認が必要（TEST_PLAN.md）。
 - 代替として、Forge 1.20.1 ブランチの実ソース（git経由で取得）で Forge API のシグネチャを確認し、
   使用APIのスタブに対する型チェック（MOD全体、`-Xlint:all` 警告なし）を実施した。スタブはリポジトリに含めていない。

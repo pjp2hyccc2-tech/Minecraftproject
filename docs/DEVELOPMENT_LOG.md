@@ -41,8 +41,20 @@
 
 追加で、レビュー対応のテストに含まれていた競合（ゲート設定順による間欠失敗）を発見して修正し、6回連続で安定を確認。
 
+### 実Forgeでの検証（GitHub Actions、同日）
+- ブランチ `feature/phase0-1-foundation` をpush。ワークフローは同リポジトリの別プロジェクトの `build.yml` とパスが重なっていたため `eternalrealm.yml`（ETERNAL REALM build）に改名。
+- 1回目: **Forge 47.4.0 での全コードのコンパイル・ユニットテスト・jar生成は成功**。GameTestサーバーはMODのサービス起動まで成功したが、
+  GameTest用構造物が見つからずクラッシュ。原因はログの `Missing metadata in pack mod:eternalrealm`：**`pack.mcmeta` が無いとForge 47.x はMODのリソース／データパックを丸ごと無効にする**
+  （クライアントでは翻訳も読まれなくなる）。公式MDKの配布zipにはForgeのビルド時に生成される `pack.mcmeta` が含まれるが、Git上のMDKフォルダには無く、それを雛形にしたため欠落していた。
+  → `pack.mcmeta`（pack_format 15）を追加し、再発防止に `ResourcesTest` を追加。
+- 2回目: **成功**。`All 2 required tests passed`。実サーバー上でキャラクター作成→EXP 1000でLv4→ログアウト保存→再読込で一致、停止時フラッシュとスナップショット作成も確認。
+- コンパイル警告1件（`ResourceLocation(String,String)` が削除予定の非推奨）→ 47.4.0 にバックポート済みの `ResourceLocation.fromNamespaceAndPath` に変更。
+- 配布用jar（再難読化済み・SHA-256検証済み）をユーザーの CurseForge インスタンス（Minecraft 1.20.1 / Forge 47.4.28）の `mods` に配置。
+  この作業環境はCI成果物の直接ダウンロードがプロキシで遮断されるため、CIログにbase64で出力したjarを復元しハッシュで照合した。
+
 ### 未実施・未実装（完成扱いにしていないもの）
-- ⏳ 実Forgeでの `./gradlew build`、`runGameTestServer`、`runClient`、`runServer`、マルチプレイテスト（TEST_PLAN.md 3章 #4〜#9）
+- ✅ 実Forgeでの `./gradlew build`、`runGameTestServer`（上記）
+- ⏳ クライアントでのプレイ確認、専用サーバー、マルチプレイテスト（TEST_PLAN.md 3章 #6〜#9）
 - ⏳ PostgreSQL バックエンド（Phase 1.5、D-008 要確認）
 - TODO(Phase 4): 暫定EXP源 `InterimKillExperience` の置き換え（D-014）
 - TODO(Phase 3): 職業、再振り分け、プレイヤーデータ参加者インターフェース

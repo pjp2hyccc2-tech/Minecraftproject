@@ -19,7 +19,7 @@ public final class ERNetwork {
     public static final String PROTOCOL_VERSION = "1";
 
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
-            .named(new ResourceLocation(ModInfo.MOD_ID, "main"))
+            .named(ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "main"))
             .networkProtocolVersion(() -> PROTOCOL_VERSION)
             .clientAcceptedVersions(PROTOCOL_VERSION::equals)
             .serverAcceptedVersions(PROTOCOL_VERSION::equals)

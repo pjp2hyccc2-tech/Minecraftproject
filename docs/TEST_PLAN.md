@@ -47,9 +47,9 @@
 | 2 | ユニット・統合・アーキテクチャテスト 101件 | 同上 | ✅ |
 | 2b | 独立コードレビュー（Forge 47.4.0 実ソースとの照合を含む） | 別エージェント | ✅（BLOCKERなし、指摘7件すべて対応） |
 | 3 | MOD全体の型整合（使用APIのスタブに対して） | 作業環境で実施（スタブは非同梱） | ✅（実APIではない） |
-| 4 | 実Forge 47.4.0 でのコンパイル・jar生成 | `./gradlew build` | ⏳ |
-| 5 | GameTestサーバーでの起動とGameTest 2件 | `./gradlew runGameTestServer` | ⏳ |
-| 6 | クライアント起動、MOD一覧に ETERNAL REALM 0.1.0 | `./gradlew runClient` | ⏳ |
+| 4 | 実Forge 47.4.0 でのコンパイル・ユニットテスト・jar生成 | `./gradlew build`（GitHub Actions） | ✅ 2026-11-08 |
+| 5 | GameTestサーバーでの起動とGameTest 2件 | `./gradlew runGameTestServer`（GitHub Actions） | ✅ 2026-11-08（初回は `pack.mcmeta` 欠落で失敗→修正後「All 2 required tests passed」） |
+| 6 | クライアント起動、MOD一覧に ETERNAL REALM 0.1.0 | CurseForge インスタンス（Forge 47.4.28）に配布用jarを配置 | ⏳ プレイ確認待ち |
 | 7 | 専用サーバー起動（`run/eula.txt` を `eula=true`） | `./gradlew runServer` | ⏳ |
 | 8 | 手動テスト（下記 4章） | — | ⏳ |
 | 9 | マルチプレイテスト（下記 5章） | — | ⏳ |
