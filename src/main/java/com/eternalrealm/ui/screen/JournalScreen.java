@@ -28,7 +28,10 @@ public abstract class JournalScreen extends Screen {
     public enum Tab {
         STATUS("screen.eternalrealm.tab.status", CharacterScreen::new),
         JOB("screen.eternalrealm.tab.job", JobScreen::new),
-        SKILLS("screen.eternalrealm.tab.skills", SkillScreen::new);
+        SKILLS("screen.eternalrealm.tab.skills", SkillScreen::new),
+        PARTY("screen.eternalrealm.tab.party", PartyScreen::new),
+        GUILD("screen.eternalrealm.tab.guild", GuildScreen::new),
+        RANKING("screen.eternalrealm.tab.ranking", RankingScreen::new);
 
         private final String key;
         private final Supplier<JournalScreen> factory;

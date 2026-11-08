@@ -10,6 +10,7 @@ import com.eternalrealm.combat.forge.ERItems;
 import com.eternalrealm.combat.forge.ERMobEffects;
 import com.eternalrealm.job.forge.JobActions;
 import com.eternalrealm.social.forge.SocialCommands;
+import com.eternalrealm.social.forge.SocialUiActions;
 import com.eternalrealm.npc.forge.Npcs;
 import com.eternalrealm.ranking.forge.RankingCommands;
 import com.eternalrealm.config.ERClientConfig;
@@ -48,6 +49,7 @@ public final class EternalRealm {
         ERCreativeTabs.register(modBus);
         JobActions.register();
         RankingCommands.register();
+        SocialUiActions.register();
 
         modBus.addListener(ServerBootstrap::onConfigReloading);
         forgeBus.addListener(ServerBootstrap::onServerAboutToStart);

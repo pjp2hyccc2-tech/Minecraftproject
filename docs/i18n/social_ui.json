@@ -1,0 +1,98 @@
+{
+  "screen.eternalrealm.tab.party": {
+    "ja": "パーティー",
+    "en": "Party"
+  },
+  "screen.eternalrealm.tab.guild": {
+    "ja": "ギルド",
+    "en": "Guild"
+  },
+  "screen.eternalrealm.tab.ranking": {
+    "ja": "ランキング",
+    "en": "Ranking"
+  },
+  "screen.eternalrealm.party.name": {
+    "ja": "プレイヤー名",
+    "en": "Player name"
+  },
+  "screen.eternalrealm.party.invite": {
+    "ja": "招待",
+    "en": "Invite"
+  },
+  "screen.eternalrealm.party.accept": {
+    "ja": "招待を受ける",
+    "en": "Accept"
+  },
+  "screen.eternalrealm.party.leave": {
+    "ja": "脱退",
+    "en": "Leave"
+  },
+  "screen.eternalrealm.party.raid": {
+    "ja": "レイドにする",
+    "en": "Make raid"
+  },
+  "screen.eternalrealm.party.promote": {
+    "ja": "リーダー",
+    "en": "Leader"
+  },
+  "screen.eternalrealm.party.kick": {
+    "ja": "除名",
+    "en": "Kick"
+  },
+  "screen.eternalrealm.party.none": {
+    "ja": "パーティーに入っていません。名前を入れて招待すると結成されます（最大5人、レイドは20人）。",
+    "en": "You are not in a party. Invite someone to form one (5 players, raids 20)."
+  },
+  "screen.eternalrealm.party.title": {
+    "ja": "パーティー %s/%s",
+    "en": "Party %s/%s"
+  },
+  "screen.eternalrealm.party.raid_title": {
+    "ja": "レイド %s/%s",
+    "en": "Raid %s/%s"
+  },
+  "screen.eternalrealm.guild.tag": {
+    "ja": "タグ",
+    "en": "Tag"
+  },
+  "screen.eternalrealm.guild.name": {
+    "ja": "ギルド名",
+    "en": "Guild name"
+  },
+  "screen.eternalrealm.guild.create": {
+    "ja": "設立",
+    "en": "Found"
+  },
+  "screen.eternalrealm.guild.accept": {
+    "ja": "招待を受ける",
+    "en": "Accept"
+  },
+  "screen.eternalrealm.guild.leave": {
+    "ja": "脱退",
+    "en": "Leave"
+  },
+  "screen.eternalrealm.guild.none": {
+    "ja": "ギルドに所属していません。タグ（英大文字・数字2〜5字）と名前で設立するか、招待を受けてください。",
+    "en": "You are not in a guild. Found one with a tag (2-5 A-Z/0-9) and a name, or accept an invitation."
+  },
+  "screen.eternalrealm.guild.invited": {
+    "ja": "招待: %s",
+    "en": "Invited by: %s"
+  },
+  "screen.eternalrealm.guild.header": {
+    "ja": "%s [%s]  Lv%s  %s/%s人  貢献 %s",
+    "en": "%s [%s]  Lv%s  %s/%s members  contribution %s"
+  },
+  "screen.eternalrealm.ranking.season": {
+    "ja": "シーズン %s  DAY %s / %s",
+    "en": "Season %s  DAY %s / %s"
+  },
+  "screen.eternalrealm.ranking.own": {
+    "ja": "あなたの順位: %s位（%s）",
+    "en": "Your rank: #%s (%s)"
+  },
+  "message.eternalrealm.player_not_online": {
+    "ja": "%s はオンラインではありません",
+    "en": "%s is not online"
+  }
+}

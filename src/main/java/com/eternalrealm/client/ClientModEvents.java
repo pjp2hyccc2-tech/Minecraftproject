@@ -45,6 +45,7 @@ public final class ClientModEvents {
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "character_hud", new CharacterHudOverlay());
         event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "combat_hud", new CombatHudOverlay());
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "party_hud", new com.eternalrealm.ui.hud.PartyHudOverlay());
     }
 
     @SubscribeEvent
