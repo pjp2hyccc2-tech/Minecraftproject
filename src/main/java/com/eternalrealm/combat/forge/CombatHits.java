@@ -201,7 +201,11 @@ public final class CombatHits {
         if (attacker.isAlliedTo(target)) {
             return false;
         }
-        return !(target instanceof Player other) || (attacker.canHarmPlayer(other) && PvpRules.canHurt(attacker, other));
+        if (!(target instanceof Player other)) {
+            return true;
+        }
+        return other instanceof ServerPlayer opponent && attacker.canHarmPlayer(opponent)
+                && PvpRules.canHurt(attacker, opponent);
     }
 
     private static boolean hasLineOfSight(ServerLevel level, ServerPlayer attacker, Vec3 eye, LivingEntity target) {
