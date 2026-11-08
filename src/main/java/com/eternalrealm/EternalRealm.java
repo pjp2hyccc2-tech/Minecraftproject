@@ -8,6 +8,7 @@ import com.eternalrealm.combat.forge.ERCreativeTabs;
 import com.eternalrealm.combat.forge.EREntities;
 import com.eternalrealm.combat.forge.ERItems;
 import com.eternalrealm.combat.forge.ERMobEffects;
+import com.eternalrealm.entity.EREntityTypes;
 import com.eternalrealm.job.forge.JobActions;
 import com.eternalrealm.social.forge.SocialCommands;
 import com.eternalrealm.social.forge.SocialUiActions;
@@ -49,6 +50,7 @@ public final class EternalRealm {
         ERMobEffects.register(modBus);
         com.eternalrealm.combat.forge.ERParticles.register(modBus);
         EREntities.register(modBus);
+        EREntityTypes.register(modBus);
         ERCreativeTabs.register(modBus);
         JobActions.register();
         RankingCommands.register();
