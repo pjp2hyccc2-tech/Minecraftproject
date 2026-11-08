@@ -28,6 +28,8 @@ public final class ERParticleProviders {
         add(event, ERParticles.SHADOW.get(), new Style(22, 0.18F, 0.01F, 0.90F, false, true));
         add(event, ERParticles.SLASH.get(), new Style(7, 0.55F, 0.0F, 0.5F, true, false));
         add(event, ERParticles.SPARK.get(), new Style(9, 0.09F, 0.0F, 0.80F, true, true));
+        event.registerSpriteSet(ERParticles.MOTE.get(), sprites -> (type, level, x, y, z, dx, dy, dz) ->
+                new MoteParticle(level, x, y, z, dx, dy, dz, sprites));
     }
 
     private static void add(RegisterParticleProvidersEvent event, SimpleParticleType type, Style style) {
@@ -85,6 +87,48 @@ public final class ERParticleProviders {
         @Override
         protected int getLightColor(float partialTick) {
             return style.glow() ? 0xF000F0 : super.getLightColor(partialTick);
+        }
+    }
+
+    /** A speck of dust in a sunbeam: fades in, drifts slowly, glints, fades out. */
+    private static final class MoteParticle extends TextureSheetParticle {
+        private final float peak;
+
+        MoteParticle(ClientLevel level, double x, double y, double z, double dx, double dy, double dz, SpriteSet sprites) {
+            super(level, x, y, z);
+            this.xd = dx;
+            this.yd = dy;
+            this.zd = dz;
+            this.lifetime = 60 + random.nextInt(80);
+            this.quadSize = 0.018F + random.nextFloat() * 0.022F;
+            this.gravity = 0.0F;
+            this.friction = 0.985F;
+            this.hasPhysics = false;
+            this.peak = 0.45F + random.nextFloat() * 0.45F;
+            this.alpha = 0.0F;
+            setSprite(sprites.get(random));
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            if (!removed) {
+                float life = (float) age / (float) lifetime;
+                float fade = life < 0.25F ? life / 0.25F : life > 0.7F ? Math.max(0.0F, (1.0F - life) / 0.3F) : 1.0F;
+                alpha = peak * fade * (0.8F + 0.2F * net.minecraft.util.Mth.sin(age * 0.3F));
+                xd += (random.nextFloat() - 0.5F) * 0.0004F;
+                zd += (random.nextFloat() - 0.5F) * 0.0004F;
+            }
+        }
+
+        @Override
+        public ParticleRenderType getRenderType() {
+            return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        }
+
+        @Override
+        protected int getLightColor(float partialTick) {
+            return 0xF000F0;
         }
     }
 }

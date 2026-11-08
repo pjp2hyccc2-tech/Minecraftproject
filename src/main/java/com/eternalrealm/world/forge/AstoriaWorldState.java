@@ -20,6 +20,8 @@ public final class AstoriaWorldState extends SavedData {
     /** Floor height chosen for the capital before it is built (Integer.MIN_VALUE = not chosen yet). */
     private int plannedHubY = Integer.MIN_VALUE;
     private final Map<String, Integer> landmarks = new TreeMap<>();
+    /** Content hash of the blueprint capital that is fully built ("" = none yet). */
+    private String capitalBuild = "";
 
     public AstoriaWorldState() {
     }
@@ -37,6 +39,7 @@ public final class AstoriaWorldState extends SavedData {
         for (String id : built.getAllKeys()) {
             state.landmarks.put(id, built.getInt(id));
         }
+        state.capitalBuild = tag.getString("capitalBuild");
         return state;
     }
 
@@ -50,6 +53,7 @@ public final class AstoriaWorldState extends SavedData {
         CompoundTag built = new CompoundTag();
         landmarks.forEach(built::putInt);
         tag.put("landmarks", built);
+        tag.putString("capitalBuild", capitalBuild);
         return tag;
     }
 
@@ -71,6 +75,18 @@ public final class AstoriaWorldState extends SavedData {
     }
 
     void markHubBuilt(int groundY) {
+        hubBuilt = true;
+        hubGroundY = groundY;
+        setDirty();
+    }
+
+    /** Content hash of the blueprint capital standing in this world ("" if none). */
+    public String capitalBuild() {
+        return capitalBuild;
+    }
+
+    public void markCapitalBuilt(String build, int groundY) {
+        capitalBuild = build;
         hubBuilt = true;
         hubGroundY = groundY;
         setDirty();

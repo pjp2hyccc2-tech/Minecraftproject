@@ -1,0 +1,174 @@
+{
+  "block.eternalrealm.castle_bricks": {
+    "ja": "城石レンガ",
+    "en": "Castle Bricks"
+  },
+  "block.eternalrealm.castle_brick_stairs": {
+    "ja": "城石レンガの階段",
+    "en": "Castle Brick Stairs"
+  },
+  "block.eternalrealm.castle_brick_slab": {
+    "ja": "城石レンガのハーフブロック",
+    "en": "Castle Brick Slab"
+  },
+  "block.eternalrealm.castle_brick_wall": {
+    "ja": "城石レンガの塀",
+    "en": "Castle Brick Wall"
+  },
+  "block.eternalrealm.smooth_castle_stone": {
+    "ja": "なめらかな城石",
+    "en": "Smooth Castle Stone"
+  },
+  "block.eternalrealm.smooth_castle_stone_stairs": {
+    "ja": "なめらかな城石の階段",
+    "en": "Smooth Castle Stone Stairs"
+  },
+  "block.eternalrealm.smooth_castle_stone_slab": {
+    "ja": "なめらかな城石のハーフブロック",
+    "en": "Smooth Castle Stone Slab"
+  },
+  "block.eternalrealm.castle_pillar": {
+    "ja": "城石の柱",
+    "en": "Castle Pillar"
+  },
+  "block.eternalrealm.carved_castle_stone": {
+    "ja": "彫刻入りの城石",
+    "en": "Carved Castle Stone"
+  },
+  "block.eternalrealm.castle_crest_stone": {
+    "ja": "紋章の城石",
+    "en": "Crest Stone"
+  },
+  "block.eternalrealm.royal_roof_tiles": {
+    "ja": "王家の青瓦",
+    "en": "Royal Roof Tiles"
+  },
+  "block.eternalrealm.royal_roof_tile_stairs": {
+    "ja": "王家の青瓦の階段",
+    "en": "Royal Roof Tile Stairs"
+  },
+  "block.eternalrealm.royal_roof_tile_slab": {
+    "ja": "王家の青瓦のハーフブロック",
+    "en": "Royal Roof Tile Slab"
+  },
+  "block.eternalrealm.pale_roof_tiles": {
+    "ja": "空色の瓦",
+    "en": "Pale Roof Tiles"
+  },
+  "block.eternalrealm.pale_roof_tile_stairs": {
+    "ja": "空色の瓦の階段",
+    "en": "Pale Roof Tile Stairs"
+  },
+  "block.eternalrealm.pale_roof_tile_slab": {
+    "ja": "空色の瓦のハーフブロック",
+    "en": "Pale Roof Tile Slab"
+  },
+  "block.eternalrealm.gilded_trim": {
+    "ja": "金の飾り縁",
+    "en": "Gilded Trim"
+  },
+  "block.eternalrealm.gilded_trim_stairs": {
+    "ja": "金の飾り縁の階段",
+    "en": "Gilded Trim Stairs"
+  },
+  "block.eternalrealm.gilded_trim_slab": {
+    "ja": "金の飾り縁のハーフブロック",
+    "en": "Gilded Trim Slab"
+  },
+  "block.eternalrealm.gilded_finial": {
+    "ja": "金の尖塔飾り",
+    "en": "Gilded Finial"
+  },
+  "block.eternalrealm.white_plaster": {
+    "ja": "白しっくい",
+    "en": "White Plaster"
+  },
+  "block.eternalrealm.chandelier": {
+    "ja": "シャンデリア",
+    "en": "Chandelier"
+  },
+  "block.eternalrealm.light_shaft": {
+    "ja": "窓の光",
+    "en": "Sunbeam"
+  },
+  "itemGroup.eternalrealm.building": {
+    "ja": "ETERNAL REALM 建築",
+    "en": "ETERNAL REALM Building"
+  },
+  "block.minecraft.banner.er_crest.white": {
+    "ja": "白のアルセリアの紋章",
+    "en": "White Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.orange": {
+    "ja": "橙のアルセリアの紋章",
+    "en": "Orange Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.magenta": {
+    "ja": "赤紫のアルセリアの紋章",
+    "en": "Magenta Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.light_blue": {
+    "ja": "空色のアルセリアの紋章",
+    "en": "Light Blue Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.yellow": {
+    "ja": "金のアルセリアの紋章",
+    "en": "Golden Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.lime": {
+    "ja": "黄緑のアルセリアの紋章",
+    "en": "Lime Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.pink": {
+    "ja": "桃のアルセリアの紋章",
+    "en": "Pink Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.gray": {
+    "ja": "灰のアルセリアの紋章",
+    "en": "Gray Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.light_gray": {
+    "ja": "薄灰のアルセリアの紋章",
+    "en": "Light Gray Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.cyan": {
+    "ja": "青緑のアルセリアの紋章",
+    "en": "Cyan Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.purple": {
+    "ja": "紫のアルセリアの紋章",
+    "en": "Purple Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.blue": {
+    "ja": "青のアルセリアの紋章",
+    "en": "Blue Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.brown": {
+    "ja": "茶のアルセリアの紋章",
+    "en": "Brown Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.green": {
+    "ja": "緑のアルセリアの紋章",
+    "en": "Green Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.red": {
+    "ja": "赤のアルセリアの紋章",
+    "en": "Red Arcelia Crest"
+  },
+  "block.minecraft.banner.er_crest.black": {
+    "ja": "黒のアルセリアの紋章",
+    "en": "Black Arcelia Crest"
+  },
+  "message.eternalrealm.capital.protected": {
+    "ja": "王都の建物は壊したり置いたりできません",
+    "en": "The buildings of the capital are protected"
+  },
+  "message.eternalrealm.capital.building": {
+    "ja": "王都を建設中… %s%%",
+    "en": "Building the capital… %s%%"
+  },
+  "message.eternalrealm.capital.built": {
+    "ja": "王都アルセリアが完成しました！",
+    "en": "The capital of Arcelia is complete!"
+  }
+}

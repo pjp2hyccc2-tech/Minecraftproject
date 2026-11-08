@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "eternalrealm:carved_castle_stone",
+    "eternalrealm:castle_brick_slab",
+    "eternalrealm:castle_brick_stairs",
+    "eternalrealm:castle_brick_wall",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:castle_crest_stone",
+    "eternalrealm:castle_pillar",
+    "eternalrealm:chandelier",
+    "eternalrealm:gilded_finial",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:gilded_trim_slab",
+    "eternalrealm:gilded_trim_stairs",
+    "eternalrealm:pale_roof_tile_slab",
+    "eternalrealm:pale_roof_tile_stairs",
+    "eternalrealm:pale_roof_tiles",
+    "eternalrealm:royal_roof_tile_slab",
+    "eternalrealm:royal_roof_tile_stairs",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab",
+    "eternalrealm:smooth_castle_stone_stairs",
+    "eternalrealm:white_plaster"
+  ]
+}

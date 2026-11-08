@@ -38,6 +38,7 @@ public final class ClientForgeEvents {
         }
         com.eternalrealm.ui.dialogue.ClientDialogue.tick();
         com.eternalrealm.client.telegraph.ClientTelegraphs.tick();
+        com.eternalrealm.client.block.ClientLightShafts.tick();
         KeyConflicts.resolveOnce();
     }
 
@@ -90,5 +91,6 @@ public final class ClientForgeEvents {
         CameraShake.clear();
         com.eternalrealm.ui.dialogue.ClientDialogue.clear();
         com.eternalrealm.client.telegraph.ClientTelegraphs.clear();
+        com.eternalrealm.client.block.ClientLightShafts.clear();
     }
 }

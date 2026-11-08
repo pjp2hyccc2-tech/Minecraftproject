@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "eternalrealm:block/gilded_trim_slab"
+    },
+    "type=top": {
+      "model": "eternalrealm:block/gilded_trim_slab_top"
+    },
+    "type=double": {
+      "model": "eternalrealm:block/gilded_trim"
+    }
+  }
+}

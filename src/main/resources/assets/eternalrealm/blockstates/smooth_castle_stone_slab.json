@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "eternalrealm:block/smooth_castle_stone_slab"
+    },
+    "type=top": {
+      "model": "eternalrealm:block/smooth_castle_stone_slab_top"
+    },
+    "type=double": {
+      "model": "eternalrealm:block/smooth_castle_stone"
+    }
+  }
+}

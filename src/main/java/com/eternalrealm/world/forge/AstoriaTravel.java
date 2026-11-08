@@ -39,7 +39,7 @@ public final class AstoriaTravel {
                     AstoriaDimension.LEVEL.location());
             return false;
         }
-        HubLayout layout = HubBuilder.ensureBuilt(astoria);
+        HubLayout layout = Capital.layout(astoria);
         teleport(player, astoria, layout.spawnPoint(), layout.yaw(HubSpot.SPAWN));
         return true;
     }

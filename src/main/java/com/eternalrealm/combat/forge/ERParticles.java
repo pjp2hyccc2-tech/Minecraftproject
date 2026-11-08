@@ -32,6 +32,8 @@ public final class ERParticles {
     public static final RegistryObject<SimpleParticleType> SLASH = register("slash");
     /** Electric sparks (critical hits, thunder). */
     public static final RegistryObject<SimpleParticleType> SPARK = register("spark");
+    /** Dust drifting in sunbeams (capital interiors). */
+    public static final RegistryObject<SimpleParticleType> MOTE = register("mote");
 
     private ERParticles() {
     }

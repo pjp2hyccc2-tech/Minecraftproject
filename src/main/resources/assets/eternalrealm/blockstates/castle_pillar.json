@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "eternalrealm:block/castle_pillar"
+    },
+    "axis=z": {
+      "model": "eternalrealm:block/castle_pillar_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "eternalrealm:block/castle_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

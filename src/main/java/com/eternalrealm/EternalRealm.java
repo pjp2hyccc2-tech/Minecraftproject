@@ -53,6 +53,8 @@ public final class EternalRealm {
         com.eternalrealm.combat.forge.ERParticles.register(modBus);
         EREntities.register(modBus);
         EREntityTypes.register(modBus);
+        com.eternalrealm.block.forge.ERBlocks.register(modBus);
+        com.eternalrealm.block.forge.ERBannerPatterns.register(modBus);
         com.eternalrealm.sound.ERSounds.register(modBus);
         ERCreativeTabs.register(modBus);
         JobActions.register();
@@ -83,6 +85,14 @@ public final class EternalRealm {
         forgeBus.addListener(RankingCommands::onRegisterCommands);
         forgeBus.addListener(SocialCommands::onNameFormat);
         forgeBus.addListener(Npcs::onEntityInteract);
+        forgeBus.addListener(com.eternalrealm.world.forge.capital.CapitalBuilder::onServerTick);
+        forgeBus.addListener((net.minecraftforge.event.server.ServerStoppedEvent event) ->
+                com.eternalrealm.world.forge.capital.CapitalBuilder.onServerStopped());
+        com.eternalrealm.world.forge.capital.CapitalBuilder.onCompleted(
+                com.eternalrealm.world.forge.RealmSetup::onCapitalCompleted);
+        forgeBus.addListener(com.eternalrealm.world.forge.CapitalProtection::onBreak);
+        forgeBus.addListener(com.eternalrealm.world.forge.CapitalProtection::onPlace);
+        forgeBus.addListener(com.eternalrealm.world.forge.CapitalProtection::onBucket);
         forgeBus.addListener(CombatEvents::onLivingAttack);
         forgeBus.addListener(CombatEvents::onLivingHurt);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onEquipmentChange);

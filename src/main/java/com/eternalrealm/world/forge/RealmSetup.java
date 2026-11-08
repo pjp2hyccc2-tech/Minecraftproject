@@ -72,9 +72,26 @@ public final class RealmSetup {
         return true;
     }
 
-    /** Builds the capital (if needed) and places its NPCs. */
+    /**
+     * The blueprint capital finished building: the NPCs standing in the old town are removed and everyone is placed
+     * at the new spots.
+     */
+    public static void onCapitalCompleted(ServerLevel astoria) {
+        net.minecraft.world.phys.AABB area = new net.minecraft.world.phys.AABB(-Realm.CAPITAL_HALF_X, astoria.getMinBuildHeight(),
+                Realm.CAPITAL_NORTH, Realm.CAPITAL_HALF_X + 1, astoria.getMaxBuildHeight(), Realm.CAPITAL_SOUTH + 1);
+        for (net.minecraft.world.entity.Mob npc : astoria.getEntitiesOfClass(net.minecraft.world.entity.Mob.class, area,
+                mob -> Npcs.roleOf(mob).isPresent())) {
+            npc.discard();
+        }
+        populateCapital(astoria);
+    }
+
+    /** Builds the capital (if needed) and places its NPCs (once the capital stands completely). */
     static void populateCapital(ServerLevel astoria) {
-        HubLayout layout = HubBuilder.ensureBuilt(astoria);
+        HubLayout layout = Capital.layout(astoria);
+        if (!Capital.ready(astoria)) {
+            return; // the blueprint capital is still being built: onCapitalCompleted places everyone
+        }
         for (Map.Entry<NpcRole, HubSpot> entry : SPOTS.entrySet()) {
             NpcRole role = entry.getKey();
             BlockPos pos = layout.position(entry.getValue());
@@ -86,15 +103,19 @@ public final class RealmSetup {
         for (int i = 0; i < CHARACTERS.size(); i++) {
             StoryNpc character = CHARACTERS.get(i);
             double angle = Math.PI * (0.25 + 0.375 * i);
-            BlockPos pos = surface(astoria, plaza.getX() + (int) Math.round(Math.cos(angle) * 6.0),
+            BlockPos fallback = surface(astoria, plaza.getX() + (int) Math.round(Math.cos(angle) * 6.0),
                     plaza.getZ() + (int) Math.round(Math.sin(angle) * 6.0));
+            String spot = "story." + character.id();
+            BlockPos pos = layout.named(spot).orElse(fallback);
             StoryNpcs.ensure(astoria, pos, character.id(), Component.translatable(character.speaker().key()),
-                    yawTowards(pos, plaza));
+                    layout.namedYaw(spot, yawTowards(pos, plaza)));
         }
         com.eternalrealm.quest.Npcs.byId("arcelia_knight_captain").ifPresent(captain -> {
             BlockPos board = layout.questBoard();
-            BlockPos pos = surface(astoria, board.getX() + 3, board.getZ() + 2);
-            StoryNpcs.ensure(astoria, pos, captain, yawTowards(pos, plaza));
+            BlockPos fallback = surface(astoria, board.getX() + 3, board.getZ() + 2);
+            String spot = "story.arcelia_knight_captain";
+            BlockPos pos = layout.named(spot).orElse(fallback);
+            StoryNpcs.ensure(astoria, pos, captain, layout.namedYaw(spot, yawTowards(pos, plaza)));
         });
     }
 
@@ -145,7 +166,7 @@ public final class RealmSetup {
         }
         MinecraftServer server = player.server;
         AstoriaTravel.astoria(server).ifPresent(astoria -> {
-            HubLayout layout = HubBuilder.ensureBuilt(astoria);
+            HubLayout layout = Capital.layout(astoria);
             AstoriaTravel.teleport(player, astoria, layout.respawnPoint(), layout.yaw(HubSpot.RESPAWN));
         });
     }

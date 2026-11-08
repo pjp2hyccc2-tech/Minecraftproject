@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "eternalrealm:block/light_shaft"
+    },
+    "facing=east": {
+      "model": "eternalrealm:block/light_shaft"
+    },
+    "facing=south": {
+      "model": "eternalrealm:block/light_shaft"
+    },
+    "facing=west": {
+      "model": "eternalrealm:block/light_shaft"
+    }
+  }
+}

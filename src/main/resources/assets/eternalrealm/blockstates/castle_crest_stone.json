@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "eternalrealm:block/castle_crest_stone"
+    },
+    "facing=east": {
+      "model": "eternalrealm:block/castle_crest_stone",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "eternalrealm:block/castle_crest_stone",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "eternalrealm:block/castle_crest_stone",
+      "y": 270
+    }
+  }
+}

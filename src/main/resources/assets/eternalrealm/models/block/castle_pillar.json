@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "eternalrealm:block/castle_pillar_top",
+    "side": "eternalrealm:block/castle_pillar_side"
+  }
+}

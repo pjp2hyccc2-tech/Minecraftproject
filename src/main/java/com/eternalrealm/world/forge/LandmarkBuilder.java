@@ -63,10 +63,11 @@ public final class LandmarkBuilder {
 
     private static void tick(ServerLevel astoria) {
         AstoriaWorldState state = AstoriaWorldState.get(astoria);
-        if (!state.hubBuilt() && anyPlayerWithin(astoria, 0, 0, HUB_TRIGGER_RADIUS)
+        if (!Capital.ready(astoria) && !com.eternalrealm.world.forge.capital.CapitalBuilder.building()
+                && anyPlayerWithin(astoria, 0, 0, HUB_TRIGGER_RADIUS)
                 && (TerrainShaper.chunksLoaded(astoria, 0, 0, HubBuilder.BLEND + 12)
                 || anyPlayerWithin(astoria, 0, 0, HubBuilder.WALL + FORCE_RADIUS))) {
-            HubBuilder.ensureBuilt(astoria);
+            Capital.layout(astoria);
         }
         long now = astoria.getGameTime();
         for (LandmarkSite site : LandmarkSites.all()) {

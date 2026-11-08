@@ -48,6 +48,8 @@ public final class ClientModEvents {
         });
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
         ClientboundHandlers.setTelegraphHandler(com.eternalrealm.client.telegraph.ClientTelegraphs::accept);
+        com.eternalrealm.block.forge.LightShaftBlockEntity.clientLoaded =
+                com.eternalrealm.client.block.ClientLightShafts::onLoaded;
         com.eternalrealm.item.forge.EquipmentStacks.setViewerLevel(() -> ClientCharacterState.snapshot()
                 .map(com.eternalrealm.character.CharacterSnapshot::level).orElse(1));
     }
@@ -62,6 +64,8 @@ public final class ClientModEvents {
         event.registerEntityRenderer(EREntities.MAGIC_PROJECTILE.get(),
                 context -> new ThrownItemRenderer<>(context, 1.25F, true));
         event.registerEntityRenderer(EREntities.SKILL_ARROW.get(), SkillArrowRenderer::new);
+        event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.LIGHT_SHAFT_ENTITY.get(),
+                com.eternalrealm.client.block.LightShaftRenderer::new);
     }
 
     @SubscribeEvent

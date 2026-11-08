@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "eternalrealm:castle_brick_stairs",
+    "eternalrealm:gilded_trim_stairs",
+    "eternalrealm:pale_roof_tile_stairs",
+    "eternalrealm:royal_roof_tile_stairs",
+    "eternalrealm:smooth_castle_stone_stairs"
+  ]
+}

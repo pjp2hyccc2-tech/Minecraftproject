@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "eternalrealm:block/castle_brick_slab"
+    },
+    "type=top": {
+      "model": "eternalrealm:block/castle_brick_slab_top"
+    },
+    "type=double": {
+      "model": "eternalrealm:block/castle_bricks"
+    }
+  }
+}

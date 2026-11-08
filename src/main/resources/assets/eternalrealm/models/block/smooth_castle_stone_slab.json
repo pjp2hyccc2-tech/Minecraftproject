@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "eternalrealm:block/smooth_castle_stone",
+    "top": "eternalrealm:block/smooth_castle_stone",
+    "side": "eternalrealm:block/smooth_castle_stone"
+  }
+}

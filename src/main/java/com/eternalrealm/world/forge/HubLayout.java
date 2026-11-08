@@ -23,9 +23,35 @@ import java.util.Map;
  */
 public final class HubLayout {
     private final int groundY;
+    /** Spots of the blueprint capital (feet positions relative to (0, groundY, 0)); empty for the classic town. */
+    private final Map<HubSpot, BlockPos> spots;
+    private final Map<HubSpot, Float> yaws;
+    /** Further named spots of the blueprint ("story.lilia", "castle.throne", ...), relative like {@link #spots}. */
+    private final Map<String, BlockPos> named;
+    private final Map<String, Float> namedYaws;
 
     HubLayout(int groundY) {
+        this(groundY, Map.of(), Map.of(), Map.of(), Map.of());
+    }
+
+    HubLayout(int groundY, Map<HubSpot, BlockPos> spots, Map<HubSpot, Float> yaws, Map<String, BlockPos> named,
+              Map<String, Float> namedYaws) {
         this.groundY = groundY;
+        this.spots = Map.copyOf(spots);
+        this.yaws = Map.copyOf(yaws);
+        this.named = Map.copyOf(named);
+        this.namedYaws = Map.copyOf(namedYaws);
+    }
+
+    /** A named blueprint spot as a world feet position, if the capital has it. */
+    public java.util.Optional<BlockPos> named(String name) {
+        BlockPos local = named.get(name);
+        return local == null ? java.util.Optional.empty()
+                : java.util.Optional.of(new BlockPos(local.getX(), groundY + local.getY(), local.getZ()));
+    }
+
+    public float namedYaw(String name, float fallback) {
+        return namedYaws.getOrDefault(name, fallback);
     }
 
     /** The layout of the capital in this アストリア level (built or not). */
@@ -40,12 +66,16 @@ public final class HubLayout {
 
     /** Feet position of a named spot. */
     public BlockPos position(HubSpot spot) {
+        BlockPos local = spots.get(spot);
+        if (local != null) {
+            return new BlockPos(local.getX(), groundY + local.getY(), local.getZ());
+        }
         return new BlockPos(spot.dx(), groundY + spot.dy(), spot.dz());
     }
 
     /** Facing (Minecraft yaw) for an NPC or a player placed at the spot. */
     public float yaw(HubSpot spot) {
-        return spot.yaw();
+        return yaws.getOrDefault(spot, spot.yaw());
     }
 
     public Map<HubSpot, BlockPos> positions() {
