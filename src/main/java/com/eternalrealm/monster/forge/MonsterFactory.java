@@ -96,6 +96,10 @@ public final class MonsterFactory {
         }
         mob.setHealth(mob.getMaxHealth());
         MonsterTags.mark(mob, template.id(), spawn.level(), stats.damage(), rewards);
+        if (mob instanceof com.eternalrealm.entity.ERMonster monster) {
+            // elites and veterans wind up telegraphed special moves (docs/modules/hazards.md)
+            monster.setSpecialMoves(com.eternalrealm.monster.SpecialMoves.moveCount(template.role(), spawn.level()));
+        }
         mob.setCustomName(nameplate(template, spawn.level()));
         mob.setCustomNameVisible(template.role() == MonsterRole.ELITE);
         return Optional.of(mob);

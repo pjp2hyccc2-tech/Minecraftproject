@@ -29,9 +29,13 @@ public class EnemyModel<T extends ERMonster> extends RigModel<T> {
         animateWalk(animation(index, WALK), limbSwing, limbSwingAmount, this.walkSpeed / scaleOf(index), 2.0F);
         animate(entity.idleAnimation, animation(index, IDLE), ageInTicks);
         animate(entity.spawnAnimation, animation(index, EnemyAnim.SPAWN.ordinal()), ageInTicks);
-        animate(entity.attack1Animation, animation(index, EnemyAnim.ATTACK1.ordinal()), ageInTicks);
-        animate(entity.attack2Animation, animation(index, EnemyAnim.ATTACK2.ordinal()), ageInTicks);
-        animate(entity.castAnimation, animation(index, EnemyAnim.CAST.ordinal()), ageInTicks);
+        // special moves wind up in slow motion (ERMonster#animationSpeed)
+        animate(entity.attack1Animation, animation(index, EnemyAnim.ATTACK1.ordinal()), ageInTicks,
+                entity.animationSpeed(EnemyAnim.ATTACK1));
+        animate(entity.attack2Animation, animation(index, EnemyAnim.ATTACK2.ordinal()), ageInTicks,
+                entity.animationSpeed(EnemyAnim.ATTACK2));
+        animate(entity.castAnimation, animation(index, EnemyAnim.CAST.ordinal()), ageInTicks,
+                entity.animationSpeed(EnemyAnim.CAST));
         animate(entity.hurtAnimation, animation(index, EnemyAnim.HURT.ordinal()), ageInTicks);
     }
 }

@@ -11,6 +11,11 @@ public final class ERClientConfig {
     public static final ForgeConfigSpec.BooleanValue HUD_ENABLED;
     public static final ForgeConfigSpec.IntValue HUD_X;
     public static final ForgeConfigSpec.IntValue HUD_Y;
+    public static final ForgeConfigSpec.BooleanValue MINIMAP_ENABLED;
+    public static final ForgeConfigSpec.IntValue MINIMAP_SIZE;
+    public static final ForgeConfigSpec.IntValue MINIMAP_ZOOM;
+    public static final ForgeConfigSpec.BooleanValue MINIMAP_ROTATE;
+    public static final ForgeConfigSpec.BooleanValue MINIMAP_COORDINATES;
     public static final ForgeConfigSpec.BooleanValue DAMAGE_NUMBERS;
     public static final ForgeConfigSpec.BooleanValue COMBAT_HUD;
     public static final ForgeConfigSpec.BooleanValue CAMERA_SHAKE;
@@ -24,6 +29,15 @@ public final class ERClientConfig {
         HUD_ENABLED = builder.define("enabled", true);
         HUD_X = builder.comment("Left offset in GUI pixels").defineInRange("x", 4, 0, 4096);
         HUD_Y = builder.comment("Top offset in GUI pixels").defineInRange("y", 4, 0, 4096);
+        builder.pop();
+        builder.comment("Minimap in the top right corner (keys: N shows/hides it, = and - zoom, M opens the world map)")
+                .push("minimap");
+        MINIMAP_ENABLED = builder.comment("Show the minimap").define("enabled", true);
+        MINIMAP_SIZE = builder.comment("Diameter in GUI pixels").defineInRange("size", 96, 64, 192);
+        MINIMAP_ZOOM = builder.comment("Zoom step: 0 = closest (32 blocks around you) .. 4 = farthest (128 blocks)")
+                .defineInRange("zoom", 2, 0, 4);
+        MINIMAP_ROTATE = builder.comment("Turn the map with you (false: north is always up)").define("rotate", false);
+        MINIMAP_COORDINATES = builder.comment("Show your coordinates under the minimap").define("coordinates", true);
         builder.pop();
         builder.comment("Combat feedback").push("combat");
         DAMAGE_NUMBERS = builder.comment("Show the damage you deal as floating numbers").define("damageNumbers", true);

@@ -8,7 +8,9 @@ import java.util.EnumSet;
 
 /**
  * Fights the current target: melee variants chase and swing when in reach; ranged variants keep 6-14 blocks away,
- * back off when the target closes in, and cast when they can see it. Flyers aim for a spot above the target.
+ * back off when the target closes in, and cast when they can see it. Flyers aim for a spot above the target. Strong
+ * monsters ({@link ERMonster#specialMoveCount()} > 0) open with a pause, then use a telegraphed special move whenever
+ * one is ready and the target is at a fitting distance ({@link ERMonster#trySpecialMove}).
  */
 final class EnemyCombatGoal extends Goal {
     private static final double RANGED_MIN = 6.0;
@@ -44,6 +46,8 @@ final class EnemyCombatGoal extends Goal {
     public void start() {
         this.cooldown = 10;
         this.repath = 0;
+        this.mob.delaySpecialMoves(com.eternalrealm.monster.SpecialMoves.OPENING_DELAY_TICKS
+                + this.mob.getRandom().nextInt(40));
     }
 
     @Override
@@ -66,6 +70,10 @@ final class EnemyCombatGoal extends Goal {
             return;
         }
         boolean sees = this.mob.getSensing().hasLineOfSight(target);
+        if (sees && this.mob.trySpecialMove(target)) {
+            this.mob.getNavigation().stop();
+            return;
+        }
         if (this.mob.isRangedAttacker()) {
             tickRanged(target, sees);
         } else {

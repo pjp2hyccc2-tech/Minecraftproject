@@ -96,6 +96,8 @@ public abstract class JournalScreen extends Screen {
             addRenderableWidget(button);
             y += 20;
         }
+        addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.tab.map"),
+                b -> com.eternalrealm.ui.map.WorldMapScreen.open()).bounds(panelLeft, y + 6, TAB_WIDTH, 18).build());
         initPage();
     }
 

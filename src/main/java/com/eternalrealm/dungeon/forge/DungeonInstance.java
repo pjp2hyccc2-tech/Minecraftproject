@@ -82,6 +82,8 @@ final class DungeonInstance {
     private int clearIndex;
     private long clearOffset;
     private BossFight fight;
+    /** The traps (null until built, or when disabled in the server config). */
+    private DungeonHazards hazards;
     private long exitAt = -1;
     private long now;
     private boolean closed;
@@ -127,6 +129,9 @@ final class DungeonInstance {
         if (state == RunState.BUILDING) {
             if (buildSlice()) {
                 handle(run.onBuilt());
+                if (trapsEnabled()) {
+                    hazards = DungeonHazards.forInstance(level, layout, origin, difficulty);
+                }
                 for (UUID member : run.members()) {
                     ServerPlayer player = service.player(member);
                     if (player != null) {
@@ -141,6 +146,9 @@ final class DungeonInstance {
             handle(run.tick(now));
             if (fight != null) {
                 fight.tick(now);
+            }
+            if (hazards != null) {
+                hazards.tick(now, trapVictims());
             }
             pruneSpawned();
         }
@@ -244,9 +252,11 @@ final class DungeonInstance {
                         String.format(Locale.ROOT, "%d:%02d", seconds / 60, seconds % 60))
                         .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD), false);
                 service.onCleared(this, cleared);
+                stopHazards();
                 exitAt = now + EXIT_DELAY_TICKS;
             } else if (event instanceof DungeonRunEvent.Failed failed) {
                 tellAll(Component.translatable(failed.reason().messageKey()).withStyle(ChatFormatting.RED), false);
+                stopHazards();
                 if (fight != null) {
                     fight.end();
                     fight.body().discard();
@@ -358,6 +368,7 @@ final class DungeonInstance {
         if (run.state() != RunState.CLOSED) {
             handle(run.close(now));
         }
+        stopHazards();
         if (fight != null) {
             fight.end();
             if (fight.body().isAlive()) {
@@ -399,6 +410,67 @@ final class DungeonInstance {
                 }
             }
         }
+    }
+
+    // ------------------------------------------------------------------ traps
+
+    private static boolean trapsEnabled() {
+        try {
+            return com.eternalrealm.config.ERServerConfig.DUNGEON_TRAPS.get();
+        } catch (IllegalStateException e) {
+            return true; // config not loaded (tests)
+        }
+    }
+
+    /** Members inside the instance who can be hurt by traps (spectators and creative players only watch). */
+    private List<ServerPlayer> trapVictims() {
+        List<ServerPlayer> victims = new ArrayList<>();
+        for (ServerPlayer player : onlineMembers()) {
+            if (player.isAlive() && !player.isSpectator() && !player.isCreative() && isInside(player)) {
+                victims.add(player);
+            }
+        }
+        return victims;
+    }
+
+    private void stopHazards() {
+        if (hazards != null) {
+            hazards.stop();
+        }
+    }
+
+    /** The traps of this instance for the map (empty before the build is complete or when traps are off). */
+    List<com.eternalrealm.dungeon.hazard.HazardSite> trapSites() {
+        return hazards == null ? List.of() : hazards.field().sites();
+    }
+
+    /** What the map shows of this instance: its layout, the current room and the fixed traps. */
+    com.eternalrealm.world.map.MapView.Dungeon mapView() {
+        List<com.eternalrealm.world.map.MapView.Rect> rooms = new ArrayList<>();
+        for (RoomLayout room : layout.rooms()) {
+            rooms.add(rect(room.bounds()));
+        }
+        List<com.eternalrealm.world.map.MapView.Rect> corridors = new ArrayList<>();
+        for (BlockBox corridor : layout.corridors()) {
+            corridors.add(rect(corridor));
+        }
+        RunState state = run.state();
+        int room = state == RunState.IN_PROGRESS ? run.currentRoom()
+                : state == RunState.BOSS || state == RunState.CLEARED ? layout.rooms().size() : -1;
+        List<com.eternalrealm.world.map.MapView.Trap> traps = new ArrayList<>();
+        for (com.eternalrealm.dungeon.hazard.HazardSite site : trapSites()) {
+            if (site.kind().trigger() != com.eternalrealm.dungeon.hazard.HazardKind.Trigger.TARGETED) {
+                traps.add(new com.eternalrealm.world.map.MapView.Trap(origin.getX() + site.x(), origin.getZ() + site.z(),
+                        site.kind().id()));
+            }
+        }
+        return new com.eternalrealm.world.map.MapView.Dungeon(contentId, nameKey, origin.getX(), origin.getY(),
+                origin.getZ(), rect(layout.entranceHall()), rooms, corridors, rect(layout.bossArena()), room,
+                state == RunState.BOSS, traps);
+    }
+
+    private static com.eternalrealm.world.map.MapView.Rect rect(BlockBox box) {
+        return new com.eternalrealm.world.map.MapView.Rect(box.minX(), box.minZ(), box.maxX(), box.maxZ());
     }
 
     List<ServerPlayer> onlineMembers() {
