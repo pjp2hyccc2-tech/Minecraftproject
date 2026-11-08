@@ -32,7 +32,7 @@ public final class Afflictions {
                     case SLOW -> target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, ticks,
                             (int) Math.round(affliction.power())), source);
                     case FREEZE -> {
-                        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, ticks, 3), source);
+                        target.addEffect(new MobEffectInstance(ERMobEffects.FROZEN.get(), ticks, 1), source);
                         target.setTicksFrozen(Math.max(target.getTicksFrozen(), FROST_TICKS));
                         source.serverLevel().sendParticles(ParticleTypes.SNOWFLAKE, target.getX(),
                                 target.getY() + target.getBbHeight() * 0.5, target.getZ(), 12, 0.3, 0.4, 0.3, 0.02);

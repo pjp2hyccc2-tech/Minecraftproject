@@ -4,6 +4,7 @@ import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.combat.DamageCalculator;
 import com.eternalrealm.combat.forge.CombatHits;
 import com.eternalrealm.combat.forge.ERMobEffects;
+import com.eternalrealm.combat.forge.ERParticles;
 import com.eternalrealm.combat.forge.PvpRules;
 import com.eternalrealm.job.SkillEffect;
 import net.minecraft.core.particles.ParticleOptions;
@@ -47,6 +48,8 @@ public final class SkillEffectsExecutor {
             } else if (effect instanceof SkillEffect.Shield shield) {
                 caster.setAbsorptionAmount(Math.max(caster.getAbsorptionAmount(),
                         (float) (caster.getMaxHealth() * shield.fraction())));
+                caster.addEffect(new net.minecraft.world.effect.MobEffectInstance(ERMobEffects.GUARD_UP.get(),
+                        shield.durationTicks(), 0, false, true, true), caster);
             } else if (effect instanceof SkillEffect.Taunt taunt) {
                 for (Mob mob : hostiles(caster, taunt.radius())) {
                     mob.setTarget(caster);
@@ -116,7 +119,7 @@ public final class SkillEffectsExecutor {
                     amplifier = ERMobEffects.amplifierFor(buff.magnitude());
                 }
                 case SPEED -> {
-                    effect = MobEffects.MOVEMENT_SPEED;
+                    effect = ERMobEffects.HASTE.get();
                     amplifier = (int) Math.round(buff.magnitude());
                 }
                 case REGENERATION -> {
@@ -162,31 +165,51 @@ public final class SkillEffectsExecutor {
                     }
                 }
             }
-            case "heal", "blessing", "sanctuary" -> burst(level, ParticleTypes.HAPPY_VILLAGER, x, y, z, 30, 2.5,
-                    SoundEvents.AMETHYST_BLOCK_CHIME, caster);
-            case "war_cry" -> burst(level, ParticleTypes.ANGRY_VILLAGER, x, y + 0.8, z, 8, 1.0,
-                    SoundEvents.RAVAGER_ROAR, caster);
-            case "iron_wall" -> burst(level, ParticleTypes.ENCHANTED_HIT, x, y, z, 30, 1.2,
-                    SoundEvents.ANVIL_PLACE, caster);
-            case "smoke" -> burst(level, ParticleTypes.LARGE_SMOKE, x, y, z, 60, 2.0,
-                    SoundEvents.FIRE_EXTINGUISH, caster);
-            case "shadow" -> burst(level, ParticleTypes.SQUID_INK, x, y, z, 20, 0.6,
+            case "heal", "blessing", "sanctuary" -> {
+                burst(level, ERParticles.HEAL.get(), x, y, z, 30, 2.5, SoundEvents.AMETHYST_BLOCK_CHIME, caster);
+                extra(level, ERParticles.HOLY.get(), x, y + 0.6, z, 16, 1.5);
+            }
+            case "war_cry" -> {
+                burst(level, ParticleTypes.ANGRY_VILLAGER, x, y + 0.8, z, 8, 1.0, SoundEvents.RAVAGER_ROAR, caster);
+                extra(level, ERParticles.SPARK.get(), x, y + 0.4, z, 24, 2.0);
+            }
+            case "iron_wall" -> {
+                burst(level, ERParticles.HOLY.get(), x, y, z, 30, 1.2, SoundEvents.ANVIL_PLACE, caster);
+                extra(level, ParticleTypes.ENCHANTED_HIT, x, y, z, 12, 1.0);
+            }
+            case "smoke" -> {
+                burst(level, ParticleTypes.LARGE_SMOKE, x, y, z, 50, 2.0, SoundEvents.FIRE_EXTINGUISH, caster);
+                extra(level, ERParticles.SHADOW.get(), x, y, z, 30, 1.8);
+            }
+            case "shadow" -> burst(level, ERParticles.SHADOW.get(), x, y, z, 28, 0.6,
                     SoundEvents.ENDERMAN_TELEPORT, caster);
-            case "flame_blade" -> burst(level, ParticleTypes.FLAME, x, y, z, 30, 0.8,
-                    SoundEvents.FIRECHARGE_USE, caster);
+            case "flame_blade" -> {
+                burst(level, ERParticles.EMBER.get(), x, y, z, 30, 0.8, SoundEvents.FIRECHARGE_USE, caster);
+                extra(level, ParticleTypes.FLAME, x, y, z, 10, 0.6);
+            }
             case "judgment", "slam_small" -> burst(level, ParticleTypes.EXPLOSION, x, caster.getY() + 0.2, z,
                     "judgment".equals(kind) ? 12 : 3, "judgment".equals(kind) ? 3.0 : 1.0,
                     SoundEvents.GENERIC_EXPLODE, caster);
-            case "judgment_charge", "meteor_cast" -> burst(level, ParticleTypes.ENCHANT, x, y, z, 50, 1.2,
+            case "judgment_charge", "meteor_cast" -> burst(level, ERParticles.RUNE.get(), x, y, z, 40, 1.2,
                     SoundEvents.BEACON_POWER_SELECT, caster);
             case "arrow_rain" -> burst(level, ParticleTypes.CRIT, x, y + 2.0, z, 10, 1.0,
                     SoundEvents.ARROW_SHOOT, caster);
-            case "blade_storm" -> burst(level, ParticleTypes.SWEEP_ATTACK, x, y, z, 12, 2.0,
-                    SoundEvents.PLAYER_ATTACK_SWEEP, caster);
-            case "rift", "arcane_slash" -> burst(level, ParticleTypes.REVERSE_PORTAL, x, y, z, 40, 1.5,
-                    SoundEvents.ILLUSIONER_CAST_SPELL, caster);
-            default -> burst(level, ParticleTypes.ENCHANT, x, y, z, 20, 1.0, SoundEvents.EVOKER_CAST_SPELL, caster);
+            case "blade_storm" -> {
+                burst(level, ERParticles.SLASH.get(), x, y, z, 14, 2.0, SoundEvents.PLAYER_ATTACK_SWEEP, caster);
+                extra(level, ParticleTypes.SWEEP_ATTACK, x, y, z, 6, 2.0);
+            }
+            case "rift", "arcane_slash" -> {
+                burst(level, ERParticles.RUNE.get(), x, y, z, 30, 1.5, SoundEvents.ILLUSIONER_CAST_SPELL, caster);
+                extra(level, ParticleTypes.REVERSE_PORTAL, x, y, z, 20, 1.5);
+            }
+            default -> burst(level, ERParticles.RUNE.get(), x, y, z, 20, 1.0, SoundEvents.EVOKER_CAST_SPELL, caster);
         }
+    }
+
+    /** More particles without a sound. */
+    private static void extra(ServerLevel level, ParticleOptions particle, double x, double y, double z, int count,
+                              double spread) {
+        level.sendParticles(particle, x, y, z, count, spread, spread * 0.5, spread, 0.03);
     }
 
     private static void burst(ServerLevel level, ParticleOptions particle, double x, double y, double z, int count,

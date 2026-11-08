@@ -121,11 +121,15 @@ final class CombatEffects {
         level.playSound(null, target.getX(), target.getY(), target.getZ(), sound, SoundSource.PLAYERS, 0.9F,
                 0.9F + level.getRandom().nextFloat() * 0.2F);
         double y = target.getY() + target.getBbHeight() * 0.6;
+        // a blade arc on every hit; sparks on criticals; runes on skills
+        level.sendParticles(ERParticles.SLASH.get(), target.getX(), y, target.getZ(), 1, 0.15, 0.15, 0.15, 0.0);
         if (critical) {
             level.sendParticles(ParticleTypes.CRIT, target.getX(), y, target.getZ(), 12, 0.3, 0.3, 0.3, 0.2);
+            level.sendParticles(ERParticles.SPARK.get(), target.getX(), y, target.getZ(), 10, 0.3, 0.3, 0.3, 0.15);
         }
         if (kind == ActionKind.SKILL) {
             level.sendParticles(ParticleTypes.ENCHANTED_HIT, target.getX(), y, target.getZ(), 8, 0.3, 0.3, 0.3, 0.2);
+            level.sendParticles(ERParticles.RUNE.get(), target.getX(), y, target.getZ(), 4, 0.3, 0.3, 0.3, 0.05);
         }
     }
 

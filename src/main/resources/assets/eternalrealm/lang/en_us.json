@@ -924,5 +924,13 @@
   "message.eternalrealm.consumable.channel_cancelled": "The channel was interrupted",
   "message.eternalrealm.consumable.returned": "You returned home",
   "message.eternalrealm.consumable.points_reset": "Your stat and skill points were refunded",
-  "message.eternalrealm.consumable.nothing_to_reset": "There are no points to refund"
+  "message.eternalrealm.consumable.nothing_to_reset": "There are no points to refund",
+  "effect.eternalrealm.haste": "Haste",
+  "effect.eternalrealm.frozen": "Frozen",
+  "effect.eternalrealm.guard_up": "Guard Shield",
+  "effect.eternalrealm.cursed": "Cursed",
+  "screen.eternalrealm.outfit.job": "Armor: job outfit",
+  "screen.eternalrealm.outfit.tier": "Armor: gear look",
+  "message.eternalrealm.outfit.job": "Your armor now shows your job outfit",
+  "message.eternalrealm.outfit.tier": "Your armor now shows its own look"
 }

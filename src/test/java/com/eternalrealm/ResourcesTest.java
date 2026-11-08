@@ -66,6 +66,95 @@ public class ResourcesTest {
         assertTrue(english.contains("itemGroup.eternalrealm"));
     }
 
+    /**
+     * Every registered item of the item module (70 equipment bases, materials, consumables) resolves to an existing
+     * texture through its model (directly, or through the art's parent model), and has a name.
+     */
+    @Test
+    public void everyEquipmentMaterialAndConsumableItemHasArtAndAName() throws IOException {
+        Set<String> english = keys(RESOURCES.resolve("assets/eternalrealm/lang/en_us.json"));
+        Set<String> japanese = keys(RESOURCES.resolve("assets/eternalrealm/lang/ja_jp.json"));
+        java.util.List<String> paths = new java.util.ArrayList<>();
+        for (com.eternalrealm.item.EquipmentBase base : com.eternalrealm.item.EquipmentBase.all()) {
+            paths.add(base.itemPath());
+        }
+        for (String id : com.eternalrealm.item.Materials.all()) {
+            paths.add(id.substring(id.indexOf(':') + 1));
+        }
+        for (com.eternalrealm.item.Consumable consumable : com.eternalrealm.item.Consumable.values()) {
+            paths.add(consumable.itemId().substring(consumable.itemId().indexOf(':') + 1));
+        }
+        for (String item : paths) {
+            String texture = textureOf("eternalrealm:item/" + item, 0);
+            Path png = RESOURCES.resolve("assets/eternalrealm/textures/" + texture.substring("eternalrealm:".length())
+                    + ".png");
+            assertTrue("missing texture " + png + " for " + item, Files.isRegularFile(png));
+            assertTrue("missing English name for " + item, english.contains("item.eternalrealm." + item));
+            assertTrue("missing Japanese name for " + item, japanese.contains("item.eternalrealm." + item));
+        }
+        for (int tier = 1; tier <= 7; tier++) {
+            for (int layer = 1; layer <= 2; layer++) {
+                Path worn = RESOURCES.resolve("assets/eternalrealm/textures/models/armor/er_tier" + tier + "_layer_"
+                        + layer + ".png");
+                assertTrue("missing worn armor " + worn, Files.isRegularFile(worn));
+            }
+        }
+        for (com.eternalrealm.job.JobType job : com.eternalrealm.job.JobType.values()) {
+            if (!job.isChosen()) {
+                continue;
+            }
+            for (int layer = 1; layer <= 2; layer++) {
+                Path worn = RESOURCES.resolve("assets/eternalrealm/textures/models/armor/er_job_" + job.id()
+                        + "_layer_" + layer + ".png");
+                assertTrue("missing job outfit " + worn, Files.isRegularFile(worn));
+            }
+            assertTrue(Files.isRegularFile(RESOURCES.resolve("assets/eternalrealm/textures/gui/job/" + job.id()
+                    + ".png")));
+        }
+    }
+
+    /** The layer0 texture of a model, following eternalrealm parents. */
+    private static String textureOf(String model, int depth) throws IOException {
+        assertTrue("model parent chain too deep at " + model, depth < 4);
+        Path file = RESOURCES.resolve("assets/eternalrealm/models/" + model.substring("eternalrealm:".length())
+                + ".json");
+        assertTrue("missing model " + file, Files.isRegularFile(file));
+        JsonObject json = JsonParser.parseString(Files.readString(file, StandardCharsets.UTF_8)).getAsJsonObject();
+        if (json.has("textures") && json.getAsJsonObject("textures").has("layer0")) {
+            return json.getAsJsonObject("textures").get("layer0").getAsString();
+        }
+        String parent = json.get("parent").getAsString();
+        assertTrue(model + " has no texture and no mod parent", parent.startsWith("eternalrealm:"));
+        return textureOf(parent, depth + 1);
+    }
+
+    @Test
+    public void everyParticleAndSkillIconExists() throws IOException {
+        for (String particle : java.util.List.of("ember", "frost", "heal", "holy", "rune", "shadow", "slash", "spark")) {
+            Path definition = RESOURCES.resolve("assets/eternalrealm/particles/" + particle + ".json");
+            assertTrue("missing particle definition " + definition, Files.isRegularFile(definition));
+            JsonObject json = JsonParser.parseString(Files.readString(definition, StandardCharsets.UTF_8))
+                    .getAsJsonObject();
+            for (com.google.gson.JsonElement frame : json.getAsJsonArray("textures")) {
+                String name = frame.getAsString().substring("eternalrealm:".length());
+                assertTrue("missing particle frame " + name, Files.isRegularFile(
+                        RESOURCES.resolve("assets/eternalrealm/textures/particle/" + name + ".png")));
+            }
+        }
+        for (com.eternalrealm.job.JobDefinition job : com.eternalrealm.job.Jobs.selectable()) {
+            for (int slot = 1; slot <= 4; slot++) {
+                String id = job.skill(slot).id();
+                assertTrue("missing skill icon " + id, Files.isRegularFile(
+                        RESOURCES.resolve("assets/eternalrealm/textures/gui/skill/" + id + ".png")));
+            }
+        }
+        for (String effect : java.util.List.of("attack_up", "defense_up", "flame_weapon", "bleed", "haste", "frozen",
+                "guard_up", "cursed")) {
+            assertTrue("missing effect icon " + effect, Files.isRegularFile(
+                    RESOURCES.resolve("assets/eternalrealm/textures/mob_effect/" + effect + ".png")));
+        }
+    }
+
     @Test
     public void everyCombatTextIsTranslated() throws IOException {
         Set<String> english = keys(RESOURCES.resolve("assets/eternalrealm/lang/en_us.json"));

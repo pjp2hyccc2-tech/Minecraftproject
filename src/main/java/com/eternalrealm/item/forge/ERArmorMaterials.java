@@ -11,8 +11,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 /**
  * One armor material per {@link ItemTier}. Defense, toughness and durability are zero on purpose: the defense of a
  * piece is an ETERNAL REALM stat (item module) applied by the combat system, so vanilla armor points would count it
- * twice, and gear does not wear out. The material name selects the worn texture
- * {@code eternalrealm:textures/models/armor/<tier>_layer_<1|2>.png}.
+ * twice, and gear does not wear out. The material name selects the worn texture of the tier
+ * {@code eternalrealm:textures/models/armor/er_tier<n>_layer_<1|2>.png} (tools/art); job outfits replace it per stack
+ * ({@link GearArmorItem#getArmorTexture}).
  */
 public enum ERArmorMaterials implements ArmorMaterial {
     IRON(ItemTier.IRON, SoundEvents.ARMOR_EQUIP_CHAIN),
@@ -71,7 +72,7 @@ public enum ERArmorMaterials implements ArmorMaterial {
 
     @Override
     public String getName() {
-        return ModInfo.MOD_ID + ":" + tier.id();
+        return ModInfo.MOD_ID + ":er_tier" + tier.number();
     }
 
     @Override

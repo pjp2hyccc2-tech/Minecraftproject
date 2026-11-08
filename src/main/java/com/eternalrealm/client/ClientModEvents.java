@@ -37,6 +37,11 @@ public final class ClientModEvents {
     }
 
     @SubscribeEvent
+    public static void onRegisterParticles(net.minecraftforge.client.event.RegisterParticleProvidersEvent event) {
+        ERParticleProviders.register(event);
+    }
+
+    @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EREntities.MAGIC_PROJECTILE.get(),
                 context -> new ThrownItemRenderer<>(context, 1.25F, true));

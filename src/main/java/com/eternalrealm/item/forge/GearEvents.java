@@ -61,6 +61,9 @@ public final class GearEvents {
     /** Server: any change of a hand or armor slot re-derives the stats. */
     public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
+            if (event.getSlot().getType() == net.minecraft.world.entity.EquipmentSlot.Type.ARMOR) {
+                OutfitStyles.onEquipped(player, event.getTo());
+            }
             ServerContext.current().ifPresent(context -> context.combat().markStatsDirty(player.getUUID()));
         }
     }

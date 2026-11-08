@@ -1,0 +1,10 @@
+{
+  "effect.eternalrealm.haste": {"ja": "俊足", "en": "Haste"},
+  "effect.eternalrealm.frozen": {"ja": "凍結", "en": "Frozen"},
+  "effect.eternalrealm.guard_up": {"ja": "守護の盾", "en": "Guard Shield"},
+  "effect.eternalrealm.cursed": {"ja": "呪い", "en": "Cursed"},
+  "screen.eternalrealm.outfit.job": {"ja": "防具: 職業衣装", "en": "Armor: job outfit"},
+  "screen.eternalrealm.outfit.tier": {"ja": "防具: 装備の外見", "en": "Armor: gear look"},
+  "message.eternalrealm.outfit.job": {"ja": "防具を職業衣装で表示します", "en": "Your armor now shows your job outfit"},
+  "message.eternalrealm.outfit.tier": {"ja": "防具を装備本来の外見で表示します", "en": "Your armor now shows its own look"}
+}

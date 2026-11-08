@@ -45,6 +45,7 @@ public final class JobActions {
             chooseJob(player, context, job);
         });
         UiActions.register("skill.invest", JobActions::investFromUi);
+        UiActions.register("outfit.set", (player, context, args) -> outfit(player, UiArgs.flag(args, "tier")));
     }
 
     private static void investFromUi(ServerPlayer player, ServerContext context, JsonObject args) {
@@ -74,6 +75,7 @@ public final class JobActions {
                 }
                 player.refreshDisplayName();
                 player.refreshTabListName();
+                com.eternalrealm.item.forge.OutfitStyles.refresh(player);
                 return true;
             }
             case SAME_JOB -> player.displayClientMessage(Component.translatable("message.eternalrealm.job.same", name), true);
@@ -116,12 +118,23 @@ public final class JobActions {
                 .withStyle(ChatFormatting.AQUA), false);
     }
 
+    /** Job outfit or tier look for the worn armor (cosmetic only). */
+    static int outfit(ServerPlayer player, boolean tierLook) {
+        com.eternalrealm.item.forge.OutfitStyles.setPrefersTierLook(player, tierLook);
+        player.displayClientMessage(Component.translatable(tierLook ? "message.eternalrealm.outfit.tier"
+                : "message.eternalrealm.outfit.job"), true);
+        return 1;
+    }
+
     // ------------------------------------------------------------------ commands
 
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         String[] jobIds = Arrays.stream(JobType.values()).filter(JobType::isChosen).map(JobType::id).toArray(String[]::new);
         dispatcher.register(Commands.literal("eternalrealm")
+                .then(Commands.literal("outfit")
+                        .then(Commands.literal("job").executes(ctx -> outfit(ctx.getSource().getPlayerOrException(), false)))
+                        .then(Commands.literal("tier").executes(ctx -> outfit(ctx.getSource().getPlayerOrException(), true))))
                 .then(Commands.literal("job")
                         .then(Commands.argument("job", StringArgumentType.word())
                                 .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(jobIds, builder))

@@ -102,7 +102,11 @@ public final class SkillScreen extends JournalScreen {
             MutableComponent name = Component.literal("[")
                     .append(ClientKeyMappings.jobSkill(slot).getTranslatedKeyMessage()).append("] ")
                     .append(Component.translatable(skill.translationKey()));
-            graphics.drawString(font, name, left + 3, y + 3, level > 0 ? TITLE_COLOR : MUTED);
+            graphics.setColor(level > 0 ? 1.0F : 0.45F, level > 0 ? 1.0F : 0.45F, level > 0 ? 1.0F : 0.45F, 1.0F);
+            graphics.blit(com.eternalrealm.ui.hud.CombatHudOverlay.skillIcon(skill.id()), left + 3, y + 3, 0, 0, 16, 16,
+                    16, 16);
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+            graphics.drawString(font, name, left + 23, y + 3, level > 0 ? TITLE_COLOR : MUTED);
             Component levelText = level > 0
                     ? Component.translatable("screen.eternalrealm.skill.level", level, skill.maxLevel())
                     : Component.translatable("screen.eternalrealm.skill.locked", skill.unlockLevel());
@@ -112,9 +116,9 @@ public final class SkillScreen extends JournalScreen {
             Component info = Component.translatable("screen.eternalrealm.skill.info",
                     Component.translatable(skill.damageType().translationKey()), cooldown,
                     String.format(Locale.ROOT, "%.0f", skill.damageScale(shownLevel) * 100.0), weapons(skill));
-            graphics.drawString(font, info, left + 3, y + 14, 0xB0D0FF);
-            drawWrapped(graphics, Component.translatable(skill.descriptionKey()), left + 3, y + 25,
-                    CONTENT_WIDTH - 30, 0xD0D0D0, 2);
+            graphics.drawString(font, info, left + 23, y + 14, 0xB0D0FF);
+            drawWrapped(graphics, Component.translatable(skill.descriptionKey()), left + 23, y + 25,
+                    CONTENT_WIDTH - 50, 0xD0D0D0, 2);
         }
     }
 

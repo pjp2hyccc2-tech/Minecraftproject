@@ -58,21 +58,21 @@ public final class MagicProjectile extends ThrowableItemProjectile {
 
     private static ParticleOptions trailFor(Item item) {
         if (item == Items.FIRE_CHARGE || item == Items.MAGMA_BLOCK) {
-            return ParticleTypes.FLAME;
+            return ERParticles.EMBER.get();
         }
         if (item == Items.PRISMARINE_SHARD) {
-            return ParticleTypes.SNOWFLAKE;
+            return ERParticles.FROST.get();
         }
         if (item == Items.NETHER_STAR) {
-            return ParticleTypes.END_ROD;
+            return ERParticles.HOLY.get();
         }
         if (item == Items.ECHO_SHARD) {
-            return ParticleTypes.SOUL_FIRE_FLAME;
+            return ERParticles.SHADOW.get();
         }
         if (item == Items.HEART_OF_THE_SEA) {
-            return ParticleTypes.GLOW;
+            return ERParticles.SPARK.get();
         }
-        return ParticleTypes.WITCH;
+        return ERParticles.RUNE.get();
     }
 
     @Override

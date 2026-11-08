@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/armor/helmet_2"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 101
+      },
+      "model": "eternalrealm:item/armor/helmet_job_knight"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 102
+      },
+      "model": "eternalrealm:item/armor/helmet_job_assassin"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 103
+      },
+      "model": "eternalrealm:item/armor/helmet_job_mage"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 104
+      },
+      "model": "eternalrealm:item/armor/helmet_job_ranger"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 105
+      },
+      "model": "eternalrealm:item/armor/helmet_job_priest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 106
+      },
+      "model": "eternalrealm:item/armor/helmet_job_spellblade"
+    }
+  ]
+}

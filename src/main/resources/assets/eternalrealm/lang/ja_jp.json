@@ -924,5 +924,13 @@
   "message.eternalrealm.consumable.channel_cancelled": "詠唱が中断された",
   "message.eternalrealm.consumable.returned": "拠点へ帰還した",
   "message.eternalrealm.consumable.points_reset": "ステータスとスキルのポイントが戻ってきた",
-  "message.eternalrealm.consumable.nothing_to_reset": "振り直すポイントがない"
+  "message.eternalrealm.consumable.nothing_to_reset": "振り直すポイントがない",
+  "effect.eternalrealm.haste": "俊足",
+  "effect.eternalrealm.frozen": "凍結",
+  "effect.eternalrealm.guard_up": "守護の盾",
+  "effect.eternalrealm.cursed": "呪い",
+  "screen.eternalrealm.outfit.job": "防具: 職業衣装",
+  "screen.eternalrealm.outfit.tier": "防具: 装備の外見",
+  "message.eternalrealm.outfit.job": "防具を職業衣装で表示します",
+  "message.eternalrealm.outfit.tier": "防具を装備本来の外見で表示します"
 }

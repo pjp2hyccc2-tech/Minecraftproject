@@ -142,12 +142,17 @@ public final class CombatHudOverlay implements IGuiOverlay {
             SkillBinding binding = local.jobSkill(slot);
             graphics.fill(x, top, x + size, top + size, binding == null ? 0x50000000 : PANEL);
             Component key = ClientKeyMappings.jobSkill(slot).getTranslatedKeyMessage();
-            graphics.drawString(font, key, x + 2, top + 2, binding == null ? 0x606060 : 0xE8C66A);
             if (binding == null) {
+                graphics.drawString(font, key, x + 2, top + 2, 0x606060);
                 continue;
             }
+            graphics.blit(skillIcon(binding.action().id()), x + 3, top + 3, 0, 0, 16, 16, 16, 16);
             int remaining = local.skillCooldownRemaining(slot, now);
             int total = local.skillCooldownTotal(slot);
+            graphics.pose().pushPose();
+            graphics.pose().translate(0.0F, 0.0F, 200.0F);
+            graphics.drawString(font, key, x + 1, top + 1, 0xE8C66A);
+            graphics.pose().popPose();
             if (remaining > 0 && total > 0) {
                 double ratio = Math.min(1.0, (double) remaining / total);
                 int shadeTop = top + size - (int) Math.round(size * ratio);
@@ -157,12 +162,14 @@ public final class CombatHudOverlay implements IGuiOverlay {
                 graphics.drawString(font, seconds, x + size - font.width(seconds) - 1, top + size - font.lineHeight,
                         0xFFFFFF);
             } else {
-                String initials = Component.translatable("skill.eternalrealm." + binding.action().id()).getString();
-                String shown = initials.isEmpty() ? "?" : initials.substring(0, Math.min(2, initials.length()));
-                graphics.drawString(font, shown, x + size - font.width(shown) - 1, top + size - font.lineHeight,
-                        0x7CFC7C);
+                graphics.renderOutline(x, top, size, size, 0xFF7CFC7C);
             }
         }
+    }
+
+    /** The skill's icon (tools/art, 16x16, frame coloured by job). */
+    public static net.minecraft.resources.ResourceLocation skillIcon(String skillId) {
+        return new net.minecraft.resources.ResourceLocation("eternalrealm", "textures/gui/skill/" + skillId + ".png");
     }
 
     private static void renderSkill(GuiGraphics graphics, Font font, Combatant local, WeaponProfile weapon, long now,
@@ -175,7 +182,7 @@ public final class CombatHudOverlay implements IGuiOverlay {
                 ? Component.translatable("hud.eternalrealm.combat.cooldown",
                 String.format(Locale.ROOT, "%.1f", remaining / 20.0))
                 : Component.translatable("hud.eternalrealm.combat.ready");
-        int width = Math.max(font.width(name), font.width(state)) + 8;
+        int width = Math.max(font.width(name), font.width(state)) + 8 + 18;
         int height = font.lineHeight * 2 + 6;
         int left = 4;
         int top = screenHeight - height - 4;
@@ -185,8 +192,9 @@ public final class CombatHudOverlay implements IGuiOverlay {
             int shadeTop = top + height - (int) Math.round(height * ratio);
             graphics.fill(left, shadeTop, left + width, top + height, COOLDOWN_SHADE);
         }
-        graphics.drawString(font, name, left + 4, top + 3, 0xFFFFFF);
-        graphics.drawString(font, state, left + 4, top + 4 + font.lineHeight, remaining > 0 ? 0xB0B0B0 : 0x7CFC7C);
+        graphics.blit(skillIcon(weapon.skill().id()), left + 3, top + (height - 16) / 2, 0, 0, 16, 16, 16, 16);
+        graphics.drawString(font, name, left + 22, top + 3, 0xFFFFFF);
+        graphics.drawString(font, state, left + 22, top + 4 + font.lineHeight, remaining > 0 ? 0xB0B0B0 : 0x7CFC7C);
 
         renderJobSkills(graphics, font, local, now, left + width + 4, top + height);
 

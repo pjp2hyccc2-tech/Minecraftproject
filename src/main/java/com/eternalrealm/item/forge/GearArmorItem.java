@@ -53,4 +53,15 @@ public final class GearArmorItem extends ArmorItem {
     public boolean isFoil(ItemStack stack) {
         return EquipmentStacks.isFoil(stack);
     }
+
+    /** A piece worn in job-outfit style shows the outfit of that job instead of the tier's armor. */
+    @Override
+    @Nullable
+    public String getArmorTexture(ItemStack stack, net.minecraft.world.entity.Entity entity,
+                                  net.minecraft.world.entity.EquipmentSlot slot, @Nullable String type) {
+        return OutfitStyles.styleOf(stack)
+                .map(job -> com.eternalrealm.core.ModInfo.MOD_ID + ":textures/models/armor/er_job_" + job.id() + "_layer_"
+                        + (slot == net.minecraft.world.entity.EquipmentSlot.LEGS ? 2 : 1) + ".png")
+                .orElse(null);
+    }
 }

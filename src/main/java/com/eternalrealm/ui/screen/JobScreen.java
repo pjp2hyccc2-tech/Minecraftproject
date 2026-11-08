@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,27 @@ public final class JobScreen extends JournalScreen {
                     .bounds(x + CARD_WIDTH - 46, y + 2, 44, 14).build();
             chooseButtons.add(addRenderableWidget(button));
         }
+        addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.outfit.job"), b -> outfit(false))
+                .bounds(left, top + PANEL_HEIGHT - 18, 120, 16).build());
+        addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.outfit.tier"), b -> outfit(true))
+                .bounds(left + 124, top + PANEL_HEIGHT - 18, 120, 16).build());
         updateButtons();
+    }
+
+    private void outfit(boolean tierLook) {
+        long now = System.currentTimeMillis();
+        if (now - lastRequestMillis < 500L) {
+            return;
+        }
+        lastRequestMillis = now;
+        JsonObject args = new JsonObject();
+        args.addProperty("tier", tierLook);
+        ERNetwork.sendToServer(new UiActionPacket("outfit.set", args));
+    }
+
+    /** The job's emblem (tools/art, 16x16). */
+    static ResourceLocation emblem(JobType type) {
+        return new ResourceLocation("eternalrealm", "textures/gui/job/" + type.id() + ".png");
     }
 
     private void choose(JobType type) {
@@ -83,12 +104,13 @@ public final class JobScreen extends JournalScreen {
             int y = top + 34 + (i / 2) * (CARD_HEIGHT + 4);
             boolean selected = job.type() == current;
             graphics.fill(x, y, x + CARD_WIDTH, y + CARD_HEIGHT, selected ? 0x60E8C66A : 0x40FFFFFF);
-            graphics.drawString(font, Component.translatable(job.type().translationKey()), x + 3, y + 4, TITLE_COLOR);
+            graphics.blit(emblem(job.type()), x + 3, y + 2, 0, 0, 16, 16, 16, 16);
+            graphics.drawString(font, Component.translatable(job.type().translationKey()), x + 22, y + 6, TITLE_COLOR);
             graphics.drawString(font, Component.translatable("screen.eternalrealm.job.role_weapon",
                     Component.translatable(job.role().translationKey()),
-                    Component.translatable(job.starterWeapon().translationKey())), x + 3, y + 16, 0xB0D0FF);
-            drawWrapped(graphics, Component.translatable(job.type().descriptionKey()), x + 3, y + 28,
-                    CARD_WIDTH - 6, 0xD0D0D0, 4);
+                    Component.translatable(job.starterWeapon().translationKey())), x + 3, y + 20, 0xB0D0FF);
+            drawWrapped(graphics, Component.translatable(job.type().descriptionKey()), x + 3, y + 31,
+                    CARD_WIDTH - 6, 0xD0D0D0, 3);
         }
     }
 

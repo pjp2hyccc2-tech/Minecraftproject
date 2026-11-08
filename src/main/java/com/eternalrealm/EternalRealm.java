@@ -47,6 +47,7 @@ public final class EternalRealm {
         com.eternalrealm.item.forge.ERGearItems.register(modBus);
         com.eternalrealm.item.forge.GearEvents.install();
         ERMobEffects.register(modBus);
+        com.eternalrealm.combat.forge.ERParticles.register(modBus);
         EREntities.register(modBus);
         ERCreativeTabs.register(modBus);
         JobActions.register();

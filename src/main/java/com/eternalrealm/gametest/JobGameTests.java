@@ -174,7 +174,11 @@ public final class JobGameTests {
             check(data.isActive(id), "waiting for the character to load");
             boolean changed = JobActions.chooseJob(player, context, JobType.MAGE);
             CharacterSnapshot snapshot = data.snapshot(id).orElseThrow();
-            boolean hasStaff = player.getInventory().contains(new ItemStack(ERItems.STAFF.get()));
+            net.minecraft.world.item.Item staffItem = com.eternalrealm.item.forge.ERGearItems.equipment(
+                    com.eternalrealm.item.EquipmentBase.weapon(com.eternalrealm.combat.WeaponType.STAFF,
+                            com.eternalrealm.item.ItemTier.IRON));
+            boolean hasStaff = player.getInventory().hasAnyMatching(stack -> stack.is(staffItem)
+                    && com.eternalrealm.item.forge.EquipmentStacks.read(stack).isPresent());
             data.onPlayerLeave(id);
             done.set(true);
             if (!changed || !"mage".equals(snapshot.jobId()) || !hasStaff) {

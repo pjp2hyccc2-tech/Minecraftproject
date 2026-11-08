@@ -33,6 +33,24 @@ public final class ERMobEffects {
             () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0xFF8A1E));
     /** Damage every second (strength stored on the victim, see {@link #applyBleed}). */
     public static final RegistryObject<MobEffect> BLEED = EFFECTS.register("bleed", BleedEffect::new);
+    /** Movement speed +15 % per level (ranger/assassin buffs). */
+    public static final RegistryObject<MobEffect> HASTE = EFFECTS.register("haste",
+            () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0x7CE0FF).addAttributeModifier(
+                    net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED,
+                    "6d4b5e8a-91c3-4f0e-9a51-2f7c8e1d4b01", 0.15,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
+    /** Frozen: movement speed −30 % per level, shown with the powder snow frost overlay. */
+    public static final RegistryObject<MobEffect> FROZEN = EFFECTS.register("frozen",
+            () -> new MarkerEffect(MobEffectCategory.HARMFUL, 0x9AD8FF).addAttributeModifier(
+                    net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED,
+                    "a83f0c55-2d1e-4b7a-8c36-5e0f9b2d7c12", -0.30,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.MULTIPLY_TOTAL));
+    /** Shown while a guard shield (absorption from a skill) holds. */
+    public static final RegistryObject<MobEffect> GUARD_UP = EFFECTS.register("guard_up",
+            () -> new MarkerEffect(MobEffectCategory.BENEFICIAL, 0xC8D2E0));
+    /** Cursed: healing received is halved (boss mechanics). */
+    public static final RegistryObject<MobEffect> CURSED = EFFECTS.register("cursed",
+            () -> new MarkerEffect(MobEffectCategory.HARMFUL, 0x6A2C8C));
 
     static final String BLEED_DPS = "eternalrealm_bleed_dps";
     static final String BLEED_SOURCE = "eternalrealm_bleed_source";
