@@ -35,6 +35,7 @@ public final class MonsterSpawner {
     private static final double MAX_DISTANCE = 34.0;
     private static final double AGGRO_RANGE_SQR = 12.0 * 12.0;
     private static final int RECOUNT_TICKS = 100;
+    private static final double DESPAWN_DISTANCE = 96.0;
 
     private final MinecraftServer server;
     private final SplittableRandom random = new SplittableRandom();
@@ -61,10 +62,19 @@ public final class MonsterSpawner {
         }
         if (tick - lastCount >= RECOUNT_TICKS) {
             levelCount = 0;
+            List<Entity> far = new ArrayList<>();
             for (Entity entity : level.getAllEntities()) {
-                if (MonsterTags.isMonster(entity)) {
+                if (!MonsterTags.isMonster(entity)) {
+                    continue;
+                }
+                if (isFieldMonster(entity) && level.getNearestPlayer(entity, DESPAWN_DISTANCE) == null) {
+                    far.add(entity);
+                } else {
                     levelCount++;
                 }
+            }
+            for (Entity entity : far) {
+                entity.discard(); // field monsters nobody is near go away (animated bodies never despawn by themselves)
             }
             lastCount = tick;
         }
@@ -80,6 +90,11 @@ public final class MonsterSpawner {
                 levelCount++;
             }
         }
+    }
+
+    /** Spawned in the field (not a dungeon wave or a boss summon). */
+    private static boolean isFieldMonster(Entity entity) {
+        return !entity.getPersistentData().contains("er_instance") && !entity.getPersistentData().hasUUID("er_fight");
     }
 
     private static void aggro(ServerPlayer player, List<Mob> near) {

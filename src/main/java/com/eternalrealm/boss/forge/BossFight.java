@@ -230,10 +230,16 @@ public final class BossFight {
         for (BossCommand command : brain.tick(now, health / maxHealth, self, snapshots)) {
             handle(command, targets);
         }
+        com.eternalrealm.entity.ERBoss boss = animated();
         if (brain.currentAbility().isPresent()) {
             body.getNavigation().stop();
-        } else if (tick % 20 == 0) {
-            topThreat(targets).ifPresent(body::setTarget);
+        } else {
+            if (boss != null) {
+                boss.setAiFrozen(false);
+            }
+            if (tick % 20 == 0) {
+                topThreat(targets).ifPresent(body::setTarget);
+            }
         }
         drawTelegraphs();
         moveBolts(targets);
@@ -276,11 +282,41 @@ public final class BossFight {
         }
     }
 
+    // ------------------------------------------------------------------ animated body
+
+    private com.eternalrealm.entity.ERBoss animated() {
+        return body instanceof com.eternalrealm.entity.ERBoss boss ? boss : null;
+    }
+
+    private static com.eternalrealm.entity.BossAnimation animationFor(AbilityKind kind) {
+        if (kind instanceof AbilityKind.CircleAroundBoss || kind instanceof AbilityKind.Ring) {
+            return com.eternalrealm.entity.BossAnimation.MELEE_SLAM;
+        }
+        if (kind instanceof AbilityKind.Cone) {
+            return com.eternalrealm.entity.BossAnimation.MELEE_SWEEP;
+        }
+        if (kind instanceof AbilityKind.Line) {
+            return com.eternalrealm.entity.BossAnimation.CHARGE;
+        }
+        if (kind instanceof AbilityKind.ArenaWide || kind instanceof AbilityKind.Buff) {
+            return com.eternalrealm.entity.BossAnimation.ROAR;
+        }
+        if (kind instanceof AbilityKind.Summon) {
+            return com.eternalrealm.entity.BossAnimation.SUMMON;
+        }
+        return com.eternalrealm.entity.BossAnimation.CAST;
+    }
+
     // ------------------------------------------------------------------ commands
 
     private void handle(BossCommand command, List<ServerPlayer> targets) {
+        com.eternalrealm.entity.ERBoss boss = animated();
         if (command instanceof BossCommand.PhaseChanged phase) {
             bar.setColor(phase.phaseIndex() >= 2 ? BossEvent.BossBarColor.RED : BossEvent.BossBarColor.PINK);
+            if (boss != null) {
+                boss.setPhase(phase.phaseIndex());
+                boss.playAnimation(com.eternalrealm.entity.BossAnimation.PHASE_CHANGE);
+            }
             tell(targets, Component.translatable("message.eternalrealm.boss.phase_changed", body.getDisplayName(),
                     phase.phaseIndex() + 1).withStyle(ChatFormatting.LIGHT_PURPLE), true);
             sound(SoundEvents.ENDER_DRAGON_GROWL, 1.0F, 0.8F);
@@ -299,11 +335,25 @@ public final class BossFight {
             tell(targets, Component.translatable("message.eternalrealm.boss.ability", body.getDisplayName(),
                     Component.translatable(started.ability().translationKey())).withStyle(ChatFormatting.RED), true);
             sound(SoundEvents.EVOKER_PREPARE_ATTACK, 1.0F, 0.8F);
+            if (boss != null) {
+                boss.setAiFrozen(true);
+                topThreat(targets).ifPresent(target -> boss.faceTowards(target.getX(), target.getZ()));
+                boss.playAnimation(animationFor(started.ability().kind()));
+            }
         } else if (command instanceof BossCommand.Telegraph telegraph) {
             telegraphs.add(new Telegraph(telegraph.ability(), telegraph.shape(), now + telegraph.durationTicks()));
+            if (boss != null) {
+                boss.setTelegraphing(true);
+            }
         } else if (command instanceof BossCommand.Cancelled cancelled) {
             telegraphs.removeIf(t -> t.ability().equals(cancelled.ability()));
+            if (boss != null) {
+                boss.setTelegraphing(false);
+            }
         } else if (command instanceof BossCommand.Execute execute) {
+            if (boss != null) {
+                boss.setTelegraphing(false);
+            }
             execute(execute, targets);
         } else if (command instanceof BossCommand.Volley volley) {
             Vec3 origin = new Vec3(volley.origin().x(), volley.origin().y() + body.getEyeHeight(), volley.origin().z());
@@ -322,12 +372,19 @@ public final class BossFight {
             sound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 0.7F);
         } else if (command instanceof BossCommand.ShieldChanged shield) {
             shielded = shield.on();
-            body.setGlowingTag(shield.on());
+            if (boss != null) {
+                boss.setShielded(shield.on());
+            } else {
+                body.setGlowingTag(shield.on());
+            }
             tell(targets, Component.translatable(shield.on() ? "message.eternalrealm.boss.shield_up"
                     : "message.eternalrealm.boss.shield_down", body.getDisplayName()).withStyle(ChatFormatting.AQUA), true);
             sound(shield.on() ? SoundEvents.BEACON_ACTIVATE : SoundEvents.BEACON_DEACTIVATE, 1.0F, 1.0F);
         } else if (command instanceof BossCommand.Enraged) {
             bar.setColor(BossEvent.BossBarColor.RED);
+            if (boss != null) {
+                boss.setEnraged(true);
+            }
             tell(targets, Component.translatable("message.eternalrealm.boss.enraged", body.getDisplayName())
                     .withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD), false);
             sound(SoundEvents.RAVAGER_ROAR, 1.2F, 0.7F);

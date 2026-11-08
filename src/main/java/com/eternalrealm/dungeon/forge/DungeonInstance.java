@@ -377,6 +377,14 @@ final class DungeonInstance {
             }
         }
         spawned.clear();
+        // boss adds and anything else of the game left in the slot (animated bodies never despawn by themselves)
+        net.minecraft.world.phys.AABB area = new net.minecraft.world.phys.AABB(origin.getX(), origin.getY() - 8,
+                origin.getZ(), origin.getX() + DungeonLayout.FOOTPRINT, origin.getY() + DungeonLayout.MAX_HEIGHT + 8,
+                origin.getZ() + DungeonLayout.FOOTPRINT);
+        for (Mob leftover : level.getEntitiesOfClass(Mob.class, area, mob -> mob.getTags().contains(
+                com.eternalrealm.monster.forge.MonsterTags.TAG) || mob.getTags().contains(BossFight.TAG))) {
+            leftover.discard();
+        }
         clearing = true;
     }
 

@@ -50,16 +50,23 @@ public final class MonsterFactory {
     /** The configured body, not yet in the level. */
     public static Optional<Mob> create(ServerLevel level, MonsterSpawn spawn, boolean rewards) {
         MonsterTemplate template = spawn.template();
-        Optional<EntityType<?>> type = EntityType.byString(template.baseEntityType());
-        if (type.isEmpty()) {
-            return Optional.empty();
-        }
-        Entity entity = type.get().create(level);
-        if (!(entity instanceof Mob mob)) {
-            if (entity != null) {
-                entity.discard();
+        Mob mob = MonsterBodies.variantFor(template.id())
+                .flatMap(variant -> com.eternalrealm.entity.EREntityTypes.createEnemy(level, variant))
+                .map(body -> (Mob) body).orElse(null);
+        boolean animated = mob != null;
+        if (mob == null) {
+            Optional<EntityType<?>> type = EntityType.byString(template.baseEntityType());
+            if (type.isEmpty()) {
+                return Optional.empty();
             }
-            return Optional.empty();
+            Entity entity = type.get().create(level);
+            if (!(entity instanceof Mob vanilla)) {
+                if (entity != null) {
+                    entity.discard();
+                }
+                return Optional.empty();
+            }
+            mob = vanilla;
         }
         SpawnHints hints = template.spawnHints();
         if (mob instanceof Slime slime && hints.size() > 0) {
@@ -68,8 +75,10 @@ public final class MonsterFactory {
         if (mob instanceof AbstractPiglin piglin) {
             piglin.setImmuneToZombification(true);
         }
-        equip(mob, EquipmentSlot.HEAD, hints.headItemId());
-        equip(mob, EquipmentSlot.MAINHAND, hints.mainHandItemId());
+        if (!animated) {
+            equip(mob, EquipmentSlot.HEAD, hints.headItemId());
+            equip(mob, EquipmentSlot.MAINHAND, hints.mainHandItemId());
+        }
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             mob.setDropChance(slot, 0.0F);
         }
