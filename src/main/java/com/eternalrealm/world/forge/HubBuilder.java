@@ -389,8 +389,8 @@ public final class HubBuilder {
     private static void buildings(Painter p) {
         building(lot(p, -35, -35, -19, -25, Direction.SOUTH), 17, 11, Style.STONE, Interior.GUILD);
         building(lot(p, 19, -35, 35, -25, Direction.SOUTH), 17, 11, Style.QUARTZ, Interior.HALL_OF_FAME);
-        building(lot(p, -36, -20, -23, -9, Direction.SOUTH), 14, 12, Style.STONE, Interior.JOB);
-        building(lot(p, 23, -20, 36, -9, Direction.SOUTH), 14, 12, Style.STONE, Interior.AUCTION);
+        building(lot(p, -36, -20, -24, -9, Direction.SOUTH), 13, 12, Style.STONE, Interior.JOB);
+        building(lot(p, 24, -20, 36, -9, Direction.SOUTH), 13, 12, Style.STONE, Interior.AUCTION);
         building(lot(p, -34, 6, -23, 15, Direction.NORTH), 12, 10, Style.TIMBER_RED, Interior.ITEM_SHOP);
         building(lot(p, 23, 6, 34, 15, Direction.NORTH), 12, 10, Style.TIMBER_DARK, Interior.BLACKSMITH);
         building(lot(p, -21, -19, -17, -12, Direction.SOUTH), 5, 8, Style.TIMBER_SLATE, Interior.HOME);

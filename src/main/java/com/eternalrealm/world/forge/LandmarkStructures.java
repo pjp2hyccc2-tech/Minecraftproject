@@ -290,7 +290,8 @@ final class LandmarkStructures {
             for (int x = cx - 2; x <= cx + 2; x++) {
                 for (int z = -3; z <= 1; z++) {
                     boolean edge = Math.abs(x - cx) == 2 || z == -3 || z == 1;
-                    for (int y = 0; y <= height + 5; y++) {
+                    p.set(x, 0, z, Blocks.PACKED_ICE);
+                    for (int y = 1; y <= height + 5; y++) {
                         p.set(x, y, z, edge ? (y % 4 == 0 ? Blocks.BLUE_ICE : Blocks.PACKED_ICE).defaultBlockState()
                                 : Blocks.AIR.defaultBlockState());
                     }

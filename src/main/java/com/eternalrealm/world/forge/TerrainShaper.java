@@ -18,6 +18,18 @@ final class TerrainShaper {
     private TerrainShaper() {
     }
 
+    /** True if every chunk within {@code radius} of (cx, cz) is loaded already (nothing would be generated). */
+    static boolean chunksLoaded(ServerLevel level, int cx, int cz, int radius) {
+        for (int x = (cx - radius) >> 4; x <= (cx + radius) >> 4; x++) {
+            for (int z = (cz - radius) >> 4; z <= (cz + radius) >> 4; z++) {
+                if (!level.hasChunk(x, z)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /** Generates and loads every chunk within {@code radius} of (cx, cz) (synchronous, server thread). */
     static void loadChunks(ServerLevel level, int cx, int cz, int radius) {
         for (int x = (cx - radius) >> 4; x <= (cx + radius) >> 4; x++) {

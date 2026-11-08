@@ -13,7 +13,7 @@ public enum HubSpot {
     /** At the anvil of the blacksmith (south-east building, open front to the north). */
     BLACKSMITH(28, 11, 180.0F),
     /** At the lectern of the job hall (west building, door to the south). */
-    JOB_MASTER(-29, -16, 0.0F),
+    JOB_MASTER(-30, -16, 0.0F),
     /** Behind the auction counter (east building, door to the south). */
     AUCTION_HOUSE(30, -16, 0.0F),
     /** Beside the post box, south-east corner of the plaza. */

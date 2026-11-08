@@ -25,13 +25,15 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Builds the dungeon entrances of アストリア lazily: once a second it checks the players in the dimension and builds
  * every landmark that one of them has come within {@link #TRIGGER_RADIUS} blocks of (and the capital within
- * {@link #HUB_TRIGGER_RADIUS}). Each landmark is built once per world (see {@link AstoriaWorldState}); the chunks it
- * needs are loaded (or generated) synchronously, which takes a fraction of a second.
+ * {@link #HUB_TRIGGER_RADIUS}) as soon as the chunks it covers are loaded, so building does not generate terrain on
+ * the server thread. A player closer than {@link #FORCE_RADIUS} forces the build (missing chunks are generated then).
+ * Each landmark is built once per world (see {@link AstoriaWorldState}).
  */
 public final class LandmarkBuilder {
     private static final Logger LOG = LogUtils.getLogger();
     public static final int TRIGGER_RADIUS = 80;
     public static final int HUB_TRIGGER_RADIUS = 160;
+    public static final int FORCE_RADIUS = 40;
     private static final long RETRY_TICKS = 20L * 60 * 5;
     /** dungeon id -> game time before which a failed build is not retried. */
     private static final Map<String, Long> RETRY_AFTER = new ConcurrentHashMap<>();
@@ -61,7 +63,9 @@ public final class LandmarkBuilder {
 
     private static void tick(ServerLevel astoria) {
         AstoriaWorldState state = AstoriaWorldState.get(astoria);
-        if (!state.hubBuilt() && anyPlayerWithin(astoria, 0, 0, HUB_TRIGGER_RADIUS)) {
+        if (!state.hubBuilt() && anyPlayerWithin(astoria, 0, 0, HUB_TRIGGER_RADIUS)
+                && (TerrainShaper.chunksLoaded(astoria, 0, 0, HubBuilder.BLEND + 12)
+                || anyPlayerWithin(astoria, 0, 0, HubBuilder.WALL + FORCE_RADIUS))) {
             HubBuilder.ensureBuilt(astoria);
         }
         long now = astoria.getGameTime();
@@ -69,6 +73,10 @@ public final class LandmarkBuilder {
             if (state.landmarkBuilt(site.dungeonId()) || now < RETRY_AFTER.getOrDefault(site.dungeonId(), Long.MIN_VALUE)
                     || !anyPlayerWithin(astoria, site.x(), site.z(), TRIGGER_RADIUS)) {
                 continue;
+            }
+            if (!TerrainShaper.chunksLoaded(astoria, site.x(), site.z(), site.padRadius() + 16)
+                    && !anyPlayerWithin(astoria, site.x(), site.z(), FORCE_RADIUS)) {
+                continue; // wait until the player's view has loaded the area
             }
             try {
                 ensureBuilt(astoria, site.dungeonId());
