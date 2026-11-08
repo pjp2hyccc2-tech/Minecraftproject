@@ -112,4 +112,30 @@ public final class WeaponItem extends Item {
                 ? Long.toString((long) value)
                 : String.format(Locale.ROOT, "%.1f", value);
     }
+
+    /**
+     * Client-only rendering hooks (only called on the client; the anonymous class is never loaded on a server): weapon
+     * arm poses for every player and the first-person attack motions.
+     */
+    // CLIENT-ONLY-BEGIN (Forge calls initializeClient only on the physical client)
+    @Override
+    public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+        consumer.accept(new net.minecraftforge.client.extensions.common.IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.model.HumanoidModel.ArmPose getArmPose(net.minecraft.world.entity.LivingEntity entity,
+                                                                              InteractionHand hand, ItemStack stack) {
+                return com.eternalrealm.client.WeaponAnimations.armPose(entity, hand, stack);
+            }
+
+            @Override
+            public boolean applyForgeHandTransform(com.mojang.blaze3d.vertex.PoseStack poseStack,
+                                                   net.minecraft.client.player.LocalPlayer player,
+                                                   net.minecraft.world.entity.HumanoidArm arm, ItemStack itemInHand,
+                                                   float partialTick, float equipProcess, float swingProcess) {
+                return com.eternalrealm.client.WeaponAnimations.firstPerson(poseStack, player, arm, itemInHand,
+                        partialTick, equipProcess, swingProcess);
+            }
+        });
+    }
+    // CLIENT-ONLY-END
 }

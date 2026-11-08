@@ -233,7 +233,7 @@ public final class Combatant {
 
     private RequestOutcome release(long now) {
         if (phase == Phase.CHARGING) {
-            if (now - charge.startTick >= charge.weapon.heavy().minChargeTicks()) {
+            if (chargedTicks(now) >= charge.weapon.heavy().minChargeTicks()) {
                 strike(now);
             } else {
                 charge.releaseRequested = true;
@@ -250,7 +250,7 @@ public final class Combatant {
     private void strike(long now) {
         Charge current = charge;
         HeavyAttack heavy = current.weapon.heavy();
-        long charged = Math.min(now - current.startTick, heavy.maxChargeTicks());
+        long charged = Math.min(chargedTicks(now), heavy.maxChargeTicks());
         double scale = heavy.chargeMultiplier(charged) + (current.derived ? heavy.derivedBonus() : 0.0);
         charge = null;
         phase = Phase.IDLE;
@@ -280,8 +280,9 @@ public final class Combatant {
         charge = null;
         spend(action.kind() == ActionKind.DODGE ? dodgeCost() : action.staminaCost(), now);
         if (skillSlot >= 0 && cooldownTicks > 0) {
-            skillReadyAt[skillSlot] = now + cooldownTicks;
-            skillCooldownTotal[skillSlot] = cooldownTicks;
+            int cooldown = Math.max(1, (int) Math.round(cooldownTicks * stats.cooldownFactor()));
+            skillReadyAt[skillSlot] = now + cooldown;
+            skillCooldownTotal[skillSlot] = cooldown;
         }
         if (action.invulnerableTicks() > 0) {
             invulnerableUntil = Math.max(invulnerableUntil, now + action.invulnerableTicks());
@@ -310,7 +311,7 @@ public final class Combatant {
     private void advance(long now) {
         if (phase == Phase.CHARGING) {
             HeavyAttack heavy = charge.weapon.heavy();
-            long elapsed = now - charge.startTick;
+            long elapsed = chargedTicks(now);
             if ((charge.releaseRequested && elapsed >= heavy.minChargeTicks()) || elapsed >= heavy.maxChargeTicks()) {
                 strike(now);
             }
@@ -673,13 +674,32 @@ public final class Combatant {
         return skillCooldownTotal[slot];
     }
 
-    /** Ticks charged so far, or 0 when not charging. */
+    /** Effective ticks charged so far (STR charges faster), or 0 when not charging. */
     public long chargeTicks(long now) {
-        return phase == Phase.CHARGING ? Math.max(0L, now - charge.startTick) : 0L;
+        return phase == Phase.CHARGING ? chargedTicks(now) : 0L;
+    }
+
+    private long chargedTicks(long now) {
+        return (long) Math.floor(Math.max(0L, now - charge.startTick) / stats.chargeTimeFactor());
     }
 
     public Optional<ActionDefinition> currentAction() {
         return phase == Phase.ACTION ? Optional.of(active.action) : Optional.empty();
+    }
+
+    /** Start tick of the action in progress (for animations), or -1 when idle. */
+    public long actionStartTick() {
+        return phase == Phase.ACTION ? active.startTick : -1L;
+    }
+
+    /** End tick of the action in progress, or -1 when idle. */
+    public long actionEndTick() {
+        return phase == Phase.ACTION ? active.endTick : -1L;
+    }
+
+    /** Start tick of the heavy attack charge in progress, or -1. */
+    public long chargeStartTick() {
+        return phase == Phase.CHARGING ? charge.startTick : -1L;
     }
 
     /** Combo step of the light attack in progress, or -1. */

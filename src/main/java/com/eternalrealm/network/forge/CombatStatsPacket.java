@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * exactly like the server's.
  */
 public record CombatStatsPacket(CombatStats stats) {
-    static final int MAX_BYTES = 14 * 8;
+    static final int MAX_BYTES = 22 * 8;
 
     public CombatStatsPacket {
         Objects.requireNonNull(stats, "stats");
@@ -34,12 +34,22 @@ public record CombatStatsPacket(CombatStats stats) {
         buffer.writeDouble(stats.guardBonus());
         buffer.writeDouble(stats.dodgeCostFactor());
         buffer.writeDouble(stats.moveSpeedBonus());
+        buffer.writeDouble(stats.chargeTimeFactor());
+        buffer.writeDouble(stats.cooldownFactor());
+        buffer.writeDouble(stats.dodgeDistanceFactor());
+        buffer.writeDouble(stats.knockbackResistance());
+        buffer.writeDouble(stats.regenPerSecond());
+        buffer.writeDouble(stats.projectileSpeedFactor());
+        buffer.writeDouble(stats.lootBonus());
+        buffer.writeDouble(stats.goldBonus());
     }
 
     public static CombatStatsPacket decode(FriendlyByteBuf buffer) {
         PacketLimits.requireMaxSize(buffer, MAX_BYTES, "CombatStatsPacket");
         try {
             return new CombatStatsPacket(new CombatStats(buffer.readDouble(), buffer.readDouble(), buffer.readDouble(),
+                    buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(),
+                    buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(),
                     buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(),
                     buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(),
                     buffer.readDouble(), buffer.readDouble(), buffer.readDouble()));

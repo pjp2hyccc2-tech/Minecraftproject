@@ -28,6 +28,7 @@ import com.eternalrealm.network.TokenBucketRateLimiter;
 import com.eternalrealm.network.forge.CombatStatsPacket;
 import com.eternalrealm.network.forge.CombatStatusPacket;
 import com.eternalrealm.network.forge.ERNetwork;
+import com.eternalrealm.network.forge.PlayerActionPacket;
 import com.eternalrealm.player.PlayerDataService;
 import com.eternalrealm.server.SyncQueue;
 import com.mojang.logging.LogUtils;
@@ -67,6 +68,8 @@ public final class CombatDriver {
     private static final int PARRY_SLOW_TICKS = 40;
     private static final int PARRY_SLOW_AMPLIFIER = 3;
     private static final float GUARD_KNOCKBACK_FACTOR = 0.5F;
+    /** Health regeneration from VIT starts this long after the last fight. */
+    private static final int OUT_OF_COMBAT_TICKS = 100;
     /** Vanilla ignores most hits while {@code invulnerableTime} is above this (half of its 20-tick hurt cooldown). */
     private static final int HURT_COOLDOWN_THRESHOLD = 10;
 
@@ -93,6 +96,7 @@ public final class CombatDriver {
     private static final class NetState {
         int lastSequence;
         long lastSentTick = Long.MIN_VALUE / 4;
+        long lastCombatTick = Long.MIN_VALUE / 4;
         double lastSentStamina = -1.0;
         final boolean[] lastSentCooling = new boolean[Combatant.SKILL_SLOTS];
     }
@@ -139,12 +143,33 @@ public final class CombatDriver {
                     handleEvent(player, combatant.stats(), event);
                 }
                 resyncStatus(player, combatant, now);
+                regenerate(player, combatant, now);
             } catch (RuntimeException e) {
                 // One broken fighter must not stop combat for everyone else.
                 LOG.error("Combat tick failed for {}; cancelling their action", player.getGameProfile().getName(), e);
                 combatant.cancelAction();
             }
         }
+    }
+
+    /** VIT regeneration: once per second while the player has neither dealt nor taken damage for 5 seconds. */
+    private void regenerate(ServerPlayer player, Combatant combatant, long now) {
+        double perSecond = combatant.stats().regenPerSecond();
+        if (perSecond <= 0.0 || now % 20 != 0 || !player.isAlive() || player.getHealth() >= player.getMaxHealth()) {
+            return;
+        }
+        NetState state = net(player.getUUID());
+        long lastCombat = Math.max(state.lastCombatTick, player.getLastHurtMobTimestamp() == 0 ? Long.MIN_VALUE / 4
+                : now - (player.tickCount - player.getLastHurtMobTimestamp()));
+        if (now - lastCombat < OUT_OF_COMBAT_TICKS || player.hurtTime > 0) {
+            return;
+        }
+        player.heal((float) perSecond);
+    }
+
+    /** Taking damage (any source) puts the player in combat for {@link #OUT_OF_COMBAT_TICKS}. */
+    public void markInCombat(ServerPlayer player) {
+        net(player.getUUID()).lastCombatTick = now();
     }
 
     private void applyChangedStats() {
@@ -198,8 +223,13 @@ public final class CombatDriver {
             }
         } else if (event instanceof CombatEvent.ActionStarted start) {
             CombatEffects.actionStarted(player, start);
+            ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(), start.action().id(),
+                    start.comboStep(), start.action().timing(stats.actionSpeedFactor()).duration(), false));
             Jobs.skillOfAction(start.action().id()).ifPresent(skill ->
                     SkillEffectsExecutor.apply(player, stats, skill.effectsAt(SkillEffect.ON_START), List.of()));
+        } else if (event instanceof CombatEvent.ChargeStarted charge) {
+            ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(),
+                    charge.weapon().heavy().strike().id(), -1, charge.weapon().heavy().maxChargeTicks(), true));
         }
     }
 
@@ -288,6 +318,7 @@ public final class CombatDriver {
 
     /** LivingHurtEvent: guard, then the VIT damage reduction for damage that has an attacker. */
     public float defend(ServerPlayer player, DamageSource source, float amount) {
+        markInCombat(player);
         Combatant combatant = service.get(player.getUUID()).orElse(null);
         if (combatant == null || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             return amount;

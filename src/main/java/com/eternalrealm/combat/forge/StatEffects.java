@@ -20,6 +20,8 @@ public final class StatEffects {
     private static final String MAX_HEALTH_MODIFIER_NAME = "eternalrealm.max_health";
     static final UUID MOVE_SPEED_MODIFIER_ID = UUID.fromString("2d8f1c44-7b39-4f3e-a0f1-5c2e9b7d4a12");
     private static final String MOVE_SPEED_MODIFIER_NAME = "eternalrealm.move_speed";
+    static final UUID KNOCKBACK_MODIFIER_ID = UUID.fromString("8a51d2e3-4c6f-4b7a-9e12-3f0d5c8b7a64");
+    private static final String KNOCKBACK_MODIFIER_NAME = "eternalrealm.knockback_resistance";
 
     private StatEffects() {
     }
@@ -27,7 +29,27 @@ public final class StatEffects {
     /** @return whether the max health changed */
     public static boolean apply(ServerPlayer player, CombatStats stats) {
         applyMoveSpeed(player, stats.moveSpeedBonus());
+        applyTransient(player, Attributes.KNOCKBACK_RESISTANCE, KNOCKBACK_MODIFIER_ID, KNOCKBACK_MODIFIER_NAME,
+                stats.knockbackResistance(), AttributeModifier.Operation.ADDITION);
         return applyMaxHealth(player, stats);
+    }
+
+    private static void applyTransient(ServerPlayer player, net.minecraft.world.entity.ai.attributes.Attribute attribute,
+                                       UUID id, String name, double amount, AttributeModifier.Operation operation) {
+        AttributeInstance instance = player.getAttribute(attribute);
+        if (instance == null) {
+            return;
+        }
+        AttributeModifier current = instance.getModifier(id);
+        if (current != null && current.getAmount() == amount) {
+            return;
+        }
+        if (current != null) {
+            instance.removeModifier(id);
+        }
+        if (amount != 0.0) {
+            instance.addTransientModifier(new AttributeModifier(id, name, amount, operation));
+        }
     }
 
     /** Job/equipment movement speed bonus as a multiplicative modifier (not saved: re-applied when stats load). */

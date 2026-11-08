@@ -1,0 +1,12 @@
+{
+  "screen.eternalrealm.character.combat1": {"ja": "物理+%s%% 魔法+%s%% 射撃+%s%% HP+%s 軽減%s%%", "en": "Phys+%s%% Mag+%s%% Rng+%s%% HP+%s Def%s%%"},
+  "screen.eternalrealm.character.combat2": {"ja": "攻速+%s%% 会心%s%% 会心倍%s%% ST%s 移動+%s%%", "en": "AtkSpd+%s%% Crit%s%% CritDmg%s%% ST%s Move+%s%%"},
+  "screen.eternalrealm.character.combat3": {"ja": "CT-%s%% 溜め-%s%% 回避+%s%% 耐KB%s%% 再生%s/秒", "en": "CD-%s%% Charge-%s%% Dodge+%s%% KBres%s%% Regen%s/s"},
+  "screen.eternalrealm.character.combat4": {"ja": "回復+%s%% 弾速+%s%% ドロップ運+%s%% 金+%s%%", "en": "Heal+%s%% ProjSpd+%s%% Loot+%s%% Gold+%s%%"},
+  "stat.eternalrealm.str.desc": {"ja": "物理攻撃・溜め速度", "en": "Physical attack, charge speed"},
+  "stat.eternalrealm.vit.desc": {"ja": "HP・防御・再生・耐KB", "en": "HP, defense, regen, knockback res."},
+  "stat.eternalrealm.agi.desc": {"ja": "攻速・ST・移動・回避", "en": "Attack speed, stamina, move, dodge"},
+  "stat.eternalrealm.int.desc": {"ja": "魔法・回復・CT短縮", "en": "Magic, healing, cooldowns"},
+  "stat.eternalrealm.dex.desc": {"ja": "射撃・会心倍率・弾速", "en": "Ranged, crit damage, projectiles"},
+  "stat.eternalrealm.luk.desc": {"ja": "会心率・ドロップ・金", "en": "Crit chance, loot, gold"}
+}

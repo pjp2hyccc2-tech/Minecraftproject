@@ -60,7 +60,7 @@ public final class CharacterScreen extends JournalScreen {
             rowY += ROW_HEIGHT;
         }
         addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> onClose())
-                .bounds(left + PANEL_WIDTH / 2 - 50, rowY + FOOTER_HEIGHT - 26, 100, 20)
+                .bounds(left + PANEL_WIDTH / 2 - 50, rowY + 43, 100, 18)
                 .build());
         updateButtons();
     }
@@ -133,17 +133,33 @@ public final class CharacterScreen extends JournalScreen {
         }
         CombatStats combat = ClientCombatState.stats();
         if (combat != null) {
-            graphics.drawString(font, Component.translatable("screen.eternalrealm.character.combat1",
-                    String.format(Locale.ROOT, "%.2f", combat.attackMultiplier()),
-                    String.format(Locale.ROOT, "%.1f", combat.maxHealthBonus()),
-                    String.format(Locale.ROOT, "%.1f", combat.damageReduction() * 100.0)), left, rowY + 2, 0xD8D8D8);
-            graphics.drawString(font, Component.translatable("screen.eternalrealm.character.combat2",
-                    String.format(Locale.ROOT, "%.1f", (1.0 / combat.actionSpeedFactor() - 1.0) * 100.0),
-                    String.format(Locale.ROOT, "%.1f", combat.critChance() * 100.0),
-                    String.format(Locale.ROOT, "%.0f", combat.maxStamina())), left, rowY + 13, 0xD8D8D8);
+            line(graphics, rowY, 0, "screen.eternalrealm.character.combat1",
+                    pct(combat.attackMultiplier() - 1.0), pct(combat.magicMultiplier() - 1.0),
+                    pct(combat.rangedMultiplier() - 1.0), f1(combat.maxHealthBonus()), pct(combat.damageReduction()));
+            line(graphics, rowY, 1, "screen.eternalrealm.character.combat2",
+                    pct(1.0 / combat.actionSpeedFactor() - 1.0), pct(combat.critChance()),
+                    pct(combat.critMultiplier()), String.format(Locale.ROOT, "%.0f", combat.maxStamina()),
+                    pct(combat.moveSpeedBonus()));
+            line(graphics, rowY, 2, "screen.eternalrealm.character.combat3",
+                    pct(1.0 - combat.cooldownFactor()), pct(1.0 - combat.chargeTimeFactor()),
+                    pct(combat.dodgeDistanceFactor() - 1.0), pct(combat.knockbackResistance()),
+                    f1(combat.regenPerSecond()));
+            line(graphics, rowY, 3, "screen.eternalrealm.character.combat4",
+                    pct(combat.healingMultiplier() - 1.0), pct(combat.projectileSpeedFactor() - 1.0),
+                    pct(combat.lootBonus()), pct(combat.goldBonus()));
         }
-        graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.character.combat_note"),
-                left + PANEL_WIDTH / 2, rowY + 26, 0x808080);
+    }
+
+    private void line(GuiGraphics graphics, int rowY, int index, String key, Object... args) {
+        graphics.drawString(font, Component.translatable(key, args), left, rowY + 1 + index * 10, 0xD8D8D8);
+    }
+
+    private static String pct(double fraction) {
+        return String.format(Locale.ROOT, "%.0f", fraction * 100.0);
+    }
+
+    private static String f1(double value) {
+        return String.format(Locale.ROOT, "%.1f", value);
     }
 
     private static String format(long value) {

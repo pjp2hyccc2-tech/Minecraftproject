@@ -138,6 +138,13 @@ public final class ClientCombatState {
     }
 
     public static void onDamageNumber(DamageNumberPacket packet) {
+        if ((packet.flags() & DamageNumberPacket.SKILL) != 0) {
+            CameraShake.add(0.7F, 7);
+        } else if ((packet.flags() & DamageNumberPacket.HEAVY) != 0) {
+            CameraShake.add(0.5F, 6);
+        } else if ((packet.flags() & DamageNumberPacket.CRITICAL) != 0) {
+            CameraShake.add(0.25F, 4);
+        }
         ThreadLocalRandom random = ThreadLocalRandom.current();
         damageNumbers.addLast(new DamageNumber(packet.x() + random.nextDouble(-0.35, 0.35), packet.y(),
                 packet.z() + random.nextDouble(-0.35, 0.35), packet.amount(), packet.flags(), tick));

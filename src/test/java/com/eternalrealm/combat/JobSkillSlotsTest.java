@@ -197,4 +197,22 @@ public class JobSkillSlotsTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new HitShape(HitShape.Kind.ARC, 3, 60, 0, 1, 1, 4, 2.0));
     }
+
+    @Test
+    public void strongerCharactersChargeFasterAndCleverOnesCoolDownFaster() {
+        CombatStats strong = new CombatStats(1.0, 0.0, 0.0, 1.0, 0.0, 1.5, 100.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0,
+                0.5, 0.8, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
+        fighter.setStats(strong);
+        assertEquals(RequestOutcome.ACCEPTED, submit(CombatRequest.HEAVY_START, WeaponProfiles.ONE_HANDED_SWORD));
+        runTo(now + 4);
+        assertEquals(8, fighter.chargeTicks(now)); // twice as fast
+        assertEquals(RequestOutcome.ACCEPTED, fighter.submit(CombatRequest.HEAVY_RELEASE, now,
+                WeaponProfiles.ONE_HANDED_SWORD, false, false)); // 8 effective ticks reach the minimum
+        assertEquals(ActionKind.HEAVY, fighter.currentAction().orElseThrow().kind());
+        runTo(now + 40);
+        fighter.setJobSkill(1, new SkillBinding(BASH, Set.of(), 1.0, 100));
+        assertEquals(RequestOutcome.ACCEPTED, submit(CombatRequest.JOB_SKILL_1, WeaponProfiles.ONE_HANDED_SWORD));
+        assertEquals(80, fighter.skillCooldownRemaining(1, now));
+        assertEquals(80, fighter.skillCooldownTotal(1));
+    }
 }

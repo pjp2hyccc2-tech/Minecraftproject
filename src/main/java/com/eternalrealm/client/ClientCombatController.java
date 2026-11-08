@@ -239,7 +239,8 @@ public final class ClientCombatController {
         double cos = Math.cos(yaw);
         double x = strafe * cos - forward * sin;
         double z = forward * cos + strafe * sin;
-        double speed = player.onGround() ? DODGE_SPEED_GROUND : DODGE_SPEED_AIR;
+        double distance = ClientCombatState.stats() == null ? 1.0 : ClientCombatState.stats().dodgeDistanceFactor();
+        double speed = (player.onGround() ? DODGE_SPEED_GROUND : DODGE_SPEED_AIR) * distance;
         Vec3 motion = player.getDeltaMovement();
         player.setDeltaMovement(x * speed, motion.y, z * speed);
     }

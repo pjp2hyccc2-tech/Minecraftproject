@@ -27,6 +27,7 @@ public final class ClientForgeEvents {
         if (event.phase == TickEvent.Phase.START) {
             // Before vanilla processes key presses this tick, so weapon clicks never reach the vanilla attack.
             ClientCombatController.onTickStart();
+            CameraShake.tick();
             return;
         }
         Minecraft minecraft = Minecraft.getInstance();
@@ -54,6 +55,11 @@ public final class ClientForgeEvents {
     }
 
     @SubscribeEvent
+    public static void onCameraAngles(net.minecraftforge.client.event.ViewportEvent.ComputeCameraAngles event) {
+        CameraShake.apply(event);
+    }
+
+    @SubscribeEvent
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
             DamageNumberRenderer.render(event);
@@ -66,5 +72,7 @@ public final class ClientForgeEvents {
         ClientCharacterState.clear();
         ClientCombatState.clear();
         ClientUiState.clear();
+        CombatAnimations.clear();
+        CameraShake.clear();
     }
 }

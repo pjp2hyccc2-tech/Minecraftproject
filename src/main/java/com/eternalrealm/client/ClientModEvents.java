@@ -31,6 +31,7 @@ public final class ClientModEvents {
         ClientboundHandlers.setCombatStatusHandler(ClientCombatState::onStatus);
         ClientboundHandlers.setDamageNumberHandler(ClientCombatState::onDamageNumber);
         ClientboundHandlers.setUiDataHandler(ClientUiState::accept);
+        ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
     }
 
     @SubscribeEvent

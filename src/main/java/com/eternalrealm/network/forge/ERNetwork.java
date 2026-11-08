@@ -77,10 +77,25 @@ public final class ERNetwork {
                 .decoder(UiDataPacket::decode)
                 .consumerMainThread(UiDataPacket::handle)
                 .add();
+        CHANNEL.messageBuilder(PlayerActionPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(PlayerActionPacket::encode)
+                .decoder(PlayerActionPacket::decode)
+                .consumerMainThread(PlayerActionPacket::handle)
+                .add();
     }
 
     public static void sendToPlayer(ServerPlayer player, Object message) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
+
+    /** To every player tracking {@code entity} (not the entity itself). */
+    public static void sendToTracking(net.minecraft.world.entity.Entity entity, Object message) {
+        CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+    }
+
+    /** To every player tracking {@code entity} and the entity itself if it is a player. */
+    public static void sendToTrackingAndSelf(net.minecraft.world.entity.Entity entity, Object message) {
+        CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
     }
 
     /** Client side only (called from client/ui code). */

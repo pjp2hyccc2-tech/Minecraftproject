@@ -39,9 +39,9 @@ jobs:
           DEST="$HOME/gradle-dist"
           mkdir -p "$DEST"
           for url in \
-            "https://downloads.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
-            "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
             "https://mirrors.cloud.tencent.com/gradle/gradle-$GRADLE_VERSION-bin.zip" \
+            "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
+            "https://downloads.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
             "https://mirrors.huaweicloud.com/gradle/gradle-$GRADLE_VERSION-bin.zip"; do
             for attempt in 1 2 3; do
               echo "Trying $url (attempt $attempt)"

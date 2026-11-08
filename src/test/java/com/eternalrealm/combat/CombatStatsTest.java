@@ -20,9 +20,34 @@ public class CombatStatsTest {
         assertEquals(2.5 / 102.5, stats.damageReduction(), EPS);
         assertEquals(1.0 / 1.015, stats.actionSpeedFactor(), EPS);
         assertEquals(0.06, stats.critChance(), EPS);
-        assertEquals(1.5, stats.critMultiplier(), EPS);
+        assertEquals(1.5 + 5 * 0.003, stats.critMultiplier(), EPS); // DEX 5
         assertEquals(102.0, stats.maxStamina(), EPS);
         assertEquals(1.025, stats.staminaRegenPerTick(), EPS);
+    }
+
+    @Test
+    public void finerStatEffectsHaveCaps() {
+        StatScaling scaling = StatScaling.defaults();
+        CombatStats base = CombatStats.derive(StatBlock.uniform(5), 1, TUNING);
+        assertEquals(1.0 - 5 * 0.002, base.chargeTimeFactor(), EPS);
+        assertEquals(1.0 - 5 * 0.0015, base.cooldownFactor(), EPS);
+        assertEquals(1.0 + 5 * 0.003, base.dodgeDistanceFactor(), EPS);
+        assertEquals(5 * 0.002, base.knockbackResistance(), EPS);
+        assertEquals(5 * 0.01, base.regenPerSecond(), EPS);
+        assertEquals(1.0 + 5 * 0.002, base.projectileSpeedFactor(), EPS);
+        assertEquals(5 * 0.002, base.lootBonus(), EPS);
+        assertEquals(5 * 0.005, base.goldBonus(), EPS);
+        assertEquals(5 * 0.001, base.moveSpeedBonus(), EPS);
+
+        CombatStats maxed = CombatStats.derive(StatBlock.uniform(StatBlock.MAX_VALUE), 100, TUNING);
+        assertEquals(scaling.minChargeTimeFactor(), maxed.chargeTimeFactor(), EPS);
+        assertEquals(scaling.minCooldownFactor(), maxed.cooldownFactor(), EPS);
+        assertEquals(1.0 + scaling.maxDodgeDistanceBonus(), maxed.dodgeDistanceFactor(), EPS);
+        assertEquals(scaling.maxKnockbackResist(), maxed.knockbackResistance(), EPS);
+        assertEquals(1.0 + scaling.maxProjectileSpeedBonus(), maxed.projectileSpeedFactor(), EPS);
+        assertEquals(scaling.maxLootBonus(), maxed.lootBonus(), EPS);
+        assertEquals(scaling.maxGoldBonus(), maxed.goldBonus(), EPS);
+        assertEquals(scaling.maxMoveSpeedFromAgi(), maxed.moveSpeedBonus(), EPS);
     }
 
     @Test
@@ -74,7 +99,7 @@ public class CombatStatsTest {
         CombatModifiers assassin = CombatModifiers.builder().crit(0.1).critDamage(0.25).dodgeCost(0.8).build();
         CombatStats rogue = CombatStats.derive(base, 1, TUNING, assassin);
         assertEquals(plain.critChance() + 0.1, rogue.critChance(), EPS);
-        assertEquals(1.75, rogue.critMultiplier(), EPS);
+        assertEquals(1.75 + 5 * 0.003, rogue.critMultiplier(), EPS);
         assertEquals(0.8, rogue.dodgeCostFactor(), EPS);
         assertEquals(plain, CombatStats.derive(base, 1, TUNING, CombatModifiers.NONE));
     }

@@ -61,9 +61,38 @@ public class ArchitectureTest {
             if (top.equals("client") || top.equals("ui")) {
                 continue;
             }
-            collect(file, CLIENT_ONLY_REFERENCES, violations);
+            List<String> found = new ArrayList<>();
+            collect(file, CLIENT_ONLY_REFERENCES, found);
+            boolean[] exempt = clientOnlyBlocks(file);
+            for (String violation : found) {
+                int line = Integer.parseInt(violation.substring(file.toString().length() + 1, violation.indexOf(" -> ")));
+                if (!exempt[line - 1]) {
+                    violations.add(violation);
+                }
+            }
         }
         assertNoViolations("Common/server code references client-only classes", violations);
+    }
+
+    /**
+     * Lines between {@code // CLIENT-ONLY-BEGIN} and {@code // CLIENT-ONLY-END}: reserved for Forge's
+     * {@code Item#initializeClient} idiom, which Forge only calls on the physical client (the anonymous class inside is
+     * never loaded on a dedicated server). Every such block is visible in review.
+     */
+    private static boolean[] clientOnlyBlocks(Path file) throws IOException {
+        String[] raw = Files.readString(file, StandardCharsets.UTF_8).split("\n", -1);
+        boolean[] exempt = new boolean[raw.length];
+        boolean inside = false;
+        for (int i = 0; i < raw.length; i++) {
+            if (raw[i].contains("// CLIENT-ONLY-BEGIN")) {
+                inside = true;
+            }
+            exempt[i] = inside;
+            if (raw[i].contains("// CLIENT-ONLY-END")) {
+                inside = false;
+            }
+        }
+        return exempt;
     }
 
     private static void collect(Path file, List<String> forbidden, List<String> violations) throws IOException {

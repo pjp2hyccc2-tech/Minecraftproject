@@ -17,6 +17,8 @@ public final class ClientboundHandlers {
     };
     private static volatile java.util.function.BiConsumer<String, String> uiDataHandler = (channel, json) -> {
     };
+    private static volatile Consumer<PlayerActionPacket> playerActionHandler = action -> {
+    };
     private static volatile Consumer<CombatStats> combatStatsHandler = stats -> {
     };
     private static volatile Consumer<CombatStatusPacket> combatStatusHandler = status -> {
@@ -33,6 +35,10 @@ public final class ClientboundHandlers {
 
     public static void setUiDataHandler(java.util.function.BiConsumer<String, String> handler) {
         uiDataHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    public static void setPlayerActionHandler(Consumer<PlayerActionPacket> handler) {
+        playerActionHandler = Objects.requireNonNull(handler, "handler");
     }
 
     public static void setCombatStatsHandler(Consumer<CombatStats> handler) {
@@ -53,6 +59,10 @@ public final class ClientboundHandlers {
 
     static void onUiData(String channel, String json) {
         uiDataHandler.accept(channel, json);
+    }
+
+    static void onPlayerAction(PlayerActionPacket packet) {
+        playerActionHandler.accept(packet);
     }
 
     static void onCombatStats(CombatStats stats) {

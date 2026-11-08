@@ -46,7 +46,7 @@ public final class CombatProjectiles {
             } else {
                 projectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 projectile.shootFromRotation(player, player.getXRot(), player.getYRot() + (float) yawOffset, 0.0F,
-                        (float) spec.speed(), 0.0F);
+                        (float) (spec.speed() * stats.projectileSpeedFactor()), 0.0F);
             }
             level.addFreshEntity(projectile);
         }
