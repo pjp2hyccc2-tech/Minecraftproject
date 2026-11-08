@@ -154,7 +154,7 @@ public final class DungeonService {
             nameKey = raid.translationKey();
             level = raid.recommendedLevel();
         }
-        if (!sizeOk) {
+        if (!sizeOk && !com.eternalrealm.config.ERServerConfig.IGNORE_PARTY_SIZE.get()) {
             leader.displayClientMessage(Component.translatable("message.eternalrealm.dungeon.party_size", minSize, maxSize)
                     .withStyle(ChatFormatting.RED), true);
             return;
@@ -173,12 +173,24 @@ public final class DungeonService {
         List<UUID> ids = members.stream().map(ServerPlayer::getUUID).toList();
         DungeonRun run;
         DungeonLayout layout;
+        boolean relaxed = !sizeOk; // only possible with dungeons.ignorePartySize
         if (dungeon.isPresent()) {
-            run = new DungeonRun(dungeon.get(), ids, FailurePolicy.defaults());
-            layout = DungeonLayoutGenerator.generate(dungeon.get(), RANDOM.nextLong());
+            DungeonDefinition definition = dungeon.get();
+            if (relaxed) {
+                definition = new DungeonDefinition(definition.id(), definition.areaId(), definition.recommendedLevel(),
+                        1, Math.max(definition.maxPartySize(), ids.size()), definition.theme(), definition.rooms(),
+                        definition.bossId(), definition.timeLimitTicks());
+            }
+            run = new DungeonRun(definition, ids, FailurePolicy.defaults());
+            layout = DungeonLayoutGenerator.generate(definition, RANDOM.nextLong());
         } else {
-            run = DungeonRun.raid(raid, ids, FailurePolicy.defaults());
-            layout = DungeonLayoutGenerator.raidArena(raid);
+            RaidDefinition definition = raid;
+            if (relaxed) {
+                definition = new RaidDefinition(raid.id(), raid.areaId(), raid.recommendedLevel(), 1,
+                        Math.max(raid.maxPartySize(), ids.size()), raid.theme(), raid.bossId(), raid.timeLimitTicks());
+            }
+            run = DungeonRun.raid(definition, ids, FailurePolicy.defaults());
+            layout = DungeonLayoutGenerator.raidArena(definition);
         }
         Map<UUID, DungeonInstance.Origin> returns = new HashMap<>();
         for (ServerPlayer member : members) {

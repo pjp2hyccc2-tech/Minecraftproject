@@ -31,6 +31,7 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.BooleanValue MOB_KILL_EXP_ENABLED;
     public static final ForgeConfigSpec.BooleanValue MONSTER_SPAWNING;
     public static final ForgeConfigSpec.BooleanValue KEEP_INVENTORY;
+    public static final ForgeConfigSpec.BooleanValue IGNORE_PARTY_SIZE;
     public static final ForgeConfigSpec.DoubleValue MOB_KILL_EXP_PER_MAX_HEALTH;
 
     public static final ForgeConfigSpec.ConfigValue<String> SEASON_ID;
@@ -111,6 +112,9 @@ public final class ERServerConfig {
         KEEP_INVENTORY = builder.comment("Players keep their items on death (the game has its own death penalty).",
                         "Sets the keepInventory game rule when the server starts.")
                 .define("keepInventory", true);
+        IGNORE_PARTY_SIZE = builder.comment("Let any party size enter dungeons and the final raid (small servers, testing).",
+                        "The final raid is designed for 10-20 players.")
+                .define("ignorePartySize", false);
         builder.pop();
 
         builder.comment("Season. Restart required.").push("season");
