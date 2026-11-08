@@ -1,0 +1,368 @@
+package com.eternalrealm.player;
+
+import com.eternalrealm.character.AllocationResult;
+import com.eternalrealm.character.CharacterRecord;
+import com.eternalrealm.character.CharacterRules;
+import com.eternalrealm.character.CharacterSnapshot;
+import com.eternalrealm.character.ExperienceResult;
+import com.eternalrealm.character.ExperienceSource;
+import com.eternalrealm.character.PowerExperienceCurve;
+import com.eternalrealm.character.SetLevelResult;
+import com.eternalrealm.character.StatBlock;
+import com.eternalrealm.character.StatType;
+import com.eternalrealm.core.concurrent.KeyedSerialExecutor;
+import com.eternalrealm.persistence.file.AtomicFileStore;
+import com.eternalrealm.persistence.file.FileAccountRepository;
+import com.eternalrealm.persistence.file.FileCharacterRepository;
+import com.eternalrealm.season.SeasonId;
+import com.eternalrealm.testutil.ManualExecutor;
+import com.eternalrealm.testutil.MutableClock;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+/**
+ * Integration tests of the player data lifecycle: real asynchronous I/O executor, server thread simulated by
+ * {@link ManualExecutor}.
+ */
+public class PlayerDataServiceTest {
+    @Rule
+    public TemporaryFolder tmp = new TemporaryFolder();
+
+    private static final SeasonId SEASON = SeasonId.of("s1");
+    private static final Duration AUTOSAVE = Duration.ofSeconds(60);
+    private static final UUID ALICE = UUID.fromString("00000000-0000-0000-0000-00000000a11c");
+    private static final UUID BOB = UUID.fromString("00000000-0000-0000-0000-000000000b0b");
+
+    private final MutableClock clock = MutableClock.startingAt("2026-11-08T00:00:00Z");
+    private final ManualExecutor main = new ManualExecutor();
+    private final RecordingListener listener = new RecordingListener();
+    private KeyedSerialExecutor<UUID> io;
+    private InMemoryRepositories.Characters characters;
+    private InMemoryRepositories.Accounts accounts;
+    private PlayerDataService service;
+
+    @Before
+    public void setUp() {
+        io = new KeyedSerialExecutor<>(2, "test-io");
+        characters = new InMemoryRepositories.Characters();
+        accounts = new InMemoryRepositories.Accounts();
+        service = newService(accounts, characters);
+    }
+
+    @After
+    public void tearDown() {
+        io.shutdown(Duration.ofSeconds(5));
+    }
+
+    private PlayerDataService newService(AccountRepository accountRepo, com.eternalrealm.character.CharacterRepository characterRepo) {
+        return new PlayerDataService(accountRepo, characterRepo, io, main, clock, SEASON, CharacterRules.defaults(),
+                AUTOSAVE, listener);
+    }
+
+    /** Lets all I/O finish and runs every resulting server-thread callback. */
+    private void settle() throws InterruptedException {
+        for (int round = 0; round < 20; round++) {
+            assertTrue("I/O did not finish", io.awaitQuiescence(Duration.ofSeconds(10)));
+            if (main.runAll() == 0 && io.pendingKeys() == 0) {
+                return;
+            }
+        }
+        throw new AssertionError("did not settle");
+    }
+
+    private void joinAndLoad(UUID player, String name) throws InterruptedException {
+        service.onPlayerJoin(player, name);
+        settle();
+    }
+
+    @Test
+    public void firstJoinCreatesLevelOneCharacterAndAccount() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+
+        assertTrue(service.isActive(ALICE));
+        assertEquals(Optional.of(SessionState.ACTIVE), service.sessionState(ALICE));
+        assertEquals(1, service.snapshot(ALICE).orElseThrow().level());
+        assertEquals(List.of(ALICE), listener.ready);
+        AccountRecord account = accounts.stored.get(ALICE);
+        assertEquals("Alice", account.lastKnownName());
+        assertEquals(1, account.loginCount());
+    }
+
+    @Test
+    public void existingCharacterIsLoaded() throws Exception {
+        Instant t = clock.instant();
+        characters.stored.put(InMemoryRepositories.Characters.key(ALICE, SEASON),
+                new CharacterRecord(ALICE, SEASON, 7, 10, 999, StatBlock.ZERO.with(StatType.STR, 3), t, t));
+
+        joinAndLoad(ALICE, "Alice");
+
+        CharacterSnapshot snapshot = service.snapshot(ALICE).orElseThrow();
+        assertEquals(7, snapshot.level());
+        assertEquals(10, snapshot.experience());
+        assertEquals(8, snapshot.totalStats().get(StatType.STR));
+    }
+
+    @Test
+    public void loadFailureRejectsThePlayerAndNeverCreatesOrSavesData() throws Exception {
+        characters.failLoads = true;
+        joinAndLoad(ALICE, "Alice");
+
+        assertFalse(service.isActive(ALICE));
+        assertEquals(Optional.of(SessionState.FAILED), service.sessionState(ALICE));
+        assertEquals(1, listener.loadFailures.size());
+        assertEquals(AllocationResult.NOT_READY, service.allocateStat(ALICE, StatType.STR, 1));
+        assertEquals(Optional.empty(), service.grantExperience(ALICE, 100, ExperienceSource.ADMIN));
+
+        service.onPlayerLeave(ALICE);
+        settle();
+        assertEquals(0, characters.saves.get());
+        assertTrue(characters.stored.isEmpty());
+    }
+
+    @Test
+    public void leavingSavesTheCharacter() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 500, ExperienceSource.ADMIN);
+        int level = service.snapshot(ALICE).orElseThrow().level();
+
+        service.onPlayerLeave(ALICE);
+        settle();
+
+        CharacterRecord saved = characters.stored.get(InMemoryRepositories.Characters.key(ALICE, SEASON));
+        assertEquals(level, saved.level());
+        assertEquals(500, saved.totalExperience());
+        assertFalse(service.sessionState(ALICE).isPresent());
+    }
+
+    @Test
+    public void leavingWhileLoadingDiscardsTheLateResult() throws Exception {
+        characters.loadGate = new CountDownLatch(1);
+        service.onPlayerJoin(ALICE, "Alice");
+        service.onPlayerLeave(ALICE);
+        characters.loadGate.countDown();
+        settle();
+
+        assertFalse(service.isActive(ALICE));
+        assertTrue(listener.ready.isEmpty());
+        assertEquals("nothing was loaded, so nothing may be saved", 0, characters.saves.get());
+    }
+
+    @Test
+    public void rejoinWhileTheOldLoadIsPendingAppliesOnlyTheNewSessionsResult() throws Exception {
+        characters.loadGate = new CountDownLatch(1);
+        service.onPlayerJoin(ALICE, "Alice");   // generation 1, load blocked
+        service.onPlayerLeave(ALICE);
+        service.onPlayerJoin(ALICE, "Alice");   // generation 2, queued behind generation 1
+        characters.loadGate.countDown();
+        settle();
+
+        assertTrue(service.isActive(ALICE));
+        assertEquals("the stale generation-1 result must be discarded", List.of(ALICE), listener.ready);
+        assertEquals(2, accounts.stored.get(ALICE).loginCount());
+    }
+
+    @Test
+    public void quickReconnectLoadsTheDataSavedOnLogout() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 2_000, ExperienceSource.ADMIN);
+        int level = service.snapshot(ALICE).orElseThrow().level();
+        assertTrue(level > 1);
+
+        characters.saveGate = new CountDownLatch(1); // the logout save is slow...
+        service.onPlayerLeave(ALICE);
+        service.onPlayerJoin(ALICE, "Alice");        // ...and the player reconnects immediately
+        characters.saveGate.countDown();
+        settle();
+
+        assertEquals("load must run after the pending save", level, service.snapshot(ALICE).orElseThrow().level());
+    }
+
+    @Test
+    public void failedLogoutSaveIsKeptInMemoryAndWinsOverStaleDiskData() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.onPlayerLeave(ALICE);
+        settle(); // level 1 is now on "disk"
+
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 2_000, ExperienceSource.ADMIN);
+        int level = service.snapshot(ALICE).orElseThrow().level();
+        characters.failNextSaves.set(PlayerDataService.SAVE_ATTEMPTS);
+        service.onPlayerLeave(ALICE);
+        settle();
+        assertEquals(1, service.status().unsavedInMemory());
+
+        joinAndLoad(ALICE, "Alice");
+        assertEquals("in-memory data must win over the stale level 1 on disk", level,
+                service.snapshot(ALICE).orElseThrow().level());
+        assertEquals(0, service.status().unsavedInMemory());
+
+        assertEquals(1, service.saveAllDirty());
+        settle();
+        assertEquals(level, characters.stored.get(InMemoryRepositories.Characters.key(ALICE, SEASON)).level());
+    }
+
+    @Test
+    public void autosaveRetriesUnsavedRecordsOfOfflinePlayers() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 700, ExperienceSource.ADMIN);
+        characters.failNextSaves.set(PlayerDataService.SAVE_ATTEMPTS);
+        service.onPlayerLeave(ALICE);
+        settle();
+        assertEquals(1, service.status().unsavedInMemory());
+
+        clock.advance(AUTOSAVE);
+        service.tick();
+        settle();
+        assertEquals(0, service.status().unsavedInMemory());
+        assertEquals(700, characters.stored.get(InMemoryRepositories.Characters.key(ALICE, SEASON)).totalExperience());
+    }
+
+    @Test
+    public void autosaveWritesOnlyDirtyCharacters() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        joinAndLoad(BOB, "Bob");
+
+        clock.advance(AUTOSAVE);
+        service.tick();
+        settle();
+        assertEquals("both new characters are saved once", 2, characters.saves.get());
+
+        service.grantExperience(BOB, 10, ExperienceSource.ADMIN);
+        clock.advance(AUTOSAVE);
+        service.tick();
+        settle();
+        assertEquals("only Bob changed", 3, characters.saves.get());
+
+        clock.advance(AUTOSAVE);
+        service.tick();
+        settle();
+        assertEquals("nothing changed", 3, characters.saves.get());
+    }
+
+    @Test
+    public void levelUpIsReportedToTheListener() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        ExperienceResult result = service.grantExperience(ALICE, 100, ExperienceSource.MOB_KILL).orElseThrow();
+        assertTrue(result.leveledUp());
+        assertEquals(1, listener.levelUps.size());
+        assertTrue(listener.changed.contains(ALICE));
+    }
+
+    @Test
+    public void statAllocationGoesThroughServerValidation() throws Exception {
+        assertEquals(AllocationResult.NOT_READY, service.allocateStat(ALICE, StatType.STR, 1));
+        joinAndLoad(ALICE, "Alice");
+        assertEquals(AllocationResult.NOT_ENOUGH_POINTS, service.allocateStat(ALICE, StatType.STR, 1));
+        service.grantExperience(ALICE, 100, ExperienceSource.ADMIN);
+        assertEquals(AllocationResult.INVALID_AMOUNT, service.allocateStat(ALICE, StatType.STR, 1000));
+        assertEquals(AllocationResult.SUCCESS, service.allocateStat(ALICE, StatType.STR, 3));
+        assertEquals(0, service.snapshot(ALICE).orElseThrow().unspentStatPoints());
+        assertTrue(service.resetStatAllocation(ALICE));
+        assertEquals(3, service.snapshot(ALICE).orElseThrow().unspentStatPoints());
+        assertEquals(SetLevelResult.SUCCESS, service.setLevel(ALICE, 20));
+        assertEquals(57, service.snapshot(ALICE).orElseThrow().unspentStatPoints());
+    }
+
+    @Test
+    public void reloadedRulesAreAppliedToOnlineCharacters() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.setLevel(ALICE, 10);
+        service.allocateStat(ALICE, StatType.VIT, 10);
+        listener.changed.clear();
+
+        CharacterRules noPoints = new CharacterRules(50, 0, 5, 10, new PowerExperienceCurve(100, 1.5));
+        service.updateRules(noPoints);
+
+        CharacterSnapshot snapshot = service.snapshot(ALICE).orElseThrow();
+        assertEquals(0, snapshot.allocatedStats().total());
+        assertEquals(0, snapshot.unspentStatPoints());
+        assertTrue("clients must be re-synced", listener.changed.contains(ALICE));
+    }
+
+    @Test
+    public void shutdownFlushesEverythingAndReportsIt() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.grantExperience(ALICE, 250, ExperienceSource.ADMIN);
+
+        PlayerDataService.ShutdownReport report = service.shutdown(Duration.ofSeconds(10));
+
+        assertTrue(report.toString(), report.clean());
+        assertEquals(1, report.saved());
+        assertEquals(250, characters.stored.get(InMemoryRepositories.Characters.key(ALICE, SEASON)).totalExperience());
+        service.onPlayerJoin(BOB, "Bob"); // ignored after shutdown
+        assertFalse(service.sessionState(BOB).isPresent());
+    }
+
+    @Test
+    public void shutdownReportsSavesThatKeepFailing() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        characters.failNextSaves.set(PlayerDataService.SAVE_ATTEMPTS);
+        PlayerDataService.ShutdownReport report = service.shutdown(Duration.ofSeconds(10));
+        assertFalse(report.clean());
+        assertEquals(1, report.failed());
+    }
+
+    @Test
+    public void progressSurvivesAServerRestartWithFileStorage() throws Exception {
+        Path dataRoot = tmp.newFolder("world", "eternalrealm").toPath();
+        AtomicFileStore store = new AtomicFileStore(dataRoot.resolve("quarantine"), clock);
+        PlayerDataService first = newService(new FileAccountRepository(dataRoot, store), new FileCharacterRepository(dataRoot, store));
+        first.onPlayerJoin(ALICE, "Alice");
+        settle();
+        first.grantExperience(ALICE, 1_000, ExperienceSource.ADMIN);
+        first.allocateStat(ALICE, StatType.INT, 2);
+        CharacterSnapshot before = first.snapshot(ALICE).orElseThrow();
+        first.onPlayerLeave(ALICE);
+        assertTrue(first.shutdown(Duration.ofSeconds(10)).clean());
+
+        // "Restart": a brand new service instance reading the same directory.
+        PlayerDataService second = newService(new FileAccountRepository(dataRoot, store), new FileCharacterRepository(dataRoot, store));
+        second.onPlayerJoin(ALICE, "Alice");
+        settle();
+        assertEquals(before, second.snapshot(ALICE).orElseThrow());
+    }
+
+    /** Records listener callbacks (always invoked on the simulated server thread). */
+    private static final class RecordingListener implements PlayerDataListener {
+        final List<UUID> ready = new ArrayList<>();
+        final List<UUID> changed = new ArrayList<>();
+        final List<ExperienceResult> levelUps = new ArrayList<>();
+        final List<String> loadFailures = new ArrayList<>();
+
+        @Override
+        public void onCharacterReady(UUID playerId) {
+            ready.add(playerId);
+        }
+
+        @Override
+        public void onCharacterChanged(UUID playerId) {
+            changed.add(playerId);
+        }
+
+        @Override
+        public void onLevelUp(UUID playerId, ExperienceResult result) {
+            levelUps.add(result);
+        }
+
+        @Override
+        public void onLoadFailed(UUID playerId, String incidentId) {
+            loadFailures.add(incidentId);
+        }
+    }
+}
