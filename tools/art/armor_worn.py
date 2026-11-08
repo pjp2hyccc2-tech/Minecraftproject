@@ -74,7 +74,11 @@ def lower(face, keep):
     return ["." * w if i < h - keep else face[i] for i in range(h)]
 
 
-def render_face(rows, mats, seed: int, grad: float = 0.7, edge: float = 0.85, noise: float = 0.07) -> Canvas:
+METAL = {id(r) for r in (P.IRON, P.IRON_DARK, P.STEEL, P.STEEL_DARK, P.SILVER, P.FROST_STEEL, P.SANDSTONE,
+                         P.HOLY_WHITE, P.ABYSS, P.GOLD, P.HOLY_GOLD)}
+
+
+def render_face(rows, mats, seed: int, grad: float = 0.7, edge: float = 0.85, noise: float = 0.04) -> Canvas:
     h, w = len(rows), len(rows[0])
     c = Canvas(w, h)
     rng = random.Random(seed)
@@ -107,7 +111,7 @@ def render_face(rows, mats, seed: int, grad: float = 0.7, edge: float = 0.85, no
                 tone -= edge * 0.5
             tone += grad * (0.5 - y / max(1, h - 1))
             r01 = rng.random()
-            if r01 < noise:
+            if r01 < noise and isinstance(spec, Ramp) and id(spec) in METAL:
                 tone += 0.6 if rng.random() < 0.5 else -0.6
             if ch.islower():
                 tone -= 1.6

@@ -127,6 +127,12 @@ def main() -> int:
         effect_imgs.append((eid, c))
 
     print(f"wrote {len(written)} files under {os.path.relpath(ASSETS, ROOT)}")
+    problems = check()
+    for p in problems:
+        print("CHECK FAILED:", p)
+    if problems:
+        return 1
+    print("self-check ok")
 
     if args.no_preview:
         return 0
@@ -160,15 +166,16 @@ def main() -> int:
         both = Image.new("RGBA", (64, 66), (0, 0, 0, 0))
         both.alpha_composite(l1.image(), (0, 0))
         both.alpha_composite(l2.image(), (0, 34))
-        nm = armor_worn.file_names(key)[0].replace("_layer_1.png", "")
-        layouts.append((nm + " (L1 / L2)", both))
+        nm = armor_worn.file_names(key)[0].replace("_layer_1.png", "").replace("er_", "")
+        layouts.append((nm, both))
     secs.append(preview.flow_section("Worn armor raw textures (64x32 layer_1 above layer_2, x2)", W, layouts, 2, 136,
                                      gap=12))
-    secs.append(preview.flow_section("Materials (x4)", W, [(n, c.image()) for n, c in mat_imgs], 4, 64, gap=8))
-    secs.append(preview.flow_section("Consumables + gold coin (x4)", W, [(n, c.image()) for n, c in con_imgs], 4, 64,
-                                     gap=8))
-    secs.append(preview.flow_section("Skill icons (x4) - knight / assassin / mage / ranger / priest / spellblade / weapon",
-                                     W, [(n, c.image()) for n, c in skill_imgs], 4, 64, gap=8))
+    secs.append(preview.flow_section("Materials (x4)", W, [(n, c.image()) for n, c in mat_imgs], 4, 100, gap=12))
+    secs.append(preview.flow_section("Consumables + gold coin (x4)", W, [(n, c.image()) for n, c in con_imgs], 4,
+                                     120, gap=12))
+    short = [(n.split("_", 1)[1] if n.split("_", 1)[0] in skills.JOBS else n, c.image()) for n, c in skill_imgs]
+    secs.append(preview.flow_section("Skill icons (x4), per job in order knight / assassin / mage / ranger / priest / "
+                                     "spellblade, then the 6 weapon skills", W, short, 4, 100, gap=12))
     secs.append(preview.flow_section("Job emblems (x4)", W, [(n, c.image()) for n, c in emblem_imgs], 4, 64, gap=8))
     secs.append(preview.flow_section("Particles (frames in order, x6)", W, [(n, c.image()) for n, c in particle_imgs],
                                      6, 96, gap=8))
@@ -183,6 +190,98 @@ def main() -> int:
     preview.stack(secs, out, args.sections)
     print(f"preview: {os.path.relpath(out, ROOT)}")
     return 0
+
+
+def check() -> list[str]:
+    """Verifies that every promised file exists with the right size and that overrides are ordered."""
+    import json
+    bad = []
+
+    def png(rel, size):
+        p = os.path.join(ASSETS, rel)
+        if not os.path.exists(p):
+            bad.append(f"missing {rel}")
+            return
+        with Image.open(p) as im:
+            if im.size != size or im.mode != "RGBA":
+                bad.append(f"{rel}: {im.size} {im.mode}, expected {size} RGBA")
+
+    def model(rel, texture=None):
+        p = os.path.join(ASSETS, rel)
+        if not os.path.exists(p):
+            bad.append(f"missing {rel}")
+            return None
+        with open(p, encoding="utf-8") as f:
+            d = json.load(f)
+        if texture and d.get("textures", {}).get("layer0") != texture:
+            bad.append(f"{rel}: layer0 {d.get('textures')} != {texture}")
+        ov = [o["predicate"]["custom_model_data"] for o in d.get("overrides", [])]
+        if ov != sorted(ov):
+            bad.append(f"{rel}: overrides not ascending {ov}")
+        for o in d.get("overrides", []):
+            ref = o["model"].split(":", 1)[1]
+            if not os.path.exists(os.path.join(ASSETS, "models", ref + ".json")):
+                bad.append(f"{rel}: override target {o['model']} missing")
+        return d
+
+    for fam in FAMILIES:
+        item = models.WEAPON_ITEMS[fam][0]
+        png(f"textures/item/{item}.png", (32, 32))
+        d = model(f"models/item/{item}.json", f"eternalrealm:item/{item}")
+        if d and [o["predicate"]["custom_model_data"] for o in d["overrides"]] != list(range(2, 8)):
+            bad.append(f"{item}: overrides must be 2..7")
+        for n in range(1, 8):
+            png(f"textures/item/weapon/{fam}_{n}.png", (32, 32))
+            model(f"models/item/weapon/{fam}_{n}.json", f"eternalrealm:item/weapon/{fam}_{n}")
+    for slot in armor_icons.SLOTS:
+        d = model(f"models/item/armor_{slot}.json", f"eternalrealm:item/armor/{slot}_1")
+        if d and [o["predicate"]["custom_model_data"] for o in d["overrides"]] != list(range(2, 8)) + list(range(101, 107)):
+            bad.append(f"armor_{slot}: overrides must be 2..7, 101..106")
+        for v in armor_icons.VARIANTS:
+            nm = armor_icons.name(slot, v)
+            png(f"textures/item/armor/{nm}.png", (16, 16))
+            model(f"models/item/armor/{nm}.json", f"eternalrealm:item/armor/{nm}")
+    for key in armor_worn.SETS:
+        for f in armor_worn.file_names(key):
+            png(f"textures/models/armor/{f}", (64, 32))
+    for mid in items.MATERIALS:
+        png(f"textures/item/material/{mid}.png", (16, 16))
+        model(f"models/item/{mid}.json", f"eternalrealm:item/material/{mid}")
+    for cid in items.CONSUMABLES:
+        png(f"textures/item/consumable/{cid}.png", (16, 16))
+        model(f"models/item/{cid}.json", f"eternalrealm:item/consumable/{cid}")
+    png("textures/item/gold_coin.png", (16, 16))
+    model("models/item/gold_coin.json", "eternalrealm:item/gold_coin")
+    for sid in skills.ALL_SKILLS:
+        png(f"textures/gui/skill/{sid}.png", (16, 16))
+    for job in skills.JOBS:
+        png(f"textures/gui/job/{job}.png", (16, 16))
+    for name, (fn, n) in effects.PARTICLES.items():
+        p = os.path.join(ASSETS, "particles", f"{name}.json")
+        with open(p, encoding="utf-8") as f:
+            d = json.load(f)
+        if d != {"textures": [f"eternalrealm:{name}_{i}" for i in range(n)]}:
+            bad.append(f"particles/{name}.json unexpected {d}")
+        for i in range(n):
+            p = os.path.join(ASSETS, "textures", "particle", f"{name}_{i}.png")
+            with Image.open(p) as im:
+                if im.size not in ((8, 8), (16, 16)):
+                    bad.append(f"particle {name}_{i} size {im.size}")
+    for eid in effects.EFFECTS:
+        png(f"textures/mob_effect/{eid}.png", (18, 18))
+    # skill ids must match Jobs.java / WeaponProfiles.java when the sources are present
+    import re
+    src = os.path.join(ROOT, "src", "main", "java", "com", "eternalrealm")
+    ids = set()
+    for rel in (("job", "Jobs.java"), ("combat", "WeaponProfiles.java")):
+        p = os.path.join(src, *rel)
+        if os.path.exists(p):
+            with open(p, encoding="utf-8") as f:
+                ids |= set(re.findall(r'(?:skill|SkillDefinition)\("([a-z_]+)"', f.read()))
+    missing = sorted(i for i in ids if i not in skills.ALL_SKILLS)
+    if missing:
+        bad.append(f"skills in Java without an icon: {missing}")
+    return bad
 
 
 if __name__ == "__main__":

@@ -53,6 +53,17 @@ RUNE_GLYPHS = [
 ]
 
 
+def abyss_tones(t, s, tone):
+    """Black blade body with a glowing violet upper-left edge."""
+    if tone == 5:
+        return P.VOID[3]
+    if tone == 4:
+        return P.ABYSS[3]
+    if tone == 3:
+        return P.ABYSS[2]
+    return P.ABYSS[1]
+
+
 def runes(c: Canvas, t0: int, t1: int, center, ramp, gap: int = 5, phase: int = 0, glow=None):
     """Glowing rune marks along a centre line between t0 and t1."""
     t = t0
@@ -64,7 +75,7 @@ def runes(c: Canvas, t0: int, t1: int, center, ramp, gap: int = 5, phase: int = 
             ss = int(round(center(tt))) + ds
             if (tt + ss) % 2 == 0:
                 ss += 1 if ds <= 0 else -1
-            put(c, tt, ss, ramp[4] if (dt + k) % 2 else ramp[5])
+            put(c, tt, ss, ramp[3] if (dt + k) % 2 else ramp[4])
         t += gap
         k += 1
 
@@ -397,15 +408,7 @@ def ls7() -> Canvas:
 
     m = am(f)
 
-    def ex(t, s, tone):
-        if tone == 5:
-            return P.VOID[3]
-        if tone == 4:
-            return P.ABYSS[4]
-        if tone == 3:
-            return P.ABYSS[2]
-        return P.ABYSS[1]
-    shade_blade(b, m, P.ABYSS, center=hook, extra=ex)
+    shade_blade(b, m, P.ABYSS, center=hook, extra=abyss_tones)
     runes(b, LS_GUARD + 3, tip - 6, hook, P.VOID_GLOW, gap=5)
     outline(b, P.ABYSS)
     grip_layer(sp, -23, -15, P.ABYSS, band=lambda t, s: (P.VOID[3] if (t + s) % 6 in (0, 1) else None))
@@ -696,38 +699,29 @@ def gs6() -> Canvas:
 
 
 def gs7() -> Canvas:
-    """Abyss: huge black blade with forked tip, glowing violet cracks, spiked guard with eye."""
+    """Abyss: huge black blade with saw teeth on both edges, glowing violet crack,
+    horned guard with an eye."""
     sp = Sprite()
     b = sp.layer()
     tip = 29
 
+    def tooth(t, ph):
+        if t < GS_GUARD + 4 or t > tip - 8:
+            return 0.0
+        return max(0.0, 2.0 - ((t + ph) % 6) * 0.5)
+
     def f(t, s):
         if t < GS_GUARD + 1:
             return False
-        w = 3.0 + (1.0 if (t % 7) in (0, 1, 2) and -6 < t < 18 else 0.0)
-        inside = abs(s) <= w and t <= tip - 1.6 * abs(s)
-        # fork notch at the tip
-        notch = t > tip - 9 and abs(s) <= (t - (tip - 9)) * 0.35
-        return inside and not notch
+        return -3 - tooth(t, 0) <= s <= 3 + tooth(t, 3) and t <= tip - 1.7 * abs(s)
 
     m = am(f)
-    for sgn in (-1, 1):
-        m |= sweep_ts([(tip - 9, sgn * 2.2), (tip - 4, sgn * 3.0), (tip - 0.5, sgn * 3.4)], [1.4, 1.0, 0.3])
-
-    def ex(t, s, tone):
-        if tone == 5:
-            return P.VOID[3]
-        if tone == 4:
-            return P.ABYSS[3]
-        if tone == 3:
-            return P.ABYSS[2]
-        return P.ABYSS[1]
-    shade_blade(b, m, P.ABYSS, center=lambda t: 0, extra=ex)
+    shade_blade(b, m, P.ABYSS, center=lambda t: 0, extra=abyss_tones)
     # glowing crack running up the blade
     tcur, scur = GS_GUARD + 2, 0
     k = 0
-    while tcur < tip - 9:
-        put(b, tcur, scur, P.VOID_GLOW[3] if k % 3 else P.VOID_GLOW[4])
+    while tcur < tip - 6:
+        put(b, tcur, scur, P.VOID_GLOW[2] if k % 3 else P.VOID_GLOW[3])
         k += 1
         tcur += 1
         scur = scur + (1 if (k % 5) in (1, 2) else -1)
@@ -989,10 +983,10 @@ def tb7() -> Canvas:
         if tone == 3:
             return P.ABYSS[2]
         return P.ABYSS[1]
-    shade_blade(b, m, P.ABYSS, center=hook, extra=ex)
+    shade_blade(b, m, P.ABYSS, center=hook, extra=abyss_tones)
     for tt in range(TB_GUARD + 3, tip - 5, 3):
         ss = 0 if tt % 2 else -1
-        put(b, tt, ss, P.VOID_GLOW[3] if tt % 2 else P.VOID_GLOW[4])
+        put(b, tt, ss, P.VOID_GLOW[2] if tt % 2 else P.VOID_GLOW[3])
     outline(b, P.ABYSS)
     tb_grip(sp, P.ABYSS, lambda t, s: (P.VOID[3] if (t + s) % 6 in (0, 1) else None))
     g = sp.layer()
@@ -1222,25 +1216,19 @@ def sp6() -> Canvas:
 
 
 def sp7() -> Canvas:
-    """Abyss harpoon: barbed black head with back hooks and runes, banded black shaft."""
+    """Abyss voulge: black blade with a big back-swept crescent hook and a spike,
+    violet runes, banded black shaft."""
     sp = Sprite()
     shaft_layer(sp, -27, 9, P.ABYSS, band=lambda t, s: (P.VOID[3] if (t + s) % 7 in (0, 1) else None))
-    m = am(lambda t, s: 9 <= t and abs(s) <= 2 and t <= 29 - 1.8 * abs(s))
-    for sgn in (-1, 1):
-        m |= sweep_ts([(14, sgn * 1.5), (12.5, sgn * 4.0), (9.0, sgn * 5.2)], [1.3, 0.9, 0.3])
-        m |= sweep_ts([(21, sgn * 1.0), (19.5, sgn * 3.2), (17.0, sgn * 4.0)], [1.0, 0.7, 0.3])
-
-    def ex(t, s, tone):
-        if tone == 5:
-            return P.VOID[3]
-        if tone == 4:
-            return P.ABYSS[3]
-        if tone == 3:
-            return P.ABYSS[2]
-        return P.ABYSS[1]
-    h = head_layer(sp, m, P.ABYSS, extra=ex)
-    for tt, ss in ((12, -1), (15, 0), (18, -1), (21, 0), (24, -1)):
-        put(h, tt, ss, P.VOID_GLOW[4] if tt % 2 else P.VOID_GLOW[3])
+    m = am(lambda t, s: 9 <= t and abs(s) <= 2 and t <= 29 - 1.9 * abs(s))
+    # crescent hook on the upper-left side, curling back toward the shaft
+    m |= sweep_ts([(16, -1.5), (16.5, -4.5), (14.0, -7.2), (10.0, -7.6), (7.5, -6.0)],
+                  [1.8, 1.7, 1.4, 1.0, 0.3])
+    # short spike on the other side
+    m |= sweep_ts([(13, 1.5), (14.5, 4.0), (17.0, 5.6)], [1.3, 0.9, 0.2])
+    h = head_layer(sp, m, P.ABYSS, extra=abyss_tones)
+    for tt, ss in ((13, 0), (16, -1), (19, 0), (22, -1), (25, 0)):
+        put(h, tt, ss, P.VOID_GLOW[3] if tt % 2 else P.VOID_GLOW[2])
     collar(sp, 7, 10, 1.8, P.ABYSS)
     g = sp.layer()
     x, y = pos(8.5, -0.5)
@@ -1597,18 +1585,19 @@ def bw6() -> Canvas:
     path = limb_path(depth=12.0)
     m = sweep_ts(path, limb_widths(path, 1.6, 0.7))
     # feathers hanging off the back of each limb
-    for tt in (-21, -16, -11, -6, 6, 11, 16, 21):
+    for tt in (-22, -17, -12, -7, 7, 12, 17, 22):
         u = tt / BOW_TIP
         s0 = STRING_S - 12.0 * (1 - u * u)
         d = 1 if tt > 0 else -1
-        m |= sweep_ts([(tt, s0 - 0.5), (tt - d * 1.2, s0 - 3.6 + abs(tt) * 0.06)], [1.3, 0.4])
+        m |= sweep_ts([(tt - d * 1.0, s0 - 0.5), (tt + d * 0.6, s0 - 3.0), (tt + d * 2.6, s0 - 4.6)],
+                      [1.6, 1.3, 0.4])
 
     def ex(t, s, tone):
         u = t / BOW_TIP
         s0 = STRING_S - 12.0 * (1 - u * u)
-        if s >= s0 - 1.0:
+        if s >= s0 - 1.2:
             return P.HOLY_GOLD[tone]
-        return P.HOLY_WHITE[min(5, tone + 1)]
+        return P.HOLY_WHITE[min(5, tone + 1)] if s > s0 - 4.0 else P.SKY[4]
     shade_bar(l, m, P.HOLY_WHITE, base=3, grad=1.0, extra=ex)
     outline(l, P.HOLY_GOLD.out)
     bow_grip(sp, P.HOLY_GOLD, t0=-3, t1=3, half=1.8)

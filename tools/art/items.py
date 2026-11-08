@@ -47,20 +47,20 @@ MATERIALS = {
     ]),
     "treant_bark": (dict(B=P.WOOD, M=P.MOSS), [
         "................",
+        "...........BB...",
+        ".........BBBBB..",
+        "........BbBBbBB.",
+        ".......BbBBbBBb.",
+        "......BbBBbBBbB.",
+        ".....BbBBbBBbBB.",
+        "....BbBBbBBbBB..",
+        "...BBBBbBBbBB...",
+        "..MMBbBBbBBB....",
+        ".MMMMBBbBBB.....",
+        ".MMMMBbBBB......",
+        "..MMBBBBB.......",
+        "...BBBBB........",
         "................",
-        "....MMMMM.......",
-        "...MMMMMMMMM....",
-        "..MMBBBMMMMMM...",
-        "..BBbBBBBMMBB...",
-        "..BBbBBBbBBBB...",
-        "..BBbBBBbBBbB...",
-        "..BBBBbBbBBbB...",
-        "..BbBBbBBBBbB...",
-        "..BbBBbBBbBBB...",
-        "..BbBBBBBbBBB...",
-        "..BBBBBBBbBbB...",
-        "...BBBBBBBBB....",
-        "....bbbbbbb.....",
         "................",
     ]),
     "forest_spore": (dict(S=P.SPORE, L=P.MOSS, O=("flat", hexc("f6ff9a"))), [
@@ -117,39 +117,22 @@ MATERIALS = {
         "................",
         "................",
     ]),
-    "frost_shard": (dict(I=P.ICE, W=("flat", hexc("f0fdff"))), [
+    "frost_shard": (dict(I=P.ICE, W=("tone", P.ICE, 1), J=("tone", P.ICE, -1)), None),
+    "yeti_fur": (dict(F=P.FUR_WHITE, B=P.Ramp("1e2a3a", "5a7088", "7f95ad", "a6bacd", "cbd9e6", "eef4fa")), [
         "................",
-        "...........I....",
-        "..........III...",
-        ".........IIWII..",
-        "........IIWIII..",
-        ".......IIWIIII..",
-        "......IIWIIII...",
-        ".....IIWIIII....",
-        "....IIWIIII.....",
-        "...IIWIIII......",
-        "...IWIIII.......",
-        "...IIIII........",
-        "...IIII.........",
-        "....II..........",
-        "................",
-        "................",
-    ]),
-    "yeti_fur": (dict(F=P.FUR_WHITE), [
-        "................",
-        "................",
-        ".....F...F......",
-        "....FF..FFF..F..",
-        "...FFFFFFFFFFF..",
+        "....F..F...F....",
+        "...FF.FF..FF.F..",
         "..FFFFFFFFFFFF..",
-        "..FFFfFFFFfFFFF.",
-        ".FFFFFFFFFFFFFF.",
-        ".FFfFFFFfFFFFF..",
-        ".FFFFFFFFFFFFF..",
-        "..FFFFFfFFFFF...",
-        "..FFFFFFFFFF....",
-        "...FFF..FFF.....",
-        "....F....F......",
+        ".FFFfFFFfFFFfF..",
+        ".FFFFfFFFfFFFfF.",
+        ".FFfFFfFFFfFFFF.",
+        "..FFfFFfFFFfFF..",
+        "..FFFfFFfFFFfFF.",
+        ".BFFFFfFFfFFFFB.",
+        ".BBFfFFfFFfFFBB.",
+        "..BBBfBBfBBfBB..",
+        "..BB.BB..BB.B...",
+        "...B..B...B.....",
         "................",
         "................",
     ]),
@@ -415,28 +398,55 @@ CONSUMABLES = {
     ]),
 }
 
-COIN = (dict(G=P.GOLD, S=P.GOLD_PALE, E=P.BRONZE), [
+COIN = (dict(G=P.GOLD, S=("tone", P.GOLD_PALE, 1), E=P.BRONZE), [
     "................",
     "................",
     ".....GGGGGG.....",
-    "....GGGGGGGG....",
-    "...GGgggggGGG...",
-    "..GGgGGSGGGgGG..",
-    "..GGgGSSSGGgGG..",
-    "..GgGSSSSSGGgG..",
-    "..GgGGSSSGGGgG..",
-    "..GGgGSGSGGgGG..",
-    "..GGgGGGGGGgGE..",
-    "...GGgggggGGE...",
-    "....GGGGGGGE....",
-    ".....EEEEEE.....",
-    "................",
+    "....GGggggGG....",
+    "...GggggSgggG...",
+    "..GgggggSggggG..",
+    "..GgSSSSSSSggG..",
+    "..GggSSSSSgggG..",
+    "..GgggSSSggggG..",
+    "..GggSSgSSgggG..",
+    "..GggSgggSgggG..",
+    "...GgggggggggE..",
+    "....GGggggGGE...",
+    ".....GGGGGGE....",
+    "......EEEE......",
     "................",
 ])
 
 
+def _shard_rows():
+    """Kite-shaped ice crystal (lit left facet W, shaded right facet J) plus a small one."""
+    from wbase import point_in_poly
+    rows = [["."] * 16 for _ in range(16)]
+
+    def kite(tip_a, tip_b, half):
+        ax, ay = tip_a
+        bx, by = tip_b
+        mx, my = ax + (bx - ax) * 0.42, ay + (by - ay) * 0.42
+        dx, dy = bx - ax, by - ay
+        ln = (dx * dx + dy * dy) ** 0.5
+        nx, ny = -dy / ln, dx / ln
+        left = (mx + nx * half, my + ny * half)
+        right = (mx - nx * half, my - ny * half)
+        for y in range(16):
+            for x in range(16):
+                if point_in_poly(x + 0.5, y + 0.5, [tip_a, left, tip_b, right]):
+                    # side of the axis: cross product sign
+                    cr = (x + 0.5 - ax) * dy - (y + 0.5 - ay) * dx
+                    rows[y][x] = "J" if cr > 0.9 else ("I" if cr > -0.9 else "W")
+    kite((12.6, 0.8), (3.2, 15.0), 3.1)
+    kite((14.6, 7.0), (10.5, 14.6), 1.6)
+    return ["".join(r) for r in rows]
+
+
 def material(name: str) -> Canvas:
     mats, rows = MATERIALS[name]
+    if rows is None:
+        rows = _shard_rows()
     return render(rows, mats, local="BMSGTLQRV")
 
 
@@ -448,6 +458,10 @@ def consumable(name: str) -> Canvas:
 def gold_coin() -> Canvas:
     mats, rows = COIN
     return render(rows, mats, local="S")
+
+
+def mat_rows(name):
+    return MATERIALS[name][1] or _shard_rows()
 
 
 def mat_i(i):
