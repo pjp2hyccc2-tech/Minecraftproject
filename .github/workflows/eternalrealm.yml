@@ -30,6 +30,16 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      # services.gradle.org / GitHub release downloads occasionally time out: retry the wrapper download.
+      - name: Download the Gradle distribution (with retries)
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if ./gradlew --version --no-daemon; then exit 0; fi
+            echo "Gradle download failed (attempt $attempt), retrying in 30s"
+            sleep 30
+          done
+          exit 1
+
       - name: Compile, unit tests and mod jar
         run: ./gradlew build --no-daemon --stacktrace
 
