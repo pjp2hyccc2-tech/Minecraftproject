@@ -44,7 +44,7 @@ def geometry():
              P('antler_r', (-5, -26, 0), C(-6, -36, -1, 2, 10, 2, 'bark:branch', tag='ant'), rot=(0, 0, -25)),
              P('antler_l', (5, -26, 0), C(4, -36, -1, 2, 10, 2, 'bark:branch', share='ant', mirror=True), rot=(0, 0, 25)))
     upper = P('trunk_upper', (0, -4, 0), C(-8, -20, -7, 16, 16, 14, 'bark:trunk2'), head, arm('r'), arm('l'),
-              P('moss_beard', (0, -8, -7), C(-5, -8, -7.6, 10, 8, 0, 'leaf:moss')),
+              P('moss_beard', (0, -6, -7), C(-5, -6, -7.6, 10, 8, 0, 'leaf:moss')),
               P('mushrooms', (7, -10, 0), C(7.5, -12, -3, 3, 2, 3, 'skin:cap', tag='cap'), C(7.5, -7, 1, 2, 2, 2, 'skin:cap2'),
                 C(-10.5, -14, -1, 3, 2, 3, 'skin:cap', share='cap')))
     trunk = P('trunk', (0, 6, 0), C(-7, -4, -6, 14, 10, 12, 'bark:trunk'), upper, root_leg('r'), root_leg('l'))
@@ -165,16 +165,24 @@ def animations():
 def variants():
     def deco(p):
         f = p.face('trunk_upper', 'front')
-        for (x, y) in ((3, 4), (4, 4), (11, 4), (12, 4), (3, 5), (4, 5), (11, 5), (12, 5)):
-            f.px(x, y, (20, 14, 8))
         g = p.face('trunk_upper', 'front', glow=True)
-        for (x, y) in ((3, 4), (4, 4), (11, 4), (12, 4)):
-            f.px(x, y, (255, 210, 80))
-            g.px(x, y, (255, 255, 255))
-        for x in range(4, 12):
-            f.px(x, 10 + (1 if x in (5, 6, 9, 10) else 0), (30, 18, 10))
-        f.hline(2, 5, 3, (60, 40, 24))
-        f.hline(10, 13, 3, (60, 40, 24))
+        socket = (22, 14, 8)
+        for (x0, x1) in ((2, 5), (10, 13)):
+            f.rect(x0, 3, x1, 6, socket)
+            f.hline(x0 - 1, x1 + 1, 2, (58, 40, 26))
+            for x in range(x0 + 1, x1):
+                f.px(x, 4, (255, 214, 90))
+                f.px(x, 5, (255, 170, 40))
+                g.px(x, 4, (255, 255, 255))
+                g.px(x, 5, (255, 220, 160))
+        mouth = [(4, 10), (5, 11), (6, 10), (7, 11), (8, 10), (9, 11), (10, 10), (11, 11)]
+        for (x, y) in mouth:
+            f.px(x, y, socket)
+            f.px(x, y + 1, socket)
+            f.px(x, y + 2, (40, 20, 10))
+            g.px(x, y + 1, (255, 150, 40))
+        f.vline(7, 7, 9, (40, 26, 16))
+        f.vline(8, 7, 9, (40, 26, 16))
         for fc in p.all_faces('mushrooms', index=0, glow=True):
             fc.rect(0, 0, fc.w - 1, fc.h - 1, (180, 255, 220))
         for fc in p.all_faces('mushrooms', index=1, glow=True):

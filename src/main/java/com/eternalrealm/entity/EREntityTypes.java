@@ -3,6 +3,7 @@ package com.eternalrealm.entity;
 import com.eternalrealm.core.ModInfo;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Entity types of the enemy and boss module. The integrator wires it with one call:
@@ -96,13 +98,40 @@ public final class EREntityTypes {
         return list;
     }
 
-    /** The entity type of an enemy rig. */
-    public static RegistryObject<? extends EntityType<? extends ERMonster>> enemy(EnemyRig rig) {
+    /** The rig whose variants include {@code variantId} (variant ids are unique across rigs). */
+    public static Optional<EnemyRig> rigOf(String variantId) {
+        for (EnemyRig rig : EnemyRig.values()) {
+            if (rig.variants().contains(variantId)) {
+                return Optional.of(rig);
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Creates (does not add to the level) an enemy of a variant, e.g. {@code createEnemy(level, "ghoul")}; the rig is
+     * found from the id. Empty if the id is unknown.
+     */
+    public static Optional<ERMonster> createEnemy(Level level, String variantId) {
+        Optional<EnemyRig> rig = rigOf(variantId);
+        if (rig.isEmpty()) {
+            return Optional.empty();
+        }
+        ERMonster mob = enemy(rig.get()).create(level);
+        if (mob == null) {
+            return Optional.empty();
+        }
+        mob.setVariant(variantId);
+        return Optional.of(mob);
+    }
+
+    /** The entity type of an enemy rig (after registration). */
+    public static EntityType<? extends ERMonster> enemy(EnemyRig rig) {
         return switch (rig) {
-            case HUMANOID -> HUMANOID_ENEMY;
-            case BEAST -> BEAST_ENEMY;
-            case GOLEM -> GOLEM_ENEMY;
-            case FLYER -> FLYER_ENEMY;
+            case HUMANOID -> HUMANOID_ENEMY.get();
+            case BEAST -> BEAST_ENEMY.get();
+            case GOLEM -> GOLEM_ENEMY.get();
+            case FLYER -> FLYER_ENEMY.get();
         };
     }
 }

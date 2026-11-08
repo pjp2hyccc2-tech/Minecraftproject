@@ -80,7 +80,7 @@ public final class EntityGameTests {
         for (int i = 0; i < variants.size(); i++) {
             String id = variants.get(i);
             BlockPos pos = new BlockPos(1 + (i % columns) * spacing, 2, 1 + (i / columns) * spacing);
-            ERMonster mob = helper.spawn(EREntityTypes.enemy(rig).get(), pos);
+            ERMonster mob = helper.spawn(EREntityTypes.enemy(rig), pos);
             mob.setVariant(id);
             check(id.equals(mob.getVariant()), "variant not applied: " + id);
             float expected = mob.getType().getHeight() * RigData.scale(rig.id(), id);
@@ -168,6 +168,11 @@ public final class EntityGameTests {
             rejected = true;
         }
         check(rejected, "unknown variants must be rejected");
+        ERMonster ghoul = EREntityTypes.createEnemy(helper.getLevel(), "ghoul").orElse(null);
+        check(ghoul instanceof HumanoidEnemy && "ghoul".equals(ghoul.getVariant()), "createEnemy(ghoul)");
+        check(EREntityTypes.createEnemy(helper.getLevel(), "scorpion").map(ERMonster::rig).orElse(null) == EnemyRig.BEAST,
+                "createEnemy(scorpion) is a beast");
+        check(EREntityTypes.createEnemy(helper.getLevel(), "no_such_variant").isEmpty(), "unknown ids give no entity");
         golem.discard();
         helper.succeed();
     }

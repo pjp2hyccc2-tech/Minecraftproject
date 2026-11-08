@@ -76,7 +76,7 @@ public final class TreantBossGeometry {
                 PartPose.offset(0.0F, 12.0F, 0.0F));
         p3.addOrReplaceChild("moss_beard", CubeListBuilder.create()
                 .texOffs(56, 112).addBox(-5.0F, 0.0F, -0.6F, 10.0F, 8.0F, 0.0F, new CubeDeformation(inflate)),
-                PartPose.offset(0.0F, -4.0F, -7.0F));
+                PartPose.offset(0.0F, -2.0F, -7.0F));
         p3.addOrReplaceChild("mushrooms", CubeListBuilder.create()
                 .texOffs(24, 114).addBox(0.5F, -2.0F, -3.0F, 3.0F, 2.0F, 3.0F, new CubeDeformation(inflate))
                 .texOffs(36, 114).addBox(0.5F, 3.0F, 1.0F, 2.0F, 2.0F, 2.0F, new CubeDeformation(inflate))

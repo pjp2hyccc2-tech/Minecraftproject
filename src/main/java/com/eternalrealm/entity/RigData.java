@@ -83,8 +83,8 @@ public final class RigData {
             case "treant/b2" -> new float[]{2.2F, 4.0F};
             case "colossus/b3" -> new float[]{2.6F, 4.8F};
             case "colossus/b7" -> new float[]{2.4F, 4.4F};
-            case "queen/b5" -> new float[]{1.3F, 3.0F};
-            case "queen/b4" -> new float[]{1.5F, 3.4F};
+            case "queen/b5" -> new float[]{1.3F, 3.4F};
+            case "queen/b4" -> new float[]{1.5F, 3.8F};
             case "dragon/b6" -> new float[]{3.6F, 3.4F};
             default -> new float[]{1.0F, 2.0F};
         };

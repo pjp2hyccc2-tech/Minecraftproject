@@ -316,9 +316,9 @@ def variants():
             'waist': {'base': '#3a3030', 'style': 'leather'}, 'pants': '#2e2a2a', 'boots': {'base': '#2a2220', 'style': 'leather'},
             'apron': {'base': '#5a3a26', 'style': 'leather'}}
     return [Variant('b5', show={'crown', 'hair', 'sleeve_r', 'sleeve_l', 'scepter', 'shard_ring', 'collar', 'gown'},
-                    palette=pal5, paint=deco_b5, glow=True, extra=dict(scale=1.2, hitbox=(1.3, 3.0))),
+                    palette=pal5, paint=deco_b5, glow=True, extra=dict(scale=1.2, hitbox=(1.3, 3.4))),
             Variant('b4', show={'hood', 'pauldron_r', 'pauldron_l', 'axe', 'right_leg', 'left_leg', 'apron'},
-                    palette=pal4, paint=deco_b4, glow=True, extra=dict(scale=1.35, hitbox=(1.5, 3.4)))]
+                    palette=pal4, paint=deco_b4, glow=True, extra=dict(scale=1.35, hitbox=(1.5, 3.8)))]
 
 
 SETS = {

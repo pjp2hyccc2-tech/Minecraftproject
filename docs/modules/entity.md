@@ -63,8 +63,21 @@ boss.setShielded(true); boss.setEnraged(true); boss.setPhase(2); boss.bossId();
 - ボス: 落下・窒息・溺死・圧死ダメージ無効、ノックバック耐性1.0、押されない、次元移動しない。
 - 配線: `EternalRealm` のコンストラクタに `EREntityTypes.register(modBus);`（このブランチで追加済み）。属性・レンダラーは `@Mod.EventBusSubscriber` で自動。
 - 名前: `docs/i18n/entity.json`（エンティティ名 `entity.eternalrealm.<type>`、バリアント名 `entity.eternalrealm.enemy.<variant>`）。
+- `EREntityTypes.createEnemy(level, "ghoul")`: バリアントIDからリグを判定して生成（レベルへの追加は呼び出し側）。`rigOf(id)` も可。
+
+ボスの取り巻きテンプレート（`<bossId>_minion`）の推奨バリアント:
+
+| テンプレート | バリアント | テンプレート | バリアント |
+|---|---|---|---|
+| b1_minion | bandit / crossbowman | b6_minion | salamander |
+| b2_minion | dryad | b7_minion | sky_sentinel |
+| b3_minion | mummy | b8_minion | shade |
+| b4_minion | jailer | final_minion | dark_knight |
+| b5_minion | ice_wraith | | |
 
 ## 5. テスト
 
 - GameTest `EntityGameTests`: 全バリアントの出現・縮尺・アニメーション・被弾・死亡アニメーション後の除去、近接/遠隔攻撃の命中、NBT保存、全ボスの全アニメーション・状態・耐性・死亡演出後の除去、ボスAIの叩きつけ命中。
 - 単体 `EntityAssetsTest`: テクスチャ・名前・UV表サイズ・ボスとの対応。
+- 単体 `ClientModelSmokeTest`（CIのみ。リフレクションのためオフラインでは自動スキップ）: 全リグの本体・シールド層をベイクし、
+  実際の `EnemyModel` / `BossModel` で全バリアントの外見を適用、全アニメーションを複数時刻で評価（GameTestサーバーはクライアントクラスを読まないため）。
