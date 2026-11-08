@@ -36,3 +36,4 @@ Thumbs.db
 # python bytecode (tools/art generators)
 __pycache__/
 *.pyc
+# audio generator caches (tools/audio)

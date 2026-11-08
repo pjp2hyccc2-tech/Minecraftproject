@@ -1,0 +1,158 @@
+{
+  "subtitles.eternalrealm.boss.phase_change": {
+    "ja": "ボスの形態変化",
+    "en": "Boss changes phase"
+  },
+  "subtitles.eternalrealm.boss.roar": {
+    "ja": "ボスの咆哮",
+    "en": "Boss roars"
+  },
+  "subtitles.eternalrealm.boss.telegraph": {
+    "ja": "危険な予兆",
+    "en": "Danger warning"
+  },
+  "subtitles.eternalrealm.combat.dodge": {
+    "ja": "回避",
+    "en": "Dodge"
+  },
+  "subtitles.eternalrealm.combat.guard": {
+    "ja": "防御",
+    "en": "Attack blocked"
+  },
+  "subtitles.eternalrealm.combat.parry": {
+    "ja": "パリィ",
+    "en": "Parry"
+  },
+  "subtitles.eternalrealm.dungeon.door_open": {
+    "ja": "扉が開く",
+    "en": "Dungeon door opens"
+  },
+  "subtitles.eternalrealm.dungeon.wave_start": {
+    "ja": "角笛",
+    "en": "War horn sounds"
+  },
+  "subtitles.eternalrealm.enhance.fail": {
+    "ja": "強化失敗",
+    "en": "Enhancement failed"
+  },
+  "subtitles.eternalrealm.enhance.success": {
+    "ja": "強化成功",
+    "en": "Enhancement succeeded"
+  },
+  "subtitles.eternalrealm.jingle.discovery": {
+    "ja": "新たな地を発見",
+    "en": "New land discovered"
+  },
+  "subtitles.eternalrealm.jingle.level_up": {
+    "ja": "レベルアップ",
+    "en": "Level up"
+  },
+  "subtitles.eternalrealm.jingle.quest_complete": {
+    "ja": "クエスト達成",
+    "en": "Quest complete"
+  },
+  "subtitles.eternalrealm.jingle.victory": {
+    "ja": "勝利のファンファーレ",
+    "en": "Victory fanfare"
+  },
+  "subtitles.eternalrealm.loot.gold_pickup": {
+    "ja": "ゴールド獲得",
+    "en": "Gold picked up"
+  },
+  "subtitles.eternalrealm.loot.legendary_drop": {
+    "ja": "レジェンダリードロップ",
+    "en": "Legendary item dropped"
+  },
+  "subtitles.eternalrealm.loot.rare_drop": {
+    "ja": "レアドロップ",
+    "en": "Rare item dropped"
+  },
+  "subtitles.eternalrealm.skill.arrow_release": {
+    "ja": "矢を放つ",
+    "en": "Arrow released"
+  },
+  "subtitles.eternalrealm.skill.arrow_volley": {
+    "ja": "矢の雨",
+    "en": "Arrow volley"
+  },
+  "subtitles.eternalrealm.skill.buff": {
+    "ja": "強化",
+    "en": "Buff"
+  },
+  "subtitles.eternalrealm.skill.fire_cast": {
+    "ja": "炎の詠唱",
+    "en": "Fire spell cast"
+  },
+  "subtitles.eternalrealm.skill.fire_explosion": {
+    "ja": "爆発",
+    "en": "Fiery explosion"
+  },
+  "subtitles.eternalrealm.skill.heal": {
+    "ja": "回復",
+    "en": "Healing"
+  },
+  "subtitles.eternalrealm.skill.heavy_slash": {
+    "ja": "重い斬撃",
+    "en": "Heavy slash"
+  },
+  "subtitles.eternalrealm.skill.holy_chime": {
+    "ja": "聖なる鐘の音",
+    "en": "Holy chime"
+  },
+  "subtitles.eternalrealm.skill.ice_cast": {
+    "ja": "氷の詠唱",
+    "en": "Ice spell cast"
+  },
+  "subtitles.eternalrealm.skill.ice_shatter": {
+    "ja": "氷が砕ける",
+    "en": "Ice shatters"
+  },
+  "subtitles.eternalrealm.skill.magic_bolt": {
+    "ja": "魔法弾",
+    "en": "Magic bolt"
+  },
+  "subtitles.eternalrealm.skill.shadow_whoosh": {
+    "ja": "闇の揺らめき",
+    "en": "Shadow whoosh"
+  },
+  "subtitles.eternalrealm.skill.slash": {
+    "ja": "斬撃",
+    "en": "Slash"
+  },
+  "subtitles.eternalrealm.skill.thunder": {
+    "ja": "雷鳴",
+    "en": "Thunder strikes"
+  },
+  "subtitles.eternalrealm.ui.journal_open": {
+    "ja": "ページをめくる",
+    "en": "Page turns"
+  },
+  "subtitles.eternalrealm.ui.npc_talk": {
+    "ja": "話し声",
+    "en": "Someone talks"
+  },
+  "subtitles.eternalrealm.weapon.swing.bow": {
+    "ja": "弓を射る",
+    "en": "Bow fires"
+  },
+  "subtitles.eternalrealm.weapon.swing.dual_blades": {
+    "ja": "双剣を振る",
+    "en": "Dual blades swing"
+  },
+  "subtitles.eternalrealm.weapon.swing.one_handed_sword": {
+    "ja": "剣を振る",
+    "en": "Sword swings"
+  },
+  "subtitles.eternalrealm.weapon.swing.spear": {
+    "ja": "槍で突く",
+    "en": "Spear thrusts"
+  },
+  "subtitles.eternalrealm.weapon.swing.staff": {
+    "ja": "杖を振る",
+    "en": "Staff swings"
+  },
+  "subtitles.eternalrealm.weapon.swing.two_handed_sword": {
+    "ja": "大剣を振る",
+    "en": "Greatsword swings"
+  }
+}
