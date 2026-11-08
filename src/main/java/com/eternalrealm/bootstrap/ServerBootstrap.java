@@ -128,7 +128,8 @@ public final class ServerBootstrap {
                 new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season), rankings,
                 world, new com.eternalrealm.quest.forge.QuestService(server, playerData, world, rankings, clock),
                 new com.eternalrealm.monster.forge.MonsterSpawner(server),
-                new com.eternalrealm.dungeon.forge.DungeonService(server));
+                new com.eternalrealm.dungeon.forge.DungeonService(server),
+                new com.eternalrealm.story.forge.StoryDirector(server, world, playerData));
 
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
                 allocateLimiter, violations, floods, syncQueue, combat, uiLimiter, game);

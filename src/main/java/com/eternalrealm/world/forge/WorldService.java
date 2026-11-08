@@ -52,6 +52,8 @@ public final class WorldService {
     /** Player extension holding the discovered areas. */
     public static final String DISCOVERY = "discovery";
 
+    private static final com.eternalrealm.story.StoryCatalog STORY = com.eternalrealm.story.StoryCatalog.standard();
+
     private final MinecraftServer server;
     private final PlayerDataService playerData;
     private final KeyedSerialExecutor<UUID> io;
@@ -139,11 +141,17 @@ public final class WorldService {
 
     private void entered(ServerPlayer player, AreaDefinition area) {
         TextColor color = TextColor.fromRgb(area.color());
-        player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 50, 20));
-        player.connection.send(new ClientboundSetSubtitleTextPacket(Component.translatable(
-                WorldMessages.RECOMMENDED_LEVEL, area.minLevel(), area.maxLevel()).withStyle(ChatFormatting.GRAY)));
-        player.connection.send(new ClientboundSetTitleTextPacket(Component.translatable(area.translationKey())
+        java.util.Optional<com.eternalrealm.story.AreaCard> card = STORY.areaCard(area.id());
+        player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 60, 20));
+        player.connection.send(new ClientboundSetSubtitleTextPacket(card
+                .map(c -> (Component) Component.translatable(c.subtitleKey()).withStyle(ChatFormatting.GRAY))
+                .orElseGet(() -> Component.translatable(WorldMessages.RECOMMENDED_LEVEL, area.minLevel(), area.maxLevel())
+                        .withStyle(ChatFormatting.GRAY))));
+        player.connection.send(new ClientboundSetTitleTextPacket(Component.translatable(card
+                .map(com.eternalrealm.story.AreaCard::titleKey).orElse(area.translationKey()))
                 .withStyle(style -> style.withColor(color))));
+        player.displayClientMessage(Component.translatable(WorldMessages.RECOMMENDED_LEVEL, area.minLevel(),
+                area.maxLevel()).withStyle(ChatFormatting.GRAY), true);
         for (BiConsumer<ServerPlayer, AreaDefinition> listener : enterListeners) {
             listener.accept(player, area);
         }

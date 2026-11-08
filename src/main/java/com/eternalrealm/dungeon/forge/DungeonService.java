@@ -298,9 +298,18 @@ public final class DungeonService {
         if (context == null) {
             return;
         }
-        context.game().world().onBossDefeated(fight.bossId());
+        com.eternalrealm.world.BossDefeatResult result = context.game().world().onBossDefeated(fight.bossId());
+        List<ServerPlayer> party = instance.onlineMembers();
+        context.game().story().trigger(new com.eternalrealm.story.StoryTrigger.BossDefeated(fight.bossId(),
+                result.firstDefeat()), null, party);
+        for (com.eternalrealm.world.AreaDefinition area : result.newlyUnlockedAreas()) {
+            context.game().story().trigger(new com.eternalrealm.story.StoryTrigger.AreaUnlocked(area.id()), null, party);
+        }
         if ("final".equals(fight.bossId())) {
             context.game().rankings().recordFinalBossClear();
+            if (result.firstDefeat()) {
+                context.game().story().startEnding(party.stream().map(p -> p.getGameProfile().getName()).toList());
+            }
         }
     }
 

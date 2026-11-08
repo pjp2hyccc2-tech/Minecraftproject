@@ -20,11 +20,13 @@ public final class GameServices {
     private final com.eternalrealm.quest.forge.QuestService quests;
     private final com.eternalrealm.monster.forge.MonsterSpawner monsters;
     private final com.eternalrealm.dungeon.forge.DungeonService dungeons;
+    private final com.eternalrealm.story.forge.StoryDirector story;
 
     public GameServices(JobRules jobRules, PartyManager parties, GuildManager guilds, RankingService rankings,
                         com.eternalrealm.world.forge.WorldService world, com.eternalrealm.quest.forge.QuestService quests,
                         com.eternalrealm.monster.forge.MonsterSpawner monsters,
-                        com.eternalrealm.dungeon.forge.DungeonService dungeons) {
+                        com.eternalrealm.dungeon.forge.DungeonService dungeons,
+                        com.eternalrealm.story.forge.StoryDirector story) {
         this.jobRules = Objects.requireNonNull(jobRules, "jobRules");
         this.parties = Objects.requireNonNull(parties, "parties");
         this.guilds = Objects.requireNonNull(guilds, "guilds");
@@ -33,6 +35,11 @@ public final class GameServices {
         this.quests = Objects.requireNonNull(quests, "quests");
         this.monsters = Objects.requireNonNull(monsters, "monsters");
         this.dungeons = Objects.requireNonNull(dungeons, "dungeons");
+        this.story = Objects.requireNonNull(story, "story");
+    }
+
+    public com.eternalrealm.story.forge.StoryDirector story() {
+        return story;
     }
 
     public com.eternalrealm.dungeon.forge.DungeonService dungeons() {
@@ -87,6 +94,7 @@ public final class GameServices {
     /** A player leaves: flush what lives in the character before it is saved. */
     public void onLogout(java.util.UUID playerId) {
         dungeons.onLogout(playerId);
+        story.onLogout(playerId);
         quests.onLogout(playerId);
         world.onLogout(playerId);
         rankings.onLogout(playerId);
@@ -98,6 +106,7 @@ public final class GameServices {
         parties.tick();
         monsters.tick(tick);
         dungeons.tick(tick);
+        story.tick(tick);
         if (tick % 20 == 0) {
             guilds.tickSecond();
             rankings.tickSecond();

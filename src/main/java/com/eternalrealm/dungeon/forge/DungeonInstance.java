@@ -218,6 +218,8 @@ final class DungeonInstance {
         for (DungeonRunEvent event : events) {
             if (event instanceof DungeonRunEvent.Started started) {
                 setDoor(layout.entranceDoor(), false);
+                com.eternalrealm.server.ServerContext.current().ifPresent(context -> context.game().story().trigger(
+                        new com.eternalrealm.story.StoryTrigger.DungeonEntered(contentId), null, onlineMembers()));
                 tellAll(Component.translatable(DungeonRunEvent.Started.MESSAGE_KEY, Component.translatable(nameKey))
                         .withStyle(ChatFormatting.GOLD), false);
                 long seconds = (started.deadlineTick() - started.startTick()) / 20;
@@ -319,6 +321,8 @@ final class DungeonInstance {
         fight = started.get();
         tellAll(Component.translatable(DungeonRunEvent.StartBoss.MESSAGE_KEY, fight.body().getDisplayName())
                 .withStyle(ChatFormatting.DARK_RED), false);
+        com.eternalrealm.server.ServerContext.current().ifPresent(context -> context.game().story().trigger(
+                new com.eternalrealm.story.StoryTrigger.BossEncounter(bossId), null, onlineMembers()));
     }
 
     // ------------------------------------------------------------------ members
@@ -387,6 +391,17 @@ final class DungeonInstance {
                 }
             }
         }
+    }
+
+    List<ServerPlayer> onlineMembers() {
+        List<ServerPlayer> players = new ArrayList<>();
+        for (UUID member : run.members()) {
+            ServerPlayer player = service.player(member);
+            if (player != null) {
+                players.add(player);
+            }
+        }
+        return players;
     }
 
     void tellAll(Component message, boolean actionBar) {

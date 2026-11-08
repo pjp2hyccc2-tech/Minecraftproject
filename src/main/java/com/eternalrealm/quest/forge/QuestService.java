@@ -209,6 +209,48 @@ public final class QuestService {
         }
     }
 
+    /** An active quest whose unfinished "talk to" objective points at {@code npcId}. */
+    public java.util.Optional<String> questWaitingForTalk(ServerPlayer player, String npcId) {
+        QuestLogState state = log(player);
+        if (state == null) {
+            return java.util.Optional.empty();
+        }
+        for (String questId : state.activeQuestIds()) {
+            QuestDefinition quest = engine.catalog().byId(questId).orElse(null);
+            if (quest == null) {
+                continue;
+            }
+            List<Integer> progress = state.progress(questId);
+            for (int i = 0; i < quest.objectives().size(); i++) {
+                Objective objective = quest.objectives().get(i);
+                int done = i < progress.size() ? progress.get(i) : 0;
+                if (objective instanceof Objective.TalkTo talk && talk.npcId().equals(npcId)
+                        && done < objective.required()) {
+                    return java.util.Optional.of(questId);
+                }
+            }
+        }
+        return java.util.Optional.empty();
+    }
+
+    /** The next quest this quest giver offers that the player can accept now (main story first). */
+    public java.util.Optional<String> nextQuestOfGiver(ServerPlayer player, String npcId) {
+        QuestLogState state = log(player);
+        if (state == null) {
+            return java.util.Optional.empty();
+        }
+        int giverArea = Npcs.byId(npcId).map(npc -> npc.areaId()).orElse(-1);
+        if (giverArea < 0) {
+            return java.util.Optional.empty();
+        }
+        for (QuestDefinition quest : engine.available(state, context(player))) {
+            if (quest.areaId() == giverArea && quest.kind() != QuestKind.DAILY) {
+                return java.util.Optional.of(quest.id());
+            }
+        }
+        return java.util.Optional.empty();
+    }
+
     // ------------------------------------------------------------------ events
 
     /** Something the player did; progress is announced and saved. */

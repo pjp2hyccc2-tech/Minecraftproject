@@ -285,6 +285,16 @@ public final class BossFight {
                     phase.phaseIndex() + 1).withStyle(ChatFormatting.LIGHT_PURPLE), true);
             sound(SoundEvents.ENDER_DRAGON_GROWL, 1.0F, 0.8F);
             burst(ERParticles.RUNE.get(), body.position().add(0, 1.5, 0), 40, 2.0);
+            int phaseNumber = phase.phaseIndex() + 1;
+            ServerContext.current().ifPresent(context -> {
+                if ("final".equals(bossId())) {
+                    context.game().story().trigger(new com.eternalrealm.story.StoryTrigger.FinalPhase(
+                            Math.max(1, Math.min(4, phaseNumber))), null, targets);
+                } else if (phaseNumber >= 2) {
+                    context.game().story().catalog().bossPhaseBark(bossId(), phaseNumber).ifPresent(line ->
+                            tell(targets, com.eternalrealm.story.forge.StoryDirector.format(line), false));
+                }
+            });
         } else if (command instanceof BossCommand.AbilityStarted started) {
             tell(targets, Component.translatable("message.eternalrealm.boss.ability", body.getDisplayName(),
                     Component.translatable(started.ability().translationKey())).withStyle(ChatFormatting.RED), true);
