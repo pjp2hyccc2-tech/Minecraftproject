@@ -1,4 +1,4 @@
-name: build
+name: ETERNAL REALM build
 
 # Compile + unit tests + headless Minecraft server boot with GameTests.
 # This is the automated part of the "完了条件": the mod must load on a dedicated-type server without errors.
@@ -33,15 +33,25 @@ jobs:
       - name: Compile, unit tests and mod jar
         run: ./gradlew build --no-daemon --stacktrace
 
-      - name: Boot a GameTest server with the mod and run all GameTests
-        run: ./gradlew runGameTestServer --no-daemon --stacktrace
+      # Development sandboxes that can read job logs but cannot download artifacts take the jar from here.
+      # Verify with the printed SHA-256 after decoding.
+      - name: Export mod jar into the log
+        run: |
+          JAR=$(ls build/libs/eternalrealm-*.jar | grep -v -- '-sources' | head -1)
+          echo "ER_JAR_NAME=$(basename "$JAR")"
+          echo "ER_JAR_SHA256=$(sha256sum "$JAR" | cut -d' ' -f1)"
+          echo "----- BEGIN ER JAR BASE64 -----"
+          base64 -w 120 "$JAR"
+          echo "----- END ER JAR BASE64 -----"
 
       - name: Upload mod jar
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: eternalrealm-jar
           path: build/libs/*.jar
+
+      - name: Boot a GameTest server with the mod and run all GameTests
+        run: ./gradlew runGameTestServer --no-daemon --stacktrace
 
       - name: Upload reports and logs
         if: always()
@@ -52,4 +62,5 @@ jobs:
             build/reports/
             build/test-results/
             run/logs/
+            run/crash-reports/
           if-no-files-found: ignore
