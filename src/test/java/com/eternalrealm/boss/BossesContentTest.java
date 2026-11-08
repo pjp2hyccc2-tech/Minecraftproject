@@ -122,6 +122,90 @@ public class BossesContentTest {
         }
     }
 
+    // ------------------------------------------------------------------ patterns & forms
+
+    private static boolean isPattern(AbilityKind kind) {
+        return kind instanceof AbilityKind.Checkerboard || kind instanceof AbilityKind.Crosses
+                || kind instanceof AbilityKind.Trail || kind instanceof AbilityKind.Exaflare
+                || kind instanceof AbilityKind.Scatter || kind instanceof AbilityKind.Charge
+                || kind instanceof AbilityKind.Knockback || kind instanceof AbilityKind.RotatingBeam
+                || kind instanceof AbilityKind.SafeZones || kind instanceof AbilityKind.Sequence;
+    }
+
+    /** The shortest warning any hit of the ability gets (later waves of a pattern have their own). */
+    static int shortestWarning(BossAbility ability) {
+        AbilityKind kind = ability.kind();
+        int warning = ability.telegraphTicks();
+        if (kind instanceof AbilityKind.Checkerboard board && board.waves() > 1) {
+            warning = Math.min(warning, board.intervalTicks());
+        } else if (kind instanceof AbilityKind.Crosses crosses && crosses.waves() > 1) {
+            warning = Math.min(warning, crosses.intervalTicks());
+        } else if (kind instanceof AbilityKind.RotatingBeam beam && beam.steps() > 1) {
+            warning = Math.min(warning, beam.intervalTicks());
+        } else if (kind instanceof AbilityKind.Charge charge && charge.charges() > 1) {
+            warning = Math.min(warning, charge.intervalTicks() - BossRules.DASH_TICKS - 1);
+        } else if (kind instanceof AbilityKind.Sequence sequence) {
+            for (int i = 1; i < sequence.parts().size(); i++) {
+                warning = Math.min(warning, sequence.parts().get(i).telegraphTicks());
+            }
+        }
+        return warning;
+    }
+
+    @Test
+    public void everyBossHasAtLeastFivePatternAttacksAndLaterBossesMoreForms() {
+        Map<String, Integer> forms = Map.of("b1", 2, "b2", 3, "b3", 3, "b4", 3, "b5", 4, "b6", 4, "b7", 4, "b8", 4,
+                "final", 4);
+        for (BossDefinition boss : Bosses.all()) {
+            long patterns = boss.abilities().stream().filter(ability -> isPattern(ability.kind())).count();
+            assertTrue(boss.id() + " has " + patterns + " pattern attacks", patterns >= 5);
+            assertEquals(boss.id(), forms.get(boss.id()).intValue(), boss.phases().size());
+            Set<Class<?>> kinds = new HashSet<>();
+            for (BossAbility ability : boss.abilities()) {
+                kinds.add(ability.kind().getClass());
+            }
+            assertTrue(boss.id() + ": varied attacks", kinds.size() >= 8);
+            for (int i = 1; i < boss.phases().size(); i++) {
+                BossPhase phase = boss.phases().get(i);
+                assertTrue(boss.id() + " form " + (i + 1) + " transforms", phase.hasTransition());
+                BossAbility transition = boss.transitionAbility(i).orElseThrow();
+                assertTrue(transition.id() + ": a shockwave", transition.kind() instanceof AbilityKind.Knockback);
+                assertTrue(transition.id() + " fits into the transition",
+                        transition.busyTicks() <= BossRules.PHASE_TRANSITION_TICKS);
+                assertTrue(boss.id() + ": later forms move faster", phase.movementSpeedMultiplier()
+                        >= boss.phases().get(i - 1).movementSpeedMultiplier());
+                assertTrue(boss.id() + ": later forms act more often", phase.globalCooldownTicks()
+                        <= boss.phases().get(i - 1).globalCooldownTicks());
+            }
+        }
+        for (String strongest : List.of("b6", "b7", "b8")) {
+            BossDefinition boss = Bosses.byId(strongest).orElseThrow();
+            assertTrue(strongest + ": the last form is enraged", boss.phases().get(boss.phases().size() - 1).enrages());
+        }
+    }
+
+    @Test
+    public void everyHitOfAPatternIsWarnedAndPatternsDoNotLastForever() {
+        for (BossDefinition boss : Bosses.all()) {
+            for (BossAbility ability : boss.abilities()) {
+                if (!ability.kind().damaging()) {
+                    continue;
+                }
+                int warning = shortestWarning(ability);
+                assertTrue(ability.id() + ": " + warning, warning >= BossRules.MIN_TELEGRAPH_TICKS);
+                if (ability.damageMultiplier() >= 2.0 && !ability.kind().splitsDamage()) {
+                    assertTrue(ability.id() + " hurts a lot: every hit warned for a second", warning >= 20);
+                }
+                assertTrue(ability.id() + " keeps the boss busy for " + ability.busyTicks(),
+                        ability.busyTicks() <= 160);
+                if (ability.kind() instanceof AbilityKind.SafeZones zones) {
+                    assertTrue(ability.id() + ": enough room for the party",
+                            zones.count() * zones.radius() * zones.radius() * Math.PI >= 6.0 * boss.maxPlayers());
+                }
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ balance
 
     /** Average light-hit damage of a level-matched player: about 8 at level 1, 45 at level 50. */

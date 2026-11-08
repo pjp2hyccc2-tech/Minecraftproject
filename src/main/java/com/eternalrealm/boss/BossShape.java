@@ -2,6 +2,7 @@ package com.eternalrealm.boss;
 
 import com.eternalrealm.combat.HitGeometry;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Objects;
  * 90 = -X/west), like {@link HitGeometry}.</p>
  */
 public sealed interface BossShape permits BossShape.Circle, BossShape.Cone, BossShape.Line, BossShape.Ring,
-        BossShape.Arena {
+        BossShape.Arena, BossShape.Square, BossShape.Cross, BossShape.Outside {
 
     /** Whether a player whose feet are at {@code (x, y, z)} is inside. */
     boolean contains(double x, double y, double z);
@@ -24,6 +25,18 @@ public sealed interface BossShape permits BossShape.Circle, BossShape.Cone, Boss
 
     private static boolean withinHeight(Point anchor, double y) {
         return Math.abs(y - anchor.y()) <= BossRules.VERTICAL_TOLERANCE;
+    }
+
+    /** Distance along the direction {@code yawDegrees} faces, from {@code center} to (x, z). */
+    private static double along(Point center, double yawDegrees, double x, double z) {
+        double radians = Math.toRadians(yawDegrees);
+        return (x - center.x()) * -Math.sin(radians) + (z - center.z()) * Math.cos(radians);
+    }
+
+    /** Distance to the left of the direction {@code yawDegrees} faces, from {@code center} to (x, z). */
+    private static double across(Point center, double yawDegrees, double x, double z) {
+        double radians = Math.toRadians(yawDegrees);
+        return (x - center.x()) * Math.cos(radians) - (z - center.z()) * -Math.sin(radians);
     }
 
     /** Disc of {@code radius} around {@code center}. */
@@ -133,6 +146,92 @@ public sealed interface BossShape permits BossShape.Circle, BossShape.Cone, Boss
 
         @Override
         public boolean contains(double x, double y, double z) {
+            return true;
+        }
+
+        @Override
+        public Point anchor() {
+            return center;
+        }
+    }
+
+    /** Square tile of side {@code 2 × halfSize} centred on {@code center}, turned by {@code yawDegrees}. */
+    record Square(Point center, double yawDegrees, double halfSize) implements BossShape {
+        public Square {
+            Objects.requireNonNull(center, "center");
+            Check.finite("yawDegrees", yawDegrees);
+            Check.range("halfSize", halfSize, 0.1, 32.0);
+        }
+
+        @Override
+        public boolean contains(double x, double y, double z) {
+            return withinHeight(center, y) && Math.abs(along(center, yawDegrees, x, z)) <= halfSize
+                    && Math.abs(across(center, yawDegrees, x, z)) <= halfSize;
+        }
+
+        @Override
+        public Point anchor() {
+            return center;
+        }
+    }
+
+    /**
+     * Plus-shaped area: two strips of full width {@code armWidth} crossing at {@code center}, each reaching
+     * {@code armLength} from it, turned by {@code yawDegrees} (45 gives an X).
+     */
+    record Cross(Point center, double yawDegrees, double armLength, double armWidth) implements BossShape {
+        public Cross {
+            Objects.requireNonNull(center, "center");
+            Check.finite("yawDegrees", yawDegrees);
+            Check.range("armLength", armLength, 0.5, 64.0);
+            Check.range("armWidth", armWidth, 0.1, 32.0);
+        }
+
+        @Override
+        public boolean contains(double x, double y, double z) {
+            if (!withinHeight(center, y)) {
+                return false;
+            }
+            double forward = Math.abs(along(center, yawDegrees, x, z));
+            double side = Math.abs(across(center, yawDegrees, x, z));
+            double half = armWidth / 2.0;
+            return (forward <= armLength && side <= half) || (side <= armLength && forward <= half);
+        }
+
+        @Override
+        public Point anchor() {
+            return center;
+        }
+    }
+
+    /**
+     * Everything except the {@code safe} shapes (the hit of a safe-zone attack). Within the vertical tolerance of
+     * {@code center}, the arena's floor.
+     */
+    record Outside(Point center, List<BossShape> safe) implements BossShape {
+        public Outside {
+            Objects.requireNonNull(center, "center");
+            safe = List.copyOf(safe);
+            if (safe.isEmpty()) {
+                throw new IllegalArgumentException("an outside area needs at least one safe shape");
+            }
+            for (BossShape shape : safe) {
+                if (shape instanceof Outside || shape instanceof Arena) {
+                    throw new IllegalArgumentException("safe shapes must be bounded: " + shape);
+                }
+            }
+        }
+
+        @Override
+        public boolean contains(double x, double y, double z) {
+            if (!withinHeight(center, y)) {
+                return false;
+            }
+            for (BossShape shape : safe) {
+                if (shape.contains(x, y, z)) {
+                    return false;
+                }
+            }
             return true;
         }
 
