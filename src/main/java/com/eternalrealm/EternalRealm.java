@@ -3,6 +3,9 @@ package com.eternalrealm;
 import com.eternalrealm.bootstrap.ServerBootstrap;
 import com.eternalrealm.character.forge.CharacterCommands;
 import com.eternalrealm.character.forge.InterimKillExperience;
+import com.eternalrealm.combat.forge.CombatEvents;
+import com.eternalrealm.combat.forge.ERCreativeTabs;
+import com.eternalrealm.combat.forge.ERItems;
 import com.eternalrealm.config.ERClientConfig;
 import com.eternalrealm.config.ERServerConfig;
 import com.eternalrealm.core.ModInfo;
@@ -33,6 +36,8 @@ public final class EternalRealm {
         context.registerConfig(ModConfig.Type.CLIENT, ERClientConfig.SPEC);
 
         ERNetwork.register();
+        ERItems.register(modBus);
+        ERCreativeTabs.register(modBus);
 
         modBus.addListener(ServerBootstrap::onConfigReloading);
         forgeBus.addListener(ServerBootstrap::onServerAboutToStart);
@@ -43,6 +48,12 @@ public final class EternalRealm {
         forgeBus.addListener(PlayerConnectionEvents::onPlayerLoggedOut);
         forgeBus.addListener(EventPriority.LOWEST, InterimKillExperience::onLivingDeath);
         forgeBus.addListener(CharacterCommands::onRegisterCommands);
+        forgeBus.addListener(CombatEvents::onLivingAttack);
+        forgeBus.addListener(CombatEvents::onLivingHurt);
+        forgeBus.addListener(CombatEvents::onKnockBack);
+        forgeBus.addListener(EventPriority.LOWEST, CombatEvents::onLivingDeath);
+        forgeBus.addListener(CombatEvents::onRespawn);
+        forgeBus.addListener(CombatEvents::onChangedDimension);
 
         LOGGER.info("{} {} loaded (network protocol {})", ModInfo.DISPLAY_NAME,
                 context.getContainer().getModInfo().getVersion(), ERNetwork.PROTOCOL_VERSION);

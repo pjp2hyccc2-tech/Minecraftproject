@@ -1,5 +1,6 @@
 package com.eternalrealm.server;
 
+import com.eternalrealm.combat.forge.CombatDriver;
 import com.eternalrealm.core.PeriodicTrigger;
 import com.eternalrealm.core.concurrent.KeyedSerialExecutor;
 import com.eternalrealm.core.concurrent.MainThreadQueue;
@@ -35,12 +36,13 @@ public final class ServerContext {
     private final ViolationTracker violations;
     private final ViolationTracker floods;
     private final SyncQueue syncQueue;
+    private final CombatDriver combat;
 
     public ServerContext(MinecraftServer server, Path dataDirectory, MainThreadQueue mainThread,
                          KeyedSerialExecutor<UUID> ioExecutor, PlayerDataService playerData,
                          SnapshotBackupService backups, PeriodicTrigger backupTrigger,
                          TokenBucketRateLimiter<UUID> allocateLimiter, ViolationTracker violations,
-                         ViolationTracker floods, SyncQueue syncQueue) {
+                         ViolationTracker floods, SyncQueue syncQueue, CombatDriver combat) {
         this.server = Objects.requireNonNull(server, "server");
         this.dataDirectory = Objects.requireNonNull(dataDirectory, "dataDirectory");
         this.mainThread = Objects.requireNonNull(mainThread, "mainThread");
@@ -52,6 +54,7 @@ public final class ServerContext {
         this.violations = Objects.requireNonNull(violations, "violations");
         this.floods = Objects.requireNonNull(floods, "floods");
         this.syncQueue = Objects.requireNonNull(syncQueue, "syncQueue");
+        this.combat = Objects.requireNonNull(combat, "combat");
     }
 
     public static Optional<ServerContext> current() {
@@ -131,5 +134,9 @@ public final class ServerContext {
 
     public SyncQueue syncQueue() {
         return syncQueue;
+    }
+
+    public CombatDriver combat() {
+        return combat;
     }
 }

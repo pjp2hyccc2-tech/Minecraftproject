@@ -3,6 +3,7 @@ package com.eternalrealm.bootstrap;
 import com.eternalrealm.character.CharacterRules;
 import com.eternalrealm.character.forge.CharacterSync;
 import com.eternalrealm.character.forge.ForgePlayerDataListener;
+import com.eternalrealm.combat.forge.CombatDriver;
 import com.eternalrealm.config.ERServerConfig;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.core.PeriodicTrigger;
@@ -78,6 +79,7 @@ public final class ServerBootstrap {
         CharacterRules rules = ERServerConfig.characterRules();
         MainThreadQueue mainThread = new MainThreadQueue();
         SyncQueue syncQueue = new SyncQueue();
+        SyncQueue combatStatsQueue = new SyncQueue();
         AtomicFileStore store = new AtomicFileStore(dataDirectory.resolve("quarantine"), clock);
         KeyedSerialExecutor<UUID> io = new KeyedSerialExecutor<>(ERServerConfig.IO_THREADS.get(), "EternalRealm-IO");
 
@@ -86,7 +88,7 @@ public final class ServerBootstrap {
                 new FileCharacterRepository(dataDirectory, store),
                 io, mainThread, clock, season, rules,
                 Duration.ofSeconds(ERServerConfig.AUTOSAVE_INTERVAL_SECONDS.get()),
-                new ForgePlayerDataListener(server, mainThread, syncQueue),
+                new ForgePlayerDataListener(server, mainThread, syncQueue, combatStatsQueue),
                 new EmergencyDumpWriter(dataDirectory.resolve("emergency"), clock));
         SnapshotBackupService backups = new SnapshotBackupService(dataDirectory, backupDirectory,
                 ERServerConfig.BACKUP_KEEP.get(), clock);
@@ -100,8 +102,13 @@ public final class ServerBootstrap {
         ViolationTracker floods = new ViolationTracker(ERServerConfig.FLOOD_KICK_THRESHOLD.get(),
                 violationWindowMillis, System::currentTimeMillis);
 
+        CombatDriver combat = new CombatDriver(server, playerData, combatStatsQueue,
+                TokenBucketRateLimiter.systemClock(ERServerConfig.COMBAT_ACTION_BURST.get(),
+                        ERServerConfig.COMBAT_ACTION_PER_SECOND.get()),
+                ERServerConfig.combatTuning());
+
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
-                allocateLimiter, violations, floods, syncQueue);
+                allocateLimiter, violations, floods, syncQueue, combat);
     }
 
     public static void onServerTick(TickEvent.ServerTickEvent event) {
@@ -127,6 +134,11 @@ public final class ServerBootstrap {
             CharacterSync.flush(context);
         } catch (RuntimeException e) {
             LOG.error("Character sync failed", e);
+        }
+        try {
+            context.combat().tick();
+        } catch (RuntimeException e) {
+            LOG.error("Combat tick failed", e);
         }
         if (context.backupTrigger().poll()) {
             context.backups().createSnapshotAsync().whenComplete((path, error) -> {
@@ -201,6 +213,7 @@ public final class ServerBootstrap {
             context.playerData().updateRules(ERServerConfig.characterRules());
             context.playerData().setAutosaveInterval(Duration.ofSeconds(ERServerConfig.AUTOSAVE_INTERVAL_SECONDS.get()));
             context.backupTrigger().setInterval(Duration.ofMinutes(ERServerConfig.BACKUP_INTERVAL_MINUTES.get()));
+            context.combat().setTuning(ERServerConfig.combatTuning());
             if (!context.playerData().season().value().equals(ERServerConfig.SEASON_ID.get())) {
                 LOG.warn("season.currentSeasonId was changed; it only takes effect after a restart");
             }

@@ -1,8 +1,10 @@
 package com.eternalrealm.client;
 
+import com.eternalrealm.combat.forge.GuardGate;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.network.forge.ClientboundHandlers;
 import com.eternalrealm.ui.hud.CharacterHudOverlay;
+import com.eternalrealm.ui.hud.CombatHudOverlay;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -23,15 +25,23 @@ public final class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         ClientboundHandlers.setCharacterSnapshotHandler(ClientCharacterState::apply);
+        ClientboundHandlers.setCombatStatsHandler(ClientCombatState::onStats);
+        ClientboundHandlers.setCombatStatusHandler(ClientCombatState::onStatus);
+        ClientboundHandlers.setDamageNumberHandler(ClientCombatState::onDamageNumber);
+        GuardGate.setClientGate(ClientCombatController::tryStartGuard);
     }
 
     @SubscribeEvent
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "character_hud", new CharacterHudOverlay());
+        event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "combat_hud", new CombatHudOverlay());
     }
 
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(ClientKeyMappings.OPEN_CHARACTER);
+        event.register(ClientKeyMappings.HEAVY_ATTACK);
+        event.register(ClientKeyMappings.DODGE);
+        event.register(ClientKeyMappings.WEAPON_SKILL);
     }
 }

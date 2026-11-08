@@ -2,6 +2,7 @@ package com.eternalrealm.config;
 
 import com.eternalrealm.character.CharacterRules;
 import com.eternalrealm.character.PowerExperienceCurve;
+import com.eternalrealm.combat.CombatTuning;
 import com.eternalrealm.season.SeasonId;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -38,6 +39,25 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.IntValue VIOLATION_KICK_THRESHOLD;
     public static final ForgeConfigSpec.IntValue VIOLATION_WINDOW_SECONDS;
     public static final ForgeConfigSpec.IntValue FLOOD_KICK_THRESHOLD;
+    public static final ForgeConfigSpec.IntValue COMBAT_ACTION_BURST;
+    public static final ForgeConfigSpec.DoubleValue COMBAT_ACTION_PER_SECOND;
+
+    public static final ForgeConfigSpec.DoubleValue ATTACK_PER_STR;
+    public static final ForgeConfigSpec.DoubleValue HEALTH_PER_VIT;
+    public static final ForgeConfigSpec.DoubleValue HEALTH_PER_LEVEL;
+    public static final ForgeConfigSpec.DoubleValue DEFENSE_PER_VIT;
+    public static final ForgeConfigSpec.DoubleValue DEFENSE_CONSTANT;
+    public static final ForgeConfigSpec.DoubleValue MAX_DAMAGE_REDUCTION;
+    public static final ForgeConfigSpec.DoubleValue SPEED_PER_AGI;
+    public static final ForgeConfigSpec.DoubleValue MIN_ACTION_TIME_FACTOR;
+    public static final ForgeConfigSpec.DoubleValue BASE_CRIT_CHANCE;
+    public static final ForgeConfigSpec.DoubleValue CRIT_PER_LUK;
+    public static final ForgeConfigSpec.DoubleValue MAX_CRIT_CHANCE;
+    public static final ForgeConfigSpec.DoubleValue CRIT_MULTIPLIER;
+    public static final ForgeConfigSpec.DoubleValue BASE_STAMINA;
+    public static final ForgeConfigSpec.DoubleValue STAMINA_PER_AGI;
+    public static final ForgeConfigSpec.DoubleValue BASE_STAMINA_REGEN;
+    public static final ForgeConfigSpec.DoubleValue STAMINA_REGEN_PER_AGI;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -96,6 +116,38 @@ public final class ERServerConfig {
         FLOOD_KICK_THRESHOLD = builder.comment("Requests dropped by the rate limits within the window that disconnect a",
                         "player; 0 = never. Rate-limited requests are NOT protocol violations (fast clicking is legitimate).")
                 .defineInRange("floodKickThreshold", 300, 0, 100_000);
+        COMBAT_ACTION_BURST = builder.comment("Combat actions (attack, dodge, skill...) a client may send in a burst.")
+                .defineInRange("combatActionBurst", 20, 1, 200);
+        COMBAT_ACTION_PER_SECOND = builder.comment("Sustained combat actions per second.")
+                .defineInRange("combatActionPerSecond", 20.0, 1.0, 200.0);
+        builder.pop();
+
+        builder.comment("How character stats turn into combat values (docs/COMBAT_SYSTEM.md). Reloadable.",
+                        "Weapon timings and damage multipliers are fixed in code so clients can predict them.")
+                .push("combat");
+        CombatTuning d = CombatTuning.defaults();
+        ATTACK_PER_STR = builder.comment("Damage multiplier = 1 + STR * attackPerStr")
+                .defineInRange("attackPerStr", d.attackPerStr(), 0.0, 1.0);
+        HEALTH_PER_VIT = builder.comment("Max health bonus = VIT * healthPerVit + (level - 1) * healthPerLevel")
+                .defineInRange("healthPerVit", d.healthPerVit(), 0.0, 10.0);
+        HEALTH_PER_LEVEL = builder.defineInRange("healthPerLevel", d.healthPerLevel(), 0.0, 20.0);
+        DEFENSE_PER_VIT = builder.comment("Damage reduction vs attackers = def / (def + defenseConstant), def = VIT * defensePerVit")
+                .defineInRange("defensePerVit", d.defensePerVit(), 0.0, 10.0);
+        DEFENSE_CONSTANT = builder.defineInRange("defenseConstant", d.defenseConstant(), 1.0, 10_000.0);
+        MAX_DAMAGE_REDUCTION = builder.defineInRange("maxDamageReduction", d.maxDamageReduction(), 0.0, 0.95);
+        SPEED_PER_AGI = builder.comment("Light/heavy attack time factor = max(minActionTimeFactor, 1 / (1 + AGI * speedPerAgi))")
+                .defineInRange("speedPerAgi", d.speedPerAgi(), 0.0, 0.1);
+        MIN_ACTION_TIME_FACTOR = builder.defineInRange("minActionTimeFactor", d.minActionTimeFactor(), 0.2, 1.0);
+        BASE_CRIT_CHANCE = builder.comment("Critical chance = min(maxCritChance, baseCritChance + LUK * critPerLuk) + weapon bonus")
+                .defineInRange("baseCritChance", d.baseCritChance(), 0.0, 1.0);
+        CRIT_PER_LUK = builder.defineInRange("critPerLuk", d.critPerLuk(), 0.0, 0.1);
+        MAX_CRIT_CHANCE = builder.defineInRange("maxCritChance", d.maxCritChance(), 0.0, 1.0);
+        CRIT_MULTIPLIER = builder.defineInRange("critMultiplier", d.critMultiplier(), 1.0, 10.0);
+        BASE_STAMINA = builder.comment("Stamina = baseStamina + AGI * staminaPerAgi; regeneration per tick = baseStaminaRegen + AGI * staminaRegenPerAgi")
+                .defineInRange("baseStamina", d.baseStamina(), 10.0, 10_000.0);
+        STAMINA_PER_AGI = builder.defineInRange("staminaPerAgi", d.staminaPerAgi(), 0.0, 100.0);
+        BASE_STAMINA_REGEN = builder.defineInRange("baseStaminaRegen", d.baseStaminaRegen(), 0.0, 100.0);
+        STAMINA_REGEN_PER_AGI = builder.defineInRange("staminaRegenPerAgi", d.staminaRegenPerAgi(), 0.0, 10.0);
         builder.pop();
 
         SPEC = builder.build();
@@ -107,6 +159,13 @@ public final class ERServerConfig {
     public static CharacterRules characterRules() {
         return new CharacterRules(LEVEL_CAP.get(), STAT_POINTS_PER_LEVEL.get(), BASE_STAT_VALUE.get(),
                 MAX_POINTS_PER_REQUEST.get(), new PowerExperienceCurve(EXP_CURVE_BASE.get(), EXP_CURVE_EXPONENT.get()));
+    }
+
+    public static CombatTuning combatTuning() {
+        return new CombatTuning(ATTACK_PER_STR.get(), HEALTH_PER_VIT.get(), HEALTH_PER_LEVEL.get(), DEFENSE_PER_VIT.get(),
+                DEFENSE_CONSTANT.get(), MAX_DAMAGE_REDUCTION.get(), SPEED_PER_AGI.get(), MIN_ACTION_TIME_FACTOR.get(),
+                BASE_CRIT_CHANCE.get(), CRIT_PER_LUK.get(), MAX_CRIT_CHANCE.get(), CRIT_MULTIPLIER.get(),
+                BASE_STAMINA.get(), STAMINA_PER_AGI.get(), BASE_STAMINA_REGEN.get(), STAMINA_REGEN_PER_AGI.get());
     }
 
     public static SeasonId seasonId() {

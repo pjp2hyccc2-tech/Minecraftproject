@@ -3,6 +3,8 @@ package com.eternalrealm.ui.screen;
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.character.StatType;
 import com.eternalrealm.client.ClientCharacterState;
+import com.eternalrealm.client.ClientCombatState;
+import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.network.forge.AllocateStatPacket;
 import com.eternalrealm.network.forge.ERNetwork;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,6 +29,8 @@ public final class CharacterScreen extends Screen {
     private static final int PANEL_WIDTH = 240;
     private static final int HEADER_HEIGHT = 58;
     private static final int ROW_HEIGHT = 20;
+    /** Combat values (two lines) and the note below the stat rows. */
+    private static final int FOOTER_HEIGHT = 64;
     /** Shift-click spends up to this many points (the server default limit per request is 10). */
     private static final int SHIFT_AMOUNT = 10;
     /**
@@ -49,7 +53,7 @@ public final class CharacterScreen extends Screen {
     @Override
     protected void init() {
         plusButtons.clear();
-        int panelHeight = HEADER_HEIGHT + ROW_HEIGHT * StatType.COUNT + 40;
+        int panelHeight = HEADER_HEIGHT + ROW_HEIGHT * StatType.COUNT + FOOTER_HEIGHT;
         left = (width - PANEL_WIDTH) / 2;
         top = Math.max(8, (height - panelHeight) / 2);
         int rowY = top + HEADER_HEIGHT;
@@ -62,7 +66,7 @@ public final class CharacterScreen extends Screen {
             rowY += ROW_HEIGHT;
         }
         addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> onClose())
-                .bounds(width / 2 - 50, rowY + 14, 100, 20)
+                .bounds(width / 2 - 50, rowY + FOOTER_HEIGHT - 26, 100, 20)
                 .build());
         updateButtons();
     }
@@ -97,7 +101,7 @@ public final class CharacterScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics);
-        int panelHeight = HEADER_HEIGHT + ROW_HEIGHT * StatType.COUNT + 40;
+        int panelHeight = HEADER_HEIGHT + ROW_HEIGHT * StatType.COUNT + FOOTER_HEIGHT;
         graphics.fill(left - 7, top - 7, left + PANEL_WIDTH + 7, top + panelHeight + 7, PANEL_BORDER);
         graphics.fill(left - 6, top - 6, left + PANEL_WIDTH + 6, top + panelHeight + 6, PANEL_BACKGROUND);
         graphics.drawCenteredString(font, title, width / 2, top, 0xFFE8C66A);
@@ -131,8 +135,19 @@ public final class CharacterScreen extends Screen {
             graphics.drawString(font, Component.translatable(stat.descriptionKey()), left + 104, rowY + 4, 0x909090);
             rowY += ROW_HEIGHT;
         }
+        CombatStats combat = ClientCombatState.stats();
+        if (combat != null) {
+            graphics.drawString(font, Component.translatable("screen.eternalrealm.character.combat1",
+                    String.format(Locale.ROOT, "%.2f", combat.attackMultiplier()),
+                    String.format(Locale.ROOT, "%.1f", combat.maxHealthBonus()),
+                    String.format(Locale.ROOT, "%.1f", combat.damageReduction() * 100.0)), left, rowY + 2, 0xD8D8D8);
+            graphics.drawString(font, Component.translatable("screen.eternalrealm.character.combat2",
+                    String.format(Locale.ROOT, "%.1f", (1.0 / combat.actionSpeedFactor() - 1.0) * 100.0),
+                    String.format(Locale.ROOT, "%.1f", combat.critChance() * 100.0),
+                    String.format(Locale.ROOT, "%.0f", combat.maxStamina())), left, rowY + 13, 0xD8D8D8);
+        }
         graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.character.combat_note"),
-                width / 2, rowY + 2, 0x808080);
+                width / 2, rowY + 26, 0x808080);
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 

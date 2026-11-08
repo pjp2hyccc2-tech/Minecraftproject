@@ -1,5 +1,8 @@
 package com.eternalrealm;
 
+import com.eternalrealm.combat.WeaponProfile;
+import com.eternalrealm.combat.WeaponProfiles;
+import com.eternalrealm.combat.WeaponType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -10,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -35,9 +39,53 @@ public class ResourcesTest {
         assertTrue(pack.has("description"));
     }
 
+    /** Registry names of the weapon items (ERItems); kept here because this test runs without Forge. */
+    private static final List<String> WEAPON_ITEMS =
+            List.of("iron_longsword", "iron_greatsword", "iron_twin_blades", "iron_spear");
+
     @Test
-    public void gameTestStructureIsPresent() {
+    public void gameTestStructuresArePresent() {
         assertTrue(Files.isRegularFile(RESOURCES.resolve("data/eternalrealm/structures/empty.nbt")));
+        assertTrue(Files.isRegularFile(RESOURCES.resolve("data/eternalrealm/structures/arena.nbt")));
+    }
+
+    @Test
+    public void everyWeaponItemHasAModelATextureAndAName() throws IOException {
+        Set<String> english = keys(RESOURCES.resolve("assets/eternalrealm/lang/en_us.json"));
+        for (String item : WEAPON_ITEMS) {
+            Path model = RESOURCES.resolve("assets/eternalrealm/models/item/" + item + ".json");
+            assertTrue("missing model " + model, Files.isRegularFile(model));
+            JsonObject json = JsonParser.parseString(Files.readString(model, StandardCharsets.UTF_8)).getAsJsonObject();
+            assertEquals("eternalrealm:item/" + item, json.getAsJsonObject("textures").get("layer0").getAsString());
+            Path texture = RESOURCES.resolve("assets/eternalrealm/textures/item/" + item + ".png");
+            assertTrue("missing texture " + texture, Files.isRegularFile(texture));
+            byte[] png = Files.readAllBytes(texture);
+            assertTrue("not a PNG: " + texture, png.length > 8 && (png[1] & 0xFF) == 'P' && png[2] == 'N' && png[3] == 'G');
+            assertTrue("missing item name for " + item, english.contains("item.eternalrealm." + item));
+        }
+        assertTrue(english.contains("itemGroup.eternalrealm"));
+    }
+
+    @Test
+    public void everyCombatTextIsTranslated() throws IOException {
+        Set<String> english = keys(RESOURCES.resolve("assets/eternalrealm/lang/en_us.json"));
+        for (WeaponType type : WeaponType.values()) {
+            assertTrue(type.translationKey(), english.contains(type.translationKey()));
+        }
+        for (WeaponProfile profile : WeaponProfiles.all()) {
+            assertTrue(profile.skill().translationKey(), english.contains(profile.skill().translationKey()));
+        }
+        for (com.eternalrealm.combat.RequestOutcome outcome : com.eternalrealm.combat.RequestOutcome.values()) {
+            outcome.messageKey().ifPresent(key -> assertTrue(key, english.contains(key)));
+        }
+        for (String key : List.of("key.eternalrealm.heavy_attack", "key.eternalrealm.dodge", "key.eternalrealm.weapon_skill",
+                "hud.eternalrealm.combat.parried", "hud.eternalrealm.combat.dodged", "hud.eternalrealm.combat.guarded",
+                "hud.eternalrealm.combat.guard_broken", "hud.eternalrealm.combat.ready", "hud.eternalrealm.combat.cooldown",
+                "hud.eternalrealm.combat.skill", "hud.eternalrealm.combat.combo", "hud.eternalrealm.combat.charge_max",
+                "screen.eternalrealm.character.combat1", "screen.eternalrealm.character.combat2",
+                "commands.eternalrealm.character.combat")) {
+            assertTrue(key, english.contains(key));
+        }
     }
 
     @Test

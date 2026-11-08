@@ -16,7 +16,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
  */
 public final class ERNetwork {
     /** Bump whenever a packet is added, removed, reordered or its layout changes. */
-    public static final String PROTOCOL_VERSION = "1";
+    public static final String PROTOCOL_VERSION = "2";
 
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "main"))
@@ -46,6 +46,26 @@ public final class ERNetwork {
                 .encoder(AllocateStatPacket::encode)
                 .decoder(AllocateStatPacket::decode)
                 .consumerMainThread(AllocateStatPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(CombatActionPacket.class, id++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(CombatActionPacket::encode)
+                .decoder(CombatActionPacket::decode)
+                .consumerMainThread(CombatActionPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(CombatStatusPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CombatStatusPacket::encode)
+                .decoder(CombatStatusPacket::decode)
+                .consumerMainThread(CombatStatusPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(CombatStatsPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CombatStatsPacket::encode)
+                .decoder(CombatStatsPacket::decode)
+                .consumerMainThread(CombatStatsPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(DamageNumberPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(DamageNumberPacket::encode)
+                .decoder(DamageNumberPacket::decode)
+                .consumerMainThread(DamageNumberPacket::handle)
                 .add();
     }
 

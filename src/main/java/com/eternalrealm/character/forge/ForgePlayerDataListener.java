@@ -22,21 +22,30 @@ public final class ForgePlayerDataListener implements PlayerDataListener {
     private final MinecraftServer server;
     private final MainThreadQueue mainThread;
     private final SyncQueue syncQueue;
+    private final SyncQueue combatStatsQueue;
 
-    public ForgePlayerDataListener(MinecraftServer server, MainThreadQueue mainThread, SyncQueue syncQueue) {
+    /**
+     * @param syncQueue        players whose snapshot must be sent
+     * @param combatStatsQueue players whose combat values (derived from stats and level) must be recomputed
+     */
+    public ForgePlayerDataListener(MinecraftServer server, MainThreadQueue mainThread, SyncQueue syncQueue,
+                                   SyncQueue combatStatsQueue) {
         this.server = Objects.requireNonNull(server, "server");
         this.mainThread = Objects.requireNonNull(mainThread, "mainThread");
         this.syncQueue = Objects.requireNonNull(syncQueue, "syncQueue");
+        this.combatStatsQueue = Objects.requireNonNull(combatStatsQueue, "combatStatsQueue");
     }
 
     @Override
     public void onCharacterReady(UUID playerId) {
         syncQueue.mark(playerId);
+        combatStatsQueue.mark(playerId);
     }
 
     @Override
     public void onCharacterChanged(UUID playerId) {
         syncQueue.mark(playerId);
+        combatStatsQueue.mark(playerId);
     }
 
     @Override

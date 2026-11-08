@@ -45,6 +45,7 @@ public final class PlayerConnectionEvents {
             context.violations().forget(playerId);
             context.floods().forget(playerId);
             context.syncQueue().forget(playerId);
+            context.combat().onPlayerLeft(playerId);
         });
     }
 }

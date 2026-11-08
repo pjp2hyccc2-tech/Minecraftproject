@@ -5,6 +5,7 @@ import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.character.ExperienceSource;
 import com.eternalrealm.character.SetLevelResult;
 import com.eternalrealm.character.StatType;
+import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.player.PlayerDataService;
 import com.eternalrealm.server.ServerContext;
 import com.mojang.brigadier.CommandDispatcher;
@@ -20,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -105,6 +107,16 @@ public final class CharacterCommands {
         source.sendSuccess(() -> Component.translatable("commands.eternalrealm.character.stats", statsLine(s)), false);
         source.sendSuccess(() -> Component.translatable("commands.eternalrealm.character.points",
                 s.unspentStatPoints()), false);
+        context.get().combat().service().get(target.getUUID()).ifPresent(combatant -> {
+            CombatStats c = combatant.stats();
+            source.sendSuccess(() -> Component.translatable("commands.eternalrealm.character.combat",
+                    String.format(Locale.ROOT, "%.2f", c.attackMultiplier()),
+                    String.format(Locale.ROOT, "%.1f", c.maxHealthBonus()),
+                    String.format(Locale.ROOT, "%.1f", c.damageReduction() * 100.0),
+                    String.format(Locale.ROOT, "%.1f", (1.0 / c.actionSpeedFactor() - 1.0) * 100.0),
+                    String.format(Locale.ROOT, "%.1f", c.critChance() * 100.0),
+                    String.format(Locale.ROOT, "%.0f", c.maxStamina())), false);
+        });
         return 1;
     }
 

@@ -1,6 +1,7 @@
 package com.eternalrealm.network.forge;
 
 import com.eternalrealm.character.CharacterSnapshot;
+import com.eternalrealm.combat.CombatStats;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -15,6 +16,12 @@ import java.util.function.Consumer;
 public final class ClientboundHandlers {
     private static volatile Consumer<CharacterSnapshot> characterSnapshotHandler = snapshot -> {
     };
+    private static volatile Consumer<CombatStats> combatStatsHandler = stats -> {
+    };
+    private static volatile Consumer<CombatStatusPacket> combatStatusHandler = status -> {
+    };
+    private static volatile Consumer<DamageNumberPacket> damageNumberHandler = number -> {
+    };
 
     private ClientboundHandlers() {
     }
@@ -23,7 +30,31 @@ public final class ClientboundHandlers {
         characterSnapshotHandler = Objects.requireNonNull(handler, "handler");
     }
 
+    public static void setCombatStatsHandler(Consumer<CombatStats> handler) {
+        combatStatsHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    public static void setCombatStatusHandler(Consumer<CombatStatusPacket> handler) {
+        combatStatusHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    public static void setDamageNumberHandler(Consumer<DamageNumberPacket> handler) {
+        damageNumberHandler = Objects.requireNonNull(handler, "handler");
+    }
+
     static void onCharacterSnapshot(CharacterSnapshot snapshot) {
         characterSnapshotHandler.accept(snapshot);
+    }
+
+    static void onCombatStats(CombatStats stats) {
+        combatStatsHandler.accept(stats);
+    }
+
+    static void onCombatStatus(CombatStatusPacket status) {
+        combatStatusHandler.accept(status);
+    }
+
+    static void onDamageNumber(DamageNumberPacket number) {
+        damageNumberHandler.accept(number);
     }
 }

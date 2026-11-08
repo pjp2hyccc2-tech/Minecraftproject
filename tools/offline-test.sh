@@ -11,7 +11,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 OUT="$ROOT/.offline-build"
-PURE_DIRS="core season character player persistence network"
+PURE_DIRS="core season character player persistence network combat"
 
 find_jar() {
   local pattern="$1" dir found
