@@ -30,18 +30,35 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      # services.gradle.org / GitHub release downloads occasionally time out: retry the wrapper download.
-      - name: Download the Gradle distribution (with retries)
+      # The wrapper downloads Gradle from services.gradle.org, which redirects to GitHub release assets; when those
+      # time out (504), install the same Gradle 8.8 from mirrors instead, verified against the official checksum.
+      - name: Install Gradle 8.8 (mirrors, checksum verified)
         run: |
-          for attempt in 1 2 3 4 5; do
-            if ./gradlew --version --no-daemon; then exit 0; fi
-            echo "Gradle download failed (attempt $attempt), retrying in 30s"
-            sleep 30
+          GRADLE_VERSION=8.8
+          SHA256=a4b4158601f8636cdeeab09bd76afb640030bb5b144aafe261a5e8af027dc612
+          DEST="$HOME/gradle-dist"
+          mkdir -p "$DEST"
+          for url in \
+            "https://downloads.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
+            "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip" \
+            "https://mirrors.cloud.tencent.com/gradle/gradle-$GRADLE_VERSION-bin.zip" \
+            "https://mirrors.huaweicloud.com/gradle/gradle-$GRADLE_VERSION-bin.zip"; do
+            for attempt in 1 2 3; do
+              echo "Trying $url (attempt $attempt)"
+              if curl -fsSL --connect-timeout 20 --max-time 300 -o "$DEST/gradle.zip" "$url" \
+                  && echo "$SHA256  $DEST/gradle.zip" | sha256sum -c -; then
+                unzip -q "$DEST/gradle.zip" -d "$DEST"
+                echo "$DEST/gradle-$GRADLE_VERSION/bin" >> "$GITHUB_PATH"
+                exit 0
+              fi
+              sleep 10
+            done
           done
+          echo "Could not download Gradle $GRADLE_VERSION from any mirror"
           exit 1
 
       - name: Compile, unit tests and mod jar
-        run: ./gradlew build --no-daemon --stacktrace
+        run: gradle build --no-daemon --stacktrace
 
       # Development sandboxes that can read job logs but cannot download artifacts take the jar from here.
       # Verify with the printed SHA-256 after decoding.
@@ -61,7 +78,7 @@ jobs:
           path: build/libs/*.jar
 
       - name: Boot a GameTest server with the mod and run all GameTests
-        run: ./gradlew runGameTestServer --no-daemon --stacktrace
+        run: gradle runGameTestServer --no-daemon --stacktrace
 
       - name: Upload reports and logs
         if: always()
