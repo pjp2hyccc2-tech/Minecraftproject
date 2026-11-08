@@ -99,7 +99,7 @@ public final class BlacksmithMenu {
         ItemStack stack = selected(player, state);
         Optional<EquipmentData> data = EquipmentStacks.read(stack);
         if (data.isEmpty()) {
-            menu.set(22, MenuItems.icon(Items.ITEM_FRAME, Component.translatable("screen.eternalrealm.smith.select"),
+            menu.set(22, MenuItems.icon(new ItemStack(Items.ITEM_FRAME), Component.translatable("screen.eternalrealm.smith.select"),
                     List.of(Component.translatable("screen.eternalrealm.smith.select_hint")), false), null);
             return;
         }
