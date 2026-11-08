@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"1"`（`ERNetwork.PROTOCOL_VERSION`） |
+| プロトコル版 | `"2"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -17,6 +17,10 @@
 |---|---|---|---|---|---|
 | 0 | `CharacterSnapshotPacket` | S→C | seasonId (UTF, ≤32), level (VarInt), levelCap (VarInt), experience (VarLong), experienceToNext (VarLong, 上限時0), unspentStatPoints (VarInt), allocated×6 (VarInt), total×6 (VarInt) | 512 B | クライアント |
 | 1 | `AllocateStatPacket` | C→S | statNetworkId (VarInt: 0=STR 1=VIT 2=AGI 3=INT 4=DEX 5=LUK), amount (VarInt) | 10 B | サーバー |
+| 2 | `CombatActionPacket` | C→S | requestId (VarInt: 0=通常攻撃 1=溜め開始 2=溜め解放 3=回避 4=武器スキル), sequence (VarInt, クライアント連番) | 10 B | サーバー |
+| 3 | `CombatStatusPacket` | S→C | ackSequence (VarInt), answersRequest (bool), outcome (byte: 0=受理 1=先行入力 2=無視 3〜9=各種拒否), stamina (float), skillCooldown (VarInt tick), skillCooldownTotal (VarInt tick), defenseEvent (byte: 0=なし 1=回避 2=パリィ 3=ガード 4=ガードブレイク) | 32 B | クライアント |
+| 4 | `CombatStatsPacket` | S→C | attackMultiplier, maxHealthBonus, damageReduction, actionSpeedFactor, critChance, critMultiplier, maxStamina, staminaRegenPerTick（すべて double。クライアントの予測が整数tickへ丸める値をサーバーと一致させるため） | 64 B | クライアント |
+| 5 | `DamageNumberPacket` | S→C | entityId (VarInt), x/y/z (float), amount (float), flags (byte: 1=クリティカル 2=強攻撃 4=スキル) | 32 B | クライアント（攻撃した本人だけに送る） |
 
 ステータスの並び順は `StatType` の宣言順（ネットワークIDは固定値で、再利用・並べ替え禁止）。
 
@@ -40,6 +44,16 @@
 | ポイント不足（連打などの正当な競合） | 違反にしない。メッセージ＋再同期 |
 | 成功 | tick終了時にスナップショット送信 |
 
+### CombatActionPacket 固有
+| 状況 | 扱い |
+|---|---|
+| 未知の requestId | **違反** |
+| 行動中で先行入力枠が埋まっている、スタミナ不足、クールダウン中、ひるみ中、ガード中、武器なし、騎乗中の回避 | 違反にしない。`CombatStatusPacket` で結果（拒否理由）を返す |
+| 受理・先行入力 | `CombatStatusPacket` で結果を返す。命中・ダメージはサーバーtickで判定 |
+
+- 専用のトークンバケット（`network.combatActionBurst` 既定20、`network.combatActionPerSecond` 既定20/秒）。超過分は破棄しフラッドとして数える。
+- 正規クライアントは状態マシンの予測で許可された入力だけを送るため、1行動につき最大1〜2パケット（溜めは開始と解放）。
+
 ### 違反
 - 対象は「正規クライアントでは起こり得ない要求」だけ（上表の **違反**）。
 - `ViolationTracker`: 既定で60秒ウィンドウ内に20回で切断（`network.violationKickThreshold`、0で切断しない）。
@@ -53,6 +67,15 @@
 
 サーバーは1tick内の変更をまとめ、tick終了時に変更のあったプレイヤーへ1回だけスナップショットを送る（`SyncQueue`）。
 送信契機: 読込完了、EXP獲得、割り振り、リセット、レベル変更、設定再読込、拒否時の再同期。
+
+### 戦闘の同期（Phase 2）
+- 要求ごとに即時に `CombatStatusPacket`（answersRequest=true）を返す。クライアントは自分の最新連番への回答で、拒否なら予測した行動を取り消し、
+  スタミナ・クールダウンを採用する（未回答の要求が残っている間は自分の予測を維持）。
+- スタミナ回復・クールダウンの補正として、変化中は最大20tickごとに `CombatStatusPacket`（answersRequest=false）。
+- 回避・パリィ・ガード・ガードブレイクは発生時に即時送信。
+- `CombatStatsPacket` はキャラクター準備完了・ステータス/レベル変更・設定再読込時。
+- 他のプレイヤーへは、腕振り（バニラの `ServerboundSwingPacket` → 周囲へ配信）、ガード姿勢（バニラのアイテム使用状態）、
+  行動開始・命中の効果音とパーティクル（サーバーから周囲へ配信）で同期する。追加の独自パケットはない。
 
 ## 5. 今後のパケット設計ルール（Phase 2 以降）
 

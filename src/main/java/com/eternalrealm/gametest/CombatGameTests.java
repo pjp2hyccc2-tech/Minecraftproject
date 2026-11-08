@@ -93,11 +93,15 @@ public final class CombatGameTests {
         Pig pig = still(helper.spawn(EntityType.PIG, new BlockPos(4, 1, 6)));
         FakePlayer attacker = fighter(helper, "er_gt_knockback", SWORD);
         pig.setDeltaMovement(Vec3.ZERO);
-        CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99);
+        float before = pig.getHealth();
+        int damaged = CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99);
         Vec3 motion = pig.getDeltaMovement();
+        String state = " [damaged=" + damaged + ", health " + before + "->" + pig.getHealth() + ", motion=" + motion
+                + ", pig=" + pig.getBoundingBox() + ", attackerEye=" + attacker.getEyePosition() + "]";
+        check(damaged == 1, "a small mob in front must be hit" + state);
         double horizontal = Math.sqrt(motion.x * motion.x + motion.z * motion.z);
         double expected = SWORD.combo().get(0).frames().get(0).knockback(); // 0.25 instead of vanilla's 0.4
-        check(Math.abs(horizontal - expected) < 0.01, "knockback " + horizontal + " != " + expected);
+        check(Math.abs(horizontal - expected) < 0.01, "knockback " + horizontal + " != " + expected + state);
         check(motion.z > 0.0, "the pig should be pushed away from the attacker (south)");
         helper.succeed();
     }

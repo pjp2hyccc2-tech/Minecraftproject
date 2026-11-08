@@ -1,6 +1,6 @@
 # ETERNAL REALM アーキテクチャ
 
-最終更新: 2026-11-08（Phase 0〜1 時点）
+最終更新: 2026-11-08（Phase 2 時点）
 
 ## 1. 設計原則
 
@@ -37,6 +37,9 @@ minecraftproject/
     │   │   │                         AccountRepository（ポート）, PlayerDataService
     │   │   └── forge/     [Forge]  ログイン／ログアウト連携
     │   ├── persistence/   [純粋] file/（JSON・原子的書き込み・隔離）, backup/（zipスナップショット）
+    │   ├── combat/        [純粋] WeaponProfiles, Combatant（行動の状態マシン）, CombatStats, DamageCalculator,
+    │   │   │                         HitGeometry, CombatService
+    │   │   └── forge/     [Forge]  武器アイテム, CombatDriver（tick・要求・防御）, CombatHits, CombatEvents, StatEffects
     │   ├── network/       [純粋] TokenBucketRateLimiter, ViolationTracker
     │   │   └── forge/     [Forge]  SimpleChannel, パケット, ServerPacketGuard, ClientboundHandlers
     │   ├── server/        [Forge] ServerContext, SyncQueue
@@ -55,12 +58,12 @@ minecraftproject/
 | 仕様のモジュール | パッケージ | フェーズ | 状態 |
 |---|---|---|---|
 | core | `core` | 0〜1 | 実装済 |
-| network | `network`, `network.forge` | 1 | 実装済（基盤＋2パケット） |
+| network | `network`, `network.forge` | 1〜2 | 実装済（基盤＋6パケット、プロトコル2） |
 | player | `player`, `player.forge` | 1 | 実装済（UUIDセッション・アカウント） |
 | character | `character`, `character.forge` | 1 | 実装済（レベル・EXP・ステータス） |
 | persistence | `persistence` | 1 | ファイル実装済／PostgreSQLは Phase 1.5 |
-| ui / client | `ui`, `client` | 1 | 基本HUD・キャラクター画面 |
-| combat, skill | `combat`, `skill` | 2 | 未着手（設計: COMBAT_SYSTEM.md） |
+| ui / client | `ui`, `client` | 1〜2 | 基本HUD・キャラクター画面・戦闘HUD・ダメージ数値・戦闘入力（予測） |
+| combat | `combat`, `combat.forge` | 2 | 実装済（4武器・コンボ・溜め・回避・ガード/パリィ・武器スキル・ステータス反映）。職業スキルは Phase 3 |
 | class | **`job`**（`class` はJavaの予約語） | 3 | 未着手 |
 | item, equipment | `item`, `equipment` | 3 | 未着手 |
 | mob, boss, dungeon | `mob`, `boss`, `dungeon` | 4 | 未着手 |
@@ -93,9 +96,14 @@ flowchart TD
         CH[character]
         PS[persistence]
         NW[network]
+        CB[combat]
         SE[season]
         CO[core]
     end
+    CBF[combat.forge] --> SRV & NF & CB & PL
+    NF --> CB
+    UI --> CB
+    CB --> CH & CO
     Main --> Boot & NF & CFG & PF & CF
     Boot --> SRV & CF & PS & PL & CFG
     CF --> SRV & NF & PL
@@ -113,7 +121,7 @@ flowchart TD
 
 | ルール | 内容 | 検査 |
 |---|---|---|
-| R1 | 純粋モジュール（`core`, `season`, `character`, `player`, `persistence`, `network`。各 `forge` サブパッケージを除く）は `net.minecraft` / `net.minecraftforge` / `com.mojang` / `org.lwjgl` / `io.netty` とプラットフォーム層を参照しない | `ArchitectureTest`（コメントは除外して実コードのみ検査） |
+| R1 | 純粋モジュール（`core`, `season`, `character`, `player`, `persistence`, `network`, `combat`。各 `forge` サブパッケージを除く）は `net.minecraft` / `net.minecraftforge` / `com.mojang` / `org.lwjgl` / `io.netty` とプラットフォーム層を参照しない | `ArchitectureTest`（コメントは除外して実コードのみ検査） |
 | R2 | `client` / `ui` 以外はクライアント専用クラス（`net.minecraft.client` 等）と `client` / `ui` パッケージを参照しない ＝ 専用サーバーでクライアントクラスが読み込まれない | `ArchitectureTest` ＋ CIのGameTestサーバー起動 |
 | R3 | ドメインがポート（`CharacterRepository`, `AccountRepository`）を定義し、`persistence` が実装する（依存は外→内） | 構造 |
 | R4 | サーバー→クライアント処理は `ClientboundHandlers` の差し込み口経由。共通コードはクライアントコードを直接呼ばない | R2で担保 |
@@ -133,6 +141,10 @@ flowchart TD
 | `SnapshotBackupService` + `PeriodicTrigger` | 定期・手動・停止時のzipスナップショット |
 | `TokenBucketRateLimiter`, `ViolationTracker` | パケットのレート制限と違反カウント |
 | `SyncQueue` | このtickで変化したプレイヤーをまとめ、tick終了時に1回だけ同期送信 |
+| `CombatDriver` | 戦闘: 要求の判定、ヒットフレームの実行、防御フック、戦闘値の適用と送信（専用の `SyncQueue` とレート制限を持つ） |
+
+tick終了時の処理順: `MainThreadQueue` → `PlayerDataService.tick` → キャラクター同期 → `CombatDriver.tick`（戦闘値の更新 → 装備・ガード状態の同期 →
+状態マシン → 命中処理 → 状態送信）→ バックアップ判定。戦闘のクライアント予測は同じ `Combatant` をクライアントtickで動かす（COMBAT_SYSTEM.md 3章）。
 
 ### 4.2 スレッド
 
