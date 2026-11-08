@@ -42,3 +42,10 @@
 | D-035 | ガードは**サーバーだけが開始を判断**し、クライアントは予測しない（バニラが同期する「アイテム使用中」状態に追従） | 行動の境目ではクライアントとサーバーの判断が1tickずれ得る。予測すると「構えているのに守られていない」状態が残り、拒否の通知も後から来る許可と競合する（独立レビューで指摘）。シングルプレイでは遅延なし、オンラインでも保護の開始時刻は予測の有無で変わらない | 確定（Phase 2） |
 | D-036 | 武器を持っている間の右クリックはガード専用。オフハンドのアイテムはしゃがみ＋右クリックで使う。他のアイテムを使用中（盾・食事・弓など）は攻撃・回避・スキルを受け付けない（サーバーとクライアントの両方） | ガードが拒否されたときにオフハンドの盾へ流れ、バニラの100%防御の裏で連撃できた（独立レビューで指摘） | 確定（Phase 2） |
 | D-037 | パリィの受付はガード開始ごとに開くが、前回のガード開始から16tick未満なら開かない | 右クリックの連打で受付を出し続けられた（自己レビュー・独立レビュー双方で指摘） | 確定（Phase 2） |
+
+## D-RNG: only java.base random generators at runtime (2026-11-08)
+Forge runs the game on a module layer in which the `jdk.random` module is not resolved, so
+`RandomGenerator.of("L64X128MixRandom")`/`RandomGenerator.getDefault()` throw "No implementation of the random number
+generator algorithm" at server start (seen in the GameTest run of 00c9b91). Pure modules take a `RandomGenerator`
+parameter; the Forge layer passes `java.util.SplittableRandom` (or `java.util.Random`/`ThreadLocalRandom`), which live in
+`java.base`. Never name an algorithm from `jdk.random`.

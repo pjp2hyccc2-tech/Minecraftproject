@@ -56,11 +56,11 @@ public final class GuildManager {
         GuildService loaded;
         boolean ok;
         try {
-            loaded = new GuildService(GuildRules.defaults(), RandomGenerator.of("L64X128MixRandom"), repository.loadAll());
+            loaded = new GuildService(GuildRules.defaults(), new java.util.SplittableRandom(), repository.loadAll());
             ok = true;
         } catch (DataAccessException | RuntimeException e) {
             LOG.error("Could not load guilds; guild features are disabled until the data is fixed", e);
-            loaded = new GuildService(GuildRules.defaults(), RandomGenerator.of("L64X128MixRandom"), List.of());
+            loaded = new GuildService(GuildRules.defaults(), new java.util.SplittableRandom(), List.of());
             ok = false;
         }
         this.service = loaded;
