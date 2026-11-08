@@ -43,6 +43,9 @@ public final class ClientCombatController {
             heavyWasDown = false;
             return;
         }
+        if (minecraft.isPaused()) {
+            return; // the integrated server is paused too: keep both combat clocks in step
+        }
         long now = ClientCombatState.advanceTick();
         Combatant local = ClientCombatState.combatant();
         WeaponProfile weapon = WeaponItem.profileOf(player.getMainHandItem());
