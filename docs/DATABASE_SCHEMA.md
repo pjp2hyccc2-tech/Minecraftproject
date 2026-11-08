@@ -16,7 +16,8 @@
 <ワールド>/eternalrealm/
 ├── accounts/<uuid>.json            (+ .prev)
 ├── seasons/<seasonId>/characters/<uuid>.json   (+ .prev)
-└── quarantine/<元の名前>.<UTC時刻>.corrupt
+├── quarantine/<元の名前>.<UTC時刻>.corrupt
+└── emergency/<uuid>-<seasonId>-<UTC時刻>.json    … 停止時に保存できなかったデータ（通常と同じ形式）
 <ワールド>/eternalrealm_backups/eternalrealm-<UTC時刻>.zip
 ```
 
