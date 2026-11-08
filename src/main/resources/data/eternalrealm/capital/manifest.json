@@ -1,0 +1,1071 @@
+{
+ "format": 1,
+ "build": "c3b04a8fb4bb3d2e",
+ "tileSize": 32,
+ "minY": -32,
+ "maxY": 159,
+ "palette": [
+  "eternalrealm:void",
+  "minecraft:air",
+  "eternalrealm:castle_brick_wall",
+  "eternalrealm:castle_bricks",
+  "eternalrealm:chandelier",
+  "eternalrealm:gilded_finial",
+  "eternalrealm:gilded_trim",
+  "eternalrealm:gilded_trim_slab[type=bottom]",
+  "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tiles",
+  "eternalrealm:smooth_castle_stone",
+  "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:allium",
+  "minecraft:amethyst_block",
+  "minecraft:amethyst_cluster[facing=up]",
+  "minecraft:andesite",
+  "minecraft:azalea_leaves[distance=1,persistent=true]",
+  "minecraft:azure_bluet",
+  "minecraft:birch_leaves[distance=1,persistent=true]",
+  "minecraft:birch_log[axis=x]",
+  "minecraft:birch_log[axis=y]",
+  "minecraft:birch_log[axis=z]",
+  "minecraft:calcite",
+  "minecraft:chiseled_quartz_block",
+  "minecraft:clay",
+  "minecraft:coarse_dirt",
+  "minecraft:cobblestone",
+  "minecraft:cornflower",
+  "minecraft:cracked_stone_bricks",
+  "minecraft:dandelion",
+  "minecraft:diorite",
+  "minecraft:dirt",
+  "minecraft:dirt_path",
+  "minecraft:end_rod[facing=up]",
+  "minecraft:grass",
+  "minecraft:grass_block",
+  "minecraft:gravel",
+  "minecraft:hanging_roots",
+  "minecraft:lantern[hanging=false]",
+  "minecraft:light_blue_stained_glass_pane",
+  "minecraft:lily_of_the_valley",
+  "minecraft:moss_block",
+  "minecraft:mossy_cobblestone",
+  "minecraft:oak_leaves[distance=1,persistent=true]",
+  "minecraft:oak_log[axis=x]",
+  "minecraft:oak_log[axis=y]",
+  "minecraft:oak_log[axis=z]",
+  "minecraft:oxeye_daisy",
+  "minecraft:polished_andesite",
+  "minecraft:polished_blackstone",
+  "minecraft:polished_blackstone_wall",
+  "minecraft:polished_diorite",
+  "minecraft:poppy",
+  "minecraft:quartz_pillar[axis=y]",
+  "minecraft:red_tulip",
+  "minecraft:rooted_dirt",
+  "minecraft:sand",
+  "minecraft:smooth_quartz_slab[type=bottom]",
+  "minecraft:smooth_stone",
+  "minecraft:snow_block",
+  "minecraft:spruce_leaves[distance=1,persistent=true]",
+  "minecraft:spruce_log[axis=y]",
+  "minecraft:stone",
+  "minecraft:stone_brick_slab[type=bottom]",
+  "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:stone_brick_wall",
+  "minecraft:stone_bricks",
+  "minecraft:tuff",
+  "minecraft:water[level=0]",
+  "minecraft:water[level=1]",
+  "minecraft:water[level=8]",
+  "minecraft:white_tulip"
+ ],
+ "tiles": [
+  {
+   "x": -6,
+   "z": -7,
+   "file": "tiles/-6_-7.bin"
+  },
+  {
+   "x": -6,
+   "z": -6,
+   "file": "tiles/-6_-6.bin"
+  },
+  {
+   "x": -6,
+   "z": -5,
+   "file": "tiles/-6_-5.bin"
+  },
+  {
+   "x": -6,
+   "z": -4,
+   "file": "tiles/-6_-4.bin"
+  },
+  {
+   "x": -6,
+   "z": -3,
+   "file": "tiles/-6_-3.bin"
+  },
+  {
+   "x": -6,
+   "z": -2,
+   "file": "tiles/-6_-2.bin"
+  },
+  {
+   "x": -6,
+   "z": -1,
+   "file": "tiles/-6_-1.bin"
+  },
+  {
+   "x": -6,
+   "z": 0,
+   "file": "tiles/-6_0.bin"
+  },
+  {
+   "x": -6,
+   "z": 1,
+   "file": "tiles/-6_1.bin"
+  },
+  {
+   "x": -6,
+   "z": 2,
+   "file": "tiles/-6_2.bin"
+  },
+  {
+   "x": -6,
+   "z": 3,
+   "file": "tiles/-6_3.bin"
+  },
+  {
+   "x": -6,
+   "z": 4,
+   "file": "tiles/-6_4.bin"
+  },
+  {
+   "x": -6,
+   "z": 5,
+   "file": "tiles/-6_5.bin"
+  },
+  {
+   "x": -5,
+   "z": -7,
+   "file": "tiles/-5_-7.bin"
+  },
+  {
+   "x": -5,
+   "z": -6,
+   "file": "tiles/-5_-6.bin"
+  },
+  {
+   "x": -5,
+   "z": -5,
+   "file": "tiles/-5_-5.bin"
+  },
+  {
+   "x": -5,
+   "z": -4,
+   "file": "tiles/-5_-4.bin"
+  },
+  {
+   "x": -5,
+   "z": -3,
+   "file": "tiles/-5_-3.bin"
+  },
+  {
+   "x": -5,
+   "z": -2,
+   "file": "tiles/-5_-2.bin"
+  },
+  {
+   "x": -5,
+   "z": -1,
+   "file": "tiles/-5_-1.bin"
+  },
+  {
+   "x": -5,
+   "z": 0,
+   "file": "tiles/-5_0.bin"
+  },
+  {
+   "x": -5,
+   "z": 1,
+   "file": "tiles/-5_1.bin"
+  },
+  {
+   "x": -5,
+   "z": 2,
+   "file": "tiles/-5_2.bin"
+  },
+  {
+   "x": -5,
+   "z": 3,
+   "file": "tiles/-5_3.bin"
+  },
+  {
+   "x": -5,
+   "z": 4,
+   "file": "tiles/-5_4.bin"
+  },
+  {
+   "x": -5,
+   "z": 5,
+   "file": "tiles/-5_5.bin"
+  },
+  {
+   "x": -4,
+   "z": -7,
+   "file": "tiles/-4_-7.bin"
+  },
+  {
+   "x": -4,
+   "z": -6,
+   "file": "tiles/-4_-6.bin"
+  },
+  {
+   "x": -4,
+   "z": -5,
+   "file": "tiles/-4_-5.bin"
+  },
+  {
+   "x": -4,
+   "z": -4,
+   "file": "tiles/-4_-4.bin"
+  },
+  {
+   "x": -4,
+   "z": -3,
+   "file": "tiles/-4_-3.bin"
+  },
+  {
+   "x": -4,
+   "z": -2,
+   "file": "tiles/-4_-2.bin"
+  },
+  {
+   "x": -4,
+   "z": -1,
+   "file": "tiles/-4_-1.bin"
+  },
+  {
+   "x": -4,
+   "z": 0,
+   "file": "tiles/-4_0.bin"
+  },
+  {
+   "x": -4,
+   "z": 1,
+   "file": "tiles/-4_1.bin"
+  },
+  {
+   "x": -4,
+   "z": 2,
+   "file": "tiles/-4_2.bin"
+  },
+  {
+   "x": -4,
+   "z": 3,
+   "file": "tiles/-4_3.bin"
+  },
+  {
+   "x": -4,
+   "z": 4,
+   "file": "tiles/-4_4.bin"
+  },
+  {
+   "x": -4,
+   "z": 5,
+   "file": "tiles/-4_5.bin"
+  },
+  {
+   "x": -3,
+   "z": -7,
+   "file": "tiles/-3_-7.bin"
+  },
+  {
+   "x": -3,
+   "z": -6,
+   "file": "tiles/-3_-6.bin"
+  },
+  {
+   "x": -3,
+   "z": -5,
+   "file": "tiles/-3_-5.bin"
+  },
+  {
+   "x": -3,
+   "z": -4,
+   "file": "tiles/-3_-4.bin"
+  },
+  {
+   "x": -3,
+   "z": -3,
+   "file": "tiles/-3_-3.bin"
+  },
+  {
+   "x": -3,
+   "z": -2,
+   "file": "tiles/-3_-2.bin"
+  },
+  {
+   "x": -3,
+   "z": -1,
+   "file": "tiles/-3_-1.bin"
+  },
+  {
+   "x": -3,
+   "z": 0,
+   "file": "tiles/-3_0.bin"
+  },
+  {
+   "x": -3,
+   "z": 1,
+   "file": "tiles/-3_1.bin"
+  },
+  {
+   "x": -3,
+   "z": 2,
+   "file": "tiles/-3_2.bin"
+  },
+  {
+   "x": -3,
+   "z": 3,
+   "file": "tiles/-3_3.bin"
+  },
+  {
+   "x": -3,
+   "z": 4,
+   "file": "tiles/-3_4.bin"
+  },
+  {
+   "x": -3,
+   "z": 5,
+   "file": "tiles/-3_5.bin"
+  },
+  {
+   "x": -2,
+   "z": -7,
+   "file": "tiles/-2_-7.bin"
+  },
+  {
+   "x": -2,
+   "z": -6,
+   "file": "tiles/-2_-6.bin"
+  },
+  {
+   "x": -2,
+   "z": -5,
+   "file": "tiles/-2_-5.bin"
+  },
+  {
+   "x": -2,
+   "z": -4,
+   "file": "tiles/-2_-4.bin"
+  },
+  {
+   "x": -2,
+   "z": -3,
+   "file": "tiles/-2_-3.bin"
+  },
+  {
+   "x": -2,
+   "z": -2,
+   "file": "tiles/-2_-2.bin"
+  },
+  {
+   "x": -2,
+   "z": -1,
+   "file": "tiles/-2_-1.bin"
+  },
+  {
+   "x": -2,
+   "z": 0,
+   "file": "tiles/-2_0.bin"
+  },
+  {
+   "x": -2,
+   "z": 1,
+   "file": "tiles/-2_1.bin"
+  },
+  {
+   "x": -2,
+   "z": 2,
+   "file": "tiles/-2_2.bin"
+  },
+  {
+   "x": -2,
+   "z": 3,
+   "file": "tiles/-2_3.bin"
+  },
+  {
+   "x": -2,
+   "z": 4,
+   "file": "tiles/-2_4.bin"
+  },
+  {
+   "x": -2,
+   "z": 5,
+   "file": "tiles/-2_5.bin"
+  },
+  {
+   "x": -1,
+   "z": -7,
+   "file": "tiles/-1_-7.bin"
+  },
+  {
+   "x": -1,
+   "z": -6,
+   "file": "tiles/-1_-6.bin"
+  },
+  {
+   "x": -1,
+   "z": -5,
+   "file": "tiles/-1_-5.bin"
+  },
+  {
+   "x": -1,
+   "z": -4,
+   "file": "tiles/-1_-4.bin"
+  },
+  {
+   "x": -1,
+   "z": -3,
+   "file": "tiles/-1_-3.bin"
+  },
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
+  {
+   "x": -1,
+   "z": -1,
+   "file": "tiles/-1_-1.bin"
+  },
+  {
+   "x": -1,
+   "z": 0,
+   "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": -1,
+   "z": 1,
+   "file": "tiles/-1_1.bin"
+  },
+  {
+   "x": -1,
+   "z": 2,
+   "file": "tiles/-1_2.bin"
+  },
+  {
+   "x": -1,
+   "z": 3,
+   "file": "tiles/-1_3.bin"
+  },
+  {
+   "x": -1,
+   "z": 4,
+   "file": "tiles/-1_4.bin"
+  },
+  {
+   "x": -1,
+   "z": 5,
+   "file": "tiles/-1_5.bin"
+  },
+  {
+   "x": 0,
+   "z": -7,
+   "file": "tiles/0_-7.bin"
+  },
+  {
+   "x": 0,
+   "z": -6,
+   "file": "tiles/0_-6.bin"
+  },
+  {
+   "x": 0,
+   "z": -5,
+   "file": "tiles/0_-5.bin"
+  },
+  {
+   "x": 0,
+   "z": -4,
+   "file": "tiles/0_-4.bin"
+  },
+  {
+   "x": 0,
+   "z": -3,
+   "file": "tiles/0_-3.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
+  },
+  {
+   "x": 0,
+   "z": -1,
+   "file": "tiles/0_-1.bin"
+  },
+  {
+   "x": 0,
+   "z": 0,
+   "file": "tiles/0_0.bin"
+  },
+  {
+   "x": 0,
+   "z": 1,
+   "file": "tiles/0_1.bin"
+  },
+  {
+   "x": 0,
+   "z": 2,
+   "file": "tiles/0_2.bin"
+  },
+  {
+   "x": 0,
+   "z": 3,
+   "file": "tiles/0_3.bin"
+  },
+  {
+   "x": 0,
+   "z": 4,
+   "file": "tiles/0_4.bin"
+  },
+  {
+   "x": 0,
+   "z": 5,
+   "file": "tiles/0_5.bin"
+  },
+  {
+   "x": 1,
+   "z": -7,
+   "file": "tiles/1_-7.bin"
+  },
+  {
+   "x": 1,
+   "z": -6,
+   "file": "tiles/1_-6.bin"
+  },
+  {
+   "x": 1,
+   "z": -5,
+   "file": "tiles/1_-5.bin"
+  },
+  {
+   "x": 1,
+   "z": -4,
+   "file": "tiles/1_-4.bin"
+  },
+  {
+   "x": 1,
+   "z": -3,
+   "file": "tiles/1_-3.bin"
+  },
+  {
+   "x": 1,
+   "z": -2,
+   "file": "tiles/1_-2.bin"
+  },
+  {
+   "x": 1,
+   "z": -1,
+   "file": "tiles/1_-1.bin"
+  },
+  {
+   "x": 1,
+   "z": 0,
+   "file": "tiles/1_0.bin"
+  },
+  {
+   "x": 1,
+   "z": 1,
+   "file": "tiles/1_1.bin"
+  },
+  {
+   "x": 1,
+   "z": 2,
+   "file": "tiles/1_2.bin"
+  },
+  {
+   "x": 1,
+   "z": 3,
+   "file": "tiles/1_3.bin"
+  },
+  {
+   "x": 1,
+   "z": 4,
+   "file": "tiles/1_4.bin"
+  },
+  {
+   "x": 1,
+   "z": 5,
+   "file": "tiles/1_5.bin"
+  },
+  {
+   "x": 2,
+   "z": -7,
+   "file": "tiles/2_-7.bin"
+  },
+  {
+   "x": 2,
+   "z": -6,
+   "file": "tiles/2_-6.bin"
+  },
+  {
+   "x": 2,
+   "z": -5,
+   "file": "tiles/2_-5.bin"
+  },
+  {
+   "x": 2,
+   "z": -4,
+   "file": "tiles/2_-4.bin"
+  },
+  {
+   "x": 2,
+   "z": -3,
+   "file": "tiles/2_-3.bin"
+  },
+  {
+   "x": 2,
+   "z": -2,
+   "file": "tiles/2_-2.bin"
+  },
+  {
+   "x": 2,
+   "z": -1,
+   "file": "tiles/2_-1.bin"
+  },
+  {
+   "x": 2,
+   "z": 0,
+   "file": "tiles/2_0.bin"
+  },
+  {
+   "x": 2,
+   "z": 1,
+   "file": "tiles/2_1.bin"
+  },
+  {
+   "x": 2,
+   "z": 2,
+   "file": "tiles/2_2.bin"
+  },
+  {
+   "x": 2,
+   "z": 3,
+   "file": "tiles/2_3.bin"
+  },
+  {
+   "x": 2,
+   "z": 4,
+   "file": "tiles/2_4.bin"
+  },
+  {
+   "x": 2,
+   "z": 5,
+   "file": "tiles/2_5.bin"
+  },
+  {
+   "x": 3,
+   "z": -7,
+   "file": "tiles/3_-7.bin"
+  },
+  {
+   "x": 3,
+   "z": -6,
+   "file": "tiles/3_-6.bin"
+  },
+  {
+   "x": 3,
+   "z": -5,
+   "file": "tiles/3_-5.bin"
+  },
+  {
+   "x": 3,
+   "z": -4,
+   "file": "tiles/3_-4.bin"
+  },
+  {
+   "x": 3,
+   "z": -3,
+   "file": "tiles/3_-3.bin"
+  },
+  {
+   "x": 3,
+   "z": -2,
+   "file": "tiles/3_-2.bin"
+  },
+  {
+   "x": 3,
+   "z": -1,
+   "file": "tiles/3_-1.bin"
+  },
+  {
+   "x": 3,
+   "z": 0,
+   "file": "tiles/3_0.bin"
+  },
+  {
+   "x": 3,
+   "z": 1,
+   "file": "tiles/3_1.bin"
+  },
+  {
+   "x": 3,
+   "z": 2,
+   "file": "tiles/3_2.bin"
+  },
+  {
+   "x": 3,
+   "z": 3,
+   "file": "tiles/3_3.bin"
+  },
+  {
+   "x": 3,
+   "z": 4,
+   "file": "tiles/3_4.bin"
+  },
+  {
+   "x": 3,
+   "z": 5,
+   "file": "tiles/3_5.bin"
+  },
+  {
+   "x": 4,
+   "z": -7,
+   "file": "tiles/4_-7.bin"
+  },
+  {
+   "x": 4,
+   "z": -6,
+   "file": "tiles/4_-6.bin"
+  },
+  {
+   "x": 4,
+   "z": -5,
+   "file": "tiles/4_-5.bin"
+  },
+  {
+   "x": 4,
+   "z": -4,
+   "file": "tiles/4_-4.bin"
+  },
+  {
+   "x": 4,
+   "z": -3,
+   "file": "tiles/4_-3.bin"
+  },
+  {
+   "x": 4,
+   "z": -2,
+   "file": "tiles/4_-2.bin"
+  },
+  {
+   "x": 4,
+   "z": -1,
+   "file": "tiles/4_-1.bin"
+  },
+  {
+   "x": 4,
+   "z": 0,
+   "file": "tiles/4_0.bin"
+  },
+  {
+   "x": 4,
+   "z": 1,
+   "file": "tiles/4_1.bin"
+  },
+  {
+   "x": 4,
+   "z": 2,
+   "file": "tiles/4_2.bin"
+  },
+  {
+   "x": 4,
+   "z": 3,
+   "file": "tiles/4_3.bin"
+  },
+  {
+   "x": 4,
+   "z": 4,
+   "file": "tiles/4_4.bin"
+  },
+  {
+   "x": 4,
+   "z": 5,
+   "file": "tiles/4_5.bin"
+  },
+  {
+   "x": 5,
+   "z": -7,
+   "file": "tiles/5_-7.bin"
+  },
+  {
+   "x": 5,
+   "z": -6,
+   "file": "tiles/5_-6.bin"
+  },
+  {
+   "x": 5,
+   "z": -5,
+   "file": "tiles/5_-5.bin"
+  },
+  {
+   "x": 5,
+   "z": -4,
+   "file": "tiles/5_-4.bin"
+  },
+  {
+   "x": 5,
+   "z": -3,
+   "file": "tiles/5_-3.bin"
+  },
+  {
+   "x": 5,
+   "z": -2,
+   "file": "tiles/5_-2.bin"
+  },
+  {
+   "x": 5,
+   "z": -1,
+   "file": "tiles/5_-1.bin"
+  },
+  {
+   "x": 5,
+   "z": 0,
+   "file": "tiles/5_0.bin"
+  },
+  {
+   "x": 5,
+   "z": 1,
+   "file": "tiles/5_1.bin"
+  },
+  {
+   "x": 5,
+   "z": 2,
+   "file": "tiles/5_2.bin"
+  },
+  {
+   "x": 5,
+   "z": 3,
+   "file": "tiles/5_3.bin"
+  },
+  {
+   "x": 5,
+   "z": 4,
+   "file": "tiles/5_4.bin"
+  },
+  {
+   "x": 5,
+   "z": 5,
+   "file": "tiles/5_5.bin"
+  }
+ ],
+ "blockEntities": [],
+ "entities": [],
+ "fluidTicks": [
+  [
+   121,
+   61,
+   -111
+  ],
+  [
+   122,
+   61,
+   -111
+  ],
+  [
+   123,
+   61,
+   -111
+  ],
+  [
+   124,
+   61,
+   -111
+  ],
+  [
+   125,
+   61,
+   -111
+  ],
+  [
+   126,
+   61,
+   -111
+  ],
+  [
+   127,
+   61,
+   -111
+  ],
+  [
+   128,
+   61,
+   -111
+  ],
+  [
+   129,
+   61,
+   -111
+  ],
+  [
+   130,
+   61,
+   -111
+  ],
+  [
+   131,
+   61,
+   -111
+  ]
+ ],
+ "spots": {
+  "npc.arena_master": {
+   "pos": [
+    56,
+    1,
+    50
+   ],
+   "yaw": 180.0
+  },
+  "npc.auction": {
+   "pos": [
+    22,
+    1,
+    22
+   ],
+   "yaw": 135.0
+  },
+  "npc.blacksmith": {
+   "pos": [
+    -22,
+    1,
+    22
+   ],
+   "yaw": -135.0
+  },
+  "npc.gatekeeper": {
+   "pos": [
+    90,
+    1,
+    9
+   ],
+   "yaw": -90.0
+  },
+  "npc.guild_registrar": {
+   "pos": [
+    28,
+    1,
+    -28
+   ],
+   "yaw": 45.0
+  },
+  "npc.hall_of_fame": {
+   "pos": [
+    60,
+    1,
+    -60
+   ],
+   "yaw": 180.0
+  },
+  "npc.item_shop": {
+   "pos": [
+    -22,
+    1,
+    -22
+   ],
+   "yaw": -45.0
+  },
+  "npc.job_master": {
+   "pos": [
+    34,
+    1,
+    -12
+   ],
+   "yaw": 90.0
+  },
+  "npc.mailbox": {
+   "pos": [
+    10,
+    1,
+    18
+   ],
+   "yaw": 180.0
+  },
+  "npc.quest_board": {
+   "pos": [
+    20,
+    1,
+    -22
+   ],
+   "yaw": 45.0
+  },
+  "spawn": {
+   "pos": [
+    0,
+    1,
+    13
+   ],
+   "yaw": 180.0
+  },
+  "story.arcelia_knight_captain": {
+   "pos": [
+    -74,
+    27,
+    -112
+   ],
+   "yaw": 180.0
+  },
+  "story.gustav": {
+   "pos": [
+    24,
+    1,
+    -32
+   ],
+   "yaw": 180.0
+  },
+  "story.laszlo": {
+   "pos": [
+    32,
+    1,
+    -32
+   ],
+   "yaw": 180.0
+  },
+  "story.lilia": {
+   "pos": [
+    0,
+    27,
+    -120
+   ],
+   "yaw": 180.0
+  },
+  "story.nox": {
+   "pos": [
+    -44,
+    27,
+    -130
+   ],
+   "yaw": 90.0
+  },
+  "story.wolfram": {
+   "pos": [
+    36,
+    1,
+    -36
+   ],
+   "yaw": 180.0
+  }
+ },
+ "blend": {
+  "edgeY": 0
+ }
+}
