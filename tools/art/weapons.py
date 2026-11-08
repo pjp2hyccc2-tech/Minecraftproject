@@ -314,23 +314,19 @@ def ls5() -> Canvas:
     gm = am(lambda t, s: abs(s) <= 3 and LS_GUARD - 1 <= t <= LS_GUARD + 1)
     for sgn in (-1, 1):
         gm |= sweep_ts([(LS_GUARD, sgn * 2.5), (LS_GUARD + 0.5, sgn * 6.0), (LS_GUARD + 3.5, sgn * 8.5),
-                        (LS_GUARD + 7.0, sgn * 8.8)], [1.7, 1.4, 0.9, 0.3])
-    shade_bar(g, gm, P.BONE, base=3, grad=1.4)
+                        (LS_GUARD + 7.0, sgn * 8.8)], [1.9, 1.6, 1.1, 0.4])
+    shade_bar(g, gm, P.DRAGON_DARK, base=3, grad=1.4,
+              extra=lambda t, s, tone: (P.BONE[min(5, tone + 1)] if abs(s) >= 8 or t >= LS_GUARD + 4 else None))
     outline(g, P.DRAGON.out)
     gl = sp.layer()
     x, y = pos(LS_GUARD, 0)
     eye_gem(gl, x + 0.5, y + 0.5, P.FLAME, P.DRAGON.out)
     outline(gl, P.DRAGON.out)
     p = sp.layer()
-    x, y = pos(-25.5, -0.5)
-    pm = disc(x + 0.5, y + 0.5, 1.6)
-    shade_ball(p, pm, P.FLAME, lo=2)
+    pm = poly_ts([(-22.5, -1.8), (-22.5, 1.8), (-24.5, 2.6), (-25.5, 0.9), (-28.0, 1.5), (-26.5, -0.4),
+                  (-28.0, -2.1), (-25.0, -2.6)])
+    shade_bar(p, pm, P.FLAME, base=3, grad=1.4)
     outline(p, P.DRAGON.out)
-    t2 = sp.layer()
-    tm = sweep_ts([(-23.5, -1.5), (-25, -3.2), (-27, -2.6)], [0.8, 0.7, 0.3]) | \
-        sweep_ts([(-23.5, 1.5), (-25, 3.2), (-27, 2.6)], [0.8, 0.7, 0.3])
-    shade_bar(t2, tm, P.BONE, base=3)
-    outline(t2, P.DRAGON.out)
     return sp.done()
 
 
@@ -1442,6 +1438,27 @@ def limb_path(depth=12.5, tip=BOW_TIP, recurve=0.0, steps=26):
     return pts
 
 
+def limb_spike(tt, depth, length=3.6, lean=0.35, width=1.3, recurve=0.0):
+    """Spike leaving the back (outer) side of the limb at axis position tt.
+
+    ``lean`` > 0 tilts the spike toward the bow tip, < 0 toward the grip."""
+    u = tt / BOW_TIP
+    s0 = STRING_S - depth * (1 - u * u)
+    dsdt = depth * 2 * u / BOW_TIP
+    tl = math.hypot(1.0, dsdt)
+    tan = (1.0 / tl, dsdt / tl)                  # along +t
+    nrm = (dsdt / tl, -1.0 / tl)                 # outward (toward -s)
+    sign = 1 if tt >= 0 else -1                  # toward the nearer tip
+    dx = nrm[0] + sign * tan[0] * lean
+    dy = nrm[1] + sign * tan[1] * lean
+    dl = math.hypot(dx, dy)
+    dx, dy = dx / dl, dy / dl
+    base = (tt, s0)
+    mid = (tt + dx * length * 0.55, s0 + dy * length * 0.55)
+    end = (tt + dx * length, s0 + dy * length)
+    return sweep_ts([base, mid, end], [width, width * 0.6, 0.15])
+
+
 def limb_widths(path, grip=1.8, tip=0.7):
     out = []
     n = len(path) - 1
@@ -1539,11 +1556,10 @@ def bw4() -> Canvas:
     l = sp.layer()
     path = limb_path(depth=12.5)
     m = sweep_ts(path, limb_widths(path, 1.9, 0.8))
-    for tt in (-17, -9, 9, 17):
-        u = tt / BOW_TIP
-        s0 = STRING_S - 12.5 * (1 - u * u)
-        d = 1 if tt > 0 else -1
-        m |= sweep_ts([(tt, s0 - 0.5), (tt + d * 2.0, s0 - 3.6)], [1.2, 0.2])
+    for tt in (-19, -11, 11, 19):
+        m |= limb_spike(tt, 12.5, length=6.0, lean=0.45, width=1.2)
+    for tt in (-15, 15):
+        m |= limb_spike(tt, 12.5, length=4.4, lean=0.2, width=1.0)
     shade_bar(l, m, P.ICE, base=3, grad=1.4)
     outline(l, P.ICE)
     bow_grip(sp, P.ICE_DEEP, extra=lambda t, s, tone: (P.FUR_WHITE[3] if t % 3 == 0 else None))
@@ -1557,11 +1573,8 @@ def bw5() -> Canvas:
     l = sp.layer()
     path = limb_path(depth=12.0, recurve=2.0)
     m = sweep_ts(path, limb_widths(path, 1.8, 0.8))
-    for tt in (-20, -14, -8, 8, 14, 20):
-        u = tt / BOW_TIP
-        s0 = STRING_S - 12.0 * (1 - u * u)
-        d = 1 if tt > 0 else -1
-        m |= sweep_ts([(tt - d * 1.5, s0 - 0.5), (tt + d * 1.8, s0 - 3.4)], [1.3, 0.2])
+    for tt in (-21, -15, -9, 9, 15, 21):
+        m |= limb_spike(tt, 12.0, length=5.8, lean=0.45, width=1.6)
 
     def ex(t, s, tone):
         if tone >= 5:
@@ -1614,16 +1627,15 @@ def bw7() -> Canvas:
     l = sp.layer()
     path = limb_path(depth=12.5, recurve=3.0)
     m = sweep_ts(path, limb_widths(path, 1.8, 0.8))
-    for tt in (-19, -12, 12, 19):
-        u = tt / BOW_TIP
-        s0 = STRING_S - 12.5 * (1 - u * u)
-        d = 1 if tt > 0 else -1
-        m |= sweep_ts([(tt, s0 - 0.5), (tt - d * 2.2, s0 - 3.6)], [1.1, 0.2])
-        m |= sweep_ts([(tt + d * 2, s0 + 0.5), (tt + d * 3.5, s0 + 2.6)], [0.9, 0.2])
+    for tt in (-21, -14, -7, 7, 14, 21):
+        # hooked thorns leaning back toward the grip
+        m |= limb_spike(tt, 12.5, length=6.2, lean=-0.45, width=1.2)
 
     def ex(t, s, tone):
-        if abs(t) in (5, 15, 23) and tone >= 3:
-            return P.VOID_GLOW[4]
+        u = t / BOW_TIP
+        s0 = STRING_S - 12.5 * (1 - u * u)
+        if abs(t) in (3, 4, 12, 13, 18, 19) and abs(s - s0) < 1.0:
+            return P.VOID_GLOW[3]
         return None
     shade_bar(l, m, P.ABYSS, base=3, grad=1.4, extra=ex)
     outline(l, P.ABYSS)
