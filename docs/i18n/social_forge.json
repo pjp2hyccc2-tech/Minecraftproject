@@ -1,0 +1,15 @@
+{
+  "message.eternalrealm.party.no_invite": {"ja": "パーティーの招待はありません", "en": "You have no party invitation"},
+  "message.eternalrealm.party.not_in_party": {"ja": "パーティーに入っていません", "en": "You are not in a party"},
+  "message.eternalrealm.party.no_such_member": {"ja": "%s はパーティーにいません", "en": "%s is not in your party"},
+  "message.eternalrealm.party.help": {"ja": "パーティー: /party invite <名前> で招待、/p <発言> でパーティーチャット", "en": "Party: /party invite <name> to invite, /p <message> to chat"},
+  "message.eternalrealm.party.info": {"ja": "パーティー (%s/%s): %s", "en": "Party (%s/%s): %s"},
+  "message.eternalrealm.guild.no_invite": {"ja": "ギルドの招待はありません", "en": "You have no guild invitation"},
+  "message.eternalrealm.guild.not_in_guild": {"ja": "ギルドに入っていません", "en": "You are not in a guild"},
+  "message.eternalrealm.guild.unavailable": {"ja": "ギルド機能は現在利用できません（データの読み込みに失敗）", "en": "Guilds are unavailable (their data could not be loaded)"},
+  "message.eternalrealm.guild.no_such_member": {"ja": "%s はギルドにいません", "en": "%s is not in your guild"},
+  "message.eternalrealm.guild.help": {"ja": "ギルド: /guild create <タグ> <名前> で設立、/g <発言> でギルドチャット", "en": "Guild: /guild create <tag> <name> to found one, /g <message> to chat"},
+  "message.eternalrealm.guild.info": {"ja": "ギルド「%s」[%s] Lv%s  メンバー %s/%s  マスター %s", "en": "Guild \"%s\" [%s] Lv%s  members %s/%s  master %s"},
+  "chat.eternalrealm.party": {"ja": "[パーティー] %s: %s", "en": "[Party] %s: %s"},
+  "chat.eternalrealm.guild": {"ja": "[%s] %s: %s", "en": "[%s] %s: %s"}
+}

@@ -65,17 +65,26 @@ public class SocialTranslationsTest {
         }
     }
 
+    /** The keys are unique and merged into the lang files with exactly these texts. */
     @Test
-    public void keysAreUniqueAndDoNotClashWithTheExistingLangFiles() throws IOException {
+    public void keysAreUniqueAndMergedIntoTheLangFiles() throws IOException {
         Matcher matcher = RAW_KEY.matcher(Files.readString(FILE, StandardCharsets.UTF_8));
         Set<String> seen = new HashSet<>();
         while (matcher.find()) {
             assertTrue("duplicate key " + matcher.group(1), seen.add(matcher.group(1)));
         }
-        Path english = Paths.get("src", "main", "resources", "assets", "eternalrealm", "lang", "en_us.json");
-        Set<String> existing = JsonParser.parseString(Files.readString(english, StandardCharsets.UTF_8))
-                .getAsJsonObject().keySet();
-        assertTrue(Collections.disjoint(existing, seen));
+        Path lang = Paths.get("src", "main", "resources", "assets", "eternalrealm", "lang");
+        JsonObject english = JsonParser.parseString(Files.readString(lang.resolve("en_us.json"), StandardCharsets.UTF_8))
+                .getAsJsonObject();
+        JsonObject japanese = JsonParser.parseString(Files.readString(lang.resolve("ja_jp.json"), StandardCharsets.UTF_8))
+                .getAsJsonObject();
+        JsonObject source = load();
+        for (String key : seen) {
+            JsonObject texts = source.getAsJsonObject(key);
+            assertTrue("not merged: " + key, english.has(key) && japanese.has(key));
+            assertEquals(key, texts.get("en").getAsString(), english.get(key).getAsString());
+            assertEquals(key, texts.get("ja").getAsString(), japanese.get(key).getAsString());
+        }
     }
 
     private static JsonObject load() throws IOException {

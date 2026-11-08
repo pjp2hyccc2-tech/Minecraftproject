@@ -38,6 +38,7 @@ public final class PlayerConnectionEvents {
         jobRules.addProperty("freeBelow", context.get().game().jobRules().freeChangeBelowLevel());
         jobRules.addProperty("goldPerLevel", context.get().game().jobRules().goldPerLevel());
         UiData.send(player, "job_rules", jobRules);
+        context.get().game().parties().onLogin(player);
     }
 
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
@@ -53,6 +54,7 @@ public final class PlayerConnectionEvents {
             context.floods().forget(playerId);
             context.syncQueue().forget(playerId);
             context.combat().onPlayerLeft(playerId);
+            context.game().parties().onLogout(playerId);
         });
     }
 }

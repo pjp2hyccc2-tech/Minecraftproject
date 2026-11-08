@@ -16,6 +16,9 @@ import com.eternalrealm.persistence.file.AtomicFileStore;
 import com.eternalrealm.persistence.file.EmergencyDumpWriter;
 import com.eternalrealm.persistence.file.FileAccountRepository;
 import com.eternalrealm.persistence.file.FileCharacterRepository;
+import com.eternalrealm.persistence.file.FileGuildRepository;
+import com.eternalrealm.social.forge.GuildManager;
+import com.eternalrealm.social.forge.PartyManager;
 import com.eternalrealm.player.PlayerDataService;
 import com.eternalrealm.season.SeasonId;
 import com.eternalrealm.server.GameServices;
@@ -110,7 +113,8 @@ public final class ServerBootstrap {
 
         TokenBucketRateLimiter<UUID> uiLimiter = TokenBucketRateLimiter.systemClock(
                 ERServerConfig.UI_ACTION_BURST.get(), ERServerConfig.UI_ACTION_PER_SECOND.get());
-        GameServices game = new GameServices(ERServerConfig.jobRules());
+        GameServices game = new GameServices(ERServerConfig.jobRules(), new PartyManager(server, playerData),
+                new GuildManager(server, new FileGuildRepository(dataDirectory, store), io, clock, season));
 
         return new ServerContext(server, dataDirectory, mainThread, io, playerData, backups, backupTrigger,
                 allocateLimiter, violations, floods, syncQueue, combat, uiLimiter, game);
@@ -144,6 +148,11 @@ public final class ServerBootstrap {
             context.combat().tick();
         } catch (RuntimeException e) {
             LOG.error("Combat tick failed", e);
+        }
+        try {
+            context.game().tick(context.server().getTickCount());
+        } catch (RuntimeException e) {
+            LOG.error("Game services tick failed", e);
         }
         if (context.backupTrigger().poll()) {
             context.backups().createSnapshotAsync().whenComplete((path, error) -> {
@@ -185,6 +194,11 @@ public final class ServerBootstrap {
 
     private static void shutdown(ServerContext context) {
         Duration timeout = Duration.ofSeconds(ERServerConfig.SHUTDOWN_FLUSH_TIMEOUT_SECONDS.get());
+        try {
+            context.game().shutdown();
+        } catch (RuntimeException e) {
+            LOG.error("Flushing game services failed", e);
+        }
         try {
             context.playerData().shutdown(timeout);
         } catch (RuntimeException e) {
