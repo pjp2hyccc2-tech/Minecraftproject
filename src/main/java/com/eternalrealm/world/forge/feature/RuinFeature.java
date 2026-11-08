@@ -123,7 +123,8 @@ public final class RuinFeature extends Feature<VariantConfig> {
     }
 
     /** Blocks of one ruin style. */
-    private record Palette(String variant, Block[] walls, Block floor, Block pillar, Block slab, Block stairs, Block accent) {
+    private record Palette(String variant, Block[] walls, Block floorBlock, Block pillarBlock, Block slabBlock,
+                           Block stairsBlock, Block accentBlock) {
         static Palette of(String variant) {
             return switch (variant) {
                 case "sandstone" -> new Palette(variant, new Block[]{Blocks.SANDSTONE, Blocks.CUT_SANDSTONE,
@@ -154,26 +155,26 @@ public final class RuinFeature extends Feature<VariantConfig> {
         }
 
         BlockState floor(RandomSource random) {
-            return random.nextFloat() < 0.75F ? floor.defaultBlockState() : wall(random);
+            return random.nextFloat() < 0.75F ? floorBlock.defaultBlockState() : wall(random);
         }
 
         BlockState pillar() {
-            BlockState state = pillar.defaultBlockState();
+            BlockState state = pillarBlock.defaultBlockState();
             return state.hasProperty(BlockStateProperties.AXIS) ? state.setValue(BlockStateProperties.AXIS, Direction.Axis.Y)
                     : state;
         }
 
         BlockState slab() {
-            return slab.defaultBlockState().setValue(BlockStateProperties.SLAB_TYPE, SlabType.BOTTOM);
+            return slabBlock.defaultBlockState().setValue(BlockStateProperties.SLAB_TYPE, SlabType.BOTTOM);
         }
 
         BlockState stairs(Direction facing) {
-            return stairs.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, facing)
+            return stairsBlock.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, facing)
                     .setValue(BlockStateProperties.HALF, Half.TOP);
         }
 
         BlockState accent() {
-            return accent.defaultBlockState();
+            return accentBlock.defaultBlockState();
         }
 
         BlockState cornerTop(RandomSource random) {
