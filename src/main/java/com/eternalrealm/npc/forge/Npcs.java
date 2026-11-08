@@ -57,6 +57,7 @@ public final class Npcs {
      */
     public static Optional<Villager> ensure(ServerLevel level, BlockPos pos, NpcRole role, float yaw, String key,
                                             String value) {
+        level.getChunk(pos.getX() >> 4, pos.getZ() >> 4); // the NPC's chunk must be loaded
         List<Villager> existing = level.getEntitiesOfClass(Villager.class, new AABB(pos).inflate(24.0),
                 villager -> roleOf(villager).filter(r -> r == role).isPresent()
                         && (key == null || value.equals(villager.getPersistentData().getString(key))));

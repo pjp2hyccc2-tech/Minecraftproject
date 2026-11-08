@@ -111,6 +111,10 @@ public final class EternalRealm {
         forgeBus.addListener(CombatEvents::onClone);
         forgeBus.addListener(CombatEvents::onChangedDimension);
         forgeBus.addListener(LandmarkBuilder::onServerTick);
+        forgeBus.addListener(com.eternalrealm.world.forge.RealmSetup::onServerStarted);
+        forgeBus.addListener(com.eternalrealm.world.forge.RealmSetup::onServerTick);
+        forgeBus.addListener(com.eternalrealm.world.forge.RealmSetup::onLogin);
+        forgeBus.addListener(EventPriority.HIGH, com.eternalrealm.world.forge.RealmSetup::onRespawn);
 
         LOGGER.info("{} {} loaded (network protocol {})", ModInfo.DISPLAY_NAME,
                 context.getContainer().getModInfo().getVersion(), ERNetwork.PROTOCOL_VERSION);
