@@ -43,8 +43,10 @@ import java.util.UUID;
  * application, suppression of the vanilla attack, the defense hooks (dodge, parry, guard) and the max health
  * modifier. The pure rules are covered by the unit tests; these prove they are wired to Minecraft correctly.
  *
- * <p>Arena: 9x5x9, stone floor at relative y=0, so entities stand at y=1. The attacker is a Forge fake player at the
- * centre facing south (+Z).</p>
+ * <p>Arena: 9x5x9 with a stone floor as its bottom layer. GameTest positions are relative to the structure block, which
+ * sits one block below the structure, so the floor is at relative y=1 and entities stand at y=2 (spawning them at y=1
+ * puts them inside the floor, where line of sight correctly blocks every hit). The attacker is a Forge fake player at
+ * the centre facing south (+Z).</p>
  */
 @GameTestHolder(ModInfo.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -60,8 +62,8 @@ public final class CombatGameTests {
 
     @GameTest(template = ARENA)
     public static void hitFrameDamagesOnlyTargetsInFront(GameTestHelper helper) {
-        IronGolem front = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 1, 6)));
-        IronGolem behind = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 1, 2)));
+        IronGolem front = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 6)));
+        IronGolem behind = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 2)));
         FakePlayer attacker = fighter(helper, "er_gt_hitter", SWORD);
         float frontBefore = front.getHealth();
         float behindBefore = behind.getHealth();
@@ -77,8 +79,30 @@ public final class CombatGameTests {
     }
 
     @GameTest(template = ARENA)
+    public static void wallsBlockHits(GameTestHelper helper) {
+        IronGolem target = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 7)));
+        FakePlayer attacker = fighter(helper, "er_gt_wall", SWORD);
+        for (int x = 3; x <= 5; x++) {
+            for (int y = 2; y <= 4; y++) {
+                helper.setBlock(new BlockPos(x, y, 5), net.minecraft.world.level.block.Blocks.STONE);
+            }
+        }
+        float before = target.getHealth();
+        check(CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99) == 0, "hit through a wall");
+        check(target.getHealth() == before, "the golem behind the wall took damage");
+
+        for (int x = 3; x <= 5; x++) {
+            for (int y = 2; y <= 4; y++) {
+                helper.setBlock(new BlockPos(x, y, 5), net.minecraft.world.level.block.Blocks.AIR);
+            }
+        }
+        check(CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99) == 1, "control: no hit without the wall");
+        helper.succeed();
+    }
+
+    @GameTest(template = ARENA)
     public static void comboHitsIgnoreVanillaHurtImmunity(GameTestHelper helper) {
-        IronGolem target = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 1, 6)));
+        IronGolem target = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 6)));
         FakePlayer attacker = fighter(helper, "er_gt_combo", SWORD);
         float before = target.getHealth();
         CombatHits.execute(attacker, PLAIN, firstHit(SWORD), () -> 0.99);
@@ -90,7 +114,7 @@ public final class CombatGameTests {
 
     @GameTest(template = ARENA)
     public static void knockbackUsesTheActionValue(GameTestHelper helper) {
-        Pig pig = still(helper.spawn(EntityType.PIG, new BlockPos(4, 1, 6)));
+        Pig pig = still(helper.spawn(EntityType.PIG, new BlockPos(4, 2, 6)));
         FakePlayer attacker = fighter(helper, "er_gt_knockback", SWORD);
         pig.setDeltaMovement(Vec3.ZERO);
         float before = pig.getHealth();
@@ -109,7 +133,7 @@ public final class CombatGameTests {
 
     @GameTest(template = ARENA)
     public static void vanillaAttackWithAWeaponDoesNothing(GameTestHelper helper) {
-        IronGolem target = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 1, 6)));
+        IronGolem target = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 6)));
         FakePlayer attacker = fighter(helper, "er_gt_vanilla", SWORD);
         float before = target.getHealth();
         attacker.attack(target);
@@ -124,7 +148,7 @@ public final class CombatGameTests {
     @GameTest(template = ARENA)
     public static void dodgeAvoidsAttacksButNotTheEnvironment(GameTestHelper helper) {
         ServerContext context = requireContext();
-        Zombie zombie = still(helper.spawn(EntityType.ZOMBIE, new BlockPos(4, 1, 6)));
+        Zombie zombie = still(helper.spawn(EntityType.ZOMBIE, new BlockPos(4, 2, 6)));
         FakePlayer defender = fighter(helper, "er_gt_dodger", SWORD);
         Combatant combatant = context.combat().service().register(defender.getUUID(), PLAIN);
         try {
@@ -147,8 +171,8 @@ public final class CombatGameTests {
     @GameTest(template = ARENA, timeoutTicks = 60)
     public static void parryThenGuardFromTheFrontOnly(GameTestHelper helper) {
         ServerContext context = requireContext();
-        Zombie front = still(helper.spawn(EntityType.ZOMBIE, new BlockPos(4, 1, 6)));
-        Zombie behind = still(helper.spawn(EntityType.ZOMBIE, new BlockPos(4, 1, 2)));
+        Zombie front = still(helper.spawn(EntityType.ZOMBIE, new BlockPos(4, 2, 6)));
+        Zombie behind = still(helper.spawn(EntityType.ZOMBIE, new BlockPos(4, 2, 2)));
         FakePlayer defender = fighter(helper, "er_gt_guard", SWORD);
         UUID id = defender.getUUID();
         Combatant combatant = context.combat().service().register(id, PLAIN);
@@ -243,7 +267,7 @@ public final class CombatGameTests {
     private static FakePlayer fighter(GameTestHelper helper, String name, WeaponProfile weapon) {
         FakePlayer player = FakePlayerFactory.get(helper.getLevel(),
                 new GameProfile(UUID.nameUUIDFromBytes(name.getBytes(java.nio.charset.StandardCharsets.UTF_8)), name));
-        Vec3 position = helper.absoluteVec(new Vec3(4.5, 1.0, 4.5));
+        Vec3 position = helper.absoluteVec(new Vec3(4.5, 2.0, 4.5));
         player.moveTo(position.x, position.y, position.z, 0.0F, 0.0F);
         player.setYHeadRot(0.0F);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(itemFor(weapon)));
