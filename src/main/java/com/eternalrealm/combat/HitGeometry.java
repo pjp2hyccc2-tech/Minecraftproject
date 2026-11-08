@@ -20,7 +20,7 @@ public final class HitGeometry {
         return switch (shape.kind()) {
             case ARC -> arc(shape, origin, target);
             case LINE -> line(shape, origin, target);
-            case CIRCLE -> withinRadius(shape.reach(), origin, target) && withinHeight(shape, origin, target, false);
+            case CIRCLE -> circle(shape, origin, target);
         };
     }
 
@@ -88,6 +88,24 @@ public final class HitGeometry {
             }
         }
         return false;
+    }
+
+    private static boolean circle(HitShape shape, AttackOrigin origin, Box target) {
+        if (!withinHeight(shape, origin, target, false)) {
+            return false;
+        }
+        if (shape.offsetForward() <= 0.0) {
+            return withinRadius(shape.reach(), origin, target);
+        }
+        double[] center = circleCenter(shape, origin);
+        return target.horizontalDistanceSquaredTo(center[0], center[1]) <= shape.reach() * shape.reach();
+    }
+
+    /** Horizontal centre {x, z} of a CIRCLE shape (moved ahead along the facing by its offset). */
+    public static double[] circleCenter(HitShape shape, AttackOrigin origin) {
+        double yaw = Math.toRadians(origin.yawDegrees());
+        return new double[]{origin.x() - Math.sin(yaw) * shape.offsetForward(),
+                origin.z() + Math.cos(yaw) * shape.offsetForward()};
     }
 
     private static boolean withinRadius(double radius, AttackOrigin origin, Box target) {

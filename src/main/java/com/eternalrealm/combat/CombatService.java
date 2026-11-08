@@ -1,5 +1,6 @@
 package com.eternalrealm.combat;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -19,7 +20,8 @@ public final class CombatService {
     private final Map<UUID, Combatant> view = Collections.unmodifiableMap(combatants);
     private final Map<UUID, Cooldown> rememberedCooldowns = new HashMap<>();
 
-    private record Cooldown(long readyAt, int total) {
+    /** Absolute ready ticks and totals of every skill slot. */
+    private record Cooldown(long[] readyAt, int[] total) {
     }
 
     /** Creates the fighter (restoring a remembered skill cooldown), or updates the stats of an existing one. */
@@ -33,8 +35,13 @@ public final class CombatService {
         }
         Combatant created = new Combatant(stats);
         Cooldown cooldown = rememberedCooldowns.remove(playerId);
-        if (cooldown != null && cooldown.readyAt() > now) {
-            created.setSkillCooldown(now, (int) Math.min(Integer.MAX_VALUE, cooldown.readyAt() - now), cooldown.total());
+        if (cooldown != null) {
+            for (int slot = 0; slot < Combatant.SKILL_SLOTS; slot++) {
+                if (cooldown.readyAt()[slot] > now) {
+                    created.setSkillCooldown(slot, now,
+                            (int) Math.min(Integer.MAX_VALUE, cooldown.readyAt()[slot] - now), cooldown.total()[slot]);
+                }
+            }
         }
         combatants.put(playerId, created);
         return created;
@@ -47,11 +54,19 @@ public final class CombatService {
     /** Removes the fighter, remembering a running skill cooldown. */
     public void remove(UUID playerId, long now) {
         Combatant removed = combatants.remove(playerId);
-        rememberedCooldowns.values().removeIf(cooldown -> cooldown.readyAt() <= now);
+        rememberedCooldowns.values().removeIf(cooldown -> Arrays.stream(cooldown.readyAt()).allMatch(t -> t <= now));
         if (removed != null) {
-            int remaining = removed.skillCooldownRemaining(now);
-            if (remaining > 0) {
-                rememberedCooldowns.put(playerId, new Cooldown(now + remaining, removed.skillCooldownTotal()));
+            long[] readyAt = new long[Combatant.SKILL_SLOTS];
+            int[] totals = new int[Combatant.SKILL_SLOTS];
+            boolean running = false;
+            for (int slot = 0; slot < Combatant.SKILL_SLOTS; slot++) {
+                int remaining = removed.skillCooldownRemaining(slot, now);
+                readyAt[slot] = now + remaining;
+                totals[slot] = removed.skillCooldownTotal(slot);
+                running |= remaining > 0;
+            }
+            if (running) {
+                rememberedCooldowns.put(playerId, new Cooldown(readyAt, totals));
             }
         }
     }

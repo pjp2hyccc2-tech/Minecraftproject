@@ -34,8 +34,40 @@ public class JsonCodecsTest {
     @Test
     public void characterRoundTrip() throws Exception {
         String json = validJson();
-        assertTrue(json.contains("\"schema\": 1"));
+        assertTrue(json.contains("\"schema\": 2"));
         assertEquals(sample(), JsonCodecs.decodeCharacter(json, PLAYER, SEASON));
+    }
+
+    @Test
+    public void schemaTwoFieldsRoundTrip() throws Exception {
+        CharacterRecord full = new CharacterRecord(PLAYER, SEASON, 12, 5, 999, StatBlock.ZERO, CREATED, UPDATED,
+                "mage", java.util.Map.of("mage_fireball", 2, "mage_ice_lance", 1), 123_456L,
+                java.util.Map.of("quests", "{\"active\":[{\"id\":\"q1\",\"progress\":[3]}]}",
+                        "raw", "not json at all"));
+        String json = JsonCodecs.encodeCharacter(full);
+        assertTrue(json.contains("\"active\""));
+        assertEquals(full, JsonCodecs.decodeCharacter(json, PLAYER, SEASON));
+    }
+
+    @Test
+    public void schemaOneFilesAreMigratedWithDefaults() throws Exception {
+        String v1 = "{\"schema\":1,\"playerId\":\"" + PLAYER + "\",\"seasonId\":\"s1\",\"level\":7,"
+                + "\"experience\":123,\"totalExperience\":4567,\"allocatedStats\":{\"str\":4,\"vit\":0,\"agi\":0,"
+                + "\"int\":0,\"dex\":0,\"luk\":2},\"createdAt\":\"2026-11-01T10:00:00Z\","
+                + "\"updatedAt\":\"2026-11-08T12:34:56.789Z\"}";
+        CharacterRecord migrated = JsonCodecs.decodeCharacter(v1, PLAYER, SEASON);
+        assertEquals(sample(), migrated);
+        assertEquals(CharacterRecord.NO_JOB, migrated.jobId());
+        assertEquals(0L, migrated.gold());
+    }
+
+    @Test
+    public void invalidSchemaTwoFieldsAreCorrupt() {
+        assertCorrupt(validJson().replace("\"gold\": 0", "\"gold\": -5"));
+        assertCorrupt(validJson().replace("\"jobId\": \"none\"", "\"jobId\": \"Not A Job\""));
+        assertCorrupt(validJson().replace("\"skills\": {}", "\"skills\": {\"x\": \"high\"}"));
+        assertCorrupt(validJson().replace("\"extensions\": {}", "\"extensions\": {\"q\": null}"));
+        assertCorrupt(validJson().replace("\"skills\": {},", ""));
     }
 
     @Test
@@ -80,9 +112,9 @@ public class JsonCodecsTest {
 
     @Test
     public void newerSchemaIsIncompatibleNotCorrupt() {
-        String newer = validJson().replace("\"schema\": 1", "\"schema\": 2");
+        String newer = validJson().replace("\"schema\": 2", "\"schema\": 3");
         assertThrows(IncompatibleDataException.class, () -> JsonCodecs.decodeCharacter(newer, PLAYER, SEASON));
-        assertCorrupt(validJson().replace("\"schema\": 1", "\"schema\": 0"));
+        assertCorrupt(validJson().replace("\"schema\": 2", "\"schema\": 0"));
     }
 
     private static void assertCorrupt(String json) {

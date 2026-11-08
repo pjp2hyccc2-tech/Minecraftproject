@@ -86,5 +86,15 @@
   "hud.eternalrealm.combat.guard_broken": "ガードブレイク！",
   "screen.eternalrealm.character.combat1": "攻撃 ×%s  最大HP +%s  被ダメージ軽減 %s%%",
   "screen.eternalrealm.character.combat2": "攻撃速度 +%s%%  クリティカル %s%%  スタミナ %s",
-  "commands.eternalrealm.character.combat": "戦闘: 攻撃 ×%s / 最大HP +%s / 被ダメージ軽減 %s%% / 攻撃速度 +%s%% / クリティカル %s%% / スタミナ %s"
+  "commands.eternalrealm.character.combat": "戦闘: 攻撃 ×%s / 最大HP +%s / 被ダメージ軽減 %s%% / 攻撃速度 +%s%% / クリティカル %s%% / スタミナ %s",
+  "weapon_type.eternalrealm.staff": "杖",
+  "weapon_type.eternalrealm.bow": "弓",
+  "action.eternalrealm.arcane_nova": "アーケインノヴァ",
+  "action.eternalrealm.piercing_arrow": "ピアシングアロー",
+  "damage_type.eternalrealm.physical": "物理",
+  "damage_type.eternalrealm.ranged": "遠距離",
+  "damage_type.eternalrealm.magic": "魔法",
+  "damage_type.eternalrealm.holy": "神聖",
+  "message.eternalrealm.combat.not_learned": "そのスキルはまだ習得していません",
+  "message.eternalrealm.combat.wrong_weapon": "この武器ではそのスキルを使えません"
 }

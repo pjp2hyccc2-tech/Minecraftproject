@@ -1,6 +1,7 @@
 package com.eternalrealm.combat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,6 +25,10 @@ public final class Combatant {
         STAGGERED
     }
 
+    /** Skill slots: 0 = the weapon's skill, 1..4 = job skills (4 = the ultimate). */
+    public static final int SKILL_SLOTS = 5;
+    public static final int WEAPON_SKILL_SLOT = 0;
+
     /** "Long ago": far from the counter range, yet safe to subtract from. */
     private static final long NEVER = Long.MIN_VALUE / 4;
     /** Upper bound of actions started within one {@link #advance} (each start is at least one tick long). */
@@ -42,8 +47,9 @@ public final class Combatant {
 
     private double stamina;
     private long lastSpendTick = NEVER;
-    private long skillReadyAt = NEVER;
-    private int skillCooldownTotal;
+    private final long[] skillReadyAt = filled(NEVER);
+    private final int[] skillCooldownTotal = new int[SKILL_SLOTS];
+    private final SkillBinding[] jobSkills = new SkillBinding[SKILL_SLOTS];
     private long invulnerableUntil = NEVER;
     private long staggerUntil = NEVER;
     private long riposteUntil = NEVER;
@@ -132,19 +138,38 @@ public final class Combatant {
                 if (mobilityRestricted) {
                     yield RequestOutcome.REJECTED_NOT_ALLOWED;
                 }
-                yield stamina < CombatRules.DODGE.staminaCost() ? RequestOutcome.REJECTED_STAMINA : null;
+                yield stamina < dodgeCost() ? RequestOutcome.REJECTED_STAMINA : null;
             }
-            case SKILL -> {
-                if (guarding) {
-                    yield RequestOutcome.REJECTED_GUARDING;
-                }
-                if (now < skillReadyAt) {
-                    yield RequestOutcome.REJECTED_COOLDOWN;
-                }
-                yield stamina < weapon.skill().staminaCost() ? RequestOutcome.REJECTED_STAMINA : null;
-            }
+            case SKILL, JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4 -> validateSkill(request.skillSlot(), now);
             case HEAVY_RELEASE -> null;
         };
+    }
+
+    private RequestOutcome validateSkill(int slot, long now) {
+        if (guarding) {
+            return RequestOutcome.REJECTED_GUARDING;
+        }
+        ActionDefinition action;
+        if (slot == WEAPON_SKILL_SLOT) {
+            action = weapon.skill();
+        } else {
+            SkillBinding binding = jobSkills[slot];
+            if (binding == null) {
+                return RequestOutcome.REJECTED_NOT_LEARNED;
+            }
+            if (!binding.allows(weapon)) {
+                return RequestOutcome.REJECTED_WRONG_WEAPON;
+            }
+            action = binding.action();
+        }
+        if (now < skillReadyAt[slot]) {
+            return RequestOutcome.REJECTED_COOLDOWN;
+        }
+        return stamina < action.staminaCost() ? RequestOutcome.REJECTED_STAMINA : null;
+    }
+
+    private double dodgeCost() {
+        return CombatRules.DODGE.staminaCost() * stats.dodgeCostFactor();
     }
 
     /** Whether {@code request} may cut the current action short right now instead of being buffered. */
@@ -160,11 +185,10 @@ public final class Combatant {
             return false;
         }
         // Dodges and skills may cancel the recovery after the last hit, but not chain into themselves.
-        return switch (request) {
-            case DODGE -> current.action.kind() != ActionKind.DODGE;
-            case SKILL -> current.action.kind() != ActionKind.SKILL;
-            default -> false;
-        };
+        if (request == CombatRequest.DODGE) {
+            return current.action.kind() != ActionKind.DODGE;
+        }
+        return request.isSkill() && current.action.kind() != ActionKind.SKILL;
     }
 
     private void start(CombatRequest request, long now) {
@@ -173,9 +197,13 @@ public final class Combatant {
             case HEAVY_START -> startCharge(now);
             case DODGE -> {
                 guarding = false;
-                begin(CombatRules.DODGE, -1, now, 1.0);
+                begin(CombatRules.DODGE, -1, now, 1.0, -1, 0);
             }
-            case SKILL -> begin(weapon.skill(), -1, now, 1.0);
+            case SKILL -> begin(weapon.skill(), -1, now, 1.0, WEAPON_SKILL_SLOT, weapon.skill().cooldownTicks());
+            case JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4 -> {
+                SkillBinding binding = jobSkills[request.skillSlot()];
+                begin(binding.action(), -1, now, binding.damageScale(), request.skillSlot(), binding.cooldownTicks());
+            }
             case HEAVY_RELEASE -> throw new IllegalArgumentException("release is not an action");
         }
     }
@@ -186,7 +214,7 @@ public final class Combatant {
         if (step >= combo.size()) {
             step = 0;
         }
-        begin(combo.get(step), step, now, 1.0);
+        begin(combo.get(step), step, now, 1.0, -1, 0);
         nextComboStep = step + 1 < combo.size() ? step + 1 : 0;
         comboExpiresAt = nextComboStep == 0 ? NEVER : active.endTick + weapon.comboResetTicks();
     }
@@ -226,10 +254,15 @@ public final class Combatant {
         double scale = heavy.chargeMultiplier(charged) + (current.derived ? heavy.derivedBonus() : 0.0);
         charge = null;
         phase = Phase.IDLE;
-        begin(heavy.strike(), -1, now, scale);
+        begin(heavy.strike(), -1, now, scale, -1, 0);
     }
 
-    private void begin(ActionDefinition action, int comboStep, long now, double damageScale) {
+    /**
+     * @param skillSlot     slot whose cooldown starts ({@code -1} for non-skills)
+     * @param cooldownTicks cooldown started in {@code skillSlot}
+     */
+    private void begin(ActionDefinition action, int comboStep, long now, double damageScale, int skillSlot,
+                       int cooldownTicks) {
         ActionDefinition.Timing timing = action.timing(stats.actionSpeedFactor());
         double scale = damageScale;
         if (action.kind() != ActionKind.DODGE && now < riposteUntil) {
@@ -245,10 +278,10 @@ public final class Combatant {
         phase = Phase.ACTION;
         buffered = null;
         charge = null;
-        spend(action.staminaCost(), now);
-        if (action.cooldownTicks() > 0) {
-            skillReadyAt = now + action.cooldownTicks();
-            skillCooldownTotal = action.cooldownTicks();
+        spend(action.kind() == ActionKind.DODGE ? dodgeCost() : action.staminaCost(), now);
+        if (skillSlot >= 0 && cooldownTicks > 0) {
+            skillReadyAt[skillSlot] = now + cooldownTicks;
+            skillCooldownTotal[skillSlot] = cooldownTicks;
         }
         if (action.invulnerableTicks() > 0) {
             invulnerableUntil = Math.max(invulnerableUntil, now + action.invulnerableTicks());
@@ -407,7 +440,7 @@ public final class Combatant {
             return new GuardResult(incoming, GuardResult.Outcome.NONE);
         }
         GuardProfile guard = weapon.guard();
-        double blocked = incoming * guard.reduction();
+        double blocked = incoming * Math.min(0.95, guard.reduction() + stats.guardBonus());
         double cost = blocked * guard.staminaPerDamage();
         if (cost <= stamina) {
             spend(cost, now);
@@ -477,10 +510,45 @@ public final class Combatant {
         stamina = Math.max(0.0, Math.min(stats.maxStamina(), value));
     }
 
-    /** Client only: adopt the server's authoritative skill cooldown. */
+    /** Client only: adopt the server's authoritative weapon skill cooldown. */
     public void setSkillCooldown(long now, int remainingTicks, int totalTicks) {
-        skillReadyAt = now + Math.max(0, remainingTicks);
-        skillCooldownTotal = Math.max(0, totalTicks);
+        setSkillCooldown(WEAPON_SKILL_SLOT, now, remainingTicks, totalTicks);
+    }
+
+    /** Adopts an authoritative cooldown of one skill slot (client sync, or restoring a remembered cooldown). */
+    public void setSkillCooldown(int slot, long now, int remainingTicks, int totalTicks) {
+        checkSlot(slot);
+        skillReadyAt[slot] = now + Math.max(0, remainingTicks);
+        skillCooldownTotal[slot] = Math.max(0, totalTicks);
+    }
+
+    /**
+     * Places a job skill in slot {@code 1..4}, or empties it ({@code null}). An action of the previous skill that is
+     * already running is not interrupted; the slot's cooldown is kept.
+     */
+    public void setJobSkill(int slot, SkillBinding binding) {
+        if (slot < 1 || slot >= SKILL_SLOTS) {
+            throw new IllegalArgumentException("job skill slot out of range [1, " + (SKILL_SLOTS - 1) + "]: " + slot);
+        }
+        jobSkills[slot] = binding;
+    }
+
+    /** The job skill in slot {@code 1..4}, or {@code null}. */
+    public SkillBinding jobSkill(int slot) {
+        checkSlot(slot);
+        return jobSkills[slot];
+    }
+
+    private static void checkSlot(int slot) {
+        if (slot < 0 || slot >= SKILL_SLOTS) {
+            throw new IllegalArgumentException("skill slot out of range [0, " + (SKILL_SLOTS - 1) + "]: " + slot);
+        }
+    }
+
+    private static long[] filled(long value) {
+        long[] array = new long[SKILL_SLOTS];
+        Arrays.fill(array, value);
+        return array;
     }
 
     // ------------------------------------------------------------------ prediction rollback
@@ -502,8 +570,8 @@ public final class Combatant {
         comboExpiresAt = snapshot.comboExpiresAt;
         stamina = Math.min(snapshot.stamina, stats.maxStamina());
         lastSpendTick = snapshot.lastSpendTick;
-        skillReadyAt = snapshot.skillReadyAt;
-        skillCooldownTotal = snapshot.skillCooldownTotal;
+        System.arraycopy(snapshot.skillReadyAt, 0, skillReadyAt, 0, SKILL_SLOTS);
+        System.arraycopy(snapshot.skillCooldownTotal, 0, skillCooldownTotal, 0, SKILL_SLOTS);
         invulnerableUntil = snapshot.invulnerableUntil;
         staggerUntil = snapshot.staggerUntil;
         riposteUntil = snapshot.riposteUntil;
@@ -524,8 +592,8 @@ public final class Combatant {
         private final long comboExpiresAt;
         private final double stamina;
         private final long lastSpendTick;
-        private final long skillReadyAt;
-        private final int skillCooldownTotal;
+        private final long[] skillReadyAt;
+        private final int[] skillCooldownTotal;
         private final long invulnerableUntil;
         private final long staggerUntil;
         private final long riposteUntil;
@@ -544,8 +612,8 @@ public final class Combatant {
             comboExpiresAt = source.comboExpiresAt;
             stamina = source.stamina;
             lastSpendTick = source.lastSpendTick;
-            skillReadyAt = source.skillReadyAt;
-            skillCooldownTotal = source.skillCooldownTotal;
+            skillReadyAt = source.skillReadyAt.clone();
+            skillCooldownTotal = source.skillCooldownTotal.clone();
             invulnerableUntil = source.invulnerableUntil;
             staggerUntil = source.staggerUntil;
             riposteUntil = source.riposteUntil;
@@ -586,12 +654,23 @@ public final class Combatant {
         return now < invulnerableUntil;
     }
 
+    /** Remaining cooldown of the weapon skill. */
     public int skillCooldownRemaining(long now) {
-        return (int) Math.max(0L, Math.min(Integer.MAX_VALUE, skillReadyAt - now));
+        return skillCooldownRemaining(WEAPON_SKILL_SLOT, now);
     }
 
     public int skillCooldownTotal() {
-        return skillCooldownTotal;
+        return skillCooldownTotal(WEAPON_SKILL_SLOT);
+    }
+
+    public int skillCooldownRemaining(int slot, long now) {
+        checkSlot(slot);
+        return (int) Math.max(0L, Math.min(Integer.MAX_VALUE, skillReadyAt[slot] - now));
+    }
+
+    public int skillCooldownTotal(int slot) {
+        checkSlot(slot);
+        return skillCooldownTotal[slot];
     }
 
     /** Ticks charged so far, or 0 when not charging. */

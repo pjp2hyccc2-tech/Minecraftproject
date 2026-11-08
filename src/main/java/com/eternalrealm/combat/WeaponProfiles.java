@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The weapon profiles of Phase 2 (docs/COMBAT_SYSTEM.md, section 5). Timings are in ticks before attack-speed
+ * The weapon profiles (docs/COMBAT_SYSTEM.md, section 5; staff and bow since Phase 3). Timings are in ticks before attack-speed
  * scaling. Defined in code so the client's prediction and the server's validation always agree (D-030).
  */
 public final class WeaponProfiles {
@@ -76,14 +76,53 @@ public final class WeaponProfiles {
                     frame(14, HitShape.line(6.5, 0.8), 1.0, 0.3)),
             new GuardProfile(0.50, 5, 70, 3.0));
 
+    /** 杖: magic bolts (INT); the third bolt and the charged orb explode; nova skill around the caster. */
+    public static final WeaponProfile STAFF = new WeaponProfile("staff",
+            WeaponType.STAFF, 6.0, 0.0,
+            List.of(
+                    light("staff_1", 14, 10, HitFrame.launch(4, ProjectileSpec.magic("magic_bolt", 1.6, 20), 1.0, 0.2)),
+                    light("staff_2", 14, 10, HitFrame.launch(4, ProjectileSpec.magic("magic_bolt", 1.6, 20), 1.0, 0.2)),
+                    light("staff_3", 20, 15, HitFrame.launch(6,
+                            ProjectileSpec.magic("magic_orb", 1.4, 22).withExplosion(1.8), 1.5, 0.5))),
+            12,
+            new HeavyAttack(10, 40, 2.0, 3.5, 0.3,
+                    heavy("staff_heavy", 16, 12, 20, HitFrame.launch(4,
+                            ProjectileSpec.magic("magic_orb", 1.5, 24).withExplosion(2.5), 1.0, 0.8))),
+            skill("arcane_nova", 24, 22, 30, 200,
+                    frame(10, HitShape.circle(4.5), 2.0, 1.0)),
+            new GuardProfile(0.35, 5, 75, 3.5));
+
+    /** 弓: arrows (DEX); charged shots pierce; piercing arrow skill. */
+    public static final WeaponProfile BOW = new WeaponProfile("bow",
+            WeaponType.BOW, 6.0, 0.05,
+            List.of(
+                    light("bow_1", 14, 10, HitFrame.launch(5, ProjectileSpec.arrow(3.0), 1.0, 0.3)),
+                    light("bow_2", 16, 12, HitFrame.launch(6, ProjectileSpec.arrow(3.0), 1.2, 0.4))),
+            12,
+            new HeavyAttack(10, 40, 1.8, 3.5, 0.2,
+                    heavy("bow_heavy", 14, 10, 15, HitFrame.launch(3, ProjectileSpec.arrow(3.5).withPierce(2), 1.0, 1.0))),
+            skill("piercing_arrow", 20, 18, 25, 160,
+                    HitFrame.launch(8, ProjectileSpec.arrow(4.0).withPierce(8), 2.5, 0.8)),
+            new GuardProfile(0.25, 4, 70, 4.0));
+
     private static final List<WeaponProfile> ALL =
-            List.of(ONE_HANDED_SWORD, TWO_HANDED_SWORD, DUAL_BLADES, SPEAR);
+            List.of(ONE_HANDED_SWORD, TWO_HANDED_SWORD, DUAL_BLADES, SPEAR, STAFF, BOW);
 
     private WeaponProfiles() {
     }
 
     public static List<WeaponProfile> all() {
         return ALL;
+    }
+
+    /** The profile of a weapon type (one per type). */
+    public static WeaponProfile of(WeaponType type) {
+        for (WeaponProfile profile : ALL) {
+            if (profile.type() == type) {
+                return profile;
+            }
+        }
+        throw new IllegalStateException("No profile for " + type);
     }
 
     public static Optional<WeaponProfile> byId(String id) {

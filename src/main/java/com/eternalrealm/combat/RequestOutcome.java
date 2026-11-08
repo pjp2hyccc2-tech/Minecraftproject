@@ -19,7 +19,11 @@ public enum RequestOutcome {
     REJECTED_STAGGERED(6, null),
     REJECTED_GUARDING(7, null),
     REJECTED_NO_WEAPON(8, null),
-    REJECTED_NOT_ALLOWED(9, null);
+    REJECTED_NOT_ALLOWED(9, null),
+    /** The job skill slot is empty (skill not learned yet). */
+    REJECTED_NOT_LEARNED(10, "message.eternalrealm.combat.not_learned"),
+    /** The job skill cannot be used with the weapon in hand. */
+    REJECTED_WRONG_WEAPON(11, "message.eternalrealm.combat.wrong_weapon");
 
     private static final RequestOutcome[] BY_NETWORK_ID = new RequestOutcome[values().length];
 

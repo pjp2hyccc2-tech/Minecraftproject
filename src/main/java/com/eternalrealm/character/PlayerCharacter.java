@@ -3,7 +3,11 @@ package com.eternalrealm.character;
 import com.eternalrealm.season.SeasonId;
 
 import java.time.Instant;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -18,6 +22,9 @@ import java.util.UUID;
  *     <li>below the cap: {@code 0 <= experience < experienceToNext(level)}; at/above the cap: {@code experience == 0}</li>
  *     <li>{@code allocated.total() <= earnedStatPoints(level)}; unspent points are derived, never stored,
  *         so they cannot drift out of sync</li>
+ *     <li>the invested skill points never exceed {@code earnedSkillPoints(level)} (which skills exist for the job is
+ *         checked by the job module)</li>
+ *     <li>{@code 0 <= gold <= MAX_GOLD}</li>
  * </ul>
  *
  * <p>Every mutation increments {@link #revision()}; the character is dirty while
@@ -34,6 +41,10 @@ public final class PlayerCharacter {
     private long experience;
     private long totalExperience;
     private StatBlock allocated;
+    private String jobId = CharacterRecord.NO_JOB;
+    private Map<String, Integer> skillInvestments = Map.of();
+    private long gold;
+    private final Map<String, String> extensions = new LinkedHashMap<>();
     private long revision;
     private long savedRevision;
 
@@ -59,6 +70,10 @@ public final class PlayerCharacter {
     public static PlayerCharacter fromRecord(CharacterRecord record, CharacterRules rules) {
         PlayerCharacter character = new PlayerCharacter(record.playerId(), record.seasonId(), record.createdAt(),
                 record.level(), record.experience(), record.totalExperience(), record.allocatedStats());
+        character.jobId = record.jobId();
+        character.skillInvestments = record.skillInvestments();
+        character.gold = record.gold();
+        character.extensions.putAll(record.extensions());
         character.reconcile(rules);
         return character;
     }
@@ -86,6 +101,10 @@ public final class PlayerCharacter {
         }
         if (!allocationFits(allocated, level, rules)) {
             allocated = StatBlock.ZERO;
+            changed = true;
+        }
+        if (investedSkillPoints() > rules.earnedSkillPoints(level)) {
+            skillInvestments = Map.of();
             changed = true;
         }
         if (changed) {
@@ -171,8 +190,150 @@ public final class PlayerCharacter {
         if (!allocationFits(allocated, level, rules)) {
             allocated = StatBlock.ZERO;
         }
+        if (investedSkillPoints() > rules.earnedSkillPoints(level)) {
+            skillInvestments = Map.of();
+        }
         revision++;
         return SetLevelResult.SUCCESS;
+    }
+
+    /**
+     * Death penalty: loses {@code fraction} of the EXP needed for the next level, but never more than the progress
+     * within the current level (a death never costs a level). Nothing is lost at the cap.
+     *
+     * @return the EXP lost
+     */
+    public long applyDeathPenalty(double fraction, CharacterRules rules) {
+        if (!(fraction >= 0.0) || fraction > 1.0) {
+            throw new IllegalArgumentException("fraction out of range [0, 1]: " + fraction);
+        }
+        if (rules.isAtCap(level) || experience == 0) {
+            return 0L;
+        }
+        long lost = Math.min(experience, (long) Math.floor(rules.experienceToNext(level) * fraction));
+        if (lost > 0) {
+            experience -= lost;
+            revision++;
+        }
+        return lost;
+    }
+
+    // ------------------------------------------------------------------ job & skills
+
+    public String jobId() {
+        return jobId;
+    }
+
+    /** Changes the job; every invested skill point is refunded. @return {@code false} if it was already the job */
+    public boolean changeJob(String newJobId) {
+        CharacterRecord.checkJobId(newJobId);
+        if (newJobId.equals(jobId)) {
+            return false;
+        }
+        jobId = newJobId;
+        skillInvestments = Map.of();
+        revision++;
+        return true;
+    }
+
+    public Map<String, Integer> skillInvestments() {
+        return skillInvestments;
+    }
+
+    public int investment(String skillId) {
+        return skillInvestments.getOrDefault(skillId, 0);
+    }
+
+    public int investedSkillPoints() {
+        int total = 0;
+        for (int points : skillInvestments.values()) {
+            total += points;
+        }
+        return total;
+    }
+
+    public int unspentSkillPoints(CharacterRules rules) {
+        return Math.max(0, rules.earnedSkillPoints(level) - investedSkillPoints());
+    }
+
+    /**
+     * Invests one more point into {@code skillId}. The caller (job module) has already checked that the skill belongs
+     * to the job, is unlocked and is below its maximum level.
+     *
+     * @return {@code false} if no skill point is left
+     */
+    public boolean investSkillPoint(String skillId, CharacterRules rules) {
+        if (unspentSkillPoints(rules) < 1) {
+            return false;
+        }
+        Map<String, Integer> next = new LinkedHashMap<>(skillInvestments);
+        next.merge(skillId, 1, Integer::sum);
+        skillInvestments = CharacterRecord.copySkills(next);
+        revision++;
+        return true;
+    }
+
+    /** Refunds every skill point. @return {@code false} if nothing was invested */
+    public boolean resetSkills() {
+        if (skillInvestments.isEmpty()) {
+            return false;
+        }
+        skillInvestments = Map.of();
+        revision++;
+        return true;
+    }
+
+    // ------------------------------------------------------------------ gold
+
+    public long gold() {
+        return gold;
+    }
+
+    /** Adds gold, saturating at {@link CharacterRecord#MAX_GOLD}. @return the amount actually added */
+    public long addGold(long amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("amount must be >= 0: " + amount);
+        }
+        long added = Math.min(amount, CharacterRecord.MAX_GOLD - gold);
+        if (added > 0) {
+            gold += added;
+            revision++;
+        }
+        return added;
+    }
+
+    /** Spends gold if the balance covers it. @return {@code false} (and nothing changes) if it does not */
+    public boolean spendGold(long amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("amount must be >= 0: " + amount);
+        }
+        if (amount > gold) {
+            return false;
+        }
+        if (amount > 0) {
+            gold -= amount;
+            revision++;
+        }
+        return true;
+    }
+
+    // ------------------------------------------------------------------ extensions
+
+    /** Season data of another module (compact JSON), if present. */
+    public Optional<String> extension(String key) {
+        return Optional.ofNullable(extensions.get(key));
+    }
+
+    /** Stores another module's season data; the character only becomes dirty if the document changed. */
+    public void setExtension(String key, String json) {
+        CharacterRecord.checkExtension(key, json);
+        if (!json.equals(extensions.put(key, json))) {
+            revision++;
+        }
+    }
+
+    public Map<String, String> extensions() {
+        return Collections.unmodifiableMap(extensions);
     }
 
     public int unspentStatPoints(CharacterRules rules) {
@@ -186,11 +347,13 @@ public final class PlayerCharacter {
 
     public CharacterSnapshot snapshot(CharacterRules rules) {
         return new CharacterSnapshot(seasonId, level, rules.levelCap(), experience, rules.experienceToNext(level),
-                unspentStatPoints(rules), allocated, totalStats(rules));
+                unspentStatPoints(rules), allocated, totalStats(rules), jobId, gold, unspentSkillPoints(rules),
+                skillInvestments);
     }
 
     public CharacterRecord toRecord(Instant now) {
-        return new CharacterRecord(playerId, seasonId, level, experience, totalExperience, allocated, createdAt, now);
+        return new CharacterRecord(playerId, seasonId, level, experience, totalExperience, allocated, createdAt, now,
+                jobId, skillInvestments, gold, extensions);
     }
 
     public boolean isDirty() {

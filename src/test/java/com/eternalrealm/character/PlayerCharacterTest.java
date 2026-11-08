@@ -197,4 +197,103 @@ public class PlayerCharacterTest {
         assertEquals(7, snapshot.totalStats().get(StatType.AGI));
         assertEquals(50.0 / 283.0, snapshot.progress(), 1e-9);
     }
+
+    // ------------------------------------------------------------------ Phase 3: job, skills, gold, extensions
+
+    @Test
+    public void skillPointsAreEarnedEveryThirdLevelAndInvestedOneByOne() {
+        PlayerCharacter character = fresh();
+        assertEquals(0, character.unspentSkillPoints(RULES));
+        assertFalse(character.investSkillPoint("mage_fireball", RULES));
+        character.setLevel(7, RULES); // (7 - 1) / 3 = 2 points
+        assertEquals(2, character.unspentSkillPoints(RULES));
+        assertTrue(character.investSkillPoint("mage_fireball", RULES));
+        assertTrue(character.investSkillPoint("mage_fireball", RULES));
+        assertFalse(character.investSkillPoint("mage_ice_lance", RULES));
+        assertEquals(2, character.investment("mage_fireball"));
+        assertEquals(0, character.unspentSkillPoints(RULES));
+        assertTrue(character.resetSkills());
+        assertEquals(2, character.unspentSkillPoints(RULES));
+        assertFalse(character.resetSkills());
+    }
+
+    @Test
+    public void changingJobRefundsSkills() {
+        PlayerCharacter character = fresh();
+        character.setLevel(10, RULES);
+        assertTrue(character.changeJob("knight"));
+        character.investSkillPoint("knight_shield_bash", RULES);
+        assertFalse(character.changeJob("knight"));
+        assertEquals(1, character.investedSkillPoints());
+        assertTrue(character.changeJob("mage"));
+        assertEquals(0, character.investedSkillPoints());
+        assertEquals("mage", character.jobId());
+        assertThrows(IllegalArgumentException.class, () -> character.changeJob("Mage!"));
+    }
+
+    @Test
+    public void loweringTheLevelRefundsSkillsThatNoLongerFit() {
+        PlayerCharacter character = fresh();
+        character.setLevel(10, RULES);
+        character.investSkillPoint("a", RULES);
+        character.investSkillPoint("b", RULES);
+        character.setLevel(4, RULES); // 1 point only
+        assertEquals(0, character.investedSkillPoints());
+    }
+
+    @Test
+    public void goldNeverGoesNegativeOrOverflows() {
+        PlayerCharacter character = fresh();
+        assertEquals(500, character.addGold(500));
+        assertFalse(character.spendGold(501));
+        assertEquals(500, character.gold());
+        assertTrue(character.spendGold(200));
+        assertEquals(300, character.gold());
+        assertEquals(CharacterRecord.MAX_GOLD - 300, character.addGold(Long.MAX_VALUE));
+        assertEquals(CharacterRecord.MAX_GOLD, character.gold());
+        assertEquals(0, character.addGold(10));
+        assertThrows(IllegalArgumentException.class, () -> character.addGold(-1));
+        assertThrows(IllegalArgumentException.class, () -> character.spendGold(-1));
+    }
+
+    @Test
+    public void deathPenaltyNeverCostsALevel() {
+        PlayerCharacter character = fresh();
+        character.addExperience(60, RULES); // level 1: 60 / 100
+        assertEquals(5, character.applyDeathPenalty(0.05, RULES));
+        assertEquals(55, character.experience());
+        assertEquals(55, character.applyDeathPenalty(1.0, RULES));
+        assertEquals(0, character.experience());
+        assertEquals(1, character.level());
+        assertEquals(0, character.applyDeathPenalty(0.5, RULES));
+    }
+
+    @Test
+    public void extensionsOnlyDirtyTheCharacterWhenTheyChange() {
+        PlayerCharacter character = fresh();
+        character.setExtension("quests", "{\"a\":1}");
+        long revision = character.revision();
+        character.setExtension("quests", "{\"a\":1}");
+        assertEquals(revision, character.revision());
+        character.setExtension("quests", "{\"a\":2}");
+        assertTrue(character.revision() > revision);
+        assertEquals("{\"a\":2}", character.extension("quests").orElseThrow());
+        assertThrows(IllegalArgumentException.class, () -> character.setExtension("Bad Key", "{}"));
+    }
+
+    @Test
+    public void phaseThreeDataSurvivesTheRecordRoundTrip() {
+        PlayerCharacter character = fresh();
+        character.setLevel(20, RULES);
+        character.changeJob("priest");
+        character.investSkillPoint("priest_heal", RULES);
+        character.addGold(777);
+        character.setExtension("stats", "{\"kills\":3}");
+        PlayerCharacter copy = PlayerCharacter.fromRecord(character.toRecord(NOW), RULES);
+        assertEquals("priest", copy.jobId());
+        assertEquals(1, copy.investment("priest_heal"));
+        assertEquals(777, copy.gold());
+        assertEquals("{\"kills\":3}", copy.extension("stats").orElseThrow());
+        assertEquals(character.snapshot(RULES), copy.snapshot(RULES));
+    }
 }

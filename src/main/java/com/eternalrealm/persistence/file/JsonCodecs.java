@@ -17,6 +17,7 @@ import com.google.gson.JsonParser;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,7 +29,8 @@ import java.util.UUID;
  * (the data is valid, this build is too old) and is never quarantined.</p>
  */
 public final class JsonCodecs {
-    public static final int CHARACTER_SCHEMA_VERSION = 1;
+    /** 2: job, skills, gold and module extensions (schema 1 files are read with empty defaults). */
+    public static final int CHARACTER_SCHEMA_VERSION = 2;
     public static final int ACCOUNT_SCHEMA_VERSION = 1;
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -53,7 +55,35 @@ public final class JsonCodecs {
         root.add("allocatedStats", stats);
         root.addProperty("createdAt", record.createdAt().toString());
         root.addProperty("updatedAt", record.updatedAt().toString());
+        root.addProperty("jobId", record.jobId());
+        JsonObject skills = new JsonObject();
+        record.skillInvestments().forEach(skills::addProperty);
+        root.add("skills", skills);
+        root.addProperty("gold", record.gold());
+        JsonObject extensions = new JsonObject();
+        record.extensions().forEach((key, json) -> extensions.add(key, embed(json)));
+        root.add("extensions", extensions);
         return GSON.toJson(root) + "\n";
+    }
+
+    /** Module documents are embedded as JSON; anything unparsable is kept verbatim as a string so it round-trips. */
+    private static JsonElement embed(String json) {
+        try {
+            JsonElement element = JsonParser.parseString(json);
+            if (element != null && (element.isJsonObject() || element.isJsonArray())) {
+                return element;
+            }
+        } catch (JsonParseException ignored) {
+            // fall through
+        }
+        return new com.google.gson.JsonPrimitive(json);
+    }
+
+    private static String unembed(JsonElement element) {
+        if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+            return element.getAsString();
+        }
+        return element.toString();
     }
 
     public static CharacterRecord decodeCharacter(String json, UUID expectedPlayer, SeasonId expectedSeason)
@@ -81,13 +111,31 @@ public final class JsonCodecs {
                     throw new CorruptDataException("Missing stat '" + type.id() + "'");
                 }
             }
+            String jobId = CharacterRecord.NO_JOB;
+            Map<String, Integer> skills = new LinkedHashMap<>();
+            long gold = 0L;
+            Map<String, String> extensions = new LinkedHashMap<>();
+            if (requireInt(root, "schema") >= 2) {
+                jobId = requireString(root, "jobId");
+                for (Map.Entry<String, JsonElement> entry : requireObject(root, "skills").entrySet()) {
+                    skills.put(entry.getKey(), toInt(entry.getValue(), "skills." + entry.getKey()));
+                }
+                gold = requireLong(root, "gold");
+                for (Map.Entry<String, JsonElement> entry : requireObject(root, "extensions").entrySet()) {
+                    if (entry.getValue() == null || entry.getValue().isJsonNull()) {
+                        throw new CorruptDataException("Extension '" + entry.getKey() + "' is null");
+                    }
+                    extensions.put(entry.getKey(), unembed(entry.getValue()));
+                }
+            }
             return new CharacterRecord(playerId, seasonId,
                     requireInt(root, "level"),
                     requireLong(root, "experience"),
                     requireLong(root, "totalExperience"),
                     StatBlock.of(stats),
                     requireInstant(root, "createdAt"),
-                    requireInstant(root, "updatedAt"));
+                    requireInstant(root, "updatedAt"),
+                    jobId, skills, gold, extensions);
         } catch (IllegalArgumentException | DateTimeParseException e) {
             throw new CorruptDataException("Invalid character data: " + e.getMessage(), e);
         }
@@ -150,7 +198,7 @@ public final class JsonCodecs {
         if (schema < 1) {
             throw new CorruptDataException("Invalid " + kind + " schema version " + schema);
         }
-        // Migrations from older schema versions go here when schema 2 is introduced.
+        // Older schemas are migrated while decoding (missing fields get their defaults).
     }
 
     private static JsonElement require(JsonObject root, String key) throws CorruptDataException {

@@ -86,5 +86,15 @@
   "hud.eternalrealm.combat.guard_broken": "Guard broken!",
   "screen.eternalrealm.character.combat1": "Attack x%s  Max HP +%s  Damage taken -%s%%",
   "screen.eternalrealm.character.combat2": "Attack speed +%s%%  Critical %s%%  Stamina %s",
-  "commands.eternalrealm.character.combat": "Combat: attack x%s / max HP +%s / damage taken -%s%% / attack speed +%s%% / critical %s%% / stamina %s"
+  "commands.eternalrealm.character.combat": "Combat: attack x%s / max HP +%s / damage taken -%s%% / attack speed +%s%% / critical %s%% / stamina %s",
+  "weapon_type.eternalrealm.staff": "Staff",
+  "weapon_type.eternalrealm.bow": "Bow",
+  "action.eternalrealm.arcane_nova": "Arcane Nova",
+  "action.eternalrealm.piercing_arrow": "Piercing Arrow",
+  "damage_type.eternalrealm.physical": "Physical",
+  "damage_type.eternalrealm.ranged": "Ranged",
+  "damage_type.eternalrealm.magic": "Magic",
+  "damage_type.eternalrealm.holy": "Holy",
+  "message.eternalrealm.combat.not_learned": "You have not learned that skill yet",
+  "message.eternalrealm.combat.wrong_weapon": "That skill cannot be used with this weapon"
 }

@@ -1,0 +1,12 @@
+{
+  "weapon_type.eternalrealm.staff": {"ja": "杖", "en": "Staff"},
+  "weapon_type.eternalrealm.bow": {"ja": "弓", "en": "Bow"},
+  "action.eternalrealm.arcane_nova": {"ja": "アーケインノヴァ", "en": "Arcane Nova"},
+  "action.eternalrealm.piercing_arrow": {"ja": "ピアシングアロー", "en": "Piercing Arrow"},
+  "damage_type.eternalrealm.physical": {"ja": "物理", "en": "Physical"},
+  "damage_type.eternalrealm.ranged": {"ja": "遠距離", "en": "Ranged"},
+  "damage_type.eternalrealm.magic": {"ja": "魔法", "en": "Magic"},
+  "damage_type.eternalrealm.holy": {"ja": "神聖", "en": "Holy"},
+  "message.eternalrealm.combat.not_learned": {"ja": "そのスキルはまだ習得していません", "en": "You have not learned that skill yet"},
+  "message.eternalrealm.combat.wrong_weapon": {"ja": "この武器ではそのスキルを使えません", "en": "That skill cannot be used with this weapon"}
+}

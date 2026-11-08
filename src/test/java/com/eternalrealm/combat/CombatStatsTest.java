@@ -47,8 +47,46 @@ public class CombatStatsTest {
         CombatStats lucky = CombatStats.derive(base.with(StatType.LUK, 105), 10, TUNING);
         assertEquals(0.05 + 105 * 0.002, lucky.critChance(), EPS);
 
-        // INT and DEX have no melee effect in Phase 2
-        assertEquals(reference, CombatStats.derive(base.with(StatType.INT, 105).with(StatType.DEX, 105), 10, TUNING));
+        // INT and DEX only drive magic, healing and ranged damage
+        CombatStats caster = CombatStats.derive(base.with(StatType.INT, 105).with(StatType.DEX, 105), 10, TUNING);
+        assertEquals(1.0 + 105 * 0.02, caster.magicMultiplier(), EPS);
+        assertEquals(1.0 + 105 * 0.02, caster.rangedMultiplier(), EPS);
+        assertTrue(caster.healingMultiplier() > reference.healingMultiplier());
+        assertEquals(reference.attackMultiplier(), caster.attackMultiplier(), EPS);
+        assertEquals(reference.maxHealthBonus(), caster.maxHealthBonus(), EPS);
+        assertEquals(reference.critChance(), caster.critChance(), EPS);
+    }
+
+    @Test
+    public void modifiersAddSecondaryBonuses() {
+        StatBlock base = StatBlock.uniform(5);
+        CombatStats plain = CombatStats.derive(base, 1, TUNING);
+        CombatModifiers knight = CombatModifiers.builder().healthPercent(0.15).guard(0.1).defense(20).build();
+        CombatStats tank = CombatStats.derive(base, 1, TUNING, knight);
+        assertEquals((20.0 + plain.maxHealthBonus()) * 1.15 - 20.0, tank.maxHealthBonus(), EPS);
+        assertEquals(0.1, tank.guardBonus(), EPS);
+        assertTrue(tank.damageReduction() > plain.damageReduction());
+
+        CombatModifiers hybrid = CombatModifiers.builder().intToPhysical(0.5).physical(0.1).build();
+        CombatStats spellblade = CombatStats.derive(base.with(StatType.INT, 105), 1, TUNING, hybrid);
+        assertEquals((1.0 + (5 + 105 * 0.5) * 0.02) * 1.1, spellblade.attackMultiplier(), EPS);
+
+        CombatModifiers assassin = CombatModifiers.builder().crit(0.1).critDamage(0.25).dodgeCost(0.8).build();
+        CombatStats rogue = CombatStats.derive(base, 1, TUNING, assassin);
+        assertEquals(plain.critChance() + 0.1, rogue.critChance(), EPS);
+        assertEquals(1.75, rogue.critMultiplier(), EPS);
+        assertEquals(0.8, rogue.dodgeCostFactor(), EPS);
+        assertEquals(plain, CombatStats.derive(base, 1, TUNING, CombatModifiers.NONE));
+    }
+
+    @Test
+    public void combinedModifiersAreClampedNotRejected() {
+        CombatModifiers huge = CombatModifiers.builder().guard(1.0).dodgeCost(0.01).moveSpeed(10).crit(1.0).build();
+        CombatStats stats = CombatStats.derive(StatBlock.uniform(5), 1, TUNING, huge.plus(huge));
+        assertEquals(CombatStats.MAX_GUARD_BONUS, stats.guardBonus(), EPS);
+        assertEquals(0.2, stats.dodgeCostFactor(), EPS);
+        assertEquals(1.0, stats.moveSpeedBonus(), EPS);
+        assertEquals(TUNING.maxCritChance(), stats.critChance(), EPS);
     }
 
     @Test
