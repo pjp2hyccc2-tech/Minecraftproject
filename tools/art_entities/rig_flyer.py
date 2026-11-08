@@ -156,6 +156,7 @@ def variants():
     V = []
 
     def deco_harpy(p):
+        wing_feathers(p)
         f = p.face('head', 'front')
         f.px(1, 2, (250, 220, 60))
         f.px(4, 2, (250, 220, 60))
@@ -170,6 +171,31 @@ def variants():
         fc = p.face('head', 'front')
         fc.hline(0, fc.w - 1, 0, rgb('#7a5030'))
     feather = {'base': '#8a6a4a', 'style': 'feather', 'tip': (230, 220, 200), 'notched': True}
+
+    def wing_feathers(p):
+        """Coverts (top), secondaries and long pointed primaries, darker roots, pale tips, notched trailing edge."""
+        dark, mid, light, tip = rgb('#4a3424'), rgb('#7a5a3a'), rgb('#a8865c'), rgb('#e6dcc8')
+        for part in ('right_wing', 'right_wing_tip'):
+            for side in ('front', 'back'):
+                fc = p.face(part, side)
+                w, h = fc.w, fc.h
+                for x in range(w):
+                    for y in range(h):
+                        fc.px(x, y, mid)
+                for y in range(0, 3):
+                    for x in range(w):
+                        fc.px(x, y, light if (x + y) % 2 == 0 else mid)
+                    fc.px((y * 2) % w, y, dark)
+                for x in range(0, w, 2):
+                    length = h - 3 - ((x // 2) % 2) if part == 'right_wing' else h - 2 - ((x * 3) % 3)
+                    for y in range(3, min(h, 3 + length)):
+                        fc.px(x, y, dark if y < 5 else mid)
+                        if x + 1 < w:
+                            fc.px(x + 1, y, light if y < h - 2 else tip)
+                    for y in range(3 + length, h):
+                        fc.clear(x, y)
+                        if x + 1 < w and y > 3 + length:
+                            fc.clear(x + 1, y)
     V.append(Variant('harpy', show={'crest', 'right_wing', 'left_wing', 'right_leg', 'left_leg', 'claws_r', 'claws_l'},
                      palette=pal(body={'base': '#8a6a4a', 'style': 'feather'}, wing=feather,
                                  wingtip=dict(feather, base='#6a4a30'), thigh={'base': '#7a5a3a', 'style': 'feather'},

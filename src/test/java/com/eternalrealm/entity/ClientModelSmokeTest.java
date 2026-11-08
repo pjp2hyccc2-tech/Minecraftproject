@@ -122,5 +122,6 @@ public class ClientModelSmokeTest {
         }
         assertTrue("too few evaluations: " + evaluated, evaluated > 1000);
         assertEquals("all rigs checked", 9, RIGS.length);
+        fail("TEMPORARY-SMOKE-REPORT evaluated=" + evaluated);
     }
 }

@@ -6,7 +6,10 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.Entity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Keyframe-animated model built from generated rig tables. Every frame: reset the pose, apply the variant's look
@@ -21,6 +24,7 @@ public abstract class RigModel<T extends Entity> extends HierarchicalModel<T> {
     private final ModelPart[] toggled;
     private final ModelPart[] posed;
     private final AnimationDefinition[][] animations;
+    private final Map<String, Optional<ModelPart>> partsByName = new HashMap<>();
     protected final ModelPart head;
 
     protected RigModel(ModelPart root, RigTables tables) {
@@ -46,6 +50,20 @@ public abstract class RigModel<T extends Entity> extends HierarchicalModel<T> {
     @Override
     public ModelPart root() {
         return this.root;
+    }
+
+    /**
+     * Cached: vanilla's keyframe player looks up every animated bone by name on every frame, which walks the whole
+     * part tree each time.
+     */
+    @Override
+    public Optional<ModelPart> getAnyDescendantWithName(String name) {
+        Optional<ModelPart> part = this.partsByName.get(name);
+        if (part == null) {
+            part = super.getAnyDescendantWithName(name);
+            this.partsByName.put(name, part);
+        }
+        return part;
     }
 
     /** Resets every part and applies the look of {@code variant}; returns the variant index. */

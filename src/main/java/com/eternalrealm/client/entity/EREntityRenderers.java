@@ -56,20 +56,20 @@ public final class EREntityRenderers {
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EREntityTypes.HUMANOID_ENEMY.get(),
-                context -> new EnemyRenderer<HumanoidEnemy>(context, EnemyRig.HUMANOID, 1.6F, 0.5F));
+                context -> new EnemyRenderer<HumanoidEnemy>(context, EnemyRig.HUMANOID, 2.2F, 0.5F));
         event.registerEntityRenderer(EREntityTypes.BEAST_ENEMY.get(),
-                context -> new EnemyRenderer<BeastEnemy>(context, EnemyRig.BEAST, 2.0F, 0.5F));
+                context -> new EnemyRenderer<BeastEnemy>(context, EnemyRig.BEAST, 2.6F, 0.5F));
         event.registerEntityRenderer(EREntityTypes.GOLEM_ENEMY.get(),
-                context -> new EnemyRenderer<GolemEnemy>(context, EnemyRig.GOLEM, 1.1F, 0.9F));
+                context -> new EnemyRenderer<GolemEnemy>(context, EnemyRig.GOLEM, 1.6F, 0.9F));
         event.registerEntityRenderer(EREntityTypes.FLYER_ENEMY.get(),
-                context -> new EnemyRenderer<FlyerEnemy>(context, EnemyRig.FLYER, 1.4F, 0.4F));
+                context -> new EnemyRenderer<FlyerEnemy>(context, EnemyRig.FLYER, 1.6F, 0.4F));
         event.registerEntityRenderer(EREntityTypes.ENEMY_BOLT.get(),
                 context -> new ThrownItemRenderer<EnemyBolt>(context, 1.1F, true));
         for (BossKind kind : BossKind.values()) {
             float walkSpeed = switch (kind.rig()) {
-                case KING, QUEEN -> 1.2F;
-                case TREANT, COLOSSUS -> 0.9F;
-                case DRAGON -> 1.0F;
+                case KING, QUEEN -> 1.7F;
+                case TREANT, COLOSSUS -> 1.3F;
+                case DRAGON -> 1.5F;
             };
             event.registerEntityRenderer(EREntityTypes.bossType(kind).get(),
                     context -> new BossRenderer(context, kind.rig(), walkSpeed));
