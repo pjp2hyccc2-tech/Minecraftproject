@@ -1,0 +1,490 @@
+{
+  "boss.eternalrealm.b1": {
+    "ja": "地下都市の盗賊王",
+    "en": "Bandit King of the Undercity"
+  },
+  "boss.eternalrealm.b2": {
+    "ja": "古代樹の守護者",
+    "en": "Guardian of the Ancient Tree"
+  },
+  "boss.eternalrealm.b3": {
+    "ja": "砂塵の巨神",
+    "en": "Colossus of the Sandstorm"
+  },
+  "boss.eternalrealm.b4": {
+    "ja": "凍獄の処刑人",
+    "en": "Executioner of the Frozen Prison"
+  },
+  "boss.eternalrealm.b5": {
+    "ja": "氷獄の女王",
+    "en": "Queen of the Frozen Abyss"
+  },
+  "boss.eternalrealm.b6": {
+    "ja": "灼炎の竜王",
+    "en": "Dragon King of Searing Flame"
+  },
+  "boss.eternalrealm.b7": {
+    "ja": "天空の機械神",
+    "en": "Machine God of the Sky"
+  },
+  "boss.eternalrealm.b8": {
+    "ja": "終焉の門番",
+    "en": "Gatekeeper of the End"
+  },
+  "boss.eternalrealm.final": {
+    "ja": "終焉の王",
+    "en": "King of the End"
+  },
+  "boss_ability.eternalrealm.b1_cleave": {
+    "ja": "薙ぎ払い",
+    "en": "Cleave"
+  },
+  "boss_ability.eternalrealm.b1_dash": {
+    "ja": "突進斬り",
+    "en": "Dash Slash"
+  },
+  "boss_ability.eternalrealm.b1_smoke_bombs": {
+    "ja": "煙玉投げ",
+    "en": "Smoke Bombs"
+  },
+  "boss_ability.eternalrealm.b1_whirlwind": {
+    "ja": "旋風斧",
+    "en": "Whirlwind Axe"
+  },
+  "boss_ability.eternalrealm.b1_call_gang": {
+    "ja": "手下召集",
+    "en": "Call the Gang"
+  },
+  "boss_ability.eternalrealm.b1_knife_fan": {
+    "ja": "投げナイフの扇",
+    "en": "Knife Fan"
+  },
+  "boss_ability.eternalrealm.b2_root_slam": {
+    "ja": "大地の根撃",
+    "en": "Root Slam"
+  },
+  "boss_ability.eternalrealm.b2_thorn_line": {
+    "ja": "茨の奔流",
+    "en": "Thorn Torrent"
+  },
+  "boss_ability.eternalrealm.b2_branch_sweep": {
+    "ja": "枝薙ぎ",
+    "en": "Branch Sweep"
+  },
+  "boss_ability.eternalrealm.b2_spore_burst": {
+    "ja": "胞子爆裂",
+    "en": "Spore Burst"
+  },
+  "boss_ability.eternalrealm.b2_sapling_call": {
+    "ja": "若木の呼び声",
+    "en": "Call of the Saplings"
+  },
+  "boss_ability.eternalrealm.b2_bark_shield": {
+    "ja": "樹皮の守り",
+    "en": "Bark Shield"
+  },
+  "boss_ability.eternalrealm.b2_regrowth": {
+    "ja": "再生の息吹",
+    "en": "Regrowth"
+  },
+  "boss_ability.eternalrealm.b2_vine_ring": {
+    "ja": "蔓の環",
+    "en": "Ring of Vines"
+  },
+  "boss_ability.eternalrealm.b3_stomp": {
+    "ja": "震脚",
+    "en": "Stomp"
+  },
+  "boss_ability.eternalrealm.b3_charge": {
+    "ja": "砂塵突進",
+    "en": "Sandstorm Charge"
+  },
+  "boss_ability.eternalrealm.b3_sand_breath": {
+    "ja": "砂の吐息",
+    "en": "Sand Breath"
+  },
+  "boss_ability.eternalrealm.b3_quicksand": {
+    "ja": "流砂",
+    "en": "Quicksand"
+  },
+  "boss_ability.eternalrealm.b3_dust_ring": {
+    "ja": "砂塵の環",
+    "en": "Ring of Dust"
+  },
+  "boss_ability.eternalrealm.b3_sand_servants": {
+    "ja": "砂の眷属",
+    "en": "Sand Servants"
+  },
+  "boss_ability.eternalrealm.b3_sandstorm": {
+    "ja": "大砂嵐",
+    "en": "Great Sandstorm"
+  },
+  "boss_ability.eternalrealm.b3_boulder_volley": {
+    "ja": "岩石投擲",
+    "en": "Boulder Volley"
+  },
+  "boss_ability.eternalrealm.b4_execution": {
+    "ja": "断罪の一撃",
+    "en": "Execution"
+  },
+  "boss_ability.eternalrealm.b4_chain_pull": {
+    "ja": "鎖の拘束",
+    "en": "Chain Pull"
+  },
+  "boss_ability.eternalrealm.b4_ice_shackles": {
+    "ja": "氷の枷",
+    "en": "Ice Shackles"
+  },
+  "boss_ability.eternalrealm.b4_frost_nova": {
+    "ja": "凍気爆発",
+    "en": "Frost Nova"
+  },
+  "boss_ability.eternalrealm.b4_pursuit": {
+    "ja": "追跡",
+    "en": "Pursuit"
+  },
+  "boss_ability.eternalrealm.b4_jailers": {
+    "ja": "看守招集",
+    "en": "Summon Jailers"
+  },
+  "boss_ability.eternalrealm.b4_judgement": {
+    "ja": "処刑宣告",
+    "en": "Sentence of Death"
+  },
+  "boss_ability.eternalrealm.b4_frozen_verdict": {
+    "ja": "氷獄の裁き",
+    "en": "Frozen Verdict"
+  },
+  "boss_ability.eternalrealm.b4_ice_ring": {
+    "ja": "氷鎖の環",
+    "en": "Ring of Ice Chains"
+  },
+  "boss_ability.eternalrealm.b5_ice_lance": {
+    "ja": "氷槍",
+    "en": "Ice Lance"
+  },
+  "boss_ability.eternalrealm.b5_frost_field": {
+    "ja": "凍結領域",
+    "en": "Frost Field"
+  },
+  "boss_ability.eternalrealm.b5_blizzard": {
+    "ja": "ブリザード",
+    "en": "Blizzard"
+  },
+  "boss_ability.eternalrealm.b5_glacial_ring": {
+    "ja": "氷河の環",
+    "en": "Glacial Ring"
+  },
+  "boss_ability.eternalrealm.b5_blink": {
+    "ja": "氷鏡転移",
+    "en": "Mirror Blink"
+  },
+  "boss_ability.eternalrealm.b5_ice_barrier": {
+    "ja": "氷晶の障壁",
+    "en": "Ice Barrier"
+  },
+  "boss_ability.eternalrealm.b5_frozen_heart": {
+    "ja": "凍てつく心臓",
+    "en": "Frozen Heart"
+  },
+  "boss_ability.eternalrealm.b5_absolute_zero": {
+    "ja": "絶対零度",
+    "en": "Absolute Zero"
+  },
+  "boss_ability.eternalrealm.b5_hailstorm": {
+    "ja": "雹嵐",
+    "en": "Hailstorm"
+  },
+  "boss_ability.eternalrealm.b6_flame_breath": {
+    "ja": "灼熱の吐息",
+    "en": "Flame Breath"
+  },
+  "boss_ability.eternalrealm.b6_fireballs": {
+    "ja": "火球乱射",
+    "en": "Fireball Barrage"
+  },
+  "boss_ability.eternalrealm.b6_magma_burst": {
+    "ja": "溶岩噴出",
+    "en": "Magma Burst"
+  },
+  "boss_ability.eternalrealm.b6_meteor": {
+    "ja": "隕石落とし",
+    "en": "Meteor Fall"
+  },
+  "boss_ability.eternalrealm.b6_inferno_ring": {
+    "ja": "獄炎の環",
+    "en": "Inferno Ring"
+  },
+  "boss_ability.eternalrealm.b6_salamanders": {
+    "ja": "火蜥蜴召喚",
+    "en": "Summon Salamanders"
+  },
+  "boss_ability.eternalrealm.b6_dragon_rage": {
+    "ja": "竜王の怒り",
+    "en": "Dragon's Rage"
+  },
+  "boss_ability.eternalrealm.b6_sunfall": {
+    "ja": "落陽",
+    "en": "Sunfall"
+  },
+  "boss_ability.eternalrealm.b6_cataclysm": {
+    "ja": "大噴火",
+    "en": "Cataclysm"
+  },
+  "boss_ability.eternalrealm.b6_flame_dive": {
+    "ja": "炎翼突撃",
+    "en": "Flame Dive"
+  },
+  "boss_ability.eternalrealm.b7_laser": {
+    "ja": "殲滅光線",
+    "en": "Annihilation Laser"
+  },
+  "boss_ability.eternalrealm.b7_missiles": {
+    "ja": "誘導弾斉射",
+    "en": "Missile Salvo"
+  },
+  "boss_ability.eternalrealm.b7_sweep": {
+    "ja": "機械腕薙ぎ",
+    "en": "Arm Sweep"
+  },
+  "boss_ability.eternalrealm.b7_bombard": {
+    "ja": "天空砲撃",
+    "en": "Sky Bombardment"
+  },
+  "boss_ability.eternalrealm.b7_overload_ring": {
+    "ja": "過負荷の環",
+    "en": "Overload Ring"
+  },
+  "boss_ability.eternalrealm.b7_drone_barrier": {
+    "ja": "防衛機の障壁",
+    "en": "Drone Barrier"
+  },
+  "boss_ability.eternalrealm.b7_warp": {
+    "ja": "空間転移",
+    "en": "Warp"
+  },
+  "boss_ability.eternalrealm.b7_judgment_beam": {
+    "ja": "審判の光",
+    "en": "Beam of Judgment"
+  },
+  "boss_ability.eternalrealm.b7_system_purge": {
+    "ja": "全域浄化",
+    "en": "System Purge"
+  },
+  "boss_ability.eternalrealm.b7_self_repair": {
+    "ja": "自己修復",
+    "en": "Self-Repair"
+  },
+  "boss_ability.eternalrealm.b7_orbital_strike": {
+    "ja": "軌道爆撃",
+    "en": "Orbital Strike"
+  },
+  "boss_ability.eternalrealm.b8_crushing_blow": {
+    "ja": "粉砕撃",
+    "en": "Crushing Blow"
+  },
+  "boss_ability.eternalrealm.b8_shockwave": {
+    "ja": "衝撃波",
+    "en": "Shockwave"
+  },
+  "boss_ability.eternalrealm.b8_dark_pillars": {
+    "ja": "闇の柱",
+    "en": "Pillars of Darkness"
+  },
+  "boss_ability.eternalrealm.b8_void_step": {
+    "ja": "虚空歩",
+    "en": "Void Step"
+  },
+  "boss_ability.eternalrealm.b8_abyss_ring": {
+    "ja": "深淵の環",
+    "en": "Abyss Ring"
+  },
+  "boss_ability.eternalrealm.b8_shades": {
+    "ja": "影の召喚",
+    "en": "Summon Shades"
+  },
+  "boss_ability.eternalrealm.b8_gate_seal": {
+    "ja": "門の封印",
+    "en": "Seal of the Gate"
+  },
+  "boss_ability.eternalrealm.b8_soul_brand": {
+    "ja": "魂の烙印",
+    "en": "Soul Brand"
+  },
+  "boss_ability.eternalrealm.b8_end_pulse": {
+    "ja": "終焉の鼓動",
+    "en": "Pulse of the End"
+  },
+  "boss_ability.eternalrealm.b8_fury": {
+    "ja": "門番の憤怒",
+    "en": "Gatekeeper's Fury"
+  },
+  "boss_ability.eternalrealm.b8_collapse": {
+    "ja": "崩落",
+    "en": "Collapse"
+  },
+  "boss_ability.eternalrealm.final_cleave": {
+    "ja": "王の大斬撃",
+    "en": "Royal Cleave"
+  },
+  "boss_ability.eternalrealm.final_dark_lance": {
+    "ja": "闇の槍",
+    "en": "Dark Lance"
+  },
+  "boss_ability.eternalrealm.final_meteor_rain": {
+    "ja": "滅星雨",
+    "en": "Meteor Rain"
+  },
+  "boss_ability.eternalrealm.final_doom_mark": {
+    "ja": "破滅の刻印",
+    "en": "Mark of Doom"
+  },
+  "boss_ability.eternalrealm.final_ruin_ring": {
+    "ja": "崩壊の環",
+    "en": "Ring of Ruin"
+  },
+  "boss_ability.eternalrealm.final_dark_volley": {
+    "ja": "黒炎弾",
+    "en": "Dark Volley"
+  },
+  "boss_ability.eternalrealm.final_royal_guard": {
+    "ja": "近衛の守護",
+    "en": "Royal Guard"
+  },
+  "boss_ability.eternalrealm.final_legion": {
+    "ja": "亡者の軍勢",
+    "en": "Legion of the Dead"
+  },
+  "boss_ability.eternalrealm.final_shadow_step": {
+    "ja": "影渡り",
+    "en": "Shadow Step"
+  },
+  "boss_ability.eternalrealm.final_dark_aura": {
+    "ja": "終焉の覇気",
+    "en": "Aura of the End"
+  },
+  "boss_ability.eternalrealm.final_end_wave": {
+    "ja": "終焉の波動",
+    "en": "Wave of the End"
+  },
+  "boss_ability.eternalrealm.final_eclipse": {
+    "ja": "蝕",
+    "en": "Eclipse"
+  },
+  "boss_ability.eternalrealm.final_oblivion": {
+    "ja": "忘却",
+    "en": "Oblivion"
+  },
+  "boss_ability.eternalrealm.final_end_of_all": {
+    "ja": "万物の終焉",
+    "en": "End of All Things"
+  },
+  "boss_ability.eternalrealm.final_void_rift": {
+    "ja": "虚無の裂け目",
+    "en": "Void Rift"
+  },
+  "difficulty.eternalrealm.normal": {
+    "ja": "ノーマル",
+    "en": "Normal"
+  },
+  "difficulty.eternalrealm.hard": {
+    "ja": "ハード",
+    "en": "Hard"
+  },
+  "difficulty.eternalrealm.ex": {
+    "ja": "EX",
+    "en": "EX"
+  },
+  "dungeon.eternalrealm.d1": {
+    "ja": "失われた地下都市",
+    "en": "Lost Underground City"
+  },
+  "dungeon.eternalrealm.d2": {
+    "ja": "古代樹の迷宮",
+    "en": "Labyrinth of the Ancient Tree"
+  },
+  "dungeon.eternalrealm.d3": {
+    "ja": "砂塵の神殿",
+    "en": "Temple of Sand"
+  },
+  "dungeon.eternalrealm.d4": {
+    "ja": "凍てつく地下牢",
+    "en": "Frozen Prison"
+  },
+  "dungeon.eternalrealm.d5": {
+    "ja": "氷結の城",
+    "en": "Frozen Castle"
+  },
+  "dungeon.eternalrealm.d6": {
+    "ja": "灼熱の火山洞窟",
+    "en": "Scorching Volcanic Cave"
+  },
+  "dungeon.eternalrealm.d7": {
+    "ja": "天空の古代遺跡",
+    "en": "Ancient Sky Ruins"
+  },
+  "dungeon.eternalrealm.d8": {
+    "ja": "終焉の塔",
+    "en": "Tower of the End"
+  },
+  "raid.eternalrealm.final": {
+    "ja": "終焉の玉座",
+    "en": "Throne of the End"
+  },
+  "message.eternalrealm.boss.phase_changed": {
+    "ja": "%1$sの様子が変わった…（フェーズ %2$s）",
+    "en": "%1$s is changing... (phase %2$s)"
+  },
+  "message.eternalrealm.boss.enraged": {
+    "ja": "%sが激昂した！ 攻撃が激しくなる！",
+    "en": "%s is enraged! Its attacks grow fiercer!"
+  },
+  "message.eternalrealm.boss.shield_up": {
+    "ja": "%sが障壁に守られている！",
+    "en": "%s is protected by a barrier!"
+  },
+  "message.eternalrealm.boss.shield_down": {
+    "ja": "%sの障壁が消えた！",
+    "en": "%s's barrier is gone!"
+  },
+  "message.eternalrealm.dungeon.started": {
+    "ja": "%s 攻略開始！",
+    "en": "%s: the run begins!"
+  },
+  "message.eternalrealm.dungeon.wave": {
+    "ja": "ウェーブ %1$s / %2$s",
+    "en": "Wave %1$s / %2$s"
+  },
+  "message.eternalrealm.dungeon.door_opened": {
+    "ja": "部屋を制圧した！ 扉が開いた。",
+    "en": "Room cleared! The door opens."
+  },
+  "message.eternalrealm.dungeon.boss": {
+    "ja": "%sが現れた！",
+    "en": "%s appears!"
+  },
+  "message.eternalrealm.dungeon.cleared": {
+    "ja": "%1$s をクリア！ タイム %2$s",
+    "en": "%1$s cleared! Time: %2$s"
+  },
+  "message.eternalrealm.dungeon.full": {
+    "ja": "現在インスタンスが満員です（最大 %s）。しばらくしてから再度お試しください。",
+    "en": "All instances are in use (max %s). Please try again later."
+  },
+  "message.eternalrealm.dungeon.failed.time_limit": {
+    "ja": "制限時間を超えました。攻略失敗です。",
+    "en": "Time is up. The run has failed."
+  },
+  "message.eternalrealm.dungeon.failed.everyone_left": {
+    "ja": "全員がいなくなったため、攻略は失敗しました。",
+    "en": "Everyone left. The run has failed."
+  },
+  "message.eternalrealm.dungeon.failed.too_many_deaths": {
+    "ja": "戦闘不能が多すぎたため、攻略は失敗しました。",
+    "en": "Too many deaths. The run has failed."
+  },
+  "message.eternalrealm.dungeon.failed.aborted": {
+    "ja": "攻略は中断されました。",
+    "en": "The run was aborted."
+  }
+}
