@@ -100,6 +100,7 @@ public final class BossFight {
     private boolean shielded;
     private boolean executing;
     private boolean defeated;
+    private boolean defeatPending;
     private long now;
 
     private BossFight(ServerLevel level, Mob body, BossBrain brain, Set<UUID> participants,
@@ -163,6 +164,11 @@ public final class BossFight {
     }
 
     public boolean isDefeated() {
+        return defeated || defeatPending;
+    }
+
+    /** The body is being killed by the fight itself (its own damage must go through). */
+    public boolean isKilling() {
         return defeated;
     }
 
@@ -191,7 +197,7 @@ public final class BossFight {
         }
         bar.setProgress((float) (health / maxHealth));
         if (health <= 0.0) {
-            defeat();
+            defeatPending = true; // finished on the next tick, outside the damage event
         }
     }
 
@@ -213,6 +219,10 @@ public final class BossFight {
     public void tick(long tick) {
         now = tick;
         if (defeated) {
+            return;
+        }
+        if (defeatPending) {
+            defeat();
             return;
         }
         if (!body.isAlive() || body.isRemoved()) {

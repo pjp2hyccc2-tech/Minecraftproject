@@ -36,7 +36,7 @@ public final class DungeonEvents {
         }
         if (victim.getTags().contains(BossFight.TAG)) {
             context.game().dungeons().fightOf(victim).ifPresent(fight -> {
-                if (!fight.isDefeated()) {
+                if (!fight.isKilling()) {
                     fight.absorb(event.getSource().getEntity(), event.getAmount());
                     event.setAmount(0.0F);
                 }
