@@ -36,8 +36,9 @@ public final class CombatHudOverlay implements IGuiOverlay {
     @Override
     public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
         Minecraft minecraft = gui.getMinecraft();
-        if (minecraft.options.hideGui || minecraft.player == null || !ERClientConfig.COMBAT_HUD.get()) {
-            return;
+        if (minecraft.options.hideGui || minecraft.player == null || minecraft.screen != null
+                || !ERClientConfig.COMBAT_HUD.get()) {
+            return; // hidden behind screens (the skill panel would overlap the chat input)
         }
         Combatant local = ClientCombatState.combatant();
         if (local == null) {
@@ -120,7 +121,7 @@ public final class CombatHudOverlay implements IGuiOverlay {
                 color = 0xFF6655;
             }
             default -> {
-                return;
+                return; // NONE, GUARD_REFUSED: nothing to show
             }
         }
         long age = ClientCombatState.popupAge();

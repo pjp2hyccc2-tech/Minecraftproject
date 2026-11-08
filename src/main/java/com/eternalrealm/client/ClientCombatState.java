@@ -94,6 +94,11 @@ public final class ClientCombatState {
         if (status.event() == DefenseEvent.GUARD_BROKEN) {
             combatant.stagger(tick, CombatRules.GUARD_BREAK_STAGGER_TICKS);
         }
+        if (status.event() == DefenseEvent.GUARD_REFUSED) {
+            combatant.stopGuard();
+            ClientCombatController.dropPredictedGuard();
+            return;
+        }
         if (status.event() != DefenseEvent.NONE) {
             popup = status.event();
             popupStart = tick;

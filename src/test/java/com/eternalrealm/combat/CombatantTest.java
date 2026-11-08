@@ -376,6 +376,25 @@ public class CombatantTest {
     }
 
     @Test
+    public void tappingTheGuardCannotKeepTheParryWindowOpen() {
+        fighter.startGuard(now, SWORD);
+        runTo(102);
+        assertEquals(AvoidOutcome.PARRIED, fighter.checkAvoid(now, true, true));
+        fighter.stopGuard();
+        runTo(105);
+        fighter.startGuard(now, SWORD); // re-pressed 5 ticks after the previous guard started
+        runTo(106);
+        assertEquals("no parry window while not re-armed", AvoidOutcome.NONE, fighter.checkAvoid(now, true, true));
+        assertEquals("it is still a normal guard", GuardResult.Outcome.GUARDED,
+                fighter.applyGuard(now, true, 1.0).outcome());
+        fighter.stopGuard();
+        runTo(105 + CombatRules.PARRY_REARM_TICKS);
+        fighter.startGuard(now, SWORD);
+        runTo(now + 1);
+        assertEquals("re-armed after a pause", AvoidOutcome.PARRIED, fighter.checkAvoid(now, true, true));
+    }
+
+    @Test
     public void parryGrantsOneRiposte() {
         fighter.startGuard(now, SWORD);
         runTo(102);

@@ -14,6 +14,11 @@ public final class CombatRules {
     public static final int RIPOSTE_WINDOW_TICKS = 30;
     public static final double RIPOSTE_MULTIPLIER = 1.5;
     public static final double PARRY_STAMINA_REFUND = 15.0;
+    /**
+     * A guard only opens a parry window if the previous guard started at least this long ago, so tapping the guard
+     * button over and over cannot keep a parry window open permanently.
+     */
+    public static final int PARRY_REARM_TICKS = 16;
     /** Running out of stamina while guarding staggers for this long. */
     public static final int GUARD_BREAK_STAGGER_TICKS = 20;
     /** Stamina starts regenerating this many ticks after it was last spent. */

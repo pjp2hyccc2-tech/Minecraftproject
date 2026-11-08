@@ -195,13 +195,20 @@ public final class CombatDriver {
         sendStatus(player, combatant, true, outcome, DefenseEvent.NONE);
     }
 
-    /** Right click with a weapon on the server: may the guard start? */
+    /**
+     * Right click with a weapon on the server: may the guard start? A refusal is reported to the client, which may
+     * have predicted the guard (it then drops the pose instead of showing a guard that does not protect).
+     */
     public boolean startGuard(ServerPlayer player, WeaponProfile weapon) {
         Combatant combatant = service.get(player.getUUID()).orElse(null);
         if (combatant == null || !player.isAlive()) {
             return false;
         }
-        return combatant.startGuard(now(), weapon);
+        boolean started = combatant.startGuard(now(), weapon);
+        if (!started) {
+            sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.GUARD_REFUSED);
+        }
+        return started;
     }
 
     // ------------------------------------------------------------------ defense

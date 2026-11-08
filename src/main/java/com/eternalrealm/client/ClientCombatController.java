@@ -51,8 +51,11 @@ public final class ClientCombatController {
 
         if (local != null) {
             local.updateWeapon(weapon);
-            if (local.isGuarding() && !isUsingWeapon(player)) {
+            boolean usingWeapon = isUsingWeapon(player);
+            if (local.isGuarding() && !usingWeapon) {
                 local.stopGuard();
+            } else if (!local.isGuarding() && usingWeapon) {
+                local.startGuard(now, weapon); // the server started a guard we did not predict: follow it
             }
         }
 
@@ -164,6 +167,15 @@ public final class ClientCombatController {
     private static boolean isUsingWeapon(Player player) {
         return player.isUsingItem() && player.getUsedItemHand() == InteractionHand.MAIN_HAND
                 && player.getUseItem().getItem() instanceof WeaponItem;
+    }
+
+    /** The server refused our guard: stop the vanilla item use we predicted (sends the vanilla release packet). */
+    static void dropPredictedGuard() {
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
+        if (player != null && minecraft.gameMode != null && isUsingWeapon(player)) {
+            minecraft.gameMode.releaseUsingItem(player);
+        }
     }
 
     /** True while the player holds an ETERNAL REALM weapon (vanilla attack/mining input is suppressed). */

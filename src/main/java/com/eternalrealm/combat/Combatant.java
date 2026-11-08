@@ -49,6 +49,8 @@ public final class Combatant {
     private long riposteUntil = NEVER;
     private boolean guarding;
     private long guardStartTick;
+    private long lastGuardStartTick = NEVER;
+    private boolean parryArmed;
 
     private final List<CombatEvent> outbox = new ArrayList<>();
 
@@ -342,7 +344,10 @@ public final class Combatant {
         };
     }
 
-    /** Starts guarding (cancelling an action's recovery). A guard already in progress keeps its start tick. */
+    /**
+     * Starts guarding (cancelling an action's recovery). A guard already in progress keeps its start tick. The guard
+     * opens a parry window only if the previous guard started {@link CombatRules#PARRY_REARM_TICKS} or more ago.
+     */
     public boolean startGuard(long now, WeaponProfile currentWeapon) {
         if (!canStartGuard(now, currentWeapon)) {
             return false;
@@ -354,6 +359,8 @@ public final class Combatant {
             phase = Phase.IDLE;
             guarding = true;
             guardStartTick = now;
+            parryArmed = now - lastGuardStartTick >= CombatRules.PARRY_REARM_TICKS;
+            lastGuardStartTick = now;
         }
         return true;
     }
@@ -373,7 +380,8 @@ public final class Combatant {
         if (evadable && now < invulnerableUntil) {
             return AvoidOutcome.DODGED;
         }
-        if (guarding && guardable && weapon != null && now - guardStartTick < weapon.guard().parryWindowTicks()) {
+        if (guarding && parryArmed && guardable && weapon != null
+                && now - guardStartTick < weapon.guard().parryWindowTicks()) {
             riposteUntil = now + CombatRules.RIPOSTE_WINDOW_TICKS;
             restoreStamina(CombatRules.PARRY_STAMINA_REFUND);
             return AvoidOutcome.PARRIED;

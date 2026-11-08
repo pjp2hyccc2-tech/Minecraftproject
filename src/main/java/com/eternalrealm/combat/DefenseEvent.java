@@ -2,13 +2,18 @@ package com.eternalrealm.combat;
 
 import java.util.Optional;
 
-/** Defensive outcome reported to the defending client (HUD popup). {@link #networkId()} is the stable wire id. */
+/**
+ * Defensive outcome reported to the defending client (HUD popup), or a guard correction. {@link #networkId()} is the
+ * stable wire id.
+ */
 public enum DefenseEvent {
     NONE(0),
     DODGED(1),
     PARRIED(2),
     GUARDED(3),
-    GUARD_BROKEN(4);
+    GUARD_BROKEN(4),
+    /** The server refused a guard the client may have predicted: the client must drop its guard pose. */
+    GUARD_REFUSED(5);
 
     private static final DefenseEvent[] BY_NETWORK_ID = new DefenseEvent[values().length];
 
