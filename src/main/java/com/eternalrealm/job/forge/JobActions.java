@@ -1,7 +1,6 @@
 package com.eternalrealm.job.forge;
 
 import com.eternalrealm.combat.WeaponType;
-import com.eternalrealm.combat.forge.ERItems;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
 import com.eternalrealm.job.SkillTree;
@@ -107,7 +106,9 @@ public final class JobActions {
     /** The first job choice hands out the job's weapon. */
     static void giveStarterKit(ServerPlayer player, JobType job) {
         WeaponType type = Jobs.get(job).starterWeapon();
-        ItemStack weapon = new ItemStack(ERItems.weaponFor(type));
+        ItemStack weapon = com.eternalrealm.item.forge.EquipmentStacks.create(com.eternalrealm.item.EquipmentData.of(
+                com.eternalrealm.item.EquipmentBase.weapon(type, com.eternalrealm.item.ItemTier.IRON),
+                com.eternalrealm.item.ItemRarity.COMMON, java.util.List.of()));
         if (!player.getInventory().add(weapon)) {
             player.drop(weapon, false);
         }

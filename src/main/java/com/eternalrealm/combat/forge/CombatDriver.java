@@ -121,6 +121,11 @@ public final class CombatDriver {
         }
     }
 
+    /** Equipment changed: the player's stats are re-derived on the next tick. */
+    public void markStatsDirty(UUID playerId) {
+        statsDirty.mark(playerId);
+    }
+
     /** The combat clock. */
     public long now() {
         return server.getTickCount();

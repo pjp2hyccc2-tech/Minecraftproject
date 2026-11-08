@@ -38,6 +38,16 @@ public final class ERItems {
         return WEAPONS;
     }
 
+    /** The weapon registered under {@code eternalrealm:<path>}, if it is one of these. */
+    public static java.util.Optional<RegistryObject<WeaponItem>> byPath(String path) {
+        for (RegistryObject<WeaponItem> weapon : WEAPONS) {
+            if (weapon.getId().getPath().equals(path)) {
+                return java.util.Optional.of(weapon);
+            }
+        }
+        return java.util.Optional.empty();
+    }
+
     /** The weapon item of a weapon type. */
     public static WeaponItem weaponFor(WeaponType type) {
         for (RegistryObject<WeaponItem> weapon : WEAPONS) {

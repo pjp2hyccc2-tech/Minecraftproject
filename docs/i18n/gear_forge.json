@@ -1,0 +1,374 @@
+{
+  "item.eternalrealm.iron_longsword": {
+    "ja": "鉄の片手剣",
+    "en": "Iron Longsword"
+  },
+  "item.eternalrealm.iron_greatsword": {
+    "ja": "鉄の両手剣",
+    "en": "Iron Greatsword"
+  },
+  "item.eternalrealm.iron_twin_blades": {
+    "ja": "鉄の双剣",
+    "en": "Iron Twin Blades"
+  },
+  "item.eternalrealm.iron_spear": {
+    "ja": "鉄の槍",
+    "en": "Iron Spear"
+  },
+  "item.eternalrealm.iron_staff": {
+    "ja": "鉄の杖",
+    "en": "Iron Staff"
+  },
+  "item.eternalrealm.iron_bow": {
+    "ja": "鉄の弓",
+    "en": "Iron Bow"
+  },
+  "item.eternalrealm.iron_helmet": {
+    "ja": "鉄の兜",
+    "en": "Iron Helmet"
+  },
+  "item.eternalrealm.iron_chestplate": {
+    "ja": "鉄の鎧",
+    "en": "Iron Chestplate"
+  },
+  "item.eternalrealm.iron_leggings": {
+    "ja": "鉄の脚甲",
+    "en": "Iron Leggings"
+  },
+  "item.eternalrealm.iron_boots": {
+    "ja": "鉄のブーツ",
+    "en": "Iron Boots"
+  },
+  "item.eternalrealm.steel_longsword": {
+    "ja": "鋼の片手剣",
+    "en": "Steel Longsword"
+  },
+  "item.eternalrealm.steel_greatsword": {
+    "ja": "鋼の両手剣",
+    "en": "Steel Greatsword"
+  },
+  "item.eternalrealm.steel_twin_blades": {
+    "ja": "鋼の双剣",
+    "en": "Steel Twin Blades"
+  },
+  "item.eternalrealm.steel_spear": {
+    "ja": "鋼の槍",
+    "en": "Steel Spear"
+  },
+  "item.eternalrealm.steel_staff": {
+    "ja": "鋼の杖",
+    "en": "Steel Staff"
+  },
+  "item.eternalrealm.steel_bow": {
+    "ja": "鋼の弓",
+    "en": "Steel Bow"
+  },
+  "item.eternalrealm.steel_helmet": {
+    "ja": "鋼の兜",
+    "en": "Steel Helmet"
+  },
+  "item.eternalrealm.steel_chestplate": {
+    "ja": "鋼の鎧",
+    "en": "Steel Chestplate"
+  },
+  "item.eternalrealm.steel_leggings": {
+    "ja": "鋼の脚甲",
+    "en": "Steel Leggings"
+  },
+  "item.eternalrealm.steel_boots": {
+    "ja": "鋼のブーツ",
+    "en": "Steel Boots"
+  },
+  "item.eternalrealm.sandstone_longsword": {
+    "ja": "砂岩の片手剣",
+    "en": "Sandstone Longsword"
+  },
+  "item.eternalrealm.sandstone_greatsword": {
+    "ja": "砂岩の両手剣",
+    "en": "Sandstone Greatsword"
+  },
+  "item.eternalrealm.sandstone_twin_blades": {
+    "ja": "砂岩の双剣",
+    "en": "Sandstone Twin Blades"
+  },
+  "item.eternalrealm.sandstone_spear": {
+    "ja": "砂岩の槍",
+    "en": "Sandstone Spear"
+  },
+  "item.eternalrealm.sandstone_staff": {
+    "ja": "砂岩の杖",
+    "en": "Sandstone Staff"
+  },
+  "item.eternalrealm.sandstone_bow": {
+    "ja": "砂岩の弓",
+    "en": "Sandstone Bow"
+  },
+  "item.eternalrealm.sandstone_helmet": {
+    "ja": "砂岩の兜",
+    "en": "Sandstone Helmet"
+  },
+  "item.eternalrealm.sandstone_chestplate": {
+    "ja": "砂岩の鎧",
+    "en": "Sandstone Chestplate"
+  },
+  "item.eternalrealm.sandstone_leggings": {
+    "ja": "砂岩の脚甲",
+    "en": "Sandstone Leggings"
+  },
+  "item.eternalrealm.sandstone_boots": {
+    "ja": "砂岩のブーツ",
+    "en": "Sandstone Boots"
+  },
+  "item.eternalrealm.frost_longsword": {
+    "ja": "氷晶の片手剣",
+    "en": "Frost Longsword"
+  },
+  "item.eternalrealm.frost_greatsword": {
+    "ja": "氷晶の両手剣",
+    "en": "Frost Greatsword"
+  },
+  "item.eternalrealm.frost_twin_blades": {
+    "ja": "氷晶の双剣",
+    "en": "Frost Twin Blades"
+  },
+  "item.eternalrealm.frost_spear": {
+    "ja": "氷晶の槍",
+    "en": "Frost Spear"
+  },
+  "item.eternalrealm.frost_staff": {
+    "ja": "氷晶の杖",
+    "en": "Frost Staff"
+  },
+  "item.eternalrealm.frost_bow": {
+    "ja": "氷晶の弓",
+    "en": "Frost Bow"
+  },
+  "item.eternalrealm.frost_helmet": {
+    "ja": "氷晶の兜",
+    "en": "Frost Helmet"
+  },
+  "item.eternalrealm.frost_chestplate": {
+    "ja": "氷晶の鎧",
+    "en": "Frost Chestplate"
+  },
+  "item.eternalrealm.frost_leggings": {
+    "ja": "氷晶の脚甲",
+    "en": "Frost Leggings"
+  },
+  "item.eternalrealm.frost_boots": {
+    "ja": "氷晶のブーツ",
+    "en": "Frost Boots"
+  },
+  "item.eternalrealm.flame_longsword": {
+    "ja": "炎竜の片手剣",
+    "en": "Drakeflame Longsword"
+  },
+  "item.eternalrealm.flame_greatsword": {
+    "ja": "炎竜の両手剣",
+    "en": "Drakeflame Greatsword"
+  },
+  "item.eternalrealm.flame_twin_blades": {
+    "ja": "炎竜の双剣",
+    "en": "Drakeflame Twin Blades"
+  },
+  "item.eternalrealm.flame_spear": {
+    "ja": "炎竜の槍",
+    "en": "Drakeflame Spear"
+  },
+  "item.eternalrealm.flame_staff": {
+    "ja": "炎竜の杖",
+    "en": "Drakeflame Staff"
+  },
+  "item.eternalrealm.flame_bow": {
+    "ja": "炎竜の弓",
+    "en": "Drakeflame Bow"
+  },
+  "item.eternalrealm.flame_helmet": {
+    "ja": "炎竜の兜",
+    "en": "Drakeflame Helmet"
+  },
+  "item.eternalrealm.flame_chestplate": {
+    "ja": "炎竜の鎧",
+    "en": "Drakeflame Chestplate"
+  },
+  "item.eternalrealm.flame_leggings": {
+    "ja": "炎竜の脚甲",
+    "en": "Drakeflame Leggings"
+  },
+  "item.eternalrealm.flame_boots": {
+    "ja": "炎竜のブーツ",
+    "en": "Drakeflame Boots"
+  },
+  "item.eternalrealm.celestial_longsword": {
+    "ja": "天空の片手剣",
+    "en": "Celestial Longsword"
+  },
+  "item.eternalrealm.celestial_greatsword": {
+    "ja": "天空の両手剣",
+    "en": "Celestial Greatsword"
+  },
+  "item.eternalrealm.celestial_twin_blades": {
+    "ja": "天空の双剣",
+    "en": "Celestial Twin Blades"
+  },
+  "item.eternalrealm.celestial_spear": {
+    "ja": "天空の槍",
+    "en": "Celestial Spear"
+  },
+  "item.eternalrealm.celestial_staff": {
+    "ja": "天空の杖",
+    "en": "Celestial Staff"
+  },
+  "item.eternalrealm.celestial_bow": {
+    "ja": "天空の弓",
+    "en": "Celestial Bow"
+  },
+  "item.eternalrealm.celestial_helmet": {
+    "ja": "天空の兜",
+    "en": "Celestial Helmet"
+  },
+  "item.eternalrealm.celestial_chestplate": {
+    "ja": "天空の鎧",
+    "en": "Celestial Chestplate"
+  },
+  "item.eternalrealm.celestial_leggings": {
+    "ja": "天空の脚甲",
+    "en": "Celestial Leggings"
+  },
+  "item.eternalrealm.celestial_boots": {
+    "ja": "天空のブーツ",
+    "en": "Celestial Boots"
+  },
+  "item.eternalrealm.abyss_longsword": {
+    "ja": "終焉の片手剣",
+    "en": "Abyssal Longsword"
+  },
+  "item.eternalrealm.abyss_greatsword": {
+    "ja": "終焉の両手剣",
+    "en": "Abyssal Greatsword"
+  },
+  "item.eternalrealm.abyss_twin_blades": {
+    "ja": "終焉の双剣",
+    "en": "Abyssal Twin Blades"
+  },
+  "item.eternalrealm.abyss_spear": {
+    "ja": "終焉の槍",
+    "en": "Abyssal Spear"
+  },
+  "item.eternalrealm.abyss_staff": {
+    "ja": "終焉の杖",
+    "en": "Abyssal Staff"
+  },
+  "item.eternalrealm.abyss_bow": {
+    "ja": "終焉の弓",
+    "en": "Abyssal Bow"
+  },
+  "item.eternalrealm.abyss_helmet": {
+    "ja": "終焉の兜",
+    "en": "Abyssal Helmet"
+  },
+  "item.eternalrealm.abyss_chestplate": {
+    "ja": "終焉の鎧",
+    "en": "Abyssal Chestplate"
+  },
+  "item.eternalrealm.abyss_leggings": {
+    "ja": "終焉の脚甲",
+    "en": "Abyssal Leggings"
+  },
+  "item.eternalrealm.abyss_boots": {
+    "ja": "終焉のブーツ",
+    "en": "Abyssal Boots"
+  },
+  "item.eternalrealm.slime_gel": {
+    "ja": "スライムゼリー",
+    "en": "Slime Gel"
+  },
+  "item.eternalrealm.wolf_fang": {
+    "ja": "狼の牙",
+    "en": "Wolf Fang"
+  },
+  "item.eternalrealm.treant_bark": {
+    "ja": "古木の樹皮",
+    "en": "Treant Bark"
+  },
+  "item.eternalrealm.forest_spore": {
+    "ja": "森の胞子",
+    "en": "Forest Spore"
+  },
+  "item.eternalrealm.scarab_shell": {
+    "ja": "スカラベの甲殻",
+    "en": "Scarab Shell"
+  },
+  "item.eternalrealm.desert_crystal": {
+    "ja": "砂漠の結晶",
+    "en": "Desert Crystal"
+  },
+  "item.eternalrealm.frost_shard": {
+    "ja": "氷晶の欠片",
+    "en": "Frost Shard"
+  },
+  "item.eternalrealm.yeti_fur": {
+    "ja": "イエティの毛皮",
+    "en": "Yeti Fur"
+  },
+  "item.eternalrealm.magma_core": {
+    "ja": "溶岩核",
+    "en": "Magma Core"
+  },
+  "item.eternalrealm.drake_scale": {
+    "ja": "竜鱗",
+    "en": "Drake Scale"
+  },
+  "item.eternalrealm.sky_feather": {
+    "ja": "天空の羽根",
+    "en": "Sky Feather"
+  },
+  "item.eternalrealm.star_fragment": {
+    "ja": "星のかけら",
+    "en": "Star Fragment"
+  },
+  "item.eternalrealm.void_essence": {
+    "ja": "虚無のエッセンス",
+    "en": "Void Essence"
+  },
+  "item.eternalrealm.abyss_crystal": {
+    "ja": "深淵の結晶",
+    "en": "Abyss Crystal"
+  },
+  "itemGroup.eternalrealm": {
+    "ja": "ETERNAL REALM",
+    "en": "ETERNAL REALM"
+  },
+  "tooltip.eternalrealm.material": {
+    "ja": "素材",
+    "en": "Material"
+  },
+  "tooltip.eternalrealm.material.area": {
+    "ja": "素材（%s）",
+    "en": "Material (%s)"
+  },
+  "tooltip.eternalrealm.sell_value": {
+    "ja": "売値 %s G",
+    "en": "Sells for %s gold"
+  },
+  "tooltip.eternalrealm.consumable.cooldown": {
+    "ja": "クールダウン %s秒",
+    "en": "Cooldown %ss"
+  },
+  "message.eternalrealm.consumable.channel_cancelled": {
+    "ja": "詠唱が中断された",
+    "en": "The channel was interrupted"
+  },
+  "message.eternalrealm.consumable.returned": {
+    "ja": "拠点へ帰還した",
+    "en": "You returned home"
+  },
+  "message.eternalrealm.consumable.points_reset": {
+    "ja": "ステータスとスキルのポイントが戻ってきた",
+    "en": "Your stat and skill points were refunded"
+  },
+  "message.eternalrealm.consumable.nothing_to_reset": {
+    "ja": "振り直すポイントがない",
+    "en": "There are no points to refund"
+  }
+}

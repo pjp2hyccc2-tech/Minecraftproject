@@ -65,7 +65,7 @@ public final class CombatHits {
      */
     public static DamageRoll roll(ServerPlayer attacker, CombatStats stats, WeaponProfile weapon, HitFrame frame,
                                   double damageScale, DamageType type, double random) {
-        double bonusAttack = WeaponBonus.bonusAttack(attacker.getMainHandItem());
+        double bonusAttack = WeaponBonus.bonusAttack(attacker, attacker.getMainHandItem());
         DamageRoll base = DamageCalculator.roll(stats, weapon, frame, damageScale, random, type, bonusAttack);
         double amount = Math.min(CombatRules.MAX_DAMAGE, base.amount() * ERMobEffects.attackMultiplier(attacker));
         return new DamageRoll(amount, base.critical());

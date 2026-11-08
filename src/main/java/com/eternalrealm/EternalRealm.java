@@ -44,6 +44,8 @@ public final class EternalRealm {
 
         ERNetwork.register();
         ERItems.register(modBus);
+        com.eternalrealm.item.forge.ERGearItems.register(modBus);
+        com.eternalrealm.item.forge.GearEvents.install();
         ERMobEffects.register(modBus);
         EREntities.register(modBus);
         ERCreativeTabs.register(modBus);
@@ -67,6 +69,8 @@ public final class EternalRealm {
         forgeBus.addListener(Npcs::onEntityInteract);
         forgeBus.addListener(CombatEvents::onLivingAttack);
         forgeBus.addListener(CombatEvents::onLivingHurt);
+        forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onEquipmentChange);
+        forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onLivingHurt);
         forgeBus.addListener(CombatEvents::onKnockBack);
         forgeBus.addListener(EventPriority.LOWEST, CombatEvents::onLivingDeath);
         forgeBus.addListener(CombatEvents::onRespawn);

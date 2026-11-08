@@ -32,6 +32,8 @@ public final class ClientModEvents {
         ClientboundHandlers.setDamageNumberHandler(ClientCombatState::onDamageNumber);
         ClientboundHandlers.setUiDataHandler(ClientUiState::accept);
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
+        com.eternalrealm.item.forge.EquipmentStacks.setViewerLevel(() -> ClientCharacterState.snapshot()
+                .map(com.eternalrealm.character.CharacterSnapshot::level).orElse(1));
     }
 
     @SubscribeEvent

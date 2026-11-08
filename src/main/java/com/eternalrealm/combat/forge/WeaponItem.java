@@ -87,11 +87,27 @@ public final class WeaponItem extends Item {
         return false;
     }
 
+    /** Equipment weapons carry their rarity-coloured name ("+3 鉄の片手剣"). */
+    @Override
+    public Component getName(ItemStack stack) {
+        return com.eternalrealm.item.forge.EquipmentStacks.displayName(stack).orElseGet(() -> super.getName(stack));
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return com.eternalrealm.item.forge.EquipmentStacks.isFoil(stack);
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable(profile.type().translationKey()).withStyle(ChatFormatting.GOLD));
-        tooltip.add(Component.translatable("tooltip.eternalrealm.weapon.attack", format(profile.baseAttack()))
-                .withStyle(ChatFormatting.GRAY));
+        boolean equipment = com.eternalrealm.item.forge.EquipmentStacks.isEquipment(stack);
+        if (equipment) {
+            com.eternalrealm.item.forge.EquipmentStacks.appendTooltip(stack, tooltip);
+        } else {
+            tooltip.add(Component.translatable(profile.type().translationKey()).withStyle(ChatFormatting.GOLD));
+            tooltip.add(Component.translatable("tooltip.eternalrealm.weapon.attack", format(profile.baseAttack()))
+                    .withStyle(ChatFormatting.GRAY));
+        }
         tooltip.add(Component.translatable("tooltip.eternalrealm.weapon.combo", profile.combo().size())
                 .withStyle(ChatFormatting.GRAY));
         ActionDefinition skill = profile.skill();

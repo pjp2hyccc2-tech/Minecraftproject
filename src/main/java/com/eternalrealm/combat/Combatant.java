@@ -501,6 +501,13 @@ public final class Combatant {
         stamina = Math.min(stats.maxStamina(), stamina + amount);
     }
 
+    /** Server: stamina from a consumable (capped by the pool). */
+    public void addStamina(double amount) {
+        if (Double.isFinite(amount) && amount > 0.0) {
+            restoreStamina(amount);
+        }
+    }
+
     public void setStats(CombatStats newStats) {
         stats = Objects.requireNonNull(newStats, "stats");
         stamina = Math.min(stamina, stats.maxStamina());
