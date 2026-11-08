@@ -1,0 +1,34 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# runtime / generated
+eclipse
+run
+run-data
+mcmodsrepo
+
+# offline test output (tools/offline-test.sh)
+.offline-build
+
+# Files from Forge MDK
+forge*changelog.txt
+
+# OS
+.DS_Store
+Thumbs.db

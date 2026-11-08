@@ -1,0 +1,11 @@
+# Normalize line endings; scripts must stay LF so they run on Linux servers/CI.
+* text=auto
+*.sh text eol=lf
+gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
+*.nbt binary
+
+# Generated resources always use LF
+src/generated/**/.cache/cache text eol=lf
+src/generated/**/*.json text eol=lf
