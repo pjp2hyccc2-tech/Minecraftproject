@@ -177,7 +177,8 @@ public final class MarketService {
         Listing listing = sale.listing().get();
         ItemStack stack = restore(listing.itemData());
         Component name = stack.isEmpty() ? Component.literal(listing.item().itemId()) : stack.getDisplayName();
-        if (!stack.isEmpty() && player.getInventory().add(stack)) {
+        if (!stack.isEmpty() && fitsInBag(player.getInventory(), stack)) {
+            com.eternalrealm.item.forge.Bags.give(player, stack); // into the bag slots, never the weapon slot
             player.sendSystemMessage(Component.translatable(EconomyMessages.AUCTION_BOUGHT, name, sale.price())
                     .withStyle(ChatFormatting.GREEN));
         } else {
@@ -322,5 +323,22 @@ public final class MarketService {
         } catch (DataAccessException | RuntimeException e) {
             LOG.error("Could not save the market at shutdown", e);
         }
+    }
+
+    /** Whether the whole stack fits into the bag slots (1-35; slot 0 is the equipped weapon). */
+    private static boolean fitsInBag(net.minecraft.world.entity.player.Inventory inventory, ItemStack stack) {
+        int room = 0;
+        for (int slot = com.eternalrealm.item.bag.Bag.FIRST_SLOT; slot <= com.eternalrealm.item.bag.Bag.LAST_SLOT; slot++) {
+            ItemStack held = inventory.items.get(slot);
+            if (held.isEmpty()) {
+                room += stack.getMaxStackSize();
+            } else if (held.isStackable() && ItemStack.isSameItemSameTags(held, stack)) {
+                room += held.getMaxStackSize() - held.getCount();
+            }
+            if (room >= stack.getCount()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

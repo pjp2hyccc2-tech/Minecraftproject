@@ -233,9 +233,7 @@ public final class JobActions {
                 .withStyle(ChatFormatting.AQUA), false);
         ItemStack potions = new ItemStack(com.eternalrealm.item.forge.ERGearItems.consumable(
                 com.eternalrealm.item.Consumable.HEALTH_POTION_SMALL), STARTER_POTIONS);
-        if (!player.getInventory().add(potions)) {
-            player.drop(potions, false);
-        }
+        com.eternalrealm.item.forge.Bags.give(player, potions); // into the bag (never the weapon slot), in the feed
         player.displayClientMessage(Component.translatable("message.eternalrealm.job.starter_potions", STARTER_POTIONS)
                 .withStyle(ChatFormatting.AQUA), false);
     }
