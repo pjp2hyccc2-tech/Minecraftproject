@@ -966,10 +966,14 @@ abstract class Style {
         board(rightWall, rightWall.mid());
         // exit portal on the back wall
         portal(backWall, backWall.mid());
-        // columns where the small hall's side walls were
+        // columns where the small hall's side walls were (not in front of the monument or the board)
         for (Side side : new Side[]{left, left.opposite()}) {
             Wall old = new Wall(core, side);
+            int keepClear = side == left ? monumentA : rightWall.mid();
             for (int a = old.min() + 1; a <= old.max() - 1; a += 4) {
+                if (Math.abs(a - keepClear) <= 2) {
+                    continue;
+                }
                 int x = old.x(a, 0);
                 int z = old.z(a, 0);
                 if (Math.abs((front.dx != 0 ? x : z) - (front.dx != 0 ? frontWall.x(0, 0) : frontWall.z(0, 0))) < 3) {

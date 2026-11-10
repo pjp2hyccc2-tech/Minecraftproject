@@ -238,11 +238,11 @@ def views(w):
         ac = center(arena)
         n = center(ante)
         if ante[3] - ante[0] >= ante[5] - ante[2] and abs(ac[2] - n[2]) < abs(ac[0] - n[0]):
-            sx = ante[0] + 0.5 if ac[0] > n[0] else ante[3] + 0.5
-            v["ante_eye"] = ("eye", (sx, 3.0, n[2]), (ac[0], 5.5, n[2]))
+            sx = ante[0] + 2.5 if ac[0] > n[0] else ante[3] - 1.5
+            v["ante_eye"] = ("eye", (sx, 3.2, n[2] + 0.5), (ac[0], 6.5, n[2] + 0.5))
         else:
-            sz = ante[2] + 0.5 if ac[2] > n[2] else ante[5] + 0.5
-            v["ante_eye"] = ("eye", (n[0], 3.0, sz), (n[0], 5.5, ac[2]))
+            sz = ante[2] + 2.5 if ac[2] > n[2] else ante[5] - 1.5
+            v["ante_eye"] = ("eye", (n[0] + 0.5, 3.2, sz), (n[0] + 0.5, 6.5, ac[2]))
         v["ante_iso"] = ("iso", ante, 3)
     arena = w.spaces["A"]
     a = center(arena)
