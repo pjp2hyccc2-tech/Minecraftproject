@@ -1,6 +1,6 @@
 package com.eternalrealm.npc.forge;
 
-import com.eternalrealm.item.forge.BlacksmithMenu;
+import com.eternalrealm.item.forge.SmithService;
 import com.eternalrealm.item.forge.ShopMenu;
 import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.UiData;
@@ -20,7 +20,7 @@ public final class NpcServices {
         });
         Npcs.onInteract(NpcRole.BLACKSMITH, (player, npc) -> {
             StoryNpcs.serviceTalk(player, NpcRole.BLACKSMITH, () -> {
-                BlacksmithMenu.open(player);
+                SmithService.open(player, "goran");
             });
         });
         Npcs.onInteract(NpcRole.QUEST_BOARD, (player, npc) -> {

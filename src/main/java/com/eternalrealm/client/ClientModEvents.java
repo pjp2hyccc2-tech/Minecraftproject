@@ -46,6 +46,10 @@ public final class ClientModEvents {
                         ClientUiState.stringOr(data, "id", "")));
             } else if (com.eternalrealm.client.boss.BossScreenEffects.CHANNEL.equals(channel)) {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.client.boss.BossScreenEffects::accept);
+            } else if (com.eternalrealm.item.forge.SmithService.CHANNEL.equals(channel)) {
+                ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.screen.SmithScreen::open);
+            } else if (com.eternalrealm.item.forge.SmithService.RESULT_CHANNEL.equals(channel)) {
+                ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.screen.SmithScreen::onResult);
             } else if (com.eternalrealm.world.field.Waystones.UI_CHANNEL.equals(channel)) {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.map.WorldMapScreen::openTravel);
             } else if (com.eternalrealm.world.field.Waystones.ARRIVE_CHANNEL.equals(channel)) {

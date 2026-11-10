@@ -18,8 +18,8 @@ public final class Inventories {
         return String.valueOf(ForgeRegistries.ITEMS.getKey(stack.getItem()));
     }
 
-    /** Item id → count of the plain items in the main inventory. */
-    public static Map<String, Integer> counts(ServerPlayer player) {
+    /** Item id → count of the plain items in the main inventory (also used by the client's smithy screen). */
+    public static Map<String, Integer> counts(net.minecraft.world.entity.player.Player player) {
         Map<String, Integer> counts = new HashMap<>();
         for (ItemStack stack : player.getInventory().items) {
             if (!stack.isEmpty() && !EquipmentStacks.isEquipment(stack)) {
