@@ -225,7 +225,7 @@ public class ResourcesTest {
         for (com.eternalrealm.job.SkillTree.InvestResult result : com.eternalrealm.job.SkillTree.InvestResult.values()) {
             required.add(result.translationKey());
         }
-        for (int slot = 1; slot <= 4; slot++) {
+        for (int slot = 1; slot <= com.eternalrealm.job.SkillTree.LOADOUT_SLOTS; slot++) {
             required.add("key.eternalrealm.job_skill_" + slot);
         }
         for (String effect : List.of("attack_up", "defense_up", "flame_weapon", "bleed")) {
