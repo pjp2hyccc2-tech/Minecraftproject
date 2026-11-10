@@ -13,6 +13,7 @@ import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.NoiseColumn;
 import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSource;
@@ -38,7 +39,8 @@ import java.util.concurrent.Executor;
  * The terrain of アストリア's field map: every column is filled from the pure {@link FieldTerrain} heights (bedrock,
  * deepslate, stone with strata, the field's ground cover, then water up to its level; the falls as a curtain of falling
  * water). No noise router, no carvers: the land is exactly the hand-made map on every server, and biome decoration
- * (trees, rocks, ruins, ores, the area surface repaint) runs on top as usual.
+ * (trees, rocks, ruins, ores, the area surface repaint) runs on top as usual. The hand-made set pieces of the fields
+ * ({@link FieldPieces}) are stamped right after the terrain and restored after the decoration.
  */
 public class FieldChunkGenerator extends ChunkGenerator {
     public static final Codec<FieldChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -115,7 +117,15 @@ public class FieldChunkGenerator extends ChunkGenerator {
                 }
             }
         }
+        FieldPieces.stampTerrain(chunk);
         return CompletableFuture.completedFuture(chunk);
+    }
+
+    /** Biome decoration as usual, then the field set pieces win back whatever the decoration grew into them. */
+    @Override
+    public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structures) {
+        super.applyBiomeDecoration(level, chunk, structures);
+        FieldPieces.restampAfterDecoration(chunk);
     }
 
     private static void set(ChunkAccess chunk, int lx, int y, int lz, BlockState state) {

@@ -1,5 +1,6 @@
 package com.eternalrealm.world.forge.feature;
 
+import com.eternalrealm.world.forge.FieldPieces;
 import com.eternalrealm.world.gen.AstoriaLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,6 +23,8 @@ public final class FeatureKit {
     private static final int FLAGS = Block.UPDATE_CLIENTS;
     /** Tower plaza (octagon radius 24) plus the reach of the largest decoration. */
     private static final double TOWER_KEEP_OUT = 40.0;
+    /** How far a typical feature reaches from its origin (trees, rocks, ruins) when checking the field set pieces. */
+    private static final int PIECE_KEEP_OUT = 8;
 
     private FeatureKit() {
     }
@@ -53,6 +56,20 @@ public final class FeatureKit {
         double dx = x - AstoriaLayout.TOWER_X;
         double dz = z - AstoriaLayout.TOWER_Z;
         return dx * dx + dz * dz <= TOWER_KEEP_OUT * TOWER_KEEP_OUT;
+    }
+
+    /**
+     * True if a feature placed at (x, z) could reach the dark tower's plaza or one of the hand-made field set pieces
+     * ({@link FieldPieces}): the feature is skipped there, so trees, rocks and ruins never grow through a shrine, a
+     * bridge or a farmstead.
+     */
+    public static boolean keepOut(int x, int z) {
+        return keepOut(x, z, PIECE_KEEP_OUT);
+    }
+
+    /** {@link #keepOut(int, int)} for a feature reaching {@code reach} blocks from its origin. */
+    public static boolean keepOut(int x, int z, int reach) {
+        return nearTower(x, z) || FieldPieces.near(x, z, reach);
     }
 
     /**
