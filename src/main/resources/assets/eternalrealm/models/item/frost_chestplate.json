@@ -39,6 +39,30 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/chestplate_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4033
+      },
+      "model": "eternalrealm:item/named/dune_stalker_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4041
+      },
+      "model": "eternalrealm:item/named/glacier_warden_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4105
+      },
+      "model": "eternalrealm:item/named/reedwalker_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4113
+      },
+      "model": "eternalrealm:item/named/tidecaller_robe_chest"
     }
   ]
 }

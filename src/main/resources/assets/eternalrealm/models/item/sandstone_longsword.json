@@ -1,3 +1,71 @@
 {
-  "parent": "eternalrealm:item/weapon/longsword_3"
+  "parent": "eternalrealm:item/weapon/longsword_3",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3002
+      },
+      "model": "eternalrealm:item/named/galewild_saber"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3019
+      },
+      "model": "eternalrealm:item/named/heartwood_edge"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3020
+      },
+      "model": "eternalrealm:item/named/eclipse_moonblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3036
+      },
+      "model": "eternalrealm:item/named/ore_vein_sword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3037
+      },
+      "model": "eternalrealm:item/named/sunscarab_khopesh"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3054
+      },
+      "model": "eternalrealm:item/named/rivermist_sword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3127
+      },
+      "model": "eternalrealm:item/named/millstone_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3128
+      },
+      "model": "eternalrealm:item/named/harvest_moon_sabre"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3144
+      },
+      "model": "eternalrealm:item/named/reedcutter"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3145
+      },
+      "model": "eternalrealm:item/named/lake_scale_sword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3162
+      },
+      "model": "eternalrealm:item/named/deckhand_cutlass"
+    }
+  ]
 }

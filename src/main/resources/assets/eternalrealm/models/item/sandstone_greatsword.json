@@ -1,3 +1,71 @@
 {
-  "parent": "eternalrealm:item/weapon/greatsword_3"
+  "parent": "eternalrealm:item/weapon/greatsword_3",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3005
+      },
+      "model": "eternalrealm:item/named/garms_maw"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3022
+      },
+      "model": "eternalrealm:item/named/rootbreaker"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3023
+      },
+      "model": "eternalrealm:item/named/nightbough_claymore"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3039
+      },
+      "model": "eternalrealm:item/named/pickaxe_breaker"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3040
+      },
+      "model": "eternalrealm:item/named/coalheart_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3057
+      },
+      "model": "eternalrealm:item/named/cascade_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3130
+      },
+      "model": "eternalrealm:item/named/granary_gate_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3131
+      },
+      "model": "eternalrealm:item/named/brutus_horncleaver"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3147
+      },
+      "model": "eternalrealm:item/named/driftwood_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3148
+      },
+      "model": "eternalrealm:item/named/marshking_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3165
+      },
+      "model": "eternalrealm:item/named/anchor_greatsword"
+    }
+  ]
 }

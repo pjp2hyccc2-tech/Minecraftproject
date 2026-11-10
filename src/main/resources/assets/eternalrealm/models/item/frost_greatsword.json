@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/greatsword_4"
+  "parent": "eternalrealm:item/weapon/greatsword_4",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3041
+      },
+      "model": "eternalrealm:item/named/colossal_ironvein"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3058
+      },
+      "model": "eternalrealm:item/named/jailers_verdict"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3149
+      },
+      "model": "eternalrealm:item/named/deep_lake_slab"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3166
+      },
+      "model": "eternalrealm:item/named/stormsail_greatsword"
+    }
+  ]
 }

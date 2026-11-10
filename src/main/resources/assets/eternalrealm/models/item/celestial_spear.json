@@ -1,3 +1,17 @@
 {
-  "parent": "eternalrealm:item/weapon/spear_6"
+  "parent": "eternalrealm:item/weapon/spear_6",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3083
+      },
+      "model": "eternalrealm:item/named/valkas_berserk_lance"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3099
+      },
+      "model": "eternalrealm:item/named/summit_spear"
+    }
+  ]
 }

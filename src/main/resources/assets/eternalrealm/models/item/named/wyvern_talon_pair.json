@@ -1,0 +1,21 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "particle": "eternalrealm:item/named/wyvern_talon_pair"
+  },
+  "base": {
+    "parent": "eternalrealm:item/named/wyvern_talon_pair_held"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "eternalrealm:item/named/wyvern_talon_pair_icon"
+    },
+    "ground": {
+      "parent": "eternalrealm:item/named/wyvern_talon_pair_icon"
+    },
+    "fixed": {
+      "parent": "eternalrealm:item/named/wyvern_talon_pair_icon"
+    }
+  }
+}

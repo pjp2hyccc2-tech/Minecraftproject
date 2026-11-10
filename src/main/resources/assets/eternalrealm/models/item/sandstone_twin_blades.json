@@ -1,3 +1,77 @@
 {
-  "parent": "eternalrealm:item/weapon/twin_blades_3"
+  "parent": "eternalrealm:item/weapon/twin_blades_3",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3008
+      },
+      "model": "eternalrealm:item/named/hooks_reapers"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3025
+      },
+      "model": "eternalrealm:item/named/moth_wing_daggers"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3026
+      },
+      "model": "eternalrealm:item/named/glowcap_stilettos"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3042
+      },
+      "model": "eternalrealm:item/named/ember_shivs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3043
+      },
+      "model": "eternalrealm:item/named/tombsand_fangs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3060
+      },
+      "model": "eternalrealm:item/named/icicle_pair"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3133
+      },
+      "model": "eternalrealm:item/named/strawman_needles"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3134
+      },
+      "model": "eternalrealm:item/named/blight_harvest_scythes"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3150
+      },
+      "model": "eternalrealm:item/named/minnow_knives"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3151
+      },
+      "model": "eternalrealm:item/named/gel_glass_daggers"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3168
+      },
+      "model": "eternalrealm:item/named/saltspray_daggers"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3180
+      },
+      "model": "eternalrealm:item/named/bandit_king_twinshade"
+    }
+  ]
 }

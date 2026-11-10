@@ -109,6 +109,12 @@
         "custom_model_data": 7
       },
       "model": "eternalrealm:item/weapon/greatsword_7"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3003
+      },
+      "model": "eternalrealm:item/named/pasture_cleaver"
     }
   ]
 }

@@ -1,3 +1,35 @@
 {
-  "parent": "eternalrealm:item/weapon/twin_blades_7"
+  "parent": "eternalrealm:item/weapon/twin_blades_7",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3097
+      },
+      "model": "eternalrealm:item/named/sky_ruin_shards"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3098
+      },
+      "model": "eternalrealm:item/named/gale_feather_blades"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3114
+      },
+      "model": "eternalrealm:item/named/shadowsilk_fangs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3115
+      },
+      "model": "eternalrealm:item/named/doomguard_shivs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3116
+      },
+      "model": "eternalrealm:item/named/voidwhisper_daggers"
+    }
+  ]
 }

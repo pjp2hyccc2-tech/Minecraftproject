@@ -1,3 +1,23 @@
 {
-  "parent": "eternalrealm:item/weapon/greatsword_2"
+  "parent": "eternalrealm:item/weapon/greatsword_2",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3004
+      },
+      "model": "eternalrealm:item/named/hillwarden_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3021
+      },
+      "model": "eternalrealm:item/named/thornwall_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3129
+      },
+      "model": "eternalrealm:item/named/plowshare_greatsword"
+    }
+  ]
 }

@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/twin_blades_5"
+  "parent": "eternalrealm:item/weapon/twin_blades_5",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3062
+      },
+      "model": "eternalrealm:item/named/mistweavers_fangs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3078
+      },
+      "model": "eternalrealm:item/named/ember_moth_blades"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3079
+      },
+      "model": "eternalrealm:item/named/salamander_tongues"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3170
+      },
+      "model": "eternalrealm:item/named/dock_brawlers_knuckleknives"
+    }
+  ]
 }

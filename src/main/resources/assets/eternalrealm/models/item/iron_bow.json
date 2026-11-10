@@ -1,3 +1,11 @@
 {
-  "parent": "eternalrealm:item/weapon/longbow_1"
+  "parent": "eternalrealm:item/weapon/longbow_1",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3015
+      },
+      "model": "eternalrealm:item/named/shepherds_bow"
+    }
+  ]
 }

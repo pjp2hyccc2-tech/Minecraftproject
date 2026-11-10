@@ -1,3 +1,41 @@
 {
-  "parent": "eternalrealm:item/weapon/greatsword_7"
+  "parent": "eternalrealm:item/weapon/greatsword_7",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3094
+      },
+      "model": "eternalrealm:item/named/thunderhorn_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3095
+      },
+      "model": "eternalrealm:item/named/thunderhead_greatblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3111
+      },
+      "model": "eternalrealm:item/named/nightmare_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3112
+      },
+      "model": "eternalrealm:item/named/towerfall_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3113
+      },
+      "model": "eternalrealm:item/named/black_knights_requiem"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3188
+      },
+      "model": "eternalrealm:item/named/king_of_end_greatsword"
+    }
+  ]
 }

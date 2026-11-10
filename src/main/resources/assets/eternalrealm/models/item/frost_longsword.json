@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/longsword_4"
+  "parent": "eternalrealm:item/weapon/longsword_4",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3038
+      },
+      "model": "eternalrealm:item/named/forgefire_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3055
+      },
+      "model": "eternalrealm:item/named/pearlguard_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3146
+      },
+      "model": "eternalrealm:item/named/mirror_surface_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3163
+      },
+      "model": "eternalrealm:item/named/doubloon_rapier"
+    }
+  ]
 }

@@ -39,6 +39,24 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/leggings_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4006
+      },
+      "model": "eternalrealm:item/named/homestead_guard_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4014
+      },
+      "model": "eternalrealm:item/named/moonleaf_robe_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4086
+      },
+      "model": "eternalrealm:item/named/farmstead_bulwark_legs"
     }
   ]
 }

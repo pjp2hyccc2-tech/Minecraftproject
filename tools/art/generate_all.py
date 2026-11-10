@@ -63,6 +63,8 @@ def main() -> int:
         # tier 1 also replaces the original item texture (same file name as before)
         save(weapon_imgs[(fam, 1)], "item", f"{models.WEAPON_ITEMS[fam][0]}.png")
     written += models.weapon_models(ASSETS, weapons.TIERS)
+    import armory_art  # noqa: E402  (named designs: their overrides on the tier items)
+    armory_art.patch_tier_models(ASSETS)
 
     # 2. armor ----------------------------------------------------------------------------
     armor_imgs = {}

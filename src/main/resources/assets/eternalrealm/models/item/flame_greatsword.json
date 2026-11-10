@@ -1,3 +1,35 @@
 {
-  "parent": "eternalrealm:item/weapon/greatsword_5"
+  "parent": "eternalrealm:item/weapon/greatsword_5",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3059
+      },
+      "model": "eternalrealm:item/named/gouras_avalanche"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3075
+      },
+      "model": "eternalrealm:item/named/ruin_guardian_slab"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3076
+      },
+      "model": "eternalrealm:item/named/amber_sun_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3167
+      },
+      "model": "eternalrealm:item/named/krakenbone_slab"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3183
+      },
+      "model": "eternalrealm:item/named/frozen_executioner_blade"
+    }
+  ]
 }

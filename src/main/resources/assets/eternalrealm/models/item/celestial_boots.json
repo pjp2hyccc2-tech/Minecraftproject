@@ -39,6 +39,18 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/boots_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4059
+      },
+      "model": "eternalrealm:item/named/ruin_guardian_plate_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4063
+      },
+      "model": "eternalrealm:item/named/thunderpeak_armor_feet"
     }
   ]
 }

@@ -39,6 +39,36 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/chestplate_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4065
+      },
+      "model": "eternalrealm:item/named/cloudweaver_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4069
+      },
+      "model": "eternalrealm:item/named/skystrider_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4073
+      },
+      "model": "eternalrealm:item/named/voidstep_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4077
+      },
+      "model": "eternalrealm:item/named/endless_night_plate_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4081
+      },
+      "model": "eternalrealm:item/named/oblivion_vestment_chest"
     }
   ]
 }

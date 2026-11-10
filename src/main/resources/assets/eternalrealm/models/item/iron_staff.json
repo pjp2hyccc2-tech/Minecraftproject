@@ -1,3 +1,11 @@
 {
-  "parent": "eternalrealm:item/weapon/staff_1"
+  "parent": "eternalrealm:item/weapon/staff_1",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3012
+      },
+      "model": "eternalrealm:item/named/sprout_wand"
+    }
+  ]
 }

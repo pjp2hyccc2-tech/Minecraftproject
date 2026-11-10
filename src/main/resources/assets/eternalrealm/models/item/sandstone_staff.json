@@ -1,3 +1,77 @@
 {
-  "parent": "eternalrealm:item/weapon/staff_3"
+  "parent": "eternalrealm:item/weapon/staff_3",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3014
+      },
+      "model": "eternalrealm:item/named/dandelion_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3031
+      },
+      "model": "eternalrealm:item/named/crescent_druid_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3032
+      },
+      "model": "eternalrealm:item/named/nebulas_starbranch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3048
+      },
+      "model": "eternalrealm:item/named/geode_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3049
+      },
+      "model": "eternalrealm:item/named/sunpriest_sceptre"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3066
+      },
+      "model": "eternalrealm:item/named/holy_dew_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3139
+      },
+      "model": "eternalrealm:item/named/sunflower_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3140
+      },
+      "model": "eternalrealm:item/named/harvest_gem_rod"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3156
+      },
+      "model": "eternalrealm:item/named/lotus_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3157
+      },
+      "model": "eternalrealm:item/named/lakebed_oracle"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3174
+      },
+      "model": "eternalrealm:item/named/buoy_lantern_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3181
+      },
+      "model": "eternalrealm:item/named/ancient_tree_heartstaff"
+    }
+  ]
 }

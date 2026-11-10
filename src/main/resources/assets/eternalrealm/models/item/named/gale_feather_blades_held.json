@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "eternalrealm:item/named/gale_feather_blades_held"
+  }
+}

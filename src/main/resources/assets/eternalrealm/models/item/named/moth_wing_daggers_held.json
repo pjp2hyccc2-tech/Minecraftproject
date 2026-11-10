@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "eternalrealm:item/named/moth_wing_daggers_held"
+  }
+}

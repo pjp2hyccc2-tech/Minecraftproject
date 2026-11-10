@@ -1,3 +1,17 @@
 {
-  "parent": "eternalrealm:item/weapon/greatsword_6"
+  "parent": "eternalrealm:item/weapon/greatsword_6",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3077
+      },
+      "model": "eternalrealm:item/named/ashen_dragonfang"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3093
+      },
+      "model": "eternalrealm:item/named/glacier_crest_claymore"
+    }
+  ]
 }

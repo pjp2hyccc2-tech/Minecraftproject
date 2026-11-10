@@ -1,0 +1,21 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "particle": "eternalrealm:item/named/glowcap_stilettos"
+  },
+  "base": {
+    "parent": "eternalrealm:item/named/glowcap_stilettos_held"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "eternalrealm:item/named/glowcap_stilettos_icon"
+    },
+    "ground": {
+      "parent": "eternalrealm:item/named/glowcap_stilettos_icon"
+    },
+    "fixed": {
+      "parent": "eternalrealm:item/named/glowcap_stilettos_icon"
+    }
+  }
+}

@@ -1,3 +1,17 @@
 {
-  "parent": "eternalrealm:item/weapon/longbow_6"
+  "parent": "eternalrealm:item/weapon/longbow_6",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3089
+      },
+      "model": "eternalrealm:item/named/rune_tablet_longbow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3105
+      },
+      "model": "eternalrealm:item/named/windrider_bow"
+    }
+  ]
 }

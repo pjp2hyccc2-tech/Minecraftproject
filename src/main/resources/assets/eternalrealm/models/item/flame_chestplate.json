@@ -39,6 +39,30 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/chestplate_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4045
+      },
+      "model": "eternalrealm:item/named/holy_spring_vestment_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4049
+      },
+      "model": "eternalrealm:item/named/rune_sage_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4053
+      },
+      "model": "eternalrealm:item/named/cinder_dancer_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4117
+      },
+      "model": "eternalrealm:item/named/anchorguard_plate_chest"
     }
   ]
 }

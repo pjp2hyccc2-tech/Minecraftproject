@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/staff_4"
+  "parent": "eternalrealm:item/weapon/staff_4",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3050
+      },
+      "model": "eternalrealm:item/named/golem_core_rod"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3067
+      },
+      "model": "eternalrealm:item/named/mistcrystal_rod"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3158
+      },
+      "model": "eternalrealm:item/named/melusines_mirror"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3175
+      },
+      "model": "eternalrealm:item/named/compass_rose_staff"
+    }
+  ]
 }

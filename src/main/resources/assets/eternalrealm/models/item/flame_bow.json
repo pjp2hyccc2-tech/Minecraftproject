@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/longbow_5"
+  "parent": "eternalrealm:item/weapon/longbow_5",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3071
+      },
+      "model": "eternalrealm:item/named/rainbow_spray_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3087
+      },
+      "model": "eternalrealm:item/named/sunstone_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3088
+      },
+      "model": "eternalrealm:item/named/flamewing_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3179
+      },
+      "model": "eternalrealm:item/named/trade_wind_longbow"
+    }
+  ]
 }

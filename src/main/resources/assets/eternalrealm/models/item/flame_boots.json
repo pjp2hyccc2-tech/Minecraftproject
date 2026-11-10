@@ -39,6 +39,30 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/boots_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4047
+      },
+      "model": "eternalrealm:item/named/holy_spring_vestment_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4051
+      },
+      "model": "eternalrealm:item/named/rune_sage_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4055
+      },
+      "model": "eternalrealm:item/named/cinder_dancer_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4119
+      },
+      "model": "eternalrealm:item/named/anchorguard_plate_feet"
     }
   ]
 }

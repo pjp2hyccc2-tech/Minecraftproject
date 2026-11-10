@@ -1,3 +1,23 @@
 {
-  "parent": "eternalrealm:item/weapon/longsword_6"
+  "parent": "eternalrealm:item/weapon/longsword_6",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3074
+      },
+      "model": "eternalrealm:item/named/gearwork_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3090
+      },
+      "model": "eternalrealm:item/named/cloudcutter"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3185
+      },
+      "model": "eternalrealm:item/named/dragon_king_flamebrand"
+    }
+  ]
 }

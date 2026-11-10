@@ -39,6 +39,30 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/boots_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4035
+      },
+      "model": "eternalrealm:item/named/dune_stalker_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4043
+      },
+      "model": "eternalrealm:item/named/glacier_warden_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4107
+      },
+      "model": "eternalrealm:item/named/reedwalker_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4115
+      },
+      "model": "eternalrealm:item/named/tidecaller_robe_feet"
     }
   ]
 }

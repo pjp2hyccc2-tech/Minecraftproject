@@ -1,3 +1,71 @@
 {
-  "parent": "eternalrealm:item/weapon/longbow_3"
+  "parent": "eternalrealm:item/weapon/longbow_3",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3017
+      },
+      "model": "eternalrealm:item/named/skylark_longbow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3034
+      },
+      "model": "eternalrealm:item/named/silverbark_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3035
+      },
+      "model": "eternalrealm:item/named/belladonnas_nightshade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3051
+      },
+      "model": "eternalrealm:item/named/cave_wren_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3052
+      },
+      "model": "eternalrealm:item/named/firedamp_longbow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3069
+      },
+      "model": "eternalrealm:item/named/heron_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3142
+      },
+      "model": "eternalrealm:item/named/cornsilk_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3143
+      },
+      "model": "eternalrealm:item/named/bullhorn_recurve"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3159
+      },
+      "model": "eternalrealm:item/named/reed_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3160
+      },
+      "model": "eternalrealm:item/named/dragonfly_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3177
+      },
+      "model": "eternalrealm:item/named/gunwale_bow"
+    }
+  ]
 }

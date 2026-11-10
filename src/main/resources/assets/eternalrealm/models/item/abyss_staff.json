@@ -1,3 +1,35 @@
 {
-  "parent": "eternalrealm:item/weapon/staff_7"
+  "parent": "eternalrealm:item/weapon/staff_7",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3103
+      },
+      "model": "eternalrealm:item/named/cirrus_rod"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3104
+      },
+      "model": "eternalrealm:item/named/starwell_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3120
+      },
+      "model": "eternalrealm:item/named/cultist_bonestaff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3121
+      },
+      "model": "eternalrealm:item/named/abyssal_lantern"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3122
+      },
+      "model": "eternalrealm:item/named/xenos_ruinsceptre"
+    }
+  ]
 }
