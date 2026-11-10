@@ -21,10 +21,12 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.IntValue MAX_POINTS_PER_REQUEST;
     public static final ForgeConfigSpec.LongValue EXP_CURVE_BASE;
     public static final ForgeConfigSpec.DoubleValue EXP_CURVE_EXPONENT;
-    public static final ForgeConfigSpec.IntValue SKILL_POINT_INTERVAL;
+    public static final ForgeConfigSpec.IntValue SKILL_POINTS_PER_LEVEL;
+    public static final ForgeConfigSpec.IntValue SKILL_POINT_MILESTONE_BONUS;
     public static final ForgeConfigSpec.DoubleValue DEATH_EXP_PENALTY;
     public static final ForgeConfigSpec.IntValue JOB_FREE_CHANGE_BELOW_LEVEL;
     public static final ForgeConfigSpec.LongValue JOB_CHANGE_GOLD_PER_LEVEL;
+    public static final ForgeConfigSpec.LongValue SKILL_RESET_GOLD_PER_LEVEL;
     public static final ForgeConfigSpec.IntValue UI_ACTION_BURST;
     public static final ForgeConfigSpec.DoubleValue UI_ACTION_PER_SECOND;
 
@@ -90,13 +92,22 @@ public final class ERServerConfig {
         EXP_CURVE_BASE = builder.defineInRange("curveBase", 100L, PowerExperienceCurve.MIN_BASE, PowerExperienceCurve.MAX_BASE);
         EXP_CURVE_EXPONENT = builder.defineInRange("curveExponent", 1.5, PowerExperienceCurve.MIN_EXPONENT, PowerExperienceCurve.MAX_EXPONENT);
         builder.pop();
-        SKILL_POINT_INTERVAL = builder.comment("One skill point every N levels: points = (level - 1) / N.")
-                .defineInRange("skillPointInterval", CharacterRules.DEFAULT_SKILL_POINT_INTERVAL, 1, CharacterRules.MAX_LEVEL);
+        SKILL_POINTS_PER_LEVEL = builder.comment("Skill points earned per level gained.",
+                        "points = (level - 1) * skillPointsPerLevel + (level / 10) * skillPointMilestoneBonus")
+                .defineInRange("skillPointsPerLevel", CharacterRules.DEFAULT_SKILL_POINTS_PER_LEVEL, 0,
+                        CharacterRules.MAX_SKILL_POINTS_PER_LEVEL);
+        SKILL_POINT_MILESTONE_BONUS = builder.comment("Extra skill points at every 10th level.")
+                .defineInRange("skillPointMilestoneBonus", CharacterRules.DEFAULT_SKILL_POINT_MILESTONE_BONUS, 0,
+                        CharacterRules.MAX_SKILL_POINT_MILESTONE_BONUS);
         DEATH_EXP_PENALTY = builder.comment("Fraction of the EXP needed for the next level lost on death (never costs a level).")
                 .defineInRange("deathExpPenalty", 0.05, 0.0, 1.0);
         builder.comment("Jobs").push("job");
         JOB_FREE_CHANGE_BELOW_LEVEL = builder.comment("Changing the job is free below this level (the first choice is always free).")
                 .defineInRange("freeChangeBelowLevel", 10, 1, 101);
+        SKILL_RESET_GOLD_PER_LEVEL = builder.comment("Resetting the skill tree at the job master costs",
+                        "skillResetGoldPerLevel * level gold (free below freeChangeBelowLevel).")
+                .defineInRange("skillResetGoldPerLevel", com.eternalrealm.job.JobRules.DEFAULT_SKILL_RESET_GOLD_PER_LEVEL,
+                        0L, 1_000_000L);
         JOB_CHANGE_GOLD_PER_LEVEL = builder.comment("Otherwise a change costs goldPerLevel * level gold.")
                 .defineInRange("changeGoldPerLevel", 100L, 0L, 1_000_000L);
         builder.pop();
@@ -207,11 +218,12 @@ public final class ERServerConfig {
     public static CharacterRules characterRules() {
         return new CharacterRules(LEVEL_CAP.get(), STAT_POINTS_PER_LEVEL.get(), BASE_STAT_VALUE.get(),
                 MAX_POINTS_PER_REQUEST.get(), new PowerExperienceCurve(EXP_CURVE_BASE.get(), EXP_CURVE_EXPONENT.get()),
-                SKILL_POINT_INTERVAL.get());
+                SKILL_POINTS_PER_LEVEL.get(), SKILL_POINT_MILESTONE_BONUS.get());
     }
 
     public static JobRules jobRules() {
-        return new JobRules(JOB_FREE_CHANGE_BELOW_LEVEL.get(), JOB_CHANGE_GOLD_PER_LEVEL.get());
+        return new JobRules(JOB_FREE_CHANGE_BELOW_LEVEL.get(), JOB_CHANGE_GOLD_PER_LEVEL.get(),
+                SKILL_RESET_GOLD_PER_LEVEL.get());
     }
 
     public static CombatTuning combatTuning() {

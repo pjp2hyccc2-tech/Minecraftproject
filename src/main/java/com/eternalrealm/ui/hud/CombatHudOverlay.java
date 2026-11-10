@@ -132,18 +132,32 @@ public final class CombatHudOverlay implements IGuiOverlay {
         graphics.drawCenteredString(font, Component.translatable(key), centerX, centerY - 30, (alpha << 24) | color);
     }
 
-    /** Four job skill boxes: key, cooldown seconds or skill initials, locked slots dimmed. */
+    /** Order of the job skill boxes on the HUD: the five active slots, then the ultimate. */
+    private static final int[] HUD_ORDER = {1, 2, 3, 5, 6, 4};
+
+    /**
+     * Six job skill boxes: icon, key and cooldown; empty slots show just the key. The ultimate (slot 4) comes last,
+     * a little apart and framed in gold.
+     */
     private static void renderJobSkills(GuiGraphics graphics, Font font, Combatant local, long now, int left,
                                         int bottom) {
         int size = 22;
         int top = bottom - size;
-        for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
-            int x = left + (slot - 1) * (size + 2);
+        int x = left;
+        for (int slot : HUD_ORDER) {
+            boolean ultimate = slot == Combatant.ULTIMATE_SLOT;
+            if (ultimate) {
+                x += 4;
+            }
             SkillBinding binding = local.jobSkill(slot);
             graphics.fill(x, top, x + size, top + size, binding == null ? 0x50000000 : PANEL);
             Component key = ClientKeyMappings.jobSkill(slot).getTranslatedKeyMessage();
             if (binding == null) {
                 graphics.drawString(font, key, x + 2, top + 2, 0x606060);
+                if (ultimate) {
+                    graphics.renderOutline(x - 1, top - 1, size + 2, size + 2, 0x80E8C66A);
+                }
+                x += size + 2;
                 continue;
             }
             graphics.blit(skillIcon(binding.action().id()), x + 3, top + 3, 0, 0, 16, 16, 16, 16);
@@ -164,6 +178,10 @@ public final class CombatHudOverlay implements IGuiOverlay {
             } else {
                 graphics.renderOutline(x, top, size, size, 0xFF7CFC7C);
             }
+            if (ultimate) {
+                graphics.renderOutline(x - 1, top - 1, size + 2, size + 2, 0xFFE8C66A);
+            }
+            x += size + 2;
         }
     }
 

@@ -154,7 +154,7 @@ final class SpellbladeSkills {
                 .fx(dash(START, 5), dash(0, 3), dash(1, 3), vis(0, "blink"), vis(2, "slash"));
         t.passive("chronomancy", 2, 1, 4).req("void_walker", 1).bonus(power(0.02), saver(0.02));
         t.active("time_stop", 2, 2, 4).req("dimension_gate", 3).cd(45).theme(ARCANE)
-                .act(20, 16, 26, hit(8, circle(7.0), 0.8, 0.0))
+                .act(20, 16, 26, hit(8, circle(7.0), 1.0, 0.0))
                 .fx(afflict(0, STUN, 50, 0), cdcut(0, 80), vis(0, "sigil"), vis(0, "nova"));
 
         t.ultimate("dimension_slash", 2, 0, 5).innate(4, 30).cd(90).theme(SHADOW)

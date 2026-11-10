@@ -29,12 +29,14 @@ public record TooltipLine(Kind kind, String translationKey, List<Arg> args, int 
         ENHANCEMENT,
         /** Required level; {@link #COLOR_WARNING} when the viewer does not meet it. */
         REQUIREMENT,
+        /** The jobs that can use a weapon; {@link #COLOR_WARNING} when the viewer's job cannot. */
+        USABLE_BY,
         /** Bound to a player, not tradeable. */
         BINDING
     }
 
     /** A translation argument. */
-    public sealed interface Arg permits Text, Key {
+    public sealed interface Arg permits Text, Key, Join {
     }
 
     /** Literal text (already formatted numbers). */
@@ -48,6 +50,14 @@ public record TooltipLine(Kind kind, String translationKey, List<Arg> args, int 
     public record Key(String translationKey) implements Arg {
         public Key {
             Objects.requireNonNull(translationKey, "translationKey");
+        }
+    }
+
+    /** Several arguments joined with a translated separator ("ナイト・魔剣士", "Knight, Spellblade"). */
+    public record Join(List<Arg> parts, String separatorKey) implements Arg {
+        public Join {
+            parts = List.copyOf(parts);
+            Objects.requireNonNull(separatorKey, "separatorKey");
         }
     }
 

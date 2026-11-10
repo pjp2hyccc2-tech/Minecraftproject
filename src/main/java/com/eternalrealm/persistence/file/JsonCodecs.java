@@ -29,8 +29,11 @@ import java.util.UUID;
  * (the data is valid, this build is too old) and is never quarantined.</p>
  */
 public final class JsonCodecs {
-    /** 2: job, skills, gold and module extensions (schema 1 files are read with empty defaults). */
-    public static final int CHARACTER_SCHEMA_VERSION = 2;
+    /**
+     * 2: job, skills, gold and module extensions (schema 1 files are read with empty defaults); 3: the skill loadout
+     * (schema 2 files are read with the default loadout).
+     */
+    public static final int CHARACTER_SCHEMA_VERSION = 3;
     public static final int ACCOUNT_SCHEMA_VERSION = 1;
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -63,6 +66,9 @@ public final class JsonCodecs {
         JsonObject extensions = new JsonObject();
         record.extensions().forEach((key, json) -> extensions.add(key, embed(json)));
         root.add("extensions", extensions);
+        com.google.gson.JsonArray loadout = new com.google.gson.JsonArray();
+        record.skillLoadout().forEach(loadout::add);
+        root.add("skillLoadout", loadout);
         return GSON.toJson(root) + "\n";
     }
 
@@ -115,7 +121,21 @@ public final class JsonCodecs {
             Map<String, Integer> skills = new LinkedHashMap<>();
             long gold = 0L;
             Map<String, String> extensions = new LinkedHashMap<>();
-            if (requireInt(root, "schema") >= 2) {
+            java.util.List<String> loadout = new java.util.ArrayList<>();
+            int schema = requireInt(root, "schema");
+            if (schema >= 3) {
+                JsonElement array = require(root, "skillLoadout");
+                if (!array.isJsonArray()) {
+                    throw new CorruptDataException("Field 'skillLoadout' is not an array");
+                }
+                for (JsonElement entry : array.getAsJsonArray()) {
+                    if (!entry.isJsonPrimitive() || !entry.getAsJsonPrimitive().isString()) {
+                        throw new CorruptDataException("skillLoadout entries must be strings");
+                    }
+                    loadout.add(entry.getAsString());
+                }
+            }
+            if (schema >= 2) {
                 jobId = requireString(root, "jobId");
                 for (Map.Entry<String, JsonElement> entry : requireObject(root, "skills").entrySet()) {
                     skills.put(entry.getKey(), toInt(entry.getValue(), "skills." + entry.getKey()));
@@ -135,7 +155,7 @@ public final class JsonCodecs {
                     StatBlock.of(stats),
                     requireInstant(root, "createdAt"),
                     requireInstant(root, "updatedAt"),
-                    jobId, skills, gold, extensions);
+                    jobId, skills, gold, extensions, loadout);
         } catch (IllegalArgumentException | DateTimeParseException e) {
             throw new CorruptDataException("Invalid character data: " + e.getMessage(), e);
         }

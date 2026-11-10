@@ -1,6 +1,8 @@
 package com.eternalrealm.item;
 
 import com.eternalrealm.core.ModInfo;
+import com.eternalrealm.job.JobType;
+import com.eternalrealm.job.Jobs;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +22,7 @@ import java.util.Objects;
  * STR +12                        ← AFFIX (one per affix, sorted by kind)
  * 強化 +7/10（基本性能 +42%）    ← ENHANCEMENT (only when enhanced)
  * 必要レベル 30                  ← REQUIREMENT
+ * 使用できる職業: ナイト・魔剣士  ← USABLE_BY (weapons; red when the viewer's job cannot use it)
  * バインド済み（取引不可）        ← BINDING (only when bound)
  * </pre>
  */
@@ -34,10 +37,12 @@ public final class EquipmentTooltip {
     public static final String ENHANCEMENT = PREFIX + "enhancement";
     public static final String REQUIRED_LEVEL = PREFIX + "required_level";
     public static final String BOUND = PREFIX + "bound";
+    public static final String USABLE_BY = PREFIX + "usable_by";
+    public static final String JOB_SEPARATOR = PREFIX + "job_separator";
 
-    /** Every fixed key of this class (tests check them against docs/i18n/item.json). */
+    /** Every fixed key of this class. */
     public static final List<String> KEYS = List.of(NAME, NAME_ENHANCED, RARITY_TYPE, ATTACK, DEFENSE, MAX_HEALTH,
-            ENHANCEMENT, REQUIRED_LEVEL, BOUND);
+            ENHANCEMENT, REQUIRED_LEVEL, BOUND, USABLE_BY, JOB_SEPARATOR);
 
     private EquipmentTooltip() {
     }
@@ -59,17 +64,36 @@ public final class EquipmentTooltip {
         return TooltipLine.of(TooltipLine.Kind.NAME, NAME, color, tier, noun);
     }
 
-    /** The tooltip body without a viewer (requirement line in the neutral colour). */
+    /** The tooltip body without a viewer (requirement lines in the neutral colour). */
     public static List<TooltipLine> lines(EquipmentData data) {
-        return build(data, Integer.MAX_VALUE);
+        return build(data, Integer.MAX_VALUE, JobType.NONE);
     }
 
     /** The tooltip body; the requirement line turns {@link TooltipLine#COLOR_WARNING} if {@code viewerLevel} is too low. */
     public static List<TooltipLine> lines(EquipmentData data, int viewerLevel) {
-        return build(data, viewerLevel);
+        return build(data, viewerLevel, JobType.NONE);
     }
 
-    private static List<TooltipLine> build(EquipmentData data, int viewerLevel) {
+    /**
+     * The tooltip body for a viewer: the requirement line is {@link TooltipLine#COLOR_WARNING} if the level is too
+     * low, the "usable by" line of a weapon if the viewer's job ({@link JobType#NONE}: none chosen) cannot use it.
+     */
+    public static List<TooltipLine> lines(EquipmentData data, int viewerLevel, JobType viewerJob) {
+        return build(data, viewerLevel, java.util.Objects.requireNonNull(viewerJob, "viewerJob"));
+    }
+
+    /** "使用できる職業: ナイト・魔剣士" for a weapon type; red when {@code viewerJob} cannot use it. */
+    public static TooltipLine usableBy(com.eternalrealm.combat.WeaponType type, JobType viewerJob) {
+        List<TooltipLine.Arg> jobs = new ArrayList<>();
+        for (JobType job : Jobs.jobsUsing(type)) {
+            jobs.add(new TooltipLine.Key(job.translationKey()));
+        }
+        int color = viewerJob.isChosen() && !Jobs.canUse(viewerJob, type) ? TooltipLine.COLOR_WARNING
+                : TooltipLine.COLOR_TEXT;
+        return TooltipLine.of(TooltipLine.Kind.USABLE_BY, USABLE_BY, color, new TooltipLine.Join(jobs, JOB_SEPARATOR));
+    }
+
+    private static List<TooltipLine> build(EquipmentData data, int viewerLevel, JobType viewerJob) {
         Objects.requireNonNull(data, "data");
         List<TooltipLine> lines = new ArrayList<>();
         String typeKey = data.isWeapon() ? data.weaponType().translationKey() : data.slot().translationKey();
@@ -95,6 +119,9 @@ public final class EquipmentTooltip {
         int requirementColor = viewerLevel < data.requiredLevel() ? TooltipLine.COLOR_WARNING : TooltipLine.COLOR_TEXT;
         lines.add(TooltipLine.of(TooltipLine.Kind.REQUIREMENT, REQUIRED_LEVEL, requirementColor,
                 new TooltipLine.Text(Integer.toString(data.requiredLevel()))));
+        if (data.isWeapon()) {
+            lines.add(usableBy(data.weaponType(), viewerJob));
+        }
         if (data.isBound()) {
             lines.add(TooltipLine.of(TooltipLine.Kind.BINDING, BOUND, TooltipLine.COLOR_WARNING));
         }

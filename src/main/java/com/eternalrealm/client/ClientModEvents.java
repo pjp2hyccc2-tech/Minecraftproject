@@ -62,6 +62,9 @@ public final class ClientModEvents {
                 com.eternalrealm.client.block.ClientLightShafts::onLoaded;
         com.eternalrealm.item.forge.EquipmentStacks.setViewerLevel(() -> ClientCharacterState.snapshot()
                 .map(com.eternalrealm.character.CharacterSnapshot::level).orElse(1));
+        com.eternalrealm.item.forge.EquipmentStacks.setViewerJob(() -> ClientCharacterState.snapshot()
+                .map(snapshot -> com.eternalrealm.job.JobType.fromStored(snapshot.jobId()))
+                .orElse(com.eternalrealm.job.JobType.NONE));
     }
 
     @SubscribeEvent
@@ -120,6 +123,8 @@ public final class ClientModEvents {
         event.register(ClientKeyMappings.JOB_SKILL_2);
         event.register(ClientKeyMappings.JOB_SKILL_3);
         event.register(ClientKeyMappings.JOB_SKILL_4);
+        event.register(ClientKeyMappings.JOB_SKILL_5);
+        event.register(ClientKeyMappings.JOB_SKILL_6);
         event.register(ClientKeyMappings.DIALOGUE_NEXT);
     }
 }

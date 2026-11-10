@@ -11,7 +11,7 @@ import java.util.Objects;
  * @param total     base + allocated + job + equipment (what combat uses)
  * @param jobBonus  stats from the job's growth
  * @param gearBonus stats from equipment
- * @param modifiers job passive + equipment secondary bonuses
+ * @param modifiers job passive + equipment + learned passive skills (secondary bonuses)
  */
 public record ComposedStats(StatBlock total, StatBlock jobBonus, StatBlock gearBonus, CombatModifiers modifiers) {
     public ComposedStats {
@@ -31,6 +31,13 @@ public record ComposedStats(StatBlock total, StatBlock jobBonus, StatBlock gearB
      */
     public static ComposedStats compose(StatBlock own, int level, JobType job, StatBlock gearStats,
                                         CombatModifiers gearModifiers) {
+        return compose(own, level, job, gearStats, gearModifiers, CombatModifiers.NONE);
+    }
+
+    /** As above, plus the secondary bonuses of the character's learned passive skills. */
+    public static ComposedStats compose(StatBlock own, int level, JobType job, StatBlock gearStats,
+                                        CombatModifiers gearModifiers, CombatModifiers skillModifiers) {
+        Objects.requireNonNull(skillModifiers, "skillModifiers");
         Objects.requireNonNull(own, "own");
         Objects.requireNonNull(job, "job");
         Objects.requireNonNull(gearStats, "gearStats");
@@ -38,6 +45,6 @@ public record ComposedStats(StatBlock total, StatBlock jobBonus, StatBlock gearB
         JobDefinition definition = Jobs.get(job);
         StatBlock jobBonus = definition.bonusStats(level);
         return new ComposedStats(own.plus(jobBonus).plus(gearStats), jobBonus, gearStats,
-                definition.passive().plus(gearModifiers));
+                definition.passive().plus(gearModifiers).plus(skillModifiers));
     }
 }

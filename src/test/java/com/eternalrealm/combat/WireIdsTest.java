@@ -17,13 +17,15 @@ public class WireIdsTest {
         assertEquals(4, CombatRequest.SKILL.networkId());
         assertEquals(5, CombatRequest.JOB_SKILL_1.networkId());
         assertEquals(8, CombatRequest.JOB_SKILL_4.networkId());
+        assertEquals(9, CombatRequest.JOB_SKILL_5.networkId());
+        assertEquals(10, CombatRequest.JOB_SKILL_6.networkId());
         for (CombatRequest request : CombatRequest.values()) {
             assertEquals(request, CombatRequest.byNetworkId(request.networkId()).orElseThrow());
         }
         assertFalse(CombatRequest.byNetworkId(-1).isPresent());
-        assertFalse(CombatRequest.byNetworkId(9).isPresent());
+        assertFalse(CombatRequest.byNetworkId(11).isPresent());
         assertEquals(0, CombatRequest.SKILL.skillSlot());
-        for (int slot = 1; slot <= 4; slot++) {
+        for (int slot = 1; slot <= 6; slot++) {
             assertEquals(slot, CombatRequest.jobSkill(slot).skillSlot());
         }
         assertEquals(-1, CombatRequest.DODGE.skillSlot());
@@ -37,11 +39,12 @@ public class WireIdsTest {
         assertEquals(9, RequestOutcome.REJECTED_NOT_ALLOWED.networkId());
         assertEquals(10, RequestOutcome.REJECTED_NOT_LEARNED.networkId());
         assertEquals(11, RequestOutcome.REJECTED_WRONG_WEAPON.networkId());
+        assertEquals(12, RequestOutcome.REJECTED_JOB_WEAPON.networkId());
         for (RequestOutcome outcome : RequestOutcome.values()) {
             assertEquals(outcome, RequestOutcome.byNetworkId(outcome.networkId()).orElseThrow());
             assertEquals(outcome.name().startsWith("REJECTED"), outcome.isRejected());
         }
         assertTrue(RequestOutcome.REJECTED_STAMINA.messageKey().isPresent());
-        assertFalse(RequestOutcome.byNetworkId(12).isPresent());
+        assertFalse(RequestOutcome.byNetworkId(13).isPresent());
     }
 }

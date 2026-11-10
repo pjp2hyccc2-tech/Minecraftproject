@@ -156,15 +156,13 @@ public class ResourcesTest {
                         RESOURCES.resolve("assets/eternalrealm/textures/particle/" + name + ".png")));
             }
         }
-        for (com.eternalrealm.job.JobDefinition job : com.eternalrealm.job.Jobs.selectable()) {
-            for (int slot = 1; slot <= 4; slot++) {
-                String id = job.skill(slot).id();
-                assertTrue("missing skill icon " + id, Files.isRegularFile(
-                        RESOURCES.resolve("assets/eternalrealm/textures/gui/skill/" + id + ".png")));
-            }
+        for (com.eternalrealm.job.SkillDefinition skill : com.eternalrealm.job.Jobs.allSkills().values()) {
+            assertTrue("missing skill icon " + skill.id(), Files.isRegularFile(
+                    RESOURCES.resolve("assets/eternalrealm/textures/gui/skill/" + skill.id() + ".png")));
         }
         for (String effect : java.util.List.of("attack_up", "defense_up", "flame_weapon", "bleed", "haste", "frozen",
-                "guard_up", "cursed")) {
+                "guard_up", "cursed", "stunned", "poisoned", "weakened", "vulnerable", "crit_up", "lifesteal",
+                "frost_weapon", "venom_weapon", "thunder_weapon", "evasion", "thorns")) {
             assertTrue("missing effect icon " + effect, Files.isRegularFile(
                     RESOURCES.resolve("assets/eternalrealm/textures/mob_effect/" + effect + ".png")));
         }

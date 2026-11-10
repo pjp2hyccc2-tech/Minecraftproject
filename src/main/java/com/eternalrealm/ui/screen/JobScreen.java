@@ -107,11 +107,26 @@ public final class JobScreen extends JournalScreen {
             graphics.blit(emblem(job.type()), x + 3, y + 2, 0, 0, 16, 16, 16, 16);
             graphics.drawString(font, Component.translatable(job.type().translationKey()), x + 22, y + 6, TITLE_COLOR);
             graphics.drawString(font, Component.translatable("screen.eternalrealm.job.role_weapon",
-                    Component.translatable(job.role().translationKey()),
-                    Component.translatable(job.starterWeapon().translationKey())), x + 3, y + 20, 0xB0D0FF);
+                    Component.translatable(job.role().translationKey()), weapons(job)), x + 3, y + 20, 0xB0D0FF);
             drawWrapped(graphics, Component.translatable(job.type().descriptionKey()), x + 3, y + 31,
                     CARD_WIDTH - 6, 0xD0D0D0, 3);
         }
+    }
+
+    /** "片手剣・両手剣・槍": the weapons the job can use. */
+    private static Component weapons(JobDefinition job) {
+        net.minecraft.network.chat.MutableComponent text = Component.empty();
+        boolean first = true;
+        for (com.eternalrealm.combat.WeaponType type : com.eternalrealm.combat.WeaponType.values()) {
+            if (job.weapons().contains(type)) {
+                if (!first) {
+                    text.append(Component.translatable("tooltip.eternalrealm.equipment.job_separator"));
+                }
+                text.append(Component.translatable(type.translationKey()));
+                first = false;
+            }
+        }
+        return text;
     }
 
     private Component costLine(Optional<CharacterSnapshot> state, JobType current) {

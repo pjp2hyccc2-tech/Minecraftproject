@@ -84,10 +84,10 @@ public abstract class JournalScreen extends Screen {
     @Override
     protected final void init() {
         lastTab = tab;
-        int totalWidth = TAB_WIDTH + 8 + CONTENT_WIDTH;
-        int panelLeft = (width - totalWidth) / 2;
+        int totalWidth = TAB_WIDTH + 8 + contentWidth();
+        int panelLeft = Math.max(4, (width - totalWidth) / 2);
         left = panelLeft + TAB_WIDTH + 8;
-        top = Math.max(8, (height - PANEL_HEIGHT) / 2);
+        top = Math.max(8, (height - panelHeight()) / 2);
         int y = top;
         for (Tab each : Tab.values()) {
             Button button = Button.builder(Component.translatable(each.key()), b -> open(each))
@@ -104,17 +104,32 @@ public abstract class JournalScreen extends Screen {
     /** Adds the page's widgets; {@link #left}/{@link #top} are set. */
     protected abstract void initPage();
 
+    /** Width of the content area (pages with a lot to show may use more of the screen). */
+    protected int contentWidth() {
+        return CONTENT_WIDTH;
+    }
+
+    /** Height of the content area. */
+    protected int panelHeight() {
+        return PANEL_HEIGHT;
+    }
+
     /** Draws the page content (after the panel background, before the widgets). */
     protected abstract void renderPage(GuiGraphics graphics, int mouseX, int mouseY, float partialTick);
 
     @Override
     public final void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics);
-        graphics.fill(left - 7, top - 7, left + CONTENT_WIDTH + 7, top + PANEL_HEIGHT + 7, PANEL_BORDER);
-        graphics.fill(left - 6, top - 6, left + CONTENT_WIDTH + 6, top + PANEL_HEIGHT + 6, PANEL_BACKGROUND);
-        graphics.drawCenteredString(font, title, left + CONTENT_WIDTH / 2, top, TITLE_COLOR);
+        graphics.fill(left - 7, top - 7, left + contentWidth() + 7, top + panelHeight() + 7, PANEL_BORDER);
+        graphics.fill(left - 6, top - 6, left + contentWidth() + 6, top + panelHeight() + 6, PANEL_BACKGROUND);
+        graphics.drawCenteredString(font, title, left + contentWidth() / 2, top, TITLE_COLOR);
         renderPage(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
+        renderOverlay(graphics, mouseX, mouseY, partialTick);
+    }
+
+    /** Drawn after the widgets (tooltips, dragged things). */
+    protected void renderOverlay(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
     }
 
     /** Draws wrapped text; @return the y below it */

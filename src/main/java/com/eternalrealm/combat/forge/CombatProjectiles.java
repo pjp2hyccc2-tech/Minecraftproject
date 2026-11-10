@@ -6,6 +6,7 @@ import com.eternalrealm.combat.DamageRoll;
 import com.eternalrealm.combat.DamageType;
 import com.eternalrealm.combat.ProjectileSpec;
 import com.eternalrealm.job.SkillEffect;
+import com.eternalrealm.job.SkillTheme;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -23,6 +24,18 @@ public final class CombatProjectiles {
 
     public static void launch(ServerPlayer player, CombatStats stats, CombatEvent.Hit hit, DamageType type,
                               List<SkillEffect.Afflict> afflictions, DoubleSupplier random) {
+        launch(player, stats, hit, type, afflictions, random, 1.0, List.of(), List.of(), null);
+    }
+
+    /**
+     * Launches a skill frame's projectiles, carrying the skill's on-impact extras.
+     *
+     * @param effectScale strength of the afflictions (skill level)
+     * @param theme       look of the impact ({@code null}: plain weapon bolt)
+     */
+    public static void launch(ServerPlayer player, CombatStats stats, CombatEvent.Hit hit, DamageType type,
+                              List<SkillEffect.Afflict> afflictions, DoubleSupplier random, double effectScale,
+                              List<SkillEffect.Siphon> siphons, List<SkillEffect.Execute> executes, SkillTheme theme) {
         ProjectileSpec spec = hit.frame().projectile();
         if (spec == null || !player.isAlive() || player.isSpectator()) {
             return;
@@ -33,7 +46,7 @@ public final class CombatProjectiles {
             DamageRoll roll = CombatHits.roll(player, stats, hit.weapon(), hit.frame(), hit.damageScale(), type,
                     random.getAsDouble());
             ProjectilePayload payload = new ProjectilePayload(spec, roll, type, hit.frame().knockback(),
-                    hit.action().kind(), afflictions);
+                    hit.action().kind(), afflictions, effectScale, siphons, executes, theme);
             Projectile projectile = "arrow".equals(spec.kind())
                     ? SkillArrow.create(level, player, payload)
                     : MagicProjectile.create(level, player, payload);

@@ -192,18 +192,30 @@ public final class PlayerDataService {
         if (resetInvalidSkills(character)) {
             LOG.info("Skill points of {} were refunded because they no longer fit the job", playerId);
         }
+        sanitizeLoadout(character);
         active.put(playerId, character);
         session.markActive();
         listener.onCharacterReady(playerId);
     }
 
-    /** Skills of another job, locked skills or levels above the maximum are refunded (job module rules). */
+    /**
+     * Skills of another job, locked skills, skills whose prerequisites are missing or levels above the maximum are
+     * refunded (job module rules).
+     */
     private boolean resetInvalidSkills(PlayerCharacter character) {
         JobType job = JobType.fromStored(character.jobId());
         if (SkillTree.isValid(job, character.level(), character.skillInvestments())) {
             return false;
         }
         return character.resetSkills();
+    }
+
+    /** Drops loadout entries that are no longer valid (forgotten skills, another job). */
+    private boolean sanitizeLoadout(PlayerCharacter character) {
+        JobType job = JobType.fromStored(character.jobId());
+        java.util.List<String> stored = character.skillLoadout();
+        java.util.List<String> clean = SkillTree.sanitize(job, character.level(), character.skillInvestments(), stored);
+        return clean != stored && character.setSkillLoadout(clean);
     }
 
     // ------------------------------------------------------------------------------------------------------------
@@ -297,6 +309,10 @@ public final class PlayerDataService {
         }
         SetLevelResult result = character.setLevel(level, rules);
         if (result == SetLevelResult.SUCCESS) {
+            if (resetInvalidSkills(character)) {
+                LOG.info("Skill points of {} were refunded because they no longer fit the level", playerId);
+            }
+            sanitizeLoadout(character);
             listener.onCharacterChanged(playerId);
         }
         return result;
@@ -306,7 +322,8 @@ public final class PlayerDataService {
     public void updateRules(CharacterRules newRules) {
         this.rules = Objects.requireNonNull(newRules, "newRules");
         for (Map.Entry<UUID, PlayerCharacter> entry : active.entrySet()) {
-            if (entry.getValue().reconcile(newRules) | resetInvalidSkills(entry.getValue())) {
+            if (entry.getValue().reconcile(newRules) | resetInvalidSkills(entry.getValue())
+                    | sanitizeLoadout(entry.getValue())) {
                 LOG.info("Character of {} was adjusted to the reloaded rules", entry.getKey());
             }
             listener.onCharacterChanged(entry.getKey());
@@ -355,19 +372,87 @@ public final class PlayerDataService {
         return new JobChange(JobChangeResult.OK, cost, !current.isChosen());
     }
 
-    /** Invests one skill point. @return empty if the data is not loaded */
+    /**
+     * Invests one skill point. A newly learned active or ultimate goes into the first free slot that takes it.
+     *
+     * @return empty if the data is not loaded
+     */
     public Optional<SkillTree.InvestResult> investSkill(UUID playerId, String skillId) {
         PlayerCharacter character = active.get(playerId);
         if (character == null) {
             return Optional.empty();
         }
-        SkillTree.InvestResult result = SkillTree.canInvest(JobType.fromStored(character.jobId()), character.level(),
-                character.skillInvestments(), character.unspentSkillPoints(rules), skillId);
+        JobType job = JobType.fromStored(character.jobId());
+        SkillTree.InvestResult result = SkillTree.canInvest(job, character.level(), character.skillInvestments(),
+                character.unspentSkillPoints(rules), skillId);
         if (result == SkillTree.InvestResult.OK) {
             character.investSkillPoint(skillId, rules);
+            com.eternalrealm.job.Jobs.skill(skillId).ifPresent(skill -> {
+                java.util.List<String> effective = SkillTree.effectiveLoadout(job, character.level(),
+                        character.skillInvestments(), character.skillLoadout());
+                int slot = SkillTree.autoSlot(effective, skill);
+                if (slot > 0) {
+                    character.setSkillLoadout(SkillTree.assign(effective, slot, skill.id()));
+                }
+            });
             listener.onCharacterChanged(playerId);
         }
         return Optional.of(result);
+    }
+
+    /**
+     * Puts a learned active into a skill slot ({@code ""} empties the slot); a skill already in another slot swaps
+     * places with what was in {@code slot}.
+     *
+     * @return empty if the data is not loaded
+     */
+    public Optional<SkillTree.LoadoutResult> setSkillSlot(UUID playerId, int slot, String skillId) {
+        Objects.requireNonNull(skillId, "skillId");
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return Optional.empty();
+        }
+        JobType job = JobType.fromStored(character.jobId());
+        SkillTree.LoadoutResult result = SkillTree.canAssign(job, character.level(), character.skillInvestments(),
+                slot, skillId);
+        if (result == SkillTree.LoadoutResult.OK) {
+            java.util.List<String> effective = SkillTree.effectiveLoadout(job, character.level(),
+                    character.skillInvestments(), character.skillLoadout());
+            if (character.setSkillLoadout(SkillTree.assign(effective, slot, skillId))) {
+                listener.onCharacterChanged(playerId);
+            }
+        }
+        return Optional.of(result);
+    }
+
+    public enum SkillResetResult {
+        OK,
+        NOTHING_TO_RESET,
+        NOT_ENOUGH_GOLD,
+        NOT_READY
+    }
+
+    /** @param cost the gold paid (or needed) */
+    public record SkillReset(SkillResetResult result, long cost) {
+    }
+
+    /** Refunds every skill point for the job master's price (the skill loadout goes back to the default). */
+    public SkillReset resetSkills(UUID playerId, JobRules jobRules) {
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return new SkillReset(SkillResetResult.NOT_READY, 0L);
+        }
+        if (character.skillInvestments().isEmpty()) {
+            return new SkillReset(SkillResetResult.NOTHING_TO_RESET, 0L);
+        }
+        long cost = jobRules.skillResetCost(character.level());
+        if (!character.spendGold(cost)) {
+            return new SkillReset(SkillResetResult.NOT_ENOUGH_GOLD, cost);
+        }
+        character.resetSkills();
+        LOG.info("{} reset their skill tree (cost {} gold)", playerId, cost);
+        listener.onCharacterChanged(playerId);
+        return new SkillReset(SkillResetResult.OK, cost);
     }
 
     /** Refunds stat and skill points (oblivion elixir). @return {@code false} if nothing was refunded */

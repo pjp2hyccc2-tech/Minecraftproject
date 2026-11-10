@@ -2,6 +2,7 @@ package com.eternalrealm.character;
 
 import com.eternalrealm.season.SeasonId;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -14,10 +15,12 @@ import java.util.Objects;
  * @param jobId              {@link CharacterRecord#NO_JOB} until a job is chosen
  * @param unspentSkillPoints skill points not invested yet
  * @param skillInvestments   points invested per skill id
+ * @param skillLoadout       the stored skill loadout ({@code ""} = empty slot; an empty list = the job's default)
  */
 public record CharacterSnapshot(SeasonId seasonId, int level, int levelCap, long experience, long experienceToNext,
                                 int unspentStatPoints, StatBlock allocatedStats, StatBlock totalStats, String jobId,
-                                long gold, int unspentSkillPoints, Map<String, Integer> skillInvestments) {
+                                long gold, int unspentSkillPoints, Map<String, Integer> skillInvestments,
+                                List<String> skillLoadout) {
     public CharacterSnapshot {
         Objects.requireNonNull(seasonId, "seasonId");
         Objects.requireNonNull(allocatedStats, "allocatedStats");
@@ -36,13 +39,22 @@ public record CharacterSnapshot(SeasonId seasonId, int level, int levelCap, long
             throw new IllegalArgumentException("gold out of range: " + gold);
         }
         skillInvestments = CharacterRecord.copySkills(skillInvestments);
+        skillLoadout = CharacterRecord.copyLoadout(skillLoadout);
+    }
+
+    /** A snapshot with the default skill loadout. */
+    public CharacterSnapshot(SeasonId seasonId, int level, int levelCap, long experience, long experienceToNext,
+                             int unspentStatPoints, StatBlock allocatedStats, StatBlock totalStats, String jobId,
+                             long gold, int unspentSkillPoints, Map<String, Integer> skillInvestments) {
+        this(seasonId, level, levelCap, experience, experienceToNext, unspentStatPoints, allocatedStats, totalStats,
+                jobId, gold, unspentSkillPoints, skillInvestments, List.of());
     }
 
     /** A snapshot without job, gold or skills. */
     public CharacterSnapshot(SeasonId seasonId, int level, int levelCap, long experience, long experienceToNext,
                              int unspentStatPoints, StatBlock allocatedStats, StatBlock totalStats) {
         this(seasonId, level, levelCap, experience, experienceToNext, unspentStatPoints, allocatedStats, totalStats,
-                CharacterRecord.NO_JOB, 0L, 0, Map.of());
+                CharacterRecord.NO_JOB, 0L, 0, Map.of(), List.of());
     }
 
     public boolean atCap() {
