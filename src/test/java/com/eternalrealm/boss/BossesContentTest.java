@@ -206,6 +206,111 @@ public class BossesContentTest {
         }
     }
 
+    // ------------------------------------------------------------------ the big bodies
+
+    /**
+     * The body starts its action so that the impact frame lands on the hit (BossActions): the telegraph must be at
+     * least as long as the wind-up, also for every further charge of a charge pattern and for the roar of a
+     * transformation.
+     */
+    @Test
+    public void everyTelegraphIsLongEnoughForTheBodysWindUp() {
+        List<String> late = new java.util.ArrayList<>();
+        for (BossDefinition boss : Bosses.all()) {
+            for (BossAbility ability : boss.abilities()) {
+                int impact = BossActions.impactTicks(boss.id(), ability.kind());
+                if (ability.telegraphTicks() < impact) {
+                    late.add(ability.id() + ": telegraph " + ability.telegraphTicks() + " < impact " + impact + " of "
+                            + BossActions.actionFor(ability.kind()));
+                }
+                if (ability.kind() instanceof AbilityKind.Charge charge && charge.charges() > 1
+                        && charge.intervalTicks() - BossRules.DASH_TICKS - 1 < impact) {
+                    late.add(ability.id() + ": the next charge is aimed too late for its wind-up");
+                }
+            }
+            int roar = BossRigData.impactTicks(boss.id(), "phase_change");
+            for (int phase = 1; phase < boss.phases().size(); phase++) {
+                boss.transitionAbility(phase).ifPresent(transition -> {
+                    if (transition.telegraphTicks() < roar) {
+                        late.add(transition.id() + ": the transformation roar peaks after the blast");
+                    }
+                });
+            }
+        }
+        assertTrue("hits before the body's impact frame:\n" + String.join("\n", late), late.isEmpty());
+    }
+
+    /** Every boss has a body of its own size, and later forms are a little bigger. */
+    @Test
+    public void bodiesAreBigAndGrowWithTheirForms() {
+        for (BossDefinition boss : Bosses.all()) {
+            assertTrue(boss.id() + " is bigger than a player", BossRigData.bodyHeight(boss.id()) >= 5.0);
+            assertTrue(boss.id(), BossRigData.bodyRadius(boss.id(), 1) > BossRigData.bodyRadius(boss.id(), 0));
+            for (String action : List.of(BossActions.SLAM, BossActions.SWEEP, BossActions.CAST, BossActions.CHARGE,
+                    BossActions.SUMMON)) {
+                int impact = BossRigData.impactTicks(boss.id(), action);
+                assertTrue(boss.id() + " " + action, impact > 0 && impact < BossRigData.lengthTicks(boss.id(), action));
+            }
+        }
+    }
+
+    /**
+     * Attacks around the boss start at its body: a disc, cone, ring or blast around the boss reaches at least two
+     * blocks beyond the body (a player in melee range is always inside it), and a charge's strip is as wide as the body
+     * that runs along it (whoever the body runs over is inside the strip).
+     */
+    @Test
+    public void attacksAroundTheBossReachBeyondItsBody() {
+        for (BossDefinition boss : Bosses.all()) {
+            double body = BossRigData.bodyRadius(boss.id(), boss.phases().size() - 1);
+            for (BossAbility ability : boss.abilities()) {
+                List<AbilityKind> kinds = ability.kind() instanceof AbilityKind.Sequence sequence
+                        ? sequence.parts().stream().map(AbilityKind.Part::kind).toList() : List.of(ability.kind());
+                for (AbilityKind kind : kinds) {
+                    double reach = reachFromTheCentre(kind);
+                    if (!Double.isNaN(reach)) {
+                        assertTrue(ability.id() + " reaches " + reach + " from the centre of a body of radius " + body,
+                                reach >= body + 2.0);
+                    }
+                    if (kind instanceof AbilityKind.Ring ring) {
+                        assertTrue(ability.id() + ": room to stand inside the ring",
+                                ring.inner() >= BossRigData.bodyRadius(boss.id(), 0) + 1.5);
+                    }
+                    if (kind instanceof AbilityKind.Charge charge) {
+                        assertTrue(ability.id() + ": strip " + charge.width() + " narrower than the body",
+                                charge.width() >= 2.0 * body);
+                    }
+                }
+            }
+        }
+    }
+
+    /** How far an attack around the boss reaches from the boss's centre; NaN for attacks placed elsewhere. */
+    private static double reachFromTheCentre(AbilityKind kind) {
+        if (kind instanceof AbilityKind.CircleAroundBoss circle) {
+            return circle.radius();
+        }
+        if (kind instanceof AbilityKind.Cone cone) {
+            return cone.range();
+        }
+        if (kind instanceof AbilityKind.Ring ring) {
+            return ring.outer();
+        }
+        if (kind instanceof AbilityKind.Knockback knockback) {
+            return knockback.radius();
+        }
+        if (kind instanceof AbilityKind.Line line) {
+            return line.length();
+        }
+        if (kind instanceof AbilityKind.Crosses crosses) {
+            return crosses.armLength();
+        }
+        if (kind instanceof AbilityKind.RotatingBeam beam) {
+            return beam.length();
+        }
+        return Double.NaN;
+    }
+
     // ------------------------------------------------------------------ balance
 
     /** Average light-hit damage of a level-matched player: about 8 at level 1, 45 at level 50. */

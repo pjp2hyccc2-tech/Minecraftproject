@@ -22,8 +22,10 @@ public final class BossRules {
     public static final double ENRAGE_COOLDOWN_MULTIPLIER = 0.6;
     /** A ground shape hits players whose feet are at most this many blocks above or below the shape. */
     public static final double VERTICAL_TOLERANCE = 3.0;
-    /** Adds are summoned on a circle of this radius around the boss. */
+    /** Adds are summoned on a circle of this radius around the boss ... */
     public static final double SUMMON_RADIUS = 4.0;
+    /** ... or this far beyond the edge of a big boss's body, whichever is further. */
+    public static final double SUMMON_CLEARANCE = 2.5;
     /** Radius of the marker shown where adds will appear or where the boss will teleport to (harmless). */
     public static final double MARKER_RADIUS = 1.5;
     /** Range of the cone that telegraphs a projectile volley; projectiles should expire after this distance. */

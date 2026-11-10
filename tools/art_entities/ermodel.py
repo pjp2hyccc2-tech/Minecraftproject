@@ -76,13 +76,53 @@ def C(x, y, z, w, h, d, mat, **kw):
 
 # ----------------------------------------------------------------------------------------------- animations
 
+# Per-key easing of the segment that ends at a key (vanilla also takes the interpolation of the target key).
+# 'c' Catmull-Rom (vanilla CATMULLROM), 'l' linear, 'i'/'o'/'s' cubic ease in/out/in-out, 'I'/'O' quartic ease in/out
+# (fast strikes, hard stops), 'b' back-out (overshoots the key, then settles on it), 'h' hold (jumps at the key).
+# The Java side (AnimKit) implements exactly the same curves.
+EASES = 'cliosIObh'
+BACK_C1 = 1.70158
+
+
+def ease(code, a):
+    """Eased fraction of a segment for the codes other than 'c' (Catmull-Rom needs the neighbouring keys)."""
+    if code == 'l':
+        return a
+    if code == 'i':
+        return a * a * a
+    if code == 'o':
+        return 1.0 - (1.0 - a) ** 3
+    if code == 's':
+        return 4.0 * a * a * a if a < 0.5 else 1.0 - (-2.0 * a + 2.0) ** 3 / 2.0
+    if code == 'I':
+        return a ** 4
+    if code == 'O':
+        return 1.0 - (1.0 - a) ** 4
+    if code == 'b':
+        u = a - 1.0
+        return 1.0 + (BACK_C1 + 1.0) * u * u * u + BACK_C1 * u * u
+    if code == 'h':
+        return 1.0 if a >= 1.0 else 0.0
+    raise ValueError("unknown ease " + code)
+
+
 class Channel:
     def __init__(self, bone, target, keys, interp='smooth'):
         self.bone, self.target, self.interp = bone, target, interp
+        default = 'l' if interp == 'linear' else 'c'
         self.keys = [(float(k[0]), float(k[1]), float(k[2]), float(k[3])) for k in keys]
+        self.eases = [(k[4] if len(k) > 4 else default) for k in keys]
+        for e in self.eases:
+            if e not in EASES:
+                raise ValueError("unknown ease %r for %s %s" % (e, bone, target))
         times = [k[0] for k in self.keys]
         if times != sorted(times):
             raise ValueError("keyframes out of order for %s %s" % (bone, target))
+
+    def uniform(self):
+        """'c' or 'l' when every key uses it (emitted with the compact boolean form), else None."""
+        first = self.eases[0]
+        return first if first in 'cl' and all(e == first for e in self.eases) else None
 
 
 class Anim:
@@ -122,8 +162,10 @@ def channel_value(ch, t):
     a = 0.0
     if j != i:
         a = min(1.0, max(0.0, (t - keys[i][0]) / (keys[j][0] - keys[i][0])))
-    if ch.interp == 'linear':
-        return tuple(keys[i][c] + (keys[j][c] - keys[i][c]) * a for c in (1, 2, 3))
+    code = ch.eases[j]
+    if code != 'c':
+        f = ease(code, a)
+        return tuple(keys[i][c] + (keys[j][c] - keys[i][c]) * f for c in (1, 2, 3))
     p0 = keys[max(0, i - 1)]
     p3 = keys[min(len(keys) - 1, j + 1)]
     return tuple(catmull(a, p0[c], keys[i][c], keys[j][c], p3[c]) for c in (1, 2, 3))
@@ -168,8 +210,9 @@ class Variant:
 
 class Rig:
     def __init__(self, name, java_name, root_parts, anims, variants, slots, anim_sets=None, tex_size=None,
-                 head='head'):
+                 head='head', texel=1):
         self.name = name
+        self.texel = texel                      # texture pixels per model unit (bosses paint at 2x for sharpness)
         self.java_name = java_name
         self.roots = root_parts
         self.anims = {a.name: a for a in anims}
@@ -419,13 +462,21 @@ def java_animations(rig, package, cls):
     w('    }')
     for n in names:
         an = rig.anims[n]
+        # a Java method holds at most 64 KiB of bytecode: about 8 bytes per float of the varargs arrays
+        floats = sum(4 * len(ch.keys) for ch in an.channels)
+        size = 8 * floats + 40 * len(an.channels)
+        if size > 56000:
+            raise ValueError('animation %s of rig %s is too dense for one Java method (~%d bytes): fewer keys'
+                             % (n, rig.name, size))
         w('')
         w('    private static AnimationDefinition %s() {' % camel(n))
         w('        return AnimationDefinition.Builder.withLength(%s)%s' % (jf(an.length), '.looping()' if an.loop else ''))
         for ch in an.channels:
             flat = ', '.join('%s, %s, %s, %s' % (jf(k[0]), jf(k[1]), jf(k[2]), jf(k[3])) for k in ch.keys)
             fn = {'rot': 'rot', 'pos': 'pos', 'scale': 'scale'}[ch.target]
-            w('                .addAnimation("%s", %s(%s, %s))' % (ch.bone, fn, 'true' if ch.interp == 'linear' else 'false', flat))
+            mode = ch.uniform()
+            interp = ('true' if mode == 'l' else 'false') if mode else '"%s"' % ''.join(ch.eases)
+            w('                .addAnimation("%s", %s(%s, %s))' % (ch.bone, fn, interp, flat))
         w('                .build();')
         w('    }')
     w('}')
@@ -482,6 +533,51 @@ def part_transforms(rig, variant, pose):
     return mats
 
 
+def ancestors(part):
+    chain = []
+    p = part
+    while p is not None:
+        chain.append(p)
+        p = p.parent
+    return list(reversed(chain))
+
+
+def part_matrix(rig, variant, pose, name):
+    """World (model space) matrix of one part, walking only its ancestors (same math as part_transforms)."""
+    m_world = np.eye(4)
+    parent_pivot = (0.0, 0.0, 0.0)
+    for part in ancestors(rig.parts[name]):
+        rel = np.array(part.pivot) - np.array(parent_pivot)
+        rx, ry, rz = [part.rot[i] * DEG for i in range(3)]
+        sx = sy = sz = 1.0
+        vp = variant.poses.get(part.name) if variant else None
+        if vp:
+            px, py, pz = vp.get('pos', (0, 0, 0))
+            rel = rel + np.array([px, -py, pz])
+            vr = vp.get('rot', (0, 0, 0))
+            rx, ry, rz = rx + vr[0] * DEG, ry + vr[1] * DEG, rz + vr[2] * DEG
+            sx, sy, sz = vp.get('scale', (1, 1, 1))
+        a = pose.get(part.name)
+        if a:
+            rel = rel + np.array([a['pos'][0], -a['pos'][1], a['pos'][2]])
+            rx, ry, rz = rx + a['rot'][0] * DEG, ry + a['rot'][1] * DEG, rz + a['rot'][2] * DEG
+            sx, sy, sz = sx + a['scale'][0], sy + a['scale'][1], sz + a['scale'][2]
+        m = np.eye(4)
+        m[:3, :3] = rot_matrix(rx, ry, rz) @ np.diag([sx, sy, sz])
+        m[:3, 3] = rel
+        m_world = m_world @ m
+        parent_pivot = part.pivot
+    return m_world
+
+
+def part_point(rig, variant, pose, name, point):
+    """Model-space position of a point given in ABSOLUTE rest coordinates of part {@code name}."""
+    part = rig.parts[name]
+    m = part_matrix(rig, variant, pose, name)
+    local = np.array([point[0] - part.pivot[0], point[1] - part.pivot[1], point[2] - part.pivot[2], 1.0])
+    return (m @ local)[:3]
+
+
 FACE_CORNERS = {
     # face: (corner order matching texture rect: top-left, top-right, bottom-right, bottom-left), viewed from outside
     'front': [(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0)],
@@ -505,6 +601,7 @@ def render(rig, variant, texture, pose=None, yaw=30.0, pitch=12.0, ppu=4.0, size
     tris = []
     tex = texture
     th, tw = tex.shape[0], tex.shape[1]
+    texel = max(1, int(round(tw / rig.tex_w))) if getattr(rig, 'tex_w', None) else 1
     light_dirs = [np.array([0.2, -1.0, -0.7]), np.array([-0.2, -1.0, 0.7])]
     light_dirs = [l / np.linalg.norm(l) for l in light_dirs]
     pts_all = []
@@ -566,7 +663,7 @@ def render(rig, variant, texture, pose=None, yaw=30.0, pitch=12.0, ppu=4.0, size
     for vp, uvq, bright in tris:
         sp = [((q[0] - cx_) * ppu + W / 2, (q[1] - cy_) * ppu + H / 2, q[2]) for q in vp]
         for tri in ((0, 1, 2), (0, 2, 3)):
-            raster(img, zbuf, [sp[i] for i in tri], [uvq[i] for i in tri], tex, tw, th, bright)
+            raster(img, zbuf, [sp[i] for i in tri], [uvq[i] for i in tri], tex, tw, th, bright, texel)
     return np.clip(img, 0, 255).astype(np.uint8)
 
 
@@ -579,7 +676,7 @@ def visible_chain(rig, variant, part):
     return True
 
 
-def raster(img, zbuf, sp, uv, tex, tw, th, bright):
+def raster(img, zbuf, sp, uv, tex, tw, th, bright, texel=1):
     H, W = zbuf.shape
     xs = [p[0] for p in sp]
     ys = [p[1] for p in sp]
@@ -602,8 +699,8 @@ def raster(img, zbuf, sp, uv, tex, tw, th, bright):
     z = l1 * az + l2 * bz + l3 * cz
     u = l1 * uv[0][0] + l2 * uv[1][0] + l3 * uv[2][0]
     v = l1 * uv[0][1] + l2 * uv[1][1] + l3 * uv[2][1]
-    ui = np.clip(np.floor(u).astype(int), 0, tw - 1)
-    vi = np.clip(np.floor(v).astype(int), 0, th - 1)
+    ui = np.clip(np.floor(u * texel).astype(int), 0, tw - 1)
+    vi = np.clip(np.floor(v * texel).astype(int), 0, th - 1)
     texel = tex[vi, ui]
     alpha_ok = texel[..., 3] > 25
     sub_z = zbuf[y0:y1 + 1, x0:x1 + 1]

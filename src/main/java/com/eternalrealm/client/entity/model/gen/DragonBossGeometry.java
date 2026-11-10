@@ -140,7 +140,7 @@ public final class DragonBossGeometry {
             {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}}, // b6_p3
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.5F, 1.5F, 1.5F, 1.5F};
+    public static final float[] SCALES = {2.7F, 2.7F, 2.7F, 2.7F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
     public static final boolean[] GLOWS = {true, true, true, true};
 }
