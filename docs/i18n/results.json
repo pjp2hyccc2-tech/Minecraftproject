@@ -1,0 +1,20 @@
+{
+  "result.eternalrealm.title": {"ja": "クリア報酬", "en": "Clear rewards"},
+  "result.eternalrealm.clear": {"ja": "DUNGEON CLEAR", "en": "DUNGEON CLEAR"},
+  "result.eternalrealm.time": {"ja": "クリアタイム %s / 制限 %s", "en": "Clear time %s / limit %s"},
+  "result.eternalrealm.falls": {"ja": "戦闘不能 %s 回", "en": "Falls: %s"},
+  "result.eternalrealm.rank": {"ja": "評価", "en": "Grade"},
+  "result.eternalrealm.party": {"ja": "パーティ", "en": "Party"},
+  "result.eternalrealm.damage": {"ja": "与ダメージ", "en": "Damage"},
+  "result.eternalrealm.taken": {"ja": "被ダメ", "en": "Taken"},
+  "result.eternalrealm.rewards": {"ja": "獲得報酬", "en": "Rewards"},
+  "result.eternalrealm.mvp_you": {"ja": "♛ あなたがMVP！ 追加報酬を獲得", "en": "♛ You are the MVP! Extra reward"},
+  "result.eternalrealm.bonus_pick": {"ja": "ボーナス宝箱をひとつ選んでください", "en": "Pick one bonus chest"},
+  "result.eternalrealm.bonus_got": {"ja": "ボーナス獲得！", "en": "Bonus!"},
+  "result.eternalrealm.leave": {"ja": "ダンジョンを出る", "en": "Leave the dungeon"},
+  "result.eternalrealm.exit_in": {"ja": "自動退出まで %s 秒", "en": "Auto exit in %ss"},
+  "message.eternalrealm.dungeon.mvp": {"ja": "MVP：%s", "en": "MVP: %s"},
+  "message.eternalrealm.dungeon.mvp_reward": {"ja": "MVP報酬として強化石と素材を獲得した", "en": "MVP reward: enhancement stones and a material"},
+  "message.eternalrealm.dungeon.bonus_item": {"ja": "ボーナス：%s ×%s", "en": "Bonus: %s ×%s"},
+  "message.eternalrealm.dungeon.bonus_gold": {"ja": "ボーナス：%s G", "en": "Bonus: %s G"}
+}

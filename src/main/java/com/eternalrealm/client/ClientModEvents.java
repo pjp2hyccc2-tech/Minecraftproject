@@ -60,6 +60,7 @@ public final class ClientModEvents {
         });
         com.eternalrealm.client.revival.ClientRevival.init();
         com.eternalrealm.client.boss.BossHudOverlay.init();
+        com.eternalrealm.ui.screen.DungeonResultScreen.init();
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
         ClientboundHandlers.setTelegraphHandler(com.eternalrealm.client.telegraph.ClientTelegraphs::accept);
         com.eternalrealm.block.forge.LightShaftBlockEntity.clientLoaded =

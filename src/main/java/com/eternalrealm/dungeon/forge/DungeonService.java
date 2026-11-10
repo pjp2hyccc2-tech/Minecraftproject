@@ -319,6 +319,16 @@ public final class DungeonService {
         }
     }
 
+    /** After a clear: the member leaves at once instead of waiting for the instance to close. */
+    public boolean leaveCleared(ServerPlayer player) {
+        DungeonInstance instance = byMember.get(player.getUUID());
+        if (instance == null || instance.run.state() != com.eternalrealm.dungeon.RunState.CLEARED) {
+            return false;
+        }
+        leave(player);
+        return true;
+    }
+
     /** The member gives up: back out, the run continues for the others. */
     public void leave(ServerPlayer player) {
         DungeonInstance instance = byMember.remove(player.getUUID());
@@ -343,7 +353,9 @@ public final class DungeonService {
                 }
             }
         }
+        DungeonResults.clear();
     }
+
 
     // ------------------------------------------------------------------ results
 
@@ -378,20 +390,25 @@ public final class DungeonService {
         MonsterStats stats = minion == null ? null : MonsterScaling.stats(minion, Math.max(minion.levels().min(),
                 Math.min(minion.levels().max(), bossLevel)));
         List<TimeAttackMember> attackers = new ArrayList<>();
+        Map<UUID, DungeonResults.Haul> hauls = new HashMap<>();
         for (UUID member : instance.run.members()) {
             ServerPlayer player = player(member);
             if (player == null || !instance.isInside(player)) {
                 continue;
             }
+            long exp = 0L;
+            long gold = 0L;
             CharacterSnapshot snapshot = context.playerData().snapshot(member).orElse(null);
             attackers.add(new TimeAttackMember(member, player.getGameProfile().getName(),
                     snapshot == null ? TimeAttackMember.NO_JOB : JobType.fromStored(snapshot.jobId()).id(),
                     snapshot == null ? 1 : snapshot.level()));
             if (stats != null) {
-                context.playerData().grantExperience(member, stats.exp() * BOSS_REWARD_FACTOR, ExperienceSource.BOSS);
-                context.playerData().grantGold(member, stats.goldMax() * BOSS_REWARD_FACTOR / 2);
+                exp = stats.exp() * BOSS_REWARD_FACTOR;
+                gold = stats.goldMax() * BOSS_REWARD_FACTOR / 2;
+                context.playerData().grantExperience(member, exp, ExperienceSource.BOSS);
+                context.playerData().grantGold(member, gold);
             }
-            reward(context, player, instance);
+            hauls.put(member, new DungeonResults.Haul(exp, gold, reward(context, player, instance)));
             com.eternalrealm.sound.forge.MusicContexts.jingle(player, "victory");
             context.game().quests().event(player, new GameEvent.DungeonCleared(instance.contentId));
             context.game().quests().event(player, new GameEvent.BossDefeated(bossId));
@@ -406,10 +423,16 @@ public final class DungeonService {
                     cleared.startTick(), cleared.endTick(), Math.max(0, nowMillis - durationMillis), nowMillis,
                     attackers, false, false, attackers.size() != instance.run.members().size()));
         }
+        DungeonResults.show(context, instance, cleared, hauls);
     }
 
-    /** One piece of the area's tier (rarity floor by difficulty) and enhancement stones for each member present. */
-    private static void reward(ServerContext context, ServerPlayer player, DungeonInstance instance) {
+    /**
+     * One piece of the area's tier (rarity floor by difficulty) and enhancement stones for each member present.
+     *
+     * @return copies of what the player got (for the result screen)
+     */
+    private static List<ItemStack> reward(ServerContext context, ServerPlayer player, DungeonInstance instance) {
+        List<ItemStack> given = new ArrayList<>();
         double luck = context.combat().service().get(player.getUUID()).map(Combatant::stats)
                 .map(CombatStats::lootBonus).orElse(0.0);
         ItemRarity rarity = EquipmentGenerator.rollRarity(luck, RANDOM);
@@ -425,6 +448,7 @@ public final class DungeonService {
         ItemStack piece = EquipmentStacks.create(EquipmentGenerator.roll(LootDrops.baseFor(player, tier), rarity, RANDOM));
         player.sendSystemMessage(Component.translatable("message.eternalrealm.dungeon.reward", piece.getDisplayName())
                 .withStyle(ChatFormatting.GOLD));
+        given.add(piece.copy());
         Inventories.give(player, piece);
         int stones = switch (instance.difficulty) {
             case NORMAL -> 2;
@@ -433,6 +457,7 @@ public final class DungeonService {
         };
         net.minecraft.world.item.Item stone = ERGearItems.material(Materials.ENHANCEMENT_STONE);
         if (stone != null) {
+            given.add(new ItemStack(stone, stones));
             Inventories.give(player, new ItemStack(stone, stones));
         }
         // the boss material of the dungeon's field (boss weapons are forged from these)
@@ -440,9 +465,11 @@ public final class DungeonService {
             net.minecraft.world.item.Item soul = ERGearItems.material(
                     com.eternalrealm.monster.Materials.bossMaterial(instance.areaId));
             if (soul != null) {
+                given.add(new ItemStack(soul, stones >= 5 ? 3 : stones - 1));
                 Inventories.give(player, new ItemStack(soul, stones >= 5 ? 3 : stones - 1));
             }
         }
+        return given;
     }
 
     static ItemTier tierOfArea(int areaId) {

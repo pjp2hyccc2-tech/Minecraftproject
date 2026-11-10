@@ -55,7 +55,8 @@ final class DungeonInstance {
     static final String INSTANCE = "er_instance";
     static final String ROOM = "er_room";
     private static final int BLOCKS_PER_TICK = 6000;
-    private static final int EXIT_DELAY_TICKS = 20 * 20;
+    /** Time to look at the result screen and pick the bonus card before everyone is sent out. */
+    private static final int EXIT_DELAY_TICKS = DungeonResults.EXIT_SECONDS * 20;
     private static final int FAIL_EXIT_DELAY_TICKS = 5 * 20;
 
     record Origin(ResourceKey<Level> dimension, Vec3 position, float yaw) {
@@ -364,6 +365,7 @@ final class DungeonInstance {
     }
 
     void sendBack(ServerPlayer player) {
+        DungeonResults.onExit(player, this);
         Origin back = returns.get(player.getUUID());
         ServerLevel target = back == null ? null : level.getServer().getLevel(back.dimension());
         if (target == null) {

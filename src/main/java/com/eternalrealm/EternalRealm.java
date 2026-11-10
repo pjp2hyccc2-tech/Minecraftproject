@@ -67,6 +67,7 @@ public final class EternalRealm {
         com.eternalrealm.world.forge.WaystoneService.register();
         com.eternalrealm.item.forge.SmithService.register();
         com.eternalrealm.revival.forge.RevivalService.register();
+        com.eternalrealm.dungeon.forge.DungeonResults.register();
         AstoriaWorldgen.register(modBus);
 
         modBus.addListener(ServerBootstrap::onConfigReloading);
