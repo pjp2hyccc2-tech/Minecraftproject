@@ -140,6 +140,10 @@ public final class ArtVisuals {
 
     /** When a ground area with its own look is made (its marker is the telegraph). */
     public static void zoneCreated(ServerLevel level, String look, Vec3 at, double radius, int delayTicks) {
+        if (look.startsWith("fx_")) {
+            com.eternalrealm.combat.forge.ArtFx.zoneCreated(level, look, at, radius);
+            return;
+        }
         switch (look) {
             case "thornroot" -> ring(level, THORN_DUST, at.x, at.y + 0.2, at.z, radius, 40);
             case "ice_prison" -> ring(level, ICE_DUST, at.x, at.y + 0.2, at.z, radius, 40);
@@ -155,6 +159,9 @@ public final class ArtVisuals {
 
     /** One pulse of an area with its own look; @return whether {@code look} is known */
     public static boolean zonePulse(ServerLevel level, String look, Vec3 at, double radius, int pulse) {
+        if (look.startsWith("fx_")) {
+            return com.eternalrealm.combat.forge.ArtFx.zonePulse(level, look, at, radius, pulse);
+        }
         RandomSource random = level.getRandom();
         switch (look) {
             case "thornroot" -> {

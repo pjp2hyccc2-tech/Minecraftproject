@@ -230,7 +230,10 @@ public final class CombatGameTests {
         UUID id = defender.getUUID();
         Combatant combatant = context.combat().service().register(id, PLAIN, context.combat().now());
         defender.startUsingItem(InteractionHand.MAIN_HAND);
-        check(context.combat().startGuard(defender, SWORD), "guard should start from idle");
+        // the held starter's own profile (it carries the iron art): a different profile would end the guard
+        check(context.combat().startGuard(defender,
+                com.eternalrealm.combat.forge.WeaponItem.profileOf(defender.getMainHandItem())),
+                "guard should start from idle");
 
         LivingAttackEvent fromBehind = new LivingAttackEvent(defender, behind.damageSources().mobAttack(behind), 4.0F);
         CombatEvents.onLivingAttack(fromBehind);
@@ -357,7 +360,7 @@ public final class CombatGameTests {
 
     private static net.minecraft.world.item.Item itemFor(WeaponProfile weapon) {
         return ERItems.weapons().stream().map(net.minecraftforge.registries.RegistryObject::get)
-                .filter(item -> item.profile() == weapon).findFirst()
+                .filter(item -> item.profile().type() == weapon.type()).findFirst() // the starter (iron) of the type
                 .orElseThrow(() -> new GameTestAssertException("no item for " + weapon.id()));
     }
 

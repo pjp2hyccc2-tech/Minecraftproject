@@ -92,6 +92,16 @@ public class SkillAimingTest {
         for (WeaponArt art : WeaponArts.all()) {
             SkillAiming.isAimed(art.action(), art.effects());
         }
+        int aimedArts = 0;
+        for (WeaponArt art : com.eternalrealm.item.GeneratedArts.all()) {
+            double range = SkillAiming.range(art.action(), art.effects());
+            assertTrue(art.id() + " range " + range, range >= SkillAiming.MIN_RANGE && range <= SkillAiming.MAX_RANGE);
+            if (SkillAiming.isAimed(art.action(), art.effects())) {
+                aimedArts++;
+            }
+        }
+        assertTrue("most weapon arts strike where the wielder faces: " + aimedArts,
+                aimedArts > com.eternalrealm.item.GeneratedArts.all().size() / 2);
         assertTrue("the bow's weapon skill shoots", SkillAiming.isAimed(WeaponProfiles.BOW.skill(), List.of()));
     }
 }

@@ -103,6 +103,19 @@ which holds the equipped weapon (the client keeps the selection there, the serve
 number keys 1-3 use items straight from the inventory (`UseItemPacket`, checked by the server like a use from the hand;
 the return scroll channels on the server). Creative and spectator mode keep the vanilla HUD for building and testing.
 
+## D-ARTS: every weapon's Z is its own weapon art, generated from one table under a damage budget (2026-11-11)
+The owner asked for the Z attack to be each weapon's own skill, fitting its look and material, with its own effects.
+The 180 named field weapons and the 42 tier weapons (7 materials × 6 types, the starters are iron) each get a unique
+art; the 9 boss arts stay. Writing 222 arts by hand would drift, so they are composed: an attack form (weapon type ×
+feel), the element's affliction, a few extras from the existing skill effects, and a look (particles, colours, shapes,
+wind-up). One Python definition (`tools/art/weapon_arts.py`) writes the Java rows, the Japanese and English names and
+descriptions (composed from the same choices, so the text always says what the art does) and the docs table. Damage
+is normalised: every art's burst and burst per second of cooldown are set from the weapon type's own skill (tier
+1.08–1.26×, named 1.40–1.85×, bosses ≥ 2×), so the arts stay balanced as a whole and tests can hold the bands. The
+generic type skills stay in the code only as the yardstick. Looks are composed at runtime by one parametric drawer
+(`ArtFx`) and checked for uniqueness by signature; vanilla particles (item, block and simple ones) are referenced by
+id from the player's own game, so no game assets are copied.
+
 ## D-VITALS: no hunger and no natural regeneration; potions are the way to heal (2026-11-10)
 The owner asked for no hunger gauge ("always full"), no automatic regeneration and potions as the basic way to heal.
 The server keeps every player's food bar full each tick (sprinting is always allowed, nobody starves) and the client

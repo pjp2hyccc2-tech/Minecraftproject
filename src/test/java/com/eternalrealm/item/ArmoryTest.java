@@ -459,7 +459,9 @@ public class ArmoryTest {
                 assertEquals(weapon.art(), profile.skill().id());
                 assertTrue(profile.skill().cooldownTicks() > base.skill().cooldownTicks());
             } else {
-                assertEquals(base.skill().id(), profile.skill().id());
+                // every named weapon brings its own art instead of the type's skill
+                assertEquals(GeneratedArts.forDesign(weapon.id()).orElseThrow().id(), profile.skill().id());
+                assertNotEquals(base.skill().id(), profile.skill().id());
             }
         }
         assertTrue(DesignProfiles.byDesign("meadow_runner_head").isEmpty());
