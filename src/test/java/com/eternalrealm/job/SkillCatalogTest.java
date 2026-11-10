@@ -291,6 +291,42 @@ public class SkillCatalogTest {
         }
     }
 
+    @Test
+    public void skillTextsTakeTheSameArgumentsInBothLanguages() throws IOException {
+        JsonObject english = JsonParser.parseString(Files.readString(
+                RESOURCES.resolve("assets/eternalrealm/lang/en_us.json"), StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonObject japanese = JsonParser.parseString(Files.readString(
+                RESOURCES.resolve("assets/eternalrealm/lang/ja_jp.json"), StandardCharsets.UTF_8)).getAsJsonObject();
+        List<String> prefixes = List.of("skill.eternalrealm.", "skill_info.eternalrealm.", "skill_buff.eternalrealm.",
+                "skill_affliction.eternalrealm.", "skill_branch.eternalrealm.", "skill_kind.eternalrealm.",
+                "message.eternalrealm.skill.", "message.eternalrealm.loadout.", "screen.eternalrealm.skill.");
+        int checked = 0;
+        for (String key : english.keySet()) {
+            if (prefixes.stream().noneMatch(key::startsWith) || !japanese.has(key)) {
+                continue;
+            }
+            assertEquals(key, arguments(english.get(key).getAsString()), arguments(japanese.get(key).getAsString()));
+            checked++;
+        }
+        assertTrue("checked " + checked, checked > 700);
+    }
+
+    /** The argument numbers a translation uses ({@code %s} counts up, {@code %2$s} names one; {@code %%} is text). */
+    private static List<Integer> arguments(String text) {
+        List<Integer> found = new ArrayList<>();
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%])").matcher(text);
+        int plain = 0;
+        while (matcher.find()) {
+            if (matcher.group(2).equals("%")) {
+                continue;
+            }
+            assertEquals("only %s is used: " + text, "s", matcher.group(2));
+            found.add(matcher.group(1) != null ? Integer.parseInt(matcher.group(1)) : ++plain);
+        }
+        found.sort(null);
+        return found;
+    }
+
     private static Set<String> keys(Path file) throws IOException {
         JsonObject json = JsonParser.parseString(Files.readString(file, StandardCharsets.UTF_8)).getAsJsonObject();
         return json.keySet();

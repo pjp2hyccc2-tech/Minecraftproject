@@ -92,9 +92,9 @@ final class SkillTexts {
         if (effect instanceof SkillEffect.Buff buff) {
             Component name = Component.translatable(buff.kind().translationKey());
             String value = switch (buff.kind()) {
-                case SPEED, REGENERATION -> "Lv" + ((int) Math.round(buff.magnitude()) + 1);
+                case SPEED, REGENERATION -> " Lv" + ((int) Math.round(buff.magnitude()) + 1);
                 case INVISIBILITY, FLAME_WEAPON, FROST_WEAPON, VENOM_WEAPON, THUNDER_WEAPON -> "";
-                default -> "+" + number(buff.magnitude() * scale * 100.0) + "%";
+                default -> " +" + number(buff.magnitude() * scale * 100.0) + "%";
             };
             return buff.target() == SkillEffect.BuffTarget.SELF
                     ? Component.translatable(P + "effect.buff_self", name, value, seconds(buff.durationTicks()))

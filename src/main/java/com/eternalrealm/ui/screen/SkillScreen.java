@@ -573,9 +573,11 @@ public final class SkillScreen extends JournalScreen {
             Component name = Component.translatable(skill.translationKey()).withStyle(ChatFormatting.GOLD);
             graphics.drawString(font, font.plainSubstrByWidth(name.getString(), maxWidth), x, slotY() + 2, 0xFFE8C66A);
             int level = level(skill);
+            SkillTree.InvestResult result = investResult(skill);
             Component status = level > 0
                     ? Component.translatable("screen.eternalrealm.skill.level", level, skill.maxLevel())
-                    : Component.translatable(investResult(skill).translationKey());
+                    : Component.translatable(result == SkillTree.InvestResult.OK ? "screen.eternalrealm.skill.learnable"
+                    : result.translationKey());
             graphics.drawString(font, font.plainSubstrByWidth(status.getString(), maxWidth), x, slotY() + 12,
                     level > 0 ? 0xFF7CFC7C : 0xFFB0A090);
         }
