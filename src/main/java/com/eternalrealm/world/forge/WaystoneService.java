@@ -209,7 +209,7 @@ public final class WaystoneService {
 
     // ------------------------------------------------------------------ where the stone is, where one arrives
 
-    record Arrival(Vec3 position, float yaw) {
+    public record Arrival(Vec3 position, float yaw) {
     }
 
     /** The lower half of the waystone block near the waystone's point, or null (not generated, or unloaded). */
@@ -232,7 +232,7 @@ public final class WaystoneService {
     }
 
     /** In front of the destination stone (the side it faces), on solid ground with room to stand, facing the stone. */
-    static Arrival arrival(ServerLevel level, FieldLayout.Waystone waystone) {
+    public static Arrival arrival(ServerLevel level, FieldLayout.Waystone waystone) {
         level.getChunk(waystone.x() >> 4, waystone.z() >> 4); // make sure it is loaded (and generated)
         BlockPos stone = findStone(level, waystone);
         Direction facing = stone != null ? level.getBlockState(stone).getValue(WaystoneBlock.FACING) : Direction.SOUTH;

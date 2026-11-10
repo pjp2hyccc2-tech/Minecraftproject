@@ -40,6 +40,11 @@ public final class ConsumableItem extends Item {
 
     /** Where the return scroll sends a player; the world layer installs the hub of アストリア. */
     private static volatile Function<ServerPlayer, Boolean> homeTeleport = ConsumableItem::teleportToRespawn;
+    /**
+     * Revives a fallen player with a 世界樹の葉: {@code (helper, target)} → whether it happened. The revival system
+     * installs it; until then nobody is ever fallen.
+     */
+    private static volatile java.util.function.BiPredicate<ServerPlayer, ServerPlayer> reviveHook = (helper, target) -> false;
 
     private final Consumable consumable;
 
@@ -55,6 +60,30 @@ public final class ConsumableItem extends Item {
     /** @param teleport moves the player home and returns whether it worked */
     public static void setHomeTeleport(Function<ServerPlayer, Boolean> teleport) {
         homeTeleport = teleport;
+    }
+
+    /** @param hook revives {@code target} (fallen) for {@code helper} and returns whether it happened */
+    public static void setReviveHook(java.util.function.BiPredicate<ServerPlayer, ServerPlayer> hook) {
+        reviveHook = hook;
+    }
+
+    /** A 世界樹の葉 used on a fallen ally revives them where they lie. */
+    @Override
+    public net.minecraft.world.InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target,
+                                                                      InteractionHand hand) {
+        if (!(consumable.effect() instanceof ConsumableEffect.Revive) || !(target instanceof Player)) {
+            return net.minecraft.world.InteractionResult.PASS;
+        }
+        if (player instanceof ServerPlayer helper && target instanceof ServerPlayer fallen) {
+            if (reviveHook.test(helper, fallen)) {
+                if (!helper.getAbilities().instabuild) {
+                    stack.shrink(1);
+                }
+                return net.minecraft.world.InteractionResult.SUCCESS;
+            }
+            return net.minecraft.world.InteractionResult.FAIL;
+        }
+        return net.minecraft.world.InteractionResult.sidedSuccess(player.level().isClientSide());
     }
 
     @Override
@@ -164,6 +193,12 @@ public final class ConsumableItem extends Item {
                         .withStyle(ChatFormatting.AQUA), true);
             }
             return moved;
+        }
+        if (effect instanceof ConsumableEffect.Revive) {
+            // used in the air: the leaf is for a fallen ally (or for oneself from the revival screen)
+            player.displayClientMessage(Component.translatable("message.eternalrealm.revival.leaf_hint")
+                    .withStyle(ChatFormatting.GRAY), true);
+            return false;
         }
         if (effect instanceof ConsumableEffect.ResetPoints) {
             boolean done = ServerContext.current().map(context -> context.playerData().resetAllPoints(player.getUUID()))

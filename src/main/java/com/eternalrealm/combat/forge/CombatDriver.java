@@ -269,7 +269,8 @@ public final class CombatDriver {
     public void handleRequest(ServerPlayer player, CombatRequest request, int sequence) {
         Combatant combatant = service.get(player.getUUID()).orElse(null);
         RequestOutcome outcome;
-        if (combatant == null || !player.isAlive() || player.isSpectator()) {
+        if (combatant == null || !player.isAlive() || player.isSpectator()
+                || com.eternalrealm.revival.forge.RevivalService.isDown(player.getUUID())) {
             outcome = RequestOutcome.REJECTED_NOT_ALLOWED;
         } else {
             syncEquipment(player, combatant);

@@ -31,7 +31,13 @@ public enum Consumable {
             new ConsumableEffect.ReturnHome(100)),
     /** Resets stat and skill points (忘却の秘薬). From level 10: below it a wrong choice costs little to level past. */
     OBLIVION_ELIXIR("oblivion_elixir", 10, 3000, 1, "oblivion_elixir", 0,
-            new ConsumableEffect.ResetPoints(true, true));
+            new ConsumableEffect.ResetPoints(true, true)),
+    /**
+     * 世界樹の葉: brings a fallen (戦闘不能) player back on the spot with half health — oneself from the revival
+     * screen, or an ally by using it on them. Does nothing on a player who is standing.
+     */
+    YGGDRASIL_LEAF("yggdrasil_leaf", 1, 400, 16, "yggdrasil_leaf", 0,
+            new ConsumableEffect.Revive(0.5));
 
     public enum UseCheck {
         OK,
@@ -83,7 +89,7 @@ public enum Consumable {
 
     /**
      * Formatted numbers for {@link #descriptionKey()}: heal → percent, flat, cooldown seconds; stamina → percent,
-     * cooldown seconds; return → channel seconds; reset → none.
+     * cooldown seconds; return → channel seconds; revive → health percent; reset → none.
      */
     public List<String> descriptionArgs() {
         if (effect instanceof ConsumableEffect.Heal heal) {
@@ -96,6 +102,9 @@ public enum Consumable {
         }
         if (effect instanceof ConsumableEffect.ReturnHome home) {
             return List.of(EquipmentTooltip.number(home.channelTicks() / 20.0));
+        }
+        if (effect instanceof ConsumableEffect.Revive revive) {
+            return List.of(EquipmentTooltip.number(revive.healthFraction() * 100.0));
         }
         return List.of();
     }

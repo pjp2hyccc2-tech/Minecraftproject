@@ -262,6 +262,7 @@ public final class PartyManager {
             if (player != null) {
                 member.addProperty("hp", Math.round(player.getHealth() * 10.0) / 10.0);
                 member.addProperty("maxHp", Math.round(player.getMaxHealth() * 10.0) / 10.0);
+                member.addProperty("down", com.eternalrealm.revival.forge.RevivalService.isDown(id));
                 Optional<CharacterSnapshot> snapshot = playerData.snapshot(id);
                 member.addProperty("level", snapshot.map(CharacterSnapshot::level).orElse(1));
                 member.addProperty("job", snapshot.map(s -> JobType.fromStored(s.jobId()).id()).orElse("none"));

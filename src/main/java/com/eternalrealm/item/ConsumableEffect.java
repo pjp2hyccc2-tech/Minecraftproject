@@ -2,7 +2,7 @@ package com.eternalrealm.item;
 
 /** What using a {@link Consumable} does; the platform layer executes it. */
 public sealed interface ConsumableEffect permits ConsumableEffect.Heal, ConsumableEffect.RestoreStamina,
-        ConsumableEffect.ReturnHome, ConsumableEffect.ResetPoints {
+        ConsumableEffect.ReturnHome, ConsumableEffect.ResetPoints, ConsumableEffect.Revive {
 
     /**
      * Instant healing: {@code fraction × max health + flat}. Not scaled by the user's healing multiplier (that is for
@@ -47,6 +47,16 @@ public sealed interface ConsumableEffect permits ConsumableEffect.Heal, Consumab
             if (!stats && !skills) {
                 throw new IllegalArgumentException("A reset must reset something");
             }
+        }
+    }
+
+    /**
+     * Brings a fallen player back where they lie with {@code healthFraction} of their health (the revival system,
+     * docs/modules/revival.md). Used on oneself from the revival screen or on a fallen ally.
+     */
+    record Revive(double healthFraction) implements ConsumableEffect {
+        public Revive {
+            Checks.range("healthFraction", healthFraction, 0.05, 1.0);
         }
     }
 }

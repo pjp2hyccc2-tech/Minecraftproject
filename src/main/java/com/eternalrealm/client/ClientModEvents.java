@@ -54,8 +54,11 @@ public final class ClientModEvents {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.map.WorldMapScreen::openTravel);
             } else if (com.eternalrealm.world.field.Waystones.ARRIVE_CHANNEL.equals(channel)) {
                 com.eternalrealm.ui.map.TravelFlashOverlay.start();
+            } else {
+                ClientChannels.dispatch(channel);
             }
         });
+        com.eternalrealm.client.revival.ClientRevival.init();
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
         ClientboundHandlers.setTelegraphHandler(com.eternalrealm.client.telegraph.ClientTelegraphs::accept);
         com.eternalrealm.block.forge.LightShaftBlockEntity.clientLoaded =

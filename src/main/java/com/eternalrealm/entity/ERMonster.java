@@ -507,7 +507,8 @@ public abstract class ERMonster extends Monster {
             return false;
         }
         if (entity instanceof Player player) {
-            return !player.isSpectator() && !player.isCreative();
+            // fallen players (the revival system) are untouchable like creative ones
+            return !player.isSpectator() && !player.isCreative() && !player.getAbilities().invulnerable;
         }
         return entity == getTarget() || !(entity instanceof Enemy);
     }

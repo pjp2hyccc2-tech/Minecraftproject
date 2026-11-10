@@ -47,8 +47,20 @@ public final class PartyHudOverlay implements IGuiOverlay {
             if (online && member.has("level")) {
                 label += " Lv" + member.get("level").getAsInt();
             }
-            graphics.drawString(font, font.plainSubstrByWidth(label, WIDTH - 4), x + 2, y + 1, nameColor);
-            if (online && member.has("hp") && member.has("maxHp")) {
+            boolean down = online && member.has("down") && member.get("down").getAsBoolean();
+            net.minecraft.network.chat.Component downLabel = net.minecraft.network.chat.Component.translatable(
+                    "revival.eternalrealm.party_down");
+            int nameWidth = down ? WIDTH - 6 - font.width(downLabel) : WIDTH - 4;
+            graphics.drawString(font, font.plainSubstrByWidth(label, nameWidth), x + 2, y + 1,
+                    down ? 0x9A8A8A : nameColor);
+            if (down) {
+                // fallen (戦闘不能): a pulsing dark red bar, waiting for a leaf or a resurrection
+                graphics.drawString(font, downLabel, x + WIDTH - 2 - font.width(downLabel), y + 1, 0xFFFF6A5A);
+                int barWidth = WIDTH - 4;
+                long time = System.currentTimeMillis() % 1200L;
+                int alpha = 0x90 + (int) (0x50 * Math.abs(Math.sin(time / 1200.0 * Math.PI)));
+                graphics.fill(x + 2, y + 11, x + 2 + barWidth, y + 14, (alpha << 24) | 0x7A1010);
+            } else if (online && member.has("hp") && member.has("maxHp")) {
                 double hp = member.get("hp").getAsDouble();
                 double max = Math.max(1.0, member.get("maxHp").getAsDouble());
                 double ratio = Math.max(0.0, Math.min(1.0, hp / max));

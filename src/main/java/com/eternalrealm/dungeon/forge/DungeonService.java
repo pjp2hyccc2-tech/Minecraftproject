@@ -262,6 +262,35 @@ public final class DungeonService {
         }
     }
 
+    /**
+     * The revival system sends a fallen member back to the instance's revival point (its entrance). False when the
+     * player is not inside a running or cleared instance.
+     */
+    public boolean reviveAtRevivalPoint(ServerPlayer player) {
+        DungeonInstance instance = byMember.get(player.getUUID());
+        if (instance == null || !instance.isInside(player)) {
+            return false;
+        }
+        com.eternalrealm.dungeon.RunState state = instance.run.state();
+        if (state == com.eternalrealm.dungeon.RunState.FAILED || state == com.eternalrealm.dungeon.RunState.CLOSED) {
+            return false;
+        }
+        instance.bringIn(player);
+        return true;
+    }
+
+    /** Whether the player's instance is fighting its boss right now. */
+    public boolean inBossFight(UUID playerId) {
+        DungeonInstance instance = byMember.get(playerId);
+        return instance != null && instance.run.state() == com.eternalrealm.dungeon.RunState.BOSS;
+    }
+
+    /** Recommended level of the player's instance (0 outside of instances). */
+    public int recommendedLevel(UUID playerId) {
+        DungeonInstance instance = byMember.get(playerId);
+        return instance == null ? 0 : instance.recommendedLevel;
+    }
+
     /** A dead member comes back into the instance while the run is on. */
     public void onRespawn(ServerPlayer player) {
         DungeonInstance instance = byMember.get(player.getUUID());

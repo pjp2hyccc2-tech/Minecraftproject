@@ -407,6 +407,7 @@ public final class BossFight {
         for (UUID member : participants) {
             ServerPlayer player = level.getServer().getPlayerList().getPlayer(member);
             if (player != null && player.isAlive() && !player.isSpectator() && player.level() == level
+                    && !com.eternalrealm.revival.forge.RevivalService.isDown(member)
                     && player.distanceToSqr(body) < arenaRange * arenaRange) {
                 targets.add(player);
             }
