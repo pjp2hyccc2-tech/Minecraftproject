@@ -148,7 +148,7 @@ public final class QueenBossGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"b5", "b4", "b5_p1", "b5_p2", "b5_p3", "b4_p1", "b4_p2"};
+    public static final String[] VARIANTS = {"b5", "b4", "b5_p1", "b5_p2", "b5_p3", "b4_p1", "b4_p2", "c_meadow", "c_meadow_p1", "c_meadow_p2", "c_sacred_falls", "c_sacred_falls_p1", "c_sacred_falls_p2", "w_moonmoth_witch", "w_moonmoth_witch_p1", "w_mist_hermit", "w_mist_hermit_p1", "w_tide_singer", "w_tide_singer_p1"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {"crown", "hair", "hood", "ice_horns", "pauldron_r", "sleeve_r", "scepter", "axe", "pauldron_l", "sleeve_l", "shard_ring", "ice_wings", "collar", "right_leg", "left_leg", "gown", "apron"};
     /** VISIBLE[variant][toggled part]. */
@@ -160,21 +160,45 @@ public final class QueenBossGeometry {
             {true, true, false, false, false, true, true, false, false, true, true, true, true, false, false, true, false}, // b5_p3
             {false, false, true, true, true, false, false, true, true, false, false, false, false, true, true, false, true}, // b4_p1
             {false, false, true, true, true, false, false, true, true, false, false, false, false, true, true, false, true}, // b4_p2
+            {false, true, true, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // c_meadow
+            {false, true, true, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // c_meadow_p1
+            {false, true, true, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // c_meadow_p2
+            {false, false, true, false, true, false, false, false, true, false, true, false, true, true, true, false, false}, // c_sacred_falls
+            {false, false, true, false, true, false, false, false, true, false, true, false, true, true, true, false, false}, // c_sacred_falls_p1
+            {false, false, true, false, true, false, false, false, true, false, true, false, true, true, true, false, false}, // c_sacred_falls_p2
+            {false, true, false, false, false, true, true, false, false, true, true, true, true, false, false, true, false}, // w_moonmoth_witch
+            {false, true, false, false, false, true, true, false, false, true, true, true, true, false, false, true, false}, // w_moonmoth_witch_p1
+            {false, true, true, false, false, true, false, false, false, true, false, false, false, true, true, false, true}, // w_mist_hermit
+            {false, true, true, false, false, true, false, false, false, true, false, false, false, true, true, false, true}, // w_mist_hermit_p1
+            {true, true, false, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // w_tide_singer
+            {true, true, false, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // w_tide_singer_p1
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"crown", "ice_horns", "shard_ring", "ice_wings"};
+    public static final String[] POSED_PARTS = {"crown", "ice_horns", "shard_ring", "ice_wings", "gown"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null, null, null, null}, // b5
-            {null, null, null, null}, // b4
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.45F, 1.25F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, null}, // b5_p1
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.45F, 1.25F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, null}, // b5_p2
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.7F, 1.35F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.0F}}, // b5_p3
-            {null, null, null, null}, // b4_p1
-            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.4F, 1.2F}, null, null}, // b4_p2
+            {null, null, null, null, null}, // b5
+            {null, null, null, null, null}, // b4
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.45F, 1.25F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, null, null}, // b5_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.45F, 1.25F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, null, null}, // b5_p2
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.7F, 1.35F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.0F}, null}, // b5_p3
+            {null, null, null, null, null}, // b4_p1
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.4F, 1.2F}, null, null, null}, // b4_p2
+            {null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow
+            {null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow_p1
+            {null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow_p2
+            {null, null, null, null, null}, // c_sacred_falls
+            {null, null, null, null, null}, // c_sacred_falls_p1
+            {null, null, null, null, null}, // c_sacred_falls_p2
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.0F}, null}, // w_moonmoth_witch
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.0F}, null}, // w_moonmoth_witch_p1
+            {null, null, null, null, null}, // w_mist_hermit
+            {null, null, null, null, null}, // w_mist_hermit_p1
+            {null, null, null, null, null}, // w_tide_singer
+            {null, null, null, null, null}, // w_tide_singer_p1
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {2.4F, 2.7F, 2.4F, 2.4F, 2.4F, 2.7F, 2.7F};
+    public static final float[] SCALES = {2.4F, 2.7F, 2.4F, 2.4F, 2.4F, 2.7F, 2.7F, 2.4F, 2.4F, 2.4F, 2.484F, 2.484F, 2.484F, 2.28F, 2.28F, 2.295F, 2.295F, 2.28F, 2.28F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true, true, true, true, true, true, true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 }

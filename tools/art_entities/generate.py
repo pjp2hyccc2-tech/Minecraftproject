@@ -34,7 +34,7 @@ TIMINGS = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'eternalrealm', 'enti
 BOSS_TIMINGS = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'eternalrealm', 'boss', 'BossRigData.java')
 PREVIEWS = os.path.join(HERE, 'previews')
 BOSS_RIGS = ('king', 'treant', 'colossus', 'queen', 'dragon')
-BOSS_IDS = ('b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'final')
+BOSS_IDS = ('b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'final') + __import__('field_bosses').IDS
 
 
 def load_rigs(names=None):
@@ -47,6 +47,10 @@ def load_rigs(names=None):
         except ImportError:
             pass
     rigs = [m.rig() for m in mods]
+    import field_bosses
+    for r in rigs:
+        if r.name in BOSS_RIGS:
+            field_bosses.extend(r)
     if names:
         rigs = [r for r in rigs if r.name in names]
     return rigs

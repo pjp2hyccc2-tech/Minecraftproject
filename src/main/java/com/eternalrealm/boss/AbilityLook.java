@@ -235,6 +235,17 @@ public record AbilityLook(Telegraph.Style style, Effect effect, String block) {
         put("final_gravity", Telegraph.Style.DARK, Effect.EXPLOSION);
         put("final_last_light", Telegraph.Style.DARK, Effect.VOID);
         put("final_vessel_rupture", Telegraph.Style.DARK, Effect.SHOCKWAVE);
+        // the field bosses: every ability in its boss's element colour, the effect from its shape
+        for (BossDefinition boss : FieldBosses.all()) {
+            Telegraph.Style style = FieldBosses.style(boss.id());
+            String block = FieldBosses.block(boss.id());
+            for (BossAbility ability : boss.abilities()) {
+                Effect effect = fieldEffect(ability.kind(), style);
+                boolean prop = effect == Effect.BOMB || effect == Effect.SPIKES || effect == Effect.METEOR
+                        || effect == Effect.ORB;
+                props(ability.id(), style, effect, prop ? block : null);
+            }
+        }
     }
 
     private static void put(String id, Telegraph.Style style, Effect effect) {
@@ -247,6 +258,40 @@ public record AbilityLook(Telegraph.Style style, Effect effect, String block) {
         if (LOOKS.put(id, new AbilityLook(style, effect, block)) != null) {
             throw new IllegalStateException("duplicate look " + id);
         }
+    }
+
+    /** The effect of a field boss's ability: from its shape, coloured by the boss's element. */
+    private static Effect fieldEffect(AbilityKind kind, Telegraph.Style style) {
+        Effect element = switch (style) {
+            case FIRE -> Effect.FIRE;
+            case FROST -> Effect.FROST;
+            case DARK -> Effect.VOID;
+            case MAGIC -> Effect.LIGHTNING;
+            default -> Effect.EXPLOSION;
+        };
+        if (kind instanceof AbilityKind.Cone || kind instanceof AbilityKind.Line) {
+            return Effect.SLASH;
+        }
+        if (kind instanceof AbilityKind.CircleAroundBoss || kind instanceof AbilityKind.Sequence) {
+            return Effect.SLAM;
+        }
+        if (kind instanceof AbilityKind.Knockback || kind instanceof AbilityKind.Ring
+                || kind instanceof AbilityKind.Charge) {
+            return Effect.SHOCKWAVE;
+        }
+        if (kind instanceof AbilityKind.Scatter) {
+            return Effect.METEOR;
+        }
+        if (kind instanceof AbilityKind.Checkerboard || kind instanceof AbilityKind.Exaflare) {
+            return Effect.SPIKES;
+        }
+        if (kind instanceof AbilityKind.RotatingBeam || kind instanceof AbilityKind.Crosses) {
+            return Effect.BEAM;
+        }
+        if (kind instanceof AbilityKind.ProjectileVolley) {
+            return Effect.ORB;
+        }
+        return element;
     }
 
     /** The look defined for {@code abilityId}, if any. */

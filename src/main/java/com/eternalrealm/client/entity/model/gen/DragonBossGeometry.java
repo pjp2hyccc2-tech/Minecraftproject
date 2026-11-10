@@ -120,7 +120,7 @@ public final class DragonBossGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"b6", "b6_p1", "b6_p2", "b6_p3"};
+    public static final String[] VARIANTS = {"b6", "b6_p1", "b6_p2", "b6_p3", "c_ancient_ruins", "c_ancient_ruins_p1", "c_ancient_ruins_p2", "c_lakeside", "c_lakeside_p1", "c_lakeside_p2", "w_cascade_wyvern", "w_cascade_wyvern_p1", "w_thunder_roc", "w_thunder_roc_p1", "w_reed_serpent", "w_reed_serpent_p1"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {};
     /** VISIBLE[variant][toggled part]. */
@@ -129,6 +129,18 @@ public final class DragonBossGeometry {
             {}, // b6_p1
             {}, // b6_p2
             {}, // b6_p3
+            {}, // c_ancient_ruins
+            {}, // c_ancient_ruins_p1
+            {}, // c_ancient_ruins_p2
+            {}, // c_lakeside
+            {}, // c_lakeside_p1
+            {}, // c_lakeside_p2
+            {}, // w_cascade_wyvern
+            {}, // w_cascade_wyvern_p1
+            {}, // w_thunder_roc
+            {}, // w_thunder_roc_p1
+            {}, // w_reed_serpent
+            {}, // w_reed_serpent_p1
     };
     /** Parts with a per-variant rest adjustment. */
     public static final String[] POSED_PARTS = {"horn_r", "horn_l", "right_wing", "left_wing"};
@@ -138,9 +150,21 @@ public final class DragonBossGeometry {
             {null, null, null, null}, // b6_p1
             {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.3F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.3F}, null, null}, // b6_p2
             {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}}, // b6_p3
+            {null, null, null, null}, // c_ancient_ruins
+            {null, null, null, null}, // c_ancient_ruins_p1
+            {null, null, null, null}, // c_ancient_ruins_p2
+            {null, null, null, null}, // c_lakeside
+            {null, null, null, null}, // c_lakeside_p1
+            {null, null, null, null}, // c_lakeside_p2
+            {null, null, null, null}, // w_cascade_wyvern
+            {null, null, null, null}, // w_cascade_wyvern_p1
+            {null, null, null, null}, // w_thunder_roc
+            {null, null, null, null}, // w_thunder_roc_p1
+            {null, null, null, null}, // w_reed_serpent
+            {null, null, null, null}, // w_reed_serpent_p1
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {2.7F, 2.7F, 2.7F, 2.7F};
+    public static final float[] SCALES = {2.7F, 2.7F, 2.7F, 2.7F, 2.43F, 2.43F, 2.43F, 2.214F, 2.214F, 2.214F, 1.89F, 1.89F, 2.106F, 2.106F, 2.025F, 2.025F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true, true, true, true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 }

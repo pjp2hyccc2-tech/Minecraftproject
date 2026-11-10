@@ -150,7 +150,7 @@ public final class ColossusBossGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"b3", "b7", "b3_p1", "b3_p2", "b7_p1", "b7_p2", "b7_p3"};
+    public static final String[] VARIANTS = {"b3", "b7", "b3_p1", "b3_p2", "b7_p1", "b7_p2", "b7_p3", "c_iron_mine", "c_iron_mine_p1", "c_iron_mine_p2", "c_summit", "c_summit_p1", "c_summit_p2", "w_slag_titan", "w_slag_titan_p1", "w_walking_glyph", "w_walking_glyph_p1", "w_glacier_bearer", "w_glacier_bearer_p1"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {"nemes", "false_beard", "visor", "antenna_r", "antenna_l", "cannon_r", "cannon_l", "core", "crystal", "ring", "back_vents", "loincloth"};
     /** VISIBLE[variant][toggled part]. */
@@ -162,6 +162,18 @@ public final class ColossusBossGeometry {
             {false, false, true, true, true, false, false, true, false, true, true, false}, // b7_p1
             {false, false, true, true, true, false, false, true, false, true, true, false}, // b7_p2
             {false, false, true, true, true, true, true, true, false, true, true, false}, // b7_p3
+            {false, false, true, false, false, true, true, true, false, false, true, false}, // c_iron_mine
+            {false, false, true, false, false, true, true, true, false, false, true, false}, // c_iron_mine_p1
+            {false, false, true, false, false, true, true, true, false, false, true, false}, // c_iron_mine_p2
+            {false, false, false, false, false, false, false, false, true, false, false, true}, // c_summit
+            {false, false, false, false, false, false, false, false, true, false, false, true}, // c_summit_p1
+            {false, false, false, false, false, false, false, false, true, false, false, true}, // c_summit_p2
+            {false, false, false, false, false, false, false, true, false, false, true, true}, // w_slag_titan
+            {false, false, false, false, false, false, false, true, false, false, true, true}, // w_slag_titan_p1
+            {false, false, true, false, false, false, false, true, false, true, false, false}, // w_walking_glyph
+            {false, false, true, false, false, false, false, true, false, true, false, false}, // w_walking_glyph_p1
+            {false, true, false, false, false, false, false, false, true, false, false, true}, // w_glacier_bearer
+            {false, true, false, false, false, false, false, false, true, false, false, true}, // w_glacier_bearer_p1
     };
     /** Parts with a per-variant rest adjustment. */
     public static final String[] POSED_PARTS = {"core", "ring"};
@@ -174,9 +186,21 @@ public final class ColossusBossGeometry {
             {null, null}, // b7_p1
             {null, null}, // b7_p2
             {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.0F}, null}, // b7_p3
+            {null, null}, // c_iron_mine
+            {null, null}, // c_iron_mine_p1
+            {null, null}, // c_iron_mine_p2
+            {null, null}, // c_summit
+            {null, null}, // c_summit_p1
+            {null, null}, // c_summit_p2
+            {null, null}, // w_slag_titan
+            {null, null}, // w_slag_titan_p1
+            {null, null}, // w_walking_glyph
+            {null, null}, // w_walking_glyph_p1
+            {null, null}, // w_glacier_bearer
+            {null, null}, // w_glacier_bearer_p1
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {3.1F, 3.0F, 3.1F, 3.1F, 3.0F, 3.0F, 3.0F};
+    public static final float[] SCALES = {3.1F, 3.0F, 3.1F, 3.1F, 3.0F, 3.0F, 3.0F, 2.16F, 2.16F, 2.16F, 2.635F, 2.635F, 2.635F, 2.108F, 2.108F, 1.98F, 1.98F, 2.325F, 2.325F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true, true, true, true, true, true, true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 }

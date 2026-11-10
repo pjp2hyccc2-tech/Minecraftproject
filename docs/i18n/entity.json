@@ -698,5 +698,105 @@
   "entity.eternalrealm.enemy.lord_ankara": {
     "ja": "錨喰らいの大ガニアンカラ",
     "en": "Ankara the Anchor-Eater"
+  },
+  "entity.eternalrealm.boss_c_meadow": {
+    "ja": "草原を呑む影",
+    "en": "The Shadow that Swallows the Meadow"
+  },
+  "entity.eternalrealm.boss_c_moon_forest": {
+    "ja": "月蝕の巨樹",
+    "en": "The Eclipsed Colossus Tree"
+  },
+  "entity.eternalrealm.boss_c_iron_mine": {
+    "ja": "坑底の破壊獣",
+    "en": "The Pit-Bottom Wrecker"
+  },
+  "entity.eternalrealm.boss_c_sacred_falls": {
+    "ja": "堕ちた滝守",
+    "en": "The Fallen Falls-Keeper"
+  },
+  "entity.eternalrealm.boss_c_ancient_ruins": {
+    "ja": "遺跡を焦がす焔",
+    "en": "The Flame that Scorches the Ruins"
+  },
+  "entity.eternalrealm.boss_c_summit": {
+    "ja": "峰を砕く巨像",
+    "en": "The Peak-Breaking Colossus"
+  },
+  "entity.eternalrealm.boss_c_end_forest": {
+    "ja": "終焉より来るもの",
+    "en": "That Which Comes from the End"
+  },
+  "entity.eternalrealm.boss_c_farm": {
+    "ja": "実りを枯らす根",
+    "en": "The Root that Withers the Harvest"
+  },
+  "entity.eternalrealm.boss_c_lakeside": {
+    "ja": "湖底の破壊獣",
+    "en": "The Lake-Bed Wrecker"
+  },
+  "entity.eternalrealm.boss_c_harbour": {
+    "ja": "嵐を呼ぶ呪術師",
+    "en": "The Storm-Calling Hexer"
+  },
+  "entity.eternalrealm.boss_w_bramble_knight": {
+    "ja": "野茨の遍歴騎士",
+    "en": "The Bramble Errant Knight"
+  },
+  "entity.eternalrealm.boss_w_moonmoth_witch": {
+    "ja": "月光蛾の魔女",
+    "en": "The Moonmoth Witch"
+  },
+  "entity.eternalrealm.boss_w_slag_titan": {
+    "ja": "鉱滓の巨人",
+    "en": "The Slag Titan"
+  },
+  "entity.eternalrealm.boss_w_cascade_wyvern": {
+    "ja": "瀑流の飛竜",
+    "en": "The Cascade Wyvern"
+  },
+  "entity.eternalrealm.boss_w_mist_hermit": {
+    "ja": "霧籠りの仙人",
+    "en": "The Mist-Bound Hermit"
+  },
+  "entity.eternalrealm.boss_w_walking_glyph": {
+    "ja": "歩く碑文",
+    "en": "The Walking Inscription"
+  },
+  "entity.eternalrealm.boss_w_ash_herald": {
+    "ja": "灰の先触れ",
+    "en": "The Herald of Ash"
+  },
+  "entity.eternalrealm.boss_w_thunder_roc": {
+    "ja": "雷鳴の巨鳥",
+    "en": "The Thunder Roc"
+  },
+  "entity.eternalrealm.boss_w_glacier_bearer": {
+    "ja": "氷河を背負う者",
+    "en": "The Glacier Bearer"
+  },
+  "entity.eternalrealm.boss_w_hollow_walker": {
+    "ja": "虚ろなる巡礼者",
+    "en": "The Hollow Pilgrim"
+  },
+  "entity.eternalrealm.boss_w_gravebloom": {
+    "ja": "墓花の大樹",
+    "en": "The Gravebloom Tree"
+  },
+  "entity.eternalrealm.boss_w_scarecrow_king": {
+    "ja": "案山子の王",
+    "en": "The Scarecrow King"
+  },
+  "entity.eternalrealm.boss_w_reed_serpent": {
+    "ja": "葦原の大蛇",
+    "en": "The Reed-Bed Serpent"
+  },
+  "entity.eternalrealm.boss_w_sunken_captain": {
+    "ja": "沈まぬ船長",
+    "en": "The Unsinking Captain"
+  },
+  "entity.eternalrealm.boss_w_tide_singer": {
+    "ja": "潮呼びの巫女",
+    "en": "The Tide-Calling Priestess"
   }
 }

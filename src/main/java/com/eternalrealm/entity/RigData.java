@@ -46,11 +46,11 @@ public final class RigData {
             case "beast" -> List.of("wolf", "snow_wolf", "cave_rat", "frost_hound", "abyss_hound", "salamander", "scorpion", "f1_horned_hare", "f1_wild_boar", "f1_stray_sheepdog", "lord_durn", "f2_moonshade_wolf", "f2_twin_tailed_fox", "f2_bark_lizard", "lord_lunar", "f3_rock_crab", "f3_golden_scarab", "f3_tunnel_rat", "lord_vein_eater", "f4_falls_toad", "f4_crystal_crab", "lord_mistweaver", "lord_ord", "f5_ash_hound", "f5_magma_lizard", "f5_lava_tortoise", "f6_peak_wolf", "f6_sky_ram", "f7_void_hound", "f7_plague_rat", "f7_end_scorpion", "lord_nihil", "f8_giant_mole", "f8_rowdy_calf", "lord_brutus", "f9_marsh_frog", "f9_lake_serpent", "f9_great_crayfish", "lord_numel", "f10_beach_crab", "f10_shore_monitor", "lord_ankara");
             case "golem" -> List.of("treant", "sand_golem", "ice_golem", "lava_golem", "ruin_construct", "f2_fungal_brute", "f3_ore_golem", "lord_dolga", "f4_moss_guardian", "f4_snow_ape", "lord_goura", "f5_ruin_sentinel", "f5_obsidian_guard", "lord_agnis", "f6_cloud_giant", "f6_frost_titanling", "f7_blighted_treant", "f7_amethyst_colossus", "f8_hay_golem", "f9_mud_golem", "f10_coral_golem");
             case "flyer" -> List.of("harpy", "ice_wraith", "storm_spirit", "sky_sentinel", "fire_spirit", "f1_meadow_wisp", "f2_moon_moth", "f2_owl_warden", "f2_will_o_wisp", "f3_giant_cave_bat", "f3_gem_wraith", "f4_mist_spirit", "f4_frost_heron", "f4_spray_wraith", "f5_cinder_wraith", "f5_scorch_vulture", "lord_scorch_eye", "f6_thunder_hawk", "f6_gale_spirit", "f6_young_griffin", "f6_star_sentinel", "lord_zephyr", "f7_hollow_eye", "f7_wandering_grudge", "f8_field_crow", "f8_wild_rooster", "f8_giant_bee", "f8_windmill_sprite", "f9_egret_spirit", "f9_giant_dragonfly", "f10_sea_harpy", "f10_tide_spirit");
-            case "king" -> List.of("b1", "b1_p1", "b8", "b8_p1", "b8_p2", "b8_p3", "final", "final_p1", "final_p2", "final_p3");
-            case "treant" -> List.of("b2", "b2_p1", "b2_p2");
-            case "colossus" -> List.of("b3", "b7", "b3_p1", "b3_p2", "b7_p1", "b7_p2", "b7_p3");
-            case "queen" -> List.of("b5", "b4", "b5_p1", "b5_p2", "b5_p3", "b4_p1", "b4_p2");
-            case "dragon" -> List.of("b6", "b6_p1", "b6_p2", "b6_p3");
+            case "king" -> List.of("b1", "b1_p1", "b8", "b8_p1", "b8_p2", "b8_p3", "final", "final_p1", "final_p2", "final_p3", "c_end_forest", "c_end_forest_p1", "c_end_forest_p2", "c_harbour", "c_harbour_p1", "c_harbour_p2", "w_bramble_knight", "w_bramble_knight_p1", "w_ash_herald", "w_ash_herald_p1", "w_hollow_walker", "w_hollow_walker_p1", "w_scarecrow_king", "w_scarecrow_king_p1", "w_sunken_captain", "w_sunken_captain_p1");
+            case "treant" -> List.of("b2", "b2_p1", "b2_p2", "c_moon_forest", "c_moon_forest_p1", "c_moon_forest_p2", "c_farm", "c_farm_p1", "c_farm_p2", "w_gravebloom", "w_gravebloom_p1");
+            case "colossus" -> List.of("b3", "b7", "b3_p1", "b3_p2", "b7_p1", "b7_p2", "b7_p3", "c_iron_mine", "c_iron_mine_p1", "c_iron_mine_p2", "c_summit", "c_summit_p1", "c_summit_p2", "w_slag_titan", "w_slag_titan_p1", "w_walking_glyph", "w_walking_glyph_p1", "w_glacier_bearer", "w_glacier_bearer_p1");
+            case "queen" -> List.of("b5", "b4", "b5_p1", "b5_p2", "b5_p3", "b4_p1", "b4_p2", "c_meadow", "c_meadow_p1", "c_meadow_p2", "c_sacred_falls", "c_sacred_falls_p1", "c_sacred_falls_p2", "w_moonmoth_witch", "w_moonmoth_witch_p1", "w_mist_hermit", "w_mist_hermit_p1", "w_tide_singer", "w_tide_singer_p1");
+            case "dragon" -> List.of("b6", "b6_p1", "b6_p2", "b6_p3", "c_ancient_ruins", "c_ancient_ruins_p1", "c_ancient_ruins_p2", "c_lakeside", "c_lakeside_p1", "c_lakeside_p2", "w_cascade_wyvern", "w_cascade_wyvern_p1", "w_thunder_roc", "w_thunder_roc_p1", "w_reed_serpent", "w_reed_serpent_p1");
             default -> List.of();
         };
     }
@@ -82,17 +82,35 @@ public final class RigData {
             case "beast/lord_lunar", "flyer/lord_zephyr" -> 1.75F;
             case "beast/f3_tunnel_rat" -> 0.78F;
             case "beast/lord_ord", "beast/lord_brutus" -> 1.8F;
-            case "beast/lord_nihil", "beast/lord_ankara", "king/b1", "king/b1_p1" -> 1.9F;
+            case "beast/lord_nihil", "beast/lord_ankara", "king/b1", "king/b1_p1", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1" -> 1.9F;
             case "beast/lord_numel" -> 2.0F;
             case "golem/lord_dolga" -> 1.6F;
             case "golem/lord_goura" -> 1.65F;
             case "flyer/f8_field_crow" -> 0.65F;
             case "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> 2.9F;
             case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> 3.2F;
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> 2.4F;
+            case "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2" -> 2.72F;
+            case "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2" -> 2.32F;
+            case "king/w_ash_herald", "king/w_ash_herald_p1" -> 2.262F;
+            case "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> 1.995F;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1", "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3", "queen/c_meadow", "queen/c_meadow_p1", "queen/c_meadow_p2" -> 2.4F;
+            case "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2" -> 2.52F;
+            case "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "queen/w_moonmoth_witch", "queen/w_moonmoth_witch_p1", "queen/w_tide_singer", "queen/w_tide_singer_p1" -> 2.28F;
             case "colossus/b3", "colossus/b3_p1", "colossus/b3_p2" -> 3.1F;
             case "colossus/b7", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> 3.0F;
+            case "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2" -> 2.16F;
+            case "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2" -> 2.635F;
+            case "colossus/w_slag_titan", "colossus/w_slag_titan_p1" -> 2.108F;
+            case "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1" -> 1.98F;
+            case "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> 2.325F;
             case "queen/b4", "queen/b4_p1", "queen/b4_p2", "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> 2.7F;
+            case "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2" -> 2.484F;
+            case "queen/w_mist_hermit", "queen/w_mist_hermit_p1" -> 2.295F;
+            case "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2" -> 2.43F;
+            case "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2" -> 2.214F;
+            case "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1" -> 1.89F;
+            case "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1" -> 2.106F;
+            case "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> 2.025F;
             default -> 1.0F;
         };
     }
@@ -103,12 +121,72 @@ public final class RigData {
             case "king/b1" -> new float[]{2.7F, 5.4F};
             case "king/b8" -> new float[]{3.8F, 8.0F};
             case "king/final" -> new float[]{4.2F, 8.9F};
+            case "king/c_end_forest" -> new float[]{3.57F, 7.57F};
+            case "king/c_end_forest_p1" -> new float[]{4.2F, 8.9F};
+            case "king/c_end_forest_p2" -> new float[]{4.2F, 8.9F};
+            case "king/c_harbour" -> new float[]{3.04F, 6.4F};
+            case "king/c_harbour_p1" -> new float[]{3.8F, 8.0F};
+            case "king/c_harbour_p2" -> new float[]{3.8F, 8.0F};
+            case "king/w_bramble_knight" -> new float[]{2.7F, 5.4F};
+            case "king/w_bramble_knight_p1" -> new float[]{2.7F, 5.4F};
+            case "king/w_ash_herald" -> new float[]{2.96F, 6.24F};
+            case "king/w_ash_herald_p1" -> new float[]{3.8F, 8.0F};
+            case "king/w_hollow_walker" -> new float[]{2.84F, 5.67F};
+            case "king/w_hollow_walker_p1" -> new float[]{2.7F, 5.4F};
+            case "king/w_scarecrow_king" -> new float[]{2.7F, 5.4F};
+            case "king/w_scarecrow_king_p1" -> new float[]{2.7F, 5.4F};
+            case "king/w_sunken_captain" -> new float[]{2.84F, 5.67F};
+            case "king/w_sunken_captain_p1" -> new float[]{2.7F, 5.4F};
             case "treant/b2" -> new float[]{4.1F, 7.4F};
+            case "treant/c_moon_forest" -> new float[]{4.3F, 7.77F};
+            case "treant/c_moon_forest_p1" -> new float[]{4.1F, 7.4F};
+            case "treant/c_moon_forest_p2" -> new float[]{4.1F, 7.4F};
+            case "treant/c_farm" -> new float[]{3.89F, 7.03F};
+            case "treant/c_farm_p1" -> new float[]{4.1F, 7.4F};
+            case "treant/c_farm_p2" -> new float[]{4.1F, 7.4F};
+            case "treant/w_gravebloom" -> new float[]{4.1F, 7.4F};
+            case "treant/w_gravebloom_p1" -> new float[]{4.1F, 7.4F};
             case "colossus/b3" -> new float[]{5.6F, 10.0F};
             case "colossus/b7" -> new float[]{5.4F, 9.8F};
+            case "colossus/c_iron_mine" -> new float[]{3.89F, 7.06F};
+            case "colossus/c_iron_mine_p1" -> new float[]{5.4F, 9.8F};
+            case "colossus/c_iron_mine_p2" -> new float[]{5.4F, 9.8F};
+            case "colossus/c_summit" -> new float[]{4.76F, 8.5F};
+            case "colossus/c_summit_p1" -> new float[]{5.6F, 10.0F};
+            case "colossus/c_summit_p2" -> new float[]{5.6F, 10.0F};
+            case "colossus/w_slag_titan" -> new float[]{3.81F, 6.8F};
+            case "colossus/w_slag_titan_p1" -> new float[]{5.6F, 10.0F};
+            case "colossus/w_walking_glyph" -> new float[]{3.56F, 6.47F};
+            case "colossus/w_walking_glyph_p1" -> new float[]{5.4F, 9.8F};
+            case "colossus/w_glacier_bearer" -> new float[]{4.2F, 7.5F};
+            case "colossus/w_glacier_bearer_p1" -> new float[]{5.6F, 10.0F};
             case "queen/b5" -> new float[]{2.6F, 6.8F};
             case "queen/b4" -> new float[]{3.0F, 7.6F};
+            case "queen/c_meadow" -> new float[]{2.6F, 6.8F};
+            case "queen/c_meadow_p1" -> new float[]{2.6F, 6.8F};
+            case "queen/c_meadow_p2" -> new float[]{2.6F, 6.8F};
+            case "queen/c_sacred_falls" -> new float[]{2.76F, 6.99F};
+            case "queen/c_sacred_falls_p1" -> new float[]{3.0F, 7.6F};
+            case "queen/c_sacred_falls_p2" -> new float[]{3.0F, 7.6F};
+            case "queen/w_moonmoth_witch" -> new float[]{2.47F, 6.46F};
+            case "queen/w_moonmoth_witch_p1" -> new float[]{2.6F, 6.8F};
+            case "queen/w_mist_hermit" -> new float[]{2.55F, 6.46F};
+            case "queen/w_mist_hermit_p1" -> new float[]{3.0F, 7.6F};
+            case "queen/w_tide_singer" -> new float[]{2.47F, 6.46F};
+            case "queen/w_tide_singer_p1" -> new float[]{2.6F, 6.8F};
             case "dragon/b6" -> new float[]{6.4F, 6.1F};
+            case "dragon/c_ancient_ruins" -> new float[]{5.76F, 5.49F};
+            case "dragon/c_ancient_ruins_p1" -> new float[]{6.4F, 6.1F};
+            case "dragon/c_ancient_ruins_p2" -> new float[]{6.4F, 6.1F};
+            case "dragon/c_lakeside" -> new float[]{5.25F, 5.2F};
+            case "dragon/c_lakeside_p1" -> new float[]{6.4F, 6.1F};
+            case "dragon/c_lakeside_p2" -> new float[]{6.4F, 6.1F};
+            case "dragon/w_cascade_wyvern" -> new float[]{4.48F, 5.2F};
+            case "dragon/w_cascade_wyvern_p1" -> new float[]{6.4F, 6.1F};
+            case "dragon/w_thunder_roc" -> new float[]{4.99F, 5.2F};
+            case "dragon/w_thunder_roc_p1" -> new float[]{6.4F, 6.1F};
+            case "dragon/w_reed_serpent" -> new float[]{4.8F, 5.2F};
+            case "dragon/w_reed_serpent_p1" -> new float[]{6.4F, 6.1F};
             default -> new float[]{1.0F, 2.0F};
         };
     }
@@ -134,11 +212,11 @@ public final class RigData {
      */
     public static float[] footsteps(String rig, String variant) {
         return switch (rig + "/" + variant) {
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[]{0.0F, -3.5F, -8.0F, 0.75F, 3.5F, -8.0F};
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[]{0.0F, -4.0F, -7.0F, 1.2F, 4.0F, -7.0F};
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[]{0.0F, -5.0F, -9.0F, 1.1F, 5.0F, -9.0F};
-            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[]{0.0F, -2.5F, -6.5F, 0.8F, 2.5F, -6.5F};
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[]{0.0F, 7.0F, 6.0F, 0.45F, 7.0F, -13.0F, 0.9F, -7.0F, 6.0F, 1.35F, -7.0F, -13.0F};
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3", "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2", "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_ash_herald", "king/w_ash_herald_p1", "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> new float[]{0.0F, -3.5F, -8.0F, 0.75F, 3.5F, -8.0F};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2", "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1" -> new float[]{0.0F, -4.0F, -7.0F, 1.2F, 4.0F, -7.0F};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3", "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2", "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2", "colossus/w_slag_titan", "colossus/w_slag_titan_p1", "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1", "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> new float[]{0.0F, -5.0F, -9.0F, 1.1F, 5.0F, -9.0F};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2", "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2", "queen/w_mist_hermit", "queen/w_mist_hermit_p1" -> new float[]{0.0F, -2.5F, -6.5F, 0.8F, 2.5F, -6.5F};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3", "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2", "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2", "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1", "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1", "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> new float[]{0.0F, 7.0F, 6.0F, 0.45F, 7.0F, -13.0F, 0.9F, -7.0F, 6.0F, 1.35F, -7.0F, -13.0F};
             default -> new float[0];
         };
     }
@@ -149,12 +227,12 @@ public final class RigData {
      */
     public static float[] muzzle(String rig, String variant) {
         return switch (rig + "/" + variant) {
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[]{0.054F, 2.227F, 1.507F};
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[]{0.0F, 1.815F, 0.795F};
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[]{0.0F, 2.004F, 0.977F};
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new float[]{-0.812F, 2.388F, 2.302F};
-            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[]{-0.022F, 2.063F, 1.418F};
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[]{0.0F, 0.635F, 2.596F};
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3", "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2", "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_ash_herald", "king/w_ash_herald_p1", "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> new float[]{0.054F, 2.227F, 1.507F};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2", "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1" -> new float[]{0.0F, 1.815F, 0.795F};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3", "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2", "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2", "colossus/w_slag_titan", "colossus/w_slag_titan_p1", "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1", "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> new float[]{0.0F, 2.004F, 0.977F};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3", "queen/c_meadow", "queen/c_meadow_p1", "queen/c_meadow_p2", "queen/w_moonmoth_witch", "queen/w_moonmoth_witch_p1", "queen/w_tide_singer", "queen/w_tide_singer_p1" -> new float[]{-0.812F, 2.388F, 2.302F};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2", "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2", "queen/w_mist_hermit", "queen/w_mist_hermit_p1" -> new float[]{-0.022F, 2.063F, 1.418F};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3", "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2", "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2", "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1", "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1", "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> new float[]{0.0F, 0.635F, 2.596F};
             default -> new float[]{0.0F, 0.6F, 0.5F};
         };
     }
@@ -162,12 +240,12 @@ public final class RigData {
     /** Bones that leave a weapon trail during attacks (sword, axe, fists, claws, tail), empty if none. */
     public static String[] trailBones(String rig, String variant) {
         return switch (rig + "/" + variant) {
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new String[]{"greatsword"};
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new String[]{"right_claws", "left_claws"};
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new String[]{"right_hand", "left_hand"};
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new String[]{"scepter"};
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3", "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2", "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_ash_herald", "king/w_ash_herald_p1", "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> new String[]{"greatsword"};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2", "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1" -> new String[]{"right_claws", "left_claws"};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3", "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2", "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2", "colossus/w_slag_titan", "colossus/w_slag_titan_p1", "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1", "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> new String[]{"right_hand", "left_hand"};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3", "queen/c_meadow", "queen/c_meadow_p1", "queen/c_meadow_p2", "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2", "queen/w_moonmoth_witch", "queen/w_moonmoth_witch_p1", "queen/w_mist_hermit", "queen/w_mist_hermit_p1", "queen/w_tide_singer", "queen/w_tide_singer_p1" -> new String[]{"scepter"};
             case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new String[]{"axe"};
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new String[]{"tail_tip", "front_right_leg_foot"};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3", "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2", "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2", "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1", "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1", "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> new String[]{"tail_tip", "front_right_leg_foot"};
             default -> new String[0];
         };
     }
@@ -175,12 +253,12 @@ public final class RigData {
     /** Per trail bone: {baseX, baseY, baseZ, tipX, tipY, tipZ} in model units relative to the bone's pivot. */
     public static float[][] trailPoints(String rig, String variant) {
         return switch (rig + "/" + variant) {
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[][]{{0.0F, -0.5F, -12.0F, 0.0F, -0.5F, -27.5F}};
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[][]{{0.0F, 2.0F, -1.0F, 0.0F, 8.0F, -1.0F}, {0.0F, 2.0F, -1.0F, 0.0F, 8.0F, -1.0F}};
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[][]{{1.0F, 4.0F, -5.0F, 1.0F, 8.0F, -5.0F}, {1.0F, 4.0F, -5.0F, 1.0F, 8.0F, -5.0F}};
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new float[][]{{0.0F, -13.0F, 0.0F, 0.0F, -23.0F, 0.0F}};
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3", "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2", "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_ash_herald", "king/w_ash_herald_p1", "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> new float[][]{{0.0F, -0.5F, -12.0F, 0.0F, -0.5F, -27.5F}};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2", "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1" -> new float[][]{{0.0F, 2.0F, -1.0F, 0.0F, 8.0F, -1.0F}, {0.0F, 2.0F, -1.0F, 0.0F, 8.0F, -1.0F}};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3", "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2", "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2", "colossus/w_slag_titan", "colossus/w_slag_titan_p1", "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1", "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> new float[][]{{1.0F, 4.0F, -5.0F, 1.0F, 8.0F, -5.0F}, {1.0F, 4.0F, -5.0F, 1.0F, 8.0F, -5.0F}};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3", "queen/c_meadow", "queen/c_meadow_p1", "queen/c_meadow_p2", "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2", "queen/w_moonmoth_witch", "queen/w_moonmoth_witch_p1", "queen/w_mist_hermit", "queen/w_mist_hermit_p1", "queen/w_tide_singer", "queen/w_tide_singer_p1" -> new float[][]{{0.0F, -13.0F, 0.0F, 0.0F, -23.0F, 0.0F}};
             case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[][]{{0.0F, 0.0F, -6.0F, 0.0F, 2.0F, -22.5F}};
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[][]{{0.0F, 0.0F, 2.0F, 0.0F, 0.0F, 10.0F}, {0.0F, 1.0F, -2.0F, 0.0F, 3.0F, -5.0F}};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3", "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2", "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2", "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1", "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1", "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> new float[][]{{0.0F, 0.0F, 2.0F, 0.0F, 0.0F, 10.0F}, {0.0F, 1.0F, -2.0F, 0.0F, 3.0F, -5.0F}};
             default -> new float[0][];
         };
     }
@@ -207,13 +285,13 @@ public final class RigData {
      */
     public static float[] fallen(String rig, String variant) {
         return switch (rig + "/" + variant) {
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> new float[]{-0.05F, 1.36F};
-            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[]{-0.05F, 1.35F};
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[]{2.7F, 0.29F};
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[]{-0.07F, -2.61F};
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new float[]{0.05F, 0.42F};
-            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[]{-0.04F, 1.21F};
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[]{-0.12F, 1.58F};
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_ash_herald", "king/w_ash_herald_p1", "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> new float[]{-0.05F, 1.36F};
+            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3", "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2" -> new float[]{-0.05F, 1.35F};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2", "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1" -> new float[]{2.7F, 0.29F};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3", "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2", "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2", "colossus/w_slag_titan", "colossus/w_slag_titan_p1", "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1", "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> new float[]{-0.07F, -2.61F};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3", "queen/c_meadow", "queen/c_meadow_p1", "queen/c_meadow_p2", "queen/w_moonmoth_witch", "queen/w_moonmoth_witch_p1", "queen/w_tide_singer", "queen/w_tide_singer_p1" -> new float[]{0.05F, 0.42F};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2", "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2", "queen/w_mist_hermit", "queen/w_mist_hermit_p1" -> new float[]{-0.04F, 1.21F};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3", "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2", "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2", "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1", "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1", "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> new float[]{-0.12F, 1.58F};
             default -> new float[]{0.0F, 0.0F};
         };
     }
@@ -224,12 +302,14 @@ public final class RigData {
      */
     public static float reach(String rig, String variant) {
         return switch (rig + "/" + variant) {
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> 2.89F;
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> 1.58F;
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> 2.25F;
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> 0.74F;
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3", "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2", "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_ash_herald", "king/w_ash_herald_p1", "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> 2.89F;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2", "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1" -> 1.58F;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3", "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2", "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2", "colossus/w_slag_titan", "colossus/w_slag_titan_p1", "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1", "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> 2.25F;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3", "queen/w_moonmoth_witch", "queen/w_moonmoth_witch_p1", "queen/w_tide_singer", "queen/w_tide_singer_p1" -> 0.74F;
             case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> 2.14F;
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> 1.23F;
+            case "queen/c_meadow", "queen/c_meadow_p1", "queen/c_meadow_p2" -> 0.91F;
+            case "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2", "queen/w_mist_hermit", "queen/w_mist_hermit_p1" -> 0.57F;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3", "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2", "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2", "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1", "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1", "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> 1.23F;
             default -> 1.0F;
         };
     }
@@ -254,13 +334,13 @@ public final class RigData {
             case "beast/scorpion", "beast/f3_rock_crab", "beast/lord_vein_eater", "beast/f4_crystal_crab", "beast/f7_end_scorpion", "beast/f9_great_crayfish", "beast/f10_beach_crab", "beast/lord_ankara" -> T3_LENGTH;
             case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct", "golem/f2_fungal_brute", "golem/f3_ore_golem", "golem/lord_dolga", "golem/f4_moss_guardian", "golem/f4_snow_ape", "golem/lord_goura", "golem/f5_ruin_sentinel", "golem/f5_obsidian_guard", "golem/lord_agnis", "golem/f6_cloud_giant", "golem/f6_frost_titanling", "golem/f7_blighted_treant", "golem/f7_amethyst_colossus", "golem/f8_hay_golem", "golem/f9_mud_golem", "golem/f10_coral_golem" -> T4_LENGTH;
             case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit", "flyer/f1_meadow_wisp", "flyer/f2_moon_moth", "flyer/f2_owl_warden", "flyer/f2_will_o_wisp", "flyer/f3_giant_cave_bat", "flyer/f3_gem_wraith", "flyer/f4_mist_spirit", "flyer/f4_frost_heron", "flyer/f4_spray_wraith", "flyer/f5_cinder_wraith", "flyer/f5_scorch_vulture", "flyer/lord_scorch_eye", "flyer/f6_thunder_hawk", "flyer/f6_gale_spirit", "flyer/f6_young_griffin", "flyer/f6_star_sentinel", "flyer/lord_zephyr", "flyer/f7_hollow_eye", "flyer/f7_wandering_grudge", "flyer/f8_field_crow", "flyer/f8_wild_rooster", "flyer/f8_giant_bee", "flyer/f8_windmill_sprite", "flyer/f9_egret_spirit", "flyer/f9_giant_dragonfly", "flyer/f10_sea_harpy", "flyer/f10_tide_spirit" -> T5_LENGTH;
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> T6_LENGTH;
-            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T7_LENGTH;
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T8_LENGTH;
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> T9_LENGTH;
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> T10_LENGTH;
-            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> T11_LENGTH;
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> T12_LENGTH;
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_ash_herald", "king/w_ash_herald_p1", "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> T6_LENGTH;
+            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3", "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2" -> T7_LENGTH;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2", "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1" -> T8_LENGTH;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3", "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2", "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2", "colossus/w_slag_titan", "colossus/w_slag_titan_p1", "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1", "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> T9_LENGTH;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3", "queen/c_meadow", "queen/c_meadow_p1", "queen/c_meadow_p2", "queen/w_moonmoth_witch", "queen/w_moonmoth_witch_p1", "queen/w_tide_singer", "queen/w_tide_singer_p1" -> T10_LENGTH;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2", "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2", "queen/w_mist_hermit", "queen/w_mist_hermit_p1" -> T11_LENGTH;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3", "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2", "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2", "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1", "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1", "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> T12_LENGTH;
             default -> null;
         };
     }
@@ -273,13 +353,13 @@ public final class RigData {
             case "beast/scorpion", "beast/f3_rock_crab", "beast/lord_vein_eater", "beast/f4_crystal_crab", "beast/f7_end_scorpion", "beast/f9_great_crayfish", "beast/f10_beach_crab", "beast/lord_ankara" -> T3_IMPACT;
             case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct", "golem/f2_fungal_brute", "golem/f3_ore_golem", "golem/lord_dolga", "golem/f4_moss_guardian", "golem/f4_snow_ape", "golem/lord_goura", "golem/f5_ruin_sentinel", "golem/f5_obsidian_guard", "golem/lord_agnis", "golem/f6_cloud_giant", "golem/f6_frost_titanling", "golem/f7_blighted_treant", "golem/f7_amethyst_colossus", "golem/f8_hay_golem", "golem/f9_mud_golem", "golem/f10_coral_golem" -> T4_IMPACT;
             case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit", "flyer/f1_meadow_wisp", "flyer/f2_moon_moth", "flyer/f2_owl_warden", "flyer/f2_will_o_wisp", "flyer/f3_giant_cave_bat", "flyer/f3_gem_wraith", "flyer/f4_mist_spirit", "flyer/f4_frost_heron", "flyer/f4_spray_wraith", "flyer/f5_cinder_wraith", "flyer/f5_scorch_vulture", "flyer/lord_scorch_eye", "flyer/f6_thunder_hawk", "flyer/f6_gale_spirit", "flyer/f6_young_griffin", "flyer/f6_star_sentinel", "flyer/lord_zephyr", "flyer/f7_hollow_eye", "flyer/f7_wandering_grudge", "flyer/f8_field_crow", "flyer/f8_wild_rooster", "flyer/f8_giant_bee", "flyer/f8_windmill_sprite", "flyer/f9_egret_spirit", "flyer/f9_giant_dragonfly", "flyer/f10_sea_harpy", "flyer/f10_tide_spirit" -> T5_IMPACT;
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> T6_IMPACT;
-            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T7_IMPACT;
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T8_IMPACT;
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> T9_IMPACT;
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> T10_IMPACT;
-            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> T11_IMPACT;
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> T12_IMPACT;
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/c_harbour", "king/c_harbour_p1", "king/c_harbour_p2", "king/w_bramble_knight", "king/w_bramble_knight_p1", "king/w_ash_herald", "king/w_ash_herald_p1", "king/w_hollow_walker", "king/w_hollow_walker_p1", "king/w_scarecrow_king", "king/w_scarecrow_king_p1", "king/w_sunken_captain", "king/w_sunken_captain_p1" -> T6_IMPACT;
+            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3", "king/c_end_forest", "king/c_end_forest_p1", "king/c_end_forest_p2" -> T7_IMPACT;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "treant/c_moon_forest", "treant/c_moon_forest_p1", "treant/c_moon_forest_p2", "treant/c_farm", "treant/c_farm_p1", "treant/c_farm_p2", "treant/w_gravebloom", "treant/w_gravebloom_p1" -> T8_IMPACT;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3", "colossus/c_iron_mine", "colossus/c_iron_mine_p1", "colossus/c_iron_mine_p2", "colossus/c_summit", "colossus/c_summit_p1", "colossus/c_summit_p2", "colossus/w_slag_titan", "colossus/w_slag_titan_p1", "colossus/w_walking_glyph", "colossus/w_walking_glyph_p1", "colossus/w_glacier_bearer", "colossus/w_glacier_bearer_p1" -> T9_IMPACT;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3", "queen/c_meadow", "queen/c_meadow_p1", "queen/c_meadow_p2", "queen/w_moonmoth_witch", "queen/w_moonmoth_witch_p1", "queen/w_tide_singer", "queen/w_tide_singer_p1" -> T10_IMPACT;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2", "queen/c_sacred_falls", "queen/c_sacred_falls_p1", "queen/c_sacred_falls_p2", "queen/w_mist_hermit", "queen/w_mist_hermit_p1" -> T11_IMPACT;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3", "dragon/c_ancient_ruins", "dragon/c_ancient_ruins_p1", "dragon/c_ancient_ruins_p2", "dragon/c_lakeside", "dragon/c_lakeside_p1", "dragon/c_lakeside_p2", "dragon/w_cascade_wyvern", "dragon/w_cascade_wyvern_p1", "dragon/w_thunder_roc", "dragon/w_thunder_roc_p1", "dragon/w_reed_serpent", "dragon/w_reed_serpent_p1" -> T12_IMPACT;
             default -> null;
         };
     }

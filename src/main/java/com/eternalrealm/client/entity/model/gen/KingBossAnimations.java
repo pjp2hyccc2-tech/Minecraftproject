@@ -28,7 +28,7 @@ public final class KingBossAnimations {
     /** The animation of every slot for a variant (variant ids as in the geometry class). */
     public static AnimationDefinition[] forVariant(String variant) {
         return switch (variant) {
-            case "final", "final_p1", "final_p2", "final_p3" -> new AnimationDefinition[]{IDLE, WALK, MELEE_SLAM, MELEE_SWEEP, CAST, ROAR, CHARGE, SUMMON, PHASE_CHANGE, STAGGER, DEATH_FINAL};
+            case "final", "final_p1", "final_p2", "final_p3", "c_end_forest", "c_end_forest_p1", "c_end_forest_p2" -> new AnimationDefinition[]{IDLE, WALK, MELEE_SLAM, MELEE_SWEEP, CAST, ROAR, CHARGE, SUMMON, PHASE_CHANGE, STAGGER, DEATH_FINAL};
             default -> new AnimationDefinition[]{IDLE, WALK, MELEE_SLAM, MELEE_SWEEP, CAST, ROAR, CHARGE, SUMMON, PHASE_CHANGE, STAGGER, DEATH};
         };
     }

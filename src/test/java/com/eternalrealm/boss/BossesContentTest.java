@@ -37,7 +37,7 @@ public class BossesContentTest {
     @Test
     public void abilityIdsAreGloballyUniqueAndPrefixedWithTheirBoss() {
         Set<String> seen = new HashSet<>();
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             for (BossAbility ability : boss.abilities()) {
                 assertTrue(ability.id(), ability.id().startsWith(boss.id() + "_"));
                 assertTrue("duplicate " + ability.id(), seen.add(ability.id()));
@@ -47,7 +47,7 @@ public class BossesContentTest {
 
     @Test
     public void bigHitsGetLongTelegraphs() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             for (BossAbility ability : boss.abilities()) {
                 if (ability.kind().damaging()) {
                     assertTrue(ability.id(), ability.telegraphTicks() >= BossRules.MIN_TELEGRAPH_TICKS);
@@ -62,7 +62,7 @@ public class BossesContentTest {
 
     @Test
     public void harderDifficultiesAreStrongerAndExAddsAMechanic() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             assertEquals(DifficultyTuning.NORMAL, boss.normal());
             assertTrue(boss.hard().healthMultiplier() > 1.0 && boss.hard().damageMultiplier() > 1.0);
             assertTrue(boss.ex().healthMultiplier() > boss.hard().healthMultiplier());
@@ -82,12 +82,17 @@ public class BossesContentTest {
 
     @Test
     public void regularBossesAreForPartiesAndHaveSeveralPhases() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             if (boss == Bosses.FINAL) {
                 continue;
             }
-            assertEquals(1, boss.minPlayers());
-            assertEquals(5, boss.maxPlayers());
+            if (FieldBosses.all().contains(boss)) {
+                // open-world fights: whoever is near joins, balanced for two or more
+                assertTrue(boss.id(), boss.minPlayers() >= 2 && boss.maxPlayers() >= 8);
+            } else {
+                assertEquals(1, boss.minPlayers());
+                assertEquals(5, boss.maxPlayers());
+            }
             assertTrue(boss.phases().size() >= 2);
             for (BossAbility ability : boss.abilitiesFor(0, Difficulty.NORMAL)) {
                 assertFalse(boss.id() + ": no soak in the first phase", ability.kind().splitsDamage());
@@ -156,10 +161,11 @@ public class BossesContentTest {
     public void everyBossHasAtLeastFivePatternAttacksAndLaterBossesMoreForms() {
         Map<String, Integer> forms = Map.of("b1", 2, "b2", 3, "b3", 3, "b4", 3, "b5", 4, "b6", 4, "b7", 4, "b8", 4,
                 "final", 4);
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             long patterns = boss.abilities().stream().filter(ability -> isPattern(ability.kind())).count();
             assertTrue(boss.id() + " has " + patterns + " pattern attacks", patterns >= 5);
-            assertEquals(boss.id(), forms.get(boss.id()).intValue(), boss.phases().size());
+            int expected = forms.getOrDefault(boss.id(), FieldBosses.CALAMITIES.contains(boss) ? 3 : 2);
+            assertEquals(boss.id(), expected, boss.phases().size());
             Set<Class<?>> kinds = new HashSet<>();
             for (BossAbility ability : boss.abilities()) {
                 kinds.add(ability.kind().getClass());
@@ -186,7 +192,7 @@ public class BossesContentTest {
 
     @Test
     public void everyHitOfAPatternIsWarnedAndPatternsDoNotLastForever() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             for (BossAbility ability : boss.abilities()) {
                 if (!ability.kind().damaging()) {
                     continue;
@@ -216,7 +222,7 @@ public class BossesContentTest {
     @Test
     public void everyTelegraphIsLongEnoughForTheBodysWindUp() {
         List<String> late = new java.util.ArrayList<>();
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             for (BossAbility ability : boss.abilities()) {
                 int impact = BossActions.impactTicks(boss.id(), ability.kind());
                 if (ability.telegraphTicks() < impact) {
@@ -243,7 +249,7 @@ public class BossesContentTest {
     /** Every boss has a body of its own size, and later forms are a little bigger. */
     @Test
     public void bodiesAreBigAndGrowWithTheirForms() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             assertTrue(boss.id() + " is bigger than a player", BossRigData.bodyHeight(boss.id()) >= 5.0);
             assertTrue(boss.id(), BossRigData.bodyRadius(boss.id(), 1) > BossRigData.bodyRadius(boss.id(), 0));
             for (String action : List.of(BossActions.SLAM, BossActions.SWEEP, BossActions.CAST, BossActions.CHARGE,
@@ -261,7 +267,7 @@ public class BossesContentTest {
      */
     @Test
     public void attacksAroundTheBossReachBeyondItsBody() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             double body = BossRigData.bodyRadius(boss.id(), boss.phases().size() - 1);
             for (BossAbility ability : boss.abilities()) {
                 List<AbilityKind> kinds = ability.kind() instanceof AbilityKind.Sequence sequence

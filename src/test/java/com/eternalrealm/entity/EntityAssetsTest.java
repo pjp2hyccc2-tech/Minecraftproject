@@ -91,11 +91,13 @@ public class EntityAssetsTest {
         JsonObject names = i18n();
         JsonObject bossNames = JsonParser.parseString(Files.readString(Paths.get("docs", "i18n", "boss.json"),
                 StandardCharsets.UTF_8)).getAsJsonObject();
+        JsonParser.parseString(Files.readString(Paths.get("docs", "i18n", "bosses_field.json"), StandardCharsets.UTF_8))
+                .getAsJsonObject().entrySet().forEach(entry -> bossNames.add(entry.getKey(), entry.getValue()));
         Set<String> bossTextures = new TreeSet<>();
         for (String rig : BOSS_RIGS) {
             bossTextures.addAll(bodyTextures(rig));
         }
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             String key = "entity.eternalrealm.boss_" + boss.id();
             assertTrue("missing " + key, names.has(key));
             assertEquals("entity name = boss name", bossNames.getAsJsonObject(boss.translationKey()).get("ja").getAsString(),
@@ -114,7 +116,7 @@ public class EntityAssetsTest {
         for (String rig : BOSS_RIGS) {
             bossTextures.addAll(bodyTextures(rig));
         }
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             for (int form = 1; form < Math.min(4, boss.phases().size()); form++) {
                 assertTrue(boss.id() + ": form " + (form + 1) + " has no look of its own",
                         bossTextures.contains(boss.id() + "_p" + form));

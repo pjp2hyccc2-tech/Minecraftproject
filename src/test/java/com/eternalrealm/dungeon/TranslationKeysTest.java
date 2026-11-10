@@ -26,13 +26,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * docs/i18n/boss.json and docs/i18n/bosses_v2.json (the second release of boss content) hold the Japanese and English
+ * docs/i18n/boss.json, docs/i18n/bosses_v2.json (the second release of boss content) and bosses_field.json (the
+ * field bosses) hold the Japanese and English
  * text of every key the boss and dungeon modules define; the integrator merges them into the lang files. Keys must
  * match exactly, so nothing is missing and nothing is stale, and no key is in both files.
  */
 public class TranslationKeysTest {
     private static final List<Path> FILES = List.of(Paths.get("docs", "i18n", "boss.json"),
-            Paths.get("docs", "i18n", "bosses_v2.json"));
+            Paths.get("docs", "i18n", "bosses_v2.json"), Paths.get("docs", "i18n", "bosses_field.json"));
 
     /** Both files merged; fails on a key defined twice. */
     private static JsonObject load() throws IOException {
@@ -49,7 +50,7 @@ public class TranslationKeysTest {
 
     private static Set<String> codeKeys() {
         Set<String> keys = new TreeSet<>();
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             keys.add(boss.translationKey());
             for (BossAbility ability : boss.abilities()) {
                 keys.add(ability.translationKey());
