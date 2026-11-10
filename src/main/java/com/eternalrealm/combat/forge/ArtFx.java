@@ -81,7 +81,8 @@ public final class ArtFx {
         }
         ServerLevel level = player.serverLevel();
         WINDOWS.put(player.getUUID(), new Window(look, weapon.type(), level.getGameTime() + action.durationTicks() + 60L));
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+        // everyone else hears the wind-up from here; the wielder's own client plays it at once (chargePitch)
+        level.playSound(player, player.getX(), player.getY(), player.getZ(),
                 ERSounds.weaponSkillCharge(weapon.type()).get(), SoundSource.PLAYERS, 1.0F, pitch(look, 0.9F));
         Vec3 hand = hand(player);
         burst(level, particle(look.accentParticle(), look.accentRgb()), hand, 8, 0.2, 0.02);
@@ -637,6 +638,11 @@ public final class ArtFx {
     }
 
     /** Every art sounds a little different: its pitch follows its colour. */
+    /** The pitch of an art's wind-up sound (the acting client predicts it). */
+    public static float chargePitch(String artId) {
+        return GeneratedArts.look(artId).map(look -> pitch(look, 0.9F)).orElse(1.0F);
+    }
+
     private static float pitch(ArtLook look, float base) {
         float shift = ((look.rgb() >> 4) & 0x7) / 7.0F - 0.5F;
         return Math.max(0.5F, Math.min(2.0F, base + shift * 0.2F));

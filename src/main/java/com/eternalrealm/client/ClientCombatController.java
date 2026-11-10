@@ -309,6 +309,10 @@ public final class ClientCombatController {
                     // the weapon skill's own wind-up (the server plays it for everyone else)
                     player.playSound(com.eternalrealm.combat.forge.WeaponSkillFx.chargeSound(start.weapon().type()),
                             1.0F, 1.0F);
+                } else if (com.eternalrealm.combat.forge.ArtFx.isGenerated(start.action())) {
+                    // a named or tier weapon's art: its own pitch of the wind-up (the server plays it for the others)
+                    player.playSound(com.eternalrealm.combat.forge.WeaponSkillFx.chargeSound(start.weapon().type()),
+                            1.0F, com.eternalrealm.combat.forge.ArtFx.chargePitch(start.action().id()));
                 } else {
                     player.playSound(com.eternalrealm.sound.ERSounds.SKILL_SLASH.get(), 1.0F, 1.0F);
                 }
