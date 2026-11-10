@@ -37,7 +37,7 @@ public final class FieldThreats {
         }
     }
 
-    /** One 災厄: the boss that manifests at the lair of its field. */
+    /** One 災厄: the boss that manifests at the lair of its field (its own boss, boss.FieldBosses). */
     public record Calamity(String id, int field, String boss, int x, int z) {
         public String translationKey() {
             return "threat." + ModInfo.MOD_ID + ".calamity." + id;
@@ -81,16 +81,16 @@ public final class FieldThreats {
     // GENERATED BESTIARY LORDS END
 
     private static final List<Calamity> CALAMITIES = List.of(
-            new Calamity("meadow", 1, "b1", -212, 420),
-            new Calamity("moon_forest", 2, "b2", -412, -36),
-            new Calamity("iron_mine", 3, "b3", -1428, 804),
-            new Calamity("sacred_falls", 4, "b4", 468, -372),
-            new Calamity("ancient_ruins", 5, "b6", 1372, -172),
-            new Calamity("soaring_peaks", 6, "b7", 156, -580),
-            new Calamity("end_forest", 7, "b8", -1092, -708),
-            new Calamity("farm", 8, "b2", 860, 196),
-            new Calamity("lakeside", 9, "b3", 284, 564),
-            new Calamity("harbour", 10, "b5", 1148, 764));
+            new Calamity("meadow", 1, "c_meadow", -212, 420),
+            new Calamity("moon_forest", 2, "c_moon_forest", -412, -36),
+            new Calamity("iron_mine", 3, "c_iron_mine", -1428, 804),
+            new Calamity("sacred_falls", 4, "c_sacred_falls", 468, -372),
+            new Calamity("ancient_ruins", 5, "c_ancient_ruins", 1372, -172),
+            new Calamity("soaring_peaks", 6, "c_summit", 156, -580),
+            new Calamity("end_forest", 7, "c_end_forest", -1092, -708),
+            new Calamity("farm", 8, "c_farm", 860, 196),
+            new Calamity("lakeside", 9, "c_lakeside", 284, 564),
+            new Calamity("harbour", 10, "c_harbour", 1148, 764));
 
     private FieldThreats() {
     }

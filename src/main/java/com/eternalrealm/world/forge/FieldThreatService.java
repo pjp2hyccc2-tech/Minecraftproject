@@ -929,8 +929,7 @@ public final class FieldThreatService {
             return;
         }
         BossDefinition definition = Bosses.byId(state.calamity.boss()).orElse(null);
-        MonsterTemplate minion = definition == null ? null
-                : Monsters.byId(Bosses.minionTemplateId(definition.id())).orElse(null);
+        MonsterTemplate minion = rewardTemplate(definition, state.calamity.field());
         MonsterStats stats = minion == null ? null : MonsterScaling.stats(minion, Math.max(minion.levels().min(),
                 Math.min(minion.levels().max(), definition.level())));
         long durationTicks = Math.max(0L, (fight.killTick() < 0 ? now : fight.killTick()) - state.fightStart);
@@ -996,6 +995,19 @@ public final class FieldThreatService {
     }
 
     // ------------------------------------------------------------------ rewards
+
+    /**
+     * The monster whose EXP and gold a boss's rewards scale from: its adds' template, or for the field bosses (which
+     * summon none) the first lord of their field, at the boss's level.
+     */
+    static MonsterTemplate rewardTemplate(BossDefinition definition, int field) {
+        if (definition == null) {
+            return null;
+        }
+        return Monsters.byId(Bosses.minionTemplateId(definition.id()))
+                .or(() -> FieldThreats.lordsOf(field).stream().findFirst().flatMap(lord -> Monsters.byId(lord.template())))
+                .orElse(null);
+    }
 
     private static void addMaterial(List<ItemStack> items, String materialId, int count) {
         Item item = materialId == null ? null : ERGearItems.material(materialId);
