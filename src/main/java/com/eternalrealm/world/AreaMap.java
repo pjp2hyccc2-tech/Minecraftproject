@@ -1,61 +1,67 @@
 package com.eternalrealm.world;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
+import com.eternalrealm.world.field.FieldLayout;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
- * Finds the area at a position from its horizontal offset to the world spawn.
+ * Finds the field at a position from its horizontal offset to the world spawn (the centre of the capital).
  *
- * <p>The rings must tile the plane: sorted by inner radius they start at 0, each ring starts where the previous one ends
- * and only the last one is unbounded. The distance is Euclidean ({@code sqrt(dx² + dz²)}), so areas are circles, not
- * squares; for integer block offsets inside the world border the computation is exact, so a ring boundary is exactly
- * where the numbers say. Immutable.</p>
+ * <p>The standard map is the field map of {@link FieldLayout}: a region per field with natural, wandering borders.
+ * Other maps (tests, a server whose realm has another shape) plug in their own {@link Locator}. Immutable.</p>
  */
 public final class AreaMap {
-    private static final AreaMap STANDARD = new AreaMap(Areas.all());
+    /** Where each field lies. */
+    public interface Locator {
+        /** The area id at a block offset from the spawn. */
+        int areaAt(double dx, double dz);
 
-    private final List<AreaDefinition> rings;
-
-    public AreaMap(List<AreaDefinition> areas) {
-        Objects.requireNonNull(areas, "areas");
-        List<AreaDefinition> sorted = new ArrayList<>(areas);
-        if (sorted.isEmpty()) {
-            throw new IllegalArgumentException("an area map needs at least one area");
-        }
-        sorted.sort(Comparator.comparingInt(AreaDefinition::innerRadius));
-        Set<Integer> ids = new HashSet<>();
-        long expectedInner = 0;
-        for (int i = 0; i < sorted.size(); i++) {
-            AreaDefinition area = Objects.requireNonNull(sorted.get(i), "area");
-            if (!ids.add(area.id())) {
-                throw new IllegalArgumentException("duplicate area id " + area.id());
-            }
-            if (area.innerRadius() != expectedInner) {
-                throw new IllegalArgumentException("area " + area.id() + " starts at " + area.innerRadius()
-                        + " but the previous ring ends at " + expectedInner + " (rings must not overlap or leave gaps)");
-            }
-            boolean outermost = i == sorted.size() - 1;
-            if (outermost != area.isUnbounded()) {
-                throw new IllegalArgumentException("only the outermost area may be (and must be) unbounded: area "
-                        + area.id());
-            }
-            expectedInner = area.outerRadius();
-        }
-        this.rings = List.copyOf(sorted);
+        /** Roughly how many blocks the offset lies inside its field (distance to the nearest border). */
+        double borderDistance(double dx, double dz);
     }
 
-    /** The map of {@link Areas#all()}. */
+    private static final Locator FIELDS = new Locator() {
+        @Override
+        public int areaAt(double dx, double dz) {
+            return FieldLayout.areaAt(dx, dz);
+        }
+
+        @Override
+        public double borderDistance(double dx, double dz) {
+            return FieldLayout.borderDistance(dx, dz);
+        }
+    };
+    private static final AreaMap STANDARD = new AreaMap(Areas.all(), FIELDS);
+
+    private final List<AreaDefinition> areas;
+    private final Map<Integer, AreaDefinition> byId = new HashMap<>();
+    private final Locator locator;
+
+    public AreaMap(List<AreaDefinition> areas, Locator locator) {
+        Objects.requireNonNull(areas, "areas");
+        this.locator = Objects.requireNonNull(locator, "locator");
+        if (areas.isEmpty()) {
+            throw new IllegalArgumentException("an area map needs at least one area");
+        }
+        for (AreaDefinition area : areas) {
+            if (byId.put(Objects.requireNonNull(area, "area").id(), area) != null) {
+                throw new IllegalArgumentException("duplicate area id " + area.id());
+            }
+        }
+        this.areas = List.copyOf(areas);
+    }
+
+    /** The field map of {@link Areas#all()}. */
     public static AreaMap standard() {
         return STANDARD;
     }
 
-    /** The areas from the spawn outwards. */
+    /** The fields, ordered by id. */
     public List<AreaDefinition> areas() {
-        return rings;
+        return areas;
     }
 
     /**
@@ -63,27 +69,29 @@ public final class AreaMap {
      * @param dz block offset {@code z - spawnZ}
      */
     public AreaDefinition areaAt(double dx, double dz) {
-        return areaAtDistance(horizontalDistance(dx, dz));
+        checkFinite(dx, dz);
+        AreaDefinition area = byId.get(locator.areaAt(dx, dz));
+        if (area == null) {
+            throw new IllegalStateException("the locator returned an unknown area at " + dx + ", " + dz);
+        }
+        return area;
     }
 
-    /** @param distance horizontal distance from the spawn; infinity is the outermost area */
-    public AreaDefinition areaAtDistance(double distance) {
-        if (!(distance >= 0.0)) {
-            throw new IllegalArgumentException("distance must be >= 0: " + distance);
-        }
-        for (AreaDefinition ring : rings) {
-            if (ring.isUnbounded() || distance < ring.outerRadius()) {
-                return ring;
-            }
-        }
-        throw new IllegalStateException("the outermost ring is unbounded");
+    /** How far the offset lies inside its field (distance to the nearest border, about blocks). */
+    public double borderDistance(double dx, double dz) {
+        checkFinite(dx, dz);
+        return locator.borderDistance(dx, dz);
     }
 
-    /** Euclidean horizontal distance; may be infinite for absurd (but finite) offsets. */
+    /** Euclidean horizontal distance. */
     public static double horizontalDistance(double dx, double dz) {
+        checkFinite(dx, dz);
+        return Math.sqrt(dx * dx + dz * dz);
+    }
+
+    private static void checkFinite(double dx, double dz) {
         if (!Double.isFinite(dx) || !Double.isFinite(dz)) {
             throw new IllegalArgumentException("non-finite offset: " + dx + ", " + dz);
         }
-        return Math.sqrt(dx * dx + dz * dz);
     }
 }

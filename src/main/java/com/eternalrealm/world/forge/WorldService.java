@@ -123,8 +123,13 @@ public final class WorldService {
             if (player.isSpectator() || !playerData.isActive(player.getUUID())) {
                 continue;
             }
-            Optional<AreaTransition> transition = tracker.update(player.getUUID(), player.getX() - center.getX(),
-                    player.getZ() - center.getZ());
+            double offsetX = player.getX() - center.getX();
+            double offsetZ = player.getZ() - center.getZ();
+            if (com.eternalrealm.world.field.FieldLayout.outOfBounds(offsetX, offsetZ) > 24.0 && !player.isCreative()) {
+                edgeOfTheWorld(player, offsetX, offsetZ);
+                continue;
+            }
+            Optional<AreaTransition> transition = tracker.update(player.getUUID(), offsetX, offsetZ);
             AreaDefinition area = tracker.currentArea(player.getUUID()).orElse(null);
             if (area == null) {
                 continue;
@@ -145,13 +150,11 @@ public final class WorldService {
         player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 60, 20));
         player.connection.send(new ClientboundSetSubtitleTextPacket(card
                 .map(c -> (Component) Component.translatable(c.subtitleKey()).withStyle(ChatFormatting.GRAY))
-                .orElseGet(() -> Component.translatable(WorldMessages.RECOMMENDED_LEVEL, area.minLevel(), area.maxLevel())
-                        .withStyle(ChatFormatting.GRAY))));
+                .orElseGet(() -> recommended(area).withStyle(ChatFormatting.GRAY))));
         player.connection.send(new ClientboundSetTitleTextPacket(Component.translatable(card
                 .map(com.eternalrealm.story.AreaCard::titleKey).orElse(area.translationKey()))
                 .withStyle(style -> style.withColor(color))));
-        player.displayClientMessage(Component.translatable(WorldMessages.RECOMMENDED_LEVEL, area.minLevel(),
-                area.maxLevel()).withStyle(ChatFormatting.GRAY), true);
+        player.displayClientMessage(recommended(area).withStyle(ChatFormatting.GRAY), true);
         for (BiConsumer<ServerPlayer, AreaDefinition> listener : enterListeners) {
             listener.accept(player, area);
         }
@@ -167,6 +170,24 @@ public final class WorldService {
                 listener.accept(player, area);
             }
         }
+    }
+
+    /** Beyond the field map the mist turns travellers back: a few blocks towards the capital. */
+    private void edgeOfTheWorld(ServerPlayer player, double offsetX, double offsetZ) {
+        double length = Math.max(1.0, Math.sqrt(offsetX * offsetX + offsetZ * offsetZ));
+        double x = player.getX() - offsetX / length * 12.0;
+        double z = player.getZ() - offsetZ / length * 12.0;
+        int y = player.serverLevel().getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                (int) Math.floor(x), (int) Math.floor(z));
+        player.teleportTo(player.serverLevel(), x, Math.max(y, player.getY()), z, player.getYRot(), player.getXRot());
+        player.displayClientMessage(Component.translatable(WorldMessages.WORLD_EDGE).withStyle(ChatFormatting.GRAY),
+                true);
+    }
+
+    /** "推奨レベル 10〜20" or, for the open-ended high fields, "推奨レベル 40〜". */
+    private static net.minecraft.network.chat.MutableComponent recommended(AreaDefinition area) {
+        return area.openEnded() ? Component.translatable(WorldMessages.RECOMMENDED_LEVEL_FROM, area.minLevel())
+                : Component.translatable(WorldMessages.RECOMMENDED_LEVEL, area.minLevel(), area.maxLevel());
     }
 
     private void pushBack(ServerPlayer player, AreaDefinition area) {

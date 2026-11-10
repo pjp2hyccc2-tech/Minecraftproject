@@ -284,6 +284,11 @@ MATERIALS = {
     ]),
 }
 
+# the field-map materials (2026-11): templates + ramps, see materials_v2.py
+from materials_v2 import ICONS as _FIELD_MATERIALS  # noqa: E402
+
+MATERIALS.update(_FIELD_MATERIALS)
+
 CONSUMABLES = {
     "health_potion_small": (dict(C=P.WOOD_PALE, G=P.GLASS, R=P.POTION_RED, W=("flat", hexc("ffe0dc"))), [
         "................",

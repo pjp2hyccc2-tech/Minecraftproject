@@ -4,6 +4,8 @@ import com.eternalrealm.dungeon.Dungeons;
 import com.eternalrealm.world.Areas;
 import com.eternalrealm.world.gen.AstoriaAreas;
 import com.eternalrealm.world.gen.AstoriaBiome;
+import com.eternalrealm.world.field.FieldLayout;
+import com.eternalrealm.world.field.FieldTerrain;
 import com.eternalrealm.world.gen.AstoriaLayout;
 import com.eternalrealm.world.gen.LandmarkSites;
 import org.junit.Test;
@@ -24,10 +26,18 @@ public class MapGeometryTest {
     public void markersCoverTheCapitalTheTowerAndEveryDungeon() {
         List<MapMarkers.Marker> markers = MapMarkers.astoria();
         assertEquals(MapMarkers.Kind.CAPITAL, markers.get(0).kind());
-        assertEquals(1 + LandmarkSites.all().size(), markers.size());
+        int waystones = com.eternalrealm.world.field.FieldLayout.waystones().size();
+        assertEquals(1 + LandmarkSites.all().size() + waystones, markers.size());
         Set<String> dungeons = new HashSet<>();
+        Set<String> stones = new HashSet<>();
         for (MapMarkers.Marker marker : markers) {
             if (marker.kind() == MapMarkers.Kind.CAPITAL) {
+                continue;
+            }
+            if (marker.kind() == MapMarkers.Kind.WAYSTONE) {
+                stones.add(marker.dungeonId());
+                assertEquals(marker.dungeonId(), AstoriaAreas.areaAt(marker.x(), marker.z()), marker.areaId());
+                assertEquals("waystone.eternalrealm." + marker.dungeonId(), marker.nameKey());
                 continue;
             }
             dungeons.add(marker.dungeonId());
@@ -36,7 +46,8 @@ public class MapGeometryTest {
             assertEquals(Dungeons.byId(marker.dungeonId()).orElseThrow().recommendedLevel(), marker.level());
         }
         assertEquals(Set.of("d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8"), dungeons);
-        MapMarkers.Marker tower = markers.get(markers.size() - 1);
+        assertEquals(waystones, stones.size());
+        MapMarkers.Marker tower = markers.get(markers.size() - 1 - waystones);
         assertEquals(MapMarkers.Kind.TOWER, tower.kind());
         assertEquals(AstoriaLayout.TOWER_Z + 0.5, tower.z(), EPS);
     }
@@ -106,8 +117,8 @@ public class MapGeometryTest {
         }
         assertNotEquals("biomes or rings only", AtlasPainter.paint(64, false)[32 * 64 + 40], a[32 * 64 + 40]);
         // the capital is light, the tower is dark
-        int capital = AtlasPainter.color(0.0, 0.0, 4.0, true, 1.0);
-        int tower = AtlasPainter.color(AstoriaLayout.TOWER_X, AstoriaLayout.TOWER_Z, 4.0, true, 1.0);
+        int capital = AtlasPainter.color(0.0, 0.0, 4.0, true, 1.0, 70.0);
+        int tower = AtlasPainter.color(AstoriaLayout.TOWER_X, AstoriaLayout.TOWER_Z, 4.0, true, 1.0, 78.0);
         assertTrue(brightness(capital) > 150);
         assertTrue(brightness(tower) < 80);
         // every biome has its own colour
@@ -116,12 +127,26 @@ public class MapGeometryTest {
             colours.add(AtlasPainter.biomeColor(biome));
         }
         assertEquals(AstoriaBiome.values().length, colours.size());
-        // the ring borders are inked
-        int onRing = AtlasPainter.color(600.0, 0.5, 4.0, true, 1.0);
-        int beside = AtlasPainter.color(612.0, 0.5, 4.0, true, 1.0);
-        assertTrue(brightness(onRing) < brightness(beside));
-        // the void beyond the land
-        assertTrue(brightness(AtlasPainter.color(2590.0, 2590.0, 4.0, true, 1.0)) < 40);
+        // the field borders are inked: find an inked border point on the meadow's edge
+        boolean inked = false;
+        for (int x = -900; x <= 900 && !inked; x++) {
+            double z = 260.0;
+            if (FieldLayout.borderDistance(x, z) < 1.0 && Math.floorMod((long) Math.floor((x + z) / 22.0), 3L) != 2L
+                    && FieldLayout.borderDistance(x + 14, z) > 6.0) {
+                double h = FieldTerrain.heightAt(x, z);
+                double hb = FieldTerrain.heightAt(x + 14, z);
+                if (FieldTerrain.waterTop(x, z, (int) h) == FieldTerrain.NO_WATER
+                        && FieldTerrain.waterTop(x + 14, z, (int) hb) == FieldTerrain.NO_WATER) {
+                    int on = AtlasPainter.color(x, z, 4.0, true, 1.0, h);
+                    int beside = AtlasPainter.color(x + 14, z, 4.0, true, 1.0, hb);
+                    assertTrue(brightness(on) < brightness(beside));
+                    inked = true;
+                }
+            }
+        }
+        assertTrue("no field border found to check", inked);
+        // beyond the bounds the map fades into clouds
+        assertTrue(brightness(AtlasPainter.color(1890.0, 1490.0, 4.0, true, 1.0, 40.0)) > 180);
     }
 
     private static int brightness(int rgb) {

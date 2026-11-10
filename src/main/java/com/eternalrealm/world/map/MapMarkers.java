@@ -23,13 +23,14 @@ public final class MapMarkers {
 
     /** What a marker stands for. */
     public enum Kind {
-        CAPITAL, TOWER, DUNGEON
+        CAPITAL, TOWER, DUNGEON, WAYSTONE
     }
 
     /**
      * One place.
      *
-     * @param dungeonId "d1".."d8" for dungeon entrances (and the tower, whose gate is d8), otherwise empty
+     * @param dungeonId "d1".."d8" for dungeon entrances (and the tower, whose gate is d8), the waystone id for
+     *                  waystones, otherwise empty
      * @param x         world position (アストリア); dungeon markers sit on the entrance in front of the gate
      * @param level     recommended level of the dungeon (0 for the capital)
      */
@@ -46,7 +47,7 @@ public final class MapMarkers {
     private MapMarkers() {
     }
 
-    /** Capital first, then the dungeon entrances d1..d7, then the tower (d8). */
+    /** Capital first, then the dungeon entrances d1..d7, then the tower (d8), then the waystones. */
     public static List<Marker> astoria() {
         return ASTORIA;
     }
@@ -67,6 +68,11 @@ public final class MapMarkers {
             markers.add(new Marker(Kind.DUNGEON, site.dungeonId(), site.worldX(entrance.dx(), entrance.dz()) + 0.5,
                     site.worldZ(entrance.dx(), entrance.dz()) + 0.5, nameKey, AstoriaAreas.areaAt(site.x(), site.z()),
                     level));
+        }
+        for (com.eternalrealm.world.field.FieldLayout.Waystone waystone
+                : com.eternalrealm.world.field.FieldLayout.waystones()) {
+            markers.add(new Marker(Kind.WAYSTONE, waystone.id(), waystone.x() + 0.5, waystone.z() + 0.5,
+                    com.eternalrealm.world.field.Waystones.translationKey(waystone.id()), waystone.field(), 0));
         }
         return List.copyOf(markers);
     }

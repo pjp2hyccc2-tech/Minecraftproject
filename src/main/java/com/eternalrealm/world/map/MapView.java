@@ -26,7 +26,7 @@ import java.util.UUID;
  * so a bad document can never break the HUD.</p>
  */
 public record MapView(Realm realm, Set<Integer> unlockedAreas, Set<Integer> discoveredAreas, boolean finalBossUnlocked,
-                      List<Member> party, List<Npc> npcs, Optional<Dungeon> dungeon) {
+                      List<Member> party, List<Npc> npcs, Optional<Dungeon> dungeon, Set<String> waystones) {
     public static final String CHANNEL = "map";
     public static final int MAX_MEMBERS = 40;
     public static final int MAX_NPCS = 64;
@@ -37,7 +37,7 @@ public record MapView(Realm realm, Set<Integer> unlockedAreas, Set<Integer> disc
 
     /** Before the first document arrives: the realm at (0, 0), only the first area open. */
     public static final MapView EMPTY = new MapView(Realm.DEFAULT, Set.of(1), Set.of(), false, List.of(), List.of(),
-            Optional.empty());
+            Optional.empty(), Set.of());
 
     public MapView {
         Objects.requireNonNull(realm, "realm");
@@ -46,6 +46,18 @@ public record MapView(Realm realm, Set<Integer> unlockedAreas, Set<Integer> disc
         party = List.copyOf(party);
         npcs = List.copyOf(npcs);
         Objects.requireNonNull(dungeon, "dungeon");
+        waystones = Collections.unmodifiableSet(new TreeSet<>(waystones));
+    }
+
+    /** Without recorded waystones. */
+    public MapView(Realm realm, Set<Integer> unlockedAreas, Set<Integer> discoveredAreas, boolean finalBossUnlocked,
+                   List<Member> party, List<Npc> npcs, Optional<Dungeon> dungeon) {
+        this(realm, unlockedAreas, discoveredAreas, finalBossUnlocked, party, npcs, dungeon, Set.of());
+    }
+
+    /** Whether this player has recorded the waystone (転移碑) {@code id}. */
+    public boolean hasWaystone(String id) {
+        return waystones.contains(id);
     }
 
     /**
@@ -171,6 +183,11 @@ public record MapView(Realm realm, Set<Integer> unlockedAreas, Set<Integer> disc
         json.add("realm", realmJson);
         json.add("unlocked", ints(unlockedAreas));
         json.add("discovered", ints(discoveredAreas));
+        if (!waystones.isEmpty()) {
+            JsonArray stones = new JsonArray();
+            waystones.forEach(stones::add);
+            json.add("waystones", stones);
+        }
         json.addProperty("final", finalBossUnlocked);
         JsonArray members = new JsonArray();
         for (Member member : party) {
@@ -283,8 +300,16 @@ public record MapView(Realm realm, Set<Integer> unlockedAreas, Set<Integer> disc
             npcs.add(new Npc(number(n, "x", 0), number(n, "y", 0), number(n, "z", 0), text(n, "role", ""),
                     text(n, "name", ""), Mark.of(text(n, "mark", ""))));
         }
+        Set<String> waystones = new TreeSet<>();
+        if (json.has("waystones") && json.get("waystones").isJsonArray()) {
+            for (JsonElement element : json.getAsJsonArray("waystones")) {
+                if (waystones.size() < 64 && element.isJsonPrimitive() && element.getAsString().matches("[a-z_]{1,32}")) {
+                    waystones.add(element.getAsString());
+                }
+            }
+        }
         return new MapView(realm, unlocked, intSet(json, "discovered"), bool(json, "final", false), party, npcs,
-                dungeon(object(json, "dungeon")));
+                dungeon(object(json, "dungeon")), waystones);
     }
 
     private static Optional<Dungeon> dungeon(JsonObject d) {

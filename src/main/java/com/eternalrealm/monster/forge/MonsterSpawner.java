@@ -22,17 +22,20 @@ import java.util.List;
 import java.util.SplittableRandom;
 
 /**
- * Field monsters around the players: once per second each player outside the capital may get one monster of the
- * area's table (level from the area's range) 18-34 blocks away on solid ground, up to a few per player and a cap per
- * server. Monsters that ignore players in daylight (spiders, endermen) are pointed at a player in sight.
+ * Field monsters around the players: twice per second each player outside the capital may get a monster of the
+ * area's table (level from the area's range) 16-38 blocks away on solid ground — often with one or two of its kind
+ * beside it — up to a dozen per player and a cap per server. Monsters that ignore players in daylight (spiders,
+ * endermen) are pointed at a player in sight.
  */
 public final class MonsterSpawner {
-    private static final int NEAR_RADIUS = 40;
-    private static final int PER_PLAYER_CAP = 7;
-    private static final int LEVEL_CAP_BASE = 24;
-    private static final int LEVEL_CAP_PER_PLAYER = 9;
-    private static final double MIN_DISTANCE = 18.0;
-    private static final double MAX_DISTANCE = 34.0;
+    private static final int NEAR_RADIUS = 44;
+    private static final int PER_PLAYER_CAP = 12;
+    private static final int LEVEL_CAP_BASE = 48;
+    private static final int LEVEL_CAP_PER_PLAYER = 18;
+    private static final double MIN_DISTANCE = 16.0;
+    private static final double MAX_DISTANCE = 38.0;
+    /** Chance that a normal monster comes with company (one or two more of its kind next to it). */
+    private static final double PACK_CHANCE = 0.4;
     private static final double AGGRO_RANGE_SQR = 12.0 * 12.0;
     private static final int RECOUNT_TICKS = 100;
     private static final double DESPAWN_DISTANCE = 96.0;
@@ -47,7 +50,7 @@ public final class MonsterSpawner {
     }
 
     public void tick(long tick) {
-        if (tick % 20 != 7 || !ERServerConfig.MONSTER_SPAWNING.get()) {
+        if (tick % 10 != 7 || !ERServerConfig.MONSTER_SPAWNING.get()) {
             return;
         }
         ServerLevel level = Realm.level(server);
@@ -86,9 +89,7 @@ public final class MonsterSpawner {
             if (levelCount >= cap || near.size() >= PER_PLAYER_CAP || Realm.inCapital(level, player.getX(), player.getZ())) {
                 continue;
             }
-            if (trySpawn(level, player)) {
-                levelCount++;
-            }
+            levelCount += trySpawn(level, player, Math.min(cap - levelCount, PER_PLAYER_CAP - near.size()));
         }
     }
 
@@ -108,7 +109,8 @@ public final class MonsterSpawner {
         }
     }
 
-    private boolean trySpawn(ServerLevel level, ServerPlayer player) {
+    /** Spawns a monster (and maybe its pack, up to {@code room} in all) near the player; returns how many. */
+    private int trySpawn(ServerLevel level, ServerPlayer player, int room) {
         for (int attempt = 0; attempt < 4; attempt++) {
             double angle = random.nextDouble() * Math.PI * 2.0;
             double distance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
@@ -137,9 +139,36 @@ public final class MonsterSpawner {
             if (!level.noCollision(type.getAABB(x + 0.5, spawnY, z + 0.5))) {
                 continue;
             }
-            return MonsterFactory.spawn(level, spawn, x + 0.5, spawnY, z + 0.5,
-                    (float) (random.nextDouble() * 360.0)).isPresent();
+            if (MonsterFactory.spawn(level, spawn, x + 0.5, spawnY, z + 0.5,
+                    (float) (random.nextDouble() * 360.0)).isEmpty()) {
+                return 0;
+            }
+            int spawned = 1;
+            if (spawn.template().role() == com.eternalrealm.monster.MonsterRole.NORMAL && room > 1
+                    && random.nextDouble() < PACK_CHANCE) {
+                int company = 1 + (room > 2 && random.nextBoolean() ? 1 : 0);
+                for (int i = 0; i < company; i++) {
+                    int cx = x + random.nextInt(-3, 4);
+                    int cz = z + random.nextInt(-3, 4);
+                    int cy = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, cx, cz);
+                    BlockPos at = new BlockPos(cx, cy, cz);
+                    if (Math.abs(cy - y) > 3 || !level.getBlockState(at.below()).isFaceSturdy(level, at.below(), Direction.UP)
+                            || !level.getFluidState(at).isEmpty() || !level.noCollision(type.getAABB(cx + 0.5, cy, cz + 0.5))) {
+                        continue;
+                    }
+                    MonsterSpawn mate = table.pick(area.levelRange(), random);
+                    if (!mate.template().id().equals(spawn.template().id())) {
+                        mate = new MonsterSpawn(spawn.template(), Math.max(spawn.template().levels().min(),
+                                Math.min(spawn.template().levels().max(), spawn.level() + random.nextInt(-1, 2))));
+                    }
+                    if (MonsterFactory.spawn(level, mate, cx + 0.5, cy, cz + 0.5,
+                            (float) (random.nextDouble() * 360.0)).isPresent()) {
+                        spawned++;
+                    }
+                }
+            }
+            return spawned;
         }
-        return false;
+        return 0;
     }
 }

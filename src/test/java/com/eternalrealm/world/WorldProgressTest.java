@@ -39,7 +39,7 @@ public class WorldProgressTest {
         WorldProgress progress = WorldProgress.fresh(SEASON);
         BossDefeatResult first = progress.recordBossDefeat("b1", T0);
         assertTrue(first.firstDefeat());
-        assertEquals(List.of(2), ids(first.newlyUnlockedAreas()));
+        assertEquals(List.of(2, 8), ids(first.newlyUnlockedAreas()));
         assertFalse(first.finalBossNewlyUnlocked());
         assertTrue(progress.isAreaUnlocked(2));
         assertTrue(progress.isDirty());
@@ -55,15 +55,15 @@ public class WorldProgressTest {
     @Test
     public void theFullStoryUnlocksEveryAreaAndThenTheFinalBoss() {
         WorldProgress progress = WorldProgress.fresh(SEASON);
-        assertEquals(List.of(2), ids(progress.recordBossDefeat("b1", T0).newlyUnlockedAreas()));
-        assertEquals(List.of(3), ids(progress.recordBossDefeat("b2", T0).newlyUnlockedAreas()));
-        assertEquals(List.of(4), ids(progress.recordBossDefeat("b3", T0).newlyUnlockedAreas()));
+        assertEquals(List.of(2, 8), ids(progress.recordBossDefeat("b1", T0).newlyUnlockedAreas()));
+        assertEquals(List.of(3, 9), ids(progress.recordBossDefeat("b2", T0).newlyUnlockedAreas()));
+        assertEquals(List.of(4, 10), ids(progress.recordBossDefeat("b3", T0).newlyUnlockedAreas()));
         assertEquals("the first snow dungeon boss opens nothing", List.of(),
                 ids(progress.recordBossDefeat("b4", T0).newlyUnlockedAreas()));
         assertEquals(List.of(5), ids(progress.recordBossDefeat("b5", T0).newlyUnlockedAreas()));
         assertEquals(List.of(6), ids(progress.recordBossDefeat("b6", T0).newlyUnlockedAreas()));
         assertEquals(List.of(7), ids(progress.recordBossDefeat("b7", T0).newlyUnlockedAreas()));
-        assertEquals(Set.of(1, 2, 3, 4, 5, 6, 7), progress.unlockedAreaIds());
+        assertEquals(Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), progress.unlockedAreaIds());
         assertFalse(progress.finalBossUnlocked());
 
         BossDefeatResult tower = progress.recordBossDefeat("b8", T0);
@@ -92,10 +92,10 @@ public class WorldProgressTest {
     @Test
     public void eachAreaDependsOnlyOnItsOwnBoss() {
         WorldProgress progress = WorldProgress.fresh(SEASON);
-        assertEquals("an administrator may record b3 first", List.of(4),
+        assertEquals("an administrator may record b3 first", List.of(4, 10),
                 ids(progress.recordBossDefeat("b3", T0).newlyUnlockedAreas()));
         assertFalse(progress.isAreaUnlocked(2));
-        assertEquals(Set.of(1, 4), progress.unlockedAreaIds());
+        assertEquals(Set.of(1, 4, 10), progress.unlockedAreaIds());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class WorldProgressTest {
 
         WorldProgress restored = WorldProgress.fromRecord(record);
         assertEquals(record, restored.toRecord());
-        assertEquals(Set.of(1, 2, 3), restored.unlockedAreaIds());
+        assertEquals(Set.of(1, 2, 3, 8, 9), restored.unlockedAreaIds());
         assertFalse("a loaded state is clean", restored.isDirty());
         assertEquals(SEASON, restored.seasonId());
 

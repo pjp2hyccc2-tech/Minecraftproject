@@ -2,6 +2,7 @@ package com.eternalrealm.world.gen;
 
 import com.eternalrealm.dungeon.DungeonDefinition;
 import com.eternalrealm.dungeon.Dungeons;
+import com.eternalrealm.world.field.FieldLayout;
 import org.junit.Test;
 
 import java.util.EnumMap;
@@ -15,87 +16,63 @@ import static org.junit.Assert.assertTrue;
 
 public class AstoriaLayoutTest {
     @Test
-    public void ringsMatchTheAreaTable() {
+    public void fieldsMatchTheAreaTable() {
         assertEquals(1, AstoriaAreas.areaAt(0, 0));
-        assertEquals(1, AstoriaAreas.areaAtDistance(299.99));
-        assertEquals(2, AstoriaAreas.areaAtDistance(300));
-        assertEquals(3, AstoriaAreas.areaAtDistance(600));
-        assertEquals(4, AstoriaAreas.areaAtDistance(900));
-        assertEquals(5, AstoriaAreas.areaAtDistance(1200));
-        assertEquals(6, AstoriaAreas.areaAtDistance(1500));
-        assertEquals(6, AstoriaAreas.areaAtDistance(1799.9));
-        assertEquals(7, AstoriaAreas.areaAtDistance(1800));
-        assertEquals(7, AstoriaAreas.areaAtDistance(1.0e9));
-        assertEquals(1, AstoriaAreas.areaAtDistance(Double.NaN));
-        assertEquals(2, AstoriaAreas.areaAt(-212.2, 212.2));
+        assertEquals(AstoriaBiome.ABYSS_SPIRE, AstoriaLayout.biomeAt(AstoriaLayout.TOWER_X, AstoriaLayout.TOWER_Z));
         for (int area = 1; area <= AstoriaAreas.COUNT; area++) {
-            assertEquals(area, AstoriaAreas.areaAtDistance(AstoriaAreas.innerRadius(area)));
+            assertTrue("field " + area + " needs at least 2 biomes", AstoriaBiome.inArea(area).size() >= 2);
             assertTrue(AstoriaAreas.titleKey(area).startsWith("area.eternalrealm."));
         }
     }
 
-    /** The biome rings must match the gameplay areas of the world module exactly. */
+    /** The worldgen fields must be the gameplay fields of the world module. */
     @Test
-    public void ringsAndKeysMatchTheWorldModule() {
+    public void fieldsAndKeysMatchTheWorldModule() {
         com.eternalrealm.world.AreaMap map = com.eternalrealm.world.AreaMap.standard();
         assertEquals(AstoriaAreas.COUNT, map.areas().size());
-        for (double distance = 0.0; distance < 2600.0; distance += 0.5) {
-            assertEquals("area at " + distance, map.areaAtDistance(distance).id(), AstoriaAreas.areaAtDistance(distance));
+        for (int x = -1800; x <= 1800; x += 37) {
+            for (int z = -1600; z <= 1400; z += 41) {
+                assertEquals("field at " + x + ", " + z, map.areaAt(x, z).id(), AstoriaAreas.areaAt(x, z));
+            }
         }
         for (com.eternalrealm.world.AreaDefinition area : map.areas()) {
             assertEquals(area.translationKey(), AstoriaAreas.titleKey(area.id()));
             assertEquals(area.descriptionKey(), AstoriaAreas.subtitleKey(area.id()));
-            assertEquals(area.innerRadius(), AstoriaAreas.innerRadius(area.id()));
         }
     }
 
     @Test
-    public void borderJitterIsSmallAndSmooth() {
-        double max = 0.0;
-        for (int x = -2500; x <= 2500; x += 7) {
-            for (int z = -2500; z <= 2500; z += 13) {
-                double jitter = AstoriaLayout.borderJitter(x, z);
-                max = Math.max(max, Math.abs(jitter));
-                double step = Math.abs(jitter - AstoriaLayout.borderJitter(x + 1, z));
-                assertTrue("jitter must change smoothly, jumped " + step, step < 1.0);
-            }
-        }
-        assertTrue("jitter " + max, max <= AstoriaLayout.MAX_BORDER_JITTER);
-        assertTrue("borders should not be perfect circles", max > 2.0);
-    }
-
-    @Test
-    public void biomesFollowTheRingsAwayFromTheBorders() {
-        for (int x = -2600; x <= 2600; x += 9) {
-            for (int z = -2600; z <= 2600; z += 11) {
-                double distance = Math.sqrt((double) x * x + (double) z * z);
-                double toBorder = distanceToBorder(distance);
+    public void biomesFollowTheFieldsAwayFromTheBorders() {
+        for (int x = FieldLayout.MIN_X; x <= FieldLayout.MAX_X; x += 23) {
+            for (int z = FieldLayout.MIN_Z; z <= FieldLayout.MAX_Z; z += 29) {
                 AstoriaBiome biome = AstoriaLayout.biomeAt(x, z);
-                if (toBorder > AstoriaLayout.MAX_BORDER_JITTER) {
-                    assertEquals("biome " + biome + " at " + x + ", " + z, AstoriaAreas.areaAtDistance(distance),
-                            biome.area());
+                if (FieldLayout.capitalDistance(x, z) <= AstoriaLayout.CAPITAL_MARGIN) {
+                    assertEquals(AstoriaBiome.ROYAL_CAPITAL, biome);
+                    continue;
                 }
+                assertEquals("biome " + biome + " at " + x + ", " + z, FieldLayout.areaAt(x, z), biome.area());
                 assertEquals(AstoriaLayout.biomeAreaAt(x, z), biome.area());
             }
         }
     }
 
     @Test
-    public void everySubBiomeAppearsInItsArea() {
+    public void everyPlacedBiomeAppearsInItsField() {
         Map<AstoriaBiome, Integer> counts = new EnumMap<>(AstoriaBiome.class);
-        for (int x = -3000; x <= 3000; x += 12) {
-            for (int z = -3000; z <= 3000; z += 12) {
+        for (int x = -1900; x <= 1900; x += 12) {
+            for (int z = -1700; z <= 1500; z += 12) {
                 counts.merge(AstoriaLayout.biomeAt(x, z), 1, Integer::sum);
             }
         }
         for (AstoriaBiome biome : AstoriaBiome.values()) {
-            assertTrue(biome + " never generated", counts.getOrDefault(biome, 0) > 20);
+            if (biome.area() == 0) {
+                assertEquals(biome + " is retired but still placed", 0, (int) counts.getOrDefault(biome, 0));
+            } else {
+                assertTrue(biome + " never generated", counts.getOrDefault(biome, 0) > 20);
+            }
         }
         assertEquals(AstoriaBiome.ROYAL_CAPITAL, AstoriaLayout.biomeAt(0, 0));
         assertEquals(AstoriaBiome.ABYSS_SPIRE, AstoriaLayout.biomeAt(AstoriaLayout.TOWER_X, AstoriaLayout.TOWER_Z));
-        for (int area = 1; area <= AstoriaAreas.COUNT; area++) {
-            assertTrue("area " + area + " needs at least 3 biomes", AstoriaBiome.inArea(area).size() >= 3);
-        }
     }
 
     @Test
@@ -106,10 +83,12 @@ public class AstoriaLayoutTest {
             DungeonDefinition dungeon = Dungeons.byId(site.dungeonId()).orElseThrow();
             assertEquals(site.dungeonId() + " area", dungeon.areaId(), site.area());
             assertEquals(dungeon.theme(), site.theme());
-            double distance = Math.sqrt((double) site.x() * site.x() + (double) site.z() * site.z());
-            double margin = site.padRadius() + AstoriaLayout.MAX_BORDER_JITTER + 10;
-            assertTrue(site.dungeonId() + " too close to an area border", distanceToBorder(distance) > margin);
-            assertTrue(site.dungeonId() + " too close to the capital", distance > AstoriaLayout.CAPITAL_RADIUS + margin);
+            assertEquals(site.dungeonId() + " field", site.area(), FieldLayout.areaAt(site.x(), site.z()));
+            double margin = site.padRadius() + 10;
+            assertTrue(site.dungeonId() + " too close to a field border",
+                    FieldLayout.borderDistance(site.x(), site.z()) > margin);
+            assertTrue(site.dungeonId() + " too close to the capital",
+                    FieldLayout.capitalDistance(site.x(), site.z()) > 100 + margin);
             assertEquals(site.area(), AstoriaLayout.biomeAt(site.x(), site.z()).area());
             for (LandmarkSite.Local local : new LandmarkSite.Local[]{site.entrance(), site.npc(), site.waypoint()}) {
                 int dx = site.worldX(local.dx(), local.dz()) - site.x();
@@ -117,6 +96,7 @@ public class AstoriaLayoutTest {
                 assertTrue(site.dungeonId() + " spot outside the pad", dx * dx + dz * dz < site.padRadius() * site.padRadius());
             }
             // the front (+z) faces the capital: the waypoint is closer to (0, 0) than the gate
+            double distance = Math.hypot(site.x(), site.z());
             double waypointDistance = Math.hypot(site.worldX(0, site.waypoint().dz()), site.worldZ(0, site.waypoint().dz()));
             assertTrue(site.dungeonId() + " does not face the capital", waypointDistance < distance);
         }
@@ -152,13 +132,5 @@ public class AstoriaLayoutTest {
             seen.add(spot);
         }
         assertEquals(13, seen.size());
-    }
-
-    private static double distanceToBorder(double distance) {
-        double best = Double.MAX_VALUE;
-        for (int area = 2; area <= AstoriaAreas.COUNT; area++) {
-            best = Math.min(best, Math.abs(distance - AstoriaAreas.innerRadius(area)));
-        }
-        return best;
     }
 }

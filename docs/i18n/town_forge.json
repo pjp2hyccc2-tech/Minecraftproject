@@ -39,10 +39,6 @@
     "ja": "これは売れません",
     "en": "This cannot be sold"
   },
-  "screen.eternalrealm.smith.title": {
-    "ja": "鍛冶屋",
-    "en": "Blacksmith"
-  },
   "screen.eternalrealm.smith.enhance": {
     "ja": "強化",
     "en": "Enhance"
@@ -67,25 +63,9 @@
     "ja": "持ち物の装備をクリックしてください",
     "en": "Click a piece of equipment in your inventory"
   },
-  "screen.eternalrealm.smith.chance": {
-    "ja": "成功率 %s%%",
-    "en": "Success chance %s%%"
-  },
   "screen.eternalrealm.smith.bonus": {
     "ja": "成功後の基本性能 +%s%%",
     "en": "Base stats on success: +%s%%"
-  },
-  "screen.eternalrealm.smith.do_enhance": {
-    "ja": "強化する",
-    "en": "Enhance"
-  },
-  "screen.eternalrealm.smith.do_reroll": {
-    "ja": "付加効果を再抽選する",
-    "en": "Reroll the affixes"
-  },
-  "screen.eternalrealm.smith.cost_gold": {
-    "ja": "費用 %s G",
-    "en": "Cost %s gold"
   },
   "screen.eternalrealm.smith.cost_item": {
     "ja": "%s ×%s",

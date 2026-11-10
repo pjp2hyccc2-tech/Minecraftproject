@@ -80,7 +80,7 @@ public class MainStoryPlaythroughTest {
                 .anyMatch(q -> q.id().equals("m2_arrival")));
 
         BossDefeatResult defeat = world.recordBossDefeat("b1", NOW);
-        assertEquals(List.of(2), defeat.newlyUnlockedAreas().stream().map(a -> a.id()).toList());
+        assertEquals(List.of(2, 8), defeat.newlyUnlockedAreas().stream().map(a -> a.id()).toList());
         assertEquals(AcceptResult.SUCCESS, engine.accept(restored, "m2_arrival", QuestContext.of(50, world, DAY, 2)));
         assertEquals("standing in the forest already counts", List.of(1, 0), restored.progress("m2_arrival"));
         engine.onEvent(restored, new GameEvent.NpcTalked("elder_forest_sage"));

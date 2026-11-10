@@ -2,6 +2,7 @@ package com.eternalrealm.world;
 
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,7 +15,21 @@ public class AreaTrackerTest {
     private static final UUID ALICE = UUID.fromString("00000000-0000-0000-0000-00000000000a");
     private static final UUID BOB = UUID.fromString("00000000-0000-0000-0000-00000000000b");
 
-    private final AreaTracker tracker = new AreaTracker(AreaMap.standard(), 8.0);
+    /** Two fields split at x = 300 (west = 1, east = 2), so borders are easy to walk. */
+    private static final AreaMap HALVES = new AreaMap(List.of(Areas.ARCELIA, Areas.ELDER_FOREST),
+            new AreaMap.Locator() {
+                @Override
+                public int areaAt(double dx, double dz) {
+                    return dx < 300 ? 1 : 2;
+                }
+
+                @Override
+                public double borderDistance(double dx, double dz) {
+                    return Math.abs(dx - 300);
+                }
+            });
+
+    private final AreaTracker tracker = new AreaTracker(HALVES, 8.0);
 
     @Test
     public void theFirstPositionOfAPlayerIsAlwaysReported() {
@@ -27,7 +42,7 @@ public class AreaTrackerTest {
     }
 
     @Test
-    public void leavingAnAreaNeedsTheHysteresisMargin() {
+    public void aBorderIsOnlyCrossedOnceThePlayerIsWellInside() {
         tracker.update(ALICE, 290, 0);
         assertEquals("just across the border", Optional.empty(), tracker.update(ALICE, 305, 0));
         assertEquals(Optional.empty(), tracker.update(ALICE, 307.9, 0));
@@ -40,28 +55,28 @@ public class AreaTrackerTest {
     }
 
     @Test
-    public void teleportsJumpStraightToTheNewArea() {
-        tracker.update(ALICE, 0, 0);
-        AreaTransition jump = tracker.update(ALICE, 0, -1400).orElseThrow();
+    public void teleportsAcrossTheFieldMapAreReportedAtOnce() {
+        AreaTracker standard = new AreaTracker(AreaMap.standard(), 8.0);
+        standard.update(ALICE, 0, 0);
+        AreaTransition jump = standard.update(ALICE, 100, -1000).orElseThrow();
         assertEquals(1, jump.previousAreaId());
-        assertEquals(5, jump.area().id());
+        assertEquals(6, jump.area().id());
     }
 
     @Test
-    public void playersAreTrackedIndependentlyAndCanBeForgotten() {
+    public void playersAreTrackedSeparatelyAndForgotten() {
         tracker.update(ALICE, 0, 0);
         assertTrue(tracker.update(BOB, 2000, 0).isPresent());
         assertEquals(2, tracker.size());
-        assertEquals(7, tracker.currentArea(BOB).orElseThrow().id());
+        assertEquals(2, tracker.currentArea(BOB).orElseThrow().id());
         tracker.forget(BOB);
         assertTrue(tracker.currentArea(BOB).isEmpty());
         assertTrue("reported again after a re-login", tracker.update(BOB, 2000, 0).orElseThrow().isFirstPosition());
-        assertEquals(1, tracker.currentArea(ALICE).orElseThrow().id());
     }
 
     @Test
     public void withoutHysteresisTheBorderIsExact() {
-        AreaTracker exact = new AreaTracker(AreaMap.standard(), 0.0);
+        AreaTracker exact = new AreaTracker(HALVES, 0.0);
         exact.update(ALICE, 299, 0);
         assertEquals(2, exact.update(ALICE, 300, 0).orElseThrow().area().id());
         assertEquals(1, exact.update(ALICE, 299.5, 0).orElseThrow().area().id());

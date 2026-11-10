@@ -1,0 +1,222 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "shaft": "eternalrealm:block/waystone_shaft_upper",
+    "cap": "eternalrealm:block/waystone_cap",
+    "particle": "eternalrealm:block/waystone_base"
+  },
+  "elements": [
+    {
+      "from": [
+        3.5,
+        0,
+        3.5
+      ],
+      "to": [
+        12.5,
+        10,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#shaft",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#shaft",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#shaft",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#shaft",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        10,
+        3
+      ],
+      "to": [
+        13,
+        11.5,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cap",
+          "uv": [
+            0,
+            0,
+            16,
+            2.4
+          ]
+        },
+        "east": {
+          "texture": "#cap",
+          "uv": [
+            0,
+            0,
+            16,
+            2.4
+          ]
+        },
+        "south": {
+          "texture": "#cap",
+          "uv": [
+            0,
+            0,
+            16,
+            2.4
+          ]
+        },
+        "west": {
+          "texture": "#cap",
+          "uv": [
+            0,
+            0,
+            16,
+            2.4
+          ]
+        },
+        "up": {
+          "texture": "#cap"
+        },
+        "down": {
+          "texture": "#cap"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        11.5,
+        4.5
+      ],
+      "to": [
+        11.5,
+        13,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cap",
+          "uv": [
+            2,
+            4,
+            14,
+            6.4
+          ]
+        },
+        "east": {
+          "texture": "#cap",
+          "uv": [
+            2,
+            4,
+            14,
+            6.4
+          ]
+        },
+        "south": {
+          "texture": "#cap",
+          "uv": [
+            2,
+            4,
+            14,
+            6.4
+          ]
+        },
+        "west": {
+          "texture": "#cap",
+          "uv": [
+            2,
+            4,
+            14,
+            6.4
+          ]
+        },
+        "up": {
+          "texture": "#cap"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        13,
+        6
+      ],
+      "to": [
+        10,
+        14.2,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cap",
+          "uv": [
+            4,
+            8,
+            12,
+            10
+          ]
+        },
+        "east": {
+          "texture": "#cap",
+          "uv": [
+            4,
+            8,
+            12,
+            10
+          ]
+        },
+        "south": {
+          "texture": "#cap",
+          "uv": [
+            4,
+            8,
+            12,
+            10
+          ]
+        },
+        "west": {
+          "texture": "#cap",
+          "uv": [
+            4,
+            8,
+            12,
+            10
+          ]
+        },
+        "up": {
+          "texture": "#cap"
+        }
+      }
+    }
+  ]
+}

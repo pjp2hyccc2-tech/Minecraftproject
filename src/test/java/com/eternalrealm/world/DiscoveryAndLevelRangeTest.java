@@ -28,14 +28,15 @@ public class DiscoveryAndLevelRangeTest {
         assertEquals(Discovery.of(List.of(1, 3)), some);
         assertThrows(UnsupportedOperationException.class, () -> some.areaIds().add(5));
         assertFalse(some.isComplete());
-        assertTrue(Discovery.of(1, 2, 3, 4, 5, 6, 7).isComplete());
+        assertFalse(Discovery.of(1, 2, 3, 4, 5, 6, 7).isComplete());
+        assertTrue(Discovery.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).isComplete());
     }
 
     @Test
     public void discoveryRejectsUnknownAreas() {
         assertThrows(IllegalArgumentException.class, () -> Discovery.NONE.with(0));
-        assertThrows(IllegalArgumentException.class, () -> Discovery.NONE.with(8));
-        assertThrows(IllegalArgumentException.class, () -> Discovery.of(1, 9));
+        assertThrows(IllegalArgumentException.class, () -> Discovery.NONE.with(11));
+        assertThrows(IllegalArgumentException.class, () -> Discovery.of(1, 12));
         Set<Integer> withNull = new HashSet<>();
         withNull.add(null);
         assertThrows(IllegalArgumentException.class, () -> new Discovery(withNull));

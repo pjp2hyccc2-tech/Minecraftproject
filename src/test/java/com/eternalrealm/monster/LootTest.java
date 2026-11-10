@@ -3,6 +3,7 @@ package com.eternalrealm.monster;
 import org.junit.Test;
 
 import java.util.EnumMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -146,12 +147,24 @@ public class LootTest {
         assertEquals(List.of("eternalrealm:enhancement_stone", "eternalrealm:reroll_crystal"), Materials.upgradeMaterials());
         assertEquals(4, Materials.areaOf("eternalrealm:yeti_fur").getAsInt());
         assertTrue(Materials.areaOf(Materials.REROLL_CRYSTAL).isEmpty());
-        assertTrue(Materials.ofArea(8).isEmpty());
+        assertTrue(Materials.ofArea(11).isEmpty());
 
         Set<String> dropped = DropTables.droppableItemIds();
         for (String material : Materials.areaMaterials()) {
             assertTrue(material + " must drop somewhere", dropped.contains(material));
         }
+        for (int field = 1; field <= 10; field++) {
+            for (String material : Materials.fieldCommons(field)) {
+                assertTrue(material + " must drop somewhere", dropped.contains(material));
+            }
+            assertTrue(dropped.contains(Materials.fieldUncommon(field)));
+            assertTrue("every field has an elite that drops " + Materials.fieldElite(field),
+                    dropped.contains(Materials.fieldElite(field)));
+        }
+        // the monster module's ids are the crafting module's ids, in the same order
+        List<String> crafting = new ArrayList<>();
+        com.eternalrealm.item.Materials.fieldMaterials().forEach(m -> crafting.add(m.id()));
+        assertEquals(crafting, Materials.fieldMaterials());
         for (String item : dropped) {
             assertTrue("unknown item " + item, Materials.isKnown(item));
         }
@@ -168,8 +181,14 @@ public class LootTest {
             int area = template.areaIds().iterator().next();
             Set<String> items = new HashSet<>();
             table.entries().forEach(entry -> items.add(entry.itemId()));
-            assertEquals(template.id(), Set.of(Materials.ofArea(area).get(0), Materials.ofArea(area).get(1),
-                    Materials.ENHANCEMENT_STONE, Materials.REROLL_CRYSTAL), items);
+            Set<String> expected = new HashSet<>(Set.of(Materials.ofArea(area).get(0), Materials.ofArea(area).get(1),
+                    Materials.ENHANCEMENT_STONE, Materials.REROLL_CRYSTAL));
+            expected.addAll(Materials.fieldCommons(area));
+            expected.add(Materials.fieldUncommon(area));
+            if (template.role() == MonsterRole.ELITE) {
+                expected.add(Materials.fieldElite(area));
+            }
+            assertEquals(template.id(), expected, items);
             double crystal = table.entries().stream().filter(e -> e.itemId().equals(Materials.REROLL_CRYSTAL))
                     .findFirst().orElseThrow().chance();
             double stone = table.entries().stream().filter(e -> e.itemId().equals(Materials.ENHANCEMENT_STONE))

@@ -29,7 +29,7 @@ public class MonstersCatalogTest {
             assertSame(template, Monsters.require(template.id()));
             assertEquals("monster.eternalrealm." + template.id(), template.translationKey());
         }
-        assertEquals(62, Monsters.all().size());
+        assertEquals(74, Monsters.all().size());
         assertEquals(List.copyOf(ids).size(), Monsters.ids().size());
         assertTrue(Monsters.byId("nope").isEmpty());
         assertThrows(IllegalArgumentException.class, () -> Monsters.require("nope"));
@@ -98,7 +98,8 @@ public class MonstersCatalogTest {
             if (template.role() != MonsterRole.MINION) {
                 assertEquals(template.id(), table.id());
                 int area = template.areaIds().iterator().next();
-                assertEquals(template.id() + " drops equipment of its area's tier", area, table.equipment().tier());
+                assertEquals(template.id() + " drops equipment of its area's tier", Areas.require(area).tier(),
+                        table.equipment().tier());
             }
         }
         assertEquals("no unused tables", DropTables.all().size(), used.size());
@@ -131,7 +132,7 @@ public class MonstersCatalogTest {
         assertThrows(IllegalArgumentException.class, () -> template("x", "minecraft:wolf", SpawnHints.NONE, Set.of(1)));
         assertThrows(IllegalArgumentException.class, () -> template("X", "minecraft:spider", SpawnHints.NONE, Set.of(1)));
         assertThrows(IllegalArgumentException.class, () -> template("x", "minecraft:spider", SpawnHints.NONE, Set.of()));
-        assertThrows(IllegalArgumentException.class, () -> template("x", "minecraft:spider", SpawnHints.NONE, Set.of(8)));
+        assertThrows(IllegalArgumentException.class, () -> template("x", "minecraft:spider", SpawnHints.NONE, Set.of(11)));
         assertThrows(IllegalArgumentException.class, () -> template("x", "minecraft:slime", SpawnHints.NONE, Set.of(1)));
         assertThrows(IllegalArgumentException.class, () -> template("x", "minecraft:slime", SpawnHints.sized(1), Set.of(1)));
         assertThrows(IllegalArgumentException.class, () -> template("x", "minecraft:spider", SpawnHints.sized(2), Set.of(1)));

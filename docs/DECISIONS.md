@@ -64,3 +64,14 @@ above the hotbar advanced with a key, so nothing blocks combat. What a conversat
 completing a talk objective, opening a shop) runs on the server when the client reports `dialogue.done {id}` (read or
 skipped). A follow-up is dropped on logout or after 15 minutes: the player simply talks to the NPC again, so no quest
 state can be lost or duplicated. Service NPCs talk once per story progress and session so shopping stays one click.
+
+## D-FIELDMAP: アストリア is the field map around the capital, with its own terrain generator (2026-11-10)
+The owner asked for the world to follow the painted "Arcelia Kingdom Field Map" (ten fields around the capital with
+the levels written on it) and to be wide. The seven concentric areas became regions of a weighted, noise-warped Voronoi
+map (`world.field.FieldLayout`); the story keeps its order and its area ids/slugs (only the names changed), the old
+themes live on as places inside the new fields (the sun temple under the mine, Nordia's ice castle above the falls, the
+dragon realm under the ruins, the sky city above the peaks), and three side fields were added. Terrain comes from a
+custom chunk generator over the pure `FieldTerrain` heights instead of the overworld noise: only that reproduces the
+map (mountains north, sea south-east, the lake, the falls) identically on every server and lets the world map be
+painted from the real land. There are no caves (dungeons are instanced). Worlds made with the rings regenerate
+アストリア once; characters, items and progress are not touched.

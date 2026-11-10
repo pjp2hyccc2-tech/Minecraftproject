@@ -133,10 +133,10 @@ public class StoryTranslationsTest {
 
     @Test
     public void officialNamesAreUsed() {
-        Map<StoryArea, String> areas = Map.of(StoryArea.ARCELIA, "アルセリア王国", StoryArea.ELDER_FOREST, "エルダーフォレスト",
-                StoryArea.SANDRIA_DESERT, "サンドリア砂漠", StoryArea.NORDIA_SNOWFIELD, "ノルディア雪原",
-                StoryArea.DRAGONIA_VOLCANO, "ドラゴニア火山", StoryArea.CELESTIA, "セレスティア天空大陸",
-                StoryArea.TOWER_OF_THE_END, "終焉の塔");
+        Map<StoryArea, String> areas = Map.of(StoryArea.ARCELIA, "はじまりの草原", StoryArea.ELDER_FOREST, "月影の森",
+                StoryArea.SANDRIA_DESERT, "鉄鉱の鉱山", StoryArea.NORDIA_SNOWFIELD, "聖なる滝",
+                StoryArea.DRAGONIA_VOLCANO, "古代遺跡", StoryArea.CELESTIA, "天翔の峰",
+                StoryArea.TOWER_OF_THE_END, "終焉の森");
         for (Map.Entry<StoryArea, String> area : areas.entrySet()) {
             assertEquals(area.getValue(), ja(CATALOG.areaCard(area.getKey().id()).orElseThrow().titleKey()));
         }

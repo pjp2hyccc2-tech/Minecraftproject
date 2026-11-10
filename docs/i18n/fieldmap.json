@@ -1,56 +1,222 @@
 {
-  "key.eternalrealm.world_map": {"ja": "世界地図", "en": "World map"},
-  "key.eternalrealm.minimap_toggle": {"ja": "ミニマップの表示切替", "en": "Show/hide minimap"},
-  "key.eternalrealm.minimap_zoom_in": {"ja": "ミニマップを拡大", "en": "Minimap: zoom in"},
-  "key.eternalrealm.minimap_zoom_out": {"ja": "ミニマップを縮小", "en": "Minimap: zoom out"},
-  "screen.eternalrealm.tab.map": {"ja": "地図", "en": "Map"},
-  "screen.eternalrealm.map.title": {"ja": "アストリア全図", "en": "Map of Astoria"},
-  "screen.eternalrealm.map.center": {"ja": "現在地", "en": "Find me"},
-  "screen.eternalrealm.map.journal": {"ja": "冒険手帳", "en": "Journal"},
-  "screen.eternalrealm.map.hint": {"ja": "ドラッグで移動・ホイールで拡大縮小・カーソルで詳細・%sで閉じる", "en": "Drag to move · scroll to zoom · hover for details · %s to close"},
-  "screen.eternalrealm.map.painting": {"ja": "地図を描いています…", "en": "Drawing the map…"},
-  "screen.eternalrealm.map.elsewhere": {"ja": "現在地はこの地図の外です", "en": "You are not on this map"},
-  "map.eternalrealm.capital": {"ja": "王都アルセリア", "en": "Royal Capital Arcelia"},
-  "map.eternalrealm.capital.desc": {"ja": "冒険者の拠点。転移門の番人がダンジョンへ送り出してくれる", "en": "Home of every adventurer; the gatekeeper sends parties to the dungeons"},
-  "map.eternalrealm.tower": {"ja": "終焉の塔", "en": "Tower of the End"},
-  "map.eternalrealm.tower.desc": {"ja": "8つの封印を解いた者だけが頂へ至る", "en": "Only those who break all eight seals reach the top"},
-  "map.eternalrealm.tower.final_open": {"ja": "頂への道が開かれた（終焉の王）", "en": "The way to the top is open (King of the End)"},
-  "map.eternalrealm.level_range": {"ja": "推奨 Lv%s〜%s", "en": "Recommended Lv %s–%s"},
-  "map.eternalrealm.dungeon_level": {"ja": "推奨 Lv%s", "en": "Recommended Lv %s"},
-  "map.eternalrealm.dungeon_label": {"ja": "%s Lv%s", "en": "%s Lv%s"},
-  "map.eternalrealm.sealed": {"ja": "封印中", "en": "Sealed"},
-  "map.eternalrealm.sealed.desc": {"ja": "封印中：手前の地域のボスを倒すと開かれる", "en": "Sealed: defeat the boss before it to open it"},
-  "map.eternalrealm.undiscovered": {"ja": "未踏の地", "en": "Not visited yet"},
-  "map.eternalrealm.you": {"ja": "あなた", "en": "You"},
-  "map.eternalrealm.member.health": {"ja": "HP %s%%", "en": "HP %s%%"},
-  "map.eternalrealm.npc.offer": {"ja": "新しいクエストがある", "en": "Has a quest for you"},
-  "map.eternalrealm.npc.ready": {"ja": "報告できるクエストがある", "en": "A quest is ready to hand in"},
-  "map.eternalrealm.entrance_hall": {"ja": "入口の広間", "en": "Entrance hall"},
-  "map.eternalrealm.room": {"ja": "部屋 %s / %s", "en": "Room %s / %s"},
-  "map.eternalrealm.room_short": {"ja": "部屋%s", "en": "Room %s"},
-  "map.eternalrealm.boss_room": {"ja": "ボスの間", "en": "Boss arena"},
-  "map.eternalrealm.trap": {"ja": "罠：赤い予告が出たら範囲の外へ", "en": "Trap: step out of the red marker"},
-  "hazard.eternalrealm.rockfall": {"ja": "落石", "en": "Rockfall"},
-  "hazard.eternalrealm.crumbling_floor": {"ja": "崩れる床", "en": "Crumbling floor"},
-  "hazard.eternalrealm.dart_volley": {"ja": "矢の罠", "en": "Dart trap"},
-  "hazard.eternalrealm.spore_bloom": {"ja": "毒胞子", "en": "Poison spores"},
-  "hazard.eternalrealm.thorn_lash": {"ja": "茨の鞭", "en": "Thorn lash"},
-  "hazard.eternalrealm.root_snare": {"ja": "絡みつく根", "en": "Root snare"},
-  "hazard.eternalrealm.sand_geyser": {"ja": "砂の間欠泉", "en": "Sand geyser"},
-  "hazard.eternalrealm.sun_beam": {"ja": "太陽光線", "en": "Sun beam"},
-  "hazard.eternalrealm.quicksand": {"ja": "流砂", "en": "Quicksand"},
-  "hazard.eternalrealm.ice_spikes": {"ja": "氷の棘", "en": "Ice spikes"},
-  "hazard.eternalrealm.frost_grate": {"ja": "凍える格子", "en": "Freezing grate"},
-  "hazard.eternalrealm.icicle_fall": {"ja": "落ちるつらら", "en": "Falling icicles"},
-  "hazard.eternalrealm.frost_rune": {"ja": "氷のルーン", "en": "Frost rune"},
-  "hazard.eternalrealm.lava_geyser": {"ja": "溶岩の噴出", "en": "Lava geyser"},
-  "hazard.eternalrealm.flame_jet": {"ja": "火炎放射", "en": "Flame jet"},
-  "hazard.eternalrealm.ember_rain": {"ja": "火の粉の雨", "en": "Ember rain"},
-  "hazard.eternalrealm.lightning_rune": {"ja": "雷のルーン", "en": "Lightning rune"},
-  "hazard.eternalrealm.gale": {"ja": "突風", "en": "Gale"},
-  "hazard.eternalrealm.void_eruption": {"ja": "虚無の噴出", "en": "Void eruption"},
-  "hazard.eternalrealm.shadow_ring": {"ja": "影の環", "en": "Shadow ring"},
-  "hazard.eternalrealm.void_lance": {"ja": "虚無の槍", "en": "Void lance"},
-  "death.attack.eternalrealm.trap": {"ja": "%1$sは罠にかかって倒れた", "en": "%1$s was caught by a trap"},
-  "death.attack.eternalrealm.trap.player": {"ja": "%1$sは%2$sとの戦いの最中に罠にかかって倒れた", "en": "%1$s was caught by a trap while fighting %2$s"}
+  "key.eternalrealm.world_map": {
+    "ja": "世界地図",
+    "en": "World map"
+  },
+  "key.eternalrealm.minimap_toggle": {
+    "ja": "ミニマップの表示切替",
+    "en": "Show/hide minimap"
+  },
+  "key.eternalrealm.minimap_zoom_in": {
+    "ja": "ミニマップを拡大",
+    "en": "Minimap: zoom in"
+  },
+  "key.eternalrealm.minimap_zoom_out": {
+    "ja": "ミニマップを縮小",
+    "en": "Minimap: zoom out"
+  },
+  "screen.eternalrealm.tab.map": {
+    "ja": "地図",
+    "en": "Map"
+  },
+  "screen.eternalrealm.map.title": {
+    "ja": "アルセリア王国 周辺地図",
+    "en": "Map of the Kingdom of Arcelia"
+  },
+  "screen.eternalrealm.map.center": {
+    "ja": "現在地",
+    "en": "Find me"
+  },
+  "screen.eternalrealm.map.journal": {
+    "ja": "冒険手帳",
+    "en": "Journal"
+  },
+  "screen.eternalrealm.map.hint": {
+    "ja": "ドラッグで移動・ホイールで拡大縮小・カーソルで詳細・%sで閉じる",
+    "en": "Drag to move · scroll to zoom · hover for details · %s to close"
+  },
+  "screen.eternalrealm.map.painting": {
+    "ja": "地図を描いています…",
+    "en": "Drawing the map…"
+  },
+  "screen.eternalrealm.map.elsewhere": {
+    "ja": "現在地はこの地図の外です",
+    "en": "You are not on this map"
+  },
+  "map.eternalrealm.capital": {
+    "ja": "王都アルセリア",
+    "en": "Royal Capital Arcelia"
+  },
+  "map.eternalrealm.capital.desc": {
+    "ja": "冒険者の拠点。転移門の番人がダンジョンへ送り出してくれる",
+    "en": "Home of every adventurer; the gatekeeper sends parties to the dungeons"
+  },
+  "map.eternalrealm.tower": {
+    "ja": "終焉の塔",
+    "en": "Tower of the End"
+  },
+  "map.eternalrealm.tower.desc": {
+    "ja": "8つの封印を解いた者だけが頂へ至る",
+    "en": "Only those who break all eight seals reach the top"
+  },
+  "map.eternalrealm.tower.final_open": {
+    "ja": "頂への道が開かれた（終焉の王）",
+    "en": "The way to the top is open (King of the End)"
+  },
+  "map.eternalrealm.level_range": {
+    "ja": "推奨 Lv%s〜%s",
+    "en": "Recommended Lv %s–%s"
+  },
+  "map.eternalrealm.dungeon_level": {
+    "ja": "推奨 Lv%s",
+    "en": "Recommended Lv %s"
+  },
+  "map.eternalrealm.dungeon_label": {
+    "ja": "%s Lv%s",
+    "en": "%s Lv%s"
+  },
+  "map.eternalrealm.sealed": {
+    "ja": "封印中",
+    "en": "Sealed"
+  },
+  "map.eternalrealm.sealed.desc": {
+    "ja": "封印中：手前の地域のボスを倒すと開かれる",
+    "en": "Sealed: defeat the boss before it to open it"
+  },
+  "map.eternalrealm.undiscovered": {
+    "ja": "未踏の地",
+    "en": "Not visited yet"
+  },
+  "map.eternalrealm.you": {
+    "ja": "あなた",
+    "en": "You"
+  },
+  "map.eternalrealm.member.health": {
+    "ja": "HP %s%%",
+    "en": "HP %s%%"
+  },
+  "map.eternalrealm.npc.offer": {
+    "ja": "新しいクエストがある",
+    "en": "Has a quest for you"
+  },
+  "map.eternalrealm.npc.ready": {
+    "ja": "報告できるクエストがある",
+    "en": "A quest is ready to hand in"
+  },
+  "map.eternalrealm.entrance_hall": {
+    "ja": "入口の広間",
+    "en": "Entrance hall"
+  },
+  "map.eternalrealm.room": {
+    "ja": "部屋 %s / %s",
+    "en": "Room %s / %s"
+  },
+  "map.eternalrealm.room_short": {
+    "ja": "部屋%s",
+    "en": "Room %s"
+  },
+  "map.eternalrealm.boss_room": {
+    "ja": "ボスの間",
+    "en": "Boss arena"
+  },
+  "map.eternalrealm.trap": {
+    "ja": "罠：赤い予告が出たら範囲の外へ",
+    "en": "Trap: step out of the red marker"
+  },
+  "hazard.eternalrealm.rockfall": {
+    "ja": "落石",
+    "en": "Rockfall"
+  },
+  "hazard.eternalrealm.crumbling_floor": {
+    "ja": "崩れる床",
+    "en": "Crumbling floor"
+  },
+  "hazard.eternalrealm.dart_volley": {
+    "ja": "矢の罠",
+    "en": "Dart trap"
+  },
+  "hazard.eternalrealm.spore_bloom": {
+    "ja": "毒胞子",
+    "en": "Poison spores"
+  },
+  "hazard.eternalrealm.thorn_lash": {
+    "ja": "茨の鞭",
+    "en": "Thorn lash"
+  },
+  "hazard.eternalrealm.root_snare": {
+    "ja": "絡みつく根",
+    "en": "Root snare"
+  },
+  "hazard.eternalrealm.sand_geyser": {
+    "ja": "砂の間欠泉",
+    "en": "Sand geyser"
+  },
+  "hazard.eternalrealm.sun_beam": {
+    "ja": "太陽光線",
+    "en": "Sun beam"
+  },
+  "hazard.eternalrealm.quicksand": {
+    "ja": "流砂",
+    "en": "Quicksand"
+  },
+  "hazard.eternalrealm.ice_spikes": {
+    "ja": "氷の棘",
+    "en": "Ice spikes"
+  },
+  "hazard.eternalrealm.frost_grate": {
+    "ja": "凍える格子",
+    "en": "Freezing grate"
+  },
+  "hazard.eternalrealm.icicle_fall": {
+    "ja": "落ちるつらら",
+    "en": "Falling icicles"
+  },
+  "hazard.eternalrealm.frost_rune": {
+    "ja": "氷のルーン",
+    "en": "Frost rune"
+  },
+  "hazard.eternalrealm.lava_geyser": {
+    "ja": "溶岩の噴出",
+    "en": "Lava geyser"
+  },
+  "hazard.eternalrealm.flame_jet": {
+    "ja": "火炎放射",
+    "en": "Flame jet"
+  },
+  "hazard.eternalrealm.ember_rain": {
+    "ja": "火の粉の雨",
+    "en": "Ember rain"
+  },
+  "hazard.eternalrealm.lightning_rune": {
+    "ja": "雷のルーン",
+    "en": "Lightning rune"
+  },
+  "hazard.eternalrealm.gale": {
+    "ja": "突風",
+    "en": "Gale"
+  },
+  "hazard.eternalrealm.void_eruption": {
+    "ja": "虚無の噴出",
+    "en": "Void eruption"
+  },
+  "hazard.eternalrealm.shadow_ring": {
+    "ja": "影の環",
+    "en": "Shadow ring"
+  },
+  "hazard.eternalrealm.void_lance": {
+    "ja": "虚無の槍",
+    "en": "Void lance"
+  },
+  "death.attack.eternalrealm.trap": {
+    "ja": "%1$sは罠にかかって倒れた",
+    "en": "%1$s was caught by a trap"
+  },
+  "death.attack.eternalrealm.trap.player": {
+    "ja": "%1$sは%2$sとの戦いの最中に罠にかかって倒れた",
+    "en": "%1$s was caught by a trap while fighting %2$s"
+  },
+  "map.eternalrealm.level_from": {
+    "ja": "推奨 Lv%s〜",
+    "en": "Recommended Lv %s+"
+  }
 }

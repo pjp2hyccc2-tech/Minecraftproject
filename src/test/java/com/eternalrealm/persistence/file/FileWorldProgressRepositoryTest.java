@@ -56,7 +56,7 @@ public class FileWorldProgressRepositoryTest {
 
         assertTrue(Files.exists(root.resolve("seasons/s1/world_progress.json")));
         assertEquals(Optional.of(record), repository.load(S1));
-        assertEquals(Set.of(1, 2, 3), WorldProgress.fromRecord(repository.load(S1).orElseThrow()).unlockedAreaIds());
+        assertEquals(Set.of(1, 2, 3, 8, 9), WorldProgress.fromRecord(repository.load(S1).orElseThrow()).unlockedAreaIds());
         assertEquals("a new season starts fresh", Optional.empty(), repository.load(SeasonId.of("s2")));
     }
 

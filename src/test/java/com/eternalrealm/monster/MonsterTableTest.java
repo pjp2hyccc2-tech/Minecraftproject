@@ -47,9 +47,9 @@ public class MonsterTableTest {
             MonsterSpawn spawn = single.pick(LevelRange.of(2, 3), random);
             assertTrue("2..3 + 5 = 7..8", spawn.level() >= 7 && spawn.level() <= 8);
         }
-        assertEquals("clamped to the template's max", 8, single.pick(LevelRange.of(40, 40), random).level());
+        assertEquals("clamped to the template's max", 11, single.pick(LevelRange.of(40, 40), random).level());
         MonsterTable negative = new MonsterTable("t", List.of(new MonsterTable.Entry(slime, 1, -5)), 0.0, List.of());
-        assertEquals("clamped to the template's min", 1, negative.pick(LevelRange.of(1, 1), random).level());
+        assertEquals("clamped to the template's min", 5, negative.pick(LevelRange.of(1, 1), random).level());
     }
 
     @Test

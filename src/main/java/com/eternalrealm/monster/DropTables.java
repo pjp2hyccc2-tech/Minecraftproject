@@ -47,66 +47,81 @@ public final class DropTables {
     private static final List<DropTable> ALL = List.of(
             DropTable.empty(NONE_ID),
             // Area 1: Kingdom of Arcelia
-            field("meadow_slime", 1, SLIME_GEL, WOLF_FANG),
-            field("wandering_dead", 1, WOLF_FANG, SLIME_GEL),
-            field("highway_bandit", 1, WOLF_FANG, SLIME_GEL),
-            fieldElite("bandit_chief", 1, WOLF_FANG, SLIME_GEL),
+            field("meadow_slime", 1, 1, SLIME_GEL, WOLF_FANG),
+            field("wandering_dead", 1, 1, WOLF_FANG, SLIME_GEL),
+            field("highway_bandit", 1, 1, WOLF_FANG, SLIME_GEL),
+            fieldElite("bandit_chief", 1, 1, WOLF_FANG, SLIME_GEL),
             // Area 2: Elder Forest
-            field("forest_spider", 2, TREANT_BARK, FOREST_SPORE),
-            field("vine_creeper", 2, FOREST_SPORE, TREANT_BARK),
-            field("forest_witch", 2, FOREST_SPORE, TREANT_BARK),
-            fieldElite("elder_druid", 2, TREANT_BARK, FOREST_SPORE),
+            field("forest_spider", 2, 2, TREANT_BARK, FOREST_SPORE),
+            field("vine_creeper", 2, 2, FOREST_SPORE, TREANT_BARK),
+            field("forest_witch", 2, 2, FOREST_SPORE, TREANT_BARK),
+            fieldElite("elder_druid", 2, 2, TREANT_BARK, FOREST_SPORE),
             // Area 3: Sandria Desert
-            field("sand_husk", 3, DESERT_CRYSTAL, SCARAB_SHELL),
-            field("giant_scarab", 3, SCARAB_SHELL, DESERT_CRYSTAL),
-            field("desert_skeleton", 3, DESERT_CRYSTAL, SCARAB_SHELL),
-            fieldElite("tomb_warden", 3, DESERT_CRYSTAL, SCARAB_SHELL),
+            field("sand_husk", 3, 3, DESERT_CRYSTAL, SCARAB_SHELL),
+            field("giant_scarab", 3, 3, SCARAB_SHELL, DESERT_CRYSTAL),
+            field("desert_skeleton", 3, 3, DESERT_CRYSTAL, SCARAB_SHELL),
+            fieldElite("tomb_warden", 3, 3, DESERT_CRYSTAL, SCARAB_SHELL),
             // Area 4: Nordia Snowfield
-            field("frozen_dead", 4, FROST_SHARD, YETI_FUR),
-            field("snowfield_archer", 4, FROST_SHARD, YETI_FUR),
-            field("frost_spider", 4, FROST_SHARD, YETI_FUR),
-            fieldElite("snowfield_yeti", 4, YETI_FUR, FROST_SHARD),
+            field("frozen_dead", 4, 4, FROST_SHARD, YETI_FUR),
+            field("snowfield_archer", 4, 4, FROST_SHARD, YETI_FUR),
+            field("frost_spider", 4, 4, FROST_SHARD, YETI_FUR),
+            fieldElite("snowfield_yeti", 4, 4, YETI_FUR, FROST_SHARD),
             // Area 5: Dragonia Volcano
-            field("lava_slime", 5, MAGMA_CORE, DRAKE_SCALE),
-            field("crater_blaze", 5, MAGMA_CORE, DRAKE_SCALE),
-            field("eruption_creeper", 5, MAGMA_CORE, DRAKE_SCALE),
-            fieldElite("dragonkin_berserker", 5, DRAKE_SCALE, MAGMA_CORE),
+            field("lava_slime", 5, 5, MAGMA_CORE, DRAKE_SCALE),
+            field("crater_blaze", 5, 5, MAGMA_CORE, DRAKE_SCALE),
+            field("eruption_creeper", 5, 5, MAGMA_CORE, DRAKE_SCALE),
+            fieldElite("dragonkin_berserker", 5, 5, DRAKE_SCALE, MAGMA_CORE),
             // Area 6: Celestia Sky Continent
-            field("cloud_phantom", 6, SKY_FEATHER, STAR_FRAGMENT),
-            field("storm_spirit", 6, STAR_FRAGMENT, SKY_FEATHER),
-            field("sky_archer", 6, SKY_FEATHER, STAR_FRAGMENT),
-            fieldElite("celestial_paladin", 6, STAR_FRAGMENT, SKY_FEATHER),
+            field("cloud_phantom", 6, 6, SKY_FEATHER, STAR_FRAGMENT),
+            field("storm_spirit", 6, 6, STAR_FRAGMENT, SKY_FEATHER),
+            field("sky_archer", 6, 6, SKY_FEATHER, STAR_FRAGMENT),
+            fieldElite("celestial_paladin", 6, 6, STAR_FRAGMENT, SKY_FEATHER),
             // Area 7: Tower of the End
-            field("void_wanderer", 7, VOID_ESSENCE, ABYSS_CRYSTAL),
-            field("knight_of_the_end", 7, ABYSS_CRYSTAL, VOID_ESSENCE),
-            field("doom_cultist", 7, VOID_ESSENCE, ABYSS_CRYSTAL),
-            fieldElite("herald_of_ruin", 7, ABYSS_CRYSTAL, VOID_ESSENCE),
+            field("void_wanderer", 7, 7, VOID_ESSENCE, ABYSS_CRYSTAL),
+            field("knight_of_the_end", 7, 7, ABYSS_CRYSTAL, VOID_ESSENCE),
+            field("doom_cultist", 7, 7, VOID_ESSENCE, ABYSS_CRYSTAL),
+            fieldElite("herald_of_ruin", 7, 7, ABYSS_CRYSTAL, VOID_ESSENCE),
+            // Field 8: 豊穣の農場 (tier 2)
+            field("crop_slime", 2, 8, FOREST_SPORE, TREANT_BARK),
+            field("scarecrow_dead", 2, 8, TREANT_BARK, FOREST_SPORE),
+            field("harvest_raider", 2, 8, TREANT_BARK, FOREST_SPORE),
+            fieldElite("rampaging_bull", 2, 8, TREANT_BARK, FOREST_SPORE),
+            // Field 9: 湖畔のほとり (tier 3)
+            field("marsh_slime", 3, 9, SCARAB_SHELL, DESERT_CRYSTAL),
+            field("lake_drowned", 3, 9, DESERT_CRYSTAL, SCARAB_SHELL),
+            field("reed_spider", 3, 9, SCARAB_SHELL, DESERT_CRYSTAL),
+            fieldElite("lake_witch", 3, 9, DESERT_CRYSTAL, SCARAB_SHELL),
+            // Field 10: 風の港 (tier 4)
+            field("dock_drowned", 4, 10, FROST_SHARD, YETI_FUR),
+            field("pirate_cutthroat", 4, 10, YETI_FUR, FROST_SHARD),
+            field("pirate_gunner", 4, 10, FROST_SHARD, YETI_FUR),
+            fieldElite("pirate_captain", 4, 10, YETI_FUR, FROST_SHARD),
             // Dungeon waves (tier = area of the dungeon)
-            wave("d1_bandit", 1, WOLF_FANG, SLIME_GEL),
-            wave("d1_crawler", 1, SLIME_GEL, WOLF_FANG),
-            waveElite("d1_canal_drowned", 1, WOLF_FANG, SLIME_GEL),
-            wave("d2_root_spider", 2, TREANT_BARK, FOREST_SPORE),
-            wave("d2_spore_creeper", 2, FOREST_SPORE, TREANT_BARK),
-            waveElite("d2_grove_priestess", 2, TREANT_BARK, FOREST_SPORE),
-            wave("d3_temple_mummy", 3, DESERT_CRYSTAL, SCARAB_SHELL),
-            wave("d3_scarab_swarm", 3, SCARAB_SHELL, DESERT_CRYSTAL),
-            waveElite("d3_sun_priest", 3, DESERT_CRYSTAL, SCARAB_SHELL),
-            wave("d4_frozen_prisoner", 4, FROST_SHARD, YETI_FUR),
-            wave("d4_ice_crawler", 4, FROST_SHARD, YETI_FUR),
-            waveElite("d4_jailer", 4, YETI_FUR, FROST_SHARD),
-            wave("d5_castle_archer", 4, FROST_SHARD, YETI_FUR),
-            wave("d5_ice_knight", 4, FROST_SHARD, YETI_FUR),
-            waveElite("d5_queens_handmaiden", 4, FROST_SHARD, YETI_FUR),
-            wave("d6_cinder_cube", 5, MAGMA_CORE, DRAKE_SCALE),
-            wave("d6_flame_spirit", 5, MAGMA_CORE, DRAKE_SCALE),
-            waveElite("d6_dragon_guard", 5, DRAKE_SCALE, MAGMA_CORE),
-            wave("d7_ruin_sentry", 6, SKY_FEATHER, STAR_FRAGMENT),
-            wave("d7_ancient_drone", 6, STAR_FRAGMENT, SKY_FEATHER),
-            waveElite("d7_ancient_guardian", 6, STAR_FRAGMENT, SKY_FEATHER),
-            wave("d8_void_acolyte", 7, VOID_ESSENCE, ABYSS_CRYSTAL),
-            wave("d8_doom_guard", 7, ABYSS_CRYSTAL, VOID_ESSENCE),
-            waveElite("d8_doom_sorcerer", 7, VOID_ESSENCE, ABYSS_CRYSTAL),
-            waveElite("d8_tower_behemoth", 7, ABYSS_CRYSTAL, VOID_ESSENCE));
+            wave("d1_bandit", 1, 1, WOLF_FANG, SLIME_GEL),
+            wave("d1_crawler", 1, 1, SLIME_GEL, WOLF_FANG),
+            waveElite("d1_canal_drowned", 1, 1, WOLF_FANG, SLIME_GEL),
+            wave("d2_root_spider", 2, 2, TREANT_BARK, FOREST_SPORE),
+            wave("d2_spore_creeper", 2, 2, FOREST_SPORE, TREANT_BARK),
+            waveElite("d2_grove_priestess", 2, 2, TREANT_BARK, FOREST_SPORE),
+            wave("d3_temple_mummy", 3, 3, DESERT_CRYSTAL, SCARAB_SHELL),
+            wave("d3_scarab_swarm", 3, 3, SCARAB_SHELL, DESERT_CRYSTAL),
+            waveElite("d3_sun_priest", 3, 3, DESERT_CRYSTAL, SCARAB_SHELL),
+            wave("d4_frozen_prisoner", 4, 4, FROST_SHARD, YETI_FUR),
+            wave("d4_ice_crawler", 4, 4, FROST_SHARD, YETI_FUR),
+            waveElite("d4_jailer", 4, 4, YETI_FUR, FROST_SHARD),
+            wave("d5_castle_archer", 4, 4, FROST_SHARD, YETI_FUR),
+            wave("d5_ice_knight", 4, 4, FROST_SHARD, YETI_FUR),
+            waveElite("d5_queens_handmaiden", 4, 4, FROST_SHARD, YETI_FUR),
+            wave("d6_cinder_cube", 5, 5, MAGMA_CORE, DRAKE_SCALE),
+            wave("d6_flame_spirit", 5, 5, MAGMA_CORE, DRAKE_SCALE),
+            waveElite("d6_dragon_guard", 5, 5, DRAKE_SCALE, MAGMA_CORE),
+            wave("d7_ruin_sentry", 6, 6, SKY_FEATHER, STAR_FRAGMENT),
+            wave("d7_ancient_drone", 6, 6, STAR_FRAGMENT, SKY_FEATHER),
+            waveElite("d7_ancient_guardian", 6, 6, STAR_FRAGMENT, SKY_FEATHER),
+            wave("d8_void_acolyte", 7, 7, VOID_ESSENCE, ABYSS_CRYSTAL),
+            wave("d8_doom_guard", 7, 7, ABYSS_CRYSTAL, VOID_ESSENCE),
+            waveElite("d8_doom_sorcerer", 7, 7, VOID_ESSENCE, ABYSS_CRYSTAL),
+            waveElite("d8_tower_behemoth", 7, 7, ABYSS_CRYSTAL, VOID_ESSENCE));
 
     private static final Set<String> DROPPABLE = collectItems(ALL);
 
@@ -136,20 +151,43 @@ public final class DropTables {
         return DROPPABLE;
     }
 
-    private static DropTable field(String id, int tier, String signature, String other) {
-        return table(id, tier, signature, 1, 2, 0.5, other, 1, 0.12, 1, 0.04, 0.004, 0.02, RarityWeights.BASE);
+    private static DropTable field(String id, int tier, int field, String signature, String other) {
+        return withField(table(id, tier, signature, 1, 2, 0.5, other, 1, 0.12, 1, 0.04, 0.004, 0.02, RarityWeights.BASE),
+                field, 0.30, 0.12, 0.05, 0.0);
     }
 
-    private static DropTable fieldElite(String id, int tier, String signature, String other) {
-        return table(id, tier, signature, 2, 3, 1.0, other, 2, 0.6, 2, 0.35, 0.05, 0.2, ELITE_WEIGHTS);
+    private static DropTable fieldElite(String id, int tier, int field, String signature, String other) {
+        return withField(table(id, tier, signature, 2, 3, 1.0, other, 2, 0.6, 2, 0.35, 0.05, 0.2, ELITE_WEIGHTS),
+                field, 0.70, 0.40, 0.30, 0.35);
     }
 
-    private static DropTable wave(String id, int tier, String signature, String other) {
-        return table(id, tier, signature, 1, 2, 0.4, other, 1, 0.2, 1, 0.08, 0.006, 0.04, RarityWeights.BASE);
+    private static DropTable wave(String id, int tier, int field, String signature, String other) {
+        return withField(table(id, tier, signature, 1, 2, 0.4, other, 1, 0.2, 1, 0.08, 0.006, 0.04, RarityWeights.BASE),
+                field, 0.20, 0.08, 0.04, 0.0);
     }
 
-    private static DropTable waveElite(String id, int tier, String signature, String other) {
-        return table(id, tier, signature, 2, 3, 1.0, other, 2, 0.8, 2, 0.5, 0.08, 0.3, ELITE_WEIGHTS);
+    private static DropTable waveElite(String id, int tier, int field, String signature, String other) {
+        return withField(table(id, tier, signature, 2, 3, 1.0, other, 2, 0.8, 2, 0.5, 0.08, 0.3, ELITE_WEIGHTS),
+                field, 0.60, 0.30, 0.25, 0.20);
+    }
+
+    /**
+     * Adds the field-map materials of {@code field}: one of its two commons (which one depends on the monster, so
+     * neighbours differ) at {@code primary}, the other at {@code secondary}, the uncommon one, and for elites the
+     * elite material.
+     */
+    private static DropTable withField(DropTable table, int field, double primary, double secondary, double uncommon,
+                                       double elite) {
+        List<String> commons = Materials.fieldCommons(field);
+        int pick = table.id().hashCode() & 1;
+        List<DropEntry> entries = new ArrayList<>(table.entries());
+        entries.add(new DropEntry(commons.get(pick), 1, elite > 0.0 ? 3 : 2, primary));
+        entries.add(new DropEntry(commons.get(1 - pick), 1, elite > 0.0 ? 2 : 1, secondary));
+        entries.add(new DropEntry(Materials.fieldUncommon(field), 1, 1, uncommon));
+        if (elite > 0.0) {
+            entries.add(new DropEntry(Materials.fieldElite(field), 1, 1, elite));
+        }
+        return new DropTable(table.id(), entries, table.equipment());
     }
 
     private static DropTable table(String id, int tier, String signature, int signatureMin, int signatureMax,

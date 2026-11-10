@@ -1,0 +1,126 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "base": "eternalrealm:block/waystone_base",
+    "shaft": "eternalrealm:block/waystone_shaft_lower",
+    "particle": "eternalrealm:block/waystone_base"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        3,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#base",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#base"
+        },
+        "north": {
+          "texture": "#base",
+          "uv": [
+            1,
+            0,
+            15,
+            3
+          ]
+        },
+        "east": {
+          "texture": "#base",
+          "uv": [
+            1,
+            0,
+            15,
+            3
+          ]
+        },
+        "south": {
+          "texture": "#base",
+          "uv": [
+            1,
+            0,
+            15,
+            3
+          ]
+        },
+        "west": {
+          "texture": "#base",
+          "uv": [
+            1,
+            0,
+            15,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        3
+      ],
+      "to": [
+        13,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#shaft",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#shaft",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#shaft",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#shaft",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#base",
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ]
+        }
+      }
+    }
+  ]
+}

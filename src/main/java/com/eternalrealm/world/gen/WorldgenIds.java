@@ -13,6 +13,8 @@ public final class WorldgenIds {
     /** The dimension, its dimension type and the biome source type. */
     public static final String DIMENSION = "astoria";
     public static final String BIOME_SOURCE = "astoria";
+    /** The field map terrain generator (FieldChunkGenerator). */
+    public static final String FIELD_GENERATOR = "fields";
 
     public static final String AREA_SURFACE = "area_surface";
     public static final String DARK_TOWER = "dark_tower";

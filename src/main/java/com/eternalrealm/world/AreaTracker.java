@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * <p>The Forge layer calls {@link #update} every few ticks with the player's offset to the spawn and reacts to a
  * transition (area title, {@code AreaEntered} quest event, {@link Discovery}). A player only leaves an area once they are
- * {@code hysteresisBlocks} beyond its border, so walking along a boundary does not flood them with titles.</p>
+ * {@code hysteresisBlocks} inside the next field, so walking along a border does not flood them with titles.</p>
  */
 public final class AreaTracker {
     public static final double DEFAULT_HYSTERESIS_BLOCKS = 8.0;
@@ -35,14 +35,13 @@ public final class AreaTracker {
      */
     public Optional<AreaTransition> update(UUID playerId, double dx, double dz) {
         Objects.requireNonNull(playerId, "playerId");
-        double distance = AreaMap.horizontalDistance(dx, dz);
         AreaDefinition previous = current.get(playerId);
-        if (previous != null && insideWithMargin(previous, distance)) {
-            return Optional.empty();
-        }
-        AreaDefinition now = map.areaAtDistance(distance);
+        AreaDefinition now = map.areaAt(dx, dz);
         if (previous != null && previous.id() == now.id()) {
             return Optional.empty();
+        }
+        if (previous != null && map.borderDistance(dx, dz) < hysteresis) {
+            return Optional.empty();                                    // not far enough into the new field yet
         }
         current.put(playerId, now);
         return Optional.of(new AreaTransition(previous == null ? 0 : previous.id(), now));
@@ -59,10 +58,5 @@ public final class AreaTracker {
 
     public int size() {
         return current.size();
-    }
-
-    private boolean insideWithMargin(AreaDefinition area, double distance) {
-        return distance >= area.innerRadius() - hysteresis
-                && (area.isUnbounded() || distance < area.outerRadius() + hysteresis);
     }
 }

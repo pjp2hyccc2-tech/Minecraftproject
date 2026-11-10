@@ -1,6 +1,7 @@
 package com.eternalrealm.world.forge.capital;
 
 import com.eternalrealm.world.forge.AstoriaWorldState;
+import com.eternalrealm.world.forge.FieldPieces;
 import com.eternalrealm.world.gen.HubSpot;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -397,8 +398,8 @@ public final class CapitalBuilder {
                 int dx = Math.max(minX - x, x - maxX);
                 int dz = Math.max(minZ - z, z - maxZ);
                 int distance = Math.max(dx, dz);
-                if (distance <= 0 || distance > BLEND) {
-                    continue;
+                if (distance <= 0 || distance > BLEND || FieldPieces.covers(x, z)) {
+                    continue;   // the field set pieces outside the gates (waystone shrine, road lanterns) stay
                 }
                 level.getChunk(x >> 4, z >> 4);
                 int natural = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;

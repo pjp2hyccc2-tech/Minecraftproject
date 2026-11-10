@@ -136,7 +136,7 @@ public final class MinimapOverlay implements IGuiOverlay {
             }
             if (view.realm().astoria()) {
                 for (MapMarkers.Marker place : MapMarkers.astoria()) {
-                    marker.place(place, view.isUnlocked(place.areaId()));
+                    marker.place(place, view.isUnlocked(place.areaId()), view.hasWaystone(place.dungeonId()));
                 }
             }
         }
@@ -182,8 +182,8 @@ public final class MinimapOverlay implements IGuiOverlay {
                     .withStyle(style -> style.withColor(MapMath.mix(definition.color(), 0xFFFFFF, 0.35)));
             centered(graphics, font, title, cx, y, screenWidth);
             y += font.lineHeight + 1;
-            centered(graphics, font, Component.translatable("map.eternalrealm.level_range", definition.minLevel(),
-                    definition.maxLevel()).withStyle(ChatFormatting.GRAY), cx, y, screenWidth);
+            centered(graphics, font, WorldMapScreen.levelRange(definition).copy().withStyle(ChatFormatting.GRAY), cx, y,
+                    screenWidth);
             y += font.lineHeight + 1;
         }
         if (coordinates()) {
@@ -269,7 +269,7 @@ public final class MinimapOverlay implements IGuiOverlay {
             }
         }
 
-        void place(MapMarkers.Marker place, boolean unlocked) {
+        void place(MapMarkers.Marker place, boolean unlocked, boolean recorded) {
             double[] p = at(place.x(), place.z(), 4.0F);
             if (p == null) {
                 return;
@@ -289,6 +289,7 @@ public final class MinimapOverlay implements IGuiOverlay {
                     MapDraw.diamond(graphics, sx, sy, 4.5F, 0xFF000000);
                     MapDraw.diamond(graphics, sx, sy, 3.2F, unlocked ? 0xFF4FD0C0 : 0xFF808080);
                 }
+                case WAYSTONE -> MapDraw.waystone(graphics, sx, sy, 6.0F, recorded);
             }
         }
 
