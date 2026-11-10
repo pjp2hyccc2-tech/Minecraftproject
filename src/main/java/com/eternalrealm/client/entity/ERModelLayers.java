@@ -6,7 +6,7 @@ import com.eternalrealm.entity.EnemyRig;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
 
-/** Model layers: one per enemy rig, two per boss rig (body and the inflated shield overlay). */
+/** Model layers: one per enemy rig, two per boss rig (body and the inflated shield overlay), one for the NPCs. */
 public final class ERModelLayers {
     /** Extra size of every box of the shield overlay model. */
     public static final float SHIELD_INFLATE = 0.9F;
@@ -24,5 +24,10 @@ public final class ERModelLayers {
 
     public static ModelLayerLocation bossShield(BossRig rig) {
         return new ModelLayerLocation(new ResourceLocation(ModInfo.MOD_ID, rig.id() + "_boss"), "shield");
+    }
+
+    /** The town NPC rig (all appearances share it). */
+    public static ModelLayerLocation npc() {
+        return new ModelLayerLocation(new ResourceLocation(ModInfo.MOD_ID, "npc"), "main");
     }
 }

@@ -2,6 +2,8 @@ package com.eternalrealm.world.forge;
 
 import com.eternalrealm.dungeon.forge.DungeonLevels;
 import com.eternalrealm.item.forge.ConsumableItem;
+import com.eternalrealm.npc.Townsfolk;
+import com.eternalrealm.npc.forge.Crowds;
 import com.eternalrealm.npc.forge.NpcRole;
 import com.eternalrealm.npc.forge.Npcs;
 import com.eternalrealm.npc.forge.StoryNpcs;
@@ -21,6 +23,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,9 +33,10 @@ import java.util.Set;
 
 /**
  * Puts the game into アストリア: the capital is built when the server starts and its NPCs stand at their spots (the
- * story characters around the plaza), every dungeon entrance gets its gatekeeper and the area's quest giver once the
- * entrance is built, players arrive in the capital when they log in outside the game's dimensions and respawn there,
- * and the return scroll leads home. Without the dimension nothing happens (see {@code /eternalrealm setup town}).
+ * story characters around the plaza, a townsperson at every {@code crowd.*} spot and a guard at every {@code guard.*}
+ * spot of the build), every dungeon entrance gets its gatekeeper and the area's quest giver once the entrance is built,
+ * players arrive in the capital when they log in outside the game's dimensions and respawn there, and the return scroll
+ * leads home. Without the dimension nothing happens (see {@code /eternalrealm setup town}).
  */
 public final class RealmSetup {
     private static final Map<NpcRole, HubSpot> SPOTS = new EnumMap<>(NpcRole.class);
@@ -83,6 +87,7 @@ public final class RealmSetup {
                 mob -> Npcs.roleOf(mob).isPresent())) {
             npc.discard();
         }
+        Crowds.removeAll(astoria, area);
         populateCapital(astoria);
     }
 
@@ -117,6 +122,28 @@ public final class RealmSetup {
             BlockPos pos = layout.named(spot).orElse(fallback);
             StoryNpcs.ensure(astoria, pos, captain, layout.namedYaw(spot, yawTowards(pos, plaza)));
         });
+        Crowds.populate(astoria, crowdSpots(layout));
+    }
+
+    /**
+     * The townsfolk and guard spots of the capital build ({@code crowd.<area>.<n>}, {@code guard.<post>.<n>}); the
+     * castle's own gate-guard spots count as guard posts unless a {@code guard.*} spot stands within two blocks.
+     */
+    static List<Crowds.Spot> crowdSpots(HubLayout layout) {
+        List<Crowds.Spot> spots = new ArrayList<>();
+        for (String prefix : List.of(Townsfolk.CROWD_PREFIX, Townsfolk.GUARD_PREFIX)) {
+            for (Map.Entry<String, BlockPos> entry : layout.namedWithPrefix(prefix).entrySet()) {
+                spots.add(new Crowds.Spot(entry.getKey(), entry.getValue(), layout.namedYaw(entry.getKey(), 0.0F)));
+            }
+        }
+        List<BlockPos> guards = new ArrayList<>(layout.namedWithPrefix(Townsfolk.GUARD_PREFIX).values());
+        for (Map.Entry<String, BlockPos> entry : layout.namedWithPrefix(Townsfolk.CASTLE_GATE_GUARD_PREFIX).entrySet()) {
+            boolean taken = guards.stream().anyMatch(pos -> pos.distSqr(entry.getValue()) <= 4.0);
+            if (!taken) {
+                spots.add(new Crowds.Spot(entry.getKey(), entry.getValue(), layout.namedYaw(entry.getKey(), 0.0F)));
+            }
+        }
+        return spots;
     }
 
     /** Once per second: entrances that have been built get their gatekeeper and quest giver. */
@@ -135,7 +162,7 @@ public final class RealmSetup {
             ENTRANCES_DONE.add(dungeonId);
             BlockPos npc = Landmarks.npc(astoria.get(), dungeonId);
             float yaw = Landmarks.npcYaw(dungeonId);
-            Npcs.ensure(astoria.get(), npc, NpcRole.GATEKEEPER, yaw, "eternalrealm_entrance", dungeonId);
+            Npcs.ensure(astoria.get(), npc, NpcRole.GATEKEEPER, yaw, Npcs.ENTRANCE, dungeonId);
             for (Map.Entry<String, String> giver : GIVER_AT.entrySet()) {
                 if (giver.getValue().equals(dungeonId)) {
                     Optional<NpcDefinition> definition = com.eternalrealm.quest.Npcs.byId(giver.getKey());

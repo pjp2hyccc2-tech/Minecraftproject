@@ -59,7 +59,7 @@
 ## 4. 進行度と物語のNPC
 
 - 進行度は `StoryProgress.of(サーバーで初回撃破されたボスID)`。シーズンのワールド状態に保存する。`Chapter.ofProgress` が冒険の書の「現在の章」。
-- 物語キャラ（lilia, gustav, nox, laszlo, wolfram）は `NpcRole.STORY` の村人に `StoryNpc` のIDを別タグで付けて王都に置く。
+- 物語キャラ（lilia, gustav, nox, laszlo, wolfram）は `NpcRole.STORY` のNPC（体は `NpcEntity`、見た目は話者ID。[npc.md](npc.md)）に `StoryNpc` のIDを別タグで付けて王都に置く。
   `isPresentAt(進行度)` が false の間（ラズロは b1、ヴォルフラムは b4 の初回撃破まで）は置かない。
 - 町の役割10人と物語キャラは進行度ごとに必ず違う台詞を持つ。クエストNPCは要所だけ（それ以外は直前の台詞、地域が開く前は最初の台詞）。
 

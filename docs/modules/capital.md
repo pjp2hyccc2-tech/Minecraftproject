@@ -126,6 +126,13 @@ them): `spawn`, `npc.quest_board`, `npc.item_shop`, `npc.blacksmith`, `npc.job_m
 `npc.mailbox`, `npc.guild_registrar`, `npc.gatekeeper`, `npc.arena_master`, `npc.hall_of_fame`, `story.lilia`,
 `story.nox`, `story.arcelia_knight_captain`, `story.gustav`, `story.laszlo`, `story.wolfram`.
 
+Townsfolk and guards (optional, any number; see [npc.md](npc.md)): `crowd.<area>.<n>` puts one townsperson who
+strolls within 6 blocks of the spot (keep water and doors out of that circle where possible; they avoid both), chosen
+for the area: `plaza`, `market`, `street`, `harbour`, `guild`, `tavern`, `inn`, `cathedral`, `residential`, `farm`,
+`castle` (names may continue, e.g. `harbour_east`). `guard.<post>.<n>` puts a guard standing watch facing the spot's
+yaw: posts containing `gate` get the halberd guard, `wall`/`tower` an archer, `castle`/`keep`/`throne`/`hall`/`court`
+a knight. `castle.gate_guard_w/e` also get a guard unless a `guard.*` spot is within 2 blocks.
+
 ## 5. The castle (`castle/`)
 
 Anchors are in `castle/plan.py`; `exterior.py` builds the shell, `interiors.py` the rooms, `parts.py` holds

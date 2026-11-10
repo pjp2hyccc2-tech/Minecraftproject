@@ -54,6 +54,18 @@ public final class HubLayout {
         return namedYaws.getOrDefault(name, fallback);
     }
 
+    /** Every named blueprint spot whose name starts with {@code prefix}, as world feet positions, sorted by name. */
+    public java.util.SortedMap<String, BlockPos> namedWithPrefix(String prefix) {
+        java.util.SortedMap<String, BlockPos> found = new java.util.TreeMap<>();
+        for (Map.Entry<String, BlockPos> entry : named.entrySet()) {
+            if (entry.getKey().startsWith(prefix)) {
+                BlockPos local = entry.getValue();
+                found.put(entry.getKey(), new BlockPos(local.getX(), groundY + local.getY(), local.getZ()));
+            }
+        }
+        return found;
+    }
+
     /** The layout of the capital in this アストリア level (built or not). */
     public static HubLayout of(ServerLevel astoria) {
         return new HubLayout(groundY(astoria));
