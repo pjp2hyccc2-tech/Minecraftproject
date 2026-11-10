@@ -137,7 +137,7 @@
   },
   "boss_ability.eternalrealm.b4_frost_nova": {
     "ja": "凍気爆発",
-    "en": "Frost Nova"
+    "en": "Icebloom Burst"
   },
   "boss_ability.eternalrealm.b4_pursuit": {
     "ja": "追跡",
@@ -168,8 +168,8 @@
     "en": "Frost Field"
   },
   "boss_ability.eternalrealm.b5_blizzard": {
-    "ja": "ブリザード",
-    "en": "Blizzard"
+    "ja": "白魔の嵐",
+    "en": "Snowblind Gale"
   },
   "boss_ability.eternalrealm.b5_glacial_ring": {
     "ja": "氷河の環",
