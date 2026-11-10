@@ -115,6 +115,8 @@ public final class FieldThreatService {
     private static final String LORD_TAG = ModInfo.MOD_ID + "_lord";
     private static final String LORD_ID = "er_lord";
     private static final String TOUGHNESS = "er_toughness";
+    /** Persistent data of a monster that answered a lord's call: the lord's id. */
+    public static final String HELPER_OF = "er_lord_helper";
     private static final String CALAMITY_TAG = ModInfo.MOD_ID + "_calamity";
     private static final double LORD_DAMAGE = 1.35;
     /** Players this close to a lord in a fight see its HUD (those who hurt it, a little farther). */
@@ -283,6 +285,43 @@ public final class FieldThreatService {
                         body.getZ(), 6, 0.4, 0.5, 0.4, 0.01);
             }
         }
+    }
+
+    /**
+     * Tests: the body of lord {@code lordId} made and tracked like a real appearance, but at {@code pos} in
+     * {@code level} (no announcement, no territory). Empty for an unknown lord.
+     */
+    public static Optional<Mob> spawnLordForTest(ServerLevel level, String lordId, BlockPos pos) {
+        FieldThreats.Lord lord = FieldThreats.lord(lordId).orElse(null);
+        MonsterTemplate template = lord == null ? null : Monsters.byId(lord.template()).orElse(null);
+        if (template == null) {
+            return Optional.empty();
+        }
+        LordState state = LORDS.computeIfAbsent(lordId, id -> new LordState(lord));
+        int lordLevel = Math.min(MonsterScaling.MAX_LEVEL, template.levels().max() + FieldThreats.LORD_LEVEL_BONUS);
+        Optional<Mob> made = MonsterFactory.create(level, new MonsterSpawn(template, lordLevel), false);
+        made.ifPresent(mob -> {
+            mob.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.0F, 0.0F);
+            mob.getPersistentData().putString(LORD_ID, lord.id());
+            mob.getPersistentData().putDouble(TOUGHNESS, 1.0);
+            mob.addTag(LORD_TAG);
+            if (mob instanceof com.eternalrealm.entity.ERMonster monster) {
+                monster.setSpecialMoves(com.eternalrealm.monster.SpecialMoves.LORD_MOVES);
+            }
+            state.turns = LordTurns.none();
+            state.enraged = false;
+            state.contributions = new Contributions();
+            state.level = lordLevel;
+            state.body = mob.getUUID();
+            level.addFreshEntity(mob);
+        });
+        return made;
+    }
+
+    /** Tests: whether the lord {@code lordId} has flown into its rage in its current appearance. */
+    public static boolean enragedForTest(String lordId) {
+        LordState state = LORDS.get(lordId);
+        return state != null && state.enraged;
     }
 
     private static void spawnLord(ServerLevel astoria, LordState state, long now) {
@@ -529,6 +568,7 @@ public final class FieldThreatService {
             BlockPos at = ground;
             MonsterFactory.spawn(level, spawn, at.getX() + 0.5, at.getY(), at.getZ() + 0.5,
                     (float) Math.toDegrees(angle)).ifPresent(helper -> {
+                        helper.getPersistentData().putString(HELPER_OF, state.lord.id());
                         if (target != null && target.isAlive()) {
                             helper.setTarget(target);
                         }
