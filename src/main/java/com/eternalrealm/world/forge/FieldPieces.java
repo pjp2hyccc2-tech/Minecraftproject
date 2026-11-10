@@ -232,7 +232,7 @@ public final class FieldPieces {
                     }
                     set(chunk, lx, y, lz, state);
                     long key = BlockPos.asLong(pos.getMinBlockX() + lx, y, pos.getMinBlockZ() + lz);
-                    if (state.hasBlockEntity()) {
+                    if (state.hasBlockEntity() && createsBlockEntity(state)) {
                         withEntities.put(key, state);
                     } else {
                         withEntities.remove(key);
@@ -339,6 +339,19 @@ public final class FieldPieces {
     }
 
     private static final Map<BlockState, String> ENTITY_IDS = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final Map<BlockState, Boolean> CREATES = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** Whether the block really creates a block entity in this state (the upper half of a waystone does not). */
+    private static boolean createsBlockEntity(BlockState state) {
+        return CREATES.computeIfAbsent(state, s -> {
+            try {
+                return s.getBlock() instanceof net.minecraft.world.level.block.EntityBlock entityBlock
+                        && entityBlock.newBlockEntity(BlockPos.ZERO, s) != null;
+            } catch (RuntimeException e) {
+                return false;
+            }
+        });
+    }
 
     /** Registry id of the block entity type of a block state ("DUMMY" if none is valid for it). */
     private static String blockEntityId(BlockState state) {

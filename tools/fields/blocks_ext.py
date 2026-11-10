@@ -92,7 +92,7 @@ C.BASE.update({
     "sculk_catalyst": (30, 60, 70), "tall_seagrass": (40, 100, 40), "end_stone": (219, 222, 158),
     "powder_snow": (248, 253, 253), "farmland": (100, 70, 45), "dried_kelp_block": (50, 60, 40),
     "mud_bricks": (137, 103, 79), "honeycomb_block": (229, 148, 29), "sea_lantern": (172, 199, 190),
-    "white_wool": (234, 236, 237), "lily_pad": (40, 120, 40),
+    "white_wool": (234, 236, 237), "lily_pad": (40, 120, 40), "cobweb": (220, 220, 225),
 })
 C.PLANTS.update({"red_mushroom": (200, 40, 40), "brown_mushroom": (150, 110, 80), "wither_rose": (40, 30, 30),
                  "crimson_roots": (130, 20, 40), "warped_roots": (20, 140, 130), "melon_stem": (110, 140, 60),
@@ -127,6 +127,37 @@ def _material_ext(state):
     if name == "farmland":
         return {"kind": "box", "alpha": 1.0, "box": (0, 0, 0, 1, 0.9375, 1), "emit": 0, "name": name,
                 "top": (100, 70, 45), "side": (134, 96, 67)}
+    sch = B.REGISTRY.get(bid, "plain")
+    if sch in ("wall", "fence", "pane") and any(props.get(d) not in (None, "false", "none")
+                                                for d in ("north", "south", "east", "west")):
+        base = _base_material(state)
+        out = dict(base)
+        lo = {"wall": 0.25, "fence": 0.375, "pane": 0.4375}[sch]
+        hi = 1.0 - lo
+        conn = {d: props.get(d) not in (None, "false", "none") for d in ("north", "south", "east", "west")}
+        x0 = 0.0 if conn["west"] else lo
+        x1 = 1.0 if conn["east"] else hi
+        z0 = 0.0 if conn["north"] else lo
+        z1 = 1.0 if conn["south"] else hi
+        if sch == "wall":
+            h = 1.0 if (props.get("up") == "true" or "tall" in props.values()) else 0.875
+            if not (conn["east"] or conn["west"]):
+                x0, x1 = 0.3125, 0.6875
+            if not (conn["north"] or conn["south"]):
+                z0, z1 = 0.3125, 0.6875
+        else:
+            h = 1.0
+        if (conn["east"] or conn["west"]) and (conn["north"] or conn["south"]):
+            # corners/crossings: an L or + shape; draw the longer arm only (one box per block)
+            if conn["east"] and conn["west"]:
+                z0, z1 = (lo, hi) if sch != "wall" else (0.3125, 0.6875)
+            else:
+                x0, x1 = (lo, hi) if sch != "wall" else (0.3125, 0.6875)
+        out["kind"], out["box"] = "box", (x0, 0.0, z0, x1, h, z1)
+        return out
+    if name == "cobweb":
+        return {"kind": "glass", "alpha": 0.35, "box": None, "emit": 0, "name": name, "top": (220, 220, 225),
+                "side": (220, 220, 225)}
     if name in ("melon_stem", "pumpkin_stem", "attached_melon_stem", "attached_pumpkin_stem", "small_dripleaf",
                 "big_dripleaf", "red_mushroom", "brown_mushroom", "wither_rose", "crimson_roots", "warped_roots",
                 "tall_seagrass"):

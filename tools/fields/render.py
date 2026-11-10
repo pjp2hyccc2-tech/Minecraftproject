@@ -99,6 +99,48 @@ class SceneWorld:
         sub[m] = remap[P.a[m]]
         self.a = a
         self.top = g.top
+        self._gimmicks(P, idx)
+
+    # preview-only stand-ins for what the client draws (windmill sails, waving flags)
+    def _put(self, x, y, z, i):
+        gx, gy, gz = x - self.X0, y - self.Y0, z - self.Z0
+        if 0 <= gx < self.NX and 0 <= gz < self.NZ and 0 <= gy < self.NY and self.a[gx, gz, gy] <= 1:
+            self.a[gx, gz, gy] = i
+
+    def _gimmicks(self, P, idx):
+        import re
+        DIRS = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}
+        COLORS = {"kingdom": ("blue_wool", "yellow_wool"), "guild": ("red_wool", "yellow_wool"),
+                  "pennant": ("red_wool", "white_wool"), "cathedral": ("white_wool", "purple_wool"),
+                  "market": ("orange_wool", "white_wool"), "harbour": ("light_blue_wool", "white_wool")}
+        for (x, y, z), nbt in P.block_entities.items():
+            st = P.get(x, y, z)
+            facing = re.search(r"facing=(\w+)", st)
+            facing = facing.group(1) if facing else "east"
+            fx, fz = DIRS.get(facing, (1, 0))
+            if st.startswith("eternalrealm:windmill_sails"):
+                R = float(re.search(r"Radius:([\d.]+)", nbt).group(1))
+                spar, cloth = idx("minecraft:stripped_spruce_log[axis=y]"), idx("minecraft:white_wool")
+                px, pz = x + fx, z + fz
+                ax, az = (0, 1) if fx else (1, 0)          # in-plane horizontal axis
+                for sx, sy in ((1, 1), (1, -1), (-1, 1), (-1, -1)):
+                    for k in range(1, int(R / 1.414) + 1):
+                        for w in (0, 1):
+                            u, v = sx * k, sy * k
+                            self._put(px + ax * u, y + v, pz + az * u, spar if w == 0 else spar)
+                            if k >= 2:
+                                for c in (1, 2):
+                                    self._put(px + ax * (u - sx * c), y + v, pz + az * (u - sx * c), cloth)
+            elif st.startswith("eternalrealm:flag"):
+                W = float(re.search(r"Width:([\d.]+)", nbt).group(1))
+                H = float(re.search(r"Height:([\d.]+)", nbt).group(1))
+                d = re.search(r'Design:"(\w+)"', nbt)
+                c1, c2 = COLORS.get(d.group(1) if d else "kingdom", COLORS["kingdom"])
+                i1, i2 = idx("minecraft:" + c1), idx("minecraft:" + c2)
+                for k in range(1, int(round(W)) + 1):
+                    hh = max(1, int(round(H * (1 - 0.5 * (k / W)) if (d and d.group(1) == "pennant") else H)))
+                    for j in range(hh):
+                        self._put(x + fx * k, y - j, z + fz * k, i2 if (k + j) % 3 == 0 else i1)
 
 
 def _patch(sw):

@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "b467a5075f0d7c93",
+ "build": "3fd2776ec9de97af",
  "terrain": "e96e7d8b55fd",
  "pieces": [
   {
@@ -102,6 +102,14 @@
    ],
    "fluidTicks": [],
    "probes": [
+    {
+     "pos": [
+      5,
+      70,
+      195
+     ],
+     "state": "minecraft:polished_andesite"
+    },
     {
      "pos": [
       -7,
@@ -1610,6 +1618,8190 @@
      1106,
      882,
      67
+    ]
+   ]
+  },
+  {
+   "id": "bridge_east_river",
+   "name": "東街道の石橋 (east road over the falls river)",
+   "field": 8,
+   "kind": "bridge",
+   "box": [
+    314,
+    59,
+    15,
+    442,
+    75,
+    77
+   ],
+   "file": "pieces/bridge_east_river.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "minecraft:andesite",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:mud",
+    "minecraft:polished_andesite",
+    "minecraft:smooth_stone",
+    "minecraft:stone",
+    "minecraft:stone_brick_wall[east=low,north=low,south=none,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=low,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=low,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=false,west=low]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=low,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_bricks",
+    "minecraft:water[level=0]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      377,
+      72,
+      49
+     ],
+     "state": "minecraft:stone_bricks"
+    }
+   ],
+   "samples": [
+    [
+     314,
+     15,
+     69
+    ],
+    [
+     442,
+     15,
+     69
+    ],
+    [
+     314,
+     77,
+     68
+    ],
+    [
+     442,
+     77,
+     69
+    ],
+    [
+     378,
+     46,
+     58
+    ],
+    [
+     314,
+     25,
+     69
+    ],
+    [
+     327,
+     29,
+     69
+    ],
+    [
+     338,
+     35,
+     69
+    ],
+    [
+     349,
+     38,
+     69
+    ],
+    [
+     360,
+     36,
+     68
+    ],
+    [
+     370,
+     45,
+     64
+    ],
+    [
+     386,
+     52,
+     65
+    ],
+    [
+     396,
+     61,
+     68
+    ],
+    [
+     407,
+     59,
+     69
+    ],
+    [
+     418,
+     62,
+     69
+    ],
+    [
+     429,
+     68,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "bridge_meadow_brook",
+   "name": "草原の小川の石橋 (south road over the meadow brook)",
+   "field": 1,
+   "kind": "bridge",
+   "box": [
+    -337,
+    59,
+    520,
+    -291,
+    78,
+    552
+   ],
+   "file": "pieces/bridge_meadow_brook.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "minecraft:andesite",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:mud",
+    "minecraft:polished_andesite",
+    "minecraft:smooth_stone",
+    "minecraft:stone",
+    "minecraft:stone_brick_wall[east=low,north=low,south=none,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=low,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=low,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=low,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=false,west=low]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=low,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_bricks",
+    "minecraft:water[level=0]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -316,
+      71,
+      531
+     ],
+     "state": "minecraft:smooth_stone"
+    }
+   ],
+   "samples": [
+    [
+     -337,
+     520,
+     64
+    ],
+    [
+     -291,
+     520,
+     71
+    ],
+    [
+     -337,
+     552,
+     72
+    ],
+    [
+     -291,
+     552,
+     60
+    ],
+    [
+     -314,
+     536,
+     58
+    ],
+    [
+     -337,
+     540,
+     70
+    ],
+    [
+     -331,
+     537,
+     68
+    ],
+    [
+     -328,
+     545,
+     69
+    ],
+    [
+     -324,
+     536,
+     65
+    ],
+    [
+     -320,
+     537,
+     64
+    ],
+    [
+     -316,
+     532,
+     59
+    ],
+    [
+     -313,
+     534,
+     59
+    ],
+    [
+     -309,
+     527,
+     66
+    ],
+    [
+     -305,
+     527,
+     67
+    ],
+    [
+     -302,
+     535,
+     65
+    ],
+    [
+     -298,
+     531,
+     68
+    ]
+   ]
+  },
+  {
+   "id": "bridge_lakeside_river",
+   "name": "湖畔の木橋 (lakeside road over the falls river)",
+   "field": 9,
+   "kind": "bridge",
+   "box": [
+    343,
+    57,
+    669,
+    377,
+    70,
+    691
+   ],
+   "file": "pieces/bridge_lakeside_river.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:coarse_dirt",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:sand",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=true]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:spruce_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=true,south=false,west=true]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_planks",
+    "minecraft:stone",
+    "minecraft:sandstone"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      359,
+      67,
+      684
+     ],
+     "state": "minecraft:spruce_fence[east=true,north=true,south=false,west=true]"
+    }
+   ],
+   "samples": [
+    [
+     343,
+     669,
+     66
+    ],
+    [
+     377,
+     669,
+     66
+    ],
+    [
+     343,
+     691,
+     65
+    ],
+    [
+     377,
+     691,
+     64
+    ],
+    [
+     360,
+     680,
+     58
+    ],
+    [
+     343,
+     676,
+     65
+    ],
+    [
+     347,
+     678,
+     65
+    ],
+    [
+     350,
+     669,
+     64
+    ],
+    [
+     352,
+     672,
+     64
+    ],
+    [
+     355,
+     679,
+     60
+    ],
+    [
+     359,
+     681,
+     58
+    ],
+    [
+     363,
+     683,
+     59
+    ],
+    [
+     367,
+     685,
+     60
+    ],
+    [
+     370,
+     675,
+     64
+    ],
+    [
+     372,
+     680,
+     65
+    ],
+    [
+     374,
+     686,
+     65
+    ]
+   ]
+  },
+  {
+   "id": "road_pond_boardwalk",
+   "name": "月影の池の木道 (pond boardwalk, west road)",
+   "field": 2,
+   "kind": "bridge",
+   "box": [
+    -834,
+    66,
+    148,
+    -784,
+    79,
+    194
+   ],
+   "file": "pieces/road_pond_boardwalk.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:coarse_dirt",
+    "minecraft:dirt_path",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:podzol[snowy=false]",
+    "minecraft:soul_lantern[hanging=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_slab[type=top]",
+    "minecraft:dirt",
+    "minecraft:stone"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -807,
+      70,
+      172
+     ],
+     "state": "minecraft:spruce_planks"
+    }
+   ],
+   "samples": [
+    [
+     -834,
+     148,
+     71
+    ],
+    [
+     -784,
+     148,
+     71
+    ],
+    [
+     -834,
+     194,
+     73
+    ],
+    [
+     -784,
+     194,
+     63
+    ],
+    [
+     -809,
+     171,
+     67
+    ],
+    [
+     -834,
+     190,
+     73
+    ],
+    [
+     -829,
+     189,
+     71
+    ],
+    [
+     -824,
+     184,
+     70
+    ],
+    [
+     -820,
+     182,
+     67
+    ],
+    [
+     -816,
+     180,
+     67
+    ],
+    [
+     -812,
+     179,
+     67
+    ],
+    [
+     -807,
+     169,
+     67
+    ],
+    [
+     -803,
+     168,
+     67
+    ],
+    [
+     -799,
+     165,
+     67
+    ],
+    [
+     -795,
+     164,
+     67
+    ],
+    [
+     -790,
+     153,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "border_west_capital",
+   "name": "境界の門 1→2 (west road)",
+   "field": 2,
+   "kind": "border",
+   "box": [
+    -223,
+    68,
+    -4,
+    -204,
+    87,
+    13
+   ],
+   "file": "pieces/border_west_capital.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_brick_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:castle_brick_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:castle_crest_stone",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:green_wall_banner[facing=east]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lime_wall_banner[facing=west]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=low]",
+    "minecraft:stone_bricks"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -216,
+      73,
+      -2
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"map.eternalrealm.capital\",\"bold\":true}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -216,
+      73,
+      11
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"map.eternalrealm.capital\",\"bold\":true}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -216,
+      77,
+      -2
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bo\",Color:5},{Pattern:\"mc\",Color:4}]}"
+    },
+    {
+     "pos": [
+      -216,
+      77,
+      11
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bo\",Color:5},{Pattern:\"mc\",Color:4}]}"
+    },
+    {
+     "pos": [
+      -214,
+      87,
+      -2
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      -214,
+      87,
+      11
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      -212,
+      73,
+      -2
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.elder_forest\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -212,
+      73,
+      11
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.elder_forest\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -212,
+      77,
+      -2
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:9},{Pattern:\"ts\",Color:9},{Pattern:\"bo\",Color:13},{Pattern:\"mc\",Color:9}]}"
+    },
+    {
+     "pos": [
+      -212,
+      77,
+      11
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:9},{Pattern:\"ts\",Color:9},{Pattern:\"bo\",Color:13},{Pattern:\"mc\",Color:9}]}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -214,
+      71,
+      11
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     -223,
+     -4,
+     71
+    ],
+    [
+     -204,
+     -4,
+     70
+    ],
+    [
+     -223,
+     13,
+     71
+    ],
+    [
+     -204,
+     13,
+     70
+    ],
+    [
+     -214,
+     4,
+     70
+    ],
+    [
+     -223,
+     3,
+     71
+    ],
+    [
+     -220,
+     2,
+     71
+    ],
+    [
+     -218,
+     5,
+     70
+    ],
+    [
+     -216,
+     3,
+     70
+    ],
+    [
+     -215,
+     1,
+     70
+    ],
+    [
+     -214,
+     -2,
+     70
+    ],
+    [
+     -214,
+     13,
+     70
+    ],
+    [
+     -213,
+     10,
+     70
+    ],
+    [
+     -212,
+     9,
+     70
+    ],
+    [
+     -210,
+     6,
+     70
+    ],
+    [
+     -207,
+     3,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "border_east_capital",
+   "name": "境界の門 1→8 (east road)",
+   "field": 8,
+   "kind": "border",
+   "box": [
+    204,
+    67,
+    -4,
+    223,
+    87,
+    13
+   ],
+   "file": "pieces/border_east_capital.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_brick_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:castle_brick_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:castle_crest_stone",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lime_wall_banner[facing=east]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=low]",
+    "minecraft:stone_bricks",
+    "minecraft:yellow_wall_banner[facing=west]"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      212,
+      73,
+      -2
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.fertile_farm\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      212,
+      73,
+      11
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.fertile_farm\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      212,
+      77,
+      -2
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:5},{Pattern:\"ts\",Color:5},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:5}]}"
+    },
+    {
+     "pos": [
+      212,
+      77,
+      11
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:5},{Pattern:\"ts\",Color:5},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:5}]}"
+    },
+    {
+     "pos": [
+      214,
+      87,
+      -2
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      214,
+      87,
+      11
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      216,
+      73,
+      -2
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"map.eternalrealm.capital\",\"bold\":true}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      216,
+      73,
+      11
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"map.eternalrealm.capital\",\"bold\":true}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      216,
+      77,
+      -2
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bo\",Color:5},{Pattern:\"mc\",Color:4}]}"
+    },
+    {
+     "pos": [
+      216,
+      77,
+      11
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bo\",Color:5},{Pattern:\"mc\",Color:4}]}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      214,
+      71,
+      -2
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     204,
+     -4,
+     70
+    ],
+    [
+     223,
+     -4,
+     70
+    ],
+    [
+     204,
+     13,
+     69
+    ],
+    [
+     223,
+     13,
+     69
+    ],
+    [
+     213,
+     4,
+     69
+    ],
+    [
+     204,
+     4,
+     69
+    ],
+    [
+     207,
+     2,
+     69
+    ],
+    [
+     209,
+     5,
+     69
+    ],
+    [
+     212,
+     -4,
+     70
+    ],
+    [
+     212,
+     13,
+     69
+    ],
+    [
+     213,
+     10,
+     69
+    ],
+    [
+     214,
+     7,
+     69
+    ],
+    [
+     215,
+     4,
+     69
+    ],
+    [
+     216,
+     2,
+     69
+    ],
+    [
+     217,
+     6,
+     69
+    ],
+    [
+     220,
+     3,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "border_lakeside_1_9",
+   "name": "境界の門 1→9 (lakeside road)",
+   "field": 9,
+   "kind": "border",
+   "box": [
+    154,
+    66,
+    412,
+    171,
+    86,
+    431
+   ],
+   "file": "pieces/border_lakeside_1_9.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_brick_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:castle_brick_stairs[facing=west,half=top,shape=straight]",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:castle_crest_stone",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:cyan_wall_banner[facing=north]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=south]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lime_wall_banner[facing=south]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=low,up=true,west=none]",
+    "minecraft:stone_bricks"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      156,
+      72,
+      420
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.lakeside\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"15\",\"25\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      156,
+      72,
+      424
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.arcelia\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"5\",\"15\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      156,
+      76,
+      420
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:11},{Pattern:\"ts\",Color:11},{Pattern:\"bo\",Color:9},{Pattern:\"mc\",Color:11}]}"
+    },
+    {
+     "pos": [
+      156,
+      76,
+      424
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bo\",Color:5},{Pattern:\"mc\",Color:4}]}"
+    },
+    {
+     "pos": [
+      156,
+      86,
+      422
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      169,
+      72,
+      420
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.lakeside\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"15\",\"25\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      169,
+      72,
+      424
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.arcelia\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"5\",\"15\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      169,
+      76,
+      420
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:11},{Pattern:\"ts\",Color:11},{Pattern:\"bo\",Color:9},{Pattern:\"mc\",Color:11}]}"
+    },
+    {
+     "pos": [
+      169,
+      76,
+      424
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bo\",Color:5},{Pattern:\"mc\",Color:4}]}"
+    },
+    {
+     "pos": [
+      169,
+      86,
+      422
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      169,
+      70,
+      422
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     154,
+     412,
+     70
+    ],
+    [
+     171,
+     412,
+     69
+    ],
+    [
+     154,
+     431,
+     68
+    ],
+    [
+     171,
+     431,
+     68
+    ],
+    [
+     162,
+     421,
+     69
+    ],
+    [
+     154,
+     420,
+     69
+    ],
+    [
+     157,
+     421,
+     69
+    ],
+    [
+     160,
+     418,
+     69
+    ],
+    [
+     161,
+     417,
+     69
+    ],
+    [
+     162,
+     414,
+     69
+    ],
+    [
+     162,
+     430,
+     68
+    ],
+    [
+     163,
+     426,
+     68
+    ],
+    [
+     164,
+     422,
+     68
+    ],
+    [
+     165,
+     419,
+     69
+    ],
+    [
+     166,
+     418,
+     69
+    ],
+    [
+     167,
+     424,
+     68
+    ]
+   ]
+  },
+  {
+   "id": "border_lakeside_9_10",
+   "name": "境界の門 9→10 (lakeside road)",
+   "field": 10,
+   "kind": "border",
+   "box": [
+    838,
+    64,
+    801,
+    857,
+    83,
+    818
+   ],
+   "file": "pieces/border_lakeside_9_10.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_brick_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:castle_brick_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:castle_crest_stone",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:blue_wall_banner[facing=west]",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:cyan_wall_banner[facing=east]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=low]",
+    "minecraft:stone_bricks"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      845,
+      69,
+      803
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.wind_harbour\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"20\",\"30\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      845,
+      69,
+      816
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.wind_harbour\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"20\",\"30\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      845,
+      73,
+      803
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bo\",Color:11},{Pattern:\"mc\",Color:0}]}"
+    },
+    {
+     "pos": [
+      845,
+      73,
+      816
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bo\",Color:11},{Pattern:\"mc\",Color:0}]}"
+    },
+    {
+     "pos": [
+      847,
+      83,
+      803
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      847,
+      83,
+      816
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      849,
+      69,
+      803
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.lakeside\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"15\",\"25\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      849,
+      69,
+      816
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.lakeside\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"15\",\"25\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      849,
+      73,
+      803
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:11},{Pattern:\"ts\",Color:11},{Pattern:\"bo\",Color:9},{Pattern:\"mc\",Color:11}]}"
+    },
+    {
+     "pos": [
+      849,
+      73,
+      816
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:11},{Pattern:\"ts\",Color:11},{Pattern:\"bo\",Color:9},{Pattern:\"mc\",Color:11}]}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      847,
+      67,
+      803
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     838,
+     801,
+     66
+    ],
+    [
+     857,
+     801,
+     66
+    ],
+    [
+     838,
+     818,
+     66
+    ],
+    [
+     857,
+     818,
+     66
+    ],
+    [
+     847,
+     809,
+     66
+    ],
+    [
+     838,
+     808,
+     66
+    ],
+    [
+     840,
+     812,
+     66
+    ],
+    [
+     843,
+     809,
+     66
+    ],
+    [
+     845,
+     807,
+     66
+    ],
+    [
+     846,
+     805,
+     66
+    ],
+    [
+     847,
+     802,
+     66
+    ],
+    [
+     847,
+     817,
+     66
+    ],
+    [
+     848,
+     814,
+     66
+    ],
+    [
+     849,
+     812,
+     66
+    ],
+    [
+     851,
+     810,
+     66
+    ],
+    [
+     854,
+     807,
+     66
+    ]
+   ]
+  },
+  {
+   "id": "border_west_2_3",
+   "name": "境界の門 2→3 (west road)",
+   "field": 3,
+   "kind": "border",
+   "box": [
+    -1091,
+    84,
+    445,
+    -1075,
+    105,
+    460
+   ],
+   "file": "pieces/border_west_2_3.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:gray_wall_banner[facing=east]",
+    "minecraft:green_wall_banner[facing=west]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=low]",
+    "minecraft:stone_bricks"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -1089,
+      91,
+      447
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.elder_forest\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -1089,
+      95,
+      447
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:9},{Pattern:\"ts\",Color:9},{Pattern:\"bo\",Color:13},{Pattern:\"mc\",Color:9}]}"
+    },
+    {
+     "pos": [
+      -1087,
+      105,
+      447
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      -1085,
+      91,
+      447
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.sandria_desert\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"15\",\"25\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -1085,
+      95,
+      447
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:1},{Pattern:\"ts\",Color:1},{Pattern:\"bo\",Color:7},{Pattern:\"mc\",Color:1}]}"
+    },
+    {
+     "pos": [
+      -1080,
+      91,
+      458
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.elder_forest\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -1080,
+      95,
+      458
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:9},{Pattern:\"ts\",Color:9},{Pattern:\"bo\",Color:13},{Pattern:\"mc\",Color:9}]}"
+    },
+    {
+     "pos": [
+      -1078,
+      105,
+      458
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      -1076,
+      91,
+      458
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.sandria_desert\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"15\",\"25\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -1076,
+      95,
+      458
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:1},{Pattern:\"ts\",Color:1},{Pattern:\"bo\",Color:7},{Pattern:\"mc\",Color:1}]}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -1078,
+      89,
+      458
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     -1091,
+     445,
+     86
+    ],
+    [
+     -1075,
+     445,
+     84
+    ],
+    [
+     -1091,
+     460,
+     91
+    ],
+    [
+     -1075,
+     460,
+     86
+    ],
+    [
+     -1083,
+     452,
+     87
+    ],
+    [
+     -1091,
+     457,
+     90
+    ],
+    [
+     -1089,
+     458,
+     91
+    ],
+    [
+     -1087,
+     445,
+     86
+    ],
+    [
+     -1086,
+     448,
+     86
+    ],
+    [
+     -1085,
+     451,
+     87
+    ],
+    [
+     -1084,
+     457,
+     89
+    ],
+    [
+     -1082,
+     454,
+     88
+    ],
+    [
+     -1080,
+     450,
+     86
+    ],
+    [
+     -1079,
+     451,
+     86
+    ],
+    [
+     -1078,
+     452,
+     86
+    ],
+    [
+     -1077,
+     458,
+     87
+    ]
+   ]
+  },
+  {
+   "id": "border_end_2_7",
+   "name": "境界の門 2→7 (end road)",
+   "field": 7,
+   "kind": "border",
+   "box": [
+    -892,
+    71,
+    -396,
+    -876,
+    91,
+    -378
+   ],
+   "file": "pieces/border_end_2_7.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_brick_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:castle_brick_stairs[facing=west,half=top,shape=straight]",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:castle_crest_stone",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=south]",
+    "minecraft:green_wall_banner[facing=north]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:purple_wall_banner[facing=south]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=low,up=true,west=none]",
+    "minecraft:stone_bricks"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -890,
+      77,
+      -389
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.elder_forest\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -890,
+      77,
+      -385
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.tower_of_the_end\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_from\",\"with\":[\"50\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -890,
+      81,
+      -389
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:9},{Pattern:\"ts\",Color:9},{Pattern:\"bo\",Color:13},{Pattern:\"mc\",Color:9}]}"
+    },
+    {
+     "pos": [
+      -890,
+      81,
+      -385
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:15},{Pattern:\"ts\",Color:15},{Pattern:\"bo\",Color:10},{Pattern:\"mc\",Color:15}]}"
+    },
+    {
+     "pos": [
+      -890,
+      91,
+      -387
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      -878,
+      77,
+      -389
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.elder_forest\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -878,
+      77,
+      -385
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.tower_of_the_end\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_from\",\"with\":[\"50\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -878,
+      81,
+      -389
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:9},{Pattern:\"ts\",Color:9},{Pattern:\"bo\",Color:13},{Pattern:\"mc\",Color:9}]}"
+    },
+    {
+     "pos": [
+      -878,
+      81,
+      -385
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:15},{Pattern:\"ts\",Color:15},{Pattern:\"bo\",Color:10},{Pattern:\"mc\",Color:15}]}"
+    },
+    {
+     "pos": [
+      -878,
+      91,
+      -387
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -890,
+      75,
+      -387
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     -892,
+     -396,
+     74
+    ],
+    [
+     -876,
+     -396,
+     73
+    ],
+    [
+     -892,
+     -378,
+     74
+    ],
+    [
+     -876,
+     -378,
+     72
+    ],
+    [
+     -884,
+     -387,
+     73
+    ],
+    [
+     -892,
+     -389,
+     74
+    ],
+    [
+     -890,
+     -385,
+     74
+    ],
+    [
+     -886,
+     -394,
+     74
+    ],
+    [
+     -886,
+     -380,
+     73
+    ],
+    [
+     -885,
+     -383,
+     73
+    ],
+    [
+     -884,
+     -388,
+     73
+    ],
+    [
+     -883,
+     -393,
+     74
+    ],
+    [
+     -883,
+     -379,
+     73
+    ],
+    [
+     -882,
+     -384,
+     73
+    ],
+    [
+     -881,
+     -387,
+     73
+    ],
+    [
+     -879,
+     -388,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "border_east_8_5",
+   "name": "境界の門 8→5 (east road)",
+   "field": 5,
+   "kind": "border",
+   "box": [
+    1017,
+    71,
+    15,
+    1033,
+    92,
+    30
+   ],
+   "file": "pieces/border_east_8_5.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:orange_wall_banner[facing=west]",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=low]",
+    "minecraft:stone_bricks",
+    "minecraft:yellow_wall_banner[facing=east]"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      1019,
+      78,
+      17
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.dragonia_volcano\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"30\",\"40\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1019,
+      82,
+      17
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:12},{Pattern:\"ts\",Color:12},{Pattern:\"bo\",Color:1},{Pattern:\"mc\",Color:12}]}"
+    },
+    {
+     "pos": [
+      1021,
+      92,
+      17
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      1023,
+      78,
+      17
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.fertile_farm\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1023,
+      82,
+      17
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:5},{Pattern:\"ts\",Color:5},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:5}]}"
+    },
+    {
+     "pos": [
+      1027,
+      78,
+      28
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.dragonia_volcano\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"30\",\"40\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1027,
+      82,
+      28
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:12},{Pattern:\"ts\",Color:12},{Pattern:\"bo\",Color:1},{Pattern:\"mc\",Color:12}]}"
+    },
+    {
+     "pos": [
+      1029,
+      92,
+      28
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      1031,
+      78,
+      28
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.fertile_farm\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1031,
+      82,
+      28
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:5},{Pattern:\"ts\",Color:5},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:5}]}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1021,
+      76,
+      17
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     1017,
+     15,
+     74
+    ],
+    [
+     1033,
+     15,
+     76
+    ],
+    [
+     1017,
+     30,
+     72
+    ],
+    [
+     1033,
+     30,
+     74
+    ],
+    [
+     1025,
+     22,
+     74
+    ],
+    [
+     1017,
+     26,
+     72
+    ],
+    [
+     1019,
+     26,
+     73
+    ],
+    [
+     1020,
+     28,
+     73
+    ],
+    [
+     1021,
+     29,
+     73
+    ],
+    [
+     1023,
+     16,
+     75
+    ],
+    [
+     1024,
+     23,
+     74
+    ],
+    [
+     1026,
+     21,
+     74
+    ],
+    [
+     1027,
+     28,
+     73
+    ],
+    [
+     1028,
+     30,
+     73
+    ],
+    [
+     1030,
+     17,
+     75
+    ],
+    [
+     1031,
+     20,
+     75
+    ]
+   ]
+  },
+  {
+   "id": "border_farm_harbour_8_10",
+   "name": "境界の門 8→10 (farm_harbour road)",
+   "field": 10,
+   "kind": "border",
+   "box": [
+    1023,
+    66,
+    659,
+    1037,
+    86,
+    674
+   ],
+   "file": "pieces/border_farm_harbour_8_10.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:blue_wall_banner[facing=north]",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=south]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=low,up=true,west=none]",
+    "minecraft:stone_bricks",
+    "minecraft:yellow_wall_banner[facing=south]"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      1025,
+      72,
+      668
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.wind_harbour\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"20\",\"30\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1025,
+      72,
+      672
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.fertile_farm\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1025,
+      76,
+      668
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bo\",Color:11},{Pattern:\"mc\",Color:0}]}"
+    },
+    {
+     "pos": [
+      1025,
+      76,
+      672
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:5},{Pattern:\"ts\",Color:5},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:5}]}"
+    },
+    {
+     "pos": [
+      1025,
+      86,
+      670
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      1035,
+      72,
+      660
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.wind_harbour\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"20\",\"30\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1035,
+      72,
+      664
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.fertile_farm\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1035,
+      76,
+      660
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bo\",Color:11},{Pattern:\"mc\",Color:0}]}"
+    },
+    {
+     "pos": [
+      1035,
+      76,
+      664
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:5},{Pattern:\"ts\",Color:5},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:5}]}"
+    },
+    {
+     "pos": [
+      1035,
+      86,
+      662
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1035,
+      70,
+      662
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     1023,
+     659,
+     69
+    ],
+    [
+     1037,
+     659,
+     69
+    ],
+    [
+     1023,
+     674,
+     68
+    ],
+    [
+     1037,
+     674,
+     68
+    ],
+    [
+     1030,
+     666,
+     69
+    ],
+    [
+     1023,
+     661,
+     69
+    ],
+    [
+     1024,
+     670,
+     68
+    ],
+    [
+     1025,
+     672,
+     68
+    ],
+    [
+     1027,
+     659,
+     69
+    ],
+    [
+     1027,
+     672,
+     68
+    ],
+    [
+     1029,
+     665,
+     69
+    ],
+    [
+     1030,
+     671,
+     68
+    ],
+    [
+     1032,
+     669,
+     68
+    ],
+    [
+     1033,
+     670,
+     68
+    ],
+    [
+     1034,
+     671,
+     68
+    ],
+    [
+     1035,
+     674,
+     68
+    ]
+   ]
+  },
+  {
+   "id": "border_falls_8_4",
+   "name": "境界の門 8→4 (falls road)",
+   "field": 4,
+   "kind": "border",
+   "box": [
+    467,
+    68,
+    -105,
+    483,
+    91,
+    -87
+   ],
+   "file": "pieces/border_falls_8_4.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_brick_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:castle_brick_stairs[facing=west,half=top,shape=straight]",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:castle_crest_stone",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=south]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:light_blue_wall_banner[facing=south]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=low,up=true,west=none]",
+    "minecraft:stone_bricks",
+    "minecraft:yellow_wall_banner[facing=north]"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      469,
+      77,
+      -98
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.fertile_farm\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      469,
+      77,
+      -94
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.nordia_snowfield\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"20\",\"30\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      469,
+      81,
+      -98
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:5},{Pattern:\"ts\",Color:5},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:5}]}"
+    },
+    {
+     "pos": [
+      469,
+      81,
+      -94
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bo\",Color:3},{Pattern:\"mc\",Color:0}]}"
+    },
+    {
+     "pos": [
+      469,
+      91,
+      -96
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      481,
+      77,
+      -98
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.fertile_farm\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"10\",\"20\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      481,
+      77,
+      -94
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.nordia_snowfield\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"20\",\"30\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      481,
+      81,
+      -98
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:5},{Pattern:\"ts\",Color:5},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:5}]}"
+    },
+    {
+     "pos": [
+      481,
+      81,
+      -94
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bo\",Color:3},{Pattern:\"mc\",Color:0}]}"
+    },
+    {
+     "pos": [
+      481,
+      91,
+      -96
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      469,
+      75,
+      -96
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     467,
+     -105,
+     69
+    ],
+    [
+     483,
+     -105,
+     75
+    ],
+    [
+     467,
+     -87,
+     71
+    ],
+    [
+     483,
+     -87,
+     71
+    ],
+    [
+     475,
+     -96,
+     73
+    ],
+    [
+     467,
+     -98,
+     70
+    ],
+    [
+     469,
+     -95,
+     71
+    ],
+    [
+     472,
+     -96,
+     72
+    ],
+    [
+     473,
+     -93,
+     72
+    ],
+    [
+     474,
+     -99,
+     73
+    ],
+    [
+     475,
+     -105,
+     72
+    ],
+    [
+     475,
+     -92,
+     72
+    ],
+    [
+     476,
+     -97,
+     73
+    ],
+    [
+     477,
+     -102,
+     73
+    ],
+    [
+     477,
+     -89,
+     72
+    ],
+    [
+     480,
+     -95,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "border_peaks_4_6",
+   "name": "境界の門 4→6 (peaks road)",
+   "field": 6,
+   "kind": "border",
+   "box": [
+    342,
+    124,
+    -698,
+    357,
+    146,
+    -681
+   ],
+   "file": "pieces/border_peaks_4_6.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_brick_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:castle_brick_stairs[facing=west,half=top,shape=straight]",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:castle_crest_stone",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+    "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:andesite",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=south]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:light_blue_wall_banner[facing=north]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=low,up=true,west=none]",
+    "minecraft:stone_bricks",
+    "minecraft:white_wall_banner[facing=south]"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      344,
+      132,
+      -691
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.nordia_snowfield\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"20\",\"30\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      344,
+      132,
+      -687
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.celestia\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_from\",\"with\":[\"40\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      344,
+      136,
+      -691
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bo\",Color:3},{Pattern:\"mc\",Color:0}]}"
+    },
+    {
+     "pos": [
+      344,
+      136,
+      -687
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:3},{Pattern:\"ts\",Color:3},{Pattern:\"bo\",Color:0},{Pattern:\"mc\",Color:3}]}"
+    },
+    {
+     "pos": [
+      344,
+      146,
+      -689
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      355,
+      132,
+      -691
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.nordia_snowfield\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"20\",\"30\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      355,
+      132,
+      -687
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.entering\"}','{\"translate\":\"area.eternalrealm.celestia\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_from\",\"with\":[\"40\"]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      355,
+      136,
+      -691
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"bo\",Color:3},{Pattern:\"mc\",Color:0}]}"
+    },
+    {
+     "pos": [
+      355,
+      136,
+      -687
+     ],
+     "nbt": "{Patterns:[{Pattern:\"bs\",Color:3},{Pattern:\"ts\",Color:3},{Pattern:\"bo\",Color:0},{Pattern:\"mc\",Color:3}]}"
+    },
+    {
+     "pos": [
+      355,
+      146,
+      -689
+     ],
+     "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      344,
+      130,
+      -689
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     342,
+     -698,
+     128
+    ],
+    [
+     357,
+     -698,
+     129
+    ],
+    [
+     342,
+     -681,
+     125
+    ],
+    [
+     357,
+     -681,
+     128
+    ],
+    [
+     349,
+     -690,
+     128
+    ],
+    [
+     342,
+     -691,
+     127
+    ],
+    [
+     344,
+     -690,
+     127
+    ],
+    [
+     346,
+     -689,
+     127
+    ],
+    [
+     348,
+     -693,
+     128
+    ],
+    [
+     348,
+     -682,
+     126
+    ],
+    [
+     349,
+     -689,
+     127
+    ],
+    [
+     350,
+     -696,
+     129
+    ],
+    [
+     350,
+     -685,
+     127
+    ],
+    [
+     351,
+     -691,
+     128
+    ],
+    [
+     352,
+     -689,
+     128
+    ],
+    [
+     354,
+     -687,
+     128
+    ]
+   ]
+  },
+  {
+   "id": "signpost_east_falls",
+   "name": "道標 東街道・滝道の分岐",
+   "field": 8,
+   "kind": "signpost",
+   "box": [
+    425,
+    68,
+    49,
+    427,
+    74,
+    51
+   ],
+   "file": "pieces/signpost_east_falls.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "minecraft:andesite",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=south]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:mossy_cobblestone"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      425,
+      71,
+      50
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"area.eternalrealm.fertile_farm\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"← \"},{\"translate\":\"area.eternalrealm.nordia_snowfield\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      426,
+      71,
+      49
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"→ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"← \"},{\"translate\":\"area.eternalrealm.fertile_farm\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"area.eternalrealm.nordia_snowfield\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      426,
+      71,
+      51
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"← \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"→ \"},{\"translate\":\"area.eternalrealm.fertile_farm\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"area.eternalrealm.nordia_snowfield\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      427,
+      71,
+      50
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"area.eternalrealm.fertile_farm\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"→ \"},{\"translate\":\"area.eternalrealm.nordia_snowfield\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      426,
+      70,
+      50
+     ],
+     "state": "minecraft:dark_oak_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     425,
+     49,
+     69
+    ],
+    [
+     427,
+     49,
+     68
+    ],
+    [
+     425,
+     51,
+     69
+    ],
+    [
+     427,
+     51,
+     69
+    ],
+    [
+     426,
+     50,
+     69
+    ],
+    [
+     425,
+     49,
+     69
+    ],
+    [
+     425,
+     50,
+     69
+    ],
+    [
+     425,
+     51,
+     69
+    ],
+    [
+     426,
+     49,
+     68
+    ],
+    [
+     426,
+     50,
+     69
+    ],
+    [
+     426,
+     51,
+     69
+    ],
+    [
+     427,
+     49,
+     68
+    ],
+    [
+     427,
+     50,
+     69
+    ],
+    [
+     427,
+     51,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "signpost_moon_forest",
+   "name": "道標 月影の森の辻",
+   "field": 2,
+   "kind": "signpost",
+   "box": [
+    -693,
+    72,
+    61,
+    -691,
+    77,
+    63
+   ],
+   "file": "pieces/signpost_moon_forest.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=south]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:stone_bricks"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -693,
+      74,
+      62
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"← \"},{\"translate\":\"area.eternalrealm.tower_of_the_end\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"area.eternalrealm.sandria_desert\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -692,
+      74,
+      61
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"← \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"area.eternalrealm.tower_of_the_end\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"area.eternalrealm.sandria_desert\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -692,
+      74,
+      63
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"→ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"area.eternalrealm.tower_of_the_end\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"area.eternalrealm.sandria_desert\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      -691,
+      74,
+      62
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"→ \"},{\"translate\":\"area.eternalrealm.tower_of_the_end\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"area.eternalrealm.sandria_desert\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -692,
+      73,
+      62
+     ],
+     "state": "minecraft:dark_oak_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     -693,
+     61,
+     72
+    ],
+    [
+     -691,
+     61,
+     72
+    ],
+    [
+     -693,
+     63,
+     72
+    ],
+    [
+     -691,
+     63,
+     72
+    ],
+    [
+     -692,
+     62,
+     72
+    ],
+    [
+     -693,
+     61,
+     72
+    ],
+    [
+     -693,
+     62,
+     72
+    ],
+    [
+     -693,
+     63,
+     72
+    ],
+    [
+     -692,
+     61,
+     72
+    ],
+    [
+     -692,
+     62,
+     72
+    ],
+    [
+     -692,
+     63,
+     72
+    ],
+    [
+     -691,
+     61,
+     72
+    ],
+    [
+     -691,
+     62,
+     72
+    ],
+    [
+     -691,
+     63,
+     72
+    ]
+   ]
+  },
+  {
+   "id": "signpost_farm",
+   "name": "道標 農場の辻",
+   "field": 8,
+   "kind": "signpost",
+   "box": [
+    731,
+    69,
+    237,
+    733,
+    74,
+    239
+   ],
+   "file": "pieces/signpost_farm.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=south]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:stone_bricks"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      731,
+      71,
+      238
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"area.eternalrealm.dragonia_volcano\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"→ \"},{\"translate\":\"area.eternalrealm.wind_harbour\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      732,
+      71,
+      237
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"→ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"← \"},{\"translate\":\"area.eternalrealm.dragonia_volcano\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"area.eternalrealm.wind_harbour\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      732,
+      71,
+      239
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"← \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"→ \"},{\"translate\":\"area.eternalrealm.dragonia_volcano\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"area.eternalrealm.wind_harbour\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      733,
+      71,
+      238
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"\",\"extra\":[{\"text\":\"↑ \"},{\"translate\":\"map.eternalrealm.capital\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"↓ \"},{\"translate\":\"area.eternalrealm.dragonia_volcano\"}]}','{\"text\":\"\",\"extra\":[{\"text\":\"← \"},{\"translate\":\"area.eternalrealm.wind_harbour\"}]}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      732,
+      70,
+      238
+     ],
+     "state": "minecraft:dark_oak_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     731,
+     237,
+     69
+    ],
+    [
+     733,
+     237,
+     69
+    ],
+    [
+     731,
+     239,
+     69
+    ],
+    [
+     733,
+     239,
+     69
+    ],
+    [
+     732,
+     238,
+     69
+    ],
+    [
+     731,
+     237,
+     69
+    ],
+    [
+     731,
+     238,
+     69
+    ],
+    [
+     731,
+     239,
+     69
+    ],
+    [
+     732,
+     237,
+     69
+    ],
+    [
+     732,
+     238,
+     69
+    ],
+    [
+     732,
+     239,
+     69
+    ],
+    [
+     733,
+     237,
+     69
+    ],
+    [
+     733,
+     238,
+     69
+    ],
+    [
+     733,
+     239,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "lamps_south",
+   "name": "街道の灯り (south road)",
+   "field": 1,
+   "kind": "road",
+   "box": [
+    -140,
+    69,
+    224,
+    -7,
+    76,
+    433
+   ],
+   "file": "pieces/lamps_south.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:polished_andesite",
+    "minecraft:polished_blackstone",
+    "minecraft:polished_blackstone_slab[type=top]",
+    "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -140,
+      71,
+      433
+     ],
+     "state": "minecraft:polished_blackstone"
+    }
+   ],
+   "samples": [
+    [
+     -140,
+     224,
+     71
+    ],
+    [
+     -7,
+     224,
+     70
+    ],
+    [
+     -140,
+     433,
+     70
+    ],
+    [
+     -7,
+     433,
+     70
+    ],
+    [
+     -74,
+     328,
+     71
+    ],
+    [
+     -140,
+     433,
+     70
+    ],
+    [
+     -135,
+     414,
+     69
+    ],
+    [
+     -116,
+     406,
+     71
+    ],
+    [
+     -111,
+     387,
+     71
+    ],
+    [
+     -92,
+     379,
+     71
+    ],
+    [
+     -87,
+     359,
+     71
+    ],
+    [
+     -69,
+     352,
+     71
+    ],
+    [
+     -64,
+     332,
+     71
+    ],
+    [
+     -45,
+     324,
+     71
+    ],
+    [
+     -40,
+     305,
+     71
+    ],
+    [
+     -28,
+     274,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "lamps_lakeside",
+   "name": "街道の灯り (lakeside road)",
+   "field": 1,
+   "kind": "road",
+   "box": [
+    32,
+    69,
+    212,
+    151,
+    77,
+    392
+   ],
+   "file": "pieces/lamps_lakeside.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:polished_andesite",
+    "minecraft:polished_blackstone",
+    "minecraft:polished_blackstone_slab[type=top]",
+    "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      32,
+      71,
+      212
+     ],
+     "state": "minecraft:polished_blackstone"
+    }
+   ],
+   "samples": [
+    [
+     32,
+     212,
+     70
+    ],
+    [
+     151,
+     212,
+     69
+    ],
+    [
+     32,
+     392,
+     69
+    ],
+    [
+     151,
+     392,
+     71
+    ],
+    [
+     91,
+     302,
+     70
+    ],
+    [
+     32,
+     212,
+     70
+    ],
+    [
+     35,
+     232,
+     71
+    ],
+    [
+     52,
+     242,
+     70
+    ],
+    [
+     56,
+     262,
+     70
+    ],
+    [
+     73,
+     271,
+     70
+    ],
+    [
+     77,
+     291,
+     70
+    ],
+    [
+     94,
+     300,
+     69
+    ],
+    [
+     97,
+     320,
+     70
+    ],
+    [
+     115,
+     330,
+     70
+    ],
+    [
+     117,
+     350,
+     70
+    ],
+    [
+     133,
+     361,
+     71
+    ]
+   ]
+  },
+  {
+   "id": "lamps_west",
+   "name": "街道の灯り (west road)",
+   "field": 2,
+   "kind": "road",
+   "box": [
+    -473,
+    69,
+    4,
+    -242,
+    78,
+    40
+   ],
+   "file": "pieces/lamps_west.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:polished_andesite",
+    "minecraft:polished_blackstone",
+    "minecraft:polished_blackstone_slab[type=top]",
+    "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -473,
+      74,
+      40
+     ],
+     "state": "minecraft:polished_blackstone"
+    }
+   ],
+   "samples": [
+    [
+     -473,
+     4,
+     72
+    ],
+    [
+     -242,
+     4,
+     71
+    ],
+    [
+     -473,
+     40,
+     73
+    ],
+    [
+     -242,
+     40,
+     72
+    ],
+    [
+     -358,
+     22,
+     71
+    ],
+    [
+     -473,
+     40,
+     73
+    ],
+    [
+     -456,
+     29,
+     72
+    ],
+    [
+     -438,
+     36,
+     72
+    ],
+    [
+     -421,
+     25,
+     70
+    ],
+    [
+     -402,
+     32,
+     69
+    ],
+    [
+     -385,
+     21,
+     69
+    ],
+    [
+     -366,
+     28,
+     70
+    ],
+    [
+     -349,
+     17,
+     71
+    ],
+    [
+     -330,
+     25,
+     72
+    ],
+    [
+     -313,
+     13,
+     73
+    ],
+    [
+     -294,
+     20,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "lamps_east",
+   "name": "街道の灯り (east road)",
+   "field": 8,
+   "kind": "road",
+   "box": [
+    241,
+    69,
+    6,
+    463,
+    75,
+    79
+   ],
+   "file": "pieces/lamps_east.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:polished_andesite",
+    "minecraft:polished_blackstone",
+    "minecraft:polished_blackstone_slab[type=top]",
+    "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      241,
+      70,
+      12
+     ],
+     "state": "minecraft:polished_blackstone"
+    }
+   ],
+   "samples": [
+    [
+     241,
+     6,
+     69
+    ],
+    [
+     463,
+     6,
+     69
+    ],
+    [
+     241,
+     79,
+     68
+    ],
+    [
+     463,
+     79,
+     69
+    ],
+    [
+     352,
+     42,
+     68
+    ],
+    [
+     241,
+     12,
+     69
+    ],
+    [
+     260,
+     6,
+     70
+    ],
+    [
+     277,
+     17,
+     69
+    ],
+    [
+     296,
+     10,
+     69
+    ],
+    [
+     311,
+     24,
+     69
+    ],
+    [
+     331,
+     22,
+     69
+    ],
+    [
+     344,
+     36,
+     69
+    ],
+    [
+     443,
+     78,
+     69
+    ],
+    [
+     463,
+     79,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "meadow_windmill",
+   "name": "風車の丘 (windmill on its knoll, miller's cottage)",
+   "field": 1,
+   "kind": "scenery",
+   "box": [
+    -458,
+    72,
+    662,
+    -404,
+    100,
+    718
+   ],
+   "file": "pieces/meadow_windmill.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:smoke_emitter[heavy=false]",
+    "eternalrealm:white_plaster",
+    "eternalrealm:windmill_sails[facing=north]",
+    "minecraft:allium",
+    "minecraft:azure_bluet",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:beetroots[age=3]",
+    "minecraft:blue_orchid",
+    "minecraft:brown_carpet",
+    "minecraft:campfire[facing=north,lit=true,signal_fire=false]",
+    "minecraft:carrots[age=7]",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=x]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_slab[type=bottom]",
+    "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:farmland[moisture=7]",
+    "minecraft:glass_pane[east=false,north=false,south=true,west=false]",
+    "minecraft:glass_pane[east=false,north=false,south=true,west=true]",
+    "minecraft:glass_pane[east=false,north=true,south=false,west=false]",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=true]",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:glass_pane[east=true,north=true,south=false,west=true]",
+    "minecraft:grass",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:mossy_cobblestone",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:pink_tulip",
+    "minecraft:poppy",
+    "minecraft:potatoes[age=7]",
+    "minecraft:potted_allium",
+    "minecraft:potted_white_tulip",
+    "minecraft:red_tulip",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=south,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=south,half=upper,hinge=right,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_pressure_plate",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_slab[type=top]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
+    "minecraft:stone_bricks",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:tall_grass[half=lower]",
+    "minecraft:tall_grass[half=upper]",
+    "minecraft:white_tulip",
+    "minecraft:white_wool"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -430,
+      92,
+      685
+     ],
+     "nbt": "{Radius:7.5f}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -430,
+      79,
+      695
+     ],
+     "state": "minecraft:stone_bricks"
+    }
+   ],
+   "samples": [
+    [
+     -458,
+     662,
+     72
+    ],
+    [
+     -404,
+     662,
+     73
+    ],
+    [
+     -458,
+     718,
+     70
+    ],
+    [
+     -404,
+     718,
+     73
+    ],
+    [
+     -431,
+     690,
+     74
+    ],
+    [
+     -458,
+     663,
+     72
+    ],
+    [
+     -446,
+     675,
+     73
+    ],
+    [
+     -442,
+     689,
+     73
+    ],
+    [
+     -438,
+     678,
+     73
+    ],
+    [
+     -435,
+     694,
+     74
+    ],
+    [
+     -432,
+     706,
+     73
+    ],
+    [
+     -429,
+     716,
+     72
+    ],
+    [
+     -425,
+     685,
+     74
+    ],
+    [
+     -422,
+     704,
+     74
+    ],
+    [
+     -418,
+     688,
+     75
+    ],
+    [
+     -414,
+     692,
+     74
+    ]
+   ]
+  },
+  {
+   "id": "meadow_stone_ring",
+   "name": "古の環状列石 (ring of ancient standing stones)",
+   "field": 1,
+   "kind": "scenery",
+   "box": [
+    -286,
+    66,
+    589,
+    -254,
+    77,
+    620
+   ],
+   "file": "pieces/meadow_stone_ring.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:allium",
+    "minecraft:andesite",
+    "minecraft:azure_bluet",
+    "minecraft:cobblestone",
+    "minecraft:cornflower",
+    "minecraft:grass",
+    "minecraft:gravel",
+    "minecraft:lily_of_the_valley",
+    "minecraft:moss_block",
+    "minecraft:mossy_cobblestone",
+    "minecraft:mossy_stone_bricks",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:smooth_stone",
+    "minecraft:smooth_stone_slab[type=bottom]",
+    "minecraft:stone",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:tall_grass[half=lower]",
+    "minecraft:tall_grass[half=upper]",
+    "minecraft:white_candle[candles=3,lit=true]",
+    "minecraft:dirt"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -270,
+      72,
+      604
+     ],
+     "state": "minecraft:smooth_stone"
+    }
+   ],
+   "samples": [
+    [
+     -286,
+     589,
+     70
+    ],
+    [
+     -254,
+     589,
+     59
+    ],
+    [
+     -286,
+     620,
+     70
+    ],
+    [
+     -254,
+     620,
+     70
+    ],
+    [
+     -270,
+     604,
+     71
+    ],
+    [
+     -286,
+     601,
+     70
+    ],
+    [
+     -280,
+     598,
+     70
+    ],
+    [
+     -278,
+     590,
+     68
+    ],
+    [
+     -276,
+     607,
+     70
+    ],
+    [
+     -273,
+     589,
+     67
+    ],
+    [
+     -272,
+     619,
+     70
+    ],
+    [
+     -270,
+     604,
+     71
+    ],
+    [
+     -268,
+     603,
+     70
+    ],
+    [
+     -266,
+     618,
+     70
+    ],
+    [
+     -263,
+     608,
+     70
+    ],
+    [
+     -260,
+     599,
+     66
+    ]
+   ]
+  },
+  {
+   "id": "meadow_shepherd",
+   "name": "羊飼いの小屋と囲い (shepherd's hut and sheep pen)",
+   "field": 1,
+   "kind": "scenery",
+   "box": [
+    -84,
+    69,
+    407,
+    -40,
+    85,
+    444
+   ],
+   "file": "pieces/meadow_shepherd.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:smoke_emitter[heavy=false]",
+    "minecraft:allium",
+    "minecraft:azure_bluet",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:blue_orchid",
+    "minecraft:campfire[facing=west,lit=true,signal_fire=false]",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_slab[type=bottom]",
+    "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:dirt_path",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:glass_pane[east=true,north=true,south=false,west=true]",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:green_carpet",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:oak_planks",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:pink_tulip",
+    "minecraft:poppy",
+    "minecraft:potted_allium",
+    "minecraft:potted_cornflower",
+    "minecraft:potted_poppy",
+    "minecraft:potted_red_tulip",
+    "minecraft:potted_white_tulip",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:spruce_door[facing=east,half=lower,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=east,half=upper,hinge=right,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:spruce_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=true,south=true,west=true]",
+    "minecraft:spruce_fence_gate[facing=east,in_wall=false,open=false]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_pressure_plate",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=south,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:water_cauldron[level=3]",
+    "minecraft:white_tulip",
+    "minecraft:dirt"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -60,
+      71,
+      424
+     ],
+     "state": "minecraft:oak_planks"
+    }
+   ],
+   "samples": [
+    [
+     -84,
+     407,
+     72
+    ],
+    [
+     -40,
+     407,
+     71
+    ],
+    [
+     -84,
+     444,
+     72
+    ],
+    [
+     -40,
+     444,
+     71
+    ],
+    [
+     -62,
+     425,
+     71
+    ],
+    [
+     -84,
+     407,
+     72
+    ],
+    [
+     -76,
+     434,
+     72
+    ],
+    [
+     -69,
+     420,
+     72
+    ],
+    [
+     -66,
+     427,
+     72
+    ],
+    [
+     -64,
+     431,
+     71
+    ],
+    [
+     -62,
+     426,
+     71
+    ],
+    [
+     -60,
+     420,
+     71
+    ],
+    [
+     -57,
+     421,
+     71
+    ],
+    [
+     -55,
+     427,
+     71
+    ],
+    [
+     -50,
+     440,
+     71
+    ],
+    [
+     -43,
+     413,
+     71
+    ]
+   ]
+  },
+  {
+   "id": "meadow_well",
+   "name": "街道の井戸 (roadside well and resting place)",
+   "field": 1,
+   "kind": "scenery",
+   "box": [
+    -196,
+    66,
+    466,
+    -176,
+    78,
+    485
+   ],
+   "file": "pieces/meadow_well.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "minecraft:allium",
+    "minecraft:andesite",
+    "minecraft:azure_bluet",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:blue_orchid",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:mossy_cobblestone",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:pink_tulip",
+    "minecraft:polished_andesite",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:stone_bricks",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:water[level=0]",
+    "minecraft:water_cauldron[level=3]",
+    "minecraft:white_tulip"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -184,
+      70,
+      476
+     ],
+     "state": "minecraft:cobblestone"
+    }
+   ],
+   "samples": [
+    [
+     -196,
+     466,
+     69
+    ],
+    [
+     -176,
+     466,
+     69
+    ],
+    [
+     -196,
+     485,
+     70
+    ],
+    [
+     -176,
+     485,
+     70
+    ],
+    [
+     -186,
+     475,
+     69
+    ],
+    [
+     -196,
+     476,
+     70
+    ],
+    [
+     -190,
+     473,
+     69
+    ],
+    [
+     -189,
+     482,
+     70
+    ],
+    [
+     -187,
+     471,
+     69
+    ],
+    [
+     -186,
+     474,
+     69
+    ],
+    [
+     -185,
+     475,
+     69
+    ],
+    [
+     -184,
+     477,
+     69
+    ],
+    [
+     -183,
+     480,
+     70
+    ],
+    [
+     -182,
+     483,
+     70
+    ],
+    [
+     -180,
+     477,
+     70
+    ],
+    [
+     -178,
+     466,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "meadow_cart",
+   "name": "打ち捨てられた荷車 (abandoned cart)",
+   "field": 1,
+   "kind": "scenery",
+   "box": [
+    -563,
+    68,
+    785,
+    -549,
+    69,
+    799
+   ],
+   "file": "pieces/meadow_cart.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:barrel[facing=east,open=false]",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:dark_oak_button[face=floor,facing=east]",
+    "minecraft:grass",
+    "minecraft:hay_block[axis=x]",
+    "minecraft:hay_block[axis=z]",
+    "minecraft:pumpkin",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_slab[type=top]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=north,half=bottom,open=false]",
+    "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:tall_grass[half=lower]",
+    "minecraft:tall_grass[half=upper]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -557,
+      68,
+      792
+     ],
+     "state": "minecraft:spruce_fence[east=false,north=false,south=false,west=false]"
+    }
+   ],
+   "samples": [
+    [
+     -563,
+     785,
+     67
+    ],
+    [
+     -549,
+     785,
+     67
+    ],
+    [
+     -563,
+     799,
+     67
+    ],
+    [
+     -549,
+     799,
+     67
+    ],
+    [
+     -556,
+     792,
+     67
+    ],
+    [
+     -563,
+     792,
+     67
+    ],
+    [
+     -560,
+     789,
+     67
+    ],
+    [
+     -559,
+     792,
+     67
+    ],
+    [
+     -557,
+     785,
+     67
+    ],
+    [
+     -557,
+     795,
+     67
+    ],
+    [
+     -556,
+     797,
+     67
+    ],
+    [
+     -555,
+     792,
+     67
+    ],
+    [
+     -554,
+     790,
+     67
+    ],
+    [
+     -553,
+     791,
+     67
+    ],
+    [
+     -552,
+     797,
+     67
+    ],
+    [
+     -550,
+     790,
+     67
+    ]
+   ]
+  },
+  {
+   "id": "meadow_flowers_1",
+   "name": "花畑 (flower meadow)",
+   "field": 1,
+   "kind": "flowers",
+   "box": [
+    -156,
+    70,
+    552,
+    -142,
+    72,
+    567
+   ],
+   "file": "pieces/meadow_flowers_1.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:allium",
+    "minecraft:azure_bluet",
+    "minecraft:blue_orchid",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:pink_tulip",
+    "minecraft:poppy",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:white_tulip"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [],
+   "samples": [
+    [
+     -156,
+     552,
+     70
+    ],
+    [
+     -142,
+     552,
+     70
+    ],
+    [
+     -156,
+     567,
+     69
+    ],
+    [
+     -142,
+     567,
+     70
+    ],
+    [
+     -149,
+     559,
+     70
+    ],
+    [
+     -156,
+     562,
+     70
+    ],
+    [
+     -154,
+     553,
+     70
+    ],
+    [
+     -154,
+     566,
+     70
+    ],
+    [
+     -153,
+     561,
+     70
+    ],
+    [
+     -152,
+     556,
+     70
+    ],
+    [
+     -151,
+     554,
+     70
+    ],
+    [
+     -151,
+     565,
+     70
+    ],
+    [
+     -150,
+     564,
+     70
+    ],
+    [
+     -149,
+     564,
+     70
+    ],
+    [
+     -147,
+     560,
+     70
+    ],
+    [
+     -145,
+     562,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "meadow_flowers_2",
+   "name": "花畑 (flower meadow)",
+   "field": 1,
+   "kind": "flowers",
+   "box": [
+    -485,
+    72,
+    604,
+    -473,
+    74,
+    617
+   ],
+   "file": "pieces/meadow_flowers_2.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:allium",
+    "minecraft:azure_bluet",
+    "minecraft:blue_orchid",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:pink_tulip",
+    "minecraft:poppy",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:white_tulip"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [],
+   "samples": [
+    [
+     -485,
+     604,
+     72
+    ],
+    [
+     -473,
+     604,
+     71
+    ],
+    [
+     -485,
+     617,
+     72
+    ],
+    [
+     -473,
+     617,
+     71
+    ],
+    [
+     -479,
+     610,
+     71
+    ],
+    [
+     -485,
+     604,
+     72
+    ],
+    [
+     -484,
+     609,
+     72
+    ],
+    [
+     -483,
+     613,
+     72
+    ],
+    [
+     -482,
+     607,
+     72
+    ],
+    [
+     -482,
+     617,
+     72
+    ],
+    [
+     -481,
+     612,
+     72
+    ],
+    [
+     -480,
+     608,
+     71
+    ],
+    [
+     -479,
+     607,
+     71
+    ],
+    [
+     -478,
+     609,
+     71
+    ],
+    [
+     -477,
+     610,
+     71
+    ],
+    [
+     -475,
+     607,
+     71
+    ]
+   ]
+  },
+  {
+   "id": "meadow_flowers_3",
+   "name": "花畑 (flower meadow)",
+   "field": 1,
+   "kind": "flowers",
+   "box": [
+    -338,
+    73,
+    714,
+    -321,
+    74,
+    729
+   ],
+   "file": "pieces/meadow_flowers_3.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:dandelion",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:orange_tulip",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:poppy",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [],
+   "samples": [
+    [
+     -338,
+     714,
+     72
+    ],
+    [
+     -321,
+     714,
+     72
+    ],
+    [
+     -338,
+     729,
+     71
+    ],
+    [
+     -321,
+     729,
+     72
+    ],
+    [
+     -330,
+     721,
+     72
+    ],
+    [
+     -338,
+     719,
+     72
+    ],
+    [
+     -335,
+     718,
+     72
+    ],
+    [
+     -334,
+     724,
+     72
+    ],
+    [
+     -333,
+     720,
+     72
+    ],
+    [
+     -332,
+     720,
+     72
+    ],
+    [
+     -331,
+     716,
+     72
+    ],
+    [
+     -330,
+     717,
+     72
+    ],
+    [
+     -329,
+     721,
+     72
+    ],
+    [
+     -328,
+     729,
+     72
+    ],
+    [
+     -326,
+     717,
+     72
+    ],
+    [
+     -324,
+     718,
+     72
+    ]
+   ]
+  },
+  {
+   "id": "meadow_flowers_4",
+   "name": "花畑 (flower meadow)",
+   "field": 1,
+   "kind": "flowers",
+   "box": [
+    -46,
+    71,
+    295,
+    -35,
+    73,
+    306
+   ],
+   "file": "pieces/meadow_flowers_4.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:allium",
+    "minecraft:azure_bluet",
+    "minecraft:cornflower",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [],
+   "samples": [
+    [
+     -46,
+     295,
+     70
+    ],
+    [
+     -35,
+     295,
+     70
+    ],
+    [
+     -46,
+     306,
+     71
+    ],
+    [
+     -35,
+     306,
+     71
+    ],
+    [
+     -41,
+     300,
+     70
+    ],
+    [
+     -46,
+     299,
+     70
+    ],
+    [
+     -45,
+     300,
+     70
+    ],
+    [
+     -44,
+     300,
+     70
+    ],
+    [
+     -42,
+     300,
+     70
+    ],
+    [
+     -41,
+     299,
+     70
+    ],
+    [
+     -40,
+     296,
+     70
+    ],
+    [
+     -40,
+     302,
+     70
+    ],
+    [
+     -39,
+     299,
+     70
+    ],
+    [
+     -39,
+     306,
+     71
+    ],
+    [
+     -38,
+     300,
+     70
+    ],
+    [
+     -37,
+     297,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "meadow_flowers_5",
+   "name": "花畑 (flower meadow)",
+   "field": 1,
+   "kind": "flowers",
+   "box": [
+    -607,
+    67,
+    853,
+    -595,
+    69,
+    866
+   ],
+   "file": "pieces/meadow_flowers_5.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:allium",
+    "minecraft:azure_bluet",
+    "minecraft:blue_orchid",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:pink_tulip",
+    "minecraft:poppy",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:white_tulip"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [],
+   "samples": [
+    [
+     -607,
+     853,
+     67
+    ],
+    [
+     -595,
+     853,
+     66
+    ],
+    [
+     -607,
+     866,
+     67
+    ],
+    [
+     -595,
+     866,
+     67
+    ],
+    [
+     -601,
+     859,
+     66
+    ],
+    [
+     -607,
+     859,
+     67
+    ],
+    [
+     -606,
+     863,
+     67
+    ],
+    [
+     -604,
+     863,
+     67
+    ],
+    [
+     -602,
+     860,
+     66
+    ],
+    [
+     -601,
+     862,
+     66
+    ],
+    [
+     -600,
+     863,
+     67
+    ],
+    [
+     -599,
+     862,
+     66
+    ],
+    [
+     -598,
+     860,
+     66
+    ],
+    [
+     -597,
+     858,
+     66
+    ],
+    [
+     -596,
+     854,
+     66
+    ],
+    [
+     -596,
+     864,
+     67
+    ]
+   ]
+  },
+  {
+   "id": "meadow_fences_south_1",
+   "name": "街道の柵 (south road)",
+   "field": 1,
+   "kind": "road",
+   "box": [
+    -169,
+    70,
+    223,
+    -7,
+    72,
+    458
+   ],
+   "file": "pieces/meadow_fences_south_1.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=false]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -169,
+      70,
+      450
+     ],
+     "state": "minecraft:oak_fence[east=true,north=false,south=true,west=false]"
+    }
+   ],
+   "samples": [
+    [
+     -169,
+     223,
+     71
+    ],
+    [
+     -7,
+     223,
+     70
+    ],
+    [
+     -169,
+     458,
+     69
+    ],
+    [
+     -7,
+     458,
+     70
+    ],
+    [
+     -88,
+     340,
+     71
+    ],
+    [
+     -169,
+     450,
+     69
+    ],
+    [
+     -145,
+     426,
+     70
+    ],
+    [
+     -134,
+     426,
+     69
+    ],
+    [
+     -116,
+     405,
+     71
+    ],
+    [
+     -98,
+     384,
+     71
+    ],
+    [
+     -87,
+     371,
+     71
+    ],
+    [
+     -67,
+     349,
+     71
+    ],
+    [
+     -48,
+     314,
+     71
+    ],
+    [
+     -36,
+     300,
+     70
+    ],
+    [
+     -24,
+     290,
+     70
+    ],
+    [
+     -18,
+     231,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "meadow_fences_south_2",
+   "name": "街道の柵 (south road)",
+   "field": 1,
+   "kind": "road",
+   "box": [
+    -427,
+    65,
+    458,
+    -174,
+    74,
+    625
+   ],
+   "file": "pieces/meadow_fences_south_2.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=false,south=true,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=false]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -427,
+      73,
+      621
+     ],
+     "state": "minecraft:oak_fence[east=true,north=false,south=true,west=false]"
+    }
+   ],
+   "samples": [
+    [
+     -427,
+     458,
+     66
+    ],
+    [
+     -174,
+     458,
+     69
+    ],
+    [
+     -427,
+     625,
+     72
+    ],
+    [
+     -174,
+     625,
+     69
+    ],
+    [
+     -301,
+     541,
+     64
+    ],
+    [
+     -427,
+     621,
+     72
+    ],
+    [
+     -409,
+     614,
+     72
+    ],
+    [
+     -393,
+     587,
+     73
+    ],
+    [
+     -376,
+     571,
+     73
+    ],
+    [
+     -356,
+     563,
+     73
+    ],
+    [
+     -328,
+     547,
+     70
+    ],
+    [
+     -293,
+     528,
+     71
+    ],
+    [
+     -276,
+     509,
+     72
+    ],
+    [
+     -250,
+     495,
+     71
+    ],
+    [
+     -223,
+     489,
+     71
+    ],
+    [
+     -196,
+     465,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "meadow_fences_south_3",
+   "name": "街道の柵 (south road)",
+   "field": 1,
+   "kind": "road",
+   "box": [
+    -614,
+    68,
+    636,
+    -433,
+    73,
+    858
+   ],
+   "file": "pieces/meadow_fences_south_3.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=false]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -614,
+      68,
+      853
+     ],
+     "state": "minecraft:oak_fence[east=true,north=false,south=true,west=false]"
+    }
+   ],
+   "samples": [
+    [
+     -614,
+     636,
+     69
+    ],
+    [
+     -433,
+     636,
+     72
+    ],
+    [
+     -614,
+     858,
+     67
+    ],
+    [
+     -433,
+     858,
+     67
+    ],
+    [
+     -524,
+     747,
+     69
+    ],
+    [
+     -614,
+     853,
+     67
+    ],
+    [
+     -595,
+     840,
+     67
+    ],
+    [
+     -578,
+     815,
+     68
+    ],
+    [
+     -567,
+     797,
+     68
+    ],
+    [
+     -549,
+     756,
+     69
+    ],
+    [
+     -532,
+     731,
+     70
+    ],
+    [
+     -517,
+     723,
+     70
+    ],
+    [
+     -500,
+     695,
+     70
+    ],
+    [
+     -486,
+     691,
+     70
+    ],
+    [
+     -469,
+     674,
+     71
+    ],
+    [
+     -449,
+     643,
+     72
+    ]
+   ]
+  },
+  {
+   "id": "meadow_fences_lakeside",
+   "name": "街道の柵 (lakeside road)",
+   "field": 1,
+   "kind": "road",
+   "box": [
+    39,
+    70,
+    229,
+    157,
+    73,
+    406
+   ],
+   "file": "pieces/meadow_fences_lakeside.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=false,south=true,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=true]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      39,
+      71,
+      238
+     ],
+     "state": "minecraft:oak_fence[east=false,north=false,south=false,west=true]"
+    }
+   ],
+   "samples": [
+    [
+     39,
+     229,
+     70
+    ],
+    [
+     157,
+     229,
+     70
+    ],
+    [
+     39,
+     406,
+     70
+    ],
+    [
+     157,
+     406,
+     70
+    ],
+    [
+     98,
+     317,
+     69
+    ],
+    [
+     39,
+     238,
+     70
+    ],
+    [
+     48,
+     251,
+     70
+    ],
+    [
+     64,
+     258,
+     70
+    ],
+    [
+     71,
+     282,
+     69
+    ],
+    [
+     84,
+     301,
+     70
+    ],
+    [
+     92,
+     312,
+     70
+    ],
+    [
+     107,
+     319,
+     70
+    ],
+    [
+     114,
+     330,
+     70
+    ],
+    [
+     126,
+     366,
+     71
+    ],
+    [
+     133,
+     362,
+     71
+    ],
+    [
+     145,
+     399,
+     71
+    ]
+   ]
+  },
+  {
+   "id": "farm_stead_north",
+   "name": "北の農家 (northern farmstead)",
+   "field": 8,
+   "kind": "scenery",
+   "box": [
+    673,
+    65,
+    151,
+    708,
+    89,
+    198
+   ],
+   "file": "pieces/farm_stead_north.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:smoke_emitter[heavy=false]",
+    "eternalrealm:terracotta_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:terracotta_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:white_plaster",
+    "minecraft:allium",
+    "minecraft:azure_bluet",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:beetroots[age=3]",
+    "minecraft:blue_carpet",
+    "minecraft:blue_orchid",
+    "minecraft:bricks",
+    "minecraft:carrots[age=7]",
+    "minecraft:chain[axis=y]",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:dark_oak_log[axis=x]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:dirt_path",
+    "minecraft:farmland[moisture=7]",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:grass",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:hay_block[axis=x]",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:hay_block[axis=z]",
+    "minecraft:ladder[facing=south]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lightning_rod[facing=up]",
+    "minecraft:lily_pad",
+    "minecraft:mangrove_planks",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=true]",
+    "minecraft:oak_fence_gate[facing=east,in_wall=false,open=false]",
+    "minecraft:oak_fence_gate[facing=north,in_wall=false,open=false]",
+    "minecraft:oak_fence_gate[facing=south,in_wall=false,open=false]",
+    "minecraft:oak_fence_gate[facing=west,in_wall=false,open=false]",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:oak_planks",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:pink_tulip",
+    "minecraft:polished_andesite",
+    "minecraft:potatoes[age=7]",
+    "minecraft:potted_allium",
+    "minecraft:potted_azure_bluet",
+    "minecraft:potted_cornflower",
+    "minecraft:potted_poppy",
+    "minecraft:potted_red_tulip",
+    "minecraft:potted_white_tulip",
+    "minecraft:red_bed[facing=north,part=foot]",
+    "minecraft:red_bed[facing=north,part=head]",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:spruce_fence[east=true,north=true,south=true,west=false]",
+    "minecraft:spruce_fence_gate[facing=east,in_wall=false,open=false]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_pressure_plate",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_slab[type=top]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=east,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=south,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:water[level=0]",
+    "minecraft:waxed_oxidized_cut_copper",
+    "minecraft:waxed_oxidized_cut_copper_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:waxed_oxidized_cut_copper_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:waxed_oxidized_cut_copper_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:waxed_oxidized_cut_copper_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:white_tulip",
+    "minecraft:dirt",
+    "minecraft:stone"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      702,
+      76,
+      155
+     ],
+     "nbt": "{Width:3.0f,Height:1.8f,Design:\"market\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      687,
+      69,
+      168
+     ],
+     "state": "minecraft:cobblestone"
+    }
+   ],
+   "samples": [
+    [
+     673,
+     151,
+     68
+    ],
+    [
+     708,
+     151,
+     68
+    ],
+    [
+     673,
+     198,
+     68
+    ],
+    [
+     708,
+     198,
+     68
+    ],
+    [
+     690,
+     174,
+     68
+    ],
+    [
+     673,
+     153,
+     68
+    ],
+    [
+     676,
+     167,
+     68
+    ],
+    [
+     679,
+     181,
+     68
+    ],
+    [
+     683,
+     157,
+     68
+    ],
+    [
+     685,
+     196,
+     68
+    ],
+    [
+     688,
+     181,
+     68
+    ],
+    [
+     691,
+     173,
+     68
+    ],
+    [
+     694,
+     181,
+     68
+    ],
+    [
+     698,
+     164,
+     68
+    ],
+    [
+     701,
+     178,
+     68
+    ],
+    [
+     705,
+     158,
+     68
+    ]
+   ]
+  },
+  {
+   "id": "farm_stead_east",
+   "name": "東の農家と果樹園 (eastern farmstead, orchard)",
+   "field": 8,
+   "kind": "scenery",
+   "box": [
+    905,
+    65,
+    452,
+    960,
+    89,
+    487
+   ],
+   "file": "pieces/farm_stead_east.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:smoke_emitter[heavy=false]",
+    "eternalrealm:terracotta_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:terracotta_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:white_plaster",
+    "minecraft:allium",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:beetroots[age=3]",
+    "minecraft:blue_orchid",
+    "minecraft:bricks",
+    "minecraft:carrots[age=7]",
+    "minecraft:chain[axis=y]",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:cornflower",
+    "minecraft:dark_oak_log[axis=x]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:dirt_path",
+    "minecraft:farmland[moisture=7]",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:grass",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:hay_block[axis=x]",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:hay_block[axis=z]",
+    "minecraft:ladder[facing=south]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lightning_rod[facing=up]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:lily_pad",
+    "minecraft:mangrove_planks",
+    "minecraft:oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:oak_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=false,west=true]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=false]",
+    "minecraft:oak_fence[east=true,north=true,south=true,west=true]",
+    "minecraft:oak_fence_gate[facing=east,in_wall=false,open=false]",
+    "minecraft:oak_fence_gate[facing=north,in_wall=false,open=false]",
+    "minecraft:oak_fence_gate[facing=south,in_wall=false,open=false]",
+    "minecraft:oak_fence_gate[facing=west,in_wall=false,open=false]",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:oak_planks",
+    "minecraft:oxeye_daisy",
+    "minecraft:pink_tulip",
+    "minecraft:polished_andesite",
+    "minecraft:poppy",
+    "minecraft:potatoes[age=7]",
+    "minecraft:potted_allium",
+    "minecraft:potted_azure_bluet",
+    "minecraft:potted_cornflower",
+    "minecraft:potted_poppy",
+    "minecraft:potted_red_tulip",
+    "minecraft:potted_white_tulip",
+    "minecraft:red_carpet",
+    "minecraft:red_tulip",
+    "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:spruce_fence[east=true,north=true,south=true,west=false]",
+    "minecraft:spruce_fence_gate[facing=east,in_wall=false,open=false]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_pressure_plate",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_slab[type=top]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=east,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=south,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
+    "minecraft:water[level=0]",
+    "minecraft:waxed_oxidized_cut_copper",
+    "minecraft:waxed_oxidized_cut_copper_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:waxed_oxidized_cut_copper_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:waxed_oxidized_cut_copper_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:waxed_oxidized_cut_copper_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:white_tulip",
+    "minecraft:dirt",
+    "minecraft:stone"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      952,
+      76,
+      457
+     ],
+     "nbt": "{Width:3.0f,Height:1.8f,Design:\"market\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      937,
+      69,
+      470
+     ],
+     "state": "minecraft:cobblestone"
+    }
+   ],
+   "samples": [
+    [
+     905,
+     452,
+     68
+    ],
+    [
+     960,
+     452,
+     69
+    ],
+    [
+     905,
+     487,
+     68
+    ],
+    [
+     960,
+     487,
+     69
+    ],
+    [
+     932,
+     469,
+     68
+    ],
+    [
+     905,
+     480,
+     67
+    ],
+    [
+     924,
+     483,
+     68
+    ],
+    [
+     928,
+     472,
+     68
+    ],
+    [
+     932,
+     457,
+     68
+    ],
+    [
+     935,
+     471,
+     68
+    ],
+    [
+     938,
+     485,
+     68
+    ],
+    [
+     942,
+     466,
+     68
+    ],
+    [
+     945,
+     484,
+     68
+    ],
+    [
+     949,
+     473,
+     68
+    ],
+    [
+     953,
+     461,
+     68
+    ],
+    [
+     956,
+     472,
+     68
+    ]
+   ]
+  },
+  {
+   "id": "farm_orchard",
+   "name": "果樹園 (orchard)",
+   "field": 8,
+   "kind": "scenery",
+   "box": [
+    898,
+    68,
+    510,
+    984,
+    75,
+    554
+   ],
+   "file": "pieces/farm_orchard.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:coarse_dirt",
+    "minecraft:dirt_path",
+    "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=true]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:spruce_fence_gate[facing=east,in_wall=false,open=false]",
+    "minecraft:dirt",
+    "minecraft:stone"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      899,
+      69,
+      513
+     ],
+     "state": "minecraft:spruce_fence[east=true,north=false,south=true,west=false]"
+    }
+   ],
+   "samples": [
+    [
+     898,
+     510,
+     68
+    ],
+    [
+     984,
+     510,
+     69
+    ],
+    [
+     898,
+     554,
+     68
+    ],
+    [
+     984,
+     554,
+     69
+    ],
+    [
+     941,
+     532,
+     69
+    ],
+    [
+     898,
+     512,
+     68
+    ],
+    [
+     906,
+     522,
+     68
+    ],
+    [
+     914,
+     532,
+     68
+    ],
+    [
+     922,
+     528,
+     68
+    ],
+    [
+     930,
+     522,
+     68
+    ],
+    [
+     938,
+     516,
+     68
+    ],
+    [
+     945,
+     553,
+     69
+    ],
+    [
+     953,
+     538,
+     69
+    ],
+    [
+     961,
+     528,
+     69
+    ],
+    [
+     969,
+     522,
+     69
+    ],
+    [
+     977,
+     516,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "farm_fields_west",
+   "name": "西の畑と風車 (west fields and windmill)",
+   "field": 8,
+   "kind": "scenery",
+   "box": [
+    557,
+    68,
+    267,
+    775,
+    92,
+    423
+   ],
+   "file": "pieces/farm_fields_west.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:windmill_sails[facing=east]",
+    "minecraft:allium",
+    "minecraft:attached_melon_stem[facing=east]",
+    "minecraft:attached_pumpkin_stem[facing=east]",
+    "minecraft:azure_bluet",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:beetroots[age=1]",
+    "minecraft:beetroots[age=3]",
+    "minecraft:blue_orchid",
+    "minecraft:carrots[age=5]",
+    "minecraft:carrots[age=7]",
+    "minecraft:carved_pumpkin[facing=east]",
+    "minecraft:carved_pumpkin[facing=north]",
+    "minecraft:carved_pumpkin[facing=south]",
+    "minecraft:clay",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:farmland[moisture=7]",
+    "minecraft:glass_pane[east=false,north=false,south=true,west=true]",
+    "minecraft:glass_pane[east=false,north=true,south=false,west=true]",
+    "minecraft:glass_pane[east=true,north=false,south=true,west=false]",
+    "minecraft:glass_pane[east=true,north=true,south=false,west=false]",
+    "minecraft:grass",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:hay_block[axis=x]",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:hay_block[axis=z]",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:melon",
+    "minecraft:melon_stem[age=7]",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:oak_planks",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:pink_tulip",
+    "minecraft:poppy",
+    "minecraft:potatoes[age=5]",
+    "minecraft:potatoes[age=7]",
+    "minecraft:pumpkin",
+    "minecraft:pumpkin_stem[age=7]",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:spruce_door[facing=west,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=west,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:tall_grass[half=lower]",
+    "minecraft:tall_grass[half=upper]",
+    "minecraft:water[level=0]",
+    "minecraft:wheat[age=4]",
+    "minecraft:wheat[age=5]",
+    "minecraft:wheat[age=6]",
+    "minecraft:wheat[age=7]",
+    "minecraft:white_tulip",
+    "minecraft:white_wool",
+    "minecraft:stone"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      675,
+      84,
+      346
+     ],
+     "nbt": "{Radius:8.0f}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      668,
+      70,
+      341
+     ],
+     "state": "minecraft:cobblestone"
+    }
+   ],
+   "samples": [
+    [
+     557,
+     267,
+     68
+    ],
+    [
+     775,
+     267,
+     69
+    ],
+    [
+     557,
+     423,
+     69
+    ],
+    [
+     775,
+     423,
+     68
+    ],
+    [
+     666,
+     345,
+     69
+    ],
+    [
+     557,
+     269,
+     68
+    ],
+    [
+     578,
+     348,
+     69
+    ],
+    [
+     597,
+     409,
+     68
+    ],
+    [
+     617,
+     323,
+     69
+    ],
+    [
+     636,
+     397,
+     69
+    ],
+    [
+     656,
+     364,
+     69
+    ],
+    [
+     676,
+     402,
+     69
+    ],
+    [
+     696,
+     377,
+     69
+    ],
+    [
+     716,
+     287,
+     69
+    ],
+    [
+     735,
+     351,
+     69
+    ],
+    [
+     754,
+     415,
+     68
+    ]
+   ]
+  },
+  {
+   "id": "farm_fields_east",
+   "name": "東の畑 (east fields)",
+   "field": 8,
+   "kind": "scenery",
+   "box": [
+    859,
+    67,
+    359,
+    983,
+    75,
+    459
+   ],
+   "file": "pieces/farm_fields_east.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:allium",
+    "minecraft:attached_melon_stem[facing=east]",
+    "minecraft:attached_pumpkin_stem[facing=east]",
+    "minecraft:azure_bluet",
+    "minecraft:beetroots[age=1]",
+    "minecraft:beetroots[age=3]",
+    "minecraft:blue_orchid",
+    "minecraft:carrots[age=5]",
+    "minecraft:carrots[age=7]",
+    "minecraft:carved_pumpkin[facing=north]",
+    "minecraft:carved_pumpkin[facing=south]",
+    "minecraft:carved_pumpkin[facing=west]",
+    "minecraft:clay",
+    "minecraft:coarse_dirt",
+    "minecraft:cornflower",
+    "minecraft:dandelion",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:farmland[moisture=7]",
+    "minecraft:grass",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:hay_block[axis=x]",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:hay_block[axis=z]",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:melon",
+    "minecraft:melon_stem[age=7]",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:pink_tulip",
+    "minecraft:poppy",
+    "minecraft:potatoes[age=5]",
+    "minecraft:potatoes[age=7]",
+    "minecraft:pumpkin",
+    "minecraft:pumpkin_stem[age=7]",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_planks",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:tall_grass[half=lower]",
+    "minecraft:tall_grass[half=upper]",
+    "minecraft:water[level=0]",
+    "minecraft:wheat[age=4]",
+    "minecraft:wheat[age=5]",
+    "minecraft:wheat[age=6]",
+    "minecraft:wheat[age=7]",
+    "minecraft:white_tulip"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      918,
+      69,
+      407
+     ],
+     "state": "minecraft:melon"
+    }
+   ],
+   "samples": [
+    [
+     859,
+     359,
+     68
+    ],
+    [
+     983,
+     359,
+     69
+    ],
+    [
+     859,
+     459,
+     67
+    ],
+    [
+     983,
+     459,
+     68
+    ],
+    [
+     921,
+     409,
+     68
+    ],
+    [
+     859,
+     450,
+     67
+    ],
+    [
+     874,
+     428,
+     68
+    ],
+    [
+     887,
+     375,
+     68
+    ],
+    [
+     898,
+     374,
+     68
+    ],
+    [
+     909,
+     369,
+     68
+    ],
+    [
+     919,
+     447,
+     68
+    ],
+    [
+     930,
+     442,
+     68
+    ],
+    [
+     941,
+     437,
+     68
+    ],
+    [
+     952,
+     429,
+     68
+    ],
+    [
+     963,
+     370,
+     69
+    ],
+    [
+     973,
+     410,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "farm_paddocks",
+   "name": "放牧地 (paddocks)",
+   "field": 8,
+   "kind": "scenery",
+   "box": [
+    612,
+    69,
+    112,
+    660,
+    74,
+    150
+   ],
+   "file": "pieces/farm_paddocks.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:grass",
+    "minecraft:hay_block[axis=x]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:spruce_fence_gate[facing=south,in_wall=false,open=false]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:tall_grass[half=lower]",
+    "minecraft:tall_grass[half=upper]",
+    "minecraft:water_cauldron[level=3]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      612,
+      70,
+      112
+     ],
+     "state": "minecraft:spruce_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     612,
+     112,
+     69
+    ],
+    [
+     660,
+     112,
+     68
+    ],
+    [
+     612,
+     150,
+     69
+    ],
+    [
+     660,
+     150,
+     68
+    ],
+    [
+     636,
+     131,
+     68
+    ],
+    [
+     612,
+     112,
+     69
+    ],
+    [
+     614,
+     141,
+     69
+    ],
+    [
+     618,
+     147,
+     69
+    ],
+    [
+     622,
+     145,
+     69
+    ],
+    [
+     628,
+     134,
+     68
+    ],
+    [
+     633,
+     148,
+     68
+    ],
+    [
+     636,
+     146,
+     68
+    ],
+    [
+     640,
+     129,
+     68
+    ],
+    [
+     644,
+     120,
+     68
+    ],
+    [
+     650,
+     149,
+     68
+    ],
+    [
+     656,
+     127,
+     68
+    ]
+   ]
+  },
+  {
+   "id": "harbour_quay",
+   "name": "港の岸壁と運河 (quay, canal, stone bridge, piers)",
+   "field": 10,
+   "kind": "scenery",
+   "box": [
+    1100,
+    50,
+    885,
+    1274,
+    78,
+    994
+   ],
+   "file": "pieces/harbour_quay.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "minecraft:andesite",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:chain[axis=y]",
+    "minecraft:cracked_stone_bricks",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:gravel",
+    "minecraft:hay_block[axis=x]",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:mossy_stone_bricks",
+    "minecraft:polished_andesite",
+    "minecraft:polished_andesite_slab[type=bottom]",
+    "minecraft:sand",
+    "minecraft:smooth_stone",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_stairs[facing=east,half=top,shape=straight]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=low]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_bricks",
+    "minecraft:water[level=0]",
+    "minecraft:sandstone",
+    "minecraft:stone"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      1200,
+      74,
+      938
+     ],
+     "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+    },
+    {
+     "pos": [
+      1216,
+      74,
+      926
+     ],
+     "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+    },
+    {
+     "pos": [
+      1246,
+      74,
+      902
+     ],
+     "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1220,
+      67,
+      948
+     ],
+     "state": "minecraft:smooth_stone"
+    }
+   ],
+   "samples": [
+    [
+     1100,
+     885,
+     67
+    ],
+    [
+     1274,
+     885,
+     57
+    ],
+    [
+     1100,
+     994,
+     67
+    ],
+    [
+     1274,
+     994,
+     41
+    ],
+    [
+     1187,
+     939,
+     64
+    ],
+    [
+     1100,
+     925,
+     66
+    ],
+    [
+     1127,
+     950,
+     64
+    ],
+    [
+     1141,
+     961,
+     65
+    ],
+    [
+     1155,
+     956,
+     65
+    ],
+    [
+     1168,
+     976,
+     64
+    ],
+    [
+     1181,
+     990,
+     56
+    ],
+    [
+     1194,
+     979,
+     54
+    ],
+    [
+     1208,
+     929,
+     64
+    ],
+    [
+     1222,
+     941,
+     57
+    ],
+    [
+     1233,
+     913,
+     64
+    ],
+    [
+     1251,
+     901,
+     64
+    ]
+   ]
+  },
+  {
+   "id": "harbour_town",
+   "name": "港町 (harbour town: houses, warehouses, market square)",
+   "field": 10,
+   "kind": "scenery",
+   "box": [
+    1113,
+    60,
+    846,
+    1247,
+    87,
+    944
+   ],
+   "file": "pieces/harbour_town.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:fountain_spray[facing=up,power=2]",
+    "eternalrealm:pale_roof_tile_slab[type=bottom]",
+    "eternalrealm:pale_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:pale_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:pale_roof_tiles",
+    "eternalrealm:royal_roof_tile_slab[type=bottom]",
+    "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "eternalrealm:royal_roof_tiles",
+    "eternalrealm:smoke_emitter[heavy=false]",
+    "eternalrealm:terracotta_roof_tile_slab[type=bottom]",
+    "eternalrealm:terracotta_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "eternalrealm:terracotta_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "eternalrealm:terracotta_roof_tiles",
+    "eternalrealm:white_plaster",
+    "minecraft:andesite",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:birch_planks",
+    "minecraft:blue_bed[facing=south,part=foot]",
+    "minecraft:blue_bed[facing=south,part=head]",
+    "minecraft:blue_carpet",
+    "minecraft:bricks",
+    "minecraft:brown_carpet",
+    "minecraft:campfire[facing=east,lit=true,signal_fire=false]",
+    "minecraft:campfire[facing=north,lit=true,signal_fire=false]",
+    "minecraft:campfire[facing=south,lit=true,signal_fire=false]",
+    "minecraft:campfire[facing=west,lit=true,signal_fire=false]",
+    "minecraft:chain[axis=y]",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:dark_oak_door[facing=north,half=lower,hinge=left,open=false]",
+    "minecraft:dark_oak_door[facing=north,half=upper,hinge=left,open=false]",
+    "minecraft:dark_oak_door[facing=south,half=lower,hinge=left,open=false]",
+    "minecraft:dark_oak_door[facing=south,half=upper,hinge=left,open=false]",
+    "minecraft:dark_oak_door[facing=west,half=lower,hinge=left,open=false]",
+    "minecraft:dark_oak_door[facing=west,half=upper,hinge=left,open=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=x]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_slab[type=bottom]",
+    "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:deepslate_tile_slab[type=bottom]",
+    "minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:deepslate_tiles",
+    "minecraft:dirt",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=true]",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:glass_pane[east=true,north=false,south=true,west=true]",
+    "minecraft:glass_pane[east=true,north=true,south=false,west=true]",
+    "minecraft:glass_pane[east=true,north=true,south=true,west=false]",
+    "minecraft:gravel",
+    "minecraft:green_carpet",
+    "minecraft:ladder[facing=east]",
+    "minecraft:ladder[facing=north]",
+    "minecraft:ladder[facing=south]",
+    "minecraft:ladder[facing=west]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:oak_door[facing=east,half=lower,hinge=left,open=false]",
+    "minecraft:oak_door[facing=east,half=upper,hinge=left,open=false]",
+    "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false]",
+    "minecraft:oak_door[facing=south,half=lower,hinge=right,open=false]",
+    "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false]",
+    "minecraft:oak_door[facing=south,half=upper,hinge=right,open=false]",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=x]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:oak_log[axis=z]",
+    "minecraft:oak_planks",
+    "minecraft:oak_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:oak_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:oak_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:oak_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:polished_andesite",
+    "minecraft:polished_blackstone",
+    "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:potted_allium",
+    "minecraft:potted_azure_bluet",
+    "minecraft:potted_cornflower",
+    "minecraft:potted_poppy",
+    "minecraft:potted_red_tulip",
+    "minecraft:potted_white_tulip",
+    "minecraft:red_bed[facing=north,part=foot]",
+    "minecraft:red_bed[facing=north,part=head]",
+    "minecraft:red_bed[facing=south,part=foot]",
+    "minecraft:red_bed[facing=south,part=head]",
+    "minecraft:red_bed[facing=west,part=foot]",
+    "minecraft:red_bed[facing=west,part=head]",
+    "minecraft:red_carpet",
+    "minecraft:spruce_door[facing=north,half=lower,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=north,half=upper,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=south,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=south,half=upper,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=west,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=west,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_pressure_plate",
+    "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=east,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=south,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
+    "minecraft:stone_bricks",
+    "minecraft:water[level=0]",
+    "minecraft:white_bed[facing=west,part=foot]",
+    "minecraft:white_bed[facing=west,part=head]",
+    "minecraft:yellow_bed[facing=north,part=foot]",
+    "minecraft:yellow_bed[facing=north,part=head]",
+    "minecraft:yellow_bed[facing=south,part=foot]",
+    "minecraft:yellow_bed[facing=south,part=head]",
+    "minecraft:stone"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      1145,
+      70,
+      893
+     ],
+     "nbt": "{front_text:{messages:['{\"text\":\"⚓\"}','{\"translate\":\"sign.eternalrealm.harbour_town\",\"bold\":true}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      1156,
+      77,
+      890
+     ],
+     "nbt": "{Width:4.0f,Height:2.5f,Design:\"harbour\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1150,
+      68,
+      878
+     ],
+     "state": "minecraft:stone_bricks"
+    }
+   ],
+   "samples": [
+    [
+     1113,
+     846,
+     67
+    ],
+    [
+     1247,
+     846,
+     65
+    ],
+    [
+     1113,
+     944,
+     59
+    ],
+    [
+     1247,
+     944,
+     54
+    ],
+    [
+     1180,
+     895,
+     66
+    ],
+    [
+     1113,
+     883,
+     67
+    ],
+    [
+     1128,
+     869,
+     67
+    ],
+    [
+     1141,
+     886,
+     67
+    ],
+    [
+     1151,
+     872,
+     67
+    ],
+    [
+     1166,
+     859,
+     67
+    ],
+    [
+     1175,
+     880,
+     67
+    ],
+    [
+     1189,
+     876,
+     67
+    ],
+    [
+     1195,
+     890,
+     66
+    ],
+    [
+     1200,
+     907,
+     65
+    ],
+    [
+     1207,
+     889,
+     66
+    ],
+    [
+     1223,
+     913,
+     64
+    ]
+   ]
+  },
+  {
+   "id": "harbour_fishermen",
+   "name": "漁師の家 (fishermen's cottages south of the canal)",
+   "field": 10,
+   "kind": "scenery",
+   "box": [
+    1119,
+    63,
+    975,
+    1159,
+    78,
+    1003
+   ],
+   "file": "pieces/harbour_fishermen.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:smoke_emitter[heavy=false]",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:blue_bed[facing=west,part=foot]",
+    "minecraft:blue_bed[facing=west,part=head]",
+    "minecraft:campfire[facing=east,lit=true,signal_fire=false]",
+    "minecraft:campfire[facing=north,lit=true,signal_fire=false]",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:cobweb",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_slab[type=bottom]",
+    "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:glass_pane[east=true,north=true,south=false,west=true]",
+    "minecraft:glass_pane[east=true,north=true,south=true,west=false]",
+    "minecraft:green_carpet",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:oak_planks",
+    "minecraft:potted_allium",
+    "minecraft:potted_azure_bluet",
+    "minecraft:potted_cornflower",
+    "minecraft:potted_poppy",
+    "minecraft:potted_red_tulip",
+    "minecraft:potted_white_tulip",
+    "minecraft:red_carpet",
+    "minecraft:sand",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=south,half=upper,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=west,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=west,half=lower,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=west,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=west,half=upper,hinge=right,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_pressure_plate",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=north,half=top,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=top,shape=straight]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=south,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
+    "minecraft:yellow_bed[facing=south,part=foot]",
+    "minecraft:yellow_bed[facing=south,part=head]",
+    "minecraft:sandstone"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1131,
+      74,
+      979
+     ],
+     "state": "minecraft:dark_oak_planks"
+    }
+   ],
+   "samples": [
+    [
+     1119,
+     975,
+     66
+    ],
+    [
+     1159,
+     975,
+     64
+    ],
+    [
+     1119,
+     1003,
+     65
+    ],
+    [
+     1159,
+     1003,
+     59
+    ],
+    [
+     1139,
+     989,
+     64
+    ],
+    [
+     1119,
+     989,
+     65
+    ],
+    [
+     1122,
+     990,
+     65
+    ],
+    [
+     1125,
+     991,
+     65
+    ],
+    [
+     1127,
+     992,
+     65
+    ],
+    [
+     1130,
+     975,
+     65
+    ],
+    [
+     1133,
+     976,
+     65
+    ],
+    [
+     1136,
+     986,
+     64
+    ],
+    [
+     1138,
+     992,
+     64
+    ],
+    [
+     1141,
+     987,
+     64
+    ],
+    [
+     1143,
+     993,
+     64
+    ],
+    [
+     1146,
+     988,
+     64
+    ]
+   ]
+  },
+  {
+   "id": "harbour_lighthouse",
+   "name": "灯台と防波堤 (lighthouse and breakwater)",
+   "field": 10,
+   "kind": "scenery",
+   "box": [
+    1274,
+    55,
+    849,
+    1305,
+    109,
+    888
+   ],
+   "file": "pieces/harbour_lighthouse.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:andesite",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=outer_left]",
+    "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=outer_right]",
+    "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=outer_left]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=outer_right]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:glass",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:glowstone",
+    "minecraft:iron_bars[east=false,north=false,south=true,west=true]",
+    "minecraft:iron_bars[east=false,north=true,south=false,west=true]",
+    "minecraft:iron_bars[east=false,north=true,south=true,west=false]",
+    "minecraft:iron_bars[east=true,north=false,south=false,west=true]",
+    "minecraft:iron_bars[east=true,north=false,south=true,west=false]",
+    "minecraft:iron_bars[east=true,north=true,south=false,west=false]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lightning_rod[facing=up]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:red_concrete",
+    "minecraft:sea_lantern",
+    "minecraft:smooth_stone",
+    "minecraft:spruce_door[facing=west,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=west,half=upper,hinge=left,open=false]",
+    "minecraft:stone",
+    "minecraft:stone_bricks",
+    "minecraft:white_concrete"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1296,
+      100,
+      862
+     ],
+     "state": "minecraft:smooth_stone"
+    }
+   ],
+   "samples": [
+    [
+     1274,
+     849,
+     64
+    ],
+    [
+     1305,
+     849,
+     56
+    ],
+    [
+     1274,
+     888,
+     57
+    ],
+    [
+     1305,
+     888,
+     52
+    ],
+    [
+     1289,
+     868,
+     56
+    ],
+    [
+     1274,
+     886,
+     57
+    ],
+    [
+     1281,
+     876,
+     57
+    ],
+    [
+     1287,
+     859,
+     58
+    ],
+    [
+     1289,
+     861,
+     57
+    ],
+    [
+     1291,
+     859,
+     57
+    ],
+    [
+     1293,
+     857,
+     57
+    ],
+    [
+     1295,
+     851,
+     58
+    ],
+    [
+     1296,
+     863,
+     56
+    ],
+    [
+     1298,
+     856,
+     56
+    ],
+    [
+     1300,
+     852,
+     57
+    ],
+    [
+     1302,
+     852,
+     56
+    ]
+   ]
+  },
+  {
+   "id": "harbour_ship",
+   "name": "帆船 (sailing ship at the main pier)",
+   "field": 10,
+   "kind": "scenery",
+   "box": [
+    1226,
+    56,
+    935,
+    1239,
+    98,
+    985
+   ],
+   "file": "pieces/harbour_ship.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:flag[facing=east]",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:birch_planks",
+    "minecraft:dark_oak_door[facing=south,half=lower,hinge=left,open=false]",
+    "minecraft:dark_oak_door[facing=south,half=upper,hinge=left,open=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=true,west=true]",
+    "minecraft:dark_oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:dark_oak_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:dark_oak_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:glass_pane[east=false,north=false,south=false,west=false]",
+    "minecraft:glass_pane[east=false,north=false,south=false,west=true]",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=false]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:sand",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_slab[type=top]",
+    "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+    "minecraft:water[level=0]",
+    "minecraft:white_wool",
+    "minecraft:sandstone"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      1233,
+      92,
+      967
+     ],
+     "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      1233,
+      93,
+      948
+     ],
+     "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+    },
+    {
+     "pos": [
+      1233,
+      98,
+      958
+     ],
+     "nbt": "{Width:4.0f,Height:2.5f,Design:\"harbour\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1233,
+      67,
+      955
+     ],
+     "state": "minecraft:spruce_planks"
+    }
+   ],
+   "samples": [
+    [
+     1226,
+     935,
+     58
+    ],
+    [
+     1239,
+     935,
+     56
+    ],
+    [
+     1226,
+     985,
+     49
+    ],
+    [
+     1239,
+     985,
+     47
+    ],
+    [
+     1232,
+     960,
+     53
+    ],
+    [
+     1226,
+     935,
+     58
+    ],
+    [
+     1228,
+     954,
+     54
+    ],
+    [
+     1229,
+     961,
+     53
+    ],
+    [
+     1230,
+     965,
+     52
+    ],
+    [
+     1231,
+     967,
+     51
+    ],
+    [
+     1232,
+     968,
+     51
+    ],
+    [
+     1233,
+     969,
+     51
+    ],
+    [
+     1234,
+     962,
+     52
+    ],
+    [
+     1235,
+     963,
+     52
+    ],
+    [
+     1236,
+     964,
+     51
+    ],
+    [
+     1237,
+     966,
+     51
+    ]
+   ]
+  },
+  {
+   "id": "lake_village",
+   "name": "漁師の村 (fishing village on the north shore)",
+   "field": 9,
+   "kind": "scenery",
+   "box": [
+    286,
+    59,
+    682,
+    355,
+    78,
+    729
+   ],
+   "file": "pieces/lake_village.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:smoke_emitter[heavy=false]",
+    "eternalrealm:white_plaster",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:bricks",
+    "minecraft:campfire[facing=south,lit=true,signal_fire=false]",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:cobweb",
+    "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:deepslate_tile_slab[type=bottom]",
+    "minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:deepslate_tiles",
+    "minecraft:dirt_path",
+    "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:green_bed[facing=north,part=foot]",
+    "minecraft:green_bed[facing=north,part=head]",
+    "minecraft:green_carpet",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lily_pad",
+    "minecraft:mossy_cobblestone",
+    "minecraft:oak_log[axis=x]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:oak_log[axis=z]",
+    "minecraft:oak_planks",
+    "minecraft:oak_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:oak_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:oak_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:oak_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:potted_allium",
+    "minecraft:potted_azure_bluet",
+    "minecraft:potted_cornflower",
+    "minecraft:potted_poppy",
+    "minecraft:potted_red_tulip",
+    "minecraft:potted_white_tulip",
+    "minecraft:red_carpet",
+    "minecraft:sand",
+    "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=north,half=lower,hinge=right,open=false]",
+    "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=north,half=upper,hinge=right,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_pressure_plate",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=east,half=top,shape=straight]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=east,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=south,half=top,open=false]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
+    "minecraft:stone_bricks",
+    "minecraft:sugar_cane[age=0]",
+    "minecraft:dirt",
+    "minecraft:stone",
+    "minecraft:sandstone"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      314,
+      65,
+      710
+     ],
+     "state": "minecraft:spruce_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     286,
+     682,
+     66
+    ],
+    [
+     355,
+     682,
+     60
+    ],
+    [
+     286,
+     729,
+     59
+    ],
+    [
+     355,
+     729,
+     58
+    ],
+    [
+     320,
+     705,
+     64
+    ],
+    [
+     286,
+     717,
+     60
+    ],
+    [
+     299,
+     688,
+     65
+    ],
+    [
+     303,
+     687,
+     65
+    ],
+    [
+     306,
+     692,
+     65
+    ],
+    [
+     311,
+     709,
+     64
+    ],
+    [
+     315,
+     689,
+     65
+    ],
+    [
+     317,
+     714,
+     60
+    ],
+    [
+     321,
+     703,
+     64
+    ],
+    [
+     324,
+     709,
+     64
+    ],
+    [
+     330,
+     709,
+     64
+    ],
+    [
+     336,
+     721,
+     59
+    ]
+   ]
+  },
+  {
+   "id": "lake_bridge",
+   "name": "湖の小島への橋 (long bridge to the island)",
+   "field": 9,
+   "kind": "bridge",
+   "box": [
+    308,
+    50,
+    708,
+    328,
+    75,
+    851
+   ],
+   "file": "pieces/lake_bridge.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=outer_left]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=outer_right]",
+    "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=outer_left]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=outer_right]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:lily_pad",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=true,south=true,west=false]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      316,
+      65,
+      720
+     ],
+     "state": "minecraft:spruce_log[axis=z]"
+    }
+   ],
+   "samples": [
+    [
+     308,
+     708,
+     64
+    ],
+    [
+     328,
+     708,
+     64
+    ],
+    [
+     308,
+     851,
+     64
+    ],
+    [
+     328,
+     851,
+     64
+    ],
+    [
+     318,
+     779,
+     54
+    ],
+    [
+     308,
+     715,
+     60
+    ],
+    [
+     314,
+     782,
+     53
+    ],
+    [
+     316,
+     775,
+     54
+    ],
+    [
+     317,
+     712,
+     60
+    ],
+    [
+     317,
+     793,
+     53
+    ],
+    [
+     318,
+     730,
+     58
+    ],
+    [
+     318,
+     811,
+     51
+    ],
+    [
+     319,
+     748,
+     56
+    ],
+    [
+     319,
+     829,
+     51
+    ],
+    [
+     320,
+     766,
+     55
+    ],
+    [
+     320,
+     847,
+     62
+    ]
+   ]
+  },
+  {
+   "id": "lake_island",
+   "name": "湖の小島の四阿 (gazebo shrine on the island)",
+   "field": 9,
+   "kind": "scenery",
+   "box": [
+    270,
+    64,
+    842,
+    370,
+    86,
+    957
+   ],
+   "file": "pieces/lake_island.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:gilded_finial",
+    "eternalrealm:pale_roof_tiles",
+    "minecraft:allium",
+    "minecraft:azure_bluet",
+    "minecraft:birch_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:birch_leaves[distance=1,persistent=true]",
+    "minecraft:birch_log[axis=y]",
+    "minecraft:blue_orchid",
+    "minecraft:chain[axis=y]",
+    "minecraft:cherry_leaves[distance=1,persistent=true]",
+    "minecraft:cherry_log[axis=y]",
+    "minecraft:chiseled_quartz_block",
+    "minecraft:cornflower",
+    "minecraft:dirt_path",
+    "minecraft:gravel",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:light_blue_candle[candles=4,lit=true]",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:lily_pad",
+    "minecraft:oak_leaves[distance=1,persistent=true]",
+    "minecraft:oak_log[axis=y]",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:quartz_bricks",
+    "minecraft:quartz_pillar[axis=y]",
+    "minecraft:quartz_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:quartz_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:quartz_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:quartz_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:smooth_quartz",
+    "minecraft:stone_bricks",
+    "minecraft:sugar_cane[age=0]",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:water[level=0]",
+    "minecraft:dirt",
+    "minecraft:stone"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      325,
+      73,
+      905
+     ],
+     "state": "minecraft:smooth_quartz"
+    }
+   ],
+   "samples": [
+    [
+     270,
+     842,
+     51
+    ],
+    [
+     370,
+     842,
+     50
+    ],
+    [
+     270,
+     957,
+     58
+    ],
+    [
+     370,
+     957,
+     58
+    ],
+    [
+     320,
+     899,
+     71
+    ],
+    [
+     270,
+     934,
+     64
+    ],
+    [
+     295,
+     891,
+     70
+    ],
+    [
+     302,
+     916,
+     70
+    ],
+    [
+     308,
+     888,
+     70
+    ],
+    [
+     316,
+     907,
+     71
+    ],
+    [
+     318,
+     899,
+     71
+    ],
+    [
+     321,
+     874,
+     69
+    ],
+    [
+     325,
+     909,
+     71
+    ],
+    [
+     334,
+     849,
+     64
+    ],
+    [
+     338,
+     893,
+     70
+    ],
+    [
+     345,
+     904,
+     70
     ]
    ]
   }

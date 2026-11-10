@@ -165,6 +165,39 @@ def _samples(P, box, n=16):
     return out
 
 
+# blocks that decoration cannot replace (no ores, no soil, nothing a plant or a tree grows into)
+_PROBE_BAD = ("stone", "andesite", "diorite", "granite", "tuff", "deepslate", "dirt", "gravel", "grass_block", "sand",
+              "clay", "coarse_dirt", "farmland", "dirt_path", "snow", "water", "air", "lava")
+
+
+def _probe_ok(st):
+    if not st.startswith("minecraft:"):
+        return False
+    name = B.parse(st)[0].split(":", 1)[1]
+    if name in _PROBE_BAD:
+        return False
+    sch = B.REGISTRY.get(B.parse(st)[0], "plain")
+    if sch == "fence":
+        return True
+    m = material(st)
+    return m["kind"] == "solid" and m["box"] is None and sch in ("plain", "axis")
+
+
+def _near_probe(P, x, y, z, radius=12):
+    """The vanilla full block of the piece nearest to (x, y, z) that makes a reliable GameTest probe."""
+    ok = np.array([_probe_ok(s) if i > 1 else False for i, s in enumerate(P.palette)], bool)
+    cells = np.argwhere(ok[P.a])
+    if cells.size == 0:
+        return None
+    pos = cells + np.array([P.X0, P.Z0, P.Y0])
+    d = (pos[:, 0] - x) ** 2 + (pos[:, 1] - z) ** 2 + (pos[:, 2] - y) ** 2
+    k = int(np.argmin(d))
+    if d[k] > radius * radius:
+        return None
+    px, pz, py = (int(v) for v in pos[k])
+    return (px, py, pz), P.get(px, py, pz)
+
+
 def export(pieces, out_dir, log=print):
     pieces_dir = os.path.join(out_dir, "pieces")
     if os.path.isdir(pieces_dir):
@@ -194,7 +227,16 @@ def export(pieces, out_dir, log=print):
         probes = []
         for (x, y, z) in P.probes:
             st = P.get(x, y, z)
-            if st.startswith("minecraft:") and st != "minecraft:air":
+            if not _probe_ok(st):
+                found = _near_probe(P, x, y, z)
+                if found is None:
+                    continue
+                (x, y, z), st = found
+            probes.append({"pos": [x, y, z], "state": st})
+        if not probes and P.kind != "flowers":
+            found = _near_probe(P, (P.X0 + P.X1) // 2, (P.Y0 + P.Y1) // 2, (P.Z0 + P.Z1) // 2, radius=10 ** 6)
+            if found:
+                (x, y, z), st = found
                 probes.append({"pos": [x, y, z], "state": st})
         entry = {"id": P.id, "name": P.name, "field": P.field, "kind": P.kind, "box": box, "file": name,
                  "palette": P.palette, "blockEntities": bes,

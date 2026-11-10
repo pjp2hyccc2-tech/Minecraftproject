@@ -185,7 +185,7 @@ def check(out_dir, pieces=None, verbose=True):
         for pr in e["probes"]:
             if not pr["state"].startswith("minecraft:"):
                 problems.append(f"{pid}: probe on a non-vanilla block {pr['state']}")
-        if not e["probes"]:
+        if not e["probes"] and e.get("kind") != "flowers":
             problems.append(f"{pid}: no GameTest probe")
     for key, pid in be_pos.items():
         st = D.get(*key)
