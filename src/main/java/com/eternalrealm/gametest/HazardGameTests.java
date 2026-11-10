@@ -134,12 +134,14 @@ public final class HazardGameTests {
                 return;
             }
             long t = tick - startedAt[0];
+            // who hurt whom: the batch's other tests run next door (a giant's slam can reach into this arena), so
+            // only the golem's own blows count
             if (t == windup - 4) {
                 check(golem.currentSpecialMove() == SpecialMove.SLAM, "the wind-up ended early");
-                check(target.getHealth() == target.getMaxHealth(), "hit during the wind-up");
+                check(target.getLastHurtByMob() != golem, "hit during the wind-up");
             } else if (t == windup + 6) {
-                check(target.getHealth() < target.getMaxHealth(), "the slam did not hit the target in its marker");
-                check(bystander.getHealth() == bystander.getMaxHealth(), "the slam hit outside its marker");
+                check(target.getLastHurtByMob() == golem, "the slam did not hit the target in its marker");
+                check(bystander.getLastHurtByMob() != golem, "the slam hit outside its marker");
                 helper.succeed();
             }
         });
