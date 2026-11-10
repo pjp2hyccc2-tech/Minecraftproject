@@ -405,6 +405,14 @@ public final class DungeonService {
         if (stone != null) {
             Inventories.give(player, new ItemStack(stone, stones));
         }
+        // the boss material of the dungeon's field (boss weapons are forged from these)
+        if (instance.areaId >= 1 && instance.areaId <= 10) {
+            net.minecraft.world.item.Item soul = ERGearItems.material(
+                    com.eternalrealm.monster.Materials.bossMaterial(instance.areaId));
+            if (soul != null) {
+                Inventories.give(player, new ItemStack(soul, stones >= 5 ? 3 : stones - 1));
+            }
+        }
     }
 
     static ItemTier tierOfArea(int areaId) {

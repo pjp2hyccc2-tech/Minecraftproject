@@ -1,0 +1,218 @@
+{
+  "item.eternalrealm.meadow_fiber": {
+    "ja": "草原の繊維草",
+    "en": "Meadow Fiber"
+  },
+  "item.eternalrealm.beast_hide": {
+    "ja": "獣の皮",
+    "en": "Beast Hide"
+  },
+  "item.eternalrealm.bandit_badge": {
+    "ja": "盗賊の徽章",
+    "en": "Bandit Badge"
+  },
+  "item.eternalrealm.alpha_mane": {
+    "ja": "群れ長のたてがみ",
+    "en": "Alpha's Mane"
+  },
+  "item.eternalrealm.moonleaf": {
+    "ja": "月影の葉",
+    "en": "Moonleaf"
+  },
+  "item.eternalrealm.spider_silk": {
+    "ja": "森蜘蛛の糸",
+    "en": "Forest Spider Silk"
+  },
+  "item.eternalrealm.glowcap": {
+    "ja": "光る茸",
+    "en": "Glowcap"
+  },
+  "item.eternalrealm.elder_heartwood": {
+    "ja": "古樹の芯材",
+    "en": "Elder Heartwood"
+  },
+  "item.eternalrealm.iron_ore_chunk": {
+    "ja": "鉄鉱の塊",
+    "en": "Iron Ore Chunk"
+  },
+  "item.eternalrealm.coal_ember": {
+    "ja": "燃え残りの石炭",
+    "en": "Smouldering Coal"
+  },
+  "item.eternalrealm.golem_core_shard": {
+    "ja": "岩人形の核片",
+    "en": "Golem Core Shard"
+  },
+  "item.eternalrealm.veined_steel": {
+    "ja": "鉱脈鋼",
+    "en": "Veined Steel"
+  },
+  "item.eternalrealm.holy_water": {
+    "ja": "聖なる滝の水",
+    "en": "Sacred Falls Water"
+  },
+  "item.eternalrealm.mist_crystal": {
+    "ja": "霧の結晶",
+    "en": "Mist Crystal"
+  },
+  "item.eternalrealm.river_pearl": {
+    "ja": "川真珠",
+    "en": "River Pearl"
+  },
+  "item.eternalrealm.falls_spirit_tear": {
+    "ja": "滝の精の涙",
+    "en": "Falls Spirit's Tear"
+  },
+  "item.eternalrealm.ancient_gear": {
+    "ja": "古代の歯車",
+    "en": "Ancient Gear"
+  },
+  "item.eternalrealm.rune_tablet_shard": {
+    "ja": "ルーン石板の欠片",
+    "en": "Rune Tablet Shard"
+  },
+  "item.eternalrealm.sun_amber": {
+    "ja": "陽琥珀",
+    "en": "Sun Amber"
+  },
+  "item.eternalrealm.guardian_plate": {
+    "ja": "守護者の装甲板",
+    "en": "Guardian Plate"
+  },
+  "item.eternalrealm.thunder_horn": {
+    "ja": "雷角",
+    "en": "Thunder Horn"
+  },
+  "item.eternalrealm.glacier_ice": {
+    "ja": "万年氷",
+    "en": "Glacier Ice"
+  },
+  "item.eternalrealm.wyvern_talon": {
+    "ja": "飛竜の鉤爪",
+    "en": "Wyvern Talon"
+  },
+  "item.eternalrealm.storm_heart": {
+    "ja": "嵐の心臓",
+    "en": "Storm Heart"
+  },
+  "item.eternalrealm.corrupted_bark": {
+    "ja": "蝕まれた樹皮",
+    "en": "Corrupted Bark"
+  },
+  "item.eternalrealm.shadow_silk": {
+    "ja": "影糸",
+    "en": "Shadow Silk"
+  },
+  "item.eternalrealm.nightmare_eye": {
+    "ja": "悪夢の眼",
+    "en": "Nightmare Eye"
+  },
+  "item.eternalrealm.oblivion_shard": {
+    "ja": "忘却の欠片",
+    "en": "Oblivion Shard"
+  },
+  "item.eternalrealm.golden_wheat": {
+    "ja": "黄金の麦",
+    "en": "Golden Wheat"
+  },
+  "item.eternalrealm.bull_horn": {
+    "ja": "暴れ牛の角",
+    "en": "Rampaging Bull Horn"
+  },
+  "item.eternalrealm.cursed_straw": {
+    "ja": "呪われた藁",
+    "en": "Cursed Straw"
+  },
+  "item.eternalrealm.harvest_gem": {
+    "ja": "豊穣の宝珠",
+    "en": "Harvest Gem"
+  },
+  "item.eternalrealm.lake_scale": {
+    "ja": "湖魚の鱗",
+    "en": "Lake Fish Scale"
+  },
+  "item.eternalrealm.reed_fiber": {
+    "ja": "葦の繊維",
+    "en": "Reed Fibre"
+  },
+  "item.eternalrealm.marsh_gel": {
+    "ja": "沼のゼリー",
+    "en": "Marsh Gel"
+  },
+  "item.eternalrealm.water_spirit_pearl": {
+    "ja": "水精の真珠",
+    "en": "Water Spirit Pearl"
+  },
+  "item.eternalrealm.sea_salt_crystal": {
+    "ja": "潮の結晶",
+    "en": "Sea Salt Crystal"
+  },
+  "item.eternalrealm.pirate_doubloon": {
+    "ja": "海賊の金貨",
+    "en": "Pirate Doubloon"
+  },
+  "item.eternalrealm.kraken_ink": {
+    "ja": "大海魔の墨",
+    "en": "Kraken Ink"
+  },
+  "item.eternalrealm.storm_sail_cloth": {
+    "ja": "嵐の帆布",
+    "en": "Storm Sailcloth"
+  },
+  "item.eternalrealm.verdant_soul": {
+    "ja": "翠緑の魂",
+    "en": "Verdant Soul"
+  },
+  "item.eternalrealm.moonlit_soul": {
+    "ja": "月影の魂",
+    "en": "Moonlit Soul"
+  },
+  "item.eternalrealm.iron_soul": {
+    "ja": "鉄鋼の魂",
+    "en": "Iron Soul"
+  },
+  "item.eternalrealm.holy_soul": {
+    "ja": "聖滝の魂",
+    "en": "Holy Soul"
+  },
+  "item.eternalrealm.ancient_soul": {
+    "ja": "古代の魂",
+    "en": "Ancient Soul"
+  },
+  "item.eternalrealm.sky_soul": {
+    "ja": "天翔の魂",
+    "en": "Sky Soul"
+  },
+  "item.eternalrealm.end_soul": {
+    "ja": "終焉の魂",
+    "en": "Soul of the End"
+  },
+  "item.eternalrealm.harvest_soul": {
+    "ja": "豊穣の魂",
+    "en": "Harvest Soul"
+  },
+  "item.eternalrealm.lake_soul": {
+    "ja": "湖精の魂",
+    "en": "Lake Soul"
+  },
+  "item.eternalrealm.tide_soul": {
+    "ja": "潮風の魂",
+    "en": "Tide Soul"
+  },
+  "tooltip.eternalrealm.material.grade.common": {
+    "ja": "%sの魔物がよく落とす素材",
+    "en": "Dropped often by the monsters of %s"
+  },
+  "tooltip.eternalrealm.material.grade.uncommon": {
+    "ja": "%sの魔物がときどき落とす素材",
+    "en": "Dropped now and then by the monsters of %s"
+  },
+  "tooltip.eternalrealm.material.grade.elite": {
+    "ja": "%sの強敵（エリート・中ボス）が落とす希少な素材",
+    "en": "A rare material of the elites and mid-bosses of %s"
+  },
+  "tooltip.eternalrealm.material.grade.boss": {
+    "ja": "%sのボスが落とす魂。ボス武器の鍛造に使う",
+    "en": "A soul dropped by the bosses of %s, used to forge boss weapons"
+  }
+}

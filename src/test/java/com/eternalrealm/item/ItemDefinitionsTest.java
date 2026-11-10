@@ -301,10 +301,39 @@ public class ItemDefinitionsTest {
     }
 
     @Test
+    public void fieldMaterialsGiveEveryFieldItsOwnSet() {
+        List<Materials.FieldMaterial> field = Materials.fieldMaterials();
+        assertEquals(50, field.size());
+        for (int f = 1; f <= 10; f++) {
+            assertEquals("field " + f, 2, Materials.ofField(f, Materials.Grade.COMMON).size());
+            assertEquals(1, Materials.ofField(f, Materials.Grade.UNCOMMON).size());
+            assertEquals(1, Materials.ofField(f, Materials.Grade.ELITE).size());
+            assertEquals(1, Materials.ofField(f, Materials.Grade.BOSS).size());
+        }
+        for (Materials.FieldMaterial material : field) {
+            assertEquals(material.field(), Materials.areaOf(material.id()).orElseThrow());
+            assertTrue(Materials.isKnown(material.id()));
+            assertEquals(material, Materials.fieldMaterial(material.id()).orElseThrow());
+        }
+        assertEquals("eternalrealm:moonleaf", Materials.ofField(2, Materials.Grade.COMMON).get(0));
+        assertEquals("eternalrealm:tide_soul", Materials.ofField(10, Materials.Grade.BOSS).get(0));
+        assertEquals(2, Materials.tierOfField(8));
+        assertEquals(4, Materials.tierOfField(10));
+        assertEquals(7, Materials.tierOfField(7));
+        // prices rise with the field's tier and the grade
+        long common = ItemPrices.materialSellValue("eternalrealm:meadow_fiber").orElseThrow();
+        long elite = ItemPrices.materialSellValue("eternalrealm:alpha_mane").orElseThrow();
+        long boss = ItemPrices.materialSellValue("eternalrealm:verdant_soul").orElseThrow();
+        long endBoss = ItemPrices.materialSellValue("eternalrealm:end_soul").orElseThrow();
+        assertTrue(common < elite && elite < boss && boss < endBoss);
+        assertTrue(ItemPrices.materialSellValue("eternalrealm:tide_soul").isPresent());
+    }
+
+    @Test
     public void materialsCoverEveryAreaOnce() {
         List<String> all = Materials.all();
-        assertEquals(16, all.size());
-        assertEquals(16, new HashSet<>(all).size());
+        assertEquals(66, all.size());
+        assertEquals(66, new HashSet<>(all).size());
         List<String> areaMaterials = new ArrayList<>();
         for (int area = 1; area <= ItemTier.COUNT; area++) {
             List<String> materials = Materials.forArea(area);

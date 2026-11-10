@@ -30,8 +30,19 @@ public final class MaterialItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        java.util.Optional<Materials.FieldMaterial> field = Materials.fieldMaterial(id);
         OptionalInt area = Materials.areaOf(id);
-        if (area.isPresent() && Areas.exists(area.getAsInt())) {
+        if (field.isPresent() && Areas.exists(field.get().field())) {
+            ChatFormatting color = switch (field.get().grade()) {
+                case COMMON -> ChatFormatting.GRAY;
+                case UNCOMMON -> ChatFormatting.GREEN;
+                case ELITE -> ChatFormatting.AQUA;
+                case BOSS -> ChatFormatting.LIGHT_PURPLE;
+            };
+            tooltip.add(Component.translatable("tooltip.eternalrealm.material.grade."
+                            + field.get().grade().name().toLowerCase(java.util.Locale.ROOT),
+                    Component.translatable(Areas.require(field.get().field()).translationKey())).withStyle(color));
+        } else if (area.isPresent() && Areas.exists(area.getAsInt())) {
             tooltip.add(Component.translatable("tooltip.eternalrealm.material.area",
                     Component.translatable(Areas.require(area.getAsInt()).translationKey())).withStyle(ChatFormatting.GRAY));
         } else {

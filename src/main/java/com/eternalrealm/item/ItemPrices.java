@@ -57,6 +57,16 @@ public final class ItemPrices {
         if (Materials.REROLL_CRYSTAL.equals(itemId)) {
             return OptionalLong.of(REROLL_CRYSTAL_SELL_PRICE);
         }
+        java.util.Optional<Materials.FieldMaterial> field = Materials.fieldMaterial(itemId);
+        if (field.isPresent()) {
+            long base = MATERIAL_SELL[Materials.tierOfField(field.get().field()) - 1];
+            return OptionalLong.of(base * switch (field.get().grade()) {
+                case COMMON -> 1;
+                case UNCOMMON -> 3;
+                case ELITE -> 8;
+                case BOSS -> 25;
+            });
+        }
         OptionalInt area = Materials.areaOf(itemId);
         return area.isPresent() ? OptionalLong.of(MATERIAL_SELL[area.getAsInt() - 1]) : OptionalLong.empty();
     }
