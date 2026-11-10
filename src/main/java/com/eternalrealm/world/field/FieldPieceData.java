@@ -215,19 +215,25 @@ public final class FieldPieceData {
     private final Map<Long, List<TileRef>> byChunk;
     /** Per chunk, 256 bits: the columns some piece writes (other than "keep"). */
     private final Map<Long, long[]> covered;
+    /** Per chunk and column: the lowest y any piece writes there ({@link #NONE} where none does). */
+    private final Map<Long, int[]> lowest;
+
+    /** {@link #lowestBlock} of a column no piece writes in. */
+    public static final int NONE = Integer.MAX_VALUE;
 
     private FieldPieceData(String build, List<Piece> pieces, List<Waystone> waystones, Map<Long, List<TileRef>> byChunk,
-                           Map<Long, long[]> covered) {
+                           Map<Long, long[]> covered, Map<Long, int[]> lowest) {
         this.build = build;
         this.pieces = List.copyOf(pieces);
         this.waystones = List.copyOf(waystones);
         this.byChunk = byChunk;
         this.covered = covered;
+        this.lowest = lowest;
     }
 
     /** An empty set (no pieces): what the generator uses when the data is missing or broken. */
     public static FieldPieceData empty() {
-        return new FieldPieceData("", List.of(), List.of(), Map.of(), Map.of());
+        return new FieldPieceData("", List.of(), List.of(), Map.of(), Map.of(), Map.of());
     }
 
     /**
@@ -243,6 +249,7 @@ public final class FieldPieceData {
         List<Piece> pieces = new ArrayList<>();
         Map<Long, List<TileRef>> byChunk = new HashMap<>();
         Map<Long, long[]> covered = new HashMap<>();
+        Map<Long, int[]> lowest = new HashMap<>();
         int index = 0;
         for (JsonElement element : manifest.getAsJsonArray("pieces")) {
             JsonObject p = element.getAsJsonObject();
@@ -291,7 +298,7 @@ public final class FieldPieceData {
             Piece piece = new Piece(index++, id, p.has("name") ? p.get("name").getAsString() : id,
                     p.has("field") ? p.get("field").getAsInt() : 0, p.has("kind") ? p.get("kind").getAsString() : "",
                     ints(p.getAsJsonArray("box")), palette, blockEntities, entities, fluidTicks, probes, samples, data);
-            scan(piece, byChunk, covered);
+            scan(piece, byChunk, covered, lowest);
             pieces.add(piece);
         }
         List<Waystone> waystones = new ArrayList<>();
@@ -304,11 +311,16 @@ public final class FieldPieceData {
             entry.setValue(List.copyOf(entry.getValue()));
         }
         String build = manifest.has("build") ? manifest.get("build").getAsString() : "";
-        return new FieldPieceData(build, pieces, waystones, Map.copyOf(byChunk), Map.copyOf(covered));
+        return new FieldPieceData(build, pieces, waystones, Map.copyOf(byChunk), Map.copyOf(covered),
+                Map.copyOf(lowest));
     }
 
-    /** Walks a piece's tiles once: records their offsets, indexes them by chunk and marks the touched columns. */
-    private static void scan(Piece piece, Map<Long, List<TileRef>> byChunk, Map<Long, long[]> covered) {
+    /**
+     * Walks a piece's tiles once: records their offsets, indexes them by chunk, marks the touched columns and the
+     * lowest block written in each.
+     */
+    private static void scan(Piece piece, Map<Long, List<TileRef>> byChunk, Map<Long, long[]> covered,
+                             Map<Long, int[]> lowest) {
         Reader in = new Reader(piece.data, 0);
         for (byte b : MAGIC) {
             if (in.u8() != b) {
@@ -320,10 +332,15 @@ public final class FieldPieceData {
             int offset = in.pos;
             int chunkX = in.int32();
             int chunkZ = in.int32();
-            in.int32();
+            int minY = in.int32();
             int height = in.varint();
             long key = chunkKey(chunkX, chunkZ);
             long[] mask = covered.computeIfAbsent(key, k -> new long[4]);
+            int[] low = lowest.computeIfAbsent(key, k -> {
+                int[] a = new int[256];
+                java.util.Arrays.fill(a, NONE);
+                return a;
+            });
             for (int column = 0; column < 256; column++) {
                 int runs = in.varint();
                 if (runs == 0) {
@@ -331,16 +348,20 @@ public final class FieldPieceData {
                 }
                 in.varint();
                 int y = 0;
-                boolean writes = false;
+                int first = -1;
                 for (int r = 0; r < runs; r++) {
-                    y += in.varint();
-                    writes |= in.varint() != 0;
+                    int length = in.varint();
+                    if (in.varint() != 0 && first < 0) {
+                        first = y;
+                    }
+                    y += length;
                 }
                 if (y != height) {
                     throw new IllegalArgumentException(piece.id + ": malformed column in chunk " + chunkX + ", " + chunkZ);
                 }
-                if (writes) {
+                if (first >= 0) {
                     mask[column >> 6] |= 1L << (column & 63);
+                    low[column] = Math.min(low[column], minY + first);
                 }
             }
             piece.tileOffsets.add(offset);
@@ -391,6 +412,21 @@ public final class FieldPieceData {
         }
         int column = (x & 15) * 16 + (z & 15);
         return (mask[column >> 6] & (1L << (column & 63))) != 0;
+    }
+
+    /** The lowest y any piece writes in column (x, z), or {@link #NONE}. */
+    public int lowestBlock(int x, int z) {
+        int[] low = lowest.get(chunkKey(x >> 4, z >> 4));
+        return low == null ? NONE : low[(x & 15) * 16 + (z & 15)];
+    }
+
+    /**
+     * Whether a piece shapes the ground of column (x, z) itself (writes at or below the terrain's top block there)
+     * rather than only building on it.
+     */
+    public boolean ownsGround(int x, int z) {
+        int low = lowestBlock(x, z);
+        return low != NONE && low <= (int) Math.floor(FieldTerrain.heightAt(x, z));
     }
 
     /** Whether a piece writes anything within {@code radius} blocks (square) of column (x, z). */

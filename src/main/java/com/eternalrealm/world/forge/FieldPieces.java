@@ -193,6 +193,15 @@ public final class FieldPieces {
         return l != null && l.data.covers(x, z);
     }
 
+    /**
+     * Whether a set piece shapes the ground of column (x, z) itself (it writes at or below the terrain's top block):
+     * surface painting leaves such columns alone, but paints the ground under pieces that only stand on it.
+     */
+    public static boolean ownsGround(int x, int z) {
+        Loaded l = current();
+        return l != null && l.data.ownsGround(x, z);
+    }
+
     /** Whether a set piece writes anything within {@code radius} blocks of column (x, z). */
     public static boolean near(int x, int z, int radius) {
         Loaded l = current();

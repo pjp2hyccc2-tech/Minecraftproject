@@ -189,6 +189,29 @@ def capital(w):
     signpost_arm(P, sx + 1, y + 3, sz, "east", [K.field_name(9), K.field_level(9)])
     signpost_arm(P, sx, y + 2, sz - 1, "north",
                  ['{"translate":"map.eternalrealm.capital","bold":true}', '{"translate":"sign.eternalrealm.waystone"}'])
+    # a clipped hedge round the apron (open to the gate and the road mouths), planters with flowering azaleas
+    hedge = K.ring(K.dilate(plaza, 1)) & ~K.dilate(road, 2)
+    for (x, z) in K.cells(hedge, P):
+        if z <= cz - 8 or P.wet(x, z) or abs(P.top(x, z) - y) > 1 or P.get_idx(x, y + 1, z) > 1:
+            continue
+        K.set_ground(P, x, z, y)
+        P.set(x, y + 1, z, B.leaves("azalea") if hash2(x, z, 21) < 0.85 else B.leaves("flowering_azalea"))
+    for (ox, oz) in ((-16, 6), (16, 6), (-10, 13), (10, 13)):
+        x, z = cx + ox, cz + oz
+        if P.get_idx(x, y + 1, z) > 1:
+            continue
+        P.fill(x - 1, y + 1, z - 1, x + 1, y + 1, z + 1, F("smooth_castle_stone"))
+        P.set(x, y + 1, z, S("rooted_dirt"))
+        P.set(x, y + 2, z, S("flowering_azalea"))
+        for (a, b) in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+            P.set(x + a, y + 2, z + b, B.potted("red_tulip") if (a + b) % 2 else B.potted("cornflower"))
+    # two gilded pillars flanking the way to the gate
+    for side in (-1, 1):
+        x, z = cx + side * 4, cz - 8
+        P.set(x, y + 1, z, F("castle_bricks"))
+        P.fill(x, y + 2, z, x, y + 4, z, F("smooth_castle_stone"))
+        P.set(x, y + 5, z, F("gilded_trim"))
+        P.set(x, y + 6, z, B.S("gilded_finial"))
     P.probe(cx + 4, y, cz)
     P.probe(cx - 7, y + 1, cz - 5)
     P.view("shrine_capital", (cx + 30, y + 22, cz + 34), (cx, y + 2, cz), fov=52)

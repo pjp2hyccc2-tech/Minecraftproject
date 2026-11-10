@@ -134,7 +134,7 @@ def stair_tower():
                                                          K.field_level(4)], wood="dark_oak",
                  rotation=K.rotation_of(-NX_, -NZ_))
     P.probe(cx - half, base + 2, cz - half)
-    P.view("falls_stair", (cx - 50, base + 40, cz + 46), (cx, base + 28, cz), fov=58)
+    P.view("falls_stair", (cx - 88, base + 52, cz + 84), (cx, base + 36, cz), fov=55)
     return P
 
 

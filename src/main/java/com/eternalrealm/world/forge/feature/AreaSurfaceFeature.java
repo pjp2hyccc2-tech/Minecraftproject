@@ -1,5 +1,6 @@
 package com.eternalrealm.world.forge.feature;
 
+import com.eternalrealm.world.field.FieldTerrain;
 import com.eternalrealm.world.forge.AstoriaDimension;
 import com.eternalrealm.world.forge.FieldPieces;
 import com.eternalrealm.world.gen.AstoriaBiome;
@@ -46,11 +47,15 @@ public final class AreaSurfaceFeature extends Feature<NoneFeatureConfiguration> 
         int chunkX = context.origin().getX() & ~15;
         int chunkZ = context.origin().getZ() & ~15;
         int seaLevel = context.chunkGenerator().getSeaLevel();
-        // ground heights of the chunk and a one block border, read before anything changes
+        // ground heights of the chunk and a one block border, read before anything changes (under a set piece:
+        // the terrain's own top, not the piece's)
         int[][] ground = new int[18][18];
         for (int i = 0; i < 18; i++) {
             for (int j = 0; j < 18; j++) {
-                ground[i][j] = level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, chunkX + i - 1, chunkZ + j - 1) - 1;
+                int gx = chunkX + i - 1;
+                int gz = chunkZ + j - 1;
+                ground[i][j] = FieldPieces.covers(gx, gz) ? (int) Math.floor(FieldTerrain.heightAt(gx, gz))
+                        : level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, gx, gz) - 1;
             }
         }
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
@@ -60,14 +65,21 @@ public final class AreaSurfaceFeature extends Feature<NoneFeatureConfiguration> 
                 int x = chunkX + dx;
                 int z = chunkZ + dz;
                 int y = ground[dx + 1][dz + 1];
-                if (y <= level.getMinBuildHeight() + 8 || FieldPieces.covers(x, z)) {
-                    continue;   // a hand-made set piece decides its own ground
+                boolean piece = FieldPieces.covers(x, z);
+                if (y <= level.getMinBuildHeight() + 8 || piece && FieldPieces.ownsGround(x, z)) {
+                    continue;   // a hand-made set piece shapes its own ground here
                 }
                 AstoriaBiome biome = AstoriaDimension.biome(level.getBiome(pos.set(x, y, z)));
                 if (biome == null) {
                     continue;
                 }
                 int surface = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) - 1;
+                if (piece) {
+                    // the piece stands on the ground here: paint the terrain under it (its own blocks above are
+                    // never replaced, and are put back after decoration in any case)
+                    int water = FieldTerrain.waterTop(x, z, y);
+                    surface = water != FieldTerrain.NO_WATER && water > y ? water : y;
+                }
                 Column column = new Column(level, pos, x, z, y, surface, seaLevel, ground, dx + 1, dz + 1);
                 paint(biome, column);
                 changed = true;

@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "f072f564158ab6c4",
+ "build": "f828a696ea54cee2",
  "terrain": "e96e7d8b55fd",
  "pieces": [
   {
@@ -9,7 +9,7 @@
    "field": 1,
    "kind": "waystone",
    "box": [
-    -15,
+    -16,
     70,
     184,
     21,
@@ -23,6 +23,7 @@
     "eternalrealm:castle_bricks",
     "eternalrealm:cobbled_paving",
     "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_finial",
     "eternalrealm:gilded_trim",
     "eternalrealm:plaza_flagstones",
     "eternalrealm:smooth_castle_stone",
@@ -31,6 +32,7 @@
     "eternalrealm:waystone[facing=north,half=upper]",
     "minecraft:allium",
     "minecraft:andesite",
+    "minecraft:azalea_leaves[distance=1,persistent=true]",
     "minecraft:cobblestone",
     "minecraft:cornflower",
     "minecraft:cracked_stone_bricks",
@@ -43,6 +45,8 @@
     "minecraft:dark_oak_wall_sign[facing=east]",
     "minecraft:dark_oak_wall_sign[facing=north]",
     "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:flowering_azalea",
+    "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
     "minecraft:grass_block[snowy=false]",
     "minecraft:lantern[hanging=false]",
     "minecraft:lantern[hanging=true]",
@@ -53,7 +57,9 @@
     "minecraft:polished_blackstone_slab[type=top]",
     "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]",
     "minecraft:polished_diorite",
+    "minecraft:potted_red_tulip",
     "minecraft:red_tulip",
+    "minecraft:rooted_dirt",
     "minecraft:stone_bricks",
     "minecraft:white_tulip",
     "minecraft:dirt"
@@ -122,7 +128,7 @@
    ],
    "samples": [
     [
-     -15,
+     -16,
      184,
      70
     ],
@@ -132,73 +138,73 @@
      70
     ],
     [
-     -15,
+     -16,
      215,
      70
     ],
     [
      21,
      215,
-     70
-    ],
-    [
-     3,
-     199,
-     70
-    ],
-    [
-     -15,
-     189,
-     70
-    ],
-    [
-     -11,
-     190,
-     70
-    ],
-    [
-     -9,
-     208,
-     70
-    ],
-    [
-     -6,
-     194,
-     70
-    ],
-    [
-     -3,
-     184,
-     70
-    ],
-    [
-     -1,
-     200,
      70
     ],
     [
      2,
+     199,
+     70
+    ],
+    [
+     -16,
+     189,
+     70
+    ],
+    [
+     -12,
+     195,
+     70
+    ],
+    [
+     -9,
+     197,
+     70
+    ],
+    [
+     -7,
+     215,
+     70
+    ],
+    [
+     -4,
+     208,
+     70
+    ],
+    [
+     -1,
      202,
      70
     ],
     [
+     2,
+     206,
+     70
+    ],
+    [
      5,
-     196,
+     201,
      70
     ],
     [
      8,
-     187,
+     194,
      70
     ],
     [
-     10,
-     207,
+     11,
+     191,
      70
     ],
     [
      14,
-     199,
+     203,
      70
     ]
    ]
@@ -5370,16 +5376,6 @@
      69
     ],
     [
-     331,
-     22,
-     69
-    ],
-    [
-     344,
-     36,
-     69
-    ],
-    [
      443,
      78,
      69
@@ -5388,6 +5384,246 @@
      463,
      79,
      69
+    ]
+   ]
+  },
+  {
+   "id": "lamps_moon_west",
+   "name": "街道の灯り (west road)",
+   "field": 2,
+   "kind": "road",
+   "box": [
+    -1065,
+    71,
+    33,
+    -494,
+    84,
+    428
+   ],
+   "file": "pieces/lamps_moon_west.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:soul_lantern[hanging=true]"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -841,
+      76,
+      210
+     ],
+     "state": "minecraft:dark_oak_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     -1065,
+     33,
+     76
+    ],
+    [
+     -494,
+     33,
+     73
+    ],
+    [
+     -1065,
+     428,
+     80
+    ],
+    [
+     -494,
+     428,
+     70
+    ],
+    [
+     -780,
+     230,
+     66
+    ],
+    [
+     -1065,
+     428,
+     80
+    ],
+    [
+     -1032,
+     393,
+     74
+    ],
+    [
+     -999,
+     358,
+     70
+    ],
+    [
+     -966,
+     323,
+     71
+    ],
+    [
+     -933,
+     288,
+     70
+    ],
+    [
+     -900,
+     254,
+     73
+    ],
+    [
+     -865,
+     220,
+     75
+    ],
+    [
+     -795,
+     154,
+     70
+    ],
+    [
+     -761,
+     121,
+     73
+    ],
+    [
+     -726,
+     88,
+     75
+    ],
+    [
+     -637,
+     55,
+     74
+    ]
+   ]
+  },
+  {
+   "id": "lamps_moon_end",
+   "name": "街道の灯り (end road)",
+   "field": 2,
+   "kind": "road",
+   "box": [
+    -864,
+    71,
+    -355,
+    -703,
+    79,
+    46
+   ],
+   "file": "pieces/lamps_moon_end.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:soul_lantern[hanging=true]"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -777,
+      74,
+      -157
+     ],
+     "state": "minecraft:dark_oak_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     -864,
+     -355,
+     70
+    ],
+    [
+     -703,
+     -355,
+     69
+    ],
+    [
+     -864,
+     46,
+     69
+    ],
+    [
+     -703,
+     46,
+     72
+    ],
+    [
+     -784,
+     -155,
+     73
+    ],
+    [
+     -864,
+     -355,
+     70
+    ],
+    [
+     -859,
+     -330,
+     71
+    ],
+    [
+     -838,
+     -287,
+     72
+    ],
+    [
+     -820,
+     -269,
+     73
+    ],
+    [
+     -799,
+     -226,
+     75
+    ],
+    [
+     -794,
+     -201,
+     74
+    ],
+    [
+     -777,
+     -157,
+     73
+    ],
+    [
+     -763,
+     -111,
+     72
+    ],
+    [
+     -748,
+     -91,
+     72
+    ],
+    [
+     -747,
+     -66,
+     71
+    ],
+    [
+     -733,
+     -20,
+     71
     ]
    ]
   },
@@ -6677,18 +6913,18 @@
      70
     ],
     [
-     -39,
-     306,
-     71
+     -38,
+     296,
+     70
     ],
     [
      -38,
-     300,
+     302,
      70
     ],
     [
      -37,
-     297,
+     298,
      70
     ]
    ]
@@ -6894,54 +7130,54 @@
      69
     ],
     [
-     -145,
-     426,
+     -146,
+     440,
      70
     ],
     [
      -134,
-     426,
-     69
+     414,
+     70
     ],
     [
      -116,
-     405,
+     393,
      71
     ],
     [
      -98,
-     384,
+     373,
      71
     ],
     [
      -87,
-     371,
+     360,
      71
     ],
     [
      -67,
-     349,
+     348,
      71
     ],
     [
-     -48,
-     314,
+     -49,
+     315,
      71
     ],
     [
-     -36,
-     300,
-     70
+     -37,
+     315,
+     71
     ],
     [
-     -24,
-     290,
-     70
+     -25,
+     264,
+     69
     ],
     [
-     -18,
-     231,
-     70
+     -19,
+     272,
+     69
     ]
    ]
   },
@@ -6952,7 +7188,7 @@
    "kind": "road",
    "box": [
     -427,
-    65,
+    70,
     458,
     -174,
     74,
@@ -6968,12 +7204,10 @@
     "minecraft:oak_fence[east=false,north=false,south=true,west=true]",
     "minecraft:oak_fence[east=false,north=true,south=false,west=false]",
     "minecraft:oak_fence[east=false,north=true,south=false,west=true]",
-    "minecraft:oak_fence[east=false,north=true,south=true,west=true]",
     "minecraft:oak_fence[east=true,north=false,south=false,west=false]",
     "minecraft:oak_fence[east=true,north=false,south=false,west=true]",
     "minecraft:oak_fence[east=true,north=false,south=true,west=false]",
     "minecraft:oak_fence[east=true,north=false,south=true,west=true]",
-    "minecraft:oak_fence[east=true,north=true,south=false,west=false]",
     "minecraft:oak_fence[east=true,north=true,south=false,west=true]",
     "minecraft:oak_fence[east=true,north=true,south=true,west=false]"
    ],
@@ -7022,53 +7256,53 @@
      72
     ],
     [
-     -409,
-     614,
+     -411,
+     616,
      72
     ],
     [
-     -393,
-     587,
-     73
-    ],
-    [
-     -376,
-     571,
-     73
-    ],
-    [
-     -356,
-     563,
-     73
-    ],
-    [
-     -328,
-     547,
-     70
-    ],
-    [
-     -293,
-     528,
-     71
-    ],
-    [
-     -276,
-     509,
+     -401,
+     596,
      72
     ],
     [
-     -250,
-     495,
+     -382,
+     576,
+     73
+    ],
+    [
+     -370,
+     564,
+     73
+    ],
+    [
+     -342,
+     546,
+     72
+    ],
+    [
+     -283,
+     522,
+     72
+    ],
+    [
+     -261,
+     510,
+     72
+    ],
+    [
+     -246,
+     492,
      71
     ],
     [
-     -223,
-     489,
+     -222,
+     488,
      71
     ],
     [
-     -196,
-     465,
+     -198,
+     466,
      69
     ]
    ]
@@ -7163,37 +7397,37 @@
     ],
     [
      -549,
-     756,
+     757,
      69
     ],
     [
-     -532,
-     731,
+     -531,
+     729,
      70
     ],
     [
-     -517,
-     723,
+     -516,
+     710,
      70
     ],
     [
      -500,
-     695,
+     705,
      70
     ],
     [
      -486,
-     691,
+     692,
      70
     ],
     [
      -469,
-     674,
+     675,
      71
     ],
     [
      -449,
-     643,
+     644,
      72
     ]
    ]
@@ -7277,53 +7511,53 @@
     ],
     [
      48,
-     251,
+     250,
      70
     ],
     [
-     64,
+     63,
      258,
      70
     ],
     [
      71,
-     282,
-     69
+     268,
+     70
     ],
     [
      84,
-     301,
+     300,
      70
     ],
     [
      92,
-     312,
+     299,
+     69
+    ],
+    [
+     106,
+     317,
      70
     ],
     [
-     107,
-     319,
-     70
-    ],
-    [
-     114,
-     330,
+     113,
+     344,
      70
     ],
     [
      126,
-     366,
-     71
+     350,
+     70
     ],
     [
-     133,
-     362,
-     71
+     132,
+     376,
+     72
     ],
     [
      145,
-     399,
-     71
+     382,
+     72
     ]
    ]
   },
@@ -8253,52 +8487,52 @@
     ],
     [
      874,
-     428,
+     426,
      68
     ],
     [
      887,
-     375,
+     371,
      68
     ],
     [
      898,
-     374,
+     368,
      68
     ],
     [
-     909,
-     369,
+     908,
+     452,
      68
     ],
     [
      919,
-     447,
-     68
-    ],
-    [
-     930,
-     442,
-     68
-    ],
-    [
-     941,
      437,
      68
     ],
     [
+     930,
+     430,
+     68
+    ],
+    [
+     941,
+     423,
+     68
+    ],
+    [
      952,
-     429,
+     413,
      68
     ],
     [
      963,
-     370,
+     373,
      69
     ],
     [
      973,
-     410,
+     411,
      69
     ]
    ]
@@ -8613,11 +8847,11 @@
    "kind": "scenery",
    "box": [
     1113,
-    60,
+    63,
     846,
     1247,
     87,
-    944
+    932
    ],
    "file": "pieces/harbour_town.bin",
    "palette": [
@@ -8688,6 +8922,7 @@
     "minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight]",
     "minecraft:deepslate_tiles",
     "minecraft:dirt",
+    "minecraft:glass_pane[east=false,north=false,south=false,west=true]",
     "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
     "minecraft:glass_pane[east=false,north=true,south=true,west=true]",
     "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
@@ -8816,17 +9051,17 @@
     ],
     [
      1113,
-     944,
-     59
+     932,
+     60
     ],
     [
      1247,
-     944,
-     54
+     932,
+     56
     ],
     [
      1180,
-     895,
+     889,
      66
     ],
     [
@@ -8835,53 +9070,53 @@
      67
     ],
     [
-     1128,
-     869,
+     1127,
+     885,
      67
     ],
     [
-     1141,
-     886,
+     1140,
+     884,
      67
     ],
     [
-     1151,
-     872,
+     1149,
+     902,
      67
     ],
     [
-     1166,
-     859,
+     1164,
+     882,
      67
     ],
     [
-     1175,
-     880,
+     1173,
+     873,
      67
     ],
     [
-     1189,
-     876,
-     67
-    ],
-    [
-     1195,
-     890,
+     1187,
+     902,
      66
     ],
     [
-     1200,
-     907,
+     1193,
+     903,
+     66
+    ],
+    [
+     1199,
+     896,
+     66
+    ],
+    [
+     1206,
+     903,
      65
     ],
     [
-     1207,
-     889,
-     66
-    ],
-    [
-     1223,
-     913,
+     1222,
+     899,
      64
     ]
    ]
@@ -9066,12 +9301,12 @@
    "field": 10,
    "kind": "scenery",
    "box": [
-    1271,
+    1273,
     55,
     849,
     1305,
     109,
-    891
+    889
    ],
    "file": "pieces/harbour_lighthouse.bin",
    "palette": [
@@ -9126,7 +9361,7 @@
    ],
    "samples": [
     [
-     1271,
+     1273,
      849,
      64
     ],
@@ -9136,74 +9371,74 @@
      56
     ],
     [
-     1271,
-     891,
-     58
+     1273,
+     889,
+     57
     ],
     [
      1305,
-     891,
+     889,
      52
     ],
     [
-     1288,
-     870,
+     1289,
+     869,
      56
     ],
     [
-     1271,
-     891,
+     1273,
+     888,
+     57
+    ],
+    [
+     1280,
+     880,
+     57
+    ],
+    [
+     1287,
+     858,
      58
-    ],
-    [
-     1279,
-     879,
-     57
-    ],
-    [
-     1285,
-     873,
-     57
     ],
     [
      1289,
-     854,
-     58
+     861,
+     57
     ],
     [
      1291,
-     853,
-     58
+     860,
+     57
     ],
     [
      1293,
-     852,
-     58
+     859,
+     57
     ],
     [
-     1294,
-     866,
-     56
-    ],
-    [
-     1296,
-     860,
-     56
-    ],
-    [
-     1298,
+     1295,
      854,
      57
     ],
     [
+     1296,
+     867,
+     55
+    ],
+    [
+     1298,
+     861,
+     56
+    ],
+    [
      1300,
-     851,
-     57
+     858,
+     56
     ],
     [
      1302,
-     852,
-     56
+     859,
+     55
     ]
    ]
   },
@@ -9515,52 +9750,52 @@
     ],
     [
      299,
-     688,
+     683,
+     66
+    ],
+    [
+     302,
+     725,
+     59
+    ],
+    [
+     305,
+     710,
+     64
+    ],
+    [
+     310,
+     691,
      65
     ],
     [
-     303,
-     687,
-     65
+     314,
+     699,
+     64
     ],
     [
-     306,
+     317,
+     696,
+     64
+    ],
+    [
+     322,
+     710,
+     64
+    ],
+    [
+     326,
+     697,
+     64
+    ],
+    [
+     332,
      692,
      65
     ],
     [
-     311,
-     709,
-     64
-    ],
-    [
-     315,
-     689,
-     65
-    ],
-    [
-     317,
-     714,
-     60
-    ],
-    [
-     321,
-     703,
-     64
-    ],
-    [
-     324,
-     709,
-     64
-    ],
-    [
-     330,
-     709,
-     64
-    ],
-    [
-     336,
-     721,
+     337,
+     719,
      59
     ]
    ]
@@ -9815,53 +10050,53 @@
     ],
     [
      295,
-     891,
-     70
+     884,
+     69
     ],
     [
      302,
-     916,
-     70
+     903,
+     71
     ],
     [
      308,
-     888,
-     70
+     867,
+     68
     ],
     [
      316,
-     907,
+     904,
      71
     ],
     [
      318,
-     899,
+     903,
      71
     ],
     [
      321,
-     874,
-     69
+     881,
+     70
     ],
     [
      325,
-     909,
-     71
+     940,
+     69
     ],
     [
      334,
-     849,
-     64
+     878,
+     69
     ],
     [
      338,
-     893,
-     70
+     908,
+     71
     ],
     [
      345,
-     904,
-     70
+     921,
+     69
     ]
    ]
   },
@@ -10507,7 +10742,7 @@
    "field": 4,
    "kind": "scenery",
    "box": [
-    591,
+    593,
     66,
     -441,
     616,
@@ -10527,7 +10762,6 @@
     "minecraft:diorite_wall[east=low,north=none,south=none,up=false,west=low]",
     "minecraft:diorite_wall[east=low,north=none,south=none,up=true,west=none]",
     "minecraft:diorite_wall[east=none,north=low,south=low,up=false,west=none]",
-    "minecraft:diorite_wall[east=none,north=low,south=none,up=true,west=none]",
     "minecraft:diorite_wall[east=none,north=none,south=none,up=true,west=low]",
     "minecraft:diorite_wall[east=none,north=none,south=none,up=true,west=none]",
     "minecraft:dirt",
@@ -10563,7 +10797,7 @@
    ],
    "samples": [
     [
-     591,
+     593,
      -441,
      132
     ],
@@ -10573,9 +10807,9 @@
      131
     ],
     [
-     591,
+     593,
      -415,
-     71
+     70
     ],
     [
      616,
@@ -10583,64 +10817,64 @@
      126
     ],
     [
-     603,
+     604,
      -428,
      132
     ],
     [
-     591,
-     -434,
-     132
-    ],
-    [
-     594,
-     -431,
+     593,
+     -437,
      132
     ],
     [
      596,
-     -427,
-     131
-    ],
-    [
-     598,
-     -430,
-     132
-    ],
-    [
-     600,
-     -437,
-     132
-    ],
-    [
-     601,
-     -418,
-     99
-    ],
-    [
-     603,
-     -426,
-     132
-    ],
-    [
-     605,
      -432,
      132
     ],
     [
+     598,
+     -431,
+     132
+    ],
+    [
+     599,
+     -417,
+     70
+    ],
+    [
+     601,
+     -427,
+     132
+    ],
+    [
+     603,
+     -440,
+     132
+    ],
+    [
+     604,
+     -424,
+     132
+    ],
+    [
+     606,
+     -435,
+     132
+    ],
+    [
      607,
-     -436,
+     -419,
      132
     ],
     [
      609,
-     -438,
-     131
+     -425,
+     132
     ],
     [
      611,
-     -437,
-     131
+     -428,
+     132
     ]
    ]
   },
@@ -10655,7 +10889,7 @@
     -365,
     627,
     78,
-    -295
+    -297
    ],
    "file": "pieces/falls_riverside.bin",
    "palette": [
@@ -10724,17 +10958,17 @@
     ],
     [
      531,
-     -295,
+     -297,
      66
     ],
     [
      627,
-     -295,
+     -297,
      80
     ],
     [
      579,
-     -330,
+     -331,
      68
     ],
     [
@@ -10743,43 +10977,43 @@
      66
     ],
     [
-     540,
+     541,
      -309,
      65
     ],
     [
-     547,
-     -317,
+     548,
+     -319,
      64
     ],
     [
-     554,
-     -332,
+     555,
+     -334,
      64
     ],
     [
      560,
-     -346,
-     65
-    ],
-    [
-     564,
-     -350,
+     -341,
      64
     ],
     [
-     569,
-     -358,
-     65
+     565,
+     -360,
+     67
     ],
     [
-     576,
-     -352,
+     569,
+     -355,
+     64
+    ],
+    [
+     577,
+     -359,
      59
     ],
     [
      584,
-     -352,
+     -351,
      65
     ],
     [
@@ -10788,9 +11022,9 @@
      70
     ],
     [
-     612,
-     -357,
-     74
+     611,
+     -354,
+     75
     ]
    ]
   },
@@ -11034,52 +11268,52 @@
     ],
     [
      1241,
-     -195,
+     -197,
      116
     ],
     [
      1246,
-     -180,
+     -184,
      116
     ],
     [
      1251,
-     -192,
+     -198,
      116
     ],
     [
      1255,
-     -154,
+     -165,
      116
     ],
     [
      1260,
-     -176,
+     -187,
      116
     ],
     [
      1265,
-     -147,
+     -167,
      116
     ],
     [
      1270,
-     -150,
-     116
+     -164,
+     117
     ],
     [
      1275,
-     -180,
+     -198,
+     116
+    ],
+    [
+     1283,
+     -196,
      117
     ],
     [
-     1284,
-     -197,
-     117
-    ],
-    [
-     1300,
-     -203,
+     1299,
+     -195,
      117
     ]
    ]
@@ -12225,6 +12459,1531 @@
      245,
      -1172,
      245
+    ]
+   ]
+  },
+  {
+   "id": "end_chapel",
+   "name": "崩れた礼拝堂と墓地 (ruined chapel and graveyard)",
+   "field": 7,
+   "kind": "scenery",
+   "box": [
+    -1040,
+    70,
+    -716,
+    -988,
+    91,
+    -682
+   ],
+   "file": "pieces/end_chapel.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:amethyst_cluster[facing=up]",
+    "minecraft:bell[attachment=ceiling,facing=north]",
+    "minecraft:black_candle[candles=2,lit=true]",
+    "minecraft:blackstone",
+    "minecraft:chain[axis=y]",
+    "minecraft:chiseled_polished_blackstone",
+    "minecraft:cobweb",
+    "minecraft:cracked_deepslate_tiles",
+    "minecraft:cracked_polished_blackstone_bricks",
+    "minecraft:crying_obsidian",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=x]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_sign[rotation=4]",
+    "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:deepslate_bricks",
+    "minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:deepslate_tiles",
+    "minecraft:end_stone",
+    "minecraft:end_stone_brick_slab[type=bottom]",
+    "minecraft:end_stone_brick_stairs[facing=east,half=top,shape=straight]",
+    "minecraft:end_stone_brick_stairs[facing=west,half=top,shape=straight]",
+    "minecraft:end_stone_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:end_stone_bricks",
+    "minecraft:iron_bars[east=false,north=false,south=false,west=true]",
+    "minecraft:iron_bars[east=false,north=false,south=true,west=false]",
+    "minecraft:iron_bars[east=false,north=false,south=true,west=true]",
+    "minecraft:iron_bars[east=false,north=true,south=false,west=true]",
+    "minecraft:iron_bars[east=false,north=true,south=true,west=false]",
+    "minecraft:iron_bars[east=false,north=true,south=true,west=true]",
+    "minecraft:iron_bars[east=true,north=false,south=false,west=false]",
+    "minecraft:iron_bars[east=true,north=false,south=false,west=true]",
+    "minecraft:iron_bars[east=true,north=false,south=true,west=false]",
+    "minecraft:iron_bars[east=true,north=false,south=true,west=true]",
+    "minecraft:iron_bars[east=true,north=true,south=false,west=false]",
+    "minecraft:iron_bars[east=true,north=true,south=false,west=true]",
+    "minecraft:magenta_stained_glass_pane[east=false,north=true,south=false,west=false]",
+    "minecraft:obsidian",
+    "minecraft:polished_blackstone",
+    "minecraft:polished_blackstone_bricks",
+    "minecraft:polished_blackstone_slab[type=bottom]",
+    "minecraft:polished_blackstone_wall[east=low,north=low,south=none,up=true,west=none]",
+    "minecraft:polished_blackstone_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:polished_blackstone_wall[east=none,north=tall,south=none,up=true,west=none]",
+    "minecraft:polished_deepslate",
+    "minecraft:purple_candle[candles=3,lit=true]",
+    "minecraft:purple_stained_glass_pane[east=false,north=false,south=false,west=false]",
+    "minecraft:purple_stained_glass_pane[east=false,north=false,south=false,west=true]",
+    "minecraft:purple_stained_glass_pane[east=false,north=false,south=true,west=false]",
+    "minecraft:purple_stained_glass_pane[east=false,north=true,south=false,west=false]",
+    "minecraft:purple_stained_glass_pane[east=false,north=true,south=true,west=false]",
+    "minecraft:purple_stained_glass_pane[east=true,north=false,south=false,west=false]",
+    "minecraft:purple_stained_glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:purpur_block",
+    "minecraft:purpur_pillar[axis=y]",
+    "minecraft:purpur_slab[type=bottom]",
+    "minecraft:purpur_stairs[facing=north,half=top,shape=straight]",
+    "minecraft:purpur_stairs[facing=south,half=top,shape=straight]",
+    "minecraft:soul_lantern[hanging=false]",
+    "minecraft:soul_lantern[hanging=true]",
+    "minecraft:soul_soil",
+    "minecraft:stripped_dark_oak_log[axis=y]",
+    "minecraft:white_candle[candles=1,lit=true]"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -1037,
+      75,
+      -710
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.chapel\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_from\",\"with\":[\"50\"]}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"light_purple\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"light_purple\",has_glowing_text:1b},is_waxed:1b}"
+    }
+   ],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -1016,
+      74,
+      -712
+     ],
+     "state": "minecraft:end_stone_bricks"
+    }
+   ],
+   "samples": [
+    [
+     -1040,
+     -716,
+     74
+    ],
+    [
+     -988,
+     -716,
+     73
+    ],
+    [
+     -1040,
+     -682,
+     74
+    ],
+    [
+     -988,
+     -682,
+     73
+    ],
+    [
+     -1014,
+     -699,
+     72
+    ],
+    [
+     -1040,
+     -709,
+     74
+    ],
+    [
+     -1020,
+     -709,
+     72
+    ],
+    [
+     -1016,
+     -709,
+     72
+    ],
+    [
+     -1012,
+     -714,
+     72
+    ],
+    [
+     -1009,
+     -705,
+     72
+    ],
+    [
+     -1006,
+     -686,
+     73
+    ],
+    [
+     -1002,
+     -709,
+     72
+    ],
+    [
+     -999,
+     -711,
+     72
+    ],
+    [
+     -996,
+     -715,
+     73
+    ],
+    [
+     -994,
+     -704,
+     73
+    ],
+    [
+     -991,
+     -714,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "end_deadwood",
+   "name": "枯れた巨木の林 (grove of giant dead trees by the road)",
+   "field": 7,
+   "kind": "scenery",
+   "box": [
+    -1000,
+    71,
+    -579,
+    -931,
+    94,
+    -490
+   ],
+   "file": "pieces/end_deadwood.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:chain[axis=y]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=true,west=true]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=x]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dead_bush",
+    "minecraft:soul_lantern[hanging=true]",
+    "minecraft:stripped_dark_oak_log[axis=y]"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -985,
+      90,
+      -560
+     ],
+     "state": "minecraft:stripped_dark_oak_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     -1000,
+     -579,
+     73
+    ],
+    [
+     -931,
+     -579,
+     73
+    ],
+    [
+     -1000,
+     -490,
+     73
+    ],
+    [
+     -931,
+     -490,
+     73
+    ],
+    [
+     -966,
+     -535,
+     72
+    ],
+    [
+     -1000,
+     -508,
+     71
+    ],
+    [
+     -990,
+     -523,
+     71
+    ],
+    [
+     -987,
+     -557,
+     72
+    ],
+    [
+     -984,
+     -560,
+     72
+    ],
+    [
+     -980,
+     -503,
+     72
+    ],
+    [
+     -975,
+     -496,
+     72
+    ],
+    [
+     -966,
+     -578,
+     72
+    ],
+    [
+     -960,
+     -491,
+     71
+    ],
+    [
+     -948,
+     -536,
+     72
+    ],
+    [
+     -944,
+     -537,
+     72
+    ],
+    [
+     -940,
+     -565,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "end_crystals_north",
+   "name": "水晶の露頭 北 (crystal outcrop)",
+   "field": 7,
+   "kind": "scenery",
+   "box": [
+    -974,
+    72,
+    -666,
+    -955,
+    90,
+    -646
+   ],
+   "file": "pieces/end_crystals_north.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:amethyst_block",
+    "minecraft:amethyst_cluster[facing=up]",
+    "minecraft:calcite",
+    "minecraft:end_rod[facing=up]",
+    "minecraft:large_amethyst_bud[facing=up]",
+    "minecraft:purple_stained_glass",
+    "minecraft:smooth_basalt"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -966,
+      74,
+      -655
+     ],
+     "state": "minecraft:amethyst_block"
+    }
+   ],
+   "samples": [
+    [
+     -974,
+     -666,
+     73
+    ],
+    [
+     -955,
+     -666,
+     73
+    ],
+    [
+     -974,
+     -646,
+     72
+    ],
+    [
+     -955,
+     -646,
+     73
+    ],
+    [
+     -965,
+     -656,
+     73
+    ],
+    [
+     -974,
+     -661,
+     73
+    ],
+    [
+     -972,
+     -658,
+     73
+    ],
+    [
+     -971,
+     -658,
+     73
+    ],
+    [
+     -970,
+     -652,
+     73
+    ],
+    [
+     -968,
+     -654,
+     73
+    ],
+    [
+     -967,
+     -657,
+     73
+    ],
+    [
+     -966,
+     -655,
+     73
+    ],
+    [
+     -965,
+     -656,
+     73
+    ],
+    [
+     -964,
+     -653,
+     73
+    ],
+    [
+     -963,
+     -665,
+     73
+    ],
+    [
+     -963,
+     -646,
+     72
+    ]
+   ]
+  },
+  {
+   "id": "end_crystals_south",
+   "name": "水晶の露頭 南 (crystal outcrop)",
+   "field": 7,
+   "kind": "scenery",
+   "box": [
+    -1083,
+    69,
+    -888,
+    -1063,
+    94,
+    -870
+   ],
+   "file": "pieces/end_crystals_south.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:amethyst_block",
+    "minecraft:amethyst_cluster[facing=up]",
+    "minecraft:calcite",
+    "minecraft:end_rod[facing=up]",
+    "minecraft:large_amethyst_bud[facing=up]",
+    "minecraft:purple_stained_glass",
+    "minecraft:smooth_basalt"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -1071,
+      70,
+      -881
+     ],
+     "state": "minecraft:smooth_basalt"
+    }
+   ],
+   "samples": [
+    [
+     -1083,
+     -888,
+     69
+    ],
+    [
+     -1063,
+     -888,
+     70
+    ],
+    [
+     -1083,
+     -870,
+     70
+    ],
+    [
+     -1063,
+     -870,
+     69
+    ],
+    [
+     -1073,
+     -879,
+     70
+    ],
+    [
+     -1083,
+     -881,
+     70
+    ],
+    [
+     -1080,
+     -873,
+     70
+    ],
+    [
+     -1079,
+     -878,
+     70
+    ],
+    [
+     -1078,
+     -878,
+     70
+    ],
+    [
+     -1077,
+     -883,
+     70
+    ],
+    [
+     -1076,
+     -886,
+     70
+    ],
+    [
+     -1075,
+     -879,
+     70
+    ],
+    [
+     -1072,
+     -878,
+     70
+    ],
+    [
+     -1071,
+     -878,
+     70
+    ],
+    [
+     -1070,
+     -870,
+     69
+    ],
+    [
+     -1066,
+     -870,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "end_fissure_1",
+   "name": "光る裂け目 1 (glowing fissure towards the tower)",
+   "field": 7,
+   "kind": "scenery",
+   "box": [
+    -1112,
+    64,
+    -966,
+    -1054,
+    78,
+    -910
+   ],
+   "file": "pieces/end_fissure_1.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:amethyst_cluster[facing=up]",
+    "minecraft:blackstone",
+    "minecraft:blackstone_slab[type=bottom]",
+    "minecraft:crying_obsidian",
+    "minecraft:obsidian",
+    "minecraft:pearlescent_froglight[axis=y]"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -1069,
+      64,
+      -961
+     ],
+     "state": "minecraft:obsidian"
+    }
+   ],
+   "samples": [
+    [
+     -1112,
+     -966,
+     77
+    ],
+    [
+     -1054,
+     -966,
+     69
+    ],
+    [
+     -1112,
+     -910,
+     70
+    ],
+    [
+     -1054,
+     -910,
+     72
+    ],
+    [
+     -1083,
+     -938,
+     70
+    ],
+    [
+     -1112,
+     -954,
+     77
+    ],
+    [
+     -1101,
+     -955,
+     76
+    ],
+    [
+     -1094,
+     -948,
+     73
+    ],
+    [
+     -1084,
+     -956,
+     72
+    ],
+    [
+     -1078,
+     -959,
+     70
+    ],
+    [
+     -1072,
+     -966,
+     70
+    ],
+    [
+     -1068,
+     -962,
+     69
+    ],
+    [
+     -1067,
+     -949,
+     69
+    ],
+    [
+     -1066,
+     -933,
+     70
+    ],
+    [
+     -1060,
+     -932,
+     71
+    ],
+    [
+     -1057,
+     -914,
+     71
+    ]
+   ]
+  },
+  {
+   "id": "end_fissure_2",
+   "name": "光る裂け目 2 (glowing fissure towards the tower)",
+   "field": 7,
+   "kind": "scenery",
+   "box": [
+    -1134,
+    64,
+    -937,
+    -1090,
+    78,
+    -871
+   ],
+   "file": "pieces/end_fissure_2.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:amethyst_cluster[facing=up]",
+    "minecraft:blackstone",
+    "minecraft:blackstone_slab[type=bottom]",
+    "minecraft:crying_obsidian",
+    "minecraft:obsidian",
+    "minecraft:pearlescent_froglight[axis=y]"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -1106,
+      65,
+      -911
+     ],
+     "state": "minecraft:obsidian"
+    }
+   ],
+   "samples": [
+    [
+     -1134,
+     -937,
+     77
+    ],
+    [
+     -1090,
+     -937,
+     71
+    ],
+    [
+     -1134,
+     -871,
+     72
+    ],
+    [
+     -1090,
+     -871,
+     71
+    ],
+    [
+     -1112,
+     -904,
+     70
+    ],
+    [
+     -1134,
+     -937,
+     77
+    ],
+    [
+     -1127,
+     -924,
+     75
+    ],
+    [
+     -1123,
+     -918,
+     73
+    ],
+    [
+     -1119,
+     -912,
+     72
+    ],
+    [
+     -1111,
+     -913,
+     71
+    ],
+    [
+     -1105,
+     -910,
+     70
+    ],
+    [
+     -1103,
+     -886,
+     70
+    ],
+    [
+     -1102,
+     -875,
+     71
+    ],
+    [
+     -1100,
+     -893,
+     69
+    ],
+    [
+     -1097,
+     -902,
+     69
+    ],
+    [
+     -1094,
+     -902,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "end_fissure_3",
+   "name": "光る裂け目 3 (glowing fissure towards the tower)",
+   "field": 7,
+   "kind": "scenery",
+   "box": [
+    -1175,
+    66,
+    -934,
+    -1144,
+    78,
+    -863
+   ],
+   "file": "pieces/end_fissure_3.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:amethyst_cluster[facing=up]",
+    "minecraft:blackstone",
+    "minecraft:blackstone_slab[type=bottom]",
+    "minecraft:crying_obsidian",
+    "minecraft:obsidian",
+    "minecraft:pearlescent_froglight[axis=y]"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -1173,
+      67,
+      -901
+     ],
+     "state": "minecraft:obsidian"
+    }
+   ],
+   "samples": [
+    [
+     -1175,
+     -934,
+     77
+    ],
+    [
+     -1144,
+     -934,
+     77
+    ],
+    [
+     -1175,
+     -863,
+     70
+    ],
+    [
+     -1144,
+     -863,
+     70
+    ],
+    [
+     -1160,
+     -899,
+     72
+    ],
+    [
+     -1175,
+     -904,
+     73
+    ],
+    [
+     -1172,
+     -919,
+     75
+    ],
+    [
+     -1171,
+     -915,
+     74
+    ],
+    [
+     -1170,
+     -918,
+     75
+    ],
+    [
+     -1169,
+     -920,
+     75
+    ],
+    [
+     -1168,
+     -910,
+     73
+    ],
+    [
+     -1166,
+     -892,
+     71
+    ],
+    [
+     -1162,
+     -892,
+     71
+    ],
+    [
+     -1158,
+     -873,
+     70
+    ],
+    [
+     -1153,
+     -932,
+     77
+    ],
+    [
+     -1149,
+     -885,
+     71
+    ]
+   ]
+  },
+  {
+   "id": "moon_pond_shrine",
+   "name": "月見の祠 (moon-viewing shrine on the forest pond)",
+   "field": 2,
+   "kind": "scenery",
+   "box": [
+    -772,
+    63,
+    191,
+    -728,
+    78,
+    209
+   ],
+   "file": "pieces/moon_pond_shrine.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:chiseled_stone_bricks",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=true,west=false]",
+    "minecraft:dark_oak_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_planks",
+    "minecraft:dark_oak_sign[rotation=12]",
+    "minecraft:dark_oak_slab[type=bottom]",
+    "minecraft:dark_oak_slab[type=top]",
+    "minecraft:dark_oak_stairs[facing=north,half=top,shape=straight]",
+    "minecraft:dark_oak_stairs[facing=south,half=top,shape=straight]",
+    "minecraft:deepslate_tile_slab[type=bottom]",
+    "minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+    "minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+    "minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+    "minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+    "minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:gravel",
+    "minecraft:light_blue_candle[candles=2,lit=true]",
+    "minecraft:lily_pad",
+    "minecraft:mangrove_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:mangrove_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:mangrove_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:mangrove_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:mangrove_log[axis=y]",
+    "minecraft:mangrove_log[axis=z]",
+    "minecraft:mangrove_planks",
+    "minecraft:mangrove_slab[type=bottom]",
+    "minecraft:mossy_stone_bricks",
+    "minecraft:polished_andesite",
+    "minecraft:sea_lantern",
+    "minecraft:soul_lantern[hanging=false]",
+    "minecraft:soul_lantern[hanging=true]",
+    "minecraft:stone_brick_slab[type=bottom]",
+    "minecraft:stone_brick_slab[type=top]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_bricks",
+    "minecraft:white_candle[candles=2,lit=true]",
+    "minecraft:white_carpet",
+    "minecraft:stone"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -729,
+      71,
+      197
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.moon_shrine\",\"bold\":true}','{\"translate\":\"area.eternalrealm.elder_forest\",\"bold\":true}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    }
+   ],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -768,
+      70,
+      196
+     ],
+     "state": "minecraft:polished_andesite"
+    }
+   ],
+   "samples": [
+    [
+     -772,
+     191,
+     64
+    ],
+    [
+     -728,
+     191,
+     71
+    ],
+    [
+     -772,
+     209,
+     64
+    ],
+    [
+     -728,
+     209,
+     71
+    ],
+    [
+     -750,
+     200,
+     66
+    ],
+    [
+     -772,
+     197,
+     63
+    ],
+    [
+     -767,
+     199,
+     64
+    ],
+    [
+     -765,
+     204,
+     64
+    ],
+    [
+     -762,
+     191,
+     65
+    ],
+    [
+     -760,
+     193,
+     65
+    ],
+    [
+     -758,
+     198,
+     65
+    ],
+    [
+     -754,
+     199,
+     65
+    ],
+    [
+     -750,
+     202,
+     66
+    ],
+    [
+     -745,
+     200,
+     66
+    ],
+    [
+     -740,
+     198,
+     67
+    ],
+    [
+     -735,
+     200,
+     67
+    ]
+   ]
+  },
+  {
+   "id": "moon_lodge",
+   "name": "狩人の小屋 (hunters' lodge, smokehouse, archery butts)",
+   "field": 2,
+   "kind": "scenery",
+   "box": [
+    -773,
+    69,
+    3,
+    -723,
+    83,
+    23
+   ],
+   "file": "pieces/moon_lodge.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:smoke_emitter[heavy=false]",
+    "minecraft:barrel[facing=east,open=false]",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:brown_carpet",
+    "minecraft:campfire[facing=south,lit=true,signal_fire=false]",
+    "minecraft:campfire[facing=west,lit=true,signal_fire=false]",
+    "minecraft:chain[axis=y]",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_slab[type=bottom]",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:light_gray_carpet",
+    "minecraft:mossy_cobblestone",
+    "minecraft:podzol[snowy=false]",
+    "minecraft:skeleton_wall_skull[facing=south]",
+    "minecraft:soul_lantern[hanging=false]",
+    "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=false]",
+    "minecraft:spruce_door[facing=south,half=upper,hinge=left,open=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=true,south=true,west=true]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_planks",
+    "minecraft:spruce_pressure_plate",
+    "minecraft:spruce_sign[rotation=12]",
+    "minecraft:spruce_slab[type=top]",
+    "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:stripped_spruce_log[axis=x]",
+    "minecraft:stripped_spruce_log[axis=z]",
+    "minecraft:target"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -725,
+      72,
+      20
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"sign.eternalrealm.hunters_lodge\",\"bold\":true}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    }
+   ],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -754,
+      72,
+      8
+     ],
+     "state": "minecraft:spruce_planks"
+    }
+   ],
+   "samples": [
+    [
+     -773,
+     3,
+     70
+    ],
+    [
+     -723,
+     3,
+     71
+    ],
+    [
+     -773,
+     23,
+     70
+    ],
+    [
+     -723,
+     23,
+     71
+    ],
+    [
+     -748,
+     13,
+     70
+    ],
+    [
+     -773,
+     6,
+     70
+    ],
+    [
+     -757,
+     22,
+     70
+    ],
+    [
+     -754,
+     4,
+     71
+    ],
+    [
+     -752,
+     6,
+     71
+    ],
+    [
+     -750,
+     8,
+     71
+    ],
+    [
+     -748,
+     10,
+     71
+    ],
+    [
+     -746,
+     12,
+     70
+    ],
+    [
+     -744,
+     14,
+     70
+    ],
+    [
+     -742,
+     16,
+     70
+    ],
+    [
+     -740,
+     18,
+     70
+    ],
+    [
+     -738,
+     21,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "moon_fairy_ring",
+   "name": "妖精の輪 (fairy ring of mushrooms under giant toadstools)",
+   "field": 2,
+   "kind": "scenery",
+   "box": [
+    -683,
+    73,
+    118,
+    -657,
+    86,
+    142
+   ],
+   "file": "pieces/moon_fairy_ring.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:amethyst_cluster[facing=up]",
+    "minecraft:azure_bluet",
+    "minecraft:brown_mushroom",
+    "minecraft:brown_mushroom_block",
+    "minecraft:glow_lichen[south=true]",
+    "minecraft:glow_lichen[west=true]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:moss_block",
+    "minecraft:moss_carpet",
+    "minecraft:mossy_cobblestone",
+    "minecraft:mushroom_stem",
+    "minecraft:podzol",
+    "minecraft:red_mushroom",
+    "minecraft:red_mushroom_block",
+    "minecraft:shroomlight",
+    "minecraft:dirt"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -672,
+      75,
+      132
+     ],
+     "state": "minecraft:mossy_cobblestone"
+    }
+   ],
+   "samples": [
+    [
+     -683,
+     118,
+     72
+    ],
+    [
+     -657,
+     118,
+     73
+    ],
+    [
+     -683,
+     142,
+     73
+    ],
+    [
+     -657,
+     142,
+     74
+    ],
+    [
+     -670,
+     130,
+     73
+    ],
+    [
+     -683,
+     138,
+     73
+    ],
+    [
+     -680,
+     139,
+     73
+    ],
+    [
+     -679,
+     141,
+     73
+    ],
+    [
+     -677,
+     122,
+     73
+    ],
+    [
+     -676,
+     138,
+     73
+    ],
+    [
+     -674,
+     124,
+     73
+    ],
+    [
+     -672,
+     123,
+     73
+    ],
+    [
+     -670,
+     133,
+     73
+    ],
+    [
+     -667,
+     133,
+     73
+    ],
+    [
+     -664,
+     137,
+     73
+    ],
+    [
+     -661,
+     137,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "moon_fallen_tree",
+   "name": "倒れた巨木の橋 (giant fallen tree across the brook)",
+   "field": 2,
+   "kind": "scenery",
+   "box": [
+    -704,
+    66,
+    250,
+    -670,
+    76,
+    290
+   ],
+   "file": "pieces/moon_fallen_tree.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "minecraft:brown_mushroom_block",
+    "minecraft:cave_vines[age=20,berries=true]",
+    "minecraft:cave_vines_plant[berries=false]",
+    "minecraft:cave_vines_plant[berries=true]",
+    "minecraft:coarse_dirt",
+    "minecraft:dark_oak_leaves[distance=1,persistent=true]",
+    "minecraft:dark_oak_log[axis=x]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dark_oak_wood[axis=y]",
+    "minecraft:dirt",
+    "minecraft:hanging_roots",
+    "minecraft:mangrove_roots",
+    "minecraft:moss_carpet",
+    "minecraft:mossy_cobblestone",
+    "minecraft:mossy_cobblestone_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:mossy_cobblestone_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:mud",
+    "minecraft:rooted_dirt",
+    "minecraft:spore_blossom",
+    "minecraft:stripped_dark_oak_log[axis=y]"
+   ],
+   "blockEntities": [],
+   "entities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -682,
+      70,
+      263
+     ],
+     "state": "minecraft:dark_oak_wood[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     -704,
+     250,
+     65
+    ],
+    [
+     -670,
+     250,
+     69
+    ],
+    [
+     -704,
+     290,
+     71
+    ],
+    [
+     -670,
+     290,
+     65
+    ],
+    [
+     -687,
+     270,
+     59
+    ],
+    [
+     -704,
+     287,
+     71
+    ],
+    [
+     -700,
+     288,
+     71
+    ],
+    [
+     -697,
+     282,
+     70
+    ],
+    [
+     -693,
+     275,
+     66
+    ],
+    [
+     -690,
+     274,
+     65
+    ],
+    [
+     -686,
+     265,
+     64
+    ],
+    [
+     -683,
+     262,
+     66
+    ],
+    [
+     -680,
+     258,
+     68
+    ],
+    [
+     -678,
+     259,
+     68
+    ],
+    [
+     -675,
+     250,
+     69
+    ],
+    [
+     -673,
+     253,
+     70
     ]
    ]
   }

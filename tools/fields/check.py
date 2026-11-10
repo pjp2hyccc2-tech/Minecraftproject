@@ -119,6 +119,46 @@ class Decoded:
         return out
 
 
+def conflicts(D, limit=12):
+    """Places where two pieces write different blocks (the later one would silently win)."""
+    import numpy as np
+    ids = {}
+    out, total = [], 0
+    for (cx, cz), tiles in D.tiles.items():
+        if len(tiles) < 2:
+            continue
+        coded = []
+        for (pid, pal, miny, arr) in tiles:
+            lut = np.array([ids.setdefault(s_, len(ids)) for s_ in pal], np.int64)
+            coded.append((pid, miny, arr, lut))
+        for i in range(len(coded)):
+            for j in range(i + 1, len(coded)):
+                pa, ya, aa, la = coded[i]
+                pb, yb, ab, lb = coded[j]
+                y0 = max(ya, yb)
+                y1 = min(ya + aa.shape[2], yb + ab.shape[2])
+                if y1 <= y0:
+                    continue
+                va = aa[:, :, y0 - ya:y1 - ya]
+                vb = ab[:, :, y0 - yb:y1 - yb]
+                both = (va > 0) & (vb > 0)
+                if not both.any():
+                    continue
+                diff = both & (la[va] != lb[vb])
+                n = int(diff.sum())
+                if not n:
+                    continue
+                total += n
+                if len(out) < limit:
+                    lx, lz, k = (int(v[0]) for v in np.nonzero(diff))
+                    pal_a = dict((v, k_) for k_, v in ids.items())
+                    out.append(f"{pa} and {pb} disagree at {n} block(s), e.g. {cx * 16 + lx}, {y0 + k}, "
+                               f"{cz * 16 + lz}: {pal_a[int(la[va[lx, lz, k]])]} vs {pal_a[int(lb[vb[lx, lz, k]])]}")
+    if total and len(out) >= limit:
+        out.append(f"... {total} conflicting blocks in all")
+    return out
+
+
 def _solid(state):
     if state is None:
         return None
@@ -198,6 +238,8 @@ def check(out_dir, pieces=None, verbose=True):
         st = D.get(*key)
         if st is None or B.schema_of(st) not in B.BE_FAMILIES:
             problems.append(f"{pid}: block entity at {key} sits on {st}")
+    # ---- pieces must not overwrite each other
+    problems += conflicts(D)
     # ---- where the pieces may build
     x0, z0, x1, z1 = L["bounds"]
     label_chunks = {(int(math.floor(p[0])) >> 4, int(math.floor(p[1])) >> 4) for p in L["labels"]}

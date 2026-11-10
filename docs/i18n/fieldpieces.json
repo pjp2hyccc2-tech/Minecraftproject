@@ -21,5 +21,6 @@
   "sign.eternalrealm.farmstead": {"ja": "農家", "en": "Farmstead"},
   "sign.eternalrealm.chapel": {"ja": "崩れた礼拝堂", "en": "Ruined Chapel"},
   "sign.eternalrealm.tower": {"ja": "終焉の塔", "en": "Tower of the End"},
-  "sign.eternalrealm.danger": {"ja": "危険", "en": "Danger"}
+  "sign.eternalrealm.danger": {"ja": "危険", "en": "Danger"},
+  "sign.eternalrealm.moon_shrine": {"ja": "月見の祠", "en": "Moon-Viewing Shrine"}
 }

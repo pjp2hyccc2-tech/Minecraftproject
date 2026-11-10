@@ -121,6 +121,19 @@ public class FieldPieceDataTest {
     }
 
     @Test
+    public void theLowestWrittenBlockTellsWhetherAPieceShapesTheGround() throws IOException {
+        FieldPieceData data = tinyData();
+        assertEquals(61, data.lowestBlock(32, -16));
+        assertEquals(60, data.lowestBlock(33, -15));
+        assertEquals(FieldPieceData.NONE, data.lowestBlock(34, -14));
+        assertEquals(FieldPieceData.NONE, data.lowestBlock(0, 0));
+        int top = (int) Math.floor(FieldTerrain.heightAt(32, -16));
+        assertEquals("the stone pillar starts at y 61", 61 <= top, data.ownsGround(32, -16));
+        assertFalse(data.ownsGround(34, -14));
+        assertFalse(FieldPieceData.empty().ownsGround(32, -16));
+    }
+
+    @Test
     public void malformedDataIsRejected() throws IOException {
         JsonObject manifest = JsonParser.parseString("{\"format\":1,\"pieces\":[{\"id\":\"bad\",\"box\":[0,0,0,0,0,0],"
                 + "\"file\":\"x\",\"palette\":[\"minecraft:air\"]}]}").getAsJsonObject();

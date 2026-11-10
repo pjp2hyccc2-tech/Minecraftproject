@@ -447,7 +447,10 @@ def lamp_run(pid, rid, s_from, s_to, every=18, side_off=4.5, field=1, style="iro
         if nearest[5] < side_off - 1.2:
             continue
         y = P.top(px, pz)
-        if style == "iron":
+        if style == "moon":
+            K.lantern_post(P, px, y, pz, height=3, wood="dark_oak", soul=True,
+                           arm=K.facing_of(uz * side, -ux * side))
+        elif style == "iron":
             P.set(px, y, pz, F("polished_andesite"))
             P.set(px, y + 1, pz, F("polished_blackstone"))
             P.fill(px, y + 2, pz, px, y + 3, pz, B.wall("polished_blackstone"))
@@ -464,7 +467,8 @@ def lamp_run(pid, rid, s_from, s_to, every=18, side_off=4.5, field=1, style="iro
             if nz_.size:
                 yb = int(nz_[0]) + P.Y0
                 st = P.get(x, yb + 1, z)
-                if st.startswith("minecraft:polished_blackstone") or st.startswith("minecraft:spruce_log"):
+                if st.split("[")[0] in ("minecraft:polished_blackstone", "minecraft:spruce_log",
+                                        "minecraft:dark_oak_log"):
                     P.probe(x, yb + 1, z)
                     return P
     return P
@@ -520,4 +524,8 @@ def build(only=None):
     for (pid, rid, a, b, fld) in runs:
         if want(pid):
             out.append(lamp_run(pid, rid, a, b, every=18, field=fld, style="iron"))
+    # soul lanterns on dark oak posts along the roads through the moon forest
+    for (pid, rid, a, b) in (("lamps_moon_west", "west", 320, 1050), ("lamps_moon_end", "end", 24, 474)):
+        if want(pid):
+            out.append(lamp_run(pid, rid, a, b, every=24, field=2, style="moon"))
     return out

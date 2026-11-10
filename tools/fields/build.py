@@ -32,6 +32,44 @@ def modules():
     return sorted(m.name for m in pkgutil.iter_modules(pkg.__path__) if not m.name.startswith("_"))
 
 
+# which piece keeps a column two pieces write in (lower first; ties: build order)
+RANK = {"waystone": 0, "bridge": 1, "border": 1, "signpost": 2, "scenery": 3, "road": 4, "flowers": 5}
+
+
+def resolve_overlaps(pieces, log=print):
+    """Where two pieces write in the same column the higher-ranked one keeps it (waystone shrines, then bridges and
+    border markers, signposts, the set pieces, roadside works, flowers) and the other leaves that whole column to
+    it, so a fence line stops at a bridge or a shrine instead of cutting through it, and no piece overwrites
+    another one in the world."""
+    import math as _m
+    import numpy as np
+    claimed = {}
+    order = sorted(range(len(pieces)), key=lambda i: (RANK.get(pieces[i].kind, 3), i))
+    for i in order:
+        P = pieces[i]
+        ixs, izs = np.nonzero((P.a > 0).any(axis=2))
+        lost = {}
+        gone = set()
+        for ix, iz in zip(ixs.tolist(), izs.tolist()):
+            key = (ix + P.X0, iz + P.Z0)
+            owner = claimed.get(key)
+            if owner is None:
+                claimed[key] = P.id
+            else:
+                P.a[ix, iz, :] = 0
+                gone.add(key)
+                lost[owner] = lost.get(owner, 0) + 1
+        if not gone:
+            continue
+        P.block_entities = {k: v for k, v in P.block_entities.items() if (k[0], k[2]) not in gone}
+        P.fluid_ticks = {k for k in P.fluid_ticks if (k[0], k[2]) not in gone}
+        P.probes = [k for k in P.probes if (k[0], k[2]) not in gone]
+        P.entities = [e for e in P.entities
+                      if (_m.floor(e["pos"][0]), _m.floor(e["pos"][2])) not in gone]
+        log(f"  {P.id}: leaves {len(gone)} column(s) to " +
+            ", ".join(f"{k} ({v})" for k, v in sorted(lost.items())))
+
+
 def build_pieces(only=None, log=print):
     out = []
     for name in modules():
@@ -43,7 +81,6 @@ def build_pieces(only=None, log=print):
         for P in made:
             if only and P.id not in only:
                 continue
-            connect.finalize(P)
             if P.clipped_writes:
                 log(f"  {P.id}: {P.clipped_writes} writes outside the box were dropped")
             out.append(P)
@@ -52,6 +89,9 @@ def build_pieces(only=None, log=print):
     dup = {i for i in ids if ids.count(i) > 1}
     if dup:
         raise SystemExit(f"duplicate piece ids: {sorted(dup)}")
+    resolve_overlaps(out, log)
+    for P in out:
+        connect.finalize(P)
     return out
 
 

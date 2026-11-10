@@ -57,6 +57,12 @@ B._reg(["tall_seagrass"], "double_plant")
 B._reg(["iron_ore", "coal_ore", "copper_ore", "gold_ore", "deepslate_iron_ore", "deepslate_coal_ore",
         "deepslate_gold_ore", "redstone_ore", "lapis_ore", "emerald_ore", "raw_copper_block"])
 B._reg(["sculk_vein"], "glow_lichen")
+B.SCHEMAS.setdefault("cave_vines", {"age": tuple(str(i) for i in range(26)), "berries": BOOL})
+B.DEFAULTS.setdefault("cave_vines", {"age": "0", "berries": "false"})
+B._reg(["cave_vines"], "cave_vines")
+B.SCHEMAS.setdefault("cave_vines_plant", {"berries": BOOL})
+B.DEFAULTS.setdefault("cave_vines_plant", {"berries": "false"})
+B._reg(["cave_vines_plant"], "cave_vines_plant")
 
 # custom blocks of the town branch (identical schemas) and the lead's waystone
 _TOWN = [("terracotta_roof_tiles", "terracotta_roof_tile_stairs", "terracotta_roof_tile_slab"),
@@ -105,6 +111,17 @@ C.PLANTS.update({"red_mushroom": (200, 40, 40), "brown_mushroom": (150, 110, 80)
                  "pumpkin_stem": (110, 140, 60), "attached_melon_stem": (110, 140, 60),
                  "attached_pumpkin_stem": (110, 140, 60), "small_dripleaf": (90, 140, 40),
                  "tall_seagrass": (40, 100, 40)})
+C.BASE.update({
+    "red_mushroom_block": (196, 46, 44), "brown_mushroom_block": (149, 111, 81), "mushroom_stem": (203, 196, 185),
+    "shroomlight": (240, 146, 70), "rooted_dirt": (144, 104, 77), "mangrove_roots": (74, 59, 38), "mud": (60, 57, 61),
+    "target": (226, 170, 158), "skeleton_wall_skull": (205, 205, 200), "skeleton_skull": (205, 205, 200),
+    "pearlescent_froglight": (246, 227, 236), "soul_soil": (75, 57, 46), "bell": (250, 210, 70),
+    "smooth_basalt": (72, 72, 78), "calcite": (223, 224, 220), "amethyst_block": (133, 97, 191),
+})
+C.PLANTS.update({"cave_vines": (95, 120, 45), "cave_vines_plant": (95, 120, 45), "spore_blossom": (207, 97, 159),
+                 "hanging_roots": (161, 115, 91), "glow_lichen": (112, 131, 121), "dead_bush": (130, 95, 50)})
+C.EMIT.update({"shroomlight": 15, "pearlescent_froglight": 15, "cave_vines": 14, "cave_vines_plant": 14,
+               "glow_lichen": 7})
 C.EMIT.update({"sea_lantern": 15, "end_rod": 14, "crying_obsidian": 10, "amethyst_cluster": 5,
                "large_amethyst_bud": 4, "medium_amethyst_bud": 2, "magma_block": 3})
 _orig_material = C.material.__wrapped__ if hasattr(C.material, "__wrapped__") else None
