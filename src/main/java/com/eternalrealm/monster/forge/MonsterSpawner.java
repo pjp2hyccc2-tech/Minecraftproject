@@ -279,13 +279,23 @@ public final class MonsterSpawner {
         }
     }
 
-    /** Where a habitat monster appeared (the habitat's middle for monsters from before the spots were kept). */
+    /**
+     * Where a habitat monster appeared. A monster from before the spots were kept (and before habitats were calm)
+     * gets its spot now: where it stands, pulled inside the habitat; it becomes calm like the others.
+     */
     private static double[] homeSpot(Mob mob, Habitats.Habitat habitat) {
         net.minecraft.nbt.CompoundTag data = mob.getPersistentData();
-        if (data.contains(HOME_X_TAG) && data.contains(HOME_Z_TAG)) {
-            return new double[]{data.getInt(HOME_X_TAG) + 0.5, data.getInt(HOME_Z_TAG) + 0.5};
+        if (!data.contains(HOME_X_TAG) || !data.contains(HOME_Z_TAG)) {
+            double dx = mob.getX() - habitat.x();
+            double dz = mob.getZ() - habitat.z();
+            double distance = Math.hypot(dx, dz);
+            double keep = distance <= habitat.radius() - 2.0 || distance < 1.0e-6 ? 1.0
+                    : (habitat.radius() - 2.0) / distance;
+            data.putInt(HOME_X_TAG, Mth.floor(habitat.x() + dx * keep));
+            data.putInt(HOME_Z_TAG, Mth.floor(habitat.z() + dz * keep));
+            MonsterTempers.makeCalm(mob);
         }
-        return new double[]{habitat.x() + 0.5, habitat.z() + 0.5};
+        return new double[]{data.getInt(HOME_X_TAG) + 0.5, data.getInt(HOME_Z_TAG) + 0.5};
     }
 
     /** One monster of the habitat (now and then the field's elite) at a free spot inside it. */
