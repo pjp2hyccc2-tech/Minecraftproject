@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/named/ember_scholar_chest"
+  }
+}

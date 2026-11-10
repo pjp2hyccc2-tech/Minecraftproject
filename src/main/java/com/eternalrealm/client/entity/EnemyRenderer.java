@@ -26,6 +26,9 @@ public class EnemyRenderer<T extends ERMonster> extends MobRenderer<T, EnemyMode
         this.tables = ERRigs.of(rig);
         this.baseShadow = shadow;
         addLayer(new RigGlowLayer<>(this, this::glowTexture, (entity, age) -> WHITE));
+        if (rig == EnemyRig.HUMANOID) {
+            addLayer(new com.eternalrealm.client.entity.layer.HeldWeaponLayer<>(this, context.getItemInHandRenderer()));
+        }
     }
 
     @Override

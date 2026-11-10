@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "eternalrealm:item/named/dragon_king_flamebrand"
+  }
+}

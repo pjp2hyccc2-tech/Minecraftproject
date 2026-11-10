@@ -39,6 +39,30 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/helmet_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4044
+      },
+      "model": "eternalrealm:item/named/holy_spring_vestment_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4048
+      },
+      "model": "eternalrealm:item/named/rune_sage_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4052
+      },
+      "model": "eternalrealm:item/named/cinder_dancer_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4116
+      },
+      "model": "eternalrealm:item/named/anchorguard_plate_head"
     }
   ]
 }

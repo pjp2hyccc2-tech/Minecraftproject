@@ -493,6 +493,7 @@ final class BossVfx {
             case DARK -> 0x9A3AE0;
             case MAGIC -> 0xC070FF;
             case SAFE -> 0x60FF80;
+            case ALLY -> 0x7FD8FF;
             case DANGER -> 0xFF4030;
         };
         return new DustParticleOptions(new Vector3f(((rgb >> 16) & 0xFF) / 255.0F, ((rgb >> 8) & 0xFF) / 255.0F,

@@ -1,3 +1,23 @@
 {
-  "parent": "eternalrealm:item/weapon/longsword_2"
+  "parent": "eternalrealm:item/weapon/longsword_2",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3001
+      },
+      "model": "eternalrealm:item/named/wayfarers_oath"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3018
+      },
+      "model": "eternalrealm:item/named/moonleaf_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3126
+      },
+      "model": "eternalrealm:item/named/wheatstalk_sword"
+    }
+  ]
 }

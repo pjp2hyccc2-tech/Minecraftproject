@@ -1,0 +1,21 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "particle": "eternalrealm:item/named/salamander_tongues"
+  },
+  "base": {
+    "parent": "eternalrealm:item/named/salamander_tongues_held"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "eternalrealm:item/named/salamander_tongues_icon"
+    },
+    "ground": {
+      "parent": "eternalrealm:item/named/salamander_tongues_icon"
+    },
+    "fixed": {
+      "parent": "eternalrealm:item/named/salamander_tongues_icon"
+    }
+  }
+}

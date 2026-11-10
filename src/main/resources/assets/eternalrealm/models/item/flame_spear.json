@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/spear_5"
+  "parent": "eternalrealm:item/weapon/spear_5",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3065
+      },
+      "model": "eternalrealm:item/named/falls_sovereign_trident"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3081
+      },
+      "model": "eternalrealm:item/named/scorchpoint_spear"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3082
+      },
+      "model": "eternalrealm:item/named/guardian_plate_halberd"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3173
+      },
+      "model": "eternalrealm:item/named/maelstrom_trident"
+    }
+  ]
 }

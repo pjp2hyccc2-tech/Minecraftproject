@@ -79,6 +79,10 @@ public final class MonsterFactory {
             equip(mob, EquipmentSlot.HEAD, hints.headItemId());
             equip(mob, EquipmentSlot.MAINHAND, hints.mainHandItemId());
         }
+        // monsters of the armory carry their named weapon visibly (and may drop it, see LootDrops)
+        Mob armed = mob;
+        com.eternalrealm.item.Signatures.wielded(template.id())
+                .ifPresent(design -> com.eternalrealm.item.forge.ArmoryStacks.arm(armed, design));
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             mob.setDropChance(slot, 0.0F);
         }

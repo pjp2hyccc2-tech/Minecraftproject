@@ -15,6 +15,9 @@ import com.eternalrealm.job.ComposedStats;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
 import com.eternalrealm.job.PassiveTotals;
+import com.eternalrealm.job.SkillTheme;
+import com.eternalrealm.item.WeaponArt;
+import com.eternalrealm.item.WeaponArts;
 import com.eternalrealm.job.SkillDefinition;
 import com.eternalrealm.job.SkillEffect;
 import com.eternalrealm.job.SkillTree;
@@ -72,7 +75,7 @@ public final class CombatDriver {
     private static final int PARRY_SLOW_TICKS = 40;
     private static final int PARRY_SLOW_AMPLIFIER = 3;
     private static final float GUARD_KNOCKBACK_FACTOR = 0.5F;
-    /** Health regeneration from VIT starts this long after the last fight. */
+    /** A player counts as in combat this long after dealing or taking damage. */
     private static final int OUT_OF_COMBAT_TICKS = 100;
     /** Upper bound of damage reflected by thorns in one hit. */
     private static final double MAX_REFLECT = 500.0;
@@ -89,9 +92,16 @@ public final class CombatDriver {
     private final Map<UUID, PlayerSkills> skills = new HashMap<>();
     private CombatTuning tuning;
 
-    /** What the server needs of a player's skill tree while hits land. */
+    /**
+     * What the server needs of a player's skill tree while hits land: the passive totals (learned passives plus the
+     * perks of the worn named equipment) and the learned skill levels.
+     */
     private record PlayerSkills(PassiveTotals passives, Map<String, Integer> levels) {
         static final PlayerSkills NONE = new PlayerSkills(PassiveTotals.NONE, Map.of());
+
+        PlayerSkills withGear(PassiveTotals gear) {
+            return gear == PassiveTotals.NONE ? this : new PlayerSkills(passives.plus(gear), levels);
+        }
     }
 
     /**
@@ -162,28 +172,12 @@ public final class CombatDriver {
                     handleEvent(player, combatant.stats(), event);
                 }
                 resyncStatus(player, combatant, now);
-                regenerate(player, combatant, now);
             } catch (RuntimeException e) {
                 // One broken fighter must not stop combat for everyone else.
                 LOG.error("Combat tick failed for {}; cancelling their action", player.getGameProfile().getName(), e);
                 combatant.cancelAction();
             }
         }
-    }
-
-    /** VIT regeneration: once per second while the player has neither dealt nor taken damage for 5 seconds. */
-    private void regenerate(ServerPlayer player, Combatant combatant, long now) {
-        double perSecond = combatant.stats().regenPerSecond();
-        if (perSecond <= 0.0 || now % 20 != 0 || !player.isAlive() || player.getHealth() >= player.getMaxHealth()) {
-            return;
-        }
-        NetState state = net(player.getUUID());
-        long lastCombat = Math.max(state.lastCombatTick, player.getLastHurtMobTimestamp() == 0 ? Long.MIN_VALUE / 4
-                : now - (player.tickCount - player.getLastHurtMobTimestamp()));
-        if (now - lastCombat < OUT_OF_COMBAT_TICKS || player.hurtTime > 0) {
-            return;
-        }
-        player.heal((float) perSecond);
     }
 
     /** Whether the player dealt or took damage in the last {@link #OUT_OF_COMBAT_TICKS} ticks. */
@@ -210,7 +204,7 @@ public final class CombatDriver {
             try {
                 CharacterSnapshot character = snapshot.get();
                 JobType job = JobType.fromStored(character.jobId());
-                skills.put(playerId, skillsOf(job, character));
+                skills.put(playerId, skillsOf(job, character).withGear(PlayerStats.perks(player)));
                 ComposedStats composed = PlayerStats.compose(player, character);
                 CombatStats stats = CombatStats.derive(composed.total(), character.level(), tuning,
                         composed.modifiers());
@@ -285,8 +279,12 @@ public final class CombatDriver {
     public static void handleEvent(ServerPlayer player, CombatStats stats, CombatEvent event) {
         if (event instanceof CombatEvent.Hit hit) {
             SkillDefinition skill = Jobs.skillOfAction(hit.action().id()).orElse(null);
+            // the weapon art of a boss weapon: its effects run like a job skill's, at strength 1
+            WeaponArt art = skill == null ? WeaponArts.byId(hit.action().id()).orElse(null) : null;
             DamageType type = skill != null ? skill.damageType() : hit.weapon().type().damageType();
-            List<SkillEffect> effects = skill != null ? skill.effectsAt(hit.frameIndex()) : List.of();
+            List<SkillEffect> effects = skill != null ? skill.effectsAt(hit.frameIndex())
+                    : art != null ? art.effectsAt(hit.frameIndex()) : List.of();
+            SkillTheme theme = skill != null ? skill.theme() : art != null ? art.theme() : null;
             int level = skill != null ? skillLevel(player, skill) : 1;
             double scale = skill != null ? skill.effectScale(level) : 1.0;
             List<SkillEffect.Afflict> afflictions = SkillEffectsExecutor.afflictions(effects);
@@ -296,18 +294,22 @@ public final class CombatDriver {
             if (hit.frame().damaging()) {
                 if (hit.frame().isProjectile()) {
                     CombatProjectiles.launch(player, stats, hit, type, afflictions, player.getRandom()::nextDouble,
-                            scale, SkillEffectsExecutor.only(effects, SkillEffect.Siphon.class), executes,
-                            skill == null ? null : skill.theme());
+                            scale, SkillEffectsExecutor.only(effects, SkillEffect.Siphon.class), executes, theme);
                     // siphons of projectiles heal on impact
                     rest = effects.stream().filter(effect -> !(effect instanceof SkillEffect.Siphon)).toList();
                 } else {
                     targets = CombatHits.execute(player, stats, hit, type, player.getRandom()::nextDouble, executes,
-                            skill == null ? null : skill.theme());
+                            theme);
                     Afflictions.apply(player, targets, afflictions, scale, player.position());
                 }
             }
             if (!rest.isEmpty()) {
-                SkillEffectsExecutor.apply(player, stats, skill, level, hit.weapon(), hit.damageScale(), rest, targets);
+                if (art != null) {
+                    SkillEffectsExecutor.applyArt(player, stats, art, hit.weapon(), hit.damageScale(), rest, targets);
+                } else {
+                    SkillEffectsExecutor.apply(player, stats, skill, level, hit.weapon(), hit.damageScale(), rest,
+                            targets);
+                }
             }
         } else if (event instanceof CombatEvent.ActionStarted start) {
             CombatEffects.actionStarted(player, start);
@@ -317,6 +319,8 @@ public final class CombatDriver {
                     SkillEffectsExecutor.apply(player, stats, skill, skillLevel(player, skill), start.weapon(),
                             skill.damageScale(skillLevel(player, skill)), skill.effectsAt(SkillEffect.ON_START),
                             List.of()));
+            WeaponArts.byId(start.action().id()).ifPresent(art -> SkillEffectsExecutor.applyArt(player, stats, art,
+                    start.weapon(), 1.0, art.effectsAt(SkillEffect.ON_START), List.of()));
         } else if (event instanceof CombatEvent.ChargeStarted charge) {
             ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(),
                     charge.weapon().heavy().strike().id(), -1, charge.weapon().heavy().maxChargeTicks(), true));

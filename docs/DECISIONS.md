@@ -43,6 +43,16 @@
 | D-036 | 武器を持っている間の右クリックはガード専用。オフハンドのアイテムはしゃがみ＋右クリックで使う。他のアイテムを使用中（盾・食事・弓など）は攻撃・回避・スキルを受け付けない（サーバーとクライアントの両方） | ガードが拒否されたときにオフハンドの盾へ流れ、バニラの100%防御の裏で連撃できた（独立レビューで指摘） | 確定（Phase 2） |
 | D-037 | パリィの受付はガード開始ごとに開くが、前回のガード開始から16tick未満なら開かない | 右クリックの連打で受付を出し続けられた（自己レビュー・独立レビュー双方で指摘） | 確定（Phase 2） |
 
+## D-VITALS: no hunger and no natural regeneration; potions are the way to heal (2026-11-10)
+The owner asked for no hunger gauge ("always full"), no automatic regeneration and potions as the basic way to heal.
+The server keeps every player's food bar full each tick (sprinting is always allowed, nobody starves) and the client
+never draws it; the `naturalRegeneration` game rule is switched off at server start (server config
+`survival.naturalRegeneration`, default false), which also stops the peaceful-difficulty heal; the out-of-combat VIT
+regeneration was removed. VIT now makes potions stronger (+0.4% per point, at most +50%) instead. So that topping up
+after a fight is not a wait, the shared potion cooldown is 2 s out of combat and stays 15 s in combat (boss balance is
+unchanged). Monsters drop the potion size of their tier (4%, elites 50% ×1-2) and the first job choice hands out ten
+small potions with the starter weapon.
+
 ## D-RNG: only java.base random generators at runtime (2026-11-08)
 Forge runs the game on a module layer in which the `jdk.random` module is not resolved, so
 `RandomGenerator.of("L64X128MixRandom")`/`RandomGenerator.getDefault()` throw "No implementation of the random number

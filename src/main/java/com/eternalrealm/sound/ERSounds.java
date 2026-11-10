@@ -111,6 +111,17 @@ public final class ERSounds {
     public static final RegistryObject<SoundEvent> ENHANCE_SUCCESS = sound("enhance.success");
     public static final RegistryObject<SoundEvent> ENHANCE_FAIL = sound("enhance.fail");
 
+    // ---- Weapon arts of the boss weapons (PLAYERS; item.WeaponArt#soundId) ----
+    public static final RegistryObject<SoundEvent> ART_SHADOW_LEGION = sound("art.shadow_legion");
+    public static final RegistryObject<SoundEvent> ART_THORNROOT_BLOOM = sound("art.thornroot_bloom");
+    public static final RegistryObject<SoundEvent> ART_SAND_MAELSTROM = sound("art.sand_maelstrom");
+    public static final RegistryObject<SoundEvent> ART_DOOM_GUILLOTINE = sound("art.doom_guillotine");
+    public static final RegistryObject<SoundEvent> ART_FROZEN_PRISON = sound("art.frozen_prison");
+    public static final RegistryObject<SoundEvent> ART_METEOR_SLASH = sound("art.meteor_slash");
+    public static final RegistryObject<SoundEvent> ART_HEAVENS_CHAIN = sound("art.heavens_chain");
+    public static final RegistryObject<SoundEvent> ART_GATE_OF_END = sound("art.gate_of_end");
+    public static final RegistryObject<SoundEvent> ART_BLACK_SWORD_RAIN = sound("art.black_sword_rain");
+
     // ---- UI (MASTER, client side; see com.eternalrealm.client.sound.UiSounds) ----
     public static final RegistryObject<SoundEvent> UI_CLICK = sound("ui.click");
     public static final RegistryObject<SoundEvent> UI_JOURNAL_OPEN = sound("ui.journal_open");

@@ -71,9 +71,15 @@ public final class SmithScreen extends Screen {
     private record Piece(int slot, ItemStack stack, EquipmentData data, boolean worn) {
     }
 
-    /** A line of the left list: a tier header (recipe == null) or a recipe. */
-    private record Line(ItemTier tier, Recipe recipe) {
+    /**
+     * A line of the left list: a tier header (tier set, recipe == null), a field header of the named designs (field
+     * set, recipe == null) or a recipe.
+     */
+    private record Line(ItemTier tier, int field, Recipe recipe) {
     }
+
+    /** Fields in the order their named designs open up (by level). */
+    private static final int[] FIELD_ORDER = {1, 8, 2, 9, 3, 10, 4, 5, 6, 7};
 
     private record Banner(String kind, boolean success, int plus, Component name, long startedAt) {
     }
@@ -245,9 +251,19 @@ public final class SmithScreen extends Screen {
             if (recipes.isEmpty()) {
                 continue;
             }
-            lines.add(new Line(tier, null));
+            lines.add(new Line(tier, 0, null));
             for (Recipe recipe : recipes) {
-                lines.add(new Line(tier, recipe));
+                lines.add(new Line(tier, 0, recipe));
+            }
+        }
+        for (int field : FIELD_ORDER) {
+            List<Recipe> recipes = Recipes.forField(field);
+            if (recipes.isEmpty()) {
+                continue;
+            }
+            lines.add(new Line(null, field, null));
+            for (Recipe recipe : recipes) {
+                lines.add(new Line(null, field, recipe));
             }
         }
         return lines;
@@ -258,6 +274,9 @@ public final class SmithScreen extends Screen {
     }
 
     private static ItemStack preview(Recipe recipe) {
+        if (recipe.design() != null) {
+            return EquipmentStacks.ofDesign(recipe.design());
+        }
         ItemStack stack = new ItemStack(ERGearItems.equipment(recipe.output()));
         EquipmentStacks.write(stack, EquipmentStacks.plain(recipe.output()));
         return stack;
@@ -495,6 +514,18 @@ public final class SmithScreen extends Screen {
         for (int i = scroll; i < lines.size() && i - scroll < listRows(); i++) {
             Line line = lines.get(i);
             int rowTop = y + (i - scroll) * ROW;
+            if (line.recipe() == null && line.tier() == null) {
+                // the named designs of a field (armory)
+                graphics.fill(x0 + 1, rowTop + 2, x1 - 1, rowTop + ROW - 2, 0x40A05A20);
+                int from = com.eternalrealm.item.Armory.levelOf(line.field(), 0);
+                String area = com.eternalrealm.world.Areas.byId(line.field())
+                        .map(definition -> definition.translationKey()).orElse("");
+                graphics.drawString(font, font.plainSubstrByWidth(Component.translatable(
+                                "screen.eternalrealm.smith.design_header", Component.translatable(area), from)
+                        .getString(), listWidth() - 10), x0 + 5, rowTop + 6,
+                        level >= from ? 0xFFFFC870 : 0xFF6A6A6A, false);
+                continue;
+            }
             if (line.recipe() == null) {
                 graphics.fill(x0 + 1, rowTop + 2, x1 - 1, rowTop + ROW - 2, 0x40806020);
                 boolean reachable = level >= line.tier().requiredLevel();
@@ -631,13 +662,33 @@ public final class SmithScreen extends Screen {
         }
         Recipe recipe = chosen.get();
         ItemStack stack = preview(recipe);
-        EquipmentData data = EquipmentStacks.plain(recipe.output());
+        EquipmentData data = recipe.design() != null
+                ? EquipmentData.of(recipe.design(), com.eternalrealm.item.ItemRarity.COMMON, List.of())
+                : EquipmentStacks.plain(recipe.output());
         int y = itemHeader(graphics, stack, recipe.requiredLevel());
         if (data.isWeapon()) {
             y = valueRow(graphics, y, "screen.eternalrealm.smith.stat.attack", EquipmentStats.baseAttack(data));
         } else {
             y = valueRow(graphics, y, "screen.eternalrealm.smith.stat.defense", EquipmentStats.baseDefense(data));
             y = valueRow(graphics, y, "screen.eternalrealm.smith.stat.health", EquipmentStats.baseMaxHealth(data));
+        }
+        if (recipe.design() != null) {
+            // what makes the design special: its traits, perks, art or set bonuses
+            int shown = 0;
+            for (com.eternalrealm.item.TooltipLine line : com.eternalrealm.item.EquipmentTooltip.lines(data)) {
+                switch (line.kind()) {
+                    case TRAIT, PERK, ART, SET -> {
+                        for (var part : font.split(EquipmentStacks.component(line), cx1 - cx0 - 16)) {
+                            if (shown++ < 9) {
+                                graphics.drawString(font, part, cx0 + 8, y, 0xFFFFFF, false);
+                                y += 10;
+                            }
+                        }
+                    }
+                    default -> {
+                    }
+                }
+            }
         }
         y += 6;
         for (var line : font.split(Component.translatable("screen.eternalrealm.smith.craft_note")

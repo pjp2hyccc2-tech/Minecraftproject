@@ -39,6 +39,72 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/helmet_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4008
+      },
+      "model": "eternalrealm:item/named/wildflower_vestment_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4016
+      },
+      "model": "eternalrealm:item/named/silkshadow_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4020
+      },
+      "model": "eternalrealm:item/named/heartwood_bulwark_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4024
+      },
+      "model": "eternalrealm:item/named/ironvein_plate_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4028
+      },
+      "model": "eternalrealm:item/named/ember_scholar_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4036
+      },
+      "model": "eternalrealm:item/named/rivermist_garb_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4088
+      },
+      "model": "eternalrealm:item/named/scarecrow_garb_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4092
+      },
+      "model": "eternalrealm:item/named/harvest_rite_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4096
+      },
+      "model": "eternalrealm:item/named/lotus_vestment_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4100
+      },
+      "model": "eternalrealm:item/named/lakescale_mail_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4108
+      },
+      "model": "eternalrealm:item/named/privateer_garb_head"
     }
   ]
 }

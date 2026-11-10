@@ -52,10 +52,14 @@ public final class LootDrops {
     }
 
     public static void drop(ServerPlayer killer, LivingEntity victim, MonsterTemplate template, double luck) {
+        boolean elite = template.role() == com.eternalrealm.monster.MonsterRole.ELITE;
+        dropWielded(killer, victim, template, luck, elite);
         DropTable table = DropTables.byId(template.dropTableId()).orElse(null);
         if (table == null || table.isEmpty()) {
             return;
         }
+        int field = template.areaIds().stream().mapToInt(Integer::intValue).min().orElse(0);
+        int level = com.eternalrealm.monster.forge.MonsterTags.level(victim);
         for (LootDrop drop : LootRoller.roll(table, luck, RANDOM)) {
             if (drop instanceof LootDrop.ItemDrop item) {
                 Item type = itemOf(item.itemId());
@@ -65,10 +69,32 @@ public final class LootDrops {
             } else if (drop instanceof LootDrop.EquipmentDrop equipment) {
                 ItemTier tier = ItemTier.byNumber(equipment.tier()).orElse(ItemTier.IRON);
                 ItemRarity rarity = ItemRarity.byId(equipment.rarity().id()).orElse(ItemRarity.COMMON);
-                EquipmentData data = EquipmentGenerator.roll(baseFor(killer, tier), rarity, RANDOM);
+                // some drops are a named design of the field (armory), rolled at the same rarity
+                java.util.Optional<com.eternalrealm.item.Design> design =
+                        RANDOM.nextDouble() < com.eternalrealm.item.ArmoryDrops.fieldDesignShare(elite)
+                                ? com.eternalrealm.item.ArmoryDrops.fieldDesign(field, level, RANDOM)
+                                : java.util.Optional.empty();
+                EquipmentData data = design.isPresent() ? EquipmentGenerator.roll(design.get(), rarity, RANDOM)
+                        : EquipmentGenerator.roll(baseFor(killer, tier), rarity, RANDOM);
                 spawn(killer, victim, EquipmentStacks.create(data), rarity);
             }
         }
+    }
+
+    /**
+     * A monster carrying a named weapon may drop it ({@code com.eternalrealm.item.Signatures#wielded}); only the weapon
+     * it really holds (a lord holds its own signature weapon, which the lord's rewards hand out instead).
+     */
+    private static void dropWielded(ServerPlayer killer, LivingEntity victim, MonsterTemplate template, double luck,
+                                    boolean elite) {
+        com.eternalrealm.item.Signatures.wielded(template.id())
+                .filter(design -> EquipmentStacks.designOf(victim.getMainHandItem()).map(design::equals).orElse(false))
+                .filter(design -> RANDOM.nextDouble() < com.eternalrealm.item.ArmoryDrops.wieldedDropChance(elite))
+                .ifPresent(design -> {
+                    ItemRarity rarity = EquipmentGenerator.rollRarity(luck, RANDOM);
+                    spawn(killer, victim, EquipmentStacks.create(EquipmentGenerator.roll(design, rarity, RANDOM)),
+                            rarity.rank() < ItemRarity.RARE.rank() ? ItemRarity.RARE : rarity);
+                });
     }
 
     private static Item itemOf(String id) {

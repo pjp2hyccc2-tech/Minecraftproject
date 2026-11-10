@@ -78,6 +78,8 @@ public final class EternalRealm {
                         .set(true, event.getServer());
             }
         });
+        forgeBus.addListener(com.eternalrealm.player.forge.Vitals::onServerStarted);
+        forgeBus.addListener(com.eternalrealm.player.forge.Vitals::onPlayerTick);
         forgeBus.addListener(ServerBootstrap::onServerStopping);
         forgeBus.addListener(ServerBootstrap::onServerStopped);
         forgeBus.addListener(ServerBootstrap::onServerTick);

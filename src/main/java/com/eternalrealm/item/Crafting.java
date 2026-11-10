@@ -95,6 +95,9 @@ public final class Crafting {
         if (!Double.isFinite(luckBonus) || luckBonus < 0.0) {
             throw new IllegalArgumentException("luckBonus must be a finite value >= 0: " + luckBonus);
         }
+        if (recipe.design() != null) {
+            return EquipmentGenerator.rollWithLuck(recipe.design(), luckBonus + CRAFT_LUCK_BONUS, random);
+        }
         return EquipmentGenerator.rollWithLuck(recipe.output(), luckBonus + CRAFT_LUCK_BONUS, random);
     }
 }

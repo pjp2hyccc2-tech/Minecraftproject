@@ -13,8 +13,10 @@ import java.util.Optional;
  * Shop consumables. {@link #id()} is the stable item path and persistence key: never rename it.
  *
  * <p>The three health potions share one cooldown ({@link #cooldownGroup()}), so carrying several sizes never allows
- * drinking faster; the cooldown is long enough that potions bridge a fight instead of replacing the healer. Prices
- * are NPC shop prices; selling back yields a quarter ({@link ItemPrices#consumableSellPrice}).</p>
+ * drinking faster. Potions are the main way to heal (there is no natural regeneration): in a fight the cooldown is long
+ * enough that potions bridge it instead of replacing the healer, out of combat it drops to
+ * {@link #CALM_HEAL_COOLDOWN_TICKS} so topping up after a fight is quick. VIT makes potions stronger. Prices are NPC shop
+ * prices; selling back yields a quarter ({@link ItemPrices#consumableSellPrice}).</p>
  */
 public enum Consumable {
     HEALTH_POTION_SMALL("health_potion_small", 1, 25, 16, "health_potion", 300,
@@ -38,6 +40,9 @@ public enum Consumable {
      */
     EVERBLOOM_PETAL("everbloom_petal", 1, 400, 16, "everbloom_petal", 0,
             new ConsumableEffect.Revive(0.5));
+
+    /** Shared cooldown of the health potions while the drinker is out of combat (no damage dealt or taken for 5 s). */
+    public static final int CALM_HEAL_COOLDOWN_TICKS = 40;
 
     public enum UseCheck {
         OK,
@@ -88,13 +93,13 @@ public enum Consumable {
     }
 
     /**
-     * Formatted numbers for {@link #descriptionKey()}: heal → percent, flat, cooldown seconds; stamina → percent,
-     * cooldown seconds; return → channel seconds; revive → health percent; reset → none.
+     * Formatted numbers for {@link #descriptionKey()}: heal → percent, flat, cooldown seconds, out-of-combat cooldown
+     * seconds; stamina → percent, cooldown seconds; return → channel seconds; revive → health percent; reset → none.
      */
     public List<String> descriptionArgs() {
         if (effect instanceof ConsumableEffect.Heal heal) {
             return List.of(EquipmentTooltip.number(heal.fraction() * 100.0), EquipmentTooltip.number(heal.flat()),
-                    EquipmentTooltip.number(cooldownTicks / 20.0));
+                    EquipmentTooltip.number(cooldownTicks / 20.0), EquipmentTooltip.number(cooldownTicks(false) / 20.0));
         }
         if (effect instanceof ConsumableEffect.RestoreStamina stamina) {
             return List.of(EquipmentTooltip.number(stamina.fraction() * 100.0),
@@ -131,6 +136,12 @@ public enum Consumable {
     /** Cooldown started for the whole group by a use; 0 = none. */
     public int cooldownTicks() {
         return cooldownTicks;
+    }
+
+    /** Cooldown of a use in or out of combat: health potions recover quickly between fights. */
+    public int cooldownTicks(boolean inCombat) {
+        return inCombat || !(effect instanceof ConsumableEffect.Heal) ? cooldownTicks
+                : Math.min(cooldownTicks, CALM_HEAL_COOLDOWN_TICKS);
     }
 
     public ConsumableEffect effect() {

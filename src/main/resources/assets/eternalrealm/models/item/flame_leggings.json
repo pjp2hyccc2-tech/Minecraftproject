@@ -39,6 +39,30 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/leggings_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4046
+      },
+      "model": "eternalrealm:item/named/holy_spring_vestment_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4050
+      },
+      "model": "eternalrealm:item/named/rune_sage_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4054
+      },
+      "model": "eternalrealm:item/named/cinder_dancer_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4118
+      },
+      "model": "eternalrealm:item/named/anchorguard_plate_legs"
     }
   ]
 }

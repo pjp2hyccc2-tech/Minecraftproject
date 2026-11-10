@@ -30,6 +30,8 @@ import java.util.UUID;
  */
 public final class SkillZones {
     private static final int MAX_ZONES = 512;
+    /** Delayed areas that wait at least this long are marked on the ground. */
+    private static final int TELEGRAPH_DELAY = 10;
     private static final List<Active> ZONES = new ArrayList<>();
 
     private SkillZones() {
@@ -71,21 +73,36 @@ public final class SkillZones {
         if (weapon == null || !caster.isAlive() || caster.isSpectator()) {
             return;
         }
-        Vec3 center = switch (zone.placement()) {
-            case CASTER -> caster.position();
-            case AHEAD -> {
-                double yaw = Math.toRadians(caster.getYRot());
-                Vec3 ahead = caster.position().add(-Math.sin(yaw) * zone.distance(), 0.0, Math.cos(yaw) * zone.distance());
-                yield new Vec3(ahead.x, SkillVisuals.groundY(caster.serverLevel(), ahead.add(0, 1.0, 0)), ahead.z);
-            }
-            case LOOK -> SkillVisuals.lookPoint(caster, zone.distance());
-        };
+        Vec3 center = centerOf(caster, zone.placement(), zone.distance());
         if (ZONES.size() >= MAX_ZONES) {
             ZONES.remove(0);
         }
         ZONES.add(new Active(caster.getUUID(), caster.serverLevel(), center, zone, theme, stats, weapon, type,
                 damageScale, effectScale, caster.server.getTickCount() + zone.delayTicks()));
         SkillVisuals.zonePulse(caster.serverLevel(), theme, center, zone.radius(), zone.healFraction() > 0.0);
+        if (zone.damageMultiplier() > 0.0 && zone.delayTicks() >= TELEGRAPH_DELAY) {
+            // a delayed blast is marked for the caster's side (a friendly marker: no danger warning for allies)
+            com.eternalrealm.combat.forge.Telegraphs.show(caster.serverLevel(), com.eternalrealm.combat.Telegraph
+                    .circle(com.eternalrealm.combat.Telegraph.Style.ALLY, center.x, center.y, center.z, zone.radius(),
+                            zone.delayTicks()));
+        }
+        if (zone.look() != null) {
+            com.eternalrealm.item.forge.ArtVisuals.zoneCreated(caster.serverLevel(), zone.look(), center,
+                    zone.radius(), zone.delayTicks());
+        }
+    }
+
+    /** Where an area or marker placed by {@code placement} lands: the caster's feet, ahead, or where it looks. */
+    public static Vec3 centerOf(ServerPlayer caster, SkillEffect.Placement placement, double distance) {
+        return switch (placement) {
+            case CASTER -> caster.position();
+            case AHEAD -> {
+                double yaw = Math.toRadians(caster.getYRot());
+                Vec3 ahead = caster.position().add(-Math.sin(yaw) * distance, 0.0, Math.cos(yaw) * distance);
+                yield new Vec3(ahead.x, SkillVisuals.groundY(caster.serverLevel(), ahead.add(0, 1.0, 0)), ahead.z);
+            }
+            case LOOK -> SkillVisuals.lookPoint(caster, distance);
+        };
     }
 
     /** Pulses due areas (once per server tick). */
@@ -122,7 +139,10 @@ public final class SkillZones {
     private static void pulse(ServerPlayer caster, Active area) {
         SkillEffect.Zone zone = area.zone;
         double radius = zone.radius();
-        SkillVisuals.zonePulse(area.level, area.theme, area.center, radius, zone.healFraction() > 0.0);
+        if (zone.look() == null || !com.eternalrealm.item.forge.ArtVisuals.zonePulse(area.level, zone.look(),
+                area.center, radius, area.pulsesDone)) {
+            SkillVisuals.zonePulse(area.level, area.theme, area.center, radius, zone.healFraction() > 0.0);
+        }
         if (zone.damageMultiplier() > 0.0) {
             AABB box = new AABB(area.center, area.center).inflate(radius, 2.5, radius);
             HitFrame frame = new HitFrame(0, HitFrame.NO_SHAPE, zone.damageMultiplier(), 0.1);

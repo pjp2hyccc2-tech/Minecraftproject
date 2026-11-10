@@ -107,7 +107,7 @@ public final class ClientTelegraphs {
                 if (active.telegraph.style() == Telegraph.Style.SAFE) {
                     return false;
                 }
-                danger = true;
+                danger = danger || active.telegraph.style().warns();
             }
         }
         return danger;

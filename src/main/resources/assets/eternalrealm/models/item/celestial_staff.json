@@ -1,3 +1,17 @@
 {
-  "parent": "eternalrealm:item/weapon/staff_6"
+  "parent": "eternalrealm:item/weapon/staff_6",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3086
+      },
+      "model": "eternalrealm:item/named/scorch_eyes_gaze"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3102
+      },
+      "model": "eternalrealm:item/named/stormcaller_staff"
+    }
+  ]
 }

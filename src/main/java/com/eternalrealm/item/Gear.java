@@ -1,7 +1,13 @@
 package com.eternalrealm.item;
 
+import com.eternalrealm.job.PassiveEffect;
+import com.eternalrealm.job.PassiveTotals;
+
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -10,6 +16,10 @@ import java.util.UUID;
  * Sums the pieces a character wears. Pass the four armor pieces plus the main-hand weapon if it is equipment (its
  * affixes count while it is held); the weapon's {@link EquipmentStats#bonusAttack()} is not part of the sum because
  * it applies per hit ({@link #weaponBonusAttack}).
+ *
+ * <p>Named armor sets ({@link ArmorSet}) add their two- and four-piece bonuses on top: their modifiers are part of the
+ * sum, their perks (like the perks and the element of a named weapon) are resolved by the server when hits land
+ * ({@link #perks}).</p>
  */
 public final class Gear {
     private Gear() {
@@ -28,7 +38,7 @@ public final class Gear {
         for (EquipmentData piece : equipped) {
             total = total.plus(EquipmentStats.of(piece).gearBonus());
         }
-        return total;
+        return total.plus(setModifiers(equipped));
     }
 
     /**
@@ -39,10 +49,74 @@ public final class Gear {
         Objects.requireNonNull(equipped, "equipped");
         checkSlots(equipped);
         GearBonus total = GearBonus.NONE;
+        List<EquipmentData> usable = new ArrayList<>(equipped.size());
         for (EquipmentData piece : equipped) {
             if (piece.canBeUsedBy(level, wearer)) {
                 total = total.plus(EquipmentStats.of(piece).gearBonus());
+                usable.add(piece);
             }
+        }
+        return total.plus(setModifiers(usable));
+    }
+
+    /** How many pieces of each named set are among {@code equipped} (sets in order of their first piece). */
+    public static Map<ArmorSet, Integer> setCounts(List<EquipmentData> equipped) {
+        Map<ArmorSet, Integer> counts = new LinkedHashMap<>();
+        for (EquipmentData piece : equipped) {
+            piece.armorPiece().ifPresent(design -> counts.merge(design.set(), 1, Integer::sum));
+        }
+        return counts;
+    }
+
+    /** The active set bonuses of the pieces (two and four pieces of a set). */
+    public static List<ArmorSet.SetBonus> setBonuses(List<EquipmentData> equipped) {
+        List<ArmorSet.SetBonus> bonuses = new ArrayList<>();
+        for (Map.Entry<ArmorSet, Integer> entry : setCounts(equipped).entrySet()) {
+            bonuses.addAll(entry.getKey().active(entry.getValue()));
+        }
+        return bonuses;
+    }
+
+    /**
+     * What the server resolves when hits land: the perks of the held named weapon and of the active set bonuses, and
+     * the element of the weapon as an on-hit affliction. Only pieces the wearer may use count; never cooldowns or
+     * stamina (the client predicts those).
+     */
+    public static PassiveTotals perks(List<EquipmentData> equipped, int level, UUID wearer) {
+        Objects.requireNonNull(equipped, "equipped");
+        checkSlots(equipped);
+        List<EquipmentData> usable = new ArrayList<>(equipped.size());
+        List<PassiveEffect> effects = new ArrayList<>();
+        List<PassiveTotals.Proc> procs = new ArrayList<>();
+        for (EquipmentData piece : equipped) {
+            if (!piece.canBeUsedBy(level, wearer)) {
+                continue;
+            }
+            usable.add(piece);
+            piece.weaponDesign().ifPresent(weapon -> {
+                effects.addAll(weapon.perks());
+                weapon.element().affliction().ifPresent(kind -> procs.add(new PassiveTotals.Proc(kind, weapon.proc(),
+                        weapon.element().ticks(), weapon.element().power(), false)));
+            });
+        }
+        for (ArmorSet.SetBonus bonus : setBonuses(usable)) {
+            effects.addAll(bonus.perks());
+        }
+        if (effects.isEmpty() && procs.isEmpty()) {
+            return PassiveTotals.NONE;
+        }
+        PassiveTotals totals = PassiveTotals.ofEffects(effects);
+        if (!procs.isEmpty()) {
+            totals = totals.plus(new PassiveTotals(com.eternalrealm.combat.CombatModifiers.NONE, 0, 0, 0, 0, procs, 0,
+                    0, 0, 0, 0));
+        }
+        return totals;
+    }
+
+    private static GearBonus setModifiers(List<EquipmentData> pieces) {
+        GearBonus total = GearBonus.NONE;
+        for (ArmorSet.SetBonus bonus : setBonuses(pieces)) {
+            total = total.plus(new GearBonus(com.eternalrealm.character.StatBlock.ZERO, bonus.modifiers()));
         }
         return total;
     }

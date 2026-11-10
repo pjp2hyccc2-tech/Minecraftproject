@@ -36,6 +36,12 @@
         "custom_model_data": 7
       },
       "model": "eternalrealm:item/weapon/twin_blades_7"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3006
+      },
+      "model": "eternalrealm:item/named/undercity_kris"
     }
   ]
 }

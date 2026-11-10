@@ -20,12 +20,24 @@ package com.eternalrealm.combat;
  * @param dodgeCostFactor  multiplies the stamina cost of the dodge (1 = unchanged)
  * @param intToPhysical    fraction of INT that also counts as STR for physical damage (hybrid jobs)
  * @param staminaBonus     added to the stamina pool
+ * @param attackSpeed      +fraction of attack speed for light and heavy attacks (equipment), works like extra AGI in
+ *                         {@link CombatStats#derive}; 0..{@link #MAX_ATTACK_SPEED}
  */
 public record CombatModifiers(double physicalBonus, double rangedBonus, double magicBonus, double healingBonus,
                               double maxHealthFlat, double maxHealthPercent, double defenseFlat, double critChance,
                               double critDamage, double moveSpeed, double guardBonus, double dodgeCostFactor,
-                              double intToPhysical, double staminaBonus) {
-    public static final CombatModifiers NONE = new CombatModifiers(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 0, 0);
+                              double intToPhysical, double staminaBonus, double attackSpeed) {
+    public static final double MAX_ATTACK_SPEED = 0.5;
+    public static final CombatModifiers NONE = new CombatModifiers(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0);
+
+    /** Without an attack speed bonus (the shape of every source before equipment had one). */
+    public CombatModifiers(double physicalBonus, double rangedBonus, double magicBonus, double healingBonus,
+                           double maxHealthFlat, double maxHealthPercent, double defenseFlat, double critChance,
+                           double critDamage, double moveSpeed, double guardBonus, double dodgeCostFactor,
+                           double intToPhysical, double staminaBonus) {
+        this(physicalBonus, rangedBonus, magicBonus, healingBonus, maxHealthFlat, maxHealthPercent, defenseFlat,
+                critChance, critDamage, moveSpeed, guardBonus, dodgeCostFactor, intToPhysical, staminaBonus, 0.0);
+    }
 
     public CombatModifiers {
         Check.range("physicalBonus", physicalBonus, -0.9, 100.0);
@@ -42,6 +54,7 @@ public record CombatModifiers(double physicalBonus, double rangedBonus, double m
         Check.range("dodgeCostFactor", dodgeCostFactor, 0.01, 10.0);
         Check.range("intToPhysical", intToPhysical, 0.0, 10.0);
         Check.range("staminaBonus", staminaBonus, -1000.0, 100_000.0);
+        Check.range("attackSpeed", attackSpeed, 0.0, MAX_ATTACK_SPEED);
     }
 
     /** Combination of two sources; ranges are re-checked, so absurd sums fail loudly instead of wrapping. */
@@ -60,7 +73,8 @@ public record CombatModifiers(double physicalBonus, double rangedBonus, double m
                 clamp(guardBonus + other.guardBonus, -1.0, 1.0),
                 clamp(dodgeCostFactor * other.dodgeCostFactor, 0.01, 10.0),
                 clamp(intToPhysical + other.intToPhysical, 0.0, 10.0),
-                clamp(staminaBonus + other.staminaBonus, -1000.0, 100_000.0));
+                clamp(staminaBonus + other.staminaBonus, -1000.0, 100_000.0),
+                clamp(attackSpeed + other.attackSpeed, 0.0, MAX_ATTACK_SPEED));
     }
 
     /**
@@ -83,7 +97,8 @@ public record CombatModifiers(double physicalBonus, double rangedBonus, double m
                 clamp(guardBonus * times, -1.0, 1.0),
                 clamp(Math.pow(dodgeCostFactor, times), 0.01, 10.0),
                 clamp(intToPhysical * times, 0.0, 10.0),
-                clamp(staminaBonus * times, -1000.0, 100_000.0));
+                clamp(staminaBonus * times, -1000.0, 100_000.0),
+                clamp(attackSpeed * times, 0.0, MAX_ATTACK_SPEED));
     }
 
     private static double clamp(double value, double min, double max) {
@@ -110,6 +125,7 @@ public record CombatModifiers(double physicalBonus, double rangedBonus, double m
         private double dodgeCost = 1.0;
         private double intToPhysical;
         private double stamina;
+        private double attackSpeed;
 
         private Builder() {
         }
@@ -184,9 +200,14 @@ public record CombatModifiers(double physicalBonus, double rangedBonus, double m
             return this;
         }
 
+        public Builder attackSpeed(double value) {
+            attackSpeed += value;
+            return this;
+        }
+
         public CombatModifiers build() {
             return new CombatModifiers(physical, ranged, magic, healing, healthFlat, healthPercent, defense, crit,
-                    critDamage, moveSpeed, guard, dodgeCost, intToPhysical, stamina);
+                    critDamage, moveSpeed, guard, dodgeCost, intToPhysical, stamina, attackSpeed);
         }
     }
 }

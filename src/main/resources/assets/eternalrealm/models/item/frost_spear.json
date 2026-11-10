@@ -1,3 +1,35 @@
 {
-  "parent": "eternalrealm:item/weapon/spear_4"
+  "parent": "eternalrealm:item/weapon/spear_4",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3047
+      },
+      "model": "eternalrealm:item/named/dolgas_tomb_halberd"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3064
+      },
+      "model": "eternalrealm:item/named/pilgrim_glaive"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3155
+      },
+      "model": "eternalrealm:item/named/drowned_fishers_gaff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3172
+      },
+      "model": "eternalrealm:item/named/windlass_harpoon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3182
+      },
+      "model": "eternalrealm:item/named/colossus_dunespear"
+    }
+  ]
 }

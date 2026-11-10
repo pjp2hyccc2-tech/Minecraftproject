@@ -155,7 +155,7 @@ public final class JobGameTests {
         helper.succeed();
     }
 
-    /** Stage 0: wait for the character; choose a job (free, starter weapon); stage 1: done. */
+    /** Stage 0: wait for the character; choose a job (free, starter weapon and potions); stage 1: done. */
     @GameTest(template = ARENA, timeoutTicks = 400)
     public static void firstJobChoiceGivesTheStarterWeapon(GameTestHelper helper) {
         ServerContext context = ServerContext.current()
@@ -184,11 +184,13 @@ public final class JobGameTests {
                             com.eternalrealm.item.ItemTier.IRON));
             boolean hasStaff = player.getInventory().hasAnyMatching(stack -> stack.is(staffItem)
                     && com.eternalrealm.item.forge.EquipmentStacks.read(stack).isPresent());
+            int potions = player.getInventory().countItem(com.eternalrealm.item.forge.ERGearItems.consumable(
+                    com.eternalrealm.item.Consumable.HEALTH_POTION_SMALL));
             data.onPlayerLeave(id);
             done.set(true);
-            if (!changed || !"mage".equals(snapshot.jobId()) || !hasStaff) {
+            if (!changed || !"mage".equals(snapshot.jobId()) || !hasStaff || potions != JobActions.STARTER_POTIONS) {
                 failure.set(new GameTestAssertException("job choice failed: changed=" + changed + ", job="
-                        + snapshot.jobId() + ", staff=" + hasStaff));
+                        + snapshot.jobId() + ", staff=" + hasStaff + ", potions=" + potions));
                 throw failure.get();
             }
         });

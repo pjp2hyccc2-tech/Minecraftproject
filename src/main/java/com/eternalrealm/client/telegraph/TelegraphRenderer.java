@@ -88,7 +88,7 @@ public final class TelegraphRenderer {
             float appear = Mth.clamp((time - active.start) / 3.0F, 0.0F, 1.0F); // quick fade-in
             float base = (0.16F + 0.06F * pulse) * fade * appear;
             brush.fill(telegraph, 1.0F, color, base, 0.02F);
-            if (telegraph.style() != Telegraph.Style.SAFE) {
+            if (telegraph.style() != Telegraph.Style.SAFE && telegraph.style() != Telegraph.Style.ALLY) {
                 brush.fill(telegraph, progress, mix(color, 0xFFFFFF, 0.08F), (0.22F + 0.1F * progress) * fade * appear,
                         0.03F);
             }
@@ -107,6 +107,7 @@ public final class TelegraphRenderer {
             case HOLY -> 0xFFD447;
             case DARK -> 0x7A1AAE;
             case SAFE -> 0x3CE65A;
+            case ALLY -> 0x7FD8FF;
         };
     }
 

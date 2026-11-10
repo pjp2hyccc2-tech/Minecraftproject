@@ -39,6 +39,18 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/chestplate_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4057
+      },
+      "model": "eternalrealm:item/named/ruin_guardian_plate_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4061
+      },
+      "model": "eternalrealm:item/named/thunderpeak_armor_chest"
     }
   ]
 }

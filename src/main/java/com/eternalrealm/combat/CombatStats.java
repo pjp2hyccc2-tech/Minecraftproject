@@ -28,7 +28,7 @@ import java.util.Objects;
  * @param cooldownFactor      multiplies skill cooldowns, {@code (0, 1]} (INT)
  * @param dodgeDistanceFactor multiplies the dodge impulse, {@code >= 1} (AGI)
  * @param knockbackResistance vanilla knockback resistance granted, {@code [0, 1]} (VIT)
- * @param regenPerSecond      health regenerated per second while out of combat (VIT)
+ * @param potionBonus         +fraction of the health a potion restores, {@code [0, 1]} (VIT)
  * @param projectileSpeedFactor multiplies projectile speed, {@code >= 1} (DEX)
  * @param lootBonus           luck bonus of loot rolls (LUK)
  * @param goldBonus           +fraction of gold found (LUK)
@@ -38,7 +38,7 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
                           double staminaRegenPerTick, double rangedMultiplier, double magicMultiplier,
                           double healingMultiplier, double guardBonus, double dodgeCostFactor, double moveSpeedBonus,
                           double chargeTimeFactor, double cooldownFactor, double dodgeDistanceFactor,
-                          double knockbackResistance, double regenPerSecond, double projectileSpeedFactor,
+                          double knockbackResistance, double potionBonus, double projectileSpeedFactor,
                           double lootBonus, double goldBonus) {
     public static final double MAX_HEALTH_BONUS = 1000.0;
     public static final double MAX_GUARD_BONUS = 0.3;
@@ -62,7 +62,7 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
         Check.range("cooldownFactor", cooldownFactor, 0.2, 1.0);
         Check.range("dodgeDistanceFactor", dodgeDistanceFactor, 1.0, 3.0);
         Check.range("knockbackResistance", knockbackResistance, 0.0, 1.0);
-        Check.range("regenPerSecond", regenPerSecond, 0.0, 1000.0);
+        Check.range("potionBonus", potionBonus, 0.0, 1.0);
         Check.range("projectileSpeedFactor", projectileSpeedFactor, 1.0, 3.0);
         Check.range("lootBonus", lootBonus, 0.0, 5.0);
         Check.range("goldBonus", goldBonus, 0.0, 10.0);
@@ -126,7 +126,8 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
         health = Math.max(0.0, Math.min(MAX_HEALTH_BONUS, health));
         double defense = Math.max(0.0, vit * tuning.defensePerVit() + modifiers.defenseFlat());
         double reduction = Math.min(tuning.maxDamageReduction(), defense / (defense + tuning.defenseConstant()));
-        double speed = Math.max(tuning.minActionTimeFactor(), 1.0 / (1.0 + agi * tuning.speedPerAgi()));
+        double speed = Math.max(tuning.minActionTimeFactor(),
+                1.0 / (1.0 + agi * tuning.speedPerAgi() + modifiers.attackSpeed()));
         double crit = clamp(tuning.baseCritChance() + luk * tuning.critPerLuk() + modifiers.critChance(),
                 0.0, tuning.maxCritChance());
         double critMultiplier = clamp(tuning.critMultiplier() + modifiers.critDamage()
@@ -139,14 +140,14 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
         double cooldown = Math.max(scaling.minCooldownFactor(), 1.0 - intel * scaling.cooldownPerInt());
         double dodgeDistance = 1.0 + Math.min(scaling.maxDodgeDistanceBonus(), agi * scaling.dodgeDistancePerAgi());
         double knockbackResist = Math.min(scaling.maxKnockbackResist(), vit * scaling.knockbackResistPerVit());
-        double healthRegen = Math.min(1000.0, vit * scaling.regenPerVit());
+        double potion = Math.min(scaling.maxPotionBonus(), vit * scaling.potionPerVit());
         double projectileSpeed = 1.0 + Math.min(scaling.maxProjectileSpeedBonus(), dex * scaling.projectileSpeedPerDex());
         double loot = Math.min(scaling.maxLootBonus(), luk * scaling.lootPerLuk());
         double gold = Math.min(scaling.maxGoldBonus(), luk * scaling.goldPerLuk());
         return new CombatStats(attack, health, reduction, speed, crit, critMultiplier, stamina, regen, ranged, magic,
                 healing, clamp(modifiers.guardBonus(), 0.0, MAX_GUARD_BONUS),
                 clamp(modifiers.dodgeCostFactor(), 0.2, 2.0), clamp(moveSpeed, -0.5, 1.0),
-                chargeTime, cooldown, dodgeDistance, knockbackResist, healthRegen, projectileSpeed, loot, gold);
+                chargeTime, cooldown, dodgeDistance, knockbackResist, potion, projectileSpeed, loot, gold);
     }
 
     private static double scaled(double stat, CombatTuning tuning) {

@@ -39,6 +39,30 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/leggings_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4034
+      },
+      "model": "eternalrealm:item/named/dune_stalker_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4042
+      },
+      "model": "eternalrealm:item/named/glacier_warden_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4106
+      },
+      "model": "eternalrealm:item/named/reedwalker_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4114
+      },
+      "model": "eternalrealm:item/named/tidecaller_robe_legs"
     }
   ]
 }

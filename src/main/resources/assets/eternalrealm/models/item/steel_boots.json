@@ -39,6 +39,24 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/boots_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4007
+      },
+      "model": "eternalrealm:item/named/homestead_guard_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4015
+      },
+      "model": "eternalrealm:item/named/moonleaf_robe_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4087
+      },
+      "model": "eternalrealm:item/named/farmstead_bulwark_feet"
     }
   ]
 }

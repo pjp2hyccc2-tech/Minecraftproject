@@ -1,3 +1,35 @@
 {
-  "parent": "eternalrealm:item/weapon/staff_5"
+  "parent": "eternalrealm:item/weapon/staff_5",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3068
+      },
+      "model": "eternalrealm:item/named/ords_shellstaff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3084
+      },
+      "model": "eternalrealm:item/named/kiln_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3085
+      },
+      "model": "eternalrealm:item/named/lava_oracle_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3176
+      },
+      "model": "eternalrealm:item/named/kraken_ink_rod"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3184
+      },
+      "model": "eternalrealm:item/named/frozen_queen_sceptre"
+    }
+  ]
 }

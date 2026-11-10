@@ -130,11 +130,28 @@ public final class AffixPool {
      * result is deterministic for a seeded generator.
      */
     public List<Affix> roll(ItemTier tier, int count, RandomGenerator random) {
+        return roll(tier, count, random, Map.of());
+    }
+
+    /**
+     * Like {@link #roll(ItemTier, int, RandomGenerator)}, with {@code bias} added to the weights of the kinds this pool
+     * allows (a named design's affix tendencies; other kinds are ignored).
+     */
+    public List<Affix> roll(ItemTier tier, int count, RandomGenerator random, Map<AffixKind, Integer> bias) {
         Objects.requireNonNull(tier, "tier");
         Objects.requireNonNull(random, "random");
+        Objects.requireNonNull(bias, "bias");
         Checks.range("count", count, 0, weights.size());
         Map<AffixKind, Integer> remaining = new EnumMap<>(weights);
-        int remainingWeight = totalWeight;
+        for (Map.Entry<AffixKind, Integer> entry : bias.entrySet()) {
+            if (remaining.containsKey(entry.getKey()) && entry.getValue() > 0) {
+                remaining.merge(entry.getKey(), entry.getValue(), Integer::sum);
+            }
+        }
+        int remainingWeight = 0;
+        for (int weight : remaining.values()) {
+            remainingWeight += weight;
+        }
         List<Affix> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             int target = random.nextInt(remainingWeight);

@@ -39,6 +39,72 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/leggings_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4010
+      },
+      "model": "eternalrealm:item/named/wildflower_vestment_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4018
+      },
+      "model": "eternalrealm:item/named/silkshadow_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4022
+      },
+      "model": "eternalrealm:item/named/heartwood_bulwark_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4026
+      },
+      "model": "eternalrealm:item/named/ironvein_plate_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4030
+      },
+      "model": "eternalrealm:item/named/ember_scholar_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4038
+      },
+      "model": "eternalrealm:item/named/rivermist_garb_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4090
+      },
+      "model": "eternalrealm:item/named/scarecrow_garb_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4094
+      },
+      "model": "eternalrealm:item/named/harvest_rite_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4098
+      },
+      "model": "eternalrealm:item/named/lotus_vestment_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4102
+      },
+      "model": "eternalrealm:item/named/lakescale_mail_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4110
+      },
+      "model": "eternalrealm:item/named/privateer_garb_legs"
     }
   ]
 }

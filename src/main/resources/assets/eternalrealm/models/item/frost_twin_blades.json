@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/twin_blades_4"
+  "parent": "eternalrealm:item/weapon/twin_blades_4",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3044
+      },
+      "model": "eternalrealm:item/named/cogwheel_daggers"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3061
+      },
+      "model": "eternalrealm:item/named/spirit_tear_daggers"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3152
+      },
+      "model": "eternalrealm:item/named/kingfisher_pair"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3169
+      },
+      "model": "eternalrealm:item/named/inkstorm_blades"
+    }
+  ]
 }

@@ -59,9 +59,17 @@ public final class GearArmorItem extends ArmorItem {
     @Nullable
     public String getArmorTexture(ItemStack stack, net.minecraft.world.entity.Entity entity,
                                   net.minecraft.world.entity.EquipmentSlot slot, @Nullable String type) {
+        int layer = slot == net.minecraft.world.entity.EquipmentSlot.LEGS ? 2 : 1;
+        java.util.Optional<String> set = EquipmentStacks.designOf(stack)
+                .filter(com.eternalrealm.item.ArmorPiece.class::isInstance)
+                .map(design -> ((com.eternalrealm.item.ArmorPiece) design).set().id());
+        if (set.isPresent()) {
+            return com.eternalrealm.core.ModInfo.MOD_ID + ":textures/models/armor/er_set_" + set.get() + "_layer_"
+                    + layer + ".png";
+        }
         return OutfitStyles.styleOf(stack)
                 .map(job -> com.eternalrealm.core.ModInfo.MOD_ID + ":textures/models/armor/er_job_" + job.id() + "_layer_"
-                        + (slot == net.minecraft.world.entity.EquipmentSlot.LEGS ? 2 : 1) + ".png")
+                        + layer + ".png")
                 .orElse(null);
     }
 }

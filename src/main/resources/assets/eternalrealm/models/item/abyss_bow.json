@@ -1,3 +1,41 @@
 {
-  "parent": "eternalrealm:item/weapon/longbow_7"
+  "parent": "eternalrealm:item/weapon/longbow_7",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3106
+      },
+      "model": "eternalrealm:item/named/tempest_recurve"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3107
+      },
+      "model": "eternalrealm:item/named/peak_snipers_horizon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3123
+      },
+      "model": "eternalrealm:item/named/deadwood_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3124
+      },
+      "model": "eternalrealm:item/named/end_howl_longbow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3125
+      },
+      "model": "eternalrealm:item/named/oblivion_shard_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3186
+      },
+      "model": "eternalrealm:item/named/machine_god_skybow"
+    }
+  ]
 }

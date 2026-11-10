@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/longsword_5"
+  "parent": "eternalrealm:item/weapon/longsword_5",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3056
+      },
+      "model": "eternalrealm:item/named/frostcastle_rapier"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3072
+      },
+      "model": "eternalrealm:item/named/cinder_rune_sword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3073
+      },
+      "model": "eternalrealm:item/named/magma_vein_falchion"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3164
+      },
+      "model": "eternalrealm:item/named/barbas_tidecleaver"
+    }
+  ]
 }

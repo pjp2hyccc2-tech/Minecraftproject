@@ -1,3 +1,29 @@
 {
-  "parent": "eternalrealm:item/weapon/longbow_4"
+  "parent": "eternalrealm:item/weapon/longbow_4",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3053
+      },
+      "model": "eternalrealm:item/named/rustbones_rattle"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3070
+      },
+      "model": "eternalrealm:item/named/frozen_chain_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3161
+      },
+      "model": "eternalrealm:item/named/spirit_pearl_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3178
+      },
+      "model": "eternalrealm:item/named/seagull_bow"
+    }
+  ]
 }

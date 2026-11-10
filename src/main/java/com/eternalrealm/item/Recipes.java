@@ -23,12 +23,25 @@ import java.util.TreeMap;
  *
  * The gold alone is worth more than the expected NPC sell value of the crafted piece, even at the maximum luck, so
  * crafting to sell can never create gold.
+ *
+ * <p><b>Named designs</b> ({@link #designRecipes()}): every design with the {@link DesignSource#CRAFT} source is forged
+ * from the materials of its own field (F1 = first common, F2 = second common, U = uncommon, E = elite, S = the field's
+ * boss soul; step = the design's step in its field, 0..2):</p>
+ * <pre>
+ * weapon      F1 × 6 + F2 × 3 + U × 2 + E × step
+ * chest       F2 × 6 + F1 × 3 + U × 2 + E × step      legs  F2 × 5 + F1 × 3 + U × 2 + E × step
+ * head, feet  F2 × 4 + F1 × 2 + U × 1 + E × step
+ * gold        tier gold × (1.5 + 0.5 × step), × 0.8 for legs, × 0.6 for head and feet
+ * boss weapon S × 12 + E × 6 + U × 4, tier gold × 6 (the soul forge)
+ * level       the design's level
+ * </pre>
  */
 public final class Recipes {
     /** Index = tier number − 1: gold of a weapon or chest piece. */
     private static final long[] GOLD = {40, 100, 200, 350, 550, 800, 1100};
 
     private static final List<Recipe> CATALOG;
+    private static final List<Recipe> DESIGNS;
     private static final Map<String, Recipe> BY_ID;
 
     static {
@@ -41,16 +54,49 @@ public final class Recipes {
             }
             catalog.add(recipe);
         }
+        List<Recipe> designs = new ArrayList<>();
+        for (Design design : Armory.designs()) {
+            if (!design.sources().contains(DesignSource.CRAFT)) {
+                continue;
+            }
+            Recipe recipe = recipeFor(design);
+            if (byId.put(recipe.id(), recipe) != null) {
+                throw new ExceptionInInitializerError("Duplicate recipe id " + recipe.id());
+            }
+            designs.add(recipe);
+        }
         CATALOG = Collections.unmodifiableList(catalog);
+        DESIGNS = Collections.unmodifiableList(designs);
         BY_ID = Collections.unmodifiableMap(byId);
     }
 
     private Recipes() {
     }
 
-    /** All recipes, tier by tier (weapons in {@code WeaponType} order, then head, chest, legs, feet). */
+    /** All recipes of plain pieces, tier by tier (weapons in {@code WeaponType} order, then head, chest, legs, feet). */
     public static List<Recipe> catalog() {
         return CATALOG;
+    }
+
+    /** The recipes of the named designs, in catalogue order (field weapons, boss weapons, armor pieces). */
+    public static List<Recipe> designRecipes() {
+        return DESIGNS;
+    }
+
+    /** The design recipes of a field (its weapons, its boss weapons and its armor pieces). */
+    public static List<Recipe> forField(int field) {
+        List<Recipe> result = new ArrayList<>();
+        for (Recipe recipe : DESIGNS) {
+            if (recipe.design().field() == field) {
+                result.add(recipe);
+            }
+        }
+        return Collections.unmodifiableList(result);
+    }
+
+    public static Optional<Recipe> forDesign(Design design) {
+        Objects.requireNonNull(design, "design");
+        return byId(design.id()).filter(recipe -> design.equals(recipe.design()));
     }
 
     public static Optional<Recipe> byId(String id) {
@@ -76,6 +122,74 @@ public final class Recipes {
     /** Gold of a weapon or chest recipe of {@code tier}; other armor pays a share of it. */
     public static long tierGold(ItemTier tier) {
         return GOLD[Objects.requireNonNull(tier, "tier").number() - 1];
+    }
+
+    private static Recipe recipeFor(Design design) {
+        int field = design.field();
+        List<String> commons = Materials.ofField(field, Materials.Grade.COMMON);
+        String first = commons.get(0);
+        String second = commons.get(1);
+        String uncommon = Materials.ofField(field, Materials.Grade.UNCOMMON).get(0);
+        String elite = Materials.ofField(field, Materials.Grade.ELITE).get(0);
+        ItemTier tier = design.base().tier();
+        Map<String, Integer> ingredients = new TreeMap<>();
+        long gold;
+        if (design instanceof WeaponDesign weapon && weapon.isBossWeapon()) {
+            ingredients.put(Materials.ofField(field, Materials.Grade.BOSS).get(0), 12);
+            ingredients.put(elite, 6);
+            ingredients.put(uncommon, 4);
+            gold = tierGold(tier) * 6;
+        } else {
+            int step = stepOf(design);
+            int a;
+            int b;
+            int u;
+            int percent;
+            switch (design.slot()) {
+                case WEAPON -> {
+                    a = 6;
+                    b = 3;
+                    u = 2;
+                    percent = 100;
+                }
+                case CHEST -> {
+                    a = 3;
+                    b = 6;
+                    u = 2;
+                    percent = 100;
+                }
+                case LEGS -> {
+                    a = 3;
+                    b = 5;
+                    u = 2;
+                    percent = 80;
+                }
+                default -> {
+                    a = 2;
+                    b = 4;
+                    u = 1;
+                    percent = 60;
+                }
+            }
+            ingredients.put(first, a);
+            ingredients.merge(second, b, Integer::sum);
+            ingredients.merge(uncommon, u, Integer::sum);
+            if (step > 0) {
+                ingredients.merge(elite, step, Integer::sum);
+            }
+            gold = Math.round(tierGold(tier) * (1.5 + 0.5 * step) * percent / 100.0);
+        }
+        return new Recipe(design.id(), design.base(), ingredients, gold, design.level(), design);
+    }
+
+    /** The design's step in its field (0..2), from its level. */
+    private static int stepOf(Design design) {
+        for (int step = 2; step >= 0; step--) {
+            if (Armory.levelOf(design.field(), step) <= design.level()) {
+                return step;
+            }
+        }
+        return 0;
     }
 
     private static Recipe recipeFor(EquipmentBase base) {

@@ -42,6 +42,11 @@ def main():
             })
             count += 1
     print(f"{count} equipment models")
+    # the named designs of the armory sit on these items (custom_model_data 3000+ / 4000+)
+    import sys
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent / "art"))
+    import armory_art
+    print(f"{armory_art.patch_tier_models(str(ROOT.parent.parent))} tier models carry the armory designs")
 
 
 if __name__ == "__main__":

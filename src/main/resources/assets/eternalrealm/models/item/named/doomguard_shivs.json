@@ -1,0 +1,21 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "particle": "eternalrealm:item/named/doomguard_shivs"
+  },
+  "base": {
+    "parent": "eternalrealm:item/named/doomguard_shivs_held"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "eternalrealm:item/named/doomguard_shivs_icon"
+    },
+    "ground": {
+      "parent": "eternalrealm:item/named/doomguard_shivs_icon"
+    },
+    "fixed": {
+      "parent": "eternalrealm:item/named/doomguard_shivs_icon"
+    }
+  }
+}

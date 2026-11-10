@@ -1,3 +1,23 @@
 {
-  "parent": "eternalrealm:item/weapon/twin_blades_2"
+  "parent": "eternalrealm:item/weapon/twin_blades_2",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3007
+      },
+      "model": "eternalrealm:item/named/thistle_fangs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3024
+      },
+      "model": "eternalrealm:item/named/silkcutter_pair"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3132
+      },
+      "model": "eternalrealm:item/named/twin_sickles"
+    }
+  ]
 }

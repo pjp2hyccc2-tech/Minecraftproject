@@ -1,3 +1,35 @@
 {
-  "parent": "eternalrealm:item/weapon/longsword_7"
+  "parent": "eternalrealm:item/weapon/longsword_7",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3091
+      },
+      "model": "eternalrealm:item/named/skyforge_saber"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3092
+      },
+      "model": "eternalrealm:item/named/alvins_oathblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3108
+      },
+      "model": "eternalrealm:item/named/hollowroot_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3109
+      },
+      "model": "eternalrealm:item/named/oblivion_edge"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3110
+      },
+      "model": "eternalrealm:item/named/last_dusk"
+    }
+  ]
 }
