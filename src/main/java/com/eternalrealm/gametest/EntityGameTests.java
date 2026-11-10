@@ -38,9 +38,10 @@ import java.util.List;
  * removal - all without exceptions on a real server.
  *
  * <p>Arena: 9x5x9 with a stone floor; entities stand at relative y=2 (see CombatGameTests). The giants also walk in
- * {@code boss_arena} (41x6x41, stone floor at y=0, walls, a 5x5 pillar in the middle and four smaller ones; made by
+ * {@code boss_arena} (41x15x41: a closed stone hall with a 5x5 pillar in the middle and four smaller ones; made by
  * tools/gen-gametest-structures.py), where they also stand at relative y=2 (the template's floor layer is relative
- * y=1).</p>
+ * y=1). Note: {@code GameTestHelper.relativePos} mirrors x and z (it turns positions by 180 degrees), unlike
+ * {@code relativeVec}.</p>
  */
 @GameTestHolder(ModInfo.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -377,6 +378,14 @@ public final class EntityGameTests {
         int entities = level.getEntityCollisions(boss, box).size();
         if (entities > 0) {
             found.append(" and ").append(entities).append(" entities");
+        }
+        // blocks falling nearby (gravel or sand from elsewhere landing in the arena)
+        for (net.minecraft.world.entity.item.FallingBlockEntity falling : level.getEntitiesOfClass(
+                net.minecraft.world.entity.item.FallingBlockEntity.class, box.inflate(32.0))) {
+            if (found.length() < 700) {
+                found.append(" falling ").append(BuiltInRegistries.BLOCK.getKey(falling.getBlockState().getBlock()))
+                        .append('@').append(helper.relativeVec(falling.position()));
+            }
         }
         return found.length() == 0 ? " nothing found" : found.toString();
     }
