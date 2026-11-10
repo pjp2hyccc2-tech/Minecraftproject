@@ -7,6 +7,7 @@ import com.eternalrealm.client.entity.model.gen.FlyerEnemyGeometry;
 import com.eternalrealm.client.entity.model.gen.GolemEnemyGeometry;
 import com.eternalrealm.client.entity.model.gen.HumanoidEnemyGeometry;
 import com.eternalrealm.client.entity.model.gen.KingBossGeometry;
+import com.eternalrealm.client.entity.model.gen.NpcGeometry;
 import com.eternalrealm.client.entity.model.gen.QueenBossGeometry;
 import com.eternalrealm.client.entity.model.gen.TreantBossGeometry;
 import com.eternalrealm.core.ModInfo;
@@ -19,6 +20,7 @@ import com.eternalrealm.entity.EnemyRig;
 import com.eternalrealm.entity.FlyerEnemy;
 import com.eternalrealm.entity.GolemEnemy;
 import com.eternalrealm.entity.HumanoidEnemy;
+import com.eternalrealm.npc.forge.NpcEntities;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,7 +30,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.function.Function;
 
-/** Client wiring of the enemy and boss entities: model layers and renderers. */
+/** Client wiring of the enemy, boss and NPC entities: model layers and renderers. */
 @Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class EREntityRenderers {
     private EREntityRenderers() {
@@ -45,6 +47,7 @@ public final class EREntityRenderers {
         boss(event, BossRig.COLOSSUS, ColossusBossGeometry::create);
         boss(event, BossRig.QUEEN, QueenBossGeometry::create);
         boss(event, BossRig.DRAGON, DragonBossGeometry::create);
+        event.registerLayerDefinition(ERModelLayers.npc(), () -> NpcGeometry.create(0.0F));
     }
 
     private static void boss(EntityRenderersEvent.RegisterLayerDefinitions event, BossRig rig,
@@ -74,5 +77,6 @@ public final class EREntityRenderers {
             event.registerEntityRenderer(EREntityTypes.bossType(kind).get(),
                     context -> new BossRenderer(context, kind.rig(), walkSpeed));
         }
+        event.registerEntityRenderer(NpcEntities.NPC.get(), NpcRenderer::new);
     }
 }

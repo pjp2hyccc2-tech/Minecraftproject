@@ -15,6 +15,8 @@ import com.eternalrealm.client.entity.model.gen.HumanoidEnemyAnimations;
 import com.eternalrealm.client.entity.model.gen.HumanoidEnemyGeometry;
 import com.eternalrealm.client.entity.model.gen.KingBossAnimations;
 import com.eternalrealm.client.entity.model.gen.KingBossGeometry;
+import com.eternalrealm.client.entity.model.gen.NpcAnimations;
+import com.eternalrealm.client.entity.model.gen.NpcGeometry;
 import com.eternalrealm.client.entity.model.gen.QueenBossAnimations;
 import com.eternalrealm.client.entity.model.gen.QueenBossGeometry;
 import com.eternalrealm.client.entity.model.gen.TreantBossAnimations;
@@ -59,6 +61,10 @@ public final class ERRigs {
             DragonBossGeometry.TOGGLED_PARTS, DragonBossGeometry.VISIBLE, DragonBossGeometry.POSED_PARTS,
             DragonBossGeometry.POSES, DragonBossGeometry.SCALES, DragonBossGeometry.GLOWS,
             DragonBossAnimations::forVariant);
+    /** The town NPCs; slots: idle, walk, work, talk. */
+    public static final RigTables NPC = new RigTables("npc", NpcGeometry.VARIANTS, NpcGeometry.TOGGLED_PARTS,
+            NpcGeometry.VISIBLE, NpcGeometry.POSED_PARTS, NpcGeometry.POSES, NpcGeometry.SCALES, NpcGeometry.GLOWS,
+            NpcAnimations::forVariant);
 
     private ERRigs() {
     }

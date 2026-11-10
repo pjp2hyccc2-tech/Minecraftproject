@@ -104,7 +104,7 @@ public final class HazardGameTests {
         helper.succeed();
     }
 
-    @GameTest(template = ARENA, timeoutTicks = 200)
+    @GameTest(template = ARENA, timeoutTicks = 300)
     public static void anEliteSlamTelegraphsThenHitsOnlyInsideItsMarker(GameTestHelper helper) {
         GolemEnemy golem = helper.spawn(EREntityTypes.GOLEM_ENEMY.get(), new BlockPos(4, 2, 1));
         golem.setVariant("ice_golem");
@@ -112,26 +112,36 @@ public final class HazardGameTests {
         golem.setNoAi(true); // stays where it is; its actions still play
         IronGolem target = still(helper, new BlockPos(4, 2, 4));
         IronGolem bystander = still(helper, new BlockPos(4, 2, 8));
-        int start = 45; // after the spawn animation
         int windup = SpecialMove.SLAM.windupTicks();
-        helper.runAfterDelay(start, () -> {
-            check(golem.specialMoves().contains(SpecialMove.SLAM), "golems slam: " + golem.specialMoves());
-            check(golem.startSpecialMove(SpecialMove.SLAM, target), "the slam did not start (acting="
-                    + golem.isActing() + ")");
-            check(golem.currentSpecialTelegraph() != null, "no marker");
-            check(golem.currentSpecialTelegraph().contains(target.getX(), target.getY(), target.getZ()),
-                    "the target should stand in the marker");
-            check(!golem.currentSpecialTelegraph().contains(bystander.getX(), bystander.getY(), bystander.getZ()),
-                    "the bystander should stand outside the marker");
-        });
-        helper.runAfterDelay(start + windup - 4, () -> {
-            check(golem.currentSpecialMove() == SpecialMove.SLAM, "the wind-up ended early");
-            check(target.getHealth() == target.getMaxHealth(), "hit during the wind-up");
-        });
-        helper.runAfterDelay(start + windup + 6, () -> {
-            check(target.getHealth() < target.getMaxHealth(), "the slam did not hit the target in its marker");
-            check(bystander.getHealth() == bystander.getMaxHealth(), "the slam hit outside its marker");
-            helper.succeed();
+        // start as soon as the spawn animation (and anything else it is playing) is over, not at a fixed tick
+        long[] startedAt = {-1L};
+        helper.onEachTick(() -> {
+            long tick = helper.getTick();
+            if (startedAt[0] < 0) {
+                if (tick < 40 || golem.isActing()) {
+                    check(tick < 200, "the golem never became free to act (action=" + golem.currentAction() + ")");
+                    return;
+                }
+                check(golem.specialMoves().contains(SpecialMove.SLAM), "golems slam: " + golem.specialMoves());
+                check(golem.startSpecialMove(SpecialMove.SLAM, target), "the slam did not start (acting="
+                        + golem.isActing() + ", action=" + golem.currentAction() + ")");
+                check(golem.currentSpecialTelegraph() != null, "no marker");
+                check(golem.currentSpecialTelegraph().contains(target.getX(), target.getY(), target.getZ()),
+                        "the target should stand in the marker");
+                check(!golem.currentSpecialTelegraph().contains(bystander.getX(), bystander.getY(), bystander.getZ()),
+                        "the bystander should stand outside the marker");
+                startedAt[0] = tick;
+                return;
+            }
+            long t = tick - startedAt[0];
+            if (t == windup - 4) {
+                check(golem.currentSpecialMove() == SpecialMove.SLAM, "the wind-up ended early");
+                check(target.getHealth() == target.getMaxHealth(), "hit during the wind-up");
+            } else if (t == windup + 6) {
+                check(target.getHealth() < target.getMaxHealth(), "the slam did not hit the target in its marker");
+                check(bystander.getHealth() == bystander.getMaxHealth(), "the slam hit outside its marker");
+                helper.succeed();
+            }
         });
     }
 

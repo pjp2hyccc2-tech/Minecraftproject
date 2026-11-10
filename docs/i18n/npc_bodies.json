@@ -1,0 +1,310 @@
+{
+  "entity.eternalrealm.npc": {
+    "ja": "住人",
+    "en": "Resident"
+  },
+  "npc.eternalrealm.folk.merchant": {
+    "ja": "商人",
+    "en": "Merchant"
+  },
+  "npc.eternalrealm.folk.housewife": {
+    "ja": "町のおかみさん",
+    "en": "Townswoman"
+  },
+  "npc.eternalrealm.folk.farmer": {
+    "ja": "農夫",
+    "en": "Farmer"
+  },
+  "npc.eternalrealm.folk.sailor": {
+    "ja": "船乗り",
+    "en": "Sailor"
+  },
+  "npc.eternalrealm.folk.noble_lady": {
+    "ja": "貴婦人",
+    "en": "Noble Lady"
+  },
+  "npc.eternalrealm.folk.noble_gent": {
+    "ja": "紳士",
+    "en": "Gentleman"
+  },
+  "npc.eternalrealm.folk.elder": {
+    "ja": "ご隠居",
+    "en": "Elder"
+  },
+  "npc.eternalrealm.folk.apprentice": {
+    "ja": "見習い職人",
+    "en": "Apprentice"
+  },
+  "npc.eternalrealm.folk.maid": {
+    "ja": "侍女",
+    "en": "Maid"
+  },
+  "npc.eternalrealm.folk.bard": {
+    "ja": "吟遊詩人",
+    "en": "Bard"
+  },
+  "npc.eternalrealm.folk.child": {
+    "ja": "町の子ども",
+    "en": "Child"
+  },
+  "npc.eternalrealm.folk.adventurer": {
+    "ja": "冒険者",
+    "en": "Adventurer"
+  },
+  "npc.eternalrealm.folk.guard": {
+    "ja": "王国衛兵",
+    "en": "Royal Guard"
+  },
+  "npc.eternalrealm.folk.knight": {
+    "ja": "王城騎士",
+    "en": "Castle Knight"
+  },
+  "npc.eternalrealm.folk.archer": {
+    "ja": "城壁の弓兵",
+    "en": "Wall Archer"
+  },
+  "npc.eternalrealm.folk.priest": {
+    "ja": "司祭",
+    "en": "Priest"
+  },
+  "npc.eternalrealm.folk.nun": {
+    "ja": "修道女",
+    "en": "Sister"
+  },
+  "npc.eternalrealm.folk.citizen": {
+    "ja": "町の人",
+    "en": "Townsperson"
+  },
+  "npc.eternalrealm.folk.say.commoner.1": {
+    "ja": "いい天気だねえ。こんな日は噴水の広場でひと休みさ。",
+    "en": "Lovely weather. Days like this, I rest by the fountain."
+  },
+  "npc.eternalrealm.folk.say.commoner.2": {
+    "ja": "星門から来た人かい？　王都へようこそ！",
+    "en": "Did you come through the Star Gate? Welcome to the capital!"
+  },
+  "npc.eternalrealm.folk.say.commoner.3": {
+    "ja": "ギルドのミーナちゃん、今日も元気いっぱいだったよ。",
+    "en": "Mina at the guild desk was as cheerful as ever today."
+  },
+  "npc.eternalrealm.folk.say.commoner.4": {
+    "ja": "夜になると、塔のほうが光るんだ……気味が悪いねえ。",
+    "en": "At night something glows over by the tower... Gives me chills."
+  },
+  "npc.eternalrealm.folk.say.commoner.5": {
+    "ja": "王女さまがご無事なら、この国は大丈夫さ。",
+    "en": "As long as the princess is well, this kingdom will be fine."
+  },
+  "npc.eternalrealm.folk.say.merchant.1": {
+    "ja": "いらっしゃい！　……おっと、店はあっちだったな。",
+    "en": "Welcome! ...Oh, wait, my shop is over that way."
+  },
+  "npc.eternalrealm.folk.say.merchant.2": {
+    "ja": "北の毛皮がまた値上がりしてね。商売あがったりだよ。",
+    "en": "Furs from the north went up again. Business is tough."
+  },
+  "npc.eternalrealm.folk.say.merchant.3": {
+    "ja": "港に南の香辛料が入ったってさ。急がないと！",
+    "en": "Spices from the south just came into the harbour. Got to hurry!"
+  },
+  "npc.eternalrealm.folk.say.merchant.4": {
+    "ja": "冒険者さんは上客だ。市場にもぜひ寄っておくれ。",
+    "en": "Adventurers are my best customers. Do drop by the market."
+  },
+  "npc.eternalrealm.folk.say.farmer.1": {
+    "ja": "今年の麦は出来がいい。星の恵みだな。",
+    "en": "The wheat came in well this year. A gift of the stars."
+  },
+  "npc.eternalrealm.folk.say.farmer.2": {
+    "ja": "畑を荒らす魔物を見かけたら、追い払っておくれよ。",
+    "en": "If you see monsters trampling the fields, chase them off."
+  },
+  "npc.eternalrealm.folk.say.farmer.3": {
+    "ja": "農家の朝は早いんだ。ふああ……。",
+    "en": "Farmers rise early, you know. Yaaawn..."
+  },
+  "npc.eternalrealm.folk.say.farmer.4": {
+    "ja": "王都のみんなは、うちの野菜が大好物なのさ。",
+    "en": "Everyone in the capital loves our vegetables."
+  },
+  "npc.eternalrealm.folk.say.sailor.1": {
+    "ja": "湖の風が変わった。明日は荒れるぞ。",
+    "en": "The lake wind has turned. It'll be rough tomorrow."
+  },
+  "npc.eternalrealm.folk.say.sailor.2": {
+    "ja": "港の酒場で一杯やらないか？　おごらないけどな。",
+    "en": "Fancy a drink at the harbour tavern? Not my treat, though."
+  },
+  "npc.eternalrealm.folk.say.sailor.3": {
+    "ja": "遠い国の噂なら、船乗りに聞くのが一番さ。",
+    "en": "If you want rumours from far away, ask a sailor."
+  },
+  "npc.eternalrealm.folk.say.sailor.4": {
+    "ja": "錨を上げろ！……あ、今日は休みだった。",
+    "en": "Weigh anchor! ...Oh, right. It's my day off."
+  },
+  "npc.eternalrealm.folk.say.noble.1": {
+    "ja": "ごきげんよう。冒険者の方でいらっしゃいますね。",
+    "en": "Good day. You must be one of the adventurers."
+  },
+  "npc.eternalrealm.folk.say.noble.2": {
+    "ja": "城の舞踏会はしばらくお預けです。物騒ですからね。",
+    "en": "No balls at the castle for a while. These are dangerous times."
+  },
+  "npc.eternalrealm.folk.say.noble.3": {
+    "ja": "陛下がまた鎧をお召しになったそうです。困ったものです。",
+    "en": "They say His Majesty put on his armour again. Oh dear."
+  },
+  "npc.eternalrealm.folk.say.noble.4": {
+    "ja": "王国の平和は、あなたがたの剣にかかっております。",
+    "en": "The peace of the kingdom rests on your swords."
+  },
+  "npc.eternalrealm.folk.say.elder.1": {
+    "ja": "わしが若いころは、あの塔もまだ静かじゃった。",
+    "en": "When I was young, that tower was still quiet."
+  },
+  "npc.eternalrealm.folk.say.elder.2": {
+    "ja": "千年前の英雄の話を知っておるかね？",
+    "en": "Do you know the tale of the heroes of a thousand years ago?"
+  },
+  "npc.eternalrealm.folk.say.elder.3": {
+    "ja": "腰が痛くてのう。若いのはいいのう。",
+    "en": "Oh, my back... How I envy you young folk."
+  },
+  "npc.eternalrealm.folk.say.elder.4": {
+    "ja": "無茶をするでないぞ。命はひとつじゃ。",
+    "en": "Don't be reckless. You only have one life."
+  },
+  "npc.eternalrealm.folk.say.young.1": {
+    "ja": "親方に怒られちゃう！　急がなきゃ！",
+    "en": "The master's going to yell at me! I have to hurry!"
+  },
+  "npc.eternalrealm.folk.say.young.2": {
+    "ja": "いつか自分の店を持つのが夢なんです。",
+    "en": "My dream is to have a shop of my own someday."
+  },
+  "npc.eternalrealm.folk.say.young.3": {
+    "ja": "ゴラン親方の鍛冶場、すごいですよね……！",
+    "en": "Master Goran's forge is amazing, isn't it...!"
+  },
+  "npc.eternalrealm.folk.say.young.4": {
+    "ja": "配達の途中なんです。またあとで！",
+    "en": "I'm in the middle of a delivery. See you later!"
+  },
+  "npc.eternalrealm.folk.say.maid.1": {
+    "ja": "お城の廊下は長くて、お掃除が終わらないんです。",
+    "en": "The castle halls are so long, the cleaning never ends."
+  },
+  "npc.eternalrealm.folk.say.maid.2": {
+    "ja": "王女さまのお茶の時間に遅れてしまいます！",
+    "en": "I'll be late for the princess's tea time!"
+  },
+  "npc.eternalrealm.folk.say.maid.3": {
+    "ja": "騎士団長さまって、実は甘いものがお好きなんですよ。",
+    "en": "The knight captain secretly loves sweets, you know."
+  },
+  "npc.eternalrealm.folk.say.maid.4": {
+    "ja": "いらっしゃいませ。どうぞごゆっくり。",
+    "en": "Welcome. Please take your time."
+  },
+  "npc.eternalrealm.folk.say.bard.1": {
+    "ja": "新しい英雄の歌を作っているんだ。君の名前も入れようか？",
+    "en": "I'm writing a new hero's song. Shall I put your name in?"
+  },
+  "npc.eternalrealm.folk.say.bard.2": {
+    "ja": "♪星の門をくぐりて、勇者は来たれり……",
+    "en": "♪Through the gate of stars, the heroes came..."
+  },
+  "npc.eternalrealm.folk.say.bard.3": {
+    "ja": "酒場で歌えば、おひねりがたっぷりさ。",
+    "en": "Sing at the tavern and the coins come pouring in."
+  },
+  "npc.eternalrealm.folk.say.bard.4": {
+    "ja": "盗賊王の歌は大ウケだったなあ。本人は怒ってたけど。",
+    "en": "The Bandit King song was a hit. He wasn't pleased, though."
+  },
+  "npc.eternalrealm.folk.say.child.1": {
+    "ja": "ぼくも大きくなったら冒険者になるんだ！",
+    "en": "When I grow up, I'm going to be an adventurer too!"
+  },
+  "npc.eternalrealm.folk.say.child.2": {
+    "ja": "ねえねえ、魔物ってほんとに大きいの？",
+    "en": "Hey, hey, are monsters really that big?"
+  },
+  "npc.eternalrealm.folk.say.child.3": {
+    "ja": "いま鬼ごっこしてるの。見つかっちゃだめ！",
+    "en": "We're playing tag. Don't give me away!"
+  },
+  "npc.eternalrealm.folk.say.child.4": {
+    "ja": "噴水にコインを投げると、願いがかなうんだって！",
+    "en": "They say if you toss a coin in the fountain, your wish comes true!"
+  },
+  "npc.eternalrealm.folk.say.adventurer.1": {
+    "ja": "次はどのダンジョンに挑む？　準備は万全にな。",
+    "en": "Which dungeon are you tackling next? Prepare well."
+  },
+  "npc.eternalrealm.folk.say.adventurer.2": {
+    "ja": "ギルドマスターのシチューは……やめておけ。",
+    "en": "The guild master's stew... Just don't."
+  },
+  "npc.eternalrealm.folk.say.adventurer.3": {
+    "ja": "パーティーを組むなら、役割を決めておくといい。",
+    "en": "If you form a party, decide on your roles first."
+  },
+  "npc.eternalrealm.folk.say.adventurer.4": {
+    "ja": "予兆を見逃すな。床が光ったら、すぐに離れろ。",
+    "en": "Watch for the warning signs. When the floor glows, get out."
+  },
+  "npc.eternalrealm.folk.say.guard.1": {
+    "ja": "異常なし。王都の平和は我らが守る。",
+    "en": "All quiet. We keep the capital safe."
+  },
+  "npc.eternalrealm.folk.say.guard.2": {
+    "ja": "通ってよし。……冒険者殿、気をつけてな。",
+    "en": "You may pass. ...Take care out there, adventurer."
+  },
+  "npc.eternalrealm.folk.say.guard.3": {
+    "ja": "団長殿の訓練は厳しいぞ。今日も足がぱんぱんだ。",
+    "en": "The captain's drills are brutal. My legs ache again."
+  },
+  "npc.eternalrealm.folk.say.guard.4": {
+    "ja": "夜警の交代まで、あと少しだ。",
+    "en": "Not long until the night watch takes over."
+  },
+  "npc.eternalrealm.folk.say.guard.5": {
+    "ja": "王国に栄光あれ！",
+    "en": "Glory to the kingdom!"
+  },
+  "npc.eternalrealm.folk.say.clergy.1": {
+    "ja": "星々のご加護がありますように。",
+    "en": "May the stars watch over you."
+  },
+  "npc.eternalrealm.folk.say.clergy.2": {
+    "ja": "大聖堂の扉は、いつでも開いております。",
+    "en": "The doors of the cathedral are always open."
+  },
+  "npc.eternalrealm.folk.say.clergy.3": {
+    "ja": "傷ついたなら、迷わず祈りなさい。",
+    "en": "If you are hurt, do not hesitate to pray."
+  },
+  "npc.eternalrealm.folk.say.clergy.4": {
+    "ja": "千年前の英雄たちのためにも、祈りを捧げております。",
+    "en": "I pray for the heroes of a thousand years ago, too."
+  },
+  "npc.eternalrealm.folk.say.king.1": {
+    "ja": "おお、冒険者よ！　よくぞ参った！　……余も一緒に行ってよいか？",
+    "en": "Ah, adventurer! Welcome! ...May I come along?"
+  },
+  "npc.eternalrealm.folk.say.king.2": {
+    "ja": "鎧はいつでも着られるようにしてあるのだ。いつでもな！",
+    "en": "I keep my armour ready at all times. At all times!"
+  },
+  "npc.eternalrealm.folk.say.king.3": {
+    "ja": "リリアを頼む。あの子は無理をしすぎるのだ……ぐすっ。",
+    "en": "Look after Lilia. She pushes herself too hard... *sniff*"
+  },
+  "npc.eternalrealm.folk.say.king.4": {
+    "ja": "アデルにまた止められてしまった。余は散歩に出たかっただけなのだ。",
+    "en": "Adel stopped me again. I only wanted to go for a walk."
+  }
+}

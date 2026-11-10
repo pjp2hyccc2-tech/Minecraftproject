@@ -616,8 +616,8 @@ def barracks(w, T):
             w.set(x, 34, z, head)
             w.set(x + (1 if f == "west" else -1), 34, z, foot)
             w.set(x + (2 if f == "west" else -2), 34, z, B.S("chest", facing="east" if f == "west" else "west"))
-    for z in (-136, -146, -154):
-        deco.hanging_lantern(w, -79, 39, z, drop=1)
+    for z in (-136, -146, -154):  # long chains from the roof ridge of the attic dormitory
+        deco.hanging_lantern(w, -79, 51, z, drop=13)
     w.spot("castle.barracks", (-79, py + 1, -132), 0.0)
 
 

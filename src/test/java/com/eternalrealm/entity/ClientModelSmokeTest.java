@@ -17,8 +17,8 @@ import static org.junit.Assert.fail;
 
 /**
  * Runs the client model pipeline of every rig outside the game (the CI GameTest server is headless and never loads
- * client classes): bakes the generated body and shield layers, builds the real EnemyModel/BossModel, applies every
- * variant look and evaluates every animation with vanilla KeyframeAnimations at several times.
+ * client classes): bakes the generated body and shield layers, builds the real EnemyModel/BossModel/NpcModel, applies
+ * every variant look and evaluates every animation with vanilla KeyframeAnimations at several times.
  *
  * <p>Uses reflection only, so it compiles without Minecraft; it is skipped where the client classes are absent
  * (tools/offline-test.sh) and runs in the Gradle build, where Minecraft is on the test classpath.</p>
@@ -28,10 +28,13 @@ public class ClientModelSmokeTest {
     /** EnemyAnim / BossAnimation slot counts (those classes are not part of the offline build). */
     private static final int ENEMY_SLOTS = 8;
     private static final int BOSS_SLOTS = 11;
+    /** NpcModel slots: idle, walk, work, talk. */
+    private static final int NPC_SLOTS = 4;
     private static final String[][] RIGS = {
             {"HUMANOID", "HumanoidEnemy", "enemy"}, {"BEAST", "BeastEnemy", "enemy"}, {"GOLEM", "GolemEnemy", "enemy"},
             {"FLYER", "FlyerEnemy", "enemy"}, {"KING", "KingBoss", "boss"}, {"TREANT", "TreantBoss", "boss"},
-            {"COLOSSUS", "ColossusBoss", "boss"}, {"QUEEN", "QueenBoss", "boss"}, {"DRAGON", "DragonBoss", "boss"}};
+            {"COLOSSUS", "ColossusBoss", "boss"}, {"QUEEN", "QueenBoss", "boss"}, {"DRAGON", "DragonBoss", "boss"},
+            {"NPC", "Npc", "npc"}};
 
     private static Class<?> load(String name) {
         try {
@@ -78,10 +81,19 @@ public class ClientModelSmokeTest {
             Method create = geometry.getMethod("create", float.class);
             Object body = bakeRoot.invoke(create.invoke(null, 0.0F));
             bakeRoot.invoke(create.invoke(null, 0.9F));
-            Class<?> modelClass = load("com.eternalrealm.client.entity.model." + ("enemy".equals(rig[2]) ? "EnemyModel" : "BossModel"));
+            String modelName = switch (rig[2]) {
+                case "enemy" -> "EnemyModel";
+                case "npc" -> "NpcModel";
+                default -> "BossModel";
+            };
+            Class<?> modelClass = load("com.eternalrealm.client.entity.model." + modelName);
             Constructor<?> constructor = modelClass.getConstructor(modelPart, rigTables, float.class);
             Object model = constructor.newInstance(body, tables, 1.5F);
-            int slots = "enemy".equals(rig[2]) ? ENEMY_SLOTS : BOSS_SLOTS;
+            int slots = switch (rig[2]) {
+                case "enemy" -> ENEMY_SLOTS;
+                case "npc" -> NPC_SLOTS;
+                default -> BOSS_SLOTS;
+            };
             for (String variant : (String[]) variants.invoke(tables)) {
                 for (int slot = 0; slot < slots; slot++) {
                     int index = (int) prepare.invoke(model, variant);
@@ -121,6 +133,6 @@ public class ClientModelSmokeTest {
             fail(String.join("\n", problems.subList(0, Math.min(40, problems.size()))));
         }
         assertTrue("too few evaluations: " + evaluated, evaluated > 1000);
-        assertEquals("all rigs checked", 9, RIGS.length);
+        assertEquals("all rigs checked", 10, RIGS.length);
     }
 }

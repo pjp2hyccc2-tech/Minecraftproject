@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "e2dd178db5071935",
+ "build": "f12d0098f77c15ac",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -10,16 +10,36 @@
   "eternalrealm:carved_castle_stone",
   "eternalrealm:castle_brick_stairs[facing=east,half=bottom,shape=straight]",
   "eternalrealm:castle_brick_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:castle_brick_stairs[facing=north,half=top,shape=straight]",
   "eternalrealm:castle_brick_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:castle_brick_stairs[facing=south,half=top,shape=straight]",
   "eternalrealm:castle_brick_stairs[facing=west,half=bottom,shape=straight]",
   "eternalrealm:castle_brick_wall",
   "eternalrealm:castle_bricks",
   "eternalrealm:castle_crest_stone",
   "eternalrealm:castle_pillar[axis=y]",
   "eternalrealm:chandelier",
+  "eternalrealm:clock_face[facing=east]",
+  "eternalrealm:clock_face[facing=north]",
+  "eternalrealm:clock_face[facing=south]",
+  "eternalrealm:cobbled_paving",
+  "eternalrealm:flag[facing=east]",
+  "eternalrealm:flag[facing=north]",
+  "eternalrealm:fountain_spray[facing=east,power=1]",
+  "eternalrealm:fountain_spray[facing=east,power=2]",
+  "eternalrealm:fountain_spray[facing=north,power=1]",
+  "eternalrealm:fountain_spray[facing=north,power=2]",
+  "eternalrealm:fountain_spray[facing=south,power=1]",
+  "eternalrealm:fountain_spray[facing=south,power=2]",
+  "eternalrealm:fountain_spray[facing=up,power=1]",
+  "eternalrealm:fountain_spray[facing=up,power=2]",
+  "eternalrealm:fountain_spray[facing=up,power=3]",
+  "eternalrealm:fountain_spray[facing=west,power=1]",
+  "eternalrealm:fountain_spray[facing=west,power=2]",
   "eternalrealm:gilded_finial",
   "eternalrealm:gilded_trim",
   "eternalrealm:gilded_trim_slab[type=bottom]",
+  "eternalrealm:gilded_trim_slab[type=top]",
   "eternalrealm:gilded_trim_stairs[facing=east,half=bottom,shape=straight]",
   "eternalrealm:gilded_trim_stairs[facing=east,half=top,shape=straight]",
   "eternalrealm:gilded_trim_stairs[facing=north,half=bottom,shape=straight]",
@@ -28,12 +48,17 @@
   "eternalrealm:gilded_trim_stairs[facing=south,half=top,shape=straight]",
   "eternalrealm:gilded_trim_stairs[facing=west,half=bottom,shape=straight]",
   "eternalrealm:gilded_trim_stairs[facing=west,half=top,shape=straight]",
+  "eternalrealm:leaded_glass_pane",
   "eternalrealm:light_shaft[facing=east]",
   "eternalrealm:light_shaft[facing=south]",
   "eternalrealm:light_shaft[facing=west]",
+  "eternalrealm:pale_roof_tile_slab[type=bottom]",
   "eternalrealm:pale_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:pale_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:pale_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:pale_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
   "eternalrealm:pale_roof_tiles",
+  "eternalrealm:plaza_flagstones",
   "eternalrealm:royal_roof_tile_slab[type=bottom]",
   "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
   "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
@@ -44,6 +69,8 @@
   "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
   "eternalrealm:royal_roof_tiles",
+  "eternalrealm:smoke_emitter[heavy=false]",
+  "eternalrealm:smoke_emitter[heavy=true]",
   "eternalrealm:smooth_castle_stone",
   "eternalrealm:smooth_castle_stone_slab[type=bottom]",
   "eternalrealm:smooth_castle_stone_slab[type=top]",
@@ -51,26 +78,65 @@
   "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
   "eternalrealm:smooth_castle_stone_stairs[facing=north,half=bottom,shape=straight]",
   "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
   "eternalrealm:smooth_castle_stone_stairs[facing=west,half=bottom,shape=straight]",
   "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+  "eternalrealm:terracotta_roof_tile_slab[type=bottom]",
+  "eternalrealm:terracotta_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:terracotta_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:terracotta_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:terracotta_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:terracotta_roof_tiles",
+  "eternalrealm:water_wheel[facing=west]",
   "eternalrealm:white_plaster",
+  "eternalrealm:windmill_sails[facing=south]",
   "minecraft:allium",
   "minecraft:amethyst_block",
   "minecraft:amethyst_cluster[facing=down]",
   "minecraft:amethyst_cluster[facing=up]",
   "minecraft:andesite",
+  "minecraft:anvil[facing=east]",
+  "minecraft:anvil[facing=north]",
   "minecraft:azalea_leaves[distance=1,persistent=true]",
   "minecraft:azure_bluet",
+  "minecraft:barrel[facing=east]",
+  "minecraft:barrel[facing=north]",
+  "minecraft:barrel[facing=south]",
+  "minecraft:barrel[facing=up,open=false]",
   "minecraft:barrel[facing=up]",
+  "minecraft:barrel[facing=west]",
+  "minecraft:bee_nest[facing=north,honey_level=5]",
+  "minecraft:bee_nest[facing=south,honey_level=5]",
+  "minecraft:beetroots[age=3]",
   "minecraft:bell[attachment=ceiling,facing=north]",
+  "minecraft:bell[attachment=floor,facing=east]",
+  "minecraft:bell[attachment=floor,facing=west]",
+  "minecraft:birch_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:birch_door[facing=north,half=lower,hinge=right,open=false]",
+  "minecraft:birch_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:birch_door[facing=north,half=upper,hinge=right,open=false]",
+  "minecraft:birch_door[facing=south,half=lower,hinge=left,open=false]",
+  "minecraft:birch_door[facing=south,half=lower,hinge=right,open=false]",
+  "minecraft:birch_door[facing=south,half=upper,hinge=left,open=false]",
+  "minecraft:birch_door[facing=south,half=upper,hinge=right,open=false]",
   "minecraft:birch_leaves[distance=1,persistent=true]",
   "minecraft:birch_log[axis=x]",
   "minecraft:birch_log[axis=y]",
   "minecraft:birch_log[axis=z]",
+  "minecraft:birch_planks",
+  "minecraft:birch_trapdoor[facing=north,half=bottom,open=true]",
+  "minecraft:birch_trapdoor[facing=south,half=bottom,open=true]",
+  "minecraft:birch_wall_sign[facing=south]",
+  "minecraft:black_wall_banner[facing=north]",
+  "minecraft:blast_furnace[facing=north,lit=true]",
   "minecraft:blue_banner[rotation=0]",
   "minecraft:blue_bed[facing=east,part=foot]",
   "minecraft:blue_bed[facing=east,part=head]",
+  "minecraft:blue_bed[facing=north,part=foot]",
+  "minecraft:blue_bed[facing=north,part=head]",
+  "minecraft:blue_bed[facing=south,part=foot]",
+  "minecraft:blue_bed[facing=south,part=head]",
   "minecraft:blue_bed[facing=west,part=foot]",
   "minecraft:blue_bed[facing=west,part=head]",
   "minecraft:blue_carpet",
@@ -83,158 +149,478 @@
   "minecraft:blue_wall_banner[facing=west]",
   "minecraft:blue_wool",
   "minecraft:bookshelf",
+  "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=true,has_bottle_2=true]",
+  "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=true]",
   "minecraft:brewing_stand[has_bottle_0=true,has_bottle_2=true]",
+  "minecraft:brewing_stand[has_bottle_0=true]",
+  "minecraft:brick_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:bricks",
+  "minecraft:brown_carpet",
+  "minecraft:brown_wall_banner[facing=east]",
+  "minecraft:brown_wall_banner[facing=north]",
+  "minecraft:brown_wall_banner[facing=south]",
   "minecraft:cake",
   "minecraft:cake[bites=3]",
   "minecraft:calcite",
+  "minecraft:campfire[lit=true,signal_fire=false]",
   "minecraft:campfire[lit=true]",
   "minecraft:candle[candles=2,lit=true]",
+  "minecraft:carrots[age=7]",
   "minecraft:cartography_table",
   "minecraft:carved_pumpkin[facing=south]",
+  "minecraft:cauldron",
+  "minecraft:chain[axis=x]",
   "minecraft:chain[axis=y]",
   "minecraft:chest[facing=east,type=single]",
+  "minecraft:chest[facing=north,type=single]",
+  "minecraft:chest[facing=south,type=single]",
   "minecraft:chest[facing=west,type=single]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_2_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_4_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_3_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=west]",
+  "minecraft:chiseled_polished_blackstone",
   "minecraft:chiseled_quartz_block",
   "minecraft:clay",
+  "minecraft:coal_block",
   "minecraft:coarse_dirt",
   "minecraft:cobblestone",
+  "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:composter",
+  "minecraft:composter[level=6]",
+  "minecraft:composter[level=7]",
+  "minecraft:composter[level=8]",
   "minecraft:cornflower",
   "minecraft:cracked_stone_bricks",
+  "minecraft:crafting_table",
+  "minecraft:cyan_carpet",
+  "minecraft:cyan_stained_glass_pane",
+  "minecraft:cyan_wall_banner[facing=north]",
+  "minecraft:cyan_wall_banner[facing=south]",
+  "minecraft:cyan_wool",
+  "minecraft:damaged_anvil[facing=north]",
   "minecraft:dandelion",
+  "minecraft:dark_oak_door[facing=east,half=lower,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=east,half=lower,hinge=right,open=false]",
+  "minecraft:dark_oak_door[facing=east,half=upper,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=east,half=upper,hinge=right,open=false]",
+  "minecraft:dark_oak_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=north,half=lower,hinge=right,open=false]",
+  "minecraft:dark_oak_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=north,half=upper,hinge=right,open=false]",
+  "minecraft:dark_oak_door[facing=south,half=lower,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=south,half=lower,hinge=right,open=false]",
+  "minecraft:dark_oak_door[facing=south,half=upper,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=south,half=upper,hinge=right,open=false]",
+  "minecraft:dark_oak_door[facing=west,half=lower,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=west,half=lower,hinge=right,open=false]",
+  "minecraft:dark_oak_door[facing=west,half=upper,hinge=left,open=false]",
+  "minecraft:dark_oak_door[facing=west,half=upper,hinge=right,open=false]",
   "minecraft:dark_oak_fence",
   "minecraft:dark_oak_leaves[distance=1,persistent=true]",
   "minecraft:dark_oak_log[axis=x]",
   "minecraft:dark_oak_log[axis=y]",
   "minecraft:dark_oak_log[axis=z]",
   "minecraft:dark_oak_planks",
+  "minecraft:dark_oak_pressure_plate",
   "minecraft:dark_oak_sign[rotation=0]",
   "minecraft:dark_oak_sign[rotation=12]",
+  "minecraft:dark_oak_sign[rotation=4]",
+  "minecraft:dark_oak_sign[rotation=8]",
+  "minecraft:dark_oak_slab[type=bottom]",
   "minecraft:dark_oak_slab[type=top]",
   "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
   "minecraft:dark_oak_stairs[facing=east,half=top,shape=straight]",
   "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=north,half=top,shape=straight]",
   "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=south,half=top,shape=straight]",
   "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:dark_oak_stairs[facing=west,half=top,shape=straight]",
   "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
+  "minecraft:dark_oak_trapdoor[facing=north,half=bottom,open=true]",
+  "minecraft:dark_oak_trapdoor[facing=south,half=bottom,open=true]",
   "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
   "minecraft:dark_oak_wall_sign[facing=east]",
+  "minecraft:dark_oak_wall_sign[facing=north]",
+  "minecraft:dark_oak_wall_sign[facing=south]",
+  "minecraft:dark_oak_wall_sign[facing=west]",
+  "minecraft:dark_prismarine",
+  "minecraft:decorated_pot",
+  "minecraft:decorated_pot[facing=north]",
+  "minecraft:decorated_pot[facing=south]",
+  "minecraft:deepslate_tile_slab[type=bottom]",
+  "minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:deepslate_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:deepslate_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:deepslate_tiles",
   "minecraft:diorite",
   "minecraft:dirt",
   "minecraft:dirt_path",
+  "minecraft:dried_kelp_block",
+  "minecraft:end_rod[facing=east]",
+  "minecraft:end_rod[facing=north]",
+  "minecraft:end_rod[facing=south]",
   "minecraft:end_rod[facing=up]",
+  "minecraft:end_rod[facing=west]",
+  "minecraft:farmland[moisture=7]",
+  "minecraft:fletching_table",
+  "minecraft:flower_pot",
   "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
+  "minecraft:furnace[facing=east,lit=false]",
+  "minecraft:furnace[facing=north,lit=false]",
+  "minecraft:furnace[facing=north,lit=true]",
+  "minecraft:furnace[facing=south,lit=false]",
+  "minecraft:furnace[facing=south,lit=true]",
+  "minecraft:furnace[facing=west,lit=false]",
   "minecraft:glass",
   "minecraft:glass_pane",
+  "minecraft:glowstone",
   "minecraft:grass",
   "minecraft:grass_block",
   "minecraft:gravel",
+  "minecraft:gray_wall_banner[facing=north]",
+  "minecraft:green_bed[facing=east,part=foot]",
+  "minecraft:green_bed[facing=east,part=head]",
+  "minecraft:green_bed[facing=north,part=foot]",
+  "minecraft:green_bed[facing=north,part=head]",
+  "minecraft:green_bed[facing=south,part=foot]",
+  "minecraft:green_bed[facing=south,part=head]",
+  "minecraft:green_bed[facing=west,part=foot]",
+  "minecraft:green_bed[facing=west,part=head]",
+  "minecraft:green_carpet",
+  "minecraft:green_wall_banner[facing=north]",
+  "minecraft:green_wool",
+  "minecraft:grindstone[face=floor,facing=north]",
   "minecraft:grindstone[face=floor,facing=south]",
   "minecraft:hanging_roots",
   "minecraft:hay_block[axis=y]",
+  "minecraft:hopper[facing=down]",
   "minecraft:iron_bars",
+  "minecraft:jukebox",
+  "minecraft:jungle_trapdoor[facing=east,half=bottom,open=true]",
+  "minecraft:jungle_trapdoor[facing=north,half=bottom,open=true]",
+  "minecraft:ladder[facing=east]",
+  "minecraft:ladder[facing=north]",
+  "minecraft:ladder[facing=south]",
+  "minecraft:ladder[facing=west]",
   "minecraft:lantern[hanging=false]",
   "minecraft:lantern[hanging=true]",
   "minecraft:lapis_block",
+  "minecraft:lava_cauldron",
   "minecraft:lectern[facing=east,has_book=true]",
+  "minecraft:lectern[facing=north,has_book=true]",
+  "minecraft:lectern[facing=north]",
   "minecraft:lectern[facing=south,has_book=false]",
   "minecraft:lectern[facing=south,has_book=true]",
+  "minecraft:lectern[facing=west,has_book=true]",
+  "minecraft:light_blue_bed[facing=east,part=foot]",
+  "minecraft:light_blue_bed[facing=east,part=head]",
+  "minecraft:light_blue_bed[facing=north,part=foot]",
+  "minecraft:light_blue_bed[facing=north,part=head]",
+  "minecraft:light_blue_bed[facing=south,part=foot]",
+  "minecraft:light_blue_bed[facing=south,part=head]",
+  "minecraft:light_blue_bed[facing=west,part=foot]",
+  "minecraft:light_blue_bed[facing=west,part=head]",
+  "minecraft:light_blue_candle[candles=2,lit=true]",
   "minecraft:light_blue_stained_glass",
   "minecraft:light_blue_stained_glass_pane",
+  "minecraft:light_blue_wall_banner[facing=east]",
+  "minecraft:light_blue_wall_banner[facing=north]",
+  "minecraft:light_blue_wall_banner[facing=west]",
+  "minecraft:light_blue_wool",
+  "minecraft:light_gray_carpet",
   "minecraft:lightning_rod[facing=south]",
+  "minecraft:lilac[half=lower]",
+  "minecraft:lilac[half=upper]",
   "minecraft:lily_of_the_valley",
+  "minecraft:lime_wall_banner[facing=north]",
+  "minecraft:lime_wool",
+  "minecraft:loom[facing=east]",
+  "minecraft:loom[facing=north]",
+  "minecraft:loom[facing=south]",
+  "minecraft:magenta_stained_glass_pane",
+  "minecraft:magenta_wall_banner[facing=north]",
+  "minecraft:magenta_wool",
+  "minecraft:magma_block",
+  "minecraft:mangrove_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:mangrove_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:mangrove_door[facing=south,half=lower,hinge=left,open=false]",
+  "minecraft:mangrove_door[facing=south,half=lower,hinge=right,open=false]",
+  "minecraft:mangrove_door[facing=south,half=upper,hinge=left,open=false]",
+  "minecraft:mangrove_door[facing=south,half=upper,hinge=right,open=false]",
+  "minecraft:mangrove_door[facing=west,half=lower,hinge=left,open=false]",
+  "minecraft:mangrove_door[facing=west,half=upper,hinge=left,open=false]",
+  "minecraft:mangrove_planks",
+  "minecraft:mangrove_slab[type=bottom]",
+  "minecraft:mangrove_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:mangrove_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:mangrove_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:mangrove_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:mangrove_trapdoor[facing=north,half=bottom,open=true]",
+  "minecraft:mangrove_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:melon",
   "minecraft:moss_block",
   "minecraft:mossy_cobblestone",
   "minecraft:mossy_stone_bricks",
+  "minecraft:note_block",
+  "minecraft:oak_door[facing=east,half=lower,hinge=left,open=false]",
+  "minecraft:oak_door[facing=east,half=lower,hinge=right,open=false]",
+  "minecraft:oak_door[facing=east,half=upper,hinge=left,open=false]",
+  "minecraft:oak_door[facing=east,half=upper,hinge=right,open=false]",
+  "minecraft:oak_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:oak_door[facing=north,half=lower,hinge=right,open=false]",
+  "minecraft:oak_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:oak_door[facing=north,half=upper,hinge=right,open=false]",
+  "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false]",
+  "minecraft:oak_door[facing=south,half=lower,hinge=right,open=false]",
+  "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false]",
+  "minecraft:oak_door[facing=south,half=upper,hinge=right,open=false]",
+  "minecraft:oak_fence",
   "minecraft:oak_leaves[distance=1,persistent=true]",
   "minecraft:oak_log[axis=x]",
   "minecraft:oak_log[axis=y]",
   "minecraft:oak_log[axis=z]",
+  "minecraft:oak_planks",
+  "minecraft:oak_slab[type=bottom]",
+  "minecraft:oak_slab[type=top]",
+  "minecraft:oak_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:oak_trapdoor[facing=south,half=bottom,open=true]",
+  "minecraft:oak_wall_sign[facing=south]",
+  "minecraft:ochre_froglight[axis=y]",
+  "minecraft:orange_stained_glass",
+  "minecraft:orange_stained_glass_pane",
+  "minecraft:orange_wall_banner[facing=north]",
+  "minecraft:orange_wall_banner[facing=south]",
+  "minecraft:orange_wool",
   "minecraft:oxeye_daisy",
+  "minecraft:peony[half=lower]",
+  "minecraft:peony[half=upper]",
+  "minecraft:pink_tulip",
+  "minecraft:pink_wall_banner[facing=north]",
+  "minecraft:pink_wall_banner[facing=south]",
+  "minecraft:pink_wool",
   "minecraft:polished_andesite",
+  "minecraft:polished_andesite_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:polished_andesite_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:polished_andesite_stairs[facing=west,half=top,shape=straight]",
   "minecraft:polished_blackstone",
   "minecraft:polished_blackstone_brick_stairs[facing=north,half=bottom,shape=straight]",
   "minecraft:polished_blackstone_bricks",
+  "minecraft:polished_blackstone_slab[type=top]",
   "minecraft:polished_blackstone_wall",
   "minecraft:polished_deepslate",
   "minecraft:polished_deepslate_stairs[facing=north,half=bottom,shape=straight]",
   "minecraft:polished_diorite",
   "minecraft:poppy",
+  "minecraft:potatoes[age=7]",
+  "minecraft:potted_allium",
   "minecraft:potted_azalea_bush",
+  "minecraft:potted_azure_bluet",
+  "minecraft:potted_blue_orchid",
+  "minecraft:potted_cornflower",
+  "minecraft:potted_oxeye_daisy",
+  "minecraft:potted_poppy",
   "minecraft:potted_red_tulip",
+  "minecraft:potted_white_tulip",
+  "minecraft:prismarine",
+  "minecraft:prismarine_bricks",
+  "minecraft:pumpkin",
   "minecraft:purple_stained_glass",
   "minecraft:purple_stained_glass_pane",
+  "minecraft:purple_wall_banner[facing=north]",
+  "minecraft:purple_wall_banner[facing=south]",
+  "minecraft:purple_wool",
+  "minecraft:quartz_block",
+  "minecraft:quartz_bricks",
   "minecraft:quartz_pillar[axis=y]",
+  "minecraft:quartz_stairs[facing=east,half=top,shape=straight]",
   "minecraft:quartz_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:quartz_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:raw_iron_block",
+  "minecraft:red_bed[facing=east,part=foot]",
+  "minecraft:red_bed[facing=east,part=head]",
+  "minecraft:red_bed[facing=north,part=foot]",
+  "minecraft:red_bed[facing=north,part=head]",
+  "minecraft:red_bed[facing=south,part=foot]",
+  "minecraft:red_bed[facing=south,part=head]",
   "minecraft:red_carpet",
+  "minecraft:red_stained_glass",
   "minecraft:red_stained_glass_pane",
+  "minecraft:red_terracotta",
   "minecraft:red_tulip",
+  "minecraft:red_wall_banner[facing=east]",
+  "minecraft:red_wall_banner[facing=north]",
+  "minecraft:red_wall_banner[facing=south]",
+  "minecraft:red_wall_banner[facing=west]",
+  "minecraft:red_wool",
   "minecraft:rooted_dirt",
+  "minecraft:rose_bush[half=lower]",
+  "minecraft:rose_bush[half=upper]",
   "minecraft:sand",
+  "minecraft:sea_lantern",
+  "minecraft:skeleton_wall_skull[facing=north]",
+  "minecraft:smithing_table",
+  "minecraft:smoker[facing=east,lit=false]",
+  "minecraft:smoker[facing=north,lit=false]",
+  "minecraft:smoker[facing=north,lit=true]",
+  "minecraft:smoker[facing=south,lit=false]",
+  "minecraft:smoker[facing=south,lit=true]",
+  "minecraft:smoker[facing=west,lit=false]",
   "minecraft:smooth_quartz",
   "minecraft:smooth_quartz_slab[type=bottom]",
+  "minecraft:smooth_sandstone",
   "minecraft:smooth_stone",
   "minecraft:snow_block",
   "minecraft:soul_lantern[hanging=false]",
   "minecraft:soul_lantern[hanging=true]",
+  "minecraft:spruce_door[facing=east,half=lower,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=east,half=lower,hinge=right,open=false]",
+  "minecraft:spruce_door[facing=east,half=upper,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=east,half=upper,hinge=right,open=false]",
   "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=north,half=lower,hinge=right,open=false]",
   "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=north,half=upper,hinge=right,open=false]",
+  "minecraft:spruce_door[facing=south,half=lower,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=south,half=lower,hinge=right,open=false]",
+  "minecraft:spruce_door[facing=south,half=upper,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=south,half=upper,hinge=right,open=false]",
+  "minecraft:spruce_door[facing=west,half=lower,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=west,half=lower,hinge=right,open=false]",
+  "minecraft:spruce_door[facing=west,half=upper,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=west,half=upper,hinge=right,open=false]",
   "minecraft:spruce_fence",
+  "minecraft:spruce_fence_gate[facing=east,open=true]",
+  "minecraft:spruce_fence_gate[facing=west,open=true]",
   "minecraft:spruce_leaves[distance=1,persistent=true]",
+  "minecraft:spruce_log[axis=x]",
   "minecraft:spruce_log[axis=y]",
+  "minecraft:spruce_log[axis=z]",
   "minecraft:spruce_planks",
+  "minecraft:spruce_pressure_plate",
+  "minecraft:spruce_sign[rotation=4]",
+  "minecraft:spruce_slab[type=bottom]",
   "minecraft:spruce_slab[type=top]",
   "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=east,half=top,shape=straight]",
   "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=north,half=top,shape=straight]",
   "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=south,half=top,shape=straight]",
   "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+  "minecraft:spruce_trapdoor[facing=east,half=top,open=false]",
+  "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true]",
+  "minecraft:spruce_trapdoor[facing=north,half=top,open=false]",
+  "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true]",
+  "minecraft:spruce_trapdoor[facing=south,half=top,open=false]",
+  "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
   "minecraft:stone",
   "minecraft:stone_brick_slab[type=bottom]",
   "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight]",
   "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight]",
   "minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight]",
   "minecraft:stone_brick_wall",
   "minecraft:stone_bricks",
+  "minecraft:stonecutter[facing=north]",
   "minecraft:stripped_dark_oak_log[axis=x]",
   "minecraft:stripped_dark_oak_log[axis=z]",
+  "minecraft:sunflower[half=lower]",
+  "minecraft:sunflower[half=upper]",
   "minecraft:target",
   "minecraft:tuff",
   "minecraft:vine[east=true]",
@@ -243,18 +629,52 @@
   "minecraft:vine[west=true]",
   "minecraft:water[level=0]",
   "minecraft:water[level=1]",
+  "minecraft:water[level=2]",
   "minecraft:water[level=8]",
+  "minecraft:water_cauldron[level=2]",
+  "minecraft:water_cauldron[level=3]",
   "minecraft:waxed_cut_copper",
+  "minecraft:waxed_oxidized_cut_copper",
+  "minecraft:waxed_oxidized_cut_copper_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:waxed_oxidized_cut_copper_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:waxed_oxidized_cut_copper_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:waxed_oxidized_cut_copper_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:wheat[age=5]",
+  "minecraft:wheat[age=7]",
+  "minecraft:white_bed[facing=east,part=foot]",
+  "minecraft:white_bed[facing=east,part=head]",
+  "minecraft:white_bed[facing=north,part=foot]",
+  "minecraft:white_bed[facing=north,part=head]",
+  "minecraft:white_bed[facing=south,part=foot]",
+  "minecraft:white_bed[facing=south,part=head]",
   "minecraft:white_candle[candles=2,lit=true]",
   "minecraft:white_candle[candles=3,lit=true]",
   "minecraft:white_candle[candles=4,lit=true]",
   "minecraft:white_carpet",
   "minecraft:white_stained_glass_pane",
+  "minecraft:white_terracotta",
   "minecraft:white_tulip",
+  "minecraft:white_wall_banner[facing=east]",
+  "minecraft:white_wall_banner[facing=north]",
+  "minecraft:white_wall_banner[facing=south]",
+  "minecraft:white_wall_banner[facing=west]",
   "minecraft:white_wool",
+  "minecraft:yellow_bed[facing=east,part=foot]",
+  "minecraft:yellow_bed[facing=east,part=head]",
+  "minecraft:yellow_bed[facing=north,part=foot]",
+  "minecraft:yellow_bed[facing=north,part=head]",
+  "minecraft:yellow_bed[facing=south,part=foot]",
+  "minecraft:yellow_bed[facing=south,part=head]",
+  "minecraft:yellow_bed[facing=west,part=foot]",
+  "minecraft:yellow_bed[facing=west,part=head]",
+  "minecraft:yellow_candle[candles=3,lit=true]",
   "minecraft:yellow_carpet",
   "minecraft:yellow_stained_glass",
-  "minecraft:yellow_stained_glass_pane"
+  "minecraft:yellow_stained_glass_pane",
+  "minecraft:yellow_wall_banner[facing=north]",
+  "minecraft:yellow_wall_banner[facing=south]",
+  "minecraft:yellow_wool",
+  "minecraft:zombie_wall_head[facing=north]"
  ],
  "tiles": [
   {
@@ -1041,17 +1461,241 @@
  "blockEntities": [
   {
    "pos": [
-    -101,
-    50,
-    -126
+    -158,
+    6,
+    -47
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -158,
+    6,
+    -41
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -157,
+    18,
+    -44
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -153,
+    18,
+    -54
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -153,
+    18,
+    -34
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -142,
+    18,
+    -60
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -142,
+    18,
+    -28
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -136,
+    6,
+    -34
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [
-    -98,
-    52,
-    -158
+    -136,
+    17,
+    36
+   ],
+   "nbt": "{Radius:7.0f}"
+  },
+  {
+   "pos": [
+    -136,
+    26,
+    32
+   ],
+   "nbt": "{Width:3.0f,Height:0.8f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -130,
+    18,
+    -60
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -130,
+    18,
+    -28
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -128,
+    17,
+    104
+   ],
+   "nbt": "{Radius:7.0f}"
+  },
+  {
+   "pos": [
+    -128,
+    26,
+    100
+   ],
+   "nbt": "{Width:3.0f,Height:0.8f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -119,
+    18,
+    -54
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -119,
+    18,
+    -34
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -115,
+    18,
+    -44
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -114,
+    6,
+    -47
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -114,
+    6,
+    -41
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -113,
+    2,
+    -48
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"闘技場\"}','{\"text\":\"Arena\"}','{\"text\":\"受付: Zain\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -108,
+    12,
+    -2
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -108,
+    12,
+    2
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -104,
+    17,
+    146
+   ],
+   "nbt": "{Radius:7.0f}"
+  },
+  {
+   "pos": [
+    -104,
+    26,
+    142
+   ],
+   "nbt": "{Width:3.0f,Height:0.8f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -104,
+    31,
+    -78
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -104,
+    31,
+    40
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -104,
+    34,
+    79
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -104,
+    36,
+    -10
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    -104,
+    36,
+    10
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    -101,
+    50,
+    -126
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1113,6 +1757,14 @@
   },
   {
    "pos": [
+    -62,
+    31,
+    79
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
     -55,
     41,
     -140
@@ -1146,10 +1798,58 @@
   {
    "pos": [
     -52,
+    3,
+    -6
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"← 西門\"}','{\"text\":\"West gate\"}','{\"text\":\"→ 冒険者ギルド\"}','{\"text\":\"Guild\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -52,
     33,
     -143
    ],
    "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"星詠みの覚え書き\",author:\"ノクス\",resolved:1b,pages:['{\"text\": \"黒き月、新月。星門は開いた。\\\\n……また会えたな。\"}','{\"text\": \"菓子の在庫：残り三つ。\\\\n至急補充のこと。\"}','{\"text\": \"異界の者は、この世界の『終わり』に縛られない。\\\\nだが十四日目の夜には、必ず帰すこと。\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    -49,
+    14,
+    -26
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -49,
+    14,
+    -22
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -49,
+    14,
+    -18
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -49,
+    14,
+    -14
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -48,
+    9,
+    -31
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"治療記録\",author:\"Wolfram\",resolved:1b,pages:['{\"text\": \"Patients of the week.\"}','{\"text\": \"Slime burns: 4. Wolf bites: 2.\"}']}},Page:0}"
   },
   {
    "pos": [
@@ -1166,6 +1866,94 @@
     -95
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -44,
+    3,
+    -20
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"冒険者名簿\",author:\"Marta\",resolved:1b,pages:['{\"text\": \"Register of adventurers of the Guild of Arseria.\"}','{\"text\": \"Name / Rank / Party / Notes\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    -44,
+    4,
+    24
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:8},{Pattern:\"bo\",Color:8},{Pattern:\"mc\",Color:1}]}"
+  },
+  {
+   "pos": [
+    -42,
+    7,
+    -28
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"依頼掲示板\"}','{\"text\":\"Quest Board\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -42,
+    14,
+    -6
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -41,
+    6,
+    24
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"鍛冶屋\"}','{\"text\":\"Blacksmith\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -39,
+    34,
+    14
+   ],
+   "nbt": "{Width:4.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -38,
+    4,
+    24
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:8},{Pattern:\"bo\",Color:8},{Pattern:\"mc\",Color:1}]}"
+  },
+  {
+   "pos": [
+    -38,
+    6,
+    -9
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -36,
+    3,
+    11
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"配達記録\",author:\"Chico\",resolved:1b,pages:['{\"text\": \"Letters delivered today: 37.\"}','{\"text\": \"Pigeons fed: all.\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    -35,
+    11,
+    -35
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"ギルド日誌\",author:\"Gustav\",resolved:1b,pages:['{\"text\": \"Rank exams next week.\"}','{\"text\": \"Keep an eye on the new ones.\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    -35,
+    14,
+    -6
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
   },
   {
    "pos": [
@@ -1201,11 +1989,267 @@
   },
   {
    "pos": [
+    -28,
+    5,
+    -26
+   ],
+   "nbt": "{Length:16.0f,Width:2.0f,Height:4.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -28,
+    5,
+    -22
+   ],
+   "nbt": "{Length:16.0f,Width:2.0f,Height:4.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -28,
+    5,
+    -11
+   ],
+   "nbt": "{Length:16.0f,Width:2.0f,Height:4.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -28,
+    5,
+    -7
+   ],
+   "nbt": "{Length:16.0f,Width:2.0f,Height:4.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -27,
+    4,
+    11
+   ],
+   "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"mc\",Color:0},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -27,
+    6,
+    14
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"郵便局\"}','{\"text\":\"Post Office\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -27,
+    7,
+    22
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"market\"}"
+  },
+  {
+   "pos": [
+    -26,
+    4,
+    16
+   ],
+   "nbt": "{Patterns:[{Pattern:\"bs\",Color:0},{Pattern:\"ts\",Color:0},{Pattern:\"mc\",Color:0},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -25,
+    11,
+    -27
+   ],
+   "nbt": "{Width:2.5f,Height:1.5f,Design:\"guild\"}"
+  },
+  {
+   "pos": [
+    -25,
+    11,
+    -10
+   ],
+   "nbt": "{Width:2.5f,Height:1.5f,Design:\"guild\"}"
+  },
+  {
+   "pos": [
+    -24,
+    6,
+    -21
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -24,
+    6,
+    -15
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -24,
+    8,
+    -26
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -24,
+    8,
+    -24
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -24,
+    8,
+    -18
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"冒険者ギルド\"}','{\"text\":\"Adventurers\\' Guild\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -24,
+    8,
+    -13
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -24,
+    8,
+    -11
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"mc\",Color:14},{Pattern:\"bts\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -24,
+    10,
+    -25
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"guild\"}"
+  },
+  {
+   "pos": [
+    -24,
+    10,
+    -12
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"guild\"}"
+  },
+  {
+   "pos": [
+    -24,
+    25,
+    -18
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"guild\"}"
+  },
+  {
+   "pos": [
+    -23,
+    29,
+    -37
+   ],
+   "nbt": "{Size:2.6f}"
+  },
+  {
+   "pos": [
+    -23,
+    29,
+    -29
+   ],
+   "nbt": "{Size:2.6f}"
+  },
+  {
+   "pos": [
+    -23,
+    70,
+    -33
+   ],
+   "nbt": "{Width:6.0f,Height:1.5f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
     -22,
     36,
     -133
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -20,
+    6,
+    24
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"道具屋\"}','{\"text\":\"Item Shop\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -19,
+    9,
+    -9
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -19,
+    9,
+    -7
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -19,
+    9,
+    7
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -19,
+    9,
+    9
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -19,
+    11,
+    -8
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    -19,
+    11,
+    8
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    -19,
+    29,
+    -33
+   ],
+   "nbt": "{Size:2.6f}"
+  },
+  {
+   "pos": [
+    -18,
+    4,
+    24
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mc\",Color:14},{Pattern:\"bo\",Color:4},{Pattern:\"cbo\",Color:5}]}"
   },
   {
    "pos": [
@@ -1273,7 +2317,7 @@
   },
   {
    "pos": [
-    -12,
+    -13,
     14,
     -158
    ],
@@ -1281,7 +2325,7 @@
   },
   {
    "pos": [
-    -12,
+    -13,
     14,
     -152
    ],
@@ -1289,16 +2333,32 @@
   },
   {
    "pos": [
-    -11,
-    38,
-    -87
+    -12,
+    12,
+    86
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [
+    -12,
+    17,
+    86
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -12,
+    43,
+    80
+   ],
+   "nbt": "{Width:4.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
     -11,
-    40,
+    38,
     -87
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
@@ -1358,6 +2418,14 @@
     -120
    ],
    "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -10,
+    3,
+    49
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"本日のおすすめ\"}','{\"text\":\"Wyvern stew\"}','{\"text\":\"Honey ale\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
   },
   {
    "pos": [
@@ -1466,10 +2534,50 @@
   {
    "pos": [
     -9,
+    8,
+    69
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    8,
+    71
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
     9,
     -65
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    9,
+    -19
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    9,
+    19
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    10,
+    70
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
   },
   {
    "pos": [
@@ -1483,7 +2591,7 @@
    "pos": [
     -9,
     68,
-    -189
+    -188
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1491,7 +2599,63 @@
    "pos": [
     -9,
     68,
-    -159
+    -160
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -8,
+    11,
+    -19
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    -8,
+    11,
+    19
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    -7,
+    5,
+    53
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mc\",Color:4},{Pattern:\"bo\",Color:12},{Pattern:\"cbo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -7,
+    5,
+    58
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mc\",Color:4},{Pattern:\"bo\",Color:12},{Pattern:\"cbo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -7,
+    6,
+    56
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"酒場\"}','{\"text\":\"The Tipsy Wyvern\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -7,
+    9,
+    -19
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -7,
+    9,
+    19
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1502,6 +2666,22 @@
     -127
    ],
    "nbt": "{front_text:{messages:['{\"text\":\"星門の間\"}','{\"text\":\"Hall of the\"}','{\"text\":\"Star Gate\"}','{\"text\":\"↓\"}'],color:\"blue\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"blue\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -6,
+    3,
+    -40
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"↑ 王城\"}','{\"text\":\"Castle\"}','{\"text\":\"↓ 広場\"}','{\"text\":\"Plaza\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -6,
+    8,
+    49
+   ],
+   "nbt": "{Width:3.0f,Height:1.0f,Design:\"pennant\"}"
   },
   {
    "pos": [
@@ -1587,7 +2767,7 @@
    "pos": [
     -3,
     14,
-    -167
+    -168
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1595,17 +2775,25 @@
    "pos": [
     -3,
     14,
-    -143
+    -142
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [
-    -2,
-    44,
-    -181
+    0,
+    13,
+    74
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    0,
+    24,
+    85
+   ],
+   "nbt": "{Width:4.5f,Height:1.0f,Design:\"pennant\"}"
   },
   {
    "pos": [
@@ -1625,9 +2813,9 @@
   },
   {
    "pos": [
-    2,
-    44,
-    -181
+    3,
+    14,
+    -168
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1635,15 +2823,7 @@
    "pos": [
     3,
     14,
-    -167
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    3,
-    14,
-    -143
+    -142
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1686,6 +2866,14 @@
     -148
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    6,
+    3,
+    40
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"↓ 城門・港\"}','{\"text\":\"Gate, Harbour\"}','{\"text\":\"↑ 広場\"}','{\"text\":\"Plaza\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
   },
   {
    "pos": [
@@ -1730,6 +2918,22 @@
   {
    "pos": [
     7,
+    9,
+    -19
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    7,
+    9,
+    19
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    7,
     33,
     -179
    ],
@@ -1737,9 +2941,49 @@
   },
   {
    "pos": [
+    8,
+    8,
+    30
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"market\"}"
+  },
+  {
+   "pos": [
+    8,
+    11,
+    -19
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    8,
+    11,
+    19
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
     9,
     3,
     -55
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    9,
+    8,
+    69
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    9,
+    8,
+    71
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1754,6 +2998,30 @@
   {
    "pos": [
     9,
+    9,
+    -19
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    9,
+    9,
+    19
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    9,
+    10,
+    70
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    9,
     15,
     -75
    ],
@@ -1763,7 +3031,7 @@
    "pos": [
     9,
     68,
-    -189
+    -188
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1771,7 +3039,7 @@
    "pos": [
     9,
     68,
-    -159
+    -160
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -1882,14 +3150,6 @@
   {
    "pos": [
     11,
-    40,
-    -87
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    11,
     42,
     -87
    ],
@@ -1946,6 +3206,62 @@
   {
    "pos": [
     12,
+    7,
+    -36
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    12,
+    7,
+    -32
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    12,
+    7,
+    -28
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    12,
+    12,
+    86
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    12,
+    17,
+    86
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    12,
+    43,
+    80
+   ],
+   "nbt": "{Width:4.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    13,
+    8,
+    -24
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    13,
     14,
     -158
    ],
@@ -1953,7 +3269,7 @@
   },
   {
    "pos": [
-    12,
+    13,
     14,
     -152
    ],
@@ -2017,11 +3333,179 @@
   },
   {
    "pos": [
+    16,
+    3,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"1.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    16,
+    4,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"7.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    16,
+    5,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"13.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    16,
+    6,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"19.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    18,
+    3,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"2.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    18,
+    4,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"8.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    18,
+    4,
+    -24
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    18,
+    5,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"14.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    18,
+    6,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"20.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    18,
+    9,
+    -75
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"cathedral\"}"
+  },
+  {
+   "pos": [
+    18,
+    9,
+    -57
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"cathedral\"}"
+  },
+  {
+   "pos": [
     18,
     68,
     -174
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    19,
+    9,
+    -9
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    19,
+    9,
+    -7
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    19,
+    9,
+    7
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    19,
+    9,
+    9
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    19,
+    11,
+    -8
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    19,
+    11,
+    8
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    20,
+    3,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"3.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    20,
+    4,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"9.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    20,
+    5,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"15.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    20,
+    6,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"21.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
   },
   {
    "pos": [
@@ -2033,11 +3517,355 @@
   },
   {
    "pos": [
+    21,
+    8,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"ランキング\"}','{\"text\":\"Ranking\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    21,
+    8,
+    -24
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"栄誉の殿堂\"}','{\"text\":\"Hall of Fame\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    21,
+    35,
+    -32
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    22,
+    3,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"4.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    22,
+    4,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"10.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    22,
+    5,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"16.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    22,
+    6,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"22.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    24,
+    3,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"5.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    24,
+    3,
+    -28
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"栄誉録\",author:\"Chloe\",resolved:1b,pages:['{\"text\": \"The deeds of Arseria\\'s heroes are written here.\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    24,
+    4,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"11.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    24,
+    4,
+    -24
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    24,
+    5,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"17.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    24,
+    6,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"23.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    26,
+    3,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"6.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    26,
+    4,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"12.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    26,
+    5,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"18.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    26,
+    6,
+    -36
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"24.\"}','{\"text\":\"---\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    27,
+    4,
+    -17
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mc\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bs\",Color:4}]}"
+  },
+  {
+   "pos": [
+    27,
+    4,
+    -11
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mc\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bs\",Color:4}]}"
+  },
+  {
+   "pos": [
+    27,
+    8,
+    -14
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"競売所\"}','{\"text\":\"Auction House\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    28,
+    11,
+    47
+   ],
+   "nbt": "{Width:2.5f,Height:1.5f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    30,
+    7,
+    -36
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    30,
+    7,
+    -32
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    30,
+    7,
+    -28
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    30,
+    8,
+    98
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    31,
+    8,
+    29
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"market\"}"
+  },
+  {
+   "pos": [
+    31,
+    18,
+    -66
+   ],
+   "nbt": "{Length:26.0f,Width:3.0f,Height:3.0f,Pitch:22.0f}"
+  },
+  {
+   "pos": [
+    31,
+    21,
+    -66
+   ],
+   "nbt": "{Length:26.0f,Width:3.0f,Height:3.0f,Pitch:22.0f}"
+  },
+  {
+   "pos": [
+    31,
+    24,
+    -66
+   ],
+   "nbt": "{Length:26.0f,Width:3.0f,Height:3.0f,Pitch:22.0f}"
+  },
+  {
+   "pos": [
     31,
     41,
     -128
    ],
    "nbt": "{Length:22.0f,Width:6.0f,Height:6.0f,Pitch:26.0f}"
+  },
+  {
+   "pos": [
+    33,
+    71,
+    -76
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"cathedral\"}"
+  },
+  {
+   "pos": [
+    33,
+    71,
+    -57
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"cathedral\"}"
+  },
+  {
+   "pos": [
+    34,
+    3,
+    53
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"宿帳\",author:\"Innkeeper\",resolved:1b,pages:['{\"text\": \"Guests of the Silver Star.\"}','{\"text\": \"Room 1: ...\"}','{\"text\": \"\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    34,
+    31,
+    79
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    35,
+    4,
+    47
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mc\",Color:0},{Pattern:\"bo\",Color:4},{Pattern:\"tt\",Color:11}]}"
+  },
+  {
+   "pos": [
+    38,
+    4,
+    -39
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:0},{Pattern:\"mc\",Color:12},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    38,
+    6,
+    48
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"宿屋\"}','{\"text\":\"Inn of the Silver Star\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"yellow\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    39,
+    8,
+    19
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"market\"}"
+  },
+  {
+   "pos": [
+    40,
+    3,
+    -31
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"職業登録簿\",author:\"Hagen\",resolved:1b,pages:['{\"text\": \"Miners, smiths, fishers, cooks, alchemists.\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    40,
+    4,
+    48
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mc\",Color:0},{Pattern:\"bo\",Color:4},{Pattern:\"tt\",Color:11}]}"
+  },
+  {
+   "pos": [
+    41,
+    6,
+    -39
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"職業ギルド\"}','{\"text\":\"Job Hall\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    42,
+    4,
+    -37
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:0},{Pattern:\"mc\",Color:12},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    43,
+    4,
+    -39
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:0},{Pattern:\"mc\",Color:12},{Pattern:\"bo\",Color:0}]}"
+  },
+  {
+   "pos": [
+    46,
+    4,
+    -14
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"競売目録\",author:\"Luce\",resolved:1b,pages:['{\"text\": \"Lot 1: a sword of the old kingdom.\"}','{\"text\": \"Lot 2: ...\"}']}},Page:0}"
   },
   {
    "pos": [
@@ -2049,11 +3877,123 @@
   },
   {
    "pos": [
+    48,
+    11,
+    47
+   ],
+   "nbt": "{Width:2.5f,Height:1.5f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    49,
+    7,
+    -14
+   ],
+   "nbt": "{Patterns:[{Pattern:\"mc\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"ts\",Color:4},{Pattern:\"bs\",Color:4}]}"
+  },
+  {
+   "pos": [
+    51,
+    8,
+    17
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"market\"}"
+  },
+  {
+   "pos": [
+    51,
+    8,
+    30
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"market\"}"
+  },
+  {
+   "pos": [
+    52,
+    3,
+    6
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"→ 東門 迷宮\"}','{\"text\":\"East gate\"}','{\"text\":\"← 市場\"}','{\"text\":\"Market\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    52,
+    8,
+    98
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    54,
+    8,
+    102
+   ],
+   "nbt": "{Width:2.5f,Height:1.5f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    54,
+    19,
+    112
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    54,
+    20,
+    124
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    54,
+    24,
+    118
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    59,
+    10,
+    -80
+   ],
+   "nbt": "{Length:12.0f,Width:2.0f,Height:4.0f,Pitch:30.0f}"
+  },
+  {
+   "pos": [
+    59,
+    10,
+    -54
+   ],
+   "nbt": "{Length:12.0f,Width:2.0f,Height:4.0f,Pitch:30.0f}"
+  },
+  {
+   "pos": [
     59,
     40,
     -128
    ],
    "nbt": "{Length:24.0f,Width:5.0f,Height:10.0f,Pitch:30.0f}"
+  },
+  {
+   "pos": [
+    60,
+    3,
+    -62
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"聖典\",author:\"Cathedral of Arseria\",resolved:1b,pages:['{\"text\": \"Light of the stars, guide us.\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    60,
+    11,
+    -48
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"mc\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [
@@ -2073,6 +4013,46 @@
   },
   {
    "pos": [
+    63,
+    59,
+    -66
+   ],
+   "nbt": "{Width:4.0f,Height:2.5f,Design:\"cathedral\"}"
+  },
+  {
+   "pos": [
+    66,
+    11,
+    -48
+   ],
+   "nbt": "{Patterns:[{Pattern:\"cr\",Color:4},{Pattern:\"mc\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    67,
+    10,
+    -80
+   ],
+   "nbt": "{Length:12.0f,Width:2.0f,Height:4.0f,Pitch:30.0f}"
+  },
+  {
+   "pos": [
+    67,
+    10,
+    -54
+   ],
+   "nbt": "{Length:12.0f,Width:2.0f,Height:4.0f,Pitch:30.0f}"
+  },
+  {
+   "pos": [
+    73,
+    40,
+    20
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"market\"}"
+  },
+  {
+   "pos": [
     73,
     57,
     -180
@@ -2089,11 +4069,91 @@
   },
   {
    "pos": [
-    98,
-    52,
-    -158
+    84,
+    5,
+    -66
    ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+   "nbt": "{Length:18.0f,Width:2.0f,Height:4.0f,Pitch:26.0f}"
+  },
+  {
+   "pos": [
+    84,
+    10,
+    -66
+   ],
+   "nbt": "{Length:18.0f,Width:2.0f,Height:4.0f,Pitch:26.0f}"
+  },
+  {
+   "pos": [
+    84,
+    15,
+    -66
+   ],
+   "nbt": "{Length:18.0f,Width:2.0f,Height:4.0f,Pitch:26.0f}"
+  },
+  {
+   "pos": [
+    92,
+    4,
+    7
+   ],
+   "nbt": "{Patterns:[{Pattern:\"sku\",Color:0},{Pattern:\"bo\",Color:0},{Pattern:\"cr\",Color:7}]}"
+  },
+  {
+   "pos": [
+    92,
+    8,
+    98
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    95,
+    3,
+    14
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"迷宮入場記録\",author:\"Gant\",resolved:1b,pages:['{\"text\": \"Entrance to the first labyrinth: east road.\"}','{\"text\": \"Parties must register here.\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    95,
+    6,
+    7
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"迷宮管理局\"}','{\"text\":\"Dungeon Warden\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    96,
+    8,
+    103
+   ],
+   "nbt": "{Width:2.5f,Height:1.5f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    96,
+    19,
+    119
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    96,
+    21,
+    112
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    97,
+    4,
+    7
+   ],
+   "nbt": "{Patterns:[{Pattern:\"sku\",Color:0},{Pattern:\"bo\",Color:0},{Pattern:\"cr\",Color:7}]}"
   },
   {
    "pos": [
@@ -2102,9 +4162,125 @@
     -126
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    104,
+    31,
+    -78
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    104,
+    31,
+    40
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    104,
+    34,
+    79
+   ],
+   "nbt": "{Width:5.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    104,
+    36,
+    -10
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    104,
+    36,
+    10
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+  },
+  {
+   "pos": [
+    106,
+    8,
+    98
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    108,
+    12,
+    -2
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    108,
+    12,
+    2
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    112,
+    38,
+    128
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    133,
+    -1,
+    40
+   ],
+   "nbt": "{Radius:4.0f,Width:2.0f}"
+  },
+  {
+   "pos": [
+    137,
+    6,
+    33
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"水車小屋\"}','{\"text\":\"Watermill\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    144,
+    7,
+    48
+   ],
+   "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
   }
  ],
  "entities": [
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -140.5,
+    1.0,
+    -46.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:leather_boots\",Count:1b},{id:\"minecraft:leather_leggings\",Count:1b},{id:\"minecraft:leather_chestplate\",Count:1b},{id:\"minecraft:leather_helmet\",Count:1b}],HandItems:[{},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -130.5,
+    1.0,
+    -40.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:leather_boots\",Count:1b},{id:\"minecraft:leather_leggings\",Count:1b},{id:\"minecraft:leather_chestplate\",Count:1b},{id:\"minecraft:leather_helmet\",Count:1b}],HandItems:[{},{}]}"
+  },
   {
    "type": "minecraft:armor_stand",
    "pos": [
@@ -2286,6 +4462,426 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
   },
   {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -48.5,
+    3.5,
+    28.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_helmet\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -48.5,
+    3.5,
+    30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -48.5,
+    3.5,
+    32.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_axe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -48.5,
+    3.5,
+    34.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_pickaxe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -48.5,
+    3.5,
+    36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:shield\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -47.5,
+    1.0,
+    28.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -47.5,
+    9.0,
+    -21.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:bow\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -47.5,
+    9.0,
+    -16.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:bow\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -47.5,
+    9.0,
+    -11.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:bow\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -44.5,
+    3.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -44.5,
+    4.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -44.5,
+    5.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -43.5,
+    3.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -43.5,
+    4.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -43.5,
+    5.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:writable_book\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -42.5,
+    3.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -42.5,
+    4.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:writable_book\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -42.5,
+    5.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:writable_book\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -41.5,
+    3.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -41.5,
+    4.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -41.5,
+    5.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -40.5,
+    1.0,
+    -8.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    3.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:writable_book\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    4.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    5.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -39.5,
+    3.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -39.5,
+    4.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -39.5,
+    5.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -38.5,
+    3.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -38.5,
+    4.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -38.5,
+    5.5,
+    -27.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -36.5,
+    11.5,
+    -36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:diamond_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -34.5,
+    1.0,
+    -8.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -33.5,
+    1.0,
+    28.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_axe\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -33.5,
+    12.5,
+    -36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -32.5,
+    3.5,
+    28.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_helmet\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -32.5,
+    3.5,
+    30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -32.5,
+    3.5,
+    32.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_axe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -32.5,
+    3.5,
+    34.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_pickaxe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -32.5,
+    3.5,
+    36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:shield\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -30.5,
+    11.5,
+    -36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:netherite_axe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -28.5,
+    9.0,
+    -31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:diamond_boots\",Count:1b},{id:\"minecraft:diamond_leggings\",Count:1b},{id:\"minecraft:diamond_chestplate\",Count:1b},{id:\"minecraft:diamond_helmet\",Count:1b}],HandItems:[{id:\"minecraft:diamond_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     -26.5,
@@ -2294,6 +4890,16 @@
    ],
    "yaw": 0.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -25.5,
+    3.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:potion\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -2306,11 +4912,51 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
   },
   {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -21.5,
+    3.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     -18.5,
     33.0,
     -132.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -15.5,
+    3.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:golden_apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -12.5,
+    3.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:arrow\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -11.5,
+    1.0,
+    82.5
    ],
    "yaw": 0.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
@@ -2389,6 +5035,16 @@
    "type": "minecraft:armor_stand",
    "pos": [
     12.5,
+    1.0,
+    82.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    12.5,
     33.0,
     -177.5
    ],
@@ -2408,12 +5064,62 @@
   {
    "type": "minecraft:armor_stand",
    "pos": [
+    13.5,
+    2.0,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:netherite_boots\",Count:1b},{id:\"minecraft:netherite_leggings\",Count:1b},{id:\"minecraft:netherite_chestplate\",Count:1b},{id:\"minecraft:netherite_helmet\",Count:1b}],HandItems:[{id:\"minecraft:trident\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    13.5,
+    2.0,
+    -31.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:golden_boots\",Count:1b},{id:\"minecraft:golden_leggings\",Count:1b},{id:\"minecraft:golden_chestplate\",Count:1b},{id:\"minecraft:golden_helmet\",Count:1b}],HandItems:[{id:\"minecraft:netherite_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    13.5,
+    2.0,
+    -27.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:netherite_boots\",Count:1b},{id:\"minecraft:netherite_leggings\",Count:1b},{id:\"minecraft:netherite_chestplate\",Count:1b},{id:\"minecraft:netherite_helmet\",Count:1b}],HandItems:[{id:\"minecraft:netherite_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
     16.5,
     33.0,
     -132.5
    ],
    "yaw": 0.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    17.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:nether_star\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    19.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:emerald\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -2426,6 +5132,26 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
   },
   {
+   "type": "minecraft:item_frame",
+   "pos": [
+    21.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:golden_apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    23.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:diamond\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     24.5,
@@ -2434,9 +5160,459 @@
    ],
    "yaw": 0.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    25.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:totem_of_undying\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    29.5,
+    2.0,
+    -35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:diamond_boots\",Count:1b},{id:\"minecraft:diamond_leggings\",Count:1b},{id:\"minecraft:diamond_chestplate\",Count:1b},{id:\"minecraft:diamond_helmet\",Count:1b}],HandItems:[{id:\"minecraft:netherite_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    29.5,
+    2.0,
+    -31.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:netherite_boots\",Count:1b},{id:\"minecraft:netherite_leggings\",Count:1b},{id:\"minecraft:netherite_chestplate\",Count:1b},{id:\"minecraft:netherite_helmet\",Count:1b}],HandItems:[{id:\"minecraft:trident\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    29.5,
+    2.0,
+    -27.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:diamond_boots\",Count:1b},{id:\"minecraft:diamond_leggings\",Count:1b},{id:\"minecraft:diamond_chestplate\",Count:1b},{id:\"minecraft:diamond_helmet\",Count:1b}],HandItems:[{id:\"minecraft:netherite_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    30.5,
+    5.5,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    30.5,
+    5.5,
+    -7.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    32.5,
+    2.0,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:crossbow\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    32.5,
+    2.0,
+    -7.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:golden_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    33.5,
+    5.5,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:enchanted_book\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    33.5,
+    5.5,
+    -7.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:clock\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    35.5,
+    3.5,
+    -37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_pickaxe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    36.5,
+    5.5,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:compass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    36.5,
+    5.5,
+    -7.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    37.5,
+    3.5,
+    -37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:fishing_rod\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    38.5,
+    2.0,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:golden_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    38.5,
+    2.0,
+    -7.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:crossbow\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    39.5,
+    3.5,
+    -37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_axe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    39.5,
+    5.5,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:emerald\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    39.5,
+    5.5,
+    -7.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:enchanted_book\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    41.5,
+    3.5,
+    -37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_shovel\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    42.5,
+    5.5,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:compass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    42.5,
+    5.5,
+    -7.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    43.5,
+    3.5,
+    -37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_hoe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    44.5,
+    2.0,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:golden_boots\",Count:1b},{id:\"minecraft:golden_leggings\",Count:1b},{id:\"minecraft:golden_chestplate\",Count:1b},{id:\"minecraft:golden_helmet\",Count:1b}],HandItems:[{id:\"minecraft:golden_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    44.5,
+    2.0,
+    -7.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:golden_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    45.5,
+    3.5,
+    -37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:shears\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    45.5,
+    5.5,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:emerald\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    45.5,
+    5.5,
+    -7.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    47.5,
+    3.5,
+    -37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:brush\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    49.5,
+    3.5,
+    -37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    91.5,
+    3.5,
+    10.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    91.5,
+    3.5,
+    11.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:recovery_compass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    91.5,
+    3.5,
+    12.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    91.5,
+    3.5,
+    13.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:compass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    98.5,
+    3.5,
+    18.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    99.5,
+    1.0,
+    16.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    99.5,
+    3.5,
+    18.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   }
  ],
  "fluidTicks": [
+  [
+   -5,
+   4,
+   -2
+  ],
+  [
+   -5,
+   4,
+   0
+  ],
+  [
+   -5,
+   4,
+   2
+  ],
+  [
+   -4,
+   4,
+   -4
+  ],
+  [
+   -4,
+   4,
+   4
+  ],
+  [
+   -2,
+   4,
+   -5
+  ],
+  [
+   -2,
+   4,
+   5
+  ],
+  [
+   0,
+   4,
+   -5
+  ],
+  [
+   0,
+   4,
+   5
+  ],
+  [
+   2,
+   4,
+   -5
+  ],
+  [
+   2,
+   4,
+   5
+  ],
+  [
+   4,
+   4,
+   -4
+  ],
+  [
+   4,
+   4,
+   4
+  ],
+  [
+   5,
+   4,
+   -2
+  ],
+  [
+   5,
+   4,
+   0
+  ],
+  [
+   5,
+   4,
+   2
+  ],
   [
    77,
    30,
@@ -2524,6 +5700,14 @@
   ]
  ],
  "spots": {
+  "board.ranking": {
+   "pos": [
+    21,
+    1,
+    -35
+   ],
+   "yaw": 0.0
+  },
   "castle.barracks": {
    "pos": [
     -79,
@@ -2628,91 +5812,859 @@
    ],
    "yaw": 0.0
   },
-  "npc.arena_master": {
+  "crowd.castle.1": {
    "pos": [
-    56,
-    1,
-    50
-   ],
-   "yaw": 180.0
-  },
-  "npc.auction": {
-   "pos": [
-    22,
-    1,
-    22
-   ],
-   "yaw": 135.0
-  },
-  "npc.blacksmith": {
-   "pos": [
-    -22,
-    1,
-    22
+    -20,
+    33,
+    -111
    ],
    "yaw": -135.0
   },
-  "npc.gatekeeper": {
+  "crowd.castle.2": {
    "pos": [
-    90,
-    1,
-    9
-   ],
-   "yaw": -90.0
-  },
-  "npc.guild_registrar": {
-   "pos": [
-    28,
-    1,
-    -28
-   ],
-   "yaw": 45.0
-  },
-  "npc.hall_of_fame": {
-   "pos": [
-    60,
-    1,
-    -60
-   ],
-   "yaw": 180.0
-  },
-  "npc.item_shop": {
-   "pos": [
-    -22,
-    1,
-    -22
-   ],
-   "yaw": -45.0
-  },
-  "npc.job_master": {
-   "pos": [
-    34,
-    1,
-    -12
+    22,
+    33,
+    -111
    ],
    "yaw": 90.0
   },
-  "npc.mailbox": {
+  "crowd.castle.3": {
    "pos": [
-    10,
+    0,
+    33,
+    -112
+   ],
+   "yaw": -90.0
+  },
+  "crowd.cathedral.1": {
+   "pos": [
+    33,
     1,
-    18
+    -68
+   ],
+   "yaw": 90.0
+  },
+  "crowd.cathedral.2": {
+   "pos": [
+    61,
+    1,
+    -62
    ],
    "yaw": 180.0
   },
-  "npc.quest_board": {
+  "crowd.cathedral.3": {
    "pos": [
-    20,
+    61,
     1,
-    -22
+    -54
+   ],
+   "yaw": 90.0
+  },
+  "crowd.cathedral.4": {
+   "pos": [
+    61,
+    1,
+    -79
+   ],
+   "yaw": 135.0
+  },
+  "crowd.farm.1": {
+   "pos": [
+    -123,
+    1,
+    67
+   ],
+   "yaw": 0.0
+  },
+  "crowd.farm.2": {
+   "pos": [
+    -136,
+    1,
+    43
+   ],
+   "yaw": 0.0
+  },
+  "crowd.farm.3": {
+   "pos": [
+    -145,
+    1,
+    132
+   ],
+   "yaw": 135.0
+  },
+  "crowd.farm.4": {
+   "pos": [
+    -112,
+    1,
+    116
+   ],
+   "yaw": 90.0
+  },
+  "crowd.farm.5": {
+   "pos": [
+    138,
+    1,
+    31
+   ],
+   "yaw": -90.0
+  },
+  "crowd.guild.1": {
+   "pos": [
+    -31,
+    1,
+    -18
+   ],
+   "yaw": 135.0
+  },
+  "crowd.guild.2": {
+   "pos": [
+    -36,
+    1,
+    -26
+   ],
+   "yaw": 0.0
+  },
+  "crowd.guild.3": {
+   "pos": [
+    -42,
+    1,
+    -12
+   ],
+   "yaw": 180.0
+  },
+  "crowd.guild.4": {
+   "pos": [
+    -31,
+    1,
+    -10
+   ],
+   "yaw": 90.0
+  },
+  "crowd.guild.5": {
+   "pos": [
+    -37,
+    9,
+    -9
+   ],
+   "yaw": 90.0
+  },
+  "crowd.guild.6": {
+   "pos": [
+    -47,
+    9,
+    -20
+   ],
+   "yaw": 0.0
+  },
+  "crowd.harbour.1": {
+   "pos": [
+    34,
+    1,
+    97
+   ],
+   "yaw": 90.0
+  },
+  "crowd.harbour.2": {
+   "pos": [
+    50,
+    1,
+    97
+   ],
+   "yaw": 135.0
+  },
+  "crowd.harbour.3": {
+   "pos": [
+    66,
+    1,
+    98
+   ],
+   "yaw": 0.0
+  },
+  "crowd.harbour.4": {
+   "pos": [
+    75,
+    1,
+    95
+   ],
+   "yaw": -135.0
+  },
+  "crowd.harbour.5": {
+   "pos": [
+    90,
+    1,
+    97
+   ],
+   "yaw": -90.0
+  },
+  "crowd.harbour.6": {
+   "pos": [
+    104,
+    1,
+    97
+   ],
+   "yaw": 135.0
+  },
+  "crowd.harbour.7": {
+   "pos": [
+    45,
+    1,
+    112
+   ],
+   "yaw": 135.0
+  },
+  "crowd.harbour.8": {
+   "pos": [
+    88,
+    1,
+    110
    ],
    "yaw": 45.0
+  },
+  "crowd.inn.1": {
+   "pos": [
+    36,
+    1,
+    52
+   ],
+   "yaw": 90.0
+  },
+  "crowd.inn.2": {
+   "pos": [
+    46,
+    1,
+    55
+   ],
+   "yaw": -45.0
+  },
+  "crowd.inn.3": {
+   "pos": [
+    30,
+    1,
+    52
+   ],
+   "yaw": 180.0
+  },
+  "crowd.market.1": {
+   "pos": [
+    30,
+    1,
+    17
+   ],
+   "yaw": 90.0
+  },
+  "crowd.market.10": {
+   "pos": [
+    57,
+    1,
+    26
+   ],
+   "yaw": 0.0
+  },
+  "crowd.market.2": {
+   "pos": [
+    43,
+    1,
+    17
+   ],
+   "yaw": 45.0
+  },
+  "crowd.market.3": {
+   "pos": [
+    25,
+    1,
+    30
+   ],
+   "yaw": 180.0
+  },
+  "crowd.market.4": {
+   "pos": [
+    14,
+    1,
+    30
+   ],
+   "yaw": 90.0
+  },
+  "crowd.market.5": {
+   "pos": [
+    42,
+    1,
+    30
+   ],
+   "yaw": 45.0
+  },
+  "crowd.market.6": {
+   "pos": [
+    35,
+    1,
+    20
+   ],
+   "yaw": -45.0
+  },
+  "crowd.market.7": {
+   "pos": [
+    30,
+    1,
+    38
+   ],
+   "yaw": 90.0
+  },
+  "crowd.market.8": {
+   "pos": [
+    44,
+    1,
+    38
+   ],
+   "yaw": 135.0
+  },
+  "crowd.market.9": {
+   "pos": [
+    73,
+    1,
+    20
+   ],
+   "yaw": 45.0
+  },
+  "crowd.plaza.1": {
+   "pos": [
+    -6,
+    1,
+    18
+   ],
+   "yaw": 0.0
+  },
+  "crowd.plaza.10": {
+   "pos": [
+    -13,
+    1,
+    12
+   ],
+   "yaw": -135.0
+  },
+  "crowd.plaza.11": {
+   "pos": [
+    12,
+    1,
+    -13
+   ],
+   "yaw": -135.0
+  },
+  "crowd.plaza.12": {
+   "pos": [
+    -13,
+    1,
+    -12
+   ],
+   "yaw": 135.0
+  },
+  "crowd.plaza.2": {
+   "pos": [
+    6,
+    1,
+    18
+   ],
+   "yaw": -90.0
+  },
+  "crowd.plaza.3": {
+   "pos": [
+    18,
+    1,
+    6
+   ],
+   "yaw": 135.0
+  },
+  "crowd.plaza.4": {
+   "pos": [
+    18,
+    1,
+    -6
+   ],
+   "yaw": -135.0
+  },
+  "crowd.plaza.5": {
+   "pos": [
+    -18,
+    1,
+    6
+   ],
+   "yaw": 45.0
+  },
+  "crowd.plaza.6": {
+   "pos": [
+    -18,
+    1,
+    -6
+   ],
+   "yaw": -90.0
+  },
+  "crowd.plaza.7": {
+   "pos": [
+    6,
+    1,
+    -18
+   ],
+   "yaw": 45.0
+  },
+  "crowd.plaza.8": {
+   "pos": [
+    -6,
+    1,
+    -18
+   ],
+   "yaw": -90.0
+  },
+  "crowd.plaza.9": {
+   "pos": [
+    12,
+    1,
+    13
+   ],
+   "yaw": 135.0
+  },
+  "crowd.residential.1": {
+   "pos": [
+    -70,
+    1,
+    60
+   ],
+   "yaw": -90.0
+  },
+  "crowd.residential.10": {
+   "pos": [
+    -26,
+    1,
+    -71
+   ],
+   "yaw": 180.0
+  },
+  "crowd.residential.2": {
+   "pos": [
+    -40,
+    1,
+    60
+   ],
+   "yaw": 135.0
+  },
+  "crowd.residential.20": {
+   "pos": [
+    -80,
+    1,
+    22
+   ],
+   "yaw": 90.0
+  },
+  "crowd.residential.4": {
+   "pos": [
+    64,
+    1,
+    60
+   ],
+   "yaw": -90.0
+  },
+  "crowd.residential.5": {
+   "pos": [
+    74,
+    1,
+    68
+   ],
+   "yaw": -45.0
+  },
+  "crowd.residential.7": {
+   "pos": [
+    93,
+    1,
+    -24
+   ],
+   "yaw": -45.0
+  },
+  "crowd.street.1": {
+   "pos": [
+    -14,
+    1,
+    72
+   ],
+   "yaw": 135.0
+  },
+  "crowd.street.2": {
+   "pos": [
+    14,
+    1,
+    88
+   ],
+   "yaw": -45.0
+  },
+  "crowd.street.20": {
+   "pos": [
+    -109,
+    1,
+    -44
+   ],
+   "yaw": 135.0
+  },
+  "crowd.street.21": {
+   "pos": [
+    -136,
+    1,
+    -48
+   ],
+   "yaw": 45.0
+  },
+  "crowd.street.30": {
+   "pos": [
+    0,
+    1,
+    -36
+   ],
+   "yaw": -90.0
+  },
+  "crowd.street.31": {
+   "pos": [
+    0,
+    1,
+    50
+   ],
+   "yaw": 0.0
+  },
+  "crowd.street.32": {
+   "pos": [
+    -75,
+    1,
+    0
+   ],
+   "yaw": 90.0
+  },
+  "crowd.street.33": {
+   "pos": [
+    72,
+    1,
+    0
+   ],
+   "yaw": -45.0
+  },
+  "crowd.street.34": {
+   "pos": [
+    -30,
+    1,
+    -43
+   ],
+   "yaw": 135.0
+  },
+  "crowd.street.35": {
+   "pos": [
+    40,
+    1,
+    43
+   ],
+   "yaw": 0.0
+  },
+  "crowd.tavern.1": {
+   "pos": [
+    -16,
+    1,
+    54
+   ],
+   "yaw": 135.0
+  },
+  "crowd.tavern.2": {
+   "pos": [
+    -19,
+    1,
+    52
+   ],
+   "yaw": 90.0
+  },
+  "crowd.tavern.3": {
+   "pos": [
+    -12,
+    1,
+    58
+   ],
+   "yaw": 135.0
+  },
+  "guard.bridge.1": {
+   "pos": [
+    -3,
+    1,
+    170
+   ],
+   "yaw": 180.0
+  },
+  "guard.bridge.2": {
+   "pos": [
+    3,
+    1,
+    170
+   ],
+   "yaw": 180.0
+  },
+  "guard.castle.1": {
+   "pos": [
+    -4,
+    27,
+    -86
+   ],
+   "yaw": 0.0
+  },
+  "guard.castle.2": {
+   "pos": [
+    4,
+    27,
+    -86
+   ],
+   "yaw": 0.0
+  },
+  "guard.cathedral.1": {
+   "pos": [
+    28,
+    1,
+    -70
+   ],
+   "yaw": 90.0
+  },
+  "guard.cathedral.2": {
+   "pos": [
+    28,
+    1,
+    -62
+   ],
+   "yaw": 90.0
+  },
+  "guard.cathedral.3": {
+   "pos": [
+    60,
+    1,
+    -47
+   ],
+   "yaw": 0.0
+  },
+  "guard.east_gate.1": {
+   "pos": [
+    99,
+    1,
+    -6
+   ],
+   "yaw": -90.0
+  },
+  "guard.east_gate.2": {
+   "pos": [
+    99,
+    1,
+    6
+   ],
+   "yaw": -90.0
+  },
+  "guard.east_gate.3": {
+   "pos": [
+    110,
+    1,
+    -6
+   ],
+   "yaw": 90.0
+  },
+  "guard.east_gate.4": {
+   "pos": [
+    110,
+    1,
+    6
+   ],
+   "yaw": 90.0
+  },
+  "guard.south_gate.1": {
+   "pos": [
+    -6,
+    1,
+    86
+   ],
+   "yaw": 0.0
+  },
+  "guard.south_gate.2": {
+   "pos": [
+    6,
+    1,
+    86
+   ],
+   "yaw": 0.0
+  },
+  "guard.south_gate.3": {
+   "pos": [
+    -6,
+    1,
+    73
+   ],
+   "yaw": 180.0
+  },
+  "guard.south_gate.4": {
+   "pos": [
+    6,
+    1,
+    73
+   ],
+   "yaw": 180.0
+  },
+  "guard.south_gate.5": {
+   "pos": [
+    0,
+    21,
+    84
+   ],
+   "yaw": 0.0
+  },
+  "guard.wall.1": {
+   "pos": [
+    -104,
+    11,
+    -20
+   ],
+   "yaw": 90.0
+  },
+  "guard.wall.2": {
+   "pos": [
+    104,
+    11,
+    20
+   ],
+   "yaw": -90.0
+  },
+  "guard.wall.3": {
+   "pos": [
+    -48,
+    11,
+    79
+   ],
+   "yaw": 0.0
+  },
+  "guard.wall.4": {
+   "pos": [
+    48,
+    11,
+    79
+   ],
+   "yaw": 0.0
+  },
+  "guard.west_gate.1": {
+   "pos": [
+    -99,
+    1,
+    -6
+   ],
+   "yaw": 90.0
+  },
+  "guard.west_gate.2": {
+   "pos": [
+    -99,
+    1,
+    6
+   ],
+   "yaw": 90.0
+  },
+  "guard.west_gate.3": {
+   "pos": [
+    -110,
+    1,
+    -6
+   ],
+   "yaw": -90.0
+  },
+  "guard.west_gate.4": {
+   "pos": [
+    -110,
+    1,
+    6
+   ],
+   "yaw": -90.0
+  },
+  "npc.arena_master": {
+   "pos": [
+    -117,
+    1,
+    -42
+   ],
+   "yaw": -90.0
+  },
+  "npc.auction": {
+   "pos": [
+    47,
+    2,
+    -14
+   ],
+   "yaw": 90.0
+  },
+  "npc.blacksmith": {
+   "pos": [
+    -41,
+    1,
+    32
+   ],
+   "yaw": 180.0
+  },
+  "npc.gatekeeper": {
+   "pos": [
+    95,
+    1,
+    15
+   ],
+   "yaw": 180.0
+  },
+  "npc.guild_registrar": {
+   "pos": [
+    -45,
+    1,
+    -18
+   ],
+   "yaw": -90.0
+  },
+  "npc.hall_of_fame": {
+   "pos": [
+    24,
+    1,
+    -29
+   ],
+   "yaw": 0.0
+  },
+  "npc.item_shop": {
+   "pos": [
+    -20,
+    1,
+    34
+   ],
+   "yaw": 180.0
+  },
+  "npc.job_master": {
+   "pos": [
+    41,
+    1,
+    -30
+   ],
+   "yaw": 180.0
+  },
+  "npc.mailbox": {
+   "pos": [
+    -37,
+    1,
+    15
+   ],
+   "yaw": -90.0
+  },
+  "npc.quest_board": {
+   "pos": [
+    -42,
+    1,
+    -27
+   ],
+   "yaw": 0.0
+  },
+  "respawn": {
+   "pos": [
+    33,
+    1,
+    -66
+   ],
+   "yaw": -90.0
   },
   "spawn": {
    "pos": [
     0,
     1,
-    13
+    14
    ],
    "yaw": 180.0
   },
@@ -2726,17 +6678,17 @@
   },
   "story.gustav": {
    "pos": [
-    24,
-    1,
-    -32
+    -34,
+    9,
+    -34
    ],
-   "yaw": 180.0
+   "yaw": 0.0
   },
   "story.laszlo": {
    "pos": [
-    32,
+    -45,
     1,
-    -32
+    -36
    ],
    "yaw": 180.0
   },
@@ -2758,9 +6710,9 @@
   },
   "story.wolfram": {
    "pos": [
-    36,
-    1,
-    -36
+    -46,
+    9,
+    -32
    ],
    "yaw": 180.0
   }

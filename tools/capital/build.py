@@ -60,6 +60,9 @@ def build_world(only=None, log=print) -> tuple:
     if only == "castle":
         return w, T
     run_districts(w, T, log)
+    if only != "districts":
+        from capital import tidy
+        tidy.tidy(w, log)
     for name, (pos, yaw) in L.DEFAULT_SPOTS.items():
         if name not in w.spots:
             w.spot(name, pos, yaw)
