@@ -23,7 +23,13 @@ import static com.eternalrealm.boss.TargetRule.RANDOM;
  */
 public final class FieldBosses {
     private static final double PARTY_SCALING = 0.55;
-    private static final int ENRAGE_TICKS = 20 * 60 * 6;
+    /**
+     * Field bosses are crowd fights (everyone nearby joins), so the owner raised their health by half (2026-11-11,
+     * 「全レイドボスのHPを今の1.5倍に」): the health numbers below are the earlier ones, this factor applies on top.
+     */
+    public static final double RAID_HEALTH = 1.5;
+    /** Soft enrage after 9 minutes: grown with the health so the enrage still comes well after a normal fight. */
+    private static final int ENRAGE_TICKS = 20 * 60 * 9;
 
     /** The ten calamities, in field order (fields 1..10). */
     public static final List<BossDefinition> CALAMITIES = List.of(meadow(), moonForest(), ironMine(), sacredFalls(),
@@ -514,7 +520,8 @@ public final class FieldBosses {
         }
         String ex = abilities.get(abilities.size() - 2).id();
         int players = forms.length == 3 ? 3 : 2;
-        return new BossDefinition(id, "minecraft:iron_golem", level, health, damage, armor, PARTY_SCALING, players,
+        return new BossDefinition(id, "minecraft:iron_golem", level, health * RAID_HEALTH, damage, armor, PARTY_SCALING,
+                players,
                 8, phases, abilities, ENRAGE_TICKS, List.of(), DifficultyTuning.NORMAL, DifficultyTuning.hard(),
                 DifficultyTuning.ex(ex));
     }

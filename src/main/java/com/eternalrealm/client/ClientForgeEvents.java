@@ -56,7 +56,43 @@ public final class ClientForgeEvents {
         if (cancel) {
             event.setCanceled(true);
             event.setSwingHand(false);
+        } else if (event.isAttack() && attackThroughPlayer(Minecraft.getInstance())) {
+            event.setCanceled(true); // the swing still plays
         }
+    }
+
+    /**
+     * A left click aimed at another player goes through them to the creature behind (players never hurt each other
+     * outside PvP matches, so in a crowd the click must not be wasted on an ally). PvP arenas do not exist yet; when
+     * they do, opponents must not be let through here.
+     *
+     * @return whether the click was aimed at another player (and was handled here)
+     */
+    private static boolean attackThroughPlayer(Minecraft minecraft) {
+        net.minecraft.client.player.LocalPlayer player = minecraft.player;
+        if (player == null || minecraft.gameMode == null
+                || !(minecraft.hitResult instanceof net.minecraft.world.phys.EntityHitResult aimed)
+                || !(aimed.getEntity() instanceof net.minecraft.world.entity.player.Player other) || other == player) {
+            return false;
+        }
+        net.minecraft.world.phys.Vec3 eye = player.getEyePosition();
+        net.minecraft.world.phys.Vec3 look = player.getViewVector(1.0F);
+        double reach = player.getEntityReach();
+        net.minecraft.world.phys.Vec3 end = eye.add(look.scale(reach));
+        net.minecraft.world.phys.AABB sweep = player.getBoundingBox().expandTowards(look.scale(reach)).inflate(1.0);
+        net.minecraft.world.phys.EntityHitResult behind = net.minecraft.world.entity.projectile.ProjectileUtil
+                .getEntityHitResult(player, eye, end, sweep, entity -> !entity.isSpectator() && entity.isPickable()
+                        && !(entity instanceof net.minecraft.world.entity.player.Player), reach * reach);
+        if (behind == null) {
+            return true;
+        }
+        net.minecraft.world.phys.BlockHitResult wall = player.level().clip(new net.minecraft.world.level.ClipContext(
+                eye, behind.getLocation(), net.minecraft.world.level.ClipContext.Block.COLLIDER,
+                net.minecraft.world.level.ClipContext.Fluid.NONE, player));
+        if (wall.getType() == net.minecraft.world.phys.HitResult.Type.MISS) {
+            minecraft.gameMode.attack(player, behind.getEntity());
+        }
+        return true;
     }
 
     @SubscribeEvent

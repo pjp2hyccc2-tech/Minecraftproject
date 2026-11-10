@@ -3,6 +3,7 @@ package com.eternalrealm.combat.forge;
 import com.eternalrealm.server.ServerContext;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -40,6 +41,21 @@ public final class CombatEvents {
                     event.setCanceled(true);
                 }
             });
+        }
+    }
+
+    /**
+     * A projectile a player shot flies through other players outside PvP matches (vanilla arrows, snowballs, hooks and
+     * the like; the mod's own arrows and spells never collide with them in the first place): in a crowded raid nobody
+     * soaks a shot meant for the boss behind them.
+     */
+    @SuppressWarnings("removal") // cancelling still means "fly on" (SKIP_ENTITY on newer 47.x builds)
+    public static void onProjectileImpact(ProjectileImpactEvent event) {
+        if (event.getRayTraceResult() instanceof net.minecraft.world.phys.EntityHitResult hit
+                && hit.getEntity() instanceof ServerPlayer victim
+                && event.getProjectile().getOwner() instanceof ServerPlayer shooter
+                && shooter != victim && !PvpRules.canHurt(shooter, victim)) {
+            event.setCanceled(true);
         }
     }
 

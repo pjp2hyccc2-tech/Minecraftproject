@@ -104,6 +104,7 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.world.forge.CapitalProtection::onPlace);
         forgeBus.addListener(com.eternalrealm.world.forge.CapitalProtection::onBucket);
         forgeBus.addListener(CombatEvents::onLivingAttack);
+        forgeBus.addListener(CombatEvents::onProjectileImpact);
         forgeBus.addListener(CombatEvents::onLivingHurt);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onEquipmentChange);
         forgeBus.addListener(EventPriority.HIGH, com.eternalrealm.monster.forge.MonsterEvents::onLivingHurt);

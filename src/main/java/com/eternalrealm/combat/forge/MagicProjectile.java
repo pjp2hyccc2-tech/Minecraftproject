@@ -140,7 +140,7 @@ public final class MagicProjectile extends ThrowableItemProjectile {
             return false;
         }
         if (level().isClientSide) {
-            return true;
+            return !(entity instanceof net.minecraft.world.entity.player.Player); // the server decides; never stop on a player
         }
         return entity instanceof LivingEntity living && getOwner() instanceof ServerPlayer owner
                 && CombatHits.isValidTarget(owner, living);

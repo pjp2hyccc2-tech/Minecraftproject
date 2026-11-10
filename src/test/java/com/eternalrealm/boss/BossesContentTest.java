@@ -330,19 +330,36 @@ public class BossesContentTest {
         return damage * (1.0 - reduction / 25.0);
     }
 
+    @Test
+    public void raidAndFieldBossesHaveHalfAgainTheirEarlierHealth() {
+        assertEquals(27_600.0, Bosses.FINAL.baseHealth(), 1.0e-9);
+        for (BossDefinition boss : FieldBosses.all()) {
+            double seconds = fightSeconds(boss, boss.minPlayers());
+            assertTrue(boss.id() + ": " + seconds + " s for its smallest group", seconds >= 180.0 && seconds <= 450.0);
+            assertTrue(boss.id() + ": enrage comes after the expected end",
+                    boss.enrageAfterTicks() / 20.0 > seconds * 1.2);
+        }
+        assertEquals(1.5, FieldBosses.RAID_HEALTH, 0.0);
+    }
+
     /** Seconds for {@code players} level-matched players at 1.5 effective hits per second each. */
     static double fightSeconds(BossDefinition boss, int players) {
         double hit = afterArmor(playerHit(boss.level()), boss.armor());
         return boss.maxHealth(players, Difficulty.NORMAL) / (players * 1.5 * hit);
     }
 
+    /**
+     * Dungeon bosses: 2 to 4 minutes. The raid boss and the field bosses (crowd fights) had their health raised by half
+     * (2026-11-11): the raid lasts 3 to 6 minutes, field bosses 3 to 7½ for their smallest group.
+     */
     @Test
     public void normalFightsLastTwoToFourMinutesForLevelMatchedParties() {
         for (BossDefinition boss : Bosses.all()) {
+            boolean raid = boss == Bosses.FINAL;
             for (int players = boss.minPlayers(); players <= boss.maxPlayers(); players++) {
                 double seconds = fightSeconds(boss, players);
                 assertTrue(boss.id() + " with " + players + " players: " + seconds + " s",
-                        seconds >= 120.0 && seconds <= 240.0);
+                        raid ? seconds >= 180.0 && seconds <= 360.0 : seconds >= 120.0 && seconds <= 240.0);
             }
             assertTrue(boss.id() + ": enrage comes well after the expected end",
                     boss.enrageAfterTicks() / 20.0 > fightSeconds(boss, boss.minPlayers()) * 1.5);
