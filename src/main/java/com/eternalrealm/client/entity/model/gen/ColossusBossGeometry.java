@@ -168,36 +168,36 @@ public final class ColossusBossGeometry {
             {false, false, false, false, false, false, false, false, true, false, false, true}, // c_summit
             {false, false, false, false, false, false, false, false, true, false, false, true}, // c_summit_p1
             {false, false, false, false, false, false, false, false, true, false, false, true}, // c_summit_p2
-            {false, false, false, false, false, false, false, true, false, false, true, true}, // w_slag_titan
-            {false, false, false, false, false, false, false, true, false, false, true, true}, // w_slag_titan_p1
+            {false, false, false, false, false, false, false, true, false, false, false, true}, // w_slag_titan
+            {false, false, false, false, false, false, false, true, false, false, false, true}, // w_slag_titan_p1
             {false, false, true, false, false, false, false, true, false, true, false, false}, // w_walking_glyph
             {false, false, true, false, false, false, false, true, false, true, false, false}, // w_walking_glyph_p1
-            {false, true, false, false, false, false, false, false, true, false, false, true}, // w_glacier_bearer
-            {false, true, false, false, false, false, false, false, true, false, false, true}, // w_glacier_bearer_p1
+            {false, true, false, false, false, false, false, false, true, true, true, true}, // w_glacier_bearer
+            {false, true, false, false, false, false, false, false, true, true, true, true}, // w_glacier_bearer_p1
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"core", "ring"};
+    public static final String[] POSED_PARTS = {"torso", "head", "shoulder_r", "right_hand", "shoulder_l", "left_hand", "core", "ring", "back_vents"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null, null}, // b3
-            {null, null}, // b7
-            {null, null}, // b3_p1
-            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}}, // b3_p2
-            {null, null}, // b7_p1
-            {null, null}, // b7_p2
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.0F}, null}, // b7_p3
-            {null, null}, // c_iron_mine
-            {null, null}, // c_iron_mine_p1
-            {null, null}, // c_iron_mine_p2
-            {null, null}, // c_summit
-            {null, null}, // c_summit_p1
-            {null, null}, // c_summit_p2
-            {null, null}, // w_slag_titan
-            {null, null}, // w_slag_titan_p1
-            {null, null}, // w_walking_glyph
-            {null, null}, // w_walking_glyph_p1
-            {null, null}, // w_glacier_bearer
-            {null, null}, // w_glacier_bearer_p1
+            {null, null, null, null, null, null, null, null, null}, // b3
+            {null, null, null, null, null, null, null, null, null}, // b7
+            {null, null, null, null, null, null, null, null, null}, // b3_p1
+            {null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}, null}, // b3_p2
+            {null, null, null, null, null, null, null, null, null}, // b7_p1
+            {null, null, null, null, null, null, null, null, null}, // b7_p2
+            {null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.0F}, null, null}, // b7_p3
+            {null, null, null, null, null, null, null, null, null}, // c_iron_mine
+            {null, null, null, null, null, null, null, null, null}, // c_iron_mine_p1
+            {null, null, null, null, null, null, null, null, null}, // c_iron_mine_p2
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.85F, 0.85F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.4F, 1.5F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.4F, 1.5F}, null, null, null, null}, // c_summit
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.85F, 0.85F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.4F, 1.5F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.4F, 1.5F}, null, null, null, null}, // c_summit_p1
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.85F, 0.85F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.4F, 1.5F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.4F, 1.5F}, null, null, null, null}, // c_summit_p2
+            {{0.0F, 0.0F, 0.0F, 14.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}, null, null, null}, // w_slag_titan
+            {{0.0F, 0.0F, 0.0F, 14.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}, null, null, null}, // w_slag_titan_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.2F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.8F, 0.8F}, null, null, null, null, null, null, null}, // w_walking_glyph
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.2F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.8F, 0.8F}, null, null, null, null, null, null, null}, // w_walking_glyph_p1
+            {{0.0F, 0.0F, 0.0F, 8.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.8F, 1.6F}}, // w_glacier_bearer
+            {{0.0F, 0.0F, 0.0F, 8.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.8F, 1.6F}}, // w_glacier_bearer_p1
     };
     /** Model scale of each variant (applied by the renderer). */
     public static final float[] SCALES = {3.1F, 3.0F, 3.1F, 3.1F, 3.0F, 3.0F, 3.0F, 2.16F, 2.16F, 2.16F, 2.635F, 2.635F, 2.635F, 2.108F, 2.108F, 1.98F, 1.98F, 2.325F, 2.325F};

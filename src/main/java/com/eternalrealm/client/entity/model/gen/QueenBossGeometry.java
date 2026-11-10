@@ -163,9 +163,9 @@ public final class QueenBossGeometry {
             {false, true, true, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // c_meadow
             {false, true, true, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // c_meadow_p1
             {false, true, true, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // c_meadow_p2
-            {false, false, true, false, true, false, false, false, true, false, true, false, true, true, true, false, false}, // c_sacred_falls
-            {false, false, true, false, true, false, false, false, true, false, true, false, true, true, true, false, false}, // c_sacred_falls_p1
-            {false, false, true, false, true, false, false, false, true, false, true, false, true, true, true, false, false}, // c_sacred_falls_p2
+            {false, true, true, false, false, false, false, false, false, false, true, false, true, false, false, true, false}, // c_sacred_falls
+            {false, true, true, false, false, false, false, false, false, false, true, false, true, false, false, true, false}, // c_sacred_falls_p1
+            {false, true, true, false, false, false, false, false, false, false, true, false, true, false, false, true, false}, // c_sacred_falls_p2
             {false, true, false, false, false, true, true, false, false, true, true, true, true, false, false, true, false}, // w_moonmoth_witch
             {false, true, false, false, false, true, true, false, false, true, true, true, true, false, false, true, false}, // w_moonmoth_witch_p1
             {false, true, true, false, false, true, false, false, false, true, false, false, false, true, true, false, true}, // w_mist_hermit
@@ -174,28 +174,28 @@ public final class QueenBossGeometry {
             {true, true, false, false, false, true, false, false, false, true, true, false, true, false, false, true, false}, // w_tide_singer_p1
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"crown", "ice_horns", "shard_ring", "ice_wings", "gown"};
+    public static final String[] POSED_PARTS = {"torso", "crown", "ice_horns", "sleeve_r", "sleeve_l", "shard_ring", "ice_wings", "gown"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null, null, null, null, null}, // b5
-            {null, null, null, null, null}, // b4
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.45F, 1.25F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, null, null}, // b5_p1
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.45F, 1.25F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, null, null}, // b5_p2
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.7F, 1.35F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.0F}, null}, // b5_p3
-            {null, null, null, null, null}, // b4_p1
-            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.4F, 1.2F}, null, null, null}, // b4_p2
-            {null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow
-            {null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow_p1
-            {null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow_p2
-            {null, null, null, null, null}, // c_sacred_falls
-            {null, null, null, null, null}, // c_sacred_falls_p1
-            {null, null, null, null, null}, // c_sacred_falls_p2
-            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.0F}, null}, // w_moonmoth_witch
-            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.0F}, null}, // w_moonmoth_witch_p1
-            {null, null, null, null, null}, // w_mist_hermit
-            {null, null, null, null, null}, // w_mist_hermit_p1
-            {null, null, null, null, null}, // w_tide_singer
-            {null, null, null, null, null}, // w_tide_singer_p1
+            {null, null, null, null, null, null, null, null}, // b5
+            {null, null, null, null, null, null, null, null}, // b4
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.45F, 1.25F}, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, null, null}, // b5_p1
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.45F, 1.25F}, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, null, null}, // b5_p2
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.7F, 1.35F}, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 1.35F, 1.35F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.0F}, null}, // b5_p3
+            {null, null, null, null, null, null, null, null}, // b4_p1
+            {null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.4F, 1.2F}, null, null, null, null, null}, // b4_p2
+            {null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow
+            {null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow_p1
+            {null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.1F, 1.25F}}, // c_meadow_p2
+            {null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.15F, 1.3F}}, // c_sacred_falls
+            {null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.15F, 1.3F}}, // c_sacred_falls_p1
+            {null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.15F, 1.3F}}, // c_sacred_falls_p2
+            {null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.0F}, null}, // w_moonmoth_witch
+            {null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.0F}, null}, // w_moonmoth_witch_p1
+            {{0.0F, 0.0F, 0.0F, 12.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.5F, 1.2F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.5F, 1.2F}, null, null, null}, // w_mist_hermit
+            {{0.0F, 0.0F, 0.0F, 12.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.5F, 1.2F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.5F, 1.2F}, null, null, null}, // w_mist_hermit_p1
+            {null, null, null, null, null, null, null, null}, // w_tide_singer
+            {null, null, null, null, null, null, null, null}, // w_tide_singer_p1
     };
     /** Model scale of each variant (applied by the renderer). */
     public static final float[] SCALES = {2.4F, 2.7F, 2.4F, 2.4F, 2.4F, 2.7F, 2.7F, 2.4F, 2.4F, 2.4F, 2.484F, 2.484F, 2.484F, 2.28F, 2.28F, 2.295F, 2.295F, 2.28F, 2.28F};

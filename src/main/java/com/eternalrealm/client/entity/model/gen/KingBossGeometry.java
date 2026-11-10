@@ -204,35 +204,35 @@ public final class KingBossGeometry {
             {false, true, false, false, true, false, false, false, true, false, false}, // w_sunken_captain_p1
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"head", "spikes_r", "spikes_l"};
+    public static final String[] POSED_PARTS = {"head", "spikes_r", "spikes_l", "cape"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null, null, null}, // b1
-            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}}, // b1_p1
-            {null, null, null}, // b8
-            {null, null, null}, // b8_p1
-            {null, null, null}, // b8_p2
-            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}}, // b8_p3
-            {null, null, null}, // final
-            {null, null, null}, // final_p1
-            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}}, // final_p2
-            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}}, // final_p3
-            {null, null, null}, // c_end_forest
-            {null, null, null}, // c_end_forest_p1
-            {null, null, null}, // c_end_forest_p2
-            {null, null, null}, // c_harbour
-            {null, null, null}, // c_harbour_p1
-            {null, null, null}, // c_harbour_p2
-            {null, null, null}, // w_bramble_knight
-            {null, null, null}, // w_bramble_knight_p1
-            {null, null, null}, // w_ash_herald
-            {null, null, null}, // w_ash_herald_p1
-            {null, null, null}, // w_hollow_walker
-            {null, null, null}, // w_hollow_walker_p1
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.2F, 1.15F}, null, null}, // w_scarecrow_king
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.2F, 1.15F}, null, null}, // w_scarecrow_king_p1
-            {null, null, null}, // w_sunken_captain
-            {null, null, null}, // w_sunken_captain_p1
+            {null, null, null, null}, // b1
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}, null}, // b1_p1
+            {null, null, null, null}, // b8
+            {null, null, null, null}, // b8_p1
+            {null, null, null, null}, // b8_p2
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}, null}, // b8_p3
+            {null, null, null, null}, // final
+            {null, null, null, null}, // final_p1
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}, null}, // final_p2
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}, null}, // final_p3
+            {null, null, null, null}, // c_end_forest
+            {null, null, null, null}, // c_end_forest_p1
+            {null, null, null, null}, // c_end_forest_p2
+            {null, null, null, null}, // c_harbour
+            {null, null, null, null}, // c_harbour_p1
+            {null, null, null, null}, // c_harbour_p2
+            {null, null, null, null}, // w_bramble_knight
+            {null, null, null, null}, // w_bramble_knight_p1
+            {null, null, null, null}, // w_ash_herald
+            {null, null, null, null}, // w_ash_herald_p1
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.9F, 1.5F, 1.0F}}, // w_hollow_walker
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.9F, 1.5F, 1.0F}}, // w_hollow_walker_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.2F, 1.15F}, null, null, null}, // w_scarecrow_king
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.2F, 1.15F}, null, null, null}, // w_scarecrow_king_p1
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.35F, 1.0F}}, // w_sunken_captain
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.35F, 1.0F}}, // w_sunken_captain_p1
     };
     /** Model scale of each variant (applied by the renderer). */
     public static final float[] SCALES = {1.9F, 1.9F, 2.9F, 2.9F, 2.9F, 2.9F, 3.2F, 3.2F, 3.2F, 3.2F, 2.72F, 2.72F, 2.72F, 2.32F, 2.32F, 2.32F, 1.9F, 1.9F, 2.262F, 2.262F, 1.995F, 1.995F, 1.9F, 1.9F, 1.995F, 1.995F};

@@ -174,20 +174,20 @@ public final class TreantBossGeometry {
             {false, true, true}, // w_gravebloom_p1
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"crystal"};
+    public static final String[] POSED_PARTS = {"canopy", "moss_r", "moss_l", "antler_r", "antler_l", "right_arm", "left_arm", "crystal", "mushrooms"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null}, // b2
-            {null}, // b2_p1
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}}, // b2_p2
-            {null}, // c_moon_forest
-            {null}, // c_moon_forest_p1
-            {null}, // c_moon_forest_p2
-            {null}, // c_farm
-            {null}, // c_farm_p1
-            {null}, // c_farm_p2
-            {null}, // w_gravebloom
-            {null}, // w_gravebloom_p1
+            {null, null, null, null, null, null, null, null, null}, // b2
+            {null, null, null, null, null, null, null, null, null}, // b2_p1
+            {null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}, null}, // b2_p2
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.3F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.6F, 1.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.6F, 1.6F}, null, null, null, null}, // c_moon_forest
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.3F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.6F, 1.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.6F, 1.6F}, null, null, null, null}, // c_moon_forest_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.3F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.6F, 1.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.6F, 1.6F}, null, null, null, null}, // c_moon_forest_p2
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.55F, 0.6F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.3F, 1.1F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.3F, 1.1F}, null, null}, // c_farm
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.55F, 0.6F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.3F, 1.1F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.3F, 1.1F}, null, null}, // c_farm_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.55F, 0.6F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.3F, 1.1F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.3F, 1.1F}, null, null}, // c_farm_p2
+            {{0.0F, 0.0F, 0.0F, 10.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.7F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.7F, 1.0F}, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}}, // w_gravebloom
+            {{0.0F, 0.0F, 0.0F, 10.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.7F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.7F, 1.0F}, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.5F}}, // w_gravebloom_p1
     };
     /** Model scale of each variant (applied by the renderer). */
     public static final float[] SCALES = {2.4F, 2.4F, 2.4F, 2.52F, 2.52F, 2.52F, 2.28F, 2.28F, 2.28F, 2.4F, 2.4F};
