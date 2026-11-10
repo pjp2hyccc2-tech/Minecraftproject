@@ -29,6 +29,8 @@ public final class MagicProjectile extends ThrowableItemProjectile {
     private int pierceLeft;
     private int age;
     private final Set<Integer> alreadyHit = new HashSet<>();
+    /** Enemy a locked skill's projectile curves into (D-LOCKON), or -1. */
+    private int homingTarget = -1;
 
     public MagicProjectile(EntityType<? extends MagicProjectile> type, Level level) {
         super(type, level);
@@ -97,8 +99,16 @@ public final class MagicProjectile extends ThrowableItemProjectile {
         return Items.AMETHYST_SHARD;
     }
 
+    /** Makes the projectile curve into {@code target} while it flies (a skill locked on to an enemy). */
+    void homeOn(net.minecraft.world.entity.LivingEntity target) {
+        homingTarget = target.getId();
+    }
+
     @Override
     public void tick() {
+        if (!level().isClientSide) {
+            homingTarget = Homing.steer(this, homingTarget);
+        }
         super.tick();
         if (level().isClientSide) {
             ParticleOptions particle = trailFor(getItem().getItem());

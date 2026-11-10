@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"7"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7 |
+| プロトコル版 | `"8"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7、スキルのロックオン（`CombatActionPacket` に targetId）で 7→8 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -17,7 +17,7 @@
 |---|---|---|---|---|---|
 | 0 | `CharacterSnapshotPacket` | S→C | seasonId (UTF, ≤32), level (VarInt), levelCap (VarInt), experience (VarLong), experienceToNext (VarLong, 上限時0), unspentStatPoints (VarInt), allocated×6 (VarInt), total×6 (VarInt) | 512 B | クライアント |
 | 1 | `AllocateStatPacket` | C→S | statNetworkId (VarInt: 0=STR 1=VIT 2=AGI 3=INT 4=DEX 5=LUK), amount (VarInt) | 10 B | サーバー |
-| 2 | `CombatActionPacket` | C→S | requestId (VarInt: 0=通常攻撃 1=溜め開始 2=溜め解放 3=回避 4=武器スキル), sequence (VarInt, クライアント連番) | 10 B | サーバー |
+| 2 | `CombatActionPacket` | C→S | requestId (VarInt: 0=通常攻撃 1=溜め開始 2=溜め解放 3=回避 4=武器スキル), sequence (VarInt, クライアント連番), targetId+1 (VarInt: 0=なし。長押しで狙ったスキルのロック先のエンティティID) | 15 B | サーバー |
 | 3 | `CombatStatusPacket` | S→C | ackSequence (VarInt), answersRequest (bool), outcome (byte: 0=受理 1=先行入力 2=無視 3〜9=各種拒否), stamina (float), skillCooldown (VarInt tick), skillCooldownTotal (VarInt tick), defenseEvent (byte: 0=なし 1=回避 2=パリィ 3=ガード 4=ガードブレイク) | 32 B | クライアント |
 | 4 | `CombatStatsPacket` | S→C | attackMultiplier, maxHealthBonus, damageReduction, actionSpeedFactor, critChance, critMultiplier, maxStamina, staminaRegenPerTick（すべて double。クライアントの予測が整数tickへ丸める値をサーバーと一致させるため） | 64 B | クライアント |
 | 5 | `DamageNumberPacket` | S→C | entityId (VarInt), x/y/z (float), amount (float), flags (byte: 1=クリティカル 2=強攻撃 4=スキル) | 32 B | クライアント（攻撃した本人だけに送る） |
@@ -54,6 +54,7 @@
 | 職業で使えない武器での攻撃・スキル（回避以外） | 違反にしない。結果 12 = `REJECTED_JOB_WEAPON` を返す |
 | 行動中で先行入力枠が埋まっている、スタミナ不足、クールダウン中、ひるみ中、ガード中、武器なし、騎乗中の回避 | 違反にしない。`CombatStatusPacket` で結果（拒否理由）を返す |
 | 受理・先行入力 | `CombatStatusPacket` で結果を返す。命中・ダメージはサーバーtickで判定 |
+| targetId（スキルのみ。他の要求では無視） | サーバーが検証（存在する・生きている・攻撃対象として正当＝プレイヤーは不可・32+4ブロック以内・視線が通る）。不正なら黙ってロックなしで実行（違反にしない）。ロックは そのスキルの行動が終わるまで（先行入力なら開始を待つ） |
 
 - 専用のトークンバケット（`network.combatActionBurst` 既定20、`network.combatActionPerSecond` 既定20/秒）。超過分は破棄しフラッドとして数える。
 - 正規クライアントは状態マシンの予測で許可された入力だけを送るため、1行動につき最大1〜2パケット（溜めは開始と解放）。

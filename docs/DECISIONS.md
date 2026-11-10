@@ -43,6 +43,18 @@
 | D-036 | 武器を持っている間の右クリックはガード専用。オフハンドのアイテムはしゃがみ＋右クリックで使う。他のアイテムを使用中（盾・食事・弓など）は攻撃・回避・スキルを受け付けない（サーバーとクライアントの両方） | ガードが拒否されたときにオフハンドの盾へ流れ、バニラの100%防御の裏で連撃できた（独立レビューで指摘） | 確定（Phase 2） |
 | D-037 | パリィの受付はガード開始ごとに開くが、前回のガード開始から16tick未満なら開かない | 右クリックの連打で受付を出し続けられた（自己レビュー・独立レビュー双方で指摘） | 確定（Phase 2） |
 
+## D-LOCKON: aimed skills lock on to an enemy while their key is held (2026-11-11)
+The owner found some skills hard to land and asked that holding the key aims at a character and hits it, with the
+aimed enemy's outline glowing white; area attacks stay as they are. A skill is "aimed" when where it lands depends on
+the facing (`job.SkillAiming`: projectiles, slashes, thrusts, discs ahead, areas placed ahead or where one looks, forward
+dashes and leaps); area, heal and buff skills still cast on key down. For aimed skills a tap (under 4 ticks) casts at
+once as before; holding picks the enemy nearest the crosshair within the skill's reach and lights the game's own
+glowing outline on this client only (white: monsters have no team), and releasing turns the player toward it and sends
+its entity id with the request (protocol 8). The server only trusts the id after its own checks (valid target, in
+sight, within reach) and then turns the player toward it at the start and before every hit, steers the middle
+projectile of a volley into it, drops falling shots on it and puts areas placed where one looks at its feet. No mixin
+was needed: the outline flag is set through `Entity`'s protected data accessor from a never-instantiated subclass.
+
 ## D-CALM: habitats twice as large; their monsters are calm until provoked and appear 4 blocks apart (2026-11-11)
 The owner asked for spawn areas about twice as large, monsters that do not attack until the player attacks them or
 stays near them, and about four blocks between spawns. Habitats got √2 × their radius (40/42/45 instead of 28/30/32,

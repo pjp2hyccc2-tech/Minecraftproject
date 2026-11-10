@@ -101,7 +101,11 @@ public final class SkillZones {
                 Vec3 ahead = caster.position().add(-Math.sin(yaw) * distance, 0.0, Math.cos(yaw) * distance);
                 yield new Vec3(ahead.x, SkillVisuals.groundY(caster.serverLevel(), ahead.add(0, 1.0, 0)), ahead.z);
             }
-            case LOOK -> SkillVisuals.lookPoint(caster, distance);
+            // a skill locked on to an enemy (D-LOCKON) puts its area on the enemy when it is within reach
+            case LOOK -> com.eternalrealm.combat.forge.SkillLocks.placeOnTarget(caster, distance,
+                            caster.server.getTickCount())
+                    .map(at -> new Vec3(at.x, SkillVisuals.groundY(caster.serverLevel(), at.add(0.0, 0.5, 0.0)), at.z))
+                    .orElseGet(() -> SkillVisuals.lookPoint(caster, distance));
         };
     }
 
