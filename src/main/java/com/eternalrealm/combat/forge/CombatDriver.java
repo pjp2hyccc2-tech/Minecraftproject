@@ -40,6 +40,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -447,7 +448,7 @@ public final class CombatDriver {
         double thorns = passive.thorns() + ERMobEffects.magnitude(player, ERMobEffects.THORNS.get());
         if (thorns <= 0.0 || taken <= 0.0 || !(source.getEntity() instanceof LivingEntity attacker)
                 || attacker == player || !attacker.isAlive() || source.is(DamageTypeTags.IS_EXPLOSION)
-                || source.is(net.minecraft.world.damagesource.DamageTypes.THORNS)
+                || source.is(DamageTypes.THORNS)
                 || attacker.distanceToSqr(player) > 64.0) {
             return;
         }
