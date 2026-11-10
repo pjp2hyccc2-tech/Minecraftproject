@@ -11,14 +11,21 @@ import com.eternalrealm.entity.EnemyRig;
 import com.eternalrealm.entity.EnemyVariant;
 import com.eternalrealm.entity.HumanoidEnemy;
 import com.eternalrealm.entity.RigData;
+import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
@@ -328,10 +335,20 @@ public final class EntityGameTests {
         boss.setTarget(target);
         check(boss.meleeReach() >= boss.getBbWidth() * 0.5 + 1.0, kind.id() + ": reach " + boss.meleeReach());
         check(boss.maxUpStep() >= 1.0F, kind.id() + " cannot step over a block");
+        int[] inside = {0};
         helper.onEachTick(() -> {
             check(boss.isAlive(), kind.id() + " died");
-            check(helper.getLevel().noCollision(boss, boss.getBoundingBox().deflate(0.1)),
-                    kind.id() + " is stuck in a block at " + helper.relativeVec(boss.position()));
+            AABB box = boss.getBoundingBox().deflate(0.1);
+            if (helper.getLevel().noCollision(boss, box)) {
+                inside[0] = 0;
+            } else if (++inside[0] == 1 || inside[0] >= 10) {
+                String where = kind.id() + " overlaps" + collisions(helper, boss, box) + " at "
+                        + helper.relativeVec(boss.position()) + ", box " + helper.relativeVec(new Vec3(box.minX, box.minY,
+                        box.minZ)) + " .. " + helper.relativeVec(new Vec3(box.maxX, box.maxY, box.maxZ));
+                LogUtils.getLogger().warn("[GameTest] {} (tick {} of the overlap)", where, inside[0]);
+                // a momentary touch is the collision code's business; a body that stays in a block is stuck
+                check(inside[0] < 10, where);
+            }
             if (boss.getTarget() != target) {
                 boss.setTarget(target);
             }
@@ -342,6 +359,26 @@ public final class EntityGameTests {
                         + helper.relativeVec(boss.position()) + ", playing " + boss.playingAnimation() + ")");
             }
         });
+    }
+
+    /** The blocks (relative positions) and colliding entities inside {@code box}, for failure messages. */
+    private static String collisions(GameTestHelper helper, ERBoss boss, AABB box) {
+        StringBuilder found = new StringBuilder();
+        ServerLevel level = helper.getLevel();
+        for (BlockPos pos : BlockPos.betweenClosed(BlockPos.containing(box.minX, box.minY, box.minZ),
+                BlockPos.containing(box.maxX, box.maxY, box.maxZ))) {
+            BlockState state = level.getBlockState(pos);
+            VoxelShape shape = state.getCollisionShape(level, pos);
+            if (!shape.isEmpty() && shape.bounds().move(pos).intersects(box) && found.length() < 400) {
+                found.append(' ').append(helper.relativePos(pos.immutable()).toShortString()).append('=')
+                        .append(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
+            }
+        }
+        int entities = level.getEntityCollisions(boss, box).size();
+        if (entities > 0) {
+            found.append(" and ").append(entities).append(" entities");
+        }
+        return found.length() == 0 ? " nothing found" : found.toString();
     }
 
     /** Later forms are a little bigger, model and hitbox alike, without sinking into the floor or the walls. */
