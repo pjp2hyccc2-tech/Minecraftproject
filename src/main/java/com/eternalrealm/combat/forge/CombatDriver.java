@@ -160,6 +160,7 @@ public final class CombatDriver {
         applyChangedStats();
         SkillZones.tick(server);
         WeaponSkillFx.tickScheduled();
+        ArtFx.tickScheduled();
         long now = now();
         for (UUID playerId : new ArrayList<>(service.all().keySet())) {
             ServerPlayer player = server.getPlayerList().getPlayer(playerId);
@@ -173,6 +174,7 @@ public final class CombatDriver {
                     handleEvent(player, combatant.stats(), event);
                 }
                 WeaponSkillFx.tick(player, combatant, now);
+                ArtFx.tick(player, combatant, now);
                 resyncStatus(player, combatant, now);
             } catch (RuntimeException e) {
                 // One broken fighter must not stop combat for everyone else.
@@ -308,6 +310,9 @@ public final class CombatDriver {
             if (skill == null && art == null && WeaponSkillFx.isWeaponSkill(hit.action())) {
                 WeaponSkillFx.frame(player, hit);
             }
+            if (art != null && ArtFx.isGenerated(hit.action())) {
+                ArtFx.frame(player, hit); // the composed look of a named or tier weapon's art
+            }
             if (!rest.isEmpty()) {
                 if (art != null) {
                     SkillEffectsExecutor.applyArt(player, stats, art, hit.weapon(), hit.damageScale(), rest, targets);
@@ -319,6 +324,7 @@ public final class CombatDriver {
         } else if (event instanceof CombatEvent.ActionStarted start) {
             CombatEffects.actionStarted(player, start);
             WeaponSkillFx.started(player, start.weapon(), start.action());
+            ArtFx.started(player, start.weapon(), start.action());
             ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(), start.action().id(),
                     start.comboStep(), start.action().timing(stats.actionSpeedFactor()).duration(), false));
             Jobs.skillOfAction(start.action().id()).ifPresent(skill ->
@@ -540,6 +546,7 @@ public final class CombatDriver {
 
     public void onPlayerLeft(UUID playerId) {
         WeaponSkillFx.forget(playerId);
+        ArtFx.forget(playerId);
         service.remove(playerId, now());
         net.remove(playerId);
         skills.remove(playerId);

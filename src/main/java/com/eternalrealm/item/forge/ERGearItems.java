@@ -1,6 +1,5 @@
 package com.eternalrealm.item.forge;
 
-import com.eternalrealm.combat.WeaponProfiles;
 import com.eternalrealm.combat.forge.ERItems;
 import com.eternalrealm.combat.forge.WeaponItem;
 import com.eternalrealm.core.ModInfo;
@@ -43,7 +42,8 @@ public final class ERGearItems {
                 EQUIPMENT.put(base, existing);
             } else if (base.isWeapon()) {
                 EQUIPMENT.put(base, ITEMS.register(base.itemPath(), () -> new WeaponItem(
-                        WeaponProfiles.of(base.weaponType()), new Item.Properties().stacksTo(1))));
+                        com.eternalrealm.item.TierProfiles.of(base.tier(), base.weaponType()),
+                        new Item.Properties().stacksTo(1))));
             } else {
                 EQUIPMENT.put(base, ITEMS.register(base.itemPath(),
                         () -> new GearArmorItem(base, new Item.Properties().stacksTo(1))));

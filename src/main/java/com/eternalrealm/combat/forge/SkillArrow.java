@@ -59,6 +59,11 @@ public final class SkillArrow extends AbstractArrow {
                 && payload.kind() == com.eternalrealm.combat.ActionKind.SKILL && payload.theme() == null
                 && level() instanceof ServerLevel serverLevel && getOwner() instanceof ServerPlayer owner) {
             WeaponSkillFx.arrowTrail(serverLevel, this, owner);
+        } else if (!level().isClientSide && !isRemoved() && !inGround && payload != null
+                && payload.kind() == com.eternalrealm.combat.ActionKind.SKILL
+                && level() instanceof ServerLevel artLevel && getOwner() instanceof ServerPlayer artOwner
+                && ArtFx.hasWindow(artOwner)) {
+            ArtFx.arrowTrail(artLevel, this, artOwner); // an arrow of a named or tier weapon's art
         }
     }
 
