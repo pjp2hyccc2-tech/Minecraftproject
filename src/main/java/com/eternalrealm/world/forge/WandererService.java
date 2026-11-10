@@ -18,6 +18,7 @@ import com.eternalrealm.monster.MonsterTemplate;
 import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.UiData;
 import com.eternalrealm.world.field.FieldLayout;
+import com.eternalrealm.world.field.FieldTerrain;
 import com.eternalrealm.world.field.FieldThreats;
 import com.eternalrealm.world.field.Miasma;
 import com.eternalrealm.world.field.Wanderers;
@@ -291,8 +292,9 @@ public final class WandererService {
         double x = out.spot.x() + 0.5;
         double z = out.spot.z() + 0.5;
         BlockPos at = new BlockPos(out.spot.x(), 64, out.spot.z());
+        // the terrain function knows the ground where the chunk is not loaded (players farther than the view distance)
         double y = astoria.hasChunkAt(at) ? astoria.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, out.spot.x(),
-                out.spot.z()) : 64.0;
+                out.spot.z()) : Math.floor(FieldTerrain.heightAt(x, z)) + 1.0;
         for (ServerPlayer player : astoria.players()) {
             double dx = player.getX() - x;
             double dz = player.getZ() - z;
