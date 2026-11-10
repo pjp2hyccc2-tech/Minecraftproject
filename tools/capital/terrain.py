@@ -89,14 +89,17 @@ def compute(T: Terrain):
     # --- NE mountain massif
     M = L.MOUNTAIN
     mj = fbm2(X, Z, 20.0, 3, seed_of("massif-rim")) * 7.0
-    mdx = np.abs(X - M["cx"]) / (31.0 + mj * 0.6)
-    mdz = np.abs(Z - M["cz"]) / (52.0 + mj)
-    mf = np.power(mdx ** 2.4 + mdz ** 2.4, 1 / 2.4)
-    dM = (1.0 - mf) * 40.0
+    mdx = np.abs(X - M["cx"]) / (38.0 + mj * 0.6)
+    mdz = np.abs(Z - M["cz"]) / (58.0 + mj)
+    mf = np.power(mdx ** 2.2 + mdz ** 2.2, 1 / 2.2)
+    dM = (1.0 - mf) * 44.0
     ridges = 1.0 - np.abs(fbm2(X, Z, 26.0, 4, seed_of("ridges")))
     crag = fbm2(X, Z, 9.0, 3, seed_of("massif-crag"))
-    hM = np.where(dM > 0, 62.0 * smoothstep(0.0, 16.0, dM + crag * 4.0) +
-                  58.0 * ridges * smoothstep(4.0, 34.0, dM) + crag * 5.0 * smoothstep(0.0, 8.0, dM), 0.0)
+    # steep faces towards the castle and the city (west / south), long slopes towards the edges
+    facing_city = smoothstep(-10.0, 10.0, (M["cx"] - X) * 0.8 + (Z - M["cz"]) * 0.6)
+    ramp = 30.0 - 17.0 * facing_city
+    hM = np.where(dM > 0, 62.0 * smoothstep(0.0, ramp, dM + crag * 4.0) +
+                  50.0 * ridges * smoothstep(4.0, 34.0, dM) + crag * 5.0 * smoothstep(0.0, 8.0, dM), 0.0)
     step_h = 6.0 + 3.0 * value2(X, Z, 23.0, seed_of("terr"))
     hM = np.where((hM > 4) & (hM < 66), np.floor(hM / step_h) * step_h + step_h * 0.6 *
                   smoothstep(0, step_h, hM % step_h), hM)
@@ -605,8 +608,8 @@ def waterfall(w, T: Terrain):
 # ============================================================================== floating islands
 ISLANDS = [
     # (cx, top_y, cz, radius, depth, feature)
-    (-122, 92, -150, 17, 30, "watchtower"),
-    (84, 110, -182, 14, 26, "ruin"),
+    (-122, 92, -150, 21, 36, "watchtower"),
+    (84, 112, -180, 17, 30, "ruin"),
     (-62, 118, -192, 7, 14, "grove"),
     (32, 128, -198, 5, 10, "rock"),
     (-152, 74, -108, 7, 12, "grove"),
@@ -645,9 +648,9 @@ def floating_islands(w, T: Terrain):
                 w.set(x, y, z, B.S(s))
             if hash2(x, z, seed + 4) < 0.18 and f[i, j] > 0.4:
                 ln = int(1 + hash2(z, x, seed + 5) * 4)
-                for k in range(1, ln + 1):
-                    w.set(x, b - k, z, B.S("hanging_roots") if k == ln else B.S("rooted_dirt") if k == 1
-                          else B.S("hanging_roots"), only_empty=True)
+                for k in range(1, ln):
+                    w.set(x, b - k, z, B.S("rooted_dirt"), only_empty=True)
+                w.set(x, b - ln, z, B.S("hanging_roots"), only_empty=True)
             if hash2(x, z, seed + 6) < 0.12:
                 w.set(x, t + 1, z, B.S("grass"), only_empty=True)
             elif hash2(x, z, seed + 7) < 0.03:

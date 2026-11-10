@@ -190,7 +190,8 @@ def great_hall(w, T):
     for z in (z_top + 1, z_top - 3):
         w.set(sx1 + 1, fy + 1, z, B.full(SM))
         w.set(sx1 + 1, fy + 2, z, B.lantern(soul=True))
-    _sign(w, sx1 + 1, fy + 2, z_top - 1, "east", ["星門の間", "Hall of the", "Star Gate", ""], color="blue")
+    deco.sign_text(w, sx1 + 2, fy + 1, z_top - 1, B.sign("dark_oak", 12), ["星門の間", "Hall of the", "Star Gate", "↓"],
+                   color="blue")
     w.spot("castle.great_hall", (0, fy + 1, -118), 180.0)
 
 
@@ -226,18 +227,23 @@ def star_gate_hall(w, T):
                     w.set(cx + dx, fl, cz + dz, B.S("lapis_block"))
             elif abs(d - 9.5) < 0.5:
                 w.set(cx + dx, fl, cz + dz, B.S("polished_blackstone_bricks"))
-    # pilasters with gilded capitals and dome ribs
+    # pilasters with gilded capitals and continuous dome ribs
     for k in range(12):
         a = k * math.pi / 6
         px, pz = cx + int(round((r - 0.4) * math.cos(a))), cz + int(round((r - 0.4) * math.sin(a)))
         w.fill(px, fl + 1, pz, px, wt, pz, B.S("quartz_pillar", axis="y"))
+        w.set(px, fl + 1, pz, B.S("chiseled_quartz_block"))
         w.set(px, wt, pz, B.full(GOLD))
-        for i in range(1, 14):
-            ang = i / 14.0 * math.pi / 2
-            rr = (r - 0.6) * math.cos(ang)
-            yy = wt + int(round((ry - 0.6) * math.sin(ang)))
-            w.set(cx + int(round(rr * math.cos(a))), yy, cz + int(round(rr * math.sin(a))),
-                  B.S("smooth_quartz") if i % 4 else B.full(GOLD))
+        seen = set()
+        for i in range(0, 160):
+            ang = i / 160.0 * math.pi / 2
+            rr = (r - 0.55) * math.cos(ang)
+            yy = wt + int(round((ry - 0.55) * math.sin(ang)))
+            cell = (cx + int(round(rr * math.cos(a))), yy, cz + int(round(rr * math.sin(a))))
+            if cell in seen or math.hypot(cell[0] - cx, cell[2] - cz) < 3.2:
+                continue
+            seen.add(cell)
+            w.set(*cell, B.S("smooth_quartz") if len(seen) % 6 else B.full(GOLD))
         # banners between pilasters
         a2 = a + math.pi / 12
         bx, bz = cx + int(round((r - 0.8) * math.cos(a2))), cz + int(round((r - 0.8) * math.sin(a2)))
@@ -250,7 +256,7 @@ def star_gate_hall(w, T):
         for dz in range(-r, r + 1):
             for y in range(wt + 1, wt + ry + 1):
                 d = math.sqrt((dx / r) ** 2 + (dz / r) ** 2 + ((y - wt) / ry) ** 2)
-                if 0.9 < d <= 1.0 and hash3(dx, y, dz, 77) < 0.03:
+                if 0.9 < d <= 1.0 and hash3(dx, y, dz, 77) < 0.012:
                     w.set(cx + dx, y, cz + dz, B.S("amethyst_cluster", facing="down"))
     # oculus to the Star Court (the light falls on the summoning circle at noon)
     S.cylinder(w, cx, cz, 2.3, wt + ry - 2, P.TY - 1, AIR)
@@ -345,18 +351,25 @@ def throne_room(w, T):
         w.fill(-7, y, za, 7, y, za, B.stairs(SM, "north"))
     w.fill(-7, fy + 4, zn, 7, fy + 4, zn + 2, B.carpet("blue"))
     ty = fy + 4
+    # the throne: gilded seat with a tall back, crest, finials and armrests
     w.set(0, ty, zn + 1, B.stairs(GOLD, "north"))
-    w.fill(0, ty, zn, 0, ty + 3, zn, B.full(GOLD))
-    w.set(0, ty + 4, zn, B.S("castle_crest_stone"))
-    w.set(0, ty + 5, zn, B.S("gilded_finial"))
+    w.fill(0, ty, zn, 0, ty + 4, zn, B.full(GOLD))
+    w.set(0, ty + 1, zn, B.S("blue_wool"))
+    w.set(0, ty + 2, zn, B.S("blue_wool"))
+    w.set(0, ty + 5, zn, B.S("castle_crest_stone"))
+    w.set(0, ty + 6, zn, B.S("gilded_finial"))
     for s in (-1, 1):
-        w.set(s, ty, zn + 1, B.slab(GOLD, "top"))
-        w.set(s, ty + 1, zn, B.full(GOLD))
-        w.set(s, ty + 2, zn, B.stairs(GOLD, "east" if s < 0 else "west"))
-        # the princess's seat
-        w.set(3 * s, ty, zn + 1, B.stairs("gilded_trim", "north"))
-        w.set(3 * s, ty, zn, B.full(GOLD))
-        w.set(3 * s, ty + 1, zn, B.slab(GOLD))
+        w.set(s, ty, zn + 1, B.stairs(GOLD, "east" if s < 0 else "west"))
+        w.fill(s, ty, zn, s, ty + 3, zn, B.full(GOLD))
+        w.set(s, ty + 4, zn, B.stairs(GOLD, "east" if s < 0 else "west"))
+        w.set(s, ty + 5, zn, B.S("gilded_finial"))
+        w.set(2 * s, ty, zn, B.full(GOLD))
+        w.set(2 * s, ty + 1, zn, B.S("gilded_finial"))
+        # the princess's seat (west) and the queen's empty seat (east)
+        w.set(4 * s, ty, zn + 1, B.stairs("gilded_trim", "north"))
+        w.set(4 * s, ty, zn, B.full(GOLD))
+        w.set(4 * s, ty + 1, zn, B.S("white_wool" if s < 0 else "blue_wool"))
+        w.set(4 * s, ty + 2, zn, B.slab(GOLD))
     w.fill(-3, fy + 13, zn, 3, fy + 13, zn + 3, B.S("blue_wool"))
     S.rect_ring(w, -3, zn, 3, zn + 3, fy + 13, B.full(GOLD))
     for x in (-3, 3):
@@ -367,9 +380,14 @@ def throne_room(w, T):
         deco.kingdom_wall_banner(w, x, fy + 16, zn, facing="south")
         deco.kingdom_wall_banner(w, x, fy + 14, zn, facing="south")
     # the king's battle armour, ready for the next sortie (7th this month)
-    deco.armor_stand(w, 6, ty - 1, zn + 2, yaw=0.0, armor="golden", weapon="minecraft:golden_sword",
+    deco.armor_stand(w, 7, ty - 1, zn + 2, yaw=0.0, armor="golden", weapon="minecraft:golden_sword",
                      offhand=deco.blue_shield())
-    _sign(w, 6, ty, zn + 4, "south", ["国王陛下の鎧", "※出陣禁止", "── 騎士団長アデル", ""], wall=False)
+    _sign(w, 7, fy + 1, zn + 6, "south", ["国王陛下の鎧", "※出陣禁止", "── 騎士団長アデル", ""], wall=False)
+    # suits of armour of the royal guard between the windows
+    for z in (-170, -178):
+        for s in (-1, 1):
+            deco.armor_stand(w, 12 * s, fy, z, yaw=-90.0 * s, armor="iron", weapon="minecraft:iron_sword",
+                             offhand=deco.blue_shield())
     # candelabra and chandeliers
     for s in (-1, 1):
         for z in (zn + 6, zs - 2):
@@ -406,7 +424,7 @@ def library(w, T):
         for x in range(x0, x1 + 1):
             if (x + z) % 2 == 0 and x0 + 2 < x < x1 - 2:
                 w.set(x, fy, z, B.S("dark_oak_planks"))
-    hs = Pt.pointed_vault(w, zn, zs, x0, x1, 46, material="dark_oak_planks", axis="z", shell=1, k=0.62,
+    hs = Pt.pointed_vault(w, zn, zs, x0, x1, 43, material="dark_oak_planks", axis="z", shell=1, k=0.55,
                           ribs=[-119, -125, -131, -137, -143], rib_state=B.log("dark_oak", "x", stripped=True))
     # bookcases along the walls between windows (two storeys), gallery at y=40 on the long walls
     bays = [-122, -128, -134, -140]

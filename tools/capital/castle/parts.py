@@ -176,8 +176,13 @@ def curtain_wall(w, T, pts, base_y, top_y, center, thick=1.6, closed=False, mat=
             for yy in (base_y + 10, base_y + 11):
                 w.set(x, yy, z, AIR)
                 w.set(x - dx, yy, z - dz, AIR)
-    for (x, z) in inner:
+    for k, (x, z) in enumerate(inner):
         w.set(x, top_y + 1, z, B.slab(SM, "bottom"))
+    # lanterns along the wall walk (night silhouette), every ~10 blocks on the inner parapet
+    for k, (x, z) in enumerate(inner):
+        if k % 10 == 5:
+            w.set(x, top_y + 1, z, B.full(SM))
+            w.set(x, top_y + 2, z, B.lantern())
     return body
 
 
