@@ -243,7 +243,7 @@ def views(w):
         else:
             sz = ante[2] + 2.5 if ac[2] > n[2] else ante[5] - 1.5
             v["ante_eye"] = ("eye", (n[0] + 0.5, 3.2, sz), (n[0] + 0.5, 6.5, ac[2]))
-        v["ante_iso"] = ("iso", ante, 3)
+        v["ante_iso"] = ("iso", ante, 3, ante[1] + 7.5)
     arena = w.spaces["A"]
     a = center(arena)
     v["arena_eye"] = ("eye", (arena[0] + 3.5, 6.0, arena[2] + 3.5), (a[0] + 6, 3.0, a[2] + 6))
@@ -280,7 +280,8 @@ def main():
         if view[0] == "top":
             topdown(scene, f"{args.dungeon}_{name}", view[1], out, args.scale)
         elif view[0] == "iso":
-            iso(scene, f"{args.dungeon}_{name}", view[1], out, args.scale, corner=view[2])
+            iso(scene, f"{args.dungeon}_{name}", view[1], out, args.scale, corner=view[2],
+                top=view[3] if len(view) > 3 else None)
         else:
             render(scene, f"{args.dungeon}_{name}", view[1], view[2], out, args.scale)
 
