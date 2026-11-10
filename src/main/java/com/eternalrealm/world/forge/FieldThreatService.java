@@ -999,6 +999,64 @@ public final class FieldThreatService {
         }
     }
 
+    /**
+     * Operator commands to try the threats without hours of hunting: {@code /eternalrealm threat miasma <field> <points>}
+     * adds miasma (1000 starts the omen), {@code /eternalrealm threat lord <id>} makes a lord due now (it appears when
+     * someone is near), {@code /eternalrealm threat status} prints every field.
+     */
+    @SubscribeEvent
+    public static void onRegisterCommands(net.minecraftforge.event.RegisterCommandsEvent event) {
+        event.getDispatcher().register(net.minecraft.commands.Commands.literal("eternalrealm")
+                .then(net.minecraft.commands.Commands.literal("threat").requires(source -> source.hasPermission(2))
+                        .then(net.minecraft.commands.Commands.literal("miasma")
+                                .then(net.minecraft.commands.Commands.argument("field",
+                                                com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, FieldLayout.FIELD_COUNT))
+                                        .then(net.minecraft.commands.Commands.argument("points",
+                                                        com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, Miasma.MAX))
+                                                .executes(ctx -> {
+                                                    MinecraftServer server = ctx.getSource().getServer();
+                                                    ServerLevel astoria = server.getLevel(AstoriaDimension.LEVEL);
+                                                    if (astoria == null || owner != server) {
+                                                        ctx.getSource().sendFailure(Component.literal("Astoria is not running"));
+                                                        return 0;
+                                                    }
+                                                    int field = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "field");
+                                                    int points = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "points");
+                                                    long now = server.getTickCount();
+                                                    handle(server, astoria, miasma.addKill(field, points, now), now);
+                                                    boardDirty = true;
+                                                    ctx.getSource().sendSuccess(() -> Component.literal("field " + field + ": "
+                                                            + miasma.phase(field).id() + " " + miasma.gauge(field) + "/" + Miasma.MAX), true);
+                                                    return 1;
+                                                }))))
+                        .then(net.minecraft.commands.Commands.literal("lord")
+                                .then(net.minecraft.commands.Commands.argument("id",
+                                                com.mojang.brigadier.arguments.StringArgumentType.word())
+                                        .executes(ctx -> {
+                                            String id = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "id");
+                                            LordState state = LORDS.get(id);
+                                            if (state == null) {
+                                                ctx.getSource().sendFailure(Component.literal("Unknown lord " + id));
+                                                return 0;
+                                            }
+                                            state.dueAt = 0L;
+                                            boardDirty = true;
+                                            ctx.getSource().sendSuccess(() -> Component.literal(id + " is due at "
+                                                    + state.lord.x() + ", " + state.lord.z()), true);
+                                            return 1;
+                                        })))
+                        .then(net.minecraft.commands.Commands.literal("status").executes(ctx -> {
+                            long now = ctx.getSource().getServer().getTickCount();
+                            for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
+                                int f = field;
+                                ctx.getSource().sendSuccess(() -> Component.literal("field " + f + ": "
+                                        + miasma.phase(f).id() + " " + miasma.gauge(f) + "/" + Miasma.MAX + " ("
+                                        + miasma.remaining(f, now) / 20 + "s)"), false);
+                            }
+                            return 1;
+                        }))));
+    }
+
     /** For the map and tests: the phase of a field right now. */
     public static Miasma.Phase phase(int field) {
         return miasma.phase(field);
