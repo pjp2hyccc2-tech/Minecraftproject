@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class BossLooksTest {
     @Test
     public void everyShippedAbilityHasItsOwnLook() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             for (BossAbility ability : boss.abilities()) {
                 AbilityLook look = AbilityLook.defined(ability.id()).orElse(null);
                 assertTrue(ability.id() + " has no look", look != null);
@@ -40,7 +40,7 @@ public class BossLooksTest {
 
     @Test
     public void everyShapeOfEveryBossBecomesAMarkerThatMatchesIt() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             BossBrain brain = new BossBrain(boss, Math.max(2, boss.minPlayers()), Difficulty.EX, new Random(9));
             brain.setArena(new Point(0, 64, 0), boss == Bosses.FINAL ? 25.5 : 14.5);
             double hp = 1.0;

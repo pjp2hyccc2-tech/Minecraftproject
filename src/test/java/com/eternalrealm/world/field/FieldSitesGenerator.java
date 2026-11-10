@@ -141,6 +141,11 @@ public final class FieldSitesGenerator {
                 return false;
             }
         }
+        for (FieldThreats.Calamity calamity : FieldThreats.calamities()) {
+            if (Math.hypot(x - calamity.x(), z - calamity.z()) < FieldThreats.LAIR_RADIUS + radius + 30.0) {
+                return false;
+            }
+        }
         for (FieldLayout.Waystone waystone : FieldLayout.shrines()) {
             if (Math.hypot(x - waystone.x(), z - waystone.z()) < radius + 28.0) {
                 return false;
@@ -232,8 +237,8 @@ public final class FieldSitesGenerator {
                 double target = near + (far - near) * (rank + 0.5) / n;
                 Site first = pass == 1 ? placed.stream().filter(s -> s.monster().equals(template.id())).findFirst()
                         .orElse(null) : null;
-                Candidate best = null;
-                double bestScore = Double.MAX_VALUE;
+                // the best-scoring candidate that also holds this monster's own circle (radius may differ from 32)
+                List<Candidate> ranked = new ArrayList<>();
                 for (Candidate c : all) {
                     if (!fits(c, radius, placed)) {
                         continue;
@@ -241,11 +246,15 @@ public final class FieldSitesGenerator {
                     if (first != null && Math.hypot(c.x() - first.x(), c.z() - first.z()) < 220.0) {
                         continue;
                     }
-                    double spread = Math.min(160.0, nearest(c, placed));
-                    double score = Math.abs(c.fromEntry() - target) - 0.35 * spread;
-                    if (score < bestScore) {
-                        bestScore = score;
+                    ranked.add(c);
+                }
+                ranked.sort(Comparator.comparingDouble(c -> Math.abs(c.fromEntry() - target)
+                        - 0.35 * Math.min(160.0, nearest(c, placed))));
+                Candidate best = null;
+                for (Candidate c : ranked) {
+                    if (radius == 32 || landCircle(field, c.x(), c.z(), radius, slopeLimit(field))) {
                         best = c;
+                        break;
                     }
                 }
                 if (best == null) {
@@ -254,7 +263,10 @@ public final class FieldSitesGenerator {
                     }
                     continue;
                 }
-                String id = "f" + field + "_" + template.id() + (pass == 1 ? "_2" : "");
+                String id = template.id() + (pass == 1 ? "_2" : "");
+                if (habitats.stream().anyMatch(h -> h.id().equals(id)) || placed.stream().anyMatch(h -> h.id().equals(id))) {
+                    throw new IllegalStateException("habitat id " + id + " twice");
+                }
                 placed.add(new Site(id, field, template.id(), (int) best.x(), (int) best.z(), radius,
                         populationOf(template)));
             }

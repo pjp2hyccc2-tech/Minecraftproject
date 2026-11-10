@@ -222,9 +222,12 @@ public final class BossBrain {
         }
     }
 
-    /** Stops the current ability; reports it if a wave had not hit yet (its markers must go). */
+    /**
+     * Stops the current ability; reports it if a placed wave had not hit yet (its markers must go). Between two waves of
+     * a pattern nothing is on the ground, so nothing is reported.
+     */
     private void cancelActive() {
-        if (active != null && !active.allFired()) {
+        if (active != null && active.markersDown()) {
             outbox.add(new BossCommand.Cancelled(active.ability));
         }
         active = null;
@@ -956,6 +959,16 @@ public final class BossBrain {
             this.startTick = startTick;
             this.endTick = endTick;
             this.transition = transition;
+        }
+
+        /** Whether a wave has been placed (its marker is on the ground) and has not hit yet. */
+        boolean markersDown() {
+            for (Wave wave : waves) {
+                if (wave.placed != null && !wave.fired) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         boolean allFired() {

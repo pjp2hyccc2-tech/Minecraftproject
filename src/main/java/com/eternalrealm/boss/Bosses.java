@@ -50,8 +50,16 @@ public final class Bosses {
         return ALL;
     }
 
+    /** The dungeon and raid bosses, then the field bosses ({@link FieldBosses}): every boss that can be fought. */
+    public static List<BossDefinition> everyBoss() {
+        List<BossDefinition> every = new java.util.ArrayList<>(ALL);
+        every.addAll(FieldBosses.all());
+        return List.copyOf(every);
+    }
+
+    /** A boss of the dungeons, the raid or the field. */
     public static Optional<BossDefinition> byId(String id) {
-        for (BossDefinition definition : ALL) {
+        for (BossDefinition definition : everyBoss()) {
             if (definition.id().equals(id)) {
                 return Optional.of(definition);
             }

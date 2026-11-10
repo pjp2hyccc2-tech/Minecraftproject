@@ -54,6 +54,15 @@ public final class EREntityTypes {
     public static final RegistryObject<EntityType<ERBoss>> BOSS_B8 = boss(BossKind.B8);
     public static final RegistryObject<EntityType<ERBoss>> BOSS_FINAL = boss(BossKind.FINAL);
 
+    static {
+        // the field bosses: one entity type each, registered in enum order
+        for (BossKind kind : BossKind.values()) {
+            if (!BOSSES.containsKey(kind)) {
+                boss(kind);
+            }
+        }
+    }
+
     private EREntityTypes() {
     }
 

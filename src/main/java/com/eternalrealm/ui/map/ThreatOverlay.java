@@ -28,7 +28,8 @@ import java.util.Locale;
 
 /**
  * Under the minimap: the 瘴気 gauge of the field the player stands in (violet, pulsing red during an omen, the risen
- * calamity's name while it is out, light blue with the time left while the field is purified), and for a few seconds
+ * calamity's name while it is out, light blue with the time left while the field is purified; while a wandering boss is
+ * out in the field, a pulsing amber mark and, every other few seconds, its name on the label row), and for a few seconds
  * after a lord hunt a small panel with the player's merit place and what they got.
  */
 @Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -125,8 +126,22 @@ public final class ThreatOverlay implements IGuiOverlay {
                 ratio = gauge / 1000.0;
             }
         }
-        String text = font.plainSubstrByWidth(label.getString(), width - 4);
+        // a wanderer out in this field: a pulsing mark on the right, and every other 3 seconds its name on the label row
+        JsonObject wanderer = outWanderer(entry);
+        boolean fighting = wanderer != null && wanderer.has("fighting") && wanderer.get("fighting").getAsBoolean();
+        if (wanderer != null && (nanos / 3_000_000_000L) % 2 == 1) {
+            label = Component.translatable(com.eternalrealm.world.field.Wanderers.MAP).append(" ")
+                    .append(Component.translatable(ClientUiState.stringOr(wanderer, "name", "")))
+                    .withStyle(fighting ? ChatFormatting.RED : ChatFormatting.GOLD);
+        }
+        int textWidth = wanderer == null ? width - 4 : width - 10;
+        String text = font.plainSubstrByWidth(label.getString(), textWidth);
         graphics.drawString(font, Component.literal(text).withStyle(label.getStyle()), left + 2, top + 1, 0xFFFFFFFF);
+        if (wanderer != null) {
+            float pulse = 0.5F + 0.5F * (float) Math.sin(nanos / 2.0E8);
+            int alpha = (int) (140 + 115 * pulse) << 24;
+            graphics.fill(left + width - 6, top + 2, left + width - 2, top + 6, alpha | (fighting ? 0xFF3010 : 0xFFB02E));
+        }
         graphics.fill(left + 2, top + 12, left + width - 2, top + 18, 0xFF1A1020);
         graphics.fill(left + 2, top + 12, left + 2 + (int) ((width - 4) * Mth.clamp(ratio, 0.0, 1.0)), top + 18,
                 fillColor);
@@ -134,6 +149,20 @@ public final class ThreatOverlay implements IGuiOverlay {
             int x = left + 2 + (width - 4) * i / 10;
             graphics.fill(x, top + 16, x + 1, top + 18, 0x50000000);
         }
+    }
+
+    /** The wanderer out in the field of {@code entry} (board data), or null. */
+    private static JsonObject outWanderer(JsonObject entry) {
+        if (!entry.has("wanderers") || !entry.get("wanderers").isJsonArray()) {
+            return null;
+        }
+        for (JsonElement element : entry.getAsJsonArray("wanderers")) {
+            JsonObject wanderer = element.getAsJsonObject();
+            if (wanderer.has("out") && wanderer.get("out").getAsBoolean()) {
+                return wanderer;
+            }
+        }
+        return null;
     }
 
     private static void drawResult(GuiGraphics graphics, Font font, int left, int top, int width) {

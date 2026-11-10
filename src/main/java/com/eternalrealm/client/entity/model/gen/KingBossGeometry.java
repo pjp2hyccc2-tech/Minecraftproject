@@ -171,7 +171,7 @@ public final class KingBossGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"b1", "b1_p1", "b8", "b8_p1", "b8_p2", "b8_p3", "final", "final_p1", "final_p2", "final_p3"};
+    public static final String[] VARIANTS = {"b1", "b1_p1", "b8", "b8_p1", "b8_p2", "b8_p3", "final", "final_p1", "final_p2", "final_p3", "c_end_forest", "c_end_forest_p1", "c_end_forest_p2", "c_harbour", "c_harbour_p1", "c_harbour_p2", "w_bramble_knight", "w_bramble_knight_p1", "w_ash_herald", "w_ash_herald_p1", "w_hollow_walker", "w_hollow_walker_p1", "w_scarecrow_king", "w_scarecrow_king_p1", "w_sunken_captain", "w_sunken_captain_p1"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {"crown", "helm", "horn_r", "horn_l", "beard", "floating_crown", "spikes_r", "spikes_l", "cape_lower", "core", "halo"};
     /** VISIBLE[variant][toggled part]. */
@@ -186,24 +186,56 @@ public final class KingBossGeometry {
             {false, false, false, false, false, true, true, true, true, false, false}, // final_p1
             {false, false, false, false, false, true, true, true, true, true, false}, // final_p2
             {false, false, false, false, false, true, true, true, false, true, true}, // final_p3
+            {false, false, true, true, false, false, true, true, true, false, true}, // c_end_forest
+            {false, false, true, true, false, false, true, true, true, false, true}, // c_end_forest_p1
+            {false, false, true, true, false, false, true, true, true, false, true}, // c_end_forest_p2
+            {false, false, true, true, false, true, true, true, true, true, false}, // c_harbour
+            {false, false, true, true, false, true, true, true, true, true, false}, // c_harbour_p1
+            {false, false, true, true, false, true, true, true, true, true, false}, // c_harbour_p2
+            {false, true, false, false, false, false, true, true, true, false, false}, // w_bramble_knight
+            {false, true, false, false, false, false, true, true, true, false, false}, // w_bramble_knight_p1
+            {false, true, false, false, false, false, true, true, true, true, false}, // w_ash_herald
+            {false, true, false, false, false, false, true, true, true, true, false}, // w_ash_herald_p1
+            {true, false, false, false, false, false, false, false, true, false, true}, // w_hollow_walker
+            {true, false, false, false, false, false, false, false, true, false, true}, // w_hollow_walker_p1
+            {true, false, false, false, false, false, false, false, true, false, false}, // w_scarecrow_king
+            {true, false, false, false, false, false, false, false, true, false, false}, // w_scarecrow_king_p1
+            {false, true, false, false, true, false, false, false, true, false, false}, // w_sunken_captain
+            {false, true, false, false, true, false, false, false, true, false, false}, // w_sunken_captain_p1
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"spikes_r", "spikes_l"};
+    public static final String[] POSED_PARTS = {"head", "spikes_r", "spikes_l", "cape"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null, null}, // b1
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}}, // b1_p1
-            {null, null}, // b8
-            {null, null}, // b8_p1
-            {null, null}, // b8_p2
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}}, // b8_p3
-            {null, null}, // final
-            {null, null}, // final_p1
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}}, // final_p2
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}}, // final_p3
+            {null, null, null, null}, // b1
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 0.8F}, null}, // b1_p1
+            {null, null, null, null}, // b8
+            {null, null, null, null}, // b8_p1
+            {null, null, null, null}, // b8_p2
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.6F, 1.4F}, null}, // b8_p3
+            {null, null, null, null}, // final
+            {null, null, null, null}, // final_p1
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.5F, 1.4F}, null}, // final_p2
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.7F, 1.5F}, null}, // final_p3
+            {null, null, null, null}, // c_end_forest
+            {null, null, null, null}, // c_end_forest_p1
+            {null, null, null, null}, // c_end_forest_p2
+            {null, null, null, null}, // c_harbour
+            {null, null, null, null}, // c_harbour_p1
+            {null, null, null, null}, // c_harbour_p2
+            {null, null, null, null}, // w_bramble_knight
+            {null, null, null, null}, // w_bramble_knight_p1
+            {null, null, null, null}, // w_ash_herald
+            {null, null, null, null}, // w_ash_herald_p1
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.9F, 1.5F, 1.0F}}, // w_hollow_walker
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.9F, 1.5F, 1.0F}}, // w_hollow_walker_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.2F, 1.15F}, null, null, null}, // w_scarecrow_king
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.2F, 1.15F}, null, null, null}, // w_scarecrow_king_p1
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.35F, 1.0F}}, // w_sunken_captain
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.35F, 1.0F}}, // w_sunken_captain_p1
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.9F, 1.9F, 2.9F, 2.9F, 2.9F, 2.9F, 3.2F, 3.2F, 3.2F, 3.2F};
+    public static final float[] SCALES = {1.9F, 1.9F, 2.9F, 2.9F, 2.9F, 2.9F, 3.2F, 3.2F, 3.2F, 3.2F, 2.72F, 2.72F, 2.72F, 2.32F, 2.32F, 2.32F, 1.9F, 1.9F, 2.262F, 2.262F, 1.995F, 1.995F, 1.9F, 1.9F, 1.995F, 1.995F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true, true, true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 }

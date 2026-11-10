@@ -31,7 +31,7 @@ public class BossFightSimulationTest {
 
     @Test
     public void everyBossKeepsItsPromisesOnEveryDifficulty() {
-        for (BossDefinition boss : Bosses.all()) {
+        for (BossDefinition boss : Bosses.everyBoss()) {
             for (Difficulty difficulty : Difficulty.values()) {
                 for (int seed = 1; seed <= 3; seed++) {
                     int party = boss.minPlayers() == 1 ? 1 + (seed * 2 - 1) % 5 : boss.minPlayers() + seed * 3;

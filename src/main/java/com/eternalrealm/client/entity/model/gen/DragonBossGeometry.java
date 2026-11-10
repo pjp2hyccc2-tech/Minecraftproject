@@ -120,7 +120,7 @@ public final class DragonBossGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"b6", "b6_p1", "b6_p2", "b6_p3"};
+    public static final String[] VARIANTS = {"b6", "b6_p1", "b6_p2", "b6_p3", "c_ancient_ruins", "c_ancient_ruins_p1", "c_ancient_ruins_p2", "c_lakeside", "c_lakeside_p1", "c_lakeside_p2", "w_cascade_wyvern", "w_cascade_wyvern_p1", "w_thunder_roc", "w_thunder_roc_p1", "w_reed_serpent", "w_reed_serpent_p1"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {};
     /** VISIBLE[variant][toggled part]. */
@@ -129,18 +129,42 @@ public final class DragonBossGeometry {
             {}, // b6_p1
             {}, // b6_p2
             {}, // b6_p3
+            {}, // c_ancient_ruins
+            {}, // c_ancient_ruins_p1
+            {}, // c_ancient_ruins_p2
+            {}, // c_lakeside
+            {}, // c_lakeside_p1
+            {}, // c_lakeside_p2
+            {}, // w_cascade_wyvern
+            {}, // w_cascade_wyvern_p1
+            {}, // w_thunder_roc
+            {}, // w_thunder_roc_p1
+            {}, // w_reed_serpent
+            {}, // w_reed_serpent_p1
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"horn_r", "horn_l", "right_wing", "left_wing"};
+    public static final String[] POSED_PARTS = {"body", "neck1", "neck2", "horn_r", "horn_l", "jaw", "tail1", "tail2", "tail_tip", "right_wing", "left_wing"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null, null, null, null}, // b6
-            {null, null, null, null}, // b6_p1
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.3F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.3F}, null, null}, // b6_p2
-            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}}, // b6_p3
+            {null, null, null, null, null, null, null, null, null, null, null}, // b6
+            {null, null, null, null, null, null, null, null, null, null, null}, // b6_p1
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.3F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.3F}, null, null, null, null, null, null}, // b6_p2
+            {null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.3F, 1.5F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.0F, 1.15F}}, // b6_p3
+            {null, {0.0F, 0.0F, 0.0F, -8.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.8F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.0F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.0F, 1.15F}}, // c_ancient_ruins
+            {null, {0.0F, 0.0F, 0.0F, -8.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.8F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.0F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.0F, 1.15F}}, // c_ancient_ruins_p1
+            {null, {0.0F, 0.0F, 0.0F, -8.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.5F, 1.8F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.0F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.0F, 1.15F}}, // c_ancient_ruins_p2
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.18F, 1.0F, 1.08F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.15F, 0.8F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.1F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.25F, 1.1F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 0.55F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 0.55F}}, // c_lakeside
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.18F, 1.0F, 1.08F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.15F, 0.8F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.1F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.25F, 1.1F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 0.55F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 0.55F}}, // c_lakeside_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.18F, 1.0F, 1.08F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.15F, 0.8F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.2F, 1.1F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.3F, 1.25F, 1.1F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 0.55F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 0.55F}}, // c_lakeside_p2
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.9F, 0.95F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.85F, 1.2F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.8F, 1.25F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.45F, 1.0F, 1.3F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.45F, 1.0F, 1.3F}}, // w_cascade_wyvern
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.9F, 0.95F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.85F, 1.2F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.8F, 1.25F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.45F, 1.0F, 1.3F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.45F, 1.0F, 1.3F}}, // w_cascade_wyvern_p1
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.15F, 0.7F}, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 2.4F, 1.0F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.0F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.0F, 1.4F}}, // w_thunder_roc
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.15F, 0.7F}, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 2.4F, 1.0F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.0F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.6F, 1.0F, 1.4F}}, // w_thunder_roc_p1
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.85F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.8F, 1.45F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.95F, 0.95F, 1.3F}, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.8F, 1.35F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3F, 0.6F, 0.3F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3F, 0.6F, 0.3F}}, // w_reed_serpent
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.85F, 1.15F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.8F, 1.45F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.95F, 0.95F, 1.3F}, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.8F, 1.35F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3F, 0.6F, 0.3F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.3F, 0.6F, 0.3F}}, // w_reed_serpent_p1
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {2.7F, 2.7F, 2.7F, 2.7F};
+    public static final float[] SCALES = {2.7F, 2.7F, 2.7F, 2.7F, 2.43F, 2.43F, 2.43F, 2.214F, 2.214F, 2.214F, 1.89F, 1.89F, 2.106F, 2.106F, 2.025F, 2.025F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true, true, true, true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true};
 }

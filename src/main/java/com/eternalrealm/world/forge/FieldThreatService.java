@@ -104,7 +104,8 @@ import java.util.UUID;
  *     experience for a while); left alone, it departs.</li>
  * </ul>
  * Every few seconds the players in アストリア get the board ({@link #BOARD_CHANNEL}): every field's miasma and phase,
- * its lords and its calamity, for the map, the 手配書 and the gauge under the minimap.
+ * its lords, its calamity and its wanderers ({@link WandererService}), for the map, the 手配書 and the gauge under the
+ * minimap.
  */
 @Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class FieldThreatService {
@@ -899,7 +900,7 @@ public final class FieldThreatService {
         startFight(astoria, state, now);
     }
 
-    private static BlockState scarBlock(int field, int x, int z, boolean rim) {
+    static BlockState scarBlock(int field, int x, int z, boolean rim) {
         int hash = (x * 73856093) ^ (z * 19349663);
         int pick = Math.floorMod(hash, 7);
         if (rim) {
@@ -991,8 +992,7 @@ public final class FieldThreatService {
             return;
         }
         BossDefinition definition = Bosses.byId(state.calamity.boss()).orElse(null);
-        MonsterTemplate minion = definition == null ? null
-                : Monsters.byId(Bosses.minionTemplateId(definition.id())).orElse(null);
+        MonsterTemplate minion = rewardTemplate(definition, state.calamity.field());
         MonsterStats stats = minion == null ? null : MonsterScaling.stats(minion, Math.max(minion.levels().min(),
                 Math.min(minion.levels().max(), definition.level())));
         long durationTicks = Math.max(0L, (fight.killTick() < 0 ? now : fight.killTick()) - state.fightStart);
@@ -1077,14 +1077,27 @@ public final class FieldThreatService {
 
     // ------------------------------------------------------------------ rewards
 
-    private static void addMaterial(List<ItemStack> items, String materialId, int count) {
+    /**
+     * The monster whose EXP and gold a boss's rewards scale from: its adds' template, or for the field bosses (which
+     * summon none) the first lord of their field, at the boss's level.
+     */
+    static MonsterTemplate rewardTemplate(BossDefinition definition, int field) {
+        if (definition == null) {
+            return null;
+        }
+        return Monsters.byId(Bosses.minionTemplateId(definition.id()))
+                .or(() -> FieldThreats.lordsOf(field).stream().findFirst().flatMap(lord -> Monsters.byId(lord.template())))
+                .orElse(null);
+    }
+
+    static void addMaterial(List<ItemStack> items, String materialId, int count) {
         Item item = materialId == null ? null : ERGearItems.material(materialId);
         if (item != null && count > 0) {
             items.add(new ItemStack(item, count));
         }
     }
 
-    private static ItemStack equipment(ServerContext context, ServerPlayer player, int field, ItemRarity floor) {
+    static ItemStack equipment(ServerContext context, ServerPlayer player, int field, ItemRarity floor) {
         double luck = context.combat().service().get(player.getUUID()).map(Combatant::stats)
                 .map(CombatStats::lootBonus).orElse(0.0);
         ItemRarity rarity = EquipmentGenerator.rollRarity(luck, RANDOM);
@@ -1101,7 +1114,7 @@ public final class FieldThreatService {
         return EquipmentStacks.create(EquipmentGenerator.roll(LootDrops.baseFor(player, tier), rarity, RANDOM));
     }
 
-    private static void give(ServerContext context, ServerPlayer player, List<ItemStack> items, long exp, long gold) {
+    static void give(ServerContext context, ServerPlayer player, List<ItemStack> items, long exp, long gold) {
         if (exp > 0) {
             context.playerData().grantExperience(player.getUUID(), exp, ExperienceSource.BOSS);
         }
@@ -1169,6 +1182,7 @@ public final class FieldThreatService {
                 lords.add(l);
             }
             entry.add("lords", lords);
+            WandererService.addToBoard(entry, field, now);
             fields.add(entry);
         }
         board.add("fields", fields);
@@ -1177,17 +1191,22 @@ public final class FieldThreatService {
         }
     }
 
+    /** Something on the board changed (a wanderer came or went): send it soon. */
+    static void boardChanged() {
+        boardDirty = true;
+    }
+
     // ------------------------------------------------------------------ helpers
 
     static String fieldKey(int field) {
         return com.eternalrealm.world.Areas.byId(field).map(area -> area.translationKey()).orElse("?");
     }
 
-    private static int fieldOf(ServerPlayer player) {
+    static int fieldOf(ServerPlayer player) {
         return FieldLayout.inCapital(player.getX(), player.getZ()) ? 0 : FieldLayout.areaAt(player.getX(), player.getZ());
     }
 
-    private static ServerPlayer nearestPlayer(ServerLevel level, double x, double z, double radius) {
+    static ServerPlayer nearestPlayer(ServerLevel level, double x, double z, double radius) {
         ServerPlayer best = null;
         double bestDistance = radius * radius;
         for (ServerPlayer player : level.players()) {
@@ -1205,7 +1224,7 @@ public final class FieldThreatService {
         return best;
     }
 
-    private static BlockPos surface(ServerLevel level, int x, int z) {
+    static BlockPos surface(ServerLevel level, int x, int z) {
         level.getChunk(x >> 4, z >> 4);
         return new BlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
     }
@@ -1215,7 +1234,7 @@ public final class FieldThreatService {
                 .map(snapshot -> JobType.fromStored(snapshot.jobId()).id()).orElse("none");
     }
 
-    private static void broadcast(MinecraftServer server, Component message) {
+    static void broadcast(MinecraftServer server, Component message) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             player.sendSystemMessage(message);
         }

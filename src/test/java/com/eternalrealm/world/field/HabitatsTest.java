@@ -64,6 +64,11 @@ public class HabitatsTest {
                 assertTrue(habitat.id() + " reaches into the territory of " + lord.id(),
                         Math.hypot(habitat.x() - lord.x(), habitat.z() - lord.z()) >= lord.territory() + habitat.radius() + 16.0);
             }
+            for (FieldThreats.Calamity calamity : FieldThreats.calamities()) {
+                assertTrue(habitat.id() + " is in the lair of the calamity of field " + calamity.field(),
+                        Math.hypot(habitat.x() - calamity.x(), habitat.z() - calamity.z())
+                                >= FieldThreats.LAIR_RADIUS + habitat.radius() + 30.0);
+            }
             for (LandmarkSite site : LandmarkSites.all()) {
                 assertTrue(habitat.id() + " is at the entrance of " + site.dungeonId(),
                         Math.hypot(habitat.x() - site.x(), habitat.z() - site.z()) >= site.padRadius() + habitat.radius() + 24.0);

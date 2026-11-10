@@ -38,7 +38,7 @@ public final class QueenBossAnimations {
     /** The animation of every slot for a variant (variant ids as in the geometry class). */
     public static AnimationDefinition[] forVariant(String variant) {
         return switch (variant) {
-            case "b4", "b4_p1", "b4_p2" -> new AnimationDefinition[]{X_IDLE, X_WALK, X_SLAM, X_SWEEP, X_CAST, X_ROAR, X_CHARGE, X_SUMMON, X_PHASE, X_STAGGER, X_DEATH};
+            case "b4", "b4_p1", "b4_p2", "c_sacred_falls", "c_sacred_falls_p1", "c_sacred_falls_p2", "w_mist_hermit", "w_mist_hermit_p1" -> new AnimationDefinition[]{X_IDLE, X_WALK, X_SLAM, X_SWEEP, X_CAST, X_ROAR, X_CHARGE, X_SUMMON, X_PHASE, X_STAGGER, X_DEATH};
             default -> new AnimationDefinition[]{IDLE, Q_WALK, Q_SLAM, Q_SWEEP, Q_CAST, Q_ROAR, Q_CHARGE, Q_SUMMON, Q_PHASE, Q_STAGGER, Q_DEATH};
         };
     }
