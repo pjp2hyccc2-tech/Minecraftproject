@@ -33,6 +33,7 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.BooleanValue MOB_KILL_EXP_ENABLED;
     public static final ForgeConfigSpec.BooleanValue MONSTER_SPAWNING;
     public static final ForgeConfigSpec.BooleanValue KEEP_INVENTORY;
+    public static final ForgeConfigSpec.BooleanValue NATURAL_REGENERATION;
     public static final ForgeConfigSpec.BooleanValue IGNORE_PARTY_SIZE;
     public static final ForgeConfigSpec.BooleanValue SPECIAL_MOVES;
     public static final ForgeConfigSpec.BooleanValue DUNGEON_TRAPS;
@@ -133,6 +134,13 @@ public final class ERServerConfig {
                 .define("specialMoves", true);
         DUNGEON_TRAPS = builder.comment("Dungeon instances have telegraphed traps in their corridors and combat rooms.")
                 .define("dungeonTraps", true);
+        builder.pop();
+
+        builder.comment("Health and hunger. There is no hunger: the food bar is hidden and always full.").push("survival");
+        NATURAL_REGENERATION = builder.comment("Vanilla natural health regeneration. Off by design: health comes back from",
+                        "potions, healing skills, revival and respawning only. Sets the naturalRegeneration game rule",
+                        "when the server starts.")
+                .define("naturalRegeneration", false);
         builder.pop();
 
         builder.comment("Season. Restart required.").push("season");

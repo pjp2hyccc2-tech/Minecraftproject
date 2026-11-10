@@ -38,7 +38,7 @@ public record CombatStatsPacket(CombatStats stats) {
         buffer.writeDouble(stats.cooldownFactor());
         buffer.writeDouble(stats.dodgeDistanceFactor());
         buffer.writeDouble(stats.knockbackResistance());
-        buffer.writeDouble(stats.regenPerSecond());
+        buffer.writeDouble(stats.potionBonus());
         buffer.writeDouble(stats.projectileSpeedFactor());
         buffer.writeDouble(stats.lootBonus());
         buffer.writeDouble(stats.goldBonus());

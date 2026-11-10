@@ -31,16 +31,29 @@ import static com.eternalrealm.monster.Materials.YETI_FUR;
  *
  * <table>
  *     <caption>Rates per kind of monster</caption>
- *     <tr><th></th><th>signature</th><th>other</th><th>enhancement stone</th><th>reroll crystal</th><th>equipment</th></tr>
- *     <tr><td>field</td><td>50% ×1-2</td><td>12%</td><td>4%</td><td>0.4%</td><td>2%, base weights</td></tr>
- *     <tr><td>field elite</td><td>100% ×2-3</td><td>60% ×1-2</td><td>35% ×1-2</td><td>5%</td><td>20%, elite weights</td></tr>
- *     <tr><td>dungeon</td><td>40% ×1-2</td><td>20%</td><td>8%</td><td>0.6%</td><td>4%, base weights</td></tr>
- *     <tr><td>dungeon elite</td><td>100% ×2-3</td><td>80% ×1-2</td><td>50% ×1-2</td><td>8%</td><td>30%, elite weights</td></tr>
+ *     <tr><th></th><th>signature</th><th>other</th><th>enhancement stone</th><th>reroll crystal</th><th>equipment</th>
+ *     <th>health potion</th></tr>
+ *     <tr><td>field</td><td>50% ×1-2</td><td>12%</td><td>4%</td><td>0.4%</td><td>2%, base weights</td><td>4%</td></tr>
+ *     <tr><td>field elite</td><td>100% ×2-3</td><td>60% ×1-2</td><td>35% ×1-2</td><td>5%</td><td>20%, elite weights</td>
+ *     <td>50% ×1-2</td></tr>
+ *     <tr><td>dungeon</td><td>40% ×1-2</td><td>20%</td><td>8%</td><td>0.6%</td><td>4%, base weights</td><td>4%</td></tr>
+ *     <tr><td>dungeon elite</td><td>100% ×2-3</td><td>80% ×1-2</td><td>50% ×1-2</td><td>8%</td><td>30%, elite weights</td>
+ *     <td>50% ×1-2</td></tr>
  * </table>
+ *
+ * <p>Health potions are the way to heal (there is no natural regeneration), so monsters drop the size of their tier
+ * ({@link #potionFor}) besides the shop's supply.</p>
  */
 public final class DropTables {
     /** Table of boss summons: drops nothing. */
     public static final String NONE_ID = "none";
+    /** Health potions monsters drop (item ids of {@code item.Consumable}): small, medium and large. */
+    public static final List<String> POTIONS = List.of("eternalrealm:health_potion_small",
+            "eternalrealm:health_potion_medium", "eternalrealm:health_potion_large");
+    /** Chance of a health potion from a normal monster, and from an elite (which drops 1-2). */
+    public static final double POTION_CHANCE = 0.04;
+    public static final double ELITE_POTION_CHANCE = 0.5;
+
     /** Rarity weights of elite equipment rolls (instead of the base 60/25/10/4/1). */
     public static final RarityWeights ELITE_WEIGHTS = new RarityWeights(20, 40, 25, 12, 3);
 
@@ -332,7 +345,17 @@ public final class DropTables {
         if (elite > 0.0) {
             entries.add(new DropEntry(Materials.fieldElite(field), 1, 1, elite));
         }
+        String potion = potionFor(table.equipment().tier());
+        entries.add(elite > 0.0 ? new DropEntry(potion, 1, 2, ELITE_POTION_CHANCE) : new DropEntry(potion, 1, 1, POTION_CHANCE));
         return new DropTable(table.id(), entries, table.equipment());
+    }
+
+    /**
+     * The health potion of a tier: small up to tier 2, medium for tiers 3-4 (level 15+ areas), large from tier 5 (level
+     * 30+ areas), matching the potions' required levels.
+     */
+    public static String potionFor(int tier) {
+        return POTIONS.get(tier <= 2 ? 0 : tier <= 4 ? 1 : 2);
     }
 
     private static DropTable table(String id, int tier, String signature, int signatureMin, int signatureMax,

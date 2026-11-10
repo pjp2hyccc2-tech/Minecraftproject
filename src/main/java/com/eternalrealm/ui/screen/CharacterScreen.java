@@ -143,7 +143,7 @@ public final class CharacterScreen extends JournalScreen {
             line(graphics, rowY, 2, "screen.eternalrealm.character.combat3",
                     pct(1.0 - combat.cooldownFactor()), pct(1.0 - combat.chargeTimeFactor()),
                     pct(combat.dodgeDistanceFactor() - 1.0), pct(combat.knockbackResistance()),
-                    f1(combat.regenPerSecond()));
+                    pct(combat.potionBonus()));
             line(graphics, rowY, 3, "screen.eternalrealm.character.combat4",
                     pct(combat.healingMultiplier() - 1.0), pct(combat.projectileSpeedFactor() - 1.0),
                     pct(combat.lootBonus()), pct(combat.goldBonus()));

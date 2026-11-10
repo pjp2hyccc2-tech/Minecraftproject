@@ -5,7 +5,7 @@ package com.eternalrealm.combat;
  * ステータス効果"). Every stat matters for more than one thing, with caps so no single stat runs away:
  * <ul>
  *     <li>STR: heavy attacks charge faster</li>
- *     <li>VIT: knockback resistance, health regeneration out of combat</li>
+ *     <li>VIT: knockback resistance, stronger health potions (there is no natural regeneration)</li>
  *     <li>AGI: movement speed, longer dodges</li>
  *     <li>INT: shorter skill cooldowns</li>
  *     <li>DEX: critical damage, faster projectiles</li>
@@ -13,7 +13,8 @@ package com.eternalrealm.combat;
  * </ul>
  */
 public record StatScaling(double chargeTimePerStr, double minChargeTimeFactor, double knockbackResistPerVit,
-                          double maxKnockbackResist, double regenPerVit, double moveSpeedPerAgi, double maxMoveSpeedFromAgi,
+                          double maxKnockbackResist, double potionPerVit, double maxPotionBonus,
+                          double moveSpeedPerAgi, double maxMoveSpeedFromAgi,
                           double dodgeDistancePerAgi, double maxDodgeDistanceBonus, double cooldownPerInt,
                           double minCooldownFactor, double critDamagePerDex, double projectileSpeedPerDex,
                           double maxProjectileSpeedBonus, double lootPerLuk, double maxLootBonus, double goldPerLuk,
@@ -23,7 +24,8 @@ public record StatScaling(double chargeTimePerStr, double minChargeTimeFactor, d
         Check.range("minChargeTimeFactor", minChargeTimeFactor, 0.2, 1.0);
         Check.range("knockbackResistPerVit", knockbackResistPerVit, 0.0, 0.1);
         Check.range("maxKnockbackResist", maxKnockbackResist, 0.0, 1.0);
-        Check.range("regenPerVit", regenPerVit, 0.0, 1.0);
+        Check.range("potionPerVit", potionPerVit, 0.0, 0.1);
+        Check.range("maxPotionBonus", maxPotionBonus, 0.0, 1.0);
         Check.range("moveSpeedPerAgi", moveSpeedPerAgi, 0.0, 0.1);
         Check.range("maxMoveSpeedFromAgi", maxMoveSpeedFromAgi, 0.0, 1.0);
         Check.range("dodgeDistancePerAgi", dodgeDistancePerAgi, 0.0, 0.1);
@@ -40,7 +42,7 @@ public record StatScaling(double chargeTimePerStr, double minChargeTimeFactor, d
     }
 
     public static StatScaling defaults() {
-        return new StatScaling(0.002, 0.6, 0.002, 0.5, 0.01, 0.001, 0.15, 0.003, 0.3, 0.0015, 0.7, 0.003, 0.002,
+        return new StatScaling(0.002, 0.6, 0.002, 0.5, 0.004, 0.5, 0.001, 0.15, 0.003, 0.3, 0.0015, 0.7, 0.003, 0.002,
                 0.4, 0.002, 0.5, 0.005, 1.0);
     }
 }

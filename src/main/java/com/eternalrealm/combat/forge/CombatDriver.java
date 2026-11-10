@@ -72,7 +72,7 @@ public final class CombatDriver {
     private static final int PARRY_SLOW_TICKS = 40;
     private static final int PARRY_SLOW_AMPLIFIER = 3;
     private static final float GUARD_KNOCKBACK_FACTOR = 0.5F;
-    /** Health regeneration from VIT starts this long after the last fight. */
+    /** A player counts as in combat this long after dealing or taking damage. */
     private static final int OUT_OF_COMBAT_TICKS = 100;
     /** Upper bound of damage reflected by thorns in one hit. */
     private static final double MAX_REFLECT = 500.0;
@@ -162,28 +162,12 @@ public final class CombatDriver {
                     handleEvent(player, combatant.stats(), event);
                 }
                 resyncStatus(player, combatant, now);
-                regenerate(player, combatant, now);
             } catch (RuntimeException e) {
                 // One broken fighter must not stop combat for everyone else.
                 LOG.error("Combat tick failed for {}; cancelling their action", player.getGameProfile().getName(), e);
                 combatant.cancelAction();
             }
         }
-    }
-
-    /** VIT regeneration: once per second while the player has neither dealt nor taken damage for 5 seconds. */
-    private void regenerate(ServerPlayer player, Combatant combatant, long now) {
-        double perSecond = combatant.stats().regenPerSecond();
-        if (perSecond <= 0.0 || now % 20 != 0 || !player.isAlive() || player.getHealth() >= player.getMaxHealth()) {
-            return;
-        }
-        NetState state = net(player.getUUID());
-        long lastCombat = Math.max(state.lastCombatTick, player.getLastHurtMobTimestamp() == 0 ? Long.MIN_VALUE / 4
-                : now - (player.tickCount - player.getLastHurtMobTimestamp()));
-        if (now - lastCombat < OUT_OF_COMBAT_TICKS || player.hurtTime > 0) {
-            return;
-        }
-        player.heal((float) perSecond);
     }
 
     /** Whether the player dealt or took damage in the last {@link #OUT_OF_COMBAT_TICKS} ticks. */

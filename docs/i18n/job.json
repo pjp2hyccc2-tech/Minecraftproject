@@ -92,6 +92,7 @@
   "message.eternalrealm.job.same": {"ja": "すでに%sです", "en": "You already are a %s"},
   "message.eternalrealm.job.not_enough_gold": {"ja": "転職には %s G 必要です", "en": "A job change costs %s gold"},
   "message.eternalrealm.job.starter_kit": {"ja": "初期装備 %s を受け取りました", "en": "Received the starter weapon %s"},
+  "message.eternalrealm.job.starter_potions": {"ja": "回復薬（小）×%s も受け取りました。HPは自然には回復しません。回復薬で回復しましょう", "en": "Also received %s small health potions. Health does not come back by itself: drink potions to heal"},
   "message.eternalrealm.skill.learned": {"ja": "%s のレベルが上がった！", "en": "%s leveled up!"},
   "message.eternalrealm.skill.ok": {"ja": "習得しました", "en": "Learned"},
   "message.eternalrealm.skill.no_job": {"ja": "先に職業を選んでください", "en": "Choose a job first"},
