@@ -111,38 +111,74 @@ castle plateau surface y = +26 (superellipse centre (0, −139), a = 106, b = 51
 grand viaduct x −6..6 from z = −47 up to the gatehouse at z = −89; lake water top y = −2 (north shore z ≈ 93);
 river (water y = −2) from the waterfall pool (126, −96) south to the lake; waterfall x 121..131 from y = 61.
 
-Roads (drawn, cobbled with smooth-stone kerbs): avenues 11 wide (x = −5..5 north/south, z = −5..5 west/east),
-streets 7 wide at x = ±43 and z = ±43, rural roads beyond the walls (west to the edge, east over the river
-bridge towards the d1 entrance at (230, 70), south over the lake bridge).
+Roads (drawn by the terrain, re-paved by `districts/streets.py` with `cobbled_paving` and a flagstone band on the
+avenues): avenues 11 wide (x = −5..5 north/south, z = −5..5 west/east), streets 7 wide at z = ±43 (x −98..98),
+x = −55 (z −84..43) and x = 55 (z −43..43), rural roads beyond the walls (west to the edge, east over the river
+bridge towards the d1 entrance at (230, 70), south over the lake bridge). City walls (`layout.WALLS`): centre
+lines x = ±104 and z = 79 (5 thick, walk top y = 10), main gate at x = 0 on the south wall, side gates at z = 0.
 
-| District | Boxes (x0, z0, x1, z1) | Ground y | Intended content |
+The town follows the owner's layout reference アルセリア王国: guild west of the plaza, market east, cathedral
+north-east below the castle, walls all round with the main gate in the south onto the lake bridge, harbour
+south-east and farms with windmills south-west outside the walls.
+
+| District | Boxes (x0, z0, x1, z1) | Content (module) |
+|---|---|---|
+| `plaza` | disc r ≤ 26 | angel fountain with `fountain_spray` jets, flagstones, compass star, beds, benches, lamps, 8 flag masts (`plaza.py`) |
+| `guild` | (−51, −39, −6, −6) − disc | adventurers' guild hall x −50..−27, z −38..−7 facing the plaza, clock tower x −27..−19, z −37..−29 (`guild.py`) |
+| `civic` | (6, −39, 51, −6) − disc | hall of fame with dome + ranking board, auction house (faces the plaza), job hall (`civic.py`) |
+| `shops` | (−51, 6, −6, 39) − disc | post office with pigeon loft, item shop, blacksmith forge (`shops.py`) |
+| `market` | (6, 6, 51, 39) − disc, (59, 6, 87, 39), (88, 21, 98, 39) | stall square with market cross, covered market hall, avenue stalls (`market.py`) |
+| `cathedral` | (12, −86, 98, −47) | gothic cathedral x 30..88, z −84..−49, close with gardens (`cathedral.py`) |
+| `upper_town` | (−98, −86, −59, −47), (−51, −86, −12, −47) | noble houses, front gardens, formal gardens with fountains (`upper_town.py`) |
+| `residential_west` | (−98, −39, −59, −6), (−98, 6, −59, 39) | half-timbered rows, back gardens (`residential_west.py`) |
+| `residential_east` | (59, −39, 87, −6), (88, −39, 98, −21) | houses, gardens (`residential_east.py`) |
+| `south_west` | (−98, 47, −25, 73), (−24, 47, −6, 65) | tavern (x −24..−8, z 48..64, faces the south avenue), houses, back lane (`south_west.py`) |
+| `south_east` | (6, 47, 24, 65), (25, 47, 98, 73) | inn (x 26..50, z 49..64, faces street_s1), houses, lane to the harbour postern (`south_east.py`) |
+| `streets` | the road corridors inside the walls | re-paving, signposts, pennant poles, castle-gate guard spots (`streets.py`) |
+| `walls` | (−112, −86, −99, 86), (99, −86, 112, 86), (−98, 74, 98, 86), (−24, 66, 24, 92), (88, −20, 98, 20) | curtain walls, 12 towers, south main gate, west/east gates, postern (x 74), Gant's office x 90..100, z 8..19 (`walls.py`) |
+| `harbour` | (25, 87, 125, 140) | quay to z = 100, warehouses, fish market, piers, cranes, lighthouse (112, 128), 2 ships + boats (`harbour.py`) |
+| `west_fields` | (−160, 6, −113, 159), (−112, 87, −25, 159) | fields, hedges, 3 windmills, farmhouses, barns, orchard (`west_fields.py`) |
+| `arena` | (−160, −80, −113, −7) | oval amphitheatre centred (−136, −44) outside the west gate (`arena.py`) |
+| `east_riverside` | (113, −60, 159, −7), (113, 7, 159, 86) | fields and the watermill on the east bank at z ≈ 40 (`east_riverside.py`) |
+| `castle` | (−112, −208, 112, −87) + viaduct (−9, −88, 9, −46) | built by `castle/` (ground y 26) |
+
+Shared town helpers (files starting with `_` are not run as districts): `_civic_kit.py` (faces, windows, doors,
+roofs, dormers, lamps, masts, stalls, interiors), `_town_kit.py` (gimmick helpers, paving mixes, the parametric
+half-timbered `house()` + `row()`, the stone `civic_hall()` shell, market stalls, `crowd()`/`guard()` spot
+helpers), `_inns.py` (tavern and inn with interiors), `_ships.py`, `_farm.py` (fields, windmills, barns), and
+`_town_views.py` (town cameras; see §8).
+
+Spots (feet positions + yaw; `layout.REQUIRED_SPOTS` also lists `respawn` and `board.ranking`):
+
+| Spot | Position | Yaw | Where |
 |---|---|---|---|
-| `plaza` | disc r ≤ 26 at (0, 0) | 0 | fountain with the angel statue (r ≤ 10), beds, benches, lamps |
-| `guild` | (6, −39, 39, −6) minus disc r ≤ 26 | 0 | adventurers' guild hall with the clock tower |
-| `shops_nw` | (−39, −39, −6, −6) minus disc | 0 | shop ring (item shop …) |
-| `shops_sw` | (−39, 6, −6, 39) minus disc | 0 | shop ring (blacksmith …) |
-| `shops_se` | (6, 6, 39, 39) minus disc | 0 | shop ring (auction house, tavern …) |
-| `upper_town_w` | (−39, −79, −10, −47) | 0 | below the castle cliff, west of the viaduct |
-| `upper_town_e` | (10, −79, 39, −47) | 0 | below the castle cliff, east of the viaduct |
-| `cathedral` | (−95, −86, −47, −47) | 0 | cathedral with stained glass |
-| `northeast_quarter` | (47, −86, 95, −47) | 0 | hall of fame / job guild / civic |
-| `residential_west` | (−95, −39, −47, −6) | 0 | half-timbered houses |
-| `market` | (−95, 6, −47, 39) | 0 | market square and stalls |
-| `residential_southwest` | (−95, 47, −47, 88) | 0 | houses, inn |
-| `residential_east` | (47, −39, 95, −6) | 0 | houses |
-| `residential_southeast` | (47, 6, 95, 39) | 0 | houses, inn |
-| `arena` | (47, 47, 95, 88) | 0 | arena |
-| `harbour_west` | (−39, 47, −6, 124) | 0 (water −2) | quays, piers into the lake |
-| `harbour_east` | (6, 47, 39, 124) | 0 (water −2) | quays, piers |
-| `outer_walls` | (−108, −86, −97, 96), (97, −86, 108, 96) | 0 | low walls, west/east gatehouses on the roads, lake towers |
-| `west_fields` | (−160, −70, −112, 150) | 0 | farms, windmill (outside the west gate) |
-| `east_riverside` | (134, −60, 160, 92) | 0 | fields east of the river |
-| `castle` | (−112, −208, 112, −87) + viaduct (−9, −88, 9, −46) | 26 | built by `castle/` |
+| `spawn` | (0, 1, 14) | 180 | south of the fountain, facing north |
+| `respawn` | (33, 1, −66) | −90 | cathedral nave by the west door, facing the altar |
+| `npc.quest_board` (Mina) | (−42, 1, −27) | 0 | guild: behind the quest counter, board behind her |
+| `npc.guild_registrar` (Marta) | (−45, 1, −18) | −90 | guild: registrar's desk |
+| `story.gustav` | (−34, 9, −34) | 0 | guild: guildmaster's office (first floor) |
+| `story.laszlo` | (−45, 1, −36) | 180 | guild kitchen, at the sink |
+| `story.wolfram` | (−46, 9, −32) | 180 | guild infirmary (first floor) |
+| `npc.hall_of_fame` (Chloe) / `board.ranking` | (24, 1, −29) / (21, 1, −35) | 0 / 0 | hall of fame desk / in front of the ranking board |
+| `npc.auction` (Luce) | (47, 2, −14) | 90 | auction house rostrum |
+| `npc.job_master` (Hagen) | (41, 1, −30) | 180 | job hall counter |
+| `npc.item_shop` (Pim) | (−20, 1, 34) | 180 | item shop counter |
+| `npc.blacksmith` (Goran) | (−41, 1, 32) | 180 | forge, by the anvil |
+| `npc.mailbox` (Chico) | (−37, 1, 15) | −90 | post office counter |
+| `npc.gatekeeper` (Gant) | (95, 1, 15) | 180 | dungeon warden's office inside the east gate |
+| `npc.arena_master` (Zain) | (−117, 1, −42) | −90 | arena, east gate |
 
-Required spots (provisional ones are in `layout.DEFAULT_SPOTS`; district builders call `w.spot(...)` to move
-them): `spawn`, `npc.quest_board`, `npc.item_shop`, `npc.blacksmith`, `npc.job_master`, `npc.auction`,
-`npc.mailbox`, `npc.guild_registrar`, `npc.gatekeeper`, `npc.arena_master`, `npc.hall_of_fame`, `story.lilia`,
-`story.nox`, `story.arcelia_knight_captain`, `story.gustav`, `story.laszlo`, `story.wolfram`.
+Townsfolk and guards: `crowd.<area>.<n>` (71: plaza, market, street, harbour, guild, tavern, inn, cathedral,
+residential, farm, castle; each with ≥ ~10 standable blocks within 3) and `guard.<post>.<n>` (24: south_gate,
+west_gate, east_gate, bridge, wall, castle, cathedral; yaw = the direction they watch).
+
+Animated blocks (custom, block entity SNBT; see `_town_kit.py`): `flag[facing]` on pole tops / bracket ends
+(`{Width,Height,Design}`, designs kingdom/guild/pennant/cathedral/market/harbour; the town's wind blows from the
+west, so free-standing flags stream east), `clock_face[facing]` (guild clock tower, `{Size:2.6f}`),
+`windmill_sails[facing]` (3 mills, `{Radius:7.0f}`, facing south), `water_wheel[facing]` (watermill,
+`{Radius:4.0f,Width:2.0f}`), `smoke_emitter[heavy]` above chimney tops (heavy at the forge),
+`fountain_spray[power,facing]` (plaza, market cross, garden fountains). `_town_views.py --check` verifies that
+every flag/sail/dial/wheel has its keep-free volume clear.
 
 ## 5. The castle (`castle/`)
 
@@ -204,4 +240,8 @@ water, all required spots present with a floor and free head room, non-air block
 `preview.py` renders `tools/capital/previews/*.png` with a numpy DDA ray caster (sun shadows through glass,
 Minecraft-like sky and block light, AO, fog, clouds, section planes, volumetric shafts for interiors) plus
 `map_top.png` (top-down map with the district boxes and spots). Cameras are in `preview.views()` and
-`castle/plan.py`. Previews approximate vanilla lighting; the game (and the owner's shader) will differ.
+`castle/plan.py`; the town cameras are in `districts/_town_views.py` (plus `VIEWS` dicts in the district
+modules): `python3 tools/capital/districts/_town_views.py town_aerial,guild_hall --scale 0.5` draws stand-in
+blocks for flags, sails, dials, wheels and jets on a copy of the world (`--raw` renders without them, `--check`
+only checks the gimmicks' keep-free volumes, `--list` lists the cameras). Previews approximate vanilla lighting;
+the game (and the owner's shader) will differ.

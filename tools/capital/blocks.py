@@ -96,6 +96,9 @@ SCHEMAS: dict[str, dict[str, tuple]] = {
     "jukebox": {"has_record": BOOL},
     "waterlogged": {"waterlogged": BOOL},
     "light_shaft": {"facing": H4},
+    "gimmick": {"facing": H4},          # flag, clock_face, windmill_sails, water_wheel (block entity data)
+    "smoke_emitter": {"heavy": BOOL},
+    "fountain_spray": {"power": ("1", "2", "3"), "facing": ("up", "north", "south", "west", "east")},
     "scaffolding": {"bottom": BOOL, "distance": _rng(0, 7), "waterlogged": BOOL},
     "hopper": {"enabled": BOOL, "facing": ("down", "north", "south", "west", "east")},
 }
@@ -124,6 +127,8 @@ DEFAULTS: dict[str, dict[str, str]] = {
     "hanging_sign": {"rotation": "0"},
     "light": {"level": "15"},
     "lit": {"lit": "false"},
+    "smoke_emitter": {"heavy": "false"},
+    "fountain_spray": {"power": "2", "facing": "up"},
 }
 
 # --------------------------------------------------------------------------------------------- registry
@@ -210,10 +215,18 @@ _family("smooth_castle_stone", "smooth_castle_stone_stairs", "smooth_castle_ston
 _family("royal_roof_tiles", "royal_roof_tile_stairs", "royal_roof_tile_slab", None, ns=CUSTOM_NS)
 _family("pale_roof_tiles", "pale_roof_tile_stairs", "pale_roof_tile_slab", None, ns=CUSTOM_NS)
 _family("gilded_trim", "gilded_trim_stairs", "gilded_trim_slab", None, ns=CUSTOM_NS)
+_family("terracotta_roof_tiles", "terracotta_roof_tile_stairs", "terracotta_roof_tile_slab", None, ns=CUSTOM_NS)
+_family("cobbled_paving", "cobbled_paving_stairs", "cobbled_paving_slab", None, ns=CUSTOM_NS)
+_family("plaza_flagstones", "plaza_flagstone_stairs", "plaza_flagstone_slab", None, ns=CUSTOM_NS)
+_reg(["leaded_glass"], "plain", CUSTOM_NS)
+_reg(["leaded_glass_pane"], "pane", CUSTOM_NS)
 _reg(["castle_pillar"], "axis", CUSTOM_NS)
 _reg(["carved_castle_stone", "castle_crest_stone", "gilded_finial", "white_plaster", "chandelier", "void"],
      "plain", CUSTOM_NS)
 _reg(["light_shaft"], "light_shaft", CUSTOM_NS)
+_reg(["flag", "clock_face", "windmill_sails", "water_wheel"], "gimmick", CUSTOM_NS)
+_reg(["smoke_emitter"], "smoke_emitter", CUSTOM_NS)
+_reg(["fountain_spray"], "fountain_spray", CUSTOM_NS)
 
 # plain full blocks and simple things
 _reg([
@@ -343,12 +356,15 @@ ALIASES = {
     "royal_roof": "royal_roof_tiles", "pale_roof": "pale_roof_tiles", "gold": "gilded_trim",
     "gilded": "gilded_trim", "quartz": "quartz_block", "stone_brick": "stone_bricks", "brick": "bricks",
     "deepslate_tile": "deepslate_tiles", "deepslate_brick": "deepslate_bricks", "mud_brick": "mud_bricks",
+    "terracotta_roof_tile": "terracotta_roof_tiles", "terracotta_roof": "terracotta_roof_tiles",
+    "plaza_flagstone": "plaza_flagstones",
 }
 
 # Block entities whose SNBT the loader applies (the loader creates the block entity, then loads this data).
 BE_FAMILIES = ("banner", "wall_banner", "sign", "wall_sign", "hanging_sign", "wall_hanging_sign", "lectern",
                "chest", "barrel", "light_shaft", "skull", "wall_skull", "decorated_pot", "chiseled_bookshelf",
-               "campfire", "furnace", "brewing_stand", "ender_chest", "bell", "jukebox", "beehive", "hopper")
+               "campfire", "furnace", "brewing_stand", "ender_chest", "bell", "jukebox", "beehive", "hopper",
+               "gimmick")
 
 
 # --------------------------------------------------------------------------------------------- parsing
