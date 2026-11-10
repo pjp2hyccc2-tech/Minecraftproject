@@ -44,7 +44,7 @@ VIEWS = {
                            label="Cathedral nave towards the altar (afternoon light through the west rose)"),
     "cathedral_west": dict(pos=(13, 6, -58), look=(34, 28, -66), fov=78, sun=(40, -150), fog=2600,
                            label="The cathedral's west front"),
-    "cathedral_se": dict(pos=(92, 14, -32), look=(60, 24, -66), fov=70, sun=(40, -150), fog=2600,
+    "cathedral_se": dict(pos=(90, 27, -21), look=(60, 20, -66), fov=70, sun=(40, -150), fog=2600,
                          label="The cathedral from the south-east: transept rose, buttresses, apse"),
 }
 

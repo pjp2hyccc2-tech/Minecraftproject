@@ -144,6 +144,15 @@ def hall_of_fame(w):
     w.be(24, 3, -28, B.lectern_nbt("栄誉録", "Chloe", ["The deeds of Arseria's heroes are written here."]))
     w.set(18, 3, -28, B.candle(3, "white"))
     w.spot("npc.hall_of_fame", (24, 1, -29), 0.0)
+    # pillars framing the central space and a gilded hero statue under the dome's oculus
+    for (x, z) in ((17, -35), (25, -35), (17, -29), (25, -29)):
+        w.fill(x, 1, z, x, 8, z, B.pillar("y"))
+        w.set(x, 9, z, F(GOLD)) if False else None
+    w.fill(20, 1, -33, 22, 1, -31, F(SM))
+    S.statue_figure(w, 21, 2, -32, facing="south", material="quartz_block", wings=True, gold_crown=True,
+                    plinth="smooth_castle_stone")
+    for (x, z) in ((19, -33), (23, -33), (19, -31), (23, -31)):
+        w.set(x, 2, z, B.candle(3, "yellow")) if w.is_empty(x, 2, z) else None
     for (x, z) in ((15, -31), (27, -31)):
         deco.chandelier(w, x, 9, z, drop=3)
 

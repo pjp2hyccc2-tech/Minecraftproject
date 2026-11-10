@@ -43,7 +43,7 @@ GUILD_BANNER = B.banner_nbt([("cr", "yellow"), ("bo", "yellow"), ("mc", "red"), 
 VIEWS = {
     "guild_hall": dict(pos=(-29.5, 5.5, -13.5), look=(-46, 3, -28), fov=76, sun=(40, -110), fog=900,
                        label="Guild hall: long tables, quest counter and board, gallery"),
-    "guild_front": dict(pos=(-7, 7, 10), look=(-38, 14, -22), fov=70, sun=(38, -120), fog=2600,
+    "guild_front": dict(pos=(-6, 16, 12), look=(-36, 15, -22), fov=66, sun=(38, -120), fog=2600,
                         label="The adventurers' guild and its clock tower from the plaza"),
     "guild_rooms": dict(pos=(-30.5, 10.6, -24.5), look=(-47, 9, -29), fov=80, sun=(40, -110), fog=900,
                         label="Guild upper floor: gallery, office and infirmary doors"),

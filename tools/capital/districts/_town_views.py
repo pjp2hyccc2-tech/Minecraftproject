@@ -69,7 +69,7 @@ def views():
                             label="West quarter from above"),
         "west_street": dict(pos=(-60, 3.6, 0), look=(-92, 7, -9), fov=70, sun=s(40, -150), fog=2600,
                             label="West avenue houses"),
-        "upper_town": dict(pos=(-30, 14, -36), look=(-70, 6, -76), fov=70, sun=s(40, -150), fog=2600,
+        "upper_town": dict(pos=(-28, 9, -44), look=(-60, 6, -72), fov=70, sun=s(40, -150), fog=2600,
                            label="Upper town at the foot of the castle cliff"),
         "south_quarter": dict(pos=(-6, 4, 46), look=(-60, 6, 64), fov=70, sun=s(40, -150), fog=2600,
                               label="South-west quarter"),
