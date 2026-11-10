@@ -39,6 +39,36 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/leggings_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4066
+      },
+      "model": "eternalrealm:item/named/cloudweaver_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4070
+      },
+      "model": "eternalrealm:item/named/skystrider_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4074
+      },
+      "model": "eternalrealm:item/named/voidstep_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4078
+      },
+      "model": "eternalrealm:item/named/endless_night_plate_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4082
+      },
+      "model": "eternalrealm:item/named/oblivion_vestment_legs"
     }
   ]
 }

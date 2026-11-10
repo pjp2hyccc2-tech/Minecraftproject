@@ -31,11 +31,28 @@ public final class GearEvents {
     /** Installs the readers (mod construction). */
     public static void install() {
         PlayerStats.setGearReader(GearEvents::readGear);
+        PlayerStats.setPerksReader(GearEvents::readPerks);
         WeaponBonus.setReader(GearEvents::weaponBonus);
     }
 
     /** A held weapon the player's job cannot use gives nothing (it cannot be used at all). */
     static PlayerStats.Gear readGear(ServerPlayer player) {
+        List<EquipmentData> worn = worn(player);
+        if (worn.isEmpty()) {
+            return PlayerStats.Gear.NONE;
+        }
+        GearBonus bonus = Gear.sum(worn, level(player), player.getUUID());
+        return new PlayerStats.Gear(bonus.stats(), bonus.modifiers());
+    }
+
+    /** Perks of the held named weapon (and its element) and of the worn set bonuses. */
+    static com.eternalrealm.job.PassiveTotals readPerks(ServerPlayer player) {
+        List<EquipmentData> worn = worn(player);
+        return worn.isEmpty() ? com.eternalrealm.job.PassiveTotals.NONE
+                : Gear.perks(worn, level(player), player.getUUID());
+    }
+
+    private static List<EquipmentData> worn(ServerPlayer player) {
         List<EquipmentData> worn = new ArrayList<>(5);
         com.eternalrealm.job.JobType job = job(player);
         EquipmentStacks.read(player.getMainHandItem()).filter(EquipmentData::isWeapon)
@@ -44,11 +61,7 @@ public final class GearEvents {
             ItemStack stack = player.getItemBySlot(GearArmorItem.vanillaSlot(slot));
             EquipmentStacks.read(stack).filter(data -> data.slot() == slot).ifPresent(worn::add);
         }
-        if (worn.isEmpty()) {
-            return PlayerStats.Gear.NONE;
-        }
-        GearBonus bonus = Gear.sum(worn, level(player), player.getUUID());
-        return new PlayerStats.Gear(bonus.stats(), bonus.modifiers());
+        return worn;
     }
 
     static double weaponBonus(ServerPlayer player, ItemStack stack) {

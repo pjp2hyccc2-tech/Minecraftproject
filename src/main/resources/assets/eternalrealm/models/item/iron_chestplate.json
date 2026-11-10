@@ -39,6 +39,12 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/chestplate_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4001
+      },
+      "model": "eternalrealm:item/named/meadow_runner_chest"
     }
   ]
 }

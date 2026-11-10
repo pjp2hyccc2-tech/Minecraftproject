@@ -1,3 +1,17 @@
 {
-  "parent": "eternalrealm:item/weapon/twin_blades_6"
+  "parent": "eternalrealm:item/weapon/twin_blades_6",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3080
+      },
+      "model": "eternalrealm:item/named/glyphcut_daggers"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3096
+      },
+      "model": "eternalrealm:item/named/wyvern_talon_pair"
+    }
+  ]
 }

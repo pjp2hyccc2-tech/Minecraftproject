@@ -126,7 +126,8 @@ public record CombatStats(double attackMultiplier, double maxHealthBonus, double
         health = Math.max(0.0, Math.min(MAX_HEALTH_BONUS, health));
         double defense = Math.max(0.0, vit * tuning.defensePerVit() + modifiers.defenseFlat());
         double reduction = Math.min(tuning.maxDamageReduction(), defense / (defense + tuning.defenseConstant()));
-        double speed = Math.max(tuning.minActionTimeFactor(), 1.0 / (1.0 + agi * tuning.speedPerAgi()));
+        double speed = Math.max(tuning.minActionTimeFactor(),
+                1.0 / (1.0 + agi * tuning.speedPerAgi() + modifiers.attackSpeed()));
         double crit = clamp(tuning.baseCritChance() + luk * tuning.critPerLuk() + modifiers.critChance(),
                 0.0, tuning.maxCritChance());
         double critMultiplier = clamp(tuning.critMultiplier() + modifiers.critDamage()

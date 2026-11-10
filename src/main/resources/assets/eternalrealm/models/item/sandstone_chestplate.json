@@ -39,6 +39,72 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/chestplate_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4009
+      },
+      "model": "eternalrealm:item/named/wildflower_vestment_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4017
+      },
+      "model": "eternalrealm:item/named/silkshadow_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4021
+      },
+      "model": "eternalrealm:item/named/heartwood_bulwark_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4025
+      },
+      "model": "eternalrealm:item/named/ironvein_plate_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4029
+      },
+      "model": "eternalrealm:item/named/ember_scholar_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4037
+      },
+      "model": "eternalrealm:item/named/rivermist_garb_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4089
+      },
+      "model": "eternalrealm:item/named/scarecrow_garb_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4093
+      },
+      "model": "eternalrealm:item/named/harvest_rite_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4097
+      },
+      "model": "eternalrealm:item/named/lotus_vestment_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4101
+      },
+      "model": "eternalrealm:item/named/lakescale_mail_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4109
+      },
+      "model": "eternalrealm:item/named/privateer_garb_chest"
     }
   ]
 }

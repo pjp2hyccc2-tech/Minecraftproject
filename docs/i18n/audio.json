@@ -1,4 +1,40 @@
 {
+  "subtitles.eternalrealm.art.black_sword_rain": {
+    "ja": "黒剣が降り注ぐ",
+    "en": "Black swords rain down"
+  },
+  "subtitles.eternalrealm.art.doom_guillotine": {
+    "ja": "氷の刑刃が落ちる",
+    "en": "Ice blade falls"
+  },
+  "subtitles.eternalrealm.art.frozen_prison": {
+    "ja": "氷の牢獄",
+    "en": "Ice prison forms"
+  },
+  "subtitles.eternalrealm.art.gate_of_end": {
+    "ja": "終焉の門が開く",
+    "en": "Gate of the end opens"
+  },
+  "subtitles.eternalrealm.art.heavens_chain": {
+    "ja": "雷の連矢",
+    "en": "Thunder volley"
+  },
+  "subtitles.eternalrealm.art.meteor_slash": {
+    "ja": "竜星が落ちる",
+    "en": "Meteors fall"
+  },
+  "subtitles.eternalrealm.art.sand_maelstrom": {
+    "ja": "砂の大渦",
+    "en": "Sand vortex howls"
+  },
+  "subtitles.eternalrealm.art.shadow_legion": {
+    "ja": "影法師の乱舞",
+    "en": "Shadow doubles strike"
+  },
+  "subtitles.eternalrealm.art.thornroot_bloom": {
+    "ja": "茨の根が咲く",
+    "en": "Thorn roots bloom"
+  },
   "subtitles.eternalrealm.boss.collapse": {
     "ja": "ボスが崩れ落ちる",
     "en": "Boss collapses"

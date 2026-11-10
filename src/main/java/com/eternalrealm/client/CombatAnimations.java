@@ -107,6 +107,16 @@ public final class CombatAnimations {
         if (CombatRules.DODGE.id().equals(actionId)) {
             return Motion.DODGE;
         }
+        Optional<com.eternalrealm.item.WeaponArt> art = com.eternalrealm.item.WeaponArts.byId(actionId);
+        if (art.isPresent()) {
+            return switch (art.get().motion()) {
+                case OVERHEAD -> Motion.OVERHEAD;
+                case THRUST -> Motion.THRUST;
+                case SPIN -> Motion.SPIN;
+                case CAST -> Motion.CAST;
+                case SHOOT -> Motion.SHOOT;
+            };
+        }
         if (weapon == WeaponType.BOW) {
             return Motion.SHOOT;
         }
@@ -158,6 +168,10 @@ public final class CombatAnimations {
                     return profile;
                 }
             }
+        }
+        Optional<com.eternalrealm.item.WeaponArt> art = com.eternalrealm.item.WeaponArts.byId(actionId);
+        if (art.isPresent()) {
+            return WeaponProfiles.of(art.get().type());
         }
         return Jobs.skill(actionId).map(skill -> Jobs.get(skill.job()).starterWeapon())
                 .map(WeaponProfiles::of).orElse(null);

@@ -39,6 +39,18 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/leggings_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4058
+      },
+      "model": "eternalrealm:item/named/ruin_guardian_plate_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4062
+      },
+      "model": "eternalrealm:item/named/thunderpeak_armor_legs"
     }
   ]
 }

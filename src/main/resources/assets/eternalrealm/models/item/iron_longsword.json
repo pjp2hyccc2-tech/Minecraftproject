@@ -39,6 +39,12 @@
         "custom_model_data": 7
       },
       "model": "eternalrealm:item/weapon/longsword_7"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3000
+      },
+      "model": "eternalrealm:item/named/meadowlark_blade"
     }
   ]
 }

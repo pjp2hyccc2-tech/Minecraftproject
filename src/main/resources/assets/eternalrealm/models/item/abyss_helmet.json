@@ -39,6 +39,36 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/helmet_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4064
+      },
+      "model": "eternalrealm:item/named/cloudweaver_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4068
+      },
+      "model": "eternalrealm:item/named/skystrider_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4072
+      },
+      "model": "eternalrealm:item/named/voidstep_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4076
+      },
+      "model": "eternalrealm:item/named/endless_night_plate_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4080
+      },
+      "model": "eternalrealm:item/named/oblivion_vestment_head"
     }
   ]
 }

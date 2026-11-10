@@ -109,6 +109,12 @@
         "custom_model_data": 7
       },
       "model": "eternalrealm:item/weapon/spear_7"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3009
+      },
+      "model": "eternalrealm:item/named/herdsman_pike"
     }
   ]
 }

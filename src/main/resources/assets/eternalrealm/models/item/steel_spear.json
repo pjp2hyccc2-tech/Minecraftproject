@@ -1,3 +1,23 @@
 {
-  "parent": "eternalrealm:item/weapon/spear_2"
+  "parent": "eternalrealm:item/weapon/spear_2",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3010
+      },
+      "model": "eternalrealm:item/named/canal_partisan"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3027
+      },
+      "model": "eternalrealm:item/named/vinewhip_spear"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3135
+      },
+      "model": "eternalrealm:item/named/pitchfork_spear"
+    }
+  ]
 }

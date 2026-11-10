@@ -123,7 +123,7 @@ public abstract class RigModel<T extends Entity> extends HierarchicalModel<T> {
         return part;
     }
 
-    private static ModelPart findOrNull(ModelPart root, String name) {
+    protected static ModelPart findOrNull(ModelPart root, String name) {
         return root.getAllParts().filter(part -> part.hasChild(name)).findFirst().map(part -> part.getChild(name))
                 .orElse(null);
     }

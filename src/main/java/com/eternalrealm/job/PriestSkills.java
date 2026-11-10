@@ -67,13 +67,13 @@ final class PriestSkills {
 
         t.ultimate("miracle", 0, 0, 6).req("sanctuary", 3).cd(120).theme(HOLY)
                 .act(30, 26, 38, pause(14))
-                .fx(heal(0, 16, 0.8, 10), cleanse(0, 16), shieldAllies(0, 0.25, 200, 16), vis(START, "cast"),
-                        vis(0, "pillar"), vis(0, "nova"));
+                .fx(heal(0, 16, 0.8, 10), cleanse(0, 16), shieldAllies(0, 0.25, 200, 16), revive(0, 16, 0.5),
+                        vis(START, "cast"), vis(0, "pillar"), vis(0, "nova"));
         t.passive("saintly", 0, 1, 6).req("grace", 3).bonus(stats(mods().healing(0.03).magic(0.02)));
         t.active("rebirth_hymn", 0, 2, 6).req("guardian_angel", 1).cd(45).theme(LIFE)
                 .act(24, 20, 28, pause(10))
-                .fx(healZone(0, CASTER, 0, 6.0, 10, 10, 0.06, 0.4), allies(0, SPEED, 0, 200, 12), vis(0, "sigil"),
-                        vis(0, "aura"));
+                .fx(healZone(0, CASTER, 0, 6.0, 10, 10, 0.06, 0.4), allies(0, SPEED, 0, 200, 12), revive(0, 12, 0.25),
+                        vis(0, "sigil"), vis(0, "aura"));
 
         // ---------------------------------------------------------------- 1: 加護
         t.active("protect", 1, 0, 1).cd(20).theme(HOLY)

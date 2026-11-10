@@ -26,9 +26,17 @@ public record Telegraph(Kind kind, Style style, double x, double y, double z, do
         CIRCLE, RING, CONE, RECT, SQUARE, CROSS
     }
 
-    /** Colour theme; {@link #SAFE} marks where to stand. */
+    /**
+     * Colour theme; {@link #SAFE} marks where to stand, {@link #ALLY} where a player's own skill or weapon art will
+     * land (a friendly marker: standing in it is no danger).
+     */
     public enum Style {
-        DANGER, MAGIC, FIRE, FROST, HOLY, DARK, SAFE
+        DANGER, MAGIC, FIRE, FROST, HOLY, DARK, SAFE, ALLY;
+
+        /** Whether standing in a charging marker of this style warns of danger. */
+        public boolean warns() {
+            return this != SAFE && this != ALLY;
+        }
     }
 
     public Telegraph {

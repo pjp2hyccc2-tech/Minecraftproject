@@ -1,3 +1,41 @@
 {
-  "parent": "eternalrealm:item/weapon/spear_7"
+  "parent": "eternalrealm:item/weapon/spear_7",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3100
+      },
+      "model": "eternalrealm:item/named/celestial_pillar_glaive"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3101
+      },
+      "model": "eternalrealm:item/named/lightning_rod_lance"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3117
+      },
+      "model": "eternalrealm:item/named/corrupt_bark_spear"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3118
+      },
+      "model": "eternalrealm:item/named/gatebreaker_halberd"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3119
+      },
+      "model": "eternalrealm:item/named/nihils_voidfang"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3187
+      },
+      "model": "eternalrealm:item/named/gatekeeper_end_halberd"
+    }
+  ]
 }

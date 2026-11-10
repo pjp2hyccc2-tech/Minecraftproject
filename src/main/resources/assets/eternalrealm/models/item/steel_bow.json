@@ -1,3 +1,23 @@
 {
-  "parent": "eternalrealm:item/weapon/longbow_2"
+  "parent": "eternalrealm:item/weapon/longbow_2",
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 3016
+      },
+      "model": "eternalrealm:item/named/rogues_recurve"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3033
+      },
+      "model": "eternalrealm:item/named/willow_shortbow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3141
+      },
+      "model": "eternalrealm:item/named/crow_scaring_bow"
+    }
+  ]
 }

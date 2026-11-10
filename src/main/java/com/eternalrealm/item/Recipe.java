@@ -11,11 +11,18 @@ import java.util.Objects;
  * @param ingredients   namespaced item id → count, sorted by id
  * @param goldCost      gold consumed by one craft
  * @param requiredLevel character level needed to craft
+ * @param design        the named design the recipe forges ({@link Recipes#designRecipes()}; the id is the design's), or
+ *                      {@code null} for a plain piece of the output base
  */
 public record Recipe(String id, EquipmentBase output, Map<String, Integer> ingredients, long goldCost,
-                     int requiredLevel) {
+                     int requiredLevel, Design design) {
     public static final int MAX_INGREDIENT_COUNT = 999;
     public static final long MAX_GOLD_COST = 1_000_000_000L;
+
+    /** A recipe of a plain piece. */
+    public Recipe(String id, EquipmentBase output, Map<String, Integer> ingredients, long goldCost, int requiredLevel) {
+        this(id, output, ingredients, goldCost, requiredLevel, null);
+    }
 
     public Recipe {
         Checks.id("id", id);
@@ -26,6 +33,10 @@ public record Recipe(String id, EquipmentBase output, Map<String, Integer> ingre
         }
         Checks.range("goldCost", goldCost, 0L, MAX_GOLD_COST);
         Checks.range("requiredLevel", requiredLevel, 1, 100);
+        if (design != null && (!design.id().equals(id) || !design.base().equals(output)
+                || requiredLevel < design.level())) {
+            throw new IllegalArgumentException(id + ": a design recipe has the design's id, base and level");
+        }
     }
 
     /** Ingredients and gold as one {@link Cost}. */

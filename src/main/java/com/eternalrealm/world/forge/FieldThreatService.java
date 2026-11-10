@@ -308,6 +308,7 @@ public final class FieldThreatService {
             if (mob instanceof com.eternalrealm.entity.ERMonster monster) {
                 monster.setSpecialMoves(com.eternalrealm.monster.SpecialMoves.LORD_MOVES);
             }
+            armSignature(mob, lord);
             state.turns = LordTurns.none();
             state.enraged = false;
             state.contributions = new Contributions();
@@ -316,6 +317,17 @@ public final class FieldThreatService {
             level.addFreshEntity(mob);
         });
         return made;
+    }
+
+    /**
+     * A lord whose body has a weapon hand carries its signature weapon of the armory (the lord's rewards may hand it
+     * out); lords on beast, golem, flyer or archer bodies keep their natural weapons.
+     */
+    private static void armSignature(Mob mob, FieldThreats.Lord lord) {
+        if (com.eternalrealm.item.Signatures.lordWieldsWeapon(lord.id())) {
+            com.eternalrealm.item.Signatures.lordWeapon(lord.id())
+                    .ifPresent(design -> com.eternalrealm.item.forge.ArmoryStacks.arm(mob, design));
+        }
     }
 
     /** Tests: whether the lord {@code lordId} has flown into its rage in its current appearance. */
@@ -364,6 +376,7 @@ public final class FieldThreatService {
         mob.setCustomName(Component.translatable("threat.eternalrealm.lord.nameplate", level,
                 Component.translatable(lord.translationKey())).withStyle(ChatFormatting.LIGHT_PURPLE));
         mob.setCustomNameVisible(true);
+        armSignature(mob, lord);
         state.body = mob.getUUID(); // before it joins the level: the join check lets only tracked lords in
         if (!astoria.addFreshEntity(mob)) {
             state.body = null;
@@ -502,6 +515,15 @@ public final class FieldThreatService {
             addMaterial(items, com.eternalrealm.monster.Materials.fieldElite(field), isHero ? 2 : 1);
             if (RANDOM.nextDouble() < (isHero ? 0.45 : 0.2)) {
                 items.add(equipment(context, player, field, isHero ? ItemRarity.RARE : ItemRarity.UNCOMMON));
+            }
+            // the lord's signature weapon (armory)
+            if (RANDOM.nextDouble() < com.eternalrealm.item.ArmoryDrops.lordWeaponChance(isHero)) {
+                com.eternalrealm.item.Signatures.lordWeapon(state.lord.id()).ifPresent(design -> {
+                    ItemStack weapon = com.eternalrealm.item.forge.ArmoryStacks.reward(player, design,
+                            ItemRarity.RARE, RANDOM);
+                    items.add(weapon);
+                    com.eternalrealm.item.forge.ArmoryStacks.announce(player, weapon, design);
+                });
             }
             if (RANDOM.nextDouble() < 0.15) {
                 items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));
@@ -1004,6 +1026,24 @@ public final class FieldThreatService {
             addMaterial(items, com.eternalrealm.monster.Materials.fieldElite(field), 1);
             if (isHero || RANDOM.nextDouble() < 0.5) {
                 items.add(equipment(context, player, field, isHero ? ItemRarity.RARE : ItemRarity.UNCOMMON));
+            }
+            // the calamity's weapon and a piece of its armor set (armory)
+            String calamity = state.calamity.id();
+            if (RANDOM.nextDouble() < com.eternalrealm.item.ArmoryDrops.calamityWeaponChance(isHero)) {
+                com.eternalrealm.item.Signatures.calamityWeapon(calamity).ifPresent(design -> {
+                    ItemStack weapon = com.eternalrealm.item.forge.ArmoryStacks.reward(player, design,
+                            ItemRarity.RARE, RANDOM);
+                    items.add(weapon);
+                    com.eternalrealm.item.forge.ArmoryStacks.announce(player, weapon, design);
+                });
+            }
+            if (RANDOM.nextDouble() < com.eternalrealm.item.ArmoryDrops.calamityArmorChance(isHero)) {
+                com.eternalrealm.item.ArmoryDrops.calamityPiece(calamity, RANDOM).ifPresent(design -> {
+                    ItemStack piece = com.eternalrealm.item.forge.ArmoryStacks.reward(player, design,
+                            ItemRarity.UNCOMMON, RANDOM);
+                    items.add(piece);
+                    com.eternalrealm.item.forge.ArmoryStacks.announce(player, piece, design);
+                });
             }
             if (RANDOM.nextDouble() < 0.35) {
                 items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));

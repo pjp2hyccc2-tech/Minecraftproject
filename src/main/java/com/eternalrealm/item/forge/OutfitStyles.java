@@ -68,8 +68,9 @@ public final class OutfitStyles {
     }
 
     private static void apply(ItemStack stack, Optional<JobType> style) {
-        if (!(stack.getItem() instanceof GearArmorItem) || styleOf(stack).equals(style)) {
-            return;
+        if (!(stack.getItem() instanceof GearArmorItem) || styleOf(stack).equals(style)
+                || EquipmentStacks.designOf(stack).isPresent()) {
+            return; // named armor keeps the look of its set
         }
         if (style.isPresent()) {
             CompoundTag tag = stack.getOrCreateTag();

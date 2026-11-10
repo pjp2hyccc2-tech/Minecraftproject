@@ -32,7 +32,7 @@ public final class TelegraphFx {
             case MAGIC -> ERSounds.SKILL_THUNDER.get();
             case HOLY -> ERSounds.SKILL_HOLY_CHIME.get();
             case DARK -> ERSounds.SKILL_SHADOW_WHOOSH.get();
-            case DANGER, SAFE -> ERSounds.SKILL_HEAVY_SLASH.get();
+            case DANGER, SAFE, ALLY -> ERSounds.SKILL_HEAVY_SLASH.get();
         };
         level.playSound(null, telegraph.x(), telegraph.y(), telegraph.z(), sound, SoundSource.HOSTILE, volume,
                 0.9F + level.getRandom().nextFloat() * 0.2F);
@@ -78,6 +78,7 @@ public final class TelegraphFx {
             case HOLY -> ParticleTypes.END_ROD;
             case DARK -> ParticleTypes.PORTAL;
             case SAFE -> ParticleTypes.HAPPY_VILLAGER;
+            case ALLY -> ParticleTypes.GLOW;
         };
     }
 
@@ -91,6 +92,7 @@ public final class TelegraphFx {
             case HOLY -> ERParticles.HOLY.get();
             case DARK -> ERParticles.SHADOW.get();
             case SAFE -> ParticleTypes.HAPPY_VILLAGER;
+            case ALLY -> ParticleTypes.END_ROD;
         };
     }
 }

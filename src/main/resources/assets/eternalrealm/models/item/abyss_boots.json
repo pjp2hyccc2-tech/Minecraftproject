@@ -39,6 +39,36 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/boots_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4067
+      },
+      "model": "eternalrealm:item/named/cloudweaver_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4071
+      },
+      "model": "eternalrealm:item/named/skystrider_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4075
+      },
+      "model": "eternalrealm:item/named/voidstep_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4079
+      },
+      "model": "eternalrealm:item/named/endless_night_plate_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4083
+      },
+      "model": "eternalrealm:item/named/oblivion_vestment_feet"
     }
   ]
 }

@@ -12,7 +12,7 @@ import java.util.Objects;
 public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, SkillEffect.Shield, SkillEffect.Dash,
         SkillEffect.Leap, SkillEffect.Taunt, SkillEffect.DropAggro, SkillEffect.Afflict, SkillEffect.Visual,
         SkillEffect.Cleanse, SkillEffect.Siphon, SkillEffect.Zone, SkillEffect.RestoreStamina,
-        SkillEffect.CooldownCut, SkillEffect.Execute {
+        SkillEffect.CooldownCut, SkillEffect.Execute, SkillEffect.Mark, SkillEffect.Revive {
     int ON_START = -1;
 
     int frame();
@@ -245,11 +245,24 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
      * frame), heals allies inside ({@code healFraction} of their max health, grows with the level) and may afflict.
      *
      * @param affliction applied to enemies a pulse damages, or {@code null}
+     * @param look       the area's own effect at every pulse (a named visual such as a falling meteor), or {@code null}
+     *                   for the theme's generic pulse
      */
     record Zone(int frame, Placement placement, double distance, double radius, int delayTicks, int pulses,
                 int intervalTicks, double damageMultiplier, double healFraction, AfflictionKind affliction,
-                int afflictionTicks, double afflictionPower) implements SkillEffect {
+                int afflictionTicks, double afflictionPower, String look) implements SkillEffect {
+        /** A zone with the theme's generic pulse. */
+        public Zone(int frame, Placement placement, double distance, double radius, int delayTicks, int pulses,
+                    int intervalTicks, double damageMultiplier, double healFraction, AfflictionKind affliction,
+                    int afflictionTicks, double afflictionPower) {
+            this(frame, placement, distance, radius, delayTicks, pulses, intervalTicks, damageMultiplier, healFraction,
+                    affliction, afflictionTicks, afflictionPower, null);
+        }
+
         public Zone {
+            if (look != null && !look.matches("[a-z0-9_]+")) {
+                throw new IllegalArgumentException("look must be [a-z0-9_]+: " + look);
+            }
             Checks.frame(frame);
             Objects.requireNonNull(placement, "placement");
             Checks.range("distance", distance, 0.0, 24.0);
@@ -277,6 +290,38 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
         /** Ticks from creation to the last pulse. */
         public int lifetimeTicks() {
             return delayTicks + (pulses - 1) * intervalTicks;
+        }
+
+        /** The same area with its own pulse effect. */
+        public Zone withLook(String newLook) {
+            return new Zone(frame, placement, distance, radius, delayTicks, pulses, intervalTicks, damageMultiplier,
+                    healFraction, affliction, afflictionTicks, afflictionPower, newLook);
+        }
+    }
+
+    /**
+     * A friendly ground marker (telegraph) showing where something will land, for {@code ticks}: placed like a
+     * {@link Zone}. Purely visual; allies standing in it are not warned of danger.
+     */
+    record Mark(int frame, Placement placement, double distance, double radius, int ticks) implements SkillEffect {
+        public Mark {
+            Checks.frame(frame);
+            Objects.requireNonNull(placement, "placement");
+            Checks.range("distance", distance, 0.0, 24.0);
+            Checks.range("radius", radius, 0.5, 12.0);
+            Checks.range("ticks", ticks, 1, 20 * 10);
+        }
+    }
+
+    /**
+     * Raises fallen (戦闘不能) party members within {@code radius} of the caster where they lie, with {@code fraction} of
+     * their max health (grows with the skill level, at most full health).
+     */
+    record Revive(int frame, double radius, double fraction) implements SkillEffect {
+        public Revive {
+            Checks.frame(frame);
+            Checks.range("radius", radius, 1.0, 24.0);
+            Checks.range("fraction", fraction, 0.05, 1.0);
         }
     }
 

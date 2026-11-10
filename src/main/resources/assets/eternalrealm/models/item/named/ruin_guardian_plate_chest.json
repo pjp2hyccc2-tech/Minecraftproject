@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/named/ruin_guardian_plate_chest"
+  }
+}

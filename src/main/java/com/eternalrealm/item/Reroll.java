@@ -88,6 +88,7 @@ public final class Reroll {
             throw new IllegalArgumentException("A " + data.rarity().id() + " piece has no affixes to reroll");
         }
         AffixPool pool = AffixPool.of(data.slot(), data.weaponType());
-        return data.withAffixes(pool.roll(data.tier(), data.rarity().affixCount(), random));
+        java.util.Map<AffixKind, Integer> bias = data.design() == null ? java.util.Map.of() : data.design().bias();
+        return data.withAffixes(pool.roll(data.tier(), data.rarity().affixCount(), random, bias));
     }
 }

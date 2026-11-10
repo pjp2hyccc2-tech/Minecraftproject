@@ -39,6 +39,30 @@
         "custom_model_data": 106
       },
       "model": "eternalrealm:item/armor/helmet_job_spellblade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4032
+      },
+      "model": "eternalrealm:item/named/dune_stalker_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4040
+      },
+      "model": "eternalrealm:item/named/glacier_warden_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4104
+      },
+      "model": "eternalrealm:item/named/reedwalker_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4112
+      },
+      "model": "eternalrealm:item/named/tidecaller_robe_head"
     }
   ]
 }

@@ -185,6 +185,11 @@ final class Dsl {
         return new SkillEffect.Execute(frame, threshold, bonus);
     }
 
+    /** Raises fallen party members within {@code radius} with {@code fraction} of their health. */
+    static SkillEffect revive(int frame, double radius, double fraction) {
+        return new SkillEffect.Revive(frame, radius, fraction);
+    }
+
     /** A damaging ground area. */
     static SkillEffect zone(int frame, Placement placement, double distance, double radius, int delay, int pulses,
                             int interval, double damage) {
