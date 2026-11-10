@@ -36,11 +36,6 @@ public enum ArmorStyle {
         return "armor_style." + ModInfo.MOD_ID + "." + id();
     }
 
-    /** Noun of a piece of this style ("兜", "頭巾", "帽子" ...). */
-    public String pieceNounKey(EquipmentSlot slot) {
-        return "armor_piece." + ModInfo.MOD_ID + "." + id() + "." + slot.id();
-    }
-
     public double defense() {
         return defense;
     }

@@ -36,6 +36,7 @@ ROSE = Ramp("2a0818", "6a1640", "a02a62", "d04a8a", "f082b4", "ffd0e6")
 LIME = Ramp("142606", "2e5a0c", "4a8a14", "6eba22", "a2e04a", "e2ffb0")
 ASH = Ramp("16141a", "3a363e", "5a5560", "7c7682", "a09aa6", "cac4ce")
 CRIMSON_STEEL = Ramp("1c060a", "4a1018", "7a1c26", "a83038", "d05a5e", "f2a0a0")
+NAVY = Ramp("060a1c", "101a3a", "1a2a5a", "2a3a7a", "4a5aa0", "7a8ac8")
 TEAL_STEEL = Ramp("061a1e", "15434a", "236c74", "3a969c", "6cc4c6", "c8f4f2")
 VIOLET = Ramp("12061e", "321050", "521c80", "7430b0", "a060dc", "dcbcff")
 
@@ -172,6 +173,58 @@ def blade_mask(style: str, base: int, tip: int, half: float):
             h = half + 0.9 * math.sin(math.pi * min(1.0, u * 1.2))
             return base <= t and abs(s - c) <= h and t <= tip - 1.8 * abs(s - c)
         m = am(kukri)
+    elif style == "claw":
+        # a wolf's claw: thick at the guard, hooking hard towards the tip
+        center = lambda t: 9.5 * min(1.0, max(0.0, u_of(t))) ** 2.1
+
+        def claw(t, s):
+            u = min(1.0, max(0.0, u_of(t)))
+            c = 9.5 * u ** 2.1
+            h = 0.6 + (half + 1.2) * (1 - u) ** 0.8
+            return base <= t and abs(s - c) <= h and t <= tip - 1.2 * abs(s - c) + 1
+        m = am(claw)
+    elif style == "segmented":
+        # a centipede's body: plates with notches between them and a leg spur on every plate
+        def seg(t, s):
+            k = (t - base) % 4
+            h = half - (1 if k == 0 and t > base + 1 else 0)
+            if base <= t and abs(s) <= h and t <= tip - 2.0 * abs(s):
+                return True
+            return base + 2 <= t <= tip - 5 and abs(s) == half + 1 and k == 2
+        m = am(seg)
+    elif style == "fin":
+        # a lake serpent's fin: a straight edge in front, spines along the back
+        def fin(t, s):
+            if base <= t and -half <= s <= half and t <= tip - 2.0 * abs(s):
+                return True
+            k = (t - base) % 4
+            spine = (s == half + 1 and k in (0, 1, 2)) or (s == half + 2 and k in (0, 1)) or (s == half + 3 and k == 0)
+            return base + 2 <= t <= tip - 4 and spine and t <= tip - 1.2 * s
+        m = am(fin)
+    elif style == "pincer":
+        # a crab's claw: a heavy trunk splitting into a long fixed finger and a shorter hooked one
+        split = base + int(length * 0.55)
+        m = am(lambda t, s: base <= t <= split and abs(s) <= half + 1 and t <= split + 2 - 0.3 * abs(s))
+        upper = curve((split - 1, half - 0.5), (split + (tip - split) * 0.55, half + 2.6), (tip, 0.6), 8)
+        lower = curve((split - 1, -half + 0.5), (split + (tip - split) * 0.45, -half - 1.8), (tip - 4, -1.2), 8)
+        m |= sweep_ts(upper, list(np.linspace(half - 0.2, 0.45, len(upper))))
+        m |= sweep_ts(lower, list(np.linspace(half - 0.6, 0.45, len(lower))))
+    elif style == "flared":
+        # an idol's ceremonial blade: narrow at the guard, flaring wide before a short point
+        def flared(t, s):
+            u = u_of(t)
+            h = half - 0.6 + 2.0 * u ** 1.4 if u < 0.82 else (half + 1.4) * (1 - u) / 0.18 + 0.4
+            return base <= t and abs(s) <= max(0.6, h) and t <= tip - 1.1 * abs(s)
+        m = am(flared)
+    elif style == "feather":
+        # a storm bird's feather: a quill down the middle, vanes notched along both sides
+        def feather(t, s):
+            u = u_of(t)
+            h = half + 0.9 * math.sin(math.pi * min(1.0, u * 1.08))
+            if not (base <= t and abs(s) <= h and t <= tip - 1.5 * abs(s)):
+                return False
+            return not (abs(s) >= h - 0.5 and (t - base) % 3 == 0 and 0.12 < u < 0.86)
+        m = am(feather)
     else:
         raise ValueError(style)
     return m, center
@@ -447,6 +500,27 @@ def spear_head(style: str, t0: int, tip: int):
         m = am(lambda t, s: t0 <= t <= tip and abs(s) <= 0.8 and t <= tip - 2.5 * abs(s))
         m |= sweep_ts(curve((tip - 6, 0.0), (tip - 2.5, 4.5), (tip - 7.0, 4.8), 8), [0.9] * 9)
         return m, center
+    if style == "tusk":
+        # a boar spear whose lugs are two curved tusks
+        def f(t, s):
+            u = (t - t0) / L
+            w = 2.3 * (1 - u) + 0.6
+            return t0 + 1 <= t <= tip and abs(s) <= w and t <= tip - 2.0 * abs(s)
+        m = am(f)
+        for sgn in (-1, 1):
+            path = curve((t0 - 0.5, sgn * 1.2), (t0 - 0.5, sgn * 7.0), (t0 + 8.5, sgn * 6.4), 10)
+            m |= sweep_ts(path, list(np.linspace(1.7, 0.35, len(path))))
+        return m, center
+    if style == "fang":
+        # one long curved fang
+        center = lambda t: -2.4 * ((t - t0) / L) ** 1.7
+
+        def f(t, s):
+            u = min(1.0, max(0.0, (t - t0) / L))
+            c = -2.4 * u ** 1.7
+            h = 3.2 * (1 - u) ** 0.8 + 0.4
+            return t0 <= t <= tip and abs(s - c) <= h and t <= tip - 1.4 * abs(s - c)
+        return am(f), center
     if style == "flamelance":
         def f(t, s):
             u = (t - t0) / L
@@ -701,6 +775,42 @@ def staff(spec: dict) -> Canvas:
         shade_bar(hat, hm, mat(spec.get("leaf", "STRAW")), base=3)
         outline(hat, mat(spec.get("leaf", "STRAW")))
         orb(sp, 20.0, -0.5, 1.4, core, out=shaft.out)
+    elif head == "shell":
+        # a tortoise shell seen from above: plates around a central scute with a glowing heart
+        shell = mat(spec.get("leaf", "MOSS"))
+        sh = sp.layer()
+        shm = disc_ts(t, -0.5, 5.6) | am(lambda tt, s: 12 <= tt <= 17 and abs(s + 0.5) <= 1.3)
+        shade_bar(sh, shm, shell, base=4)
+        outline(sh, shell)
+        seams = sp.layer()
+        sm = disc_ts(t, -0.5, 3.1) & ~disc_ts(t, -0.5, 2.2)
+        for k in range(6):
+            a = k * math.pi / 3 + math.pi / 6
+            sm |= sweep_ts([(t + 3.0 * math.cos(a), -0.5 + 3.0 * math.sin(a)),
+                            (t + 5.2 * math.cos(a), -0.5 + 5.2 * math.sin(a))], [0.5, 0.5])
+        sm &= disc_ts(t, -0.5, 5.2)
+        shade_bar(seams, sm, trim, base=1)
+        orb(sp, t, -0.5, 1.8, core, out=shell.out)
+    elif head == "crown":
+        # a scarecrow king's sceptre: straw tassels, a burning orb and a small crown on top
+        straw = mat(spec.get("leaf", "STRAW"))
+        st = sp.layer()
+        stm = Canvas(N).mask()
+        for k in (-2.4, -0.8, 0.8, 2.4):
+            stm |= sweep_ts([(15.0, -0.5 + k * 0.5), (12.0, -0.5 + k * 1.2), (8.5, -0.5 + k * 1.5)], [0.9, 0.8, 0.5])
+        shade_bar(st, stm, straw, base=3)
+        outline(st, straw)
+        nk = sp.layer()
+        nm = am(lambda tt, s: 13 <= tt <= 17 and abs(s + 0.5) <= 1.4)
+        shade_bar(nk, nm, trim, base=3)
+        outline(nk, trim)
+        orb(sp, 20.0, -0.5, 3.1, core)
+        cr = sp.layer()
+        crm = am(lambda tt, s: 23 <= tt <= 24.5 and abs(s + 0.5) <= 3.0)
+        for k in (-2.6, -0.5, 1.6):
+            crm |= am(lambda tt, s, k=k: 24 <= tt <= 28 and abs(s - k) <= max(0.0, 1.2 - (tt - 24) * 0.3))
+        shade_bar(cr, crm, trim, base=3)
+        outline(cr, trim)
     else:
         raise ValueError(head)
     canvas = sp.done()

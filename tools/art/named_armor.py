@@ -28,39 +28,39 @@ def theme(A, B, C, E, G, R=None, S=None, F=None, D=DARK):
 
 # set id -> (pattern of armor_icons / armor_worn, materials, emblem)
 LOOKS = {
-    # 1 アルセリア王国
+    # 1 はじまりの草原
     "meadow_runner": ("ranger", theme(P.LEATHER, P.BRONZE, P.CLOTH_RED, P.LINEN, P.SKY, F=P.LINEN), "wing"),
     "homestead_guard": (1, theme(P.STEEL, P.BRONZE, P.LEATHER, P.CLOTH_RED, NW.AMBER, F=P.GOLD), "mountain"),
     "wildflower_vestment": ("priest", theme(P.LINEN, P.LEAF, P.LINEN, NW.ROSE, NW.ROSE, F=NW.ROSE, D=DARK_GREEN),
                             "flower"),
-    # 2 エルダーフォレスト
+    # 2 月影の森
     "moonleaf_robe": ("mage", theme(NW.MOONSILVER, P.LEAF, NW.MOONSILVER, P.MOSS, P.SKY), "moon"),
     "silkshadow": ("assassin", theme(P.LINEN, NW.MOONSILVER, P.LINEN, NW.VIOLET, P.VOID_GLOW, S=P.SILVER,
                                      D=DARK_VIOLET), "eye"),
     "heartwood_bulwark": (5, theme(NW.DARKWOOD, P.MOSS, NW.DARKWOOD, P.LEAF, NW.AMBER, S=P.WOOD, F=P.LEAF),
                           "leaf"),
-    # 3 サンドリア砂漠
+    # 3 鉄鉱の鉱山
     "ironvein_plate": (2, theme(P.IRON_DARK, NW.COPPER, P.LEATHER_DARK, P.CLOTH_RED, NW.AMBER, R=NW.AMBER,
                                 F=NW.AMBER), "mountain"),
     "ember_scholar": ("mage", theme(P.DRAGON_DARK, P.GOLD, P.DRAGON_DARK, P.EMBER, P.FLAME), "flame"),
     "dune_stalker": (3, theme(P.SAND, P.SCARAB, P.LINEN, P.SLIME, P.SCARAB, S=P.SCARAB), "fang"),
-    # 4 ノルディア雪原
+    # 4 聖なる滝
     "rivermist_garb": ("ranger", theme(P.LEATHER_DARK, P.SILVER, NW.SEA, P.FUR_WHITE, P.ICE, F=P.ICE), "wave"),
     "glacier_warden": ("knight", theme(P.FROST_STEEL, P.ICE, P.ICE_DEEP, P.FUR_WHITE, P.ICE, F=P.FUR_WHITE,
                                        D=DARK_BLUE), "flake"),
     "holy_spring_vestment": ("priest", theme(NW.PEARL, P.HOLY_GOLD, NW.PEARL, NW.SEA, P.SKY, F=NW.SEA), "drop_water"),
-    # 5 ドラゴニア火山
+    # 5 古代遺跡
     "rune_sage": ("mage", theme(P.STONE, P.BRONZE, P.STONE, P.CYAN_RUNE, P.CYAN_RUNE), "bolt"),
     "cinder_dancer": ("assassin", theme(P.DRAGON_DARK, P.GOLD, P.DRAGON_DARK, P.FLAME, P.FLAME, S=P.OBSIDIAN,
                                         D=DARK_RED), "flame"),
     "ruin_guardian_plate": (6, theme(P.SANDSTONE, P.STONE, P.SANDSTONE, NW.SUNSTONE, NW.AMBER, F=NW.AMBER),
                             "sun"),
-    # 6 セレスティア天空大陸
+    # 6 天翔の峰
     "thunderpeak_armor": ("spellblade", theme(P.STEEL, P.SILVER, P.SKY, P.SKY, NW.THUNDER, R=NW.THUNDER,
                                               D=DARK_BLUE), "bolt"),
     "cloudweaver": ("priest", theme(P.SKY, P.HOLY_WHITE, P.HOLY_WHITE, P.SKY, P.SKY, F=P.SKY, D=DARK_BLUE), "wing"),
     "skystrider": (3, theme(P.HOLY_WHITE, NW.THUNDER, P.SKY, P.SKY, NW.THUNDER, S=P.SILVER), "bolt"),
-    # 7 終焉の塔
+    # 7 終焉の森
     "voidstep": ("assassin", theme(P.ABYSS, P.VOID, NW.INK, P.VOID_GLOW, P.VOID_GLOW, S=P.SHADOW, D=DARK_VIOLET),
                  "eye"),
     "endless_night_plate": (7, theme(NW.NIGHT, P.BLOOD, NW.NIGHT, P.BLOOD, P.BLOOD, R=P.BLOOD, S=NW.NIGHT,

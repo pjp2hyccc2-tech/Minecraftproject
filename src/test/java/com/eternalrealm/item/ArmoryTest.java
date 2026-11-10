@@ -35,6 +35,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -171,7 +172,20 @@ public class ArmoryTest {
             assertEquals(lord.id(), lord.field(), weapon.field());
             assertFalse(weapon.perks().isEmpty());
         }
-        assertEquals(20, Armory.weapons().stream().filter(w -> w.has(DesignSource.LORD)).count());
+        assertEquals(30, FieldThreats.lords().size());
+        assertEquals(FieldThreats.lords().size(), Armory.weapons().stream().filter(w -> w.has(DesignSource.LORD)).count());
+        for (FieldThreats.Lord lord : FieldThreats.lords()) {
+            assertEquals("exactly one signature for " + lord.id(), 1, Armory.weapons().stream()
+                    .filter(w -> w.has(DesignSource.LORD) && w.origin().equals(lord.id())).count());
+            if (Signatures.lordWieldsWeapon(lord.id())) {
+                // archers keep their crossbows: a lord that shows its weapon never carries a bow
+                assertNotEquals(lord.id(), WeaponType.BOW, Signatures.lordWeapon(lord.id()).orElseThrow().type());
+            }
+        }
+        assertTrue(Signatures.lordWieldsWeapon("strom"));
+        assertFalse(Signatures.lordWieldsWeapon("scorch_eye"));
+        assertFalse(Signatures.lordWieldsWeapon("hook"));
+        assertFalse(Signatures.lordWieldsWeapon("durn"));
         for (FieldThreats.Calamity calamity : FieldThreats.calamities()) {
             WeaponDesign weapon = Signatures.calamityWeapon(calamity.id()).orElse(null);
             ArmorSet set = Signatures.calamityArmor(calamity.id()).orElse(null);

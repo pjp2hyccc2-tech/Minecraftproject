@@ -10,7 +10,7 @@ thistle_fangs 3007
 hooks_reapers 3008
 herdsman_pike 3009
 canal_partisan 3010
-sunfield_lance 3011
+durns_tuskspear 3011
 sprout_wand 3012
 lantern_of_the_lost 3013
 dandelion_staff 3014
@@ -25,7 +25,7 @@ rootbreaker 3022
 nightbough_claymore 3023
 silkcutter_pair 3024
 moth_wing_daggers 3025
-glowcap_stilettos 3026
+lunars_moonclaws 3026
 vinewhip_spear 3027
 owl_feather_lance 3028
 grovewarden_glaive 3029
@@ -37,7 +37,7 @@ silverbark_bow 3034
 belladonnas_nightshade 3035
 ore_vein_sword 3036
 sunscarab_khopesh 3037
-forgefire_blade 3038
+vein_eaters_jointblade 3038
 pickaxe_breaker 3039
 coalheart_greatsword 3040
 colossal_ironvein 3041
@@ -66,14 +66,14 @@ whitewater_spear 3063
 pilgrim_glaive 3064
 falls_sovereign_trident 3065
 holy_dew_staff 3066
-mistcrystal_rod 3067
-handmaidens_snowbell 3068
+handmaidens_snowbell 3067
+ords_shellstaff 3068
 heron_bow 3069
 frozen_chain_bow 3070
 rainbow_spray_bow 3071
 cinder_rune_sword 3072
 magma_vein_falchion 3073
-gearwork_blade 3074
+agnis_idol_blade 3074
 ruin_guardian_slab 3075
 amber_sun_greatsword 3076
 ashen_dragonfang 3077
@@ -97,7 +97,7 @@ thunderhorn_greatsword 3094
 thunderhead_greatblade 3095
 wyvern_talon_pair 3096
 sky_ruin_shards 3097
-gale_feather_blades 3098
+zephyrs_thunderplumes 3098
 summit_spear 3099
 celestial_pillar_glaive 3100
 lightning_rod_lance 3101
@@ -118,7 +118,7 @@ doomguard_shivs 3115
 voidwhisper_daggers 3116
 corrupt_bark_spear 3117
 gatebreaker_halberd 3118
-nightmare_eye_lance 3119
+nihils_voidfang 3119
 cultist_bonestaff 3120
 abyssal_lantern 3121
 xenos_ruinsceptre 3122
@@ -139,7 +139,7 @@ golden_ear_lance 3136
 harvest_boss_reaper 3137
 scarecrow_post 3138
 sunflower_staff 3139
-harvest_gem_rod 3140
+stroms_strawcrown 3140
 crow_scaring_bow 3141
 cornsilk_bow 3142
 bullhorn_recurve 3143
@@ -148,7 +148,7 @@ lake_scale_sword 3145
 mirror_surface_blade 3146
 driftwood_greatsword 3147
 marshking_greatsword 3148
-deep_lake_slab 3149
+numels_greatfin 3149
 minnow_knives 3150
 gel_glass_daggers 3151
 kingfisher_pair 3152
@@ -166,7 +166,7 @@ doubloon_rapier 3163
 barbas_tidecleaver 3164
 anchor_greatsword 3165
 stormsail_greatsword 3166
-krakenbone_slab 3167
+ankaras_great_pincer 3167
 saltspray_daggers 3168
 inkstorm_blades 3169
 dock_brawlers_knuckleknives 3170

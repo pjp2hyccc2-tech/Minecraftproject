@@ -172,7 +172,7 @@ public final class EquipmentTooltip {
         return Collections.unmodifiableList(lines);
     }
 
-    /** "ヌシ「街道荒らしのガルム」の得物", "砂塵の神殿の秘宝", "アルセリア王国の名品" ... */
+    /** "ヌシ「街道荒らしのガルム」の得物", "砂塵の神殿の秘宝", "はじまりの草原の名品" ... */
     static TooltipLine source(Design design) {
         String origin = design.origin();
         TooltipLine line;

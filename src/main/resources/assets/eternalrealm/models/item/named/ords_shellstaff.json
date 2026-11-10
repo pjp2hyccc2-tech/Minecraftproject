@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "eternalrealm:item/named/nightmare_eye_lance"
+    "layer0": "eternalrealm:item/named/ords_shellstaff"
   },
   "display": {
     "thirdperson_righthand": {

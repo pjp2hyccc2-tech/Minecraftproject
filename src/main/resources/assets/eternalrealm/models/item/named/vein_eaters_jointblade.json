@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "eternalrealm:item/named/glowcap_stilettos_held"
+    "layer0": "eternalrealm:item/named/vein_eaters_jointblade"
   }
 }

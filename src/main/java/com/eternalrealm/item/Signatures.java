@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * The drop hooks of the named designs: what a field lord (ヌシ), a calamity (災厄), a dungeon and a boss leave
@@ -39,15 +40,24 @@ public final class Signatures {
             Map.entry("herald_of_ruin", "cultist_bonestaff"),
             Map.entry("scarecrow_dead", "pitchfork_spear"),
             Map.entry("pirate_cutthroat", "deckhand_cutlass"),
-            Map.entry("pirate_captain", "anchor_greatsword"));
+            Map.entry("pirate_captain", "anchor_greatsword"),
+            // bestiary humanoids whose body already holds a blade or a dagger
+            Map.entry("f1_fallen_squire", "wayfarers_oath"),
+            Map.entry("f3_rust_guard", "ore_vein_sword"),
+            Map.entry("f6_sky_knight", "cloudcutter"),
+            Map.entry("f7_doom_knight", "oblivion_edge"),
+            Map.entry("f10_ghost_sailor", "deckhand_cutlass"),
+            Map.entry("f10_deck_pirate", "saltspray_daggers"));
 
     /**
-     * Lord templates whose body shows a held weapon: the lord then carries its signature weapon. Lords on beast, golem
-     * or archer bodies (whose AI needs their own bow or crossbow) keep their natural weapons.
+     * Lords whose body ({@code lord_<id>}, a humanoid rig with a right hand) visibly carries the signature weapon. The
+     * weapon must suit the body's way of fighting: melee bodies (blade, greatblade, club) hold melee designs, caster
+     * bodies (staff) hold staffs. Archers keep their crossbows (their AI shoots), and beast, golem and flyer bodies have
+     * no hand; belladonna casts with a staff but her signature is a bow, so she keeps her own staff.
      */
-    private static final Map<String, Boolean> LORD_BODY_SHOWS_WEAPON = Map.of(
-            "garm", true, "valka", true, "scorch_eye", true, "alvin", true, "xenos", true,
-            "black_knight", true, "drowned_fisher", true, "barbas", true, "dock_brawler", true);
+    private static final Set<String> LORD_BODY_SHOWS_WEAPON = Set.of(
+            "garm", "nebula", "valka", "alvin", "xenos", "black_knight", "harvest_boss", "strom", "melusine",
+            "drowned_fisher", "barbas", "dock_brawler");
 
     private Signatures() {
     }
@@ -59,7 +69,7 @@ public final class Signatures {
 
     /** Whether the lord's body visibly carries its signature weapon. */
     public static boolean lordWieldsWeapon(String lordId) {
-        return LORD_BODY_SHOWS_WEAPON.getOrDefault(lordId, false) && lordWeapon(lordId).isPresent();
+        return LORD_BODY_SHOWS_WEAPON.contains(lordId) && lordWeapon(lordId).isPresent();
     }
 
     /** The weapon of a calamity (災厄), by calamity id ({@code meadow} .. {@code harbour}). */

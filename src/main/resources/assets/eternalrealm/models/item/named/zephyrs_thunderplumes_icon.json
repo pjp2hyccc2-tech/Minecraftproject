@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "eternalrealm:item/named/glowcap_stilettos"
+    "layer0": "eternalrealm:item/named/zephyrs_thunderplumes"
   }
 }

@@ -32,7 +32,7 @@ def BW(metal, **kw):
 
 
 SPECS = {
-    # ---------------------------------------------------------------- 1 アルセリア王国
+    # ---------------------------------------------------------------- 1 はじまりの草原
     "meadowlark_blade": SW("leaf", "STEEL", trim="BRONZE", grip="LEATHER", guard="crescent_up", fuller=True),
     "wayfarers_oath": SW("slim", "SILVER", tip=28, trim="GOLD", grip="CLOTH_RED", guard="ring", pommel="gem",
                          gem="SKY"),
@@ -50,8 +50,8 @@ SPECS = {
                         edge="BLOOD"),
     "herdsman_pike": SPR("leaf", "IRON", shaft="WOOD", trim="IRON_DARK"),
     "canal_partisan": SPR("broad", "STEEL", shaft="DARKWOOD", trim="SILVER", edge="ICE", bands=(-12, -11), gem="ICE"),
-    "sunfield_lance": SPR("winged", "HOLY_WHITE", shaft="WOOD_PALE", trim="GOLD", ribbon="CLOTH_RED",
-                          runes="HOLY_GOLD"),
+    "durns_tuskspear": SPR("tusk", "BONE", shaft="DARKWOOD", trim="IRON_DARK", ribbon="SHADOW", bands=(-12, -11),
+                           gem="EMBER", veins="AMBER"),
     "sprout_wand": STF("branch", shaft="WOOD", leaf="LEAF", core="HEAL_GREEN"),
     "lantern_of_the_lost": STF("lantern", core="HOLY_GOLD", shaft="DARKWOOD", trim="IRON_DARK"),
     "dandelion_staff": STF("sunflower", core="GOLD", leaf="FUR_WHITE", shaft="MOSS"),
@@ -60,7 +60,7 @@ SPECS = {
                          tips="curl"),
     "skylark_longbow": BW("WOOD_PALE", depth=13.0, trim="SILVER", tips="feather", feather="SKY", gem="THUNDER",
                           runes="THUNDER"),
-    # ---------------------------------------------------------------- 2 エルダーフォレスト
+    # ---------------------------------------------------------------- 2 月影の森
     "moonleaf_blade": SW("leaf", "MOONSILVER", trim="SILVER", grip="LEAF", guard="crescent_down", pommel="gem",
                          gem="SKY"),
     "heartwood_edge": SW("broad", "WOOD", trim="DARKWOOD", grip="MOSS", guard="claw", fuller="AMBER"),
@@ -75,8 +75,8 @@ SPECS = {
     "silkcutter_pair": TW("slim", "SILVER", trim="LINEN", grip="PEARL", guard="tsuba", pommel="tassel",
                           pgem="LINEN"),
     "moth_wing_daggers": TW("leaf", "ASH", trim="SPORE", grip="LEATHER_DARK", guard="wing", edge="SLIME"),
-    "glowcap_stilettos": TW("needle", "STEEL", half=2, trim="SPORE", grip="MOSS", guard="disc", pommel="orb",
-                            pgem="SPORE", glow="SPORE"),
+    "lunars_moonclaws": TW("claw", "MOONSILVER", half=1.4, tip=16, trim="SILVER", grip="NIGHT", guard="claw", pommel="fang",
+                           edge="ICE", sparkle="ICE"),
     "vinewhip_spear": SPR("flamelance", "JADE", shaft="DARKWOOD", trim="MOSS", edge="SLIME"),
     "owl_feather_lance": SPR("pike", "SILVER", shaft="WOOD_PALE", trim="BRONZE", ribbon="LINEN"),
     "grovewarden_glaive": SPR("glaive", "STEEL", shaft="DARKWOOD", trim="BRONZE", gem="AMBER", fuller=True),
@@ -88,12 +88,12 @@ SPECS = {
     "silverbark_bow": BW("MOONSILVER", recurve=3.0, trim="SILVER", bands=(9, 10), grip="LEATHER_DARK", tips="curl"),
     "belladonnas_nightshade": BW("VIOLET", recurve=5.0, trim="SLIME", grip="SHADOW", spikes=(-14, -8, 8, 14),
                                  spike_mat="LEAF", gem="SLIME", glow="SLIME", tips="gem"),
-    # ---------------------------------------------------------------- 3 サンドリア砂漠
+    # ---------------------------------------------------------------- 3 鉄鉱の鉱山
     "ore_vein_sword": SW("straight", "IRON", trim="COPPER", grip="LEATHER", veins="AMBER"),
     "sunscarab_khopesh": SW("khopesh", "GOLD", trim="TURQUOISE", grip="LINEN", guard="short", pommel="gem",
                             gem="TURQUOISE", edge="FLAME"),
-    "forgefire_blade": SW("broad", "IRON_DARK", trim="BRONZE", grip="LEATHER_DARK", veins="FLAME", edge="EMBER",
-                          glow="EMBER"),
+    "vein_eaters_jointblade": SW("segmented", "RUST", trim="GOLD", grip="LEATHER_DARK", guard="claw", pommel="spike",
+                                 edge="SLIME", veins="AMBER", gem="AMBER"),
     "pickaxe_breaker": GS("cleaver", "STONE", trim="WOOD", grip="LEATHER", reach=8, pommel="spike"),
     "coalheart_greatsword": GS("broad", "OBSIDIAN", trim="IRON", grip="LEATHER_DARK", veins="EMBER", pommel="gem",
                                gem="EMBER"),
@@ -115,7 +115,7 @@ SPECS = {
                            grip="LEATHER_DARK"),
     "rustbones_rattle": BW("BONE", recurve=4.0, trim="RUST", spikes=(-16, -10, 10, 16), spike_mat="BONE",
                            grip="CLOTH_RED", gem="BLOOD", tips="curl"),
-    # ---------------------------------------------------------------- 4 ノルディア雪原
+    # ---------------------------------------------------------------- 4 聖なる滝
     "rivermist_sword": SW("straight", "FROST_STEEL", trim="SILVER", grip="SEA", guard="crescent_up", edge="ICE"),
     "pearlguard_blade": SW("broad", "PEARL", trim="SILVER", grip="SEA", guard="disc", gem="HOLY_GOLD", pommel="orb",
                            pgem="PEARL"),
@@ -135,19 +135,20 @@ SPECS = {
     "falls_sovereign_trident": SPR("trident", "SEA", shaft="PEARL", trim="GOLD", gem="ICE", glow="ICE",
                                    sparkle="ICE"),
     "holy_dew_staff": STF("orb_claw", core="HOLY_WHITE", trim="SILVER", shaft="WOOD_PALE"),
-    "mistcrystal_rod": STF("crystal", core="ICE", trim="FROST_STEEL", shaft="SEA", glow="ICE"),
+    "ords_shellstaff": STF("shell", leaf="MOSS", trim="STONE", core="AMBER", shaft="DARKWOOD", bands=(-4, -3),
+                           sparkle="GOLD"),
     "handmaidens_snowbell": STF("bell", core="PEARL", trim="ICE", shaft="FROST_STEEL", sparkle="ICE"),
     "heron_bow": BW("PEARL", depth=13.0, grip="SEA", tips="feather", feather="FUR_WHITE", trim="SILVER"),
     "frozen_chain_bow": BW("FROST_STEEL", recurve=4.0, trim="ICE", bands=(5, 6, 11, 12, 17, 18), grip="LEATHER_DARK",
                            tips="blade", gem="ICE"),
     "rainbow_spray_bow": BW("SEA", recurve=2.0, trim="HOLY_GOLD", grip="PEARL", gem="HOLY_GOLD", runes="ROSE",
                             sparkle="HOLY_GOLD", glow="SKY"),
-    # ---------------------------------------------------------------- 5 ドラゴニア火山
+    # ---------------------------------------------------------------- 5 古代遺跡
     "cinder_rune_sword": SW("straight", "OBSIDIAN", trim="BRONZE", grip="DRAGON_DARK", runes="FLAME", glow="EMBER"),
     "magma_vein_falchion": SW("falchion", "DRAGON_DARK", trim="GOLD", grip="LEATHER_DARK", guard="crescent_down",
                               veins="FLAME"),
-    "gearwork_blade": SW("serrated", "BRONZE", trim="COPPER", grip="LEATHER_DARK", guard="ring", pommel="ring",
-                         edge="THUNDER"),
+    "agnis_idol_blade": SW("flared", "GOLD", trim="CLOTH_RED", grip="CLOTH_RED", guard="wing", pommel="gem",
+                           gem="FLAME", runes="FLAME", edge="EMBER"),
     "ruin_guardian_slab": GS("slab", "SANDSTONE", trim="STONE", grip="LEATHER_DARK", runes="AMBER"),
     "amber_sun_greatsword": GS("straight", "SUNSTONE", tip=30, trim="GOLD", grip="CLOTH_RED", guard="wing",
                                gem="AMBER", pommel="gem"),
@@ -170,7 +171,7 @@ SPECS = {
                         grip="DRAGON_DARK", glow="EMBER"),
     "rune_tablet_longbow": BW("STONE", depth=13.0, trim="BRONZE", runes="CYAN_RUNE", grip="LEATHER", gem="THUNDER",
                               capped=True),
-    # ---------------------------------------------------------------- 6 セレスティア天空大陸
+    # ---------------------------------------------------------------- 6 天翔の峰
     "cloudcutter": SW("saber", "HOLY_WHITE", trim="SKY", grip="SKY", guard="wing", sparkle="SKY"),
     "skyforge_saber": SW("scimitar", "SILVER", trim="GOLD", grip="SKY", guard="crescent_up", edge="THUNDER",
                          pommel="gem", gem="THUNDER"),
@@ -183,7 +184,8 @@ SPECS = {
                                  glow="THUNDER"),
     "wyvern_talon_pair": TW("fang", "BONE", trim="DRAGON_DARK", grip="LEATHER_DARK", guard="short", edge="BLOOD"),
     "sky_ruin_shards": TW("crystal", "SKY", trim="HOLY_GOLD", grip="HOLY_WHITE", guard="tsuba", glow="SKY"),
-    "gale_feather_blades": TW("leaf", "HOLY_WHITE", trim="SILVER", grip="SKY", guard="wing", edge="THUNDER"),
+    "zephyrs_thunderplumes": TW("feather", "NAVY", trim="THUNDER", grip="SKY", guard="wing", pommel="tassel",
+                                pgem="THUNDER", fuller="THUNDER", edge="THUNDER", sparkle="THUNDER"),
     "summit_spear": SPR("pike", "SILVER", shaft="WOOD_PALE", trim="SKY", ribbon="HOLY_WHITE"),
     "celestial_pillar_glaive": SPR("crescent", "HOLY_WHITE", shaft="HOLY_GOLD", trim="GOLD", gem="SKY",
                                    sparkle="HOLY_GOLD"),
@@ -197,7 +199,7 @@ SPECS = {
                           gem="THUNDER", tips="curl"),
     "peak_snipers_horizon": BW("SILVER", depth=14.0, recurve=2.0, trim="GOLD", grip="JOB_KNIGHT", tips="blade",
                                gem="SKY", sparkle="SKY"),
-    # ---------------------------------------------------------------- 7 終焉の塔
+    # ---------------------------------------------------------------- 7 終焉の森
     "hollowroot_blade": SW("straight", "ABYSS", trim="DARKWOOD", grip="MOSS", guard="claw", veins="SLIME"),
     "oblivion_edge": SW("katana", "NIGHT", trim="VOID", grip="SHADOW", guard="tsuba", edge="VOID_GLOW",
                         pommel="orb", pgem="VOID_GLOW"),
@@ -214,7 +216,8 @@ SPECS = {
     "voidwhisper_daggers": TW("kris", "VOID", trim="ABYSS", grip="SHADOW", guard="short", glow="VOID_GLOW"),
     "corrupt_bark_spear": SPR("flamelance", "ABYSS", shaft="DARKWOOD", trim="MOSS", veins="SLIME"),
     "gatebreaker_halberd": SPR("halberd", "IRON_DARK", shaft="OBSIDIAN", trim="RUST", gem="AMBER"),
-    "nightmare_eye_lance": SPR("leaf", "NIGHT", shaft="ABYSS", trim="VOID", gem="BLOOD", edge="VOID_GLOW"),
+    "nihils_voidfang": SPR("fang", "MOONSILVER", socket=7, shaft="ABYSS", trim="VIOLET", gem="VOID_GLOW", edge="VOID_GLOW",
+                           bands=(-14, -13, -6, -5), sparkle="VOID_GLOW"),
     "cultist_bonestaff": STF("skull", core="VOID_GLOW", bone="BONE", shaft="ABYSS"),
     "abyssal_lantern": STF("lantern", core="HOLY_WHITE", trim="ABYSS", shaft="NIGHT", glow="HOLY_WHITE"),
     "xenos_ruinsceptre": STF("sceptre", core="FLAME", trim="BRONZE", shaft="ABYSS", glow="EMBER", sparkle="FLAME"),
@@ -242,7 +245,7 @@ SPECS = {
     "harvest_boss_reaper": SPR("crescent", "RUST", shaft="DARKWOOD", trim="BONE", edge="BLOOD"),
     "scarecrow_post": STF("post", core="VOID_GLOW", shaft="WOOD", leaf="STRAW"),
     "sunflower_staff": STF("sunflower", core="WOOD", leaf="GOLD", shaft="LEAF"),
-    "harvest_gem_rod": STF("sceptre", core="AMBER", trim="GOLD_PALE", shaft="WOOD"),
+    "stroms_strawcrown": STF("crown", core="FLAME", trim="GOLD", leaf="STRAW", shaft="DARKWOOD", glow="EMBER"),
     "crow_scaring_bow": BW("WOOD", depth=11.0, grip="LINEN", tips="feather", feather="SHADOW"),
     "cornsilk_bow": BW("STRAW", trim="WOOD", grip="LEATHER", bands=(6, 7, 13, 14), string="LINEN"),
     "bullhorn_recurve": BW("BONE", recurve=6.0, depth=11.0, trim="LEATHER_DARK", grip="LEATHER", tips="curl",
@@ -255,7 +258,8 @@ SPECS = {
     "driftwood_greatsword": GS("slab", "WOOD_PALE", trim="RUST", grip="SEA"),
     "marshking_greatsword": GS("broad", "MOSS", trim="BRONZE", grip="LEATHER_DARK", guard="crescent_down",
                                veins="SLIME", pommel="gem", gem="SLIME"),
-    "deep_lake_slab": GS("straight", "SEA", tip=30, trim="PEARL", grip="ICE_DEEP", guard="wing", runes="ICE"),
+    "numels_greatfin": GS("fin", "TEAL_STEEL", trim="PEARL", grip="SEA", guard="wing", pommel="orb", pgem="SKY",
+                          edge="ICE", veins="SKY"),
     "minnow_knives": TW("leaf", "SILVER", trim="SEA", grip="LINEN", guard="none"),
     "gel_glass_daggers": TW("crystal", "SLIME", trim="GLASS", grip="MOSS", guard="short", glow="SLIME"),
     "kingfisher_pair": TW("straight", "SKY", trim="SUNSTONE", grip="SEA", guard="wing", edge="THUNDER"),
@@ -278,7 +282,8 @@ SPECS = {
     "anchor_greatsword": GS("straight", "IRON_DARK", trim="RUST", grip="LINEN", guard="crescent_up", reach=8,
                             pommel="ring"),
     "stormsail_greatsword": GS("straight", "STEEL", tip=30, trim="LINEN", grip="SEA", guard="wing", edge="THUNDER"),
-    "krakenbone_slab": GS("slab", "BONE", trim="INK", grip="INK", guard="claw", veins="VOID_GLOW"),
+    "ankaras_great_pincer": GS("pincer", "STEEL_DARK", trim="CRIMSON_STEEL", grip="SEA", guard="claw", pommel="ring",
+                               edge="CORAL", gem="AMBER"),
     "saltspray_daggers": TW("straight", "TEAL_STEEL", trim="SEA", grip="LINEN", guard="short", edge="ICE"),
     "inkstorm_blades": TW("kris", "INK", trim="SEA", grip="SHADOW", guard="short", glow="VOID_GLOW"),
     "dock_brawlers_knuckleknives": TW("broad", "IRON", trim="BRONZE", grip="LEATHER", guard="basket", edge="BLOOD"),

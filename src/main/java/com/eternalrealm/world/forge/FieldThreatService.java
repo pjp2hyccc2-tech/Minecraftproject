@@ -308,6 +308,7 @@ public final class FieldThreatService {
             if (mob instanceof com.eternalrealm.entity.ERMonster monster) {
                 monster.setSpecialMoves(com.eternalrealm.monster.SpecialMoves.LORD_MOVES);
             }
+            armSignature(mob, lord);
             state.turns = LordTurns.none();
             state.enraged = false;
             state.contributions = new Contributions();
@@ -316,6 +317,17 @@ public final class FieldThreatService {
             level.addFreshEntity(mob);
         });
         return made;
+    }
+
+    /**
+     * A lord whose body has a weapon hand carries its signature weapon of the armory (the lord's rewards may hand it
+     * out); lords on beast, golem, flyer or archer bodies keep their natural weapons.
+     */
+    private static void armSignature(Mob mob, FieldThreats.Lord lord) {
+        if (com.eternalrealm.item.Signatures.lordWieldsWeapon(lord.id())) {
+            com.eternalrealm.item.Signatures.lordWeapon(lord.id())
+                    .ifPresent(design -> com.eternalrealm.item.forge.ArmoryStacks.arm(mob, design));
+        }
     }
 
     /** Tests: whether the lord {@code lordId} has flown into its rage in its current appearance. */
@@ -364,11 +376,7 @@ public final class FieldThreatService {
         mob.setCustomName(Component.translatable("threat.eternalrealm.lord.nameplate", level,
                 Component.translatable(lord.translationKey())).withStyle(ChatFormatting.LIGHT_PURPLE));
         mob.setCustomNameVisible(true);
-        if (com.eternalrealm.item.Signatures.lordWieldsWeapon(lord.id())) {
-            // the lord carries its signature weapon (armory); the lord's rewards may hand it out
-            com.eternalrealm.item.Signatures.lordWeapon(lord.id())
-                    .ifPresent(design -> com.eternalrealm.item.forge.ArmoryStacks.arm(mob, design));
-        }
+        armSignature(mob, lord);
         state.body = mob.getUUID(); // before it joins the level: the join check lets only tracked lords in
         if (!astoria.addFreshEntity(mob)) {
             state.body = null;

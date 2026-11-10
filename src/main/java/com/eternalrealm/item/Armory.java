@@ -87,6 +87,7 @@ public final class Armory {
     private static final Set<DesignSource> C = EnumSet.of(DesignSource.CRAFT);
     private static final Set<DesignSource> CF = EnumSet.of(DesignSource.CRAFT, DesignSource.FIELD);
     private static final Set<DesignSource> FM = EnumSet.of(DesignSource.FIELD, DesignSource.MONSTER);
+    private static final Set<DesignSource> CM = EnumSet.of(DesignSource.CRAFT, DesignSource.MONSTER);
     private static final Set<DesignSource> D = EnumSet.of(DesignSource.DUNGEON);
     private static final Set<DesignSource> DM = EnumSet.of(DesignSource.DUNGEON, DesignSource.MONSTER);
     private static final Set<DesignSource> LORD = EnumSet.of(DesignSource.LORD);
@@ -252,9 +253,9 @@ public final class Armory {
     // ------------------------------------------------------------------ the field weapons
 
     private static void fieldWeapons(List<WeaponDesign> out) {
-        // 1 アルセリア王国 (Lv5/10/15): meadows, bandits, the lost underground city (d1)
+        // 1 はじまりの草原 (Lv5/10/15): meadows, bandits, the boar Durn, the lost underground city (d1)
         w(out, "meadowlark_blade", SWORD, 1, 0, F, "", Feel.BALANCED, Element.NONE);
-        w(out, "wayfarers_oath", SWORD, 1, 1, C, "", Feel.KEEN, Element.NONE);
+        w(out, "wayfarers_oath", SWORD, 1, 1, CM, "", Feel.KEEN, Element.NONE);
         w(out, "galewild_saber", SWORD, 1, 2, CAL, "meadow", Feel.SWIFT, Element.THUNDER);
         w(out, "pasture_cleaver", GREAT, 1, 0, FM, "", Feel.HEAVY, Element.NONE);
         w(out, "hillwarden_greatsword", GREAT, 1, 1, C, "", Feel.LONG, Element.EARTH);
@@ -264,14 +265,14 @@ public final class Armory {
         w(out, "hooks_reapers", TWIN, 1, 2, LORD, "hook", Feel.KEEN, Element.BLOOD);
         w(out, "herdsman_pike", SPEAR, 1, 0, F, "", Feel.BALANCED, Element.NONE);
         w(out, "canal_partisan", SPEAR, 1, 1, D, "d1", Feel.LONG, Element.FROST);
-        w(out, "sunfield_lance", SPEAR, 1, 2, C, "", Feel.ELEMENTAL, Element.HOLY);
+        w(out, "durns_tuskspear", SPEAR, 1, 2, LORD, "durn", Feel.HEAVY, Element.EARTH);
         w(out, "sprout_wand", STAFF, 1, 0, F, "", Feel.BALANCED, Element.NONE);
         w(out, "lantern_of_the_lost", STAFF, 1, 1, D, "d1", Feel.ELEMENTAL, Element.HOLY);
         w(out, "dandelion_staff", STAFF, 1, 2, C, "", Feel.SWIFT, Element.EARTH);
         w(out, "shepherds_bow", BOW, 1, 0, F, "", Feel.BALANCED, Element.NONE);
         w(out, "rogues_recurve", BOW, 1, 1, D, "d1", Feel.KEEN, Element.VENOM);
         w(out, "skylark_longbow", BOW, 1, 2, C, "", Feel.SWIFT, Element.THUNDER);
-        // 2 エルダーフォレスト (Lv10/15/20): moonlit woods, the ancient tree maze (d2)
+        // 2 月影の森 (Lv10/15/20): moonlit woods, the silver wolf king, the ancient tree maze (d2)
         w(out, "moonleaf_blade", SWORD, 2, 0, F, "", Feel.BALANCED, Element.NONE);
         w(out, "heartwood_edge", SWORD, 2, 1, D, "d2", Feel.BALANCED, Element.EARTH);
         w(out, "eclipse_moonblade", SWORD, 2, 2, CAL, "moon_forest", Feel.KEEN, Element.SHADOW);
@@ -280,7 +281,7 @@ public final class Armory {
         w(out, "nightbough_claymore", GREAT, 2, 2, C, "", Feel.LONG, Element.SHADOW);
         w(out, "silkcutter_pair", TWIN, 2, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "moth_wing_daggers", TWIN, 2, 1, D, "d2", Feel.KEEN, Element.VENOM);
-        w(out, "glowcap_stilettos", TWIN, 2, 2, C, "", Feel.ELEMENTAL, Element.HOLY);
+        w(out, "lunars_moonclaws", TWIN, 2, 2, LORD, "lunar", Feel.SWIFT, Element.FROST);
         w(out, "vinewhip_spear", SPEAR, 2, 0, F, "", Feel.LONG, Element.VENOM);
         w(out, "owl_feather_lance", SPEAR, 2, 1, C, "", Feel.SWIFT, Element.NONE);
         w(out, "grovewarden_glaive", SPEAR, 2, 2, C, "", Feel.BALANCED, Element.EARTH);
@@ -290,10 +291,10 @@ public final class Armory {
         w(out, "willow_shortbow", BOW, 2, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "silverbark_bow", BOW, 2, 1, C, "", Feel.BALANCED, Element.NONE);
         w(out, "belladonnas_nightshade", BOW, 2, 2, LORD, "belladonna", Feel.ELEMENTAL, Element.VENOM);
-        // 3 サンドリア砂漠 (Lv15/20/25): the iron mine, the sand temple (d3)
-        w(out, "ore_vein_sword", SWORD, 3, 0, F, "", Feel.BALANCED, Element.EARTH);
+        // 3 鉄鉱の鉱山 (Lv15/20/25): the iron mine, the Vein-Eater, the sand temple (d3)
+        w(out, "ore_vein_sword", SWORD, 3, 0, FM, "", Feel.BALANCED, Element.EARTH);
         w(out, "sunscarab_khopesh", SWORD, 3, 1, D, "d3", Feel.KEEN, Element.FIRE);
-        w(out, "forgefire_blade", SWORD, 3, 2, C, "", Feel.ELEMENTAL, Element.FIRE);
+        w(out, "vein_eaters_jointblade", SWORD, 3, 2, LORD, "vein_eater", Feel.KEEN, Element.VENOM);
         w(out, "pickaxe_breaker", GREAT, 3, 0, FM, "", Feel.HEAVY, Element.EARTH);
         w(out, "coalheart_greatsword", GREAT, 3, 1, C, "", Feel.HEAVY, Element.FIRE);
         w(out, "colossal_ironvein", GREAT, 3, 2, CAL, "iron_mine", Feel.HEAVY, Element.EARTH);
@@ -309,7 +310,7 @@ public final class Armory {
         w(out, "cave_wren_bow", BOW, 3, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "firedamp_longbow", BOW, 3, 1, C, "", Feel.ELEMENTAL, Element.FIRE);
         w(out, "rustbones_rattle", BOW, 3, 2, LORD, "rustbone", Feel.KEEN, Element.BLOOD);
-        // 4 ノルディア雪原 (Lv20/25/30): the sacred falls, the frozen prison (d4), the ice castle (d5)
+        // 4 聖なる滝 (Lv20/25/30): the sacred falls, the tortoise Ord, the frozen prison (d4), the ice castle (d5)
         w(out, "rivermist_sword", SWORD, 4, 0, F, "", Feel.BALANCED, Element.FROST);
         w(out, "pearlguard_blade", SWORD, 4, 1, C, "", Feel.BALANCED, Element.HOLY);
         w(out, "frostcastle_rapier", SWORD, 4, 2, DM, "d5", Feel.KEEN, Element.FROST);
@@ -323,15 +324,15 @@ public final class Armory {
         w(out, "pilgrim_glaive", SPEAR, 4, 1, C, "", Feel.BALANCED, Element.HOLY);
         w(out, "falls_sovereign_trident", SPEAR, 4, 2, CAL, "sacred_falls", Feel.LONG, Element.FROST);
         w(out, "holy_dew_staff", STAFF, 4, 0, F, "", Feel.BALANCED, Element.HOLY);
-        w(out, "mistcrystal_rod", STAFF, 4, 1, C, "", Feel.ELEMENTAL, Element.FROST);
-        w(out, "handmaidens_snowbell", STAFF, 4, 2, D, "d5", Feel.BALANCED, Element.HOLY);
+        w(out, "handmaidens_snowbell", STAFF, 4, 1, D, "d5", Feel.BALANCED, Element.HOLY);
+        w(out, "ords_shellstaff", STAFF, 4, 2, LORD, "ord", Feel.ELEMENTAL, Element.EARTH);
         w(out, "heron_bow", BOW, 4, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "frozen_chain_bow", BOW, 4, 1, D, "d4", Feel.KEEN, Element.FROST);
         w(out, "rainbow_spray_bow", BOW, 4, 2, C, "", Feel.ELEMENTAL, Element.HOLY);
-        // 5 ドラゴニア火山 (Lv30/35/40): ancient ruins, the volcano cave (d6)
+        // 5 古代遺跡 (Lv30/35/40): ancient ruins, the idol Agnis, the volcano cave (d6)
         w(out, "cinder_rune_sword", SWORD, 5, 0, F, "", Feel.ELEMENTAL, Element.FIRE);
         w(out, "magma_vein_falchion", SWORD, 5, 1, D, "d6", Feel.BALANCED, Element.FIRE);
-        w(out, "gearwork_blade", SWORD, 5, 2, C, "", Feel.SWIFT, Element.THUNDER);
+        w(out, "agnis_idol_blade", SWORD, 5, 2, LORD, "agnis", Feel.HEAVY, Element.FIRE);
         w(out, "ruin_guardian_slab", GREAT, 5, 0, FM, "", Feel.HEAVY, Element.EARTH);
         w(out, "amber_sun_greatsword", GREAT, 5, 1, C, "", Feel.LONG, Element.HOLY);
         w(out, "ashen_dragonfang", GREAT, 5, 2, CAL, "ancient_ruins", Feel.HEAVY, Element.FIRE);
@@ -347,8 +348,8 @@ public final class Armory {
         w(out, "sunstone_bow", BOW, 5, 0, F, "", Feel.BALANCED, Element.HOLY);
         w(out, "flamewing_bow", BOW, 5, 1, D, "d6", Feel.SWIFT, Element.FIRE);
         w(out, "rune_tablet_longbow", BOW, 5, 2, C, "", Feel.KEEN, Element.THUNDER);
-        // 6 セレスティア天空大陸 (Lv40/45/50): soaring peaks, the sky ruins (d7)
-        w(out, "cloudcutter", SWORD, 6, 0, F, "", Feel.SWIFT, Element.NONE);
+        // 6 天翔の峰 (Lv40/45/50): soaring peaks, the thunderwing Zephyr, the sky ruins (d7)
+        w(out, "cloudcutter", SWORD, 6, 0, FM, "", Feel.SWIFT, Element.NONE);
         w(out, "skyforge_saber", SWORD, 6, 1, D, "d7", Feel.KEEN, Element.THUNDER);
         w(out, "alvins_oathblade", SWORD, 6, 2, LORD, "alvin", Feel.BALANCED, Element.HOLY);
         w(out, "glacier_crest_claymore", GREAT, 6, 0, C, "", Feel.LONG, Element.FROST);
@@ -356,7 +357,7 @@ public final class Armory {
         w(out, "thunderhead_greatblade", GREAT, 6, 2, CAL, "soaring_peaks", Feel.HEAVY, Element.THUNDER);
         w(out, "wyvern_talon_pair", TWIN, 6, 0, F, "", Feel.SWIFT, Element.BLOOD);
         w(out, "sky_ruin_shards", TWIN, 6, 1, D, "d7", Feel.KEEN, Element.HOLY);
-        w(out, "gale_feather_blades", TWIN, 6, 2, C, "", Feel.SWIFT, Element.THUNDER);
+        w(out, "zephyrs_thunderplumes", TWIN, 6, 2, LORD, "zephyr", Feel.SWIFT, Element.THUNDER);
         w(out, "summit_spear", SPEAR, 6, 0, F, "", Feel.LONG, Element.NONE);
         w(out, "celestial_pillar_glaive", SPEAR, 6, 1, D, "d7", Feel.LONG, Element.HOLY);
         w(out, "lightning_rod_lance", SPEAR, 6, 2, C, "", Feel.ELEMENTAL, Element.THUNDER);
@@ -366,9 +367,9 @@ public final class Armory {
         w(out, "windrider_bow", BOW, 6, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "tempest_recurve", BOW, 6, 1, C, "", Feel.BALANCED, Element.THUNDER);
         w(out, "peak_snipers_horizon", BOW, 6, 2, LORD, "peak_sniper", Feel.KEEN, Element.NONE);
-        // 7 終焉の塔 (Lv50): the forest of the end, the tower (d8)
+        // 7 終焉の森 (Lv50): the forest of the end, the void drake Nihil, the tower (d8)
         w(out, "hollowroot_blade", SWORD, 7, 0, F, "", Feel.BALANCED, Element.VENOM);
-        w(out, "oblivion_edge", SWORD, 7, 1, C, "", Feel.KEEN, Element.SHADOW);
+        w(out, "oblivion_edge", SWORD, 7, 1, CM, "", Feel.KEEN, Element.SHADOW);
         w(out, "last_dusk", SWORD, 7, 2, CAL, "end_forest", Feel.BALANCED, Element.SHADOW);
         w(out, "nightmare_greatsword", GREAT, 7, 0, FM, "", Feel.HEAVY, Element.SHADOW);
         w(out, "towerfall_greatsword", GREAT, 7, 1, D, "d8", Feel.LONG, Element.EARTH);
@@ -378,14 +379,14 @@ public final class Armory {
         w(out, "voidwhisper_daggers", TWIN, 7, 2, C, "", Feel.ELEMENTAL, Element.SHADOW);
         w(out, "corrupt_bark_spear", SPEAR, 7, 0, FM, "", Feel.LONG, Element.VENOM);
         w(out, "gatebreaker_halberd", SPEAR, 7, 1, D, "d8", Feel.HEAVY, Element.EARTH);
-        w(out, "nightmare_eye_lance", SPEAR, 7, 2, C, "", Feel.KEEN, Element.SHADOW);
+        w(out, "nihils_voidfang", SPEAR, 7, 2, LORD, "nihil", Feel.LONG, Element.SHADOW);
         w(out, "cultist_bonestaff", STAFF, 7, 0, FM, "", Feel.BALANCED, Element.SHADOW);
         w(out, "abyssal_lantern", STAFF, 7, 1, D, "d8", Feel.ELEMENTAL, Element.HOLY);
         w(out, "xenos_ruinsceptre", STAFF, 7, 2, LORD, "xenos", Feel.KEEN, Element.FIRE);
         w(out, "deadwood_bow", BOW, 7, 0, F, "", Feel.BALANCED, Element.VENOM);
         w(out, "end_howl_longbow", BOW, 7, 1, D, "d8", Feel.KEEN, Element.SHADOW);
         w(out, "oblivion_shard_bow", BOW, 7, 2, C, "", Feel.ELEMENTAL, Element.FROST);
-        // 8 黄金の農村 (Lv10/15/20): fields of wheat, scarecrows, the blight
+        // 8 豊穣の農場 (Lv10/15/20): fields of wheat, the scarecrow king Strom, the blight
         w(out, "wheatstalk_sword", SWORD, 8, 0, F, "", Feel.BALANCED, Element.NONE);
         w(out, "millstone_blade", SWORD, 8, 1, C, "", Feel.BALANCED, Element.EARTH);
         w(out, "harvest_moon_sabre", SWORD, 8, 2, CF, "", Feel.KEEN, Element.HOLY);
@@ -400,17 +401,17 @@ public final class Armory {
         w(out, "harvest_boss_reaper", SPEAR, 8, 2, LORD, "harvest_boss", Feel.LONG, Element.BLOOD);
         w(out, "scarecrow_post", STAFF, 8, 0, F, "", Feel.BALANCED, Element.SHADOW);
         w(out, "sunflower_staff", STAFF, 8, 1, C, "", Feel.ELEMENTAL, Element.HOLY);
-        w(out, "harvest_gem_rod", STAFF, 8, 2, CF, "", Feel.KEEN, Element.EARTH);
+        w(out, "stroms_strawcrown", STAFF, 8, 2, LORD, "strom", Feel.ELEMENTAL, Element.FIRE);
         w(out, "crow_scaring_bow", BOW, 8, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "cornsilk_bow", BOW, 8, 1, C, "", Feel.BALANCED, Element.NONE);
         w(out, "bullhorn_recurve", BOW, 8, 2, CF, "", Feel.HEAVY, Element.EARTH);
-        // 9 静寂の湖畔 (Lv15/20/25): reeds, the drowned, the lake witch
+        // 9 湖畔のほとり (Lv15/20/25): reeds, the drowned, the lake witch, Numel of the lakebed
         w(out, "reedcutter", SWORD, 9, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "lake_scale_sword", SWORD, 9, 1, C, "", Feel.BALANCED, Element.FROST);
         w(out, "mirror_surface_blade", SWORD, 9, 2, CAL, "lakeside", Feel.KEEN, Element.FROST);
         w(out, "driftwood_greatsword", GREAT, 9, 0, F, "", Feel.HEAVY, Element.NONE);
         w(out, "marshking_greatsword", GREAT, 9, 1, C, "", Feel.HEAVY, Element.VENOM);
-        w(out, "deep_lake_slab", GREAT, 9, 2, CF, "", Feel.LONG, Element.FROST);
+        w(out, "numels_greatfin", GREAT, 9, 2, LORD, "numel", Feel.LONG, Element.FROST);
         w(out, "minnow_knives", TWIN, 9, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "gel_glass_daggers", TWIN, 9, 1, C, "", Feel.KEEN, Element.VENOM);
         w(out, "kingfisher_pair", TWIN, 9, 2, CF, "", Feel.SWIFT, Element.THUNDER);
@@ -423,14 +424,14 @@ public final class Armory {
         w(out, "reed_bow", BOW, 9, 0, F, "", Feel.SWIFT, Element.NONE);
         w(out, "dragonfly_bow", BOW, 9, 1, C, "", Feel.KEEN, Element.THUNDER);
         w(out, "spirit_pearl_bow", BOW, 9, 2, CF, "", Feel.ELEMENTAL, Element.HOLY);
-        // 10 潮騒の港町 (Lv20/25/30): docks, pirates, the maelstrom
+        // 10 風の港 (Lv20/25/30): docks, pirates, the anchor-eating crab Ankara, the maelstrom
         w(out, "deckhand_cutlass", SWORD, 10, 0, FM, "", Feel.SWIFT, Element.NONE);
         w(out, "doubloon_rapier", SWORD, 10, 1, C, "", Feel.KEEN, Element.NONE);
         w(out, "barbas_tidecleaver", SWORD, 10, 2, LORD, "barbas", Feel.BALANCED, Element.FROST);
         w(out, "anchor_greatsword", GREAT, 10, 0, FM, "", Feel.HEAVY, Element.EARTH);
         w(out, "stormsail_greatsword", GREAT, 10, 1, C, "", Feel.LONG, Element.THUNDER);
-        w(out, "krakenbone_slab", GREAT, 10, 2, CF, "", Feel.HEAVY, Element.SHADOW);
-        w(out, "saltspray_daggers", TWIN, 10, 0, F, "", Feel.SWIFT, Element.FROST);
+        w(out, "ankaras_great_pincer", GREAT, 10, 2, LORD, "ankara", Feel.HEAVY, Element.EARTH);
+        w(out, "saltspray_daggers", TWIN, 10, 0, FM, "", Feel.SWIFT, Element.FROST);
         w(out, "inkstorm_blades", TWIN, 10, 1, C, "", Feel.ELEMENTAL, Element.SHADOW);
         w(out, "dock_brawlers_knuckleknives", TWIN, 10, 2, LORD, "dock_brawler", Feel.KEEN, Element.BLOOD);
         w(out, "boarding_pike", SPEAR, 10, 0, F, "", Feel.LONG, Element.NONE);
