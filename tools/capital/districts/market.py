@@ -101,7 +101,7 @@ def _cart(w, x, z, seed=0):
 def market_hall(w):
     x0, x1, z0, z1 = 62, 84, 10, 30
     TK.pave(w, 59, 6, 87, 39, TK.SQUARE_MIX, seed=102)
-    TK.pave(w, 88, 21, 101, 39, TK.LANE_MIX, seed=103)
+    TK.pave(w, 88, 21, 98, 39, TK.LANE_MIX, seed=103)
     w.fill(x0, 0, z0, x1, 0, z1, F("stone_bricks"))
     gy = 7                                         # upper floor level
     # piers every 4 with round arches between them (open arcade)
@@ -201,7 +201,7 @@ def avenue_stalls(w):
     for (x, z) in ((92, 24), (93, 24), (92, 25), (96, 30), (97, 30), (96, 31)):
         w.set(x, 1, z, B.barrel("up") if (x + z) % 3 else B.S("hay_block", axis="y"))
     w.set(92, 2, 24, B.barrel("up"))
-    rect = (89, 32, 100, 38)
+    rect = (89, 32, 97, 38)
     f, W, D = TK.frame_for(w, rect, "north")
     sp = TK.HouseSpec.random(777, W, D)
     sp.floors = 2
