@@ -49,7 +49,7 @@ def views():
                              label="From the plaza towards the market"),
         "plaza_south": dict(pos=(-14, 5, -18), look=(14, 4, 40), fov=72, sun=s(40, -150), fog=2600,
                             label="From the plaza looking south"),
-        "cathedral_s": dict(pos=(30, 4, -20), look=(62, 26, -66), fov=70, sun=s(40, -150), fog=2600,
+        "cathedral_s": dict(pos=(64, 5, -38), look=(62, 24, -70), fov=74, sun=s(40, -150), fog=2600,
                             label="The cathedral from the south"),
         "main_gate": dict(pos=(6, 7, 128), look=(0, 18, 76), fov=64, sun=s(40, -150), fog=2600,
                           label="The south gate from the lake bridge"),
