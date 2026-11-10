@@ -186,7 +186,7 @@ public abstract class ERMonster extends Monster {
         if (variantsOf(rig()).contains(id)) {
             setVariant(id);
         }
-        this.specialMoves = Mth.clamp(tag.getInt("SpecialMoves"), 0, 2);
+        this.specialMoves = Mth.clamp(tag.getInt("SpecialMoves"), 0, com.eternalrealm.monster.SpecialMoves.LORD_MOVES);
         this.spawnAnnounced = true;
     }
 
@@ -323,9 +323,12 @@ public abstract class ERMonster extends Monster {
 
     // ------------------------------------------------------------------------------------------ special moves
 
-    /** How many of its body's special moves this monster uses (0 = none, 1 = veteran, 2 = elite). Server side. */
+    /**
+     * How many of its body's special moves this monster uses (0 = none, 1 = veteran, 2 = elite, 3 = a field lord).
+     * Server side.
+     */
     public void setSpecialMoves(int count) {
-        this.specialMoves = Mth.clamp(count, 0, 2);
+        this.specialMoves = Mth.clamp(count, 0, com.eternalrealm.monster.SpecialMoves.LORD_MOVES);
     }
 
     public int specialMoveCount() {
@@ -340,6 +343,11 @@ public abstract class ERMonster extends Monster {
     /** The special move winding up or hitting right now, or {@code null}. */
     public SpecialMove currentSpecialMove() {
         return this.special;
+    }
+
+    /** Ticks until the special move winding up right now hits, 0 if none is winding up. */
+    public int specialTicksLeft() {
+        return this.special != null && !this.actionImpactDone ? Math.max(0, this.actionImpactTick - this.actionTick) : 0;
     }
 
     /** The ground marker of the current special move, or {@code null}. */

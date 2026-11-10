@@ -260,8 +260,8 @@ public final class DungeonService {
     }
 
     /**
-     * The revival system sends a fallen member back to the instance's revival point (its entrance). False when the
-     * player is not inside a running or cleared instance.
+     * The revival system sends a fallen member back to the instance's revival point (in front of the revival monument
+     * of the entrance hall). False when the player is not inside a running or cleared instance.
      */
     public boolean reviveAtRevivalPoint(ServerPlayer player) {
         DungeonInstance instance = byMember.get(player.getUUID());
@@ -272,7 +272,7 @@ public final class DungeonService {
         if (state == com.eternalrealm.dungeon.RunState.FAILED || state == com.eternalrealm.dungeon.RunState.CLOSED) {
             return false;
         }
-        instance.bringIn(player);
+        instance.toRevivalPoint(player);
         return true;
     }
 

@@ -29,18 +29,21 @@ public class MonstersCatalogTest {
             assertSame(template, Monsters.require(template.id()));
             assertEquals("monster.eternalrealm." + template.id(), template.translationKey());
         }
-        assertEquals(74, Monsters.all().size());
+        assertEquals("74 first monsters, 100 of the bestiary and 30 lords", 204, Monsters.all().size());
         assertEquals(List.copyOf(ids).size(), Monsters.ids().size());
         assertTrue(Monsters.byId("nope").isEmpty());
         assertThrows(IllegalArgumentException.class, () -> Monsters.require("nope"));
     }
 
     @Test
-    public void everyAreaHasThreeFieldMonstersAndOneEliteInItsTable() {
+    public void everyAreaHasThirteenFieldMonstersAndOneEliteInItsTable() {
         for (AreaDefinition area : Areas.all()) {
             MonsterTable table = Monsters.tableFor(area);
             assertEquals(area.monsterTableId(), table.id());
-            assertEquals(area.slug(), 3, table.entries().size());
+            assertEquals(area.slug(), 13, table.entries().size());
+            long bestiary = table.entries().stream()
+                    .filter(entry -> entry.template().id().startsWith("f" + area.id() + "_")).count();
+            assertEquals(area.slug() + ": ten monsters of the bestiary", 10, bestiary);
             assertEquals(area.slug(), 1, table.eliteEntries().size());
             assertTrue(table.eliteChance() > 0.0 && table.eliteChance() <= 0.1);
             for (MonsterTable.Entry entry : concat(table.entries(), table.eliteEntries())) {
@@ -73,6 +76,26 @@ public class MonstersCatalogTest {
         assertEquals(25, waves);
         assertEquals(4, Monsters.dungeonMonsters("d8").size());
         assertTrue(Monsters.dungeonMonsters("d9").isEmpty());
+    }
+
+    @Test
+    public void theBestiaryHasTenMonstersAndThreeLordsPerField() {
+        for (AreaDefinition area : Areas.all()) {
+            String prefix = "f" + area.id() + "_";
+            List<MonsterTemplate> normals = Monsters.all().stream().filter(m -> m.id().startsWith(prefix)).toList();
+            assertEquals(area.slug(), 10, normals.size());
+            for (MonsterTemplate monster : normals) {
+                assertEquals(monster.id(), MonsterRole.NORMAL, monster.role());
+                assertEquals(monster.id(), Set.of(area.id()), monster.areaIds());
+            }
+        }
+        List<MonsterTemplate> lords = Monsters.all().stream().filter(m -> m.id().startsWith("lord_")).toList();
+        assertEquals(30, lords.size());
+        for (MonsterTemplate lord : lords) {
+            assertEquals(lord.id(), MonsterRole.ELITE, lord.role());
+            int area = lord.areaIds().iterator().next();
+            assertEquals(lord.id() + " fights at the top of its field", Areas.require(area).maxLevel(), lord.levels().max());
+        }
     }
 
     @Test

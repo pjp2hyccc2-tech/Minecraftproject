@@ -178,5 +178,525 @@
   "entity.eternalrealm.enemy.fire_spirit": {
     "ja": "炎の精霊",
     "en": "Fire Spirit"
+  },
+  "entity.eternalrealm.enemy.f1_horned_hare": {
+    "ja": "ツノウサギ",
+    "en": "Horned Hare"
+  },
+  "entity.eternalrealm.enemy.f1_wild_boar": {
+    "ja": "荒野のイノシシ",
+    "en": "Wild Boar"
+  },
+  "entity.eternalrealm.enemy.f1_bandit_scout": {
+    "ja": "山賊の斥候",
+    "en": "Bandit Scout"
+  },
+  "entity.eternalrealm.enemy.f1_goblin_pilferer": {
+    "ja": "小鬼の盗人",
+    "en": "Goblin Pilferer"
+  },
+  "entity.eternalrealm.enemy.f1_meadow_wisp": {
+    "ja": "野原の灯火",
+    "en": "Meadow Wisp"
+  },
+  "entity.eternalrealm.enemy.f1_stray_sheepdog": {
+    "ja": "はぐれ牧羊犬",
+    "en": "Stray Sheepdog"
+  },
+  "entity.eternalrealm.enemy.f1_living_scarecrow": {
+    "ja": "動く案山子",
+    "en": "Living Scarecrow"
+  },
+  "entity.eternalrealm.enemy.f1_bandit_crossbowman": {
+    "ja": "山賊の弩手",
+    "en": "Bandit Crossbowman"
+  },
+  "entity.eternalrealm.enemy.f1_capling": {
+    "ja": "キノコ帽子",
+    "en": "Capling"
+  },
+  "entity.eternalrealm.enemy.f1_fallen_squire": {
+    "ja": "落ちぶれ従士",
+    "en": "Fallen Squire"
+  },
+  "entity.eternalrealm.enemy.lord_garm": {
+    "ja": "街道荒らしのガルム",
+    "en": "Garm the Highway Scourge"
+  },
+  "entity.eternalrealm.enemy.lord_hook": {
+    "ja": "赤目のフック",
+    "en": "Red-Eyed Hook"
+  },
+  "entity.eternalrealm.enemy.lord_durn": {
+    "ja": "大猪ドルン",
+    "en": "Durn the Great Boar"
+  },
+  "entity.eternalrealm.enemy.f2_moonshade_wolf": {
+    "ja": "月影オオカミ",
+    "en": "Moonshade Wolf"
+  },
+  "entity.eternalrealm.enemy.f2_twin_tailed_fox": {
+    "ja": "双尾の狐",
+    "en": "Twin-Tailed Fox"
+  },
+  "entity.eternalrealm.enemy.f2_thorn_dryad": {
+    "ja": "茨のドライアド",
+    "en": "Thorn Dryad"
+  },
+  "entity.eternalrealm.enemy.f2_moon_moth": {
+    "ja": "月蛾の妖精",
+    "en": "Moon Moth Fairy"
+  },
+  "entity.eternalrealm.enemy.f2_fungal_brute": {
+    "ja": "茸の巨人",
+    "en": "Fungal Brute"
+  },
+  "entity.eternalrealm.enemy.f2_owl_warden": {
+    "ja": "梟の守り神",
+    "en": "Owl Warden"
+  },
+  "entity.eternalrealm.enemy.f2_night_stalker": {
+    "ja": "宵闇の追跡者",
+    "en": "Night Stalker"
+  },
+  "entity.eternalrealm.enemy.f2_bark_lizard": {
+    "ja": "樹皮トカゲ",
+    "en": "Bark Lizard"
+  },
+  "entity.eternalrealm.enemy.f2_moonbow_hunter": {
+    "ja": "月弓の狩人",
+    "en": "Moonbow Hunter"
+  },
+  "entity.eternalrealm.enemy.f2_will_o_wisp": {
+    "ja": "迷い火",
+    "en": "Will-o'-Wisp"
+  },
+  "entity.eternalrealm.enemy.lord_nebula": {
+    "ja": "月影の古老ネブラ",
+    "en": "Nebula, Elder of the Moonshade"
+  },
+  "entity.eternalrealm.enemy.lord_belladonna": {
+    "ja": "宵闇の魔女ベラドンナ",
+    "en": "Belladonna the Dusk Witch"
+  },
+  "entity.eternalrealm.enemy.lord_lunar": {
+    "ja": "白銀の狼王ルナール",
+    "en": "Lunar the Silver Wolf King"
+  },
+  "entity.eternalrealm.enemy.f3_kobold_miner": {
+    "ja": "坑道のコボルト",
+    "en": "Kobold Miner"
+  },
+  "entity.eternalrealm.enemy.f3_rock_crab": {
+    "ja": "岩ガニ",
+    "en": "Rock Crab"
+  },
+  "entity.eternalrealm.enemy.f3_ore_golem": {
+    "ja": "鉱石ゴーレム",
+    "en": "Ore Golem"
+  },
+  "entity.eternalrealm.enemy.f3_dust_mummy": {
+    "ja": "砂塵のミイラ",
+    "en": "Dust Mummy"
+  },
+  "entity.eternalrealm.enemy.f3_giant_cave_bat": {
+    "ja": "洞窟オオコウモリ",
+    "en": "Giant Cave Bat"
+  },
+  "entity.eternalrealm.enemy.f3_sun_cultist": {
+    "ja": "太陽教団の祭司",
+    "en": "Sun Cultist"
+  },
+  "entity.eternalrealm.enemy.f3_golden_scarab": {
+    "ja": "黄金スカラベ",
+    "en": "Golden Scarab"
+  },
+  "entity.eternalrealm.enemy.f3_tunnel_rat": {
+    "ja": "坑道オオネズミ",
+    "en": "Tunnel Rat"
+  },
+  "entity.eternalrealm.enemy.f3_rust_guard": {
+    "ja": "錆びた守衛",
+    "en": "Rust Guard"
+  },
+  "entity.eternalrealm.enemy.f3_gem_wraith": {
+    "ja": "宝石の怨霊",
+    "en": "Gem Wraith"
+  },
+  "entity.eternalrealm.enemy.lord_dolga": {
+    "ja": "坑道の墓守ドルガ",
+    "en": "Dolga, Warden of the Shafts"
+  },
+  "entity.eternalrealm.enemy.lord_rustbone": {
+    "ja": "錆骨の射手",
+    "en": "The Rustbone Archer"
+  },
+  "entity.eternalrealm.enemy.lord_vein_eater": {
+    "ja": "鉱脈喰らいの大ムカデ",
+    "en": "The Vein-Eater"
+  },
+  "entity.eternalrealm.enemy.f4_mist_spirit": {
+    "ja": "霧の精",
+    "en": "Mist Spirit"
+  },
+  "entity.eternalrealm.enemy.f4_falls_toad": {
+    "ja": "滝ガエル",
+    "en": "Falls Toad"
+  },
+  "entity.eternalrealm.enemy.f4_kappa": {
+    "ja": "河童",
+    "en": "Kappa"
+  },
+  "entity.eternalrealm.enemy.f4_lost_pilgrim": {
+    "ja": "迷える巡礼者",
+    "en": "Lost Pilgrim"
+  },
+  "entity.eternalrealm.enemy.f4_frost_heron": {
+    "ja": "氷鷺",
+    "en": "Frost Heron"
+  },
+  "entity.eternalrealm.enemy.f4_crystal_crab": {
+    "ja": "氷晶ガニ",
+    "en": "Crystal Crab"
+  },
+  "entity.eternalrealm.enemy.f4_frost_monk": {
+    "ja": "氷の修行僧",
+    "en": "Frost Monk"
+  },
+  "entity.eternalrealm.enemy.f4_moss_guardian": {
+    "ja": "苔むした守護像",
+    "en": "Moss Guardian"
+  },
+  "entity.eternalrealm.enemy.f4_snow_ape": {
+    "ja": "雪ザル",
+    "en": "Snow Ape"
+  },
+  "entity.eternalrealm.enemy.f4_spray_wraith": {
+    "ja": "飛沫の亡霊",
+    "en": "Spray Wraith"
+  },
+  "entity.eternalrealm.enemy.lord_goura": {
+    "ja": "滝壺の暴君ゴウラ",
+    "en": "Goura, Tyrant of the Plunge Pool"
+  },
+  "entity.eternalrealm.enemy.lord_mistweaver": {
+    "ja": "霧糸の大蜘蛛",
+    "en": "The Mistweaver"
+  },
+  "entity.eternalrealm.enemy.lord_ord": {
+    "ja": "滝守の大亀オルド",
+    "en": "Ord the Falls Tortoise"
+  },
+  "entity.eternalrealm.enemy.f5_ember_imp": {
+    "ja": "熾火の小悪魔",
+    "en": "Ember Imp"
+  },
+  "entity.eternalrealm.enemy.f5_ash_hound": {
+    "ja": "灰の猟犬",
+    "en": "Ash Hound"
+  },
+  "entity.eternalrealm.enemy.f5_magma_lizard": {
+    "ja": "溶岩トカゲ",
+    "en": "Magma Lizard"
+  },
+  "entity.eternalrealm.enemy.f5_ruin_sentinel": {
+    "ja": "遺跡の番兵",
+    "en": "Ruin Sentinel"
+  },
+  "entity.eternalrealm.enemy.f5_cinder_wraith": {
+    "ja": "燃え殻の亡霊",
+    "en": "Cinder Wraith"
+  },
+  "entity.eternalrealm.enemy.f5_relic_thief": {
+    "ja": "遺物泥棒",
+    "en": "Relic Thief"
+  },
+  "entity.eternalrealm.enemy.f5_flame_priest": {
+    "ja": "炎の神官",
+    "en": "Flame Priest"
+  },
+  "entity.eternalrealm.enemy.f5_obsidian_guard": {
+    "ja": "黒曜の衛兵",
+    "en": "Obsidian Guard"
+  },
+  "entity.eternalrealm.enemy.f5_scorch_vulture": {
+    "ja": "焦げハゲワシ",
+    "en": "Scorch Vulture"
+  },
+  "entity.eternalrealm.enemy.f5_lava_tortoise": {
+    "ja": "溶岩ガメ",
+    "en": "Lava Tortoise"
+  },
+  "entity.eternalrealm.enemy.lord_valka": {
+    "ja": "遺跡の狂戦士ヴァルカ",
+    "en": "Valka the Ruin Berserker"
+  },
+  "entity.eternalrealm.enemy.lord_scorch_eye": {
+    "ja": "灼眼のブレイズ",
+    "en": "Scorch-Eye"
+  },
+  "entity.eternalrealm.enemy.lord_agnis": {
+    "ja": "遺跡の神像アグニス",
+    "en": "Agnis the Ruin Idol"
+  },
+  "entity.eternalrealm.enemy.f6_thunder_hawk": {
+    "ja": "雷鷹",
+    "en": "Thunder Hawk"
+  },
+  "entity.eternalrealm.enemy.f6_sky_knight": {
+    "ja": "天空の騎士",
+    "en": "Sky Knight"
+  },
+  "entity.eternalrealm.enemy.f6_cloud_giant": {
+    "ja": "雲の巨人",
+    "en": "Cloud Giant"
+  },
+  "entity.eternalrealm.enemy.f6_gale_spirit": {
+    "ja": "旋風の精",
+    "en": "Gale Spirit"
+  },
+  "entity.eternalrealm.enemy.f6_peak_wolf": {
+    "ja": "峰の狼",
+    "en": "Peak Wolf"
+  },
+  "entity.eternalrealm.enemy.f6_storm_mage": {
+    "ja": "嵐の魔導師",
+    "en": "Storm Mage"
+  },
+  "entity.eternalrealm.enemy.f6_young_griffin": {
+    "ja": "若きグリフォン",
+    "en": "Young Griffin"
+  },
+  "entity.eternalrealm.enemy.f6_sky_ram": {
+    "ja": "天の大角羊",
+    "en": "Sky Ram"
+  },
+  "entity.eternalrealm.enemy.f6_star_sentinel": {
+    "ja": "星の哨兵",
+    "en": "Star Sentinel"
+  },
+  "entity.eternalrealm.enemy.f6_frost_titanling": {
+    "ja": "氷巨人の子",
+    "en": "Frost Titanling"
+  },
+  "entity.eternalrealm.enemy.lord_alvin": {
+    "ja": "天翔の聖騎士アルヴィン",
+    "en": "Alvin, Paladin of the Peaks"
+  },
+  "entity.eternalrealm.enemy.lord_peak_sniper": {
+    "ja": "峰の狙撃手",
+    "en": "The Peak Sniper"
+  },
+  "entity.eternalrealm.enemy.lord_zephyr": {
+    "ja": "雷翼のゼファー",
+    "en": "Zephyr the Thunderwing"
+  },
+  "entity.eternalrealm.enemy.f7_void_hound": {
+    "ja": "虚無の猟犬",
+    "en": "Void Hound"
+  },
+  "entity.eternalrealm.enemy.f7_blighted_treant": {
+    "ja": "蝕まれた古木",
+    "en": "Blighted Treant"
+  },
+  "entity.eternalrealm.enemy.f7_doom_knight": {
+    "ja": "破滅の騎士",
+    "en": "Doom Knight"
+  },
+  "entity.eternalrealm.enemy.f7_hollow_eye": {
+    "ja": "虚ろな眼",
+    "en": "Hollow Eye"
+  },
+  "entity.eternalrealm.enemy.f7_amethyst_colossus": {
+    "ja": "紫晶の巨像",
+    "en": "Amethyst Colossus"
+  },
+  "entity.eternalrealm.enemy.f7_shadow_assassin": {
+    "ja": "影の暗殺者",
+    "en": "Shadow Assassin"
+  },
+  "entity.eternalrealm.enemy.f7_plague_rat": {
+    "ja": "疫病ネズミ",
+    "en": "Plague Rat"
+  },
+  "entity.eternalrealm.enemy.f7_hex_witch": {
+    "ja": "呪詛の魔女",
+    "en": "Hex Witch"
+  },
+  "entity.eternalrealm.enemy.f7_wandering_grudge": {
+    "ja": "彷徨う怨念",
+    "en": "Wandering Grudge"
+  },
+  "entity.eternalrealm.enemy.f7_end_scorpion": {
+    "ja": "終焉のサソリ",
+    "en": "End Scorpion"
+  },
+  "entity.eternalrealm.enemy.lord_xenos": {
+    "ja": "破滅の先触れゼノス",
+    "en": "Xenos, Herald of Ruin"
+  },
+  "entity.eternalrealm.enemy.lord_black_knight": {
+    "ja": "終焉の黒騎士",
+    "en": "The Black Knight of the End"
+  },
+  "entity.eternalrealm.enemy.lord_nihil": {
+    "ja": "虚無を喰む竜ニヒル",
+    "en": "Nihil the Void-Gnawing Drake"
+  },
+  "entity.eternalrealm.enemy.f8_field_crow": {
+    "ja": "畑荒らしのカラス",
+    "en": "Field Crow"
+  },
+  "entity.eternalrealm.enemy.f8_giant_mole": {
+    "ja": "大モグラ",
+    "en": "Giant Mole"
+  },
+  "entity.eternalrealm.enemy.f8_pumpkin_head": {
+    "ja": "カボチャ頭",
+    "en": "Pumpkin Head"
+  },
+  "entity.eternalrealm.enemy.f8_wild_rooster": {
+    "ja": "暴れ雄鶏",
+    "en": "Wild Rooster"
+  },
+  "entity.eternalrealm.enemy.f8_rowdy_calf": {
+    "ja": "暴れ仔牛",
+    "en": "Rowdy Calf"
+  },
+  "entity.eternalrealm.enemy.f8_hay_golem": {
+    "ja": "干し草ゴーレム",
+    "en": "Hay Golem"
+  },
+  "entity.eternalrealm.enemy.f8_lost_farmhand": {
+    "ja": "迷い農夫",
+    "en": "Lost Farmhand"
+  },
+  "entity.eternalrealm.enemy.f8_giant_bee": {
+    "ja": "大バチ",
+    "en": "Giant Bee"
+  },
+  "entity.eternalrealm.enemy.f8_vine_lurker": {
+    "ja": "蔓の潜み",
+    "en": "Vine Lurker"
+  },
+  "entity.eternalrealm.enemy.f8_windmill_sprite": {
+    "ja": "風車の妖精",
+    "en": "Windmill Sprite"
+  },
+  "entity.eternalrealm.enemy.lord_brutus": {
+    "ja": "暴れ牛ブルータス",
+    "en": "Brutus the Rampaging Bull"
+  },
+  "entity.eternalrealm.enemy.lord_harvest_boss": {
+    "ja": "収穫泥棒の頭目",
+    "en": "The Harvest Thief Chief"
+  },
+  "entity.eternalrealm.enemy.lord_strom": {
+    "ja": "案山子の王ストローム",
+    "en": "Strom the Scarecrow King"
+  },
+  "entity.eternalrealm.enemy.f9_marsh_frog": {
+    "ja": "沼ガエル",
+    "en": "Marsh Frog"
+  },
+  "entity.eternalrealm.enemy.f9_lake_serpent": {
+    "ja": "湖ヘビ",
+    "en": "Lake Serpent"
+  },
+  "entity.eternalrealm.enemy.f9_egret_spirit": {
+    "ja": "白鷺の精",
+    "en": "Egret Spirit"
+  },
+  "entity.eternalrealm.enemy.f9_bog_ghoul": {
+    "ja": "沼の亡者",
+    "en": "Bog Ghoul"
+  },
+  "entity.eternalrealm.enemy.f9_reed_witch": {
+    "ja": "葦の魔女",
+    "en": "Reed Witch"
+  },
+  "entity.eternalrealm.enemy.f9_great_crayfish": {
+    "ja": "大ザリガニ",
+    "en": "Great Crayfish"
+  },
+  "entity.eternalrealm.enemy.f9_mud_golem": {
+    "ja": "泥ゴーレム",
+    "en": "Mud Golem"
+  },
+  "entity.eternalrealm.enemy.f9_fisher_ghost": {
+    "ja": "漁師の幽霊",
+    "en": "Fisher's Ghost"
+  },
+  "entity.eternalrealm.enemy.f9_giant_dragonfly": {
+    "ja": "大トンボ",
+    "en": "Giant Dragonfly"
+  },
+  "entity.eternalrealm.enemy.f9_water_imp": {
+    "ja": "水の小鬼",
+    "en": "Water Imp"
+  },
+  "entity.eternalrealm.enemy.lord_melusine": {
+    "ja": "湖の魔女メリュー",
+    "en": "Melu, Witch of the Lake"
+  },
+  "entity.eternalrealm.enemy.lord_drowned_fisher": {
+    "ja": "沈んだ漁師",
+    "en": "The Drowned Fisher"
+  },
+  "entity.eternalrealm.enemy.lord_numel": {
+    "ja": "湖底の主ヌメル",
+    "en": "Numel of the Lakebed"
+  },
+  "entity.eternalrealm.enemy.f10_deck_pirate": {
+    "ja": "甲板の海賊",
+    "en": "Deck Pirate"
+  },
+  "entity.eternalrealm.enemy.f10_pirate_brute": {
+    "ja": "海賊の荒くれ",
+    "en": "Pirate Brute"
+  },
+  "entity.eternalrealm.enemy.f10_beach_crab": {
+    "ja": "浜ガニ",
+    "en": "Beach Crab"
+  },
+  "entity.eternalrealm.enemy.f10_sea_harpy": {
+    "ja": "海鳥ハーピー",
+    "en": "Sea Harpy"
+  },
+  "entity.eternalrealm.enemy.f10_coral_golem": {
+    "ja": "珊瑚の巨像",
+    "en": "Coral Golem"
+  },
+  "entity.eternalrealm.enemy.f10_shore_monitor": {
+    "ja": "岸辺のオオトカゲ",
+    "en": "Shore Monitor"
+  },
+  "entity.eternalrealm.enemy.f10_ghost_sailor": {
+    "ja": "幽霊船員",
+    "en": "Ghost Sailor"
+  },
+  "entity.eternalrealm.enemy.f10_smuggler": {
+    "ja": "密輸人",
+    "en": "Smuggler"
+  },
+  "entity.eternalrealm.enemy.f10_tide_spirit": {
+    "ja": "潮の精",
+    "en": "Tide Spirit"
+  },
+  "entity.eternalrealm.enemy.f10_sea_witch": {
+    "ja": "海の魔女",
+    "en": "Sea Witch"
+  },
+  "entity.eternalrealm.enemy.lord_barbas": {
+    "ja": "隻眼の船長バルバス",
+    "en": "One-Eyed Captain Barbas"
+  },
+  "entity.eternalrealm.enemy.lord_dock_brawler": {
+    "ja": "港の喧嘩屋",
+    "en": "The Dock Brawler"
+  },
+  "entity.eternalrealm.enemy.lord_ankara": {
+    "ja": "錨喰らいの大ガニアンカラ",
+    "en": "Ankara the Anchor-Eater"
   }
 }

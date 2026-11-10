@@ -501,6 +501,8 @@ def variants():
         pants=bark, boots=bark, robe={'base': '#4f8a3a', 'style': 'leaf', 'flowers': (240, 160, 200)},
         leaves={'base': '#4f8a3a', 'flowers': (240, 160, 200)}, staff='#7a5a3a', orb={'base': '#f0a0c8', 'style': 'gem'}),
         paint=deco_dryad, glow=True, extra=dict(scale=1.0)))
+    import bestiary
+    V.extend(bestiary.variants_for('humanoid'))
     return V
 
 
@@ -511,4 +513,7 @@ def emblem_on(fc, col):
 
 
 def rig():
-    return Rig('humanoid', 'HumanoidEnemy', geometry(), animations(), variants(), SLOTS, head='head')
+    import bestiary
+    r = Rig('humanoid', 'HumanoidEnemy', geometry(), animations(), variants(), SLOTS, head='head')
+    bestiary.snap_to_ground(r)
+    return r

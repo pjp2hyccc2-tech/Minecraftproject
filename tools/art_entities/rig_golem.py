@@ -234,8 +234,13 @@ def variants():
                                  core={'base': '#60ffd0', 'style': 'glowcore'}),
                      poses={'head': dict(pos=(0, 2.5, 0))},
                      paint=deco_ruin, glow=True, extra=dict(scale=1.2)))
+    import bestiary
+    V.extend(bestiary.variants_for('golem'))
     return V
 
 
 def rig():
-    return Rig('golem', 'GolemEnemy', geometry(), animations(), variants(), SLOTS)
+    import bestiary
+    r = Rig('golem', 'GolemEnemy', geometry(), animations(), variants(), SLOTS)
+    bestiary.snap_to_ground(r)
+    return r

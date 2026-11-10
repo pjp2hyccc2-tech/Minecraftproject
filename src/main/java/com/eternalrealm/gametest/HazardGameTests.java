@@ -134,14 +134,65 @@ public final class HazardGameTests {
                 return;
             }
             long t = tick - startedAt[0];
+            // who hurt whom: the batch's other tests run next door (a giant's slam can reach into this arena), so
+            // only the golem's own blows count
             if (t == windup - 4) {
                 check(golem.currentSpecialMove() == SpecialMove.SLAM, "the wind-up ended early");
-                check(target.getHealth() == target.getMaxHealth(), "hit during the wind-up");
+                check(target.getLastHurtByMob() != golem, "hit during the wind-up");
             } else if (t == windup + 6) {
-                check(target.getHealth() < target.getMaxHealth(), "the slam did not hit the target in its marker");
-                check(bystander.getHealth() == bystander.getMaxHealth(), "the slam hit outside its marker");
+                check(target.getLastHurtByMob() == golem, "the slam did not hit the target in its marker");
+                check(bystander.getLastHurtByMob() != golem, "the slam hit outside its marker");
                 helper.succeed();
             }
+        });
+    }
+
+    /**
+     * A field lord fights like a small boss: all three moves of its body; a blow that takes it to 70% calls two
+     * monsters of its field, one to 50% makes it roar and rage (faster), and every turn comes once.
+     */
+    @GameTest(template = ARENA, timeoutTicks = 200)
+    public static void aLordCallsForHelpAndFliesIntoARage(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos at = helper.absolutePos(new BlockPos(4, 2, 4));
+        Mob lord = com.eternalrealm.world.forge.FieldThreatService.spawnLordForTest(level, "garm", at).orElse(null);
+        check(lord != null, "no body for the lord garm");
+        check(lord instanceof ERMonster monster && monster.specialMoveCount() == 3
+                && monster.specialMoves().size() == 3, "a lord uses all three moves of its body");
+        net.minecraft.world.phys.AABB around = lord.getBoundingBox().inflate(10.0);
+        // only the lord's own helpers count: the batch's other tests have monsters next door
+        java.util.function.IntSupplier helpers = () -> level.getEntitiesOfClass(Mob.class, around,
+                mob -> "garm".equals(mob.getPersistentData().getString(
+                        com.eternalrealm.world.forge.FieldThreatService.HELPER_OF))).size();
+        check(helpers.getAsInt() == 0, "helpers before any call");
+        helper.runAfterDelay(5, () -> {
+            lord.setHealth(lord.getMaxHealth() * 0.69F);
+            lord.invulnerableTime = 0;
+            lord.hurt(lord.damageSources().generic(), 1.0F);
+        });
+        helper.runAfterDelay(12, () -> {
+            int called = helpers.getAsInt();
+            check(called == com.eternalrealm.world.field.LordTurns.HELPERS, "the call brought " + called + " monsters");
+            check(!com.eternalrealm.world.forge.FieldThreatService.enragedForTest("garm"), "raged too early");
+            lord.setHealth(lord.getMaxHealth() * 0.6F);
+            lord.invulnerableTime = 0;
+            lord.hurt(lord.damageSources().generic(), 1.0F);
+        });
+        helper.runAfterDelay(20, () -> {
+            int called = helpers.getAsInt();
+            check(called == com.eternalrealm.world.field.LordTurns.HELPERS, "a turn came twice: " + called);
+            lord.setHealth(lord.getMaxHealth() * 0.49F);
+            lord.invulnerableTime = 0;
+            lord.hurt(lord.damageSources().generic(), 1.0F);
+        });
+        helper.runAfterDelay(28, () -> {
+            check(com.eternalrealm.world.forge.FieldThreatService.enragedForTest("garm"), "no rage at half health");
+            check(lord.hasEffect(net.minecraft.world.effect.MobEffects.MOVEMENT_SPEED), "the rage makes it faster");
+            for (Mob mob : level.getEntitiesOfClass(Mob.class, around, mob -> mob == lord || "garm".equals(
+                    mob.getPersistentData().getString(com.eternalrealm.world.forge.FieldThreatService.HELPER_OF)))) {
+                mob.discard();
+            }
+            helper.succeed();
         });
     }
 

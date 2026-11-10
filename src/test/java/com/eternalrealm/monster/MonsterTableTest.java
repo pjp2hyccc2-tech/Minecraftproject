@@ -27,10 +27,13 @@ public class MonsterTableTest {
         }
         double elite = counts.getOrDefault("bandit_chief", 0) / (double) samples;
         assertEquals("elite chance 5%", 0.05, elite, 0.006);
-        // Normal weights 40/35/25 of the remaining 95%.
-        assertEquals(0.95 * 0.40, counts.get("meadow_slime") / (double) samples, 0.012);
-        assertEquals(0.95 * 0.35, counts.get("wandering_dead") / (double) samples, 0.012);
-        assertEquals(0.95 * 0.25, counts.get("highway_bandit") / (double) samples, 0.012);
+        // Every normal monster gets its weight's share of the remaining 95%.
+        int total = arcelia.entries().stream().mapToInt(MonsterTable.Entry::weight).sum();
+        for (MonsterTable.Entry entry : arcelia.entries()) {
+            double expected = 0.95 * entry.weight() / total;
+            assertEquals(entry.template().id(), expected, counts.getOrDefault(entry.template().id(), 0) / (double) samples,
+                    0.008);
+        }
     }
 
     @Test

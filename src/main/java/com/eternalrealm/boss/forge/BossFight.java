@@ -90,7 +90,8 @@ public final class BossFight {
     /** The boss HUD of the participants (layered health frame, cast bar, merit ranking). */
     public static final String HUD_CHANNEL = "boss_hud";
     private static final int HUD_INTERVAL = 4;
-    private static final int RANKING_ROWS = 5;
+    /** Rows of the damage ranking on the HUD (and the viewer's own row below them). */
+    public static final int RANKING_ROWS = 5;
     static final String FIGHT = "er_fight";
     /** Half size of the arena floor when the caller does not know it (tests). */
     public static final double DEFAULT_ARENA_HALF_SIZE = 14.5;

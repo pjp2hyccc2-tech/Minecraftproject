@@ -94,14 +94,34 @@ public class MiasmaTest {
     }
 
     @Test
-    public void everyFieldHasTwoLordsAndOneCalamity() {
+    public void everyFieldHasThreeLordsAndOneCalamity() {
         Set<String> ids = new HashSet<>();
+        Set<String> spawnedByTables = new HashSet<>();
+        for (com.eternalrealm.monster.MonsterTable table : com.eternalrealm.monster.Monsters.tables()) {
+            table.entries().forEach(entry -> spawnedByTables.add(entry.template().id()));
+            table.eliteEntries().forEach(entry -> spawnedByTables.add(entry.template().id()));
+        }
         for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
-            assertEquals(2, FieldThreats.lordsOf(field).size());
+            assertEquals(3, FieldThreats.lordsOf(field).size());
             assertTrue(FieldThreats.calamityOf(field).isPresent());
         }
-        for (FieldThreats.Lord lord : FieldThreats.lords()) {
+        List<FieldThreats.Lord> all = FieldThreats.lords();
+        for (FieldThreats.Lord lord : all) {
             assertTrue(lord.id(), ids.add(lord.id()));
+            com.eternalrealm.monster.MonsterTemplate template = com.eternalrealm.monster.Monsters.require(lord.template());
+            assertEquals(lord.id() + " has a template of its own", "lord_" + lord.id(), template.id());
+            assertEquals(com.eternalrealm.monster.MonsterRole.ELITE, template.role());
+            assertTrue(lord.id() + " lives in its field", template.livesIn(lord.field()));
+            assertFalse(lord.id() + " is not spawned by the field tables", spawnedByTables.contains(template.id()));
+            for (FieldThreats.Lord other : all) {
+                if (other != lord) {
+                    assertTrue(lord.id() + " and " + other.id() + " share a territory",
+                            Math.hypot(lord.x() - other.x(), lord.z() - other.z()) > lord.territory() + other.territory());
+                }
+            }
+            FieldThreats.Calamity lair = FieldThreats.calamityOf(lord.field()).orElseThrow();
+            assertTrue(lord.id() + " roams into the calamity's lair", Math.hypot(lord.x() - lair.x(), lord.z() - lair.z())
+                    > lord.territory() + FieldThreats.LAIR_RADIUS + 16);
             assertEquals(lord.id() + " stands in its field", lord.field(), FieldLayout.areaAt(lord.x(), lord.z()));
             assertFalse(FieldLayout.inCapital(lord.x(), lord.z()));
             int ticks = FieldThreats.respawnTicks(lord, new SplittableRandom(1));

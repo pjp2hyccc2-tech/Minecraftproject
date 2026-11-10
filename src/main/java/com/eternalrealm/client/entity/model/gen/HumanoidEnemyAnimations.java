@@ -25,7 +25,7 @@ public final class HumanoidEnemyAnimations {
     /** The animation of every slot for a variant (variant ids as in the geometry class). */
     public static AnimationDefinition[] forVariant(String variant) {
         return switch (variant) {
-            case "crossbowman" -> new AnimationDefinition[]{IDLE, WALK, ATTACK1, ATTACK2, SHOOT, HURT, SPAWN, DEATH};
+            case "crossbowman", "f1_bandit_crossbowman", "lord_hook", "f2_moonbow_hunter", "lord_rustbone", "lord_peak_sniper", "f10_smuggler" -> new AnimationDefinition[]{IDLE, WALK, ATTACK1, ATTACK2, SHOOT, HURT, SPAWN, DEATH};
             default -> new AnimationDefinition[]{IDLE, WALK, ATTACK1, ATTACK2, CAST, HURT, SPAWN, DEATH};
         };
     }

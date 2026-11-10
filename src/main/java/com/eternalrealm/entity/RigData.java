@@ -42,10 +42,10 @@ public final class RigData {
     /** Variant ids of a rig ("humanoid", "beast", ..., "king", ...), empty if unknown. */
     public static List<String> variants(String rig) {
         return switch (rig) {
-            case "humanoid" -> List.of("bandit", "ghoul", "mummy", "cultist", "prisoner", "jailer", "ice_knight", "frost_mage", "fire_imp", "dark_knight", "void_mage", "shade", "crossbowman", "dryad");
-            case "beast" -> List.of("wolf", "snow_wolf", "cave_rat", "frost_hound", "abyss_hound", "salamander", "scorpion");
-            case "golem" -> List.of("treant", "sand_golem", "ice_golem", "lava_golem", "ruin_construct");
-            case "flyer" -> List.of("harpy", "ice_wraith", "storm_spirit", "sky_sentinel", "fire_spirit");
+            case "humanoid" -> List.of("bandit", "ghoul", "mummy", "cultist", "prisoner", "jailer", "ice_knight", "frost_mage", "fire_imp", "dark_knight", "void_mage", "shade", "crossbowman", "dryad", "f1_bandit_scout", "f1_goblin_pilferer", "f1_living_scarecrow", "f1_bandit_crossbowman", "f1_capling", "f1_fallen_squire", "lord_garm", "lord_hook", "f2_thorn_dryad", "f2_night_stalker", "f2_moonbow_hunter", "lord_nebula", "lord_belladonna", "f3_kobold_miner", "f3_dust_mummy", "f3_sun_cultist", "f3_rust_guard", "lord_rustbone", "f4_kappa", "f4_lost_pilgrim", "f4_frost_monk", "f5_ember_imp", "f5_relic_thief", "f5_flame_priest", "lord_valka", "f6_sky_knight", "f6_storm_mage", "lord_alvin", "lord_peak_sniper", "f7_doom_knight", "f7_shadow_assassin", "f7_hex_witch", "lord_xenos", "lord_black_knight", "f8_pumpkin_head", "f8_lost_farmhand", "f8_vine_lurker", "lord_harvest_boss", "lord_strom", "f9_bog_ghoul", "f9_reed_witch", "f9_fisher_ghost", "f9_water_imp", "lord_melusine", "lord_drowned_fisher", "f10_deck_pirate", "f10_pirate_brute", "f10_ghost_sailor", "f10_smuggler", "f10_sea_witch", "lord_barbas", "lord_dock_brawler");
+            case "beast" -> List.of("wolf", "snow_wolf", "cave_rat", "frost_hound", "abyss_hound", "salamander", "scorpion", "f1_horned_hare", "f1_wild_boar", "f1_stray_sheepdog", "lord_durn", "f2_moonshade_wolf", "f2_twin_tailed_fox", "f2_bark_lizard", "lord_lunar", "f3_rock_crab", "f3_golden_scarab", "f3_tunnel_rat", "lord_vein_eater", "f4_falls_toad", "f4_crystal_crab", "lord_mistweaver", "lord_ord", "f5_ash_hound", "f5_magma_lizard", "f5_lava_tortoise", "f6_peak_wolf", "f6_sky_ram", "f7_void_hound", "f7_plague_rat", "f7_end_scorpion", "lord_nihil", "f8_giant_mole", "f8_rowdy_calf", "lord_brutus", "f9_marsh_frog", "f9_lake_serpent", "f9_great_crayfish", "lord_numel", "f10_beach_crab", "f10_shore_monitor", "lord_ankara");
+            case "golem" -> List.of("treant", "sand_golem", "ice_golem", "lava_golem", "ruin_construct", "f2_fungal_brute", "f3_ore_golem", "lord_dolga", "f4_moss_guardian", "f4_snow_ape", "lord_goura", "f5_ruin_sentinel", "f5_obsidian_guard", "lord_agnis", "f6_cloud_giant", "f6_frost_titanling", "f7_blighted_treant", "f7_amethyst_colossus", "f8_hay_golem", "f9_mud_golem", "f10_coral_golem");
+            case "flyer" -> List.of("harpy", "ice_wraith", "storm_spirit", "sky_sentinel", "fire_spirit", "f1_meadow_wisp", "f2_moon_moth", "f2_owl_warden", "f2_will_o_wisp", "f3_giant_cave_bat", "f3_gem_wraith", "f4_mist_spirit", "f4_frost_heron", "f4_spray_wraith", "f5_cinder_wraith", "f5_scorch_vulture", "lord_scorch_eye", "f6_thunder_hawk", "f6_gale_spirit", "f6_young_griffin", "f6_star_sentinel", "lord_zephyr", "f7_hollow_eye", "f7_wandering_grudge", "f8_field_crow", "f8_wild_rooster", "f8_giant_bee", "f8_windmill_sprite", "f9_egret_spirit", "f9_giant_dragonfly", "f10_sea_harpy", "f10_tide_spirit");
             case "king" -> List.of("b1", "b1_p1", "b8", "b8_p1", "b8_p2", "b8_p3", "final", "final_p1", "final_p2", "final_p3");
             case "treant" -> List.of("b2", "b2_p1", "b2_p2");
             case "colossus" -> List.of("b3", "b7", "b3_p1", "b3_p2", "b7_p1", "b7_p2", "b7_p3");
@@ -58,17 +58,35 @@ public final class RigData {
     /** Model and hitbox scale of {@code rig/variant} (1 if unknown). */
     public static float scale(String rig, String variant) {
         return switch (rig + "/" + variant) {
-            case "humanoid/mummy", "humanoid/shade", "beast/snow_wolf" -> 1.05F;
-            case "humanoid/prisoner" -> 0.95F;
-            case "humanoid/jailer", "beast/frost_hound", "flyer/sky_sentinel" -> 1.15F;
-            case "humanoid/ice_knight", "beast/salamander", "flyer/ice_wraith", "flyer/storm_spirit" -> 1.1F;
-            case "humanoid/fire_imp" -> 0.72F;
-            case "humanoid/dark_knight", "beast/scorpion", "golem/ruin_construct" -> 1.2F;
-            case "beast/cave_rat" -> 0.6F;
-            case "beast/abyss_hound", "golem/treant" -> 1.25F;
-            case "golem/sand_golem", "golem/lava_golem" -> 1.3F;
-            case "golem/ice_golem" -> 1.35F;
-            case "king/b1", "king/b1_p1" -> 1.9F;
+            case "humanoid/mummy", "humanoid/shade", "beast/snow_wolf", "beast/f6_sky_ram", "golem/f3_ore_golem", "flyer/f3_gem_wraith", "flyer/f4_spray_wraith", "flyer/f5_scorch_vulture", "flyer/f7_wandering_grudge" -> 1.05F;
+            case "humanoid/prisoner", "beast/f1_wild_boar", "beast/f2_bark_lizard", "beast/f3_rock_crab", "beast/f8_rowdy_calf", "golem/f8_hay_golem", "flyer/f2_owl_warden", "flyer/f5_cinder_wraith", "flyer/f9_egret_spirit", "flyer/f10_tide_spirit" -> 0.95F;
+            case "humanoid/jailer", "humanoid/f7_doom_knight", "humanoid/f10_pirate_brute", "beast/frost_hound", "beast/f5_lava_tortoise", "beast/f10_shore_monitor", "golem/f4_moss_guardian", "golem/f5_ruin_sentinel", "golem/f10_coral_golem", "flyer/sky_sentinel", "flyer/f6_young_griffin" -> 1.15F;
+            case "humanoid/ice_knight", "humanoid/f6_sky_knight", "beast/salamander", "beast/f5_ash_hound", "beast/f5_magma_lizard", "beast/f6_peak_wolf", "golem/f5_obsidian_guard", "golem/f9_mud_golem", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/f6_star_sentinel" -> 1.1F;
+            case "humanoid/fire_imp", "humanoid/f1_goblin_pilferer" -> 0.72F;
+            case "humanoid/dark_knight", "beast/scorpion", "beast/f7_void_hound", "beast/f7_end_scorpion", "golem/ruin_construct", "golem/f7_amethyst_colossus" -> 1.2F;
+            case "humanoid/f1_capling" -> 0.66F;
+            case "humanoid/lord_garm", "humanoid/lord_melusine", "humanoid/lord_barbas", "golem/ice_golem" -> 1.35F;
+            case "humanoid/lord_hook", "beast/abyss_hound", "golem/treant", "golem/f6_cloud_giant" -> 1.25F;
+            case "humanoid/lord_nebula", "humanoid/lord_alvin", "humanoid/lord_drowned_fisher" -> 1.4F;
+            case "humanoid/lord_belladonna", "humanoid/lord_rustbone", "humanoid/lord_peak_sniper", "humanoid/lord_harvest_boss", "golem/sand_golem", "golem/lava_golem", "golem/f7_blighted_treant" -> 1.3F;
+            case "humanoid/f3_kobold_miner", "beast/f7_plague_rat", "beast/f9_marsh_frog", "flyer/f2_moon_moth" -> 0.8F;
+            case "humanoid/f4_kappa", "beast/f3_golden_scarab", "beast/f8_giant_mole", "beast/f10_beach_crab", "golem/f4_snow_ape" -> 0.85F;
+            case "humanoid/f5_ember_imp", "humanoid/f9_water_imp", "flyer/f2_will_o_wisp", "flyer/f8_wild_rooster", "flyer/f9_giant_dragonfly" -> 0.7F;
+            case "humanoid/lord_valka", "humanoid/lord_xenos", "humanoid/lord_black_knight", "humanoid/lord_dock_brawler" -> 1.45F;
+            case "humanoid/lord_strom", "beast/lord_mistweaver", "flyer/lord_scorch_eye" -> 1.5F;
+            case "beast/cave_rat", "flyer/f8_giant_bee" -> 0.6F;
+            case "beast/f1_horned_hare" -> 0.55F;
+            case "beast/f1_stray_sheepdog", "beast/f4_falls_toad", "flyer/f4_mist_spirit", "flyer/f7_hollow_eye" -> 0.9F;
+            case "beast/lord_durn", "beast/lord_vein_eater", "golem/lord_agnis" -> 1.7F;
+            case "beast/f2_twin_tailed_fox", "flyer/f1_meadow_wisp", "flyer/f3_giant_cave_bat", "flyer/f8_windmill_sprite" -> 0.75F;
+            case "beast/lord_lunar", "flyer/lord_zephyr" -> 1.75F;
+            case "beast/f3_tunnel_rat" -> 0.78F;
+            case "beast/lord_ord", "beast/lord_brutus" -> 1.8F;
+            case "beast/lord_nihil", "beast/lord_ankara", "king/b1", "king/b1_p1" -> 1.9F;
+            case "beast/lord_numel" -> 2.0F;
+            case "golem/lord_dolga" -> 1.6F;
+            case "golem/lord_goura" -> 1.65F;
+            case "flyer/f8_field_crow" -> 0.65F;
             case "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> 2.9F;
             case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> 3.2F;
             case "treant/b2", "treant/b2_p1", "treant/b2_p2", "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> 2.4F;
@@ -230,12 +248,12 @@ public final class RigData {
 
     private static float[] lengths(String key) {
         return switch (key) {
-            case "humanoid/bandit", "humanoid/ghoul", "humanoid/mummy", "humanoid/cultist", "humanoid/prisoner", "humanoid/jailer", "humanoid/ice_knight", "humanoid/frost_mage", "humanoid/fire_imp", "humanoid/dark_knight", "humanoid/void_mage", "humanoid/shade", "humanoid/dryad" -> T0_LENGTH;
-            case "humanoid/crossbowman" -> T1_LENGTH;
-            case "beast/wolf", "beast/snow_wolf", "beast/cave_rat", "beast/frost_hound", "beast/abyss_hound", "beast/salamander" -> T2_LENGTH;
-            case "beast/scorpion" -> T3_LENGTH;
-            case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct" -> T4_LENGTH;
-            case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit" -> T5_LENGTH;
+            case "humanoid/bandit", "humanoid/ghoul", "humanoid/mummy", "humanoid/cultist", "humanoid/prisoner", "humanoid/jailer", "humanoid/ice_knight", "humanoid/frost_mage", "humanoid/fire_imp", "humanoid/dark_knight", "humanoid/void_mage", "humanoid/shade", "humanoid/dryad", "humanoid/f1_bandit_scout", "humanoid/f1_goblin_pilferer", "humanoid/f1_living_scarecrow", "humanoid/f1_capling", "humanoid/f1_fallen_squire", "humanoid/lord_garm", "humanoid/f2_thorn_dryad", "humanoid/f2_night_stalker", "humanoid/lord_nebula", "humanoid/lord_belladonna", "humanoid/f3_kobold_miner", "humanoid/f3_dust_mummy", "humanoid/f3_sun_cultist", "humanoid/f3_rust_guard", "humanoid/f4_kappa", "humanoid/f4_lost_pilgrim", "humanoid/f4_frost_monk", "humanoid/f5_ember_imp", "humanoid/f5_relic_thief", "humanoid/f5_flame_priest", "humanoid/lord_valka", "humanoid/f6_sky_knight", "humanoid/f6_storm_mage", "humanoid/lord_alvin", "humanoid/f7_doom_knight", "humanoid/f7_shadow_assassin", "humanoid/f7_hex_witch", "humanoid/lord_xenos", "humanoid/lord_black_knight", "humanoid/f8_pumpkin_head", "humanoid/f8_lost_farmhand", "humanoid/f8_vine_lurker", "humanoid/lord_harvest_boss", "humanoid/lord_strom", "humanoid/f9_bog_ghoul", "humanoid/f9_reed_witch", "humanoid/f9_fisher_ghost", "humanoid/f9_water_imp", "humanoid/lord_melusine", "humanoid/lord_drowned_fisher", "humanoid/f10_deck_pirate", "humanoid/f10_pirate_brute", "humanoid/f10_ghost_sailor", "humanoid/f10_sea_witch", "humanoid/lord_barbas", "humanoid/lord_dock_brawler" -> T0_LENGTH;
+            case "humanoid/crossbowman", "humanoid/f1_bandit_crossbowman", "humanoid/lord_hook", "humanoid/f2_moonbow_hunter", "humanoid/lord_rustbone", "humanoid/lord_peak_sniper", "humanoid/f10_smuggler" -> T1_LENGTH;
+            case "beast/wolf", "beast/snow_wolf", "beast/cave_rat", "beast/frost_hound", "beast/abyss_hound", "beast/salamander", "beast/f1_horned_hare", "beast/f1_wild_boar", "beast/f1_stray_sheepdog", "beast/lord_durn", "beast/f2_moonshade_wolf", "beast/f2_twin_tailed_fox", "beast/f2_bark_lizard", "beast/lord_lunar", "beast/f3_golden_scarab", "beast/f3_tunnel_rat", "beast/f4_falls_toad", "beast/lord_mistweaver", "beast/lord_ord", "beast/f5_ash_hound", "beast/f5_magma_lizard", "beast/f5_lava_tortoise", "beast/f6_peak_wolf", "beast/f6_sky_ram", "beast/f7_void_hound", "beast/f7_plague_rat", "beast/lord_nihil", "beast/f8_giant_mole", "beast/f8_rowdy_calf", "beast/lord_brutus", "beast/f9_marsh_frog", "beast/f9_lake_serpent", "beast/lord_numel", "beast/f10_shore_monitor" -> T2_LENGTH;
+            case "beast/scorpion", "beast/f3_rock_crab", "beast/lord_vein_eater", "beast/f4_crystal_crab", "beast/f7_end_scorpion", "beast/f9_great_crayfish", "beast/f10_beach_crab", "beast/lord_ankara" -> T3_LENGTH;
+            case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct", "golem/f2_fungal_brute", "golem/f3_ore_golem", "golem/lord_dolga", "golem/f4_moss_guardian", "golem/f4_snow_ape", "golem/lord_goura", "golem/f5_ruin_sentinel", "golem/f5_obsidian_guard", "golem/lord_agnis", "golem/f6_cloud_giant", "golem/f6_frost_titanling", "golem/f7_blighted_treant", "golem/f7_amethyst_colossus", "golem/f8_hay_golem", "golem/f9_mud_golem", "golem/f10_coral_golem" -> T4_LENGTH;
+            case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit", "flyer/f1_meadow_wisp", "flyer/f2_moon_moth", "flyer/f2_owl_warden", "flyer/f2_will_o_wisp", "flyer/f3_giant_cave_bat", "flyer/f3_gem_wraith", "flyer/f4_mist_spirit", "flyer/f4_frost_heron", "flyer/f4_spray_wraith", "flyer/f5_cinder_wraith", "flyer/f5_scorch_vulture", "flyer/lord_scorch_eye", "flyer/f6_thunder_hawk", "flyer/f6_gale_spirit", "flyer/f6_young_griffin", "flyer/f6_star_sentinel", "flyer/lord_zephyr", "flyer/f7_hollow_eye", "flyer/f7_wandering_grudge", "flyer/f8_field_crow", "flyer/f8_wild_rooster", "flyer/f8_giant_bee", "flyer/f8_windmill_sprite", "flyer/f9_egret_spirit", "flyer/f9_giant_dragonfly", "flyer/f10_sea_harpy", "flyer/f10_tide_spirit" -> T5_LENGTH;
             case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> T6_LENGTH;
             case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T7_LENGTH;
             case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T8_LENGTH;
@@ -249,12 +267,12 @@ public final class RigData {
 
     private static float[] impacts(String key) {
         return switch (key) {
-            case "humanoid/bandit", "humanoid/ghoul", "humanoid/mummy", "humanoid/cultist", "humanoid/prisoner", "humanoid/jailer", "humanoid/ice_knight", "humanoid/frost_mage", "humanoid/fire_imp", "humanoid/dark_knight", "humanoid/void_mage", "humanoid/shade", "humanoid/dryad" -> T0_IMPACT;
-            case "humanoid/crossbowman" -> T1_IMPACT;
-            case "beast/wolf", "beast/snow_wolf", "beast/cave_rat", "beast/frost_hound", "beast/abyss_hound", "beast/salamander" -> T2_IMPACT;
-            case "beast/scorpion" -> T3_IMPACT;
-            case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct" -> T4_IMPACT;
-            case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit" -> T5_IMPACT;
+            case "humanoid/bandit", "humanoid/ghoul", "humanoid/mummy", "humanoid/cultist", "humanoid/prisoner", "humanoid/jailer", "humanoid/ice_knight", "humanoid/frost_mage", "humanoid/fire_imp", "humanoid/dark_knight", "humanoid/void_mage", "humanoid/shade", "humanoid/dryad", "humanoid/f1_bandit_scout", "humanoid/f1_goblin_pilferer", "humanoid/f1_living_scarecrow", "humanoid/f1_capling", "humanoid/f1_fallen_squire", "humanoid/lord_garm", "humanoid/f2_thorn_dryad", "humanoid/f2_night_stalker", "humanoid/lord_nebula", "humanoid/lord_belladonna", "humanoid/f3_kobold_miner", "humanoid/f3_dust_mummy", "humanoid/f3_sun_cultist", "humanoid/f3_rust_guard", "humanoid/f4_kappa", "humanoid/f4_lost_pilgrim", "humanoid/f4_frost_monk", "humanoid/f5_ember_imp", "humanoid/f5_relic_thief", "humanoid/f5_flame_priest", "humanoid/lord_valka", "humanoid/f6_sky_knight", "humanoid/f6_storm_mage", "humanoid/lord_alvin", "humanoid/f7_doom_knight", "humanoid/f7_shadow_assassin", "humanoid/f7_hex_witch", "humanoid/lord_xenos", "humanoid/lord_black_knight", "humanoid/f8_pumpkin_head", "humanoid/f8_lost_farmhand", "humanoid/f8_vine_lurker", "humanoid/lord_harvest_boss", "humanoid/lord_strom", "humanoid/f9_bog_ghoul", "humanoid/f9_reed_witch", "humanoid/f9_fisher_ghost", "humanoid/f9_water_imp", "humanoid/lord_melusine", "humanoid/lord_drowned_fisher", "humanoid/f10_deck_pirate", "humanoid/f10_pirate_brute", "humanoid/f10_ghost_sailor", "humanoid/f10_sea_witch", "humanoid/lord_barbas", "humanoid/lord_dock_brawler" -> T0_IMPACT;
+            case "humanoid/crossbowman", "humanoid/f1_bandit_crossbowman", "humanoid/lord_hook", "humanoid/f2_moonbow_hunter", "humanoid/lord_rustbone", "humanoid/lord_peak_sniper", "humanoid/f10_smuggler" -> T1_IMPACT;
+            case "beast/wolf", "beast/snow_wolf", "beast/cave_rat", "beast/frost_hound", "beast/abyss_hound", "beast/salamander", "beast/f1_horned_hare", "beast/f1_wild_boar", "beast/f1_stray_sheepdog", "beast/lord_durn", "beast/f2_moonshade_wolf", "beast/f2_twin_tailed_fox", "beast/f2_bark_lizard", "beast/lord_lunar", "beast/f3_golden_scarab", "beast/f3_tunnel_rat", "beast/f4_falls_toad", "beast/lord_mistweaver", "beast/lord_ord", "beast/f5_ash_hound", "beast/f5_magma_lizard", "beast/f5_lava_tortoise", "beast/f6_peak_wolf", "beast/f6_sky_ram", "beast/f7_void_hound", "beast/f7_plague_rat", "beast/lord_nihil", "beast/f8_giant_mole", "beast/f8_rowdy_calf", "beast/lord_brutus", "beast/f9_marsh_frog", "beast/f9_lake_serpent", "beast/lord_numel", "beast/f10_shore_monitor" -> T2_IMPACT;
+            case "beast/scorpion", "beast/f3_rock_crab", "beast/lord_vein_eater", "beast/f4_crystal_crab", "beast/f7_end_scorpion", "beast/f9_great_crayfish", "beast/f10_beach_crab", "beast/lord_ankara" -> T3_IMPACT;
+            case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct", "golem/f2_fungal_brute", "golem/f3_ore_golem", "golem/lord_dolga", "golem/f4_moss_guardian", "golem/f4_snow_ape", "golem/lord_goura", "golem/f5_ruin_sentinel", "golem/f5_obsidian_guard", "golem/lord_agnis", "golem/f6_cloud_giant", "golem/f6_frost_titanling", "golem/f7_blighted_treant", "golem/f7_amethyst_colossus", "golem/f8_hay_golem", "golem/f9_mud_golem", "golem/f10_coral_golem" -> T4_IMPACT;
+            case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit", "flyer/f1_meadow_wisp", "flyer/f2_moon_moth", "flyer/f2_owl_warden", "flyer/f2_will_o_wisp", "flyer/f3_giant_cave_bat", "flyer/f3_gem_wraith", "flyer/f4_mist_spirit", "flyer/f4_frost_heron", "flyer/f4_spray_wraith", "flyer/f5_cinder_wraith", "flyer/f5_scorch_vulture", "flyer/lord_scorch_eye", "flyer/f6_thunder_hawk", "flyer/f6_gale_spirit", "flyer/f6_young_griffin", "flyer/f6_star_sentinel", "flyer/lord_zephyr", "flyer/f7_hollow_eye", "flyer/f7_wandering_grudge", "flyer/f8_field_crow", "flyer/f8_wild_rooster", "flyer/f8_giant_bee", "flyer/f8_windmill_sprite", "flyer/f9_egret_spirit", "flyer/f9_giant_dragonfly", "flyer/f10_sea_harpy", "flyer/f10_tide_spirit" -> T5_IMPACT;
             case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> T6_IMPACT;
             case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T7_IMPACT;
             case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T8_IMPACT;

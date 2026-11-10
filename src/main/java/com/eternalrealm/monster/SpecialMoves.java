@@ -21,6 +21,9 @@ import java.util.Set;
 public final class SpecialMoves {
     /** Normal monsters from this level on get their first special move. */
     public static final int VETERAN_LEVEL = 30;
+    /** The ヌシ (field lords) use all three moves of their bodies, more often than elites. */
+    public static final int LORD_MOVES = 3;
+    public static final int LORD_COOLDOWN_TICKS = 110;
     public static final int ELITE_COOLDOWN_TICKS = 160;
     public static final int VETERAN_COOLDOWN_TICKS = 300;
     /** Delay after a monster starts fighting before its first special move. */
@@ -47,7 +50,7 @@ public final class SpecialMoves {
 
     /** Ticks between two special moves of a monster using {@code count} moves. */
     public static int cooldownTicks(int count) {
-        return count >= 2 ? ELITE_COOLDOWN_TICKS : VETERAN_COOLDOWN_TICKS;
+        return count >= LORD_MOVES ? LORD_COOLDOWN_TICKS : count >= 2 ? ELITE_COOLDOWN_TICKS : VETERAN_COOLDOWN_TICKS;
     }
 
     /**
@@ -57,6 +60,10 @@ public final class SpecialMoves {
      * @param variant the body's variant id (e.g. "dark_knight")
      */
     public static List<SpecialMove> forBody(String rig, String variant) {
+        List<SpecialMove> bestiary = BestiaryMoves.movesOf(variant);
+        if (bestiary != null) {
+            return bestiary; // three moves: the ヌシ use the third as well
+        }
         switch (variant) {
             case "salamander", "frost_hound" -> {
                 return List.of(SpecialMove.BREATH, SpecialMove.CHARGE);
@@ -133,7 +140,7 @@ public final class SpecialMoves {
         };
     }
 
-    /** The first {@code count} moves of a body (0..2). */
+    /** The first {@code count} moves of a body (0..3; the first bodies have two). */
     public static List<SpecialMove> movesOf(String rig, String variant, int count) {
         List<SpecialMove> all = forBody(rig, variant);
         return all.subList(0, Math.max(0, Math.min(count, all.size())));
@@ -141,6 +148,10 @@ public final class SpecialMoves {
 
     /** Colour of a body's markers by its element; physical moves are the red danger marker. */
     public static Telegraph.Style style(String variant) {
+        Telegraph.Style bestiary = BestiaryMoves.styleOf(variant);
+        if (bestiary != null) {
+            return bestiary;
+        }
         if (FIRE.contains(variant)) {
             return Telegraph.Style.FIRE;
         }

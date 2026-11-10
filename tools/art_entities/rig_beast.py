@@ -315,8 +315,13 @@ def variants():
                             'head': dict(scale=(1.1, 0.6, 0.7), pos=(0, -0.5, 0.5))},
                      overrides={'attack1': 'scorpion_attack1', 'attack2': 'scorpion_attack2'},
                      paint=deco_scorpion, glow=True, extra=dict(scale=1.2)))
+    import bestiary
+    V.extend(bestiary.variants_for('beast'))
     return V
 
 
 def rig():
-    return Rig('beast', 'BeastEnemy', geometry(), animations(), variants(), SLOTS)
+    import bestiary
+    r = Rig('beast', 'BeastEnemy', geometry(), animations(), variants(), SLOTS)
+    bestiary.snap_to_ground(r)
+    return r

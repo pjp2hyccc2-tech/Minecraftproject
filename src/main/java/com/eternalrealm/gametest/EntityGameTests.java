@@ -37,7 +37,8 @@ import java.util.List;
  * hitbox, plays every animation, fights (hits land at the impact frame), and dies with a death animation followed by
  * removal - all without exceptions on a real server.
  *
- * <p>Arena: 9x5x9 with a stone floor; entities stand at relative y=2 (see CombatGameTests). The giants also walk in
+ * <p>Arena: 9x5x9 with a stone floor; entities stand at relative y=2 (see CombatGameTests). The line-ups of all the
+ * enemy looks of a rig and the giants use
  * {@code boss_arena} (41x15x41: a closed stone hall with a 5x5 pillar in the middle and four smaller ones; made by
  * tools/gen-gametest-structures.py), where they also stand at relative y=2 (the template's floor layer is relative
  * y=1). Note: {@code GameTestHelper.relativePos} mirrors x and z (it turns positions by 180 degrees), unlike
@@ -54,22 +55,22 @@ public final class EntityGameTests {
 
     // ------------------------------------------------------------------------------------------------ enemies
 
-    @GameTest(template = ARENA, timeoutTicks = 300)
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 300)
     public static void humanoidVariantsSpawnAnimateAndDie(GameTestHelper helper) {
         enemyVariants(helper, EnemyRig.HUMANOID);
     }
 
-    @GameTest(template = ARENA, timeoutTicks = 300)
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 300)
     public static void beastVariantsSpawnAnimateAndDie(GameTestHelper helper) {
         enemyVariants(helper, EnemyRig.BEAST);
     }
 
-    @GameTest(template = ARENA, timeoutTicks = 300)
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 300)
     public static void golemVariantsSpawnAnimateAndDie(GameTestHelper helper) {
         enemyVariants(helper, EnemyRig.GOLEM);
     }
 
-    @GameTest(template = ARENA, timeoutTicks = 300)
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 300)
     public static void flyerVariantsSpawnAnimateAndDie(GameTestHelper helper) {
         enemyVariants(helper, EnemyRig.FLYER);
     }
@@ -85,13 +86,13 @@ public final class EntityGameTests {
         for (String id : variants) {
             check(EnemyVariant.of(rig, id).id().equals(id), "variant " + id + " has no behaviour entry");
         }
-        int columns = rig == EnemyRig.GOLEM ? 3 : 4;
-        int spacing = rig == EnemyRig.GOLEM ? 3 : 2;
+        List<BlockPos> spots = variantSpots(rig == EnemyRig.GOLEM ? 4 : 3);
+        check(spots.size() >= variants.size(), rig + ": " + variants.size() + " variants, " + spots.size() + " spots");
         List<ERMonster> spawned = new ArrayList<>();
         int maxDeath = 0;
         for (int i = 0; i < variants.size(); i++) {
             String id = variants.get(i);
-            BlockPos pos = new BlockPos(1 + (i % columns) * spacing, 2, 1 + (i / columns) * spacing);
+            BlockPos pos = spots.get(i);
             ERMonster mob = helper.spawn(EREntityTypes.enemy(rig), pos);
             mob.setVariant(id);
             check(id.equals(mob.getVariant()), "variant not applied: " + id);
@@ -129,6 +130,37 @@ public final class EntityGameTests {
             }
             helper.succeed();
         });
+    }
+
+    /**
+     * A grid of places in {@code boss_arena} for the variant line-ups, {@code spacing} blocks apart, clear of the walls
+     * and the pillars (the middle one at 18..22, the small ones at 10..11 and 29..30 on both axes).
+     */
+    private static List<BlockPos> variantSpots(int spacing) {
+        List<BlockPos> spots = new ArrayList<>();
+        for (int x = 3; x <= 37; x += spacing) {
+            for (int z = 3; z <= 37; z += spacing) {
+                if (nearPillar(x, z)) {
+                    continue;
+                }
+                spots.add(new BlockPos(x, 2, z));
+            }
+        }
+        return spots;
+    }
+
+    private static boolean nearPillar(int x, int z) {
+        if (x >= 15 && x <= 25 && z >= 15 && z <= 25) {
+            return true;
+        }
+        for (int cx : new int[]{10, 29}) {
+            for (int cz : new int[]{10, 29}) {
+                if (x >= cx - 3 && x <= cx + 4 && z >= cz - 3 && z <= cz + 4) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @GameTest(template = ARENA, timeoutTicks = 200)

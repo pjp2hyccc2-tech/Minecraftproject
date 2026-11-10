@@ -33,6 +33,7 @@ import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.UiData;
 import com.eternalrealm.world.field.FieldLayout;
 import com.eternalrealm.world.field.FieldThreats;
+import com.eternalrealm.world.field.LordTurns;
 import com.eternalrealm.world.field.Miasma;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -55,6 +56,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -91,8 +94,10 @@ import java.util.UUID;
  * <ul>
  *     <li><b>ヌシ</b>: each lord appears when a player comes near its home and it is due, much tougher than its kin
  *     (more health than the attribute cap allows is carried by a toughness factor), roams its territory, goes to
- *     sleep when nobody is around and comes back some minutes after it fell. Everyone who did a fair share of the
- *     damage gets the lord's rewards; the best contributor is the hero (殊勲).</li>
+ *     sleep when nobody is around and comes back some minutes after it fell. It fights like a small boss: all three
+ *     special moves of its body, helpers called at 70% and 30% health and a rage from 50% ({@link LordTurns}), and
+ *     the players fighting it see its health, the move it winds up and the damage ranking on the boss HUD. Everyone
+ *     who did a fair share of the damage gets the lord's rewards; the best contributor is the hero (殊勲).</li>
  *     <li><b>瘴気</b>: monsters slain in a field fill its gauge. An overflowing gauge brings an omen (warning to
  *     everyone, darker sky in the field), then the field's <b>災厄</b> manifests: when a player reaches its lair the lair
  *     is scarred flat and a boss fight starts that anyone close by joins. Subdued, it purifies the field (more
@@ -110,8 +115,14 @@ public final class FieldThreatService {
     private static final String LORD_TAG = ModInfo.MOD_ID + "_lord";
     private static final String LORD_ID = "er_lord";
     private static final String TOUGHNESS = "er_toughness";
+    /** Persistent data of a monster that answered a lord's call: the lord's id. */
+    public static final String HELPER_OF = "er_lord_helper";
     private static final String CALAMITY_TAG = ModInfo.MOD_ID + "_calamity";
     private static final double LORD_DAMAGE = 1.35;
+    /** Players this close to a lord in a fight see its HUD (those who hurt it, a little farther). */
+    private static final double HUD_RANGE = 28.0;
+    private static final double HUD_RANGE_FIGHTER = 48.0;
+    private static final int HUD_INTERVAL = 4;
     private static final double HEALTH_CAP = 1000.0;
     private static final int SCAR_COLUMNS_PER_TICK = 160;
     private static final int BOARD_TICKS = 100;
@@ -125,6 +136,11 @@ public final class FieldThreatService {
         long lastNearby;
         int level;
         Contributions contributions = new Contributions();
+        /** The turns of this appearance taken so far (helpers called, rage). */
+        java.util.EnumSet<LordTurns.Turn> turns = LordTurns.none();
+        boolean enraged;
+        /** Players shown this lord's HUD (they get its end when they leave or it falls). */
+        final Set<UUID> hud = new HashSet<>();
 
         LordState(FieldThreats.Lord lord) {
             this.lord = lord;
@@ -201,6 +217,9 @@ public final class FieldThreatService {
                     scarSlice(astoria, state, now);
                 }
             }
+            if (now % HUD_INTERVAL == 0) {
+                lordHuds(astoria);
+            }
             if (now % 20 == 0) {
                 tickLords(astoria, now);
                 tickCalamities(astoria, now);
@@ -251,6 +270,7 @@ public final class FieldThreatService {
                 state.lastNearby = now;
             } else if (now - state.lastNearby > FieldThreats.SLEEP_TICKS) {
                 body.discard(); // asleep: it comes back, healed, when someone wanders by
+                endHud(astoria, state, body.getUUID());
                 state.body = null;
                 state.dueAt = now;
                 state.contributions = new Contributions();
@@ -265,6 +285,43 @@ public final class FieldThreatService {
                         body.getZ(), 6, 0.4, 0.5, 0.4, 0.01);
             }
         }
+    }
+
+    /**
+     * Tests: the body of lord {@code lordId} made and tracked like a real appearance, but at {@code pos} in
+     * {@code level} (no announcement, no territory). Empty for an unknown lord.
+     */
+    public static Optional<Mob> spawnLordForTest(ServerLevel level, String lordId, BlockPos pos) {
+        FieldThreats.Lord lord = FieldThreats.lord(lordId).orElse(null);
+        MonsterTemplate template = lord == null ? null : Monsters.byId(lord.template()).orElse(null);
+        if (template == null) {
+            return Optional.empty();
+        }
+        LordState state = LORDS.computeIfAbsent(lordId, id -> new LordState(lord));
+        int lordLevel = Math.min(MonsterScaling.MAX_LEVEL, template.levels().max() + FieldThreats.LORD_LEVEL_BONUS);
+        Optional<Mob> made = MonsterFactory.create(level, new MonsterSpawn(template, lordLevel), false);
+        made.ifPresent(mob -> {
+            mob.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.0F, 0.0F);
+            mob.getPersistentData().putString(LORD_ID, lord.id());
+            mob.getPersistentData().putDouble(TOUGHNESS, 1.0);
+            mob.addTag(LORD_TAG);
+            if (mob instanceof com.eternalrealm.entity.ERMonster monster) {
+                monster.setSpecialMoves(com.eternalrealm.monster.SpecialMoves.LORD_MOVES);
+            }
+            state.turns = LordTurns.none();
+            state.enraged = false;
+            state.contributions = new Contributions();
+            state.level = lordLevel;
+            state.body = mob.getUUID();
+            level.addFreshEntity(mob);
+        });
+        return made;
+    }
+
+    /** Tests: whether the lord {@code lordId} has flown into its rage in its current appearance. */
+    public static boolean enragedForTest(String lordId) {
+        LordState state = LORDS.get(lordId);
+        return state != null && state.enraged;
     }
 
     private static void spawnLord(ServerLevel astoria, LordState state, long now) {
@@ -299,6 +356,11 @@ public final class FieldThreatService {
             walker.restrictTo(ground, lord.territory());
         }
         mob.setPersistenceRequired();
+        if (mob instanceof com.eternalrealm.entity.ERMonster monster) {
+            monster.setSpecialMoves(com.eternalrealm.monster.SpecialMoves.LORD_MOVES); // all three moves of its body
+        }
+        state.turns = LordTurns.none();
+        state.enraged = false;
         mob.setCustomName(Component.translatable("threat.eternalrealm.lord.nameplate", level,
                 Component.translatable(lord.translationKey())).withStyle(ChatFormatting.LIGHT_PURPLE));
         mob.setCustomNameVisible(true);
@@ -358,10 +420,17 @@ public final class FieldThreatService {
         }
     }
 
-    /** What a lord's blows cost the players (for the hero), and what players lose to a calamity's surroundings. */
+    /**
+     * What a lord's blows cost the players (for the hero); and a lord's turns when a blow takes its health past a mark.
+     */
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onLivingDamage(LivingDamageEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
+            LivingEntity victim = event.getEntity();
+            if (!victim.level().isClientSide() && victim.getTags().contains(LORD_TAG)) {
+                lordOf(victim).ifPresent(state -> turns((ServerLevel) victim.level(), state, victim,
+                        (victim.getHealth() - event.getAmount()) / Math.max(1.0F, victim.getMaxHealth())));
+            }
             return;
         }
         Entity attacker = event.getSource().getEntity();
@@ -397,6 +466,7 @@ public final class FieldThreatService {
     }
 
     private static void lordDown(ServerLevel astoria, LordState state, LivingEntity body, Entity killer, long now) {
+        endHud(astoria, state, body.getUUID());
         state.body = null;
         state.dueAt = now + FieldThreats.respawnTicks(state.lord, RANDOM);
         if (killer instanceof ServerPlayer player) {
@@ -466,6 +536,204 @@ public final class FieldThreatService {
             data.add("rewards", rewards);
             UiData.send(player, RESULT_CHANNEL, data);
         }
+    }
+
+    // ------------------------------------------------------------------ the lord fight
+
+    /** The turns whose marks the lord's health fraction {@code health} has reached: calls for help, the rage. */
+    private static void turns(ServerLevel level, LordState state, LivingEntity body, double health) {
+        if (health <= 0.0) {
+            return; // the killing blow
+        }
+        for (LordTurns.Turn turn : LordTurns.due(health, state.turns)) {
+            state.turns.add(turn);
+            Component name = Component.translatable(state.lord.translationKey()).withStyle(ChatFormatting.LIGHT_PURPLE);
+            Component message = Component.translatable(turn.messageKey(), name).withStyle(ChatFormatting.RED);
+            for (ServerPlayer player : level.players()) {
+                if (player.distanceToSqr(body) < 48.0 * 48.0) {
+                    player.displayClientMessage(message, false);
+                }
+            }
+            if (turn.calls()) {
+                callHelpers(level, state, body);
+            } else {
+                rage(level, state, body);
+            }
+        }
+    }
+
+    /** Monsters of the lord's field answer its call and join its fight. */
+    private static void callHelpers(ServerLevel level, LordState state, LivingEntity body) {
+        com.eternalrealm.world.AreaDefinition area = com.eternalrealm.world.Areas.require(state.lord.field());
+        com.eternalrealm.monster.MonsterTable table = Monsters.tableFor(area);
+        LivingEntity target = body instanceof Mob mob ? mob.getTarget() : null;
+        level.playSound(null, body.getX(), body.getY(), body.getZ(), SoundEvents.EVOKER_PREPARE_SUMMON,
+                SoundSource.HOSTILE, 1.4F, 0.8F);
+        for (int i = 0; i < LordTurns.HELPERS; i++) {
+            double angle = RANDOM.nextDouble() * Math.PI * 2.0;
+            double distance = 2.5 + body.getBbWidth();
+            int x = (int) Math.floor(body.getX() + Math.cos(angle) * distance);
+            int z = (int) Math.floor(body.getZ() + Math.sin(angle) * distance);
+            BlockPos ground = surface(level, x, z);
+            if (Math.abs(ground.getY() - body.getY()) > 4.0) {
+                ground = body.blockPosition();
+            }
+            MonsterSpawn spawn = table.pick(area.levelRange(), RANDOM);
+            BlockPos at = ground;
+            MonsterFactory.spawn(level, spawn, at.getX() + 0.5, at.getY(), at.getZ() + 0.5,
+                    (float) Math.toDegrees(angle)).ifPresent(helper -> {
+                        helper.getPersistentData().putString(HELPER_OF, state.lord.id());
+                        if (target != null && target.isAlive()) {
+                            helper.setTarget(target);
+                        }
+                        level.sendParticles(ParticleTypes.SOUL, helper.getX(), helper.getY() + 0.5, helper.getZ(), 16,
+                                0.4, 0.6, 0.4, 0.03);
+                        level.sendParticles(ParticleTypes.LARGE_SMOKE, helper.getX(), helper.getY() + 0.2, helper.getZ(),
+                                10, 0.5, 0.1, 0.5, 0.02);
+                    });
+        }
+    }
+
+    /** The roar at half health: everyone close is thrown back, and the lord fights faster and harder from now on. */
+    private static void rage(ServerLevel level, LordState state, LivingEntity body) {
+        state.enraged = true;
+        level.playSound(null, body.getX(), body.getY(), body.getZ(), SoundEvents.RAVAGER_ROAR, SoundSource.HOSTILE, 1.8F,
+                0.6F);
+        level.sendParticles(ParticleTypes.ANGRY_VILLAGER, body.getX(), body.getY() + body.getBbHeight() + 0.3,
+                body.getZ(), 8, 0.6, 0.3, 0.6, 0.0);
+        level.sendParticles(ParticleTypes.LAVA, body.getX(), body.getY() + 0.5, body.getZ(), 24, 1.2, 0.4, 1.2, 0.0);
+        level.sendParticles(ParticleTypes.SONIC_BOOM, body.getX(), body.getY() + body.getBbHeight() * 0.6, body.getZ(),
+                1, 0.0, 0.0, 0.0, 0.0);
+        double radius = LordTurns.ROAR_RADIUS + body.getBbWidth() * 0.5;
+        for (ServerPlayer player : level.players()) {
+            double dx = player.getX() - body.getX();
+            double dz = player.getZ() - body.getZ();
+            double distance = Math.sqrt(dx * dx + dz * dz);
+            if (distance < radius && !player.isSpectator() && !player.isCreative()) {
+                double push = 1.1 * (1.0 - distance / radius) + 0.4;
+                player.push(dx / Math.max(0.3, distance) * push, 0.35, dz / Math.max(0.3, distance) * push);
+                player.hurtMarked = true;
+            }
+        }
+        body.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 60 * 10, 0, false, false));
+        MonsterTags.scaleDamage(body, LordTurns.RAGE_DAMAGE);
+    }
+
+    /**
+     * The boss HUD for the players fighting a lord: its true health (above the attribute cap), the special move it
+     * winds up, its rage and the damage ranking. Sent every few ticks while a lord has someone to show it to.
+     */
+    private static void lordHuds(ServerLevel astoria) {
+        for (LordState state : LORDS.values()) {
+            Entity entity = state.body == null ? null : astoria.getEntity(state.body);
+            if (!(entity instanceof Mob body) || !body.isAlive()) {
+                continue;
+            }
+            boolean fighting = body.getTarget() instanceof ServerPlayer || !state.contributions.byDamage().isEmpty();
+            Set<UUID> audience = new HashSet<>();
+            if (fighting) {
+                for (ServerPlayer player : astoria.players()) {
+                    boolean fighter = state.contributions.byDamage().stream().anyMatch(l -> l.id().equals(player.getUUID()));
+                    double range = fighter ? HUD_RANGE_FIGHTER : HUD_RANGE;
+                    if (player.distanceToSqr(body) < range * range) {
+                        audience.add(player.getUUID());
+                    }
+                }
+            }
+            for (UUID gone : List.copyOf(state.hud)) {
+                if (!audience.contains(gone)) {
+                    ServerPlayer player = astoria.getServer().getPlayerList().getPlayer(gone);
+                    if (player != null) {
+                        UiData.send(player, BossFight.HUD_CHANNEL, hudEnd(body.getUUID()));
+                    }
+                    state.hud.remove(gone);
+                }
+            }
+            if (audience.isEmpty()) {
+                continue;
+            }
+            JsonObject base = lordHud(state, body);
+            List<Contributions.Line> ranking = state.contributions.byDamage();
+            for (UUID id : audience) {
+                ServerPlayer player = astoria.getServer().getPlayerList().getPlayer(id);
+                if (player == null) {
+                    continue;
+                }
+                JsonObject data = base.deepCopy();
+                JsonArray rows = new JsonArray();
+                int place = 0;
+                for (Contributions.Line line : ranking) {
+                    place++;
+                    boolean me = line.id().equals(id);
+                    if (place > BossFight.RANKING_ROWS && !me) {
+                        continue;
+                    }
+                    JsonObject row = new JsonObject();
+                    row.addProperty("pos", place);
+                    row.addProperty("name", line.name());
+                    row.addProperty("job", line.job());
+                    row.addProperty("damage", Math.round(line.damage()));
+                    row.addProperty("share", Math.round(line.share() * 1000.0) / 1000.0);
+                    if (me) {
+                        row.addProperty("me", true);
+                    }
+                    rows.add(row);
+                }
+                data.add("rank", rows);
+                UiData.send(player, BossFight.HUD_CHANNEL, data);
+                state.hud.add(id);
+            }
+        }
+    }
+
+    private static JsonObject lordHud(LordState state, Mob body) {
+        double toughness = body.getPersistentData().contains(TOUGHNESS) ? body.getPersistentData().getDouble(TOUGHNESS)
+                : 1.0;
+        double scale = 1.0 / Math.max(0.05, Math.min(1.0, toughness));
+        double max = body.getMaxHealth() * scale;
+        double hp = Math.max(0.0, body.getHealth()) * scale;
+        JsonObject data = new JsonObject();
+        data.addProperty("id", body.getUUID().toString());
+        data.addProperty("name", Component.Serializer.toJson(Component.translatable(state.lord.translationKey())));
+        data.addProperty("boss", state.lord.id());
+        data.addProperty("level", state.level);
+        data.addProperty("difficulty", "lord");
+        data.addProperty("difficultyKey", "threat.eternalrealm.hud.lord");
+        data.addProperty("hp", Math.round(hp * 10.0) / 10.0);
+        data.addProperty("max", Math.round(max * 10.0) / 10.0);
+        data.addProperty("layers", Math.max(3, Math.min(10, (int) Math.round(max / 450.0))));
+        data.addProperty("phase", 0);
+        data.addProperty("phases", 1);
+        data.addProperty("enraged", state.enraged);
+        data.addProperty("enrage", -1.0);
+        if (body instanceof com.eternalrealm.entity.ERMonster monster && monster.currentSpecialMove() != null
+                && monster.specialTicksLeft() > 0) {
+            com.eternalrealm.monster.SpecialMove move = monster.currentSpecialMove();
+            JsonObject cast = new JsonObject();
+            cast.addProperty("key", "special." + ModInfo.MOD_ID + "." + move.id());
+            cast.addProperty("total", move.windupTicks() / 20.0);
+            cast.addProperty("left", monster.specialTicksLeft() / 20.0);
+            data.add("cast", cast);
+        }
+        return data;
+    }
+
+    private static JsonObject hudEnd(UUID body) {
+        JsonObject end = new JsonObject();
+        end.addProperty("id", body.toString());
+        end.addProperty("end", true);
+        return end;
+    }
+
+    /** The lord is gone (fallen or asleep): its HUD goes away for everyone who had it. */
+    private static void endHud(ServerLevel level, LordState state, UUID body) {
+        for (UUID id : state.hud) {
+            ServerPlayer player = level.getServer().getPlayerList().getPlayer(id);
+            if (player != null) {
+                UiData.send(player, BossFight.HUD_CHANNEL, hudEnd(body));
+            }
+        }
+        state.hud.clear();
     }
 
     // ------------------------------------------------------------------ miasma and calamities

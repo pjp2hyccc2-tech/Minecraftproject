@@ -19,13 +19,14 @@ import java.util.List;
 
 /**
  * 討伐手配書 — the wanted board of the fields: for every field its recommended levels, its 瘴気 gauge and phase, its
- * calamity (sleeping, omen, risen, or the field purified) and its two lords (out now, or back in mm:ss). Opened from
+ * calamity (sleeping, omen, risen, or the field purified) and its three lords (out now, or back in mm:ss). Opened from
  * the map; scrolls with the mouse wheel.
  */
 public final class ThreatBoardScreen extends Screen {
     private static final int GOLD = 0xFFE8C66A;
     private static final int BORDER = 0xFF7A5A26;
-    private static final int ROW = 50;
+    /** Height of one field: the name row, the calamity and one line per lord (three), and a gap. */
+    private static final int ROW = 24 + 3 * 11 + 6;
     private final Screen parent;
     private double scroll;
 

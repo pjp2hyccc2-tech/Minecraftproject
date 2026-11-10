@@ -151,6 +151,7 @@ public final class BossHudOverlay implements IGuiOverlay {
         int tagColor = switch (difficulty) {
             case "hard" -> 0xFFE0703A;
             case "ex" -> 0xFFD050E0;
+            case "lord" -> 0xFFC890FF;
             default -> 0xFF8FC8FF;
         };
         graphics.drawString(font, tag, left, top, tagColor);
