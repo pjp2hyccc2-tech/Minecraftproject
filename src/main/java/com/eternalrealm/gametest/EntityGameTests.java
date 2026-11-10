@@ -32,7 +32,8 @@ import java.util.List;
  *
  * <p>Arena: 9x5x9 with a stone floor; entities stand at relative y=2 (see CombatGameTests). The giants also walk in
  * {@code boss_arena} (41x6x41, stone floor at y=0, walls, a 5x5 pillar in the middle and four smaller ones; made by
- * tools/gen-gametest-structures.py), where they stand at relative y=1.</p>
+ * tools/gen-gametest-structures.py), where they also stand at relative y=2 (the template's floor layer is relative
+ * y=1).</p>
  */
 @GameTestHolder(ModInfo.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -320,8 +321,8 @@ public final class EntityGameTests {
      * straight steering), never sinks into a wall or a pillar on the way, and its slam lands from its own reach.
      */
     private static void giantReachesItsTarget(GameTestHelper helper, BossKind kind) {
-        ERBoss boss = helper.spawn(EREntityTypes.bossType(kind).get(), new BlockPos(6, 1, 6));
-        IronGolem target = helper.spawn(EntityType.IRON_GOLEM, new BlockPos(34, 1, 34));
+        ERBoss boss = helper.spawn(EREntityTypes.bossType(kind).get(), new BlockPos(6, 2, 6));
+        IronGolem target = helper.spawn(EntityType.IRON_GOLEM, new BlockPos(34, 2, 34));
         target.setNoAi(true);
         float before = target.getHealth();
         boss.setTarget(target);
@@ -346,7 +347,7 @@ public final class EntityGameTests {
     /** Later forms are a little bigger, model and hitbox alike, without sinking into the floor or the walls. */
     @GameTest(template = BOSS_ARENA, timeoutTicks = 100)
     public static void bossesGrowWithTheirForms(GameTestHelper helper) {
-        ERBoss boss = helper.spawn(EREntityTypes.bossType(BossKind.B7).get(), new BlockPos(8, 1, 20));
+        ERBoss boss = helper.spawn(EREntityTypes.bossType(BossKind.B7).get(), new BlockPos(8, 2, 20));
         boss.setAiFrozen(true);
         float width = boss.getBbWidth();
         float height = boss.getBbHeight();

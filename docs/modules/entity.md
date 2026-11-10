@@ -151,7 +151,7 @@ boss.setShielded(true); boss.setEnraged(true); boss.setPhase(2); boss.bossId();
 ## 5. テスト
 
 - GameTest `EntityGameTests`: 全バリアントの出現・縮尺・アニメーション・被弾・死亡アニメーション後の除去、近接/遠隔攻撃の命中、NBT保存、全ボスの全アニメーション・状態・耐性・死亡演出後の除去、ボスAIの叩きつけ命中。
-  巨体の移動（`boss_arena` 41×6×41、壁と中央の柱。`tools/gen-gametest-structures.py` で生成）: b2・b3・b6・final が柱を回り込んで対角の目標に届き叩きつける、その間ずっと壁や柱にめり込まない。
+  巨体の移動（`boss_arena` 41×6×41、壁と中央の柱。`tools/gen-gametest-structures.py` で生成）: b2・b3・b6・final が柱を回り込んで対角の目標に届き叩きつける（経路がなければ直進し、進めなければ障害物の横へ回り込む）、その間ずっと壁や柱にめり込まない。
   `bossesGrowWithTheirForms`: 最終形態で当たり判定とモデルが12%大きく、めり込まない。
 - 単体 `EntityAssetsTest`: テクスチャ・名前・UV表サイズ（テクセル密度 `xN` を含む）・ボスとの対応。
 - 生成時の検査（`generate.py`）: ボスのインパクトがtick単位、同じボスの形態どうしで動作の時間が同じ、Javaの1メソッドに収まるキー数。
