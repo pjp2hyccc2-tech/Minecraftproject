@@ -1,0 +1,148 @@
+package com.eternalrealm.monster.forge;
+
+import com.eternalrealm.config.ERServerConfig;
+import com.eternalrealm.monster.Temper;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * The calm monsters of the habitats ({@link Temper}): they pick no fight with a player until that player hurts them or
+ * stays close for a while, and a calm one deals no damage (no touch damage of slimes either). Every way a monster picks
+ * a target goes through {@link Mob#setTarget}, so vetoing the target change covers vanilla goals, the mod's own and
+ * the spawner's aggro alike. Server thread only.
+ */
+public final class MonsterTempers {
+    /** Persistent tag of a monster that is calm until provoked (habitat monsters). */
+    public static final String CALM_TAG = "er_calm";
+    /** How often the habitats look around (ticks; the spawner calls {@link #look} at this pace). */
+    public static final int LOOK_STEP = 20;
+
+    private static final Map<UUID, Temper> TEMPERS = new HashMap<>();
+
+    private MonsterTempers() {
+    }
+
+    /** Marks a freshly spawned habitat monster as calm until provoked. */
+    public static void makeCalm(Mob mob) {
+        mob.getPersistentData().putBoolean(CALM_TAG, true);
+    }
+
+    /** A monster with a temper: a habitat monster while calm habitats are switched on. */
+    public static boolean hasTemper(Entity entity) {
+        return entity instanceof Mob && entity.getPersistentData().getBoolean(CALM_TAG)
+                && ERServerConfig.CALM_HABITATS.get();
+    }
+
+    private static Temper temper(Mob mob) {
+        return TEMPERS.computeIfAbsent(mob.getUUID(),
+                id -> new Temper(Math.max(0, ERServerConfig.LINGER_SECONDS.get()) * 20));
+    }
+
+    /** Whether {@code mob} may fight {@code player} (always, for monsters without a temper). */
+    public static boolean mayFight(Mob mob, Player player) {
+        return !hasTemper(mob) || temper(mob).mayTarget(player.getUUID());
+    }
+
+    /** A calm monster turns only on the players who provoked it. */
+    public static void onChangeTarget(LivingChangeTargetEvent event) {
+        if (event.getEntity() instanceof Mob mob && !mob.level().isClientSide()
+                && event.getNewTarget() instanceof Player player && !mayFight(mob, player)) {
+            event.setCanceled(true);
+        }
+    }
+
+    /**
+     * Hurting a calm monster provokes it (it turns on the attacker); a monster that is still calm deals no damage to
+     * players (touch damage, a stray swing).
+     */
+    public static void onLivingAttack(LivingAttackEvent event) {
+        LivingEntity victim = event.getEntity();
+        if (victim.level().isClientSide()) {
+            return;
+        }
+        Entity source = event.getSource().getEntity();
+        if (source instanceof ServerPlayer player && victim instanceof Mob mob && hasTemper(mob) && !player.isSpectator()) {
+            if (temper(mob).provoke(player.getUUID())) {
+                angry(mob);
+            }
+            if (mob.getTarget() == null || !mob.getTarget().isAlive()) {
+                mob.setTarget(player);
+            }
+            return;
+        }
+        if (victim instanceof Player && source instanceof Mob mob && hasTemper(mob) && temper(mob).isCalm()) {
+            event.setCanceled(true);
+        }
+    }
+
+    public static void onEntityLeave(EntityLeaveLevelEvent event) {
+        if (!event.getLevel().isClientSide()) {
+            TEMPERS.remove(event.getEntity().getUUID());
+        }
+    }
+
+    public static void clear() {
+        TEMPERS.clear();
+    }
+
+    /**
+     * One look around of a habitat's monsters ({@link #LOOK_STEP} ticks after the last): players staying close annoy
+     * them; halfway a monster turns to look and growls, at the end it attacks.
+     */
+    public static void look(ServerLevel level, List<Mob> monsters, List<ServerPlayer> players) {
+        if (!ERServerConfig.CALM_HABITATS.get()) {
+            return;
+        }
+        double radius = ERServerConfig.LINGER_RADIUS.get();
+        for (Mob mob : monsters) {
+            if (!hasTemper(mob) || !mob.isAlive()) {
+                continue;
+            }
+            List<UUID> near = new ArrayList<>();
+            Map<UUID, ServerPlayer> byId = new HashMap<>();
+            for (ServerPlayer player : players) {
+                if (!player.isCreative() && !player.isSpectator() && player.isAlive()
+                        && mob.distanceToSqr(player) <= radius * radius && mob.hasLineOfSight(player)) {
+                    near.add(player.getUUID());
+                    byId.put(player.getUUID(), player);
+                }
+            }
+            boolean fighting = mob.getTarget() != null && mob.getTarget().isAlive();
+            Temper.Look look = temper(mob).look(near, LOOK_STEP, fighting);
+            if (look.warned() != null) {
+                ServerPlayer player = byId.get(look.warned());
+                mob.getLookControl().setLookAt(player, 30.0F, 30.0F);
+                mob.playAmbientSound();
+            }
+            if (look.provoked() != null) {
+                ServerPlayer player = byId.get(look.provoked());
+                angry(mob);
+                if (!fighting) {
+                    mob.setTarget(player);
+                }
+            }
+        }
+    }
+
+    /** The moment a calm monster turns hostile: a puff of anger over its head. */
+    private static void angry(Mob mob) {
+        if (mob.level() instanceof ServerLevel level) {
+            level.sendParticles(ParticleTypes.ANGRY_VILLAGER, mob.getX(), mob.getY() + mob.getBbHeight() + 0.4,
+                    mob.getZ(), 3, 0.3, 0.1, 0.3, 0.0);
+        }
+    }
+}

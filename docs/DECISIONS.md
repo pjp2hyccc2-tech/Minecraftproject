@@ -43,6 +43,35 @@
 | D-036 | 武器を持っている間の右クリックはガード専用。オフハンドのアイテムはしゃがみ＋右クリックで使う。他のアイテムを使用中（盾・食事・弓など）は攻撃・回避・スキルを受け付けない（サーバーとクライアントの両方） | ガードが拒否されたときにオフハンドの盾へ流れ、バニラの100%防御の裏で連撃できた（独立レビューで指摘） | 確定（Phase 2） |
 | D-037 | パリィの受付はガード開始ごとに開くが、前回のガード開始から16tick未満なら開かない | 右クリックの連打で受付を出し続けられた（自己レビュー・独立レビュー双方で指摘） | 確定（Phase 2） |
 
+## D-CALM: habitats twice as large; their monsters are calm until provoked and appear 4 blocks apart (2026-11-11)
+The owner asked for spawn areas about twice as large, monsters that do not attack until the player attacks them or
+stays near them, and about four blocks between spawns. Habitats got √2 × their radius (40/42/45 instead of 28/30/32,
+twice the area) and were placed anew by `FieldSitesGenerator --keep-waystones`, which keeps the 44 named minor
+waystones where they are; a habitat may now touch a shore with up to a quarter of its rim (nothing spawns in water) and
+the rims of two habitats are 16 apart (was 24). The harbour, mostly sea, has no room for the second homes of its three
+common kinds, whose first homes hold half again as many monsters instead (157 habitats). A new habitat monster appears
+at least 4 blocks from any other monster and keeps near the spot it appeared at instead of bunching in the middle.
+Habitat monsters are calm (`monster.Temper`, `MonsterTempers`): they take no player as a target until that player
+hurts them or stays within 8 blocks for 8 seconds (they turn to look and growl halfway), deal no damage while calm
+(no touch damage), fight only those who provoked them and settle down 10 s after they have nobody to fight. Vetoing the
+target change (`LivingChangeTargetEvent`) covers every way a monster picks a target. Server config
+`monsters.calmUntilProvoked` / `lingerSeconds` / `lingerRadius`. Lords, dungeon monsters and bosses are unchanged. A
+wandering boss's arena may come up to a habitat's rim where a field would otherwise have fewer than three spots.
+
+## D-CROWD: attacks pass through other players; crowd bosses have half again their health (2026-11-11)
+The owner asked that, outside arena matches, attacks never hit other players (raids are crowded) and that every raid
+boss have 1.5 × its health. The mod's attacks already skipped players; now the mod's arrows and spells never collide
+with a player on the client either, vanilla projectiles a player shoots fly through other players (impact cancelled),
+and a bare left click aimed at another player lands on the creature behind. "Raid bosses" was read as every boss
+fought by a crowd: the final raid boss and the 25 field bosses (calamities and wanderers); dungeon bosses (parties of
+1-5) are unchanged. Their enrage timers grew by the same factor (field 6 → 9 min, final raid 7½ → 11¼ min).
+
+## D-LEVEL100: the level cap is 100 (2026-11-11)
+The owner asked for a level cap of 100 (D-002 had 50). The server config key changed from `character.levelCap`
+(default 50) to `character.maxLevel` (default 100) so that worlds whose config still says 50 pick up the new cap. The
+skill point economy is unchanged: 218 points at level 100 master about 80 % of a tree (266), never all of it. Content
+(areas, gear, bosses) still tops out around level 50-55; levels above that come from hunting, bosses and raids there.
+
 ## D-HABITATS: field monsters live in fixed habitats; five times as many waystones (2026-11-10)
 The owner asked for a fixed spawn place for every monster of every field (to make levelling and farming materials
 easier) and for five times as many waystones. Every normal monster of a field got a habitat (the three common ones two):

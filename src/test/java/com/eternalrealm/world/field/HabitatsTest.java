@@ -56,8 +56,9 @@ public class HabitatsTest {
             MonsterTemplate template = Monsters.require(habitat.monster());
             assertEquals(habitat.id(), MonsterRole.NORMAL, template.role());
             assertEquals(habitat.id(), habitat.field(), FieldLayout.areaAt(habitat.x(), habitat.z()));
-            assertTrue(habitat.id() + " is not on walkable land", FieldSitesGenerator.landCircle(habitat.field(),
+            assertTrue(habitat.id() + " is not on walkable land", FieldSitesGenerator.habitatGround(habitat.field(),
                     habitat.x(), habitat.z(), habitat.radius(), FieldSitesGenerator.slopeLimit(habitat.field())));
+            assertTrue(habitat.id() + " is not twice the first area", habitat.radius() >= 40);
             assertTrue(habitat.id() + " is too close to the capital",
                     FieldLayout.capitalDistance(habitat.x(), habitat.z()) >= habitat.radius() + 40.0);
             for (FieldThreats.Lord lord : FieldThreats.lords()) {
@@ -80,7 +81,7 @@ public class HabitatsTest {
             for (Habitats.Habitat other : all) {
                 if (other != habitat) {
                     assertTrue(habitat.id() + " overlaps " + other.id(), Math.hypot(habitat.x() - other.x(),
-                            habitat.z() - other.z()) >= habitat.radius() + other.radius() + 24.0);
+                            habitat.z() - other.z()) >= habitat.radius() + other.radius() + FieldSitesGenerator.HABITAT_GAP);
                 }
             }
         }

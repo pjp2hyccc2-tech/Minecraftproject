@@ -156,8 +156,9 @@ public final class JobGameTests {
     }
 
     /**
-     * In a crowd, attacks go through allies: a sword swing through an ally hits the golem behind, a vanilla punch never
-     * hurts the ally, and an arrow flies through them (its impact on the ally is cancelled, on the golem it is not).
+     * In a crowd, attacks go through allies: a sword swing through an ally hits the golem behind (the ally is no target
+     * and takes nothing), a vanilla punch on the ally is cancelled, and an arrow flies through them (its impact on the
+     * ally is cancelled, on the golem it is not).
      */
     @GameTest(template = ARENA)
     public static void attacksGoThroughOtherPlayers(GameTestHelper helper) {
@@ -179,8 +180,11 @@ public final class JobGameTests {
         check(golem.getHealth() < golemBefore, "the golem behind the ally was not hit");
         check(ally.getHealth() == allyBefore, "the swing hurt the ally");
 
-        attacker.attack(ally);
-        check(ally.getHealth() == allyBefore, "a vanilla attack hurt the ally");
+        // fake players are invulnerable anyway, so the vanilla attack is checked at its event
+        net.minecraftforge.event.entity.living.LivingAttackEvent punch = new net.minecraftforge.event.entity.living
+                .LivingAttackEvent(ally, attacker.damageSources().playerAttack(attacker), 5.0F);
+        com.eternalrealm.combat.forge.CombatEvents.onLivingAttack(punch);
+        check(punch.isCanceled(), "a vanilla attack on the ally must be cancelled");
 
         net.minecraft.world.entity.projectile.Arrow arrow =
                 new net.minecraft.world.entity.projectile.Arrow(helper.getLevel(), attacker);

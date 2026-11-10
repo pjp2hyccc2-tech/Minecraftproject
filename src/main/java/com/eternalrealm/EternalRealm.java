@@ -114,6 +114,11 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onLivingTick);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onMobGriefing);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onEntityJoin);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onChangeTarget);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onLivingAttack);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onEntityLeave);
+        forgeBus.addListener((net.minecraftforge.event.server.ServerStoppedEvent event) ->
+                com.eternalrealm.monster.forge.MonsterTempers.clear());
         forgeBus.addListener(net.minecraftforge.eventbus.api.EventPriority.HIGHEST,
                 com.eternalrealm.monster.forge.VanillaSpawnBlocker::onFinalizeSpawn);
         forgeBus.addListener(com.eternalrealm.quest.forge.QuestActions::onItemPickup);
