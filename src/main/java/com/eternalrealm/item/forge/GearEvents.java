@@ -34,9 +34,12 @@ public final class GearEvents {
         WeaponBonus.setReader(GearEvents::weaponBonus);
     }
 
+    /** A held weapon the player's job cannot use gives nothing (it cannot be used at all). */
     static PlayerStats.Gear readGear(ServerPlayer player) {
         List<EquipmentData> worn = new ArrayList<>(5);
-        EquipmentStacks.read(player.getMainHandItem()).filter(EquipmentData::isWeapon).ifPresent(worn::add);
+        com.eternalrealm.job.JobType job = job(player);
+        EquipmentStacks.read(player.getMainHandItem()).filter(EquipmentData::isWeapon)
+                .filter(data -> com.eternalrealm.job.Jobs.canUse(job, data.weaponType())).ifPresent(worn::add);
         for (EquipmentSlot slot : EquipmentSlot.armor()) {
             ItemStack stack = player.getItemBySlot(GearArmorItem.vanillaSlot(slot));
             EquipmentStacks.read(stack).filter(data -> data.slot() == slot).ifPresent(worn::add);
@@ -51,6 +54,12 @@ public final class GearEvents {
     static double weaponBonus(ServerPlayer player, ItemStack stack) {
         Optional<EquipmentData> held = EquipmentStacks.read(stack);
         return held.map(data -> Gear.weaponBonusAttack(data, level(player), player.getUUID())).orElse(0.0);
+    }
+
+    private static com.eternalrealm.job.JobType job(ServerPlayer player) {
+        return ServerContext.current().flatMap(context -> context.playerData().snapshot(player.getUUID()))
+                .map(snapshot -> com.eternalrealm.job.JobType.fromStored(snapshot.jobId()))
+                .orElse(com.eternalrealm.job.JobType.NONE);
     }
 
     private static int level(ServerPlayer player) {

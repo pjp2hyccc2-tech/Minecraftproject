@@ -12,11 +12,13 @@ public enum CombatRequest {
     DODGE(3, -1),
     /** The weapon's own skill (skill slot 0). */
     SKILL(4, 0),
-    /** Job skills in the four job skill slots (skill slots 1..4; slot 4 is the ultimate). */
+    /** Job skills in the job skill slots (skill slots 1..6; slot 4 is the ultimate). Slots 5 and 6: protocol 5. */
     JOB_SKILL_1(5, 1),
     JOB_SKILL_2(6, 2),
     JOB_SKILL_3(7, 3),
-    JOB_SKILL_4(8, 4);
+    JOB_SKILL_4(8, 4),
+    JOB_SKILL_5(9, 5),
+    JOB_SKILL_6(10, 6);
 
     private static final CombatRequest[] BY_NETWORK_ID = new CombatRequest[values().length];
 
@@ -41,7 +43,7 @@ public enum CombatRequest {
         return networkId;
     }
 
-    /** Skill slot ({@code 0} weapon skill, {@code 1..4} job skills) or {@code -1} for non-skill requests. */
+    /** Skill slot ({@code 0} weapon skill, {@code 1..6} job skills) or {@code -1} for non-skill requests. */
     public int skillSlot() {
         return skillSlot;
     }
@@ -50,14 +52,16 @@ public enum CombatRequest {
         return skillSlot >= 0;
     }
 
-    /** The request that uses job skill slot {@code slot} (1..4). */
+    /** The request that uses job skill slot {@code slot} (1..6). */
     public static CombatRequest jobSkill(int slot) {
         return switch (slot) {
             case 1 -> JOB_SKILL_1;
             case 2 -> JOB_SKILL_2;
             case 3 -> JOB_SKILL_3;
             case 4 -> JOB_SKILL_4;
-            default -> throw new IllegalArgumentException("job skill slot out of range [1, 4]: " + slot);
+            case 5 -> JOB_SKILL_5;
+            case 6 -> JOB_SKILL_6;
+            default -> throw new IllegalArgumentException("job skill slot out of range [1, 6]: " + slot);
         };
     }
 

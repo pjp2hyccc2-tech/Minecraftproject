@@ -1,0 +1,3250 @@
+{
+  "skill_branch.eternalrealm.knight.0": {
+    "ja": "守護",
+    "en": "Guardian"
+  },
+  "skill_branch.eternalrealm.knight.1": {
+    "ja": "武技",
+    "en": "Weapon Arts"
+  },
+  "skill_branch.eternalrealm.knight.2": {
+    "ja": "聖騎士",
+    "en": "Paladin"
+  },
+  "skill_branch.eternalrealm.assassin.0": {
+    "ja": "影",
+    "en": "Shadow"
+  },
+  "skill_branch.eternalrealm.assassin.1": {
+    "ja": "毒",
+    "en": "Venom"
+  },
+  "skill_branch.eternalrealm.assassin.2": {
+    "ja": "刃",
+    "en": "Blades"
+  },
+  "skill_branch.eternalrealm.mage.0": {
+    "ja": "炎",
+    "en": "Fire"
+  },
+  "skill_branch.eternalrealm.mage.1": {
+    "ja": "氷",
+    "en": "Frost"
+  },
+  "skill_branch.eternalrealm.mage.2": {
+    "ja": "雷・秘術",
+    "en": "Storm & Arcane"
+  },
+  "skill_branch.eternalrealm.ranger.0": {
+    "ja": "射撃",
+    "en": "Marksmanship"
+  },
+  "skill_branch.eternalrealm.ranger.1": {
+    "ja": "狩猟",
+    "en": "Hunting"
+  },
+  "skill_branch.eternalrealm.ranger.2": {
+    "ja": "弾幕",
+    "en": "Barrage"
+  },
+  "skill_branch.eternalrealm.priest.0": {
+    "ja": "癒し",
+    "en": "Healing"
+  },
+  "skill_branch.eternalrealm.priest.1": {
+    "ja": "加護",
+    "en": "Protection"
+  },
+  "skill_branch.eternalrealm.priest.2": {
+    "ja": "審判",
+    "en": "Judgment"
+  },
+  "skill_branch.eternalrealm.spellblade.0": {
+    "ja": "魔刃",
+    "en": "Arcane Blade"
+  },
+  "skill_branch.eternalrealm.spellblade.1": {
+    "ja": "元素",
+    "en": "Elements"
+  },
+  "skill_branch.eternalrealm.spellblade.2": {
+    "ja": "次元",
+    "en": "Dimension"
+  },
+  "skill_kind.eternalrealm.active": {
+    "ja": "アクティブ",
+    "en": "Active"
+  },
+  "skill_kind.eternalrealm.passive": {
+    "ja": "パッシブ",
+    "en": "Passive"
+  },
+  "skill_kind.eternalrealm.ultimate": {
+    "ja": "必殺技",
+    "en": "Ultimate"
+  },
+  "skill_buff.eternalrealm.attack_up": {
+    "ja": "与ダメージ",
+    "en": "Damage dealt"
+  },
+  "skill_buff.eternalrealm.defense_up": {
+    "ja": "被ダメージ軽減",
+    "en": "Damage reduction"
+  },
+  "skill_buff.eternalrealm.speed": {
+    "ja": "移動速度",
+    "en": "Speed"
+  },
+  "skill_buff.eternalrealm.regeneration": {
+    "ja": "再生",
+    "en": "Regeneration"
+  },
+  "skill_buff.eternalrealm.invisibility": {
+    "ja": "透明化",
+    "en": "Invisibility"
+  },
+  "skill_buff.eternalrealm.flame_weapon": {
+    "ja": "炎の刃",
+    "en": "Flame weapon"
+  },
+  "skill_buff.eternalrealm.crit_up": {
+    "ja": "会心率",
+    "en": "Critical chance"
+  },
+  "skill_buff.eternalrealm.lifesteal": {
+    "ja": "吸血",
+    "en": "Lifesteal"
+  },
+  "skill_buff.eternalrealm.frost_weapon": {
+    "ja": "氷の刃",
+    "en": "Frost weapon"
+  },
+  "skill_buff.eternalrealm.venom_weapon": {
+    "ja": "毒の刃",
+    "en": "Venom weapon"
+  },
+  "skill_buff.eternalrealm.thunder_weapon": {
+    "ja": "雷の刃",
+    "en": "Thunder weapon"
+  },
+  "skill_buff.eternalrealm.evasion": {
+    "ja": "回避率",
+    "en": "Evasion"
+  },
+  "skill_buff.eternalrealm.thorns": {
+    "ja": "ダメージ反射",
+    "en": "Thorns"
+  },
+  "skill_affliction.eternalrealm.slow": {
+    "ja": "鈍足",
+    "en": "Slow"
+  },
+  "skill_affliction.eternalrealm.freeze": {
+    "ja": "凍結",
+    "en": "Freeze"
+  },
+  "skill_affliction.eternalrealm.burn": {
+    "ja": "炎上",
+    "en": "Burn"
+  },
+  "skill_affliction.eternalrealm.bleed": {
+    "ja": "出血",
+    "en": "Bleed"
+  },
+  "skill_affliction.eternalrealm.blind": {
+    "ja": "暗闇",
+    "en": "Blind"
+  },
+  "skill_affliction.eternalrealm.stun": {
+    "ja": "スタン",
+    "en": "Stun"
+  },
+  "skill_affliction.eternalrealm.poison": {
+    "ja": "毒",
+    "en": "Poison"
+  },
+  "skill_affliction.eternalrealm.weaken": {
+    "ja": "弱体化",
+    "en": "Weaken"
+  },
+  "skill_affliction.eternalrealm.vulnerable": {
+    "ja": "脆弱",
+    "en": "Vulnerable"
+  },
+  "skill_affliction.eternalrealm.pull": {
+    "ja": "引き寄せ",
+    "en": "Pull"
+  },
+  "skill_affliction.eternalrealm.launch": {
+    "ja": "打ち上げ",
+    "en": "Launch"
+  },
+  "effect.eternalrealm.stunned": {
+    "ja": "スタン",
+    "en": "Stunned"
+  },
+  "effect.eternalrealm.poisoned": {
+    "ja": "毒",
+    "en": "Poisoned"
+  },
+  "effect.eternalrealm.weakened": {
+    "ja": "弱体化",
+    "en": "Weakened"
+  },
+  "effect.eternalrealm.vulnerable": {
+    "ja": "脆弱",
+    "en": "Vulnerable"
+  },
+  "effect.eternalrealm.crit_up": {
+    "ja": "会心率上昇",
+    "en": "Critical Up"
+  },
+  "effect.eternalrealm.lifesteal": {
+    "ja": "吸血",
+    "en": "Lifesteal"
+  },
+  "effect.eternalrealm.frost_weapon": {
+    "ja": "氷の刃",
+    "en": "Frost Weapon"
+  },
+  "effect.eternalrealm.venom_weapon": {
+    "ja": "毒の刃",
+    "en": "Venom Weapon"
+  },
+  "effect.eternalrealm.thunder_weapon": {
+    "ja": "雷の刃",
+    "en": "Thunder Weapon"
+  },
+  "effect.eternalrealm.evasion": {
+    "ja": "回避上昇",
+    "en": "Evasion"
+  },
+  "effect.eternalrealm.thorns": {
+    "ja": "ダメージ反射",
+    "en": "Thorns"
+  },
+  "message.eternalrealm.skill.locked": {
+    "ja": "キャラクターレベルが足りません",
+    "en": "Your character level is too low"
+  },
+  "message.eternalrealm.skill.prerequisite": {
+    "ja": "前提スキルのレベルが足りません",
+    "en": "Learn the prerequisite skills first"
+  },
+  "message.eternalrealm.skill.learned": {
+    "ja": "%s が Lv%s になった！",
+    "en": "%s is now Lv %s!"
+  },
+  "message.eternalrealm.skill.acquired": {
+    "ja": "%s を習得した！",
+    "en": "Learned %s!"
+  },
+  "message.eternalrealm.skill.auto_slot": {
+    "ja": "%s をスキル枠%sにセットしました（スキル画面で変更できます）",
+    "en": "%s was put in skill slot %s (change it on the skills screen)"
+  },
+  "message.eternalrealm.skill.reset_job_master": {
+    "ja": "スキルのリセットは職業マスターのそばで行えます",
+    "en": "Talk to a job master to reset your skills"
+  },
+  "message.eternalrealm.skill.reset_done": {
+    "ja": "スキルをリセットし、ポイントが戻りました（%s G）",
+    "en": "Skills reset and points refunded (%s gold)"
+  },
+  "message.eternalrealm.skill.reset_nothing": {
+    "ja": "リセットするスキルがありません",
+    "en": "There are no skills to reset"
+  },
+  "message.eternalrealm.skill.reset_gold": {
+    "ja": "スキルのリセットには %s G 必要です",
+    "en": "A skill reset costs %s gold"
+  },
+  "message.eternalrealm.loadout.ok": {
+    "ja": "スキルをセットしました",
+    "en": "Skill set"
+  },
+  "message.eternalrealm.loadout.no_job": {
+    "ja": "先に職業を選んでください",
+    "en": "Choose a job first"
+  },
+  "message.eternalrealm.loadout.bad_slot": {
+    "ja": "そのスキル枠はありません",
+    "en": "There is no such skill slot"
+  },
+  "message.eternalrealm.loadout.unknown_skill": {
+    "ja": "そのスキルは存在しません",
+    "en": "No such skill"
+  },
+  "message.eternalrealm.loadout.wrong_job": {
+    "ja": "現在の職業のスキルではありません",
+    "en": "That skill belongs to another job"
+  },
+  "message.eternalrealm.loadout.passive": {
+    "ja": "パッシブスキルはセットしなくても常に効果があります",
+    "en": "Passive skills always work and can't be put in a slot"
+  },
+  "message.eternalrealm.loadout.not_learned": {
+    "ja": "まだ習得していないスキルです",
+    "en": "You haven't learned that skill yet"
+  },
+  "message.eternalrealm.loadout.needs_ultimate": {
+    "ja": "必殺技枠には必殺技だけをセットできます",
+    "en": "Only ultimates fit the ultimate slot"
+  },
+  "message.eternalrealm.loadout.ultimate_only": {
+    "ja": "必殺技は必殺技枠にセットしてください",
+    "en": "Ultimates go in the ultimate slot"
+  },
+  "message.eternalrealm.combat.job_weapon": {
+    "ja": "今の職業ではこの武器を使えません",
+    "en": "Your job can't use this weapon"
+  },
+  "message.eternalrealm.combat.job_weapon_detail": {
+    "ja": "%sは%sを使えません（使える武器: %s）",
+    "en": "A %s can't use a %s (usable: %s)"
+  },
+  "message.eternalrealm.job.weapon_unusable": {
+    "ja": "手に持っている%sは%sでは使えません。武器を持ち替えてください",
+    "en": "The %s in your hand can't be used as a %s. Switch weapons"
+  },
+  "message.eternalrealm.job.weapons": {
+    "ja": "使える武器: %s",
+    "en": "Usable weapons: %s"
+  },
+  "tooltip.eternalrealm.equipment.usable_by": {
+    "ja": "使用できる職業: %s",
+    "en": "Usable by: %s"
+  },
+  "tooltip.eternalrealm.equipment.job_separator": {
+    "ja": "・",
+    "en": ", "
+  },
+  "screen.eternalrealm.job.role_weapon": {
+    "ja": "%s / 武器: %s",
+    "en": "%s / weapons: %s"
+  },
+  "key.eternalrealm.job_skill_5": {
+    "ja": "職業スキル5",
+    "en": "Job skill 5"
+  },
+  "key.eternalrealm.job_skill_6": {
+    "ja": "職業スキル6",
+    "en": "Job skill 6"
+  },
+  "screen.eternalrealm.skill.learn": {
+    "ja": "習得",
+    "en": "Learn"
+  },
+  "screen.eternalrealm.skill.upgrade": {
+    "ja": "強化",
+    "en": "Upgrade"
+  },
+  "screen.eternalrealm.skill.reset": {
+    "ja": "リセット",
+    "en": "Reset"
+  },
+  "screen.eternalrealm.skill.reset_tooltip": {
+    "ja": "職業マスターのそばで全スキルをリセットし、ポイントを取り戻す（%s G）",
+    "en": "Reset every skill and get the points back; next to a job master (%s gold)"
+  },
+  "screen.eternalrealm.skill.points_header": {
+    "ja": "ポイント %s ・ 習得 %s/%s",
+    "en": "Points %s · learned %s/%s"
+  },
+  "screen.eternalrealm.skill.loadout": {
+    "ja": "スキル枠",
+    "en": "Skill slots"
+  },
+  "screen.eternalrealm.skill.slot": {
+    "ja": "スキル枠 [%s]",
+    "en": "Skill slot [%s]"
+  },
+  "screen.eternalrealm.skill.slot_ultimate": {
+    "ja": "必殺技枠 [%s]",
+    "en": "Ultimate slot [%s]"
+  },
+  "screen.eternalrealm.skill.slot_hint": {
+    "ja": "スキルをドラッグしてセット・右クリックで外す",
+    "en": "Drag a skill here · right-click to clear"
+  },
+  "screen.eternalrealm.skill.learnable": {
+    "ja": "習得できます",
+    "en": "Can be learned"
+  },
+  "skill_info.eternalrealm.level": {
+    "ja": "スキルLv %s/%s",
+    "en": "Skill Lv %s/%s"
+  },
+  "skill_info.eternalrealm.innate": {
+    "ja": "初期スキル（キャラクターLv%sで使える）",
+    "en": "Starting skill (usable from character Lv %s)"
+  },
+  "skill_info.eternalrealm.unlearned": {
+    "ja": "未習得（最大Lv%s）",
+    "en": "Not learned (max Lv %s)"
+  },
+  "skill_info.eternalrealm.maxed": {
+    "ja": "最大レベル",
+    "en": "Max level"
+  },
+  "skill_info.eternalrealm.requires": {
+    "ja": "前提: %s Lv%s",
+    "en": "Requires %s Lv %s"
+  },
+  "skill_info.eternalrealm.requires_level": {
+    "ja": "キャラクターLv%sで解放",
+    "en": "Unlocks at character Lv %s"
+  },
+  "skill_info.eternalrealm.unlocks": {
+    "ja": "解放先: %s",
+    "en": "Unlocks: %s"
+  },
+  "skill_info.eternalrealm.hint_learn": {
+    "ja": "「習得」でポイントを使う（残り %s）",
+    "en": "Press Learn to spend a point (%s left)"
+  },
+  "skill_info.eternalrealm.hint_slot": {
+    "ja": "スキル枠へドラッグしてセット",
+    "en": "Drag onto a skill slot to use it"
+  },
+  "skill_info.eternalrealm.hint_ultimate": {
+    "ja": "必殺技枠 [%s] へドラッグしてセット",
+    "en": "Drag onto the ultimate slot [%s] to use it"
+  },
+  "skill_info.eternalrealm.damage": {
+    "ja": "%sダメージ 総威力%s%%（%sヒット）",
+    "en": "%s damage, %s%% total power (%s hits)"
+  },
+  "skill_info.eternalrealm.cooldown": {
+    "ja": "再使用 %s秒 / スタミナ %s",
+    "en": "Cooldown %s s / stamina %s"
+  },
+  "skill_info.eternalrealm.weapons": {
+    "ja": "武器: %s",
+    "en": "Weapons: %s"
+  },
+  "skill_info.eternalrealm.any_job_weapon": {
+    "ja": "職業の全武器",
+    "en": "any of your job's weapons"
+  },
+  "skill_info.eternalrealm.next_passive": {
+    "ja": "次のレベル:",
+    "en": "Next level:"
+  },
+  "skill_info.eternalrealm.next": {
+    "ja": "次のレベル: 威力+%s%% / 再使用−%s秒 / 効果+%s%%",
+    "en": "Next level: +%s%% power / −%s s cooldown / +%s%% effects"
+  },
+  "skill_info.eternalrealm.effect.heal": {
+    "ja": "半径%3$sの味方を最大HPの%1$s%%+%2$s回復",
+    "en": "Heals allies within %3$s for %1$s%% max HP + %2$s"
+  },
+  "skill_info.eternalrealm.effect.heal_self": {
+    "ja": "最大HPの%s%%+%s回復",
+    "en": "Heals you for %s%% max HP + %s"
+  },
+  "skill_info.eternalrealm.effect.buff_self": {
+    "ja": "自身: %s%s（%s秒）",
+    "en": "Self: %s%s for %s s"
+  },
+  "skill_info.eternalrealm.effect.buff_allies": {
+    "ja": "味方（半径%s）: %s%s（%s秒）",
+    "en": "Allies within %s: %s%s for %s s"
+  },
+  "skill_info.eternalrealm.effect.shield": {
+    "ja": "最大HP%s%%のシールド（%s秒）",
+    "en": "Shield of %s%% max HP for %s s"
+  },
+  "skill_info.eternalrealm.effect.shield_allies": {
+    "ja": "味方（半径%s）に最大HP%s%%のシールド（%s秒）",
+    "en": "Allies within %s: shield of %s%% max HP for %s s"
+  },
+  "skill_info.eternalrealm.effect.dash": {
+    "ja": "前方へ%sブロック踏み込む",
+    "en": "Dashes %s blocks forward"
+  },
+  "skill_info.eternalrealm.effect.retreat": {
+    "ja": "後方へ%sブロック跳ぶ",
+    "en": "Leaps %s blocks back"
+  },
+  "skill_info.eternalrealm.effect.leap": {
+    "ja": "跳躍（前方%sブロック・高さ%s）",
+    "en": "Leaps %s blocks forward, %s high"
+  },
+  "skill_info.eternalrealm.effect.taunt": {
+    "ja": "半径%sの敵を挑発（%s秒）",
+    "en": "Taunts enemies within %s for %s s"
+  },
+  "skill_info.eternalrealm.effect.drop_aggro": {
+    "ja": "半径%sの敵の狙いを外す",
+    "en": "Enemies within %s lose track of you"
+  },
+  "skill_info.eternalrealm.effect.cleanse": {
+    "ja": "半径%sの味方の状態異常を解除",
+    "en": "Removes ailments from allies within %s"
+  },
+  "skill_info.eternalrealm.effect.cleanse_self": {
+    "ja": "自身の状態異常を解除",
+    "en": "Removes your ailments"
+  },
+  "skill_info.eternalrealm.effect.siphon": {
+    "ja": "与ダメージの%s%%で自身と半径%sの味方を回復",
+    "en": "Heals you and allies within %2$s for %1$s%% of the damage dealt"
+  },
+  "skill_info.eternalrealm.effect.siphon_self": {
+    "ja": "与ダメージの%s%%でHPを回復",
+    "en": "Heals you for %s%% of the damage dealt"
+  },
+  "skill_info.eternalrealm.effect.stamina": {
+    "ja": "スタミナを%s回復",
+    "en": "Restores %s stamina"
+  },
+  "skill_info.eternalrealm.effect.cooldown_cut": {
+    "ja": "他のスキルの再使用時間を%s秒短縮",
+    "en": "Your other skills' cooldowns −%s s"
+  },
+  "skill_info.eternalrealm.effect.execute": {
+    "ja": "HP%s%%以下の敵に与ダメージ+%s%%",
+    "en": "+%2$s%% damage to enemies below %1$s%% HP"
+  },
+  "skill_info.eternalrealm.effect.afflict": {
+    "ja": "%s（%s秒）",
+    "en": "%s for %s s"
+  },
+  "skill_info.eternalrealm.effect.afflict_dot": {
+    "ja": "%s（%s秒・毎秒 一撃の%s%%）",
+    "en": "%s for %s s (%s%% of the hit per second)"
+  },
+  "skill_info.eternalrealm.effect.afflict_power": {
+    "ja": "%s（%s秒・%s%%）",
+    "en": "%s for %s s (%s%%)"
+  },
+  "skill_info.eternalrealm.effect.afflict_level": {
+    "ja": "%1$s Lv%3$s（%2$s秒）",
+    "en": "%1$s %3$s for %2$s s"
+  },
+  "skill_info.eternalrealm.effect.afflict_instant": {
+    "ja": "%s",
+    "en": "%s"
+  },
+  "skill_info.eternalrealm.placement.caster": {
+    "ja": "足元",
+    "en": "around you"
+  },
+  "skill_info.eternalrealm.placement.ahead": {
+    "ja": "前方%sブロック",
+    "en": "%s blocks ahead"
+  },
+  "skill_info.eternalrealm.placement.look": {
+    "ja": "狙った地点",
+    "en": "where you aim"
+  },
+  "skill_info.eternalrealm.effect.zone": {
+    "ja": "%1$sに半径%2$sの領域: %4$s秒ごとに威力%5$s%%×%3$s回",
+    "en": "Area (radius %2$s) %1$s: %5$s%% power every %4$s s, %3$s times"
+  },
+  "skill_info.eternalrealm.effect.zone_and_heal": {
+    "ja": "、味方を最大HPの%s%%回復",
+    "en": ", heals allies %s%% max HP"
+  },
+  "skill_info.eternalrealm.effect.zone_heal": {
+    "ja": "%1$sに半径%2$sの癒しの領域: %4$s秒ごとに最大HPの%5$s%%回復×%3$s回",
+    "en": "Healing area (radius %2$s) %1$s: %5$s%% max HP every %4$s s, %3$s times"
+  },
+  "skill_info.eternalrealm.effect.zone_delay": {
+    "ja": "（%s秒後に発動）",
+    "en": " (after %s s)"
+  },
+  "skill_info.eternalrealm.passive.physical": {
+    "ja": "物理ダメージ +%s%%",
+    "en": "Physical damage +%s%%"
+  },
+  "skill_info.eternalrealm.passive.ranged": {
+    "ja": "遠距離ダメージ +%s%%",
+    "en": "Ranged damage +%s%%"
+  },
+  "skill_info.eternalrealm.passive.magic": {
+    "ja": "魔法・神聖ダメージ +%s%%",
+    "en": "Magic and holy damage +%s%%"
+  },
+  "skill_info.eternalrealm.passive.healing": {
+    "ja": "回復量 +%s%%",
+    "en": "Healing +%s%%"
+  },
+  "skill_info.eternalrealm.passive.health_flat": {
+    "ja": "最大HP +%s",
+    "en": "Max HP +%s"
+  },
+  "skill_info.eternalrealm.passive.health_percent": {
+    "ja": "最大HP +%s%%",
+    "en": "Max HP +%s%%"
+  },
+  "skill_info.eternalrealm.passive.defense": {
+    "ja": "防御力 +%s",
+    "en": "Defense +%s"
+  },
+  "skill_info.eternalrealm.passive.crit": {
+    "ja": "会心率 +%s%%",
+    "en": "Critical chance +%s%%"
+  },
+  "skill_info.eternalrealm.passive.crit_damage": {
+    "ja": "会心ダメージ +%s%%",
+    "en": "Critical damage +%s%%"
+  },
+  "skill_info.eternalrealm.passive.move_speed": {
+    "ja": "移動速度 +%s%%",
+    "en": "Movement speed +%s%%"
+  },
+  "skill_info.eternalrealm.passive.guard": {
+    "ja": "ガード性能 +%s%%",
+    "en": "Guard +%s%%"
+  },
+  "skill_info.eternalrealm.passive.dodge_cost": {
+    "ja": "回避のスタミナ消費 −%s%%",
+    "en": "Dodge stamina cost −%s%%"
+  },
+  "skill_info.eternalrealm.passive.int_to_physical": {
+    "ja": "INTの%s%%を物理攻撃力に加算",
+    "en": "%s%% of INT added to physical attack"
+  },
+  "skill_info.eternalrealm.passive.stamina": {
+    "ja": "最大スタミナ +%s",
+    "en": "Max stamina +%s"
+  },
+  "skill_info.eternalrealm.passive.skill_power": {
+    "ja": "スキル威力 +%s%%",
+    "en": "Skill power +%s%%"
+  },
+  "skill_info.eternalrealm.passive.cooldown": {
+    "ja": "スキルの再使用時間 −%s%%",
+    "en": "Skill cooldowns −%s%%"
+  },
+  "skill_info.eternalrealm.passive.stamina_saver": {
+    "ja": "スキルのスタミナ消費 −%s%%",
+    "en": "Skill stamina costs −%s%%"
+  },
+  "skill_info.eternalrealm.passive.lifesteal": {
+    "ja": "与ダメージの%s%%を吸収",
+    "en": "Heals %s%% of the damage you deal"
+  },
+  "skill_info.eternalrealm.passive.proc_melee": {
+    "ja": "近接攻撃時 %s%%の確率で%s（%s秒）",
+    "en": "Melee hits: %s%% chance of %s for %s s"
+  },
+  "skill_info.eternalrealm.passive.proc_any": {
+    "ja": "攻撃時 %s%%の確率で%s（%s秒）",
+    "en": "Attacks: %s%% chance of %s for %s s"
+  },
+  "skill_info.eternalrealm.passive.last_stand_damage": {
+    "ja": "HP半分以下で与ダメージ +%s%%",
+    "en": "Below half HP: damage dealt +%s%%"
+  },
+  "skill_info.eternalrealm.passive.last_stand_reduction": {
+    "ja": "HP半分以下で被ダメージ −%s%%",
+    "en": "Below half HP: damage taken −%s%%"
+  },
+  "skill_info.eternalrealm.passive.thorns": {
+    "ja": "受けたダメージの%s%%を反射",
+    "en": "Reflects %s%% of the damage you take"
+  },
+  "skill_info.eternalrealm.passive.evasion": {
+    "ja": "%s%%の確率で攻撃を回避",
+    "en": "%s%% chance to evade attacks"
+  },
+  "skill_info.eternalrealm.passive.heal_on_kill": {
+    "ja": "敵を倒すと最大HPの%s%%回復",
+    "en": "Defeating an enemy heals %s%% max HP"
+  },
+  "skill.eternalrealm.knight_guard_stance": {
+    "ja": "防御の構え",
+    "en": "Guard Stance"
+  },
+  "skill.eternalrealm.knight_guard_stance.desc": {
+    "ja": "身構えて受けるダメージを減らし、攻撃の一部を跳ね返す。",
+    "en": "Brace yourself: take less damage and reflect part of it."
+  },
+  "skill.eternalrealm.knight_toughness": {
+    "ja": "頑健",
+    "en": "Toughness"
+  },
+  "skill.eternalrealm.knight_toughness.desc": {
+    "ja": "最大HPが上がる。",
+    "en": "Raises max HP."
+  },
+  "skill.eternalrealm.knight_provoke": {
+    "ja": "威嚇の一撃",
+    "en": "Provoking Strike"
+  },
+  "skill.eternalrealm.knight_provoke.desc": {
+    "ja": "前方を打ち、周囲の敵を引きつけて与ダメージを下げる。",
+    "en": "Strikes ahead, draws nearby enemies to you and weakens them."
+  },
+  "skill.eternalrealm.knight_war_cry": {
+    "ja": "挑発の雄叫び",
+    "en": "War Cry"
+  },
+  "skill.eternalrealm.knight_war_cry.desc": {
+    "ja": "周囲12ブロックの敵を引きつけ、8秒間被ダメージ30%軽減。",
+    "en": "Taunts enemies within 12 blocks; takes 30% less damage for 8 s."
+  },
+  "skill.eternalrealm.knight_bulwark": {
+    "ja": "城壁の守り",
+    "en": "Bulwark"
+  },
+  "skill.eternalrealm.knight_bulwark.desc": {
+    "ja": "防御力が上がる。",
+    "en": "Raises defense."
+  },
+  "skill.eternalrealm.knight_shield_charge": {
+    "ja": "シールドチャージ",
+    "en": "Shield Charge"
+  },
+  "skill.eternalrealm.knight_shield_charge.desc": {
+    "ja": "盾を構えて突進し、ぶつかった敵を気絶させる。",
+    "en": "Charges behind your shield and stuns what you hit."
+  },
+  "skill.eternalrealm.knight_iron_wall": {
+    "ja": "鉄壁",
+    "en": "Iron Wall"
+  },
+  "skill.eternalrealm.knight_iron_wall.desc": {
+    "ja": "最大HP30%のシールドを得て被ダメージ50%軽減。周囲の仲間も20%軽減。",
+    "en": "Shield of 30% max HP and 50% less damage; nearby allies take 20% less."
+  },
+  "skill.eternalrealm.knight_guardian_oath": {
+    "ja": "守護の誓い",
+    "en": "Guardian's Oath"
+  },
+  "skill.eternalrealm.knight_guardian_oath.desc": {
+    "ja": "ガード性能と最大HPが上がる。",
+    "en": "Improves guarding and raises max HP."
+  },
+  "skill.eternalrealm.knight_rampart": {
+    "ja": "防壁",
+    "en": "Rampart"
+  },
+  "skill.eternalrealm.knight_rampart.desc": {
+    "ja": "周囲の仲間の被ダメージを減らし、敵の狙いを自分に集める。",
+    "en": "Nearby allies take less damage while enemies turn on you."
+  },
+  "skill.eternalrealm.knight_retaliation": {
+    "ja": "報復の構え",
+    "en": "Retaliation"
+  },
+  "skill.eternalrealm.knight_retaliation.desc": {
+    "ja": "しばらくの間、受けたダメージの多くを攻撃者に跳ね返す。",
+    "en": "For a while, sends much of the damage you take back to the attacker."
+  },
+  "skill.eternalrealm.knight_second_wind": {
+    "ja": "不屈の息吹",
+    "en": "Second Wind"
+  },
+  "skill.eternalrealm.knight_second_wind.desc": {
+    "ja": "敵を倒すとHPが回復し、最大スタミナも増える。",
+    "en": "Defeating an enemy restores HP; also raises max stamina."
+  },
+  "skill.eternalrealm.knight_challenge": {
+    "ja": "宣戦布告",
+    "en": "Challenge"
+  },
+  "skill.eternalrealm.knight_challenge.desc": {
+    "ja": "周囲の敵をなぎ払って広く挑発し、被ダメージを増やす。",
+    "en": "Sweeps the enemies around you, taunts far and wide and makes them take more damage."
+  },
+  "skill.eternalrealm.knight_fortress": {
+    "ja": "不落の要塞",
+    "en": "Fortress"
+  },
+  "skill.eternalrealm.knight_fortress.desc": {
+    "ja": "【必殺技】最大HP60%のシールドをまとい、周囲の仲間を守りながら敵をすべて引きつける。",
+    "en": "[Ultimate] Gains a shield of 60% max HP, protects nearby allies and draws every enemy to you."
+  },
+  "skill.eternalrealm.knight_unbreakable": {
+    "ja": "金剛",
+    "en": "Unbreakable"
+  },
+  "skill.eternalrealm.knight_unbreakable.desc": {
+    "ja": "最大HPと防御力が上がる。",
+    "en": "Raises max HP and defense."
+  },
+  "skill.eternalrealm.knight_protector": {
+    "ja": "守護者",
+    "en": "Protector"
+  },
+  "skill.eternalrealm.knight_protector.desc": {
+    "ja": "周囲の仲間にシールドを張り、敵の注意を引きつける。",
+    "en": "Shields nearby allies and draws enemy attention."
+  },
+  "skill.eternalrealm.knight_aegis": {
+    "ja": "神盾アイギス",
+    "en": "Aegis"
+  },
+  "skill.eternalrealm.knight_aegis.desc": {
+    "ja": "【必殺技】数秒間ほぼ無敵となり、巨大なシールドで敵を引きつける。周囲の仲間は再生する。",
+    "en": "[Ultimate] Nearly invulnerable for a few seconds; a huge shield draws every enemy while allies regenerate."
+  },
+  "skill.eternalrealm.knight_last_bastion": {
+    "ja": "最後の砦",
+    "en": "Last Bastion"
+  },
+  "skill.eternalrealm.knight_last_bastion.desc": {
+    "ja": "HPが半分以下のとき、受けるダメージが減る。",
+    "en": "Take less damage while below half HP."
+  },
+  "skill.eternalrealm.knight_shield_wall": {
+    "ja": "盾壁突撃",
+    "en": "Shield Wall"
+  },
+  "skill.eternalrealm.knight_shield_wall.desc": {
+    "ja": "盾で押し込みながら3回打ち、周囲の仲間の守りを固める。",
+    "en": "Drives forward behind your shield with three blows and fortifies nearby allies."
+  },
+  "skill.eternalrealm.knight_shield_bash": {
+    "ja": "シールドバッシュ",
+    "en": "Shield Bash"
+  },
+  "skill.eternalrealm.knight_shield_bash.desc": {
+    "ja": "前方を強打し、敵を3秒間鈍足にする。",
+    "en": "Strikes ahead and slows enemies for 3 s."
+  },
+  "skill.eternalrealm.knight_cleave": {
+    "ja": "薙ぎ払い",
+    "en": "Cleave"
+  },
+  "skill.eternalrealm.knight_cleave.desc": {
+    "ja": "前方を大きく薙ぎ払う。",
+    "en": "A wide sweeping cut."
+  },
+  "skill.eternalrealm.knight_swordsmanship": {
+    "ja": "剣術",
+    "en": "Swordsmanship"
+  },
+  "skill.eternalrealm.knight_swordsmanship.desc": {
+    "ja": "物理ダメージが上がる。",
+    "en": "Raises physical damage."
+  },
+  "skill.eternalrealm.knight_heavy_slam": {
+    "ja": "ヘヴィスラム",
+    "en": "Heavy Slam"
+  },
+  "skill.eternalrealm.knight_heavy_slam.desc": {
+    "ja": "地面を叩き割り、周囲の敵を気絶させる。",
+    "en": "Smashes the ground and stuns enemies around you."
+  },
+  "skill.eternalrealm.knight_rising_slash": {
+    "ja": "斬り上げ",
+    "en": "Rising Slash"
+  },
+  "skill.eternalrealm.knight_rising_slash.desc": {
+    "ja": "敵を空中へ斬り上げる。",
+    "en": "Slashes upward, throwing enemies into the air."
+  },
+  "skill.eternalrealm.knight_lance_thrust": {
+    "ja": "槍突進",
+    "en": "Lance Thrust"
+  },
+  "skill.eternalrealm.knight_lance_thrust.desc": {
+    "ja": "【槍】踏み込みながら一直線に突き通す。",
+    "en": "[Spear] Lunges forward and pierces everything in a line."
+  },
+  "skill.eternalrealm.knight_armor_break": {
+    "ja": "鎧砕き",
+    "en": "Armor Break"
+  },
+  "skill.eternalrealm.knight_armor_break.desc": {
+    "ja": "敵の守りを砕き、受けるダメージを増やす。",
+    "en": "Cracks the enemy's armor so it takes more damage."
+  },
+  "skill.eternalrealm.knight_whirl_guard": {
+    "ja": "旋風の守り",
+    "en": "Whirling Guard"
+  },
+  "skill.eternalrealm.knight_whirl_guard.desc": {
+    "ja": "守りを固めながら2回転斬りを放つ。",
+    "en": "Spins twice while keeping your guard up."
+  },
+  "skill.eternalrealm.knight_battle_hardened": {
+    "ja": "歴戦",
+    "en": "Battle-Hardened"
+  },
+  "skill.eternalrealm.knight_battle_hardened.desc": {
+    "ja": "会心率と会心ダメージが上がる。",
+    "en": "Raises critical chance and critical damage."
+  },
+  "skill.eternalrealm.knight_earthshaker": {
+    "ja": "大地割り",
+    "en": "Earthshaker"
+  },
+  "skill.eternalrealm.knight_earthshaker.desc": {
+    "ja": "前方一直線に地割れを走らせ、敵を鈍足にする。",
+    "en": "Sends a fissure racing forward that slows enemies."
+  },
+  "skill.eternalrealm.knight_foresight_cut": {
+    "ja": "見切り斬り",
+    "en": "Foresight Cut"
+  },
+  "skill.eternalrealm.knight_foresight_cut.desc": {
+    "ja": "攻撃を見切りながら斬る。使用後しばらく回避率が上がる。",
+    "en": "Reads the enemy's attack as you strike; briefly raises evasion."
+  },
+  "skill.eternalrealm.knight_spear_sweep": {
+    "ja": "旋槍",
+    "en": "Spear Sweep"
+  },
+  "skill.eternalrealm.knight_spear_sweep.desc": {
+    "ja": "【槍】槍を振り回し、周囲を3回なぎ払う。",
+    "en": "[Spear] Whirls the spear around you three times."
+  },
+  "skill.eternalrealm.knight_titan_strike": {
+    "ja": "タイタンストライク",
+    "en": "Titan Strike"
+  },
+  "skill.eternalrealm.knight_titan_strike.desc": {
+    "ja": "【必殺技】高く跳び上がって叩きつけ、周囲の敵を長く気絶させる。",
+    "en": "[Ultimate] Leaps high and crashes down, stunning everything around you."
+  },
+  "skill.eternalrealm.knight_relentless": {
+    "ja": "猛攻",
+    "en": "Relentless"
+  },
+  "skill.eternalrealm.knight_relentless.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.knight_impale": {
+    "ja": "串刺し",
+    "en": "Impale"
+  },
+  "skill.eternalrealm.knight_impale.desc": {
+    "ja": "【槍】深く突き刺し、敵を出血させる。",
+    "en": "[Spear] A deep thrust that makes the enemy bleed."
+  },
+  "skill.eternalrealm.knight_grand_cross": {
+    "ja": "グランドクロス",
+    "en": "Grand Cross"
+  },
+  "skill.eternalrealm.knight_grand_cross.desc": {
+    "ja": "【必殺技】十字を刻む三連撃。最後の一撃で敵の守りを崩す。",
+    "en": "[Ultimate] Carves a great cross in three strikes; the last leaves enemies vulnerable."
+  },
+  "skill.eternalrealm.knight_war_master": {
+    "ja": "戦の達人",
+    "en": "War Master"
+  },
+  "skill.eternalrealm.knight_war_master.desc": {
+    "ja": "スキルの再使用時間とスタミナ消費が減る。",
+    "en": "Shorter skill cooldowns and lower stamina costs."
+  },
+  "skill.eternalrealm.knight_dragon_lance": {
+    "ja": "竜槍",
+    "en": "Dragon Lance"
+  },
+  "skill.eternalrealm.knight_dragon_lance.desc": {
+    "ja": "【槍】竜のごとく突進し、貫いた敵を打ち上げる。",
+    "en": "[Spear] Charges like a dragon, throwing pierced enemies into the air."
+  },
+  "skill.eternalrealm.knight_holy_strike": {
+    "ja": "ホーリーストライク",
+    "en": "Holy Strike"
+  },
+  "skill.eternalrealm.knight_holy_strike.desc": {
+    "ja": "聖なる一撃。与えたダメージの一部でHPを回復する。",
+    "en": "A holy blow that heals you for part of the damage."
+  },
+  "skill.eternalrealm.knight_faith": {
+    "ja": "信仰",
+    "en": "Faith"
+  },
+  "skill.eternalrealm.knight_faith.desc": {
+    "ja": "回復量と最大HPが上がる。",
+    "en": "Raises healing and max HP."
+  },
+  "skill.eternalrealm.knight_consecrate": {
+    "ja": "聖別",
+    "en": "Consecrate"
+  },
+  "skill.eternalrealm.knight_consecrate.desc": {
+    "ja": "足元を清め、中の仲間を癒しながら敵を聖なる光で焼く。",
+    "en": "Consecrates the ground: allies inside heal, enemies burn in holy light."
+  },
+  "skill.eternalrealm.knight_lay_on_hands": {
+    "ja": "癒しの手",
+    "en": "Lay on Hands"
+  },
+  "skill.eternalrealm.knight_lay_on_hands.desc": {
+    "ja": "自分と周囲の仲間を回復し、状態異常を解除する。",
+    "en": "Heals you and nearby allies and removes ailments."
+  },
+  "skill.eternalrealm.knight_divine_shield": {
+    "ja": "神聖の盾",
+    "en": "Divine Shield"
+  },
+  "skill.eternalrealm.knight_divine_shield.desc": {
+    "ja": "周囲の仲間にシールドと再生を与える。",
+    "en": "Gives nearby allies a shield and regeneration."
+  },
+  "skill.eternalrealm.knight_judgment_hammer": {
+    "ja": "裁きの鉄槌",
+    "en": "Hammer of Judgment"
+  },
+  "skill.eternalrealm.knight_judgment_hammer.desc": {
+    "ja": "天から光の鉄槌を落とし、当たった敵を気絶させる。",
+    "en": "Drops a hammer of light from the sky, stunning those it hits."
+  },
+  "skill.eternalrealm.knight_aura_of_valor": {
+    "ja": "勇気のオーラ",
+    "en": "Aura of Valor"
+  },
+  "skill.eternalrealm.knight_aura_of_valor.desc": {
+    "ja": "周囲の仲間の攻撃力と会心率を上げる。",
+    "en": "Raises the damage and critical chance of nearby allies."
+  },
+  "skill.eternalrealm.knight_holy_vigor": {
+    "ja": "聖なる活力",
+    "en": "Holy Vigor"
+  },
+  "skill.eternalrealm.knight_holy_vigor.desc": {
+    "ja": "最大HPが上がる。",
+    "en": "Raises max HP."
+  },
+  "skill.eternalrealm.knight_radiant_wave": {
+    "ja": "光波斬",
+    "en": "Radiant Wave"
+  },
+  "skill.eternalrealm.knight_radiant_wave.desc": {
+    "ja": "光の斬撃を飛ばし、貫いた敵の目をくらませる。",
+    "en": "Sends a wave of light that pierces and blinds enemies."
+  },
+  "skill.eternalrealm.knight_purify": {
+    "ja": "浄化",
+    "en": "Purify"
+  },
+  "skill.eternalrealm.knight_purify.desc": {
+    "ja": "周囲の仲間の状態異常を払い、回復して守りを固める。",
+    "en": "Cleanses, heals and fortifies nearby allies."
+  },
+  "skill.eternalrealm.knight_martyr": {
+    "ja": "殉教者",
+    "en": "Martyr"
+  },
+  "skill.eternalrealm.knight_martyr.desc": {
+    "ja": "受けたダメージの一部を攻撃者に跳ね返す。",
+    "en": "Reflects part of the damage you take."
+  },
+  "skill.eternalrealm.knight_sacred_spear": {
+    "ja": "聖槍",
+    "en": "Sacred Spear"
+  },
+  "skill.eternalrealm.knight_sacred_spear.desc": {
+    "ja": "光の槍を放ち、貫いた敵の被ダメージを増やす。",
+    "en": "Hurls a spear of light that leaves pierced enemies vulnerable."
+  },
+  "skill.eternalrealm.knight_holy_judgment": {
+    "ja": "聖騎士の審判",
+    "en": "Holy Judgment"
+  },
+  "skill.eternalrealm.knight_holy_judgment.desc": {
+    "ja": "【必殺技】力を溜め、周囲6ブロックを叩き割る。",
+    "en": "[Ultimate] Gathers power and smashes everything within 6 blocks."
+  },
+  "skill.eternalrealm.knight_blessed_armor": {
+    "ja": "祝福の鎧",
+    "en": "Blessed Armor"
+  },
+  "skill.eternalrealm.knight_blessed_armor.desc": {
+    "ja": "防御力とガード性能が上がる。",
+    "en": "Raises defense and improves guarding."
+  },
+  "skill.eternalrealm.knight_heavens_wrath": {
+    "ja": "天罰",
+    "en": "Heaven's Wrath"
+  },
+  "skill.eternalrealm.knight_heavens_wrath.desc": {
+    "ja": "天から3つの光の鉄槌を降らせる。",
+    "en": "Calls three hammers of light down from the sky."
+  },
+  "skill.eternalrealm.knight_resurgence": {
+    "ja": "再起の祈り",
+    "en": "Resurgence"
+  },
+  "skill.eternalrealm.knight_resurgence.desc": {
+    "ja": "広範囲の仲間を大きく回復し、状態異常を払って再生を与える。",
+    "en": "Greatly heals allies over a wide area, cleanses them and grants regeneration."
+  },
+  "skill.eternalrealm.knight_crusader": {
+    "ja": "十字軍",
+    "en": "Crusader"
+  },
+  "skill.eternalrealm.knight_crusader.desc": {
+    "ja": "物理ダメージとスキルの威力が上がる。",
+    "en": "Raises physical damage and skill power."
+  },
+  "skill.eternalrealm.knight_divine_lance": {
+    "ja": "神槍",
+    "en": "Divine Lance"
+  },
+  "skill.eternalrealm.knight_divine_lance.desc": {
+    "ja": "巨大な光の槍で一直線に貫き、敵を打ち上げる。",
+    "en": "A giant lance of light pierces a whole line and throws enemies up."
+  },
+  "skill.eternalrealm.assassin_shadow_step": {
+    "ja": "シャドウステップ",
+    "en": "Shadow Step"
+  },
+  "skill.eternalrealm.assassin_shadow_step.desc": {
+    "ja": "前方へ瞬時に踏み込み、着地点の敵を斬る。",
+    "en": "Dashes forward and cuts enemies around the landing spot."
+  },
+  "skill.eternalrealm.assassin_light_feet": {
+    "ja": "軽身",
+    "en": "Light Feet"
+  },
+  "skill.eternalrealm.assassin_light_feet.desc": {
+    "ja": "移動速度が上がり、回避のスタミナ消費が減る。",
+    "en": "Faster movement and cheaper dodges."
+  },
+  "skill.eternalrealm.assassin_vital_strike": {
+    "ja": "急所突き",
+    "en": "Vital Strike"
+  },
+  "skill.eternalrealm.assassin_vital_strike.desc": {
+    "ja": "急所を狙う一撃。HPの減った敵にはダメージが増える。",
+    "en": "Aims for a vital spot; deals more damage to wounded enemies."
+  },
+  "skill.eternalrealm.assassin_phantom_dash": {
+    "ja": "幻影走",
+    "en": "Phantom Dash"
+  },
+  "skill.eternalrealm.assassin_phantom_dash.desc": {
+    "ja": "残像を残して駆け抜けながら斬り、しばらく回避率が上がる。",
+    "en": "Dashes through enemies leaving an afterimage, then briefly raises evasion."
+  },
+  "skill.eternalrealm.assassin_shadow_sense": {
+    "ja": "影の気配",
+    "en": "Shadow Sense"
+  },
+  "skill.eternalrealm.assassin_shadow_sense.desc": {
+    "ja": "一定確率で攻撃を回避する。",
+    "en": "A chance to evade attacks completely."
+  },
+  "skill.eternalrealm.assassin_caltrops": {
+    "ja": "撒き菱",
+    "en": "Caltrops"
+  },
+  "skill.eternalrealm.assassin_caltrops.desc": {
+    "ja": "後ろへ跳びながら撒き菱をばらまき、踏んだ敵を傷つけて鈍足にする。",
+    "en": "Leaps back scattering caltrops that hurt and slow enemies."
+  },
+  "skill.eternalrealm.assassin_smoke_bomb": {
+    "ja": "煙幕",
+    "en": "Smoke Bomb"
+  },
+  "skill.eternalrealm.assassin_smoke_bomb.desc": {
+    "ja": "姿を消して加速し、周囲の敵の狙いを外させる。",
+    "en": "Turns invisible, speeds up and makes nearby enemies lose track of you."
+  },
+  "skill.eternalrealm.assassin_night_veil": {
+    "ja": "夜の帳",
+    "en": "Night Veil"
+  },
+  "skill.eternalrealm.assassin_night_veil.desc": {
+    "ja": "会心率と会心ダメージが上がる。",
+    "en": "Raises critical chance and critical damage."
+  },
+  "skill.eternalrealm.assassin_shadow_bind": {
+    "ja": "影縫い",
+    "en": "Shadow Bind"
+  },
+  "skill.eternalrealm.assassin_shadow_bind.desc": {
+    "ja": "影の矢で敵を縫い止めて気絶させ、与ダメージを下げる。",
+    "en": "A shadow bolt pins the enemy in place, stunning and weakening it."
+  },
+  "skill.eternalrealm.assassin_mirage": {
+    "ja": "蜃気楼",
+    "en": "Mirage"
+  },
+  "skill.eternalrealm.assassin_mirage.desc": {
+    "ja": "幻に紛れて敵の狙いを外させ、回避率と移動速度を上げる。",
+    "en": "Fades into a mirage: enemies lose track of you, and your evasion and speed rise."
+  },
+  "skill.eternalrealm.assassin_predator": {
+    "ja": "捕食者",
+    "en": "Predator"
+  },
+  "skill.eternalrealm.assassin_predator.desc": {
+    "ja": "物理ダメージと移動速度が上がる。",
+    "en": "Raises physical damage and movement speed."
+  },
+  "skill.eternalrealm.assassin_shadow_claw": {
+    "ja": "影爪",
+    "en": "Shadow Claw"
+  },
+  "skill.eternalrealm.assassin_shadow_claw.desc": {
+    "ja": "影の爪で3回切り裂き、最後の一撃で目をくらませる。",
+    "en": "Three shadow claw strikes; the last blinds."
+  },
+  "skill.eternalrealm.assassin_eclipse": {
+    "ja": "月蝕",
+    "en": "Eclipse"
+  },
+  "skill.eternalrealm.assassin_eclipse.desc": {
+    "ja": "【必殺技】闇に溶けて敵の狙いを外し、周囲を5回斬り刻む。しばらく攻撃力も上がる。",
+    "en": "[Ultimate] Melts into darkness so enemies lose you, then cuts everything around you five times; your damage rises."
+  },
+  "skill.eternalrealm.assassin_ghost_step": {
+    "ja": "幽歩",
+    "en": "Ghost Step"
+  },
+  "skill.eternalrealm.assassin_ghost_step.desc": {
+    "ja": "スキルのスタミナ消費が減り、最大スタミナが増える。",
+    "en": "Lower skill stamina costs and more max stamina."
+  },
+  "skill.eternalrealm.assassin_abyss_gate": {
+    "ja": "奈落の門",
+    "en": "Abyss Gate"
+  },
+  "skill.eternalrealm.assassin_abyss_gate.desc": {
+    "ja": "狙った場所に闇の渦を開き、敵を引き込みながら傷つける。",
+    "en": "Opens a vortex of darkness where you aim that drags enemies in and hurts them."
+  },
+  "skill.eternalrealm.assassin_death_mark": {
+    "ja": "死の刻印",
+    "en": "Death Mark"
+  },
+  "skill.eternalrealm.assassin_death_mark.desc": {
+    "ja": "【必殺技】刻印で敵の守りを奪い、続く爆発で弱った敵にとどめを刺す。",
+    "en": "[Ultimate] Marks enemies so they take more damage, then a burst finishes off the wounded."
+  },
+  "skill.eternalrealm.assassin_phantom_master": {
+    "ja": "幻影の達人",
+    "en": "Phantom Master"
+  },
+  "skill.eternalrealm.assassin_phantom_master.desc": {
+    "ja": "回避率が上がり、スキルの再使用時間が短くなる。",
+    "en": "Higher evasion and shorter skill cooldowns."
+  },
+  "skill.eternalrealm.assassin_void_rend": {
+    "ja": "虚空裂き",
+    "en": "Void Rend"
+  },
+  "skill.eternalrealm.assassin_void_rend.desc": {
+    "ja": "踏み込みながら虚空を4回切り裂き、敵の与ダメージを下げる。",
+    "en": "Rends the void four times as you dash in, weakening enemies."
+  },
+  "skill.eternalrealm.assassin_poison_dart": {
+    "ja": "毒針",
+    "en": "Poison Dart"
+  },
+  "skill.eternalrealm.assassin_poison_dart.desc": {
+    "ja": "毒針を投げ、敵を毒にする。",
+    "en": "Throws a poisoned dart."
+  },
+  "skill.eternalrealm.assassin_toxicology": {
+    "ja": "毒物学",
+    "en": "Toxicology"
+  },
+  "skill.eternalrealm.assassin_toxicology.desc": {
+    "ja": "近接攻撃が一定確率で敵を毒にする。",
+    "en": "Melee hits may poison the enemy."
+  },
+  "skill.eternalrealm.assassin_rupture": {
+    "ja": "裂傷",
+    "en": "Rupture"
+  },
+  "skill.eternalrealm.assassin_rupture.desc": {
+    "ja": "深い傷を負わせ、出血させる。",
+    "en": "Opens a deep wound that bleeds."
+  },
+  "skill.eternalrealm.assassin_venom_blade": {
+    "ja": "毒刃",
+    "en": "Venom Blade"
+  },
+  "skill.eternalrealm.assassin_venom_blade.desc": {
+    "ja": "3連撃。最後の一撃で出血と毒を与える。",
+    "en": "Three cuts; the last makes the target bleed and poisons it."
+  },
+  "skill.eternalrealm.assassin_venom_coat": {
+    "ja": "毒塗り",
+    "en": "Venom Coat"
+  },
+  "skill.eternalrealm.assassin_venom_coat.desc": {
+    "ja": "しばらくの間、近接攻撃が敵を毒にする。",
+    "en": "For a while, your melee hits poison enemies."
+  },
+  "skill.eternalrealm.assassin_hemorrhage": {
+    "ja": "大出血",
+    "en": "Hemorrhage"
+  },
+  "skill.eternalrealm.assassin_hemorrhage.desc": {
+    "ja": "2連撃で深手を負わせ、長く出血させる。",
+    "en": "Two cuts that cause heavy, lasting bleeding."
+  },
+  "skill.eternalrealm.assassin_toxic_cloud": {
+    "ja": "毒霧",
+    "en": "Toxic Cloud"
+  },
+  "skill.eternalrealm.assassin_toxic_cloud.desc": {
+    "ja": "前方に毒の霧を広げ、中の敵を毒で蝕む。",
+    "en": "Spreads a poisonous cloud ahead of you."
+  },
+  "skill.eternalrealm.assassin_virulence": {
+    "ja": "蝕み",
+    "en": "Virulence"
+  },
+  "skill.eternalrealm.assassin_virulence.desc": {
+    "ja": "攻撃が一定確率で敵を弱体化させる。",
+    "en": "Attacks may weaken the enemy."
+  },
+  "skill.eternalrealm.assassin_serpent_fang": {
+    "ja": "蛇牙",
+    "en": "Serpent Fang"
+  },
+  "skill.eternalrealm.assassin_serpent_fang.desc": {
+    "ja": "蛇のように素早く突き、毒と鈍足を与える。",
+    "en": "A snake-quick thrust that poisons and slows."
+  },
+  "skill.eternalrealm.assassin_plague_bomb": {
+    "ja": "疫病瓶",
+    "en": "Plague Bomb"
+  },
+  "skill.eternalrealm.assassin_plague_bomb.desc": {
+    "ja": "毒瓶を投げつけて炸裂させ、毒と弱体化を広げる。",
+    "en": "Throws a flask that bursts into poison and weakness."
+  },
+  "skill.eternalrealm.assassin_bloodthirst": {
+    "ja": "渇血",
+    "en": "Bloodthirst"
+  },
+  "skill.eternalrealm.assassin_bloodthirst.desc": {
+    "ja": "与えたダメージの一部でHPを回復する。",
+    "en": "Heals you for part of the damage you deal."
+  },
+  "skill.eternalrealm.assassin_viper_dance": {
+    "ja": "毒蛇の舞",
+    "en": "Viper Dance"
+  },
+  "skill.eternalrealm.assassin_viper_dance.desc": {
+    "ja": "舞うように周囲を5回斬り、最後に毒を与える。",
+    "en": "Dances through five spinning cuts, poisoning at the end."
+  },
+  "skill.eternalrealm.assassin_pandemic": {
+    "ja": "パンデミック",
+    "en": "Pandemic"
+  },
+  "skill.eternalrealm.assassin_pandemic.desc": {
+    "ja": "周囲に猛毒をまき散らし、敵を毒と弱体化で蝕む。",
+    "en": "Bursts with virulent poison, poisoning and weakening everything around you."
+  },
+  "skill.eternalrealm.assassin_blood_frenzy": {
+    "ja": "血の狂乱",
+    "en": "Blood Frenzy"
+  },
+  "skill.eternalrealm.assassin_blood_frenzy.desc": {
+    "ja": "HPが半分以下のとき、与ダメージが上がる。",
+    "en": "Deal more damage while below half HP."
+  },
+  "skill.eternalrealm.assassin_crimson_rain": {
+    "ja": "血雨",
+    "en": "Crimson Rain"
+  },
+  "skill.eternalrealm.assassin_crimson_rain.desc": {
+    "ja": "【必殺技】狙った場所に血の刃の雨を降らせ、敵を出血させる。",
+    "en": "[Ultimate] Rains crimson blades where you aim, making enemies bleed."
+  },
+  "skill.eternalrealm.assassin_hydra_venom": {
+    "ja": "ヒュドラの毒",
+    "en": "Hydra Venom"
+  },
+  "skill.eternalrealm.assassin_hydra_venom.desc": {
+    "ja": "【必殺技】九頭の毒蛇のように毒針を3度扇状に放ち、敵を猛毒に侵す。",
+    "en": "[Ultimate] Like a hydra, fires three fans of poison darts."
+  },
+  "skill.eternalrealm.assassin_venom_lord": {
+    "ja": "毒の王",
+    "en": "Venom Lord"
+  },
+  "skill.eternalrealm.assassin_venom_lord.desc": {
+    "ja": "攻撃が一定確率で強い毒を与え、会心率も上がる。",
+    "en": "Any attack may inflict strong poison; also raises critical chance."
+  },
+  "skill.eternalrealm.assassin_exsanguinate": {
+    "ja": "瀉血",
+    "en": "Exsanguinate"
+  },
+  "skill.eternalrealm.assassin_exsanguinate.desc": {
+    "ja": "血を絞り取る一撃。与えたダメージでHPを回復し、出血させる。",
+    "en": "Drains the enemy's blood: heals you and causes bleeding."
+  },
+  "skill.eternalrealm.assassin_quick_slash": {
+    "ja": "疾風斬り",
+    "en": "Quick Slash"
+  },
+  "skill.eternalrealm.assassin_quick_slash.desc": {
+    "ja": "素早い2連撃。",
+    "en": "Two lightning-fast cuts."
+  },
+  "skill.eternalrealm.assassin_twin_mastery": {
+    "ja": "二刀の心得",
+    "en": "Twin Mastery"
+  },
+  "skill.eternalrealm.assassin_twin_mastery.desc": {
+    "ja": "会心率が上がる。",
+    "en": "Raises critical chance."
+  },
+  "skill.eternalrealm.assassin_throwing_knives": {
+    "ja": "投げナイフ",
+    "en": "Throwing Knives"
+  },
+  "skill.eternalrealm.assassin_throwing_knives.desc": {
+    "ja": "ナイフを3本投げる。",
+    "en": "Throws three knives."
+  },
+  "skill.eternalrealm.assassin_cross_cut": {
+    "ja": "十字斬り",
+    "en": "Cross Cut"
+  },
+  "skill.eternalrealm.assassin_cross_cut.desc": {
+    "ja": "十字に斬り裂く2連撃。",
+    "en": "Two cuts that cross."
+  },
+  "skill.eternalrealm.assassin_keen_edge": {
+    "ja": "鋭刃",
+    "en": "Keen Edge"
+  },
+  "skill.eternalrealm.assassin_keen_edge.desc": {
+    "ja": "会心ダメージが上がる。",
+    "en": "Raises critical damage."
+  },
+  "skill.eternalrealm.assassin_fan_of_knives": {
+    "ja": "ナイフの扇",
+    "en": "Fan of Knives"
+  },
+  "skill.eternalrealm.assassin_fan_of_knives.desc": {
+    "ja": "扇状に7本のナイフを投げる。",
+    "en": "Throws seven knives in a fan."
+  },
+  "skill.eternalrealm.assassin_assassinate": {
+    "ja": "暗殺",
+    "en": "Assassinate"
+  },
+  "skill.eternalrealm.assassin_assassinate.desc": {
+    "ja": "必殺の一撃。HPが少ない敵には2倍のダメージ。",
+    "en": "A killing blow; double damage to badly wounded enemies."
+  },
+  "skill.eternalrealm.assassin_adrenaline": {
+    "ja": "アドレナリン",
+    "en": "Adrenaline"
+  },
+  "skill.eternalrealm.assassin_adrenaline.desc": {
+    "ja": "最大スタミナと物理ダメージが上がる。",
+    "en": "Raises max stamina and physical damage."
+  },
+  "skill.eternalrealm.assassin_blade_flurry": {
+    "ja": "乱れ斬り",
+    "en": "Blade Flurry"
+  },
+  "skill.eternalrealm.assassin_blade_flurry.desc": {
+    "ja": "目にも止まらぬ6連撃。",
+    "en": "Six blindingly fast cuts."
+  },
+  "skill.eternalrealm.assassin_heart_piercer": {
+    "ja": "心臓穿ち",
+    "en": "Heart Piercer"
+  },
+  "skill.eternalrealm.assassin_heart_piercer.desc": {
+    "ja": "踏み込んで心臓を貫き、出血させる。",
+    "en": "Lunges in and pierces the heart, causing bleeding."
+  },
+  "skill.eternalrealm.assassin_killing_spree": {
+    "ja": "殺戮の連鎖",
+    "en": "Killing Spree"
+  },
+  "skill.eternalrealm.assassin_killing_spree.desc": {
+    "ja": "会心率が上がり、敵を倒すとHPが回復する。",
+    "en": "Raises critical chance; defeating an enemy restores HP."
+  },
+  "skill.eternalrealm.assassin_dancing_blades": {
+    "ja": "剣舞",
+    "en": "Dancing Blades"
+  },
+  "skill.eternalrealm.assassin_dancing_blades.desc": {
+    "ja": "舞うように周囲を5回斬る。舞の間は回避率が上がる。",
+    "en": "Five dancing cuts around you, with raised evasion while you dance."
+  },
+  "skill.eternalrealm.assassin_thousand_blades": {
+    "ja": "千刃乱舞",
+    "en": "Thousand Blades"
+  },
+  "skill.eternalrealm.assassin_thousand_blades.desc": {
+    "ja": "【必殺技】周囲の敵を10回斬り刻む。",
+    "en": "[Ultimate] Cuts everything around you ten times."
+  },
+  "skill.eternalrealm.assassin_lethal_precision": {
+    "ja": "致命の精度",
+    "en": "Lethal Precision"
+  },
+  "skill.eternalrealm.assassin_lethal_precision.desc": {
+    "ja": "会心率と会心ダメージが上がる。",
+    "en": "Raises critical chance and critical damage."
+  },
+  "skill.eternalrealm.assassin_tempest_edge": {
+    "ja": "嵐刃",
+    "en": "Tempest Edge"
+  },
+  "skill.eternalrealm.assassin_tempest_edge.desc": {
+    "ja": "嵐のように2度駆け抜け、一直線に斬り裂く。",
+    "en": "Tears through a line of enemies twice like a storm."
+  },
+  "skill.eternalrealm.assassin_phantom_assault": {
+    "ja": "幻影強襲",
+    "en": "Phantom Assault"
+  },
+  "skill.eternalrealm.assassin_phantom_assault.desc": {
+    "ja": "残像を残して敵の間を跳び回りながら4回斬り、最後の一撃で弱った敵を仕留める。",
+    "en": "Darts between enemies leaving afterimages for four cuts; the last finishes off the wounded."
+  },
+  "skill.eternalrealm.assassin_blade_saint": {
+    "ja": "剣聖",
+    "en": "Blade Saint"
+  },
+  "skill.eternalrealm.assassin_blade_saint.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.assassin_shadow_requiem": {
+    "ja": "影の鎮魂歌",
+    "en": "Shadow Requiem"
+  },
+  "skill.eternalrealm.assassin_shadow_requiem.desc": {
+    "ja": "前方に影の刃を4度湧き上がらせ、最後に敵を気絶させる。",
+    "en": "Shadow blades erupt four times ahead of you; the last stuns."
+  },
+  "skill.eternalrealm.mage_fireball": {
+    "ja": "ファイアボール",
+    "en": "Fireball"
+  },
+  "skill.eternalrealm.mage_fireball.desc": {
+    "ja": "着弾で爆発する火球。敵を燃やす。",
+    "en": "A fireball that explodes on impact and burns enemies."
+  },
+  "skill.eternalrealm.mage_pyromancy": {
+    "ja": "火術",
+    "en": "Pyromancy"
+  },
+  "skill.eternalrealm.mage_pyromancy.desc": {
+    "ja": "魔法ダメージが上がる。",
+    "en": "Raises magic damage."
+  },
+  "skill.eternalrealm.mage_flame_burst": {
+    "ja": "火炎放射",
+    "en": "Flame Burst"
+  },
+  "skill.eternalrealm.mage_flame_burst.desc": {
+    "ja": "前方に炎を吹きつけ、敵を燃やす。",
+    "en": "Breathes a gout of flame ahead, setting enemies alight."
+  },
+  "skill.eternalrealm.mage_explosion": {
+    "ja": "エクスプロージョン",
+    "en": "Explosion"
+  },
+  "skill.eternalrealm.mage_explosion.desc": {
+    "ja": "広範囲を吹き飛ばす大きな火球。",
+    "en": "A larger fireball whose blast covers a wide area."
+  },
+  "skill.eternalrealm.mage_kindling": {
+    "ja": "着火",
+    "en": "Kindling"
+  },
+  "skill.eternalrealm.mage_kindling.desc": {
+    "ja": "攻撃が一定確率で敵を燃やす。",
+    "en": "Attacks may set enemies on fire."
+  },
+  "skill.eternalrealm.mage_fire_wall": {
+    "ja": "ファイアウォール",
+    "en": "Fire Wall"
+  },
+  "skill.eternalrealm.mage_fire_wall.desc": {
+    "ja": "前方に炎の壁を立て、触れた敵を焼く。",
+    "en": "Raises a wall of fire ahead that burns enemies."
+  },
+  "skill.eternalrealm.mage_magma_orb": {
+    "ja": "マグマボール",
+    "en": "Magma Orb"
+  },
+  "skill.eternalrealm.mage_magma_orb.desc": {
+    "ja": "ゆっくり進む溶岩の玉。貫いた敵を燃やし、鈍足にする。",
+    "en": "A slow ball of magma that pierces, burns and slows."
+  },
+  "skill.eternalrealm.mage_heat_haze": {
+    "ja": "陽炎",
+    "en": "Heat Haze"
+  },
+  "skill.eternalrealm.mage_heat_haze.desc": {
+    "ja": "会心ダメージが上がる。",
+    "en": "Raises critical damage."
+  },
+  "skill.eternalrealm.mage_flame_pillar": {
+    "ja": "火柱",
+    "en": "Flame Pillar"
+  },
+  "skill.eternalrealm.mage_flame_pillar.desc": {
+    "ja": "前方に火柱を噴き上げ、敵を燃やして打ち上げる。",
+    "en": "Erupts a pillar of fire ahead that burns and launches enemies."
+  },
+  "skill.eternalrealm.mage_phoenix_bolt": {
+    "ja": "フェニックス",
+    "en": "Phoenix Bolt"
+  },
+  "skill.eternalrealm.mage_phoenix_bolt.desc": {
+    "ja": "不死鳥の炎を放つ。貫いた敵を燃やし、与えたダメージでHPを回復する。",
+    "en": "Looses a phoenix of flame that pierces and burns, healing you for part of the damage."
+  },
+  "skill.eternalrealm.mage_combustion": {
+    "ja": "燃焼",
+    "en": "Combustion"
+  },
+  "skill.eternalrealm.mage_combustion.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.mage_inferno_ring": {
+    "ja": "インフェルノ",
+    "en": "Inferno Ring"
+  },
+  "skill.eternalrealm.mage_inferno_ring.desc": {
+    "ja": "自分を中心に炎の輪を2度広げる。",
+    "en": "Two rings of fire spread out from you."
+  },
+  "skill.eternalrealm.mage_meteor": {
+    "ja": "メテオ",
+    "en": "Meteor"
+  },
+  "skill.eternalrealm.mage_meteor.desc": {
+    "ja": "【必殺技】狙った場所に隕石を落とし、半径6の大爆発。",
+    "en": "[Ultimate] Calls a meteor down where you look: a huge explosion."
+  },
+  "skill.eternalrealm.mage_ember_heart": {
+    "ja": "残り火の心",
+    "en": "Ember Heart"
+  },
+  "skill.eternalrealm.mage_ember_heart.desc": {
+    "ja": "スキルのスタミナ消費が減り、最大スタミナが増える。",
+    "en": "Lower skill stamina costs and more max stamina."
+  },
+  "skill.eternalrealm.mage_dragon_breath": {
+    "ja": "ドラゴンブレス",
+    "en": "Dragon Breath"
+  },
+  "skill.eternalrealm.mage_dragon_breath.desc": {
+    "ja": "竜の息吹のような業火を前方に長く吐き続ける。",
+    "en": "Breathes a long torrent of dragonfire ahead."
+  },
+  "skill.eternalrealm.mage_armageddon": {
+    "ja": "アルマゲドン",
+    "en": "Armageddon"
+  },
+  "skill.eternalrealm.mage_armageddon.desc": {
+    "ja": "【必殺技】隕石の雨を降らせ、一帯を焼き尽くす。",
+    "en": "[Ultimate] Calls down a rain of meteors that scorches the land."
+  },
+  "skill.eternalrealm.mage_flame_lord": {
+    "ja": "炎帝",
+    "en": "Flame Lord"
+  },
+  "skill.eternalrealm.mage_flame_lord.desc": {
+    "ja": "魔法ダメージが上がり、攻撃が一定確率で敵を燃やす。",
+    "en": "Raises magic damage; attacks may set enemies on fire."
+  },
+  "skill.eternalrealm.mage_sunfire": {
+    "ja": "日輪",
+    "en": "Sunfire"
+  },
+  "skill.eternalrealm.mage_sunfire.desc": {
+    "ja": "狙った場所に太陽の炎を落とし、激しく焼き続ける。",
+    "en": "Brings the sun's fire down where you aim, searing again and again."
+  },
+  "skill.eternalrealm.mage_frost_bolt": {
+    "ja": "フロストボルト",
+    "en": "Frost Bolt"
+  },
+  "skill.eternalrealm.mage_frost_bolt.desc": {
+    "ja": "冷気の弾。当たった敵を鈍足にする。",
+    "en": "A bolt of frost that slows."
+  },
+  "skill.eternalrealm.mage_cryomancy": {
+    "ja": "氷術",
+    "en": "Cryomancy"
+  },
+  "skill.eternalrealm.mage_cryomancy.desc": {
+    "ja": "魔法ダメージと最大HPが上がる。",
+    "en": "Raises magic damage and max HP."
+  },
+  "skill.eternalrealm.mage_frost_nova": {
+    "ja": "フロストノヴァ",
+    "en": "Frost Nova"
+  },
+  "skill.eternalrealm.mage_frost_nova.desc": {
+    "ja": "周囲に冷気を放ち、敵を凍りつかせる。",
+    "en": "A burst of cold that freezes nearby enemies."
+  },
+  "skill.eternalrealm.mage_ice_lance": {
+    "ja": "アイスランス",
+    "en": "Ice Lance"
+  },
+  "skill.eternalrealm.mage_ice_lance.desc": {
+    "ja": "敵を貫く氷の槍。凍えさせて動きを鈍らせる。",
+    "en": "A piercing lance of ice that freezes and slows enemies."
+  },
+  "skill.eternalrealm.mage_permafrost": {
+    "ja": "永久凍土",
+    "en": "Permafrost"
+  },
+  "skill.eternalrealm.mage_permafrost.desc": {
+    "ja": "攻撃が一定確率で敵を鈍足にする。",
+    "en": "Attacks may slow enemies."
+  },
+  "skill.eternalrealm.mage_ice_wall": {
+    "ja": "アイスウォール",
+    "en": "Ice Wall"
+  },
+  "skill.eternalrealm.mage_ice_wall.desc": {
+    "ja": "氷をまとってシールドを得て、受けるダメージを減らす。",
+    "en": "Encases you in ice: a shield and less damage taken."
+  },
+  "skill.eternalrealm.mage_glacial_spike": {
+    "ja": "氷柱",
+    "en": "Glacial Spike"
+  },
+  "skill.eternalrealm.mage_glacial_spike.desc": {
+    "ja": "前方の地面から氷柱を突き上げ、敵を打ち上げて凍らせる。",
+    "en": "An ice spike erupts ahead, launching and freezing enemies."
+  },
+  "skill.eternalrealm.mage_cold_blood": {
+    "ja": "冷血",
+    "en": "Cold Blood"
+  },
+  "skill.eternalrealm.mage_cold_blood.desc": {
+    "ja": "会心率が上がる。",
+    "en": "Raises critical chance."
+  },
+  "skill.eternalrealm.mage_blizzard": {
+    "ja": "ブリザード",
+    "en": "Blizzard"
+  },
+  "skill.eternalrealm.mage_blizzard.desc": {
+    "ja": "狙った場所に吹雪を起こし、敵を傷つけて大きく鈍らせる。",
+    "en": "A blizzard where you aim that hurts and greatly slows enemies."
+  },
+  "skill.eternalrealm.mage_shatter": {
+    "ja": "砕氷",
+    "en": "Shatter"
+  },
+  "skill.eternalrealm.mage_shatter.desc": {
+    "ja": "周囲に氷を砕き散らす。HPの減った敵にはダメージが増える。",
+    "en": "Shatters ice all around you; deals more damage to wounded enemies."
+  },
+  "skill.eternalrealm.mage_frozen_heart": {
+    "ja": "凍てつく心",
+    "en": "Frozen Heart"
+  },
+  "skill.eternalrealm.mage_frozen_heart.desc": {
+    "ja": "HPが半分以下のとき、受けるダメージが減る。",
+    "en": "Take less damage while below half HP."
+  },
+  "skill.eternalrealm.mage_ice_prison": {
+    "ja": "氷獄",
+    "en": "Ice Prison"
+  },
+  "skill.eternalrealm.mage_ice_prison.desc": {
+    "ja": "着弾点の敵を氷に閉じ込め、気絶させる。",
+    "en": "Traps enemies near the impact in ice, stunning them."
+  },
+  "skill.eternalrealm.mage_absolute_zero": {
+    "ja": "絶対零度",
+    "en": "Absolute Zero"
+  },
+  "skill.eternalrealm.mage_absolute_zero.desc": {
+    "ja": "【必殺技】周囲一帯を凍結させ、敵の動きを止める。",
+    "en": "[Ultimate] Freezes everything around you solid."
+  },
+  "skill.eternalrealm.mage_winter_soul": {
+    "ja": "冬の魂",
+    "en": "Winter Soul"
+  },
+  "skill.eternalrealm.mage_winter_soul.desc": {
+    "ja": "スキルの再使用時間が短くなる。",
+    "en": "Shorter skill cooldowns."
+  },
+  "skill.eternalrealm.mage_hail_storm": {
+    "ja": "ヘイルストーム",
+    "en": "Hail Storm"
+  },
+  "skill.eternalrealm.mage_hail_storm.desc": {
+    "ja": "大粒の雹を降らせ、敵を鈍らせる。",
+    "en": "Rains down heavy hailstones that slow enemies."
+  },
+  "skill.eternalrealm.mage_frost_giant": {
+    "ja": "氷の巨人",
+    "en": "Frost Giant"
+  },
+  "skill.eternalrealm.mage_frost_giant.desc": {
+    "ja": "氷の巨人の拳を前方に叩きつけ、敵を凍らせて気絶させる。",
+    "en": "Smashes the fist of a frost giant down ahead, freezing and stunning enemies."
+  },
+  "skill.eternalrealm.mage_ice_queen": {
+    "ja": "氷の女帝",
+    "en": "Frost Empress"
+  },
+  "skill.eternalrealm.mage_ice_queen.desc": {
+    "ja": "魔法ダメージが上がり、攻撃が一定確率で敵を凍らせる。",
+    "en": "Raises magic damage; attacks may freeze enemies."
+  },
+  "skill.eternalrealm.mage_eternal_winter": {
+    "ja": "永劫の冬",
+    "en": "Eternal Winter"
+  },
+  "skill.eternalrealm.mage_eternal_winter.desc": {
+    "ja": "【必殺技】自分の周りに凍てつく嵐を巻き起こし、敵を凍らせ続ける。自身の被ダメージも減る。",
+    "en": "[Ultimate] A freezing storm swirls around you, freezing enemies again and again while you take less damage."
+  },
+  "skill.eternalrealm.mage_spark": {
+    "ja": "スパーク",
+    "en": "Spark"
+  },
+  "skill.eternalrealm.mage_spark.desc": {
+    "ja": "素早く撃てる小さな雷弾。",
+    "en": "A quick little bolt of lightning."
+  },
+  "skill.eternalrealm.mage_arcane_mind": {
+    "ja": "秘術の心得",
+    "en": "Arcane Mind"
+  },
+  "skill.eternalrealm.mage_arcane_mind.desc": {
+    "ja": "最大スタミナが増える。",
+    "en": "Raises max stamina."
+  },
+  "skill.eternalrealm.mage_mana_shield": {
+    "ja": "マナシールド",
+    "en": "Mana Shield"
+  },
+  "skill.eternalrealm.mage_mana_shield.desc": {
+    "ja": "魔力の障壁でダメージを吸収する。",
+    "en": "A barrier of mana absorbs damage."
+  },
+  "skill.eternalrealm.mage_chain_lightning": {
+    "ja": "チェインライトニング",
+    "en": "Chain Lightning"
+  },
+  "skill.eternalrealm.mage_chain_lightning.desc": {
+    "ja": "周囲の敵4体まで連鎖する稲妻。一瞬しびれさせる。",
+    "en": "Lightning that chains between up to four enemies, briefly stunning them."
+  },
+  "skill.eternalrealm.mage_focus": {
+    "ja": "集中",
+    "en": "Focus"
+  },
+  "skill.eternalrealm.mage_focus.desc": {
+    "ja": "スキルの再使用時間が短くなる。",
+    "en": "Shorter skill cooldowns."
+  },
+  "skill.eternalrealm.mage_blink": {
+    "ja": "ブリンク",
+    "en": "Blink"
+  },
+  "skill.eternalrealm.mage_blink.desc": {
+    "ja": "前方へ瞬間移動し、一瞬回避率が上がる。",
+    "en": "Teleports forward and briefly raises evasion."
+  },
+  "skill.eternalrealm.mage_thunderstorm": {
+    "ja": "サンダーストーム",
+    "en": "Thunderstorm"
+  },
+  "skill.eternalrealm.mage_thunderstorm.desc": {
+    "ja": "周囲12ブロックの敵最大5体に2度落雷。",
+    "en": "Lightning strikes up to 5 enemies within 12 blocks, twice."
+  },
+  "skill.eternalrealm.mage_arcane_flow": {
+    "ja": "魔力循環",
+    "en": "Arcane Flow"
+  },
+  "skill.eternalrealm.mage_arcane_flow.desc": {
+    "ja": "スキルのスタミナ消費が減る。",
+    "en": "Lower skill stamina costs."
+  },
+  "skill.eternalrealm.mage_arcane_missiles": {
+    "ja": "アーケインミサイル",
+    "en": "Arcane Missiles"
+  },
+  "skill.eternalrealm.mage_arcane_missiles.desc": {
+    "ja": "魔力の弾を5連射する。",
+    "en": "Fires five missiles of pure magic."
+  },
+  "skill.eternalrealm.mage_thunder_spear": {
+    "ja": "雷槍",
+    "en": "Thunder Spear"
+  },
+  "skill.eternalrealm.mage_thunder_spear.desc": {
+    "ja": "雷の槍で一直線に貫き、敵をしびれさせる。",
+    "en": "A spear of lightning that pierces a line and stuns."
+  },
+  "skill.eternalrealm.mage_overload": {
+    "ja": "過充電",
+    "en": "Overload"
+  },
+  "skill.eternalrealm.mage_overload.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.mage_gravity_well": {
+    "ja": "グラビティウェル",
+    "en": "Gravity Well"
+  },
+  "skill.eternalrealm.mage_gravity_well.desc": {
+    "ja": "狙った場所に重力の渦を作り、敵を引き寄せて押しつぶす。",
+    "en": "Creates a gravity well where you aim that pulls enemies in and crushes them."
+  },
+  "skill.eternalrealm.mage_thunder_god": {
+    "ja": "雷神",
+    "en": "Thunder God"
+  },
+  "skill.eternalrealm.mage_thunder_god.desc": {
+    "ja": "【必殺技】雷神を宿し、周囲の敵に5度雷を落とす。移動速度も上がる。",
+    "en": "[Ultimate] Channels the thunder god: five lightning strikes on enemies around you, and you move faster."
+  },
+  "skill.eternalrealm.mage_mana_surge": {
+    "ja": "魔力の奔流",
+    "en": "Mana Surge"
+  },
+  "skill.eternalrealm.mage_mana_surge.desc": {
+    "ja": "魔法ダメージと最大スタミナが上がる。",
+    "en": "Raises magic damage and max stamina."
+  },
+  "skill.eternalrealm.mage_time_warp": {
+    "ja": "タイムワープ",
+    "en": "Time Warp"
+  },
+  "skill.eternalrealm.mage_time_warp.desc": {
+    "ja": "時を早め、他のスキルの再使用時間を縮めてスタミナを回復する。",
+    "en": "Speeds up time: your other skills recharge faster and stamina returns."
+  },
+  "skill.eternalrealm.mage_ball_lightning": {
+    "ja": "球電",
+    "en": "Ball Lightning"
+  },
+  "skill.eternalrealm.mage_ball_lightning.desc": {
+    "ja": "ゆっくり進む雷球が、触れた敵すべてを撃つ。",
+    "en": "A slow ball of lightning that strikes everything it passes."
+  },
+  "skill.eternalrealm.mage_archmage": {
+    "ja": "大魔導師",
+    "en": "Archmage"
+  },
+  "skill.eternalrealm.mage_archmage.desc": {
+    "ja": "スキルの威力が上がり、再使用時間が短くなる。",
+    "en": "Raises skill power and shortens cooldowns."
+  },
+  "skill.eternalrealm.mage_singularity": {
+    "ja": "特異点",
+    "en": "Singularity"
+  },
+  "skill.eternalrealm.mage_singularity.desc": {
+    "ja": "【必殺技】狙った場所に特異点を生み、敵を吸い寄せたあと大爆発させる。",
+    "en": "[Ultimate] Opens a singularity where you aim that draws enemies in, then detonates."
+  },
+  "skill.eternalrealm.ranger_rapid_shot": {
+    "ja": "ラピッドショット",
+    "en": "Rapid Shot"
+  },
+  "skill.eternalrealm.ranger_rapid_shot.desc": {
+    "ja": "素早く3本の矢を放つ。",
+    "en": "Looses three arrows in quick succession."
+  },
+  "skill.eternalrealm.ranger_eagle_eye": {
+    "ja": "鷹の目",
+    "en": "Eagle Eye"
+  },
+  "skill.eternalrealm.ranger_eagle_eye.desc": {
+    "ja": "遠距離ダメージが上がる。",
+    "en": "Raises ranged damage."
+  },
+  "skill.eternalrealm.ranger_aimed_shot": {
+    "ja": "狙い撃ち",
+    "en": "Aimed Shot"
+  },
+  "skill.eternalrealm.ranger_aimed_shot.desc": {
+    "ja": "じっくり狙いを定めて放つ強力な一矢。",
+    "en": "A carefully aimed, powerful arrow."
+  },
+  "skill.eternalrealm.ranger_piercing_shot": {
+    "ja": "貫通射撃",
+    "en": "Piercing Shot"
+  },
+  "skill.eternalrealm.ranger_piercing_shot.desc": {
+    "ja": "敵を貫く矢を放つ。",
+    "en": "An arrow that pierces through enemies."
+  },
+  "skill.eternalrealm.ranger_steady_aim": {
+    "ja": "精密射撃",
+    "en": "Steady Aim"
+  },
+  "skill.eternalrealm.ranger_steady_aim.desc": {
+    "ja": "会心率が上がる。",
+    "en": "Raises critical chance."
+  },
+  "skill.eternalrealm.ranger_crippling_shot": {
+    "ja": "足止めの矢",
+    "en": "Crippling Shot"
+  },
+  "skill.eternalrealm.ranger_crippling_shot.desc": {
+    "ja": "足を射抜いて大きく鈍らせ、与ダメージを下げる。",
+    "en": "Shoots the legs, greatly slowing and weakening the enemy."
+  },
+  "skill.eternalrealm.ranger_headshot": {
+    "ja": "ヘッドショット",
+    "en": "Headshot"
+  },
+  "skill.eternalrealm.ranger_headshot.desc": {
+    "ja": "頭を狙う一矢。HPの減った敵にはダメージが増える。",
+    "en": "Aims for the head; deals more damage to wounded enemies."
+  },
+  "skill.eternalrealm.ranger_hawk_focus": {
+    "ja": "鷹の集中",
+    "en": "Hawk Focus"
+  },
+  "skill.eternalrealm.ranger_hawk_focus.desc": {
+    "ja": "会心ダメージが上がる。",
+    "en": "Raises critical damage."
+  },
+  "skill.eternalrealm.ranger_mark_prey": {
+    "ja": "獲物の印",
+    "en": "Mark Prey"
+  },
+  "skill.eternalrealm.ranger_mark_prey.desc": {
+    "ja": "印の矢を撃ち込み、敵の被ダメージを長く増やす。",
+    "en": "Marks the prey: the enemy takes more damage for a long time."
+  },
+  "skill.eternalrealm.ranger_power_shot": {
+    "ja": "パワーショット",
+    "en": "Power Shot"
+  },
+  "skill.eternalrealm.ranger_power_shot.desc": {
+    "ja": "弓を限界まで引き絞り、敵を吹き飛ばす一矢を放つ。",
+    "en": "Draws the bow to its limit for an arrow that blasts enemies back."
+  },
+  "skill.eternalrealm.ranger_sniper": {
+    "ja": "狙撃手",
+    "en": "Sniper"
+  },
+  "skill.eternalrealm.ranger_sniper.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.ranger_explosive_arrow": {
+    "ja": "爆裂矢",
+    "en": "Explosive Arrow"
+  },
+  "skill.eternalrealm.ranger_explosive_arrow.desc": {
+    "ja": "着弾で爆発し、敵を燃やす矢。",
+    "en": "An arrow that explodes on impact and burns."
+  },
+  "skill.eternalrealm.ranger_deadeye": {
+    "ja": "デッドアイ",
+    "en": "Deadeye"
+  },
+  "skill.eternalrealm.ranger_deadeye.desc": {
+    "ja": "【必殺技】極限まで集中して会心率を高め、貫通する矢を4連射する。",
+    "en": "[Ultimate] Total focus: raised critical chance and four piercing arrows."
+  },
+  "skill.eternalrealm.ranger_wind_reader": {
+    "ja": "風読み",
+    "en": "Wind Reader"
+  },
+  "skill.eternalrealm.ranger_wind_reader.desc": {
+    "ja": "移動速度と最大スタミナが上がる。",
+    "en": "Raises movement speed and max stamina."
+  },
+  "skill.eternalrealm.ranger_thunder_arrow": {
+    "ja": "雷鳴の矢",
+    "en": "Thunder Arrow"
+  },
+  "skill.eternalrealm.ranger_thunder_arrow.desc": {
+    "ja": "雷をまとった矢が敵を貫き、しびれさせる。",
+    "en": "A lightning-charged arrow that pierces and stuns."
+  },
+  "skill.eternalrealm.ranger_star_piercer": {
+    "ja": "星穿ち",
+    "en": "Star Piercer"
+  },
+  "skill.eternalrealm.ranger_star_piercer.desc": {
+    "ja": "【必殺技】星の光を宿した一矢が、一直線上のすべてを撃ち抜く。",
+    "en": "[Ultimate] An arrow of starlight that pierces everything in its path."
+  },
+  "skill.eternalrealm.ranger_marksman_creed": {
+    "ja": "射手の誓い",
+    "en": "Marksman's Creed"
+  },
+  "skill.eternalrealm.ranger_marksman_creed.desc": {
+    "ja": "遠距離ダメージと会心率が上がる。",
+    "en": "Raises ranged damage and critical chance."
+  },
+  "skill.eternalrealm.ranger_chain_volley": {
+    "ja": "連続斉射",
+    "en": "Chain Volley"
+  },
+  "skill.eternalrealm.ranger_chain_volley.desc": {
+    "ja": "2本ずつ4回続けて矢を放つ。",
+    "en": "Four quick volleys of two arrows."
+  },
+  "skill.eternalrealm.ranger_hunter_slash": {
+    "ja": "狩人の双刃",
+    "en": "Hunter's Slash"
+  },
+  "skill.eternalrealm.ranger_hunter_slash.desc": {
+    "ja": "【双剣】素早い2連撃。",
+    "en": "[Dual blades] Two quick cuts."
+  },
+  "skill.eternalrealm.ranger_survivalist": {
+    "ja": "サバイバル術",
+    "en": "Survivalist"
+  },
+  "skill.eternalrealm.ranger_survivalist.desc": {
+    "ja": "最大HPが上がる。",
+    "en": "Raises max HP."
+  },
+  "skill.eternalrealm.ranger_snare_trap": {
+    "ja": "くくり罠",
+    "en": "Snare Trap"
+  },
+  "skill.eternalrealm.ranger_snare_trap.desc": {
+    "ja": "足元に罠を仕掛ける。少し後に作動し、周囲の敵を気絶させる。",
+    "en": "Sets a snare at your feet that springs a moment later, stunning enemies."
+  },
+  "skill.eternalrealm.ranger_beast_call": {
+    "ja": "野性の呼び声",
+    "en": "Beast Call"
+  },
+  "skill.eternalrealm.ranger_beast_call.desc": {
+    "ja": "野性を呼び覚まし、攻撃力と移動速度を上げる。",
+    "en": "Awakens your wild side: more damage and speed."
+  },
+  "skill.eternalrealm.ranger_camouflage": {
+    "ja": "迷彩",
+    "en": "Camouflage"
+  },
+  "skill.eternalrealm.ranger_camouflage.desc": {
+    "ja": "一定確率で攻撃を回避する。",
+    "en": "A chance to evade attacks completely."
+  },
+  "skill.eternalrealm.ranger_venom_trap": {
+    "ja": "毒罠",
+    "en": "Venom Trap"
+  },
+  "skill.eternalrealm.ranger_venom_trap.desc": {
+    "ja": "前方に毒の罠を仕掛ける。作動すると周囲の敵を毒で蝕む。",
+    "en": "Sets a poison trap ahead that releases toxic fumes."
+  },
+  "skill.eternalrealm.ranger_leap_shot": {
+    "ja": "跳躍射撃",
+    "en": "Leap Shot"
+  },
+  "skill.eternalrealm.ranger_leap_shot.desc": {
+    "ja": "後方へ跳びながら強力な矢を放ち、敵を鈍足にする。",
+    "en": "Leaps back while firing a strong, slowing arrow."
+  },
+  "skill.eternalrealm.ranger_tracker": {
+    "ja": "追跡者",
+    "en": "Tracker"
+  },
+  "skill.eternalrealm.ranger_tracker.desc": {
+    "ja": "移動速度が上がり、回避のスタミナ消費が減る。",
+    "en": "Faster movement and cheaper dodges."
+  },
+  "skill.eternalrealm.ranger_wild_claws": {
+    "ja": "獣爪",
+    "en": "Wild Claws"
+  },
+  "skill.eternalrealm.ranger_wild_claws.desc": {
+    "ja": "【双剣】獣のように4回切り裂き、出血させる。",
+    "en": "[Dual blades] Four savage cuts that cause bleeding."
+  },
+  "skill.eternalrealm.ranger_hawk_dive": {
+    "ja": "鷹の急降下",
+    "en": "Hawk Dive"
+  },
+  "skill.eternalrealm.ranger_hawk_dive.desc": {
+    "ja": "高く跳び上がり、空中から炸裂する矢を撃ち込む。",
+    "en": "Leaps high and fires an exploding arrow from the air."
+  },
+  "skill.eternalrealm.ranger_natures_blessing": {
+    "ja": "自然の恵み",
+    "en": "Nature's Blessing"
+  },
+  "skill.eternalrealm.ranger_natures_blessing.desc": {
+    "ja": "回復量が上がり、敵を倒すとHPが回復する。",
+    "en": "Raises healing; defeating an enemy restores HP."
+  },
+  "skill.eternalrealm.ranger_explosive_trap": {
+    "ja": "爆薬罠",
+    "en": "Explosive Trap"
+  },
+  "skill.eternalrealm.ranger_explosive_trap.desc": {
+    "ja": "前方に爆薬を仕掛け、少し後に爆発させて敵を吹き上げる。",
+    "en": "Plants explosives ahead that blow up a moment later, launching enemies."
+  },
+  "skill.eternalrealm.ranger_predator_pounce": {
+    "ja": "猛獣の跳躍",
+    "en": "Predator Pounce"
+  },
+  "skill.eternalrealm.ranger_predator_pounce.desc": {
+    "ja": "【双剣】獲物に飛びかかって叩きつけ、気絶させる。",
+    "en": "[Dual blades] Pounces on the prey and stuns it."
+  },
+  "skill.eternalrealm.ranger_apex": {
+    "ja": "頂点捕食者",
+    "en": "Apex"
+  },
+  "skill.eternalrealm.ranger_apex.desc": {
+    "ja": "物理ダメージと遠距離ダメージが上がる。",
+    "en": "Raises physical and ranged damage."
+  },
+  "skill.eternalrealm.ranger_storm_trap": {
+    "ja": "雷撃罠",
+    "en": "Storm Trap"
+  },
+  "skill.eternalrealm.ranger_storm_trap.desc": {
+    "ja": "前方に雷の罠を仕掛ける。作動すると敵を何度も打ち、しびれさせる。",
+    "en": "Sets a lightning trap ahead that strikes and stuns enemies again and again."
+  },
+  "skill.eternalrealm.ranger_beast_lord": {
+    "ja": "百獣の王",
+    "en": "Beast Lord"
+  },
+  "skill.eternalrealm.ranger_beast_lord.desc": {
+    "ja": "【必殺技】獣の王の力を宿して突進し、周囲を食い破る。しばらく攻撃力が上がり、HPを吸収する。",
+    "en": "[Ultimate] Takes on the might of the beast lord: charges and tears into enemies, then deals more damage and drains life."
+  },
+  "skill.eternalrealm.ranger_wilderness": {
+    "ja": "野生の本能",
+    "en": "Wilderness"
+  },
+  "skill.eternalrealm.ranger_wilderness.desc": {
+    "ja": "HPが半分以下のとき、与ダメージが上がり受けるダメージが減る。",
+    "en": "While below half HP, deal more damage and take less."
+  },
+  "skill.eternalrealm.ranger_primal_fury": {
+    "ja": "原始の怒り",
+    "en": "Primal Fury"
+  },
+  "skill.eternalrealm.ranger_primal_fury.desc": {
+    "ja": "【双剣】怒りに任せて周囲を4回斬り、与えたダメージでHPを回復する。",
+    "en": "[Dual blades] Four furious spinning cuts that heal you for part of the damage."
+  },
+  "skill.eternalrealm.ranger_double_shot": {
+    "ja": "ダブルショット",
+    "en": "Double Shot"
+  },
+  "skill.eternalrealm.ranger_double_shot.desc": {
+    "ja": "2本の矢を同時に放つ。",
+    "en": "Fires two arrows at once."
+  },
+  "skill.eternalrealm.ranger_quiver_mastery": {
+    "ja": "矢筒の心得",
+    "en": "Quiver Mastery"
+  },
+  "skill.eternalrealm.ranger_quiver_mastery.desc": {
+    "ja": "スキルのスタミナ消費が減る。",
+    "en": "Lower skill stamina costs."
+  },
+  "skill.eternalrealm.ranger_scatter_shot": {
+    "ja": "散弾射撃",
+    "en": "Scatter Shot"
+  },
+  "skill.eternalrealm.ranger_scatter_shot.desc": {
+    "ja": "至近距離に矢をばらまき、敵を押し返す。",
+    "en": "Sprays arrows at close range, knocking enemies back."
+  },
+  "skill.eternalrealm.ranger_spread_shot": {
+    "ja": "拡散矢",
+    "en": "Spread Shot"
+  },
+  "skill.eternalrealm.ranger_spread_shot.desc": {
+    "ja": "扇状に5本の矢を放つ。",
+    "en": "Fires five arrows in a fan."
+  },
+  "skill.eternalrealm.ranger_rapid_reload": {
+    "ja": "高速装填",
+    "en": "Rapid Reload"
+  },
+  "skill.eternalrealm.ranger_rapid_reload.desc": {
+    "ja": "スキルの再使用時間が短くなる。",
+    "en": "Shorter skill cooldowns."
+  },
+  "skill.eternalrealm.ranger_fire_volley": {
+    "ja": "火矢",
+    "en": "Fire Volley"
+  },
+  "skill.eternalrealm.ranger_fire_volley.desc": {
+    "ja": "燃える矢を3本放つ。",
+    "en": "Fires three burning arrows."
+  },
+  "skill.eternalrealm.ranger_arrow_storm": {
+    "ja": "アローストーム",
+    "en": "Arrow Storm"
+  },
+  "skill.eternalrealm.ranger_arrow_storm.desc": {
+    "ja": "矢を立て続けに6連射する。",
+    "en": "Looses six arrows in a rapid stream."
+  },
+  "skill.eternalrealm.ranger_volley_expert": {
+    "ja": "斉射の達人",
+    "en": "Volley Expert"
+  },
+  "skill.eternalrealm.ranger_volley_expert.desc": {
+    "ja": "遠距離ダメージが上がる。",
+    "en": "Raises ranged damage."
+  },
+  "skill.eternalrealm.ranger_frost_volley": {
+    "ja": "氷矢",
+    "en": "Frost Volley"
+  },
+  "skill.eternalrealm.ranger_frost_volley.desc": {
+    "ja": "冷気の矢を4本放ち、敵を鈍らせる。",
+    "en": "Fires four frost arrows that slow."
+  },
+  "skill.eternalrealm.ranger_cluster_bomb": {
+    "ja": "クラスターボム",
+    "en": "Cluster Bomb"
+  },
+  "skill.eternalrealm.ranger_cluster_bomb.desc": {
+    "ja": "炸裂する矢を3本同時に放つ。",
+    "en": "Fires three exploding arrows."
+  },
+  "skill.eternalrealm.ranger_hail_of_arrows": {
+    "ja": "連射の極意",
+    "en": "Hail of Arrows"
+  },
+  "skill.eternalrealm.ranger_hail_of_arrows.desc": {
+    "ja": "最大スタミナと遠距離ダメージが上がる。",
+    "en": "Raises max stamina and ranged damage."
+  },
+  "skill.eternalrealm.ranger_rain_of_thorns": {
+    "ja": "荊棘の雨",
+    "en": "Rain of Thorns"
+  },
+  "skill.eternalrealm.ranger_rain_of_thorns.desc": {
+    "ja": "狙った場所に棘の矢を降らせ、敵を出血させる。",
+    "en": "Rains barbed arrows where you aim, causing bleeding."
+  },
+  "skill.eternalrealm.ranger_arrow_rain": {
+    "ja": "天穿つ矢雨",
+    "en": "Arrow Rain"
+  },
+  "skill.eternalrealm.ranger_arrow_rain.desc": {
+    "ja": "【必殺技】前方10ブロック先に矢の雨を降らせる。",
+    "en": "[Ultimate] Rains arrows on the area 10 blocks ahead."
+  },
+  "skill.eternalrealm.ranger_barrage_master": {
+    "ja": "弾幕の達人",
+    "en": "Barrage Master"
+  },
+  "skill.eternalrealm.ranger_barrage_master.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.ranger_gale_volley": {
+    "ja": "疾風の斉射",
+    "en": "Gale Volley"
+  },
+  "skill.eternalrealm.ranger_gale_volley.desc": {
+    "ja": "風をまとい、貫通する矢を5本放つ。しばらく移動速度が上がる。",
+    "en": "Wrapped in wind, fires five piercing arrows and moves faster for a while."
+  },
+  "skill.eternalrealm.ranger_apocalypse_rain": {
+    "ja": "終末の矢雨",
+    "en": "Apocalypse Rain"
+  },
+  "skill.eternalrealm.ranger_apocalypse_rain.desc": {
+    "ja": "【必殺技】空を埋め尽くす矢を降らせ続け、最後に敵を気絶させる。",
+    "en": "[Ultimate] Fills the sky with falling arrows; the last volley stuns."
+  },
+  "skill.eternalrealm.ranger_endless_quiver": {
+    "ja": "無尽の矢筒",
+    "en": "Endless Quiver"
+  },
+  "skill.eternalrealm.ranger_endless_quiver.desc": {
+    "ja": "スキルのスタミナ消費が減り、再使用時間が短くなる。",
+    "en": "Lower skill stamina costs and shorter cooldowns."
+  },
+  "skill.eternalrealm.ranger_tempest_arrows": {
+    "ja": "嵐の矢",
+    "en": "Tempest Arrows"
+  },
+  "skill.eternalrealm.ranger_tempest_arrows.desc": {
+    "ja": "雷をまとう矢を3本ずつ4回放ち、敵をしびれさせる。",
+    "en": "Four volleys of three lightning arrows that stun."
+  },
+  "skill.eternalrealm.priest_heal": {
+    "ja": "ヒール",
+    "en": "Heal"
+  },
+  "skill.eternalrealm.priest_heal.desc": {
+    "ja": "自分と周囲8ブロックの仲間を回復する。",
+    "en": "Heals you and allies within 8 blocks."
+  },
+  "skill.eternalrealm.priest_devotion": {
+    "ja": "献身",
+    "en": "Devotion"
+  },
+  "skill.eternalrealm.priest_devotion.desc": {
+    "ja": "回復量が上がる。",
+    "en": "Raises healing."
+  },
+  "skill.eternalrealm.priest_renew": {
+    "ja": "リジェネ",
+    "en": "Renew"
+  },
+  "skill.eternalrealm.priest_renew.desc": {
+    "ja": "周囲の仲間に再生を与える。",
+    "en": "Grants nearby allies regeneration."
+  },
+  "skill.eternalrealm.priest_greater_heal": {
+    "ja": "ハイヒール",
+    "en": "Greater Heal"
+  },
+  "skill.eternalrealm.priest_greater_heal.desc": {
+    "ja": "詠唱に時間はかかるが、仲間を大きく回復する。",
+    "en": "A slower spell that heals allies greatly."
+  },
+  "skill.eternalrealm.priest_mercy": {
+    "ja": "慈悲",
+    "en": "Mercy"
+  },
+  "skill.eternalrealm.priest_mercy.desc": {
+    "ja": "最大HPと回復量が上がる。",
+    "en": "Raises max HP and healing."
+  },
+  "skill.eternalrealm.priest_cleansing_light": {
+    "ja": "浄化の光",
+    "en": "Cleansing Light"
+  },
+  "skill.eternalrealm.priest_cleansing_light.desc": {
+    "ja": "周囲の仲間の状態異常を払い、少し回復する。",
+    "en": "Removes ailments from nearby allies and heals them a little."
+  },
+  "skill.eternalrealm.priest_healing_circle": {
+    "ja": "癒しの陣",
+    "en": "Healing Circle"
+  },
+  "skill.eternalrealm.priest_healing_circle.desc": {
+    "ja": "足元に癒しの陣を描き、中の仲間を回復し続ける。",
+    "en": "Draws a healing circle at your feet that keeps healing allies inside."
+  },
+  "skill.eternalrealm.priest_benediction": {
+    "ja": "祝祷",
+    "en": "Benediction"
+  },
+  "skill.eternalrealm.priest_benediction.desc": {
+    "ja": "スキルの再使用時間が短くなる。",
+    "en": "Shorter skill cooldowns."
+  },
+  "skill.eternalrealm.priest_prayer_of_mending": {
+    "ja": "癒しの祈り",
+    "en": "Prayer of Mending"
+  },
+  "skill.eternalrealm.priest_prayer_of_mending.desc": {
+    "ja": "広範囲の仲間を回復し、小さなシールドを張る。",
+    "en": "Heals allies over a wide area and gives them a small shield."
+  },
+  "skill.eternalrealm.priest_lifebloom": {
+    "ja": "生命の花",
+    "en": "Lifebloom"
+  },
+  "skill.eternalrealm.priest_lifebloom.desc": {
+    "ja": "仲間を回復し、強い再生を与える。",
+    "en": "Heals allies and grants strong regeneration."
+  },
+  "skill.eternalrealm.priest_serenity": {
+    "ja": "静謐",
+    "en": "Serenity"
+  },
+  "skill.eternalrealm.priest_serenity.desc": {
+    "ja": "スキルのスタミナ消費が減り、最大スタミナが増える。",
+    "en": "Lower skill stamina costs and more max stamina."
+  },
+  "skill.eternalrealm.priest_spirit_link": {
+    "ja": "魂の絆",
+    "en": "Spirit Link"
+  },
+  "skill.eternalrealm.priest_spirit_link.desc": {
+    "ja": "周囲の仲間が、与えたダメージでHPを回復できるようになる。",
+    "en": "Nearby allies heal from the damage they deal."
+  },
+  "skill.eternalrealm.priest_sanctuary": {
+    "ja": "聖域",
+    "en": "Sanctuary"
+  },
+  "skill.eternalrealm.priest_sanctuary.desc": {
+    "ja": "【必殺技】仲間を大回復し被ダメージ軽減、周囲の敵に聖なる裁き。",
+    "en": "[Ultimate] Greatly heals and protects allies and smites nearby foes."
+  },
+  "skill.eternalrealm.priest_grace": {
+    "ja": "恩寵",
+    "en": "Grace"
+  },
+  "skill.eternalrealm.priest_grace.desc": {
+    "ja": "回復量と最大HPが上がる。",
+    "en": "Raises healing and max HP."
+  },
+  "skill.eternalrealm.priest_guardian_angel": {
+    "ja": "守護天使",
+    "en": "Guardian Angel"
+  },
+  "skill.eternalrealm.priest_guardian_angel.desc": {
+    "ja": "仲間に大きなシールドを張り、被ダメージを減らす。",
+    "en": "Gives allies a large shield and reduces the damage they take."
+  },
+  "skill.eternalrealm.priest_miracle": {
+    "ja": "奇跡",
+    "en": "Miracle"
+  },
+  "skill.eternalrealm.priest_miracle.desc": {
+    "ja": "【必殺技】広範囲の仲間をほぼ全快させ、状態異常を払ってシールドを張る。",
+    "en": "[Ultimate] Nearly fully heals allies over a wide area, cleanses them and shields them."
+  },
+  "skill.eternalrealm.priest_saintly": {
+    "ja": "聖人",
+    "en": "Saintly"
+  },
+  "skill.eternalrealm.priest_saintly.desc": {
+    "ja": "回復量と魔法ダメージが上がる。",
+    "en": "Raises healing and magic damage."
+  },
+  "skill.eternalrealm.priest_rebirth_hymn": {
+    "ja": "再生の聖歌",
+    "en": "Hymn of Rebirth"
+  },
+  "skill.eternalrealm.priest_rebirth_hymn.desc": {
+    "ja": "聖歌で癒しの場を作り、仲間を回復し続けながら敵を焼く。仲間の足も速くなる。",
+    "en": "A hymn creates a sacred place that keeps healing allies and searing enemies; allies also move faster."
+  },
+  "skill.eternalrealm.priest_protect": {
+    "ja": "プロテクト",
+    "en": "Protect"
+  },
+  "skill.eternalrealm.priest_protect.desc": {
+    "ja": "周囲の仲間の被ダメージを減らす。",
+    "en": "Nearby allies take less damage."
+  },
+  "skill.eternalrealm.priest_piety": {
+    "ja": "敬虔",
+    "en": "Piety"
+  },
+  "skill.eternalrealm.priest_piety.desc": {
+    "ja": "最大HPと防御力が上がる。",
+    "en": "Raises max HP and defense."
+  },
+  "skill.eternalrealm.priest_haste_prayer": {
+    "ja": "ヘイスト",
+    "en": "Haste Prayer"
+  },
+  "skill.eternalrealm.priest_haste_prayer.desc": {
+    "ja": "周囲の仲間の移動速度と回避率を上げる。",
+    "en": "Raises the speed and evasion of nearby allies."
+  },
+  "skill.eternalrealm.priest_holy_shield": {
+    "ja": "聖なる盾",
+    "en": "Holy Shield"
+  },
+  "skill.eternalrealm.priest_holy_shield.desc": {
+    "ja": "周囲の仲間にシールドを張る。",
+    "en": "Shields nearby allies."
+  },
+  "skill.eternalrealm.priest_inner_light": {
+    "ja": "内なる光",
+    "en": "Inner Light"
+  },
+  "skill.eternalrealm.priest_inner_light.desc": {
+    "ja": "魔法ダメージと回復量が上がる。",
+    "en": "Raises magic damage and healing."
+  },
+  "skill.eternalrealm.priest_battle_hymn": {
+    "ja": "戦いの聖歌",
+    "en": "Battle Hymn"
+  },
+  "skill.eternalrealm.priest_battle_hymn.desc": {
+    "ja": "周囲の仲間の攻撃力を上げる。",
+    "en": "Raises the damage of nearby allies."
+  },
+  "skill.eternalrealm.priest_blessing": {
+    "ja": "祝福",
+    "en": "Blessing"
+  },
+  "skill.eternalrealm.priest_blessing.desc": {
+    "ja": "周囲10ブロックの仲間の攻撃力+20%と再生を10秒間付与。",
+    "en": "Allies within 10 blocks: +20% damage and regeneration for 10 s."
+  },
+  "skill.eternalrealm.priest_sacred_vow": {
+    "ja": "聖なる誓い",
+    "en": "Sacred Vow"
+  },
+  "skill.eternalrealm.priest_sacred_vow.desc": {
+    "ja": "ガード性能と最大HPが上がる。",
+    "en": "Improves guarding and raises max HP."
+  },
+  "skill.eternalrealm.priest_divine_favor": {
+    "ja": "神の寵愛",
+    "en": "Divine Favor"
+  },
+  "skill.eternalrealm.priest_divine_favor.desc": {
+    "ja": "周囲の仲間の会心率を上げ、与えたダメージでHPを回復させる。",
+    "en": "Raises nearby allies' critical chance and lets them heal from the damage they deal."
+  },
+  "skill.eternalrealm.priest_sanctified_ground": {
+    "ja": "聖なる大地",
+    "en": "Sanctified Ground"
+  },
+  "skill.eternalrealm.priest_sanctified_ground.desc": {
+    "ja": "足元を聖なる地に変え、仲間を守り癒しながら敵を焼く。",
+    "en": "Sanctifies the ground: allies are protected and healed, enemies burn."
+  },
+  "skill.eternalrealm.priest_aegis_of_faith": {
+    "ja": "信仰の盾",
+    "en": "Aegis of Faith"
+  },
+  "skill.eternalrealm.priest_aegis_of_faith.desc": {
+    "ja": "防御力が上がり、HPが半分以下のとき受けるダメージが減る。",
+    "en": "Raises defense; take less damage while below half HP."
+  },
+  "skill.eternalrealm.priest_dispel_evil": {
+    "ja": "破邪",
+    "en": "Dispel Evil"
+  },
+  "skill.eternalrealm.priest_dispel_evil.desc": {
+    "ja": "聖なる光を放って周囲の敵を弱体化させ、仲間の状態異常を払う。",
+    "en": "A flash of holy light weakens nearby enemies and cleanses allies."
+  },
+  "skill.eternalrealm.priest_angelic_wings": {
+    "ja": "天使の翼",
+    "en": "Angelic Wings"
+  },
+  "skill.eternalrealm.priest_angelic_wings.desc": {
+    "ja": "翼を広げて跳び上がり、周囲の仲間を大きく加速させて回避率を上げる。",
+    "en": "Spreads your wings and leaps; nearby allies gain great speed and evasion."
+  },
+  "skill.eternalrealm.priest_conviction": {
+    "ja": "信念",
+    "en": "Conviction"
+  },
+  "skill.eternalrealm.priest_conviction.desc": {
+    "ja": "スキルの威力が上がり、再使用時間が短くなる。",
+    "en": "Raises skill power and shortens cooldowns."
+  },
+  "skill.eternalrealm.priest_holy_barrier": {
+    "ja": "ホーリーバリア",
+    "en": "Holy Barrier"
+  },
+  "skill.eternalrealm.priest_holy_barrier.desc": {
+    "ja": "【必殺技】仲間全員を巨大な光の障壁で包み、被ダメージを減らして状態異常を払う。",
+    "en": "[Ultimate] Wraps every ally in a great barrier of light, reducing damage and cleansing ailments."
+  },
+  "skill.eternalrealm.priest_divine_intervention": {
+    "ja": "神の介入",
+    "en": "Divine Intervention"
+  },
+  "skill.eternalrealm.priest_divine_intervention.desc": {
+    "ja": "短い間、仲間の被ダメージを大きく減らし、回復もする。",
+    "en": "For a moment, allies take far less damage; also heals them."
+  },
+  "skill.eternalrealm.priest_high_priest": {
+    "ja": "大司祭",
+    "en": "High Priest"
+  },
+  "skill.eternalrealm.priest_high_priest.desc": {
+    "ja": "回復量・魔法ダメージ・最大スタミナが上がる。",
+    "en": "Raises healing, magic damage and max stamina."
+  },
+  "skill.eternalrealm.priest_ascension": {
+    "ja": "天上の加護",
+    "en": "Ascension"
+  },
+  "skill.eternalrealm.priest_ascension.desc": {
+    "ja": "【必殺技】天の力を仲間に授け、攻撃力と会心率を大きく上げて回復と再生を与える。",
+    "en": "[Ultimate] Grants allies heavenly power: much more damage and critical chance, with healing and regeneration."
+  },
+  "skill.eternalrealm.priest_smite": {
+    "ja": "スマイト",
+    "en": "Smite"
+  },
+  "skill.eternalrealm.priest_smite.desc": {
+    "ja": "天から聖なる光を落とし、敵を撃つ。",
+    "en": "Strikes the enemy with holy light from above."
+  },
+  "skill.eternalrealm.priest_zeal": {
+    "ja": "熱意",
+    "en": "Zeal"
+  },
+  "skill.eternalrealm.priest_zeal.desc": {
+    "ja": "神聖・魔法ダメージが上がる。",
+    "en": "Raises holy and magic damage."
+  },
+  "skill.eternalrealm.priest_consecrated_blade": {
+    "ja": "聖別の剣",
+    "en": "Consecrated Blade"
+  },
+  "skill.eternalrealm.priest_consecrated_blade.desc": {
+    "ja": "【片手剣】聖なる斬撃。与えたダメージで自分と周囲の仲間を回復する。",
+    "en": "[One-handed sword] A holy cut whose damage heals you and nearby allies."
+  },
+  "skill.eternalrealm.priest_holy_light": {
+    "ja": "ホーリーライト",
+    "en": "Holy Light"
+  },
+  "skill.eternalrealm.priest_holy_light.desc": {
+    "ja": "聖なる光弾。不死者には2倍のダメージ。",
+    "en": "A bolt of holy light; double damage to the undead."
+  },
+  "skill.eternalrealm.priest_righteousness": {
+    "ja": "正義",
+    "en": "Righteousness"
+  },
+  "skill.eternalrealm.priest_righteousness.desc": {
+    "ja": "会心率が上がる。",
+    "en": "Raises critical chance."
+  },
+  "skill.eternalrealm.priest_radiant_burst": {
+    "ja": "光の炸裂",
+    "en": "Radiant Burst"
+  },
+  "skill.eternalrealm.priest_radiant_burst.desc": {
+    "ja": "周囲に光を炸裂させて敵を吹き飛ばし、目をくらませる。",
+    "en": "Light bursts around you, knocking enemies back and blinding them."
+  },
+  "skill.eternalrealm.priest_light_ray": {
+    "ja": "光線",
+    "en": "Light Ray"
+  },
+  "skill.eternalrealm.priest_light_ray.desc": {
+    "ja": "前方に光線を照射し、一直線上の敵を6回焼く。",
+    "en": "Fires a beam of light ahead that burns everything in its path six times."
+  },
+  "skill.eternalrealm.priest_wrath": {
+    "ja": "神の怒り",
+    "en": "Wrath"
+  },
+  "skill.eternalrealm.priest_wrath.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.priest_holy_lance": {
+    "ja": "ホーリーランス",
+    "en": "Holy Lance"
+  },
+  "skill.eternalrealm.priest_holy_lance.desc": {
+    "ja": "光の槍で敵の列を貫き、被ダメージを増やす。",
+    "en": "A lance of light pierces a line of enemies and leaves them vulnerable."
+  },
+  "skill.eternalrealm.priest_chains_of_light": {
+    "ja": "光の鎖",
+    "en": "Chains of Light"
+  },
+  "skill.eternalrealm.priest_chains_of_light.desc": {
+    "ja": "光の鎖で周囲の敵5体までを縛り、引き寄せて気絶させる。",
+    "en": "Chains of light bind up to five enemies, pulling them in and stunning them."
+  },
+  "skill.eternalrealm.priest_purgatory": {
+    "ja": "煉獄",
+    "en": "Purgatory"
+  },
+  "skill.eternalrealm.priest_purgatory.desc": {
+    "ja": "攻撃が一定確率で敵を聖なる炎で燃やす。",
+    "en": "Attacks may set enemies ablaze with holy fire."
+  },
+  "skill.eternalrealm.priest_penance": {
+    "ja": "贖罪の光",
+    "en": "Penance"
+  },
+  "skill.eternalrealm.priest_penance.desc": {
+    "ja": "3つの光弾を放ち、与えたダメージで自分と周囲の仲間を回復する。",
+    "en": "Three bolts of light whose damage heals you and nearby allies."
+  },
+  "skill.eternalrealm.priest_judgment_day": {
+    "ja": "審判の日",
+    "en": "Judgment Day"
+  },
+  "skill.eternalrealm.priest_judgment_day.desc": {
+    "ja": "【必殺技】天から裁きの光を何度も降らせ、敵を気絶させて被ダメージを増やす。",
+    "en": "[Ultimate] Calls judgment down from the heavens again and again; enemies are stunned and left vulnerable."
+  },
+  "skill.eternalrealm.priest_divine_power": {
+    "ja": "神威",
+    "en": "Divine Power"
+  },
+  "skill.eternalrealm.priest_divine_power.desc": {
+    "ja": "魔法ダメージと会心ダメージが上がる。",
+    "en": "Raises magic damage and critical damage."
+  },
+  "skill.eternalrealm.priest_purifying_flame": {
+    "ja": "浄火",
+    "en": "Purifying Flame"
+  },
+  "skill.eternalrealm.priest_purifying_flame.desc": {
+    "ja": "狙った場所に浄化の炎を燃え上がらせ、敵を焼き続ける。",
+    "en": "Purifying flames rise where you aim and keep burning enemies."
+  },
+  "skill.eternalrealm.priest_seraph_wrath": {
+    "ja": "熾天使の怒り",
+    "en": "Seraph's Wrath"
+  },
+  "skill.eternalrealm.priest_seraph_wrath.desc": {
+    "ja": "前方に熾天使の裁きを落とし、敵を打ち上げて目をくらませる。",
+    "en": "Brings a seraph's wrath down ahead, launching and blinding enemies."
+  },
+  "skill.eternalrealm.priest_avatar": {
+    "ja": "神の化身",
+    "en": "Avatar"
+  },
+  "skill.eternalrealm.priest_avatar.desc": {
+    "ja": "スキルの威力と会心率が上がる。",
+    "en": "Raises skill power and critical chance."
+  },
+  "skill.eternalrealm.priest_nova_of_light": {
+    "ja": "光の新星",
+    "en": "Nova of Light"
+  },
+  "skill.eternalrealm.priest_nova_of_light.desc": {
+    "ja": "【必殺技】光の波動を3度放って周囲の敵を撃ち、仲間を回復する。",
+    "en": "[Ultimate] Three waves of light blast nearby enemies while healing allies."
+  },
+  "skill.eternalrealm.spellblade_arcane_edge": {
+    "ja": "魔刃",
+    "en": "Arcane Edge"
+  },
+  "skill.eternalrealm.spellblade_arcane_edge.desc": {
+    "ja": "魔力を纏った斬撃（魔法ダメージ）。",
+    "en": "A slash wrapped in magic (magic damage)."
+  },
+  "skill.eternalrealm.spellblade_blade_attunement": {
+    "ja": "刃の共鳴",
+    "en": "Blade Attunement"
+  },
+  "skill.eternalrealm.spellblade_blade_attunement.desc": {
+    "ja": "INTの一部が物理攻撃力にも加わる。",
+    "en": "Part of your INT also powers physical attacks."
+  },
+  "skill.eternalrealm.spellblade_mana_slash": {
+    "ja": "魔力斬り",
+    "en": "Mana Slash"
+  },
+  "skill.eternalrealm.spellblade_mana_slash.desc": {
+    "ja": "魔力をまとった2連撃。",
+    "en": "Two mana-charged cuts."
+  },
+  "skill.eternalrealm.spellblade_rune_strike": {
+    "ja": "ルーンストライク",
+    "en": "Rune Strike"
+  },
+  "skill.eternalrealm.spellblade_rune_strike.desc": {
+    "ja": "ルーンを刻み込む一撃。敵の被ダメージを増やす。",
+    "en": "Carves a rune into the enemy, leaving it vulnerable."
+  },
+  "skill.eternalrealm.spellblade_mana_conduit": {
+    "ja": "魔力の導管",
+    "en": "Mana Conduit"
+  },
+  "skill.eternalrealm.spellblade_mana_conduit.desc": {
+    "ja": "魔法ダメージが上がる。",
+    "en": "Raises magic damage."
+  },
+  "skill.eternalrealm.spellblade_spell_parry": {
+    "ja": "マジックパリィ",
+    "en": "Spell Parry"
+  },
+  "skill.eternalrealm.spellblade_spell_parry.desc": {
+    "ja": "魔力で攻撃をいなす構え。一瞬回避率が上がり、受けたダメージを跳ね返す。",
+    "en": "A mana parry: briefly raises evasion and reflects damage taken."
+  },
+  "skill.eternalrealm.spellblade_mana_wave": {
+    "ja": "魔力衝撃波",
+    "en": "Mana Wave"
+  },
+  "skill.eternalrealm.spellblade_mana_wave.desc": {
+    "ja": "敵を貫く魔力の波を飛ばす。",
+    "en": "Sends a piercing wave of mana."
+  },
+  "skill.eternalrealm.spellblade_arcane_knowledge": {
+    "ja": "秘術の知識",
+    "en": "Arcane Knowledge"
+  },
+  "skill.eternalrealm.spellblade_arcane_knowledge.desc": {
+    "ja": "会心率が上がる。",
+    "en": "Raises critical chance."
+  },
+  "skill.eternalrealm.spellblade_arcane_burst": {
+    "ja": "魔力爆発",
+    "en": "Arcane Burst"
+  },
+  "skill.eternalrealm.spellblade_arcane_burst.desc": {
+    "ja": "周囲に魔力を爆発させ、敵を吹き飛ばして鈍らせる。",
+    "en": "Detonates mana around you, knocking enemies back and slowing them."
+  },
+  "skill.eternalrealm.spellblade_runic_cascade": {
+    "ja": "ルーンの連撃",
+    "en": "Runic Cascade"
+  },
+  "skill.eternalrealm.spellblade_runic_cascade.desc": {
+    "ja": "ルーンをまとった4連撃。最後の一撃で敵の守りを崩す。",
+    "en": "Four rune-charged cuts; the last leaves the enemy vulnerable."
+  },
+  "skill.eternalrealm.spellblade_spellsword": {
+    "ja": "魔剣術",
+    "en": "Spellsword"
+  },
+  "skill.eternalrealm.spellblade_spellsword.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.spellblade_mana_drain": {
+    "ja": "マナドレイン",
+    "en": "Mana Drain"
+  },
+  "skill.eternalrealm.spellblade_mana_drain.desc": {
+    "ja": "敵の力を吸い取る斬撃。与えたダメージでHPを回復し、スタミナも取り戻す。",
+    "en": "A draining cut: heals you for part of the damage and restores stamina."
+  },
+  "skill.eternalrealm.spellblade_crescent_moon": {
+    "ja": "三日月斬",
+    "en": "Crescent Moon"
+  },
+  "skill.eternalrealm.spellblade_crescent_moon.desc": {
+    "ja": "三日月の形をした魔力の刃を飛ばし、敵を貫く。",
+    "en": "Sends a crescent blade of mana that pierces enemies."
+  },
+  "skill.eternalrealm.spellblade_mana_overflow": {
+    "ja": "溢れる魔力",
+    "en": "Mana Overflow"
+  },
+  "skill.eternalrealm.spellblade_mana_overflow.desc": {
+    "ja": "スキルのスタミナ消費が減り、最大スタミナが増える。",
+    "en": "Lower skill stamina costs and more max stamina."
+  },
+  "skill.eternalrealm.spellblade_arcane_storm": {
+    "ja": "アーケインストーム",
+    "en": "Arcane Storm"
+  },
+  "skill.eternalrealm.spellblade_arcane_storm.desc": {
+    "ja": "【必殺技】魔力の嵐をまとって周囲を6回斬り刻み、最後に敵を気絶させる。",
+    "en": "[Ultimate] Wrapped in an arcane storm, cuts everything around you six times; the last stuns."
+  },
+  "skill.eternalrealm.spellblade_excalibur": {
+    "ja": "エクスカリバー",
+    "en": "Excalibur"
+  },
+  "skill.eternalrealm.spellblade_excalibur.desc": {
+    "ja": "【必殺技】光の聖剣を振り下ろし、前方一直線を両断する。",
+    "en": "[Ultimate] Brings down a holy sword of light that cleaves a long line ahead."
+  },
+  "skill.eternalrealm.spellblade_sword_sage": {
+    "ja": "魔剣の賢者",
+    "en": "Sword Sage"
+  },
+  "skill.eternalrealm.spellblade_sword_sage.desc": {
+    "ja": "物理ダメージと魔法ダメージが上がる。",
+    "en": "Raises physical and magic damage."
+  },
+  "skill.eternalrealm.spellblade_mana_blade_dance": {
+    "ja": "魔剣の舞",
+    "en": "Mana Blade Dance"
+  },
+  "skill.eternalrealm.spellblade_mana_blade_dance.desc": {
+    "ja": "踏み込みながら魔力の刃で周囲を6回斬る。",
+    "en": "Steps in and cuts around you six times with blades of mana."
+  },
+  "skill.eternalrealm.spellblade_flame_strike": {
+    "ja": "炎撃",
+    "en": "Flame Strike"
+  },
+  "skill.eternalrealm.spellblade_flame_strike.desc": {
+    "ja": "炎をまとった斬撃。敵を燃やす。",
+    "en": "A flaming cut that sets enemies alight."
+  },
+  "skill.eternalrealm.spellblade_elemental_affinity": {
+    "ja": "元素の親和",
+    "en": "Elemental Affinity"
+  },
+  "skill.eternalrealm.spellblade_elemental_affinity.desc": {
+    "ja": "近接攻撃が一定確率で敵を燃やす。",
+    "en": "Melee hits may set enemies on fire."
+  },
+  "skill.eternalrealm.spellblade_frost_strike": {
+    "ja": "氷撃",
+    "en": "Frost Strike"
+  },
+  "skill.eternalrealm.spellblade_frost_strike.desc": {
+    "ja": "冷気をまとった斬撃。敵を大きく鈍らせる。",
+    "en": "A frosty cut that greatly slows."
+  },
+  "skill.eternalrealm.spellblade_flame_blade": {
+    "ja": "フレイムブレード",
+    "en": "Flame Blade"
+  },
+  "skill.eternalrealm.spellblade_flame_blade.desc": {
+    "ja": "10秒間攻撃力+25%、近接攻撃が敵を燃やす。",
+    "en": "For 10 s: +25% damage and melee hits set enemies on fire."
+  },
+  "skill.eternalrealm.spellblade_element_surge": {
+    "ja": "元素の高まり",
+    "en": "Element Surge"
+  },
+  "skill.eternalrealm.spellblade_element_surge.desc": {
+    "ja": "魔法ダメージと会心ダメージが上がる。",
+    "en": "Raises magic damage and critical damage."
+  },
+  "skill.eternalrealm.spellblade_frost_blade": {
+    "ja": "フロストブレード",
+    "en": "Frost Blade"
+  },
+  "skill.eternalrealm.spellblade_frost_blade.desc": {
+    "ja": "10秒間、剣に冷気を宿す。近接攻撃が敵を鈍らせ、受けるダメージも減る。",
+    "en": "For 10 s your blade carries frost: melee hits slow enemies and you take less damage."
+  },
+  "skill.eternalrealm.spellblade_inferno_slash": {
+    "ja": "業火斬",
+    "en": "Inferno Slash"
+  },
+  "skill.eternalrealm.spellblade_inferno_slash.desc": {
+    "ja": "業火をまとった大振りの斬撃。",
+    "en": "A wide slash wreathed in hellfire."
+  },
+  "skill.eternalrealm.spellblade_conductor": {
+    "ja": "導雷",
+    "en": "Conductor"
+  },
+  "skill.eternalrealm.spellblade_conductor.desc": {
+    "ja": "近接攻撃が一定確率で敵をしびれさせる。",
+    "en": "Melee hits may stun the enemy."
+  },
+  "skill.eternalrealm.spellblade_glacier_edge": {
+    "ja": "氷河の刃",
+    "en": "Glacier Edge"
+  },
+  "skill.eternalrealm.spellblade_glacier_edge.desc": {
+    "ja": "前方一直線に氷の刃を走らせ、敵を凍らせる。",
+    "en": "Sends an icy edge along a line ahead, freezing enemies."
+  },
+  "skill.eternalrealm.spellblade_thunder_blade": {
+    "ja": "サンダーブレード",
+    "en": "Thunder Blade"
+  },
+  "skill.eternalrealm.spellblade_thunder_blade.desc": {
+    "ja": "10秒間、剣に雷を宿す。近接攻撃が近くの別の敵にも連鎖し、移動速度も上がる。",
+    "en": "For 10 s your blade carries lightning: melee hits arc to another enemy nearby, and you move faster."
+  },
+  "skill.eternalrealm.spellblade_elemental_mastery": {
+    "ja": "元素の極意",
+    "en": "Elemental Mastery"
+  },
+  "skill.eternalrealm.spellblade_elemental_mastery.desc": {
+    "ja": "スキルの威力が上がる。",
+    "en": "Raises skill power."
+  },
+  "skill.eternalrealm.spellblade_frozen_tomb": {
+    "ja": "氷棺",
+    "en": "Frozen Tomb"
+  },
+  "skill.eternalrealm.spellblade_frozen_tomb.desc": {
+    "ja": "周囲の敵を氷の棺に閉じ込め、気絶させて凍らせる。",
+    "en": "Seals nearby enemies in an icy tomb, stunning and freezing them."
+  },
+  "skill.eternalrealm.spellblade_lightning_slash": {
+    "ja": "雷光斬",
+    "en": "Lightning Slash"
+  },
+  "skill.eternalrealm.spellblade_lightning_slash.desc": {
+    "ja": "雷光のごとく駆け抜けて斬り、敵をしびれさせる。",
+    "en": "Dashes through like lightning, stunning those you cut."
+  },
+  "skill.eternalrealm.spellblade_storm_heart": {
+    "ja": "嵐の心臓",
+    "en": "Storm Heart"
+  },
+  "skill.eternalrealm.spellblade_storm_heart.desc": {
+    "ja": "スキルの再使用時間が短くなり、移動速度が上がる。",
+    "en": "Shorter skill cooldowns and faster movement."
+  },
+  "skill.eternalrealm.spellblade_elemental_fury": {
+    "ja": "元素の怒り",
+    "en": "Elemental Fury"
+  },
+  "skill.eternalrealm.spellblade_elemental_fury.desc": {
+    "ja": "【必殺技】炎・氷・雷の三連撃。燃やし、凍らせ、最後に気絶させる。",
+    "en": "[Ultimate] Fire, ice and lightning in three strikes: burns, freezes, then stuns."
+  },
+  "skill.eternalrealm.spellblade_raijin": {
+    "ja": "雷神剣",
+    "en": "Raijin"
+  },
+  "skill.eternalrealm.spellblade_raijin.desc": {
+    "ja": "雷神の力を剣に呼び、周囲の敵に4度雷を落とす。最後の一撃で気絶させる。",
+    "en": "Calls the thunder god into your sword: four lightning strikes on nearby enemies, the last stuns."
+  },
+  "skill.eternalrealm.spellblade_avatar_of_elements": {
+    "ja": "元素の化身",
+    "en": "Avatar of Elements"
+  },
+  "skill.eternalrealm.spellblade_avatar_of_elements.desc": {
+    "ja": "物理・魔法ダメージが上がり、近接攻撃が一定確率で敵を凍らせる。",
+    "en": "Raises physical and magic damage; melee hits may freeze."
+  },
+  "skill.eternalrealm.spellblade_meteor_blade": {
+    "ja": "流星剣",
+    "en": "Meteor Blade"
+  },
+  "skill.eternalrealm.spellblade_meteor_blade.desc": {
+    "ja": "高く跳び上がり、流星のように炎の剣を叩きつける。",
+    "en": "Leaps high and crashes down like a meteor with a flaming blade."
+  },
+  "skill.eternalrealm.spellblade_warp_strike": {
+    "ja": "ワープストライク",
+    "en": "Warp Strike"
+  },
+  "skill.eternalrealm.spellblade_warp_strike.desc": {
+    "ja": "空間を跳んで間合いを詰め、斬りつける。",
+    "en": "Warps through space to close in and strike."
+  },
+  "skill.eternalrealm.spellblade_spatial_sense": {
+    "ja": "空間把握",
+    "en": "Spatial Sense"
+  },
+  "skill.eternalrealm.spellblade_spatial_sense.desc": {
+    "ja": "回避のスタミナ消費が減り、移動速度が上がる。",
+    "en": "Cheaper dodges and faster movement."
+  },
+  "skill.eternalrealm.spellblade_gravity_slash": {
+    "ja": "重力斬",
+    "en": "Gravity Slash"
+  },
+  "skill.eternalrealm.spellblade_gravity_slash.desc": {
+    "ja": "重力をまとった斬撃で、周囲の敵を引き寄せる。",
+    "en": "A gravity-laden cut that pulls nearby enemies in."
+  },
+  "skill.eternalrealm.spellblade_phase_shift": {
+    "ja": "位相転移",
+    "en": "Phase Shift"
+  },
+  "skill.eternalrealm.spellblade_phase_shift.desc": {
+    "ja": "後方へ空間を跳び、しばらく回避率が上がる。",
+    "en": "Phases backwards through space and raises evasion for a while."
+  },
+  "skill.eternalrealm.spellblade_time_sense": {
+    "ja": "時の感覚",
+    "en": "Time Sense"
+  },
+  "skill.eternalrealm.spellblade_time_sense.desc": {
+    "ja": "スキルの再使用時間が短くなる。",
+    "en": "Shorter skill cooldowns."
+  },
+  "skill.eternalrealm.spellblade_rift_blade": {
+    "ja": "次元刃",
+    "en": "Rift Blade"
+  },
+  "skill.eternalrealm.spellblade_rift_blade.desc": {
+    "ja": "空間の裂け目を刃として飛ばし、敵を貫く。",
+    "en": "Hurls a rift in space as a blade that pierces enemies."
+  },
+  "skill.eternalrealm.spellblade_echo_slash": {
+    "ja": "残響斬",
+    "en": "Echo Slash"
+  },
+  "skill.eternalrealm.spellblade_echo_slash.desc": {
+    "ja": "斬撃の後、時間差で同じ場所にもう一度斬撃が走る。",
+    "en": "A cut that echoes: the same place is cut again a moment later."
+  },
+  "skill.eternalrealm.spellblade_void_walker": {
+    "ja": "虚空歩き",
+    "en": "Void Walker"
+  },
+  "skill.eternalrealm.spellblade_void_walker.desc": {
+    "ja": "一定確率で攻撃を回避する。",
+    "en": "A chance to evade attacks completely."
+  },
+  "skill.eternalrealm.spellblade_dimension_gate": {
+    "ja": "次元の門",
+    "en": "Dimension Gate"
+  },
+  "skill.eternalrealm.spellblade_dimension_gate.desc": {
+    "ja": "狙った場所に次元の門を開き、敵を吸い込みながら傷つける。",
+    "en": "Opens a gate between dimensions where you aim that draws enemies in and hurts them."
+  },
+  "skill.eternalrealm.spellblade_blink_assault": {
+    "ja": "瞬撃",
+    "en": "Blink Assault"
+  },
+  "skill.eternalrealm.spellblade_blink_assault.desc": {
+    "ja": "瞬間移動を繰り返しながら3回斬りつける。",
+    "en": "Blinks again and again for three cuts."
+  },
+  "skill.eternalrealm.spellblade_chronomancy": {
+    "ja": "時空術",
+    "en": "Chronomancy"
+  },
+  "skill.eternalrealm.spellblade_chronomancy.desc": {
+    "ja": "スキルの威力が上がり、スタミナ消費が減る。",
+    "en": "Raises skill power and lowers stamina costs."
+  },
+  "skill.eternalrealm.spellblade_time_stop": {
+    "ja": "タイムストップ",
+    "en": "Time Stop"
+  },
+  "skill.eternalrealm.spellblade_time_stop.desc": {
+    "ja": "周囲の時を止めて敵を気絶させ、他のスキルの再使用時間を縮める。",
+    "en": "Stops time around you: enemies are stunned and your other skills recharge faster."
+  },
+  "skill.eternalrealm.spellblade_dimension_slash": {
+    "ja": "次元斬",
+    "en": "Dimension Slash"
+  },
+  "skill.eternalrealm.spellblade_dimension_slash.desc": {
+    "ja": "【必殺技】踏み込んで空間ごと斬り裂き、時間差でもう一度斬る。",
+    "en": "[Ultimate] Dashes in and cuts space itself, then again a moment later."
+  },
+  "skill.eternalrealm.spellblade_eternity": {
+    "ja": "永劫",
+    "en": "Eternity"
+  },
+  "skill.eternalrealm.spellblade_eternity.desc": {
+    "ja": "最大スタミナが増え、HPが半分以下のとき与ダメージが上がる。",
+    "en": "More max stamina; deal more damage while below half HP."
+  },
+  "skill.eternalrealm.spellblade_rewind": {
+    "ja": "リワインド",
+    "en": "Rewind"
+  },
+  "skill.eternalrealm.spellblade_rewind.desc": {
+    "ja": "自分の時を巻き戻し、HPを回復して状態異常を払い、他のスキルの再使用時間を縮める。",
+    "en": "Rewinds your own time: heals, removes ailments and shortens your other cooldowns."
+  },
+  "skill.eternalrealm.spellblade_world_cutter": {
+    "ja": "世界断ち",
+    "en": "World Cutter"
+  },
+  "skill.eternalrealm.spellblade_world_cutter.desc": {
+    "ja": "【必殺技】世界ごと断ち切る長大な斬撃を2度放ち、敵の守りを崩す。",
+    "en": "[Ultimate] Two vast cuts that sever the world itself, leaving enemies vulnerable."
+  },
+  "skill.eternalrealm.spellblade_dimensional_lord": {
+    "ja": "次元の支配者",
+    "en": "Dimensional Lord"
+  },
+  "skill.eternalrealm.spellblade_dimensional_lord.desc": {
+    "ja": "スキルの再使用時間が短くなり、威力が上がる。",
+    "en": "Shorter cooldowns and more skill power."
+  },
+  "skill.eternalrealm.spellblade_collapse": {
+    "ja": "次元崩壊",
+    "en": "Collapse"
+  },
+  "skill.eternalrealm.spellblade_collapse.desc": {
+    "ja": "【必殺技】狙った場所の空間を崩壊させ、敵を引き込んだあと押しつぶして気絶させる。",
+    "en": "[Ultimate] Collapses space where you aim: enemies are drawn in, then crushed and stunned."
+  }
+}

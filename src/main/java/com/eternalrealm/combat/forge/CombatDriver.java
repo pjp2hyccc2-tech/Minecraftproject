@@ -14,11 +14,13 @@ import com.eternalrealm.combat.SkillBinding;
 import com.eternalrealm.job.ComposedStats;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
+import com.eternalrealm.job.PassiveTotals;
 import com.eternalrealm.job.SkillDefinition;
 import com.eternalrealm.job.SkillEffect;
 import com.eternalrealm.job.SkillTree;
 import com.eternalrealm.job.forge.PlayerStats;
 import com.eternalrealm.job.forge.SkillEffectsExecutor;
+import com.eternalrealm.job.forge.SkillZones;
 import com.eternalrealm.combat.DefenseEvent;
 import com.eternalrealm.combat.GuardResult;
 import com.eternalrealm.combat.HitGeometry;
@@ -30,6 +32,7 @@ import com.eternalrealm.network.forge.CombatStatusPacket;
 import com.eternalrealm.network.forge.ERNetwork;
 import com.eternalrealm.network.forge.PlayerActionPacket;
 import com.eternalrealm.player.PlayerDataService;
+import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.SyncQueue;
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.MinecraftServer;
@@ -37,6 +40,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -70,6 +74,8 @@ public final class CombatDriver {
     private static final float GUARD_KNOCKBACK_FACTOR = 0.5F;
     /** Health regeneration from VIT starts this long after the last fight. */
     private static final int OUT_OF_COMBAT_TICKS = 100;
+    /** Upper bound of damage reflected by thorns in one hit. */
+    private static final double MAX_REFLECT = 500.0;
     /** Vanilla ignores most hits while {@code invulnerableTime} is above this (half of its 20-tick hurt cooldown). */
     private static final int HURT_COOLDOWN_THRESHOLD = 10;
 
@@ -79,7 +85,14 @@ public final class CombatDriver {
     private final TokenBucketRateLimiter<UUID> limiter;
     private final CombatService service = new CombatService();
     private final Map<UUID, NetState> net = new HashMap<>();
+    /** Learned skill levels and passive totals per online player (rebuilt whenever the character changes). */
+    private final Map<UUID, PlayerSkills> skills = new HashMap<>();
     private CombatTuning tuning;
+
+    /** What the server needs of a player's skill tree while hits land. */
+    private record PlayerSkills(PassiveTotals passives, Map<String, Integer> levels) {
+        static final PlayerSkills NONE = new PlayerSkills(PassiveTotals.NONE, Map.of());
+    }
 
     /**
      * @param statsDirty players whose character changed; marked by the player data listener, drained every tick
@@ -135,6 +148,7 @@ public final class CombatDriver {
 
     public void tick() {
         applyChangedStats();
+        SkillZones.tick(server);
         long now = now();
         for (UUID playerId : new ArrayList<>(service.all().keySet())) {
             ServerPlayer player = server.getPlayerList().getPlayer(playerId);
@@ -195,15 +209,18 @@ public final class CombatDriver {
             }
             try {
                 CharacterSnapshot character = snapshot.get();
+                JobType job = JobType.fromStored(character.jobId());
+                skills.put(playerId, skillsOf(job, character));
                 ComposedStats composed = PlayerStats.compose(player, character);
                 CombatStats stats = CombatStats.derive(composed.total(), character.level(), tuning,
                         composed.modifiers());
                 Combatant combatant = service.register(playerId, stats, now());
-                SkillBinding[] bindings = SkillTree.bindings(JobType.fromStored(character.jobId()), character.level(),
-                        character.skillInvestments());
+                SkillBinding[] bindings = SkillTree.bindings(job, character.level(), character.skillInvestments(),
+                        character.skillLoadout());
                 for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
                     combatant.setJobSkill(slot, bindings[slot]);
                 }
+                combatant.setAllowedWeapons(Jobs.get(job).weapons());
                 StatEffects.apply(player, stats);
                 ERNetwork.sendToPlayer(player, new CombatStatsPacket(stats));
                 sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.NONE);
@@ -213,34 +230,93 @@ public final class CombatDriver {
         }
     }
 
+    private static PlayerSkills skillsOf(JobType job, CharacterSnapshot character) {
+        if (!job.isChosen()) {
+            return PlayerSkills.NONE;
+        }
+        Map<String, Integer> levels = new HashMap<>();
+        for (SkillDefinition skill : Jobs.get(job).skills()) {
+            int level = SkillTree.levelOf(skill, character.level(), character.skillInvestments());
+            if (level > 0) {
+                levels.put(skill.id(), level);
+            }
+        }
+        return new PlayerSkills(SkillTree.passives(job, character.level(), character.skillInvestments()),
+                Map.copyOf(levels));
+    }
+
+    /** The player's passive skill totals (none before the character loaded). */
+    public PassiveTotals passives(ServerPlayer player) {
+        return skills.getOrDefault(player.getUUID(), PlayerSkills.NONE).passives();
+    }
+
+    /** Learned level of {@code skillId} (1 when unknown, e.g. a scripted call before the character loaded). */
+    public int levelOf(UUID playerId, String skillId) {
+        return Math.max(1, skills.getOrDefault(playerId, PlayerSkills.NONE).levels().getOrDefault(skillId, 1));
+    }
+
+    private static int skillLevel(ServerPlayer player, SkillDefinition skill) {
+        int level = ServerContext.current().map(context -> context.combat().levelOf(player.getUUID(), skill.id()))
+                .orElse(1);
+        return Math.min(level, skill.maxLevel());
+    }
+
+    /** A skill effect gives stamina back; the client learns it from the status sent right away. */
+    public void restoreStamina(ServerPlayer player, double amount) {
+        service.get(player.getUUID()).ifPresent(combatant -> {
+            combatant.addStamina(amount);
+            sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.NONE);
+        });
+    }
+
+    /** A skill effect shortens the running job skill cooldowns; the client learns it from the status sent now. */
+    public void cutCooldowns(ServerPlayer player, int ticks) {
+        service.get(player.getUUID()).ifPresent(combatant -> {
+            combatant.reduceJobSkillCooldowns(now(), ticks);
+            sendStatus(player, combatant, false, RequestOutcome.IGNORED, DefenseEvent.NONE);
+        });
+    }
+
     /**
      * Hit frames become damage (melee volume or projectiles) with the damage type of the weapon or of the job skill;
-     * job skills also run their effects for the frame (afflictions go to what the frame damaged).
+     * job skills also run their effects for the frame at their learned level (afflictions, executes and siphons go
+     * to what the frame damaged).
      */
     public static void handleEvent(ServerPlayer player, CombatStats stats, CombatEvent event) {
         if (event instanceof CombatEvent.Hit hit) {
             SkillDefinition skill = Jobs.skillOfAction(hit.action().id()).orElse(null);
             DamageType type = skill != null ? skill.damageType() : hit.weapon().type().damageType();
             List<SkillEffect> effects = skill != null ? skill.effectsAt(hit.frameIndex()) : List.of();
+            int level = skill != null ? skillLevel(player, skill) : 1;
+            double scale = skill != null ? skill.effectScale(level) : 1.0;
             List<SkillEffect.Afflict> afflictions = SkillEffectsExecutor.afflictions(effects);
+            List<SkillEffect.Execute> executes = SkillEffectsExecutor.only(effects, SkillEffect.Execute.class);
             List<CombatHits.HitTarget> targets = List.of();
+            List<SkillEffect> rest = effects;
             if (hit.frame().damaging()) {
                 if (hit.frame().isProjectile()) {
-                    CombatProjectiles.launch(player, stats, hit, type, afflictions, player.getRandom()::nextDouble);
+                    CombatProjectiles.launch(player, stats, hit, type, afflictions, player.getRandom()::nextDouble,
+                            scale, SkillEffectsExecutor.only(effects, SkillEffect.Siphon.class), executes,
+                            skill == null ? null : skill.theme());
+                    // siphons of projectiles heal on impact
+                    rest = effects.stream().filter(effect -> !(effect instanceof SkillEffect.Siphon)).toList();
                 } else {
-                    targets = CombatHits.execute(player, stats, hit, type, player.getRandom()::nextDouble);
-                    Afflictions.apply(player, targets, afflictions);
+                    targets = CombatHits.execute(player, stats, hit, type, player.getRandom()::nextDouble, executes,
+                            skill == null ? null : skill.theme());
+                    Afflictions.apply(player, targets, afflictions, scale, player.position());
                 }
             }
-            if (!effects.isEmpty()) {
-                SkillEffectsExecutor.apply(player, stats, effects, targets);
+            if (!rest.isEmpty()) {
+                SkillEffectsExecutor.apply(player, stats, skill, level, hit.weapon(), hit.damageScale(), rest, targets);
             }
         } else if (event instanceof CombatEvent.ActionStarted start) {
             CombatEffects.actionStarted(player, start);
             ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(), start.action().id(),
                     start.comboStep(), start.action().timing(stats.actionSpeedFactor()).duration(), false));
             Jobs.skillOfAction(start.action().id()).ifPresent(skill ->
-                    SkillEffectsExecutor.apply(player, stats, skill.effectsAt(SkillEffect.ON_START), List.of()));
+                    SkillEffectsExecutor.apply(player, stats, skill, skillLevel(player, skill), start.weapon(),
+                            skill.damageScale(skillLevel(player, skill)), skill.effectsAt(SkillEffect.ON_START),
+                            List.of()));
         } else if (event instanceof CombatEvent.ChargeStarted charge) {
             ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(),
                     charge.weapon().heavy().strike().id(), -1, charge.weapon().heavy().maxChargeTicks(), true));
@@ -313,6 +389,13 @@ public final class CombatDriver {
         boolean evadable = source.getEntity() != null || source.getDirectEntity() != null
                 || source.is(DamageTypeTags.IS_EXPLOSION) || source.is(DamageTypeTags.IS_PROJECTILE);
         AvoidOutcome outcome = combatant.checkAvoid(now(), evadable, isGuardable(player, combatant, source));
+        if (outcome == AvoidOutcome.NONE && evadable && source.getEntity() != null && source.getEntity() != player) {
+            double evasion = Math.min(PassiveTotals.MAX_EVASION + 0.25, passives(player).evasion()
+                    + ERMobEffects.magnitude(player, ERMobEffects.EVASION.get()));
+            if (evasion > 0.0 && player.getRandom().nextDouble() < evasion) {
+                outcome = AvoidOutcome.DODGED;
+            }
+        }
         switch (outcome) {
             case DODGED -> {
                 CombatEffects.dodged(player);
@@ -353,7 +436,27 @@ public final class CombatDriver {
             result = DamageCalculator.reduce(result, combatant.stats().damageReduction());
         }
         result *= ERMobEffects.defenseMultiplier(player);
+        PassiveTotals passive = passives(player);
+        if (passive.lastStandReduction() > 0.0 && player.getHealth() < player.getMaxHealth() * CombatHits.LAST_STAND_HEALTH) {
+            result *= 1.0 - passive.lastStandReduction();
+        }
+        reflect(player, source, result, passive);
         return (float) result;
+    }
+
+    /** Thorns (passives and the thorns buff) send part of the damage back to a living attacker. */
+    private static void reflect(ServerPlayer player, DamageSource source, double taken, PassiveTotals passive) {
+        double thorns = passive.thorns() + ERMobEffects.magnitude(player, ERMobEffects.THORNS.get());
+        if (thorns <= 0.0 || taken <= 0.0 || !(source.getEntity() instanceof LivingEntity attacker)
+                || attacker == player || !attacker.isAlive() || source.is(DamageTypeTags.IS_EXPLOSION)
+                || source.is(DamageTypes.THORNS)
+                || attacker.distanceToSqr(player) > 64.0) {
+            return;
+        }
+        float amount = (float) Math.min(MAX_REFLECT, taken * Math.min(1.5, thorns));
+        if (amount > 0.0F) {
+            attacker.hurt(player.damageSources().thorns(player), amount);
+        }
     }
 
     /** Guarding players take reduced knockback. */
@@ -428,6 +531,7 @@ public final class CombatDriver {
     public void onPlayerLeft(UUID playerId) {
         service.remove(playerId, now());
         net.remove(playerId);
+        skills.remove(playerId);
         limiter.forget(playerId);
         statsDirty.forget(playerId);
     }

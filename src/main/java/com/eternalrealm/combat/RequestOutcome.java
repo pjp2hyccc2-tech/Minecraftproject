@@ -23,7 +23,9 @@ public enum RequestOutcome {
     /** The job skill slot is empty (skill not learned yet). */
     REJECTED_NOT_LEARNED(10, "message.eternalrealm.combat.not_learned"),
     /** The job skill cannot be used with the weapon in hand. */
-    REJECTED_WRONG_WEAPON(11, "message.eternalrealm.combat.wrong_weapon");
+    REJECTED_WRONG_WEAPON(11, "message.eternalrealm.combat.wrong_weapon"),
+    /** The character's job cannot use the weapon in hand at all (attacks, skills and the guard). */
+    REJECTED_JOB_WEAPON(12, "message.eternalrealm.combat.job_weapon");
 
     private static final RequestOutcome[] BY_NETWORK_ID = new RequestOutcome[values().length];
 

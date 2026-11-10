@@ -42,8 +42,10 @@ import java.util.SplittableRandom;
  * can only be picked up by the killer; rare and better pieces glow, legendary ones are announced to the server.
  */
 public final class LootDrops {
-    /** Share of equipment drops that are the killer's job weapon. */
+    /** Share of equipment drops that are a weapon of the killer's job. */
     private static final double JOB_WEAPON_SHARE = 0.4;
+    /** Share of the other drops that may be a weapon of another job (for trading); the rest is armor. */
+    private static final double OTHER_WEAPON_SHARE = 0.15;
     private static final SplittableRandom RANDOM = new SplittableRandom();
 
     private LootDrops() {
@@ -78,22 +80,26 @@ public final class LootDrops {
         return item == null || item == Items.AIR ? null : item;
     }
 
-    /** A base of the tier: often the killer's job weapon, otherwise any weapon or armor piece of the tier. */
+    /**
+     * A base of the tier for the killer: with a job, often one of the job's weapons, otherwise armor and only rarely a
+     * weapon the job cannot use; without a job any weapon or armor piece of the tier.
+     */
     public static EquipmentBase baseFor(ServerPlayer killer, ItemTier tier) {
         JobType job = ServerContext.current().flatMap(context -> context.playerData().snapshot(killer.getUUID()))
                 .map(CharacterSnapshot::jobId).map(JobType::fromStored).orElse(JobType.NONE);
         if (job.isChosen() && RANDOM.nextDouble() < JOB_WEAPON_SHARE) {
             JobDefinition definition = Jobs.get(job);
-            List<WeaponType> weapons = new ArrayList<>(definition.preferredWeapons());
+            List<WeaponType> weapons = new ArrayList<>(definition.weapons());
             if (weapons.isEmpty()) {
                 weapons.add(definition.starterWeapon());
             }
             weapons.sort(null);
             return EquipmentBase.weapon(weapons.get(RANDOM.nextInt(weapons.size())), tier);
         }
+        boolean anyWeapon = !job.isChosen() || RANDOM.nextDouble() < OTHER_WEAPON_SHARE;
         List<EquipmentBase> bases = new ArrayList<>();
         for (EquipmentBase base : EquipmentBase.all()) {
-            if (base.tier() == tier) {
+            if (base.tier() == tier && (anyWeapon || !base.isWeapon())) {
                 bases.add(base);
             }
         }

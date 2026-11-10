@@ -23,6 +23,7 @@ import effects  # noqa: E402
 import items  # noqa: E402
 import models  # noqa: E402
 import preview  # noqa: E402
+import skill_tree  # noqa: E402
 import skills  # noqa: E402
 import weapons  # noqa: E402
 
@@ -106,6 +107,9 @@ def main() -> int:
         c = skills.skill_icon(sid)
         save(c, "gui", "skill", f"{sid}.png")
         skill_imgs.append((sid, c))
+    tree_icons = {}
+    for sid in skill_tree.new_skills():
+        tree_icons[sid] = save(skill_tree.icon(sid), "gui", "skill", f"{sid}.png")
     emblem_imgs = []
     for job in skills.JOBS:
         c = skills.emblem(job)
@@ -193,6 +197,9 @@ def main() -> int:
     out = os.path.join(HERE, "preview.png")
     preview.stack(secs, out, args.sections)
     print(f"preview: {os.path.relpath(out, ROOT)}")
+    tree = os.path.join(HERE, "skill_tree_preview.png")
+    skill_tree.preview(tree, {**{sid: c for sid, c in skill_imgs}, **tree_icons})
+    print(f"skill trees: {os.path.relpath(tree, ROOT)}")
     return 0
 
 
@@ -270,8 +277,9 @@ def check() -> list[str]:
         model(f"models/item/{cid}.json", f"eternalrealm:item/consumable/{cid}")
     png("textures/item/gold_coin.png", (16, 16))
     model("models/item/gold_coin.json", "eternalrealm:item/gold_coin")
-    for sid in skills.ALL_SKILLS:
+    for sid in skills.ALL_SKILLS + skill_tree.new_skills():
         png(f"textures/gui/skill/{sid}.png", (16, 16))
+    bad += skill_tree.check()
     for job in skills.JOBS:
         png(f"textures/gui/job/{job}.png", (16, 16))
     for name, (fn, n) in effects.PARTICLES.items():
@@ -296,7 +304,19 @@ def check() -> list[str]:
         if os.path.exists(p):
             with open(p, encoding="utf-8") as f:
                 ids |= set(re.findall(r'(?:skill|SkillDefinition)\("([a-z_]+)"', f.read()))
-    missing = sorted(i for i in ids if i not in skills.ALL_SKILLS)
+    # the job skill trees (KnightSkills.java ...): every node must have a recipe in skill_tree.py, and vice versa
+    tree = set()
+    for job in skill_tree.JOBS:
+        p = os.path.join(src, "job", job.capitalize() + "Skills.java")
+        if os.path.exists(p):
+            with open(p, encoding="utf-8") as f:
+                tree |= {f"{job}_{n}" for n in re.findall(r'\.(?:active|passive|ultimate)\("([a-z_]+)"', f.read())}
+    if tree:
+        drawn = {n[0] for job in skill_tree.JOBS for n in skill_tree.nodes(job)}
+        if tree != drawn:
+            bad.append(f"skill tree nodes without icons: {sorted(tree - drawn)}, icons without nodes: "
+                       f"{sorted(drawn - tree)}")
+    missing = sorted(i for i in ids if i not in skills.ALL_SKILLS + skill_tree.new_skills())
     if missing:
         bad.append(f"skills in Java without an icon: {missing}")
     return bad

@@ -115,9 +115,49 @@ public final class ClientCombatController {
             for (CombatEvent event : local.tick(now)) {
                 if (event instanceof CombatEvent.ActionStarted start) {
                     onActionStarted(player, start);
+                } else if (event instanceof CombatEvent.Hit hit && hit.action().kind() == ActionKind.SKILL) {
+                    Jobs.skillOfAction(hit.action().id()).ifPresent(skill -> move(player,
+                            skill.effectsAt(hit.frameIndex())));
                 }
             }
         }
+        announceForbiddenWeapon(player, local, weapon);
+    }
+
+    /** Weapon type last announced as unusable for the job (so the hint shows once per weapon switch). */
+    private static com.eternalrealm.combat.WeaponType announcedWeapon;
+
+    /** Switching to a weapon the job cannot use shows why it will not work (attacks would be refused anyway). */
+    private static void announceForbiddenWeapon(LocalPlayer player, Combatant local, WeaponProfile weapon) {
+        if (local == null || weapon == null || local.allowsWeapon(weapon)) {
+            announcedWeapon = null;
+            return;
+        }
+        if (announcedWeapon != weapon.type()) {
+            announcedWeapon = weapon.type();
+            player.displayClientMessage(jobWeaponMessage(weapon), true);
+        }
+    }
+
+    /** "魔剣士は弓を使えません（使える武器: 片手剣・両手剣）". */
+    private static Component jobWeaponMessage(WeaponProfile weapon) {
+        com.eternalrealm.job.JobType job = ClientCharacterState.snapshot()
+                .map(snapshot -> com.eternalrealm.job.JobType.fromStored(snapshot.jobId()))
+                .orElse(com.eternalrealm.job.JobType.NONE);
+        net.minecraft.network.chat.MutableComponent usable = Component.empty();
+        boolean first = true;
+        for (com.eternalrealm.combat.WeaponType type : com.eternalrealm.combat.WeaponType.values()) {
+            if (Jobs.canUse(job, type)) {
+                if (!first) {
+                    usable.append(Component.translatable("tooltip.eternalrealm.equipment.job_separator"));
+                }
+                usable.append(Component.translatable(type.translationKey()));
+                first = false;
+            }
+        }
+        return Component.translatable("message.eternalrealm.combat.job_weapon_detail",
+                Component.translatable(job.translationKey()), Component.translatable(weapon.type().translationKey()),
+                usable).withStyle(net.minecraft.ChatFormatting.RED);
     }
 
     /**
@@ -148,7 +188,9 @@ public final class ClientCombatController {
         Combatant.Snapshot before = local.snapshot();
         RequestOutcome outcome = local.submit(request, now, weapon, restricted, usingOtherItem);
         if (outcome != RequestOutcome.ACCEPTED && outcome != RequestOutcome.BUFFERED) {
-            if (request != CombatRequest.LIGHT && request != CombatRequest.HEAVY_RELEASE) {
+            if (outcome == RequestOutcome.REJECTED_JOB_WEAPON) {
+                player.displayClientMessage(jobWeaponMessage(weapon), true);
+            } else if (request != CombatRequest.LIGHT && request != CombatRequest.HEAVY_RELEASE) {
                 outcome.messageKey().ifPresent(key -> player.displayClientMessage(Component.translatable(key), true));
             }
             return false;
@@ -197,15 +239,30 @@ public final class ClientCombatController {
             case SKILL -> {
                 player.swing(InteractionHand.MAIN_HAND);
                 player.playSound(com.eternalrealm.sound.ERSounds.SKILL_SLASH.get(), 1.0F, 1.0F);
-                Jobs.skillOfAction(start.action().id()).ifPresent(skill -> {
-                    for (SkillEffect effect : skill.effectsAt(SkillEffect.ON_START)) {
-                        if (effect instanceof SkillEffect.Dash dash) {
-                            applyDash(player, dash);
-                        }
-                    }
-                });
+                Jobs.skillOfAction(start.action().id()).ifPresent(skill ->
+                        move(player, skill.effectsAt(SkillEffect.ON_START)));
             }
         }
+    }
+
+    /** The movement effects of a skill moment (dashes and leaps; movement is the client's). */
+    private static void move(LocalPlayer player, java.util.List<SkillEffect> effects) {
+        for (SkillEffect effect : effects) {
+            if (effect instanceof SkillEffect.Dash dash) {
+                applyDash(player, dash);
+            } else if (effect instanceof SkillEffect.Leap leap) {
+                applyLeap(player, leap);
+            }
+        }
+    }
+
+    /** A jump of about {@code height} blocks carrying the player {@code distance} blocks forward. */
+    private static void applyLeap(LocalPlayer player, SkillEffect.Leap leap) {
+        double yaw = Math.toRadians(player.getYRot());
+        double up = Math.min(1.6, Math.sqrt(2.0 * 0.08 * leap.height()) + 0.05);
+        double airTicks = Math.max(8.0, up / 0.08 * 2.0);
+        double forward = Math.min(1.2, leap.distance() / airTicks * 1.6);
+        player.setDeltaMovement(-Math.sin(yaw) * forward, up, Math.cos(yaw) * forward);
     }
 
     /**

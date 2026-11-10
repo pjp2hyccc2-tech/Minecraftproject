@@ -2,6 +2,7 @@ package com.eternalrealm.combat.forge;
 
 import com.eternalrealm.server.ServerContext;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -21,6 +22,12 @@ public final class CombatEvents {
      * animation).
      */
     public static void onLivingAttack(LivingAttackEvent event) {
+        if (event.getSource().getEntity() instanceof LivingEntity attacker
+                && event.getSource().getDirectEntity() == attacker && !attacker.level().isClientSide()
+                && ERMobEffects.isStunned(attacker)) {
+            event.setCanceled(true); // a stunned fighter cannot strike
+            return;
+        }
         if (event.getEntity() instanceof ServerPlayer victim
                 && event.getSource().getEntity() instanceof ServerPlayer attacker
                 && attacker != victim && !PvpRules.canHurt(attacker, victim)) {
@@ -36,8 +43,21 @@ public final class CombatEvents {
         }
     }
 
-    /** Guard and VIT damage reduction. */
+    /**
+     * Skill debuffs on everyone (vulnerable victims take more, weakened attackers deal less), then the guard and the
+     * VIT damage reduction of players.
+     */
     public static void onLivingHurt(LivingHurtEvent event) {
+        LivingEntity victim = event.getEntity();
+        if (!victim.level().isClientSide()) {
+            double factor = ERMobEffects.vulnerabilityMultiplier(victim);
+            if (event.getSource().getEntity() instanceof LivingEntity attacker && attacker != victim) {
+                factor *= ERMobEffects.weakenMultiplier(attacker);
+            }
+            if (factor != 1.0) {
+                event.setAmount((float) (event.getAmount() * factor));
+            }
+        }
         if (event.getEntity() instanceof ServerPlayer player) {
             ServerContext.current().ifPresent(context ->
                     event.setAmount(context.combat().defend(player, event.getSource(), event.getAmount())));
@@ -53,6 +73,15 @@ public final class CombatEvents {
     }
 
     public static void onLivingDeath(LivingDeathEvent event) {
+        if (event.getSource().getEntity() instanceof ServerPlayer killer && killer != event.getEntity()
+                && killer.isAlive()) {
+            ServerContext.current().ifPresent(context -> {
+                double heal = context.combat().passives(killer).healOnKill();
+                if (heal > 0.0 && killer.getHealth() < killer.getMaxHealth()) {
+                    killer.heal((float) (killer.getMaxHealth() * heal));
+                }
+            });
+        }
         if (event.getEntity() instanceof ServerPlayer player) {
             ServerContext.current().ifPresent(context -> {
                 context.combat().onDeath(player);

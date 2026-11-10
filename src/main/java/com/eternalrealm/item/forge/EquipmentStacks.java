@@ -33,6 +33,9 @@ public final class EquipmentStacks {
     private static volatile Map<Item, EquipmentBase> bases;
     /** Level of the player looking at a tooltip; the client installs the real value. */
     private static volatile IntSupplier viewerLevel = () -> Integer.MAX_VALUE;
+    /** Job of the player looking at a tooltip; the client installs the real value. */
+    private static volatile java.util.function.Supplier<com.eternalrealm.job.JobType> viewerJob =
+            () -> com.eternalrealm.job.JobType.NONE;
 
     private EquipmentStacks() {
     }
@@ -43,6 +46,15 @@ public final class EquipmentStacks {
 
     public static int viewerLevel() {
         return viewerLevel.getAsInt();
+    }
+
+    public static void setViewerJob(java.util.function.Supplier<com.eternalrealm.job.JobType> supplier) {
+        viewerJob = supplier;
+    }
+
+    public static com.eternalrealm.job.JobType viewerJob() {
+        com.eternalrealm.job.JobType job = viewerJob.get();
+        return job == null ? com.eternalrealm.job.JobType.NONE : job;
     }
 
     /** The base of an equipment item; empty for every other item. */
@@ -101,9 +113,7 @@ public final class EquipmentStacks {
 
     public static void appendTooltip(ItemStack stack, List<Component> tooltip) {
         read(stack).ifPresent(data -> {
-            int level = viewerLevel();
-            for (TooltipLine line : level == Integer.MAX_VALUE ? EquipmentTooltip.lines(data)
-                    : EquipmentTooltip.lines(data, level)) {
+            for (TooltipLine line : EquipmentTooltip.lines(data, viewerLevel(), viewerJob())) {
                 tooltip.add(component(line));
             }
         });
@@ -119,17 +129,31 @@ public final class EquipmentStacks {
     public static MutableComponent component(TooltipLine line) {
         Object[] args = new Object[line.args().size()];
         for (int i = 0; i < args.length; i++) {
-            TooltipLine.Arg arg = line.args().get(i);
-            if (arg instanceof TooltipLine.Key key) {
-                args[i] = Component.translatable(key.translationKey());
-            } else if (arg instanceof TooltipLine.Text text) {
-                args[i] = text.text();
-            } else {
-                args[i] = "";
-            }
+            args[i] = argument(line.args().get(i));
         }
         int color = line.color();
         return Component.translatable(line.translationKey(), args).withStyle(style -> style.withColor(color));
+    }
+
+    private static Object argument(TooltipLine.Arg arg) {
+        if (arg instanceof TooltipLine.Key key) {
+            return Component.translatable(key.translationKey());
+        }
+        if (arg instanceof TooltipLine.Text text) {
+            return text.text();
+        }
+        if (arg instanceof TooltipLine.Join join) {
+            MutableComponent joined = Component.empty();
+            for (int i = 0; i < join.parts().size(); i++) {
+                if (i > 0) {
+                    joined.append(Component.translatable(join.separatorKey()));
+                }
+                Object part = argument(join.parts().get(i));
+                joined.append(part instanceof Component component ? component : Component.literal(part.toString()));
+            }
+            return joined;
+        }
+        return "";
     }
 
     private static Map<Item, EquipmentBase> bases() {

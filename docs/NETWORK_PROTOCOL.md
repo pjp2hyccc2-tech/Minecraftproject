@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"2"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2 |
+| プロトコル版 | `"5"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -48,6 +48,7 @@
 | 状況 | 扱い |
 |---|---|
 | 未知の requestId | **違反** |
+| 職業で使えない武器での攻撃・スキル（回避以外） | 違反にしない。結果 12 = `REJECTED_JOB_WEAPON` を返す |
 | 行動中で先行入力枠が埋まっている、スタミナ不足、クールダウン中、ひるみ中、ガード中、武器なし、騎乗中の回避 | 違反にしない。`CombatStatusPacket` で結果（拒否理由）を返す |
 | 受理・先行入力 | `CombatStatusPacket` で結果を返す。命中・ダメージはサーバーtickで判定 |
 
@@ -83,3 +84,10 @@
 - 時刻はサーバーtickで判定する。クライアント時刻は参考値としてのみ扱う。
 - 高頻度パケットは専用のレート制限を設け、`ServerPacketGuard` を必ず通す。
 - 他プレイヤーへの配信（戦闘演出等）は範囲を絞る（`PacketDistributor.TRACKING_ENTITY` 等）。
+
+## 付録: スキルツリーでの変更（版 5）
+
+- `CombatActionPacket` の requestId: 5〜8 = 職業スキル枠 1〜4（4 は必殺技）、**9・10 = 職業スキル枠 5・6**（`CombatRequest` のネットワークID。並べ替え・再利用禁止）。
+- `CombatStatusPacket` の outcome: **12 = `REJECTED_JOB_WEAPON`**（職業で使えない武器）。CT は職業スキル枠 0〜6 の 7 つ。
+- `CharacterSnapshotPacket`: スキル投資（最大128件）の後に**スキル枠**（skillId の列、空文字 = 空き。通常 6 件、受信側の上限 16 件）を追加。最大 12288 B。
+- UI 操作（`UiActionPacket`）: `skill.invest {skill}`、`skill.slot {slot, skill}`（空文字で外す）、`skill.reset`。サーバーが `SkillTree` で再判定し、結果をメッセージとスナップショットで返す。

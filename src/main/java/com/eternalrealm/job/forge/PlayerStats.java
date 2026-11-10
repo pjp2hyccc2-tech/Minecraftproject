@@ -10,8 +10,8 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.function.Function;
 
 /**
- * Final stats of an online player: own stats + job + equipment. The equipment module installs the gear reader;
- * until then equipment adds nothing.
+ * Final stats of an online player: own stats + job + learned passive skills + equipment. The equipment module installs
+ * the gear reader; until then equipment adds nothing.
  */
 public final class PlayerStats {
     /** Stats and secondary modifiers granted by what a player wears. */
@@ -31,8 +31,9 @@ public final class PlayerStats {
         } catch (RuntimeException e) {
             gear = Gear.NONE; // never let a broken item break the character
         }
-        return ComposedStats.compose(snapshot.totalStats(), snapshot.level(), JobType.fromStored(snapshot.jobId()),
-                gear.stats(), gear.modifiers());
+        JobType job = JobType.fromStored(snapshot.jobId());
+        return ComposedStats.compose(snapshot.totalStats(), snapshot.level(), job, gear.stats(), gear.modifiers(),
+                com.eternalrealm.job.SkillTree.passives(job, snapshot.level(), snapshot.skillInvestments()).modifiers());
     }
 
     public static void setGearReader(Function<ServerPlayer, Gear> reader) {

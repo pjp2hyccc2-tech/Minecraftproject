@@ -515,8 +515,15 @@ public final class SmithScreen extends Screen {
             ItemStack stack = preview(recipe);
             graphics.renderItem(stack, x0 + 3, rowTop + 2);
             boolean ok = Crafting.check(recipe, counts, gold, level).isOk();
-            String text = font.plainSubstrByWidth(stack.getHoverName().getString(), listWidth() - 34);
-            graphics.drawString(font, text, x0 + 22, rowTop + 6, ok ? 0xFFFFFF : 0x8A8A8A, false);
+            // weapons the player's job cannot use stay craftable (trade), but read as "not for you"
+            boolean otherJob = recipe.output().isWeapon() && !com.eternalrealm.job.Jobs.canUse(
+                    com.eternalrealm.item.forge.EquipmentStacks.viewerJob(), recipe.output().weaponType());
+            String text = font.plainSubstrByWidth(stack.getHoverName().getString(), listWidth() - (otherJob ? 44 : 34));
+            graphics.drawString(font, text, x0 + 22, rowTop + 6, otherJob ? 0x9A6A6A : ok ? 0xFFFFFF : 0x8A8A8A,
+                    false);
+            if (otherJob) {
+                graphics.drawString(font, "✘", x1 - 18, rowTop + 6, 0xFFB04040, false);
+            }
             if (ok) {
                 graphics.fill(x1 - 9, rowTop + 8, x1 - 5, rowTop + 12, GOOD);
             }

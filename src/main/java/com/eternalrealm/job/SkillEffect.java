@@ -5,9 +5,14 @@ import java.util.Objects;
 /**
  * Non-damage effects of a job skill, executed by the platform layer. {@link #frame()} says when: {@code -1} when the
  * action starts, otherwise at that hit frame of the skill's action (afflictions go to whatever that frame hits).
+ *
+ * <p>Strengths grow with the skill level: healing, shields, fractional buffs, damage-over-time and the debuff
+ * strengths are multiplied by {@link SkillDefinition#effectScale(int)}, affliction durations too (see each record).</p>
  */
 public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, SkillEffect.Shield, SkillEffect.Dash,
-        SkillEffect.Taunt, SkillEffect.DropAggro, SkillEffect.Afflict, SkillEffect.Visual {
+        SkillEffect.Leap, SkillEffect.Taunt, SkillEffect.DropAggro, SkillEffect.Afflict, SkillEffect.Visual,
+        SkillEffect.Cleanse, SkillEffect.Siphon, SkillEffect.Zone, SkillEffect.RestoreStamina,
+        SkillEffect.CooldownCut, SkillEffect.Execute {
     int ON_START = -1;
 
     int frame();
@@ -21,20 +26,49 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
 
     enum BuffKind {
         /** Damage dealt × (1 + magnitude). */
-        ATTACK_UP,
+        ATTACK_UP(true),
         /** Damage taken × (1 − magnitude). */
-        DEFENSE_UP,
-        /** Movement speed (vanilla Speed, amplifier = magnitude). */
-        SPEED,
+        DEFENSE_UP(true),
+        /** Movement speed (amplifier = magnitude). */
+        SPEED(false),
         /** Vanilla Regeneration (amplifier = magnitude). */
-        REGENERATION,
-        INVISIBILITY,
+        REGENERATION(false),
+        INVISIBILITY(false),
         /** Melee hits set targets on fire. */
-        FLAME_WEAPON
+        FLAME_WEAPON(false),
+        /** Critical chance + magnitude. */
+        CRIT_UP(true),
+        /** Heals magnitude of the damage the fighter's hits deal. */
+        LIFESTEAL(true),
+        /** Melee hits chill (slow) their targets. */
+        FROST_WEAPON(false),
+        /** Melee hits poison their targets. */
+        VENOM_WEAPON(false),
+        /** Melee hits arc to a second enemy nearby. */
+        THUNDER_WEAPON(false),
+        /** Chance (magnitude) to evade attacks completely. */
+        EVASION(true),
+        /** Reflects magnitude of the damage taken from attackers. */
+        THORNS(true);
+
+        private final boolean fractional;
+
+        BuffKind(boolean fractional) {
+            this.fractional = fractional;
+        }
+
+        /** The magnitude is a fraction (5 % steps, grows with the skill level); otherwise an amplifier or unused. */
+        public boolean fractional() {
+            return fractional;
+        }
+
+        public String translationKey() {
+            return "skill_buff.eternalrealm." + name().toLowerCase(java.util.Locale.ROOT);
+        }
     }
 
     enum AfflictionKind {
-        /** Vanilla Slowness (amplifier = power). */
+        /** Slowness (amplifier = power). */
         SLOW,
         /** Strong slow plus the powder snow frost overlay. */
         FREEZE,
@@ -42,7 +76,38 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
         BURN,
         /** Damage over time: {@code power} × the hit's damage per second. */
         BLEED,
-        BLIND
+        BLIND,
+        /** Cannot move or attack (bosses only stagger for a moment). */
+        STUN,
+        /** Damage over time like bleeding ({@code power} × the hit's damage per second), stacks with it. */
+        POISON,
+        /** Damage the target deals × (1 − power). */
+        WEAKEN,
+        /** Damage the target takes × (1 + power). */
+        VULNERABLE,
+        /** Drags the target towards the caster ({@code power} = pull speed); instant. */
+        PULL,
+        /** Throws the target up ({@code power} = upward speed); instant. */
+        LAUNCH;
+
+        /** Instant displacements ignore the duration and do not grow with the skill level. */
+        public boolean instant() {
+            return this == PULL || this == LAUNCH;
+        }
+
+        public String translationKey() {
+            return "skill_affliction.eternalrealm." + name().toLowerCase(java.util.Locale.ROOT);
+        }
+    }
+
+    /** Where a ground area is placed when it is created. */
+    enum Placement {
+        /** Around the caster's feet. */
+        CASTER,
+        /** {@code distance} blocks ahead along the horizontal facing. */
+        AHEAD,
+        /** Where the caster looks, at most {@code distance} blocks away. */
+        LOOK
     }
 
     /** Heals the caster and party members within {@code radius}: {@code fraction} of max health + {@code flat}. */
@@ -56,7 +121,7 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
     }
 
     /**
-     * @param magnitude ATTACK_UP/DEFENSE_UP: fraction; SPEED/REGENERATION: vanilla amplifier; otherwise ignored
+     * @param magnitude fractional kinds: fraction; SPEED/REGENERATION: amplifier; otherwise ignored
      * @param radius    ALLIES only: reach around the caster
      */
     record Buff(int frame, BuffTarget target, BuffKind kind, double magnitude, int durationTicks, double radius)
@@ -71,12 +136,21 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
         }
     }
 
-    /** Absorption equal to {@code fraction} of the caster's max health for {@code durationTicks}. */
-    record Shield(int frame, double fraction, int durationTicks) implements SkillEffect {
+    /**
+     * Absorption equal to {@code fraction} of the max health for {@code durationTicks}: the caster's own, or (radius
+     * above 0) also every party member within {@code radius}.
+     */
+    record Shield(int frame, double fraction, int durationTicks, double radius) implements SkillEffect {
         public Shield {
             Checks.frame(frame);
             Checks.range("fraction", fraction, 0.0, 2.0);
             Checks.range("durationTicks", durationTicks, 1, 20 * 600);
+            Checks.range("radius", radius, 0.0, 32.0);
+        }
+
+        /** A shield for the caster only. */
+        public Shield(int frame, double fraction, int durationTicks) {
+            this(frame, fraction, durationTicks, 0.0);
         }
     }
 
@@ -85,6 +159,15 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
         public Dash {
             Checks.frame(frame);
             Checks.range("distance", distance, 0.5, 16.0);
+        }
+    }
+
+    /** Jumps {@code distance} blocks forward and about {@code height} blocks up (movement is the client's). */
+    record Leap(int frame, double distance, double height) implements SkillEffect {
+        public Leap {
+            Checks.frame(frame);
+            Checks.range("distance", distance, 0.0, 16.0);
+            Checks.range("height", height, 0.5, 8.0);
         }
     }
 
@@ -114,14 +197,113 @@ public sealed interface SkillEffect permits SkillEffect.Heal, SkillEffect.Buff, 
             Objects.requireNonNull(kind, "kind");
             Checks.range("durationTicks", durationTicks, 1, 20 * 60);
             Checks.range("power", power, 0.0, 10.0);
+            if ((kind == AfflictionKind.WEAKEN || kind == AfflictionKind.VULNERABLE) && power > 0.6) {
+                throw new IllegalArgumentException(kind + " power above 60%: " + power);
+            }
         }
     }
 
-    /** Particles/sound hint for the platform layer (e.g. {@code lightning}, {@code heal}). */
+    /**
+     * Particles/sound for the platform layer, coloured by the skill's {@link SkillTheme}: generic kinds
+     * ({@code cast}, {@code nova}, {@code pillar}, {@code aura}, {@code shield}, {@code smite}, {@code quake},
+     * {@code storm}, {@code vortex}, {@code mist}, {@code blink}, {@code burst}, {@code ray}, {@code rain},
+     * {@code sigil}, {@code impact}, {@code roar}) and the named effects of the first skills ({@code lightning},
+     * {@code heal}, {@code judgment}...).
+     */
     record Visual(int frame, String kind) implements SkillEffect {
         public Visual {
             Checks.frame(frame);
             Checks.id("kind", kind);
+        }
+    }
+
+    /** Removes harmful effects (and fire) from the caster and party members within {@code radius}. */
+    record Cleanse(int frame, double radius) implements SkillEffect {
+        public Cleanse {
+            Checks.frame(frame);
+            Checks.range("radius", radius, 0.0, 32.0);
+        }
+    }
+
+    /**
+     * Heals the caster and party members within {@code radius} by {@code fraction} of the damage the frame (or its
+     * projectiles) dealt.
+     */
+    record Siphon(int frame, double fraction, double radius) implements SkillEffect {
+        public Siphon {
+            if (frame < 0) {
+                throw new IllegalArgumentException("siphons need a hit frame");
+            }
+            Checks.range("fraction", fraction, 0.01, 2.0);
+            Checks.range("radius", radius, 0.0, 32.0);
+        }
+    }
+
+    /**
+     * A ground area that pulses {@code pulses} times every {@code intervalTicks}, the first pulse after
+     * {@code delayTicks}: each pulse damages enemies inside ({@code damageMultiplier} × the skill's damage, like a hit
+     * frame), heals allies inside ({@code healFraction} of their max health, grows with the level) and may afflict.
+     *
+     * @param affliction applied to enemies a pulse damages, or {@code null}
+     */
+    record Zone(int frame, Placement placement, double distance, double radius, int delayTicks, int pulses,
+                int intervalTicks, double damageMultiplier, double healFraction, AfflictionKind affliction,
+                int afflictionTicks, double afflictionPower) implements SkillEffect {
+        public Zone {
+            Checks.frame(frame);
+            Objects.requireNonNull(placement, "placement");
+            Checks.range("distance", distance, 0.0, 24.0);
+            Checks.range("radius", radius, 1.0, 12.0);
+            Checks.range("delayTicks", delayTicks, 0, 200);
+            Checks.range("pulses", pulses, 1, 40);
+            Checks.range("intervalTicks", intervalTicks, 1, 100);
+            Checks.range("damageMultiplier", damageMultiplier, 0.0, 10.0);
+            Checks.range("healFraction", healFraction, 0.0, 0.5);
+            if (damageMultiplier == 0.0 && healFraction == 0.0) {
+                throw new IllegalArgumentException("a zone must damage or heal");
+            }
+            if (affliction != null) {
+                Checks.range("afflictionTicks", afflictionTicks, 1, 20 * 60);
+                Checks.range("afflictionPower", afflictionPower, 0.0, 10.0);
+                if (damageMultiplier == 0.0) {
+                    throw new IllegalArgumentException("only damaging zones afflict");
+                }
+            }
+            if ((long) delayTicks + (long) (pulses - 1) * intervalTicks > 20 * 30) {
+                throw new IllegalArgumentException("a zone lasts at most 30 seconds");
+            }
+        }
+
+        /** Ticks from creation to the last pulse. */
+        public int lifetimeTicks() {
+            return delayTicks + (pulses - 1) * intervalTicks;
+        }
+    }
+
+    /** Gives the caster {@code amount} stamina back. */
+    record RestoreStamina(int frame, double amount) implements SkillEffect {
+        public RestoreStamina {
+            Checks.frame(frame);
+            Checks.range("amount", amount, 1.0, 200.0);
+        }
+    }
+
+    /** Shortens the running cooldowns of the caster's other job skills by {@code ticks}. */
+    record CooldownCut(int frame, int ticks) implements SkillEffect {
+        public CooldownCut {
+            Checks.frame(frame);
+            Checks.range("ticks", ticks, 1, 20 * 60);
+        }
+    }
+
+    /** The frame's hits deal {@code bonus} more damage to targets below {@code threshold} of their health. */
+    record Execute(int frame, double threshold, double bonus) implements SkillEffect {
+        public Execute {
+            if (frame < 0) {
+                throw new IllegalArgumentException("executes need a hit frame");
+            }
+            Checks.range("threshold", threshold, 0.05, 0.9);
+            Checks.range("bonus", bonus, 0.05, 5.0);
         }
     }
 }

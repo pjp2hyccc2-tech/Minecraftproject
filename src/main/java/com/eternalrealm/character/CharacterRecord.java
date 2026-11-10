@@ -5,6 +5,7 @@ import com.eternalrealm.season.SeasonId;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -24,14 +25,19 @@ import java.util.regex.Pattern;
  * @param gold             season currency
  * @param extensions       per-module season data as compact JSON documents (quest log, discovery, statistics...),
  *                         keyed by module id; the character module never interprets them
+ * @param skillLoadout     skill id (or {@code ""}) per job skill slot; empty = the job's default slots (the job module
+ *                         validates the entries)
  */
 public record CharacterRecord(UUID playerId, SeasonId seasonId, int level, long experience, long totalExperience,
                               StatBlock allocatedStats, Instant createdAt, Instant updatedAt, String jobId,
-                              Map<String, Integer> skillInvestments, long gold, Map<String, String> extensions) {
+                              Map<String, Integer> skillInvestments, long gold, Map<String, String> extensions,
+                              List<String> skillLoadout) {
     public static final String NO_JOB = "none";
     public static final long MAX_GOLD = 9_999_999_999L;
     public static final int MAX_SKILL_INVESTMENT = 100;
     public static final int MAX_EXTENSION_LENGTH = 1 << 20;
+    /** Upper bound of stored loadout entries (the job module uses six). */
+    public static final int MAX_LOADOUT_SLOTS = 16;
     private static final Pattern JOB_ID = Pattern.compile("[a-z_]{1,32}");
     private static final Pattern SKILL_ID = Pattern.compile("[a-z0-9_]{1,64}");
     private static final Pattern EXTENSION_KEY = Pattern.compile("[a-z_]{1,32}");
@@ -57,13 +63,22 @@ public record CharacterRecord(UUID playerId, SeasonId seasonId, int level, long 
             throw new IllegalArgumentException("gold out of range [0, " + MAX_GOLD + "]: " + gold);
         }
         extensions = copyExtensions(extensions);
+        skillLoadout = copyLoadout(skillLoadout);
+    }
+
+    /** A record without a customised skill loadout (schema 2 data). */
+    public CharacterRecord(UUID playerId, SeasonId seasonId, int level, long experience, long totalExperience,
+                           StatBlock allocatedStats, Instant createdAt, Instant updatedAt, String jobId,
+                           Map<String, Integer> skillInvestments, long gold, Map<String, String> extensions) {
+        this(playerId, seasonId, level, experience, totalExperience, allocatedStats, createdAt, updatedAt, jobId,
+                skillInvestments, gold, extensions, List.of());
     }
 
     /** A character without job, skills, gold or extensions (schema 1 data). */
     public CharacterRecord(UUID playerId, SeasonId seasonId, int level, long experience, long totalExperience,
                            StatBlock allocatedStats, Instant createdAt, Instant updatedAt) {
         this(playerId, seasonId, level, experience, totalExperience, allocatedStats, createdAt, updatedAt, NO_JOB,
-                Map.of(), 0L, Map.of());
+                Map.of(), 0L, Map.of(), List.of());
     }
 
     static String checkJobId(String jobId) {
@@ -91,6 +106,20 @@ public record CharacterRecord(UUID playerId, SeasonId seasonId, int level, long 
             }
         }
         return Collections.unmodifiableMap(copy);
+    }
+
+    /** Validated unmodifiable copy: at most {@link #MAX_LOADOUT_SLOTS} entries, each a skill id or {@code ""}. */
+    static List<String> copyLoadout(List<String> source) {
+        Objects.requireNonNull(source, "skillLoadout");
+        if (source.size() > MAX_LOADOUT_SLOTS) {
+            throw new IllegalArgumentException("too many loadout slots: " + source.size());
+        }
+        for (String id : source) {
+            if (id == null || (!id.isEmpty() && !SKILL_ID.matcher(id).matches())) {
+                throw new IllegalArgumentException("invalid loadout entry: " + id);
+            }
+        }
+        return List.copyOf(source);
     }
 
     static Map<String, String> copyExtensions(Map<String, String> source) {

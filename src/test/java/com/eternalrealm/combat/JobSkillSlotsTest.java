@@ -123,7 +123,7 @@ public class JobSkillSlotsTest {
         assertEquals(100, fighter.skillCooldownRemaining(1, now));
         assertSame(BASH, fighter.currentAction().orElseThrow()); // the running action is not interrupted
         assertThrows(IllegalArgumentException.class, () -> fighter.setJobSkill(0, null));
-        assertThrows(IllegalArgumentException.class, () -> fighter.setJobSkill(5, null));
+        assertThrows(IllegalArgumentException.class, () -> fighter.setJobSkill(Combatant.SKILL_SLOTS, null));
     }
 
     @Test

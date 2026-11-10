@@ -44,14 +44,21 @@ public final class MagicProjectile extends ThrowableItemProjectile {
         return projectile;
     }
 
+    /**
+     * The glowing sprite of a spell kind (vanilla item textures; the trail is derived from the item on the client, so
+     * every kind maps to an item that tells its element apart).
+     */
     static Item visualFor(String kind) {
         return switch (kind) {
-            case "fireball" -> Items.FIRE_CHARGE;
-            case "ice_lance" -> Items.PRISMARINE_SHARD;
-            case "holy_light" -> Items.NETHER_STAR;
-            case "mana_wave" -> Items.ECHO_SHARD;
-            case "meteor" -> Items.MAGMA_BLOCK;
-            case "magic_orb" -> Items.HEART_OF_THE_SEA;
+            case "fireball", "phoenix" -> Items.FIRE_CHARGE;
+            case "ice_lance", "frost_orb", "hail" -> Items.PRISMARINE_SHARD;
+            case "holy_light", "smite", "holy_lance", "light_wave", "star_arrow" -> Items.NETHER_STAR;
+            case "mana_wave", "shadow_bolt", "rift" -> Items.ECHO_SHARD;
+            case "meteor", "magma" -> Items.MAGMA_BLOCK;
+            case "magic_orb", "spark", "thunder", "thunder_orb" -> Items.HEART_OF_THE_SEA;
+            case "poison_dart", "poison_flask" -> Items.SLIME_BALL;
+            case "knife" -> Items.IRON_NUGGET;
+            case "crescent" -> Items.AMETHYST_CLUSTER;
             default -> Items.AMETHYST_SHARD;
         };
     }
@@ -71,6 +78,12 @@ public final class MagicProjectile extends ThrowableItemProjectile {
         }
         if (item == Items.HEART_OF_THE_SEA) {
             return ERParticles.SPARK.get();
+        }
+        if (item == Items.SLIME_BALL) {
+            return net.minecraft.core.particles.ParticleTypes.ITEM_SLIME;
+        }
+        if (item == Items.IRON_NUGGET) {
+            return net.minecraft.core.particles.ParticleTypes.CRIT;
         }
         return ERParticles.RUNE.get();
     }

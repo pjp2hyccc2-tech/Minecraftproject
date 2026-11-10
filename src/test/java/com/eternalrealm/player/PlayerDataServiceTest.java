@@ -505,19 +505,68 @@ public class PlayerDataServiceTest {
         service.chooseJob(ALICE, com.eternalrealm.job.JobType.PRIEST, com.eternalrealm.job.JobRules.defaults());
         assertEquals(com.eternalrealm.job.SkillTree.InvestResult.NO_POINTS,
                 service.investSkill(ALICE, "priest_heal").orElseThrow());
-        service.setLevel(ALICE, 10); // 3 points
+        service.setLevel(ALICE, 10); // 9 * 2 + 2 = 20 points
         assertEquals(com.eternalrealm.job.SkillTree.InvestResult.OK, service.investSkill(ALICE, "priest_heal").orElseThrow());
         assertEquals(com.eternalrealm.job.SkillTree.InvestResult.WRONG_JOB,
                 service.investSkill(ALICE, "mage_fireball").orElseThrow());
         assertEquals(com.eternalrealm.job.SkillTree.InvestResult.LOCKED,
                 service.investSkill(ALICE, "priest_blessing").orElseThrow());
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.PREREQUISITE,
+                service.investSkill(ALICE, "priest_greater_heal").orElseThrow());
         assertEquals(1, service.snapshot(ALICE).orElseThrow().investment("priest_heal"));
-        assertEquals(2, service.snapshot(ALICE).orElseThrow().unspentSkillPoints());
+        assertEquals(19, service.snapshot(ALICE).orElseThrow().unspentSkillPoints());
         service.onPlayerLeave(ALICE);
         settle();
         assertEquals(1, (int) stored(ALICE).skillInvestments().get("priest_heal"));
         assertEquals("priest", stored(ALICE).jobId());
         assertTrue(service.investSkill(ALICE, "priest_heal").isEmpty());
+    }
+
+    @Test
+    public void learnedActivesFillFreeSlotsAndTheLoadoutIsValidatedAndPersisted() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        service.chooseJob(ALICE, com.eternalrealm.job.JobType.MAGE, com.eternalrealm.job.JobRules.defaults());
+        service.setLevel(ALICE, 20);
+        for (int i = 0; i < 4; i++) {
+            service.investSkill(ALICE, "mage_fireball");
+        }
+        assertEquals(com.eternalrealm.job.SkillTree.InvestResult.OK, service.investSkill(ALICE, "mage_explosion")
+                .orElseThrow());
+        // the newly learned active went into the first free slot (5)
+        assertEquals(java.util.List.of("mage_fireball", "mage_ice_lance", "mage_thunderstorm", "mage_meteor",
+                "mage_explosion", ""), service.snapshot(ALICE).orElseThrow().skillLoadout());
+        assertEquals(com.eternalrealm.job.SkillTree.LoadoutResult.OK,
+                service.setSkillSlot(ALICE, 1, "mage_explosion").orElseThrow());
+        assertEquals(java.util.List.of("mage_explosion", "mage_ice_lance", "mage_thunderstorm", "mage_meteor",
+                "mage_fireball", ""), service.snapshot(ALICE).orElseThrow().skillLoadout());
+        assertEquals(com.eternalrealm.job.SkillTree.LoadoutResult.NOT_LEARNED,
+                service.setSkillSlot(ALICE, 6, "mage_frost_bolt").orElseThrow());
+        assertEquals(com.eternalrealm.job.SkillTree.LoadoutResult.NEEDS_ULTIMATE,
+                service.setSkillSlot(ALICE, 4, "mage_fireball").orElseThrow());
+        service.onPlayerLeave(ALICE);
+        settle();
+        assertEquals("mage_explosion", stored(ALICE).skillLoadout().get(0));
+        assertTrue(service.setSkillSlot(ALICE, 1, "").isEmpty());
+    }
+
+    @Test
+    public void theSkillResetCostsGoldAndRefundsEverything() throws Exception {
+        joinAndLoad(ALICE, "Alice");
+        com.eternalrealm.job.JobRules rules = com.eternalrealm.job.JobRules.defaults();
+        service.chooseJob(ALICE, com.eternalrealm.job.JobType.PRIEST, rules);
+        assertEquals(PlayerDataService.SkillResetResult.NOTHING_TO_RESET, service.resetSkills(ALICE, rules).result());
+        service.setLevel(ALICE, 20);
+        service.investSkill(ALICE, "priest_heal");
+        service.investSkill(ALICE, "priest_renew");
+        PlayerDataService.SkillReset poor = service.resetSkills(ALICE, rules);
+        assertEquals(PlayerDataService.SkillResetResult.NOT_ENOUGH_GOLD, poor.result());
+        assertEquals(1000L, poor.cost());
+        service.grantGold(ALICE, 1500L);
+        assertEquals(PlayerDataService.SkillResetResult.OK, service.resetSkills(ALICE, rules).result());
+        assertEquals(500L, service.gold(ALICE));
+        assertTrue(service.snapshot(ALICE).orElseThrow().skillInvestments().isEmpty());
+        assertTrue(service.snapshot(ALICE).orElseThrow().skillLoadout().isEmpty());
+        assertEquals(PlayerDataService.SkillResetResult.NOT_READY, service.resetSkills(BOB, rules).result());
     }
 
     @Test

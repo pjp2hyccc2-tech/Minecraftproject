@@ -5,6 +5,7 @@ import com.eternalrealm.season.SeasonId;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,6 +44,7 @@ public final class PlayerCharacter {
     private StatBlock allocated;
     private String jobId = CharacterRecord.NO_JOB;
     private Map<String, Integer> skillInvestments = Map.of();
+    private List<String> skillLoadout = List.of();
     private long gold;
     private final Map<String, String> extensions = new LinkedHashMap<>();
     private long revision;
@@ -72,6 +74,7 @@ public final class PlayerCharacter {
                 record.level(), record.experience(), record.totalExperience(), record.allocatedStats());
         character.jobId = record.jobId();
         character.skillInvestments = record.skillInvestments();
+        character.skillLoadout = record.skillLoadout();
         character.gold = record.gold();
         character.extensions.putAll(record.extensions());
         character.reconcile(rules);
@@ -105,6 +108,7 @@ public final class PlayerCharacter {
         }
         if (investedSkillPoints() > rules.earnedSkillPoints(level)) {
             skillInvestments = Map.of();
+            skillLoadout = List.of();
             changed = true;
         }
         if (changed) {
@@ -192,6 +196,7 @@ public final class PlayerCharacter {
         }
         if (investedSkillPoints() > rules.earnedSkillPoints(level)) {
             skillInvestments = Map.of();
+            skillLoadout = List.of();
         }
         revision++;
         return SetLevelResult.SUCCESS;
@@ -224,7 +229,11 @@ public final class PlayerCharacter {
         return jobId;
     }
 
-    /** Changes the job; every invested skill point is refunded. @return {@code false} if it was already the job */
+    /**
+     * Changes the job; every invested skill point is refunded and the skill loadout goes back to the job's default.
+     *
+     * @return {@code false} if it was already the job
+     */
     public boolean changeJob(String newJobId) {
         CharacterRecord.checkJobId(newJobId);
         if (newJobId.equals(jobId)) {
@@ -232,6 +241,27 @@ public final class PlayerCharacter {
         }
         jobId = newJobId;
         skillInvestments = Map.of();
+        skillLoadout = List.of();
+        revision++;
+        return true;
+    }
+
+    /** The stored skill loadout (empty = the job's default slots). */
+    public List<String> skillLoadout() {
+        return skillLoadout;
+    }
+
+    /**
+     * Stores a skill loadout (the job module validated it). The character only becomes dirty if it changed.
+     *
+     * @return {@code true} if it changed
+     */
+    public boolean setSkillLoadout(List<String> loadout) {
+        List<String> copy = CharacterRecord.copyLoadout(loadout);
+        if (copy.equals(skillLoadout)) {
+            return false;
+        }
+        skillLoadout = copy;
         revision++;
         return true;
     }
@@ -273,12 +303,17 @@ public final class PlayerCharacter {
         return true;
     }
 
-    /** Refunds every skill point. @return {@code false} if nothing was invested */
+    /**
+     * Refunds every skill point; the skill loadout goes back to the job's default.
+     *
+     * @return {@code false} if nothing was invested
+     */
     public boolean resetSkills() {
         if (skillInvestments.isEmpty()) {
             return false;
         }
         skillInvestments = Map.of();
+        skillLoadout = List.of();
         revision++;
         return true;
     }
@@ -348,12 +383,12 @@ public final class PlayerCharacter {
     public CharacterSnapshot snapshot(CharacterRules rules) {
         return new CharacterSnapshot(seasonId, level, rules.levelCap(), experience, rules.experienceToNext(level),
                 unspentStatPoints(rules), allocated, totalStats(rules), jobId, gold, unspentSkillPoints(rules),
-                skillInvestments);
+                skillInvestments, skillLoadout);
     }
 
     public CharacterRecord toRecord(Instant now) {
         return new CharacterRecord(playerId, seasonId, level, experience, totalExperience, allocated, createdAt, now,
-                jobId, skillInvestments, gold, extensions);
+                jobId, skillInvestments, gold, extensions, skillLoadout);
     }
 
     public boolean isDirty() {

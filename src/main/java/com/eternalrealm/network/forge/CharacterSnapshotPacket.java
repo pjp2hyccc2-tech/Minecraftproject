@@ -18,8 +18,8 @@ import java.util.function.Supplier;
  * equipment add on top of it.
  */
 public record CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonusStats) {
-    static final int MAX_BYTES = 4096;
-    static final int MAX_SKILLS = 64;
+    static final int MAX_BYTES = 12288;
+    static final int MAX_SKILLS = 128;
 
     public CharacterSnapshotPacket {
         Objects.requireNonNull(snapshot, "snapshot");
@@ -44,6 +44,10 @@ public record CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonu
             buffer.writeVarInt(points);
         });
         writeStats(buffer, bonusStats);
+        buffer.writeVarInt(snapshot.skillLoadout().size());
+        for (String id : snapshot.skillLoadout()) {
+            buffer.writeUtf(id, 64);
+        }
     }
 
     public static CharacterSnapshotPacket decode(FriendlyByteBuf buffer) {
@@ -69,8 +73,16 @@ public record CharacterSnapshotPacket(CharacterSnapshot snapshot, StatBlock bonu
                 skills.put(buffer.readUtf(64), buffer.readVarInt());
             }
             StatBlock bonus = readStats(buffer);
+            int loadoutSize = buffer.readVarInt();
+            if (loadoutSize < 0 || loadoutSize > com.eternalrealm.character.CharacterRecord.MAX_LOADOUT_SLOTS) {
+                throw new DecoderException("Too many loadout slots: " + loadoutSize);
+            }
+            java.util.List<String> loadout = new java.util.ArrayList<>(loadoutSize);
+            for (int i = 0; i < loadoutSize; i++) {
+                loadout.add(buffer.readUtf(64));
+            }
             return new CharacterSnapshotPacket(new CharacterSnapshot(season, level, levelCap, experience,
-                    experienceToNext, unspent, allocated, total, jobId, gold, skillPoints, skills), bonus);
+                    experienceToNext, unspent, allocated, total, jobId, gold, skillPoints, skills, loadout), bonus);
         } catch (IllegalArgumentException e) {
             throw new DecoderException("Invalid CharacterSnapshotPacket: " + e.getMessage(), e);
         }

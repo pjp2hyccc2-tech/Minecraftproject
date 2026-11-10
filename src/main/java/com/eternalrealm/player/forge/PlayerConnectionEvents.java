@@ -37,6 +37,7 @@ public final class PlayerConnectionEvents {
         JsonObject jobRules = new JsonObject();
         jobRules.addProperty("freeBelow", context.get().game().jobRules().freeChangeBelowLevel());
         jobRules.addProperty("goldPerLevel", context.get().game().jobRules().goldPerLevel());
+        jobRules.addProperty("resetGoldPerLevel", context.get().game().jobRules().skillResetGoldPerLevel());
         UiData.send(player, "job_rules", jobRules);
         context.get().game().parties().onLogin(player);
     }

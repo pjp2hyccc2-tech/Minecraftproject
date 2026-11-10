@@ -4,6 +4,7 @@ import com.eternalrealm.season.SeasonId;
 import org.junit.Test;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -201,11 +202,11 @@ public class PlayerCharacterTest {
     // ------------------------------------------------------------------ Phase 3: job, skills, gold, extensions
 
     @Test
-    public void skillPointsAreEarnedEveryThirdLevelAndInvestedOneByOne() {
+    public void skillPointsAreEarnedEveryLevelWithMilestonesAndInvestedOneByOne() {
         PlayerCharacter character = fresh();
         assertEquals(0, character.unspentSkillPoints(RULES));
         assertFalse(character.investSkillPoint("mage_fireball", RULES));
-        character.setLevel(7, RULES); // (7 - 1) / 3 = 2 points
+        character.setLevel(2, RULES); // (2 - 1) * 2 = 2 points
         assertEquals(2, character.unspentSkillPoints(RULES));
         assertTrue(character.investSkillPoint("mage_fireball", RULES));
         assertTrue(character.investSkillPoint("mage_fireball", RULES));
@@ -215,6 +216,30 @@ public class PlayerCharacterTest {
         assertTrue(character.resetSkills());
         assertEquals(2, character.unspentSkillPoints(RULES));
         assertFalse(character.resetSkills());
+        character.setLevel(10, RULES); // 9 * 2 + the level-10 milestone bonus 2
+        assertEquals(20, character.unspentSkillPoints(RULES));
+    }
+
+    @Test
+    public void theSkillLoadoutIsStoredAndClearedWithTheSkills() {
+        PlayerCharacter character = fresh();
+        character.setLevel(20, RULES);
+        character.changeJob("mage");
+        assertTrue(character.skillLoadout().isEmpty());
+        List<String> loadout = List.of("mage_fireball", "", "", "", "mage_explosion", "");
+        assertTrue(character.setSkillLoadout(loadout));
+        long revision = character.revision();
+        assertFalse(character.setSkillLoadout(loadout));
+        assertEquals(revision, character.revision());
+        assertEquals(loadout, character.snapshot(RULES).skillLoadout());
+        assertEquals(loadout, PlayerCharacter.fromRecord(character.toRecord(NOW), RULES).skillLoadout());
+        character.investSkillPoint("mage_fireball", RULES);
+        assertTrue(character.resetSkills());
+        assertTrue(character.skillLoadout().isEmpty());
+        character.setSkillLoadout(loadout);
+        character.changeJob("priest");
+        assertTrue(character.skillLoadout().isEmpty());
+        assertThrows(IllegalArgumentException.class, () -> character.setSkillLoadout(List.of("Bad Id")));
     }
 
     @Test
@@ -235,9 +260,10 @@ public class PlayerCharacterTest {
     public void loweringTheLevelRefundsSkillsThatNoLongerFit() {
         PlayerCharacter character = fresh();
         character.setLevel(10, RULES);
-        character.investSkillPoint("a", RULES);
-        character.investSkillPoint("b", RULES);
-        character.setLevel(4, RULES); // 1 point only
+        for (int i = 0; i < 4; i++) {
+            character.investSkillPoint("a", RULES);
+        }
+        character.setLevel(2, RULES); // 2 points only
         assertEquals(0, character.investedSkillPoints());
     }
 

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  * @param answersRequest true when this packet is the answer to request {@code ackSequence} ({@code outcome} is
  *                       meaningful); false for periodic corrections and defense events
  * @param stamina        current stamina
- * @param cooldowns      remaining cooldown in ticks per skill slot (0 = weapon skill, 1..4 = job skills)
+ * @param cooldowns      remaining cooldown in ticks per skill slot (0 = weapon skill, 1..6 = job skills)
  * @param cooldownTotals length of each slot's current cooldown in ticks
  * @param event          defensive event that just happened, or NONE
  */

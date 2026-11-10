@@ -63,6 +63,29 @@ public record CombatModifiers(double physicalBonus, double rangedBonus, double m
                 clamp(staminaBonus + other.staminaBonus, -1000.0, 100_000.0));
     }
 
+    /**
+     * The bonuses {@code times} over (a passive skill of level {@code times}): every sum is multiplied, the dodge cost
+     * factor is raised to the power. Clamped like {@link #plus}.
+     */
+    public CombatModifiers scaled(double times) {
+        Check.range("times", times, 0.0, 100.0);
+        return new CombatModifiers(
+                clamp(physicalBonus * times, -0.9, 100.0),
+                clamp(rangedBonus * times, -0.9, 100.0),
+                clamp(magicBonus * times, -0.9, 100.0),
+                clamp(healingBonus * times, -0.9, 100.0),
+                clamp(maxHealthFlat * times, -1000.0, 100_000.0),
+                clamp(maxHealthPercent * times, -0.9, 100.0),
+                clamp(defenseFlat * times, -10_000.0, 1_000_000.0),
+                clamp(critChance * times, -1.0, 1.0),
+                clamp(critDamage * times, -1.0, 10.0),
+                clamp(moveSpeed * times, -0.9, 10.0),
+                clamp(guardBonus * times, -1.0, 1.0),
+                clamp(Math.pow(dodgeCostFactor, times), 0.01, 10.0),
+                clamp(intToPhysical * times, 0.0, 10.0),
+                clamp(staminaBonus * times, -1000.0, 100_000.0));
+    }
+
     private static double clamp(double value, double min, double max) {
         return Math.max(min, Math.min(max, value));
     }

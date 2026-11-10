@@ -9,17 +9,23 @@ import java.util.Objects;
  * @param statPointsPerLevel  stat points granted per level gained
  * @param baseStatValue       starting value of every stat before allocation
  * @param maxPointsPerRequest upper bound of points a single allocation request may spend (anti-abuse)
- * @param experienceCurve     EXP needed per level
- * @param skillPointInterval  one skill point is earned every this many levels ({@code (level - 1) / interval})
+ * @param experienceCurve          EXP needed per level
+ * @param skillPointsPerLevel      skill points earned with every level gained
+ * @param skillPointMilestoneBonus extra skill points at every {@value #SKILL_POINT_MILESTONE}th level
  */
 public record CharacterRules(int levelCap, int statPointsPerLevel, int baseStatValue, int maxPointsPerRequest,
-                             ExperienceCurve experienceCurve, int skillPointInterval) {
+                             ExperienceCurve experienceCurve, int skillPointsPerLevel, int skillPointMilestoneBonus) {
     /** Hard upper bound supported by the data model (design target: level 100). */
     public static final int MAX_LEVEL = 100;
     public static final int MAX_STAT_POINTS_PER_LEVEL = 20;
     public static final int MAX_BASE_STAT = 100;
     public static final int MAX_POINTS_PER_REQUEST = 100;
-    public static final int DEFAULT_SKILL_POINT_INTERVAL = 3;
+    /** Skill points per level: a level-50 character (108 points) masters about 40 % of a job's tree. */
+    public static final int DEFAULT_SKILL_POINTS_PER_LEVEL = 2;
+    public static final int DEFAULT_SKILL_POINT_MILESTONE_BONUS = 2;
+    public static final int SKILL_POINT_MILESTONE = 10;
+    public static final int MAX_SKILL_POINTS_PER_LEVEL = 10;
+    public static final int MAX_SKILL_POINT_MILESTONE_BONUS = 20;
 
     public CharacterRules {
         checkRange("levelCap", levelCap, 1, MAX_LEVEL);
@@ -27,25 +33,30 @@ public record CharacterRules(int levelCap, int statPointsPerLevel, int baseStatV
         checkRange("baseStatValue", baseStatValue, 0, MAX_BASE_STAT);
         checkRange("maxPointsPerRequest", maxPointsPerRequest, 1, MAX_POINTS_PER_REQUEST);
         Objects.requireNonNull(experienceCurve, "experienceCurve");
-        checkRange("skillPointInterval", skillPointInterval, 1, MAX_LEVEL);
+        checkRange("skillPointsPerLevel", skillPointsPerLevel, 0, MAX_SKILL_POINTS_PER_LEVEL);
+        checkRange("skillPointMilestoneBonus", skillPointMilestoneBonus, 0, MAX_SKILL_POINT_MILESTONE_BONUS);
     }
 
-    /** Rules with the default skill point interval. */
+    /** Rules with the default skill point economy. */
     public CharacterRules(int levelCap, int statPointsPerLevel, int baseStatValue, int maxPointsPerRequest,
                           ExperienceCurve experienceCurve) {
         this(levelCap, statPointsPerLevel, baseStatValue, maxPointsPerRequest, experienceCurve,
-                DEFAULT_SKILL_POINT_INTERVAL);
+                DEFAULT_SKILL_POINTS_PER_LEVEL, DEFAULT_SKILL_POINT_MILESTONE_BONUS);
     }
 
     /** Defaults of the initial season (see docs/GAME_DESIGN.md). */
     public static CharacterRules defaults() {
-        return new CharacterRules(50, 3, 5, 10, new PowerExperienceCurve(100, 1.5), DEFAULT_SKILL_POINT_INTERVAL);
+        return new CharacterRules(50, 3, 5, 10, new PowerExperienceCurve(100, 1.5), DEFAULT_SKILL_POINTS_PER_LEVEL,
+                DEFAULT_SKILL_POINT_MILESTONE_BONUS);
     }
 
-    /** Total skill points a character of {@code level} has earned. */
+    /**
+     * Total skill points a character of {@code level} has earned:
+     * {@code (level − 1) × perLevel + ⌊level / 10⌋ × milestoneBonus} (defaults: 20 at level 10, 64 at 30, 108 at 50).
+     */
     public int earnedSkillPoints(int level) {
         checkRange("level", level, 1, MAX_LEVEL);
-        return (level - 1) / skillPointInterval;
+        return (level - 1) * skillPointsPerLevel + (level / SKILL_POINT_MILESTONE) * skillPointMilestoneBonus;
     }
 
     public boolean isAtCap(int level) {

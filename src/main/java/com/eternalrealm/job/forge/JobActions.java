@@ -3,6 +3,7 @@ package com.eternalrealm.job.forge;
 import com.eternalrealm.combat.WeaponType;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
+import com.eternalrealm.job.SkillDefinition;
 import com.eternalrealm.job.SkillTree;
 import com.eternalrealm.player.PlayerDataService;
 import com.eternalrealm.server.ServerContext;
@@ -28,11 +29,15 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * Job selection and skill learning, from the journal ({@code job.choose}, {@code skill.invest}) or by command
- * ({@code /er job <job>}, {@code /er skill <id>}); plus {@code /er admin gold <player> <amount>}.
+ * Job selection, skill learning, the skill loadout and the paid skill reset, from the journal ({@code job.choose},
+ * {@code skill.invest}, {@code skill.slot}, {@code skill.reset}) or by command ({@code /er job <job>},
+ * {@code /er skill <id>}); plus {@code /er admin gold <player> <amount>}. Every request is validated by the job
+ * module's rules on the server.
  */
 public final class JobActions {
     private static final long MAX_ADMIN_GOLD = 1_000_000_000L;
+    /** The skill tree can be reset within this distance of the job master. */
+    private static final double JOB_MASTER_RANGE = 8.0;
 
     private JobActions() {
     }
@@ -45,6 +50,15 @@ public final class JobActions {
             chooseJob(player, context, job);
         });
         UiActions.register("skill.invest", JobActions::investFromUi);
+        UiActions.register("skill.slot", (player, context, args) -> {
+            int slot = (int) UiArgs.number(args, "slot", 1, SkillTree.LOADOUT_SLOTS);
+            String skill = UiArgs.string(args, "skill", 64);
+            if (!skill.isEmpty() && Jobs.skill(skill).isEmpty()) {
+                throw new UiArgs.InvalidArgumentException("unknown skill " + skill);
+            }
+            setSlot(player, context, slot, skill);
+        });
+        UiActions.register("skill.reset", (player, context, args) -> resetSkills(player, context));
         UiActions.register("outfit.set", (player, context, args) -> outfit(player, UiArgs.flag(args, "tier")));
     }
 
@@ -76,6 +90,7 @@ public final class JobActions {
                 player.refreshDisplayName();
                 player.refreshTabListName();
                 com.eternalrealm.item.forge.OutfitStyles.refresh(player);
+                warnAboutWeapons(player, job);
                 return true;
             }
             case SAME_JOB -> player.displayClientMessage(Component.translatable("message.eternalrealm.job.same", name), true);
@@ -89,20 +104,116 @@ public final class JobActions {
     }
 
     public static boolean invest(ServerPlayer player, ServerContext context, String skillId) {
+        java.util.List<String> before = context.playerData().snapshot(player.getUUID())
+                .map(com.eternalrealm.character.CharacterSnapshot::skillLoadout).orElse(java.util.List.of());
         Optional<SkillTree.InvestResult> result = context.playerData().investSkill(player.getUUID(), skillId);
         if (result.isEmpty()) {
             return false;
         }
         if (result.get() == SkillTree.InvestResult.OK) {
-            Jobs.skill(skillId).ifPresent(skill -> player.displayClientMessage(Component.translatable(
-                    "message.eternalrealm.skill.learned", Component.translatable(skill.translationKey())), true));
+            SkillDefinition skill = Jobs.skill(skillId).orElseThrow();
+            com.eternalrealm.character.CharacterSnapshot snapshot = context.playerData().snapshot(player.getUUID())
+                    .orElseThrow();
+            int level = SkillTree.levelOf(skill, snapshot.level(), snapshot.skillInvestments());
+            Component name = Component.translatable(skill.translationKey());
+            player.displayClientMessage(level == 1
+                    ? Component.translatable("message.eternalrealm.skill.acquired", name).withStyle(ChatFormatting.GOLD)
+                    : Component.translatable("message.eternalrealm.skill.learned", name, level), true);
+            if (!before.equals(snapshot.skillLoadout())) {
+                int slot = SkillTree.effectiveLoadout(JobType.fromStored(snapshot.jobId()), snapshot.level(),
+                        snapshot.skillInvestments(), snapshot.skillLoadout()).indexOf(skillId) + 1;
+                if (slot > 0) {
+                    player.sendSystemMessage(Component.translatable("message.eternalrealm.skill.auto_slot", name, slot)
+                            .withStyle(ChatFormatting.AQUA));
+                }
+            }
             player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 0.6F, 1.2F);
+                    SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 0.6F, level == 1 ? 1.0F : 1.2F);
             return true;
         }
         player.displayClientMessage(Component.translatable(result.get().translationKey()).withStyle(ChatFormatting.RED),
                 true);
         return false;
+    }
+
+    /** Puts a learned active into a loadout slot ({@code ""} clears it). */
+    public static boolean setSlot(ServerPlayer player, ServerContext context, int slot, String skillId) {
+        Optional<SkillTree.LoadoutResult> result = context.playerData().setSkillSlot(player.getUUID(), slot, skillId);
+        if (result.isEmpty()) {
+            return false;
+        }
+        if (result.get() != SkillTree.LoadoutResult.OK) {
+            player.displayClientMessage(Component.translatable(result.get().translationKey())
+                    .withStyle(ChatFormatting.RED), true);
+            return false;
+        }
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), com.eternalrealm.sound.ERSounds.UI_CLICK.get(),
+                SoundSource.PLAYERS, 0.4F, 1.4F);
+        return true;
+    }
+
+    /** Refunds every skill point for gold, only next to the job master. */
+    public static boolean resetSkills(ServerPlayer player, ServerContext context) {
+        if (!nearJobMaster(player)) {
+            player.displayClientMessage(Component.translatable("message.eternalrealm.skill.reset_job_master")
+                    .withStyle(ChatFormatting.RED), true);
+            return false;
+        }
+        com.eternalrealm.player.PlayerDataService.SkillReset reset = context.playerData().resetSkills(player.getUUID(),
+                context.game().jobRules());
+        switch (reset.result()) {
+            case OK -> {
+                player.displayClientMessage(Component.translatable("message.eternalrealm.skill.reset_done",
+                        reset.cost()).withStyle(ChatFormatting.GOLD), false);
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 0.8F, 0.7F);
+                return true;
+            }
+            case NOTHING_TO_RESET -> player.displayClientMessage(Component.translatable(
+                    "message.eternalrealm.skill.reset_nothing"), true);
+            case NOT_ENOUGH_GOLD -> player.displayClientMessage(Component.translatable(
+                    "message.eternalrealm.skill.reset_gold", reset.cost()).withStyle(ChatFormatting.RED), true);
+            case NOT_READY -> {
+                // data still loading: nothing to say
+            }
+        }
+        return false;
+    }
+
+    private static boolean nearJobMaster(ServerPlayer player) {
+        return !player.serverLevel().getEntitiesOfClass(net.minecraft.world.entity.Mob.class,
+                player.getBoundingBox().inflate(JOB_MASTER_RANGE),
+                mob -> com.eternalrealm.npc.forge.Npcs.roleOf(mob)
+                        .filter(role -> role == com.eternalrealm.npc.forge.NpcRole.JOB_MASTER).isPresent()).isEmpty();
+    }
+
+    /** After a job change: weapons the new job cannot use stay where they are, but the player is told. */
+    static void warnAboutWeapons(ServerPlayer player, JobType job) {
+        WeaponType held = heldWeapon(player);
+        if (held != null && !Jobs.canUse(job, held)) {
+            player.sendSystemMessage(Component.translatable("message.eternalrealm.job.weapon_unusable",
+                    Component.translatable(held.translationKey()), Component.translatable(job.translationKey()))
+                    .withStyle(ChatFormatting.YELLOW));
+        }
+        java.util.List<Component> names = new java.util.ArrayList<>();
+        for (WeaponType type : Jobs.get(job).weapons()) {
+            names.add(Component.translatable(type.translationKey()));
+        }
+        net.minecraft.network.chat.MutableComponent list = Component.empty();
+        for (int i = 0; i < names.size(); i++) {
+            if (i > 0) {
+                list.append(Component.translatable("tooltip.eternalrealm.equipment.job_separator"));
+            }
+            list.append(names.get(i));
+        }
+        player.sendSystemMessage(Component.translatable("message.eternalrealm.job.weapons", list)
+                .withStyle(ChatFormatting.GRAY));
+    }
+
+    private static WeaponType heldWeapon(ServerPlayer player) {
+        com.eternalrealm.combat.WeaponProfile profile =
+                com.eternalrealm.combat.forge.WeaponItem.profileOf(player.getMainHandItem());
+        return profile == null ? null : profile.type();
     }
 
     /** The first job choice hands out the job's weapon. */
@@ -159,6 +270,11 @@ public final class JobActions {
                                     return chooseJob(player, context.get(), job.get()) ? 1 : 0;
                                 })))
                 .then(Commands.literal("skill")
+                        .then(Commands.literal("reset").executes(ctx -> {
+                            ServerPlayer player = ctx.getSource().getPlayerOrException();
+                            return ServerContext.current().map(context -> resetSkills(player, context) ? 1 : 0)
+                                    .orElse(0);
+                        }))
                         .then(Commands.argument("skill", StringArgumentType.word())
                                 .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(Jobs.allSkills().keySet(), builder))
                                 .executes(ctx -> {

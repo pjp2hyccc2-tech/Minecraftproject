@@ -92,16 +92,21 @@ public final class ClientCombatState {
         }
     }
 
-    /** Job skill slots follow the character's job, level and invested points (same rules as the server). */
+    /**
+     * Job skill slots and the usable weapons follow the character's job, level, invested points and loadout (same
+     * rules as the server).
+     */
     static void onCharacter(CharacterSnapshot character) {
         if (combatant == null) {
             return;
         }
-        SkillBinding[] bindings = SkillTree.bindings(JobType.fromStored(character.jobId()), character.level(),
-                character.skillInvestments());
+        JobType job = JobType.fromStored(character.jobId());
+        SkillBinding[] bindings = SkillTree.bindings(job, character.level(), character.skillInvestments(),
+                character.skillLoadout());
         for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
             combatant.setJobSkill(slot, bindings[slot]);
         }
+        combatant.setAllowedWeapons(com.eternalrealm.job.Jobs.get(job).weapons());
     }
 
     public static void onStatus(CombatStatusPacket status) {
