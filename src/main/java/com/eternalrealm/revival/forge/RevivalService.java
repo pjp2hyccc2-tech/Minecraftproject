@@ -211,6 +211,9 @@ public final class RevivalService {
             context.combat().service().get(id).ifPresent(Combatant::cancelAction);
             context.game().rankings().onDeath(player);
             context.game().dungeons().onPlayerDeath(player);
+            for (com.eternalrealm.boss.forge.BossFight fight : com.eternalrealm.boss.forge.BossFight.fightsOf(id)) {
+                fight.recordFall(player);
+            }
             if (RevivalRules.costsExperience(place)) {
                 double fraction = com.eternalrealm.config.ERServerConfig.DEATH_EXP_PENALTY.get();
                 down.expLost = fraction > 0.0 ? context.playerData().applyDeathPenalty(id, fraction) : 0L;

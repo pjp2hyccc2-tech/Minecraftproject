@@ -81,14 +81,8 @@ public final class DungeonService {
         if (!body.getPersistentData().hasUUID("er_fight")) {
             return Optional.empty();
         }
-        UUID fightId = body.getPersistentData().getUUID("er_fight");
-        for (DungeonInstance instance : instances) {
-            Optional<BossFight> fight = instance.fight().filter(f -> f.id().equals(fightId));
-            if (fight.isPresent()) {
-                return fight;
-            }
-        }
-        return Optional.empty();
+        // dungeon bosses and field calamities alike
+        return BossFight.live(body.getPersistentData().getUUID("er_fight"));
     }
 
     /** The boss fight the player is part of right now. */
@@ -256,7 +250,6 @@ public final class DungeonService {
     public void onPlayerDeath(ServerPlayer player) {
         DungeonInstance instance = byMember.get(player.getUUID());
         if (instance != null) {
-            instance.fight().filter(fight -> !fight.isOver()).ifPresent(fight -> fight.recordFall(player));
             instance.tellAll(Component.translatable("message.eternalrealm.dungeon.member_down", player.getDisplayName(),
                     instance.run.deaths() + 1).withStyle(ChatFormatting.GRAY), false);
             instance.dispatch(instance.run.onPlayerDied(player.getUUID()));

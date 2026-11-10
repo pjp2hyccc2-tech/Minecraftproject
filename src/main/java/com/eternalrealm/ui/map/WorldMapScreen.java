@@ -212,6 +212,8 @@ public final class WorldMapScreen extends Screen {
                 b -> centerOnPlayer()).bounds(right - 128, 4, 66, 16).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.map.journal"),
                 b -> com.eternalrealm.ui.screen.JournalScreen.open()).bounds(MARGIN, 4, 70, 16).build());
+        addRenderableWidget(Button.builder(Component.translatable("threat.eternalrealm.board.open"),
+                b -> ThreatBoardScreen.open()).bounds(MARGIN + 74, 4, 78, 16).build());
         if (mode == Mode.REALM) {
             int mid = (frameLeft() + right) / 2;
             addRenderableWidget(Button.builder(tabLabel(Tab.FIELD), b -> showTab(Tab.FIELD, playerField()))
@@ -519,6 +521,7 @@ public final class WorldMapScreen extends Screen {
             for (MapMarkers.Marker place : MapMarkers.astoria()) {
                 drawPlace(graphics, view, place, cx, cy, ppb);
             }
+            drawThreats(graphics, cx, cy);
         }
         if (minecraft.level == null || !ClientMapState.inRealm(minecraft.level)) {
             graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.map.elsewhere"),
@@ -741,6 +744,69 @@ public final class WorldMapScreen extends Screen {
             }
         }
         hovers.add(new Hover(sx, sy, lines));
+    }
+
+    /**
+     * The field threats on the map: a calamity's lair (a red-black sun while it is out, a dim mark while it sleeps)
+     * and every lord that is out (a violet crown where it was seen last).
+     */
+    private void drawThreats(GuiGraphics graphics, float cx, float cy) {
+        com.google.gson.JsonObject board = com.eternalrealm.client.map.ThreatClient.board().orElse(null);
+        if (board == null || !board.has("fields")) {
+            return;
+        }
+        long nanos = System.nanoTime();
+        for (com.google.gson.JsonElement element : board.getAsJsonArray("fields")) {
+            com.google.gson.JsonObject entry = element.getAsJsonObject();
+            String phase = com.eternalrealm.client.ClientUiState.stringOr(entry, "phase", "calm");
+            if (entry.has("calamity")) {
+                com.google.gson.JsonObject calamity = entry.getAsJsonObject("calamity");
+                boolean risen = calamity.has("risen") && calamity.get("risen").getAsBoolean();
+                boolean awake = risen || "manifest".equals(phase) || "omen".equals(phase);
+                double x = calamity.has("bx") ? calamity.get("bx").getAsDouble() : calamity.get("x").getAsDouble();
+                double z = calamity.has("bz") ? calamity.get("bz").getAsDouble() : calamity.get("z").getAsDouble();
+                float sx = (float) viewport.screenX(x, cx);
+                float sy = (float) viewport.screenY(z, cy);
+                float pulse = awake ? 1.0F + 0.25F * (float) Math.sin(nanos / 1.5E8) : 1.0F;
+                MapDraw.disc(graphics, sx, sy, 6.5F * pulse, 0xFF000000);
+                MapDraw.disc(graphics, sx, sy, 5.0F * pulse, awake ? 0xFFC0182A : 0xFF4A3A44);
+                MapDraw.disc(graphics, sx, sy, 2.2F, awake ? 0xFF1A0008 : 0xFF2A2028);
+                List<Component> lines = new ArrayList<>();
+                lines.add(Component.translatable("threat.eternalrealm.board.calamity",
+                        Component.translatable(com.eternalrealm.client.ClientUiState.stringOr(calamity, "name", "")),
+                        com.eternalrealm.client.ClientUiState.intOr(calamity, "level", 0))
+                        .withStyle(ChatFormatting.DARK_RED));
+                lines.add(Component.translatable(risen ? "threat.eternalrealm.board.risen"
+                        : awake ? "threat.eternalrealm.board.waiting" : "threat.eternalrealm.board.sleeping")
+                        .withStyle(awake ? ChatFormatting.RED : ChatFormatting.DARK_GRAY));
+                if (awake) {
+                    label(graphics, Component.translatable("threat.eternalrealm.map.calamity").withStyle(ChatFormatting.RED),
+                            sx, sy + 10.0F);
+                }
+                hovers.add(new Hover(sx, sy, lines));
+            }
+            if (entry.has("lords")) {
+                for (com.google.gson.JsonElement lordElement : entry.getAsJsonArray("lords")) {
+                    com.google.gson.JsonObject lord = lordElement.getAsJsonObject();
+                    if (!lord.has("present") || !lord.get("present").getAsBoolean()) {
+                        continue;
+                    }
+                    float sx = (float) viewport.screenX(lord.has("bx") ? lord.get("bx").getAsDouble()
+                            : lord.get("x").getAsDouble(), cx);
+                    float sy = (float) viewport.screenY(lord.has("bz") ? lord.get("bz").getAsDouble()
+                            : lord.get("z").getAsDouble(), cy);
+                    MapDraw.diamond(graphics, sx, sy, 5.5F, 0xFF000000);
+                    MapDraw.diamond(graphics, sx, sy, 4.0F, 0xFFC070F0);
+                    List<Component> lines = new ArrayList<>();
+                    lines.add(Component.translatable("threat.eternalrealm.board.lord",
+                            Component.translatable(com.eternalrealm.client.ClientUiState.stringOr(lord, "name", "")),
+                            com.eternalrealm.client.ClientUiState.intOr(lord, "level", 0))
+                            .withStyle(ChatFormatting.LIGHT_PURPLE));
+                    lines.add(Component.translatable("threat.eternalrealm.board.lord_out").withStyle(ChatFormatting.GOLD));
+                    hovers.add(new Hover(sx, sy, lines));
+                }
+            }
+        }
     }
 
     private void drawNpc(GuiGraphics graphics, MapView.Npc npc, float sx, float sy) {

@@ -39,6 +39,12 @@ public final class MonsterTags {
         return entity.getPersistentData().getDouble(DAMAGE);
     }
 
+    /** Makes every hit of the monster {@code factor} times as strong (field lords). */
+    public static void scaleDamage(Entity entity, double factor) {
+        CompoundTag data = entity.getPersistentData();
+        data.putDouble(DAMAGE, data.getDouble(DAMAGE) * factor);
+    }
+
     public static boolean givesRewards(Entity entity) {
         return isMonster(entity) && !entity.getPersistentData().getBoolean(NO_REWARD);
     }

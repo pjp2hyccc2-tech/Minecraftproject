@@ -71,8 +71,10 @@ public final class DungeonEvents {
     /** Damage a member takes during the boss fight counts for the merit ranking and the hero (after armour and guards). */
     public static void onLivingDamage(LivingDamageEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && !player.level().isClientSide() && event.getAmount() > 0.0F) {
-            ServerContext.current().flatMap(context -> context.game().dungeons().fightFor(player))
-                    .ifPresent(fight -> fight.recordTaken(player, Math.min(event.getAmount(), player.getHealth())));
+            double taken = Math.min(event.getAmount(), player.getHealth());
+            for (BossFight fight : BossFight.fightsOf(player.getUUID())) {
+                fight.recordTaken(player, taken);
+            }
         }
     }
 

@@ -89,7 +89,9 @@ public final class MonsterEvents {
             return;
         }
         MonsterStats stats = MonsterScaling.stats(template, MonsterTags.level(victim));
-        Map<UUID, Long> shares = context.game().parties().shareExperience(killer, stats.exp(), victim.position());
+        // a purified field (its calamity was subdued) gives more experience for a while
+        long exp = Math.round(stats.exp() * com.eternalrealm.world.forge.FieldThreatService.expMultiplier(victim));
+        Map<UUID, Long> shares = context.game().parties().shareExperience(killer, exp, victim.position());
         for (Map.Entry<UUID, Long> share : shares.entrySet()) {
             if (share.getValue() > 0) {
                 context.playerData().grantExperience(share.getKey(), share.getValue(), ExperienceSource.MOB_KILL);

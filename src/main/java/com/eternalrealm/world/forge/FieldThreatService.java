@@ -1,0 +1,1010 @@
+package com.eternalrealm.world.forge;
+
+import com.eternalrealm.boss.BossDefinition;
+import com.eternalrealm.boss.Bosses;
+import com.eternalrealm.boss.Contributions;
+import com.eternalrealm.boss.Difficulty;
+import com.eternalrealm.boss.forge.BossFight;
+import com.eternalrealm.character.CharacterSnapshot;
+import com.eternalrealm.character.ExperienceSource;
+import com.eternalrealm.combat.CombatStats;
+import com.eternalrealm.combat.Combatant;
+import com.eternalrealm.core.ModInfo;
+import com.eternalrealm.dungeon.ClearRank;
+import com.eternalrealm.item.Consumable;
+import com.eternalrealm.item.EquipmentGenerator;
+import com.eternalrealm.item.ItemRarity;
+import com.eternalrealm.item.ItemTier;
+import com.eternalrealm.item.Materials;
+import com.eternalrealm.item.forge.ERGearItems;
+import com.eternalrealm.item.forge.EquipmentStacks;
+import com.eternalrealm.item.forge.Inventories;
+import com.eternalrealm.job.JobType;
+import com.eternalrealm.monster.MonsterRole;
+import com.eternalrealm.monster.MonsterScaling;
+import com.eternalrealm.monster.MonsterSpawn;
+import com.eternalrealm.monster.MonsterStats;
+import com.eternalrealm.monster.MonsterTemplate;
+import com.eternalrealm.monster.Monsters;
+import com.eternalrealm.monster.forge.LootDrops;
+import com.eternalrealm.monster.forge.MonsterFactory;
+import com.eternalrealm.monster.forge.MonsterTags;
+import com.eternalrealm.server.ServerContext;
+import com.eternalrealm.server.UiData;
+import com.eternalrealm.world.field.FieldLayout;
+import com.eternalrealm.world.field.FieldThreats;
+import com.eternalrealm.world.field.Miasma;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.mojang.logging.LogUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SplittableRandom;
+import java.util.UUID;
+
+/**
+ * The threats of the fields on the server ({@link FieldThreats}, {@link Miasma}).
+ *
+ * <ul>
+ *     <li><b>ヌシ</b>: each lord appears when a player comes near its home and it is due, much tougher than its kin
+ *     (more health than the attribute cap allows is carried by a toughness factor), roams its territory, goes to
+ *     sleep when nobody is around and comes back some minutes after it fell. Everyone who did a fair share of the
+ *     damage gets the lord's rewards; the best contributor is the hero (殊勲).</li>
+ *     <li><b>瘴気</b>: monsters slain in a field fill its gauge. An overflowing gauge brings an omen (warning to
+ *     everyone, darker sky in the field), then the field's <b>災厄</b> manifests: when a player reaches its lair the lair
+ *     is scarred flat and a boss fight starts that anyone close by joins. Subdued, it purifies the field (more
+ *     experience for a while); left alone, it departs.</li>
+ * </ul>
+ * Every few seconds the players in アストリア get the board ({@link #BOARD_CHANNEL}): every field's miasma and phase,
+ * its lords and its calamity, for the map, the 手配書 and the gauge under the minimap.
+ */
+@Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public final class FieldThreatService {
+    private static final Logger LOG = LogUtils.getLogger();
+    public static final String BOARD_CHANNEL = "threat_board";
+    /** Short result of a lord hunt for each contributor (a toast). */
+    public static final String RESULT_CHANNEL = "threat_result";
+    private static final String LORD_TAG = ModInfo.MOD_ID + "_lord";
+    private static final String LORD_ID = "er_lord";
+    private static final String TOUGHNESS = "er_toughness";
+    private static final String CALAMITY_TAG = ModInfo.MOD_ID + "_calamity";
+    private static final double LORD_DAMAGE = 1.35;
+    private static final double HEALTH_CAP = 1000.0;
+    private static final int SCAR_COLUMNS_PER_TICK = 160;
+    private static final int BOARD_TICKS = 100;
+    private static final int SAVE_TICKS = 20 * 60;
+    private static final SplittableRandom RANDOM = new SplittableRandom();
+
+    private static final class LordState {
+        final FieldThreats.Lord lord;
+        UUID body;
+        long dueAt;
+        long lastNearby;
+        int level;
+        Contributions contributions = new Contributions();
+
+        LordState(FieldThreats.Lord lord) {
+            this.lord = lord;
+        }
+    }
+
+    private static final class CalamityState {
+        final FieldThreats.Calamity calamity;
+        BossFight fight;
+        Scar scar;
+        long fightStart;
+
+        CalamityState(FieldThreats.Calamity calamity) {
+            this.calamity = calamity;
+        }
+    }
+
+    /** The lair being levelled before the calamity rises from it. */
+    private static final class Scar {
+        final List<int[]> columns = new ArrayList<>();
+        final int groundY;
+        final int field;
+        int index;
+
+        Scar(int groundY, int field) {
+            this.groundY = groundY;
+            this.field = field;
+        }
+
+        boolean done() {
+            return index >= columns.size();
+        }
+    }
+
+    private static MinecraftServer owner;
+    private static Miasma miasma = new Miasma();
+    private static final Map<String, LordState> LORDS = new HashMap<>();
+    private static final Map<Integer, CalamityState> CALAMITIES = new HashMap<>();
+    private static boolean boardDirty = true;
+
+    private FieldThreatService() {
+    }
+
+    /** Experience multiplier for a monster killed at {@code victim}'s place (purified fields). */
+    public static double expMultiplier(Entity victim) {
+        if (victim == null || victim.level().dimension() != AstoriaDimension.LEVEL
+                || FieldLayout.inCapital(victim.getX(), victim.getZ())) {
+            return 1.0;
+        }
+        return miasma.expMultiplier(FieldLayout.areaAt(victim.getX(), victim.getZ()));
+    }
+
+    // ------------------------------------------------------------------ the clock
+
+    @SubscribeEvent
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        MinecraftServer server = event.getServer();
+        if (event.phase != TickEvent.Phase.END || server == null) {
+            return;
+        }
+        ServerLevel astoria = server.getLevel(AstoriaDimension.LEVEL);
+        if (astoria == null) {
+            return;
+        }
+        long now = server.getTickCount();
+        if (owner != server) {
+            start(server, astoria, now);
+        }
+        try {
+            for (CalamityState state : List.copyOf(CALAMITIES.values())) {
+                if (state.fight != null) {
+                    state.fight.tick(now);
+                } else if (state.scar != null) {
+                    scarSlice(astoria, state, now);
+                }
+            }
+            if (now % 20 == 0) {
+                tickLords(astoria, now);
+                tickCalamities(astoria, now);
+                handle(server, astoria, miasma.tick(now), now);
+            }
+            if (now % BOARD_TICKS == 0 || boardDirty && now % 10 == 0) {
+                sendBoard(astoria, now);
+            }
+            if (now % SAVE_TICKS == 0) {
+                ThreatData.get(astoria).store(miasma.toJson());
+            }
+        } catch (RuntimeException e) {
+            LOG.error("Field threats tick failed", e);
+        }
+    }
+
+    private static void start(MinecraftServer server, ServerLevel astoria, long now) {
+        owner = server;
+        miasma = Miasma.fromJson(ThreatData.get(astoria).json());
+        LORDS.clear();
+        CALAMITIES.clear();
+        for (FieldThreats.Lord lord : FieldThreats.lords()) {
+            LordState state = new LordState(lord);
+            state.dueAt = now + FieldThreats.firstAppearanceTicks(lord, RANDOM);
+            LORDS.put(lord.id(), state);
+        }
+        boardDirty = true;
+    }
+
+    // ------------------------------------------------------------------ lords
+
+    private static void tickLords(ServerLevel astoria, long now) {
+        for (LordState state : LORDS.values()) {
+            FieldThreats.Lord lord = state.lord;
+            Entity body = state.body == null ? null : astoria.getEntity(state.body);
+            if (body != null && (!body.isAlive() || body.isRemoved())) {
+                body = null;
+                state.body = null;
+            }
+            if (body == null) {
+                if (now >= state.dueAt && nearestPlayer(astoria, lord.x(), lord.z(), FieldThreats.WAKE_RADIUS) != null
+                        && astoria.hasChunkAt(new BlockPos(lord.x(), 64, lord.z()))) {
+                    spawnLord(astoria, state, now);
+                }
+                continue;
+            }
+            if (nearestPlayer(astoria, body.getX(), body.getZ(), FieldThreats.SLEEP_RADIUS) != null) {
+                state.lastNearby = now;
+            } else if (now - state.lastNearby > FieldThreats.SLEEP_TICKS) {
+                body.discard(); // asleep: it comes back, healed, when someone wanders by
+                state.body = null;
+                state.dueAt = now;
+                state.contributions = new Contributions();
+                boardDirty = true;
+                continue;
+            }
+            // an aura that tells it apart from its kin
+            astoria.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, body.getX(), body.getY() + 0.2, body.getZ(), 3,
+                    body.getBbWidth() * 0.6, 0.05, body.getBbWidth() * 0.6, 0.01);
+            if (now % 60 == 0) {
+                astoria.sendParticles(ParticleTypes.DRAGON_BREATH, body.getX(), body.getY() + body.getBbHeight() * 0.5,
+                        body.getZ(), 6, 0.4, 0.5, 0.4, 0.01);
+            }
+        }
+    }
+
+    private static void spawnLord(ServerLevel astoria, LordState state, long now) {
+        FieldThreats.Lord lord = state.lord;
+        MonsterTemplate template = Monsters.byId(lord.template()).orElse(null);
+        if (template == null) {
+            state.dueAt = Long.MAX_VALUE;
+            LOG.warn("Field lord {} names unknown monster template {}", lord.id(), lord.template());
+            return;
+        }
+        int level = Math.min(MonsterScaling.MAX_LEVEL, template.levels().max() + FieldThreats.LORD_LEVEL_BONUS);
+        Optional<Mob> made = MonsterFactory.create(astoria, new MonsterSpawn(template, level), true);
+        if (made.isEmpty()) {
+            state.dueAt = now + 20L * 60L;
+            return;
+        }
+        Mob mob = made.get();
+        BlockPos ground = surface(astoria, lord.x(), lord.z());
+        mob.moveTo(ground.getX() + 0.5, ground.getY(), ground.getZ() + 0.5, RANDOM.nextFloat() * 360.0F, 0.0F);
+        AttributeInstance health = mob.getAttribute(Attributes.MAX_HEALTH);
+        double wanted = mob.getMaxHealth() * lord.healthMultiplier();
+        double capped = Math.min(wanted, HEALTH_CAP);
+        if (health != null) {
+            health.setBaseValue(capped);
+        }
+        mob.setHealth(mob.getMaxHealth());
+        mob.getPersistentData().putString(LORD_ID, lord.id());
+        mob.getPersistentData().putDouble(TOUGHNESS, capped / wanted);
+        mob.addTag(LORD_TAG);
+        MonsterTags.scaleDamage(mob, LORD_DAMAGE);
+        if (mob instanceof PathfinderMob walker) {
+            walker.restrictTo(ground, lord.territory());
+        }
+        mob.setPersistenceRequired();
+        mob.setCustomName(Component.translatable("threat.eternalrealm.lord.nameplate", level,
+                Component.translatable(lord.translationKey())).withStyle(ChatFormatting.LIGHT_PURPLE));
+        mob.setCustomNameVisible(true);
+        state.body = mob.getUUID(); // before it joins the level: the join check lets only tracked lords in
+        if (!astoria.addFreshEntity(mob)) {
+            state.body = null;
+            state.dueAt = now + 20L * 30L;
+            return;
+        }
+        state.level = level;
+        state.lastNearby = now;
+        state.contributions = new Contributions();
+        boardDirty = true;
+        astoria.sendParticles(ParticleTypes.SOUL, mob.getX(), mob.getY() + 1.0, mob.getZ(), 40, 0.8, 1.0, 0.8, 0.05);
+        astoria.sendParticles(ParticleTypes.LARGE_SMOKE, mob.getX(), mob.getY() + 0.3, mob.getZ(), 30, 1.0, 0.2, 1.0,
+                0.02);
+        astoria.playSound(null, mob.getX(), mob.getY(), mob.getZ(), SoundEvents.RAVAGER_ROAR, SoundSource.HOSTILE,
+                1.4F, 0.7F);
+        Component message = Component.translatable("threat.eternalrealm.lord_appears",
+                Component.translatable(lord.translationKey()).withStyle(ChatFormatting.LIGHT_PURPLE))
+                .withStyle(ChatFormatting.GOLD);
+        for (ServerPlayer player : astoria.players()) {
+            if (player.distanceToSqr(mob) < 128.0 * 128.0) {
+                player.displayClientMessage(message, false);
+            }
+        }
+    }
+
+    private static Optional<LordState> lordOf(Entity entity) {
+        if (entity == null || !entity.getTags().contains(LORD_TAG)) {
+            return Optional.empty();
+        }
+        LordState state = LORDS.get(entity.getPersistentData().getString(LORD_ID));
+        return state != null && entity.getUUID().equals(state.body) ? Optional.of(state) : Optional.empty();
+    }
+
+    /** Hits on a lord: its toughness carries the health above the attribute cap; the attacker's share is noted. */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onLivingHurt(LivingHurtEvent event) {
+        LivingEntity victim = event.getEntity();
+        if (victim.level().isClientSide() || !victim.getTags().contains(LORD_TAG)) {
+            return;
+        }
+        double toughness = victim.getPersistentData().contains(TOUGHNESS)
+                ? victim.getPersistentData().getDouble(TOUGHNESS) : 1.0;
+        float amount = (float) (event.getAmount() * Math.max(0.05, Math.min(1.0, toughness)));
+        event.setAmount(amount);
+        if (event.getSource().getEntity() instanceof ServerPlayer player) {
+            lordOf(victim).ifPresent(state -> state.contributions.damage(player.getUUID(),
+                    player.getGameProfile().getName(), jobOf(player), Math.min(amount, victim.getHealth()) / Math.max(
+                            0.05, toughness)));
+        }
+    }
+
+    /** What a lord's blows cost the players (for the hero), and what players lose to a calamity's surroundings. */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onLivingDamage(LivingDamageEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
+            return;
+        }
+        Entity attacker = event.getSource().getEntity();
+        lordOf(attacker).ifPresent(state -> state.contributions.taken(player.getUUID(), player.getGameProfile().getName(),
+                jobOf(player), Math.min(event.getAmount(), player.getHealth())));
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onLivingDeath(LivingDeathEvent event) {
+        LivingEntity victim = event.getEntity();
+        if (victim.level().isClientSide() || victim.level().dimension() != AstoriaDimension.LEVEL
+                || !MonsterTags.givesRewards(victim)) {
+            return;
+        }
+        long now = victim.getServer() == null ? 0L : victim.getServer().getTickCount();
+        int field = FieldLayout.inCapital(victim.getX(), victim.getZ()) ? 0
+                : FieldLayout.areaAt(victim.getX(), victim.getZ());
+        Optional<LordState> lord = lordOf(victim);
+        int points;
+        if (lord.isPresent()) {
+            points = Miasma.LORD_KILL;
+        } else {
+            points = MonsterTags.template(victim).map(template -> template.role() == MonsterRole.ELITE
+                    ? Miasma.ELITE_KILL : Miasma.NORMAL_KILL).orElse(Miasma.NORMAL_KILL);
+        }
+        if (field > 0 && victim.getServer() != null) {
+            ServerLevel astoria = (ServerLevel) victim.level();
+            handle(victim.getServer(), astoria, miasma.addKill(field, points, now), now);
+            boardDirty = boardDirty || miasma.gauge(field) % 50 < points;
+        }
+        lord.ifPresent(state -> lordDown((ServerLevel) victim.level(), state, victim, event.getSource().getEntity(),
+                now));
+    }
+
+    private static void lordDown(ServerLevel astoria, LordState state, LivingEntity body, Entity killer, long now) {
+        state.body = null;
+        state.dueAt = now + FieldThreats.respawnTicks(state.lord, RANDOM);
+        if (killer instanceof ServerPlayer player) {
+            state.contributions.lastHit(player.getUUID());
+        }
+        boardDirty = true;
+        Contributions contributions = state.contributions;
+        state.contributions = new Contributions();
+        Optional<Contributions.Line> hero = contributions.hero();
+        Component lordName = Component.translatable(state.lord.translationKey()).withStyle(ChatFormatting.LIGHT_PURPLE);
+        Component message = Component.translatable("threat.eternalrealm.lord_down", lordName,
+                hero.map(line -> Component.literal(line.name()).withStyle(ChatFormatting.GOLD))
+                        .orElse(Component.literal("-"))).withStyle(ChatFormatting.YELLOW);
+        for (ServerPlayer player : astoria.players()) {
+            if (player.distanceToSqr(body) < 160.0 * 160.0) {
+                player.displayClientMessage(message, false);
+            }
+        }
+        astoria.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, body.getX(), body.getY() + 1.0, body.getZ(), 50, 0.6,
+                0.8, 0.6, 0.3);
+        ServerContext context = ServerContext.current().orElse(null);
+        MonsterTemplate template = Monsters.byId(state.lord.template()).orElse(null);
+        if (context == null || template == null) {
+            return;
+        }
+        MonsterStats stats = MonsterScaling.stats(template, Math.max(1, state.level));
+        double total = contributions.totalDamage();
+        List<Contributions.Line> lines = contributions.byDamage();
+        for (Contributions.Line line : lines) {
+            ServerPlayer player = astoria.getServer().getPlayerList().getPlayer(line.id());
+            boolean isHero = hero.map(best -> best.id().equals(line.id())).orElse(false);
+            if (player == null || total <= 0.0 || line.share() < FieldThreats.REWARD_SHARE && !isHero) {
+                continue;
+            }
+            List<ItemStack> items = new ArrayList<>();
+            int field = state.lord.field();
+            addMaterial(items, com.eternalrealm.monster.Materials.fieldUncommon(field), 2 + RANDOM.nextInt(2));
+            addMaterial(items, com.eternalrealm.monster.Materials.fieldElite(field), isHero ? 2 : 1);
+            if (RANDOM.nextDouble() < (isHero ? 0.45 : 0.2)) {
+                items.add(equipment(context, player, field, isHero ? ItemRarity.RARE : ItemRarity.UNCOMMON));
+            }
+            if (RANDOM.nextDouble() < 0.15) {
+                items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));
+            }
+            long exp = Math.round(stats.exp() * 2.0 * expMultiplier(body));
+            long gold = stats.goldMax() * 2;
+            give(context, player, items, exp, gold);
+            JsonObject data = new JsonObject();
+            data.addProperty("kind", "lord");
+            data.addProperty("name", Component.Serializer.toJson(Component.translatable(state.lord.translationKey())));
+            data.addProperty("rank", contributions.rank(line.id()));
+            data.addProperty("share", Math.round(line.share() * 1000.0) / 1000.0);
+            data.addProperty("hero", isHero);
+            data.addProperty("exp", exp);
+            data.addProperty("gold", gold);
+            JsonArray rewards = new JsonArray();
+            items.forEach(stack -> rewards.add(stack.save(new CompoundTag()).toString()));
+            data.add("rewards", rewards);
+            UiData.send(player, RESULT_CHANNEL, data);
+        }
+    }
+
+    // ------------------------------------------------------------------ miasma and calamities
+
+    private static void handle(MinecraftServer server, ServerLevel astoria, List<Miasma.Event> events, long now) {
+        for (Miasma.Event event : events) {
+            boardDirty = true;
+            int field = event.field();
+            Component fieldName = Component.translatable(fieldKey(field)).withStyle(ChatFormatting.AQUA);
+            Optional<FieldThreats.Calamity> calamity = FieldThreats.calamityOf(field);
+            Component calamityName = calamity.<Component>map(c -> Component.translatable(c.translationKey())
+                    .withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD)).orElse(Component.literal("?"));
+            switch (event.kind()) {
+                case OMEN -> {
+                    broadcast(server, Component.translatable("threat.eternalrealm.omen", fieldName)
+                            .withStyle(ChatFormatting.DARK_PURPLE));
+                    for (ServerPlayer player : astoria.players()) {
+                        if (fieldOf(player) == field) {
+                            player.playNotifySound(SoundEvents.ELDER_GUARDIAN_CURSE, SoundSource.HOSTILE, 0.6F, 0.6F);
+                        }
+                    }
+                }
+                case MANIFEST -> {
+                    calamity.ifPresent(c -> CALAMITIES.put(field, new CalamityState(c)));
+                    broadcast(server, Component.translatable("threat.eternalrealm.manifest", fieldName, calamityName)
+                            .withStyle(ChatFormatting.RED));
+                    for (ServerPlayer player : astoria.players()) {
+                        if (fieldOf(player) == field) {
+                            player.playNotifySound(SoundEvents.WITHER_SPAWN, SoundSource.HOSTILE, 0.5F, 0.7F);
+                        }
+                    }
+                }
+                case DEPART -> {
+                    CalamityState state = CALAMITIES.remove(field);
+                    if (state != null && state.fight != null) {
+                        Entity body = state.fight.body();
+                        state.fight.end();
+                        if (body.isAlive()) {
+                            astoria.sendParticles(ParticleTypes.REVERSE_PORTAL, body.getX(), body.getY() + 2.0,
+                                    body.getZ(), 120, 1.5, 2.5, 1.5, 0.1);
+                            body.discard();
+                        }
+                    }
+                    broadcast(server, Component.translatable("threat.eternalrealm.depart", calamityName, fieldName)
+                            .withStyle(ChatFormatting.GRAY));
+                }
+                case PURIFIED -> broadcast(server, Component.translatable("threat.eternalrealm.purified", fieldName,
+                        Miasma.PURIFIED_TICKS / 1200).withStyle(ChatFormatting.AQUA));
+                case CALM -> {
+                    for (ServerPlayer player : astoria.players()) {
+                        if (fieldOf(player) == field) {
+                            player.displayClientMessage(Component.translatable("threat.eternalrealm.calm", fieldName)
+                                    .withStyle(ChatFormatting.GRAY), false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void tickCalamities(ServerLevel astoria, long now) {
+        for (CalamityState state : List.copyOf(CALAMITIES.values())) {
+            FieldThreats.Calamity calamity = state.calamity;
+            if (state.fight == null) {
+                if (state.scar == null && nearestPlayer(astoria, calamity.x(), calamity.z(), FieldThreats.JOIN_RADIUS) != null
+                        && astoria.hasChunkAt(new BlockPos(calamity.x(), 64, calamity.z()))) {
+                    state.scar = planScar(astoria, calamity);
+                }
+                continue;
+            }
+            if (state.fight.isOver()) {
+                continue;
+            }
+            Entity body = state.fight.body();
+            boolean engaged = false;
+            for (ServerPlayer player : astoria.players()) {
+                if (player.isSpectator() || player.distanceToSqr(body) > FieldThreats.JOIN_RADIUS * FieldThreats.JOIN_RADIUS) {
+                    continue;
+                }
+                state.fight.join(player);
+                engaged = engaged || !com.eternalrealm.revival.forge.RevivalService.isDown(player.getUUID());
+            }
+            if (engaged) {
+                miasma.engaged(calamity.field(), now);
+            }
+            // the omen sky over the lair: dark motes rising
+            if (now % 40 == 0) {
+                astoria.sendParticles(ParticleTypes.SQUID_INK, calamity.x() + 0.5, body.getY() + 0.3, calamity.z() + 0.5,
+                        20, FieldThreats.LAIR_RADIUS * 0.5, 0.2, FieldThreats.LAIR_RADIUS * 0.5, 0.01);
+            }
+        }
+    }
+
+    /** Levels the lair: the median ground height, cleared above and filled below, scarred blocks on top. */
+    private static Scar planScar(ServerLevel astoria, FieldThreats.Calamity calamity) {
+        int radius = FieldThreats.LAIR_RADIUS + 2;
+        List<Integer> heights = new ArrayList<>();
+        for (int dx = -radius; dx <= radius; dx += 3) {
+            for (int dz = -radius; dz <= radius; dz += 3) {
+                if (dx * dx + dz * dz <= radius * radius) {
+                    heights.add(astoria.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, calamity.x() + dx,
+                            calamity.z() + dz));
+                }
+            }
+        }
+        heights.sort(Integer::compare);
+        int groundY = heights.get(heights.size() / 2) - 1;
+        Scar scar = new Scar(groundY, calamity.field());
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                if (dx * dx + dz * dz <= radius * radius) {
+                    scar.columns.add(new int[]{calamity.x() + dx, calamity.z() + dz, dx * dx + dz * dz});
+                }
+            }
+        }
+        // from the middle outwards, so the scar spreads
+        scar.columns.sort((a, b) -> Integer.compare(a[2], b[2]));
+        return scar;
+    }
+
+    private static void scarSlice(ServerLevel astoria, CalamityState state, long now) {
+        Scar scar = state.scar;
+        int inner = FieldThreats.LAIR_RADIUS * FieldThreats.LAIR_RADIUS;
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int n = 0; n < SCAR_COLUMNS_PER_TICK && !scar.done(); n++) {
+            int[] column = scar.columns.get(scar.index++);
+            int x = column[0];
+            int z = column[1];
+            int top = astoria.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
+            for (int y = Math.min(top + 1, scar.groundY + 28); y > scar.groundY; y--) {
+                pos.set(x, y, z);
+                if (!astoria.getBlockState(pos).isAir()) {
+                    astoria.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                }
+            }
+            for (int y = scar.groundY - 1; y >= scar.groundY - 6; y--) {
+                pos.set(x, y, z);
+                BlockState below = astoria.getBlockState(pos);
+                if (below.isAir() || !below.getFluidState().isEmpty() || below.canBeReplaced()) {
+                    astoria.setBlock(pos, Blocks.DIRT.defaultBlockState(), Block.UPDATE_CLIENTS);
+                }
+            }
+            pos.set(x, scar.groundY, z);
+            boolean rim = column[2] > inner;
+            astoria.setBlock(pos, scarBlock(scar.field, x, z, rim), Block.UPDATE_CLIENTS);
+        }
+        if (!scar.done()) {
+            if (now % 10 == 0) {
+                astoria.playSound(null, state.calamity.x(), scar.groundY + 1, state.calamity.z(),
+                        SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 0.5F, 0.5F);
+            }
+            return;
+        }
+        state.scar = null;
+        startFight(astoria, state, now);
+    }
+
+    private static BlockState scarBlock(int field, int x, int z, boolean rim) {
+        int hash = (x * 73856093) ^ (z * 19349663);
+        int pick = Math.floorMod(hash, 7);
+        if (rim) {
+            return switch (field) {
+                case 7 -> pick < 3 ? Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS.defaultBlockState()
+                        : Blocks.POLISHED_BLACKSTONE_BRICKS.defaultBlockState();
+                case 5, 10 -> pick < 3 ? Blocks.CUT_SANDSTONE.defaultBlockState()
+                        : Blocks.SMOOTH_SANDSTONE.defaultBlockState();
+                default -> pick < 3 ? Blocks.CRACKED_STONE_BRICKS.defaultBlockState()
+                        : pick < 5 ? Blocks.STONE_BRICKS.defaultBlockState() : Blocks.MOSSY_STONE_BRICKS.defaultBlockState();
+            };
+        }
+        Block[] blocks = switch (field) {
+            case 2 -> new Block[]{Blocks.PODZOL, Blocks.MOSS_BLOCK, Blocks.COARSE_DIRT, Blocks.ROOTED_DIRT};
+            case 3 -> new Block[]{Blocks.GRAVEL, Blocks.COBBLED_DEEPSLATE, Blocks.TUFF, Blocks.COARSE_DIRT};
+            case 4, 9 -> new Block[]{Blocks.MUD, Blocks.PACKED_MUD, Blocks.COARSE_DIRT, Blocks.GRAVEL};
+            case 5 -> new Block[]{Blocks.SMOOTH_SANDSTONE, Blocks.SANDSTONE, Blocks.COARSE_DIRT, Blocks.GRAVEL};
+            case 6 -> new Block[]{Blocks.SNOW_BLOCK, Blocks.GRAVEL, Blocks.STONE, Blocks.ANDESITE};
+            case 7 -> new Block[]{Blocks.BLACKSTONE, Blocks.SOUL_SOIL, Blocks.BASALT, Blocks.SMOOTH_BASALT};
+            case 10 -> new Block[]{Blocks.SAND, Blocks.GRAVEL, Blocks.COARSE_DIRT, Blocks.SANDSTONE};
+            default -> new Block[]{Blocks.COARSE_DIRT, Blocks.ROOTED_DIRT, Blocks.PODZOL, Blocks.GRAVEL};
+        };
+        return blocks[Math.floorMod(hash >> 3, blocks.length)].defaultBlockState();
+    }
+
+    private static void startFight(ServerLevel astoria, CalamityState state, long now) {
+        FieldThreats.Calamity calamity = state.calamity;
+        BossDefinition definition = Bosses.byId(calamity.boss()).orElse(null);
+        if (definition == null) {
+            handle(astoria.getServer(), astoria, miasma.departed(calamity.field(), now), now);
+            return;
+        }
+        BlockPos spawn = surface(astoria, calamity.x(), calamity.z());
+        Vec3 center = Vec3.atBottomCenterOf(spawn);
+        Set<UUID> participants = new HashSet<>();
+        for (ServerPlayer player : astoria.players()) {
+            if (!player.isSpectator() && player.distanceToSqr(center) < FieldThreats.JOIN_RADIUS * FieldThreats.JOIN_RADIUS) {
+                participants.add(player.getUUID());
+            }
+        }
+        if (participants.isEmpty()) {
+            return; // everyone left while the lair was scarred: it rises when someone comes back
+        }
+        // a field calamity is tuned for at least two fighters: whoever is around joins on the way
+        Set<UUID> tuning = new HashSet<>(participants);
+        while (tuning.size() < 2) {
+            tuning.add(UUID.randomUUID());
+        }
+        Optional<BossFight> started = BossFight.start(astoria, definition, Difficulty.NORMAL, spawn, center,
+                FieldThreats.LAIR_RADIUS, tuning, killed -> {
+                }, defeated -> calamityDown(astoria, state));
+        if (started.isEmpty()) {
+            handle(astoria.getServer(), astoria, miasma.departed(calamity.field(), now), now);
+            return;
+        }
+        BossFight fight = started.get();
+        Mob body = fight.body();
+        body.setCustomName(Component.translatable("threat.eternalrealm.calamity.nameplate",
+                Component.translatable(calamity.translationKey())).withStyle(ChatFormatting.DARK_RED));
+        body.addTag(CALAMITY_TAG);
+        body.getPersistentData().putInt(CALAMITY_TAG, calamity.field());
+        state.fight = fight;
+        state.fightStart = now;
+        miasma.engaged(calamity.field(), now);
+        LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(astoria);
+        if (bolt != null) {
+            bolt.moveTo(center);
+            bolt.setVisualOnly(true);
+            astoria.addFreshEntity(bolt);
+        }
+        boardDirty = true;
+    }
+
+    private static void calamityDown(ServerLevel astoria, CalamityState state) {
+        MinecraftServer server = astoria.getServer();
+        long now = server.getTickCount();
+        CALAMITIES.remove(state.calamity.field());
+        handle(server, astoria, miasma.subdued(state.calamity.field(), now), now);
+        BossFight fight = state.fight;
+        Contributions contributions = fight.contributions();
+        Optional<Contributions.Line> hero = contributions.hero();
+        Component fieldName = Component.translatable(fieldKey(state.calamity.field())).withStyle(ChatFormatting.AQUA);
+        broadcast(server, Component.translatable("threat.eternalrealm.subdued", fieldName,
+                Component.translatable(state.calamity.translationKey()).withStyle(ChatFormatting.DARK_RED),
+                hero.map(line -> Component.literal(line.name()).withStyle(ChatFormatting.GOLD))
+                        .orElse(Component.literal("-"))).withStyle(ChatFormatting.GOLD));
+        ServerContext context = ServerContext.current().orElse(null);
+        if (context == null) {
+            return;
+        }
+        BossDefinition definition = Bosses.byId(state.calamity.boss()).orElse(null);
+        MonsterTemplate minion = definition == null ? null
+                : Monsters.byId(Bosses.minionTemplateId(definition.id())).orElse(null);
+        MonsterStats stats = minion == null ? null : MonsterScaling.stats(minion, Math.max(minion.levels().min(),
+                Math.min(minion.levels().max(), definition.level())));
+        long durationTicks = Math.max(0L, (fight.killTick() < 0 ? now : fight.killTick()) - state.fightStart);
+        int falls = contributions.byDamage().stream().mapToInt(Contributions.Line::falls).sum();
+        ClearRank rank = ClearRank.of(durationTicks, 10L * 60L * 20L, falls);
+        JsonArray party = new JsonArray();
+        for (Contributions.Line line : contributions.byDamage()) {
+            CharacterSnapshot snapshot = context.playerData().snapshot(line.id()).orElse(null);
+            JsonObject row = new JsonObject();
+            row.addProperty("id", line.id().toString());
+            row.addProperty("name", line.name());
+            row.addProperty("job", line.job());
+            row.addProperty("level", snapshot == null ? 0 : snapshot.level());
+            row.addProperty("damage", Math.round(line.damage()));
+            row.addProperty("share", Math.round(line.share() * 1000.0) / 1000.0);
+            row.addProperty("taken", Math.round(line.taken()));
+            row.addProperty("falls", line.falls());
+            row.addProperty("hero", hero.map(best -> best.id().equals(line.id())).orElse(false));
+            party.add(row);
+        }
+        for (Contributions.Line line : contributions.byDamage()) {
+            ServerPlayer player = server.getPlayerList().getPlayer(line.id());
+            boolean isHero = hero.map(best -> best.id().equals(line.id())).orElse(false);
+            if (player == null || line.share() < FieldThreats.REWARD_SHARE && !isHero) {
+                continue;
+            }
+            int field = state.calamity.field();
+            List<ItemStack> items = new ArrayList<>();
+            addMaterial(items, com.eternalrealm.monster.Materials.bossMaterial(field), isHero ? 2 : 1);
+            addMaterial(items, Materials.ENHANCEMENT_STONE, 2 + rank.bonusTier());
+            addMaterial(items, com.eternalrealm.monster.Materials.fieldElite(field), 1);
+            if (isHero || RANDOM.nextDouble() < 0.5) {
+                items.add(equipment(context, player, field, isHero ? ItemRarity.RARE : ItemRarity.UNCOMMON));
+            }
+            if (RANDOM.nextDouble() < 0.35) {
+                items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));
+            }
+            long exp = stats == null ? 0L : stats.exp() * 25L;
+            long gold = stats == null ? 0L : stats.goldMax() * 12L;
+            give(context, player, items, exp, gold);
+            JsonObject data = new JsonObject();
+            data.addProperty("kind", "calamity");
+            data.addProperty("dungeon", state.calamity.translationKey());
+            data.addProperty("difficulty", "calamity");
+            data.addProperty("difficultyKey", fieldKey(field));
+            data.addProperty("time", durationTicks / 20.0);
+            data.addProperty("limit", 0);
+            data.addProperty("falls", falls);
+            data.addProperty("rank", rank.name());
+            data.addProperty("me", player.getUUID().toString());
+            data.addProperty("heroMe", isHero);
+            data.add("party", party);
+            JsonArray rewards = new JsonArray();
+            items.forEach(stack -> rewards.add(stack.save(new CompoundTag()).toString()));
+            data.add("rewards", rewards);
+            data.addProperty("exp", exp);
+            data.addProperty("gold", gold);
+            data.addProperty("cards", 0);
+            data.addProperty("exit", 0);
+            UiData.send(player, com.eternalrealm.dungeon.forge.DungeonResults.CHANNEL, data);
+        }
+        boardDirty = true;
+    }
+
+    // ------------------------------------------------------------------ rewards
+
+    private static void addMaterial(List<ItemStack> items, String materialId, int count) {
+        Item item = materialId == null ? null : ERGearItems.material(materialId);
+        if (item != null && count > 0) {
+            items.add(new ItemStack(item, count));
+        }
+    }
+
+    private static ItemStack equipment(ServerContext context, ServerPlayer player, int field, ItemRarity floor) {
+        double luck = context.combat().service().get(player.getUUID()).map(Combatant::stats)
+                .map(CombatStats::lootBonus).orElse(0.0);
+        ItemRarity rarity = EquipmentGenerator.rollRarity(luck, RANDOM);
+        if (rarity.rank() < floor.rank()) {
+            rarity = floor;
+        }
+        ItemTier tier = ItemTier.IRON;
+        int tierNumber = com.eternalrealm.world.Areas.byId(field).map(area -> area.tier()).orElse(1);
+        for (ItemTier candidate : ItemTier.values()) {
+            if (candidate.number() <= tierNumber && candidate.number() >= tier.number()) {
+                tier = candidate;
+            }
+        }
+        return EquipmentStacks.create(EquipmentGenerator.roll(LootDrops.baseFor(player, tier), rarity, RANDOM));
+    }
+
+    private static void give(ServerContext context, ServerPlayer player, List<ItemStack> items, long exp, long gold) {
+        if (exp > 0) {
+            context.playerData().grantExperience(player.getUUID(), exp, ExperienceSource.BOSS);
+        }
+        if (gold > 0) {
+            context.playerData().grantGold(player.getUUID(), gold);
+        }
+        for (ItemStack stack : items) {
+            Inventories.give(player, stack.copy());
+        }
+        player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.7F, 1.3F);
+    }
+
+    // ------------------------------------------------------------------ the board
+
+    private static void sendBoard(ServerLevel astoria, long now) {
+        boardDirty = false;
+        if (astoria.players().isEmpty()) {
+            return;
+        }
+        JsonObject board = new JsonObject();
+        JsonArray fields = new JsonArray();
+        for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
+            JsonObject entry = new JsonObject();
+            entry.addProperty("field", field);
+            entry.addProperty("phase", miasma.phase(field).id());
+            entry.addProperty("gauge", miasma.gauge(field));
+            entry.addProperty("remaining", miasma.remaining(field, now) / 20.0);
+            int fieldNumber = field;
+            FieldThreats.calamityOf(field).ifPresent(calamity -> {
+                JsonObject c = new JsonObject();
+                c.addProperty("id", calamity.id());
+                c.addProperty("name", calamity.translationKey());
+                c.addProperty("x", calamity.x());
+                c.addProperty("z", calamity.z());
+                CalamityState state = CALAMITIES.get(fieldNumber);
+                c.addProperty("risen", state != null && state.fight != null && !state.fight.isOver());
+                if (state != null && state.fight != null && !state.fight.isOver()) {
+                    c.addProperty("bx", Math.round(state.fight.body().getX()));
+                    c.addProperty("bz", Math.round(state.fight.body().getZ()));
+                }
+                Bosses.byId(calamity.boss()).ifPresent(definition -> c.addProperty("level", definition.level()));
+                entry.add("calamity", c);
+            });
+            JsonArray lords = new JsonArray();
+            for (FieldThreats.Lord lord : FieldThreats.lordsOf(field)) {
+                LordState state = LORDS.get(lord.id());
+                JsonObject l = new JsonObject();
+                l.addProperty("id", lord.id());
+                l.addProperty("name", lord.translationKey());
+                l.addProperty("x", lord.x());
+                l.addProperty("z", lord.z());
+                Entity body = state == null || state.body == null ? null : astoria.getEntity(state.body);
+                boolean alive = body != null && body.isAlive();
+                l.addProperty("present", alive);
+                if (alive) {
+                    l.addProperty("bx", Math.round(body.getX()));
+                    l.addProperty("bz", Math.round(body.getZ()));
+                    l.addProperty("level", state.level);
+                } else {
+                    Monsters.byId(lord.template()).ifPresent(template -> l.addProperty("level",
+                            Math.min(MonsterScaling.MAX_LEVEL, template.levels().max() + FieldThreats.LORD_LEVEL_BONUS)));
+                }
+                long due = state == null ? 0L : Math.max(0L, state.dueAt - now);
+                l.addProperty("due", alive ? 0.0 : due / 20.0);
+                lords.add(l);
+            }
+            entry.add("lords", lords);
+            fields.add(entry);
+        }
+        board.add("fields", fields);
+        for (ServerPlayer player : astoria.players()) {
+            UiData.send(player, BOARD_CHANNEL, board);
+        }
+    }
+
+    // ------------------------------------------------------------------ helpers
+
+    static String fieldKey(int field) {
+        return com.eternalrealm.world.Areas.byId(field).map(area -> area.translationKey()).orElse("?");
+    }
+
+    private static int fieldOf(ServerPlayer player) {
+        return FieldLayout.inCapital(player.getX(), player.getZ()) ? 0 : FieldLayout.areaAt(player.getX(), player.getZ());
+    }
+
+    private static ServerPlayer nearestPlayer(ServerLevel level, double x, double z, double radius) {
+        ServerPlayer best = null;
+        double bestDistance = radius * radius;
+        for (ServerPlayer player : level.players()) {
+            if (player.isSpectator()) {
+                continue;
+            }
+            double dx = player.getX() - x;
+            double dz = player.getZ() - z;
+            double distance = dx * dx + dz * dz;
+            if (distance <= bestDistance) {
+                best = player;
+                bestDistance = distance;
+            }
+        }
+        return best;
+    }
+
+    private static BlockPos surface(ServerLevel level, int x, int z) {
+        level.getChunk(x >> 4, z >> 4);
+        return new BlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
+    }
+
+    private static String jobOf(ServerPlayer player) {
+        return ServerContext.current().flatMap(context -> context.playerData().snapshot(player.getUUID()))
+                .map(snapshot -> JobType.fromStored(snapshot.jobId()).id()).orElse("none");
+    }
+
+    private static void broadcast(MinecraftServer server, Component message) {
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            player.sendSystemMessage(message);
+        }
+    }
+
+    /** Lords and calamities saved with their chunks by an earlier run are not tracked: they leave quietly. */
+    @SubscribeEvent
+    public static void onEntityJoin(EntityJoinLevelEvent event) {
+        Entity entity = event.getEntity();
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+        if (entity.getTags().contains(LORD_TAG) && lordOf(entity).isEmpty() && !isBeingSpawned(entity)) {
+            event.setCanceled(true);
+        } else if (entity.getTags().contains(CALAMITY_TAG) && !isTrackedCalamity(entity)) {
+            event.setCanceled(true);
+        }
+    }
+
+    private static boolean isBeingSpawned(Entity entity) {
+        LordState state = LORDS.get(entity.getPersistentData().getString(LORD_ID));
+        return state != null && entity.getUUID().equals(state.body);
+    }
+
+    private static boolean isTrackedCalamity(Entity entity) {
+        for (CalamityState state : CALAMITIES.values()) {
+            if (state.fight != null && state.fight.body() == entity) {
+                return true;
+            }
+        }
+        // the tag is added after the body joined the level, so a fresh body is never caught here
+        return false;
+    }
+
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
+        ServerLevel astoria = event.getServer().getLevel(AstoriaDimension.LEVEL);
+        if (astoria != null && owner == event.getServer()) {
+            ThreatData.get(astoria).store(miasma.toJson());
+            for (CalamityState state : CALAMITIES.values()) {
+                if (state.fight != null) {
+                    state.fight.end();
+                    state.fight.body().discard();
+                }
+            }
+            for (LordState state : LORDS.values()) {
+                Entity body = state.body == null ? null : astoria.getEntity(state.body);
+                if (body != null) {
+                    body.discard();
+                }
+            }
+        }
+        CALAMITIES.clear();
+        LORDS.clear();
+        BossFight.forgetAll();
+        owner = null;
+    }
+
+    /** The miasma gauges, saved with アストリア ({@code data/eternalrealm_field_threats.dat}). */
+    public static final class ThreatData extends SavedData {
+        private static final String NAME = ModInfo.MOD_ID + "_field_threats";
+        private String json = "";
+
+        public static ThreatData get(ServerLevel astoria) {
+            return astoria.getDataStorage().computeIfAbsent(ThreatData::load, ThreatData::new, NAME);
+        }
+
+        static ThreatData load(CompoundTag tag) {
+            ThreatData data = new ThreatData();
+            data.json = tag.getString("miasma");
+            return data;
+        }
+
+        String json() {
+            return json;
+        }
+
+        void store(String value) {
+            if (!value.equals(json)) {
+                json = value;
+                setDirty();
+            }
+        }
+
+        @Override
+        public CompoundTag save(CompoundTag tag) {
+            tag.putString("miasma", json);
+            return tag;
+        }
+    }
+
+    /** For the map and tests: the phase of a field right now. */
+    public static Miasma.Phase phase(int field) {
+        return miasma.phase(field);
+    }
+
+    static String id(int field) {
+        return String.format(Locale.ROOT, "field_%d", field);
+    }
+}

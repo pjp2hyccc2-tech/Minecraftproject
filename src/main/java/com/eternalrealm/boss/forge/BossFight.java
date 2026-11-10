@@ -159,6 +159,9 @@ public final class BossFight {
         }
     }
 
+    /** Fights in progress (dungeons and fields), so damage and deaths find their fight. Server thread only. */
+    private static final Map<UUID, BossFight> LIVE = new HashMap<>();
+
     private final UUID id = UUID.randomUUID();
     private final ServerLevel level;
     private final Mob body;
@@ -202,7 +205,7 @@ public final class BossFight {
         this.level = level;
         this.body = body;
         this.brain = brain;
-        this.participants = Set.copyOf(participants);
+        this.participants = new HashSet<>(participants);
         this.onKilled = onKilled;
         this.onDefeated = onDefeated;
         this.maxHealth = brain.maxHealth();
@@ -247,6 +250,7 @@ public final class BossFight {
             return Optional.empty();
         }
         BossFight fight = new BossFight(level, body.get(), brain, participants, half, onKilled, onDefeated);
+        LIVE.put(fight.id, fight);
         body.get().getPersistentData().putUUID(FIGHT, fight.id);
         body.get().moveTo(spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 180.0F, 0.0F);
         level.addFreshEntity(body.get());
@@ -278,7 +282,38 @@ public final class BossFight {
     }
 
     public Set<UUID> participants() {
-        return participants;
+        return java.util.Collections.unmodifiableSet(participants);
+    }
+
+    /** A player joins a fight in progress (field calamities: whoever comes close). */
+    public boolean join(ServerPlayer player) {
+        if (ended || isDefeated() || !participants.add(player.getUUID())) {
+            return false;
+        }
+        title(player, body.getDisplayName().copy().withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD),
+                Component.translatable(brain.difficulty().translationKey()).withStyle(ChatFormatting.GRAY), 40);
+        return true;
+    }
+
+    /** The fight with this id, if it is still going on. */
+    public static Optional<BossFight> live(UUID fightId) {
+        return Optional.ofNullable(LIVE.get(fightId));
+    }
+
+    /** Fights going on that {@code playerId} takes part in. */
+    public static List<BossFight> fightsOf(UUID playerId) {
+        List<BossFight> found = new ArrayList<>();
+        for (BossFight fight : LIVE.values()) {
+            if (!fight.isOver() && fight.participants.contains(playerId)) {
+                found.add(fight);
+            }
+        }
+        return found;
+    }
+
+    /** Server stopping: forget every fight (their bodies are gone with the levels). */
+    public static void forgetAll() {
+        LIVE.clear();
     }
 
     /** The boss lost: its health pool reached 0 (it may still be collapsing, see {@link #isDying()}). */
@@ -1225,6 +1260,7 @@ public final class BossFight {
             return;
         }
         ended = true;
+        LIVE.remove(id);
         JsonObject over = new JsonObject();
         over.addProperty("id", id.toString());
         over.addProperty("end", true);

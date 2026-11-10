@@ -56,6 +56,8 @@ public final class DungeonResultScreen extends Screen {
     private final Component dungeon;
     private final Component difficulty;
     private final int cardCount;
+    /** A field calamity was subdued (no time limit, no bonus chest, nothing to leave). */
+    private final boolean calamity;
     private List<Card> revealed;
     private int picked = -1;
     private long revealedAt;
@@ -86,6 +88,7 @@ public final class DungeonResultScreen extends Screen {
         this.dungeon = Component.translatable(ClientUiState.stringOr(data, "dungeon", ""));
         this.difficulty = Component.translatable(ClientUiState.stringOr(data, "difficultyKey", ""));
         this.cardCount = Mth.clamp(ClientUiState.intOr(data, "cards", 3), 0, 5);
+        this.calamity = "calamity".equals(ClientUiState.stringOr(data, "kind", ""));
         this.exitAt = System.nanoTime() + (long) (number(data, "exit") * 1.0E9);
         String me = ClientUiState.stringOr(data, "me", "");
         if (data.has("party") && data.get("party").isJsonArray()) {
@@ -209,8 +212,10 @@ public final class DungeonResultScreen extends Screen {
                 }
             }
             if (inside(mouseX, mouseY, leaveLeft(), leaveTop(), 120, 14)) {
-                ERNetwork.sendToServer(new UiActionPacket(com.eternalrealm.dungeon.forge.DungeonResults.EXIT_ACTION,
-                        new JsonObject()));
+                if (!calamity) {
+                    ERNetwork.sendToServer(new UiActionPacket(com.eternalrealm.dungeon.forge.DungeonResults.EXIT_ACTION,
+                            new JsonObject()));
+                }
                 play(SoundEvents.UI_BUTTON_CLICK.value(), 1.0F);
                 onClose();
                 return true;
@@ -247,7 +252,8 @@ public final class DungeonResultScreen extends Screen {
         // ---- DUNGEON CLEAR
         float grow = (float) Mth.clamp(t / 0.35, 0.0, 1.0);
         float scale = 2.6F - 0.6F * (1.0F - (1.0F - grow) * (1.0F - grow));
-        Component clear = Component.translatable("result.eternalrealm.clear").withStyle(ChatFormatting.BOLD);
+        Component clear = Component.translatable(calamity ? "result.eternalrealm.calamity_clear"
+                : "result.eternalrealm.clear").withStyle(ChatFormatting.BOLD);
         graphics.pose().pushPose();
         graphics.pose().translate(width / 2.0F, 10.0F, 0.0F);
         graphics.pose().scale(scale, scale, 1.0F);
@@ -258,7 +264,8 @@ public final class DungeonResultScreen extends Screen {
                 .withStyle(ChatFormatting.GRAY)), width / 2, 32, 0xFFE8E0D0);
         double time = number(data, "time");
         double limit = number(data, "limit");
-        Component stats = Component.translatable("result.eternalrealm.time", clock(time), clock(limit))
+        Component stats = (limit > 0.0 ? Component.translatable("result.eternalrealm.time", clock(time), clock(limit))
+                : Component.translatable("result.eternalrealm.time_only", clock(time)))
                 .append(Component.literal("    "))
                 .append(Component.translatable("result.eternalrealm.falls", ClientUiState.intOr(data, "falls", 0)));
         graphics.drawCenteredString(font, stats.copy().withStyle(ChatFormatting.GRAY), width / 2, 44, 0xFFFFFFFF);
@@ -375,11 +382,13 @@ public final class DungeonResultScreen extends Screen {
         boolean overLeave = inside(mouseX, mouseY, leaveLeft(), leaveTop(), 120, 14);
         graphics.fill(leaveLeft() - 1, leaveTop() - 1, leaveLeft() + 121, leaveTop() + 15, overLeave ? GOLD : BORDER);
         graphics.fill(leaveLeft(), leaveTop(), leaveLeft() + 120, leaveTop() + 14, overLeave ? 0xF0302418 : PANEL);
-        graphics.drawCenteredString(font, Component.translatable("result.eternalrealm.leave"), width / 2, leaveTop() + 3,
-                0xFFFFFFFF);
-        Component countdown = Component.translatable("result.eternalrealm.exit_in", left0);
-        graphics.drawString(font, countdown.copy().withStyle(ChatFormatting.DARK_GRAY), leaveLeft() + 126,
-                leaveTop() + 3, 0xFFFFFFFF);
+        graphics.drawCenteredString(font, Component.translatable(calamity ? "result.eternalrealm.close"
+                : "result.eternalrealm.leave"), width / 2, leaveTop() + 3, 0xFFFFFFFF);
+        if (!calamity) {
+            Component countdown = Component.translatable("result.eternalrealm.exit_in", left0);
+            graphics.drawString(font, countdown.copy().withStyle(ChatFormatting.DARK_GRAY), leaveLeft() + 126,
+                    leaveTop() + 3, 0xFFFFFFFF);
+        }
         super.render(graphics, mouseX, mouseY, partialTick);
         if (!hovered.isEmpty()) {
             graphics.renderTooltip(font, hovered, mouseX, mouseY);
