@@ -37,20 +37,30 @@ def seed_of(*keys):
 
 
 class FaceCanvas:
-    """Drawing on one face rectangle of the texture, in face-local pixel coordinates."""
+    """Drawing on one face rectangle of the texture, in face-local coordinates (x to the right, y down).
 
-    def __init__(self, img, rect, face):
+    Coordinates are model units (one per box unit); a texture painted at a texel density {@code k} > 1 (the bosses)
+    has k x k pixels per unit: {@link #px} fills the whole unit, {@link #fpx} and the {@code f*} helpers address
+    single pixels for fine detail ({@code fw} x {@code fh} of them).
+    """
+
+    def __init__(self, img, rect, face, k=1):
         self.img = img
         self.u, self.v, self.w, self.h = rect
         self.face = face
+        self.k = k
+        self.fw, self.fh = self.w * k, self.h * k
 
     def px(self, x, y, c, a=255):
         if 0 <= x < self.w and 0 <= y < self.h:
-            self.img[self.v + y, self.u + x, :3] = c[:3]
-            self.img[self.v + y, self.u + x, 3] = a if len(c) < 4 else c[3]
+            k = self.k
+            y0, x0 = (self.v + y) * k, (self.u + x) * k
+            self.img[y0:y0 + k, x0:x0 + k, :3] = c[:3]
+            self.img[y0:y0 + k, x0:x0 + k, 3] = a if len(c) < 4 else c[3]
 
     def get(self, x, y):
-        return tuple(int(v) for v in self.img[self.v + y, self.u + x, :3])
+        k = self.k
+        return tuple(int(v) for v in self.img[(self.v + y) * k + k // 2, (self.u + x) * k + k // 2, :3])
 
     def rect(self, x0, y0, x1, y1, c, a=255):
         for y in range(y0, y1 + 1):
@@ -65,15 +75,40 @@ class FaceCanvas:
 
     def clear(self, x, y):
         if 0 <= x < self.w and 0 <= y < self.h:
-            self.img[self.v + y, self.u + x, 3] = 0
+            k = self.k
+            self.img[(self.v + y) * k:(self.v + y + 1) * k, (self.u + x) * k:(self.u + x + 1) * k, 3] = 0
 
     def tint(self, x, y, f):
         if 0 <= x < self.w and 0 <= y < self.h:
-            c = self.get(x, y)
-            self.px(x, y, shade(c, f))
+            k = self.k
+            block = self.img[(self.v + y) * k:(self.v + y + 1) * k, (self.u + x) * k:(self.u + x + 1) * k, :3]
+            block[...] = np.clip(block.astype(np.float64) * f, 0, 255).astype(block.dtype)
 
     def cx(self):
         return self.w // 2
+
+    # -------------------------------------------------------------- single pixels (fine detail)
+
+    def fpx(self, x, y, c, a=255):
+        if 0 <= x < self.fw and 0 <= y < self.fh:
+            self.img[self.v * self.k + y, self.u * self.k + x, :3] = c[:3]
+            self.img[self.v * self.k + y, self.u * self.k + x, 3] = a if len(c) < 4 else c[3]
+
+    def fget(self, x, y):
+        return tuple(int(v) for v in self.img[self.v * self.k + y, self.u * self.k + x, :3])
+
+    def fclear(self, x, y):
+        if 0 <= x < self.fw and 0 <= y < self.fh:
+            self.img[self.v * self.k + y, self.u * self.k + x, 3] = 0
+
+    def frect(self, x0, y0, x1, y1, c, a=255):
+        for y in range(y0, y1 + 1):
+            for x in range(x0, x1 + 1):
+                self.fpx(x, y, c, a)
+
+    def ftint(self, x, y, f):
+        if 0 <= x < self.fw and 0 <= y < self.fh:
+            self.fpx(x, y, shade(self.fget(x, y), f))
 
 
 # ---------------------------------------------------------------------------------------------- materials
@@ -97,20 +132,25 @@ def palette_entry(pal, key):
     return out
 
 
-def paint_face(img, rect, style, pe, face, rng, cube):
+def paint_face(img, rect, style, pe, face, rng, cube, k=1):
     u, v, w, h = rect
     if w <= 0 or h <= 0:
         return
     fn = MATERIALS.get(style)
     if fn is None:
         raise KeyError('unknown material style ' + style)
-    tile = np.zeros((h, w, 4), dtype=np.float64)
+    tile = np.zeros((h * k, w * k, 4), dtype=np.float64)
     tile[..., 3] = 255
-    fn(tile, pe, face, rng, cube)
+    fn(tile, dict(pe, _k=k) if k != 1 else pe, face, rng, cube)
     if style not in UNSHADED:
         apply_light(tile, face, style)
-    region = img[v:v + h, u:u + w]
+    region = img[v * k:(v + h) * k, u * k:(u + w) * k]
     region[...] = np.clip(tile, 0, 255)
+
+
+def kof(pe):
+    """Texel density the face is painted at (feature sizes such as trims and rivets scale with it)."""
+    return pe.get('_k', 1)
 
 
 UNSHADED = {'flame', 'gem', 'glowcore', 'void', 'eye'}
@@ -173,11 +213,14 @@ def m_cloth(t, pe, face, rng, cube):
                     t[y, x + 1, :3] *= 1.07
             x += int(rng.integers(3, 5))
         trim = pe.get('trim')
-        if trim is not None and h >= 4:
-            t[h - 1, :, :3] = shade(trim, 0.9)
-            t[h - 2, :, :3] = trim
+        k = kof(pe)
+        if trim is not None and h >= 4 * k:
+            t[h - k:h, :, :3] = shade(trim, 0.9)
+            t[h - 2 * k:h - k, :, :3] = trim
+            if k > 1:
+                t[h - 2 * k, :, :3] = lighten(trim, 0.25)
             if pe.get('trim_top'):
-                t[0, :, :3] = trim
+                t[0:k, :, :3] = trim
     noise(t, rng, 0.04)
 
 
@@ -187,11 +230,12 @@ def m_leather(t, pe, face, rng, cube):
     for _ in range(max(1, w * h // 10)):
         x, y = int(rng.integers(0, w)), int(rng.integers(0, h))
         t[y, x, :3] *= rng.uniform(0.82, 1.1)
-    if face in ('front', 'back') and w >= 5 and h >= 5:
+    k = kof(pe)
+    if face in ('front', 'back') and w >= 5 * k and h >= 5 * k:
         st = lighten(pe['base'], 0.35)
-        for x in range(1, w - 1, 2):
-            t[1, x, :3] = st
-            t[h - 2, x, :3] = st
+        for x in range(k, w - k, 2 * k):
+            t[k, x:x + k, :3] = st
+            t[h - 1 - k, x:x + k, :3] = st
     noise(t, rng, 0.03)
 
 
@@ -219,11 +263,14 @@ def m_metal(t, pe, face, rng, cube):
         t[:, w - 1, :3] = shade(b, 0.7)
         t[0, :, :3] = lighten(b, 0.3)
         t[:, 0, :3] = lighten(b, 0.12)
-    if w >= 6 and h >= 6 and face not in ('top', 'bottom') and pe.get('rivets', True):
-        for (x, y) in ((1, 1), (w - 2, 1), (1, h - 2), (w - 2, h - 2)):
-            t[y, x, :3] = lighten(b, 0.6)
-            if y + 1 < h and x + 1 < w:
-                t[y + 1, x + 1, :3] = shade(b, 0.5)
+    k = kof(pe)
+    if w >= 6 * k and h >= 6 * k and face not in ('top', 'bottom') and pe.get('rivets', True):
+        for (x, y) in ((k, k), (w - 2 * k, k), (k, h - 2 * k), (w - 2 * k, h - 2 * k)):
+            t[y:y + k, x:x + k, :3] = lighten(b, 0.6)
+            if k > 1:
+                t[y, x, :3] = lighten(b, 0.85)
+            if y + k < h and x + k < w:
+                t[y + k, x + k, :3] = shade(b, 0.5)
     noise(t, rng, 0.02)
 
 
@@ -360,11 +407,12 @@ def m_stone(t, pe, face, rng, cube):
     fill(t, b)
     y = 0
     row = 0
+    k = kof(pe)
     while y < h:
-        bh = int(rng.integers(3, 5))
-        x = -int(rng.integers(0, 3)) if row % 2 else 0
+        bh = int(rng.integers(3, 5)) * k
+        x = -int(rng.integers(0, 3)) * k if row % 2 else 0
         while x < w:
-            bw = int(rng.integers(3, 7))
+            bw = int(rng.integers(3, 7)) * k
             f = rng.uniform(0.9, 1.1)
             for yy in range(y, min(h, y + bh)):
                 for xx in range(max(0, x), min(w, x + bw)):
@@ -527,8 +575,9 @@ def m_membrane(t, pe, face, rng, cube):
             if 0 <= x < w:
                 t[y, x, :3] = vein
     if pe.get('scallop', True):
+        kk = kof(pe)
         for x in range(w):
-            depth = int(round(1.5 + 1.5 * math.cos((x % 6) / 6.0 * 2 * math.pi)))
+            depth = int(round((1.5 + 1.5 * math.cos((x % (6 * kk)) / (6.0 * kk) * 2 * math.pi)) * kk))
             for k in range(depth):
                 if h - 1 - k >= 0:
                     t[h - 1 - k, x, 3] = 0
@@ -627,7 +676,7 @@ def m_mech(t, pe, face, rng, cube):
     b = pe['base']
     for y in range(h):
         t[y, :, :3] = shade(b, 1.1 - 0.2 * (y / max(1, h - 1)))
-    step = pe.get('panel', 5)
+    step = pe.get('panel', 5) * kof(pe)
     seam = shade(b, 0.55)
     for x in range(step, w, step):
         t[:, x, :3] = seam
@@ -700,8 +749,9 @@ class Painter:
     def __init__(self, rig, variant, visible):
         self.rig = rig
         self.variant = variant
-        self.img = np.zeros((rig.tex_h, rig.tex_w, 4), dtype=np.uint8)
-        self.glow = np.zeros((rig.tex_h, rig.tex_w, 4), dtype=np.uint8)
+        self.k = getattr(rig, 'texel', 1)
+        self.img = np.zeros((rig.tex_h * self.k, rig.tex_w * self.k, 4), dtype=np.uint8)
+        self.glow = np.zeros((rig.tex_h * self.k, rig.tex_w * self.k, 4), dtype=np.uint8)
         self.visible = visible
 
     def paint_all(self):
@@ -717,7 +767,7 @@ class Painter:
             st = pe.get('style', style)
             for fname, rect in c.faces().items():
                 rng = np.random.default_rng(seed_of(self.rig.name, self.variant.id, c.part.name, c.x, c.y, c.z, fname))
-                paint_face(self.img, rect, st, pe, fname, rng, c)
+                paint_face(self.img, rect, st, pe, fname, rng, c, self.k)
 
     def cube(self, part, index=0, tag=None):
         p = self.rig.parts[part]
@@ -730,12 +780,12 @@ class Painter:
 
     def face(self, part, face, index=0, tag=None, glow=False):
         c = self.cube(part, index, tag)
-        return FaceCanvas(self.glow if glow else self.img, c.faces()[face], face)
+        return FaceCanvas(self.glow if glow else self.img, c.faces()[face], face, self.k)
 
     def all_faces(self, part, index=0, tag=None, glow=False, sides_only=False):
         c = self.cube(part, index, tag)
         names = ('front', 'right', 'back', 'left') if sides_only else ('front', 'right', 'back', 'left', 'top', 'bottom')
-        return [FaceCanvas(self.glow if glow else self.img, c.faces()[n], n) for n in names]
+        return [FaceCanvas(self.glow if glow else self.img, c.faces()[n], n, self.k) for n in names]
 
     def has_glow(self):
         return bool(self.glow[..., :3].any())

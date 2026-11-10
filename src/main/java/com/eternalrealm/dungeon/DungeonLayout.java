@@ -21,10 +21,10 @@ import java.util.Objects;
 public record DungeonLayout(String id, DungeonTheme theme, long seed, BlockBox entranceHall, List<RoomLayout> rooms,
                             List<BlockBox> corridors, Door entranceDoor, List<Door> doors, BlockBox bossArena,
                             BlockPoint bossSpawn, BlockPoint entry, BlockPoint exit, List<BlockFill> buildPlan) {
-    /** Horizontal size of the area an instance may use (x and z from 0 to 255). */
-    public static final int FOOTPRINT = 256;
-    /** Vertical size of the area an instance may use (y from 0 to 23). */
-    public static final int MAX_HEIGHT = 24;
+    /** Horizontal size of the area an instance may use (x and z from 0 to 287). */
+    public static final int FOOTPRINT = 288;
+    /** Vertical size of the area an instance may use (y from 0 to 35): the arenas of the giants are up to 32 high. */
+    public static final int MAX_HEIGHT = 36;
     public static final BlockBox BOUNDS = new BlockBox(0, 0, 0, FOOTPRINT - 1, MAX_HEIGHT - 1, FOOTPRINT - 1);
     /** Smallest boss arena floor (inside the walls). */
     public static final int MIN_ARENA_INTERIOR = 25;

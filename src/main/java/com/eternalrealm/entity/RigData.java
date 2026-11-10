@@ -21,18 +21,20 @@ public final class RigData {
     private static final float[] T4_IMPACT = {2.0F, 0.8F, 0.65F, 0.5F, 0.8F, 0.2F, 0.8F, 1.0F};
     private static final float[] T5_LENGTH = {2.0F, 1.0F, 0.8F, 0.8F, 1.2F, 0.4F, 1.2F, 1.6F};
     private static final float[] T5_IMPACT = {1.0F, 0.5F, 0.45F, 0.4F, 0.7F, 0.2F, 0.6F, 0.8F};
-    private static final float[] T6_LENGTH = {4.0F, 1.4F, 1.6F, 1.4F, 1.6F, 1.0F, 1.2F, 1.8F, 2.4F, 1.2F, 3.2F};
-    private static final float[] T6_IMPACT = {2.0F, 0.7F, 0.85F, 0.7F, 0.9F, 0.5F, 0.6F, 1.0F, 1.2F, 0.6F, 1.6F};
-    private static final float[] T7_LENGTH = {4.0F, 1.8F, 1.8F, 1.6F, 2.0F, 1.2F, 1.4F, 2.0F, 2.6F, 1.3F, 3.6F};
-    private static final float[] T7_IMPACT = {2.0F, 0.9F, 1.0F, 0.8F, 1.1F, 0.6F, 0.7F, 1.2F, 1.3F, 0.65F, 1.8F};
-    private static final float[] T8_LENGTH = {4.0F, 2.0F, 2.0F, 1.8F, 2.2F, 1.2F, 1.6F, 2.2F, 2.8F, 1.4F, 4.0F};
-    private static final float[] T8_IMPACT = {2.0F, 1.0F, 1.1F, 0.9F, 1.2F, 0.6F, 0.8F, 1.2F, 1.4F, 0.7F, 2.0F};
-    private static final float[] T9_LENGTH = {3.0F, 1.6F, 1.4F, 1.3F, 1.6F, 1.2F, 1.0F, 1.8F, 2.2F, 1.0F, 3.0F};
-    private static final float[] T9_IMPACT = {1.5F, 0.8F, 0.8F, 0.65F, 0.9F, 0.6F, 0.5F, 1.0F, 1.1F, 0.5F, 1.5F};
-    private static final float[] T10_LENGTH = {3.5F, 1.4F, 1.6F, 1.5F, 1.6F, 1.0F, 1.0F, 1.6F, 2.0F, 1.0F, 3.0F};
-    private static final float[] T10_IMPACT = {1.75F, 0.7F, 0.9F, 0.75F, 0.9F, 0.5F, 0.5F, 0.9F, 1.0F, 0.5F, 1.5F};
-    private static final float[] T11_LENGTH = {3.0F, 1.6F, 1.8F, 1.6F, 2.0F, 1.2F, 1.4F, 2.0F, 2.6F, 1.2F, 3.6F};
-    private static final float[] T11_IMPACT = {1.5F, 0.8F, 1.0F, 0.9F, 1.0F, 0.6F, 0.7F, 1.1F, 1.3F, 0.6F, 1.8F};
+    private static final float[] T6_LENGTH = {4.0F, 1.5F, 2.25F, 1.85F, 1.85F, 1.2F, 1.8F, 2.45F, 3.0F, 1.4F, 3.6F};
+    private static final float[] T6_IMPACT = {2.0F, 0.75F, 1.1F, 0.8F, 0.8F, 0.6F, 0.85F, 1.25F, 1.8F, 0.1F, 1.8F};
+    private static final float[] T7_LENGTH = {4.0F, 1.5F, 2.25F, 1.85F, 1.85F, 1.2F, 1.8F, 2.45F, 3.0F, 1.4F, 5.6F};
+    private static final float[] T7_IMPACT = {2.0F, 0.75F, 1.1F, 0.8F, 0.8F, 0.6F, 0.85F, 1.25F, 1.8F, 0.1F, 1.6F};
+    private static final float[] T8_LENGTH = {4.6F, 2.4F, 2.5F, 2.15F, 2.05F, 1.4F, 2.0F, 2.6F, 3.2F, 1.5F, 4.0F};
+    private static final float[] T8_IMPACT = {2.3F, 1.2F, 1.2F, 0.9F, 0.8F, 0.7F, 1.0F, 1.3F, 1.8F, 0.15F, 1.8F};
+    private static final float[] T9_LENGTH = {4.5F, 2.2F, 2.4F, 2.25F, 2.05F, 1.4F, 2.0F, 2.6F, 3.2F, 1.5F, 4.0F};
+    private static final float[] T9_IMPACT = {2.25F, 1.1F, 1.1F, 1.0F, 0.8F, 0.7F, 1.0F, 1.3F, 1.8F, 0.15F, 1.8F};
+    private static final float[] T10_LENGTH = {3.2F, 1.8F, 2.1F, 1.9F, 1.85F, 1.2F, 1.6F, 2.2F, 3.0F, 1.3F, 3.6F};
+    private static final float[] T10_IMPACT = {1.6F, 0.9F, 1.0F, 0.9F, 0.8F, 0.6F, 0.8F, 1.1F, 1.8F, 0.1F, 1.8F};
+    private static final float[] T11_LENGTH = {3.6F, 1.6F, 2.2F, 2.0F, 2.0F, 1.2F, 1.8F, 2.2F, 3.0F, 1.3F, 3.6F};
+    private static final float[] T11_IMPACT = {1.8F, 0.8F, 1.1F, 1.0F, 0.95F, 0.6F, 0.85F, 1.1F, 1.8F, 0.1F, 1.8F};
+    private static final float[] T12_LENGTH = {3.4F, 1.8F, 2.4F, 2.3F, 2.05F, 1.4F, 2.0F, 2.6F, 3.2F, 1.4F, 4.0F};
+    private static final float[] T12_IMPACT = {1.7F, 0.9F, 1.1F, 1.05F, 0.8F, 0.7F, 1.0F, 1.3F, 1.8F, 0.15F, 1.8F};
 
     private RigData() {
     }
@@ -61,15 +63,18 @@ public final class RigData {
             case "humanoid/jailer", "beast/frost_hound", "flyer/sky_sentinel" -> 1.15F;
             case "humanoid/ice_knight", "beast/salamander", "flyer/ice_wraith", "flyer/storm_spirit" -> 1.1F;
             case "humanoid/fire_imp" -> 0.72F;
-            case "humanoid/dark_knight", "beast/scorpion", "golem/ruin_construct", "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> 1.2F;
+            case "humanoid/dark_knight", "beast/scorpion", "golem/ruin_construct" -> 1.2F;
             case "beast/cave_rat" -> 0.6F;
             case "beast/abyss_hound", "golem/treant" -> 1.25F;
-            case "golem/sand_golem", "golem/lava_golem", "treant/b2", "treant/b2_p1", "treant/b2_p2", "colossus/b7", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> 1.3F;
-            case "golem/ice_golem", "queen/b4", "queen/b4_p1", "queen/b4_p2" -> 1.35F;
-            case "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> 1.45F;
-            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> 1.7F;
-            case "colossus/b3", "colossus/b3_p1", "colossus/b3_p2" -> 1.4F;
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> 1.5F;
+            case "golem/sand_golem", "golem/lava_golem" -> 1.3F;
+            case "golem/ice_golem" -> 1.35F;
+            case "king/b1", "king/b1_p1" -> 1.9F;
+            case "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> 2.9F;
+            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> 3.2F;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2", "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> 2.4F;
+            case "colossus/b3", "colossus/b3_p1", "colossus/b3_p2" -> 3.1F;
+            case "colossus/b7", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> 3.0F;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2", "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> 2.7F;
             default -> 1.0F;
         };
     }
@@ -77,16 +82,137 @@ public final class RigData {
     /** Hitbox {width, height} in blocks of a boss look (bosses only; {1, 2} if unknown). */
     public static float[] hitbox(String rig, String variant) {
         return switch (rig + "/" + variant) {
-            case "king/b1" -> new float[]{1.4F, 2.8F};
-            case "king/b8" -> new float[]{1.9F, 4.0F};
-            case "king/final" -> new float[]{2.2F, 4.7F};
-            case "treant/b2" -> new float[]{2.2F, 4.0F};
-            case "colossus/b3" -> new float[]{2.6F, 4.8F};
-            case "colossus/b7" -> new float[]{2.4F, 4.4F};
-            case "queen/b5" -> new float[]{1.3F, 3.4F};
-            case "queen/b4" -> new float[]{1.5F, 3.8F};
-            case "dragon/b6" -> new float[]{3.6F, 3.4F};
+            case "king/b1" -> new float[]{2.7F, 5.4F};
+            case "king/b8" -> new float[]{3.8F, 8.0F};
+            case "king/final" -> new float[]{4.2F, 8.9F};
+            case "treant/b2" -> new float[]{4.1F, 7.4F};
+            case "colossus/b3" -> new float[]{5.6F, 10.0F};
+            case "colossus/b7" -> new float[]{5.4F, 9.8F};
+            case "queen/b5" -> new float[]{2.6F, 6.8F};
+            case "queen/b4" -> new float[]{3.0F, 7.6F};
+            case "dragon/b6" -> new float[]{6.4F, 6.1F};
             default -> new float[]{1.0F, 2.0F};
+        };
+    }
+
+    /**
+     * Speed factor of the walk cycle of a rig for the model (the walk animation advances {@code walkSpeed / scale}
+     * seconds per 50 ms tick at full stride), chosen so that a planted foot moves with the ground; 0 if unknown.
+     */
+    public static float walkSpeed(String rig) {
+        return switch (rig) {
+            case "king" -> 4.65F;
+            case "treant" -> 9.3257F;
+            case "colossus" -> 6.4533F;
+            case "queen" -> 6.1046F;
+            case "dragon" -> 7.2F;
+            default -> 0.0F;
+        };
+    }
+
+    /**
+     * Foot strikes of the walk cycle of {@code rig/variant}: triples {time (s), x, z} with the foot position in model
+     * units at scale 1 (x: +left, z: +back, origin between the feet); empty if unknown.
+     */
+    public static float[] footsteps(String rig, String variant) {
+        return switch (rig + "/" + variant) {
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[]{0.0F, -3.5F, -8.0F, 0.75F, 3.5F, -8.0F};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[]{0.0F, -4.0F, -7.0F, 1.2F, 4.0F, -7.0F};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[]{0.0F, -5.0F, -9.0F, 1.1F, 5.0F, -9.0F};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[]{0.0F, -2.5F, -6.5F, 0.8F, 2.5F, -6.5F};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[]{0.0F, 7.0F, 6.0F, 0.45F, 7.0F, -13.0F, 0.9F, -7.0F, 6.0F, 1.35F, -7.0F, -13.0F};
+            default -> new float[0];
+        };
+    }
+
+    /**
+     * Where the projectiles of {@code rig/variant} leave its body (hand, mouth, core) at the impact frame of its cast:
+     * {left, up, forward} in blocks at scale 1 from the feet; {0, 0.6, 0.5} if unknown.
+     */
+    public static float[] muzzle(String rig, String variant) {
+        return switch (rig + "/" + variant) {
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[]{0.054F, 2.227F, 1.507F};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[]{0.0F, 1.815F, 0.795F};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[]{0.0F, 2.004F, 0.977F};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new float[]{-0.812F, 2.388F, 2.302F};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[]{-0.022F, 2.063F, 1.418F};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[]{0.0F, 0.635F, 2.596F};
+            default -> new float[]{0.0F, 0.6F, 0.5F};
+        };
+    }
+
+    /** Bones that leave a weapon trail during attacks (sword, axe, fists, claws, tail), empty if none. */
+    public static String[] trailBones(String rig, String variant) {
+        return switch (rig + "/" + variant) {
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new String[]{"greatsword"};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new String[]{"right_claws", "left_claws"};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new String[]{"right_hand", "left_hand"};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new String[]{"scepter"};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new String[]{"axe"};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new String[]{"tail_tip", "front_right_leg_foot"};
+            default -> new String[0];
+        };
+    }
+
+    /** Per trail bone: {baseX, baseY, baseZ, tipX, tipY, tipZ} in model units relative to the bone's pivot. */
+    public static float[][] trailPoints(String rig, String variant) {
+        return switch (rig + "/" + variant) {
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[][]{{0.0F, -0.5F, -12.0F, 0.0F, -0.5F, -27.5F}};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[][]{{0.0F, 2.0F, -1.0F, 0.0F, 8.0F, -1.0F}, {0.0F, 2.0F, -1.0F, 0.0F, 8.0F, -1.0F}};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[][]{{1.0F, 4.0F, -5.0F, 1.0F, 8.0F, -5.0F}, {1.0F, 4.0F, -5.0F, 1.0F, 8.0F, -5.0F}};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new float[][]{{0.0F, -13.0F, 0.0F, 0.0F, -23.0F, 0.0F}};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[][]{{0.0F, 0.0F, -6.0F, 0.0F, 2.0F, -22.5F}};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[][]{{0.0F, 0.0F, 2.0F, 0.0F, 0.0F, 10.0F}, {0.0F, 1.0F, -2.0F, 0.0F, 3.0F, -5.0F}};
+            default -> new float[0][];
+        };
+    }
+
+    /** The names of the parts from the model root down to a trail bone (to find its transform); empty if unknown. */
+    public static String[] trailChain(String rig, String bone) {
+        return switch (rig + "/" + bone) {
+            case "king/greatsword" -> new String[]{"base", "hips", "chest", "right_arm", "right_forearm", "right_hand", "greatsword"};
+            case "treant/right_claws" -> new String[]{"base", "trunk", "trunk_upper", "right_arm", "right_forearm", "right_claws"};
+            case "treant/left_claws" -> new String[]{"base", "trunk", "trunk_upper", "left_arm", "left_forearm", "left_claws"};
+            case "colossus/right_hand" -> new String[]{"base", "pelvis", "torso", "right_arm", "right_forearm", "right_hand"};
+            case "colossus/left_hand" -> new String[]{"base", "pelvis", "torso", "left_arm", "left_forearm", "left_hand"};
+            case "queen/scepter" -> new String[]{"base", "hips", "torso", "right_arm", "right_forearm", "right_hand", "scepter"};
+            case "queen/axe" -> new String[]{"base", "hips", "torso", "right_arm", "right_forearm", "right_hand", "axe"};
+            case "dragon/tail_tip" -> new String[]{"base", "body", "tail1", "tail2", "tail3", "tail_tip"};
+            case "dragon/front_right_leg_foot" -> new String[]{"base", "body", "front_right_leg", "front_right_leg_shin", "front_right_leg_foot"};
+            default -> new String[0];
+        };
+    }
+
+    /**
+     * Where the head of {@code rig/variant} lies at the end of its death animation (the fallen body runs from the
+     * feet to there): {left, forward} in blocks at scale 1; {0, 0} if unknown.
+     */
+    public static float[] fallen(String rig, String variant) {
+        return switch (rig + "/" + variant) {
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> new float[]{-0.05F, 1.36F};
+            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[]{-0.05F, 1.35F};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[]{2.7F, 0.29F};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[]{-0.07F, -2.61F};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new float[]{0.05F, 0.42F};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[]{-0.04F, 1.21F};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[]{-0.12F, 1.58F};
+            default -> new float[]{0.0F, 0.0F};
+        };
+    }
+
+    /**
+     * How far in front of its centre the slam of {@code rig/variant} lands (weapon, fists, claws or jaws on the
+     * floor at the impact frame), in blocks at scale 1; 1 if unknown. The default AI swings from this distance.
+     */
+    public static float reach(String rig, String variant) {
+        return switch (rig + "/" + variant) {
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> 2.89F;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> 1.58F;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> 2.25F;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> 0.74F;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> 2.14F;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> 1.23F;
+            default -> 1.0F;
         };
     }
 
@@ -110,12 +236,13 @@ public final class RigData {
             case "beast/scorpion" -> T3_LENGTH;
             case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct" -> T4_LENGTH;
             case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit" -> T5_LENGTH;
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T6_LENGTH;
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T7_LENGTH;
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> T8_LENGTH;
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> T9_LENGTH;
-            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> T10_LENGTH;
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> T11_LENGTH;
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> T6_LENGTH;
+            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T7_LENGTH;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T8_LENGTH;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> T9_LENGTH;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> T10_LENGTH;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> T11_LENGTH;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> T12_LENGTH;
             default -> null;
         };
     }
@@ -128,12 +255,13 @@ public final class RigData {
             case "beast/scorpion" -> T3_IMPACT;
             case "golem/treant", "golem/sand_golem", "golem/ice_golem", "golem/lava_golem", "golem/ruin_construct" -> T4_IMPACT;
             case "flyer/harpy", "flyer/ice_wraith", "flyer/storm_spirit", "flyer/sky_sentinel", "flyer/fire_spirit" -> T5_IMPACT;
-            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T6_IMPACT;
-            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T7_IMPACT;
-            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> T8_IMPACT;
-            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> T9_IMPACT;
-            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> T10_IMPACT;
-            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> T11_IMPACT;
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> T6_IMPACT;
+            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> T7_IMPACT;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> T8_IMPACT;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> T9_IMPACT;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> T10_IMPACT;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> T11_IMPACT;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> T12_IMPACT;
             default -> null;
         };
     }

@@ -100,6 +100,36 @@ public final class BossProps {
         }
     }
 
+    /**
+     * A chunk of floor thrown up by an impact: it pops out tumbling, lands half sunk in the floor and lies there for
+     * {@code hold} ticks.
+     */
+    void debris(String owner, BlockState state, double x, double y, double z, float size, double angle, long now,
+                int hold) {
+        float tilt = (float) (0.35 + 0.3 * Math.sin(angle * 3.1));
+        Prop prop = spawn(owner, state, x, y, z, false, box(size, size, -size, size), now + 9 + hold);
+        if (prop != null) {
+            prop.steps.add(new Step(now + 1, box(size, size, size * 1.6F, size, tilted(angle, tilt)), 4));
+            prop.steps.add(new Step(now + 5, box(size, size, -size * 0.45F, size, tilted(angle + 1.3, tilt * 1.6F)), 4));
+            prop.steps.add(new Step(now + 9 + hold - 6, box(size, size, -size * 1.1F, size, tilted(angle + 1.3, tilt)),
+                    6));
+        }
+    }
+
+    /**
+     * A crack in the floor: a dark sliver {@code length} long lying flat along {@code angle} (radians, from +x), from
+     * (x, y, z) outward, that opens in two ticks and closes again after {@code hold} ticks.
+     */
+    void crack(String owner, BlockState state, double x, double y, double z, float length, float width, double angle,
+               long now, int hold) {
+        float[] yaw = {0.0F, (float) Math.sin(-angle / 2.0), 0.0F, (float) Math.cos(-angle / 2.0)};
+        Prop prop = spawn(owner, state, x, y, z, false, flat(0.1F, width * 0.3F, yaw), now + hold + 8);
+        if (prop != null) {
+            prop.steps.add(new Step(now + 1, flat(length, width, yaw), 2));
+            prop.steps.add(new Step(now + hold, flat(length * 0.9F, width * 0.2F, yaw), 6));
+        }
+    }
+
     /** Removes the props of one owner (an ability that was called off). */
     void remove(String owner) {
         Iterator<Prop> iterator = props.iterator();
@@ -200,6 +230,37 @@ public final class BossProps {
         transformation.put("scale", floats(width, height, depth));
         transformation.put("right_rotation", floats(0.0F, 0.0F, 0.0F, 1.0F));
         return transformation;
+    }
+
+    /** A box like {@link #box} turned by the quaternion {@code rotation} (x, y, z, w) about its centre. */
+    private static CompoundTag box(float width, float height, float lift, float depth, float[] rotation) {
+        CompoundTag transformation = new CompoundTag();
+        org.joml.Quaternionf q = new org.joml.Quaternionf(rotation[0], rotation[1], rotation[2], rotation[3]);
+        org.joml.Vector3f centre = new org.joml.Vector3f(width / 2.0F, height / 2.0F, depth / 2.0F).rotate(q);
+        transformation.put("translation", floats(-centre.x, lift + height / 2.0F - centre.y, -centre.z));
+        transformation.put("left_rotation", floats(rotation));
+        transformation.put("scale", floats(width, height, depth));
+        transformation.put("right_rotation", floats(0.0F, 0.0F, 0.0F, 1.0F));
+        return transformation;
+    }
+
+    /** A thin flat slab {@code length} long (along its local x, starting at the entity) turned about y by {@code yaw}. */
+    private static CompoundTag flat(float length, float width, float[] yaw) {
+        CompoundTag transformation = new CompoundTag();
+        org.joml.Quaternionf q = new org.joml.Quaternionf(yaw[0], yaw[1], yaw[2], yaw[3]);
+        org.joml.Vector3f corner = new org.joml.Vector3f(0.0F, 0.0F, -width / 2.0F).rotate(q);
+        transformation.put("translation", floats(corner.x, 0.012F, corner.z));
+        transformation.put("left_rotation", floats(yaw));
+        transformation.put("scale", floats(length, 0.02F, width));
+        transformation.put("right_rotation", floats(0.0F, 0.0F, 0.0F, 1.0F));
+        return transformation;
+    }
+
+    /** Quaternion of a tumble by {@code amount} radians about a horizontal axis at {@code angle}. */
+    private static float[] tilted(double angle, float amount) {
+        float half = amount / 2.0F;
+        float sin = (float) Math.sin(half);
+        return new float[]{(float) Math.cos(angle) * sin, 0.0F, (float) Math.sin(angle) * sin, (float) Math.cos(half)};
     }
 
     private static ListTag floats(float... values) {

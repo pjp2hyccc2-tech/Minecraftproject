@@ -69,11 +69,9 @@ public final class EREntityRenderers {
         event.registerEntityRenderer(EREntityTypes.ENEMY_BOLT.get(),
                 context -> new ThrownItemRenderer<EnemyBolt>(context, 1.1F, true));
         for (BossKind kind : BossKind.values()) {
-            float walkSpeed = switch (kind.rig()) {
-                case KING, QUEEN -> 1.7F;
-                case TREANT, COLOSSUS -> 1.3F;
-                case DRAGON -> 1.5F;
-            };
+            // made by the rig's gait so that the feet do not slide (divided by the drawn scale in the model)
+            float generated = com.eternalrealm.entity.RigData.walkSpeed(kind.rig().id());
+            float walkSpeed = generated > 0.0F ? generated : 1.5F;
             event.registerEntityRenderer(EREntityTypes.bossType(kind).get(),
                     context -> new BossRenderer(context, kind.rig(), walkSpeed));
         }

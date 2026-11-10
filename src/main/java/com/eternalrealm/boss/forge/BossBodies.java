@@ -48,7 +48,7 @@ public final class BossBodies {
         set(mob, Attributes.ARMOR, Math.min(30.0, brain.armor()));
         set(mob, Attributes.ATTACK_DAMAGE, brain.meleeDamage(0));
         set(mob, Attributes.KNOCKBACK_RESISTANCE, 1.0);
-        set(mob, Attributes.FOLLOW_RANGE, 48.0);
+        set(mob, Attributes.FOLLOW_RANGE, 64.0); // the arenas of the big bosses are up to ~60 blocks wide
         AttributeInstance speed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             speed.setBaseValue(speed.getBaseValue() * brain.movementSpeedMultiplier());

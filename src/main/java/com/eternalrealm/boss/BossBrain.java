@@ -447,7 +447,7 @@ public final class BossBrain {
         } else if (kind instanceof AbilityKind.Exaflare exaflare) {
             double baseYaw = yawTowards(origin, pickOne(rule, origin, targets), self.yawDegrees());
             for (int k = 0; k < exaflare.rows(); k++) {
-                List<BossShape> row = row(origin, baseYaw, exaflare, k);
+                List<BossShape> row = row(origin, baseYaw, exaflare, k, bodyRadius());
                 waves.add(new Wave(now, first + (long) k * exaflare.intervalTicks(), kind, 1.0,
                         (s, t) -> Placed.of(origin, row)));
             }
@@ -546,11 +546,11 @@ public final class BossBrain {
                     List.of(), null, null, fan(yaw, volley.count(), volley.spreadDegrees()), origin, null);
         }
         if (kind instanceof AbilityKind.Summon summon) {
-            return Placed.markers(origin, around(origin, self.yawDegrees(), summon.count()));
+            return Placed.markers(origin, around(origin, self.yawDegrees(), summon.count(), summonRadius()));
         }
         if (kind instanceof AbilityKind.Shield shieldKind) {
             return Placed.markers(origin, shieldKind.addCount() > 0
-                    ? around(origin, self.yawDegrees(), shieldKind.addCount()) : List.of());
+                    ? around(origin, self.yawDegrees(), shieldKind.addCount(), summonRadius()) : List.of());
         }
         if (kind instanceof AbilityKind.TeleportToTarget) {
             TargetSnapshot target = pickOne(rule, origin, targets);
@@ -558,7 +558,8 @@ public final class BossBrain {
                 return Placed.of(origin, List.of());
             }
             Point destination = Point.of(target);
-            return new Placed(List.of(new BossShape.Circle(destination, BossRules.MARKER_RADIUS)), List.of(),
+            return new Placed(List.of(new BossShape.Circle(destination, Math.max(BossRules.MARKER_RADIUS,
+                    bodyRadius()))), List.of(),
                     List.of(), target.id(), destination, List.of(), origin, null);
         }
         return Placed.of(origin, List.of()); // heal, buff: a cast bar only
@@ -598,9 +599,10 @@ public final class BossBrain {
     }
 
     /** Row {@code k} of an exaflare in every direction: strips across the direction of travel. */
-    private static List<BossShape> row(Point origin, double baseYaw, AbilityKind.Exaflare exaflare, int k) {
+    private static List<BossShape> row(Point origin, double baseYaw, AbilityKind.Exaflare exaflare, int k,
+                                       double body) {
         List<BossShape> segments = new ArrayList<>();
-        double distance = 1.0 + exaflare.spacing() * (k + 0.5);
+        double distance = Math.max(1.0, body) + exaflare.spacing() * (k + 0.5); // the first row starts at the body
         for (int d = 0; d < exaflare.directions(); d++) {
             double yaw = baseYaw + 360.0 * d / exaflare.directions();
             Point center = ahead(origin, yaw, distance);
@@ -729,12 +731,22 @@ public final class BossBrain {
     }
 
     /** {@code count} points evenly spaced on a circle around the boss, the first one in front of it. */
-    private static List<Point> around(Point center, double startYaw, int count) {
+    private static List<Point> around(Point center, double startYaw, int count, double radius) {
         List<Point> positions = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            positions.add(ahead(center, startYaw + 360.0 * i / count, BossRules.SUMMON_RADIUS));
+            positions.add(ahead(center, startYaw + 360.0 * i / count, radius));
         }
         return positions;
+    }
+
+    /** Half the width of the boss's body in the current form (attacks around it start there). */
+    private double bodyRadius() {
+        return BossRigData.bodyRadius(definition.id(), phaseIndex);
+    }
+
+    /** Adds appear on a circle around the boss, clear of its body. */
+    private double summonRadius() {
+        return Math.max(BossRules.SUMMON_RADIUS, bodyRadius() + BossRules.SUMMON_CLEARANCE);
     }
 
     private double damageFactor(long now) {

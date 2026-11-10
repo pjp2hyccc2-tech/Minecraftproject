@@ -13,6 +13,7 @@ Writes
 UV map: every box gets its own rectangle from the skyline packer in ermodel.pack(); the table is printed with
 --uv and kept in tools/art_entities/uv_map.txt so texture edits can be matched to boxes.
 """
+import math
 import os
 import sys
 
@@ -30,6 +31,10 @@ TEX_DIR = os.path.join(ROOT, 'src', 'main', 'resources', 'assets', 'eternalrealm
 GEN_PKG = 'com.eternalrealm.client.entity.model.gen'
 GEN_DIR = os.path.join(ROOT, 'src', 'main', 'java', *GEN_PKG.split('.'))
 TIMINGS = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'eternalrealm', 'entity', 'RigData.java')
+BOSS_TIMINGS = os.path.join(ROOT, 'src', 'main', 'java', 'com', 'eternalrealm', 'boss', 'BossRigData.java')
+PREVIEWS = os.path.join(HERE, 'previews')
+BOSS_RIGS = ('king', 'treant', 'colossus', 'queen', 'dragon')
+BOSS_IDS = ('b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8', 'final')
 
 
 def load_rigs(names=None):
@@ -162,6 +167,145 @@ def write_timings(rigs):
     w('        };')
     w('    }')
     w('')
+    w('    /**')
+    w('     * Speed factor of the walk cycle of a rig for the model (the walk animation advances {@code walkSpeed / scale}')
+    w('     * seconds per 50 ms tick at full stride), chosen so that a planted foot moves with the ground; 0 if unknown.')
+    w('     */')
+    w('    public static float walkSpeed(String rig) {')
+    w('        return switch (rig) {')
+    for rig in rigs:
+        if getattr(rig, 'walk_speed', None):
+            w('            case "%s" -> %s;' % (rig.name, jf(rig.walk_speed)))
+    w('            default -> 0.0F;')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /**')
+    w('     * Foot strikes of the walk cycle of {@code rig/variant}: triples {time (s), x, z} with the foot position in model')
+    w('     * units at scale 1 (x: +left, z: +back, origin between the feet); empty if unknown.')
+    w('     */')
+    w('    public static float[] footsteps(String rig, String variant) {')
+    w('        return switch (rig + "/" + variant) {')
+    groups = {}
+    for rig in rigs:
+        for v in rig.variants:
+            if rig.name not in BOSS_RIGS:
+                continue
+            steps = getattr(rig.slot_anim(v, 'walk'), 'footsteps', None)
+            if steps:
+                groups.setdefault(tuple(steps), []).append('%s/%s' % (rig.name, v.id))
+    for steps, keys in groups.items():
+        w('            case %s -> new float[]{%s};' % (', '.join('"%s"' % k for k in keys),
+                                                     ', '.join(jf(x) for st in steps for x in st)))
+    w('            default -> new float[0];')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /**')
+    w('     * Where the projectiles of {@code rig/variant} leave its body (hand, mouth, core) at the impact frame of its cast:')
+    w('     * {left, up, forward} in blocks at scale 1 from the feet; {0, 0.6, 0.5} if unknown.')
+    w('     */')
+    w('    public static float[] muzzle(String rig, String variant) {')
+    w('        return switch (rig + "/" + variant) {')
+    groups = {}
+    for rig in rigs:
+        for v in rig.variants:
+            m = getattr(rig.slot_anim(v, 'cast'), 'muzzle', None) if rig.name in BOSS_RIGS else None
+            if m:
+                groups.setdefault(tuple(round(x, 3) for x in m), []).append('%s/%s' % (rig.name, v.id))
+    for m, keys in groups.items():
+        w('            case %s -> new float[]{%s};' % (', '.join('"%s"' % k for k in keys), ', '.join(jf(x) for x in m)))
+    w('            default -> new float[]{0.0F, 0.6F, 0.5F};')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /** Bones that leave a weapon trail during attacks (sword, axe, fists, claws, tail), empty if none. */')
+    w('    public static String[] trailBones(String rig, String variant) {')
+    w('        return switch (rig + "/" + variant) {')
+    groups = {}
+    for rig in rigs:
+        for v in rig.variants:
+            trails = rig.trails_for(v) if hasattr(rig, 'trails_for') else []
+            if trails:
+                groups.setdefault(tuple((b, tuple(base), tuple(tip)) for b, base, tip in trails), []).append(
+                    '%s/%s' % (rig.name, v.id))
+    for trails, keys in groups.items():
+        w('            case %s -> new String[]{%s};' % (', '.join('"%s"' % k for k in keys),
+                                                      ', '.join('"%s"' % t[0] for t in trails)))
+    w('            default -> new String[0];')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /** Per trail bone: {baseX, baseY, baseZ, tipX, tipY, tipZ} in model units relative to the bone\'s pivot. */')
+    w('    public static float[][] trailPoints(String rig, String variant) {')
+    w('        return switch (rig + "/" + variant) {')
+    for trails, keys in groups.items():
+        rows = []
+        for bone, base, tip in trails:
+            rows.append('{' + ', '.join(jf(x) for x in tuple(base) + tuple(tip)) + '}')
+        w('            case %s -> new float[][]{%s};' % (', '.join('"%s"' % k for k in keys), ', '.join(rows)))
+    w('            default -> new float[0][];')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /** The names of the parts from the model root down to a trail bone (to find its transform); empty if unknown. */')
+    w('    public static String[] trailChain(String rig, String bone) {')
+    w('        return switch (rig + "/" + bone) {')
+    for rig in rigs:
+        if rig.name not in BOSS_RIGS or not hasattr(rig, 'trails_for'):
+            continue
+        bones = []
+        for v in rig.variants:
+            for bone, _, _ in rig.trails_for(v):
+                if bone not in bones:
+                    bones.append(bone)
+        for bone in bones:
+            names = [p.name for p in ermodel.ancestors(rig.parts[bone])]
+            w('            case "%s/%s" -> new String[]{%s};' % (rig.name, bone, ', '.join('"%s"' % n for n in names)))
+    w('            default -> new String[0];')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /**')
+    w('     * Where the head of {@code rig/variant} lies at the end of its death animation (the fallen body runs from the')
+    w('     * feet to there): {left, forward} in blocks at scale 1; {0, 0} if unknown.')
+    w('     */')
+    w('    public static float[] fallen(String rig, String variant) {')
+    w('        return switch (rig + "/" + variant) {')
+    groups = {}
+    for rig in rigs:
+        if rig.name not in BOSS_RIGS or 'head' not in rig.parts:
+            continue
+        for v in rig.variants:
+            an = rig.slot_anim(v, 'death')
+            pose = ermodel.evaluate([(an, an.length)])
+            p = ermodel.part_point(rig, v, pose, 'head', rig.parts['head'].pivot)
+            key = (round(p[0] / 16.0, 2), round(-p[2] / 16.0, 2))
+            groups.setdefault(key, []).append('%s/%s' % (rig.name, v.id))
+    for key, keys in groups.items():
+        w('            case %s -> new float[]{%s, %s};' % (', '.join('"%s"' % k for k in keys), jf(key[0]), jf(key[1])))
+    w('            default -> new float[]{0.0F, 0.0F};')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /**')
+    w('     * How far in front of its centre the slam of {@code rig/variant} lands (weapon, fists, claws or jaws on the')
+    w('     * floor at the impact frame), in blocks at scale 1; 1 if unknown. The default AI swings from this distance.')
+    w('     */')
+    w('    public static float reach(String rig, String variant) {')
+    w('        return switch (rig + "/" + variant) {')
+    groups = {}
+    for rig in rigs:
+        if rig.name not in BOSS_RIGS:
+            continue
+        for v in rig.variants:
+            groups.setdefault(round(slam_reach(rig, v), 2), []).append('%s/%s' % (rig.name, v.id))
+    for r, keys in groups.items():
+        w('            case %s -> %s;' % (', '.join('"%s"' % k for k in keys), jf(r)))
+    w('            default -> 1.0F;')
+    w('        };')
+    w('    }')
+    w('')
     w('    /** Seconds of the animation in {@code slot} for {@code rig/variant}, or 1 if unknown. */')
     w('    public static float length(String rig, String variant, int slot) {')
     w('        float[] values = lengths(rig + "/" + variant);')
@@ -189,12 +333,126 @@ def write_timings(rigs):
     os.makedirs(os.path.dirname(TIMINGS), exist_ok=True)
     with open(TIMINGS, 'w') as f:
         f.write('\n'.join(L) + '\n')
+    write_boss_timings(rigs)
+
+
+def slam_reach(rig, v):
+    """Horizontal distance (blocks, scale 1) from the centre of the farthest box corner within 3 model units of the
+    floor at the impact frame of the slam: where the blade, fists or jaws land."""
+    an = rig.slot_anim(v, 'melee_slam')
+    pose = ermodel.evaluate([(an, an.impact)])
+    mats = ermodel.part_transforms(rig, v, pose)
+    best = 0.0
+    for part in rig.parts.values():
+        if not part.cubes or not ermodel.visible_chain(rig, v, part):
+            continue
+        m = mats[part.name]
+        for c in part.cubes:
+            for dx in (0, c.w):
+                for dy in (0, c.h):
+                    for dz in (0, c.d):
+                        q = m @ np.array([c.x + dx - part.pivot[0], c.y + dy - part.pivot[1], c.z + dz - part.pivot[2],
+                                          1.0])
+                        if q[1] >= 21.0:
+                            best = max(best, math.hypot(q[0], q[2]) / 16.0)
+    return best
+
+
+def write_boss_timings(rigs):
+    """Pure copy of the rig data the boss module needs (com.eternalrealm.boss has no Minecraft code and does not see
+    RigData): action timings, so the fight starts an action with its impact frame on the hit (BossActions) and the
+    content tests can check that every telegraph is long enough for the wind-up, and the body size of every boss
+    (summon spacing, reach checks). Every form look of a boss must time its actions like the boss's first look."""
+    import math as _m
+    table = {}
+    bodies = {}
+    for rig in rigs:
+        if rig.name not in BOSS_RIGS:
+            continue
+        for v in rig.variants:
+            boss = v.id.split('_p')[0]
+            if boss not in BOSS_IDS:
+                continue
+            row = []
+            for slot in rig.slots:
+                an = rig.slot_anim(v, slot)
+                impact = an.impact if an.impact is not None else an.length * 0.5
+                if abs(impact * 20.0 - round(impact * 20.0)) > 1e-6:
+                    raise ValueError('%s %s: impact %.3f s is not on a game tick (multiples of 0.05 s)'
+                                     % (rig.name, an.name, impact))
+                row.append((int(_m.ceil(round(impact * 20.0, 6))), int(_m.ceil(round(an.length * 20.0, 6)))))
+            if boss in table and table[boss][1] != row:
+                raise ValueError('%s: form look %s times its actions differently from %s' % (boss, v.id, table[boss][0]))
+            table.setdefault(boss, (v.id, row, rig.slots))
+            if v.id == boss:
+                bodies[boss] = v.extra['hitbox']
+    L = []
+    w = L.append
+    w('// GENERATED by tools/art_entities/generate.py. Do not edit: change the script and re-run.')
+    w('package com.eternalrealm.boss;')
+    w('')
+    w('import java.util.List;')
+    w('')
+    w('/**')
+    w(' * Data of the boss rigs that the boss module needs (generated from the rigs the client draws): the length and')
+    w(' * impact frame of every animated action in ticks, so {@link BossActions} can start an action with its impact on')
+    w(' * the hit and tests can check that telegraphs leave room for the wind-up, and the body size of every boss in its')
+    w(' * first form (later forms are {@link #FORM_GROWTH} bigger per form).')
+    w(' */')
+    w('public final class BossRigData {')
+    w('    /** Action ids in the order of the arrays (the boss entity\'s animation slots). */')
+    slots = rigs[[r.name for r in rigs].index('king')].slots if any(r.name == 'king' for r in rigs) else []
+    w('    public static final List<String> ACTIONS = List.of(%s);' % ', '.join('"%s"' % sl for sl in slots))
+    w('    /** Growth of the body (model and hitbox) per later form: form n is (1 + n * FORM_GROWTH) times as big. */')
+    w('    public static final double FORM_GROWTH = 0.04;')
+    w('')
+    w('    private BossRigData() {')
+    w('    }')
+    w('')
+    for name, idx in (('impactTicks', 0), ('lengthTicks', 1)):
+        doc = ('Ticks from the start of {@code action} to its impact frame (hit, release, landing); 0 if unknown.'
+               if idx == 0 else 'Length of {@code action} in ticks; 0 if unknown.')
+        w('    /** %s */' % doc)
+        w('    public static int %s(String bossId, String action) {' % name)
+        w('        int slot = ACTIONS.indexOf(action);')
+        w('        if (slot < 0) {')
+        w('            return 0;')
+        w('        }')
+        w('        int[] values = switch (bossId) {')
+        for boss in BOSS_IDS:
+            if boss in table:
+                w('            case "%s" -> new int[]{%s};' % (boss, ', '.join(str(r[idx]) for r in table[boss][1])))
+        w('            default -> null;')
+        w('        };')
+        w('        return values == null ? 0 : values[slot];')
+        w('    }')
+        w('')
+    for name, idx, doc in (('bodyWidth', 0, 'Width of the body (hitbox) in blocks in the first form; 1 if unknown.'),
+                           ('bodyHeight', 1, 'Height of the body (hitbox) in blocks in the first form; 2 if unknown.')):
+        w('    /** %s */' % doc)
+        w('    public static double %s(String bossId) {' % name)
+        w('        return switch (bossId) {')
+        for boss in BOSS_IDS:
+            if boss in bodies:
+                w('            case "%s" -> %s;' % (boss, repr(float(bodies[boss][idx]))))
+        w('            default -> %s;' % ('1.0' if idx == 0 else '2.0'))
+        w('        };')
+        w('    }')
+        w('')
+    w('    /** Half the width of the body in {@code form} (0 = first form): what an attack around the boss starts from. */')
+    w('    public static double bodyRadius(String bossId, int form) {')
+    w('        return bodyWidth(bossId) * 0.5 * (1.0 + FORM_GROWTH * Math.max(0, Math.min(3, form)));')
+    w('    }')
+    w('}')
+    with open(BOSS_TIMINGS, 'w') as f:
+        f.write('\n'.join(L) + '\n')
 
 
 def uv_table(rigs):
     lines = ['UV map (rig, part, box index, material, texOffs u v, size w h d, mirror/share)']
     for rig in rigs:
-        lines.append('== %s %dx%d' % (rig.name, rig.tex_w, rig.tex_h))
+        lines.append('== %s %dx%d%s' % (rig.name, rig.tex_w, rig.tex_h,
+                                         (' x%d' % rig.texel) if getattr(rig, 'texel', 1) != 1 else ''))
         for p in rig.parts.values():
             for i, c in enumerate(p.cubes):
                 lines.append('%-12s %-16s %d %-16s %4d %4d   %2d %2d %2d %s' % (
@@ -245,6 +503,137 @@ def preview_rig(rig, painted, ppu, frames=5, scale_preview=False):
     if row:
         rows.append(row)
     return rows
+
+
+def projected_bounds(rig, v, pose, yaw, pitch):
+    """View-space x/y bounds of the visible boxes of a pose (cheap: corners only)."""
+    mats = ermodel.part_transforms(rig, v, pose)
+    view = ermodel.rot_matrix(pitch * ermodel.DEG, 0, 0) @ ermodel.rot_matrix(0, yaw * ermodel.DEG, 0)
+    lo = np.array([1e9, 1e9])
+    hi = np.array([-1e9, -1e9])
+    for part in rig.parts.values():
+        if not ermodel.visible_chain(rig, v, part):
+            continue
+        m = mats[part.name]
+        for c in part.cubes:
+            for dx in (0, c.w):
+                for dy in (0, c.h):
+                    for dz in (0, c.d):
+                        q = m @ np.array([c.x + dx - part.pivot[0], c.y + dy - part.pivot[1], c.z + dz - part.pivot[2], 1.0])
+                        vp = view @ q[:3]
+                        lo = np.minimum(lo, vp[:2])
+                        hi = np.maximum(hi, vp[:2])
+    return lo, hi
+
+
+def frame_times(an):
+    """Frames of a strip: about one per 0.2 s (6..12), always including the impact frame."""
+    n = max(6, min(12, int(round(an.length / 0.2)) + 1))
+    if an.loop:
+        times = [an.length * k / n for k in range(n)]
+    else:
+        times = [an.length * k / (n - 1) for k in range(n)]
+    if an.impact is not None and not an.loop:
+        nearest = min(range(len(times)), key=lambda i: abs(times[i] - an.impact))
+        if 0 < nearest < len(times) - 1:
+            times[nearest] = an.impact
+        else:
+            times.append(an.impact)
+            times.sort()
+    return times
+
+
+def anim_strips(rig, painted, ppu, yaw=35, pitch=10):
+    """Animation strips of every animation set of a rig with a fixed camera per look (root motion, falls and lunges
+    stay visible), a ground line under the feet and the impact frame marked."""
+    rows = []
+    seen = set()
+    for v in rig.variants:
+        names = [rig.slot_anim(v, s).name for s in rig.slots]
+        new = [n for n in names if n not in seen]
+        if not new:
+            continue
+        lo = np.array([1e9, 1e9])
+        hi = np.array([-1e9, -1e9])
+        for n in new:
+            an = rig.anims[n]
+            for t in frame_times(an):
+                a, b = projected_bounds(rig, v, ermodel.evaluate([(an, t)]), yaw, pitch)
+                lo, hi = np.minimum(lo, a), np.maximum(hi, b)
+        margin = 3.0
+        cx, cy = (lo[0] + hi[0]) / 2.0, (lo[1] + hi[1]) / 2.0
+        size = (int((hi[0] - lo[0] + 2 * margin) * ppu), int((hi[1] - lo[1] + 2 * margin) * ppu))
+        view = ermodel.rot_matrix(pitch * ermodel.DEG, 0, 0) @ ermodel.rot_matrix(0, yaw * ermodel.DEG, 0)
+        ground = (view @ np.array([0.0, 24.0, 0.0]))[1]
+        gy = int((ground - cy) * ppu + size[1] / 2)
+        for n in names:
+            if n in seen:
+                continue
+            seen.add(n)
+            an = rig.anims[n]
+            row = []
+            for k, t in enumerate(frame_times(an)):
+                arr = ermodel.render(rig, v, painted[v.id].img, pose=ermodel.evaluate([(an, t)]), ppu=ppu, yaw=yaw,
+                                     pitch=pitch, size=size, center=(cx, cy))
+                im = to_img(arr)
+                base = Image.new('RGBA', im.size, (0, 0, 0, 0))
+                d = ImageDraw.Draw(base)
+                if 0 <= gy < im.height:
+                    d.line([(0, gy), (im.width, gy)], fill=(90, 100, 120, 255), width=1)
+                base.alpha_composite(im)
+                impact = an.impact is not None and abs(t - an.impact) < 1e-6
+                if impact:
+                    d2 = ImageDraw.Draw(base)
+                    d2.rectangle([0, 0, base.width - 1, base.height - 1], outline=(255, 120, 60, 255))
+                label = '%s t=%.2f%s' % (('%s %s' % (v.id, n)) if k == 0 else '', t, ' HIT' if impact else '')
+                row.append((base, label.strip()))
+            rows.append(row)
+    return rows
+
+
+def size_lineup(rigs, px_per_block=14):
+    """Every boss look at its true in-game size (form looks with their growth) next to a player, on a block grid."""
+    pieces = []
+    for rig in rigs:
+        if rig.name not in BOSS_RIGS:
+            continue
+        for v in rig.variants:
+            boss = v.id.split('_p')[0]
+            form = int(v.id.split('_p')[1]) if '_p' in v.id else 0
+            scale = v.extra.get('scale', 1.0) * (1.0 + 0.04 * form)
+            ppu = px_per_block * scale / 16.0
+            im = to_img(ermodel.render(rig, v, rig.painted[v.id].img, ppu=ppu, yaw=30, pitch=6))
+            lo, hi = projected_bounds(rig, v, {}, 30, 6)
+            view = ermodel.rot_matrix(6 * ermodel.DEG, 0, 0) @ ermodel.rot_matrix(0, 30 * ermodel.DEG, 0)
+            ground = (view @ np.array([0.0, 24.0, 0.0]))[1]
+            foot = int((ground - lo[1]) * ppu + 4)
+            pieces.append((boss, v.id, im, foot, scale))
+    order = {b: i for i, b in enumerate(BOSS_IDS)}
+    pieces.sort(key=lambda p: (order.get(p[0], 99), p[1]))
+    gap = 10
+    player_w = int(0.6 * px_per_block)
+    width = sum(p[2].width for p in pieces) + gap * (len(pieces) + 3) + player_w + 40
+    top = max(p[3] for p in pieces) + 30
+    height = top + 40
+    sheet = Image.new('RGBA', (width, height), BG)
+    d = ImageDraw.Draw(sheet)
+    ground_y = top
+    for b in range(0, int(top / px_per_block) + 1):
+        y = ground_y - b * px_per_block
+        d.line([(0, y), (width, y)], fill=(58, 64, 78, 255) if b % 2 else (70, 78, 94, 255), width=1)
+        if b % 2 == 0:
+            d.text((2, y - 11), '%d' % b, fill=(150, 160, 180, 255))
+    x = 30
+    d.rectangle([x, ground_y - int(1.8 * px_per_block), x + player_w, ground_y], fill=(200, 200, 210, 255))
+    d.text((x - 8, ground_y + 4), 'player', fill=(230, 230, 230, 255))
+    x += player_w + gap * 2
+    for boss, vid, im, foot, scale in pieces:
+        sheet.alpha_composite(im, (x, ground_y - foot))
+        d.text((x, ground_y + 4), vid, fill=(230, 230, 230, 255))
+        d.text((x, ground_y + 16), 'x%.2f' % scale, fill=(160, 170, 190, 255))
+        x += im.width + gap
+    d.line([(0, ground_y), (width, ground_y)], fill=(160, 170, 190, 255), width=2)
+    return sheet
 
 
 def anim_sheet(rig, painted, ppu, frames=6):
@@ -333,15 +722,24 @@ def main(argv):
     if '--no-preview' in argv:
         return
     all_rows = []
+    os.makedirs(PREVIEWS, exist_ok=True)
     for rig in rigs:
         ppu = rig.__dict__.get('preview_ppu', 4.0)
         all_rows.extend(preview_rig(rig, rig.painted, ppu))
-        sheet = compose_rows(anim_sheet(rig, rig.painted, ppu * 0.75))
-        sheet.save(os.path.join(HERE, 'preview_%s.png' % rig.name))
+        if rig.name in BOSS_RIGS:
+            # committed for review: every animation set of the boss rig, fixed camera per look
+            compose_rows(anim_strips(rig, rig.painted, ppu * 0.9), label_h=12).save(
+                os.path.join(PREVIEWS, 'anim_%s.png' % rig.name), optimize=True)
+        else:
+            sheet = compose_rows(anim_sheet(rig, rig.painted, ppu * 0.75))
+            sheet.save(os.path.join(HERE, 'preview_%s.png' % rig.name))
     if not names:
         compose_rows(all_rows).save(os.path.join(HERE, 'preview.png'))
+        size_lineup(rigs).save(os.path.join(PREVIEWS, 'boss_sizes.png'), optimize=True)
     else:
         compose_rows(all_rows).save(os.path.join(HERE, 'preview_%s_variants.png' % '_'.join(names)))
+        if any(r.name in BOSS_RIGS for r in rigs):
+            size_lineup(rigs).save(os.path.join(PREVIEWS, 'boss_sizes_%s.png' % '_'.join(names)))
 
 
 if __name__ == '__main__':

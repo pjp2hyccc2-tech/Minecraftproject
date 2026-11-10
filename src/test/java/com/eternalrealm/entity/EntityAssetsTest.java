@@ -124,6 +124,10 @@ public class EntityAssetsTest {
         }
     }
 
+    /**
+     * Textures have the size of the UV layout times the rig's texel density ({@code == king 128x128 x2}: the model
+     * maps 128x128 texture units, the PNG has 2x2 pixels per unit for sharper detail on the big bosses).
+     */
     @Test
     public void texturesMatchTheGeneratedUvLayout() throws IOException {
         Map<String, int[]> sizes = new HashMap<>();
@@ -131,7 +135,8 @@ public class EntityAssetsTest {
             if (line.startsWith("== ")) {
                 String[] parts = line.substring(3).trim().split(" ");
                 String[] wh = parts[1].split("x");
-                sizes.put(parts[0], new int[]{Integer.parseInt(wh[0]), Integer.parseInt(wh[1])});
+                int density = parts.length > 2 && parts[2].startsWith("x") ? Integer.parseInt(parts[2].substring(1)) : 1;
+                sizes.put(parts[0], new int[]{Integer.parseInt(wh[0]) * density, Integer.parseInt(wh[1]) * density});
             }
         }
         List<String> rigs = new ArrayList<>(ENEMY_RIGS);
