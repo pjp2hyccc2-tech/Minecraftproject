@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "9866d0e2cc2e6f80",
+ "build": "f12d0098f77c15ac",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -1701,14 +1701,6 @@
   },
   {
    "pos": [
-    -98,
-    52,
-    -158
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
     -88,
     29,
     -133
@@ -2325,15 +2317,7 @@
   },
   {
    "pos": [
-    -12,
-    12,
-    86
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    -12,
+    -13,
     14,
     -158
    ],
@@ -2341,9 +2325,17 @@
   },
   {
    "pos": [
-    -12,
+    -13,
     14,
     -152
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -12,
+    12,
+    86
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -2367,14 +2359,6 @@
    "pos": [
     -11,
     38,
-    -87
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    -11,
-    40,
     -87
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
@@ -2607,7 +2591,7 @@
    "pos": [
     -9,
     68,
-    -189
+    -188
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -2615,7 +2599,7 @@
    "pos": [
     -9,
     68,
-    -159
+    -160
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -2783,7 +2767,7 @@
    "pos": [
     -3,
     14,
-    -167
+    -168
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -2791,15 +2775,7 @@
    "pos": [
     -3,
     14,
-    -143
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    -2,
-    44,
-    -181
+    -142
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -2837,9 +2813,9 @@
   },
   {
    "pos": [
-    2,
-    44,
-    -181
+    3,
+    14,
+    -168
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -2847,15 +2823,7 @@
    "pos": [
     3,
     14,
-    -167
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    3,
-    14,
-    -143
+    -142
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -3063,7 +3031,7 @@
    "pos": [
     9,
     68,
-    -189
+    -188
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -3071,7 +3039,7 @@
    "pos": [
     9,
     68,
-    -159
+    -160
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
@@ -3182,14 +3150,6 @@
   {
    "pos": [
     11,
-    40,
-    -87
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    11,
     42,
     -87
    ],
@@ -3278,22 +3238,6 @@
   {
    "pos": [
     12,
-    14,
-    -158
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    12,
-    14,
-    -152
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    12,
     17,
     86
    ],
@@ -3314,6 +3258,22 @@
     -24
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4},{Pattern:\"tts\",Color:4}]}"
+  },
+  {
+   "pos": [
+    13,
+    14,
+    -158
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    13,
+    14,
+    -152
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [
@@ -4194,14 +4154,6 @@
     7
    ],
    "nbt": "{Patterns:[{Pattern:\"sku\",Color:0},{Pattern:\"bo\",Color:0},{Pattern:\"cr\",Color:7}]}"
-  },
-  {
-   "pos": [
-    98,
-    52,
-    -158
-   ],
-   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [
