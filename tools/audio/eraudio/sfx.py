@@ -595,6 +595,158 @@ def npc_talk(rng, v):
     return place(0.09, (0.0, tone * env, 1.0)), -8.0
 
 
+# ------------------------------------------------------------------------------------------------- weapon arts
+# The arts of the boss weapons: one showpiece each, 1.6-2.6 s, louder and wider than a job skill.
+
+def art_shadow_legion(rng):
+    """Smoke swell, six rapid cuts from every side, a heavy dark finisher."""
+    pre = drums.reverse_swell(0.14, rng, 200, 2500)
+    smoke = whoosh(0.5, 1500, 220, rng, 1.8, peak_at=0.2, shape=2)
+    parts = [(0.0, pre, 0.7), (0.02, smoke, 0.8)]
+    for k, at in enumerate((0.15, 0.35, 0.5, 0.65, 0.8, 0.95)):
+        cut, _ = slash(rng, k % 2)
+        parts.append((at - 0.08 + rng.uniform(0, 0.012), cut, 0.55))
+    fin, _ = heavy_slash(rng)
+    growl = formant_growl(0.7, rng, 92, "bas_o", "bas_u", (1.0, 0.85, 0.6)) * env_ar(int(0.7 * SR), 0, 2, 0.25)
+    parts += [(1.06, fin, 1.0), (1.12, growl, 0.3)]
+    return room(place(2.3, *parts), 1.3, 0.3, "art_shadow"), -1.0
+
+
+def art_thornroot_bloom(rng):
+    """Creaking wood and bursting roots under a rising harp bloom."""
+    dur = 1.9
+    n = int(dur * SR)
+    t = seconds(n)
+    creak = dsp.butter(rng.normal(size=n), "bandpass", (180, 900), 2)
+    creak *= np.clip(0.3 + 0.9 * dsp.smooth_random(n, 9, rng), 0, 1.5) * env_ar(n, 0, 1.4, 0.45)
+    parts = [(0.0, creak, 0.5)]
+    for k in range(5):
+        root = layer(thump(rng, 140, 55, 0.35, 0.07), crackle(0.25, 60, rng, 300, 3000, 0.004) * 0.6)
+        parts.append((0.35 + k * 0.22 + rng.uniform(0, 0.03), root, 0.6))
+    harp = I.Pluck("harp")
+    for k, pitch in enumerate([57, 62, 64, 69, 74, 76, 81]):
+        parts.append((0.15 + k * 0.08, mono(harp.render(pitch, 0.9, 0.7, rng)), 0.45))
+    spores = crackle(1.2, 80, rng, 5000, 12000, 0.002) * np.linspace(0.2, 1.0, int(1.2 * SR))
+    parts.append((0.6, spores, 0.25))
+    return room(place(2.3, *parts), 1.5, 0.35, "art_thorn"), -2.0
+
+
+def art_sand_maelstrom(rng):
+    """Three drilling thrusts, then a howling sand vortex."""
+    parts = []
+    for k in range(3):
+        w = whoosh(0.2, 900 + 300 * k, 3400, rng, 1.0, peak_at=0.6, shape=3)
+        knock = thump(rng, 170, 80, 0.15, 0.03)
+        parts += [(0.2 + k * 0.15, w, 0.7), (0.32 + k * 0.15, knock, 0.4)]
+    dur = 1.5
+    n = int(dur * SR)
+    t = seconds(n)
+    swirl = sweep_noise(dur, 400, 2600, rng, 1.6, curve=0.8)
+    swirl *= (0.55 + 0.45 * np.sin(TAU * (3.0 + 4.0 * t / dur) * t)) * env_ar(n, 0, 1.3, 0.5)
+    grit = crackle(dur, 140, rng, 2500, 9000, 0.0015) * env_ar(n, 0, 1.5, 0.5)
+    parts += [(0.6, swirl, 0.9), (0.6, grit, 0.35)]
+    out = room(place(2.3, *parts), 1.0, 0.25, "art_sand")
+    return dsp.soft_clip(out / (np.max(np.abs(out)) + 1e-12) * 1.8, 1.0), -1.5
+
+
+def art_doom_guillotine(rng):
+    """A rising icy whistle, then the blade falls: boom, shatter and a long ring."""
+    dur = 0.85
+    n = int(dur * SR)
+    t = seconds(n)
+    f = 500 * 2 ** (t / dur * 2.2)
+    whistle = np.sin(TAU * np.cumsum(f) / SR) * (t / dur) ** 2
+    rise = sweep_noise(dur, 800, 7000, rng, 0.8) * (t / dur) ** 2.5
+    fm = I.FMBell(ratio=3.51, index=2.0, decay=0.7)
+    glints = [(0.1 + k * 0.1, mono(fm.render(int(p), 0.15, 0.6, rng)), 0.25) for k, p in enumerate([84, 88, 91, 96, 100])]
+    boom = drums.boom(1.0, rng, length=1.8, top=90, bottom=28)
+    shatter, _ = ice_shatter(rng)
+    ring = metal(rng, 820, 12, 1.4, decay=0.45, spread=(1.0, 3.2))
+    out = place(2.6, (0.0, whistle, 0.25), (0.0, rise, 0.5), *glints, (0.88, boom, 1.0), (0.88, shatter, 0.8),
+                (0.9, ring, 0.35))
+    return dsp.soft_clip(room(out, 1.6, 0.3, "art_guillotine") * 1.3, 1.3), -2.5
+
+
+def art_frozen_prison(rng):
+    """Ice crystals grow around the target, crack, and lock with a cold stab."""
+    fm = I.FMBell(ratio=3.51, index=2.4, decay=1.0)
+    parts = []
+    for k, p in enumerate([100, 96, 93, 91, 88, 84, 81, 79]):
+        parts.append((k * 0.07 + rng.uniform(0, 0.015), mono(fm.render(p, 0.25, rng.uniform(0.5, 0.85), rng)), 0.45))
+    n = int(1.2 * SR)
+    t = seconds(n)
+    groan = dsp.butter(rng.normal(size=n), "bandpass", (250, 1400), 2) * np.clip(t / 1.2, 0, 1) ** 1.5
+    cracks = crackle(1.2, 60, rng, 3000, 12000, 0.003) * np.linspace(0.2, 1.0, n)
+    stab = layer(thump(rng, 200, 70, 0.4, 0.08), drums.noise_burst(int(0.3 * SR), rng, 2500, 14000, 0.04))
+    shatter, _ = ice_shatter(rng)
+    parts += [(0.2, groan, 0.6), (0.25, cracks, 0.5), (1.25, stab, 0.7), (1.27, shatter, 0.4)]
+    out = room(place(2.5, *parts), 1.8, 0.4, "art_prison")
+    return dsp.soft_clip(out / (np.max(np.abs(out)) + 1e-12) * 2.2, 1.0), -1.5
+
+
+def art_meteor_slash(rng):
+    """A blazing slash, the whistle of meteors coming down, the impact."""
+    cast, _ = fire_cast(rng)
+    cut = whoosh(0.3, 700, 3800, rng, 1.1, peak_at=0.6, shape=2.5)
+    dur = 0.75
+    n = int(dur * SR)
+    t = seconds(n)
+    f = 2600 * 2 ** (-t / dur * 2.5)
+    whistle = np.sin(TAU * np.cumsum(f) / SR) * (t / dur) ** 1.5 * 0.6
+    fall = sweep_noise(dur, 5000, 600, rng, 1.0) * (t / dur) ** 2
+    blast, _ = fire_explosion(rng)
+    out = place(3.2, (0.0, cast, 0.55), (0.18, cut, 0.9), (0.55, whistle, 0.35), (0.55, fall, 0.6),
+                (1.3, blast, 1.0))
+    return dsp.soft_clip(out * 1.2, 1.3), -2.0
+
+
+def art_heavens_chain(rng):
+    """Electric charge, a fan of bolts, thunder from above."""
+    dur = 0.3
+    n = int(dur * SR)
+    t = seconds(n)
+    f = 180 * 2 ** (t / dur * 3)
+    charge = np.sign(np.sin(TAU * np.cumsum(f) / SR)) * (t / dur) ** 2 * 0.25
+    charge = dsp.butter(charge, "lowpass", 4000, 2)
+    sparks = crackle(dur, 150, rng, 3000, 12000, 0.0012) * (t / dur)
+    parts = [(0.0, charge, 0.6), (0.0, sparks, 0.4)]
+    for k in range(5):
+        parts.append((0.28 + k * 0.03, _twang(rng, rng.uniform(120, 150), 0.9), 0.4))
+        parts.append((0.30 + k * 0.03, whoosh(0.3, rng.uniform(4000, 6000), 1800, rng, 1.0, 0.3), 0.3))
+    boom, _ = thunder(rng)
+    parts.append((0.95, boom, 0.85))
+    return place(3.2, *parts), -2.0
+
+
+def art_gate_of_end(rng):
+    """A deep portal drone opens, everything is sucked in, the gate bursts."""
+    dur = 2.0
+    n = int(dur * SR)
+    t = seconds(n)
+    drone = (np.sin(TAU * 41 * t) + np.sin(TAU * 43.5 * t) + 0.6 * np.sin(TAU * 82 * t + 0.4 * np.sin(TAU * 0.7 * t)))
+    drone *= env_ar(n, 0, 1.2, 0.55)
+    suck = drums.reverse_swell(1.0, rng, 150, 4000)
+    voice = formant_growl(1.2, rng, 70, "bas_u", "bas_a", (0.9, 1.1, 0.8)) * env_ar(int(1.2 * SR), 0, 2, 0.5)
+    boom = drums.boom(1.0, rng, length=2.0, top=70, bottom=24)
+    burst = drums.noise_burst(int(0.6 * SR), rng, 200, 6000, 0.12)
+    out = place(3.6, (0.0, drone, 0.5), (0.9, suck, 0.7), (0.2, voice, 0.25), (1.9, boom, 1.0), (1.9, burst, 0.6))
+    return dsp.soft_clip(room(out, 2.0, 0.35, "art_gate") * 1.3, 1.3), -1.0
+
+
+def art_black_sword_rain(rng):
+    """A grim chord swells, then black swords hammer down around the wielder."""
+    choir = I.choir("bas_o")
+    parts = [(0.0, mono(choir.render(p, 1.5, 0.7, rng)), 0.35) for p in (38, 45, 50, 53)]
+    parts.append((0.0, drums.reverse_swell(0.5, rng, 120, 3000), 0.6))
+    for k in range(7):
+        st = 1.28 + k * 0.17 + rng.uniform(0, 0.04)
+        clang = metal(rng, rng.uniform(600, 1100), 10, 0.6, decay=0.18, spread=(1.0, 3.0))
+        hit = thump(rng, 130, 45, 0.3, 0.07)
+        parts += [(st, clang, 0.35), (st, hit, 0.7), (st - 0.06, whoosh(0.12, 3000, 900, rng, 1.0, 0.7), 0.3)]
+    parts.append((0.5, drums.boom(0.9, rng, length=2.0, top=60, bottom=25), 0.8))
+    return room(place(3.6, *parts), 1.8, 0.35, "art_swords"), -1.0
+
+
 # ------------------------------------------------------------------------------------------------- dispatch
 
 RENDERERS = {
@@ -611,6 +763,11 @@ RENDERERS = {
     "sfx/loot/rare_drop": rare_drop, "sfx/loot/legendary_drop": legendary_drop,
     "sfx/enhance/success": enhance_success, "sfx/enhance/fail": enhance_fail,
     "sfx/ui/click": ui_click, "sfx/ui/journal_open": journal_open,
+    "sfx/art/shadow_legion": art_shadow_legion, "sfx/art/thornroot_bloom": art_thornroot_bloom,
+    "sfx/art/sand_maelstrom": art_sand_maelstrom, "sfx/art/doom_guillotine": art_doom_guillotine,
+    "sfx/art/frozen_prison": art_frozen_prison, "sfx/art/meteor_slash": art_meteor_slash,
+    "sfx/art/heavens_chain": art_heavens_chain, "sfx/art/gate_of_end": art_gate_of_end,
+    "sfx/art/black_sword_rain": art_black_sword_rain,
 }
 for _v in range(2):
     RENDERERS[f"sfx/weapon/one_handed_sword_{_v + 1}"] = (lambda v: lambda r: swing_sword(r, v))(_v)

@@ -380,6 +380,87 @@
       "eternalrealm:sfx/enhance/fail"
     ]
   },
+  "art.shadow_legion": {
+    "subtitle": "subtitles.eternalrealm.art.shadow_legion",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/shadow_legion",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "art.thornroot_bloom": {
+    "subtitle": "subtitles.eternalrealm.art.thornroot_bloom",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/thornroot_bloom",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "art.sand_maelstrom": {
+    "subtitle": "subtitles.eternalrealm.art.sand_maelstrom",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/sand_maelstrom",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "art.doom_guillotine": {
+    "subtitle": "subtitles.eternalrealm.art.doom_guillotine",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/doom_guillotine",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "art.frozen_prison": {
+    "subtitle": "subtitles.eternalrealm.art.frozen_prison",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/frozen_prison",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "art.meteor_slash": {
+    "subtitle": "subtitles.eternalrealm.art.meteor_slash",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/meteor_slash",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "art.heavens_chain": {
+    "subtitle": "subtitles.eternalrealm.art.heavens_chain",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/heavens_chain",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "art.gate_of_end": {
+    "subtitle": "subtitles.eternalrealm.art.gate_of_end",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/gate_of_end",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "art.black_sword_rain": {
+    "subtitle": "subtitles.eternalrealm.art.black_sword_rain",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/art/black_sword_rain",
+        "attenuation_distance": 48
+      }
+    ]
+  },
   "ui.click": {
     "sounds": [
       "eternalrealm:sfx/ui/click"

@@ -41,10 +41,20 @@ public final class WeaponItem extends Item {
         return profile;
     }
 
-    /** @return the weapon profile of the stack, or {@code null} if it is not an ETERNAL REALM weapon */
+    /**
+     * @return the weapon profile of the stack, or {@code null} if it is not an ETERNAL REALM weapon. A named weapon
+     *         (armory design) has its own profile: its reach, and for a boss weapon its weapon art; the same on the
+     *         server and the client, which both read the design tag of the stack.
+     */
     @Nullable
     public static WeaponProfile profileOf(ItemStack stack) {
-        return stack.getItem() instanceof WeaponItem weapon ? weapon.profile : null;
+        if (!(stack.getItem() instanceof WeaponItem weapon)) {
+            return null;
+        }
+        return com.eternalrealm.item.forge.EquipmentStacks.designOf(stack)
+                .filter(com.eternalrealm.item.WeaponDesign.class::isInstance)
+                .map(design -> com.eternalrealm.item.DesignProfiles.of((com.eternalrealm.item.WeaponDesign) design))
+                .orElse(weapon.profile);
     }
 
     @Override
@@ -68,7 +78,7 @@ public final class WeaponItem extends Item {
         if (player.isSecondaryUseActive()) {
             return InteractionResultHolder.pass(stack);
         }
-        if (hand != InteractionHand.MAIN_HAND || !GuardGate.tryStartGuard(player, profile)) {
+        if (hand != InteractionHand.MAIN_HAND || !GuardGate.tryStartGuard(player, profileOf(stack))) {
             return InteractionResultHolder.fail(stack);
         }
         player.startUsingItem(hand);
@@ -100,6 +110,7 @@ public final class WeaponItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        WeaponProfile profile = profileOf(stack);
         boolean equipment = com.eternalrealm.item.forge.EquipmentStacks.isEquipment(stack);
         if (equipment) {
             com.eternalrealm.item.forge.EquipmentStacks.appendTooltip(stack, tooltip);

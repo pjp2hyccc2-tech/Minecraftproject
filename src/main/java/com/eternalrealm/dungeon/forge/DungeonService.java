@@ -17,7 +17,10 @@ import com.eternalrealm.dungeon.FailurePolicy;
 import com.eternalrealm.dungeon.InstanceAllocator;
 import com.eternalrealm.dungeon.InstanceSlot;
 import com.eternalrealm.dungeon.RaidDefinition;
+import com.eternalrealm.item.ArmoryDrops;
 import com.eternalrealm.item.EquipmentGenerator;
+import com.eternalrealm.item.Signatures;
+import com.eternalrealm.item.forge.ArmoryStacks;
 import com.eternalrealm.item.ItemRarity;
 import com.eternalrealm.item.ItemTier;
 import com.eternalrealm.item.Materials;
@@ -452,6 +455,24 @@ public final class DungeonService {
         if (stone != null) {
             given.add(new ItemStack(stone, stones));
             Inventories.give(player, new ItemStack(stone, stones));
+        }
+        // named designs (armory): one of the dungeon's own, and rarely the boss's weapon
+        ArmoryDrops.Difficulty odds = ArmoryDrops.Difficulty.of(instance.difficulty.name());
+        if (RANDOM.nextDouble() < odds.designChance()) {
+            ArmoryDrops.dungeonDesign(instance.contentId, RANDOM).ifPresent(design -> {
+                ItemStack named = ArmoryStacks.reward(player, design, floor, RANDOM);
+                ArmoryStacks.announce(player, named, design);
+                given.add(named.copy());
+                Inventories.give(player, named);
+            });
+        }
+        if (RANDOM.nextDouble() < odds.bossWeaponChance()) {
+            Signatures.bossWeapon(instance.run.bossId()).ifPresent(design -> {
+                ItemStack weapon = ArmoryStacks.reward(player, design, floor, RANDOM);
+                ArmoryStacks.announce(player, weapon, design);
+                given.add(weapon.copy());
+                Inventories.give(player, weapon);
+            });
         }
         // the boss material of the dungeon's field (boss weapons are forged from these)
         if (instance.areaId >= 1 && instance.areaId <= 10) {

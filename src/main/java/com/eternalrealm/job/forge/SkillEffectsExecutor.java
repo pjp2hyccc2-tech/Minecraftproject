@@ -2,7 +2,11 @@ package com.eternalrealm.job.forge;
 
 import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.combat.DamageCalculator;
+import com.eternalrealm.combat.DamageType;
+import com.eternalrealm.combat.Telegraph;
 import com.eternalrealm.combat.WeaponProfile;
+import com.eternalrealm.combat.forge.Telegraphs;
+import com.eternalrealm.item.WeaponArt;
 import com.eternalrealm.combat.forge.CombatHits;
 import com.eternalrealm.combat.forge.ERMobEffects;
 import com.eternalrealm.combat.forge.ERParticles;
@@ -27,6 +31,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +65,25 @@ public final class SkillEffectsExecutor {
                              List<CombatHits.HitTarget> targets) {
         double scale = skill == null ? 1.0 : skill.effectScale(Math.max(1, Math.min(level, skill.maxLevel())));
         SkillTheme theme = skill == null ? SkillTheme.STEEL : skill.theme();
+        run(caster, stats, theme, skill == null ? null : skill.damageType(), scale, weapon, damageScale, effects,
+                targets);
+    }
+
+    /**
+     * The effects of a boss weapon's art ({@link WeaponArt}) at strength 1: ground areas deal the weapon's damage type
+     * in the art's colours.
+     */
+    public static void applyArt(ServerPlayer caster, CombatStats stats, WeaponArt art, WeaponProfile weapon,
+                                double damageScale, List<SkillEffect> effects, List<CombatHits.HitTarget> targets) {
+        run(caster, stats, art.theme(), art.type().damageType(), 1.0, weapon, damageScale, effects, targets);
+    }
+
+    /**
+     * @param type damage type of ground areas, or {@code null} without a skill context (areas are skipped)
+     */
+    private static void run(ServerPlayer caster, CombatStats stats, SkillTheme theme, DamageType type, double scale,
+                            WeaponProfile weapon, double damageScale, List<SkillEffect> effects,
+                            List<CombatHits.HitTarget> targets) {
         for (SkillEffect effect : effects) {
             if (effect instanceof SkillEffect.Heal heal) {
                 heal(caster, stats, heal, scale);
@@ -87,9 +111,15 @@ public final class SkillEffectsExecutor {
             } else if (effect instanceof SkillEffect.Siphon siphon) {
                 CombatHits.siphon(caster, targets, List.of(siphon));
             } else if (effect instanceof SkillEffect.Zone zone) {
-                if (skill != null && weapon != null) {
-                    SkillZones.create(caster, stats, weapon, skill.damageType(), theme, damageScale, scale, zone);
+                if (type != null && weapon != null) {
+                    SkillZones.create(caster, stats, weapon, type, theme, damageScale, scale, zone);
                 }
+            } else if (effect instanceof SkillEffect.Mark mark) {
+                Vec3 at = SkillZones.centerOf(caster, mark.placement(), mark.distance());
+                Telegraphs.show(caster.serverLevel(), Telegraph.circle(Telegraph.Style.ALLY, at.x, at.y, at.z,
+                        mark.radius(), mark.ticks()));
+            } else if (effect instanceof SkillEffect.Revive revive) {
+                revive(caster, revive, scale);
             } else if (effect instanceof SkillEffect.RestoreStamina restore) {
                 ServerContext.current().ifPresent(context -> context.combat().restoreStamina(caster,
                         restore.amount()));
@@ -97,6 +127,26 @@ public final class SkillEffectsExecutor {
                 ServerContext.current().ifPresent(context -> context.combat().cutCooldowns(caster, cut.ticks()));
             } else if (effect instanceof SkillEffect.Visual visual) {
                 visual(caster, theme, visual.kind(), targets);
+            }
+        }
+    }
+
+    /**
+     * Raises fallen (戦闘不能) party members around the caster where they lie (the revival module decides who is
+     * fallen); each gets the effect's share of their health, at most all of it.
+     */
+    private static void revive(ServerPlayer caster, SkillEffect.Revive revive, double scale) {
+        double fraction = Math.min(1.0, revive.fraction() * scale);
+        for (ServerPlayer fallen : com.eternalrealm.revival.forge.RevivalService.fallenNear(caster.serverLevel(),
+                caster.position(), revive.radius())) {
+            if (fallen == caster || PvpRules.canHurt(caster, fallen)) {
+                continue;
+            }
+            if (com.eternalrealm.revival.forge.RevivalService.resurrect(caster, fallen, fraction)) {
+                burst(caster.serverLevel(), ERParticles.HOLY.get(), fallen.getX(), fallen.getY() + 1.0, fallen.getZ(),
+                        40, 1.2, com.eternalrealm.sound.ERSounds.SKILL_HOLY_CHIME.get());
+                extra(caster.serverLevel(), ERParticles.HEAL.get(), fallen.getX(), fallen.getY() + 0.4,
+                        fallen.getZ(), 24, 0.8);
             }
         }
     }
@@ -291,6 +341,9 @@ public final class SkillEffectsExecutor {
                 extra(level, ParticleTypes.REVERSE_PORTAL, x, y, z, 20, 1.5);
             }
             default -> {
+                if (com.eternalrealm.item.forge.ArtVisuals.play(caster, kind, targets)) {
+                    return;
+                }
                 if (!SkillVisuals.play(caster, theme, kind, targets)) {
                     burst(level, ERParticles.RUNE.get(), x, y, z, 20, 1.0,
                             com.eternalrealm.sound.ERSounds.SKILL_MAGIC_BOLT.get());

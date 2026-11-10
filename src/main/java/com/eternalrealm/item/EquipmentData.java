@@ -26,10 +26,18 @@ import java.util.function.Supplier;
  * @param uniqueId    identity of this physical piece for duplicate detection in trades and the market, or
  *                    {@code null} until the platform layer stamps one ({@link #ensureUniqueId})
  * @param boundTo     the only player who may use and own it (quest and boss rewards), or {@code null} if tradeable
+ * @param design      the named design of the piece ({@link Armory}), or {@code null} for a plain piece of its tier; a
+ *                    design is always made on its own base (slot, weapon type and tier)
  */
 public record EquipmentData(EquipmentSlot slot, WeaponType weaponType, ItemTier tier, ItemRarity rarity,
-                            int enhancement, List<Affix> affixes, UUID uniqueId, UUID boundTo) {
+                            int enhancement, List<Affix> affixes, UUID uniqueId, UUID boundTo, Design design) {
     public static final int MAX_ENHANCEMENT = 10;
+
+    /** A plain piece (no named design): the shape of every piece before the armory existed. */
+    public EquipmentData(EquipmentSlot slot, WeaponType weaponType, ItemTier tier, ItemRarity rarity, int enhancement,
+                         List<Affix> affixes, UUID uniqueId, UUID boundTo) {
+        this(slot, weaponType, tier, rarity, enhancement, affixes, uniqueId, boundTo, null);
+    }
 
     public EquipmentData {
         Objects.requireNonNull(slot, "slot");
@@ -64,12 +72,22 @@ public record EquipmentData(EquipmentSlot slot, WeaponType weaponType, ItemTier 
             }
         }
         affixes = List.copyOf(sorted);
+        if (design != null && !design.base().equals(new EquipmentBase(slot, weaponType, tier))) {
+            throw new IllegalArgumentException("Design " + design.id() + " is made on " + design.base().itemPath()
+                    + ", not on " + tier.id() + " " + describe(slot, weaponType));
+        }
     }
 
     /** A fresh piece: not enhanced, no unique id yet, not bound. */
     public static EquipmentData of(EquipmentBase base, ItemRarity rarity, List<Affix> affixes) {
         Objects.requireNonNull(base, "base");
         return new EquipmentData(base.slot(), base.weaponType(), base.tier(), rarity, 0, affixes, null, null);
+    }
+
+    /** A fresh piece of a named design (on the design's base). */
+    public static EquipmentData of(Design design, ItemRarity rarity, List<Affix> affixes) {
+        EquipmentBase base = Objects.requireNonNull(design, "design").base();
+        return new EquipmentData(base.slot(), base.weaponType(), base.tier(), rarity, 0, affixes, null, null, design);
     }
 
     public EquipmentBase base() {
@@ -80,8 +98,23 @@ public record EquipmentData(EquipmentSlot slot, WeaponType weaponType, ItemTier 
         return slot == EquipmentSlot.WEAPON;
     }
 
+    /** The design's own level for a named piece, otherwise the tier's. */
     public int requiredLevel() {
-        return tier.requiredLevel();
+        return design != null ? Math.max(design.level(), tier.requiredLevel()) : tier.requiredLevel();
+    }
+
+    public boolean hasDesign() {
+        return design != null;
+    }
+
+    /** The named weapon design, if this is one. */
+    public Optional<WeaponDesign> weaponDesign() {
+        return design instanceof WeaponDesign weapon ? Optional.of(weapon) : Optional.empty();
+    }
+
+    /** The armor piece design, if this is one. */
+    public Optional<ArmorPiece> armorPiece() {
+        return design instanceof ArmorPiece piece ? Optional.of(piece) : Optional.empty();
     }
 
     public Optional<Affix> affix(AffixKind kind) {
@@ -111,16 +144,16 @@ public record EquipmentData(EquipmentSlot slot, WeaponType weaponType, ItemTier 
     }
 
     public EquipmentData withEnhancement(int level) {
-        return new EquipmentData(slot, weaponType, tier, rarity, level, affixes, uniqueId, boundTo);
+        return new EquipmentData(slot, weaponType, tier, rarity, level, affixes, uniqueId, boundTo, design);
     }
 
     /** Same piece with other affixes (a reroll); everything else, the unique id included, stays. */
     public EquipmentData withAffixes(List<Affix> newAffixes) {
-        return new EquipmentData(slot, weaponType, tier, rarity, enhancement, newAffixes, uniqueId, boundTo);
+        return new EquipmentData(slot, weaponType, tier, rarity, enhancement, newAffixes, uniqueId, boundTo, design);
     }
 
     public EquipmentData withUniqueId(UUID id) {
-        return new EquipmentData(slot, weaponType, tier, rarity, enhancement, affixes, id, boundTo);
+        return new EquipmentData(slot, weaponType, tier, rarity, enhancement, affixes, id, boundTo, design);
     }
 
     /**
@@ -137,7 +170,7 @@ public record EquipmentData(EquipmentSlot slot, WeaponType weaponType, ItemTier 
 
     /** Binds the piece to {@code player} (quest and boss rewards); {@code null} unbinds it (admin tools only). */
     public EquipmentData withBoundTo(UUID player) {
-        return new EquipmentData(slot, weaponType, tier, rarity, enhancement, affixes, uniqueId, player);
+        return new EquipmentData(slot, weaponType, tier, rarity, enhancement, affixes, uniqueId, player, design);
     }
 
     private static String describe(EquipmentSlot slot, WeaponType weaponType) {

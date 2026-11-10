@@ -17,6 +17,12 @@ public record TooltipLine(Kind kind, String translationKey, List<Arg> args, int 
     public static final int COLOR_AFFIX = 0x55FFFF;
     public static final int COLOR_ENHANCEMENT = 0xFFFF55;
     public static final int COLOR_WARNING = 0xFF5555;
+    public static final int COLOR_DESIGN = 0xFFD27A;
+    public static final int COLOR_TRAIT = 0x9BE28A;
+    public static final int COLOR_PERK = 0xE59BFF;
+    public static final int COLOR_ART = 0xFF9F5A;
+    public static final int COLOR_SET = 0x7FC8FF;
+    public static final int COLOR_LORE = 0x8A8A9A;
 
     public enum Kind {
         /** The display name (the item's name, not a tooltip body line). */
@@ -32,11 +38,35 @@ public record TooltipLine(Kind kind, String translationKey, List<Arg> args, int 
         /** The jobs that can use a weapon; {@link #COLOR_WARNING} when the viewer's job cannot. */
         USABLE_BY,
         /** Bound to a player, not tradeable. */
-        BINDING
+        BINDING,
+        /** Where a named design comes from ("ヌシ「…」の得物"). */
+        DESIGN,
+        /** A named weapon's handling, element and fixed bonuses. */
+        TRAIT,
+        /** A special effect resolved when hits land (lifesteal, evasion, ...). */
+        PERK,
+        /** The weapon art of a boss weapon. */
+        ART,
+        /** A named armor set and its two- and four-piece bonuses. */
+        SET,
+        /** The flavour text of a named design. */
+        LORE
     }
 
     /** A translation argument. */
-    public sealed interface Arg permits Text, Key, Join {
+    public sealed interface Arg permits Text, Key, Join, Nested {
+    }
+
+    /** A nested translation with its own arguments ("会心率 +3%" inside "2点: %s"). */
+    public record Nested(String translationKey, List<Arg> args) implements Arg {
+        public Nested {
+            Objects.requireNonNull(translationKey, "translationKey");
+            args = List.copyOf(args);
+        }
+
+        public static Nested of(String translationKey, Arg... args) {
+            return new Nested(translationKey, List.of(args));
+        }
     }
 
     /** Literal text (already formatted numbers). */

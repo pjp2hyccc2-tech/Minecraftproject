@@ -58,6 +58,71 @@ public record PassiveTotals(CombatModifiers modifiers, double skillPower, double
         Checks.range("healOnKill", healOnKill, 0.0, MAX_HEAL_ON_KILL);
     }
 
+    /**
+     * Passive effects that are not skills (equipment perks, set bonuses), each counted once. Only the effects resolved
+     * on the server belong here: equipment never changes cooldowns or stamina costs, which the client predicts.
+     *
+     * @throws IllegalArgumentException for {@link PassiveEffect.Cooldown} and {@link PassiveEffect.StaminaSaver}
+     */
+    public static PassiveTotals ofEffects(List<PassiveEffect> effects) {
+        for (PassiveEffect effect : effects) {
+            if (effect instanceof PassiveEffect.Cooldown || effect instanceof PassiveEffect.StaminaSaver) {
+                throw new IllegalArgumentException("equipment perks must not change cooldowns or stamina: " + effect);
+            }
+        }
+        return sumEffects(effects);
+    }
+
+    /** Both totals together (sums, capped like {@link #sum}); the procs of both apply. */
+    public PassiveTotals plus(PassiveTotals other) {
+        List<Proc> both = new ArrayList<>(procs);
+        both.addAll(other.procs);
+        return new PassiveTotals(modifiers.plus(other.modifiers), Math.min(10.0, skillPower + other.skillPower),
+                Math.min(MAX_COOLDOWN_REDUCTION, cooldownReduction + other.cooldownReduction),
+                Math.min(MAX_STAMINA_REDUCTION, staminaReduction + other.staminaReduction),
+                Math.min(MAX_LIFESTEAL, lifesteal + other.lifesteal), both,
+                Math.min(MAX_LAST_STAND, lastStandDamage + other.lastStandDamage),
+                Math.min(MAX_LAST_STAND, lastStandReduction + other.lastStandReduction),
+                Math.min(MAX_THORNS, thorns + other.thorns), Math.min(MAX_EVASION, evasion + other.evasion),
+                Math.min(MAX_HEAL_ON_KILL, healOnKill + other.healOnKill));
+    }
+
+    private static PassiveTotals sumEffects(List<PassiveEffect> effects) {
+        CombatModifiers modifiers = CombatModifiers.NONE;
+        double power = 0;
+        double lifesteal = 0;
+        double lastDamage = 0;
+        double lastReduction = 0;
+        double thorns = 0;
+        double evasion = 0;
+        double healOnKill = 0;
+        List<Proc> procs = new ArrayList<>();
+        for (PassiveEffect effect : effects) {
+            if (effect instanceof PassiveEffect.Stats stats) {
+                modifiers = modifiers.plus(stats.perLevel());
+            } else if (effect instanceof PassiveEffect.SkillPower p) {
+                power += p.perLevel();
+            } else if (effect instanceof PassiveEffect.Lifesteal l) {
+                lifesteal += l.perLevel();
+            } else if (effect instanceof PassiveEffect.Proc proc) {
+                procs.add(new Proc(proc.kind(), Math.min(1.0, proc.chancePerLevel()), proc.durationTicks(), proc.power(),
+                        proc.meleeOnly()));
+            } else if (effect instanceof PassiveEffect.LastStand last) {
+                lastDamage += last.damagePerLevel();
+                lastReduction += last.reductionPerLevel();
+            } else if (effect instanceof PassiveEffect.Thorns t) {
+                thorns += t.perLevel();
+            } else if (effect instanceof PassiveEffect.Evasion e) {
+                evasion += e.perLevel();
+            } else if (effect instanceof PassiveEffect.HealOnKill h) {
+                healOnKill += h.perLevel();
+            }
+        }
+        return new PassiveTotals(modifiers, Math.min(10.0, power), 0.0, 0.0, Math.min(MAX_LIFESTEAL, lifesteal), procs,
+                Math.min(MAX_LAST_STAND, lastDamage), Math.min(MAX_LAST_STAND, lastReduction),
+                Math.min(MAX_THORNS, thorns), Math.min(MAX_EVASION, evasion), Math.min(MAX_HEAL_ON_KILL, healOnKill));
+    }
+
     /** Sums the passives of {@code learned} skills at their levels (passive skill → level). */
     static PassiveTotals sum(List<SkillDefinition> skills, List<Integer> levels) {
         CombatModifiers modifiers = CombatModifiers.NONE;

@@ -67,6 +67,9 @@ public final class ERGearItems {
                     EquipmentStacks.write(stack, EquipmentStacks.plain(base));
                     output.accept(stack);
                 }
+                for (com.eternalrealm.item.Design design : com.eternalrealm.item.Armory.designs()) {
+                    output.accept(EquipmentStacks.ofDesign(design));
+                }
                 for (RegistryObject<MaterialItem> material : MATERIALS.values()) {
                     output.accept(material.get());
                 }

@@ -41,6 +41,24 @@ public final class EquipmentGenerator {
         return EquipmentData.of(base, rarity, pool.roll(base.tier(), rarity.affixCount(), random));
     }
 
+    /**
+     * A new piece of a named design: its base, the rarity given, affixes rolled with the design's tendencies
+     * ({@link Design#bias()}). Draws {@code 2 × affix count} values from {@code random}.
+     */
+    public static EquipmentData roll(Design design, ItemRarity rarity, RandomGenerator random) {
+        Objects.requireNonNull(design, "design");
+        Objects.requireNonNull(rarity, "rarity");
+        Objects.requireNonNull(random, "random");
+        EquipmentBase base = design.base();
+        AffixPool pool = AffixPool.of(base.slot(), base.weaponType());
+        return EquipmentData.of(design, rarity, pool.roll(base.tier(), rarity.affixCount(), random, design.bias()));
+    }
+
+    /** Rolls the rarity first ({@link #rollRarity}), then the piece of the design. */
+    public static EquipmentData rollWithLuck(Design design, double luckBonus, RandomGenerator random) {
+        return roll(design, rollRarity(luckBonus, random), random);
+    }
+
     /** Rolls the rarity first ({@link #rollRarity}), then the piece. */
     public static EquipmentData rollWithLuck(EquipmentBase base, double luckBonus, RandomGenerator random) {
         return roll(base, rollRarity(luckBonus, random), random);

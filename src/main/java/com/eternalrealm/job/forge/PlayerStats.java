@@ -20,6 +20,8 @@ public final class PlayerStats {
     }
 
     private static volatile Function<ServerPlayer, Gear> gearReader = player -> Gear.NONE;
+    private static volatile Function<ServerPlayer, com.eternalrealm.job.PassiveTotals> perksReader =
+            player -> com.eternalrealm.job.PassiveTotals.NONE;
 
     private PlayerStats() {
     }
@@ -38,5 +40,22 @@ public final class PlayerStats {
 
     public static void setGearReader(Function<ServerPlayer, Gear> reader) {
         gearReader = reader;
+    }
+
+    /**
+     * What the worn named equipment adds when hits land (weapon perks and element, set bonus perks); resolved by the
+     * server only. Never fails: a broken item adds nothing.
+     */
+    public static com.eternalrealm.job.PassiveTotals perks(ServerPlayer player) {
+        try {
+            com.eternalrealm.job.PassiveTotals perks = perksReader.apply(player);
+            return perks == null ? com.eternalrealm.job.PassiveTotals.NONE : perks;
+        } catch (RuntimeException e) {
+            return com.eternalrealm.job.PassiveTotals.NONE;
+        }
+    }
+
+    public static void setPerksReader(Function<ServerPlayer, com.eternalrealm.job.PassiveTotals> reader) {
+        perksReader = reader;
     }
 }

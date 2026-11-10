@@ -19,6 +19,12 @@ import java.util.Objects;
  * bonus attack       = weapon attack − weapon type base attack          (passed to DamageCalculator per hit)
  * armor defense      = tier set defense × slot share × rarity base multiplier × enhancement factor
  * armor max health   = tier set health  × slot share × rarity base multiplier × enhancement factor
+ *
+ * named designs ({@link Armory}) use their own level instead of the tier, and their profile:
+ * weapon attack      = weapon type base attack × (1 + {@link Armory#weaponBonusAt}(level)) × design attack × rarity × enh.
+ * armor defense      = {@link Armory#setDefenseAt}(level) × slot share × style × set × rarity × enhancement factor
+ * armor max health   = {@link Armory#setHealthAt}(level)  × slot share × style × set × rarity × enhancement factor
+ * modifiers          + the weapon's crit, attack speed and fixed bonuses / the armor piece's bonus
  * </pre>
  *
  * Enhancement and rarity scale only these base values, never the affixes, so enhancing (強化) and rerolling (厳選) are
@@ -47,8 +53,9 @@ public record EquipmentStats(StatBlock stats, CombatModifiers modifiers, double 
             affix.kind().stat().ifPresent(stat -> stats.merge(stat, affix.intValue(), Integer::sum));
             affix.kind().addTo(modifiers, affix.value());
         }
+        CombatModifiers total = modifiers.build().plus(designModifiers(data));
         double bonus = data.isWeapon() ? Math.max(0.0, baseAttack(data) - weaponTypeAttack(data)) : 0.0;
-        return new EquipmentStats(StatBlock.of(stats), modifiers.build(), bonus);
+        return new EquipmentStats(StatBlock.of(stats), total, Math.min(DamageCalculator.MAX_BONUS_ATTACK, bonus));
     }
 
     public GearBonus gearBonus() {
@@ -68,20 +75,43 @@ public record EquipmentStats(StatBlock stats, CombatModifiers modifiers, double 
         if (!data.isWeapon()) {
             return 0.0;
         }
-        return weaponTypeAttack(data) * (1.0 + data.tier().weaponAttackBonus()) * data.rarity().baseMultiplier()
-                * enhancementFactor(data.enhancement());
+        double base = data.weaponDesign()
+                .map(design -> (1.0 + Armory.weaponBonusAt(design.level())) * design.attack())
+                .orElse(1.0 + data.tier().weaponAttackBonus());
+        return weaponTypeAttack(data) * base * data.rarity().baseMultiplier() * enhancementFactor(data.enhancement());
     }
 
     /** Defense of an armor piece before affixes; 0 for weapons. */
     public static double baseDefense(EquipmentData data) {
-        return data.tier().armorDefense(data.slot()) * data.rarity().baseMultiplier()
-                * enhancementFactor(data.enhancement());
+        double base = data.armorPiece()
+                .map(piece -> Armory.setDefenseAt(piece.level()) * piece.armorSlot().armorShare()
+                        * piece.set().style().defense() * piece.set().defense())
+                .orElse(data.tier().armorDefense(data.slot()));
+        return base * data.rarity().baseMultiplier() * enhancementFactor(data.enhancement());
     }
 
     /** Max health of an armor piece before affixes; 0 for weapons. */
     public static double baseMaxHealth(EquipmentData data) {
-        return data.tier().armorMaxHealth(data.slot()) * data.rarity().baseMultiplier()
-                * enhancementFactor(data.enhancement());
+        double base = data.armorPiece()
+                .map(piece -> Armory.setHealthAt(piece.level()) * piece.armorSlot().armorShare()
+                        * piece.set().style().health() * piece.set().health())
+                .orElse(data.tier().armorMaxHealth(data.slot()));
+        return base * data.rarity().baseMultiplier() * enhancementFactor(data.enhancement());
+    }
+
+    /**
+     * What a named design adds on its own: a weapon's critical chance, attack speed and fixed bonuses, an armor piece's
+     * bonus (set bonuses are {@link Gear}'s, they depend on the other pieces); nothing for plain pieces.
+     */
+    public static CombatModifiers designModifiers(EquipmentData data) {
+        if (data.design() instanceof WeaponDesign weapon) {
+            return weapon.bonus().plus(CombatModifiers.builder().crit(weapon.crit()).attackSpeed(weapon.speed())
+                    .build());
+        }
+        if (data.design() instanceof ArmorPiece piece) {
+            return piece.set().piece();
+        }
+        return CombatModifiers.NONE;
     }
 
     private static double weaponTypeAttack(EquipmentData data) {

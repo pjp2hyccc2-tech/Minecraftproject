@@ -143,6 +143,10 @@ final class SkillTexts {
         if (effect instanceof SkillEffect.CooldownCut cut) {
             return Component.translatable(P + "effect.cooldown_cut", seconds(cut.ticks()));
         }
+        if (effect instanceof SkillEffect.Revive revive) {
+            return Component.translatable(P + "effect.revive", number(revive.radius()),
+                    number(Math.min(100.0, revive.fraction() * scale * 100.0)));
+        }
         if (effect instanceof SkillEffect.Execute execute) {
             return Component.translatable(P + "effect.execute", number(execute.threshold() * 100.0),
                     number(execute.bonus() * 100.0));

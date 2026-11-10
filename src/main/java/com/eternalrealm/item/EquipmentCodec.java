@@ -20,8 +20,13 @@ import java.util.UUID;
  * <pre>
  * {"v":1, "slot":"weapon", "weaponType":"spear", "tier":"frost", "rarity":"rare", "enhancement":3,
  *  "affixes":[{"kind":"str","value":7}, {"kind":"crit_chance","value":0.031}],
- *  "uniqueId":"…", "boundTo":"…"}                       (weaponType only for weapons; the ids are optional)
+ *  "uniqueId":"…", "boundTo":"…", "design":"garms_maw"}  (weaponType only for weapons; the ids and the design
+ *                                                          are optional)
  * </pre>
+ *
+ * <p>The named design ({@link Armory}) is an optional field of version 1: older builds ignore it and see a plain piece
+ * of the same base. A design id this build does not know, or one that is made on another base, is dropped when read,
+ * so the piece always stays usable.</p>
  *
  * <p>Decoding is strict, like the character files: missing fields, wrong types, unknown ids, non-integral numbers,
  * malformed UUIDs and anything {@link EquipmentData} rejects are {@link CorruptDataException}; a version newer than
@@ -65,6 +70,9 @@ public final class EquipmentCodec {
         }
         if (data.boundTo() != null) {
             json.addProperty("boundTo", data.boundTo().toString());
+        }
+        if (data.design() != null) {
+            json.addProperty("design", data.design().id());
         }
         return json;
     }
@@ -126,8 +134,9 @@ public final class EquipmentCodec {
         List<Affix> affixes = affixes(json);
         UUID uniqueId = optionalUuid(json, "uniqueId");
         UUID boundTo = optionalUuid(json, "boundTo");
+        Design design = design(json, new EquipmentBase(slot, weaponType, tier));
         try {
-            return new EquipmentData(slot, weaponType, tier, rarity, enhancement, affixes, uniqueId, boundTo);
+            return new EquipmentData(slot, weaponType, tier, rarity, enhancement, affixes, uniqueId, boundTo, design);
         } catch (IllegalArgumentException e) {
             throw new CorruptDataException("Invalid equipment data: " + e.getMessage(), e);
         }
@@ -160,6 +169,15 @@ public final class EquipmentCodec {
             }
         }
         return affixes;
+    }
+
+    /** The named design, or {@code null} when absent, unknown or made on another base (the piece stays plain). */
+    private static Design design(JsonObject json, EquipmentBase base) throws CorruptDataException {
+        if (!isPresent(json, "design")) {
+            return null;
+        }
+        String id = requireString(json, "design");
+        return Armory.design(id).filter(design -> design.base().equals(base)).orElse(null);
     }
 
     // ---------------------------------------------------------------------------------------------- helpers
