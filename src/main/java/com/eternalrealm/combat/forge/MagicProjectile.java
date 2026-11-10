@@ -59,6 +59,7 @@ public final class MagicProjectile extends ThrowableItemProjectile {
             case "poison_dart", "poison_flask" -> Items.SLIME_BALL;
             case "knife" -> Items.IRON_NUGGET;
             case "crescent" -> Items.AMETHYST_CLUSTER;
+            case com.eternalrealm.combat.WeaponProfiles.STAR_SIGIL -> Items.END_CRYSTAL;
             default -> Items.AMETHYST_SHARD;
         };
     }
@@ -85,6 +86,9 @@ public final class MagicProjectile extends ThrowableItemProjectile {
         if (item == Items.IRON_NUGGET) {
             return net.minecraft.core.particles.ParticleTypes.CRIT;
         }
+        if (item == Items.END_CRYSTAL) {
+            return net.minecraft.core.particles.ParticleTypes.END_ROD;
+        }
         return ERParticles.RUNE.get();
     }
 
@@ -102,6 +106,16 @@ public final class MagicProjectile extends ThrowableItemProjectile {
             for (int i = 0; i < 2; i++) {
                 level().addParticle(particle, getX() - motion.x * 0.5 * i, getY() + 0.15 - motion.y * 0.5 * i,
                         getZ() - motion.z * 0.5 * i, 0.0, 0.0, 0.0);
+            }
+            if (getItem().getItem() == Items.END_CRYSTAL) {
+                // the star sigil bolt: a thick trail of runes and sparks
+                for (int i = 0; i < 3; i++) {
+                    level().addParticle(ERParticles.RUNE.get(), getX() - motion.x * 0.33 * i + (random.nextDouble() - 0.5) * 0.3,
+                            getY() + 0.15 - motion.y * 0.33 * i + (random.nextDouble() - 0.5) * 0.3,
+                            getZ() - motion.z * 0.33 * i + (random.nextDouble() - 0.5) * 0.3, 0.0, 0.0, 0.0);
+                }
+                level().addParticle(net.minecraft.core.particles.ParticleTypes.WITCH, getX(), getY() + 0.15, getZ(),
+                        0.0, 0.0, 0.0);
             }
             return;
         }
@@ -172,6 +186,9 @@ public final class MagicProjectile extends ThrowableItemProjectile {
     private void explode(Vec3 at) {
         if (getOwner() instanceof ServerPlayer owner && level() instanceof ServerLevel level && payload != null) {
             CombatHits.explosion(owner, level, at, payload);
+            if (com.eternalrealm.combat.WeaponProfiles.STAR_SIGIL.equals(payload.spec().kind())) {
+                WeaponSkillFx.sigilBurst(owner, level, at, payload.spec().explosionRadius());
+            }
         }
     }
 }

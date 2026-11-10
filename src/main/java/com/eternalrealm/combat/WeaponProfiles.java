@@ -10,6 +10,9 @@ import java.util.Optional;
  * scaling. Defined in code so the client's prediction and the server's validation always agree (D-030).
  */
 public final class WeaponProfiles {
+    /** Id of the staff's weapon skill and of its bolt (the projectile kind). */
+    public static final String STAR_SIGIL = "star_sigil";
+
     /** 片手剣: balanced three-step combo, good guard, whirlwind skill. */
     public static final WeaponProfile ONE_HANDED_SWORD = new WeaponProfile("one_handed_sword",
             WeaponType.ONE_HANDED_SWORD, 6.0, 0.0,
@@ -76,7 +79,10 @@ public final class WeaponProfiles {
                     frame(14, HitShape.line(6.5, 0.8), 1.0, 0.3)),
             new GuardProfile(0.50, 5, 70, 3.0));
 
-    /** 杖: magic bolts (INT); the third bolt and the charged orb explode; nova skill around the caster. */
+    /**
+     * 杖: magic bolts (INT); the third bolt and the charged orb explode; the weapon skill is a spell, the star sigil: a
+     * magic circle charges in front of the caster and launches a bolt that bursts where it lands.
+     */
     public static final WeaponProfile STAFF = new WeaponProfile("staff",
             WeaponType.STAFF, 6.0, 0.0,
             List.of(
@@ -88,8 +94,8 @@ public final class WeaponProfiles {
             new HeavyAttack(10, 40, 2.0, 3.5, 0.3,
                     heavy("staff_heavy", 16, 12, 20, HitFrame.launch(4,
                             ProjectileSpec.magic("magic_orb", 1.5, 24).withExplosion(2.5), 1.0, 0.8))),
-            skill("arcane_nova", 24, 22, 30, 200,
-                    frame(10, HitShape.circle(4.5), 2.0, 1.0)),
+            skill(STAR_SIGIL, 24, 22, 30, 200, HitFrame.launch(10,
+                    ProjectileSpec.magic(STAR_SIGIL, 1.3, 30).withExplosion(3.5), 2.2, 1.0)),
             new GuardProfile(0.35, 5, 75, 3.5));
 
     /** 弓: arrows (DEX); charged shots pierce; piercing arrow skill. */

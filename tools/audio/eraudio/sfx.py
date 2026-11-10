@@ -747,6 +747,153 @@ def art_black_sword_rain(rng):
     return room(place(3.6, *parts), 1.8, 0.35, "art_swords"), -1.0
 
 
+# ------------------------------------------------------------------------------------- weapon skills (Z key)
+
+def _rise(dur, f0, f1, rng, wave="sine", shape=1.6):
+    """A tone gliding from f0 to f1 that swells towards the end (a charge)."""
+    n = int(dur * SR)
+    t = seconds(n)
+    f = f0 * (f1 / f0) ** ((t / dur) ** 1.2)
+    ph = TAU * np.cumsum(f) / SR
+    tone = np.sin(ph) if wave == "sine" else np.sign(np.sin(ph)) * 0.5 + 0.5 * np.sin(2 * ph)
+    return tone * (t / dur) ** shape
+
+
+def charge_sword(rng):
+    """Wind spirals onto the blade, a bright metallic shimmer rises."""
+    wind = whoosh(0.4, 400, 2600, rng, 1.3, peak_at=0.9, shape=1.6)
+    shimmer = metal(rng, 1800, 8, 0.45, decay=0.5, spread=(1.0, 3.2)) * env_ar(int(0.45 * SR), 0.3, 1.5, 0.8)
+    tone = _rise(0.35, 600, 1500, rng) * 0.25
+    return place(0.6, (0.0, wind, 0.7), (0.05, shimmer, 0.35), (0.0, tone, 0.5)), -3.0
+
+
+def charge_greatsword(rng):
+    """A deep rumble grows under crackling embers."""
+    n = int(0.6 * SR)
+    t = seconds(n)
+    rumble = (np.sin(TAU * 52 * t) + 0.5 * np.sin(TAU * 78 * t)) * (t / 0.6) ** 1.4
+    embers = crackle(0.6, 60, rng, 1500, 7000, 0.003) * (t / 0.6)
+    swell = drums.reverse_swell(0.55, rng, 100, 2500)
+    return place(0.7, (0.0, rumble, 0.6), (0.0, embers, 0.35), (0.05, swell, 0.6)), -2.5
+
+
+def charge_dual(rng):
+    """Two blades scrape against each other: shing-shing."""
+    parts = []
+    for k, st in enumerate((0.0, 0.12)):
+        scrape = sweep_noise(0.12, 3000 + 1500 * k, 7000, rng, 0.6) * env_ar(int(0.12 * SR), 0.1, 2.0)
+        ring = metal(rng, 2400 + 500 * k, 6, 0.25, decay=0.3, spread=(1.0, 2.6))
+        parts += [(st, scrape, 0.5), (st + 0.02, ring, 0.35)]
+    return place(0.45, *parts), -3.0
+
+
+def charge_spear(rng):
+    """A drill-like whirr rising in pitch."""
+    n = int(0.42 * SR)
+    t = seconds(n)
+    f = 90 * 2 ** (t / 0.42 * 2.2)
+    whirr = np.sin(TAU * np.cumsum(f) / SR) * (0.5 + 0.5 * np.sin(TAU * np.cumsum(f * 0.25) / SR))
+    whirr = dsp.butter(whirr * (t / 0.42) ** 1.2, "lowpass", 3000, 2)
+    air = whoosh(0.4, 300, 2000, rng, 1.0, peak_at=0.95, shape=1.5)
+    return place(0.5, (0.0, whirr, 0.5), (0.0, air, 0.5)), -3.0
+
+
+def charge_staff(rng):
+    """A magic hum and a rising arpeggio of chimes as the circle is drawn."""
+    n = int(0.5 * SR)
+    t = seconds(n)
+    hum = (np.sin(TAU * 220 * t) + 0.6 * np.sin(TAU * 331 * t)) * (t / 0.5) ** 1.3 * 0.4
+    parts = [(0.0, hum, 0.5)]
+    for k, ratio in enumerate((1.0, 1.25, 1.5, 2.0)):
+        chime = metal(rng, 880 * ratio, 4, 0.35, decay=0.5, spread=(1.0, 2.0), bright=0.6)
+        parts.append((0.08 + 0.09 * k, chime, 0.25))
+    return place(0.75, *parts), -3.0
+
+
+def charge_bow(rng):
+    """The bowstring creaks taut while wind is drawn in."""
+    n = int(0.4 * SR)
+    t = seconds(n)
+    creak = np.sin(TAU * (140 + 60 * t / 0.4) * t) * (0.6 + 0.4 * np.sin(TAU * 31 * t)) * (t / 0.4)
+    creak = dsp.butter(creak, "bandpass", (200, 1800), 2) * 0.6
+    inhale = whoosh(0.38, 2500, 600, rng, 1.2, peak_at=0.85, shape=1.5)
+    return place(0.5, (0.0, creak, 0.5), (0.0, inhale, 0.5)), -3.0
+
+
+def skill_whirl(rng):
+    """A full circle of wind and steel."""
+    sweep = whoosh(0.45, 300, 3200, rng, 1.4, peak_at=0.45, shape=2.2)
+    ring = metal(rng, 1500, 10, 0.5, decay=0.35, spread=(1.0, 4.0))
+    hit = thump(rng, 160, 60, 0.25, 0.06)
+    return place(0.8, (0.0, sweep, 0.9), (0.18, ring, 0.3), (0.18, hit, 0.4)), -2.0
+
+
+def skill_quake(rng):
+    """The blade meets the ground: a boom, stone cracking open, falling debris."""
+    boom = drums.boom(0.8, rng, length=1.4, top=90, bottom=30)
+    crack = crackle(0.5, 220, rng, 600, 5000, 0.004)
+    burst = drums.noise_burst(int(0.35 * SR), rng, 150, 5000, 0.1)
+    debris = crackle(0.8, 40, rng, 1500, 6000, 0.01) * env_ar(int(0.8 * SR), 0.05, 2.0)
+    out = place(1.5, (0.0, boom, 1.0), (0.0, burst, 0.6), (0.02, crack, 0.5), (0.25, debris, 0.35))
+    return dsp.soft_clip(room(out, 1.2, 0.25, "skill_quake") * 1.2, 1.3), -1.5
+
+
+def skill_dance(rng):
+    """One quick crossing slash of the dance."""
+    cut = whoosh(0.16, 900, 5200, rng, 0.9, peak_at=0.55, shape=2.6)
+    ring = metal(rng, rng.uniform(2200, 2800), 6, 0.3, decay=0.25, spread=(1.0, 3.0))
+    return place(0.4, (0.0, cut, 0.9), (0.08, ring, 0.3)), -3.0
+
+
+def skill_drill(rng):
+    """The spear punches through the air: a spiralling burst and a thud."""
+    pierce = sweep_noise(0.22, 6000, 1200, rng, 0.8) * env_ar(int(0.22 * SR), 0.05, 2.5)
+    n = int(0.22 * SR)
+    t = seconds(n)
+    spiral = np.sin(TAU * np.cumsum(400 * 2 ** (-t / 0.22 * 1.5)) / SR) * env_ar(n, 0.05, 2.0) * 0.5
+    hit = thump(rng, 140, 50, 0.3, 0.07)
+    return place(0.5, (0.0, pierce, 0.8), (0.0, spiral, 0.4), (0.06, hit, 0.6)), -2.5
+
+
+def skill_sigil_launch(rng):
+    """The magic circle fires its bolt: a bright whoom."""
+    n = int(0.35 * SR)
+    t = seconds(n)
+    f = 900 * 2 ** (-t / 0.35 * 2)
+    zap = np.sin(TAU * np.cumsum(f) / SR) * env_ar(n, 0.02, 2.0) * 0.6
+    air = whoosh(0.35, 3000, 600, rng, 1.0, peak_at=0.2, shape=2.0)
+    chime = metal(rng, 1760, 5, 0.4, decay=0.4, spread=(1.0, 2.0), bright=0.6)
+    return place(0.6, (0.0, zap, 0.6), (0.0, air, 0.6), (0.0, chime, 0.3)), -2.5
+
+
+def skill_sigil_burst(rng):
+    """The star bolt bursts: a crystalline blast with a shimmering tail."""
+    blast = drums.noise_burst(int(0.4 * SR), rng, 300, 9000, 0.09)
+    boom = drums.boom(0.6, rng, length=1.0, top=110, bottom=40)
+    shimmer = layer(*[metal(rng, f, 4, 0.9, decay=0.6, spread=(1.0, 2.0), bright=0.5)
+                      for f in (1320, 1760, 2217, 2637)])
+    out = place(1.3, (0.0, blast, 0.7), (0.0, boom, 0.8), (0.05, shimmer, 0.25))
+    return dsp.soft_clip(room(out, 1.4, 0.3, "skill_sigil") * 1.2, 1.3), -1.5
+
+
+def skill_arrow_launch(rng):
+    """A taut release and a sonic crack as the arrow tears away."""
+    twang = _twang(rng, 128, 1.2)
+    crack = drums.noise_burst(int(0.08 * SR), rng, 1500, 12000, 0.02)
+    streak = whoosh(0.4, 7000, 1500, rng, 0.9, peak_at=0.15, shape=2.0)
+    out = place(0.6, (0.0, twang, 0.6), (0.01, crack, 0.6), (0.02, streak, 0.6))
+    return dsp.soft_clip(out * 1.6, 1.3), -2.0
+
+
+def skill_impact(rng):
+    """A skill strike landing: a heavy thud, a metallic bite and a crack."""
+    hit = thump(rng, 180, 55, 0.35, 0.08)
+    bite = metal(rng, rng.uniform(900, 1300), 8, 0.3, decay=0.2, spread=(1.0, 3.5))
+    crack = drums.noise_burst(int(0.06 * SR), rng, 2000, 10000, 0.015)
+    out = place(0.5, (0.0, hit, 0.9), (0.0, bite, 0.35), (0.0, crack, 0.5))
+    return dsp.soft_clip(out * 1.8, 1.3), -2.0
+
+
 # ------------------------------------------------------------------------------------------------- dispatch
 
 RENDERERS = {
@@ -763,6 +910,14 @@ RENDERERS = {
     "sfx/loot/rare_drop": rare_drop, "sfx/loot/legendary_drop": legendary_drop,
     "sfx/enhance/success": enhance_success, "sfx/enhance/fail": enhance_fail,
     "sfx/ui/click": ui_click, "sfx/ui/journal_open": journal_open,
+    "sfx/weapon_skill/charge_sword": charge_sword, "sfx/weapon_skill/charge_greatsword": charge_greatsword,
+    "sfx/weapon_skill/charge_dual": charge_dual, "sfx/weapon_skill/charge_spear": charge_spear,
+    "sfx/weapon_skill/charge_staff": charge_staff, "sfx/weapon_skill/charge_bow": charge_bow,
+    "sfx/weapon_skill/whirl": skill_whirl, "sfx/weapon_skill/quake": skill_quake,
+    "sfx/weapon_skill/dance_1": skill_dance, "sfx/weapon_skill/dance_2": skill_dance,
+    "sfx/weapon_skill/drill": skill_drill, "sfx/weapon_skill/sigil_launch": skill_sigil_launch,
+    "sfx/weapon_skill/sigil_burst": skill_sigil_burst, "sfx/weapon_skill/arrow_launch": skill_arrow_launch,
+    "sfx/weapon_skill/impact_1": skill_impact, "sfx/weapon_skill/impact_2": skill_impact,
     "sfx/art/shadow_legion": art_shadow_legion, "sfx/art/thornroot_bloom": art_thornroot_bloom,
     "sfx/art/sand_maelstrom": art_sand_maelstrom, "sfx/art/doom_guillotine": art_doom_guillotine,
     "sfx/art/frozen_prison": art_frozen_prison, "sfx/art/meteor_slash": art_meteor_slash,

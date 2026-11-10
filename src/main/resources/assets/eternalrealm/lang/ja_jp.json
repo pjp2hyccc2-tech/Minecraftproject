@@ -4048,5 +4048,20 @@
   "subtitles.eternalrealm.art.meteor_slash": "竜星が落ちる",
   "subtitles.eternalrealm.art.sand_maelstrom": "砂の大渦",
   "subtitles.eternalrealm.art.shadow_legion": "影法師の乱舞",
-  "subtitles.eternalrealm.art.thornroot_bloom": "茨の根が咲く"
+  "subtitles.eternalrealm.art.thornroot_bloom": "茨の根が咲く",
+  "action.eternalrealm.star_sigil": "星紋の魔弾",
+  "subtitles.eternalrealm.weapon_skill.arrow_launch": "光の矢が飛ぶ",
+  "subtitles.eternalrealm.weapon_skill.charge_bow": "弓を引き絞る",
+  "subtitles.eternalrealm.weapon_skill.charge_dual": "双剣が鳴る",
+  "subtitles.eternalrealm.weapon_skill.charge_greatsword": "大剣に力がこもる",
+  "subtitles.eternalrealm.weapon_skill.charge_spear": "槍が唸る",
+  "subtitles.eternalrealm.weapon_skill.charge_staff": "魔法陣が輝く",
+  "subtitles.eternalrealm.weapon_skill.charge_sword": "刃に風が集まる",
+  "subtitles.eternalrealm.weapon_skill.dance": "刃が舞う",
+  "subtitles.eternalrealm.weapon_skill.drill": "螺旋の突き",
+  "subtitles.eternalrealm.weapon_skill.impact": "技が命中する",
+  "subtitles.eternalrealm.weapon_skill.quake": "大地が裂ける",
+  "subtitles.eternalrealm.weapon_skill.sigil_burst": "魔弾が炸裂する",
+  "subtitles.eternalrealm.weapon_skill.sigil_launch": "星紋の魔弾",
+  "subtitles.eternalrealm.weapon_skill.whirl": "旋風の刃"
 }

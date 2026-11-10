@@ -26,6 +26,9 @@ final class CombatEffects {
     /** Swing / dodge sound for everyone around except the actor (who already heard the predicted sound). */
     static void actionStarted(ServerPlayer player, CombatEvent.ActionStarted start) {
         ActionKind kind = start.action().kind();
+        if (WeaponSkillFx.isWeaponSkill(start.action())) {
+            return; // the weapon skill's own wind-up (WeaponSkillFx)
+        }
         SoundEvent sound;
         float pitch;
         float volume = 0.8F;
@@ -123,6 +126,7 @@ final class CombatEffects {
         if (kind == ActionKind.SKILL) {
             level.sendParticles(ParticleTypes.ENCHANTED_HIT, target.getX(), y, target.getZ(), 8, 0.3, 0.3, 0.3, 0.2);
             level.sendParticles(ERParticles.RUNE.get(), target.getX(), y, target.getZ(), 4, 0.3, 0.3, 0.3, 0.05);
+            WeaponSkillFx.impact(attacker, target, critical); // only while the attacker's weapon skill is out
         }
     }
 

@@ -37,11 +37,20 @@ public final class CombatAnimations {
     /**
      * @param start    client tick the action started
      * @param duration length in ticks
+     * @param local    the local player's own action (it holds still during a {@link HitStop})
      */
-    public record Anim(Motion motion, WeaponType weapon, long start, int duration) {
+    public record Anim(Motion motion, WeaponType weapon, long start, int duration, boolean local) {
+        public Anim(Motion motion, WeaponType weapon, long start, int duration) {
+            this(motion, weapon, start, duration, false);
+        }
+
         /** Progress in [0, 1]. */
         public float progress(long tick, float partialTick) {
-            return Math.max(0.0F, Math.min(1.0F, (tick - start + partialTick) / Math.max(1, duration)));
+            float elapsed = tick - start + partialTick;
+            if (local) {
+                elapsed = HitStop.adjust(tick, partialTick, elapsed);
+            }
+            return Math.max(0.0F, Math.min(1.0F, elapsed / Math.max(1, duration)));
         }
     }
 
@@ -82,7 +91,8 @@ public final class CombatAnimations {
         WeaponType type = fighter.weapon().type();
         long chargeStart = fighter.chargeStartTick();
         if (chargeStart >= 0) {
-            return Optional.of(new Anim(Motion.CHARGE, type, chargeStart, fighter.weapon().heavy().maxChargeTicks()));
+            return Optional.of(new Anim(Motion.CHARGE, type, chargeStart, fighter.weapon().heavy().maxChargeTicks(),
+                    true));
         }
         Optional<ActionDefinition> action = fighter.currentAction();
         if (action.isEmpty()) {
@@ -90,7 +100,8 @@ public final class CombatAnimations {
         }
         long start = fighter.actionStartTick();
         int duration = (int) Math.max(1L, fighter.actionEndTick() - start);
-        return Optional.of(new Anim(motionOf(action.get().id(), fighter.currentComboStep(), type), type, start, duration));
+        return Optional.of(new Anim(motionOf(action.get().id(), fighter.currentComboStep(), type), type, start, duration,
+                true));
     }
 
     /** Charge progress of the local player in [0, 1] (0 when not charging). */
@@ -121,7 +132,7 @@ public final class CombatAnimations {
             return Motion.SHOOT;
         }
         if (weapon == WeaponType.STAFF) {
-            return actionId.equals("arcane_nova") ? Motion.SPIN : Motion.CAST;
+            return Motion.CAST; // bolts and the star sigil are spells: the staff is raised, never swung
         }
         if (Jobs.skill(actionId).isPresent()) {
             String id = actionId;
