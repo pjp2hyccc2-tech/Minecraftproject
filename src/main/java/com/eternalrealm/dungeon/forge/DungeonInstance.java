@@ -16,6 +16,8 @@ import com.eternalrealm.dungeon.InstanceSlot;
 import com.eternalrealm.dungeon.MonsterCount;
 import com.eternalrealm.dungeon.RoomLayout;
 import com.eternalrealm.dungeon.RunState;
+import com.eternalrealm.dungeon.decor.DecorPlan;
+import com.eternalrealm.dungeon.forge.decor.DecorBuilder;
 import com.eternalrealm.monster.MonsterSpawn;
 import com.eternalrealm.monster.MonsterTemplate;
 import com.eternalrealm.monster.Monsters;
@@ -76,6 +78,9 @@ final class DungeonInstance {
     final Map<UUID, Origin> returns = new HashMap<>();
     private final DungeonService service;
     private final List<BlockFill> plan;
+    /** The interior decoration, built after the plan (docs/modules/dungeons.md). */
+    private final DecorBuilder decor;
+    private List<BlockBox> clearBoxes = List.of();
     private final Set<UUID> spawned = new HashSet<>();
     private int fillIndex;
     private long fillOffset;
@@ -107,6 +112,7 @@ final class DungeonInstance {
         this.origin = DungeonLevels.origin(level, slot);
         this.returns.putAll(returns);
         this.plan = layout.buildPlan();
+        this.decor = new DecorBuilder(level, origin, layout);
     }
 
     Optional<BossFight> fight() {
@@ -130,7 +136,7 @@ final class DungeonInstance {
         }
         RunState state = run.state();
         if (state == RunState.BUILDING) {
-            if (buildSlice()) {
+            if (buildSlice() && decor.buildSlice()) {
                 handle(run.onBuilt());
                 if (trapsEnabled()) {
                     hazards = DungeonHazards.forInstance(level, layout, origin, difficulty);
@@ -195,7 +201,7 @@ final class DungeonInstance {
 
     /** Clears the occupied boxes a slice per tick, then releases the slot. */
     private void clearSlice() {
-        List<BlockBox> boxes = layout.occupiedBoxes();
+        List<BlockBox> boxes = clearBoxes;
         int budget = BLOCKS_PER_TICK * 2;
         while (clearIndex < boxes.size() && budget > 0) {
             BlockBox box = boxes.get(clearIndex);
@@ -360,8 +366,14 @@ final class DungeonInstance {
 
     void bringIn(ServerPlayer player) {
         BlockPos entry = DungeonLevels.at(origin, layout.entry());
-        player.teleportTo(level, entry.getX() + 0.5, entry.getY(), entry.getZ() + 0.5, 180.0F, 0.0F);
+        player.teleportTo(level, entry.getX() + 0.5, entry.getY(), entry.getZ() + 0.5, revivalYaw(), 0.0F);
         player.setHealth(player.getMaxHealth());
+    }
+
+    /** A fallen member who chose to come back: in front of the hall's revival monument, facing into the dungeon. */
+    void toRevivalPoint(ServerPlayer player) {
+        BlockPos point = revivalPoint();
+        player.teleportTo(level, point.getX() + 0.5, point.getY(), point.getZ() + 0.5, revivalYaw(), 0.0F);
     }
 
     void sendBack(ServerPlayer player) {
@@ -419,7 +431,23 @@ final class DungeonInstance {
                 com.eternalrealm.monster.forge.MonsterTags.TAG) || mob.getTags().contains(BossFight.TAG))) {
             leftover.discard();
         }
+        decor.drainFluids();
+        clearBoxes = new ArrayList<>(layout.occupiedBoxes());
+        clearBoxes.addAll(decor.extraBoxes());
         clearing = true;
+    }
+
+    /**
+     * Where fallen members come back: the feet position in front of the entrance hall's revival monument (the
+     * layout's entry until the decoration is planned). Face {@link #revivalYaw()} there: into the dungeon.
+     */
+    BlockPos revivalPoint() {
+        return DungeonLevels.at(origin, decor.plan().map(DecorPlan::revivalPoint).orElse(layout.entry()));
+    }
+
+    /** Facing at {@link #revivalPoint()}: towards the entrance door. */
+    float revivalYaw() {
+        return decor.plan().map(DecorPlan::revivalYaw).orElse(180.0F);
     }
 
     private void setDoor(Door door, boolean sealed) {
