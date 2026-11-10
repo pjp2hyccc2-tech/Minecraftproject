@@ -167,7 +167,12 @@ public final class JobGameTests {
         UUID id = player.getUUID();
         data.onPlayerJoin(id, "gametest_job");
         AtomicBoolean done = new AtomicBoolean();
+        java.util.concurrent.atomic.AtomicReference<GameTestAssertException> failure =
+                new java.util.concurrent.atomic.AtomicReference<>();
         helper.succeedWhen(() -> {
+            if (failure.get() != null) {
+                throw failure.get(); // a failed check must not turn into a pass on the next tick
+            }
             if (done.get()) {
                 return;
             }
@@ -182,8 +187,9 @@ public final class JobGameTests {
             data.onPlayerLeave(id);
             done.set(true);
             if (!changed || !"mage".equals(snapshot.jobId()) || !hasStaff) {
-                throw new GameTestAssertException("job choice failed: changed=" + changed + ", job="
-                        + snapshot.jobId() + ", staff=" + hasStaff);
+                failure.set(new GameTestAssertException("job choice failed: changed=" + changed + ", job="
+                        + snapshot.jobId() + ", staff=" + hasStaff));
+                throw failure.get();
             }
         });
     }

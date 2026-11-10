@@ -47,6 +47,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The job skill trees on a real server: job weapon sets enforced by the server's combat state, the tree rules
@@ -126,7 +127,11 @@ public final class SkillTreeGameTests {
         UUID id = player.getUUID();
         data.onPlayerJoin(id, "gametest_tree");
         AtomicBoolean done = new AtomicBoolean();
+        AtomicReference<GameTestAssertException> failure = new AtomicReference<>();
         helper.succeedWhen(() -> {
+            if (failure.get() != null) {
+                throw failure.get(); // keeps failing (with the first message) until the test times out
+            }
             if (done.get()) {
                 return;
             }
@@ -176,6 +181,9 @@ public final class SkillTreeGameTests {
                                 + ", gold " + after.gold());
                 expect(data.investSkill(id, "knight_heavy_slam"), SkillTree.InvestResult.PREREQUISITE,
                         "heavy slam after the reset");
+            } catch (GameTestAssertException e) {
+                failure.set(e);
+                throw e;
             } finally {
                 data.onPlayerLeave(id);
             }
