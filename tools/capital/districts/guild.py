@@ -641,3 +641,5 @@ def build(w, district, terrain):
     side_facades(w)
     roof(w)
     clock_tower(w)
+    TK.crowd(w, "guild", [(-31, 1, -18), (-36, 1, -26), (-42, 1, -12), (-31, 1, -10), (-37, GY + 1, -9),
+                          (-46, GY + 1, -20)], need=10)

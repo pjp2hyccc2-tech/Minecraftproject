@@ -117,6 +117,12 @@ def pave(w, x0, z0, x1, z1, mix=None, seed=0, y=0, only_ground=True):
     x0, x1 = sorted((x0, x1))
     z0, z1 = sorted((z0, z1))
     X, Z = np.meshgrid(np.arange(x0, x1 + 1), np.arange(z0, z1 + 1), indexing="ij")
+    from capital.world import X0 as WX0, Z0 as WZ0
+    bx0, by0, bz0, bx1, by1, bz1 = w._bounds()
+    inb = (X >= bx0) & (X <= bx1) & (Z >= bz0) & (Z <= bz1)
+    keep = np.zeros(X.shape, bool)
+    keep[inb] = w._colmask()[X[inb] - WX0, Z[inb] - WZ0]
+    X, Z = X[keep], Z[keep]
     mix = mix or COBBLE_MIX
     wts = np.array([m[1] for m in mix], float)
     c = np.cumsum(wts / wts.sum())
@@ -398,7 +404,7 @@ def house(f, W, D, sp: HouseSpec, nb_left=True, nb_right=True):
                     for y in range(eave + 1, ridge + 1):
                         if f.get(x, y, z) == B.canon(plaster):
                             f.set(x, y, z, tim)
-        if sp.dormers and W >= 7:
+        if sp.dormers and W >= 7 and ridge - eave >= 7:
             for a in ([W // 2] if W < 12 else [W // 3, W - 1 - W // 3]):
                 if abs(a - door_x) <= 0 or True:
                     K.dormer(f, roof, -1, a, width=3, wall="white_plaster", frame=sp.timber,

@@ -373,7 +373,30 @@ def flags(w):
             TK.flag(w, x, 11, z, "east", "kingdom", 3.0, 2.0)
 
 
+def flagstones(w):
+    """Re-lay the plaza field in large flagstones with smooth castle stone rings; the ring road in cobbles."""
+    R = 26
+    X, Z = np.meshgrid(np.arange(-R, R + 1), np.arange(-R, R + 1), indexing="ij")
+    r = np.sqrt(X * X + Z * Z)
+    ids_old = [w.idx(B.S(n)) for n in ("smooth_stone", "calcite", "polished_diorite")]
+    road_old = [w.idx(B.S(n)) for n in ("stone_bricks", "polished_andesite", "andesite", "cobblestone",
+                                        "cracked_stone_bricks")]
+    from capital.world import X0 as WX0, Z0 as WZ0, Y0 as WY0
+    cur = w.a[X - WX0, Z - WZ0, 0 - WY0]
+    field = (r <= 21.6) & np.isin(cur, ids_old) & (r > 10.5)
+    ring = field & (np.abs(r - 15.5) < 0.5)
+    road = (r > 22.4) & (r <= 26.4) & np.isin(cur, road_old)
+    w.a[X[field] - WX0, Z[field] - WZ0, 0 - WY0] = w.idx(B.S("plaza_flagstones"))
+    w.a[X[ring] - WX0, Z[ring] - WZ0, 0 - WY0] = w.idx(K.F(K.SM))
+    u = hash2(X[road], Z[road], 2301)
+    w.a[X[road] - WX0, Z[road] - WZ0, 0 - WY0] = np.where(u < 0.85, w.idx(B.S("cobbled_paving")),
+                                                         w.idx(B.S("stone_bricks"))).astype(np.uint16)
+    edge = (r > 21.6) & (r <= 22.4)
+    w.a[X[edge] - WX0, Z[edge] - WZ0, 0 - WY0] = w.idx(K.F(K.SM))
+
+
 def build(w, district, terrain):
+    flagstones(w)
     paving(w)
     fountain(w)
     angel(w, 0, STATUE_Y, 0, scale=1.0)
@@ -383,3 +406,6 @@ def build(w, district, terrain):
     jets(w)
     flags(w)
     w.spot("spawn", (0, 1, 14), 180.0)
+    TK.crowd(w, "plaza", [(-6, 1, 18), (6, 1, 18), (18, 1, 6), (18, 1, -6), (-18, 1, 6), (-18, 1, -6),
+                          (6, 1, -18), (-6, 1, -18), (12, 1, 12), (-12, 1, 12), (12, 1, -12), (-12, 1, -12),
+                          (0, 1, 22)], need=22)

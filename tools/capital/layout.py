@@ -142,6 +142,10 @@ DISTRICTS: dict[str, District] = {d.name: d for d in [
     District("arena", [(-160, -80, -113, -7)], title="闘技場 Arena", notes="Arena outside the west gate (Zain)."),
     District("east_riverside", [(113, -60, 159, -7), (113, 7, 159, 86)], title="東の川辺 East riverside",
              notes="Fields east of the river and the watermill on its bank."),
+    District("streets", [(-5, -45, 5, -27), (-5, 27, 5, 65), (-98, -5, -27, 5), (27, -5, 87, 5),
+                         (-98, -46, -10, -40), (-9, -45, 9, -40), (10, -46, 98, -40), (-98, 40, 98, 46),
+                         (-58, -84, -52, 39), (52, -39, 58, 39)], exclude_circles=_PL,
+             title="通り Streets", notes="Re-paving of the town roads, street furniture, signposts."),
     District("castle", [(-112, -208, 112, -87), (-9, -88, 9, -46)], ground_y=PLATEAU_Y, owner="capital",
              title="王城 Royal castle", notes="Castle plateau, castle, viaduct (built by the framework)."),
 ]}
