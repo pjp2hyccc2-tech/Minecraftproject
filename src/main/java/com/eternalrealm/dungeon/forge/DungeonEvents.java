@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
@@ -65,6 +66,14 @@ public final class DungeonEvents {
                         SoundSource.HOSTILE, 0.6F, 1.4F);
             }
         });
+    }
+
+    /** Damage a member takes during the boss fight counts for the ranking and the MVP (after armour and guards). */
+    public static void onLivingDamage(LivingDamageEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player && !player.level().isClientSide() && event.getAmount() > 0.0F) {
+            ServerContext.current().flatMap(context -> context.game().dungeons().fightFor(player))
+                    .ifPresent(fight -> fight.recordTaken(player, Math.min(event.getAmount(), player.getHealth())));
+        }
     }
 
     public static void onLivingDeath(LivingDeathEvent event) {

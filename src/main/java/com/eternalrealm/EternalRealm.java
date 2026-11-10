@@ -115,6 +115,7 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLivingAttack);
         forgeBus.addListener(com.eternalrealm.boss.forge.BossProps::onEntityJoin);
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLivingDeath);
+        forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLivingDamage);
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLivingDrops);
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onExperienceDrop);
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onRespawn);

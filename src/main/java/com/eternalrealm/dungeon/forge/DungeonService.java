@@ -256,6 +256,7 @@ public final class DungeonService {
     public void onPlayerDeath(ServerPlayer player) {
         DungeonInstance instance = byMember.get(player.getUUID());
         if (instance != null) {
+            instance.fight().filter(fight -> !fight.isOver()).ifPresent(fight -> fight.recordFall(player));
             instance.tellAll(Component.translatable("message.eternalrealm.dungeon.member_down", player.getDisplayName(),
                     instance.run.deaths() + 1).withStyle(ChatFormatting.GRAY), false);
             instance.dispatch(instance.run.onPlayerDied(player.getUUID()));

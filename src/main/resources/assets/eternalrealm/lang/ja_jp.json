@@ -2278,5 +2278,11 @@
   "message.eternalrealm.revival.revived.leaf_ally": "%s が世界樹の葉で蘇生してくれた",
   "message.eternalrealm.revival.revived.resurrection": "%s のリザレクションで蘇生した",
   "message.eternalrealm.revival.revived.return": "セーブポイントで復活した",
-  "message.eternalrealm.revival.revived.auto_return": "セーブポイントへ帰還した"
+  "message.eternalrealm.revival.revived.auto_return": "セーブポイントへ帰還した",
+  "hud.eternalrealm.boss.shield": "シールド",
+  "hud.eternalrealm.boss.invulnerable": "無敵",
+  "hud.eternalrealm.boss.defeated": "撃破",
+  "hud.eternalrealm.boss.enraged": "激昂",
+  "hud.eternalrealm.boss.enrage_in": "激昂まで %s",
+  "hud.eternalrealm.boss.ranking": "ダメージランキング"
 }

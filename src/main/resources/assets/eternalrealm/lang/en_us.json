@@ -2278,5 +2278,11 @@
   "message.eternalrealm.revival.revived.leaf_ally": "%s revived you with a Yggdrasil Leaf",
   "message.eternalrealm.revival.revived.resurrection": "%s's Resurrection brings you back",
   "message.eternalrealm.revival.revived.return": "You returned to your save point",
-  "message.eternalrealm.revival.revived.auto_return": "You were brought back to your save point"
+  "message.eternalrealm.revival.revived.auto_return": "You were brought back to your save point",
+  "hud.eternalrealm.boss.shield": "Shield",
+  "hud.eternalrealm.boss.invulnerable": "Invulnerable",
+  "hud.eternalrealm.boss.defeated": "Defeated",
+  "hud.eternalrealm.boss.enraged": "Enraged",
+  "hud.eternalrealm.boss.enrage_in": "Enrage in %s",
+  "hud.eternalrealm.boss.ranking": "Damage ranking"
 }

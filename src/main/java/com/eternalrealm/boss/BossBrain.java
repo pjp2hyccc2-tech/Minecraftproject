@@ -331,7 +331,7 @@ public final class BossBrain {
         for (Wave wave : waves) {
             lastFire = Math.max(lastFire, wave.fireTick);
         }
-        active = new Active(ability, waves, lastFire + ability.castTicks(), transition);
+        active = new Active(ability, waves, now, lastFire + ability.castTicks(), transition);
         if (!transition) {
             readyAt.put(ability.id(), now + scaled(ability.cooldownTicks()));
         }
@@ -805,6 +805,33 @@ public final class BossBrain {
         return active == null ? Optional.empty() : Optional.of(active.ability);
     }
 
+    /**
+     * The ability being prepared (the cast bar): when it started, when its first hit lands and when the boss is free
+     * again. Empty between abilities and during form changes.
+     */
+    public Optional<Cast> cast() {
+        if (active == null || active.transition) {
+            return Optional.empty();
+        }
+        long firstHit = Long.MAX_VALUE;
+        for (Wave wave : active.waves) {
+            firstHit = Math.min(firstHit, wave.fireTick);
+        }
+        if (firstHit == Long.MAX_VALUE) {
+            firstHit = active.startTick + active.ability.telegraphTicks();
+        }
+        return Optional.of(new Cast(active.ability, active.startTick, firstHit, active.endTick));
+    }
+
+    /** An ability in preparation; see {@link #cast()}. */
+    public record Cast(BossAbility ability, long startTick, long firstHitTick, long endTick) {
+    }
+
+    /** Tick of the soft enrage (or {@link Long#MAX_VALUE} before the fight started). */
+    public long enrageTick() {
+        return started ? fightStartTick + definition.enrageAfterTicks() : Long.MAX_VALUE;
+    }
+
     /** Abilities the boss can pick in the current phase on this difficulty. */
     public List<BossAbility> rotation() {
         return rotations.get(phaseIndex);
@@ -919,12 +946,14 @@ public final class BossBrain {
     private static final class Active {
         final BossAbility ability;
         final List<Wave> waves;
+        final long startTick;
         final long endTick;
         final boolean transition;
 
-        Active(BossAbility ability, List<Wave> waves, long endTick, boolean transition) {
+        Active(BossAbility ability, List<Wave> waves, long startTick, long endTick, boolean transition) {
             this.ability = ability;
             this.waves = waves;
+            this.startTick = startTick;
             this.endTick = endTick;
             this.transition = transition;
         }

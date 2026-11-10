@@ -12,6 +12,7 @@ import com.eternalrealm.boss.BossPosition;
 import com.eternalrealm.boss.BossRules;
 import com.eternalrealm.boss.BossShape;
 import com.eternalrealm.boss.BossTexts;
+import com.eternalrealm.boss.Contributions;
 import com.eternalrealm.boss.DefeatSequence;
 import com.eternalrealm.boss.Difficulty;
 import com.eternalrealm.boss.Point;
@@ -30,6 +31,9 @@ import com.eternalrealm.monster.MonsterTemplate;
 import com.eternalrealm.monster.Monsters;
 import com.eternalrealm.monster.forge.MonsterFactory;
 import com.eternalrealm.server.ServerContext;
+import com.eternalrealm.server.UiData;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -58,6 +62,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -82,6 +87,10 @@ import java.util.function.Consumer;
  */
 public final class BossFight {
     public static final String TAG = "eternalrealm_boss";
+    /** The boss HUD of the participants (Ragnarok-X-style frame, cast bar, damage ranking). */
+    public static final String HUD_CHANNEL = "boss_hud";
+    private static final int HUD_INTERVAL = 4;
+    private static final int RANKING_ROWS = 5;
     static final String FIGHT = "er_fight";
     /** Half size of the arena floor when the caller does not know it (tests). */
     public static final double DEFAULT_ARENA_HALF_SIZE = 14.5;
@@ -164,6 +173,7 @@ public final class BossFight {
     private final Set<UUID> shieldAdds = new HashSet<>();
     private final Set<UUID> adds = new HashSet<>();
     private final Map<String, AbilityLook> looks = new HashMap<>();
+    private final Contributions contributions = new Contributions();
     private final BossProps props;
     private final BossVfx vfx;
     private final Consumer<BossFight> onKilled;
@@ -206,6 +216,7 @@ public final class BossFight {
         this.bar = new ServerBossEvent(body.getDisplayName(), BossEvent.BossBarColor.PURPLE,
                 BossEvent.BossBarOverlay.NOTCHED_10);
         this.bar.setDarkenScreen(true);
+        this.bar.setVisible(false); // the boss HUD replaces the vanilla bar
     }
 
     /** Spawns the boss at {@code spawn} in an arena of unknown size and starts the fight. */
@@ -309,14 +320,21 @@ public final class BossFight {
         if (defeated || dying || defeatPending || !(amount > 0.0)) {
             return;
         }
+        double dealt = Math.min(health, amount);
         health = Math.max(0.0, health - amount);
-        if (attacker instanceof ServerPlayer player && participants.contains(player.getUUID())) {
-            threat.merge(player.getUUID(), amount * threatMultiplier(player), Double::sum);
+        ServerPlayer hitter = attacker instanceof ServerPlayer player && participants.contains(player.getUUID())
+                ? player : null;
+        if (hitter != null) {
+            threat.merge(hitter.getUUID(), amount * threatMultiplier(hitter), Double::sum);
+            contributions.damage(hitter.getUUID(), hitter.getGameProfile().getName(), jobOf(hitter), dealt);
         }
         bar.setProgress((float) (health / maxHealth));
         if (health <= 0.0) {
             defeatPending = true; // the collapse starts on the next tick, outside the damage event
             killTick = now;
+            if (hitter != null) {
+                contributions.lastHit(hitter.getUUID());
+            }
         }
     }
 
@@ -324,6 +342,37 @@ public final class BossFight {
         JobType job = ServerContext.current().flatMap(context -> context.playerData().snapshot(player.getUUID()))
                 .map(CharacterSnapshot::jobId).map(JobType::fromStored).orElse(JobType.NONE);
         return job.isChosen() ? Jobs.get(job).threatMultiplier() : 1.0;
+    }
+
+    private static String jobOf(ServerPlayer player) {
+        return ServerContext.current().flatMap(context -> context.playerData().snapshot(player.getUUID()))
+                .map(CharacterSnapshot::jobId).map(JobType::fromStored).map(JobType::id).orElse("none");
+    }
+
+    /** Who did what so far (ranking, MVP). */
+    public Contributions contributions() {
+        return contributions;
+    }
+
+    /** A participant took {@code amount} damage during the fight (damage ranking, MVP score). */
+    public void recordTaken(ServerPlayer player, double amount) {
+        if (participants.contains(player.getUUID()) && !isDefeated()) {
+            contributions.taken(player.getUUID(), player.getGameProfile().getName(), jobOf(player), amount);
+        }
+    }
+
+    /** A participant healed allies for {@code amount} during the fight. */
+    public void recordHealing(ServerPlayer healer, double amount) {
+        if (participants.contains(healer.getUUID()) && !isDefeated()) {
+            contributions.healing(healer.getUUID(), healer.getGameProfile().getName(), jobOf(healer), amount);
+        }
+    }
+
+    /** A participant fell (戦闘不能). */
+    public void recordFall(ServerPlayer player) {
+        if (participants.contains(player.getUUID()) && !isDefeated()) {
+            contributions.fell(player.getUUID(), player.getGameProfile().getName(), jobOf(player));
+        }
     }
 
     /** One of the summoned adds died (or vanished). */
@@ -342,6 +391,9 @@ public final class BossFight {
         props.tick(now);
         if (defeated || ended) {
             return;
+        }
+        if (now % HUD_INTERVAL == 0) {
+            sendHud();
         }
         if (dying) {
             tickDefeat();
@@ -1011,6 +1063,74 @@ public final class BossFight {
         player.connection.send(new ClientboundSetTitleTextPacket(title));
     }
 
+    // ------------------------------------------------------------------ HUD
+
+    /** HP layers of the bar ("×N"): more for bosses with more health. */
+    static int layers(double maxHealth) {
+        return Mth.clamp((int) Math.round(Math.sqrt(maxHealth / 30.0)), 3, 25);
+    }
+
+    /** Sends the boss HUD (frame, cast bar, ranking) to every participant in the level. */
+    private void sendHud() {
+        List<ServerPlayer> audience = audience();
+        if (audience.isEmpty()) {
+            return;
+        }
+        JsonObject base = new JsonObject();
+        base.addProperty("id", id.toString());
+        base.addProperty("name", Component.Serializer.toJson(body.getDisplayName()));
+        base.addProperty("boss", bossId());
+        base.addProperty("level", brain.definition().level());
+        base.addProperty("difficulty", brain.difficulty().name().toLowerCase(Locale.ROOT));
+        base.addProperty("difficultyKey", brain.difficulty().translationKey());
+        base.addProperty("hp", Math.round(health * 10.0) / 10.0);
+        base.addProperty("max", Math.round(maxHealth * 10.0) / 10.0);
+        base.addProperty("layers", layers(maxHealth));
+        base.addProperty("phase", brain.phase());
+        base.addProperty("phases", brain.definition().phases().size());
+        base.addProperty("shield", shielded);
+        base.addProperty("invulnerable", isInvulnerable());
+        base.addProperty("dying", isDying());
+        base.addProperty("enraged", brain.isEnraged());
+        long enrageTick = brain.enrageTick();
+        base.addProperty("enrage", enrageTick == Long.MAX_VALUE ? -1.0 : Math.max(0L, enrageTick - now) / 20.0);
+        brain.cast().ifPresent(cast -> {
+            long left = cast.firstHitTick() - now;
+            if (left > 0 && !isDying()) {
+                JsonObject castBar = new JsonObject();
+                castBar.addProperty("key", cast.ability().translationKey());
+                castBar.addProperty("total", Math.max(1L, cast.firstHitTick() - cast.startTick()) / 20.0);
+                castBar.addProperty("left", left / 20.0);
+                base.add("cast", castBar);
+            }
+        });
+        List<Contributions.Line> ranking = contributions.byDamage();
+        for (ServerPlayer player : audience) {
+            JsonObject data = base.deepCopy();
+            JsonArray rows = new JsonArray();
+            int place = 0;
+            for (Contributions.Line line : ranking) {
+                place++;
+                boolean me = line.id().equals(player.getUUID());
+                if (place > RANKING_ROWS && !me) {
+                    continue;
+                }
+                JsonObject row = new JsonObject();
+                row.addProperty("pos", place);
+                row.addProperty("name", line.name());
+                row.addProperty("job", line.job());
+                row.addProperty("damage", Math.round(line.damage()));
+                row.addProperty("share", Math.round(line.share() * 1000.0) / 1000.0);
+                if (me) {
+                    row.addProperty("me", true);
+                }
+                rows.add(row);
+            }
+            data.add("rank", rows);
+            UiData.send(player, HUD_CHANNEL, data);
+        }
+    }
+
     // ------------------------------------------------------------------ defeat
 
     /** The killing blow: everything stops, the boss freezes and starts to collapse. */
@@ -1105,6 +1225,12 @@ public final class BossFight {
             return;
         }
         ended = true;
+        JsonObject over = new JsonObject();
+        over.addProperty("id", id.toString());
+        over.addProperty("end", true);
+        for (ServerPlayer player : audience()) {
+            UiData.send(player, HUD_CHANNEL, over);
+        }
         bar.removeAllPlayers();
         bar.setVisible(false);
         clearAttacks();
