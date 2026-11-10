@@ -64,7 +64,7 @@ public final class DungeonResultScreen extends Screen {
     private int popped;
     private long exitAt;
 
-    public static void init() {
+    public static void registerChannels() {
         ClientChannels.register(CHANNEL, DungeonResultScreen::open);
         ClientChannels.register(BONUS_CHANNEL, DungeonResultScreen::onBonus);
     }
