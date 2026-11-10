@@ -168,7 +168,7 @@ def write_bodies(rig):
     w('')
     w('    /** Model (and hitbox) scale of an appearance (1 if unknown). */')
     w('    public static float scale(String id) {')
-    w('        return switch (id) {')
+    w('        return switch (id == null ? "" : id) {')
     by_scale = {}
     for v in rig.variants:
         s = round(float(v.extra.get('scale', 1.0)), 4)
@@ -182,7 +182,7 @@ def write_bodies(rig):
     w('')
     w('    /** Seconds of the talk gesture of an appearance (3 if unknown). */')
     w('    public static float talkSeconds(String id) {')
-    w('        return switch (id) {')
+    w('        return switch (id == null ? "" : id) {')
     by_len = {}
     for v in rig.variants:
         by_len.setdefault(round(rig.slot_anim(v, 'talk').length, 4), []).append(v.id)

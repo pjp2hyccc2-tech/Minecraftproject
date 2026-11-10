@@ -35,7 +35,7 @@ public final class NpcBodies {
 
     /** Model (and hitbox) scale of an appearance (1 if unknown). */
     public static float scale(String id) {
-        return switch (id) {
+        return switch (id == null ? "" : id) {
             case "mina", "lilia", "housewife", "housewife2", "noble_lady", "noble_lady2", "nun" -> 0.95F;
             case "pim", "marta", "chloe", "selene" -> 0.96F;
             case "goran", "helga", "knight" -> 1.04F;
@@ -57,7 +57,7 @@ public final class NpcBodies {
 
     /** Seconds of the talk gesture of an appearance (3 if unknown). */
     public static float talkSeconds(String id) {
-        return switch (id) {
+        return switch (id == null ? "" : id) {
             case "pim", "luce", "marta", "zain", "chloe", "gustav", "nox", "laszlo", "neris", "khalid", "helga", "king", "merchant", "merchant2", "farmer", "sailor", "sailor2", "noble_gent", "noble_gent2", "bard", "bard2", "adventurer2" -> 3.2F;
             case "mina", "lilia", "selene", "housewife", "housewife2", "farmer2", "noble_lady", "noble_lady2", "maid", "maid2", "priest", "nun" -> 3.4F;
             default -> 3.0F;

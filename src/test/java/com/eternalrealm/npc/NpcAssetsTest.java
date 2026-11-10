@@ -118,6 +118,8 @@ public class NpcAssetsTest {
             assertTrue(id + " talk " + talk, talk >= 1.0F && talk <= 5.0F);
         }
         assertEquals(1.0F, NpcBodies.scale("nobody"), 0.0F);
+        assertEquals(1.0F, NpcBodies.scale(null), 0.0F);
+        assertEquals(3.0F, NpcBodies.talkSeconds(null), 0.0F);
         assertEquals(NpcBodies.DEFAULT, NpcBodies.orDefault("nobody"));
         assertEquals(NpcBodies.DEFAULT, NpcBodies.orDefault(null));
         assertEquals("mina", NpcBodies.orDefault("mina"));
