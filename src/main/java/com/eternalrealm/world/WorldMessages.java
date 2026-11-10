@@ -19,9 +19,13 @@ public final class WorldMessages {
     public static final String AREA_LOCKED = "message.eternalrealm.world.area_locked";
     /** Subtitle of the area title. Args: minimum and maximum recommended level. */
     public static final String RECOMMENDED_LEVEL = "hud.eternalrealm.area.recommended_level";
+    /** Shown when the mist at the edge of the field map turns a player back. */
+    public static final String WORLD_EDGE = "message.eternalrealm.world.world_edge";
+    /** For the open-ended high fields: "推奨レベル 40〜". */
+    public static final String RECOMMENDED_LEVEL_FROM = "hud.eternalrealm.area.recommended_level_from";
 
     public static final List<String> ALL = List.of(AREA_UNLOCKED, BOSS_FIRST_DEFEAT, FINAL_BOSS_UNLOCKED,
-            AREA_DISCOVERED, AREA_LOCKED, RECOMMENDED_LEVEL);
+            AREA_DISCOVERED, AREA_LOCKED, RECOMMENDED_LEVEL, RECOMMENDED_LEVEL_FROM, WORLD_EDGE);
 
     private WorldMessages() {
     }

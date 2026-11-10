@@ -38,7 +38,7 @@ public class WorldgenDataTest {
     private static final Set<String> PASSIVE = Set.of("minecraft:sheep", "minecraft:pig", "minecraft:chicken",
             "minecraft:cow", "minecraft:horse", "minecraft:donkey", "minecraft:rabbit", "minecraft:wolf",
             "minecraft:fox", "minecraft:mooshroom", "minecraft:camel", "minecraft:goat", "minecraft:bat",
-            "minecraft:glow_squid", "minecraft:squid", "minecraft:salmon");
+            "minecraft:glow_squid", "minecraft:squid", "minecraft:salmon", "minecraft:cod", "minecraft:dolphin");
 
     @Test
     public void everyBiomeHasExactlyOneDefinition() throws IOException {
@@ -153,12 +153,11 @@ public class WorldgenDataTest {
     }
 
     @Test
-    public void dimensionUsesTheOverworldNoiseAndTheAstoriaBiomeSource() throws IOException {
+    public void dimensionUsesTheFieldMapTerrainAndTheAstoriaBiomeSource() throws IOException {
         JsonObject dimension = read(DATA.resolve("dimension/" + WorldgenIds.DIMENSION + ".json"));
         assertEquals("eternalrealm:" + WorldgenIds.DIMENSION, dimension.get("type").getAsString());
         JsonObject generator = dimension.getAsJsonObject("generator");
-        assertEquals("minecraft:noise", generator.get("type").getAsString());
-        assertEquals("minecraft:overworld", generator.get("settings").getAsString());
+        assertEquals("eternalrealm:" + WorldgenIds.FIELD_GENERATOR, generator.get("type").getAsString());
         assertEquals("eternalrealm:" + WorldgenIds.BIOME_SOURCE,
                 generator.getAsJsonObject("biome_source").get("type").getAsString());
         JsonObject type = read(DATA.resolve("dimension_type/" + WorldgenIds.DIMENSION + ".json"));

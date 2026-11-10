@@ -73,8 +73,10 @@ public class QuestsCatalogTest {
             assertTrue("areas only move forwards", quest.areaId() >= previousArea);
             previousArea = quest.areaId();
             AreaDefinition area = Areas.require(quest.areaId());
+            // the first field's quests start in the capital at level 1; elsewhere a quest may be taken a few levels
+            // before the field's recommendation
             assertTrue(quest.id() + " level fits the area",
-                    quest.prerequisites().minLevel() >= area.minLevel() - 1
+                    (quest.areaId() == 1 || quest.prerequisites().minLevel() >= area.minLevel() - 3)
                             && quest.prerequisites().minLevel() <= area.maxLevel());
             for (Objective objective : quest.objectives()) {
                 if (objective instanceof Objective.ClearDungeon clear) {

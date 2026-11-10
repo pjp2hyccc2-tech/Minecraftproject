@@ -17,48 +17,53 @@ import static org.junit.Assert.assertTrue;
 
 public class AreasTest {
     @Test
-    public void sevenRingsAroundTheSpawnWithTheOfficialLayout() {
+    public void tenFieldsWithTheLevelsOfTheFieldMap() {
         List<AreaDefinition> areas = Areas.all();
-        assertEquals(7, areas.size());
-        int[] inner = {0, 300, 600, 900, 1200, 1500, 1800};
-        int[] minLevel = {1, 8, 15, 22, 30, 37, 44};
-        int[] maxLevel = {8, 15, 22, 30, 37, 44, 50};
+        assertEquals(10, areas.size());
+        int[] minLevel = {5, 10, 15, 20, 30, 40, 50, 10, 15, 20};
+        int[] maxLevel = {15, 20, 25, 30, 40, 50, 50, 20, 25, 30};
+        boolean[] open = {false, false, false, false, false, true, true, false, false, false};
+        int[] tier = {1, 2, 3, 4, 5, 6, 7, 2, 3, 4};
         String[] slugs = {"arcelia", "elder_forest", "sandria_desert", "nordia_snowfield", "dragonia_volcano",
-                "celestia", "tower_of_the_end"};
-        for (int i = 0; i < 7; i++) {
+                "celestia", "tower_of_the_end", "fertile_farm", "lakeside", "wind_harbour"};
+        for (int i = 0; i < 10; i++) {
             AreaDefinition area = areas.get(i);
             assertEquals(i + 1, area.id());
             assertEquals(slugs[i], area.slug());
-            assertEquals(inner[i], area.innerRadius());
-            assertEquals(i < 6 ? inner[i + 1] : AreaDefinition.UNBOUNDED, area.outerRadius());
             assertEquals(minLevel[i], area.minLevel());
             assertEquals(maxLevel[i], area.maxLevel());
+            assertEquals(open[i], area.openEnded());
+            assertEquals(tier[i], area.tier());
             assertEquals(LevelRange.of(minLevel[i], maxLevel[i]), area.levelRange());
             assertEquals("area.eternalrealm." + slugs[i], area.translationKey());
             assertEquals("area.eternalrealm." + slugs[i] + ".desc", area.descriptionKey());
             assertSame(area, Areas.require(area.id()));
         }
-        assertTrue(Areas.TOWER_OF_THE_END.isUnbounded());
-        assertFalse(Areas.CELESTIA.isUnbounded());
+        assertEquals(AreaDefinition.Kind.DANGER, Areas.TOWER_OF_THE_END.kind());
+        assertEquals(AreaDefinition.Kind.QUEST, Areas.WIND_HARBOUR.kind());
     }
 
     @Test
-    public void unlockChainFollowsTheBossesWithTheSecondSnowDungeonOpeningTheVolcano() {
-        String[] expected = {null, "b1", "b2", "b3", "b5", "b6", "b7"};
-        for (int i = 0; i < 7; i++) {
+    public void unlockChainFollowsTheBossesWithTheSecondFallsDungeonOpeningTheRuins() {
+        String[] expected = {null, "b1", "b2", "b3", "b5", "b6", "b7", "b1", "b2", "b3"};
+        for (int i = 0; i < 10; i++) {
             assertEquals("area " + (i + 1), expected[i], Areas.all().get(i).unlockedByBossId());
         }
         assertTrue(Areas.ARCELIA.isOpenFromStart());
         assertFalse(Areas.ELDER_FOREST.isOpenFromStart());
         Set<String> unlocking = new HashSet<>();
-        for (AreaDefinition area : Areas.all()) {
+        for (AreaDefinition area : Areas.all().subList(0, 7)) {
             if (area.unlockedByBossId() != null) {
                 assertTrue(Areas.isBossId(area.unlockedByBossId()));
-                assertTrue("one boss unlocks one area", unlocking.add(area.unlockedByBossId()));
+                assertTrue("one boss opens one story field", unlocking.add(area.unlockedByBossId()));
             }
         }
         assertFalse("b4 unlocks nothing", unlocking.contains("b4"));
         assertFalse("b8 unlocks nothing", unlocking.contains("b8"));
+        for (AreaDefinition side : Areas.all().subList(7, 10)) {
+            assertTrue("side fields open with the story field of their level band",
+                    unlocking.contains(side.unlockedByBossId()));
+        }
     }
 
     @Test
@@ -91,11 +96,11 @@ public class AreasTest {
     @Test
     public void lookupsHandleUnknownIds() {
         assertTrue(Areas.byId(0).isEmpty());
-        assertTrue(Areas.byId(8).isEmpty());
+        assertTrue(Areas.byId(11).isEmpty());
         assertFalse(Areas.exists(0));
-        assertFalse(Areas.exists(8));
-        assertTrue(Areas.exists(1) && Areas.exists(7));
-        assertThrows(IllegalArgumentException.class, () -> Areas.require(8));
+        assertFalse(Areas.exists(11));
+        assertTrue(Areas.exists(1) && Areas.exists(10));
+        assertThrows(IllegalArgumentException.class, () -> Areas.require(11));
     }
 
     @Test
@@ -105,30 +110,30 @@ public class AreasTest {
         for (AreaDefinition area : Areas.all()) {
             assertTrue(colours.add(area.color()));
             assertTrue(keys.add(area.translationKey()));
-            assertTrue(area.containsDistance(area.innerRadius()));
-            assertFalse(area.containsDistance(area.innerRadius() - 0.5));
         }
     }
 
     @Test
     public void invalidDefinitionsAreRejected() {
+        AreaDefinition.Kind main = AreaDefinition.Kind.MAIN;
         List<Runnable> invalid = Arrays.asList(
-                () -> new AreaDefinition(0, "x", 0, 10, 1, 2, null, "t", 0),
-                () -> new AreaDefinition(1, "Bad Slug", 0, 10, 1, 2, null, "t", 0),
-                () -> new AreaDefinition(1, "x", -1, 10, 1, 2, null, "t", 0),
-                () -> new AreaDefinition(1, "x", 10, 10, 1, 2, null, "t", 0),
-                () -> new AreaDefinition(1, "x", 0, 10, 0, 2, null, "t", 0),
-                () -> new AreaDefinition(1, "x", 0, 10, 5, 4, null, "t", 0),
-                () -> new AreaDefinition(1, "x", 0, 10, 1, 101, null, "t", 0),
-                () -> new AreaDefinition(1, "x", 0, 10, 1, 2, "B1", "t", 0),
-                () -> new AreaDefinition(1, "x", 0, 10, 1, 2, null, "", 0),
-                () -> new AreaDefinition(1, "x", 0, 10, 1, 2, null, "t", 0x1000000),
+                () -> new AreaDefinition(0, "x", 1, 2, false, null, "t", 0, main, 1),
+                () -> new AreaDefinition(1, "Bad Slug", 1, 2, false, null, "t", 0, main, 1),
+                () -> new AreaDefinition(1, "x", 0, 2, false, null, "t", 0, main, 1),
+                () -> new AreaDefinition(1, "x", 5, 4, false, null, "t", 0, main, 1),
+                () -> new AreaDefinition(1, "x", 1, 101, false, null, "t", 0, main, 1),
+                () -> new AreaDefinition(1, "x", 1, 2, false, "B1", "t", 0, main, 1),
+                () -> new AreaDefinition(1, "x", 1, 2, false, null, "", 0, main, 1),
+                () -> new AreaDefinition(1, "x", 1, 2, false, null, "t", 0x1000000, main, 1),
+                () -> new AreaDefinition(1, "x", 1, 2, false, null, "t", 0, null, 1),
+                () -> new AreaDefinition(1, "x", 1, 2, false, null, "t", 0, main, 0),
+                () -> new AreaDefinition(1, "x", 1, 2, false, null, "t", 0, main, 8),
                 () -> new DungeonSite("d1", 0, "b1"),
                 () -> new DungeonSite("D1", 1, "b1"));
         for (Runnable definition : invalid) {
             assertThrows(IllegalArgumentException.class, definition::run);
         }
-        AreaDefinition valid = new AreaDefinition(1, "x", 0, 10, 1, 2, null, "t", 0xFFFFFF);
+        AreaDefinition valid = new AreaDefinition(1, "x", 1, 2, false, null, "t", 0xFFFFFF, main, 7);
         assertNull(valid.unlockedByBossId());
     }
 }

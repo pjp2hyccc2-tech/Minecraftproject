@@ -76,12 +76,12 @@ public class ObjectiveAndDefinitionTest {
     public void invalidObjectivesAndEventsAreRejected() {
         assertThrows(IllegalArgumentException.class, () -> Objective.KillMonsters.of("x", 0));
         assertThrows(IllegalArgumentException.class, () -> Objective.KillMonsters.of("X", 1));
-        assertThrows(IllegalArgumentException.class, () -> Objective.KillMonsters.anyIn(8, 1));
+        assertThrows(IllegalArgumentException.class, () -> Objective.KillMonsters.anyIn(11, 1));
         assertThrows(IllegalArgumentException.class, () -> new Objective.CollectItems("slime_gel", 1));
         assertThrows(IllegalArgumentException.class, () -> new Objective.ClearDungeon("d1", 10_001));
         assertThrows(IllegalArgumentException.class, () -> new Objective.ReachArea(0));
         assertThrows(IllegalArgumentException.class, () -> new Objective.TalkTo(""));
-        assertThrows(IllegalArgumentException.class, () -> new GameEvent.MonsterKilled("x", 8));
+        assertThrows(IllegalArgumentException.class, () -> new GameEvent.MonsterKilled("x", 11));
         assertThrows(IllegalArgumentException.class, () -> new GameEvent.MonsterKilled(null, 1));
         assertThrows(IllegalArgumentException.class, () -> new GameEvent.ItemCollected("a:b", 0));
         assertThrows(IllegalArgumentException.class, () -> new GameEvent.AreaEntered(0));
@@ -103,7 +103,7 @@ public class ObjectiveAndDefinitionTest {
         assertThrows(IllegalArgumentException.class, () -> new QuestDefinition("q", QuestKind.SIDE, 1, none, List.of(), reward));
         assertThrows(IllegalArgumentException.class, () -> new QuestDefinition("q", QuestKind.SIDE, 1, none,
                 List.of(one.get(0), one.get(0), one.get(0), one.get(0), one.get(0), one.get(0)), reward));
-        assertThrows(IllegalArgumentException.class, () -> new QuestDefinition("q", QuestKind.SIDE, 8, none, one, reward));
+        assertThrows(IllegalArgumentException.class, () -> new QuestDefinition("q", QuestKind.SIDE, 11, none, one, reward));
         assertThrows(IllegalArgumentException.class, () -> new QuestDefinition("q", QuestKind.SIDE, 1,
                 new QuestPrerequisites(List.of("q"), 1, 1), one, reward));
         assertThrows(IllegalArgumentException.class, () -> new QuestPrerequisites(List.of("a", "a"), 1, 1));

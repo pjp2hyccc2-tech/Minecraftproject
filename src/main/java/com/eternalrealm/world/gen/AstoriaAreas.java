@@ -1,60 +1,39 @@
 package com.eternalrealm.world.gen;
 
+import com.eternalrealm.world.field.FieldLayout;
+
 /**
- * The seven concentric areas of アストリア around the capital at (0, 0), by horizontal distance from the origin.
- * Area {@code n} (1..6) covers distances {@code [300(n-1), 300n)}; area 7 is everything from 1800 outwards.
- *
- * <p>These exact rings are the gameplay rule (level ranges, quests, messages). Biome borders follow the same rings
- * but jitter by up to {@link AstoriaLayout#MAX_BORDER_JITTER} blocks so the landscape has no hard circles.</p>
+ * The ten fields of アストリア around the capital at (0, 0), as the world generator sees them (the gameplay side is
+ * {@code world.Areas}; both use {@link FieldLayout}, a test keeps them equal).
  */
 public final class AstoriaAreas {
-    public static final int COUNT = 7;
-    public static final int RING_WIDTH = 300;
+    public static final int COUNT = FieldLayout.FIELD_COUNT;
 
     /**
-     * Slugs used in translation keys ({@code area.eternalrealm.<slug>}), indexed by area number - 1. They are the slugs of
+     * Slugs used in translation keys ({@code area.eternalrealm.<slug>}), indexed by field id - 1. They are the slugs of
      * the gameplay world module ({@code world.Areas}); the texts live in docs/i18n/world.json.
      */
     private static final String[] SLUGS = {"arcelia", "elder_forest", "sandria_desert", "nordia_snowfield",
-            "dragonia_volcano", "celestia", "tower_of_the_end"};
+            "dragonia_volcano", "celestia", "tower_of_the_end", "fertile_farm", "lakeside", "wind_harbour"};
 
     private AstoriaAreas() {
     }
 
-    /** @return the area (1..7) at the horizontal position {@code (x, z)} */
+    /** @return the field (1..{@value FieldLayout#FIELD_COUNT}) at the horizontal position {@code (x, z)} */
     public static int areaAt(double x, double z) {
-        return areaAtDistance(Math.sqrt(x * x + z * z));
-    }
-
-    /** @return the area (1..7) at a horizontal distance from the capital; negative or NaN distances count as 0 */
-    public static int areaAtDistance(double distance) {
-        if (!(distance > 0.0)) {
-            return 1;
-        }
-        double ring = Math.floor(distance / RING_WIDTH) + 1.0;
-        return ring >= COUNT ? COUNT : (int) ring;
-    }
-
-    /** Inclusive inner radius of an area. */
-    public static int innerRadius(int area) {
-        return (checked(area) - 1) * RING_WIDTH;
-    }
-
-    /** Exclusive outer radius of an area; {@link Integer#MAX_VALUE} for the outermost area. */
-    public static int outerRadius(int area) {
-        return checked(area) == COUNT ? Integer.MAX_VALUE : area * RING_WIDTH;
+        return FieldLayout.areaAt(x, z);
     }
 
     public static String slug(int area) {
         return SLUGS[checked(area) - 1];
     }
 
-    /** Area title, e.g. {@code area.eternalrealm.arcelia} = アルセリア王国. */
+    /** Field title, e.g. {@code area.eternalrealm.arcelia} = はじまりの草原. */
     public static String titleKey(int area) {
         return "area.eternalrealm." + slug(area);
     }
 
-    /** Area description line shown under the title ({@code area.eternalrealm.<slug>.desc}). */
+    /** Field description line shown under the title ({@code area.eternalrealm.<slug>.desc}). */
     public static String subtitleKey(int area) {
         return titleKey(area) + ".desc";
     }

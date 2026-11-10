@@ -1,8 +1,7 @@
 {
   "type": "eternalrealm:astoria",
   "generator": {
-    "type": "minecraft:noise",
-    "settings": "minecraft:overworld",
+    "type": "eternalrealm:fields",
     "biome_source": {
       "type": "eternalrealm:astoria"
     }

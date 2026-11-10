@@ -29,6 +29,8 @@ import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
+import com.eternalrealm.world.field.FieldLayout;
+import com.eternalrealm.world.forge.FieldChunkGenerator;
 import net.minecraftforge.gametest.GameTestHolder;
 import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
@@ -37,8 +39,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The アストリア dimension inside a real server: the level and its biome source exist, biomes follow the area rings,
- * chunks of every area generate with their surface theme, and the capital and every dungeon entrance build with free
+ * The アストリア dimension inside a real server: the level and its biome source exist, biomes follow the field map,
+ * chunks of every field generate with their surface theme, and the capital and every dungeon entrance build with free
  * NPC/spawn positions. Chunk generation and building run synchronously, so these tests hold the server thread for a
  * while (their tick timeouts are generous but only count ticks).
  */
@@ -46,26 +48,31 @@ import java.util.Set;
 @PrefixGameTestTemplate(false)
 public final class WorldGameTests {
     private static final String EMPTY = "empty";
-    /** Blocks that show the surface theme of each area (natural blocks count for the green areas 1, 2 and 6). */
+    /** Blocks that show the surface theme of each field of the field map. */
     private static final Map<Integer, Set<Block>> THEMES = Map.of(
             1, Set.of(Blocks.GRASS_BLOCK, Blocks.DIRT, Blocks.SAND, Blocks.GRAVEL, Blocks.CLAY, Blocks.DIRT_PATH,
-                    Blocks.FARMLAND, Blocks.STONE, Blocks.ANDESITE, Blocks.GRANITE, Blocks.DIORITE, Blocks.COBBLESTONE),
+                    Blocks.FARMLAND, Blocks.STONE, Blocks.ANDESITE, Blocks.COBBLESTONE, Blocks.COARSE_DIRT, Blocks.MUD),
             2, Set.of(Blocks.GRASS_BLOCK, Blocks.PODZOL, Blocks.MOSS_BLOCK, Blocks.MYCELIUM, Blocks.COARSE_DIRT,
-                    Blocks.ROOTED_DIRT, Blocks.MUD, Blocks.DIRT, Blocks.GRAVEL, Blocks.STONE, Blocks.ANDESITE,
-                    Blocks.GRANITE, Blocks.DIORITE),
-            3, Set.of(Blocks.SAND, Blocks.SANDSTONE, Blocks.RED_SAND, Blocks.TERRACOTTA, Blocks.ORANGE_TERRACOTTA,
-                    Blocks.YELLOW_TERRACOTTA, Blocks.BROWN_TERRACOTTA, Blocks.RED_TERRACOTTA, Blocks.WHITE_TERRACOTTA,
-                    Blocks.LIGHT_GRAY_TERRACOTTA, Blocks.GRASS_BLOCK, Blocks.SMOOTH_SANDSTONE, Blocks.CUT_SANDSTONE),
-            4, Set.of(Blocks.SNOW, Blocks.SNOW_BLOCK, Blocks.PACKED_ICE, Blocks.BLUE_ICE, Blocks.ICE, Blocks.POWDER_SNOW),
-            5, Set.of(Blocks.BASALT, Blocks.SMOOTH_BASALT, Blocks.BLACKSTONE, Blocks.MAGMA_BLOCK, Blocks.TUFF, Blocks.GRAVEL,
-                    Blocks.COARSE_DIRT, Blocks.OBSIDIAN, Blocks.LAVA, Blocks.CRYING_OBSIDIAN, Blocks.POLISHED_BASALT,
-                    Blocks.POLISHED_BLACKSTONE_BRICKS, Blocks.CRACKED_POLISHED_BLACKSTONE_BRICKS, Blocks.SHROOMLIGHT),
-            6, Set.of(Blocks.GRASS_BLOCK, Blocks.CALCITE, Blocks.DIORITE, Blocks.MOSS_BLOCK, Blocks.QUARTZ_BLOCK,
-                    Blocks.SAND, Blocks.DIRT, Blocks.GRAVEL, Blocks.STONE, Blocks.ANDESITE, Blocks.GRANITE),
+                    Blocks.ROOTED_DIRT, Blocks.MUD, Blocks.DIRT, Blocks.GRAVEL, Blocks.STONE, Blocks.ANDESITE),
+            3, Set.of(Blocks.STONE, Blocks.GRAVEL, Blocks.COARSE_DIRT, Blocks.ANDESITE, Blocks.TUFF, Blocks.CALCITE,
+                    Blocks.COBBLESTONE, Blocks.GRASS_BLOCK, Blocks.DIRT, Blocks.BASALT, Blocks.SMOOTH_BASALT,
+                    Blocks.BLACKSTONE),
+            4, Set.of(Blocks.GRASS_BLOCK, Blocks.CALCITE, Blocks.DIORITE, Blocks.MOSS_BLOCK, Blocks.QUARTZ_BLOCK,
+                    Blocks.SAND, Blocks.DIRT, Blocks.GRAVEL, Blocks.STONE, Blocks.ANDESITE, Blocks.TUFF, Blocks.CLAY),
+            5, Set.of(Blocks.GRASS_BLOCK, Blocks.COARSE_DIRT, Blocks.DIRT, Blocks.STONE, Blocks.ANDESITE,
+                    Blocks.RED_SAND, Blocks.TERRACOTTA, Blocks.ORANGE_TERRACOTTA, Blocks.YELLOW_TERRACOTTA,
+                    Blocks.BROWN_TERRACOTTA, Blocks.RED_TERRACOTTA, Blocks.GRAVEL),
+            6, Set.of(Blocks.SNOW, Blocks.SNOW_BLOCK, Blocks.POWDER_SNOW, Blocks.PACKED_ICE, Blocks.ICE, Blocks.STONE,
+                    Blocks.GRAVEL, Blocks.ANDESITE, Blocks.TUFF, Blocks.CALCITE, Blocks.GRASS_BLOCK, Blocks.DIRT),
             7, Set.of(Blocks.DEEPSLATE, Blocks.COBBLED_DEEPSLATE, Blocks.BLACKSTONE, Blocks.TUFF, Blocks.END_STONE,
                     Blocks.OBSIDIAN, Blocks.CRYING_OBSIDIAN, Blocks.SOUL_SOIL, Blocks.COARSE_DIRT, Blocks.ROOTED_DIRT,
-                    Blocks.DEEPSLATE_TILES, Blocks.POLISHED_DEEPSLATE, Blocks.POLISHED_BLACKSTONE_BRICKS,
-                    Blocks.DEEPSLATE_BRICKS, Blocks.CRACKED_DEEPSLATE_BRICKS, Blocks.BONE_BLOCK));
+                    Blocks.GRAVEL, Blocks.DIRT),
+            8, Set.of(Blocks.GRASS_BLOCK, Blocks.DIRT, Blocks.FARMLAND, Blocks.DIRT_PATH, Blocks.SAND, Blocks.GRAVEL,
+                    Blocks.CLAY, Blocks.COARSE_DIRT, Blocks.WATER, Blocks.MUD),
+            9, Set.of(Blocks.GRASS_BLOCK, Blocks.SAND, Blocks.GRAVEL, Blocks.CLAY, Blocks.DIRT, Blocks.MUD,
+                    Blocks.SANDSTONE, Blocks.DIRT_PATH),
+            10, Set.of(Blocks.GRASS_BLOCK, Blocks.SAND, Blocks.SANDSTONE, Blocks.GRAVEL, Blocks.DIRT, Blocks.STONE,
+                    Blocks.DIRT_PATH, Blocks.CLAY));
 
     private WorldGameTests() {
     }
@@ -77,30 +84,31 @@ public final class WorldGameTests {
         check(source instanceof AstoriaBiomeSource, "astoria uses " + source.getClass().getName());
         check(source.possibleBiomes().size() == AstoriaBiome.values().length,
                 "possible biomes " + source.possibleBiomes().size());
-        check(astoria.getSeaLevel() == 63, "the overworld noise settings give sea level 63, got " + astoria.getSeaLevel());
+        check(astoria.getSeaLevel() == 63, "the field map's sea level is 63, got " + astoria.getSeaLevel());
         helper.succeed();
     }
 
     @GameTest(template = EMPTY)
-    public static void biomeSourceFollowsTheAreaRings(GameTestHelper helper) {
+    public static void biomeSourceFollowsTheFieldMap(GameTestHelper helper) {
         ServerLevel astoria = astoria(helper);
         BiomeSource source = astoria.getChunkSource().getGenerator().getBiomeSource();
         Climate.Sampler sampler = astoria.getChunkSource().randomState().sampler();
-        int[] distances = {0, 60, 150, 450, 750, 1050, 1350, 1650, 1950, 2600};
-        for (int distance : distances) {
-            for (int angle = 0; angle < 360; angle += 30) {
-                int x = (int) Math.round(distance * Math.cos(Math.toRadians(angle)));
-                int z = (int) Math.round(distance * Math.sin(Math.toRadians(angle)));
-                Holder<Biome> holder = source.getNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(64),
-                        QuartPos.fromBlock(z), sampler);
-                AstoriaBiome biome = AstoriaDimension.biome(holder);
-                check(biome != null, "no Astoria biome at " + x + ", " + z + ": " + holder.unwrapKey());
-                check(biome.area() == AstoriaAreas.areaAtDistance(distance),
-                        biome + " (area " + biome.area() + ") at distance " + distance + " (" + x + ", " + z + ")");
-            }
+        for (int area = 1; area <= AstoriaAreas.COUNT; area++) {
+            double[] at = FieldLayout.labelPoint(area);
+            int x = (int) Math.round(at[0]);
+            int z = (int) Math.round(at[1]);
+            Holder<Biome> holder = source.getNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(64),
+                    QuartPos.fromBlock(z), sampler);
+            AstoriaBiome biome = AstoriaDimension.biome(holder);
+            check(biome != null, "no Astoria biome at " + x + ", " + z + ": " + holder.unwrapKey());
+            check(biome.area() == area, biome + " (field " + biome.area() + ") in field " + area + " at " + x + ", " + z);
         }
         check(AstoriaDimension.biome(source.getNoiseBiome(0, 16, 0, sampler)) == AstoriaBiome.ROYAL_CAPITAL,
                 "the capital stands in the royal capital meadows");
+        check(AstoriaDimension.biome(source.getNoiseBiome(QuartPos.fromBlock(1650), 16, QuartPos.fromBlock(1250),
+                sampler)) == AstoriaBiome.ASTORIA_SEA, "the south-east is open sea");
+        check(astoria.getChunkSource().getGenerator() instanceof FieldChunkGenerator,
+                "astoria uses the field map terrain");
         helper.succeed();
     }
 
@@ -109,10 +117,9 @@ public final class WorldGameTests {
         ServerLevel astoria = astoria(helper);
         StringBuilder report = new StringBuilder();
         for (int area = 1; area <= AstoriaAreas.COUNT; area++) {
-            double angle = Math.toRadians(25 + area * 47);
-            int distance = area == AstoriaAreas.COUNT ? 2000 : (area - 1) * AstoriaAreas.RING_WIDTH + 150;
-            int x = (int) Math.round(distance * Math.cos(angle));
-            int z = (int) Math.round(distance * Math.sin(angle));
+            double[] at = FieldLayout.labelPoint(area);
+            int x = (int) Math.round(at[0]);
+            int z = (int) Math.round(at[1]);
             LevelChunk chunk = astoria.getChunk(x >> 4, z >> 4);
             Set<Block> theme = THEMES.get(area);
             int themed = 0;
@@ -125,11 +132,13 @@ public final class WorldGameTests {
                     }
                 }
             }
-            report.append(" area ").append(area).append(" @").append(chunk.getPos()).append(": ").append(themed)
+            report.append(" field ").append(area).append(" @").append(chunk.getPos()).append(": ").append(themed)
                     .append("/256");
-            int required = area == 1 || area == 2 || area == 6 ? 128 : 154;
-            check(themed >= required, "surface theme missing:" + report);
+            check(themed >= 128, "surface theme missing:" + report);
         }
+        int capitalGround = astoria.getChunkSource().getGenerator().getBaseHeight(0, 0,
+                Heightmap.Types.OCEAN_FLOOR_WG, astoria, astoria.getChunkSource().randomState()) - 1;
+        check(capitalGround == FieldLayout.CAPITAL_GROUND_Y, "capital ground " + capitalGround);
         helper.succeed();
     }
 

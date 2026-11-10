@@ -182,8 +182,8 @@ public final class MinimapOverlay implements IGuiOverlay {
                     .withStyle(style -> style.withColor(MapMath.mix(definition.color(), 0xFFFFFF, 0.35)));
             centered(graphics, font, title, cx, y, screenWidth);
             y += font.lineHeight + 1;
-            centered(graphics, font, Component.translatable("map.eternalrealm.level_range", definition.minLevel(),
-                    definition.maxLevel()).withStyle(ChatFormatting.GRAY), cx, y, screenWidth);
+            centered(graphics, font, WorldMapScreen.levelRange(definition).copy().withStyle(ChatFormatting.GRAY), cx, y,
+                    screenWidth);
             y += font.lineHeight + 1;
         }
         if (coordinates()) {

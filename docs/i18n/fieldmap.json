@@ -52,5 +52,6 @@
   "hazard.eternalrealm.shadow_ring": {"ja": "影の環", "en": "Shadow ring"},
   "hazard.eternalrealm.void_lance": {"ja": "虚無の槍", "en": "Void lance"},
   "death.attack.eternalrealm.trap": {"ja": "%1$sは罠にかかって倒れた", "en": "%1$s was caught by a trap"},
-  "death.attack.eternalrealm.trap.player": {"ja": "%1$sは%2$sとの戦いの最中に罠にかかって倒れた", "en": "%1$s was caught by a trap while fighting %2$s"}
+  "death.attack.eternalrealm.trap.player": {"ja": "%1$sは%2$sとの戦いの最中に罠にかかって倒れた", "en": "%1$s was caught by a trap while fighting %2$s"},
+  "map.eternalrealm.level_from": {"ja": "推奨 Lv%s〜", "en": "Recommended Lv %s+"}
 }

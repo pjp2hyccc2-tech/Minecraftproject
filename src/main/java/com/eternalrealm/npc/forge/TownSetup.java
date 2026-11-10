@@ -23,7 +23,6 @@ public final class TownSetup {
             StoryNpc.LASZLO, StoryNpc.WOLFRAM);
     private static final double SERVICE_RADIUS = 9.0;
     private static final double CHARACTER_RADIUS = 15.0;
-    private static final int RING_WIDTH = 300;
 
     private TownSetup() {
     }
@@ -47,10 +46,16 @@ public final class TownSetup {
                     facing(center, pos)).isPresent() ? 1 : 0;
         }
         for (NpcDefinition giver : com.eternalrealm.quest.Npcs.all()) {
-            double distance = giver.areaId() <= 1 ? CHARACTER_RADIUS + 4.0 : (giver.areaId() - 1) * RING_WIDTH + 24.0;
-            BlockPos column = giver.areaId() <= 1 ? onRing(level, center, distance, 0, 1)
-                    : surface(level, center.getX() + (int) distance, center.getZ());
-            placed += StoryNpcs.ensure(level, column, giver, facing(center, column)).isPresent() ? 1 : 0;
+            // quest givers of the other fields wait beside their field's waystone
+            java.util.Optional<com.eternalrealm.world.field.FieldLayout.Waystone> stone = giver.areaId() <= 1
+                    ? java.util.Optional.empty()
+                    : com.eternalrealm.world.field.FieldLayout.waystones().stream()
+                            .filter(w -> w.field() == giver.areaId()).findFirst();
+            BlockPos column = stone.map(w -> surface(level, center.getX() + w.x() + 5, center.getZ() + w.z() + 3))
+                    .orElseGet(() -> onRing(level, center, CHARACTER_RADIUS + 4.0, 0, 1));
+            BlockPos look = stone.map(w -> new BlockPos(center.getX() + w.x(), column.getY(), center.getZ() + w.z()))
+                    .orElse(center);
+            placed += StoryNpcs.ensure(level, column, giver, facing(look, column)).isPresent() ? 1 : 0;
         }
         return placed;
     }

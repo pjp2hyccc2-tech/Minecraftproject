@@ -72,6 +72,7 @@ public final class Monsters {
     private static final String BOW = "minecraft:bow";
     private static final String CROSSBOW = "minecraft:crossbow";
     private static final String TRIDENT = "minecraft:trident";
+    private static final String CARVED_PUMPKIN = "minecraft:carved_pumpkin";
     private static final String IRON_AXE = "minecraft:iron_axe";
     private static final String GOLDEN_AXE = "minecraft:golden_axe";
     private static final String STONE_SWORD = "minecraft:stone_sword";
@@ -83,44 +84,59 @@ public final class Monsters {
     private static final SpawnHints NONE = SpawnHints.NONE;
 
     private static final List<MonsterTemplate> ALL = List.of(
-            // ---- Area 1: Kingdom of Arcelia, plains (Lv1-8)
-            normal("meadow_slime", SLIME, 1, 8, 1, t(0.85, 0.8, 0.0, 1.0), SpawnHints.sized(2)),
-            normal("wandering_dead", ZOMBIE, 1, 8, 1, t(1.0, 1.0, 1.0, 0.95), SpawnHints.helmet(LEATHER_HELMET)),
-            normal("highway_bandit", PILLAGER, 2, 8, 1, t(0.9, 1.1, 0.8, 1.0), SpawnHints.holding(CROSSBOW)),
-            elite("bandit_chief", VINDICATOR, 4, 8, 1, t(1.0, 1.0, 1.0, 1.0), SpawnHints.holding(IRON_AXE)),
-            // ---- Area 2: Elder Forest (Lv8-15)
-            normal("forest_spider", SPIDER, 8, 15, 2, t(0.9, 1.0, 0.6, 1.05), NONE),
-            normal("vine_creeper", CREEPER, 8, 15, 2, t(0.8, 2.5, 0.5, 1.0), NONE),
-            normal("forest_witch", WITCH, 9, 15, 2, t(0.95, 1.1, 0.6, 1.0), NONE),
-            elite("elder_druid", EVOKER, 11, 15, 2, t(0.9, 1.1, 0.8, 1.0), NONE),
-            // ---- Area 3: Sandria Desert (Lv15-22)
+            // ---- Field 1: はじまりの草原 (Lv5-15)
+            normal("meadow_slime", SLIME, 5, 11, 1, t(0.85, 0.8, 0.0, 1.0), SpawnHints.sized(2)),
+            normal("wandering_dead", ZOMBIE, 6, 13, 1, t(1.0, 1.0, 1.0, 0.95), SpawnHints.helmet(LEATHER_HELMET)),
+            normal("highway_bandit", PILLAGER, 8, 15, 1, t(0.9, 1.1, 0.8, 1.0), SpawnHints.holding(CROSSBOW)),
+            elite("bandit_chief", VINDICATOR, 10, 15, 1, t(1.0, 1.0, 1.0, 1.0), SpawnHints.holding(IRON_AXE)),
+            // ---- Field 2: 月影の森
+            normal("forest_spider", SPIDER, 10, 17, 2, t(0.9, 1.0, 0.6, 1.05), NONE),
+            normal("vine_creeper", CREEPER, 11, 18, 2, t(0.8, 2.5, 0.5, 1.0), NONE),
+            normal("forest_witch", WITCH, 12, 20, 2, t(0.95, 1.1, 0.6, 1.0), NONE),
+            elite("elder_druid", EVOKER, 15, 20, 2, t(0.9, 1.1, 0.8, 1.0), NONE),
+            // ---- Field 3: 鉄鉱の鉱山
             normal("sand_husk", HUSK, 15, 22, 3, t(1.1, 1.0, 1.0, 0.95), NONE),
-            normal("giant_scarab", CAVE_SPIDER, 15, 22, 3, t(0.8, 0.9, 1.2, 1.1), NONE),
-            normal("desert_skeleton", SKELETON, 16, 22, 3, t(0.85, 1.1, 0.8, 1.0),
+            normal("giant_scarab", CAVE_SPIDER, 16, 23, 3, t(0.8, 0.9, 1.2, 1.1), NONE),
+            normal("desert_skeleton", SKELETON, 17, 25, 3, t(0.85, 1.1, 0.8, 1.0),
                     SpawnHints.equipped(GOLDEN_HELMET, BOW)),
-            elite("tomb_warden", WITHER_SKELETON, 18, 22, 3, t(1.0, 1.0, 1.2, 1.0), SpawnHints.holding(GOLDEN_SWORD)),
-            // ---- Area 4: Nordia Snowfield (Lv22-30)
-            normal("frozen_dead", ZOMBIE, 22, 30, 4, t(1.1, 1.0, 1.1, 0.9), SpawnHints.helmet(IRON_HELMET)),
-            normal("snowfield_archer", STRAY, 22, 30, 4, t(0.85, 1.1, 0.8, 1.0),
+            elite("tomb_warden", WITHER_SKELETON, 20, 25, 3, t(1.0, 1.0, 1.2, 1.0), SpawnHints.holding(GOLDEN_SWORD)),
+            // ---- Field 4: 聖なる滝
+            normal("frozen_dead", ZOMBIE, 20, 27, 4, t(1.1, 1.0, 1.1, 0.9), SpawnHints.helmet(IRON_HELMET)),
+            normal("snowfield_archer", STRAY, 21, 28, 4, t(0.85, 1.1, 0.8, 1.0),
                     SpawnHints.equipped(CHAINMAIL_HELMET, BOW)),
-            normal("frost_spider", SPIDER, 23, 30, 4, t(0.9, 1.0, 0.8, 1.1), NONE),
+            normal("frost_spider", SPIDER, 22, 30, 4, t(0.9, 1.0, 0.8, 1.1), NONE),
             elite("snowfield_yeti", RAVAGER, 25, 30, 4, t(1.2, 1.1, 1.3, 0.9), NONE),
-            // ---- Area 5: Dragonia Volcano (Lv30-37)
+            // ---- Field 5: 古代遺跡
             normal("lava_slime", MAGMA_CUBE, 30, 37, 5, t(0.9, 0.9, 1.5, 1.0), SpawnHints.sized(2)),
-            normal("crater_blaze", BLAZE, 30, 37, 5, t(0.8, 1.1, 0.8, 1.0), NONE),
-            normal("eruption_creeper", CREEPER, 31, 37, 5, t(0.8, 2.5, 0.6, 1.05), NONE),
-            elite("dragonkin_berserker", PIGLIN_BRUTE, 33, 37, 5, t(1.0, 1.2, 1.2, 1.0), SpawnHints.holding(GOLDEN_AXE)),
-            // ---- Area 6: Celestia Sky Continent (Lv37-44)
-            normal("cloud_phantom", PHANTOM, 37, 44, 6, t(0.75, 1.0, 0.5, 1.0), NONE),
-            normal("storm_spirit", BLAZE, 37, 44, 6, t(0.85, 1.1, 0.8, 1.0), NONE),
-            normal("sky_archer", SKELETON, 38, 44, 6, t(0.9, 1.1, 1.0, 1.0), SpawnHints.equipped(GOLDEN_HELMET, BOW)),
-            elite("celestial_paladin", VINDICATOR, 40, 44, 6, t(1.1, 1.0, 1.4, 1.0), SpawnHints.holding(DIAMOND_SWORD)),
-            // ---- Area 7: Tower of the End (Lv44-50)
-            normal("void_wanderer", ENDERMAN, 44, 50, 7, t(1.0, 1.1, 0.8, 1.0), NONE),
-            normal("knight_of_the_end", WITHER_SKELETON, 44, 50, 7, t(1.15, 1.0, 1.3, 1.0),
+            normal("crater_blaze", BLAZE, 31, 38, 5, t(0.8, 1.1, 0.8, 1.0), NONE),
+            normal("eruption_creeper", CREEPER, 32, 40, 5, t(0.8, 2.5, 0.6, 1.05), NONE),
+            elite("dragonkin_berserker", PIGLIN_BRUTE, 35, 40, 5, t(1.0, 1.2, 1.2, 1.0), SpawnHints.holding(GOLDEN_AXE)),
+            // ---- Field 6: 天翔の峰
+            normal("cloud_phantom", PHANTOM, 40, 47, 6, t(0.75, 1.0, 0.5, 1.0), NONE),
+            normal("storm_spirit", BLAZE, 41, 48, 6, t(0.85, 1.1, 0.8, 1.0), NONE),
+            normal("sky_archer", SKELETON, 42, 50, 6, t(0.9, 1.1, 1.0, 1.0), SpawnHints.equipped(GOLDEN_HELMET, BOW)),
+            elite("celestial_paladin", VINDICATOR, 45, 50, 6, t(1.1, 1.0, 1.4, 1.0), SpawnHints.holding(DIAMOND_SWORD)),
+            // ---- Field 7: 終焉の森 (Lv50〜)
+            normal("void_wanderer", ENDERMAN, 50, 50, 7, t(1.0, 1.1, 0.8, 1.0), NONE),
+            normal("knight_of_the_end", WITHER_SKELETON, 50, 50, 7, t(1.15, 1.0, 1.3, 1.0),
                     SpawnHints.holding(NETHERITE_SWORD)),
-            normal("doom_cultist", WITCH, 45, 50, 7, t(0.9, 1.2, 0.8, 1.0), NONE),
-            elite("herald_of_ruin", EVOKER, 46, 50, 7, t(1.0, 1.2, 1.1, 1.0), NONE),
+            normal("doom_cultist", WITCH, 50, 50, 7, t(0.9, 1.2, 0.8, 1.0), NONE),
+            elite("herald_of_ruin", EVOKER, 50, 50, 7, t(1.0, 1.2, 1.1, 1.0), NONE),
+            // ---- Field 8: 豊穣の農場 (Lv10-20)
+            normal("crop_slime", SLIME, 10, 16, 8, t(0.9, 0.8, 0.0, 1.0), SpawnHints.sized(2)),
+            normal("scarecrow_dead", ZOMBIE, 11, 18, 8, t(1.0, 1.0, 0.9, 0.95), SpawnHints.helmet(CARVED_PUMPKIN)),
+            normal("harvest_raider", PILLAGER, 13, 20, 8, t(0.9, 1.1, 0.8, 1.0), SpawnHints.holding(CROSSBOW)),
+            elite("rampaging_bull", RAVAGER, 15, 20, 8, t(1.1, 1.0, 1.1, 0.95), NONE),
+            // ---- Field 9: 湖畔のほとり (Lv15-25)
+            normal("marsh_slime", SLIME, 15, 21, 9, t(0.9, 0.85, 0.0, 1.0), SpawnHints.sized(2)),
+            normal("lake_drowned", DROWNED, 16, 23, 9, t(1.0, 1.0, 1.0, 1.0), SpawnHints.equipped(LEATHER_HELMET, TRIDENT)),
+            normal("reed_spider", SPIDER, 17, 25, 9, t(0.9, 1.0, 0.7, 1.1), NONE),
+            elite("lake_witch", WITCH, 20, 25, 9, t(1.0, 1.1, 0.9, 1.0), NONE),
+            // ---- Field 10: 風の港 (Lv20-30)
+            normal("dock_drowned", DROWNED, 20, 27, 10, t(1.05, 1.0, 1.0, 1.0), SpawnHints.equipped(LEATHER_HELMET, TRIDENT)),
+            normal("pirate_cutthroat", VINDICATOR, 21, 28, 10, t(0.95, 1.05, 0.9, 1.05), SpawnHints.holding(IRON_SWORD)),
+            normal("pirate_gunner", PILLAGER, 22, 30, 10, t(0.9, 1.1, 0.8, 1.0), SpawnHints.holding(CROSSBOW)),
+            elite("pirate_captain", VINDICATOR, 25, 30, 10, t(1.1, 1.1, 1.2, 1.0), SpawnHints.holding(DIAMOND_SWORD)),
             // ---- d1 失われた地下都市 (area 1)
             normal("d1_bandit", VINDICATOR, 6, 10, 1, t(1.0, 1.0, 1.0, 1.0), SpawnHints.holding(IRON_AXE)),
             normal("d1_crawler", SILVERFISH, 6, 10, 1, t(0.7, 0.8, 0.5, 1.1), NONE),
@@ -191,7 +207,16 @@ public final class Monsters {
                     entry("celestial_paladin", 1, 1)),
             table(Areas.TOWER_OF_THE_END, 0.06,
                     List.of(entry("void_wanderer", 35, 0), entry("knight_of_the_end", 35, 0), entry("doom_cultist", 30, 1)),
-                    entry("herald_of_ruin", 1, 1)));
+                    entry("herald_of_ruin", 1, 1)),
+            table(Areas.FERTILE_FARM, 0.05,
+                    List.of(entry("crop_slime", 40, 0), entry("scarecrow_dead", 35, 0), entry("harvest_raider", 25, 1)),
+                    entry("rampaging_bull", 1, 1)),
+            table(Areas.LAKESIDE, 0.05,
+                    List.of(entry("marsh_slime", 35, 0), entry("lake_drowned", 35, 0), entry("reed_spider", 30, 1)),
+                    entry("lake_witch", 1, 1)),
+            table(Areas.WIND_HARBOUR, 0.05,
+                    List.of(entry("dock_drowned", 35, 0), entry("pirate_cutthroat", 35, 0), entry("pirate_gunner", 30, 1)),
+                    entry("pirate_captain", 1, 1)));
 
     private Monsters() {
     }

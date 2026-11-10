@@ -52,9 +52,11 @@ public final class Materials {
         return UPGRADES;
     }
 
-    /** The two materials of an area; empty for unknown areas. */
+    /** The two materials of a field (those of its content tier); empty for unknown fields. */
     public static List<String> ofArea(int areaId) {
-        return areaId >= 1 && areaId <= BY_AREA.size() ? BY_AREA.get(areaId - 1) : List.of();
+        int tier = com.eternalrealm.world.Areas.byId(areaId).map(com.eternalrealm.world.AreaDefinition::tier)
+                .orElse(0);
+        return tier >= 1 && tier <= BY_AREA.size() ? BY_AREA.get(tier - 1) : List.of();
     }
 
     /** The area an area material belongs to; empty for upgrades and unknown ids. */

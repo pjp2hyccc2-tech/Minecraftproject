@@ -220,9 +220,9 @@ public class QuestEngineTest {
     public void invalidArgumentsAreRejected() {
         assertThrows(IllegalArgumentException.class, () -> engine.resetDailies(state, -1));
         assertThrows(IllegalArgumentException.class, () -> new QuestContext(0, Set.of(1), DAY, 0));
-        assertThrows(IllegalArgumentException.class, () -> new QuestContext(1, Set.of(9), DAY, 0));
+        assertThrows(IllegalArgumentException.class, () -> new QuestContext(1, Set.of(12), DAY, 0));
         assertThrows(IllegalArgumentException.class, () -> new QuestContext(1, Set.of(1), -1, 0));
-        assertThrows(IllegalArgumentException.class, () -> new QuestContext(1, Set.of(1), DAY, 8));
+        assertThrows(IllegalArgumentException.class, () -> new QuestContext(1, Set.of(1), DAY, 11));
         assertThrows(NullPointerException.class, () -> engine.onEvent(state, null));
         assertThrows(NullPointerException.class, () -> new QuestEngine(null));
     }

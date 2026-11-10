@@ -254,44 +254,28 @@ public final class WorldMapScreen extends Screen {
         float cx = centerX();
         float cy = centerY();
         double ppb = viewport.pixelsPerBlock();
-        float originX = (float) viewport.screenX(0.0, cx);
-        float originY = (float) viewport.screenY(0.0, cy);
         net.minecraft.resources.ResourceLocation atlas = AtlasTexture.get(astoria);
         if (atlas != null) {
             int extent = AtlasPainter.EXTENT;
             MapDraw.texturedRect(graphics, atlas, (float) viewport.screenX(-extent, cx), (float) viewport.screenY(-extent, cy),
                     (float) viewport.screenX(extent, cx), (float) viewport.screenY(extent, cy), 0.0F, 0.0F, 1.0F, 1.0F);
         } else {
-            for (int id = Areas.LAST_ID; id >= Areas.FIRST_ID; id--) {
-                AreaDefinition area = Areas.require(id);
-                double outer = area.isUnbounded() ? AtlasPainter.LAND_RADIUS : area.outerRadius();
-                MapDraw.disc(graphics, originX, originY, (float) (outer * ppb), MapMath.opaque(area.color()));
-            }
+            int extent = AtlasPainter.EXTENT;
+            graphics.fill(Math.round((float) viewport.screenX(-extent, cx)), Math.round((float) viewport.screenY(-extent, cy)),
+                    Math.round((float) viewport.screenX(extent, cx)), Math.round((float) viewport.screenY(extent, cy)),
+                    0xFFE8DCB5);
             graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.map.painting"),
                     Math.round(cx), frameTop() + 6, 0xFFE8C66A);
         }
-        // sealed areas: greyed out
-        for (AreaDefinition area : Areas.all()) {
-            if (view.isUnlocked(area.id())) {
-                continue;
-            }
-            double outer = area.isUnbounded() ? AtlasPainter.EXTENT * 1.5 : area.outerRadius();
-            MapDraw.ring(graphics, originX, originY, (float) (area.innerRadius() * ppb), (float) (outer * ppb), 0xB0282830);
-        }
-        // area names along the north-east diagonal (hidden when zoomed out so far that they would overlap)
-        for (AreaDefinition area : viewport.blocksPerPixel() <= 12.0 ? Areas.all() : List.<AreaDefinition>of()) {
-            double middle = area.isUnbounded() ? area.innerRadius() + 160.0 : (area.innerRadius() + area.outerRadius()) / 2.0;
-            if (area.id() == 1) {
-                middle = 190.0;
-            }
-            double angle = Math.toRadians(-40.0);
-            float lx = (float) viewport.screenX(Math.cos(angle) * middle, cx);
-            float ly = (float) viewport.screenY(Math.sin(angle) * middle, cy);
+        // field names with their recommended levels (sealed fields in grey)
+        for (AreaDefinition area : viewport.blocksPerPixel() <= 14.0 ? Areas.all() : List.<AreaDefinition>of()) {
+            double[] at = com.eternalrealm.world.field.FieldLayout.labelPoint(area.id());
+            float lx = (float) viewport.screenX(at[0], cx);
+            float ly = (float) viewport.screenY(at[1], cy);
             boolean open = view.isUnlocked(area.id());
             MutableComponent name = Component.translatable(area.translationKey());
             name.withStyle(style -> style.withColor(open ? MapMath.mix(area.color(), 0xFFFFFF, 0.45) : 0x9A9A9A));
-            Component sub = open ? Component.translatable("map.eternalrealm.level_range", area.minLevel(), area.maxLevel())
-                    : Component.translatable("map.eternalrealm.sealed");
+            Component sub = open ? levelRange(area) : Component.translatable("map.eternalrealm.sealed");
             label(graphics, name, lx, ly - 5.0F);
             label(graphics, sub.copy().withStyle(open ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), lx, ly + 5.0F);
         }
@@ -523,19 +507,24 @@ public final class WorldMapScreen extends Screen {
         List<Component> lines = new ArrayList<>();
         lines.add(Component.translatable(area.translationKey())
                 .withStyle(style -> style.withColor(MapMath.mix(area.color(), 0xFFFFFF, 0.45))));
-        lines.add(Component.translatable("map.eternalrealm.level_range", area.minLevel(), area.maxLevel())
-                .withStyle(ChatFormatting.GRAY));
+        lines.add(levelRange(area).copy().withStyle(ChatFormatting.GRAY));
         if (!view.isUnlocked(area.id())) {
             lines.add(Component.translatable("map.eternalrealm.sealed.desc").withStyle(ChatFormatting.RED));
         } else if (!view.isDiscovered(area.id())) {
             lines.add(Component.translatable("map.eternalrealm.undiscovered").withStyle(ChatFormatting.YELLOW));
         }
-        if (view.realm().astoria() && Math.sqrt(x * x + z * z) < AtlasPainter.LAND_RADIUS) {
+        if (view.realm().astoria() && com.eternalrealm.world.field.FieldLayout.inBounds(x, z)) {
             lines.add(Component.translatable(AstoriaLayout.biomeAt((int) Math.floor(x), (int) Math.floor(z))
                     .translationKey()).withStyle(ChatFormatting.DARK_GREEN));
         }
         lines.add(Component.literal(String.format(Locale.ROOT, "%d, %d", Math.round(x + view.realm().centerX()),
                 Math.round(z + view.realm().centerZ()))).withStyle(ChatFormatting.DARK_GRAY));
         return lines;
+    }
+
+    /** "推奨Lv.10〜20", or "推奨Lv.40〜" for the open-ended high fields. */
+    static Component levelRange(AreaDefinition area) {
+        return area.openEnded() ? Component.translatable("map.eternalrealm.level_from", area.minLevel())
+                : Component.translatable("map.eternalrealm.level_range", area.minLevel(), area.maxLevel());
     }
 }

@@ -146,7 +146,7 @@ public class LootTest {
         assertEquals(List.of("eternalrealm:enhancement_stone", "eternalrealm:reroll_crystal"), Materials.upgradeMaterials());
         assertEquals(4, Materials.areaOf("eternalrealm:yeti_fur").getAsInt());
         assertTrue(Materials.areaOf(Materials.REROLL_CRYSTAL).isEmpty());
-        assertTrue(Materials.ofArea(8).isEmpty());
+        assertTrue(Materials.ofArea(11).isEmpty());
 
         Set<String> dropped = DropTables.droppableItemIds();
         for (String material : Materials.areaMaterials()) {

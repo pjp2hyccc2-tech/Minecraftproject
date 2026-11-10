@@ -78,7 +78,7 @@ public class WorldCodecsTest {
 
     @Test
     public void invalidDiscoveryIsCorrupt() {
-        for (String json : new String[]{"{\"schema\":1,\"areas\":[1,1]}", "{\"schema\":1,\"areas\":[8]}",
+        for (String json : new String[]{"{\"schema\":1,\"areas\":[1,1]}", "{\"schema\":1,\"areas\":[11]}",
                 "{\"schema\":1,\"areas\":[1.5]}", "{\"schema\":1,\"areas\":[\"1\"]}", "{\"schema\":1}",
                 "{\"schema\":1,\"areas\":{}}", "{\"areas\":[1]}", "[1,2]", "{\"schema\":0,\"areas\":[]}"}) {
             assertThrows(json, CorruptDataException.class, () -> DiscoveryCodec.fromJson(JsonParser.parseString(json)));

@@ -81,6 +81,21 @@ public final class DropTables {
             field("knight_of_the_end", 7, ABYSS_CRYSTAL, VOID_ESSENCE),
             field("doom_cultist", 7, VOID_ESSENCE, ABYSS_CRYSTAL),
             fieldElite("herald_of_ruin", 7, ABYSS_CRYSTAL, VOID_ESSENCE),
+            // Field 8: 豊穣の農場 (tier 2)
+            field("crop_slime", 2, FOREST_SPORE, TREANT_BARK),
+            field("scarecrow_dead", 2, TREANT_BARK, FOREST_SPORE),
+            field("harvest_raider", 2, TREANT_BARK, FOREST_SPORE),
+            fieldElite("rampaging_bull", 2, TREANT_BARK, FOREST_SPORE),
+            // Field 9: 湖畔のほとり (tier 3)
+            field("marsh_slime", 3, SCARAB_SHELL, DESERT_CRYSTAL),
+            field("lake_drowned", 3, DESERT_CRYSTAL, SCARAB_SHELL),
+            field("reed_spider", 3, SCARAB_SHELL, DESERT_CRYSTAL),
+            fieldElite("lake_witch", 3, DESERT_CRYSTAL, SCARAB_SHELL),
+            // Field 10: 風の港 (tier 4)
+            field("dock_drowned", 4, FROST_SHARD, YETI_FUR),
+            field("pirate_cutthroat", 4, YETI_FUR, FROST_SHARD),
+            field("pirate_gunner", 4, FROST_SHARD, YETI_FUR),
+            fieldElite("pirate_captain", 4, YETI_FUR, FROST_SHARD),
             // Dungeon waves (tier = area of the dungeon)
             wave("d1_bandit", 1, WOLF_FANG, SLIME_GEL),
             wave("d1_crawler", 1, SLIME_GEL, WOLF_FANG),
