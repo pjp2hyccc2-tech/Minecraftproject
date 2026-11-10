@@ -9,8 +9,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public final class ERClientConfig {
     public static final ForgeConfigSpec SPEC;
     public static final ForgeConfigSpec.BooleanValue HUD_ENABLED;
-    public static final ForgeConfigSpec.IntValue HUD_X;
-    public static final ForgeConfigSpec.IntValue HUD_Y;
     public static final ForgeConfigSpec.BooleanValue MINIMAP_ENABLED;
     public static final ForgeConfigSpec.IntValue MINIMAP_SIZE;
     public static final ForgeConfigSpec.IntValue MINIMAP_ZOOM;
@@ -25,12 +23,11 @@ public final class ERClientConfig {
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-        builder.comment("Character HUD (level / EXP / unspent points)").push("hud");
+        builder.comment("The game's HUD: player frame, skill bar with quick-use items, bag and equipment icons. It replaces",
+                "the vanilla hotbar, hearts, armor and experience bar (false: the vanilla HUD comes back).").push("hud");
         HUD_ENABLED = builder.define("enabled", true);
-        HUD_X = builder.comment("Left offset in GUI pixels").defineInRange("x", 4, 0, 4096);
-        HUD_Y = builder.comment("Top offset in GUI pixels").defineInRange("y", 4, 0, 4096);
         builder.pop();
-        builder.comment("Minimap in the top right corner (keys: N shows/hides it, = and - zoom, M opens the world map)")
+        builder.comment("Minimap in the top right corner (keys: Y shows/hides it, = and - zoom, M opens the world map)")
                 .push("minimap");
         MINIMAP_ENABLED = builder.comment("Show the minimap").define("enabled", true);
         MINIMAP_SIZE = builder.comment("Diameter in GUI pixels").defineInRange("size", 96, 64, 192);

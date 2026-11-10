@@ -43,6 +43,14 @@
 | D-036 | 武器を持っている間の右クリックはガード専用。オフハンドのアイテムはしゃがみ＋右クリックで使う。他のアイテムを使用中（盾・食事・弓など）は攻撃・回避・スキルを受け付けない（サーバーとクライアントの両方） | ガードが拒否されたときにオフハンドの盾へ流れ、バニラの100%防御の裏で連撃できた（独立レビューで指摘） | 確定（Phase 2） |
 | D-037 | パリィの受付はガード開始ごとに開くが、前回のガード開始から16tick未満なら開かない | 右クリックの連打で受付を出し続けられた（自己レビュー・独立レビュー双方で指摘） | 確定（Phase 2） |
 
+## D-HUD: one layout for the whole HUD; no hotbar, the main hand is slot 0 (2026-11-10)
+The owner asked for no overlapping HUD parts, no vanilla hotbar and a bag and an equipment icon on the right with their
+keys. Every part is placed by one pure layout (`hud.HudLayout`) computed per frame from the screen and what is showing,
+and tested for overlaps; overlays draw only inside their rectangle. Without a hotbar the main hand is inventory slot 0,
+which holds the equipped weapon (the client keeps the selection there, the server moves a weapon there at login); the
+number keys 1-3 use items straight from the inventory (`UseItemPacket`, checked by the server like a use from the hand;
+the return scroll channels on the server). Creative and spectator mode keep the vanilla HUD for building and testing.
+
 ## D-VITALS: no hunger and no natural regeneration; potions are the way to heal (2026-11-10)
 The owner asked for no hunger gauge ("always full"), no automatic regeneration and potions as the basic way to heal.
 The server keeps every player's food bar full each tick (sprinting is always allowed, nobody starves) and the client

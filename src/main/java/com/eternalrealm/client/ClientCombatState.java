@@ -144,7 +144,10 @@ public final class ClientCombatState {
 
     public static void onDamageNumber(DamageNumberPacket packet) {
         if ((packet.flags() & DamageNumberPacket.SKILL) != 0) {
+            // a skill landing: shake, a kick of the view and a moment of hit-stop on the swing
             CameraShake.add(0.7F, 7);
+            CameraShake.kick((packet.flags() & DamageNumberPacket.CRITICAL) != 0 ? 1.6F : 1.1F, 5);
+            HitStop.trigger(2);
         } else if ((packet.flags() & DamageNumberPacket.HEAVY) != 0) {
             CameraShake.add(0.5F, 6);
         } else if ((packet.flags() & DamageNumberPacket.CRITICAL) != 0) {

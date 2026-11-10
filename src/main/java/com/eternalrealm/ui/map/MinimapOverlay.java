@@ -17,7 +17,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -29,11 +28,10 @@ import java.util.Locale;
  * The minimap in the top right corner: a round map of the surroundings drawn from the loaded chunks
  * ({@link Minimap}), the player's arrow, north, party members (pinned to the rim when far away), town NPCs with their
  * quest marks, dungeon entrances, the capital and the tower, dungeon traps; below it the area (or dungeon room) and the
- * coordinates. It moves down when status effect icons are shown.
+ * coordinates. Where and how big it is comes from the HUD layout ({@link com.eternalrealm.ui.hud.HudFrame}).
  */
 public final class MinimapOverlay implements IGuiOverlay {
     private static final Logger LOG = LogUtils.getLogger();
-    private static final int MARGIN = 4;
     private static final int BACKGROUND = 0xC0141018;
     private static final int RIM = 0xFFC9A55A;
     private static final int RIM_DARK = 0xFF2A2016;
@@ -49,19 +47,15 @@ public final class MinimapOverlay implements IGuiOverlay {
                 || minecraft.level == null || !Minimap.visible()) {
             return;
         }
+        com.eternalrealm.hud.HudLayout.Layout layout = com.eternalrealm.ui.hud.HudFrame.layout();
+        if (layout.minimap().isEmpty()) {
+            return; // no room on this screen
+        }
         try {
-            draw(minecraft, player, graphics, partialTick, screenWidth);
+            draw(minecraft, player, graphics, partialTick, layout.minimap(), layout.minimapLabels());
         } catch (RuntimeException e) {
             broken = true;
             LOG.error("Minimap overlay disabled after a rendering error", e);
-        }
-    }
-
-    private static int size() {
-        try {
-            return ERClientConfig.MINIMAP_SIZE.get();
-        } catch (IllegalStateException e) {
-            return 96;
         }
     }
 
@@ -81,28 +75,27 @@ public final class MinimapOverlay implements IGuiOverlay {
         }
     }
 
-    /** Below the status effect icons when there are any (vanilla draws them in the top right corner). */
-    private static int effectsOffset(LocalPlayer player) {
-        boolean beneficial = false;
-        boolean harmful = false;
-        for (MobEffectInstance effect : player.getActiveEffects()) {
-            if (!effect.showIcon()) {
-                continue;
-            }
-            if (effect.getEffect().isBeneficial()) {
-                beneficial = true;
-            } else {
-                harmful = true;
-            }
+    /**
+     * Lines of text under the minimap: the dungeon and room, or the area and its levels, and the coordinates (the HUD
+     * layout reserves them).
+     */
+    public static int labelLines(Minecraft minecraft, LocalPlayer player) {
+        int lines = coordinates() ? 1 : 0;
+        if (minecraft.level == null) {
+            return lines;
         }
-        return harmful ? 52 : beneficial ? 26 : 0;
+        if (ClientMapState.inDungeonDimension(minecraft.level) && ClientMapState.view().dungeon().isPresent()) {
+            return lines + 2;
+        }
+        return ClientMapState.inRealm(minecraft.level) ? lines + 2 : lines;
     }
 
-    private void draw(Minecraft minecraft, LocalPlayer player, GuiGraphics graphics, float partialTick, int screenWidth) {
+    private void draw(Minecraft minecraft, LocalPlayer player, GuiGraphics graphics, float partialTick,
+                      com.eternalrealm.hud.Rect area, com.eternalrealm.hud.Rect labelArea) {
         Font font = minecraft.font;
-        float radius = size() / 2.0F;
-        float cx = screenWidth - MARGIN - radius;
-        float cy = MARGIN + effectsOffset(player) + radius;
+        float radius = area.width() / 2.0F - 2.0F; // the rim is drawn 2 px outside the map
+        float cx = area.x() + area.width() / 2.0F;
+        float cy = area.y() + area.height() / 2.0F;
         double px = Mth.lerp(partialTick, player.xo, player.getX());
         double pz = Mth.lerp(partialTick, player.zo, player.getZ());
         float yaw = Mth.lerp(partialTick, player.yRotO, player.getYRot());
@@ -161,35 +154,32 @@ public final class MinimapOverlay implements IGuiOverlay {
                 false);
         MapDraw.arrow(graphics, cx, cy, 4.5F, MapMath.arrowAngle(yaw, mapRotation), PLAYER, 0xFF000000);
 
-        labels(minecraft, graphics, font, view, cx, cy + radius + 4.0F, screenWidth, player);
+        if (!labelArea.isEmpty()) {
+            labels(minecraft, graphics, font, view, labelArea, player);
+        }
     }
 
-    private static void labels(Minecraft minecraft, GuiGraphics graphics, Font font, MapView view, float cx, float top,
-                               int screenWidth, LocalPlayer player) {
-        int y = Math.round(top);
-        Component title = null;
+    private static void labels(Minecraft minecraft, GuiGraphics graphics, Font font, MapView view,
+                               com.eternalrealm.hud.Rect area, LocalPlayer player) {
+        int y = area.y() + 1;
+        int bottom = area.bottom();
         if (ClientMapState.inDungeonDimension(minecraft.level) && view.dungeon().isPresent()) {
             MapView.Dungeon dungeon = view.dungeon().get();
-            title = Component.translatable(dungeon.nameKey()).withStyle(ChatFormatting.GOLD);
-            centered(graphics, font, title, cx, y, screenWidth);
-            y += font.lineHeight + 1;
-            centered(graphics, font, roomLabel(dungeon), cx, y, screenWidth);
-            y += font.lineHeight + 1;
+            y = centered(graphics, font, Component.translatable(dungeon.nameKey()).withStyle(ChatFormatting.GOLD), area, y, bottom);
+            y = centered(graphics, font, roomLabel(dungeon), area, y, bottom);
         } else if (ClientMapState.inRealm(minecraft.level)) {
-            int area = AstoriaAreas.areaAt(player.getX() - view.realm().centerX(), player.getZ() - view.realm().centerZ());
-            AreaDefinition definition = Areas.require(area);
-            title = Component.translatable(definition.translationKey())
+            int areaId = AstoriaAreas.areaAt(player.getX() - view.realm().centerX(), player.getZ() - view.realm().centerZ());
+            AreaDefinition definition = Areas.require(areaId);
+            Component title = Component.translatable(definition.translationKey())
                     .withStyle(style -> style.withColor(MapMath.mix(definition.color(), 0xFFFFFF, 0.35)));
-            centered(graphics, font, title, cx, y, screenWidth);
-            y += font.lineHeight + 1;
-            centered(graphics, font, WorldMapScreen.levelRange(definition).copy().withStyle(ChatFormatting.GRAY), cx, y,
-                    screenWidth);
-            y += font.lineHeight + 1;
+            y = centered(graphics, font, title, area, y, bottom);
+            y = centered(graphics, font, WorldMapScreen.levelRange(definition).copy().withStyle(ChatFormatting.GRAY), area,
+                    y, bottom);
         }
         if (coordinates()) {
             String text = String.format(Locale.ROOT, "%d, %d, %d", player.getBlockX(), player.getBlockY(),
                     player.getBlockZ());
-            centered(graphics, font, Component.literal(text).withStyle(ChatFormatting.GRAY), cx, y, screenWidth);
+            centered(graphics, font, Component.literal(text).withStyle(ChatFormatting.GRAY), area, y, bottom);
         }
     }
 
@@ -206,10 +196,17 @@ public final class MinimapOverlay implements IGuiOverlay {
                 .withStyle(ChatFormatting.GRAY);
     }
 
-    private static void centered(GuiGraphics graphics, Font font, Component text, float cx, int y, int screenWidth) {
-        int width = font.width(text);
-        int x = Math.min(Math.round(cx - width / 2.0F), screenWidth - 2 - width);
-        graphics.drawString(font, text, x, y, 0xFFFFFF);
+    /** One line centred in the label area (shortened to its width); @return the next line's top */
+    private static int centered(GuiGraphics graphics, Font font, Component text, com.eternalrealm.hud.Rect area, int y,
+                                int bottom) {
+        if (y + font.lineHeight > bottom + 1) {
+            return y;
+        }
+        net.minecraft.util.FormattedCharSequence line = font.split(text, area.width()).stream().findFirst()
+                .orElse(net.minecraft.util.FormattedCharSequence.EMPTY);
+        int width = font.width(line);
+        graphics.drawString(font, line, area.x() + (area.width() - width) / 2, y, 0xFFFFFF);
+        return y + font.lineHeight + 1;
     }
 
     /** Places markers on the round map. */

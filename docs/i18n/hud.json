@@ -1,0 +1,8 @@
+{
+  "key.eternalrealm.open_equipment": {"ja": "装備", "en": "Equipment"},
+  "hud.eternalrealm.frame.points": {"ja": "ステータスP %s・スキルP %s [%s]", "en": "Stat pts %s, skill pts %s [%s]"},
+  "hud.eternalrealm.quick.none_0": {"ja": "回復薬を持っていません", "en": "You have no health potions"},
+  "hud.eternalrealm.quick.none_1": {"ja": "スタミナトニックを持っていません", "en": "You have no stamina tonics"},
+  "hud.eternalrealm.quick.none_2": {"ja": "帰還の巻物を持っていません", "en": "You have no return scrolls"},
+  "message.eternalrealm.consumable.return_channel": {"ja": "帰還の巻物を読んでいます… あと%s秒（動く・攻撃を受けると中断）", "en": "Reading the return scroll... %ss (moving or taking damage cancels)"}
+}

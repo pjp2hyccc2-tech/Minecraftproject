@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"5"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5 |
+| プロトコル版 | `"6"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -21,6 +21,8 @@
 | 3 | `CombatStatusPacket` | S→C | ackSequence (VarInt), answersRequest (bool), outcome (byte: 0=受理 1=先行入力 2=無視 3〜9=各種拒否), stamina (float), skillCooldown (VarInt tick), skillCooldownTotal (VarInt tick), defenseEvent (byte: 0=なし 1=回避 2=パリィ 3=ガード 4=ガードブレイク) | 32 B | クライアント |
 | 4 | `CombatStatsPacket` | S→C | attackMultiplier, maxHealthBonus, damageReduction, actionSpeedFactor, critChance, critMultiplier, maxStamina, staminaRegenPerTick（すべて double。クライアントの予測が整数tickへ丸める値をサーバーと一致させるため） | 64 B | クライアント |
 | 5 | `DamageNumberPacket` | S→C | entityId (VarInt), x/y/z (float), amount (float), flags (byte: 1=クリティカル 2=強攻撃 4=スキル) | 32 B | クライアント（攻撃した本人だけに送る） |
+| 6〜9 | `UiActionPacket` `UiDataPacket` `PlayerActionPacket` `TelegraphPacket` | | （各モジュールの説明を参照） | | |
+| 10 | `UseItemPacket` | C→S | slot (VarInt: インベントリの 0〜35)。クイック使用（1〜3キー）とカバンの「使う」。サーバーがスロット・アイテム・レベル・クールダウンを確認（`QuickUse.useSlot`）。範囲外のスロットは**違反** | 5 B | サーバー |
 
 ステータスの並び順は `StatType` の宣言順（ネットワークIDは固定値で、再利用・並べ替え禁止）。
 

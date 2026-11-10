@@ -228,6 +228,7 @@ public final class JobActions {
         if (!player.getInventory().add(weapon)) {
             player.drop(weapon, false);
         }
+        com.eternalrealm.item.forge.MainHand.ensureWeapon(player); // into the main hand (slot 0) if it holds none
         player.displayClientMessage(Component.translatable("message.eternalrealm.job.starter_kit", weapon.getHoverName())
                 .withStyle(ChatFormatting.AQUA), false);
         ItemStack potions = new ItemStack(com.eternalrealm.item.forge.ERGearItems.consumable(

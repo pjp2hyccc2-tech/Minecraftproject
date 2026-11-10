@@ -2,7 +2,6 @@ package com.eternalrealm.ui.map;
 
 import com.eternalrealm.client.ClientUiState;
 import com.eternalrealm.client.map.ThreatClient;
-import com.eternalrealm.config.ERClientConfig;
 import com.eternalrealm.core.ModInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,7 +13,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -30,9 +28,9 @@ import java.util.Locale;
 
 /**
  * Under the minimap: the 瘴気 gauge of the field the player stands in (violet, pulsing red during an omen, the risen
- * calamity's name while it is out, light blue with the time left while the field is purified), the name of a wandering
- * boss that is out in the field, and for a few seconds after a lord hunt a small panel with the player's merit place
- * and what they got.
+ * calamity's name while it is out, light blue with the time left while the field is purified; while a wandering boss is
+ * out in the field, a pulsing amber mark and, every other few seconds, its name on the label row), and for a few seconds
+ * after a lord hunt a small panel with the player's merit place and what they got.
  */
 @Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ThreatOverlay implements IGuiOverlay {
@@ -64,29 +62,9 @@ public final class ThreatOverlay implements IGuiOverlay {
         }
     }
 
-    private static int minimapBottom(LocalPlayer player) {
-        int size;
-        boolean coordinates;
-        try {
-            size = ERClientConfig.MINIMAP_SIZE.get();
-            coordinates = ERClientConfig.MINIMAP_COORDINATES.get();
-        } catch (IllegalStateException e) {
-            size = 96;
-            coordinates = true;
-        }
-        boolean beneficial = false;
-        boolean harmful = false;
-        for (MobEffectInstance effect : player.getActiveEffects()) {
-            if (effect.showIcon()) {
-                if (effect.getEffect().isBeneficial()) {
-                    beneficial = true;
-                } else {
-                    harmful = true;
-                }
-            }
-        }
-        int offset = harmful ? 52 : beneficial ? 26 : 0;
-        return 4 + offset + size + (coordinates ? 14 : 4);
+    /** Whether the result card of a defeated lord is still up (the HUD layout makes room for it). */
+    public static boolean resultShowing() {
+        return result != null && System.nanoTime() - resultAt < RESULT_NANOS;
     }
 
     @Override
@@ -97,18 +75,16 @@ public final class ThreatOverlay implements IGuiOverlay {
             return;
         }
         Font font = minecraft.font;
-        int top = minimapBottom(player);
-        int width = 108;
-        int left = screenWidth - 4 - width;
+        com.eternalrealm.hud.HudLayout.Layout layout = com.eternalrealm.ui.hud.HudFrame.layout();
         int field = ThreatClient.currentField();
         JsonObject entry = field == 0 ? null : ThreatClient.field(field).orElse(null);
-        if (entry != null) {
-            drawGauge(graphics, font, entry, left, top, width);
-            top += 24;
-            top = drawWanderer(graphics, font, entry, left, top, width);
+        com.eternalrealm.hud.Rect gauge = layout.threat();
+        if (entry != null && !gauge.isEmpty()) {
+            drawGauge(graphics, font, entry, gauge.x(), gauge.y(), gauge.width());
         }
-        if (result != null && System.nanoTime() - resultAt < RESULT_NANOS) {
-            drawResult(graphics, font, left - 30, top, width + 30);
+        com.eternalrealm.hud.Rect card = layout.threatResult();
+        if (resultShowing() && !card.isEmpty()) {
+            drawResult(graphics, font, card.x(), card.y(), card.width());
         }
     }
 
@@ -150,8 +126,22 @@ public final class ThreatOverlay implements IGuiOverlay {
                 ratio = gauge / 1000.0;
             }
         }
-        String text = font.plainSubstrByWidth(label.getString(), width - 4);
+        // a wanderer out in this field: a pulsing mark on the right, and every other 3 seconds its name on the label row
+        JsonObject wanderer = outWanderer(entry);
+        boolean fighting = wanderer != null && wanderer.has("fighting") && wanderer.get("fighting").getAsBoolean();
+        if (wanderer != null && (nanos / 3_000_000_000L) % 2 == 1) {
+            label = Component.translatable(com.eternalrealm.world.field.Wanderers.MAP).append(" ")
+                    .append(Component.translatable(ClientUiState.stringOr(wanderer, "name", "")))
+                    .withStyle(fighting ? ChatFormatting.RED : ChatFormatting.GOLD);
+        }
+        int textWidth = wanderer == null ? width - 4 : width - 10;
+        String text = font.plainSubstrByWidth(label.getString(), textWidth);
         graphics.drawString(font, Component.literal(text).withStyle(label.getStyle()), left + 2, top + 1, 0xFFFFFFFF);
+        if (wanderer != null) {
+            float pulse = 0.5F + 0.5F * (float) Math.sin(nanos / 2.0E8);
+            int alpha = (int) (140 + 115 * pulse) << 24;
+            graphics.fill(left + width - 6, top + 2, left + width - 2, top + 6, alpha | (fighting ? 0xFF3010 : 0xFFB02E));
+        }
         graphics.fill(left + 2, top + 12, left + width - 2, top + 18, 0xFF1A1020);
         graphics.fill(left + 2, top + 12, left + 2 + (int) ((width - 4) * Mth.clamp(ratio, 0.0, 1.0)), top + 18,
                 fillColor);
@@ -161,25 +151,18 @@ public final class ThreatOverlay implements IGuiOverlay {
         }
     }
 
-    /** A wanderer out in this field: its name in amber under the gauge (red while it is fought). */
-    private static int drawWanderer(GuiGraphics graphics, Font font, JsonObject entry, int left, int top, int width) {
+    /** The wanderer out in the field of {@code entry} (board data), or null. */
+    private static JsonObject outWanderer(JsonObject entry) {
         if (!entry.has("wanderers") || !entry.get("wanderers").isJsonArray()) {
-            return top;
+            return null;
         }
         for (JsonElement element : entry.getAsJsonArray("wanderers")) {
             JsonObject wanderer = element.getAsJsonObject();
-            if (!wanderer.has("out") || !wanderer.get("out").getAsBoolean()) {
-                continue;
+            if (wanderer.has("out") && wanderer.get("out").getAsBoolean()) {
+                return wanderer;
             }
-            boolean fighting = wanderer.has("fighting") && wanderer.get("fighting").getAsBoolean();
-            Component label = Component.translatable(com.eternalrealm.world.field.Wanderers.MAP).append(" ")
-                    .append(Component.translatable(ClientUiState.stringOr(wanderer, "name", "")));
-            String text = font.plainSubstrByWidth(label.getString(), width - 4);
-            graphics.fill(left - 1, top - 1, left + width + 1, top + 11, 0xC0000000);
-            graphics.drawString(font, text, left + 2, top + 1, fighting ? 0xFFFF6040 : 0xFFFFC040);
-            return top + 14;
         }
-        return top;
+        return null;
     }
 
     private static void drawResult(GuiGraphics graphics, Font font, int left, int top, int width) {

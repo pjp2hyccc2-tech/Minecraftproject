@@ -33,6 +33,22 @@ final class DialogueBox {
      * @param bottom y of the panel's lower edge
      * @param hint   small grey text in the panel's top-right corner (may be null)
      */
+    /** Room the name tab and the key hint take above the panel. */
+    static final int TAB = 12;
+
+    /** Height of the panel {@link #render} draws for this line (without the name tab above it). */
+    static int height(Font font, ClientDialogue.Conversation conversation, int maxWidth, boolean large) {
+        ClientDialogue.Line line = conversation.line();
+        int portraitSize = large ? 48 : 32;
+        boolean portrait = line.portrait() != null;
+        int width = Math.min(maxWidth, large ? 420 : 330);
+        int pad = large ? 6 : 4;
+        int textLeft = pad + (portrait ? portraitSize + pad + 2 : 4);
+        int textWidth = width - textLeft - pad - 8;
+        int textHeight = wrap(font, line.text().getString(), textWidth).size() * LINE_HEIGHT;
+        return Math.max(portrait ? portraitSize + pad * 2 : 0, textHeight + pad * 2 + (large ? 8 : 4));
+    }
+
     static void render(GuiGraphics graphics, Font font, ClientDialogue.Conversation conversation, int centerX, int bottom,
                        int maxWidth, boolean large, Component hint) {
         ClientDialogue.Line line = conversation.line();

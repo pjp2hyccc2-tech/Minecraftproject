@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The shader mod (Oculus/Iris) binds K (toggle shaders) and R (reload shaders) by default: the same keys as the
- * character journal and the heavy attack, so every heavy attack reloaded the shader pack. Once per game, known key
- * mappings of other mods that sit on one of ETERNAL REALM's keys are moved to a free key (or unbound), the options are
- * saved and the player is told in chat. Bindings the player chose deliberately elsewhere are never touched.
+ * Keys that clash with ETERNAL REALM's are moved once per game. The shader mod (Oculus/Iris) binds K (toggle shaders)
+ * and R (reload shaders) by default: the same keys as the character journal and the heavy attack, so every heavy
+ * attack reloaded the shader pack. Vanilla's "save hotbar" sits on C, the equipment key (there is no hotbar in the
+ * game). Our own minimap toggle used to share N with the fifth job skill and moves to its new default. Known mappings
+ * that sit on one of the game's keys are moved to a free key (or unbound), the options are saved and the player is told
+ * in chat. Bindings the player chose deliberately elsewhere are never touched.
  */
 public final class KeyConflicts {
     private static final Logger LOG = LogUtils.getLogger();
@@ -30,6 +32,8 @@ public final class KeyConflicts {
     static {
         MOVES.put("iris.keybind.toggleShaders", GLFW.GLFW_KEY_F8);
         MOVES.put("iris.keybind.reload", GLFW.GLFW_KEY_UNKNOWN);
+        MOVES.put("key.saveToolbarActivator", GLFW.GLFW_KEY_UNKNOWN);
+        MOVES.put("key." + ModInfo.MOD_ID + ".minimap_toggle", GLFW.GLFW_KEY_Y);
     }
 
     private KeyConflicts() {
@@ -72,9 +76,9 @@ public final class KeyConflicts {
         }
     }
 
-    private static boolean clashes(KeyMapping foreign, List<KeyMapping> ours) {
+    private static boolean clashes(KeyMapping moved, List<KeyMapping> ours) {
         for (KeyMapping mine : ours) {
-            if (!mine.isUnbound() && mine.getKey().equals(foreign.getKey())) {
+            if (mine != moved && !mine.isUnbound() && mine.getKey().equals(moved.getKey())) {
                 return true;
             }
         }

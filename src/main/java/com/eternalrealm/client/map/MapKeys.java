@@ -23,7 +23,7 @@ public final class MapKeys {
     /** Opens (and closes) the world map. */
     public static final KeyMapping WORLD_MAP = key("world_map", GLFW.GLFW_KEY_M);
     /** Shows or hides the minimap. */
-    public static final KeyMapping MINIMAP_TOGGLE = key("minimap_toggle", GLFW.GLFW_KEY_N);
+    public static final KeyMapping MINIMAP_TOGGLE = key("minimap_toggle", GLFW.GLFW_KEY_Y);
     public static final KeyMapping MINIMAP_ZOOM_IN = key("minimap_zoom_in", GLFW.GLFW_KEY_EQUAL);
     public static final KeyMapping MINIMAP_ZOOM_OUT = key("minimap_zoom_out", GLFW.GLFW_KEY_MINUS);
 

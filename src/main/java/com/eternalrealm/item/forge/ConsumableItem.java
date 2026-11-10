@@ -150,6 +150,44 @@ public final class ConsumableItem extends Item {
         }
     }
 
+    /**
+     * Quick use from the inventory (number keys, the bag's use button): no hand and no drinking animation. Level and
+     * cooldown are checked as for a use from the hand; the return scroll channels for its usual time (moving or taking
+     * damage cancels it, see {@link ReturnChannel}). @return whether something happened or started
+     */
+    public boolean useFromInventory(ServerPlayer player, ItemStack stack) {
+        if (player.getCooldowns().isOnCooldown(this)) {
+            player.displayClientMessage(Component.translatable(Consumable.UseCheck.ON_COOLDOWN.translationKey(),
+                    consumable.requiredLevel()).withStyle(ChatFormatting.GRAY), true);
+            return false;
+        }
+        Consumable.UseCheck check = consumable.check(levelOf(player), 0);
+        if (check != Consumable.UseCheck.OK) {
+            player.displayClientMessage(Component.translatable(check.translationKey(), consumable.requiredLevel())
+                    .withStyle(ChatFormatting.RED), true);
+            return false;
+        }
+        if (consumable.effect() instanceof ConsumableEffect.ReturnHome home) {
+            return ReturnChannel.start(player, this, home.channelTicks());
+        }
+        boolean done = applyAndConsume(player, stack);
+        if (done && (consumable.effect() instanceof ConsumableEffect.Heal
+                || consumable.effect() instanceof ConsumableEffect.RestoreStamina)) {
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_DRINK,
+                    SoundSource.PLAYERS, 0.6F, 1.1F);
+        }
+        return done;
+    }
+
+    /** Runs the effect and, if it happened, uses up one item of {@code stack} and starts the cooldown. */
+    boolean applyAndConsume(ServerPlayer player, ItemStack stack) {
+        if (apply(player)) {
+            consume(player, stack);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
         if (entity instanceof ServerPlayer player && apply(player)) {

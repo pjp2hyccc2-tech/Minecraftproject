@@ -8,6 +8,9 @@ import net.minecraftforge.client.event.ViewportEvent;
  */
 public final class CameraShake {
     private static float strength;
+    private static float kickDegrees;
+    private static int kickRemaining;
+    private static int kickTotal;
     private static int remaining;
     private static int total;
 
@@ -24,13 +27,35 @@ public final class CameraShake {
         total = remaining;
     }
 
+    /**
+     * A camera kick: the view dips by {@code degrees} and springs back over {@code ticks} (the recoil of a heavy hit
+     * landing), on top of any shake.
+     */
+    public static void kick(float degrees, int ticks) {
+        if (!com.eternalrealm.config.ERClientConfig.CAMERA_SHAKE.get()) {
+            return;
+        }
+        kickDegrees = Math.min(3.0F, Math.max(kickDegrees * kickRemaining / Math.max(1, kickTotal), 0.0F) + degrees);
+        kickRemaining = Math.max(kickRemaining, ticks);
+        kickTotal = kickRemaining;
+    }
+
     static void tick() {
         if (remaining > 0) {
             remaining--;
         }
+        if (kickRemaining > 0) {
+            kickRemaining--;
+        }
     }
 
     static void apply(ViewportEvent.ComputeCameraAngles event) {
+        if (kickRemaining > 0 && kickDegrees > 0.0F) {
+            // a fast dip that eases back: sin over the first half, then the decay
+            float t = 1.0F - (kickRemaining - (float) event.getPartialTick()) / Math.max(1, kickTotal);
+            float shape = t < 0.25F ? t / 0.25F : (1.0F - t) / 0.75F;
+            event.setPitch(event.getPitch() + kickDegrees * Math.max(0.0F, shape));
+        }
         if (remaining <= 0 || strength <= 0.0F) {
             return;
         }
@@ -45,5 +70,8 @@ public final class CameraShake {
     static void clear() {
         remaining = 0;
         strength = 0.0F;
+        kickRemaining = 0;
+        kickDegrees = 0.0F;
+        HitStop.clear();
     }
 }

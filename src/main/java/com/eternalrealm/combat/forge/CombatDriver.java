@@ -159,6 +159,7 @@ public final class CombatDriver {
     public void tick() {
         applyChangedStats();
         SkillZones.tick(server);
+        WeaponSkillFx.tickScheduled();
         long now = now();
         for (UUID playerId : new ArrayList<>(service.all().keySet())) {
             ServerPlayer player = server.getPlayerList().getPlayer(playerId);
@@ -171,6 +172,7 @@ public final class CombatDriver {
                 for (CombatEvent event : combatant.tick(now)) {
                     handleEvent(player, combatant.stats(), event);
                 }
+                WeaponSkillFx.tick(player, combatant, now);
                 resyncStatus(player, combatant, now);
             } catch (RuntimeException e) {
                 // One broken fighter must not stop combat for everyone else.
@@ -303,6 +305,9 @@ public final class CombatDriver {
                     Afflictions.apply(player, targets, afflictions, scale, player.position());
                 }
             }
+            if (skill == null && art == null && WeaponSkillFx.isWeaponSkill(hit.action())) {
+                WeaponSkillFx.frame(player, hit);
+            }
             if (!rest.isEmpty()) {
                 if (art != null) {
                     SkillEffectsExecutor.applyArt(player, stats, art, hit.weapon(), hit.damageScale(), rest, targets);
@@ -313,6 +318,7 @@ public final class CombatDriver {
             }
         } else if (event instanceof CombatEvent.ActionStarted start) {
             CombatEffects.actionStarted(player, start);
+            WeaponSkillFx.started(player, start.weapon(), start.action());
             ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(), start.action().id(),
                     start.comboStep(), start.action().timing(stats.actionSpeedFactor()).duration(), false));
             Jobs.skillOfAction(start.action().id()).ifPresent(skill ->
@@ -533,6 +539,7 @@ public final class CombatDriver {
     }
 
     public void onPlayerLeft(UUID playerId) {
+        WeaponSkillFx.forget(playerId);
         service.remove(playerId, now());
         net.remove(playerId);
         skills.remove(playerId);
