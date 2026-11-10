@@ -234,6 +234,7 @@ public final class WaystoneService {
     /** In front of the destination stone (the side it faces), on solid ground with room to stand, facing the stone. */
     public static Arrival arrival(ServerLevel level, FieldLayout.Waystone waystone) {
         level.getChunk(waystone.x() >> 4, waystone.z() >> 4); // make sure it is loaded (and generated)
+        MinorWaystones.ensureBuilt(level, waystone); // a minor stone nobody has walked up to yet
         BlockPos stone = findStone(level, waystone);
         Direction facing = stone != null ? level.getBlockState(stone).getValue(WaystoneBlock.FACING) : Direction.SOUTH;
         int baseX = stone != null ? stone.getX() : waystone.x();

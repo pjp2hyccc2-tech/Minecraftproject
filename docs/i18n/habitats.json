@@ -1,0 +1,5 @@
+{
+  "screen.eternalrealm.map.habitat": {"ja": "%s の生息地（Lv%s〜%s）", "en": "Home of the %s (Lv%s-%s)"},
+  "screen.eternalrealm.map.habitat.drops": {"ja": "落とす物: %s", "en": "Drops: %s"},
+  "screen.eternalrealm.map.habitat.hint": {"ja": "倒しても少しすると同じ場所に戻ってくる", "en": "Those you defeat come back here after a while"}
+}

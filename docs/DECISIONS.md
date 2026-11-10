@@ -43,6 +43,17 @@
 | D-036 | 武器を持っている間の右クリックはガード専用。オフハンドのアイテムはしゃがみ＋右クリックで使う。他のアイテムを使用中（盾・食事・弓など）は攻撃・回避・スキルを受け付けない（サーバーとクライアントの両方） | ガードが拒否されたときにオフハンドの盾へ流れ、バニラの100%防御の裏で連撃できた（独立レビューで指摘） | 確定（Phase 2） |
 | D-037 | パリィの受付はガード開始ごとに開くが、前回のガード開始から16tick未満なら開かない | 右クリックの連打で受付を出し続けられた（自己レビュー・独立レビュー双方で指摘） | 確定（Phase 2） |
 
+## D-HABITATS: field monsters live in fixed habitats; five times as many waystones (2026-11-10)
+The owner asked for a fixed spawn place for every monster of every field (to make levelling and farming materials
+easier) and for five times as many waystones. Every normal monster of a field got a habitat (the three common ones two):
+160 circles placed once by `FieldSitesGenerator` (tests) on dry, walkable land inside the field, clear of the capital,
+the lords' territories, the dungeon entrances, the waystones, the set pieces and each other, the weaker kinds nearer the
+field's shrine, and kept as a fixed table so the places never move. In アストリア monsters now appear only there (filled
+while a player is near, a killed one back after about five seconds, now and then the field's elite) and stay near home.
+44 minor waystones (4-5 per field, placed to be near the habitats, lords and dungeon entrances) join the 11 shrines; the
+server builds each as a stone on a small platform when a player first comes near or travels there, so existing worlds get
+them as well.
+
 ## D-HUD: one layout for the whole HUD; no hotbar, the main hand is slot 0 (2026-11-10)
 The owner asked for no overlapping HUD parts, no vanilla hotbar and a bag and an equipment icon on the right with their
 keys. Every part is placed by one pure layout (`hud.HudLayout`) computed per frame from the screen and what is showing,

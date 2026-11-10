@@ -20,6 +20,8 @@ public final class AstoriaWorldState extends SavedData {
     /** Floor height chosen for the capital before it is built (Integer.MIN_VALUE = not chosen yet). */
     private int plannedHubY = Integer.MIN_VALUE;
     private final Map<String, Integer> landmarks = new TreeMap<>();
+    /** Minor waystones built so far: id -> floor height. */
+    private final Map<String, Integer> minorWaystones = new TreeMap<>();
     /** Content hash of the blueprint capital that is fully built ("" = none yet). */
     private String capitalBuild = "";
 
@@ -40,6 +42,10 @@ public final class AstoriaWorldState extends SavedData {
             state.landmarks.put(id, built.getInt(id));
         }
         state.capitalBuild = tag.getString("capitalBuild");
+        CompoundTag stones = tag.getCompound("minorWaystones");
+        for (String id : stones.getAllKeys()) {
+            state.minorWaystones.put(id, stones.getInt(id));
+        }
         return state;
     }
 
@@ -54,6 +60,9 @@ public final class AstoriaWorldState extends SavedData {
         landmarks.forEach(built::putInt);
         tag.put("landmarks", built);
         tag.putString("capitalBuild", capitalBuild);
+        CompoundTag stones = new CompoundTag();
+        minorWaystones.forEach(stones::putInt);
+        tag.put("minorWaystones", stones);
         return tag;
     }
 
@@ -109,6 +118,15 @@ public final class AstoriaWorldState extends SavedData {
 
     void markLandmarkBuilt(String dungeonId, int groundY) {
         landmarks.put(dungeonId, groundY);
+        setDirty();
+    }
+
+    public boolean minorWaystoneBuilt(String id) {
+        return minorWaystones.containsKey(id);
+    }
+
+    void markMinorWaystoneBuilt(String id, int floorY) {
+        minorWaystones.put(id, floorY);
         setDirty();
     }
 }

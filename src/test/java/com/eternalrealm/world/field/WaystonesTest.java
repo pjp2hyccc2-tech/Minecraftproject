@@ -20,7 +20,7 @@ public class WaystonesTest {
         Set<String> ids = new HashSet<>();
         for (FieldLayout.Waystone waystone : Waystones.all()) {
             assertTrue("duplicate id " + waystone.id(), ids.add(waystone.id()));
-            assertTrue(waystone.id(), waystone.id().matches("[a-z_]{1,32}"));
+            assertTrue(waystone.id(), waystone.id().matches("[a-z0-9_]{1,32}"));
             assertEquals(waystone.id() + " lies in its own field", waystone.field(),
                     FieldLayout.areaAt(waystone.x(), waystone.z()));
             fields.add(waystone.field());

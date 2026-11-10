@@ -98,6 +98,8 @@ public final class WorldMapScreen extends Screen {
     private double pressX;
     private double pressY;
     private String selected;
+    /** Travel list: first visible row (the list scrolls with the mouse wheel over it). */
+    private int listScroll;
     private Button travelButton;
 
     private WorldMapScreen(Tab tab, Travel travel) {
@@ -346,10 +348,11 @@ public final class WorldMapScreen extends Screen {
             return false;
         }
         if (travel != null && mouseX >= panelLeft() && mouseX < width - MARGIN) {
-            int index = (int) Math.floor((mouseY - (frameTop() + 18)) / ROW);
-            List<FieldLayout.Waystone> all = Waystones.all();
-            if (mouseY >= frameTop() + 18 && index >= 0 && index < all.size()) {
-                select(all.get(index).id());
+            int index = (int) Math.floor((mouseY - (frameTop() + 18)) / ROW) + listScroll;
+            List<TravelRow> rows = travelRows();
+            if (mouseY >= frameTop() + 18 && mouseY < listBottom() && index >= 0 && index < rows.size()
+                    && rows.get(index).waystone() != null) {
+                select(rows.get(index).waystone().id());
                 return true;
             }
             return false;
@@ -405,6 +408,12 @@ public final class WorldMapScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (travel != null && mouseX >= panelLeft() && mouseX < width - MARGIN && delta != 0.0) {
+            int visible = Math.max(1, (listBottom() - (frameTop() + 18)) / ROW);
+            int max = Math.max(0, travelRows().size() - visible);
+            listScroll = Math.max(0, Math.min(max, listScroll + (delta > 0.0 ? -1 : 1)));
+            return true;
+        }
         if (delta != 0.0) {
             viewport.zoom(delta > 0.0 ? 1.0 / 1.25 : 1.25, mouseX, mouseY, centerX(), centerY());
         }
@@ -516,8 +525,9 @@ public final class WorldMapScreen extends Screen {
             label(graphics, name, lx, ly - 5.0F);
             label(graphics, sub.copy().withStyle(open ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY), lx, ly + 5.0F);
         }
-        // the fixed places
+        // the monsters' habitats, then the fixed places
         if (astoria) {
+            drawHabitats(graphics, cx, cy, ppb);
             for (MapMarkers.Marker place : MapMarkers.astoria()) {
                 drawPlace(graphics, view, place, cx, cy, ppb);
             }
@@ -618,7 +628,40 @@ public final class WorldMapScreen extends Screen {
         }
     }
 
-    /** Travel mode: every waystone with its state; recorded and open ones can be chosen. */
+    /** One row of the travel list: a field's heading, or one of its waystones. */
+    private record TravelRow(int field, FieldLayout.Waystone waystone) {
+    }
+
+    /**
+     * The travel list: the fields in order, the one the player stands in first, each with a heading and its waystones
+     * (the shrine first). Fields the player has recorded nothing in show only their heading and the count.
+     */
+    private List<TravelRow> travelRows() {
+        int here = Waystones.byId(travel.from()).map(FieldLayout.Waystone::field).orElse(1);
+        List<Integer> order = new ArrayList<>();
+        order.add(here);
+        for (int f = 1; f <= FieldLayout.FIELD_COUNT; f++) {
+            if (f != here) {
+                order.add(f);
+            }
+        }
+        List<TravelRow> rows = new ArrayList<>();
+        for (int f : order) {
+            rows.add(new TravelRow(f, null));
+            for (FieldLayout.Waystone waystone : Waystones.all()) {
+                if (waystone.field() == f && (recorded(waystone.id()) || f == here)) {
+                    rows.add(new TravelRow(f, waystone));
+                }
+            }
+        }
+        return rows;
+    }
+
+    private int listBottom() {
+        return frameBottom() - 40;
+    }
+
+    /** Travel mode: the waystones by field with their state; recorded and open ones can be chosen. */
     private void drawTravelPanel(GuiGraphics graphics, int mouseX, int mouseY) {
         int x0 = panelLeft();
         int y0 = frameTop();
@@ -629,13 +672,25 @@ public final class WorldMapScreen extends Screen {
         graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.waystone.choose")
                 .withStyle(ChatFormatting.GOLD), (x0 + x1) / 2, y0 + 5, 0xFFFFFF);
         MapView view = ClientMapState.view();
-        List<FieldLayout.Waystone> all = Waystones.all();
-        for (int i = 0; i < all.size(); i++) {
-            FieldLayout.Waystone waystone = all.get(i);
-            int top = y0 + 18 + i * ROW;
-            if (top + ROW > y1 - 28) {
-                break;
+        List<TravelRow> rows = travelRows();
+        int visible = Math.max(1, (listBottom() - (y0 + 18)) / ROW);
+        listScroll = Math.max(0, Math.min(listScroll, Math.max(0, rows.size() - visible)));
+        for (int i = listScroll; i < rows.size() && i < listScroll + visible; i++) {
+            TravelRow row = rows.get(i);
+            int top = y0 + 18 + (i - listScroll) * ROW;
+            if (row.waystone() == null) {
+                // the field's heading: name, levels and how many of its waystones are recorded
+                long known = Waystones.all().stream().filter(w -> w.field() == row.field() && recorded(w.id())).count();
+                long total = Waystones.all().stream().filter(w -> w.field() == row.field()).count();
+                graphics.fill(x0 + 2, top + 2, x1 - 2, top + ROW - 2, 0x60302418);
+                Component name = Component.translatable(Areas.require(row.field()).translationKey())
+                        .withStyle(view.isUnlocked(row.field()) ? ChatFormatting.GOLD : ChatFormatting.DARK_GRAY);
+                graphics.drawString(font, name, x0 + 6, top + 7, 0xFFFFFF, false);
+                String count = known + "/" + total;
+                graphics.drawString(font, count, x1 - 6 - font.width(count), top + 7, 0xFFB8B0A0, false);
+                continue;
             }
+            FieldLayout.Waystone waystone = row.waystone();
             boolean here = waystone.id().equals(travel.from());
             boolean known = recorded(waystone.id());
             boolean open = view.isUnlocked(waystone.field());
@@ -646,16 +701,26 @@ public final class WorldMapScreen extends Screen {
             } else if (hovered && canChoose(waystone.id())) {
                 graphics.fill(x0 + 2, top, x1 - 2, top + ROW - 2, 0x40FFFFFF);
             }
-            MapDraw.waystone(graphics, x0 + 11.0F, top + 12.0F, 7.0F, known);
+            MapDraw.waystone(graphics, x0 + 11.0F, top + 12.0F, FieldLayout.isMinor(waystone.id()) ? 5.0F : 7.0F, known);
             ChatFormatting color = here ? ChatFormatting.GREEN : !known ? ChatFormatting.DARK_GRAY
                     : !open ? ChatFormatting.RED : ChatFormatting.AQUA;
-            graphics.drawString(font, Component.translatable(Waystones.translationKey(waystone.id()))
-                    .withStyle(color), x0 + 22, top + 2, 0xFFFFFF, false);
+            String name = font.plainSubstrByWidth(Component.translatable(Waystones.translationKey(waystone.id()))
+                    .getString(), x1 - x0 - 26);
+            graphics.drawString(font, Component.literal(name).withStyle(color), x0 + 22, top + 2, 0xFFFFFF, false);
             Component sub = here ? Component.translatable("screen.eternalrealm.waystone.here")
                     : !known ? Component.translatable("screen.eternalrealm.waystone.unknown")
                     : !open ? Component.translatable("map.eternalrealm.sealed")
                     : levelRange(Areas.require(waystone.field()));
             graphics.drawString(font, sub.copy().withStyle(ChatFormatting.GRAY), x0 + 22, top + 11, 0xFFFFFF, false);
+        }
+        if (rows.size() > visible) {
+            // a thin scroll bar along the right edge of the list
+            int trackTop = y0 + 18;
+            int trackHeight = listBottom() - trackTop;
+            int thumb = Math.max(8, trackHeight * visible / rows.size());
+            int thumbTop = trackTop + (trackHeight - thumb) * listScroll / Math.max(1, rows.size() - visible);
+            graphics.fill(x1 - 3, trackTop, x1 - 1, trackTop + trackHeight, 0x40FFFFFF);
+            graphics.fill(x1 - 3, thumbTop, x1 - 1, thumbTop + thumb, 0xC0E8C66A);
         }
         long wait = travel.readyAtMillis() - System.currentTimeMillis();
         if (wait > 0L) {
@@ -750,6 +815,60 @@ public final class WorldMapScreen extends Screen {
      * The field threats on the map: a calamity's lair (a red-black sun while it is out, a dim mark while it sleeps)
      * and every lord that is out (a violet crown where it was seen last).
      */
+    /**
+     * The habitats (生息地) of the field on the field tab, of every field once zoomed in: a disc per habitat in a colour
+     * telling how the monster's levels compare with the player's (green: easy, gold: right, red: dangerous), its name
+     * when zoomed in further, and on hover its levels and what it drops.
+     */
+    private void drawHabitats(GuiGraphics graphics, float cx, float cy, double ppb) {
+        boolean fieldTab = tab == Tab.FIELD;
+        if (!fieldTab && ppb < 0.3) {
+            return;
+        }
+        int playerLevel = com.eternalrealm.client.ClientCharacterState.snapshot()
+                .map(com.eternalrealm.character.CharacterSnapshot::level).orElse(1);
+        for (com.eternalrealm.world.field.Habitats.Habitat habitat : com.eternalrealm.world.field.Habitats.all()) {
+            if (fieldTab && habitat.field() != field) {
+                continue;
+            }
+            com.eternalrealm.monster.MonsterTemplate template = com.eternalrealm.monster.Monsters.byId(habitat.monster())
+                    .orElse(null);
+            if (template == null) {
+                continue;
+            }
+            float sx = (float) viewport.screenX(habitat.x() + 0.5, cx);
+            float sy = (float) viewport.screenY(habitat.z() + 0.5, cy);
+            float radius = (float) Math.max(3.0, habitat.radius() * ppb);
+            int min = template.levels().min();
+            int max = template.levels().max();
+            int color = max < playerLevel - 3 ? 0x6AC86A : min > playerLevel + 3 ? 0xE0503A : 0xE8C66A;
+            MapDraw.disc(graphics, sx, sy, radius, 0x48000000 | color);
+            MapDraw.ring(graphics, sx, sy, Math.max(0.0F, radius - 1.2F), radius, 0xD0000000 | color);
+            Component name = Component.translatable(template.translationKey());
+            if (ppb >= 0.55) {
+                label(graphics, name.copy().withStyle(style -> style.withColor(color)), sx, sy - 4.0F);
+                label(graphics, Component.literal("Lv" + min + "-" + max).withStyle(ChatFormatting.GRAY), sx, sy + 5.0F);
+            }
+            List<Component> lines = new ArrayList<>();
+            lines.add(Component.translatable("screen.eternalrealm.map.habitat", name, min, max)
+                    .withStyle(style -> style.withColor(color)));
+            List<Component> drops = new ArrayList<>();
+            com.eternalrealm.monster.DropTables.byId(template.dropTableId()).ifPresent(table -> table.entries().stream()
+                    .filter(entry -> entry.chance() >= 0.1 && !com.eternalrealm.monster.DropTables.POTIONS.contains(entry.itemId()))
+                    .sorted((a, b) -> Double.compare(b.chance(), a.chance())).limit(3)
+                    .forEach(entry -> drops.add(Component.translatable("item." + entry.itemId().replace(':', '.')))));
+            if (!drops.isEmpty()) {
+                MutableComponent list = Component.empty();
+                for (int i = 0; i < drops.size(); i++) {
+                    list.append(i == 0 ? Component.empty() : Component.literal("・")).append(drops.get(i));
+                }
+                lines.add(Component.translatable("screen.eternalrealm.map.habitat.drops", list).withStyle(ChatFormatting.GRAY));
+            }
+            lines.add(Component.translatable("screen.eternalrealm.map.habitat.hint").withStyle(ChatFormatting.DARK_GRAY));
+            hovers.add(new Hover(sx, sy, lines));
+        }
+    }
+
     private void drawThreats(GuiGraphics graphics, float cx, float cy) {
         com.google.gson.JsonObject board = com.eternalrealm.client.map.ThreatClient.board().orElse(null);
         if (board == null || !board.has("fields")) {

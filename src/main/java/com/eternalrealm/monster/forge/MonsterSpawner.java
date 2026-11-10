@@ -2,9 +2,11 @@ package com.eternalrealm.monster.forge;
 
 import com.eternalrealm.config.ERServerConfig;
 import com.eternalrealm.monster.MonsterSpawn;
+import com.eternalrealm.monster.MonsterTemplate;
 import com.eternalrealm.monster.MonsterTable;
 import com.eternalrealm.monster.Monsters;
 import com.eternalrealm.world.AreaDefinition;
+import com.eternalrealm.world.field.Habitats;
 import com.eternalrealm.world.forge.Realm;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,11 +24,12 @@ import java.util.List;
 import java.util.SplittableRandom;
 
 /**
- * Field monsters around the players: twice per second each player outside the capital gets monsters of the area's
- * table (level from the area's range) 14-40 blocks away on solid ground — half of them with one or two of their kind
- * beside them, two spawns per round while the surroundings are emptier than half the cap — up to 21 per player
- * (three times the original seven) and a cap per server. Monsters that ignore players in daylight (spiders,
- * endermen) are pointed at a player in sight.
+ * Field monsters. In アストリア they live in their fixed habitats ({@link Habitats}): twice per second every habitat a
+ * player is near fills up to its population (quickly while it is half empty, then one monster every few seconds, so a
+ * killed one comes back), at the monster's own levels, now and then the field's elite instead. Habitat monsters walk
+ * back when they stray from home and give up a chase far from it. Elsewhere (a world without アストリア) monsters of the
+ * area's table appear around each player as before: 14-40 blocks away on solid ground, up to 21 per player and a cap
+ * per server. Monsters that ignore players in daylight (spiders, endermen) are pointed at a player in sight.
  */
 public final class MonsterSpawner {
     private static final int NEAR_RADIUS = 48;
@@ -47,8 +50,18 @@ public final class MonsterSpawner {
     private static final int RECOUNT_TICKS = 100;
     private static final double DESPAWN_DISTANCE = 96.0;
 
+    /** Persistent tag naming a monster's habitat. */
+    public static final String HABITAT_TAG = "er_habitat";
+    /** Spawns per habitat per round while it is less than half full. */
+    private static final int FILL_BURST = 2;
+    /** Ticks between spawns of a habitat that is at least half full (a killed monster is back after this). */
+    private static final int RESPAWN_TICKS = 100;
+    /** Monsters never appear closer than this to a player. */
+    private static final double PLAYER_CLEARANCE = 9.0;
+
     private final MinecraftServer server;
     private final SplittableRandom random = new SplittableRandom();
+    private final java.util.Map<String, Long> nextHabitatSpawn = new java.util.HashMap<>();
     private int levelCount;
     private long lastCount = Long.MIN_VALUE;
 
@@ -89,6 +102,14 @@ public final class MonsterSpawner {
             lastCount = tick;
         }
         int cap = LEVEL_CAP_BASE + LEVEL_CAP_PER_PLAYER * players.size();
+        if (level.dimension() == Realm.ASTORIA) {
+            for (ServerPlayer player : players) {
+                aggro(player, level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(NEAR_RADIUS),
+                        MonsterTags::isMonster));
+            }
+            tickHabitats(level, players, tick, cap);
+            return;
+        }
         for (ServerPlayer player : players) {
             List<Mob> near = level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(NEAR_RADIUS),
                     MonsterTags::isMonster);
@@ -183,5 +204,118 @@ public final class MonsterSpawner {
             return spawned;
         }
         return 0;
+    }
+
+    // ------------------------------------------------------------------ habitats
+
+    private void tickHabitats(ServerLevel level, List<ServerPlayer> players, long tick, int cap) {
+        for (Habitats.Habitat habitat : Habitats.all()) {
+            if (!anyPlayerNear(players, habitat)) {
+                continue;
+            }
+            List<Mob> home = level.getEntitiesOfClass(Mob.class, new net.minecraft.world.phys.AABB(
+                    habitat.x() - habitat.radius() - Habitats.LEASH_MARGIN - 16, level.getMinBuildHeight(),
+                    habitat.z() - habitat.radius() - Habitats.LEASH_MARGIN - 16,
+                    habitat.x() + habitat.radius() + Habitats.LEASH_MARGIN + 16, level.getMaxBuildHeight(),
+                    habitat.z() + habitat.radius() + Habitats.LEASH_MARGIN + 16),
+                    mob -> habitat.id().equals(mob.getPersistentData().getString(HABITAT_TAG)) && mob.isAlive());
+            if (tick % 20 == 7) {
+                leash(habitat, home);
+            }
+            int missing = habitat.population() - home.size();
+            if (missing <= 0 || levelCount >= cap || tick < nextHabitatSpawn.getOrDefault(habitat.id(), Long.MIN_VALUE)) {
+                continue;
+            }
+            boolean filling = home.size() * 2 < habitat.population();
+            int spawns = filling ? Math.min(FILL_BURST, missing) : 1;
+            for (int i = 0; i < spawns && levelCount < cap; i++) {
+                if (spawnInHabitat(level, habitat, players)) {
+                    levelCount++;
+                }
+            }
+            nextHabitatSpawn.put(habitat.id(), tick + (filling ? 10 : RESPAWN_TICKS + random.nextInt(40)));
+        }
+    }
+
+    private static boolean anyPlayerNear(List<ServerPlayer> players, Habitats.Habitat habitat) {
+        double reach = Habitats.ACTIVE_RADIUS + habitat.radius();
+        for (ServerPlayer player : players) {
+            double dx = player.getX() - habitat.x();
+            double dz = player.getZ() - habitat.z();
+            if (dx * dx + dz * dz <= reach * reach) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Strays walk home; a chase that leads far from home is given up. */
+    private static void leash(Habitats.Habitat habitat, List<Mob> home) {
+        for (Mob mob : home) {
+            double distance = habitat.distanceTo(mob.getX(), mob.getZ());
+            boolean chasing = mob.getTarget() != null && mob.getTarget().isAlive();
+            if (chasing && distance > habitat.radius() + Habitats.LEASH_MARGIN) {
+                mob.setTarget(null);
+                mob.getNavigation().moveTo(habitat.x() + 0.5, mob.getY(), habitat.z() + 0.5, 1.1);
+            } else if (!chasing && distance > habitat.radius() + Habitats.WANDER_MARGIN && mob.getNavigation().isDone()) {
+                mob.getNavigation().moveTo(habitat.x() + 0.5, mob.getY(), habitat.z() + 0.5, 1.0);
+            }
+        }
+    }
+
+    /** One monster of the habitat (now and then the field's elite) at a free spot inside it. */
+    private boolean spawnInHabitat(ServerLevel level, Habitats.Habitat habitat, List<ServerPlayer> players) {
+        MonsterTemplate template = Monsters.byId(habitat.monster()).orElse(null);
+        if (template == null) {
+            return false;
+        }
+        MonsterTable table = Monsters.tableFor(Realm.areaAt(level, habitat.x() + 0.5, habitat.z() + 0.5));
+        if (table.eliteChance() > 0.0 && random.nextDouble() < table.eliteChance() && !table.eliteEntries().isEmpty()) {
+            template = table.eliteEntries().get(random.nextInt(table.eliteEntries().size())).template();
+        }
+        EntityType<?> type = EntityType.byString(template.baseEntityType()).orElse(null);
+        if (type == null) {
+            return false;
+        }
+        for (int attempt = 0; attempt < ATTEMPTS; attempt++) {
+            double angle = random.nextDouble() * Math.PI * 2.0;
+            double distance = Math.sqrt(random.nextDouble()) * habitat.radius();
+            int x = Mth.floor(habitat.x() + Math.cos(angle) * distance);
+            int z = Mth.floor(habitat.z() + Math.sin(angle) * distance);
+            if (!level.hasChunkAt(new BlockPos(x, 64, z)) || tooCloseToPlayer(players, x + 0.5, z + 0.5)) {
+                continue;
+            }
+            int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            BlockPos pos = new BlockPos(x, y, z);
+            if (y <= level.getMinBuildHeight() + 1
+                    || !level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)
+                    || !level.getFluidState(pos).isEmpty()) {
+                continue;
+            }
+            double spawnY = type == EntityType.PHANTOM ? y + 6.0 : y;
+            if (!level.noCollision(type.getAABB(x + 0.5, spawnY, z + 0.5))) {
+                continue;
+            }
+            MonsterSpawn spawn = new MonsterSpawn(template, template.levels().random(random));
+            java.util.Optional<Mob> mob = MonsterFactory.spawn(level, spawn, x + 0.5, spawnY, z + 0.5,
+                    (float) (random.nextDouble() * 360.0));
+            if (mob.isEmpty()) {
+                return false;
+            }
+            mob.get().getPersistentData().putString(HABITAT_TAG, habitat.id());
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean tooCloseToPlayer(List<ServerPlayer> players, double x, double z) {
+        for (ServerPlayer player : players) {
+            double dx = player.getX() - x;
+            double dz = player.getZ() - z;
+            if (dx * dx + dz * dz < PLAYER_CLEARANCE * PLAYER_CLEARANCE) {
+                return true;
+            }
+        }
+        return false;
     }
 }

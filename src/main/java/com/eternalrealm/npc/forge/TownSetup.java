@@ -49,7 +49,7 @@ public final class TownSetup {
             // quest givers of the other fields wait beside their field's waystone
             java.util.Optional<com.eternalrealm.world.field.FieldLayout.Waystone> stone = giver.areaId() <= 1
                     ? java.util.Optional.empty()
-                    : com.eternalrealm.world.field.FieldLayout.waystones().stream()
+                    : com.eternalrealm.world.field.FieldLayout.shrines().stream()
                             .filter(w -> w.field() == giver.areaId()).findFirst();
             BlockPos column = stone.map(w -> surface(level, center.getX() + w.x() + 5, center.getZ() + w.z() + 3))
                     .orElseGet(() -> onRing(level, center, CHARACTER_RADIUS + 4.0, 0, 1));

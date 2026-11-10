@@ -303,7 +303,8 @@ public record MapView(Realm realm, Set<Integer> unlockedAreas, Set<Integer> disc
         Set<String> waystones = new TreeSet<>();
         if (json.has("waystones") && json.get("waystones").isJsonArray()) {
             for (JsonElement element : json.getAsJsonArray("waystones")) {
-                if (waystones.size() < 64 && element.isJsonPrimitive() && element.getAsString().matches("[a-z_]{1,32}")) {
+                if (waystones.size() < 128 && element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()
+                        && element.getAsString().matches("[a-z0-9_]{1,32}")) {
                     waystones.add(element.getAsString());
                 }
             }

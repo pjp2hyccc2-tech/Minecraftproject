@@ -179,13 +179,13 @@ public class FieldPieceDataTest {
     @Test
     public void everyWaystoneHasItsShrine() throws IOException {
         FieldPieceData data = export();
-        for (FieldLayout.Waystone stone : FieldLayout.waystones()) {
+        for (FieldLayout.Waystone stone : FieldLayout.shrines()) {
             FieldPieceData.Waystone placed = data.waystoneNear(stone.x(), stone.z(), 3);
             assertNotNull("no waystone placed within 3 blocks of " + stone.id(), placed);
             assertEquals(stone.id(), placed.id());
             assertTrue(stone.id() + " shrine does not cover its stone", data.covers(placed.x(), placed.z()));
         }
-        assertEquals(FieldLayout.waystones().size(), data.waystones().size());
+        assertEquals(FieldLayout.shrines().size(), data.waystones().size());
     }
 
     /** The pieces were fitted to the terrain: a changed FieldTerrain needs {@code python3 tools/fields/build.py}. */

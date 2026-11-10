@@ -172,6 +172,66 @@ public final class FieldLayout {
             new Waystone("lakeside", LAKESIDE, 282, 676),
             new Waystone("harbour", HARBOUR, 1100, 876));
 
+    /**
+     * Four or five more waystones per field, placed by {@code FieldSitesGenerator} (tests) between the shrines, the
+     * habitats and the lords' territories; fixed here so they never move.
+     */
+    // GENERATED MINOR WAYSTONES BEGIN (FieldSitesGenerator)
+    private static final List<Waystone> MINOR_WAYSTONES = List.of(
+            new Waystone("meadow_2", 1, -596, 936),
+            new Waystone("meadow_3", 1, -260, 912),
+            new Waystone("meadow_4", 1, -680, 720),
+            new Waystone("meadow_5", 1, -248, 396),
+            new Waystone("meadow_6", 1, -452, 1128),
+            new Waystone("moon_forest_2", 2, -860, -248),
+            new Waystone("moon_forest_3", 2, -452, -104),
+            new Waystone("moon_forest_4", 2, -980, 232),
+            new Waystone("moon_forest_5", 2, -524, 268),
+            new Waystone("moon_forest_6", 2, -1028, -104),
+            new Waystone("iron_mine_2", 3, -1244, 1056),
+            new Waystone("iron_mine_3", 3, -1448, 12),
+            new Waystone("iron_mine_4", 3, -1436, 696),
+            new Waystone("iron_mine_5", 3, -1016, 1008),
+            new Waystone("sacred_falls_2", 4, 780, -556),
+            new Waystone("sacred_falls_3", 4, 336, -520),
+            new Waystone("sacred_falls_4", 4, 192, -280),
+            new Waystone("sacred_falls_5", 4, 504, -592),
+            new Waystone("ancient_ruins_2", 5, 1348, -572),
+            new Waystone("ancient_ruins_3", 5, 1396, 244),
+            new Waystone("ancient_ruins_4", 5, 1012, -92),
+            new Waystone("ancient_ruins_5", 5, 1504, -188),
+            new Waystone("soaring_peaks_2", 6, -340, -888),
+            new Waystone("soaring_peaks_3", 6, -88, -696),
+            new Waystone("soaring_peaks_4", 6, -64, -1284),
+            new Waystone("soaring_peaks_5", 6, 1028, -936),
+            new Waystone("soaring_peaks_6", 6, 620, -948),
+            new Waystone("end_forest_2", 7, -1304, -1080),
+            new Waystone("end_forest_3", 7, -872, -1356),
+            new Waystone("end_forest_4", 7, -1460, -636),
+            new Waystone("end_forest_5", 7, -1556, -1008),
+            new Waystone("farm_2", 8, 1012, 532),
+            new Waystone("farm_3", 8, 508, 112),
+            new Waystone("farm_4", 8, 952, 160),
+            new Waystone("farm_5", 8, 616, 472),
+            new Waystone("lakeside_2", 9, 256, 1104),
+            new Waystone("lakeside_3", 9, 736, 852),
+            new Waystone("lakeside_4", 9, 376, 480),
+            new Waystone("lakeside_5", 9, 52, 972),
+            new Waystone("lakeside_6", 9, 520, 624),
+            new Waystone("harbour_2", 10, 1296, 660),
+            new Waystone("harbour_3", 10, 912, 1104),
+            new Waystone("harbour_4", 10, 936, 792),
+            new Waystone("harbour_5", 10, 1176, 756));
+    // GENERATED MINOR WAYSTONES END
+
+    private static final List<Waystone> ALL_WAYSTONES = concat(WAYSTONES, MINOR_WAYSTONES);
+
+    private static List<Waystone> concat(List<Waystone> a, List<Waystone> b) {
+        List<Waystone> all = new java.util.ArrayList<>(a);
+        all.addAll(b);
+        return List.copyOf(all);
+    }
+
     /** Where each field's name is written on the map (index = field id). */
     private static final double[][] LABELS = {{0, 0}, {-330, 610}, {-800, -10}, {-1300, 560}, {610, -300},
             {1300, -40}, {150, -950}, {-1110, -700}, {820, 330}, {360, 770}, {1250, 760}};
@@ -197,8 +257,28 @@ public final class FieldLayout {
         return ROADS;
     }
 
+    /** Every waystone: the eleven shrines of the field map, then the minor waystones. */
     public static List<Waystone> waystones() {
+        return ALL_WAYSTONES;
+    }
+
+    /** The eleven shrines (hand-made set pieces, generated with the terrain). */
+    public static List<Waystone> shrines() {
         return WAYSTONES;
+    }
+
+    /** The minor waystones (a stone on a small platform, built by the server when a player first comes near). */
+    public static List<Waystone> minorWaystones() {
+        return MINOR_WAYSTONES;
+    }
+
+    public static boolean isMinor(String waystoneId) {
+        for (Waystone waystone : MINOR_WAYSTONES) {
+            if (waystone.id().equals(waystoneId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Map position of a field's name: {@code {x, z}}. */
