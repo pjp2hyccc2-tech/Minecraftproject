@@ -55,7 +55,7 @@ public class DungeonDefinitionTest {
                 assertTrue(template, template.matches(dungeon.id() + "_[a-z][a-z_]*"));
             }
         }
-        assertEquals(Set.of("d1_bandit", "d1_cave_rat", "d1_crossbowman", "d1_ghoul"), Dungeons.D1.monsterTemplateIds());
+        assertEquals(Set.of("d1_bandit", "d1_crawler", "d1_canal_drowned"), Dungeons.D1.monsterTemplateIds());
     }
 
     @Test
