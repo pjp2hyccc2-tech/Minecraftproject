@@ -1,2 +1,5 @@
 __pycache__/
 preview_*.png
+# committed NPC sheets (the animation strips stay local)
+!preview_npc.png
+!preview_npc_portraits.png

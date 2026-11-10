@@ -14,6 +14,8 @@
 生成物は手で編集しない（スクリプトを直して `python3 tools/art_entities/generate.py` を再実行）。UV表は `tools/art_entities/uv_map.txt`、
 全バリアントのプレビューは `preview.png`、アニメーションの連続コマは `preview_<rig>.png`。
 
+町のNPC（窓口・物語キャラ・町の人・衛兵）の体 `eternalrealm:npc` は同じパイプラインの別リグ（`generate_npc.py`）で、[npc.md](npc.md) に分けて記す。
+
 ## 2. エンティティとバリアント
 
 | エンティティ | バリアント（`setVariant` のID） |

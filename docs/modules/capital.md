@@ -180,6 +180,14 @@ west, so free-standing flags stream east), `clock_face[facing]` (guild clock tow
 `fountain_spray[power,facing]` (plaza, market cross, garden fountains). `_town_views.py --check` verifies that
 every flag/sail/dial/wheel has its keep-free volume clear.
 
+Townsfolk and guards (optional, any number; see [npc.md](npc.md)): `crowd.<area>.<n>` puts one townsperson who
+strolls within 6 blocks of the spot (keep water and doors out of that circle where possible; they avoid both), chosen
+for the area: `plaza`, `market`, `street`, `harbour`, `guild`, `tavern`, `inn`, `cathedral`, `residential`, `farm`,
+`castle` (names may continue, e.g. `harbour_east`). `guard.<post>.<n>` puts a guard standing watch facing the spot's
+yaw: posts containing `gate` get the halberd guard, `wall`/`tower` an archer, `castle`/`keep`/`throne`/`hall`/`court`
+a knight. `castle.gate_guard_w/e` also get a guard unless a `guard.*` spot is within 2 blocks; `castle.king` gets
+King Bertrand himself.
+
 ## 5. The castle (`castle/`)
 
 Anchors are in `castle/plan.py`; `exterior.py` builds the shell, `interiors.py` the rooms, `parts.py` holds
