@@ -33,7 +33,7 @@ import java.util.List;
  */
 public final class EquipmentScreen extends Screen {
     private static final int WIDTH = 312;
-    private static final int HEIGHT = 196;
+    private static final int HEIGHT = 216;
     private static final int BOX = 20;
     private static final int ROW = 18;
     private static final int LIST_ROWS = 4;
@@ -147,21 +147,18 @@ public final class EquipmentScreen extends Screen {
         int y = top + 126;
         graphics.drawString(font, Component.translatable("screen.eternalrealm.equipment.total"), x, y, RIM, false);
         y += 11;
-        int column = 0;
         for (EquipmentComparison.Stat stat : EquipmentComparison.Stat.values()) {
             double value = totals[stat.ordinal()];
             if (Math.abs(value) < 1.0E-9) {
                 continue;
             }
-            int cx = x + (column % 2) * 68;
-            int cy = y + (column / 2) * 10;
-            if (cy > top + HEIGHT - 12) {
+            if (y > top + HEIGHT - 12) {
                 break;
             }
-            graphics.drawString(font, Component.translatable(stat.translationKey()), cx, cy, MUTED, false);
+            graphics.drawString(font, Component.translatable(stat.translationKey()), x, y, MUTED, false);
             String text = format(stat, value);
-            graphics.drawString(font, text, cx + 64 - font.width(text), cy, TEXT, false);
-            column++;
+            graphics.drawString(font, text, x + 136 - font.width(text), y, TEXT, false);
+            y += 10;
         }
     }
 
@@ -244,8 +241,8 @@ public final class EquipmentScreen extends Screen {
                 break;
             }
             graphics.drawString(font, Component.translatable(row.stat().translationKey()), x, y, MUTED, false);
-            String values = format(row.stat(), row.before()) + " → " + format(row.stat(), row.after());
-            graphics.drawString(font, values, x + 58, y, TEXT, false);
+            String value = format(row.stat(), row.after());
+            graphics.drawString(font, value, x + 92 - font.width(value), y, TEXT, false);
             if (row.direction() != 0) {
                 String delta = (row.direction() > 0 ? "▲" : "▼") + format(row.stat(), Math.abs(row.change()));
                 graphics.drawString(font, delta, x + w - font.width(delta), y, row.direction() > 0 ? UP : DOWN, false);
