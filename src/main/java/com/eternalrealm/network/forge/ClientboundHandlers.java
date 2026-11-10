@@ -25,6 +25,8 @@ public final class ClientboundHandlers {
     };
     private static volatile Consumer<DamageNumberPacket> damageNumberHandler = number -> {
     };
+    private static volatile Consumer<PickupFeedPacket> pickupFeedHandler = pickup -> {
+    };
 
     private static volatile Consumer<TelegraphPacket> telegraphHandler = telegraph -> {
     };
@@ -58,6 +60,14 @@ public final class ClientboundHandlers {
 
     static void onTelegraph(TelegraphPacket packet) {
         telegraphHandler.accept(packet);
+    }
+
+    public static void setPickupFeedHandler(Consumer<PickupFeedPacket> handler) {
+        pickupFeedHandler = java.util.Objects.requireNonNull(handler, "handler");
+    }
+
+    static void onPickupFeed(PickupFeedPacket packet) {
+        pickupFeedHandler.accept(packet);
     }
 
     public static void setDamageNumberHandler(Consumer<DamageNumberPacket> handler) {

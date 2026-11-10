@@ -5,7 +5,7 @@
 | 項目 | 値 |
 |---|---|
 | チャンネル | `eternalrealm:main`（Forge SimpleChannel） |
-| プロトコル版 | `"6"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6 |
+| プロトコル版 | `"7"`（`ERNetwork.PROTOCOL_VERSION`）。Phase 2 で戦闘パケット追加のため 1→2、以後の追加を経て、スキルツリー（職業スキル枠5・6、職業武器の拒否、スナップショットのスキル枠）で 4→5、HUD 刷新（`UseItemPacket`、戦闘値の回復薬補正）で 5→6、カバンの取得表示（`PickupFeedPacket`）で 6→7 |
 | 互換性 | クライアント・サーバーとも**完全一致のみ受け入れ**。MOD未導入のクライアントは接続時に拒否 |
 | 版上げ条件 | パケットの追加・削除・順序変更・フィールド変更のいずれか |
 
@@ -23,6 +23,7 @@
 | 5 | `DamageNumberPacket` | S→C | entityId (VarInt), x/y/z (float), amount (float), flags (byte: 1=クリティカル 2=強攻撃 4=スキル) | 32 B | クライアント（攻撃した本人だけに送る） |
 | 6〜9 | `UiActionPacket` `UiDataPacket` `PlayerActionPacket` `TelegraphPacket` | | （各モジュールの説明を参照） | | |
 | 10 | `UseItemPacket` | C→S | slot (VarInt: インベントリの 0〜35)。クイック使用（1〜3キー）とカバンの「使う」。サーバーがスロット・アイテム・レベル・クールダウンを確認（`QuickUse.useSlot`）。範囲外のスロットは**違反** | 5 B | サーバー |
+| 11 | `PickupFeedPacket` | S→C | stack (ItemStack: 1個。名前・アイコン・レア度), count (VarInt, 1〜1,000,000), flags (byte: 1=カバンが満杯で足元に落ちた) | 2 KB（ItemStack の NBT 込み） | クライアント（取得した本人だけに送る） |
 
 ステータスの並び順は `StatType` の宣言順（ネットワークIDは固定値で、再利用・並べ替え禁止）。
 

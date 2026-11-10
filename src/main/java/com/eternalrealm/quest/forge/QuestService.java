@@ -203,9 +203,7 @@ public final class QuestService {
         while (left > 0) {
             int count = Math.min(left, item.getMaxStackSize());
             ItemStack stack = new ItemStack(item, count);
-            if (!player.getInventory().add(stack)) {
-                player.drop(stack, false);
-            }
+            com.eternalrealm.item.forge.Bags.give(player, stack); // into the bag (and the pickup feed)
             left -= count;
         }
     }

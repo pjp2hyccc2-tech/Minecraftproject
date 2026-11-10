@@ -16,7 +16,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
  */
 public final class ERNetwork {
     /** Bump whenever a packet is added, removed, reordered or its layout changes. */
-    public static final String PROTOCOL_VERSION = "6";
+    public static final String PROTOCOL_VERSION = "7";
 
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "main"))
@@ -91,6 +91,11 @@ public final class ERNetwork {
                 .encoder(UseItemPacket::encode)
                 .decoder(UseItemPacket::decode)
                 .consumerMainThread(UseItemPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(PickupFeedPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(PickupFeedPacket::encode)
+                .decoder(PickupFeedPacket::decode)
+                .consumerMainThread(PickupFeedPacket::handle)
                 .add();
     }
 

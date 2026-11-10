@@ -31,6 +31,9 @@ public final class ClientModEvents {
         ClientboundHandlers.setCombatStatsHandler(ClientCombatState::onStats);
         ClientboundHandlers.setCombatStatusHandler(ClientCombatState::onStatus);
         ClientboundHandlers.setDamageNumberHandler(ClientCombatState::onDamageNumber);
+        ClientboundHandlers.setPickupFeedHandler(com.eternalrealm.ui.hud.PickupFeedOverlay::onPacket);
+        ClientScreens.setBagScreen(com.eternalrealm.ui.screen.BagScreen::new);
+        ClientScreens.setEquipmentScreen(com.eternalrealm.ui.screen.EquipmentScreen::new);
         ClientboundHandlers.setUiDataHandler((channel, json) -> {
             ClientUiState.accept(channel, json);
             if ("open".equals(channel)) {
@@ -109,6 +112,7 @@ public final class ClientModEvents {
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "player_frame", new com.eternalrealm.ui.hud.PlayerFrameOverlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quick_slots", new com.eternalrealm.ui.hud.QuickSlotsOverlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "hud_icons", new com.eternalrealm.ui.hud.HudIconsOverlay());
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "pickup_feed", new com.eternalrealm.ui.hud.PickupFeedOverlay());
         event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "combat_hud", new CombatHudOverlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "party_hud", new com.eternalrealm.ui.hud.PartyHudOverlay());
         event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), "dialogue_box", new com.eternalrealm.ui.dialogue.DialogueOverlay());
