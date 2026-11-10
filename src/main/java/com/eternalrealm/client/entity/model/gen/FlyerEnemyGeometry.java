@@ -127,29 +127,83 @@ public final class FlyerEnemyGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"harpy", "ice_wraith", "storm_spirit", "sky_sentinel", "fire_spirit"};
+    public static final String[] VARIANTS = {"harpy", "ice_wraith", "storm_spirit", "sky_sentinel", "fire_spirit", "f1_meadow_wisp", "f2_moon_moth", "f2_owl_warden", "f2_will_o_wisp", "f3_giant_cave_bat", "f3_gem_wraith", "f4_mist_spirit", "f4_frost_heron", "f4_spray_wraith", "f5_cinder_wraith", "f5_scorch_vulture", "lord_scorch_eye", "f6_thunder_hawk", "f6_gale_spirit", "f6_young_griffin", "f6_star_sentinel", "lord_zephyr", "f7_hollow_eye", "f7_wandering_grudge", "f8_field_crow", "f8_wild_rooster", "f8_giant_bee", "f8_windmill_sprite", "f9_egret_spirit", "f9_giant_dragonfly", "f10_sea_harpy", "f10_tide_spirit"};
     /** Parts whose visibility depends on the variant. */
-    public static final String[] TOGGLED_PARTS = {"crest", "hood", "ice_crown", "helm", "flame_hair", "halo", "claws_r", "plate_r", "claws_l", "plate_l", "right_wing", "left_wing", "tail1", "right_leg", "left_leg", "orbit", "core", "robe_tatters"};
+    public static final String[] TOGGLED_PARTS = {"crest", "hood", "ice_crown", "helm", "flame_hair", "halo", "right_arm", "claws_r", "plate_r", "left_arm", "claws_l", "plate_l", "right_wing", "left_wing", "tail1", "right_leg", "left_leg", "orbit", "core", "robe_tatters"};
     /** VISIBLE[variant][toggled part]. */
     public static final boolean[][] VISIBLE = {
-            {true, false, false, false, false, false, true, false, true, false, true, true, false, true, true, false, false, false}, // harpy
-            {false, true, true, false, false, false, true, false, true, false, false, false, true, false, false, false, false, true}, // ice_wraith
-            {false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, true, false}, // storm_spirit
-            {false, false, false, true, false, true, false, true, false, true, true, true, true, false, false, false, true, false}, // sky_sentinel
-            {false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, true, true, false}, // fire_spirit
+            {true, false, false, false, false, false, true, true, false, true, true, false, true, true, false, true, true, false, false, false}, // harpy
+            {false, true, true, false, false, false, true, true, false, true, true, false, false, false, true, false, false, false, false, true}, // ice_wraith
+            {false, false, false, false, false, false, true, false, false, true, false, false, false, false, true, false, false, true, true, false}, // storm_spirit
+            {false, false, false, true, false, true, true, false, true, true, false, true, true, true, true, false, false, false, true, false}, // sky_sentinel
+            {false, false, false, false, true, false, true, false, false, true, false, false, false, false, true, false, false, true, true, false}, // fire_spirit
+            {false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false}, // f1_meadow_wisp
+            {false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false}, // f2_moon_moth
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // f2_owl_warden
+            {false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false}, // f2_will_o_wisp
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // f3_giant_cave_bat
+            {false, true, true, false, false, false, true, true, false, true, true, false, false, false, true, false, false, false, false, true}, // f3_gem_wraith
+            {false, false, false, false, false, false, true, false, false, true, false, false, false, false, true, false, false, true, true, true}, // f4_mist_spirit
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // f4_frost_heron
+            {false, true, true, false, false, false, true, true, false, true, true, false, false, false, true, false, false, false, false, true}, // f4_spray_wraith
+            {false, true, true, false, false, false, true, true, false, true, true, false, false, false, true, false, false, false, false, true}, // f5_cinder_wraith
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // f5_scorch_vulture
+            {false, false, false, false, true, false, true, false, false, true, false, false, false, false, true, false, false, true, true, false}, // lord_scorch_eye
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // f6_thunder_hawk
+            {false, false, false, false, false, false, true, false, false, true, false, false, true, true, true, false, false, true, true, false}, // f6_gale_spirit
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false}, // f6_young_griffin
+            {false, false, false, true, false, true, true, false, true, true, false, true, true, true, true, false, false, false, true, false}, // f6_star_sentinel
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // lord_zephyr
+            {false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, true, false}, // f7_hollow_eye
+            {false, true, true, false, false, false, true, true, false, true, true, false, false, false, true, false, false, false, false, true}, // f7_wandering_grudge
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // f8_field_crow
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // f8_wild_rooster
+            {false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false}, // f8_giant_bee
+            {false, false, false, false, false, true, true, false, false, true, false, false, true, true, true, false, false, true, true, false}, // f8_windmill_sprite
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, true, false, true, true, false, false, false}, // f9_egret_spirit
+            {false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false}, // f9_giant_dragonfly
+            {true, false, false, false, false, false, true, true, false, true, true, false, true, true, false, true, true, false, false, false}, // f10_sea_harpy
+            {false, false, true, false, false, false, true, false, false, true, false, false, false, false, true, false, false, true, true, true}, // f10_tide_spirit
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {};
+    public static final String[] POSED_PARTS = {"body", "head", "crest", "halo", "right_wing", "left_wing", "tail1", "tail2", "tail3", "right_leg", "left_leg", "orbit", "robe_tatters"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {}, // harpy
-            {}, // ice_wraith
-            {}, // storm_spirit
-            {}, // sky_sentinel
-            {}, // fire_spirit
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // harpy
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // ice_wraith
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // storm_spirit
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // sky_sentinel
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // fire_spirit
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.7F, 0.7F, 0.7F}, {0.0F, -6.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.7F, 1.7F, 1.7F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.9F, 1.0F, 0.9F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.2F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.4F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, null}, // f1_meadow_wisp
+            {{0.0F, 0.0F, 0.0F, 25.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -25.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 1.1F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 1.1F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.25F, 1.4F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.7F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.7F, 0.6F}, null, null}, // f2_moon_moth
+            {null, {0.0F, -0.4F, 0.0F, 0.0F, 0.0F, 0.0F, 1.25F, 1.15F, 1.1F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.6F, 0.5F}, null, null, null, null, null, null, null, null, null, null}, // f2_owl_warden
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.7F, 0.7F, 0.7F}, {0.0F, -6.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.7F, 1.7F, 1.7F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.9F, 1.0F, 0.9F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.2F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.4F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, null}, // f2_will_o_wisp
+            {{0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.9F, 0.9F, 0.9F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.9F, 0.9F}, {0.0F, 0.6F, 0.0F, 0.0F, 0.0F, 0.0F, 4.0F, 0.7F, 0.25F}, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.2F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.2F, 1.0F}, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 0.6F, 0.6F}, null, null}, // f3_giant_cave_bat
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // f3_gem_wraith
+            {null, null, null, null, null, null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.6F, 1.1F}}, // f4_mist_spirit
+            {{0.0F, 0.0F, 0.0F, -12.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 2.2F, -1.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.9F, 1.1F}, null, null, null, null, null, null, null, null, null, null, null}, // f4_frost_heron
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // f4_spray_wraith
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // f5_cinder_wraith
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.95F, 0.95F, 1.1F}, null, null, null, null, null, null, null, null, null, null, null}, // f5_scorch_vulture
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // lord_scorch_eye
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.95F, 0.95F, 1.1F}, null, null, null, null, null, null, null, null, null, null, null}, // f6_thunder_hawk
+            {null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.8F, 0.9F, 1.0F}, null, null, null, null, null, null, null}, // f6_gale_spirit
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.95F, 0.95F, 1.1F}, null, null, null, null, {0.0F, 0.0F, 1.5F, 35.0F, 0.0F, 0.0F, 0.35F, 1.0F, 0.45F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 1.0F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 2.2F, 0.8F, 2.2F}, null, null, null, null}, // f6_young_griffin
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // f6_star_sentinel
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.95F, 0.95F, 1.1F}, null, null, null, null, null, null, null, null, null, null, null}, // lord_zephyr
+            {null, {0.0F, -7.0F, 0.0F, 0.0F, 0.0F, 0.0F, 2.2F, 2.2F, 2.2F}, null, null, null, null, null, null, null, null, null, null, null}, // f7_hollow_eye
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // f7_wandering_grudge
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.95F, 0.95F, 1.1F}, null, null, null, null, null, null, null, null, null, null, null}, // f8_field_crow
+            {null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.95F, 0.95F, 1.1F}, null, null, null, null, null, null, null, null, null, null, null}, // f8_wild_rooster
+            {{0.0F, 0.0F, 0.0F, 70.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.5F, -1.0F, -70.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.7F, 0.75F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.7F, 0.75F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.25F, 1.4F}, null, null, {0.0F, 0.0F, 0.0F, -40.0F, 0.0F, 0.0F, 0.6F, 0.7F, 0.6F}, {0.0F, 0.0F, 0.0F, -40.0F, 0.0F, 0.0F, 0.6F, 0.7F, 0.6F}, null, null}, // f8_giant_bee
+            {null, null, null, {0.0F, 1.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 1.0F, 1.4F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.55F, 0.8F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.55F, 0.8F, 1.0F}, null, null, null, null, null, null, null}, // f8_windmill_sprite
+            {{0.0F, 0.0F, 0.0F, -12.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 2.2F, -1.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.9F, 1.1F}, null, null, null, null, null, null, null, null, null, null, null}, // f9_egret_spirit
+            {{0.0F, 0.0F, 0.0F, 70.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.5F, -1.0F, -70.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.5F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.85F, 0.5F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.6F, 1.0F, 0.8F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.9F, 1.6F, 1.2F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.4F, 2.0F, 1.6F}, {0.0F, 0.0F, 0.0F, -40.0F, 0.0F, 0.0F, 0.6F, 0.7F, 0.6F}, {0.0F, 0.0F, 0.0F, -40.0F, 0.0F, 0.0F, 0.6F, 0.7F, 0.6F}, null, null}, // f9_giant_dragonfly
+            {null, null, null, null, null, null, null, null, null, null, null, null, null}, // f10_sea_harpy
+            {null, null, null, null, null, null, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.1F, 1.6F, 1.1F}}, // f10_tide_spirit
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.0F, 1.1F, 1.1F, 1.15F, 1.0F};
+    public static final float[] SCALES = {1.0F, 1.1F, 1.1F, 1.15F, 1.0F, 0.75F, 0.8F, 0.95F, 0.7F, 0.75F, 1.05F, 0.9F, 1.0F, 1.05F, 0.95F, 1.05F, 1.5F, 1.0F, 1.0F, 1.15F, 1.1F, 1.75F, 0.9F, 1.05F, 0.65F, 0.7F, 0.6F, 0.75F, 0.95F, 0.7F, 1.0F, 0.95F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {false, true, true, true, true};
+    public static final boolean[] GLOWS = {false, true, true, true, true, true, true, true, true, true, true, true, false, true, true, false, true, true, true, false, true, true, true, true, false, false, false, true, true, false, false, true};
 }

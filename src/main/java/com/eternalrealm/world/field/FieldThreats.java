@@ -8,8 +8,8 @@ import java.util.Optional;
 import java.util.random.RandomGenerator;
 
 /**
- * The threats of the fields (フィールドの脅威): in every field two ヌシ (lords) — named, much tougher individuals of
- * the field's monsters that roam their territory and come back some minutes after they fell — and one 災厄
+ * The threats of the fields (フィールドの脅威): in every field three ヌシ (lords) — named, much tougher monsters of
+ * the field (each a look and template of its own) that roam their territory and come back some minutes after they fell — and one 災厄
  * (calamity), a boss that manifests at its lair when the field's 瘴気 (miasma, {@link Miasma}) overflows. Places are
  * flat, dry spots away from roads, waystones and set pieces (found with the field terrain functions); a calamity's
  * lair is levelled into a scar (災厄の爪痕) during its omen.
@@ -45,27 +45,40 @@ public final class FieldThreats {
     }
 
     private static final int MIN = 60 * 20;
+    /** The ヌシ: three per field, each its own ELITE template {@code lord_<id>} of the bestiary. */
+    // GENERATED BESTIARY LORDS BEGIN (tools/art_entities/bestiary_gen.py)
     private static final List<Lord> LORDS = List.of(
-            lord("garm", 1, "bandit_chief", -468, 564, 28, 6.0, 9, 13),
-            lord("hook", 1, "highway_bandit", -676, 916, 32, 14.0, 7, 11),
-            lord("nebula", 2, "elder_druid", -908, -284, 26, 6.0, 9, 13),
-            lord("belladonna", 2, "forest_witch", -588, -4, 30, 14.0, 7, 11),
-            lord("dolga", 3, "tomb_warden", -1212, 524, 24, 6.0, 10, 14),
-            lord("rustbone", 3, "desert_skeleton", -1196, 804, 30, 14.0, 8, 12),
-            lord("goura", 4, "snowfield_yeti", 556, -148, 28, 6.0, 10, 14),
-            lord("mistweaver", 4, "frost_spider", 412, -644, 26, 14.0, 8, 12),
-            lord("valka", 5, "dragonkin_berserker", 1052, -44, 28, 6.0, 11, 15),
-            lord("scorch_eye", 5, "crater_blaze", 948, -196, 26, 14.0, 9, 13),
-            lord("alvin", 6, "celestial_paladin", 300, -676, 24, 6.0, 11, 15),
-            lord("peak_sniper", 6, "sky_archer", 28, -748, 26, 14.0, 9, 13),
-            lord("xenos", 7, "herald_of_ruin", -892, -556, 28, 6.0, 12, 16),
-            lord("black_knight", 7, "knight_of_the_end", -956, -388, 28, 14.0, 10, 14),
-            lord("brutus", 8, "rampaging_bull", 556, 180, 34, 6.0, 9, 13),
-            lord("harvest_boss", 8, "harvest_raider", 940, 612, 30, 14.0, 7, 11),
-            lord("melusine", 9, "lake_witch", 484, 660, 26, 6.0, 10, 14),
-            lord("drowned_fisher", 9, "lake_drowned", 716, 732, 30, 14.0, 8, 12),
-            lord("barbas", 10, "pirate_captain", 892, 772, 26, 6.0, 10, 14),
-            lord("dock_brawler", 10, "pirate_cutthroat", 1020, 884, 24, 14.0, 8, 12));
+            lord("garm", 1, "lord_garm", -468, 564, 28, 6.0, 9, 13),
+            lord("hook", 1, "lord_hook", -676, 916, 32, 6.0, 7, 11),
+            lord("durn", 1, "lord_durn", -652, 772, 34, 6.0, 10, 14),
+            lord("nebula", 2, "lord_nebula", -908, -284, 26, 6.0, 9, 13),
+            lord("belladonna", 2, "lord_belladonna", -588, -4, 30, 6.0, 7, 11),
+            lord("lunar", 2, "lord_lunar", -804, -396, 30, 6.0, 10, 14),
+            lord("dolga", 3, "lord_dolga", -1212, 524, 24, 6.0, 10, 14),
+            lord("rustbone", 3, "lord_rustbone", -1196, 804, 30, 6.0, 8, 12),
+            lord("vein_eater", 3, "lord_vein_eater", -1372, 660, 26, 6.0, 10, 14),
+            lord("goura", 4, "lord_goura", 556, -148, 28, 6.0, 10, 14),
+            lord("mistweaver", 4, "lord_mistweaver", 412, -644, 26, 6.0, 8, 12),
+            lord("ord", 4, "lord_ord", 380, -492, 26, 6.0, 10, 14),
+            lord("valka", 5, "lord_valka", 1052, -44, 28, 6.0, 11, 15),
+            lord("scorch_eye", 5, "lord_scorch_eye", 948, -196, 26, 6.0, 9, 13),
+            lord("agnis", 5, "lord_agnis", 1228, -252, 24, 6.0, 10, 14),
+            lord("alvin", 6, "lord_alvin", 300, -676, 24, 6.0, 11, 15),
+            lord("peak_sniper", 6, "lord_peak_sniper", 28, -748, 26, 6.0, 9, 13),
+            lord("zephyr", 6, "lord_zephyr", 404, -796, 30, 6.0, 10, 14),
+            lord("xenos", 7, "lord_xenos", -892, -556, 28, 6.0, 12, 16),
+            lord("black_knight", 7, "lord_black_knight", -956, -388, 28, 6.0, 10, 14),
+            lord("nihil", 7, "lord_nihil", -1044, -500, 30, 6.0, 10, 14),
+            lord("brutus", 8, "lord_brutus", 556, 180, 34, 6.0, 9, 13),
+            lord("harvest_boss", 8, "lord_harvest_boss", 940, 612, 30, 6.0, 7, 11),
+            lord("strom", 8, "lord_strom", 500, -12, 30, 6.0, 10, 14),
+            lord("melusine", 9, "lord_melusine", 484, 660, 26, 6.0, 10, 14),
+            lord("drowned_fisher", 9, "lord_drowned_fisher", 716, 732, 30, 6.0, 8, 12),
+            lord("numel", 9, "lord_numel", 804, 844, 30, 6.0, 10, 14),
+            lord("barbas", 10, "lord_barbas", 892, 772, 26, 6.0, 10, 14),
+            lord("dock_brawler", 10, "lord_dock_brawler", 1020, 884, 24, 6.0, 8, 12),
+            lord("ankara", 10, "lord_ankara", 1284, 804, 28, 6.0, 10, 14));
+    // GENERATED BESTIARY LORDS END
 
     private static final List<Calamity> CALAMITIES = List.of(
             new Calamity("meadow", 1, "b1", -212, 420),

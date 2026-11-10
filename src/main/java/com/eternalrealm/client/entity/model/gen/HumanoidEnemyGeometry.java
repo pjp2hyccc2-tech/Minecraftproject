@@ -150,7 +150,7 @@ public final class HumanoidEnemyGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"bandit", "ghoul", "mummy", "cultist", "prisoner", "jailer", "ice_knight", "frost_mage", "fire_imp", "dark_knight", "void_mage", "shade", "crossbowman", "dryad"};
+    public static final String[] VARIANTS = {"bandit", "ghoul", "mummy", "cultist", "prisoner", "jailer", "ice_knight", "frost_mage", "fire_imp", "dark_knight", "void_mage", "shade", "crossbowman", "dryad", "f1_bandit_scout", "f1_goblin_pilferer", "f1_living_scarecrow", "f1_bandit_crossbowman", "f1_capling", "f1_fallen_squire", "lord_garm", "lord_hook", "f2_thorn_dryad", "f2_night_stalker", "f2_moonbow_hunter", "lord_nebula", "lord_belladonna", "f3_kobold_miner", "f3_dust_mummy", "f3_sun_cultist", "f3_rust_guard", "lord_rustbone", "f4_kappa", "f4_lost_pilgrim", "f4_frost_monk", "f5_ember_imp", "f5_relic_thief", "f5_flame_priest", "lord_valka", "f6_sky_knight", "f6_storm_mage", "lord_alvin", "lord_peak_sniper", "f7_doom_knight", "f7_shadow_assassin", "f7_hex_witch", "lord_xenos", "lord_black_knight", "f8_pumpkin_head", "f8_lost_farmhand", "f8_vine_lurker", "lord_harvest_boss", "lord_strom", "f9_bog_ghoul", "f9_reed_witch", "f9_fisher_ghost", "f9_water_imp", "lord_melusine", "lord_drowned_fisher", "f10_deck_pirate", "f10_pirate_brute", "f10_ghost_sailor", "f10_smuggler", "f10_sea_witch", "lord_barbas", "lord_dock_brawler"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {"hood", "helmet", "helm_crest", "horn_r", "horn_l", "leaf_crown", "pauldron_r", "dagger", "blade", "greatblade", "club", "staff", "crossbow", "claws_r", "shackle_r", "pauldron_l", "claws_l", "shackle_l", "shield_l", "hand_flame", "mummy_strips", "cape", "chest_strips", "right_leg", "left_leg", "robe", "tail"};
     /** VISIBLE[variant][toggled part]. */
@@ -169,28 +169,132 @@ public final class HumanoidEnemyGeometry {
             {true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, false, false, true, false}, // shade
             {true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // crossbowman
             {false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // dryad
+            {true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f1_bandit_scout
+            {false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, false}, // f1_goblin_pilferer
+            {true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f1_living_scarecrow
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f1_bandit_crossbowman
+            {false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f1_capling
+            {false, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true, false, false}, // f1_fallen_squire
+            {true, false, false, false, false, false, true, false, false, true, false, false, false, false, false, true, false, false, false, false, false, true, false, true, true, false, false}, // lord_garm
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, true, true, false, false}, // lord_hook
+            {false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, true, true, true, false}, // f2_thorn_dryad
+            {true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, true, false, false}, // f2_night_stalker
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f2_moonbow_hunter
+            {false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // lord_nebula
+            {true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // lord_belladonna
+            {false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f3_kobold_miner
+            {true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, true, true, false, false}, // f3_dust_mummy
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // f3_sun_cultist
+            {false, true, false, false, false, false, true, false, true, false, false, false, false, false, false, true, false, false, true, false, false, false, false, true, true, false, false}, // f3_rust_guard
+            {false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, true, true, false, false}, // lord_rustbone
+            {false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, true, false, true, true, false, false}, // f4_kappa
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // f4_lost_pilgrim
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // f4_frost_monk
+            {false, false, false, true, true, false, false, false, false, false, false, false, false, true, false, false, true, false, false, true, false, false, false, true, true, false, true}, // f5_ember_imp
+            {true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, false}, // f5_relic_thief
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // f5_flame_priest
+            {false, false, false, true, true, false, true, false, false, true, false, false, false, false, false, true, false, false, false, false, false, true, false, true, true, false, false}, // lord_valka
+            {false, true, true, false, false, false, true, false, true, false, false, false, false, false, false, true, false, false, true, false, false, true, false, true, true, false, false}, // f6_sky_knight
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // f6_storm_mage
+            {false, true, true, false, false, false, true, false, true, false, false, false, false, false, false, true, false, false, true, false, false, true, false, true, true, false, false}, // lord_alvin
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, true, true, false, false}, // lord_peak_sniper
+            {false, true, false, true, true, false, true, false, true, false, false, false, false, false, false, true, false, false, true, false, false, false, false, true, true, false, false}, // f7_doom_knight
+            {true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, false, true, true, false, false}, // f7_shadow_assassin
+            {true, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // f7_hex_witch
+            {true, false, false, true, true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // lord_xenos
+            {false, true, false, true, true, false, true, false, false, true, false, false, false, false, false, true, false, false, false, false, false, true, false, true, true, false, false}, // lord_black_knight
+            {false, false, false, false, false, true, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f8_pumpkin_head
+            {false, false, false, false, false, true, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f8_lost_farmhand
+            {false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, true, true, false, false}, // f8_vine_lurker
+            {true, false, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // lord_harvest_boss
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, true, false, true, false, true, true, false, false}, // lord_strom
+            {false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, true, true, false, false}, // f9_bog_ghoul
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // f9_reed_witch
+            {true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, false}, // f9_fisher_ghost
+            {false, false, false, true, true, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false, false, false, false, true, true, false, true}, // f9_water_imp
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // lord_melusine
+            {false, false, false, false, false, true, false, false, false, false, true, false, false, false, true, false, false, false, false, false, false, false, false, true, true, false, false}, // lord_drowned_fisher
+            {true, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f10_deck_pirate
+            {false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f10_pirate_brute
+            {true, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, false, false}, // f10_ghost_sailor
+            {true, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, true, false, true, true, false, false}, // f10_smuggler
+            {true, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false}, // f10_sea_witch
+            {true, false, false, false, false, true, true, false, true, false, false, false, false, false, false, true, false, false, false, false, false, true, false, true, true, false, false}, // lord_barbas
+            {false, false, false, false, false, false, false, false, false, false, true, false, false, false, true, false, false, true, false, false, false, false, false, true, true, false, false}, // lord_dock_brawler
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"base", "chest", "head", "right_arm", "left_arm", "robe"};
+    public static final String[] POSED_PARTS = {"base", "chest", "head", "leaf_crown", "right_arm", "left_arm", "cape", "robe"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null, null, null, null, null, null}, // bandit
-            {null, {0.0F, 0.0F, 0.0F, 18.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, -0.5F, -14.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -25.0F, 0.0F, 6.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -25.0F, 0.0F, -6.0F, 1.0F, 1.0F, 1.0F}, null}, // ghoul
-            {null, null, {0.0F, 0.0F, 0.0F, 6.0F, 0.0F, 4.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -75.0F, 0.0F, 4.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -70.0F, 0.0F, -4.0F, 1.0F, 1.0F, 1.0F}, null}, // mummy
-            {null, null, null, null, null, null}, // cultist
-            {null, {0.0F, 0.0F, 0.0F, 6.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, 10.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null}, // prisoner
-            {null, null, null, null, null, null}, // jailer
-            {null, null, null, null, null, null}, // ice_knight
-            {null, null, null, null, null, null}, // frost_mage
-            {null, null, {0.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.2F}, null, null, null}, // fire_imp
-            {null, null, null, null, null, null}, // dark_knight
-            {null, null, null, null, null, null}, // void_mage
-            {{0.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.15F, 1.0F}}, // shade
-            {null, null, null, null, null, null}, // crossbowman
-            {null, null, null, null, null, null}, // dryad
+            {null, null, null, null, null, null, null, null}, // bandit
+            {null, {0.0F, 0.0F, 0.0F, 18.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, -0.5F, -14.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, {0.0F, 0.0F, 0.0F, -25.0F, 0.0F, 6.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -25.0F, 0.0F, -6.0F, 1.0F, 1.0F, 1.0F}, null, null}, // ghoul
+            {null, null, {0.0F, 0.0F, 0.0F, 6.0F, 0.0F, 4.0F, 1.0F, 1.0F, 1.0F}, null, {0.0F, 0.0F, 0.0F, -75.0F, 0.0F, 4.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -70.0F, 0.0F, -4.0F, 1.0F, 1.0F, 1.0F}, null, null}, // mummy
+            {null, null, null, null, null, null, null, null}, // cultist
+            {null, {0.0F, 0.0F, 0.0F, 6.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, 10.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null, null, null}, // prisoner
+            {null, null, null, null, null, null, null, null}, // jailer
+            {null, null, null, null, null, null, null, null}, // ice_knight
+            {null, null, null, null, null, null, null, null}, // frost_mage
+            {null, null, {0.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.2F}, null, null, null, null, null}, // fire_imp
+            {null, null, null, null, null, null, null, null}, // dark_knight
+            {null, null, null, null, null, null, null, null}, // void_mage
+            {{0.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.15F, 1.0F}}, // shade
+            {null, null, null, null, null, null, null, null}, // crossbowman
+            {null, null, null, null, null, null, null, null}, // dryad
+            {null, null, null, null, null, null, null, null}, // f1_bandit_scout
+            {null, null, {0.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.2F}, null, null, null, null, null}, // f1_goblin_pilferer
+            {null, null, null, null, null, null, null, null}, // f1_living_scarecrow
+            {null, null, null, null, null, null, null, null}, // f1_bandit_crossbowman
+            {null, null, null, {0.0F, 0.4F, 0.0F, 0.0F, 0.0F, 0.0F, 1.5F, 1.4F, 1.5F}, null, null, null, null}, // f1_capling
+            {null, null, null, null, null, null, null, null}, // f1_fallen_squire
+            {null, null, null, null, null, null, null, null}, // lord_garm
+            {null, null, null, null, null, null, null, null}, // lord_hook
+            {null, null, null, null, null, null, null, null}, // f2_thorn_dryad
+            {null, null, null, null, null, null, null, null}, // f2_night_stalker
+            {null, null, null, null, null, null, null, null}, // f2_moonbow_hunter
+            {null, null, null, null, null, null, null, null}, // lord_nebula
+            {null, null, null, {0.0F, 0.9F, 0.0F, 0.0F, 0.0F, 0.0F, 1.55F, 0.3F, 1.55F}, null, null, null, null}, // lord_belladonna
+            {null, null, {0.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.2F}, null, null, null, null, null}, // f3_kobold_miner
+            {null, null, null, null, {0.0F, 0.0F, 0.0F, -70.0F, 0.0F, 4.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -65.0F, 0.0F, -4.0F, 1.0F, 1.0F, 1.0F}, null, null}, // f3_dust_mummy
+            {null, null, null, null, null, null, null, null}, // f3_sun_cultist
+            {null, null, null, null, null, null, null, null}, // f3_rust_guard
+            {null, null, null, null, null, null, null, null}, // lord_rustbone
+            {null, {0.0F, 0.0F, 0.0F, 10.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null, null, {0.0F, 0.4F, 0.0F, -6.0F, 0.0F, 0.0F, 1.3F, 0.72F, 4.5F}, null}, // f4_kappa
+            {null, {0.0F, 0.0F, 0.0F, 14.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, -0.4F, -12.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, {0.0F, 0.0F, 0.0F, -20.0F, 0.0F, 6.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -20.0F, 0.0F, -6.0F, 1.0F, 1.0F, 1.0F}, null, null}, // f4_lost_pilgrim
+            {null, null, null, null, null, null, null, null}, // f4_frost_monk
+            {null, null, {0.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.2F}, null, null, null, null, null}, // f5_ember_imp
+            {null, null, null, null, null, null, null, null}, // f5_relic_thief
+            {null, null, null, null, null, null, null, null}, // f5_flame_priest
+            {null, null, null, null, null, null, null, null}, // lord_valka
+            {null, null, null, null, null, null, null, null}, // f6_sky_knight
+            {null, null, null, null, null, null, null, null}, // f6_storm_mage
+            {null, null, null, null, null, null, null, null}, // lord_alvin
+            {null, null, null, null, null, null, null, null}, // lord_peak_sniper
+            {null, null, null, null, null, null, null, null}, // f7_doom_knight
+            {null, null, null, null, null, null, null, null}, // f7_shadow_assassin
+            {null, null, null, {0.0F, 0.9F, 0.0F, 0.0F, 0.0F, 0.0F, 1.55F, 0.3F, 1.55F}, null, null, null, null}, // f7_hex_witch
+            {null, null, null, null, null, null, null, null}, // lord_xenos
+            {null, null, null, null, null, null, null, null}, // lord_black_knight
+            {null, null, null, {0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.2F, 0.7F, 0.2F}, null, null, null, null}, // f8_pumpkin_head
+            {null, {0.0F, 0.0F, 0.0F, 14.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, -0.4F, -12.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.2F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 0.45F, 1.35F}, {0.0F, 0.0F, 0.0F, -20.0F, 0.0F, 6.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -20.0F, 0.0F, -6.0F, 1.0F, 1.0F, 1.0F}, null, null}, // f8_lost_farmhand
+            {null, null, null, null, null, null, null, null}, // f8_vine_lurker
+            {null, null, null, null, null, null, null, null}, // lord_harvest_boss
+            {null, null, null, null, null, null, null, null}, // lord_strom
+            {null, {0.0F, 0.0F, 0.0F, 14.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, -0.4F, -12.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, {0.0F, 0.0F, 0.0F, -20.0F, 0.0F, 6.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -20.0F, 0.0F, -6.0F, 1.0F, 1.0F, 1.0F}, null, null}, // f9_bog_ghoul
+            {null, null, null, null, null, null, null, null}, // f9_reed_witch
+            {{0.0F, 2.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null, null, null, null, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.15F, 1.0F}}, // f9_fisher_ghost
+            {null, null, {0.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.2F, 1.2F, 1.2F}, null, null, null, null, null}, // f9_water_imp
+            {null, null, null, null, null, null, null, null}, // lord_melusine
+            {null, {0.0F, 0.0F, 0.0F, 14.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, -0.4F, -12.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.2F, 0.0F, 0.0F, 0.0F, 0.0F, 1.35F, 0.45F, 1.35F}, {0.0F, 0.0F, 0.0F, -20.0F, 0.0F, 6.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, -20.0F, 0.0F, -6.0F, 1.0F, 1.0F, 1.0F}, null, null}, // lord_drowned_fisher
+            {null, null, null, null, null, null, null, null}, // f10_deck_pirate
+            {null, null, null, null, null, null, null, null}, // f10_pirate_brute
+            {null, null, null, null, null, null, null, null}, // f10_ghost_sailor
+            {null, null, null, null, null, null, null, null}, // f10_smuggler
+            {null, null, null, null, null, null, null, null}, // f10_sea_witch
+            {null, null, null, {0.0F, 0.9F, 0.0F, 0.0F, 45.0F, 0.0F, 1.3F, 0.5F, 1.3F}, null, null, null, null}, // lord_barbas
+            {null, null, null, null, null, null, null, null}, // lord_dock_brawler
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.0F, 1.0F, 1.05F, 1.0F, 0.95F, 1.15F, 1.1F, 1.0F, 0.72F, 1.2F, 1.0F, 1.05F, 1.0F, 1.0F};
+    public static final float[] SCALES = {1.0F, 1.0F, 1.05F, 1.0F, 0.95F, 1.15F, 1.1F, 1.0F, 0.72F, 1.2F, 1.0F, 1.05F, 1.0F, 1.0F, 1.0F, 0.72F, 1.0F, 1.0F, 0.66F, 1.0F, 1.35F, 1.25F, 1.0F, 1.0F, 1.0F, 1.4F, 1.3F, 0.8F, 1.0F, 1.0F, 1.0F, 1.3F, 0.85F, 1.0F, 1.0F, 0.7F, 1.0F, 1.0F, 1.45F, 1.1F, 1.0F, 1.4F, 1.3F, 1.15F, 1.0F, 1.0F, 1.45F, 1.45F, 1.0F, 1.0F, 1.0F, 1.3F, 1.5F, 1.0F, 1.0F, 1.0F, 0.7F, 1.35F, 1.4F, 1.0F, 1.15F, 1.0F, 1.0F, 1.0F, 1.35F, 1.45F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {false, true, true, true, false, false, true, true, true, true, true, true, false, true};
+    public static final boolean[] GLOWS = {false, true, true, true, false, false, true, true, true, true, true, true, false, true, false, false, false, false, false, false, true, true, true, true, false, true, true, true, true, true, true, true, false, true, true, true, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, true, true, true, true, true, true, true, false, false, true, false, true, false, false};
 }

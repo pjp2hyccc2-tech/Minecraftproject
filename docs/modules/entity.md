@@ -31,6 +31,10 @@
 | `eternalrealm:enemy_bolt` | 遠隔攻撃の弾（★のバリアントが発射。属性: 炎/氷/虚無/呪い/雷/自然/矢） |
 | `eternalrealm:boss_b1`..`boss_b8`, `boss_final` | KING: b1, b8, final / TREANT: b2 / COLOSSUS: b3, b7 / QUEEN: b5, b4 / DRAGON: b6。形態ごとの外見 `<id>_p1`〜`p3`（b1_p1, b2_p1〜p2, b3_p1〜p2, b4_p1〜p2, b5_p1〜p3, b6_p1〜p3, b7_p1〜p3, b8_p1〜p3, final_p1〜p3） |
 
+さらに魔物図鑑の130種（フィールドの魔物100＋ヌシ30、ID `f<フィールド>_<名前>` / `lord_<名前>`）が同じ4つのエンティティのバリアントとして加わる。
+定義は `tools/art_entities/bestiary.py` の1か所（見た目＝パーツ・配色・姿勢・模様、行動＝弾の属性・粒子・音・火炎耐性・半透明・特技3つ）で、
+`bestiary_gen.py` が Java とテキストを、`generate.py` がテクスチャ・モデル表を生成する。一覧は [bestiary.md](bestiary.md)。
+
 ★ = 遠隔（距離6〜14を保ち、見えていればキャストして `EnemyBolt` を撃つ。ダメージ = ATTACK_DAMAGE）。それ以外は近接（2種の攻撃をランダム）。
 バリアントごとに縮尺（当たり判定も追従）、パーツ表示、テクスチャ、発光、音、粒子、火炎耐性（fire_imp, salamander, lava_golem, fire_spirit）、
 半透明（shade, ice_wraith）が決まる。crossbowman・dryad・snow_wolf は d1/d2/d5 のテンプレート用に追加。

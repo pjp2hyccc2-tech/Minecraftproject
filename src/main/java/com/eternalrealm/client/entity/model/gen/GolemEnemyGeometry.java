@@ -102,7 +102,7 @@ public final class GolemEnemyGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"treant", "sand_golem", "ice_golem", "lava_golem", "ruin_construct"};
+    public static final String[] VARIANTS = {"treant", "sand_golem", "ice_golem", "lava_golem", "ruin_construct", "f2_fungal_brute", "f3_ore_golem", "lord_dolga", "f4_moss_guardian", "f4_snow_ape", "lord_goura", "f5_ruin_sentinel", "f5_obsidian_guard", "lord_agnis", "f6_cloud_giant", "f6_frost_titanling", "f7_blighted_treant", "f7_amethyst_colossus", "f8_hay_golem", "f9_mud_golem", "f10_coral_golem"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {"canopy", "headdress", "ice_crown", "rune_halo", "shoulder_r", "branch_r", "crystal_r", "shoulder_l", "branch_l", "crystal_l", "core", "back_spikes", "moss_beard"};
     /** VISIBLE[variant][toggled part]. */
@@ -112,19 +112,51 @@ public final class GolemEnemyGeometry {
             {false, false, true, false, true, false, true, true, false, true, false, false, false}, // ice_golem
             {false, false, false, false, true, false, false, true, false, false, true, true, false}, // lava_golem
             {false, false, false, true, true, false, false, true, false, false, true, false, false}, // ruin_construct
+            {true, false, false, false, false, false, false, false, false, false, false, false, true}, // f2_fungal_brute
+            {false, false, false, false, true, false, false, true, false, false, false, false, false}, // f3_ore_golem
+            {false, true, false, false, true, false, false, true, false, false, true, false, false}, // lord_dolga
+            {false, false, false, true, true, false, false, true, false, false, false, false, true}, // f4_moss_guardian
+            {false, false, false, false, false, false, false, false, false, false, false, false, false}, // f4_snow_ape
+            {false, false, true, false, true, false, true, true, false, true, false, false, false}, // lord_goura
+            {false, false, false, false, true, false, false, true, false, false, true, false, false}, // f5_ruin_sentinel
+            {false, false, false, false, true, false, false, true, false, false, false, true, false}, // f5_obsidian_guard
+            {false, true, false, true, true, false, false, true, false, false, true, false, false}, // lord_agnis
+            {false, false, false, false, true, false, false, true, false, false, false, false, false}, // f6_cloud_giant
+            {false, false, true, false, false, false, true, false, false, false, false, false, false}, // f6_frost_titanling
+            {true, false, false, false, false, true, false, false, true, false, false, false, false}, // f7_blighted_treant
+            {false, false, false, false, true, false, true, true, false, true, false, false, false}, // f7_amethyst_colossus
+            {false, false, false, false, false, false, false, false, false, false, false, false, true}, // f8_hay_golem
+            {false, false, false, false, false, false, false, false, false, false, false, false, true}, // f9_mud_golem
+            {false, false, false, false, true, false, true, false, false, true, false, false, false}, // f10_coral_golem
     };
     /** Parts with a per-variant rest adjustment. */
-    public static final String[] POSED_PARTS = {"head"};
+    public static final String[] POSED_PARTS = {"base", "chest", "head", "canopy", "right_arm", "left_arm", "right_leg", "left_leg"};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {null}, // treant
-            {null}, // sand_golem
-            {null}, // ice_golem
-            {null}, // lava_golem
-            {{0.0F, 2.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}}, // ruin_construct
+            {null, null, null, null, null, null, null, null}, // treant
+            {null, null, null, null, null, null, null, null}, // sand_golem
+            {null, null, null, null, null, null, null, null}, // ice_golem
+            {null, null, null, null, null, null, null, null}, // lava_golem
+            {null, null, {0.0F, 2.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, null, null, null, null, null}, // ruin_construct
+            {null, null, null, {0.0F, -0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 1.15F, 1.1F, 1.15F}, null, null, null, null}, // f2_fungal_brute
+            {null, null, null, null, null, null, null, null}, // f3_ore_golem
+            {null, null, null, null, null, null, null, null}, // lord_dolga
+            {null, null, null, null, null, null, null, null}, // f4_moss_guardian
+            {{0.0F, -2.1F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, 18.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, -0.5F, -1.0F, -14.0F, 0.0F, 0.0F, 0.9F, 0.9F, 0.9F}, null, {0.0F, 0.0F, 0.0F, -22.0F, 0.0F, 4.0F, 1.0F, 1.12F, 1.0F}, {0.0F, 0.0F, 0.0F, -22.0F, 0.0F, -4.0F, 1.0F, 1.12F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.85F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.85F, 1.0F}}, // f4_snow_ape
+            {{0.0F, -2.1F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, 0.0F, 0.0F, 18.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F}, {0.0F, -0.5F, -1.0F, -14.0F, 0.0F, 0.0F, 0.9F, 0.9F, 0.9F}, null, {0.0F, 0.0F, 0.0F, -22.0F, 0.0F, 4.0F, 1.0F, 1.12F, 1.0F}, {0.0F, 0.0F, 0.0F, -22.0F, 0.0F, -4.0F, 1.0F, 1.12F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.85F, 1.0F}, {0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.85F, 1.0F}}, // lord_goura
+            {null, null, null, null, null, null, null, null}, // f5_ruin_sentinel
+            {null, null, null, null, null, null, null, null}, // f5_obsidian_guard
+            {null, null, null, null, null, null, null, null}, // lord_agnis
+            {null, null, null, null, null, null, null, null}, // f6_cloud_giant
+            {null, null, null, null, null, null, null, null}, // f6_frost_titanling
+            {null, null, null, null, null, null, null, null}, // f7_blighted_treant
+            {null, null, null, null, null, null, null, null}, // f7_amethyst_colossus
+            {null, null, null, null, null, null, null, null}, // f8_hay_golem
+            {null, null, null, null, null, null, null, null}, // f9_mud_golem
+            {null, null, null, null, null, null, null, null}, // f10_coral_golem
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.25F, 1.3F, 1.35F, 1.3F, 1.2F};
+    public static final float[] SCALES = {1.25F, 1.3F, 1.35F, 1.3F, 1.2F, 1.0F, 1.05F, 1.6F, 1.15F, 0.85F, 1.65F, 1.15F, 1.1F, 1.7F, 1.25F, 1.0F, 1.3F, 1.2F, 0.95F, 1.1F, 1.15F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true, true, true, true, true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, false, true, true, true, false, true, true, true, true, true, false, true, true, false, true, true};
 }

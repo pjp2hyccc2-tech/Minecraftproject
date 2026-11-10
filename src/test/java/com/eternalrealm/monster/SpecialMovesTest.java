@@ -27,6 +27,31 @@ public class SpecialMovesTest {
         assertEquals(1, SpecialMoves.moveCount(MonsterRole.NORMAL, SpecialMoves.VETERAN_LEVEL));
         assertEquals("boss summons never", 0, SpecialMoves.moveCount(MonsterRole.MINION, 50));
         assertTrue(SpecialMoves.cooldownTicks(2) < SpecialMoves.cooldownTicks(1));
+        assertTrue("the lords move most often", SpecialMoves.cooldownTicks(SpecialMoves.LORD_MOVES)
+                < SpecialMoves.cooldownTicks(2));
+    }
+
+    @Test
+    public void everyBestiaryBodyHasThreeDistinctMovesForItsLordsAndVeterans() {
+        int bodies = 0;
+        for (MonsterTemplate template : Monsters.all()) {
+            String id = template.id();
+            if (!id.matches("(f\\d+|lord)_[a-z_]+")) {
+                continue;
+            }
+            bodies++;
+            List<SpecialMove> moves = BestiaryMoves.movesOf(id);
+            assertTrue(id, moves != null && moves.size() == 3 && new java.util.HashSet<>(moves).size() == 3);
+            assertEquals(moves, SpecialMoves.forBody("any", id));
+            assertEquals(moves.subList(0, 1), SpecialMoves.movesOf("any", id, 1));
+            assertEquals(moves, SpecialMoves.movesOf("any", id, SpecialMoves.LORD_MOVES));
+            assertTrue(id, BestiaryMoves.styleOf(id) != null);
+        }
+        assertEquals(130, bodies);
+        assertEquals("a fire imp of the ruins burns", Telegraph.Style.FIRE, SpecialMoves.style("f5_ember_imp"));
+        assertEquals("the knight of the peaks is holy", Telegraph.Style.HOLY, SpecialMoves.style("lord_alvin"));
+        assertEquals(SpecialMove.VOLLEY, SpecialMoves.forBody("humanoid", "lord_peak_sniper").get(0));
+        assertEquals("the first bodies keep two moves", 2, SpecialMoves.movesOf("humanoid", "bandit", 3).size());
     }
 
     @Test
@@ -65,6 +90,19 @@ public class SpecialMovesTest {
         assertEquals(SpecialMove.CLEAVE, SpecialMoves.forVanillaBody("minecraft:vindicator").get(0));
         assertEquals(Telegraph.Style.FIRE, SpecialMoves.vanillaStyle("minecraft:magma_cube"));
         assertEquals(Telegraph.Style.DANGER, SpecialMoves.vanillaStyle("minecraft:piglin_brute"));
+    }
+
+    /** The lords' HUD names the move they wind up (special.eternalrealm.<move>, docs/i18n/field_threats.json). */
+    @Test
+    public void everyMoveHasANameForTheHud() throws java.io.IOException {
+        com.google.gson.JsonObject names = com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(
+                java.nio.file.Paths.get("docs", "i18n", "field_threats.json"), java.nio.charset.StandardCharsets.UTF_8))
+                .getAsJsonObject();
+        for (SpecialMove move : SpecialMove.values()) {
+            String key = "special.eternalrealm." + move.id();
+            assertTrue("missing " + key, names.has(key));
+            assertFalse(key, names.getAsJsonObject(key).get("ja").getAsString().isBlank());
+        }
     }
 
     @Test

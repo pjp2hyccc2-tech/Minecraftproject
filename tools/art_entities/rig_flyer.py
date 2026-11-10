@@ -289,8 +289,13 @@ def variants():
                                  hair=fire, tail=fire, tail2=fire, tail3=fire, puff={'base': '#ffcc60', 'style': 'flame'},
                                  core={'base': '#fff0a0', 'style': 'glowcore'}),
                      paint=deco_fire, glow=True, extra=dict(scale=1.0)))
+    import bestiary
+    V.extend(bestiary.variants_for('flyer'))
     return V
 
 
 def rig():
-    return Rig('flyer', 'FlyerEnemy', geometry(), animations(), variants(), SLOTS)
+    import bestiary
+    r = Rig('flyer', 'FlyerEnemy', geometry(), animations(), variants(), SLOTS)
+    bestiary.snap_to_ground(r)
+    return r

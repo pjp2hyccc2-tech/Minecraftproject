@@ -26,7 +26,7 @@ public final class BeastEnemyAnimations {
     /** The animation of every slot for a variant (variant ids as in the geometry class). */
     public static AnimationDefinition[] forVariant(String variant) {
         return switch (variant) {
-            case "scorpion" -> new AnimationDefinition[]{IDLE, WALK, SCORPION_ATTACK1, SCORPION_ATTACK2, CAST, HURT, SPAWN, DEATH};
+            case "scorpion", "f3_rock_crab", "lord_vein_eater", "f4_crystal_crab", "f7_end_scorpion", "f9_great_crayfish", "f10_beach_crab", "lord_ankara" -> new AnimationDefinition[]{IDLE, WALK, SCORPION_ATTACK1, SCORPION_ATTACK2, CAST, HURT, SPAWN, DEATH};
             default -> new AnimationDefinition[]{IDLE, WALK, ATTACK1, ATTACK2, CAST, HURT, SPAWN, DEATH};
         };
     }

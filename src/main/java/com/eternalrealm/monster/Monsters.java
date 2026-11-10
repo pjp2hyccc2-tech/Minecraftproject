@@ -15,7 +15,8 @@ import java.util.Set;
  * The monster templates and area monster tables of the initial season (docs/modules/world.md lists them all).
  *
  * <ul>
- *     <li>Field monsters: three NORMAL templates and one ELITE per area.</li>
+ *     <li>Field monsters: thirteen NORMAL templates (three with vanilla bodies, ten of the bestiary) and one ELITE per
+ *         area, plus the area's three ヌシ ({@code lord_<id>}, ELITE, spawned by the field threats only).</li>
  *     <li>Dungeon waves: {@code <dungeonId>_<name>}, three per dungeon (four in the tower), one or two of them ELITE
  *         wave captains. The dungeon module picks them by id.</li>
  *     <li>Boss summons: {@code <bossId>_minion} for {@code b1}..{@code b8} and {@code final}.</li>
@@ -83,7 +84,7 @@ public final class Monsters {
 
     private static final SpawnHints NONE = SpawnHints.NONE;
 
-    private static final List<MonsterTemplate> ALL = List.of(
+    private static final List<MonsterTemplate> ALL = join(List.of(
             // ---- Field 1: はじまりの草原 (Lv5-15)
             normal("meadow_slime", SLIME, 5, 11, 1, t(0.85, 0.8, 0.0, 1.0), SpawnHints.sized(2)),
             normal("wandering_dead", ZOMBIE, 6, 13, 1, t(1.0, 1.0, 1.0, 0.95), SpawnHints.helmet(LEATHER_HELMET)),
@@ -182,7 +183,7 @@ public final class Monsters {
             minion("b6", MAGMA_CUBE, 34, 38, 5, t(1.0, 0.9, 1.0, 1.0), SpawnHints.sized(2)),
             minion("b7", SILVERFISH, 41, 45, 6, t(0.9, 0.9, 1.0, 1.15), NONE),
             minion("b8", WITHER_SKELETON, 46, 50, 7, t(1.0, 1.0, 1.0, 1.0), SpawnHints.holding(STONE_SWORD)),
-            minion(Areas.FINAL_BOSS_ID, ENDERMAN, 48, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE));
+            minion(Areas.FINAL_BOSS_ID, ENDERMAN, 48, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE)), bestiary());
 
     private static final Map<String, MonsterTemplate> BY_ID = index(ALL);
 
@@ -301,8 +302,276 @@ public final class Monsters {
 
     private static MonsterTable table(AreaDefinition area, double eliteChance, List<MonsterTable.Entry> entries,
                                       MonsterTable.Entry elite) {
-        return new MonsterTable(area.monsterTableId(), entries, eliteChance, List.of(elite));
+        return new MonsterTable(area.monsterTableId(), join(entries, bestiaryEntries(area.id())), eliteChance,
+                List.of(elite));
     }
+
+    private static <T> List<T> join(List<T> first, List<T> second) {
+        List<T> all = new ArrayList<>(first);
+        all.addAll(second);
+        return List.copyOf(all);
+    }
+
+    // ------------------------------------------------------------------------------------------- the bestiary
+
+    /**
+     * The bestiary of the fields (docs/modules/bestiary.md): ten more monsters per field with animated bodies of their
+     * own, and the three ヌシ (lords) of every field, ELITE templates {@code lord_<id>} that only the field threats
+     * spawn.
+     */
+    // GENERATED BESTIARY TEMPLATES BEGIN (tools/art_entities/bestiary_gen.py)
+    private static List<MonsterTemplate> bestiary() {
+        return List.of(
+                // ---- field 1 (meadow)
+                normal("f1_horned_hare", SPIDER, 5, 9, 1, t(0.7, 0.8, 0.6, 1.2), NONE),
+                normal("f1_wild_boar", SPIDER, 6, 11, 1, t(1.25, 1.0, 1.1, 1.0), NONE),
+                normal("f1_bandit_scout", HUSK, 6, 12, 1, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f1_goblin_pilferer", HUSK, 5, 10, 1, t(0.8, 0.9, 0.8, 1.15), NONE),
+                normal("f1_meadow_wisp", BLAZE, 8, 13, 1, t(0.75, 1.0, 0.6, 1.05), NONE),
+                normal("f1_stray_sheepdog", SPIDER, 7, 12, 1, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f1_living_scarecrow", HUSK, 9, 14, 1, t(1.0, 1.0, 0.9, 0.95), NONE),
+                normal("f1_bandit_crossbowman", HUSK, 8, 14, 1, t(0.85, 1.05, 0.8, 1.0), NONE),
+                normal("f1_capling", HUSK, 7, 12, 1, t(0.8, 0.85, 0.7, 1.05), NONE),
+                normal("f1_fallen_squire", HUSK, 11, 15, 1, t(1.15, 1.05, 1.3, 0.95), NONE),
+                elite("lord_garm", HUSK, 13, 15, 1, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_hook", HUSK, 13, 15, 1, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_durn", SPIDER, 13, 15, 1, t(1.0, 1.0, 1.0, 1.0), NONE),
+                // ---- field 2 (moon_forest)
+                normal("f2_moonshade_wolf", SPIDER, 10, 15, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f2_twin_tailed_fox", SPIDER, 11, 17, 2, t(0.85, 1.0, 0.8, 1.15), NONE),
+                normal("f2_thorn_dryad", HUSK, 13, 19, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f2_moon_moth", BLAZE, 12, 18, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f2_fungal_brute", RAVAGER, 14, 20, 2, t(1.3, 1.0, 1.1, 0.9), NONE),
+                normal("f2_owl_warden", BLAZE, 13, 19, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f2_night_stalker", HUSK, 12, 18, 2, t(0.9, 1.1, 0.8, 1.1), NONE),
+                normal("f2_bark_lizard", SPIDER, 10, 16, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f2_moonbow_hunter", HUSK, 14, 20, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f2_will_o_wisp", BLAZE, 15, 20, 2, t(0.7, 1.1, 0.5, 1.1), NONE),
+                elite("lord_nebula", HUSK, 18, 20, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_belladonna", HUSK, 18, 20, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_lunar", SPIDER, 18, 20, 2, t(1.0, 1.0, 1.0, 1.0), NONE),
+                // ---- field 3 (iron_mine)
+                normal("f3_kobold_miner", HUSK, 15, 20, 3, t(0.9, 1.0, 1.0, 1.05), NONE),
+                normal("f3_rock_crab", SPIDER, 15, 21, 3, t(1.2, 1.0, 1.5, 0.9), NONE),
+                normal("f3_ore_golem", RAVAGER, 17, 23, 3, t(1.4, 1.0, 1.4, 0.85), NONE),
+                normal("f3_dust_mummy", HUSK, 16, 22, 3, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f3_giant_cave_bat", BLAZE, 15, 21, 3, t(0.75, 1.0, 0.6, 1.2), NONE),
+                normal("f3_sun_cultist", HUSK, 18, 24, 3, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f3_golden_scarab", SPIDER, 17, 23, 3, t(1.0, 1.0, 1.6, 0.95), NONE),
+                normal("f3_tunnel_rat", SPIDER, 15, 20, 3, t(0.8, 0.95, 0.7, 1.15), NONE),
+                normal("f3_rust_guard", HUSK, 19, 25, 3, t(1.2, 1.0, 1.4, 0.9), NONE),
+                normal("f3_gem_wraith", BLAZE, 20, 25, 3, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_dolga", RAVAGER, 23, 25, 3, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_rustbone", HUSK, 23, 25, 3, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_vein_eater", SPIDER, 23, 25, 3, t(1.0, 1.0, 1.0, 1.0), NONE),
+                // ---- field 4 (sacred_falls)
+                normal("f4_mist_spirit", BLAZE, 20, 26, 4, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f4_falls_toad", SPIDER, 20, 25, 4, t(1.1, 1.0, 0.9, 1.0), NONE),
+                normal("f4_kappa", HUSK, 21, 27, 4, t(1.0, 1.0, 1.1, 1.05), NONE),
+                normal("f4_lost_pilgrim", HUSK, 22, 28, 4, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f4_frost_heron", BLAZE, 21, 27, 4, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f4_crystal_crab", SPIDER, 23, 29, 4, t(1.2, 1.0, 1.6, 0.9), NONE),
+                normal("f4_frost_monk", HUSK, 24, 30, 4, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f4_moss_guardian", RAVAGER, 24, 30, 4, t(1.4, 1.0, 1.3, 0.85), NONE),
+                normal("f4_snow_ape", RAVAGER, 22, 28, 4, t(1.1, 1.1, 0.9, 1.1), NONE),
+                normal("f4_spray_wraith", BLAZE, 25, 30, 4, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_goura", RAVAGER, 28, 30, 4, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_mistweaver", SPIDER, 28, 30, 4, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_ord", SPIDER, 28, 30, 4, t(1.2, 1.0, 1.6, 0.8), NONE),
+                // ---- field 5 (ancient_ruins)
+                normal("f5_ember_imp", HUSK, 30, 35, 5, t(0.8, 1.1, 0.7, 1.15), NONE),
+                normal("f5_ash_hound", SPIDER, 31, 37, 5, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f5_magma_lizard", SPIDER, 32, 38, 5, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f5_ruin_sentinel", RAVAGER, 33, 39, 5, t(1.4, 1.0, 1.4, 0.85), NONE),
+                normal("f5_cinder_wraith", BLAZE, 32, 38, 5, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f5_relic_thief", HUSK, 30, 36, 5, t(0.9, 1.1, 0.8, 1.15), NONE),
+                normal("f5_flame_priest", HUSK, 34, 40, 5, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f5_obsidian_guard", RAVAGER, 35, 40, 5, t(1.3, 1.1, 1.6, 0.85), NONE),
+                normal("f5_scorch_vulture", BLAZE, 31, 37, 5, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f5_lava_tortoise", SPIDER, 33, 39, 5, t(1.4, 1.0, 1.6, 0.8), NONE),
+                elite("lord_valka", HUSK, 38, 40, 5, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_scorch_eye", BLAZE, 38, 40, 5, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_agnis", RAVAGER, 38, 40, 5, t(1.0, 1.0, 1.0, 1.0), NONE),
+                // ---- field 6 (soaring_peaks)
+                normal("f6_thunder_hawk", BLAZE, 40, 46, 6, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f6_sky_knight", HUSK, 42, 48, 6, t(1.2, 1.05, 1.4, 0.95), NONE),
+                normal("f6_cloud_giant", RAVAGER, 44, 50, 6, t(1.4, 1.0, 1.0, 0.85), NONE),
+                normal("f6_gale_spirit", BLAZE, 41, 47, 6, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f6_peak_wolf", SPIDER, 40, 45, 6, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f6_storm_mage", HUSK, 43, 49, 6, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f6_young_griffin", BLAZE, 42, 48, 6, t(1.1, 1.05, 1.0, 1.05), NONE),
+                normal("f6_sky_ram", SPIDER, 41, 47, 6, t(1.2, 1.0, 1.1, 1.0), NONE),
+                normal("f6_star_sentinel", BLAZE, 45, 50, 6, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f6_frost_titanling", RAVAGER, 44, 50, 6, t(1.3, 1.05, 1.2, 0.9), NONE),
+                elite("lord_alvin", HUSK, 48, 50, 6, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_peak_sniper", HUSK, 48, 50, 6, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_zephyr", BLAZE, 48, 50, 6, t(1.0, 1.0, 1.0, 1.0), NONE),
+                // ---- field 7 (end_forest)
+                normal("f7_void_hound", SPIDER, 50, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f7_blighted_treant", RAVAGER, 50, 50, 7, t(1.4, 1.1, 1.2, 0.85), NONE),
+                normal("f7_doom_knight", HUSK, 50, 50, 7, t(1.2, 1.1, 1.4, 0.95), NONE),
+                normal("f7_hollow_eye", BLAZE, 50, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f7_amethyst_colossus", RAVAGER, 50, 50, 7, t(1.4, 1.0, 1.5, 0.85), NONE),
+                normal("f7_shadow_assassin", HUSK, 50, 50, 7, t(0.9, 1.2, 0.8, 1.15), NONE),
+                normal("f7_plague_rat", SPIDER, 50, 50, 7, t(0.8, 1.05, 0.7, 1.15), NONE),
+                normal("f7_hex_witch", HUSK, 50, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f7_wandering_grudge", BLAZE, 50, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f7_end_scorpion", SPIDER, 50, 50, 7, t(1.2, 1.1, 1.3, 1.0), NONE),
+                elite("lord_xenos", HUSK, 50, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_black_knight", HUSK, 50, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_nihil", SPIDER, 50, 50, 7, t(1.0, 1.0, 1.0, 1.0), NONE),
+                // ---- field 8 (farm)
+                normal("f8_field_crow", BLAZE, 10, 15, 8, t(0.7, 0.9, 0.6, 1.2), NONE),
+                normal("f8_giant_mole", SPIDER, 10, 16, 8, t(1.0, 0.95, 1.0, 0.95), NONE),
+                normal("f8_pumpkin_head", HUSK, 12, 18, 8, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f8_wild_rooster", BLAZE, 11, 16, 8, t(0.75, 1.0, 0.7, 1.15), NONE),
+                normal("f8_rowdy_calf", SPIDER, 11, 17, 8, t(1.2, 1.0, 1.0, 1.0), NONE),
+                normal("f8_hay_golem", RAVAGER, 13, 19, 8, t(1.2, 0.95, 0.9, 0.95), NONE),
+                normal("f8_lost_farmhand", HUSK, 12, 18, 8, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f8_giant_bee", BLAZE, 13, 19, 8, t(0.7, 1.05, 0.6, 1.2), NONE),
+                normal("f8_vine_lurker", HUSK, 14, 20, 8, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f8_windmill_sprite", BLAZE, 15, 20, 8, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_brutus", SPIDER, 18, 20, 8, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_harvest_boss", HUSK, 18, 20, 8, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_strom", HUSK, 18, 20, 8, t(1.0, 1.0, 1.0, 1.0), NONE),
+                // ---- field 9 (lakeside)
+                normal("f9_marsh_frog", SPIDER, 15, 20, 9, t(0.9, 1.0, 0.8, 1.05), NONE),
+                normal("f9_lake_serpent", SPIDER, 17, 23, 9, t(1.0, 1.05, 0.9, 1.05), NONE),
+                normal("f9_egret_spirit", BLAZE, 16, 22, 9, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f9_bog_ghoul", HUSK, 16, 22, 9, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f9_reed_witch", HUSK, 18, 24, 9, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f9_great_crayfish", SPIDER, 17, 23, 9, t(1.1, 1.05, 1.4, 0.95), NONE),
+                normal("f9_mud_golem", RAVAGER, 19, 25, 9, t(1.4, 1.0, 1.1, 0.85), NONE),
+                normal("f9_fisher_ghost", HUSK, 18, 24, 9, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f9_giant_dragonfly", BLAZE, 17, 23, 9, t(0.7, 1.0, 0.6, 1.25), NONE),
+                normal("f9_water_imp", HUSK, 20, 25, 9, t(0.8, 1.05, 0.7, 1.15), NONE),
+                elite("lord_melusine", HUSK, 23, 25, 9, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_drowned_fisher", HUSK, 23, 25, 9, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_numel", SPIDER, 23, 25, 9, t(1.0, 1.0, 1.0, 1.0), NONE),
+                // ---- field 10 (harbour)
+                normal("f10_deck_pirate", HUSK, 20, 26, 10, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f10_pirate_brute", HUSK, 22, 28, 10, t(1.3, 1.1, 1.0, 0.95), NONE),
+                normal("f10_beach_crab", SPIDER, 20, 25, 10, t(1.1, 1.0, 1.4, 0.95), NONE),
+                normal("f10_sea_harpy", BLAZE, 21, 27, 10, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f10_coral_golem", RAVAGER, 24, 30, 10, t(1.4, 1.0, 1.3, 0.85), NONE),
+                normal("f10_shore_monitor", SPIDER, 21, 27, 10, t(1.2, 1.05, 1.1, 1.0), NONE),
+                normal("f10_ghost_sailor", HUSK, 23, 29, 10, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f10_smuggler", HUSK, 22, 28, 10, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f10_tide_spirit", BLAZE, 24, 30, 10, t(1.0, 1.0, 1.0, 1.0), NONE),
+                normal("f10_sea_witch", HUSK, 25, 30, 10, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_barbas", HUSK, 28, 30, 10, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_dock_brawler", HUSK, 28, 30, 10, t(1.0, 1.0, 1.0, 1.0), NONE),
+                elite("lord_ankara", SPIDER, 28, 30, 10, t(1.0, 1.0, 1.0, 1.0), NONE));
+    }
+
+    /** The bestiary monsters of field {@code areaId} that the field spawner picks (not the lords). */
+    private static List<MonsterTable.Entry> bestiaryEntries(int areaId) {
+        return switch (areaId) {
+            case 1 -> List.of(entry("f1_horned_hare", 14, 0),
+                entry("f1_wild_boar", 12, 0),
+                entry("f1_bandit_scout", 12, 0),
+                entry("f1_goblin_pilferer", 10, 0),
+                entry("f1_meadow_wisp", 8, 0),
+                entry("f1_stray_sheepdog", 10, 0),
+                entry("f1_living_scarecrow", 9, 0),
+                entry("f1_bandit_crossbowman", 9, 0),
+                entry("f1_capling", 11, 0),
+                entry("f1_fallen_squire", 7, 0));
+            case 2 -> List.of(entry("f2_moonshade_wolf", 13, 0),
+                entry("f2_twin_tailed_fox", 10, 0),
+                entry("f2_thorn_dryad", 10, 0),
+                entry("f2_moon_moth", 9, 0),
+                entry("f2_fungal_brute", 8, 1),
+                entry("f2_owl_warden", 10, 0),
+                entry("f2_night_stalker", 10, 0),
+                entry("f2_bark_lizard", 12, 0),
+                entry("f2_moonbow_hunter", 10, 0),
+                entry("f2_will_o_wisp", 7, 0));
+            case 3 -> List.of(entry("f3_kobold_miner", 13, 0),
+                entry("f3_rock_crab", 12, 0),
+                entry("f3_ore_golem", 8, 1),
+                entry("f3_dust_mummy", 10, 0),
+                entry("f3_giant_cave_bat", 12, 0),
+                entry("f3_sun_cultist", 8, 0),
+                entry("f3_golden_scarab", 9, 0),
+                entry("f3_tunnel_rat", 13, 0),
+                entry("f3_rust_guard", 7, 0),
+                entry("f3_gem_wraith", 6, 0));
+            case 4 -> List.of(entry("f4_mist_spirit", 9, 0),
+                entry("f4_falls_toad", 13, 0),
+                entry("f4_kappa", 11, 0),
+                entry("f4_lost_pilgrim", 9, 0),
+                entry("f4_frost_heron", 10, 0),
+                entry("f4_crystal_crab", 11, 0),
+                entry("f4_frost_monk", 8, 0),
+                entry("f4_moss_guardian", 7, 1),
+                entry("f4_snow_ape", 10, 0),
+                entry("f4_spray_wraith", 7, 0));
+            case 5 -> List.of(entry("f5_ember_imp", 12, 0),
+                entry("f5_ash_hound", 12, 0),
+                entry("f5_magma_lizard", 11, 0),
+                entry("f5_ruin_sentinel", 7, 1),
+                entry("f5_cinder_wraith", 9, 0),
+                entry("f5_relic_thief", 11, 0),
+                entry("f5_flame_priest", 8, 0),
+                entry("f5_obsidian_guard", 7, 1),
+                entry("f5_scorch_vulture", 11, 0),
+                entry("f5_lava_tortoise", 8, 1));
+            case 6 -> List.of(entry("f6_thunder_hawk", 12, 0),
+                entry("f6_sky_knight", 8, 0),
+                entry("f6_cloud_giant", 7, 1),
+                entry("f6_gale_spirit", 10, 0),
+                entry("f6_peak_wolf", 13, 0),
+                entry("f6_storm_mage", 8, 0),
+                entry("f6_young_griffin", 9, 0),
+                entry("f6_sky_ram", 11, 0),
+                entry("f6_star_sentinel", 7, 0),
+                entry("f6_frost_titanling", 8, 1));
+            case 7 -> List.of(entry("f7_void_hound", 12, 0),
+                entry("f7_blighted_treant", 8, 1),
+                entry("f7_doom_knight", 9, 0),
+                entry("f7_hollow_eye", 9, 0),
+                entry("f7_amethyst_colossus", 7, 1),
+                entry("f7_shadow_assassin", 10, 0),
+                entry("f7_plague_rat", 13, 0),
+                entry("f7_hex_witch", 10, 0),
+                entry("f7_wandering_grudge", 10, 0),
+                entry("f7_end_scorpion", 10, 0));
+            case 8 -> List.of(entry("f8_field_crow", 13, 0),
+                entry("f8_giant_mole", 12, 0),
+                entry("f8_pumpkin_head", 10, 0),
+                entry("f8_wild_rooster", 12, 0),
+                entry("f8_rowdy_calf", 11, 0),
+                entry("f8_hay_golem", 8, 0),
+                entry("f8_lost_farmhand", 10, 0),
+                entry("f8_giant_bee", 11, 0),
+                entry("f8_vine_lurker", 9, 0),
+                entry("f8_windmill_sprite", 8, 0));
+            case 9 -> List.of(entry("f9_marsh_frog", 13, 0),
+                entry("f9_lake_serpent", 11, 0),
+                entry("f9_egret_spirit", 9, 0),
+                entry("f9_bog_ghoul", 12, 0),
+                entry("f9_reed_witch", 8, 0),
+                entry("f9_great_crayfish", 11, 0),
+                entry("f9_mud_golem", 7, 1),
+                entry("f9_fisher_ghost", 8, 0),
+                entry("f9_giant_dragonfly", 10, 0),
+                entry("f9_water_imp", 10, 0));
+            case 10 -> List.of(entry("f10_deck_pirate", 13, 0),
+                entry("f10_pirate_brute", 10, 1),
+                entry("f10_beach_crab", 13, 0),
+                entry("f10_sea_harpy", 10, 0),
+                entry("f10_coral_golem", 7, 1),
+                entry("f10_shore_monitor", 11, 0),
+                entry("f10_ghost_sailor", 9, 0),
+                entry("f10_smuggler", 10, 0),
+                entry("f10_tide_spirit", 8, 0),
+                entry("f10_sea_witch", 7, 0));
+            default -> List.of();
+        };
+    }
+    // GENERATED BESTIARY TEMPLATES END
+
 
     private static Map<String, MonsterTemplate> index(List<MonsterTemplate> templates) {
         Map<String, MonsterTemplate> byId = new HashMap<>();
