@@ -29,6 +29,14 @@ public final class DamageCalculator {
      */
     public static DamageRoll roll(CombatStats attacker, WeaponProfile weapon, HitFrame frame, double damageScale,
                                   double random, DamageType type, double bonusAttack) {
+        return roll(attacker, weapon, frame, damageScale, random, type, bonusAttack, 0.0);
+    }
+
+    /**
+     * @param extraCritChance critical chance added by effects (buffs, skills), before the global cap
+     */
+    public static DamageRoll roll(CombatStats attacker, WeaponProfile weapon, HitFrame frame, double damageScale,
+                                  double random, DamageType type, double bonusAttack, double extraCritChance) {
         Objects.requireNonNull(attacker, "attacker");
         Objects.requireNonNull(weapon, "weapon");
         Objects.requireNonNull(frame, "frame");
@@ -38,7 +46,9 @@ public final class DamageCalculator {
         Check.range("bonusAttack", bonusAttack, 0.0, MAX_BONUS_ATTACK);
         double base = (weapon.baseAttack() + bonusAttack) * type.multiplier(attacker) * frame.multiplier()
                 * damageScale;
-        double chance = Math.min(CombatRules.MAX_CRIT_CHANCE, attacker.critChance() + weapon.critBonus());
+        Check.range("extraCritChance", extraCritChance, 0.0, 1.0);
+        double chance = Math.min(CombatRules.MAX_CRIT_CHANCE,
+                attacker.critChance() + weapon.critBonus() + extraCritChance);
         boolean critical = random < chance;
         double amount = critical ? base * attacker.critMultiplier() : base;
         return new DamageRoll(Math.min(CombatRules.MAX_DAMAGE, amount), critical);

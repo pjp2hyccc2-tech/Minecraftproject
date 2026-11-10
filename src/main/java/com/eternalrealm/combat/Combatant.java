@@ -2,9 +2,11 @@ package com.eternalrealm.combat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Action state machine of one fighter (docs/COMBAT_SYSTEM.md, section 4).
@@ -25,9 +27,11 @@ public final class Combatant {
         STAGGERED
     }
 
-    /** Skill slots: 0 = the weapon's skill, 1..4 = job skills (4 = the ultimate). */
-    public static final int SKILL_SLOTS = 5;
+    /** Skill slots: 0 = the weapon's skill, 1..6 = job skills (4 = the ultimate). */
+    public static final int SKILL_SLOTS = 7;
     public static final int WEAPON_SKILL_SLOT = 0;
+    /** The job skill slot reserved for ultimates. */
+    public static final int ULTIMATE_SLOT = 4;
 
     /** "Long ago": far from the counter range, yet safe to subtract from. */
     private static final long NEVER = Long.MIN_VALUE / 4;
@@ -50,6 +54,8 @@ public final class Combatant {
     private final long[] skillReadyAt = filled(NEVER);
     private final int[] skillCooldownTotal = new int[SKILL_SLOTS];
     private final SkillBinding[] jobSkills = new SkillBinding[SKILL_SLOTS];
+    /** Weapon types the fighter's job may use; empty = any (no job). */
+    private Set<WeaponType> allowedWeapons = Set.of();
     private long invulnerableUntil = NEVER;
     private long staggerUntil = NEVER;
     private long riposteUntil = NEVER;
@@ -91,6 +97,9 @@ public final class Combatant {
         }
         if (usingOtherItem) {
             return RequestOutcome.REJECTED_BUSY;
+        }
+        if (request != CombatRequest.DODGE && !allowsWeapon(weapon)) {
+            return RequestOutcome.REJECTED_JOB_WEAPON;
         }
         RequestOutcome invalid = validate(request, now, mobilityRestricted);
         if (invalid != null) {
@@ -140,7 +149,8 @@ public final class Combatant {
                 }
                 yield stamina < dodgeCost() ? RequestOutcome.REJECTED_STAMINA : null;
             }
-            case SKILL, JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4 -> validateSkill(request.skillSlot(), now);
+            case SKILL, JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4, JOB_SKILL_5, JOB_SKILL_6 ->
+                    validateSkill(request.skillSlot(), now);
             case HEAVY_RELEASE -> null;
         };
     }
@@ -149,9 +159,9 @@ public final class Combatant {
         if (guarding) {
             return RequestOutcome.REJECTED_GUARDING;
         }
-        ActionDefinition action;
+        double cost;
         if (slot == WEAPON_SKILL_SLOT) {
-            action = weapon.skill();
+            cost = weapon.skill().staminaCost();
         } else {
             SkillBinding binding = jobSkills[slot];
             if (binding == null) {
@@ -160,12 +170,12 @@ public final class Combatant {
             if (!binding.allows(weapon)) {
                 return RequestOutcome.REJECTED_WRONG_WEAPON;
             }
-            action = binding.action();
+            cost = binding.staminaCost();
         }
         if (now < skillReadyAt[slot]) {
             return RequestOutcome.REJECTED_COOLDOWN;
         }
-        return stamina < action.staminaCost() ? RequestOutcome.REJECTED_STAMINA : null;
+        return stamina < cost ? RequestOutcome.REJECTED_STAMINA : null;
     }
 
     private double dodgeCost() {
@@ -197,12 +207,14 @@ public final class Combatant {
             case HEAVY_START -> startCharge(now);
             case DODGE -> {
                 guarding = false;
-                begin(CombatRules.DODGE, -1, now, 1.0, -1, 0);
+                begin(CombatRules.DODGE, -1, now, 1.0, -1, 0, dodgeCost());
             }
-            case SKILL -> begin(weapon.skill(), -1, now, 1.0, WEAPON_SKILL_SLOT, weapon.skill().cooldownTicks());
-            case JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4 -> {
+            case SKILL -> begin(weapon.skill(), -1, now, 1.0, WEAPON_SKILL_SLOT, weapon.skill().cooldownTicks(),
+                    weapon.skill().staminaCost());
+            case JOB_SKILL_1, JOB_SKILL_2, JOB_SKILL_3, JOB_SKILL_4, JOB_SKILL_5, JOB_SKILL_6 -> {
                 SkillBinding binding = jobSkills[request.skillSlot()];
-                begin(binding.action(), -1, now, binding.damageScale(), request.skillSlot(), binding.cooldownTicks());
+                begin(binding.action(), -1, now, binding.damageScale(), request.skillSlot(), binding.cooldownTicks(),
+                        binding.staminaCost());
             }
             case HEAVY_RELEASE -> throw new IllegalArgumentException("release is not an action");
         }
@@ -214,7 +226,8 @@ public final class Combatant {
         if (step >= combo.size()) {
             step = 0;
         }
-        begin(combo.get(step), step, now, 1.0, -1, 0);
+        ActionDefinition light = combo.get(step);
+        begin(light, step, now, 1.0, -1, 0, light.staminaCost());
         nextComboStep = step + 1 < combo.size() ? step + 1 : 0;
         comboExpiresAt = nextComboStep == 0 ? NEVER : active.endTick + weapon.comboResetTicks();
     }
@@ -254,15 +267,16 @@ public final class Combatant {
         double scale = heavy.chargeMultiplier(charged) + (current.derived ? heavy.derivedBonus() : 0.0);
         charge = null;
         phase = Phase.IDLE;
-        begin(heavy.strike(), -1, now, scale, -1, 0);
+        begin(heavy.strike(), -1, now, scale, -1, 0, heavy.strike().staminaCost());
     }
 
     /**
      * @param skillSlot     slot whose cooldown starts ({@code -1} for non-skills)
      * @param cooldownTicks cooldown started in {@code skillSlot}
+     * @param staminaCost   stamina spent now
      */
     private void begin(ActionDefinition action, int comboStep, long now, double damageScale, int skillSlot,
-                       int cooldownTicks) {
+                       int cooldownTicks, double staminaCost) {
         ActionDefinition.Timing timing = action.timing(stats.actionSpeedFactor());
         double scale = damageScale;
         if (action.kind() != ActionKind.DODGE && now < riposteUntil) {
@@ -278,7 +292,7 @@ public final class Combatant {
         phase = Phase.ACTION;
         buffered = null;
         charge = null;
-        spend(action.kind() == ActionKind.DODGE ? dodgeCost() : action.staminaCost(), now);
+        spend(staminaCost, now);
         if (skillSlot >= 0 && cooldownTicks > 0) {
             int cooldown = Math.max(1, (int) Math.round(cooldownTicks * stats.cooldownFactor()));
             skillReadyAt[skillSlot] = now + cooldown;
@@ -342,7 +356,8 @@ public final class Combatant {
     }
 
     private void startBuffered(Buffered next, long now) {
-        if (weapon == null || now < staggerUntil || validate(next.request, now, false) != null) {
+        if (weapon == null || now < staggerUntil || validate(next.request, now, false) != null
+                || (next.request != CombatRequest.DODGE && !allowsWeapon(weapon))) {
             return; // the situation changed (stamina, cooldown): the buffered input is dropped
         }
         start(next.request, now);
@@ -375,7 +390,7 @@ public final class Combatant {
     public boolean canStartGuard(long now, WeaponProfile currentWeapon) {
         updateWeapon(currentWeapon);
         advance(now);
-        if (weapon == null || now < staggerUntil) {
+        if (weapon == null || now < staggerUntil || !allowsWeapon(weapon)) {
             return false;
         }
         if (guarding) {
@@ -531,7 +546,7 @@ public final class Combatant {
     }
 
     /**
-     * Places a job skill in slot {@code 1..4}, or empties it ({@code null}). An action of the previous skill that is
+     * Places a job skill in slot {@code 1..6}, or empties it ({@code null}). An action of the previous skill that is
      * already running is not interrupted; the slot's cooldown is kept.
      */
     public void setJobSkill(int slot, SkillBinding binding) {
@@ -541,7 +556,41 @@ public final class Combatant {
         jobSkills[slot] = binding;
     }
 
-    /** The job skill in slot {@code 1..4}, or {@code null}. */
+    /**
+     * The weapon types the fighter's job may use ({@code empty} = any). Attacks, skills and the guard with any other
+     * weapon are rejected ({@link RequestOutcome#REJECTED_JOB_WEAPON}); dodging stays possible. Set from the same
+     * character data on the server and the owning client, so both always agree.
+     */
+    public void setAllowedWeapons(Set<WeaponType> weapons) {
+        Objects.requireNonNull(weapons, "weapons");
+        allowedWeapons = weapons.isEmpty() ? Set.of() : Set.copyOf(EnumSet.copyOf(weapons));
+    }
+
+    public Set<WeaponType> allowedWeapons() {
+        return allowedWeapons;
+    }
+
+    /** Whether the fighter's job may use {@code profile} ({@code null} never counts as allowed). */
+    public boolean allowsWeapon(WeaponProfile profile) {
+        return profile != null && (allowedWeapons.isEmpty() || allowedWeapons.contains(profile.type()));
+    }
+
+    /**
+     * Shortens the running cooldowns of the job skill slots by {@code ticks} (a skill effect; the server sends the
+     * result to the client).
+     */
+    public void reduceJobSkillCooldowns(long now, int ticks) {
+        if (ticks <= 0) {
+            return;
+        }
+        for (int slot = 1; slot < SKILL_SLOTS; slot++) {
+            if (skillReadyAt[slot] > now) {
+                skillReadyAt[slot] = Math.max(now, skillReadyAt[slot] - ticks);
+            }
+        }
+    }
+
+    /** The job skill in slot {@code 1..6}, or {@code null}. */
     public SkillBinding jobSkill(int slot) {
         checkSlot(slot);
         return jobSkills[slot];
