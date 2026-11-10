@@ -4064,5 +4064,11 @@
   "subtitles.eternalrealm.weapon_skill.quake": "The ground splits",
   "subtitles.eternalrealm.weapon_skill.sigil_burst": "Star sigil bursts",
   "subtitles.eternalrealm.weapon_skill.sigil_launch": "Star sigil fired",
-  "subtitles.eternalrealm.weapon_skill.whirl": "Whirling blade"
+  "subtitles.eternalrealm.weapon_skill.whirl": "Whirling blade",
+  "key.eternalrealm.open_equipment": "Equipment",
+  "hud.eternalrealm.frame.points": "Stat pts %s, skill pts %s [%s]",
+  "hud.eternalrealm.quick.none_0": "You have no health potions",
+  "hud.eternalrealm.quick.none_1": "You have no stamina tonics",
+  "hud.eternalrealm.quick.none_2": "You have no return scrolls",
+  "message.eternalrealm.consumable.return_channel": "Reading the return scroll... %ss (moving or taking damage cancels)"
 }

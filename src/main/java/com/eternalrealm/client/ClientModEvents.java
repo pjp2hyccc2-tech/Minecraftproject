@@ -2,7 +2,6 @@ package com.eternalrealm.client;
 
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.network.forge.ClientboundHandlers;
-import com.eternalrealm.ui.hud.CharacterHudOverlay;
 import com.eternalrealm.ui.hud.CombatHudOverlay;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -107,7 +106,9 @@ public final class ClientModEvents {
 
     @SubscribeEvent
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "character_hud", new CharacterHudOverlay());
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "player_frame", new com.eternalrealm.ui.hud.PlayerFrameOverlay());
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "quick_slots", new com.eternalrealm.ui.hud.QuickSlotsOverlay());
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "hud_icons", new com.eternalrealm.ui.hud.HudIconsOverlay());
         event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "combat_hud", new CombatHudOverlay());
         event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "party_hud", new com.eternalrealm.ui.hud.PartyHudOverlay());
         event.registerAbove(VanillaGuiOverlay.CHAT_PANEL.id(), "dialogue_box", new com.eternalrealm.ui.dialogue.DialogueOverlay());
@@ -122,6 +123,7 @@ public final class ClientModEvents {
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(ClientKeyMappings.OPEN_CHARACTER);
+        event.register(ClientKeyMappings.OPEN_EQUIPMENT);
         event.register(ClientKeyMappings.HEAVY_ATTACK);
         event.register(ClientKeyMappings.DODGE);
         event.register(ClientKeyMappings.WEAPON_SKILL);

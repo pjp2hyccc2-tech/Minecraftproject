@@ -2,7 +2,6 @@ package com.eternalrealm.ui.map;
 
 import com.eternalrealm.client.ClientUiState;
 import com.eternalrealm.client.map.ThreatClient;
-import com.eternalrealm.config.ERClientConfig;
 import com.eternalrealm.core.ModInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,7 +13,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
@@ -63,29 +61,9 @@ public final class ThreatOverlay implements IGuiOverlay {
         }
     }
 
-    private static int minimapBottom(LocalPlayer player) {
-        int size;
-        boolean coordinates;
-        try {
-            size = ERClientConfig.MINIMAP_SIZE.get();
-            coordinates = ERClientConfig.MINIMAP_COORDINATES.get();
-        } catch (IllegalStateException e) {
-            size = 96;
-            coordinates = true;
-        }
-        boolean beneficial = false;
-        boolean harmful = false;
-        for (MobEffectInstance effect : player.getActiveEffects()) {
-            if (effect.showIcon()) {
-                if (effect.getEffect().isBeneficial()) {
-                    beneficial = true;
-                } else {
-                    harmful = true;
-                }
-            }
-        }
-        int offset = harmful ? 52 : beneficial ? 26 : 0;
-        return 4 + offset + size + (coordinates ? 14 : 4);
+    /** Whether the result card of a defeated lord is still up (the HUD layout makes room for it). */
+    public static boolean resultShowing() {
+        return result != null && System.nanoTime() - resultAt < RESULT_NANOS;
     }
 
     @Override
@@ -96,17 +74,16 @@ public final class ThreatOverlay implements IGuiOverlay {
             return;
         }
         Font font = minecraft.font;
-        int top = minimapBottom(player);
-        int width = 108;
-        int left = screenWidth - 4 - width;
+        com.eternalrealm.hud.HudLayout.Layout layout = com.eternalrealm.ui.hud.HudFrame.layout();
         int field = ThreatClient.currentField();
         JsonObject entry = field == 0 ? null : ThreatClient.field(field).orElse(null);
-        if (entry != null) {
-            drawGauge(graphics, font, entry, left, top, width);
-            top += 24;
+        com.eternalrealm.hud.Rect gauge = layout.threat();
+        if (entry != null && !gauge.isEmpty()) {
+            drawGauge(graphics, font, entry, gauge.x(), gauge.y(), gauge.width());
         }
-        if (result != null && System.nanoTime() - resultAt < RESULT_NANOS) {
-            drawResult(graphics, font, left - 30, top, width + 30);
+        com.eternalrealm.hud.Rect card = layout.threatResult();
+        if (resultShowing() && !card.isEmpty()) {
+            drawResult(graphics, font, card.x(), card.y(), card.width());
         }
     }
 

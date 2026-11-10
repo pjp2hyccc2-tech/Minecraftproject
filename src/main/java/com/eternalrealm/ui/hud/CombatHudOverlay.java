@@ -9,6 +9,8 @@ import com.eternalrealm.combat.HeavyAttack;
 import com.eternalrealm.combat.WeaponProfile;
 import com.eternalrealm.combat.forge.WeaponItem;
 import com.eternalrealm.config.ERClientConfig;
+import com.eternalrealm.hud.HudLayout;
+import com.eternalrealm.hud.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,12 +18,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
- * Combat HUD: stamina under the crosshair, charge meter above it, defense popups ("パリィ！"), and the weapon skill
- * with its cooldown plus the combo counter in the bottom-left corner. Shows the client's predicted state, which the
- * server corrects with every status update.
+ * Combat HUD: stamina under the crosshair, charge meter above it, the combo counter beside it, defense popups
+ * ("パリィ！"), and the skill bar at the bottom centre (weapon skill with its name, then the six job skills; the
+ * quick-use items follow, see {@link QuickSlotsOverlay}). Positions come from the HUD layout ({@link HudFrame}). Shows
+ * the client's predicted state, which the server corrects with every status update.
  */
 public final class CombatHudOverlay implements IGuiOverlay {
     private static final int BAR_WIDTH = 40;
@@ -57,7 +61,10 @@ public final class CombatHudOverlay implements IGuiOverlay {
         }
         renderStamina(graphics, local, now, centerX, centerY);
         renderCharge(graphics, font, local, weapon, now, centerX, centerY);
-        renderSkill(graphics, font, local, weapon, now, screenHeight);
+        renderCombo(graphics, font, local, weapon, centerX, centerY);
+        if (HudFrame.mmo(minecraft.player)) {
+            renderSkills(graphics, font, local, weapon, now, HudFrame.layout());
+        }
     }
 
     private static void renderStamina(GuiGraphics graphics, Combatant local, long now, int centerX, int centerY) {
@@ -139,50 +146,54 @@ public final class CombatHudOverlay implements IGuiOverlay {
      * Six job skill boxes: icon, key and cooldown; empty slots show just the key. The ultimate (slot 4) comes last,
      * a little apart and framed in gold.
      */
-    private static void renderJobSkills(GuiGraphics graphics, Font font, Combatant local, long now, int left,
-                                        int bottom) {
-        int size = 22;
-        int top = bottom - size;
-        int x = left;
-        for (int slot : HUD_ORDER) {
+    private static void renderJobSkills(GuiGraphics graphics, Font font, Combatant local, long now,
+                                        List<Rect> boxes) {
+        for (int i = 0; i < HUD_ORDER.length && i < boxes.size(); i++) {
+            int slot = HUD_ORDER[i];
+            Rect box = boxes.get(i);
             boolean ultimate = slot == Combatant.ULTIMATE_SLOT;
-            if (ultimate) {
-                x += 4;
-            }
             SkillBinding binding = local.jobSkill(slot);
-            graphics.fill(x, top, x + size, top + size, binding == null ? 0x50000000 : PANEL);
             Component key = ClientKeyMappings.jobSkill(slot).getTranslatedKeyMessage();
             if (binding == null) {
-                graphics.drawString(font, key, x + 2, top + 2, 0x606060);
+                graphics.fill(box.x(), box.y(), box.right(), box.bottom(), 0x50000000);
+                graphics.drawString(font, key, box.x() + 2, box.y() + 2, 0x606060);
                 if (ultimate) {
-                    graphics.renderOutline(x - 1, top - 1, size + 2, size + 2, 0x80E8C66A);
+                    graphics.renderOutline(box.x() - 1, box.y() - 1, box.width() + 2, box.height() + 2, 0x80E8C66A);
                 }
-                x += size + 2;
                 continue;
             }
-            graphics.blit(skillIcon(binding.action().id()), x + 3, top + 3, 0, 0, 16, 16, 16, 16);
             int remaining = local.skillCooldownRemaining(slot, now);
             int total = local.skillCooldownTotal(slot);
+            skillBox(graphics, font, box, skillIcon(binding.action().id()), key, remaining, total);
+            if (ultimate) {
+                graphics.renderOutline(box.x() - 1, box.y() - 1, box.width() + 2, box.height() + 2, 0xFFE8C66A);
+            }
+        }
+    }
+
+    /** One skill box: icon, key in the corner, the cooldown as a shade with seconds, a green rim when ready. */
+    static void skillBox(GuiGraphics graphics, Font font, Rect box, net.minecraft.resources.ResourceLocation icon,
+                         Component key, int remaining, int total) {
+        graphics.fill(box.x(), box.y(), box.right(), box.bottom(), PANEL);
+        graphics.blit(icon, box.x() + 3, box.y() + 3, 0, 0, 16, 16, 16, 16);
+        if (remaining > 0 && total > 0) {
+            double ratio = Math.min(1.0, (double) remaining / total);
+            int shadeTop = box.bottom() - (int) Math.round(box.height() * ratio);
+            graphics.fill(box.x(), shadeTop, box.right(), box.bottom(), COOLDOWN_SHADE);
+            String seconds = remaining >= 200 ? Integer.toString(remaining / 20)
+                    : String.format(Locale.ROOT, "%.1f", remaining / 20.0);
             graphics.pose().pushPose();
             graphics.pose().translate(0.0F, 0.0F, 200.0F);
-            graphics.drawString(font, key, x + 1, top + 1, 0xE8C66A);
+            graphics.drawString(font, seconds, box.right() - font.width(seconds) - 1, box.bottom() - font.lineHeight,
+                    0xFFFFFF);
             graphics.pose().popPose();
-            if (remaining > 0 && total > 0) {
-                double ratio = Math.min(1.0, (double) remaining / total);
-                int shadeTop = top + size - (int) Math.round(size * ratio);
-                graphics.fill(x, shadeTop, x + size, top + size, COOLDOWN_SHADE);
-                String seconds = remaining >= 200 ? Integer.toString(remaining / 20)
-                        : String.format(Locale.ROOT, "%.1f", remaining / 20.0);
-                graphics.drawString(font, seconds, x + size - font.width(seconds) - 1, top + size - font.lineHeight,
-                        0xFFFFFF);
-            } else {
-                graphics.renderOutline(x, top, size, size, 0xFF7CFC7C);
-            }
-            if (ultimate) {
-                graphics.renderOutline(x - 1, top - 1, size + 2, size + 2, 0xFFE8C66A);
-            }
-            x += size + 2;
+        } else {
+            graphics.renderOutline(box.x(), box.y(), box.width(), box.height(), 0xFF7CFC7C);
         }
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, 200.0F);
+        graphics.drawString(font, key, box.x() + 1, box.y() + 1, 0xE8C66A);
+        graphics.pose().popPose();
     }
 
     /** The skill's icon (tools/art, 16x16, frame coloured by job). */
@@ -190,36 +201,27 @@ public final class CombatHudOverlay implements IGuiOverlay {
         return new net.minecraft.resources.ResourceLocation("eternalrealm", "textures/gui/skill/" + skillId + ".png");
     }
 
-    private static void renderSkill(GuiGraphics graphics, Font font, Combatant local, WeaponProfile weapon, long now,
-                                    int screenHeight) {
-        Component name = Component.translatable("hud.eternalrealm.combat.skill",
-                ClientKeyMappings.WEAPON_SKILL.getTranslatedKeyMessage(),
-                Component.translatable(weapon.skill().translationKey()));
+    /** The weapon skill box with its name above it, then the job skills. */
+    private static void renderSkills(GuiGraphics graphics, Font font, Combatant local, WeaponProfile weapon, long now,
+                                     HudLayout.Layout layout) {
         int remaining = local.skillCooldownRemaining(now);
-        Component state = remaining > 0
-                ? Component.translatable("hud.eternalrealm.combat.cooldown",
-                String.format(Locale.ROOT, "%.1f", remaining / 20.0))
-                : Component.translatable("hud.eternalrealm.combat.ready");
-        int width = Math.max(font.width(name), font.width(state)) + 8 + 18;
-        int height = font.lineHeight * 2 + 6;
-        int left = 4;
-        int top = screenHeight - height - 4;
-        graphics.fill(left, top, left + width, top + height, PANEL);
-        if (remaining > 0 && local.skillCooldownTotal() > 0) {
-            double ratio = Math.min(1.0, (double) remaining / local.skillCooldownTotal());
-            int shadeTop = top + height - (int) Math.round(height * ratio);
-            graphics.fill(left, shadeTop, left + width, top + height, COOLDOWN_SHADE);
-        }
-        graphics.blit(skillIcon(weapon.skill().id()), left + 3, top + (height - 16) / 2, 0, 0, 16, 16, 16, 16);
-        graphics.drawString(font, name, left + 22, top + 3, 0xFFFFFF);
-        graphics.drawString(font, state, left + 22, top + 4 + font.lineHeight, remaining > 0 ? 0xB0B0B0 : 0x7CFC7C);
+        Rect box = layout.weaponSkill();
+        skillBox(graphics, font, box, skillIcon(weapon.skill().id()), ClientKeyMappings.WEAPON_SKILL.getTranslatedKeyMessage(),
+                remaining, local.skillCooldownTotal());
+        Rect label = layout.weaponLabel();
+        String name = font.plainSubstrByWidth(Component.translatable(weapon.skill().translationKey()).getString(),
+                label.width());
+        graphics.drawString(font, name, label.x(), label.y() + 1, remaining > 0 ? 0xFF9A9A9A : 0xFFFFE8B0, true);
+        renderJobSkills(graphics, font, local, now, layout.jobSlots());
+    }
 
-        renderJobSkills(graphics, font, local, now, left + width + 4, top + height);
-
+    /** The combo step ("2/4") to the right of the crosshair while a combo is running. */
+    private static void renderCombo(GuiGraphics graphics, Font font, Combatant local, WeaponProfile weapon, int centerX,
+                                    int centerY) {
         int step = local.currentComboStep();
         if (step >= 0) {
             Component combo = Component.translatable("hud.eternalrealm.combat.combo", step + 1, weapon.combo().size());
-            graphics.drawString(font, combo, left + 2, top - font.lineHeight - 2, 0xFFE8C66A);
+            graphics.drawString(font, combo, centerX + 14, centerY - 4, 0xFFE8C66A, true);
         }
     }
 }

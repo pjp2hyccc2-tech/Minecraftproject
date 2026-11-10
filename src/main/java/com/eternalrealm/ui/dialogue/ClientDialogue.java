@@ -213,6 +213,11 @@ public final class ClientDialogue {
         return ambient;
     }
 
+    /** Whether an ambient dialogue box is showing (the HUD layout makes room for it). */
+    public static boolean ambientShowing() {
+        return ambient != null && !(net.minecraft.client.Minecraft.getInstance().screen instanceof DialogueScreen);
+    }
+
     // ------------------------------------------------------------------ advancing
 
     /**

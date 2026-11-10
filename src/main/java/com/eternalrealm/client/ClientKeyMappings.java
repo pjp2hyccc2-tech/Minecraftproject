@@ -14,6 +14,8 @@ public final class ClientKeyMappings {
     public static final String CATEGORY = "key.categories." + ModInfo.MOD_ID;
 
     public static final KeyMapping OPEN_CHARACTER = key("open_character", GLFW.GLFW_KEY_K);
+    /** The equipment screen (the bag is vanilla's inventory key, E by default). */
+    public static final KeyMapping OPEN_EQUIPMENT = key("open_equipment", GLFW.GLFW_KEY_C);
     /** Hold to charge, release to strike. */
     public static final KeyMapping HEAVY_ATTACK = key("heavy_attack", GLFW.GLFW_KEY_R);
     public static final KeyMapping DODGE = key("dodge", GLFW.GLFW_KEY_LEFT_ALT);
@@ -25,7 +27,7 @@ public final class ClientKeyMappings {
     public static final KeyMapping JOB_SKILL_4 = key("job_skill_4", GLFW.GLFW_KEY_H);
     public static final KeyMapping JOB_SKILL_5 = key("job_skill_5", GLFW.GLFW_KEY_N);
     public static final KeyMapping JOB_SKILL_6 = key("job_skill_6", GLFW.GLFW_KEY_J);
-    /** Next line of the dialogue box above the hotbar (the dialogue window itself takes clicks, Space and Enter). */
+    /** Next line of the ambient dialogue box (the dialogue window itself takes clicks, Space and Enter). */
     public static final KeyMapping DIALOGUE_NEXT = key("dialogue_next", GLFW.GLFW_KEY_ENTER);
 
     /** The key of job skill slot {@code 1..6}. */

@@ -81,6 +81,31 @@ public final class BossHudOverlay implements IGuiOverlay {
         receivedAt = System.nanoTime();
     }
 
+    /** Rows of the damage ranking the server sent (the HUD layout makes room for them). */
+    public static int rankRows() {
+        JsonObject d = data;
+        return active() && d.has("rank") && d.get("rank").isJsonArray() ? d.getAsJsonArray("rank").size() : 0;
+    }
+
+    /** The first rows that fit, keeping the player's own row as the last one when it would be cut. */
+    private static java.util.List<JsonObject> rankRowsToShow(com.google.gson.JsonArray rank, int max) {
+        java.util.List<JsonObject> rows = new java.util.ArrayList<>();
+        for (JsonElement element : rank) {
+            if (element.isJsonObject()) {
+                rows.add(element.getAsJsonObject());
+            }
+        }
+        if (rows.size() <= max) {
+            return rows;
+        }
+        java.util.List<JsonObject> shown = new java.util.ArrayList<>(rows.subList(0, Math.max(0, max)));
+        JsonObject me = rows.stream().filter(row -> flag(row, "me")).findFirst().orElse(null);
+        if (me != null && !shown.contains(me) && !shown.isEmpty()) {
+            shown.set(shown.size() - 1, me);
+        }
+        return shown;
+    }
+
     /** Whether the HUD is up (other overlays may move out of its way). */
     public static boolean active() {
         return data != null && System.nanoTime() - receivedAt < STALE_NANOS;
@@ -133,9 +158,14 @@ public final class BossHudOverlay implements IGuiOverlay {
             ghostHp += (shownHp - ghostHp) * Math.min(1.0, dt * 2.2);
         }
 
-        int width = Mth.clamp(screenWidth - 240, 180, 320);
-        int left = (screenWidth - width) / 2;
-        int top = 6;
+        com.eternalrealm.hud.HudLayout.Layout layout = com.eternalrealm.ui.hud.HudFrame.layout();
+        com.eternalrealm.hud.Rect area = layout.boss().isEmpty()
+                ? new com.eternalrealm.hud.Rect((screenWidth - 180) / 2, 6, 180, com.eternalrealm.hud.HudLayout.BOSS_HEIGHT)
+                : layout.boss();
+        int width = area.width();
+        int left = area.x();
+        int top = area.y();
+        int centerX = area.centerX();
         double elapsed = (nowNanos - receivedAt) / 1.0E9;
         boolean dying = flag(d, "dying");
 
@@ -145,7 +175,7 @@ public final class BossHudOverlay implements IGuiOverlay {
         int remaining = hp <= 0.0 ? 0 : layerIndex + 1;
         Component level = Component.literal("Lv." + (int) number(d, "level", 1) + " ").withStyle(ChatFormatting.GRAY);
         Component title = level.copy().append(name.copy().withStyle(ChatFormatting.BOLD));
-        graphics.drawCenteredString(font, title, screenWidth / 2, top, 0xFFF4ECD8);
+        graphics.drawCenteredString(font, title, centerX, top, 0xFFF4ECD8);
         String difficulty = ClientUiState.stringOr(d, "difficulty", "normal");
         Component tag = Component.translatable(ClientUiState.stringOr(d, "difficultyKey", "difficulty.eternalrealm.normal"));
         int tagColor = switch (difficulty) {
@@ -194,7 +224,7 @@ public final class BossHudOverlay implements IGuiOverlay {
                     | (veil & 0xFFFFFF));
             Component label = Component.translatable(shield ? "hud.eternalrealm.boss.shield"
                     : dying ? "hud.eternalrealm.boss.defeated" : "hud.eternalrealm.boss.invulnerable");
-            graphics.drawCenteredString(font, label, screenWidth / 2, barTop + 1, 0xFFFFFFFF);
+            graphics.drawCenteredString(font, label, centerX, barTop + 1, 0xFFFFFFFF);
         }
 
         // ---- under the bar: HP, phases, enrage
@@ -204,7 +234,7 @@ public final class BossHudOverlay implements IGuiOverlay {
         int phases = Mth.clamp((int) number(d, "phases", 1), 1, 8);
         int phase = Mth.clamp((int) number(d, "phase", 0), 0, phases - 1);
         if (phases > 1) {
-            int pipLeft = screenWidth / 2 - (phases * 8) / 2;
+            int pipLeft = centerX - (phases * 8) / 2;
             for (int i = 0; i < phases; i++) {
                 int x = pipLeft + i * 8;
                 int pip = i < phase ? 0xFF5A5050 : i == phase ? 0xFFE84A3A : 0xFFE8C66A;
@@ -235,11 +265,11 @@ public final class BossHudOverlay implements IGuiOverlay {
             if (left0 > -0.1) {
                 double progress = Mth.clamp(1.0 - left0 / total, 0.0, 1.0);
                 int castWidth = Math.min(200, width - 40);
-                int castLeft = (screenWidth - castWidth) / 2;
+                int castLeft = centerX - castWidth / 2;
                 int castTop = infoTop + 22;
                 Component ability = Component.translatable(ClientUiState.stringOr(cast, "key", ""));
                 Component label = Component.literal("◆ ").append(ability).append(" ◆");
-                graphics.drawCenteredString(font, label, screenWidth / 2, castTop - 10, 0xFFFFC46A);
+                graphics.drawCenteredString(font, label, centerX, castTop - 10, 0xFFFFC46A);
                 graphics.fill(castLeft - 1, castTop - 1, castLeft + castWidth + 1, castTop + 5, GOLD);
                 graphics.fill(castLeft, castTop, castLeft + castWidth, castTop + 4, 0xFF201410);
                 boolean flash = left0 < 0.35;
@@ -249,19 +279,20 @@ public final class BossHudOverlay implements IGuiOverlay {
         }
 
         // ---- the damage ranking (right, below the minimap)
-        if (d.has("rank") && d.get("rank").isJsonArray() && !d.getAsJsonArray("rank").isEmpty()) {
-            int panelWidth = 118;
-            int panelLeft = screenWidth - 4 - panelWidth;
-            int rows = d.getAsJsonArray("rank").size();
-            int panelTop = Mth.clamp(screenHeight / 2 - 30, 150, Math.max(150, screenHeight - 24 - rows * 12));
+        com.eternalrealm.hud.Rect panel = layout.ranking();
+        if (d.has("rank") && d.get("rank").isJsonArray() && !d.getAsJsonArray("rank").isEmpty() && !panel.isEmpty()) {
+            int panelWidth = panel.width();
+            int panelLeft = panel.x();
+            java.util.List<JsonObject> shownRows = rankRowsToShow(d.getAsJsonArray("rank"), layout.rankingRows());
+            int rows = shownRows.size();
+            int panelTop = panel.y();
             graphics.fill(panelLeft - 1, panelTop - 1, panelLeft + panelWidth + 1, panelTop + 13 + rows * 12, BORDER);
             graphics.fill(panelLeft, panelTop, panelLeft + panelWidth, panelTop + 12 + rows * 12, 0xC0101014);
             graphics.drawString(font, Component.translatable("hud.eternalrealm.boss.ranking"), panelLeft + 4,
                     panelTop + 2, GOLD);
             int y = panelTop + 13;
             int lastPos = 0;
-            for (JsonElement element : d.getAsJsonArray("rank")) {
-                JsonObject row = element.getAsJsonObject();
+            for (JsonObject row : shownRows) {
                 int pos = (int) number(row, "pos", 0);
                 boolean me = flag(row, "me");
                 if (pos > lastPos + 1 && lastPos > 0) {

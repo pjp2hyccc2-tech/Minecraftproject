@@ -4064,5 +4064,11 @@
   "subtitles.eternalrealm.weapon_skill.quake": "大地が裂ける",
   "subtitles.eternalrealm.weapon_skill.sigil_burst": "魔弾が炸裂する",
   "subtitles.eternalrealm.weapon_skill.sigil_launch": "星紋の魔弾",
-  "subtitles.eternalrealm.weapon_skill.whirl": "旋風の刃"
+  "subtitles.eternalrealm.weapon_skill.whirl": "旋風の刃",
+  "key.eternalrealm.open_equipment": "装備",
+  "hud.eternalrealm.frame.points": "ステータスP %s・スキルP %s [%s]",
+  "hud.eternalrealm.quick.none_0": "回復薬を持っていません",
+  "hud.eternalrealm.quick.none_1": "スタミナトニックを持っていません",
+  "hud.eternalrealm.quick.none_2": "帰還の巻物を持っていません",
+  "message.eternalrealm.consumable.return_channel": "帰還の巻物を読んでいます… あと%s秒（動く・攻撃を受けると中断）"
 }

@@ -40,6 +40,7 @@ public final class PlayerConnectionEvents {
         jobRules.addProperty("resetGoldPerLevel", context.get().game().jobRules().skillResetGoldPerLevel());
         UiData.send(player, "job_rules", jobRules);
         context.get().game().parties().onLogin(player);
+        com.eternalrealm.item.forge.MainHand.ensureWeapon(player); // the main hand is slot 0 (no hotbar)
     }
 
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
