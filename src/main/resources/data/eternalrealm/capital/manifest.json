@@ -1,0 +1,2771 @@
+{
+ "format": 1,
+ "build": "e2dd178db5071935",
+ "tileSize": 32,
+ "minY": -32,
+ "maxY": 159,
+ "palette": [
+  "eternalrealm:void",
+  "minecraft:air",
+  "eternalrealm:carved_castle_stone",
+  "eternalrealm:castle_brick_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:castle_brick_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:castle_brick_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:castle_brick_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:castle_brick_wall",
+  "eternalrealm:castle_bricks",
+  "eternalrealm:castle_crest_stone",
+  "eternalrealm:castle_pillar[axis=y]",
+  "eternalrealm:chandelier",
+  "eternalrealm:gilded_finial",
+  "eternalrealm:gilded_trim",
+  "eternalrealm:gilded_trim_slab[type=bottom]",
+  "eternalrealm:gilded_trim_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:gilded_trim_stairs[facing=east,half=top,shape=straight]",
+  "eternalrealm:gilded_trim_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:gilded_trim_stairs[facing=north,half=top,shape=straight]",
+  "eternalrealm:gilded_trim_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:gilded_trim_stairs[facing=south,half=top,shape=straight]",
+  "eternalrealm:gilded_trim_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:gilded_trim_stairs[facing=west,half=top,shape=straight]",
+  "eternalrealm:light_shaft[facing=east]",
+  "eternalrealm:light_shaft[facing=south]",
+  "eternalrealm:light_shaft[facing=west]",
+  "eternalrealm:pale_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:pale_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:pale_roof_tiles",
+  "eternalrealm:royal_roof_tile_slab[type=bottom]",
+  "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_left]",
+  "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=outer_right]",
+  "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_left]",
+  "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=outer_right]",
+  "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tiles",
+  "eternalrealm:smooth_castle_stone",
+  "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+  "eternalrealm:smooth_castle_stone_slab[type=top]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=east,half=top,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=north,half=top,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=south,half=top,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:smooth_castle_stone_stairs[facing=west,half=top,shape=straight]",
+  "eternalrealm:white_plaster",
+  "minecraft:allium",
+  "minecraft:amethyst_block",
+  "minecraft:amethyst_cluster[facing=down]",
+  "minecraft:amethyst_cluster[facing=up]",
+  "minecraft:andesite",
+  "minecraft:azalea_leaves[distance=1,persistent=true]",
+  "minecraft:azure_bluet",
+  "minecraft:barrel[facing=up]",
+  "minecraft:bell[attachment=ceiling,facing=north]",
+  "minecraft:birch_leaves[distance=1,persistent=true]",
+  "minecraft:birch_log[axis=x]",
+  "minecraft:birch_log[axis=y]",
+  "minecraft:birch_log[axis=z]",
+  "minecraft:blue_banner[rotation=0]",
+  "minecraft:blue_bed[facing=east,part=foot]",
+  "minecraft:blue_bed[facing=east,part=head]",
+  "minecraft:blue_bed[facing=west,part=foot]",
+  "minecraft:blue_bed[facing=west,part=head]",
+  "minecraft:blue_carpet",
+  "minecraft:blue_orchid",
+  "minecraft:blue_stained_glass",
+  "minecraft:blue_stained_glass_pane",
+  "minecraft:blue_wall_banner[facing=east]",
+  "minecraft:blue_wall_banner[facing=north]",
+  "minecraft:blue_wall_banner[facing=south]",
+  "minecraft:blue_wall_banner[facing=west]",
+  "minecraft:blue_wool",
+  "minecraft:bookshelf",
+  "minecraft:brewing_stand[has_bottle_0=true,has_bottle_2=true]",
+  "minecraft:cake",
+  "minecraft:cake[bites=3]",
+  "minecraft:calcite",
+  "minecraft:campfire[lit=true]",
+  "minecraft:candle[candles=2,lit=true]",
+  "minecraft:cartography_table",
+  "minecraft:carved_pumpkin[facing=south]",
+  "minecraft:chain[axis=y]",
+  "minecraft:chest[facing=east,type=single]",
+  "minecraft:chest[facing=west,type=single]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_quartz_block",
+  "minecraft:clay",
+  "minecraft:coarse_dirt",
+  "minecraft:cobblestone",
+  "minecraft:cornflower",
+  "minecraft:cracked_stone_bricks",
+  "minecraft:dandelion",
+  "minecraft:dark_oak_fence",
+  "minecraft:dark_oak_leaves[distance=1,persistent=true]",
+  "minecraft:dark_oak_log[axis=x]",
+  "minecraft:dark_oak_log[axis=y]",
+  "minecraft:dark_oak_log[axis=z]",
+  "minecraft:dark_oak_planks",
+  "minecraft:dark_oak_sign[rotation=0]",
+  "minecraft:dark_oak_sign[rotation=12]",
+  "minecraft:dark_oak_slab[type=top]",
+  "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=east,half=top,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
+  "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:dark_oak_wall_sign[facing=east]",
+  "minecraft:deepslate_tiles",
+  "minecraft:diorite",
+  "minecraft:dirt",
+  "minecraft:dirt_path",
+  "minecraft:end_rod[facing=up]",
+  "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
+  "minecraft:glass",
+  "minecraft:glass_pane",
+  "minecraft:grass",
+  "minecraft:grass_block",
+  "minecraft:gravel",
+  "minecraft:grindstone[face=floor,facing=south]",
+  "minecraft:hanging_roots",
+  "minecraft:hay_block[axis=y]",
+  "minecraft:iron_bars",
+  "minecraft:lantern[hanging=false]",
+  "minecraft:lantern[hanging=true]",
+  "minecraft:lapis_block",
+  "minecraft:lectern[facing=east,has_book=true]",
+  "minecraft:lectern[facing=south,has_book=false]",
+  "minecraft:lectern[facing=south,has_book=true]",
+  "minecraft:light_blue_stained_glass",
+  "minecraft:light_blue_stained_glass_pane",
+  "minecraft:lightning_rod[facing=south]",
+  "minecraft:lily_of_the_valley",
+  "minecraft:moss_block",
+  "minecraft:mossy_cobblestone",
+  "minecraft:mossy_stone_bricks",
+  "minecraft:oak_leaves[distance=1,persistent=true]",
+  "minecraft:oak_log[axis=x]",
+  "minecraft:oak_log[axis=y]",
+  "minecraft:oak_log[axis=z]",
+  "minecraft:oxeye_daisy",
+  "minecraft:polished_andesite",
+  "minecraft:polished_blackstone",
+  "minecraft:polished_blackstone_brick_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:polished_blackstone_bricks",
+  "minecraft:polished_blackstone_wall",
+  "minecraft:polished_deepslate",
+  "minecraft:polished_deepslate_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:polished_diorite",
+  "minecraft:poppy",
+  "minecraft:potted_azalea_bush",
+  "minecraft:potted_red_tulip",
+  "minecraft:purple_stained_glass",
+  "minecraft:purple_stained_glass_pane",
+  "minecraft:quartz_pillar[axis=y]",
+  "minecraft:quartz_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:red_carpet",
+  "minecraft:red_stained_glass_pane",
+  "minecraft:red_tulip",
+  "minecraft:rooted_dirt",
+  "minecraft:sand",
+  "minecraft:smooth_quartz",
+  "minecraft:smooth_quartz_slab[type=bottom]",
+  "minecraft:smooth_stone",
+  "minecraft:snow_block",
+  "minecraft:soul_lantern[hanging=false]",
+  "minecraft:soul_lantern[hanging=true]",
+  "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:spruce_fence",
+  "minecraft:spruce_leaves[distance=1,persistent=true]",
+  "minecraft:spruce_log[axis=y]",
+  "minecraft:spruce_planks",
+  "minecraft:spruce_slab[type=top]",
+  "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:stone",
+  "minecraft:stone_brick_slab[type=bottom]",
+  "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:stone_brick_wall",
+  "minecraft:stone_bricks",
+  "minecraft:stripped_dark_oak_log[axis=x]",
+  "minecraft:stripped_dark_oak_log[axis=z]",
+  "minecraft:target",
+  "minecraft:tuff",
+  "minecraft:vine[east=true]",
+  "minecraft:vine[north=true]",
+  "minecraft:vine[south=true]",
+  "minecraft:vine[west=true]",
+  "minecraft:water[level=0]",
+  "minecraft:water[level=1]",
+  "minecraft:water[level=8]",
+  "minecraft:waxed_cut_copper",
+  "minecraft:white_candle[candles=2,lit=true]",
+  "minecraft:white_candle[candles=3,lit=true]",
+  "minecraft:white_candle[candles=4,lit=true]",
+  "minecraft:white_carpet",
+  "minecraft:white_stained_glass_pane",
+  "minecraft:white_tulip",
+  "minecraft:white_wool",
+  "minecraft:yellow_carpet",
+  "minecraft:yellow_stained_glass",
+  "minecraft:yellow_stained_glass_pane"
+ ],
+ "tiles": [
+  {
+   "x": -6,
+   "z": -7,
+   "file": "tiles/-6_-7.bin"
+  },
+  {
+   "x": -6,
+   "z": -6,
+   "file": "tiles/-6_-6.bin"
+  },
+  {
+   "x": -6,
+   "z": -5,
+   "file": "tiles/-6_-5.bin"
+  },
+  {
+   "x": -6,
+   "z": -4,
+   "file": "tiles/-6_-4.bin"
+  },
+  {
+   "x": -6,
+   "z": -3,
+   "file": "tiles/-6_-3.bin"
+  },
+  {
+   "x": -6,
+   "z": -2,
+   "file": "tiles/-6_-2.bin"
+  },
+  {
+   "x": -6,
+   "z": -1,
+   "file": "tiles/-6_-1.bin"
+  },
+  {
+   "x": -6,
+   "z": 0,
+   "file": "tiles/-6_0.bin"
+  },
+  {
+   "x": -6,
+   "z": 1,
+   "file": "tiles/-6_1.bin"
+  },
+  {
+   "x": -6,
+   "z": 2,
+   "file": "tiles/-6_2.bin"
+  },
+  {
+   "x": -6,
+   "z": 3,
+   "file": "tiles/-6_3.bin"
+  },
+  {
+   "x": -6,
+   "z": 4,
+   "file": "tiles/-6_4.bin"
+  },
+  {
+   "x": -6,
+   "z": 5,
+   "file": "tiles/-6_5.bin"
+  },
+  {
+   "x": -5,
+   "z": -7,
+   "file": "tiles/-5_-7.bin"
+  },
+  {
+   "x": -5,
+   "z": -6,
+   "file": "tiles/-5_-6.bin"
+  },
+  {
+   "x": -5,
+   "z": -5,
+   "file": "tiles/-5_-5.bin"
+  },
+  {
+   "x": -5,
+   "z": -4,
+   "file": "tiles/-5_-4.bin"
+  },
+  {
+   "x": -5,
+   "z": -3,
+   "file": "tiles/-5_-3.bin"
+  },
+  {
+   "x": -5,
+   "z": -2,
+   "file": "tiles/-5_-2.bin"
+  },
+  {
+   "x": -5,
+   "z": -1,
+   "file": "tiles/-5_-1.bin"
+  },
+  {
+   "x": -5,
+   "z": 0,
+   "file": "tiles/-5_0.bin"
+  },
+  {
+   "x": -5,
+   "z": 1,
+   "file": "tiles/-5_1.bin"
+  },
+  {
+   "x": -5,
+   "z": 2,
+   "file": "tiles/-5_2.bin"
+  },
+  {
+   "x": -5,
+   "z": 3,
+   "file": "tiles/-5_3.bin"
+  },
+  {
+   "x": -5,
+   "z": 4,
+   "file": "tiles/-5_4.bin"
+  },
+  {
+   "x": -5,
+   "z": 5,
+   "file": "tiles/-5_5.bin"
+  },
+  {
+   "x": -4,
+   "z": -7,
+   "file": "tiles/-4_-7.bin"
+  },
+  {
+   "x": -4,
+   "z": -6,
+   "file": "tiles/-4_-6.bin"
+  },
+  {
+   "x": -4,
+   "z": -5,
+   "file": "tiles/-4_-5.bin"
+  },
+  {
+   "x": -4,
+   "z": -4,
+   "file": "tiles/-4_-4.bin"
+  },
+  {
+   "x": -4,
+   "z": -3,
+   "file": "tiles/-4_-3.bin"
+  },
+  {
+   "x": -4,
+   "z": -2,
+   "file": "tiles/-4_-2.bin"
+  },
+  {
+   "x": -4,
+   "z": -1,
+   "file": "tiles/-4_-1.bin"
+  },
+  {
+   "x": -4,
+   "z": 0,
+   "file": "tiles/-4_0.bin"
+  },
+  {
+   "x": -4,
+   "z": 1,
+   "file": "tiles/-4_1.bin"
+  },
+  {
+   "x": -4,
+   "z": 2,
+   "file": "tiles/-4_2.bin"
+  },
+  {
+   "x": -4,
+   "z": 3,
+   "file": "tiles/-4_3.bin"
+  },
+  {
+   "x": -4,
+   "z": 4,
+   "file": "tiles/-4_4.bin"
+  },
+  {
+   "x": -4,
+   "z": 5,
+   "file": "tiles/-4_5.bin"
+  },
+  {
+   "x": -3,
+   "z": -7,
+   "file": "tiles/-3_-7.bin"
+  },
+  {
+   "x": -3,
+   "z": -6,
+   "file": "tiles/-3_-6.bin"
+  },
+  {
+   "x": -3,
+   "z": -5,
+   "file": "tiles/-3_-5.bin"
+  },
+  {
+   "x": -3,
+   "z": -4,
+   "file": "tiles/-3_-4.bin"
+  },
+  {
+   "x": -3,
+   "z": -3,
+   "file": "tiles/-3_-3.bin"
+  },
+  {
+   "x": -3,
+   "z": -2,
+   "file": "tiles/-3_-2.bin"
+  },
+  {
+   "x": -3,
+   "z": -1,
+   "file": "tiles/-3_-1.bin"
+  },
+  {
+   "x": -3,
+   "z": 0,
+   "file": "tiles/-3_0.bin"
+  },
+  {
+   "x": -3,
+   "z": 1,
+   "file": "tiles/-3_1.bin"
+  },
+  {
+   "x": -3,
+   "z": 2,
+   "file": "tiles/-3_2.bin"
+  },
+  {
+   "x": -3,
+   "z": 3,
+   "file": "tiles/-3_3.bin"
+  },
+  {
+   "x": -3,
+   "z": 4,
+   "file": "tiles/-3_4.bin"
+  },
+  {
+   "x": -3,
+   "z": 5,
+   "file": "tiles/-3_5.bin"
+  },
+  {
+   "x": -2,
+   "z": -7,
+   "file": "tiles/-2_-7.bin"
+  },
+  {
+   "x": -2,
+   "z": -6,
+   "file": "tiles/-2_-6.bin"
+  },
+  {
+   "x": -2,
+   "z": -5,
+   "file": "tiles/-2_-5.bin"
+  },
+  {
+   "x": -2,
+   "z": -4,
+   "file": "tiles/-2_-4.bin"
+  },
+  {
+   "x": -2,
+   "z": -3,
+   "file": "tiles/-2_-3.bin"
+  },
+  {
+   "x": -2,
+   "z": -2,
+   "file": "tiles/-2_-2.bin"
+  },
+  {
+   "x": -2,
+   "z": -1,
+   "file": "tiles/-2_-1.bin"
+  },
+  {
+   "x": -2,
+   "z": 0,
+   "file": "tiles/-2_0.bin"
+  },
+  {
+   "x": -2,
+   "z": 1,
+   "file": "tiles/-2_1.bin"
+  },
+  {
+   "x": -2,
+   "z": 2,
+   "file": "tiles/-2_2.bin"
+  },
+  {
+   "x": -2,
+   "z": 3,
+   "file": "tiles/-2_3.bin"
+  },
+  {
+   "x": -2,
+   "z": 4,
+   "file": "tiles/-2_4.bin"
+  },
+  {
+   "x": -2,
+   "z": 5,
+   "file": "tiles/-2_5.bin"
+  },
+  {
+   "x": -1,
+   "z": -7,
+   "file": "tiles/-1_-7.bin"
+  },
+  {
+   "x": -1,
+   "z": -6,
+   "file": "tiles/-1_-6.bin"
+  },
+  {
+   "x": -1,
+   "z": -5,
+   "file": "tiles/-1_-5.bin"
+  },
+  {
+   "x": -1,
+   "z": -4,
+   "file": "tiles/-1_-4.bin"
+  },
+  {
+   "x": -1,
+   "z": -3,
+   "file": "tiles/-1_-3.bin"
+  },
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
+  {
+   "x": -1,
+   "z": -1,
+   "file": "tiles/-1_-1.bin"
+  },
+  {
+   "x": -1,
+   "z": 0,
+   "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": -1,
+   "z": 1,
+   "file": "tiles/-1_1.bin"
+  },
+  {
+   "x": -1,
+   "z": 2,
+   "file": "tiles/-1_2.bin"
+  },
+  {
+   "x": -1,
+   "z": 3,
+   "file": "tiles/-1_3.bin"
+  },
+  {
+   "x": -1,
+   "z": 4,
+   "file": "tiles/-1_4.bin"
+  },
+  {
+   "x": -1,
+   "z": 5,
+   "file": "tiles/-1_5.bin"
+  },
+  {
+   "x": 0,
+   "z": -7,
+   "file": "tiles/0_-7.bin"
+  },
+  {
+   "x": 0,
+   "z": -6,
+   "file": "tiles/0_-6.bin"
+  },
+  {
+   "x": 0,
+   "z": -5,
+   "file": "tiles/0_-5.bin"
+  },
+  {
+   "x": 0,
+   "z": -4,
+   "file": "tiles/0_-4.bin"
+  },
+  {
+   "x": 0,
+   "z": -3,
+   "file": "tiles/0_-3.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
+  },
+  {
+   "x": 0,
+   "z": -1,
+   "file": "tiles/0_-1.bin"
+  },
+  {
+   "x": 0,
+   "z": 0,
+   "file": "tiles/0_0.bin"
+  },
+  {
+   "x": 0,
+   "z": 1,
+   "file": "tiles/0_1.bin"
+  },
+  {
+   "x": 0,
+   "z": 2,
+   "file": "tiles/0_2.bin"
+  },
+  {
+   "x": 0,
+   "z": 3,
+   "file": "tiles/0_3.bin"
+  },
+  {
+   "x": 0,
+   "z": 4,
+   "file": "tiles/0_4.bin"
+  },
+  {
+   "x": 0,
+   "z": 5,
+   "file": "tiles/0_5.bin"
+  },
+  {
+   "x": 1,
+   "z": -7,
+   "file": "tiles/1_-7.bin"
+  },
+  {
+   "x": 1,
+   "z": -6,
+   "file": "tiles/1_-6.bin"
+  },
+  {
+   "x": 1,
+   "z": -5,
+   "file": "tiles/1_-5.bin"
+  },
+  {
+   "x": 1,
+   "z": -4,
+   "file": "tiles/1_-4.bin"
+  },
+  {
+   "x": 1,
+   "z": -3,
+   "file": "tiles/1_-3.bin"
+  },
+  {
+   "x": 1,
+   "z": -2,
+   "file": "tiles/1_-2.bin"
+  },
+  {
+   "x": 1,
+   "z": -1,
+   "file": "tiles/1_-1.bin"
+  },
+  {
+   "x": 1,
+   "z": 0,
+   "file": "tiles/1_0.bin"
+  },
+  {
+   "x": 1,
+   "z": 1,
+   "file": "tiles/1_1.bin"
+  },
+  {
+   "x": 1,
+   "z": 2,
+   "file": "tiles/1_2.bin"
+  },
+  {
+   "x": 1,
+   "z": 3,
+   "file": "tiles/1_3.bin"
+  },
+  {
+   "x": 1,
+   "z": 4,
+   "file": "tiles/1_4.bin"
+  },
+  {
+   "x": 1,
+   "z": 5,
+   "file": "tiles/1_5.bin"
+  },
+  {
+   "x": 2,
+   "z": -7,
+   "file": "tiles/2_-7.bin"
+  },
+  {
+   "x": 2,
+   "z": -6,
+   "file": "tiles/2_-6.bin"
+  },
+  {
+   "x": 2,
+   "z": -5,
+   "file": "tiles/2_-5.bin"
+  },
+  {
+   "x": 2,
+   "z": -4,
+   "file": "tiles/2_-4.bin"
+  },
+  {
+   "x": 2,
+   "z": -3,
+   "file": "tiles/2_-3.bin"
+  },
+  {
+   "x": 2,
+   "z": -2,
+   "file": "tiles/2_-2.bin"
+  },
+  {
+   "x": 2,
+   "z": -1,
+   "file": "tiles/2_-1.bin"
+  },
+  {
+   "x": 2,
+   "z": 0,
+   "file": "tiles/2_0.bin"
+  },
+  {
+   "x": 2,
+   "z": 1,
+   "file": "tiles/2_1.bin"
+  },
+  {
+   "x": 2,
+   "z": 2,
+   "file": "tiles/2_2.bin"
+  },
+  {
+   "x": 2,
+   "z": 3,
+   "file": "tiles/2_3.bin"
+  },
+  {
+   "x": 2,
+   "z": 4,
+   "file": "tiles/2_4.bin"
+  },
+  {
+   "x": 2,
+   "z": 5,
+   "file": "tiles/2_5.bin"
+  },
+  {
+   "x": 3,
+   "z": -7,
+   "file": "tiles/3_-7.bin"
+  },
+  {
+   "x": 3,
+   "z": -6,
+   "file": "tiles/3_-6.bin"
+  },
+  {
+   "x": 3,
+   "z": -5,
+   "file": "tiles/3_-5.bin"
+  },
+  {
+   "x": 3,
+   "z": -4,
+   "file": "tiles/3_-4.bin"
+  },
+  {
+   "x": 3,
+   "z": -3,
+   "file": "tiles/3_-3.bin"
+  },
+  {
+   "x": 3,
+   "z": -2,
+   "file": "tiles/3_-2.bin"
+  },
+  {
+   "x": 3,
+   "z": -1,
+   "file": "tiles/3_-1.bin"
+  },
+  {
+   "x": 3,
+   "z": 0,
+   "file": "tiles/3_0.bin"
+  },
+  {
+   "x": 3,
+   "z": 1,
+   "file": "tiles/3_1.bin"
+  },
+  {
+   "x": 3,
+   "z": 2,
+   "file": "tiles/3_2.bin"
+  },
+  {
+   "x": 3,
+   "z": 3,
+   "file": "tiles/3_3.bin"
+  },
+  {
+   "x": 3,
+   "z": 4,
+   "file": "tiles/3_4.bin"
+  },
+  {
+   "x": 3,
+   "z": 5,
+   "file": "tiles/3_5.bin"
+  },
+  {
+   "x": 4,
+   "z": -7,
+   "file": "tiles/4_-7.bin"
+  },
+  {
+   "x": 4,
+   "z": -6,
+   "file": "tiles/4_-6.bin"
+  },
+  {
+   "x": 4,
+   "z": -5,
+   "file": "tiles/4_-5.bin"
+  },
+  {
+   "x": 4,
+   "z": -4,
+   "file": "tiles/4_-4.bin"
+  },
+  {
+   "x": 4,
+   "z": -3,
+   "file": "tiles/4_-3.bin"
+  },
+  {
+   "x": 4,
+   "z": -2,
+   "file": "tiles/4_-2.bin"
+  },
+  {
+   "x": 4,
+   "z": -1,
+   "file": "tiles/4_-1.bin"
+  },
+  {
+   "x": 4,
+   "z": 0,
+   "file": "tiles/4_0.bin"
+  },
+  {
+   "x": 4,
+   "z": 1,
+   "file": "tiles/4_1.bin"
+  },
+  {
+   "x": 4,
+   "z": 2,
+   "file": "tiles/4_2.bin"
+  },
+  {
+   "x": 4,
+   "z": 3,
+   "file": "tiles/4_3.bin"
+  },
+  {
+   "x": 4,
+   "z": 4,
+   "file": "tiles/4_4.bin"
+  },
+  {
+   "x": 4,
+   "z": 5,
+   "file": "tiles/4_5.bin"
+  },
+  {
+   "x": 5,
+   "z": -7,
+   "file": "tiles/5_-7.bin"
+  },
+  {
+   "x": 5,
+   "z": -6,
+   "file": "tiles/5_-6.bin"
+  },
+  {
+   "x": 5,
+   "z": -5,
+   "file": "tiles/5_-5.bin"
+  },
+  {
+   "x": 5,
+   "z": -4,
+   "file": "tiles/5_-4.bin"
+  },
+  {
+   "x": 5,
+   "z": -3,
+   "file": "tiles/5_-3.bin"
+  },
+  {
+   "x": 5,
+   "z": -2,
+   "file": "tiles/5_-2.bin"
+  },
+  {
+   "x": 5,
+   "z": -1,
+   "file": "tiles/5_-1.bin"
+  },
+  {
+   "x": 5,
+   "z": 0,
+   "file": "tiles/5_0.bin"
+  },
+  {
+   "x": 5,
+   "z": 1,
+   "file": "tiles/5_1.bin"
+  },
+  {
+   "x": 5,
+   "z": 2,
+   "file": "tiles/5_2.bin"
+  },
+  {
+   "x": 5,
+   "z": 3,
+   "file": "tiles/5_3.bin"
+  },
+  {
+   "x": 5,
+   "z": 4,
+   "file": "tiles/5_4.bin"
+  },
+  {
+   "x": 5,
+   "z": 5,
+   "file": "tiles/5_5.bin"
+  }
+ ],
+ "blockEntities": [
+  {
+   "pos": [
+    -101,
+    50,
+    -126
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -98,
+    52,
+    -158
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -88,
+    29,
+    -133
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"ラズロ捕縛：正正丅\"}','{\"text\":\"脱獄　　：正正丅\"}','{\"text\":\"（次こそ）\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -84,
+    31,
+    -134
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -83,
+    28,
+    -132
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"騎士団日誌\",author:\"アデル\",resolved:1b,pages:['{\"text\": \"盗賊王ラズロ、十三度目の脱獄。\\\\n陛下の宝冠も持ち去られた。\"}','{\"text\": \"陛下、本日も出陣を希望。\\\\nお止めした。今月七回目。\"}','{\"text\": \"差し入れの焼き菓子は\\\\n団員には内密に保管のこと。\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    -82,
+    32,
+    -127
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -76,
+    32,
+    -127
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -75,
+    53,
+    -97
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -73,
+    57,
+    -180
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -55,
+    41,
+    -140
+   ],
+   "nbt": "{Length:16.0f,Width:4.0f,Height:10.0f,Pitch:35.0f}"
+  },
+  {
+   "pos": [
+    -55,
+    41,
+    -134
+   ],
+   "nbt": "{Length:16.0f,Width:4.0f,Height:10.0f,Pitch:35.0f}"
+  },
+  {
+   "pos": [
+    -55,
+    41,
+    -128
+   ],
+   "nbt": "{Length:16.0f,Width:4.0f,Height:10.0f,Pitch:35.0f}"
+  },
+  {
+   "pos": [
+    -55,
+    41,
+    -122
+   ],
+   "nbt": "{Length:16.0f,Width:4.0f,Height:10.0f,Pitch:35.0f}"
+  },
+  {
+   "pos": [
+    -52,
+    33,
+    -143
+   ],
+   "nbt": "{Book:{id:\"minecraft:written_book\",Count:1b,tag:{title:\"星詠みの覚え書き\",author:\"ノクス\",resolved:1b,pages:['{\"text\": \"黒き月、新月。星門は開いた。\\\\n……また会えたな。\"}','{\"text\": \"菓子の在庫：残り三つ。\\\\n至急補充のこと。\"}','{\"text\": \"異界の者は、この世界の『終わり』に縛られない。\\\\nだが十四日目の夜には、必ず帰すこと。\"}']}},Page:0}"
+  },
+  {
+   "pos": [
+    -48,
+    77,
+    -158
+   ],
+   "nbt": "{Patterns:[{Pattern:\"glb\",Color:4},{Pattern:\"flo\",Color:3},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -47,
+    45,
+    -95
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -33,
+    41,
+    -140
+   ],
+   "nbt": "{Length:16.0f,Width:4.0f,Height:10.0f,Pitch:35.0f}"
+  },
+  {
+   "pos": [
+    -33,
+    41,
+    -134
+   ],
+   "nbt": "{Length:16.0f,Width:4.0f,Height:10.0f,Pitch:35.0f}"
+  },
+  {
+   "pos": [
+    -33,
+    41,
+    -128
+   ],
+   "nbt": "{Length:16.0f,Width:4.0f,Height:10.0f,Pitch:35.0f}"
+  },
+  {
+   "pos": [
+    -33,
+    41,
+    -122
+   ],
+   "nbt": "{Length:16.0f,Width:4.0f,Height:10.0f,Pitch:35.0f}"
+  },
+  {
+   "pos": [
+    -22,
+    36,
+    -133
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -18,
+    68,
+    -174
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -14,
+    44,
+    -181
+   ],
+   "nbt": "{Length:20.0f,Width:4.0f,Height:14.0f,Pitch:33.0f}"
+  },
+  {
+   "pos": [
+    -14,
+    44,
+    -174
+   ],
+   "nbt": "{Length:20.0f,Width:4.0f,Height:14.0f,Pitch:33.0f}"
+  },
+  {
+   "pos": [
+    -14,
+    44,
+    -167
+   ],
+   "nbt": "{Length:20.0f,Width:4.0f,Height:14.0f,Pitch:33.0f}"
+  },
+  {
+   "pos": [
+    -14,
+    48,
+    -178
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -14,
+    48,
+    -170
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -14,
+    50,
+    -178
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -14,
+    50,
+    -170
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -12,
+    14,
+    -158
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -12,
+    14,
+    -152
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -11,
+    38,
+    -87
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -11,
+    40,
+    -87
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -11,
+    42,
+    -87
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -11,
+    44,
+    -87
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -11,
+    48,
+    -144
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -11,
+    48,
+    -138
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -11,
+    48,
+    -132
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -11,
+    48,
+    -126
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -11,
+    48,
+    -120
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    -10,
+    48,
+    -147
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    48,
+    -141
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    48,
+    -135
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    48,
+    -129
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    48,
+    -123
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    48,
+    -117
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    50,
+    -147
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    50,
+    -141
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    50,
+    -135
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    50,
+    -129
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    50,
+    -123
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -10,
+    50,
+    -117
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    3,
+    -55
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    9,
+    -65
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    15,
+    -75
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    68,
+    -189
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -9,
+    68,
+    -159
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -7,
+    33,
+    -127
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"星門の間\"}','{\"text\":\"Hall of the\"}','{\"text\":\"Star Gate\"}','{\"text\":\"↓\"}'],color:\"blue\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"blue\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -6,
+    43,
+    -113
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -6,
+    45,
+    -113
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -6,
+    46,
+    -185
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -6,
+    47,
+    -113
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -6,
+    48,
+    -185
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -4,
+    43,
+    -100
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -4,
+    43,
+    -88
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -4,
+    50,
+    -148
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -4,
+    52,
+    -148
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -4,
+    54,
+    -148
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -3,
+    14,
+    -167
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -3,
+    14,
+    -143
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    -2,
+    44,
+    -181
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    0,
+    30,
+    -155
+   ],
+   "nbt": "{Length:24.0f,Width:3.0f,Height:3.0f,Pitch:89.0f}"
+  },
+  {
+   "pos": [
+    0,
+    66,
+    -132
+   ],
+   "nbt": "{Length:34.0f,Width:3.0f,Height:3.0f,Pitch:89.0f}"
+  },
+  {
+   "pos": [
+    2,
+    44,
+    -181
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    3,
+    14,
+    -167
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    3,
+    14,
+    -143
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    4,
+    43,
+    -100
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    4,
+    43,
+    -88
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    4,
+    50,
+    -148
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    4,
+    52,
+    -148
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    4,
+    54,
+    -148
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    6,
+    43,
+    -113
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    6,
+    45,
+    -113
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    6,
+    46,
+    -185
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    6,
+    47,
+    -113
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    6,
+    48,
+    -185
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    7,
+    33,
+    -179
+   ],
+   "nbt": "{front_text:{messages:['{\"text\":\"国王陛下の鎧\"}','{\"text\":\"※出陣禁止\"}','{\"text\":\"── 騎士団長アデル\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    9,
+    3,
+    -55
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    9,
+    9,
+    -65
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    9,
+    15,
+    -75
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    9,
+    68,
+    -189
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    9,
+    68,
+    -159
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    48,
+    -147
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    48,
+    -141
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    48,
+    -135
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    48,
+    -129
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    48,
+    -123
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    48,
+    -117
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    50,
+    -147
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    50,
+    -141
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    50,
+    -135
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    50,
+    -129
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    50,
+    -123
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    10,
+    50,
+    -117
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    11,
+    38,
+    -87
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    11,
+    40,
+    -87
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    11,
+    42,
+    -87
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    11,
+    44,
+    -87
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    11,
+    48,
+    -144
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    11,
+    48,
+    -138
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    11,
+    48,
+    -132
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    11,
+    48,
+    -126
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    11,
+    48,
+    -120
+   ],
+   "nbt": "{Length:24.0f,Width:4.0f,Height:14.0f,Pitch:34.0f}"
+  },
+  {
+   "pos": [
+    12,
+    14,
+    -158
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    12,
+    14,
+    -152
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    14,
+    44,
+    -181
+   ],
+   "nbt": "{Length:20.0f,Width:4.0f,Height:14.0f,Pitch:33.0f}"
+  },
+  {
+   "pos": [
+    14,
+    44,
+    -174
+   ],
+   "nbt": "{Length:20.0f,Width:4.0f,Height:14.0f,Pitch:33.0f}"
+  },
+  {
+   "pos": [
+    14,
+    44,
+    -167
+   ],
+   "nbt": "{Length:20.0f,Width:4.0f,Height:14.0f,Pitch:33.0f}"
+  },
+  {
+   "pos": [
+    14,
+    48,
+    -178
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    14,
+    48,
+    -170
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    14,
+    50,
+    -178
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    14,
+    50,
+    -170
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    18,
+    68,
+    -174
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    20,
+    36,
+    -133
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    31,
+    41,
+    -128
+   ],
+   "nbt": "{Length:22.0f,Width:6.0f,Height:6.0f,Pitch:26.0f}"
+  },
+  {
+   "pos": [
+    47,
+    45,
+    -95
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    59,
+    40,
+    -128
+   ],
+   "nbt": "{Length:24.0f,Width:5.0f,Height:10.0f,Pitch:30.0f}"
+  },
+  {
+   "pos": [
+    60,
+    41,
+    -133
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    60,
+    41,
+    -123
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    73,
+    57,
+    -180
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    75,
+    53,
+    -97
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    98,
+    52,
+    -158
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
+    101,
+    50,
+    -126
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  }
+ ],
+ "entities": [
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -86.5,
+    27.0,
+    -154.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -86.5,
+    27.0,
+    -152.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -86.5,
+    27.0,
+    -150.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -86.5,
+    27.0,
+    -125.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -83.5,
+    27.0,
+    -125.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -83.5,
+    28.5,
+    -156.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -83.5,
+    29.5,
+    -156.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -80.5,
+    28.5,
+    -156.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -80.5,
+    29.5,
+    -156.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -77.5,
+    28.5,
+    -156.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -77.5,
+    29.5,
+    -156.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -74.5,
+    28.5,
+    -156.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -74.5,
+    29.5,
+    -156.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -72.5,
+    27.0,
+    -125.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -70.5,
+    27.0,
+    -154.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_axe\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -70.5,
+    27.0,
+    -152.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_axe\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -70.5,
+    27.0,
+    -150.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_axe\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -69.5,
+    27.0,
+    -125.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -26.5,
+    33.0,
+    -132.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -22.5,
+    33.0,
+    -132.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -18.5,
+    33.0,
+    -132.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -11.5,
+    33.0,
+    -177.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -11.5,
+    33.0,
+    -169.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -3.5,
+    27.0,
+    -97.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -3.5,
+    27.0,
+    -94.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    4.5,
+    27.0,
+    -97.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    4.5,
+    27.0,
+    -94.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    7.5,
+    36.0,
+    -182.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:golden_boots\",Count:1b},{id:\"minecraft:golden_leggings\",Count:1b},{id:\"minecraft:golden_chestplate\",Count:1b},{id:\"minecraft:golden_helmet\",Count:1b}],HandItems:[{id:\"minecraft:golden_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    12.5,
+    33.0,
+    -177.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    12.5,
+    33.0,
+    -169.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    16.5,
+    33.0,
+    -132.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    20.5,
+    33.0,
+    -132.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    24.5,
+    33.0,
+    -132.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  }
+ ],
+ "fluidTicks": [
+  [
+   77,
+   30,
+   -138
+  ],
+  [
+   118,
+   61,
+   -105
+  ],
+  [
+   119,
+   61,
+   -105
+  ],
+  [
+   120,
+   61,
+   -105
+  ],
+  [
+   121,
+   61,
+   -105
+  ],
+  [
+   122,
+   61,
+   -105
+  ],
+  [
+   123,
+   61,
+   -105
+  ],
+  [
+   124,
+   61,
+   -105
+  ],
+  [
+   125,
+   61,
+   -105
+  ],
+  [
+   126,
+   61,
+   -105
+  ],
+  [
+   127,
+   61,
+   -105
+  ],
+  [
+   128,
+   61,
+   -105
+  ],
+  [
+   129,
+   61,
+   -105
+  ],
+  [
+   130,
+   61,
+   -105
+  ],
+  [
+   131,
+   61,
+   -105
+  ],
+  [
+   132,
+   61,
+   -105
+  ],
+  [
+   133,
+   61,
+   -105
+  ]
+ ],
+ "spots": {
+  "castle.barracks": {
+   "pos": [
+    -79,
+    27,
+    -132
+   ],
+   "yaw": 0.0
+  },
+  "castle.chapel": {
+   "pos": [
+    33,
+    33,
+    -128
+   ],
+   "yaw": -90.0
+  },
+  "castle.garden": {
+   "pos": [
+    77,
+    27,
+    -132
+   ],
+   "yaw": 180.0
+  },
+  "castle.gate": {
+   "pos": [
+    0,
+    27,
+    -87
+   ],
+   "yaw": 0.0
+  },
+  "castle.gate_guard_e": {
+   "pos": [
+    4,
+    27,
+    -88
+   ],
+   "yaw": 0.0
+  },
+  "castle.gate_guard_w": {
+   "pos": [
+    -4,
+    27,
+    -88
+   ],
+   "yaw": 0.0
+  },
+  "castle.great_hall": {
+   "pos": [
+    0,
+    33,
+    -118
+   ],
+   "yaw": 180.0
+  },
+  "castle.king": {
+   "pos": [
+    -2,
+    36,
+    -183
+   ],
+   "yaw": 0.0
+  },
+  "castle.library": {
+   "pos": [
+    -44,
+    33,
+    -120
+   ],
+   "yaw": 180.0
+  },
+  "castle.observatory": {
+   "pos": [
+    -51,
+    77,
+    -156
+   ],
+   "yaw": 180.0
+  },
+  "castle.star_court": {
+   "pos": [
+    0,
+    33,
+    -152
+   ],
+   "yaw": 180.0
+  },
+  "castle.summon": {
+   "pos": [
+    0,
+    9,
+    -155
+   ],
+   "yaw": 180.0
+  },
+  "castle.throne": {
+   "pos": [
+    0,
+    37,
+    -183
+   ],
+   "yaw": 0.0
+  },
+  "npc.arena_master": {
+   "pos": [
+    56,
+    1,
+    50
+   ],
+   "yaw": 180.0
+  },
+  "npc.auction": {
+   "pos": [
+    22,
+    1,
+    22
+   ],
+   "yaw": 135.0
+  },
+  "npc.blacksmith": {
+   "pos": [
+    -22,
+    1,
+    22
+   ],
+   "yaw": -135.0
+  },
+  "npc.gatekeeper": {
+   "pos": [
+    90,
+    1,
+    9
+   ],
+   "yaw": -90.0
+  },
+  "npc.guild_registrar": {
+   "pos": [
+    28,
+    1,
+    -28
+   ],
+   "yaw": 45.0
+  },
+  "npc.hall_of_fame": {
+   "pos": [
+    60,
+    1,
+    -60
+   ],
+   "yaw": 180.0
+  },
+  "npc.item_shop": {
+   "pos": [
+    -22,
+    1,
+    -22
+   ],
+   "yaw": -45.0
+  },
+  "npc.job_master": {
+   "pos": [
+    34,
+    1,
+    -12
+   ],
+   "yaw": 90.0
+  },
+  "npc.mailbox": {
+   "pos": [
+    10,
+    1,
+    18
+   ],
+   "yaw": 180.0
+  },
+  "npc.quest_board": {
+   "pos": [
+    20,
+    1,
+    -22
+   ],
+   "yaw": 45.0
+  },
+  "spawn": {
+   "pos": [
+    0,
+    1,
+    13
+   ],
+   "yaw": 180.0
+  },
+  "story.arcelia_knight_captain": {
+   "pos": [
+    -79,
+    27,
+    -121
+   ],
+   "yaw": 0.0
+  },
+  "story.gustav": {
+   "pos": [
+    24,
+    1,
+    -32
+   ],
+   "yaw": 180.0
+  },
+  "story.laszlo": {
+   "pos": [
+    32,
+    1,
+    -32
+   ],
+   "yaw": 180.0
+  },
+  "story.lilia": {
+   "pos": [
+    0,
+    9,
+    -158
+   ],
+   "yaw": 0.0
+  },
+  "story.nox": {
+   "pos": [
+    -54,
+    33,
+    -140
+   ],
+   "yaw": 180.0
+  },
+  "story.wolfram": {
+   "pos": [
+    36,
+    1,
+    -36
+   ],
+   "yaw": 180.0
+  }
+ },
+ "blend": {
+  "edgeY": 0
+ }
+}
