@@ -1,0 +1,82 @@
+{
+  "threat.eternalrealm.wanderer.appears": {
+    "ja": "【放浪する大物】%1$s に「%2$s」Lv%3$s が現れた！ %4$sから%5$sへ約%6$sブロック（X %7$s / Z %8$s）",
+    "en": "[Wanderer] %2$s (Lv%3$s) has appeared in %1$s! About %6$s blocks %5$s of %4$s (X %7$s / Z %8$s)"
+  },
+  "threat.eternalrealm.wanderer.leaves": {
+    "ja": "「%s」は %s から去っていった……",
+    "en": "%s has wandered away from %s..."
+  },
+  "threat.eternalrealm.wanderer.flees": {
+    "ja": "災厄の気配に、「%s」は %s から姿を消した",
+    "en": "Sensing the calamity, %s has vanished from %s"
+  },
+  "threat.eternalrealm.wanderer.walks_off": {
+    "ja": "相手のいなくなった「%s」は %s から立ち去った",
+    "en": "With nobody left to fight, %s walks away from %s"
+  },
+  "threat.eternalrealm.wanderer.down": {
+    "ja": "【大物討伐】%1$s の「%2$s」が討ち取られた！ 殊勲：%3$s",
+    "en": "[Wanderer down] %2$s of %1$s has been defeated! Hero: %3$s"
+  },
+  "threat.eternalrealm.wanderer.nameplate": {
+    "ja": "【放浪する大物】%s",
+    "en": "[Wanderer] %s"
+  },
+  "threat.eternalrealm.board.wanderer": {
+    "ja": "放浪「%s」 Lv%s",
+    "en": "Wanderer %s Lv%s"
+  },
+  "threat.eternalrealm.board.wanderer_out": {
+    "ja": "出現中（あと %s）",
+    "en": "Out (%s left)"
+  },
+  "threat.eternalrealm.board.wanderer_fighting": {
+    "ja": "交戦中！",
+    "en": "Fighting!"
+  },
+  "threat.eternalrealm.board.wanderer_away": {
+    "ja": "どこかを放浪中",
+    "en": "Roaming elsewhere"
+  },
+  "threat.eternalrealm.map.wanderer": {
+    "ja": "放浪する大物",
+    "en": "Wanderer"
+  },
+  "result.eternalrealm.wanderer_clear": {
+    "ja": "WANDERER DEFEATED",
+    "en": "WANDERER DEFEATED"
+  },
+  "threat.eternalrealm.dir.n": {
+    "ja": "北",
+    "en": "north"
+  },
+  "threat.eternalrealm.dir.ne": {
+    "ja": "北東",
+    "en": "north-east"
+  },
+  "threat.eternalrealm.dir.e": {
+    "ja": "東",
+    "en": "east"
+  },
+  "threat.eternalrealm.dir.se": {
+    "ja": "南東",
+    "en": "south-east"
+  },
+  "threat.eternalrealm.dir.s": {
+    "ja": "南",
+    "en": "south"
+  },
+  "threat.eternalrealm.dir.sw": {
+    "ja": "南西",
+    "en": "south-west"
+  },
+  "threat.eternalrealm.dir.w": {
+    "ja": "西",
+    "en": "west"
+  },
+  "threat.eternalrealm.dir.nw": {
+    "ja": "北西",
+    "en": "north-west"
+  }
+}

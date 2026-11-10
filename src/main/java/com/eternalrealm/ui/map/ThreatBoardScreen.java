@@ -4,6 +4,7 @@ import com.eternalrealm.client.ClientUiState;
 import com.eternalrealm.client.map.ThreatClient;
 import com.eternalrealm.world.AreaDefinition;
 import com.eternalrealm.world.Areas;
+import com.eternalrealm.world.field.Wanderers;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.ChatFormatting;
@@ -19,16 +20,21 @@ import java.util.List;
 
 /**
  * 討伐手配書 — the wanted board of the fields: for every field its recommended levels, its 瘴気 gauge and phase, its
- * calamity (sleeping, omen, risen, or the field purified) and its three lords (out now, or back in mm:ss). Opened from
- * the map; scrolls with the mouse wheel.
+ * calamity (sleeping, omen, risen, or the field purified), its wandering bosses (out with the time they stay, fought,
+ * or roaming elsewhere) and its three lords (out now, or back in mm:ss). Opened from the map; scrolls with the mouse
+ * wheel.
  */
 public final class ThreatBoardScreen extends Screen {
     private static final int GOLD = 0xFFE8C66A;
     private static final int BORDER = 0xFF7A5A26;
-    /** Height of one field: the name row, the calamity and one line per lord (three), and a gap. */
-    private static final int ROW = 24 + 3 * 11 + 6;
+    /** Height of a field without its list lines: the name row, the calamity and a gap. */
+    private static final int HEAD = 24 + 6;
+    /** Height of one line: a wanderer or a lord. */
+    private static final int LINE = 11;
     private final Screen parent;
     private double scroll;
+    /** Height of everything on the board at the last frame (how far it scrolls). */
+    private int contentHeight = 10 * (HEAD + 4 * LINE);
 
     public ThreatBoardScreen(Screen parent) {
         super(Component.translatable("threat.eternalrealm.board.title"));
@@ -57,7 +63,7 @@ public final class ThreatBoardScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        scroll = Mth.clamp(scroll - delta * 24.0, 0.0, Math.max(0.0, 10 * ROW - (height - 40)));
+        scroll = Mth.clamp(scroll - delta * 24.0, 0.0, Math.max(0.0, contentHeight - (height - 40)));
         return true;
     }
 
@@ -88,21 +94,34 @@ public final class ThreatBoardScreen extends Screen {
                     .withStyle(ChatFormatting.GRAY), width / 2, top + 20, 0xFFFFFFFF);
         }
         double age = ThreatClient.boardAge();
+        int content = 0;
         for (AreaDefinition area : Areas.all()) {
             JsonObject entry = ThreatClient.field(area.id()).orElse(null);
             if (entry == null) {
                 continue;
             }
-            drawField(graphics, area, entry, left + 6, y, right - left - 12, age);
-            y += ROW;
+            int row = rowHeight(entry);
+            drawField(graphics, area, entry, left + 6, y, right - left - 12, row, age);
+            y += row;
+            content += row;
         }
+        contentHeight = content + 8;
         graphics.disableScissor();
         super.render(graphics, mouseX, mouseY, partialTick);
     }
 
+    /** A field's height: its head, then one line per wanderer and per lord. */
+    private static int rowHeight(JsonObject entry) {
+        return HEAD + LINE * (count(entry, "wanderers") + count(entry, "lords"));
+    }
+
+    private static int count(JsonObject entry, String key) {
+        return entry.has(key) && entry.get(key).isJsonArray() ? entry.getAsJsonArray(key).size() : 0;
+    }
+
     private void drawField(GuiGraphics graphics, AreaDefinition area, JsonObject entry, int x, int y, int width,
-                           double age) {
-        graphics.fill(x - 2, y - 2, x + width + 2, y + ROW - 6, 0x30FFFFFF);
+                           int row, double age) {
+        graphics.fill(x - 2, y - 2, x + width + 2, y + row - 6, 0x30FFFFFF);
         Component name = Component.translatable(area.translationKey()).withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD);
         graphics.drawString(font, name, x, y, 0xFFFFFFFF);
         Component levels = WorldMapScreen.levelRange(area);
@@ -149,8 +168,27 @@ public final class ThreatBoardScreen extends Screen {
                     ClientUiState.intOr(calamity, "level", 0)).append("  ").append(status);
             graphics.drawString(font, text, x + 4, line, 0xFFE0D0D0);
         }
+        // the wanderers: out (and how long it stays), fought, or roaming elsewhere
+        line += LINE;
+        if (entry.has("wanderers") && entry.get("wanderers").isJsonArray()) {
+            for (JsonElement element : entry.getAsJsonArray("wanderers")) {
+                JsonObject wanderer = element.getAsJsonObject();
+                boolean out = wanderer.has("out") && wanderer.get("out").getAsBoolean();
+                boolean fighting = out && wanderer.has("fighting") && wanderer.get("fighting").getAsBoolean();
+                double leaves = Math.max(0.0, number(wanderer, "leaves") - age);
+                Component status = fighting ? Component.translatable(Wanderers.BOARD_FIGHTING)
+                        .withStyle(ChatFormatting.RED, ChatFormatting.BOLD)
+                        : out ? Component.translatable(Wanderers.BOARD_OUT, ThreatOverlay.clock(leaves))
+                        .withStyle(ChatFormatting.GOLD)
+                        : Component.translatable(Wanderers.BOARD_AWAY).withStyle(ChatFormatting.DARK_GRAY);
+                Component text = Component.translatable(Wanderers.BOARD,
+                        Component.translatable(ClientUiState.stringOr(wanderer, "name", "")).withStyle(ChatFormatting.GOLD),
+                        ClientUiState.intOr(wanderer, "level", 0)).append(" ").append(status);
+                graphics.drawString(font, text, x + 4, line, 0xFFE0D8C0);
+                line += LINE;
+            }
+        }
         // the lords
-        line += 11;
         int lordX = x + 4;
         if (entry.has("lords") && entry.get("lords").isJsonArray()) {
             List<Component> parts = new ArrayList<>();
@@ -169,7 +207,7 @@ public final class ThreatBoardScreen extends Screen {
             }
             for (Component part : parts) {
                 graphics.drawString(font, part, lordX, line, 0xFFD8D0C8);
-                line += 11;
+                line += LINE;
             }
         }
     }

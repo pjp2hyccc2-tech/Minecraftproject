@@ -30,8 +30,9 @@ import java.util.Locale;
 
 /**
  * Under the minimap: the 瘴気 gauge of the field the player stands in (violet, pulsing red during an omen, the risen
- * calamity's name while it is out, light blue with the time left while the field is purified), and for a few seconds
- * after a lord hunt a small panel with the player's merit place and what they got.
+ * calamity's name while it is out, light blue with the time left while the field is purified), the name of a wandering
+ * boss that is out in the field, and for a few seconds after a lord hunt a small panel with the player's merit place
+ * and what they got.
  */
 @Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class ThreatOverlay implements IGuiOverlay {
@@ -104,6 +105,7 @@ public final class ThreatOverlay implements IGuiOverlay {
         if (entry != null) {
             drawGauge(graphics, font, entry, left, top, width);
             top += 24;
+            top = drawWanderer(graphics, font, entry, left, top, width);
         }
         if (result != null && System.nanoTime() - resultAt < RESULT_NANOS) {
             drawResult(graphics, font, left - 30, top, width + 30);
@@ -157,6 +159,27 @@ public final class ThreatOverlay implements IGuiOverlay {
             int x = left + 2 + (width - 4) * i / 10;
             graphics.fill(x, top + 16, x + 1, top + 18, 0x50000000);
         }
+    }
+
+    /** A wanderer out in this field: its name in amber under the gauge (red while it is fought). */
+    private static int drawWanderer(GuiGraphics graphics, Font font, JsonObject entry, int left, int top, int width) {
+        if (!entry.has("wanderers") || !entry.get("wanderers").isJsonArray()) {
+            return top;
+        }
+        for (JsonElement element : entry.getAsJsonArray("wanderers")) {
+            JsonObject wanderer = element.getAsJsonObject();
+            if (!wanderer.has("out") || !wanderer.get("out").getAsBoolean()) {
+                continue;
+            }
+            boolean fighting = wanderer.has("fighting") && wanderer.get("fighting").getAsBoolean();
+            Component label = Component.translatable(com.eternalrealm.world.field.Wanderers.MAP).append(" ")
+                    .append(Component.translatable(ClientUiState.stringOr(wanderer, "name", "")));
+            String text = font.plainSubstrByWidth(label.getString(), width - 4);
+            graphics.fill(left - 1, top - 1, left + width + 1, top + 11, 0xC0000000);
+            graphics.drawString(font, text, left + 2, top + 1, fighting ? 0xFFFF6040 : 0xFFFFC040);
+            return top + 14;
+        }
+        return top;
     }
 
     private static void drawResult(GuiGraphics graphics, Font font, int left, int top, int width) {

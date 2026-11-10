@@ -747,8 +747,9 @@ public final class WorldMapScreen extends Screen {
     }
 
     /**
-     * The field threats on the map: a calamity's lair (a red-black sun while it is out, a dim mark while it sleeps)
-     * and every lord that is out (a violet crown where it was seen last).
+     * The field threats on the map: a calamity's lair (a red-black sun while it is out, a dim mark while it sleeps),
+     * every lord that is out (a violet crown where it was seen last) and every wanderer that is out (an amber sun
+     * with a pulsing ring, red while it is fought).
      */
     private void drawThreats(GuiGraphics graphics, float cx, float cy) {
         com.google.gson.JsonObject board = com.eternalrealm.client.map.ThreatClient.board().orElse(null);
@@ -803,6 +804,39 @@ public final class WorldMapScreen extends Screen {
                             com.eternalrealm.client.ClientUiState.intOr(lord, "level", 0))
                             .withStyle(ChatFormatting.LIGHT_PURPLE));
                     lines.add(Component.translatable("threat.eternalrealm.board.lord_out").withStyle(ChatFormatting.GOLD));
+                    hovers.add(new Hover(sx, sy, lines));
+                }
+            }
+            if (entry.has("wanderers")) {
+                double age = com.eternalrealm.client.map.ThreatClient.boardAge();
+                for (com.google.gson.JsonElement wandererElement : entry.getAsJsonArray("wanderers")) {
+                    com.google.gson.JsonObject wanderer = wandererElement.getAsJsonObject();
+                    if (!wanderer.has("out") || !wanderer.get("out").getAsBoolean()) {
+                        continue;
+                    }
+                    boolean fighting = wanderer.has("fighting") && wanderer.get("fighting").getAsBoolean();
+                    float sx = (float) viewport.screenX(wanderer.has("bx") ? wanderer.get("bx").getAsDouble()
+                            : wanderer.get("x").getAsDouble(), cx);
+                    float sy = (float) viewport.screenY(wanderer.has("bz") ? wanderer.get("bz").getAsDouble()
+                            : wanderer.get("z").getAsDouble(), cy);
+                    float pulse = 1.0F + 0.2F * (float) Math.sin(nanos / 2.0E8);
+                    MapDraw.ring(graphics, sx, sy, 6.0F * pulse, 7.5F * pulse, fighting ? 0xC0FF3010 : 0xA0FFC040);
+                    MapDraw.disc(graphics, sx, sy, 5.0F, 0xFF000000);
+                    MapDraw.disc(graphics, sx, sy, 3.8F, fighting ? 0xFFFF5A1E : 0xFFFFB02E);
+                    MapDraw.disc(graphics, sx, sy, 1.4F, 0xFF3A1A00);
+                    List<Component> lines = new ArrayList<>();
+                    lines.add(Component.translatable(com.eternalrealm.world.field.Wanderers.BOARD,
+                            Component.translatable(com.eternalrealm.client.ClientUiState.stringOr(wanderer, "name", "")),
+                            com.eternalrealm.client.ClientUiState.intOr(wanderer, "level", 0))
+                            .withStyle(ChatFormatting.GOLD));
+                    double leaves = Math.max(0.0, (wanderer.has("leaves") ? wanderer.get("leaves").getAsDouble() : 0.0)
+                            - age);
+                    lines.add(fighting ? Component.translatable(com.eternalrealm.world.field.Wanderers.BOARD_FIGHTING)
+                            .withStyle(ChatFormatting.RED)
+                            : Component.translatable(com.eternalrealm.world.field.Wanderers.BOARD_OUT,
+                            ThreatOverlay.clock(leaves)).withStyle(ChatFormatting.YELLOW));
+                    label(graphics, Component.translatable(com.eternalrealm.world.field.Wanderers.MAP)
+                            .withStyle(ChatFormatting.GOLD), sx, sy + 10.0F);
                     hovers.add(new Hover(sx, sy, lines));
                 }
             }

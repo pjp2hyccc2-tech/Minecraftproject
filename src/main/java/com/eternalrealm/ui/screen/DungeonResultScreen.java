@@ -56,8 +56,10 @@ public final class DungeonResultScreen extends Screen {
     private final Component dungeon;
     private final Component difficulty;
     private final int cardCount;
-    /** A field calamity was subdued (no time limit, no bonus chest, nothing to leave). */
+    /** A field calamity or wanderer was defeated (no time limit, no bonus chest, nothing to leave). */
     private final boolean calamity;
+    /** It was a field wanderer (its own header). */
+    private final boolean wanderer;
     private List<Card> revealed;
     private int picked = -1;
     private long revealedAt;
@@ -88,7 +90,9 @@ public final class DungeonResultScreen extends Screen {
         this.dungeon = Component.translatable(ClientUiState.stringOr(data, "dungeon", ""));
         this.difficulty = Component.translatable(ClientUiState.stringOr(data, "difficultyKey", ""));
         this.cardCount = Mth.clamp(ClientUiState.intOr(data, "cards", 3), 0, 5);
-        this.calamity = "calamity".equals(ClientUiState.stringOr(data, "kind", ""));
+        String kind = ClientUiState.stringOr(data, "kind", "");
+        this.wanderer = "wanderer".equals(kind);
+        this.calamity = "calamity".equals(kind) || wanderer;
         this.exitAt = System.nanoTime() + (long) (number(data, "exit") * 1.0E9);
         String me = ClientUiState.stringOr(data, "me", "");
         if (data.has("party") && data.get("party").isJsonArray()) {
@@ -252,8 +256,9 @@ public final class DungeonResultScreen extends Screen {
         // ---- DUNGEON CLEAR
         float grow = (float) Mth.clamp(t / 0.35, 0.0, 1.0);
         float scale = 2.6F - 0.6F * (1.0F - (1.0F - grow) * (1.0F - grow));
-        Component clear = Component.translatable(calamity ? "result.eternalrealm.calamity_clear"
-                : "result.eternalrealm.clear").withStyle(ChatFormatting.BOLD);
+        Component clear = Component.translatable(wanderer ? com.eternalrealm.world.field.Wanderers.RESULT
+                : calamity ? "result.eternalrealm.calamity_clear" : "result.eternalrealm.clear")
+                .withStyle(ChatFormatting.BOLD);
         graphics.pose().pushPose();
         graphics.pose().translate(width / 2.0F, 10.0F, 0.0F);
         graphics.pose().scale(scale, scale, 1.0F);
