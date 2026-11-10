@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Writes GameTest structure templates that are easier to describe in code than to build by hand.
 
-  boss_arena.nbt  41x6x41: stone floor, a wall around it 5 blocks high, a 5x5 pillar in the middle and four 2x2
-                  pillars around it. Big enough for the giant bosses to walk, turn and swing (EntityGameTests).
+  boss_arena.nbt  41x15x41: stone floor, walls and a roof (a closed hall, so nothing from the neighbouring tests can
+                  fall in), a 5x5 pillar in the middle and four 2x2 pillars around it, 13 blocks of headroom. Big
+                  enough for the giant bosses to walk, turn and swing (EntityGameTests).
 
 Run from the repository root: python3 tools/gen-gametest-structures.py
 """
@@ -77,14 +78,15 @@ def structure(size, solid):
 
 def boss_arena():
     size = 41
+    height = 15
 
     def solid(x, y, z):
-        if y == 0:
-            return True                                      # floor
+        if y == 0 or y == height - 1:
+            return True                                      # floor and roof
+        if x in (0, size - 1) or z in (0, size - 1):
+            return True                                      # walls
         if y > 5:
             return False
-        if x in (0, size - 1) or z in (0, size - 1):
-            return True                                      # wall around
         if 18 <= x <= 22 and 18 <= z <= 22:
             return True                                      # pillar in the middle (blocks the diagonal)
         for cx in (10, 29):
@@ -92,7 +94,7 @@ def boss_arena():
                 if cx <= x <= cx + 1 and cz <= z <= cz + 1:
                     return True                              # smaller pillars
         return False
-    return structure((size, 6, size), solid)
+    return structure((size, height, size), solid)
 
 
 def main():

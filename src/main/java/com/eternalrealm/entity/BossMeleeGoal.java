@@ -1,8 +1,14 @@
 package com.eternalrealm.entity;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
@@ -14,12 +20,18 @@ import java.util.EnumSet;
  * badly, so a boss steers instead: it heads straight for its target and feels ahead with its own hitbox; when a
  * pillar or a wall is in the way it swings out to the nearest free heading on one side and keeps to that side until
  * it is past (no dithering in front of an obstacle). A boss that still makes no headway switches sides.</p>
+ *
+ * <p>A body that overlaps blocks (gravel or sand that fell onto it, a block placed into its reach) first shuffles out
+ * of them, away from where they are: the feelers would otherwise find every heading blocked by what the body is
+ * already standing in, and the boss would wait inside the blocks forever.</p>
  */
 final class BossMeleeGoal extends Goal {
     /** Headings tried around the direct one, in degrees, nearest first. */
     private static final double[] SWING = {0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 125.0, 150.0};
     /** Ticks a chosen side is kept after an obstacle was seen. */
     private static final int COMMIT_TICKS = 16;
+    /** Blocks per tick a body shuffles out of blocks it overlaps. */
+    private static final double ESCAPE_STEP = 0.2;
     /** Ticks between progress checks, and the least distance (squared) to cover in them. */
     private static final int PROGRESS_TICKS = 20;
     private static final double MIN_PROGRESS_SQR = 0.6 * 0.6;
@@ -87,6 +99,12 @@ final class BossMeleeGoal extends Goal {
             }
             return;
         }
+        Vec3 out = escape();
+        if (out != null) {
+            this.boss.move(MoverType.SELF, out.scale(ESCAPE_STEP));
+            this.lastPosition = null;
+            return;
+        }
         Vec3 heading = heading(target);
         if (heading != null) {
             double lead = 2.0 + this.boss.getBbWidth() * 0.5;
@@ -126,6 +144,44 @@ final class BossMeleeGoal extends Goal {
             }
         }
         return null;
+    }
+
+    /**
+     * Horizontal direction out of the blocks the body overlaps (away from their middle), or null if it overlaps none.
+     */
+    private Vec3 escape() {
+        Level level = this.boss.level();
+        AABB box = this.boss.getBoundingBox().deflate(0.02);
+        if (level.noCollision(this.boss, box)) {
+            return null;
+        }
+        double sumX = 0.0;
+        double sumZ = 0.0;
+        int found = 0;
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int x = Mth.floor(box.minX); x <= Mth.floor(box.maxX); x++) {
+            for (int y = Mth.floor(box.minY); y <= Mth.floor(box.maxY); y++) {
+                for (int z = Mth.floor(box.minZ); z <= Mth.floor(box.maxZ); z++) {
+                    pos.set(x, y, z);
+                    BlockState state = level.getBlockState(pos);
+                    VoxelShape shape = state.getCollisionShape(level, pos);
+                    if (!shape.isEmpty() && shape.bounds().move(pos).intersects(box)) {
+                        sumX += x + 0.5 - this.boss.getX();
+                        sumZ += z + 0.5 - this.boss.getZ();
+                        found++;
+                    }
+                }
+            }
+        }
+        if (found == 0) {
+            return null; // only entities are in the way: the usual feelers handle it
+        }
+        double length = Math.sqrt(sumX * sumX + sumZ * sumZ);
+        if (length < 1.0E-3) { // right in the middle: back away from where it faces
+            Vec3 facing = Vec3.directionFromRotation(0.0F, this.boss.getYRot());
+            return new Vec3(-facing.x, 0.0, -facing.z).normalize();
+        }
+        return new Vec3(-sumX / length, 0.0, -sumZ / length);
     }
 
     /** Whether the body fits along {@code heading} for {@code probe} blocks (steps it can climb do not count). */
