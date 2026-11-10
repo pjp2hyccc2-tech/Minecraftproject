@@ -242,7 +242,7 @@ def grounds(w):
     for (x, z) in ((27, -23), (25, -11)):
         K.lamp(w, x, 0, z, height=4)
     # masts with kingdom flags flanking the hall of fame portico
-    for (x, z) in ((14, -24), (29, -23)):
+    for (x, z) in ((14, -24),):
         K.mast(w, x, 0, z, height=9, sides=("east", "west"), nbt=HOF_BANNER)
         TK.flag(w, x, 10, z, "east", "kingdom", 3.0, 2.0)
     # the lane between job hall and auction house

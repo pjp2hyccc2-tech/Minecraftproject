@@ -21,5 +21,5 @@ def block(w, x0, z0, x1, z1, street_side, seed):
 
 
 def build(w, district, terrain):
-    block(w, -101, -39, -59, -6, "south", 11)
-    block(w, -101, 6, -59, 39, "north", 23)
+    block(w, -98, -39, -59, -6, "south", 11)
+    block(w, -98, 6, -59, 39, "north", 23)
