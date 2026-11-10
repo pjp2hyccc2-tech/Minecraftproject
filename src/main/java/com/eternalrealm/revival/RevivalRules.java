@@ -5,11 +5,11 @@ import com.eternalrealm.core.ModInfo;
 import java.util.Locale;
 
 /**
- * The revival rules (復活システム), modelled on Ragnarok X: a player whose health runs out does not die at once but
+ * The revival rules (復活システム): a player whose health runs out does not die at once but
  * falls (戦闘不能): lying on the ground, out of the fight, untouchable, for a while. From there they
  * <ul>
- *     <li>revive on the spot with a 世界樹の葉 (half health),</li>
- *     <li>are revived by an ally (a 世界樹の葉 used on them, or a priest's resurrection), or</li>
+ *     <li>revive on the spot with a 永久花の花びら (half health),</li>
+ *     <li>are revived by an ally (a 永久花の花びら used on them, or a priest's resurrection), or</li>
  *     <li>return to their save point (セーブポイント) at full health: the nearest waystone they recorded in the field,
  *         the capital's plaza, or the entrance of the dungeon they are in. After {@link #autoReturnTicks} this
  *         happens on its own.</li>
@@ -19,15 +19,15 @@ import java.util.Locale;
 public final class RevivalRules {
     /** The "return" button needs this long, so a click meant for the fight does not send anyone home. */
     public static final int RETURN_UNLOCK_TICKS = 40;
-    /** Health after reviving oneself with a 世界樹の葉. */
-    public static final double LEAF_SELF_HEALTH = 0.5;
-    /** Health after an ally used a 世界樹の葉 on the fallen player. */
-    public static final double LEAF_ALLY_HEALTH = 0.5;
+    /** Health after reviving oneself with a 永久花の花びら. */
+    public static final double PETAL_SELF_HEALTH = 0.5;
+    /** Health after an ally used a 永久花の花びら on the fallen player. */
+    public static final double PETAL_ALLY_HEALTH = 0.5;
     /** Health after returning to the save point. */
     public static final double RETURN_HEALTH = 1.0;
     /** Untouchable for this long after any revival (time to get one's bearings). */
     public static final int GRACE_TICKS = 60;
-    /** How far an ally may stand from a fallen player to revive them with a leaf. */
+    /** How far an ally may stand from a fallen player to revive them with a petal. */
     public static final double ALLY_REACH = 4.5;
     /** Body anchor: a fallen body drifting further than this (pushed, server lag) is put back. */
     public static final double ANCHOR_SLACK = 0.6;
@@ -65,8 +65,8 @@ public final class RevivalRules {
 
     /** How a fallen player came back. */
     public enum Way {
-        LEAF_SELF,
-        LEAF_ALLY,
+        PETAL_SELF,
+        PETAL_ALLY,
         RESURRECTION,
         RETURN,
         AUTO_RETURN;
@@ -77,7 +77,7 @@ public final class RevivalRules {
 
         /** Whether the player stays where they fell. */
         public boolean inPlace() {
-            return this == LEAF_SELF || this == LEAF_ALLY || this == RESURRECTION;
+            return this == PETAL_SELF || this == PETAL_ALLY || this == RESURRECTION;
         }
     }
 
@@ -113,8 +113,8 @@ public final class RevivalRules {
     /** Health fraction after coming back the given way. */
     public static double healthAfter(Way way, double resurrectionFraction) {
         return switch (way) {
-            case LEAF_SELF -> LEAF_SELF_HEALTH;
-            case LEAF_ALLY -> LEAF_ALLY_HEALTH;
+            case PETAL_SELF -> PETAL_SELF_HEALTH;
+            case PETAL_ALLY -> PETAL_ALLY_HEALTH;
             case RESURRECTION -> Math.max(0.1, Math.min(1.0, resurrectionFraction));
             case RETURN, AUTO_RETURN -> RETURN_HEALTH;
         };

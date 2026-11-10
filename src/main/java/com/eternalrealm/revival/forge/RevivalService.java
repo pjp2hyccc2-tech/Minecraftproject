@@ -71,8 +71,8 @@ import java.util.UUID;
 /**
  * The revival system on the server ({@link RevivalRules}): in アストリア and in dungeon instances a lethal hit does not
  * kill a player but makes them fall (戦闘不能). The fallen player lies where they fell — untouchable, ignored by monsters
- * and bosses, unable to act — and gets the revival screen ({@link #CHANNEL}): revive on the spot with a 世界樹の葉,
- * return to the save point (automatically when the countdown ends), or wait for an ally's leaf or resurrection.
+ * and bosses, unable to act — and gets the revival screen ({@link #CHANNEL}): revive on the spot with a 永久花の花びら,
+ * return to the save point (automatically when the countdown ends), or wait for an ally's petal or resurrection.
  * Nearby clients get the list of fallen bodies ({@link #BODIES_CHANNEL}) to draw them lying on the ground.
  *
  * <p>Deaths that bypass invulnerability ({@code /kill}, the void) and deaths elsewhere stay vanilla deaths. The
@@ -86,7 +86,7 @@ public final class RevivalService {
     /** Fallen bodies in the receiver's level: entity ids and player ids. */
     public static final String BODIES_CHANNEL = "revival_bodies";
     public static final String RETURN_ACTION = "revival.return";
-    public static final String LEAF_ACTION = "revival.leaf";
+    public static final String PETAL_ACTION = "revival.petal";
     /** Persistent-data marker (place id) while fallen. */
     private static final String MARK = ModInfo.MOD_ID + "_fallen";
     private static final int RESEND_TICKS = 100;
@@ -120,11 +120,11 @@ public final class RevivalService {
     private RevivalService() {
     }
 
-    /** Registers the screen's actions and the leaf hook (once, during mod construction). */
+    /** Registers the screen's actions and the petal hook (once, during mod construction). */
     public static void register() {
         UiActions.register(RETURN_ACTION, (player, context, args) -> requestReturn(player));
-        UiActions.register(LEAF_ACTION, (player, context, args) -> requestLeaf(player));
-        ConsumableItem.setReviveHook(RevivalService::leafOnAlly);
+        UiActions.register(PETAL_ACTION, (player, context, args) -> requestPetal(player));
+        ConsumableItem.setReviveHook(RevivalService::petalOnAlly);
     }
 
     /** Whether the player is fallen right now (server thread). */
@@ -258,7 +258,7 @@ public final class RevivalService {
         data.addProperty("destination", Component.Serializer.toJson(destinationName(player, down, context)));
         data.addProperty("unlock", Math.max(0, RevivalRules.RETURN_UNLOCK_TICKS - fallenFor) / 20.0);
         data.addProperty("auto", Math.max(0, RevivalRules.autoReturnTicks(down.place) - fallenFor) / 20.0);
-        data.addProperty("leaves", countLeaves(player));
+        data.addProperty("petals", countPetals(player));
         data.addProperty("exp", down.expLost);
         data.addProperty("since", down.since);
         JsonArray tips = new JsonArray();
@@ -331,22 +331,22 @@ public final class RevivalService {
         returnToSavePoint(player, down, RevivalRules.Way.RETURN);
     }
 
-    private static void requestLeaf(ServerPlayer player) {
+    private static void requestPetal(ServerPlayer player) {
         Down down = DOWN.get(player.getUUID());
         if (down == null) {
             return;
         }
-        if (!takeLeaf(player)) {
-            player.displayClientMessage(Component.translatable("message.eternalrealm.revival.no_leaf")
+        if (!takePetal(player)) {
+            player.displayClientMessage(Component.translatable("message.eternalrealm.revival.no_petal")
                     .withStyle(ChatFormatting.RED), true);
             return;
         }
         DOWN.remove(player.getUUID());
-        stand(player, RevivalRules.Way.LEAF_SELF, null, 0.0);
+        stand(player, RevivalRules.Way.PETAL_SELF, null, 0.0);
     }
 
-    /** The leaf hook of {@link ConsumableItem}: {@code helper} used a 世界樹の葉 on {@code target}. */
-    private static boolean leafOnAlly(ServerPlayer helper, ServerPlayer target) {
+    /** The petal hook of {@link ConsumableItem}: {@code helper} used a 永久花の花びら on {@code target}. */
+    private static boolean petalOnAlly(ServerPlayer helper, ServerPlayer target) {
         if (helper == target || DOWN.containsKey(helper.getUUID())) {
             return false;
         }
@@ -359,7 +359,7 @@ public final class RevivalService {
             return false;
         }
         DOWN.remove(target.getUUID());
-        stand(target, RevivalRules.Way.LEAF_ALLY, helper, 0.0);
+        stand(target, RevivalRules.Way.PETAL_ALLY, helper, 0.0);
         helper.displayClientMessage(Component.translatable("message.eternalrealm.revival.you_revived",
                 target.getDisplayName()).withStyle(ChatFormatting.GREEN), true);
         return true;
@@ -501,15 +501,15 @@ public final class RevivalService {
         syncBodies(server);
     }
 
-    private static boolean takeLeaf(ServerPlayer player) {
-        Item leaf = ERGearItems.consumable(Consumable.YGGDRASIL_LEAF);
+    private static boolean takePetal(ServerPlayer player) {
+        Item petal = ERGearItems.consumable(Consumable.EVERBLOOM_PETAL);
         if (player.getAbilities().instabuild) {
             return true;
         }
         Inventory inventory = player.getInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
             ItemStack stack = inventory.getItem(slot);
-            if (!stack.isEmpty() && stack.getItem() == leaf) {
+            if (!stack.isEmpty() && stack.getItem() == petal) {
                 stack.shrink(1);
                 return true;
             }
@@ -517,13 +517,13 @@ public final class RevivalService {
         return false;
     }
 
-    private static int countLeaves(ServerPlayer player) {
-        Item leaf = ERGearItems.consumable(Consumable.YGGDRASIL_LEAF);
+    private static int countPetals(ServerPlayer player) {
+        Item petal = ERGearItems.consumable(Consumable.EVERBLOOM_PETAL);
         int count = 0;
         Inventory inventory = player.getInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
             ItemStack stack = inventory.getItem(slot);
-            if (stack.getItem() == leaf) {
+            if (stack.getItem() == petal) {
                 count += stack.getCount();
             }
         }

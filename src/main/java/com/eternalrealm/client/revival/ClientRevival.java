@@ -46,7 +46,7 @@ import java.util.UUID;
  * The client half of the revival system: keeps the revival screen open while the local player is fallen (it comes
  * back after the chat or the pause menu), switches to the third-person view so the player sees themselves on the
  * ground, freezes movement input, lays every fallen player flat, and writes "戦闘不能" over their bodies (with a hint
- * for allies holding a 世界樹の葉).
+ * for allies holding a 永久花の花びら).
  */
 @Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class ClientRevival {
@@ -233,8 +233,8 @@ public final class ClientRevival {
         PoseStack pose = event.getPoseStack();
         MultiBufferSource.BufferSource buffers = minecraft.renderBuffers().bufferSource();
         Font font = minecraft.font;
-        Item leaf = ERGearItems.consumable(Consumable.YGGDRASIL_LEAF);
-        boolean holdingLeaf = minecraft.player.getMainHandItem().is(leaf) || minecraft.player.getOffhandItem().is(leaf);
+        Item petal = ERGearItems.consumable(Consumable.EVERBLOOM_PETAL);
+        boolean holdingPetal = minecraft.player.getMainHandItem().is(petal) || minecraft.player.getOffhandItem().is(petal);
         float time = (minecraft.level.getGameTime() % 40 + event.getPartialTick()) / 40.0F;
         for (int id : BODIES) {
             Entity body = minecraft.level.getEntity(id);
@@ -259,8 +259,8 @@ public final class ClientRevival {
                     Font.DisplayMode.SEE_THROUGH, 0x60000000, LightTexture.FULL_BRIGHT);
             font.drawInBatch(name, -font.width(name) / 2.0F, 0.0F, 0xFFE0E0E0, true, matrix, buffers,
                     Font.DisplayMode.NORMAL, 0x40000000, LightTexture.FULL_BRIGHT);
-            if (holdingLeaf && body != minecraft.player && distance < 6.0) {
-                Component hint = Component.translatable("revival.eternalrealm.marker.leaf_hint");
+            if (holdingPetal && body != minecraft.player && distance < 6.0) {
+                Component hint = Component.translatable("revival.eternalrealm.marker.petal_hint");
                 font.drawInBatch(hint, -font.width(hint) / 2.0F, 11.0F, 0xFF8CF27A, true, matrix, buffers,
                         Font.DisplayMode.SEE_THROUGH, 0x60000000, LightTexture.FULL_BRIGHT);
             }

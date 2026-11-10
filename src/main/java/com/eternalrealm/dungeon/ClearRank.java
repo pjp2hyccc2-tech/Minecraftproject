@@ -3,7 +3,7 @@ package com.eternalrealm.dungeon;
 import java.util.Locale;
 
 /**
- * The grade of a dungeon clear on the result screen (Ragnarok X style): how much of the time limit the party used
+ * The grade of a dungeon clear on the result screen: how much of the time limit the party used
  * and how often its members fell. A better grade makes the bonus chest richer ({@link #bonusTier()}).
  */
 public enum ClearRank {

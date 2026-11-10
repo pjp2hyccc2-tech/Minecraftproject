@@ -41,7 +41,7 @@ public final class ConsumableItem extends Item {
     /** Where the return scroll sends a player; the world layer installs the hub of アストリア. */
     private static volatile Function<ServerPlayer, Boolean> homeTeleport = ConsumableItem::teleportToRespawn;
     /**
-     * Revives a fallen player with a 世界樹の葉: {@code (helper, target)} → whether it happened. The revival system
+     * Revives a fallen player with a 永久花の花びら: {@code (helper, target)} → whether it happened. The revival system
      * installs it; until then nobody is ever fallen.
      */
     private static volatile java.util.function.BiPredicate<ServerPlayer, ServerPlayer> reviveHook = (helper, target) -> false;
@@ -67,7 +67,7 @@ public final class ConsumableItem extends Item {
         reviveHook = hook;
     }
 
-    /** A 世界樹の葉 used on a fallen ally revives them where they lie. */
+    /** A 永久花の花びら used on a fallen ally revives them where they lie. */
     @Override
     public net.minecraft.world.InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target,
                                                                       InteractionHand hand) {
@@ -195,8 +195,8 @@ public final class ConsumableItem extends Item {
             return moved;
         }
         if (effect instanceof ConsumableEffect.Revive) {
-            // used in the air: the leaf is for a fallen ally (or for oneself from the revival screen)
-            player.displayClientMessage(Component.translatable("message.eternalrealm.revival.leaf_hint")
+            // used in the air: the petal is for a fallen ally (or for oneself from the revival screen)
+            player.displayClientMessage(Component.translatable("message.eternalrealm.revival.petal_hint")
                     .withStyle(ChatFormatting.GRAY), true);
             return false;
         }

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * "強くなるには" — the advice on the revival screen, chosen from what the fallen player could actually improve (like
- * Ragnarok X's "become stronger" panel): level below the place's recommendation, unspent points, no potions, gear
+ * "強くなるには" — the advice on the revival screen, chosen from what the fallen player could actually improve (a
+ * "become stronger" panel): level below the place's recommendation, unspent points, no potions, gear
  * that was never enhanced, fighting a dungeon alone. Ordered by how much each would help; at most {@link #MAX} tips,
  * the last slot falls back to a combat hint.
  */

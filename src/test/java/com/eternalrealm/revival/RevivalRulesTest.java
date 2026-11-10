@@ -36,13 +36,13 @@ public class RevivalRulesTest {
 
     @Test
     public void healthAfterEachWay() {
-        assertEquals(0.5, RevivalRules.healthAfter(RevivalRules.Way.LEAF_SELF, 0), 1e-9);
-        assertEquals(0.5, RevivalRules.healthAfter(RevivalRules.Way.LEAF_ALLY, 0), 1e-9);
+        assertEquals(0.5, RevivalRules.healthAfter(RevivalRules.Way.PETAL_SELF, 0), 1e-9);
+        assertEquals(0.5, RevivalRules.healthAfter(RevivalRules.Way.PETAL_ALLY, 0), 1e-9);
         assertEquals(1.0, RevivalRules.healthAfter(RevivalRules.Way.RETURN, 0), 1e-9);
         assertEquals(1.0, RevivalRules.healthAfter(RevivalRules.Way.AUTO_RETURN, 0), 1e-9);
         assertEquals(0.3, RevivalRules.healthAfter(RevivalRules.Way.RESURRECTION, 0.3), 1e-9);
         assertEquals(0.1, RevivalRules.healthAfter(RevivalRules.Way.RESURRECTION, 0.0), 1e-9);
-        assertTrue(RevivalRules.Way.LEAF_ALLY.inPlace());
+        assertTrue(RevivalRules.Way.PETAL_ALLY.inPlace());
         assertFalse(RevivalRules.Way.AUTO_RETURN.inPlace());
     }
 

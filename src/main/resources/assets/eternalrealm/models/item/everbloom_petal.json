@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "eternalrealm:item/consumable/yggdrasil_leaf"
+    "layer0": "eternalrealm:item/consumable/everbloom_petal"
   }
 }

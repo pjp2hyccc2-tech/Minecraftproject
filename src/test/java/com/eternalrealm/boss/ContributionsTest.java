@@ -39,13 +39,13 @@ public class ContributionsTest {
         contributions.lastHit(MAGE);
         assertEquals(30.0 + 4.0, contributions.score(KNIGHT), 1e-9);
         assertEquals(30.0 + 8.0, contributions.score(MAGE), 1e-9);
-        assertEquals(MAGE, contributions.mvp().orElseThrow().id());
+        assertEquals(MAGE, contributions.hero().orElseThrow().id());
         assertTrue(contributions.line(KNIGHT).orElseThrow().firstStrike());
         assertTrue(contributions.line(MAGE).orElseThrow().lastHit());
     }
 
     @Test
-    public void tanksAndHealersCanBeMvp() {
+    public void tanksAndHealersCanBeTheHero() {
         Contributions contributions = new Contributions();
         contributions.damage(MAGE, "Mage", "mage", 550);
         contributions.damage(KNIGHT, "Knight", "knight", 450);
@@ -53,11 +53,11 @@ public class ContributionsTest {
         contributions.taken(MAGE, "Mage", "mage", 100);
         contributions.healing(PRIEST, "Priest", "priest", 800);
         contributions.fell(MAGE, "Mage", "mage");
-        // knight: 27 + 18 = 45; mage: 33 + 2 + 4 (first strike) - 2 = 37; priest: 20 (no damage: never MVP)
+        // knight: 27 + 18 = 45; mage: 33 + 2 + 4 (first strike) - 2 = 37; priest: 20 (no damage: never hero (殊勲))
         assertEquals(45.0, contributions.score(KNIGHT), 1e-9);
         assertEquals(37.0, contributions.score(MAGE), 1e-9);
         assertEquals(20.0, contributions.score(PRIEST), 1e-9);
-        assertEquals(KNIGHT, contributions.mvp().orElseThrow().id());
+        assertEquals(KNIGHT, contributions.hero().orElseThrow().id());
         assertEquals(List.of(KNIGHT, MAGE, PRIEST), contributions.byScore().stream().map(Contributions.Line::id).toList());
     }
 
@@ -75,7 +75,7 @@ public class ContributionsTest {
     public void nothingCountsBeforeTheFirstHit() {
         Contributions contributions = new Contributions();
         assertTrue(contributions.isEmpty());
-        assertFalse(contributions.mvp().isPresent());
+        assertFalse(contributions.hero().isPresent());
         contributions.damage(KNIGHT, "Knight", "knight", 0);
         contributions.lastHit(MAGE); // not a participant: ignored
         assertTrue(contributions.isEmpty());

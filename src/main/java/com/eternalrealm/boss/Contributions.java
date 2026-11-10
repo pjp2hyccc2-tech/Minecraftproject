@@ -11,9 +11,9 @@ import java.util.UUID;
 
 /**
  * Who did what in one boss fight: damage dealt to the boss, damage taken, healing, falls, the first strike and the
- * killing blow. Feeds the damage ranking shown during the fight and picks the MVP at the end with a Ragnarok-style
- * score ({@link #score}): damage counts most, holding the boss's attention (damage taken) and keeping the party up
- * (healing) count too, the first strike and the killing blow give a bonus and every fall costs a little.
+ * killing blow. Feeds the merit ranking (戦功) shown during the fight and names the hero of the fight (殊勲) at the end
+ * with a merit score ({@link #score}): damage counts most, holding the boss's attention (damage taken) and keeping
+ * the party up (healing) count too, the first strike and the killing blow give a bonus and every fall costs a little.
  */
 public final class Contributions {
     /** Score weights (a perfect solo fight: 60 + 20 + 20 + 4 + 8). */
@@ -116,7 +116,7 @@ public final class Contributions {
         return entry == null || total <= 0.0 ? 0.0 : entry.damage / total;
     }
 
-    /** The MVP score of {@code id} (0 for someone who did nothing). */
+    /** The merit score of {@code id} (0 for someone who did nothing). */
     public double score(UUID id) {
         Entry entry = entries.get(id);
         if (entry == null) {
@@ -146,7 +146,7 @@ public final class Contributions {
         return lines;
     }
 
-    /** Everyone, best MVP score first (ties: more damage first). */
+    /** Everyone, best merit score first (ties: more damage first). */
     public List<Line> byScore() {
         List<Line> lines = lines();
         lines.sort(Comparator.comparingDouble(Line::score).reversed()
@@ -165,8 +165,8 @@ public final class Contributions {
         return 0;
     }
 
-    /** The MVP: the best score among those who hurt the boss. */
-    public Optional<Line> mvp() {
+    /** The hero (殊勲): the best score among those who hurt the boss. */
+    public Optional<Line> hero() {
         return byScore().stream().filter(line -> line.damage() > 0.0).findFirst();
     }
 

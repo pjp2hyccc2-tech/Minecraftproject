@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * The clear result (報酬画面, Ragnarok X style): "DUNGEON CLEAR" and the grade stamped next to it, the clear time and
- * the falls, the party's contributions with the MVP crowned, the rewards popping into their slots one by one, and a
+ * The clear result (報酬画面): "DUNGEON CLEAR" and the grade stamped next to it, the clear time and
+ * the falls, the party's contributions with the hero of the fight (殊勲) crowned, the rewards popping into their slots one by one, and a
  * bonus chest of three face-down cards — pick one and all three turn over. The instance sends everyone out when the
  * countdown ends; the leave button goes at once.
  */
@@ -42,7 +42,7 @@ public final class DungeonResultScreen extends Screen {
     private static final int CARD_H = 42;
 
     private record Row(String name, String job, int level, long damage, double share, long taken, int falls,
-                       boolean mvp, boolean me) {
+                       boolean hero, boolean me) {
     }
 
     private record Card(ItemStack stack, long gold) {
@@ -94,7 +94,7 @@ public final class DungeonResultScreen extends Screen {
                 party.add(new Row(ClientUiState.stringOr(row, "name", "?"), ClientUiState.stringOr(row, "job", "none"),
                         ClientUiState.intOr(row, "level", 0), ClientUiState.longOr(row, "damage", 0L),
                         number(row, "share"), ClientUiState.longOr(row, "taken", 0L),
-                        ClientUiState.intOr(row, "falls", 0), row.has("mvp") && row.get("mvp").getAsBoolean(),
+                        ClientUiState.intOr(row, "falls", 0), row.has("hero") && row.get("hero").getAsBoolean(),
                         me.equals(ClientUiState.stringOr(row, "id", ""))));
             }
             party.sort((a, b) -> Long.compare(b.damage(), a.damage()));
@@ -294,7 +294,7 @@ public final class DungeonResultScreen extends Screen {
                 graphics.fill(left + 1, y - 1, left + colWidth - 1, y + rowHeight - 1, 0x40806020);
             }
             int x = left + 4 + slide;
-            if (row.mvp()) {
+            if (row.hero()) {
                 graphics.drawString(font, "♛", x, y, 0xFFFFD34A);
             }
             String label = row.name() + (row.level() > 0 ? " Lv" + row.level() : "");
@@ -302,13 +302,13 @@ public final class DungeonResultScreen extends Screen {
             graphics.drawString(font, font.plainSubstrByWidth(label, Math.max(20, nameWidth)), x + 10, y,
                     jobColor(row.job()));
             String damage = String.format(Locale.ROOT, "%,d (%.0f%%)", row.damage(), row.share() * 100.0);
-            graphics.drawString(font, damage, damageRight - font.width(damage), y, row.mvp() ? 0xFFFFE08A : 0xFFE0D8D0);
+            graphics.drawString(font, damage, damageRight - font.width(damage), y, row.hero() ? 0xFFFFE08A : 0xFFE0D8D0);
             String taken = String.format(Locale.ROOT, "%,d", row.taken());
             graphics.drawString(font, taken, takenRight - font.width(taken), y, 0xFFB0A8A0);
             y += rowHeight;
         }
-        if (data.has("mvpMe") && data.get("mvpMe").getAsBoolean() && t > 1.2) {
-            graphics.drawString(font, Component.translatable("result.eternalrealm.mvp_you").withStyle(ChatFormatting.GOLD),
+        if (data.has("heroMe") && data.get("heroMe").getAsBoolean() && t > 1.2) {
+            graphics.drawString(font, Component.translatable("result.eternalrealm.hero_you").withStyle(ChatFormatting.GOLD),
                     left + 4, bottom - 11, 0xFFFFFFFF);
         }
 

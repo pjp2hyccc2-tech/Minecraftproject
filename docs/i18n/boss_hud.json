@@ -1,8 +1,26 @@
 {
-  "hud.eternalrealm.boss.shield": {"ja": "シールド", "en": "Shield"},
-  "hud.eternalrealm.boss.invulnerable": {"ja": "無敵", "en": "Invulnerable"},
-  "hud.eternalrealm.boss.defeated": {"ja": "撃破", "en": "Defeated"},
-  "hud.eternalrealm.boss.enraged": {"ja": "激昂", "en": "Enraged"},
-  "hud.eternalrealm.boss.enrage_in": {"ja": "激昂まで %s", "en": "Enrage in %s"},
-  "hud.eternalrealm.boss.ranking": {"ja": "ダメージランキング", "en": "Damage ranking"}
+  "hud.eternalrealm.boss.shield": {
+    "ja": "シールド",
+    "en": "Shield"
+  },
+  "hud.eternalrealm.boss.invulnerable": {
+    "ja": "無敵",
+    "en": "Invulnerable"
+  },
+  "hud.eternalrealm.boss.defeated": {
+    "ja": "撃破",
+    "en": "Defeated"
+  },
+  "hud.eternalrealm.boss.enraged": {
+    "ja": "激昂",
+    "en": "Enraged"
+  },
+  "hud.eternalrealm.boss.enrage_in": {
+    "ja": "激昂まで %s",
+    "en": "Enrage in %s"
+  },
+  "hud.eternalrealm.boss.ranking": {
+    "ja": "戦功ランキング",
+    "en": "Merit ranking"
+  }
 }

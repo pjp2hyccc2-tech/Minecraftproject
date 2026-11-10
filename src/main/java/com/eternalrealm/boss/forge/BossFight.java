@@ -87,7 +87,7 @@ import java.util.function.Consumer;
  */
 public final class BossFight {
     public static final String TAG = "eternalrealm_boss";
-    /** The boss HUD of the participants (Ragnarok-X-style frame, cast bar, damage ranking). */
+    /** The boss HUD of the participants (layered health frame, cast bar, merit ranking). */
     public static final String HUD_CHANNEL = "boss_hud";
     private static final int HUD_INTERVAL = 4;
     private static final int RANKING_ROWS = 5;
@@ -349,12 +349,12 @@ public final class BossFight {
                 .map(CharacterSnapshot::jobId).map(JobType::fromStored).map(JobType::id).orElse("none");
     }
 
-    /** Who did what so far (ranking, MVP). */
+    /** Who did what so far (merit ranking, the hero of the fight). */
     public Contributions contributions() {
         return contributions;
     }
 
-    /** A participant took {@code amount} damage during the fight (damage ranking, MVP score). */
+    /** A participant took {@code amount} damage during the fight (damage ranking, merit score). */
     public void recordTaken(ServerPlayer player, double amount) {
         if (participants.contains(player.getUUID()) && !isDefeated()) {
             contributions.taken(player.getUUID(), player.getGameProfile().getName(), jobOf(player), amount);

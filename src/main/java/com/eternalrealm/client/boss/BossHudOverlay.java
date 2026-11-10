@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import java.util.Locale;
 
 /**
- * The boss HUD (Ragnarok X style), replacing the vanilla boss bar: name, level and difficulty over a layered health bar
+ * The boss HUD, replacing the vanilla boss bar: name, level and difficulty over a layered health bar
  * ("×N" bars of changing colour, the lost part fading out in white), phase pips, the enrage timer, a shield or
  * invulnerability veil, the cast bar of the attack being prepared (its name over a filling bar) and, on the right,
  * the damage ranking of the party with the player's own line highlighted. Fed by the {@code boss_hud} channel every

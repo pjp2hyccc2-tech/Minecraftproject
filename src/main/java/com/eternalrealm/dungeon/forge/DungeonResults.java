@@ -42,9 +42,9 @@ import java.util.SplittableRandom;
 import java.util.UUID;
 
 /**
- * The clear result (報酬画面, Ragnarok X style): every member present gets a result screen with the grade
- * ({@link ClearRank}), the clear time, the party's contributions with the MVP crowned, what they received and a bonus
- * chest of three face-down cards to pick one from — the grade decides how rich the cards are. The MVP gets an
+ * The clear result (報酬画面): every member present gets a result screen with the grade
+ * ({@link ClearRank}), the clear time, the party's contributions with the hero of the fight (殊勲) crowned, what they received and a bonus
+ * chest of three face-down cards to pick one from — the grade decides how rich the cards are. The hero (殊勲) gets an
  * extra reward. A card not picked before leaving is picked at random on the way out.
  */
 public final class DungeonResults {
@@ -102,7 +102,7 @@ public final class DungeonResults {
                      Map<UUID, Haul> hauls) {
         ClearRank rank = ClearRank.of(cleared.durationTicks(), instance.run.timeLimitTicks(), instance.run.deaths());
         Contributions contributions = instance.fight().map(BossFight::contributions).orElse(new Contributions());
-        Optional<Contributions.Line> mvp = contributions.mvp();
+        Optional<Contributions.Line> hero = contributions.hero();
 
         // the party table, the same for everyone
         JsonArray party = new JsonArray();
@@ -122,13 +122,13 @@ public final class DungeonResults {
             row.addProperty("taken", Math.round(line.map(Contributions.Line::taken).orElse(0.0)));
             row.addProperty("falls", line.map(Contributions.Line::falls).orElse(0));
             row.addProperty("score", Math.round(line.map(Contributions.Line::score).orElse(0.0)));
-            row.addProperty("mvp", mvp.map(best -> best.id().equals(member)).orElse(false));
+            row.addProperty("hero", hero.map(best -> best.id().equals(member)).orElse(false));
             party.add(row);
         }
 
-        mvp.ifPresent(best -> {
+        hero.ifPresent(best -> {
             Component name = Component.literal(best.name()).withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD);
-            instance.tellAll(Component.translatable("message.eternalrealm.dungeon.mvp", name)
+            instance.tellAll(Component.translatable("message.eternalrealm.dungeon.hero", name)
                     .withStyle(ChatFormatting.YELLOW), false);
         });
 
@@ -139,9 +139,9 @@ public final class DungeonResults {
             }
             Haul haul = entry.getValue();
             List<ItemStack> items = new ArrayList<>(haul.items());
-            boolean isMvp = mvp.map(best -> best.id().equals(player.getUUID())).orElse(false);
-            if (isMvp) {
-                items.addAll(mvpReward(player, instance));
+            boolean isHero = hero.map(best -> best.id().equals(player.getUUID())).orElse(false);
+            if (isHero) {
+                items.addAll(heroReward(player, instance));
             }
             List<Card> cards = rollCards(context, player, instance, rank);
             OFFERS.put(player.getUUID(), new Offer(instance.instanceId, cards));
@@ -155,7 +155,7 @@ public final class DungeonResults {
             data.addProperty("falls", instance.run.deaths());
             data.addProperty("rank", rank.name());
             data.addProperty("me", player.getUUID().toString());
-            data.addProperty("mvpMe", isMvp);
+            data.addProperty("heroMe", isHero);
             data.add("party", party);
             JsonArray rewards = new JsonArray();
             for (ItemStack stack : items) {
@@ -172,8 +172,8 @@ public final class DungeonResults {
         }
     }
 
-    /** The MVP's extra: two more enhancement stones and a boss material of the area. */
-    private static List<ItemStack> mvpReward(ServerPlayer player, DungeonInstance instance) {
+    /** The hero (殊勲)'s extra: two more enhancement stones and a boss material of the area. */
+    private static List<ItemStack> heroReward(ServerPlayer player, DungeonInstance instance) {
         List<ItemStack> extra = new ArrayList<>();
         Item stone = ERGearItems.material(Materials.ENHANCEMENT_STONE);
         if (stone != null) {
@@ -188,7 +188,7 @@ public final class DungeonResults {
         for (ItemStack stack : extra) {
             Inventories.give(player, stack.copy());
         }
-        player.displayClientMessage(Component.translatable("message.eternalrealm.dungeon.mvp_reward")
+        player.displayClientMessage(Component.translatable("message.eternalrealm.dungeon.hero_reward")
                 .withStyle(ChatFormatting.GOLD), false);
         return extra;
     }
@@ -220,7 +220,7 @@ public final class DungeonResults {
                 }
             }
         } else if (roll < 65) {
-            return new Card(new ItemStack(ERGearItems.consumable(Consumable.YGGDRASIL_LEAF), tier >= 2 ? 2 : 1), 0L);
+            return new Card(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL), tier >= 2 ? 2 : 1), 0L);
         } else if (roll >= 90) {
             double luck = context.combat().service().get(player.getUUID()).map(Combatant::stats)
                     .map(CombatStats::lootBonus).orElse(0.0);

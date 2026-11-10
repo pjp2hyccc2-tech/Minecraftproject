@@ -33,10 +33,10 @@ public enum Consumable {
     OBLIVION_ELIXIR("oblivion_elixir", 10, 3000, 1, "oblivion_elixir", 0,
             new ConsumableEffect.ResetPoints(true, true)),
     /**
-     * 世界樹の葉: brings a fallen (戦闘不能) player back on the spot with half health — oneself from the revival
+     * 永久花の花びら: brings a fallen (戦闘不能) player back on the spot with half health — oneself from the revival
      * screen, or an ally by using it on them. Does nothing on a player who is standing.
      */
-    YGGDRASIL_LEAF("yggdrasil_leaf", 1, 400, 16, "yggdrasil_leaf", 0,
+    EVERBLOOM_PETAL("everbloom_petal", 1, 400, 16, "everbloom_petal", 0,
             new ConsumableEffect.Revive(0.5));
 
     public enum UseCheck {

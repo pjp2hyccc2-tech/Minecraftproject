@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * 戦闘不能 — the revival screen (Ragnarok X style): who brought the player down, what it cost, the two ways back
- * (revive on the spot with a 世界樹の葉, or return to the save point, which happens by itself when the countdown ends),
+ * 戦闘不能 — the revival screen: who brought the player down, what it cost, the two ways back
+ * (revive on the spot with a 永久花の花びら, or return to the save point, which happens by itself when the countdown ends),
  * a reminder that allies can revive the player, and "強くなるには" advice. The world stays visible (and running)
  * behind a dark red veil; Esc opens the pause menu and T the chat, after which the screen comes back.
  */
@@ -44,7 +44,7 @@ public final class RevivalScreen extends Screen {
 
     private Component killer = Component.empty();
     private Component destination = Component.empty();
-    private int leaves;
+    private int petals;
     private long expLost;
     private double unlock;
     private double auto;
@@ -69,7 +69,7 @@ public final class RevivalScreen extends Screen {
         }
         killer = component(ClientUiState.stringOr(data, "killer", ""));
         destination = component(ClientUiState.stringOr(data, "destination", ""));
-        leaves = ClientUiState.intOr(data, "leaves", 0);
+        petals = ClientUiState.intOr(data, "petals", 0);
         expLost = ClientUiState.longOr(data, "exp", 0L);
         unlock = number(data, "unlock");
         auto = number(data, "auto");
@@ -127,7 +127,7 @@ public final class RevivalScreen extends Screen {
         return Math.max(96, height * 46 / 100);
     }
 
-    private int leafLeft() {
+    private int petalLeft() {
         return width / 2 - GAP / 2 - BUTTON_W;
     }
 
@@ -139,8 +139,8 @@ public final class RevivalScreen extends Screen {
         return ClientRevival.secondsSinceUpdate();
     }
 
-    private boolean leafEnabled() {
-        return leaves > 0 && System.currentTimeMillis() >= pendingUntil;
+    private boolean petalEnabled() {
+        return petals > 0 && System.currentTimeMillis() >= pendingUntil;
     }
 
     private boolean returnEnabled() {
@@ -157,8 +157,8 @@ public final class RevivalScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
             int top = buttonsTop();
-            if (inside(mouseX, mouseY, leafLeft(), top, BUTTON_W, BUTTON_H) && leafEnabled()) {
-                send(com.eternalrealm.revival.forge.RevivalService.LEAF_ACTION);
+            if (inside(mouseX, mouseY, petalLeft(), top, BUTTON_W, BUTTON_H) && petalEnabled()) {
+                send(com.eternalrealm.revival.forge.RevivalService.PETAL_ACTION);
                 return true;
             }
             if (inside(mouseX, mouseY, returnLeft(), top, BUTTON_W, BUTTON_H) && returnEnabled()) {
@@ -236,13 +236,13 @@ public final class RevivalScreen extends Screen {
 
         // the two ways back
         int top = buttonsTop();
-        ItemStack leafIcon = new ItemStack(ERGearItems.consumable(Consumable.YGGDRASIL_LEAF));
-        Component leafSub = leaves > 0
-                ? Component.translatable("revival.eternalrealm.leaf_count", leaves).withStyle(ChatFormatting.GREEN)
-                : Component.translatable("revival.eternalrealm.no_leaf").withStyle(ChatFormatting.DARK_GRAY);
-        button(graphics, leafLeft(), top, leafIcon, Component.translatable("revival.eternalrealm.revive_here"), leafSub,
+        ItemStack petalIcon = new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL));
+        Component petalSub = petals > 0
+                ? Component.translatable("revival.eternalrealm.petal_count", petals).withStyle(ChatFormatting.GREEN)
+                : Component.translatable("revival.eternalrealm.no_petal").withStyle(ChatFormatting.DARK_GRAY);
+        button(graphics, petalLeft(), top, petalIcon, Component.translatable("revival.eternalrealm.revive_here"), petalSub,
                 Component.translatable("revival.eternalrealm.revive_here.health").withStyle(ChatFormatting.GRAY),
-                leafEnabled(), inside(mouseX, mouseY, leafLeft(), top, BUTTON_W, BUTTON_H), 0xFF4FB85A);
+                petalEnabled(), inside(mouseX, mouseY, petalLeft(), top, BUTTON_W, BUTTON_H), 0xFF4FB85A);
         double unlockLeft = unlock - elapsed();
         double autoLeft = Math.max(0.0, auto - elapsed());
         Component countdown = unlockLeft > 0.0
@@ -254,7 +254,7 @@ public final class RevivalScreen extends Screen {
                 Component.translatable("revival.eternalrealm.return"), destination.copy().withStyle(ChatFormatting.AQUA),
                 countdown, returnEnabled(), inside(mouseX, mouseY, returnLeft(), top, BUTTON_W, BUTTON_H), 0xFF5AA8E0);
         // the automatic return as a draining bar under the buttons
-        int barLeft = leafLeft();
+        int barLeft = petalLeft();
         int barRight = returnLeft() + BUTTON_W;
         double total = com.eternalrealm.revival.RevivalRules.autoReturnTicks(com.eternalrealm.revival.RevivalRules.Place
                 .byId(place)) / 20.0;
