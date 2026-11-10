@@ -166,9 +166,27 @@ public class LootTest {
         com.eternalrealm.item.Materials.fieldMaterials().forEach(m -> crafting.add(m.id()));
         assertEquals(crafting, Materials.fieldMaterials());
         for (String item : dropped) {
-            assertTrue("unknown item " + item, Materials.isKnown(item));
+            assertTrue("unknown item " + item, Materials.isKnown(item) || DropTables.POTIONS.contains(item));
+        }
+        // the potion ids are the item module's consumables
+        for (String potion : DropTables.POTIONS) {
+            assertTrue(potion, java.util.Arrays.stream(com.eternalrealm.item.Consumable.values())
+                    .anyMatch(c -> c.itemId().equals(potion) && c.effect() instanceof com.eternalrealm.item.ConsumableEffect.Heal));
         }
         assertFalse(Materials.isKnown("eternalrealm:slime_jelly"));
+    }
+
+    @Test
+    public void potionSizesFollowTheTierAndTheirRequiredLevels() {
+        assertEquals("eternalrealm:health_potion_small", DropTables.potionFor(1));
+        assertEquals("eternalrealm:health_potion_small", DropTables.potionFor(2));
+        assertEquals("eternalrealm:health_potion_medium", DropTables.potionFor(3));
+        assertEquals("eternalrealm:health_potion_medium", DropTables.potionFor(4));
+        assertEquals("eternalrealm:health_potion_large", DropTables.potionFor(5));
+        assertEquals("eternalrealm:health_potion_large", DropTables.potionFor(7));
+        // a tier-3 area starts at level 15 (medium), a tier-5 area at level 30 (large)
+        assertEquals(15, com.eternalrealm.item.Consumable.HEALTH_POTION_MEDIUM.requiredLevel());
+        assertEquals(30, com.eternalrealm.item.Consumable.HEALTH_POTION_LARGE.requiredLevel());
     }
 
     @Test
@@ -188,7 +206,12 @@ public class LootTest {
             if (template.role() == MonsterRole.ELITE) {
                 expected.add(Materials.fieldElite(area));
             }
+            String potion = DropTables.potionFor(table.equipment().tier());
+            expected.add(potion);
             assertEquals(template.id(), expected, items);
+            DropEntry potionEntry = table.entries().stream().filter(e -> e.itemId().equals(potion)).findFirst().orElseThrow();
+            assertEquals(template.id(), template.role() == MonsterRole.ELITE ? DropTables.ELITE_POTION_CHANCE
+                    : DropTables.POTION_CHANCE, potionEntry.chance(), 1e-9);
             double crystal = table.entries().stream().filter(e -> e.itemId().equals(Materials.REROLL_CRYSTAL))
                     .findFirst().orElseThrow().chance();
             double stone = table.entries().stream().filter(e -> e.itemId().equals(Materials.ENHANCEMENT_STONE))

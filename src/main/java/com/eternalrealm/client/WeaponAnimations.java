@@ -252,11 +252,15 @@ public final class WeaponAnimations {
         }
     }
 
-    /** Weapon held across the body (guarding). */
+    /**
+     * Weapon held across the body (guarding): the hilt low on the weapon side, the tip raised towards the other
+     * shoulder and the edge facing forward. The item is first stood upright (X) and then turned across the view (Y), so
+     * the blade never points back at the camera; the twin blades mirror it and cross in front.
+     */
     private static void guard(PoseStack pose, int side) {
-        pose.translate(side * -0.28F, 0.12F, 0.1F);
-        pose.mulPose(Axis.YP.rotationDegrees(side * 40.0F));
-        pose.mulPose(Axis.ZP.rotationDegrees(side * 70.0F));
+        pose.translate(side * -0.30F, 0.18F, -0.05F);
+        pose.mulPose(Axis.YP.rotationDegrees(side * 70.0F));
+        pose.mulPose(Axis.XP.rotationDegrees(-90.0F));
     }
 
     /** The blade that is not striking this beat: drawn back a little, ready for the next cut. */

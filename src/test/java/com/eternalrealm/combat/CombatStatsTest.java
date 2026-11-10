@@ -33,7 +33,7 @@ public class CombatStatsTest {
         assertEquals(1.0 - 5 * 0.0015, base.cooldownFactor(), EPS);
         assertEquals(1.0 + 5 * 0.003, base.dodgeDistanceFactor(), EPS);
         assertEquals(5 * 0.002, base.knockbackResistance(), EPS);
-        assertEquals(5 * 0.01, base.regenPerSecond(), EPS);
+        assertEquals(5 * 0.004, base.potionBonus(), EPS);
         assertEquals(1.0 + 5 * 0.002, base.projectileSpeedFactor(), EPS);
         assertEquals(5 * 0.002, base.lootBonus(), EPS);
         assertEquals(5 * 0.005, base.goldBonus(), EPS);
@@ -44,6 +44,7 @@ public class CombatStatsTest {
         assertEquals(scaling.minCooldownFactor(), maxed.cooldownFactor(), EPS);
         assertEquals(1.0 + scaling.maxDodgeDistanceBonus(), maxed.dodgeDistanceFactor(), EPS);
         assertEquals(scaling.maxKnockbackResist(), maxed.knockbackResistance(), EPS);
+        assertEquals(scaling.maxPotionBonus(), maxed.potionBonus(), EPS);
         assertEquals(1.0 + scaling.maxProjectileSpeedBonus(), maxed.projectileSpeedFactor(), EPS);
         assertEquals(scaling.maxLootBonus(), maxed.lootBonus(), EPS);
         assertEquals(scaling.maxGoldBonus(), maxed.goldBonus(), EPS);
@@ -63,6 +64,7 @@ public class CombatStatsTest {
         CombatStats sturdy = CombatStats.derive(base.with(StatType.VIT, 105), 10, TUNING);
         assertTrue(sturdy.maxHealthBonus() > reference.maxHealthBonus());
         assertTrue(sturdy.damageReduction() > reference.damageReduction());
+        assertTrue(sturdy.potionBonus() > reference.potionBonus());
 
         CombatStats quick = CombatStats.derive(base.with(StatType.AGI, 105), 10, TUNING);
         assertTrue(quick.actionSpeedFactor() < reference.actionSpeedFactor());

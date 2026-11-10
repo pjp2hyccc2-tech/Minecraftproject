@@ -216,7 +216,10 @@ public final class JobActions {
         return profile == null ? null : profile.type();
     }
 
-    /** The first job choice hands out the job's weapon. */
+    /** Small health potions in the starter kit: health does not come back by itself (player.forge.Vitals). */
+    public static final int STARTER_POTIONS = 10;
+
+    /** The first job choice hands out the job's weapon and a stack of small health potions. */
     static void giveStarterKit(ServerPlayer player, JobType job) {
         WeaponType type = Jobs.get(job).starterWeapon();
         ItemStack weapon = com.eternalrealm.item.forge.EquipmentStacks.create(com.eternalrealm.item.EquipmentData.of(
@@ -226,6 +229,13 @@ public final class JobActions {
             player.drop(weapon, false);
         }
         player.displayClientMessage(Component.translatable("message.eternalrealm.job.starter_kit", weapon.getHoverName())
+                .withStyle(ChatFormatting.AQUA), false);
+        ItemStack potions = new ItemStack(com.eternalrealm.item.forge.ERGearItems.consumable(
+                com.eternalrealm.item.Consumable.HEALTH_POTION_SMALL), STARTER_POTIONS);
+        if (!player.getInventory().add(potions)) {
+            player.drop(potions, false);
+        }
+        player.displayClientMessage(Component.translatable("message.eternalrealm.job.starter_potions", STARTER_POTIONS)
                 .withStyle(ChatFormatting.AQUA), false);
     }
 

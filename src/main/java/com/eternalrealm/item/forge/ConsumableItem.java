@@ -162,8 +162,10 @@ public final class ConsumableItem extends Item {
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
         }
+        boolean fighting = ServerContext.current().map(context -> context.combat().inCombat(player)).orElse(true);
+        int cooldown = consumable.cooldownTicks(fighting);
         for (Consumable member : consumable.cooldownGroupMembers()) {
-            player.getCooldowns().addCooldown(ERGearItems.consumable(member), consumable.cooldownTicks());
+            player.getCooldowns().addCooldown(ERGearItems.consumable(member), cooldown);
         }
     }
 
@@ -172,7 +174,10 @@ public final class ConsumableItem extends Item {
         ServerLevel level = player.serverLevel();
         ConsumableEffect effect = consumable.effect();
         if (effect instanceof ConsumableEffect.Heal heal) {
-            player.heal((float) heal.amount(player.getMaxHealth()));
+            // VIT makes potions stronger (the only health that comes back by itself is gone: see player.forge.Vitals)
+            double bonus = ServerContext.current().flatMap(context -> context.combat().service().get(player.getUUID()))
+                    .map(combatant -> combatant.stats().potionBonus()).orElse(0.0);
+            player.heal((float) (heal.amount(player.getMaxHealth()) * (1.0 + bonus)));
             level.sendParticles(ParticleTypes.HEART, player.getX(), player.getY() + 1.6, player.getZ(),
                     4, 0.4, 0.3, 0.4, 0.0);
             return true;
@@ -240,7 +245,12 @@ public final class ConsumableItem extends Item {
             tooltip.add(Component.translatable("tooltip.eternalrealm.equipment.required_level", consumable.requiredLevel())
                     .withStyle(viewer < consumable.requiredLevel() ? ChatFormatting.RED : ChatFormatting.GRAY));
         }
-        tooltip.add(Component.translatable("tooltip.eternalrealm.consumable.cooldown",
-                String.format(Locale.ROOT, "%.0f", consumable.cooldownTicks() / 20.0)).withStyle(ChatFormatting.DARK_GRAY));
+        // potions and tonics state their cooldown in the description; items without a cooldown show none
+        ConsumableEffect effect = consumable.effect();
+        boolean described = effect instanceof ConsumableEffect.Heal || effect instanceof ConsumableEffect.RestoreStamina;
+        if (consumable.cooldownTicks() > 0 && !described) {
+            tooltip.add(Component.translatable("tooltip.eternalrealm.consumable.cooldown",
+                    String.format(Locale.ROOT, "%.0f", consumable.cooldownTicks() / 20.0)).withStyle(ChatFormatting.DARK_GRAY));
+        }
     }
 }
