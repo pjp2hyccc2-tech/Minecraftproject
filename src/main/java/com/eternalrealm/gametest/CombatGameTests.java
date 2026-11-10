@@ -304,7 +304,7 @@ public final class CombatGameTests {
 
     private static net.minecraft.world.item.Item itemFor(WeaponProfile weapon) {
         return ERItems.weapons().stream().map(net.minecraftforge.registries.RegistryObject::get)
-                .filter(item -> item.profile() == weapon).findFirst()
+                .filter(item -> item.profile().type() == weapon.type()).findFirst() // the starter (iron) of the type
                 .orElseThrow(() -> new GameTestAssertException("no item for " + weapon.id()));
     }
 
