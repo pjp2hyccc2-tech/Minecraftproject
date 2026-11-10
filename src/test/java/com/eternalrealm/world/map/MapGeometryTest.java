@@ -26,10 +26,18 @@ public class MapGeometryTest {
     public void markersCoverTheCapitalTheTowerAndEveryDungeon() {
         List<MapMarkers.Marker> markers = MapMarkers.astoria();
         assertEquals(MapMarkers.Kind.CAPITAL, markers.get(0).kind());
-        assertEquals(1 + LandmarkSites.all().size(), markers.size());
+        int waystones = com.eternalrealm.world.field.FieldLayout.waystones().size();
+        assertEquals(1 + LandmarkSites.all().size() + waystones, markers.size());
         Set<String> dungeons = new HashSet<>();
+        Set<String> stones = new HashSet<>();
         for (MapMarkers.Marker marker : markers) {
             if (marker.kind() == MapMarkers.Kind.CAPITAL) {
+                continue;
+            }
+            if (marker.kind() == MapMarkers.Kind.WAYSTONE) {
+                stones.add(marker.dungeonId());
+                assertEquals(marker.dungeonId(), AstoriaAreas.areaAt(marker.x(), marker.z()), marker.areaId());
+                assertEquals("waystone.eternalrealm." + marker.dungeonId(), marker.nameKey());
                 continue;
             }
             dungeons.add(marker.dungeonId());
@@ -38,7 +46,8 @@ public class MapGeometryTest {
             assertEquals(Dungeons.byId(marker.dungeonId()).orElseThrow().recommendedLevel(), marker.level());
         }
         assertEquals(Set.of("d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8"), dungeons);
-        MapMarkers.Marker tower = markers.get(markers.size() - 1);
+        assertEquals(waystones, stones.size());
+        MapMarkers.Marker tower = markers.get(markers.size() - 1 - waystones);
         assertEquals(MapMarkers.Kind.TOWER, tower.kind());
         assertEquals(AstoriaLayout.TOWER_Z + 0.5, tower.z(), EPS);
     }

@@ -131,6 +131,23 @@ public final class MapDraw {
     }
 
     /** A diamond (rotated square) marker. */
+    /**
+     * A waystone (転移碑): a small obelisk with a crystal above it; glowing blue once the player has recorded it,
+     * grey before. {@code (cx, cy)} is the foot of the stone's middle.
+     */
+    public static void waystone(GuiGraphics graphics, float cx, float cy, float size, boolean recorded) {
+        float half = size * 0.38F;
+        float top = cy - size * 0.55F;
+        float bottom = cy + size * 0.5F;
+        rect(graphics, cx - half - 1.0F, top - 1.0F, cx + half + 1.0F, bottom + 1.0F, 0xFF000000);
+        rect(graphics, cx - half, top, cx + half, bottom, recorded ? 0xFF9AB0D0 : 0xFF808080);
+        rect(graphics, cx - half * 0.35F, top + size * 0.15F, cx + half * 0.35F, bottom - size * 0.15F,
+                recorded ? 0xFF5FE0FF : 0xFF5A5A5A);
+        float crystal = cy - size * 0.95F;
+        diamond(graphics, cx, crystal, size * 0.36F + 1.0F, 0xFF000000);
+        diamond(graphics, cx, crystal, size * 0.36F, recorded ? 0xFF8FF4FF : 0xFFB0B0B0);
+    }
+
     public static void diamond(GuiGraphics graphics, float cx, float cy, float radius, int argb) {
         triangle(graphics, cx, cy - radius, cx - radius, cy, cx + radius, cy, argb);
         triangle(graphics, cx, cy + radius, cx - radius, cy, cx + radius, cy, argb);

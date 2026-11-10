@@ -46,6 +46,10 @@ public final class ClientModEvents {
                         ClientUiState.stringOr(data, "id", "")));
             } else if (com.eternalrealm.client.boss.BossScreenEffects.CHANNEL.equals(channel)) {
                 ClientUiState.get(channel).ifPresent(com.eternalrealm.client.boss.BossScreenEffects::accept);
+            } else if (com.eternalrealm.world.field.Waystones.UI_CHANNEL.equals(channel)) {
+                ClientUiState.get(channel).ifPresent(com.eternalrealm.ui.map.WorldMapScreen::openTravel);
+            } else if (com.eternalrealm.world.field.Waystones.ARRIVE_CHANNEL.equals(channel)) {
+                com.eternalrealm.ui.map.TravelFlashOverlay.start();
             }
         });
         ClientboundHandlers.setPlayerActionHandler(CombatAnimations::onRemoteAction);
@@ -78,6 +82,8 @@ public final class ClientModEvents {
                 com.eternalrealm.client.block.WaterWheelRenderer::new);
         event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.FOUNTAIN_SPRAY_ENTITY.get(),
                 com.eternalrealm.client.block.FountainRenderer::new);
+        event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.WAYSTONE_ENTITY.get(),
+                com.eternalrealm.client.block.WaystoneRenderer::new);
     }
 
     @SubscribeEvent
@@ -95,6 +101,8 @@ public final class ClientModEvents {
                 new com.eternalrealm.client.telegraph.DangerOverlay());
         event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), "boss_flash",
                 new com.eternalrealm.client.boss.BossScreenEffects());
+        event.registerAbove(VanillaGuiOverlay.VIGNETTE.id(), "waystone_flash",
+                new com.eternalrealm.ui.map.TravelFlashOverlay());
     }
 
     @SubscribeEvent

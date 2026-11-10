@@ -172,6 +172,15 @@ public final class CombatDriver {
         player.heal((float) perSecond);
     }
 
+    /** Whether the player dealt or took damage in the last {@link #OUT_OF_COMBAT_TICKS} ticks. */
+    public boolean inCombat(ServerPlayer player) {
+        long now = now();
+        NetState state = net(player.getUUID());
+        long lastCombat = Math.max(state.lastCombatTick, player.getLastHurtMobTimestamp() == 0 ? Long.MIN_VALUE / 4
+                : now - (player.tickCount - player.getLastHurtMobTimestamp()));
+        return now - lastCombat < OUT_OF_COMBAT_TICKS || player.hurtTime > 0;
+    }
+
     /** Taking damage (any source) puts the player in combat for {@link #OUT_OF_COMBAT_TICKS}. */
     public void markInCombat(ServerPlayer player) {
         net(player.getUUID()).lastCombatTick = now();

@@ -3,15 +3,23 @@ package com.eternalrealm.ui.map;
 import com.eternalrealm.client.map.ClientMapState;
 import com.eternalrealm.client.map.MapKeys;
 import com.eternalrealm.dungeon.hazard.HazardKind;
+import com.eternalrealm.network.forge.ERNetwork;
+import com.eternalrealm.network.forge.UiActionPacket;
 import com.eternalrealm.world.AreaDefinition;
 import com.eternalrealm.world.Areas;
+import com.eternalrealm.world.field.FieldLayout;
+import com.eternalrealm.world.field.Waystones;
 import com.eternalrealm.world.gen.AstoriaAreas;
 import com.eternalrealm.world.gen.AstoriaLayout;
 import com.eternalrealm.world.map.AtlasPainter;
+import com.eternalrealm.world.map.FieldMaskPainter;
 import com.eternalrealm.world.map.MapMarkers;
 import com.eternalrealm.world.map.MapMath;
 import com.eternalrealm.world.map.MapView;
 import com.eternalrealm.world.map.MapViewport;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -21,19 +29,29 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 /**
- * The world map (M, or the map button of the journal): a stylised atlas of アストリア painted from the pure layout
- * ({@link AtlasTexture}) with the area rings, their names and level ranges, sealed areas greyed out by the server's
- * world progress, the capital, the Tower of the End and every dungeon entrance with its recommended level, the town
- * NPCs near the player, the party members and the player. Drag to pan, scroll to zoom, hover for details. Inside a
- * dungeon instance it shows the instance's layout instead (rooms, current room, boss arena, traps).
+ * The world map (M, or the map button of the journal), with two tabs:
+ * <ul>
+ *   <li><b>フィールドマップ</b> (first press of M): the field the player is in, zoomed to fit, everything else veiled and
+ *   the field's border drawn in its colour ({@link FieldMaskTexture}), with a panel: name, recommended level, what it
+ *   is like, its waystone and its dungeons;</li>
+ *   <li><b>全域マップ</b> (M again, or Tab): the whole kingdom — every field with its name and level range, sealed ones in
+ *   grey, the capital, the Tower of the End, every dungeon entrance and every waystone.</li>
+ * </ul>
+ * Clicking a field (without dragging) opens its field map. Waystones show whether the player has recorded them.
+ * Opened at a waystone ({@link #openTravel}) the screen is the travel menu: a list of all waystones next to the map;
+ * recorded ones can be chosen on the list or the map and the server checks and performs the travel. Inside a dungeon
+ * instance it shows the instance's layout instead (rooms, current room, boss arena, traps).
  */
 public final class WorldMapScreen extends Screen {
     private static final int MARGIN = 8;
@@ -43,29 +61,91 @@ public final class WorldMapScreen extends Screen {
     private static final int PANEL = 0xF0101018;
     private static final int LABEL_BACKGROUND = 0xA0101018;
     private static final int HOVER_PIXELS = 7;
-    /** The zoom is kept between openings; the view always starts on the player. */
-    private static double realmZoom = 4.0;
+    private static final int TRAVEL_PANEL = 168;
+    private static final int ROW = 22;
+    private static final int CLICK_SLOP = 4;
 
     private enum Mode {
         REALM, DUNGEON
+    }
+
+    /** The two realm views. */
+    public enum Tab {
+        FIELD, WHOLE
     }
 
     /** Something under the mouse: where it is drawn and what the tooltip says. */
     private record Hover(float x, float y, List<Component> lines) {
     }
 
-    private final List<Hover> hovers = new ArrayList<>();
-    private Mode mode = Mode.REALM;
-    private MapViewport viewport;
-    private boolean dragging;
-
-    private WorldMapScreen() {
-        super(Component.translatable("screen.eternalrealm.map.title"));
+    /** A waystone drawn on the map (clickable in travel mode). */
+    private record StoneSpot(float x, float y, String id) {
     }
 
+    /** Opened at a waystone: where the player stands, when travel is possible again, what the server says is known. */
+    private record Travel(String from, long readyAtMillis, Set<String> recorded) {
+    }
+
+    private final List<Hover> hovers = new ArrayList<>();
+    private final List<StoneSpot> stoneSpots = new ArrayList<>();
+    private final Travel travel;
+    private Mode mode = Mode.REALM;
+    private Tab tab;
+    private int field = FieldLayout.MEADOW;
+    private MapViewport viewport;
+    private boolean dragging;
+    private boolean pressed;
+    private double pressX;
+    private double pressY;
+    private String selected;
+    private Button travelButton;
+
+    private WorldMapScreen(Tab tab, Travel travel) {
+        super(Component.translatable(travel != null ? "screen.eternalrealm.waystone.title"
+                : "screen.eternalrealm.map.title"));
+        this.tab = tab;
+        this.travel = travel;
+    }
+
+    /** M or the journal: the field map first. */
     public static void open() {
         com.eternalrealm.client.sound.UiSounds.journalOpen();
-        Minecraft.getInstance().setScreen(new WorldMapScreen());
+        Minecraft.getInstance().setScreen(new WorldMapScreen(Tab.FIELD, null));
+    }
+
+    /**
+     * The server's answer to touching a waystone ({@link Waystones#UI_CHANNEL}):
+     * {@code {"at": id, "cooldown": seconds, "recorded": [ids]}}.
+     */
+    public static void openTravel(JsonObject data) {
+        String at = data.has("at") && data.get("at").isJsonPrimitive() ? data.get("at").getAsString() : "";
+        if (Waystones.byId(at).isEmpty()) {
+            return;
+        }
+        double cooldown = 0.0;
+        if (data.has("cooldown") && data.get("cooldown").isJsonPrimitive()) {
+            try {
+                cooldown = Math.max(0.0, Math.min(600.0, data.get("cooldown").getAsDouble()));
+            } catch (NumberFormatException | UnsupportedOperationException e) {
+                cooldown = 0.0;
+            }
+        }
+        Set<String> recorded = new HashSet<>();
+        if (data.has("recorded") && data.get("recorded").isJsonArray()) {
+            JsonArray array = data.getAsJsonArray("recorded");
+            for (JsonElement element : array) {
+                if (element.isJsonPrimitive() && Waystones.byId(element.getAsString()).isPresent()) {
+                    recorded.add(element.getAsString());
+                }
+            }
+        }
+        com.eternalrealm.client.sound.UiSounds.journalOpen();
+        Minecraft.getInstance().setScreen(new WorldMapScreen(Tab.WHOLE,
+                new Travel(at, System.currentTimeMillis() + Math.round(cooldown * 1000.0), Set.copyOf(recorded))));
+    }
+
+    private boolean recorded(String waystone) {
+        return ClientMapState.view().hasWaystone(waystone) || (travel != null && travel.recorded().contains(waystone));
     }
 
     // ------------------------------------------------------------------ layout
@@ -79,7 +159,11 @@ public final class WorldMapScreen extends Screen {
     }
 
     private int frameRight() {
-        return width - MARGIN;
+        return width - MARGIN - (travel != null ? TRAVEL_PANEL + 6 : 0);
+    }
+
+    private int panelLeft() {
+        return width - MARGIN - TRAVEL_PANEL;
     }
 
     private int frameBottom() {
@@ -100,21 +184,26 @@ public final class WorldMapScreen extends Screen {
         MapView view = ClientMapState.view();
         LocalPlayer player = minecraft.player;
         if (viewport == null) {
-            if (player != null && minecraft.level != null && ClientMapState.inDungeonDimension(minecraft.level)
-                    && view.dungeon().isPresent()) {
+            if (travel == null && player != null && minecraft.level != null
+                    && ClientMapState.inDungeonDimension(minecraft.level) && view.dungeon().isPresent()) {
                 mode = Mode.DUNGEON;
                 MapView.Dungeon dungeon = view.dungeon().get();
                 double fit = 280.0 / Math.max(80, Math.min(frameRight() - frameLeft(), frameBottom() - frameTop()));
                 viewport = new MapViewport(player.getX() - dungeon.originX(), player.getZ() - dungeon.originZ(), fit);
             } else {
                 mode = Mode.REALM;
-                viewport = new MapViewport(0.0, 0.0, realmZoom);
-                centerOnPlayer();
+                field = playerField();
+                if (travel != null) {
+                    field = Waystones.byId(travel.from()).map(FieldLayout.Waystone::field).orElse(field);
+                }
+                fit();
             }
+        } else if (mode == Mode.REALM) {
+            fit(); // the window was resized
         }
-        int right = width - MARGIN;
+        int right = frameRight();
         addRenderableWidget(Button.builder(Component.literal("×"), b -> onClose())
-                .bounds(right - 18, 4, 18, 16).build());
+                .bounds(width - MARGIN - 18, 4, 18, 16).build());
         addRenderableWidget(Button.builder(Component.literal("−"), b -> zoomButton(1.5))
                 .bounds(right - 40, 4, 18, 16).build());
         addRenderableWidget(Button.builder(Component.literal("+"), b -> zoomButton(1.0 / 1.5))
@@ -123,16 +212,104 @@ public final class WorldMapScreen extends Screen {
                 b -> centerOnPlayer()).bounds(right - 128, 4, 66, 16).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.map.journal"),
                 b -> com.eternalrealm.ui.screen.JournalScreen.open()).bounds(MARGIN, 4, 70, 16).build());
+        if (mode == Mode.REALM) {
+            int mid = (frameLeft() + right) / 2;
+            addRenderableWidget(Button.builder(tabLabel(Tab.FIELD), b -> showTab(Tab.FIELD, playerField()))
+                    .bounds(mid - 96, 4, 94, 16).build());
+            addRenderableWidget(Button.builder(tabLabel(Tab.WHOLE), b -> showTab(Tab.WHOLE, field))
+                    .bounds(mid + 2, 4, 94, 16).build());
+        }
+        if (travel != null) {
+            travelButton = addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.waystone.go"),
+                    b -> travel()).bounds(panelLeft() + 8, frameBottom() - 22, TRAVEL_PANEL - 16, 18).build());
+            travelButton.active = false;
+        }
+    }
+
+    private Component tabLabel(Tab which) {
+        MutableComponent label = Component.translatable(which == Tab.FIELD ? "screen.eternalrealm.map.tab.field"
+                : "screen.eternalrealm.map.tab.whole");
+        return which == tab ? Component.literal("» ").append(label.withStyle(ChatFormatting.GOLD)).append(" «")
+                : label;
+    }
+
+    /** Field (area id) the player stands in; the meadow when not in the realm. */
+    private static int playerField() {
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
+        if (player == null || minecraft.level == null || !ClientMapState.inRealm(minecraft.level)) {
+            return FieldLayout.MEADOW;
+        }
+        MapView view = ClientMapState.view();
+        return AstoriaAreas.areaAt(player.getX() - view.realm().centerX(), player.getZ() - view.realm().centerZ());
+    }
+
+    private void showTab(Tab which, int newField) {
+        tab = which;
+        field = Math.max(1, Math.min(FieldLayout.FIELD_COUNT, newField));
+        com.eternalrealm.client.sound.UiSounds.journalOpen();
+        rebuildWidgets();
+        fit();
+    }
+
+    /** Fits the view to the tab: the whole kingdom, or the field's region with a little of its neighbours. */
+    private void fit() {
+        double w = Math.max(40, frameRight() - frameLeft());
+        double h = Math.max(40, frameBottom() - frameTop());
+        if (tab == Tab.WHOLE) {
+            double minX = FieldLayout.MIN_X - 60;
+            double maxX = FieldLayout.MAX_X + 60;
+            double minZ = FieldLayout.MIN_Z - 60;
+            double maxZ = FieldLayout.MAX_Z + 60;
+            viewport = new MapViewport((minX + maxX) / 2.0, (minZ + maxZ) / 2.0,
+                    Math.max((maxX - minX) / w, (maxZ - minZ) / h));
+        } else {
+            int[] b = FieldLayout.regionBounds(field);
+            double minX = b[0] - 40;
+            double maxX = b[2] + 56;
+            double minZ = b[1] - 40;
+            double maxZ = b[3] + 56;
+            viewport = new MapViewport((minX + maxX) / 2.0, (minZ + maxZ) / 2.0,
+                    Math.max((maxX - minX) / w, (maxZ - minZ) / h) * 1.08);
+        }
     }
 
     private void zoomButton(double factor) {
         viewport.zoom(factor, centerX(), centerY(), centerX(), centerY());
-        rememberZoom();
     }
 
-    private void rememberZoom() {
-        if (mode == Mode.REALM) {
-            realmZoom = viewport.blocksPerPixel();
+    /** Travel mode: asks the server to travel to the selected waystone (the server checks everything). */
+    private void travel() {
+        if (travel == null || selected == null || !canChoose(selected)) {
+            return;
+        }
+        JsonObject args = new JsonObject();
+        args.addProperty("to", selected);
+        ERNetwork.sendToServer(new UiActionPacket(Waystones.TRAVEL_ACTION, args));
+        onClose();
+    }
+
+    /** Whether the player may pick {@code id} as the destination (the server checks again). */
+    private boolean canChoose(String id) {
+        if (travel == null || id.equals(travel.from()) || !recorded(id)) {
+            return false;
+        }
+        return Waystones.byId(id).map(w -> ClientMapState.view().isUnlocked(w.field())).orElse(false);
+    }
+
+    private void select(String id) {
+        if (canChoose(id)) {
+            selected = id;
+            com.eternalrealm.client.sound.UiSounds.journalOpen();
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (travelButton != null) {
+            travelButton.active = selected != null && canChoose(selected)
+                    && System.currentTimeMillis() >= travel.readyAtMillis();
         }
     }
 
@@ -163,8 +340,33 @@ public final class WorldMapScreen extends Screen {
         if (super.mouseClicked(mouseX, mouseY, button)) {
             return true;
         }
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && insideFrame(mouseX, mouseY)) {
+        if (button != GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            return false;
+        }
+        if (travel != null && mouseX >= panelLeft() && mouseX < width - MARGIN) {
+            int index = (int) Math.floor((mouseY - (frameTop() + 18)) / ROW);
+            List<FieldLayout.Waystone> all = Waystones.all();
+            if (mouseY >= frameTop() + 18 && index >= 0 && index < all.size()) {
+                select(all.get(index).id());
+                return true;
+            }
+            return false;
+        }
+        if (insideFrame(mouseX, mouseY)) {
+            if (travel != null) {
+                for (StoneSpot spot : stoneSpots) {
+                    double dx = spot.x() - mouseX;
+                    double dy = spot.y() - mouseY;
+                    if (dx * dx + dy * dy <= 81.0 && canChoose(spot.id())) {
+                        select(spot.id());
+                        return true;
+                    }
+                }
+            }
             dragging = true;
+            pressed = true;
+            pressX = mouseX;
+            pressY = mouseY;
             return true;
         }
         return false;
@@ -172,7 +374,21 @@ public final class WorldMapScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        boolean click = pressed && Math.abs(mouseX - pressX) <= CLICK_SLOP && Math.abs(mouseY - pressY) <= CLICK_SLOP;
         dragging = false;
+        pressed = false;
+        if (click && mode == Mode.REALM && button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            // a click (not a drag) on a field opens its field map
+            double x = viewport.worldX(mouseX, centerX());
+            double z = viewport.worldZ(mouseY, centerY());
+            if (FieldLayout.inBounds(x, z)) {
+                int clicked = AstoriaAreas.areaAt(x, z);
+                if (tab == Tab.WHOLE || clicked != field) {
+                    showTab(Tab.FIELD, clicked);
+                    return true;
+                }
+            }
+        }
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
@@ -189,7 +405,6 @@ public final class WorldMapScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         if (delta != 0.0) {
             viewport.zoom(delta > 0.0 ? 1.0 / 1.25 : 1.25, mouseX, mouseY, centerX(), centerY());
-            rememberZoom();
         }
         return true;
     }
@@ -197,7 +412,15 @@ public final class WorldMapScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (MapKeys.WORLD_MAP.matches(keyCode, scanCode)) {
-            onClose();
+            if (mode == Mode.REALM && tab == Tab.FIELD && travel == null) {
+                showTab(Tab.WHOLE, field);
+            } else {
+                onClose();
+            }
+            return true;
+        }
+        if (keyCode == GLFW.GLFW_KEY_TAB && mode == Mode.REALM) {
+            showTab(tab == Tab.FIELD ? Tab.WHOLE : Tab.FIELD, tab == Tab.FIELD ? field : playerField());
             return true;
         }
         double step = 40.0;
@@ -224,6 +447,7 @@ public final class WorldMapScreen extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics);
         hovers.clear();
+        stoneSpots.clear();
         int x0 = frameLeft();
         int y0 = frameTop();
         int x1 = frameRight();
@@ -237,10 +461,15 @@ public final class WorldMapScreen extends Screen {
             drawRealm(graphics, partialTick);
         }
         graphics.disableScissor();
+        if (travel != null) {
+            drawTravelPanel(graphics, mouseX, mouseY);
+        }
         graphics.drawString(font, title, MARGIN + 76, 8, 0xFFE8C66A);
-        graphics.drawString(font, Component.translatable("screen.eternalrealm.map.hint",
-                MapKeys.WORLD_MAP.getTranslatedKeyMessage()).withStyle(ChatFormatting.GRAY), MARGIN, height - 12,
-                0xFFFFFF);
+        Component hint = mode == Mode.REALM
+                ? Component.translatable(travel != null ? "screen.eternalrealm.waystone.hint"
+                : "screen.eternalrealm.map.hint_tabs", MapKeys.WORLD_MAP.getTranslatedKeyMessage())
+                : Component.translatable("screen.eternalrealm.map.hint", MapKeys.WORLD_MAP.getTranslatedKeyMessage());
+        graphics.drawString(font, hint.copy().withStyle(ChatFormatting.GRAY), MARGIN, height - 12, 0xFFFFFF);
         super.render(graphics, mouseX, mouseY, partialTick);
         if (insideFrame(mouseX, mouseY) && !dragging) {
             tooltip(graphics, mouseX, mouseY);
@@ -267,8 +496,14 @@ public final class WorldMapScreen extends Screen {
             graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.map.painting"),
                     Math.round(cx), frameTop() + 6, 0xFFE8C66A);
         }
+        if (tab == Tab.FIELD && astoria) {
+            drawFieldMask(graphics, cx, cy);
+        }
         // field names with their recommended levels (sealed fields in grey)
         for (AreaDefinition area : viewport.blocksPerPixel() <= 14.0 ? Areas.all() : List.<AreaDefinition>of()) {
+            if (tab == Tab.FIELD && area.id() == field) {
+                continue; // the panel names it
+            }
             double[] at = com.eternalrealm.world.field.FieldLayout.labelPoint(area.id());
             float lx = (float) viewport.screenX(at[0], cx);
             float ly = (float) viewport.screenY(at[1], cy);
@@ -299,6 +534,134 @@ public final class WorldMapScreen extends Screen {
             }
         }
         drawMembersAndPlayer(graphics, view, realmX, realmZ, cx, cy, partialTick);
+        if (tab == Tab.FIELD && astoria) {
+            drawFieldPanel(graphics, view);
+        }
+    }
+
+    /** Veils everything but the field and draws its border (see {@link FieldMaskPainter}). */
+    private void drawFieldMask(GuiGraphics graphics, float cx, float cy) {
+        int[] box = FieldMaskPainter.box(field);
+        float x0 = (float) viewport.screenX(box[0], cx);
+        float y0 = (float) viewport.screenY(box[1], cy);
+        float x1 = (float) viewport.screenX(box[2], cx);
+        float y1 = (float) viewport.screenY(box[3], cy);
+        net.minecraft.resources.ResourceLocation mask = FieldMaskTexture.get(field);
+        if (mask != null) {
+            MapDraw.texturedRect(graphics, mask, x0, y0, x1, y1, 0.0F, 0.0F, 1.0F, 1.0F);
+        }
+        int veil = FieldMaskPainter.VEIL;
+        float l = frameLeft();
+        float t = frameTop();
+        float r = frameRight();
+        float b = frameBottom();
+        MapDraw.rect(graphics, l, t, r, Math.max(t, y0), veil);
+        MapDraw.rect(graphics, l, Math.min(b, y1), r, b, veil);
+        MapDraw.rect(graphics, l, Math.max(t, y0), Math.max(l, x0), Math.min(b, y1), veil);
+        MapDraw.rect(graphics, Math.min(r, x1), Math.max(t, y0), r, Math.min(b, y1), veil);
+    }
+
+    /** Field tab: name, level, description, its waystone and its dungeons, top left of the map. */
+    private void drawFieldPanel(GuiGraphics graphics, MapView view) {
+        AreaDefinition area = Areas.require(field);
+        boolean open = view.isUnlocked(field);
+        List<Component> lines = new ArrayList<>();
+        List<FormattedCharSequence> desc = font.split(Component.translatable(area.descriptionKey())
+                .withStyle(ChatFormatting.GRAY), 176);
+        for (FieldLayout.Waystone waystone : Waystones.all()) {
+            if (waystone.field() == field) {
+                boolean known = recorded(waystone.id());
+                lines.add(Component.translatable(known ? "screen.eternalrealm.map.field.waystone_known"
+                        : "screen.eternalrealm.map.field.waystone_unknown",
+                        Component.translatable(Waystones.translationKey(waystone.id())))
+                        .withStyle(known ? ChatFormatting.AQUA : ChatFormatting.DARK_GRAY));
+            }
+        }
+        for (MapMarkers.Marker place : MapMarkers.astoria()) {
+            if (place.areaId() == field && (place.kind() == MapMarkers.Kind.DUNGEON
+                    || place.kind() == MapMarkers.Kind.TOWER)) {
+                lines.add(Component.translatable("screen.eternalrealm.map.field.dungeon",
+                        Component.translatable(place.kind() == MapMarkers.Kind.TOWER ? MapMarkers.TOWER_KEY
+                                : place.nameKey()), place.level()).withStyle(ChatFormatting.LIGHT_PURPLE));
+            }
+        }
+        if (!open) {
+            lines.add(Component.translatable("map.eternalrealm.sealed.desc").withStyle(ChatFormatting.RED));
+        } else if (!view.isDiscovered(field)) {
+            lines.add(Component.translatable("map.eternalrealm.undiscovered").withStyle(ChatFormatting.YELLOW));
+        }
+        int x = frameLeft() + 6;
+        int y = frameTop() + 6;
+        int w = 184;
+        int h = 8 + 12 + 11 + desc.size() * 10 + 4 + lines.size() * 10 + 4;
+        graphics.fill(x - 1, y - 1, x + w + 1, y + h + 1, 0xFF5A4A2A);
+        graphics.fill(x, y, x + w, y + h, 0xE0101018);
+        graphics.fill(x, y, x + 3, y + h, 0xFF000000 | area.color());
+        MutableComponent name = Component.translatable(area.translationKey());
+        name.withStyle(style -> style.withColor(open ? MapMath.mix(area.color(), 0xFFFFFF, 0.5) : 0x9A9A9A)
+                .withBold(true));
+        graphics.drawString(font, name, x + 8, y + 5, 0xFFFFFF);
+        graphics.drawString(font, levelRange(area).copy().withStyle(open ? ChatFormatting.GOLD : ChatFormatting.DARK_GRAY),
+                x + 8, y + 17, 0xFFFFFF);
+        int ly = y + 30;
+        for (FormattedCharSequence line : desc) {
+            graphics.drawString(font, line, x + 8, ly, 0xFFFFFF, false);
+            ly += 10;
+        }
+        ly += 4;
+        for (Component line : lines) {
+            graphics.drawString(font, line, x + 8, ly, 0xFFFFFF, false);
+            ly += 10;
+        }
+    }
+
+    /** Travel mode: every waystone with its state; recorded and open ones can be chosen. */
+    private void drawTravelPanel(GuiGraphics graphics, int mouseX, int mouseY) {
+        int x0 = panelLeft();
+        int y0 = frameTop();
+        int x1 = width - MARGIN;
+        int y1 = frameBottom();
+        graphics.fill(x0 - 2, y0 - 2, x1 + 2, y1 + 2, FRAME);
+        graphics.fill(x0, y0, x1, y1, PANEL);
+        graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.waystone.choose")
+                .withStyle(ChatFormatting.GOLD), (x0 + x1) / 2, y0 + 5, 0xFFFFFF);
+        MapView view = ClientMapState.view();
+        List<FieldLayout.Waystone> all = Waystones.all();
+        for (int i = 0; i < all.size(); i++) {
+            FieldLayout.Waystone waystone = all.get(i);
+            int top = y0 + 18 + i * ROW;
+            if (top + ROW > y1 - 28) {
+                break;
+            }
+            boolean here = waystone.id().equals(travel.from());
+            boolean known = recorded(waystone.id());
+            boolean open = view.isUnlocked(waystone.field());
+            boolean chosen = waystone.id().equals(selected);
+            boolean hovered = mouseX >= x0 && mouseX < x1 && mouseY >= top && mouseY < top + ROW;
+            if (chosen) {
+                graphics.fill(x0 + 2, top, x1 - 2, top + ROW - 2, 0x806A5A20);
+            } else if (hovered && canChoose(waystone.id())) {
+                graphics.fill(x0 + 2, top, x1 - 2, top + ROW - 2, 0x40FFFFFF);
+            }
+            MapDraw.waystone(graphics, x0 + 11.0F, top + 12.0F, 7.0F, known);
+            ChatFormatting color = here ? ChatFormatting.GREEN : !known ? ChatFormatting.DARK_GRAY
+                    : !open ? ChatFormatting.RED : ChatFormatting.AQUA;
+            graphics.drawString(font, Component.translatable(Waystones.translationKey(waystone.id()))
+                    .withStyle(color), x0 + 22, top + 2, 0xFFFFFF, false);
+            Component sub = here ? Component.translatable("screen.eternalrealm.waystone.here")
+                    : !known ? Component.translatable("screen.eternalrealm.waystone.unknown")
+                    : !open ? Component.translatable("map.eternalrealm.sealed")
+                    : levelRange(Areas.require(waystone.field()));
+            graphics.drawString(font, sub.copy().withStyle(ChatFormatting.GRAY), x0 + 22, top + 11, 0xFFFFFF, false);
+        }
+        long wait = travel.readyAtMillis() - System.currentTimeMillis();
+        if (wait > 0L) {
+            graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.waystone.cooldown",
+                    (wait + 999L) / 1000L).withStyle(ChatFormatting.RED), (x0 + x1) / 2, y1 - 34, 0xFFFFFF);
+        } else if (selected == null) {
+            graphics.drawCenteredString(font, Component.translatable("screen.eternalrealm.waystone.pick")
+                    .withStyle(ChatFormatting.GRAY), (x0 + x1) / 2, y1 - 34, 0xFFFFFF);
+        }
     }
 
     private void drawPlace(GuiGraphics graphics, MapView view, MapMarkers.Marker place, float cx, float cy, double ppb) {
@@ -344,6 +707,37 @@ public final class WorldMapScreen extends Screen {
                     label(graphics, Component.translatable("map.eternalrealm.dungeon_label", name, place.level())
                             .withStyle(open ? ChatFormatting.AQUA : ChatFormatting.GRAY), sx, sy + 11.0F);
                 }
+            }
+            case WAYSTONE -> {
+                String id = place.dungeonId();
+                boolean known = recorded(id);
+                boolean here = travel != null && travel.from().equals(id);
+                boolean chosen = id.equals(selected);
+                float size = here || chosen ? 9.0F : 7.0F;
+                if (here || chosen) {
+                    MapDraw.ring(graphics, sx, sy - 2.0F, size + 2.0F, size + 3.5F, chosen ? 0xFFFFE070 : 0xFF70FFB0);
+                }
+                MapDraw.waystone(graphics, sx, sy, size, known);
+                Component name = Component.translatable(place.nameKey());
+                lines.add(name.copy().withStyle(known ? ChatFormatting.AQUA : ChatFormatting.GRAY));
+                lines.add(Component.translatable(Areas.require(place.areaId()).translationKey())
+                        .withStyle(ChatFormatting.DARK_GRAY));
+                if (here) {
+                    lines.add(Component.translatable("screen.eternalrealm.waystone.here").withStyle(ChatFormatting.GREEN));
+                } else if (!known) {
+                    lines.add(Component.translatable("map.eternalrealm.waystone.unknown")
+                            .withStyle(ChatFormatting.DARK_GRAY));
+                } else if (!open) {
+                    lines.add(Component.translatable("map.eternalrealm.sealed").withStyle(ChatFormatting.RED));
+                } else {
+                    lines.add(Component.translatable(travel != null ? "map.eternalrealm.waystone.choose"
+                            : "map.eternalrealm.waystone.known").withStyle(ChatFormatting.YELLOW));
+                }
+                if (ppb >= 0.15 || travel != null || here) {
+                    label(graphics, name.copy().withStyle(known ? ChatFormatting.AQUA : ChatFormatting.GRAY), sx,
+                            sy + 11.0F);
+                }
+                stoneSpots.add(new StoneSpot(sx, sy - 3.0F, id));
             }
         }
         hovers.add(new Hover(sx, sy, lines));

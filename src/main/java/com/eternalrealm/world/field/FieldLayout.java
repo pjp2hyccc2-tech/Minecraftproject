@@ -280,6 +280,36 @@ public final class FieldLayout {
         return capitalDistance(x, z) <= 0.0;
     }
 
+    private static volatile int[][] regionBounds;
+
+    /**
+     * Bounding box {@code {minX, minZ, maxX, maxZ}} of a field's region inside the world bounds (sampled every 16
+     * blocks, so accurate to that; the capital counts as part of the meadow). Computed once.
+     */
+    public static int[] regionBounds(int field) {
+        if (field < 1 || field > FIELD_COUNT) {
+            throw new IllegalArgumentException("field " + field);
+        }
+        int[][] bounds = regionBounds;
+        if (bounds == null) {
+            bounds = new int[FIELD_COUNT + 1][];
+            for (int f = 1; f <= FIELD_COUNT; f++) {
+                bounds[f] = new int[]{Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE};
+            }
+            for (int x = MIN_X; x <= MAX_X; x += 16) {
+                for (int z = MIN_Z; z <= MAX_Z; z += 16) {
+                    int[] b = bounds[areaAt(x, z)];
+                    b[0] = Math.min(b[0], x);
+                    b[1] = Math.min(b[1], z);
+                    b[2] = Math.max(b[2], x);
+                    b[3] = Math.max(b[3], z);
+                }
+            }
+            regionBounds = bounds;
+        }
+        return bounds[field].clone();
+    }
+
     public static boolean inBounds(double x, double z) {
         return x >= MIN_X && x <= MAX_X && z >= MIN_Z && z <= MAX_Z;
     }

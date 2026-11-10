@@ -53,6 +53,23 @@ public class MapViewTest {
     }
 
     @Test
+    public void recordedWaystonesTravelWithTheDocument() {
+        MapView base = sample();
+        MapView view = new MapView(base.realm(), base.unlockedAreas(), base.discoveredAreas(), false, base.party(),
+                base.npcs(), base.dungeon(), Set.of("meadow", "capital"));
+        MapView back = MapView.fromJson(JsonParser.parseString(view.toJson().toString()).getAsJsonObject());
+        assertEquals(Set.of("capital", "meadow"), back.waystones());
+        assertTrue(back.hasWaystone("meadow"));
+        assertFalse(back.hasWaystone("farm"));
+        assertTrue("none recorded: none sent", sample().toJson().get("waystones") == null);
+        JsonObject junk = view.toJson();
+        junk.add("waystones", JsonParser.parseString("[\"farm\", 3, {}, \"Bad Id!\"]"));
+        assertEquals(Set.of("farm"), MapView.fromJson(junk).waystones());
+        junk.addProperty("waystones", "meadow");
+        assertTrue(MapView.fromJson(junk).waystones().isEmpty());
+    }
+
+    @Test
     public void brokenDocumentsBecomeDefaults() {
         MapView empty = MapView.fromJson(new JsonObject());
         assertEquals(MapView.Realm.DEFAULT, empty.realm());

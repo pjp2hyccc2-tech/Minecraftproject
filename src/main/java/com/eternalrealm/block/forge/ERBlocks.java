@@ -144,6 +144,18 @@ public final class ERBlocks {
             BlockBehaviour.Properties.of().mapColor(MapColor.NONE).strength(0.0F, 3600000.0F).noCollission()
                     .noOcclusion().noParticlesOnBreak().pushReaction(PushReaction.DESTROY)));
 
+    // ---- the waystones (転移碑) of the field map
+    public static final RegistryObject<Block> WAYSTONE = block("waystone", () -> new WaystoneBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM)
+                    .strength(-1.0F, 3600000.0F).noLootTable().sound(SoundType.STONE).noOcclusion()
+                    .pushReaction(PushReaction.BLOCK).isValidSpawn((state, level, pos, type) -> false)
+                    .lightLevel(state -> state.getValue(WaystoneBlock.HALF)
+                            == net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER ? 11 : 7)));
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<WaystoneBlockEntity>> WAYSTONE_ENTITY =
+            BLOCK_ENTITIES.register("waystone",
+                    () -> BlockEntityType.Builder.of(WaystoneBlockEntity::new, WAYSTONE.get()).build(null));
+
     @SuppressWarnings("DataFlowIssue")
     public static final RegistryObject<BlockEntityType<FlagBlockEntity>> FLAG_ENTITY = BLOCK_ENTITIES.register("flag",
             () -> BlockEntityType.Builder.of(FlagBlockEntity::new, FLAG.get()).build(null));
