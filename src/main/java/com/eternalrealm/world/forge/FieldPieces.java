@@ -9,6 +9,9 @@ import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
@@ -43,7 +47,7 @@ import java.util.TreeSet;
 /**
  * Stamps the field set pieces ({@link FieldPieceData}, exported by {@code tools/fields}) into アストリア while its chunks
  * generate: {@link #stampTerrain} right after the terrain fill (blocks, foundations down to the terrain, block entity
- * data, fluid ticks, heightmaps) and {@link #restampAfterDecoration} once the chunk's own decoration ran (what trees or
+ * data, decoration entities such as minecarts, fluid ticks, heightmaps) and {@link #restampAfterDecoration} once the chunk's own decoration ran (what trees or
  * flowers grew into a piece's air and blocks is put back). Decoration features ask {@link #covers}/{@link #near} to
  * leave the pieces alone; the capital's terrain blend skips them too.
  *
@@ -63,6 +67,7 @@ public final class FieldPieces {
         final BlockState[][] palettes;
         final Map<Long, List<FieldPieceData.BlockEntity>> blockEntities;
         final Map<Long, List<int[]>> fluidTicks;
+        final Map<Long, List<FieldPieceData.Entity>> entities;
 
         Loaded(FieldPieceData data) {
             this.data = data;
@@ -70,6 +75,7 @@ public final class FieldPieces {
             this.palettes = new BlockState[pieces.size()][];
             this.blockEntities = new HashMap<>();
             this.fluidTicks = new HashMap<>();
+            this.entities = new HashMap<>();
             TreeSet<String> unknown = new TreeSet<>();
             for (FieldPieceData.Piece piece : pieces) {
                 List<String> palette = piece.palette();
@@ -87,6 +93,10 @@ public final class FieldPieces {
                 for (FieldPieceData.BlockEntity be : piece.blockEntities()) {
                     blockEntities.computeIfAbsent(FieldPieceData.chunkKey(be.x() >> 4, be.z() >> 4),
                             k -> new ArrayList<>()).add(be);
+                }
+                for (FieldPieceData.Entity entity : piece.entities()) {
+                    entities.computeIfAbsent(FieldPieceData.chunkKey((int) Math.floor(entity.x()) >> 4,
+                            (int) Math.floor(entity.z()) >> 4), k -> new ArrayList<>()).add(entity);
                 }
                 for (int[] tick : piece.fluidTicks()) {
                     fluidTicks.computeIfAbsent(FieldPieceData.chunkKey(tick[0] >> 4, tick[2] >> 4),
@@ -253,6 +263,27 @@ public final class FieldPieces {
             BlockPos at = new BlockPos(tick[0], tick[1], tick[2]);
             if (!chunk.getFluidState(at).isEmpty()) {
                 chunk.markPosForPostprocessing(at);
+            }
+        }
+        if (chunk instanceof ProtoChunk proto) {
+            for (FieldPieceData.Entity entity : l.entities.getOrDefault(FieldPieceData.chunkKey(pos.x, pos.z), List.of())) {
+                try {
+                    CompoundTag tag = TagParser.parseTag(entity.nbt());
+                    tag.putString("id", entity.type());
+                    ListTag at = new ListTag();
+                    at.add(DoubleTag.valueOf(entity.x()));
+                    at.add(DoubleTag.valueOf(entity.y()));
+                    at.add(DoubleTag.valueOf(entity.z()));
+                    tag.put("Pos", at);
+                    ListTag rotation = new ListTag();
+                    rotation.add(FloatTag.valueOf(entity.yaw()));
+                    rotation.add(FloatTag.valueOf(0.0F));
+                    tag.put("Rotation", rotation);
+                    proto.addEntity(tag);
+                } catch (Exception e) {
+                    LOG.warn("Field piece entity {} at {}, {}, {} is invalid: {}", entity.type(), entity.x(), entity.y(),
+                            entity.z(), e.getMessage());
+                }
             }
         }
         Heightmap.primeHeightmaps(chunk, EnumSet.of(Heightmap.Types.OCEAN_FLOOR_WG, Heightmap.Types.WORLD_SURFACE_WG));

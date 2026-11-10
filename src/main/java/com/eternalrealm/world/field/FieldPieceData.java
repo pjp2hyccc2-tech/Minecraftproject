@@ -42,6 +42,10 @@ public final class FieldPieceData {
     public record Probe(int x, int y, int z, String state) {
     }
 
+    /** A decoration entity (a minecart on a rail...) with its feet position and SNBT data (without id/position). */
+    public record Entity(String type, double x, double y, double z, float yaw, String nbt) {
+    }
+
     /** A terrain height the piece was fitted to: {@code floor(FieldTerrain.heightAt(x, z)) == top} when exported. */
     public record Sample(int x, int z, int top) {
     }
@@ -60,6 +64,7 @@ public final class FieldPieceData {
         private final int[] box;
         private final List<String> palette;
         private final List<BlockEntity> blockEntities;
+        private final List<Entity> entities;
         private final List<int[]> fluidTicks;
         private final List<Probe> probes;
         private final List<Sample> samples;
@@ -67,8 +72,8 @@ public final class FieldPieceData {
         private final List<Integer> tileOffsets = new ArrayList<>();
 
         Piece(int index, String id, String name, int field, String kind, int[] box, List<String> palette,
-              List<BlockEntity> blockEntities, List<int[]> fluidTicks, List<Probe> probes, List<Sample> samples,
-              byte[] data) {
+              List<BlockEntity> blockEntities, List<Entity> entities, List<int[]> fluidTicks, List<Probe> probes,
+              List<Sample> samples, byte[] data) {
             this.index = index;
             this.id = id;
             this.name = name;
@@ -77,6 +82,7 @@ public final class FieldPieceData {
             this.box = box;
             this.palette = List.copyOf(palette);
             this.blockEntities = List.copyOf(blockEntities);
+            this.entities = List.copyOf(entities);
             this.fluidTicks = List.copyOf(fluidTicks);
             this.probes = List.copyOf(probes);
             this.samples = List.copyOf(samples);
@@ -114,6 +120,10 @@ public final class FieldPieceData {
 
         public List<BlockEntity> blockEntities() {
             return blockEntities;
+        }
+
+        public List<Entity> entities() {
+            return entities;
         }
 
         public List<int[]> fluidTicks() {
@@ -250,6 +260,14 @@ public final class FieldPieceData {
                 int[] pos = ints(be.getAsJsonArray("pos"));
                 blockEntities.add(new BlockEntity(pos[0], pos[1], pos[2], be.get("nbt").getAsString()));
             }
+            List<Entity> entities = new ArrayList<>();
+            for (JsonElement e : array(p, "entities")) {
+                JsonObject en = e.getAsJsonObject();
+                JsonArray pos = en.getAsJsonArray("pos");
+                entities.add(new Entity(en.get("type").getAsString(), pos.get(0).getAsDouble(), pos.get(1).getAsDouble(),
+                        pos.get(2).getAsDouble(), en.has("yaw") ? en.get("yaw").getAsFloat() : 0.0F,
+                        en.has("nbt") ? en.get("nbt").getAsString() : "{}"));
+            }
             List<int[]> fluidTicks = new ArrayList<>();
             for (JsonElement e : array(p, "fluidTicks")) {
                 fluidTicks.add(ints(e.getAsJsonArray()));
@@ -272,7 +290,7 @@ public final class FieldPieceData {
             }
             Piece piece = new Piece(index++, id, p.has("name") ? p.get("name").getAsString() : id,
                     p.has("field") ? p.get("field").getAsInt() : 0, p.has("kind") ? p.get("kind").getAsString() : "",
-                    ints(p.getAsJsonArray("box")), palette, blockEntities, fluidTicks, probes, samples, data);
+                    ints(p.getAsJsonArray("box")), palette, blockEntities, entities, fluidTicks, probes, samples, data);
             scan(piece, byChunk, covered);
             pieces.add(piece);
         }

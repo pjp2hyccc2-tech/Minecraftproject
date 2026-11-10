@@ -373,7 +373,7 @@ def ship():
 # ====================================================================================== the lighthouse
 def lighthouse():
     lx, lz = LIGHT
-    P = Piece("harbour_lighthouse", "灯台と防波堤 (lighthouse and breakwater)", 10, lx - 22, lz - 22, lx + 22, lz + 30,
+    P = Piece("harbour_lighthouse", "灯台と防波堤 (lighthouse and breakwater)", 10, lx - 26, lz - 22, lx + 22, lz + 34,
               below=14, above=50, y0=48, y1=118, kind="scenery")
     base = QUAY_Y
     # a rocky outcrop: a mound of stone, andesite and mossy cobble around the tower foot

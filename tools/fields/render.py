@@ -168,6 +168,18 @@ def default_view(P):
     return dict(name=P.id, pos=pos, look=(cx, cy - span * 0.06, cz), fov=50.0, sun=(42.0, -125.0), label=None)
 
 
+def save(img, path):
+    """Previews are committed: 256 colours (median cut, no dithering) keeps them at about half the size."""
+    img.convert("RGB").quantize(colors=256, method=Image.Quantize.MEDIANCUT,
+                                dither=Image.Dither.NONE).save(path, optimize=True)
+
+
+def shrink(path):
+    with Image.open(path) as im:
+        im.load()
+    save(im, path)
+
+
 def render_piece(P, size=(960, 600), views=True, margin=None):
     os.makedirs(OUT_DIR, exist_ok=True)
     t0 = time.time()
@@ -187,6 +199,7 @@ def render_piece(P, size=(960, 600), views=True, margin=None):
         CP.render(scene, name, cam["pos"], cam["look"], size=size, fov=cam.get("fov", 50.0), sun=sun, fog=1600,
                   label=label)
         out.append(os.path.join(OUT_DIR, f"{name}.png"))
+        shrink(out[-1])
     out.append(topdown(P, sw))
     print(f"render {P.id}: {time.time() - t0:.1f}s")
     return out
@@ -232,7 +245,7 @@ def topdown(P, sw=None, name=None, scale=None):
         d.ellipse([px - 5, pz - 5, px + 5, pz + 5], outline=(0, 255, 255), width=2)
     name = name or f"{P.id}_plan"
     p = os.path.join(OUT_DIR, f"{name}.png")
-    img.save(p, optimize=True)
+    save(img, p)
     return p
 
 
@@ -263,7 +276,7 @@ def contact_sheet(paths, out="contact_sheet.png", thumb=(384, 240), cols=4, titl
         sheet.paste(im, (x + (thumb[0] - im.size[0]) // 2, y))
         d.text((x + 2, y + thumb[1] + 4), name, fill=(220, 220, 220), font=f)
     p = os.path.join(OUT_DIR, out)
-    sheet.save(p, optimize=True)
+    save(sheet, p)
     return p
 
 
@@ -318,5 +331,5 @@ def overview(pieces, out="map.png", step=4):
             d.text((a + 2, b - 2), P.id, fill=(255, 255, 255), font=fnt)
     img = img.resize((img.size[0] * 2, img.size[1] * 2), Image.NEAREST)
     path = os.path.join(OUT_DIR, out)
-    img.save(path, optimize=True)
+    save(img, path)
     return path

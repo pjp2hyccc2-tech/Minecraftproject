@@ -251,8 +251,14 @@ class Piece:
         if self.inside(x, y, z):
             self.block_entities[(x, y, z)] = snbt
 
-    def entity(self, *a, **k):
-        raise NotImplementedError("field pieces do not carry entities (use blocks)")
+    def entity(self, etype: str, pos, yaw=0.0, nbt="{}"):
+        """A decoration entity (minecart on a rail, armour stand...) at absolute position ``pos`` (feet)."""
+        x, y, z = (float(v) for v in pos)
+        if not (self.X0 <= x < self.X1 + 1 and self.Z0 <= z < self.Z1 + 1):
+            self.clipped_writes += 1
+            return
+        self.entities.append({"type": B.full_id(etype), "pos": [round(x, 4), round(y, 4), round(z, 4)],
+                              "yaw": round(float(yaw), 1), "nbt": nbt})
 
     def fluid_tick(self, x, y, z):
         self.fluid_ticks.add((int(x), int(y), int(z)))

@@ -5,7 +5,8 @@
     {"format": 1, "build": "<hash>", "terrain": "<probe hash>",
      "pieces": [{"id", "name", "field", "kind", "box": [x0, y0, z0, x1, y1, z1], "file": "pieces/<id>.bin",
                  "palette": ["eternalrealm:void", "minecraft:air", ...],
-                 "blockEntities": [{"pos": [x, y, z], "nbt": "{...}"}], "fluidTicks": [[x, y, z]],
+                 "blockEntities": [{"pos": [x, y, z], "nbt": "{...}"}],
+                 "entities": [{"type", "pos": [x, y, z], "yaw", "nbt"}], "fluidTicks": [[x, y, z]],
                  "probes": [{"pos": [x, y, z], "state": "..."}], "samples": [[x, z, top]]}],
      "waystones": [{"id", "pos": [x, y, z], "facing"}]}
 
@@ -240,6 +241,7 @@ def export(pieces, out_dir, log=print):
                 probes.append({"pos": [x, y, z], "state": st})
         entry = {"id": P.id, "name": P.name, "field": P.field, "kind": P.kind, "box": box, "file": name,
                  "palette": P.palette, "blockEntities": bes,
+                 "entities": sorted(P.entities, key=lambda e: (e["pos"], e["type"])),
                  "fluidTicks": [list(p) for p in sorted(P.fluid_ticks)], "probes": probes,
                  "samples": _samples(P, box)}
         entries.append(entry)

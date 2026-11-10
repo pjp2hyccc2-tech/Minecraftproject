@@ -182,6 +182,13 @@ def check(out_dir, pieces=None, verbose=True):
             st = D.get(x, y, z) or ""
             if "water" not in st and "lava" not in st:
                 problems.append(f"{pid}: fluid tick on {st} at {(x, y, z)}")
+        for en in e.get("entities", []):
+            x, y, z = en["pos"]
+            if not en["type"].startswith("minecraft:") or not en["nbt"].startswith("{"):
+                problems.append(f"{pid}: bad entity {en}")
+            under = D.get(int(math.floor(x)), int(math.floor(y)), int(math.floor(z)))
+            if en["type"].endswith("minecart") and (under is None or "rail" not in under):
+                problems.append(f"{pid}: minecart not on a rail at {en['pos']} ({under})")
         for pr in e["probes"]:
             if not pr["state"].startswith("minecraft:"):
                 problems.append(f"{pid}: probe on a non-vanilla block {pr['state']}")

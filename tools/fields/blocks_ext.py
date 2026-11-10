@@ -54,6 +54,8 @@ B._reg(["red_mushroom", "brown_mushroom", "crimson_roots", "warped_roots", "neth
         "warped_fungus", "wither_rose", "lodestone", "dead_horn_coral_block", "dead_brain_coral_block",
         "dead_tube_coral_block", "sculk_catalyst", "powder_snow"])
 B._reg(["tall_seagrass"], "double_plant")
+B._reg(["iron_ore", "coal_ore", "copper_ore", "gold_ore", "deepslate_iron_ore", "deepslate_coal_ore",
+        "deepslate_gold_ore", "redstone_ore", "lapis_ore", "emerald_ore", "raw_copper_block"])
 B._reg(["sculk_vein"], "glow_lichen")
 
 # custom blocks of the town branch (identical schemas) and the lead's waystone
@@ -93,6 +95,10 @@ C.BASE.update({
     "powder_snow": (248, 253, 253), "farmland": (100, 70, 45), "dried_kelp_block": (50, 60, 40),
     "mud_bricks": (137, 103, 79), "honeycomb_block": (229, 148, 29), "sea_lantern": (172, 199, 190),
     "white_wool": (234, 236, 237), "lily_pad": (40, 120, 40), "cobweb": (220, 220, 225),
+    "iron_ore": (136, 129, 122), "coal_ore": (105, 105, 105), "copper_ore": (124, 125, 120),
+    "gold_ore": (145, 133, 106), "raw_iron_block": (166, 136, 107), "coal_block": (16, 16, 16),
+    "lava_cauldron": (90, 60, 50), "blast_furnace": (100, 100, 105), "smoker": (100, 90, 80),
+    "smithing_table": (60, 60, 70),
 })
 C.PLANTS.update({"red_mushroom": (200, 40, 40), "brown_mushroom": (150, 110, 80), "wither_rose": (40, 30, 30),
                  "crimson_roots": (130, 20, 40), "warped_roots": (20, 140, 130), "melon_stem": (110, 140, 60),
