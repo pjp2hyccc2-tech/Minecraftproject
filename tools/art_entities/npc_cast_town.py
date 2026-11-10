@@ -114,14 +114,17 @@ def mina():
 def pim():
     skin = '#eab796'
     hair_c = '#6e4528'
-    face = Face(skin, eye='#3a2a20', style='normal', brows='#5a3820', brow_style='raised', nose='big', mouth='grin',
-                mouth_row=7, teeth=True, cheek='#e8907e', mouth_w=4)
+    face = Face(skin, eye='#3a2a20', style='normal', brows='#5a3820', brow_style='raised', nose='small', mouth='grin',
+                teeth=True, cheek='#e8907e', mouth_w=3)
 
     def paint(p):
         face.paint(p)
         hair(p, hair_c, bangs=[1, 1, 1, 1, 1, 1, 1, 1], back_len=6, side_front=5)
         cap(p, '#3f7a3a', rows=3, band='#d8b04a')
-        mustache_plane(p, '#5a3820', curl=True)
+        hf = p.face('head', 'front')
+        for y in (4, 5):                              # sideburns
+            hf.px(0, y, col(hair_c))
+            hf.px(7, y, col(hair_c))
         t = torso_part(p)
         f = p.face(t, 'front')
         vneck(f, '#f0e6cc', depth=2)
@@ -151,7 +154,7 @@ def pim():
     pal = palette(skin=skin, hair=hair_c, beard='#5a3820', tunic='#d9a94a', sleeve='#d9a94a', sleeve2='#d9a94a',
                   belly='#d9a94a', apron={'base': '#4c8a46', 'style': 'cloth'}, hat='#3f7a3a',
                   potion_hand={'base': '#e83848', 'style': 'gem'}, pouch='#8a5a30')
-    return look('pim', show={'hair_cap', 'band', 'brim', 'mustache', 'belly', 'apron', 'apron_bib', 'potions',
+    return look('pim', show={'hair_cap', 'band', 'brim', 'belly', 'apron', 'apron_bib', 'potions',
                              'potion_hand', 'coin_pouch'},
                 poses={'right_arm': dict(rot=(-38, 0, 6)), 'right_forearm': dict(rot=(-52, 0, 0)),
                        'left_arm': dict(rot=(-6, 0, -6)), 'left_forearm': dict(rot=(-34, 0, 0)),

@@ -854,33 +854,51 @@ def nun():
                 portrait=dict(bg=('#4a5070', '#121420')))
 
 
-def warden():
-    """Warden of a dungeon gate: dark hooded cloak over mail, a short royal tabard, a glaive."""
-    skin = '#d8a888'
+# area colours of the dungeon wardens: (hood/cloak, tabard, trim, skin, extra parts)
+WARDENS = {
+    'd1': ('#2a2e48', ROYAL_DARK, GOLD, '#d8a888', ()),
+    'd2': ('#2e4a2a', '#3e6a34', '#c8b060', '#e0b490', ('wreath',)),
+    'd3': ('#c8a878', '#a83a2a', GOLD, '#a8704a', ()),
+    'd4': ('#3a3e4a', '#4a5a7a', '#c8ccd4', '#e8c8b4', ('mantle',)),
+    'd5': ('#a8c4dc', '#3a6a9a', '#e8f4ff', '#f0d8cc', ('mantle',)),
+    'd6': ('#2a2224', '#8a2a1a', '#f0a040', '#b88060', ()),
+    'd7': ('#f0eee8', '#3a6ab0', GOLD, '#f2dcc8', ()),
+    'd8': ('#1e1a26', '#4a2a6a', '#a080d0', '#d8b8a8', ()),
+}
+
+
+def warden(vid='warden', area='d1'):
+    """Warden of a dungeon gate: hooded cloak over mail, a short tabard and a glaive, in the colours of the area."""
+    hood, tabard_c, trim, skin, extra = WARDENS[area]
     face = Face(skin, eye='#4a3a2a', style='stern', brows='#3a2a20', brow_style='thick', mouth='line',
-                stubble='#5a4030')
+                stubble=shade(col(skin), 0.6))
 
     def paint(p):
         face.paint(p)
         for fc in faces_of(p, 'shell'):
             if fc.face == 'bottom':
                 mask_alpha(fc, lambda x, y: False)
-        shell_face_opening(p, 'shell', left=1, right=1, top=2, bottom=0, rim=(40, 44, 70))
+        shell_face_opening(p, 'shell', left=1, right=1, top=2, bottom=0, rim=shade(col(trim), 0.7))
         mail(p, torso_part(p), '#6e7682')
         for side in ('right', 'left'):
             upper, fore = arm_parts(p, side)
             mail(p, fore, '#6e7682', rows=(0, 1, 2, 3))
         hands(p, '#3a2a20', rows=2, gloves=True)
-        tabard(p, ROYAL_DARK, back=False)
-        belt(p, 0, '#2a2030', '#c8b060')
-        legs(p, '#2a2e40')
+        tabard(p, tabard_c, trim=trim, emblem=trim, back=False)
+        belt(p, 0, '#2a2030', trim)
+        legs(p, shade(col(hood), 0.8))
         boots(p, '#2a2020', rows=3)
         for fc in faces_of(p, 'cape', sides_only=True):
-            fc.hline(0, fc.w - 1, fc.h - 1, col(GOLD))
-    pal = palette(skin=skin, tunic='#6e7682', sleeve='#2a2e48', sleeve2='#2a2e48', belly='#2a2e40',
-                  shell={'base': '#2a2e48', 'style': 'cloth'}, cape={'base': '#262a42', 'style': 'cloth'},
-                  apron=ROYAL_DARK, blade={'base': '#c8d0d8', 'style': 'metal'}, pole='#3a2a20')
-    return look('warden', show={'shell', 'cape', 'apron', 'apron_bib', 'glaive'},
+            fc.hline(0, fc.w - 1, fc.h - 1, col(trim))
+        if 'wreath' in extra:
+            wt = p.face('wreath', 'top')
+            for (x, y) in ((1, 1), (6, 6), (2, 7)):
+                wt.px(x, y, (240, 230, 140))
+    pal = palette(skin=skin, tunic='#6e7682', sleeve=hood, sleeve2=hood, belly=shade(col(hood), 0.85),
+                  shell={'base': hood, 'style': 'cloth'}, cape={'base': shade(col(hood), 0.92), 'style': 'cloth'},
+                  apron=tabard_c, blade={'base': '#c8d0d8', 'style': 'metal'}, pole='#3a2a20',
+                  mantle={'base': '#8a7a6a' if area == 'd4' else '#e8ecf0', 'style': 'fur'})
+    return look(vid, show={'shell', 'cape', 'apron', 'apron_bib', 'glaive'} | set(extra),
                 poses={'right_arm': dict(rot=(-8, 0, 4)), 'right_forearm': dict(rot=(-24, 0, 0))},
                 pal=pal, paint=paint, idle='idle_still', work='work_watch', talk='talk_gruff', scale=1.02,
                 portrait=dict(bg=('#3a3e60', '#0e1018')))
@@ -931,7 +949,8 @@ FOLK = [
 
 
 def cast():
-    return [fn(vid, v) for fn, vid, v in FOLK] + [guard(), knight(), archer(), priest(), nun(), warden()]
+    return ([fn(vid, v) for fn, vid, v in FOLK] + [guard(), knight(), archer(), priest(), nun(), warden()]
+            + [warden('warden_' + area, area) for area in WARDENS])
 
 
 def base():

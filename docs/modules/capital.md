@@ -131,7 +131,8 @@ strolls within 6 blocks of the spot (keep water and doors out of that circle whe
 for the area: `plaza`, `market`, `street`, `harbour`, `guild`, `tavern`, `inn`, `cathedral`, `residential`, `farm`,
 `castle` (names may continue, e.g. `harbour_east`). `guard.<post>.<n>` puts a guard standing watch facing the spot's
 yaw: posts containing `gate` get the halberd guard, `wall`/`tower` an archer, `castle`/`keep`/`throne`/`hall`/`court`
-a knight. `castle.gate_guard_w/e` also get a guard unless a `guard.*` spot is within 2 blocks.
+a knight. `castle.gate_guard_w/e` also get a guard unless a `guard.*` spot is within 2 blocks; `castle.king` gets
+King Bertrand himself.
 
 ## 5. The castle (`castle/`)
 

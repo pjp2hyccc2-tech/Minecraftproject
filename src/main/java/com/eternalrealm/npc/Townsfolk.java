@@ -11,10 +11,11 @@ import java.util.Set;
 
 /**
  * The people of the capital who are not service NPCs: one townsperson per {@code crowd.<area>.<n>} spot of the capital
- * build (strolling near it) and one guard per {@code guard.<post>.<n>} spot (standing watch). Decides deterministically
- * who stands where (from the spot name, suited to the area: sailors at the harbour, clergy in the cathedral...), their
- * names and what they say when a player talks to them. Pure: names and lines are translation keys
- * ({@code docs/i18n/npc_bodies.json}).
+ * build (strolling near it), one guard per {@code guard.<post>.<n>} spot (standing watch) and the residents of a few
+ * named spots (the king at {@code castle.king}). Decides deterministically who stands where (from the spot name, suited
+ * to the area: sailors at the harbour, clergy in the cathedral...), their names and what they say when a player talks
+ * to them. Pure: names and lines are translation keys ({@code docs/i18n/npc_bodies.json}; residents are named by their
+ * story speaker key).
  */
 public final class Townsfolk {
     public static final String CROWD_PREFIX = "crowd.";
@@ -28,7 +29,9 @@ public final class Townsfolk {
         /** Strolls within {@link #STROLL_RADIUS} of its spot, pauses, looks at players. */
         CROWD,
         /** Stands watch at its spot facing the spot's yaw. */
-        GUARD
+        GUARD,
+        /** A named person who stays at the spot (see {@link #residentSpots()}). */
+        RESIDENT
     }
 
     /** A parsed spot name: kind, area (crowd) or post (guard), and the number ({@code -1} if not a number). */
@@ -40,6 +43,8 @@ public final class Townsfolk {
     private static final Map<String, List<String>> AREAS = new LinkedHashMap<>();
     private static final Map<String, String> GROUPS = new LinkedHashMap<>();
     private static final Map<String, Integer> LINES = new LinkedHashMap<>();
+    /** Named spots of the capital build with the person who lives there. */
+    private static final Map<String, String> RESIDENTS = Map.of("castle.king", "king");
 
     static {
         AREAS.put("plaza", List.of("merchant", "housewife", "noble_gent", "child", "bard", "elder", "merchant2",
@@ -82,6 +87,7 @@ public final class Townsfolk {
         GROUPS.put("priest", "clergy");
         GROUPS.put("nun", "clergy");
         GROUPS.put("citizen", "commoner");
+        GROUPS.put("king", "king");
 
         LINES.put("commoner", 5);
         LINES.put("merchant", 4);
@@ -96,15 +102,22 @@ public final class Townsfolk {
         LINES.put("adventurer", 4);
         LINES.put("guard", 5);
         LINES.put("clergy", 4);
+        LINES.put("king", 4);
     }
 
     private Townsfolk() {
     }
 
-    /** {@code crowd.<area>.<n>}, {@code guard.<post>.<n>} or a castle gate-guard spot; empty for any other name. */
+    /**
+     * {@code crowd.<area>.<n>}, {@code guard.<post>.<n>}, a castle gate-guard spot or a resident's spot; empty for any
+     * other name.
+     */
     public static Optional<Spot> parse(String name) {
         if (name == null) {
             return Optional.empty();
+        }
+        if (RESIDENTS.containsKey(name)) {
+            return Optional.of(new Spot(Kind.RESIDENT, name.substring(0, name.indexOf('.')), -1));
         }
         Kind kind;
         String rest;
@@ -156,6 +169,11 @@ public final class Townsfolk {
         return COMMONERS;
     }
 
+    /** Named spots that have a resident ({@code castle.king}). */
+    public static Set<String> residentSpots() {
+        return RESIDENTS.keySet();
+    }
+
     /** Area names with their own pool. */
     public static Set<String> areas() {
         return AREAS.keySet();
@@ -172,6 +190,9 @@ public final class Townsfolk {
             return NpcBodies.DEFAULT;
         }
         Spot spot = parsed.get();
+        if (spot.kind() == Kind.RESIDENT) {
+            return NpcBodies.orDefault(RESIDENTS.get(spotName));
+        }
         if (spot.kind() == Kind.GUARD) {
             return guardFor(spot.area());
         }
@@ -219,6 +240,9 @@ public final class Townsfolk {
      */
     public static String nameKey(String appearance) {
         String type = type(appearance);
+        if (RESIDENTS.containsValue(type)) {
+            return "story.eternalrealm.speaker." + type; // residents speak as their story selves (name and portrait)
+        }
         return "npc.eternalrealm.folk." + (GROUPS.containsKey(type) ? type : "citizen");
     }
 
@@ -238,11 +262,13 @@ public final class Townsfolk {
         return "npc.eternalrealm.folk.say." + group + "." + (Math.floorMod(roll, LINES.get(group)) + 1);
     }
 
-    /** Every translation key used here (names and greetings). */
+    /** Every translation key of {@code npc_bodies.json} used here (names and greetings; not the residents' names). */
     public static Set<String> translationKeys() {
         Set<String> keys = new LinkedHashSet<>();
         for (String type : GROUPS.keySet()) {
-            keys.add("npc.eternalrealm.folk." + type);
+            if (!RESIDENTS.containsValue(type)) {
+                keys.add("npc.eternalrealm.folk." + type);
+            }
         }
         for (Map.Entry<String, Integer> group : LINES.entrySet()) {
             for (int n = 1; n <= group.getValue(); n++) {
@@ -259,6 +285,7 @@ public final class Townsfolk {
             all.addAll(pool);
         }
         all.addAll(List.of("guard", "knight", "archer"));
+        all.addAll(RESIDENTS.values());
         return new ArrayList<>(all);
     }
 

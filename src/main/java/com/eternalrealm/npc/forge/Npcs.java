@@ -126,7 +126,7 @@ public final class Npcs {
             level.addFreshEntity(npc);
         }
         npc.setAppearance(StoryNpcs.CHARACTER.equals(key) ? NpcLooks.forCharacter(value)
-                : ENTRANCE.equals(key) ? NpcLooks.WARDEN : NpcLooks.forRole(role.id()));
+                : ENTRANCE.equals(key) ? NpcLooks.forEntrance(value) : NpcLooks.forRole(role.id()));
         npc.setPost(pos, yaw);
         npc.setInvulnerable(true);
         npc.setSilent(true);

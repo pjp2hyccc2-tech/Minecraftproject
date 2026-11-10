@@ -66,8 +66,8 @@ public final class NpcGameTests {
         check(lilia instanceof NpcEntity princess && "lilia".equals(princess.getAppearance()), "Lilia wears her body");
         Mob warden = Npcs.ensure(level, helper.absolutePos(new BlockPos(6, 2, 6)), NpcRole.GATEKEEPER, 0.0F,
                 Npcs.ENTRANCE, "d3").orElse(null);
-        check(warden instanceof NpcEntity gate && NpcLooks.WARDEN.equals(gate.getAppearance()),
-                "the gatekeepers of the dungeon entrances are wardens");
+        check(warden instanceof NpcEntity gate && NpcLooks.forEntrance("d3").equals(gate.getAppearance()),
+                "the gatekeepers of the dungeon entrances are the area's wardens");
         body.discard();
         lilia.discard();
         warden.discard();

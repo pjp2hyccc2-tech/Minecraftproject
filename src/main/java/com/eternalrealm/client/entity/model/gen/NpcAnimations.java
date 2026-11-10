@@ -83,9 +83,9 @@ public final class NpcAnimations {
             case "ilsa" -> new AnimationDefinition[]{IDLE, WALK, WORK_BIGHAMMER, TALK_GRUFF};
             case "selene" -> new AnimationDefinition[]{IDLE_HOVER, WALK, WORK_ORB, TALK_MECH};
             case "gunter" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_LANTERN, TALK_GRUFF};
+            case "king", "farmer", "sailor2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_HEARTY};
             case "merchant", "merchant2", "noble_gent", "noble_gent2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_FLOURISH};
             case "housewife", "housewife2", "farmer2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_BOW};
-            case "farmer", "sailor2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_HEARTY};
             case "sailor" -> new AnimationDefinition[]{IDLE, WALK, WORK_PIPE, TALK_HEARTY};
             case "noble_lady", "noble_lady2" -> new AnimationDefinition[]{IDLE, WALK, WORK_FAN, TALK_BOW};
             case "elder" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_PIPE, TALK_GRUFF};
@@ -98,7 +98,7 @@ public final class NpcAnimations {
             case "guard" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_GUARD, TALK_SALUTE};
             case "knight", "archer" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_WATCH, TALK_SALUTE};
             case "priest", "nun" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_PRAY, TALK_BLESS};
-            case "warden" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_WATCH, TALK_GRUFF};
+            case "warden", "warden_d1", "warden_d2", "warden_d3", "warden_d4", "warden_d5", "warden_d6", "warden_d7", "warden_d8" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_WATCH, TALK_GRUFF};
             default -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK};
         };
     }

@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The townsfolk and guards of the capital: one {@link NpcEntity} per {@code crowd.*} / {@code guard.*} spot of the
- * capital build (who stands where: {@link Townsfolk}). Placing is idempotent like {@link Npcs#ensure}: the NPC of a
+ * The townsfolk, guards and residents of the capital: one {@link NpcEntity} per {@code crowd.*} / {@code guard.*} spot
+ * of the capital build and per resident's spot such as {@code castle.king} (who stands where: {@link Townsfolk}). Placing is idempotent like {@link Npcs#ensure}: the NPC of a
  * spot is found again by the spot name it carries, duplicates are removed. Townsfolk are not service NPCs (no role
  * tag, not on the map); talking to one plays a short greeting in the ambient dialogue box. Server thread only.
  */
@@ -66,17 +66,24 @@ public final class Crowds {
         }
         String appearance = Townsfolk.appearanceFor(spot.name());
         npc.setAppearance(appearance);
-        if (parsed.get().kind() == Townsfolk.Kind.GUARD) {
-            npc.setWatch(pos, spot.yaw());
-        } else {
-            npc.setStroll(pos, spot.yaw());
+        Townsfolk.Kind kind = parsed.get().kind();
+        switch (kind) {
+            case GUARD -> npc.setWatch(pos, spot.yaw());
+            case RESIDENT -> npc.setPost(pos, spot.yaw());
+            default -> npc.setStroll(pos, spot.yaw());
         }
         npc.setInvulnerable(true);
         npc.setSilent(true);
         npc.setPersistenceRequired();
-        // the name shows when a player looks at them
-        npc.setCustomName(Component.translatable(Townsfolk.nameKey(appearance)));
-        npc.setCustomNameVisible(false);
+        if (kind == Townsfolk.Kind.RESIDENT) {
+            // named people show their name like the story characters
+            npc.setCustomName(Component.translatable(Townsfolk.nameKey(appearance)).withStyle(ChatFormatting.AQUA));
+            npc.setCustomNameVisible(true);
+        } else {
+            // the name shows when a player looks at them
+            npc.setCustomName(Component.translatable(Townsfolk.nameKey(appearance)));
+            npc.setCustomNameVisible(false);
+        }
         npc.markEnsured(level.getGameTime());
         return Optional.of(npc);
     }

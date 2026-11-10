@@ -660,5 +660,60 @@ def gunter():
                 pal=pal, paint=paint, glow=True, idle='idle_still', work='work_lantern', talk='talk_gruff', scale=1.0,
                 portrait=dict(bg=('#5a5470', '#16141e')))
 
+
+def king():
+    """King Bertrand XIV: jolly and quick to tears, always half in armour in case he gets to ride out."""
+    skin = '#ecbc9c'
+    beard_c = '#9a5a34'
+    face = Face(skin, eye='#3a5a9a', style='normal', brows='#8a4a2a', brow_style='raised', nose='big', mouth='none',
+                cheek='#f0a090')
+
+    def paint(p):
+        face.paint(p)
+        hair(p, beard_c, bangs=[1, 1, 2, 1, 1, 2, 1, 1], back_len=6, side_front=6, highlight=(220, 150, 100))
+        f = p.face('head', 'front')
+        f.px(6, 5, (150, 200, 250))                   # a happy tear
+        for i in range(len(p.rig.parts['beard_big'].cubes)):
+            hair_piece(p, 'beard_big', beard_c, index=i)
+        bf = p.face('beard_big', 'front')
+        for x in (3, 4, 5):
+            bf.clear(x, 0)
+        bf.hline(3, 5, 2, (90, 40, 30))
+        for y in range(2, bf.h):
+            bf.px(1, y, mix(bf.get(1, y), (190, 180, 170), 0.4))
+            bf.px(7, y, mix(bf.get(7, y), (190, 180, 170), 0.4))
+        for name in ('front', 'back', 'right', 'left'):
+            cf = p.face('crown_small', name)
+            mask_alpha(cf, lambda x, y: y > 0 or x % 2 == 0)
+            cf.px(cf.w // 2, 1, (210, 40, 50))
+        # breastplate with the crest over a blue tunic, red cape with an ermine collar
+        t = torso_part(p)
+        plate(p, t, '#c8ccd4')
+        tf = p.face(t, 'front')
+        crest(tf, tf.w // 2, 3, GOLD)
+        for fc in faces_of(p, 'mantle'):
+            for y in range(fc.h):
+                for x in range(fc.w):
+                    if (x * 3 + y * 5) % 7 == 0:
+                        fc.px(x, y, (30, 28, 30))
+        cf = p.face('cape', 'back')
+        crest(cf, cf.w // 2, 7, GOLD)
+        for fc in faces_of(p, 'cape', sides_only=True):
+            fc.hline(0, fc.w - 1, fc.h - 1, col(GOLD))
+        hands(p, '#f0ece4', rows=1, gloves=True)
+        belt(p, 0, '#c8a040', '#f0d070', buckle_w=3)
+        legs(p, ROYAL)
+        boots(p, '#4a2a1c', rows=3, top_trim=GOLD)
+    pal = palette(skin=skin, hair=beard_c, beard=beard_c, tunic='#c8ccd4', sleeve=ROYAL, sleeve2=ROYAL, belly=ROYAL,
+                  crown={'base': '#f0c850', 'style': 'gold'}, cape={'base': '#b02a34', 'style': 'cloth'},
+                  mantle={'base': '#f2f0ec', 'style': 'fur'}, armor={'base': '#c8ccd4', 'style': 'metal'})
+    return look('king', show={'hair_cap', 'beard_big', 'crown_small', 'mantle', 'cape'},
+                broad=True,
+                poses={'crown_small': dict(rot=(0, -18, -14), pos=(0, 0.5, 0), scale=(1.25, 1.1, 1.25)),
+                       'right_arm': dict(rot=(-6, 0, 10)), 'left_arm': dict(rot=(-6, 0, -10))},
+                pal=pal, paint=paint, talk='talk_hearty', scale=1.06,
+                portrait=dict(bg=('#c04a4a', '#3a0e14'), dy=-1.5))
+
 def cast():
-    return [lilia(), gustav(), nox(), laszlo(), wolfram(), adel(), neris(), khalid(), helga(), ilsa(), selene(), gunter()]
+    return [lilia(), gustav(), nox(), laszlo(), wolfram(), adel(), neris(), khalid(), helga(), ilsa(), selene(), gunter(),
+            king()]

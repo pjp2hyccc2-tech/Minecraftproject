@@ -290,5 +290,21 @@
   "npc.eternalrealm.folk.say.clergy.4": {
     "ja": "千年前の英雄たちのためにも、祈りを捧げております。",
     "en": "I pray for the heroes of a thousand years ago, too."
+  },
+  "npc.eternalrealm.folk.say.king.1": {
+    "ja": "おお、冒険者よ！　よくぞ参った！　……余も一緒に行ってよいか？",
+    "en": "Ah, adventurer! Welcome! ...May I come along?"
+  },
+  "npc.eternalrealm.folk.say.king.2": {
+    "ja": "鎧はいつでも着られるようにしてあるのだ。いつでもな！",
+    "en": "I keep my armour ready at all times. At all times!"
+  },
+  "npc.eternalrealm.folk.say.king.3": {
+    "ja": "リリアを頼む。あの子は無理をしすぎるのだ……ぐすっ。",
+    "en": "Look after Lilia. She pushes herself too hard... *sniff*"
+  },
+  "npc.eternalrealm.folk.say.king.4": {
+    "ja": "アデルにまた止められてしまった。余は散歩に出たかっただけなのだ。",
+    "en": "Adel stopped me again. I only wanted to go for a walk."
   }
 }

@@ -1,6 +1,6 @@
 # 町のNPCの体（`npc` / `npc.forge` / `client.entity` パッケージ）
 
-王都の人々（窓口NPC10人、物語キャラ、クエストNPC、町の人・衛兵・聖職者、ダンジョンの門番）が、バニラの村人ではなく専用の
+王都の人々（窓口NPC10人、物語キャラ、クエストNPC、国王、町の人・衛兵・聖職者、ダンジョンの門番）が、バニラの村人ではなく専用の
 エンティティ `eternalrealm:npc`（`NpcEntity`）と専用モデルで立つ。見た目は「アピアランス（appearance）」IDで切り替える。
 会話や窓口の中身（`Npcs.onInteract` のハンドラ、`StoryNpcs`）は従来どおり `Mob` だけに依存し、体が変わっても影響しない。
 
@@ -33,16 +33,17 @@ python3 tools/art_entities/generate_npc.py mina lilia   # 指定したアピア�
   約0.6秒かけて消える）、**talk**（話しかけられたときの仕草1回。お辞儀、豪快な笑い、敬礼、祝福…）。
 - アニメーションの開始時刻はエンティティごとにずらす（群衆が一斉に同じ動きをしない）。
 
-## 3. アピアランス（53）
+## 3. アピアランス（62）
 
 | 区分 | ID |
 |---|---|
 | 窓口NPC（話者ID＝見た目ID） | mina（受付）, pim（道具屋）, goran（鍛冶師）, hagen（教官）, luce（競売人）, chico（配達人、鳩付き）, marta（登録係）, gant（王都の門衛）, zain（闘技場主）, chloe（記録官） |
-| 物語キャラ | lilia（星門の間の王女。星の王笏）, gustav（ギルドマスター。眼帯とシチュー）, nox（星詠み。宙に浮く星図）, laszlo（皿洗い中の元盗賊王。足かせ付き）, wolfram（療養中の銀狼。包帯と銀狼の毛皮）, adel（騎士団長。大剣） |
+| 物語キャラ | lilia（星門の間の王女。星の王笏）, gustav（ギルドマスター。眼帯とシチュー）, nox（星詠み。宙に浮く星図）, laszlo（皿洗い中の元盗賊王。足かせ付き）, wolfram（療養中の銀狼。包帯と銀狼の毛皮）, adel（騎士団長。大剣）, king（国王ベルトラン十四世。いつでも出撃できる胸甲と王冠、うれし涙） |
 | クエストNPC | neris（エルフの賢者）, khalid（隊商長）, helga（北の族長）, ilsa（竜鍛冶）, selene（神託人形。浮遊）, gunter（塔守） |
 | 町の人（12種×2色） | merchant, housewife, farmer, sailor, noble_lady, noble_gent, elder, apprentice, maid, bard, child, adventurer（各 `…2` が別の色・性別・髪型） |
 | 衛兵・聖職者 | guard（斧槍と青い陣羽織の門衛）, knight（全身鎧・盾・剣の王城騎士）, archer（長弓と矢筒の城壁弓兵）, priest（司祭）, nun（修道女） |
-| その他 | warden（ダンジョン入口の門番）, citizen（既定。不明なIDもこれ） |
+| ダンジョン入口の門番 | warden_d1〜warden_d8（地域の色: 王国の青、森の緑、砂漠の砂色と赤、凍獄の灰青と毛皮、氷城の水色と白い毛皮、火山の黒と橙、天空の白金、終焉の塔の黒紫）, warden（それ以外） |
+| その他 | citizen（既定。不明なIDもこれ） |
 
 縮尺（当たり判定も追従）: 子ども0.68〜0.8、チコ0.8、イルザ0.92 … ゴラン1.04、グスタフ1.08。発光: リリア（王笏・ペンダント・ティアラ）、
 ノクス（星図・ローブの星）、ネリス（杖のつぼみ）、セレネ（目・光輪・天球儀）、ギュンター（ランタン）、修道女（ろうそく）。
@@ -76,17 +77,19 @@ python3 tools/art_entities/generate_npc.py mina lilia   # 指定したアピア�
 ## 5. 配置
 
 - **窓口NPC・物語キャラ・クエストNPC**: 従来どおり `Npcs.ensure` / `StoryNpcs.ensure`（`RealmSetup`、`TownSetup`）。見た目は役割／キャラIDの話者ID
-  （`NpcLooks`）、ダンジョン入口の門番（`Npcs.ENTRANCE` キー付き）は `warden`。
+  （`NpcLooks`）、ダンジョン入口の門番（`Npcs.ENTRANCE` キー付き。名前は「転移門の番人」）はその地域の `warden_<dungeon>`（`NpcLooks.forEntrance`）。
 - **旧バージョンの村人**: `TAG`（`eternalrealm_npc`）付きの村人が見つかると、その永続データ（ForgeData 全体）を引き継いだ `NpcEntity` に置き換える。
 - **町の人と衛兵**（`RealmSetup.populateCapital` の最後、王都が完成しているとき）:
   - 王都ビルドの名前付きスポット `crowd.<area>.<n>` に町の人を1人、`guard.<post>.<n>` に衛兵を1人（スポットの yaw を向く）。
     城の `castle.gate_guard_w/e` も、2ブロック以内に `guard.*` が無ければ衛兵の持ち場になる。
+  - 住人のいる名前付きスポット（`Townsfolk.residentSpots()`）: `castle.king` に国王（POST。名前は話者名「国王ベルトラン」を常時表示、
+    挨拶は国王専用の4行、肖像は `king.png`。物語の会話で国王が話すときもこの肖像が出る）。
   - 見た目はスポット名から決定的に決める（`Townsfolk.appearanceFor`）。地区ごとのプール: plaza, market, street, harbour（船乗り）, guild（冒険者）,
     tavern, inn, cathedral（司祭・修道女）, residential, farm（農夫）, castle（侍女・貴族）。`harbour_east` のような名前は先頭一致。未知の地区は町の人一般。
     連番は地区ごとにずらした位置からプールを順に巡るので、隣どうしが違う人になる。
   - 衛兵: 持ち場名に gate → 門衛（斧槍）、wall / tower / rampart / battlement → 弓兵、castle / keep / throne / hall / palace / court → 騎士、それ以外 → 門衛。
   - 冪等: スポット名（永続データ `eternalrealm_spot`）で同じ人を探して戻す。王都の再建（`onCapitalCompleted`）では町の人も一度消して置き直す。
-  - 町の人は窓口NPCではない（役割タグなし、地図に出ない）。右クリックで種類ごとの短い挨拶（`npc.eternalrealm.folk.say.<group>.<n>`、13グループ54行）が
+  - 町の人は窓口NPCではない（役割タグなし、地図に出ない）。右クリックで種類ごとの短い挨拶（`npc.eternalrealm.folk.say.<group>.<n>`、14グループ58行）が
     会話ボックス（ボスの叫びと同じアンビエント表示、名前と肖像付き）に出る。話し終えるまで次の挨拶はしない。
 
 ## 6. テスト

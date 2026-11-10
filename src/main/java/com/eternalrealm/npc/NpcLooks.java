@@ -19,6 +19,12 @@ public final class NpcLooks {
         return speakerLook(roleId);
     }
 
+    /** The gatekeeper at a dungeon entrance: the warden in the colours of the area ({@code warden_d3}), else {@link #WARDEN}. */
+    public static String forEntrance(String dungeonId) {
+        String themed = WARDEN + "_" + dungeonId;
+        return dungeonId != null && NpcBodies.exists(themed) ? themed : WARDEN;
+    }
+
     /** Appearance of a story character or quest giver, by {@link StoryNpc} id. */
     public static String forCharacter(String characterId) {
         return speakerLook(characterId);

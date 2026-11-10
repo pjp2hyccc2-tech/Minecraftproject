@@ -93,10 +93,12 @@ public class TownsfolkTest {
     @Test
     public void everyTownspersonHasABodyANamePortraitAndGreetings() throws IOException {
         JsonObject texts = i18n();
+        JsonObject lang = JsonParser.parseString(Files.readString(Paths.get("src", "main", "resources", "assets",
+                "eternalrealm", "lang", "en_us.json"), StandardCharsets.UTF_8)).getAsJsonObject();
         for (String look : Townsfolk.appearances()) {
             assertTrue("no body " + look, NpcBodies.exists(look));
             String name = Townsfolk.nameKey(look);
-            assertTrue("no name " + name, texts.has(name));
+            assertTrue("no name " + name, texts.has(name) || name.startsWith("story.") && lang.has(name));
             String type = name.substring(name.lastIndexOf('.') + 1);
             assertTrue("no portrait for " + type, Files.isRegularFile(PORTRAITS.resolve(type + ".png")));
             assertTrue(Townsfolk.greetingCount(look) >= 4);
@@ -109,6 +111,24 @@ public class TownsfolkTest {
         assertEquals("noble_lady", Townsfolk.type("noble_lady2"));
         assertEquals("citizen", Townsfolk.type("citizen"));
         assertEquals("npc.eternalrealm.folk.citizen", Townsfolk.nameKey("lilia"));
+    }
+
+    @Test
+    public void theKingLivesInTheThroneRoom() throws IOException {
+        Townsfolk.Spot throne = Townsfolk.parse("castle.king").orElseThrow();
+        assertEquals(Townsfolk.Kind.RESIDENT, throne.kind());
+        assertEquals("king", Townsfolk.appearanceFor("castle.king"));
+        assertTrue(Townsfolk.residentSpots().contains("castle.king"));
+        String name = Townsfolk.nameKey("king");
+        assertEquals("story.eternalrealm.speaker.king", name);
+        JsonObject lang = JsonParser.parseString(Files.readString(Paths.get("src", "main", "resources", "assets",
+                "eternalrealm", "lang", "ja_jp.json"), StandardCharsets.UTF_8)).getAsJsonObject();
+        assertTrue("the king's name", lang.has(name));
+        assertTrue("the king's portrait", Files.isRegularFile(PORTRAITS.resolve("king.png")));
+        for (int roll = 0; roll < Townsfolk.greetingCount("king"); roll++) {
+            assertTrue(lang.has(Townsfolk.greetingKey("king", roll)));
+        }
+        assertTrue(Townsfolk.parse("castle.throne").isEmpty());
     }
 
     @Test
@@ -137,6 +157,11 @@ public class TownsfolkTest {
         assertEquals("adel", NpcLooks.forCharacter("arcelia_knight_captain"));
         assertEquals("gant", NpcLooks.forRole("gatekeeper"));
         assertTrue(NpcBodies.exists(NpcLooks.WARDEN));
+        for (int area = 1; area <= 8; area++) {
+            assertEquals("warden_d" + area, NpcLooks.forEntrance("d" + area));
+        }
+        assertEquals(NpcLooks.WARDEN, NpcLooks.forEntrance("final"));
+        assertEquals(NpcLooks.WARDEN, NpcLooks.forEntrance(null));
         assertEquals(NpcBodies.DEFAULT, NpcLooks.forRole("story"));
         assertEquals(NpcBodies.DEFAULT, NpcLooks.forCharacter(null));
         assertEquals(NpcBodies.DEFAULT, NpcLooks.forCharacter("someone_new"));

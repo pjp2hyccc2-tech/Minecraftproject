@@ -126,8 +126,9 @@ public final class RealmSetup {
     }
 
     /**
-     * The townsfolk and guard spots of the capital build ({@code crowd.<area>.<n>}, {@code guard.<post>.<n>}); the
-     * castle's own gate-guard spots count as guard posts unless a {@code guard.*} spot stands within two blocks.
+     * The townsfolk, guard and resident spots of the capital build ({@code crowd.<area>.<n>}, {@code guard.<post>.<n>},
+     * {@code castle.king}); the castle's own gate-guard spots count as guard posts unless a {@code guard.*} spot stands
+     * within two blocks.
      */
     static List<Crowds.Spot> crowdSpots(HubLayout layout) {
         List<Crowds.Spot> spots = new ArrayList<>();
@@ -135,6 +136,9 @@ public final class RealmSetup {
             for (Map.Entry<String, BlockPos> entry : layout.namedWithPrefix(prefix).entrySet()) {
                 spots.add(new Crowds.Spot(entry.getKey(), entry.getValue(), layout.namedYaw(entry.getKey(), 0.0F)));
             }
+        }
+        for (String resident : Townsfolk.residentSpots()) {
+            layout.named(resident).ifPresent(pos -> spots.add(new Crowds.Spot(resident, pos, layout.namedYaw(resident, 0.0F))));
         }
         List<BlockPos> guards = new ArrayList<>(layout.namedWithPrefix(Townsfolk.GUARD_PREFIX).values());
         for (Map.Entry<String, BlockPos> entry : layout.namedWithPrefix(Townsfolk.CASTLE_GATE_GUARD_PREFIX).entrySet()) {
