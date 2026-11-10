@@ -160,7 +160,7 @@ def inn(w, rect, front, name_lines=("", "宿屋", "Inn of the Silver Star", ""))
             K.rug(f, x + 1, 3, x + 3, kz - 4, y0, field=("blue", "red", "green")[(x // 5) % 3], border="white") \
                 if kz - 4 >= 3 else None
             deco.hanging_lantern(f, x + 2, y0 + sh, 3, drop=1)
-        deco.carpet_runner(f, 1, kz - 1, W - 2, kz - 1, y0, color="red", border=None)
+        deco.carpet_runner(f, sh + 2, kz - 1, W - 2, kz - 1, y0, color="red", border=None)
     for x in (2, W - 3):
         TK.bracket_flag(f, x, 2 * sh + 1, -1, "north", "kingdom", 2.5, 1.5)
     return f, W, D

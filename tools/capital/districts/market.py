@@ -185,7 +185,7 @@ def market_hall(w):
                 w.set(x + dx, 1, z, B.barrel("up") if dx == 1 else F("spruce_planks"))
                 g = TK.GOODS[GOODS_CYCLE[(i * 2 + (z > 20)) % len(GOODS_CYCLE)]]
                 w.set(x + dx, 2, z, TK._goods_state(g[int(hash2(x + dx, z, 7) * len(g))], fac))
-        deco.hanging_lantern(w, x + 1, gy - 1, (z0 + z1) // 2, drop=1)
+        deco.hanging_lantern(w, x + 1, gy, (z0 + z1) // 2, drop=1)
     # stair to the upper hall (merchants' guild room): long table and benches
     for i in range(6):
         w.set(x1 - 2, 1 + i, z0 + 2 + i, B.stairs("spruce", "south"))

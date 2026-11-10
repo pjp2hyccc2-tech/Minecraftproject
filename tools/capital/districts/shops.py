@@ -115,7 +115,7 @@ def item_shop(w):
         for x in range(x0, x1 + 1):
             c = "green" if (x % 2) else "white"
             w.set(x, 4, 24, B.wool(c))
-            w.set(x, 3, 23, B.S(f"{c}_wall_banner", facing="north"))
+            w.set(x, 4, 23, B.S(f"{c}_wall_banner", facing="north"))
     # interior: counter, shelves of goods
     w.fill(-27, 0, 26, -12, 0, 37, F("oak_planks"))
     for x in range(-25, -13):

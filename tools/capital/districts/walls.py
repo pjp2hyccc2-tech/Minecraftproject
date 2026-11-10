@@ -222,8 +222,8 @@ def main_gate(w):
         deco.armor_stand(w, s * 5, 0, z1 - 2, yaw=90.0 * s if False else (90.0 if s > 0 else -90.0), armor="iron",
                          weapon="minecraft:iron_sword", offhand=deco.blue_shield()) if False else None
         # tower stair: ladder up to the walk floor inside
-        for y in range(1, WALK + 1):
-            w.set(cx - s * 3, y, zc + 1, B.S("ladder", facing="east" if s > 0 else "west"))
+        for y in range(1, WALK + 1):                       # against the tower wall on its north side
+            w.set(cx, y, zc + 1 - 4, B.S("ladder", facing="south"))
         w.set(cx, 1, zc + 1, B.S("barrel", facing="up"))
         w.set(cx + s, 1, zc + 3, B.S("chest", facing="north"))
         w.set(cx + s, 1, zc - 1, B.S("grindstone", face="floor", facing="north"))

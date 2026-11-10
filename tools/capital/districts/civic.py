@@ -116,7 +116,7 @@ def hall_of_fame(w):
             xs = 12 if x == 13 else 30
             w.set(xs, 5, z, B.S("glowstone")) if False else None
             fac = "east" if x == 13 else "west"
-            deco.kingdom_wall_banner(w, xs + (1 if x == 13 else -1), 7, z, facing=fac, color="blue", nbt=HOF_BANNER)
+            deco.kingdom_wall_banner(w, xs, 7, z, facing=fac, color="blue", nbt=HOF_BANNER)
     # ranking board: dark oak frame, birch panel, gilded header, framed trophies
     bx0, bx1 = 15, 27
     for x in range(bx0, bx1 + 1):
@@ -152,7 +152,7 @@ def hall_of_fame(w):
     S.statue_figure(w, 21, 2, -32, facing="south", material="quartz_block", wings=True, gold_crown=True,
                     plinth="smooth_castle_stone")
     for (x, z) in ((19, -33), (23, -33), (19, -31), (23, -31)):
-        w.set(x, 2, z, B.candle(3, "yellow")) if w.is_empty(x, 2, z) else None
+        w.set(x, 1, z, B.candle(3, "yellow")) if w.is_empty(x, 1, z) else None
     for (x, z) in ((15, -31), (27, -31)):
         deco.chandelier(w, x, 9, z, drop=3)
 
@@ -241,7 +241,7 @@ def job_hall(w):
     w.fill(34, 5, -38, 50, 5, -26, F("spruce_planks"))
     for z in range(-38, -25, 3):
         w.fill(34, 4, z, 50, 4, z, B.log("spruce", "x")) if False else None
-    deco.kingdom_wall_banner(w, 42, 4, -38, facing="south", color="brown", nbt=JOB_BANNER)
+    deco.kingdom_wall_banner(w, 42, 4, -37, facing="south", color="brown", nbt=JOB_BANNER)
 
 
 def grounds(w):

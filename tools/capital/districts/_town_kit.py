@@ -308,6 +308,7 @@ def house(f, W, D, sp: HouseSpec, nb_left=True, nb_right=True):
     f.set(door_x, 2, 0, hi)
     f.set(door_x, 3, 0, pane if fh >= 4 and u(9) < 0.5 else (tim_x if sp.ground_plaster else ground))
     f.set(door_x, 0, -1, B.stairs("stone_bricks" if not sp.posh else "smooth_castle_stone", "south"))
+    f.set(door_x, 1, -1, AIR)
     if not jet:
         # small hood over the door on brackets
         rm = sp.roof if B.has_stairs(sp.roof) else "spruce"
@@ -373,8 +374,9 @@ def house(f, W, D, sp: HouseSpec, nb_left=True, nb_right=True):
                             if tall:
                                 f.set(x, y0 + 1, zf - 1, B.trapdoor(sp.shutters, "north", "bottom", True))
                             break
+        ladder_x = 1 if door_x > 2 else W - 2                        # (the interior ladder climbs here)
         for x in range(1, W - 1):                                    # back windows
-            if x % 3 and u(70 + x + k) < 0.45:
+            if x % 3 and u(70 + x + k) < 0.45 and x != ladder_x:
                 f.set(x, y0 + 2, D - 1, pane)
         for (xs, nb) in ((0, nb_left), (W - 1, nb_right)):          # side windows if free
             if nb:
@@ -761,10 +763,8 @@ GOODS = {
 
 
 def _goods_state(name, facing):
-    if name in ("carrots", "potatoes"):
-        return B.S(name, age=7)
-    if name == "beetroots":
-        return B.S(name, age=3)
+    if name in ("carrots", "potatoes", "beetroots"):
+        return B.S("composter", level=7)              # a crate full of produce (crops need farmland)
     if name in ("oak_leaves",):
         return B.leaves("oak")
     if name in ("hay_block", "bee_nest"):

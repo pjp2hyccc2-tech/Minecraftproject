@@ -24,6 +24,7 @@ def ship(w, cx, z_stern, length=30, beam=9, masts=3, deck_y=1, keel_y=-6, seed=0
     stern_castle = int(L * 0.24)
     fore_castle = int(L * 0.86)
     hull_st, upper_st = F(f"{hull}_planks"), F(f"{upper}_planks")
+    decks = []
     for u in range(L):
         z = z_stern + u
         t = u / (L - 1)
@@ -37,6 +38,7 @@ def ship(w, cx, z_stern, length=30, beam=9, masts=3, deck_y=1, keel_y=-6, seed=0
             hw = half
         sheer = int(round(1.5 * (abs(t - 0.5) * 2) ** 2))           # deck rises towards bow/stern
         dk = deck_y + (sheer if t > 0.5 else min(sheer, 1))
+        decks.append(dk)
         kl = keel_y + int(round(3 * max(0.0, abs(t - 0.45) * 2.2 - 0.5)))
         rail = dk + (3 if u < stern_castle else (2 if u >= fore_castle else 1))
         for y in range(kl, rail + 1):
@@ -79,8 +81,9 @@ def ship(w, cx, z_stern, length=30, beam=9, masts=3, deck_y=1, keel_y=-6, seed=0
                     w.set(cx + s * int(math.floor(hw + 0.25)), dk + 2, z, B.pane("yellow"))
     # stern castle door and stairs to the quarterdeck
     zc = z_stern + stern_castle
-    w.set(cx, deck_y + 1, zc - 1, B.door_states("spruce", "north", "left")[0])
-    w.set(cx, deck_y + 2, zc - 1, B.door_states("spruce", "north", "left")[1])
+    dd = decks[stern_castle - 1]
+    w.set(cx, dd + 1, zc - 1, B.door_states("spruce", "north", "left")[0])
+    w.set(cx, dd + 2, zc - 1, B.door_states("spruce", "north", "left")[1])
     for i in range(3):
         w.set(cx + 2, deck_y + 2 + i, zc + 2 - i, B.stairs(upper, "north"))
     w.set(cx, deck_y + 5, z_stern + 1, B.S("gilded_finial"))

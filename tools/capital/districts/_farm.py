@@ -118,11 +118,12 @@ def windmill(w, cx, cz, facing="south", radius=7.0, seed=0):
     bx, bz = cx - vx * 4, cz - vz * 4
     w.fill(bx, 1, bz, bx, 2, bz, AIR)
     w.set(bx - vx, 0, bz - vz, B.stairs("cobblestone", facing))
+    w.set(bx - vx, 1, bz - vz, AIR)
+    # the main post (upright shaft) with the ladder on it, millstones and sacks beside
+    w.fill(cx, 1, cz, cx, cap_y, cz, B.log("spruce", "y"))
     for y in range(1, cap_y + 1):
-        w.set(cx + vx * 2, y, cz + vz * 2, B.S("ladder", facing=facing if False else {"south": "north",
-              "north": "south", "east": "west", "west": "east"}[facing]))
-    # millstones and sacks
-    w.set(cx, 1, cz, B.S("grindstone", face="floor", facing="north"))
+        w.set(cx + vx, y, cz + vz, B.S("ladder", facing=facing))
+    w.set(cx - vz, 1, cz + vx, B.S("grindstone", face="floor", facing="north"))
     w.set(cx - 1, 1, cz + 1, B.barrel("up"))
     w.set(cx + 1, 1, cz - 1, B.S("hay_block", axis="y"))
     TK.flagpole(w, cx, cap_y + 9, cz, 2, "east", "pennant", 3.0, 0.8, pole="fence")
@@ -162,4 +163,5 @@ def barn(w, rect, front, seed=0):
                     f.set(x, 2, z, B.S("hay_block", axis="y"))
     f.set(1, 1, 1, B.S("composter", level=6))
     f.set(W - 2, 1, 1, B.barrel("up"))
-    deco.hanging_lantern(f, mx, 7, D // 2, drop=1)
+    f.fill(1, 6, D // 2, W - 2, 6, D // 2, B.log("dark_oak", "x"))       # tie beam
+    deco.hanging_lantern(f, mx, 6, D // 2, drop=1)
