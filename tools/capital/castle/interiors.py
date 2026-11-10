@@ -424,7 +424,7 @@ def library(w, T):
         for x in range(x0, x1 + 1):
             if (x + z) % 2 == 0 and x0 + 2 < x < x1 - 2:
                 w.set(x, fy, z, B.S("dark_oak_planks"))
-    hs = Pt.pointed_vault(w, zn, zs, x0, x1, 46, material="dark_oak_planks", axis="z", shell=1, k=0.62,
+    hs = Pt.pointed_vault(w, zn, zs, x0, x1, 43, material="dark_oak_planks", axis="z", shell=1, k=0.55,
                           ribs=[-119, -125, -131, -137, -143], rib_state=B.log("dark_oak", "x", stripped=True))
     # bookcases along the walls between windows (two storeys), gallery at y=40 on the long walls
     bays = [-122, -128, -134, -140]

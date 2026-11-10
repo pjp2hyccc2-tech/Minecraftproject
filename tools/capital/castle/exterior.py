@@ -134,6 +134,15 @@ def viaduct(w, T):
             w.set(7 * s, y, z, B.full(SM))
             w.set(7 * s, y - 1, z, B.stairs(SM, "east" if s > 0 else "west", "top"))
             w.fill(6 * s, y + 2, z, 7 * s, y + 6, z, AIR)
+    # side faces: plinth, carved band under the cornice, pilaster strips at the piers
+    for z, (y, stair) in prof.items():
+        for s in (-1, 1):
+            x = xo * s
+            if y - 2 >= 1:
+                w.set(x, y - 2, z, B.full(CARVED))
+            if z % 5 == 0:
+                w.fill(x, 0, z, x, y - 3, z, B.full(SM))
+            w.set(x, 0, z, B.full("stone_bricks"))
     # arches through the viaduct (people walk under it between the two upper towns)
     for (za, zb, crown) in arches:
         width = za - zb + 1
@@ -615,7 +624,7 @@ def library(w, T):
     bays = [-122, -128, -134, -140]
     buttr = [-119, -125, -131, -137, -143]
     for (xw, sgn) in ((x1, 1), (x0, -1)):
-        Pt.gothic_wall_bays(w, "z", xw, sgn, bays, y0, eave - 2, 5, 13, 35, glass=B.pane(), mullion=B.wall(CB),
+        Pt.gothic_wall_bays(w, "z", xw, sgn, bays, y0, eave - 2, 5, 10, 34, glass=B.pane(), mullion=B.wall(CB),
                             frame=B.full(SM), buttress_u=buttr, b_depth=2, b_width=1, pinnacle_h=6,
                             sill=B.slab(SM, "top"), sharp=1.25)
     door = S.pointed_arch_mask(5, 7, 1.1)

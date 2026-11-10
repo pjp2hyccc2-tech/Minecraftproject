@@ -29,7 +29,7 @@ TERRACE = dict(x0=-58, x1=62, z0=-110, z1=-172)
 TERRACE_STAIR = dict(x0=-8, x1=8, z_bottom=-104)
 
 # palace buildings (outer wall faces)
-HALL = dict(x0=-13, x1=13, z0=-114, z1=-150, eave=62, floor=TY, win_y=39, win_h=18, spring=57, vault_k=0.55)
+HALL = dict(x0=-13, x1=13, z0=-114, z1=-150, eave=62, floor=TY, win_y=39, win_h=17, spring=56, vault_k=0.52)
 COURT = dict(x0=-13, x1=13, z0=-151, z1=-159)
 KEEP = dict(x0=-17, x1=17, z0=-160, z1=-188, top=84)
 CHAPEL = dict(x0=28, x1=62, z0=-120, z1=-136, eave=47)

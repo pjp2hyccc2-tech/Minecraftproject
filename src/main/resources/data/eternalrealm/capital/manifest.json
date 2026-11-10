@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "bc1d09449d6ff39e",
+ "build": "e2dd178db5071935",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -1618,7 +1618,7 @@
   {
    "pos": [
     0,
-    68,
+    66,
     -132
    ],
    "nbt": "{Length:34.0f,Width:3.0f,Height:3.0f,Pitch:89.0f}"

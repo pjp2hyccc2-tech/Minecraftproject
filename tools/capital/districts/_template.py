@@ -14,8 +14,8 @@ DISTRICT = "_example"   # e.g. "market"
 def build(w, district, terrain):
     x0, z0, x1, z1 = district.bbox()
     gy = district.ground_y               # top block of the ground (players stand at gy + 1)
-    # a house rotated so that its local south (+z) faces west:
-    f = Frame(w, origin=(x0 + 4, gy, z0 + 4), rot=1)
+    # a house rotated so that its local south (+z) faces west (local z 0..10 -> world x x0+14 .. x0+4):
+    f = Frame(w, origin=(x0 + 14, gy, z0 + 4), rot=1)
     shapes.hollow_box(f, 0, 1, 0, 8, 6, 10, B.full("white_plaster"), floor=False, ceiling=False)
     shapes.gable_roof(f, 0, 0, 8, 10, 7, "pale_roof_tiles", axis="z", overhang=1, gable_state=B.full("white_plaster"))
     lo, hi = B.door_states("spruce", facing="north")
