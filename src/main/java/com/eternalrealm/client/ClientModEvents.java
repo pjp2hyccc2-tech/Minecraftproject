@@ -89,6 +89,7 @@ public final class ClientModEvents {
     @SubscribeEvent
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
         DualWield.addLayers(event);
+        com.eternalrealm.client.monster.MenaceSwirlLayer.addLayers(event);
     }
 
     @SubscribeEvent
