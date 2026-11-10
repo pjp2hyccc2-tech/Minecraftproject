@@ -16,7 +16,7 @@ public class PlayerCharacterTest {
     private static final UUID PLAYER = UUID.fromString("00000000-0000-0000-0000-000000000001");
     private static final SeasonId SEASON = SeasonId.of("s1");
     private static final Instant NOW = Instant.parse("2026-11-08T00:00:00Z");
-    private static final CharacterRules RULES = CharacterRules.defaults(); // cap 50, 3 pts/level, base 5, max 10/request
+    private static final CharacterRules RULES = CharacterRules.defaults(); // cap 100, 3 pts/level, base 5, max 10/request
 
     private static PlayerCharacter fresh() {
         return PlayerCharacter.createNew(PLAYER, SEASON, NOW);
@@ -78,7 +78,7 @@ public class PlayerCharacterTest {
     public void hugeGrantsAreClampedInsteadOfOverflowing() {
         PlayerCharacter character = fresh();
         ExperienceResult result = character.addExperience(Long.MAX_VALUE, RULES);
-        assertEquals(50, character.level());
+        assertEquals(100, character.level());
         assertTrue(result.applied() <= PlayerCharacter.MAX_SINGLE_GRANT);
         assertEquals(Long.MAX_VALUE - result.applied(), result.discarded());
     }
@@ -135,7 +135,8 @@ public class PlayerCharacterTest {
         assertEquals(12, character.unspentStatPoints(RULES));
 
         assertEquals(SetLevelResult.OUT_OF_RANGE, character.setLevel(0, RULES));
-        assertEquals(SetLevelResult.OUT_OF_RANGE, character.setLevel(51, RULES));
+        assertEquals(SetLevelResult.SUCCESS, character.setLevel(100, RULES));
+        assertEquals(SetLevelResult.OUT_OF_RANGE, character.setLevel(101, RULES));
     }
 
     @Test
@@ -190,7 +191,7 @@ public class PlayerCharacterTest {
         character.allocate(StatType.AGI, 2, RULES);
         CharacterSnapshot snapshot = character.snapshot(RULES);
         assertEquals(2, snapshot.level());
-        assertEquals(50, snapshot.levelCap());
+        assertEquals(100, snapshot.levelCap());
         assertEquals(50, snapshot.experience());
         assertEquals(283, snapshot.experienceToNext());
         assertEquals(1, snapshot.unspentStatPoints());

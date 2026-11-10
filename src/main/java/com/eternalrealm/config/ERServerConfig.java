@@ -81,8 +81,10 @@ public final class ERServerConfig {
 
         builder.comment("Character progression. Reloadable: online characters are re-validated against new values.")
                 .push("character");
-        LEVEL_CAP = builder.comment("Maximum level of the current season. Initial season: 50. Hard limit: 100.")
-                .defineInRange("levelCap", 50, 1, CharacterRules.MAX_LEVEL);
+        // "maxLevel" replaced "levelCap" (default 50) when the cap became 100: worlds whose config still says
+        // levelCap = 50 pick up the new default instead of keeping the old cap.
+        LEVEL_CAP = builder.comment("Maximum character level. Default and hard limit: 100.")
+                .defineInRange("maxLevel", CharacterRules.MAX_LEVEL, 1, CharacterRules.MAX_LEVEL);
         STAT_POINTS_PER_LEVEL = builder.comment("Stat points granted per level gained.")
                 .defineInRange("statPointsPerLevel", 3, 0, CharacterRules.MAX_STAT_POINTS_PER_LEVEL);
         BASE_STAT_VALUE = builder.comment("Starting value of every stat (STR/VIT/AGI/INT/DEX/LUK).")

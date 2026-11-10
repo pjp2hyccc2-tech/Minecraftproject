@@ -120,7 +120,8 @@ public class SkillCatalogTest {
 
     /**
      * The point economy: every node can be reached with the points earned around the time its tier opens, a level-50
-     * character masters a good part of a tree (more than a third) but never all of it.
+     * character masters a good part of a tree (more than a third) and a character at the cap (level 100) never all of
+     * it.
      */
     @Test
     public void pointBudget() {
@@ -128,7 +129,8 @@ public class SkillCatalogTest {
             int master = SkillTree.pointsToMaster(job.type());
             int atCap = RULES.earnedSkillPoints(RULES.levelCap());
             assertTrue(job.type() + ": " + atCap + " of " + master, atCap < master);
-            assertTrue(job.type() + ": " + atCap + " of " + master, atCap >= master * 0.35);
+            int atFifty = RULES.earnedSkillPoints(50);
+            assertTrue(job.type() + ": " + atFifty + " of " + master, atFifty >= master * 0.35);
             for (SkillDefinition skill : job.skills()) {
                 // learnable at most one level after its tier opens (level 1 has no points yet)
                 int cost = unlockCost(skill, new HashMap<>());
@@ -137,6 +139,7 @@ public class SkillCatalogTest {
             }
         }
         assertEquals(108, RULES.earnedSkillPoints(50));
+        assertEquals(218, RULES.earnedSkillPoints(100));
         assertEquals(20, RULES.earnedSkillPoints(10));
         assertEquals(0, RULES.earnedSkillPoints(1));
     }

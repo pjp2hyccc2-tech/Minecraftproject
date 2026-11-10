@@ -91,7 +91,7 @@ ARCHITECTURE.md 4.2 を参照。要点:
 
 | キー | 既定 | 再読込 |
 |---|---|---|
-| `character.levelCap` | 50 | 可 |
+| `character.maxLevel` | 100 | 可 |
 | `character.statPointsPerLevel` | 3 | 可 |
 | `character.baseStatValue` | 5 | 可 |
 | `character.maxPointsPerRequest` | 10 | 可 |
