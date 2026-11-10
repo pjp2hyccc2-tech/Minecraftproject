@@ -49,6 +49,7 @@ public final class EternalRealm {
         ERItems.register(modBus);
         com.eternalrealm.item.forge.ERGearItems.register(modBus);
         com.eternalrealm.item.forge.GearEvents.install();
+        com.eternalrealm.item.forge.Bags.install();
         ERMobEffects.register(modBus);
         com.eternalrealm.combat.forge.ERParticles.register(modBus);
         EREntities.register(modBus);
@@ -66,6 +67,7 @@ public final class EternalRealm {
         com.eternalrealm.story.forge.StoryActions.register();
         com.eternalrealm.world.forge.WaystoneService.register();
         com.eternalrealm.item.forge.SmithService.register();
+        com.eternalrealm.item.forge.BagService.register();
         com.eternalrealm.revival.forge.RevivalService.register();
         com.eternalrealm.dungeon.forge.DungeonResults.register();
         AstoriaWorldgen.register(modBus);

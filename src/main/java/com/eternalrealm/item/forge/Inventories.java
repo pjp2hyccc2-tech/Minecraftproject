@@ -49,11 +49,9 @@ public final class Inventories {
         return left.values().stream().allMatch(count -> count <= 0);
     }
 
-    /** Into the inventory, the rest dropped at the player's feet. */
+    /** Into the bag (shown in the pickup feed), the rest dropped at the player's feet for them alone ({@link Bags}). */
     public static void give(ServerPlayer player, ItemStack stack) {
-        if (!player.getInventory().add(stack) && !stack.isEmpty()) {
-            player.drop(stack, false);
-        }
+        Bags.give(player, stack);
     }
 
     public static Item item(String id) {

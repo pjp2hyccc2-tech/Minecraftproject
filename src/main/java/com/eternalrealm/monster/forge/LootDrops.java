@@ -26,7 +26,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -132,17 +131,11 @@ public final class LootDrops {
         return bases.get(RANDOM.nextInt(bases.size()));
     }
 
+    /** The killer's loot goes straight into their bag (what does not fit drops at their feet, for them alone). */
     private static void spawn(ServerPlayer killer, LivingEntity victim, ItemStack stack, ItemRarity rarity) {
         ServerLevel level = (ServerLevel) victim.level();
-        ItemEntity entity = new ItemEntity(level, victim.getX(), victim.getY() + 0.4, victim.getZ(), stack,
-                (RANDOM.nextDouble() - 0.5) * 0.15, 0.25, (RANDOM.nextDouble() - 0.5) * 0.15);
-        entity.setPickUpDelay(10);
-        entity.setTarget(killer.getUUID());
         boolean rare = rarity.rank() >= ItemRarity.RARE.rank();
-        if (rare) {
-            entity.setGlowingTag(true);
-        }
-        level.addFreshEntity(entity);
+        com.eternalrealm.item.forge.Bags.give(killer, stack);
         if (!rare) {
             return;
         }
