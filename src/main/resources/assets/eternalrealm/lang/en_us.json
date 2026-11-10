@@ -1964,5 +1964,11 @@
   "story.eternalrealm.boss.b7.phase4": "WARNING. CRITICAL LIMIT EXCEEDED. ALL FUNCTIONS REROUTED TO ATTACK.",
   "story.eternalrealm.boss.b8.phase4": "I am the gate, I am the shield. A thousand years, and still I stand!",
   "subtitles.eternalrealm.boss.collapse": "Boss collapses",
-  "subtitles.eternalrealm.boss.form_sting": "Boss transforms"
+  "subtitles.eternalrealm.boss.form_sting": "Boss transforms",
+  "block.eternalrealm.flag": "Waving Flag",
+  "block.eternalrealm.clock_face": "Tower Clock Face",
+  "block.eternalrealm.windmill_sails": "Windmill Sails",
+  "block.eternalrealm.water_wheel": "Water Wheel",
+  "block.eternalrealm.smoke_emitter": "Chimney Smoke",
+  "block.eternalrealm.fountain_spray": "Fountain Jet"
 }

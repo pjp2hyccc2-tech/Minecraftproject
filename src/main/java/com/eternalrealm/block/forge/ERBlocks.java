@@ -29,7 +29,8 @@ import java.util.function.Supplier;
 
 /**
  * Building blocks of the royal capital (white castle stone, blue roof tiles, gold trim, plaster), its furnishings
- * (chandelier, gilded finial) and the light shaft emitter. Textures, models and data come from
+ * (chandelier, gilded finial), the light shaft emitter and the town's moving decorations (waving flags, tower clocks,
+ * windmill sails, water wheels, chimney smoke, fountain jets). Textures, models and data come from
  * {@code tools/art/capital_blocks.py}; the capital build ({@code tools/capital}) uses exactly these ids.
  */
 public final class ERBlocks {
@@ -97,6 +98,50 @@ public final class ERBlocks {
             BLOCK_ENTITIES.register("light_shaft", () -> BlockEntityType.Builder.of(LightShaftBlockEntity::new,
                     LIGHT_SHAFT.get()).build(null));
 
+    // ---- moving decorations of the town (drawn and animated by the client, see client/block)
+    public static final RegistryObject<Block> FLAG = block("flag", () -> new FlagBlock(BlockBehaviour.Properties.of()
+            .mapColor(MapColor.GOLD).strength(1.0F, 3.0F).sound(SoundType.WOOD).noOcclusion()
+            .pushReaction(PushReaction.DESTROY)));
+    public static final RegistryObject<Block> CLOCK_FACE = block("clock_face",
+            () -> new FacadeMechanismBlock<>(stone(MapColor.QUARTZ), () -> ERBlocks.CLOCK_FACE_ENTITY.get(),
+                    ClockFaceBlockEntity::new, ClockFaceBlockEntity::clientTick));
+    public static final RegistryObject<Block> WINDMILL_SAILS = block("windmill_sails",
+            () -> new FacadeMechanismBlock<>(wood(MapColor.COLOR_BROWN), () -> ERBlocks.WINDMILL_SAILS_ENTITY.get(),
+                    WindmillSailsBlockEntity::new, null));
+    public static final RegistryObject<Block> WATER_WHEEL = block("water_wheel",
+            () -> new FacadeMechanismBlock<>(wood(MapColor.WOOD), () -> ERBlocks.WATER_WHEEL_ENTITY.get(),
+                    WaterWheelBlockEntity::new, WaterWheelBlockEntity::clientTick));
+    public static final RegistryObject<Block> SMOKE_EMITTER = block("smoke_emitter", () -> new SmokeEmitterBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.NONE).strength(0.0F, 3600000.0F).noCollission()
+                    .noOcclusion().noParticlesOnBreak().pushReaction(PushReaction.DESTROY)));
+    public static final RegistryObject<Block> FOUNTAIN_SPRAY = block("fountain_spray", () -> new FountainSprayBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.NONE).strength(0.0F, 3600000.0F).noCollission()
+                    .noOcclusion().noParticlesOnBreak().pushReaction(PushReaction.DESTROY)));
+
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<FlagBlockEntity>> FLAG_ENTITY = BLOCK_ENTITIES.register("flag",
+            () -> BlockEntityType.Builder.of(FlagBlockEntity::new, FLAG.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<ClockFaceBlockEntity>> CLOCK_FACE_ENTITY =
+            BLOCK_ENTITIES.register("clock_face",
+                    () -> BlockEntityType.Builder.of(ClockFaceBlockEntity::new, CLOCK_FACE.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<WindmillSailsBlockEntity>> WINDMILL_SAILS_ENTITY =
+            BLOCK_ENTITIES.register("windmill_sails",
+                    () -> BlockEntityType.Builder.of(WindmillSailsBlockEntity::new, WINDMILL_SAILS.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<WaterWheelBlockEntity>> WATER_WHEEL_ENTITY =
+            BLOCK_ENTITIES.register("water_wheel",
+                    () -> BlockEntityType.Builder.of(WaterWheelBlockEntity::new, WATER_WHEEL.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<SmokeEmitterBlock.Entity>> SMOKE_EMITTER_ENTITY =
+            BLOCK_ENTITIES.register("smoke_emitter",
+                    () -> BlockEntityType.Builder.of(SmokeEmitterBlock.Entity::new, SMOKE_EMITTER.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<FountainSprayBlock.Entity>> FOUNTAIN_SPRAY_ENTITY =
+            BLOCK_ENTITIES.register("fountain_spray",
+                    () -> BlockEntityType.Builder.of(FountainSprayBlock.Entity::new, FOUNTAIN_SPRAY.get()).build(null));
+
     public static final RegistryObject<CreativeModeTab> TAB = TABS.register("building", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + ModInfo.MOD_ID + ".building"))
             .icon(() -> new ItemStack(CASTLE_BRICKS.get()))
@@ -127,6 +172,11 @@ public final class ERBlocks {
     private static BlockBehaviour.Properties tiles(MapColor color) {
         return BlockBehaviour.Properties.of().mapColor(color).instrument(NoteBlockInstrument.BASEDRUM)
                 .requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE_TILES);
+    }
+
+    private static BlockBehaviour.Properties wood(MapColor color) {
+        return BlockBehaviour.Properties.of().mapColor(color).instrument(NoteBlockInstrument.BASS)
+                .strength(2.0F, 3.0F).sound(SoundType.WOOD);
     }
 
     private static BlockBehaviour.Properties gold() {

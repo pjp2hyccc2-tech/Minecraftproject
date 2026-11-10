@@ -30,6 +30,12 @@ public final class ERParticleProviders {
         add(event, ERParticles.SPARK.get(), new Style(9, 0.09F, 0.0F, 0.80F, true, true));
         event.registerSpriteSet(ERParticles.MOTE.get(), sprites -> (type, level, x, y, z, dx, dy, dz) ->
                 new MoteParticle(level, x, y, z, dx, dy, dz, sprites));
+        event.registerSpriteSet(ERParticles.SPRAY.get(), sprites -> (type, level, x, y, z, dx, dy, dz) ->
+                new SprayParticle(level, x, y, z, dx, dy, dz, sprites));
+        event.registerSpriteSet(ERParticles.CHIMNEY_SMOKE.get(), sprites -> (type, level, x, y, z, dx, dy, dz) ->
+                new ChimneySmokeParticle(level, x, y, z, dx, dy, dz, sprites, false));
+        event.registerSpriteSet(ERParticles.FORGE_SMOKE.get(), sprites -> (type, level, x, y, z, dx, dy, dz) ->
+                new ChimneySmokeParticle(level, x, y, z, dx, dy, dz, sprites, true));
     }
 
     private static void add(RegisterParticleProvidersEvent event, SimpleParticleType type, Style style) {
@@ -129,6 +135,120 @@ public final class ERParticleProviders {
         @Override
         protected int getLightColor(float partialTick) {
             return 0xF000F0;
+        }
+    }
+
+    /**
+     * A drop of fountain water: falls under gravity, glints, and bursts into a splash when it reaches water or stone
+     * (vanilla splash particles, a ring of them on water).
+     */
+    private static final class SprayParticle extends TextureSheetParticle {
+        SprayParticle(ClientLevel level, double x, double y, double z, double dx, double dy, double dz,
+                      SpriteSet sprites) {
+            super(level, x, y, z);
+            this.xd = dx;
+            this.yd = dy;
+            this.zd = dz;
+            this.lifetime = 60;
+            this.quadSize = 0.035F + random.nextFloat() * 0.035F;
+            this.gravity = 1.0F;                      // 0.04 blocks/tick^2, the jets' own gravity
+            this.friction = 0.995F;
+            this.hasPhysics = false;
+            this.rCol = 0.78F;
+            this.gCol = 0.9F;
+            this.bCol = 1.0F;
+            this.alpha = 0.85F;
+            setSprite(sprites.get(random));
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            if (removed) {
+                return;
+            }
+            net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.containing(x, y, z);
+            net.minecraft.world.level.material.FluidState fluid = level.getFluidState(pos);
+            if (!fluid.isEmpty() && y <= pos.getY() + fluid.getHeight(level, pos)) {
+                double surface = pos.getY() + fluid.getHeight(level, pos);
+                if (random.nextFloat() < 0.55F) {
+                    level.addParticle(net.minecraft.core.particles.ParticleTypes.SPLASH, x, surface + 0.02, z,
+                            0.0, 0.0, 0.0);
+                }
+                remove();
+                return;
+            }
+            if (yd < 0.0 && !level.getBlockState(pos).getCollisionShape(level, pos).isEmpty()) {
+                if (random.nextFloat() < 0.4F) {
+                    level.addParticle(net.minecraft.core.particles.ParticleTypes.SPLASH, x, y + 0.05, z,
+                            0.0, 0.0, 0.0);
+                }
+                remove();
+            }
+        }
+
+        @Override
+        public ParticleRenderType getRenderType() {
+            return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        }
+    }
+
+    /**
+     * Chimney smoke: a soft puff that swells as it rises, slows, drifts off with the breeze and thins away; forge
+     * smoke is darker, thicker and lives longer.
+     */
+    private static final class ChimneySmokeParticle extends TextureSheetParticle {
+        private static final double DRIFT_X = 0.00035;
+        private static final double DRIFT_Z = 0.00022;
+        private final float startSize;
+        private final float endSize;
+        private final float peak;
+
+        ChimneySmokeParticle(ClientLevel level, double x, double y, double z, double dx, double dy, double dz,
+                             SpriteSet sprites, boolean heavy) {
+            super(level, x, y, z);
+            this.xd = dx;
+            this.yd = dy;
+            this.zd = dz;
+            this.lifetime = (heavy ? 170 : 140) + random.nextInt(heavy ? 90 : 70);
+            this.startSize = (heavy ? 0.42F : 0.3F) * (0.85F + random.nextFloat() * 0.3F);
+            this.endSize = startSize * (heavy ? 5.0F : 4.2F);
+            this.quadSize = startSize;
+            this.gravity = 0.0F;
+            this.friction = 0.985F;
+            this.hasPhysics = false;
+            float grey = heavy ? 0.22F + random.nextFloat() * 0.08F : 0.78F + random.nextFloat() * 0.12F;
+            this.rCol = grey;
+            this.gCol = grey * 0.98F;
+            this.bCol = grey * 0.96F;
+            this.peak = heavy ? 0.78F : 0.5F;
+            this.alpha = 0.0F;
+            this.roll = random.nextFloat() * (float) Math.PI * 2.0F;
+            this.oRoll = roll;
+            setSprite(sprites.get(random));
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            if (removed) {
+                return;
+            }
+            float life = (float) age / (float) lifetime;
+            float grow = 1.0F - (1.0F - life) * (1.0F - life);
+            quadSize = startSize + (endSize - startSize) * grow;
+            float fade = life < 0.08F ? life / 0.08F : life > 0.45F ? Math.max(0.0F, (1.0F - life) / 0.55F) : 1.0F;
+            alpha = peak * fade;
+            xd += DRIFT_X * (1.0 + random.nextGaussian() * 0.3);
+            zd += DRIFT_Z * (1.0 + random.nextGaussian() * 0.3);
+            yd = Math.max(yd, 0.004);
+            oRoll = roll;
+            roll += 0.004F;
+        }
+
+        @Override
+        public ParticleRenderType getRenderType() {
+            return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
         }
     }
 }

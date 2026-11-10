@@ -86,6 +86,21 @@ def build(w, district, terrain):          # called by build.py inside w.district
   travels towards `facing` (east windows → `west`), tilted down by `pitch`. The sun moves east→west through the
   zenith, so shafts come through east/west windows and skylights only.
 
+### Moving decorations (block entities drawn by the client)
+
+| Block | State | Data (SNBT) | Placement |
+|---|---|---|---|
+| `eternalrealm:flag` | `facing` n/s/e/w | `{Width:3.0f,Height:2.0f,Design:"kingdom",Wind:1.0f}` (Width 0.5–12, Height 0.25–8, Wind 0–3; designs `kingdom`, `guild` (swallowtail), `pennant` (tapering streamer), `cathedral`, `market`, `harbour`) | The block is a slim pole top with a gold ball: put it on a fence/wall/chain/bar column or at the end of a wall bracket. The cloth hangs from its top down `Height` blocks along the pole and streams `Width` blocks towards `facing`, waving in the town wind (gusts; stronger in rain and storms). Keep that area ±1 block sideways free. Indoors use `Wind:0.2`. |
+| `eternalrealm:clock_face` | `facing` | `{Size:2.5f}` (dial radius 0.75–6) | A solid block flush in the wall, `facing` out of the wall. Dial (ivory, Roman numerals, gilded bezel) and hands are drawn just in front of the outer face, centred on it, and show the world time; lit from behind at night; the bell tolls the hours (one bell per 48 blocks). Keep the wall plane flat within the radius. |
+| `eternalrealm:windmill_sails` | `facing` | `{Radius:7.0f}` (2–12) | The hub bearing, set into the mill cap, `facing` out. Axle, hub and four lattice sails turn (counter-clockwise from the front, faster in wind) in a plane ~1 block in front of the face. Keep a disc of `Radius` clear 0.25–1.75 blocks in front. |
+| `eternalrealm:water_wheel` | `facing` | `{Radius:3.0f,Width:2.0f}` (Radius 1.5–8, Width 0.5–4) | The axle bearing, set into the mill wall at hub height, `facing` out. The wheel turns about the horizontal axis through the block centre, occupying 0.15 … 0.15+Width blocks in front of the face; water 0–1 blocks below the axle gives splashes and drips. |
+| `eternalrealm:smoke_emitter` | `heavy` true/false | — | Invisible, walk-through: the air block right above a chimney. Soft grey smoke seen from across the town; `heavy=true` for forges. |
+| `eternalrealm:fountain_spray` | `power` 1–3, `facing` up/n/s/e/w | — | Invisible, walk-through: the air block at the nozzle. `up` = vertical column (≈1.5/3/5 blocks) breaking into falling drops; a horizontal facing = a spout arcing out (≈1.5/2.5/4 blocks) for lion heads and statues' jars. Drops splash where they land. |
+
+Java: `block/forge` (`FlagBlock`, `FacadeMechanismBlock`, `*BlockEntity`, `SmokeEmitterBlock`, `FountainSprayBlock`),
+renderers in `client/block`, the pure maths (cloth waves, wind, clock angles, jet ballistics) in `world/town`
+(unit-tested), art in `tools/art/town_gimmicks.py`.
+
 ## 4. Master plan (`layout.py`)
 
 Anchors: plaza disc r = 22 (+ ring road to r = 26, fountain reserved r ≤ 10, spawn (0, 1, 13) facing north);

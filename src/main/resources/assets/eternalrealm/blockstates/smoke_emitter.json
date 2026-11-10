@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "heavy=false": {
+      "model": "eternalrealm:block/smoke_emitter"
+    },
+    "heavy=true": {
+      "model": "eternalrealm:block/smoke_emitter"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "eternalrealm:block/flag"
+    },
+    "facing=east": {
+      "model": "eternalrealm:block/flag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "eternalrealm:block/flag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "eternalrealm:block/flag",
+      "y": 270
+    }
+  }
+}

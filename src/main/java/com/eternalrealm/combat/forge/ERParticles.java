@@ -34,6 +34,12 @@ public final class ERParticles {
     public static final RegistryObject<SimpleParticleType> SPARK = register("spark");
     /** Dust drifting in sunbeams (capital interiors). */
     public static final RegistryObject<SimpleParticleType> MOTE = register("mote");
+    /** Water drops of fountains (fall, splash where they land). */
+    public static final RegistryObject<SimpleParticleType> SPRAY = register("spray");
+    /** Soft grey chimney smoke, visible from afar. */
+    public static final RegistryObject<SimpleParticleType> CHIMNEY_SMOKE = register("chimney_smoke");
+    /** Thick dark smoke of forges. */
+    public static final RegistryObject<SimpleParticleType> FORGE_SMOKE = register("forge_smoke");
 
     private ERParticles() {
     }

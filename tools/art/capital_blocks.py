@@ -618,11 +618,18 @@ def tags() -> None:
     walls = [f"{NS}:{w}" for w in WALLS]
     for tag, values in (("mineable/pickaxe", [f"{NS}:{n}" for n in PICKAXE]), ("stairs", stairs), ("slabs", slabs),
                         ("walls", walls)):
-        write_json(os.path.join(DATA, "minecraft", "tags", "blocks", f"{tag}.json"),
-                   {"replace": False, "values": sorted(values)})
+        merge_tag(os.path.join(DATA, "minecraft", "tags", "blocks", f"{tag}.json"), values)
     for tag, values in (("stairs", stairs), ("slabs", slabs), ("walls", walls)):
-        write_json(os.path.join(DATA, "minecraft", "tags", "items", f"{tag}.json"),
-                   {"replace": False, "values": sorted(values)})
+        merge_tag(os.path.join(DATA, "minecraft", "tags", "items", f"{tag}.json"), values)
+
+
+def merge_tag(path: str, values) -> None:
+    """Adds values to a tag file, keeping entries other generators wrote (town_gimmicks.py shares these tags)."""
+    existing = []
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            existing = json.load(f).get("values", [])
+    write_json(path, {"replace": False, "values": sorted(set(existing) | set(values))})
 
 
 def main() -> int:

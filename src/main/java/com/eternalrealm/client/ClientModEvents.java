@@ -68,6 +68,16 @@ public final class ClientModEvents {
         event.registerEntityRenderer(EREntities.SKILL_ARROW.get(), SkillArrowRenderer::new);
         event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.LIGHT_SHAFT_ENTITY.get(),
                 com.eternalrealm.client.block.LightShaftRenderer::new);
+        event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.FLAG_ENTITY.get(),
+                com.eternalrealm.client.block.FlagRenderer::new);
+        event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.CLOCK_FACE_ENTITY.get(),
+                com.eternalrealm.client.block.ClockFaceRenderer::new);
+        event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.WINDMILL_SAILS_ENTITY.get(),
+                com.eternalrealm.client.block.WindmillRenderer::new);
+        event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.WATER_WHEEL_ENTITY.get(),
+                com.eternalrealm.client.block.WaterWheelRenderer::new);
+        event.registerBlockEntityRenderer(com.eternalrealm.block.forge.ERBlocks.FOUNTAIN_SPRAY_ENTITY.get(),
+                com.eternalrealm.client.block.FountainRenderer::new);
     }
 
     @SubscribeEvent

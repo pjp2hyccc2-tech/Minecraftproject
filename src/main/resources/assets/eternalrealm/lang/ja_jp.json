@@ -1964,5 +1964,11 @@
   "story.eternalrealm.boss.b7.phase4": "警告。臨界突破。全機能ヲ攻撃ニ転用スル。",
   "story.eternalrealm.boss.b8.phase4": "我は門、我は盾。千年経とうと、退かぬ！",
   "subtitles.eternalrealm.boss.collapse": "ボスが崩れ落ちる",
-  "subtitles.eternalrealm.boss.form_sting": "ボスが姿を変える"
+  "subtitles.eternalrealm.boss.form_sting": "ボスが姿を変える",
+  "block.eternalrealm.flag": "はためく旗",
+  "block.eternalrealm.clock_face": "塔時計の文字盤",
+  "block.eternalrealm.windmill_sails": "風車の羽根",
+  "block.eternalrealm.water_wheel": "水車",
+  "block.eternalrealm.smoke_emitter": "煙突の煙",
+  "block.eternalrealm.fountain_spray": "噴水の噴き出し口"
 }
