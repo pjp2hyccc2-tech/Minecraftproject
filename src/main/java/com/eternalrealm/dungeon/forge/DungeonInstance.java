@@ -146,13 +146,15 @@ final class DungeonInstance {
         }
         if (state.isRunning()) {
             handle(run.tick(now));
-            if (fight != null) {
-                fight.tick(now);
-            }
             if (hazards != null) {
                 hazards.tick(now, trapVictims());
             }
             pruneSpawned();
+        }
+        // The fight keeps ticking after the killing blow: the run is already CLEARED then, but the boss's collapse
+        // (DefeatSequence) still has to play to its end, and only its end hands out the rewards and opens the exit.
+        if (fight != null && (state.isRunning() || fight.isDying())) {
+            fight.tick(now);
         }
         if (exitAt >= 0 && now >= exitAt) {
             close();

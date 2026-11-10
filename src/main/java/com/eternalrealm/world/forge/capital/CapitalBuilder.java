@@ -50,7 +50,7 @@ public final class CapitalBuilder {
     /** Work per server tick. */
     private static final long BUDGET_NANOS = 14_000_000L;
     /** Natural terrain is eased into the city over this many blocks outside the footprint. */
-    private static final int BLEND = 24;
+    private static final int BLEND = 40;
     private static final String ENTITY_TAG = "eternalrealm_capital";
     private static final int FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
 
@@ -382,6 +382,23 @@ public final class CapitalBuilder {
 
         // ---- easing the natural terrain into the city edge
 
+        /** The ground of column (x, z) under {@code top}: the first block down that is soil or rock (not a tree). */
+        private int ground(int x, int z, int top) {
+            for (int y = top; y > top - 40 && y > level.getMinBuildHeight(); y--) {
+                cursor.set(x, y, z);
+                BlockState state = level.getBlockState(cursor);
+                if (state.isAir() || state.is(net.minecraft.tags.BlockTags.LEAVES) || state.is(net.minecraft.tags.BlockTags.LOGS)
+                        || state.canBeReplaced() || !state.getFluidState().isEmpty() && !state.isSolid()) {
+                    if (!state.getFluidState().isEmpty()) {
+                        return y; // water: the caller leaves it alone
+                    }
+                    continue;
+                }
+                return y;
+            }
+            return top;
+        }
+
         private boolean blend(long deadline) {
             int width = maxX - minX + 1 + 2 * BLEND;
             int depth = maxZ - minZ + 1 + 2 * BLEND;
@@ -402,9 +419,10 @@ public final class CapitalBuilder {
                     continue;   // the field set pieces outside the gates (waystone shrine, road lanterns) stay
                 }
                 level.getChunk(x >> 4, z >> 4);
-                int natural = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;
+                int top = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;
+                int natural = ground(x, z, top);
                 cursor.set(x, natural, z);
-                if (!level.getFluidState(cursor).isEmpty()) {
+                if (!level.getFluidState(cursor).isEmpty() || !level.getFluidState(cursor.above()).isEmpty()) {
                     continue; // leave lakes and rivers alone
                 }
                 float t = distance / (float) BLEND;
@@ -414,7 +432,8 @@ public final class CapitalBuilder {
                     continue;
                 }
                 if (target < natural) {
-                    for (int y = natural; y > target; y--) {
+                    // cut the hill down, and whatever stood on it (trees, plants), so nothing is left floating
+                    for (int y = Math.max(natural, top); y > target; y--) {
                         cursor.set(x, y, z);
                         level.setBlock(cursor, Blocks.AIR.defaultBlockState(), FLAGS);
                     }

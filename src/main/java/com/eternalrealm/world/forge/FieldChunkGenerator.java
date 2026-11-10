@@ -241,11 +241,7 @@ public class FieldChunkGenerator extends ChunkGenerator {
 
     @Override
     public void spawnOriginalMobs(WorldGenRegion region) {
-        ChunkPos chunkPos = region.getCenter();
-        Holder<Biome> biome = region.getBiome(chunkPos.getWorldPosition().atY(region.getMaxBuildHeight() - 1));
-        WorldgenRandom random = new WorldgenRandom(new LegacyRandomSource(RandomSupport.generateUniqueSeed()));
-        random.setDecorationSeed(region.getSeed(), chunkPos.getMinBlockX(), chunkPos.getMinBlockZ());
-        NaturalSpawner.spawnMobsForChunkGeneration(region, biome, chunkPos, random);
+        // no vanilla animals or monsters in the kingdom: its life is the mod's field monsters and NPCs
     }
 
     @Override

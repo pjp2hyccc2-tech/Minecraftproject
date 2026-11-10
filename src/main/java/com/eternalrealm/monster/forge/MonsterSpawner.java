@@ -22,20 +22,27 @@ import java.util.List;
 import java.util.SplittableRandom;
 
 /**
- * Field monsters around the players: twice per second each player outside the capital may get a monster of the
- * area's table (level from the area's range) 16-38 blocks away on solid ground — often with one or two of its kind
- * beside it — up to a dozen per player and a cap per server. Monsters that ignore players in daylight (spiders,
+ * Field monsters around the players: twice per second each player outside the capital gets monsters of the area's
+ * table (level from the area's range) 14-40 blocks away on solid ground — half of them with one or two of their kind
+ * beside them, two spawns per round while the surroundings are emptier than half the cap — up to 21 per player
+ * (three times the original seven) and a cap per server. Monsters that ignore players in daylight (spiders,
  * endermen) are pointed at a player in sight.
  */
 public final class MonsterSpawner {
-    private static final int NEAR_RADIUS = 44;
-    private static final int PER_PLAYER_CAP = 12;
-    private static final int LEVEL_CAP_BASE = 48;
-    private static final int LEVEL_CAP_PER_PLAYER = 18;
-    private static final double MIN_DISTANCE = 16.0;
-    private static final double MAX_DISTANCE = 38.0;
+    private static final int NEAR_RADIUS = 48;
+    /** Three times the original seven. */
+    private static final int PER_PLAYER_CAP = 21;
+    private static final int LEVEL_CAP_BASE = 72;
+    private static final int LEVEL_CAP_PER_PLAYER = 27;
+    private static final double MIN_DISTANCE = 14.0;
+    private static final double MAX_DISTANCE = 40.0;
+    /** Height difference to the player a spawn spot may have (hills and valleys). */
+    private static final double MAX_HEIGHT_DIFFERENCE = 20.0;
+    private static final int ATTEMPTS = 10;
     /** Chance that a normal monster comes with company (one or two more of its kind next to it). */
-    private static final double PACK_CHANCE = 0.4;
+    private static final double PACK_CHANCE = 0.5;
+    /** Spawns per player per round while far below the cap (the field fills up quickly again). */
+    private static final int BURST = 2;
     private static final double AGGRO_RANGE_SQR = 12.0 * 12.0;
     private static final int RECOUNT_TICKS = 100;
     private static final double DESPAWN_DISTANCE = 96.0;
@@ -89,7 +96,13 @@ public final class MonsterSpawner {
             if (levelCount >= cap || near.size() >= PER_PLAYER_CAP || Realm.inCapital(level, player.getX(), player.getZ())) {
                 continue;
             }
-            levelCount += trySpawn(level, player, Math.min(cap - levelCount, PER_PLAYER_CAP - near.size()));
+            int room = Math.min(cap - levelCount, PER_PLAYER_CAP - near.size());
+            int rounds = near.size() < PER_PLAYER_CAP / 2 ? BURST : 1;
+            for (int round = 0; round < rounds && room > 0; round++) {
+                int spawned = trySpawn(level, player, room);
+                levelCount += spawned;
+                room -= spawned;
+            }
         }
     }
 
@@ -111,7 +124,7 @@ public final class MonsterSpawner {
 
     /** Spawns a monster (and maybe its pack, up to {@code room} in all) near the player; returns how many. */
     private int trySpawn(ServerLevel level, ServerPlayer player, int room) {
-        for (int attempt = 0; attempt < 4; attempt++) {
+        for (int attempt = 0; attempt < ATTEMPTS; attempt++) {
             double angle = random.nextDouble() * Math.PI * 2.0;
             double distance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
             int x = Mth.floor(player.getX() + Math.cos(angle) * distance);
@@ -120,7 +133,7 @@ public final class MonsterSpawner {
                 continue;
             }
             int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-            if (y <= level.getMinBuildHeight() + 1 || Math.abs(y - player.getY()) > 12.0) {
+            if (y <= level.getMinBuildHeight() + 1 || Math.abs(y - player.getY()) > MAX_HEIGHT_DIFFERENCE) {
                 continue;
             }
             BlockPos pos = new BlockPos(x, y, z);

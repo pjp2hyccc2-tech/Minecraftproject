@@ -107,7 +107,8 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onLivingTick);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onMobGriefing);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onEntityJoin);
-        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onFinalizeSpawn);
+        forgeBus.addListener(net.minecraftforge.eventbus.api.EventPriority.HIGHEST,
+                com.eternalrealm.monster.forge.VanillaSpawnBlocker::onFinalizeSpawn);
         forgeBus.addListener(com.eternalrealm.quest.forge.QuestActions::onItemPickup);
         forgeBus.addListener(EventPriority.HIGH, com.eternalrealm.dungeon.forge.DungeonEvents::onLivingHurt);
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onLivingAttack);
