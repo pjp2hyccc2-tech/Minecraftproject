@@ -251,7 +251,7 @@ def main_gate(w):
     TK.guard(w, "south_gate", 3, -6, 1, zc - 6, 180.0)
     TK.guard(w, "south_gate", 4, 6, 1, zc - 6, 180.0)
     TK.guard(w, "south_gate", 5, 0, top - 1, z1, 0.0)
-    TK.crowd(w, "street", [(-14, 1, 72), (14, 1, 72), (-14, 1, 88), (14, 1, 88)], start=1)
+    TK.crowd(w, "street", [(-14, 1, 72), (14, 1, 88)], start=1)
 
 
 # ============================================================================== side gates

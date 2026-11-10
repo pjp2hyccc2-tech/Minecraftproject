@@ -61,8 +61,10 @@ def square(w):
             stall_at(w, x0, z0, front, W=5, D=4, seed=11 + i * 3 + z0)
     # market cross with a fountain basin at the centre of the cross aisle
     cx, cz = 35, 24
-    S.cylinder(w, cx, cz, 2.4, 1, 1, F(SM))
-    S.cylinder(w, cx, cz, 1.4, 1, 1, B.S("water"))
+    S.cylinder(w, cx, cz, 3.4, 1, 1, F(SM))
+    S.cylinder(w, cx, cz, 3.4, 2, 2, B.slab(SM, "bottom"), hollow=True)
+    S.cylinder(w, cx, cz, 2.5, 1, 1, B.S("water"))
+    S.cylinder(w, cx, cz, 2.5, 2, 2, AIR)
     w.fill(cx, 1, cz, cx, 6, cz, B.pillar("y"))
     w.set(cx, 7, cz, F(CARVED))
     for (dx, dz, fac) in ((1, 0, "east"), (-1, 0, "west"), (0, 1, "south"), (0, -1, "north")):
@@ -74,7 +76,7 @@ def square(w):
     w.set(cx, 9, cz, B.S("gilded_finial"))
     w.set(cx, 4, cz, F(GOLD))
     # pennant masts with market flags at the aisle ends
-    for (x, z) in ((51, 17), (51, 30), (8, 30), (33, 28), (37, 20)):
+    for (x, z) in ((51, 17), (51, 30), (8, 30), (31, 29), (39, 19)):
         TK.flagpole(w, x, 0, z, 8, "east", "market", 3.0, 2.0, pole="fence")
         w.set(x, 1, z, F(SM))
     # carts, crates and benches in the aisles
@@ -210,8 +212,7 @@ def avenue_stalls(w):
 
 
 def crowd(w):
-    pts = [(30, 17), (43, 17), (25, 30), (14, 30), (42, 30), (35, 20), (35, 28), (30, 38), (44, 38),
-           (18, 38), (73, 20), (57, 26)]
+    pts = [(30, 17), (43, 17), (25, 30), (14, 30), (42, 30), (35, 20), (30, 38), (44, 38), (73, 20), (57, 26)]
     TK.crowd(w, "market", pts)
 
 

@@ -32,4 +32,4 @@ def build(w, district, terrain):
     for x in (-64, -32):
         K.lamp(w, x, 0, 61, height=3)
     TK.crowd(w, "tavern", [(-15, 1, 54), (-19, 1, 52), (-12, 1, 58)], need=14)
-    TK.crowd(w, "residential", [(-70, 1, 60), (-40, 1, 60), (-90, 1, 60)], need=14)
+    TK.crowd(w, "residential", [(-70, 1, 60), (-40, 1, 60)], need=14)

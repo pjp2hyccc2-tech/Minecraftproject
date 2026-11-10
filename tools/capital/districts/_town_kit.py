@@ -904,3 +904,12 @@ def crowd(w, area, pts, start=1, need=26):
 
 def guard(w, post, n, x, y, z, yaw):
     return people_spot(w, f"guard.{post}.{n}", x, y, z, yaw, need=0, search=3)
+
+
+def bracket_flag(w, x, y, z, out_dir, design="kingdom", width=2.5, height=1.5, wood="dark_oak"):
+    """Flag on a wall bracket: a short horizontal pole out of the wall at (x, y, z) (the air block in front of
+    the wall) with the flag block at its end; the cloth streams towards ``out_dir`` away from the wall."""
+    vx, vz = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}[out_dir]
+    w.set(x, y, z, B.fence(wood))
+    w.set(x, y - 1, z, B.stairs(wood, OPP[out_dir], "top"))
+    flag(w, x + vx, y, z + vz, out_dir, design, width, height)

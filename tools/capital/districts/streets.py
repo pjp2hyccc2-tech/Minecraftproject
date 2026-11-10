@@ -65,8 +65,8 @@ def build(w, district, terrain):
         TK.flagpole(w, x, 0, z, 9, "east", "pennant", 5.0, 1.0, pole="wall")
         w.set(x, 1, z, K.F(K.SM))
     # street crowd
-    TK.crowd(w, "street", [(0, 1, -36), (0, 1, 50), (-40, 1, 0), (-75, 1, 0), (40, 1, 0), (72, 1, 0),
-                           (-30, 1, -43), (40, 1, 43)], start=30, need=16)
+    TK.crowd(w, "street", [(0, 1, -36), (0, 1, 50), (-75, 1, 0), (72, 1, 0), (-30, 1, -43), (40, 1, 43)],
+             start=30, need=16)
     # castle gate guards (top of the viaduct) and a few people on the castle terrace
     for (n, x) in ((1, -4), (2, 4)):
         TK.people_spot(w, f"guard.castle.{n}", x, L.PLATEAU_Y + 1, -86, 0.0, need=0, search=4)

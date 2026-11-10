@@ -106,7 +106,7 @@ def build(w, district, terrain):
     for (x, z) in ((CX - 5, CZ - 3), (CX + 5, CZ + 3)):
         deco.armor_stand(w, x, 0, z, yaw=0.0, armor="leather", weapon=None)
     # Zain at the east gate, the town-side forecourt with a notice board
-    w.spot("npc.arena_master", (CX + int(A) - 2, 1, CZ + 2), 90.0)
+    w.spot("npc.arena_master", (CX + int(A) - 2, 1, CZ + 2), -90.0)
     deco.sign_text(w, CX + int(A) + 2, 2, CZ - 4, B.S("spruce_sign", rotation=4),
                    ["闘技場", "Arena", "受付: Zain", ""], color="black")
     w.set(CX + int(A) + 2, 1, CZ - 4, B.fence("spruce"))

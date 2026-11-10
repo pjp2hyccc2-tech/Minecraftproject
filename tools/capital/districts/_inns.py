@@ -84,6 +84,7 @@ def tavern(w, rect, front, name_lines=("", "酒場", "The Tipsy Wyvern", "")):
         f.set(x + 3, y0 + 1, 1, B.chest("south")) if x + 3 < W - 1 else None
     f.fill(1, y0 + 1, D // 2, W - 2, y0 + 1, D // 2, F("white_plaster")) if False else None
     deco.hanging_lantern(f, W // 2, 2 * sh, D - 3, drop=1)
+    TK.bracket_flag(f, 1, sh + 2, -1, "north", "pennant", 3.0, 1.0)
     return f, W, D
 
 
@@ -160,4 +161,6 @@ def inn(w, rect, front, name_lines=("", "宿屋", "Inn of the Silver Star", ""))
                 if kz - 4 >= 3 else None
             deco.hanging_lantern(f, x + 2, y0 + sh, 3, drop=1)
         deco.carpet_runner(f, 1, kz - 1, W - 2, kz - 1, y0, color="red", border=None)
+    for x in (2, W - 3):
+        TK.bracket_flag(f, x, 2 * sh + 1, -1, "north", "kingdom", 2.5, 1.5)
     return f, W, D
