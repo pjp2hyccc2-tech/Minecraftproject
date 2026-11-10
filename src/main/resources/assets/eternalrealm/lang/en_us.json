@@ -4049,5 +4049,20 @@
   "subtitles.eternalrealm.art.meteor_slash": "Meteors fall",
   "subtitles.eternalrealm.art.sand_maelstrom": "Sand vortex howls",
   "subtitles.eternalrealm.art.shadow_legion": "Shadow doubles strike",
-  "subtitles.eternalrealm.art.thornroot_bloom": "Thorn roots bloom"
+  "subtitles.eternalrealm.art.thornroot_bloom": "Thorn roots bloom",
+  "action.eternalrealm.star_sigil": "Star Sigil Bolt",
+  "subtitles.eternalrealm.weapon_skill.arrow_launch": "Piercing shot",
+  "subtitles.eternalrealm.weapon_skill.charge_bow": "Bow drawn taut",
+  "subtitles.eternalrealm.weapon_skill.charge_dual": "Twin blades ring",
+  "subtitles.eternalrealm.weapon_skill.charge_greatsword": "Greatsword gathers power",
+  "subtitles.eternalrealm.weapon_skill.charge_spear": "Spear whirs",
+  "subtitles.eternalrealm.weapon_skill.charge_staff": "Magic circle glows",
+  "subtitles.eternalrealm.weapon_skill.charge_sword": "Wind gathers on the blade",
+  "subtitles.eternalrealm.weapon_skill.dance": "Blades dance",
+  "subtitles.eternalrealm.weapon_skill.drill": "Spiral thrust",
+  "subtitles.eternalrealm.weapon_skill.impact": "Skill strikes",
+  "subtitles.eternalrealm.weapon_skill.quake": "The ground splits",
+  "subtitles.eternalrealm.weapon_skill.sigil_burst": "Star sigil bursts",
+  "subtitles.eternalrealm.weapon_skill.sigil_launch": "Star sigil fired",
+  "subtitles.eternalrealm.weapon_skill.whirl": "Whirling blade"
 }

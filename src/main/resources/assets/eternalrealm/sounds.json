@@ -380,6 +380,140 @@
       "eternalrealm:sfx/enhance/fail"
     ]
   },
+  "weapon_skill.charge_sword": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.charge_sword",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/charge_sword",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon_skill.charge_greatsword": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.charge_greatsword",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/charge_greatsword",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon_skill.charge_dual": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.charge_dual",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/charge_dual",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon_skill.charge_spear": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.charge_spear",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/charge_spear",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon_skill.charge_staff": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.charge_staff",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/charge_staff",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon_skill.charge_bow": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.charge_bow",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/charge_bow",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon_skill.whirl": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.whirl",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/whirl",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "weapon_skill.quake": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.quake",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/quake",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "weapon_skill.dance": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.dance",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/dance_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "eternalrealm:sfx/weapon_skill/dance_2",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon_skill.drill": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.drill",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/drill",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "weapon_skill.sigil_launch": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.sigil_launch",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/sigil_launch",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "weapon_skill.sigil_burst": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.sigil_burst",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/sigil_burst",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "weapon_skill.arrow_launch": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.arrow_launch",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/arrow_launch",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "weapon_skill.impact": {
+    "subtitle": "subtitles.eternalrealm.weapon_skill.impact",
+    "sounds": [
+      {
+        "name": "eternalrealm:sfx/weapon_skill/impact_1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "eternalrealm:sfx/weapon_skill/impact_2",
+        "attenuation_distance": 24
+      }
+    ]
+  },
   "art.shadow_legion": {
     "subtitle": "subtitles.eternalrealm.art.shadow_legion",
     "sounds": [

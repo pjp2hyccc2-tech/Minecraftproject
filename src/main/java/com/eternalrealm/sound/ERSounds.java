@@ -117,6 +117,22 @@ public final class ERSounds {
     public static final RegistryObject<SoundEvent> ART_SAND_MAELSTROM = sound("art.sand_maelstrom");
     public static final RegistryObject<SoundEvent> ART_DOOM_GUILLOTINE = sound("art.doom_guillotine");
     public static final RegistryObject<SoundEvent> ART_FROZEN_PRISON = sound("art.frozen_prison");
+    // weapon skills (Z key): wind-up per weapon type, the hit or launch, the bursts and a skill impact
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_CHARGE_SWORD = sound("weapon_skill.charge_sword");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_CHARGE_GREATSWORD =
+            sound("weapon_skill.charge_greatsword");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_CHARGE_DUAL = sound("weapon_skill.charge_dual");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_CHARGE_SPEAR = sound("weapon_skill.charge_spear");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_CHARGE_STAFF = sound("weapon_skill.charge_staff");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_CHARGE_BOW = sound("weapon_skill.charge_bow");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_WHIRL = sound("weapon_skill.whirl");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_QUAKE = sound("weapon_skill.quake");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_DANCE = sound("weapon_skill.dance");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_DRILL = sound("weapon_skill.drill");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_SIGIL_LAUNCH = sound("weapon_skill.sigil_launch");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_SIGIL_BURST = sound("weapon_skill.sigil_burst");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_ARROW_LAUNCH = sound("weapon_skill.arrow_launch");
+    public static final RegistryObject<SoundEvent> WEAPON_SKILL_IMPACT = sound("weapon_skill.impact");
     public static final RegistryObject<SoundEvent> ART_METEOR_SLASH = sound("art.meteor_slash");
     public static final RegistryObject<SoundEvent> ART_HEAVENS_CHAIN = sound("art.heavens_chain");
     public static final RegistryObject<SoundEvent> ART_GATE_OF_END = sound("art.gate_of_end");
@@ -152,6 +168,18 @@ public final class ERSounds {
     }
 
     /** The basic attack sound of a weapon family. */
+    /** The wind-up of a weapon type's own skill (the Z key). */
+    public static RegistryObject<SoundEvent> weaponSkillCharge(WeaponType type) {
+        return switch (type) {
+            case ONE_HANDED_SWORD -> WEAPON_SKILL_CHARGE_SWORD;
+            case TWO_HANDED_SWORD -> WEAPON_SKILL_CHARGE_GREATSWORD;
+            case DUAL_BLADES -> WEAPON_SKILL_CHARGE_DUAL;
+            case SPEAR -> WEAPON_SKILL_CHARGE_SPEAR;
+            case STAFF -> WEAPON_SKILL_CHARGE_STAFF;
+            case BOW -> WEAPON_SKILL_CHARGE_BOW;
+        };
+    }
+
     public static RegistryObject<SoundEvent> weaponSwing(WeaponType type) {
         return switch (type) {
             case ONE_HANDED_SWORD -> WEAPON_SWING_ONE_HANDED_SWORD;

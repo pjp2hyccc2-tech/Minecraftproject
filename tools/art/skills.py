@@ -424,18 +424,18 @@ SYMBOLS = {
         "............",
         "............",
     ]),
-    "arcane_nova": ("weapon", [
-        ".....P......",
-        "..P..P..P...",
-        "...P.P.P....",
-        "....PPP.....",
-        ".PPPPXPPPP..",
-        "....PPP.....",
-        "...P.P.P....",
-        "..P..P..P...",
-        ".....P......",
-        "............",
-        "............",
+    "star_sigil": ("weapon", [
+        "...PPPPP....",
+        "..P..X..P...",
+        ".P..XXX..P..",
+        "P.XXXXXXX.P.",
+        "P..XXXXX..P.",
+        "P..XX.XX..P.",
+        ".PX.....XP..",
+        "..P.....P.Q.",
+        "...PPPPP.QQ.",
+        ".........QQQ",
+        "..........QQ",
         "............",
     ]),
     "piercing_arrow": ("weapon", [
@@ -514,7 +514,7 @@ JOB_SKILLS = {
     "spellblade": ["spellblade_arcane_edge", "spellblade_flame_blade", "spellblade_mana_wave",
                    "spellblade_dimension_slash"],
 }
-WEAPON_SKILLS = ["whirlwind", "ground_rend", "blade_dance", "spiral_thrust", "arcane_nova", "piercing_arrow"]
+WEAPON_SKILLS = ["whirlwind", "ground_rend", "blade_dance", "spiral_thrust", "star_sigil", "piercing_arrow"]
 ALL_SKILLS = [s for v in JOB_SKILLS.values() for s in v] + WEAPON_SKILLS
 
 # --------------------------------------------------------------------------- job emblems

@@ -238,7 +238,13 @@ public final class ClientCombatController {
             }
             case SKILL -> {
                 player.swing(InteractionHand.MAIN_HAND);
-                player.playSound(com.eternalrealm.sound.ERSounds.SKILL_SLASH.get(), 1.0F, 1.0F);
+                if (com.eternalrealm.combat.forge.WeaponSkillFx.isWeaponSkill(start.action())) {
+                    // the weapon skill's own wind-up (the server plays it for everyone else)
+                    player.playSound(com.eternalrealm.combat.forge.WeaponSkillFx.chargeSound(start.weapon().type()),
+                            1.0F, 1.0F);
+                } else {
+                    player.playSound(com.eternalrealm.sound.ERSounds.SKILL_SLASH.get(), 1.0F, 1.0F);
+                }
                 Jobs.skillOfAction(start.action().id()).ifPresent(skill ->
                         move(player, skill.effectsAt(SkillEffect.ON_START)));
             }

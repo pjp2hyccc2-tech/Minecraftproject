@@ -52,6 +52,13 @@ public final class SkillArrow extends AbstractArrow {
         if (!level().isClientSide && !isRemoved()
                 && (payload == null || tickCount > payload.spec().lifetimeTicks())) {
             discard();
+            return;
+        }
+        // the bow's weapon skill (a skill shot without a job skill's theme) leaves a bright streak while it flies
+        if (!level().isClientSide && !isRemoved() && !inGround && payload != null
+                && payload.kind() == com.eternalrealm.combat.ActionKind.SKILL && payload.theme() == null
+                && level() instanceof ServerLevel serverLevel && getOwner() instanceof ServerPlayer owner) {
+            WeaponSkillFx.arrowTrail(serverLevel, this, owner);
         }
     }
 

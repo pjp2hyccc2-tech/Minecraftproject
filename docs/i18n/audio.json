@@ -198,5 +198,61 @@
   "subtitles.eternalrealm.weapon.swing.two_handed_sword": {
     "ja": "大剣を振る",
     "en": "Greatsword swings"
+  },
+  "subtitles.eternalrealm.weapon_skill.arrow_launch": {
+    "ja": "光の矢が飛ぶ",
+    "en": "Piercing shot"
+  },
+  "subtitles.eternalrealm.weapon_skill.charge_bow": {
+    "ja": "弓を引き絞る",
+    "en": "Bow drawn taut"
+  },
+  "subtitles.eternalrealm.weapon_skill.charge_dual": {
+    "ja": "双剣が鳴る",
+    "en": "Twin blades ring"
+  },
+  "subtitles.eternalrealm.weapon_skill.charge_greatsword": {
+    "ja": "大剣に力がこもる",
+    "en": "Greatsword gathers power"
+  },
+  "subtitles.eternalrealm.weapon_skill.charge_spear": {
+    "ja": "槍が唸る",
+    "en": "Spear whirs"
+  },
+  "subtitles.eternalrealm.weapon_skill.charge_staff": {
+    "ja": "魔法陣が輝く",
+    "en": "Magic circle glows"
+  },
+  "subtitles.eternalrealm.weapon_skill.charge_sword": {
+    "ja": "刃に風が集まる",
+    "en": "Wind gathers on the blade"
+  },
+  "subtitles.eternalrealm.weapon_skill.dance": {
+    "ja": "刃が舞う",
+    "en": "Blades dance"
+  },
+  "subtitles.eternalrealm.weapon_skill.drill": {
+    "ja": "螺旋の突き",
+    "en": "Spiral thrust"
+  },
+  "subtitles.eternalrealm.weapon_skill.impact": {
+    "ja": "技が命中する",
+    "en": "Skill strikes"
+  },
+  "subtitles.eternalrealm.weapon_skill.quake": {
+    "ja": "大地が裂ける",
+    "en": "The ground splits"
+  },
+  "subtitles.eternalrealm.weapon_skill.sigil_burst": {
+    "ja": "魔弾が炸裂する",
+    "en": "Star sigil bursts"
+  },
+  "subtitles.eternalrealm.weapon_skill.sigil_launch": {
+    "ja": "星紋の魔弾",
+    "en": "Star sigil fired"
+  },
+  "subtitles.eternalrealm.weapon_skill.whirl": {
+    "ja": "旋風の刃",
+    "en": "Whirling blade"
   }
 }
