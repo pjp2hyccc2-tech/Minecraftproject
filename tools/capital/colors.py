@@ -88,6 +88,9 @@ BASE = {
     "carved_castle_stone": (221, 215, 202), "castle_crest_stone": (214, 200, 168), "royal_roof_tiles": (43, 76, 155),
     "pale_roof_tiles": (92, 134, 208), "gilded_trim": (217, 169, 59), "gilded_finial": (232, 188, 72),
     "white_plaster": (238, 231, 214), "chandelier": (236, 196, 96), "light_shaft": (0, 0, 0),
+    "flag": (232, 188, 72), "clock_face": (226, 218, 196), "windmill_sails": (110, 82, 50),
+    "water_wheel": (96, 70, 42), "terracotta_roof_tiles": (178, 86, 58), "cobbled_paving": (124, 121, 117),
+    "plaza_flagstones": (214, 208, 196), "leaded_glass": (200, 214, 222), "leaded_glass_pane": (200, 214, 222),
 }
 PLANTS = {
     "grass": (90, 150, 55), "fern": (80, 135, 50), "tall_grass": (90, 150, 55), "large_fern": (80, 135, 50),
@@ -119,6 +122,7 @@ PLURAL = {"brick": "bricks", "stone_brick": "stone_bricks", "mossy_stone_brick":
           "polished_blackstone_brick": "polished_blackstone_bricks", "end_stone_brick": "end_stone_bricks",
           "nether_brick": "nether_bricks", "prismarine_brick": "prismarine_bricks", "castle_brick": "castle_bricks",
           "royal_roof_tile": "royal_roof_tiles", "pale_roof_tile": "pale_roof_tiles", "quartz": "quartz_block",
+          "terracotta_roof_tile": "terracotta_roof_tiles", "plaza_flagstone": "plaza_flagstones",
           "purpur": "purpur_block", "oak": "oak_planks", "spruce": "spruce_planks", "birch": "birch_planks",
           "jungle": "jungle_planks", "acacia": "acacia_planks", "dark_oak": "dark_oak_planks",
           "mangrove": "mangrove_planks", "cherry": "cherry_planks", "bamboo": "bamboo_planks",
@@ -136,7 +140,7 @@ def material(state: str) -> dict:
     name = bid.split(":", 1)[1]
     sch = B.REGISTRY.get(bid, "plain")
     out = {"kind": "solid", "alpha": 1.0, "box": None, "emit": 0, "name": name}
-    if name in ("air", "cave_air", "void", "light_shaft", "light", "barrier"):
+    if name in ("air", "cave_air", "void", "light_shaft", "light", "barrier", "smoke_emitter", "fountain_spray"):
         out["kind"] = "air"
         out["emit"] = int(props.get("level", 0)) if name == "light" else 0
         out["top"] = out["side"] = (0, 0, 0)
@@ -252,7 +256,7 @@ def material(state: str) -> dict:
     if name == "chandelier":
         out["kind"], out["box"] = "box", (0.1, 0.15, 0.1, 0.9, 0.85, 0.9)
         return out
-    if name == "gilded_finial":
+    if name in ("gilded_finial", "flag"):
         out["kind"], out["box"] = "box", (0.3, 0, 0.3, 0.7, 0.9, 0.7)
         return out
     if name == "chain":

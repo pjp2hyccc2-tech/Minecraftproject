@@ -18,6 +18,7 @@ from capital import shapes as S
 from capital.noise import hash2
 
 from . import _civic_kit as K
+from . import _town_kit as TK
 
 DISTRICT = "plaza"
 AIR = K.AIR
@@ -168,14 +169,12 @@ def fountain(w):
     _set_ring(w, PED_R - 1.0, PED_R, STATUE_Y - 1, carved)
     _set_ring(w, PED_R - 1.0, PED_R, BOWL_Y, carved)
     for (ox, oz, fac) in ((2, 0, "east"), (-2, 0, "west"), (0, 2, "south"), (0, -2, "north")):
-        w.set(ox, SPOUT_Y, oz, water)
-        w.set(ox + np.sign(ox), SPOUT_Y, oz + np.sign(oz), B.S("water", level=1))
-        w.fluid_tick(ox + int(np.sign(ox)), SPOUT_Y, oz + int(np.sign(oz)))
-        for y in range(SPOUT_Y - 1, BOWL_Y, -1):
-            w.set(ox + int(np.sign(ox)), y, oz + int(np.sign(oz)), B.S("water", level=8))
-        # hood over the spout (lion-mask lintel)
-        w.set(ox + int(np.sign(ox)), SPOUT_Y + 1, oz + int(np.sign(oz)), B.stairs(K.SM, K.OPP[fac], "top"))
+        sx, sz = ox + int(np.sign(ox)), oz + int(np.sign(oz))
+        # spout mouth: a gilded block in the pedestal under a lion-mask lintel; the jet arcs into the bowl
+        w.set(ox, SPOUT_Y, oz, K.F(K.GOLD))
+        w.set(sx, SPOUT_Y + 1, sz, B.stairs(K.SM, K.OPP[fac], "top"))
         w.set(ox, SPOUT_Y + 1, oz, carved)
+        TK.spray(w, sx, SPOUT_Y, sz, power=1, facing=fac)
 
 
 # ============================================================================== angel statue
@@ -352,6 +351,28 @@ def lamps_and_masts(w):
             K.mast(w, x, 0, z, height=10, sides=sides)
 
 
+def jets(w):
+    """Animated jets: arcs from the four cardinal rim posts into the pool, tall jets at the diagonals and a
+    ring of small bubblers between them."""
+    for (dx, dz, fac) in ((1, 0, "west"), (-1, 0, "east"), (0, 1, "north"), (0, -1, "south")):
+        TK.spray(w, 8 * dx, 2, 8 * dz, power=2, facing=fac)
+        w.set(9 * dx, 2, 9 * dz, K.F(K.GOLD))                  # gilded mask on the post
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        TK.spray(w, int(round(7.0 * math.cos(a))), 1, int(round(7.0 * math.sin(a))), power=3)
+    for k in range(8):
+        a = math.radians(22.5 + 45 * k)
+        TK.spray(w, int(round(7.4 * math.cos(a))), 1, int(round(7.4 * math.sin(a))), power=1)
+
+
+def flags(w):
+    """Kingdom flags on the eight banner masts (the town's wind blows from the west: cloth streams east)."""
+    for (ax, az) in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+        for s in (-1, 1):
+            x, z = (8 * s, 19 * az) if az else (19 * ax, 8 * s)
+            TK.flag(w, x, 11, z, "east", "kingdom", 3.0, 2.0)
+
+
 def build(w, district, terrain):
     paving(w)
     fountain(w)
@@ -359,4 +380,6 @@ def build(w, district, terrain):
     flower_beds(w)
     benches(w)
     lamps_and_masts(w)
+    jets(w)
+    flags(w)
     w.spot("spawn", (0, 1, 14), 180.0)
