@@ -140,11 +140,11 @@ def melee_slam(x):
     """Double-fist hammer: both fists rise above the head, the giant arches back, then smashes them into the floor."""
     A, B, Cc, I, F, R, E = 0.15, 0.95, 1.12, 1.3, 1.48, 1.95, 2.6
     c = Clip('melee_slam', E, impact=I)
-    c.pos('base', [(0, 0, 0, 0), (A, 0, -1.0, 0), (B, 0, 1.5, 1.8), (Cc, 0, 1.7, 2.0, 'o'), (I, 0, -3.6, -2.6, 'I'),
-                   (F, 0, -4.0, -2.8, 'O'), (R, 0, -3.0, -2.0), (E, 0, 0, 0)])
-    c.rot('pelvis', [(0, 0, 0, 0), (B, -8, 0, 0), (I, 12, 0, 0, 'I'), (F, 14, 0, 0, 'O'), (R, 8, 0, 0), (E, 0, 0, 0)])
-    c.rot('torso', [(0, 0, 0, 0), (A, 6, 0, 0), (B, -26, 0, 0), (Cc, -28, 0, 0, 'o'), (I, 30, 0, 0, 'I'),
-                    (F, 34, 0, 0, 'O'), (R, 22, 0, 0), (E, 0, 0, 0)])
+    c.pos('base', [(0, 0, 0, 0), (A, 0, -1.0, 0), (B, 0, 1.5, 1.8), (Cc, 0, 1.7, 2.0, 'o'), (I, 0, -7.0, -3.0, 'I'),
+                   (F, 0, -7.6, -3.2, 'O'), (R, 0, -5.0, -2.2), (E, 0, 0, 0)])
+    c.rot('pelvis', [(0, 0, 0, 0), (B, -8, 0, 0), (I, 18, 0, 0, 'I'), (F, 20, 0, 0, 'O'), (R, 10, 0, 0), (E, 0, 0, 0)])
+    c.rot('torso', [(0, 0, 0, 0), (A, 6, 0, 0), (B, -26, 0, 0), (Cc, -28, 0, 0, 'o'), (I, 36, 0, 0, 'I'),
+                    (F, 40, 0, 0, 'O'), (R, 24, 0, 0), (E, 0, 0, 0)])
     c.rot('head', [(0, 0, 0, 0), (A, 4, 0, 0), (B, -18, 0, 0), (I, -12, 0, 0, 'I'), (F, -14, 0, 0), (E, 0, 0, 0)])
     for side, sz in (('right', 1), ('left', -1)):
         c.rot('%s_arm' % side, [(0, 0, 0, 0), (A, 14, 0, 6 * sz), (B, -168, 0, -16 * sz), (Cc, -174, 0, -18 * sz, 'o'),
@@ -155,9 +155,9 @@ def melee_slam(x):
     c.scl('ring', [(0, 1, 1, 1), (B, 1.15, 1.15, 1), (I, 0.9, 0.9, 1, 'I'), (F, 1.2, 1.2, 1, 'b'), (E, 1, 1, 1)])
     c.scl('core', [(0, 1, 1, 1), (B, 1.5, 1.5, 1.2), (I, 2.2, 2.2, 1.4, 'O'), (R, 1.2, 1.2, 1.1), (E, 1, 1, 1)])
     feet(c, x, right_plan=[(0.18, 0.55, (7.0, 0.8), 2.5), (2.02, 2.42, (0.0, 0.0), 2.0)])
-    for t in (I, F):
-        eranim.reach_y(c, x.rig, x.v, t, 'right_arm', 'x', 'right_hand', FIST_R, 24.0, -90.0, -5.0)
-        eranim.reach_y(c, x.rig, x.v, t, 'left_arm', 'x', 'left_hand', FIST_L, 24.0, -90.0, -5.0)
+    for side, part, point in (('right', 'right_hand', FIST_R), ('left', 'left_hand', FIST_L)):    # they stay where they landed
+        a = eranim.reach_y(c, x.rig, x.v, I, side + '_arm', 'x', part, point, 24.0, -100.0, -5.0)
+        eranim.reach_y(c, x.rig, x.v, F, side + '_arm', 'x', part, point, 24.0, a - 14.0, a + 14.0)
     return eranim.retime(c, 1.1)
 
 

@@ -17,7 +17,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Geometry of generated layouts over many seeds, and a voxel check of the build plan: the plan is applied to a
- * 256x24x256 grid and flood-filled from the entry, as a player would walk.
+ * 288x36x288 grid and flood-filled from the entry, as a player would walk.
  */
 public class DungeonLayoutGeneratorTest {
     private static final int GEOMETRY_SEEDS = 60;
@@ -337,10 +337,32 @@ public class DungeonLayoutGeneratorTest {
         }
     }
 
+    /** The giants fight in halls sized for them: wide enough to walk round them, high enough for their reach. */
+    @Test
+    public void bossArenasAreSizedForTheirBoss() {
+        for (DungeonDefinition dungeon : Dungeons.all()) {
+            DungeonLayout layout = DungeonLayoutGenerator.generate(dungeon, 7);
+            BlockBox arena = layout.bossArena();
+            String boss = dungeon.bossId();
+            assertEquals(dungeon.id(), DungeonLayoutGenerator.arenaSize(boss), arena.sizeX());
+            assertEquals(dungeon.id(), DungeonLayoutGenerator.arenaSize(boss), arena.sizeZ());
+            assertTrue(dungeon.id() + ": 45..61 wide", arena.sizeX() >= 45 && arena.sizeX() <= 61);
+            assertTrue(dungeon.id() + ": 24..32 high", arena.sizeY() >= 24 && arena.sizeY() <= 32);
+            double body = com.eternalrealm.boss.BossRigData.bodyWidth(boss);
+            double height = com.eternalrealm.boss.BossRigData.bodyHeight(boss);
+            assertTrue(dungeon.id() + ": room around the boss", arena.interior().sizeX() >= 7.0 * body);
+            assertTrue(dungeon.id() + ": the boss in its last form stands well under the ceiling",
+                    arena.interior().sizeY() - 1 >= height * 1.12 * 2.0);
+        }
+        BlockBox raid = DungeonLayoutGenerator.raidArena(Dungeons.FINAL_RAID).bossArena();
+        assertTrue("the raid arena is the biggest", raid.sizeX() > 61 && raid.sizeY() >= 32);
+    }
+
     @Test
     public void layoutsRejectInvalidGeometry() {
         DungeonLayout layout = DungeonLayoutGenerator.generate(Dungeons.D1, 1);
-        BlockBox outside = new BlockBox(250, 0, 250, 260, 5, 260);
+        int edge = DungeonLayout.FOOTPRINT;
+        BlockBox outside = new BlockBox(edge - 6, 0, edge - 6, edge + 4, 5, edge + 4);
         try {
             new DungeonLayout(layout.id(), layout.theme(), layout.seed(), layout.entranceHall(), layout.rooms(),
                     layout.corridors(), layout.entranceDoor(), layout.doors(), layout.bossArena(), layout.bossSpawn(),

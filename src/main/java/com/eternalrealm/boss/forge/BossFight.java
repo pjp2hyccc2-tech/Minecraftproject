@@ -2,6 +2,7 @@ package com.eternalrealm.boss.forge;
 
 import com.eternalrealm.boss.AbilityKind;
 import com.eternalrealm.boss.AbilityLook;
+import com.eternalrealm.boss.BossActions;
 import com.eternalrealm.boss.BossAbility;
 import com.eternalrealm.boss.BossBrain;
 import com.eternalrealm.boss.BossCommand;
@@ -21,6 +22,7 @@ import com.eternalrealm.combat.forge.ERParticles;
 import com.eternalrealm.combat.forge.Telegraphs;
 import com.eternalrealm.entity.BossAnimation;
 import com.eternalrealm.entity.ERBoss;
+import com.eternalrealm.entity.RigData;
 import com.eternalrealm.job.JobType;
 import com.eternalrealm.job.Jobs;
 import com.eternalrealm.monster.MonsterSpawn;
@@ -83,7 +85,10 @@ public final class BossFight {
     static final String FIGHT = "er_fight";
     /** Half size of the arena floor when the caller does not know it (tests). */
     public static final double DEFAULT_ARENA_HALF_SIZE = 14.5;
+    /** Players this close to the boss take part in the fight (at least; bigger arenas reach their corners). */
     private static final double ARENA_RANGE = 48.0;
+    /** Height above the floor at which projectiles fly once they have come down from the boss's hand or mouth. */
+    private static final double BOLT_CRUISE_HEIGHT = 1.1;
     private static final SplittableRandom RANDOM = new SplittableRandom();
 
     /** A charging attack area (or safe spot); {@code markerId} is its ground marker on the clients. */
@@ -119,17 +124,26 @@ public final class BossFight {
     private record Scheduled(long tick, String owner, Runnable action) {
     }
 
+    /**
+     * A projectile: it leaves the boss's hand or mouth (high up on a big boss), comes down along its path to
+     * {@code cruiseY} (chest height over the floor) and flies on level from there.
+     */
     private static final class Bolt {
         Vec3 position;
         final Vec3 step;
+        final double cruiseY;
+        final double range;
         double travelled;
         final double damage;
         final AbilityKind kind;
         final ParticleOptions particle;
 
-        Bolt(Vec3 position, Vec3 step, double damage, AbilityKind kind, ParticleOptions particle) {
+        Bolt(Vec3 position, Vec3 step, double cruiseY, double range, double damage, AbilityKind kind,
+             ParticleOptions particle) {
             this.position = position;
             this.step = step;
+            this.cruiseY = cruiseY;
+            this.range = range;
             this.damage = damage;
             this.kind = kind;
             this.particle = particle;
@@ -156,6 +170,7 @@ public final class BossFight {
     private final Consumer<BossFight> onDefeated;
     private final double maxHealth;
     private final double arenaRadius;
+    private final double arenaRange;
     private final double baseSpeed;
     private double health;
     private boolean shielded;
@@ -167,6 +182,8 @@ public final class BossFight {
     private long killTick = -1;
     private DefeatSequence sequence;
     private DashState dash;
+    /** Tick at which the last charge of the current charge ability was aimed (-1: none yet). */
+    private long chargeAimedAt = -1;
     private long now;
     private java.util.function.Supplier<List<ServerPlayer>> targetOverride;
 
@@ -181,6 +198,7 @@ public final class BossFight {
         this.maxHealth = brain.maxHealth();
         this.health = maxHealth;
         this.arenaRadius = arenaHalfSize * 1.45;
+        this.arenaRange = Math.max(ARENA_RANGE, arenaHalfSize * 1.5 + 8.0);
         AttributeInstance speed = body.getAttribute(Attributes.MOVEMENT_SPEED);
         this.baseSpeed = speed == null ? 0.0 : speed.getBaseValue() / Math.max(0.1, brain.movementSpeedMultiplier());
         this.props = new BossProps(level);
@@ -389,7 +407,7 @@ public final class BossFight {
         for (UUID member : participants) {
             ServerPlayer player = level.getServer().getPlayerList().getPlayer(member);
             if (player != null && player.isAlive() && !player.isSpectator() && player.level() == level
-                    && player.distanceToSqr(body) < ARENA_RANGE * ARENA_RANGE) {
+                    && player.distanceToSqr(body) < arenaRange * arenaRange) {
                 targets.add(player);
             }
         }
@@ -462,27 +480,35 @@ public final class BossFight {
     }
 
     private static BossAnimation animationFor(AbilityKind kind) {
-        if (kind instanceof AbilityKind.Sequence sequence) {
-            return animationFor(sequence.parts().get(0).kind());
-        }
-        if (kind instanceof AbilityKind.CircleAroundBoss || kind instanceof AbilityKind.Ring
-                || kind instanceof AbilityKind.Knockback || kind instanceof AbilityKind.Exaflare) {
-            return BossAnimation.MELEE_SLAM;
-        }
-        if (kind instanceof AbilityKind.Cone || kind instanceof AbilityKind.Crosses) {
-            return BossAnimation.MELEE_SWEEP;
-        }
-        if (kind instanceof AbilityKind.Line) {
-            return BossAnimation.CHARGE;
-        }
-        if (kind instanceof AbilityKind.ArenaWide || kind instanceof AbilityKind.Buff
-                || kind instanceof AbilityKind.SafeZones || kind instanceof AbilityKind.Charge) {
-            return BossAnimation.ROAR;
-        }
-        if (kind instanceof AbilityKind.Summon) {
-            return BossAnimation.SUMMON;
+        String action = BossActions.actionFor(kind);
+        for (BossAnimation animation : BossAnimation.values()) {
+            if (animation.id().equals(action)) {
+                return animation;
+            }
         }
         return BossAnimation.CAST;
+    }
+
+    /**
+     * Plays the body's action for {@code ability} so that its impact frame lands on the hit {@code ticksToHit} from
+     * now ({@link BossActions}); until then the body holds its telegraph roar. A cancelled ability never starts it.
+     */
+    private void startAction(ERBoss boss, BossAbility ability, int ticksToHit) {
+        BossAnimation animation = animationFor(ability.kind());
+        if (animation == BossAnimation.ROAR || BossActions.channelled(ability.kind())) {
+            boss.playAnimation(animation);
+            return;
+        }
+        int delay = Math.max(0, ticksToHit - boss.impactTicks(animation));
+        if (delay == 0) {
+            boss.playAnimation(animation);
+        } else {
+            later(delay, ability.id(), () -> {
+                if (!dying && brain.currentAbility().map(ability::equals).orElse(false)) {
+                    boss.playAnimation(animation);
+                }
+            });
+        }
     }
 
     private AbilityLook look(BossAbility ability) {
@@ -497,6 +523,7 @@ public final class BossFight {
             phaseChanged(phase, targets);
         } else if (command instanceof BossCommand.AbilityStarted started) {
             BossAbility ability = started.ability();
+            chargeAimedAt = ability.kind() instanceof AbilityKind.Charge ? now : -1;
             Component hint = ability.kind() instanceof AbilityKind.SafeZones
                     ? Component.translatable(BossTexts.SAFE_ZONES).withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD)
                     : Component.translatable("message.eternalrealm.boss.ability", body.getDisplayName(),
@@ -507,7 +534,7 @@ public final class BossFight {
                 boss.setAiFrozen(true);
                 topThreat(targets).ifPresent(target -> boss.faceTowards(target.getX(), target.getZ()));
                 if (!brain.isTransforming(now)) {
-                    boss.playAnimation(animationFor(ability.kind()));
+                    startAction(boss, ability, started.executeInTicks());
                 }
             }
         } else if (command instanceof BossCommand.Telegraph telegraph) {
@@ -551,17 +578,21 @@ public final class BossFight {
             }
             dash = new DashState(body.position(), new Vec3(charge.to().x(), body.getY(), charge.to().z()), now);
             if (boss != null) {
-                boss.faceTowards(charge.to().x(), charge.to().z());
-                boss.playAnimation(BossAnimation.CHARGE);
+                boss.faceTowardsNow(charge.to().x(), charge.to().z());
+                if (boss.playingAnimation().filter(BossAnimation.CHARGE::equals).isEmpty()) {
+                    boss.playAnimation(BossAnimation.CHARGE); // the wind-up was skipped: lunge now
+                }
             }
             sound(SoundEvents.RAVAGER_ROAR, 1.2F, 1.3F);
             sound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 1.5F, 0.6F);
         } else if (command instanceof BossCommand.Summon summon) {
             summon(summon);
         } else if (command instanceof BossCommand.Teleport teleport) {
-            burst(ParticleTypes.REVERSE_PORTAL, body.position().add(0, 1, 0), 40, 1.0);
+            double size = Math.max(1.0, body.getBbWidth() * 0.5);
+            burst(ParticleTypes.REVERSE_PORTAL, body.position().add(0, body.getBbHeight() * 0.4, 0), (int) (40 * size),
+                    size);
             body.teleportTo(teleport.destination().x(), teleport.destination().y(), teleport.destination().z());
-            burst(ParticleTypes.PORTAL, body.position().add(0, 1, 0), 60, 1.0);
+            burst(ParticleTypes.PORTAL, body.position().add(0, body.getBbHeight() * 0.4, 0), (int) (60 * size), size);
             sound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 0.7F);
         } else if (command instanceof BossCommand.ShieldChanged shield) {
             shielded = shield.on();
@@ -584,16 +615,19 @@ public final class BossFight {
             tell(targets, Component.translatable(BossCommand.Enraged.MESSAGE_KEY, body.getDisplayName())
                     .withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD), false);
             sound(com.eternalrealm.sound.ERSounds.BOSS_ROAR.get(), 1.2F, 1.0F);
-            burst(ParticleTypes.ANGRY_VILLAGER, body.position().add(0, 2, 0), 20, 1.5);
+            burst(ParticleTypes.ANGRY_VILLAGER, body.position().add(0, body.getBbHeight() * 0.75, 0), 20,
+                    Math.max(1.5, body.getBbWidth() * 0.5));
             BossFx.send(targets, 0.8F, 16, 0xFF2010, 0.25F, 12);
         } else if (command instanceof BossCommand.Heal heal) {
             health = Math.min(maxHealth, health + maxHealth * heal.fraction());
             bar.setProgress((float) (health / maxHealth));
-            burst(ERParticles.HEAL.get(), body.position().add(0, 1.5, 0), 30, 1.5);
+            burst(ERParticles.HEAL.get(), body.position().add(0, body.getBbHeight() * 0.5, 0), 30,
+                    Math.max(1.5, body.getBbWidth() * 0.5));
             sound(SoundEvents.ZOMBIE_VILLAGER_CURE, 0.8F, 1.2F);
         } else if (command instanceof BossCommand.Buffed) {
-            burst(ERParticles.EMBER.get(), body.position().add(0, 1.5, 0), 30, 1.2);
-            burst(ParticleTypes.ANGRY_VILLAGER, body.position().add(0, 2.0, 0), 8, 1.0);
+            burst(ERParticles.EMBER.get(), body.position().add(0, body.getBbHeight() * 0.5, 0), 30,
+                    Math.max(1.2, body.getBbWidth() * 0.5));
+            burst(ParticleTypes.ANGRY_VILLAGER, body.position().add(0, body.getBbHeight() * 0.75, 0), 8, 1.0);
             sound(SoundEvents.BLAZE_AMBIENT, 1.0F, 0.6F);
         }
     }
@@ -615,7 +649,18 @@ public final class BossFight {
         }
         if (boss != null) {
             boss.setAiFrozen(true);
-            boss.playAnimation(BossAnimation.PHASE_CHANGE);
+            // the full-body roar peaks (its impact frame) when the transformation's blast goes off
+            int blast = brain.definition().transitionAbility(index).map(BossAbility::telegraphTicks).orElse(0);
+            int delay = Math.max(0, blast - boss.impactTicks(BossAnimation.PHASE_CHANGE));
+            if (delay == 0) {
+                boss.playAnimation(BossAnimation.PHASE_CHANGE);
+            } else {
+                later(delay, "phase", () -> {
+                    if (!dying) {
+                        boss.playAnimation(BossAnimation.PHASE_CHANGE);
+                    }
+                });
+            }
         }
         List<ServerPlayer> audience = audience();
         for (ServerPlayer player : audience) {
@@ -649,6 +694,14 @@ public final class BossFight {
         markers.add(new Marker(ability, telegraph.shape(), fireTick, marker, false));
         if (!damaging) {
             return;
+        }
+        ERBoss charger = animated();
+        if (charger != null && ability.kind() instanceof AbilityKind.Charge && chargeAimedAt >= 0
+                && now > chargeAimedAt && telegraph.shape() instanceof BossShape.Line strip) {
+            // every further charge winds up again with its lunge on the dash (the first one starts with the ability)
+            charger.faceTowards(strip.end().x(), strip.end().z());
+            startAction(charger, ability, telegraph.durationTicks());
+            chargeAimedAt = now;
         }
         vfx.telegraphed(ability.id(), look, telegraph.hitKind(), telegraph.shape(), now, fireTick);
         if (telegraph.hitKind() instanceof AbilityKind.Soak) {
@@ -735,13 +788,48 @@ public final class BossFight {
             default -> ERParticles.SHADOW.get();
         };
         fireMarkersDue(volley.ability());
-        Vec3 origin = new Vec3(volley.origin().x(), volley.origin().y() + body.getEyeHeight(), volley.origin().z());
+        // the projectiles leave the hand, gem, core or mouth of the body (as the cast animation shows at its release)
+        Vec3 muzzle = muzzle();
+        double floorY = volley.origin().y();
+        double cruiseY = floorY + BOLT_CRUISE_HEIGHT;
         for (double yaw : volley.yawDegrees()) {
             double radians = Math.toRadians(yaw);
-            Vec3 step = new Vec3(-Math.sin(radians), 0.0, Math.cos(radians)).scale(volley.speed());
-            bolts.add(new Bolt(origin, step, volley.damage(), volley.ability().kind(), particle));
+            Vec3 direction = new Vec3(-Math.sin(radians), 0.0, Math.cos(radians));
+            // start at the muzzle's height on this bolt's line (the fan stays the telegraphed one), no further out
+            // than the front of the body, so nobody standing close is skipped
+            double ahead = Mth.clamp((muzzle.x - volley.origin().x()) * direction.x
+                    + (muzzle.z - volley.origin().z()) * direction.z, 0.0, body.getBbWidth() * 0.5);
+            Vec3 start = new Vec3(volley.origin().x() + direction.x * ahead, muzzle.y,
+                    volley.origin().z() + direction.z * ahead);
+            // come down steeply to chest height, then fly level
+            double drop = Math.max(0.0, start.y - cruiseY);
+            double descent = Math.max(2.0, drop * 0.9);
+            Vec3 step = direction.scale(volley.speed()).add(0.0, -drop / descent * volley.speed(), 0.0);
+            bolts.add(new Bolt(start, step, cruiseY, Math.max(4.0, BossRules.VOLLEY_RANGE - ahead), volley.damage(),
+                    volley.ability().kind(), particle));
         }
         sound(look.style() == Telegraph.Style.FIRE ? SoundEvents.BLAZE_SHOOT : SoundEvents.CROSSBOW_SHOOT, 1.0F, 0.8F);
+    }
+
+    /** World position of the body's muzzle (cast release point) for its current look and size. */
+    private Vec3 muzzle() {
+        ERBoss boss = animated();
+        if (boss == null) {
+            return new Vec3(body.getX(), body.getY() + body.getEyeHeight(), body.getZ());
+        }
+        float[] offset = RigData.muzzle(boss.kind().rig().id(), boss.lookKey());
+        float scale = boss.modelScale();
+        double yaw = Math.toRadians(body.getYRot());
+        double forwardX = -Math.sin(yaw);
+        double forwardZ = Math.cos(yaw);
+        // left of the facing direction (x: +left): forward rotated by 90 degrees
+        double leftX = forwardZ;
+        double leftZ = -forwardX;
+        double left = offset[0] * scale;
+        double up = offset[1] * scale;
+        double forward = offset[2] * scale;
+        return new Vec3(body.getX() + forwardX * forward + leftX * left, body.getY() + Math.max(0.5, up),
+                body.getZ() + forwardZ * forward + leftZ * left);
     }
 
     /** Fires every marker of {@code ability} that is due now (a volley's fan, summon spots). */
@@ -871,8 +959,9 @@ public final class BossFight {
         Iterator<Bolt> iterator = bolts.iterator();
         while (iterator.hasNext()) {
             Bolt bolt = iterator.next();
-            bolt.position = bolt.position.add(bolt.step);
-            bolt.travelled += bolt.step.length();
+            Vec3 next = bolt.position.add(bolt.step);
+            bolt.position = next.y < bolt.cruiseY ? new Vec3(next.x, bolt.cruiseY, next.z) : next;
+            bolt.travelled += Math.sqrt(bolt.step.x * bolt.step.x + bolt.step.z * bolt.step.z);
             level.sendParticles(bolt.particle, bolt.position.x, bolt.position.y, bolt.position.z, 2, 0.05, 0.05, 0.05,
                     0.0);
             ServerPlayer struck = null;
@@ -890,7 +979,7 @@ public final class BossFight {
                     executing = false;
                 }
                 iterator.remove();
-            } else if (bolt.travelled > BossRules.VOLLEY_RANGE
+            } else if (bolt.travelled > bolt.range
                     || !level.getBlockState(BlockPos.containing(bolt.position)).isAir()) {
                 iterator.remove();
             }

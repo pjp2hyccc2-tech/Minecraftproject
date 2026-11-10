@@ -374,8 +374,9 @@ final class DungeonInstance {
     }
 
     boolean isInside(ServerPlayer player) {
-        return player.level() == level && Math.abs(player.getX() - (origin.getX() + 128)) < 200
-                && Math.abs(player.getZ() - (origin.getZ() + 128)) < 200;
+        int half = DungeonLayout.FOOTPRINT / 2;
+        return player.level() == level && Math.abs(player.getX() - (origin.getX() + half)) < half + 72
+                && Math.abs(player.getZ() - (origin.getZ() + half)) < half + 72;
     }
 
     /** Sends the members out and starts clearing the blocks. */

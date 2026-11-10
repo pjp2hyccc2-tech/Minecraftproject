@@ -7,6 +7,7 @@ import com.eternalrealm.boss.DefeatSequence;
 import com.eternalrealm.boss.Point;
 import com.eternalrealm.combat.forge.ERParticles;
 import com.eternalrealm.entity.ERBoss;
+import com.eternalrealm.entity.RigData;
 import com.eternalrealm.sound.ERSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -172,8 +173,10 @@ final class BossVfx {
                     level.sendParticles(ParticleTypes.CLOUD, spot.x, spot.y + 0.2, spot.z, 2, 0.5, 0.05, 0.5, 0.02);
                 }
                 explosionAt(shape.anchor(), 1);
-                sound(shape.anchor(), heavySound(), 1.4F, 0.8F);
-                shake(near(audience, shape.anchor(), 16.0), 0.6F, 8);
+                // the floor breaks where the body's blow lands: cracks and chunks as big as the boss
+                impact(owner, landing(shape), floorBlock(shape.anchor()));
+                sound(shape.anchor(), heavySound(), 1.4F + bodySize() * 0.2F, 0.8F);
+                shake(near(audience, shape.anchor(), 16.0 + bodySize() * 4.0), 0.5F + bodySize() * 0.15F, 8);
             }
             case EXPLOSION, BOMB -> {
                 for (Vec3 center : centers(shape)) {
@@ -352,15 +355,18 @@ final class BossVfx {
     /** The boss changes into its next form. */
     void transformation(int phaseIndex, List<ServerPlayer> audience) {
         Vec3 center = body.position();
-        level.sendParticles(ParticleTypes.FLASH, center.x, center.y + body.getBbHeight() * 0.5, center.z, 1, 0, 0, 0, 0);
-        burstOutward(theme.main(), center.add(0, body.getBbHeight() * 0.5, 0), 60, 0.5);
-        burstOutward(ERParticles.RUNE.get(), center.add(0, body.getBbHeight() * 0.5, 0), 30, 0.3);
+        float size = bodySize();
+        level.sendParticles(ParticleTypes.FLASH, center.x, center.y + body.getBbHeight() * 0.5, center.z,
+                1 + (int) size, size * 0.5, body.getBbHeight() * 0.25, size * 0.5, 0);
+        burstOutward(theme.main(), center.add(0, body.getBbHeight() * 0.5, 0), (int) (60 * size), 0.5 * size);
+        burstOutward(ERParticles.RUNE.get(), center.add(0, body.getBbHeight() * 0.5, 0), (int) (30 * size),
+                0.3 * size);
         for (int delay = 0; delay < 30; delay += 3) {
             scheduler.later(delay, "transform", () -> {
                 Vec3 at = body.position();
-                for (int i = 0; i < 12; i++) {
+                for (int i = 0; i < (int) (12 * size); i++) {
                     double angle = random.nextDouble() * Math.PI * 2.0;
-                    double r = body.getBbWidth() * 0.7 + random.nextDouble() * 1.5;
+                    double r = body.getBbWidth() * 0.7 + random.nextDouble() * 1.5 * size;
                     level.sendParticles(theme.main(), at.x + Math.cos(angle) * r, at.y + 0.1, at.z + Math.sin(angle) * r,
                             0, 0.0, 1.0, 0.0, 0.15 + 0.05 * phaseIndex);
                 }
@@ -382,8 +388,11 @@ final class BossVfx {
         float intensity = (float) beat.intensity();
         switch (beat.kind()) {
             case COLLAPSE -> {
-                level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 3, 0.6, 0.6, 0.6, 0.0);
-                level.sendParticles(ParticleTypes.LARGE_SMOKE, center.x, center.y, center.z, 20, 0.8, 0.8, 0.8, 0.03);
+                double spread = Math.max(0.6, body.getBbWidth() * 0.3);
+                level.sendParticles(ParticleTypes.EXPLOSION, center.x, center.y, center.z, 3, spread, spread, spread,
+                        0.0);
+                level.sendParticles(ParticleTypes.LARGE_SMOKE, center.x, center.y, center.z, (int) (20 * bodySize()),
+                        spread * 1.3, body.getBbHeight() * 0.25, spread * 1.3, 0.03);
                 sound(ground, deathSound(), 2.0F, 0.8F);
                 sound(ground, ERSounds.BOSS_ROAR.get(), 2.0F, 0.6F);
                 sound(ground, ERSounds.BOSS_COLLAPSE.get(), 3.0F, 1.0F);
@@ -401,7 +410,11 @@ final class BossVfx {
                 burstOutward(theme.accent(), center, (int) (16 * intensity), 0.3);
                 sound(ground, SoundEvents.GENERIC_EXPLODE, 0.8F * intensity, 1.3F);
             }
-            case SHOCKWAVE -> shockwave("defeat", ground, 10.0 + 6.0 * intensity, audience);
+            case SHOCKWAVE -> {
+                // the body hits the floor: dust all along where it lies, then the wave
+                fallenDust(ground);
+                shockwave("defeat", ground, 10.0 + 6.0 * intensity + body.getBbWidth(), audience);
+            }
             case PILLAR -> {
                 for (int delay = 0; delay < 24; delay += 2) {
                     scheduler.later(delay, "defeat", () -> {
@@ -518,6 +531,77 @@ final class BossVfx {
             level.sendParticles(particle, center.x, center.y, center.z, 0, Math.cos(yaw) * Math.cos(pitch),
                     Math.sin(pitch), Math.sin(yaw) * Math.cos(pitch), speed);
         }
+    }
+
+    /** Size of the body against a 3-block-wide boss (1 at least): scales debris, dust and bursts. */
+    private float bodySize() {
+        return Math.max(1.0F, body.getBbWidth() / 3.0F);
+    }
+
+    /**
+     * Where the body's blow lands for a slam on {@code shape}: in front of the boss at the reach of its weapon when the
+     * shape is centred on the boss (slams, novas), else the shape's centre.
+     */
+    private Point landing(BossShape shape) {
+        Point anchor = shape.anchor();
+        if (!(body instanceof ERBoss boss) || anchor.horizontalDistanceSquared(body.getX(), body.getZ()) > 1.0) {
+            return anchor;
+        }
+        double reach = Math.max(body.getBbWidth() * 0.5 + 0.5, boss.meleeReach() * 0.85);
+        double yaw = Math.toRadians(body.getYRot());
+        return new Point(body.getX() - Math.sin(yaw) * reach, anchor.y(), body.getZ() + Math.cos(yaw) * reach);
+    }
+
+    /** Cracks radiating from {@code at}, floor chunks thrown up and dust, scaled to the body. */
+    private void impact(String owner, Point at, BlockState floor) {
+        float size = bodySize();
+        long now = level.getGameTime();
+        int cracks = 4 + (int) (2 * size);
+        double start = random.nextDouble() * Math.PI * 2.0;
+        BlockState dark = Blocks.BLACKSTONE.defaultBlockState();
+        for (int i = 0; i < cracks; i++) {
+            double angle = start + Math.PI * 2.0 * i / cracks + (random.nextDouble() - 0.5) * 0.5;
+            float length = (float) (1.2 + random.nextDouble() * 1.6) * size;
+            props.crack(owner, dark, at.x(), at.y(), at.z(), length, 0.16F + 0.06F * size, angle, now,
+                    40 + random.nextInt(20));
+        }
+        int chunks = 2 + (int) (2 * size);
+        for (int i = 0; i < chunks; i++) {
+            double angle = random.nextDouble() * Math.PI * 2.0;
+            double r = 0.4 + random.nextDouble() * 1.4 * size;
+            float chunk = (float) (0.25 + random.nextDouble() * 0.25) * size;
+            props.debris(owner, floor, at.x() + Math.cos(angle) * r, at.y(), at.z() + Math.sin(angle) * r, chunk, angle,
+                    now, 30 + random.nextInt(20));
+        }
+        BlockParticleOption dust = new BlockParticleOption(ParticleTypes.BLOCK, floor);
+        level.sendParticles(dust, at.x(), at.y() + 0.3, at.z(), (int) (24 * size), 0.8 * size, 0.3, 0.8 * size, 0.3);
+        level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, at.x(), at.y() + 0.2, at.z(), (int) (3 * size),
+                0.6 * size, 0.1, 0.6 * size, 0.01);
+    }
+
+    /** Dust and debris along the fallen body, from its feet to where its head lies at the end of the death animation. */
+    private void fallenDust(Point ground) {
+        if (!(body instanceof ERBoss boss)) {
+            return;
+        }
+        float[] head = RigData.fallen(boss.kind().rig().id(), boss.lookKey());
+        float scale = boss.modelScale();
+        double yaw = Math.toRadians(body.getYRot());
+        double forwardX = -Math.sin(yaw);
+        double forwardZ = Math.cos(yaw);
+        double toX = (forwardZ * head[0] + forwardX * head[1]) * scale;
+        double toZ = (-forwardX * head[0] + forwardZ * head[1]) * scale;
+        double length = Math.sqrt(toX * toX + toZ * toZ);
+        BlockParticleOption dust = new BlockParticleOption(ParticleTypes.BLOCK, floorBlock(ground));
+        int steps = Math.max(2, (int) (length * 1.5));
+        for (int i = 0; i <= steps; i++) {
+            double f = i / (double) steps;
+            double x = ground.x() + toX * f;
+            double z = ground.z() + toZ * f;
+            level.sendParticles(dust, x, ground.y() + 0.2, z, 6, 0.5 * bodySize(), 0.1, 0.5 * bodySize(), 0.2);
+            level.sendParticles(ParticleTypes.CLOUD, x, ground.y() + 0.3, z, 2, 0.6, 0.1, 0.6, 0.04);
+        }
+        impact("defeat", new Point(ground.x() + toX, ground.y(), ground.z() + toZ), floorBlock(ground));
     }
 
     private void explosionAt(Point at, int count) {

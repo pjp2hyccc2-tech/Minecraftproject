@@ -30,12 +30,15 @@ import java.util.List;
  * hitbox, plays every animation, fights (hits land at the impact frame), and dies with a death animation followed by
  * removal - all without exceptions on a real server.
  *
- * <p>Arena: 9x5x9 with a stone floor; entities stand at relative y=2 (see CombatGameTests).</p>
+ * <p>Arena: 9x5x9 with a stone floor; entities stand at relative y=2 (see CombatGameTests). The giants also walk in
+ * {@code boss_arena} (41x6x41, stone floor at y=0, walls, a 5x5 pillar in the middle and four smaller ones; made by
+ * tools/gen-gametest-structures.py), where they stand at relative y=1.</p>
  */
 @GameTestHolder(ModInfo.MOD_ID)
 @PrefixGameTestTemplate(false)
 public final class EntityGameTests {
     private static final String ARENA = "arena";
+    private static final String BOSS_ARENA = "boss_arena";
 
     private EntityGameTests() {
     }
@@ -287,6 +290,77 @@ public final class EntityGameTests {
             if (!(target.getHealth() < before)) {
                 throw new GameTestAssertException("no slam has landed yet (playing=" + boss.playingAnimation() + ")");
             }
+        });
+    }
+
+    // ------------------------------------------------------------------------------------------ the giants
+
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 900)
+    public static void theColossusWalksRoundThePillarsToItsTarget(GameTestHelper helper) {
+        giantReachesItsTarget(helper, BossKind.B3);
+    }
+
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 900)
+    public static void theDragonWalksRoundThePillarsToItsTarget(GameTestHelper helper) {
+        giantReachesItsTarget(helper, BossKind.B6);
+    }
+
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 900)
+    public static void theTreantWalksRoundThePillarsToItsTarget(GameTestHelper helper) {
+        giantReachesItsTarget(helper, BossKind.B2);
+    }
+
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 900)
+    public static void theKingOfTheEndWalksRoundThePillarsToItsTarget(GameTestHelper helper) {
+        giantReachesItsTarget(helper, BossKind.FINAL);
+    }
+
+    /**
+     * A giant crosses the arena to a target behind the middle pillar and slams it: it finds a way round (a path or
+     * straight steering), never sinks into a wall or a pillar on the way, and its slam lands from its own reach.
+     */
+    private static void giantReachesItsTarget(GameTestHelper helper, BossKind kind) {
+        ERBoss boss = helper.spawn(EREntityTypes.bossType(kind).get(), new BlockPos(6, 1, 6));
+        IronGolem target = helper.spawn(EntityType.IRON_GOLEM, new BlockPos(34, 1, 34));
+        target.setNoAi(true);
+        float before = target.getHealth();
+        boss.setTarget(target);
+        check(boss.meleeReach() >= boss.getBbWidth() * 0.5 + 1.0, kind.id() + ": reach " + boss.meleeReach());
+        check(boss.maxUpStep() >= 1.0F, kind.id() + " cannot step over a block");
+        helper.onEachTick(() -> {
+            check(boss.isAlive(), kind.id() + " died");
+            check(helper.getLevel().noCollision(boss, boss.getBoundingBox().deflate(0.1)),
+                    kind.id() + " is stuck in a block at " + helper.relativeVec(boss.position()));
+            if (boss.getTarget() != target) {
+                boss.setTarget(target);
+            }
+        });
+        helper.succeedWhen(() -> {
+            if (!(target.getHealth() < before)) {
+                throw new GameTestAssertException(kind.id() + " has not reached its target yet (at "
+                        + helper.relativeVec(boss.position()) + ", playing " + boss.playingAnimation() + ")");
+            }
+        });
+    }
+
+    /** Later forms are a little bigger, model and hitbox alike, without sinking into the floor or the walls. */
+    @GameTest(template = BOSS_ARENA, timeoutTicks = 100)
+    public static void bossesGrowWithTheirForms(GameTestHelper helper) {
+        ERBoss boss = helper.spawn(EREntityTypes.bossType(BossKind.B7).get(), new BlockPos(8, 1, 20));
+        boss.setAiFrozen(true);
+        float width = boss.getBbWidth();
+        float height = boss.getBbHeight();
+        float scale = boss.modelScale();
+        check(Math.abs(width - BossKind.B7.width()) < 1.0E-4F, "first form hitbox " + width);
+        boss.setPhase(3);
+        float growth = 1.0F + 3.0F * (float) com.eternalrealm.boss.BossRigData.FORM_GROWTH;
+        check(Math.abs(boss.getBbWidth() - width * growth) < 1.0E-3F
+                        && Math.abs(boss.getBbHeight() - height * growth) < 1.0E-3F,
+                "the last form's hitbox " + boss.getBbWidth() + "x" + boss.getBbHeight());
+        check(boss.modelScale() > scale * 1.1F, "the last form's model " + boss.modelScale() + " vs " + scale);
+        helper.runAfterDelay(10, () -> {
+            check(helper.getLevel().noCollision(boss, boss.getBoundingBox().deflate(0.1)), "the grown boss is in a block");
+            helper.succeed();
         });
     }
 

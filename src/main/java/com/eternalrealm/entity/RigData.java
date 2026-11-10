@@ -167,6 +167,55 @@ public final class RigData {
         };
     }
 
+    /** The names of the parts from the model root down to a trail bone (to find its transform); empty if unknown. */
+    public static String[] trailChain(String rig, String bone) {
+        return switch (rig + "/" + bone) {
+            case "king/greatsword" -> new String[]{"base", "hips", "chest", "right_arm", "right_forearm", "right_hand", "greatsword"};
+            case "treant/right_claws" -> new String[]{"base", "trunk", "trunk_upper", "right_arm", "right_forearm", "right_claws"};
+            case "treant/left_claws" -> new String[]{"base", "trunk", "trunk_upper", "left_arm", "left_forearm", "left_claws"};
+            case "colossus/right_hand" -> new String[]{"base", "pelvis", "torso", "right_arm", "right_forearm", "right_hand"};
+            case "colossus/left_hand" -> new String[]{"base", "pelvis", "torso", "left_arm", "left_forearm", "left_hand"};
+            case "queen/scepter" -> new String[]{"base", "hips", "torso", "right_arm", "right_forearm", "right_hand", "scepter"};
+            case "queen/axe" -> new String[]{"base", "hips", "torso", "right_arm", "right_forearm", "right_hand", "axe"};
+            case "dragon/tail_tip" -> new String[]{"base", "body", "tail1", "tail2", "tail3", "tail_tip"};
+            case "dragon/front_right_leg_foot" -> new String[]{"base", "body", "front_right_leg", "front_right_leg_shin", "front_right_leg_foot"};
+            default -> new String[0];
+        };
+    }
+
+    /**
+     * Where the head of {@code rig/variant} lies at the end of its death animation (the fallen body runs from the
+     * feet to there): {left, forward} in blocks at scale 1; {0, 0} if unknown.
+     */
+    public static float[] fallen(String rig, String variant) {
+        return switch (rig + "/" + variant) {
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3" -> new float[]{-0.05F, 1.36F};
+            case "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> new float[]{-0.05F, 1.35F};
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> new float[]{2.7F, 0.29F};
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> new float[]{-0.07F, -2.61F};
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> new float[]{0.05F, 0.42F};
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> new float[]{-0.04F, 1.21F};
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> new float[]{-0.12F, 1.58F};
+            default -> new float[]{0.0F, 0.0F};
+        };
+    }
+
+    /**
+     * How far in front of its centre the slam of {@code rig/variant} lands (weapon, fists, claws or jaws on the
+     * floor at the impact frame), in blocks at scale 1; 1 if unknown. The default AI swings from this distance.
+     */
+    public static float reach(String rig, String variant) {
+        return switch (rig + "/" + variant) {
+            case "king/b1", "king/b1_p1", "king/b8", "king/b8_p1", "king/b8_p2", "king/b8_p3", "king/final", "king/final_p1", "king/final_p2", "king/final_p3" -> 2.89F;
+            case "treant/b2", "treant/b2_p1", "treant/b2_p2" -> 1.58F;
+            case "colossus/b3", "colossus/b7", "colossus/b3_p1", "colossus/b3_p2", "colossus/b7_p1", "colossus/b7_p2", "colossus/b7_p3" -> 2.25F;
+            case "queen/b5", "queen/b5_p1", "queen/b5_p2", "queen/b5_p3" -> 0.74F;
+            case "queen/b4", "queen/b4_p1", "queen/b4_p2" -> 2.14F;
+            case "dragon/b6", "dragon/b6_p1", "dragon/b6_p2", "dragon/b6_p3" -> 1.23F;
+            default -> 1.0F;
+        };
+    }
+
     /** Seconds of the animation in {@code slot} for {@code rig/variant}, or 1 if unknown. */
     public static float length(String rig, String variant, int slot) {
         float[] values = lengths(rig + "/" + variant);

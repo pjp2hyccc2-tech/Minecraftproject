@@ -156,9 +156,9 @@ def melee_slam(x):
     """Both branch arms rise high above the canopy, the trunk bends back creaking, then the claws hammer the floor."""
     A, B, Cc, I, F, R, E = 0.15, 0.95, 1.12, 1.3, 1.5, 1.95, 2.6
     c = Clip('melee_slam', E, impact=I)
-    c.pos('base', [(0, 0, 0, 0), (A, 0, -0.8, 0), (B, 0, 1.2, 1.5), (Cc, 0, 1.4, 1.7, 'o'), (I, 0, -3.2, -2.4, 'I'),
-                   (F, 0, -3.6, -2.6, 'O'), (R, 0, -2.8, -1.8), (E, 0, 0, 0)])
-    c.rot('trunk', [(0, 0, 0, 0), (B, -6, 0, 0), (I, 10, 0, 0, 'I'), (F, 12, 0, 0, 'O'), (R, 6, 0, 0), (E, 0, 0, 0)])
+    c.pos('base', [(0, 0, 0, 0), (A, 0, -0.8, 0), (B, 0, 1.2, 1.5), (Cc, 0, 1.4, 1.7, 'o'), (I, 0, -5.4, -2.6, 'I'),
+                   (F, 0, -5.8, -2.8, 'O'), (R, 0, -3.6, -1.8), (E, 0, 0, 0)])
+    c.rot('trunk', [(0, 0, 0, 0), (B, -6, 0, 0), (I, 14, 0, 0, 'I'), (F, 16, 0, 0, 'O'), (R, 8, 0, 0), (E, 0, 0, 0)])
     c.rot('trunk_upper', [(0, 0, 0, 0), (A, 6, 0, 0), (B, -24, 0, 0), (Cc, -26, 0, 0, 'o'), (I, 30, 0, 0, 'I'),
                           (F, 34, 0, 0, 'O'), (R, 20, 0, 0), (E, 0, 0, 0)])
     c.rot('head', [(0, 0, 0, 0), (B, -16, 0, 0), (I, -8, 0, 0, 'I'), (E, 0, 0, 0)])
@@ -169,9 +169,9 @@ def melee_slam(x):
         c.rot('%s_forearm' % side, [(0, 0, 0, 0), (B, -30, 0, 0), (I, 8, 0, 0, 'I'), (F, 10, 0, 0), (E, 0, 0, 0)])
         c.rot('%s_claws' % side, [(0, 0, 0, 0), (B, -35, 0, 0), (I, 15, 0, 0, 'I'), (F, 8, 0, 0, 'b'), (E, 0, 0, 0)])
     feet(c, x, right_plan=[(0.18, 0.55, (6.0, 0.8), 2.5), (2.02, 2.42, (0.0, 0.0), 2.0)])
-    for t in (I, F):
-        eranim.reach_y(c, x.rig, x.v, t, 'right_arm', 'x', 'right_claws', CLAW_R, 24.0, -100.0, -5.0)
-        eranim.reach_y(c, x.rig, x.v, t, 'left_arm', 'x', 'left_claws', CLAW_L, 24.0, -100.0, -5.0)
+    for side, part, point in (('right', 'right_claws', CLAW_R), ('left', 'left_claws', CLAW_L)):    # they stay where they landed
+        a = eranim.reach_y(c, x.rig, x.v, I, side + '_arm', 'x', part, point, 24.0, -100.0, -5.0)
+        eranim.reach_y(c, x.rig, x.v, F, side + '_arm', 'x', part, point, 24.0, a - 14.0, a + 14.0)
     return eranim.retime(c, 1.2)
 
 

@@ -13,6 +13,7 @@ Writes
 UV map: every box gets its own rectangle from the skyline packer in ermodel.pack(); the table is printed with
 --uv and kept in tools/art_entities/uv_map.txt so texture edits can be matched to boxes.
 """
+import math
 import os
 import sys
 
@@ -247,6 +248,64 @@ def write_timings(rigs):
     w('        };')
     w('    }')
     w('')
+    w('    /** The names of the parts from the model root down to a trail bone (to find its transform); empty if unknown. */')
+    w('    public static String[] trailChain(String rig, String bone) {')
+    w('        return switch (rig + "/" + bone) {')
+    for rig in rigs:
+        if rig.name not in BOSS_RIGS or not hasattr(rig, 'trails_for'):
+            continue
+        bones = []
+        for v in rig.variants:
+            for bone, _, _ in rig.trails_for(v):
+                if bone not in bones:
+                    bones.append(bone)
+        for bone in bones:
+            names = [p.name for p in ermodel.ancestors(rig.parts[bone])]
+            w('            case "%s/%s" -> new String[]{%s};' % (rig.name, bone, ', '.join('"%s"' % n for n in names)))
+    w('            default -> new String[0];')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /**')
+    w('     * Where the head of {@code rig/variant} lies at the end of its death animation (the fallen body runs from the')
+    w('     * feet to there): {left, forward} in blocks at scale 1; {0, 0} if unknown.')
+    w('     */')
+    w('    public static float[] fallen(String rig, String variant) {')
+    w('        return switch (rig + "/" + variant) {')
+    groups = {}
+    for rig in rigs:
+        if rig.name not in BOSS_RIGS or 'head' not in rig.parts:
+            continue
+        for v in rig.variants:
+            an = rig.slot_anim(v, 'death')
+            pose = ermodel.evaluate([(an, an.length)])
+            p = ermodel.part_point(rig, v, pose, 'head', rig.parts['head'].pivot)
+            key = (round(p[0] / 16.0, 2), round(-p[2] / 16.0, 2))
+            groups.setdefault(key, []).append('%s/%s' % (rig.name, v.id))
+    for key, keys in groups.items():
+        w('            case %s -> new float[]{%s, %s};' % (', '.join('"%s"' % k for k in keys), jf(key[0]), jf(key[1])))
+    w('            default -> new float[]{0.0F, 0.0F};')
+    w('        };')
+    w('    }')
+    w('')
+    w('    /**')
+    w('     * How far in front of its centre the slam of {@code rig/variant} lands (weapon, fists, claws or jaws on the')
+    w('     * floor at the impact frame), in blocks at scale 1; 1 if unknown. The default AI swings from this distance.')
+    w('     */')
+    w('    public static float reach(String rig, String variant) {')
+    w('        return switch (rig + "/" + variant) {')
+    groups = {}
+    for rig in rigs:
+        if rig.name not in BOSS_RIGS:
+            continue
+        for v in rig.variants:
+            groups.setdefault(round(slam_reach(rig, v), 2), []).append('%s/%s' % (rig.name, v.id))
+    for r, keys in groups.items():
+        w('            case %s -> %s;' % (', '.join('"%s"' % k for k in keys), jf(r)))
+    w('            default -> 1.0F;')
+    w('        };')
+    w('    }')
+    w('')
     w('    /** Seconds of the animation in {@code slot} for {@code rig/variant}, or 1 if unknown. */')
     w('    public static float length(String rig, String variant, int slot) {')
     w('        float[] values = lengths(rig + "/" + variant);')
@@ -275,6 +334,28 @@ def write_timings(rigs):
     with open(TIMINGS, 'w') as f:
         f.write('\n'.join(L) + '\n')
     write_boss_timings(rigs)
+
+
+def slam_reach(rig, v):
+    """Horizontal distance (blocks, scale 1) from the centre of the farthest box corner within 3 model units of the
+    floor at the impact frame of the slam: where the blade, fists or jaws land."""
+    an = rig.slot_anim(v, 'melee_slam')
+    pose = ermodel.evaluate([(an, an.impact)])
+    mats = ermodel.part_transforms(rig, v, pose)
+    best = 0.0
+    for part in rig.parts.values():
+        if not part.cubes or not ermodel.visible_chain(rig, v, part):
+            continue
+        m = mats[part.name]
+        for c in part.cubes:
+            for dx in (0, c.w):
+                for dy in (0, c.h):
+                    for dz in (0, c.d):
+                        q = m @ np.array([c.x + dx - part.pivot[0], c.y + dy - part.pivot[1], c.z + dz - part.pivot[2],
+                                          1.0])
+                        if q[1] >= 21.0:
+                            best = max(best, math.hypot(q[0], q[2]) / 16.0)
+    return best
 
 
 def write_boss_timings(rigs):

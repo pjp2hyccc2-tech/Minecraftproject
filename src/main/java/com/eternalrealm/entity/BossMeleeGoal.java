@@ -5,11 +5,16 @@ import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
-/** Default boss AI: chase the target and slam it when in reach. Inactive while the AI is frozen. */
+/**
+ * Default boss AI: chase the target and slam it when in reach. Inactive while the AI is frozen. A giant that finds no
+ * path (its footprint is several blocks wide) walks straight at the target instead.
+ */
 final class BossMeleeGoal extends Goal {
     private final ERBoss boss;
     private int cooldown;
     private int repath;
+    /** No path was found: walk straight at the target. */
+    private boolean steer;
 
     BossMeleeGoal(ERBoss boss) {
         this.boss = boss;
@@ -41,6 +46,7 @@ final class BossMeleeGoal extends Goal {
     @Override
     public void stop() {
         this.boss.getNavigation().stop();
+        this.steer = false;
     }
 
     @Override
@@ -58,12 +64,21 @@ final class BossMeleeGoal extends Goal {
         }
         if (this.boss.inMeleeReach(target, 1.0)) {
             this.boss.getNavigation().stop();
+            this.steer = false;
             if (this.cooldown <= 0 && this.boss.startSlam(target)) {
                 this.cooldown = this.boss.durationTicks(BossAnimation.MELEE_SLAM) + 20 + this.boss.getRandom().nextInt(20);
             }
         } else if (--this.repath <= 0) {
             this.repath = 8 + this.boss.getRandom().nextInt(6);
-            this.boss.getNavigation().moveTo(target, 1.0);
+            if (!this.boss.getNavigation().moveTo(target, 1.0)) {
+                this.boss.getNavigation().stop();
+                this.steer = true;
+            } else {
+                this.steer = false;
+            }
+        }
+        if (this.steer) {
+            this.boss.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.0);
         }
     }
 }

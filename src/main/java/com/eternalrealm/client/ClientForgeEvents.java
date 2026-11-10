@@ -38,6 +38,7 @@ public final class ClientForgeEvents {
         }
         com.eternalrealm.ui.dialogue.ClientDialogue.tick();
         com.eternalrealm.client.telegraph.ClientTelegraphs.tick();
+        com.eternalrealm.client.boss.BossBodyEffects.tick();
         com.eternalrealm.client.block.ClientLightShafts.tick();
         KeyConflicts.resolveOnce();
     }
@@ -89,6 +90,7 @@ public final class ClientForgeEvents {
         ClientUiState.clear();
         CombatAnimations.clear();
         CameraShake.clear();
+        com.eternalrealm.client.boss.BossBodyEffects.clear();
         com.eternalrealm.ui.dialogue.ClientDialogue.clear();
         com.eternalrealm.client.telegraph.ClientTelegraphs.clear();
         com.eternalrealm.client.block.ClientLightShafts.clear();

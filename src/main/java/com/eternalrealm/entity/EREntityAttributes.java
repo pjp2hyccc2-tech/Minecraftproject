@@ -48,12 +48,14 @@ public final class EREntityAttributes {
         BossDefinition definition = Bosses.byId(kind.id()).orElse(null);
         double damage = definition != null ? definition.damage() : 10.0;
         double armor = definition != null ? definition.armor() : 8.0;
+        // ground speed is about 44 * speed^2 blocks per second: 3.8 (king) .. 2.4 (colossus). Big bodies take long,
+        // slow strides (their walk cycles are made to match these speeds without the feet sliding)
         double speed = switch (kind.rig()) {
-            case KING -> 0.28;
-            case QUEEN -> 0.27;
-            case DRAGON -> 0.26;
-            case TREANT -> 0.22;
-            case COLOSSUS -> 0.21;
+            case KING -> 0.294;
+            case DRAGON -> 0.286;
+            case QUEEN -> 0.282;
+            case TREANT -> 0.243;
+            case COLOSSUS -> 0.233;
         };
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, BOSS_DEFAULT_HEALTH)
@@ -61,6 +63,6 @@ public final class EREntityAttributes {
                 .add(Attributes.ARMOR, armor)
                 .add(Attributes.MOVEMENT_SPEED, speed)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
-                .add(Attributes.FOLLOW_RANGE, 48.0);
+                .add(Attributes.FOLLOW_RANGE, 64.0);
     }
 }
