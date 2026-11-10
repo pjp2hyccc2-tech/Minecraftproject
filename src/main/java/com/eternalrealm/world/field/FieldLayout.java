@@ -148,8 +148,10 @@ public final class FieldLayout {
                     {1080, -20}, {1250, -150}}, 2.5),
             new Road("farm_harbour", new double[][]{{740, 230}, {860, 420}, {980, 600}, {1100, 760}, {1180, 860}},
                     2.0),
-            new Road("falls", new double[][]{{420, 60}, {470, -60}, {500, -200}, {540, -300}}, 2.0),
-            new Road("peaks", new double[][]{{540, -300}, {470, -470}, {380, -620}, {300, -800}, {230, -980},
+            // up the east bank of the falls river, then across it (the shrine's bridge) to the waystone's bank
+            new Road("falls", new double[][]{{420, 60}, {470, -60}, {478, -120}, {530, -222}, {552, -276},
+                    {524, -293}}, 2.0),
+            new Road("peaks", new double[][]{{524, -293}, {470, -470}, {380, -620}, {300, -800}, {230, -980},
                     {200, -1200}}, 1.5));
 
     // ---- waystones (転移碑): id, field, position

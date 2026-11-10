@@ -1,6 +1,7 @@
 package com.eternalrealm.world.forge.feature;
 
 import com.eternalrealm.world.forge.AstoriaDimension;
+import com.eternalrealm.world.forge.FieldPieces;
 import com.eternalrealm.world.gen.AstoriaBiome;
 import com.eternalrealm.world.gen.AstoriaLayout;
 import com.eternalrealm.world.gen.GenNoise;
@@ -59,8 +60,8 @@ public final class AreaSurfaceFeature extends Feature<NoneFeatureConfiguration> 
                 int x = chunkX + dx;
                 int z = chunkZ + dz;
                 int y = ground[dx + 1][dz + 1];
-                if (y <= level.getMinBuildHeight() + 8) {
-                    continue;
+                if (y <= level.getMinBuildHeight() + 8 || FieldPieces.covers(x, z)) {
+                    continue;   // a hand-made set piece decides its own ground
                 }
                 AstoriaBiome biome = AstoriaDimension.biome(level.getBiome(pos.set(x, y, z)));
                 if (biome == null) {

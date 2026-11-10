@@ -1,0 +1,1718 @@
+{
+ "format": 1,
+ "build": "b467a5075f0d7c93",
+ "terrain": "e96e7d8b55fd",
+ "pieces": [
+  {
+   "id": "shrine_capital",
+   "name": "転移碑 王都南門前広場 (capital gate forecourt)",
+   "field": 1,
+   "kind": "waystone",
+   "box": [
+    -15,
+    70,
+    184,
+    21,
+    79,
+    215
+   ],
+   "file": "pieces/shrine_capital.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:castle_bricks",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:gilded_trim",
+    "eternalrealm:plaza_flagstones",
+    "eternalrealm:smooth_castle_stone",
+    "eternalrealm:smooth_castle_stone_slab[type=bottom]",
+    "eternalrealm:waystone[facing=north,half=lower]",
+    "eternalrealm:waystone[facing=north,half=upper]",
+    "minecraft:allium",
+    "minecraft:andesite",
+    "minecraft:cobblestone",
+    "minecraft:cornflower",
+    "minecraft:cracked_stone_bricks",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_leaves[distance=1,persistent=true]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+    "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:dark_oak_wall_sign[facing=east]",
+    "minecraft:dark_oak_wall_sign[facing=north]",
+    "minecraft:dark_oak_wall_sign[facing=west]",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:oxeye_daisy",
+    "minecraft:polished_andesite",
+    "minecraft:polished_blackstone",
+    "minecraft:polished_blackstone_slab[type=top]",
+    "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:polished_diorite",
+    "minecraft:red_tulip",
+    "minecraft:stone_bricks",
+    "minecraft:white_tulip",
+    "minecraft:dirt"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      -12,
+      79,
+      189
+     ],
+     "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+    },
+    {
+     "pos": [
+      2,
+      73,
+      211
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"area.eternalrealm.arcelia\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"5\",\"15\"]}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      3,
+      72,
+      210
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"map.eternalrealm.capital\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.waystone\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      4,
+      73,
+      211
+     ],
+     "nbt": "{front_text:{messages:['{\"translate\":\"area.eternalrealm.lakeside\",\"bold\":true}','{\"translate\":\"sign.eternalrealm.level_range\",\"with\":[\"15\",\"25\"]}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+    },
+    {
+     "pos": [
+      12,
+      79,
+      189
+     ],
+     "nbt": "{Width:3.0f,Height:2.0f,Design:\"kingdom\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -7,
+      71,
+      191
+     ],
+     "state": "minecraft:polished_blackstone"
+    }
+   ],
+   "samples": [
+    [
+     -15,
+     184,
+     70
+    ],
+    [
+     21,
+     184,
+     70
+    ],
+    [
+     -15,
+     215,
+     70
+    ],
+    [
+     21,
+     215,
+     70
+    ],
+    [
+     3,
+     199,
+     70
+    ],
+    [
+     -15,
+     189,
+     70
+    ],
+    [
+     -11,
+     190,
+     70
+    ],
+    [
+     -9,
+     208,
+     70
+    ],
+    [
+     -6,
+     194,
+     70
+    ],
+    [
+     -3,
+     184,
+     70
+    ],
+    [
+     -1,
+     200,
+     70
+    ],
+    [
+     2,
+     202,
+     70
+    ],
+    [
+     5,
+     196,
+     70
+    ],
+    [
+     8,
+     187,
+     70
+    ],
+    [
+     10,
+     207,
+     70
+    ],
+    [
+     14,
+     199,
+     70
+    ]
+   ]
+  },
+  {
+   "id": "shrine_meadow",
+   "name": "転移碑 はじまりの草原",
+   "field": 1,
+   "kind": "waystone",
+   "box": [
+    -371,
+    72,
+    557,
+    -348,
+    79,
+    584
+   ],
+   "file": "pieces/shrine_meadow.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:waystone[facing=north,half=lower]",
+    "eternalrealm:waystone[facing=north,half=upper]",
+    "minecraft:allium",
+    "minecraft:andesite",
+    "minecraft:azure_bluet",
+    "minecraft:blue_orchid",
+    "minecraft:chiseled_stone_bricks",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:cornflower",
+    "minecraft:cracked_stone_bricks",
+    "minecraft:dandelion",
+    "minecraft:dirt_path",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lilac[half=lower]",
+    "minecraft:lilac[half=upper]",
+    "minecraft:lily_of_the_valley",
+    "minecraft:mossy_cobblestone",
+    "minecraft:mossy_stone_bricks",
+    "minecraft:orange_tulip",
+    "minecraft:oxeye_daisy",
+    "minecraft:peony[half=lower]",
+    "minecraft:peony[half=upper]",
+    "minecraft:pink_tulip",
+    "minecraft:polished_andesite",
+    "minecraft:poppy",
+    "minecraft:red_tulip",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:stone",
+    "minecraft:stone_bricks",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]",
+    "minecraft:white_tulip",
+    "minecraft:dirt"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -357,
+      74,
+      573
+     ],
+     "state": "minecraft:cobblestone"
+    }
+   ],
+   "samples": [
+    [
+     -371,
+     557,
+     73
+    ],
+    [
+     -348,
+     557,
+     73
+    ],
+    [
+     -371,
+     584,
+     73
+    ],
+    [
+     -348,
+     584,
+     73
+    ],
+    [
+     -360,
+     570,
+     73
+    ],
+    [
+     -371,
+     566,
+     73
+    ],
+    [
+     -367,
+     579,
+     73
+    ],
+    [
+     -365,
+     577,
+     73
+    ],
+    [
+     -363,
+     574,
+     73
+    ],
+    [
+     -361,
+     560,
+     73
+    ],
+    [
+     -360,
+     561,
+     73
+    ],
+    [
+     -359,
+     561,
+     73
+    ],
+    [
+     -358,
+     570,
+     73
+    ],
+    [
+     -357,
+     578,
+     73
+    ],
+    [
+     -355,
+     569,
+     73
+    ],
+    [
+     -353,
+     562,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "shrine_moon_forest",
+   "name": "転移碑 月影の森",
+   "field": 2,
+   "kind": "waystone",
+   "box": [
+    -711,
+    72,
+    73,
+    -689,
+    80,
+    97
+   ],
+   "file": "pieces/shrine_moon_forest.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:waystone[facing=north,half=lower]",
+    "eternalrealm:waystone[facing=north,half=upper]",
+    "minecraft:azalea_leaves[distance=1,persistent=true]",
+    "minecraft:brown_mushroom",
+    "minecraft:chiseled_stone_bricks",
+    "minecraft:cracked_stone_bricks",
+    "minecraft:dirt",
+    "minecraft:fern",
+    "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:moss_block",
+    "minecraft:moss_carpet",
+    "minecraft:mossy_cobblestone",
+    "minecraft:mossy_cobblestone_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:mossy_stone_brick_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:mossy_stone_brick_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:mossy_stone_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:mossy_stone_bricks",
+    "minecraft:podzol[snowy=false]",
+    "minecraft:red_mushroom",
+    "minecraft:soul_lantern[hanging=false]",
+    "minecraft:soul_lantern[hanging=true]",
+    "minecraft:stone_bricks",
+    "minecraft:vine[east=true]",
+    "minecraft:vine[north=true]",
+    "minecraft:vine[south=true]",
+    "minecraft:vine[west=true]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -696,
+      76,
+      90
+     ],
+     "state": "minecraft:mossy_stone_bricks"
+    }
+   ],
+   "samples": [
+    [
+     -711,
+     73,
+     75
+    ],
+    [
+     -689,
+     73,
+     72
+    ],
+    [
+     -711,
+     97,
+     74
+    ],
+    [
+     -689,
+     97,
+     72
+    ],
+    [
+     -700,
+     85,
+     74
+    ],
+    [
+     -711,
+     84,
+     75
+    ],
+    [
+     -708,
+     85,
+     75
+    ],
+    [
+     -706,
+     89,
+     74
+    ],
+    [
+     -704,
+     84,
+     74
+    ],
+    [
+     -702,
+     81,
+     74
+    ],
+    [
+     -701,
+     93,
+     73
+    ],
+    [
+     -699,
+     81,
+     74
+    ],
+    [
+     -698,
+     97,
+     73
+    ],
+    [
+     -696,
+     90,
+     73
+    ],
+    [
+     -694,
+     85,
+     73
+    ],
+    [
+     -692,
+     86,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "shrine_iron_mine",
+   "name": "転移碑 鉄鉱の鉱山",
+   "field": 3,
+   "kind": "waystone",
+   "box": [
+    -1257,
+    85,
+    610,
+    -1242,
+    96,
+    625
+   ],
+   "file": "pieces/shrine_iron_mine.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:waystone[facing=north,half=lower]",
+    "eternalrealm:waystone[facing=north,half=upper]",
+    "minecraft:andesite",
+    "minecraft:anvil[facing=east]",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:chain[axis=y]",
+    "minecraft:chiseled_deepslate",
+    "minecraft:coarse_dirt",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_slab[type=bottom]",
+    "minecraft:dirt_path",
+    "minecraft:gravel",
+    "minecraft:iron_block",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lantern[hanging=true]",
+    "minecraft:polished_andesite",
+    "minecraft:polished_blackstone_bricks",
+    "minecraft:polished_deepslate",
+    "minecraft:raw_iron_block",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=true]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:spruce_slab[type=bottom]",
+    "minecraft:spruce_slab[type=top]",
+    "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:dirt",
+    "minecraft:stone"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -1254,
+      88,
+      614
+     ],
+     "state": "minecraft:spruce_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     -1257,
+     610,
+     86
+    ],
+    [
+     -1242,
+     610,
+     86
+    ],
+    [
+     -1257,
+     625,
+     86
+    ],
+    [
+     -1242,
+     625,
+     86
+    ],
+    [
+     -1250,
+     617,
+     86
+    ],
+    [
+     -1257,
+     612,
+     86
+    ],
+    [
+     -1256,
+     618,
+     86
+    ],
+    [
+     -1255,
+     623,
+     86
+    ],
+    [
+     -1253,
+     613,
+     86
+    ],
+    [
+     -1252,
+     617,
+     86
+    ],
+    [
+     -1251,
+     622,
+     86
+    ],
+    [
+     -1249,
+     612,
+     86
+    ],
+    [
+     -1248,
+     616,
+     86
+    ],
+    [
+     -1247,
+     621,
+     86
+    ],
+    [
+     -1245,
+     611,
+     86
+    ],
+    [
+     -1244,
+     616,
+     86
+    ]
+   ]
+  },
+  {
+   "id": "shrine_sacred_falls",
+   "name": "転移碑 聖なる滝",
+   "field": 4,
+   "kind": "waystone",
+   "box": [
+    516,
+    59,
+    -299,
+    537,
+    77,
+    -280
+   ],
+   "file": "pieces/shrine_sacred_falls.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:waystone[facing=east,half=lower]",
+    "eternalrealm:waystone[facing=east,half=upper]",
+    "minecraft:calcite",
+    "minecraft:cherry_leaves[distance=1,persistent=true]",
+    "minecraft:cherry_log[axis=y]",
+    "minecraft:chiseled_quartz_block",
+    "minecraft:coarse_dirt",
+    "minecraft:diorite_slab[type=top]",
+    "minecraft:diorite_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:mud",
+    "minecraft:pink_petals[facing=north,flower_amount=1]",
+    "minecraft:pink_petals[facing=north,flower_amount=2]",
+    "minecraft:pink_petals[facing=north,flower_amount=3]",
+    "minecraft:pink_petals[facing=north,flower_amount=4]",
+    "minecraft:polished_diorite",
+    "minecraft:quartz_bricks",
+    "minecraft:quartz_pillar[axis=y]",
+    "minecraft:sea_lantern",
+    "minecraft:smooth_quartz",
+    "minecraft:smooth_quartz_slab[type=bottom]",
+    "minecraft:smooth_stone",
+    "minecraft:stone",
+    "minecraft:water[level=0]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      526,
+      66,
+      -290
+     ],
+     "state": "minecraft:sea_lantern"
+    }
+   ],
+   "samples": [
+    [
+     516,
+     -299,
+     73
+    ],
+    [
+     537,
+     -299,
+     64
+    ],
+    [
+     516,
+     -280,
+     69
+    ],
+    [
+     537,
+     -280,
+     59
+    ],
+    [
+     526,
+     -290,
+     67
+    ],
+    [
+     516,
+     -292,
+     71
+    ],
+    [
+     520,
+     -295,
+     70
+    ],
+    [
+     521,
+     -286,
+     68
+    ],
+    [
+     523,
+     -297,
+     69
+    ],
+    [
+     524,
+     -289,
+     67
+    ],
+    [
+     526,
+     -296,
+     68
+    ],
+    [
+     527,
+     -286,
+     66
+    ],
+    [
+     529,
+     -295,
+     67
+    ],
+    [
+     530,
+     -286,
+     64
+    ],
+    [
+     532,
+     -287,
+     64
+    ],
+    [
+     534,
+     -289,
+     60
+    ]
+   ]
+  },
+  {
+   "id": "shrine_ancient_ruins",
+   "name": "転移碑 古代遺跡",
+   "field": 5,
+   "kind": "waystone",
+   "box": [
+    1218,
+    113,
+    -144,
+    1242,
+    123,
+    -120
+   ],
+   "file": "pieces/shrine_ancient_ruins.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:waystone[facing=west,half=lower]",
+    "eternalrealm:waystone[facing=west,half=upper]",
+    "minecraft:campfire[facing=north,lit=true,signal_fire=false]",
+    "minecraft:chiseled_sandstone",
+    "minecraft:coarse_dirt",
+    "minecraft:cracked_stone_bricks",
+    "minecraft:cut_red_sandstone",
+    "minecraft:cut_sandstone",
+    "minecraft:dead_bush",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:grass",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:gravel",
+    "minecraft:quartz_pillar[axis=y]",
+    "minecraft:sandstone",
+    "minecraft:sandstone_stairs[facing=east,half=bottom,shape=straight]",
+    "minecraft:sandstone_stairs[facing=west,half=bottom,shape=straight]",
+    "minecraft:smooth_sandstone",
+    "minecraft:smooth_sandstone_slab[type=bottom]",
+    "minecraft:stone"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1233,
+      116,
+      -133
+     ],
+     "state": "minecraft:smooth_sandstone"
+    }
+   ],
+   "samples": [
+    [
+     1218,
+     -144,
+     115
+    ],
+    [
+     1242,
+     -144,
+     116
+    ],
+    [
+     1218,
+     -120,
+     113
+    ],
+    [
+     1242,
+     -120,
+     115
+    ],
+    [
+     1230,
+     -132,
+     115
+    ],
+    [
+     1218,
+     -133,
+     114
+    ],
+    [
+     1222,
+     -128,
+     114
+    ],
+    [
+     1224,
+     -132,
+     114
+    ],
+    [
+     1226,
+     -141,
+     115
+    ],
+    [
+     1227,
+     -133,
+     115
+    ],
+    [
+     1228,
+     -125,
+     114
+    ],
+    [
+     1230,
+     -138,
+     115
+    ],
+    [
+     1231,
+     -128,
+     115
+    ],
+    [
+     1233,
+     -133,
+     115
+    ],
+    [
+     1234,
+     -123,
+     115
+    ],
+    [
+     1236,
+     -124,
+     115
+    ]
+   ]
+  },
+  {
+   "id": "shrine_soaring_peaks",
+   "name": "転移碑 天翔の峰",
+   "field": 6,
+   "kind": "waystone",
+   "box": [
+    288,
+    134,
+    -823,
+    313,
+    158,
+    -800
+   ],
+   "file": "pieces/shrine_soaring_peaks.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:waystone[facing=south,half=lower]",
+    "eternalrealm:waystone[facing=south,half=upper]",
+    "minecraft:andesite",
+    "minecraft:chiseled_stone_bricks",
+    "minecraft:coarse_dirt",
+    "minecraft:cobblestone",
+    "minecraft:cobblestone_slab[type=bottom]",
+    "minecraft:cracked_stone_bricks",
+    "minecraft:dirt",
+    "minecraft:dirt_path",
+    "minecraft:gravel",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:packed_ice",
+    "minecraft:polished_andesite",
+    "minecraft:snow[layers=1]",
+    "minecraft:snow_block",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_leaves[distance=1,persistent=true]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:stone",
+    "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=false,west=low]",
+    "minecraft:stone_brick_wall[east=low,north=none,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=low,up=true,west=none]",
+    "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=low]",
+    "minecraft:stone_bricks"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      303,
+      142,
+      -813
+     ],
+     "state": "minecraft:stone_bricks"
+    }
+   ],
+   "samples": [
+    [
+     288,
+     -823,
+     146
+    ],
+    [
+     313,
+     -823,
+     150
+    ],
+    [
+     288,
+     -800,
+     136
+    ],
+    [
+     313,
+     -800,
+     131
+    ],
+    [
+     300,
+     -812,
+     143
+    ],
+    [
+     288,
+     -822,
+     146
+    ],
+    [
+     292,
+     -809,
+     141
+    ],
+    [
+     294,
+     -805,
+     139
+    ],
+    [
+     296,
+     -811,
+     142
+    ],
+    [
+     298,
+     -819,
+     147
+    ],
+    [
+     299,
+     -805,
+     138
+    ],
+    [
+     301,
+     -815,
+     145
+    ],
+    [
+     302,
+     -801,
+     136
+    ],
+    [
+     304,
+     -810,
+     140
+    ],
+    [
+     306,
+     -817,
+     145
+    ],
+    [
+     308,
+     -816,
+     143
+    ]
+   ]
+  },
+  {
+   "id": "shrine_end_forest",
+   "name": "転移碑 終焉の森",
+   "field": 7,
+   "kind": "waystone",
+   "box": [
+    -1011,
+    71,
+    -615,
+    -988,
+    79,
+    -593
+   ],
+   "file": "pieces/shrine_end_forest.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:waystone[facing=east,half=lower]",
+    "eternalrealm:waystone[facing=east,half=upper]",
+    "minecraft:amethyst_block",
+    "minecraft:amethyst_cluster[facing=east]",
+    "minecraft:amethyst_cluster[facing=north]",
+    "minecraft:amethyst_cluster[facing=south]",
+    "minecraft:amethyst_cluster[facing=up]",
+    "minecraft:blackstone",
+    "minecraft:coarse_dirt",
+    "minecraft:cobbled_deepslate",
+    "minecraft:cracked_polished_blackstone_bricks",
+    "minecraft:crying_obsidian",
+    "minecraft:dirt_path",
+    "minecraft:end_rod[facing=up]",
+    "minecraft:gilded_blackstone",
+    "minecraft:obsidian",
+    "minecraft:polished_blackstone",
+    "minecraft:polished_blackstone_bricks",
+    "minecraft:polished_blackstone_wall[east=none,north=none,south=none,up=true,west=none]",
+    "minecraft:purpur_block",
+    "minecraft:soul_lantern[hanging=false]",
+    "minecraft:dirt"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      -1004,
+      74,
+      -608
+     ],
+     "state": "minecraft:polished_blackstone"
+    }
+   ],
+   "samples": [
+    [
+     -1011,
+     -615,
+     73
+    ],
+    [
+     -988,
+     -615,
+     73
+    ],
+    [
+     -1011,
+     -593,
+     74
+    ],
+    [
+     -988,
+     -593,
+     73
+    ],
+    [
+     -1000,
+     -604,
+     72
+    ],
+    [
+     -1011,
+     -606,
+     73
+    ],
+    [
+     -1005,
+     -613,
+     73
+    ],
+    [
+     -1004,
+     -601,
+     73
+    ],
+    [
+     -1002,
+     -609,
+     73
+    ],
+    [
+     -1001,
+     -602,
+     73
+    ],
+    [
+     -1000,
+     -594,
+     73
+    ],
+    [
+     -998,
+     -607,
+     72
+    ],
+    [
+     -997,
+     -603,
+     72
+    ],
+    [
+     -995,
+     -609,
+     72
+    ],
+    [
+     -994,
+     -603,
+     72
+    ],
+    [
+     -992,
+     -612,
+     73
+    ]
+   ]
+  },
+  {
+   "id": "shrine_farm",
+   "name": "転移碑 豊穣の農場",
+   "field": 8,
+   "kind": "waystone",
+   "box": [
+    741,
+    67,
+    239,
+    761,
+    74,
+    257
+   ],
+   "file": "pieces/shrine_farm.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:cobbled_paving",
+    "eternalrealm:waystone[facing=north,half=lower]",
+    "eternalrealm:waystone[facing=north,half=upper]",
+    "minecraft:andesite",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:carved_pumpkin[facing=west]",
+    "minecraft:cobblestone",
+    "minecraft:composter[level=6]",
+    "minecraft:dirt_path",
+    "minecraft:hay_block[axis=x]",
+    "minecraft:hay_block[axis=y]",
+    "minecraft:hay_block[axis=z]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:mossy_cobblestone",
+    "minecraft:polished_andesite",
+    "minecraft:pumpkin",
+    "minecraft:rooted_dirt",
+    "minecraft:rose_bush[half=lower]",
+    "minecraft:rose_bush[half=upper]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=false,north=false,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=false,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=false]",
+    "minecraft:spruce_fence[east=false,north=true,south=true,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:spruce_fence[east=true,north=false,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=false,south=true,west=true]",
+    "minecraft:spruce_fence[east=true,north=true,south=false,west=true]",
+    "minecraft:spruce_fence[east=true,north=true,south=true,west=false]",
+    "minecraft:spruce_log[axis=x]",
+    "minecraft:spruce_log[axis=y]",
+    "minecraft:spruce_log[axis=z]",
+    "minecraft:sunflower[half=lower]",
+    "minecraft:sunflower[half=upper]"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      746,
+      70,
+      242
+     ],
+     "state": "minecraft:spruce_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     741,
+     239,
+     69
+    ],
+    [
+     761,
+     239,
+     69
+    ],
+    [
+     741,
+     257,
+     69
+    ],
+    [
+     761,
+     257,
+     69
+    ],
+    [
+     751,
+     248,
+     69
+    ],
+    [
+     741,
+     255,
+     69
+    ],
+    [
+     746,
+     249,
+     69
+    ],
+    [
+     747,
+     252,
+     69
+    ],
+    [
+     749,
+     242,
+     69
+    ],
+    [
+     750,
+     245,
+     69
+    ],
+    [
+     751,
+     248,
+     69
+    ],
+    [
+     752,
+     251,
+     69
+    ],
+    [
+     753,
+     254,
+     69
+    ],
+    [
+     755,
+     244,
+     69
+    ],
+    [
+     756,
+     247,
+     69
+    ],
+    [
+     757,
+     250,
+     69
+    ]
+   ]
+  },
+  {
+   "id": "shrine_lakeside",
+   "name": "転移碑 湖畔のほとり",
+   "field": 9,
+   "kind": "waystone",
+   "box": [
+    271,
+    65,
+    665,
+    293,
+    75,
+    687
+   ],
+   "file": "pieces/shrine_lakeside.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:waystone[facing=north,half=lower]",
+    "eternalrealm:waystone[facing=north,half=upper]",
+    "minecraft:azure_bluet",
+    "minecraft:birch_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:birch_leaves[distance=1,persistent=true]",
+    "minecraft:birch_log[axis=y]",
+    "minecraft:birch_planks",
+    "minecraft:blue_orchid",
+    "minecraft:chiseled_stone_bricks",
+    "minecraft:grass",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:lily_pad",
+    "minecraft:mossy_stone_bricks",
+    "minecraft:oxeye_daisy",
+    "minecraft:polished_andesite",
+    "minecraft:polished_diorite",
+    "minecraft:smooth_stone",
+    "minecraft:stone_bricks",
+    "minecraft:sugar_cane[age=0]",
+    "minecraft:water[level=0]",
+    "minecraft:dirt"
+   ],
+   "blockEntities": [],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      287,
+      68,
+      679
+     ],
+     "state": "minecraft:birch_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     271,
+     665,
+     67
+    ],
+    [
+     293,
+     665,
+     67
+    ],
+    [
+     271,
+     687,
+     65
+    ],
+    [
+     293,
+     687,
+     65
+    ],
+    [
+     282,
+     676,
+     66
+    ],
+    [
+     271,
+     676,
+     66
+    ],
+    [
+     274,
+     676,
+     66
+    ],
+    [
+     276,
+     676,
+     66
+    ],
+    [
+     278,
+     676,
+     66
+    ],
+    [
+     280,
+     668,
+     67
+    ],
+    [
+     281,
+     678,
+     66
+    ],
+    [
+     283,
+     672,
+     67
+    ],
+    [
+     284,
+     679,
+     66
+    ],
+    [
+     286,
+     673,
+     67
+    ],
+    [
+     288,
+     674,
+     66
+    ],
+    [
+     290,
+     675,
+     66
+    ]
+   ]
+  },
+  {
+   "id": "shrine_harbour",
+   "name": "転移碑 風の港",
+   "field": 10,
+   "kind": "waystone",
+   "box": [
+    1092,
+    66,
+    868,
+    1108,
+    76,
+    884
+   ],
+   "file": "pieces/shrine_harbour.bin",
+   "palette": [
+    "eternalrealm:void",
+    "minecraft:air",
+    "eternalrealm:flag[facing=east]",
+    "eternalrealm:waystone[facing=north,half=lower]",
+    "eternalrealm:waystone[facing=north,half=upper]",
+    "minecraft:barrel[facing=east,open=false]",
+    "minecraft:barrel[facing=north,open=false]",
+    "minecraft:barrel[facing=up,open=false]",
+    "minecraft:bell[attachment=ceiling,facing=north]",
+    "minecraft:chain[axis=x]",
+    "minecraft:chain[axis=y]",
+    "minecraft:chain[axis=z]",
+    "minecraft:cobblestone",
+    "minecraft:dark_oak_fence[east=false,north=false,south=false,west=false]",
+    "minecraft:dark_oak_fence[east=true,north=false,south=false,west=false]",
+    "minecraft:dark_oak_log[axis=x]",
+    "minecraft:dark_oak_log[axis=y]",
+    "minecraft:dark_oak_log[axis=z]",
+    "minecraft:dark_oak_planks",
+    "minecraft:grass_block[snowy=false]",
+    "minecraft:iron_bars[east=false,north=false,south=false,west=false]",
+    "minecraft:iron_trapdoor[facing=east,half=bottom,open=true]",
+    "minecraft:iron_trapdoor[facing=west,half=bottom,open=true]",
+    "minecraft:lantern[hanging=false]",
+    "minecraft:oak_planks",
+    "minecraft:polished_andesite",
+    "minecraft:smooth_stone",
+    "minecraft:spruce_planks",
+    "minecraft:dirt"
+   ],
+   "blockEntities": [
+    {
+     "pos": [
+      1094,
+      76,
+      870
+     ],
+     "nbt": "{Width:3.5f,Height:2.2f,Design:\"harbour\"}"
+    }
+   ],
+   "fluidTicks": [],
+   "probes": [
+    {
+     "pos": [
+      1104,
+      69,
+      872
+     ],
+     "state": "minecraft:dark_oak_log[axis=y]"
+    }
+   ],
+   "samples": [
+    [
+     1092,
+     868,
+     67
+    ],
+    [
+     1108,
+     868,
+     67
+    ],
+    [
+     1092,
+     884,
+     67
+    ],
+    [
+     1108,
+     884,
+     67
+    ],
+    [
+     1100,
+     876,
+     67
+    ],
+    [
+     1092,
+     869,
+     67
+    ],
+    [
+     1093,
+     878,
+     67
+    ],
+    [
+     1095,
+     869,
+     67
+    ],
+    [
+     1096,
+     877,
+     67
+    ],
+    [
+     1098,
+     868,
+     67
+    ],
+    [
+     1099,
+     876,
+     67
+    ],
+    [
+     1100,
+     884,
+     67
+    ],
+    [
+     1102,
+     875,
+     67
+    ],
+    [
+     1103,
+     883,
+     67
+    ],
+    [
+     1105,
+     874,
+     67
+    ],
+    [
+     1106,
+     882,
+     67
+    ]
+   ]
+  }
+ ],
+ "waystones": [
+  {
+   "id": "ancient_ruins",
+   "pos": [
+    1230,
+    117,
+    -132
+   ],
+   "facing": "west"
+  },
+  {
+   "id": "capital",
+   "pos": [
+    0,
+    71,
+    196
+   ],
+   "facing": "north"
+  },
+  {
+   "id": "end_forest",
+   "pos": [
+    -1000,
+    74,
+    -604
+   ],
+   "facing": "east"
+  },
+  {
+   "id": "farm",
+   "pos": [
+    752,
+    70,
+    248
+   ],
+   "facing": "north"
+  },
+  {
+   "id": "harbour",
+   "pos": [
+    1100,
+    69,
+    876
+   ],
+   "facing": "north"
+  },
+  {
+   "id": "iron_mine",
+   "pos": [
+    -1250,
+    88,
+    618
+   ],
+   "facing": "north"
+  },
+  {
+   "id": "lakeside",
+   "pos": [
+    282,
+    68,
+    676
+   ],
+   "facing": "north"
+  },
+  {
+   "id": "meadow",
+   "pos": [
+    -360,
+    75,
+    572
+   ],
+   "facing": "north"
+  },
+  {
+   "id": "moon_forest",
+   "pos": [
+    -700,
+    76,
+    86
+   ],
+   "facing": "north"
+  },
+  {
+   "id": "sacred_falls",
+   "pos": [
+    530,
+    67,
+    -290
+   ],
+   "facing": "east"
+  },
+  {
+   "id": "soaring_peaks",
+   "pos": [
+    300,
+    143,
+    -812
+   ],
+   "facing": "south"
+  }
+ ]
+}

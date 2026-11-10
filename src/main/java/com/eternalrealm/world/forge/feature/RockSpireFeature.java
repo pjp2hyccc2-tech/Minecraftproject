@@ -34,7 +34,7 @@ public final class RockSpireFeature extends Feature<VariantConfig> {
         FeatureKit.Bounds bounds = FeatureKit.Bounds.of(level, origin);
         int x0 = origin.getX();
         int z0 = origin.getZ();
-        if (FeatureKit.nearTower(x0, z0)) {
+        if (FeatureKit.keepOut(x0, z0)) {
             return false;
         }
         if (!FeatureKit.dry(level, x0, z0)) {
