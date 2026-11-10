@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/template_glass_pane_post",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "pane": "eternalrealm:block/leaded_glass",
+    "edge": "eternalrealm:block/leaded_glass_pane_top"
+  }
+}

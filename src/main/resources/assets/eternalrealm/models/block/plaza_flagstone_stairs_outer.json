@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "eternalrealm:block/plaza_flagstones",
+    "top": "eternalrealm:block/plaza_flagstones",
+    "side": "eternalrealm:block/plaza_flagstones"
+  }
+}

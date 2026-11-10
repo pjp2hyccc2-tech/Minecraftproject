@@ -74,9 +74,10 @@ LIMESTONE = hexc("#E9E4D8")
 MORTAR = hexc("#C9C1B1")
 
 
-def castle_bricks() -> np.ndarray:
-    """Warm white limestone: 8x4 bricks, staggered, soft bevel, faint speckles."""
-    r = rng("castle_bricks")
+def castle_bricks(variant: int = 0) -> np.ndarray:
+    """Warm white limestone: 8x4 bricks, staggered, soft bevel, faint speckles. Variants (1, 2) use other stones
+    and a little weathering: rain streaks under a brick, a chipped corner (placed at random by the blockstate)."""
+    r = rng("castle_bricks" + (f"_{variant}" if variant else ""))
     a = solid(16, 16, LIMESTONE)
     for row in range(4):
         y0 = row * 4
@@ -102,13 +103,31 @@ def castle_bricks() -> np.ndarray:
         x, y = r.randrange(16), r.randrange(16)
         if a[y, x, 0] > 215:
             a[y, x, :3] *= 0.93
+    if variant:
+        for _ in range(2 + variant):                       # rain streaks below the joints
+            x = r.randrange(16)
+            y0 = r.choice((0, 4, 8, 12))
+            for y in range(y0, min(16, y0 + 3)):
+                if a[y, x, 0] > 190:
+                    a[y, x, :3] *= 0.94 + 0.02 * (y - y0)
+        if variant == 2:                                   # a chipped brick corner
+            x, y = r.choice(((1, 1), (9, 5), (5, 9), (13, 13)))
+            a[y, x, :3] *= 0.82
+            a[y, x + 1, :3] *= 0.9
+            a[y + 1, x, :3] *= 0.9
     return a
 
 
-def smooth_castle_stone() -> np.ndarray:
-    r = rng("smooth_castle_stone")
+def smooth_castle_stone(variant: int = 0) -> np.ndarray:
+    r = rng("smooth_castle_stone" + (f"_{variant}" if variant else ""))
     a = solid(16, 16, hexc("#EEEAE1"))
     noise_tone(a, r, 0.012)
+    if variant:                                            # a faint vein through the stone
+        x = r.uniform(2, 13)
+        for y in range(1, 15):
+            x += r.uniform(-0.9, 0.9)
+            xi = int(round(min(14.0, max(1.0, x))))
+            a[y, xi, :3] *= 0.965 if variant == 1 else 0.955
     edge = np.zeros((16, 16), bool)
     edge[0, :] = edge[15, :] = edge[:, 0] = edge[:, 15] = True
     shade(a, edge, 0.95)
@@ -252,6 +271,127 @@ def roof_tiles(name: str, base: str, light: str, dark: str, hi: str) -> np.ndarr
     return a
 
 
+def terracotta_roof_tiles() -> np.ndarray:
+    """Red clay beaver-tail tiles: 4 px wide, rounded lower ends overlapping the row below, sun-faded tones."""
+    r = rng("terracotta_roof_tiles")
+    base, light, dark, hi = (np.array(hexc(c)[:3], float) for c in ("#B4532F", "#CC6B42", "#6E2B1B", "#E58F60"))
+    a = solid(16, 16, hexc("#6E2B1B"))
+    for row in range(4):
+        y0 = row * 4
+        offset = 0 if row % 2 == 0 else 2
+        for t in range(-1, 5):
+            x0 = t * 4 + offset
+            tone = 1.0 + (r.random() - 0.5) * 0.16
+            warm = (r.random() - 0.5) * 18
+            for yy in range(4):
+                for xx in range(4):
+                    x = x0 + xx
+                    if not 0 <= x < 16:
+                        continue
+                    y = y0 + yy
+                    rounded = yy == 3 and xx in (0, 3)            # the rounded tail leaves a dark gap
+                    if rounded:
+                        col = dark * 1.1
+                    elif xx == 3:
+                        col = dark * 1.25                         # shadow of the next tile's edge
+                    elif yy == 0:
+                        col = (hi if xx == 0 else light) * tone
+                    elif yy == 3:
+                        col = base * tone * 0.86                  # the lip
+                    else:
+                        col = base * tone * (1.0 - 0.04 * yy)
+                    a[y, x, :3] = np.clip(col + np.array([warm, warm * 0.4, -warm * 0.3]), 0, 255)
+    noise_tone(a, r, 0.02)
+    return a
+
+
+def cobbled_paving() -> np.ndarray:
+    """Rounded street cobbles set in dark sand: a fixed Voronoi of 9 stones (tileable), each with its own tone,
+    lit from the upper left."""
+    r = rng("cobbled_paving")
+    seeds = [(2.5, 2.5), (8.5, 1.5), (13.5, 3.0), (5.0, 7.0), (10.5, 7.5), (1.0, 11.5), (6.5, 12.5), (12.0, 12.5),
+             (15.5, 8.5)]
+    tones = [np.array(hexc(c)[:3], float) for c in ("#9A9385", "#8B8578", "#A7A090", "#938C7E", "#7F796D")]
+    stone_tone = [tones[r.randrange(len(tones))] * (0.97 + r.random() * 0.06) for _ in seeds]
+    gap = np.array(hexc("#4C4740")[:3], float)
+    a = solid(16, 16, hexc("#4C4740"))
+    for y in range(16):
+        for x in range(16):
+            ds = []
+            for i, (sx, sy) in enumerate(seeds):
+                best = min(math.hypot(x - sx - ox, y - sy - oy) for ox in (-16, 0, 16) for oy in (-16, 0, 16))
+                ds.append((best, i))
+            ds.sort()
+            (d0, i0), (d1, _) = ds[0], ds[1]
+            edge = d1 - d0
+            if edge < 0.9:
+                a[y, x, :3] = gap * (0.95 + r.random() * 0.1)
+                continue
+            col = stone_tone[i0].copy()
+            sx, sy = seeds[i0]
+            dx = ((x - sx + 8) % 16) - 8
+            dy = ((y - sy + 8) % 16) - 8
+            lit = -(dx + dy) * 0.025                             # rounded top: lit upper-left, shaded lower-right
+            col *= 1.0 + lit + (0.06 if edge > 2.5 else 0.0) - (0.08 if edge < 1.5 else 0.0)
+            a[y, x, :3] = np.clip(col * (1.0 + (r.random() - 0.5) * 0.04), 0, 255)
+    return a
+
+
+def plaza_flagstones() -> np.ndarray:
+    """Large pale flagstones in two staggered rows (10 + 6 px), fine mortar, a few speckles and worn hollows."""
+    r = rng("plaza_flagstones")
+    mortar = np.array(hexc("#A59D8C")[:3], float)
+    stones = [np.array(hexc(c)[:3], float) for c in ("#DAD3C4", "#D2CAB9", "#E2DCCF", "#CEC6B4")]
+    a = solid(16, 16, hexc("#A59D8C"))
+    layout = [(0, 0, 10, 8), (10, 0, 6, 8), (0, 8, 6, 8), (6, 8, 10, 8)]
+    for k, (x0, y0, w, h) in enumerate(layout):
+        tone = stones[(k + r.randrange(4)) % 4] * (0.98 + r.random() * 0.04)
+        for y in range(y0, y0 + h):
+            for x in range(x0, x0 + w):
+                if x == x0 or y == y0:
+                    a[y, x, :3] = mortar * (0.97 + r.random() * 0.05)
+                    continue
+                col = tone.copy()
+                if x == x0 + 1 or y == y0 + 1:
+                    col *= 1.03                                  # lit edge
+                if x == x0 + w - 1 or y == y0 + h - 1:
+                    col *= 0.96
+                a[y, x, :3] = np.clip(col * (1.0 + (r.random() - 0.5) * 0.035), 0, 255)
+    for _ in range(9):
+        x, y = r.randrange(16), r.randrange(16)
+        a[y, x, :3] *= 0.92
+    return a
+
+
+def leaded_glass() -> np.ndarray:
+    """Diamond-lattice window: lead cames on lightly tinted, slightly uneven crown glass (translucent)."""
+    r = rng("leaded_glass")
+    a = np.zeros((16, 16, 4), float)
+    lead, lead_hi = np.array(hexc("#3B3C42")[:3], float), np.array(hexc("#6C6E78")[:3], float)
+    for y in range(16):
+        for x in range(16):
+            u = (x + y) % 8
+            v = (x - y) % 8
+            if x in (0, 15) or y in (0, 15):
+                a[y, x] = [*lead, 255]
+            elif u == 0 or v == 0:
+                a[y, x] = [*(lead_hi if (x + y) % 3 == 0 else lead), 255]
+            else:
+                ripple = 0.5 + 0.5 * math.sin(x * 1.3 + y * 0.7 + r.random() * 0.5)
+                glass = mix(hexc("#CFE3DA"), hexc("#EEF6F0"), ripple)
+                alpha = 70 + 40 * ripple
+                if (u == 1 and v in (2, 3)) or (v == 1 and u == 2):
+                    glass, alpha = hexc("#FFFFFF"), 150             # a glint in each diamond
+                a[y, x] = [glass[0], glass[1], glass[2], alpha]
+    return a
+
+
+def leaded_glass_pane_top() -> np.ndarray:
+    a = solid(16, 16, hexc("#3B3C42"))
+    a[:, 7:9, :3] = np.array(hexc("#55575F")[:3], float)
+    return a
+
+
 def gilded_trim() -> np.ndarray:
     """Gold moulding: dark rims, bright fillets and a row of round beads between two grooves."""
     a = solid(16, 16, GOLD[2])
@@ -289,13 +429,28 @@ def gilded_plain() -> np.ndarray:
     return a
 
 
-def white_plaster() -> np.ndarray:
-    r = rng("white_plaster")
+def white_plaster(variant: int = 0) -> np.ndarray:
+    r = rng("white_plaster" + (f"_{variant}" if variant else ""))
     a = solid(16, 16, hexc("#EEE7D6"))
     for y in range(16):
         for x in range(16):
             v = math.sin(x * 0.9 + r.random() * 0.3) * math.sin(y * 0.7 + 1.3) * 0.012
             a[y, x, :3] *= 1.0 + v + (r.random() - 0.5) * 0.03
+    if variant == 1:                                       # a soft damp stain
+        cx, cy = r.uniform(3, 12), r.uniform(8, 14)
+        for y in range(16):
+            for x in range(16):
+                d = math.hypot((x - cx) / 4.5, (y - cy) / 3.0)
+                if d < 1.0:
+                    a[y, x, :3] *= 1.0 - 0.035 * (1.0 - d)
+    elif variant == 2:                                     # a hairline crack
+        x, y = r.randrange(4, 12), r.randrange(2, 6)
+        for _ in range(7):
+            a[y, x, :3] *= 0.9
+            x += r.choice((-1, 0, 1))
+            y += 1
+            if not (0 <= x < 16 and 0 <= y < 16):
+                break
     return a
 
 
@@ -408,18 +563,25 @@ FULL = {
     "pale_roof_tiles": "pale_roof_tiles",
     "gilded_trim": "gilded_trim",
     "white_plaster": "white_plaster",
+    "terracotta_roof_tiles": "terracotta_roof_tiles",
+    "cobbled_paving": "cobbled_paving",
+    "plaza_flagstones": "plaza_flagstones",
 }
+VARIANTS = {"castle_bricks": 2, "smooth_castle_stone": 2, "white_plaster": 2}   # extra random textures
 STAIRS = {  # stairs/slab id prefix -> (full block, texture)
     "castle_brick": ("castle_bricks", "castle_bricks"),
     "smooth_castle_stone": ("smooth_castle_stone", "smooth_castle_stone"),
     "royal_roof_tile": ("royal_roof_tiles", "royal_roof_tiles"),
     "pale_roof_tile": ("pale_roof_tiles", "pale_roof_tiles"),
     "gilded_trim": ("gilded_trim", "gilded_trim"),
+    "terracotta_roof_tile": ("terracotta_roof_tiles", "terracotta_roof_tiles"),
+    "cobbled_paving": ("cobbled_paving", "cobbled_paving"),
+    "plaza_flagstone": ("plaza_flagstones", "plaza_flagstones"),
 }
 WALLS = {"castle_brick_wall": "castle_bricks"}
 PICKAXE = ["castle_bricks", "smooth_castle_stone", "carved_castle_stone", "castle_crest_stone", "castle_pillar",
            "royal_roof_tiles", "pale_roof_tiles", "gilded_trim", "gilded_finial", "white_plaster", "chandelier",
-           "castle_brick_wall"] + [f"{p}_stairs" for p in STAIRS] + [f"{p}_slab" for p in STAIRS]
+           "castle_brick_wall", "terracotta_roof_tiles", "cobbled_paving", "plaza_flagstones"] + [f"{p}_stairs" for p in STAIRS] + [f"{p}_slab" for p in STAIRS]
 
 
 def tex(name: str) -> str:
@@ -513,8 +675,45 @@ def gen_wall(name: str, texture: str) -> None:
 
 def gen_full(name: str, texture: str) -> None:
     model(name, {"parent": "minecraft:block/cube_all", "textures": {"all": tex(texture)}})
-    blockstate(name, {"variants": {"": {"model": f"{NS}:block/{name}"}}})
+    extra = VARIANTS.get(name, 0)
+    if extra:
+        # weighted random textures so big walls do not look printed (stairs/slabs keep the main texture)
+        choices = [{"model": f"{NS}:block/{name}", "weight": 6}]
+        for i in range(1, extra + 1):
+            model(f"{name}_{i}", {"parent": "minecraft:block/cube_all", "textures": {"all": tex(f"{texture}_{i}")}})
+            choices.append({"model": f"{NS}:block/{name}_{i}", "weight": 2})
+        blockstate(name, {"variants": {"": choices}})
+    else:
+        blockstate(name, {"variants": {"": {"model": f"{NS}:block/{name}"}}})
     item_model(name)
+    loot(name)
+
+
+def gen_leaded_glass() -> None:
+    """A diamond-lattice window block and pane (translucent), with vanilla's pane templates."""
+    model("leaded_glass", {"parent": "minecraft:block/cube_all", "render_type": "minecraft:translucent",
+                           "textures": {"all": tex("leaded_glass")}})
+    blockstate("leaded_glass", {"variants": {"": {"model": f"{NS}:block/leaded_glass"}}})
+    item_model("leaded_glass")
+    loot("leaded_glass")
+    name = "leaded_glass_pane"
+    textures = {"pane": tex("leaded_glass"), "edge": tex("leaded_glass_pane_top")}
+    for suffix in ("post", "side", "side_alt", "noside", "noside_alt"):
+        model(f"{name}_{suffix}", {"parent": f"minecraft:block/template_glass_pane_{suffix}",
+                                   "render_type": "minecraft:translucent", "textures": textures})
+    m = lambda s_: f"{NS}:block/{name}_{s_}"  # noqa: E731
+    blockstate(name, {"multipart": [
+        {"apply": {"model": m("post")}},
+        {"when": {"north": "true"}, "apply": {"model": m("side")}},
+        {"when": {"east": "true"}, "apply": {"model": m("side"), "y": 90}},
+        {"when": {"south": "true"}, "apply": {"model": m("side_alt")}},
+        {"when": {"west": "true"}, "apply": {"model": m("side_alt"), "y": 90}},
+        {"when": {"north": "false"}, "apply": {"model": m("noside")}},
+        {"when": {"east": "false"}, "apply": {"model": m("noside_alt")}},
+        {"when": {"south": "false"}, "apply": {"model": m("noside_alt"), "y": 90}},
+        {"when": {"west": "false"}, "apply": {"model": m("noside"), "y": 270}},
+    ]})
+    item_model(name, data={"parent": "minecraft:item/generated", "textures": {"layer0": tex("leaded_glass")}})
     loot(name)
 
 
@@ -645,10 +844,20 @@ def main() -> int:
         "gilded_trim": gilded_trim(),
         "gilded_plain": gilded_plain(),
         "white_plaster": white_plaster(),
+        "terracotta_roof_tiles": terracotta_roof_tiles(),
+        "cobbled_paving": cobbled_paving(),
+        "plaza_flagstones": plaza_flagstones(),
+        "leaded_glass": leaded_glass(),
+        "leaded_glass_pane_top": leaded_glass_pane_top(),
         "candle_wax": candle_wax(),
         "flame": flame(),
         "light_shaft": light_shaft_icon(),
     }
+    variant_makers = {"castle_bricks": castle_bricks, "smooth_castle_stone": smooth_castle_stone,
+                      "white_plaster": white_plaster}
+    for base, count in VARIANTS.items():
+        for i in range(1, count + 1):
+            textures[f"{base}_{i}"] = variant_makers[base](i)
     for name, arr in textures.items():
         save(arr, "block", f"{name}.png")
     save(banner_pattern(), "entity", "banner", "er_crest.png")
@@ -667,12 +876,13 @@ def main() -> int:
     gen_finial()
     gen_chandelier()
     gen_light_shaft()
+    gen_leaded_glass()
     tags()
 
     # preview sheet: every texture at 6x, plus the banner crest on a blue flag
     tiles = list(textures.items())
     cell = 96
-    sheet = Image.new("RGBA", (cell * 8, cell * 3), (40, 44, 56, 255))
+    sheet = Image.new("RGBA", (cell * 8, cell * 4), (40, 44, 56, 255))
     for i, (name, arr) in enumerate(tiles):
         im = canvas_from(arr).image().resize((cell - 8, cell - 8), Image.NEAREST)
         sheet.paste(im, ((i % 8) * cell + 4, (i // 8) * cell + 4), im)
@@ -682,9 +892,9 @@ def main() -> int:
         for x in range(20):
             if m[y, x]:
                 flag.putpixel((x, y), (232, 190, 70, 255))
-    sheet.paste(flag.resize((40, 80), Image.NEAREST), (cell * 7 + 28, cell * 2 + 8))
+    sheet.paste(flag.resize((40, 80), Image.NEAREST), (cell * 7 + 28, cell * 3 + 8))
     sheet.save(os.path.join(HERE, "capital_blocks_preview.png"))
-    print(f"{len(textures)} textures, {len(FULL) + 2 * len(STAIRS) + len(WALLS) + 5} blocks")
+    print(f"{len(textures)} textures, {len(FULL) + 2 * len(STAIRS) + len(WALLS) + 7} blocks")
     return 0
 
 

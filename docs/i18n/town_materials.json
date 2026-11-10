@@ -1,0 +1,13 @@
+{
+  "block.eternalrealm.terracotta_roof_tiles": {"ja": "赤瓦", "en": "Terracotta Roof Tiles"},
+  "block.eternalrealm.terracotta_roof_tile_stairs": {"ja": "赤瓦の階段", "en": "Terracotta Roof Tile Stairs"},
+  "block.eternalrealm.terracotta_roof_tile_slab": {"ja": "赤瓦のハーフブロック", "en": "Terracotta Roof Tile Slab"},
+  "block.eternalrealm.cobbled_paving": {"ja": "石畳", "en": "Cobbled Paving"},
+  "block.eternalrealm.cobbled_paving_stairs": {"ja": "石畳の階段", "en": "Cobbled Paving Stairs"},
+  "block.eternalrealm.cobbled_paving_slab": {"ja": "石畳のハーフブロック", "en": "Cobbled Paving Slab"},
+  "block.eternalrealm.plaza_flagstones": {"ja": "広場の敷石", "en": "Plaza Flagstones"},
+  "block.eternalrealm.plaza_flagstone_stairs": {"ja": "広場の敷石の階段", "en": "Plaza Flagstone Stairs"},
+  "block.eternalrealm.plaza_flagstone_slab": {"ja": "広場の敷石のハーフブロック", "en": "Plaza Flagstone Slab"},
+  "block.eternalrealm.leaded_glass": {"ja": "鉛枠の窓ガラス", "en": "Leaded Glass"},
+  "block.eternalrealm.leaded_glass_pane": {"ja": "鉛枠の窓ガラス板", "en": "Leaded Glass Pane"}
+}

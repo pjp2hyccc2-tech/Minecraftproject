@@ -1,7 +1,18 @@
 {
   "variants": {
-    "": {
-      "model": "eternalrealm:block/white_plaster"
-    }
+    "": [
+      {
+        "model": "eternalrealm:block/white_plaster",
+        "weight": 6
+      },
+      {
+        "model": "eternalrealm:block/white_plaster_1",
+        "weight": 2
+      },
+      {
+        "model": "eternalrealm:block/white_plaster_2",
+        "weight": 2
+      }
+    ]
   }
 }

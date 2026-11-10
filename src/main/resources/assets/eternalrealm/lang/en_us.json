@@ -1970,5 +1970,16 @@
   "block.eternalrealm.windmill_sails": "Windmill Sails",
   "block.eternalrealm.water_wheel": "Water Wheel",
   "block.eternalrealm.smoke_emitter": "Chimney Smoke",
-  "block.eternalrealm.fountain_spray": "Fountain Jet"
+  "block.eternalrealm.fountain_spray": "Fountain Jet",
+  "block.eternalrealm.terracotta_roof_tiles": "Terracotta Roof Tiles",
+  "block.eternalrealm.terracotta_roof_tile_stairs": "Terracotta Roof Tile Stairs",
+  "block.eternalrealm.terracotta_roof_tile_slab": "Terracotta Roof Tile Slab",
+  "block.eternalrealm.cobbled_paving": "Cobbled Paving",
+  "block.eternalrealm.cobbled_paving_stairs": "Cobbled Paving Stairs",
+  "block.eternalrealm.cobbled_paving_slab": "Cobbled Paving Slab",
+  "block.eternalrealm.plaza_flagstones": "Plaza Flagstones",
+  "block.eternalrealm.plaza_flagstone_stairs": "Plaza Flagstone Stairs",
+  "block.eternalrealm.plaza_flagstone_slab": "Plaza Flagstone Slab",
+  "block.eternalrealm.leaded_glass": "Leaded Glass",
+  "block.eternalrealm.leaded_glass_pane": "Leaded Glass Pane"
 }

@@ -8,6 +8,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -84,6 +86,30 @@ public final class ERBlocks {
             () -> new FinialBlock(gold().noOcclusion().pushReaction(PushReaction.DESTROY)));
     public static final RegistryObject<Block> WHITE_PLASTER = block("white_plaster", () -> new Block(
             BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(1.0F, 3.0F).sound(SoundType.CALCITE)));
+
+    // ---- town materials: red clay roofs, street cobbles, plaza flagstones, leaded windows
+    public static final RegistryObject<Block> TERRACOTTA_ROOF_TILES = block("terracotta_roof_tiles",
+            () -> new Block(tiles(MapColor.TERRACOTTA_RED)));
+    public static final RegistryObject<Block> TERRACOTTA_ROOF_TILE_STAIRS = block("terracotta_roof_tile_stairs",
+            () -> new StairBlock(() -> TERRACOTTA_ROOF_TILES.get().defaultBlockState(), tiles(MapColor.TERRACOTTA_RED)));
+    public static final RegistryObject<Block> TERRACOTTA_ROOF_TILE_SLAB = block("terracotta_roof_tile_slab",
+            () -> new SlabBlock(tiles(MapColor.TERRACOTTA_RED)));
+    public static final RegistryObject<Block> COBBLED_PAVING = block("cobbled_paving",
+            () -> new Block(stone(MapColor.STONE)));
+    public static final RegistryObject<Block> COBBLED_PAVING_STAIRS = block("cobbled_paving_stairs",
+            () -> new StairBlock(() -> COBBLED_PAVING.get().defaultBlockState(), stone(MapColor.STONE)));
+    public static final RegistryObject<Block> COBBLED_PAVING_SLAB = block("cobbled_paving_slab",
+            () -> new SlabBlock(stone(MapColor.STONE)));
+    public static final RegistryObject<Block> PLAZA_FLAGSTONES = block("plaza_flagstones",
+            () -> new Block(stone(MapColor.SAND)));
+    public static final RegistryObject<Block> PLAZA_FLAGSTONE_STAIRS = block("plaza_flagstone_stairs",
+            () -> new StairBlock(() -> PLAZA_FLAGSTONES.get().defaultBlockState(), stone(MapColor.SAND)));
+    public static final RegistryObject<Block> PLAZA_FLAGSTONE_SLAB = block("plaza_flagstone_slab",
+            () -> new SlabBlock(stone(MapColor.SAND)));
+    public static final RegistryObject<Block> LEADED_GLASS = block("leaded_glass",
+            () -> new GlassBlock(glass()));
+    public static final RegistryObject<Block> LEADED_GLASS_PANE = block("leaded_glass_pane",
+            () -> new IronBarsBlock(glass()));
 
     // ---- furnishings and light
     public static final RegistryObject<Block> CHANDELIER = block("chandelier", () -> new ChandelierBlock(
@@ -172,6 +198,13 @@ public final class ERBlocks {
     private static BlockBehaviour.Properties tiles(MapColor color) {
         return BlockBehaviour.Properties.of().mapColor(color).instrument(NoteBlockInstrument.BASEDRUM)
                 .requiresCorrectToolForDrops().strength(1.5F, 6.0F).sound(SoundType.DEEPSLATE_TILES);
+    }
+
+    private static BlockBehaviour.Properties glass() {
+        return BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).strength(0.3F)
+                .sound(SoundType.GLASS).noOcclusion().isValidSpawn((state, level, pos, type) -> false)
+                .isRedstoneConductor((state, level, pos) -> false).isSuffocating((state, level, pos) -> false)
+                .isViewBlocking((state, level, pos) -> false);
     }
 
     private static BlockBehaviour.Properties wood(MapColor color) {

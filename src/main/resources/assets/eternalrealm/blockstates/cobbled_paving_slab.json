@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "eternalrealm:block/cobbled_paving_slab"
+    },
+    "type=top": {
+      "model": "eternalrealm:block/cobbled_paving_slab_top"
+    },
+    "type=double": {
+      "model": "eternalrealm:block/cobbled_paving"
+    }
+  }
+}

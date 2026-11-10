@@ -1970,5 +1970,16 @@
   "block.eternalrealm.windmill_sails": "風車の羽根",
   "block.eternalrealm.water_wheel": "水車",
   "block.eternalrealm.smoke_emitter": "煙突の煙",
-  "block.eternalrealm.fountain_spray": "噴水の噴き出し口"
+  "block.eternalrealm.fountain_spray": "噴水の噴き出し口",
+  "block.eternalrealm.terracotta_roof_tiles": "赤瓦",
+  "block.eternalrealm.terracotta_roof_tile_stairs": "赤瓦の階段",
+  "block.eternalrealm.terracotta_roof_tile_slab": "赤瓦のハーフブロック",
+  "block.eternalrealm.cobbled_paving": "石畳",
+  "block.eternalrealm.cobbled_paving_stairs": "石畳の階段",
+  "block.eternalrealm.cobbled_paving_slab": "石畳のハーフブロック",
+  "block.eternalrealm.plaza_flagstones": "広場の敷石",
+  "block.eternalrealm.plaza_flagstone_stairs": "広場の敷石の階段",
+  "block.eternalrealm.plaza_flagstone_slab": "広場の敷石のハーフブロック",
+  "block.eternalrealm.leaded_glass": "鉛枠の窓ガラス",
+  "block.eternalrealm.leaded_glass_pane": "鉛枠の窓ガラス板"
 }

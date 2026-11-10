@@ -1,7 +1,18 @@
 {
   "variants": {
-    "": {
-      "model": "eternalrealm:block/castle_bricks"
-    }
+    "": [
+      {
+        "model": "eternalrealm:block/castle_bricks",
+        "weight": 6
+      },
+      {
+        "model": "eternalrealm:block/castle_bricks_1",
+        "weight": 2
+      },
+      {
+        "model": "eternalrealm:block/castle_bricks_2",
+        "weight": 2
+      }
+    ]
   }
 }

@@ -2,9 +2,12 @@
   "replace": false,
   "values": [
     "eternalrealm:castle_brick_stairs",
+    "eternalrealm:cobbled_paving_stairs",
     "eternalrealm:gilded_trim_stairs",
     "eternalrealm:pale_roof_tile_stairs",
+    "eternalrealm:plaza_flagstone_stairs",
     "eternalrealm:royal_roof_tile_stairs",
-    "eternalrealm:smooth_castle_stone_stairs"
+    "eternalrealm:smooth_castle_stone_stairs",
+    "eternalrealm:terracotta_roof_tile_stairs"
   ]
 }

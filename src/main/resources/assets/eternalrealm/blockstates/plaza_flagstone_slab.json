@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "eternalrealm:block/plaza_flagstone_slab"
+    },
+    "type=top": {
+      "model": "eternalrealm:block/plaza_flagstone_slab_top"
+    },
+    "type=double": {
+      "model": "eternalrealm:block/plaza_flagstones"
+    }
+  }
+}

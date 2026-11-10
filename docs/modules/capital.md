@@ -74,8 +74,11 @@ def build(w, district, terrain):          # called by build.py inside w.district
   `B.hanging_sign`, `B.lectern`, `B.chest`, `B.barrel`, `B.potted(plant)`, `B.door_states(...)` → (lower, upper),
   `B.bed_states(color, facing)` → (foot, head; the head lies towards `facing`), `B.light_shaft(facing)`.
   Materials with stairs/slabs/walls: `castle_bricks`, `smooth_castle_stone`, `royal_roof_tiles`,
-  `pale_roof_tiles`, `gilded_trim`, every vanilla stone family and wood (see `blocks.MATERIALS`; aliases
-  `castle`, `roof`, `pale_roof`, `gold`). Stair `facing` = the side of the tall back (roof slopes face the ridge).
+  `pale_roof_tiles`, `gilded_trim`, `terracotta_roof_tiles` (red clay roofs), `cobbled_paving` (street cobbles),
+  `plaza_flagstones` (large pale flags), every vanilla stone family and wood (see `blocks.MATERIALS`; aliases
+  `castle`, `roof`, `pale_roof`, `gold`). Windows: `leaded_glass` / `leaded_glass_pane` (diamond lattice,
+  translucent). `castle_bricks`, `smooth_castle_stone` and `white_plaster` pick one of three textures at random per
+  block (weathered variants), so large walls do not look printed. Stair `facing` = the side of the tall back (roof slopes face the ridge).
 - **SNBT**: `B.KINGDOM_BANNER` (`{Patterns:[{Pattern:"er_crest",Color:4},{Pattern:"bo",Color:4}]}`),
   `B.banner_nbt([(code, color), ...])`, `B.sign_nbt(lines, color, glowing)` (1.20.1 `front_text`/`back_text`),
   `B.light_shaft_nbt(length, width, height, pitch)`, `B.lectern_nbt(title, author, pages)`, `B.item_snbt(id)`.
