@@ -170,9 +170,9 @@ def horse_geometry():
                rot=(0, 0, 12)),
              rot=(16, 0, 0))
     neck = P('neck', (0, -1, -9),
-             C(-3, -14, -13, 6, 14, 7, 'fur:coat'),
-             C(-1.5, -16, -7, 3, 17, 3, 'hair:mane'),
-             C(-3.5, -5, -13.5, 7, 5, 6, 'metal:plate'),
+             C(-3.5, -14, -13.5, 7, 14, 8, 'fur:coat'),
+             C(-1.5, -16, -6.5, 3, 17, 3, 'hair:mane'),
+             C(-4, -5, -14, 8, 5, 7, 'metal:plate'),
              head, *shards, rot=(18, 0, 0))
     tail = P('tail', (0, -2, 11), C(-2, -3, 10, 4, 4, 4, 'hair:tail'),
              P('tail2', (0, -1.5, 13), C(-3, -2.5, 12, 6, 9, 4, 'hair:tail'),
@@ -195,8 +195,9 @@ def horse_geometry():
                C(-2.5, -7, -4.5, 5, 2, 2, 'leather:saddle_rim'), C(-3.5, -7, 3.5, 7, 2, 2, 'leather:saddle_rim')),
              C(-6, -2, -10, 1, 11, 19, 'cloth:caparison', tag='cap'),
              C(5, -2, -10, 1, 11, 19, 'cloth:caparison', share='cap', mirror=True),
-             C(-5.5, -2, -12.5, 11, 7, 2, 'metal:plate', tag='peytral'),
-             C(-1, -0.5, -13.5, 2, 3, 1, 'gem:gem', tag='chest_gem'),
+             C(-5.5, -2.5, -13, 11, 8, 3, 'fur:coat', tag='chest'),
+             C(-6, -2, -14.5, 12, 7, 2, 'metal:plate', tag='peytral'),
+             C(-1.5, -0.5, -15.5, 3, 4, 1, 'gem:gem', tag='chest_gem'),
              C(-6.5, -3, -10.5, 2, 6, 6, 'metal:plate', tag='pauldron'),
              C(4.5, -3, -10.5, 2, 6, 6, 'metal:plate', share='pauldron', mirror=True),
              C(-7.5, -1.5, 5, 2, 5, 5, 'leather:bag', tag='bag'),
@@ -343,11 +344,11 @@ def horse_paint(p):
     for name in ('right', 'left', 'top', 'bottom', 'back'):
         gem_face(p.face('body', name, tag='chest_gem'), p.face('body', name, tag='chest_gem', glow=True))
     fc = p.face('body', 'front', tag='peytral')
-    cx, cy = fc.fw // 2, int(fc.fh * 0.45)
-    for dy in range(-4, 5):
-        for dx in range(-4, 5):
-            if abs(dx) + abs(dy) in (4, 5):
-                fc.fpx(cx + dx - (1 if dx < 0 else 0), cy + dy, GOLD)
+    cx, cy = fc.fw // 2, 7
+    for dy in range(-6, 7):
+        for dx in range(-6, 7):
+            if abs(dx) + abs(dy) in (5, 6):
+                fc.fpx(cx + dx - (1 if dx < 0 else 0), cy + dy, GOLD if abs(dx) + abs(dy) == 5 else GOLD_DARK)
     for name in ('top', 'front', 'right', 'left'):
         gem_face(p.face('head', name, index=3), p.face('head', name, index=3, glow=True))
     # head: glowing eyes, a gold bridle with a gem at the cheek, nostrils
@@ -414,8 +415,9 @@ def horse_rig():
 # ================================================================================================ the griffin
 
 def griffin_wing(side):
-    """Arm with coverts, a row of secondaries and a gold armoured leading edge with a gem; the hand with its own
-    coverts, edge and gem and five primaries fanned out (each its own part). side 'r' (-X) or 'l' (+X)."""
+    """Arm with coverts, a row of secondaries and a gold armoured leading bone with a gem; the hand with its own
+    coverts, a gold wrist plate, bone and gem, and six long primaries fanned out (each its own part).
+    side 'r' (-X) or 'l' (+X)."""
     s = -1 if side == 'r' else 1
     mirror = side == 'l'
 
@@ -430,22 +432,24 @@ def griffin_wing(side):
         return t if side == 'l' else None
 
     primaries = []
-    for i, (r, length, fan) in enumerate(((18.5, 12, 4), (21, 13, 14), (23.5, 14, 26), (26, 14, 40), (28, 12, 56))):
+    for i, (r, length, fan) in enumerate(((20, 15, 2), (22.5, 17, 10), (25, 19, 20), (27.5, 20, 31), (30, 19, 44),
+                                          (32, 16, 58))):
         primaries.append(P('prim_%s%d' % (side, i + 1), (s * r, 0, -0.5),
                            C(X(r - 1.5, 3), -0.5, -1, 3, 1, length, 'feather:%s' % ('pw' if i % 2 else 'pb'),
                              tag=tg('pf%d' % i), share=sh('pf%d' % i), mirror=mirror),
                            rot=(0, s * fan, 0)))
-    secondaries = [C(X(5 + 3 * i, 3), -0.5, 1, 3, 1, 8 + i, 'feather:%s' % ('sw' if i % 2 else 'sb'),
-                     tag=tg('sf%d' % i), share=sh('sf%d' % i), mirror=mirror) for i in range(4)]
-    hand = P('wing_%s2' % side, (17 * s, 0, -5),
-             C(X(17, 10), -1, -6, 10, 2, 6, 'feather:hand', tag=tg('hand'), share=sh('hand'), mirror=mirror),
-             C(X(17, 12), -1.5, -7.5, 12, 2, 2, 'gold:edge', tag=tg('edge2'), share=sh('edge2'), mirror=mirror),
-             C(X(25, 2), -2.5, -8, 2, 1, 2, 'gem:gem', tag=tg('wgem2'), share=sh('wgem2'), mirror=mirror),
+    secondaries = [C(X(4 + 3 * i, 3), -0.5, 1.5, 3, 1, 9 + i, 'feather:%s' % ('sw' if i % 2 else 'sb'),
+                     tag=tg('sf%d' % i), share=sh('sf%d' % i), mirror=mirror) for i in range(5)]
+    hand = P('wing_%s2' % side, (19 * s, 0, -5),
+             C(X(19, 13), -1, -6, 13, 2, 6, 'feather:hand', tag=tg('hand'), share=sh('hand'), mirror=mirror),
+             C(X(19, 14), -2, -8, 14, 3, 3, 'gold:edge', tag=tg('edge2'), share=sh('edge2'), mirror=mirror),
+             C(X(18, 4), -2.5, -8.5, 4, 4, 4, 'gold:wrist', tag=tg('wrist'), share=sh('wrist'), mirror=mirror),
+             C(X(27, 2), -3, -9, 2, 1, 2, 'gem:gem', tag=tg('wgem2'), share=sh('wgem2'), mirror=mirror),
              *primaries)
     return P('wing_%s' % side, (5 * s, 0, -4),
-             C(X(5, 12), -1, -6, 12, 2, 8, 'feather:covert', tag=tg('cov'), share=sh('cov'), mirror=mirror),
-             C(X(5, 12), -2, -7.5, 12, 2, 2, 'gold:edge', tag=tg('edge1'), share=sh('edge1'), mirror=mirror),
-             C(X(11, 2), -3, -8, 2, 1, 2, 'gem:gem', tag=tg('wgem1'), share=sh('wgem1'), mirror=mirror),
+             C(X(5, 14), -1, -6, 14, 2, 8, 'feather:covert', tag=tg('cov'), share=sh('cov'), mirror=mirror),
+             C(X(5, 14), -2, -8, 14, 3, 3, 'gold:edge', tag=tg('edge1'), share=sh('edge1'), mirror=mirror),
+             C(X(11, 2), -3, -8.5, 2, 1, 2, 'gem:gem', tag=tg('wgem1'), share=sh('wgem1'), mirror=mirror),
              *secondaries, hand)
 
 
@@ -481,15 +485,18 @@ def griffin_geometry():
                                                                 (-3.5, -8.5, -11, 2, 5, 0, 38, -10),
                                                                 (3.5, -8.5, -11, 2, 5, 0, -38, 10)))]
     head = P('head', (0, -7, -10),
-             C(-3.5, -13, -15, 7, 7, 8, 'feather:head'),
-             C(-1.5, -10.5, -19, 3, 3, 4, 'gold:beak'),
-             C(-1.5, -8.5, -20, 3, 2, 1, 'gold:beak'),
-             C(-1, -8, -18, 2, 1, 3, 'gold:beak_low'),
-             C(-4, -14, -15.5, 8, 2, 8, 'gold:crown'),
-             C(-0.5, -17.5, -14, 1, 4, 2, 'gold:crown'),
-             C(-3.5, -16, -13, 1, 2, 2, 'gold:crown'),
-             C(2.5, -16, -13, 1, 2, 2, 'gold:crown'),
-             C(-1, -14.5, -16.5, 2, 2, 1, 'gem:gem'),
+             C(-3.5, -13, -15, 7, 6, 8, 'feather:head', tag='skull'),
+             C(-4, -12.5, -16.5, 8, 2, 4, 'feather:brow', tag='brow'),
+             C(-4, -10, -14.5, 8, 4, 6, 'feather:cheek', tag='cheek'),
+             C(-2, -11.5, -19.5, 4, 3, 3, 'gold:beak', tag='beak'),
+             C(-1.5, -11, -21.5, 3, 3, 2, 'gold:beak', tag='beak2'),
+             C(-1, -10, -22.5, 2, 4, 1, 'gold:beak_tip', tag='hook'),
+             C(-1.5, -8.5, -19.5, 3, 1, 3, 'gold:beak_low', tag='jaw'),
+             C(-4, -14.5, -15.5, 8, 2, 7, 'gold:crown', tag='crown'),
+             C(-0.5, -18.5, -14, 1, 4, 2, 'gold:crown', tag='spike'),
+             C(-4.5, -16.5, -13, 1, 3, 3, 'gold:crown', tag='wing_crest'),
+             C(3.5, -16.5, -13, 1, 3, 3, 'gold:crown', share='wing_crest', mirror=True),
+             C(-1, -15, -16.5, 2, 2, 1, 'gem:gem', tag='crown_gem'),
              *tufts)
     neck = P('neck', (0, 1, -8),
              C(-3, -8, -12, 6, 10, 6, 'feather:neck'),
@@ -508,8 +515,8 @@ def griffin_geometry():
              C(-5.5, -0.5, 4, 11, 1, 1, 'gold:strap'),
              P('banner_r', (-5.5, 1, 4), C(-6, 1, 1.5, 1, 11, 5, 'cloth:banner', tag='banner')),
              P('banner_l', (5.5, 1, 4), C(5, 1, 1.5, 1, 11, 5, 'cloth:banner', share='banner', mirror=True)),
-             P('lantern', (-6.5, 2, -4.5), C(-7, 2, -5, 1, 2, 1, 'chain:chain'),
-               C(-8, 4, -6, 3, 4, 3, 'gold:lantern'), C(-7.5, 8, -5.5, 2, 1, 2, 'gold:lantern_cap')),
+             P('lantern', (-6, 1, -10), C(-6.5, 1, -10.5, 1, 2, 1, 'chain:chain'),
+               C(-7.5, 3, -11.5, 3, 4, 3, 'gold:lantern'), C(-7, 7, -11, 2, 1, 2, 'gold:lantern_cap')),
              neck, tail, griffin_wing('r'), griffin_wing('l'),
              griffin_leg('front_right_leg', -3, -6, False, tag='fl'),
              griffin_leg('front_left_leg', 3, -6, False, share='fl', mirror=True),
@@ -544,12 +551,14 @@ def griffin_animations():
                   body=dict(pos=[(0, 0, 0, 0), (0.25, 0, 0.3, 0), (0.5, 0, 0, 0), (0.75, 0, 0.3, 0), (1.0, 0, 0, 0)]),
                   neck=dict(rot=[(0, 4, 0, 0), (0.25, -3, 0, 0), (0.5, 4, 0, 0), (0.75, -3, 0, 0), (1.0, 4, 0, 0)]),
                   **w))
-    # folded: each wing turns about its own span until the feathers hang down, then swings back along the flank
-    folded = dict(wing_r=dict(rot=[(0, -88, 78, 0)], pos=[(0, -1.5, 0, 0)]),
-                  wing_l=dict(rot=[(0, -88, -78, 0)], pos=[(0, 1.5, 0, 0)]),
-                  wing_r2=dict(rot=[(0, 0, 10, 0)]), wing_l2=dict(rot=[(0, 0, -10, 0)]),
-                  prim_r5=dict(rot=[(0, 0, -24, 0)]), prim_l5=dict(rot=[(0, 0, 24, 0)]),
-                  prim_r4=dict(rot=[(0, 0, -14, 0)]), prim_l4=dict(rot=[(0, 0, 14, 0)]))
+    # folded: each wing swings down along the flank with its feathers trailing back, the hand folds back up along the
+    # arm (a bird's Z-fold) and the primaries close their fan
+    folded = dict(wing_r=dict(rot=[(0, 0, -6, -90)], pos=[(0, -2.5, 0, 0)]),
+                  wing_l=dict(rot=[(0, 0, 6, 90)], pos=[(0, 2.5, 0, 0)]),
+                  wing_r2=dict(rot=[(0, 0, 0, 166)]), wing_l2=dict(rot=[(0, 0, 0, -166)]))
+    for i, fan in enumerate((2, 10, 20, 31, 44, 58)):
+        folded['prim_r%d' % (i + 1)] = dict(rot=[(0, 0, fan, 0)])
+        folded['prim_l%d' % (i + 1)] = dict(rot=[(0, 0, -fan, 0)])
     A.append(anim('fold', 1.0, loop=True, **{b: {ch: keys + [(1.0,) + keys[0][1:]] for ch, keys in v.items()}
                                              for b, v in folded.items()}))
     tuck = dict(front_right_leg=dict(rot=[(0, 55, 0, 0)]), front_left_leg=dict(rot=[(0, 55, 0, 0)]),
@@ -636,46 +645,71 @@ def griffin_paint(p):
         for name in ('top', 'bottom'):
             wing_feathers(p.face('wing_' + side, name, index=0), [(pale, 4), (blue, 5), (white, 5), (navy, 4)], 0)
             wing_feathers(p.face('wing_%s2' % side, name, index=0), [(pale, 4), (blue, 5), (white, 5)], 0)
-    for side in ('r',):
-        for i in range(4):
-            for name in ('top', 'bottom'):
-                feather(p.face('wing_' + side, name, tag='sf%d' % i), blue if i % 2 == 0 else white)
-        for i in range(5):
-            for name in ('top', 'bottom'):
-                feather(p.face('prim_%s%d' % (side, i + 1), name, index=0), blue if i % 2 == 0 else white)
-    # the leading edges: gold plates with darker seams and a gem each
-    for side in ('r', 'l'):
-        for part in ('wing_' + side, 'wing_%s2' % side):
-            for name in ('top', 'front', 'bottom', 'back'):
-                fc = p.face(part, name, index=1)
-                for x in range(0, fc.fw, 6):
-                    for y in range(fc.fh):
-                        fc.fpx(x, y, GOLD_DARK)
-            for name in ('top', 'front', 'right', 'left', 'back', 'bottom'):
-                gem_face(p.face(part, name, index=2), p.face(part, name, index=2, glow=True))
-    # crown gem, chest gem
+    for i in range(5):
+        for name in ('top', 'bottom'):
+            feather(p.face('wing_r', name, tag='sf%d' % i), blue if i % 2 == 0 else white)
+    for i in range(6):
+        for name in ('top', 'bottom'):
+            feather(p.face('prim_r%d' % (i + 1), name, index=0), blue if i % 2 == 0 else white)
+    # the leading bones: gold plates with darker seams; the wrist plate and the gems
+    for part, tag in (('wing_r', 'edge1'), ('wing_r2', 'edge2')):
+        for name in ('top', 'front', 'bottom', 'back', 'right', 'left'):
+            fc = p.face(part, name, tag=tag)
+            for x in range(0, fc.fw, 6):
+                for y in range(fc.fh):
+                    fc.fpx(x, y, GOLD_DARK)
+            border(fc, GOLD_LIGHT, 1, 't')
+    for name in ('top', 'front', 'right', 'left', 'back', 'bottom'):
+        border(p.face('wing_r2', name, tag='wrist'), GOLD_DARK, 1, 'tblr')
+        gem_face(p.face('wing_r', name, tag='wgem1'), p.face('wing_r', name, tag='wgem1', glow=True))
+        gem_face(p.face('wing_r2', name, tag='wgem2'), p.face('wing_r2', name, tag='wgem2', glow=True))
+    fc = p.face('wing_r2', 'top', tag='wrist')
+    star(fc, fc.fw // 2, fc.fh // 2, 2, GOLD_LIGHT)
+    # crown gem, chest gem; the crown's engraved band
     for name in ('front', 'right', 'left', 'top'):
-        gem_face(p.face('head', name, index=8), p.face('head', name, index=8, glow=True))
+        gem_face(p.face('head', name, tag='crown_gem'), p.face('head', name, tag='crown_gem', glow=True))
         gem_face(p.face('body', name, index=3), p.face('body', name, index=3, glow=True))
-    # crown: engraved band
     for name in ('front', 'right', 'left', 'back'):
-        fc = p.face('head', name, index=4)
+        fc = p.face('head', name, tag='crown')
         for x in range(0, fc.fw, 3):
             fc.fpx(x, fc.fh - 1, GOLD_DARK)
         border(fc, GOLD_LIGHT, 1, 't')
-    # eyes
+    # the eagle's face: a stern brow with its shadow, glowing eyes just under it, a dark stripe back from the eye
+    for name in ('bottom',):
+        fc = p.face('head', name, tag='brow')
+        for y in range(fc.fh):
+            for x in range(fc.fw):
+                fc.fpx(x, y, shade(pale, 0.7))
     for name in ('right', 'left'):
-        fc = p.face('head', name, index=0)
-        gc = p.face('head', name, index=0, glow=True)
-        ex = fc.fw - 6 if name == 'right' else 4
-        eye(fc, gc, ex, 5, size=2)
-        for x in range(ex - 2, ex + 4):
-            fc.fpx(x, 4, shade(navy, 0.9))
-    # beak: darker hook tip
-    for name in ('front', 'bottom', 'right', 'left'):
-        fc = p.face('head', name, index=2)
-        for x in range(fc.fw):
-            fc.fpx(x, fc.fh - 1, GOLD_DARK)
+        fc = p.face('head', name, tag='cheek')
+        gc = p.face('head', name, tag='cheek', glow=True)
+        front = name == 'right'
+        ex = fc.fw - 5 if front else 2
+        for dx in range(3):
+            for dy in range(2):
+                fc.fpx(ex + dx, dy, EYE_GLOW)
+                gc.fpx(ex + dx, dy, EYE_GLOW)
+        fc.fpx(ex + (2 if front else 0), 0, (240, 252, 255))
+        stripe = range(0, ex) if front else range(ex + 3, fc.fw)
+        for x in stripe:
+            fc.fpx(x, 1, shade(navy, 1.1))
+        brow = p.face('head', name, tag='brow')
+        for x in range(brow.fw):
+            brow.fpx(x, brow.fh - 1, shade(pale, 0.75))
+    # the beak: gold, a darker hooked tip, the cere at its base
+    for tag in ('beak', 'beak2'):
+        for name in ('right', 'left', 'top', 'front'):
+            fc = p.face('head', name, tag=tag)
+            border(fc, GOLD_LIGHT, 1, 't')
+    for name in ('right', 'left', 'front', 'bottom', 'back'):
+        fc = p.face('head', name, tag='hook')
+        for y in range(fc.fh):
+            for x in range(fc.fw):
+                fc.fpx(x, y, mix(GOLD, GOLD_DARK, y / max(1, fc.fh - 1)))
+    for name in ('right', 'left'):
+        fc = p.face('head', name, tag='beak')
+        fc.fpx(fc.fw - 2 if name == 'left' else 1, 1, GOLD_DARK)
+        fc.fpx(fc.fw - 3 if name == 'left' else 2, 1, GOLD_DARK)
     # banners: blue with gold trim, the star, pointed tabs
     for name in ('right', 'left'):
         fc = p.face('banner_r', name, tag='banner')
@@ -723,6 +757,10 @@ def griffin_variant():
         'claw': '#18161c',
         'beak': {'base': '#f0c050', 'style': 'gold'},
         'beak_low': {'base': '#c0902c', 'style': 'gold'},
+        'beak_tip': {'base': '#d09a30', 'style': 'gold'},
+        'brow': {'base': '#f4f6fb', 'style': 'feather', 'light': '#ffffff', 'dark': '#c0c8de'},
+        'cheek': {'base': '#eef1f8', 'style': 'feather', 'light': '#ffffff', 'dark': '#b8c2dc'},
+        'wrist': {'base': '#eab84a', 'style': 'gold'},
         'crown': {'base': '#eab84a', 'style': 'gold'},
         'edge': {'base': '#e6b444', 'style': 'gold'},
         'plate': {'base': '#e6b444', 'style': 'gold'},
@@ -749,54 +787,92 @@ def griffin_rig():
 WHEEL_R = 7.0
 
 
+TYRE = 5          # tyre width (model units)
+FENDER_R = 8.5    # radius of the middle of the fenders around the wheel centres
+
+
 def wheel(name, cy, cz):
-    """A wheel in the y-z plane around (cy, cz): four boxes make the round tyre (their side faces are painted as one
-    disc, transparent outside the radius), a gold hub sticks out on both sides."""
+    """A wide wheel in the y-z plane around (cy, cz): four boxes make the round tyre (their side faces are painted as
+    one disc, transparent outside the radius; the tread faces are the chunky tyre), a gold hub sticks out both
+    sides."""
+    x = -TYRE / 2.0
     return P(name, (0, cy, cz),
-             C(-1.5, cy - 7, cz - 3, 3, 14, 6, 'plain:tyre'),
-             C(-1.5, cy - 3, cz - 7, 3, 6, 14, 'plain:tyre', inflate=0.01),
-             C(-1.5, cy - 6, cz - 5, 3, 12, 10, 'plain:tyre', inflate=0.02),
-             C(-1.5, cy - 5, cz - 6, 3, 10, 12, 'plain:tyre', inflate=0.03),
-             C(-2, cy - 1.5, cz - 1.5, 4, 3, 3, 'gold:hub'))
+             C(x, cy - 7, cz - 3, TYRE, 14, 6, 'plain:tyre'),
+             C(x, cy - 3, cz - 7, TYRE, 6, 14, 'plain:tyre', inflate=0.01),
+             C(x, cy - 6, cz - 5, TYRE, 12, 10, 'plain:tyre', inflate=0.02),
+             C(x, cy - 5, cz - 6, TYRE, 10, 12, 'plain:tyre', inflate=0.03),
+             C(x - 0.5, cy - 1.5, cz - 1.5, TYRE + 1, 3, 3, 'gold:hub'))
+
+
+def fender(prefix, cy, cz, angles, tag=None, share=None):
+    """A curved fender over a wheel: segments around the wheel centre, each a stone plate turned to its angle
+    (0 = on top, positive = towards the front)."""
+    parts = []
+    for i, angle in enumerate(angles):
+        first = i == 0
+        parts.append(P('%s_%d' % (prefix, i + 1), (0, cy, cz),
+                       C(-3.5, cy - FENDER_R - 1.5, cz - 3.5, 7, 3, 7, 'stone:fender',
+                         tag=(tag if first else None), share=(None if first else tag) if share is None else share),
+                       rot=(angle, 0, 0)))
+    return parts
 
 
 def bike_geometry():
-    fork = P('fork', (0, 2, -10),
-             C(-4.5, -2, -11, 2, 21, 2, 'gold:fork', tag='tube'),
-             C(2.5, -2, -11, 2, 21, 2, 'gold:fork', share='tube', mirror=True),
-             C(-3, -1.5, -12.5, 6, 5, 4, 'stone:head', tag='head'),
-             P('headlight', (0, 1, -14), C(-2.5, -1, -17, 5, 5, 4, 'gold:lantern'),
-               C(-3, -2, -17.5, 6, 1, 5, 'gold:lantern_cap')),
-             C(-2.5, 10.5, -15, 5, 1, 10, 'stone:fender_front', tag='ffender'),
-             P('bars', (0, -2, -10),
-               C(-1.5, -5, -10.5, 1, 3, 1, 'gold:bar'), C(0.5, -5, -10.5, 1, 3, 1, 'gold:bar'),
-               C(-7, -6, -10.5, 14, 1, 1, 'gold:bar'),
-               C(-9.5, -6.5, -10, 3, 2, 3, 'leather:grip', tag='grip'),
-               C(6.5, -6.5, -10, 3, 2, 3, 'leather:grip', share='grip', mirror=True),
-               rot=(28, 0, 0)),
-             wheel('front_wheel', 19, -10),
-             rot=(-28, 0, 0))
-    flag = P('flag', (0, -11.5, 19), C(-0.5, -11.5, 19, 1, 6, 9, 'cloth:flag'))
+    rake = -24
+    fcy, fcz = 18.5, -11      # front wheel centre in the fork's own (unturned) frame
+    fork = P('fork', (0, 1, -11),
+             C(-5, -3, -12, 2, 21, 2, 'gold:fork', tag='tube'),
+             C(3, -3, -12, 2, 21, 2, 'gold:fork', share='tube', mirror=True),
+             C(-5.5, 9, -12.5, 3, 9, 3, 'gold:slider', tag='slider'),
+             C(2.5, 9, -12.5, 3, 9, 3, 'gold:slider', share='slider', mirror=True),
+             C(-5.5, -2, -12.5, 11, 2, 3, 'gold:clamp', tag='clamp'),
+             C(-3.5, -1, -14.5, 7, 5, 5, 'stone:head', tag='head'),
+             P('headlight', (0, 1.5, -15), C(-3.5, -2, -20, 7, 7, 5, 'gold:lamp'),
+               C(-4, -3, -20.5, 8, 1, 6, 'gold:lantern_cap'), C(-1, -4, -18.5, 2, 1, 2, 'gold:lantern_cap')),
+             P('bars', (0, -3, -11),
+               C(-3, -6, -11.5, 1, 3, 1, 'gold:bar'), C(2, -6, -11.5, 1, 3, 1, 'gold:bar'),
+               C(-8, -7, -11.5, 16, 1, 1, 'gold:bar'),
+               C(-10.5, -7.5, -11, 3, 2, 2, 'leather:grip', tag='grip'),
+               C(7.5, -7.5, -11, 3, 2, 2, 'leather:grip', share='grip', mirror=True),
+               rot=(-rake, 0, 0)),
+             *fender('ffender', fcy, fcz, (-16, 14, 44, 74, 104), tag='fseg'),
+             wheel('front_wheel', fcy, fcz),
+             rot=(rake, 0, 0))
+    flag = P('flag', (0, -11.5, 21.5), C(-0.5, -11.5, 21.5, 1, 6, 9, 'cloth:flag'))
+
+    def lantern(side):
+        s = -1 if side == 'r' else 1
+        x0 = -7 if s < 0 else 4
+        return P('lantern_' + side, (5 * s, 2, -8),
+                 C(-5.5 if s < 0 else 4.5, 2, -8.5, 1, 2, 1, 'chain:chain', tag=('chain' if s < 0 else None),
+                   share=(None if s < 0 else 'chain'), mirror=s > 0),
+                 C(x0, 4, -9.5, 3, 4, 3, 'gold:lantern', tag=('lamp' if s < 0 else None),
+                   share=(None if s < 0 else 'lamp'), mirror=s > 0),
+                 C(x0 + 0.5, 8, -9, 2, 1, 2, 'gold:lantern_cap', tag=('lcap' if s < 0 else None),
+                   share=(None if s < 0 else 'lcap'), mirror=s > 0))
     frame = P('frame', (0, 12, 0),
-              C(-4, 1, -9, 8, 6, 10, 'stone:tank', tag='tank'),
-              C(-1.5, 0.5, -8, 3, 1, 8, 'gem:gem_strip', tag='gemstrip'),
-              C(-3.5, 4, 1, 7, 2, 9, 'leather:seat', tag='seat'),
-              C(-3.5, 1, 9, 7, 3, 2, 'leather:seat', tag='seatback'),
-              C(-4, 7, -7, 8, 8, 10, 'mech:engine', tag='engine'),
-              C(-5, 8, -5, 1, 5, 6, 'crystal:core', tag='crys'),
-              C(4, 8, -5, 1, 5, 6, 'crystal:core', share='crys', mirror=True),
-              C(-4, 6, 2, 8, 4, 7, 'stone:cover', tag='cover'),
-              C(-3, 8, 8, 6, 2, 13, 'stone:fender', tag='fender'),
-              C(-1, 15, -6, 2, 1, 21, 'gold:rail'),
-              C(-7, 4, 10, 3, 6, 7, 'leather:bag', tag='bag'),
-              C(4, 4, 10, 3, 6, 7, 'leather:bag', share='bag', mirror=True),
-              C(-6.5, 13, -3, 2, 2, 19, 'gold:pipe', tag='pipe'),
-              C(4.5, 13, -3, 2, 2, 19, 'gold:pipe', share='pipe', mirror=True),
-              P('banner', (-7.25, 5, 13.5), C(-7.5, 5, 11, 1, 10, 6, 'cloth:banner')),
-              P('lantern', (-4.5, 3, -5), C(-5, 3, -5.5, 1, 2, 1, 'chain:chain'),
-                C(-7, 5, -6.5, 3, 4, 3, 'gold:lantern'), C(-6.5, 9, -6, 2, 1, 2, 'gold:lantern_cap')),
-              P('flag_pole', (0, 8, 18.5), C(-0.5, -12, 18, 1, 20, 1, 'gold:pole'),
-                C(-1, -13, 17.5, 2, 1, 2, 'gold:pole'), flag),
+              C(-4.5, 7, -9, 9, 10, 16, 'mech:engine', tag='engine'),
+              C(-6.5, 5, -6, 2, 6, 5, 'mech:cyl', tag='cyl'),
+              C(4.5, 5, -6, 2, 6, 5, 'mech:cyl', share='cyl', mirror=True),
+              C(-5.5, 11, 0, 1, 4, 5, 'crystal:core', tag='crys'),
+              C(4.5, 11, 0, 1, 4, 5, 'crystal:core', share='crys', mirror=True),
+              C(-4.5, 0, -11, 9, 7, 12, 'stone:tank', tag='tank'),
+              C(-5, 1.5, -10, 1, 4, 10, 'gold:plate', tag='tplate'),
+              C(4, 1.5, -10, 1, 4, 10, 'gold:plate', share='tplate', mirror=True),
+              C(-1.5, -0.5, -10.5, 3, 1, 11, 'gold:band', tag='band'),
+              C(-1, -1, -9, 2, 1, 7, 'gem:gem_strip', tag='gemstrip'),
+              C(-4, 4, 1, 8, 2, 12, 'leather:seat', tag='seat'),
+              C(-4, 2, 11, 8, 2, 3, 'leather:seat', tag='seatback'),
+              C(-4.5, 6, 2, 9, 5, 7, 'stone:cover', tag='cover'),
+              C(-8, 5, 9, 3, 6, 7, 'leather:bag', tag='bag'),
+              C(5, 5, 9, 3, 6, 7, 'leather:bag', share='bag', mirror=True),
+              C(-7.5, 14, -4, 2, 2, 20, 'gold:pipe', tag='pipe'),
+              C(5.5, 14, -4, 2, 2, 20, 'gold:pipe', share='pipe', mirror=True),
+              P('banner', (-8.25, 6, 12.5), C(-8.5, 6, 10, 1, 10, 6, 'cloth:banner')),
+              lantern('r'), lantern('l'),
+              P('flag_pole', (0, 7.5, 21), C(-0.5, -12, 20.5, 1, 19, 1, 'gold:pole'),
+                C(-1, -13, 20, 2, 1, 2, 'gold:pole'), flag),
+              *fender('rfender', 17, 15, (40, 10, -20, -50, -80, -108), tag='rseg'),
               fork,
               wheel('rear_wheel', 17, 15))
     return [P('base', (0, 24, 0), frame)]
@@ -810,7 +886,8 @@ def bike_animations():
                                   (0.9, 0, 0.12, 0), (1.0, 0, 0, 0), (1.1, 0, 0.1, 0), (1.2, 0, 0, 0)]),
                   flag=dict(rot=[(0, 0, 8, 0), (0.6, 0, -8, 0), (1.2, 0, 8, 0)]),
                   banner=dict(rot=[(0, 0, 0, 2), (0.6, 0, 0, -2), (1.2, 0, 0, 2)]),
-                  lantern=dict(rot=[(0, 2, 0, 2), (0.6, -2, 0, -2), (1.2, 2, 0, 2)])))
+                  lantern_r=dict(rot=[(0, 2, 0, 2), (0.6, -2, 0, -2), (1.2, 2, 0, 2)]),
+                  lantern_l=dict(rot=[(0, -2, 0, -2), (0.6, 2, 0, 2), (1.2, -2, 0, -2)])))
     R = 0.6
     A.append(anim('ride', R, loop=True,
                   frame=dict(pos=[(0, 0, 0, 0), (R * 0.25, 0, 0.2, 0), (R * 0.5, 0, 0, 0), (R * 0.75, 0, 0.15, 0),
@@ -818,7 +895,8 @@ def bike_animations():
                   flag=dict(rot=[(0, 0, 18, 6), (R * 0.25, 0, -6, -4), (R * 0.5, 0, 20, 4), (R * 0.75, 0, -4, -6),
                                  (R, 0, 18, 6)]),
                   banner=dict(rot=[(0, 34, 0, 0), (R * 0.5, 42, 0, 0), (R, 34, 0, 0)]),
-                  lantern=dict(rot=[(0, 22, 0, 0), (R * 0.5, 28, 0, 0), (R, 22, 0, 0)])))
+                  lantern_r=dict(rot=[(0, 22, 0, 0), (R * 0.5, 28, 0, 0), (R, 22, 0, 0)]),
+                  lantern_l=dict(rot=[(0, 22, 0, 0), (R * 0.5, 28, 0, 0), (R, 22, 0, 0)])))
     return A
 
 
@@ -826,20 +904,22 @@ def disc(r, angle):
     """Colour, alpha and glow of a wheel side at radius r (model units) and angle (radians)."""
     if r > WHEEL_R + 0.05:
         return None, 0, None
-    if r > 5.4:
-        tread = (int((angle + math.pi) / (2 * math.pi) * 28) % 2) == 0
-        return (38, 34, 44) if tread else (52, 48, 58), 255, None
-    if r > 4.7:
-        return GOLD if r > 5.05 else GOLD_DARK, 255, None
+    if r > 5.2:
+        tread = (int((angle + math.pi) / (2 * math.pi) * 24) % 2) == 0
+        edge = r > WHEEL_R - 0.45
+        c = (30, 28, 36) if tread else (46, 42, 52)
+        return (shade(c, 0.8) if edge else c), 255, None
+    if r > 4.4:
+        return GOLD if r > 4.8 else GOLD_DARK, 255, None
     # the star hub: four gold points over the glowing blue
     a = (angle + math.pi / 4) % (math.pi / 2) - math.pi / 4
-    arm = 4.3 * max(0.0, 1.0 - abs(a) / 0.42) + (1.4 if r < 1.4 else 0)
-    if r < 1.2 or r < arm * (1.0 - abs(a) / 0.5):
+    arm = 4.0 * max(0.0, 1.0 - abs(a) / 0.42)
+    if r < 1.3 or r < arm * (1.0 - abs(a) / 0.5):
         return (GOLD_LIGHT if r < 0.7 else GOLD), 255, None
     spoke = (int((angle + math.pi) / (2 * math.pi) * 16) % 2) == 0
-    base = (70, 140, 255) if r > 3.6 else (40, 90, 220)
+    base = (80, 150, 255) if r > 3.4 else (40, 90, 220)
     c = shade(base, 1.0 if spoke else 0.78)
-    return c, 255, tuple(int(v * (1.0 if r > 3.6 else 0.8)) for v in (90, 170, 255))
+    return c, 255, tuple(int(v * (1.0 if r > 3.4 else 0.8)) for v in (90, 170, 255))
 
 
 def paint_wheel(p, part):
@@ -864,49 +944,90 @@ def paint_wheel(p, part):
                     if glow is not None:
                         p.glow[py, px, :3] = glow
                         p.glow[py, px, 3] = 255
+        # the chunky tread on the running faces: raised blocks across the tyre
+        for fname in ('front', 'back', 'top', 'bottom'):
+            fc = p.face(part, fname, index=p.rig.parts[part].cubes.index(c))
+            for y in range(fc.fh):
+                for x in range(fc.fw):
+                    block = (y // 2) % 2 == 0 and 1 <= x < fc.fw - 1
+                    fc.fpx(x, y, (48, 44, 54) if block else (24, 22, 28))
     hub = p.rig.parts[part].cubes[4]
     for fname in ('right', 'left'):
-        u, v, fw, fh = hub.faces()[fname]
         fc = p.face(part, fname, index=4)
         star(fc, fc.fw // 2, fc.fh // 2, fc.fw // 2, GOLD_LIGHT, edge=GOLD)
 
 
+def round_lamp(fc, glow_fc, rim=GOLD, light=AMBER, glow=AMBER_GLOW):
+    """A round lamp on a square face: transparent corners, a gold rim, warm light inside."""
+    w, h = fc.fw, fc.fh
+    cx, cy = (w - 1) / 2.0, (h - 1) / 2.0
+    r = min(w, h) / 2.0
+    for y in range(h):
+        for x in range(w):
+            d = math.hypot(x - cx, y - cy)
+            if d > r:
+                fc.fclear(x, y)
+            elif d > r - 1.6:
+                fc.fpx(x, y, rim if (x + y) % 3 else GOLD_LIGHT)
+            else:
+                t = d / max(1.0, r - 1.6)
+                fc.fpx(x, y, mix((255, 250, 225), light, t))
+                glow_fc.fpx(x, y, glow)
+
+
 def bike_paint(p):
     k = p.k
-    # pale stone panels with engraved gold trim and the star on the tank
-    for tag in ('tank', 'fender', 'cover'):
-        for name in ('right', 'left', 'top', 'front', 'back'):
-            border(p.face('frame', name, tag=tag), GOLD, 1, 'tblr')
+    stone_line = shade(rgb('#d9d4ca'), 0.82)
+    # tank: pale stone, gold rims, the star; the gold side plates engraved; the top band
+    for name in ('right', 'left', 'top', 'front', 'back'):
+        border(p.face('frame', name, tag='tank'), GOLD, 1, 'tblr')
     for name in ('right', 'left'):
-        fc = p.face('frame', name, tag='tank')
-        star(fc, fc.fw // 2, fc.fh // 2, 4, GOLD_LIGHT, edge=GOLD)
+        fc = p.face('frame', name, tag='tplate')
+        for x in range(1, fc.fw - 1, 3):
+            for y in range(1, fc.fh - 1):
+                fc.fpx(x, y, GOLD_DARK)
+        star(fc, fc.fw // 2, fc.fh // 2, 3, GOLD_LIGHT, edge=GOLD_DARK)
         cover = p.face('frame', name, tag='cover')
-        for y in range(2, cover.fh - 2, 3):
+        border(cover, GOLD, 1, 'tblr')
+        for y in range(3, cover.fh - 2, 3):
             for x in range(2, cover.fw - 2):
-                cover.fpx(x, y, shade(cover.fget(x, y), 0.85))
-    for tag in ('head', 'ffender'):
-        for name in ('right', 'left', 'top', 'front'):
-            border(p.face('fork', name, tag=tag), GOLD, 1, 'tblr')
-    # the engine: glowing blue seams; the crystals glow
-    for name in ('right', 'left', 'front'):
+                cover.fpx(x, y, stone_line)
+    for name in ('top', 'right', 'left', 'front', 'back'):
+        gem_face(p.face('frame', name, tag='gemstrip'), p.face('frame', name, tag='gemstrip', glow=True))
+    # the engine: dark plates with glowing blue vents; the cylinders with blue-lit fins; the crystal core
+    for name in ('right', 'left', 'front', 'back'):
         fc = p.face('frame', name, tag='engine')
         gc = p.face('frame', name, tag='engine', glow=True)
-        for x in range(3, fc.fw - 3, 4):
-            for y in range(3, fc.fh - 3):
-                fc.fpx(x, y, (70, 140, 255))
-                gc.fpx(x, y, (60, 130, 255))
+        for y in range(4, fc.fh - 4, 4):
+            for x in range(4, fc.fw - 4):
+                if (x // 6) % 2 == 0:
+                    fc.fpx(x, y, (70, 150, 255))
+                    gc.fpx(x, y, (60, 140, 255))
+        border(fc, shade(rgb('#3a3a4c'), 0.6), 1, 'tblr')
+    for name in ('right', 'left', 'front', 'back', 'top'):
+        fc = p.face('frame', name, tag='cyl')
+        gc = p.face('frame', name, tag='cyl', glow=True)
+        for y in range(1, fc.fh - 1, 2):
+            for x in range(fc.fw):
+                fc.fpx(x, y, (60, 120, 230))
+                gc.fpx(x, y, (50, 110, 230))
     for name in ('right', 'left', 'front', 'back', 'top', 'bottom'):
         fc = p.face('frame', name, tag='crys')
         gc = p.face('frame', name, tag='crys', glow=True)
         for y in range(fc.fh):
             for x in range(fc.fw):
-                c = fc.fget(x, y)
-                gc.fpx(x, y, tuple(int(min(255, v * 0.9)) for v in c))
-    for name in ('top', 'right', 'left', 'front', 'back'):
-        gem_face(p.face('frame', name, tag='gemstrip'), p.face('frame', name, tag='gemstrip', glow=True))
-    # lanterns
+                gc.fpx(x, y, tuple(int(min(255, v * 0.95)) for v in fc.fget(x, y)))
+    # fenders: pale stone with gold edges
+    for prefix, count in (('ffender', 5), ('rfender', 6)):
+        for name in ('top', 'right', 'left', 'bottom'):
+            fc = p.face(prefix + '_1', name, index=0)
+            border(fc, GOLD, 1, 'lr' if name in ('top', 'bottom') else 'tb')
+    for name in ('top', 'front', 'right', 'left'):
+        border(p.face('fork', name, tag='head'), GOLD, 1, 'tblr')
+    # the headlight: a round lamp; the side lanterns
     lantern_faces(p, 'headlight', 0)
-    lantern_faces(p, 'lantern', 1)
+    round_lamp(p.face('headlight', 'front', index=0), p.face('headlight', 'front', index=0, glow=True))
+    lantern_faces(p, 'lantern_r', 1)
     # saddlebags: straps and buckles; the seat's stitching
     for name in ('right', 'left', 'front', 'back'):
         fc = p.face('frame', name, tag='bag')
@@ -914,10 +1035,11 @@ def bike_paint(p):
             fc.fpx(x, 2, shade(rgb('#5a3418'), 0.8))
         fc.fpx(fc.fw // 2, 3, GOLD)
         fc.fpx(fc.fw // 2, 4, GOLD)
-    seat = p.face('frame', 'top', tag='seat')
-    for y in range(1, seat.fh - 1, 2):
-        seat.fpx(1, y, lighten(rgb('#6e3c22'), 0.3))
-        seat.fpx(seat.fw - 2, y, lighten(rgb('#6e3c22'), 0.3))
+    for tag in ('seat', 'seatback'):
+        seat = p.face('frame', 'top', tag=tag)
+        for y in range(1, seat.fh - 1, 2):
+            seat.fpx(1, y, lighten(rgb('#6e3c22'), 0.3))
+            seat.fpx(seat.fw - 2, y, lighten(rgb('#6e3c22'), 0.3))
     # the banner on the right bag and the flag: blue, gold trim, the star, cut ends
     for name in ('right', 'left'):
         fc = p.face('banner', name, index=0)
@@ -927,7 +1049,6 @@ def bike_paint(p):
         flag = p.face('flag', name, index=0)
         border(flag, GOLD, 1, 'tb')
         star(flag, flag.fw // 2, flag.fh // 2, 3, GOLD_LIGHT, edge=GOLD)
-        # swallowtail at the free end (the back: high z, at the face's right on the left face, its left on the right)
         w, h = flag.fw, flag.fh
         for y in range(h):
             depth = int(round(5 * (1.0 - abs(y - (h - 1) / 2.0) / ((h - 1) / 2.0))))
@@ -944,25 +1065,28 @@ def bike_variant():
     pal = {
         'tank': {'base': '#d9d4ca', 'style': 'stone'},
         'head': {'base': '#d9d4ca', 'style': 'stone'},
-        'fender': {'base': '#d4cfc4', 'style': 'stone'},
-        'fender_front': {'base': '#d4cfc4', 'style': 'stone'},
+        'fender': {'base': '#dcd7cc', 'style': 'stone'},
         'cover': {'base': '#cfc9bd', 'style': 'stone'},
-        'engine': {'base': '#3a3a4c', 'style': 'mech'},
+        'engine': {'base': '#33323f', 'style': 'mech'},
+        'cyl': {'base': '#2c2b38', 'style': 'mech'},
         'core': {'base': '#4a8cff', 'style': 'crystal'},
         'seat': {'base': '#6e3c22', 'style': 'leather'},
         'bag': {'base': '#6a3e22', 'style': 'leather'},
         'grip': {'base': '#2a2228', 'style': 'leather'},
         'fork': {'base': '#e2b046', 'style': 'gold'},
+        'slider': {'base': '#d8a43c', 'style': 'gold'},
+        'clamp': {'base': '#e2b046', 'style': 'gold'},
         'bar': {'base': '#e2b046', 'style': 'gold'},
-        'rail': {'base': '#d8a43c', 'style': 'gold'},
-        'rail2': {'base': '#d8a43c', 'style': 'gold'},
+        'plate': {'base': '#e2b046', 'style': 'gold'},
+        'band': {'base': '#e2b046', 'style': 'gold'},
         'pipe': {'base': '#c8962e', 'style': 'gold'},
         'pole': {'base': '#c8962e', 'style': 'gold'},
         'hub': {'base': '#e8b84a', 'style': 'gold'},
+        'lamp': {'base': '#c8962e', 'style': 'gold'},
         'lantern': {'base': '#c8962e', 'style': 'gold'},
         'lantern_cap': {'base': '#b8862a', 'style': 'gold'},
         'gem_strip': {'base': '#4a9cff', 'style': 'gem'},
-        'tyre': '#2c2a34',
+        'tyre': '#26242c',
         'banner': {'base': '#2a3f9c', 'style': 'cloth'},
         'flag': {'base': '#2a3f9c', 'style': 'cloth'},
         'chain': {'base': '#8a7a5a', 'style': 'chain'},

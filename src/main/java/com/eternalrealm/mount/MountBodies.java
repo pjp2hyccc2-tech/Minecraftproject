@@ -45,7 +45,7 @@ public final class MountBodies {
         return switch (kind) {
             case HORSE -> -0.0312;
             case GRIFFIN -> -0.0625;
-            case BIKE -> -0.3438;
+            case BIKE -> -0.4375;
         };
     }
 
