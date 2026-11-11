@@ -19,7 +19,12 @@ public enum DesignSource {
     /** The signature drop of a field calamity, 災厄 (origin = the calamity id). */
     CALAMITY,
     /** A boss weapon (origin = the boss id). */
-    BOSS;
+    BOSS,
+    /**
+     * A relic (金枠の遺宝): about one kill in a thousand of a dungeon boss, a calamity, a lord or a wanderer leaves one
+     * of its own ({@link Relics}; origin = the relic source id).
+     */
+    RELIC;
 
     public String translationKey() {
         return "design_source." + ModInfo.MOD_ID + "." + name().toLowerCase(Locale.ROOT);

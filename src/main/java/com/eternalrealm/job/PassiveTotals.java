@@ -65,12 +65,21 @@ public record PassiveTotals(CombatModifiers modifiers, double skillPower, double
      * @throws IllegalArgumentException for {@link PassiveEffect.Cooldown} and {@link PassiveEffect.StaminaSaver}
      */
     public static PassiveTotals ofEffects(List<PassiveEffect> effects) {
+        return ofEffects(effects, 1.0);
+    }
+
+    /**
+     * Like {@link #ofEffects(List)}, every value multiplied by {@code scale} (a piece's rarity power: chances, shares
+     * and bonuses grow, the durations and strengths of procs stay).
+     */
+    public static PassiveTotals ofEffects(List<PassiveEffect> effects, double scale) {
+        Checks.range("scale", scale, 0.0, 10.0);
         for (PassiveEffect effect : effects) {
             if (effect instanceof PassiveEffect.Cooldown || effect instanceof PassiveEffect.StaminaSaver) {
                 throw new IllegalArgumentException("equipment perks must not change cooldowns or stamina: " + effect);
             }
         }
-        return sumEffects(effects);
+        return sumEffects(effects, scale);
     }
 
     /** Both totals together (sums, capped like {@link #sum}); the procs of both apply. */
@@ -87,7 +96,7 @@ public record PassiveTotals(CombatModifiers modifiers, double skillPower, double
                 Math.min(MAX_HEAL_ON_KILL, healOnKill + other.healOnKill));
     }
 
-    private static PassiveTotals sumEffects(List<PassiveEffect> effects) {
+    private static PassiveTotals sumEffects(List<PassiveEffect> effects, double scale) {
         CombatModifiers modifiers = CombatModifiers.NONE;
         double power = 0;
         double lifesteal = 0;
@@ -99,23 +108,24 @@ public record PassiveTotals(CombatModifiers modifiers, double skillPower, double
         List<Proc> procs = new ArrayList<>();
         for (PassiveEffect effect : effects) {
             if (effect instanceof PassiveEffect.Stats stats) {
-                modifiers = modifiers.plus(stats.perLevel());
+                modifiers = modifiers.plus(stats.perLevel().scaled(scale));
             } else if (effect instanceof PassiveEffect.SkillPower p) {
-                power += p.perLevel();
+                power += p.perLevel() * scale;
             } else if (effect instanceof PassiveEffect.Lifesteal l) {
-                lifesteal += l.perLevel();
+                lifesteal += l.perLevel() * scale;
             } else if (effect instanceof PassiveEffect.Proc proc) {
-                procs.add(new Proc(proc.kind(), Math.min(1.0, proc.chancePerLevel()), proc.durationTicks(), proc.power(),
+                procs.add(new Proc(proc.kind(), Math.min(1.0, proc.chancePerLevel() * scale), proc.durationTicks(),
+                        proc.power(),
                         proc.meleeOnly()));
             } else if (effect instanceof PassiveEffect.LastStand last) {
-                lastDamage += last.damagePerLevel();
-                lastReduction += last.reductionPerLevel();
+                lastDamage += last.damagePerLevel() * scale;
+                lastReduction += last.reductionPerLevel() * scale;
             } else if (effect instanceof PassiveEffect.Thorns t) {
-                thorns += t.perLevel();
+                thorns += t.perLevel() * scale;
             } else if (effect instanceof PassiveEffect.Evasion e) {
-                evasion += e.perLevel();
+                evasion += e.perLevel() * scale;
             } else if (effect instanceof PassiveEffect.HealOnKill h) {
-                healOnKill += h.perLevel();
+                healOnKill += h.perLevel() * scale;
             }
         }
         return new PassiveTotals(modifiers, Math.min(10.0, power), 0.0, 0.0, Math.min(MAX_LIFESTEAL, lifesteal), procs,

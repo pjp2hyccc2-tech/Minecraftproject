@@ -1,0 +1,8 @@
+-proc:none
+-Xmaxerrs
+2000
+-d
+/tmp/er/parsecheck
+-cp
+/tmp/er/main
+src/main/java/com/eternalrealm/item/forge/GearArmorItem.java

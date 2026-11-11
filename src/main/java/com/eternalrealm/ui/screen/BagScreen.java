@@ -3,6 +3,7 @@ package com.eternalrealm.ui.screen;
 import com.eternalrealm.client.ClientCharacterState;
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.item.ItemRarity;
+import com.eternalrealm.item.forge.EquipmentStacks;
 import com.eternalrealm.item.bag.Bag;
 import com.eternalrealm.item.bag.BagCategory;
 import com.eternalrealm.item.bag.BagEntry;
@@ -25,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The bag (カバン): the 35 bag slots in five tabs (全て / 装備 / 消耗品 / 素材 / その他) with rarity frames and counts,
+ * The bag (カバン): the 35 bag slots in five tabs (全て / 装備 / 消耗品 / 素材 / その他) with rarity frames (relics: the
+ * gold frame) and counts,
  * the selected item's details, and its actions: use a consumable, equip a piece, discard (after a confirmation), sort the
  * bag. Every action is a request; the server checks and moves the items ({@link BagService}, {@code UseItemPacket}).
  */
@@ -161,8 +163,14 @@ public final class BagScreen extends Screen {
                 graphics.renderItemDecorations(font, stack, x + 1, y + 1);
             }
             boolean hover = mouseX >= x && mouseX < x + CELL - 2 && mouseY >= y && mouseY < y + CELL - 2;
-            graphics.renderOutline(x - 1, y - 1, CELL, CELL, slot >= 0 && slot == selected ? RIM : hover ? 0xFF8A7A50
-                    : rim);
+            if (!stack.isEmpty() && EquipmentStacks.isGoldFrame(stack) && slot != selected) {
+                // a relic (金枠): the gold frame
+                com.eternalrealm.ui.GoldFrame.draw(graphics, x, y, CELL - 2, CELL - 2,
+                        com.eternalrealm.client.ClientCombatState.tick());
+            } else {
+                graphics.renderOutline(x - 1, y - 1, CELL, CELL, slot >= 0 && slot == selected ? RIM
+                        : hover ? 0xFF8A7A50 : rim);
+            }
         }
     }
 

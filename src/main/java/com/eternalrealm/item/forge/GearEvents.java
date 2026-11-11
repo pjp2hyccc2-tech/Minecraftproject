@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Connects equipment to the character: the gear reader sums the worn pieces (and the held weapon's affixes) into
- * the composed stats, the weapon bonus reader adds the held weapon's bonus attack per hit, and every equipment change
+ * Connects equipment to the character: the gear reader sums the worn pieces (armor, trinkets and the held weapon's
+ * affixes) into the composed stats, the weapon bonus reader adds the held weapon's bonus attack per hit, and every equipment change
  * re-derives the player's stats on the next tick.
  */
 public final class GearEvents {
@@ -53,7 +53,7 @@ public final class GearEvents {
     }
 
     private static List<EquipmentData> worn(ServerPlayer player) {
-        List<EquipmentData> worn = new ArrayList<>(5);
+        List<EquipmentData> worn = new ArrayList<>(8);
         com.eternalrealm.job.JobType job = job(player);
         EquipmentStacks.read(player.getMainHandItem()).filter(EquipmentData::isWeapon)
                 .filter(data -> com.eternalrealm.job.Jobs.canUse(job, data.weaponType())).ifPresent(worn::add);
@@ -61,6 +61,7 @@ public final class GearEvents {
             ItemStack stack = player.getItemBySlot(GearArmorItem.vanillaSlot(slot));
             EquipmentStacks.read(stack).filter(data -> data.slot() == slot).ifPresent(worn::add);
         }
+        worn.addAll(TrinketSlots.worn(player));
         return worn;
     }
 

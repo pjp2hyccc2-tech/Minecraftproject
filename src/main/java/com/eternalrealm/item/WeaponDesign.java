@@ -37,7 +37,7 @@ public record WeaponDesign(String id, int model, WeaponType type, int field, int
         Checks.range("model", model, Design.WEAPON_MODELS, Design.ARMOR_MODELS - 1);
         Objects.requireNonNull(type, "type");
         Checks.range("field", field, 1, 10);
-        Checks.range("level", level, 1, 50);
+        Checks.range("level", level, 1, Design.MAX_LEVEL);
         sources = Set.copyOf(sources);
         if (sources.isEmpty()) {
             throw new IllegalArgumentException(id + ": a design needs a source");

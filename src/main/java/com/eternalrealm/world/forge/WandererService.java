@@ -540,6 +540,9 @@ public final class WandererService {
             if (RANDOM.nextDouble() < (isHero ? 0.3 : 0.2)) {
                 items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));
             }
+            // about one kill in a thousand: one of the wanderer's relics (金枠)
+            com.eternalrealm.item.forge.RelicDrops.roll(player, com.eternalrealm.item.Relics.SourceKind.WANDERER,
+                    out.wanderer.id(), RANDOM).ifPresent(items::add);
             long exp = stats == null ? 0L : Math.round(stats.exp() * (isHero ? 15.0 : 10.0));
             long gold = stats == null ? 0L : Math.round(stats.goldMax() * (isHero ? 7.5 : 5.0));
             FieldThreatService.give(context, player, items, exp, gold);

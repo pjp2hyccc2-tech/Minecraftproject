@@ -105,6 +105,42 @@
         "custom_model_data": 4109
       },
       "model": "eternalrealm:item/named/privateer_garb_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4505
+      },
+      "model": "eternalrealm:item/named/relic_b2_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4537
+      },
+      "model": "eternalrealm:item/named/relic_c_meadow_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4577
+      },
+      "model": "eternalrealm:item/named/relic_l_garm_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4581
+      },
+      "model": "eternalrealm:item/named/relic_l_hook_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4585
+      },
+      "model": "eternalrealm:item/named/relic_l_durn_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4697
+      },
+      "model": "eternalrealm:item/named/relic_w_bramble_knight_chest"
     }
   ]
 }

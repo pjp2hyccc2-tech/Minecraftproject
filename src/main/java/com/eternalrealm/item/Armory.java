@@ -164,8 +164,13 @@ public final class Armory {
         return DESIGNS;
     }
 
+    /** A design of the catalogue or a relic ({@link Relics}) by id. */
     public static Optional<Design> design(String id) {
-        return Optional.ofNullable(id == null ? null : BY_ID.get(id));
+        if (id == null) {
+            return Optional.empty();
+        }
+        Design design = BY_ID.get(id);
+        return design != null ? Optional.of(design) : id.startsWith("relic_") ? Relics.design(id) : Optional.empty();
     }
 
     public static Optional<WeaponDesign> weapon(String id) {
@@ -176,8 +181,10 @@ public final class Armory {
         return Optional.ofNullable(id == null ? null : SETS_BY_ID.get(id));
     }
 
+    /** A design of the catalogue or a relic by its model number. */
     public static Optional<Design> byModel(int model) {
-        return Optional.ofNullable(BY_MODEL.get(model));
+        Design design = BY_MODEL.get(model);
+        return design != null ? Optional.of(design) : Relics.byModel(model);
     }
 
     /** The named weapons of a field (boss weapons included), in catalogue order. */
@@ -623,6 +630,7 @@ public final class Armory {
                 case DUNGEON -> 1.08;
                 case LORD -> 1.10;
                 case CALAMITY, BOSS -> 1.12;
+                case RELIC -> 1.20;
             });
         }
         return best;
@@ -641,6 +649,7 @@ public final class Armory {
                 case LORD -> 0.04;
                 case CALAMITY -> 0.05;
                 case BOSS -> 0.06;
+                case RELIC -> 0.08;
             });
         }
         CombatModifiers.Builder b = CombatModifiers.builder();
@@ -674,7 +683,7 @@ public final class Armory {
     }
 
     /** Affix tendencies: the weapon's attack stat, plus the feel's and the element's. */
-    private static Map<AffixKind, Integer> bias(WeaponType type, Feel feel, Element element) {
+    static Map<AffixKind, Integer> bias(WeaponType type, Feel feel, Element element) {
         AffixPool pool = AffixPool.of(EquipmentSlot.WEAPON, type);
         Map<AffixKind, Integer> bias = new EnumMap<>(AffixKind.class);
         AffixKind main = switch (type) {

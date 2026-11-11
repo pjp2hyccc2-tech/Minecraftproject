@@ -96,7 +96,7 @@ def armor_models(assets: str, piece_id: str) -> None:
 
 
 def design_overrides():
-    """item path of the base -> [(model number, model id)] of every design made on it."""
+    """item path of the base -> [(model number, model id)] of every design made on it (the relics included)."""
     weapons, sets = armory_data.load()
     by_item: dict[str, list] = {}
     for w in weapons:
@@ -105,6 +105,10 @@ def design_overrides():
         tier = armory_data.TIER_IDS[s.tier - 1]
         for piece_id, noun, model in s.pieces():
             by_item.setdefault(f"{tier}_{noun}", []).append((model, f"{NS}:item/named/{piece_id}"))
+    import relics_data
+    import relic_art
+    for item, entries in relic_art.overrides(relics_data.load()).items():
+        by_item.setdefault(item, []).extend(entries)
     return by_item
 
 

@@ -23,6 +23,8 @@ public record TooltipLine(Kind kind, String translationKey, List<Arg> args, int 
     public static final int COLOR_ART = 0xFF9F5A;
     public static final int COLOR_SET = 0x7FC8FF;
     public static final int COLOR_LORE = 0x8A8A9A;
+    /** The gold of a relic (金枠): its name, its frame and its tooltip header. */
+    public static final int COLOR_RELIC = 0xFFD84A;
 
     public enum Kind {
         /** The display name (the item's name, not a tooltip body line). */

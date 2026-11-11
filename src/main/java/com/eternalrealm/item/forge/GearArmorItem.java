@@ -30,7 +30,7 @@ public final class GearArmorItem extends ArmorItem {
             case CHEST -> ArmorItem.Type.CHESTPLATE;
             case LEGS -> ArmorItem.Type.LEGGINGS;
             case FEET -> ArmorItem.Type.BOOTS;
-            case WEAPON -> throw new IllegalArgumentException("A weapon is not armor");
+            case WEAPON, ACCESSORY, CHARM -> throw new IllegalArgumentException(slot + " is not armor");
         };
     }
 

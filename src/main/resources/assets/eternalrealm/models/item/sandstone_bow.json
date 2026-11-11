@@ -66,6 +66,12 @@
         "custom_model_data": 3177
       },
       "model": "eternalrealm:item/named/gunwale_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3520
+      },
+      "model": "eternalrealm:item/named/relic_l_hook_weapon"
     }
   ]
 }

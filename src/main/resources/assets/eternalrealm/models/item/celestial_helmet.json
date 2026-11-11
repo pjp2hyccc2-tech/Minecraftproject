@@ -51,6 +51,24 @@
         "custom_model_data": 4060
       },
       "model": "eternalrealm:item/named/thunderpeak_armor_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4520
+      },
+      "model": "eternalrealm:item/named/relic_b6_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4716
+      },
+      "model": "eternalrealm:item/named/relic_w_walking_glyph_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4720
+      },
+      "model": "eternalrealm:item/named/relic_w_ash_herald_head"
     }
   ]
 }

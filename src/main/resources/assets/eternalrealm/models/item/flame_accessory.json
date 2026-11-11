@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_accessory"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5006
+      },
+      "model": "eternalrealm:item/trinket/relic_b4_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5008
+      },
+      "model": "eternalrealm:item/trinket/relic_b5_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5022
+      },
+      "model": "eternalrealm:item/trinket/relic_c_iron_mine_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5024
+      },
+      "model": "eternalrealm:item/trinket/relic_c_sacred_falls_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5034
+      },
+      "model": "eternalrealm:item/trinket/relic_c_lakeside_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5036
+      },
+      "model": "eternalrealm:item/trinket/relic_c_harbour_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5050
+      },
+      "model": "eternalrealm:item/trinket/relic_l_dolga_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5052
+      },
+      "model": "eternalrealm:item/trinket/relic_l_rustbone_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5054
+      },
+      "model": "eternalrealm:item/trinket/relic_l_vein_eater_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5056
+      },
+      "model": "eternalrealm:item/trinket/relic_l_goura_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5058
+      },
+      "model": "eternalrealm:item/trinket/relic_l_mistweaver_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5060
+      },
+      "model": "eternalrealm:item/trinket/relic_l_ord_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5086
+      },
+      "model": "eternalrealm:item/trinket/relic_l_melusine_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5088
+      },
+      "model": "eternalrealm:item/trinket/relic_l_drowned_fisher_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5090
+      },
+      "model": "eternalrealm:item/trinket/relic_l_numel_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5092
+      },
+      "model": "eternalrealm:item/trinket/relic_l_barbas_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5094
+      },
+      "model": "eternalrealm:item/trinket/relic_l_dock_brawler_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5096
+      },
+      "model": "eternalrealm:item/trinket/relic_l_ankara_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5104
+      },
+      "model": "eternalrealm:item/trinket/relic_w_cascade_wyvern_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5106
+      },
+      "model": "eternalrealm:item/trinket/relic_w_mist_hermit_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5124
+      },
+      "model": "eternalrealm:item/trinket/relic_w_sunken_captain_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5126
+      },
+      "model": "eternalrealm:item/trinket/relic_w_tide_singer_amulet"
+    }
+  ]
+}

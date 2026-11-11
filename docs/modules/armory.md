@@ -2,6 +2,9 @@
 
 オーナーの依頼「武器種ごとに＋30の武器と、防具を30種類追加」「敵、中ボス、ボスの武器も作って」
 「ボスの武器は特殊な性能を持たせて、派手で個性的なスキルも」に対応するモジュール。
+2026-11-11 の依頼「武器はレア度が増す毎に特殊性能の強さが上がったり、Zボタンの威力も上がったりするようにして、扱えるプレイヤーレベルなども
+実装して」「ダンジョンボスや災厄、ヌシなどから0.1%ぐらいの確率で…お守り、アクセサリー…それらの枠は金枠として実装して」もここに含む
+（レア度と性能・必要レベル・金枠の遺宝・装身具）。
 名前・見た目はすべてオリジナル（他作品の名前を使わない。`ArmoryResourcesTest` が有名な武器名・技名の混入を検査する）。
 
 ## 中身
@@ -11,9 +14,11 @@
 | 名品の武器 | 180 | 6武器種 × 30（片手剣・両手剣・双剣・槍・杖・弓）。10フィールド × 武器種ごとに3段階 |
 | ボス武器 | 9 | ボス b1〜b8 と終焉の王（`final`）に1本ずつ。それぞれ専用の武技（Zキー）を持つ |
 | 防具セット | 30（120部位） | 重鎧10・軽装10・法衣10。兜・胴・脚・靴の4部位、2点と4点のセット効果 |
+| 金枠の遺宝 | 448 | 64の出どころ（ダンジョンのボス9・災厄10・ヌシ30・放浪する大物15）ごとに武器1・防具セット1組（4部位）・アクセサリー1・お守り1 |
 
 - 定義: `item/Armory.java`（武器の表とセットの表）、`item/WeaponArts.java`（武技9種）、`item/Signatures.java`（落とす者）、
-  `item/ArmoryDrops.java`（確率）。すべて Minecraft 非依存の純粋モジュール。
+  `item/ArmoryDrops.java`（確率）、`item/Relics.java`＋`item/RelicTable.java`（金枠の遺宝）、`item/TrinketDesign.java`（装身具）。
+  すべて Minecraft 非依存の純粋モジュール。
 - 段階とレベル: フィールドごとに Lv の帯（1: 5/10/15、2: 10/15/20、3: 15/20/25、4: 20/25/30、5: 30/35/40、6: 40/45/50、7: 50、
   8: 10/15/20、9: 15/20/25、10: 20/25/30）。装備できるのはそのレベルから。
 - 性能: 名品ごとに攻撃・会心・攻撃速度・間合い（`DesignProfiles` が武器の当たり判定を間合いに合わせて拡大縮小）・属性
@@ -64,25 +69,92 @@
 | b8 | 終焉門の斧槍 | 終焉門・開 | 前方に虚無の門。敵を引き込み、まとめて炸裂 |
 | final | 終焉王の黒剣 | 黒剣の驟雨 | 周囲に黒剣の雨。当たった敵を脆くし、自身の攻撃力上昇 |
 
+## レア度と性能
+
+レア度が上がるほど、同じ装備でも特殊性能と武技（Zキー）が強くなり、必要レベルが上がる（`ItemRarity`）。
+
+| レア度 | 付加効果 | 基本値 | 特殊性能・武技（`power`） | 必要Lv |
+|---|---|---|---|---|
+| コモン | 0 | ×1.00 | ×1.00 | +0 |
+| アンコモン | 1 | ×1.05 | ×1.07 | +0 |
+| レア | 2 | ×1.10 | ×1.14 | +1 |
+| エピック | 3 | ×1.15 | ×1.22 | +3 |
+| レジェンダリー | 4 | ×1.20 | ×1.30 | +5 |
+
+- 特殊性能 ×`power`: 付加効果の値（同じ出目でもレジェンダリーなら1.3倍）、名品の武器の属性の発動率、固定の上乗せ（会心・攻撃速度・
+  ダメージ%など）、特性（吸血・反撃・回避など）、防具の固定効果、装身具の能力。ツールチップの数値は倍率込み。
+- 武技 ×`power`: 手に持つ武器のレア度で、その武器の武技のダメージと追加効果（状態異常・回復・バフなどの強さ）が上がる
+  （`CombatDriver.artPower`。ほかの武器の武技やジョブのスキルには掛からない）。武器の基本値（×1.20）と合わせて、
+  同じ武器のレジェンダリーの武技はコモンの約1.56倍。ツールチップに「武技の威力・効果 +30%」と出る。
+- 釣り合い（`RarityScalingTest`）: レア度ごとに必ず強くなる。同じレア度ならボス武器の武技が名品の最良の武技より上。
+
+## 必要レベル（扱えるプレイヤーレベル）
+
+- 必要Lv = 名品は名品のLv、段階の装備は段階のLv（鉄1・鋼8・砂岩15・氷晶22・炎竜30・天空37・終焉44）＋レア度の加算（上の表）、上限100
+  （D-LEVEL100）。金枠の遺宝は出どころのLv＋5ちょうどで、レア度の加算はない。
+- 表示: ツールチップの「必要Lv」、装備画面の候補一覧の「Lv」（足りなければ灰色）。
+- サーバーが判定する場所: 装備（カバン・装備画面の `bag.equip`。足りなければ「○○を装備するにはレベル55が必要です」）、
+  手に持った武器の攻撃・ガード・武技（足りなければ受け付けず「○○を扱うにはレベル55が必要です」。クライアントも先に止める）、
+  能力の合計（足りない防具・装身具・武器の能力は数えない。`Gear.sum`）、武器の攻撃力の上乗せ。
+  キャラクターデータの無い相手（読み込み前など）は止めない。
+- 既存の装備: レア・エピック・レジェンダリーの手持ちは必要Lvが1〜5上がる。足りない間は能力が数えられず、装備画面で灰色になる。
+
+## 金枠の遺宝（レリック）
+
+ダンジョンのボス（b1〜b8・終焉の王）・災厄10体・ヌシ30体・放浪する大物15体の64の出どころに、それぞれの姿をかたどった遺宝が7つずつある
+（武器1・防具セット1組の4部位・アクセサリー1・お守り1、計448。下の一覧）。
+
+- 入手: 討伐の報酬を受け取る人ごとに **0.1%**（サーバー設定 `relicDropChance`、既定 0.001）。当たると武器・アクセサリー・お守り・
+  防具（各部位1/16）が1/4ずつ。ダンジョン（難易度を問わず）・終焉のレイド・ヌシ・災厄・放浪する大物の報酬に入る。
+- 必ずレジェンダリー（付加効果4つ）。必要Lvは出どころのLv＋5（Lv11〜60）。
+- 強さ: その必要Lvでいちばん強い装備（`RelicCatalogTest`: その必要Lvで装備できる同じ武器種の名品・ボス武器・段階の武器より、
+  どのレア度と比べても攻撃力が高い。防具は同じ型の名品セットより、重鎧と軽装は段階の防具よりも防御が高い）。
+  武器は攻撃×1.30〜1.40、会心+3%、攻撃速度+2%、属性の発動率16%（属性型28%）、その武器種のダメージ+8%×(0.5＋Lv/50)、特性と
+  スキル威力+6%、専用の武技（武器種スキルの2.05〜2.30倍。ボス武器の武技は1.95倍以上、名品は1.40〜1.85倍）。防具はセットの質×1.40と型の効果×1.5、主題の特性。
+  アクセサリーは主能力 3＋0.30×Lv・副能力 2＋0.16×Lv と会心・会心ダメージ・与ダメージ・攻撃速度・移動速度・回復量のどれか。
+  お守りは VIT 2＋0.2×Lv・LUK 1＋0.12×Lv・最大HP 0.6×Lv・防御 0.5×Lv と、瀕死の守り・撃破で回復・回避・反撃・吸血・最大HP% のどれか。
+- 金枠: カバンのマス・装備画面の枠と候補一覧・ツールチップの枠・入手表示（専用の音）で金色の二重枠と光が回る。
+  ツールチップは「金枠の遺宝・(種類)」と「(出どころ)の遺宝」。
+- 告知: 落ちたときにサーバー全員へ「【金枠】(プレイヤー)が(出どころ)から(遺宝)を手に入れた！」、ほかの人には知らせの音。
+- 売値は同じ段階・レア度の装備の10倍。
+- ほかのモジュール向け（市場・取引掲示板の絞り込み）: `item.forge.EquipmentStacks.isGoldFrame(stack)`・`requiredLevel(stack)`・
+  `rarity(stack)`。
+
+## 装身具（アクセサリー・お守り）
+
+- 枠: アクセサリー2つ（飾1・飾2）とお守り1つ（守）。装備画面は8枠（武器・頭・胴・脚・足・飾1・飾2・守）、能力の合計に入る。
+- 種類: アクセサリーは指輪・首飾り・耳飾り・腕輪、お守りは護符・守り鈴・守り石・お守り袋（アイコンは種類と出どころの色）。
+- 同じ装身具は一つだけ（2つ目は「同じ装身具は一つしか着けられません」。能力の合計でも1つと数える）。
+- 付け外しは既存の UI 操作 `bag.equip`（`target`: `accessory_1`・`accessory_2`・`charm`）と `bag.unequip`。中身はプレイヤーの
+  保存データ（`ERTrinkets`）にあり、死亡・リスポーン・ディメンション移動でも残る。クライアントへは UI データの `trinkets` で送る
+  （新しいパケット・プロトコル版の変更なし）。
+- 土台のアイテムは段階ごとの `<段階>_accessory`・`<段階>_charm`（遺宝の見た目は CustomModelData で切り替え）。
+
 ## 見た目
 
 - アイテム: 名品は既存の段階アイテム（鉄の片手剣など）の上に作られ、スタックの `ERDesign` タグと CustomModelData で見た目を切り替える
-  （武器 3000 + (フィールド−1)×18 + 武器種×3 + 段階、ボス武器 3180〜3188、防具 4000 + セット×4 + 部位）。
+  （武器 3000 + (フィールド−1)×18 + 武器種×3 + 段階、ボス武器 3180〜3188、防具 4000 + セット×4 + 部位、
+  遺宝の武器 3500 + i、遺宝の防具 4500 + 4i + 部位、アクセサリー 5000 + 2i、お守り 5001 + 2i。i は遺宝の一覧の順）。
   `src/test/resources/armory/models.txt` が番号を固定する（公開後は変えない）。
 - 生成: `python3 tools/art/armory_art.py`（アイコン・手持ち・着用テクスチャ・モデル・段階アイテムの上書き表。`--check` で欠けを検査）。
   形と素材は `tools/art/named_weapon_specs.py` と `tools/art/named_armor.py`、描画は `tools/art/named_weapons.py`。
   一覧: `tools/art/armory_preview.png`。双剣はインベントリでは2本、手には1本（`forge:separate_transforms`）。
+- 遺宝: `python3 tools/art/relics.py`（`tools/art/relics_data.py` の1か所から `RelicTable.java`・`docs/i18n/relics.json`・
+  下の一覧・アイコン・手持ち・着用テクスチャ・モデルを生成。`--check` で欠けと一覧の古さを検査）。武器は名品と同じ描画、防具は出どころの
+  素材と紋章、装身具は `tools/art/trinket_icons.py`。一覧画像: `tools/art/relics_preview.png`。
 - 魔物: バニラの体はそのまま手に描かれ、人型の体（`EnemyModel`）は元の武器を隠して `HeldWeaponLayer` で右手に描く。
 
 ## セーブ互換
 
 装備データの `design` は省略可能な項目（コーデック v1 のまま）。知らない名品・土台の合わない名品は普通の装備として読み込む。
-既存の装備・キャラクターデータはそのまま有効。
+既存の装備・キャラクターデータはそのまま有効。装身具の枠は新しい保存項目（プレイヤーの `ERTrinkets`）で、無ければ空。
+レア度の必要Lvの加算は既存の装備にも掛かる（上の「必要レベル」）。
 
 ## 翻訳
 
 `docs/i18n/armory.json`（名前・説明文・セット・武技・ツールチップ・メッセージ）を
 `python3 /home/claude/scripts/add_lang.py . docs/i18n/armory.json` で言語ファイルへ取り込む。
+遺宝は `docs/i18n/relics.json`（生成）と `docs/i18n/relics_ui.json`（装身具・枠・告知・必要Lvの文言）。
 
 ## テスト
 
@@ -92,10 +164,19 @@
   名前の重複と他作品の名前の混入。
 - `ArmoryGameTests`（GameTest）: スタックの名品・モデル番号・武器の性能、ボス武器で武技が始まること、普通の武器は通常スキルのまま、
   ヌシ（ストローム）が得物を持ち獣（ドルン）は持たないこと、図鑑の騎士が名品の剣を持つこと。
+- `RarityScalingTest`: レア度の倍率と必要Lvの加算、付加効果・属性・固定効果・特性・武技の伸び、同じレア度でボスの武技が上。
+- `RelicCatalogTest`: 64の出どころすべてに7つずつ、必要Lv、その必要Lvでいちばん強いこと、約0.1%の確率と内訳、コーデック、名前と絵。
+- `TrinketTest`: 装身具の枠と能力、レア度と強化での伸び、同じ装身具は1つと数えること。
+- `RelicGameTests`（GameTest）: 必要Lvに届かない遺宝は装備・攻撃・ガード・武技を断られ、届けば武技が出ること、装身具が枠に入り
+  能力が増えること・同じものは断られること・外すとカバンに戻ること、レジェンダリーの武技がコモンより強く当たること、
+  確率を1に固定した遺宝の抽選（64の出どころすべて）で金枠・レジェンダリー・出どころ・必要Lvが正しいこと、448の遺宝がスタックになること。
 
 ## 未確認（実機が必要）
 
 - 人型の魔物が手に持つ武器の位置と角度、着用した防具の見た目、武技の粒子演出と音の印象。
+- 金枠の見え方（カバン・装備画面・ツールチップ・入手表示）、遺宝の武器・防具・装身具のアイコンと着用の見た目、告知の文と音。
+- 討伐の報酬からの遺宝の抽選は、報酬の流れ（ダンジョン・ヌシ・災厄・放浪する大物）ごとには GameTest で通していない
+  （抽選そのもの `RelicDrops.roll` は GameTest で確認）。
 - プリーストの蘇生（`RevivalService.resurrect` 経由）の実戦での動き。
 
 ## 武技（Zキー）
@@ -108,7 +189,8 @@ Zキーはすべての武器で、その武器だけの武技になる（ボス�
 
 - 定義: `tools/art/weapon_arts.py`（1か所。名前・説明・形・追加効果・見た目）→ `item.ArtTable`（生成）→ `item.GeneratedArts`／`item.ArtForge`。
   説明文は形・状態異常・追加効果から組み立てるので、実際の効果と食い違わない。
-- 強さ: 武器種共通スキルとの比較で、段階 < 名品 < ボス（`item.ArtBudget`、テストで固定）。COMBAT_SYSTEM.md 5.1。
+- 強さ: 武器種共通スキルとの比較で、段階 < 名品 < ボス・金枠の遺宝（`item.ArtBudget`、テストで固定）。COMBAT_SYSTEM.md 5.1。
+  さらに手に持つ武器のレア度で ×1.00〜×1.30（上の「レア度と性能」）。
 - 見た目: `combat.forge.ArtFx` が `item.ArtLook` を当たり判定に合わせて描く。同じ見た目の武技は無い（`WeaponArtCatalogTest`）。
 
 ## 武技の一覧（Zキー）
@@ -297,6 +379,70 @@ Zキーはすべての武器で、その武器だけの武技になる（ボス�
 | `gunwale_bow` | 舷側の一斉射（Broadside Volley） | `bow_fan` | knockback | broadside / fan |
 | `seagull_bow` | 海鳥の旋回矢（Gullwheel Arrows） | `bow_volley` | evasion | gull / spiral |
 | `trade_wind_longbow` | 貿易風の遠矢（Tradewind Longshot） | `bow_pierce` | speed | tradewind / line |
+| `relic_b1_weapon` | 簒奪の三閃（Usurper's Triple Flash） | `sword_precise` | vanish, execute | relic_b1 / line |
+| `relic_b2_weapon` | 千年輪の大震（Thousand-Ring Quake） | `great_slam` | stun, zone | relic_b2 / wave |
+| `relic_b3_weapon` | 砂嵐の巨弾（Sandstorm Titanshot） | `bow_impact` | knockback, slow_field | relic_b3 / burst |
+| `relic_b4_weapon` | 凍獄の断罪（Frozen Verdict） | `spear_impale` | execute, mark | relic_b4 / pillar |
+| `relic_b5_weapon` | 氷晶の舞踏（Crystal Ballroom） | `twin_flurry` | slow_field, evasion | relic_b5 / scatter |
+| `relic_b6_weapon` | 竜王の焔穿（Dragonking Flamepierce） | `spear_charge` | imbue, launch | relic_b6 / comet |
+| `relic_b7_weapon` | 機神雷断（Machina Thundercut） | `great_guillotine` | stun, mark | relic_b7 / pillar |
+| `relic_b8_weapon` | 封印の大門（Sealing Gate） | `staff_meteor` | pull, zone | relic_b8 / rain |
+| `relic_final_weapon` | 終焉の黙示（Apocalypse of the End） | `bow_rain` | zone, lifesteal | relic_final / rain |
+| `relic_c_meadow_weapon` | 影呑みの顎（Shadow-Swallow Jaws） | `twin_assassinate` | vanish, siphon | relic_c_meadow / line |
+| `relic_c_moon_forest_weapon` | 月蝕の輪光（Eclipse Halo） | `staff_burst` | heal, cleanse | relic_c_moon_forest / burst |
+| `relic_c_iron_mine_weapon` | 坑底崩落（Pit Collapse） | `great_eruption` | stun, knockback | relic_c_iron_mine / geyser |
+| `relic_c_sacred_falls_weapon` | 堕滝の逆流（Fallen Backflow） | `spear_lance` | pull, slow_field | relic_c_sacred_falls / wave |
+| `relic_c_ancient_ruins_weapon` | 焦遺の祭火（Ruinflame Rite） | `sword_burst` | imbue, zone | relic_c_ancient_ruins / burst |
+| `relic_c_soaring_peaks_weapon` | 貫天の雷矢（Skypiercing Bolt） | `bow_pierce` | stun, crit_up | relic_c_soaring_peaks / line |
+| `relic_c_end_forest_weapon` | 虚空の招来（Void Summons） | `staff_lance` | siphon, mark | relic_c_end_forest / line |
+| `relic_c_farm_weapon` | 枯死の刈り取り（Withering Reap） | `twin_maul` | zone, lifesteal | relic_c_farm / burst |
+| `relic_c_lakeside_weapon` | 湖底の大顎（Lakebed Maw） | `sword_cleave` | knockback, slow_field | relic_c_lakeside / crescent |
+| `relic_c_harbour_weapon` | 嵐呼びの雷雨（Stormcall Downpour） | `staff_volley` | stun, speed | relic_c_harbour / fan |
+| `relic_l_garm_weapon` | 街道裂きの突進（Roadripper Rush） | `spear_charge` | lifesteal, knockback | relic_l_garm / comet |
+| `relic_l_hook_weapon` | 赤目の一射（Red-Eye Shot） | `bow_snipe` | execute, mark | relic_l_hook / line |
+| `relic_l_durn_weapon` | 大猪の地響き（Boar Rumble） | `sword_combo` | knockback, defense_up | relic_l_durn / crescent |
+| `relic_l_nebula_weapon` | 星読みの扇射（Stargazer's Fan） | `bow_fan` | heal, crit_up | relic_l_nebula / fan |
+| `relic_l_belladonna_weapon` | 毒華の一刺（Poisonbloom Lance） | `staff_lance` | slow_field, execute | relic_l_belladonna / line |
+| `relic_l_lunar_weapon` | 銀月の旋風（Silvermoon Whirl） | `great_spin` | speed, slow_field | relic_l_lunar / ring |
+| `relic_l_dolga_weapon` | 墓守の地穿ち（Warden's Groundbreaker） | `spear_impale` | stun, defense_up | relic_l_dolga / spikes |
+| `relic_l_rustbone_weapon` | 錆骨の連刺（Rustbone Sting） | `twin_cross` | slow_field, execute | relic_l_rustbone / cross |
+| `relic_l_vein_eater_weapon` | 鉱脈喰いの連射（Veineater Volley） | `bow_volley` | speed, lifesteal | relic_l_vein_eater / comet |
+| `relic_l_goura_weapon` | 瀑布の大断（Cascade Cleave） | `great_sweep` | knockback, slow_field | relic_l_goura / wave |
+| `relic_l_mistweaver_weapon` | 霧糸縫い（Mistweave Stitch） | `twin_chain` | pull, slow_field | relic_l_mistweaver / chain |
+| `relic_l_ord_weapon` | 甲羅の守り珠（Shellguard Orbs） | `staff_orbs` | shield, defense_up | relic_l_ord / orbs |
+| `relic_l_valka_weapon` | 血風の乱撃（Bloodgale Frenzy） | `great_rend` | lifesteal, attack_up | relic_l_valka / crescent |
+| `relic_l_scorch_eye_weapon` | 灼眼の焦視（Searing Stare） | `staff_burst` | imbue, mark | relic_l_scorch_eye / burst |
+| `relic_l_agnis_weapon` | 神像の聖連突（Idol's Sacred Thrusts） | `spear_thrusts` | heal, defense_up | relic_l_agnis / helix |
+| `relic_l_alvin_weapon` | 天誓の聖斬（Skyoath Strike） | `sword_combo` | shield, party_attack | relic_l_alvin / crescent |
+| `relic_l_peak_sniper_weapon` | 天穿の一矢（Heavenbore Arrow） | `bow_snipe` | crit_up, execute | relic_l_peak_sniper / line |
+| `relic_l_zephyr_weapon` | 雷翼の乱舞（Thunderwing Flurry） | `twin_flurry` | speed, stun | relic_l_zephyr / scatter |
+| `relic_l_xenos_weapon` | 破滅の予兆（Omen of Ruin） | `staff_meteor` | mark, siphon | relic_l_xenos / rain |
+| `relic_l_black_knight_weapon` | 黒騎士の断罪（Black Verdict） | `sword_cleave` | execute, defense_up | relic_l_black_knight / crescent |
+| `relic_l_nihil_weapon` | 虚無の喰らい牙（Void Gnaw） | `spear_pierce` | siphon, vanish | relic_l_nihil / line |
+| `relic_l_brutus_weapon` | 暴れ牛の踏み砕き（Bull Stomp） | `great_slam` | knockback, launch | relic_l_brutus / spikes |
+| `relic_l_harvest_boss_weapon` | 早取りの連射（Quickpick Volley） | `bow_volley` | speed, evasion | relic_l_harvest_boss / comet |
+| `relic_l_strom_weapon` | 見張りの光線（Watchman's Beam） | `staff_beam` | heal, slow_field | relic_l_strom / line |
+| `relic_l_melusine_weapon` | 水鏡の疾走（Mirrorwater Dash） | `sword_dash` | slow_field, vanish | relic_l_melusine / arc |
+| `relic_l_drowned_fisher_weapon` | 溺れ漁師の網打ち（Drowning Net） | `spear_lance` | pull, slow_field | relic_l_drowned_fisher / line |
+| `relic_l_numel_weapon` | ぬめりの大泡（Slick Bubble Burst） | `staff_burst` | slow_field, regen | relic_l_numel / burst |
+| `relic_l_barbas_weapon` | 隻眼の一閃（One-Eyed Flash） | `sword_precise` | execute, crit_up | relic_l_barbas / line |
+| `relic_l_dock_brawler_weapon` | 喧嘩屋の乱打（Brawler's Barrage） | `twin_cross` | knockback, stamina | relic_l_dock_brawler / cross |
+| `relic_l_ankara_weapon` | 錨喰らいの大鋏（Anchor-Eater Snap） | `great_guillotine` | execute, defense_up | relic_l_ankara / pillar |
+| `relic_w_bramble_knight_weapon` | 茨槍の突撃（Thornlance Charge） | `spear_lance` | zone, thorns | relic_w_bramble_knight / comet |
+| `relic_w_moonmoth_witch_weapon` | 鱗粉の月雨（Moondust Rain） | `bow_rain` | zone, evasion | relic_w_moonmoth_witch / rain |
+| `relic_w_slag_titan_weapon` | 熔鉄の噴出（Molten Upheaval） | `great_eruption` | imbue, zone | relic_w_slag_titan / geyser |
+| `relic_w_cascade_wyvern_weapon` | 瀑流の急降下（Cascade Dive） | `spear_charge` | leap, slow_field | relic_w_cascade_wyvern / comet |
+| `relic_w_mist_hermit_weapon` | 霞練りの珠（Haze-Kneaded Pearls） | `staff_orbs` | heal, regen | relic_w_mist_hermit / orbs |
+| `relic_w_walking_glyph_weapon` | 碑文の波動（Inscription Wave） | `sword_wave` | mark, stun | relic_w_walking_glyph / wave |
+| `relic_w_ash_herald_weapon` | 燼の扇（Cinder Spread） | `bow_fan` | imbue, slow_field | relic_w_ash_herald / fan |
+| `relic_w_thunder_roc_weapon` | 天雷の投槍（Skybolt Javelin） | `spear_javelin` | stun, mark | relic_w_thunder_roc / comet |
+| `relic_w_glacier_bearer_weapon` | 氷河の崩落（Glacier Calving） | `great_slam` | stun, slow_field | relic_w_glacier_bearer / spikes |
+| `relic_w_hollow_walker_weapon` | 虚ろの行脚（Hollow Pilgrimage） | `sword_dash` | vanish, siphon | relic_w_hollow_walker / arc |
+| `relic_w_gravebloom_weapon` | 散華の舞（Petalfall Dance） | `twin_fan` | zone, siphon | relic_w_gravebloom / fan |
+| `relic_w_scarecrow_king_weapon` | 熊手の連突き（Hayfork Flurry） | `spear_thrusts` | imbue, knockback | relic_w_scarecrow_king / helix |
+| `relic_w_reed_serpent_weapon` | 大蛇の一咬み（Serpent's Bite） | `bow_snipe` | execute, slow_field | relic_w_reed_serpent / line |
+| `relic_w_sunken_captain_weapon` | 錨落としの大旋回（Anchorfall Swing） | `great_rend` | knockback, pull | relic_w_sunken_captain / crescent |
+| `relic_w_tide_singer_weapon` | 潮騒の歌（Song of the Surf） | `staff_volley` | heal, slow_field | relic_w_tide_singer / fan |
 | `iron:ONE_HANDED_SWORD` | 鉄刃一閃（Iron Clean Cut） | `sword_combo` | — | iron_longsword / crescent |
 | `iron:TWO_HANDED_SWORD` | 鉄塊打ち（Iron Mass Strike） | `great_slam` | — | iron_greatsword / spikes |
 | `iron:DUAL_BLADES` | 鉄双刃の交差（Iron Crosscut） | `twin_cross` | — | iron_twin_blades / cross |
@@ -341,3 +487,78 @@ Zキーはすべての武器で、その武器だけの武技になる（ボス�
 | `abyss:BOW` | 虚無矢（Void Arrow） | `bow_pierce` | siphon | abyss_bow / line |
 
 <!-- ART TABLE END -->
+
+## 遺宝の一覧（金枠）
+
+出どころ・必要Lv・武器（武器種・属性）・防具セット（型）・アクセサリー（主能力・副能力・効果）・お守り（効果）。
+
+<!-- RELIC TABLE BEGIN (tools/art/relics.py) -->
+
+| 出どころ | 必要Lv | 武器 | 防具セット | アクセサリー | お守り |
+|---|---|---|---|---|---|
+| `b1` ダンジョンのボス・盗賊王 | 11 | 簒奪者の細剣（片手剣・闇） | 盗賊王の遺装（軽装） | 盗賊王の指輪（AGI・LUK・会心率） | 盗賊王のお守り袋（回避） |
+| `b2` ダンジョンのボス・古代樹 | 18 | 千年樹の剛剣（両手剣・地） | 古代樹の遺鎧（重鎧） | 古代樹の腕輪（VIT・STR・与ダメージ） | 古代樹の守り石（瀕死の守り） |
+| `b3` ダンジョンのボス・砂塵巨神 | 25 | 巨神の砂嵐弓（弓・地） | 砂塵巨神の遺鎧（重鎧） | 砂塵巨神の首飾り（STR・VIT・会心ダメージ） | 砂塵巨神の護符（反撃） |
+| `b4` ダンジョンのボス・凍獄の処刑人 | 31 | 氷獄の断頭斧槍（槍・氷） | 凍獄の処刑人の遺鎧（重鎧） | 凍獄の処刑人の耳飾り（STR・VIT・会心ダメージ） | 凍獄の処刑人の守り鈴（瀕死の守り） |
+| `b5` ダンジョンのボス・氷獄の女王 | 34 | 氷后の双晶刃（双剣・氷） | 氷獄の女王の遺衣（法衣） | 氷獄の女王の首飾り（INT・AGI・会心率） | 氷獄の女王の守り石（最大HP%） |
+| `b6` ダンジョンのボス・竜王 | 40 | 竜王の焔牙槍（槍・炎） | 竜王の遺鎧（重鎧） | 竜王の指輪（STR・VIT・与ダメージ） | 竜王の護符（吸血） |
+| `b7` ダンジョンのボス・機械神 | 47 | 機神の雷断剣（両手剣・雷） | 機械神の遺鎧（重鎧） | 機械神の腕輪（DEX・INT・攻撃速度） | 機械神の守り鈴（回避） |
+| `b8` ダンジョンのボス・終焉の門番 | 52 | 門番の封鍵杖（杖・闇） | 終焉の門番の遺鎧（重鎧） | 終焉の門番の耳飾り（INT・VIT・与ダメージ） | 終焉の門番の守り石（瀕死の守り） |
+| `final` ダンジョンのボス・終焉王 | 55 | 終焉王の黙示弓（弓・血） | 終焉王の遺鎧（重鎧） | 終焉王の首飾り（LUK・VIT・会心ダメージ） | 終焉王の護符（吸血） |
+| `c_meadow` 災厄・呑影 | 20 | 呑影の双爪（双剣・闇） | 呑影の遺装（軽装） | 呑影の耳飾り（AGI・DEX・会心率） | 呑影のお守り袋（回避） |
+| `c_moon_forest` 災厄・月蝕樹 | 25 | 月蝕樹の枝杖（杖・聖） | 月蝕樹の遺衣（法衣） | 月蝕樹の首飾り（INT・VIT・回復量） | 月蝕樹の守り鈴（撃破で回復） |
+| `c_iron_mine` 災厄・坑底獣 | 30 | 坑底の破砕大剣（両手剣・地） | 坑底獣の遺鎧（重鎧） | 坑底獣の腕輪（STR・VIT・与ダメージ） | 坑底獣の守り石（反撃） |
+| `c_sacred_falls` 災厄・堕ちた滝守 | 35 | 堕滝の水鏡槍（槍・氷） | 堕ちた滝守の遺装（軽装） | 堕ちた滝守の指輪（DEX・INT・会心率） | 堕ちた滝守の守り鈴（最大HP%） |
+| `c_ancient_ruins` 災厄・焦遺の焔 | 45 | 焦遺焔の祭剣（片手剣・炎） | 焦遺の焔の遺衣（法衣） | 焦遺の焔の耳飾り（INT・STR・与ダメージ） | 焦遺の焔の護符（撃破で回復） |
+| `c_soaring_peaks` 災厄・峰砕き | 55 | 峰砕きの貫天弓（弓・雷） | 峰砕きの遺鎧（重鎧） | 峰砕きの腕輪（DEX・STR・会心ダメージ） | 峰砕きの守り石（瀕死の守り） |
+| `c_end_forest` 災厄・終焉の来訪者 | 60 | 来訪者の虚空杖（杖・闇） | 終焉の来訪者の遺衣（法衣） | 終焉の来訪者の首飾り（INT・LUK・会心ダメージ） | 終焉の来訪者の護符（吸血） |
+| `c_farm` 災厄・枯れ根 | 25 | 枯れ根の双鎌（双剣・毒） | 枯れ根の遺装（軽装） | 枯れ根の指輪（STR・AGI・与ダメージ） | 枯れ根のお守り袋（反撃） |
+| `c_lakeside` 災厄・湖底獣 | 30 | 湖底獣の殻断剣（片手剣・氷） | 湖底獣の遺鎧（重鎧） | 湖底獣の腕輪（VIT・STR・与ダメージ） | 湖底獣の守り石（最大HP%） |
+| `c_harbour` 災厄・嵐呼び | 35 | 嵐呼びの呪笛杖（杖・雷） | 嵐呼びの遺衣（法衣） | 嵐呼びの耳飾り（INT・DEX・攻撃速度） | 嵐呼びの守り鈴（回避） |
+| `l_garm` ヌシ・ガルム | 20 | ガルムの街道裂き（槍・血） | ガルムの遺装（軽装） | ガルムの耳飾り（STR・AGI・会心ダメージ） | ガルムのお守り袋（吸血） |
+| `l_hook` ヌシ・赤目のフック | 20 | 赤目の狙い鉤弓（弓・闇） | 赤目のフックの遺装（軽装） | 赤目のフックの指輪（DEX・LUK・会心率） | 赤目のフックの護符（回避） |
+| `l_durn` ヌシ・大猪ドルン | 20 | 大猪の牙剣（片手剣・地） | 大猪ドルンの遺鎧（重鎧） | 大猪ドルンの腕輪（STR・VIT・会心ダメージ） | 大猪ドルンの守り石（反撃） |
+| `l_nebula` ヌシ・古老ネブラ | 25 | 古老の星読み弓（弓・聖） | 古老ネブラの遺衣（法衣） | 古老ネブラの首飾り（INT・LUK・回復量） | 古老ネブラの守り鈴（撃破で回復） |
+| `l_belladonna` ヌシ・宵闇の魔女 | 25 | 宵闇の毒華杖（杖・毒） | 宵闇の魔女の遺衣（法衣） | 宵闇の魔女の耳飾り（INT・AGI・会心率） | 宵闇の魔女のお守り袋（回避） |
+| `l_lunar` ヌシ・銀狼王 | 25 | 狼王の銀月大剣（両手剣・氷） | 銀狼王の遺装（軽装） | 銀狼王の指輪（AGI・STR・攻撃速度） | 銀狼王の守り石（回避） |
+| `l_dolga` ヌシ・墓守ドルガ | 30 | 墓守の鶴嘴槍（槍・地） | 墓守ドルガの遺鎧（重鎧） | 墓守ドルガの腕輪（VIT・STR・会心ダメージ） | 墓守ドルガの守り石（瀕死の守り） |
+| `l_rustbone` ヌシ・錆骨 | 30 | 錆骨の双刺（双剣・毒） | 錆骨の遺装（軽装） | 錆骨の耳飾り（DEX・AGI・会心率） | 錆骨の護符（反撃） |
+| `l_vein_eater` ヌシ・鉱脈喰らい | 30 | 鉱脈喰らいの節弓（弓・地） | 鉱脈喰らいの遺装（軽装） | 鉱脈喰らいの指輪（DEX・STR・与ダメージ） | 鉱脈喰らいのお守り袋（最大HP%） |
+| `l_goura` ヌシ・暴君ゴウラ | 35 | 暴君の瀑布大剣（両手剣・氷） | 暴君ゴウラの遺鎧（重鎧） | 暴君ゴウラの腕輪（STR・VIT・与ダメージ） | 暴君ゴウラの守り石（反撃） |
+| `l_mistweaver` ヌシ・霧糸 | 35 | 霧糸の毒牙双刃（双剣・毒） | 霧糸の遺装（軽装） | 霧糸の首飾り（AGI・DEX・会心率） | 霧糸のお守り袋（回避） |
+| `l_ord` ヌシ・大亀オルド | 35 | 大亀の甲羅杖（杖・地） | 大亀オルドの遺鎧（重鎧） | 大亀オルドの首飾り（VIT・INT・回復量） | 大亀オルドの守り石（瀕死の守り） |
+| `l_valka` ヌシ・狂戦士ヴァルカ | 45 | 狂戦士の血風大剣（両手剣・血） | 狂戦士ヴァルカの遺鎧（重鎧） | 狂戦士ヴァルカの指輪（STR・VIT・会心ダメージ） | 狂戦士ヴァルカの護符（吸血） |
+| `l_scorch_eye` ヌシ・灼眼 | 45 | 灼眼の焔瞳杖（杖・炎） | 灼眼の遺衣（法衣） | 灼眼の耳飾り（INT・DEX・与ダメージ） | 灼眼の守り鈴（撃破で回復） |
+| `l_agnis` ヌシ・神像アグニス | 45 | 神像の聖槍（槍・聖） | 神像アグニスの遺鎧（重鎧） | 神像アグニスの腕輪（STR・VIT・攻撃速度） | 神像アグニスの守り石（最大HP%） |
+| `l_alvin` ヌシ・聖騎士アルヴィン | 55 | 聖騎士の天誓剣（片手剣・聖） | 聖騎士アルヴィンの遺鎧（重鎧） | 聖騎士アルヴィンの指輪（STR・INT・会心率） | 聖騎士アルヴィンの守り鈴（瀕死の守り） |
+| `l_peak_sniper` ヌシ・峰の狙撃手 | 55 | 狙撃手の天穿弓（弓・雷） | 峰の狙撃手の遺装（軽装） | 峰の狙撃手の耳飾り（DEX・LUK・会心ダメージ） | 峰の狙撃手の護符（回避） |
+| `l_zephyr` ヌシ・雷翼ゼファー | 55 | 雷翼の疾風双刃（双剣・雷） | 雷翼ゼファーの遺装（軽装） | 雷翼ゼファーの腕輪（AGI・DEX・攻撃速度） | 雷翼ゼファーの守り鈴（回避） |
+| `l_xenos` ヌシ・先触れゼノス | 55 | 破滅の先触れの終杖（杖・闇） | 先触れゼノスの遺衣（法衣） | 先触れゼノスの首飾り（INT・LUK・与ダメージ） | 先触れゼノスの護符（瀕死の守り） |
+| `l_black_knight` ヌシ・黒騎士 | 55 | 黒騎士の終剣（片手剣・闇） | 黒騎士の遺鎧（重鎧） | 黒騎士の指輪（STR・VIT・会心ダメージ） | 黒騎士の守り石（反撃） |
+| `l_nihil` ヌシ・虚無竜ニヒル | 55 | 虚無竜の喰らい槍（槍・闇） | 虚無竜ニヒルの遺装（軽装） | 虚無竜ニヒルの耳飾り（AGI・STR・会心率） | 虚無竜ニヒルのお守り袋（吸血） |
+| `l_brutus` ヌシ・暴れ牛ブルータス | 25 | 暴れ牛の角断剣（両手剣・地） | 暴れ牛ブルータスの遺鎧（重鎧） | 暴れ牛ブルータスの腕輪（STR・VIT・与ダメージ） | 暴れ牛ブルータスの守り石（反撃） |
+| `l_harvest_boss` ヌシ・収穫泥棒 | 25 | 収穫泥棒の早取り弓（弓・毒） | 収穫泥棒の遺装（軽装） | 収穫泥棒の指輪（DEX・LUK・会心率） | 収穫泥棒のお守り袋（回避） |
+| `l_strom` ヌシ・案山子王ストローム | 25 | 案山子王の見張り杖（杖・地） | 案山子王ストロームの遺衣（法衣） | 案山子王ストロームの首飾り（INT・VIT・回復量） | 案山子王ストロームの護符（撃破で回復） |
+| `l_melusine` ヌシ・湖の魔女メリュー | 30 | 湖の魔女の水鏡剣（片手剣・氷） | 湖の魔女メリューの遺衣（法衣） | 湖の魔女メリューの耳飾り（INT・DEX・会心率） | 湖の魔女メリューの守り鈴（最大HP%） |
+| `l_drowned_fisher` ヌシ・溺れ漁師 | 30 | 溺れ漁師の銛（槍・氷） | 溺れ漁師の遺装（軽装） | 溺れ漁師の腕輪（DEX・STR・与ダメージ） | 溺れ漁師のお守り袋（吸血） |
+| `l_numel` ヌシ・湖底の主ヌメル | 30 | 湖底の主のぬめり杖（杖・毒） | 湖底の主ヌメルの遺衣（法衣） | 湖底の主ヌメルの首飾り（INT・VIT・与ダメージ） | 湖底の主ヌメルの守り石（撃破で回復） |
+| `l_barbas` ヌシ・隻眼の船長 | 35 | 隻眼船長の海賊刀（片手剣・血） | 隻眼の船長の遺装（軽装） | 隻眼の船長の耳飾り（STR・LUK・会心ダメージ） | 隻眼の船長の護符（吸血） |
+| `l_dock_brawler` ヌシ・港の喧嘩屋 | 35 | 喧嘩屋の拳刃（双剣・地） | 港の喧嘩屋の遺鎧（重鎧） | 港の喧嘩屋の腕輪（STR・AGI・攻撃速度） | 港の喧嘩屋の守り石（瀕死の守り） |
+| `l_ankara` ヌシ・錨喰らいの大ガニ | 35 | 錨喰らいの鋏大剣（両手剣・氷） | 錨喰らいの大ガニの遺鎧（重鎧） | 錨喰らいの大ガニの指輪（VIT・STR・会心ダメージ） | 錨喰らいの大ガニの守り石（反撃） |
+| `w_bramble_knight` 放浪する大物・野茨騎士 | 17 | 野茨騎士の茨槍（槍・毒） | 野茨騎士の遺鎧（重鎧） | 野茨騎士の指輪（STR・VIT・与ダメージ） | 野茨騎士の守り石（反撃） |
+| `w_moonmoth_witch` 放浪する大物・月光蛾 | 23 | 月光蛾の鱗粉弓（弓・聖） | 月光蛾の遺衣（法衣） | 月光蛾の耳飾り（DEX・INT・会心率） | 月光蛾の守り鈴（回避） |
+| `w_slag_titan` 放浪する大物・鉱滓巨人 | 28 | 鉱滓巨人の熔鉄剣（両手剣・炎） | 鉱滓巨人の遺鎧（重鎧） | 鉱滓巨人の腕輪（STR・VIT・会心ダメージ） | 鉱滓巨人の守り石（瀕死の守り） |
+| `w_cascade_wyvern` 放浪する大物・瀑流飛竜 | 33 | 瀑流飛竜の翼槍（槍・氷） | 瀑流飛竜の遺装（軽装） | 瀑流飛竜の耳飾り（AGI・STR・移動速度） | 瀑流飛竜の守り鈴（回避） |
+| `w_mist_hermit` 放浪する大物・霧仙 | 35 | 霧仙の霞杖（杖・聖） | 霧仙の遺衣（法衣） | 霧仙の首飾り（INT・VIT・回復量） | 霧仙の護符（撃破で回復） |
+| `w_walking_glyph` 放浪する大物・歩く碑文 | 41 | 碑文の刻文剣（片手剣・地） | 歩く碑文の遺鎧（重鎧） | 歩く碑文の首飾り（INT・STR・会心率） | 歩く碑文の守り石（瀕死の守り） |
+| `w_ash_herald` 放浪する大物・灰の先触れ | 43 | 灰の先触れの燼弓（弓・炎） | 灰の先触れの遺装（軽装） | 灰の先触れの指輪（DEX・INT・与ダメージ） | 灰の先触れの護符（反撃） |
+| `w_thunder_roc` 放浪する大物・雷鳴の巨鳥 | 50 | 雷鳥の天雷槍（槍・雷） | 雷鳴の巨鳥の遺装（軽装） | 雷鳴の巨鳥の腕輪（DEX・AGI・攻撃速度） | 雷鳴の巨鳥の守り鈴（回避） |
+| `w_glacier_bearer` 放浪する大物・氷河負い | 53 | 氷河負いの氷塊剣（両手剣・氷） | 氷河負いの遺鎧（重鎧） | 氷河負いの指輪（VIT・STR・与ダメージ） | 氷河負いの守り石（最大HP%） |
+| `w_hollow_walker` 放浪する大物・虚ろな巡礼者 | 57 | 虚ろ巡礼の行脚剣（片手剣・闇） | 虚ろな巡礼者の遺衣（法衣） | 虚ろな巡礼者の首飾り（AGI・INT・会心率） | 虚ろな巡礼者の守り鈴（撃破で回復） |
+| `w_gravebloom` 放浪する大物・墓花 | 59 | 墓花の散華双刃（双剣・毒） | 墓花の遺装（軽装） | 墓花の耳飾り（AGI・INT・与ダメージ） | 墓花のお守り袋（吸血） |
+| `w_scarecrow_king` 放浪する大物・渡りの案山子王 | 22 | 案山子王の干し草熊手（槍・炎） | 渡りの案山子王の遺装（軽装） | 渡りの案山子王の指輪（STR・LUK・会心ダメージ） | 渡りの案山子王の護符（反撃） |
+| `w_reed_serpent` 放浪する大物・葦原の大蛇 | 27 | 葦原大蛇の毒牙弓（弓・毒） | 葦原の大蛇の遺装（軽装） | 葦原の大蛇の耳飾り（DEX・AGI・会心率） | 葦原の大蛇のお守り袋（回避） |
+| `w_sunken_captain` 放浪する大物・沈まぬ船長 | 32 | 沈まぬ船長の錨大剣（両手剣・雷） | 沈まぬ船長の遺鎧（重鎧） | 沈まぬ船長の首飾り（STR・LUK・会心ダメージ） | 沈まぬ船長の守り石（瀕死の守り） |
+| `w_tide_singer` 放浪する大物・潮呼びの巫女 | 34 | 潮呼びの潮騒杖（杖・聖） | 潮呼びの巫女の遺衣（法衣） | 潮呼びの巫女の首飾り（INT・VIT・回復量） | 潮呼びの巫女の守り鈴（撃破で回復） |
+
+<!-- RELIC TABLE END -->

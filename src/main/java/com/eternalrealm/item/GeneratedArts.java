@@ -13,18 +13,22 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * The weapon arts (the Z key) of every named field weapon and every tier weapon, built from {@link ArtTable} by
- * {@link ArtForge}. Built on first use (after the catalogue of designs).
+ * The weapon arts (the Z key) of every named field weapon, every relic weapon (金枠) and every tier weapon, built
+ * from {@link ArtTable} by {@link ArtForge}. Built on first use (after the catalogue of designs).
  *
  * <p>The damage budget: one use deals {@code typeBurst × factor} and its burst per second of cooldown is
  * {@code typePerSecond × factor} ({@link ArtBudget}): tier arts 1.08..1.26 × the type skill's burst at its rate (by
  * material), named arts 1.40..1.80 × at 1.05..1.15 × the rate (by level; lords' and calamities' +0.05), the boss arts
- * above them all.</p>
+ * above them; the relic arts 2.05..2.30 × at 1.15..1.25 × the rate, at least a boss art's strength. The held piece's
+ * rarity multiplies the damage and strength of every art when it is used ({@link ItemRarity#power()}).</p>
  */
 public final class GeneratedArts {
+    /** Burst of the weakest relic art, × the type skill (the strongest: +0.25). */
+    public static final double RELIC_BURST = 2.05;
+
     private record Catalog(Map<String, WeaponArt> byId, Map<String, WeaponArt> byDesign,
                            Map<ItemTier, Map<WeaponType, WeaponArt>> byTier, Map<String, ArtLook> looks,
-                           Map<String, ArtLook> zoneLooks, List<WeaponArt> all) {
+                           Map<String, ArtLook> zoneLooks, List<WeaponArt> all, java.util.Set<String> relics) {
     }
 
     private static final class Holder {
@@ -61,7 +65,12 @@ public final class GeneratedArts {
         return Holder.CATALOG.all();
     }
 
-    /** Whether the art belongs to a tier weapon (else to a named weapon). */
+    /** Whether the art belongs to a relic weapon (金枠). */
+    public static boolean isRelicArt(String artId) {
+        return artId != null && Holder.CATALOG.relics().contains(artId);
+    }
+
+    /** Whether the art belongs to a tier weapon (else to a named or relic weapon). */
     public static boolean isTierArt(String artId) {
         for (Map<WeaponType, WeaponArt> arts : Holder.CATALOG.byTier().values()) {
             for (WeaponArt art : arts.values()) {
@@ -80,6 +89,7 @@ public final class GeneratedArts {
         Map<String, ArtLook> looks = new HashMap<>();
         Map<String, ArtLook> zoneLooks = new HashMap<>();
         List<WeaponArt> all = new ArrayList<>();
+        java.util.Set<String> relics = new java.util.HashSet<>();
         for (ArtTable.Row row : ArtTable.ROWS) {
             ArtLook look = new ArtLook(row.family(), ArtLook.Shape.valueOf(row.primary()),
                     ArtLook.Shape.valueOf(row.accent()), row.particle(), row.accentParticle(), row.rgb(),
@@ -93,14 +103,24 @@ public final class GeneratedArts {
             }
             String[] key = row.key().split(":");
             WeaponArt art;
-            if (key[0].equals("design")) {
+            if (key[0].equals("design") || key[0].equals("relic")) {
                 WeaponDesign design = Armory.weapon(key[1])
                         .orElseThrow(() -> new IllegalStateException("Unknown design " + row.key()));
                 Element element = design.element();
-                double progress = Math.max(0.0, Math.min(1.0, (design.level() - 5) / 45.0));
-                boolean signature = design.has(DesignSource.LORD) || design.has(DesignSource.CALAMITY);
-                double burst = 1.40 + 0.40 * progress + (signature ? 0.05 : 0.0);
-                double rate = 1.05 + 0.10 * progress;
+                double burst;
+                double rate;
+                if (design.isRelic()) {
+                    // relics: at least as strong as the boss arts of their level
+                    double progress = Math.max(0.0, Math.min(1.0, (design.level() - 11) / 49.0));
+                    burst = RELIC_BURST + 0.25 * progress;
+                    rate = 1.15 + 0.10 * progress;
+                    relics.add(row.id());
+                } else {
+                    double progress = Math.max(0.0, Math.min(1.0, (design.level() - 5) / 45.0));
+                    boolean signature = design.has(DesignSource.LORD) || design.has(DesignSource.CALAMITY);
+                    burst = 1.40 + 0.40 * progress + (signature ? 0.05 : 0.0);
+                    rate = 1.05 + 0.10 * progress;
+                }
                 art = ArtForge.build(new ArtForge.Recipe(row.id(), design.type(), form, element.theme(),
                         element.affliction().orElse(null), Math.max(1, element.ticks()), element.power(), extras,
                         ArtBudget.typeBurst(design.type()) * burst, ArtBudget.typePerSecond(design.type()) * rate,
@@ -131,6 +151,7 @@ public final class GeneratedArts {
         }
         return new Catalog(Collections.unmodifiableMap(byId), Collections.unmodifiableMap(byDesign),
                 Collections.unmodifiableMap(byTier), Collections.unmodifiableMap(looks),
-                Collections.unmodifiableMap(zoneLooks), Collections.unmodifiableList(all));
+                Collections.unmodifiableMap(zoneLooks), Collections.unmodifiableList(all),
+                java.util.Set.copyOf(relics));
     }
 }

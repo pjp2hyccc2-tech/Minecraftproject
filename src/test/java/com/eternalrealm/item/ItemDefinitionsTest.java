@@ -22,10 +22,16 @@ public class ItemDefinitionsTest {
 
     @Test
     public void slotsHaveStableIdsAndArmorSharesMakeOneSet() {
-        assertEquals(List.of("weapon", "head", "chest", "legs", "feet"),
+        assertEquals(List.of("weapon", "head", "chest", "legs", "feet", "accessory", "charm"),
                 List.of(EquipmentSlot.values()).stream().map(EquipmentSlot::id).toList());
         assertEquals(List.of(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET),
                 EquipmentSlot.armor());
+        assertEquals(List.of(EquipmentSlot.ACCESSORY, EquipmentSlot.CHARM), EquipmentSlot.trinkets());
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            assertEquals(slot.toString(), slot.isTrinket(), EquipmentSlot.trinkets().contains(slot));
+            assertEquals(slot.toString(), slot.isArmor(), EquipmentSlot.armor().contains(slot));
+            assertEquals(slot == EquipmentSlot.ACCESSORY ? 2 : 1, slot.capacity());
+        }
         double total = 0;
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             assertEquals(slot, EquipmentSlot.byId(slot.id()).orElseThrow());

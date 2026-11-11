@@ -18,6 +18,12 @@
         "custom_model_data": 3185
       },
       "model": "eternalrealm:item/named/dragon_king_flamebrand"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3554
+      },
+      "model": "eternalrealm:item/named/relic_w_walking_glyph_weapon"
     }
   ]
 }

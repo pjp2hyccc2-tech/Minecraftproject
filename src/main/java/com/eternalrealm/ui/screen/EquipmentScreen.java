@@ -2,6 +2,7 @@ package com.eternalrealm.ui.screen;
 
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.client.ClientCharacterState;
+import com.eternalrealm.client.ClientTrinkets;
 import com.eternalrealm.item.EquipmentData;
 import com.eternalrealm.item.EquipmentSlot;
 import com.eternalrealm.item.ItemRarity;
@@ -27,11 +28,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The equipment (装備): the five slots (weapon, head, chest, legs, feet) around the character, the pieces in the bag
- * that fit the selected slot with a comparison against what is worn, equip and take off, and the totals of everything
- * worn. The job's weapons and the level requirements are shown; the server checks them again ({@link BagService}).
+ * The equipment (装備): the eight slots around the character (head, chest, legs, feet on the left; weapon, two
+ * accessories and the charm on the right), the pieces in the bag that fit the selected slot with a comparison against
+ * what is worn, equip and take off, and the totals of everything worn. The job's weapons and the level requirements
+ * are shown; the server checks them again ({@link BagService}). Relics (金枠) wear the gold frame.
  */
 public final class EquipmentScreen extends Screen {
+    /** The boxes of the screen: what fits in each, and the UI action target. */
+    private enum Box {
+        WEAPON(EquipmentSlot.WEAPON, "weapon", -1),
+        HEAD(EquipmentSlot.HEAD, "head", -1),
+        CHEST(EquipmentSlot.CHEST, "chest", -1),
+        LEGS(EquipmentSlot.LEGS, "legs", -1),
+        FEET(EquipmentSlot.FEET, "feet", -1),
+        ACCESSORY_1(EquipmentSlot.ACCESSORY, "accessory_1", 0),
+        ACCESSORY_2(EquipmentSlot.ACCESSORY, "accessory_2", 1),
+        CHARM(EquipmentSlot.CHARM, "charm", 2);
+
+        final EquipmentSlot kind;
+        final String target;
+        /** Index in {@link ClientTrinkets}, -1 for the weapon and the armor. */
+        final int trinket;
+
+        Box(EquipmentSlot kind, String target, int trinket) {
+            this.kind = kind;
+            this.target = target;
+            this.trinket = trinket;
+        }
+    }
+
     private static final int WIDTH = 312;
     private static final int HEIGHT = 216;
     private static final int BOX = 20;
@@ -46,7 +71,7 @@ public final class EquipmentScreen extends Screen {
     private static final int UP = 0xFF7CDB3A;
     private static final int DOWN = 0xFFFF6A50;
 
-    private EquipmentSlot slot = EquipmentSlot.WEAPON;
+    private Box slot = Box.WEAPON;
     private int candidate = -1;
     private int scroll;
     private int left;
@@ -109,12 +134,17 @@ public final class EquipmentScreen extends Screen {
         InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, cx, top + 112, 38, cx - mouseX,
                 top + 60 - mouseY, player);
         ItemStack hovered = ItemStack.EMPTY;
-        for (EquipmentSlot each : EquipmentSlot.values()) {
+        for (Box each : Box.values()) {
             int[] at = boxOf(each);
             ItemStack worn = worn(player, each);
             boolean on = each == slot;
             graphics.fill(at[0], at[1], at[0] + BOX, at[1] + BOX, 0xFF262130);
-            graphics.renderOutline(at[0] - 1, at[1] - 1, BOX + 2, BOX + 2, on ? RIM : rimOf(worn));
+            if (!on && EquipmentStacks.isGoldFrame(worn)) {
+                com.eternalrealm.ui.GoldFrame.draw(graphics, at[0], at[1], BOX, BOX,
+                        com.eternalrealm.client.ClientCombatState.tick());
+            } else {
+                graphics.renderOutline(at[0] - 1, at[1] - 1, BOX + 2, BOX + 2, on ? RIM : rimOf(worn));
+            }
             if (worn.isEmpty()) {
                 graphics.drawString(font, Component.translatable(slotKey(each)), at[0] + 2, at[1] + 6, 0x60FFFFFF,
                         false);
@@ -139,7 +169,7 @@ public final class EquipmentScreen extends Screen {
 
     private void drawTotals(GuiGraphics graphics, Player player) {
         List<EquipmentData> wornData = new ArrayList<>();
-        for (EquipmentSlot each : EquipmentSlot.values()) {
+        for (Box each : Box.values()) {
             EquipmentStacks.read(worn(player, each)).ifPresent(wornData::add);
         }
         double[] totals = EquipmentComparison.total(wornData);
@@ -197,7 +227,12 @@ public final class EquipmentScreen extends Screen {
             EquipmentData data = EquipmentStacks.read(stack).orElse(null);
             boolean usable = usable(player, data, level);
             ItemRarity rarity = data == null ? ItemRarity.COMMON : data.rarity();
-            int color = !usable ? 0xFF6A6474 : rarity == ItemRarity.COMMON ? TEXT : 0xFF000000 | rarity.color();
+            int color = !usable ? 0xFF6A6474 : data != null && data.isRelic() ? com.eternalrealm.ui.GoldFrame.GOLD
+                    : rarity == ItemRarity.COMMON ? TEXT : 0xFF000000 | rarity.color();
+            if (data != null && data.isRelic()) {
+                com.eternalrealm.ui.GoldFrame.draw(graphics, x + 2, ry + 1, 16, 16,
+                        com.eternalrealm.client.ClientCombatState.tick());
+            }
             String name = font.plainSubstrByWidth(stack.getHoverName().getString(), w - 52);
             graphics.drawString(font, name, x + 21, ry + 5, color, false);
             if (data != null) {
@@ -229,7 +264,7 @@ public final class EquipmentScreen extends Screen {
         }
         EquipmentData now = EquipmentStacks.read(worn(player, slot)).orElse(null);
         int level = ClientCharacterState.snapshot().map(CharacterSnapshot::level).orElse(1);
-        String reason = reason(player, next, level);
+        String reason = reason(player, next, level, slot);
         if (reason != null) {
             graphics.drawString(font, Component.translatable(reason, next.requiredLevel()), x, y, DOWN, false);
             y += 10;
@@ -257,7 +292,7 @@ public final class EquipmentScreen extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Player player = minecraft == null ? null : minecraft.player;
         if (player != null) {
-            for (EquipmentSlot each : EquipmentSlot.values()) {
+            for (Box each : Box.values()) {
                 int[] at = boxOf(each);
                 if (inside(mouseX, mouseY, at[0], at[1], BOX, BOX)) {
                     slot = each;
@@ -296,6 +331,9 @@ public final class EquipmentScreen extends Screen {
         if (Bag.isBagSlot(candidate)) {
             JsonObject args = new JsonObject();
             args.addProperty("slot", candidate);
+            if (slot.trinket >= 0) {
+                args.addProperty("target", slot.target);
+            }
             ERNetwork.sendToServer(new UiActionPacket(BagService.EQUIP, args));
             candidate = -1;
             click();
@@ -304,7 +342,7 @@ public final class EquipmentScreen extends Screen {
 
     private void unequipSlot() {
         JsonObject args = new JsonObject();
-        args.addProperty("target", slot.id());
+        args.addProperty("target", slot.target);
         ERNetwork.sendToServer(new UiActionPacket(BagService.UNEQUIP, args));
         click();
     }
@@ -315,13 +353,13 @@ public final class EquipmentScreen extends Screen {
             return;
         }
         if (Bag.isBagSlot(candidate) && EquipmentStacks.read(player.getInventory().items.get(candidate))
-                .map(data -> data.slot() != slot).orElse(true)) {
+                .map(data -> data.slot() != slot.kind).orElse(true)) {
             candidate = -1; // moved or equipped meanwhile
         }
         int level = ClientCharacterState.snapshot().map(CharacterSnapshot::level).orElse(1);
         EquipmentData next = Bag.isBagSlot(candidate)
                 ? EquipmentStacks.read(player.getInventory().items.get(candidate)).orElse(null) : null;
-        equip.active = next != null && usable(player, next, level);
+        equip.active = next != null && reason(player, next, level, slot) == null;
         unequip.active = !worn(player, slot).isEmpty();
     }
 
@@ -334,7 +372,7 @@ public final class EquipmentScreen extends Screen {
         for (int i = Bag.FIRST_SLOT; i <= Bag.LAST_SLOT; i++) {
             ItemStack stack = player.getInventory().items.get(i);
             EquipmentData data = EquipmentStacks.read(stack).orElse(null);
-            if (data != null && data.slot() == slot) {
+            if (data != null && data.slot() == slot.kind) {
                 out.add(i);
             }
         }
@@ -348,13 +386,21 @@ public final class EquipmentScreen extends Screen {
     }
 
     private static boolean usable(Player player, EquipmentData data, int level) {
-        return data != null && reason(player, data, level) == null;
+        return data != null && reason(player, data, level, null) == null;
     }
 
-    /** Why a piece cannot be worn (a translation key), or {@code null}. */
-    private static String reason(Player player, EquipmentData data, int level) {
+    /** Why a piece cannot be worn in {@code box} (a translation key), or {@code null}. */
+    private static String reason(Player player, EquipmentData data, int level, Box box) {
         if (!data.canBeUsedBy(level, player.getUUID())) {
             return "screen.eternalrealm.equipment.need_level";
+        }
+        if (box != null && box.trinket >= 0 && data.design() != null) {
+            for (Box other : Box.values()) {
+                if (other != box && other.trinket >= 0 && EquipmentStacks.designOf(worn(player, other))
+                        .map(design -> design.id().equals(data.design().id())).orElse(false)) {
+                    return "screen.eternalrealm.equipment.duplicate";
+                }
+            }
         }
         if (data.isWeapon()) {
             JobType job = ClientCharacterState.snapshot().map(CharacterSnapshot::jobId).map(JobType::fromStored)
@@ -366,23 +412,29 @@ public final class EquipmentScreen extends Screen {
         return null;
     }
 
-    private static ItemStack worn(Player player, EquipmentSlot slot) {
-        return slot == EquipmentSlot.WEAPON ? player.getInventory().items.get(0)
-                : player.getItemBySlot(GearArmorItem.vanillaSlot(slot));
+    private static ItemStack worn(Player player, Box box) {
+        if (box.trinket >= 0) {
+            return ClientTrinkets.get(box.trinket);
+        }
+        return box == Box.WEAPON ? player.getInventory().items.get(0)
+                : player.getItemBySlot(GearArmorItem.vanillaSlot(box.kind));
     }
 
-    private int[] boxOf(EquipmentSlot slot) {
-        return switch (slot) {
-            case WEAPON -> new int[] {left + 118, top + 58};
+    private int[] boxOf(Box box) {
+        return switch (box) {
             case HEAD -> new int[] {left + 8, top + 22};
             case CHEST -> new int[] {left + 8, top + 46};
             case LEGS -> new int[] {left + 8, top + 70};
             case FEET -> new int[] {left + 8, top + 94};
+            case WEAPON -> new int[] {left + 118, top + 22};
+            case ACCESSORY_1 -> new int[] {left + 118, top + 46};
+            case ACCESSORY_2 -> new int[] {left + 118, top + 70};
+            case CHARM -> new int[] {left + 118, top + 94};
         };
     }
 
-    private static String slotKey(EquipmentSlot slot) {
-        return "screen.eternalrealm.equipment.slot." + slot.id();
+    private static String slotKey(Box box) {
+        return "screen.eternalrealm.equipment.slot." + box.target;
     }
 
     private static int rimOf(ItemStack stack) {

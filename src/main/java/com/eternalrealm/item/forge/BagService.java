@@ -24,9 +24,12 @@ import java.util.Optional;
 /**
  * The server side of the bag and equipment screens (UI actions; every change is checked here):
  * <ul>
- *     <li>{@value #EQUIP} {@code {slot}}: a weapon from the bag swaps into slot 0 ({@link MainHand#equip}), an armor
- *     piece into its armor slot (what was worn goes back into the bag slot). The job's weapons and the level count.</li>
- *     <li>{@value #UNEQUIP} {@code {target: weapon|head|chest|legs|feet}}: into the first free bag slot.</li>
+ *     <li>{@value #EQUIP} {@code {slot, target?}}: a weapon from the bag swaps into slot 0 ({@link MainHand#equip}), an
+ *     armor piece into its armor slot, an accessory or a charm into a trinket slot ({@link TrinketSlots}: the
+ *     {@code target} one if given, else the first free one); what was worn goes back into the bag slot. The job's
+ *     weapons, the level and (trinkets) one copy of each named trinket count.</li>
+ *     <li>{@value #UNEQUIP} {@code {target: weapon|head|chest|legs|feet|accessory_1|accessory_2|charm}}: into the
+ *     first free bag slot.</li>
  *     <li>{@value #SORT}: equipment, consumables, materials, the rest; matching stacks merged.</li>
  *     <li>{@value #DISCARD} {@code {slot}}: the stack is destroyed (the client asked for a confirmation).</li>
  * </ul>
@@ -43,7 +46,9 @@ public final class BagService {
         OK,
         NOT_EQUIPMENT,
         LEVEL,
-        JOB
+        JOB,
+        /** The same named trinket is already worn. */
+        DUPLICATE
     }
 
     private BagService() {
@@ -51,14 +56,19 @@ public final class BagService {
 
     public static void register() {
         UiActions.register(EQUIP, (player, context, args) -> {
-            EquipResult result = equip(player, bagSlot(args));
+            int slot = bagSlot(args);
+            TrinketSlots.Slot wanted = args.has("target")
+                    ? TrinketSlots.Slot.byId(UiArgs.id(args, "target")).orElse(null) : null;
+            EquipResult result = equip(player, slot, wanted);
             if (result != EquipResult.OK) {
-                tell(player, "message.eternalrealm.bag.equip." + result.name().toLowerCase(java.util.Locale.ROOT));
+                tellRefusal(player, result, player.getInventory().items.get(slot));
             }
         });
         UiActions.register(UNEQUIP, (player, context, args) -> {
-            EquipmentSlot target = target(UiArgs.id(args, "target"));
-            if (!unequip(player, target)) {
+            String id = UiArgs.id(args, "target");
+            Optional<TrinketSlots.Slot> trinket = TrinketSlots.Slot.byId(id);
+            boolean done = trinket.isPresent() ? unequip(player, trinket.get()) : unequip(player, target(id));
+            if (!done) {
                 tell(player, "message.eternalrealm.bag.full");
             }
         });
@@ -68,6 +78,11 @@ public final class BagService {
 
     /** Equips the piece in bag slot {@code slot}. */
     public static EquipResult equip(ServerPlayer player, int slot) {
+        return equip(player, slot, null);
+    }
+
+    /** Equips the piece in bag slot {@code slot}; a trinket goes to {@code wanted} if it fits there. */
+    public static EquipResult equip(ServerPlayer player, int slot, TrinketSlots.Slot wanted) {
         Inventory inventory = player.getInventory();
         ItemStack stack = inventory.items.get(slot);
         Optional<EquipmentData> data = EquipmentStacks.read(stack);
@@ -77,6 +92,22 @@ public final class BagService {
         int level = snapshot(player).map(CharacterSnapshot::level).orElse(1);
         if (!data.get().canBeUsedBy(level, player.getUUID())) {
             return EquipResult.LEVEL;
+        }
+        if (data.get().isTrinket()) {
+            TrinketSlots.Slot target = TrinketSlots.targetFor(player, data.get().slot(), wanted);
+            String id = data.get().design() == null ? null : data.get().design().id();
+            for (TrinketSlots.Slot other : TrinketSlots.Slot.values()) {
+                if (other != target && id != null && EquipmentStacks.designOf(TrinketSlots.get(player, other))
+                        .map(design -> design.id().equals(id)).orElse(false)) {
+                    return EquipResult.DUPLICATE;
+                }
+            }
+            ItemStack worn = TrinketSlots.get(player, target);
+            TrinketSlots.set(player, target, stack.copy());
+            inventory.items.set(slot, worn.copy());
+            inventory.setChanged();
+            player.inventoryMenu.broadcastChanges();
+            return EquipResult.OK;
         }
         if (data.get().isWeapon()) {
             JobType job = job(player);
@@ -115,6 +146,36 @@ public final class BagService {
         inventory.setChanged();
         player.inventoryMenu.broadcastChanges();
         return true;
+    }
+
+    /** Takes off a trinket into the first free bag slot. @return false when the bag is full */
+    public static boolean unequip(ServerPlayer player, TrinketSlots.Slot target) {
+        ItemStack worn = TrinketSlots.get(player, target);
+        if (worn.isEmpty()) {
+            return true;
+        }
+        Inventory inventory = player.getInventory();
+        int free = Bags.firstFree(inventory);
+        if (free < 0) {
+            return false;
+        }
+        inventory.items.set(free, worn.copy());
+        TrinketSlots.set(player, target, ItemStack.EMPTY);
+        inventory.setChanged();
+        player.inventoryMenu.broadcastChanges();
+        return true;
+    }
+
+    /** "装備にはレベル55が必要です" (with the level), or the plain refusal. */
+    static void tellRefusal(ServerPlayer player, EquipResult result, ItemStack stack) {
+        String key = "message.eternalrealm.bag.equip." + result.name().toLowerCase(java.util.Locale.ROOT);
+        if (result == EquipResult.LEVEL) {
+            int needed = EquipmentStacks.requiredLevel(stack).orElse(1);
+            player.displayClientMessage(Component.translatable("message.eternalrealm.equipment.level_required",
+                    needed, stack.getHoverName()).withStyle(ChatFormatting.RED), true);
+            return;
+        }
+        tell(player, key);
     }
 
     /** Merges matching stacks, then orders the bag ({@link Bag#ORDER}). */
@@ -160,7 +221,7 @@ public final class BagService {
 
     private static EquipmentSlot target(String id) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (slot.id().equals(id)) {
+            if (slot.id().equals(id) && !slot.isTrinket()) {
                 return slot;
             }
         }

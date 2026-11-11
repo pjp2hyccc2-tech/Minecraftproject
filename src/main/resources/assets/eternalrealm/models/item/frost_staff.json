@@ -24,6 +24,24 @@
         "custom_model_data": 3175
       },
       "model": "eternalrealm:item/named/compass_rose_staff"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3510
+      },
+      "model": "eternalrealm:item/named/relic_c_moon_forest_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3523
+      },
+      "model": "eternalrealm:item/named/relic_l_belladonna_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3542
+      },
+      "model": "eternalrealm:item/named/relic_l_strom_weapon"
     }
   ]
 }

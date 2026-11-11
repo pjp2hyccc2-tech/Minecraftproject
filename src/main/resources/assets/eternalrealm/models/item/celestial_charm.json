@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_charm"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5011
+      },
+      "model": "eternalrealm:item/trinket/relic_b6_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5109
+      },
+      "model": "eternalrealm:item/trinket/relic_w_walking_glyph_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5111
+      },
+      "model": "eternalrealm:item/trinket/relic_w_ash_herald_talisman"
+    }
+  ]
+}

@@ -30,6 +30,30 @@
         "custom_model_data": 3183
       },
       "model": "eternalrealm:item/named/frozen_executioner_blade"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3511
+      },
+      "model": "eternalrealm:item/named/relic_c_iron_mine_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3528
+      },
+      "model": "eternalrealm:item/named/relic_l_goura_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3548
+      },
+      "model": "eternalrealm:item/named/relic_l_ankara_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3562
+      },
+      "model": "eternalrealm:item/named/relic_w_sunken_captain_weapon"
     }
   ]
 }

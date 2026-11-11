@@ -24,6 +24,24 @@
         "custom_model_data": 3164
       },
       "model": "eternalrealm:item/named/barbas_tidecleaver"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3517
+      },
+      "model": "eternalrealm:item/named/relic_c_lakeside_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3543
+      },
+      "model": "eternalrealm:item/named/relic_l_melusine_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3546
+      },
+      "model": "eternalrealm:item/named/relic_l_barbas_weapon"
     }
   ]
 }

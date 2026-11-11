@@ -288,7 +288,7 @@ public class ArmoryTest {
             assertTrue(design.id(), check.isOk());
             EquipmentData made = Crafting.craft(recipe, new SplittableRandom(recipes));
             assertEquals(design, made.design());
-            assertEquals(design.level(), made.requiredLevel());
+            assertEquals(design.level() + made.rarity().levelOffset(), made.requiredLevel());
         }
         assertEquals(Recipes.designRecipes().size(), recipes);
         assertEquals(70, Recipes.catalog().size());
@@ -370,7 +370,9 @@ public class ArmoryTest {
             EquipmentStats stats = EquipmentStats.of(data);
             assertEquals(expected - typeAttack, stats.bonusAttack(), 1e-9);
             assertTrue(weapon.id(), stats.modifiers().critChance() >= weapon.crit());
-            assertEquals(weapon.speed() + weapon.bonus().attackSpeed(), stats.modifiers().attackSpeed(), 1e-9);
+            // the rarity raises the special performance (ItemRarity#power)
+            assertEquals((weapon.speed() + weapon.bonus().attackSpeed()) * ItemRarity.RARE.power(),
+                    stats.modifiers().attackSpeed(), 1e-9);
         }
         // a boss weapon beats the plain piece of its own tier
         WeaponDesign king = Signatures.bossWeapon("final").orElseThrow();

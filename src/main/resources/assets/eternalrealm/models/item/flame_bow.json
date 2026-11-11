@@ -24,6 +24,12 @@
         "custom_model_data": 3179
       },
       "model": "eternalrealm:item/named/trade_wind_longbow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3527
+      },
+      "model": "eternalrealm:item/named/relic_l_vein_eater_weapon"
     }
   ]
 }

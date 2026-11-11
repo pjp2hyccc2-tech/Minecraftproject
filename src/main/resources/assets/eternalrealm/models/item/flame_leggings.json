@@ -63,6 +63,138 @@
         "custom_model_data": 4118
       },
       "model": "eternalrealm:item/named/anchorguard_plate_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4514
+      },
+      "model": "eternalrealm:item/named/relic_b4_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4518
+      },
+      "model": "eternalrealm:item/named/relic_b5_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4546
+      },
+      "model": "eternalrealm:item/named/relic_c_iron_mine_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4550
+      },
+      "model": "eternalrealm:item/named/relic_c_sacred_falls_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4570
+      },
+      "model": "eternalrealm:item/named/relic_c_lakeside_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4574
+      },
+      "model": "eternalrealm:item/named/relic_c_harbour_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4602
+      },
+      "model": "eternalrealm:item/named/relic_l_dolga_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4606
+      },
+      "model": "eternalrealm:item/named/relic_l_rustbone_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4610
+      },
+      "model": "eternalrealm:item/named/relic_l_vein_eater_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4614
+      },
+      "model": "eternalrealm:item/named/relic_l_goura_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4618
+      },
+      "model": "eternalrealm:item/named/relic_l_mistweaver_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4622
+      },
+      "model": "eternalrealm:item/named/relic_l_ord_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4674
+      },
+      "model": "eternalrealm:item/named/relic_l_melusine_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4678
+      },
+      "model": "eternalrealm:item/named/relic_l_drowned_fisher_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4682
+      },
+      "model": "eternalrealm:item/named/relic_l_numel_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4686
+      },
+      "model": "eternalrealm:item/named/relic_l_barbas_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4690
+      },
+      "model": "eternalrealm:item/named/relic_l_dock_brawler_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4694
+      },
+      "model": "eternalrealm:item/named/relic_l_ankara_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4710
+      },
+      "model": "eternalrealm:item/named/relic_w_cascade_wyvern_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4714
+      },
+      "model": "eternalrealm:item/named/relic_w_mist_hermit_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4750
+      },
+      "model": "eternalrealm:item/named/relic_w_sunken_captain_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4754
+      },
+      "model": "eternalrealm:item/named/relic_w_tide_singer_legs"
     }
   ]
 }

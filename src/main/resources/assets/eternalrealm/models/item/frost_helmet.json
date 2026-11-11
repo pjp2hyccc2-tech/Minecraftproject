@@ -63,6 +63,84 @@
         "custom_model_data": 4112
       },
       "model": "eternalrealm:item/named/tidecaller_robe_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4508
+      },
+      "model": "eternalrealm:item/named/relic_b3_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4540
+      },
+      "model": "eternalrealm:item/named/relic_c_moon_forest_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4564
+      },
+      "model": "eternalrealm:item/named/relic_c_farm_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4588
+      },
+      "model": "eternalrealm:item/named/relic_l_nebula_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4592
+      },
+      "model": "eternalrealm:item/named/relic_l_belladonna_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4596
+      },
+      "model": "eternalrealm:item/named/relic_l_lunar_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4660
+      },
+      "model": "eternalrealm:item/named/relic_l_brutus_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4664
+      },
+      "model": "eternalrealm:item/named/relic_l_harvest_boss_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4668
+      },
+      "model": "eternalrealm:item/named/relic_l_strom_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4700
+      },
+      "model": "eternalrealm:item/named/relic_w_moonmoth_witch_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4704
+      },
+      "model": "eternalrealm:item/named/relic_w_slag_titan_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4740
+      },
+      "model": "eternalrealm:item/named/relic_w_scarecrow_king_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4744
+      },
+      "model": "eternalrealm:item/named/relic_w_reed_serpent_head"
     }
   ]
 }

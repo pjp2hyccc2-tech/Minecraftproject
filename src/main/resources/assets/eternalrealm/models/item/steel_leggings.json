@@ -57,6 +57,12 @@
         "custom_model_data": 4086
       },
       "model": "eternalrealm:item/named/farmstead_bulwark_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4502
+      },
+      "model": "eternalrealm:item/named/relic_b1_legs"
     }
   ]
 }

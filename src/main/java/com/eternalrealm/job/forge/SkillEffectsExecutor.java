@@ -75,7 +75,17 @@ public final class SkillEffectsExecutor {
      */
     public static void applyArt(ServerPlayer caster, CombatStats stats, WeaponArt art, WeaponProfile weapon,
                                 double damageScale, List<SkillEffect> effects, List<CombatHits.HitTarget> targets) {
-        run(caster, stats, art.theme(), art.type().damageType(), 1.0, weapon, damageScale, effects, targets);
+        applyArt(caster, stats, art, weapon, damageScale, 1.0, effects, targets);
+    }
+
+    /**
+     * A weapon art's effects at {@code strength} (the held piece's rarity power: heals, shields, buffs and
+     * afflictions grow with it).
+     */
+    public static void applyArt(ServerPlayer caster, CombatStats stats, WeaponArt art, WeaponProfile weapon,
+                                double damageScale, double strength, List<SkillEffect> effects,
+                                List<CombatHits.HitTarget> targets) {
+        run(caster, stats, art.theme(), art.type().damageType(), strength, weapon, damageScale, effects, targets);
     }
 
     /**

@@ -118,12 +118,22 @@ public final class ClientForgeEvents {
         DualWield.onRenderPlayerPre(event);
     }
 
+    /** A relic's tooltip has the gold frame (金枠) as its border. */
+    @SubscribeEvent
+    public static void onTooltipColor(net.minecraftforge.client.event.RenderTooltipEvent.Color event) {
+        if (com.eternalrealm.item.forge.EquipmentStacks.isGoldFrame(event.getItemStack())) {
+            event.setBorderStart(com.eternalrealm.ui.GoldFrame.borderTop());
+            event.setBorderEnd(com.eternalrealm.ui.GoldFrame.borderBottom());
+        }
+    }
+
     @SubscribeEvent
     public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
         // Never show one world's/server's character in the next one.
         ClientCharacterState.clear();
         ClientCombatState.clear();
         ClientUiState.clear();
+        ClientTrinkets.clear();
         CombatAnimations.clear();
         CameraShake.clear();
         com.eternalrealm.client.boss.BossBodyEffects.clear();

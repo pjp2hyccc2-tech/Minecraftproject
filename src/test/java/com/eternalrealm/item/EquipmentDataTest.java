@@ -132,8 +132,10 @@ public class EquipmentDataTest {
         EquipmentData free = rareSword();
         assertTrue(free.isTradeable());
         assertFalse(free.isBound());
-        assertTrue(free.canBeUsedBy(22, PLAYER));
-        assertFalse("level 22 needed", free.canBeUsedBy(21, PLAYER));
+        // a rare frost piece: the tier's level 22 plus one for the rarity
+        assertEquals(23, free.requiredLevel());
+        assertTrue(free.canBeUsedBy(23, PLAYER));
+        assertFalse("level 23 needed", free.canBeUsedBy(22, PLAYER));
 
         EquipmentData bound = free.withBoundTo(PLAYER);
         assertTrue(bound.isBound());

@@ -30,7 +30,10 @@ import java.util.Objects;
  *
  * A named design ({@link Armory}) is called by its own name and adds, after the rarity line: where it comes from
  * (DESIGN), its handling, element and fixed bonuses (TRAIT), its perks (PERK), every weapon's art (ART), an armor
- * piece's set with both bonuses (SET), and its flavour text (LORE) before the requirement.
+ * piece's set with both bonuses (SET), and its flavour text (LORE) before the requirement. A trinket shows its stats
+ * instead of defense; a relic (金枠) is named and headed in gold ("金枠の遺宝・指輪") and says whose relic it is.
+ * Every special value is shown as it counts, raised by the rarity ({@link ItemRarity#power()}); the art line adds the
+ * rarity's boost to the art's power.
  */
 public final class EquipmentTooltip {
     private static final String PREFIX = "tooltip." + ModInfo.MOD_ID + ".equipment.";
@@ -53,6 +56,14 @@ public final class EquipmentTooltip {
     public static final String FROM_LORD = PREFIX + "from.lord";
     public static final String FROM_CALAMITY = PREFIX + "from.calamity";
     public static final String FROM_BOSS = PREFIX + "from.boss";
+    public static final String FROM_RELIC = PREFIX + "from.relic";
+    /** "金枠の遺宝・指輪": the header of a relic instead of the rarity. */
+    public static final String RELIC_TYPE = PREFIX + "relic_type";
+    /** "武技の威力 +30%（レア度）". */
+    public static final String ART_POWER = PREFIX + "art_power";
+    /** "STR +12 · VIT +8": a trinket's stats. */
+    public static final String TRINKET_STATS = PREFIX + "trinket_stats";
+    public static final String STAT = PREFIX + "stat";
     public static final String REACH = PREFIX + "reach";
     public static final String ELEMENT = PREFIX + "element";
     public static final String ART = PREFIX + "art";
@@ -68,8 +79,9 @@ public final class EquipmentTooltip {
     /** Every fixed key of this class. */
     public static final List<String> KEYS = List.of(NAME, NAME_ENHANCED, RARITY_TYPE, ATTACK, DEFENSE, MAX_HEALTH,
             ENHANCEMENT, REQUIRED_LEVEL, BOUND, USABLE_BY, JOB_SEPARATOR, DESIGN_NAME, DESIGN_NAME_ENHANCED,
-            FROM_FIELD, FROM_CRAFT, FROM_DUNGEON, FROM_LORD, FROM_CALAMITY, FROM_BOSS, REACH, ELEMENT, ART, SET,
-            SET_BONUS, LORE, TRAIT_SEPARATOR, TRAITS, MODIFIER + "attack_speed");
+            FROM_FIELD, FROM_CRAFT, FROM_DUNGEON, FROM_LORD, FROM_CALAMITY, FROM_BOSS, FROM_RELIC, RELIC_TYPE,
+            ART_POWER, TRINKET_STATS, STAT, REACH, ELEMENT, ART, SET, SET_BONUS, LORE, TRAIT_SEPARATOR, TRAITS,
+            MODIFIER + "attack_speed");
 
     private EquipmentTooltip() {
     }
@@ -82,11 +94,12 @@ public final class EquipmentTooltip {
         Objects.requireNonNull(data, "data");
         if (data.design() != null) {
             TooltipLine.Key design = new TooltipLine.Key(data.design().translationKey());
+            int color = data.isRelic() ? TooltipLine.COLOR_RELIC : data.rarity().color();
             if (data.enhancement() > 0) {
-                return TooltipLine.of(TooltipLine.Kind.NAME, DESIGN_NAME_ENHANCED, data.rarity().color(), design,
+                return TooltipLine.of(TooltipLine.Kind.NAME, DESIGN_NAME_ENHANCED, color, design,
                         new TooltipLine.Text(Integer.toString(data.enhancement())));
             }
-            return TooltipLine.of(TooltipLine.Kind.NAME, DESIGN_NAME, data.rarity().color(), design);
+            return TooltipLine.of(TooltipLine.Kind.NAME, DESIGN_NAME, color, design);
         }
         EquipmentBase base = data.base();
         TooltipLine.Key tier = new TooltipLine.Key(data.tier().translationKey());
@@ -131,24 +144,34 @@ public final class EquipmentTooltip {
     private static List<TooltipLine> build(EquipmentData data, int viewerLevel, JobType viewerJob) {
         Objects.requireNonNull(data, "data");
         List<TooltipLine> lines = new ArrayList<>();
-        String typeKey = data.isWeapon() ? data.weaponType().translationKey() : data.slot().translationKey();
-        lines.add(TooltipLine.of(TooltipLine.Kind.RARITY, RARITY_TYPE, data.rarity().color(),
-                new TooltipLine.Key(data.rarity().translationKey()), new TooltipLine.Key(typeKey)));
+        String typeKey = data.isWeapon() ? data.weaponType().translationKey()
+                : data.trinketDesign().map(trinket -> trinket.kind().translationKey())
+                .orElse(data.slot().translationKey());
+        if (data.isRelic()) {
+            lines.add(TooltipLine.of(TooltipLine.Kind.RARITY, RELIC_TYPE, TooltipLine.COLOR_RELIC,
+                    new TooltipLine.Key(typeKey)));
+        } else {
+            lines.add(TooltipLine.of(TooltipLine.Kind.RARITY, RARITY_TYPE, data.rarity().color(),
+                    new TooltipLine.Key(data.rarity().translationKey()), new TooltipLine.Key(typeKey)));
+        }
         if (data.design() != null) {
             lines.add(source(data.design()));
         }
+        double power = data.rarity().power();
         if (data.isWeapon()) {
             lines.add(stat(ATTACK, EquipmentStats.baseAttack(data)));
+        } else if (data.isTrinket()) {
+            lines.addAll(trinketLines(data));
         } else {
             lines.add(stat(DEFENSE, EquipmentStats.baseDefense(data)));
             lines.add(stat(MAX_HEALTH, EquipmentStats.baseMaxHealth(data)));
         }
-        data.weaponDesign().ifPresent(weapon -> lines.addAll(weaponLines(weapon)));
-        artOf(data).ifPresent(art -> lines.addAll(artLines(art)));
-        data.armorPiece().ifPresent(piece -> lines.addAll(armorLines(piece)));
+        data.weaponDesign().ifPresent(weapon -> lines.addAll(weaponLines(weapon, data.rarity())));
+        artOf(data).ifPresent(art -> lines.addAll(artLines(art, data.rarity())));
+        data.armorPiece().ifPresent(piece -> lines.addAll(armorLines(piece, power)));
         for (Affix affix : data.affixes()) {
             lines.add(TooltipLine.of(TooltipLine.Kind.AFFIX, affix.kind().translationKey(), TooltipLine.COLOR_AFFIX,
-                    new TooltipLine.Text(affix.kind().format(affix.value()))));
+                    new TooltipLine.Text(affix.kind().format(EquipmentStats.affixValue(affix, data.rarity())))));
         }
         if (data.enhancement() > 0) {
             double percent = EquipmentStats.ENHANCEMENT_BONUS_PER_LEVEL * data.enhancement() * 100.0;
@@ -177,7 +200,12 @@ public final class EquipmentTooltip {
     static TooltipLine source(Design design) {
         String origin = design.origin();
         TooltipLine line;
-        if (design.sources().contains(DesignSource.BOSS)) {
+        java.util.Optional<Relics.Source> relic = Relics.sourceOf(design);
+        if (relic.isPresent()) {
+            line = TooltipLine.of(TooltipLine.Kind.DESIGN, FROM_RELIC, TooltipLine.COLOR_RELIC,
+                    new TooltipLine.Key(relic.get().kind().translationKey()),
+                    new TooltipLine.Key(relic.get().nameKey()));
+        } else if (design.sources().contains(DesignSource.BOSS)) {
             line = TooltipLine.of(TooltipLine.Kind.DESIGN, FROM_BOSS, TooltipLine.COLOR_ART,
                     new TooltipLine.Key("boss." + ModInfo.MOD_ID + "." + origin));
         } else if (design.sources().contains(DesignSource.LORD)) {
@@ -199,12 +227,16 @@ public final class EquipmentTooltip {
         return line;
     }
 
-    /** Handling (crit, speed, reach), element, fixed bonuses, perks and the art of a named weapon. */
-    static List<TooltipLine> weaponLines(WeaponDesign weapon) {
+    /**
+     * Handling (crit, speed, reach), element, fixed bonuses and perks of a named weapon, raised by the piece's
+     * rarity.
+     */
+    static List<TooltipLine> weaponLines(WeaponDesign weapon, ItemRarity rarity) {
+        double power = rarity.power();
         List<TooltipLine> lines = new ArrayList<>();
         List<TooltipLine.Arg> handling = new ArrayList<>();
-        modifier(handling, "crit", weapon.crit(), true);
-        modifier(handling, "attack_speed", weapon.speed(), true);
+        modifier(handling, "crit", weapon.crit() * power, true);
+        modifier(handling, "attack_speed", weapon.speed() * power, true);
         if (weapon.reach() != 1.0) {
             double percent = (weapon.reach() - 1.0) * 100.0;
             handling.add(TooltipLine.Nested.of(REACH,
@@ -216,15 +248,16 @@ public final class EquipmentTooltip {
         }
         weapon.element().affliction().ifPresent(kind -> lines.add(TooltipLine.of(TooltipLine.Kind.TRAIT, ELEMENT,
                 TooltipLine.COLOR_TRAIT, new TooltipLine.Key(weapon.element().translationKey()),
-                new TooltipLine.Text(number(weapon.proc() * 100.0)), new TooltipLine.Key(kind.translationKey()),
+                new TooltipLine.Text(number(Gear.elementChance(weapon, rarity) * 100.0)),
+                new TooltipLine.Key(kind.translationKey()),
                 new TooltipLine.Text(number(weapon.element().ticks() / 20.0)))));
-        List<TooltipLine.Arg> bonus = modifiers(weapon.bonus());
+        List<TooltipLine.Arg> bonus = modifiers(weapon.bonus().scaled(power));
         if (!bonus.isEmpty()) {
             lines.add(TooltipLine.of(TooltipLine.Kind.TRAIT, TRAITS, TooltipLine.COLOR_TRAIT,
                     new TooltipLine.Join(bonus, TRAIT_SEPARATOR)));
         }
         for (PassiveEffect perk : weapon.perks()) {
-            for (TooltipLine.Nested text : perk(perk)) {
+            for (TooltipLine.Nested text : perk(perk, power)) {
                 lines.add(new TooltipLine(TooltipLine.Kind.PERK, text.translationKey(), text.args(),
                         TooltipLine.COLOR_PERK));
             }
@@ -245,19 +278,60 @@ public final class EquipmentTooltip {
         return java.util.Optional.of(GeneratedArts.forTier(data.tier(), data.weaponType()));
     }
 
-    /** Name and cooldown of the art, then what it does. */
-    static List<TooltipLine> artLines(WeaponArt art) {
-        return List.of(TooltipLine.of(TooltipLine.Kind.ART, ART, TooltipLine.COLOR_ART,
-                        new TooltipLine.Key(art.translationKey()),
-                        new TooltipLine.Text(number(art.action().cooldownTicks() / 20.0))),
-                TooltipLine.of(TooltipLine.Kind.ART, art.descriptionKey(), TooltipLine.COLOR_ART));
+    /** Name and cooldown of the art, what it does, and how much the piece's rarity raises its power. */
+    static List<TooltipLine> artLines(WeaponArt art, ItemRarity rarity) {
+        List<TooltipLine> lines = new ArrayList<>(3);
+        lines.add(TooltipLine.of(TooltipLine.Kind.ART, ART, TooltipLine.COLOR_ART,
+                new TooltipLine.Key(art.translationKey()),
+                new TooltipLine.Text(number(art.action().cooldownTicks() / 20.0))));
+        lines.add(TooltipLine.of(TooltipLine.Kind.ART, art.descriptionKey(), TooltipLine.COLOR_ART));
+        if (rarity.power() > 1.0) {
+            lines.add(TooltipLine.of(TooltipLine.Kind.ART, ART_POWER, TooltipLine.COLOR_ART,
+                    new TooltipLine.Text(number((rarity.power() - 1.0) * 100.0)),
+                    new TooltipLine.Key(rarity.translationKey())));
+        }
+        return lines;
     }
 
-    /** The set of an armor piece with its two- and four-piece bonuses. */
-    static List<TooltipLine> armorLines(ArmorPiece piece) {
+    /** A trinket's stats and bonuses (raised by rarity and enhancement) and its perks (raised by rarity). */
+    static List<TooltipLine> trinketLines(EquipmentData data) {
+        List<TooltipLine> lines = new ArrayList<>();
+        TrinketDesign trinket = data.trinketDesign().orElse(null);
+        if (trinket == null) {
+            return lines;
+        }
+        double factor = data.rarity().power() * EquipmentStats.enhancementFactor(data.enhancement());
+        List<TooltipLine.Arg> stats = new ArrayList<>();
+        for (com.eternalrealm.character.StatType type : com.eternalrealm.character.StatType.values()) {
+            int value = trinket.stats().get(type);
+            if (value > 0) {
+                stats.add(TooltipLine.Nested.of(STAT, new TooltipLine.Text(type.name()),
+                        new TooltipLine.Text(Integer.toString(EquipmentStats.scaledStat(value, factor)))));
+            }
+        }
+        if (!stats.isEmpty()) {
+            lines.add(TooltipLine.of(TooltipLine.Kind.BASE_STAT, TRINKET_STATS, TooltipLine.COLOR_STAT,
+                    new TooltipLine.Join(stats, TRAIT_SEPARATOR)));
+        }
+        List<TooltipLine.Arg> bonus = modifiers(trinket.modifiers().scaled(factor));
+        if (!bonus.isEmpty()) {
+            lines.add(TooltipLine.of(TooltipLine.Kind.TRAIT, TRAITS, TooltipLine.COLOR_TRAIT,
+                    new TooltipLine.Join(bonus, TRAIT_SEPARATOR)));
+        }
+        for (PassiveEffect perk : trinket.perks()) {
+            for (TooltipLine.Nested text : perk(perk, data.rarity().power())) {
+                lines.add(new TooltipLine(TooltipLine.Kind.PERK, text.translationKey(), text.args(),
+                        TooltipLine.COLOR_PERK));
+            }
+        }
+        return lines;
+    }
+
+    /** The set of an armor piece with its two- and four-piece bonuses (the piece's own bonus raised by rarity). */
+    static List<TooltipLine> armorLines(ArmorPiece piece, double power) {
         ArmorSet set = piece.set();
         List<TooltipLine> lines = new ArrayList<>();
-        List<TooltipLine.Arg> own = modifiers(set.piece());
+        List<TooltipLine.Arg> own = modifiers(set.piece().scaled(power));
         if (!own.isEmpty()) {
             lines.add(TooltipLine.of(TooltipLine.Kind.TRAIT, TRAITS, TooltipLine.COLOR_TRAIT,
                     new TooltipLine.Join(own, TRAIT_SEPARATOR)));
@@ -272,7 +346,7 @@ public final class EquipmentTooltip {
     private static TooltipLine setBonus(int pieces, ArmorSet.SetBonus bonus) {
         List<TooltipLine.Arg> parts = new ArrayList<>(modifiers(bonus.modifiers()));
         for (PassiveEffect perk : bonus.perks()) {
-            parts.addAll(perk(perk));
+            parts.addAll(perk(perk, 1.0));
         }
         return TooltipLine.of(TooltipLine.Kind.SET, SET_BONUS, TooltipLine.COLOR_SET,
                 new TooltipLine.Text(Integer.toString(pieces)), new TooltipLine.Join(parts, TRAIT_SEPARATOR));
@@ -304,32 +378,36 @@ public final class EquipmentTooltip {
         }
     }
 
-    /** The text of a perk (one part, two for a last stand with both bonuses). */
-    static List<TooltipLine.Nested> perk(PassiveEffect perk) {
+    /** The text of a perk (one part, two for a last stand with both bonuses), its values × {@code scale}. */
+    static List<TooltipLine.Nested> perk(PassiveEffect perk, double scale) {
         List<TooltipLine.Nested> parts = new ArrayList<>();
         if (perk instanceof PassiveEffect.Lifesteal lifesteal) {
-            parts.add(TooltipLine.Nested.of(MODIFIER + "lifesteal", percent(lifesteal.perLevel())));
+            parts.add(TooltipLine.Nested.of(MODIFIER + "lifesteal", percent(lifesteal.perLevel() * scale)));
         } else if (perk instanceof PassiveEffect.Proc proc) {
             parts.add(TooltipLine.Nested.of(MODIFIER + (proc.meleeOnly() ? "proc_melee" : "proc_any"),
-                    percent(proc.chancePerLevel()), new TooltipLine.Key(proc.kind().translationKey()),
+                    percent(Math.min(1.0, proc.chancePerLevel() * scale)),
+                    new TooltipLine.Key(proc.kind().translationKey()),
                     new TooltipLine.Text(number(proc.durationTicks() / 20.0))));
         } else if (perk instanceof PassiveEffect.LastStand last) {
             if (last.damagePerLevel() > 0.0) {
-                parts.add(TooltipLine.Nested.of(MODIFIER + "last_stand_damage", percent(last.damagePerLevel())));
+                parts.add(TooltipLine.Nested.of(MODIFIER + "last_stand_damage",
+                        percent(last.damagePerLevel() * scale)));
             }
             if (last.reductionPerLevel() > 0.0) {
-                parts.add(TooltipLine.Nested.of(MODIFIER + "last_stand_reduction", percent(last.reductionPerLevel())));
+                parts.add(TooltipLine.Nested.of(MODIFIER + "last_stand_reduction",
+                        percent(last.reductionPerLevel() * scale)));
             }
         } else if (perk instanceof PassiveEffect.Thorns thorns) {
-            parts.add(TooltipLine.Nested.of(MODIFIER + "thorns", percent(thorns.perLevel())));
+            parts.add(TooltipLine.Nested.of(MODIFIER + "thorns", percent(thorns.perLevel() * scale)));
         } else if (perk instanceof PassiveEffect.Evasion evasion) {
-            parts.add(TooltipLine.Nested.of(MODIFIER + "evasion", percent(evasion.perLevel())));
+            parts.add(TooltipLine.Nested.of(MODIFIER + "evasion", percent(evasion.perLevel() * scale)));
         } else if (perk instanceof PassiveEffect.HealOnKill heal) {
-            parts.add(TooltipLine.Nested.of(MODIFIER + "heal_on_kill", percent(heal.perLevel())));
+            parts.add(TooltipLine.Nested.of(MODIFIER + "heal_on_kill", percent(heal.perLevel() * scale)));
         } else if (perk instanceof PassiveEffect.Stats stats) {
-            parts.addAll(modifiers(stats.perLevel()).stream().map(TooltipLine.Nested.class::cast).toList());
+            parts.addAll(modifiers(stats.perLevel().scaled(scale)).stream().map(TooltipLine.Nested.class::cast)
+                    .toList());
         } else if (perk instanceof PassiveEffect.SkillPower power) {
-            parts.add(TooltipLine.Nested.of(MODIFIER + "skill_power", percent(power.perLevel())));
+            parts.add(TooltipLine.Nested.of(MODIFIER + "skill_power", percent(power.perLevel() * scale)));
         }
         return parts;
     }

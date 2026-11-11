@@ -17,13 +17,20 @@ import java.util.Optional;
  * the tier-1 weapons match the Phase 2 items ({@code iron_longsword}, {@code iron_greatsword},
  * {@code iron_twin_blades}, {@code iron_spear}) so they can stay registered under the same names.</p>
  *
- * @param weaponType required for {@link EquipmentSlot#WEAPON}, {@code null} for armor
+ * <p>The trinkets (accessories and charms) have bases too, one per tier ({@code abyss_accessory}, {@code iron_charm}):
+ * they exist only as the items the named trinkets ({@link TrinketDesign}) are made on, so they are not part of
+ * {@link #all()} (no plain trinket drops or recipes); {@link #trinkets()} and {@link #everything()} list them.</p>
+ *
+ * @param weaponType required for {@link EquipmentSlot#WEAPON}, {@code null} for armor and trinkets
  */
 public record EquipmentBase(EquipmentSlot slot, WeaponType weaponType, ItemTier tier) {
     private static final List<EquipmentBase> ALL;
+    private static final List<EquipmentBase> TRINKETS;
+    private static final List<EquipmentBase> EVERYTHING;
 
     static {
         List<EquipmentBase> all = new ArrayList<>();
+        List<EquipmentBase> trinkets = new ArrayList<>();
         for (ItemTier tier : ItemTier.values()) {
             for (WeaponType type : WeaponType.values()) {
                 all.add(weapon(type, tier));
@@ -31,8 +38,15 @@ public record EquipmentBase(EquipmentSlot slot, WeaponType weaponType, ItemTier 
             for (EquipmentSlot slot : EquipmentSlot.armor()) {
                 all.add(armor(slot, tier));
             }
+            for (EquipmentSlot slot : EquipmentSlot.trinkets()) {
+                trinkets.add(trinket(slot, tier));
+            }
         }
         ALL = Collections.unmodifiableList(all);
+        TRINKETS = Collections.unmodifiableList(trinkets);
+        List<EquipmentBase> everything = new ArrayList<>(all);
+        everything.addAll(trinkets);
+        EVERYTHING = Collections.unmodifiableList(everything);
     }
 
     public EquipmentBase {
@@ -55,13 +69,31 @@ public record EquipmentBase(EquipmentSlot slot, WeaponType weaponType, ItemTier 
         return new EquipmentBase(slot, null, tier);
     }
 
-    /** Every base: 7 tiers × (6 weapon types + 4 armor slots), tier by tier. */
+    /** The base of an accessory or a charm of {@code tier}. */
+    public static EquipmentBase trinket(EquipmentSlot slot, ItemTier tier) {
+        if (!Objects.requireNonNull(slot, "slot").isTrinket()) {
+            throw new IllegalArgumentException("Not a trinket slot: " + slot);
+        }
+        return new EquipmentBase(slot, null, tier);
+    }
+
+    /** Every base of weapons and armor: 7 tiers × (6 weapon types + 4 armor slots), tier by tier. */
     public static List<EquipmentBase> all() {
         return ALL;
     }
 
+    /** The trinket bases: 7 tiers × (accessory, charm). */
+    public static List<EquipmentBase> trinkets() {
+        return TRINKETS;
+    }
+
+    /** Every base, the trinkets included (item registration). */
+    public static List<EquipmentBase> everything() {
+        return EVERYTHING;
+    }
+
     public static Optional<EquipmentBase> byItemPath(String path) {
-        for (EquipmentBase base : ALL) {
+        for (EquipmentBase base : EVERYTHING) {
             if (base.itemPath().equals(path)) {
                 return Optional.of(base);
             }
@@ -71,6 +103,10 @@ public record EquipmentBase(EquipmentSlot slot, WeaponType weaponType, ItemTier 
 
     public boolean isWeapon() {
         return slot == EquipmentSlot.WEAPON;
+    }
+
+    public boolean isTrinket() {
+        return slot.isTrinket();
     }
 
     /** Stable noun id of the piece: longsword, greatsword, twin_blades, spear, staff, bow, helmet, chestplate, ... */
@@ -90,6 +126,8 @@ public record EquipmentBase(EquipmentSlot slot, WeaponType weaponType, ItemTier 
             case CHEST -> "chestplate";
             case LEGS -> "leggings";
             case FEET -> "boots";
+            case ACCESSORY -> "accessory";
+            case CHARM -> "charm";
             case WEAPON -> throw new IllegalStateException("unreachable");
         };
     }

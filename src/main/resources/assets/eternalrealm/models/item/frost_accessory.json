@@ -1,0 +1,86 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_accessory"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5004
+      },
+      "model": "eternalrealm:item/trinket/relic_b3_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5020
+      },
+      "model": "eternalrealm:item/trinket/relic_c_moon_forest_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5032
+      },
+      "model": "eternalrealm:item/trinket/relic_c_farm_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5044
+      },
+      "model": "eternalrealm:item/trinket/relic_l_nebula_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5046
+      },
+      "model": "eternalrealm:item/trinket/relic_l_belladonna_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5048
+      },
+      "model": "eternalrealm:item/trinket/relic_l_lunar_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5080
+      },
+      "model": "eternalrealm:item/trinket/relic_l_brutus_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5082
+      },
+      "model": "eternalrealm:item/trinket/relic_l_harvest_boss_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5084
+      },
+      "model": "eternalrealm:item/trinket/relic_l_strom_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5100
+      },
+      "model": "eternalrealm:item/trinket/relic_w_moonmoth_witch_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5102
+      },
+      "model": "eternalrealm:item/trinket/relic_w_slag_titan_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5120
+      },
+      "model": "eternalrealm:item/trinket/relic_w_scarecrow_king_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5122
+      },
+      "model": "eternalrealm:item/trinket/relic_w_reed_serpent_earring"
+    }
+  ]
+}

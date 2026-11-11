@@ -29,9 +29,12 @@ import java.util.function.IntSupplier;
  * enhancement, unique id, binding) as the {@link EquipmentCodec} string in the tag {@value #TAG}; a stack without the
  * tag (creative menu, /give, the starter weapon of older versions) is a plain common piece of its base.
  *
- * <p>A named design ({@link Armory}) is also written as its id ({@value #DESIGN_TAG}) and its model number
- * ({@code CustomModelData}), so every client draws the design's own icon and model and the combat code finds the
- * design's profile without decoding the data every tick.</p>
+ * <p>A named design ({@link Armory}) or a relic is also written as its id ({@value #DESIGN_TAG}) and its model
+ * number ({@code CustomModelData}), so every client draws the design's own icon and model and the combat code finds
+ * the design's profile without decoding the data every tick.</p>
+ *
+ * <p>Other modules (the market, the trading board) filter stacks with {@link #isGoldFrame}, {@link #requiredLevel}
+ * and {@link #rarity}.</p>
  */
 public final class EquipmentStacks {
     public static final String TAG = "ERGear";
@@ -122,11 +125,40 @@ public final class EquipmentStacks {
         return stack;
     }
 
-    /** A plain common piece of a design (creative menu, smithy previews, monsters' hands). */
+    /**
+     * A plain common piece of a design (creative menu, smithy previews, monsters' hands); a relic always comes as
+     * legendary, its affixes rolled from the design's model number (the same piece every time).
+     */
     public static ItemStack ofDesign(Design design) {
         ItemStack stack = new ItemStack(ERGearItems.equipment(design.base()));
-        write(stack, EquipmentData.of(design, ItemRarity.COMMON, List.of()));
+        if (design.isRelic()) {
+            write(stack, com.eternalrealm.item.EquipmentGenerator.roll(design, ItemRarity.LEGENDARY,
+                    new java.util.SplittableRandom(design.model())));
+        } else {
+            write(stack, EquipmentData.of(design, ItemRarity.COMMON, List.of()));
+        }
         return stack;
+    }
+
+    // ------------------------------------------------------------------ for other modules (market, trading board)
+
+    /**
+     * Whether the stack is a relic (金枠の遺宝): its frame is gold everywhere. Fast (reads the design tag, no
+     * decoding); false for every other stack.
+     */
+    public static boolean isGoldFrame(ItemStack stack) {
+        return designOf(stack).map(Design::isRelic).orElse(false);
+    }
+
+    /** Character level needed to equip the stack, if it is equipment (rarity and relic rules included). */
+    public static java.util.OptionalInt requiredLevel(ItemStack stack) {
+        return read(stack).map(data -> java.util.OptionalInt.of(data.requiredLevel()))
+                .orElse(java.util.OptionalInt.empty());
+    }
+
+    /** The stack's rarity, if it is equipment (relics are legendary). */
+    public static Optional<ItemRarity> rarity(ItemStack stack) {
+        return read(stack).map(EquipmentData::rarity);
     }
 
     /**
@@ -158,9 +190,10 @@ public final class EquipmentStacks {
         });
     }
 
-    /** Epic and legendary pieces, boss weapons, and the tiers that always shine, render with the glint. */
+    /** Epic and legendary pieces, boss weapons, relics, and the tiers that always shine, render with the glint. */
     public static boolean isFoil(ItemStack stack) {
         return read(stack).map(data -> data.tier().glint() || data.rarity().rank() >= ItemRarity.EPIC.rank()
+                || data.isRelic()
                 || data.weaponDesign().map(com.eternalrealm.item.WeaponDesign::isBossWeapon).orElse(false))
                 .orElse(false);
     }
@@ -207,7 +240,7 @@ public final class EquipmentStacks {
         Map<Item, EquipmentBase> map = bases;
         if (map == null) {
             map = new IdentityHashMap<>();
-            for (EquipmentBase base : EquipmentBase.all()) {
+            for (EquipmentBase base : EquipmentBase.everything()) {
                 map.put(ERGearItems.equipment(base), base);
             }
             bases = map;

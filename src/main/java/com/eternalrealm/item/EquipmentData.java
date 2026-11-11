@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * ({@link AffixPool}), and no value exceeds what the tier can roll (with {@link AffixKind#STORED_VALUE_TOLERANCE}).
  * Affixes are kept sorted by kind, so two pieces with the same affixes are equal whatever the roll order was.</p>
  *
- * @param weaponType  required for {@link EquipmentSlot#WEAPON}, {@code null} for armor
+ * @param weaponType  required for {@link EquipmentSlot#WEAPON}, {@code null} for armor and trinkets
  * @param enhancement 強化 level, 0..{@link #MAX_ENHANCEMENT}
  * @param uniqueId    identity of this physical piece for duplicate detection in trades and the market, or
  *                    {@code null} until the platform layer stamps one ({@link #ensureUniqueId})
@@ -98,13 +98,35 @@ public record EquipmentData(EquipmentSlot slot, WeaponType weaponType, ItemTier 
         return slot == EquipmentSlot.WEAPON;
     }
 
-    /** The design's own level for a named piece, otherwise the tier's. */
+    /**
+     * Character level needed to equip the piece: the design's own level for a named piece, otherwise the tier's, plus
+     * the rarity's {@link ItemRarity#levelOffset()} (at most {@link Design#MAX_LEVEL}). A relic asks for exactly its
+     * own level.
+     */
     public int requiredLevel() {
-        return design != null ? Math.max(design.level(), tier.requiredLevel()) : tier.requiredLevel();
+        if (design != null && design.isRelic()) {
+            return design.level();
+        }
+        int base = design != null ? Math.max(design.level(), tier.requiredLevel()) : tier.requiredLevel();
+        return Math.min(Design.MAX_LEVEL, base + rarity.levelOffset());
     }
 
     public boolean hasDesign() {
         return design != null;
+    }
+
+    /** A relic (金枠): its frame is gold everywhere it is shown. */
+    public boolean isRelic() {
+        return design != null && design.isRelic();
+    }
+
+    public boolean isTrinket() {
+        return slot.isTrinket();
+    }
+
+    /** The named trinket, if this is one. */
+    public Optional<TrinketDesign> trinketDesign() {
+        return design instanceof TrinketDesign trinket ? Optional.of(trinket) : Optional.empty();
     }
 
     /** The named weapon design, if this is one. */

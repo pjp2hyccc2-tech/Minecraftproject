@@ -43,6 +43,37 @@
 | D-036 | 武器を持っている間の右クリックはガード専用。オフハンドのアイテムはしゃがみ＋右クリックで使う。他のアイテムを使用中（盾・食事・弓など）は攻撃・回避・スキルを受け付けない（サーバーとクライアントの両方） | ガードが拒否されたときにオフハンドの盾へ流れ、バニラの100%防御の裏で連撃できた（独立レビューで指摘） | 確定（Phase 2） |
 | D-037 | パリィの受付はガード開始ごとに開くが、前回のガード開始から16tick未満なら開かない | 右クリックの連打で受付を出し続けられた（自己レビュー・独立レビュー双方で指摘） | 確定（Phase 2） |
 
+## D-RARITY: rarity raises a piece's special performance and its art, and asks for a few more levels (2026-11-11)
+The owner asked that the higher a weapon's rarity, the stronger its special performance and its Z art, and that pieces
+have a level players need to handle them. Each rarity has a power (COMMON ×1.00, UNCOMMON ×1.07, RARE ×1.14, EPIC
+×1.22, LEGENDARY ×1.30) that multiplies what makes a piece special rather than its plain numbers: affix values, a named
+weapon's element chance, fixed bonuses and perks, an armor set's and a trinket's fixed bonuses, and the damage and
+effect strength of the held weapon's own art (job skills and other weapons' arts are not touched). Together with the
+existing base multiplier (×1.20 at LEGENDARY) a legendary piece's art lands about 1.56 times as hard as a common one of
+the same weapon; at equal rarity boss arts stay above every named art (tested). The required level is the design's or
+tier's level plus a rarity offset (+0/+0/+1/+3/+5, capped at 100): a rarer piece is worth a short wait, and the offset
+stays small so a lucky drop is still usable soon. It applies to pieces players already own; until they reach the new
+level such a piece gives no stats (as before for pieces above the level) and is greyed in the equipment screen. The
+server enforces the level when equipping, when attacking, guarding or using the art with a held weapon (with a
+message; the client refuses first), and in the stat totals. Players without loaded character data are not stopped.
+
+## D-RELICS: gold-frame relics, about one kill in a thousand, from every boss, calamity, lord and wanderer (2026-11-11)
+The owner asked for very rare (about 0.1 %) weapons, armor and two new kinds of item, charms and accessories, themed on
+the dungeon bosses, calamities and lords, gold-framed. Every one of the 64 sources (9 dungeon bosses including the final
+raid, 10 calamities, 30 lords and the 15 wanderers, which are field bosses too) got its own seven relics: a weapon, a
+four-piece armor set, an accessory and a charm (448), all from one table (`tools/art/relics_data.py`) that writes the
+Java rows, the texts, the art and the docs list. A relic always comes as LEGENDARY, asks for its source's level + 5
+(no rarity offset) and is the strongest piece of its level (tested against what that level can wear, at any rarity:
+more attack than every named, boss and tier weapon of its type; more defense than every named set of its style, and the
+heavy and light sets also than every tier piece). Each
+rewarded player rolls once per kill at `relicDropChance` (server config, default 0.001); a hit is the weapon, the
+accessory, the charm or one armor piece, a quarter each. Accessories and charms got their own slots (two accessory, one
+charm) because they should add a lot without replacing armor; the same trinket counts once. The slots live in the
+player's saved data (like the vanilla armor slots, kept through death and dimension changes) and travel to the client
+over the existing UI action and UI data channels: no new packet, no protocol bump. Gold frames are drawn by one client
+helper wherever a relic is shown (bag, equipment slots and candidate list, tooltip border, pickup feed), and a drop is
+announced to the whole server. Other modules filter with `EquipmentStacks.isGoldFrame`, `requiredLevel` and `rarity`.
+
 ## D-LOCKON: aimed skills lock on to an enemy while their key is held (2026-11-11)
 The owner found some skills hard to land and asked that holding the key aims at a character and hits it, with the
 aimed enemy's outline glowing white; area attacks stay as they are. A skill is "aimed" when where it lands depends on

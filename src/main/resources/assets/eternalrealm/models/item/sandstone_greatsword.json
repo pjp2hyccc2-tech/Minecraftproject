@@ -66,6 +66,12 @@
         "custom_model_data": 3165
       },
       "model": "eternalrealm:item/named/anchor_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3501
+      },
+      "model": "eternalrealm:item/named/relic_b2_weapon"
     }
   ]
 }

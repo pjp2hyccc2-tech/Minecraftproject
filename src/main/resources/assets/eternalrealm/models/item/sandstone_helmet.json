@@ -105,6 +105,42 @@
         "custom_model_data": 4108
       },
       "model": "eternalrealm:item/named/privateer_garb_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4504
+      },
+      "model": "eternalrealm:item/named/relic_b2_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4536
+      },
+      "model": "eternalrealm:item/named/relic_c_meadow_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4576
+      },
+      "model": "eternalrealm:item/named/relic_l_garm_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4580
+      },
+      "model": "eternalrealm:item/named/relic_l_hook_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4584
+      },
+      "model": "eternalrealm:item/named/relic_l_durn_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4696
+      },
+      "model": "eternalrealm:item/named/relic_w_bramble_knight_head"
     }
   ]
 }

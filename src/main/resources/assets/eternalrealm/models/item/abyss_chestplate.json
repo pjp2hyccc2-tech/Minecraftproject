@@ -69,6 +69,120 @@
         "custom_model_data": 4081
       },
       "model": "eternalrealm:item/named/oblivion_vestment_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4525
+      },
+      "model": "eternalrealm:item/named/relic_b7_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4529
+      },
+      "model": "eternalrealm:item/named/relic_b8_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4533
+      },
+      "model": "eternalrealm:item/named/relic_final_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4553
+      },
+      "model": "eternalrealm:item/named/relic_c_ancient_ruins_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4557
+      },
+      "model": "eternalrealm:item/named/relic_c_soaring_peaks_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4561
+      },
+      "model": "eternalrealm:item/named/relic_c_end_forest_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4625
+      },
+      "model": "eternalrealm:item/named/relic_l_valka_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4629
+      },
+      "model": "eternalrealm:item/named/relic_l_scorch_eye_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4633
+      },
+      "model": "eternalrealm:item/named/relic_l_agnis_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4637
+      },
+      "model": "eternalrealm:item/named/relic_l_alvin_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4641
+      },
+      "model": "eternalrealm:item/named/relic_l_peak_sniper_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4645
+      },
+      "model": "eternalrealm:item/named/relic_l_zephyr_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4649
+      },
+      "model": "eternalrealm:item/named/relic_l_xenos_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4653
+      },
+      "model": "eternalrealm:item/named/relic_l_black_knight_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4657
+      },
+      "model": "eternalrealm:item/named/relic_l_nihil_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4725
+      },
+      "model": "eternalrealm:item/named/relic_w_thunder_roc_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4729
+      },
+      "model": "eternalrealm:item/named/relic_w_glacier_bearer_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4733
+      },
+      "model": "eternalrealm:item/named/relic_w_hollow_walker_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4737
+      },
+      "model": "eternalrealm:item/named/relic_w_gravebloom_chest"
     }
   ]
 }

@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_accessory"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5010
+      },
+      "model": "eternalrealm:item/trinket/relic_b6_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5108
+      },
+      "model": "eternalrealm:item/trinket/relic_w_walking_glyph_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5110
+      },
+      "model": "eternalrealm:item/trinket/relic_w_ash_herald_ring"
+    }
+  ]
+}

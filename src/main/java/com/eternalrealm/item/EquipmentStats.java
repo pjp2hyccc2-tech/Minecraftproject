@@ -27,8 +27,15 @@ import java.util.Objects;
  * modifiers          + the weapon's crit, attack speed and fixed bonuses / the armor piece's bonus
  * </pre>
  *
- * Enhancement and rarity scale only these base values, never the affixes, so enhancing (強化) and rerolling (厳選) are
- * independent ways to improve a piece.
+ * Enhancement scales only these base values (and a trinket's fixed stats), never the affixes, so enhancing (強化) and
+ * rerolling (厳選) are independent ways to improve a piece. The rarity's {@link ItemRarity#power()} multiplies the
+ * special performance: every affix value (primary stats rounded), a named design's fixed bonuses (a weapon's critical
+ * chance, attack speed and bonuses, an armor piece's bonus) and a trinket's stats and bonuses.
+ *
+ * <pre>
+ * trinket stats      = design stats     × rarity power × enhancement factor (primary stats rounded)
+ * trinket modifiers  = design modifiers × rarity power × enhancement factor
+ * </pre>
  *
  * @param stats       primary stats from affixes
  * @param modifiers   armor defense / max health and the secondary affixes
@@ -45,14 +52,25 @@ public record EquipmentStats(StatBlock stats, CombatModifiers modifiers, double 
 
     public static EquipmentStats of(EquipmentData data) {
         Objects.requireNonNull(data, "data");
+        double power = data.rarity().power();
         Map<StatType, Integer> stats = new EnumMap<>(StatType.class);
         CombatModifiers.Builder modifiers = CombatModifiers.builder()
                 .defense(baseDefense(data))
                 .healthFlat(baseMaxHealth(data));
         for (Affix affix : data.affixes()) {
-            affix.kind().stat().ifPresent(stat -> stats.merge(stat, affix.intValue(), Integer::sum));
-            affix.kind().addTo(modifiers, affix.value());
+            affix.kind().stat().ifPresent(stat -> stats.merge(stat, scaledStat(affix.intValue(), power),
+                    Integer::sum));
+            affix.kind().addTo(modifiers, affixValue(affix, data.rarity()));
         }
+        data.trinketDesign().ifPresent(trinket -> {
+            double factor = power * enhancementFactor(data.enhancement());
+            for (StatType type : StatType.values()) {
+                int value = trinket.stats().get(type);
+                if (value > 0) {
+                    stats.merge(type, scaledStat(value, factor), Integer::sum);
+                }
+            }
+        });
         CombatModifiers total = modifiers.build().plus(designModifiers(data));
         double bonus = data.isWeapon() ? Math.max(0.0, baseAttack(data) - weaponTypeAttack(data)) : 0.0;
         return new EquipmentStats(StatBlock.of(stats), total, Math.min(DamageCalculator.MAX_BONUS_ATTACK, bonus));
@@ -104,14 +122,31 @@ public record EquipmentStats(StatBlock stats, CombatModifiers modifiers, double 
      * bonus (set bonuses are {@link Gear}'s, they depend on the other pieces); nothing for plain pieces.
      */
     public static CombatModifiers designModifiers(EquipmentData data) {
+        double power = data.rarity().power();
         if (data.design() instanceof WeaponDesign weapon) {
             return weapon.bonus().plus(CombatModifiers.builder().crit(weapon.crit()).attackSpeed(weapon.speed())
-                    .build());
+                    .build()).scaled(power);
         }
         if (data.design() instanceof ArmorPiece piece) {
-            return piece.set().piece();
+            return piece.set().piece().scaled(power);
+        }
+        if (data.design() instanceof TrinketDesign trinket) {
+            return trinket.modifiers().scaled(power * enhancementFactor(data.enhancement()));
         }
         return CombatModifiers.NONE;
+    }
+
+    /** An affix's value as it counts (and is shown): the rolled value × the rarity's power, on the kind's grid. */
+    public static double affixValue(Affix affix, ItemRarity rarity) {
+        if (affix.kind().isPrimaryStat()) {
+            return scaledStat(affix.intValue(), rarity.power());
+        }
+        return affix.kind().snap(affix.value() * rarity.power());
+    }
+
+    /** A primary stat × a factor, rounded half up (never below the value itself). */
+    public static int scaledStat(int value, double factor) {
+        return Math.max(value, (int) Math.floor(value * factor + 0.5 + 1.0e-9));
     }
 
     private static double weaponTypeAttack(EquipmentData data) {

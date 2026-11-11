@@ -10,6 +10,7 @@ import java.util.OptionalLong;
  *
  * <pre>
  * equipment sell value = tier base (8, 20, 40, 70, 110, 160, 220) × rarity price multiplier (1, 1.5, 2.5, 4, 7)
+ *                        (a relic: ×10 on top)
  *                        × (1 + 0.05 × enhancement), rounded; affixes do not matter (rerolling cannot raise it)
  * area material        = 2, 4, 6, 9, 13, 18, 25 per item (area 1..7); not sold by NPCs
  * enhancement stone    = shop 30, sell 6          reroll crystal = shop 150, sell 30
@@ -44,9 +45,13 @@ public final class ItemPrices {
                 * (1.0 + ENHANCEMENT_VALUE_PER_LEVEL * enhancement));
     }
 
+    /** A relic (金枠) sells for this many times a legendary piece of its tier. */
+    public static final int RELIC_VALUE_FACTOR = 10;
+
     public static long equipmentSellValue(EquipmentData data) {
         Objects.requireNonNull(data, "data");
-        return equipmentSellValue(data.tier(), data.rarity(), data.enhancement());
+        long value = equipmentSellValue(data.tier(), data.rarity(), data.enhancement());
+        return data.isRelic() ? value * RELIC_VALUE_FACTOR : value;
     }
 
     /** What an NPC pays for one unit of a material; empty for ids that are not {@link Materials}. */

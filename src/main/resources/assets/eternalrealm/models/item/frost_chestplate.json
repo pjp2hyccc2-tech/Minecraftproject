@@ -63,6 +63,84 @@
         "custom_model_data": 4113
       },
       "model": "eternalrealm:item/named/tidecaller_robe_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4509
+      },
+      "model": "eternalrealm:item/named/relic_b3_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4541
+      },
+      "model": "eternalrealm:item/named/relic_c_moon_forest_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4565
+      },
+      "model": "eternalrealm:item/named/relic_c_farm_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4589
+      },
+      "model": "eternalrealm:item/named/relic_l_nebula_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4593
+      },
+      "model": "eternalrealm:item/named/relic_l_belladonna_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4597
+      },
+      "model": "eternalrealm:item/named/relic_l_lunar_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4661
+      },
+      "model": "eternalrealm:item/named/relic_l_brutus_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4665
+      },
+      "model": "eternalrealm:item/named/relic_l_harvest_boss_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4669
+      },
+      "model": "eternalrealm:item/named/relic_l_strom_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4701
+      },
+      "model": "eternalrealm:item/named/relic_w_moonmoth_witch_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4705
+      },
+      "model": "eternalrealm:item/named/relic_w_slag_titan_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4741
+      },
+      "model": "eternalrealm:item/named/relic_w_scarecrow_king_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4745
+      },
+      "model": "eternalrealm:item/named/relic_w_reed_serpent_chest"
     }
   ]
 }

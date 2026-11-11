@@ -24,6 +24,12 @@
         "custom_model_data": 3169
       },
       "model": "eternalrealm:item/named/inkstorm_blades"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3516
+      },
+      "model": "eternalrealm:item/named/relic_c_farm_weapon"
     }
   ]
 }
