@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "4795e40d0a4dcb31",
+ "build": "fe134a84162f9f2c",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -92,7 +92,6 @@
   "eternalrealm:shop_sign[attach=ceiling,facing=north,icon=flower]",
   "eternalrealm:shop_sign[attach=ceiling,facing=north,icon=mug]",
   "eternalrealm:shop_sign[attach=ceiling,facing=north,icon=potion]",
-  "eternalrealm:shop_sign[attach=ceiling,facing=north,icon=shirt]",
   "eternalrealm:shop_sign[attach=ceiling,facing=north,icon=sword]",
   "eternalrealm:shop_sign[attach=ceiling,facing=south,icon=bread]",
   "eternalrealm:shop_sign[attach=ceiling,facing=south,icon=fish]",
@@ -107,7 +106,6 @@
   "eternalrealm:shop_sign[attach=wall,facing=north,icon=sword]",
   "eternalrealm:shop_sign[attach=wall,facing=south,icon=anvil]",
   "eternalrealm:shop_sign[attach=wall,facing=south,icon=flower]",
-  "eternalrealm:shop_sign[attach=wall,facing=south,icon=hammer]",
   "eternalrealm:shop_sign[attach=wall,facing=south,icon=map]",
   "eternalrealm:shop_sign[attach=wall,facing=south,icon=potion]",
   "eternalrealm:shop_sign[attach=wall,facing=south,icon=ring]",
@@ -1935,9 +1933,9 @@
    "pos": [
     -64,
     6,
-    39
+    40
    ],
-   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:6,Sag:1.0f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [
@@ -2071,9 +2069,9 @@
    "pos": [
     -48,
     6,
-    39
+    40
    ],
-   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:6,Sag:1.0f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [
@@ -2266,14 +2264,6 @@
     22
    ],
    "nbt": "{Width:3.0f,Height:2.0f,Design:\"market\"}"
-  },
-  {
-   "pos": [
-    -27,
-    7,
-    60
-   ],
-   "nbt": "{Tx:0,Ty:0,Tz:2,Sag:0.8f,Style:\"laundry\",Colors:[I;14,0,11,0],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4015,9 +4005,17 @@
    "pos": [
     32,
     6,
-    39
+    40
    ],
-   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:6,Sag:1.0f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+  },
+  {
+   "pos": [
+    33,
+    7,
+    24
+   ],
+   "nbt": "{Tx:-12,Ty:0,Tz:6,Sag:0.4f,Style:\"pennant\",Colors:[I;1,4,3,10,5],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4034,14 +4032,6 @@
     -57
    ],
    "nbt": "{Width:3.0f,Height:2.0f,Design:\"cathedral\"}"
-  },
-  {
-   "pos": [
-    34,
-    8,
-    24
-   ],
-   "nbt": "{Tx:-14,Ty:0,Tz:6,Sag:1.2f,Style:\"pennant\",Colors:[I;1,4,3,10,5],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4070,10 +4060,10 @@
   {
    "pos": [
     35,
-    8,
-    23
+    7,
+    22
    ],
-   "nbt": "{Tx:3,Ty:0,Tz:-6,Sag:0.7f,Style:\"pennant\",Colors:[I;6,4,9,0,3],Wind:1.0f}"
+   "nbt": "{Tx:3,Ty:0,Tz:-4,Sag:0.4f,Style:\"pennant\",Colors:[I;6,4,9,0,3],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4085,11 +4075,11 @@
   },
   {
    "pos": [
-    36,
-    8,
+    37,
+    7,
     24
    ],
-   "nbt": "{Tx:14,Ty:0,Tz:6,Sag:1.2f,Style:\"pennant\",Colors:[I;14,4,11,0,5],Wind:1.0f}"
+   "nbt": "{Tx:12,Ty:0,Tz:6,Sag:0.4f,Style:\"pennant\",Colors:[I;14,4,11,0,5],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4607,9 +4597,9 @@
    "pos": [
     80,
     6,
-    39
+    40
    ],
-   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:6,Sag:1.0f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [
@@ -4703,9 +4693,9 @@
    "pos": [
     96,
     6,
-    39
+    40
    ],
-   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:6,Sag:1.0f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [

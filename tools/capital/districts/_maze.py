@@ -27,20 +27,85 @@ ICONS = ("sword", "shield", "potion", "bread", "anvil", "book", "gem", "flower",
 
 
 # ------------------------------------------------------------------------------------------------ gimmicks
-def bunting(w, x, y, z, to, style="pennant", colors=(14, 4, 11, 0), sag=1.0, wind=1.0, facing="east"):
-    """A string of pennants / flags / lanterns / laundry / garland from the anchor (x, y, z) (an air cell in
-    front of a wall, an eave or a post top) to the point at block offset ``to``."""
+HANG = {"pennant": 0.62, "flags": 0.45, "lanterns": 0.6, "laundry": 0.8, "garland": 0.18}
+_SOFT = ("minecraft:air", "eternalrealm:void", "minecraft:vine", "minecraft:glow_lichen", "minecraft:water",
+         "eternalrealm:light_shaft", "eternalrealm:bunting", "eternalrealm:smoke_emitter")
+
+
+def cord_cells(x, y, z, to, sag, style):
+    """Cells a string from the anchor (x, y, z) to the block ``to`` away passes or hangs its pieces in (a parabola
+    through the two block centres sagging ``sag`` at mid-span; no pieces within 0.32 of either hook), without the
+    two end cells. The town gimmicks' checker follows the exact curve; this keeps us clear of it."""
+    tx, ty, tz = to
+    span = max(1e-6, (tx * tx + tz * tz) ** 0.5)
+    n = max(8, int(span * 12))
+    hang = HANG.get(style, 0.62)
+    cells = set()
+    for i in range(n + 1):
+        t = i / n
+        px, pz = x + 0.5 + tx * t, z + 0.5 + tz * t
+        py = y + 0.5 + ty * t - 4.0 * sag * t * (1.0 - t)
+        cells.add((int(px // 1), int(py // 1), int(pz // 1)))
+        if min(t, 1.0 - t) * span < 0.32:
+            continue
+        k = 0.25
+        while k <= hang + 1e-9:
+            cells.add((int(px // 1), int((py - k) // 1), int(pz // 1)))
+            k += 0.25
+    cells.discard((x, y, z))
+    cells.discard((x + tx, y + ty, z + tz))
+    return cells
+
+
+def cord_clear(w, x, y, z, to, sag, style):
+    """True when the string would hang free (also: its far end is not inside a block)."""
     tx, ty, tz = (int(v) for v in to)
+    if w.get(x, y, z) != AIR or w.get(x + tx, y + ty, z + tz).split("[")[0] not in _SOFT:
+        return False
+    return all(w.get(*c).split("[")[0] in _SOFT for c in cord_cells(x, y, z, (tx, ty, tz), sag, style))
+
+
+def bunting(w, x, y, z, to, style="pennant", colors=(14, 4, 11, 0), sag=1.0, wind=1.0, facing="east", check=True):
+    """A string of pennants / flags / lanterns / laundry / garland from the anchor (x, y, z) (an air cell in
+    front of a wall or under an eave; on a post top the pieces would hang into the post) to the point at block
+    offset ``to`` (an air cell by a wall, under an eave or beside a post: the hook). Skipped (False) when
+    ``check`` and something is in the way of the cord or the pieces hanging from it."""
+    tx, ty, tz = (int(v) for v in to)
+    if check and not cord_clear(w, x, y, z, (tx, ty, tz), sag, style):
+        return False
     w.set(x, y, z, B.S("eternalrealm:bunting", facing=facing))
     cols = ",".join(str(int(c)) for c in colors)
     w.be(x, y, z, f'{{Tx:{tx},Ty:{ty},Tz:{tz},Sag:{float(sag):.1f}f,Style:"{style}",Colors:[I;{cols}],'
                   f'Wind:{float(wind):.1f}f}}')
+    return True
+
+
+def _solid_full(st):
+    """A full opaque block (what a sign can be fixed to; what a hanging board must not poke into)."""
+    from capital import colors as C
+    if st.split("[")[0] in _SOFT:
+        return False
+    try:
+        m = C.material(st)
+    except Exception:
+        return False
+    return m["kind"] == "solid" and m["box"] is None and "secret_door" not in st
 
 
 def shop_sign(w, x, y, z, facing, icon, attach="wall"):
-    """A hanging shop board with a picture of the trade in the air cell (x, y, z) in front of a wall (``facing``
-    = away from the wall) or under a ceiling block."""
+    """A hanging shop board with a picture of the trade in the air cell (x, y, z) in front of a full wall block
+    (``facing`` = away from the wall) or under a ceiling block, with no full block under the board. False (nothing
+    placed) when the place does not suit it."""
+    if w.get(x, y, z) != AIR or _solid_full(w.get(x, y - 1, z)):
+        return False
+    if attach == "wall":
+        dx, dz = STEP[facing]
+        if not _solid_full(w.get(x - dx, y, z - dz)):
+            return False
+    elif w.get(x, y + 1, z).split("[")[0] in _SOFT:
+        return False
     w.set(x, y, z, B.S("eternalrealm:shop_sign", facing=facing, attach=attach, icon=icon))
+    return True
 
 
 # ------------------------------------------------------------------------------------------------ helpers
@@ -196,9 +261,9 @@ def strings(w, cells, axis_across, seed=0, y0=0, every=9):
             continue
         style = "laundry" if hash2(x, z, seed + 1) < 0.45 else "pennant"
         colors = PENNANTS[int(hash2(z, x, seed + 2) * len(PENNANTS))]
-        bunting(w, a[0], y, a[1], (b[0] - a[0], 0, b[1] - a[1]), style=style, colors=colors, sag=0.6 + span * 0.12,
-                facing="east" if axis_across == "x" else "south")
-        done += 1
+        if bunting(w, a[0], y, a[1], (b[0] - a[0], 0, b[1] - a[1]), style=style, colors=colors,
+                   sag=0.6 + span * 0.12, facing="east" if axis_across == "x" else "south"):
+            done += 1
     return done
 
 

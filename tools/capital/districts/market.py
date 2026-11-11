@@ -57,8 +57,11 @@ def stall_at(w, x0, z0, front, W=5, D=4, seed=0):
     colors = TK.AWNINGS[int(hash2(x0, z0, seed) * len(TK.AWNINGS))]
     goods = GOODS_CYCLE[int(hash2(z0, x0, seed + 1) * len(GOODS_CYCLE))]
     TK.market_stall(f, 0, 1, W=Wd, D=Dd - 1, colors=colors, goods=goods, seed=seed + x0 * 7 + z0)
-    if goods in STALL_ICON:                     # a board with the picture of the trade under the awning's front
-        MZ.shop_sign(f, Wd // 2, 3, 1, "north", STALL_ICON[goods], attach="ceiling")
+    if goods in STALL_ICON:                     # a board with the picture of the trade under the awning's front,
+        mid = Wd // 2                           # over a spot of the counter where nothing tall stands
+        for x in sorted(range(1, Wd - 1), key=lambda u: abs(u - mid)):
+            if MZ.shop_sign(f, x, 3, 1, "north", STALL_ICON[goods], attach="ceiling"):
+                break
 
 
 # ============================================================================== market square
@@ -94,13 +97,12 @@ def square(w):
         _cart(w, x, z, seed=x + z)
     for (x, z) in ((26, 30), (50, 30), (38, 17), (20, 30)):
         K.lamp(w, x, 0, z, height=4)
-    # pennant strings from the top of the market cross to the tops of three lamps (clear of the masts' flags,
-    # which stream east, and above the stall awnings)
-    for (a, b, colors) in (((36, 8, 24), (50, 8, 30), (14, 4, 11, 0, 5)), ((34, 8, 24), (20, 8, 30), (1, 4, 3, 10, 5)),
-                           ((35, 8, 23), (38, 8, 17), (6, 4, 9, 0, 3))):
-        span = ((b[0] - a[0]) ** 2 + (b[2] - a[2]) ** 2) ** 0.5
-        MZ.bunting(w, *a, (b[0] - a[0], b[1] - a[1], b[2] - a[2]), style="pennant", colors=colors,
-                   sag=round(0.25 + 0.06 * span, 2), wind=1.0, facing="east" if b[0] > a[0] else "west")
+    # pennant strings from the market cross (in front of its capital) to beside the finials of three lamps, low-sagging
+    # over the stall awnings and clear of the masts' flags (which stream east)
+    for (a, b, colors) in (((37, 7, 24), (49, 7, 30), (14, 4, 11, 0, 5)), ((33, 7, 24), (21, 7, 30), (1, 4, 3, 10, 5)),
+                           ((35, 7, 22), (38, 7, 18), (6, 4, 9, 0, 3))):
+        MZ.bunting(w, *a, (b[0] - a[0], b[1] - a[1], b[2] - a[2]), style="pennant", colors=colors, sag=0.4,
+                   wind=1.0, facing="east" if b[0] > a[0] else "west" if b[0] < a[0] else "north")
 
 
 def _cart(w, x, z, seed=0):
