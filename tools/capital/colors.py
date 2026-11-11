@@ -150,6 +150,9 @@ BASE.update({
     "light_weighted_pressure_plate": (246, 208, 61), "heavy_weighted_pressure_plate": (220, 220, 220),
     "small_amethyst_bud": (170, 130, 220), "medium_amethyst_bud": (170, 130, 220),
     "large_amethyst_bud": (170, 130, 220), "sea_pickle": (100, 120, 50),
+    "shingle_roof_tiles": (92, 72, 52), "slate_roof_tiles": (66, 74, 88), "kawara_roof_tiles": (62, 64, 70),
+    "verdigris_roof_tiles": (84, 166, 140), "gilded_roof_tiles": (222, 172, 52), "thatch_roof": (200, 160, 80),
+    "dragon_egg": (20, 12, 26), "kelp": (60, 120, 40), "mycelium": (113, 98, 110),
 })
 PLANTS.update({
     "tube_coral": (48, 82, 214), "brain_coral": (198, 86, 154), "bubble_coral": (160, 24, 160),
@@ -199,6 +202,7 @@ PLURAL = {"brick": "bricks", "stone_brick": "stone_bricks", "mossy_stone_brick":
           "mangrove": "mangrove_planks", "cherry": "cherry_planks", "bamboo": "bamboo_planks",
           "bamboo_mosaic": "bamboo_mosaic", "polished_blackstone": "polished_blackstone", "iron": "iron_door",
           "stone": "stone", "smooth_stone": "smooth_stone", "gilded_trim": "gilded_trim"}
+PLURAL.update({f"{r}_roof_tile": f"{r}_roof_tiles" for r in ("shingle", "slate", "kawara", "verdigris", "gilded")})
 
 
 def _shade(c, f):

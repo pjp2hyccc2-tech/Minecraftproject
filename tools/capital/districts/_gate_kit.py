@@ -34,6 +34,7 @@ with open(os.path.join(ROOT, "src", "main", "resources", "data", "eternalrealm",
           encoding="utf-8") as _f:
     DESIGNS = {d["id"]: d for d in json.load(_f)["designs"]}
 ROT = {"south": 0, "west": 1, "north": 2, "east": 3}     # frame rotation that turns the local front to a direction
+PLAQUE = "terrace"   # "house": the twin gate inside a guild house, whose plaque shows the way back instead of the price
 F, ST, SL, WL = B.full, B.stairs, B.slab, B.wall
 
 
@@ -84,6 +85,11 @@ def plaque_nbt(theme, ink="black"):
              {"text": "★" * d["tier"], "color": "gold"},
              {"text": f"{d['price']:,} G"},
              {"translate": "guildhouse.eternalrealm.plaque.hint", "italic": True}]
+    if PLAQUE == "house":
+        front = [{"translate": f"guildhouse.eternalrealm.design.{theme}", "bold": True},
+                 {"text": "★" * d["tier"], "color": "gold"},
+                 {"translate": "guildhouse.eternalrealm.plaque.home"},
+                 {"translate": "guildhouse.eternalrealm.plaque.home_hint", "italic": True}]
     blank = ",".join(_line({"text": ""}) for _ in range(4))
     msgs = ",".join(_line(x) for x in front)
     return (f'{{front_text:{{messages:[{msgs}],color:"{ink}",has_glowing_text:1b}},'

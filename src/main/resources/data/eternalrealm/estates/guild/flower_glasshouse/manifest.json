@@ -1,0 +1,235 @@
+{
+ "format": 1,
+ "build": "56ebb9608ac97407",
+ "tileSize": 32,
+ "minY": -32,
+ "maxY": 159,
+ "palette": [
+  "eternalrealm:void",
+  "minecraft:air",
+  "eternalrealm:fountain_spray[facing=up,power=1]",
+  "eternalrealm:fountain_spray[facing=up,power=3]",
+  "eternalrealm:gilded_finial",
+  "eternalrealm:guild_board[facing=south]",
+  "eternalrealm:guild_portal[axis=z,theme=flower_glasshouse]",
+  "eternalrealm:slate_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:slate_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:smoke_emitter[heavy=false]",
+  "minecraft:allium",
+  "minecraft:andesite",
+  "minecraft:anvil[facing=west]",
+  "minecraft:azalea_leaves[distance=1,persistent=true]",
+  "minecraft:azure_bluet",
+  "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
+  "minecraft:birch_door[facing=north,half=lower,hinge=left,open=false]",
+  "minecraft:birch_door[facing=north,half=upper,hinge=left,open=false]",
+  "minecraft:birch_fence",
+  "minecraft:birch_sign[rotation=12]",
+  "minecraft:birch_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:birch_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:birch_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:birch_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:birch_trapdoor[facing=east,half=bottom,open=true]",
+  "minecraft:birch_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:blast_furnace[facing=south,lit=true]",
+  "minecraft:blue_orchid",
+  "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=false,has_bottle_2=true]",
+  "minecraft:bricks",
+  "minecraft:calcite",
+  "minecraft:cartography_table",
+  "minecraft:chain[axis=y]",
+  "minecraft:cherry_leaves[distance=1,persistent=true]",
+  "minecraft:cherry_log[axis=x]",
+  "minecraft:cherry_log[axis=y]",
+  "minecraft:chest[facing=north,type=single]",
+  "minecraft:cobblestone",
+  "minecraft:composter[level=6]",
+  "minecraft:cornflower",
+  "minecraft:crafting_table",
+  "minecraft:dandelion",
+  "minecraft:dirt",
+  "minecraft:fletching_table",
+  "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
+  "minecraft:furnace[facing=south,lit=false]",
+  "minecraft:glass",
+  "minecraft:glass_pane",
+  "minecraft:grass",
+  "minecraft:grass_block",
+  "minecraft:grindstone[face=floor,facing=south]",
+  "minecraft:hay_block[axis=y]",
+  "minecraft:jungle_leaves[distance=1,persistent=true]",
+  "minecraft:jungle_log[axis=y]",
+  "minecraft:lantern[hanging=false]",
+  "minecraft:lantern[hanging=true]",
+  "minecraft:lilac[half=lower]",
+  "minecraft:lilac[half=upper]",
+  "minecraft:lily_of_the_valley",
+  "minecraft:loom[facing=south]",
+  "minecraft:moss_block",
+  "minecraft:oxeye_daisy",
+  "minecraft:peony[half=lower]",
+  "minecraft:peony[half=upper]",
+  "minecraft:pink_stained_glass",
+  "minecraft:pink_terracotta",
+  "minecraft:pink_tulip",
+  "minecraft:polished_blackstone",
+  "minecraft:polished_blackstone_wall",
+  "minecraft:polished_diorite",
+  "minecraft:poppy",
+  "minecraft:potted_azure_bluet",
+  "minecraft:potted_blue_orchid",
+  "minecraft:potted_cactus",
+  "minecraft:potted_fern",
+  "minecraft:potted_orange_tulip",
+  "minecraft:potted_red_tulip",
+  "minecraft:prismarine_bricks",
+  "minecraft:quartz_pillar[axis=y]",
+  "minecraft:quartz_slab[type=bottom]",
+  "minecraft:quartz_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:quartz_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:red_tulip",
+  "minecraft:rose_bush[half=lower]",
+  "minecraft:rose_bush[half=upper]",
+  "minecraft:smithing_table",
+  "minecraft:smoker[facing=south,lit=true]",
+  "minecraft:smooth_quartz",
+  "minecraft:smooth_quartz_slab[type=bottom]",
+  "minecraft:spruce_planks",
+  "minecraft:stone",
+  "minecraft:stonecutter[facing=south]",
+  "minecraft:sunflower[half=lower]",
+  "minecraft:sunflower[half=upper]",
+  "minecraft:target[power=0]",
+  "minecraft:trapped_chest[facing=west,type=single]",
+  "minecraft:water[level=0]",
+  "minecraft:water_cauldron[level=3]",
+  "minecraft:white_carpet",
+  "minecraft:white_tulip"
+ ],
+ "tiles": [
+  {
+   "x": -1,
+   "z": -1,
+   "file": "tiles/-1_-1.bin"
+  },
+  {
+   "x": -1,
+   "z": 0,
+   "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -1,
+   "file": "tiles/0_-1.bin"
+  },
+  {
+   "x": 0,
+   "z": 0,
+   "file": "tiles/0_0.bin"
+  }
+ ],
+ "blockEntities": [
+  {
+   "pos": [
+    -11,
+    2,
+    -3
+   ],
+   "nbt": "{front_text:{messages:['{\"translate\":\"guildhouse.eternalrealm.design.flower_glasshouse\",\"bold\":true}','{\"text\":\"★★\",\"color\":\"gold\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home_hint\",\"italic\":true}'],color:\"black\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -3,
+    1,
+    -9
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.1\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    -9
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.2\"}}"
+  },
+  {
+   "pos": [
+    6,
+    1,
+    -9
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.3\"}}"
+  },
+  {
+   "pos": [
+    15,
+    1,
+    0
+   ],
+   "nbt": "{ForgeData:{er_slot:\"vault.1\"}}"
+  }
+ ],
+ "entities": [
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    2.5,
+    1.0,
+    12.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Look:0b}"
+  },
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    5.5,
+    1.0,
+    13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Look:2b}"
+  },
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    8.5,
+    1.0,
+    12.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Look:0b}"
+  }
+ ],
+ "fluidTicks": [],
+ "spots": {
+  "board": {
+   "pos": [
+    -3,
+    1,
+    0
+   ],
+   "yaw": 180.0
+  },
+  "entry": {
+   "pos": [
+    -9,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  },
+  "exit": {
+   "pos": [
+    -12,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  }
+ },
+ "blend": {
+  "edgeY": 0
+ }
+}

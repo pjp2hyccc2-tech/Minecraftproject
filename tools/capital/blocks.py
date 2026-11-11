@@ -379,7 +379,14 @@ DEFAULTS["cave_vines"] = {"age": "25", "berries": "true"}
 DEFAULTS["cave_vines_plant"] = {"berries": "true"}
 DEFAULTS["bamboo"] = {"age": "0", "leaves": "large", "stage": "0"}
 _reg(["guild_portal"], "guild_portal", CUSTOM_NS)              # shimmering gate surface (no collision)
-_reg(["guild_board", "guild_chest"], "facing4", CUSTOM_NS)      # notice board / the guild's shared storage
+_reg(["guild_board"], "facing4", CUSTOM_NS)                     # the guild's notice board (3 x 2 on a wall)
+# roof tiles of the guild houses (GuildHouseBlocks; textures by tools/art/guild_house_blocks.py)
+GUILD_ROOFS = ("shingle", "slate", "kawara", "verdigris", "gilded")
+for _r in GUILD_ROOFS:
+    _family(f"{_r}_roof_tiles", f"{_r}_roof_tile_stairs", f"{_r}_roof_tile_slab", None, ns=CUSTOM_NS)
+_family("thatch_roof", "thatch_roof_stairs", "thatch_roof_slab", None, ns=CUSTOM_NS)
+_reg(["dragon_egg", "red_mushroom", "brown_mushroom"])
+_reg(["kelp"], "age25")
 for _c in ("tube", "brain", "bubble", "fire", "horn"):
     _reg(f"{_c}_coral_block")
     _reg([f"{_c}_coral", f"{_c}_coral_fan"], "waterlogged")

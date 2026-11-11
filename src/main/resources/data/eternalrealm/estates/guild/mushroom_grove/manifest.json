@@ -1,0 +1,184 @@
+{
+ "format": 1,
+ "build": "8d7c171db0d67547",
+ "tileSize": 32,
+ "minY": -32,
+ "maxY": 159,
+ "palette": [
+  "eternalrealm:void",
+  "minecraft:air",
+  "eternalrealm:guild_board[facing=west]",
+  "eternalrealm:guild_portal[axis=z,theme=mushroom_grove]",
+  "minecraft:andesite",
+  "minecraft:anvil[facing=west]",
+  "minecraft:azalea",
+  "minecraft:barrel[facing=up,open=false]",
+  "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
+  "minecraft:birch_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:birch_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:bookshelf",
+  "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=false,has_bottle_2=true]",
+  "minecraft:brown_mushroom",
+  "minecraft:brown_mushroom_block",
+  "minecraft:brown_stained_glass_pane",
+  "minecraft:campfire[facing=west,lit=true]",
+  "minecraft:cartography_table",
+  "minecraft:chest[facing=south,type=single]",
+  "minecraft:coarse_dirt",
+  "minecraft:crafting_table",
+  "minecraft:dark_oak_planks",
+  "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:dirt",
+  "minecraft:fern",
+  "minecraft:furnace[facing=south,lit=false]",
+  "minecraft:glow_lichen[north=true]",
+  "minecraft:grass",
+  "minecraft:grass_block",
+  "minecraft:green_carpet",
+  "minecraft:grindstone[face=floor,facing=south]",
+  "minecraft:hanging_roots",
+  "minecraft:hay_block[axis=y]",
+  "minecraft:ladder[facing=north]",
+  "minecraft:lantern[hanging=false]",
+  "minecraft:lectern[facing=north,has_book=true]",
+  "minecraft:lime_carpet",
+  "minecraft:loom[facing=south]",
+  "minecraft:mangrove_slab[type=bottom]",
+  "minecraft:mangrove_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:mangrove_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:mangrove_wall_sign[facing=east]",
+  "minecraft:moss_block",
+  "minecraft:moss_carpet",
+  "minecraft:mossy_cobblestone",
+  "minecraft:mushroom_stem",
+  "minecraft:mycelium",
+  "minecraft:podzol",
+  "minecraft:potted_brown_mushroom",
+  "minecraft:potted_red_mushroom",
+  "minecraft:red_mushroom",
+  "minecraft:red_mushroom_block",
+  "minecraft:rooted_dirt",
+  "minecraft:shroomlight",
+  "minecraft:smithing_table",
+  "minecraft:spore_blossom",
+  "minecraft:spruce_planks",
+  "minecraft:stone",
+  "minecraft:stonecutter[facing=south]",
+  "minecraft:target[power=0]",
+  "minecraft:trapped_chest[facing=west,type=single]",
+  "minecraft:tuff",
+  "minecraft:warped_stem[axis=y]",
+  "minecraft:warped_wart_block",
+  "minecraft:white_candle[candles=2,lit=true]",
+  "minecraft:white_stained_glass_pane"
+ ],
+ "tiles": [
+  {
+   "x": -1,
+   "z": -1,
+   "file": "tiles/-1_-1.bin"
+  },
+  {
+   "x": -1,
+   "z": 0,
+   "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -1,
+   "file": "tiles/0_-1.bin"
+  },
+  {
+   "x": 0,
+   "z": 0,
+   "file": "tiles/0_0.bin"
+  }
+ ],
+ "blockEntities": [
+  {
+   "pos": [
+    -6,
+    2,
+    -2
+   ],
+   "nbt": "{front_text:{messages:['{\"translate\":\"guildhouse.eternalrealm.design.mushroom_grove\",\"bold\":true}','{\"text\":\"★\",\"color\":\"gold\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home_hint\",\"italic\":true}'],color:\"white\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    5,
+    1,
+    -3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.1\"}}"
+  },
+  {
+   "pos": [
+    7,
+    1,
+    -3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.2\"}}"
+  },
+  {
+   "pos": [
+    12,
+    10,
+    0
+   ],
+   "nbt": "{ForgeData:{er_slot:\"vault.1\"}}"
+  }
+ ],
+ "entities": [
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    2.5,
+    1.0,
+    11.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Look:0b}"
+  },
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    6.5,
+    1.0,
+    11.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Look:2b}"
+  }
+ ],
+ "fluidTicks": [],
+ "spots": {
+  "board": {
+   "pos": [
+    8,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  },
+  "entry": {
+   "pos": [
+    -6,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  },
+  "exit": {
+   "pos": [
+    -9,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  }
+ },
+ "blend": {
+  "edgeY": 0
+ }
+}

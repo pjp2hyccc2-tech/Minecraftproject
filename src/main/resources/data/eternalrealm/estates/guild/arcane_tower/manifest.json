@@ -1,0 +1,398 @@
+{
+ "format": 1,
+ "build": "61b7f2cc4a0068a8",
+ "tileSize": 32,
+ "minY": -32,
+ "maxY": 159,
+ "palette": [
+  "eternalrealm:void",
+  "minecraft:air",
+  "eternalrealm:gilded_trim",
+  "eternalrealm:guild_board[facing=west]",
+  "eternalrealm:guild_portal[axis=z,theme=arcane_tower]",
+  "eternalrealm:slate_roof_tile_slab[type=bottom]",
+  "eternalrealm:slate_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:slate_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:slate_roof_tiles",
+  "minecraft:allium",
+  "minecraft:amethyst_block",
+  "minecraft:amethyst_cluster[facing=down]",
+  "minecraft:amethyst_cluster[facing=up]",
+  "minecraft:anvil[facing=west]",
+  "minecraft:azure_bluet",
+  "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
+  "minecraft:blast_furnace[facing=south,lit=true]",
+  "minecraft:bookshelf",
+  "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=false,has_bottle_2=true]",
+  "minecraft:budding_amethyst",
+  "minecraft:calcite",
+  "minecraft:cartography_table",
+  "minecraft:chain[axis=y]",
+  "minecraft:cherry_leaves[distance=1,persistent=true]",
+  "minecraft:cherry_log[axis=x]",
+  "minecraft:cherry_log[axis=y]",
+  "minecraft:cherry_log[axis=z]",
+  "minecraft:chest[facing=east,type=single]",
+  "minecraft:chest[facing=west,type=single]",
+  "minecraft:crafting_table",
+  "minecraft:crying_obsidian",
+  "minecraft:dark_oak_planks",
+  "minecraft:dark_oak_sign[rotation=12]",
+  "minecraft:dark_oak_slab[type=top]",
+  "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:dirt",
+  "minecraft:enchanting_table",
+  "minecraft:end_rod[facing=up]",
+  "minecraft:fern",
+  "minecraft:fletching_table",
+  "minecraft:furnace[facing=south,lit=false]",
+  "minecraft:gold_block",
+  "minecraft:grass",
+  "minecraft:grass_block",
+  "minecraft:grindstone[face=floor,facing=south]",
+  "minecraft:hay_block[axis=y]",
+  "minecraft:iron_bars",
+  "minecraft:lantern[hanging=true]",
+  "minecraft:large_amethyst_bud[facing=up]",
+  "minecraft:lodestone",
+  "minecraft:loom[facing=south]",
+  "minecraft:moss_block",
+  "minecraft:polished_deepslate",
+  "minecraft:potted_brown_mushroom",
+  "minecraft:potted_red_mushroom",
+  "minecraft:purple_carpet",
+  "minecraft:purple_stained_glass",
+  "minecraft:purple_stained_glass_pane",
+  "minecraft:purpur_block",
+  "minecraft:purpur_pillar[axis=y]",
+  "minecraft:purpur_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:purpur_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:smithing_table",
+  "minecraft:smoker[facing=south,lit=true]",
+  "minecraft:soul_lantern[hanging=true]",
+  "minecraft:stone",
+  "minecraft:stonecutter[facing=south]",
+  "minecraft:target[power=0]",
+  "minecraft:trapped_chest[facing=north,type=single]",
+  "minecraft:trapped_chest[facing=south,type=single]",
+  "minecraft:tuff",
+  "minecraft:water_cauldron[level=3]",
+  "minecraft:white_candle[candles=3,lit=true]"
+ ],
+ "tiles": [
+  {
+   "x": -2,
+   "z": 0,
+   "file": "tiles/-2_0.bin"
+  },
+  {
+   "x": -1,
+   "z": -1,
+   "file": "tiles/-1_-1.bin"
+  },
+  {
+   "x": -1,
+   "z": 0,
+   "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
+  },
+  {
+   "x": 0,
+   "z": -1,
+   "file": "tiles/0_-1.bin"
+  },
+  {
+   "x": 0,
+   "z": 0,
+   "file": "tiles/0_0.bin"
+  },
+  {
+   "x": 1,
+   "z": -1,
+   "file": "tiles/1_-1.bin"
+  }
+ ],
+ "blockEntities": [
+  {
+   "pos": [
+    -23,
+    2,
+    -3
+   ],
+   "nbt": "{front_text:{messages:['{\"translate\":\"guildhouse.eternalrealm.design.arcane_tower\",\"bold\":true}','{\"text\":\"★★★★★\",\"color\":\"gold\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home_hint\",\"italic\":true}'],color:\"magenta\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    6,
+    33,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.1\"}}"
+  },
+  {
+   "pos": [
+    6,
+    33,
+    0
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.2\"}}"
+  },
+  {
+   "pos": [
+    6,
+    33,
+    2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.3\"}}"
+  },
+  {
+   "pos": [
+    10,
+    33,
+    -4
+   ],
+   "nbt": "{ForgeData:{er_slot:\"vault.1\"}}"
+  },
+  {
+   "pos": [
+    10,
+    33,
+    4
+   ],
+   "nbt": "{ForgeData:{er_slot:\"vault.2\"}}"
+  },
+  {
+   "pos": [
+    14,
+    33,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.4\"}}"
+  },
+  {
+   "pos": [
+    14,
+    33,
+    0
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.5\"}}"
+  },
+  {
+   "pos": [
+    14,
+    33,
+    2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.6\"}}"
+  }
+ ],
+ "entities": [
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    -11.5,
+    1.0,
+    11.5
+   ],
+   "yaw": -54.0,
+   "nbt": "{Look:0b}"
+  },
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    -11.5,
+    1.0,
+    17.5
+   ],
+   "yaw": -126.0,
+   "nbt": "{Look:2b}"
+  },
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    -5.5,
+    1.0,
+    9.5
+   ],
+   "yaw": 18.0,
+   "nbt": "{Look:1b}"
+  },
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    -5.5,
+    1.0,
+    19.5
+   ],
+   "yaw": 162.0,
+   "nbt": "{Look:1b}"
+  },
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    -2.5,
+    1.0,
+    14.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Look:0b}"
+  },
+  {
+   "type": "minecraft:glow_item_frame",
+   "pos": [
+    8.5,
+    27.5,
+    -4.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.1\"}}"
+  },
+  {
+   "type": "minecraft:glow_item_frame",
+   "pos": [
+    8.5,
+    27.5,
+    5.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.5\"}}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    9.5,
+    1.0,
+    -3.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:0b,Invulnerable:1b,DisabledSlots:0,ForgeData:{er_slot:\"stand.3\"}}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    9.5,
+    1.0,
+    4.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:0b,Invulnerable:1b,DisabledSlots:0,ForgeData:{er_slot:\"stand.4\"}}"
+  },
+  {
+   "type": "minecraft:glow_item_frame",
+   "pos": [
+    10.5,
+    27.5,
+    -4.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.2\"}}"
+  },
+  {
+   "type": "minecraft:glow_item_frame",
+   "pos": [
+    10.5,
+    27.5,
+    5.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.6\"}}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    12.5,
+    1.0,
+    -2.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:0b,Invulnerable:1b,DisabledSlots:0,ForgeData:{er_slot:\"stand.1\"}}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    12.5,
+    1.0,
+    3.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:0b,Invulnerable:1b,DisabledSlots:0,ForgeData:{er_slot:\"stand.2\"}}"
+  },
+  {
+   "type": "minecraft:glow_item_frame",
+   "pos": [
+    12.5,
+    27.5,
+    -4.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.3\"}}"
+  },
+  {
+   "type": "minecraft:glow_item_frame",
+   "pos": [
+    12.5,
+    27.5,
+    5.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.7\"}}"
+  },
+  {
+   "type": "minecraft:glow_item_frame",
+   "pos": [
+    14.5,
+    27.5,
+    -3.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.4\"}}"
+  },
+  {
+   "type": "minecraft:glow_item_frame",
+   "pos": [
+    14.5,
+    27.5,
+    4.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.8\"}}"
+  }
+ ],
+ "fluidTicks": [],
+ "spots": {
+  "board": {
+   "pos": [
+    14,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  },
+  "entry": {
+   "pos": [
+    -21,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  },
+  "exit": {
+   "pos": [
+    -24,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  }
+ },
+ "blend": {
+  "edgeY": 0
+ }
+}

@@ -28,6 +28,14 @@ VIEWS = {
 }
 
 
+def _guild_views():
+    from estates.guild import houses
+    VIEWS.update(houses.VIEWS)
+
+
+_guild_views()
+
+
 def render(w, kind, design, names=None, scale=1.0):
     views = VIEWS.get((kind, design), {})
     chosen = [n for n in (names or views) if n in views]
