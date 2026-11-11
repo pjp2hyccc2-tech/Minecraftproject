@@ -19,7 +19,8 @@ import java.util.random.RandomGenerator;
  * bonuses; swords may also roll INT / magic damage for the spellblade. Armor favours defense, max health and VIT; each
  * piece adds a little identity (the head the mind, the legs agility, the feet movement speed). The attack stats STR,
  * INT and DEX have the same total weight over a full armor set, so no build gets more useful armor rolls than
- * another.</p>
+ * another. Accessories roll primary stats and critical bonuses (STR, INT and DEX alike), charms protection and
+ * fortune.</p>
  */
 public final class AffixPool {
     private static final AffixPool MELEE = pool(Map.of(
@@ -49,6 +50,14 @@ public final class AffixPool {
     private static final AffixPool FEET = pool(Map.of(
             AffixKind.DEFENSE, 2, AffixKind.MAX_HEALTH, 2, AffixKind.VIT, 1,
             AffixKind.AGI, 3, AffixKind.DEX, 1, AffixKind.LUK, 1, AffixKind.MOVE_SPEED, 3));
+    /** Accessories: the primary stats (every build's attack stat equally) and the critical bonuses. */
+    private static final AffixPool ACCESSORY = pool(Map.of(
+            AffixKind.STR, 3, AffixKind.INT, 3, AffixKind.DEX, 3, AffixKind.AGI, 2, AffixKind.VIT, 2,
+            AffixKind.LUK, 2, AffixKind.CRIT_CHANCE, 2, AffixKind.CRIT_DAMAGE, 2));
+    /** Charms: protection and fortune. */
+    private static final AffixPool CHARM = pool(Map.of(
+            AffixKind.VIT, 3, AffixKind.MAX_HEALTH, 3, AffixKind.DEFENSE, 2, AffixKind.LUK, 3,
+            AffixKind.HEALING_PERCENT, 2, AffixKind.MOVE_SPEED, 1, AffixKind.AGI, 1));
 
     /** Iteration in enum order keeps rolls deterministic. */
     private final Map<AffixKind, Integer> weights;
@@ -98,6 +107,8 @@ public final class AffixPool {
             case CHEST -> CHEST;
             case LEGS -> LEGS;
             case FEET -> FEET;
+            case ACCESSORY -> ACCESSORY;
+            case CHARM -> CHARM;
             case WEAPON -> throw new IllegalStateException("unreachable");
         };
     }

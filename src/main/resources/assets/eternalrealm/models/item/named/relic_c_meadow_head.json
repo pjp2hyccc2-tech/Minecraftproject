@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/named/relic_c_meadow_head"
+  }
+}

@@ -12,6 +12,12 @@
         "custom_model_data": 3105
       },
       "model": "eternalrealm:item/named/windrider_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3555
+      },
+      "model": "eternalrealm:item/named/relic_w_ash_herald_weapon"
     }
   ]
 }

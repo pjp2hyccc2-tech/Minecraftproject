@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_charm"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5007
+      },
+      "model": "eternalrealm:item/trinket/relic_b4_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5009
+      },
+      "model": "eternalrealm:item/trinket/relic_b5_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5023
+      },
+      "model": "eternalrealm:item/trinket/relic_c_iron_mine_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5025
+      },
+      "model": "eternalrealm:item/trinket/relic_c_sacred_falls_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5035
+      },
+      "model": "eternalrealm:item/trinket/relic_c_lakeside_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5037
+      },
+      "model": "eternalrealm:item/trinket/relic_c_harbour_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5051
+      },
+      "model": "eternalrealm:item/trinket/relic_l_dolga_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5053
+      },
+      "model": "eternalrealm:item/trinket/relic_l_rustbone_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5055
+      },
+      "model": "eternalrealm:item/trinket/relic_l_vein_eater_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5057
+      },
+      "model": "eternalrealm:item/trinket/relic_l_goura_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5059
+      },
+      "model": "eternalrealm:item/trinket/relic_l_mistweaver_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5061
+      },
+      "model": "eternalrealm:item/trinket/relic_l_ord_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5087
+      },
+      "model": "eternalrealm:item/trinket/relic_l_melusine_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5089
+      },
+      "model": "eternalrealm:item/trinket/relic_l_drowned_fisher_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5091
+      },
+      "model": "eternalrealm:item/trinket/relic_l_numel_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5093
+      },
+      "model": "eternalrealm:item/trinket/relic_l_barbas_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5095
+      },
+      "model": "eternalrealm:item/trinket/relic_l_dock_brawler_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5097
+      },
+      "model": "eternalrealm:item/trinket/relic_l_ankara_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5105
+      },
+      "model": "eternalrealm:item/trinket/relic_w_cascade_wyvern_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5107
+      },
+      "model": "eternalrealm:item/trinket/relic_w_mist_hermit_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5125
+      },
+      "model": "eternalrealm:item/trinket/relic_w_sunken_captain_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5127
+      },
+      "model": "eternalrealm:item/trinket/relic_w_tide_singer_bell"
+    }
+  ]
+}

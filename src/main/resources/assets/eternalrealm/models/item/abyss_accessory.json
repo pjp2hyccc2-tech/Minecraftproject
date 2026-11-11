@@ -1,0 +1,122 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_accessory"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5012
+      },
+      "model": "eternalrealm:item/trinket/relic_b7_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5014
+      },
+      "model": "eternalrealm:item/trinket/relic_b8_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5016
+      },
+      "model": "eternalrealm:item/trinket/relic_final_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5026
+      },
+      "model": "eternalrealm:item/trinket/relic_c_ancient_ruins_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5028
+      },
+      "model": "eternalrealm:item/trinket/relic_c_soaring_peaks_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5030
+      },
+      "model": "eternalrealm:item/trinket/relic_c_end_forest_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5062
+      },
+      "model": "eternalrealm:item/trinket/relic_l_valka_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5064
+      },
+      "model": "eternalrealm:item/trinket/relic_l_scorch_eye_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5066
+      },
+      "model": "eternalrealm:item/trinket/relic_l_agnis_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5068
+      },
+      "model": "eternalrealm:item/trinket/relic_l_alvin_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5070
+      },
+      "model": "eternalrealm:item/trinket/relic_l_peak_sniper_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5072
+      },
+      "model": "eternalrealm:item/trinket/relic_l_zephyr_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5074
+      },
+      "model": "eternalrealm:item/trinket/relic_l_xenos_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5076
+      },
+      "model": "eternalrealm:item/trinket/relic_l_black_knight_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5078
+      },
+      "model": "eternalrealm:item/trinket/relic_l_nihil_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5112
+      },
+      "model": "eternalrealm:item/trinket/relic_w_thunder_roc_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5114
+      },
+      "model": "eternalrealm:item/trinket/relic_w_glacier_bearer_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5116
+      },
+      "model": "eternalrealm:item/trinket/relic_w_hollow_walker_amulet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5118
+      },
+      "model": "eternalrealm:item/trinket/relic_w_gravebloom_earring"
+    }
+  ]
+}

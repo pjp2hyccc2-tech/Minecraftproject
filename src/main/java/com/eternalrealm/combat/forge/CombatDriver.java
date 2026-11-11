@@ -39,6 +39,8 @@ import com.eternalrealm.player.PlayerDataService;
 import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.SyncQueue;
 import com.mojang.logging.LogUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -49,6 +51,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 
@@ -254,6 +257,49 @@ public final class CombatDriver {
         return Math.max(1, skills.getOrDefault(playerId, PlayerSkills.NONE).levels().getOrDefault(skillId, 1));
     }
 
+    /**
+     * How much the held piece's rarity raises the weapon art's damage and effects ({@code ItemRarity#power}, owner's
+     * request of 2026-11-11): 1 for a plain common piece and for an art that is not the held weapon's.
+     */
+    public static double artPower(ServerPlayer player, WeaponArt art) {
+        ItemStack held = player.getMainHandItem();
+        WeaponProfile profile = WeaponItem.profileOf(held);
+        if (profile == null || !profile.skill().id().equals(art.id())) {
+            return 1.0;
+        }
+        return com.eternalrealm.item.forge.EquipmentStacks.rarity(held)
+                .map(com.eternalrealm.item.ItemRarity::power).orElse(1.0);
+    }
+
+    /** The character's level, if their data is loaded. */
+    static java.util.OptionalInt characterLevel(ServerPlayer player) {
+        return ServerContext.current().flatMap(context -> context.playerData().snapshot(player.getUUID()))
+                .map(snapshot -> java.util.OptionalInt.of(snapshot.level())).orElse(java.util.OptionalInt.empty());
+    }
+
+    /**
+     * The held weapon asks for a higher level than the character's (or is bound to someone else): it cannot attack,
+     * guard or use its art. A player without character data (not loaded yet, a fake player) is not stopped.
+     *
+     * @return the level it needs, or 0 when it may be used
+     */
+    public static int refusedLevel(ServerPlayer player) {
+        java.util.OptionalInt level = characterLevel(player);
+        if (level.isEmpty()) {
+            return 0;
+        }
+        return com.eternalrealm.item.forge.EquipmentStacks.read(player.getMainHandItem())
+                .filter(com.eternalrealm.item.EquipmentData::isWeapon)
+                .filter(data -> !data.canBeUsedBy(level.getAsInt(), player.getUUID()))
+                .map(com.eternalrealm.item.EquipmentData::requiredLevel).orElse(0);
+    }
+
+    private static void tellLevel(ServerPlayer player, int level) {
+        // (not "net.minecraft...": the field "net" would shadow the package)
+        player.displayClientMessage(Component.translatable("message.eternalrealm.equipment.weapon_level", level,
+                player.getMainHandItem().getHoverName()).withStyle(ChatFormatting.RED), true);
+    }
+
     private static int skillLevel(ServerPlayer player, SkillDefinition skill) {
         int level = ServerContext.current().map(context -> context.combat().levelOf(player.getUUID(), skill.id()))
                 .orElse(1);
@@ -293,16 +339,20 @@ public final class CombatDriver {
     }
 
     private static void process(ServerPlayer player, CombatStats stats, CombatEvent event) {
-        if (event instanceof CombatEvent.Hit hit) {
-            SkillDefinition skill = Jobs.skillOfAction(hit.action().id()).orElse(null);
-            // the weapon art of a boss weapon: its effects run like a job skill's, at strength 1
-            WeaponArt art = skill == null ? WeaponArts.byId(hit.action().id()).orElse(null) : null;
+        if (event instanceof CombatEvent.Hit original) {
+            SkillDefinition skill = Jobs.skillOfAction(original.action().id()).orElse(null);
+            // a weapon art: its effects run like a job skill's, as strong as the held piece's rarity makes them
+            WeaponArt art = skill == null ? WeaponArts.byId(original.action().id()).orElse(null) : null;
+            double artPower = art == null ? 1.0 : artPower(player, art);
+            CombatEvent.Hit hit = artPower == 1.0 ? original : new CombatEvent.Hit(original.weapon(),
+                    original.action(), original.frameIndex(), original.frame(), original.damageScale() * artPower,
+                    original.tick());
             DamageType type = skill != null ? skill.damageType() : hit.weapon().type().damageType();
             List<SkillEffect> effects = skill != null ? skill.effectsAt(hit.frameIndex())
                     : art != null ? art.effectsAt(hit.frameIndex()) : List.of();
             SkillTheme theme = skill != null ? skill.theme() : art != null ? art.theme() : null;
             int level = skill != null ? skillLevel(player, skill) : 1;
-            double scale = skill != null ? skill.effectScale(level) : 1.0;
+            double scale = skill != null ? skill.effectScale(level) : artPower;
             List<SkillEffect.Afflict> afflictions = SkillEffectsExecutor.afflictions(effects);
             List<SkillEffect.Execute> executes = SkillEffectsExecutor.only(effects, SkillEffect.Execute.class);
             List<CombatHits.HitTarget> targets = List.of();
@@ -327,7 +377,8 @@ public final class CombatDriver {
             }
             if (!rest.isEmpty()) {
                 if (art != null) {
-                    SkillEffectsExecutor.applyArt(player, stats, art, hit.weapon(), hit.damageScale(), rest, targets);
+                    SkillEffectsExecutor.applyArt(player, stats, art, hit.weapon(), hit.damageScale(), artPower, rest,
+                            targets);
                 } else {
                     SkillEffectsExecutor.apply(player, stats, skill, level, hit.weapon(), hit.damageScale(), rest,
                             targets);
@@ -343,8 +394,11 @@ public final class CombatDriver {
                     SkillEffectsExecutor.apply(player, stats, skill, skillLevel(player, skill), start.weapon(),
                             skill.damageScale(skillLevel(player, skill)), skill.effectsAt(SkillEffect.ON_START),
                             List.of()));
-            WeaponArts.byId(start.action().id()).ifPresent(art -> SkillEffectsExecutor.applyArt(player, stats, art,
-                    start.weapon(), 1.0, art.effectsAt(SkillEffect.ON_START), List.of()));
+            WeaponArts.byId(start.action().id()).ifPresent(art -> {
+                double power = artPower(player, art);
+                SkillEffectsExecutor.applyArt(player, stats, art, start.weapon(), power, power,
+                        art.effectsAt(SkillEffect.ON_START), List.of());
+            });
         } else if (event instanceof CombatEvent.ChargeStarted charge) {
             ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(),
                     charge.weapon().heavy().strike().id(), -1, charge.weapon().heavy().maxChargeTicks(), true));
@@ -381,9 +435,13 @@ public final class CombatDriver {
     public void handleRequest(ServerPlayer player, CombatRequest request, int sequence, int targetId) {
         Combatant combatant = service.get(player.getUUID()).orElse(null);
         RequestOutcome outcome;
+        int refused = request == CombatRequest.DODGE ? 0 : refusedLevel(player);
         if (combatant == null || !player.isAlive() || player.isSpectator()
                 || com.eternalrealm.revival.forge.RevivalService.isDown(player.getUUID())) {
             outcome = RequestOutcome.REJECTED_NOT_ALLOWED;
+        } else if (refused > 0) {
+            outcome = RequestOutcome.REJECTED_NOT_ALLOWED; // the client refuses first and says why
+            tellLevel(player, refused);
         } else {
             syncEquipment(player, combatant);
             boolean restricted = player.isPassenger() || player.isFallFlying();
@@ -420,6 +478,11 @@ public final class CombatDriver {
     public boolean startGuard(ServerPlayer player, WeaponProfile weapon) {
         Combatant combatant = service.get(player.getUUID()).orElse(null);
         if (combatant == null || !player.isAlive()) {
+            return false;
+        }
+        int refused = refusedLevel(player);
+        if (refused > 0) {
+            tellLevel(player, refused);
             return false;
         }
         return combatant.startGuard(now(), weapon);

@@ -63,6 +63,84 @@
         "custom_model_data": 4115
       },
       "model": "eternalrealm:item/named/tidecaller_robe_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4511
+      },
+      "model": "eternalrealm:item/named/relic_b3_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4543
+      },
+      "model": "eternalrealm:item/named/relic_c_moon_forest_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4567
+      },
+      "model": "eternalrealm:item/named/relic_c_farm_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4591
+      },
+      "model": "eternalrealm:item/named/relic_l_nebula_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4595
+      },
+      "model": "eternalrealm:item/named/relic_l_belladonna_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4599
+      },
+      "model": "eternalrealm:item/named/relic_l_lunar_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4663
+      },
+      "model": "eternalrealm:item/named/relic_l_brutus_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4667
+      },
+      "model": "eternalrealm:item/named/relic_l_harvest_boss_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4671
+      },
+      "model": "eternalrealm:item/named/relic_l_strom_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4703
+      },
+      "model": "eternalrealm:item/named/relic_w_moonmoth_witch_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4707
+      },
+      "model": "eternalrealm:item/named/relic_w_slag_titan_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4743
+      },
+      "model": "eternalrealm:item/named/relic_w_scarecrow_king_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4747
+      },
+      "model": "eternalrealm:item/named/relic_w_reed_serpent_feet"
     }
   ]
 }

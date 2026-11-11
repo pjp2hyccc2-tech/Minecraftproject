@@ -69,6 +69,120 @@
         "custom_model_data": 4080
       },
       "model": "eternalrealm:item/named/oblivion_vestment_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4524
+      },
+      "model": "eternalrealm:item/named/relic_b7_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4528
+      },
+      "model": "eternalrealm:item/named/relic_b8_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4532
+      },
+      "model": "eternalrealm:item/named/relic_final_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4552
+      },
+      "model": "eternalrealm:item/named/relic_c_ancient_ruins_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4556
+      },
+      "model": "eternalrealm:item/named/relic_c_soaring_peaks_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4560
+      },
+      "model": "eternalrealm:item/named/relic_c_end_forest_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4624
+      },
+      "model": "eternalrealm:item/named/relic_l_valka_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4628
+      },
+      "model": "eternalrealm:item/named/relic_l_scorch_eye_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4632
+      },
+      "model": "eternalrealm:item/named/relic_l_agnis_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4636
+      },
+      "model": "eternalrealm:item/named/relic_l_alvin_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4640
+      },
+      "model": "eternalrealm:item/named/relic_l_peak_sniper_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4644
+      },
+      "model": "eternalrealm:item/named/relic_l_zephyr_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4648
+      },
+      "model": "eternalrealm:item/named/relic_l_xenos_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4652
+      },
+      "model": "eternalrealm:item/named/relic_l_black_knight_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4656
+      },
+      "model": "eternalrealm:item/named/relic_l_nihil_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4724
+      },
+      "model": "eternalrealm:item/named/relic_w_thunder_roc_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4728
+      },
+      "model": "eternalrealm:item/named/relic_w_glacier_bearer_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4732
+      },
+      "model": "eternalrealm:item/named/relic_w_hollow_walker_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4736
+      },
+      "model": "eternalrealm:item/named/relic_w_gravebloom_head"
     }
   ]
 }

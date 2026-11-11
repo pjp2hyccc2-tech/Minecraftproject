@@ -6,16 +6,25 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A named equipment design (名品): a weapon of {@link Armory#weapons()} or one piece of an {@link ArmorSet}. A design
+ * A named equipment design (名品): a weapon of {@link Armory#weapons()}, one piece of an {@link ArmorSet}, or a relic
+ * (金枠: a weapon, an armor piece or a trinket of {@link Relics}). A design
  * sits on top of a tiered base (its item, rarity, affixes and enhancement work as for every piece) and adds its own
  * name, look, required level, stat profile and where it comes from. {@link #id()} and {@link #model()} are stable:
  * stored in item stacks, never renamed or reused.
  */
-public sealed interface Design permits WeaponDesign, ArmorPiece {
+public sealed interface Design permits WeaponDesign, ArmorPiece, TrinketDesign {
     /** First custom model data number of the weapon designs. */
     int WEAPON_MODELS = 3000;
+    /** First custom model data number of the relic weapons (金枠). */
+    int RELIC_WEAPON_MODELS = 3500;
     /** First custom model data number of the armor pieces. */
     int ARMOR_MODELS = 4000;
+    /** First custom model data number of the relic armor pieces. */
+    int RELIC_ARMOR_MODELS = 4500;
+    /** First custom model data number of the trinkets (accessories and charms). */
+    int TRINKET_MODELS = 5000;
+    /** Highest level a design may ask for (the level cap). */
+    int MAX_LEVEL = 100;
 
     String id();
 
@@ -38,6 +47,11 @@ public sealed interface Design permits WeaponDesign, ArmorPiece {
 
     /** Extra weights of the affix pool when a piece of this design is rolled (only kinds the pool allows). */
     Map<AffixKind, Integer> bias();
+
+    /** A relic (金枠): the gold frame, its own level, always legendary. */
+    default boolean isRelic() {
+        return sources().contains(DesignSource.RELIC);
+    }
 
     default String translationKey() {
         return "design." + ModInfo.MOD_ID + "." + id();

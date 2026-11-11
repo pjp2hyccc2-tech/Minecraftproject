@@ -474,6 +474,12 @@ public final class DungeonService {
                 Inventories.give(player, weapon);
             });
         }
+        // about one kill in a thousand: one of the boss's relics (金枠)
+        com.eternalrealm.item.forge.RelicDrops.roll(player, com.eternalrealm.item.Relics.SourceKind.BOSS,
+                instance.run.bossId(), RANDOM).ifPresent(relic -> {
+                    given.add(relic.copy());
+                    Inventories.give(player, relic);
+                });
         // the boss material of the dungeon's field (boss weapons are forged from these)
         if (instance.areaId >= 1 && instance.areaId <= 10) {
             net.minecraft.world.item.Item soul = ERGearItems.material(

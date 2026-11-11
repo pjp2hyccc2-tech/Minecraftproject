@@ -51,6 +51,24 @@
         "custom_model_data": 4062
       },
       "model": "eternalrealm:item/named/thunderpeak_armor_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4522
+      },
+      "model": "eternalrealm:item/named/relic_b6_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4718
+      },
+      "model": "eternalrealm:item/named/relic_w_walking_glyph_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4722
+      },
+      "model": "eternalrealm:item/named/relic_w_ash_herald_legs"
     }
   ]
 }

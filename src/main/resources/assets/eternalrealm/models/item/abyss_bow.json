@@ -36,6 +36,24 @@
         "custom_model_data": 3186
       },
       "model": "eternalrealm:item/named/machine_god_skybow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3508
+      },
+      "model": "eternalrealm:item/named/relic_final_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3514
+      },
+      "model": "eternalrealm:item/named/relic_c_soaring_peaks_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3535
+      },
+      "model": "eternalrealm:item/named/relic_l_peak_sniper_weapon"
     }
   ]
 }

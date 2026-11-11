@@ -115,3 +115,11 @@
   `auction.buyout {id}`、`auction.register {slot, count, start, buyout, minutes}`、`auction.start {id}`、`auction.withdraw {id}`。
   slot はカバンの 1〜35、価格は 1〜9,999,999,999、個数は 1〜9,999、分類・並びは既知の値だけ。範囲外は違反（`UiArgs`）。
 
+## 付録: 金枠の遺宝と装身具（パケット追加なし・版は変えない）
+
+- UI 操作（`UiActionPacket`）: 既存の `bag.equip {slot}` に省略可能な `target`（`accessory_1`・`accessory_2`・`charm`。装身具を入れる枠）、
+  `bag.unequip {target}` の `target` に同じ3つを追加。レベル・同じ装身具の二重装備はサーバーが判定（`BagService`）。
+- ビューデータ（`UiDataPacket`）: チャンネル `trinkets` = `{"stacks":["<SNBT>","",""]}`（飾1・飾2・守の順、空文字 = 空き）。
+  ログイン・リスポーン・ディメンション移動・付け外しのたびに本人へ送る。装備画面が使う。
+- 必要レベルの足りない武器での攻撃・ガード・武技は既存の `CombatStatusPacket` の outcome `REJECTED_NOT_ALLOWED` で断り、理由はメッセージで送る
+  （[modules/armory.md](modules/armory.md)）。

@@ -23,8 +23,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * Registers the 70 equipment items of the item module (the four Phase 2 iron weapons keep their {@link ERItems}
- * registrations), the crafting materials, the consumables and the ETERNAL REALM creative tab.
+ * Registers the 84 equipment items of the item module (the four Phase 2 iron weapons keep their {@link ERItems}
+ * registrations; 14 of them are the trinket bases), the crafting materials, the consumables and the ETERNAL REALM
+ * creative tab (every named design and relic included).
  */
 public final class ERGearItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ModInfo.MOD_ID);
@@ -36,10 +37,13 @@ public final class ERGearItems {
     private static final Map<Consumable, RegistryObject<ConsumableItem>> CONSUMABLES = new EnumMap<>(Consumable.class);
 
     static {
-        for (EquipmentBase base : EquipmentBase.all()) {
+        for (EquipmentBase base : EquipmentBase.everything()) {
             Supplier<? extends Item> existing = ERItems.byPath(base.itemPath()).orElse(null);
             if (existing != null) {
                 EQUIPMENT.put(base, existing);
+            } else if (base.isTrinket()) {
+                EQUIPMENT.put(base, ITEMS.register(base.itemPath(),
+                        () -> new TrinketItem(base, new Item.Properties().stacksTo(1))));
             } else if (base.isWeapon()) {
                 EQUIPMENT.put(base, ITEMS.register(base.itemPath(), () -> new WeaponItem(
                         com.eternalrealm.item.TierProfiles.of(base.tier(), base.weaponType()),
@@ -69,6 +73,9 @@ public final class ERGearItems {
                 }
                 for (com.eternalrealm.item.Design design : com.eternalrealm.item.Armory.designs()) {
                     output.accept(EquipmentStacks.ofDesign(design));
+                }
+                for (com.eternalrealm.item.Design relic : com.eternalrealm.item.Relics.designs()) {
+                    output.accept(EquipmentStacks.ofDesign(relic));
                 }
                 for (RegistryObject<MaterialItem> material : MATERIALS.values()) {
                     output.accept(material.get());

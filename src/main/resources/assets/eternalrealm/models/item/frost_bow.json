@@ -24,6 +24,36 @@
         "custom_model_data": 3178
       },
       "model": "eternalrealm:item/named/seagull_bow"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3502
+      },
+      "model": "eternalrealm:item/named/relic_b3_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3522
+      },
+      "model": "eternalrealm:item/named/relic_l_nebula_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3541
+      },
+      "model": "eternalrealm:item/named/relic_l_harvest_boss_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3550
+      },
+      "model": "eternalrealm:item/named/relic_w_moonmoth_witch_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3561
+      },
+      "model": "eternalrealm:item/named/relic_w_reed_serpent_weapon"
     }
   ]
 }

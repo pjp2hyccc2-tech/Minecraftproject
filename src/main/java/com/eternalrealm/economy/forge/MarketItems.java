@@ -10,7 +10,6 @@ import com.eternalrealm.item.forge.Inventories;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,10 +98,9 @@ public final class MarketItems {
         return "item:" + itemId;
     }
 
-    /** Whether the stack is a gold-frame piece (金枠). */
+    /** Whether the stack is a gold-frame piece (金枠: a relic of a boss, calamity, lord or wanderer). */
     public static boolean isGoldFrame(ItemStack stack) {
-        CompoundTag tag = stack.isEmpty() ? null : stack.getTag();
-        return tag != null && (tag.getBoolean("er_gold_frame") || tag.getBoolean("GoldFrame"));
+        return com.eternalrealm.item.forge.EquipmentStacks.isGoldFrame(stack);
     }
 
     /** The name of a translation key in Japanese or English (the key itself when unknown). */

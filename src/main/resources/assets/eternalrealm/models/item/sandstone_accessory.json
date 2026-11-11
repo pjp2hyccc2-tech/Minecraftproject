@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_accessory"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5002
+      },
+      "model": "eternalrealm:item/trinket/relic_b2_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5018
+      },
+      "model": "eternalrealm:item/trinket/relic_c_meadow_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5038
+      },
+      "model": "eternalrealm:item/trinket/relic_l_garm_earring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5040
+      },
+      "model": "eternalrealm:item/trinket/relic_l_hook_ring"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5042
+      },
+      "model": "eternalrealm:item/trinket/relic_l_durn_bracelet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5098
+      },
+      "model": "eternalrealm:item/trinket/relic_w_bramble_knight_ring"
+    }
+  ]
+}

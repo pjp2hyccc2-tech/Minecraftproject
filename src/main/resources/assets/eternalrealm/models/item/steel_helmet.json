@@ -57,6 +57,12 @@
         "custom_model_data": 4084
       },
       "model": "eternalrealm:item/named/farmstead_bulwark_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4500
+      },
+      "model": "eternalrealm:item/named/relic_b1_head"
     }
   ]
 }

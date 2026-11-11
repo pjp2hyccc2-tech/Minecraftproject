@@ -30,6 +30,12 @@
         "custom_model_data": 3182
       },
       "model": "eternalrealm:item/named/colossus_dunespear"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3560
+      },
+      "model": "eternalrealm:item/named/relic_w_scarecrow_king_weapon"
     }
   ]
 }

@@ -30,6 +30,36 @@
         "custom_model_data": 3184
       },
       "model": "eternalrealm:item/named/frozen_queen_sceptre"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3518
+      },
+      "model": "eternalrealm:item/named/relic_c_harbour_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3530
+      },
+      "model": "eternalrealm:item/named/relic_l_ord_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3545
+      },
+      "model": "eternalrealm:item/named/relic_l_numel_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3553
+      },
+      "model": "eternalrealm:item/named/relic_w_mist_hermit_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3563
+      },
+      "model": "eternalrealm:item/named/relic_w_tide_singer_weapon"
     }
   ]
 }

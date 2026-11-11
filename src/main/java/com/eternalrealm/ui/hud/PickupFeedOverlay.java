@@ -20,7 +20,8 @@ import java.util.List;
 /**
  * The pickup feed at the right edge, just above the bag and equipment icons ({@code HudLayout.pickupFeed}): one row
  * per acquisition with the item's icon, its name in the rarity's colour and ×count; the same item again within a few
- * seconds adds to its row. Rare and better items are framed and chime; a full bag shows a warning row.
+ * seconds adds to its row. Rare and better items are framed and chime, a relic (金枠) gets the gold frame and its own
+ * chime; a full bag shows a warning row.
  */
 public final class PickupFeedOverlay implements IGuiOverlay {
     private static final PickupFeed<ItemStack> FEED = new PickupFeed<>();
@@ -39,7 +40,11 @@ public final class PickupFeedOverlay implements IGuiOverlay {
                 full ? PickupFeed.Kind.WARNING : PickupFeed.Kind.ITEM, stack, rarity, packet.count(),
                 ClientCombatState.tick());
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.player != null && row.highlighted() && row.count() == packet.count()) {
+        if (minecraft.player != null && !full && EquipmentStacks.isGoldFrame(stack)) {
+            // a relic (金枠): its own chime
+            minecraft.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_RESONATE, 1.0F, 1.4F);
+            minecraft.player.playSound(com.eternalrealm.sound.ERSounds.LOOT_RARE_DROP.get(), 0.9F, 0.8F);
+        } else if (minecraft.player != null && row.highlighted() && row.count() == packet.count()) {
             minecraft.player.playSound(full ? com.eternalrealm.sound.ERSounds.UI_CLICK.get()
                     : com.eternalrealm.sound.ERSounds.LOOT_RARE_DROP.get(), full ? 0.8F : 0.6F, full ? 0.6F : 1.2F);
         }
@@ -86,7 +91,12 @@ public final class PickupFeedOverlay implements IGuiOverlay {
         int x = area.right() - width;
         int a = Math.round(alpha * 255.0F);
         graphics.fill(x, y, area.right(), y + ROW - 1, argb((int) (a * 0.7F), BACK));
-        int accent = warning ? WARNING : row.highlighted() ? row.rarity().color() : RIM;
+        boolean gold = !warning && EquipmentStacks.isGoldFrame(row.payload());
+        if (gold && alpha > 0.35F) {
+            // a relic (金枠): the gold frame around the whole row, its name in gold
+            com.eternalrealm.ui.GoldFrame.draw(graphics, x, y, area.right() - x, ROW - 1, ClientCombatState.tick());
+        }
+        int accent = warning ? WARNING : gold ? 0xFFD84A : row.highlighted() ? row.rarity().color() : RIM;
         graphics.fill(x, y, x + 1, y + ROW - 1, argb(a, accent));
         if (row.highlighted()) {
             graphics.fill(x, y, area.right(), y + 1, argb((int) (a * 0.8F), accent));
@@ -99,7 +109,8 @@ public final class PickupFeedOverlay implements IGuiOverlay {
             graphics.renderItem(row.payload(), 0, 0);
             graphics.pose().popPose();
         }
-        int color = warning ? WARNING : row.rarity() == ItemRarity.COMMON ? 0xFFFFFF : row.rarity().color();
+        int color = warning ? WARNING : gold ? 0xFFD84A
+                : row.rarity() == ItemRarity.COMMON ? 0xFFFFFF : row.rarity().color();
         int textX = x + 15;
         graphics.drawString(font, name, textX, y + 2, argb(Math.max(8, a), color), true);
         if (!count.isEmpty()) {

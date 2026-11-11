@@ -111,6 +111,10 @@ public final class EternalRealm {
         forgeBus.addListener(CombatEvents::onProjectileImpact);
         forgeBus.addListener(CombatEvents::onLivingHurt);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onEquipmentChange);
+        forgeBus.addListener(com.eternalrealm.item.forge.TrinketSlots::onClone);
+        forgeBus.addListener(com.eternalrealm.item.forge.TrinketSlots::onLogin);
+        forgeBus.addListener(com.eternalrealm.item.forge.TrinketSlots::onRespawn);
+        forgeBus.addListener(com.eternalrealm.item.forge.TrinketSlots::onChangedDimension);
         forgeBus.addListener(EventPriority.HIGH, com.eternalrealm.monster.forge.MonsterEvents::onLivingHurt);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onLivingDeath);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onLivingDrops);

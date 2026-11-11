@@ -529,6 +529,9 @@ public final class FieldThreatService {
             if (RANDOM.nextDouble() < 0.15) {
                 items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));
             }
+            // about one kill in a thousand: one of the lord's relics (金枠)
+            com.eternalrealm.item.forge.RelicDrops.roll(player, com.eternalrealm.item.Relics.SourceKind.LORD,
+                    state.lord.id(), RANDOM).ifPresent(items::add);
             long exp = Math.round(stats.exp() * 2.0 * expMultiplier(body));
             long gold = stats.goldMax() * 2;
             give(context, player, items, exp, gold);
@@ -1048,6 +1051,9 @@ public final class FieldThreatService {
             if (RANDOM.nextDouble() < 0.35) {
                 items.add(new ItemStack(ERGearItems.consumable(Consumable.EVERBLOOM_PETAL)));
             }
+            // about one kill in a thousand: one of the calamity's relics (金枠)
+            com.eternalrealm.item.forge.RelicDrops.roll(player, com.eternalrealm.item.Relics.SourceKind.CALAMITY,
+                    calamity, RANDOM).ifPresent(items::add);
             long exp = stats == null ? 0L : stats.exp() * 25L;
             long gold = stats == null ? 0L : stats.goldMax() * 12L;
             give(context, player, items, exp, gold);

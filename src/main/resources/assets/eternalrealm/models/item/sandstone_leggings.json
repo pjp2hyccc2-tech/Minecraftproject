@@ -105,6 +105,42 @@
         "custom_model_data": 4110
       },
       "model": "eternalrealm:item/named/privateer_garb_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4506
+      },
+      "model": "eternalrealm:item/named/relic_b2_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4538
+      },
+      "model": "eternalrealm:item/named/relic_c_meadow_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4578
+      },
+      "model": "eternalrealm:item/named/relic_l_garm_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4582
+      },
+      "model": "eternalrealm:item/named/relic_l_hook_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4586
+      },
+      "model": "eternalrealm:item/named/relic_l_durn_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4698
+      },
+      "model": "eternalrealm:item/named/relic_w_bramble_knight_legs"
     }
   ]
 }

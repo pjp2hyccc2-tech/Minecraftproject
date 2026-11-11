@@ -55,6 +55,15 @@ public class WeaponArtCatalogTest {
             }
         }
         assertEquals(189, used.size());
+        // every relic weapon (金枠) has its own art too
+        for (WeaponDesign relic : Relics.weapons()) {
+            String art = DesignProfiles.of(relic).skill().id();
+            assertEquals(GeneratedArts.forDesign(relic.id()).orElseThrow().id(), art);
+            assertTrue("art used twice: " + art, used.add(art));
+            assertTrue(relic.id(), GeneratedArts.isRelicArt(art));
+            assertEquals(relic.type(), GeneratedArts.byId(art).orElseThrow().type());
+        }
+        assertEquals(189 + 64, used.size());
         for (ItemTier tier : ItemTier.values()) {
             for (WeaponType type : WeaponType.values()) {
                 WeaponProfile profile = TierProfiles.of(tier, type);
@@ -65,8 +74,8 @@ public class WeaponArtCatalogTest {
                 assertTrue(WeaponArts.byId(art).isPresent());
             }
         }
-        assertEquals(189 + 42, used.size());
-        assertEquals(222, GeneratedArts.all().size());
+        assertEquals(189 + 64 + 42, used.size());
+        assertEquals(180 + 64 + 42, GeneratedArts.all().size());
     }
 
     @Test
@@ -96,9 +105,17 @@ public class WeaponArtCatalogTest {
     public void tierArtsBelowNamedArtsBelowBossArts() {
         Map<WeaponType, double[]> tier = new EnumMap<>(WeaponType.class);
         Map<WeaponType, double[]> named = new EnumMap<>(WeaponType.class);
+        double relicLowest = 9.0;
         for (WeaponArt art : GeneratedArts.all()) {
             double burst = ArtBudget.burst(art) / ArtBudget.typeBurst(art.type());
             double rate = ArtBudget.perSecond(art) / ArtBudget.typePerSecond(art.type());
+            if (GeneratedArts.isRelicArt(art.id())) {
+                // relics (金枠): at least a boss art's strength
+                assertTrue(art.id() + " burst " + burst, burst >= 2.0 && burst <= 2.4);
+                assertTrue(art.id() + " rate " + rate, rate >= 1.05 && rate <= 1.35);
+                relicLowest = Math.min(relicLowest, burst);
+                continue;
+            }
             boolean isTier = GeneratedArts.isTierArt(art.id());
             if (isTier) {
                 assertTrue(art.id() + " burst " + burst, burst >= 1.05 && burst <= 1.30);
@@ -120,6 +137,7 @@ public class WeaponArtCatalogTest {
         }
         for (WeaponType type : WeaponType.values()) {
             assertTrue(type + ": named arts above tier arts", named.get(type)[0] > tier.get(type)[1]);
+            assertTrue(type + ": relic arts above named arts", relicLowest > named.get(type)[1]);
         }
     }
 

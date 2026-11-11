@@ -186,6 +186,19 @@ public final class ClientCombatController {
         return com.eternalrealm.job.SkillAiming.range(action, effects);
     }
 
+    /** The level the held weapon asks for when the character is below it (or it is bound to another), else 0. */
+    static int refusedLevel(LocalPlayer player) {
+        java.util.Optional<com.eternalrealm.character.CharacterSnapshot> snapshot = ClientCharacterState.snapshot();
+        if (snapshot.isEmpty()) {
+            return 0; // not known yet: the server decides
+        }
+        int level = snapshot.get().level();
+        return com.eternalrealm.item.forge.EquipmentStacks.read(player.getMainHandItem())
+                .filter(com.eternalrealm.item.EquipmentData::isWeapon)
+                .filter(data -> !data.canBeUsedBy(level, player.getUUID()))
+                .map(com.eternalrealm.item.EquipmentData::requiredLevel).orElse(0);
+    }
+
     /** Weapon type last announced as unusable for the job (so the hint shows once per weapon switch). */
     private static com.eternalrealm.combat.WeaponType announcedWeapon;
 
@@ -253,6 +266,16 @@ public final class ClientCombatController {
      */
     private static boolean request(Minecraft minecraft, LocalPlayer player, Combatant local, CombatRequest request,
                                    long now, WeaponProfile weapon, int target) {
+        if (request != CombatRequest.DODGE && request != CombatRequest.HEAVY_RELEASE) {
+            int needed = refusedLevel(player);
+            if (needed > 0) {
+                // a weapon above the character's level cannot be used (the server refuses it too)
+                player.displayClientMessage(Component.translatable("message.eternalrealm.equipment.weapon_level",
+                        needed, player.getMainHandItem().getHoverName()).withStyle(net.minecraft.ChatFormatting.RED),
+                        true);
+                return false;
+            }
+        }
         boolean restricted = player.isPassenger() || player.isFallFlying();
         boolean usingOtherItem = player.isUsingItem() && !isUsingWeapon(player);
         boolean guarding = isUsingWeapon(player);

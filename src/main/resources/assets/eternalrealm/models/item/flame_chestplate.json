@@ -63,6 +63,138 @@
         "custom_model_data": 4117
       },
       "model": "eternalrealm:item/named/anchorguard_plate_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4513
+      },
+      "model": "eternalrealm:item/named/relic_b4_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4517
+      },
+      "model": "eternalrealm:item/named/relic_b5_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4545
+      },
+      "model": "eternalrealm:item/named/relic_c_iron_mine_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4549
+      },
+      "model": "eternalrealm:item/named/relic_c_sacred_falls_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4569
+      },
+      "model": "eternalrealm:item/named/relic_c_lakeside_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4573
+      },
+      "model": "eternalrealm:item/named/relic_c_harbour_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4601
+      },
+      "model": "eternalrealm:item/named/relic_l_dolga_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4605
+      },
+      "model": "eternalrealm:item/named/relic_l_rustbone_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4609
+      },
+      "model": "eternalrealm:item/named/relic_l_vein_eater_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4613
+      },
+      "model": "eternalrealm:item/named/relic_l_goura_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4617
+      },
+      "model": "eternalrealm:item/named/relic_l_mistweaver_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4621
+      },
+      "model": "eternalrealm:item/named/relic_l_ord_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4673
+      },
+      "model": "eternalrealm:item/named/relic_l_melusine_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4677
+      },
+      "model": "eternalrealm:item/named/relic_l_drowned_fisher_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4681
+      },
+      "model": "eternalrealm:item/named/relic_l_numel_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4685
+      },
+      "model": "eternalrealm:item/named/relic_l_barbas_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4689
+      },
+      "model": "eternalrealm:item/named/relic_l_dock_brawler_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4693
+      },
+      "model": "eternalrealm:item/named/relic_l_ankara_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4709
+      },
+      "model": "eternalrealm:item/named/relic_w_cascade_wyvern_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4713
+      },
+      "model": "eternalrealm:item/named/relic_w_mist_hermit_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4749
+      },
+      "model": "eternalrealm:item/named/relic_w_sunken_captain_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4753
+      },
+      "model": "eternalrealm:item/named/relic_w_tide_singer_chest"
     }
   ]
 }

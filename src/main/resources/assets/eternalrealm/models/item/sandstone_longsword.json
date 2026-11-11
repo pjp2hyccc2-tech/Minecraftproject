@@ -66,6 +66,12 @@
         "custom_model_data": 3162
       },
       "model": "eternalrealm:item/named/deckhand_cutlass"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3521
+      },
+      "model": "eternalrealm:item/named/relic_l_durn_weapon"
     }
   ]
 }

@@ -48,7 +48,7 @@ public record ArmorSet(String id, int model, ArmorStyle style, int field, int le
         Checks.range("model", model, Design.ARMOR_MODELS, 9999 - PIECES);
         Objects.requireNonNull(style, "style");
         Checks.range("field", field, 1, 10);
-        Checks.range("level", level, 1, 50);
+        Checks.range("level", level, 1, Design.MAX_LEVEL);
         sources = Set.copyOf(sources);
         if (sources.isEmpty()) {
             throw new IllegalArgumentException(id + ": a set needs a source");

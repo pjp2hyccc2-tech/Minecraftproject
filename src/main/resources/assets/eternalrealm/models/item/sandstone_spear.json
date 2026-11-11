@@ -66,6 +66,18 @@
         "custom_model_data": 3171
       },
       "model": "eternalrealm:item/named/boarding_pike"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3519
+      },
+      "model": "eternalrealm:item/named/relic_l_garm_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3549
+      },
+      "model": "eternalrealm:item/named/relic_w_bramble_knight_weapon"
     }
   ]
 }

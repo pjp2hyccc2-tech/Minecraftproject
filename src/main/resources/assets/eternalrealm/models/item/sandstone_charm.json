@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_charm"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5003
+      },
+      "model": "eternalrealm:item/trinket/relic_b2_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5019
+      },
+      "model": "eternalrealm:item/trinket/relic_c_meadow_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5039
+      },
+      "model": "eternalrealm:item/trinket/relic_l_garm_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5041
+      },
+      "model": "eternalrealm:item/trinket/relic_l_hook_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5043
+      },
+      "model": "eternalrealm:item/trinket/relic_l_durn_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5099
+      },
+      "model": "eternalrealm:item/trinket/relic_w_bramble_knight_stone"
+    }
+  ]
+}

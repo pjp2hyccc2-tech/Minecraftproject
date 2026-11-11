@@ -24,6 +24,24 @@
         "custom_model_data": 3166
       },
       "model": "eternalrealm:item/named/stormsail_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3524
+      },
+      "model": "eternalrealm:item/named/relic_l_lunar_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3540
+      },
+      "model": "eternalrealm:item/named/relic_l_brutus_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3551
+      },
+      "model": "eternalrealm:item/named/relic_w_slag_titan_weapon"
     }
   ]
 }

@@ -63,6 +63,138 @@
         "custom_model_data": 4116
       },
       "model": "eternalrealm:item/named/anchorguard_plate_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4512
+      },
+      "model": "eternalrealm:item/named/relic_b4_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4516
+      },
+      "model": "eternalrealm:item/named/relic_b5_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4544
+      },
+      "model": "eternalrealm:item/named/relic_c_iron_mine_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4548
+      },
+      "model": "eternalrealm:item/named/relic_c_sacred_falls_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4568
+      },
+      "model": "eternalrealm:item/named/relic_c_lakeside_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4572
+      },
+      "model": "eternalrealm:item/named/relic_c_harbour_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4600
+      },
+      "model": "eternalrealm:item/named/relic_l_dolga_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4604
+      },
+      "model": "eternalrealm:item/named/relic_l_rustbone_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4608
+      },
+      "model": "eternalrealm:item/named/relic_l_vein_eater_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4612
+      },
+      "model": "eternalrealm:item/named/relic_l_goura_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4616
+      },
+      "model": "eternalrealm:item/named/relic_l_mistweaver_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4620
+      },
+      "model": "eternalrealm:item/named/relic_l_ord_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4672
+      },
+      "model": "eternalrealm:item/named/relic_l_melusine_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4676
+      },
+      "model": "eternalrealm:item/named/relic_l_drowned_fisher_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4680
+      },
+      "model": "eternalrealm:item/named/relic_l_numel_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4684
+      },
+      "model": "eternalrealm:item/named/relic_l_barbas_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4688
+      },
+      "model": "eternalrealm:item/named/relic_l_dock_brawler_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4692
+      },
+      "model": "eternalrealm:item/named/relic_l_ankara_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4708
+      },
+      "model": "eternalrealm:item/named/relic_w_cascade_wyvern_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4712
+      },
+      "model": "eternalrealm:item/named/relic_w_mist_hermit_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4748
+      },
+      "model": "eternalrealm:item/named/relic_w_sunken_captain_head"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4752
+      },
+      "model": "eternalrealm:item/named/relic_w_tide_singer_head"
     }
   ]
 }

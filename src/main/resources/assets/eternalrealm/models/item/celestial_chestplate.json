@@ -51,6 +51,24 @@
         "custom_model_data": 4061
       },
       "model": "eternalrealm:item/named/thunderpeak_armor_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4521
+      },
+      "model": "eternalrealm:item/named/relic_b6_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4717
+      },
+      "model": "eternalrealm:item/named/relic_w_walking_glyph_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4721
+      },
+      "model": "eternalrealm:item/named/relic_w_ash_herald_chest"
     }
   ]
 }

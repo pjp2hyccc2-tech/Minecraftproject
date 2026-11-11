@@ -69,6 +69,120 @@
         "custom_model_data": 4082
       },
       "model": "eternalrealm:item/named/oblivion_vestment_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4526
+      },
+      "model": "eternalrealm:item/named/relic_b7_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4530
+      },
+      "model": "eternalrealm:item/named/relic_b8_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4534
+      },
+      "model": "eternalrealm:item/named/relic_final_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4554
+      },
+      "model": "eternalrealm:item/named/relic_c_ancient_ruins_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4558
+      },
+      "model": "eternalrealm:item/named/relic_c_soaring_peaks_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4562
+      },
+      "model": "eternalrealm:item/named/relic_c_end_forest_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4626
+      },
+      "model": "eternalrealm:item/named/relic_l_valka_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4630
+      },
+      "model": "eternalrealm:item/named/relic_l_scorch_eye_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4634
+      },
+      "model": "eternalrealm:item/named/relic_l_agnis_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4638
+      },
+      "model": "eternalrealm:item/named/relic_l_alvin_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4642
+      },
+      "model": "eternalrealm:item/named/relic_l_peak_sniper_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4646
+      },
+      "model": "eternalrealm:item/named/relic_l_zephyr_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4650
+      },
+      "model": "eternalrealm:item/named/relic_l_xenos_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4654
+      },
+      "model": "eternalrealm:item/named/relic_l_black_knight_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4658
+      },
+      "model": "eternalrealm:item/named/relic_l_nihil_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4726
+      },
+      "model": "eternalrealm:item/named/relic_w_thunder_roc_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4730
+      },
+      "model": "eternalrealm:item/named/relic_w_glacier_bearer_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4734
+      },
+      "model": "eternalrealm:item/named/relic_w_hollow_walker_legs"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4738
+      },
+      "model": "eternalrealm:item/named/relic_w_gravebloom_legs"
     }
   ]
 }

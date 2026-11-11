@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "eternalrealm:item/named/relic_w_walking_glyph_weapon"
+  }
+}

@@ -30,6 +30,18 @@
         "custom_model_data": 3116
       },
       "model": "eternalrealm:item/named/voidwhisper_daggers"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3536
+      },
+      "model": "eternalrealm:item/named/relic_l_zephyr_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3559
+      },
+      "model": "eternalrealm:item/named/relic_w_gravebloom_weapon"
     }
   ]
 }

@@ -12,6 +12,12 @@
         "custom_model_data": 3099
       },
       "model": "eternalrealm:item/named/summit_spear"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3505
+      },
+      "model": "eternalrealm:item/named/relic_b6_weapon"
     }
   ]
 }

@@ -18,6 +18,12 @@
         "custom_model_data": 3126
       },
       "model": "eternalrealm:item/named/wheatstalk_sword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3500
+      },
+      "model": "eternalrealm:item/named/relic_b1_weapon"
     }
   ]
 }

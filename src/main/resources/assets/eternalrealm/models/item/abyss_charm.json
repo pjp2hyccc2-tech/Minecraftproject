@@ -1,0 +1,122 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_charm"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5013
+      },
+      "model": "eternalrealm:item/trinket/relic_b7_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5015
+      },
+      "model": "eternalrealm:item/trinket/relic_b8_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5017
+      },
+      "model": "eternalrealm:item/trinket/relic_final_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5027
+      },
+      "model": "eternalrealm:item/trinket/relic_c_ancient_ruins_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5029
+      },
+      "model": "eternalrealm:item/trinket/relic_c_soaring_peaks_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5031
+      },
+      "model": "eternalrealm:item/trinket/relic_c_end_forest_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5063
+      },
+      "model": "eternalrealm:item/trinket/relic_l_valka_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5065
+      },
+      "model": "eternalrealm:item/trinket/relic_l_scorch_eye_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5067
+      },
+      "model": "eternalrealm:item/trinket/relic_l_agnis_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5069
+      },
+      "model": "eternalrealm:item/trinket/relic_l_alvin_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5071
+      },
+      "model": "eternalrealm:item/trinket/relic_l_peak_sniper_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5073
+      },
+      "model": "eternalrealm:item/trinket/relic_l_zephyr_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5075
+      },
+      "model": "eternalrealm:item/trinket/relic_l_xenos_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5077
+      },
+      "model": "eternalrealm:item/trinket/relic_l_black_knight_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5079
+      },
+      "model": "eternalrealm:item/trinket/relic_l_nihil_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5113
+      },
+      "model": "eternalrealm:item/trinket/relic_w_thunder_roc_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5115
+      },
+      "model": "eternalrealm:item/trinket/relic_w_glacier_bearer_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5117
+      },
+      "model": "eternalrealm:item/trinket/relic_w_hollow_walker_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5119
+      },
+      "model": "eternalrealm:item/trinket/relic_w_gravebloom_pouch"
+    }
+  ]
+}

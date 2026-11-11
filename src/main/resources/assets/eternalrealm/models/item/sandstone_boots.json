@@ -105,6 +105,42 @@
         "custom_model_data": 4111
       },
       "model": "eternalrealm:item/named/privateer_garb_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4507
+      },
+      "model": "eternalrealm:item/named/relic_b2_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4539
+      },
+      "model": "eternalrealm:item/named/relic_c_meadow_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4579
+      },
+      "model": "eternalrealm:item/named/relic_l_garm_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4583
+      },
+      "model": "eternalrealm:item/named/relic_l_hook_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4587
+      },
+      "model": "eternalrealm:item/named/relic_l_durn_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4699
+      },
+      "model": "eternalrealm:item/named/relic_w_bramble_knight_feet"
     }
   ]
 }

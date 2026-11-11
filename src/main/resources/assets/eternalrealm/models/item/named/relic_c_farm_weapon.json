@@ -1,0 +1,21 @@
+{
+  "loader": "forge:separate_transforms",
+  "gui_light": "front",
+  "textures": {
+    "particle": "eternalrealm:item/named/relic_c_farm_weapon"
+  },
+  "base": {
+    "parent": "eternalrealm:item/named/relic_c_farm_weapon_held"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "eternalrealm:item/named/relic_c_farm_weapon_icon"
+    },
+    "ground": {
+      "parent": "eternalrealm:item/named/relic_c_farm_weapon_icon"
+    },
+    "fixed": {
+      "parent": "eternalrealm:item/named/relic_c_farm_weapon_icon"
+    }
+  }
+}

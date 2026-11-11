@@ -90,8 +90,9 @@ public final class EquipmentComparison {
         EquipmentStats stats = EquipmentStats.of(data);
         CombatModifiers modifiers = stats.modifiers();
         out[Stat.ATTACK.ordinal()] = EquipmentStats.baseAttack(data) + stats.bonusAttack();
-        out[Stat.DEFENSE.ordinal()] = EquipmentStats.baseDefense(data) + modifiers.defenseFlat();
-        out[Stat.MAX_HEALTH.ordinal()] = EquipmentStats.baseMaxHealth(data) + modifiers.maxHealthFlat();
+        // the modifiers already hold the piece's base defense and max health (EquipmentStats#of)
+        out[Stat.DEFENSE.ordinal()] = modifiers.defenseFlat();
+        out[Stat.MAX_HEALTH.ordinal()] = modifiers.maxHealthFlat();
         out[Stat.STR.ordinal()] = stats.stats().get(StatType.STR);
         out[Stat.VIT.ordinal()] = stats.stats().get(StatType.VIT);
         out[Stat.AGI.ordinal()] = stats.stats().get(StatType.AGI);

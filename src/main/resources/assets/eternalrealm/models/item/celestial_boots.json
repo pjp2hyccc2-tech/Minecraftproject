@@ -51,6 +51,24 @@
         "custom_model_data": 4063
       },
       "model": "eternalrealm:item/named/thunderpeak_armor_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4523
+      },
+      "model": "eternalrealm:item/named/relic_b6_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4719
+      },
+      "model": "eternalrealm:item/named/relic_w_walking_glyph_feet"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4723
+      },
+      "model": "eternalrealm:item/named/relic_w_ash_herald_feet"
     }
   ]
 }

@@ -57,6 +57,12 @@
         "custom_model_data": 4085
       },
       "model": "eternalrealm:item/named/farmstead_bulwark_chest"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4501
+      },
+      "model": "eternalrealm:item/named/relic_b1_chest"
     }
   ]
 }

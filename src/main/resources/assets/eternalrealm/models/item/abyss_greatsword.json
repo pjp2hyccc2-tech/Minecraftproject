@@ -36,6 +36,24 @@
         "custom_model_data": 3188
       },
       "model": "eternalrealm:item/named/king_of_end_greatsword"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3506
+      },
+      "model": "eternalrealm:item/named/relic_b7_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3531
+      },
+      "model": "eternalrealm:item/named/relic_l_valka_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3557
+      },
+      "model": "eternalrealm:item/named/relic_w_glacier_bearer_weapon"
     }
   ]
 }

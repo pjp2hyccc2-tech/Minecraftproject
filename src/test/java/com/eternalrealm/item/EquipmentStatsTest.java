@@ -83,12 +83,13 @@ public class EquipmentStatsTest {
                 List.of(new Affix(AffixKind.INT, 12), new Affix(AffixKind.CRIT_CHANCE, 0.05),
                         new Affix(AffixKind.HEALING_PERCENT, 0.1), new Affix(AffixKind.DEFENSE, 15)), null, null);
         EquipmentStats stats = EquipmentStats.of(head);
-        assertEquals(12, stats.stats().get(StatType.INT));
-        assertEquals(12, stats.stats().total());
+        // legendary: every affix value ×1.30 (ItemRarity#power), primary stats rounded, the rest on their grid
+        assertEquals(16, stats.stats().get(StatType.INT));
+        assertEquals(16, stats.stats().total());
         CombatModifiers modifiers = stats.modifiers();
-        assertEquals(0.05, modifiers.critChance(), EPS);
-        assertEquals(0.1, modifiers.healingBonus(), EPS);
-        assertEquals(168.0 * 0.2 * 1.2 + 15, modifiers.defenseFlat(), EPS);
+        assertEquals(0.065, modifiers.critChance(), EPS);
+        assertEquals(0.13, modifiers.healingBonus(), EPS);
+        assertEquals(168.0 * 0.2 * 1.2 + 20, modifiers.defenseFlat(), EPS);
         assertEquals(64.0 * 0.2 * 1.2, modifiers.maxHealthFlat(), EPS);
         assertEquals(1.0, modifiers.dodgeCostFactor(), 0.0);
 
@@ -96,21 +97,25 @@ public class EquipmentStatsTest {
                 List.of(new Affix(AffixKind.RANGED_PERCENT, 0.12), new Affix(AffixKind.CRIT_DAMAGE, 0.25),
                         new Affix(AffixKind.AGI, 9)), null, null);
         CombatModifiers bowModifiers = EquipmentStats.of(bow).modifiers();
-        assertEquals(0.12, bowModifiers.rangedBonus(), EPS);
-        assertEquals(0.25, bowModifiers.critDamage(), EPS);
-        assertEquals(9, EquipmentStats.of(bow).stats().get(StatType.AGI));
+        assertEquals(0.146, bowModifiers.rangedBonus(), EPS); // epic ×1.22
+        assertEquals(0.305, bowModifiers.critDamage(), EPS);
+        assertEquals(11, EquipmentStats.of(bow).stats().get(StatType.AGI));
 
         EquipmentData boots = new EquipmentData(EquipmentSlot.FEET, null, ItemTier.IRON, ItemRarity.UNCOMMON, 0,
                 List.of(new Affix(AffixKind.MOVE_SPEED, 0.03)), null, null);
-        assertEquals(0.03, EquipmentStats.of(boots).modifiers().moveSpeed(), EPS);
+        assertEquals(0.032, EquipmentStats.of(boots).modifiers().moveSpeed(), EPS); // uncommon ×1.07
 
         for (AffixKind kind : List.of(AffixKind.PHYSICAL_PERCENT, AffixKind.MAGIC_PERCENT)) {
             EquipmentData sword = new EquipmentData(EquipmentSlot.WEAPON, WeaponType.ONE_HANDED_SWORD, ItemTier.IRON,
                     ItemRarity.UNCOMMON, 0, List.of(new Affix(kind, 0.03)), null, null);
             CombatModifiers m = EquipmentStats.of(sword).modifiers();
-            assertEquals(kind.toString(), 0.03, kind == AffixKind.PHYSICAL_PERCENT ? m.physicalBonus() : m.magicBonus(),
-                    EPS);
+            assertEquals(kind.toString(), 0.032, kind == AffixKind.PHYSICAL_PERCENT ? m.physicalBonus()
+                    : m.magicBonus(), EPS);
         }
+        // a common piece shows its rolls unchanged
+        EquipmentData plain = new EquipmentData(EquipmentSlot.FEET, null, ItemTier.IRON, ItemRarity.COMMON, 0,
+                List.of(), null, null);
+        assertEquals(EquipmentStats.baseDefense(plain), EquipmentStats.of(plain).modifiers().defenseFlat(), EPS);
     }
 
     @Test
@@ -121,9 +126,9 @@ public class EquipmentStatsTest {
                 new Affix(AffixKind.VIT, 4));
         EquipmentData sword = EquipmentDataTest.rareSword();
         GearBonus sum = Gear.sum(List.of(head, chest, sword));
-        assertEquals(7, sum.stats().get(StatType.VIT));
-        assertEquals(7, sum.stats().get(StatType.STR));
-        assertEquals(0.09, sum.modifiers().physicalBonus(), EPS);
+        assertEquals(7, sum.stats().get(StatType.VIT)); // uncommon ×1.07: 3 and 4 stay
+        assertEquals(8, sum.stats().get(StatType.STR)); // rare ×1.14: 7 becomes 8
+        assertEquals(0.103, sum.modifiers().physicalBonus(), EPS);
         double defense = 30.0 * (0.2 + 0.35) * 1.05;
         assertEquals(defense, sum.modifiers().defenseFlat(), EPS);
         assertEquals(GearBonus.NONE, Gear.sum(List.of()));
@@ -136,21 +141,21 @@ public class EquipmentStatsTest {
 
     @Test
     public void unusablePiecesGiveNothing() {
-        EquipmentData sword = EquipmentDataTest.rareSword(); // frost: level 22
+        EquipmentData sword = EquipmentDataTest.rareSword(); // frost: level 22, +1 for rare
         EquipmentData head = EquipmentDataTest.armor(EquipmentSlot.HEAD, ItemTier.IRON, ItemRarity.COMMON)
                 .withBoundTo(EquipmentDataTest.OTHER);
-        GearBonus atLevel21 = Gear.sum(List.of(sword, head), 21, EquipmentDataTest.PLAYER);
-        assertEquals(GearBonus.NONE, atLevel21);
         GearBonus atLevel22 = Gear.sum(List.of(sword, head), 22, EquipmentDataTest.PLAYER);
-        assertEquals(EquipmentStats.of(sword).gearBonus(), atLevel22);
-        assertEquals(Gear.sum(List.of(sword, head)), Gear.sum(List.of(sword, head), 22, EquipmentDataTest.OTHER));
+        assertEquals(GearBonus.NONE, atLevel22);
+        GearBonus atLevel23 = Gear.sum(List.of(sword, head), 23, EquipmentDataTest.PLAYER);
+        assertEquals(EquipmentStats.of(sword).gearBonus(), atLevel23);
+        assertEquals(Gear.sum(List.of(sword, head)), Gear.sum(List.of(sword, head), 23, EquipmentDataTest.OTHER));
         assertThrows(IllegalArgumentException.class, () -> Gear.sum(List.of(sword, sword), 50, null));
 
         EquipmentData spear = weapon(WeaponType.SPEAR, ItemTier.ABYSS, ItemRarity.RARE, 0);
         double bonus = EquipmentStats.of(spear).bonusAttack();
         assertTrue(bonus > 0);
-        assertEquals(bonus, Gear.weaponBonusAttack(spear, 44, EquipmentDataTest.PLAYER), 0.0);
-        assertEquals(0.0, Gear.weaponBonusAttack(spear, 43, EquipmentDataTest.PLAYER), 0.0);
+        assertEquals(bonus, Gear.weaponBonusAttack(spear, 45, EquipmentDataTest.PLAYER), 0.0);
+        assertEquals(0.0, Gear.weaponBonusAttack(spear, 44, EquipmentDataTest.PLAYER), 0.0);
         assertEquals(0.0, Gear.weaponBonusAttack(spear.withBoundTo(EquipmentDataTest.OTHER), 50,
                 EquipmentDataTest.PLAYER), 0.0);
         assertEquals(0.0, Gear.weaponBonusAttack(null, 50, EquipmentDataTest.PLAYER), 0.0);
@@ -224,7 +229,8 @@ public class EquipmentStatsTest {
 
             double[] legendary = averageFullSet(build, ItemTier.ABYSS, ItemRarity.LEGENDARY, 400);
             assertTrue(name + " legendary clearly better ×" + legendary[0], legendary[0] >= rare[0] * 1.12);
-            assertTrue(name + " legendary not game-breaking ×" + legendary[0], legendary[0] <= 3.0);
+            // legendary affixes count ×1.30 (ItemRarity#power), so a full legendary set is worth a little more
+            assertTrue(name + " legendary not game-breaking ×" + legendary[0], legendary[0] <= 3.3);
             assertTrue(name + " legendary defense " + legendary[1], legendary[1] > rare[1] && legendary[1] <= 300);
         }
     }

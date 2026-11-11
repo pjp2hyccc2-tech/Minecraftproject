@@ -1,0 +1,86 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_charm"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5005
+      },
+      "model": "eternalrealm:item/trinket/relic_b3_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5021
+      },
+      "model": "eternalrealm:item/trinket/relic_c_moon_forest_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5033
+      },
+      "model": "eternalrealm:item/trinket/relic_c_farm_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5045
+      },
+      "model": "eternalrealm:item/trinket/relic_l_nebula_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5047
+      },
+      "model": "eternalrealm:item/trinket/relic_l_belladonna_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5049
+      },
+      "model": "eternalrealm:item/trinket/relic_l_lunar_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5081
+      },
+      "model": "eternalrealm:item/trinket/relic_l_brutus_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5083
+      },
+      "model": "eternalrealm:item/trinket/relic_l_harvest_boss_pouch"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5085
+      },
+      "model": "eternalrealm:item/trinket/relic_l_strom_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5101
+      },
+      "model": "eternalrealm:item/trinket/relic_w_moonmoth_witch_bell"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5103
+      },
+      "model": "eternalrealm:item/trinket/relic_w_slag_titan_stone"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5121
+      },
+      "model": "eternalrealm:item/trinket/relic_w_scarecrow_king_talisman"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5123
+      },
+      "model": "eternalrealm:item/trinket/relic_w_reed_serpent_pouch"
+    }
+  ]
+}

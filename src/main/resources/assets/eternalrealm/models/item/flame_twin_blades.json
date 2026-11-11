@@ -24,6 +24,30 @@
         "custom_model_data": 3170
       },
       "model": "eternalrealm:item/named/dock_brawlers_knuckleknives"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3504
+      },
+      "model": "eternalrealm:item/named/relic_b5_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3526
+      },
+      "model": "eternalrealm:item/named/relic_l_rustbone_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3529
+      },
+      "model": "eternalrealm:item/named/relic_l_mistweaver_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3547
+      },
+      "model": "eternalrealm:item/named/relic_l_dock_brawler_weapon"
     }
   ]
 }

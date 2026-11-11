@@ -24,6 +24,36 @@
         "custom_model_data": 3173
       },
       "model": "eternalrealm:item/named/maelstrom_trident"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3503
+      },
+      "model": "eternalrealm:item/named/relic_b4_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3512
+      },
+      "model": "eternalrealm:item/named/relic_c_sacred_falls_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3525
+      },
+      "model": "eternalrealm:item/named/relic_l_dolga_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3544
+      },
+      "model": "eternalrealm:item/named/relic_l_drowned_fisher_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3552
+      },
+      "model": "eternalrealm:item/named/relic_w_cascade_wyvern_weapon"
     }
   ]
 }

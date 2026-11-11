@@ -30,6 +30,30 @@
         "custom_model_data": 3122
       },
       "model": "eternalrealm:item/named/xenos_ruinsceptre"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3507
+      },
+      "model": "eternalrealm:item/named/relic_b8_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3515
+      },
+      "model": "eternalrealm:item/named/relic_c_end_forest_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3532
+      },
+      "model": "eternalrealm:item/named/relic_l_scorch_eye_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3537
+      },
+      "model": "eternalrealm:item/named/relic_l_xenos_weapon"
     }
   ]
 }

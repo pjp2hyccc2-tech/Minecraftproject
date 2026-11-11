@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "eternalrealm:item/trinket/base_charm"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 5001
+      },
+      "model": "eternalrealm:item/trinket/relic_b1_pouch"
+    }
+  ]
+}

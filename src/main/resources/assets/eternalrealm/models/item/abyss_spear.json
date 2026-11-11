@@ -36,6 +36,24 @@
         "custom_model_data": 3187
       },
       "model": "eternalrealm:item/named/gatekeeper_end_halberd"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3533
+      },
+      "model": "eternalrealm:item/named/relic_l_agnis_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3539
+      },
+      "model": "eternalrealm:item/named/relic_l_nihil_weapon"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3556
+      },
+      "model": "eternalrealm:item/named/relic_w_thunder_roc_weapon"
     }
   ]
 }

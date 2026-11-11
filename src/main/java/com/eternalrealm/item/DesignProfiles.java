@@ -28,6 +28,9 @@ public final class DesignProfiles {
         for (WeaponDesign design : Armory.weapons()) {
             profiles.put(design.id(), build(design));
         }
+        for (WeaponDesign design : Relics.weapons()) {
+            profiles.put(design.id(), build(design));
+        }
         PROFILES = Collections.unmodifiableMap(profiles);
     }
 
@@ -63,7 +66,7 @@ public final class DesignProfiles {
         HeavyAttack heavy = base.heavy();
         HeavyAttack scaledHeavy = new HeavyAttack(heavy.minChargeTicks(), heavy.maxChargeTicks(), heavy.minMultiplier(),
                 heavy.maxMultiplier(), heavy.derivedBonus(), scaled(heavy.strike(), reach));
-        // boss weapons bring their boss art, every other named weapon its own art (GeneratedArts)
+        // boss weapons bring their boss art, every other named weapon and every relic its own art (GeneratedArts)
         ActionDefinition skill = design.art() != null
                 ? WeaponArts.byId(design.art()).orElseThrow(() -> new IllegalStateException("Unknown art "
                         + design.art())).action()
