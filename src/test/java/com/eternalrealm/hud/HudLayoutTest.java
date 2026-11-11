@@ -115,9 +115,14 @@ public class HudLayoutTest {
         // the pickup feed stands right above the equipment icon
         assertEquals(layout.equipment().y() - HudLayout.GAP, layout.pickupFeed().bottom());
         assertEquals(HudLayout.FEED_ROWS * HudLayout.FEED_ROW, layout.pickupFeed().height());
+        // the mount icon stands left of the equipment, in its row
+        assertEquals(layout.equipment().y(), layout.mount().y());
+        assertEquals(layout.equipment().x() - HudLayout.GAP, layout.mount().right());
+        assertTrue(layout.mount().bottom() <= layout.skillBar().y());
         // subtitles push the icons up
         HudLayout.Layout subtitles = HudLayout.compute(HudLayout.Input.of(640, 360).withSubtitles(true));
         assertEquals(layout.bag().y() - HudLayout.SUBTITLE_SHIFT, subtitles.bag().y());
+        assertEquals(subtitles.equipment().y(), subtitles.mount().y());
     }
 
     @Test

@@ -94,3 +94,13 @@
 - `CombatStatusPacket` の outcome: **12 = `REJECTED_JOB_WEAPON`**（職業で使えない武器）。CT は職業スキル枠 0〜6 の 7 つ。
 - `CharacterSnapshotPacket`: スキル投資（最大128件）の後に**スキル枠**（skillId の列、空文字 = 空き。通常 6 件、受信側の上限 16 件）を追加。最大 12288 B。
 - UI 操作（`UiActionPacket`）: `skill.invest {skill}`、`skill.slot {slot, skill}`（空文字で外す）、`skill.reset`。サーバーが `SkillTree` で再判定し、結果をメッセージとスナップショットで返す。
+
+## 付録: 乗り物（パケット追加なし・版 7 のまま）
+
+- UI 操作（`UiActionPacket`）: `mount.toggle`（引数なし。乗っていれば降りる・呼び出し中なら中止・それ以外は呼ぶ）、
+  `mount.choose`（引数なし。持っている乗り物の一覧メニューを開く）。判定はすべてサーバー（`MountRules`）。
+- ビューデータ（`UiDataPacket`）: チャンネル `mount_state` = `{"owned":["horse",...],"selected":"griffin","riding":""}`。
+  変わったとき（購入・選択・乗る・降りる）と1秒ごとの確認で送る。HUD の乗り物アイコンが使う。
+- 乗り物の移動はバニラの乗り物と同じ（乗り手のクライアントが `ServerboundMoveVehiclePacket` で送る）。サーバーは速さと高さを見張る
+  （[modules/mounts.md](modules/mounts.md)）。
+

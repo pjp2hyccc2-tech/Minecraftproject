@@ -11,14 +11,14 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import java.util.List;
 
 /**
- * Places the town's NPCs: the ten service NPCs and the story characters in a ring around the capital's centre, and the
+ * Places the town's NPCs: the eleven service NPCs and the story characters in a ring around the capital's centre, and the
  * quest giver of every other area at the inner edge of that area's ring (east of the centre). Used by the world layer
  * with the capital's own spots, and by {@code /eternalrealm setup town} on servers without the アストリア dimension.
  */
 public final class TownSetup {
     private static final NpcRole[] SERVICES = {NpcRole.QUEST_BOARD, NpcRole.ITEM_SHOP, NpcRole.BLACKSMITH,
             NpcRole.JOB_MASTER, NpcRole.AUCTION, NpcRole.MAILBOX, NpcRole.GUILD_REGISTRAR, NpcRole.GATEKEEPER,
-            NpcRole.ARENA_MASTER, NpcRole.HALL_OF_FAME};
+            NpcRole.ARENA_MASTER, NpcRole.HALL_OF_FAME, NpcRole.STABLE_MASTER};
     private static final List<StoryNpc> CHARACTERS = List.of(StoryNpc.LILIA, StoryNpc.GUSTAV, StoryNpc.NOX,
             StoryNpc.LASZLO, StoryNpc.WOLFRAM);
     private static final double SERVICE_RADIUS = 9.0;

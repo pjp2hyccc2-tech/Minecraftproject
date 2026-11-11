@@ -1,0 +1,194 @@
+{
+  "mount.eternalrealm.horse": {
+    "ja": "月鬣の軍馬",
+    "en": "Moonmane Charger"
+  },
+  "mount.eternalrealm.horse.desc": {
+    "ja": "白いたてがみの黒い軍馬。蒼い馬衣と白金の鎧をまとう",
+    "en": "A black warhorse in blue barding and white-gold armour"
+  },
+  "mount.eternalrealm.griffin": {
+    "ja": "蒼翼のグリフォン",
+    "en": "Azurewing Griffin"
+  },
+  "mount.eternalrealm.griffin.desc": {
+    "ja": "鷲の頭と蒼白の大翼をもつ、鎧のグリフォン",
+    "en": "An armoured griffin with an eagle head and azure wings"
+  },
+  "mount.eternalrealm.bike": {
+    "ja": "星輪の魔導二輪",
+    "en": "Starwheel Arcbike"
+  },
+  "mount.eternalrealm.bike.desc": {
+    "ja": "白石と金で組まれ、蒼く光る車輪で走る魔導の二輪",
+    "en": "An arcane two-wheeler of pale stone and gold"
+  },
+  "mount.eternalrealm.calling": {
+    "ja": "%sを呼んでいる…（動くと中断）",
+    "en": "Calling %s... (moving stops it)"
+  },
+  "mount.eternalrealm.call_stopped": {
+    "ja": "呼び出しをやめた",
+    "en": "Call stopped"
+  },
+  "mount.eternalrealm.dismissed": {
+    "ja": "%sから降りた",
+    "en": "You get off %s"
+  },
+  "mount.eternalrealm.none_owned": {
+    "ja": "乗り物を持っていない。王都の南門のそばにいる厩舎長から買える",
+    "en": "You have no mount. The stablemaster by the capital's south gate sells them"
+  },
+  "mount.eternalrealm.not_here": {
+    "ja": "ここでは乗り物を呼べない",
+    "en": "Mounts cannot be called here"
+  },
+  "mount.eternalrealm.in_combat": {
+    "ja": "戦闘中は乗り物を呼べない",
+    "en": "You cannot call a mount in combat"
+  },
+  "mount.eternalrealm.in_boss_fight": {
+    "ja": "ボス戦の中では乗り物を呼べない",
+    "en": "You cannot call a mount during a boss fight"
+  },
+  "mount.eternalrealm.in_water": {
+    "ja": "水の中では乗り物を呼べない",
+    "en": "You cannot call a mount in water"
+  },
+  "mount.eternalrealm.down": {
+    "ja": "倒れている間は乗り物を呼べない",
+    "en": "You cannot call a mount while you are down"
+  },
+  "mount.eternalrealm.no_room": {
+    "ja": "ここは狭くて乗り物を呼べない",
+    "en": "There is no room for a mount here"
+  },
+  "mount.eternalrealm.left_boss_fight": {
+    "ja": "ボス戦が始まり、乗り物は退いた",
+    "en": "A boss fight begins: your mount withdraws"
+  },
+  "mount.eternalrealm.left_here": {
+    "ja": "ここには乗り物を連れて入れない",
+    "en": "Mounts cannot come in here"
+  },
+  "mount.eternalrealm.fight_on_foot": {
+    "ja": "戦うには乗り物から降りる",
+    "en": "You get off your mount to fight"
+  },
+  "mount.eternalrealm.bought": {
+    "ja": "%1$sを手に入れた！ %2$sキーで呼び出せる",
+    "en": "You got the %1$s! Press %2$s to call it"
+  },
+  "mount.eternalrealm.selected": {
+    "ja": "次に呼ぶ乗り物: %s",
+    "en": "Mount to call: %s"
+  },
+  "mount.eternalrealm.not_enough_gold": {
+    "ja": "ゴールドが足りない（%s G）",
+    "en": "Not enough gold (%s G)"
+  },
+  "mount.eternalrealm.level_too_low": {
+    "ja": "Lv%sから購入できる",
+    "en": "Available from Lv%s"
+  },
+  "mount.eternalrealm.already_owned": {
+    "ja": "もう持っている",
+    "en": "You already own it"
+  },
+  "mount.eternalrealm.hint": {
+    "ja": "WASDで進む、スペースでジャンプ、スニークで降りる",
+    "en": "WASD to ride, Space to jump, Sneak to get off"
+  },
+  "mount.eternalrealm.flight_hint": {
+    "ja": "スペースで上昇、スニークで下降（地上でスニークすると降りる）",
+    "en": "Space climbs, Sneak descends (Sneak on the ground to get off)"
+  },
+  "mount.eternalrealm.stable.title": {
+    "ja": "厩舎",
+    "en": "Stable"
+  },
+  "mount.eternalrealm.stable.choose_title": {
+    "ja": "乗り物を選ぶ",
+    "en": "Choose a Mount"
+  },
+  "mount.eternalrealm.stable.price": {
+    "ja": "価格 %s G",
+    "en": "Price %s G"
+  },
+  "mount.eternalrealm.stable.level": {
+    "ja": "Lv%sから",
+    "en": "From Lv%s"
+  },
+  "mount.eternalrealm.stable.locked": {
+    "ja": "Lv%sになると購入できる",
+    "en": "Can be bought at Lv%s"
+  },
+  "mount.eternalrealm.stable.owned": {
+    "ja": "購入済み",
+    "en": "Owned"
+  },
+  "mount.eternalrealm.stable.buy": {
+    "ja": "クリックで購入",
+    "en": "Click to buy"
+  },
+  "mount.eternalrealm.stable.pick": {
+    "ja": "クリックで次に呼ぶ乗り物にする",
+    "en": "Click to make it the mount you call"
+  },
+  "mount.eternalrealm.stable.selected": {
+    "ja": "次に呼ぶ乗り物（%sキー）",
+    "en": "The mount you call (%s)"
+  },
+  "mount.eternalrealm.stable.speed": {
+    "ja": "速さ: 全力疾走の約%s倍",
+    "en": "Speed: about %s× a sprint"
+  },
+  "mount.eternalrealm.stable.flies": {
+    "ja": "空を飛べる",
+    "en": "Flies"
+  },
+  "mount.eternalrealm.stable.gold": {
+    "ja": "所持金 %s G",
+    "en": "Gold %s G"
+  },
+  "mount.eternalrealm.stable.choose": {
+    "ja": "持っている乗り物はクリックで選べる",
+    "en": "Click a mount you own to choose it"
+  },
+  "mount.eternalrealm.stable.none": {
+    "ja": "まだ乗り物を持っていない",
+    "en": "You own no mount yet"
+  },
+  "mount.eternalrealm.stable.confirm": {
+    "ja": "もう一度クリックで購入（%s G）",
+    "en": "Click again to buy (%s G)"
+  },
+  "mount.eternalrealm.stable.call": {
+    "ja": "クリックで呼び出す",
+    "en": "Click to call it"
+  },
+  "npc.eternalrealm.stable_master": {
+    "ja": "厩舎長 ハルヴァン",
+    "en": "Stablemaster Halvan"
+  },
+  "key.eternalrealm.mount": {
+    "ja": "乗り物を呼ぶ／降りる",
+    "en": "Call / dismiss mount"
+  },
+  "key.eternalrealm.mount_choose": {
+    "ja": "乗り物を選ぶ",
+    "en": "Choose mount"
+  },
+  "entity.eternalrealm.mount_horse": {
+    "ja": "月鬣の軍馬",
+    "en": "Moonmane Charger"
+  },
+  "entity.eternalrealm.mount_griffin": {
+    "ja": "蒼翼のグリフォン",
+    "en": "Azurewing Griffin"
+  },
+  "entity.eternalrealm.mount_bike": {
+    "ja": "星輪の魔導二輪",
+    "en": "Starwheel Arcbike"
+  }
+}

@@ -46,6 +46,9 @@ public final class RealmSetup {
     private static final List<StoryNpc> CHARACTERS = List.of(StoryNpc.LILIA, StoryNpc.GUSTAV, StoryNpc.NOX,
             StoryNpc.LASZLO, StoryNpc.WOLFRAM);
     private static final Set<String> ENTRANCES_DONE = new HashSet<>();
+    /** The stablemaster's fallback spot: the square west of the south gate road (blueprint coordinates). */
+    private static final int STABLE_X = -20;
+    private static final int STABLE_Z = 69;
 
     static {
         SPOTS.put(NpcRole.QUEST_BOARD, HubSpot.QUEST_BOARD);
@@ -105,6 +108,7 @@ public final class RealmSetup {
                             npc.setCustomName(Component.translatable(key).withStyle(ChatFormatting.GOLD))));
         }
         BlockPos plaza = layout.spawnPoint();
+        placeStablemaster(astoria, layout);
         for (int i = 0; i < CHARACTERS.size(); i++) {
             StoryNpc character = CHARACTERS.get(i);
             double angle = Math.PI * (0.25 + 0.375 * i);
@@ -123,6 +127,16 @@ public final class RealmSetup {
             StoryNpcs.ensure(astoria, pos, captain, layout.namedYaw(spot, yawTowards(pos, plaza)));
         });
         Crowds.populate(astoria, crowdSpots(layout));
+    }
+
+    /**
+     * The stablemaster (mounts): at the blueprint's {@code npc.stable_master} spot, or on the square west of the road
+     * inside the south gate, facing the road.
+     */
+    private static void placeStablemaster(ServerLevel astoria, HubLayout layout) {
+        String spot = "npc." + NpcRole.STABLE_MASTER.id();
+        BlockPos pos = layout.named(spot).orElse(new BlockPos(STABLE_X, layout.groundY() + 1, STABLE_Z));
+        Npcs.ensure(astoria, pos, NpcRole.STABLE_MASTER, layout.namedYaw(spot, -90.0F));
     }
 
     /**

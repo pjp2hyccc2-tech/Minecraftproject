@@ -17,6 +17,8 @@ public enum NpcRole {
     GATEKEEPER("gatekeeper", "mason"),
     ARENA_MASTER("arena_master", "butcher"),
     HALL_OF_FAME("hall_of_fame", "librarian"),
+    /** Sells mounts (docs/modules/mounts.md). */
+    STABLE_MASTER("stable_master", "leatherworker"),
     /** Story characters: only talk. */
     STORY("story", "nitwit");
 
@@ -48,6 +50,7 @@ public enum NpcRole {
             case "toolsmith" -> VillagerProfession.TOOLSMITH;
             case "mason" -> VillagerProfession.MASON;
             case "butcher" -> VillagerProfession.BUTCHER;
+            case "leatherworker" -> VillagerProfession.LEATHERWORKER;
             default -> VillagerProfession.NITWIT;
         };
     }

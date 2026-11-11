@@ -1,9 +1,14 @@
 package com.eternalrealm.ui.hud;
 
 import com.eternalrealm.client.ClientKeyMappings;
+import com.eternalrealm.client.ClientUiState;
+import com.eternalrealm.client.mount.MountClient;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.hud.HudLayout;
 import com.eternalrealm.hud.Rect;
+import com.eternalrealm.mount.MountKind;
+import com.eternalrealm.mount.MountRules;
+import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +19,8 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 /**
  * The equipment and bag icons in the bottom right corner, each with its key in the icon's bottom right corner
- * (equipment: {@link ClientKeyMappings#OPEN_EQUIPMENT}, bag: vanilla's inventory key).
+ * (equipment: {@link ClientKeyMappings#OPEN_EQUIPMENT}, bag: vanilla's inventory key), and left of the equipment the
+ * mount key with the chosen mount once the player owns one.
  */
 public final class HudIconsOverlay implements IGuiOverlay {
     public static final ResourceLocation BAG = ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID, "textures/gui/hud/bag.png");
@@ -23,6 +29,15 @@ public final class HudIconsOverlay implements IGuiOverlay {
     private static final int PANEL = 0xB0141018;
     private static final int RIM = 0xFFC9A55A;
     private static final int RIM_DARK = 0xFF3A2C18;
+    private static final int RIDING = 0xFF6FC3FF;
+    private static final java.util.Map<MountKind, ResourceLocation> MOUNTS = new java.util.EnumMap<>(MountKind.class);
+
+    static {
+        for (MountKind kind : MountKind.values()) {
+            MOUNTS.put(kind, ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID,
+                    "textures/gui/hud/mount_" + kind.id() + ".png"));
+        }
+    }
 
     @Override
     public void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int screenWidth, int screenHeight) {
@@ -34,6 +49,24 @@ public final class HudIconsOverlay implements IGuiOverlay {
         Font font = minecraft.font;
         icon(graphics, font, layout.equipment(), EQUIPMENT, ClientKeyMappings.OPEN_EQUIPMENT.getTranslatedKeyMessage());
         icon(graphics, font, layout.bag(), BAG, minecraft.options.keyInventory.getTranslatedKeyMessage());
+        mount(graphics, font, layout.mount());
+    }
+
+    /** The mount key with the chosen mount (only once the player owns one); a blue rim while riding. */
+    private static void mount(GuiGraphics graphics, Font font, Rect box) {
+        JsonObject state = ClientUiState.get(MountRules.STATE_CHANNEL).orElse(null);
+        if (state == null || box.isEmpty()) {
+            return;
+        }
+        String selected = state.has("selected") ? state.get("selected").getAsString() : "";
+        MountKind kind = MountKind.byId(selected).orElse(null);
+        if (kind == null) {
+            return;
+        }
+        icon(graphics, font, box, MOUNTS.get(kind), MountClient.CALL.getTranslatedKeyMessage());
+        if (state.has("riding") && !state.get("riding").getAsString().isEmpty()) {
+            graphics.renderOutline(box.x() - 1, box.y() - 1, box.width() + 2, box.height() + 2, RIDING);
+        }
     }
 
     private static void icon(GuiGraphics graphics, Font font, Rect box, ResourceLocation texture, Component key) {

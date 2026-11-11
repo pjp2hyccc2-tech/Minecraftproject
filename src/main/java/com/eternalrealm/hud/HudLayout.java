@@ -15,7 +15,7 @@ import java.util.List;
  * │ party        │        ambient dialogue      │ threat  │
  * │              │                              │ ranking │
  * │ (chat)       │      (action bar)            │ pickups │
- * │              │                              │ [equip] │
+ * │              │                      [mount] [equip]   │
  * └──────────────┘ [Z][job skills][quick items] │ [bag]   │
  * </pre>
  *
@@ -174,7 +174,7 @@ public final class HudLayout {
                          int partyShown, Rect boss, Rect dialogue, boolean dialogueFromBottom, Rect minimap,
                          Rect minimapLabels, Rect threat, Rect threatResult, Rect ranking, int rankingRows,
                          Rect skillBar, Rect weaponSkill, Rect weaponLabel, List<Rect> jobSlots, List<Rect> quickSlots,
-                         Rect equipment, Rect bag, Rect pickupFeed, Rect chat, Rect actionBar) {
+                         Rect equipment, Rect bag, Rect mount, Rect pickupFeed, Rect chat, Rect actionBar) {
         public Layout {
             jobSlots = List.copyOf(jobSlots);
             quickSlots = List.copyOf(quickSlots);
@@ -183,7 +183,7 @@ public final class HudLayout {
         /** Every part of ours that takes space (not the reserved vanilla areas), for overlap checks. */
         public List<Rect> elements() {
             List<Rect> all = new ArrayList<>(List.of(player, effects, party, boss, dialogue, minimap, minimapLabels,
-                    threat, threatResult, ranking, skillBar, weaponLabel, equipment, bag, pickupFeed));
+                    threat, threatResult, ranking, skillBar, weaponLabel, equipment, bag, mount, pickupFeed));
             all.removeIf(Rect::isEmpty);
             return all;
         }
@@ -225,6 +225,8 @@ public final class HudLayout {
         int bagY = h - MARGIN - ICON - (in.subtitles() ? SUBTITLE_SHIFT : 0);
         Rect bag = new Rect(iconX, bagY, ICON, ICON);
         Rect equipment = new Rect(iconX, bagY - GAP - ICON, ICON, ICON);
+        // the mount key's icon left of the equipment, above the skill bar's row
+        Rect mount = new Rect(iconX - GAP - ICON, equipment.y(), ICON, ICON);
 
         // ---- the two columns; the boss HUD goes between them, or above both when there is no room
         int lowest = weaponLabel.y() - GAP;
@@ -249,7 +251,7 @@ public final class HudLayout {
             int top = boss.isEmpty() ? MARGIN + 2 : boss.bottom() + GAP;
             int maxHeight = Math.max(DIALOGUE_MIN_HEIGHT, h / 2 - TITLE_CLEARANCE - top);
             List<Rect> placed = new ArrayList<>(columns.placed());
-            placed.addAll(List.of(boss, equipment, bag, skillBar, weaponLabel));
+            placed.addAll(List.of(boss, equipment, bag, mount, skillBar, weaponLabel));
             int span = Math.min(DIALOGUE_MAX_WIDTH, freeWidth(placed, top, top + maxHeight, w));
             if (span >= DIALOGUE_MIN_WIDTH) {
                 dialogue = new Rect((w - span) / 2, top, span, maxHeight);
@@ -274,7 +276,7 @@ public final class HudLayout {
         return new Layout(columns.player(), columns.effects(), columns.effectsPerRow(), columns.party(),
                 columns.partyRow(), columns.partyPerColumn(), columns.partyShown(), boss, dialogue, fromBottom,
                 columns.minimap(), columns.labels(), columns.threat(), columns.threatResult(), columns.ranking(),
-                columns.rankingRows(), skillBar, weaponSkill, weaponLabel, jobSlots, quickSlots, equipment, bag, feed,
+                columns.rankingRows(), skillBar, weaponSkill, weaponLabel, jobSlots, quickSlots, equipment, bag, mount, feed,
                 chat, actionBar);
     }
 
