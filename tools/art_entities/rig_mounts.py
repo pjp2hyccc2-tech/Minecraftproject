@@ -1,6 +1,8 @@
 """MOUNT rigs: the Moonmane Charger (warhorse), the Azurewing Griffin and the Starwheel Arcbike.
 
-One rig per mount (rig names mount_horse, mount_griffin, mount_bike; one variant each). Own designs after the owner's
+One rig per mount (rig names mount_horse, mount_griffin, mount_bike). The horse and the griffin have one variant per
+coat (MountLooks: ten horse coats, eight griffin coats; the first is the classic look), the bike one. Own designs after
+the owner's
 three reference pictures: a black warhorse with a white shard mane and tail, blue caparison with gold trim, white-gold
 plate and blue gems; an armoured griffin with an eagle head under a gold crown, blue-and-white wings with gold leading
 edges, gold talons, banners and a lantern; a pale-stone-and-gold motorcycle on glowing blue wheels with lantern lights,
@@ -304,6 +306,11 @@ def plate_trim(p, part, tag=None, index=0, faces=('front', 'right', 'left', 'top
 
 def horse_paint(p):
     k = p.k
+    extra = p.variant.extra
+    if extra.get('pattern'):
+        coat_pattern(p, extra['pattern'], extra['pattern_color'])
+    if extra.get('glow_hair'):
+        glow_hair(p, extra['hair'])
     # caparison: blue, a gold-trimmed front panel with the star and a rear panel, pointed tabs at the hem
     for name in ('right', 'left'):
         fc = p.face('body', name, tag='cap')
@@ -385,16 +392,46 @@ def horse_paint(p):
         fc.fpx(fc.fw // 2, 4, GOLD)
 
 
-def horse_variant():
+# coat id -> coat (base, dark, light), muzzle (base, dark, light), mane, tail, fetlock, caparison, blanket, extra
+HORSE_COATS = [
+    ('night', dict(coat=('#25242e', '#14141a', '#3a3a4a'), muzzle=('#302f3a', '#1c1b24', '#46455a'), mane='#eef1f7',
+                   tail='#eaeef6', fetlock='#e6eaf2', caparison='#2a3f9c', blanket='#1e2c74')),
+    ('chestnut', dict(coat=('#8a4a24', '#5e2f14', '#a8643a'), muzzle=('#6e3a1c', '#4a240e', '#86502c'),
+                      mane='#e0ac66', tail='#d8a25a', fetlock='#ecc892', caparison='#7a1f2a', blanket='#5a1420')),
+    ('bay', dict(coat=('#6b3f22', '#45260f', '#87542f'), muzzle=('#3a2414', '#24150a', '#4e3220'), mane='#221a14',
+                 tail='#221a14', fetlock='#2a2018', caparison='#2a6a3a', blanket='#1d4a28')),
+    ('grey', dict(coat=('#b9bcc4', '#8f939c', '#d6d9df'), muzzle=('#8a8d96', '#64676f', '#a6a9b1'), mane='#f4f5f8',
+                  tail='#eeeff3', fetlock='#f6f7fa', caparison='#4a3a8c', blanket='#33286a')),
+    ('palomino', dict(coat=('#d9b062', '#b38a42', '#ecc985'), muzzle=('#c39a52', '#9c7638', '#d8b46e'),
+                      mane='#fbf4e2', tail='#f6eedb', fetlock='#f8f1e0', caparison='#2a6fa0', blanket='#1d4f74')),
+    ('dapple', dict(coat=('#8d939e', '#646a74', '#b3b8c1'), muzzle=('#565b64', '#3c4048', '#6e737c'), mane='#3a3d44',
+                    tail='#3a3d44', fetlock='#2e3137', caparison='#8c2a2a', blanket='#641c1c', pattern='dapple',
+                    pattern_color='#d4d8df')),
+    ('pinto', dict(coat=('#4a3426', '#2e1f15', '#634635'), muzzle=('#3a291d', '#251a11', '#4e3828'), mane='#efebe3',
+                   tail='#2c2119', fetlock='#efebe3', caparison='#c08a2a', blanket='#8a6018', pattern='pinto',
+                   pattern_color='#efebe3')),
+    ('ember', dict(coat=('#7a1c18', '#4e0f0c', '#9c2a22'), muzzle=('#561310', '#380a08', '#6e1c16'), mane='#1a1010',
+                   tail='#1a1010', fetlock='#2a1414', caparison='#1c1c22', blanket='#121216')),
+    ('frost', dict(coat=('#cfe6f4', '#a8c8de', '#eaf6fd'), muzzle=('#b4d2e6', '#90b4cc', '#cce2f2'), mane='#7fd0ff',
+                   tail='#8ad6ff', fetlock='#dff3ff', caparison='#3a6ea8', blanket='#2a5486', glow_hair=True)),
+    ('star', dict(coat=('#1a1d3a', '#0f1126', '#2a2f58'), muzzle=('#23264a', '#151834', '#30345e'), mane='#c2b4ff',
+                  tail='#bba9ff', fetlock='#d8ccff', caparison='#4b2a8c', blanket='#33196a', pattern='stars',
+                  pattern_color='#f4f0ff', glow_hair=True)),
+]
+
+
+def horse_variant(cid='night', spec=None):
+    spec = spec or dict(HORSE_COATS)[cid]
+    coat, muzzle = spec['coat'], spec['muzzle']
     pal = {
-        'coat': {'base': '#25242e', 'style': 'fur', 'dark': '#14141a', 'light': '#3a3a4a'},
-        'muzzle': {'base': '#302f3a', 'style': 'fur', 'dark': '#1c1b24', 'light': '#46455a'},
-        'mane': {'base': '#eef1f7', 'style': 'hair'},
-        'tail': {'base': '#eaeef6', 'style': 'hair'},
-        'fetlock': {'base': '#e6eaf2', 'style': 'hair'},
+        'coat': {'base': coat[0], 'style': 'fur', 'dark': coat[1], 'light': coat[2]},
+        'muzzle': {'base': muzzle[0], 'style': 'fur', 'dark': muzzle[1], 'light': muzzle[2]},
+        'mane': {'base': spec['mane'], 'style': 'hair'},
+        'tail': {'base': spec['tail'], 'style': 'hair'},
+        'fetlock': {'base': spec['fetlock'], 'style': 'hair'},
         'hoof': '#1a1a20',
-        'caparison': {'base': '#2a3f9c', 'style': 'cloth'},
-        'blanket': {'base': '#1e2c74', 'style': 'cloth'},
+        'caparison': {'base': spec['caparison'], 'style': 'cloth'},
+        'blanket': {'base': spec['blanket'], 'style': 'cloth'},
         'saddle': {'base': '#7a4826', 'style': 'leather'},
         'saddle_rim': {'base': '#5a3218', 'style': 'leather'},
         'bag': {'base': '#6e4022', 'style': 'leather'},
@@ -403,13 +440,74 @@ def horse_variant():
         'greave': {'base': '#dfe3ec', 'style': 'metal', 'rivets': False},
         'gem': {'base': '#4a9cff', 'style': 'gem'},
     }
-    return Variant('horse', palette=pal, paint=horse_paint, glow=True,
-                   extra=dict(scale=1.0, hitbox=(1.3, 1.75), seat='saddle'))
+    return Variant(cid, palette=pal, paint=horse_paint, glow=True,
+                   extra=dict(scale=1.0, hitbox=(1.3, 1.75), seat='saddle', pattern=spec.get('pattern'),
+                              pattern_color=spec.get('pattern_color'), glow_hair=spec.get('glow_hair', False),
+                              hair=spec['mane']))
 
 
 def horse_rig():
-    return Rig('mount_horse', 'HorseMount', horse_geometry(), horse_animations(), [horse_variant()], HORSE_SLOTS,
-               texel=2)
+    return Rig('mount_horse', 'HorseMount', horse_geometry(), horse_animations(),
+               [horse_variant(cid, spec) for cid, spec in HORSE_COATS], HORSE_SLOTS, texel=2)
+
+
+def material_faces(p, materials):
+    """Every painted face (fine-pixel canvases) of the cubes made of one of {@code materials}, with its glow face."""
+    from erpaint import FaceCanvas
+    out = []
+    for c in p.rig.cubes:
+        if c.share is not None or c.mat not in materials or not p.visible(c.part):
+            continue
+        for fname, rect in c.faces().items():
+            out.append((FaceCanvas(p.img, rect, fname, p.k), FaceCanvas(p.glow, rect, fname, p.k), c, fname))
+    return out
+
+
+def coat_pattern(p, kind, color):
+    """Dapples (light rings on a grid), pinto patches (big white islands) or star specks (glowing) on the coat."""
+    from erpaint import seed_of
+    color = rgb(color)
+    for fc, gc, c, fname in material_faces(p, ('fur:coat', 'fur:muzzle')):
+        rng = np.random.default_rng(seed_of('pattern', p.variant.id, c.part.name, c.x, c.y, c.z, fname))
+        w, h = fc.fw, fc.fh
+        if kind == 'dapple':
+            cell = 6
+            for cy in range(-cell, h + cell, cell):
+                for cx in range(-cell, w + cell, cell):
+                    ox = cx + rng.integers(0, cell)
+                    oy = cy + rng.integers(0, cell)
+                    r = 1.2 + rng.random() * 1.3
+                    for y in range(int(oy - r - 1), int(oy + r + 2)):
+                        for x in range(int(ox - r - 1), int(ox + r + 2)):
+                            if 0 <= x < w and 0 <= y < h:
+                                d = math.hypot(x - ox, y - oy)
+                                if d <= r:
+                                    fc.fpx(x, y, mix(fc.fget(x, y), color, 0.55 if d > r - 0.8 else 0.3))
+        elif kind == 'pinto':
+            a, b, ph1, ph2, ph3 = rng.random() * 0.25 + 0.18, rng.random() * 0.25 + 0.18, *(rng.random(3) * 6.28)
+            for y in range(h):
+                for x in range(w):
+                    v = math.sin(x * a + ph1) + math.sin(y * b + ph2) + 0.8 * math.sin((x + y) * 0.13 + ph3)
+                    if v > 0.75:
+                        fc.fpx(x, y, shade(color, 0.92 + 0.08 * ((x * 7 + y * 3) % 3)))
+        elif kind == 'stars':
+            for y in range(h):
+                for x in range(w):
+                    if rng.random() < 0.018:
+                        bright = rng.random() < 0.3
+                        fc.fpx(x, y, color if bright else mix(color, fc.fget(x, y), 0.4))
+                        gc.fpx(x, y, (200, 190, 255) if bright else (110, 100, 170))
+
+
+def glow_hair(p, color):
+    """The mane, tail and fetlocks shine (the emissive layer gets the hair's own colours, a little dimmed)."""
+    color = rgb(color)
+    for fc, gc, c, fname in material_faces(p, ('hair:mane', 'hair:tail', 'hair:fetlock')):
+        for y in range(fc.fh):
+            for x in range(fc.fw):
+                if fc.img[fc.v * fc.k + y, fc.u * fc.k + x, 3] > 0:
+                    base = fc.fget(x, y)
+                    gc.fpx(x, y, tuple(int(min(255, v * 0.8)) for v in mix(base, color, 0.5)))
 
 
 # ================================================================================================ the griffin
@@ -636,10 +734,11 @@ def feather(fc, color):
 
 def griffin_paint(p):
     k = p.k
-    white = WHITE
-    pale = rgb('#c9d2ea')
-    blue = rgb('#3150b8')
-    navy = rgb('#22306e')
+    wing = p.variant.extra['wing']
+    white = rgb(wing['white'])
+    pale = rgb(wing['pale'])
+    blue = rgb(wing['accent'])
+    navy = rgb(wing['navy'])
     # wings: coverts in white and blue rows; secondaries and primaries alternately blue and white with pointed tips
     for side in ('r', 'l'):
         for name in ('top', 'bottom'):
@@ -725,7 +824,7 @@ def griffin_paint(p):
         fc = p.face('body', name, index=1)
         for x in range(fc.fw):
             fc.fpx(x, 2 * k, GOLD)
-    # tail tips blue
+    # tail tips in the wing colour
     for name in ('top', 'bottom'):
         fc = p.face('tail2', name, index=0)
         for fx in range(fc.fw):
@@ -733,33 +832,67 @@ def griffin_paint(p):
                 fc.fpx(fx, fy, shade(blue, 1.0 if (fx // 2) % 2 else 0.85))
             if fx % 3 == 0:
                 fc.fclear(fx, 0)
+    if p.variant.extra.get('glow_wings'):
+        # the aurora: every bar of the wing colour shines on the emissive layer
+        for fc, gc, c, fname in material_faces(p, ('feather:pb', 'feather:sb', 'feather:tailtip', 'feather:covert',
+                                                   'feather:hand')):
+            for y in range(fc.fh):
+                for x in range(fc.fw):
+                    if fc.img[fc.v * fc.k + y, fc.u * fc.k + x, 3] > 0:
+                        px = fc.fget(x, y)
+                        if sum(abs(a - b) for a, b in zip(px, blue)) < 120:
+                            gc.fpx(x, y, tuple(int(v * 0.85) for v in px))
 
 
-def griffin_variant():
+# coat id -> body (base, light), head (base, light, dark), white, pale, accent (the wing bars), navy, banner
+GRIFFIN_COATS = [
+    ('azure', dict(body=('#26346f', '#3a4c96'), head=('#f2f4fa', '#ffffff', '#c0c8de'), white='#eef1f8',
+                   pale='#c9d2ea', accent='#3150b8', navy='#22306e', banner='#2a3f9c')),
+    ('golden', dict(body=('#6a4418', '#8a5c26'), head=('#f6f1e4', '#ffffff', '#d4c6a6'), white='#c9984a',
+                    pale='#a87a34', accent='#5e3612', navy='#3e220a', banner='#8c2a2a')),
+    ('snow', dict(body=('#dfe4ec', '#f6f8fb'), head=('#ffffff', '#ffffff', '#d2d8e2'), white='#f8fafc',
+                  pale='#d6dce6', accent='#8e9aae', navy='#5e687a', banner='#3a6ea8')),
+    ('raven', dict(body=('#1c1a22', '#2c2934'), head=('#4a4752', '#5c5966', '#34313c'), white='#3a3742',
+                   pale='#2c2a33', accent='#6a44a8', navy='#2a1a46', banner='#3a1a5a')),
+    ('crimson', dict(body=('#6a1414', '#8a2420'), head=('#f4e6dc', '#fff4ec', '#d4bcae'), white='#b8402e',
+                     pale='#923222', accent='#ffb04a', navy='#5a1010', banner='#1c1c22')),
+    ('verdant', dict(body=('#1f5a3a', '#2e7a50'), head=('#eef6ee', '#ffffff', '#c4d8c4'), white='#4a9a5a',
+                     pale='#367a44', accent='#e0c040', navy='#14402a', banner='#6a4a1a')),
+    ('dawn', dict(body=('#c86a6a', '#e08a7a'), head=('#fff4e6', '#ffffff', '#e8cdb6'), white='#f2a6a0',
+                  pale='#d88882', accent='#ffd070', navy='#a8485a', banner='#f0c860')),
+    ('aurora', dict(body=('#1a2a4a', '#2a4070'), head=('#e8fff8', '#ffffff', '#b4dcd2'), white='#2a4a7a',
+                    pale='#20385e', accent='#3affc0', navy='#2a1a6a', banner='#2a1a6a', glow_wings=True)),
+]
+
+
+def griffin_variant(cid='azure', spec=None):
+    spec = spec or dict(GRIFFIN_COATS)[cid]
+    body, head = spec['body'], spec['head']
+    white, pale, accent = spec['white'], spec['pale'], spec['accent']
     pal = {
-        'body': {'base': '#26346f', 'style': 'feather', 'light': '#3a4c96'},
-        'ruff': {'base': '#eef1f8', 'style': 'feather', 'light': '#ffffff', 'dark': '#b8c2dc'},
-        'neck': {'base': '#eef1f8', 'style': 'feather', 'light': '#ffffff', 'dark': '#b8c2dc'},
-        'head': {'base': '#f2f4fa', 'style': 'feather', 'light': '#ffffff', 'dark': '#c0c8de'},
-        'tuft': {'base': '#e8ecf6', 'style': 'feather', 'light': '#ffffff'},
-        'covert': {'base': '#eef1f8', 'style': 'feather'},
-        'hand': {'base': '#eef1f8', 'style': 'feather'},
-        'pw': {'base': '#eef1f8', 'style': 'feather'},
-        'pb': {'base': '#3150b8', 'style': 'feather'},
-        'sw': {'base': '#eef1f8', 'style': 'feather'},
-        'sb': {'base': '#3150b8', 'style': 'feather'},
-        'tail': {'base': '#eef1f8', 'style': 'feather'},
-        'tailtip': {'base': '#eef1f8', 'style': 'feather'},
-        'thigh': {'base': '#e8ecf6', 'style': 'feather', 'light': '#ffffff'},
-        'leg': {'base': '#dfe4f0', 'style': 'feather'},
+        'body': {'base': body[0], 'style': 'feather', 'light': body[1]},
+        'ruff': {'base': white, 'style': 'feather', 'light': head[1], 'dark': head[2]},
+        'neck': {'base': white, 'style': 'feather', 'light': head[1], 'dark': head[2]},
+        'head': {'base': head[0], 'style': 'feather', 'light': head[1], 'dark': head[2]},
+        'tuft': {'base': head[0], 'style': 'feather', 'light': head[1]},
+        'covert': {'base': white, 'style': 'feather'},
+        'hand': {'base': white, 'style': 'feather'},
+        'pw': {'base': white, 'style': 'feather'},
+        'pb': {'base': accent, 'style': 'feather'},
+        'sw': {'base': white, 'style': 'feather'},
+        'sb': {'base': accent, 'style': 'feather'},
+        'tail': {'base': white, 'style': 'feather'},
+        'tailtip': {'base': white, 'style': 'feather'},
+        'thigh': {'base': white, 'style': 'feather', 'light': head[1]},
+        'leg': {'base': pale, 'style': 'feather'},
         'shin': {'base': '#d8a640', 'style': 'scale'},
         'foot': {'base': '#e2b046', 'style': 'gold'},
         'claw': '#18161c',
         'beak': {'base': '#f0c050', 'style': 'gold'},
         'beak_low': {'base': '#c0902c', 'style': 'gold'},
         'beak_tip': {'base': '#d09a30', 'style': 'gold'},
-        'brow': {'base': '#f4f6fb', 'style': 'feather', 'light': '#ffffff', 'dark': '#c0c8de'},
-        'cheek': {'base': '#eef1f8', 'style': 'feather', 'light': '#ffffff', 'dark': '#b8c2dc'},
+        'brow': {'base': head[0], 'style': 'feather', 'light': head[1], 'dark': head[2]},
+        'cheek': {'base': white, 'style': 'feather', 'light': head[1], 'dark': head[2]},
         'wrist': {'base': '#eab84a', 'style': 'gold'},
         'crown': {'base': '#eab84a', 'style': 'gold'},
         'edge': {'base': '#e6b444', 'style': 'gold'},
@@ -768,18 +901,19 @@ def griffin_variant():
         'gem': {'base': '#4a9cff', 'style': 'gem'},
         'saddle': {'base': '#7a4826', 'style': 'leather'},
         'saddle_rim': {'base': '#5a3218', 'style': 'leather'},
-        'banner': {'base': '#2a3f9c', 'style': 'cloth'},
+        'banner': {'base': spec['banner'], 'style': 'cloth'},
         'chain': {'base': '#8a7a5a', 'style': 'chain'},
         'lantern': {'base': '#c8962e', 'style': 'gold'},
         'lantern_cap': {'base': '#c8962e', 'style': 'gold'},
     }
-    return Variant('griffin', palette=pal, paint=griffin_paint, glow=True,
-                   extra=dict(scale=1.0, hitbox=(1.5, 1.8), seat='saddle'))
+    return Variant(cid, palette=pal, paint=griffin_paint, glow=True,
+                   extra=dict(scale=1.0, hitbox=(1.5, 1.8), seat='saddle', glow_wings=spec.get('glow_wings', False),
+                              wing=dict(white=white, pale=pale, accent=accent, navy=spec['navy'])))
 
 
 def griffin_rig():
-    return Rig('mount_griffin', 'GriffinMount', griffin_geometry(), griffin_animations(), [griffin_variant()],
-               GRIFFIN_SLOTS, texel=2)
+    return Rig('mount_griffin', 'GriffinMount', griffin_geometry(), griffin_animations(),
+               [griffin_variant(cid, spec) for cid, spec in GRIFFIN_COATS], GRIFFIN_SLOTS, texel=2)
 
 
 # ================================================================================================ the bike

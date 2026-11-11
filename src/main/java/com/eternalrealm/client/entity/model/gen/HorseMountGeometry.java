@@ -168,21 +168,39 @@ public final class HorseMountGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"horse"};
+    public static final String[] VARIANTS = {"night", "chestnut", "bay", "grey", "palomino", "dapple", "pinto", "ember", "frost", "star"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {};
     /** VISIBLE[variant][toggled part]. */
     public static final boolean[][] VISIBLE = {
-            {}, // horse
+            {}, // night
+            {}, // chestnut
+            {}, // bay
+            {}, // grey
+            {}, // palomino
+            {}, // dapple
+            {}, // pinto
+            {}, // ember
+            {}, // frost
+            {}, // star
     };
     /** Parts with a per-variant rest adjustment. */
     public static final String[] POSED_PARTS = {};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {}, // horse
+            {}, // night
+            {}, // chestnut
+            {}, // bay
+            {}, // grey
+            {}, // palomino
+            {}, // dapple
+            {}, // pinto
+            {}, // ember
+            {}, // frost
+            {}, // star
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.0F};
+    public static final float[] SCALES = {1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true, true, true};
 }

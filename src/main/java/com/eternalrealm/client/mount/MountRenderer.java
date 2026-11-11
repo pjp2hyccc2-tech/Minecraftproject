@@ -13,25 +13,31 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 /**
- * Renderer of a mount: its texture ({@code textures/entity/<rig>/<rig>.png}), the model scale, and the emissive
- * layer (eyes and gems, the griffin's and the bike's lanterns, the bike's wheel rims and crystals, which brighten with
- * speed). Mounts show no name tag and never take the death pose.
+ * Renderer of a mount: the texture of its coat ({@code textures/entity/<rig>/<coat>.png}: each coat is a variant of
+ * the model), the model scale, and the emissive layer (eyes and gems, the griffin's and the bike's lanterns, the bike's
+ * wheel rims and crystals, which brighten with speed; the rare coats' shining manes, specks and feathers). Mounts show
+ * no name tag and never take the death pose.
  */
 public class MountRenderer extends MobRenderer<MountEntity, MountModel> {
     private final MountKind kind;
     private final RigTables tables;
-    private final ResourceLocation texture;
-    private final ResourceLocation glow;
 
     public MountRenderer(EntityRendererProvider.Context context, MountKind kind) {
         super(context, new MountModel(context.bakeLayer(MountClient.layer(kind)), MountClient.tables(kind), kind),
                 shadow(kind));
         this.kind = kind;
         this.tables = MountClient.tables(kind);
-        String variant = this.tables.variants()[0];
-        this.texture = EntityTextures.body(this.tables.rig(), variant);
-        this.glow = this.tables.glows()[0] ? EntityTextures.glow(this.tables.rig(), variant) : null;
-        addLayer(new RigGlowLayer<>(this, mount -> this.glow, this::glowColor));
+        addLayer(new RigGlowLayer<>(this, this::glowOf, this::glowColor));
+    }
+
+    /** The model variant of the mount's coat (the first one for a coat the model does not know). */
+    private String variantOf(MountEntity mount) {
+        return this.tables.variants()[this.tables.indexOf(mount.look().coat())];
+    }
+
+    private ResourceLocation glowOf(MountEntity mount) {
+        int index = this.tables.indexOf(mount.look().coat());
+        return this.tables.glows()[index] ? EntityTextures.glow(this.tables.rig(), this.tables.variants()[index]) : null;
     }
 
     private static float shadow(MountKind kind) {
@@ -48,7 +54,7 @@ public class MountRenderer extends MobRenderer<MountEntity, MountModel> {
 
     @Override
     public ResourceLocation getTextureLocation(MountEntity mount) {
-        return this.texture;
+        return EntityTextures.body(this.tables.rig(), variantOf(mount));
     }
 
     @Override

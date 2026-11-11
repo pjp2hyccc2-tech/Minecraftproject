@@ -21,6 +21,9 @@ import org.joml.Vector3f;
  *     <li>bike: the idle hum and the ride (banner and flag in the wind); the wheels turn with the distance (their
  *     glowing rims are the emissive layer) and the bike leans and steers into turns.</li>
  * </ul>
+ * Each mount wears its coat (the model variant) and its shape: a horse's mane cropped, flowing or long (with a longer
+ * tail); a griffin's wings broad, swept (long narrow primaries folded back), fanned (short and spread) or royal (long
+ * plumes on the crest, the wing tips and the tail).
  */
 public class MountModel extends RigModel<MountEntity> {
     // animation slots (the order of SLOTS in rig_mounts.py)
@@ -44,6 +47,12 @@ public class MountModel extends RigModel<MountEntity> {
     private final ModelPart frontWheel;
     private final ModelPart rearWheel;
     private final ModelPart fork;
+    private final java.util.List<ModelPart> mane = new java.util.ArrayList<>();
+    private final java.util.List<ModelPart> tailEnds = new java.util.ArrayList<>();
+    private final java.util.List<ModelPart> primaries = new java.util.ArrayList<>();
+    private final java.util.List<ModelPart> hands = new java.util.ArrayList<>();
+    private final java.util.List<ModelPart> crest = new java.util.ArrayList<>();
+    private final ModelPart tailTip;
 
     public MountModel(ModelPart root, RigTables tables, MountKind kind) {
         super(root, tables);
@@ -52,12 +61,33 @@ public class MountModel extends RigModel<MountEntity> {
         this.frontWheel = findOrNull(root, "front_wheel");
         this.rearWheel = findOrNull(root, "rear_wheel");
         this.fork = findOrNull(root, "fork");
+        for (int i = 1; i <= 11; i++) {
+            add(this.mane, findOrNull(root, "mane_" + i));
+        }
+        add(this.tailEnds, findOrNull(root, "tail3"));
+        add(this.tailEnds, findOrNull(root, "tail4"));
+        for (String side : new String[] {"r", "l"}) {
+            for (int i = 1; i <= 6; i++) {
+                add(this.primaries, findOrNull(root, "prim_" + side + i));
+            }
+            add(this.hands, findOrNull(root, "wing_" + side + "2"));
+        }
+        for (int i = 1; i <= 8; i++) {
+            add(this.crest, findOrNull(root, "crest_" + i));
+        }
+        this.tailTip = kind == MountKind.GRIFFIN ? findOrNull(root, "tail2") : null;
+    }
+
+    private static void add(java.util.List<ModelPart> parts, ModelPart part) {
+        if (part != null) {
+            parts.add(part);
+        }
     }
 
     @Override
     public void setupAnim(MountEntity mount, float limbSwing, float limbSwingAmount, float ageInTicks,
                           float netHeadYaw, float headPitch) {
-        int index = prepare(this.tables.variants()[0]);
+        int index = prepare(mount.look().coat());
         float partial = Mth.clamp(ageInTicks - mount.tickCount, 0.0F, 1.0F);
         long millis = (long) (ageInTicks * 50.0F);
         play(animation(index, IDLE), millis, 1.0F);
@@ -65,6 +95,62 @@ public class MountModel extends RigModel<MountEntity> {
             case HORSE -> horse(mount, index, partial);
             case GRIFFIN -> griffin(mount, index, partial);
             case BIKE -> bike(mount, index, partial, millis);
+        }
+        shape(mount.look().shape());
+    }
+
+    /** The individual's mane or wings, over the pose of this frame. */
+    private void shape(String shape) {
+        switch (shape) {
+            case "cropped" -> {
+                for (ModelPart part : this.mane) {
+                    part.zScale *= 0.55F;
+                    part.yScale *= 0.85F;
+                }
+            }
+            case "long" -> {
+                for (ModelPart part : this.mane) {
+                    part.zScale *= 1.45F;
+                }
+                for (ModelPart part : this.tailEnds) {
+                    part.yScale *= 1.3F;
+                }
+            }
+            case "swept" -> {
+                for (ModelPart part : this.primaries) {
+                    part.zScale *= 1.3F;
+                    part.xScale *= 0.75F;
+                    part.yRot *= 0.55F;
+                }
+                for (ModelPart part : this.hands) {
+                    part.xScale *= 1.1F;
+                }
+            }
+            case "fan" -> {
+                for (ModelPart part : this.primaries) {
+                    part.zScale *= 0.82F;
+                    part.yRot *= 1.35F;
+                }
+                for (ModelPart part : this.hands) {
+                    part.xScale *= 0.9F;
+                }
+            }
+            case "royal" -> {
+                for (ModelPart part : this.crest) {
+                    part.zScale *= 1.9F;
+                }
+                for (int i = 0; i < this.primaries.size(); i++) {
+                    if (i % 6 >= 2) {
+                        this.primaries.get(i).zScale *= 1.4F;
+                    }
+                }
+                if (this.tailTip != null) {
+                    this.tailTip.zScale *= 1.6F;
+                }
+            }
+            default -> {
+                // the classic flowing mane, the broad wings
+            }
         }
     }
 

@@ -111,14 +111,6 @@
     "ja": "乗り物を選ぶ",
     "en": "Choose a Mount"
   },
-  "mount.eternalrealm.stable.price": {
-    "ja": "価格 %s G",
-    "en": "Price %s G"
-  },
-  "mount.eternalrealm.stable.level": {
-    "ja": "Lv%sから",
-    "en": "From Lv%s"
-  },
   "mount.eternalrealm.stable.locked": {
     "ja": "Lv%sになると購入できる",
     "en": "Can be bought at Lv%s"
@@ -128,44 +120,28 @@
     "en": "Owned"
   },
   "mount.eternalrealm.stable.buy": {
-    "ja": "クリックで購入",
-    "en": "Click to buy"
+    "ja": "購入（%s G）",
+    "en": "Buy (%s G)"
   },
   "mount.eternalrealm.stable.pick": {
-    "ja": "クリックで次に呼ぶ乗り物にする",
-    "en": "Click to make it the mount you call"
-  },
-  "mount.eternalrealm.stable.selected": {
-    "ja": "次に呼ぶ乗り物（%sキー）",
-    "en": "The mount you call (%s)"
-  },
-  "mount.eternalrealm.stable.speed": {
-    "ja": "速さ: 全力疾走の約%s倍",
-    "en": "Speed: about %s× a sprint"
-  },
-  "mount.eternalrealm.stable.flies": {
-    "ja": "空を飛べる",
-    "en": "Flies"
+    "ja": "選ぶ",
+    "en": "Pick"
   },
   "mount.eternalrealm.stable.gold": {
     "ja": "所持金 %s G",
     "en": "Gold %s G"
-  },
-  "mount.eternalrealm.stable.choose": {
-    "ja": "持っている乗り物はクリックで選べる",
-    "en": "Click a mount you own to choose it"
   },
   "mount.eternalrealm.stable.none": {
     "ja": "まだ乗り物を持っていない",
     "en": "You own no mount yet"
   },
   "mount.eternalrealm.stable.confirm": {
-    "ja": "もう一度クリックで購入（%s G）",
-    "en": "Click again to buy (%s G)"
+    "ja": "もう一度押して確定",
+    "en": "Click again to confirm"
   },
   "mount.eternalrealm.stable.call": {
-    "ja": "クリックで呼び出す",
-    "en": "Click to call it"
+    "ja": "呼ぶ",
+    "en": "Call"
   },
   "npc.eternalrealm.stable_master": {
     "ja": "厩舎長 ハルヴァン",
@@ -190,5 +166,301 @@
   "entity.eternalrealm.mount_bike": {
     "ja": "星輪の魔導二輪",
     "en": "Starwheel Arcbike"
+  },
+  "mount.eternalrealm.stable_full": {
+    "ja": "厩舎がいっぱい（%s頭まで）",
+    "en": "Your stable is full (%s mounts at most)"
+  },
+  "mount.eternalrealm.not_at_stable": {
+    "ja": "王都の厩舎長のそばで行える",
+    "en": "Do this next to the stablemaster in the capital"
+  },
+  "mount.eternalrealm.rerolled": {
+    "ja": "厩舎長が別の%sを4頭連れてきた",
+    "en": "The stablemaster brings out four other: %s"
+  },
+  "mount.eternalrealm.reveal": {
+    "ja": "個体値の合計 %1$s・ランク%2$s",
+    "en": "Values total %1$s · grade %2$s"
+  },
+  "mount.eternalrealm.lucky": {
+    "ja": "【厩舎】%1$sがランク%2$sの%3$sを手に入れた！",
+    "en": "[Stable] %1$s got a grade %2$s %3$s!"
+  },
+  "mount.eternalrealm.deed_made": {
+    "ja": "%sを作った（騎獣は厩舎を出た）",
+    "en": "Made %s (the mount left your stable)"
+  },
+  "mount.eternalrealm.deed_taken": {
+    "ja": "%sを厩舎に迎え入れた",
+    "en": "Took the %s into your stable"
+  },
+  "mount.eternalrealm.deed_bag_full": {
+    "ja": "カバンに空きがない",
+    "en": "Your bag is full"
+  },
+  "mount.eternalrealm.deed_not_tradeable": {
+    "ja": "魔導二輪は証書にできない",
+    "en": "An arcbike cannot be made into a deed"
+  },
+  "mount.eternalrealm.deed_already_kept": {
+    "ja": "この騎獣はもう厩舎にいる",
+    "en": "This mount is already in your stable"
+  },
+  "mount.eternalrealm.deed_broken": {
+    "ja": "壊れた証書",
+    "en": "A damaged deed"
+  },
+  "item.eternalrealm.mount_deed": {
+    "ja": "騎獣の証書",
+    "en": "Mount Deed"
+  },
+  "item.eternalrealm.mount_deed.named": {
+    "ja": "騎獣の証書（%1$s・ランク%2$s）",
+    "en": "Mount Deed (%1$s, grade %2$s)"
+  },
+  "item.eternalrealm.mount_deed.look": {
+    "ja": "%1$s・%2$s",
+    "en": "%1$s · %2$s"
+  },
+  "item.eternalrealm.mount_deed.values": {
+    "ja": "速さ %1$s・加速 %2$s・%3$s %4$s",
+    "en": "Speed %1$s · Accel %2$s · %3$s %4$s"
+  },
+  "item.eternalrealm.mount_deed.grade": {
+    "ja": "ランク%1$s（個体値の合計 %2$s）",
+    "en": "Grade %1$s (values total %2$s)"
+  },
+  "item.eternalrealm.mount_deed.level": {
+    "ja": "Lv%sから迎え入れられる",
+    "en": "Can be taken in from Lv%s"
+  },
+  "item.eternalrealm.mount_deed.use": {
+    "ja": "王都の厩舎長のところで厩舎に迎え入れる。売り買いもできる",
+    "en": "Take it into your stable at the stablemaster; it can also be traded"
+  },
+  "mount.eternalrealm.grade.c": {
+    "ja": "C",
+    "en": "C"
+  },
+  "mount.eternalrealm.grade.b": {
+    "ja": "B",
+    "en": "B"
+  },
+  "mount.eternalrealm.grade.a": {
+    "ja": "A",
+    "en": "A"
+  },
+  "mount.eternalrealm.grade.s": {
+    "ja": "S",
+    "en": "S"
+  },
+  "mount.eternalrealm.grade.ss": {
+    "ja": "SS",
+    "en": "SS"
+  },
+  "mount.eternalrealm.coat.horse.night": {
+    "ja": "夜色",
+    "en": "Night"
+  },
+  "mount.eternalrealm.coat.horse.chestnut": {
+    "ja": "栗毛",
+    "en": "Chestnut"
+  },
+  "mount.eternalrealm.coat.horse.bay": {
+    "ja": "鹿毛",
+    "en": "Bay"
+  },
+  "mount.eternalrealm.coat.horse.grey": {
+    "ja": "芦毛",
+    "en": "Grey"
+  },
+  "mount.eternalrealm.coat.horse.palomino": {
+    "ja": "月毛",
+    "en": "Palomino"
+  },
+  "mount.eternalrealm.coat.horse.dapple": {
+    "ja": "連銭芦毛",
+    "en": "Dapple grey"
+  },
+  "mount.eternalrealm.coat.horse.pinto": {
+    "ja": "駁毛",
+    "en": "Pinto"
+  },
+  "mount.eternalrealm.coat.horse.ember": {
+    "ja": "緋毛",
+    "en": "Ember"
+  },
+  "mount.eternalrealm.coat.horse.frost": {
+    "ja": "霜白",
+    "en": "Frost"
+  },
+  "mount.eternalrealm.coat.horse.star": {
+    "ja": "星夜",
+    "en": "Starlit"
+  },
+  "mount.eternalrealm.shape.horse.flowing": {
+    "ja": "流れるたてがみ",
+    "en": "Flowing mane"
+  },
+  "mount.eternalrealm.shape.horse.cropped": {
+    "ja": "短いたてがみ",
+    "en": "Cropped mane"
+  },
+  "mount.eternalrealm.shape.horse.long": {
+    "ja": "長いたてがみ",
+    "en": "Long mane"
+  },
+  "mount.eternalrealm.coat.griffin.azure": {
+    "ja": "蒼",
+    "en": "Azure"
+  },
+  "mount.eternalrealm.coat.griffin.golden": {
+    "ja": "金鷲",
+    "en": "Golden"
+  },
+  "mount.eternalrealm.coat.griffin.snow": {
+    "ja": "雪白",
+    "en": "Snow"
+  },
+  "mount.eternalrealm.coat.griffin.raven": {
+    "ja": "鴉羽",
+    "en": "Raven"
+  },
+  "mount.eternalrealm.coat.griffin.crimson": {
+    "ja": "紅蓮",
+    "en": "Crimson"
+  },
+  "mount.eternalrealm.coat.griffin.verdant": {
+    "ja": "翠",
+    "en": "Verdant"
+  },
+  "mount.eternalrealm.coat.griffin.dawn": {
+    "ja": "暁",
+    "en": "Dawn"
+  },
+  "mount.eternalrealm.coat.griffin.aurora": {
+    "ja": "極光",
+    "en": "Aurora"
+  },
+  "mount.eternalrealm.shape.griffin.broad": {
+    "ja": "幅広の翼",
+    "en": "Broad wings"
+  },
+  "mount.eternalrealm.shape.griffin.swept": {
+    "ja": "流線の翼",
+    "en": "Swept wings"
+  },
+  "mount.eternalrealm.shape.griffin.fan": {
+    "ja": "扇の翼",
+    "en": "Fanned wings"
+  },
+  "mount.eternalrealm.shape.griffin.royal": {
+    "ja": "冠羽",
+    "en": "Royal plumes"
+  },
+  "mount.eternalrealm.stable.loading": {
+    "ja": "読み込み中…",
+    "en": "Loading…"
+  },
+  "mount.eternalrealm.stable.tab_stable": {
+    "ja": "厩舎 %1$s/%2$s",
+    "en": "Stable %1$s/%2$s"
+  },
+  "mount.eternalrealm.stable.tab_deeds": {
+    "ja": "証書 %s",
+    "en": "Deeds %s"
+  },
+  "mount.eternalrealm.stable.kind_line": {
+    "ja": "Lv%1$s〜・%2$s G・全力疾走の約%3$s倍",
+    "en": "From Lv%1$s · %2$s G · about %3$s× a sprint"
+  },
+  "mount.eternalrealm.stable.no_gold": {
+    "ja": "ゴールドが足りない",
+    "en": "Not enough gold"
+  },
+  "mount.eternalrealm.stable.confirm_short": {
+    "ja": "確定",
+    "en": "Confirm"
+  },
+  "mount.eternalrealm.stable.reroll": {
+    "ja": "別の4頭を見る（%s G）",
+    "en": "See four others (%s G)"
+  },
+  "mount.eternalrealm.stable.rare": {
+    "ja": "✦ めずらしい色",
+    "en": "✦ Rare colours"
+  },
+  "mount.eternalrealm.stable.hidden": {
+    "ja": "個体値 ？？？",
+    "en": "Values ???"
+  },
+  "mount.eternalrealm.stable.values_later": {
+    "ja": "個体値は買ってからわかる",
+    "en": "You learn its values once you buy it"
+  },
+  "mount.eternalrealm.stable.at_stable": {
+    "ja": "購入と証書は王都の厩舎長のそばで",
+    "en": "Buy and use deeds next to the stablemaster in the capital"
+  },
+  "mount.eternalrealm.stable.at_stable_short": {
+    "ja": "厩舎長のそばで",
+    "en": "At the stablemaster"
+  },
+  "mount.eternalrealm.stable.machine": {
+    "ja": "機械なので個体差はない",
+    "en": "A machine: every one is the same"
+  },
+  "mount.eternalrealm.stable.deed": {
+    "ja": "証書にする",
+    "en": "Make deed"
+  },
+  "mount.eternalrealm.stable.value_speed": {
+    "ja": "速さ",
+    "en": "Speed"
+  },
+  "mount.eternalrealm.stable.value_accel": {
+    "ja": "加速",
+    "en": "Accel"
+  },
+  "mount.eternalrealm.stable.value_jump": {
+    "ja": "跳躍",
+    "en": "Jump"
+  },
+  "mount.eternalrealm.stable.value_flight": {
+    "ja": "飛翔",
+    "en": "Flight"
+  },
+  "mount.eternalrealm.stable.total": {
+    "ja": "合計 %1$s・ランク%2$s",
+    "en": "Total %1$s · grade %2$s"
+  },
+  "mount.eternalrealm.stable.deeds_note": {
+    "ja": "カバンの中の騎獣の証書。厩舎に迎え入れると乗れる",
+    "en": "Mount deeds in your bag: take one in to ride it"
+  },
+  "mount.eternalrealm.stable.no_deeds": {
+    "ja": "カバンに証書はない",
+    "en": "No deeds in your bag"
+  },
+  "mount.eternalrealm.stable.redeem": {
+    "ja": "迎え入れる",
+    "en": "Take in"
+  },
+  "mount.eternalrealm.stable.full_short": {
+    "ja": "厩舎がいっぱい",
+    "en": "Stable full"
+  },
+  "mount.eternalrealm.stable.kept_short": {
+    "ja": "もう厩舎にいる",
+    "en": "Already kept"
+  },
+  "mount.eternalrealm.stable.reveal_title": {
+    "ja": "新しい相棒！",
+    "en": "A new companion!"
+  },
+  "mount.eternalrealm.stable.reveal_ok": {
+    "ja": "厩舎で見る",
+    "en": "See it in the stable"
   }
 }

@@ -80,7 +80,15 @@ public final class MountMotion {
      * @param current    the velocity it had (after the last tick's collisions)
      */
     public static Velocity step(MountKind kind, Input input, double yawDegrees, Velocity current, Surroundings where) {
-        MountKind.MountStats stats = kind.stats();
+        return step(kind, kind.stats(), input, yawDegrees, current, where);
+    }
+
+    /**
+     * The velocity for the next tick of a mount moving by {@code stats} (an individual's numbers, {@link
+     * MountIndividual#stats()}).
+     */
+    public static Velocity step(MountKind kind, MountKind.MountStats stats, Input input, double yawDegrees,
+                                Velocity current, Surroundings where) {
         boolean flying = kind.flies() && !where.onGround();
         double top = kind.flies() && where.onGround() ? stats.groundSpeed() : stats.topSpeed();
         if (where.inWater()) {

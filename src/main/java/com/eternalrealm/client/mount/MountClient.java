@@ -19,6 +19,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -96,5 +97,15 @@ public final class MountClient {
             Minecraft minecraft = Minecraft.getInstance();
             return minecraft.screen == null && minecraft.options.keyJump.isDown();
         };
+        event.enqueueWork(() -> com.eternalrealm.client.ClientChannels.register(
+                com.eternalrealm.mount.MountRules.STABLE_CHANNEL, com.eternalrealm.ui.mount.StableScreen::accept));
+    }
+
+    /** A deed's seal takes the colour of its mount's grade. */
+    @SubscribeEvent
+    public static void onItemColors(RegisterColorHandlersEvent.Item event) {
+        event.register((stack, layer) -> layer == 1 ? com.eternalrealm.mount.forge.MountDeeds.read(stack)
+                        .map(mount -> mount.grade().color()).orElse(0xFFFFFF) : -1,
+                com.eternalrealm.mount.forge.MountItems.DEED.get());
     }
 }

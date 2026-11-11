@@ -4,14 +4,18 @@ import com.eternalrealm.character.SetLevelResult;
 import com.eternalrealm.combat.forge.CombatHits;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.dungeon.forge.DungeonLevels;
+import com.eternalrealm.mount.MountIndividual;
 import com.eternalrealm.mount.MountKind;
 import com.eternalrealm.mount.MountMotion;
 import com.eternalrealm.mount.MountOwnership;
 import com.eternalrealm.mount.MountRules;
 import com.eternalrealm.mount.forge.MountEntity;
 import com.eternalrealm.mount.forge.MountService;
+import com.eternalrealm.mount.forge.MountStable;
 import com.eternalrealm.player.PlayerDataService;
 import com.eternalrealm.server.ServerContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
@@ -27,6 +31,7 @@ import net.minecraftforge.gametest.PrefixGameTestTemplate;
 
 import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -92,8 +97,8 @@ public final class MountGameTests {
                     MountOwnership owned = MountService.ownership(player);
                     data.onPlayerLeave(id);
                     stage.set(2);
-                    if (!owned.owned().equals(EnumSet.allOf(MountKind.class))
-                            || owned.selected().orElse(null) != MountKind.GRIFFIN) {
+                    if (!owned.kinds().equals(EnumSet.allOf(MountKind.class)) || owned.size() != 4
+                            || owned.selected().map(MountIndividual::kind).orElse(null) != MountKind.GRIFFIN) {
                         failure.set(new GameTestAssertException("after the rejoin the player has " + owned));
                         throw failure.get();
                     }
@@ -114,10 +119,27 @@ public final class MountGameTests {
         check(data.gold(id) == gold && !MountService.ownership(player).owns(MountKind.HORSE),
                 "a refused purchase must take no gold and give nothing");
         check(data.setLevel(id, 10) == SetLevelResult.SUCCESS, "setting level 10");
+        List<MountIndividual> shown = MountStable.offers(player, MountKind.HORSE);
+        check(shown.size() == MountRules.OFFERS, "the stablemaster shows " + MountRules.OFFERS + " horses");
+        JsonObject screen = MountStable.screen(player, true, null);
+        for (JsonElement kind : screen.getAsJsonArray("kinds")) {
+            if (kind.getAsJsonObject().has("offers")) {
+                for (JsonElement offer : kind.getAsJsonObject().getAsJsonArray("offers")) {
+                    JsonObject json = offer.getAsJsonObject();
+                    check(!json.has("speed") && !json.has("accel") && !json.has("lift") && !json.has("grade")
+                            && json.has("coat"), "an offer shows its look only, not its values: " + json);
+                }
+            }
+        }
         expect(MountService.buy(player, MountKind.HORSE), MountRules.Purchase.OK, "the horse at Lv10");
         check(data.gold(id) == gold - MountKind.HORSE.price(), "the horse costs " + MountKind.HORSE.price()
                 + ", gold went from " + gold + " to " + data.gold(id));
-        expect(MountService.buy(player, MountKind.HORSE), MountRules.Purchase.ALREADY_OWNED, "a second horse");
+        check(MountService.ownership(player).mount(shown.get(0).id()).filter(shown.get(0)::equals).isPresent(),
+                "the horse bought is the one shown, with its look and values");
+        check(!MountStable.offers(player, MountKind.HORSE).equals(shown), "after a purchase other horses are shown");
+        data.grantGold(id, MountKind.HORSE.price());
+        expect(MountService.buy(player, MountKind.HORSE), MountRules.Purchase.OK, "a second horse (each differs)");
+        check(MountService.ownership(player).count(MountKind.HORSE) == 2, "two horses kept");
         expect(MountService.buy(player, MountKind.GRIFFIN), MountRules.Purchase.LEVEL_TOO_LOW, "the griffin at Lv10");
         check(data.setLevel(id, 30) == SetLevelResult.SUCCESS, "setting level 30");
         expect(MountService.buy(player, MountKind.GRIFFIN), MountRules.Purchase.OK, "the griffin at Lv30");
@@ -129,10 +151,79 @@ public final class MountGameTests {
         data.grantGold(id, MountKind.BIKE.price());
         expect(MountService.buy(player, MountKind.BIKE), MountRules.Purchase.OK, "the bike at Lv50");
         check(data.gold(id) == 0, "the bike costs all the gold that was left, " + data.gold(id) + " left");
+        data.grantGold(id, MountKind.BIKE.price());
+        expect(MountService.buy(player, MountKind.BIKE), MountRules.Purchase.ALREADY_OWNED, "one arcbike at most");
+        check(data.spendGold(id, MountKind.BIKE.price()), "taking the test gold back");
         MountOwnership owned = MountService.ownership(player);
-        check(owned.owned().equals(EnumSet.allOf(MountKind.class)) && owned.selected().orElse(null) == MountKind.BIKE,
+        check(owned.kinds().equals(EnumSet.allOf(MountKind.class))
+                        && owned.selected().map(MountIndividual::kind).orElse(null) == MountKind.BIKE,
                 "after buying all three: " + owned);
         check(MountService.select(player, MountKind.GRIFFIN), "choosing the griffin");
+    }
+
+    /**
+     * A kept griffin made into a deed leaves the stable; the market files the deed under mounts by species and grade;
+     * a player below the griffin's level cannot take it in, one at the level can, with the same look and values, and
+     * the deed is used up. An arcbike is never a deed.
+     */
+    @GameTest(template = ARENA, timeoutTicks = 300)
+    public static void aDeedCarriesAMountToAnotherStable(GameTestHelper helper) {
+        PlayerDataService data = context().playerData();
+        String run = UUID.randomUUID().toString().substring(0, 6);
+        FakePlayer giver = rider(helper, "er_gt_deed_a_" + run, new Vec3(3.5, 2.0, 3.5));
+        FakePlayer taker = rider(helper, "er_gt_deed_b_" + run, new Vec3(6.5, 2.0, 6.5));
+        data.onPlayerJoin(giver.getUUID(), giver.getGameProfile().getName());
+        data.onPlayerJoin(taker.getUUID(), taker.getGameProfile().getName());
+        java.util.concurrent.atomic.AtomicBoolean done = new java.util.concurrent.atomic.AtomicBoolean();
+        AtomicReference<GameTestAssertException> failure = new AtomicReference<>();
+        helper.succeedWhen(() -> {
+            if (failure.get() != null) {
+                throw failure.get();
+            }
+            if (done.get()) {
+                return;
+            }
+            check(data.isActive(giver.getUUID()) && data.isActive(taker.getUUID()), "waiting for the characters");
+            done.set(true);
+            try {
+                MountIndividual griffin = MountIndividual.roll(UUID.randomUUID(), MountKind.GRIFFIN,
+                        new java.util.SplittableRandom(11));
+                check(MountService.keep(giver, griffin) && MountService.grant(giver, MountKind.BIKE),
+                        "giving the griffin and the bike");
+                for (int slot = 1; slot <= 35; slot++) {
+                    giver.getInventory().items.set(slot, net.minecraft.world.item.ItemStack.EMPTY);
+                    taker.getInventory().items.set(slot, net.minecraft.world.item.ItemStack.EMPTY);
+                }
+                check(MountStable.makeDeed(giver, griffin.id()), "making the deed");
+                check(MountService.ownership(giver).mount(griffin.id()).isEmpty(), "the griffin left the stable");
+                net.minecraft.world.item.ItemStack deed = giver.getInventory().items.get(1);
+                check(com.eternalrealm.mount.forge.MountDeeds.read(deed).filter(griffin::equals).isPresent(),
+                        "the deed holds the griffin with its look and values: " + deed.getTag());
+                com.eternalrealm.economy.ItemInfo info = com.eternalrealm.economy.forge.MarketItems.describe(deed, 1);
+                check("mount".equals(info.category()) && ("mount:griffin:" + griffin.grade().id()).equals(info.group()),
+                        "the market files the deed as " + info.category() + " / " + info.group());
+                MountIndividual bike = MountService.ownership(giver).first(MountKind.BIKE).orElseThrow();
+                check(!MountStable.makeDeed(giver, bike.id()) && MountService.ownership(giver).owns(MountKind.BIKE),
+                        "an arcbike is never a deed");
+                giver.getInventory().items.set(1, net.minecraft.world.item.ItemStack.EMPTY);
+                taker.getInventory().items.set(1, deed);
+                check(data.setLevel(taker.getUUID(), 20) == SetLevelResult.SUCCESS, "setting level 20");
+                check(MountStable.redeem(taker, 1) == MountRules.Redeem.LEVEL_TOO_LOW
+                        && !taker.getInventory().items.get(1).isEmpty(), "a level 20 player keeps the deed");
+                check(data.setLevel(taker.getUUID(), 30) == SetLevelResult.SUCCESS, "setting level 30");
+                check(MountStable.redeem(taker, 1) == MountRules.Redeem.OK, "a level 30 player takes it in");
+                check(MountService.ownership(taker).mount(griffin.id()).filter(griffin::equals).isPresent(),
+                        "the same griffin, look and values, is in the new stable");
+                check(taker.getInventory().items.get(1).isEmpty(), "the deed is used up");
+                check(MountStable.redeem(taker, 1) != MountRules.Redeem.OK, "nothing more to take in");
+            } catch (GameTestAssertException e) {
+                failure.set(e);
+                throw e;
+            } finally {
+                data.onPlayerLeave(giver.getUUID());
+                data.onPlayerLeave(taker.getUUID());
+            }
+        });
     }
 
     /**

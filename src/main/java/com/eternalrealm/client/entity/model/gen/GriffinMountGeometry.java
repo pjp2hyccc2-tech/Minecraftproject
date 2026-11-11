@@ -200,21 +200,35 @@ public final class GriffinMountGeometry {
     }
 
     /** Variant ids, in the order of the tables below. */
-    public static final String[] VARIANTS = {"griffin"};
+    public static final String[] VARIANTS = {"azure", "golden", "snow", "raven", "crimson", "verdant", "dawn", "aurora"};
     /** Parts whose visibility depends on the variant. */
     public static final String[] TOGGLED_PARTS = {};
     /** VISIBLE[variant][toggled part]. */
     public static final boolean[][] VISIBLE = {
-            {}, // griffin
+            {}, // azure
+            {}, // golden
+            {}, // snow
+            {}, // raven
+            {}, // crimson
+            {}, // verdant
+            {}, // dawn
+            {}, // aurora
     };
     /** Parts with a per-variant rest adjustment. */
     public static final String[] POSED_PARTS = {};
     /** POSES[variant][posed part] = {posX, posY(up), posZ, rotX, rotY, rotZ (degrees), scaleX, scaleY, scaleZ} or null. */
     public static final float[][][] POSES = {
-            {}, // griffin
+            {}, // azure
+            {}, // golden
+            {}, // snow
+            {}, // raven
+            {}, // crimson
+            {}, // verdant
+            {}, // dawn
+            {}, // aurora
     };
     /** Model scale of each variant (applied by the renderer). */
-    public static final float[] SCALES = {1.0F};
+    public static final float[] SCALES = {1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F};
     /** Variants that have an emissive texture (&lt;variant&gt;_glow.png). */
-    public static final boolean[] GLOWS = {true};
+    public static final boolean[] GLOWS = {true, true, true, true, true, true, true, true};
 }

@@ -1,12 +1,19 @@
 package com.eternalrealm.mount.forge;
 
 import com.eternalrealm.mount.MountBodies;
+import com.eternalrealm.mount.MountIndividual;
 import com.eternalrealm.mount.MountKind;
+import com.eternalrealm.mount.MountLook;
+import com.eternalrealm.mount.MountLooks;
 import com.eternalrealm.mount.MountMotion;
 import com.eternalrealm.mount.MountRules;
+import com.eternalrealm.mount.MountTraits;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -47,8 +54,21 @@ public class MountEntity extends Mob implements OwnableEntity {
     public static volatile BooleanSupplier clientJumpHeld = () -> false;
     /** Ticks per sample of the server's watch on speed and height. */
     private static final int WATCH_WINDOW = 20;
+    /** The individual's look ({@link MountLook#encode()}): the coat (texture) and the mane or wings. */
+    private static final EntityDataAccessor<String> LOOK = SynchedEntityData.defineId(MountEntity.class,
+            EntityDataSerializers.STRING);
+    /** The individual's values packed as speed | acceleration << 8 | lift << 16: the rider's client moves by them. */
+    private static final EntityDataAccessor<Integer> TRAITS = SynchedEntityData.defineId(MountEntity.class,
+            EntityDataSerializers.INT);
 
     private final MountKind kind;
+    /** Which kept mount this is (server side; the stable's id). */
+    @Nullable
+    private UUID individualId;
+    private MountKind.MountStats stats;
+    private int statsFrom = Integer.MIN_VALUE;
+    private MountLook look;
+    private String lookFrom;
     private MountMotion.Velocity motion = MountMotion.Velocity.ZERO;
     @Nullable
     private UUID owner;
@@ -95,6 +115,71 @@ public class MountEntity extends Mob implements OwnableEntity {
 
     public MountKind kind() {
         return kind;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(LOOK, "");
+        this.entityData.define(TRAITS, pack(MountTraits.STANDARD));
+    }
+
+    /** Becomes {@code individual}: its look for everyone, its values for the rider's client (set before spawning). */
+    public void become(MountIndividual individual) {
+        this.individualId = individual.id();
+        this.entityData.set(LOOK, individual.look().encode());
+        this.entityData.set(TRAITS, pack(individual.traits()));
+    }
+
+    /** The stable id of the kept mount this is (server side), if it was called from a stable. */
+    public java.util.Optional<UUID> individualId() {
+        return java.util.Optional.ofNullable(individualId);
+    }
+
+    /** Its look (the classic one until the server says otherwise). */
+    public MountLook look() {
+        String encoded = this.entityData.get(LOOK);
+        if (look == null || !encoded.equals(lookFrom)) {
+            lookFrom = encoded;
+            look = MountLooks.orClassic(kind, MountLook.decode(encoded));
+        }
+        return look;
+    }
+
+    /** Its values (standard until the server says otherwise). */
+    public MountTraits traits() {
+        return unpack(this.entityData.get(TRAITS));
+    }
+
+    /** How it moves: its kind's numbers scaled by its values. */
+    public MountKind.MountStats stats() {
+        int packed = this.entityData.get(TRAITS);
+        if (stats == null || packed != statsFrom) {
+            statsFrom = packed;
+            stats = MountIndividual.scaled(kind, unpack(packed));
+        }
+        return stats;
+    }
+
+    /** Client side, for the stable's preview: shows {@code look} without a server. */
+    public void preview(MountLook look) {
+        this.entityData.set(LOOK, look.encode());
+    }
+
+    /** Client side, for the stable's preview: a griffin shows its wings spread as in a glide. */
+    public void previewSpread() {
+        this.wings = 1.0F;
+        this.wingsO = 1.0F;
+        this.airTicks = 30;
+    }
+
+    private static int pack(MountTraits traits) {
+        return traits.speed() | traits.acceleration() << 8 | traits.lift() << 16;
+    }
+
+    private static MountTraits unpack(int packed) {
+        return new MountTraits(MountTraits.clamp(packed & 0xFF), MountTraits.clamp(packed >> 8 & 0xFF),
+                MountTraits.clamp(packed >> 16 & 0xFF));
     }
 
     void setOwner(UUID owner) {
@@ -154,7 +239,7 @@ public class MountEntity extends Mob implements OwnableEntity {
     public void drive(MountMotion.Input input) {
         boolean water = isInWater() || isInLava();
         double gap = kind.flies() ? flightCeiling() - getY() : Double.MAX_VALUE;
-        MountMotion.Velocity next = MountMotion.step(kind, input, getYRot(), motion,
+        MountMotion.Velocity next = MountMotion.step(kind, stats(), input, getYRot(), motion,
                 new MountMotion.Surroundings(onGround(), water, gap));
         Vec3 before = position();
         move(MoverType.SELF, new Vec3(next.x(), next.y(), next.z()));
@@ -279,7 +364,7 @@ public class MountEntity extends Mob implements OwnableEntity {
         double dz = getZ() - watchedFrom.z;
         double perTick = Math.sqrt(dx * dx + dz * dz) / WATCH_WINDOW;
         watchedFrom = position();
-        speedingWindows = perTick > kind.stats().topSpeed() * 1.35 + 0.25 ? speedingWindows + 1 : 0;
+        speedingWindows = perTick > stats().topSpeed() * 1.35 + 0.25 ? speedingWindows + 1 : 0;
         if (kind.flies()) {
             // above the ceiling the ride sinks by itself (MountMotion.ABOVE_CEILING_SINK): only hovering up there counts
             boolean high = getY() > flightCeiling() + 6.0;

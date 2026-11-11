@@ -3,6 +3,7 @@ package com.eternalrealm.mount.forge;
 import com.eternalrealm.boss.forge.BossFight;
 import com.eternalrealm.character.CharacterSnapshot;
 import com.eternalrealm.core.ModInfo;
+import com.eternalrealm.mount.MountIndividual;
 import com.eternalrealm.mount.MountKind;
 import com.eternalrealm.mount.MountOwnership;
 import com.eternalrealm.mount.MountRules;
@@ -60,37 +61,46 @@ public final class MountService {
     private static final long HINT_DELAY = 5L;
 
     /** {@code player} is kept (not looked up by id) so GameTests' fake players can call mounts too. */
-    private record Call(ServerPlayer player, MountKind kind, Vec3 from, long readyAt) {
+    private record Call(ServerPlayer player, MountIndividual mount, Vec3 from, long readyAt) {
+        MountKind kind() {
+            return mount.kind();
+        }
     }
 
     private MountService() {
     }
 
-    /** Registers the key actions (once, during mod construction). */
+    /** Registers the key actions and the stable's (once, during mod construction). */
     public static void register() {
         UiActions.register(MountRules.TOGGLE_ACTION, (player, context, args) -> toggle(player));
         UiActions.register(MountRules.CHOOSE_ACTION, (player, context, args) -> MountStable.openChooser(player));
+        MountStable.register();
     }
 
     // ------------------------------------------------------------------ ownership
 
-    /** What {@code player} owns (nothing if the character is not loaded). */
+    /** What {@code player} keeps (nothing if the character is not loaded). */
     public static MountOwnership ownership(ServerPlayer player) {
         return ServerContext.current().flatMap(context -> context.playerData().extension(player.getUUID(),
-                MountRules.EXTENSION)).map(MountOwnership::fromJson).orElse(MountOwnership.NONE);
+                MountRules.EXTENSION)).map(text -> MountOwnership.fromJson(text, player.getUUID()))
+                .orElse(MountOwnership.NONE);
     }
 
-    private static boolean save(ServerPlayer player, MountOwnership ownership) {
+    static boolean save(ServerPlayer player, MountOwnership ownership) {
         return ServerContext.current().map(context -> context.playerData().setExtension(player.getUUID(),
                 MountRules.EXTENSION, ownership.toJson())).orElse(false);
     }
 
-    /** Buys {@code kind} for the player if the rules allow it; tells the player either way. */
-    public static MountRules.Purchase buy(ServerPlayer player, MountKind kind) {
+    /**
+     * Buys {@code mount} (one the stablemaster showed) if the rules allow it; tells the player either way. The
+     * player learns its values from the stable screen.
+     */
+    public static MountRules.Purchase buy(ServerPlayer player, MountIndividual mount) {
         ServerContext context = ServerContext.current().orElse(null);
         if (context == null) {
             return MountRules.Purchase.NOT_ENOUGH_GOLD;
         }
+        MountKind kind = mount.kind();
         UUID id = player.getUUID();
         int level = context.playerData().snapshot(id).map(CharacterSnapshot::level).orElse(0);
         MountOwnership owned = ownership(player);
@@ -98,7 +108,7 @@ public final class MountService {
         if (result == MountRules.Purchase.OK) {
             if (!context.playerData().spendGold(id, kind.price())) {
                 result = MountRules.Purchase.NOT_ENOUGH_GOLD;
-            } else if (!save(player, owned.withBought(kind))) {
+            } else if (!save(player, owned.withAdded(mount))) {
                 context.playerData().grantGold(id, kind.price()); // could not record it: the gold goes back
                 return MountRules.Purchase.NOT_ENOUGH_GOLD;
             }
@@ -117,26 +127,44 @@ public final class MountService {
                     kind.price()).withStyle(ChatFormatting.RED), true);
             case ALREADY_OWNED -> player.displayClientMessage(Component.translatable(MountRules.ALREADY_OWNED)
                     .withStyle(ChatFormatting.GRAY), true);
+            case STABLE_FULL -> player.displayClientMessage(Component.translatable(MountRules.STABLE_FULL,
+                    MountRules.STABLE_CAPACITY).withStyle(ChatFormatting.RED), true);
         }
         sendState(player);
         return result;
     }
 
-    /** Makes {@code kind} the mount the player calls (if owned). */
-    public static boolean select(ServerPlayer player, MountKind kind) {
+    /** Buys the first mount the stablemaster shows of {@code kind} (operators' commands and tests). */
+    public static MountRules.Purchase buy(ServerPlayer player, MountKind kind) {
+        return MountStable.buyOffer(player, kind, 0);
+    }
+
+    /** Makes kept mount {@code id} the one the player calls. */
+    public static boolean select(ServerPlayer player, UUID id) {
         MountOwnership owned = ownership(player);
-        if (!owned.owns(kind) || !save(player, owned.withSelected(kind))) {
+        Optional<MountIndividual> mount = owned.mount(id);
+        if (mount.isEmpty() || !save(player, owned.withSelected(id))) {
             return false;
         }
         player.displayClientMessage(Component.translatable(MountRules.SELECTED,
-                Component.translatable(kind.translationKey()).withStyle(ChatFormatting.GOLD)), true);
+                Component.translatable(mount.get().kind().translationKey()).withStyle(ChatFormatting.GOLD)), true);
         sendState(player);
         return true;
     }
 
-    /** Operators and tests: gives {@code kind} without gold or level. */
+    /** Makes the first kept mount of {@code kind} the one the player calls (tests). */
+    public static boolean select(ServerPlayer player, MountKind kind) {
+        return ownership(player).first(kind).map(mount -> select(player, mount.id())).orElse(false);
+    }
+
+    /** Operators and tests: gives a standard mount of {@code kind} without gold or level. */
     public static boolean grant(ServerPlayer player, MountKind kind) {
-        boolean saved = save(player, ownership(player).withBought(kind));
+        return keep(player, MountIndividual.standard(UUID.randomUUID(), kind));
+    }
+
+    /** Records {@code mount} in the player's stable (picked to be called); false if it could not be saved. */
+    public static boolean keep(ServerPlayer player, MountIndividual mount) {
+        boolean saved = save(player, ownership(player).withAdded(mount));
         sendState(player);
         return saved;
     }
@@ -164,14 +192,16 @@ public final class MountService {
     /** Starts calling the selected mount; {@link MountRules.Call#OK} if the call began. */
     public static MountRules.Call startCall(ServerPlayer player) {
         MountOwnership owned = ownership(player);
-        MountRules.Call check = MountRules.call(owned, situation(player, owned.selectedOrFirst().orElse(null)));
+        MountRules.Call check = MountRules.call(owned, situation(player, owned.selectedOrFirst()
+                .map(MountIndividual::kind).orElse(null)));
         if (check != MountRules.Call.OK) {
             player.displayClientMessage(Component.translatable(check.messageKey()).withStyle(ChatFormatting.RED), true);
             return check;
         }
-        MountKind kind = owned.selectedOrFirst().orElseThrow();
+        MountIndividual mount = owned.selectedOrFirst().orElseThrow();
+        MountKind kind = mount.kind();
         long now = player.server.getTickCount();
-        CALLS.put(player.getUUID(), new Call(player, kind, player.position(), now + MountRules.SUMMON_TICKS));
+        CALLS.put(player.getUUID(), new Call(player, mount, player.position(), now + MountRules.SUMMON_TICKS));
         player.displayClientMessage(Component.translatable(MountRules.CALLING,
                 Component.translatable(kind.translationKey()).withStyle(ChatFormatting.GOLD)), true);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), callSound(kind),
@@ -185,15 +215,26 @@ public final class MountService {
     }
 
     /**
-     * Brings {@code kind} at once under the player (the end of a call; GameTests skip the wait). Empty if there is no
-     * room or the entity could not be made.
+     * Brings the first kept mount of {@code kind} (a standard one if none is kept) at once under the player
+     * (GameTests skip the wait).
      */
     public static Optional<MountEntity> summonNow(ServerPlayer player, MountKind kind) {
+        return summonNow(player, ownership(player).first(kind)
+                .orElseGet(() -> MountIndividual.standard(UUID.randomUUID(), kind)));
+    }
+
+    /**
+     * Brings {@code individual} at once under the player (the end of a call). Empty if there is no room or the entity
+     * could not be made.
+     */
+    public static Optional<MountEntity> summonNow(ServerPlayer player, MountIndividual individual) {
+        MountKind kind = individual.kind();
         ServerLevel level = player.serverLevel();
         MountEntity mount = MountEntities.type(kind).create(level);
         if (mount == null) {
             return Optional.empty();
         }
+        mount.become(individual);
         mount.moveTo(player.getX(), player.getY(), player.getZ(), player.getYRot(), 0.0F);
         mount.setYBodyRot(player.getYRot());
         mount.setYHeadRot(player.getYRot());
@@ -308,7 +349,9 @@ public final class MountService {
                 it.remove();
                 continue;
             }
-            MountRules.Call check = MountRules.call(ownership(player), situation(player, call.kind()));
+            MountOwnership owned = ownership(player);
+            MountRules.Call check = owned.mount(call.mount().id()).isEmpty() ? MountRules.Call.NONE_OWNED
+                    : MountRules.call(owned, situation(player, call.kind()));
             if (check != MountRules.Call.OK || player.position().distanceTo(call.from())
                     > MountRules.SUMMON_MOVE_TOLERANCE || player.isPassenger()) {
                 it.remove();
@@ -319,7 +362,7 @@ public final class MountService {
             }
             if (now >= call.readyAt()) {
                 it.remove();
-                summonNow(player, call.kind());
+                summonNow(player, call.mount());
             } else if (now % 4 == 0) {
                 double progress = 1.0 - (call.readyAt() - now) / (double) MountRules.SUMMON_TICKS;
                 player.serverLevel().sendParticles(ParticleTypes.ENCHANT, player.getX(), player.getY() + 0.2,
@@ -422,7 +465,6 @@ public final class MountService {
             FALL_GUARDS.remove(player.getUUID());
             SENT.remove(player.getUUID());
             HINTS.remove(player.getUUID());
-            MountStable.forget(player.getUUID());
         }
     }
 
@@ -472,11 +514,11 @@ public final class MountService {
         MountOwnership owned = ownership(player);
         JsonObject json = new JsonObject();
         JsonArray ids = new JsonArray();
-        for (MountKind kind : owned.owned()) {
+        for (MountKind kind : owned.kinds()) {
             ids.add(kind.id());
         }
         json.add("owned", ids);
-        json.addProperty("selected", owned.selectedOrFirst().map(MountKind::id).orElse(""));
+        json.addProperty("selected", owned.selectedOrFirst().map(mount -> mount.kind().id()).orElse(""));
         json.addProperty("riding", player.getVehicle() instanceof MountEntity mount ? mount.kind().id() : "");
         return json.toString();
     }

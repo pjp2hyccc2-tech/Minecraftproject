@@ -56,6 +56,7 @@ public final class EternalRealm {
         EREntityTypes.register(modBus);
         com.eternalrealm.npc.forge.NpcEntities.register(modBus);
         com.eternalrealm.mount.forge.MountEntities.register(modBus);
+        com.eternalrealm.mount.forge.MountItems.register(modBus);
         com.eternalrealm.block.forge.ERBlocks.register(modBus);
         com.eternalrealm.block.forge.ERBannerPatterns.register(modBus);
         com.eternalrealm.sound.ERSounds.register(modBus);
