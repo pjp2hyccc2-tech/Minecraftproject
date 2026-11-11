@@ -505,10 +505,10 @@ F = {
                         ["FIELD_HEAL"]),
     "stroms_strawcrown": ("art_stroms_strawfire_crown", "ストロームの藁火の冠", "Strom's Strawfire Crown", "strawfire",
                           "GEYSER", "STAFF_METEOR", ["ZONE"]),
-    "crow_scaring_bow": ("art_crowscatter", "鴉追いの散らし矢", "Crowscatter", "crow", "SCATTER", None, ["KNOCKBACK"]),
+    "crow_scaring_bow": ("art_crowscatter", "鴉追いの散らし矢", "Crowscatter", "crow", "SCATTER", None, ["BLIND"]),
     "cornsilk_bow": ("art_cornsilk_fan", "とうもろこし糸の扇射ち", "Cornsilk Fan", "cornsilk", None, None, ["STAMINA"]),
     "bullhorn_recurve": ("art_bullhorn_heavy_shot", "牛角の重矢", "Bullhorn Heavy Shot", "bullhorn", None, None,
-                         ["KNOCKBACK"]),
+                         ["EXECUTE"]),
     # ---------------------------------------------------------------- 9 湖畔のほとり
     "reedcutter": ("art_reedcutter_rush", "葦刈りの疾走斬", "Reedcutter Rush", "reed", None, None, ["SPEED"]),
     "lake_scale_sword": ("art_lakescale_ripple", "湖鱗の波紋斬り", "Lakescale Ripple", "ripple", "RING", "SWORD_BURST",
@@ -569,7 +569,7 @@ F = {
     "kraken_ink_rod": ("art_krakenink_tentacles", "海魔墨の触腕", "Krakenink Tentacles", "krakenink", "CHAIN",
                        "STAFF_BEAM", ["STUN", "PULL"]),
     "gunwale_bow": ("art_broadside_volley", "舷側の一斉射", "Broadside Volley", "broadside", None, None,
-                    ["KNOCKBACK"]),
+                    ["STAMINA"]),
     "seagull_bow": ("art_gullwheel_arrows", "海鳥の旋回矢", "Gullwheel Arrows", "gull", "SPIRAL", None, ["EVASION"]),
     "trade_wind_longbow": ("art_tradewind_longshot", "貿易風の遠矢", "Tradewind Longshot", "tradewind", None,
                            "BOW_PIERCE", ["SPEED"]),
@@ -793,7 +793,18 @@ def check(all_rows):
         sigs[sig] = key
         if not art.startswith("art_"):
             problems.append(f"{key}: bad id {art}")
+        # magic and bow attacks push nothing in the game (D-RANGEDKB): a knockback extra there would promise nothing
+        if "KNOCKBACK" in extras and _wields(key, w) in ("bow", "staff"):
+            problems.append(f"{key}: a bow or staff art cannot knock back (D-RANGEDKB)")
     return problems
+
+
+def _wields(key, w):
+    """The weapon type (bow, staff, ...) of an art row: named weapons, relics and tier weapons."""
+    if key.startswith("tier:"):
+        return {"BOW": "bow", "STAFF": "staff"}.get(key.split(":")[2], "melee")
+    kind = getattr(w, "type", None) or getattr(w, "wtype", "")
+    return {"BOW": "bow", "STAFF": "staff"}.get(str(kind).upper(), "melee")
 
 
 def java(all_rows):

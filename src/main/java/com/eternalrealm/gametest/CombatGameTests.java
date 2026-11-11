@@ -191,6 +191,75 @@ public final class CombatGameTests {
         helper.succeed();
     }
 
+    /** D-RANGEDKB: a bolt of magic, an arrow and a ray of holy light push nothing, whatever the action's value. */
+    @GameTest(template = ARENA)
+    public static void magicAndArrowsPushNothing(GameTestHelper helper) {
+        Pig pig = sturdy(still(helper.spawn(EntityType.PIG, new BlockPos(4, 2, 6))));
+        FakePlayer shooter = fighter(helper, "er_gt_kb_ranged", WeaponProfiles.STAFF);
+        for (com.eternalrealm.combat.DamageType type : new com.eternalrealm.combat.DamageType[]{
+                com.eternalrealm.combat.DamageType.MAGIC, com.eternalrealm.combat.DamageType.RANGED,
+                com.eternalrealm.combat.DamageType.HOLY}) {
+            pig.setDeltaMovement(Vec3.ZERO);
+            float before = pig.getHealth();
+            CombatHits.projectileHit(shooter, pig, new com.eternalrealm.combat.forge.ProjectilePayload(
+                    com.eternalrealm.combat.ProjectileSpec.magic("magic_bolt", 1.6, 20),
+                    new com.eternalrealm.combat.DamageRoll(2.0, false), type, 0.8,
+                    com.eternalrealm.combat.ActionKind.LIGHT, java.util.List.of()));
+            check(pig.getHealth() < before, type + ": the pig took no damage");
+            check(horizontal(pig.getDeltaMovement()) < 1.0e-3, type + " pushed the pig: " + pig.getDeltaMovement());
+        }
+        // a melee blow of the same strength still pushes
+        pig.setDeltaMovement(Vec3.ZERO);
+        CombatHits.execute(shooter, PLAIN, new CombatEvent.Hit(SWORD, SWORD.combo().get(0), 0,
+                new com.eternalrealm.combat.HitFrame(0, com.eternalrealm.combat.HitShape.arc(3.2, 50), 1.0, 0.8),
+                1.0, 0L), com.eternalrealm.combat.DamageType.PHYSICAL, () -> 0.99);
+        check(Math.abs(horizontal(pig.getDeltaMovement()) - 0.8) < 0.01, "a melee blow must push 0.8, pushed "
+                + horizontal(pig.getDeltaMovement()));
+        helper.succeed();
+    }
+
+    /**
+     * D-RANGEDKB through the driver: the mage's frost nova (knockback 0.8 in its frame) pushes nothing, the
+     * spellblade's arcane burst, a sword blow of magic damage, keeps its push of 1.0.
+     */
+    @GameTest(template = ARENA)
+    public static void aMageNovaPushesNothingButTheSpellbladesBurstDoes(GameTestHelper helper) {
+        Pig pig = sturdy(still(helper.spawn(EntityType.PIG, new BlockPos(4, 2, 6))));
+        FakePlayer caster = fighter(helper, "er_gt_kb_nova", WeaponProfiles.STAFF);
+        pig.setDeltaMovement(Vec3.ZERO);
+        float before = pig.getHealth();
+        com.eternalrealm.combat.forge.CombatDriver.handleEvent(caster, PLAIN,
+                skillHit("mage_frost_nova", WeaponProfiles.STAFF));
+        check(pig.getHealth() < before, "the frost nova must hit the pig");
+        check(horizontal(pig.getDeltaMovement()) < 1.0e-3, "the frost nova pushed the pig: " + pig.getDeltaMovement());
+
+        FakePlayer blade = fighter(helper, "er_gt_kb_blade", SWORD);
+        pig.setDeltaMovement(Vec3.ZERO);
+        before = pig.getHealth();
+        com.eternalrealm.combat.forge.CombatDriver.handleEvent(blade, PLAIN, skillHit("spellblade_arcane_burst", SWORD));
+        check(pig.getHealth() < before, "the arcane burst must hit the pig");
+        check(Math.abs(horizontal(pig.getDeltaMovement()) - 1.0) < 0.01, "the arcane burst must push 1.0, pushed "
+                + horizontal(pig.getDeltaMovement()));
+        helper.succeed();
+    }
+
+    /** The first frame of a job skill as a hit of {@code weapon}. */
+    private static CombatEvent.Hit skillHit(String skillId, WeaponProfile weapon) {
+        ActionDefinition action = com.eternalrealm.job.Jobs.skill(skillId).orElseThrow().action();
+        return new CombatEvent.Hit(weapon, action, 0, action.frames().get(0), 1.0, 0L);
+    }
+
+    /** A pig that survives a few strong hits (its knockback resistance stays 0). */
+    private static Pig sturdy(Pig pig) {
+        pig.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(400.0);
+        pig.setHealth(400.0F);
+        return pig;
+    }
+
+    private static double horizontal(Vec3 motion) {
+        return Math.sqrt(motion.x * motion.x + motion.z * motion.z);
+    }
+
     @GameTest(template = ARENA)
     public static void vanillaAttackWithAWeaponDoesNothing(GameTestHelper helper) {
         IronGolem target = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 6)));

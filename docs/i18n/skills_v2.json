@@ -1548,7 +1548,7 @@
     "en": "Explosion"
   },
   "skill.eternalrealm.mage_explosion.desc": {
-    "ja": "広範囲を吹き飛ばす大きな火球。",
+    "ja": "広い範囲で炸裂する大きな火球。",
     "en": "A larger fireball whose blast covers a wide area."
   },
   "skill.eternalrealm.mage_kindling": {
@@ -2028,8 +2028,8 @@
     "en": "Power Shot"
   },
   "skill.eternalrealm.ranger_power_shot.desc": {
-    "ja": "弓を限界まで引き絞り、敵を吹き飛ばす一矢を放つ。",
-    "en": "Draws the bow to its limit for an arrow that blasts enemies back."
+    "ja": "弓を限界まで引き絞り、重い一矢を放つ。",
+    "en": "Draws the bow to its limit for one heavy arrow."
   },
   "skill.eternalrealm.ranger_sniper": {
     "ja": "狙撃手",
@@ -2260,8 +2260,8 @@
     "en": "Spray of Arrows"
   },
   "skill.eternalrealm.ranger_scatter_shot.desc": {
-    "ja": "至近距離に矢をばらまき、敵を押し返す。",
-    "en": "Sprays arrows at close range, knocking enemies back."
+    "ja": "至近距離に矢をばらまく。",
+    "en": "Sprays arrows at close range."
   },
   "skill.eternalrealm.ranger_spread_shot": {
     "ja": "拡散矢",
@@ -2716,8 +2716,8 @@
     "en": "Radiant Burst"
   },
   "skill.eternalrealm.priest_radiant_burst.desc": {
-    "ja": "周囲に光を炸裂させて敵を吹き飛ばし、目をくらませる。",
-    "en": "Light bursts around you, knocking enemies back and blinding them."
+    "ja": "周囲に光を炸裂させ、敵の目をくらませる。",
+    "en": "Light bursts around you, blinding enemies."
   },
   "skill.eternalrealm.priest_light_ray": {
     "ja": "光線",

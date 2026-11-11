@@ -340,9 +340,9 @@ Zキーはすべての武器で、その武器だけの武技になる（ボス�
 | `scarecrow_post` | かかしの睨み（Scarecrow Stare） | `staff_orbs` | stun | scarecrow / orbs |
 | `sunflower_staff` | 向日葵の陽だまり（Sunflower Glow） | `staff_burst` | field_heal | sunflower / petals |
 | `stroms_strawcrown` | ストロームの藁火の冠（Strom's Strawfire Crown） | `staff_meteor` | zone | strawfire / geyser |
-| `crow_scaring_bow` | 鴉追いの散らし矢（Crowscatter） | `bow_volley` | knockback | crow / scatter |
+| `crow_scaring_bow` | 鴉追いの散らし矢（Crowscatter） | `bow_volley` | blind | crow / scatter |
 | `cornsilk_bow` | とうもろこし糸の扇射ち（Cornsilk Fan） | `bow_fan` | stamina | cornsilk / fan |
-| `bullhorn_recurve` | 牛角の重矢（Bullhorn Heavy Shot） | `bow_impact` | knockback | bullhorn / burst |
+| `bullhorn_recurve` | 牛角の重矢（Bullhorn Heavy Shot） | `bow_impact` | execute | bullhorn / burst |
 | `reedcutter` | 葦刈りの疾走斬（Reedcutter Rush） | `sword_dash` | speed | reed / arc |
 | `lake_scale_sword` | 湖鱗の波紋斬り（Lakescale Ripple） | `sword_burst` | slow_field | ripple / ring |
 | `mirror_surface_blade` | 水鏡の写し斬り（Mirrorwater Reflection） | `sword_precise` | mark, evasion | mirror / cross |
@@ -376,12 +376,12 @@ Zキーはすべての武器で、その武器だけの武技になる（ボス�
 | `buoy_lantern_staff` | 浮標灯の灯り（Buoylight） | `staff_orbs` | shield | buoy / pillar |
 | `compass_rose_staff` | 羅針の四方風（Fourfold Winds） | `staff_volley` | speed | compass / cross |
 | `kraken_ink_rod` | 海魔墨の触腕（Krakenink Tentacles） | `staff_beam` | stun, pull | krakenink / chain |
-| `gunwale_bow` | 舷側の一斉射（Broadside Volley） | `bow_fan` | knockback | broadside / fan |
+| `gunwale_bow` | 舷側の一斉射（Broadside Volley） | `bow_fan` | stamina | broadside / fan |
 | `seagull_bow` | 海鳥の旋回矢（Gullwheel Arrows） | `bow_volley` | evasion | gull / spiral |
 | `trade_wind_longbow` | 貿易風の遠矢（Tradewind Longshot） | `bow_pierce` | speed | tradewind / line |
 | `relic_b1_weapon` | 簒奪の三閃（Usurper's Triple Flash） | `sword_precise` | vanish, execute | relic_b1 / line |
 | `relic_b2_weapon` | 千年輪の大震（Thousand-Ring Quake） | `great_slam` | stun, zone | relic_b2 / wave |
-| `relic_b3_weapon` | 砂嵐の巨弾（Sandstorm Titanshot） | `bow_impact` | knockback, slow_field | relic_b3 / burst |
+| `relic_b3_weapon` | 砂嵐の巨弾（Sandstorm Titanshot） | `bow_impact` | blind, slow_field | relic_b3 / burst |
 | `relic_b4_weapon` | 凍獄の断罪（Frozen Verdict） | `spear_impale` | execute, mark | relic_b4 / pillar |
 | `relic_b5_weapon` | 氷晶の舞踏（Crystal Ballroom） | `twin_flurry` | slow_field, evasion | relic_b5 / scatter |
 | `relic_b6_weapon` | 竜王の焔穿（Dragonking Flamepierce） | `spear_charge` | imbue, launch | relic_b6 / comet |

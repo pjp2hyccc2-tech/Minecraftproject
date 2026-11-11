@@ -26,7 +26,9 @@ import com.eternalrealm.job.forge.SkillEffectsExecutor;
 import com.eternalrealm.job.forge.SkillZones;
 import com.eternalrealm.combat.DefenseEvent;
 import com.eternalrealm.combat.GuardResult;
+import com.eternalrealm.combat.HitFrame;
 import com.eternalrealm.combat.HitGeometry;
+import com.eternalrealm.combat.Knockback;
 import com.eternalrealm.combat.ActionDefinition;
 import com.eternalrealm.combat.RequestOutcome;
 import com.eternalrealm.combat.WeaponProfile;
@@ -344,10 +346,14 @@ public final class CombatDriver {
             // a weapon art: its effects run like a job skill's, as strong as the held piece's rarity makes them
             WeaponArt art = skill == null ? WeaponArts.byId(original.action().id()).orElse(null) : null;
             double artPower = art == null ? 1.0 : artPower(player, art);
-            CombatEvent.Hit hit = artPower == 1.0 ? original : new CombatEvent.Hit(original.weapon(),
-                    original.action(), original.frameIndex(), original.frame(), original.damageScale() * artPower,
-                    original.tick());
-            DamageType type = skill != null ? skill.damageType() : hit.weapon().type().damageType();
+            DamageType type = skill != null ? skill.damageType() : original.weapon().type().damageType();
+            // magic and bow attacks push nothing (D-RANGEDKB); the spellblade's sword blows keep their push
+            boolean swordBlow = skill != null && skill.job() == JobType.SPELLBLADE && !original.frame().isProjectile();
+            HitFrame frame = original.frame().withKnockback(
+                    Knockback.of(original.frame().knockback(), type, swordBlow));
+            CombatEvent.Hit hit = artPower == 1.0 && frame == original.frame() ? original
+                    : new CombatEvent.Hit(original.weapon(), original.action(), original.frameIndex(), frame,
+                    original.damageScale() * artPower, original.tick());
             List<SkillEffect> effects = skill != null ? skill.effectsAt(hit.frameIndex())
                     : art != null ? art.effectsAt(hit.frameIndex()) : List.of();
             SkillTheme theme = skill != null ? skill.theme() : art != null ? art.theme() : null;

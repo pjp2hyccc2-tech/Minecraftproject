@@ -92,6 +92,9 @@
 | GameTest `hitFrameDamagesOnlyTargetsInFront` | 実エンティティ: 前方のゴーレムだけに 6.0 ダメージ、背後は無傷 |
 | GameTest `comboHitsIgnoreVanillaHurtImmunity` | 同tickの2連撃が両方とも入る（バニラの無敵時間を無視） |
 | GameTest `knockbackUsesTheActionValue` | ノックバックが行動ごとの値（0.25）に置き換わり、攻撃者から離れる方向 |
+| GameTest `magicAndArrowsPushNothing` | 魔法・矢・聖なる光の飛び道具（行動の値 0.8）は当たっても押さない。対照: 同じ値の近接は 0.8 押す（D-RANGEDKB） |
+| GameTest `aMageNovaPushesNothingButTheSpellbladesBurstDoes` | 実際の処理経路で、メイジのフロストノヴァ（0.8）は押さず、魔剣士のアーケインバースト（剣の間合い、1.0）は押す |
+| Unit `KnockbackTest` | 魔法・聖・弓の種類は 0、物理と魔剣士の剣の一撃はそのまま。杖・弓の全行動とメイジ・プリースト・レンジャーの魔法と弓のスキルの打撃が 0、レンジャーの双剣のスキルはそのまま |
 | GameTest `vanillaAttackWithAWeaponDoesNothing` | 武器でのバニラ攻撃はダメージなし（対照: 素手のバニラ攻撃は有効） |
 | GameTest `dodgeAvoidsAttacksButNotTheEnvironment` | 回避中のMob攻撃は無効、落下ダメージは無効化しない |
 | GameTest `parryThenGuardFromTheFrontOnly` | ガード直後は正面だけパリィ（背後は不可）・相手に鈍足、10tick後は60%軽減とスタミナ18消費、背後は軽減なし |

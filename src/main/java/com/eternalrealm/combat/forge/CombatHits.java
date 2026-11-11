@@ -12,6 +12,7 @@ import com.eternalrealm.combat.DamageType;
 import com.eternalrealm.combat.HitFrame;
 import com.eternalrealm.combat.HitGeometry;
 import com.eternalrealm.combat.HitShape;
+import com.eternalrealm.combat.Knockback;
 import com.eternalrealm.combat.WeaponProfile;
 import com.eternalrealm.job.PassiveTotals;
 import com.eternalrealm.job.SkillEffect;
@@ -225,12 +226,16 @@ public final class CombatHits {
 
     /**
      * Applies one rolled hit: holy damage is doubled against undead, vanilla's hurt immunity is skipped (combo hits
-     * land faster than it, D-032), the action's knockback replaces vanilla's, a flame weapon ignites melee targets.
+     * land faster than it, D-032), the action's knockback replaces vanilla's (none for magic and arrows that fly, burst
+     * or linger on the ground, D-RANGEDKB), a flame weapon ignites melee targets.
      *
      * @return the damage dealt, 0 if the hit did nothing
      */
     static float deal(ServerPlayer attacker, LivingEntity target, DamageRoll roll, DamageType type, double knockback,
                       ActionKind kind, boolean melee) {
+        if (!melee) {
+            knockback = Knockback.of(knockback, type, false);
+        }
         float amount = (float) roll.amount();
         if (type == DamageType.HOLY && target.getMobType() == MobType.UNDEAD) {
             amount *= 2.0F;

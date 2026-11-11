@@ -311,3 +311,15 @@ climb), on top of the existing individuality, grades and deeds. Talents change h
 adding speed, and no breed outruns the Lv50 bike even with its talent active, so the bike keeps its place. The old
 `horse` and `griffin` ids stay the first breed of each family, so saves need no conversion. Details:
 `docs/modules/mounts.md`.
+
+## D-RANGEDKB: magic and bow attacks push nothing (2026-11-11)
+The owner: 「魔法と弓の遠距離攻撃でのノックバックを0にして。敵が近寄れないから強すぎる」. Every hit of a staff or a bow
+(light, heavy, weapon skill, weapon arts), every hit of the mage's and priest's skills (their close-range bursts
+included: they too kept enemies away) and of the ranger's bow skills, and every projectile, blast and ground area of magic
+or arrows now has knockback 0 (`combat.Knockback`, by damage type, applied to the frame in `CombatDriver.process` and to
+non-melee hits in `CombatHits.deal`). Melee keeps its per-action knockback (D-032): the ranger's dual-blade skills
+(physical) and the spellblade's sword skills, which deal magic damage but at a sword's length, where a push does not keep
+anyone away. Texts that promised a push were rewritten, and the four bow arts whose
+extra was "knocks foes far back" got another extra instead (blind, execute, stamina; the sandstorm relic bow: blind); the
+art generator now refuses a knockback extra on a bow or staff art.
+

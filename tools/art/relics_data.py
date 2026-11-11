@@ -198,7 +198,7 @@ ROWS = [
        ("AMULET", "STR", "VIT", "CRIT_DAMAGE"), ("TALISMAN", "THORNS"),
        ("砂嵐とともに歩んだ巨神の胸から零れた、砂金の遺宝。",
         "Gold-sand relics that spilled from the colossus that walked with the sandstorm."),
-       ("砂嵐の巨弾", "Sandstorm Titanshot", ["KNOCKBACK", "SLOW_FIELD"], "BURST", "VORTEX", "GROUND_SIGIL",
+       ("砂嵐の巨弾", "Sandstorm Titanshot", ["BLIND", "SLOW_FIELD"], "BURST", "VORTEX", "GROUND_SIGIL",
         "block:minecraft:sand", "dust:e0b050", 0xD8B060, 0x8A5A2A),
        BW("SANDSTONE", recurve=3.0, trim="GOLD", bands=(8, 9), grip="LINEN", gem="AMBER", tips="curl"),
        (6, "SANDSTONE", "GOLD", "SAND", "SUNSTONE", "AMBER", "sun", {"F": "AMBER"}),

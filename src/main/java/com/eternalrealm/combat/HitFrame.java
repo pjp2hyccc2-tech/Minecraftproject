@@ -46,4 +46,9 @@ public record HitFrame(int offsetTicks, HitShape shape, double multiplier, doubl
     public boolean isProjectile() {
         return projectile != null;
     }
+
+    /** This frame with another knockback (the same frame if it is unchanged). */
+    public HitFrame withKnockback(double value) {
+        return value == knockback ? this : new HitFrame(offsetTicks, shape, multiplier, value, projectile, damaging);
+    }
 }
