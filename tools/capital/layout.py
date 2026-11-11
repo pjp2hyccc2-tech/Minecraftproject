@@ -55,7 +55,7 @@ ROADS = [
     Road("road_south_out", [(0, 158), (0, 176)], 7, "street"),
     Road("street_n1", [(-98, -43), (98, -43)], 7, "street"),
     Road("street_s1", [(-98, 43), (98, 43)], 7, "street"),
-    Road("street_w1", [(-55, -84), (-55, 43)], 7, "street"),
+    Road("street_w1", [(-55, -40), (-55, 43)], 7, "street"),
     Road("street_e1", [(55, -43), (55, 43)], 7, "street"),
 ]
 # city walls (centre lines; 5 thick): west x=-104, east x=104, south z=79; main gate at x=0 on the south wall
@@ -123,8 +123,10 @@ DISTRICTS: dict[str, District] = {d.name: d for d in [
              notes="Half-timbered houses between the market and the east wall."),
     District("residential_west", [(-98, -39, -59, -6), (-98, 6, -59, 39)], title="住宅街 (西) Residential W",
              notes="Half-timbered houses west of the guild, both sides of the west avenue."),
-    District("upper_town", [(-98, -86, -59, -47), (-51, -86, -12, -47)], title="城下 Upper town",
-             notes="Noble houses and gardens at the foot of the castle cliff, west of the viaduct."),
+    District("guild_gates", [(-98, -86, -10, -47)], title="ギルド門の広場 Guild Gate Terrace",
+             notes="Raised terrace (top block y = 6, level with the viaduct's first landing at z -53..-56) at the "
+                   "foot of the castle cliff, west of the viaduct: the twenty guild gates, each a different theme, "
+                   "the guild estate broker, stairs down to street_n1, a bridge to the viaduct."),
     District("cathedral", [(12, -86, 98, -47)], title="大聖堂 Cathedral",
              notes="Gothic cathedral (east-west nave, south transept facing the town) with its close."),
     District("south_west", [(-98, 47, -25, 73), (-24, 47, -6, 65)], title="住宅街 (南西) Residential SW",
@@ -144,7 +146,7 @@ DISTRICTS: dict[str, District] = {d.name: d for d in [
              notes="Fields east of the river and the watermill on its bank."),
     District("streets", [(-5, -45, 5, -27), (-5, 27, 5, 65), (-98, -5, -27, 5), (27, -5, 87, 5),
                          (-98, -46, -10, -40), (-9, -45, 9, -40), (10, -46, 98, -40), (-98, 40, 98, 46),
-                         (-58, -84, -52, 39), (52, -39, 58, 39)], exclude_circles=_PL,
+                         (-58, -39, -52, 39), (52, -39, 58, 39)], exclude_circles=_PL,
              title="通り Streets", notes="Re-paving of the town roads, street furniture, signposts."),
     District("castle", [(-112, -208, 112, -87), (-9, -88, 9, -46)], ground_y=PLATEAU_Y, owner="capital",
              title="王城 Royal castle", notes="Castle plateau, castle, viaduct (built by the framework)."),

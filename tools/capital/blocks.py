@@ -102,6 +102,13 @@ SCHEMAS: dict[str, dict[str, tuple]] = {
     "scaffolding": {"bottom": BOOL, "distance": _rng(0, 7), "waterlogged": BOOL},
     "hopper": {"enabled": BOOL, "facing": ("down", "north", "south", "west", "east")},
     "piston": {"facing": F6, "extended": BOOL},
+    # 2026-11-11 rebuild: shared ids (Java side by the estates and town-gimmick work)
+    "secret_door": {"facing": H4, "half": ("lower", "upper"), "open": BOOL,
+                    "look": ("bookshelf", "stone_bricks", "castle_bricks", "white_plaster", "mossy_stone_bricks",
+                             "dark_oak_planks", "spruce_planks")},
+    "shop_sign": {"facing": H4, "attach": ("wall", "ceiling"),
+                  "icon": ("sword", "shield", "potion", "bread", "anvil", "book", "gem", "flower", "shirt", "key",
+                           "fish", "mug", "scroll", "map", "hammer", "ring")},
 }
 
 # Defaults written into the canonical string when absent (only where the game default is not what we want,
@@ -130,6 +137,8 @@ DEFAULTS: dict[str, dict[str, str]] = {
     "lit": {"lit": "false"},
     "smoke_emitter": {"heavy": "false"},
     "fountain_spray": {"power": "2", "facing": "up"},
+    "secret_door": {"half": "lower", "open": "false"},
+    "shop_sign": {"attach": "wall"},
 }
 
 # --------------------------------------------------------------------------------------------- registry
@@ -228,6 +237,10 @@ _reg(["light_shaft"], "light_shaft", CUSTOM_NS)
 _reg(["flag", "clock_face", "windmill_sails", "water_wheel"], "gimmick", CUSTOM_NS)
 _reg(["smoke_emitter"], "smoke_emitter", CUSTOM_NS)
 _reg(["fountain_spray"], "fountain_spray", CUSTOM_NS)
+_reg(["bunting"], "gimmick", CUSTOM_NS)          # pennant / lantern strings (block entity data, see capital.md)
+_reg(["secret_door"], "secret_door", CUSTOM_NS)  # hidden passages: a wall that slides open
+_reg(["shop_sign"], "shop_sign", CUSTOM_NS)      # hanging shop boards with a picture of the trade
+_reg(["room_door"], "door", CUSTOM_NS)           # the inn mansion's room doors (lead into one's own room)
 
 # plain full blocks and simple things
 _reg([

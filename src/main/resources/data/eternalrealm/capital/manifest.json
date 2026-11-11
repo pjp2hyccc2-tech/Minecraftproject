@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "df3005acd4456b04",
+ "build": "0b608aa8aa7f75df",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -32,7 +32,6 @@
   "eternalrealm:fountain_spray[facing=south,power=1]",
   "eternalrealm:fountain_spray[facing=south,power=2]",
   "eternalrealm:fountain_spray[facing=up,power=1]",
-  "eternalrealm:fountain_spray[facing=up,power=2]",
   "eternalrealm:fountain_spray[facing=up,power=3]",
   "eternalrealm:fountain_spray[facing=west,power=1]",
   "eternalrealm:fountain_spray[facing=west,power=2]",
@@ -117,9 +116,7 @@
   "minecraft:bell[attachment=floor,facing=east]",
   "minecraft:bell[attachment=floor,facing=south]",
   "minecraft:bell[attachment=floor,facing=west]",
-  "minecraft:birch_door[facing=north,half=lower,hinge=left,open=false]",
   "minecraft:birch_door[facing=north,half=lower,hinge=right,open=false]",
-  "minecraft:birch_door[facing=north,half=upper,hinge=left,open=false]",
   "minecraft:birch_door[facing=north,half=upper,hinge=right,open=false]",
   "minecraft:birch_door[facing=south,half=lower,hinge=left,open=false]",
   "minecraft:birch_door[facing=south,half=lower,hinge=right,open=false]",
@@ -284,7 +281,6 @@
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
-  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_2_occupied=true,slot_4_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=west]",
   "minecraft:chiseled_polished_blackstone",
   "minecraft:chiseled_quartz_block",
@@ -454,8 +450,6 @@
   "minecraft:mangrove_door[facing=south,half=lower,hinge=right,open=false]",
   "minecraft:mangrove_door[facing=south,half=upper,hinge=left,open=false]",
   "minecraft:mangrove_door[facing=south,half=upper,hinge=right,open=false]",
-  "minecraft:mangrove_door[facing=west,half=lower,hinge=left,open=false]",
-  "minecraft:mangrove_door[facing=west,half=upper,hinge=left,open=false]",
   "minecraft:mangrove_planks",
   "minecraft:mangrove_slab[type=bottom]",
   "minecraft:mangrove_stairs[facing=east,half=bottom,shape=straight]",
@@ -469,9 +463,7 @@
   "minecraft:mossy_cobblestone",
   "minecraft:mossy_stone_bricks",
   "minecraft:note_block",
-  "minecraft:oak_door[facing=east,half=lower,hinge=left,open=false]",
   "minecraft:oak_door[facing=east,half=lower,hinge=right,open=false]",
-  "minecraft:oak_door[facing=east,half=upper,hinge=left,open=false]",
   "minecraft:oak_door[facing=east,half=upper,hinge=right,open=false]",
   "minecraft:oak_door[facing=north,half=lower,hinge=left,open=false]",
   "minecraft:oak_door[facing=north,half=lower,hinge=right,open=false]",
@@ -493,8 +485,6 @@
   "minecraft:oak_trapdoor[facing=south,half=bottom,open=true]",
   "minecraft:oak_wall_sign[facing=south]",
   "minecraft:ochre_froglight[axis=y]",
-  "minecraft:orange_bed[facing=east,part=foot]",
-  "minecraft:orange_bed[facing=east,part=head]",
   "minecraft:orange_bed[facing=north,part=foot]",
   "minecraft:orange_bed[facing=north,part=head]",
   "minecraft:orange_bed[facing=south,part=foot]",
@@ -550,8 +540,6 @@
   "minecraft:purple_bed[facing=north,part=head]",
   "minecraft:purple_bed[facing=south,part=foot]",
   "minecraft:purple_bed[facing=south,part=head]",
-  "minecraft:purple_bed[facing=west,part=foot]",
-  "minecraft:purple_bed[facing=west,part=head]",
   "minecraft:purple_stained_glass",
   "minecraft:purple_stained_glass_pane",
   "minecraft:purple_wall_banner[facing=north]",
@@ -4432,16 +4420,6 @@
    "pos": [
     -94.5,
     3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -94.5,
-    3.5,
     -30.5
    ],
    "yaw": 0.0,
@@ -4502,16 +4480,6 @@
    "pos": [
     -93.5,
     3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -93.5,
-    3.5,
     -13.5
    ],
    "yaw": 180.0,
@@ -4556,16 +4524,6 @@
    ],
    "yaw": 90.0,
    "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -92.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4912,16 +4870,6 @@
    "pos": [
     -87.5,
     2.5,
-    -54.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -87.5,
-    2.5,
     -9.5
    ],
    "yaw": -90.0,
@@ -5002,16 +4950,6 @@
    "pos": [
     -87.5,
     6.5,
-    -54.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -87.5,
-    6.5,
     -8.5
    ],
    "yaw": -90.0,
@@ -5046,16 +4984,6 @@
    ],
    "yaw": -90.0,
    "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -87.5,
-    10.5,
-    -54.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:painting",
@@ -5212,16 +5140,6 @@
    "pos": [
     -84.5,
     2.5,
-    -54.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -84.5,
-    2.5,
     -34.5
    ],
    "yaw": 90.0,
@@ -5242,16 +5160,6 @@
    "pos": [
     -84.5,
     3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -84.5,
-    3.5,
     -30.5
    ],
    "yaw": 0.0,
@@ -5266,16 +5174,6 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -84.5,
-    6.5,
-    -54.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:painting",
@@ -5326,16 +5224,6 @@
    ],
    "yaw": -90.0,
    "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -83.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -5436,16 +5324,6 @@
    ],
    "yaw": 90.0,
    "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -82.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -5752,16 +5630,6 @@
    "pos": [
     -78.5,
     2.5,
-    -54.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -78.5,
-    2.5,
     51.5
    ],
    "yaw": -90.0,
@@ -5796,16 +5664,6 @@
    ],
    "yaw": 180.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -78.5,
-    6.5,
-    -54.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:painting",
@@ -5982,30 +5840,10 @@
    "pos": [
     -75.5,
     2.5,
-    -54.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -75.5,
-    2.5,
     -9.5
    ],
    "yaw": 90.0,
    "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -75.5,
-    6.5,
-    -53.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:painting",
@@ -6282,16 +6120,6 @@
    "pos": [
     -71.5,
     3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -71.5,
-    3.5,
     -13.5
    ],
    "yaw": 180.0,
@@ -6356,16 +6184,6 @@
    ],
    "yaw": 90.0,
    "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -70.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -6446,46 +6264,6 @@
    ],
    "yaw": -90.0,
    "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -69.5,
-    3.5,
-    -75.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{Facing:5b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -69.5,
-    3.5,
-    -74.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{Facing:5b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -69.5,
-    3.5,
-    -73.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{Facing:5b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -69.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -7418,36 +7196,6 @@
    "nbt": "{Facing:5b,Item:{id:\"minecraft:shield\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -47.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -47.5,
-    6.5,
-    -71.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{variant:\"minecraft:alban\",facing:2b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -47.5,
-    6.5,
-    -68.5
-   ],
-   "yaw": 0.0,
-   "nbt": "{variant:\"minecraft:plant\",facing:0b,Invulnerable:1b}"
-  },
-  {
    "type": "minecraft:painting",
    "pos": [
     -47.5,
@@ -7490,62 +7238,12 @@
   {
    "type": "minecraft:painting",
    "pos": [
-    -47.5,
-    10.5,
-    -71.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{variant:\"minecraft:plant\",facing:2b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -47.5,
-    10.5,
-    -68.5
-   ],
-   "yaw": 0.0,
-   "nbt": "{variant:\"minecraft:bomb\",facing:0b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -46.5,
-    2.5,
-    -71.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{variant:\"minecraft:bomb\",facing:2b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -46.5,
-    2.5,
-    -68.5
-   ],
-   "yaw": 0.0,
-   "nbt": "{variant:\"minecraft:alban\",facing:0b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
     -46.5,
     2.5,
     51.5
    ],
    "yaw": -90.0,
    "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -46.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -7576,16 +7274,6 @@
    ],
    "yaw": -90.0,
    "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -45.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -7892,66 +7580,6 @@
    "pos": [
     -40.5,
     3.5,
-    -77.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -40.5,
-    3.5,
-    -76.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -40.5,
-    3.5,
-    -75.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -40.5,
-    3.5,
-    -68.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -40.5,
-    3.5,
-    -67.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -40.5,
-    3.5,
-    -66.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -40.5,
-    3.5,
     -27.5
    ],
    "yaw": 0.0,
@@ -8018,16 +7646,6 @@
    "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
   },
   {
-   "type": "minecraft:painting",
-   "pos": [
-    -39.5,
-    2.5,
-    -54.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
-  },
-  {
    "type": "minecraft:item_frame",
    "pos": [
     -39.5,
@@ -8066,16 +7684,6 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -39.5,
-    6.5,
-    -53.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -8132,16 +7740,6 @@
    "pos": [
     -36.5,
     2.5,
-    -54.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -36.5,
-    2.5,
     51.5
    ],
    "yaw": 90.0,
@@ -8152,30 +7750,10 @@
    "pos": [
     -36.5,
     3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -36.5,
-    3.5,
     57.5
    ],
    "yaw": 0.0,
    "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -36.5,
-    6.5,
-    -53.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:painting",
@@ -8208,16 +7786,6 @@
    "nbt": "{Facing:3b,Item:{id:\"minecraft:diamond_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -35.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
    "type": "minecraft:armor_stand",
    "pos": [
     -34.5,
@@ -8226,16 +7794,6 @@
    ],
    "yaw": 180.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -34.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -8412,16 +7970,6 @@
    "pos": [
     -28.5,
     2.5,
-    -54.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -28.5,
-    2.5,
     18.5
    ],
    "yaw": 90.0,
@@ -8446,16 +7994,6 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -28.5,
-    6.5,
-    -53.5
-   ],
-   "yaw": 90.0,
-   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:painting",
@@ -8488,26 +8026,6 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
   },
   {
-   "type": "minecraft:painting",
-   "pos": [
-    -25.5,
-    2.5,
-    -54.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -25.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
    "type": "minecraft:item_frame",
    "pos": [
     -25.5,
@@ -8516,46 +8034,6 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:potion\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -25.5,
-    6.5,
-    -53.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:painting",
-   "pos": [
-    -25.5,
-    10.5,
-    -53.5
-   ],
-   "yaw": -90.0,
-   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -24.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -23.5,
-    3.5,
-    -59.5
-   ],
-   "yaw": 180.0,
-   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:painting",
@@ -11523,14 +11001,6 @@
     60
    ],
    "yaw": -90.0
-  },
-  "crowd.residential.10": {
-   "pos": [
-    -26,
-    1,
-    -71
-   ],
-   "yaw": 180.0
   },
   "crowd.residential.2": {
    "pos": [
