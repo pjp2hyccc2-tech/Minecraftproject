@@ -267,6 +267,8 @@ public final class MountGameTests {
         MountEntity horse = MountService.summonNow(jumper, MountKind.HORSE)
                 .orElseThrow(() -> new GameTestAssertException("no room for the horse"));
         double ground = griffin.getY();
+        // the horse is measured from where it stands: the call may put it on a step of the arena
+        double horseGround = horse.getY();
         // the terrain's ceiling stands at least 32 above the ground under the griffin (or 8 under the world's top);
         // the flight itself runs under a fixed ceiling 8 above the ground, since the test world's sky varies
         double terrain = griffin.terrainCeiling();
@@ -287,7 +289,7 @@ public final class MountGameTests {
             int tick = ticks.incrementAndGet();
             if (tick <= 60) {
                 horse.drive(CLIMB);
-                notes[0] = Math.max(notes[0], horse.getY() - ground);
+                notes[0] = Math.max(notes[0], horse.getY() - horseGround);
             } else if (tick == 61) {
                 MountService.dismiss(jumper, false);
                 if (notes[0] > 4.5 || notes[0] < 0.5) {

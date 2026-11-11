@@ -83,6 +83,8 @@ public final class MarketService {
     private long savedPricesRevision;
     private boolean loaded;
     private boolean saveInFlight;
+    /** How far GameTests moved the market's clock forward ({@link #advanceClockForTests}). */
+    private long clockOffsetMillis;
     /** Players with the auction screen open: they get every change. */
     private final Set<UUID> hallViewers = new LinkedHashSet<>();
 
@@ -136,7 +138,17 @@ public final class MarketService {
     }
 
     long now() {
-        return clock.millis();
+        return clock.millis() + clockOffsetMillis;
+    }
+
+    /**
+     * Moves the market's time forward by {@code millis}, so a GameTest can end a lot without waiting for it. Never
+     * used by the game itself.
+     */
+    public void advanceClockForTests(long millis) {
+        if (millis > 0) {
+            clockOffsetMillis += millis;
+        }
     }
 
     // ------------------------------------------------------------------ wallet bridge
