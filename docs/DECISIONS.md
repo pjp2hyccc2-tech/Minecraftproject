@@ -359,3 +359,19 @@ player in sight (`client.ArtTrails`: crescents, arcs, streaks, rings, quakes wit
 wind-up glow by the art's wind-up style; a heavy finisher shakes the wielder's view); the server draws the same strike
 trails in particles with a shockwave on the last hit (`ArtFx`), which is all a shader-pack user sees. Arts of one form are
 mirrored by their id, so half of them cut the other way round. The body's lean is not posed (legs would come apart).
+
+## D-TESTBOTS: thirty AI players log in as real players (2026-11-12)
+The owner: 「複数人プレイをもしたテストを行うために、本物のプレイヤーと同じような行動を行うAIを30体導入して。見た目はワンカラーの
+キャラでいい、テスト後消すから」. `/er admin bots spawn [count]` (permission 2, default 30, at most 64) logs in test bots
+that are real server players: `TestBot` extends the server player and goes through the server's own login
+(`PlayerList#placeNewPlayer`) on a connection whose in-memory channel throws away whatever is sent, so it is saved, listed,
+tracked by every other player and logged out like anyone else; only the client is replaced, by `BotBrain`. It moves by
+setting a player's inputs (path finding through a stand-in walker that is never added to the world; physics as for a
+player; a bot stuck for six seconds is set down at its goal), and fights, shops, rents and visits rooms, gathers parties
+and returns from falls by calling the same server code a client's request calls (combat requests, shop menu clicks, UI
+actions). Its choices that need no world (job by number, stat and skill points, hunting grounds by level, potions,
+errands, fighting distance) are pure (`BotPlans`), so they are tested offline; it logs in under a fixed id per number, so
+its character carries on and clients recognise it and paint it a single colour of its own (`BotSkins`, no shipped art).
+`remove` logs them out; `purge` also gives up their rooms and removes their ranking entries. They do not take part in
+dungeons, PvP, the auction, crafting, mounts, quests or guilds, and do not equip dropped gear (they sell it).
+

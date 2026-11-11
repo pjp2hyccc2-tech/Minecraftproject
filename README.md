@@ -102,6 +102,9 @@
 - テスト用（管理者）: `/er admin test all [プレイヤー]` — Lv・所持金を上限に、ステータスとスキルのポイントをすべて未使用で最大に、
   宿屋の客室5室とギルドハウス20軒をすべて見学できるように開放（女将の「見学」、ギルド門の広場の門、`/er admin test tour <room|guild> <間取り>`）。
   `max` / `unlock` / `lock` / `status` で個別に（[docs/modules/testkit.md](docs/modules/testkit.md)）
+- テストボット（管理者）: `/er admin bots spawn [数]`（既定 30）— 本物のプレイヤーとしてログインする単色の AI。職業に就き、
+  道具屋で売り買いし、宿で休み、パーティを組んで Lv に合う生息地で狩りをする。`list` / `send <town|shop|inn|hunt|return>` /
+  `chat on|off` / `remove`（ログアウト）/ `purge`（部屋とランキングの記録も片づける）（[docs/modules/testkit.md](docs/modules/testkit.md) §4）
 
 ## 導入
 

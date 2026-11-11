@@ -1,0 +1,110 @@
+{
+  "commands.eternalrealm.bots.spawning": {
+    "ja": "テストボットを %1$s 体ログインさせます（すでに %2$s 体います）。約 %3$s 秒で全員そろいます。",
+    "en": "Logging in %1$s test bots (%2$s already online). All of them are there in about %3$s s."
+  },
+  "commands.eternalrealm.bots.removed": {
+    "ja": "テストボット %s 体をログアウトさせました（キャラクターは次回のために残ります）。",
+    "en": "Logged out %s test bots (their characters stay for next time)."
+  },
+  "commands.eternalrealm.bots.purged": {
+    "ja": "テストボット %1$s 体をログアウトさせ、宿の部屋 %2$s 室とランキングの記録 %3$s 件を片づけました。",
+    "en": "Logged out %1$s test bots and cleared away %2$s inn rooms and %3$s ranking entries."
+  },
+  "commands.eternalrealm.bots.none": {
+    "ja": "テストボットはいません。",
+    "en": "No test bots are online."
+  },
+  "commands.eternalrealm.bots.list_header": {
+    "ja": "テストボット %1$s 体（到着待ち %2$s 体）",
+    "en": "Test bots: %1$s online (%2$s arriving)"
+  },
+  "commands.eternalrealm.bots.list_line": {
+    "ja": "%1$s Lv%2$s %3$s — %4$s（%5$s）",
+    "en": "%1$s Lv%2$s %3$s — %4$s (%5$s)"
+  },
+  "commands.eternalrealm.bots.sent": {
+    "ja": "テストボット %1$s 体に「%2$s」を指示しました。",
+    "en": "Sent %1$s test bots off: %2$s."
+  },
+  "commands.eternalrealm.bots.unknown_activity": {
+    "ja": "知らない行動です: %s（town / shop / inn / hunt / return）",
+    "en": "Unknown activity: %s (town / shop / inn / hunt / return)"
+  },
+  "commands.eternalrealm.bots.chat_on": {
+    "ja": "テストボットがときどきチャットで話すようになりました。",
+    "en": "Test bots now say something in the chat now and then."
+  },
+  "commands.eternalrealm.bots.chat_off": {
+    "ja": "テストボットはチャットで話さなくなりました。",
+    "en": "Test bots keep quiet in the chat."
+  },
+  "message.eternalrealm.bots.removed": {
+    "ja": "テストボットの片づけ",
+    "en": "Test bot cleared away"
+  },
+  "bot.eternalrealm.activity.setup": {
+    "ja": "準備中",
+    "en": "getting ready"
+  },
+  "bot.eternalrealm.activity.town": {
+    "ja": "街をぶらぶら",
+    "en": "about town"
+  },
+  "bot.eternalrealm.activity.shop": {
+    "ja": "買い物",
+    "en": "shopping"
+  },
+  "bot.eternalrealm.activity.inn": {
+    "ja": "宿で休憩",
+    "en": "resting at the inn"
+  },
+  "bot.eternalrealm.activity.hunt": {
+    "ja": "狩り",
+    "en": "hunting"
+  },
+  "bot.eternalrealm.activity.return": {
+    "ja": "帰還中",
+    "en": "heading home"
+  },
+  "bot.eternalrealm.activity.down": {
+    "ja": "倒れている",
+    "en": "down"
+  },
+  "chat.eternalrealm.bot.greet": {
+    "ja": "よろしくお願いします！",
+    "en": "Hi everyone!"
+  },
+  "chat.eternalrealm.bot.hunt": {
+    "ja": "ちょっと狩りに行ってきます",
+    "en": "Off to hunt for a bit"
+  },
+  "chat.eternalrealm.bot.party": {
+    "ja": "パーティで狩りに行ってきます！",
+    "en": "Heading out with my party!"
+  },
+  "chat.eternalrealm.bot.shop": {
+    "ja": "ポーションを買い足さないと",
+    "en": "Need to restock my potions"
+  },
+  "chat.eternalrealm.bot.inn": {
+    "ja": "宿でひと休みします",
+    "en": "Taking a break at the inn"
+  },
+  "chat.eternalrealm.bot.room": {
+    "ja": "宿の部屋を借りました！",
+    "en": "Rented a room at the inn!"
+  },
+  "chat.eternalrealm.bot.down": {
+    "ja": "やられた…",
+    "en": "I'm down..."
+  },
+  "chat.eternalrealm.bot.revive": {
+    "ja": "%sさん、いま起こします！",
+    "en": "Hang on, %s, I've got you!"
+  },
+  "chat.eternalrealm.bot.level": {
+    "ja": "レベル%sになりました！",
+    "en": "Reached level %s!"
+  }
+}

@@ -30,8 +30,15 @@ import java.util.OptionalLong;
  */
 public final class ShopMenu {
     private static final int ROWS = 4;
+    /** The menu slot of the first consumable on the shelf; the others follow in their order. */
+    private static final int FIRST_SHELF = 10;
 
     private ShopMenu() {
+    }
+
+    /** The menu slot where {@code consumable} is sold (a click there buys one, a shift-click ten). */
+    public static int shelfSlot(Consumable consumable) {
+        return FIRST_SHELF + consumable.ordinal();
     }
 
     public static void open(ServerPlayer player) {
@@ -43,16 +50,16 @@ public final class ShopMenu {
         for (int slot = 0; slot < menu.size(); slot++) {
             menu.set(slot, MenuItems.filler(), null);
         }
-        int slot = 10;
         for (Consumable consumable : Consumable.values()) {
             Item item = ERGearItems.consumable(consumable);
             long price = ItemPrices.consumableShopPrice(consumable);
-            menu.set(slot++, priced(new ItemStack(item), price, consumable.requiredLevel()), (p, button, shift) -> {
-                buy(p, new ItemStack(item), price, shift ? 10 : 1);
-                menu.refresh();
-            });
+            menu.set(shelfSlot(consumable), priced(new ItemStack(item), price, consumable.requiredLevel()),
+                    (p, button, shift) -> {
+                        buy(p, new ItemStack(item), price, shift ? 10 : 1);
+                        menu.refresh();
+                    });
         }
-        slot = 19;
+        int slot = 19;
         for (String id : List.of(Materials.ENHANCEMENT_STONE, Materials.REROLL_CRYSTAL)) {
             OptionalLong price = ItemPrices.materialShopPrice(id);
             Item item = ERGearItems.material(id);

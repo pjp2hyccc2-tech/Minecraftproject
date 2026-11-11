@@ -40,6 +40,7 @@ public final class ClientForgeEvents {
         com.eternalrealm.client.telegraph.ClientTelegraphs.tick();
         com.eternalrealm.client.boss.BossBodyEffects.tick();
         com.eternalrealm.client.block.ClientLightShafts.tick();
+        BotSkins.tick(minecraft);
         KeyConflicts.resolveOnce();
     }
 
