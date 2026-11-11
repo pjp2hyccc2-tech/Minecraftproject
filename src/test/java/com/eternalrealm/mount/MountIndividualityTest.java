@@ -87,7 +87,10 @@ public class MountIndividualityTest {
     @Test
     public void everyCoatIsATextureOfItsModelAndTheClassicLookComesFirst() {
         Path textures = Paths.get("src", "main", "resources", "assets", "eternalrealm", "textures", "entity");
-        for (MountKind kind : new MountKind[] {MountKind.HORSE, MountKind.GRIFFIN}) {
+        for (MountKind kind : MountKind.values()) {
+            if (kind.family() == MountFamily.BIKE) {
+                continue;
+            }
             assertTrue(MountLooks.varies(kind));
             Set<String> ids = new HashSet<>();
             boolean rare = false;
@@ -103,10 +106,49 @@ public class MountIndividualityTest {
             assertTrue("a few coats are rare", rare);
             assertFalse("the classic coat is a common one", MountLooks.coats(kind).get(0).rare());
             assertTrue(MountLooks.shapes(kind).size() > 1);
+            assertTrue(kind + ": several coats", MountLooks.coats(kind).size() >= 5);
+            // the manes and wings are the family's
+            assertEquals(MountLooks.shapes(kind.family() == MountFamily.HORSE ? MountKind.HORSE : MountKind.GRIFFIN),
+                    MountLooks.shapes(kind));
+            Path hud = Paths.get("src", "main", "resources", "assets", "eternalrealm", "textures", "gui", "hud",
+                    "mount_" + kind.id() + ".png");
+            assertTrue("HUD icon of " + kind.id(), Files.isRegularFile(hud));
             assertEquals(new MountLook(MountLooks.coats(kind).get(0).id(), MountLooks.shapes(kind).get(0).id()),
                     MountLooks.classic(kind));
         }
         assertFalse("the arcbike is one machine", MountLooks.varies(MountKind.BIKE));
+        assertTrue(Files.isRegularFile(Paths.get("src", "main", "resources", "assets", "eternalrealm", "textures", "gui",
+                "hud", "mount_bike.png")));
+    }
+
+    @Test
+    public void everyBreedRollsAllItsCoatsByWeightAndKeepsItsValuesAndLookInJson() {
+        SplittableRandom random = new SplittableRandom(21);
+        for (MountKind kind : MountKind.values()) {
+            if (!MountLooks.varies(kind)) {
+                continue;
+            }
+            Set<String> seen = new HashSet<>();
+            for (int i = 0; i < 4_000; i++) {
+                MountIndividual mount = MountIndividual.roll(UUID.randomUUID(), kind, random);
+                assertTrue(MountLooks.valid(kind, mount.look()));
+                seen.add(mount.look().coat());
+                if (i < 20) {
+                    assertEquals(mount, MountIndividual.fromJson(mount.toJson()).orElseThrow());
+                }
+            }
+            assertEquals(kind + " rolls every coat", MountLooks.coats(kind).size(), seen.size());
+            // a breed's individual moves by its own numbers scaled by its values
+            MountIndividual best = new MountIndividual(UUID.randomUUID(), kind, MountLooks.classic(kind),
+                    new MountTraits(100, 100, 100));
+            assertEquals(kind.stats().topSpeed() * 1.08, best.stats().topSpeed(), 1e-9);
+            // a coat of another breed is not this breed's: the classic look instead
+            MountLook foreign = new MountLook("night", "flowing");
+            if (!MountLooks.valid(kind, foreign)) {
+                assertEquals(MountLooks.classic(kind), new MountIndividual(UUID.randomUUID(), kind, foreign,
+                        MountTraits.STANDARD).look());
+            }
+        }
     }
 
     @Test
@@ -172,9 +214,12 @@ public class MountIndividualityTest {
     }
 
     @Test
-    public void theStablemasterShowsFourDifferentOffers() {
+    public void theStablemasterShowsFourDifferentOffersOfEveryBreed() {
         SplittableRandom random = new SplittableRandom(9);
-        for (MountKind kind : new MountKind[] {MountKind.HORSE, MountKind.GRIFFIN}) {
+        for (MountKind kind : MountKind.values()) {
+            if (!MountLooks.varies(kind)) {
+                continue;
+            }
             List<MountIndividual> offers = MountOffers.roll(kind, random);
             assertEquals(MountRules.OFFERS, offers.size());
             assertEquals(4, MountRules.OFFERS);

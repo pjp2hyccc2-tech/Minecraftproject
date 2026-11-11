@@ -356,31 +356,38 @@ def lock_count():
     return 2 * len(LOCKS)
 
 
-def animations():
+def animations(mane_n=None, lock_n=None, reins=True, extra=None, more=()):
+    """The four gaits. Breeds (rig_horse_breeds.py) pass their own mane and lock counts, whether they wear reins,
+    {@code extra} channels per animation name for their own parts and {@code more} animations of their own."""
     A = []
-    n = mane_count()
+    n = mane_count() if mane_n is None else mane_n
+    locks_n = lock_count() if lock_n is None else lock_n
+    extra = extra or {}
     sway = {}
     for i in range(1, n + 1):
         a = 3 + (i % 3)
         sway['mane_%d' % i] = dict(rot=[(0, 0, 0, 0), (1.6, a if i % 2 else -a, 0, 0), (3.2, 0, 0, 0)])
-    for i in range(1, lock_count() + 1):
+    for i in range(1, locks_n + 1):
         sway['lock_%d' % i] = dict(rot=[(0, 0, 0, 0), (1.6, 4 if i % 4 < 2 else -3, 0, 0), (3.2, 0, 0, 0)])
-    A.append(anim('idle', 3.2, loop=True,
-                  body=dict(scale=[(0, 1, 1, 1), (1.6, 1.015, 1.02, 1.0), (3.2, 1, 1, 1)]),
-                  neck=dict(rot=[(0, 0, 0, 0), (1.0, -3, 2, 0), (2.0, 1, -2, 0), (3.2, 0, 0, 0)]),
-                  head=dict(rot=[(0, 0, 0, 0), (0.8, 3, 4, 0), (1.8, -2, -3, 0), (3.2, 0, 0, 0)]),
-                  ear_r=dict(rot=[(0, 0, 0, 0), (1.1, 0, 0, 0), (1.2, -20, 0, -10), (1.4, 0, 0, 0), (3.2, 0, 0, 0)]),
-                  ear_l=dict(rot=[(0, 0, 0, 0), (2.2, 0, 0, 0), (2.3, -20, 0, 10), (2.5, 0, 0, 0), (3.2, 0, 0, 0)]),
-                  tail=dict(rot=[(0, 0, 6, 0), (1.6, 0, -6, 0), (3.2, 0, 6, 0)]),
-                  tail2=dict(rot=[(0, 0, 0, 3), (1.6, 0, 0, -3), (3.2, 0, 0, 3)]),
-                  tail3=dict(rot=[(0, 0, 0, -4), (1.6, 0, 0, 4), (3.2, 0, 0, -4)]),
-                  reins=dict(rot=[(0, 0, 0, 0), (1.6, 4, 0, 0), (3.2, 0, 0, 0)]),
-                  # a paw at the ground now and then, as in the picture
-                  front_right_leg=dict(rot=[(0, 0, 0, 0), (2.2, 0, 0, 0), (2.45, -38, 0, 0), (2.75, -38, 0, 0),
-                                            (3.0, 0, 0, 0), (3.2, 0, 0, 0)]),
-                  front_right_shin=dict(rot=[(0, 0, 0, 0), (2.2, 0, 0, 0), (2.45, 62, 0, 0), (2.75, 62, 0, 0),
-                                             (3.0, 0, 0, 0), (3.2, 0, 0, 0)]),
-                  **sway))
+    idle = dict(body=dict(scale=[(0, 1, 1, 1), (1.6, 1.015, 1.02, 1.0), (3.2, 1, 1, 1)]),
+                neck=dict(rot=[(0, 0, 0, 0), (1.0, -3, 2, 0), (2.0, 1, -2, 0), (3.2, 0, 0, 0)]),
+                head=dict(rot=[(0, 0, 0, 0), (0.8, 3, 4, 0), (1.8, -2, -3, 0), (3.2, 0, 0, 0)]),
+                ear_r=dict(rot=[(0, 0, 0, 0), (1.1, 0, 0, 0), (1.2, -20, 0, -10), (1.4, 0, 0, 0), (3.2, 0, 0, 0)]),
+                ear_l=dict(rot=[(0, 0, 0, 0), (2.2, 0, 0, 0), (2.3, -20, 0, 10), (2.5, 0, 0, 0), (3.2, 0, 0, 0)]),
+                tail=dict(rot=[(0, 0, 6, 0), (1.6, 0, -6, 0), (3.2, 0, 6, 0)]),
+                tail2=dict(rot=[(0, 0, 0, 3), (1.6, 0, 0, -3), (3.2, 0, 0, 3)]),
+                tail3=dict(rot=[(0, 0, 0, -4), (1.6, 0, 0, 4), (3.2, 0, 0, -4)]),
+                reins=dict(rot=[(0, 0, 0, 0), (1.6, 4, 0, 0), (3.2, 0, 0, 0)]),
+                # a paw at the ground now and then, as in the picture
+                front_right_leg=dict(rot=[(0, 0, 0, 0), (2.2, 0, 0, 0), (2.45, -38, 0, 0), (2.75, -38, 0, 0),
+                                          (3.0, 0, 0, 0), (3.2, 0, 0, 0)]),
+                front_right_shin=dict(rot=[(0, 0, 0, 0), (2.2, 0, 0, 0), (2.45, 62, 0, 0), (2.75, 62, 0, 0),
+                                           (3.0, 0, 0, 0), (3.2, 0, 0, 0)]),
+                **sway)
+    if not reins:
+        del idle['reins']
+    idle.update(extra.get('idle', {}))
+    A.append(anim('idle', 3.2, loop=True, **idle))
     swing = 18
 
     def leg_cycle(offset, length, amp, knee):
@@ -401,7 +408,7 @@ def animations():
                   body=dict(pos=[(0, 0, 0, 0), (0.25, 0, 0.35, 0), (0.5, 0, 0, 0), (0.75, 0, 0.35, 0), (1.0, 0, 0, 0)]),
                   neck=dict(rot=[(0, 3, 0, 0), (0.25, -2, 0, 0), (0.5, 3, 0, 0), (0.75, -2, 0, 0), (1.0, 3, 0, 0)]),
                   tail=dict(rot=[(0, 0, 8, 0), (0.5, 0, -8, 0), (1.0, 0, 8, 0)]),
-                  **w))
+                  **w, **extra.get('walk', {})))
     g = {}
     for leg_name, off, amp in (('front_right', 0.0, 46), ('front_left', 0.08, 46), ('hind_right', 0.45, 40),
                                ('hind_left', 0.53, 40)):
@@ -417,9 +424,8 @@ def animations():
                   for i in range(1, n + 1))
     # the hanging locks fly back
     stream.update(('lock_%d' % i, dict(rot=[(0, 34, 0, 0), (0.25, 46, 0, 0), (0.5, 34, 0, 0)]))
-                  for i in range(1, lock_count() + 1))
-    A.append(anim('gallop', 0.5, loop=True,
-                  body=dict(rot=[(0, -6, 0, 0), (0.25, 5, 0, 0), (0.5, -6, 0, 0)],
+                  for i in range(1, locks_n + 1))
+    gallop = dict(body=dict(rot=[(0, -6, 0, 0), (0.25, 5, 0, 0), (0.5, -6, 0, 0)],
                             pos=[(0, 0, 0.9, 0), (0.125, 0, 0.2, 0), (0.25, 0, 0, 0), (0.375, 0, 0.6, 0),
                                  (0.5, 0, 0.9, 0)]),
                   neck=dict(rot=[(0, 14, 0, 0), (0.25, 2, 0, 0), (0.5, 14, 0, 0)]),
@@ -428,7 +434,11 @@ def animations():
                   tail=dict(rot=[(0, 24, 0, 0), (0.25, 32, 0, 0), (0.5, 24, 0, 0)]),
                   tail2=dict(rot=[(0, -30, 0, 0), (0.25, -38, 0, 0), (0.5, -30, 0, 0)]),
                   tail3=dict(rot=[(0, -18, 0, 0), (0.25, -10, 0, 0), (0.5, -18, 0, 0)]),
-                  **stream, **g))
+                  **stream, **g)
+    if not reins:
+        del gallop['reins']
+    gallop.update(extra.get('gallop', {}))
+    A.append(anim('gallop', 0.5, loop=True, **gallop))
     A.append(anim('jump', 0.6,
                   body=dict(rot=[(0, 0, 0, 0), (0.15, -14, 0, 0), (0.6, -8, 0, 0)]),
                   neck=dict(rot=[(0, 0, 0, 0), (0.15, 10, 0, 0), (0.6, 8, 0, 0)]),
@@ -438,7 +448,8 @@ def animations():
                   front_left_shin=dict(rot=[(0, 0, 0, 0), (0.15, 76, 0, 0), (0.6, 66, 0, 0)]),
                   hind_right_leg=dict(rot=[(0, 0, 0, 0), (0.15, 40, 0, 0), (0.6, 30, 0, 0)]),
                   hind_left_leg=dict(rot=[(0, 0, 0, 0), (0.15, 36, 0, 0), (0.6, 28, 0, 0)]),
-                  tail=dict(rot=[(0, 0, 0, 0), (0.15, 45, 0, 0), (0.6, 40, 0, 0)])))
+                  tail=dict(rot=[(0, 0, 0, 0), (0.15, 45, 0, 0), (0.6, 40, 0, 0)]), **extra.get('jump', {})))
+    A.extend(more)
     return A
 
 

@@ -579,6 +579,10 @@ def bike_rig():
 
 
 def rigs():
+    """The three first mounts, then the five horse and the five griffin breeds (rig_horse_breeds.py,
+    rig_griffin_breeds.py)."""
     import rig_griffin
+    import rig_griffin_breeds
     import rig_horse
-    return [rig_horse.rig(), rig_griffin.rig(), bike_rig()]
+    import rig_horse_breeds
+    return [rig_horse.rig(), rig_griffin.rig(), bike_rig()] + rig_horse_breeds.rigs() + rig_griffin_breeds.rigs()
