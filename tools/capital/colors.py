@@ -117,6 +117,73 @@ EMIT = {
     "pearlescent_froglight": 15, "amethyst_cluster": 5, "candle_cake": 3, "redstone_lamp": 15,
     "gilded_finial": 0, "lava_cauldron": 15, "beacon": 15, "conduit": 15, "magma_block": 3,
 }
+# guild houses (docs/modules/guildhouse.md): the ids blocks.py registers for the gate terrace and the house designs
+BASE.update({
+    "guild_board": (150, 112, 70), "guild_chest": (120, 78, 40), "tube_coral_block": (50, 86, 214),
+    "brain_coral_block": (206, 92, 160), "bubble_coral_block": (166, 26, 160), "fire_coral_block": (164, 36, 46),
+    "horn_coral_block": (216, 200, 66), "dead_bubble_coral_block": (130, 122, 118),
+    "dead_brain_coral_block": (124, 118, 114), "crimson_planks": (101, 48, 70), "warped_planks": (43, 104, 99),
+    "crimson_stem": (92, 25, 29), "warped_stem": (58, 58, 77), "stripped_crimson_stem": (137, 57, 90),
+    "stripped_warped_stem": (57, 150, 147), "crimson_hyphae": (92, 25, 29), "warped_hyphae": (58, 58, 77),
+    "crimson_nylium": (130, 31, 31), "warped_nylium": (43, 114, 101), "red_nether_bricks": (69, 7, 9),
+    "chiseled_nether_bricks": (47, 23, 28), "cracked_nether_bricks": (40, 20, 23),
+    "chiseled_red_sandstone": (183, 97, 28), "lodestone": (147, 149, 152), "netherite_block": (66, 61, 63),
+    "budding_amethyst": (132, 96, 186), "waxed_exposed_copper": (161, 125, 103),
+    "waxed_weathered_copper": (108, 153, 110), "waxed_oxidized_copper": (82, 162, 132),
+    "coal_ore": (106, 106, 106), "iron_ore": (136, 129, 122), "copper_ore": (124, 125, 120),
+    "gold_ore": (145, 133, 106), "diamond_ore": (121, 141, 140), "emerald_ore": (108, 136, 115),
+    "lapis_ore": (99, 110, 132), "redstone_ore": (140, 109, 109), "deepslate_coal_ore": (74, 74, 76),
+    "deepslate_iron_ore": (106, 99, 94), "deepslate_copper_ore": (92, 93, 89), "deepslate_gold_ore": (115, 102, 78),
+    "deepslate_diamond_ore": (83, 106, 106), "deepslate_emerald_ore": (78, 104, 87),
+    "deepslate_lapis_ore": (79, 90, 115), "deepslate_redstone_ore": (104, 73, 74), "nether_gold_ore": (115, 54, 42),
+    "nether_quartz_ore": (117, 65, 62), "pointed_dripstone": (129, 102, 89),
+    "red_mushroom_block": (200, 46, 45), "brown_mushroom_block": (149, 111, 81), "mushroom_stem": (203, 196, 185),
+    "purpur_pillar": (171, 129, 171), "nether_wart_block": (115, 2, 2), "warped_wart_block": (22, 119, 121),
+    "end_stone": (219, 222, 158), "dripstone_block": (134, 107, 92), "cut_red_sandstone": (189, 101, 31),
+    "smooth_red_sandstone": (181, 97, 31), "honeycomb_block": (229, 148, 29), "mangrove_roots": (74, 59, 38),
+    "muddy_mangrove_roots": (70, 58, 45), "sculk": (12, 29, 36), "soul_sand": (81, 62, 50),
+    "soul_soil": (75, 57, 46), "beacon": (118, 221, 215), "conduit": (160, 140, 110), "dragon_head": (30, 30, 34),
+    "dragon_wall_head": (30, 30, 34), "wither_skeleton_skull": (40, 40, 40), "wither_skeleton_wall_skull": (40, 40, 40),
+    "cracked_deepslate_bricks": (64, 64, 65), "cracked_polished_blackstone_bricks": (44, 37, 43),
+    "bamboo_block": (127, 144, 58), "redstone_block": (175, 24, 5), "torch": (250, 200, 90),
+    "wall_torch": (250, 200, 90), "soul_torch": (110, 210, 220), "soul_wall_torch": (110, 210, 220),
+    "light_weighted_pressure_plate": (246, 208, 61), "heavy_weighted_pressure_plate": (220, 220, 220),
+    "small_amethyst_bud": (170, 130, 220), "medium_amethyst_bud": (170, 130, 220),
+    "large_amethyst_bud": (170, 130, 220), "sea_pickle": (100, 120, 50),
+})
+PLANTS.update({
+    "tube_coral": (48, 82, 214), "brain_coral": (198, 86, 154), "bubble_coral": (160, 24, 160),
+    "fire_coral": (166, 38, 47), "horn_coral": (209, 186, 63), "tube_coral_fan": (48, 82, 214),
+    "brain_coral_fan": (198, 86, 154), "bubble_coral_fan": (160, 24, 160), "fire_coral_fan": (166, 38, 47),
+    "horn_coral_fan": (209, 186, 63), "crimson_fungus": (160, 40, 40), "warped_fungus": (40, 160, 140),
+    "crimson_roots": (130, 20, 40), "warped_roots": (20, 150, 130), "nether_sprouts": (20, 150, 130),
+    "weeping_vines": (130, 20, 30), "weeping_vines_plant": (130, 20, 30), "twisting_vines": (20, 140, 120),
+    "twisting_vines_plant": (20, 140, 120), "cave_vines": (90, 110, 40), "cave_vines_plant": (90, 110, 40),
+    "bamboo": (95, 145, 40), "tube_coral_wall_fan": (48, 82, 214), "brain_coral_wall_fan": (198, 86, 154),
+    "bubble_coral_wall_fan": (160, 24, 160), "fire_coral_wall_fan": (166, 38, 47),
+    "horn_coral_wall_fan": (209, 186, 63),
+})
+EMIT.update({"cave_vines": 14, "cave_vines_plant": 14, "guild_portal": 11, "redstone_ore": 0})
+GUILD_PORTAL_RGB: dict = {}
+
+
+def guild_portal_rgb(theme: str):
+    """The portal colour of a guild-house theme (``base`` of data/eternalrealm/guildhouse/designs.json)."""
+    if not GUILD_PORTAL_RGB:
+        import json
+        import os
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "src", "main", "resources",
+                            "data", "eternalrealm", "guildhouse", "designs.json")
+        try:
+            with open(path, encoding="utf-8") as f:
+                for d in json.load(f)["designs"]:
+                    h = d["base"].lstrip("#")
+                    GUILD_PORTAL_RGB[d["id"]] = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+        except (OSError, ValueError, KeyError):
+            GUILD_PORTAL_RGB["?"] = (170, 120, 255)
+    return GUILD_PORTAL_RGB.get(theme, (170, 120, 255))
+
+
 STRIP = ["_wall_hanging_sign", "_hanging_sign", "_wall_sign", "_sign", "_wall_banner", "_banner", "_stairs",
          "_slab", "_wall", "_fence_gate", "_fence", "_door", "_trapdoor", "_pressure_plate", "_button",
          "_stained_glass_pane", "_stained_glass", "_carpet", "_bed", "_candle_cake", "_candle", "_wool", "_concrete_powder",
@@ -148,6 +215,10 @@ def material(state: str) -> dict:
         out["kind"] = "air"
         out["emit"] = int(props.get("level", 0)) if name == "light" else 0
         out["top"] = out["side"] = (0, 0, 0)
+        return out
+    if name == "guild_portal":
+        c = guild_portal_rgb(props.get("theme", ""))
+        out.update(kind="glass", alpha=0.78, top=c, side=c, emit=11)
         return out
     emit = EMIT.get(name, 0)
     if sch == "candle":
