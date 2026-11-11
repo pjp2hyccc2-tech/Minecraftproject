@@ -277,3 +277,37 @@ it) and is reached only by hidden ways (the culvert and its fall, the cellar hat
 because the pictures asked for back-room trade, not a second street level. New block behaviour (bunting, shop signs,
 secret doors, room doors) lives in custom blocks that the generator writes by id and the Java side draws, as with the
 earlier flags and clocks, so the voxel build stays deterministic and the art stays original.
+
+## D-ESTATES: player rooms and guild houses are private places in a dimension of their own (2026-11-11)
+The owner asked for player houses (an inn, mainly for keeping luggage, with a teleport to one's room) and guild houses
+reached through gates in the capital. Both are "estates" on one core (`docs/modules/estates.md`): a void dimension
+`eternalrealm:estates` with a fixed late-afternoon sky, plots 1024 blocks apart (an estate never sees another), one
+blueprint loader and placer shared with the capital, a registry saved with the world, and protection (nobody breaks
+or places; storage, doors, frames and stands only for those allowed in). Putting them in the capital itself would have
+meant fixed numbers of rooms and houses and strangers walking in; instancing them keeps the capital's look (the inn
+mansion's doors and the twenty gates are the entrances), scales to any number of players and guilds, and lets a
+design be swapped by building a fresh copy and moving every stored item into the same-named piece in one tick.
+
+## D-INNROOMS: rooms are rented from the innkeeper; going home is a short cast that combat breaks (2026-11-11)
+One room per player, five designs from a garret to a grand suite priced by size and storage, rented from Rosetta in the
+Starlight Manor; any of its 43 room doors takes a renter home. Storage comes first: labelled chests, and a sorting desk
+that lists everything in the room and puts the bag away by label, with every move done on the server (nothing lost or
+doubled). The way home is a 3-second cast (Home key or the journal) broken by moving, damage or a fight and refused in
+combat, dungeons, raids, boss fights and PvP, with a 60-second rest: a free escape from danger would undercut the
+dungeons and the return scroll.
+Details: `docs/modules/estates.md` §7–9 and its decisions section.
+
+## D-GUILDHOUSES: one gate per design on a terrace below the castle; members only; the master buys (2026-11-11)
+Twenty designs with no theme repeated, in five tiers by size and quality, each with its own gate on the Guild Gate
+Terrace; a member walking through the gate of the guild's own design arrives in the guild's copy of that house, anyone
+else is turned back. The guild master buys, switches and sells (the guild fund first, then the master's gold; switching
+moves the stored items), members share chests and the officers' vaults with a log. Details:
+`docs/modules/guildhouse.md` and its decisions section.
+
+## D-MOUNTBREEDS: five horse and five griffin breeds, each with one talent, none faster than the bike (2026-11-11)
+The owner asked for five more of each. Each breed has its own look (4 coats + 1 rare), level and price and one talent
+(a leap, running on water, gliding, a surge, an air step; striding on land, hovering, a dive, high flight, the fastest
+climb), on top of the existing individuality, grades and deeds. Talents change how a mount handles rather than only
+adding speed, and no breed outruns the Lv50 bike even with its talent active, so the bike keeps its place. The old
+`horse` and `griffin` ids stay the first breed of each family, so saves need no conversion. Details:
+`docs/modules/mounts.md`.
