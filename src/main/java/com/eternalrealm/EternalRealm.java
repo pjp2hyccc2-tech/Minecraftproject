@@ -106,6 +106,7 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.world.forge.CapitalProtection::onPlace);
         forgeBus.addListener(com.eternalrealm.world.forge.CapitalProtection::onBucket);
         forgeBus.addListener(CombatEvents::onLivingAttack);
+        forgeBus.addListener(CombatEvents::onProjectileImpact);
         forgeBus.addListener(CombatEvents::onLivingHurt);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onEquipmentChange);
         forgeBus.addListener(EventPriority.HIGH, com.eternalrealm.monster.forge.MonsterEvents::onLivingHurt);
@@ -115,6 +116,13 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onLivingTick);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onMobGriefing);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onEntityJoin);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onChangeTarget);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onLivingAttack);
+        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onEntityLeave);
+        forgeBus.addListener((net.minecraftforge.event.server.ServerStoppedEvent event) -> {
+            com.eternalrealm.monster.forge.MonsterTempers.clear();
+            com.eternalrealm.combat.forge.SkillLocks.clearAll();
+        });
         forgeBus.addListener(net.minecraftforge.eventbus.api.EventPriority.HIGHEST,
                 com.eternalrealm.monster.forge.VanillaSpawnBlocker::onFinalizeSpawn);
         forgeBus.addListener(com.eternalrealm.quest.forge.QuestActions::onItemPickup);

@@ -155,6 +155,51 @@ public final class JobGameTests {
         helper.succeed();
     }
 
+    /**
+     * In a crowd, attacks go through allies: a sword swing through an ally hits the golem behind (the ally is no target
+     * and takes nothing), a vanilla punch on the ally is cancelled, and an arrow flies through them (its impact on the
+     * ally is cancelled, on the golem it is not).
+     */
+    @GameTest(template = ARENA)
+    public static void attacksGoThroughOtherPlayers(GameTestHelper helper) {
+        IronGolem golem = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 6)));
+        FakePlayer attacker = fighter(helper, "er_gt_crowd_a", WeaponProfiles.ONE_HANDED_SWORD);
+        FakePlayer ally = FakePlayerFactory.get(helper.getLevel(), profile("er_gt_crowd_b"));
+        Vec3 between = helper.absoluteVec(new Vec3(4.5, 2.0, 5.4));
+        ally.moveTo(between.x, between.y, between.z, 180.0F, 0.0F);
+        ally.removeAllEffects();
+        ally.setHealth(ally.getMaxHealth());
+        float allyBefore = ally.getHealth();
+        float golemBefore = golem.getHealth();
+
+        ActionDefinition step = WeaponProfiles.ONE_HANDED_SWORD.combo().get(0);
+        CombatEvent.Hit hit = new CombatEvent.Hit(WeaponProfiles.ONE_HANDED_SWORD, step, 0, step.frames().get(0), 1.0,
+                0L);
+        int damaged = CombatHits.execute(attacker, PLAIN, hit, DamageType.PHYSICAL, () -> 0.99).size();
+        check(damaged == 1, "the swing should damage exactly the golem, damaged " + damaged);
+        check(golem.getHealth() < golemBefore, "the golem behind the ally was not hit");
+        check(ally.getHealth() == allyBefore, "the swing hurt the ally");
+
+        // fake players are invulnerable anyway, so the vanilla attack is checked at its event
+        net.minecraftforge.event.entity.living.LivingAttackEvent punch = new net.minecraftforge.event.entity.living
+                .LivingAttackEvent(ally, attacker.damageSources().playerAttack(attacker), 5.0F);
+        com.eternalrealm.combat.forge.CombatEvents.onLivingAttack(punch);
+        check(punch.isCanceled(), "a vanilla attack on the ally must be cancelled");
+
+        net.minecraft.world.entity.projectile.Arrow arrow =
+                new net.minecraft.world.entity.projectile.Arrow(helper.getLevel(), attacker);
+        net.minecraftforge.event.entity.ProjectileImpactEvent atAlly = new net.minecraftforge.event.entity
+                .ProjectileImpactEvent(arrow, new net.minecraft.world.phys.EntityHitResult(ally));
+        com.eternalrealm.combat.forge.CombatEvents.onProjectileImpact(atAlly);
+        check(atAlly.isCanceled(), "an arrow must fly through the ally");
+        net.minecraftforge.event.entity.ProjectileImpactEvent atGolem = new net.minecraftforge.event.entity
+                .ProjectileImpactEvent(arrow, new net.minecraft.world.phys.EntityHitResult(golem));
+        com.eternalrealm.combat.forge.CombatEvents.onProjectileImpact(atGolem);
+        check(!atGolem.isCanceled(), "an arrow must still hit the golem");
+        arrow.discard();
+        helper.succeed();
+    }
+
     /** Stage 0: wait for the character; choose a job (free, starter weapon and potions); stage 1: done. */
     @GameTest(template = ARENA, timeoutTicks = 400)
     public static void firstJobChoiceGivesTheStarterWeapon(GameTestHelper helper) {

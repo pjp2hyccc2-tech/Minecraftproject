@@ -63,19 +63,38 @@ public final class FieldSitesGenerator {
         }
     }
 
+    /**
+     * {@code FieldSitesGenerator <repo root> [map image] [--keep-waystones]}: with {@code --keep-waystones} the minor
+     * waystones stay where they are (their names describe their surroundings) and only the habitats are placed anew,
+     * clear of them.
+     */
     public static void main(String[] args) throws IOException {
-        Path root = Path.of(args.length > 0 ? args[0] : ".");
+        List<String> plain = new ArrayList<>();
+        boolean keepWaystones = false;
+        for (String arg : args) {
+            if (arg.equals("--keep-waystones")) {
+                keepWaystones = true;
+            } else {
+                plain.add(arg);
+            }
+        }
+        Path root = Path.of(plain.isEmpty() ? "." : plain.get(0));
         FieldSitesGenerator generator = new FieldSitesGenerator(root);
+        if (keepWaystones) {
+            generator.minor.addAll(FieldLayout.minorWaystones());
+        }
         for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
             generator.placeHabitats(field);
         }
-        for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
-            generator.placeWaystones(field);
+        if (!keepWaystones) {
+            for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
+                generator.placeWaystones(field);
+            }
         }
         generator.write(root);
         generator.report();
-        if (args.length > 1) {
-            generator.image(Path.of(args[1]));
+        if (plain.size() > 1) {
+            generator.image(Path.of(plain.get(1)));
         }
     }
 
@@ -122,6 +141,39 @@ public final class FieldSitesGenerator {
         return true;
     }
 
+    /**
+     * Ground for a habitat: the centre and the inner half all dry, walkable land of the field; on the rim at least
+     * three quarters (a habitat may touch a shore or a pond — nothing spawns in the water). The slope limit applies to
+     * the dry samples.
+     */
+    static boolean habitatGround(int field, double x, double z, double radius, int slopeLimit) {
+        double min = Double.MAX_VALUE;
+        double max = -Double.MAX_VALUE;
+        int wetRim = 0;
+        double[] rings = {0.0, 0.5, 1.0};
+        for (double ring : rings) {
+            int samples = ring == 0.0 ? 1 : 12;
+            for (int i = 0; i < samples; i++) {
+                double angle = Math.PI * 2.0 * i / samples;
+                double sx = x + Math.cos(angle) * radius * ring;
+                double sz = z + Math.sin(angle) * radius * ring;
+                if (FieldLayout.areaAt(sx, sz) != field || !dry(sx, sz)) {
+                    if (ring < 1.0 || ++wetRim > 3) {
+                        return false;
+                    }
+                    continue;
+                }
+                double h = FieldTerrain.heightAt(sx, sz);
+                min = Math.min(min, h);
+                max = Math.max(max, h);
+                if (max - min > slopeLimit) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /** Clear of the capital, the edge of the world and the field, the lords, the dungeons and the set pieces. */
     boolean clear(int field, double x, double z, double radius, double pieceGap) {
         if (FieldLayout.capitalDistance(x, z) < radius + 40.0 || FieldLayout.borderDistance(x, z) < radius + 6.0) {
@@ -148,6 +200,11 @@ public final class FieldSitesGenerator {
         }
         for (FieldLayout.Waystone waystone : FieldLayout.shrines()) {
             if (Math.hypot(x - waystone.x(), z - waystone.z()) < radius + 28.0) {
+                return false;
+            }
+        }
+        for (FieldLayout.Waystone waystone : minor) { // kept minor waystones (empty while they are placed anew)
+            if (Math.hypot(x - waystone.x(), z - waystone.z()) < radius + 16.0) {
                 return false;
             }
         }
@@ -181,7 +238,8 @@ public final class FieldSitesGenerator {
         for (int x = bounds[0]; x <= bounds[2]; x += STEP) {
             for (int z = bounds[1]; z <= bounds[3]; z += STEP) {
                 if (FieldLayout.areaAt(x, z) != field || !clear(field, x, z, radius, pieceGap)
-                        || !landCircle(field, x, z, radius, slopeLimit)) {
+                        || !(radius >= 20 ? habitatGround(field, x, z, radius, slopeLimit)
+                        : landCircle(field, x, z, radius, slopeLimit))) {
                     continue;
                 }
                 out.add(new Candidate(x, z, Math.hypot(x - entry[0], z - entry[1])));
@@ -192,13 +250,20 @@ public final class FieldSitesGenerator {
 
     // ------------------------------------------------------------------ habitats
 
+    /** The radius of a monster's habitat: √2 × the first 32/30/28 (twice the area, owner's request of 2026-11-11). */
     static int radiusOf(MonsterTemplate template) {
         return switch (template.baseEntityType()) {
-            case "minecraft:ravager" -> 32;
-            case "minecraft:blaze", "minecraft:phantom" -> 30;
-            default -> 28;
+            case "minecraft:ravager" -> MAX_RADIUS;
+            case "minecraft:blaze", "minecraft:phantom" -> 42;
+            default -> 40;
         };
     }
+
+    /** Blocks between the rims of two habitats (their monsters may stray 8 beyond the rim before walking home). */
+    static final double HABITAT_GAP = 16.0;
+
+    /** The largest habitat radius; candidates are checked for it. */
+    static final int MAX_RADIUS = 45;
 
     static int populationOf(MonsterTemplate template) {
         return switch (template.baseEntityType()) {
@@ -214,7 +279,7 @@ public final class FieldSitesGenerator {
         List<MonsterTable.Entry> species = new ArrayList<>(table.entries());
         species.sort(Comparator.comparingInt((MonsterTable.Entry e) -> e.template().levels().min())
                 .thenComparingInt(e -> e.template().levels().max()).thenComparing(e -> e.template().id()));
-        List<Candidate> all = candidates(field, 32, slopeLimit(field), 10.0);
+        List<Candidate> all = candidates(field, MAX_RADIUS, slopeLimit(field), 10.0);
         if (all.isEmpty()) {
             throw new IllegalStateException("no habitat ground in field " + field);
         }
@@ -237,7 +302,7 @@ public final class FieldSitesGenerator {
                 double target = near + (far - near) * (rank + 0.5) / n;
                 Site first = pass == 1 ? placed.stream().filter(s -> s.monster().equals(template.id())).findFirst()
                         .orElse(null) : null;
-                // the best-scoring candidate that also holds this monster's own circle (radius may differ from 32)
+                // the best-scoring candidate that also holds this monster's own circle (radius may be below the largest)
                 List<Candidate> ranked = new ArrayList<>();
                 for (Candidate c : all) {
                     if (!fits(c, radius, placed)) {
@@ -252,7 +317,7 @@ public final class FieldSitesGenerator {
                         - 0.35 * Math.min(160.0, nearest(c, placed))));
                 Candidate best = null;
                 for (Candidate c : ranked) {
-                    if (radius == 32 || landCircle(field, c.x(), c.z(), radius, slopeLimit(field))) {
+                    if (radius == MAX_RADIUS || habitatGround(field, c.x(), c.z(), radius, slopeLimit(field))) {
                         best = c;
                         break;
                     }
@@ -271,12 +336,22 @@ public final class FieldSitesGenerator {
                         populationOf(template)));
             }
         }
+        // a common kind that found no room for a second home keeps as many monsters in its first one
+        for (int i = 0; i < placed.size(); i++) {
+            Site site = placed.get(i);
+            String second = site.id() + "_2";
+            boolean common = species.stream().anyMatch(e -> e.template().id().equals(site.monster()) && e.weight() >= 25);
+            if (common && !site.id().endsWith("_2") && placed.stream().noneMatch(s -> s.id().equals(second))) {
+                placed.set(i, new Site(site.id(), site.field(), site.monster(), site.x(), site.z(), site.radius(),
+                        Math.min(12, site.population() * 3 / 2)));
+            }
+        }
         habitats.addAll(placed);
     }
 
     private static boolean fits(Candidate c, int radius, List<Site> placed) {
         for (Site site : placed) {
-            if (Math.hypot(c.x() - site.x(), c.z() - site.z()) < radius + site.radius() + 24.0) {
+            if (Math.hypot(c.x() - site.x(), c.z() - site.z()) < radius + site.radius() + HABITAT_GAP) {
                 return false;
             }
         }

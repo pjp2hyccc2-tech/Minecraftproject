@@ -32,6 +32,9 @@ public final class ERServerConfig {
 
     public static final ForgeConfigSpec.BooleanValue MOB_KILL_EXP_ENABLED;
     public static final ForgeConfigSpec.BooleanValue MONSTER_SPAWNING;
+    public static final ForgeConfigSpec.BooleanValue CALM_HABITATS;
+    public static final ForgeConfigSpec.IntValue LINGER_SECONDS;
+    public static final ForgeConfigSpec.DoubleValue LINGER_RADIUS;
     public static final ForgeConfigSpec.BooleanValue KEEP_INVENTORY;
     public static final ForgeConfigSpec.BooleanValue NATURAL_REGENERATION;
     public static final ForgeConfigSpec.BooleanValue IGNORE_PARTY_SIZE;
@@ -81,8 +84,10 @@ public final class ERServerConfig {
 
         builder.comment("Character progression. Reloadable: online characters are re-validated against new values.")
                 .push("character");
-        LEVEL_CAP = builder.comment("Maximum level of the current season. Initial season: 50. Hard limit: 100.")
-                .defineInRange("levelCap", 50, 1, CharacterRules.MAX_LEVEL);
+        // "maxLevel" replaced "levelCap" (default 50) when the cap became 100: worlds whose config still says
+        // levelCap = 50 pick up the new default instead of keeping the old cap.
+        LEVEL_CAP = builder.comment("Maximum character level. Default and hard limit: 100.")
+                .defineInRange("maxLevel", CharacterRules.MAX_LEVEL, 1, CharacterRules.MAX_LEVEL);
         STAT_POINTS_PER_LEVEL = builder.comment("Stat points granted per level gained.")
                 .defineInRange("statPointsPerLevel", 3, 0, CharacterRules.MAX_STAT_POINTS_PER_LEVEL);
         BASE_STAT_VALUE = builder.comment("Starting value of every stat (STR/VIT/AGI/INT/DEX/LUK).")
@@ -123,6 +128,14 @@ public final class ERServerConfig {
         builder.comment("Field monsters of the areas around the capital.").push("monsters");
         MONSTER_SPAWNING = builder.comment("Spawn the monsters of each area around the players (outside the capital).")
                 .define("spawning", true);
+        CALM_HABITATS = builder.comment("Monsters of the habitats leave players alone until a player hurts them or stays",
+                        "close to them for a while (lingerSeconds within lingerRadius).")
+                .define("calmUntilProvoked", true);
+        LINGER_SECONDS = builder.comment("Seconds a player may stay within lingerRadius of a calm monster before it attacks",
+                        "(it turns to look and growls halfway). 0: staying close never provokes.")
+                .defineInRange("lingerSeconds", 8, 0, 120);
+        LINGER_RADIUS = builder.comment("How close (blocks) a player must stay to annoy a calm monster.")
+                .defineInRange("lingerRadius", 8.0, 2.0, 32.0);
         KEEP_INVENTORY = builder.comment("Players keep their items on death (the game has its own death penalty).",
                         "Sets the keepInventory game rule when the server starts.")
                 .define("keepInventory", true);

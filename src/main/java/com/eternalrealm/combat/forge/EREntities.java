@@ -18,7 +18,7 @@ public final class EREntities {
                     .build(ModInfo.MOD_ID + ":magic_projectile"));
     public static final RegistryObject<EntityType<SkillArrow>> SKILL_ARROW = ENTITIES.register("skill_arrow",
             () -> EntityType.Builder.<SkillArrow>of(SkillArrow::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20).noSave()
+                    .sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(2).noSave() // homing arrows curve
                     .build(ModInfo.MOD_ID + ":skill_arrow"));
 
     private EREntities() {

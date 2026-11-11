@@ -63,7 +63,7 @@
 5. 「セーブして終了」→ 再度ワールドを開く → レベル・EXP・割り振りが同じ（**再ログイン後もデータが残る**）
 6. `saves/<ワールド>/eternalrealm/` に JSON、`eternalrealm_backups/` に zip ができている
 7. 破損テスト（ワールドを閉じた状態で）: キャラクターJSONを壊す → 開くと `.prev` から復旧し `quarantine/` に移動。`.prev` も壊すと障害ID付きで切断され、ログに同じIDが出る
-8. `serverconfig/eternalrealm-server.toml` の `levelCap` をプレイ中に変更 → HUDの上限表示が変わる
+8. `serverconfig/eternalrealm-server.toml` の `maxLevel` をプレイ中に変更 → HUDの上限表示が変わる
 9. MOD未導入のクライアントで専用サーバーに接続 → 拒否される
 
 ## 5. マルチプレイテスト（Phase 1）

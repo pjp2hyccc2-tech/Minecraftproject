@@ -63,10 +63,12 @@ public final class DesignProfiles {
         HeavyAttack heavy = base.heavy();
         HeavyAttack scaledHeavy = new HeavyAttack(heavy.minChargeTicks(), heavy.maxChargeTicks(), heavy.minMultiplier(),
                 heavy.maxMultiplier(), heavy.derivedBonus(), scaled(heavy.strike(), reach));
+        // boss weapons bring their boss art, every other named weapon its own art (GeneratedArts)
         ActionDefinition skill = design.art() != null
                 ? WeaponArts.byId(design.art()).orElseThrow(() -> new IllegalStateException("Unknown art "
                         + design.art())).action()
-                : scaled(base.skill(), reach);
+                : GeneratedArts.forDesign(design.id()).map(WeaponArt::action)
+                        .orElseThrow(() -> new IllegalStateException("No art for " + design.id()));
         return new WeaponProfile(design.id(), design.type(), base.baseAttack(), base.critBonus(), combo,
                 base.comboResetTicks(), scaledHeavy, skill, base.guard());
     }

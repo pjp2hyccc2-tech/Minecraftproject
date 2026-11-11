@@ -6,7 +6,7 @@
 | ID | 判断 | 理由 | 状態 |
 |---|---|---|---|
 | D-001 | 仕様の優先順位は **2.0追加仕様 ＞ 最終企画書 ＞ 開発指示書** | 2.0は既存方針を明示的に変更する後発の文書 | 確定 |
-| D-002 | レベル上限は**初期50**（サーバー設定 `character.levelCap`）、データモデルの上限は100 | 2.0「初期レベル上限50」と指示書「最大レベル100」を両立 | 確定 |
+| D-002 | ~~レベル上限は初期50~~ → **レベル上限100**（サーバー設定 `character.maxLevel`、既定100＝データモデルの上限）。2026-11-11 オーナー指示「レベルの上限を100にして」で変更。旧キー `levelCap`（既定50）は廃止し、既存ワールドの設定に残る `levelCap = 50` が新しい既定値を上書きしないようキー名ごと替えた | 2.0「初期レベル上限50」と指示書「最大レベル100」→ オーナーが100に決定 | 確定（改訂） |
 | D-003 | 攻略進行は**条件解放**（ボス討伐等）。DAY 1〜14は進行の目安。実時間での強制待ちはしない | 2.0「実時間で強制的に次の日まで進めない」。企画書の実時間スケジュールより優先 | 確定（詳細は SEASON_SYSTEM.md） |
 | D-004 | 解放の単位は「サーバー全体（誰かが条件達成で全員に解放）」＋個人条件（推奨レベル等）の2層を提案 | 企画書の Shared 方針と 2.0 を両立 | **要確認** |
 | D-005 | シーズン移行時のリセット範囲（レベル・装備など）は設定で選択 | 2.0 | 確定（Phase 10で実装） |
@@ -43,6 +43,47 @@
 | D-036 | 武器を持っている間の右クリックはガード専用。オフハンドのアイテムはしゃがみ＋右クリックで使う。他のアイテムを使用中（盾・食事・弓など）は攻撃・回避・スキルを受け付けない（サーバーとクライアントの両方） | ガードが拒否されたときにオフハンドの盾へ流れ、バニラの100%防御の裏で連撃できた（独立レビューで指摘） | 確定（Phase 2） |
 | D-037 | パリィの受付はガード開始ごとに開くが、前回のガード開始から16tick未満なら開かない | 右クリックの連打で受付を出し続けられた（自己レビュー・独立レビュー双方で指摘） | 確定（Phase 2） |
 
+## D-LOCKON: aimed skills lock on to an enemy while their key is held (2026-11-11)
+The owner found some skills hard to land and asked that holding the key aims at a character and hits it, with the
+aimed enemy's outline glowing white; area attacks stay as they are. A skill is "aimed" when where it lands depends on
+the facing (`job.SkillAiming`: projectiles, slashes, thrusts, discs ahead, areas placed ahead or where one looks, forward
+dashes and leaps); area, heal and buff skills still cast on key down. For aimed skills a tap (under 4 ticks) casts at
+once as before; holding picks the enemy nearest the crosshair within the skill's reach and lights the game's own
+glowing outline on this client only (white: monsters have no team), and releasing turns the player toward it and sends
+its entity id with the request (protocol 8). The server only trusts the id after its own checks (valid target, in
+sight, within reach) and then turns the player toward it at the start and before every hit, steers the middle
+projectile of a volley into it, drops falling shots on it and puts areas placed where one looks at its feet. No mixin
+was needed: the outline flag is set through `Entity`'s protected data accessor from a never-instantiated subclass.
+
+## D-CALM: habitats twice as large; their monsters are calm until provoked and appear 4 blocks apart (2026-11-11)
+The owner asked for spawn areas about twice as large, monsters that do not attack until the player attacks them or
+stays near them, and about four blocks between spawns. Habitats got √2 × their radius (40/42/45 instead of 28/30/32,
+twice the area) and were placed anew by `FieldSitesGenerator --keep-waystones`, which keeps the 44 named minor
+waystones where they are; a habitat may now touch a shore with up to a quarter of its rim (nothing spawns in water) and
+the rims of two habitats are 16 apart (was 24). The harbour, mostly sea, has no room for the second homes of its three
+common kinds, whose first homes hold half again as many monsters instead (157 habitats). A new habitat monster appears
+at least 4 blocks from any other monster and keeps near the spot it appeared at instead of bunching in the middle.
+Habitat monsters are calm (`monster.Temper`, `MonsterTempers`): they take no player as a target until that player
+hurts them or stays within 8 blocks for 8 seconds (they turn to look and growl halfway), deal no damage while calm
+(no touch damage), fight only those who provoked them and settle down 10 s after they have nobody to fight. Vetoing the
+target change (`LivingChangeTargetEvent`) covers every way a monster picks a target. Server config
+`monsters.calmUntilProvoked` / `lingerSeconds` / `lingerRadius`. Lords, dungeon monsters and bosses are unchanged. A
+wandering boss's arena may come up to a habitat's rim where a field would otherwise have fewer than three spots.
+
+## D-CROWD: attacks pass through other players; crowd bosses have half again their health (2026-11-11)
+The owner asked that, outside arena matches, attacks never hit other players (raids are crowded) and that every raid
+boss have 1.5 × its health. The mod's attacks already skipped players; now the mod's arrows and spells never collide
+with a player on the client either, vanilla projectiles a player shoots fly through other players (impact cancelled),
+and a bare left click aimed at another player lands on the creature behind. "Raid bosses" was read as every boss
+fought by a crowd: the final raid boss and the 25 field bosses (calamities and wanderers); dungeon bosses (parties of
+1-5) are unchanged. Their enrage timers grew by the same factor (field 6 → 9 min, final raid 7½ → 11¼ min).
+
+## D-LEVEL100: the level cap is 100 (2026-11-11)
+The owner asked for a level cap of 100 (D-002 had 50). The server config key changed from `character.levelCap`
+(default 50) to `character.maxLevel` (default 100) so that worlds whose config still says 50 pick up the new cap. The
+skill point economy is unchanged: 218 points at level 100 master about 80 % of a tree (266), never all of it. Content
+(areas, gear, bosses) still tops out around level 50-55; levels above that come from hunting, bosses and raids there.
+
 ## D-HABITATS: field monsters live in fixed habitats; five times as many waystones (2026-11-10)
 The owner asked for a fixed spawn place for every monster of every field (to make levelling and farming materials
 easier) and for five times as many waystones. Every normal monster of a field got a habitat (the three common ones two):
@@ -74,6 +115,19 @@ and tested for overlaps; overlays draw only inside their rectangle. Without a ho
 which holds the equipped weapon (the client keeps the selection there, the server moves a weapon there at login); the
 number keys 1-3 use items straight from the inventory (`UseItemPacket`, checked by the server like a use from the hand;
 the return scroll channels on the server). Creative and spectator mode keep the vanilla HUD for building and testing.
+
+## D-ARTS: every weapon's Z is its own weapon art, generated from one table under a damage budget (2026-11-11)
+The owner asked for the Z attack to be each weapon's own skill, fitting its look and material, with its own effects.
+The 180 named field weapons and the 42 tier weapons (7 materials × 6 types, the starters are iron) each get a unique
+art; the 9 boss arts stay. Writing 222 arts by hand would drift, so they are composed: an attack form (weapon type ×
+feel), the element's affliction, a few extras from the existing skill effects, and a look (particles, colours, shapes,
+wind-up). One Python definition (`tools/art/weapon_arts.py`) writes the Java rows, the Japanese and English names and
+descriptions (composed from the same choices, so the text always says what the art does) and the docs table. Damage
+is normalised: every art's burst and burst per second of cooldown are set from the weapon type's own skill (tier
+1.08–1.26×, named 1.40–1.85×, bosses ≥ 2×), so the arts stay balanced as a whole and tests can hold the bands. The
+generic type skills stay in the code only as the yardstick. Looks are composed at runtime by one parametric drawer
+(`ArtFx`) and checked for uniqueness by signature; vanilla particles (item, block and simple ones) are referenced by
+id from the player's own game, so no game assets are copied.
 
 ## D-VITALS: no hunger and no natural regeneration; potions are the way to heal (2026-11-10)
 The owner asked for no hunger gauge ("always full"), no automatic regeneration and potions as the basic way to heal.

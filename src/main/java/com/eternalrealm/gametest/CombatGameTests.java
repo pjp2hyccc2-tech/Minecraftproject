@@ -78,6 +78,59 @@ public final class CombatGameTests {
         helper.succeed();
     }
 
+    /**
+     * D-LOCKON: a skill locked on to an enemy turns its user toward it (a swing that would miss behind lands), and only
+     * fair enemies can be locked (never a player, never an unknown entity).
+     */
+    @GameTest(template = ARENA)
+    public static void lockedSkillsTurnTowardTheirEnemy(GameTestHelper helper) {
+        IronGolem front = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 6)));
+        FakePlayer attacker = fighter(helper, "er_gt_lock", SWORD);
+        attacker.setYRot(180.0F); // facing away from the golem
+        attacker.setYHeadRot(180.0F);
+        CombatEvent.Hit hit = firstHit(SWORD);
+        check(swing(attacker, hit) == 0, "control: facing away, the swing must miss");
+        long now = helper.getLevel().getServer().getTickCount();
+        FakePlayer other = FakePlayerFactory.get(helper.getLevel(), new GameProfile(
+                UUID.nameUUIDFromBytes("er_gt_lock_other".getBytes(java.nio.charset.StandardCharsets.UTF_8)),
+                "er_gt_lock_other"));
+        check(!com.eternalrealm.combat.forge.SkillLocks.lock(attacker, other.getId(), hit.action().id(), 40, now),
+                "a player can never be locked");
+        check(!com.eternalrealm.combat.forge.SkillLocks.lock(attacker, -12345, hit.action().id(), 40, now),
+                "an unknown entity cannot be locked");
+        check(com.eternalrealm.combat.forge.SkillLocks.lock(attacker, front.getId(), hit.action().id(), 40, now),
+                "the golem in sight must be lockable");
+        com.eternalrealm.combat.forge.SkillLocks.face(attacker, "some_other_action", now);
+        check(Math.abs(net.minecraft.util.Mth.wrapDegrees(attacker.getYRot() - 180.0F)) < 1.0F,
+                "another action's lock must not turn the player");
+        com.eternalrealm.combat.forge.SkillLocks.face(attacker, hit.action().id(), now);
+        check(Math.abs(net.minecraft.util.Mth.wrapDegrees(attacker.getYRot())) < 10.0F,
+                "the lock must turn the player toward the golem, yaw " + attacker.getYRot());
+        float before = front.getHealth();
+        check(swing(attacker, hit) == 1, "the locked swing must land");
+        check(front.getHealth() < before, "the golem took no damage");
+        com.eternalrealm.combat.forge.SkillLocks.clear(attacker);
+        helper.succeed();
+    }
+
+    /** D-LOCKON: the arrow of a locked skill curves into an enemy a straight shot would miss. */
+    @GameTest(template = ARENA, timeoutTicks = 80)
+    public static void lockedArrowsCurveIntoTheirEnemy(GameTestHelper helper) {
+        IronGolem aside = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(6, 2, 8)));
+        FakePlayer ranger = fighter(helper, "er_gt_lock_bow", WeaponProfiles.BOW);
+        CombatEvent.Hit hit = firstHit(WeaponProfiles.BOW);
+        long now = helper.getLevel().getServer().getTickCount();
+        check(com.eternalrealm.combat.forge.SkillLocks.lock(ranger, aside.getId(), hit.action().id(), 60, now),
+                "the golem must be lockable");
+        float before = aside.getHealth();
+        com.eternalrealm.combat.forge.CombatProjectiles.launch(ranger, PLAIN, hit,
+                com.eternalrealm.combat.DamageType.RANGED, java.util.List.of(), () -> 0.99);
+        helper.succeedWhen(() -> {
+            check(aside.getHealth() < before, "waiting for the arrow to curve into the golem");
+            com.eternalrealm.combat.forge.SkillLocks.clear(ranger);
+        });
+    }
+
     @GameTest(template = ARENA)
     public static void wallsBlockHits(GameTestHelper helper) {
         IronGolem target = still(helper.spawn(EntityType.IRON_GOLEM, new BlockPos(4, 2, 7)));
@@ -177,7 +230,10 @@ public final class CombatGameTests {
         UUID id = defender.getUUID();
         Combatant combatant = context.combat().service().register(id, PLAIN, context.combat().now());
         defender.startUsingItem(InteractionHand.MAIN_HAND);
-        check(context.combat().startGuard(defender, SWORD), "guard should start from idle");
+        // the held starter's own profile (it carries the iron art): a different profile would end the guard
+        check(context.combat().startGuard(defender,
+                com.eternalrealm.combat.forge.WeaponItem.profileOf(defender.getMainHandItem())),
+                "guard should start from idle");
 
         LivingAttackEvent fromBehind = new LivingAttackEvent(defender, behind.damageSources().mobAttack(behind), 4.0F);
         CombatEvents.onLivingAttack(fromBehind);
@@ -304,7 +360,7 @@ public final class CombatGameTests {
 
     private static net.minecraft.world.item.Item itemFor(WeaponProfile weapon) {
         return ERItems.weapons().stream().map(net.minecraftforge.registries.RegistryObject::get)
-                .filter(item -> item.profile() == weapon).findFirst()
+                .filter(item -> item.profile().type() == weapon.type()).findFirst() // the starter (iron) of the type
                 .orElseThrow(() -> new GameTestAssertException("no item for " + weapon.id()));
     }
 

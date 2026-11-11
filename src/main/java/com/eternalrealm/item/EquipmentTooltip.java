@@ -29,7 +29,7 @@ import java.util.Objects;
  * </pre>
  *
  * A named design ({@link Armory}) is called by its own name and adds, after the rarity line: where it comes from
- * (DESIGN), its handling, element and fixed bonuses (TRAIT), its perks (PERK), a boss weapon's art (ART), an armor
+ * (DESIGN), its handling, element and fixed bonuses (TRAIT), its perks (PERK), every weapon's art (ART), an armor
  * piece's set with both bonuses (SET), and its flavour text (LORE) before the requirement.
  */
 public final class EquipmentTooltip {
@@ -144,6 +144,7 @@ public final class EquipmentTooltip {
             lines.add(stat(MAX_HEALTH, EquipmentStats.baseMaxHealth(data)));
         }
         data.weaponDesign().ifPresent(weapon -> lines.addAll(weaponLines(weapon)));
+        artOf(data).ifPresent(art -> lines.addAll(artLines(art)));
         data.armorPiece().ifPresent(piece -> lines.addAll(armorLines(piece)));
         for (Affix affix : data.affixes()) {
             lines.add(TooltipLine.of(TooltipLine.Kind.AFFIX, affix.kind().translationKey(), TooltipLine.COLOR_AFFIX,
@@ -228,15 +229,28 @@ public final class EquipmentTooltip {
                         TooltipLine.COLOR_PERK));
             }
         }
-        if (weapon.art() != null) {
-            WeaponArts.byId(weapon.art()).ifPresent(art -> {
-                lines.add(TooltipLine.of(TooltipLine.Kind.ART, ART, TooltipLine.COLOR_ART,
-                        new TooltipLine.Key(art.translationKey()),
-                        new TooltipLine.Text(number(art.action().cooldownTicks() / 20.0))));
-                lines.add(TooltipLine.of(TooltipLine.Kind.ART, art.descriptionKey(), TooltipLine.COLOR_ART));
-            });
-        }
         return lines;
+    }
+
+    /** The weapon art on the weapon-skill key (Z): the boss art, the named weapon's art or the tier's art. */
+    public static java.util.Optional<WeaponArt> artOf(EquipmentData data) {
+        if (!data.isWeapon()) {
+            return java.util.Optional.empty();
+        }
+        java.util.Optional<WeaponDesign> design = data.weaponDesign();
+        if (design.isPresent()) {
+            WeaponDesign weapon = design.get();
+            return weapon.art() != null ? WeaponArts.byId(weapon.art()) : GeneratedArts.forDesign(weapon.id());
+        }
+        return java.util.Optional.of(GeneratedArts.forTier(data.tier(), data.weaponType()));
+    }
+
+    /** Name and cooldown of the art, then what it does. */
+    static List<TooltipLine> artLines(WeaponArt art) {
+        return List.of(TooltipLine.of(TooltipLine.Kind.ART, ART, TooltipLine.COLOR_ART,
+                        new TooltipLine.Key(art.translationKey()),
+                        new TooltipLine.Text(number(art.action().cooldownTicks() / 20.0))),
+                TooltipLine.of(TooltipLine.Kind.ART, art.descriptionKey(), TooltipLine.COLOR_ART));
     }
 
     /** The set of an armor piece with its two- and four-piece bonuses. */

@@ -41,7 +41,17 @@ public final class CombatProjectiles {
             return;
         }
         ServerLevel level = player.serverLevel();
-        Vec3 target = spec.fromAbove() ? lookTarget(player, ProjectileSpec.FROM_ABOVE_RANGE) : null;
+        // a skill locked on to an enemy (D-LOCKON): falling shots land on it, the middle shot of a volley curves into it
+        net.minecraft.world.entity.LivingEntity locked = SkillLocks.target(player, hit.action().id(),
+                player.server.getTickCount()).orElse(null);
+        Vec3 target = !spec.fromAbove() ? null : locked != null && player.distanceTo(locked)
+                <= ProjectileSpec.FROM_ABOVE_RANGE + 2.0 ? locked.position()
+                : lookTarget(player, ProjectileSpec.FROM_ABOVE_RANGE);
+        double homingOffset = Double.MAX_VALUE;
+        for (double yawOffset : spec.yawOffsets()) {
+            homingOffset = Math.abs(yawOffset) < Math.abs(homingOffset) ? yawOffset : homingOffset;
+        }
+        boolean homed = false;
         for (double yawOffset : spec.yawOffsets()) {
             DamageRoll roll = CombatHits.roll(player, stats, hit.weapon(), hit.frame(), hit.damageScale(), type,
                     random.getAsDouble());
@@ -60,6 +70,14 @@ public final class CombatProjectiles {
                 projectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 projectile.shootFromRotation(player, player.getXRot(), player.getYRot() + (float) yawOffset, 0.0F,
                         (float) (spec.speed() * stats.projectileSpeedFactor()), 0.0F);
+            }
+            if (locked != null && !homed && yawOffset == homingOffset) {
+                homed = true;
+                if (projectile instanceof MagicProjectile magic) {
+                    magic.homeOn(locked);
+                } else if (projectile instanceof SkillArrow arrow) {
+                    arrow.homeOn(locked);
+                }
             }
             level.addFreshEntity(projectile);
         }

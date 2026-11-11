@@ -26,8 +26,9 @@ import java.util.SplittableRandom;
 /**
  * Field monsters. In アストリア they live in their fixed habitats ({@link Habitats}): twice per second every habitat a
  * player is near fills up to its population (quickly while it is half empty, then one monster every few seconds, so a
- * killed one comes back), at the monster's own levels, now and then the field's elite instead. Habitat monsters walk
- * back when they stray from home and give up a chase far from it. Elsewhere (a world without アストリア) monsters of the
+ * killed one comes back), at the monster's own levels, now and then the field's elite instead, each at least
+ * {@value #SPACING} blocks from any other monster. Habitat monsters keep near the spot they appeared at, walk back when
+ * they stray and give up a chase far from home, and they are calm until provoked ({@link MonsterTempers}). Elsewhere (a world without アストリア) monsters of the
  * area's table appear around each player as before: 14-40 blocks away on solid ground, up to 21 per player and a cap
  * per server. Monsters that ignore players in daylight (spiders, endermen) are pointed at a player in sight.
  */
@@ -58,6 +59,13 @@ public final class MonsterSpawner {
     private static final int RESPAWN_TICKS = 100;
     /** Monsters never appear closer than this to a player. */
     private static final double PLAYER_CLEARANCE = 9.0;
+    /** Blocks between a new habitat monster and any other monster (owner: 「湧く間隔は4ブロック毎くらいで」). */
+    static final double SPACING = 4.0;
+    /** Persistent tags of the spot a habitat monster appeared at (it keeps near it). */
+    public static final String HOME_X_TAG = "er_home_x";
+    public static final String HOME_Z_TAG = "er_home_z";
+    /** A habitat monster without a target this far from its spot walks back to it. */
+    private static final double HOME_DRIFT = 12.0;
 
     private final MinecraftServer server;
     private final SplittableRandom random = new SplittableRandom();
@@ -137,7 +145,8 @@ public final class MonsterSpawner {
             return;
         }
         for (Mob mob : near) {
-            if (mob.getTarget() == null && mob.distanceToSqr(player) < AGGRO_RANGE_SQR && mob.hasLineOfSight(player)) {
+            if (mob.getTarget() == null && mob.distanceToSqr(player) < AGGRO_RANGE_SQR && mob.hasLineOfSight(player)
+                    && MonsterTempers.mayFight(mob, player)) {
                 mob.setTarget(player);
             }
         }
@@ -219,8 +228,9 @@ public final class MonsterSpawner {
                     habitat.x() + habitat.radius() + Habitats.LEASH_MARGIN + 16, level.getMaxBuildHeight(),
                     habitat.z() + habitat.radius() + Habitats.LEASH_MARGIN + 16),
                     mob -> habitat.id().equals(mob.getPersistentData().getString(HABITAT_TAG)) && mob.isAlive());
-            if (tick % 20 == 7) {
+            if (tick % MonsterTempers.LOOK_STEP == 7) {
                 leash(habitat, home);
+                MonsterTempers.look(level, home, players);
             }
             int missing = habitat.population() - home.size();
             if (missing <= 0 || levelCount >= cap || tick < nextHabitatSpawn.getOrDefault(habitat.id(), Long.MIN_VALUE)) {
@@ -249,18 +259,43 @@ public final class MonsterSpawner {
         return false;
     }
 
-    /** Strays walk home; a chase that leads far from home is given up. */
+    /**
+     * Strays walk back to the spot they appeared at (so the monsters stay spread over the habitat instead of bunching
+     * in its middle); a chase that leads far from home is given up.
+     */
     private static void leash(Habitats.Habitat habitat, List<Mob> home) {
         for (Mob mob : home) {
             double distance = habitat.distanceTo(mob.getX(), mob.getZ());
             boolean chasing = mob.getTarget() != null && mob.getTarget().isAlive();
+            double[] spot = homeSpot(mob, habitat);
             if (chasing && distance > habitat.radius() + Habitats.LEASH_MARGIN) {
                 mob.setTarget(null);
-                mob.getNavigation().moveTo(habitat.x() + 0.5, mob.getY(), habitat.z() + 0.5, 1.1);
-            } else if (!chasing && distance > habitat.radius() + Habitats.WANDER_MARGIN && mob.getNavigation().isDone()) {
-                mob.getNavigation().moveTo(habitat.x() + 0.5, mob.getY(), habitat.z() + 0.5, 1.0);
+                mob.getNavigation().moveTo(spot[0], mob.getY(), spot[1], 1.1);
+            } else if (!chasing && mob.getNavigation().isDone()
+                    && (distance > habitat.radius() + Habitats.WANDER_MARGIN
+                    || Math.hypot(mob.getX() - spot[0], mob.getZ() - spot[1]) > HOME_DRIFT)) {
+                mob.getNavigation().moveTo(spot[0], mob.getY(), spot[1], 1.0);
             }
         }
+    }
+
+    /**
+     * Where a habitat monster appeared. A monster from before the spots were kept (and before habitats were calm)
+     * gets its spot now: where it stands, pulled inside the habitat; it becomes calm like the others.
+     */
+    private static double[] homeSpot(Mob mob, Habitats.Habitat habitat) {
+        net.minecraft.nbt.CompoundTag data = mob.getPersistentData();
+        if (!data.contains(HOME_X_TAG) || !data.contains(HOME_Z_TAG)) {
+            double dx = mob.getX() - habitat.x();
+            double dz = mob.getZ() - habitat.z();
+            double distance = Math.hypot(dx, dz);
+            double keep = distance <= habitat.radius() - 2.0 || distance < 1.0e-6 ? 1.0
+                    : (habitat.radius() - 2.0) / distance;
+            data.putInt(HOME_X_TAG, Mth.floor(habitat.x() + dx * keep));
+            data.putInt(HOME_Z_TAG, Mth.floor(habitat.z() + dz * keep));
+            MonsterTempers.makeCalm(mob);
+        }
+        return new double[]{data.getInt(HOME_X_TAG) + 0.5, data.getInt(HOME_Z_TAG) + 0.5};
     }
 
     /** One monster of the habitat (now and then the field's elite) at a free spot inside it. */
@@ -286,6 +321,9 @@ public final class MonsterSpawner {
                 continue;
             }
             int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+            if (crowded(level, x + 0.5, y, z + 0.5)) {
+                continue;
+            }
             BlockPos pos = new BlockPos(x, y, z);
             if (y <= level.getMinBuildHeight() + 1
                     || !level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP)
@@ -303,9 +341,20 @@ public final class MonsterSpawner {
                 return false;
             }
             mob.get().getPersistentData().putString(HABITAT_TAG, habitat.id());
+            mob.get().getPersistentData().putInt(HOME_X_TAG, x);
+            mob.get().getPersistentData().putInt(HOME_Z_TAG, z);
+            MonsterTempers.makeCalm(mob.get());
             return true;
         }
         return false;
+    }
+
+    /** Another monster within {@link #SPACING} blocks of (x, y, z). */
+    public static boolean crowded(ServerLevel level, double x, double y, double z) {
+        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(x - SPACING, y - 4.0, z - SPACING,
+                x + SPACING, y + 6.0, z + SPACING);
+        return !level.getEntitiesOfClass(Mob.class, box, mob -> MonsterTags.isMonster(mob) && mob.isAlive()
+                && Math.hypot(mob.getX() - x, mob.getZ() - z) < SPACING).isEmpty();
     }
 
     private static boolean tooCloseToPlayer(List<ServerPlayer> players, double x, double z) {

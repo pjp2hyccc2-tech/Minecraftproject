@@ -20,7 +20,8 @@ import java.util.Optional;
 /**
  * The nine weapon arts (武技) of the boss weapons, one per boss. Each is a showpiece: a long wind-up or a ground marker
  * says where it lands (delayed ground areas are marked for the wielder's party), it has its own look and sound, and it
- * is stronger than the weapon type's own skill at a longer cooldown.
+ * is stronger than the weapon type's own skill at a longer cooldown, and stronger in one use than any art of a named or
+ * tier weapon ({@link GeneratedArts}; six of them are raised by {@link ArtForge#strengthened}).
  *
  * <pre>
  * art                    weapon        boss   what it does
@@ -38,7 +39,7 @@ import java.util.Optional;
 public final class WeaponArts {
     private static final int START = SkillEffect.ON_START;
 
-    public static final WeaponArt SHADOW_LEGION = new WeaponArt("art_shadow_legion", WeaponType.DUAL_BLADES,
+    public static final WeaponArt SHADOW_LEGION = ArtForge.strengthened(new WeaponArt("art_shadow_legion", WeaponType.DUAL_BLADES,
             skill("art_shadow_legion", 36, 34, 30, 320,
                     melee(3, HitShape.circle(3.5), 0.5, 0.05),
                     melee(7, HitShape.arc(3.6, 70), 0.45, 0.05),
@@ -52,16 +53,16 @@ public final class WeaponArts {
             new SkillEffect.Visual(START, "art_shadow_legion"),
             new SkillEffect.Visual(3, "art_shadow_legion_cut"),
             new SkillEffect.Afflict(6, AfflictionKind.BLEED, 80, 0.25),
-            new SkillEffect.Visual(6, "art_shadow_legion_finish")));
+            new SkillEffect.Visual(6, "art_shadow_legion_finish"))), 1.65);
 
-    public static final WeaponArt THORNROOT_BLOOM = new WeaponArt("art_thornroot_bloom", WeaponType.STAFF,
+    public static final WeaponArt THORNROOT_BLOOM = ArtForge.strengthened(new WeaponArt("art_thornroot_bloom", WeaponType.STAFF,
             skill("art_thornroot_bloom", 24, 22, 30, 360, HitFrame.effect(8)),
             SkillTheme.LIFE, WeaponArt.Motion.CAST, List.of(
             new SkillEffect.Visual(START, "art_thornroot_bloom"),
             new SkillEffect.Zone(0, Placement.LOOK, 14.0, 4.5, 16, 5, 10, 0.7, 0.03, AfflictionKind.SLOW, 40, 3.0,
-                    "thornroot")));
+                    "thornroot"))), 1.26);
 
-    public static final WeaponArt SAND_MAELSTROM = new WeaponArt("art_sand_maelstrom", WeaponType.SPEAR,
+    public static final WeaponArt SAND_MAELSTROM = ArtForge.strengthened(new WeaponArt("art_sand_maelstrom", WeaponType.SPEAR,
             skill("art_sand_maelstrom", 30, 28, 30, 320,
                     melee(6, HitShape.line(7.5, 0.9), 1.0, 0.2),
                     melee(9, HitShape.line(7.5, 0.9), 1.0, 0.2),
@@ -70,9 +71,9 @@ public final class WeaponArts {
             new SkillEffect.Visual(START, "art_sand_maelstrom"),
             new SkillEffect.Afflict(2, AfflictionKind.VULNERABLE, 100, 0.15),
             new SkillEffect.Zone(2, Placement.AHEAD, 6.0, 3.5, 0, 6, 5, 0.35, 0.0, AfflictionKind.PULL, 1, 0.3,
-                    "sand_vortex")));
+                    "sand_vortex"))), 1.1);
 
-    public static final WeaponArt DOOM_GUILLOTINE = new WeaponArt("art_doom_guillotine", WeaponType.TWO_HANDED_SWORD,
+    public static final WeaponArt DOOM_GUILLOTINE = ArtForge.strengthened(new WeaponArt("art_doom_guillotine", WeaponType.TWO_HANDED_SWORD,
             skill("art_doom_guillotine", 34, 32, 40, 400,
                     melee(18, HitShape.circleAhead(3.6, 3.0), 4.0, 1.2)),
             SkillTheme.FROST, WeaponArt.Motion.OVERHEAD, List.of(
@@ -80,18 +81,18 @@ public final class WeaponArts {
             new SkillEffect.Visual(START, "art_doom_guillotine"),
             new SkillEffect.Visual(0, "art_doom_guillotine_fall"),
             new SkillEffect.Execute(0, 0.3, 1.0),
-            new SkillEffect.Afflict(0, AfflictionKind.FREEZE, 60, 0.0)));
+            new SkillEffect.Afflict(0, AfflictionKind.FREEZE, 60, 0.0))), 1.5);
 
-    public static final WeaponArt FROZEN_PRISON = new WeaponArt("art_frozen_prison", WeaponType.STAFF,
+    public static final WeaponArt FROZEN_PRISON = ArtForge.strengthened(new WeaponArt("art_frozen_prison", WeaponType.STAFF,
             skill("art_frozen_prison", 26, 24, 30, 380, HitFrame.effect(8)),
             SkillTheme.FROST, WeaponArt.Motion.CAST, List.of(
             new SkillEffect.Visual(START, "art_frozen_prison"),
             new SkillEffect.Zone(0, Placement.LOOK, 16.0, 4.0, 14, 1, 1, 2.0, 0.0, AfflictionKind.FREEZE, 80, 0.0,
                     "ice_prison"),
             new SkillEffect.Zone(0, Placement.LOOK, 16.0, 4.0, 44, 1, 1, 1.8, 0.0, AfflictionKind.VULNERABLE, 100,
-                    0.2, "ice_shatter")));
+                    0.2, "ice_shatter"))), 1.16);
 
-    public static final WeaponArt METEOR_SLASH = new WeaponArt("art_meteor_slash", WeaponType.ONE_HANDED_SWORD,
+    public static final WeaponArt METEOR_SLASH = ArtForge.strengthened(new WeaponArt("art_meteor_slash", WeaponType.ONE_HANDED_SWORD,
             skill("art_meteor_slash", 30, 28, 30, 360,
                     melee(6, HitShape.arc(4.2, 80), 1.8, 0.8)),
             SkillTheme.FIRE, WeaponArt.Motion.OVERHEAD, List.of(
@@ -99,7 +100,7 @@ public final class WeaponArts {
             new SkillEffect.Afflict(0, AfflictionKind.BURN, 80, 0.0),
             new SkillEffect.Visual(0, "art_meteor_slash_wave"),
             new SkillEffect.Zone(0, Placement.AHEAD, 6.0, 3.5, 14, 3, 6, 1.1, 0.0, AfflictionKind.BURN, 60, 0.0,
-                    "meteor")));
+                    "meteor"))), 1.1);
 
     public static final WeaponArt HEAVENS_CHAIN = new WeaponArt("art_heavens_chain", WeaponType.BOW,
             skill("art_heavens_chain", 26, 24, 30, 360,
@@ -140,13 +141,14 @@ public final class WeaponArts {
         return ALL;
     }
 
+    /** A boss art, or the art of a named or tier weapon ({@link GeneratedArts}). */
     public static Optional<WeaponArt> byId(String id) {
         for (WeaponArt art : ALL) {
             if (art.id().equals(id)) {
                 return Optional.of(art);
             }
         }
-        return Optional.empty();
+        return id != null && id.startsWith("art_") ? GeneratedArts.byId(id) : Optional.empty();
     }
 
     private static HitFrame melee(int offset, HitShape shape, double multiplier, double knockback) {

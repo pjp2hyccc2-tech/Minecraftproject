@@ -51,6 +51,7 @@ public final class ClientCombatController {
         if (player == null) {
             heavyWasDown = false;
             syncedSlot = -1;
+            LockOn.cancel();
             return;
         }
         if (minecraft.isPaused()) {
@@ -98,17 +99,9 @@ public final class ClientCombatController {
                 request(minecraft, player, local, CombatRequest.DODGE, now, weapon);
             }
         }
-        while (ClientKeyMappings.WEAPON_SKILL.consumeClick()) {
-            if (canAct) {
-                request(minecraft, player, local, CombatRequest.SKILL, now, weapon);
-            }
-        }
+        skillKey(minecraft, player, local, weapon, 0, ClientKeyMappings.WEAPON_SKILL, inGame, canAct, now);
         for (int slot = 1; slot < Combatant.SKILL_SLOTS; slot++) {
-            while (ClientKeyMappings.jobSkill(slot).consumeClick()) {
-                if (canAct) {
-                    request(minecraft, player, local, CombatRequest.jobSkill(slot), now, weapon);
-                }
-            }
+            skillKey(minecraft, player, local, weapon, slot, ClientKeyMappings.jobSkill(slot), inGame, canAct, now);
         }
 
         if (local != null) {
@@ -122,6 +115,71 @@ public final class ClientCombatController {
             }
         }
         announceForbiddenWeapon(player, local, weapon);
+    }
+
+    /**
+     * One skill key (D-LOCKON): an area skill casts when the key goes down; an aimed skill aims while the key is held
+     * (the enemy nearest the crosshair is outlined in white) and casts at that enemy when it is released, and a tap
+     * casts at once as before. A skill that cannot be used now (cooldown, not learned) answers at once.
+     */
+    private static void skillKey(Minecraft minecraft, LocalPlayer player, Combatant local, WeaponProfile weapon,
+                                 int slot, net.minecraft.client.KeyMapping key, boolean inGame, boolean canAct,
+                                 long now) {
+        int presses = 0;
+        while (key.consumeClick()) {
+            presses++;
+        }
+        CombatRequest request = slot == 0 ? CombatRequest.SKILL : CombatRequest.jobSkill(slot);
+        boolean down = inGame && key.isDown();
+        if (LockOn.aimingSlot() == slot) {
+            if (!canAct) {
+                LockOn.cancel();
+            } else if (down) {
+                LockOn.hold(player, now);
+            } else {
+                int target = LockOn.release(player, now);
+                request(minecraft, player, local, request, now, weapon, target);
+            }
+            return;
+        }
+        if (presses == 0 || !canAct) {
+            return;
+        }
+        double range = aimRange(local, weapon, slot, now);
+        if (range > 0.0 && down && !LockOn.isAiming()) {
+            LockOn.begin(slot, range, now);
+            return;
+        }
+        for (int i = 0; i < presses; i++) {
+            request(minecraft, player, local, request, now, weapon, -1);
+        }
+    }
+
+    /**
+     * How far the skill in {@code slot} can be aimed (blocks), or 0 when it is not an aimed skill or cannot be used
+     * right now (so pressing it answers at once).
+     */
+    private static double aimRange(Combatant local, WeaponProfile weapon, int slot, long now) {
+        com.eternalrealm.combat.ActionDefinition action;
+        java.util.List<SkillEffect> effects;
+        if (slot == 0) {
+            action = weapon.skill();
+            effects = com.eternalrealm.item.WeaponArts.byId(action.id())
+                    .map(com.eternalrealm.item.WeaponArt::effects).orElse(java.util.List.of());
+        } else {
+            com.eternalrealm.combat.SkillBinding binding = local.jobSkill(slot);
+            if (binding == null || !binding.allows(weapon)) {
+                return 0.0;
+            }
+            action = binding.action();
+            effects = Jobs.skillOfAction(action.id()).map(com.eternalrealm.job.SkillDefinition::effects)
+                    .orElse(java.util.List.of());
+        }
+        if (local.skillCooldownRemaining(slot, now) > 0
+                || !com.eternalrealm.job.SkillAiming.isAimed(action, effects)) {
+            return 0.0;
+        }
+        return com.eternalrealm.job.SkillAiming.range(action, effects);
     }
 
     /** Weapon type last announced as unusable for the job (so the hint shows once per weapon switch). */
@@ -182,6 +240,15 @@ public final class ClientCombatController {
     /** @return whether the request was sent (the prediction accepted or buffered it) */
     private static boolean request(Minecraft minecraft, LocalPlayer player, Combatant local, CombatRequest request,
                                    long now, WeaponProfile weapon) {
+        return request(minecraft, player, local, request, now, weapon, -1);
+    }
+
+    /**
+     * @param target entity id of the enemy an aimed skill is locked on, or -1
+     * @return whether the request was sent (the prediction accepted or buffered it)
+     */
+    private static boolean request(Minecraft minecraft, LocalPlayer player, Combatant local, CombatRequest request,
+                                   long now, WeaponProfile weapon, int target) {
         boolean restricted = player.isPassenger() || player.isFallFlying();
         boolean usingOtherItem = player.isUsingItem() && !isUsingWeapon(player);
         boolean guarding = isUsingWeapon(player);
@@ -202,7 +269,7 @@ public final class ClientCombatController {
         }
         int sequence = ClientCombatState.nextSequence();
         ClientCombatState.rememberPrediction(sequence, before);
-        ERNetwork.sendToServer(new CombatActionPacket(request, sequence));
+        ERNetwork.sendToServer(new CombatActionPacket(request, sequence, request.isSkill() ? target : -1));
         return true;
     }
 
@@ -242,6 +309,10 @@ public final class ClientCombatController {
                     // the weapon skill's own wind-up (the server plays it for everyone else)
                     player.playSound(com.eternalrealm.combat.forge.WeaponSkillFx.chargeSound(start.weapon().type()),
                             1.0F, 1.0F);
+                } else if (com.eternalrealm.combat.forge.ArtFx.isGenerated(start.action())) {
+                    // a named or tier weapon's art: its own pitch of the wind-up (the server plays it for the others)
+                    player.playSound(com.eternalrealm.combat.forge.WeaponSkillFx.chargeSound(start.weapon().type()),
+                            1.0F, com.eternalrealm.combat.forge.ArtFx.chargePitch(start.action().id()));
                 } else {
                     player.playSound(com.eternalrealm.sound.ERSounds.SKILL_SLASH.get(), 1.0F, 1.0F);
                 }

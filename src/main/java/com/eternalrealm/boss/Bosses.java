@@ -15,12 +15,19 @@ import static com.eternalrealm.boss.TargetRule.RANDOM;
  * <p>Balance model (checked by BossesContentTest): a level-matched player deals about 8 (level 1) to 45 (level 50)
  * per light hit and lands 1.5 hits per second on average (dodging and moving included), reduced by the boss's armor
  * with vanilla's formula. Base health is chosen so one player needs about 3 minutes on NORMAL; with +70% health per
- * extra player a party of 5 needs about 2.3 minutes. The final boss is sized for 10-20 players (about 3.6 minutes).</p>
+ * extra player a party of 5 needs about 2.3 minutes. The final boss is sized for 10-20 players: about 3.6 minutes
+ * before its health was raised by half (2026-11-11), about 5.5 minutes now.</p>
  */
 public final class Bosses {
     private static final double PARTY_SCALING = 0.7;
     private static final int ENRAGE_TICKS = 20 * 60 * 5;
-    private static final int FINAL_ENRAGE_TICKS = 20 * 60 * 15 / 2;
+    /** The raid's soft enrage: 11¼ minutes, grown with its health (×1.5 on 2026-11-11). */
+    private static final int FINAL_ENRAGE_TICKS = 20 * 60 * 45 / 4;
+    /**
+     * The raid boss's health was raised by half on the owner's request (2026-11-11, 「全レイドボスのHPを今の1.5倍に」):
+     * 18 400 before, 27 600 now.
+     */
+    public static final double FINAL_BASE_HEALTH = 18_400 * 1.5;
 
     /** 地下都市の盗賊王 (Lost Underground City, d1, area 1). */
     public static final BossDefinition B1 = b1();
@@ -457,7 +464,7 @@ public final class Bosses {
                         "final_dark_volley", "final_royal_guard", "final_shadow_step", "final_dark_aura",
                         "final_end_of_all", "final_oblivion_beams", "final_ruin_tide", "final_gravity",
                         "final_last_light"));
-        return boss("final", "minecraft:wither_skeleton", 50, 18400, 15, 12, 10, 20, phases, abilities,
+        return boss("final", "minecraft:wither_skeleton", 50, FINAL_BASE_HEALTH, 15, 12, 10, 20, phases, abilities,
                 FINAL_ENRAGE_TICKS, List.of(minion), "final_void_rift");
     }
 

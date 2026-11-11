@@ -5,7 +5,6 @@ import com.eternalrealm.combat.CombatRequest;
 import com.eternalrealm.combat.CombatStats;
 import com.eternalrealm.combat.Combatant;
 import com.eternalrealm.combat.WeaponProfile;
-import com.eternalrealm.combat.WeaponProfiles;
 import com.eternalrealm.combat.forge.WeaponItem;
 import com.eternalrealm.core.ModInfo;
 import com.eternalrealm.item.Armory;
@@ -92,12 +91,13 @@ public final class ArmoryGameTests {
         helper.succeed();
     }
 
-    /** A plain weapon of the same type keeps the type's own weapon skill. */
+    /** A plain weapon (the iron starter) brings its tier's art, never the type's generic skill. */
     @GameTest(template = ARENA)
-    public static void plainWeaponKeepsTheTypeSkill(GameTestHelper helper) {
+    public static void plainWeaponUsesItsTierArt(GameTestHelper helper) {
         ServerContext context = requireContext();
         WeaponDesign design = Signatures.bossWeapon("final").orElseThrow();
-        WeaponProfile typeProfile = WeaponProfiles.of(design.type());
+        String expected = com.eternalrealm.item.GeneratedArts.forTier(com.eternalrealm.item.ItemTier.IRON,
+                design.type()).id();
         FakePlayer player = fighter(helper, "er_gt_plain_weapon",
                 new ItemStack(com.eternalrealm.combat.forge.ERItems.weaponFor(design.type())));
         UUID id = player.getUUID();
@@ -105,10 +105,89 @@ public final class ArmoryGameTests {
         try {
             context.combat().handleRequest(player, CombatRequest.SKILL, 1);
             Optional<ActionDefinition> action = combatant.currentAction();
-            check(action.isPresent() && action.get().id().equals(typeProfile.skill().id()),
-                    "a plain " + design.type() + " should use " + typeProfile.skill().id() + ", not " + action);
+            check(action.isPresent() && action.get().id().equals(expected),
+                    "a plain " + design.type() + " should use " + expected + ", not " + action);
         } finally {
             context.combat().onPlayerLeft(id);
+        }
+        helper.succeed();
+    }
+
+    /** Z with a named weapon runs its own art end to end: its hits damage, its element afflicts, its cooldown runs. */
+    @GameTest(template = ARENA)
+    public static void namedArtRunsEndToEnd(GameTestHelper helper) {
+        // 収穫月の一閃: a precise thrust that blinds (holy) and heals
+        WeaponDesign design = com.eternalrealm.item.Armory.weapon("harvest_moon_sabre").orElseThrow();
+        runArt(helper, "er_gt_art_named", EquipmentStacks.ofDesign(design),
+                com.eternalrealm.item.GeneratedArts.forDesign(design.id()).orElseThrow().id(),
+                target -> target.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS), "blinded");
+    }
+
+    /** Z with a tier weapon runs the tier's art end to end (flame greatsword: a burning sweep). */
+    @GameTest(template = ARENA)
+    public static void tierArtRunsEndToEnd(GameTestHelper helper) {
+        ItemStack flame = EquipmentStacks.create(com.eternalrealm.item.EquipmentData.of(
+                com.eternalrealm.item.EquipmentBase.weapon(com.eternalrealm.combat.WeaponType.TWO_HANDED_SWORD,
+                        com.eternalrealm.item.ItemTier.FLAME), com.eternalrealm.item.ItemRarity.COMMON,
+                java.util.List.of()));
+        runArt(helper, "er_gt_art_tier", flame, com.eternalrealm.item.GeneratedArts.forTier(
+                        com.eternalrealm.item.ItemTier.FLAME, com.eternalrealm.combat.WeaponType.TWO_HANDED_SWORD).id(),
+                net.minecraft.world.entity.LivingEntity::isOnFire, "set on fire");
+    }
+
+    /** A projectile art flies and bursts on its own (iron staff): the target in front loses health. */
+    @GameTest(template = ARENA, timeoutTicks = 120)
+    public static void projectileArtHitsItsTarget(GameTestHelper helper) {
+        ServerContext context = requireContext();
+        net.minecraft.world.entity.animal.IronGolem target = helper.spawn(
+                net.minecraft.world.entity.EntityType.IRON_GOLEM, new net.minecraft.core.BlockPos(4, 2, 9));
+        target.setNoAi(true);
+        FakePlayer player = fighter(helper, "er_gt_art_bolt", new ItemStack(
+                com.eternalrealm.combat.forge.ERItems.weaponFor(com.eternalrealm.combat.WeaponType.STAFF)));
+        UUID id = player.getUUID();
+        Combatant combatant = context.combat().service().register(id, PLAIN, context.combat().now());
+        float before = target.getHealth();
+        long now = context.combat().now();
+        context.combat().handleRequest(player, CombatRequest.SKILL, 1);
+        ActionDefinition action = combatant.currentAction()
+                .orElseThrow(() -> new GameTestAssertException("the staff's art did not start"));
+        for (int t = 1; t <= action.durationTicks() + 1; t++) {
+            for (com.eternalrealm.combat.CombatEvent event : combatant.tick(now + t)) {
+                com.eternalrealm.combat.forge.CombatDriver.handleEvent(player, combatant.stats(), event);
+            }
+        }
+        context.combat().onPlayerLeft(id);
+        helper.succeedWhen(() -> check(target.getHealth() < before, "the bolt should hit the golem in front"));
+    }
+
+    private static void runArt(GameTestHelper helper, String name, ItemStack weapon, String expectedArt,
+                               java.util.function.Predicate<net.minecraft.world.entity.LivingEntity> afflicted,
+                               String what) {
+        ServerContext context = requireContext();
+        net.minecraft.world.entity.animal.IronGolem target = helper.spawn(
+                net.minecraft.world.entity.EntityType.IRON_GOLEM, new net.minecraft.core.BlockPos(4, 2, 7));
+        target.setNoAi(true);
+        FakePlayer player = fighter(helper, name, weapon);
+        UUID id = player.getUUID();
+        Combatant combatant = context.combat().service().register(id, PLAIN, context.combat().now());
+        try {
+            float before = target.getHealth();
+            long now = context.combat().now();
+            context.combat().handleRequest(player, CombatRequest.SKILL, 1);
+            ActionDefinition action = combatant.currentAction()
+                    .orElseThrow(() -> new GameTestAssertException(expectedArt + " did not start"));
+            check(action.id().equals(expectedArt), "started " + action.id() + " instead of " + expectedArt);
+            check(combatant.skillCooldownRemaining(0, now + 1) > 0, expectedArt + " should be on cooldown");
+            for (int t = 1; t <= action.durationTicks() + 1; t++) {
+                for (com.eternalrealm.combat.CombatEvent event : combatant.tick(now + t)) {
+                    com.eternalrealm.combat.forge.CombatDriver.handleEvent(player, combatant.stats(), event);
+                }
+            }
+            check(target.getHealth() < before, expectedArt + " should damage the golem in front");
+            check(afflicted.test(target), expectedArt + " should leave the golem " + what);
+        } finally {
+            context.combat().onPlayerLeft(id);
+            target.discard();
         }
         helper.succeed();
     }

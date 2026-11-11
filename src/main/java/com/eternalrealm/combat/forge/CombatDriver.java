@@ -27,6 +27,7 @@ import com.eternalrealm.job.forge.SkillZones;
 import com.eternalrealm.combat.DefenseEvent;
 import com.eternalrealm.combat.GuardResult;
 import com.eternalrealm.combat.HitGeometry;
+import com.eternalrealm.combat.ActionDefinition;
 import com.eternalrealm.combat.RequestOutcome;
 import com.eternalrealm.combat.WeaponProfile;
 import com.eternalrealm.network.TokenBucketRateLimiter;
@@ -160,6 +161,7 @@ public final class CombatDriver {
         applyChangedStats();
         SkillZones.tick(server);
         WeaponSkillFx.tickScheduled();
+        ArtFx.tickScheduled();
         long now = now();
         for (UUID playerId : new ArrayList<>(service.all().keySet())) {
             ServerPlayer player = server.getPlayerList().getPlayer(playerId);
@@ -173,6 +175,7 @@ public final class CombatDriver {
                     handleEvent(player, combatant.stats(), event);
                 }
                 WeaponSkillFx.tick(player, combatant, now);
+                ArtFx.tick(player, combatant, now);
                 resyncStatus(player, combatant, now);
             } catch (RuntimeException e) {
                 // One broken fighter must not stop combat for everyone else.
@@ -280,6 +283,7 @@ public final class CombatDriver {
      */
     public static void handleEvent(ServerPlayer player, CombatStats stats, CombatEvent event) {
         if (event instanceof CombatEvent.Hit hit) {
+            SkillLocks.face(player, hit.action().id(), player.server.getTickCount()); // a locked skill hits its enemy
             SkillDefinition skill = Jobs.skillOfAction(hit.action().id()).orElse(null);
             // the weapon art of a boss weapon: its effects run like a job skill's, at strength 1
             WeaponArt art = skill == null ? WeaponArts.byId(hit.action().id()).orElse(null) : null;
@@ -308,6 +312,9 @@ public final class CombatDriver {
             if (skill == null && art == null && WeaponSkillFx.isWeaponSkill(hit.action())) {
                 WeaponSkillFx.frame(player, hit);
             }
+            if (art != null && ArtFx.isGenerated(hit.action())) {
+                ArtFx.frame(player, hit); // the composed look of a named or tier weapon's art
+            }
             if (!rest.isEmpty()) {
                 if (art != null) {
                     SkillEffectsExecutor.applyArt(player, stats, art, hit.weapon(), hit.damageScale(), rest, targets);
@@ -317,8 +324,10 @@ public final class CombatDriver {
                 }
             }
         } else if (event instanceof CombatEvent.ActionStarted start) {
+            SkillLocks.face(player, start.action().id(), player.server.getTickCount());
             CombatEffects.actionStarted(player, start);
             WeaponSkillFx.started(player, start.weapon(), start.action());
+            ArtFx.started(player, start.weapon(), start.action());
             ERNetwork.sendToTracking(player, new PlayerActionPacket(player.getId(), start.action().id(),
                     start.comboStep(), start.action().timing(stats.actionSpeedFactor()).duration(), false));
             Jobs.skillOfAction(start.action().id()).ifPresent(skill ->
@@ -353,6 +362,14 @@ public final class CombatDriver {
 
     /** A validated request from the network layer (sender authenticated, rate limited, data loaded). */
     public void handleRequest(ServerPlayer player, CombatRequest request, int sequence) {
+        handleRequest(player, request, sequence, -1);
+    }
+
+    /**
+     * A validated request; a skill aimed by holding its key names the enemy it is locked on ({@code targetId}, -1 for
+     * none), which {@link SkillLocks} checks before keeping the skill on it.
+     */
+    public void handleRequest(ServerPlayer player, CombatRequest request, int sequence, int targetId) {
         Combatant combatant = service.get(player.getUUID()).orElse(null);
         RequestOutcome outcome;
         if (combatant == null || !player.isAlive() || player.isSpectator()
@@ -364,9 +381,27 @@ public final class CombatDriver {
             boolean usingOtherItem = player.isUsingItem() && !isUsingWeapon(player);
             outcome = combatant.submit(request, now(), WeaponItem.profileOf(player.getMainHandItem()), restricted,
                     usingOtherItem);
+            if (request.isSkill() && (outcome == RequestOutcome.ACCEPTED || outcome == RequestOutcome.BUFFERED)) {
+                ActionDefinition action = skillAction(combatant, request.skillSlot());
+                if (targetId >= 0 && action != null) {
+                    // a buffered skill starts at the current action's cancel point: the lock waits for it
+                    SkillLocks.lock(player, targetId, action.id(), action.durationTicks() + 40, now());
+                } else {
+                    SkillLocks.clear(player);
+                }
+            }
         }
         net(player.getUUID()).lastSequence = sequence;
         sendStatus(player, combatant, true, outcome, DefenseEvent.NONE);
+    }
+
+    /** The action a skill request uses: the weapon's skill (slot 0) or the job skill in the slot. */
+    private static ActionDefinition skillAction(Combatant combatant, int slot) {
+        if (slot == 0) {
+            return combatant.weapon() == null ? null : combatant.weapon().skill();
+        }
+        com.eternalrealm.combat.SkillBinding binding = combatant.jobSkill(slot);
+        return binding == null ? null : binding.action();
     }
 
     /**
@@ -540,6 +575,7 @@ public final class CombatDriver {
 
     public void onPlayerLeft(UUID playerId) {
         WeaponSkillFx.forget(playerId);
+        ArtFx.forget(playerId);
         service.remove(playerId, now());
         net.remove(playerId);
         skills.remove(playerId);

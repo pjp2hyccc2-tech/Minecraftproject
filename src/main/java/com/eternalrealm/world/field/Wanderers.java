@@ -37,7 +37,15 @@ public final class Wanderers {
     static final int LANDMARK_CLEARANCE = 48;
     static final int PIECE_CLEARANCE = 32;
     static final int LORD_CLEARANCE = 40;
+    /**
+     * Arena rim to habitat rim. Where a field has too few spots with it (the habitats grew to twice their area on
+     * 2026-11-11 and the harbour is mostly sea), the arena may come as close as {@link #HABITAT_CLEARANCE_TIGHT}:
+     * habitat monsters stay calm unless attacked or lingered near, so a fight next door does not pull them in.
+     */
     static final int HABITAT_CLEARANCE = 12;
+    static final int HABITAT_CLEARANCE_TIGHT = 0;
+    /** Fewest spots a field should offer (the wanderer turns up in different places). */
+    static final int MIN_SPOTS = 3;
     static final int LAIR_CLEARANCE = 80;
     static final int CAPITAL_CLEARANCE = 120;
     static final int BORDER_CLEARANCE = 36;
@@ -191,12 +199,18 @@ public final class Wanderers {
      * terrain sampling, so the server finds them off the main thread.
      */
     public static List<Spot> findSpots(int field, List<Box> keepOut) {
+        List<Spot> spots = findSpots(field, keepOut, HABITAT_CLEARANCE);
+        return spots.size() >= MIN_SPOTS ? spots : findSpots(field, keepOut, HABITAT_CLEARANCE_TIGHT);
+    }
+
+    private static List<Spot> findSpots(int field, List<Box> keepOut, int habitatClearance) {
         int[] bounds = FieldLayout.regionBounds(field);
         double[] label = FieldLayout.labelPoint(field);
         List<Spot> candidates = new ArrayList<>();
         for (int x = bounds[0] + GRID / 2; x <= bounds[2]; x += GRID) {
             for (int z = bounds[1] + GRID / 2; z <= bounds[3]; z += GRID) {
-                if (Math.hypot(x - label[0], z - label[1]) <= HEART_RADIUS && suitable(field, x, z, keepOut)) {
+                if (Math.hypot(x - label[0], z - label[1]) <= HEART_RADIUS
+                        && suitable(field, x, z, keepOut, habitatClearance)) {
                     candidates.add(new Spot(x, z));
                 }
             }
@@ -238,6 +252,10 @@ public final class Wanderers {
      * {@code field}, clear of what a fight must not trample.
      */
     public static boolean suitable(int field, int x, int z, List<Box> keepOut) {
+        return suitable(field, x, z, keepOut, HABITAT_CLEARANCE);
+    }
+
+    private static boolean suitable(int field, int x, int z, List<Box> keepOut, int habitatClearance) {
         int edge = Math.min(Math.min(x - FieldLayout.MIN_X, FieldLayout.MAX_X - x),
                 Math.min(z - FieldLayout.MIN_Z, FieldLayout.MAX_Z - z));
         if (edge < EDGE_CLEARANCE || FieldLayout.areaAt(x, z) != field
@@ -276,7 +294,7 @@ public final class Wanderers {
         }
         for (Habitats.Habitat habitat : Habitats.all()) {
             // the fight would pull the habitat's monsters in
-            if (habitat.distanceTo(x, z) < habitat.radius() + FieldThreats.LAIR_RADIUS + HABITAT_CLEARANCE) {
+            if (habitat.distanceTo(x, z) < habitat.radius() + FieldThreats.LAIR_RADIUS + habitatClearance) {
                 return false;
             }
         }

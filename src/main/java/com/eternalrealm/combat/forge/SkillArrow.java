@@ -22,6 +22,8 @@ public final class SkillArrow extends AbstractArrow {
     private ProjectilePayload payload;
     private int pierceLeft;
     private final Set<Integer> alreadyHit = new HashSet<>();
+    /** Enemy a locked skill's arrow curves into (D-LOCKON), or -1. */
+    private int homingTarget = -1;
 
     public SkillArrow(EntityType<? extends SkillArrow> type, Level level) {
         super(type, level);
@@ -46,8 +48,17 @@ public final class SkillArrow extends AbstractArrow {
         return ItemStack.EMPTY;
     }
 
+    /** Makes the arrow fly straight at {@code target} and curve into it (a skill locked on to an enemy). */
+    void homeOn(net.minecraft.world.entity.LivingEntity target) {
+        homingTarget = target.getId();
+        setNoGravity(true);
+    }
+
     @Override
     public void tick() {
+        if (!level().isClientSide && !inGround) {
+            homingTarget = Homing.steer(this, homingTarget);
+        }
         super.tick();
         if (!level().isClientSide && !isRemoved()
                 && (payload == null || tickCount > payload.spec().lifetimeTicks())) {
@@ -59,6 +70,11 @@ public final class SkillArrow extends AbstractArrow {
                 && payload.kind() == com.eternalrealm.combat.ActionKind.SKILL && payload.theme() == null
                 && level() instanceof ServerLevel serverLevel && getOwner() instanceof ServerPlayer owner) {
             WeaponSkillFx.arrowTrail(serverLevel, this, owner);
+        } else if (!level().isClientSide && !isRemoved() && !inGround && payload != null
+                && payload.kind() == com.eternalrealm.combat.ActionKind.SKILL
+                && level() instanceof ServerLevel artLevel && getOwner() instanceof ServerPlayer artOwner
+                && ArtFx.hasWindow(artOwner)) {
+            ArtFx.arrowTrail(artLevel, this, artOwner); // an arrow of a named or tier weapon's art
         }
     }
 
@@ -68,7 +84,7 @@ public final class SkillArrow extends AbstractArrow {
             return false;
         }
         if (level().isClientSide) {
-            return true;
+            return !(entity instanceof net.minecraft.world.entity.player.Player); // the server decides; never stop on a player
         }
         return entity instanceof LivingEntity living && getOwner() instanceof ServerPlayer owner
                 && CombatHits.isValidTarget(owner, living);

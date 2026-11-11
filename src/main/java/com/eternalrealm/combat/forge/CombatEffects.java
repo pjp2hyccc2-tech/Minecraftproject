@@ -127,6 +127,7 @@ final class CombatEffects {
             level.sendParticles(ParticleTypes.ENCHANTED_HIT, target.getX(), y, target.getZ(), 8, 0.3, 0.3, 0.3, 0.2);
             level.sendParticles(ERParticles.RUNE.get(), target.getX(), y, target.getZ(), 4, 0.3, 0.3, 0.3, 0.05);
             WeaponSkillFx.impact(attacker, target, critical); // only while the attacker's weapon skill is out
+            ArtFx.impact(attacker, target, critical); // only while a named or tier weapon's art is out
         }
     }
 
