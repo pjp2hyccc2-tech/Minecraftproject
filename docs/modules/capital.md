@@ -282,7 +282,8 @@ Minecraft-like sky and block light, AO, fog, clouds, section planes, volumetric 
 `map_top.png` (top-down map with the district boxes and spots). Cameras are in `preview.views()` and
 `castle/plan.py`; the town cameras are in `districts/_town_views.py` (plus `VIEWS` dicts in the district
 modules): `python3 tools/capital/districts/_town_views.py town_aerial,guild_hall --scale 0.5` draws stand-in
-blocks for flags, sails, dials, wheels and jets on a copy of the world (`--raw` renders without them, `--check`
+blocks for flags, sails, dials, wheels, jets, bunting strings, shop signs, secret doors (as their wall) and floating
+lanterns on a copy of the world (`--raw` renders without them, `--check`
 only checks the gimmicks' keep-free volumes, `--list` lists the cameras). Previews approximate vanilla lighting;
 the game (and the owner's shader) will differ. Entities (paintings, item frames, armour stands) are not drawn, and
 blocks are flat colours (`colors.py`; a block missing there shows magenta).

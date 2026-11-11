@@ -224,6 +224,17 @@ public class SecretDoorBlock extends Block implements EntityBlock {
         return new SecretDoorBlockEntity(pos, state);
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState old, boolean moving) {
+        super.onPlace(state, level, pos, old, moving);
+        // a door placed standing open (by a structure or the capital data) closes by itself like any other
+        if (!level.isClientSide && !old.is(this) && state.getValue(HALF) == DoubleBlockHalf.LOWER
+                && state.getValue(OPEN)) {
+            level.scheduleTick(pos, this, SecretDoorMotion.STAY_OPEN_TICKS);
+        }
+    }
+
     // ------------------------------------------------------------------------------------------ opening and closing
 
     @Override
