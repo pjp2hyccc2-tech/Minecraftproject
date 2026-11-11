@@ -1,0 +1,318 @@
+{
+ "format": 1,
+ "build": "1d0bcaa714e70fca",
+ "tileSize": 32,
+ "minY": -32,
+ "maxY": 159,
+ "palette": [
+  "eternalrealm:void",
+  "minecraft:air",
+  "eternalrealm:chandelier",
+  "eternalrealm:gilded_trim",
+  "eternalrealm:guild_board[facing=west]",
+  "eternalrealm:guild_portal[axis=z,theme=dwarven_forge]",
+  "eternalrealm:smoke_emitter[heavy=true]",
+  "eternalrealm:water_wheel[facing=south]",
+  "minecraft:andesite",
+  "minecraft:anvil[facing=north]",
+  "minecraft:anvil[facing=west]",
+  "minecraft:barrel[facing=north,open=false]",
+  "minecraft:barrel[facing=up,open=false]",
+  "minecraft:bell[attachment=ceiling,facing=east,powered=false]",
+  "minecraft:blast_furnace[facing=south,lit=true]",
+  "minecraft:bricks",
+  "minecraft:campfire[facing=north,lit=true]",
+  "minecraft:cartography_table",
+  "minecraft:chain[axis=y]",
+  "minecraft:chest[facing=north,type=single]",
+  "minecraft:chiseled_deepslate",
+  "minecraft:chiseled_polished_blackstone",
+  "minecraft:coarse_dirt",
+  "minecraft:cobbled_deepslate",
+  "minecraft:crafting_table",
+  "minecraft:dark_oak_fence",
+  "minecraft:dark_oak_log[axis=z]",
+  "minecraft:deepslate[axis=y]",
+  "minecraft:deepslate_bricks",
+  "minecraft:deepslate_copper_ore",
+  "minecraft:deepslate_diamond_ore",
+  "minecraft:deepslate_gold_ore",
+  "minecraft:deepslate_iron_ore",
+  "minecraft:deepslate_lapis_ore",
+  "minecraft:deepslate_tiles",
+  "minecraft:furnace[facing=south,lit=false]",
+  "minecraft:gilded_blackstone",
+  "minecraft:gold_block",
+  "minecraft:grass_block",
+  "minecraft:gravel",
+  "minecraft:grindstone[face=floor,facing=south]",
+  "minecraft:hay_block[axis=y]",
+  "minecraft:iron_bars",
+  "minecraft:iron_block",
+  "minecraft:iron_door[facing=south,half=lower,hinge=left,open=false]",
+  "minecraft:iron_door[facing=south,half=upper,hinge=left,open=false]",
+  "minecraft:lantern[hanging=false]",
+  "minecraft:lantern[hanging=true]",
+  "minecraft:lava[level=0]",
+  "minecraft:loom[facing=south]",
+  "minecraft:magma_block",
+  "minecraft:moss_block",
+  "minecraft:packed_mud",
+  "minecraft:polished_blackstone_brick_slab[type=bottom]",
+  "minecraft:polished_blackstone_brick_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:polished_blackstone_brick_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:polished_blackstone_bricks",
+  "minecraft:polished_blackstone_wall",
+  "minecraft:polished_deepslate",
+  "minecraft:polished_deepslate_slab[type=bottom]",
+  "minecraft:raw_gold_block",
+  "minecraft:raw_iron_block",
+  "minecraft:shroomlight",
+  "minecraft:smithing_table",
+  "minecraft:smoker[facing=south,lit=true]",
+  "minecraft:snow_block",
+  "minecraft:spruce_fence",
+  "minecraft:spruce_leaves[distance=1,persistent=true]",
+  "minecraft:spruce_log[axis=x]",
+  "minecraft:spruce_log[axis=y]",
+  "minecraft:spruce_log[axis=z]",
+  "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight]",
+  "minecraft:spruce_wall_sign[facing=east]",
+  "minecraft:stone",
+  "minecraft:stone_button[face=wall,facing=north,powered=false]",
+  "minecraft:stonecutter[facing=south]",
+  "minecraft:target[power=0]",
+  "minecraft:trapped_chest[facing=north,type=single]",
+  "minecraft:tuff",
+  "minecraft:water_cauldron[level=3]"
+ ],
+ "tiles": [
+  {
+   "x": -1,
+   "z": -1,
+   "file": "tiles/-1_-1.bin"
+  },
+  {
+   "x": -1,
+   "z": 0,
+   "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": 0,
+   "z": -1,
+   "file": "tiles/0_-1.bin"
+  },
+  {
+   "x": 0,
+   "z": 0,
+   "file": "tiles/0_0.bin"
+  }
+ ],
+ "blockEntities": [
+  {
+   "pos": [
+    -15,
+    7,
+    0
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.8\"}}"
+  },
+  {
+   "pos": [
+    -10,
+    1,
+    -4
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -9,
+    2,
+    -3
+   ],
+   "nbt": "{front_text:{messages:['{\"translate\":\"guildhouse.eternalrealm.design.dwarven_forge\",\"bold\":true}','{\"text\":\"★★\",\"color\":\"gold\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home_hint\",\"italic\":true}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -7,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -6,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.1\"}}"
+  },
+  {
+   "pos": [
+    -5,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+  },
+  {
+   "pos": [
+    -3,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.4\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    -8
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.1\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.2\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.5\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -8
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.2\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.6\"}}"
+  },
+  {
+   "pos": [
+    2,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.3\"}}"
+  },
+  {
+   "pos": [
+    3,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.7\"}}"
+  },
+  {
+   "pos": [
+    4,
+    1,
+    -8
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.3\"}}"
+  },
+  {
+   "pos": [
+    6,
+    1,
+    -8
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.4\"}}"
+  },
+  {
+   "pos": [
+    6,
+    34,
+    0
+   ],
+   "nbt": "{Radius:1.8f,Width:0.5f}"
+  },
+  {
+   "pos": [
+    7,
+    1,
+    -8
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.5\"}}"
+  },
+  {
+   "pos": [
+    9,
+    1,
+    12
+   ],
+   "nbt": "{ForgeData:{er_slot:\"vault.1\"}}"
+  }
+ ],
+ "entities": [
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    2.5,
+    0.0,
+    -0.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Look:1b}"
+  },
+  {
+   "type": "eternalrealm:training_dummy",
+   "pos": [
+    5.5,
+    0.0,
+    1.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Look:1b}"
+  }
+ ],
+ "fluidTicks": [],
+ "spots": {
+  "board": {
+   "pos": [
+    -8,
+    1,
+    5
+   ],
+   "yaw": -90.0
+  },
+  "entry": {
+   "pos": [
+    -9,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  },
+  "exit": {
+   "pos": [
+    -12,
+    1,
+    0
+   ],
+   "yaw": -90.0
+  }
+ },
+ "blend": {
+  "edgeY": 0
+ }
+}

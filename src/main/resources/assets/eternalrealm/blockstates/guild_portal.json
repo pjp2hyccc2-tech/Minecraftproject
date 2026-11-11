@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "eternalrealm:block/guild_portal"
+    },
+    "axis=z": {
+      "model": "eternalrealm:block/guild_portal",
+      "y": 90
+    }
+  }
+}

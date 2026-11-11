@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "eternalrealm:block/shingle_roof_tile_slab"
+    },
+    "type=top": {
+      "model": "eternalrealm:block/shingle_roof_tile_slab_top"
+    },
+    "type=double": {
+      "model": "eternalrealm:block/shingle_roof_tiles"
+    }
+  }
+}

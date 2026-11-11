@@ -22,7 +22,9 @@ public enum NpcRole {
     /** Rents the rooms of the Starlight Manor (docs/modules/estates.md). */
     INNKEEPER("innkeeper", "cleric"),
     /** Story characters: only talk. */
-    STORY("story", "nitwit");
+    STORY("story", "nitwit"),
+    /** Sells the guild houses on the Guild Gate Terrace (docs/modules/guildhouse.md). */
+    GUILD_ESTATES("guild_estates", "librarian");
 
     private final String id;
     private final String profession;

@@ -29,6 +29,8 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 OUT = os.path.join(ROOT, "src", "main", "resources", "data", "eternalrealm", "estates")
 
 DESIGNS = dict(rooms.DESIGNS)
+from estates.guild import houses as guild_houses  # noqa: E402  (the guild houses, docs/modules/guildhouse.md)
+DESIGNS.update(guild_houses.DESIGNS)
 
 
 def build_design(kind, design, log=print):
@@ -70,6 +72,7 @@ def main(argv=None) -> int:
             views.render(w, kind, design, names=[v for v in args.views.split(",") if v] or None, scale=args.scale)
     if all(("room", tier) in results for tier in rooms.ROOM_TIERS):
         problems += rooms.check_storage(results)
+    problems += guild_houses.check(results)
     for p in problems:
         print("PROBLEM:", p)
     print("ok" if not problems else f"{len(problems)} problems")

@@ -29,7 +29,8 @@ def passable(st: str) -> bool:
     """Blocks a player walks through or over: air, decoration without a collision box (torches, signs, banners,
     pressure plates, buttons, vines, open doors) and carpets (1/16 high). Lanterns, chains and candles collide."""
     n = st.split(":", 1)[1].split("[")[0]
-    if n in ("air", "cave_air", "void", "light_shaft", "light", "smoke_emitter", "fountain_spray", "vine"):
+    if n in ("air", "cave_air", "void", "light_shaft", "light", "smoke_emitter", "fountain_spray", "vine",
+             "guild_portal"):
         return True
     if n.endswith(("torch", "_sign", "_banner", "pressure_plate", "_button", "carpet")):
         return True
@@ -273,7 +274,8 @@ def check(out_dir: str, verbose=True) -> list:
         feet, head, floor = block_at(x, y, z), block_at(x, y + 1, z), block_at(x, y - 1, z)
         for what, st in (("feet", feet), ("head", head)):
             sch = B.schema_of(st)
-            if st not in ("minecraft:air",) and sch not in ("carpet", "pressure_plate", "candle", "light_shaft") \
+            if st not in ("minecraft:air",) and sch not in ("carpet", "pressure_plate", "candle", "light_shaft",
+                                                             "guild_portal") \
                     and "carpet" not in st and "grass" != st.split(":")[1].split("[")[0] and "slab" not in st:
                 problems.append(f"spot {name} {what} blocked by {st}")
         if floor in ("minecraft:air", "eternalrealm:void"):

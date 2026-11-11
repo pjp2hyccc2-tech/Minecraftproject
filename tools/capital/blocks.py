@@ -360,6 +360,61 @@ _reg("hopper", "hopper")
 _reg(["seagrass", "kelp_plant"], "plain")
 _reg(["conduit"], "waterlogged")
 
+# ---- guild houses (docs/modules/guildhouse.md): the guild gates' portal surface, the house furniture with game
+# logic, and vanilla ids the twenty house designs use. GUILD_THEMES = the design ids of
+# data/eternalrealm/guildhouse/designs.json (tools/estates/guild/check.py keeps them in step).
+GUILD_THEMES = ("northern_longhouse", "mushroom_grove", "ancient_ruins", "pirate_ship", "flower_glasshouse",
+                "dwarven_forge", "desert_palace", "observatory", "japanese_mansion", "great_tree", "sage_library",
+                "jungle_temple", "gothic_cathedral", "coral_hall", "volcanic_fortress", "ice_castle", "dragon_lair",
+                "arcane_tower", "sky_temple", "marble_palace")
+SCHEMAS["guild_portal"] = {"axis": ("x", "z"), "theme": GUILD_THEMES}
+SCHEMAS["coral_wall_fan"] = {"facing": H4, "waterlogged": BOOL}
+SCHEMAS["age25"] = {"age": _rng(0, 25)}
+SCHEMAS["cave_vines"] = {"age": _rng(0, 25), "berries": BOOL}
+SCHEMAS["cave_vines_plant"] = {"berries": BOOL}
+SCHEMAS["bamboo"] = {"age": ("0", "1"), "leaves": ("none", "small", "large"), "stage": ("0", "1")}
+SCHEMAS["pointed_dripstone"] = {"thickness": ("tip_merge", "tip", "frustum", "middle", "base"),
+                                "vertical_direction": ("up", "down"), "waterlogged": BOOL}
+DEFAULTS["guild_portal"] = {"axis": "x"}
+DEFAULTS["cave_vines"] = {"age": "25", "berries": "true"}
+DEFAULTS["cave_vines_plant"] = {"berries": "true"}
+DEFAULTS["bamboo"] = {"age": "0", "leaves": "large", "stage": "0"}
+_reg(["guild_portal"], "guild_portal", CUSTOM_NS)              # shimmering gate surface (no collision)
+_reg(["guild_board"], "facing4", CUSTOM_NS)                     # the guild's notice board (3 x 2 on a wall)
+# roof tiles of the guild houses (GuildHouseBlocks; textures by tools/art/guild_house_blocks.py)
+GUILD_ROOFS = ("shingle", "slate", "kawara", "verdigris", "gilded")
+for _r in GUILD_ROOFS:
+    _family(f"{_r}_roof_tiles", f"{_r}_roof_tile_stairs", f"{_r}_roof_tile_slab", None, ns=CUSTOM_NS)
+_family("thatch_roof", "thatch_roof_stairs", "thatch_roof_slab", None, ns=CUSTOM_NS)
+_reg(["dragon_egg", "red_mushroom", "brown_mushroom"])
+_reg(["kelp"], "age25")
+for _c in ("tube", "brain", "bubble", "fire", "horn"):
+    _reg(f"{_c}_coral_block")
+    _reg([f"{_c}_coral", f"{_c}_coral_fan"], "waterlogged")
+    _reg(f"{_c}_coral_wall_fan", "coral_wall_fan")
+for _n in ("crimson", "warped"):
+    _family(f"{_n}_planks", f"{_n}_stairs", f"{_n}_slab", None)
+    MATERIALS[_n] = MATERIALS[f"{_n}_planks"]
+    _reg([f"{_n}_stem", f"stripped_{_n}_stem", f"{_n}_hyphae"], "axis")
+    _reg([f"{_n}_nylium", f"{_n}_fungus", f"{_n}_roots"])
+    _reg(f"{_n}_fence", "fence")
+    _reg(f"{_n}_fence_gate", "fence_gate")
+    _reg(f"{_n}_door", "door")
+    _reg(f"{_n}_trapdoor", "trapdoor")
+_std("red_nether_bricks", "red_nether_brick")
+_reg(["chiseled_nether_bricks", "cracked_nether_bricks", "chiseled_red_sandstone", "lodestone", "netherite_block",
+      "budding_amethyst", "nether_sprouts", "weeping_vines_plant", "twisting_vines_plant", "waxed_exposed_copper",
+      "waxed_weathered_copper", "waxed_oxidized_copper", "coal_ore", "iron_ore", "copper_ore", "gold_ore",
+      "diamond_ore", "emerald_ore", "lapis_ore", "deepslate_coal_ore", "deepslate_iron_ore", "deepslate_copper_ore",
+      "deepslate_gold_ore", "deepslate_diamond_ore", "deepslate_emerald_ore", "deepslate_lapis_ore",
+      "nether_gold_ore", "nether_quartz_ore", "dead_bubble_coral_block", "dead_brain_coral_block"])
+_reg(["redstone_ore", "deepslate_redstone_ore"], "lit")
+_reg(["weeping_vines", "twisting_vines"], "age25")
+_reg("cave_vines", "cave_vines")
+_reg("cave_vines_plant", "cave_vines_plant")
+_reg("bamboo", "bamboo")
+_reg("pointed_dripstone", "pointed_dripstone")
+
 for _w in WOODS:
     MATERIALS[_w] = MATERIALS[f"{_w}_planks"]
 

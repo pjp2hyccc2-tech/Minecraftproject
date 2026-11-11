@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "eternalrealm:block/gilded_roof_tiles",
+    "top": "eternalrealm:block/gilded_roof_tiles",
+    "side": "eternalrealm:block/gilded_roof_tiles"
+  }
+}

@@ -115,8 +115,9 @@ def check(out_dir, storage=None, verbose=True) -> list:
             problems.append(f"spot {name} has no floor")
     if "exit" in m["spots"]:
         x, y, z = m["spots"]["exit"]["pos"]
-        if not any("room_door" in block_at(x + dx, y, z + dz) for dx, dz in ((1, 0), (-1, 0), (0, 1), (0, -1))):
-            problems.append("the exit spot is not in front of a room door")
+        if not any(any(way in block_at(x + dx, y, z + dz) for way in ("room_door", "guild_portal"))
+                   for dx, dz in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+            problems.append("the exit spot is not in front of a room door or a guild portal")
     problems += stair_problems(pal, grid, block_at)
     if nonair > MAX_NONAIR:
         problems.append(f"non-air blocks {nonair} > {MAX_NONAIR}")

@@ -109,6 +109,7 @@ public final class RealmSetup {
         }
         BlockPos plaza = layout.spawnPoint();
         placeStablemaster(astoria, layout);
+        com.eternalrealm.guild.house.forge.GuildBroker.place(astoria, layout);
         for (int i = 0; i < CHARACTERS.size(); i++) {
             StoryNpc character = CHARACTERS.get(i);
             double angle = Math.PI * (0.25 + 0.375 * i);
