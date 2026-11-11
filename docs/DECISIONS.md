@@ -74,6 +74,22 @@ over the existing UI action and UI data channels: no new packet, no protocol bum
 helper wherever a relic is shown (bag, equipment slots and candidate list, tooltip border, pickup feed), and a drop is
 announced to the whole server. Other modules filter with `EquipmentStacks.isGoldFrame`, `requiredLevel` and `rarity`.
 
+## D-MOUNT-TRAITS: each horse and griffin is an individual; values with a floor stay hidden until bought (2026-11-11)
+The owner asked for horses and griffins that differ one from another in colour and wing or mane shape, individual
+values with a floor, four random offers to choose from at each purchase with the values shown only after buying (a
+gamble), and an auction for the good ones. A mount is now an individual (`MountIndividual`: id, kind, look, values) and
+a character keeps up to 12 of them; the arcbike is a machine and stays one, unvaried, per character. The three values
+(speed, acceleration, lift) are rolled evenly between 30 and 100 and scale the species' numbers by 0.92 to 1.08 (65 is
+the species itself): the floor means no mount is a dud and the narrow band keeps the gamble about bragging and small
+edges rather than a mount twice as fast: the best horse (0.62 blocks a tick) stays well behind the arcbike (0.86). The
+grade comes from the sum (C, B, A, S, SS: about 28/48/19/4.3/0.57 %), and an SS is announced. The stablemaster rolls
+four looks per kind and keeps them (until bought or re-rolled for 5 % of the price), and their values never leave the
+server until one is bought, so a modified client cannot read them. Coats are model textures and shapes scale model
+parts, so all looks share one model. Mounts bought before this read as the classic look with standard values. A kept
+mount can become a deed item (`er_mount` tag) to sell at the board or the hall and be taken into another player's
+stable at the stablemaster, with the kind's level gate; deeds keep the mount's id, so one mount can never be kept
+twice.
+
 ## D-AUCTION: two market counters — a fixed-price board and a live auction hall with five lots at once (2026-11-11)
 The owner asked for an auction for high-value pieces (five lots at once on the server, run at the capital's hall, joined
 from any field, "fine and delicate"), and for a board shop where common gear and materials trade cheaply and rare

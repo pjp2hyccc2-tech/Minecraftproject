@@ -99,11 +99,24 @@
 ## 付録: 乗り物（パケット追加なし・版 7 のまま）
 
 - UI 操作（`UiActionPacket`）: `mount.toggle`（引数なし。乗っていれば降りる・呼び出し中なら中止・それ以外は呼ぶ）、
-  `mount.choose`（引数なし。持っている乗り物の一覧メニューを開く）。判定はすべてサーバー（`MountRules`）。
-- ビューデータ（`UiDataPacket`）: チャンネル `mount_state` = `{"owned":["horse",...],"selected":"griffin","riding":""}`。
+  `mount.choose`（引数なし。持っている乗り物の画面を開く）。判定はすべてサーバー（`MountRules`）。
+- ビューデータ（`UiDataPacket`）: チャンネル `mount_state` = `{"owned":["horse",...],"selected":"griffin","riding":""}`（種類）。
   変わったとき（購入・選択・乗る・降りる）と1秒ごとの確認で送る。HUD の乗り物アイコンが使う。
 - 乗り物の移動はバニラの乗り物と同じ（乗り手のクライアントが `ServerboundMoveVehiclePacket` で送る）。サーバーは速さと高さを見張る
   （[modules/mounts.md](modules/mounts.md)）。
+
+### 個体差と厩舎（2026-11-11 追加・パケット追加なし）
+- UI 操作: `mount.stable.buy {kind, index}`（index 0〜3）、`mount.stable.reroll {kind}`、`mount.select {id, call?}`（id は UUID、
+  call が true ならその場で呼ぶ）、`mount.deed {id}`、`mount.redeem {slot}`（カバンの枠 1〜35）。kind は `horse`/`griffin`/`bike`。
+  型・範囲の違反は `UiArgs` が違反として扱う。buy・reroll・deed・redeem は厩舎長の8ブロック以内でだけ受け付ける。
+- ビューデータ: チャンネル `mount.stable` = `{"open", "mode": "stable"|"choose", "atStable", "gold", "level", "capacity",
+  "kinds": [{kind, level, price, flies, speed, varies, reroll, status, "offers": [{index, coat, shape, rare}]}],
+  "mounts": [{id, kind, coat, shape, rare, varies, speed, accel, lift, total, grade, selected, riding, tradeable}],
+  "deeds": [{…mounts と同じ, slot, redeem}], "reveal": {…買った直後の1頭}}`。**4頭（offers）は毛色と形だけで、個体値を含めない。**
+- エンティティの同期データ（`MountEntity`）: 毛色と形（文字列 `coat/shape`）と、その1頭の個体値（3つを1つの int に詰める）。
+  乗り手のクライアントが性能を計算するのに使う。
+- 証書（アイテム `eternalrealm:mount_deed`）のタグ `er_mount` = `{id (UUID), species, coat, shape, speed, accel, lift, grade}`。
+  読み込みは寛容（範囲外の値は丸め、種類が不明・二輪なら壊れた証書として扱う）。
 
 ## 付録: 市場（パケット追加なし・版 8 のまま）
 - S→C `UiDataPacket`: `market.board`（掲示板の検索結果 1 ページ・自分の出品・メール・規則。開くときは `open: true` と `tab`）、

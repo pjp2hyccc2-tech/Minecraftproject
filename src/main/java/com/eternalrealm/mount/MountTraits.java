@@ -59,7 +59,7 @@ public record MountTraits(int speed, int acceleration, int lift) {
 
     /**
      * The quality of a mount from the sum of its values. With even rolls about 28 % are C, 48 % B, 19 % A, 4 % S and
-     * one in 175 SS.
+     * about one in 177 SS.
      */
     public enum Grade {
         C("c", 0, 0x9A9AA6),
