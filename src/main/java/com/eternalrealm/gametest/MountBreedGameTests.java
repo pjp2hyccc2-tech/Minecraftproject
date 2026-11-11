@@ -163,6 +163,7 @@ public final class MountBreedGameTests {
             player.moveTo(back.x, back.y, back.z, 0.0F, 0.0F);
             MountEntity jumper = MountService.summonNow(player, MountIndividual.standard(UUID.randomUUID(), kind))
                     .orElseThrow(() -> new GameTestAssertException("no room for the " + kind + " to jump"));
+            settle(jumper);
             double floor = Double.NaN;
             double highest = Double.NEGATIVE_INFINITY;
             for (int tick = 0; tick < 40; tick++) {
@@ -185,6 +186,7 @@ public final class MountBreedGameTests {
         FakePlayer stepper = rider(helper, "er_gt_breed_step", new Vec3(4.5, 2.0, 30.5));
         MountEntity halo = MountService.summonNow(stepper, MountIndividual.standard(UUID.randomUUID(),
                 MountKind.HORSE_HALO)).orElseThrow(() -> new GameTestAssertException("no room for the halohorn"));
+        settle(halo);
         double ground = halo.getY();
         double top = ground;
         for (int tick = 0; tick < 40; tick++) {
@@ -247,7 +249,8 @@ public final class MountBreedGameTests {
 
     /**
      * A lane of still water over the floor: the tide gallops on top of it at full speed while a warhorse wades
-     * through it slowly. Driven once per tick (the entities' own ticks notice the water).
+     * through it slowly (it bobs at the surface, in and out of the water, so it is measured over 20 ticks). Driven
+     * once per tick (the entities' own ticks notice the water).
      */
     @GameTest(template = HALL, timeoutTicks = 200)
     public static void theTideGallopsOverWaterThatSlowsTheOtherHorses(GameTestHelper helper) {
@@ -277,20 +280,21 @@ public final class MountBreedGameTests {
             int tick = ticks.incrementAndGet();
             tide.drive(FORWARD);
             horse.drive(FORWARD);
-            if (tick == 25) {
+            if (tick == 20) {
                 marks[0] = tide.position();
                 marks[1] = horse.position();
-            } else if (tick == 35) {
+            } else if (tick == 40) {
                 done.set(true);
-                double tideSpeed = horizontal(tide.position().subtract(marks[0])) / 10.0;
-                double horseSpeed = horizontal(horse.position().subtract(marks[1])) / 10.0;
+                double tideSpeed = horizontal(tide.position().subtract(marks[0])) / 20.0;
+                double horseSpeed = horizontal(horse.position().subtract(marks[1])) / 20.0;
                 double tideY = tide.getY();
                 MountService.dismiss(tideRider, false);
                 MountService.dismiss(horseRider, false);
                 String speeds = String.format(Locale.ROOT, "tide %.3f at y %.2f (surface %.2f), warhorse %.3f",
                         tideSpeed, tideY, surface, horseSpeed);
                 if (tideSpeed < MountKind.HORSE_TIDE.stats().topSpeed() * 0.85
-                        || horseSpeed > MountKind.HORSE.stats().topSpeed() * 0.5 || tideY < surface - 0.3) {
+                        || horseSpeed > MountKind.HORSE.stats().topSpeed() * 0.8 || tideSpeed < horseSpeed * 1.25
+                        || tideY < surface - 0.3) {
                     helper.fail("the tide must gallop on the water and the warhorse wade: " + speeds);
                     return;
                 }
@@ -460,6 +464,14 @@ public final class MountBreedGameTests {
     }
 
     // ------------------------------------------------------------------ helpers
+
+    /** A mount just called is not yet marked on the ground: one still tick puts it down on the floor. */
+    private static void settle(MountEntity mount) {
+        for (int tick = 0; tick < 5 && !mount.onGround(); tick++) {
+            mount.drive(MountMotion.Input.NONE);
+        }
+        check(mount.onGround(), mount.kind() + " never stood on the floor");
+    }
 
     private static double horizontal(Vec3 delta) {
         return Math.sqrt(delta.x * delta.x + delta.z * delta.z);
