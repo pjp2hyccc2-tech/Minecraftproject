@@ -79,8 +79,11 @@ class House:
 
     # ------------------------------------------------------------------ storage
     def chest(self, t, x, y, z, facing="south"):
-        """A members' chest (27 slots) named chest.<n>; ``facing`` = the side its lid opens to."""
-        return EK.chest(t, self.storage, x, y, z, facing)
+        """A members' chest (a vanilla chest, 27 slots) named chest.<n>; ``facing`` = the side its lid opens to."""
+        name = self.storage.name("chest")
+        t.set(x, y, z, B.chest(facing))
+        t.be(x, y, z, "{" + EK.slot_nbt(name) + "}")
+        return name
 
     def vault(self, t, x, y, z, facing="south"):
         """The officers' vault: a trapped chest named vault.<n> (only the master and the officers open it)."""
