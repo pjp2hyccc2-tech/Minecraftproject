@@ -363,11 +363,43 @@ def _band_rooms(f):
                     FU.bed_pair(f, x, fy, z, "south", color="white")
 
 
+def _oriels(f):
+    """Two timber oriels on the canal front (x 4..7 and 28..31) over the first and second floors, each on a stone
+    corbel with leaded windows on three sides and a little tiled roof; kingdom banners on the posts between them and
+    the portico, ivy climbing the ground floor under them."""
+    for xa in (4, W - 8):
+        xb = xa + 3
+        for x in range(xa, xb + 1):
+            f.set(x, FLOORS[1], -1, B.stairs("smooth_castle_stone", "south", "top"))
+            f.fill(x, FLOORS[1] + 1, -1, x, FLOORS[3] - 1, -1, PLASTER)
+            f.set(x, FLOORS[2], -1, B.log("dark_oak", "x"))
+            f.set(x, FLOORS[3], -1, B.stairs(ROOF, "south"))
+        for x in range(xa + 1, xb):
+            f.set(x, FLOORS[1] - 1, -1, B.stairs("smooth_castle_stone", "south", "top"))   # the corbel
+        for y in range(FLOORS[1] + 1, FLOORS[3]):
+            f.set(xa, y, -1, TIMBER)
+            f.set(xb, y, -1, TIMBER)
+        for fy in FLOORS[1:3]:
+            f.fill(xa + 1, fy + 2, -1, xb - 1, fy + 3, -1, TK.LEADED)       # the front lights
+            f.fill(xa, fy + 2, -1, xa, fy + 3, -1, TK.LEADED)               # and the side lights
+            f.fill(xb, fy + 2, -1, xb, fy + 3, -1, TK.LEADED)
+            f.fill(xa + 1, fy, -1, xb - 1, fy, -1, B.S("spruce_planks"))     # its floor, open to the room
+            f.fill(xa + 1, fy + 1, 0, xb - 1, fy + 3, 0, AIR)
+            f.set(xa + 1, fy + 1, -1, B.potted("flowering_azalea_bush"))
+        for x in range(xa, xb + 1):
+            for y in range(1, FLOORS[1]):
+                if f.is_empty(x, y, -1) and hash2(x, y, 5110) < 0.75:
+                    f.set(x, y, -1, B.S("vine", south=True))
+    for x in (9, 27):                                   # on timber posts (x % 3 == 0)
+        deco.kingdom_wall_banner(f, x, FLOORS[2] + 3, -1, facing="north")
+
+
 def inn_mansion(w, x0, z0):
     """Build the Starlight Manor with its front (north) wall on z = z0, west wall on x = x0."""
     f = Frame(w, (x0, 0, z0), 0)
     _shell(f)
     _windows(f)
+    _oriels(f)
     _turret(f, 0, 0)
     _turret(f, W - 1, 0)
     _atrium(f)

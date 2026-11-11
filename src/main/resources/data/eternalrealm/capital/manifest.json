@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "b90762f50d2e7a82",
+ "build": "f424f27421e3cd9b",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -4084,6 +4084,14 @@
   },
   {
    "pos": [
+    35,
+    14,
+    51
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
+  },
+  {
+   "pos": [
     36,
     8,
     24
@@ -4273,6 +4281,14 @@
     98
    ],
    "nbt": "{Width:3.0f,Height:2.0f,Design:\"harbour\"}"
+  },
+  {
+   "pos": [
+    53,
+    14,
+    51
+   ],
+   "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
   },
   {
    "pos": [
