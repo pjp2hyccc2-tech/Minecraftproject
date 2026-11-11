@@ -14,6 +14,10 @@ public enum MailReason {
     AUCTION_EXPIRED("auction_expired"),
     /** A purchase the buyer had no inventory room for. */
     AUCTION_PURCHASE("auction_purchase"),
+    /** Won at the auction hall while away or with a full bag. */
+    AUCTION_WON("auction_won"),
+    /** An auction-hall lot back to its seller: unsold, withdrawn or an old draft. */
+    AUCTION_RETURNED("auction_returned"),
     /** Rewards and deliveries from other systems or operators. */
     SYSTEM("system");
 

@@ -108,6 +108,8 @@
   "mail_reason.eternalrealm.auction_cancelled": {"ja": "出品取り消し", "en": "Listing cancelled"},
   "mail_reason.eternalrealm.auction_expired": {"ja": "出品期限切れ", "en": "Listing expired"},
   "mail_reason.eternalrealm.auction_purchase": {"ja": "購入品", "en": "Purchase"},
+  "mail_reason.eternalrealm.auction_won": {"ja": "落札品", "en": "Won at auction"},
+  "mail_reason.eternalrealm.auction_returned": {"ja": "オークション返却", "en": "Returned from auction"},
   "mail_reason.eternalrealm.system": {"ja": "お届け物", "en": "Delivery"},
   "message.eternalrealm.mail.waiting": {"ja": "メールボックスに %1$s G とアイテム %2$s 個が届いています", "en": "Your mailbox holds %1$s G and %2$s items."},
   "message.eternalrealm.mail.claimed": {"ja": "%1$s G とアイテム %2$s 個を受け取りました", "en": "You claimed %1$s G and %2$s items."},
