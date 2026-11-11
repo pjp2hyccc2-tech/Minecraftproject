@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "eternalrealm:block/sorting_desk"
+    },
+    "facing=east": {
+      "model": "eternalrealm:block/sorting_desk",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "eternalrealm:block/sorting_desk",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "eternalrealm:block/sorting_desk",
+      "y": 270
+    }
+  }
+}

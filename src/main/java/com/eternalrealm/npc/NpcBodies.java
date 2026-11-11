@@ -18,8 +18,8 @@ public final class NpcBodies {
             "king", "merchant", "merchant2", "housewife", "housewife2", "farmer", "farmer2", "stable_master",
             "sailor", "sailor2", "noble_lady", "noble_lady2", "noble_gent", "noble_gent2", "elder", "elder2",
             "apprentice", "apprentice2", "maid", "maid2", "bard", "bard2", "child", "child2", "adventurer",
-            "adventurer2", "guard", "knight", "archer", "priest", "nun", "warden", "warden_d1", "warden_d2",
-            "warden_d3", "warden_d4", "warden_d5", "warden_d6", "warden_d7", "warden_d8");
+            "adventurer2", "innkeeper", "guard", "knight", "archer", "priest", "nun", "warden", "warden_d1",
+            "warden_d2", "warden_d3", "warden_d4", "warden_d5", "warden_d6", "warden_d7", "warden_d8");
 
     private NpcBodies() {
     }
@@ -37,7 +37,7 @@ public final class NpcBodies {
     public static float scale(String id) {
         return switch (id == null ? "" : id) {
             case "mina", "lilia", "housewife", "housewife2", "noble_lady", "noble_lady2", "nun" -> 0.95F;
-            case "pim", "marta", "chloe", "selene" -> 0.96F;
+            case "pim", "marta", "chloe", "selene", "innkeeper" -> 0.96F;
             case "goran", "helga", "knight" -> 1.04F;
             case "hagen", "khalid" -> 1.03F;
             case "luce", "neris", "bard", "bard2" -> 0.97F;
@@ -59,7 +59,7 @@ public final class NpcBodies {
     public static float talkSeconds(String id) {
         return switch (id == null ? "" : id) {
             case "pim", "luce", "marta", "zain", "chloe", "gustav", "nox", "laszlo", "neris", "khalid", "helga", "king", "merchant", "merchant2", "farmer", "stable_master", "sailor", "sailor2", "noble_gent", "noble_gent2", "bard", "bard2", "adventurer2" -> 3.2F;
-            case "mina", "lilia", "selene", "housewife", "housewife2", "farmer2", "noble_lady", "noble_lady2", "maid", "maid2", "priest", "nun" -> 3.4F;
+            case "mina", "lilia", "selene", "housewife", "housewife2", "farmer2", "noble_lady", "noble_lady2", "maid", "maid2", "innkeeper", "priest", "nun" -> 3.4F;
             default -> 3.0F;
         };
     }

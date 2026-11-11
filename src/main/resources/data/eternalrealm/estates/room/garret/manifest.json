@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "83188e5d33af7555",
+ "build": "624c4d37b8e5f98e",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -20,8 +20,8 @@
   "eternalrealm:pale_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
   "eternalrealm:pale_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
   "eternalrealm:pale_roof_tiles",
-  "eternalrealm:room_door[facing=east,half=lower,hinge=left,open=false]",
-  "eternalrealm:room_door[facing=east,half=upper,hinge=left,open=false]",
+  "eternalrealm:room_door[facing=west,half=lower,hinge=left,open=false]",
+  "eternalrealm:room_door[facing=west,half=upper,hinge=left,open=false]",
   "eternalrealm:royal_roof_tile_slab[type=bottom]",
   "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
   "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
@@ -30,6 +30,10 @@
   "eternalrealm:royal_roof_tiles",
   "eternalrealm:smoke_emitter[heavy=false]",
   "eternalrealm:smooth_castle_stone",
+  "eternalrealm:sorting_desk[facing=east]",
+  "eternalrealm:storage_chest[facing=north,label=gear]",
+  "eternalrealm:storage_chest[facing=north,label=material]",
+  "eternalrealm:storage_chest[facing=north,label=potion]",
   "eternalrealm:terracotta_roof_tile_slab[type=bottom]",
   "eternalrealm:terracotta_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
   "eternalrealm:terracotta_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
@@ -52,9 +56,8 @@
   "minecraft:birch_trapdoor[facing=west,half=bottom,open=true]",
   "minecraft:bricks",
   "minecraft:chain[axis=y]",
-  "minecraft:chest[facing=north,type=left]",
-  "minecraft:chest[facing=north,type=right]",
   "minecraft:chiseled_bookshelf[facing=north]",
+  "minecraft:chiseled_bookshelf[facing=south]",
   "minecraft:coarse_dirt",
   "minecraft:cobblestone",
   "minecraft:dark_oak_door[facing=east,half=lower,hinge=right,open=false]",
@@ -73,7 +76,6 @@
   "minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight]",
   "minecraft:deepslate_tiles",
   "minecraft:dirt_path",
-  "minecraft:flower_pot",
   "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
   "minecraft:glass_pane",
   "minecraft:gravel",
@@ -244,7 +246,7 @@
   },
   {
    "pos": [
-    -4,
+    -5,
     13,
     3
    ],
@@ -252,11 +254,19 @@
   },
   {
    "pos": [
-    -3,
+    -4,
     13,
     3
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.2\"}}"
+  },
+  {
+   "pos": [
+    -3,
+    13,
+    3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.3\"}}"
   },
   {
    "pos": [
@@ -265,6 +275,14 @@
     3
    ],
    "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    13,
+    -3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.2\"}}"
   },
   {
    "pos": [

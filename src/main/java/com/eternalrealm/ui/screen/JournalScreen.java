@@ -98,6 +98,12 @@ public abstract class JournalScreen extends Screen {
         }
         addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.tab.map"),
                 b -> com.eternalrealm.ui.map.WorldMapScreen.open()).bounds(panelLeft, y + 6, TAB_WIDTH, 18).build());
+        // the way home to one's inn room (the room key, Home)
+        addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.tab.room"), b -> {
+            onClose();
+            com.eternalrealm.client.estate.EstateInput.recall();
+        }).bounds(panelLeft, y + 26, TAB_WIDTH, 18).tooltip(net.minecraft.client.gui.components.Tooltip.create(
+                Component.translatable("screen.eternalrealm.tab.room_tip"))).build());
         initPage();
     }
 

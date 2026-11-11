@@ -8,12 +8,14 @@
 
 | 場所 | 内容 |
 |---|---|
-| `estate`（純粋） | `EstateKey`、`EstatePlot` / `EstatePlots`（区画と割り当て）、`EstateRecord` / `EstateRegistry`（誰がどの区画）、`EstateData` / `EstateRepository`、`EstateStatus`、`EstateResult` |
+| `estate`（純粋） | `EstateKey`、`EstatePlot` / `EstatePlots`（区画と割り当て）、`EstateRecord` / `EstateRegistry`（誰がどの区画）、`EstateData` / `EstateRepository`、`EstateStatus`、`EstateResult`、客室の `RoomDesign`（5室と値段）/ `RoomRules`（借りる・移る・引き払う）、`StorageLabel`（収納の札）/ `DepositPlanner`（しまい方）/ `Ledger`（台帳の集計と検索）、`RecallRules`（帰還の判定） |
 | `persistence.file` | `EstateCodec`（`estates.json` schema 1）、`FileEstateRepository` |
-| `estate.forge` | `EstateService`（API と次元の見張り）、`EstateManager`（建築・移転・解体の作業）、`EstateProtection`、`EstateContents`（保管物の移動）、`EstateWorldState`（建っている物と預かり品）、`EstateLevels`、`EstateBlueprints`、`RoomDoorBlock` / `RoomDoors`、`EstateCommands` |
+| `estate.forge` | `EstateService`（API と次元の見張り）、`EstateManager`（建築・移転・解体の作業）、`EstateProtection`、`EstateContents`（保管物の移動）、`EstateWorldState`（建っている物と預かり品）、`EstateLevels`、`EstateBlueprints`、`RoomDoorBlock` / `RoomDoors`、`EstateCommands`、宿屋の `InnService`（女将・扉のメニュー）、`LedgerService`（仕分け机）、`RecallService`（帰還）、`StorageChestBlock`（札付き収納箱）/ `SortingDeskBlock`、`EstateItems`（物の種類） |
+| `ui.estate` / `client.estate` | `InnScreen`（女将）、`LedgerScreen`（収納台帳）、`RoomExitScreen`（扉のメニュー）、`RecallOverlay`（帰還の詠唱バー）、`EstateClient` / `EstateInput`（帰還キー Home） |
 | `world.forge.blueprint` | `Blueprint` / `BlueprintPlacer`: 王都と屋敷で共通のブループリント読み込みと段階的な設置（`CapitalBlueprint` / `CapitalBuilder` もこれを使う） |
-| `tools/estates/` | 間取りの Python（王都のキット `tools/capital` を使う）: `kit.py`（保管家具・扉・スポット）、`rooms.py`（客室）、`build.py`、`check.py`、`views.py`（プレビュー） |
-| `tools/art/estate_blocks.py` | 客室の扉のテクスチャ・モデル・ブロックステート（オリジナルのドット絵） |
+| `tools/estates/` | 間取りの Python（王都のキット `tools/capital` を使う）: `kit.py`（保管家具・扉・スポット）、`rooms.py`（屋根裏部屋と共通部品）、`suites.py`（運河・書斎・星見の塔・スイート）、`blocks_ext.py`（収納箱・仕分け机をキットに登録）、`build.py`（`--thumbnails` で女将の画面の部屋の絵）、`check.py`、`views.py`（プレビュー） |
+| `tools/art/estate_blocks.py` | 客室の扉・札付き収納箱（札8種の絵）・仕分け机のテクスチャ・モデル・ブロックステート・ルートテーブル（オリジナルのドット絵） |
+| `tools/art_entities/npc_cast_folk.py` | 女将ロゼッタの姿（`innkeeper`、生成器 `generate_npc.py`）。地図の印は `tools/art/map_npc_icons.py`（寝台と星） |
 
 ## 1. 次元と区画
 
@@ -111,20 +113,65 @@ EstateService.keepsafe(owner);  EstateService.claimKeepsafe(player, owner);   //
 ## 6. 客室の扉（`eternalrealm:room_door`）
 
 王都の宿屋の館の廊下に並ぶ扉（`tools/capital/blocks.py` で登録済み、バニラの扉と同じ状態: facing, half, hinge, open, powered）。
+**`facing` は扉の正面（部屋札のある側）が向く方向**（バニラの扉とは逆の意味）: 館の扉は廊下の側を向き、部屋の出口は部屋の内側を向く。
+置くときは置く人の方を向く。
 **開かない飾りの扉**（手でもレッドストーンでも開かない、壊れない）。王都で使うと、部屋を借りている人は鍵の音がして **自分の部屋** に入る
-（どの扉からでも自分の部屋）。借りていない人には「宿屋の主人に話しかけよう」。屋敷の中では出口。見た目: 胡桃色の板張り、鉄の帯の蝶番、
+（どの扉からでも自分の部屋）。借りていない人には「宿屋の主人に話しかけよう」。屋敷の中では **出口のメニュー**（来た場所へ戻る／王都アストリアへ／部屋に残る）。見た目: 胡桃色の板張り、鉄の帯の蝶番、
 琥珀色に灯る小窓、真鍮の取っ手・蹴り板・鍵穴、そして浮き彫りの **真鍮の部屋札**（鍵と月桂樹の彫り）。
 
-## 7. 管理者コマンド
+## 7. 宿屋の客室（星灯りの館）
+
+王都の **星灯りの館** のフロント（スポット `npc.innkeeper`）に **女将ロゼッタ**（`NpcRole.INNKEEPER`、地図の印は寝台と星）。話しかけると
+`InnScreen`: 5つの部屋を絵（`textures/gui/inn/<design>.png`、間取りのレンダリングから `build.py --thumbnails`）・説明・収納の数・値段で
+見せる。お金の動く操作は2度押しで確定。すべてサーバー（`InnService`）が判定する（女将の近く 7 ブロック以内）。
+
+| 部屋 | 値段 | 収納 | 眺め |
+|---|---|---|---|
+| 屋根裏部屋 `garret` | 1,000 G | 収納箱3・樽3・書棚2・防具立て1・額2 | 破風窓から通りと遠くの塔 |
+| 運河の見える部屋 `canal` | 5,000 G | 収納箱5・樽4・書棚3・防具立て2・額4 | 出窓の下に大運河、向こう岸の家並み・街灯・橋・浮き灯籠 |
+| 書斎の間 `library` | 12,000 G | 収納箱6・樽5・書棚12・防具立て2・額4 | 二層の吹き抜けと回廊、高窓から中庭の泉・花壇 |
+| 星見の塔の部屋 `tower` | 25,000 G | 収納箱8・樽6・書棚12・防具立て3・額6 | 円塔の二層、星空の天井の観測室と望遠鏡、塔をめぐるバルコニー |
+| 貴賓のスイート `grand` | 50,000 G | 収納箱12・樽10・書棚16・防具立て6・額10 | サロン・寝室・武具の間・宝物庫・運河のバルコニー |
+
+- **借りる**: 1人1部屋。値段を払うと区画に建ち（数秒）、できたら知らせが届く。入るのは館の **どの客室の扉** からでも、帰還（9節）でも。
+- **移る**: 差額を払う（安い部屋へは差額の半分が戻る）。収納は **同じ名前の収納へ枠ごと**、札もそのまま。小さい部屋にない収納の中身と床の物は
+  空いている収納へ入り、入りきらない物は **預かり品**（女将から受け取る。画面で事前に数の見込みを表示）。
+- **引き払う**: 部屋が空のときだけ。値段の半分が戻る。預かり品は部屋と別に残る。
+- **出口**: 部屋の扉を使うとメニュー。「来た場所へ戻る」は入る前にいた場所（ダンジョンなど戻れない所なら王都のロビー `estate.lobby`）。
+
+## 8. 収納と仕分け机
+
+- **札付き収納箱** `eternalrealm:storage_chest`（27枠）: 正面の真鍮の札に絵（札なし・装備・薬・素材・食料・書物・貴重品・その他）。
+  素手でしゃがんで使うと次の札へ。間取りでは番号ごとに既定の札（`kit.CHEST_LABELS`: 1 装備、2 薬、3 素材、4 食料、5 貴重品、6 その他…）。
+  樽と書棚（チゼルドブックシェルフ、本だけ）は札なし。
+- **仕分け机** `eternalrealm:sorting_desk`（各部屋に1つ）で **収納台帳**（`LedgerScreen`）: 部屋の収納の中身を物ごとに1行（数・どこにあるか）、
+  種類のタブ、名前の検索（プレイヤーの言語で）、収納ごとの埋まり具合（クリックでその収納の中身だけ）。1スタック／全部を鞄へ取り出せる。
+  **すべてしまう**: 鞄（枠1〜35、手の武器は触らない）を札に合わせて片付ける。同じ物の積み増し → 本は書棚 → その種類の札 → 札なし →
+  「その他」の順（`DepositPlanner`）。回復薬・強壮剤・帰還の巻物は鞄に残す（種類のタブの「…をしまう」なら持っていく）。
+  サーバーが毎回部屋を読み直して実行し、鞄に入った分だけ収納から減らす（失わない・増やさない）。物の種類は `EstateItems`。
+
+## 9. 自室への帰還（Home キー・日誌の「自室へ」）
+
+約3秒の詠唱（`RecallRules.CAST_TICKS` = 60 tick、HUD に真鍮の鍵が回るバー）。動く（0.35 ブロック）・攻撃を受ける・戦闘になると中断、
+もう一度押すとやめる。戦闘中・ダンジョン／レイド・ボス戦・対人戦・倒れている間・部屋がない／準備中・自分の部屋の中では使えず、
+着いてから 60 秒は休み。着くと戻り先が記録され、扉のメニューで元の場所へ戻れる（館の扉から入ったときと同じ）。
+
+## 10. 管理者コマンド
 
 `/eternalrealm estate status | info <player> | visit <player> | leave | release <player>`（権限2）。
 
-## 8. テスト
+## 11. テスト
 
 - 純粋: `EstatePlotsTest`（地域の分離・距離・位置からの区画・割り当てと再利用）、`EstateRegistryTest`（1種類1つ・模様替えの区画・
   中止・手放し・孤児・整合性）、`EstateCodecTest`（往復・壊れたデータ・新しすぎる schema・前の世代への退避）。
-- GameTest `EstateGameTests`: 全間取りの妥当性、借りる → 建つ → 入る（入口・位置から屋敷）→ 出る（元の場所）→ 手放す、
+- 純粋（客室・帰還）: `RoomRulesTest`（借りる・移る・差額と返金・引き払い）、`RecallRulesTest`（判定の順・中断・休み）、
+  `DepositPlannerTest`（札・積み増し・本は書棚・あふれ）、`LedgerTest`（集計・検索）。
+- GameTest `EstateGameTests`: 全間取りの妥当性（5室すべて）、借りる → 建つ → 入る（入口・位置から屋敷）→ 出る（元の場所）→ 手放す、
   他人は入れない・中に入れられても外へ出される・壊せない置けない、部屋のない人の扉。
+- GameTest `InnGameTests`: 女将の一覧（5室・収納は増える一方）、借りる（1,000 G）→ 中身・札・防具立て・額を入れて運河の部屋へ
+  （4,000 G）→ すべて同じ所に → 入りきらないほど詰めて屋根裏へ戻る（2,000 G 戻る、失わない・増えない、あふれは預かり品）→
+  受け取る → 空にして引き払う（500 G）。仕分け机（札どおりに片付く・薬は残る・取り出し・種類だけしまう）。帰還（部屋なし・戦闘中は
+  不可、動くと中断、着く、部屋の中では不可、扉はメニュー、休み）。
 
 ## 決定事項（Decisions）
 
@@ -135,5 +182,12 @@ EstateService.keepsafe(owner);  EstateService.claimKeepsafe(player, owner);   //
   （位置と同じファイル）。それぞれ一緒に保存されるべき物と同じ所に置いた。クラッシュ時の一貫性はバニラのチェストと同じ水準
   （1つの tick の中の移動は、次の自動保存でまとめて保存される）。
 - **ログアウトした場所に戻る**（MMO の家と同じ）。ただし入ってよい・建っている場合だけ。
+- **客室は5室の固定の間取り**（自由建築にしない）: 荷物の管理が主目的なので、収納の名前を部屋の格ごとに増やす（大きい部屋は小さい部屋の
+  名前をすべて持つ: `rooms.check_storage`）。移っても中身が同じ収納に残り、迷わない。
+- **札は収納箱のブロック状態**（見た目に出る）、移るときは名前の同じ箱へ札も移す。仕分けは **その場の部屋だけ**（遠隔の倉庫にしない:
+  部屋に帰る理由になる）。本の書棚・札なしの樽は「その他」より先。
+- **返金は半分**（借り直しで得をしない）。**引き払いは空のときだけ**（物を失わない）。
+- **帰還は詠唱・休みつき**（戦闘からの逃げ道にしない）。理由ごとの短い文で断る。
+- **女将の場所は王都のスポット** `npc.innkeeper`、客室の扉は王都の書き出しにある 43 枚（どれも自分の部屋）。
 - **天気なし・時刻固定**: 窓からの眺めがいつも夕方前の光（西の窓から差し込む）。雨は次元ごとの雨量を 0 に保つ方式（バニラは地上の
   雨の開始を全次元に知らせるため、中の人には晴れを送り直す）。

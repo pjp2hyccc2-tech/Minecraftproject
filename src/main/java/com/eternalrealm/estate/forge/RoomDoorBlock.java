@@ -33,9 +33,11 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * The inn's room door ({@code eternalrealm:room_door}): an ornate two-block door with a brass room plate, with the
- * states of a vanilla door (facing, half, hinge, open, powered) so the capital's builders place it like one. It is a
- * façade: it never opens (neither by hand nor by redstone) and nothing lies behind it. Using it in the capital takes
- * a player who rents a room into it; inside an estate it is the way out ({@link RoomDoors}).
+ * states of a vanilla door (facing, half, hinge, open, powered) so the capital's builders place it like one. Unlike a
+ * vanilla door, {@code facing} is the side the door faces: its front (the plate, the knob) and its 3-pixel panel lie on
+ * that side, flush with the wall it is set in, and {@code hinge} is seen from there. It is a façade: it never opens
+ * (neither by hand nor by redstone) and nothing lies behind it. Using it in the capital takes a player who rents a room
+ * into it; inside an estate it is the way out ({@link RoomDoors}).
  */
 public class RoomDoorBlock extends Block implements EstateProtection.UsableInEstates {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -43,11 +45,11 @@ public class RoomDoorBlock extends Block implements EstateProtection.UsableInEst
     public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    // like a closed vanilla door: the 3-pixel panel lies on the side a player walking through comes from
-    private static final VoxelShape EAST = Block.box(0.0, 0.0, 0.0, 3.0, 16.0, 16.0);
-    private static final VoxelShape SOUTH = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 3.0);
-    private static final VoxelShape WEST = Block.box(13.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-    private static final VoxelShape NORTH = Block.box(0.0, 0.0, 13.0, 16.0, 16.0, 16.0);
+    // the 3-pixel panel on the side the door faces
+    private static final VoxelShape NORTH = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 3.0);
+    private static final VoxelShape SOUTH = Block.box(0.0, 0.0, 13.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape EAST = Block.box(13.0, 0.0, 0.0, 16.0, 16.0, 16.0);
+    private static final VoxelShape WEST = Block.box(0.0, 0.0, 0.0, 3.0, 16.0, 16.0);
 
     public RoomDoorBlock(Properties properties) {
         super(properties);
@@ -66,8 +68,8 @@ public class RoomDoorBlock extends Block implements EstateProtection.UsableInEst
         return switch (state.getValue(FACING)) {
             case SOUTH -> SOUTH;
             case WEST -> WEST;
-            case NORTH -> NORTH;
-            default -> EAST;
+            case EAST -> EAST;
+            default -> NORTH;
         };
     }
 
@@ -79,8 +81,8 @@ public class RoomDoorBlock extends Block implements EstateProtection.UsableInEst
         if (pos.getY() >= level.getMaxBuildHeight() - 1 || !level.getBlockState(pos.above()).canBeReplaced(context)) {
             return null;
         }
-        Direction facing = context.getHorizontalDirection();
-        Direction left = facing.getCounterClockWise();
+        Direction facing = context.getHorizontalDirection().getOpposite();   // towards the one placing it
+        Direction left = facing.getClockWise();                              // the viewer's left
         boolean neighbourLeft = level.getBlockState(pos.relative(left)).is(this);
         return defaultBlockState().setValue(FACING, facing).setValue(HALF, DoubleBlockHalf.LOWER)
                 .setValue(HINGE, neighbourLeft ? DoorHingeSide.RIGHT : DoorHingeSide.LEFT);

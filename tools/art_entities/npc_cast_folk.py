@@ -5,6 +5,7 @@ from npc_cast import (BROAD, GOLD, NO_LEGS, ROYAL, ROYAL_DARK, SLIM, WHITE, apro
                       palette, pants_and_boots, pendant, plate, sleeves_cuff, stripes, tabard)
 from npc_cast_town import cap, helmet, mustache_plane
 from npc_paint import (CROSS, Face, arm_parts, bald_head, bare_arms, belt, boots, buttons, clear_part, col, faces_of,
+                       page_lines,
                        fill_face, hair, hair_piece, hands, legs, mask_alpha, open_front, page_lines, rows_color, sash,
                        shell_face_opening, torso_part, trim_col, trim_row, vneck)
 
@@ -462,6 +463,53 @@ def maid(vid, v):
                 poses={'right_arm': dict(rot=(-14, 0, 6)), 'right_forearm': dict(rot=(-16, 0, 0))},
                 pal=pal, paint=paint, work='work_sweep', talk='talk_bow', scale=0.94,
                 portrait=dict(bg=('#6a6a8a', '#1a1a2a')))
+
+
+def innkeeper(vid, v):
+    """Rosetta, the landlady of the Starlight Manor (星灯りの館, the inn rooms): a wine-red dress with gold lacing, a
+    saffron shawl over the shoulders, a cream apron with a stitched star, the brass key ring of the rooms at her belt,
+    a silver streak in her bun, and the guest book and quill in her hands."""
+    face = face_of(v, style='tall', mouth='smile', blush=True)
+
+    def paint(p):
+        face.paint(p)
+        hair(p, v['hair'], bangs=[2, 3, 2, 1, 1, 2, 3, 2], back_len=6, side_front=6)
+        hair_piece(p, 'bun_top', v['hair'])
+        for fc in faces_of(p, 'hair_cap'):
+            if fc.face == 'left':
+                for y in range(min(5, fc.h)):
+                    fc.px(min(fc.w - 2, 5), y, (206, 200, 210))
+        for fc in faces_of(p, 'bun_top'):
+            if fc.face in ('front', 'left'):
+                fc.px(1, 1, (206, 200, 210))
+        bodice(p, v['dress'], blouse='#f4ece0', lace=GOLD)
+        sleeves_cuff(p, '#f4ece0', row=3)
+        hands(p, v['skin'])
+        af = p.face('apron', 'front')
+        cx, cy = af.w // 2, af.h - 3
+        for (dx, dy) in ((0, -1), (-1, 0), (0, 0), (1, 0), (0, 1)):
+            if 0 <= cx + dx < af.w and 0 <= cy + dy < af.h:
+                af.px(cx + dx, cy + dy, (216, 176, 74))
+        for fc in faces_of(p, 'apron', sides_only=True):
+            fc.hline(0, fc.w - 1, 0, (226, 214, 190))
+        belt(p, 0, '#4a2a1c', GOLD)
+        skirt_plain(p, shade(col(v['dress']), 0.62))
+        for fc in faces_of(p, 'scarf', sides_only=True):
+            for x in range(0, fc.w, 2):
+                fc.px(x, fc.h - 1, shade(col(v['shawl']), 0.78))
+        lf = p.face('ledger', 'top')
+        page_lines(lf, paper=(242, 234, 214))
+        lf.vline(0, 0, lf.h - 1, (120, 40, 44))
+    pal = palette(skin=v['skin'], hair=v['hair'], tunic=v['dress'], sleeve=v['dress'], sleeve2=v['dress'],
+                  belly=v['dress'], skirt={'base': v['dress'], 'style': 'cloth'},
+                  skirt2={'base': v['dress'], 'style': 'cloth'}, apron={'base': '#f2ebdc', 'style': 'cloth'},
+                  scarf=v['shawl'], keys='#d8b04a', book='#7a2a30', quill='#f4f0e8')
+    return look(vid, builds=(SLIM, NO_LEGS), show={'hair_cap', 'bun_top', 'skirt_long', 'apron', 'scarf', 'keyring',
+                                                   'ledger', 'quill'},
+                poses={'left_arm': dict(rot=(-18, 0, -6)), 'left_forearm': dict(rot=(-62, 0, 0)),
+                       'right_arm': dict(rot=(-22, -10, -12)), 'right_forearm': dict(rot=(-58, 0, 0))},
+                pal=pal, paint=paint, work='work_write', talk='talk_bow', scale=0.96,
+                portrait=dict(bg=('#c8904a', '#3a1e14')))
 
 
 def bard(vid, v):
@@ -948,6 +996,8 @@ FOLK = [
     (adventurer, 'adventurer', dict(skin=SKINS[1], hair='#3a2a1c', body='#6a4a2e', scarf='#a83a2a', eye='#3a4a2a')),
     (adventurer, 'adventurer2', dict(mage=True, woman=True, skin=SKINS[4], hair='#8a5ac8', body='#3a2a6a',
                                      hat='#2a1e4a', eye='#9a5ad0')),
+    # the Starlight Manor's innkeeper (the inn rooms, docs/modules/estates.md)
+    (innkeeper, 'innkeeper', dict(skin=SKINS[1], hair='#5a3424', dress='#7a2034', shawl='#e0a83a', eye='#6a4a2a')),
 ]
 
 

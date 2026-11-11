@@ -5,6 +5,7 @@
     python3 tools/estates/build.py room/garret        # only these designs
     python3 tools/estates/build.py --previews         # + previews in tools/estates/previews/
     python3 tools/estates/build.py --views garret_in --scale 0.5
+    python3 tools/estates/build.py --thumbnails        # + the innkeeper's pictures (textures/gui/inn/<design>.png)
 
 Output: ``src/main/resources/data/eternalrealm/estates/<kind>/<design>/manifest.json`` + ``tiles/``, the same
 format as the capital (tools/capital/export.py). Deterministic: the same sources give byte-identical output.
@@ -34,6 +35,8 @@ def build_design(kind, design, log=print):
     t0 = time.time()
     w = World()
     storage = DESIGNS[(kind, design)](w)
+    from capital import blocks as B
+    w.idx(B.chain())  # tidy adds this state to the palette midway; known beforehand it keeps its tables in step
     tidy.tidy(w, log=lambda *a: None)
     log(f"{kind}/{design}: built in {time.time() - t0:.1f}s, storage {storage.summary()}")
     return w, storage
@@ -46,6 +49,7 @@ def main(argv=None) -> int:
     ap.add_argument("--views", default="")
     ap.add_argument("--scale", type=float, default=1.0)
     ap.add_argument("--no-export", action="store_true")
+    ap.add_argument("--thumbnails", action="store_true", help="write the innkeeper's pictures of the rooms")
     args = ap.parse_args(argv)
     wanted = [tuple(d.split("/", 1)) for d in args.designs] or list(DESIGNS)
     results = {}
@@ -58,6 +62,9 @@ def main(argv=None) -> int:
             os.makedirs(out, exist_ok=True)
             export.export(w, out)
             problems += [f"{kind}/{design}: {p}" for p in check.check(out, storage)]
+        if args.thumbnails:
+            from estates import views
+            views.thumbnail(w, kind, design)
         if args.previews or args.views:
             from estates import views
             views.render(w, kind, design, names=[v for v in args.views.split(",") if v] or None, scale=args.scale)
