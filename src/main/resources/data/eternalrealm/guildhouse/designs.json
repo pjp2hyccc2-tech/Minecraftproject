@@ -1,0 +1,26 @@
+{
+ "schema": 1,
+ "comment": "Guild-house designs (docs/modules/guildhouse.md). Single source of truth for the game (GuildHouseCatalog) and the builders (tools/estates/guild, tools/capital/districts/guild_gates.py). Names and descriptions: guildhouse.eternalrealm.design.<id>[.desc]. size = [width, depth, height] of the built house (written by tools/estates/guild/build.py).",
+ "designs": [
+  {"id": "northern_longhouse", "tier": 1, "price": 18000, "base": "#7CF2CC", "accent": "#B48CFF", "size": [33, 33, 18]},
+  {"id": "mushroom_grove", "tier": 1, "price": 20000, "base": "#D84CA8", "accent": "#7CFFD8", "size": [33, 33, 22]},
+  {"id": "ancient_ruins", "tier": 1, "price": 22000, "base": "#5FC08E", "accent": "#E8DCA8", "size": [33, 33, 16]},
+  {"id": "pirate_ship", "tier": 1, "price": 25000, "base": "#1FB8A8", "accent": "#F2E2A0", "size": [33, 33, 26]},
+  {"id": "flower_glasshouse", "tier": 2, "price": 45000, "base": "#FF9ACF", "accent": "#B4F27A", "size": [39, 39, 20]},
+  {"id": "dwarven_forge", "tier": 2, "price": 50000, "base": "#E08A30", "accent": "#FFD27A", "size": [39, 39, 22]},
+  {"id": "desert_palace", "tier": 2, "price": 55000, "base": "#E8C070", "accent": "#3CC8C0", "size": [39, 39, 22]},
+  {"id": "observatory", "tier": 2, "price": 60000, "base": "#2E5CD8", "accent": "#F4F0FF", "size": [39, 39, 30]},
+  {"id": "japanese_mansion", "tier": 3, "price": 100000, "base": "#F05A3C", "accent": "#FFC4D6", "size": [47, 47, 22]},
+  {"id": "great_tree", "tier": 3, "price": 110000, "base": "#8CE04C", "accent": "#F4F49A", "size": [47, 47, 40]},
+  {"id": "sage_library", "tier": 3, "price": 120000, "base": "#FFB45A", "accent": "#FFF2C8", "size": [47, 47, 30]},
+  {"id": "jungle_temple", "tier": 3, "price": 130000, "base": "#FFD21E", "accent": "#28D07C", "size": [47, 47, 28]},
+  {"id": "gothic_cathedral", "tier": 4, "price": 200000, "base": "#5A48DC", "accent": "#D6DCFF", "size": [55, 55, 42]},
+  {"id": "coral_hall", "tier": 4, "price": 220000, "base": "#FF8A80", "accent": "#4CE6E0", "size": [55, 55, 30]},
+  {"id": "volcanic_fortress", "tier": 4, "price": 240000, "base": "#FF7414", "accent": "#FFD840", "size": [55, 55, 36]},
+  {"id": "ice_castle", "tier": 4, "price": 260000, "base": "#A8E8FF", "accent": "#FFFFFF", "size": [55, 55, 44]},
+  {"id": "dragon_lair", "tier": 5, "price": 400000, "base": "#D81E2C", "accent": "#FFB020", "size": [63, 63, 40]},
+  {"id": "arcane_tower", "tier": 5, "price": 420000, "base": "#9A5CFF", "accent": "#5CE0FF", "size": [63, 63, 60]},
+  {"id": "sky_temple", "tier": 5, "price": 460000, "base": "#FFF0A8", "accent": "#9CD4FF", "size": [63, 63, 40]},
+  {"id": "marble_palace", "tier": 5, "price": 500000, "base": "#F8F2E6", "accent": "#FFCC48", "size": [63, 63, 38]}
+ ]
+}
