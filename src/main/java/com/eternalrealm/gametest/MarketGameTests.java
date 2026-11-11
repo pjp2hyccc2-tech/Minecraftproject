@@ -239,7 +239,9 @@ public final class MarketGameTests {
     }
 
     private static Mob clerk(GameTestHelper helper) {
-        return Npcs.ensure(helper.getLevel(), helper.absolutePos(new BlockPos(2, 2, 2)), NpcRole.AUCTION, 0.0F)
+        // this test's own clerk: ensure() would otherwise take over the clerk of a test placed within 24 blocks
+        return Npcs.ensure(helper.getLevel(), helper.absolutePos(new BlockPos(2, 2, 2)), NpcRole.AUCTION, 0.0F,
+                        "eternalrealm_gametest", UUID.randomUUID().toString())
                 .orElseThrow(() -> new GameTestAssertException("no auction clerk"));
     }
 

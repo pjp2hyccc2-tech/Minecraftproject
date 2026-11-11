@@ -6140,5 +6140,21 @@
   "map.eternalrealm.npc.gatekeeper": "Dungeon warden",
   "map.eternalrealm.npc.arena_master": "Arena",
   "map.eternalrealm.npc.hall_of_fame": "Hall of fame",
-  "map.eternalrealm.npc.stable_master": "Stable"
+  "map.eternalrealm.npc.stable_master": "Stable",
+  "block.eternalrealm.room_door": "Inn Room Door",
+  "message.eternalrealm.estate.ok": "Done.",
+  "message.eternalrealm.estate.already_claimed": "You already have one.",
+  "message.eternalrealm.estate.not_claimed": "You do not have one yet.",
+  "message.eternalrealm.estate.unknown_design": "That design does not exist.",
+  "message.eternalrealm.estate.no_plot": "There is no free plot right now. Please try again later.",
+  "message.eternalrealm.estate.building": "Still being prepared (%s%%). Please wait a little.",
+  "message.eternalrealm.estate.not_allowed": "You are not allowed in here.",
+  "message.eternalrealm.estate.unavailable": "Not available right now.",
+  "message.eternalrealm.estate.same_design": "It already has that design.",
+  "message.eternalrealm.estate.not_empty": "There are still things stored inside.",
+  "message.eternalrealm.estate.busy": "It is being refurbished right now.",
+  "message.eternalrealm.estate.protected": "You cannot break or place blocks here.",
+  "message.eternalrealm.estate.bed": "A soft, well-made bed. The sun never sets here.",
+  "message.eternalrealm.estate.door.no_room": "It is locked. Talk to the innkeeper to rent a room.",
+  "message.eternalrealm.estate.door.key": "Click — the key turns."
 }

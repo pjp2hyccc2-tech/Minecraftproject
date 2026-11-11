@@ -1,0 +1,350 @@
+{
+ "format": 1,
+ "build": "83188e5d33af7555",
+ "tileSize": 32,
+ "minY": -32,
+ "maxY": 159,
+ "palette": [
+  "eternalrealm:void",
+  "minecraft:air",
+  "eternalrealm:castle_bricks",
+  "eternalrealm:cobbled_paving",
+  "eternalrealm:flag[facing=east]",
+  "eternalrealm:gilded_finial",
+  "eternalrealm:gilded_trim_slab[type=bottom]",
+  "eternalrealm:leaded_glass_pane",
+  "eternalrealm:light_shaft[facing=east]",
+  "eternalrealm:pale_roof_tile_slab[type=bottom]",
+  "eternalrealm:pale_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:pale_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:pale_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:pale_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:pale_roof_tiles",
+  "eternalrealm:room_door[facing=east,half=lower,hinge=left,open=false]",
+  "eternalrealm:room_door[facing=east,half=upper,hinge=left,open=false]",
+  "eternalrealm:royal_roof_tile_slab[type=bottom]",
+  "eternalrealm:royal_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:royal_roof_tiles",
+  "eternalrealm:smoke_emitter[heavy=false]",
+  "eternalrealm:smooth_castle_stone",
+  "eternalrealm:terracotta_roof_tile_slab[type=bottom]",
+  "eternalrealm:terracotta_roof_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "eternalrealm:terracotta_roof_tile_stairs[facing=north,half=bottom,shape=straight]",
+  "eternalrealm:terracotta_roof_tile_stairs[facing=south,half=bottom,shape=straight]",
+  "eternalrealm:terracotta_roof_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "eternalrealm:white_plaster",
+  "minecraft:andesite",
+  "minecraft:azalea_leaves[distance=1,persistent=true]",
+  "minecraft:barrel[facing=north,open=false]",
+  "minecraft:barrel[facing=up,open=false]",
+  "minecraft:birch_door[facing=east,half=lower,hinge=left,open=false]",
+  "minecraft:birch_door[facing=east,half=lower,hinge=right,open=false]",
+  "minecraft:birch_door[facing=east,half=upper,hinge=left,open=false]",
+  "minecraft:birch_door[facing=east,half=upper,hinge=right,open=false]",
+  "minecraft:birch_door[facing=west,half=lower,hinge=left,open=false]",
+  "minecraft:birch_door[facing=west,half=lower,hinge=right,open=false]",
+  "minecraft:birch_door[facing=west,half=upper,hinge=left,open=false]",
+  "minecraft:birch_door[facing=west,half=upper,hinge=right,open=false]",
+  "minecraft:birch_trapdoor[facing=east,half=bottom,open=true]",
+  "minecraft:birch_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:bricks",
+  "minecraft:chain[axis=y]",
+  "minecraft:chest[facing=north,type=left]",
+  "minecraft:chest[facing=north,type=right]",
+  "minecraft:chiseled_bookshelf[facing=north]",
+  "minecraft:coarse_dirt",
+  "minecraft:cobblestone",
+  "minecraft:dark_oak_door[facing=east,half=lower,hinge=right,open=false]",
+  "minecraft:dark_oak_door[facing=east,half=upper,hinge=right,open=false]",
+  "minecraft:dark_oak_log[axis=x]",
+  "minecraft:dark_oak_log[axis=y]",
+  "minecraft:dark_oak_log[axis=z]",
+  "minecraft:dark_oak_planks",
+  "minecraft:dark_oak_stairs[facing=east,half=top,shape=straight]",
+  "minecraft:dark_oak_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
+  "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:decorated_pot",
+  "minecraft:deepslate_tile_slab[type=bottom]",
+  "minecraft:deepslate_tile_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:deepslate_tile_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:deepslate_tiles",
+  "minecraft:dirt_path",
+  "minecraft:flower_pot",
+  "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
+  "minecraft:glass_pane",
+  "minecraft:gravel",
+  "minecraft:jungle_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:lantern[hanging=true]",
+  "minecraft:mangrove_door[facing=east,half=lower,hinge=right,open=false]",
+  "minecraft:mangrove_door[facing=east,half=upper,hinge=right,open=false]",
+  "minecraft:mangrove_door[facing=west,half=lower,hinge=right,open=false]",
+  "minecraft:mangrove_door[facing=west,half=upper,hinge=right,open=false]",
+  "minecraft:mangrove_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:mossy_cobblestone",
+  "minecraft:oak_door[facing=east,half=lower,hinge=right,open=false]",
+  "minecraft:oak_door[facing=east,half=upper,hinge=right,open=false]",
+  "minecraft:oak_door[facing=west,half=lower,hinge=left,open=false]",
+  "minecraft:oak_door[facing=west,half=lower,hinge=right,open=false]",
+  "minecraft:oak_door[facing=west,half=upper,hinge=left,open=false]",
+  "minecraft:oak_door[facing=west,half=upper,hinge=right,open=false]",
+  "minecraft:oak_planks",
+  "minecraft:polished_andesite",
+  "minecraft:potted_cornflower",
+  "minecraft:potted_fern",
+  "minecraft:potted_red_tulip",
+  "minecraft:red_bed[facing=west,part=foot]",
+  "minecraft:red_bed[facing=west,part=head]",
+  "minecraft:red_carpet",
+  "minecraft:smooth_sandstone",
+  "minecraft:spruce_door[facing=east,half=lower,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=east,half=lower,hinge=right,open=false]",
+  "minecraft:spruce_door[facing=east,half=upper,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=east,half=upper,hinge=right,open=false]",
+  "minecraft:spruce_door[facing=west,half=lower,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=west,half=lower,hinge=right,open=false]",
+  "minecraft:spruce_door[facing=west,half=upper,hinge=left,open=false]",
+  "minecraft:spruce_door[facing=west,half=upper,hinge=right,open=false]",
+  "minecraft:spruce_fence",
+  "minecraft:spruce_log[axis=x]",
+  "minecraft:spruce_log[axis=y]",
+  "minecraft:spruce_log[axis=z]",
+  "minecraft:spruce_planks",
+  "minecraft:spruce_slab[type=bottom]",
+  "minecraft:spruce_slab[type=top]",
+  "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=east,half=top,shape=straight]",
+  "minecraft:spruce_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:spruce_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:spruce_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true]",
+  "minecraft:spruce_trapdoor[facing=east,half=top,open=false]",
+  "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true]",
+  "minecraft:spruce_trapdoor[facing=west,half=top,open=false]",
+  "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=north,half=top,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight]",
+  "minecraft:stone_bricks",
+  "minecraft:white_candle[candles=2,lit=true]",
+  "minecraft:white_terracotta",
+  "minecraft:yellow_candle[candles=3,lit=true]",
+  "minecraft:yellow_carpet"
+ ],
+ "tiles": [
+  {
+   "x": -3,
+   "z": -2,
+   "file": "tiles/-3_-2.bin"
+  },
+  {
+   "x": -3,
+   "z": -1,
+   "file": "tiles/-3_-1.bin"
+  },
+  {
+   "x": -3,
+   "z": 0,
+   "file": "tiles/-3_0.bin"
+  },
+  {
+   "x": -3,
+   "z": 1,
+   "file": "tiles/-3_1.bin"
+  },
+  {
+   "x": -2,
+   "z": -2,
+   "file": "tiles/-2_-2.bin"
+  },
+  {
+   "x": -2,
+   "z": -1,
+   "file": "tiles/-2_-1.bin"
+  },
+  {
+   "x": -2,
+   "z": 0,
+   "file": "tiles/-2_0.bin"
+  },
+  {
+   "x": -2,
+   "z": 1,
+   "file": "tiles/-2_1.bin"
+  },
+  {
+   "x": -1,
+   "z": -2,
+   "file": "tiles/-1_-2.bin"
+  },
+  {
+   "x": -1,
+   "z": -1,
+   "file": "tiles/-1_-1.bin"
+  },
+  {
+   "x": -1,
+   "z": 0,
+   "file": "tiles/-1_0.bin"
+  },
+  {
+   "x": -1,
+   "z": 1,
+   "file": "tiles/-1_1.bin"
+  },
+  {
+   "x": 0,
+   "z": -2,
+   "file": "tiles/0_-2.bin"
+  },
+  {
+   "x": 0,
+   "z": -1,
+   "file": "tiles/0_-1.bin"
+  },
+  {
+   "x": 0,
+   "z": 0,
+   "file": "tiles/0_0.bin"
+  },
+  {
+   "x": 0,
+   "z": 1,
+   "file": "tiles/0_1.bin"
+  }
+ ],
+ "blockEntities": [
+  {
+   "pos": [
+    -74,
+    52,
+    12
+   ],
+   "nbt": "{Width:3.0f,Height:1.0f,Design:\"pennant\"}"
+  },
+  {
+   "pos": [
+    -6,
+    13,
+    -3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    -6,
+    16,
+    0
+   ],
+   "nbt": "{Length:8.0f,Width:2.6f,Height:2.6f,Pitch:28.0f}"
+  },
+  {
+   "pos": [
+    -4,
+    13,
+    3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.1\"}}"
+  },
+  {
+   "pos": [
+    -3,
+    13,
+    3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"chest.2\"}}"
+  },
+  {
+   "pos": [
+    -2,
+    13,
+    3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    13,
+    3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
+  },
+  {
+   "pos": [
+    1,
+    13,
+    3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.1\"}}"
+  }
+ ],
+ "entities": [
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -2.5,
+    14.5,
+    -2.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    1.5,
+    13.0,
+    -1.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:0b,Invulnerable:1b,DisabledSlots:0,ForgeData:{er_slot:\"stand.1\"}}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    2.5,
+    15.5,
+    -1.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:4b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.1\"}}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    2.5,
+    15.5,
+    2.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:4b,Fixed:0b,Invulnerable:1b,Invisible:0b,ForgeData:{er_slot:\"frame.2\"}}"
+  }
+ ],
+ "fluidTicks": [],
+ "spots": {
+  "entry": {
+   "pos": [
+    1,
+    13,
+    0
+   ],
+   "yaw": 90.0
+  },
+  "exit": {
+   "pos": [
+    2,
+    13,
+    0
+   ],
+   "yaw": -90.0
+  }
+ },
+ "blend": {
+  "edgeY": 0
+ }
+}
