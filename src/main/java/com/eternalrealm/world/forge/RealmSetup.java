@@ -191,10 +191,11 @@ public final class RealmSetup {
         }
     }
 
-    /** Players who log in outside the game's dimensions arrive in the capital. */
+    /** Players who log in outside the game's dimensions arrive in the capital (the estates decide for themselves). */
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && !AstoriaTravel.isInAstoria(player)
-                && !DungeonLevels.isDungeonLevel(player.level())) {
+                && !DungeonLevels.isDungeonLevel(player.level())
+                && !com.eternalrealm.estate.forge.EstateLevels.isEstateLevel(player.level())) {
             AstoriaTravel.sendToHub(player);
         }
     }

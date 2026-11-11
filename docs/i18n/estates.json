@@ -1,0 +1,18 @@
+{
+"block.eternalrealm.room_door": {"ja": "宿屋の客室の扉", "en": "Inn Room Door"},
+"message.eternalrealm.estate.ok": {"ja": "完了しました。", "en": "Done."},
+"message.eternalrealm.estate.already_claimed": {"ja": "すでに持っています。", "en": "You already have one."},
+"message.eternalrealm.estate.not_claimed": {"ja": "まだ持っていません。", "en": "You do not have one yet."},
+"message.eternalrealm.estate.unknown_design": {"ja": "その間取りは用意されていません。", "en": "That design does not exist."},
+"message.eternalrealm.estate.no_plot": {"ja": "空いている区画がありません。しばらくしてからお試しください。", "en": "There is no free plot right now. Please try again later."},
+"message.eternalrealm.estate.building": {"ja": "ただいま準備中です（%s%%）。もう少しお待ちください。", "en": "Still being prepared (%s%%). Please wait a little."},
+"message.eternalrealm.estate.not_allowed": {"ja": "ここに入ることは許されていません。", "en": "You are not allowed in here."},
+"message.eternalrealm.estate.unavailable": {"ja": "今は利用できません。", "en": "Not available right now."},
+"message.eternalrealm.estate.same_design": {"ja": "すでにその間取りです。", "en": "It already has that design."},
+"message.eternalrealm.estate.not_empty": {"ja": "まだ中に荷物が残っています。", "en": "There are still things stored inside."},
+"message.eternalrealm.estate.busy": {"ja": "ただいま模様替えの最中です。", "en": "It is being refurbished right now."},
+"message.eternalrealm.estate.protected": {"ja": "ここでは壊したり置いたりできません。", "en": "You cannot break or place blocks here."},
+"message.eternalrealm.estate.bed": {"ja": "ふかふかのベッドだ。ここでは日が暮れない。", "en": "A soft, well-made bed. The sun never sets here."},
+"message.eternalrealm.estate.door.no_room": {"ja": "鍵がかかっている。部屋を借りるには宿屋の主人に話しかけよう。", "en": "It is locked. Talk to the innkeeper to rent a room."},
+"message.eternalrealm.estate.door.key": {"ja": "カチャリ、と鍵が回った。", "en": "Click — the key turns."}
+}

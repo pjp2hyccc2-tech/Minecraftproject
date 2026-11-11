@@ -6140,5 +6140,21 @@
   "map.eternalrealm.npc.gatekeeper": "迷宮管理局",
   "map.eternalrealm.npc.arena_master": "闘技場",
   "map.eternalrealm.npc.hall_of_fame": "栄誉の殿堂",
-  "map.eternalrealm.npc.stable_master": "厩舎"
+  "map.eternalrealm.npc.stable_master": "厩舎",
+  "block.eternalrealm.room_door": "宿屋の客室の扉",
+  "message.eternalrealm.estate.ok": "完了しました。",
+  "message.eternalrealm.estate.already_claimed": "すでに持っています。",
+  "message.eternalrealm.estate.not_claimed": "まだ持っていません。",
+  "message.eternalrealm.estate.unknown_design": "その間取りは用意されていません。",
+  "message.eternalrealm.estate.no_plot": "空いている区画がありません。しばらくしてからお試しください。",
+  "message.eternalrealm.estate.building": "ただいま準備中です（%s%%）。もう少しお待ちください。",
+  "message.eternalrealm.estate.not_allowed": "ここに入ることは許されていません。",
+  "message.eternalrealm.estate.unavailable": "今は利用できません。",
+  "message.eternalrealm.estate.same_design": "すでにその間取りです。",
+  "message.eternalrealm.estate.not_empty": "まだ中に荷物が残っています。",
+  "message.eternalrealm.estate.busy": "ただいま模様替えの最中です。",
+  "message.eternalrealm.estate.protected": "ここでは壊したり置いたりできません。",
+  "message.eternalrealm.estate.bed": "ふかふかのベッドだ。ここでは日が暮れない。",
+  "message.eternalrealm.estate.door.no_room": "鍵がかかっている。部屋を借りるには宿屋の主人に話しかけよう。",
+  "message.eternalrealm.estate.door.key": "カチャリ、と鍵が回った。"
 }
