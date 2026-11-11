@@ -75,7 +75,7 @@ BASE = {
     "stonecutter": (120, 115, 110), "cauldron": (60, 60, 64), "water_cauldron": (60, 60, 64), "brewing_stand": (110, 100, 90),
     "hay_block": (166, 139, 12), "target": (226, 170, 157), "bone_block": (229, 225, 207), "melon": (111, 145, 30),
     "pumpkin": (198, 118, 24), "carved_pumpkin": (198, 118, 24), "jack_o_lantern": (214, 152, 52),
-    "lantern": (210, 160, 80), "soul_lantern": (90, 180, 190), "wall_torch": (230, 180, 90), "cobweb": (220, 222, 225), "chain": (60, 64, 75), "iron_bars": (140, 140, 140),
+    "lantern": (210, 160, 80), "soul_lantern": (90, 180, 190), "wall_torch": (230, 180, 90), "cobweb": (220, 222, 225), "floating_lantern": (238, 196, 120), "chain": (60, 64, 75), "iron_bars": (140, 140, 140),
     "iron_door": (190, 190, 190), "iron_trapdoor": (190, 190, 190), "bell": (230, 190, 70), "end_rod": (240, 235, 225),
     "lightning_rod": (200, 120, 90), "redstone_lamp": (200, 140, 80), "beehive": (180, 140, 80),
     "cake": (240, 230, 220), "candle_cake": (240, 230, 220), "flower_pot": (124, 68, 52), "decorated_pot": (140, 70, 50),
@@ -112,7 +112,7 @@ PLANTS = {
     "pitcher_plant": (100, 120, 200),
 }
 EMIT = {
-    "chandelier": 15, "lantern": 15, "soul_lantern": 10, "torch": 14, "wall_torch": 14, "soul_torch": 10,
+    "chandelier": 15, "lantern": 15, "soul_lantern": 10, "floating_lantern": 9, "torch": 14, "wall_torch": 14, "soul_torch": 10,
     "soul_wall_torch": 10, "sea_lantern": 15, "glowstone": 15, "shroomlight": 15, "end_rod": 14, "campfire": 15,
     "soul_campfire": 10, "jack_o_lantern": 15, "lava": 15, "ochre_froglight": 15, "verdant_froglight": 15,
     "pearlescent_froglight": 15, "amethyst_cluster": 5, "candle_cake": 3, "redstone_lamp": 15,
@@ -259,6 +259,9 @@ def material(state: str) -> dict:
     if name in ("lantern", "soul_lantern"):
         out["kind"], out["box"] = "box", (0.3, 0.0, 0.3, 0.7, 0.55, 0.7) if props.get("hanging") != "true" else \
             (0.3, 0.1, 0.3, 0.7, 0.65, 0.7)
+        return out
+    if name == "floating_lantern":
+        out["kind"], out["box"] = "box", (0.32, 0.0, 0.32, 0.68, 0.45, 0.68)
         return out
     if name == "chandelier":
         out["kind"], out["box"] = "box", (0.1, 0.15, 0.1, 0.9, 0.85, 0.9)
