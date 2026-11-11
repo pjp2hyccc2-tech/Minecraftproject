@@ -263,3 +263,17 @@ climbed (a step short at the top, a beam or pier in the head room, a first step 
 now judges every staircase of the export by the rules a player's 1.8-block body imposes and fails the build on one
 that cannot be used or rises against its facing. A voxel check cannot see everything (it does not walk, and it does
 not judge looks), so the previews and section drawings are still looked at by eye.
+
+## D-CANALTOWN: the capital becomes a canal town with an undercroft; the castle stays (2026-11-11)
+The owner asked for a more intricate town after four pictures of a canal town (canals with bridges, back alleys and
+passages, rooms over the lanes, an underground waterway for back-room trade and storage, an indoor shopping street)
+and for the castle to stay as it is. The rebuild keeps the master plan (plaza, guild, civic quarter, cathedral,
+walls, gates) and the castle, and changes what is between them: a Grand Canal along z = 43 that the terrain carves
+and `canal.py` builds (water top −2, the same level as the lake and the river it comes from, so it needs no locks),
+maze quarters from one kit (`_maze.py`) instead of plain rows, the inn mansion for the player rooms (星灯りの館), the
+Galleria in place of the covered market hall, and an undercroft under the market square. The undercroft lies inside
+the market district's columns (district clipping is by column, so an underground place belongs to the district above
+it) and is reached only by hidden ways (the culvert and its fall, the cellar hatch, the old well, a secret door),
+because the pictures asked for back-room trade, not a second street level. New block behaviour (bunting, shop signs,
+secret doors, room doors) lives in custom blocks that the generator writes by id and the Java side draws, as with the
+earlier flags and clocks, so the voxel build stays deterministic and the art stays original.

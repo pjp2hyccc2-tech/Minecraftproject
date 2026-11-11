@@ -127,14 +127,15 @@ south-east and farms with windmills south-west outside the walls.
 | `guild` | (−51, −39, −6, −6) − disc | adventurers' guild hall x −50..−27, z −38..−7 facing the plaza, clock tower x −27..−19, z −37..−29 (`guild.py`) |
 | `civic` | (6, −39, 51, −6) − disc | hall of fame with dome + ranking board, auction house (faces the plaza), job hall (`civic.py`) |
 | `shops` | (−51, 6, −6, 39) − disc | post office with pigeon loft and the sorting room upstairs, item shop with Pim's storeroom upstairs, blacksmith forge x −50..−32, z 25..38 with its entrance on the street at z = 43 and a back door to the shop lane (`shops.py`) |
-| `market` | (6, 6, 51, 39) − disc, (59, 6, 87, 39), (88, 21, 98, 39) | stall square with market cross, covered market hall, avenue stalls (`market.py`) |
+| `market` | (6, 6, 51, 38) − disc, (59, 6, 87, 38), (88, 21, 98, 38) | stall square with market cross, stall signs and pennant strings; the Galleria 商店回廊 x 62..86, z 10..35 (`_galleria.py`); the undercroft under the square (`_undercroft.py`); a stall and a hand cart on the avenue, the storehouse yard (`market.py`) |
 | `cathedral` | (12, −86, 98, −47) | gothic cathedral x 30..88, z −84..−49, close with gardens (`cathedral.py`) |
-| `upper_town` | (−98, −86, −59, −47), (−51, −86, −12, −47) | noble houses, front gardens, formal gardens with fountains (`upper_town.py`) |
-| `residential_west` | (−98, −39, −59, −6), (−98, 6, −59, 39) | half-timbered rows, back gardens (`residential_west.py`) |
-| `residential_east` | (59, −39, 87, −6), (88, −39, 98, −21) | houses, gardens (`residential_east.py`) |
-| `south_west` | (−98, 47, −25, 73), (−24, 47, −6, 65) | tavern (x −24..−8, z 48..64, faces the south avenue), houses, back lane (`south_west.py`) |
-| `south_east` | (6, 47, 24, 65), (25, 47, 98, 73) | inn (x 26..50, z 49..64, faces street_s1), houses, lane to the harbour postern (`south_east.py`) |
+| `guild_gates` | (−98, −86, −10, −47) | the Guild Gate Terrace (top block y 6, level with the viaduct's first landing; a passage through the viaduct's west parapet at z −54..−53): the twenty gates to the guild houses (`guild_gates.py`) |
+| `residential_west` | (−98, −39, −59, −6), (−98, 6, −59, 38) | the old town: two maze quarters (`_maze.quarter`) of jogging lanes, back-to-back rows, rooms bridging the lanes, a well square, washing lines and pennant strings (`residential_west.py`) |
+| `residential_east` | (59, −39, 87, −6), (88, −39, 98, −21) | a maze quarter and a row facing the east wall street (`residential_east.py`) |
+| `south_west` | (−98, 48, −94, 73), (−82, 48, −25, 73), (−24, 48, −6, 65) | tavern (x −24..−8, z 48..64, faces the south avenue), a maze quarter between the canal and the wall, a row (`south_west.py`) |
+| `south_east` | (6, 48, 24, 65), (25, 48, 98, 73) | 星灯りの館 Starlight Manor, the inn mansion of the player rooms (x 26..61, z 52..73, `_mansion.py`) with its forecourt, rows, a maze quarter x 63..98 (`south_east.py`) |
 | `streets` | the road corridors inside the walls | re-paving, signposts, pennant poles, castle-gate guard spots (`streets.py`) |
+| `canal` | (−98, 39, 98, 47), (−93, 48, −83, 73), (−93, 87, −83, 108), (113, 39, 122, 47) | 大運河 the Grand Canal (water z 41..45 along z = 43, turning south at x = −88): quays, bridges, landings with moored boats, lantern festoons, the culvert into the undercroft (`canal.py`) |
 | `walls` | (−112, −86, −99, 86), (99, −86, 112, 86), (−98, 74, 98, 86), (−24, 66, 24, 92), (88, −20, 98, 20) | curtain walls, 12 towers, south main gate, west/east gates, postern (x 74), Gant's office x 90..100, z 8..19 (`walls.py`) |
 | `harbour` | (25, 87, 125, 140) | quay to z = 100, warehouses, fish market, piers, cranes, lighthouse (112, 128), 2 ships + boats (`harbour.py`) |
 | `west_fields` | (−160, 6, −113, 159), (−112, 87, −25, 159) | fields, hedges, 3 windmills, farmhouses, barns, orchard (`west_fields.py`) |
@@ -201,6 +202,61 @@ for the area: `plaza`, `market`, `street`, `harbour`, `guild`, `tavern`, `inn`, 
 yaw: posts containing `gate` get the halberd guard, `wall`/`tower` an archer, `castle`/`keep`/`throne`/`hall`/`court`
 a knight. `castle.gate_guard_w/e` also get a guard unless a `guard.*` spot is within 2 blocks; `castle.king` gets
 King Bertrand himself.
+
+### The canal town (2026-11-11 rebuild)
+
+The owner's pictures of a canal town (canals with arched bridges, back alleys and passages, rooms bridging the
+lanes, covered bridges, an underground waterway for back-room trade and storage, an indoor shopping street, awnings,
+bunting and lanterns) turned the districts south and either side of the plaza into a denser, more intricate town.
+The castle is unchanged except for a passage through the viaduct's west parapet (first landing, x −9..−6,
+z −54..−53) to the Guild Gate Terrace.
+
+- **Grand Canal** (`layout.CANAL_PTS` [(127, 43), (−88, 43), (−88, 108)], `CANAL_HALF` 2.5, bed `CANAL_BED` −5,
+  water top `WATER_Y` −2, `CANAL_QUAY` 2): the terrain carves it (`T.canal`); `canal.py` builds quay walls with a pale
+  coping, cobbled quays (north z 39..40, south z 46..47), the avenue bridge and the two street bridges (flat, piers
+  and low arches, lamps), humped footbridges at x −78, −30, 22 and 73 (in line with the Galleria's south arch), a
+  covered timber bridge (x 42..46) to the inn mansion, landing stairs with moored boats, lamps and bollards, strings
+  of paper lanterns across the water, the square where it turns south and the culvert into the undercroft.
+  `walls.py` gives it two water gates (arched openings with a raised portcullis): east at z 41..45 and south at
+  x −90..−86.
+- **Maze quarters** (`_maze.py`): `quarter(w, rect, seed, a1, a2, b, …)` lays a jogging north–south lane and a
+  cross lane into a block, fills the four sub-blocks with back-to-back `TK.row` houses, trims the corners into a
+  dog-leg square with a well and a cherry planter, throws rooms across the lanes overhead (`alley_bridge`: a
+  timber room with leaded windows on the floor over the lane, an arched soffit, a hanging lantern), and dresses the
+  lanes (`lane_life`: wall torches, vines, potted plants and barrels clear of the doors, shop boards; `strings`:
+  washing lines and pennants across the lanes). Used by `residential_west` (the old town), `residential_east`,
+  `south_west` and `south_east`.
+- **星灯りの館 Starlight Manor** (`_mansion.py`, x 26..61, z 52..73, front to the canal): the inn mansion of the
+  player rooms. Floors at y 0, 6, 11 and 16 round a glazed atrium with three flights of stairs, balconies and
+  chandeliers; the reception desk with a key wall (spot `npc.innkeeper` (43, 1, 71), yaw 180) and the lounges with
+  a fireplace (spot `estate.lobby` (43, 1, 62)); 43 room doors (`eternalrealm:room_door`) on the galleries, which the
+  estates feature turns into the doors of each player's own room. Portico with a balcony and glowing name signs,
+  corner turrets, a hip roof with dormers, a glazed lantern over the atrium and a clock tower.
+- **商店回廊 The Galleria** (`_galleria.py`, x 62..86, z 10..35): ten partitioned shops (sword, potion, bread, gem,
+  shirt, book, flower, map, hammer, mug) either side of a flagstone passage under a leaded-glass barrel vault on dark
+  oak ribs; every shop has its wares in item frames and lying on the counter, the big pieces of its trade, a hanging
+  shop sign, a striped awning and a lit storeroom above; a sunken pool with a fountain, benches, flower beds,
+  chandeliers, a clock over each arch, pennant strings across the passage; cream sandstone façades with great
+  round arches to the east avenue (north) and the canal quay (south).
+- **The undercroft** (`_undercroft.py`, under the market square, floors y −11, ceilings y −5): the canal pours
+  through the culvert under the north quay (x 40..42) down a shaft into a 3-wide underground channel (a falling
+  curtain of water, `fluid_ticks` at the culvert make it flow on load) between walkways under a brick vault; the
+  smugglers' dock at its north end (pool, jetty, moored boats, a crane); the old cistern (marble columns in still
+  water lit from below); a warehouse with racks and an archive wall of bookshelves; the black market behind a
+  secret door in that wall (a fence, a potion seller, an information broker with the smugglers' ledger on a
+  lectern, weapons, a card table, a bar). Hidden ways in: swim or boat through the culvert and drop down the fall,
+  the cellar hatch in the market aisle (x 30, z 17: a trapdoor over a ladder into the cistern), the dry old well on
+  the square (x 8, z 27: a ladder down into the black market). `crowd.undercroft.1..4`.
+
+Town gimmick ids added for the rebuild (the Java blocks and renderers: the town gimmicks work; `room_door`: the
+estates work):
+
+| Block | State | Data (SNBT) | Placement |
+|---|---|---|---|
+| `eternalrealm:bunting` | `facing` | `{Tx:<int>,Ty:<int>,Tz:<int>,Sag:<float>f,Style:"pennant\|flags\|lanterns\|laundry\|garland",Colors:[I;…],Wind:<float>f}` | The anchor: an air cell in front of a wall, an eave or on a post top; the string hangs to the point at block offset (Tx, Ty, Tz) with the given sag; colours are dye ids. `_maze.bunting()` writes it. |
+| `eternalrealm:shop_sign` | `facing`, `attach` wall/ceiling, `icon` (sword, shield, potion, bread, anvil, book, gem, flower, shirt, key, fish, mug, scroll, map, hammer, ring) | — | A hanging board with the picture of the trade: in the air cell in front of a wall (`facing` away from it) or under a ceiling block. `_maze.shop_sign()`. |
+| `eternalrealm:secret_door` | `facing`, `half` lower/upper, `open`, `look` (bookshelf, stone_bricks, castle_bricks, white_plaster, mossy_stone_bricks, dark_oak_planks, spruce_planks) | — | A two-high wall section that looks like the wall around it and opens like a door. |
+| `eternalrealm:room_door` | door states | — | The Starlight Manor's room doors. |
 
 ## 5. The castle (`castle/`)
 

@@ -1,12 +1,14 @@
 """市場 The market, east and south-east of the plaza.
 
-- Market square (SE quadrant x 6..51, z 6..39): rows of stalls with striped awnings (fruit, vegetables, flowers,
+- Market square (SE quadrant x 6..51, z 6..38): rows of stalls with striped awnings (fruit, vegetables, flowers,
   cloth, fish, pottery, bread, potions, arms, books) along three aisles, a market cross with a fountain basin,
-  pennant masts with market flags, crates, carts and benches.
-- Covered market hall (x 62..84, z 10..30): open stone arcade on the ground floor full of counters, a stair along
-  the east wall (x 83) up to the timber-framed upper hall (the merchants' guild room), a big terracotta roof with
-  a cupola carrying a market flag.
-- More stalls along the east avenue and a storehouse yard behind (x 88..101, z 21..39).
+  pennant masts with market flags, crates and carts; the old well (x 8, z 10) and the cellar hatch (x 29, z 17)
+  lead down into the undercroft under the square (_undercroft.py: the underground waterway fed by the canal
+  culvert, a smugglers' dock, a warehouse and the black market behind a secret door).
+- The Galleria 商店回廊 (x 62..86, z 10..35, _galleria.py): an indoor shopping street of ten partitioned shops
+  under a leaded-glass vault, arches at both ends (the east avenue to the north, the canal quay to the south).
+- Two stalls along the east avenue either side of the Galleria forecourt, a storehouse yard behind
+  (x 88..98, z 21..38).
 """
 from __future__ import annotations
 
@@ -18,7 +20,10 @@ from capital import shapes as S
 from capital.noise import hash2
 
 from . import _civic_kit as K
+from . import _galleria as GA
+from . import _maze as MZ
 from . import _town_kit as TK
+from . import _undercroft as UC
 
 DISTRICT = "market"
 AIR = K.AIR
@@ -28,13 +33,17 @@ CB, SM, GOLD, ROOF = K.CB, K.SM, K.GOLD, K.ROOF
 VIEWS = {
     "market_square": dict(pos=(14, 7, 6), look=(44, 2, 30), fov=74, sun=(40, -160), fog=2600,
                           label="The market square"),
-    "market_hall": dict(pos=(56, 6, 3), look=(76, 6, 22), fov=72, sun=(40, -160), fog=2600,
-                        label="The covered market hall"),
-    "market_hall_in": dict(pos=(64.5, 3.5, 12.5), look=(80, 2, 26), fov=80, sun=(40, -160), fog=900,
-                           label="Inside the market hall"),
+    "galleria": dict(pos=(63, 9, -4), look=(74, 8, 12), fov=72, sun=(40, -160), fog=2600,
+                     label="The Galleria from the east avenue"),
+    "galleria_in": dict(pos=(74.5, 3.2, 12.5), look=(74.5, 6, 34), fov=80, sun=(40, -160), fog=900,
+                        label="Inside the Galleria"),
+    "galleria_shops": dict(pos=(76.5, 2.6, 19.5), look=(69, 2.5, 22), fov=80, sun=(40, -160), fog=900,
+                           label="Shop fronts in the Galleria"),
 }
 
 GOODS_CYCLE = ["fruit", "veg", "flowers", "cloth", "fish", "pots", "bread", "potions", "arms", "books"]
+STALL_ICON = {"flowers": "flower", "cloth": "shirt", "fish": "fish", "pots": "mug", "bread": "bread",
+              "potions": "potion", "arms": "sword", "books": "book"}      # shop_sign pictures of the stall trades
 
 
 def stall_at(w, x0, z0, front, W=5, D=4, seed=0):
@@ -48,6 +57,8 @@ def stall_at(w, x0, z0, front, W=5, D=4, seed=0):
     colors = TK.AWNINGS[int(hash2(x0, z0, seed) * len(TK.AWNINGS))]
     goods = GOODS_CYCLE[int(hash2(z0, x0, seed + 1) * len(GOODS_CYCLE))]
     TK.market_stall(f, 0, 1, W=Wd, D=Dd - 1, colors=colors, goods=goods, seed=seed + x0 * 7 + z0)
+    if goods in STALL_ICON:                     # a board with the picture of the trade under the awning's front
+        MZ.shop_sign(f, Wd // 2, 3, 1, "north", STALL_ICON[goods], attach="ceiling")
 
 
 # ============================================================================== market square
@@ -71,8 +82,6 @@ def square(w):
     for (dx, dz, fac) in ((1, 0, "east"), (-1, 0, "west"), (0, 1, "south"), (0, -1, "north")):
         w.set(cx + dx, 7, cz + dz, B.stairs(SM, K.OPP[fac], "top"))
         TK.spray(w, cx + dx, 5, cz + dz, power=1, facing=fac)
-        w.set(cx + dx, 5, cz + dz, B.S("fountain_spray", power=1, facing=fac))
-        w.set(cx + dx * 1, 6, cz + dz * 1, B.S("lightning_rod", facing=fac)) if False else None
     w.set(cx, 8, cz, F(GOLD))
     w.set(cx, 9, cz, B.S("gilded_finial"))
     w.set(cx, 4, cz, F(GOLD))
@@ -83,15 +92,19 @@ def square(w):
     # carts, crates and benches in the aisles
     for (x, z) in ((22, 17), (14, 38)):
         _cart(w, x, z, seed=x + z)
-    for (x, z) in ((33, 21), (36, 27)):
-        deco.bench(w, x, 0, z, facing="east" if x < 35 else "west", length=1) if False else None
     for (x, z) in ((26, 30), (50, 30), (38, 17), (20, 30)):
         K.lamp(w, x, 0, z, height=4)
+    # pennant strings over the aisles between the masts, and from the top of the market cross
+    for (a, b, colors) in (((32, 6, 29), (50, 6, 30), (14, 4, 11, 0, 5)), ((9, 6, 30), (30, 6, 29), (1, 4, 3, 10, 5)),
+                           ((50, 6, 17), (40, 6, 19), (11, 0, 14, 4)), ((36, 8, 24), (50, 6, 30), (6, 4, 9, 0, 3)),
+                           ((35, 8, 25), (32, 6, 28), (14, 0, 11, 0))):
+        MZ.bunting(w, *a, (b[0] - a[0], b[1] - a[1], b[2] - a[2]), style="pennant", colors=colors,
+                   sag=0.5 + 0.06 * abs(b[0] - a[0]), wind=1.0, facing="east")
 
 
 def _cart(w, x, z, seed=0):
     """Small hand cart with goods: two wheels (dark oak trapdoors), planks bed, goods on top."""
-    w.set(x, 1, z, B.S("spruce_slab", type="top") if False else B.slab("spruce", "top"))
+    w.set(x, 1, z, B.slab("spruce", "top"))
     w.set(x + 1, 1, z, B.slab("spruce", "top"))
     w.set(x, 2, z, B.S("pumpkin") if hash2(x, z, seed) < 0.5 else B.S("hay_block", axis="y"))
     w.set(x + 1, 2, z, B.barrel("up"))
@@ -100,112 +113,20 @@ def _cart(w, x, z, seed=0):
     w.set(x + 2, 1, z, B.fence("spruce"))
 
 
-# ============================================================================== covered market hall
-def market_hall(w):
-    x0, x1, z0, z1 = 62, 84, 10, 30
+# ============================================================================== the Galleria
+GALLERIA = (62, 10)          # north-west corner of the Galleria (x 62..86, z 10..35; 2026-11-11 rebuild)
+
+
+def galleria_site(w):
     TK.pave(w, 59, 6, 87, 39, TK.SQUARE_MIX, seed=102)
     TK.pave(w, 88, 21, 98, 39, TK.LANE_MIX, seed=103)
-    w.fill(x0, 0, z0, x1, 0, z1, F("stone_bricks"))
-    gy = 7                                         # upper floor level
-    # piers every 4 with round arches between them (open arcade)
-    for x in range(x0, x1 + 1):
-        for z in (z0, z1):
-            w.fill(x, 1, z, x, gy - 1, z, F(CB))
-    for z in range(z0, z1 + 1):
-        for x in (x0, x1):
-            w.fill(x, 1, z, x, gy - 1, z, F(CB))
-    for (axis, c, out, a0, a1) in (("x", z0, -1, x0, x1), ("x", z1, 1, x0, x1), ("z", x0, -1, z0, z1),
-                                   ("z", x1, 1, z0, z1)):
-        f = K.Face(w, axis, c, out)
-        u = a0 + 1
-        while u + 2 < a1:
-            span = min(3, a1 - u)
-            f.mask(u, 1, 0, S.round_arch_mask(span, 5), AIR)
-            u += 4
-        for uu in range(a0, a1 + 1, 4):
-            f.set(uu, 0, 1, F(SM)) if False else None
-    # inner piers carrying the floor
-    for x in range(x0 + 4, x1, 4):
-        for z in range(z0 + 5, z1, 5):
-            w.fill(x, 1, z, x, gy - 1, z, B.pillar("y"))
-    w.fill(x0, gy, z0, x1, gy, z1, F("spruce_planks"))
-    S.walls(w, x0, z0, x1, z1, gy, gy, F(SM))
-    for (a, b, c, d, fac) in ((x0, z0 - 1, x1, z0 - 1, "south"), (x0, z1 + 1, x1, z1 + 1, "north"),
-                              (x0 - 1, z0, x0 - 1, z1, "east"), (x1 + 1, z0, x1 + 1, z1, "west")):
-        w.fill(a, gy, b, c, gy, d, B.stairs(SM, fac, "top"))
-    # timber-framed upper hall
-    top = gy + 6
-    S.walls(w, x0, z0, x1, z1, gy + 1, top - 1, F("white_plaster"))
-    for x in range(x0, x1 + 1):
-        if (x - x0) % 3 == 0 or x == x1:
-            for z in (z0, z1):
-                w.fill(x, gy + 1, z, x, top - 1, z, B.log("dark_oak"))
-    for z in range(z0, z1 + 1):
-        if (z - z0) % 3 == 0 or z == z1:
-            for x in (x0, x1):
-                w.fill(x, gy + 1, z, x, top - 1, z, B.log("dark_oak"))
-    S.rect_ring(w, x0, z0, x1, z1, top, B.log("dark_oak", "x"))
-    w.fill(x0, top, z0, x0, top, z1, B.log("dark_oak", "z"))
-    w.fill(x1, top, z0, x1, top, z1, B.log("dark_oak", "z"))
-    w.fill(x0 + 1, top, z0 + 1, x1 - 1, top, z1 - 1, F("spruce_planks"))
-    for (axis, c, out, a0, a1) in (("x", z0, -1, x0, x1), ("x", z1, 1, x0, x1), ("z", x0, -1, z0, z1),
-                                   ("z", x1, 1, z0, z1)):
-        f = K.Face(w, axis, c, out)
-        for u in range(a0 + 1, a1, 3):
-            if u + 1 < a1:
-                f.fill(u, gy + 2, 0, u + 1, gy + 4, 0, TK.LEADED)
-                f.set(u, gy + 1, 1, B.leaves("flowering_azalea")) if hash2(u, c, 4) < 0.5 else None
-                f.set(u + 1, gy + 1, 1, B.leaves("azalea")) if hash2(u, c, 5) < 0.4 else None
-    # roof: big terracotta gable (ridge along x) with a cupola and the market flag
-    r = K.Roof(w, x0, z0, x1, z1, top + 1, "terracotta_roof_tiles", axis="x", overhang=1,
-               gable=F("white_plaster"), trim=None, end_overhang=1)
-    ridge = r.ridge_y
-    for x in (x0, x1):
-        for z in range(z0, z1 + 1):
-            for y in range(top + 1, ridge + 1):
-                if w.get(x, y, z) == B.canon(F("white_plaster")) and (z - z0) % 3 == 0:
-                    w.set(x, y, z, B.log("dark_oak"))
-    for a in (67, 73, 79):
-        K.dormer(w, r, -1, a, width=3, wall="white_plaster", frame="dark_oak", glass=TK.LEADED, mat=
-                 "terracotta_roof_tiles")
-        K.dormer(w, r, 1, a, width=3, wall="white_plaster", frame="dark_oak", glass=TK.LEADED, mat=
-                 "terracotta_roof_tiles")
-    ccx, ccz = (x0 + x1) // 2, (z0 + z1) // 2
-    w.fill(ccx - 2, ridge - 1, ccz - 2, ccx + 2, ridge + 3, ccz + 2, B.log("dark_oak"))
-    w.fill(ccx - 1, ridge, ccz - 2, ccx + 1, ridge + 2, ccz + 2, TK.LEADED)
-    w.fill(ccx - 2, ridge, ccz - 1, ccx + 2, ridge + 2, ccz + 1, TK.LEADED)
-    w.fill(ccx - 1, ridge, ccz - 1, ccx + 1, ridge + 2, ccz + 1, AIR)
-    w.set(ccx, ridge + 2, ccz, B.S("bell", attachment="ceiling", facing="north"))
-    S.square_spire(w, ccx, ccz, 3, ridge + 4, 7, ROOF, finial=False)
-    w.set(ccx, ridge + 11, ccz, F(GOLD))
-    TK.flagpole(w, ccx, ridge + 11, ccz, 3, "east", "market", 3.0, 2.0, pole="fence")
-    # inside the arcade: counters and goods, lanterns
-    for i, x in enumerate(range(x0 + 2, x1 - 1, 4)):
-        for (z, fac) in ((z0 + 3, "south"), (z1 - 3, "north")):
-            for dx in range(3):
-                w.set(x + dx, 1, z, B.barrel("up") if dx == 1 else F("spruce_planks"))
-                g = TK.GOODS[GOODS_CYCLE[(i * 2 + (z > 20)) % len(GOODS_CYCLE)]]
-                w.set(x + dx, 2, z, TK._goods_state(g[int(hash2(x + dx, z, 7) * len(g))], fac))
-        deco.hanging_lantern(w, x + 1, gy, (z0 + z1) // 2, drop=1)
-    # stair to the upper hall (merchants' guild room) along the east wall, clear of the inner piers (x = 82) and
-    # the counters: seven steps rising south, the last one level with the upper floor; a railing round the opening
-    from . import _furnish as FU
-    sx, sz = x1 - 1, z0 + 2
-    FU.stair_up(w, sx, sz, 0, gy, "south", wood="spruce")
-    for z in range(sz + gy - 4, sz + gy - 1):                  # the opening cut in the upper floor
-        w.set(sx - 1, gy + 1, z, B.fence("spruce"))
-    w.set(sx - 1, gy + 1, sz + gy - 5, B.fence("spruce"))
-    w.set(sx, gy + 1, sz + gy - 5, B.fence("spruce"))
-    # the merchants' guild room: long table and benches
-    deco.long_table(w, ccx - 6, gy, ccz, 12, axis="x", top="spruce", cloth="green", chairs=True)
-    for x in (ccx - 4, ccx + 4):
-        deco.chandelier(w, x, top, ccz, drop=2)
+    GA.galleria(w, *GALLERIA)
 
 
 def avenue_stalls(w):
-    """Stalls along the east avenue (south side) between the square and the hall, facing the avenue."""
-    for i, x0 in enumerate(range(60, 84, 6)):
-        stall_at(w, x0, 6, "north", W=5, D=3, seed=301 + i)
+    """A stall on the east avenue (south side) west of the Galleria forecourt, a hand cart east of it."""
+    stall_at(w, 59, 6, "north", W=5, D=3, seed=301)
+    _cart(w, 83, 7, seed=302)
     # storehouse yard: stacked crates and a wagon shed
     for (x, z) in ((92, 24), (93, 24), (92, 25), (96, 30), (97, 30), (96, 31)):
         w.set(x, 1, z, B.barrel("up") if (x + z) % 3 else B.S("hay_block", axis="y"))
@@ -219,13 +140,15 @@ def avenue_stalls(w):
 
 
 def crowd(w):
-    pts = [(30, 17), (43, 17), (25, 30), (14, 30), (42, 30), (35, 20), (30, 38), (44, 38), (73, 20), (57, 26)]
+    pts = [(30, 17), (43, 17), (25, 30), (14, 30), (42, 30), (35, 20), (30, 38), (44, 38), (73, 8), (57, 26),
+           (71, 14), (77, 18), (71, 28), (77, 31), (74, 37)]
     TK.crowd(w, "market", pts)
 
 
 def build(w, district, terrain):
     square(w)
-    market_hall(w)
+    UC.build(w)
+    galleria_site(w)
     avenue_stalls(w)
     crowd(w)
 
