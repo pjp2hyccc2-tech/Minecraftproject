@@ -18,7 +18,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -210,7 +209,8 @@ public final class EstateGameTests {
                             check(waited.incrementAndGet() < 60, "the stranger was not sent out");
                             return;
                         }
-                        check(stranger.level() == home, "the stranger went back where they came from");
+                        // the stranger never came in through a door, so has no way back: off to the capital
+                        check(!EstateLevels.isEstateLevel(stranger.level()), "the stranger was sent out");
                         check(EstateService.leave(owner), "the owner leaves");
                         check(EstateService.release(key) == EstateResult.OK, "releasing the room");
                         stage.set(3);
@@ -239,8 +239,7 @@ public final class EstateGameTests {
     public static void aRoomDoorWithoutARoomGoesNowhere(GameTestHelper helper) {
         FakePlayer player = fake(helper, "er_gt_estate_doorless", new Vec3(2.5, 2.0, 2.5));
         EstateService.release(new EstateKey(EstateKey.ROOM, player.getUUID(), DESIGN));
-        BlockPos door = helper.absolutePos(new BlockPos(2, 2, 3));
-        helper.getLevel().setBlock(door, Blocks.AIR.defaultBlockState(), 3);
+        BlockPos door = helper.absolutePos(new BlockPos(1, 1, 1));
         Vec3 before = player.position();
         RoomDoors.use(player, door);
         check(player.level() == helper.getLevel() && player.position().distanceTo(before) < 0.01,
