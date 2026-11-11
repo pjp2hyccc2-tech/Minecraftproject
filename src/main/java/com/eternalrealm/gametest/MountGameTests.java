@@ -358,8 +358,6 @@ public final class MountGameTests {
         MountEntity horse = MountService.summonNow(jumper, MountKind.HORSE)
                 .orElseThrow(() -> new GameTestAssertException("no room for the horse"));
         double ground = griffin.getY();
-        // the horse is measured from where it stands: the call may put it on a step of the arena
-        double horseGround = horse.getY();
         // the terrain's ceiling stands at least 32 above the ground under the griffin (or 8 under the world's top);
         // the flight itself runs under a fixed ceiling 8 above the ground, since the test world's sky varies
         double terrain = griffin.terrainCeiling();
@@ -369,26 +367,37 @@ public final class MountGameTests {
                     + MountRules.FLIGHT_HEIGHT + " above the ground " + ground);
         }
         griffin.fixCeilingForTests(ground + 8.0);
+        // the horse: 60 ticks of riding with jump held, driven at once (one drive is one tick of ridden movement,
+        // collisions included), so neither the test scheduler nor the tests around can add a move or a push; it
+        // leaps and lands again and again, never higher than one leap above the floor it lands on
+        double floor = Double.NaN;
+        double highest = Double.NEGATIVE_INFINITY;
+        StringBuilder path = new StringBuilder();
+        for (int i = 0; i < 60; i++) {
+            horse.drive(CLIMB);
+            if (horse.onGround()) {
+                floor = Double.isNaN(floor) ? horse.getY() : Math.min(floor, horse.getY());
+            }
+            highest = Math.max(highest, horse.getY());
+            if (i < 40) {
+                path.append(String.format(java.util.Locale.ROOT, " %.2f%s", horse.getY(), horse.onGround() ? "g" : ""));
+            }
+        }
+        boolean wet = horse.isInWater();
+        MountService.dismiss(jumper, false);
+        if (Double.isNaN(floor) || highest - floor < 0.5 || highest - floor > 3.5) {
+            throw new GameTestAssertException("a horse jumps, it does not fly: " + (highest - floor)
+                    + " above the floor " + floor + (wet ? " (in water)" : "") + ", path" + path);
+        }
         AtomicInteger ticks = new AtomicInteger();
         AtomicInteger phase = new AtomicInteger();
         AtomicInteger inPhase = new AtomicInteger();
-        double[] notes = new double[3]; // the horse's highest jump, the griffin's top, the end of its glide
+        double[] notes = new double[2]; // the griffin's top, the end of its glide
         helper.onEachTick(() -> {
             if (phase.get() > 3) {
                 return;
             }
             int tick = ticks.incrementAndGet();
-            if (tick <= 60) {
-                horse.drive(CLIMB);
-                notes[0] = Math.max(notes[0], horse.getY() - horseGround);
-            } else if (tick == 61) {
-                MountService.dismiss(jumper, false);
-                if (notes[0] > 4.5 || notes[0] < 0.5) {
-                    phase.set(4);
-                    helper.fail("a horse jumps, it does not fly: highest " + notes[0]);
-                    return;
-                }
-            }
             int step = inPhase.incrementAndGet();
             double ceiling = griffin.flightCeiling();
             switch (phase.get()) {
@@ -404,7 +413,7 @@ public final class MountGameTests {
                                     + " (ground " + ground + ")");
                             return;
                         }
-                        notes[1] = griffin.getY();
+                        notes[0] = griffin.getY();
                         next(phase, inPhase, 1);
                     } else if (step > 300) {
                         phase.set(4);
@@ -414,8 +423,8 @@ public final class MountGameTests {
                 case 1 -> { // glide without input
                     griffin.drive(MountMotion.Input.NONE);
                     if (step == 20) {
-                        notes[2] = griffin.getY();
-                        double sank = notes[1] - notes[2];
+                        notes[1] = griffin.getY();
+                        double sank = notes[0] - notes[1];
                         if (sank < 0.2 || sank > 2.5 || griffin.onGround()) {
                             phase.set(4);
                             helper.fail("gliding 20 ticks should sink gently, sank " + sank);
@@ -427,8 +436,8 @@ public final class MountGameTests {
                 case 2 -> { // dive with sneak (8 ticks: still in the air afterwards)
                     griffin.drive(DESCEND);
                     if (step == 8) {
-                        double dived = notes[2] - griffin.getY();
-                        if (dived < (notes[1] - notes[2]) * 2.0) {
+                        double dived = notes[1] - griffin.getY();
+                        if (dived < (notes[0] - notes[1]) * 2.0) {
                             phase.set(4);
                             helper.fail("sneak should dive faster than the glide: dived " + dived);
                             return;
@@ -436,7 +445,7 @@ public final class MountGameTests {
                         next(phase, inPhase, 3);
                     }
                 }
-                default -> { // get off in the air (once the horse is done)
+                default -> { // get off in the air (after a few ticks of gliding)
                     griffin.drive(MountMotion.Input.NONE);
                     if (tick <= 61) {
                         return;
