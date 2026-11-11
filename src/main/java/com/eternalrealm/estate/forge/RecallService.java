@@ -42,7 +42,8 @@ import java.util.UUID;
  * are {@link RecallRules}; this class gathers the facts and moves the player. Server thread.
  */
 public final class RecallService {
-    private record Cast(long started, Vec3 start, float health, ResourceKey<Level> dimension) {
+    /** A cast in progress; the player object itself (a player who logs out and in again is a new one). */
+    private record Cast(ServerPlayer player, long started, Vec3 start, float health, ResourceKey<Level> dimension) {
     }
 
     private static final Map<UUID, Cast> CASTS = new HashMap<>();
@@ -110,7 +111,7 @@ public final class RecallService {
             state(player, "refused", check.id());
             return check;
         }
-        CASTS.put(player.getUUID(), new Cast(now(player.server), player.position(), player.getHealth(),
+        CASTS.put(player.getUUID(), new Cast(player, now(player.server), player.position(), player.getHealth(),
                 player.level().dimension()));
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME,
                 SoundSource.PLAYERS, 1.0F, 0.8F);
@@ -157,9 +158,9 @@ public final class RecallService {
         Iterator<Map.Entry<UUID, Cast>> it = CASTS.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<UUID, Cast> entry = it.next();
-            ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
             Cast cast = entry.getValue();
-            if (player == null || player.isRemoved() || !player.isAlive()) {
+            ServerPlayer player = cast.player();
+            if (player.isRemoved() || !player.isAlive() || player.hasDisconnected()) {
                 it.remove();
                 continue;
             }
@@ -206,7 +207,8 @@ public final class RecallService {
     private static void arrive(ServerPlayer player, long now) {
         Optional<EstateKey> room = EstateService.estate(EstateKey.ROOM, player.getUUID());
         if (room.isEmpty() || !EstateService.ready(room.get())) {
-            CASTS.put(player.getUUID(), new Cast(now, player.position(), player.getHealth(), player.level().dimension()));
+            CASTS.put(player.getUUID(), new Cast(player, now, player.position(), player.getHealth(),
+                    player.level().dimension()));
             interrupt(player, RecallRules.Interrupt.REFUSED);
             return;
         }

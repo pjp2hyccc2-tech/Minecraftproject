@@ -290,6 +290,14 @@ public final class EstateContents {
 
     /** Everything stored in {@code box} (loaded chunks are loaded). */
     public static Found scan(ServerLevel level, AABB box) {
+        return scan(level, box, Map.of());
+    }
+
+    /**
+     * Everything stored in {@code box}; {@code names} names containers by position where the block entity cannot keep
+     * its name itself (a chiseled bookshelf does not load or save Forge's persistent data: see {@link #slotNames}).
+     */
+    public static Found scan(ServerLevel level, AABB box, Map<BlockPos, String> names) {
         Found found = new Found();
         Map<String, Holder> named = new java.util.TreeMap<>();
         int cx0 = (int) Math.floor(box.minX) >> 4;
@@ -305,7 +313,8 @@ public final class EstateContents {
                             pos.getZ() + 0.5)) {
                         continue;
                     }
-                    add(found, named, new ContainerHolder(slotOf(blockEntity.getPersistentData()), blockEntity));
+                    String name = slotOf(blockEntity.getPersistentData());
+                    add(found, named, new ContainerHolder(name != null ? name : names.get(pos), blockEntity));
                 }
             }
         }
@@ -327,6 +336,25 @@ public final class EstateContents {
         if (holder.name() == null || named.putIfAbsent(holder.name(), holder) != null) {
             found.unnamed.add(holder);
         }
+    }
+
+    private static final java.util.regex.Pattern SLOT_NAME =
+            java.util.regex.Pattern.compile(SLOT + ":\"([a-z]+\\.[0-9]+)\"");
+
+    /**
+     * The storage names a design gives its block entities, by world position on {@code plot}: what names a container
+     * whose block entity drops Forge's persistent data (the chiseled bookshelf's own load and save skip it).
+     */
+    public static Map<BlockPos, String> slotNames(com.eternalrealm.world.forge.blueprint.Blueprint blueprint,
+                                                  com.eternalrealm.estate.EstatePlot plot) {
+        Map<BlockPos, String> names = new java.util.HashMap<>();
+        for (com.eternalrealm.world.forge.blueprint.Blueprint.BlockEntityData data : blueprint.blockEntities()) {
+            java.util.regex.Matcher matcher = SLOT_NAME.matcher(data.snbt() == null ? "" : data.snbt());
+            if (matcher.find()) {
+                names.put(EstateLevels.at(plot, data.pos()), matcher.group(1));
+            }
+        }
+        return names;
     }
 
     private static String slotOf(CompoundTag data) {

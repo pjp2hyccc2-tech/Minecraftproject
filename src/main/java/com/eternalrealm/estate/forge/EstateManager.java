@@ -126,6 +126,12 @@ final class EstateManager {
         return state().built(plot).filter(built -> built.design().equals(design));
     }
 
+    /** The storage names of a build's design by world position (see {@link EstateContents#slotNames}). */
+    java.util.Map<net.minecraft.core.BlockPos, String> slotNames(Optional<EstateWorldState.Built> built, EstatePlot plot) {
+        return built.flatMap(b -> EstateBlueprints.get(server, b.kind(), b.design()))
+                .map(blueprint -> EstateContents.slotNames(blueprint, plot)).orElse(java.util.Map.of());
+    }
+
     /** The build players use for estate {@code record}, if it stands. */
     Optional<EstateWorldState.Built> liveBuild(EstateRecord record) {
         return record.moving() ? state().built(record.previous()) : builtAs(record.plot(), record.key().design());
@@ -464,7 +470,9 @@ final class EstateManager {
                 }
                 return false;
             }
-            List<ItemStack> left = EstateContents.move(EstateContents.scan(level, from), EstateContents.scan(level, to));
+            List<ItemStack> left = EstateContents.move(
+                    EstateContents.scan(level, from, slotNames(state().built(record.previous()), record.previous())),
+                    EstateContents.scan(level, to, slotNames(target, record.plot())));
             keepAll(left, record.key().owner(), record.previous());
             double[] entry = target.get().entry();
             for (ServerPlayer player : List.copyOf(level.players())) {

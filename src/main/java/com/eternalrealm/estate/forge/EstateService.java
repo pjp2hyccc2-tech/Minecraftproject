@@ -203,7 +203,11 @@ public final class EstateService {
 
     /** What is stored in the estate (containers, armour stands, item frames, the floor); empty while not built. */
     public static Optional<EstateContents.Found> contents(EstateKey key) {
-        return box(key).map(box -> EstateContents.scan(manager.level, box));
+        return record(key).flatMap(record -> {
+            Optional<EstateWorldState.Built> live = manager.liveBuild(record);
+            return live.map(built -> EstateContents.scan(manager.level, built.aabb(),
+                    manager.slotNames(live, record.livePlot())));
+        });
     }
 
     /** Copies of what waits in {@code owner}'s keepsafe. */
