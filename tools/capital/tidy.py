@@ -46,6 +46,35 @@ def _short(bid: str) -> str:
     return bid.split(":", 1)[1]
 
 
+PAINTING_SIZES = {"kebab": (1, 1), "aztec": (1, 1), "alban": (1, 1), "aztec2": (1, 1), "bomb": (1, 1),
+                  "plant": (1, 1), "wasteland": (1, 1), "pool": (2, 1), "courbet": (2, 1), "sea": (2, 1),
+                  "sunset": (2, 1), "creebet": (2, 1), "wanderer": (1, 2), "graham": (1, 2), "match": (2, 2),
+                  "bust": (2, 2), "stage": (2, 2), "void": (2, 2), "skull_and_roses": (2, 2)}
+_CCW = {0: (1, 0), 1: (0, 1), 2: (-1, 0), 3: (0, -1)}      # facing south/west/north/east -> counter-clockwise
+_BACK = {0: (0, 1), 1: (-1, 0), 2: (0, -1), 3: (1, 0)}
+
+
+def painting_holds(w, e) -> bool:
+    """Whether the painting entity ``e`` would stay up: every block it covers free, a full block behind each
+    (the rules check.py enforces on the export)."""
+    from .districts import _furnish as FU
+    nbt = e["nbt"]
+    variant = nbt.split('variant:"minecraft:')[1].split('"')[0]
+    facing = int(nbt.split("facing:")[1].split("b")[0])
+    w_, h_ = PAINTING_SIZES.get(variant, (0, 0))
+    if not w_:
+        return False
+    x, y, z = (int(np.floor(v)) for v in e["pos"])
+    sx, sz = _CCW[facing]
+    bx, bz = _BACK[facing]
+    for k in range(w_):
+        for l in range(h_):
+            cx, cy, cz = x + sx * k, y + l, z + sz * k
+            if not FU.is_free(w.get(cx, cy, cz)) or not FU.is_full(w.get(cx - bx, cy, cz - bz)):
+                return False
+    return True
+
+
 def tidy(w, log=print) -> dict:
     pal = w.palette
     parsed = [B.parse(s) for s in pal]
@@ -160,6 +189,19 @@ def tidy(w, log=print) -> dict:
     for (x, y, z) in positions(lambda i: _short(parsed[i][0]) in _TALL_PLANTS and parsed[i][1].get("half") == "upper"):
         if _short(parsed[at(x, y - 1, z)][0]) != _short(parsed[at(x, y, z)][0]):
             remove(x, y, z, "plant")
+
+    # 4. paintings that a later builder walled over or left hanging on nothing: the game would drop them as items
+    stats["painting"] = 0
+    where["painting"] = []
+    keep = []
+    for e in w.entities:
+        if e["type"] == "minecraft:painting" and not painting_holds(w, e):
+            stats["painting"] += 1
+            if len(where["painting"]) < 8:
+                where["painting"].append(tuple(e["pos"]))
+            continue
+        keep.append(e)
+    w.entities[:] = keep
 
     if any(stats.values()):
         log("tidy: " + ", ".join(f"{k} {v}" for k, v in stats.items() if v)

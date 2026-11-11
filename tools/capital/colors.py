@@ -75,7 +75,7 @@ BASE = {
     "stonecutter": (120, 115, 110), "cauldron": (60, 60, 64), "water_cauldron": (60, 60, 64), "brewing_stand": (110, 100, 90),
     "hay_block": (166, 139, 12), "target": (226, 170, 157), "bone_block": (229, 225, 207), "melon": (111, 145, 30),
     "pumpkin": (198, 118, 24), "carved_pumpkin": (198, 118, 24), "jack_o_lantern": (214, 152, 52),
-    "lantern": (210, 160, 80), "soul_lantern": (90, 180, 190), "chain": (60, 64, 75), "iron_bars": (140, 140, 140),
+    "lantern": (210, 160, 80), "soul_lantern": (90, 180, 190), "wall_torch": (230, 180, 90), "cobweb": (220, 222, 225), "chain": (60, 64, 75), "iron_bars": (140, 140, 140),
     "iron_door": (190, 190, 190), "iron_trapdoor": (190, 190, 190), "bell": (230, 190, 70), "end_rod": (240, 235, 225),
     "lightning_rod": (200, 120, 90), "redstone_lamp": (200, 140, 80), "beehive": (180, 140, 80),
     "cake": (240, 230, 220), "candle_cake": (240, 230, 220), "flower_pot": (124, 68, 52), "decorated_pot": (140, 70, 50),
@@ -87,6 +87,7 @@ BASE = {
     "raw_iron_block": (166, 135, 107), "raw_copper_block": (154, 105, 79), "raw_gold_block": (221, 169, 46),
     "piston": (120, 110, 95), "bee_nest": (196, 150, 77), "dried_kelp_block": (50, 58, 35),
     "farmland": (92, 58, 32), "skeleton_wall_skull": (200, 200, 200), "zombie_wall_head": (80, 120, 70),
+    "room_door": (96, 62, 36), "secret_door": (120, 108, 96), "shop_sign": (128, 92, 56), "bunting": (70, 70, 74),
     # custom
     "castle_bricks": (232, 228, 218), "smooth_castle_stone": (239, 235, 227), "castle_pillar": (230, 225, 214),
     "carved_castle_stone": (221, 215, 202), "castle_crest_stone": (214, 200, 168), "royal_roof_tiles": (43, 76, 155),
