@@ -167,10 +167,10 @@ public final class InnGameTests {
                         // fill the canal room: more than the garret holds, two diamonds among it
                         container(found, "chest.5").setItem(3, new ItemStack(Items.DIAMOND, 2));
                         for (String name : CANAL_BOXES) {
-                            Container box = container(found, name);
-                            for (int slot = 0; slot < box.getContainerSize(); slot++) {
-                                if (box.getItem(slot).isEmpty()) {
-                                    box.setItem(slot, new ItemStack(Items.DIRT, 64));
+                            Container piece = container(found, name);
+                            for (int slot = 0; slot < piece.getContainerSize(); slot++) {
+                                if (piece.getItem(slot).isEmpty()) {
+                                    piece.setItem(slot, new ItemStack(Items.DIRT, 64));
                                 }
                             }
                         }

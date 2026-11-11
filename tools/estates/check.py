@@ -18,6 +18,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 
 from capital import blocks as B  # noqa: E402
+from estates import blocks_ext  # noqa: E402,F401  (the estate blocks in the kit's table)
 from capital.check import stair_problems  # noqa: E402
 from capital.export import TILE, decode_tile  # noqa: E402
 from capital.world import Y0, Y1  # noqa: E402
