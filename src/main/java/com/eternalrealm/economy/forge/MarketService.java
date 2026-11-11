@@ -508,7 +508,7 @@ public final class MarketService {
                     : ChatFormatting.GRAY));
         } else if (event instanceof HallEvent.Started started) {
             Lot lot = started.lot();
-            Component line = lot.buyoutPrice() > 0
+            net.minecraft.network.chat.MutableComponent line = lot.buyoutPrice() > 0
                     ? Component.translatable("message.eternalrealm.hall.started_buyout", name(lot), lot.startPrice(),
                     lot.buyoutPrice(), lot.durationMinutes())
                     : Component.translatable("message.eternalrealm.hall.started", name(lot), lot.startPrice(),
