@@ -118,6 +118,11 @@
 - 証書（アイテム `eternalrealm:mount_deed`）のタグ `er_mount` = `{id (UUID), species, coat, shape, speed, accel, lift, grade}`。
   読み込みは寛容（範囲外の値は丸め、種類が不明・二輪なら壊れた証書として扱う）。
 
+### 品種（2026-11-11 追加・パケット追加なし）
+- 種類（kind・species・`mount_state` の値）に品種の id が加わった: `horse_bloom`・`horse_tide`・`horse_gale`・`horse_blaze`・
+  `horse_halo`・`griffin_gold`・`griffin_owl`・`griffin_storm`・`griffin_frost`・`griffin_void`（前からの `horse`/`griffin`/`bike` は同じ）。
+- `mount.stable` の `kinds` の各項目に `family`（`horse`/`griffin`/`bike`）と `talent`（特性の id、なしは `none`）が加わった。
+
 ## 付録: 市場（パケット追加なし・版 8 のまま）
 - S→C `UiDataPacket`: `market.board`（掲示板の検索結果 1 ページ・自分の出品・メール・規則。開くときは `open: true` と `tab`）、
   `market.prices`（カバンの 1 枠の品の相場）、`market.auction`（オークション会場: 開催中・待機列・自分のロット・結果・規則。
