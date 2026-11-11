@@ -126,6 +126,7 @@ public final class RealmSetup {
             BlockPos pos = layout.named(spot).orElse(fallback);
             StoryNpcs.ensure(astoria, pos, captain, layout.namedYaw(spot, yawTowards(pos, plaza)));
         });
+        com.eternalrealm.estate.forge.InnService.placeInnkeeper(astoria, layout);
         Crowds.populate(astoria, crowdSpots(layout));
     }
 

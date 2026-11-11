@@ -262,5 +262,9 @@
   "map.eternalrealm.npc.stable_master": {
     "ja": "厩舎",
     "en": "Stable"
+  },
+  "map.eternalrealm.npc.innkeeper": {
+    "ja": "宿屋",
+    "en": "Inn"
   }
 }

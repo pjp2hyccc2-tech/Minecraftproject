@@ -1,0 +1,124 @@
+{
+  "variants": {
+    "facing=north,label=none": {
+      "model": "eternalrealm:block/storage_chest_none"
+    },
+    "facing=north,label=gear": {
+      "model": "eternalrealm:block/storage_chest_gear"
+    },
+    "facing=north,label=potion": {
+      "model": "eternalrealm:block/storage_chest_potion"
+    },
+    "facing=north,label=material": {
+      "model": "eternalrealm:block/storage_chest_material"
+    },
+    "facing=north,label=food": {
+      "model": "eternalrealm:block/storage_chest_food"
+    },
+    "facing=north,label=book": {
+      "model": "eternalrealm:block/storage_chest_book"
+    },
+    "facing=north,label=treasure": {
+      "model": "eternalrealm:block/storage_chest_treasure"
+    },
+    "facing=north,label=misc": {
+      "model": "eternalrealm:block/storage_chest_misc"
+    },
+    "facing=east,label=none": {
+      "model": "eternalrealm:block/storage_chest_none",
+      "y": 90
+    },
+    "facing=east,label=gear": {
+      "model": "eternalrealm:block/storage_chest_gear",
+      "y": 90
+    },
+    "facing=east,label=potion": {
+      "model": "eternalrealm:block/storage_chest_potion",
+      "y": 90
+    },
+    "facing=east,label=material": {
+      "model": "eternalrealm:block/storage_chest_material",
+      "y": 90
+    },
+    "facing=east,label=food": {
+      "model": "eternalrealm:block/storage_chest_food",
+      "y": 90
+    },
+    "facing=east,label=book": {
+      "model": "eternalrealm:block/storage_chest_book",
+      "y": 90
+    },
+    "facing=east,label=treasure": {
+      "model": "eternalrealm:block/storage_chest_treasure",
+      "y": 90
+    },
+    "facing=east,label=misc": {
+      "model": "eternalrealm:block/storage_chest_misc",
+      "y": 90
+    },
+    "facing=south,label=none": {
+      "model": "eternalrealm:block/storage_chest_none",
+      "y": 180
+    },
+    "facing=south,label=gear": {
+      "model": "eternalrealm:block/storage_chest_gear",
+      "y": 180
+    },
+    "facing=south,label=potion": {
+      "model": "eternalrealm:block/storage_chest_potion",
+      "y": 180
+    },
+    "facing=south,label=material": {
+      "model": "eternalrealm:block/storage_chest_material",
+      "y": 180
+    },
+    "facing=south,label=food": {
+      "model": "eternalrealm:block/storage_chest_food",
+      "y": 180
+    },
+    "facing=south,label=book": {
+      "model": "eternalrealm:block/storage_chest_book",
+      "y": 180
+    },
+    "facing=south,label=treasure": {
+      "model": "eternalrealm:block/storage_chest_treasure",
+      "y": 180
+    },
+    "facing=south,label=misc": {
+      "model": "eternalrealm:block/storage_chest_misc",
+      "y": 180
+    },
+    "facing=west,label=none": {
+      "model": "eternalrealm:block/storage_chest_none",
+      "y": 270
+    },
+    "facing=west,label=gear": {
+      "model": "eternalrealm:block/storage_chest_gear",
+      "y": 270
+    },
+    "facing=west,label=potion": {
+      "model": "eternalrealm:block/storage_chest_potion",
+      "y": 270
+    },
+    "facing=west,label=material": {
+      "model": "eternalrealm:block/storage_chest_material",
+      "y": 270
+    },
+    "facing=west,label=food": {
+      "model": "eternalrealm:block/storage_chest_food",
+      "y": 270
+    },
+    "facing=west,label=book": {
+      "model": "eternalrealm:block/storage_chest_book",
+      "y": 270
+    },
+    "facing=west,label=treasure": {
+      "model": "eternalrealm:block/storage_chest_treasure",
+      "y": 270
+    },
+    "facing=west,label=misc": {
+      "model": "eternalrealm:block/storage_chest_misc",
+      "y": 270
+    }
+  }
+}

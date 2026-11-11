@@ -47,6 +47,16 @@ public final class EstateContents {
         /** Things lying on the floor. */
         final List<ItemEntity> loose = new ArrayList<>();
 
+        /** The storage piece called {@code name} ({@code chest.3}), if the room has it. */
+        public java.util.Optional<Holder> named(String name) {
+            return java.util.Optional.ofNullable(named.get(name));
+        }
+
+        /** Whether things lie on the floor. */
+        public boolean hasLoose() {
+            return !loose.isEmpty();
+        }
+
         /** Every holder, the named ones first (in name order), then the others. */
         public List<Holder> holders() {
             List<Holder> all = new ArrayList<>(named.values());
@@ -329,7 +339,8 @@ public final class EstateContents {
     /**
      * Moves everything in {@code from} into {@code to}: each named piece into the piece of the same name and kind
      * position by position, then the rest (and what did not fit there) into any free space of {@code to}'s
-     * containers. Frames keep their turn. @return what found no place (the caller keeps it safe)
+     * containers. Frames keep their turn, labelled chests their label. @return what found no place (the caller keeps
+     * it safe)
      */
     public static List<ItemStack> move(Found from, Found to) {
         List<ItemStack> pool = new ArrayList<>();
@@ -349,6 +360,14 @@ public final class EstateContents {
             if (slotBySlot && source instanceof FrameHolder frame && target instanceof FrameHolder destination
                     && !destination.frame.getItem().isEmpty()) {
                 destination.frame.setRotation(frame.rotation);
+            }
+            if (slotBySlot && source instanceof ContainerHolder chest && target instanceof ContainerHolder destination
+                    && chest.blockEntity.getLevel() != null && destination.blockEntity.getLevel() != null) {
+                // a labelled chest keeps its label in the new room (the player chose it)
+                ChestLabel label = StorageChestBlock.labelAt(chest.blockEntity.getLevel(), chest.pos());
+                if (chest.blockEntity.getBlockState().hasProperty(StorageChestBlock.LABEL)) {
+                    StorageChestBlock.setLabel(destination.blockEntity.getLevel(), destination.pos(), label);
+                }
             }
             source.changed();
             if (target != null) {

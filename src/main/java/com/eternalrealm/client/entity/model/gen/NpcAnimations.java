@@ -61,7 +61,7 @@ public final class NpcAnimations {
     /** The animation of every slot for a variant (variant ids as in the geometry class). */
     public static AnimationDefinition[] forVariant(String variant) {
         return switch (variant) {
-            case "mina" -> new AnimationDefinition[]{IDLE, WALK, WORK_WRITE, TALK_BOW};
+            case "mina", "innkeeper" -> new AnimationDefinition[]{IDLE, WALK, WORK_WRITE, TALK_BOW};
             case "pim" -> new AnimationDefinition[]{IDLE, WALK, WORK_POTION, TALK_FLOURISH};
             case "goran" -> new AnimationDefinition[]{IDLE, WALK, WORK_HAMMER, TALK_GRUFF};
             case "hagen" -> new AnimationDefinition[]{IDLE, WALK, WORK_KATA, TALK_POINT};

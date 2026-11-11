@@ -185,7 +185,23 @@ ICONS = [
         "..oSSSSSSo..",
         "...oooooo...",
     ], {"S": hexc("8a94a6"), "H": hexc("dfe6f0")}),
-    # 11 story character: a speech bubble
+    # 11 innkeeper: a bed with a red blanket under a little star (the Starlight Manor's rooms)
+    ("innkeeper", [
+        ".....Y......",
+        "....YYY.....",
+        ".....Y......",
+        "o..........o",
+        "oWWo.......o",
+        "oWWoRRRRRRRo",
+        "oWWRRrRRRRRo",
+        "oooooooooooo",
+        "oBBBBBBBBBBo",
+        "oBo......oBo",
+        "oBo......oBo",
+        ".o........o.",
+    ], {"W": hexc("f2f0e8"), "R": hexc("c0383a"), "r": hexc("e86a5a"), "B": hexc("7a4a22"),
+        "Y": hexc("ffe27a")}),
+    # 12 story character: a speech bubble
     ("story", [
         "............",
         "..oooooooo..",

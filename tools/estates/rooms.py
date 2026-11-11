@@ -180,9 +180,9 @@ def attic_room(w, x0, x1, z0, z1, wall="white_plaster", roof="terracotta_roof_ti
 
 # ============================================================================ tier 1: the garret
 def garret(w):
-    """屋根裏の小部屋 — a snug attic under a cross gable of the inn's roof: bed under the eaves, a writing desk at the
-    gable window with the town and two distant towers in the evening sun, a double chest, three barrels, an armour
-    stand by the door, a pair of weapon frames and a book shelf."""
+    """屋根裏の小部屋 — a snug attic under a cross gable of the inn's roof: bed under the eaves, the sorting desk at the
+    gable window with the town and two distant towers in the evening sun, three labelled chests, three barrels, two
+    book shelves, an armour stand by the door and a pair of weapon frames."""
     s = kit.Storage()
     seed = 101
     street_and_houses(w, -15, -9, -34, 34, seed=seed)
@@ -208,7 +208,7 @@ def garret(w):
     deco.light_shaft(w, x0, FY + 4, 0, "east", length=8.0, width=2.6, height=2.6, pitch=28.0)
 
     # the way in and out: the room door in the east gable
-    kit.exit_door(w, x1 + 1, FY + 1, 0, "east")
+    kit.exit_door(w, x1 + 1, FY + 1, 0, "west")
     kit.entry(w, x1 - 1, FY + 1, 0, 90.0)
 
     # bed under the north eaves, head west, a barrel nightstand with a candle
@@ -219,21 +219,23 @@ def garret(w):
     w.set(-6, FY + 2, -3, B.candle(2, "white"))
     FU.painting(w, -3, FY + 2, -3, "south", variant="kebab")
 
-    # writing desk under the window with a chair
-    w.set(-6, FY + 1, 0, B.slab("spruce", "top"))
+    # the sorting desk under the window, a chair before it, a candle and a pot of flowers beside it
+    kit.sorting_desk(w, -6, FY + 1, 0, "east")
+    deco.chair(w, -5, FY, 0, faces="west")
     w.set(-6, FY + 1, 1, B.slab("spruce", "top"))
     w.set(-6, FY + 2, 1, B.candle(3, "yellow"))
-    w.set(-6, FY + 2, 0, B.S("flower_pot"))
-    w.set(-5, FY + 1, 1, B.stairs("spruce", "east"))
 
-    # storage along the south eaves: a double chest and two barrels
-    kit.double_chest(w, s, -4, FY + 1, 3, "north", "east")
+    # storage along the south eaves: three labelled chests and two barrels
+    kit.chest(w, s, -5, FY + 1, 3, "north")
+    kit.chest(w, s, -4, FY + 1, 3, "north")
+    kit.chest(w, s, -3, FY + 1, 3, "north")
     kit.barrel(w, s, -2, FY + 1, 3, "north")
     kit.barrel(w, s, -1, FY + 1, 3, "up")
     w.set(-1, FY + 2, 3, B.S("decorated_pot"))
-    # by the door: armour stand, a shelf of books, two weapon frames on the gable wall
+    # by the door: armour stand, two shelves of books, two weapon frames on the gable wall
     kit.stand(w, s, 1, FY, -2, yaw=180.0)
     kit.shelf(w, s, 1, FY + 1, 3, "north")
+    kit.shelf(w, s, -1, FY + 1, -3, "south")
     kit.frame(w, s, x1, FY + 3, -2, "west")
     kit.frame(w, s, x1, FY + 3, 2, "west")
 
@@ -245,12 +247,19 @@ def garret(w):
     return s
 
 
+from . import suites  # noqa: E402  (the dearer rooms; they use the helpers above)
+
 DESIGNS = {
     ("room", "garret"): garret,
+    ("room", "canal"): suites.canal,
+    ("room", "library"): suites.library,
+    ("room", "tower"): suites.tower,
+    ("room", "grand"): suites.grand,
 }
 
-# Storage names of each room tier, smallest first: each must contain the one before (checked by check_storage).
-ROOM_TIERS = ["garret"]
+# Storage names of each room tier, smallest first: each must contain the one before (checked by check_storage);
+# the same order and ids as com.eternalrealm.estate.RoomDesign.
+ROOM_TIERS = ["garret", "canal", "library", "tower", "grand"]
 
 
 def check_storage(results: dict) -> list:

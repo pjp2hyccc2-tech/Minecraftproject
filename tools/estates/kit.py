@@ -13,7 +13,12 @@ from __future__ import annotations
 from capital import blocks as B
 from capital.deco import FACING_BYTE, _wdir
 
+from . import blocks_ext  # noqa: F401  (registers storage_chest / sorting_desk)
+
 SLOT = "er_slot"
+# The label a storage chest starts with, by its number (a player's own labels move with the contents).
+CHEST_LABELS = ("gear", "potion", "material", "food", "treasure", "misc", "gear", "material", "potion", "treasure",
+                "material", "misc")
 
 
 def slot_nbt(name: str) -> str:
@@ -38,12 +43,20 @@ class Storage:
         return dict(self.count)
 
 
-def chest(t, s: Storage, x, y, z, facing="north", kind="chest"):
-    """A single chest (27 slots) at (x, y, z); ``facing`` = the side its lid opens towards."""
-    name = s.name(kind)
-    t.set(x, y, z, B.chest(facing))
+def chest(t, s: Storage, x, y, z, facing="north", label=None):
+    """A labelled storage chest (27 slots, ``eternalrealm:storage_chest``) at (x, y, z), its front (with the label
+    plate) towards ``facing``. Its label defaults by its number (``CHEST_LABELS``)."""
+    name = s.name("chest")
+    number = int(name.split(".")[1])
+    label = label or CHEST_LABELS[(number - 1) % len(CHEST_LABELS)]
+    t.set(x, y, z, B.S("storage_chest", facing=facing, label=label))
     t.be(x, y, z, "{" + slot_nbt(name) + "}")
     return name
+
+
+def sorting_desk(t, x, y, z, facing):
+    """The sorting desk with the room's ledger, its drawer front towards ``facing`` (the side one sits at)."""
+    t.set(x, y, z, B.S("sorting_desk", facing=facing))
 
 
 def double_chest(t, s: Storage, x, y, z, facing="north", along="east"):
@@ -102,19 +115,20 @@ def frame(t, s: Storage, x, y, z, facing, glow=False):
 
 
 def room_door(t, x, y, z, facing, hinge="left"):
-    """The ornate inn room door (two blocks, y and y+1); ``facing`` like a vanilla door (the direction a player
-    walking in faces). It never opens: using it is the game's business."""
+    """The ornate inn room door (two blocks, y and y+1) facing ``facing``: its front with the brass plate looks that
+    way (the side players stand on to use it; unlike a vanilla door). It never opens: using it is the game's
+    business."""
     t.set(x, y, z, B.S("room_door", facing=facing, half="lower", hinge=hinge))
     t.set(x, y + 1, z, B.S("room_door", facing=facing, half="upper", hinge=hinge))
 
 
 def exit_door(t, x, y, z, facing, hinge="left"):
-    """The way out: a room door at (x, y, z) (lower half) and the ``exit`` spot in front of it, inside."""
+    """The way out: a room door at (x, y, z) (lower half) set in a wall, facing into the room, and the ``exit`` spot
+    in front of it looking at it."""
     room_door(t, x, y, z, facing, hinge)
-    from capital.world import DIR_VEC
+    from capital.world import DIR_VEC, OPPOSITE
     dx, _, dz = DIR_VEC[facing]
-    # the player stands inside, in front of the door (opposite to facing, i.e. against the walking direction)
-    t.spot("exit", (x - dx, y, z - dz), _yaw_towards(facing))
+    t.spot("exit", (x + dx, y, z + dz), _yaw_towards(OPPOSITE[facing]))
 
 
 def entry(t, x, y, z, yaw):

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""The estates' blocks (docs/modules/estates.md): the inn's ornate room door with its brass room plate — textures
-(drawn pixel by pixel here, original art), block/item models, the blockstate — and a preview.
+"""The estates' blocks (docs/modules/estates.md): the inn's ornate room door with its brass room plate, the labelled
+storage chest of the rooms (one brass plate picture per label) and the sorting desk with its ledger — textures (drawn
+pixel by pixel here, original art), block/item models, blockstates, loot tables — and a preview.
 
     python3 tools/art/estate_blocks.py      # writes the assets and tools/art/estate_blocks_preview.png
 
 Deterministic (seeded per texture name). The door is 3/16 thick like a vanilla door; its models add a brass knob
-and the room plate as raised elements. Faces: 32x32 textures (two pixels per model unit).
+and the room plate as raised elements. Its ``facing`` is the side it faces (its front, with the plate), unlike a
+vanilla door's; the capital's manor sets every door facing its gallery. Faces: 32x32 textures (two pixels per model unit).
 """
 from __future__ import annotations
 
@@ -357,36 +359,37 @@ def item_icon():
 
 # ----------------------------------------------------------------------------------------------- models
 def door_model(half, hinge):
-    """Model of the door facing east (panel at x 0..3, front face west), hinge on the left (north) or right."""
+    """Model of the door facing north: panel at z 0..3, its front (plate, knob) on the north face; ``hinge`` is
+    seen from the front (left: the hinge on the viewer's left, i.e. east)."""
     front_uv = [0, 0, 16, 16] if hinge == "left" else [16, 0, 0, 16]
     back_uv = [16, 0, 0, 16] if hinge == "left" else [0, 0, 16, 16]
     tex = f"{NS}:block/room_door_{'bottom' if half == 'lower' else 'top'}"
     elements = [{
-        "from": [0, 0, 0], "to": [3, 16, 16],
+        "from": [0, 0, 0], "to": [16, 16, 3],
         "faces": {
-            "west": {"uv": front_uv, "texture": "#face"},
-            "east": {"uv": back_uv, "texture": "#face"},
-            "north": {"uv": [6, 0, 9, 16], "texture": "#side"},
-            "south": {"uv": [6, 0, 9, 16], "texture": "#side"},
-            "up": {"uv": [6, 0, 9, 16], "texture": "#side"},
-            "down": {"uv": [6, 0, 9, 16], "texture": "#side"},
+            "north": {"uv": front_uv, "texture": "#face"},
+            "south": {"uv": back_uv, "texture": "#face"},
+            "east": {"uv": [6, 0, 9, 16], "texture": "#side"},
+            "west": {"uv": [6, 0, 9, 16], "texture": "#side"},
+            "up": {"uv": [0, 6, 16, 9], "texture": "#side", "rotation": 90},
+            "down": {"uv": [0, 6, 16, 9], "texture": "#side", "rotation": 90},
         },
     }]
-    knob_z = (12.5, 14.5) if hinge == "left" else (1.5, 3.5)
+    knob_x = (1.5, 3.5) if hinge == "left" else (12.5, 14.5)   # opposite the hinge
     if half == "lower":
-        for (x0, x1) in ((-1.0, 0.0), (3.0, 4.0)):
+        for (z0, z1) in ((-1.0, 0.0), (3.0, 4.0)):
             elements.append({
-                "from": [x0, 12.5, knob_z[0]], "to": [x1, 14.5, knob_z[1]],
+                "from": [knob_x[0], 12.5, z0], "to": [knob_x[1], 14.5, z1],
                 "faces": {f: {"uv": [4, 4, 6, 6], "texture": "#brass"}
                           for f in ("north", "south", "east", "west", "up", "down")},
             })
     else:
         elements.append({
-            "from": [-0.5, 3.0, 4.0], "to": [0.0, 8.0, 12.0],
+            "from": [4.0, 3.0, -0.5], "to": [12.0, 8.0, 0.0],
             "faces": {
-                "west": {"uv": [0, 0, 16, 10], "texture": "#plate"},
-                "north": {"uv": [0, 0, 1, 10], "texture": "#plate"},
-                "south": {"uv": [15, 0, 16, 10], "texture": "#plate"},
+                "north": {"uv": [0, 0, 16, 10], "texture": "#plate"},
+                "east": {"uv": [15, 0, 16, 10], "texture": "#plate"},
+                "west": {"uv": [0, 0, 1, 10], "texture": "#plate"},
                 "up": {"uv": [0, 0, 16, 1], "texture": "#plate"},
                 "down": {"uv": [0, 9, 16, 10], "texture": "#plate"},
             },
@@ -401,8 +404,9 @@ def door_model(half, hinge):
 
 
 def blockstate():
+    """The model faces north; the others turn it (the door's front faces ``facing``)."""
     variants = {}
-    for facing, y in (("east", 0), ("south", 90), ("west", 180), ("north", 270)):
+    for facing, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
         for half in ("lower", "upper"):
             for hinge in ("left", "right"):
                 model = {"model": f"{NS}:block/room_door_{'bottom' if half == 'lower' else 'top'}_{hinge}"}
@@ -411,6 +415,448 @@ def blockstate():
                 variants[f"facing={facing},half={half},hinge={hinge}"] = model
     return {"variants": variants}
 
+
+
+# ----------------------------------------------------------------------------------------------- storage chest
+LABELS = ("none", "gear", "potion", "material", "food", "book", "treasure", "misc")
+CARD = [hexc(c) for c in ("#6e5a40", "#a8916a", "#d8c8a0", "#efe4c6", "#fbf4e2")]
+
+# 12x8 pictures on the plate's card: '.' card, letters from PIC_COLORS
+LABEL_PICTURES = {
+    "gear": ([
+        "..........ss",
+        ".........sSs",
+        "........sSs.",
+        ".......sSs..",
+        "..gg..sSs...",
+        "...ggsSs....",
+        "....hgg.....",
+        "...hh.g.....",
+    ], {"s": "#5a6070", "S": "#d8dee8", "g": "#b8862e", "h": "#6a3a1e"}),
+    "potion": ([
+        ".....cc.....",
+        ".....nn.....",
+        "....gnng....",
+        "...gRRRRg...",
+        "..gRrRRRRg..",
+        "..gRRRRRRg..",
+        "...gRRRRg...",
+        "....gggg....",
+    ], {"c": "#8a5a30", "n": "#cfe0ea", "g": "#7a8a98", "R": "#c8283c", "r": "#ff8a96"}),
+    "material": ([
+        "............",
+        "....yYYy....",
+        "...yYYYYy...",
+        "..dyyyyyyd..",
+        ".kkKKk..ii..",
+        "kKKKKkkiIIi.",
+        "kkkkkk.iiii.",
+        "............",
+    ], {"y": "#c89628", "Y": "#ffe07a", "d": "#7a5414", "k": "#5a5a64", "K": "#9a9aa8", "i": "#6a8a9a",
+        "I": "#b8e0f0"}),
+    "food": ([
+        "......l.....",
+        ".....lL.....",
+        "...bbbbbb...",
+        "..bBBbBBbb..",
+        ".bBBBBBBBBb.",
+        ".bbbbbbbbbb.",
+        "..oooooooo..",
+        "............",
+    ], {"l": "#4a7a2a", "L": "#8ac050", "b": "#9a5a22", "B": "#e0a050", "o": "#6a3a14"}),
+    "book": ([
+        "............",
+        "..pppppppp..",
+        ".rPPPPPPPPr.",
+        ".rRRRRRRRRr.",
+        ".rRRgRRgRRr.",
+        ".rRRRRRRRRr.",
+        ".rrrrrrrrrr.",
+        "............",
+    ], {"p": "#f4ead2", "P": "#ffffff", "r": "#5a1a1e", "R": "#a8323a", "g": "#e8c050"}),
+    "treasure": ([
+        "....aaaa....",
+        "...aAAAAa...",
+        "..aAWAAAAa..",
+        "..aaaaaaaa..",
+        "...aAAAAa...",
+        "....aAAa....",
+        ".....aa.....",
+        "............",
+    ], {"a": "#2a8aa8", "A": "#7ae0f8", "W": "#ffffff"}),
+    "misc": ([
+        ".....tt.....",
+        "....tTTt....",
+        "...uuuuuu...",
+        "..uUUUUUUu..",
+        ".uUUUUuUUUu.",
+        ".uUUUUUUUUu.",
+        "..uuuuuuuu..",
+        "............",
+    ], {"t": "#8a6a3a", "T": "#d0b070", "u": "#7a5a34", "U": "#b8935a"}),
+}
+
+
+def chest_wood(name, along="x"):
+    r = rng(name)
+    a = canvas(32, 32, WOOD[3])
+    wood_fill(a, 0, 0, 31, 31, r, along, base=3.1, streak=0.1)
+    # board seams every 7 px across the grain
+    for k in range(4, 32, 7):
+        for t in range(32):
+            if along == "x":
+                a[k, t, :3] = WOOD[1][:3]
+            else:
+                a[t, k, :3] = WOOD[1][:3]
+    return a, r
+
+
+def iron_corner(a, x, y, w, h, flip_x=False, flip_y=False):
+    """An L-shaped iron corner cap with a rivet."""
+    for dy in range(h):
+        for dx in range(w):
+            if dx < 3 or dy < 3:
+                xx = x + (w - 1 - dx if flip_x else dx)
+                yy = y + (h - 1 - dy if flip_y else dy)
+                t = 3 if (dx == 0 or dy == 0) else 2
+                a[yy, xx, :3] = IRON[t][:3]
+    rx = x + (w - 2 if flip_x else 1)
+    ry = y + (h - 2 if flip_y else 1)
+    a[ry, rx, :3] = IRON[4][:3]
+
+
+def chest_front():
+    """The chest's front (the model's north face uses x 2..29, y 4..31): walnut boards, the lid's edge with an iron
+    band, iron corner caps and the brass hasp; the label plate is its own raised element below the hasp."""
+    a, r = chest_wood("storage_chest_front", "x")
+    # the lid (rows 4..13) a little lighter, its lower edge an iron band
+    for y in range(4, 14):
+        for x in range(32):
+            a[y, x, :3] = np.minimum(255, a[y, x, :3] * 1.08)
+    for x in range(32):
+        a[13, x, :3] = IRON[1][:3]
+        a[14, x, :3] = IRON[3][:3]
+        a[15, x, :3] = IRON[2][:3]
+    for x in range(4, 30, 6):
+        a[14, x, :3] = IRON[4][:3]
+    iron_corner(a, 2, 4, 6, 6)
+    iron_corner(a, 24, 4, 6, 6, flip_x=True)
+    iron_corner(a, 2, 26, 6, 6, flip_y=True)
+    iron_corner(a, 24, 26, 6, 6, flip_x=True, flip_y=True)
+    # the hasp: a brass tongue from the lid over the band
+    for y in range(11, 18):
+        for x in range(14, 18):
+            a[y, x, :3] = mix_ramp(BRASS, 4.4 - (y - 11) * 0.25 + (0.4 if x == 14 else 0.0) - (0.6 if x == 17 else 0))[:3]
+    a[16, 15, :3] = BRASS[0][:3]
+    a[16, 16, :3] = BRASS[0][:3]
+    for y in range(4, 32):
+        a[y, 2, :3] = a[y, 2, :3] * 0.8
+        a[y, 29, :3] = a[y, 29, :3] * 0.7
+    a[31, :, :3] = a[31, :, :3] * 0.7
+    return a
+
+
+def chest_side():
+    a, r = chest_wood("storage_chest_side", "x")
+    for y in range(4, 14):
+        for x in range(32):
+            a[y, x, :3] = np.minimum(255, a[y, x, :3] * 1.08)
+    for x in range(32):
+        a[13, x, :3] = IRON[1][:3]
+        a[14, x, :3] = IRON[3][:3]
+        a[15, x, :3] = IRON[2][:3]
+    iron_corner(a, 2, 4, 6, 6)
+    iron_corner(a, 24, 4, 6, 6, flip_x=True)
+    iron_corner(a, 2, 26, 6, 6, flip_y=True)
+    iron_corner(a, 24, 26, 6, 6, flip_x=True, flip_y=True)
+    # a carrying handle
+    for x in range(12, 20):
+        a[19, x, :3] = IRON[3][:3]
+        a[20, x, :3] = IRON[1][:3]
+    for y in range(17, 20):
+        a[y, 12, :3] = IRON[2][:3]
+        a[y, 19, :3] = IRON[2][:3]
+    return a
+
+
+def chest_top():
+    a, r = chest_wood("storage_chest_top", "x")
+    for y in range(32):
+        for x in (8, 9, 22, 23):
+            a[y, x, :3] = IRON[2 if x in (8, 22) else 3][:3]
+        for x in (8, 22):
+            if y % 6 == 4:
+                a[y, x + 1, :3] = IRON[4][:3]
+    for x in range(32):
+        a[2, x, :3] = a[2, x, :3] * 0.75
+        a[29, x, :3] = a[29, x, :3] * 0.75
+    return a
+
+
+def chest_bottom():
+    a, r = chest_wood("storage_chest_bottom", "x")
+    a[:, :, :3] = a[:, :, :3] * 0.6
+    return a
+
+
+def label_plate(label):
+    """The brass plate (its element shows the top-left 16x12): a bevelled brass frame round a cream card with the
+    label's picture; the unlabelled plate is plain engraved brass."""
+    r = rng("storage_chest_label_" + label)
+    a = np.zeros((32, 32, 4), np.float64)
+    w, h = 16, 12
+    for y in range(h):
+        for x in range(w):
+            a[y, x] = mix_ramp(BRASS, 4.0 - y * 0.08 + (r.random() - 0.5) * 0.2)
+            a[y, x, 3] = 255
+    for x in range(w):
+        a[0, x, :3] = BRASS[5][:3]
+        a[h - 1, x, :3] = BRASS[1][:3]
+    for y in range(h):
+        a[y, 0, :3] = BRASS[4][:3]
+        a[y, w - 1, :3] = BRASS[1][:3]
+    for (x, y) in ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1)):
+        a[y, x, 3] = 0
+    if label == "none":
+        for x in range(3, w - 3):
+            a[5, x, :3] = BRASS[2][:3]
+            a[6, x, :3] = BRASS[5][:3]
+        for (x, y) in ((2, 2), (w - 3, 2), (2, h - 3), (w - 3, h - 3)):
+            a[y, x, :3] = BRASS[6][:3]
+        return a
+    rows, colors = LABEL_PICTURES[label]
+    for y in range(1, h - 1):
+        for x in range(1, w - 1):
+            edge = x == 1 or y == 1 or x == w - 2 or y == h - 2
+            a[y, x, :3] = (CARD[1] if edge else mix_ramp(CARD, 3.3 + (r.random() - 0.5) * 0.4))[:3]
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch != ".":
+                a[y + 2, x + 2, :3] = hexc(colors[ch])[:3]
+    return a
+
+
+def chest_model(label):
+    """A 14x14x14 chest facing north (its front at z = 1), with the label plate as a raised element on the front."""
+    t = f"{NS}:block/"
+    faces = {
+        "north": {"uv": [1, 2, 15, 16], "texture": "#front"},
+        "south": {"uv": [1, 2, 15, 16], "texture": "#side"},
+        "east": {"uv": [1, 2, 15, 16], "texture": "#side"},
+        "west": {"uv": [1, 2, 15, 16], "texture": "#side"},
+        "up": {"uv": [1, 1, 15, 15], "texture": "#top"},
+        "down": {"uv": [1, 1, 15, 15], "texture": "#bottom", "cullface": "down"},
+    }
+    plate_faces = {
+        "north": {"uv": [0, 0, 8, 6], "texture": "#label"},
+        "east": {"uv": [7, 0, 8, 6], "texture": "#label"},
+        "west": {"uv": [0, 0, 1, 6], "texture": "#label"},
+        "up": {"uv": [0, 0, 8, 1], "texture": "#label"},
+        "down": {"uv": [0, 5, 8, 6], "texture": "#label"},
+    }
+    return {
+        "parent": "minecraft:block/block",
+        "textures": {
+            "particle": t + "storage_chest_front",
+            "front": t + "storage_chest_front",
+            "side": t + "storage_chest_side",
+            "top": t + "storage_chest_top",
+            "bottom": t + "storage_chest_bottom",
+            "label": t + "storage_chest_label_" + label,
+        },
+        "elements": [
+            {"from": [1, 0, 1], "to": [15, 14, 15], "faces": faces},
+            {"from": [4, 2, 0.5], "to": [12, 8, 1], "faces": plate_faces},
+        ],
+    }
+
+
+def chest_blockstate():
+    variants = {}
+    for facing, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
+        for label in LABELS:
+            model = {"model": f"{NS}:block/storage_chest_{label}"}
+            if y:
+                model["y"] = y
+            variants[f"facing={facing},label={label}"] = model
+    return {"variants": variants}
+
+
+# ----------------------------------------------------------------------------------------------- sorting desk
+def desk_top():
+    """The desk's top (32x32): walnut boards, a green baize writing pad with a brass edge."""
+    r = rng("sorting_desk_top")
+    a = canvas(32, 32, WOOD[3])
+    wood_fill(a, 0, 0, 31, 31, r, "x", base=3.4, streak=0.08)
+    for x in range(32):
+        a[0, x, :3] = WOOD[5][:3]
+        a[31, x, :3] = WOOD[1][:3]
+    for y in range(32):
+        a[y, 0, :3] = WOOD[5][:3]
+        a[y, 31, :3] = WOOD[1][:3]
+    for y in range(5, 27):
+        for x in range(4, 28):
+            g = 0.82 + (r.random() - 0.5) * 0.08 + ((x + y) % 3 == 0) * 0.03
+            a[y, x, :3] = np.array([46, 92, 64]) * g
+    for x in range(4, 28):
+        a[5, x, :3] = BRASS[4][:3]
+        a[26, x, :3] = BRASS[2][:3]
+    for y in range(5, 27):
+        a[y, 4, :3] = BRASS[4][:3]
+        a[y, 27, :3] = BRASS[2][:3]
+    return a
+
+
+def desk_front():
+    """The drawer front (the model's drawer face uses x 6..25, y 8..15): a raised panel with two brass pulls and a
+    little brass card holder."""
+    r = rng("sorting_desk_front")
+    a = canvas(32, 32, WOOD[3])
+    wood_fill(a, 0, 0, 31, 31, r, "x", base=3.0, streak=0.08)
+    bevel_panel(a, 6, 8, 25, 15, r, depth=1, field=3.3)
+    for (x, y) in ((9, 11), (21, 11)):
+        for dx in range(3):
+            a[y, x + dx, :3] = BRASS[5 - dx][:3]
+            a[y + 1, x + dx, :3] = BRASS[2][:3]
+    for x in range(14, 18):
+        a[10, x, :3] = BRASS[4][:3]
+        a[13, x, :3] = BRASS[2][:3]
+    for y in range(10, 14):
+        a[y, 14, :3] = BRASS[3][:3]
+        a[y, 17, :3] = BRASS[2][:3]
+    a[11, 15, :3] = CARD[3][:3]
+    a[11, 16, :3] = CARD[3][:3]
+    a[12, 15, :3] = CARD[2][:3]
+    a[12, 16, :3] = CARD[2][:3]
+    return a
+
+
+def desk_side():
+    r = rng("sorting_desk_side")
+    a = canvas(32, 32, WOOD[3])
+    wood_fill(a, 0, 0, 31, 31, r, "y", base=2.8, streak=0.1)
+    return a
+
+
+def ledger_book():
+    """The open ledger lying on the desk (32x32; the book element's top uses x 0..19, y 0..15): two cream pages ruled
+    in columns with tallies, a red ribbon, the leather cover's edge showing round them."""
+    r = rng("sorting_desk_ledger")
+    a = canvas(32, 32, hexc("#5a1e22"))
+    for y in range(16):
+        for x in range(20):
+            a[y, x, :3] = mix_ramp([hexc("#2a0c0e"), hexc("#5a1e22"), hexc("#7a2a30")], 1.2 + (r.random() - 0.5) * 0.4)[:3]
+    for y in range(1, 15):
+        for x in range(1, 19):
+            if x in (9, 10):
+                a[y, x, :3] = CARD[1][:3]
+                continue
+            a[y, x, :3] = mix_ramp(CARD, 3.4 + (r.random() - 0.5) * 0.3 - (0.5 if x in (8, 11) else 0.0))[:3]
+    for y in range(3, 14, 2):
+        for x in list(range(2, 8)) + list(range(12, 18)):
+            if r.random() < 0.8:
+                a[y, x, :3] = np.array([92, 78, 70]) if (x % 4) else np.array([150, 60, 50])
+    for y in range(1, 15):
+        a[y, 5, :3] = a[y, 5, :3] * 0.85
+        a[y, 15, :3] = a[y, 15, :3] * 0.85
+    for y in range(8, 16):
+        a[y, 10, :3] = np.array([196, 40, 50])
+    return a
+
+
+def desk_ink():
+    """Inkwell and bell (16x16): dark glass with a quill, a brass bell."""
+    a = canvas(16, 16, hexc("#1a1c2a"))
+    for y in range(16):
+        for x in range(16):
+            a[y, x, :3] = mix_ramp([hexc("#0c0c16"), hexc("#1a1c2a"), hexc("#3a3e5a"), hexc("#8a90b8")],
+                                   1.2 + (0.9 if (x + y) % 7 == 0 else 0.0))[:3]
+    return a
+
+
+def desk_model():
+    t = f"{NS}:block/"
+
+    def box(f, to, tex, uv=None, faces=("north", "south", "east", "west", "up", "down")):
+        out = {}
+        for face in faces:
+            entry = {"texture": tex}
+            if uv is not None and face in uv:
+                entry["uv"] = uv[face]
+            out[face] = entry
+        return {"from": f, "to": to, "faces": out}
+
+    elements = [
+        # the top, its front edge and the drawer
+        {"from": [0, 12, 0], "to": [16, 15, 16], "faces": {
+            "up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+            "down": {"uv": [0, 0, 16, 16], "texture": "#side"},
+            "north": {"uv": [0, 0, 16, 3], "texture": "#side"},
+            "south": {"uv": [0, 0, 16, 3], "texture": "#side"},
+            "east": {"uv": [0, 0, 16, 3], "texture": "#side"},
+            "west": {"uv": [0, 0, 16, 3], "texture": "#side"}}},
+        {"from": [3, 8, 2], "to": [13, 12, 14], "faces": {
+            "north": {"uv": [3, 4, 13, 8], "texture": "#front"},
+            "south": {"uv": [3, 4, 13, 8], "texture": "#side"},
+            "east": {"uv": [2, 4, 14, 8], "texture": "#side"},
+            "west": {"uv": [2, 4, 14, 8], "texture": "#side"},
+            "down": {"uv": [3, 2, 13, 14], "texture": "#side"}}},
+        box([1, 0, 1], [3, 12, 3], "#side"),
+        box([13, 0, 1], [15, 12, 3], "#side"),
+        box([1, 0, 13], [3, 12, 15], "#side"),
+        box([13, 0, 13], [15, 12, 15], "#side"),
+        # the open ledger, a little turned towards the sitter
+        {"from": [3, 15, 4], "to": [13, 15.5, 12], "rotation": {"angle": 0, "axis": "y", "origin": [8, 15, 8]},
+         "faces": {
+             "up": {"uv": [0, 0, 10, 8], "texture": "#book"},
+             "north": {"uv": [0, 0, 10, 0.5], "texture": "#book"},
+             "south": {"uv": [0, 0, 10, 0.5], "texture": "#book"},
+             "east": {"uv": [0, 0, 8, 0.5], "texture": "#book"},
+             "west": {"uv": [0, 0, 8, 0.5], "texture": "#book"}}},
+        # the inkwell with a quill, and the brass bell
+        box([12, 15, 12.5], [14, 17, 14.5], "#ink"),
+        {"from": [13, 16, 13], "to": [13.2, 21, 13.6], "rotation": {"angle": 22.5, "axis": "z", "origin": [13, 16, 13]},
+         "faces": {face: {"texture": "#quill"} for face in ("north", "south", "east", "west", "up")}},
+        box([2, 15, 12.5], [4.5, 16.5, 15], "#brass"),
+        box([2.75, 16.5, 13.25], [3.75, 17, 14.25], "#brass"),
+    ]
+    return {
+        "parent": "minecraft:block/block",
+        "textures": {
+            "particle": t + "sorting_desk_side",
+            "top": t + "sorting_desk_top",
+            "front": t + "sorting_desk_front",
+            "side": t + "sorting_desk_side",
+            "book": t + "sorting_desk_ledger",
+            "ink": t + "sorting_desk_ink",
+            "quill": "minecraft:block/white_wool",
+            "brass": t + "room_door_brass",
+        },
+        "elements": elements,
+    }
+
+
+def desk_blockstate():
+    variants = {}
+    for facing, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270)):
+        model = {"model": f"{NS}:block/sorting_desk"}
+        if y:
+            model["y"] = y
+        variants[f"facing={facing}"] = model
+    return {"variants": variants}
+
+
+def loot_table(block):
+    return {
+        "type": "minecraft:block",
+        "pools": [{
+            "rolls": 1.0,
+            "bonus_rolls": 0.0,
+            "entries": [{"type": "minecraft:item", "name": f"{NS}:{block}"}],
+            "conditions": [{"condition": "minecraft:survives_explosion"}],
+        }],
+        "random_sequence": f"{NS}:blocks/{block}",
+    }
 
 def main():
     textures = {
@@ -430,6 +876,37 @@ def main():
     write_json(os.path.join(ASSETS, "models", "item", "room_door.json"),
                {"parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/room_door"}})
     write_json(os.path.join(ASSETS, "blockstates", "room_door.json"), blockstate())
+    # the storage chest and the sorting desk
+    chest = {
+        "storage_chest_front": chest_front(),
+        "storage_chest_side": chest_side(),
+        "storage_chest_top": chest_top(),
+        "storage_chest_bottom": chest_bottom(),
+    }
+    for label in LABELS:
+        chest["storage_chest_label_" + label] = label_plate(label)
+    desk = {
+        "sorting_desk_top": desk_top(),
+        "sorting_desk_front": desk_front(),
+        "sorting_desk_side": desk_side(),
+        "sorting_desk_ledger": ledger_book(),
+        "sorting_desk_ink": desk_ink(),
+    }
+    for name, a in list(chest.items()) + list(desk.items()):
+        save(a, "block", name + ".png")
+    for label in LABELS:
+        write_json(os.path.join(ASSETS, "models", "block", f"storage_chest_{label}.json"), chest_model(label))
+    write_json(os.path.join(ASSETS, "blockstates", "storage_chest.json"), chest_blockstate())
+    write_json(os.path.join(ASSETS, "models", "item", "storage_chest.json"),
+               {"parent": f"{NS}:block/storage_chest_gear"})
+    write_json(os.path.join(ASSETS, "models", "block", "sorting_desk.json"), desk_model())
+    write_json(os.path.join(ASSETS, "blockstates", "sorting_desk.json"), desk_blockstate())
+    write_json(os.path.join(ASSETS, "models", "item", "sorting_desk.json"), {"parent": f"{NS}:block/sorting_desk"})
+    data = os.path.join(ROOT, "src", "main", "resources", "data", NS, "loot_tables", "blocks")
+    for block in ("storage_chest", "sorting_desk"):
+        write_json(os.path.join(data, block + ".json"), loot_table(block))
+    textures.update(chest)
+    textures.update(desk)
     preview(textures)
     return 0
 
@@ -440,7 +917,7 @@ def preview(textures):
     top = textures["room_door_top"]
     bottom = textures["room_door_bottom"]
     door = np.concatenate([top, bottom], axis=0)
-    sheet = np.zeros((64 * scale // 2 * 2 + 40, 32 * scale * 3 + 60, 4), np.float64)
+    sheet = np.zeros((64 * scale // 2 * 2 + 40 + 160, 32 * scale * 3 + 60 + 340, 4), np.float64)
     sheet[:, :] = (40, 36, 44, 255)
 
     def blit(img, ox, oy, s):
@@ -455,6 +932,14 @@ def preview(textures):
     blit(textures["room_door_side"], 64 * scale + 50, 180, 6)
     blit(textures["room_door_brass"], 64 * scale + 160, 180, 6)
     blit(item_icon(), 64 * scale + 50, 300, 10)
+    if "storage_chest_front" in textures:
+        blit(textures["storage_chest_front"], 64 * scale + 220, 300, 4)
+        blit(textures["storage_chest_side"], 64 * scale + 360, 300, 4)
+        blit(textures["sorting_desk_top"], 64 * scale + 220, 440, 4)
+        blit(textures["sorting_desk_ledger"], 64 * scale + 360, 440, 4)
+        for i, label in enumerate(LABELS):
+            blit(textures["storage_chest_label_" + label][:12, :16], 64 * scale + 260 + (i % 4) * 100,
+                 20 + (i // 4) * 90, 6)
     Image.fromarray(np.clip(sheet, 0, 255).astype(np.uint8), "RGBA").save(
         os.path.join(HERE, "estate_blocks_preview.png"))
 

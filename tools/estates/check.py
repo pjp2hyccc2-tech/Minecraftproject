@@ -26,7 +26,8 @@ SLOT = re.compile(r'er_slot:"([a-z]+\.[0-9]+)"')
 # a design must fit the plot (EstatePlot.HALF_EXTENT = 256) and stay compact
 MAX_EXTENT = 176
 MAX_NONAIR = 400_000
-CONTAINERS = ("chest", "barrel", "chiseled_bookshelf", "furnace", "brewing_stand", "hopper", "jukebox")
+CONTAINERS = ("chest", "barrel", "chiseled_bookshelf", "furnace", "brewing_stand", "hopper", "jukebox", "smoker",
+              "dispenser", "dropper", "shulker_box", "storage_chest")
 
 
 def check(out_dir, storage=None, verbose=True) -> list:
@@ -86,6 +87,16 @@ def check(out_dir, storage=None, verbose=True) -> list:
             st = block_at(x, y, z)
             if st not in ("minecraft:air", "eternalrealm:void") and "carpet" not in st:
                 problems.append(f"armour stand inside {st} at {e['pos']}")
+    # every container must be a named storage piece (an unnamed one would not move with a redesign)
+    named_at = {tuple(be["pos"]) for be in m["blockEntities"] if SLOT.search(be["nbt"])}
+    container_ids = [i for i, st in enumerate(pal) if any(B.block_id(st).endswith(c) for c in CONTAINERS)
+                     and "lectern" not in st]
+    for (tx, tz), cols in grid.items():
+        for idx in container_ids:
+            for (lx, lz, ly) in np.argwhere(cols == idx):
+                pos = (tx * TILE + int(lx), Y0 + int(ly), tz * TILE + int(lz))
+                if pos not in named_at:
+                    problems.append(f"unnamed container {pal[idx]} at {list(pos)}")
     if len(set(names)) != len(names):
         problems.append(f"duplicate storage names: {sorted(n for n in set(names) if names.count(n) > 1)}")
     if storage is not None and sorted(names) != sorted(storage.names):

@@ -54,7 +54,10 @@ public final class EstateGameTests {
     public static void estateBlueprintsAreValid(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         Map<String, List<String>> designs = EstateBlueprints.designs(level.getServer().getResourceManager());
-        check(designs.getOrDefault(EstateKey.ROOM, List.of()).contains(DESIGN), "the room designs " + designs);
+        for (com.eternalrealm.estate.RoomDesign room : com.eternalrealm.estate.RoomDesign.values()) {
+            check(designs.getOrDefault(EstateKey.ROOM, List.of()).contains(room.id()), "the room designs " + designs
+                    + " lack " + room.id());
+        }
         List<String> problems = new ArrayList<>();
         for (Map.Entry<String, List<String>> kind : designs.entrySet()) {
             for (String design : kind.getValue()) {

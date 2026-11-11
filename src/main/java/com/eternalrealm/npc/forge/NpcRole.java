@@ -19,6 +19,8 @@ public enum NpcRole {
     HALL_OF_FAME("hall_of_fame", "librarian"),
     /** Sells mounts (docs/modules/mounts.md). */
     STABLE_MASTER("stable_master", "leatherworker"),
+    /** Rents the rooms of the Starlight Manor (docs/modules/estates.md). */
+    INNKEEPER("innkeeper", "cleric"),
     /** Story characters: only talk. */
     STORY("story", "nitwit");
 
