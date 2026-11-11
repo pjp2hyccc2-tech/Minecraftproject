@@ -3115,7 +3115,7 @@
   "threat.eternalrealm.board.sleeping": "眠っている",
   "threat.eternalrealm.board.lord": "◆ ヌシ「%s」 Lv%s",
   "threat.eternalrealm.board.lord_out": "出現中",
-  "threat.eternalrealm.board.lord_back": "再出現まで %s",
+  "threat.eternalrealm.board.lord_back": "出現まで %s",
   "threat.eternalrealm.board.lord_near": "近づくと現れる",
   "threat.eternalrealm.map.calamity": "災厄",
   "result.eternalrealm.calamity_clear": "CALAMITY SUBDUED",
@@ -6125,5 +6125,9 @@
   "art.eternalrealm.art_relic_w_sunken_captain.desc": "横薙ぎから、前方へ叩きつける二段斬り。とどめの一撃は敵をしびれさせる。敵を大きく吹き飛ばす。敵を引き寄せる。",
   "action.eternalrealm.art_relic_w_tide_singer": "潮騒の歌",
   "art.eternalrealm.art_relic_w_tide_singer.desc": "魔弾を扇状に五つ放つ。とどめの一撃は敵の目をくらませる。自分と周りの仲間の傷を癒やす。敵の足を鈍らせる場が残る。",
-  "design_source.eternalrealm.relic": "金枠の遺宝"
+  "design_source.eternalrealm.relic": "金枠の遺宝",
+  "threat.eternalrealm.board.lord_resting": "休んでいる（次の入れ替えで現れる）",
+  "threat.eternalrealm.board.lord_beaten": "討伐済み（入れ替えまで現れない）",
+  "threat.eternalrealm.board.lord_rotation": "ヌシは各フィールド%s体まで・入れ替えまで %s",
+  "threat.eternalrealm.lord_leaves": "ヌシ「%s」は去っていった……"
 }

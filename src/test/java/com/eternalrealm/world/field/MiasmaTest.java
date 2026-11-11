@@ -124,8 +124,8 @@ public class MiasmaTest {
                     > lord.territory() + FieldThreats.LAIR_RADIUS + 16);
             assertEquals(lord.id() + " stands in its field", lord.field(), FieldLayout.areaAt(lord.x(), lord.z()));
             assertFalse(FieldLayout.inCapital(lord.x(), lord.z()));
-            int ticks = FieldThreats.respawnTicks(lord, new SplittableRandom(1));
-            assertTrue(ticks >= lord.respawnMinTicks() && ticks <= lord.respawnMaxTicks());
+            int first = FieldThreats.firstAppearanceTicks(lord, new SplittableRandom(1));
+            assertTrue(first >= 20 * 20 && first < lord.respawnMinTicks());
         }
         for (FieldThreats.Calamity calamity : FieldThreats.calamities()) {
             assertEquals(calamity.id() + " lair in its field", calamity.field(),

@@ -3115,7 +3115,7 @@
   "threat.eternalrealm.board.sleeping": "Asleep",
   "threat.eternalrealm.board.lord": "◆ Lord %s Lv%s",
   "threat.eternalrealm.board.lord_out": "Out",
-  "threat.eternalrealm.board.lord_back": "Back in %s",
+  "threat.eternalrealm.board.lord_back": "Out in %s",
   "threat.eternalrealm.board.lord_near": "Appears when you come near",
   "threat.eternalrealm.map.calamity": "Calamity",
   "result.eternalrealm.calamity_clear": "CALAMITY SUBDUED",
@@ -6125,5 +6125,9 @@
   "art.eternalrealm.art_relic_w_sunken_captain.desc": "A sideways cut, then a crushing blow ahead. The final hit stuns foes. Knocks foes far back. Pulls foes in.",
   "action.eternalrealm.art_relic_w_tide_singer": "Song of the Surf",
   "art.eternalrealm.art_relic_w_tide_singer.desc": "Five bolts fly out in a fan. The final hit blinds foes. Heals you and allies nearby. Leaves a field that slows foes.",
-  "design_source.eternalrealm.relic": "Gold-frame relic"
+  "design_source.eternalrealm.relic": "Gold-frame relic",
+  "threat.eternalrealm.board.lord_resting": "Resting (out at the next change)",
+  "threat.eternalrealm.board.lord_beaten": "Beaten (not out before the change)",
+  "threat.eternalrealm.board.lord_rotation": "Up to %s lords per field · next change in %s",
+  "threat.eternalrealm.lord_leaves": "The lord %s has gone away..."
 }

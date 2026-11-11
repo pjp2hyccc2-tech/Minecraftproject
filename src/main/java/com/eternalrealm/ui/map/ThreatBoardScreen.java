@@ -21,8 +21,9 @@ import java.util.List;
 /**
  * 討伐手配書 — the wanted board of the fields: for every field its recommended levels, its 瘴気 gauge and phase, its
  * calamity (sleeping, omen, risen, or the field purified), its wandering bosses (out with the time they stay, fought,
- * or roaming elsewhere) and its three lords (out now, or back in mm:ss). Opened from the map; scrolls with the mouse
- * wheel.
+ * or roaming elsewhere) and its three lords (out now, appearing when someone comes near, resting, or beaten until the
+ * next change of the line-up; two are out at a time and the line-up changes every 20 minutes, the time to the next
+ * change is under the title). Opened from the map; scrolls with the mouse wheel.
  */
 public final class ThreatBoardScreen extends Screen {
     private static final int GOLD = 0xFFE8C66A;
@@ -83,7 +84,21 @@ public final class ThreatBoardScreen extends Screen {
         graphics.drawCenteredString(font, title.copy().withStyle(ChatFormatting.BOLD), width / 2, 8, GOLD);
         graphics.drawCenteredString(font, Component.translatable("threat.eternalrealm.board.hint")
                 .withStyle(ChatFormatting.GRAY), width / 2, 19, 0xFFFFFFFF);
-        int top = 32;
+        double age = ThreatClient.boardAge();
+        double rotation = -1.0;
+        for (AreaDefinition area : Areas.all()) {
+            JsonObject entry = ThreatClient.field(area.id()).orElse(null);
+            if (entry != null && entry.has("rotation")) {
+                rotation = Math.max(0.0, number(entry, "rotation") - age);
+                break;
+            }
+        }
+        if (rotation >= 0.0) {
+            graphics.drawCenteredString(font, Component.translatable("threat.eternalrealm.board.lord_rotation",
+                    com.eternalrealm.world.field.LordRoster.PER_FIELD, ThreatOverlay.clock(rotation))
+                    .withStyle(ChatFormatting.LIGHT_PURPLE), width / 2, 30, 0xFFFFFFFF);
+        }
+        int top = 43;
         int bottom = height - 6;
         graphics.fill(left - 1, top - 1, right + 1, bottom + 1, BORDER);
         graphics.fill(left, top, right, bottom, 0xE0141218);
@@ -93,7 +108,6 @@ public final class ThreatBoardScreen extends Screen {
             graphics.drawCenteredString(font, Component.translatable("threat.eternalrealm.board.empty")
                     .withStyle(ChatFormatting.GRAY), width / 2, top + 20, 0xFFFFFFFF);
         }
-        double age = ThreatClient.boardAge();
         int content = 0;
         for (AreaDefinition area : Areas.all()) {
             JsonObject entry = ThreatClient.field(area.id()).orElse(null);
@@ -195,9 +209,15 @@ public final class ThreatBoardScreen extends Screen {
             for (JsonElement element : entry.getAsJsonArray("lords")) {
                 JsonObject lord = element.getAsJsonObject();
                 boolean present = lord.has("present") && lord.get("present").getAsBoolean();
+                boolean out = !lord.has("out") || lord.get("out").getAsBoolean();
+                boolean beaten = lord.has("beaten") && lord.get("beaten").getAsBoolean();
                 double due = Math.max(0.0, number(lord, "due") - age);
                 Component status = present ? Component.translatable("threat.eternalrealm.board.lord_out")
                         .withStyle(ChatFormatting.GOLD)
+                        : beaten ? Component.translatable("threat.eternalrealm.board.lord_beaten")
+                        .withStyle(ChatFormatting.DARK_GREEN)
+                        : !out ? Component.translatable("threat.eternalrealm.board.lord_resting")
+                        .withStyle(ChatFormatting.DARK_GRAY)
                         : due > 0.5 ? Component.translatable("threat.eternalrealm.board.lord_back",
                         ThreatOverlay.clock(due)).withStyle(ChatFormatting.DARK_GRAY)
                         : Component.translatable("threat.eternalrealm.board.lord_near").withStyle(ChatFormatting.GRAY);

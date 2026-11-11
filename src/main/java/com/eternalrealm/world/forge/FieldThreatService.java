@@ -33,6 +33,7 @@ import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.UiData;
 import com.eternalrealm.world.field.FieldLayout;
 import com.eternalrealm.world.field.FieldThreats;
+import com.eternalrealm.world.field.LordRoster;
 import com.eternalrealm.world.field.LordTurns;
 import com.eternalrealm.world.field.Miasma;
 import com.google.gson.JsonArray;
@@ -92,9 +93,12 @@ import java.util.UUID;
  * The threats of the fields on the server ({@link FieldThreats}, {@link Miasma}).
  *
  * <ul>
- *     <li><b>ヌシ</b>: each lord appears when a player comes near its home and it is due, much tougher than its kin
- *     (more health than the attribute cap allows is carried by a toughness factor), roams its territory, goes to
- *     sleep when nobody is around and comes back some minutes after it fell. It fights like a small boss: all three
+ *     <li><b>ヌシ</b>: at most two lords of a field are out at a time ({@link LordRoster}); every 20 minutes the
+ *     line-up changes: those out and not beaten leave (after their fight, if players are fighting them) and the
+ *     resting ones come out, so every change brings a lord that was not there; a beaten lord stays down until the
+ *     next change. A lord that is out appears when a player comes near its home, much tougher than its kin
+ *     (more health than the attribute cap allows is carried by a toughness factor), roams its territory and goes to
+ *     sleep when nobody is around. It fights like a small boss: all three
  *     special moves of its body, helpers called at 70% and 30% health and a rage from 50% ({@link LordTurns}), and
  *     the players fighting it see its health, the move it winds up and the damage ranking on the boss HUD. Everyone
  *     who did a fair share of the damage gets the lord's rewards; the best contributor is the hero (殊勲).</li>
@@ -140,6 +144,14 @@ public final class FieldThreatService {
         /** The turns of this appearance taken so far (helpers called, rage). */
         java.util.EnumSet<LordTurns.Turn> turns = LordTurns.none();
         boolean enraged;
+        /** In the field's line-up of this turn ({@link LordRoster}). */
+        boolean out;
+        /** Beaten during this turn: it stays down until the next change. */
+        boolean beaten;
+        /** Its turn is over but players are fighting it: it leaves when the fight is over. */
+        boolean leaving;
+        /** When a player last hit it (a tick; -1: not in this appearance). */
+        long lastHit = -1L;
         /** Players shown this lord's HUD (they get its end when they leave or it falls). */
         final Set<UUID> hud = new HashSet<>();
 
@@ -181,6 +193,8 @@ public final class FieldThreatService {
     private static final Map<String, LordState> LORDS = new HashMap<>();
     private static final Map<Integer, CalamityState> CALAMITIES = new HashMap<>();
     private static boolean boardDirty = true;
+    /** The tick of the next change of the lords' line-up. */
+    private static long nextRotation;
 
     private FieldThreatService() {
     }
@@ -247,32 +261,54 @@ public final class FieldThreatService {
             state.dueAt = now + FieldThreats.firstAppearanceTicks(lord, RANDOM);
             LORDS.put(lord.id(), state);
         }
+        for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
+            for (String id : LordRoster.first(lordIds(field), RANDOM)) {
+                LORDS.get(id).out = true;
+            }
+        }
+        nextRotation = now + LordRoster.ROTATION_TICKS;
         boardDirty = true;
+    }
+
+    private static List<String> lordIds(int field) {
+        List<String> ids = new ArrayList<>();
+        for (FieldThreats.Lord lord : FieldThreats.lordsOf(field)) {
+            ids.add(lord.id());
+        }
+        return ids;
     }
 
     // ------------------------------------------------------------------ lords
 
     private static void tickLords(ServerLevel astoria, long now) {
+        if (now >= nextRotation) {
+            rotate(astoria, now);
+            nextRotation = now + LordRoster.ROTATION_TICKS;
+        }
         for (LordState state : LORDS.values()) {
             FieldThreats.Lord lord = state.lord;
-            Entity body = state.body == null ? null : astoria.getEntity(state.body);
-            if (body != null && (!body.isAlive() || body.isRemoved())) {
-                body = null;
-                state.body = null;
-            }
+            Entity body = body(astoria, state);
             if (body == null) {
-                if (now >= state.dueAt && nearestPlayer(astoria, lord.x(), lord.z(), FieldThreats.WAKE_RADIUS) != null
+                state.leaving = false;
+                if (state.out && !state.beaten && now >= state.dueAt
+                        && bodies(astoria, lord.field()) < LordRoster.PER_FIELD
+                        && nearestPlayer(astoria, lord.x(), lord.z(), FieldThreats.WAKE_RADIUS) != null
                         && astoria.hasChunkAt(new BlockPos(lord.x(), 64, lord.z()))) {
                     spawnLord(astoria, state, now);
                 }
                 continue;
             }
+            if (state.leaving && !LordRoster.engaged(state.lastHit, now)) {
+                leave(astoria, state, body);
+                continue;
+            }
             if (nearestPlayer(astoria, body.getX(), body.getZ(), FieldThreats.SLEEP_RADIUS) != null) {
                 state.lastNearby = now;
             } else if (now - state.lastNearby > FieldThreats.SLEEP_TICKS) {
-                body.discard(); // asleep: it comes back, healed, when someone wanders by
+                body.discard(); // asleep: it comes back, healed, when someone wanders by (if it is still out)
                 endHud(astoria, state, body.getUUID());
                 state.body = null;
+                state.leaving = false;
                 state.dueAt = now;
                 state.contributions = new Contributions();
                 boardDirty = true;
@@ -286,6 +322,106 @@ public final class FieldThreatService {
                         body.getZ(), 6, 0.4, 0.5, 0.4, 0.01);
             }
         }
+    }
+
+    /** The body of a lord in アストリア, if it is there and alive (a gone body is forgotten). */
+    private static Entity body(ServerLevel astoria, LordState state) {
+        Entity body = state.body == null ? null : astoria.getEntity(state.body);
+        if (body != null && (!body.isAlive() || body.isRemoved())) {
+            state.body = null;
+            return null;
+        }
+        return body;
+    }
+
+    /** Lords of {@code field} whose body is in the field now (out, or leaving after a fight). */
+    private static int bodies(ServerLevel astoria, int field) {
+        int count = 0;
+        for (LordState state : LORDS.values()) {
+            if (state.lord.field() == field && body(astoria, state) != null) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * A change of the line-up ({@link LordRoster}): in every field the lords whose turn is over and who were not
+     * beaten leave (those in a fight when it is over), the newcomers may appear at once, the beaten ones are up again.
+     */
+    private static void rotate(ServerLevel astoria, long now) {
+        for (int field = 1; field <= FieldLayout.FIELD_COUNT; field++) {
+            List<String> ids = lordIds(field);
+            List<String> out = new ArrayList<>();
+            for (String id : ids) {
+                if (LORDS.get(id).out) {
+                    out.add(id);
+                }
+            }
+            List<String> next = LordRoster.next(ids, out, RANDOM);
+            for (String id : ids) {
+                LordState state = LORDS.get(id);
+                boolean stays = next.contains(id);
+                if (state.out && !stays) {
+                    Entity body = body(astoria, state);
+                    if (body != null) {
+                        if (LordRoster.engaged(state.lastHit, now)) {
+                            state.leaving = true;
+                        } else {
+                            leave(astoria, state, body);
+                        }
+                    }
+                }
+                if (stays && (!state.out || state.beaten)) {
+                    state.dueAt = now;
+                }
+                state.out = stays;
+                state.beaten = false;
+            }
+        }
+        boardDirty = true;
+    }
+
+    /** Tests: the lords of {@code field} in the current line-up. */
+    public static List<String> outForTest(int field) {
+        List<String> out = new ArrayList<>();
+        for (String id : lordIds(field)) {
+            LordState state = LORDS.get(id);
+            if (state != null && state.out) {
+                out.add(id);
+            }
+        }
+        return out;
+    }
+
+    /** Tests: a change of the line-up now (the next one is a full turn later). */
+    public static void rotateForTest(ServerLevel astoria) {
+        long now = astoria.getServer().getTickCount();
+        rotate(astoria, now);
+        nextRotation = now + LordRoster.ROTATION_TICKS;
+    }
+
+    /** A lord whose turn is over goes away (nobody is fighting it). */
+    private static void leave(ServerLevel astoria, LordState state, Entity body) {
+        Component message = Component.translatable("threat.eternalrealm.lord_leaves",
+                Component.translatable(state.lord.translationKey()).withStyle(ChatFormatting.LIGHT_PURPLE))
+                .withStyle(ChatFormatting.GRAY);
+        for (ServerPlayer player : astoria.players()) {
+            if (player.distanceToSqr(body) < 128.0 * 128.0) {
+                player.displayClientMessage(message, false);
+            }
+        }
+        astoria.sendParticles(ParticleTypes.LARGE_SMOKE, body.getX(), body.getY() + 1.0, body.getZ(), 40, 0.8, 1.0,
+                0.8, 0.03);
+        astoria.sendParticles(ParticleTypes.SOUL, body.getX(), body.getY() + 0.5, body.getZ(), 20, 0.6, 0.6, 0.6,
+                0.04);
+        endHud(astoria, state, body.getUUID());
+        body.discard();
+        state.body = null;
+        state.leaving = false;
+        state.lastHit = -1L;
+        state.contributions = new Contributions();
+        boardDirty = true;
     }
 
     /**
@@ -374,6 +510,7 @@ public final class FieldThreatService {
         }
         state.turns = LordTurns.none();
         state.enraged = false;
+        state.lastHit = -1L;
         mob.setCustomName(Component.translatable("threat.eternalrealm.lord.nameplate", level,
                 Component.translatable(lord.translationKey())).withStyle(ChatFormatting.LIGHT_PURPLE));
         mob.setCustomNameVisible(true);
@@ -423,9 +560,12 @@ public final class FieldThreatService {
         float amount = (float) (event.getAmount() * Math.max(0.05, Math.min(1.0, toughness)));
         event.setAmount(amount);
         if (event.getSource().getEntity() instanceof ServerPlayer player) {
-            lordOf(victim).ifPresent(state -> state.contributions.damage(player.getUUID(),
-                    player.getGameProfile().getName(), jobOf(player), Math.min(amount, victim.getHealth()) / Math.max(
-                            0.05, toughness)));
+            long now = player.server.getTickCount();
+            lordOf(victim).ifPresent(state -> {
+                state.lastHit = now;
+                state.contributions.damage(player.getUUID(), player.getGameProfile().getName(), jobOf(player),
+                        Math.min(amount, victim.getHealth()) / Math.max(0.05, toughness));
+            });
         }
     }
 
@@ -477,7 +617,9 @@ public final class FieldThreatService {
     private static void lordDown(ServerLevel astoria, LordState state, LivingEntity body, Entity killer, long now) {
         endHud(astoria, state, body.getUUID());
         state.body = null;
-        state.dueAt = now + FieldThreats.respawnTicks(state.lord, RANDOM);
+        state.beaten = true; // down until the next change of the line-up
+        state.leaving = false;
+        state.lastHit = -1L;
         if (killer instanceof ServerPlayer player) {
             state.contributions.lastHit(player.getUUID());
         }
@@ -1165,6 +1307,7 @@ public final class FieldThreatService {
                 entry.add("calamity", c);
             });
             JsonArray lords = new JsonArray();
+            entry.addProperty("rotation", Math.max(0L, nextRotation - now) / 20.0);
             for (FieldThreats.Lord lord : FieldThreats.lordsOf(field)) {
                 LordState state = LORDS.get(lord.id());
                 JsonObject l = new JsonObject();
@@ -1185,6 +1328,8 @@ public final class FieldThreatService {
                 }
                 long due = state == null ? 0L : Math.max(0L, state.dueAt - now);
                 l.addProperty("due", alive ? 0.0 : due / 20.0);
+                l.addProperty("out", alive || state != null && state.out);
+                l.addProperty("beaten", !alive && state != null && state.beaten);
                 lords.add(l);
             }
             entry.add("lords", lords);

@@ -9,7 +9,8 @@ import java.util.random.RandomGenerator;
 
 /**
  * The threats of the fields (フィールドの脅威): in every field three ヌシ (lords) — named, much tougher monsters of
- * the field (each a look and template of its own) that roam their territory and come back some minutes after they fell — and one 災厄
+ * the field (each a look and template of its own) that roam their territory, two of them out at a time and the
+ * line-up changing every 20 minutes ({@link LordRoster}) — and one 災厄
  * (calamity), a boss that manifests at its lair when the field's 瘴気 (miasma, {@link Miasma}) overflows. Places are
  * flat, dry spots away from roads, waystones and set pieces (found with the field terrain functions); a calamity's
  * lair is levelled into a scar (災厄の爪痕) during its omen.
@@ -124,12 +125,6 @@ public final class FieldThreats {
 
     public static Optional<Calamity> calamityOf(int field) {
         return CALAMITIES.stream().filter(calamity -> calamity.field() == field).findFirst();
-    }
-
-    /** Ticks until a fallen lord comes back. */
-    public static int respawnTicks(Lord lord, RandomGenerator random) {
-        int span = Math.max(0, lord.respawnMaxTicks() - lord.respawnMinTicks());
-        return lord.respawnMinTicks() + (span == 0 ? 0 : random.nextInt(span + 1));
     }
 
     /** Ticks until a lord first appears after the server started (staggered, so not all at once). */

@@ -148,6 +148,39 @@ public final class HazardGameTests {
     }
 
     /**
+     * The lords' line-up (the owner, 2026-11-11): two lords of every field out at a time, and a change of the line-up
+     * keeps two out and brings the lord that was resting.
+     */
+    @GameTest(template = ARENA, timeoutTicks = 100)
+    public static void twoLordsOfAFieldAreOutAndEveryChangeBringsTheRestingOne(GameTestHelper helper) {
+        ServerLevel astoria = helper.getLevel().getServer().getLevel(
+                com.eternalrealm.world.forge.AstoriaDimension.LEVEL);
+        check(astoria != null, "the field dimension is not loaded");
+        helper.runAfterDelay(5, () -> {
+            java.util.Map<Integer, java.util.List<String>> before = new java.util.HashMap<>();
+            for (int field = 1; field <= com.eternalrealm.world.field.FieldLayout.FIELD_COUNT; field++) {
+                java.util.List<String> out = com.eternalrealm.world.forge.FieldThreatService.outForTest(field);
+                check(out.size() == com.eternalrealm.world.field.LordRoster.PER_FIELD,
+                        "field " + field + " has " + out + " out");
+                before.put(field, out);
+            }
+            com.eternalrealm.world.forge.FieldThreatService.rotateForTest(astoria);
+            for (int field = 1; field <= com.eternalrealm.world.field.FieldLayout.FIELD_COUNT; field++) {
+                java.util.List<String> out = com.eternalrealm.world.forge.FieldThreatService.outForTest(field);
+                check(out.size() == com.eternalrealm.world.field.LordRoster.PER_FIELD,
+                        "after the change field " + field + " has " + out + " out");
+                for (com.eternalrealm.world.field.FieldThreats.Lord lord
+                        : com.eternalrealm.world.field.FieldThreats.lordsOf(field)) {
+                    if (!before.get(field).contains(lord.id())) {
+                        check(out.contains(lord.id()), "the resting lord " + lord.id() + " did not come out: " + out);
+                    }
+                }
+            }
+            helper.succeed();
+        });
+    }
+
+    /**
      * A field lord fights like a small boss: all three moves of its body; a blow that takes it to 70% calls two
      * monsters of its field, one to 50% makes it roar and rage (faster), and every turn comes once.
      */

@@ -74,7 +74,7 @@
   "threat.eternalrealm.board.sleeping": {"ja": "眠っている", "en": "Asleep"},
   "threat.eternalrealm.board.lord": {"ja": "◆ ヌシ「%s」 Lv%s", "en": "◆ Lord %s Lv%s"},
   "threat.eternalrealm.board.lord_out": {"ja": "出現中", "en": "Out"},
-  "threat.eternalrealm.board.lord_back": {"ja": "再出現まで %s", "en": "Back in %s"},
+  "threat.eternalrealm.board.lord_back": {"ja": "出現まで %s", "en": "Out in %s"},
   "threat.eternalrealm.board.lord_near": {"ja": "近づくと現れる", "en": "Appears when you come near"},
   "threat.eternalrealm.map.calamity": {"ja": "災厄", "en": "Calamity"},
   "result.eternalrealm.calamity_clear": {"ja": "CALAMITY SUBDUED", "en": "CALAMITY SUBDUED"},
@@ -95,5 +95,9 @@
   "special.eternalrealm.storm_cross": {"ja": "雷の十字", "en": "Storm Cross"},
   "special.eternalrealm.beam": {"ja": "光線", "en": "Beam"},
   "special.eternalrealm.volley": {"ja": "矢の雨", "en": "Arrow Rain"},
-  "special.eternalrealm.wave": {"ja": "衝撃波", "en": "Shockwave"}
+  "special.eternalrealm.wave": {"ja": "衝撃波", "en": "Shockwave"},
+  "threat.eternalrealm.board.lord_resting": {"ja": "休んでいる（次の入れ替えで現れる）", "en": "Resting (out at the next change)"},
+  "threat.eternalrealm.board.lord_beaten": {"ja": "討伐済み（入れ替えまで現れない）", "en": "Beaten (not out before the change)"},
+  "threat.eternalrealm.board.lord_rotation": {"ja": "ヌシは各フィールド%s体まで・入れ替えまで %s", "en": "Up to %s lords per field · next change in %s"},
+  "threat.eternalrealm.lord_leaves": {"ja": "ヌシ「%s」は去っていった……", "en": "The lord %s has gone away..."}
 }
