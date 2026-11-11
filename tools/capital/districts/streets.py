@@ -39,20 +39,11 @@ def repave(w, district):
     w.a[xs - X0, zs - Z0, 0 - Y0] = out
 
 
-def signpost(w, x, z, lines_by_face):
-    w.fill(x, 1, z, x, 3, z, B.fence("dark_oak"))
-    for fac, lines in lines_by_face.items():
-        vx, vz = {"north": (0, -1), "south": (0, 1), "east": (1, 0), "west": (-1, 0)}[fac]
-        deco.sign_text(w, x + vx, 3, z + vz, B.S("dark_oak_wall_sign", facing=fac), lines, color="black")
-    w.set(x, 4, z, B.lantern())
-
-
 def build(w, district, terrain):
     repave(w, district)
     # signposts at the main junctions
-    signpost(w, -42, -6, {}) if False else None
     for (x, z, lines) in ((-6, -40, {"south": ["↑ 王城", "Castle", "↓ 広場", "Plaza"]}),
-                          (6, 40, {"north": ["↓ 城門・港", "Gate, Harbour", "↑ 広場", "Plaza"]}),
+                          (5, 37, {"north": ["↓ 城門・港", "Gate, Harbour", "↑ 広場", "Plaza"]}),
                           (-52, -6, {"east": ["← 西門", "West gate", "→ 冒険者ギルド", "Guild"]}),
                           (52, 6, {"west": ["→ 東門 迷宮", "East gate", "← 市場", "Market"]})):
         w.set(x, 1, z, B.fence("dark_oak"))

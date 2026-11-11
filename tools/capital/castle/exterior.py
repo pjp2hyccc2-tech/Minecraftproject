@@ -183,6 +183,16 @@ def viaduct(w, T):
             deco.kingdom_wall_banner(w, x + s, y - 3, zc, facing="east" if s > 0 else "west")
             w.set(6 * s, y + 1, zc, B.full(SM))
             deco.lamp_post(w, 6 * s, y + 1, zc, height=3)
+    # the side door on the first landing to the Guild Gate Terrace (top block y 6, west of x -10): a 2-wide
+    # passage through the west parapet and buttress at z -54..-53, railed on both sides
+    ly = prof[-53][0]
+    w.fill(-9, ly, -54, -6, ly, -53, B.full(SM))
+    w.fill(-9, ly + 1, -54, -6, ly + 4, -53, AIR)
+    for z in (-55, -52):
+        for x in (-9, -8, -7):
+            if w.get(x, ly + 1, z) == AIR:
+                w.set(x, ly, z, B.full(CB))
+                w.set(x, ly + 1, z, B.wall(CB))
     # statues flanking the foot of the stair and at the top
     for s in (-1, 1):
         w.fill(8 * s, 0, -48, 8 * s, 1, -50, B.full(CB))

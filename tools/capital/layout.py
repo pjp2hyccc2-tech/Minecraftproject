@@ -31,6 +31,13 @@ WATER_Y = -2
 WATERFALL = dict(x0=118, x1=133, top_y=61, lip_z=-106, pool=(126, -96), pool_r=11)
 MOUNTAIN = dict(cx=134.0, cz=-148.0)
 
+# the Grand Canal (2026-11-11 rebuild): from the river through the east water gate along z = 43 to the west
+# quarter, then south through a water gate in the south wall to the lake. Water top y = WATER_Y, bed CANAL_BED.
+CANAL_HALF = 2.5         # water x/z within 2.5 of the line: 5 blocks wide
+CANAL_BED = -5
+CANAL_PTS = [(127, 43), (-88, 43), (-88, 108)]
+CANAL_QUAY = 2           # quay walks beside the water (z 39..40 north, 46..47 south on the main line)
+
 FOOTPRINT_CORNER_R = 40  # rounded footprint corners (outside = void)
 EDGE_BAND = 16           # keep this band at y = 0
 
@@ -54,7 +61,6 @@ ROADS = [
     Road("road_east_out", [(108, 0), (142, 0), (176, 26)], 7, "street"),
     Road("road_south_out", [(0, 158), (0, 176)], 7, "street"),
     Road("street_n1", [(-98, -43), (98, -43)], 7, "street"),
-    Road("street_s1", [(-98, 43), (98, 43)], 7, "street"),
     Road("street_w1", [(-55, -40), (-55, 43)], 7, "street"),
     Road("street_e1", [(55, -43), (55, 43)], 7, "street"),
 ]
@@ -115,13 +121,13 @@ DISTRICTS: dict[str, District] = {d.name: d for d in [
                    "Laszlo, Wolfram."),
     District("civic", [(6, -39, 51, -6)], exclude_circles=_PL, title="市庁区 Civic quarter (NE of the plaza)",
              notes="Hall of fame (Chloe, ranking board), auction house (Luce), job hall (Hagen)."),
-    District("shops", [(-51, 6, -6, 39)], exclude_circles=_PL, title="商店街 Shops (SW of the plaza)",
+    District("shops", [(-51, 6, -6, 38)], exclude_circles=_PL, title="商店街 Shops (SW of the plaza)",
              notes="Item shop (Pim), blacksmith forge (Goran), post office with pigeon loft (Chico)."),
-    District("market", [(6, 6, 51, 39), (59, 6, 87, 39), (88, 21, 98, 39)], exclude_circles=_PL,
+    District("market", [(6, 6, 51, 38), (59, 6, 87, 38), (88, 21, 98, 38)], exclude_circles=_PL,
              title="市場 Market (E/SE of the plaza)", notes="Market square with stalls, covered market hall."),
     District("residential_east", [(59, -39, 87, -6), (88, -39, 98, -21)], title="住宅街 (東) Residential E",
              notes="Half-timbered houses between the market and the east wall."),
-    District("residential_west", [(-98, -39, -59, -6), (-98, 6, -59, 39)], title="住宅街 (西) Residential W",
+    District("residential_west", [(-98, -39, -59, -6), (-98, 6, -59, 38)], title="住宅街 (西) Residential W",
              notes="Half-timbered houses west of the guild, both sides of the west avenue."),
     District("guild_gates", [(-98, -86, -10, -47)], title="ギルド門の広場 Guild Gate Terrace",
              notes="Raised terrace (top block y = 6, level with the viaduct's first landing at z -53..-56) at the "
@@ -129,9 +135,10 @@ DISTRICTS: dict[str, District] = {d.name: d for d in [
                    "the guild estate broker, stairs down to street_n1, a bridge to the viaduct."),
     District("cathedral", [(12, -86, 98, -47)], title="大聖堂 Cathedral",
              notes="Gothic cathedral (east-west nave, south transept facing the town) with its close."),
-    District("south_west", [(-98, 47, -25, 73), (-24, 47, -6, 65)], title="住宅街 (南西) Residential SW",
+    District("south_west", [(-98, 48, -94, 73), (-82, 48, -25, 73), (-24, 48, -6, 65)],
+             title="住宅街 (南西) Residential SW",
              notes="Houses and the tavern between street_s1 and the south wall."),
-    District("south_east", [(6, 47, 24, 65), (25, 47, 98, 73)], title="宿屋街 (南東) Inn quarter",
+    District("south_east", [(6, 48, 24, 65), (25, 48, 98, 73)], title="宿屋街 (南東) Inn quarter",
              notes="The inn and houses between street_s1 and the south wall."),
     District("walls", [(-112, -86, -99, 86), (99, -86, 112, 86), (-98, 74, 98, 86), (-24, 66, 24, 92),
                        (88, -20, 98, 20)],
@@ -139,15 +146,21 @@ DISTRICTS: dict[str, District] = {d.name: d for d in [
                                          "inside the east gate."),
     District("harbour", [(25, 87, 125, 140)], title="港 Harbour", notes="Quays, piers, warehouses, cranes, "
                                                                         "lighthouse, ships (outside the walls)."),
-    District("west_fields", [(-160, 6, -113, 159), (-112, 87, -25, 159)], title="農場 Farms (SW)",
+    District("west_fields", [(-160, 6, -113, 159), (-112, 87, -94, 159), (-82, 87, -25, 159), (-93, 109, -83, 159)],
+             title="農場 Farms (SW)",
              notes="Fields, orchards and windmills outside the walls."),
     District("arena", [(-160, -80, -113, -7)], title="闘技場 Arena", notes="Arena outside the west gate (Zain)."),
-    District("east_riverside", [(113, -60, 159, -7), (113, 7, 159, 86)], title="東の川辺 East riverside",
+    District("east_riverside", [(113, -60, 159, -7), (113, 7, 159, 38), (113, 48, 159, 86), (123, 39, 159, 47)],
+             title="東の川辺 East riverside",
              notes="Fields east of the river and the watermill on its bank."),
     District("streets", [(-5, -45, 5, -27), (-5, 27, 5, 65), (-98, -5, -27, 5), (27, -5, 87, 5),
-                         (-98, -46, -10, -40), (-9, -45, 9, -40), (10, -46, 98, -40), (-98, 40, 98, 46),
+                         (-98, -46, -10, -40), (-9, -45, 9, -40), (10, -46, 98, -40),
                          (-58, -39, -52, 39), (52, -39, 58, 39)], exclude_circles=_PL,
              title="通り Streets", notes="Re-paving of the town roads, street furniture, signposts."),
+    District("canal", [(-98, 39, 98, 47), (-93, 48, -83, 73), (-93, 87, -83, 108), (113, 39, 122, 47)],
+             title="大運河 Grand Canal",
+             notes="Water (5 wide) with quays, bridges, landings, moored boats; the south branch to the lake. The "
+                   "water gates in the walls are built by the walls."),
     District("castle", [(-112, -208, 112, -87), (-9, -88, 9, -46)], ground_y=PLATEAU_Y, owner="capital",
              title="王城 Royal castle", notes="Castle plateau, castle, viaduct (built by the framework)."),
 ]}

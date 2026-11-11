@@ -145,6 +145,11 @@ def compute(T: Terrain):
     H = np.where(river, np.minimum(H, rbed), H)
     H = np.where(bank, np.minimum(H, -1.0), H)
 
+    # --- the Grand Canal: a straight masonry channel (quays, walls and bridges come from the canal district)
+    cdist = _polyline_dist(X, Z, L.CANAL_PTS)
+    canal = cdist <= L.CANAL_HALF
+    H = np.where(canal, np.minimum(H, float(L.CANAL_BED)), H)
+
     # --- flatten roads and free districts
     for r in L.ROADS:
         d = _polyline_dist(X, Z, r.pts)
@@ -159,8 +164,9 @@ def compute(T: Terrain):
     T.river = river | (pool & (Z > lip))
     T.pool = pool & (Z > lip)
     T.valley = valley | chan
+    T.canal = canal
     water = np.full((NX, NZ), -999, np.int32)
-    water[lake | T.river] = L.WATER_Y
+    water[lake | T.river | canal] = L.WATER_Y
     water[valley | chan] = WF["top_y"]
     T.water = water
 
@@ -177,7 +183,7 @@ def compute(T: Terrain):
     kind[(Hi >= SNOW_Y) & (slope < 4)] = K_SNOW
     kind[beach | bank] = K_SAND
     kind[(beach | bank) & (hash2(T.X, T.Z, 78) < 0.3)] = K_GRAVEL
-    kind[lake | T.river | valley | chan] = K_BED
+    kind[lake | T.river | valley | chan | canal] = K_BED
     T.kind = kind
     return T
 

@@ -96,6 +96,39 @@ def curtain(w, axis, c, a0, a1, out, gaps=()):
             w.set(ox, 8, oz, B.S("iron_bars")) if False else None
 
 
+def water_gate(w, axis, c, a0, a1, out):
+    """Open an arched water gate through a finished curtain where the Grand Canal passes (``a0..a1`` = the
+    water along the wall): the opening rises from the water to y 3 with rounded shoulders, a pale archivolt and
+    a carved keystone on both faces, the raised portcullis's teeth showing under the crown, a crest banner over
+    the outer arch. The quays stop at the wall."""
+    mid = (a0 + a1) / 2.0
+    for a in range(a0, a1 + 1):
+        top = 3 if abs(a - mid) < 1.6 else 2
+        for d in range(-3, 4):
+            x, z = (a, c + d * out) if axis == "x" else (c + d * out, a)
+            w.fill(x, 0, z, x, top, z, AIR)
+            if abs(d) == 2:
+                w.set(x, top + 1, z, F(SM) if abs(a - mid) > 0.6 else F("carved_castle_stone"))
+        # shoulders
+        if abs(a - mid) >= 1.6:
+            for d in (-2, 2):
+                x, z = (a, c + d * out) if axis == "x" else (c + d * out, a)
+                inward = (1 if a < mid else -1)
+                if axis == "x":
+                    face = "east" if inward > 0 else "west"
+                else:
+                    face = "south" if inward > 0 else "north"
+                w.set(x, top, z, B.stairs(SM, face, "top"))
+    # the portcullis: raised, its iron teeth hang under the crown just inside the outer face
+    for a in range(a0 + 1, a1):
+        x, z = (a, c + 1 * out) if axis == "x" else (c + 1 * out, a)
+        w.set(x, 3, z, B.S("iron_bars"))
+    # crest banner over the outer arch
+    x, z = (int(mid), c + 3 * out) if axis == "x" else (c + 3 * out, int(mid))
+    face_out = ("south" if out > 0 else "north") if axis == "x" else ("east" if out > 0 else "west")
+    deco.kingdom_wall_banner(w, x, 6, z, facing=face_out)
+
+
 def tower(w, cx, cz, r=4.5, top=16, cone_h=13, roof=ROOF, flag=None, door_dir=None, seed=0):
     """Round wall tower with a crenellated top and a cone roof; interior floors at the walk level."""
     S.cylinder(w, cx, cz, r, 0, top - 1, F("stone_bricks"))
@@ -399,7 +432,7 @@ def build(w, district, terrain):
     curtain(w, "z", WX_E, WZ_N, zc, 1, gaps=[(-5, 5)])
     curtain(w, "x", zc, WX_W - 2, WX_E + 2, 1, gaps=[(-6, 6)])
     # wall towers
-    towers = [(WX_W, -78), (WX_W, -40), (WX_W, 40), (WX_W, zc), (WX_E, -78), (WX_E, -40), (WX_E, 40),
+    towers = [(WX_W, -78), (WX_W, -40), (WX_W, 40), (WX_W, zc), (WX_E, -78), (WX_E, -40), (WX_E, 58),
               (WX_E, zc), (-62, zc), (-34, zc), (34, zc), (62, zc)]
     for i, (x, z) in enumerate(towers):
         corner = (x in (WX_W, WX_E) and z == zc)
@@ -409,6 +442,9 @@ def build(w, district, terrain):
         if corner:
             dirs = ["north", "east" if x < 0 else "west"]
         walk_openings(w, x, z, 5.0 if corner else 4.5, dirs)
+    # water gates where the Grand Canal passes the walls (east: from the river; south: to the lake)
+    water_gate(w, "z", WX_E, 41, 45, 1)
+    water_gate(w, "x", zc, -90, -86, 1)
     main_gate(w)
     side_gate(w, WX_W, -1, "west_gate")
     side_gate(w, WX_E, 1, "east_gate")
