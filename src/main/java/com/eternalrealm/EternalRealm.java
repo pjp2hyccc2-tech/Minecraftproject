@@ -117,7 +117,8 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onMobGriefing);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterEvents::onEntityJoin);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onChangeTarget);
-        forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onLivingAttack);
+        // before the dodge/parry checks: a calm monster's touch must not trigger evasions or parries
+        forgeBus.addListener(EventPriority.HIGH, com.eternalrealm.monster.forge.MonsterTempers::onLivingAttack);
         forgeBus.addListener(com.eternalrealm.monster.forge.MonsterTempers::onEntityLeave);
         forgeBus.addListener((net.minecraftforge.event.server.ServerStoppedEvent event) -> {
             com.eternalrealm.monster.forge.MonsterTempers.clear();

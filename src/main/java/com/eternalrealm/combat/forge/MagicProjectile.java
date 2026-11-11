@@ -167,6 +167,9 @@ public final class MagicProjectile extends ThrowableItemProjectile {
             return;
         }
         alreadyHit.add(target.getId());
+        if (target.getId() == homingTarget) {
+            homingTarget = -1; // hit: a piercing shot flies on straight
+        }
         if (payload.spec().explosionRadius() > 0.0) {
             explode(result.getLocation());
             discard();

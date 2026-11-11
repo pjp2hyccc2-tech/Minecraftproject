@@ -101,6 +101,9 @@ public final class SkillArrow extends AbstractArrow {
             return;
         }
         alreadyHit.add(target.getId());
+        if (target.getId() == homingTarget) {
+            homingTarget = -1; // hit: a piercing shot flies on straight
+        }
         CombatHits.projectileHit(owner, target, payload);
         if (pierceLeft-- <= 0) {
             discard();

@@ -54,6 +54,9 @@ public final class ClientCombatController {
             LockOn.cancel();
             return;
         }
+        if (minecraft.screen != null) {
+            LockOn.cancel(); // a menu (or the pause screen after losing focus) never fires an aimed skill on return
+        }
         if (minecraft.isPaused()) {
             return; // the integrated server is paused too: keep both combat clocks in step
         }
@@ -146,7 +149,8 @@ public final class ClientCombatController {
             return;
         }
         double range = aimRange(local, weapon, slot, now);
-        if (range > 0.0 && down && !LockOn.isAiming()) {
+        // aim only when there is an enemy to aim at; otherwise the skill goes off at once
+        if (range > 0.0 && down && !LockOn.isAiming() && LockOn.pick(player, range, null) != null) {
             LockOn.begin(slot, range, now);
             return;
         }

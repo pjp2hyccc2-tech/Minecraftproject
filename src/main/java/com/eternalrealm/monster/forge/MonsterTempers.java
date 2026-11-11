@@ -62,6 +62,9 @@ public final class MonsterTempers {
         if (event.getEntity() instanceof Mob mob && !mob.level().isClientSide()
                 && event.getNewTarget() instanceof Player player && !mayFight(mob, player)) {
             event.setCanceled(true);
+            if (mob instanceof net.minecraft.world.entity.monster.EnderMan && mob.getTarget() == null) {
+                mob.setTarget(null); // it set its scream and rush before asking: take them back
+            }
         }
     }
 

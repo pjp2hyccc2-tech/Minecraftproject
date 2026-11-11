@@ -14,7 +14,9 @@ final class Homing {
     }
 
     /**
-     * Turns {@code projectile} toward the entity {@code targetId} (server side, before it moves this tick).
+     * Turns {@code projectile} toward the entity {@code targetId} (server side, before it moves this tick). It stops
+     * steering once it has passed the enemy; the projectile itself stops once it has hit it (a piercing shot flies on
+     * straight).
      *
      * @return the id to keep steering toward next tick, -1 once the enemy is gone
      */
@@ -31,6 +33,9 @@ final class Homing {
         Vec3 toward = target.getBoundingBox().getCenter().subtract(projectile.position());
         if (speed < 1.0e-3 || toward.lengthSqr() < 1.0e-6) {
             return targetId;
+        }
+        if (motion.dot(toward) < 0.0) {
+            return -1; // it has flown past the enemy: no turning back through the pack
         }
         Vec3 next = motion.scale((1.0 - TURN) / speed).add(toward.normalize().scale(TURN));
         projectile.setDeltaMovement(next.normalize().scale(speed));

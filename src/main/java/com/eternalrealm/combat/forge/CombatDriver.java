@@ -282,8 +282,18 @@ public final class CombatDriver {
      * to what the frame damaged).
      */
     public static void handleEvent(ServerPlayer player, CombatStats stats, CombatEvent event) {
+        String actionId = event instanceof CombatEvent.Hit hit ? hit.action().id()
+                : event instanceof CombatEvent.ActionStarted start ? start.action().id() : null;
+        if (actionId == null) {
+            process(player, stats, event);
+        } else {
+            // a skill locked on to an enemy starts and hits facing it, and its look-placed areas land on it (D-LOCKON)
+            SkillLocks.during(player, actionId, player.server.getTickCount(), () -> process(player, stats, event));
+        }
+    }
+
+    private static void process(ServerPlayer player, CombatStats stats, CombatEvent event) {
         if (event instanceof CombatEvent.Hit hit) {
-            SkillLocks.face(player, hit.action().id(), player.server.getTickCount()); // a locked skill hits its enemy
             SkillDefinition skill = Jobs.skillOfAction(hit.action().id()).orElse(null);
             // the weapon art of a boss weapon: its effects run like a job skill's, at strength 1
             WeaponArt art = skill == null ? WeaponArts.byId(hit.action().id()).orElse(null) : null;
@@ -324,7 +334,6 @@ public final class CombatDriver {
                 }
             }
         } else if (event instanceof CombatEvent.ActionStarted start) {
-            SkillLocks.face(player, start.action().id(), player.server.getTickCount());
             CombatEffects.actionStarted(player, start);
             WeaponSkillFx.started(player, start.weapon(), start.action());
             ArtFx.started(player, start.weapon(), start.action());
@@ -383,11 +392,11 @@ public final class CombatDriver {
                     usingOtherItem);
             if (request.isSkill() && (outcome == RequestOutcome.ACCEPTED || outcome == RequestOutcome.BUFFERED)) {
                 ActionDefinition action = skillAction(combatant, request.skillSlot());
-                if (targetId >= 0 && action != null) {
+                if (action != null && targetId >= 0) {
                     // a buffered skill starts at the current action's cancel point: the lock waits for it
-                    SkillLocks.lock(player, targetId, action.id(), action.durationTicks() + 40, now());
-                } else {
-                    SkillLocks.clear(player);
+                    SkillLocks.lock(player, targetId, action, action.durationTicks() + 40, now());
+                } else if (action != null) {
+                    SkillLocks.clear(player, action.id()); // only this skill's own earlier lock
                 }
             }
         }

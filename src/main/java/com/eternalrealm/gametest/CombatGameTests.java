@@ -94,21 +94,28 @@ public final class CombatGameTests {
         FakePlayer other = FakePlayerFactory.get(helper.getLevel(), new GameProfile(
                 UUID.nameUUIDFromBytes("er_gt_lock_other".getBytes(java.nio.charset.StandardCharsets.UTF_8)),
                 "er_gt_lock_other"));
-        check(!com.eternalrealm.combat.forge.SkillLocks.lock(attacker, other.getId(), hit.action().id(), 40, now),
+        check(!com.eternalrealm.combat.forge.SkillLocks.lock(attacker, other.getId(), hit.action(), 40, now),
                 "a player can never be locked");
-        check(!com.eternalrealm.combat.forge.SkillLocks.lock(attacker, -12345, hit.action().id(), 40, now),
+        check(!com.eternalrealm.combat.forge.SkillLocks.lock(attacker, -12345, hit.action(), 40, now),
                 "an unknown entity cannot be locked");
-        check(com.eternalrealm.combat.forge.SkillLocks.lock(attacker, front.getId(), hit.action().id(), 40, now),
+        check(com.eternalrealm.combat.forge.SkillLocks.lock(attacker, front.getId(), hit.action(), 40, now),
                 "the golem in sight must be lockable");
-        com.eternalrealm.combat.forge.SkillLocks.face(attacker, "some_other_action", now);
-        check(Math.abs(net.minecraft.util.Mth.wrapDegrees(attacker.getYRot() - 180.0F)) < 1.0F,
-                "another action's lock must not turn the player");
-        com.eternalrealm.combat.forge.SkillLocks.face(attacker, hit.action().id(), now);
-        check(Math.abs(net.minecraft.util.Mth.wrapDegrees(attacker.getYRot())) < 10.0F,
-                "the lock must turn the player toward the golem, yaw " + attacker.getYRot());
+        // another skill pressed meanwhile (a tap without a target) neither drops nor uses this lock
+        com.eternalrealm.combat.forge.SkillLocks.clear(attacker, "some_other_action");
+        com.eternalrealm.combat.forge.SkillLocks.during(attacker, "some_other_action", now, () ->
+                check(Math.abs(net.minecraft.util.Mth.wrapDegrees(attacker.getYRot() - 180.0F)) < 1.0F,
+                        "another action's frame must not turn the player"));
         float before = front.getHealth();
-        check(swing(attacker, hit) == 1, "the locked swing must land");
+        java.util.concurrent.atomic.AtomicInteger landed = new java.util.concurrent.atomic.AtomicInteger(-1);
+        com.eternalrealm.combat.forge.SkillLocks.during(attacker, hit.action().id(), now, () -> {
+            check(Math.abs(net.minecraft.util.Mth.wrapDegrees(attacker.getYRot())) < 10.0F,
+                    "the lock must turn the player toward the golem, yaw " + attacker.getYRot());
+            landed.set(swing(attacker, hit));
+        });
+        check(landed.get() == 1, "the locked swing must land, hit " + landed.get());
         check(front.getHealth() < before, "the golem took no damage");
+        check(Math.abs(net.minecraft.util.Mth.wrapDegrees(attacker.getYRot() - 180.0F)) < 1.0F,
+                "after the frame the player's own rotation is back, yaw " + attacker.getYRot());
         com.eternalrealm.combat.forge.SkillLocks.clear(attacker);
         helper.succeed();
     }
@@ -120,7 +127,7 @@ public final class CombatGameTests {
         FakePlayer ranger = fighter(helper, "er_gt_lock_bow", WeaponProfiles.BOW);
         CombatEvent.Hit hit = firstHit(WeaponProfiles.BOW);
         long now = helper.getLevel().getServer().getTickCount();
-        check(com.eternalrealm.combat.forge.SkillLocks.lock(ranger, aside.getId(), hit.action().id(), 60, now),
+        check(com.eternalrealm.combat.forge.SkillLocks.lock(ranger, aside.getId(), hit.action(), 60, now),
                 "the golem must be lockable");
         float before = aside.getHealth();
         com.eternalrealm.combat.forge.CombatProjectiles.launch(ranger, PLAIN, hit,

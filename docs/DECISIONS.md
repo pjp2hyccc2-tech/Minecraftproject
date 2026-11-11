@@ -47,12 +47,15 @@
 The owner found some skills hard to land and asked that holding the key aims at a character and hits it, with the
 aimed enemy's outline glowing white; area attacks stay as they are. A skill is "aimed" when where it lands depends on
 the facing (`job.SkillAiming`: projectiles, slashes, thrusts, discs ahead, areas placed ahead or where one looks, forward
-dashes and leaps); area, heal and buff skills still cast on key down. For aimed skills a tap (under 4 ticks) casts at
-once as before; holding picks the enemy nearest the crosshair within the skill's reach and lights the game's own
-glowing outline on this client only (white: monsters have no team), and releasing turns the player toward it and sends
-its entity id with the request (protocol 8). The server only trusts the id after its own checks (valid target, in
-sight, within reach) and then turns the player toward it at the start and before every hit, steers the middle
-projectile of a volley into it, drops falling shots on it and puts areas placed where one looks at its feet. No mixin
+dashes and leaps); area, heal and buff skills still cast on key down. For aimed skills the key casts at once when no
+enemy is in reach at key-down and on release after a tap (under 4 ticks); holding picks the enemy nearest the crosshair
+within the skill's reach and lights the game's own glowing outline on this client only (white: monsters have no team),
+and releasing turns the player toward it and sends its entity id with the request (protocol 8). The server only trusts
+the id after its own checks (valid target, in sight, within reach) and keeps one lock per action (another skill pressed
+meanwhile neither drops nor steals it). While the locked action's start or a hit is carried out the player faces the
+enemy (and gets their own rotation back afterwards, as the client only sends rotation when the mouse moves); the middle
+projectile of a volley steers into it until it hits or passes it, falling shots drop on it and areas placed where one
+looks land at its feet within the skill's reach. An independent review found these points before release. No mixin
 was needed: the outline flag is set through `Entity`'s protected data accessor from a never-instantiated subclass.
 
 ## D-CALM: habitats twice as large; their monsters are calm until provoked and appear 4 blocks apart (2026-11-11)

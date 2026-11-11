@@ -193,7 +193,8 @@ public final class SkillVisuals {
                 sound(level, x, y, z, p.cast(), 0.9F, 1.3F);
             }
             case "rain" -> {
-                Vec3 at = lookPoint(caster, 14.0);
+                // where the skill's area lands (on a locked enemy, D-LOCKON)
+                Vec3 at = SkillZones.centerOf(caster, com.eternalrealm.job.SkillEffect.Placement.LOOK, 14.0);
                 for (int i = 0; i < 24; i++) {
                     double a = i * 2.399963;
                     double r = 0.4 + (i % 6) * 0.65;
