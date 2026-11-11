@@ -21,8 +21,11 @@ import java.util.List;
  *     rider gets off, logs out, dies, changes dimension, enters a dungeon or joins a boss fight. Big hits do not
  *     knock the rider off. Nobody takes fall damage from riding: a rider who leaves a mount in the air is spared the
  *     fall.</li>
- *     <li><b>Flying</b> (griffin): at most {@value #FLIGHT_HEIGHT} blocks above the highest ground nearby and
- *     {@value #TOP_MARGIN} blocks below the top of the world.</li>
+ *     <li><b>Flying</b> (griffins): at most {@value #FLIGHT_HEIGHT} blocks above the highest ground nearby
+ *     ({@link MountTalent#HIGH_FLIGHT}: {@value MountTalent#HIGH_FLIGHT_EXTRA} more) and {@value #TOP_MARGIN} blocks
+ *     below the top of the world.</li>
+ *     <li><b>Breeds</b>: every breed is bought, kept, called and made into a deed like the first horse and griffin;
+ *     a {@link MountTalent#WAVE_RUNNER} may also be called while its rider stands in water.</li>
  * </ul>
  */
 public final class MountRules {
@@ -111,6 +114,8 @@ public final class MountRules {
     public static final String DEED_LEVEL = "item." + ModInfo.MOD_ID + ".mount_deed.level";
     public static final String HINT = TEXT + "hint";
     public static final String FLIGHT_HINT = TEXT + "flight_hint";
+    /** The breed's talent, shown after the controls when it is called: {@code 【name】how}. */
+    public static final String TALENT_HINT = TEXT + "talent_hint";
     // the stable screen (the stablemaster's and the choose key's)
     public static final String STABLE_TITLE = TEXT + "stable.title";
     public static final String CHOOSE_TITLE = TEXT + "stable.choose_title";
@@ -148,6 +153,8 @@ public final class MountRules {
     public static final String SCREEN_KEPT_SHORT = TEXT + "stable.kept_short";
     public static final String SCREEN_REVEAL_TITLE = TEXT + "stable.reveal_title";
     public static final String SCREEN_REVEAL_OK = TEXT + "stable.reveal_ok";
+    /** The talent line of a breed: {@code 特性【name】what it does}. */
+    public static final String SCREEN_TALENT = TEXT + "stable.talent";
     /** The stablemaster's name over his head (his NPC role's name). */
     public static final String STABLEMASTER = "npc." + ModInfo.MOD_ID + ".stable_master";
 
@@ -277,12 +284,34 @@ public final class MountRules {
      * @param worldTop      the level's build limit (exclusive)
      */
     public static double flightCeiling(List<Integer> groundHeights, int worldTop) {
+        return ceiling(groundHeights, worldTop, FLIGHT_HEIGHT);
+    }
+
+    /** How high above the highest ground nearby {@code kind} may fly (blocks). */
+    public static int flightHeight(MountKind kind) {
+        return FLIGHT_HEIGHT + (kind.talent() == MountTalent.HIGH_FLIGHT ? MountTalent.HIGH_FLIGHT_EXTRA : 0);
+    }
+
+    /** {@link #flightCeiling(List, int)} for {@code kind}: a high flier's is higher, below the same top margin. */
+    public static double flightCeiling(MountKind kind, List<Integer> groundHeights, int worldTop) {
+        return ceiling(groundHeights, worldTop, flightHeight(kind));
+    }
+
+    private static double ceiling(List<Integer> groundHeights, int worldTop, int height) {
         int highest = Integer.MIN_VALUE;
-        for (int height : groundHeights) {
-            highest = Math.max(highest, height);
+        for (int each : groundHeights) {
+            highest = Math.max(highest, each);
         }
         double top = worldTop - TOP_MARGIN;
-        return highest == Integer.MIN_VALUE ? top : Math.min(top, highest + (double) FLIGHT_HEIGHT);
+        return highest == Integer.MIN_VALUE ? top : Math.min(top, highest + (double) height);
+    }
+
+    /**
+     * Whether standing in water or lava keeps {@code kind} from being called (and from being ridden there): lava
+     * always; water unless the breed is a {@link MountTalent#WAVE_RUNNER}. {@code kind} may be null (no mount yet).
+     */
+    public static boolean waterStopsCall(MountKind kind, boolean inWater, boolean inLava) {
+        return inLava || inWater && (kind == null || kind.talent() != MountTalent.WAVE_RUNNER);
     }
 
     /** Every text key the mounts use (names and descriptions of the mounts included). */
@@ -295,10 +324,20 @@ public final class MountRules {
                 SCREEN_REROLL, SCREEN_RARE, SCREEN_HIDDEN, SCREEN_VALUES_LATER, SCREEN_AT_STABLE, SCREEN_AT_STABLE_SHORT,
                 SCREEN_MACHINE, SCREEN_CALL, SCREEN_PICK, SCREEN_DEED, SCREEN_SPEED, SCREEN_ACCEL, SCREEN_JUMP,
                 SCREEN_FLIGHT, SCREEN_TOTAL, SCREEN_DEEDS_NOTE, SCREEN_NO_DEEDS, SCREEN_REDEEM, SCREEN_FULL_SHORT,
-                SCREEN_KEPT_SHORT, SCREEN_REVEAL_TITLE, SCREEN_REVEAL_OK,
+                SCREEN_KEPT_SHORT, SCREEN_REVEAL_TITLE, SCREEN_REVEAL_OK, SCREEN_TALENT,
+                TALENT_HINT,
                 STABLEMASTER, STABLE_FULL, NOT_AT_STABLE, REROLLED, REVEAL, LUCKY, DEED_ITEM, DEED_MADE, DEED_TAKEN, DEED_BAG_FULL,
                 DEED_NOT_TRADEABLE, DEED_ALREADY_KEPT, DEED_BROKEN, DEED_NAME, DEED_LOOK, DEED_VALUES, DEED_GRADE,
                 DEED_USE, DEED_LEVEL));
+        for (MountFamily family : MountFamily.values()) {
+            keys.add(family.translationKey());
+        }
+        for (MountTalent talent : MountTalent.values()) {
+            if (talent != MountTalent.NONE) {
+                keys.add(talent.translationKey());
+                keys.add(talent.descriptionKey());
+            }
+        }
         for (MountKind kind : MountKind.values()) {
             keys.add(kind.translationKey());
             keys.add(kind.descriptionKey());
@@ -308,8 +347,9 @@ public final class MountRules {
                 }
             }
             for (MountLooks.Shape shape : MountLooks.shapes(kind)) {
-                if (MountLooks.varies(kind)) {
-                    keys.add(MountLooks.shapeKey(kind, shape.id()));
+                String key = MountLooks.shapeKey(kind, shape.id());
+                if (MountLooks.varies(kind) && !keys.contains(key)) {
+                    keys.add(key); // one per family
                 }
             }
         }

@@ -53,6 +53,9 @@ public final class MountGameTests {
     private static final MountMotion.Input FORWARD = new MountMotion.Input(1.0, 0.0, false, false);
     private static final MountMotion.Input CLIMB = new MountMotion.Input(0.0, 0.0, true, false);
     private static final MountMotion.Input DESCEND = new MountMotion.Input(0.0, 0.0, false, true);
+    /** The first three mounts (the breeds have their own tests: MountBreedGameTests). */
+    private static final java.util.Set<MountKind> FIRST_THREE = EnumSet.of(MountKind.HORSE, MountKind.GRIFFIN,
+            MountKind.BIKE);
 
     private MountGameTests() {
     }
@@ -97,7 +100,7 @@ public final class MountGameTests {
                     MountOwnership owned = MountService.ownership(player);
                     data.onPlayerLeave(id);
                     stage.set(2);
-                    if (!owned.kinds().equals(EnumSet.allOf(MountKind.class)) || owned.size() != 4
+                    if (!owned.kinds().equals(FIRST_THREE) || owned.size() != 4
                             || owned.selected().map(MountIndividual::kind).orElse(null) != MountKind.GRIFFIN) {
                         failure.set(new GameTestAssertException("after the rejoin the player has " + owned));
                         throw failure.get();
@@ -155,7 +158,7 @@ public final class MountGameTests {
         expect(MountService.buy(player, MountKind.BIKE), MountRules.Purchase.ALREADY_OWNED, "one arcbike at most");
         check(data.spendGold(id, MountKind.BIKE.price()), "taking the test gold back");
         MountOwnership owned = MountService.ownership(player);
-        check(owned.kinds().equals(EnumSet.allOf(MountKind.class))
+        check(owned.kinds().equals(FIRST_THREE)
                         && owned.selected().map(MountIndividual::kind).orElse(null) == MountKind.BIKE,
                 "after buying all three: " + owned);
         check(MountService.select(player, MountKind.GRIFFIN), "choosing the griffin");

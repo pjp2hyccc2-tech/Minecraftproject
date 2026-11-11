@@ -250,14 +250,26 @@ def count(spec):
     return sum(1 if roll == 0 else 2 for ring_spec in spec for roll in ring_spec[4])
 
 
-def animations():
+def animations(primaries=PRIMARIES, secondaries=SECONDARIES, crest_n=None, hackle_n=None, absent=(), extra=None,
+               more=()):
+    """Idle, walk, fold, flap and glide. Breeds (rig_griffin_breeds.py) pass their own feathers, crest and hackle
+    counts, the bones they do not have ({@code absent}: banners, pennant, lantern), {@code extra} channels per
+    animation name for their own parts and {@code more} animations of their own."""
+    PRIMARIES, SECONDARIES = primaries, secondaries  # noqa: N806 (the tables below read these names)
+    extra = extra or {}
+
+    def keep(name, bones):
+        out = {b: v for b, v in bones.items() if b not in absent}
+        out.update(extra.get(name, {}))
+        return out
+
     A = []
     crest_sway = {}
-    for i in range(1, count(CREST) + 1):
+    for i in range(1, (count(CREST) if crest_n is None else crest_n) + 1):
         crest_sway['crest_%d' % i] = dict(rot=[(0, 0, 0, 0), (1.5, 3 + (i % 3), 0, 0), (3.0, 0, 0, 0)])
-    for i in range(1, count(HACKLES) + 1):
+    for i in range(1, (count(HACKLES) if hackle_n is None else hackle_n) + 1):
         crest_sway['hackle_%d' % i] = dict(rot=[(0, 0, 0, 0), (1.5, 2 + (i % 2), 0, 0), (3.0, 0, 0, 0)])
-    A.append(anim('idle', 3.0, loop=True,
+    A.append(anim('idle', 3.0, loop=True, **keep('idle', dict(
                   body=dict(scale=[(0, 1, 1, 1), (1.5, 1.015, 1.025, 1.0), (3.0, 1, 1, 1)]),
                   head=dict(rot=[(0, 0, 0, 0), (0.6, 4, 14, 0), (1.2, 0, 14, 0), (1.5, -3, -8, 0), (2.4, 0, -8, 0),
                                  (3.0, 0, 0, 0)]),
@@ -266,7 +278,7 @@ def animations():
                   banner_l=dict(rot=[(0, 0, 0, -2), (1.5, 0, 0, 2), (3.0, 0, 0, -2)]),
                   pennant=dict(rot=[(0, 3, 0, 0), (1.5, -3, 0, 0), (3.0, 3, 0, 0)]),
                   lantern=dict(rot=[(0, 3, 0, 4), (1.5, -3, 0, -4), (3.0, 3, 0, 4)]),
-                  **crest_sway))
+                  **crest_sway))))
     w = {}
     for leg_name, off in (('front_right', 0.0), ('hind_left', 0.0), ('front_left', 0.5), ('hind_right', 0.5)):
         keys, shin = [], []
@@ -277,10 +289,10 @@ def animations():
             shin.append((t, 18 * max(0.0, math.cos(ph)), 0, 0))
         w[leg_name + '_leg'] = dict(rot=keys)
         w[leg_name + '_shin'] = dict(rot=shin)
-    A.append(anim('walk', 1.0, loop=True,
+    A.append(anim('walk', 1.0, loop=True, **keep('walk', dict(
                   body=dict(pos=[(0, 0, 0, 0), (0.25, 0, 0.3, 0), (0.5, 0, 0, 0), (0.75, 0, 0.3, 0), (1.0, 0, 0, 0)]),
                   neck=dict(rot=[(0, 4, 0, 0), (0.25, -3, 0, 0), (0.5, 4, 0, 0), (0.75, -3, 0, 0), (1.0, 4, 0, 0)]),
-                  **w))
+                  **w))))
     # folded: each wing turns back along the flank, rolled so its gold edge runs along the top and its feathers
     # hang behind; the chord closes up, the hand folds short, and every flight feather turns to lie along the bones
     folded = {}
@@ -294,8 +306,9 @@ def animations():
         for i in range(len(SECONDARIES)):
             folded['sec_%s%d' % (side, i + 1)] = dict(rot=[(0, 0, s * (90 - (4 - i * 1.2)), 0)],
                                                        scale=[(0, 1.0, 1.0, 0.5)])
-    A.append(anim('fold', 1.0, loop=True, **{b: {ch: keys + [(1.0,) + keys[0][1:]] for ch, keys in v.items()}
-                                             for b, v in folded.items()}))
+    A.append(anim('fold', 1.0, loop=True, **keep('fold', {b: {ch: keys + [(1.0,) + keys[0][1:]]
+                                                              for ch, keys in v.items()}
+                                                          for b, v in folded.items()})))
     tuck = dict(front_right_leg=dict(rot=[(0, 55, 0, 0)]), front_left_leg=dict(rot=[(0, 55, 0, 0)]),
                 front_right_shin=dict(rot=[(0, -70, 0, 0)]), front_left_shin=dict(rot=[(0, -70, 0, 0)]),
                 hind_right_leg=dict(rot=[(0, 60, 0, 0)]), hind_left_leg=dict(rot=[(0, 60, 0, 0)]),
@@ -322,7 +335,7 @@ def animations():
         bend = 4 + i
         flap['prim_r%d' % (i + 1)] = dict(rot=[(0, -bend, 0, 0), (L * 0.5, bend, 0, 0), (L, -bend, 0, 0)])
         flap['prim_l%d' % (i + 1)] = dict(rot=[(0, -bend, 0, 0), (L * 0.5, bend, 0, 0), (L, -bend, 0, 0)])
-    A.append(anim('flap', L, loop=True, **flap, **held(tuck, L)))
+    A.append(anim('flap', L, loop=True, **keep('flap', dict(**flap, **held(tuck, L)))))
     G = 2.4
     glide = dict(
         wing_r=dict(rot=[(0, 0, 0, 8), (G * 0.5, 0, 0, 12), (G, 0, 0, 8)]),
@@ -337,7 +350,8 @@ def animations():
         flutter = 2 + (i % 3)
         glide['prim_r%d' % (i + 1)] = dict(rot=[(0, 0, 0, 0), (G * 0.5, flutter, 0, 0), (G, 0, 0, 0)])
         glide['prim_l%d' % (i + 1)] = dict(rot=[(0, 0, 0, 0), (G * 0.5, flutter, 0, 0), (G, 0, 0, 0)])
-    A.append(anim('glide', G, loop=True, **glide, **held(tuck, G)))
+    A.append(anim('glide', G, loop=True, **keep('glide', dict(**glide, **held(tuck, G)))))
+    A.extend(more)
     return A
 
 

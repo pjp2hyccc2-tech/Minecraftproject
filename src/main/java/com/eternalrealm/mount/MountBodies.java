@@ -14,6 +14,16 @@ public final class MountBodies {
             case HORSE -> 1.0F;
             case GRIFFIN -> 1.0F;
             case BIKE -> 1.0F;
+            case HORSE_BLOOM -> 1.0F;
+            case HORSE_TIDE -> 1.0F;
+            case HORSE_GALE -> 1.0F;
+            case HORSE_BLAZE -> 1.0F;
+            case HORSE_HALO -> 1.0F;
+            case GRIFFIN_GOLD -> 1.0F;
+            case GRIFFIN_OWL -> 1.0F;
+            case GRIFFIN_STORM -> 1.0F;
+            case GRIFFIN_FROST -> 1.0F;
+            case GRIFFIN_VOID -> 1.0F;
         };
     }
 
@@ -22,6 +32,16 @@ public final class MountBodies {
             case HORSE -> 1.3F;
             case GRIFFIN -> 1.5F;
             case BIKE -> 1.1F;
+            case HORSE_BLOOM -> 1.25F;
+            case HORSE_TIDE -> 1.3F;
+            case HORSE_GALE -> 1.3F;
+            case HORSE_BLAZE -> 1.3F;
+            case HORSE_HALO -> 1.3F;
+            case GRIFFIN_GOLD -> 1.5F;
+            case GRIFFIN_OWL -> 1.5F;
+            case GRIFFIN_STORM -> 1.5F;
+            case GRIFFIN_FROST -> 1.5F;
+            case GRIFFIN_VOID -> 1.5F;
         };
     }
 
@@ -30,6 +50,16 @@ public final class MountBodies {
             case HORSE -> 1.75F;
             case GRIFFIN -> 1.8F;
             case BIKE -> 1.4F;
+            case HORSE_BLOOM -> 1.75F;
+            case HORSE_TIDE -> 1.75F;
+            case HORSE_GALE -> 1.75F;
+            case HORSE_BLAZE -> 1.75F;
+            case HORSE_HALO -> 1.85F;
+            case GRIFFIN_GOLD -> 1.8F;
+            case GRIFFIN_OWL -> 1.8F;
+            case GRIFFIN_STORM -> 1.8F;
+            case GRIFFIN_FROST -> 1.8F;
+            case GRIFFIN_VOID -> 1.8F;
         };
     }
 
@@ -38,6 +68,16 @@ public final class MountBodies {
             case HORSE -> 1.875;
             case GRIFFIN -> 1.6875;
             case BIKE -> 1.25;
+            case HORSE_BLOOM -> 1.8438;
+            case HORSE_TIDE -> 1.875;
+            case HORSE_GALE -> 1.875;
+            case HORSE_BLAZE -> 1.875;
+            case HORSE_HALO -> 1.875;
+            case GRIFFIN_GOLD -> 1.6875;
+            case GRIFFIN_OWL -> 1.6875;
+            case GRIFFIN_STORM -> 1.6875;
+            case GRIFFIN_FROST -> 1.6875;
+            case GRIFFIN_VOID -> 1.6875;
         };
     }
 
@@ -46,6 +86,16 @@ public final class MountBodies {
             case HORSE -> -0.0312;
             case GRIFFIN -> -0.0312;
             case BIKE -> -0.4375;
+            case HORSE_BLOOM -> -0.0;
+            case HORSE_TIDE -> -0.0312;
+            case HORSE_GALE -> -0.0312;
+            case HORSE_BLAZE -> -0.0312;
+            case HORSE_HALO -> -0.0312;
+            case GRIFFIN_GOLD -> -0.0312;
+            case GRIFFIN_OWL -> -0.0312;
+            case GRIFFIN_STORM -> -0.0312;
+            case GRIFFIN_FROST -> -0.0312;
+            case GRIFFIN_VOID -> -0.0312;
         };
     }
 
@@ -54,6 +104,16 @@ public final class MountBodies {
             case HORSE -> 0.0;
             case GRIFFIN -> 0.0;
             case BIKE -> 0.4375;
+            case HORSE_BLOOM -> 0.0;
+            case HORSE_TIDE -> 0.0;
+            case HORSE_GALE -> 0.0;
+            case HORSE_BLAZE -> 0.0;
+            case HORSE_HALO -> 0.0;
+            case GRIFFIN_GOLD -> 0.0;
+            case GRIFFIN_OWL -> 0.0;
+            case GRIFFIN_STORM -> 0.0;
+            case GRIFFIN_FROST -> 0.0;
+            case GRIFFIN_VOID -> 0.0;
         };
     }
 }
