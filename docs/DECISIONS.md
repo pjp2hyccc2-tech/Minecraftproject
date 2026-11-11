@@ -74,6 +74,22 @@ over the existing UI action and UI data channels: no new packet, no protocol bum
 helper wherever a relic is shown (bag, equipment slots and candidate list, tooltip border, pickup feed), and a drop is
 announced to the whole server. Other modules filter with `EquipmentStacks.isGoldFrame`, `requiredLevel` and `rarity`.
 
+## D-AUCTION: two market counters — a fixed-price board and a live auction hall with five lots at once (2026-11-11)
+The owner asked for an auction for high-value pieces (five lots at once on the server, run at the capital's hall, joined
+from any field, "fine and delicate"), and for a board shop where common gear and materials trade cheaply and rare
+pieces dearly. Both live in the existing season market (one file, one save): the board extends the earlier fixed-price
+house (filters by words, category, rarity, level and gold frame; six sorts; 2 % listing fee capped at 100,000 G so rare
+pieces are not taxed out; recent prices per item group beside the sell form), and the hall is a new pure model
+(`AuctionHall`) whose every step is an event the server carries out: the seller registers a draft at the counter and
+pays 1 % to start it; five lots run at once and later ones queue (a queued lot can be withdrawn with its fee back);
+bids are held from the bidder's gold at once and refunded the moment they are beaten, so a winner can always pay; the
+next bid must beat the highest by 5 % (10 G at least); a bid in the last minute pushes the end back a minute (15 minutes
+at most) so last-second sniping does not decide lots; time stops while the server is down. Registering and starting
+need the hall's clerk (12 blocks) because the owner placed the auction at the capital; bidding, buying outright,
+withdrawing and the mailbox work anywhere. Nothing new crosses the network: the screens are fed by UI data channels and
+send UI actions, and the server checks every argument and decides everything. Everything a player gets while away goes
+to the mailbox; tax and fees leave the economy.
+
 ## D-LOCKON: aimed skills lock on to an enemy while their key is held (2026-11-11)
 The owner found some skills hard to land and asked that holding the key aims at a character and hits it, with the
 aimed enemy's outline glowing white; area attacks stay as they are. A skill is "aimed" when where it lands depends on

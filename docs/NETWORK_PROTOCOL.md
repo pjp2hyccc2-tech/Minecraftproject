@@ -105,6 +105,16 @@
 - 乗り物の移動はバニラの乗り物と同じ（乗り手のクライアントが `ServerboundMoveVehiclePacket` で送る）。サーバーは速さと高さを見張る
   （[modules/mounts.md](modules/mounts.md)）。
 
+## 付録: 市場（パケット追加なし・版 8 のまま）
+- S→C `UiDataPacket`: `market.board`（掲示板の検索結果 1 ページ・自分の出品・メール・規則。開くときは `open: true` と `tab`）、
+  `market.prices`（カバンの 1 枠の品の相場）、`market.auction`（オークション会場: 開催中・待機列・自分のロット・結果・規則。
+  画面を開いている人には変化のたびに送る）。どれも `UiDataPacket.MAX_JSON` に収まるよう、長い一覧は末尾から削って `trimmed` を付ける。
+- C→S `UiActionPacket`: `board.query {text?, category?, rarity?, minLevel?, maxLevel?, gold?, sort?, page?}`、
+  `board.buy {id, …検索条件}`、`board.list {slot, count, price}`、`board.cancel {id}`、`board.prices {slot}`、`board.open`、
+  `mail.claim {id?}`（id なしは預かり金）、`mail.claim_all`、`auction.open`、`auction.close`、`auction.bid {id, amount}`、
+  `auction.buyout {id}`、`auction.register {slot, count, start, buyout, minutes}`、`auction.start {id}`、`auction.withdraw {id}`。
+  slot はカバンの 1〜35、価格は 1〜9,999,999,999、個数は 1〜9,999、分類・並びは既知の値だけ。範囲外は違反（`UiArgs`）。
+
 ## 付録: 金枠の遺宝と装身具（パケット追加なし・版は変えない）
 
 - UI 操作（`UiActionPacket`）: 既存の `bag.equip {slot}` に省略可能な `target`（`accessory_1`・`accessory_2`・`charm`。装身具を入れる枠）、

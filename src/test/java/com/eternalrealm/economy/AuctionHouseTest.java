@@ -71,7 +71,9 @@ public class AuctionHouseTest {
         assertEquals(1, house.listingFee(1));
         assertEquals(1, house.listingFee(99));
         assertEquals(2, house.listingFee(100));
-        assertEquals(199_999_999, house.listingFee(Listing.MAX_PRICE));
+        assertEquals("2 % up to the cap", 100_000, house.listingFee(5_000_000));
+        assertEquals("expensive pieces pay at most the cap", AuctionRules.MAX_LISTING_FEE,
+                house.listingFee(Listing.MAX_PRICE));
         assertThrows(IllegalArgumentException.class, () -> house.listingFee(0));
         AuctionRules expensive = new AuctionRules(Duration.ofHours(1), 0, 100, 0, 1);
         assertEquals("the minimum may exceed a low price", 100, expensive.listingFee(10));

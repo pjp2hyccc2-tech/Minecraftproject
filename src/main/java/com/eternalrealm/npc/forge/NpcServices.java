@@ -52,12 +52,12 @@ public final class NpcServices {
         });
         Npcs.onInteract(NpcRole.AUCTION, (player, npc) -> {
             StoryNpcs.serviceTalk(player, NpcRole.AUCTION, () -> {
-                com.eternalrealm.economy.forge.AuctionMenu.open(player);
+                com.eternalrealm.economy.forge.MarketScreens.openBoard(player, false);
             });
         });
         Npcs.onInteract(NpcRole.MAILBOX, (player, npc) -> {
             StoryNpcs.serviceTalk(player, NpcRole.MAILBOX, () -> {
-                com.eternalrealm.economy.forge.AuctionMenu.openMailbox(player);
+                com.eternalrealm.economy.forge.MarketScreens.openBoard(player, true);
             });
         });
         Npcs.onInteract(NpcRole.STABLE_MASTER, (player, npc) -> {

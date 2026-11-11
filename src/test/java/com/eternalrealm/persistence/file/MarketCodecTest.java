@@ -2,7 +2,11 @@ package com.eternalrealm.persistence.file;
 
 import com.eternalrealm.core.data.CorruptDataException;
 import com.eternalrealm.core.data.IncompatibleDataException;
+import com.eternalrealm.economy.Bid;
 import com.eternalrealm.economy.ItemInfo;
+import com.eternalrealm.economy.Lot;
+import com.eternalrealm.economy.LotState;
+import com.eternalrealm.economy.PriceHistory;
 import com.eternalrealm.economy.Listing;
 import com.eternalrealm.economy.MailItem;
 import com.eternalrealm.economy.MailReason;
@@ -35,8 +39,16 @@ public class MarketCodecTest {
                 new ItemInfo("minecraft:diamond", 16, "common"), 900, 1_794_096_000_001L, 1_794_268_800_001L);
         MailItem returned = new MailItem(MAIL_1, "{id:\"minecraft:bread\"}", new ItemInfo("minecraft:bread", 3, "common"),
                 MailReason.AUCTION_EXPIRED, 1_794_000_000_000L);
+        ItemInfo relic = new ItemInfo("eternalrealm:abyss_greatsword", 1, "legendary", "weapon", 55, true,
+                "design:king_of_end_greatsword:legendary", "終焉の大剣 king of end greatsword");
+        Lot running = new Lot(UUID.fromString("44444444-0000-4000-8000-000000000004"), SELLER, "Alex", TRICKY_ITEM,
+                relic, 100_000, 500_000, 60, LotState.RUNNING, 1_794_096_000_000L, 1_794_096_100_000L,
+                1_794_096_100_000L, 1_794_099_700_000L, 1_794_100_600_000L,
+                List.of(new Bid(BUYER, "Steve", 120_000, 1_794_096_200_000L)), 3, 1_000, 0L);
         return new MarketData(S1, List.of(sword, diamonds),
-                List.of(new Mailbox(SELLER, 950, List.of(returned)), new Mailbox(BUYER, 7, List.of())));
+                List.of(new Mailbox(SELLER, 950, List.of(returned)), new Mailbox(BUYER, 7, List.of())),
+                List.of(running), java.util.Map.of("item:minecraft:diamond",
+                        List.of(new PriceHistory.Sale(55, 16, 1_794_000_000_000L, false))), 1_794_096_300_000L);
     }
 
     private static String json() {
@@ -46,10 +58,25 @@ public class MarketCodecTest {
     @Test
     public void roundTripKeepsEverything() throws Exception {
         String json = json();
-        assertTrue(json.contains("\"schema\": 1"));
+        assertTrue(json.contains("\"schema\": 2"));
         assertTrue(json.contains("\"seasonId\": \"s1\""));
         assertEquals(sample(), MarketCodec.decode(json, S1));
         assertEquals(MarketData.empty(S1), MarketCodec.decode(MarketCodec.encode(MarketData.empty(S1)), S1));
+    }
+
+    /** A market saved before the auction hall (schema 1) still loads: items get default board data. */
+    @Test
+    public void schemaOneStillLoads() throws Exception {
+        String v1 = "{\"schema\": 1, \"seasonId\": \"s1\", \"listings\": [{\"id\": \"" + LISTING_1
+                + "\", \"sellerId\": \"" + SELLER + "\", \"sellerName\": \"Alex\", \"item\": {\"itemId\": "
+                + "\"minecraft:diamond\", \"count\": 2, \"rarity\": \"common\"}, \"itemData\": \"{}\", "
+                + "\"price\": 10, \"createdAtMillis\": 1, \"expiresAtMillis\": 2}], \"mailboxes\": []}";
+        MarketData data = MarketCodec.decode(v1, S1);
+        ItemInfo item = data.listings().get(0).item();
+        assertEquals("other", item.category());
+        assertEquals("item:minecraft:diamond", item.group());
+        assertTrue(data.lots().isEmpty());
+        assertTrue(data.prices().isEmpty());
     }
 
     @Test
@@ -60,8 +87,8 @@ public class MarketCodecTest {
     @Test
     public void newerSchemaIsIncompatibleNotCorrupt() {
         assertThrows(IncompatibleDataException.class,
-                () -> MarketCodec.decode(json().replace("\"schema\": 1", "\"schema\": 3"), S1));
-        assertCorrupt(json().replace("\"schema\": 1", "\"schema\": -1"));
+                () -> MarketCodec.decode(json().replace("\"schema\": 2", "\"schema\": 3"), S1));
+        assertCorrupt(json().replace("\"schema\": 2", "\"schema\": -1"));
     }
 
     @Test

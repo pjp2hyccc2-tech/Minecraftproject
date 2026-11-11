@@ -15,11 +15,22 @@ import java.util.UUID;
  * <p>The market is season data (stored under {@code seasons/<seasonId>/}) because it holds gold and items of that
  * season's economy, like the character's wallet and inventory. See docs/modules/party.md.</p>
  */
-public record MarketData(SeasonId season, List<Listing> listings, List<Mailbox> mailboxes) {
+public record MarketData(SeasonId season, List<Listing> listings, List<Mailbox> mailboxes, List<Lot> lots,
+                         java.util.Map<String, List<PriceHistory.Sale>> prices, long savedAtMillis) {
     public MarketData {
         Objects.requireNonNull(season, "season");
         listings = List.copyOf(listings);
         mailboxes = List.copyOf(mailboxes);
+        lots = List.copyOf(lots);
+        java.util.Map<String, List<PriceHistory.Sale>> copiedPrices = new java.util.LinkedHashMap<>();
+        prices.forEach((group, sales) -> copiedPrices.put(group, List.copyOf(sales)));
+        prices = java.util.Collections.unmodifiableMap(copiedPrices);
+        Set<UUID> lotIds = new HashSet<>();
+        for (Lot lot : lots) {
+            if (!lotIds.add(lot.id())) {
+                throw new IllegalArgumentException("duplicate lot " + lot.id());
+            }
+        }
         Set<UUID> listingIds = new HashSet<>();
         for (Listing listing : listings) {
             if (!listingIds.add(listing.id())) {
@@ -40,7 +51,18 @@ public record MarketData(SeasonId season, List<Listing> listings, List<Mailbox> 
         }
     }
 
+    /** The board and the mailboxes only (no auction lots, no price history). */
+    public MarketData(SeasonId season, List<Listing> listings, List<Mailbox> mailboxes) {
+        this(season, listings, mailboxes, List.of(), java.util.Map.of(), 0L);
+    }
+
     public static MarketData empty(SeasonId season) {
         return new MarketData(season, List.of(), List.of());
+    }
+
+    /** This market with the auction hall's lots, the price history and the time of saving. */
+    public MarketData with(List<Lot> newLots, java.util.Map<String, List<PriceHistory.Sale>> newPrices,
+                           long newSavedAtMillis) {
+        return new MarketData(season, listings, mailboxes, newLots, newPrices, newSavedAtMillis);
     }
 }

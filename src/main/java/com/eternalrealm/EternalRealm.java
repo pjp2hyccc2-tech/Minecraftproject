@@ -63,6 +63,7 @@ public final class EternalRealm {
         JobActions.register();
         RankingCommands.register();
         SocialUiActions.register();
+        com.eternalrealm.economy.forge.MarketScreens.register();
         com.eternalrealm.quest.forge.QuestActions.register();
         com.eternalrealm.npc.forge.NpcServices.register();
         com.eternalrealm.story.forge.StoryActions.register();
@@ -143,6 +144,7 @@ public final class EternalRealm {
         forgeBus.addListener(com.eternalrealm.dungeon.forge.DungeonEvents::onRegisterCommands);
         forgeBus.addListener(com.eternalrealm.economy.forge.MarketCommands::onRegisterCommands);
         forgeBus.addListener(com.eternalrealm.economy.forge.MarketCommands::onLogin);
+        forgeBus.addListener(com.eternalrealm.economy.forge.MarketCommands::onLogout);
         forgeBus.addListener(com.eternalrealm.item.forge.GearEvents::onLivingHurt);
         forgeBus.addListener(CombatEvents::onKnockBack);
         forgeBus.addListener(EventPriority.LOWEST, CombatEvents::onLivingDeath);
