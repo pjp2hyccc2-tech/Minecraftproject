@@ -9,6 +9,7 @@ import com.eternalrealm.estate.forge.EstateService;
 import com.eternalrealm.guild.Guild;
 import com.eternalrealm.guild.GuildResult;
 import com.eternalrealm.guild.GuildService;
+import com.eternalrealm.guild.house.GateAccess;
 import com.eternalrealm.guild.house.GuildHouseCatalog;
 import com.eternalrealm.guild.house.GuildHouseOutcome;
 import com.eternalrealm.guild.house.forge.GuildGates;
@@ -126,7 +127,8 @@ public final class GuildHouseGameTests {
 
     /**
      * The master buys the longhouse; a member walks through the gate into the guild's own house and out through the
-     * return gate; a stranger may not be there; the master switches to the mushroom grove and the house is rebuilt.
+     * return gate; a stranger may not be there; the master switches to the mushroom grove, the house is rebuilt and
+     * the members are now let in by the mushroom grove's gate.
      */
     @GameTest(template = EMPTY, timeoutTicks = 9000)
     public static void aMemberEntersLeavesAndTheHouseSwitchesDesign(GameTestHelper helper) {
@@ -180,6 +182,9 @@ public final class GuildHouseGameTests {
                         GuildGates.forget(s.member.getUUID());
                         GuildGates.onPortal(s.member, back, returnGate);
                         check(s.member.level() == home, "back out in the world after the return gate");
+                        // the trip made the fake player a real entity of the test level: take it out again at once,
+                        // or the monsters of tests nearby would hunt it instead of their own targets
+                        cleanUp(s.member);
                         // the master switches the design: half of the price difference is not charged twice
                         check(houses().switchTo(s.member, SECOND) == GuildHouseOutcome.NO_PERMISSION,
                                 "only the master switches");
@@ -195,12 +200,12 @@ public final class GuildHouseGameTests {
                         }
                         check(houses().service().design(s.guild).map(d -> d.id().equals(SECOND)).orElse(false),
                                 "the house record shows the new design");
-                        BlockState portal = portal(SECOND);
-                        home.setBlock(gate, portal, 3);
-                        GuildGates.forget(s.member.getUUID());
-                        GuildGates.onPortal(s.member, gate, portal);
-                        check(EstateLevels.isEstateLevel(s.member.level()), "the member walks into the new house");
-                        check(EstateService.leave(s.member), "and leaves it again");
+                        check(houses().service().gate(SECOND, s.guild) == GateAccess.ENTER,
+                                "the new design's gate lets the members in");
+                        check(houses().service().gate(FIRST, s.guild) == GateAccess.OTHER_DESIGN,
+                                "the old design's gate now turns them to the right one");
+                        check(EstateService.spot(key(s.guild), EstateService.ENTRY_SPOT).isPresent(),
+                                "the new house has its entry");
                         check(houses().sell(s.master) == GuildHouseOutcome.OK, "the master sells the house");
                         s.done = true;
                         s.close();

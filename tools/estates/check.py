@@ -26,7 +26,8 @@ SLOT = re.compile(r'er_slot:"([a-z]+\.[0-9]+)"')
 # a design must fit the plot (EstatePlot.HALF_EXTENT = 256) and stay compact
 MAX_EXTENT = 176
 MAX_NONAIR = 400_000
-CONTAINERS = ("chest", "barrel", "chiseled_bookshelf", "furnace", "brewing_stand", "hopper", "jukebox")
+CONTAINERS = ("chest", "barrel", "chiseled_bookshelf", "furnace", "brewing_stand", "hopper", "jukebox", "smoker",
+              "dispenser", "dropper", "shulker_box", "storage_chest")
 
 
 def check(out_dir, storage=None, verbose=True) -> list:

@@ -201,8 +201,33 @@ class House:
                     t.set(cx + dx, y + 3, cz + dz, B.candle(3, "white"))
         self.enchanting = True
 
+    def name_containers(self):
+        """Every other container gets a storage name too (``furnace.<n>``, ``barrel.<n>``, ``brewer.<n>``,
+        ``shelf.<n>``...): what players leave in a furnace or a barrel moves with the guild when it switches designs
+        (the estates core moves storage by name), nothing is left behind unnamed."""
+        import numpy as np
+        from capital.world import X0, Y0, Z0
+        kinds = {"barrel": "barrel", "furnace": "furnace", "blast_furnace": "furnace", "smoker": "furnace",
+                 "brewing_stand": "brewer", "chiseled_bookshelf": "shelf", "jukebox": "jukebox", "hopper": "hopper",
+                 "dispenser": "dispenser", "dropper": "dropper", "chest": "crate", "trapped_chest": "crate"}
+        ids = {i: kinds[s.split("[")[0].split(":")[1]] for i, s in enumerate(self.w.palette)
+               if s.split("[")[0].split(":")[1] in kinds or s.split("[")[0].endswith("shulker_box")}
+        if not ids:
+            return
+        xs, zs, ys = np.nonzero(np.isin(self.w.a, list(ids)))
+        cells = sorted(((int(y) + Y0, int(x) + X0, int(z) + Z0, ids[int(self.w.a[x, z, y])])
+                        for x, z, y in zip(xs, zs, ys)))
+        for (y, x, z, kind) in cells:
+            nbt = self.w.block_entities.get((x, y, z), "")
+            if EK.SLOT in nbt:
+                continue
+            name = self.storage.name(kind)
+            body = nbt.strip()[1:-1].strip() if nbt.strip().startswith("{") else ""
+            self.w.be(x, y, z, "{" + (body + "," if body else "") + EK.slot_nbt(name) + "}")
+
     def finish(self):
         """Check the house holds what its tier promises; returns the storage (for the exporter's checks)."""
+        self.name_containers()
         need = REQUIRED[self.tier]
         got = self.storage.summary()
         problems = []

@@ -1,8 +1,8 @@
 """Registry of the twenty guild-house designs and their preview cameras (docs/modules/guildhouse.md).
 
-``DESIGNS[("guild", id)] = builder(world) -> storage`` for tools/estates/build.py; ``VIEWS`` adds the cameras to
-tools/estates/views.py. ``check(results)`` checks the set as a whole: one design per catalogue id, the same ids as
-the capital's portal block, storage names that grow with the tiers.
+``DESIGNS[("guild", id)] = builder(world) -> storage`` for tools/estates/build.py; ``VIEWS`` (added to
+tools/estates/views.py's table on import) are the preview cameras. ``check(results)`` checks the set as a whole:
+one design per catalogue id, the same ids as the capital's portal block.
 """
 from __future__ import annotations
 
@@ -56,6 +56,15 @@ def _views():
 
 
 VIEWS = _views()
+
+
+def _register_views():
+    """The cameras join tools/estates/views.py's table (``--views`` / ``--previews`` of tools/estates/build.py)."""
+    from estates import views
+    views.VIEWS.update(VIEWS)
+
+
+_register_views()
 
 
 def check(results) -> list:

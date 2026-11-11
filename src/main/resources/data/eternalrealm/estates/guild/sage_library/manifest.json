@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "d73a61486e45f1de",
+ "build": "141d46aba46b11c7",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -138,6 +138,22 @@
  "blockEntities": [
   {
    "pos": [
+    -14,
+    3,
+    3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.10\"}}"
+  },
+  {
+   "pos": [
+    -14,
+    4,
+    -3
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.11\"}}"
+  },
+  {
+   "pos": [
     -13,
     2,
     4
@@ -162,11 +178,51 @@
   },
   {
    "pos": [
+    -1,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.1\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.1\"}}"
+  },
+  {
+   "pos": [
+    0,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.2\"}}"
+  },
+  {
+   "pos": [
     1,
     1,
     -16
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.2\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.3\"}}"
+  },
+  {
+   "pos": [
+    2,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.4\"}}"
   },
   {
    "pos": [
@@ -178,6 +234,22 @@
   },
   {
    "pos": [
+    3,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.5\"}}"
+  },
+  {
+   "pos": [
+    4,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.6\"}}"
+  },
+  {
+   "pos": [
     5,
     1,
     -16
@@ -186,11 +258,59 @@
   },
   {
    "pos": [
+    5,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.7\"}}"
+  },
+  {
+   "pos": [
+    6,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.8\"}}"
+  },
+  {
+   "pos": [
+    6,
+    1,
+    14
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.2\"}}"
+  },
+  {
+   "pos": [
+    7,
+    1,
+    -10
+   ],
+   "nbt": "{ForgeData:{er_slot:\"shelf.9\"}}"
+  },
+  {
+   "pos": [
+    7,
+    1,
+    14
+   ],
+   "nbt": "{ForgeData:{er_slot:\"brewer.1\"}}"
+  },
+  {
+   "pos": [
     9,
     1,
     -16
    ],
    "nbt": "{ForgeData:{er_slot:\"vault.1\"}}"
+  },
+  {
+   "pos": [
+    9,
+    1,
+    14
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.3\"}}"
   }
  ],
  "entities": [

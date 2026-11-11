@@ -380,6 +380,24 @@ def dwarven_forge(w):
         for z in (hz0 - 1, hz1 + 1):
             if not w.get(x, 6, z).startswith("minecraft:lava") and "door" not in w.get(x, 1, z):
                 w.set(x, 7, z, F("shroomlight"))
+    # on the summit: the winding headframe of the deep shaft (its wheel turns), a second smoking stack and braziers
+    sx, sz = max(((x, z) for (x, z) in peak if abs(x - 2) <= 8 and abs(z) <= 6), key=lambda c: peak[c])
+    base = peak[(sx, sz)]
+    w.fill(sx - 2, base, sz - 2, sx + 2, base, sz + 2, F("polished_deepslate"))
+    for dx in (-2, 2):
+        w.fill(sx + dx, base + 1, sz, sx + dx, base + 7, sz, B.log("spruce", "y"))
+        w.set(sx + dx, base + 1, sz - 1, ST("spruce", "south"))
+        w.set(sx + dx, base + 1, sz + 1, ST("spruce", "north"))
+    w.fill(sx - 2, base + 8, sz, sx + 2, base + 8, sz, B.log("spruce", "x"))
+    w.set(sx, base + 7, sz, F("polished_blackstone_bricks"))
+    K.TK.water_wheel(w, sx, base + 7, sz, "south", radius=1.8, width=0.5)
+    for (x, z) in ((sx - 2, sz - 2), (sx + 2, sz - 2), (sx - 2, sz + 2), (sx + 2, sz + 2)):
+        w.set(x, base + 1, z, F("polished_blackstone_bricks"))
+        w.set(x, base + 2, z, B.S("campfire", lit=True, facing="north"))
+    ox, oz = sx - 6, sz + 3
+    oy = peak.get((ox, oz), base - 3)
+    w.fill(ox, oy + 1, oz, ox, oy + 5, oz, F("polished_blackstone_bricks"))
+    K.TK.smoke(w, ox, oy + 6, oz, heavy=True)
     return h.finish()
 
 

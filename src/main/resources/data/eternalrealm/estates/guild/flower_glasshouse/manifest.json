@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "56ebb9608ac97407",
+ "build": "0cd7095dd6f90114",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -147,6 +147,14 @@
   },
   {
    "pos": [
+    -2,
+    1,
+    -12
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.1\"}}"
+  },
+  {
+   "pos": [
     -1,
     1,
     -9
@@ -155,11 +163,35 @@
   },
   {
    "pos": [
+    5,
+    1,
+    -12
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.2\"}}"
+  },
+  {
+   "pos": [
+    6,
+    1,
+    -12
+   ],
+   "nbt": "{ForgeData:{er_slot:\"brewer.1\"}}"
+  },
+  {
+   "pos": [
     6,
     1,
     -9
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.3\"}}"
+  },
+  {
+   "pos": [
+    8,
+    1,
+    -12
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.3\"}}"
   },
   {
    "pos": [

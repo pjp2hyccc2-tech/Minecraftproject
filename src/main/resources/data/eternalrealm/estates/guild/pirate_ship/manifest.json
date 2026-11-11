@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "54f227e362a1e27f",
+ "build": "350927159e52082c",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -106,11 +106,35 @@
   },
   {
    "pos": [
+    -9,
+    8,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.6\"}}"
+  },
+  {
+   "pos": [
     -6,
     6,
     0
    ],
    "nbt": "{front_text:{messages:['{\"translate\":\"guildhouse.eternalrealm.design.pirate_ship\",\"bold\":true}','{\"text\":\"★\",\"color\":\"gold\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home_hint\",\"italic\":true}'],color:\"yellow\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    9
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.4\"}}"
+  },
+  {
+   "pos": [
+    1,
+    1,
+    -14
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.1\"}}"
   },
   {
    "pos": [
@@ -122,11 +146,43 @@
   },
   {
    "pos": [
+    3,
+    3,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.5\"}}"
+  },
+  {
+   "pos": [
+    6,
+    0,
+    -1
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.1\"}}"
+  },
+  {
+   "pos": [
+    6,
+    0,
+    1
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.2\"}}"
+  },
+  {
+   "pos": [
     8,
     0,
     -1
    ],
    "nbt": "{ForgeData:{er_slot:\"chest.1\"}}"
+  },
+  {
+   "pos": [
+    8,
+    0,
+    1
+   ],
+   "nbt": "{ForgeData:{er_slot:\"barrel.3\"}}"
   },
   {
    "pos": [

@@ -47,11 +47,23 @@ public class GuildPortalBlock extends Block {
         builder.add(AXIS, THEME);
     }
 
+    /** Per theme (by ordinal): its two colours, read from the catalogue once. */
+    private static volatile int[][] colorTable;
+
     /** The two colours (0xRRGGBB: base, accent) of a theme's portal. */
     public static int[] colors(GuildTheme theme) {
-        return GuildHouseCatalog.standard().design(theme.id())
-                .map(design -> new int[]{design.baseColor(), design.accentColor()})
-                .orElse(new int[]{0xA070FF, 0xFFFFFF});
+        int[][] table = colorTable;
+        if (table == null) {
+            GuildTheme[] themes = GuildTheme.values();
+            table = new int[themes.length][];
+            for (GuildTheme each : themes) {
+                table[each.ordinal()] = GuildHouseCatalog.standard().design(each.id())
+                        .map(design -> new int[]{design.baseColor(), design.accentColor()})
+                        .orElse(new int[]{0xA070FF, 0xFFFFFF});
+            }
+            colorTable = table;
+        }
+        return table[theme.ordinal()];
     }
 
     public static GuildHouseDesign design(BlockState state) {

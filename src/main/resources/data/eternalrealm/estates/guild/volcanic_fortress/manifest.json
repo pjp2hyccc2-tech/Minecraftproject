@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "6c2f3ba26da40f11",
+ "build": "2f9cd11b66a5fce0",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -105,6 +105,46 @@
     3
    ],
    "nbt": "{front_text:{messages:['{\"translate\":\"guildhouse.eternalrealm.design.volcanic_fortress\",\"bold\":true}','{\"text\":\"★★★★\",\"color\":\"gold\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home\"}','{\"translate\":\"guildhouse.eternalrealm.plaque.home_hint\",\"italic\":true}'],color:\"orange\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"black\",has_glowing_text:0b},is_waxed:1b}"
+  },
+  {
+   "pos": [
+    -12,
+    1,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.1\"}}"
+  },
+  {
+   "pos": [
+    -8,
+    1,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.2\"}}"
+  },
+  {
+   "pos": [
+    -7,
+    1,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.3\"}}"
+  },
+  {
+   "pos": [
+    -4,
+    1,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"furnace.4\"}}"
+  },
+  {
+   "pos": [
+    -1,
+    1,
+    -2
+   ],
+   "nbt": "{ForgeData:{er_slot:\"brewer.1\"}}"
   },
   {
    "pos": [

@@ -57,6 +57,11 @@ def house_checks(w):
         st = w.get(x, y, z)
         if "er_slot" in nbt and ("chest" in st) and is_full(w.get(x, y + 1, z)):
             problems.append(f"chest at {(x, y, z)} cannot open: {w.get(x, y + 1, z)} on its lid")
+    containers = ("chest", "barrel", "furnace", "smoker", "brewing_stand", "chiseled_bookshelf", "jukebox", "hopper",
+                  "dispenser", "dropper", "shulker_box")
+    for (pos, st) in [c for b in containers for c in _states_like(w, b)]:
+        if "er_slot" not in w.block_entities.get(pos, ""):
+            problems.append(f"unnamed container {st} at {pos} (its contents would not move with a redesign)")
     boards = [(p, st) for p, st in _states(w, "eternalrealm:guild_board")]
     if len(boards) != 1:
         problems.append(f"{len(boards)} guild boards")
@@ -72,6 +77,14 @@ def house_checks(w):
                 if not is_full(w.get(cell[0] - bx, cell[1], cell[2] - bz)):
                     problems.append(f"no wall behind the board at {cell}: {w.get(cell[0] - bx, cell[1], cell[2] - bz)}")
     return problems
+
+
+def _states_like(w, suffix):
+    ids = [i for i, s in enumerate(w.palette) if s.split("[")[0].endswith(suffix) and "lectern" not in s]
+    if not ids:
+        return []
+    xs, zs, ys = np.nonzero(np.isin(w.a, ids))
+    return [((int(x) + X0, int(y) + Y0, int(z) + Z0), w.palette[int(w.a[x, z, y])]) for x, z, y in zip(xs, zs, ys)]
 
 
 def _states(w, block_id):

@@ -6,7 +6,7 @@
     {"id": "ancient_ruins", "tier": 1, "price": 22000, "base": "#5FC08E", "accent": "#E8DCA8", "size": [33, 35, 13]},
     {"id": "pirate_ship", "tier": 1, "price": 25000, "base": "#1FB8A8", "accent": "#F2E2A0", "size": [35, 33, 22]},
     {"id": "flower_glasshouse", "tier": 2, "price": 45000, "base": "#FF9ACF", "accent": "#B4F27A", "size": [38, 39, 16]},
-    {"id": "dwarven_forge", "tier": 2, "price": 50000, "base": "#E08A30", "accent": "#FFD27A", "size": [38, 40, 31]},
+    {"id": "dwarven_forge", "tier": 2, "price": 50000, "base": "#E08A30", "accent": "#FFD27A", "size": [38, 40, 35]},
     {"id": "desert_palace", "tier": 2, "price": 55000, "base": "#E8C070", "accent": "#3CC8C0", "size": [40, 40, 23]},
     {"id": "observatory", "tier": 2, "price": 60000, "base": "#2E5CD8", "accent": "#F4F0FF", "size": [39, 41, 28]},
     {"id": "japanese_mansion", "tier": 3, "price": 100000, "base": "#F05A3C", "accent": "#FFC4D6", "size": [47, 47, 18]},
