@@ -6129,5 +6129,16 @@
   "threat.eternalrealm.board.lord_resting": "Resting (out at the next change)",
   "threat.eternalrealm.board.lord_beaten": "Beaten (not out before the change)",
   "threat.eternalrealm.board.lord_rotation": "Up to %s lords per field · next change in %s",
-  "threat.eternalrealm.lord_leaves": "The lord %s has gone away..."
+  "threat.eternalrealm.lord_leaves": "The lord %s has gone away...",
+  "map.eternalrealm.npc.quest_board": "Quests",
+  "map.eternalrealm.npc.guild_registrar": "Guild desk",
+  "map.eternalrealm.npc.item_shop": "Item shop",
+  "map.eternalrealm.npc.blacksmith": "Blacksmith",
+  "map.eternalrealm.npc.job_master": "Job hall",
+  "map.eternalrealm.npc.auction": "Exchange",
+  "map.eternalrealm.npc.mailbox": "Post office",
+  "map.eternalrealm.npc.gatekeeper": "Dungeon warden",
+  "map.eternalrealm.npc.arena_master": "Arena",
+  "map.eternalrealm.npc.hall_of_fame": "Hall of fame",
+  "map.eternalrealm.npc.stable_master": "Stable"
 }

@@ -218,5 +218,49 @@
   "map.eternalrealm.level_from": {
     "ja": "推奨 Lv%s〜",
     "en": "Recommended Lv %s+"
+  },
+  "map.eternalrealm.npc.quest_board": {
+    "ja": "依頼受付",
+    "en": "Quests"
+  },
+  "map.eternalrealm.npc.guild_registrar": {
+    "ja": "ギルド登録",
+    "en": "Guild desk"
+  },
+  "map.eternalrealm.npc.item_shop": {
+    "ja": "道具屋",
+    "en": "Item shop"
+  },
+  "map.eternalrealm.npc.blacksmith": {
+    "ja": "鍛冶屋",
+    "en": "Blacksmith"
+  },
+  "map.eternalrealm.npc.job_master": {
+    "ja": "職業ギルド",
+    "en": "Job hall"
+  },
+  "map.eternalrealm.npc.auction": {
+    "ja": "取引所",
+    "en": "Exchange"
+  },
+  "map.eternalrealm.npc.mailbox": {
+    "ja": "郵便局",
+    "en": "Post office"
+  },
+  "map.eternalrealm.npc.gatekeeper": {
+    "ja": "迷宮管理局",
+    "en": "Dungeon warden"
+  },
+  "map.eternalrealm.npc.arena_master": {
+    "ja": "闘技場",
+    "en": "Arena"
+  },
+  "map.eternalrealm.npc.hall_of_fame": {
+    "ja": "栄誉の殿堂",
+    "en": "Hall of fame"
+  },
+  "map.eternalrealm.npc.stable_master": {
+    "ja": "厩舎",
+    "en": "Stable"
   }
 }

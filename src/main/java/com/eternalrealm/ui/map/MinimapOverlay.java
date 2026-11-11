@@ -9,6 +9,7 @@ import com.eternalrealm.world.gen.AstoriaAreas;
 import com.eternalrealm.world.map.MapMarkers;
 import com.eternalrealm.world.map.MapMath;
 import com.eternalrealm.world.map.MapView;
+import com.eternalrealm.world.map.NpcMarkers;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -27,8 +28,9 @@ import java.util.Locale;
 /**
  * The minimap in the top right corner: a round map of the surroundings drawn from the loaded chunks
  * ({@link Minimap}), the player's arrow, north, party members (pinned to the rim when far away), town NPCs with their
- * quest marks, dungeon entrances, the capital and the tower, dungeon traps; below it the area (or dungeon room) and the
- * coordinates. Where and how big it is comes from the HUD layout ({@link com.eternalrealm.ui.hud.HudFrame}).
+ * quest marks (inside the capital an icon of what each one does and its label, see {@link NpcMarkers}), dungeon
+ * entrances, the capital and the tower, dungeon traps; below it the area (or dungeon room) and the coordinates. Where
+ * and how big it is comes from the HUD layout ({@link com.eternalrealm.ui.hud.HudFrame}).
  */
 public final class MinimapOverlay implements IGuiOverlay {
     private static final Logger LOG = LogUtils.getLogger();
@@ -37,6 +39,18 @@ public final class MinimapOverlay implements IGuiOverlay {
     private static final int RIM_DARK = 0xFF2A2016;
     private static final int PARTY = 0xFF55E0FF;
     private static final int PLAYER = 0xFFFFFFFF;
+    private static final net.minecraft.resources.ResourceLocation NPC_ICONS = new net.minecraft.resources.ResourceLocation(
+            com.eternalrealm.core.ModInfo.MOD_ID, NpcMarkers.ATLAS);
+    /** Size of an NPC icon on the minimap (GUI pixels) and of its label text. */
+    private static final float ICON = 12.0F;
+    private static final float LABEL_SCALE = 0.75F;
+    /** Story characters' names, parsed once (the map document carries them as JSON). */
+    private static final java.util.Map<String, Component> NAMES = new java.util.LinkedHashMap<>(64, 0.75F, true) {
+        @Override
+        protected boolean removeEldestEntry(java.util.Map.Entry<String, Component> eldest) {
+            return size() > 128;
+        }
+    };
     private boolean broken;
 
     @Override
@@ -124,8 +138,12 @@ public final class MinimapOverlay implements IGuiOverlay {
             });
         }
         if (ClientMapState.inRealm(minecraft.level)) {
-            for (MapView.Npc npc : view.npcs()) {
-                marker.npc(font, npc);
+            if (view.realm().astoria() && com.eternalrealm.world.field.FieldLayout.inCapital(px, pz)) {
+                marker.townNpcs(font, view.npcs(), area);       // in the capital: what each NPC does
+            } else {
+                for (MapView.Npc npc : view.npcs()) {
+                    marker.npc(font, npc);
+                }
             }
             if (view.realm().astoria()) {
                 for (MapMarkers.Marker place : MapMarkers.astoria()) {
@@ -264,6 +282,69 @@ public final class MinimapOverlay implements IGuiOverlay {
                 graphics.drawString(font, mark, Math.round(sx - font.width(mark) / 2.0F), Math.round(sy - 11.0F),
                         npc.mark() == MapView.Mark.READY ? 0xFFFFC040 : 0xFFFFFF40, true);
             }
+        }
+
+        /**
+         * The town's NPCs in the capital: each one's icon (what it does) with its quest mark above, and labels under
+         * the nearest ones where they fit (no overlaps, inside the map).
+         */
+        void townNpcs(Font font, java.util.List<MapView.Npc> npcs, com.eternalrealm.hud.Rect area) {
+            java.util.List<MapView.Npc> sorted = new java.util.ArrayList<>(npcs);
+            sorted.sort(java.util.Comparator.comparingDouble(n -> (n.x() - px) * (n.x() - px) + (n.z() - pz) * (n.z() - pz)));
+            java.util.List<float[]> boxes = new java.util.ArrayList<>();
+            java.util.List<Component> texts = new java.util.ArrayList<>();
+            java.util.List<float[]> spots = new java.util.ArrayList<>();
+            for (MapView.Npc npc : sorted) {
+                double[] p = at(npc.x(), npc.z(), ICON / 2.0F);
+                if (p == null) {
+                    continue;
+                }
+                float sx = cx + (float) p[0];
+                float sy = cy + (float) p[1];
+                int index = NpcMarkers.icon(npc.role());
+                float u0 = index / (float) NpcMarkers.roles().size();
+                float u1 = (index + 1) / (float) NpcMarkers.roles().size();
+                MapDraw.texturedRect(graphics, NPC_ICONS, sx - ICON / 2.0F, sy - ICON / 2.0F, sx + ICON / 2.0F,
+                        sy + ICON / 2.0F, u0, 0.0F, u1, 1.0F);
+                if (npc.mark() != MapView.Mark.NONE) {
+                    String mark = npc.mark().symbol();
+                    graphics.drawString(font, mark, Math.round(sx - font.width(mark) / 2.0F), Math.round(sy - ICON),
+                            npc.mark() == MapView.Mark.READY ? 0xFFFFC040 : 0xFFFFFF40, true);
+                }
+                Component text = label(npc);
+                float width = font.width(text) * LABEL_SCALE;
+                float top = sy + ICON / 2.0F;
+                boxes.add(new float[] {sx - width / 2.0F - 1.0F, top, sx + width / 2.0F + 1.0F,
+                        top + font.lineHeight * LABEL_SCALE + 1.0F});
+                texts.add(text);
+                spots.add(new float[] {sx, top});
+            }
+            for (int i : NpcMarkers.place(boxes, area.x(), area.y(), area.x() + area.width(), area.y() + area.height())) {
+                float[] box = boxes.get(i);
+                graphics.pose().pushPose();
+                graphics.pose().translate(box[0] + 1.0F, box[1] + 0.5F, 0.0F);
+                graphics.pose().scale(LABEL_SCALE, LABEL_SCALE, 1.0F);
+                int w = font.width(texts.get(i));
+                graphics.fill(-1, -1, w + 1, font.lineHeight - 1, 0xA0100C08);
+                graphics.drawString(font, texts.get(i), 0, 0, 0xFFF4E8C8, false);
+                graphics.pose().popPose();
+            }
+        }
+
+        private static Component label(MapView.Npc npc) {
+            String key = NpcMarkers.labelKey(npc.role());
+            if (!key.isEmpty()) {
+                return Component.translatable(key);
+            }
+            return NAMES.computeIfAbsent(npc.name(), json -> {
+                try {
+                    Component parsed = Component.Serializer.fromJson(json);
+                    return parsed == null ? Component.literal("?") : parsed.copy().withStyle(style -> style.withColor(
+                            (net.minecraft.network.chat.TextColor) null));
+                } catch (RuntimeException e) {
+                    return Component.literal("?");
+                }
+            });
         }
 
         void place(MapMarkers.Marker place, boolean unlocked, boolean recorded) {

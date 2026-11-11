@@ -6129,5 +6129,16 @@
   "threat.eternalrealm.board.lord_resting": "休んでいる（次の入れ替えで現れる）",
   "threat.eternalrealm.board.lord_beaten": "討伐済み（入れ替えまで現れない）",
   "threat.eternalrealm.board.lord_rotation": "ヌシは各フィールド%s体まで・入れ替えまで %s",
-  "threat.eternalrealm.lord_leaves": "ヌシ「%s」は去っていった……"
+  "threat.eternalrealm.lord_leaves": "ヌシ「%s」は去っていった……",
+  "map.eternalrealm.npc.quest_board": "依頼受付",
+  "map.eternalrealm.npc.guild_registrar": "ギルド登録",
+  "map.eternalrealm.npc.item_shop": "道具屋",
+  "map.eternalrealm.npc.blacksmith": "鍛冶屋",
+  "map.eternalrealm.npc.job_master": "職業ギルド",
+  "map.eternalrealm.npc.auction": "取引所",
+  "map.eternalrealm.npc.mailbox": "郵便局",
+  "map.eternalrealm.npc.gatekeeper": "迷宮管理局",
+  "map.eternalrealm.npc.arena_master": "闘技場",
+  "map.eternalrealm.npc.hall_of_fame": "栄誉の殿堂",
+  "map.eternalrealm.npc.stable_master": "厩舎"
 }

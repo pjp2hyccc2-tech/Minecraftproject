@@ -51,6 +51,11 @@ public class FieldMapTranslationsTest {
         }
         keys.add(MapMarkers.CAPITAL_KEY);
         keys.add(MapMarkers.TOWER_KEY);
+        for (String role : NpcMarkers.roles()) {
+            if (!NpcMarkers.labelKey(role).isEmpty()) {
+                keys.add(NpcMarkers.labelKey(role));
+            }
+        }
         return keys;
     }
 
