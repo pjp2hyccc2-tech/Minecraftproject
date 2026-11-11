@@ -161,7 +161,8 @@ def great_hall(w, T):
         w.set(6 * s, fy + 2, zn + 1, B.stairs(GOLD, "north"))
         for by in (54, 52, 50):
             deco.kingdom_wall_banner(w, 4 * s, by, zn, facing="south")
-    # stairwell down to the Hall of the Star Gate (west aisle, descending northwards)
+    # stairwell down to the Hall of the Star Gate (west aisle, descending northwards: the steps rise towards the
+    # south, so the stairs face south, the side of their tall back)
     sx0, sx1 = -11, -9
     z_top = -126
     for k in range(24):
@@ -169,7 +170,7 @@ def great_hall(w, T):
         y = fy - 1 - k
         sg = P.STARGATE
         in_hall = math.hypot(sx0 + 1 - sg["cx"], z - sg["cz"]) < sg["r"] - 0.4
-        w.fill(sx0, y, z, sx1, y, z, B.stairs("polished_deepslate", "north"))
+        w.fill(sx0, y, z, sx1, y, z, B.stairs("polished_deepslate", "south"))
         w.fill(sx0, y + 1, z, sx1, y + 4, z, AIR)
         if in_hall:
             w.fill(sx0, sg["floor"], z, sx1, y - 1, z, B.S("polished_deepslate"))
@@ -181,12 +182,15 @@ def great_hall(w, T):
         if k % 4 == 2:
             w.set(sx1, y + 4, z, B.S("chain"))
             w.set(sx1, y + 3, z, B.lantern(hanging=True, soul=True))
+    # the stair head: one more step level with the hall floor (the top step used to be a block lower, behind a
+    # balustrade across its end, so the stair could not be entered from the hall), the opening clear up to the
+    # hall (no ceiling row or wall stubs left above it), a balustrade along the east side only
+    w.fill(sx0, fy, z_top + 1, sx1, fy, z_top + 1, B.stairs("polished_deepslate", "south"))
     w.fill(sx0, fy, z_top - 2, sx1, fy, z_top, AIR)
-    w.fill(sx0, fy + 1, z_top - 2, sx1, fy + 3, z_top, AIR)
+    w.fill(sx0, fy + 1, z_top - 2, sx1, fy + 4, z_top + 1, AIR)
+    w.fill(sx1 + 1, fy + 2, z_top - 2, sx1 + 1, fy + 4, z_top, AIR)
     for z in range(z_top - 3, z_top + 2):
         w.set(sx1 + 1, fy + 1, z, B.wall(CB))
-    for x in range(sx0, sx1 + 2):
-        w.set(x, fy + 1, z_top + 1, B.wall(CB))
     for z in (z_top + 1, z_top - 3):
         w.set(sx1 + 1, fy + 1, z, B.full(SM))
         w.set(sx1 + 1, fy + 2, z, B.lantern(soul=True))

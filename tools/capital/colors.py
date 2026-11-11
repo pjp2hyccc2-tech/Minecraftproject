@@ -83,6 +83,10 @@ BASE = {
     "ladder": (125, 98, 55), "skeleton_skull": (200, 200, 200), "player_head": (90, 60, 40),
     "amethyst_cluster": (170, 130, 220), "lava": (207, 92, 20), "water": (48, 92, 196), "light": (0, 0, 0),
     "hopper": (70, 70, 72), "cactus": (88, 130, 40), "big_dripleaf_stem": (90, 120, 40), "netherrack": (110, 50, 50),
+    "coal_block": (22, 21, 21), "magma_block": (150, 66, 30), "lava_cauldron": (60, 60, 64),
+    "raw_iron_block": (166, 135, 107), "raw_copper_block": (154, 105, 79), "raw_gold_block": (221, 169, 46),
+    "piston": (120, 110, 95), "bee_nest": (196, 150, 77), "dried_kelp_block": (50, 58, 35),
+    "farmland": (92, 58, 32), "skeleton_wall_skull": (200, 200, 200), "zombie_wall_head": (80, 120, 70),
     # custom
     "castle_bricks": (232, 228, 218), "smooth_castle_stone": (239, 235, 227), "castle_pillar": (230, 225, 214),
     "carved_castle_stone": (221, 215, 202), "castle_crest_stone": (214, 200, 168), "royal_roof_tiles": (43, 76, 155),
@@ -111,7 +115,7 @@ EMIT = {
     "soul_wall_torch": 10, "sea_lantern": 15, "glowstone": 15, "shroomlight": 15, "end_rod": 14, "campfire": 15,
     "soul_campfire": 10, "jack_o_lantern": 15, "lava": 15, "ochre_froglight": 15, "verdant_froglight": 15,
     "pearlescent_froglight": 15, "amethyst_cluster": 5, "candle_cake": 3, "redstone_lamp": 15,
-    "gilded_finial": 0, "lava_cauldron": 15, "beacon": 15, "conduit": 15,
+    "gilded_finial": 0, "lava_cauldron": 15, "beacon": 15, "conduit": 15, "magma_block": 3,
 }
 STRIP = ["_wall_hanging_sign", "_hanging_sign", "_wall_sign", "_sign", "_wall_banner", "_banner", "_stairs",
          "_slab", "_wall", "_fence_gate", "_fence", "_door", "_trapdoor", "_pressure_plate", "_button",
@@ -198,6 +202,8 @@ def material(state: str) -> dict:
         top = _shade(base, 1.25) if not name.startswith("stripped") else base
     if name == "bookshelf":
         top = BASE["oak_planks"]
+    if name == "lava_cauldron":
+        top = BASE["lava"]
     out["top"], out["side"] = top, side
     # geometry / kind
     if name == "water" or name == "lava":

@@ -68,10 +68,10 @@ def tavern(w, rect, front, name_lines=("", "酒場", "The Tipsy Wyvern", "")):
         f.set(x, 4, 0 + 1, B.S("skeleton_wall_skull", facing="south")) if False else None
     f.set(1, 3, 2, B.S("oak_wall_sign", facing="east"))
     f.be(1, 3, 2, B.sign_nbt(["本日のおすすめ", "Wyvern stew", "Honey ale", ""], color="black"))
-    # stair to the upper floor along the side wall
-    for i in range(sh):
-        f.set(1, 1 + i, D - 3 - i, B.stairs("spruce", "north"))
-        f.fill(1, sh, D - 3 - i, 1, sh, D - 3 - i, AIR)
+    # stair to the upper floor along the side wall (the last step level with the upper floor; it used to be
+    # carved away again, leaving a gap at the top)
+    from . import _furnish as FU
+    FU.stair_up(f, 1, D - 3, 0, sh, "north", wood="spruce")
     # upper floor: rooms along the front, gallery corridor
     y0 = sh
     for x in range(3, W - 2, 5):
@@ -79,12 +79,20 @@ def tavern(w, rect, front, name_lines=("", "酒場", "The Tipsy Wyvern", "")):
         lo, hi = B.door_states("spruce", "north", "left")
         f.set(x + 2, y0 + 1, D // 2, lo) if x + 2 < W - 1 else None
         f.set(x + 2, y0 + 2, D // 2, hi) if x + 2 < W - 1 else None
-        K.bed(f, x + 1, y0, 1, facing="north", color=("red", "blue", "green", "yellow")[(x // 5) % 4]) \
+        # the foot at z = 2 so the head lies at z = 1 against the front wall (not in it)
+        K.bed(f, x + 1, y0, 2, facing="north", color=("red", "blue", "green", "yellow")[(x // 5) % 4]) \
             if x + 1 < W - 1 else None
         f.set(x + 3, y0 + 1, 1, B.chest("south")) if x + 3 < W - 1 else None
     f.fill(1, y0 + 1, D // 2, W - 2, y0 + 1, D // 2, F("white_plaster")) if False else None
     deco.hanging_lantern(f, W // 2, 2 * sh, D - 3, drop=1)
     TK.bracket_flag(f, 1, sh + 2, -1, "north", "pennant", 3.0, 1.0)
+    # the common room and the gallery dressed: beams, paintings, plants; a rug and a nightstand in each room
+    FU.dress(f, 1, 1, W - 2, D - 2, 0, sh, seed=301, rug_colors=None, paintings=3, beam_axis="z")
+    for x in range(3, W - 2, 5):
+        if x + 1 < W - 1:
+            if f.is_empty(x + 2, y0 + 1, 1):
+                FU.nightstand(f, x + 2, y0, 1)
+            FU.painting(f, x + 1, y0 + 3, 1, "south", seed=302 + x)
     return f, W, D
 
 
@@ -153,8 +161,8 @@ def inn(w, rect, front, name_lines=("", "宿屋", "Inn of the Silver Star", ""))
             lo, hi = B.door_states("oak", "north", "left")
             f.set(dx, y0 + 1, kz - 2, lo)
             f.set(dx, y0 + 2, kz - 2, hi)
-            K.bed(f, x + 1, y0, 1, facing="north", color=("red", "blue", "light_blue", "green", "white")[
-                (x // 5 + k) % 5])
+            K.bed(f, x + 1, y0, 2, facing="north", color=("red", "blue", "light_blue", "green", "white")[
+                (x // 5 + k) % 5])          # foot at z = 2: the head lies at z = 1, against the wall
             f.set(x + 3, y0 + 1, 1, B.chest("south"))
             f.set(x + 3, y0 + 2, 1, B.S("flower_pot"))
             K.rug(f, x + 1, 3, x + 3, kz - 4, y0, field=("blue", "red", "green")[(x // 5) % 3], border="white") \
@@ -163,4 +171,13 @@ def inn(w, rect, front, name_lines=("", "宿屋", "Inn of the Silver Star", ""))
         deco.carpet_runner(f, sh + 2, kz - 1, W - 2, kz - 1, y0, color="red", border=None)
     for x in (2, W - 3):
         TK.bracket_flag(f, x, 2 * sh + 1, -1, "north", "kingdom", 2.5, 1.5)
+    # the reception and dining hall dressed; a painting above every bed
+    from . import _furnish as FU
+    FU.dress(f, px + 1, 1, W - 2, kz - 1, 0, sh, seed=311, rug_colors=None, paintings=2, beams_on=False)
+    for k in (1, 2):
+        y0 = k * sh
+        for x in range(1, W - 5, 5):
+            FU.painting(f, x + 2, y0 + 3, 1, "south", seed=312 + x + k)
+            if f.is_empty(x + 4, y0 + 1, 2):
+                f.set(x + 4, y0 + 1, 2, B.S("barrel", facing="up"))
     return f, W, D

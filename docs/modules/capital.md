@@ -126,7 +126,7 @@ south-east and farms with windmills south-west outside the walls.
 | `plaza` | disc r ≤ 26 | angel fountain with `fountain_spray` jets, flagstones, compass star, beds, benches, lamps, 8 flag masts (`plaza.py`) |
 | `guild` | (−51, −39, −6, −6) − disc | adventurers' guild hall x −50..−27, z −38..−7 facing the plaza, clock tower x −27..−19, z −37..−29 (`guild.py`) |
 | `civic` | (6, −39, 51, −6) − disc | hall of fame with dome + ranking board, auction house (faces the plaza), job hall (`civic.py`) |
-| `shops` | (−51, 6, −6, 39) − disc | post office with pigeon loft, item shop, blacksmith forge (`shops.py`) |
+| `shops` | (−51, 6, −6, 39) − disc | post office with pigeon loft and the sorting room upstairs, item shop with Pim's storeroom upstairs, blacksmith forge x −50..−32, z 25..38 with its entrance on the street at z = 43 and a back door to the shop lane (`shops.py`) |
 | `market` | (6, 6, 51, 39) − disc, (59, 6, 87, 39), (88, 21, 98, 39) | stall square with market cross, covered market hall, avenue stalls (`market.py`) |
 | `cathedral` | (12, −86, 98, −47) | gothic cathedral x 30..88, z −84..−49, close with gardens (`cathedral.py`) |
 | `upper_town` | (−98, −86, −59, −47), (−51, −86, −12, −47) | noble houses, front gardens, formal gardens with fountains (`upper_town.py`) |
@@ -145,8 +145,22 @@ south-east and farms with windmills south-west outside the walls.
 Shared town helpers (files starting with `_` are not run as districts): `_civic_kit.py` (faces, windows, doors,
 roofs, dormers, lamps, masts, stalls, interiors), `_town_kit.py` (gimmick helpers, paving mixes, the parametric
 half-timbered `house()` + `row()`, the stone `civic_hall()` shell, market stalls, `crowd()`/`guard()` spot
-helpers), `_inns.py` (tavern and inn with interiors), `_ships.py`, `_farm.py` (fields, windmills, barns), and
-`_town_views.py` (town cameras; see §8).
+helpers), `_inns.py` (tavern and inn with interiors), `_ships.py`, `_farm.py` (fields, windmills, barns),
+`_furnish.py` (room dressing, see below) and `_town_views.py` (town cameras; see §8).
+
+**Interiors (`_furnish.py`).** The owner found the interiors too plain (2026-11-11). `dress(t, x0, z0, x1, z1, y,
+ceiling, …)` dresses a room: exposed beams under the ceiling, a rug, plants in the corners, a lantern and paintings
+on free wall spans (cells next to doors and the `keep` set stay clear). Single pieces: `painting`, `wainscot`,
+`beams`, `rug`, `goods` (small wares on tables), `cupboard`, `wardrobe`, `nightstand`, `desk`, `kitchen`,
+`bed_pair`, `plants`, `crates`, `item_on_wall`, `stair_up` (a straight stair whose last step is level with the
+floor above, with its stairwell cut in that floor: two free blocks over every step and a third over all but the
+last, because a 1.8-tall player stepping onto the next stair is still partly over this one). Ceiling beams never
+go over a stair or ladder (`over_stairway`), so build stairs before dressing a room. Every half-timbered house gets a kitchen corner, a cupboard, a table with chairs, a rug, and upstairs beds
+with nightstands, a wardrobe and paintings; the shops, the job hall, Gant's office, the hall of fame, the auction
+house, the tavern and the inn are dressed room by room, and the item shop, the post office, the job hall and Gant's
+office have furnished upper floors reached by a stair. A painting only hangs where every block behind it is a full
+solid block and the blocks it covers are free (the game takes paintings down otherwise); `painting()` returns
+False instead of hanging one that would fall. Beds lie fully inside their rooms (no headboards in the walls).
 
 Spots (feet positions + yaw; `layout.REQUIRED_SPOTS` also lists `respawn` and `board.ranking`):
 
@@ -163,7 +177,7 @@ Spots (feet positions + yaw; `layout.REQUIRED_SPOTS` also lists `respawn` and `b
 | `npc.auction` (Luce) | (47, 2, −14) | 90 | auction house rostrum |
 | `npc.job_master` (Hagen) | (41, 1, −30) | 180 | job hall counter |
 | `npc.item_shop` (Pim) | (−20, 1, 34) | 180 | item shop counter |
-| `npc.blacksmith` (Goran) | (−41, 1, 32) | 180 | forge, by the anvil |
+| `npc.blacksmith` (Goran) | (−41, 1, 29) | 0 | forge, between the hearth and the anvil, facing the street door |
 | `npc.mailbox` (Chico) | (−37, 1, 15) | −90 | post office counter |
 | `npc.gatekeeper` (Gant) | (95, 1, 15) | 180 | dungeon warden's office inside the east gate |
 | `npc.arena_master` (Zain) | (−117, 1, −42) | −90 | arena, east gate |
@@ -199,7 +213,7 @@ round towers, curtain walls, buttressed window bays and pointed vaults.
 | Gatehouse | x −7..7, z −89..−99; towers (±11, −93) | pointed passage with raised portcullis, crest panel, belfry spire, guard niches with armour stands |
 | Curtain wall | polygon `WALL_PTS`, top y 41 | crenellated walk, ten round towers with tall cones (`TOWERS`) |
 | Inner terrace | x −58..62, z −110..−172; y 32 | retaining wall, balustrade, front stair, side stairs to the yard and gardens |
-| Great hall 大広間 | x −13..13, z −114..−150 | 5-light windows on the east/west walls (y 39–56), vaulted ceiling with a glazed lantern oculus, banquet tables, high table, twin façade towers and rose window; stair (west aisle, z −126) down to the Star Gate |
+| Great hall 大広間 | x −13..13, z −114..−150 | 5-light windows on the east/west walls (y 39–56), vaulted ceiling with a glazed lantern oculus, banquet tables, high table, twin façade towers and rose window; stair (west aisle, top step at z −125 level with the floor, a balustrade on its east side) down to the Star Gate (24 steps facing south, the way they rise; until 2026-11-11 they faced the wrong way and the top was railed off) |
 | Star court | x −13..13, z −151..−159 | glass oculus in a star mosaic (skylight of the hall below) |
 | Hall of the Star Gate 星門の間 | centre (0, −155), floor y 8 | domed undercroft, ring gate on a dais (z −163), summoning circle lit by the noon beam |
 | Keep / throne room 玉座の間 | x −17..17, z −160..−188 | throne room y 33–58 with coffered ceiling, east/west windows, stained north window, the king's battle armour; corner turrets and the great spire (tip ≈ y 122) |
@@ -242,6 +256,13 @@ Star Gate oculus). Interiors are lit by chandeliers, sconces, candles and soul l
 `check.py` decodes every tile and checks: canonical/valid palette states, palette indices, void outside the
 footprint, block entities sit on blocks that carry them, armour stands not inside solid blocks, fluid ticks on
 water, all required spots present with a floor and free head room, non-air blocks < 4 000 000, tile bytes < 6 MB.
+Paintings: a known variant, every covered block free, a full solid block behind each of them; no two hanging
+entities (paintings, item frames) share a block. Staircases (runs of three or more bottom stairs, roof tiles aside):
+each must start from a floor (not a lone block that needs a jump), have the head room above, end level with a
+floor ahead of or beside the last step, and rise towards the stairs' `facing`; side-by-side runs are judged as one
+wide stair. The owner found stairs facing the wrong way and stairs that could not be climbed (2026-11-11): the Star
+Gate stair (reversed, a step short, a balustrade across its top), the guild gallery stair (a jump at both ends), the
+market hall stair (into a pier, a gap at the top), the tavern and post office stairs (a gap at the top); all fixed.
 
 ## 8. Previews
 
@@ -252,4 +273,5 @@ Minecraft-like sky and block light, AO, fog, clouds, section planes, volumetric 
 modules): `python3 tools/capital/districts/_town_views.py town_aerial,guild_hall --scale 0.5` draws stand-in
 blocks for flags, sails, dials, wheels and jets on a copy of the world (`--raw` renders without them, `--check`
 only checks the gimmicks' keep-free volumes, `--list` lists the cameras). Previews approximate vanilla lighting;
-the game (and the owner's shader) will differ.
+the game (and the owner's shader) will differ. Entities (paintings, item frames, armour stands) are not drawn, and
+blocks are flat colours (`colors.py`; a block missing there shows magenta).

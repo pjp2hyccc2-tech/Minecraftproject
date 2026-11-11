@@ -400,16 +400,18 @@ def interior(w):
         w.fill(X0 + 5, EAVE - 1, z, X1 - 1, EAVE - 1, z, B.log("dark_oak", "x"))
     for (x, z) in ((-38, -23), (-38, -16), (-32, -20)):
         deco.chandelier(w, x, EAVE - 1, z, drop=4)
-    # stair from the hall (NE corner) up to the north gallery
-    for i in range(7):
+    # stair from the hall (NE corner) up to the north gallery: eight steps, the last one level with the gallery
+    # floor (GY) at its edge (z = -27)
+    for i in range(GY):
         y = 1 + i
         z = -20 - i
         for x in (X1 - 2, X1 - 1):
             w.set(x, y, z, B.stairs("dark_oak", "north"))
-            w.fill(x, 1, z, x, y - 1, z, F("dark_oak_planks"))
-        w.set(X1 - 3, y + 1, z, B.fence("dark_oak"))
-    w.fill(X1 - 2, GY, -27, X1 - 1, GY, -27, gal)
-    w.fill(X1 - 2, GY + 1, -27, X1 - 1, GY + 1, -27, AIR)
+            if y > 1:
+                w.fill(x, 1, z, x, y - 1, z, F("dark_oak_planks"))
+        if i < GY - 1:
+            w.set(X1 - 3, y + 1, z, B.fence("dark_oak"))
+    w.fill(X1 - 2, GY + 1, -27, X1 - 1, GY + 3, -27, AIR)
     for z in range(-27, -20):
         w.fill(X1 - 2, GY, z, X1 - 1, GY + 3, z, AIR) if z > -27 else None
     # ---------------------------------------------------------------- the quest board + counter (Mina)
@@ -571,7 +573,7 @@ def infirmary(w):
     w.fill(x0, y, z0, x1, y, z1, F("birch_planks"))
     for x in (x0, x0 + 3, x0 + 6):
         if x <= x1:
-            K.bed(w, x, y, z0, facing="north", color="white")
+            K.bed(w, x, y, z0 + 1, facing="north", color="white")   # head at z0, against the north wall
             w.set(x + 1, y + 1, z0, B.S("barrel", facing="up")) if x + 1 <= x1 else None
     w.set(x1, y + 1, z1, B.S("brewing_stand", has_bottle_0=True, has_bottle_1=True))
     w.set(x1 - 1, y + 1, z1, B.S("water_cauldron", level=2))

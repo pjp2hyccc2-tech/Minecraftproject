@@ -453,11 +453,16 @@ def house(f, W, D, sp: HouseSpec, nb_left=True, nb_right=True):
         else:
             f.set((W - 1) // 2, ridge + 1, z_lo - 1, B.S("gilded_finial"), only_empty=True)
     if sp.interior:
-        _interior(f, W, D, sp, door_x, zt)
+        _interior(f, W, D, sp, door_x, zt, nb_left, nb_right)
     return dict(door=(door_x, 1, 0), eave=eave, ridge=ridge, z_front=zt)
 
 
-def _interior(f, W, D, sp, door_x, zt):
+def _interior(f, W, D, sp, door_x, zt, nb_left=True, nb_right=True):
+    """A lived-in house: a kitchen run along the back wall, a dining table on a rug, a cupboard and a plant by
+    the door, a painting and items on the walls; upstairs bedrooms (a double bed in wide houses) with nightstands,
+    a wardrobe, a desk under the front window, a rug and a painting; on a third floor a study with bookshelves.
+    The ladder corner, its landing and the door stay free."""
+    from . import _furnish as FU
     seed = sp.seed
     fh, nf = sp.fh, sp.floors
     u = lambda k: hash2(seed, k, 5531)  # noqa: E731
@@ -470,43 +475,99 @@ def _interior(f, W, D, sp, door_x, zt):
                 f.set(lx, y, D - 2, B.S("ladder", facing="north"))
     if W < 5 or D < 5:
         return
-    # ground floor: table with chairs, hearth/stove, barrels, rug, lantern
+    keep = {(lx, D - 2), (lx, D - 3), (door_x, 1)}             # ladder, its landing, inside the door
+    bx = W - 2 if lx == 1 else 1                                 # the side away from the ladder
+    toward_mid = -1 if bx == W - 2 else 1
+    side_in = "west" if bx == W - 2 else "east"                  # facing into the room from the bx side wall
+    wood = sp.timber if sp.timber in ("spruce", "dark_oak") else "spruce"
+
+    def free(x, y, z):
+        return (x, z) not in keep and 0 < x < W - 1 and f.is_empty(x, y, z)
+
+    # ------------------------------------------------------------------ ground floor
+    run = [bx + toward_mid * i for i in range(min(3, W - 3))]
+    run = [x for x in run if (x, D - 2) not in keep]
+    if run:
+        FU.kitchen(f, run[0], D - 2, run[-1], 0, "south", seed=seed)
+        for x in run:
+            if fh >= 4 and f.is_empty(x, 3, D - 2):
+                FU.item_on_wall(f, x, 3, D - 2, "north", ("minecraft:bread", "minecraft:apple", "minecraft:cookie",
+                                                           "minecraft:pumpkin_pie", "minecraft:honey_bottle")
+                                [int(u(40 + x) * 5)])
     tx = (W - 1) // 2 + (1 if door_x <= (W - 1) // 2 else -1)
     tz = max(2, D // 2)
-    if 0 < tx < W - 1 and tz < D - 2:
+    if 0 < tx < W - 1 and tz < D - 2 and (tx, tz) not in keep:
+        FU.rug(f, max(1, tx - 1), max(1, tz - 1), min(W - 2, tx + 1), min(D - 3, tz + 1), 0,
+               field=("red", "blue", "brown", "green", "cyan", "orange")[int(u(4) * 6)],
+               border=("yellow", "white", "black", "light_gray")[int(u(5) * 4)])
         f.set(tx, 1, tz, B.fence("spruce"))
         f.set(tx, 2, tz, B.S("spruce_pressure_plate") if u(1) < 0.5 else B.carpet("white"))
         for dx in (-1, 1):
-            if 0 < tx + dx < W - 1 and f.is_empty(tx + dx, 1, tz):
+            if free(tx + dx, 1, tz) or (0 < tx + dx < W - 1 and f.get(tx + dx, 1, tz).endswith("carpet")):
                 f.set(tx + dx, 1, tz, B.stairs("spruce", "east" if dx > 0 else "west"))
-    bx = W - 2 if lx == 1 else 1
-    for (zz, st) in ((1, (B.barrel("up"), B.S("crafting_table"), B.S("smoker", facing="south"),
-                          B.S("furnace", facing="south"))[int(u(2) * 4)]),
-                     (2, B.barrel("up") if u(3) < 0.5 else B.S("composter")),
-                     (D - 2, B.chest("north"))):
-        if 0 < zz < D - 1 and f.is_empty(bx, 1, zz):
-            f.set(bx, 1, zz, st)
-    if f.is_empty(door_x, 1, 1):
-        f.set(door_x, 1, 1, B.carpet(("red", "blue", "brown", "green", "cyan")[int(u(4) * 5)]))
-    f.set((W - 1) // 2, fh - 1, max(2, D // 2), B.lantern(hanging=True)) if         f.is_empty((W - 1) // 2, fh - 1, max(2, D // 2)) else None
+    if free(bx, 1, 1) and abs(bx - door_x) >= 1:
+        FU.cupboard(f, bx, 0, 1, "east" if bx == 1 else "west", height=2 if fh >= 4 else 1, seed=seed + 3)
+    elif free(bx, 1, 2):
+        FU.cupboard(f, bx, 0, 2, "east" if bx == 1 else "west", height=1, seed=seed + 3)
+    pot_x = door_x + (1 if door_x + 1 < W - 1 and free(door_x + 1, 1, 1) else -1)
+    if free(pot_x, 1, 1):
+        f.set(pot_x, 1, 1, B.potted(("fern", "azalea_bush", "flowering_azalea_bush", "red_tulip",
+                                     "cornflower")[int(u(7) * 5)]))
+    # a painting on a windowless side wall
+    for (xs, nb, facing) in ((1, nb_left, "east"), (W - 2, nb_right, "west")):
+        if nb and fh >= 4:
+            for z in range(2, D - 2):
+                if (xs, z) not in keep and FU.painting(f, xs, 2, z, facing, seed=seed + 11):
+                    break
+    if f.is_empty((W - 1) // 2, fh - 1, max(2, D // 2)):
+        f.set((W - 1) // 2, fh - 1, max(2, D // 2), B.lantern(hanging=True))
+    # ------------------------------------------------------------------ upper floors
     for k in range(1, nf):
         y0 = k * fh
-        if D >= 6:
-            color = ("red", "blue", "white", "light_blue", "green", "yellow")[int(u(10 + k) * 6)]
-            foot, head = B.bed_states(color, "south")
-            if f.is_empty(bx, y0 + 1, D - 3) and f.is_empty(bx, y0 + 1, D - 2):
-                f.set(bx, y0 + 1, D - 3, foot)
-                f.set(bx, y0 + 1, D - 2, head)
-            cx = bx + (1 if bx == 1 else -1)
-            if f.is_empty(cx, y0 + 1, D - 2) and cx != lx:
-                f.set(cx, y0 + 1, D - 2, B.chest("north"))
-        mx, mz = (W - 1) // 2, max(1, (D - 1) // 2)
-        if f.is_empty(mx, y0 + 1, mz):
-            f.set(mx, y0 + 1, mz, B.carpet(("blue", "red", "brown", "light_gray")[int(u(20 + k) * 4)]))
-        if f.is_empty(bx, y0 + 1, zt + 1):
-            f.set(bx, y0 + 1, zt + 1, (B.S("bookshelf"), B.barrel("up"), B.S("flower_pot"),
-                                       B.S("loom", facing="south"))[int(u(30 + k) * 4)])
-        f.set(mx, y0 + fh - 1, mz, B.lantern(hanging=True)) if f.is_empty(mx, y0 + fh - 1, mz) else None
+        top = k == nf - 1
+        color = ("red", "blue", "white", "light_blue", "green", "yellow", "orange", "purple")[int(u(10 + k) * 8)]
+        study = top and nf >= 3 and u(60 + k) < 0.6
+        if D >= 6 and not study:
+            double = W >= 7 and u(12 + k) < 0.7
+            bxx = bx if not double else bx + (toward_mid if bx + toward_mid != lx else 0)
+            if free(bxx, y0 + 1, D - 3) and free(bxx, y0 + 1, D - 2):
+                FU.bed_pair(f, bxx, y0, D - 3, "south", color, double=double and free(bxx - toward_mid,
+                                                                                      y0 + 1, D - 3))
+            for nx in (bxx + toward_mid * (2 if double else 1), bxx - toward_mid):
+                if free(nx, y0 + 1, D - 2) and 0 < nx < W - 1:
+                    FU.nightstand(f, nx, y0, D - 2, seed=seed + k)
+                    break
+        elif study:
+            for x in range(1, W - 1):
+                if free(x, y0 + 1, D - 2):
+                    for y in range(y0 + 1, y0 + fh):
+                        if f.is_empty(x, y, D - 2):
+                            f.set(x, y, D - 2, B.S("bookshelf") if (x + y) % 4 else
+                                  B.S("chiseled_bookshelf", facing="north", slot_0_occupied=True,
+                                      slot_2_occupied=True, slot_4_occupied=True))
+            if free(bx, y0 + 1, D - 3) and free(bx, y0 + 1, D - 4):
+                foot, head = B.bed_states(color, "south")
+                f.set(bx, y0 + 1, D - 4, foot)
+                f.set(bx, y0 + 1, D - 3, head)
+        # wardrobe at the front corner on the bed side, a desk under a front window
+        wz = zt + 1
+        if free(bx, y0 + 1, wz) and free(bx, y0 + 2, wz) and fh >= 4:
+            FU.wardrobe(f, bx, y0, wz, side_in, wood=wood)
+        mx = (W - 1) // 2
+        if free(mx, y0 + 1, zt + 1) and free(mx, y0 + 1, zt + 2) and mx != bx:
+            FU.desk(f, mx, y0, zt + 1, "north", wood=wood, seed=seed + 20 + k)
+        rz0, rz1 = zt + 3, D - 4
+        if rz1 - rz0 >= 1 and W >= 6:
+            FU.rug(f, 2, rz0, W - 3, rz1, y0, field=("blue", "red", "brown", "light_gray", "green")[int(u(20 + k)
+                                                                                                    * 5)],
+                   border=("white", "yellow", "black")[int(u(25 + k) * 3)])
+        for (xs, nb, facing) in ((1, nb_left, "east"), (W - 2, nb_right, "west")):
+            if nb and fh >= 4:
+                for z in range(zt + 2, D - 2):
+                    if (xs, z) not in keep and FU.painting(f, xs, y0 + 2, z, facing, seed=seed + 30 + k):
+                        break
+        if f.is_empty(mx, y0 + fh - 1, max(1, (D - 1) // 2)):
+            f.set(mx, y0 + fh - 1, max(1, (D - 1) // 2), B.lantern(hanging=True))
 
 
 # ====================================================================================== rows of houses

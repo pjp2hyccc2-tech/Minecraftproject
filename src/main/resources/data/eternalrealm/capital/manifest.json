@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "f12d0098f77c15ac",
+ "build": "df3005acd4456b04",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -100,17 +100,22 @@
   "minecraft:anvil[facing=north]",
   "minecraft:azalea_leaves[distance=1,persistent=true]",
   "minecraft:azure_bluet",
+  "minecraft:barrel[facing=east,open=false]",
   "minecraft:barrel[facing=east]",
+  "minecraft:barrel[facing=north,open=false]",
   "minecraft:barrel[facing=north]",
+  "minecraft:barrel[facing=south,open=false]",
   "minecraft:barrel[facing=south]",
   "minecraft:barrel[facing=up,open=false]",
   "minecraft:barrel[facing=up]",
+  "minecraft:barrel[facing=west,open=false]",
   "minecraft:barrel[facing=west]",
   "minecraft:bee_nest[facing=north,honey_level=5]",
   "minecraft:bee_nest[facing=south,honey_level=5]",
   "minecraft:beetroots[age=3]",
   "minecraft:bell[attachment=ceiling,facing=north]",
   "minecraft:bell[attachment=floor,facing=east]",
+  "minecraft:bell[attachment=floor,facing=south]",
   "minecraft:bell[attachment=floor,facing=west]",
   "minecraft:birch_door[facing=north,half=lower,hinge=left,open=false]",
   "minecraft:birch_door[facing=north,half=lower,hinge=right,open=false]",
@@ -128,8 +133,9 @@
   "minecraft:birch_trapdoor[facing=north,half=bottom,open=true]",
   "minecraft:birch_trapdoor[facing=south,half=bottom,open=true]",
   "minecraft:birch_wall_sign[facing=south]",
+  "minecraft:black_carpet",
   "minecraft:black_wall_banner[facing=north]",
-  "minecraft:blast_furnace[facing=north,lit=true]",
+  "minecraft:blast_furnace[facing=south,lit=true]",
   "minecraft:blue_banner[rotation=0]",
   "minecraft:blue_bed[facing=east,part=foot]",
   "minecraft:blue_bed[facing=east,part=head]",
@@ -149,19 +155,23 @@
   "minecraft:blue_wall_banner[facing=west]",
   "minecraft:blue_wool",
   "minecraft:bookshelf",
+  "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=false,has_bottle_2=true]",
   "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=true,has_bottle_2=true]",
   "minecraft:brewing_stand[has_bottle_0=true,has_bottle_1=true]",
   "minecraft:brewing_stand[has_bottle_0=true,has_bottle_2=true]",
   "minecraft:brewing_stand[has_bottle_0=true]",
-  "minecraft:brick_stairs[facing=south,half=top,shape=straight]",
+  "minecraft:brick_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:brick_stairs[facing=north,half=top,shape=straight]",
   "minecraft:bricks",
   "minecraft:brown_carpet",
   "minecraft:brown_wall_banner[facing=east]",
   "minecraft:brown_wall_banner[facing=north]",
   "minecraft:brown_wall_banner[facing=south]",
+  "minecraft:brown_wool",
   "minecraft:cake",
   "minecraft:cake[bites=3]",
   "minecraft:calcite",
+  "minecraft:campfire[facing=south,lit=true]",
   "minecraft:campfire[lit=true,signal_fire=false]",
   "minecraft:campfire[lit=true]",
   "minecraft:candle[candles=2,lit=true]",
@@ -175,10 +185,12 @@
   "minecraft:chest[facing=north,type=single]",
   "minecraft:chest[facing=south,type=single]",
   "minecraft:chest[facing=west,type=single]",
+  "minecraft:chipped_anvil[facing=north]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
@@ -186,6 +198,8 @@
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
@@ -196,6 +210,7 @@
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
@@ -203,9 +218,11 @@
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=east,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
@@ -230,6 +247,7 @@
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_1_occupied=true,slot_3_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=north,slot_0_occupied=true,slot_2_occupied=true,slot_4_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=false,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
@@ -243,6 +261,7 @@
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=false,slot_3_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=false,slot_4_occupied=true,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
@@ -252,6 +271,8 @@
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_1_occupied=true,slot_3_occupied=true,slot_5_occupied=false]",
+  "minecraft:chiseled_bookshelf[facing=south,slot_0_occupied=true,slot_2_occupied=true,slot_4_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=false,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=false,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=true]",
@@ -263,6 +284,7 @@
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=false,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=false]",
   "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_1_occupied=true,slot_2_occupied=true,slot_3_occupied=true,slot_4_occupied=true,slot_5_occupied=true]",
+  "minecraft:chiseled_bookshelf[facing=west,slot_0_occupied=true,slot_2_occupied=true,slot_4_occupied=true]",
   "minecraft:chiseled_bookshelf[facing=west]",
   "minecraft:chiseled_polished_blackstone",
   "minecraft:chiseled_quartz_block",
@@ -278,12 +300,10 @@
   "minecraft:cornflower",
   "minecraft:cracked_stone_bricks",
   "minecraft:crafting_table",
-  "minecraft:cyan_carpet",
   "minecraft:cyan_stained_glass_pane",
   "minecraft:cyan_wall_banner[facing=north]",
   "minecraft:cyan_wall_banner[facing=south]",
   "minecraft:cyan_wool",
-  "minecraft:damaged_anvil[facing=north]",
   "minecraft:dandelion",
   "minecraft:dark_oak_door[facing=east,half=lower,hinge=left,open=false]",
   "minecraft:dark_oak_door[facing=east,half=lower,hinge=right,open=false]",
@@ -325,6 +345,7 @@
   "minecraft:dark_oak_trapdoor[facing=east,half=bottom,open=true]",
   "minecraft:dark_oak_trapdoor[facing=north,half=bottom,open=true]",
   "minecraft:dark_oak_trapdoor[facing=south,half=bottom,open=true]",
+  "minecraft:dark_oak_trapdoor[facing=south,half=top,open=false]",
   "minecraft:dark_oak_trapdoor[facing=west,half=bottom,open=true]",
   "minecraft:dark_oak_wall_sign[facing=east]",
   "minecraft:dark_oak_wall_sign[facing=north]",
@@ -353,19 +374,18 @@
   "minecraft:fletching_table",
   "minecraft:flower_pot",
   "minecraft:flowering_azalea_leaves[distance=1,persistent=true]",
-  "minecraft:furnace[facing=east,lit=false]",
-  "minecraft:furnace[facing=north,lit=false]",
   "minecraft:furnace[facing=north,lit=true]",
-  "minecraft:furnace[facing=south,lit=false]",
   "minecraft:furnace[facing=south,lit=true]",
-  "minecraft:furnace[facing=west,lit=false]",
   "minecraft:glass",
   "minecraft:glass_pane",
   "minecraft:glowstone",
   "minecraft:grass",
   "minecraft:grass_block",
   "minecraft:gravel",
-  "minecraft:gray_wall_banner[facing=north]",
+  "minecraft:gray_bed[facing=north,part=foot]",
+  "minecraft:gray_bed[facing=north,part=head]",
+  "minecraft:gray_carpet",
+  "minecraft:gray_wall_banner[facing=south]",
   "minecraft:green_bed[facing=east,part=foot]",
   "minecraft:green_bed[facing=east,part=head]",
   "minecraft:green_bed[facing=north,part=foot]",
@@ -377,6 +397,7 @@
   "minecraft:green_carpet",
   "minecraft:green_wall_banner[facing=north]",
   "minecraft:green_wool",
+  "minecraft:grindstone[face=floor,facing=east]",
   "minecraft:grindstone[face=floor,facing=north]",
   "minecraft:grindstone[face=floor,facing=south]",
   "minecraft:hanging_roots",
@@ -406,8 +427,6 @@
   "minecraft:light_blue_bed[facing=north,part=head]",
   "minecraft:light_blue_bed[facing=south,part=foot]",
   "minecraft:light_blue_bed[facing=south,part=head]",
-  "minecraft:light_blue_bed[facing=west,part=foot]",
-  "minecraft:light_blue_bed[facing=west,part=head]",
   "minecraft:light_blue_candle[candles=2,lit=true]",
   "minecraft:light_blue_stained_glass",
   "minecraft:light_blue_stained_glass_pane",
@@ -420,11 +439,11 @@
   "minecraft:lilac[half=lower]",
   "minecraft:lilac[half=upper]",
   "minecraft:lily_of_the_valley",
+  "minecraft:lime_bed[facing=north,part=foot]",
+  "minecraft:lime_bed[facing=north,part=head]",
   "minecraft:lime_wall_banner[facing=north]",
   "minecraft:lime_wool",
-  "minecraft:loom[facing=east]",
   "minecraft:loom[facing=north]",
-  "minecraft:loom[facing=south]",
   "minecraft:magenta_stained_glass_pane",
   "minecraft:magenta_wall_banner[facing=north]",
   "minecraft:magenta_wool",
@@ -474,6 +493,15 @@
   "minecraft:oak_trapdoor[facing=south,half=bottom,open=true]",
   "minecraft:oak_wall_sign[facing=south]",
   "minecraft:ochre_froglight[axis=y]",
+  "minecraft:orange_bed[facing=east,part=foot]",
+  "minecraft:orange_bed[facing=east,part=head]",
+  "minecraft:orange_bed[facing=north,part=foot]",
+  "minecraft:orange_bed[facing=north,part=head]",
+  "minecraft:orange_bed[facing=south,part=foot]",
+  "minecraft:orange_bed[facing=south,part=head]",
+  "minecraft:orange_bed[facing=west,part=foot]",
+  "minecraft:orange_bed[facing=west,part=head]",
+  "minecraft:orange_carpet",
   "minecraft:orange_stained_glass",
   "minecraft:orange_stained_glass_pane",
   "minecraft:orange_wall_banner[facing=north]",
@@ -486,6 +514,7 @@
   "minecraft:pink_wall_banner[facing=north]",
   "minecraft:pink_wall_banner[facing=south]",
   "minecraft:pink_wool",
+  "minecraft:piston[facing=up]",
   "minecraft:polished_andesite",
   "minecraft:polished_andesite_stairs[facing=north,half=top,shape=straight]",
   "minecraft:polished_andesite_stairs[facing=south,half=top,shape=straight]",
@@ -496,15 +525,18 @@
   "minecraft:polished_blackstone_slab[type=top]",
   "minecraft:polished_blackstone_wall",
   "minecraft:polished_deepslate",
-  "minecraft:polished_deepslate_stairs[facing=north,half=bottom,shape=straight]",
+  "minecraft:polished_deepslate_stairs[facing=south,half=bottom,shape=straight]",
   "minecraft:polished_diorite",
   "minecraft:poppy",
   "minecraft:potatoes[age=7]",
   "minecraft:potted_allium",
   "minecraft:potted_azalea_bush",
   "minecraft:potted_azure_bluet",
+  "minecraft:potted_bamboo",
   "minecraft:potted_blue_orchid",
   "minecraft:potted_cornflower",
+  "minecraft:potted_fern",
+  "minecraft:potted_flowering_azalea_bush",
   "minecraft:potted_oxeye_daisy",
   "minecraft:potted_poppy",
   "minecraft:potted_red_tulip",
@@ -512,6 +544,14 @@
   "minecraft:prismarine",
   "minecraft:prismarine_bricks",
   "minecraft:pumpkin",
+  "minecraft:purple_bed[facing=east,part=foot]",
+  "minecraft:purple_bed[facing=east,part=head]",
+  "minecraft:purple_bed[facing=north,part=foot]",
+  "minecraft:purple_bed[facing=north,part=head]",
+  "minecraft:purple_bed[facing=south,part=foot]",
+  "minecraft:purple_bed[facing=south,part=head]",
+  "minecraft:purple_bed[facing=west,part=foot]",
+  "minecraft:purple_bed[facing=west,part=head]",
   "minecraft:purple_stained_glass",
   "minecraft:purple_stained_glass_pane",
   "minecraft:purple_wall_banner[facing=north]",
@@ -523,6 +563,8 @@
   "minecraft:quartz_stairs[facing=east,half=top,shape=straight]",
   "minecraft:quartz_stairs[facing=north,half=bottom,shape=straight]",
   "minecraft:quartz_stairs[facing=west,half=top,shape=straight]",
+  "minecraft:raw_copper_block",
+  "minecraft:raw_gold_block",
   "minecraft:raw_iron_block",
   "minecraft:red_bed[facing=east,part=foot]",
   "minecraft:red_bed[facing=east,part=head]",
@@ -530,6 +572,8 @@
   "minecraft:red_bed[facing=north,part=head]",
   "minecraft:red_bed[facing=south,part=foot]",
   "minecraft:red_bed[facing=south,part=head]",
+  "minecraft:red_candle[candles=1,lit=true]",
+  "minecraft:red_candle[candles=2,lit=true]",
   "minecraft:red_carpet",
   "minecraft:red_stained_glass",
   "minecraft:red_stained_glass_pane",
@@ -547,12 +591,11 @@
   "minecraft:sea_lantern",
   "minecraft:skeleton_wall_skull[facing=north]",
   "minecraft:smithing_table",
-  "minecraft:smoker[facing=east,lit=false]",
-  "minecraft:smoker[facing=north,lit=false]",
+  "minecraft:smoker[facing=east,lit=true]",
   "minecraft:smoker[facing=north,lit=true]",
-  "minecraft:smoker[facing=south,lit=false]",
   "minecraft:smoker[facing=south,lit=true]",
   "minecraft:smoker[facing=west,lit=false]",
+  "minecraft:smoker[facing=west,lit=true]",
   "minecraft:smooth_quartz",
   "minecraft:smooth_quartz_slab[type=bottom]",
   "minecraft:smooth_sandstone",
@@ -647,6 +690,7 @@
   "minecraft:white_bed[facing=north,part=head]",
   "minecraft:white_bed[facing=south,part=foot]",
   "minecraft:white_bed[facing=south,part=head]",
+  "minecraft:white_candle[candles=1,lit=true]",
   "minecraft:white_candle[candles=2,lit=true]",
   "minecraft:white_candle[candles=3,lit=true]",
   "minecraft:white_candle[candles=4,lit=true]",
@@ -667,6 +711,8 @@
   "minecraft:yellow_bed[facing=south,part=head]",
   "minecraft:yellow_bed[facing=west,part=foot]",
   "minecraft:yellow_bed[facing=west,part=head]",
+  "minecraft:yellow_candle[candles=1,lit=true]",
+  "minecraft:yellow_candle[candles=2,lit=true]",
   "minecraft:yellow_candle[candles=3,lit=true]",
   "minecraft:yellow_carpet",
   "minecraft:yellow_stained_glass",
@@ -1879,7 +1925,7 @@
    "pos": [
     -44,
     4,
-    24
+    39
    ],
    "nbt": "{Patterns:[{Pattern:\"cr\",Color:8},{Pattern:\"bo\",Color:8},{Pattern:\"mc\",Color:1}]}"
   },
@@ -1903,7 +1949,7 @@
    "pos": [
     -41,
     6,
-    24
+    39
    ],
    "nbt": "{front_text:{messages:['{\"text\":\"\"}','{\"text\":\"鍛冶屋\"}','{\"text\":\"Blacksmith\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},back_text:{messages:['{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}','{\"text\":\"\"}'],color:\"white\",has_glowing_text:1b},is_waxed:1b}"
   },
@@ -1919,7 +1965,7 @@
    "pos": [
     -38,
     4,
-    24
+    39
    ],
    "nbt": "{Patterns:[{Pattern:\"cr\",Color:8},{Pattern:\"bo\",Color:8},{Pattern:\"mc\",Color:1}]}"
   },
@@ -4262,6 +4308,36 @@
  ],
  "entities": [
   {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -148.5,
+    3.5,
+    121.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -148.5,
+    3.5,
+    122.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -148.5,
+    3.5,
+    123.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     -140.5,
@@ -4282,6 +4358,786 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:leather_boots\",Count:1b},{id:\"minecraft:leather_leggings\",Count:1b},{id:\"minecraft:leather_chestplate\",Count:1b},{id:\"minecraft:leather_helmet\",Count:1b}],HandItems:[{},{}]}"
   },
   {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -128.5,
+    3.5,
+    61.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -128.5,
+    3.5,
+    62.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -128.5,
+    3.5,
+    63.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -95.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -95.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -95.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -95.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -94.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -94.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -94.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -94.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -94.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -93.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -93.5,
+    2.5,
+    10.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -93.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -93.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -93.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -93.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -93.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -93.5,
+    6.5,
+    10.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -92.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -92.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -92.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -91.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -91.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -91.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -91.5,
+    6.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -91.5,
+    10.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    2.5,
+    10.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    2.5,
+    35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -90.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    6.5,
+    9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    6.5,
+    35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    6.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    10.5,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    10.5,
+    -8.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    10.5,
+    9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    10.5,
+    35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -90.5,
+    10.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -89.5,
+    3.5,
+    -26.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -89.5,
+    3.5,
+    -25.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -89.5,
+    3.5,
+    -24.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -89.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -89.5,
+    3.5,
+    18.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -89.5,
+    3.5,
+    19.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -89.5,
+    3.5,
+    20.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -88.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -88.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -88.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -88.5,
+    6.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    2.5,
+    -54.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    2.5,
+    10.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    2.5,
+    35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -87.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -87.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -87.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -87.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    6.5,
+    -54.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    6.5,
+    9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    6.5,
+    36.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    10.5,
+    -54.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    10.5,
+    -8.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    10.5,
+    9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -87.5,
+    10.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -86.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -86.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -86.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -86.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -86.5,
+    6.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     -86.5,
@@ -4322,6 +5178,216 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
   },
   {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -85.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -85.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -85.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -84.5,
+    2.5,
+    -54.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -84.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -84.5,
+    2.5,
+    10.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -84.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -84.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -84.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -84.5,
+    6.5,
+    -54.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -84.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -84.5,
+    6.5,
+    9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -84.5,
+    10.5,
+    -35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -83.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -83.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -83.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -83.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -83.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -83.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -83.5,
+    6.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -83.5,
+    10.5,
+    -8.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     -83.5,
@@ -4352,6 +5418,206 @@
    "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -82.5,
+    2.5,
+    10.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -82.5,
+    2.5,
+    35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -82.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -82.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -82.5,
+    6.5,
+    9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -82.5,
+    6.5,
+    36.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -81.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -81.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -81.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -81.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -81.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -81.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -81.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -81.5,
+    10.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -80.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -80.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -80.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -80.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -80.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -80.5,
+    10.5,
+    -8.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -80.5,
@@ -4370,6 +5636,226 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -79.5,
+    2.5,
+    10.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -79.5,
+    2.5,
+    35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -79.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -79.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -79.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -79.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -79.5,
+    6.5,
+    9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -79.5,
+    6.5,
+    36.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -79.5,
+    6.5,
+    65.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -79.5,
+    10.5,
+    9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -79.5,
+    10.5,
+    36.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -78.5,
+    2.5,
+    -54.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -78.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -78.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -78.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -78.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -78.5,
+    6.5,
+    -54.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -78.5,
+    6.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -77.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -77.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -77.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -77.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4392,6 +5878,206 @@
    "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -76.5,
+    2.5,
+    10.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -76.5,
+    2.5,
+    35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -76.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -76.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -76.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -76.5,
+    6.5,
+    9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -76.5,
+    6.5,
+    36.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -76.5,
+    6.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -76.5,
+    10.5,
+    9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -76.5,
+    10.5,
+    36.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -75.5,
+    2.5,
+    -54.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -75.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -75.5,
+    6.5,
+    -53.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -75.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -75.5,
+    10.5,
+    -8.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -74.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -74.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -74.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -74.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -74.5,
+    10.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -74.5,
@@ -4410,6 +6096,166 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -73.5,
+    2.5,
+    10.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -73.5,
+    2.5,
+    35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -73.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -73.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -73.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -73.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -73.5,
+    6.5,
+    10.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -73.5,
+    6.5,
+    36.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -72.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -72.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -72.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -72.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -72.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -72.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -72.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -72.5,
+    6.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -4422,6 +6268,146 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -71.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -71.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -71.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -71.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -71.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -71.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -71.5,
+    10.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -70.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -70.5,
+    2.5,
+    35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -70.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -70.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -70.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -70.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -70.5,
+    6.5,
+    36.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     -70.5,
@@ -4452,6 +6438,76 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_axe\",Count:1b},{}]}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -69.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -69.5,
+    3.5,
+    -75.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -69.5,
+    3.5,
+    -74.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -69.5,
+    3.5,
+    -73.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -69.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -69.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -69.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     -69.5,
@@ -4462,6 +6518,886 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -68.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -68.5,
+    2.5,
+    10.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -68.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -68.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -68.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -68.5,
+    6.5,
+    10.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -68.5,
+    10.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -67.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -67.5,
+    2.5,
+    35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -67.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -67.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -67.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -67.5,
+    6.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -67.5,
+    6.5,
+    35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -67.5,
+    10.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    -24.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    -23.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    -22.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    20.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    21.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    22.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -66.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    2.5,
+    10.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    2.5,
+    35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -65.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -65.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -65.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    6.5,
+    10.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    6.5,
+    35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    10.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -65.5,
+    10.5,
+    10.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -63.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -62.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -62.5,
+    2.5,
+    35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -62.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -62.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -62.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -62.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -62.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -62.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -62.5,
+    6.5,
+    36.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -62.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -61.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -61.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -61.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -61.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -61.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -61.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -61.5,
+    6.5,
+    65.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -61.5,
+    10.5,
+    65.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -60.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -60.5,
+    3.5,
+    14.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -60.5,
+    3.5,
+    31.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -60.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -58.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -58.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -58.5,
+    6.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -58.5,
+    10.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -57.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -57.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -57.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -57.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -57.5,
+    10.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -56.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -56.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -55.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -54.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -54.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -54.5,
+    10.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -52.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -52.5,
+    6.5,
+    65.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -52.5,
+    10.5,
+    65.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -51.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -51.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -51.5,
+    6.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -50.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -49.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -49.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -49.5,
+    6.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -49.5,
+    6.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -49.5,
+    10.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -48.5,
@@ -4469,27 +7405,7 @@
     28.5
    ],
    "yaw": 0.0,
-   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_helmet\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -48.5,
-    3.5,
-    30.5
-   ],
-   "yaw": 0.0,
-   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -48.5,
-    3.5,
-    32.5
-   ],
-   "yaw": 0.0,
-   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_axe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_helmet\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4499,27 +7415,47 @@
     34.5
    ],
    "yaw": 0.0,
-   "nbt": "{Facing:5b,Item:{id:\"minecraft:iron_pickaxe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+   "nbt": "{Facing:5b,Item:{id:\"minecraft:shield\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
    "pos": [
-    -48.5,
+    -47.5,
     3.5,
-    36.5
+    -59.5
    ],
-   "yaw": 0.0,
-   "nbt": "{Facing:5b,Item:{id:\"minecraft:shield\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
-   "type": "minecraft:armor_stand",
+   "type": "minecraft:painting",
    "pos": [
     -47.5,
-    1.0,
-    28.5
+    6.5,
+    -71.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:2b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -47.5,
+    6.5,
+    -68.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -47.5,
+    7.5,
+    16.5
    ],
    "yaw": -90.0,
-   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+   "nbt": "{variant:\"minecraft:creebet\",facing:3b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -4552,6 +7488,156 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:bow\",Count:1b},{}]}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -47.5,
+    10.5,
+    -71.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:2b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -47.5,
+    10.5,
+    -68.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -46.5,
+    2.5,
+    -71.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:2b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -46.5,
+    2.5,
+    -68.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -46.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -46.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -46.5,
+    3.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_shovel\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -46.5,
+    4.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_hoe\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -46.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -45.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -45.5,
+    3.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:shears\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -45.5,
+    3.5,
+    36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:1b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -45.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -45.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -45.5,
+    4.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:flint_and_steel\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -44.5,
@@ -4560,6 +7646,26 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -44.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -44.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4582,6 +7688,26 @@
    "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -43.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -43.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -43.5,
@@ -4590,6 +7716,36 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -43.5,
+    3.5,
+    36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:1b,Item:{id:\"minecraft:iron_axe\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -43.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -43.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4610,6 +7766,36 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:writable_book\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -43.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -43.5,
+    6.5,
+    65.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -43.5,
+    10.5,
+    65.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4682,6 +7868,86 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -40.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -40.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    3.5,
+    -77.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    3.5,
+    -76.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    3.5,
+    -75.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    3.5,
+    -68.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    3.5,
+    -67.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
+    3.5,
+    -66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -40.5,
@@ -4695,6 +7961,16 @@
    "type": "minecraft:item_frame",
    "pos": [
     -40.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -40.5,
     4.5,
     -27.5
    ],
@@ -4712,6 +7988,46 @@
    "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -40.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -40.5,
+    6.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -40.5,
+    10.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -39.5,
+    2.5,
+    -54.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -39.5,
@@ -4725,6 +8041,16 @@
    "type": "minecraft:item_frame",
    "pos": [
     -39.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -39.5,
     4.5,
     -27.5
    ],
@@ -4742,6 +8068,16 @@
    "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -39.5,
+    6.5,
+    -53.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -38.5,
@@ -4750,6 +8086,16 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:paper\",Count:1b},ItemRotation:7b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -38.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4774,12 +8120,102 @@
   {
    "type": "minecraft:item_frame",
    "pos": [
+    -37.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -36.5,
+    2.5,
+    -54.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -36.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -36.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -36.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -36.5,
+    6.5,
+    -53.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -36.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -36.5,
+    10.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
     -36.5,
     11.5,
     -36.5
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:diamond_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -35.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -4792,14 +8228,74 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
   },
   {
-   "type": "minecraft:armor_stand",
+   "type": "minecraft:item_frame",
+   "pos": [
+    -34.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -34.5,
+    3.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_pickaxe\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -34.5,
+    4.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_axe\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
    "pos": [
     -33.5,
-    1.0,
-    28.5
+    2.5,
+    51.5
    ],
-   "yaw": 90.0,
-   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_axe\",Count:1b},{}]}"
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -33.5,
+    3.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_shovel\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -33.5,
+    4.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_hoe\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -33.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4812,6 +8308,36 @@
    "nbt": "{Facing:3b,Item:{id:\"minecraft:map\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -32.5,
+    1.0,
+    30.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -32.5,
+    1.0,
+    33.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_axe\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    -32.5,
+    1.0,
+    36.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:golden_boots\",Count:1b},{id:\"minecraft:golden_leggings\",Count:1b},{id:\"minecraft:golden_chestplate\",Count:1b},{id:\"minecraft:golden_helmet\",Count:1b}],HandItems:[{id:\"minecraft:golden_sword\",Count:1b},{}]}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -32.5,
@@ -4819,27 +8345,7 @@
     28.5
    ],
    "yaw": 0.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_helmet\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -32.5,
-    3.5,
-    30.5
-   ],
-   "yaw": 0.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
-  },
-  {
-   "type": "minecraft:item_frame",
-   "pos": [
-    -32.5,
-    3.5,
-    32.5
-   ],
-   "yaw": 0.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_axe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_helmet\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4849,17 +8355,27 @@
     34.5
    ],
    "yaw": 0.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:iron_pickaxe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:shield\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
    "pos": [
-    -32.5,
+    -30.5,
     3.5,
-    36.5
+    57.5
    ],
    "yaw": 0.0,
-   "nbt": "{Facing:4b,Item:{id:\"minecraft:shield\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -30.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4870,6 +8386,86 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:netherite_axe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -29.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -29.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -28.5,
+    2.5,
+    -54.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -28.5,
+    2.5,
+    18.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:pool\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -28.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -28.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -28.5,
+    6.5,
+    -53.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -28.5,
+    7.5,
+    13.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -4892,6 +8488,26 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -25.5,
+    2.5,
+    -54.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -25.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     -25.5,
@@ -4900,6 +8516,56 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:potion\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -25.5,
+    6.5,
+    -53.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -25.5,
+    10.5,
+    -53.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -24.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    -23.5,
+    3.5,
+    -59.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -22.5,
+    7.5,
+    37.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:2b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -4930,6 +8596,16 @@
    ],
    "yaw": 0.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -16.5,
+    7.5,
+    26.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:0b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -4982,6 +8658,56 @@
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:iron_boots\",Count:1b},{id:\"minecraft:iron_leggings\",Count:1b},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    -8.5,
+    2.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:sea\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -8.5,
+    2.5,
+    59.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -8.5,
+    2.5,
+    62.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -8.5,
+    9.5,
+    57.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    -8.5,
+    9.5,
+    62.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     -3.5,
@@ -5030,6 +8756,46 @@
    ],
    "yaw": 0.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:golden_boots\",Count:1b},{id:\"minecraft:golden_leggings\",Count:1b},{id:\"minecraft:golden_chestplate\",Count:1b},{id:\"minecraft:golden_helmet\",Count:1b}],HandItems:[{id:\"minecraft:golden_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    10.5,
+    2.5,
+    53.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:2b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    10.5,
+    2.5,
+    56.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    10.5,
+    6.5,
+    53.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:2b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    10.5,
+    6.5,
+    56.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:0b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -5090,6 +8856,76 @@
    ],
    "yaw": -90.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:netherite_boots\",Count:1b},{id:\"minecraft:netherite_leggings\",Count:1b},{id:\"minecraft:netherite_chestplate\",Count:1b},{id:\"minecraft:netherite_helmet\",Count:1b}],HandItems:[{id:\"minecraft:netherite_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    13.5,
+    2.5,
+    -36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    16.5,
+    3.5,
+    49.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    16.5,
+    3.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    16.5,
+    3.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    16.5,
+    3.5,
+    56.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    16.5,
+    3.5,
+    57.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    16.5,
+    3.5,
+    58.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:armor_stand",
@@ -5172,6 +9008,16 @@
    "nbt": "{Facing:3b,Item:{id:\"minecraft:totem_of_undying\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    28.5,
+    2.5,
+    -36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:0b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:armor_stand",
    "pos": [
     29.5,
@@ -5200,6 +9046,46 @@
    ],
    "yaw": 90.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:diamond_boots\",Count:1b},{id:\"minecraft:diamond_leggings\",Count:1b},{id:\"minecraft:diamond_chestplate\",Count:1b},{id:\"minecraft:diamond_helmet\",Count:1b}],HandItems:[{id:\"minecraft:netherite_sword\",Count:1b},{id:\"minecraft:shield\",Count:1b,tag:{BlockEntityTag:{Base:11,Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}}}]}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    29.5,
+    2.5,
+    -18.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:creebet\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    29.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    29.5,
+    8.5,
+    50.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    29.5,
+    13.5,
+    50.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:0b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -5262,6 +9148,26 @@
    "nbt": "{Facing:2b,Item:{id:\"minecraft:clock\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    34.5,
+    8.5,
+    50.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    34.5,
+    13.5,
+    50.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:0b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     35.5,
@@ -5270,6 +9176,26 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:iron_pickaxe\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    35.5,
+    6.0,
+    -28.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:leather_boots\",Count:1b,tag:{display:{color:9132587}}},{id:\"minecraft:leather_leggings\",Count:1b,tag:{display:{color:9132587}}},{id:\"minecraft:leather_chestplate\",Count:1b,tag:{display:{color:9132587}}},{id:\"minecraft:leather_helmet\",Count:1b,tag:{display:{color:9132587}}}],HandItems:[{id:\"minecraft:wooden_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    36.5,
+    2.5,
+    -19.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:0b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -5382,6 +9308,16 @@
    "nbt": "{Facing:2b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    43.5,
+    2.5,
+    50.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:sea\",facing:0b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     43.5,
@@ -5410,6 +9346,36 @@
    ],
    "yaw": 180.0,
    "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:golden_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    44.5,
+    7.5,
+    -36.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    44.5,
+    8.5,
+    50.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    44.5,
+    13.5,
+    50.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:0b,Invulnerable:1b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -5442,6 +9408,16 @@
    "nbt": "{Facing:2b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
+   "type": "minecraft:painting",
+   "pos": [
+    46.5,
+    2.5,
+    50.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:sea\",facing:0b,Invulnerable:1b}"
+  },
+  {
    "type": "minecraft:item_frame",
    "pos": [
     47.5,
@@ -5460,6 +9436,1186 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:3b,Item:{id:\"minecraft:spyglass\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    54.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    55.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    56.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    57.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    58.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    58.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    58.5,
+    6.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    58.5,
+    10.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    59.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    59.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    59.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    61.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    61.5,
+    6.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    62.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    62.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    62.5,
+    6.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    62.5,
+    10.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    63.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    63.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    63.5,
+    6.5,
+    -9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    64.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    64.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    65.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    65.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    66.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    66.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    66.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    66.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    66.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    66.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    66.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    66.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    66.5,
+    6.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    66.5,
+    10.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    66.5,
+    10.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    67.5,
+    3.5,
+    -24.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    67.5,
+    3.5,
+    -23.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    67.5,
+    3.5,
+    -22.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    67.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    67.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    68.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    68.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    69.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    69.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    69.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    69.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    69.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    69.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    69.5,
+    10.5,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    70.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    70.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    71.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    71.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    71.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    72.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    72.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    72.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    72.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    72.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    72.5,
+    10.5,
+    -35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    74.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    74.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    75.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    75.5,
+    2.5,
+    -9.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    75.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    75.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    75.5,
+    6.5,
+    -8.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    76.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    77.5,
+    3.5,
+    -13.5
+   ],
+   "yaw": 180.0,
+   "nbt": "{Facing:3b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    78.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    78.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    79.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    79.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    80.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    80.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    80.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    80.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    80.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    80.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    80.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    81.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    82.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    82.5,
+    6.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    83.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    83.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    83.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    83.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    83.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    83.5,
+    6.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    83.5,
+    10.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:aztec\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    83.5,
+    10.5,
+    50.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    84.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    84.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    85.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    85.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    85.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    85.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    85.5,
+    6.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    86.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:aztec2\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    86.5,
+    2.5,
+    51.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    86.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    86.5,
+    6.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    86.5,
+    6.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    86.5,
+    10.5,
+    -34.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    86.5,
+    10.5,
+    50.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    87.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    88.5,
+    2.5,
+    66.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    88.5,
+    6.5,
+    65.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{variant:\"minecraft:bomb\",facing:1b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    89.5,
+    2.5,
+    -34.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    89.5,
+    2.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    89.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    89.5,
+    6.5,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:alban\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    89.5,
+    6.5,
+    51.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    89.5,
+    10.5,
+    -35.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    90.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    90.5,
+    3.5,
+    37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    91.5,
+    2.5,
+    66.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:wasteland\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    91.5,
+    3.5,
+    -30.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   },
   {
    "type": "minecraft:item_frame",
@@ -5504,6 +10660,106 @@
   {
    "type": "minecraft:item_frame",
    "pos": [
+    91.5,
+    3.5,
+    37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    91.5,
+    6.5,
+    65.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{variant:\"minecraft:plant\",facing:3b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    92.5,
+    3.5,
+    37.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    93.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    93.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    94.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:bread\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    94.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    95.5,
+    3.5,
+    57.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    95.5,
+    3.5,
+    71.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{Facing:2b,Item:{id:\"minecraft:cookie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:painting",
+   "pos": [
+    98.5,
+    2.5,
+    9.5
+   ],
+   "yaw": 0.0,
+   "nbt": "{variant:\"minecraft:kebab\",facing:0b,Invulnerable:1b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
     98.5,
     3.5,
     18.5
@@ -5530,6 +10786,46 @@
    ],
    "yaw": 0.0,
    "nbt": "{Facing:2b,Item:{id:\"minecraft:iron_sword\",Count:1b},ItemRotation:1b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:armor_stand",
+   "pos": [
+    99.5,
+    6.0,
+    12.5
+   ],
+   "yaw": 90.0,
+   "nbt": "{ShowArms:1b,NoBasePlate:1b,Invulnerable:1b,DisabledSlots:4144959,ArmorItems:[{id:\"minecraft:chainmail_boots\",Count:1b},{id:\"minecraft:chainmail_leggings\",Count:1b},{id:\"minecraft:chainmail_chestplate\",Count:1b},{id:\"minecraft:chainmail_helmet\",Count:1b}],HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}]}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    153.5,
+    3.5,
+    -28.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:honey_bottle\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    153.5,
+    3.5,
+    -27.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:pumpkin_pie\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
+  },
+  {
+   "type": "minecraft:item_frame",
+   "pos": [
+    153.5,
+    3.5,
+    -26.5
+   ],
+   "yaw": -90.0,
+   "nbt": "{Facing:4b,Item:{id:\"minecraft:apple\",Count:1b},ItemRotation:0b,Fixed:1b,Invulnerable:1b,Invisible:0b}"
   }
  ],
  "fluidTicks": [
@@ -6592,9 +11888,9 @@
    "pos": [
     -41,
     1,
-    32
+    29
    ],
-   "yaw": 180.0
+   "yaw": 0.0
   },
   "npc.gatekeeper": {
    "pos": [

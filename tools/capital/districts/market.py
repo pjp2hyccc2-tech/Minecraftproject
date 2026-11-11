@@ -3,8 +3,9 @@
 - Market square (SE quadrant x 6..51, z 6..39): rows of stalls with striped awnings (fruit, vegetables, flowers,
   cloth, fish, pottery, bread, potions, arms, books) along three aisles, a market cross with a fountain basin,
   pennant masts with market flags, crates, carts and benches.
-- Covered market hall (x 62..84, z 10..30): open stone arcade on the ground floor full of counters, a timber-
-  framed upper hall, a big terracotta roof with a cupola carrying a market flag.
+- Covered market hall (x 62..84, z 10..30): open stone arcade on the ground floor full of counters, a stair along
+  the east wall (x 83) up to the timber-framed upper hall (the merchants' guild room), a big terracotta roof with
+  a cupola carrying a market flag.
 - More stalls along the east avenue and a storehouse yard behind (x 88..101, z 21..39).
 """
 from __future__ import annotations
@@ -186,10 +187,16 @@ def market_hall(w):
                 g = TK.GOODS[GOODS_CYCLE[(i * 2 + (z > 20)) % len(GOODS_CYCLE)]]
                 w.set(x + dx, 2, z, TK._goods_state(g[int(hash2(x + dx, z, 7) * len(g))], fac))
         deco.hanging_lantern(w, x + 1, gy, (z0 + z1) // 2, drop=1)
-    # stair to the upper hall (merchants' guild room): long table and benches
-    for i in range(6):
-        w.set(x1 - 2, 1 + i, z0 + 2 + i, B.stairs("spruce", "south"))
-    w.fill(x1 - 2, gy, z0 + 2, x1 - 2, gy, z0 + 8, AIR)
+    # stair to the upper hall (merchants' guild room) along the east wall, clear of the inner piers (x = 82) and
+    # the counters: seven steps rising south, the last one level with the upper floor; a railing round the opening
+    from . import _furnish as FU
+    sx, sz = x1 - 1, z0 + 2
+    FU.stair_up(w, sx, sz, 0, gy, "south", wood="spruce")
+    for z in range(sz + gy - 4, sz + gy - 1):                  # the opening cut in the upper floor
+        w.set(sx - 1, gy + 1, z, B.fence("spruce"))
+    w.set(sx - 1, gy + 1, sz + gy - 5, B.fence("spruce"))
+    w.set(sx, gy + 1, sz + gy - 5, B.fence("spruce"))
+    # the merchants' guild room: long table and benches
     deco.long_table(w, ccx - 6, gy, ccz, 12, axis="x", top="spruce", cloth="green", chairs=True)
     for x in (ccx - 4, ccx + 4):
         deco.chandelier(w, x, top, ccz, drop=2)

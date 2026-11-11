@@ -101,6 +101,7 @@ SCHEMAS: dict[str, dict[str, tuple]] = {
     "fountain_spray": {"power": ("1", "2", "3"), "facing": ("up", "north", "south", "west", "east")},
     "scaffolding": {"bottom": BOOL, "distance": _rng(0, 7), "waterlogged": BOOL},
     "hopper": {"enabled": BOOL, "facing": ("down", "north", "south", "west", "east")},
+    "piston": {"facing": F6, "extended": BOOL},
 }
 
 # Defaults written into the canonical string when absent (only where the game default is not what we want,
@@ -317,6 +318,7 @@ _reg("pink_petals", "pink_petals")
 _reg(["amethyst_cluster", "large_amethyst_bud", "medium_amethyst_bud", "small_amethyst_bud"], "amethyst")
 _reg("lightning_rod", "lightning_rod")
 _reg(["end_rod"], "facing6")
+_reg(["piston", "sticky_piston"], "piston")
 _reg(["anvil", "chipped_anvil", "damaged_anvil", "stonecutter", "loom", "carved_pumpkin", "jack_o_lantern"],
      "facing4")
 _reg(["barrel"], "barrel")

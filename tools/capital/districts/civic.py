@@ -155,6 +155,11 @@ def hall_of_fame(w):
         w.set(x, 1, z, B.candle(3, "yellow")) if w.is_empty(x, 1, z) else None
     for (x, z) in ((15, -31), (27, -31)):
         deco.chandelier(w, x, 9, z, drop=3)
+    from . import _furnish as FU
+    FU.dress(w, 12, -37, 30, -26, 0, 9, seed=11, rug_colors=None, paintings=2, beams_on=False)
+    for (x, z) in ((14, -27), (28, -27), (14, -36), (28, -36)):
+        if w.is_empty(x, 1, z):
+            w.set(x, 1, z, B.potted("flowering_azalea_bush"))
 
 
 def CARVED_OR_SM():
@@ -202,6 +207,16 @@ def auction_house(w):
     for (x, z) in ((35, -14), (42, -14)):
         deco.chandelier(w, x, 9, z, drop=3)
     deco.kingdom_wall_banner(w, 49, 7, -14, facing="west", color="red", nbt=AUCTION_BANNER)
+    # red curtains behind the rostrum, lots on pedestals by the dais, plants and paintings
+    for z in range(-19, -8):
+        for y in range(3, 7):
+            if w.is_empty(49, y, z) and z not in (-14,):
+                w.set(49, y, z, B.wool("red"))
+    for (x, z, item) in ((44, -19, "minecraft:diamond_sword"), (44, -9, "minecraft:enchanted_golden_apple")):
+        if w.is_empty(x, 1, z):
+            w.set(x, 1, z, B.S("smooth_quartz"))
+    from . import _furnish as FU
+    FU.dress(w, 29, -20, 44, -8, 0, 9, seed=12, rug_colors=None, paintings=3, beams_on=False)
 
 
 # ============================================================================== job hall
@@ -224,9 +239,10 @@ def job_hall(w):
     w.set(40, 3, -31, B.lectern("north", True))
     w.be(40, 3, -31, B.lectern_nbt("職業登録簿", "Hagen", ["Miners, smiths, fishers, cooks, alchemists."]))
     # profession corners: smithing, alchemy, fishing, cooking, carpentry, mining
+    # (the hall's free cells are x 34..49, z -37..-26: x = 50 is the east wall)
     stations = [(34, -37, B.S("smithing_table")), (35, -37, B.S("anvil", facing="east")),
-                (50, -37, B.S("brewing_stand", has_bottle_0=True)), (49, -37, B.S("cauldron")),
-                (34, -27, B.S("barrel", facing="up")), (50, -27, B.S("smoker", facing="west")),
+                (48, -37, B.S("brewing_stand", has_bottle_0=True)), (49, -37, B.S("cauldron")),
+                (34, -27, B.S("barrel", facing="up")), (48, -27, B.S("smoker", facing="west")),
                 (49, -27, B.S("crafting_table")), (35, -27, B.S("fletching_table")),
                 (44, -28, B.S("loom", facing="north")), (39, -28, B.S("stonecutter", facing="north")),
                 (46, -37, B.S("cartography_table")), (38, -37, B.S("grindstone", face="floor", facing="north"))]
@@ -242,6 +258,29 @@ def job_hall(w):
     for z in range(-38, -25, 3):
         w.fill(34, 4, z, 50, 4, z, B.log("spruce", "x")) if False else None
     deco.kingdom_wall_banner(w, 42, 4, -37, facing="south", color="brown", nbt=JOB_BANNER)
+    job_hall_rooms(w)
+
+
+def job_hall_rooms(w):
+    """A stair behind the counter up to the masters' rooms (floor y = 5): a reading room with bookshelves and a
+    long table, Hagen's desk, a training dummy; both floors dressed."""
+    from . import _furnish as FU
+    # the stair rises east along the back wall (z = -26) from x = 37 to the floor at y = 5
+    FU.stair_up(w, 37, -26, 0, 5, "east", wood="spruce")
+    y = 5
+    for x in range(34, 50):
+        for yy in (y + 1, y + 2, y + 3):
+            if w.is_empty(x, yy, -37) and x % 4:
+                w.set(x, yy, -37, B.S("bookshelf"))
+    deco.long_table(w, 40, y, -34, 7, axis="x", top="spruce", cloth="green", chair_wood="spruce")
+    FU.desk(w, 47, y, -29, "east", wood="spruce", seed=3)
+    deco.armor_stand(w, 35, y, -29, yaw=-90.0, armor="leather", weapon="minecraft:wooden_sword", color=0x8B5A2B)
+    FU.crates(w, 47, y, -33, n=3, seed=4)
+    FU.dress(w, 34, -37, 49, -27, y, 10, seed=5, rug_colors=("brown", "yellow"), paintings=2,
+             keep={(42, -26), (43, -26), (42, -27)})
+    deco.hanging_lantern(w, 42, 10, -31, drop=1)
+    FU.dress(w, 34, -36, 49, -32, 0, 5, seed=6, rug_colors=("green", "yellow"), paintings=1, beams_on=False,
+             plants=True)
 
 
 def grounds(w):

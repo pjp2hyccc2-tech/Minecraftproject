@@ -351,6 +351,26 @@ def gant_office(w):
     w.set(92, 1, 18, B.S("barrel", facing="up"))
     deco.hanging_lantern(w, 95, 5, 11, drop=1)
     w.set(99, 1, 9, B.S("skeleton_skull", rotation=12)) if False else None
+    from . import _furnish as FU
+    # stair along the back wall (z = 18) rising west to the archive and the wardens' bunks (floor y = 5)
+    FU.stair_up(w, 98, 18, 0, 5, "west", wood="spruce")
+    y = 5
+    for x in range(91, 100):
+        for yy in (y + 1, y + 2):
+            if w.is_empty(x, yy, 9) and x % 3:
+                w.set(x, yy, 9, B.S("chiseled_bookshelf", facing="south", slot_0_occupied=True,
+                                    slot_1_occupied=x % 2 == 0, slot_3_occupied=True, slot_5_occupied=x % 2 == 1))
+    FU.bed_pair(w, 91, y, 16, "north", "gray")
+    if w.is_empty(92, y + 1, 15):
+        FU.nightstand(w, 92, y, 15)
+    FU.desk(w, 96, y, 11, "north", wood="spruce", seed=21)
+    deco.armor_stand(w, 99, y, 12, yaw=90.0, armor="chainmail", weapon="minecraft:iron_sword")
+    for z in (11, 13):
+        FU.item_on_wall(w, 99, y + 3, z, "west", "minecraft:map")
+    FU.dress(w, 91, 10, 99, 17, y, 10, seed=22, rug_colors=("gray", "black"), paintings=1,
+             keep={(92, 18), (93, 18), (92, 17)})
+    deco.hanging_lantern(w, 95, 10, 14, drop=1)
+    FU.dress(w, 91, 9, 99, 13, 0, 5, seed=23, rug_colors=None, paintings=1, beams_on=False)
 
 
 # ============================================================================== postern to the harbour
