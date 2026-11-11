@@ -8,9 +8,9 @@
 
 | 場所 | 内容 |
 |---|---|
-| `estate`（純粋） | `EstateKey`、`EstatePlot` / `EstatePlots`（区画と割り当て）、`EstateRecord` / `EstateRegistry`（誰がどの区画）、`EstateData` / `EstateRepository`、`EstateStatus`、`EstateResult`、客室の `RoomDesign`（5室と値段）/ `RoomRules`（借りる・移る・引き払う）、`StorageLabel`（収納の札）/ `DepositPlanner`（しまい方）/ `Ledger`（台帳の集計と検索）、`RecallRules`（帰還の判定） |
+| `estate`（純粋） | `EstateKey`、`EstatePlot` / `EstatePlots`（区画と割り当て）、`EstateRecord` / `EstateRegistry`（誰がどの区画）、`EstateData` / `EstateRepository`、`EstateStatus`、`EstateResult`、客室の `RoomDesign`（5室と値段）/ `RoomRules`（借りる・移る・引き払う）、`StorageLabel`（収納の札）/ `DepositPlanner`（しまい方）/ `Ledger`（台帳の集計と検索）、`RecallRules`（帰還の判定）、`Showcase`（テスト用の見学用の屋敷のキー） |
 | `persistence.file` | `EstateCodec`（`estates.json` schema 1）、`FileEstateRepository` |
-| `estate.forge` | `EstateService`（API と次元の見張り）、`EstateManager`（建築・移転・解体の作業）、`EstateProtection`、`EstateContents`（保管物の移動）、`EstateWorldState`（建っている物と預かり品）、`EstateLevels`、`EstateBlueprints`、`RoomDoorBlock` / `RoomDoors`、`EstateCommands`、宿屋の `InnService`（女将・扉のメニュー）、`LedgerService`（仕分け机）、`RecallService`（帰還）、`StorageChestBlock`（札付き収納箱）/ `SortingDeskBlock`、`EstateItems`（物の種類） |
+| `estate.forge` | `EstateService`（API と次元の見張り）、`EstateManager`（建築・移転・解体の作業）、`EstateProtection`、`EstateContents`（保管物の移動）、`EstateWorldState`（建っている物と預かり品）、`EstateLevels`、`EstateBlueprints`、`RoomDoorBlock` / `RoomDoors`、`EstateCommands`、宿屋の `InnService`（女将・扉のメニュー）、`LedgerService`（仕分け机）、`RecallService`（帰還）、`Showcases`（見学パスと見学用の屋敷、[testkit.md](testkit.md)）、`StorageChestBlock`（札付き収納箱）/ `SortingDeskBlock`、`EstateItems`（物の種類） |
 | `ui.estate` / `client.estate` | `InnScreen`（女将）、`LedgerScreen`（収納台帳）、`RoomExitScreen`（扉のメニュー）、`RecallOverlay`（帰還の詠唱バー）、`EstateClient` / `EstateInput`（帰還キー Home） |
 | `world.forge.blueprint` | `Blueprint` / `BlueprintPlacer`: 王都と屋敷で共通のブループリント読み込みと段階的な設置（`CapitalBlueprint` / `CapitalBuilder` もこれを使う） |
 | `tools/estates/` | 間取りの Python（王都のキット `tools/capital` を使う）: `kit.py`（保管家具・扉・スポット）、`rooms.py`（屋根裏部屋と共通部品）、`suites.py`（運河・書斎・星見の塔・スイート）、`blocks_ext.py`（収納箱・仕分け机をキットに登録）、`build.py`（`--thumbnails` で女将の画面の部屋の絵）、`check.py`、`views.py`（プレビュー） |
@@ -75,7 +75,8 @@ EstateService.keepsafe(owner);  EstateService.claimKeepsafe(player, owner);   //
 - **結果**（`EstateResult`）: `OK`, `ALREADY_CLAIMED`, `NOT_CLAIMED`, `UNKNOWN_DESIGN`, `NO_PLOT`, `BUILDING`, `NOT_ALLOWED`,
   `UNAVAILABLE`（次元がない・データが読めない）, `SAME_DESIGN`, `NOT_EMPTY`, `BUSY`（模様替え中）。`messageKey()` が表示文。
 - **アクセス**: 持ち主（プレイヤーの UUID が持ち主）と、クリエイティブモードの管理者（権限2）は常に入れる。ほかは種類ごとの
-  `EstateAccess`。規則は軽く（中にいる人ごとに0.5秒ごとに呼ばれる）。
+  `EstateAccess`。規則は軽く（中にいる人ごとに0.5秒ごとに呼ばれる）。テスト用の **見学用の屋敷**（`Showcase`: 間取りごとに1つ、
+  持ち主は種類と間取りから決まる固定の id）には、見学パスを持つ人だけが入れる（[testkit.md](testkit.md)）。
 - **建築**: 1 tick 6 ms まで、1件ずつ（キュー）。区画のチャンクはチケットで読み込み、**エンティティの読み込みを待ってから** 作業する
   （防具立てや額縁の見落としを防ぐ）。設置は `BlueprintPlacer`（王都と同じ: タイル → 階段や柵の形 → ブロック実体のデータ →
   エンティティ → 液体）。終わると世界側の記録（`EstateWorldState`: 区画・間取り・ハッシュ・範囲・入口）に書く。
@@ -159,6 +160,9 @@ EstateService.keepsafe(owner);  EstateService.claimKeepsafe(player, owner);   //
 ## 10. 管理者コマンド
 
 `/eternalrealm estate status | info <player> | visit <player> | leave | release <player>`（権限2）。
+
+テスト用: `/er admin test unlock [<player>]` で客室5室とギルドハウス20軒をすべて見学できるようにする（見学パスと見学用の屋敷）。
+女将の画面に「見学」が出る。`/er admin test tour room <間取り>`・`lock`・`status` も（[testkit.md](testkit.md)）。
 
 ## 11. テスト
 

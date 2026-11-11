@@ -3,8 +3,12 @@ package com.eternalrealm.guild.house.forge;
 import com.eternalrealm.estate.EstateKey;
 import com.eternalrealm.estate.EstateResult;
 import com.eternalrealm.estate.EstateStatus;
+import com.eternalrealm.estate.Showcase;
 import com.eternalrealm.estate.forge.EstateContents;
 import com.eternalrealm.estate.forge.EstateService;
+import com.eternalrealm.estate.forge.Showcases;
+import com.eternalrealm.guild.house.GuildHouseCatalog;
+import com.eternalrealm.guild.house.GuildHouseDesign;
 import com.eternalrealm.server.ServerContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,9 +29,15 @@ public final class EstateGuildEstates implements GuildEstates {
     private EstateGuildEstates() {
     }
 
-    /** Registers the member rule and the "house is ready" listener with the estates and installs the bridge. */
+    /**
+     * Registers the member rule, the "house is ready" listener and the designs testers may tour with the estates and
+     * installs the bridge.
+     */
     static void install() {
         EstateService.registerAccess(EstateKey.GUILD, EstateGuildEstates::mayEnter);
+        Showcases.register(EstateKey.GUILD, () -> GuildHouseCatalog.standard().designs().stream()
+                .map(GuildHouseDesign::id).toList(), id -> GuildHouseCatalog.standard().design(id)
+                .map(GuildHouseDesign::nameKey).orElse(id));
         EstateService.onReady((level, key) -> {
             if (EstateKey.GUILD.equals(key.kind())) {
                 GuildHouses.get().ifPresent(houses -> houses.onReady(key.owner()));
@@ -109,6 +119,40 @@ public final class EstateGuildEstates implements GuildEstates {
     @Override
     public Optional<UUID> houseAt(Level level, BlockPos pos) {
         return EstateService.at(level, pos).filter(key -> EstateKey.GUILD.equals(key.kind())).map(EstateKey::owner);
+    }
+
+    @Override
+    public boolean isShowcase(UUID owner) {
+        return Showcases.showcaseDesign(EstateKey.GUILD, owner).isPresent();
+    }
+
+    @Override
+    public boolean hasTourPass(ServerPlayer player) {
+        return Showcases.hasPass(player);
+    }
+
+    @Override
+    public boolean mayTour(ServerPlayer player) {
+        return Showcases.mayTour(player);
+    }
+
+    @Override
+    public int prepareShowcase(String design) {
+        EstateStatus status = Showcases.ensure(EstateKey.GUILD, design);
+        if (status.phase() == EstateStatus.Phase.NONE) {
+            return -1;
+        }
+        return status.enterable() ? 100 : Math.min(99, status.percent());
+    }
+
+    @Override
+    public Result enterShowcase(ServerPlayer player, String design) {
+        return of(EstateService.enter(player, Showcase.key(EstateKey.GUILD, design)));
+    }
+
+    @Override
+    public void welcomeShowcase(ServerPlayer player, String design) {
+        Showcases.welcome(player, EstateKey.GUILD, design);
     }
 
     @Override

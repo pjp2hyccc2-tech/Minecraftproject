@@ -40,8 +40,9 @@ import java.util.regex.Pattern;
  * The inn of the Starlight Manor (星灯りの館, docs/modules/estates.md): the innkeeper rents each player one room
  * ({@link RoomDesign}), moves them to another room with everything they stored (paying the difference, or getting half
  * of it back for a smaller one), takes a room back when it is empty (half its price back) and hands out what waits in
- * the keepsafe. Inside a room its door opens a little menu: back to where one came from, or to the capital. All
- * requests are checked here; the screens only show the documents ({@value #CHANNEL}, {@value #EXIT_CHANNEL}).
+ * the keepsafe. Inside a room its door opens a little menu: back to where one came from, or to the capital. Players
+ * holding the test pass may also tour the showcase of every room ({@link Showcases}). All requests are checked here;
+ * the screens only show the documents ({@value #CHANNEL}, {@value #EXIT_CHANNEL}).
  */
 public final class InnService {
     public static final String CHANNEL = "estate.inn";
@@ -51,6 +52,8 @@ public final class InnService {
     public static final String GIVE_UP = "estate.inn.give_up";
     public static final String KEEPSAFE = "estate.inn.keepsafe";
     public static final String VISIT = "estate.inn.visit";
+    /** Testers (the test pass, docs/modules/testkit.md): into the showcase of a room. */
+    public static final String TOUR = "estate.inn.tour";
     public static final String EXIT_CHANNEL = "estate.exit";
     public static final String EXIT = "estate.exit";
     public static final String NOT_AT_INN = "message.eternalrealm.inn.not_at_inn";
@@ -95,6 +98,15 @@ public final class InnService {
                 EstateService.estate(EstateKey.ROOM, player.getUUID()).ifPresent(key -> EstateService.enter(player, key));
             }
         });
+        UiActions.register(TOUR, (player, context, args) -> {
+            RoomDesign design = design(args);
+            if (requireInn(player) && Showcases.hasPass(player)
+                    && !Showcases.tour(player, EstateKey.ROOM, design.id()).ok()) {
+                send(player, false);
+            }
+        });
+        Showcases.register(EstateKey.ROOM, () -> java.util.Arrays.stream(RoomDesign.values()).map(RoomDesign::id)
+                .toList(), id -> RoomDesign.byId(id).map(RoomDesign::translationKey).orElse(id));
         UiActions.register(EXIT, (player, context, args) -> {
             String to = UiArgs.id(args, "to");
             if (!EstateLevels.isEstateLevel(player.level())) {
@@ -173,12 +185,19 @@ public final class InnService {
         data.addProperty("empty", contents.map(InnService::isEmpty).orElse(true));
         data.addProperty("refund", current.map(RoomRules::refund).orElse(0L));
         data.addProperty("keepsafe", EstateService.keepsafe(player.getUUID()).size());
+        boolean tour = Showcases.hasPass(player);
+        data.addProperty("tour", tour);
         Map<String, Integer> stored = contents.map(InnService::storedByName).orElse(Map.of());
         JsonArray designs = new JsonArray();
         for (RoomDesign design : RoomDesign.values()) {
             JsonObject json = new JsonObject();
             json.addProperty("id", design.id());
             json.addProperty("price", design.price());
+            if (tour) {
+                EstateStatus showcase = Showcases.status(EstateKey.ROOM, design.id());
+                json.addProperty("tourPhase", showcase.phase().name().toLowerCase(java.util.Locale.ROOT));
+                json.addProperty("tourPercent", showcase.percent());
+            }
             current.ifPresent(from -> json.addProperty("cost", RoomRules.changeCost(from, design)));
             Set<String> names = storageNames(player.server, design);
             JsonObject storage = new JsonObject();

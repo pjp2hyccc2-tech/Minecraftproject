@@ -32,8 +32,9 @@ import java.util.UUID;
  *     <li>In a guild house: the return gate takes the player back where they came from (in front of the gate in the
  *     capital).</li>
  *     <li>Anywhere else (the twenty gates of the Guild Gate Terrace): a member of a guild that owns the gate's design
- *     steps out in front of the gate (where they will come back to) and through into their own guild's house; anyone
- *     else is told why not and pushed gently back out of the light.</li>
+ *     steps out in front of the gate (where they will come back to) and through into their own guild's house; a
+ *     tester holding the test pass (docs/modules/testkit.md) whose guild does not own it goes into the design's
+ *     showcase the same way; anyone else is told why not and pushed gently back out of the light.</li>
  * </ul>
  * A player in the light is handled once, then left alone for a moment (the light touches them every tick).
  */
@@ -65,6 +66,10 @@ public final class GuildGates {
         GateAccess access = houses.map(h -> h.service().gate(design, guild.map(Guild::id).orElse(null)))
                 .orElse(GateAccess.NO_HOUSE);
         if (access != GateAccess.ENTER) {
+            if (estates.hasTourPass(player)) {
+                tour(player, pos, state, design, estates);
+                return;
+            }
             refuse(player, pos, state, access, guild);
             return;
         }
@@ -89,6 +94,37 @@ public final class GuildGates {
                 SoundSource.PLAYERS, 0.9F, 1.3F);
         if (estates.enter(player, guildId) == GuildEstates.Result.OK) {
             welcome(player, guild.get());
+        }
+    }
+
+    /** A tester's way in: the showcase of the gate's design (its build starts first if it is not there yet). */
+    private static void tour(ServerPlayer player, BlockPos pos, BlockState state, String design,
+                             GuildEstates estates) {
+        if (!estates.available()) {
+            pushBack(player, pos, state);
+            player.displayClientMessage(Component.translatable("message.eternalrealm.guildhouse.error.unavailable")
+                    .withStyle(ChatFormatting.RED), true);
+            return;
+        }
+        int percent = estates.prepareShowcase(design);
+        if (percent < 100) {
+            pushBack(player, pos, state);
+            player.displayClientMessage(percent < 0
+                    ? Component.translatable("message.eternalrealm.guildhouse.error.unavailable")
+                    .withStyle(ChatFormatting.RED)
+                    : Component.translatable("message.eternalrealm.showcase.preparing", GuildHouses.name(design),
+                    percent).withStyle(ChatFormatting.YELLOW), true);
+            return;
+        }
+        stepOut(player, pos, state);
+        ServerLevel from = player.serverLevel();
+        from.sendParticles(ParticleTypes.END_ROD, player.getX(), player.getY() + 1.0, player.getZ(), 24, 0.4, 0.8, 0.4,
+                0.04);
+        from.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_RESONATE,
+                SoundSource.PLAYERS, 0.9F, 1.3F);
+        if (estates.enterShowcase(player, design) == GuildEstates.Result.OK) {
+            estates.welcomeShowcase(player, design);
+            GuildHouseUi.sendBoard(player);
         }
     }
 

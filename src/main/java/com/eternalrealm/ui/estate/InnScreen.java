@@ -19,12 +19,14 @@ import java.util.List;
 /**
  * The innkeeper's screen (星灯りの館): the five rooms with a picture, what they hold and what they cost; renting one,
  * moving to another with everything stored, going to one's room, the keepsafe and giving the room back. Spending
- * gold takes a second click. Everything is decided by the server ({@link InnService}).
+ * gold takes a second click. Players holding the test pass also get a "Tour" button: into the showcase of the room
+ * (docs/modules/testkit.md). Everything is decided by the server ({@link InnService}).
  */
 public final class InnScreen extends Screen {
     private static final int WIDTH = 420;
     private static final int HEIGHT = 262;
     private static final int BUTTON_W = 86;
+    private static final int TOUR_W = 84;
     private static final int LIST_W = 168;
     private static final int ROW_H = 38;
     private static final int PICTURE_W = 228;
@@ -42,6 +44,7 @@ public final class InnScreen extends Screen {
     private int ticks;
 
     private Button actionButton;
+    private Button tourButton;
     private Button visitButton;
     private Button keepsafeButton;
     private Button giveUpButton;
@@ -65,6 +68,8 @@ public final class InnScreen extends Screen {
         int px = left + LIST_W + 16;
         actionButton = addRenderableWidget(Button.builder(Component.empty(), button -> act())
                 .bounds(px, top + 208, PICTURE_W, 18).build());
+        tourButton = addRenderableWidget(Button.builder(Component.translatable("screen.eternalrealm.inn.tour"),
+                button -> tour()).bounds(px + PICTURE_W - TOUR_W, top + 208, TOUR_W, 18).build());
         int by = top + HEIGHT - 22;
         int bx = left + WIDTH - 8 - BUTTON_W;
         giveUpButton = addRenderableWidget(Button.builder(Component.empty(), button -> giveUp())
@@ -88,7 +93,7 @@ public final class InnScreen extends Screen {
             confirming = "";
         }
         String phase = EstateUi.str(data, "phase");
-        if (ticks % 20 == 0 && ("building".equals(phase) || "rebuilding".equals(phase))) {
+        if (ticks % 20 == 0 && ("building".equals(phase) || "rebuilding".equals(phase) || showcaseBuilding())) {
             EstateUi.send(InnService.VIEW, new JsonObject());
         }
         refresh();
@@ -113,6 +118,19 @@ public final class InnScreen extends Screen {
         confirming = "";
     }
 
+    /** Whether the showcase of a room is being built (testers: the screen follows its progress). */
+    private boolean showcaseBuilding() {
+        if (!EstateUi.bool(data, "tour")) {
+            return false;
+        }
+        for (JsonObject design : EstateUi.objects(data, "designs")) {
+            if ("building".equals(EstateUi.str(design, "tourPhase"))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private JsonObject design(String id) {
         for (JsonObject design : EstateUi.objects(data, "designs")) {
             if (id.equals(EstateUi.str(design, "id"))) {
@@ -130,6 +148,16 @@ public final class InnScreen extends Screen {
         JsonObject design = design(selected);
         long gold = EstateUi.num(data, "gold");
         actionButton.visible = design.has("id");
+        boolean tour = EstateUi.bool(data, "tour");
+        actionButton.setWidth(tour ? PICTURE_W - TOUR_W - 4 : PICTURE_W);
+        tourButton.visible = tour && design.has("id");
+        if (tourButton.visible) {
+            boolean building = "building".equals(EstateUi.str(design, "tourPhase"));
+            tourButton.active = atInn && EstateUi.bool(data, "available") && !building;
+            tourButton.setMessage(building ? Component.translatable("screen.eternalrealm.inn.tour_preparing",
+                    EstateUi.num(design, "tourPercent")) : Component.translatable("screen.eternalrealm.inn.tour"));
+            tourButton.setTooltip(Tooltip.create(Component.translatable("screen.eternalrealm.inn.tour_tip")));
+        }
         if (!hasRoom) {
             long price = EstateUi.num(design, "price");
             actionButton.active = atInn && gold >= price;
@@ -184,6 +212,17 @@ public final class InnScreen extends Screen {
         JsonObject args = new JsonObject();
         args.addProperty("design", selected);
         EstateUi.send(room.isEmpty() ? InnService.RENT : InnService.CHANGE, args);
+    }
+
+    /** Testers: into the selected room's showcase (its build starts first if it is not there yet). */
+    private void tour() {
+        JsonObject args = new JsonObject();
+        args.addProperty("design", selected);
+        EstateUi.send(InnService.TOUR, args);
+        String phase = EstateUi.str(design(selected), "tourPhase");
+        if ("ready".equals(phase) || "rebuilding".equals(phase)) {
+            onClose();
+        }
     }
 
     private void giveUp() {

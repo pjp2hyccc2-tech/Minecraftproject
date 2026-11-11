@@ -468,6 +468,30 @@ public final class PlayerDataService {
         return changed;
     }
 
+    /**
+     * The test kit (an operator's command, docs/modules/testkit.md): the level goes to the cap, the gold to the purse's
+     * limit ({@link CharacterRecord#MAX_GOLD}), and every stat and skill point goes back into the pool, so all the
+     * points of the cap can be spent anew (the skill loadout goes back to the job's default). Like {@link #setLevel},
+     * nothing counts as EXP earned (the rankings do not move).
+     *
+     * @return the character afterwards, or empty if the data is not loaded
+     */
+    public Optional<CharacterSnapshot> maxOut(UUID playerId) {
+        PlayerCharacter character = active.get(playerId);
+        if (character == null) {
+            return Optional.empty();
+        }
+        character.setLevel(rules.levelCap(), rules);
+        character.resetAllocation();
+        character.resetSkills();
+        character.addGold(CharacterRecord.MAX_GOLD);
+        CharacterSnapshot snapshot = character.snapshot(rules);
+        LOG.info("Test kit: {} is now level {} with {} gold, {} stat and {} skill points unspent", playerId,
+                snapshot.level(), snapshot.gold(), snapshot.unspentStatPoints(), snapshot.unspentSkillPoints());
+        listener.onCharacterChanged(playerId);
+        return Optional.of(snapshot);
+    }
+
     /** @return the gold actually added (saturating), or empty if the data is not loaded */
     public Optional<Long> grantGold(UUID playerId, long amount) {
         PlayerCharacter character = active.get(playerId);

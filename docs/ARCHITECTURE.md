@@ -45,6 +45,7 @@ minecraftproject/
     │   ├── server/        [Forge] ServerContext, SyncQueue
     │   ├── bootstrap/     [Forge] ServerBootstrap（コンポジションルート・tick・停止処理）
     │   ├── config/        [Forge] ERServerConfig / ERClientConfig
+    │   ├── testkit/       [Forge] テスト用コマンド /er admin test（最大化・見学用の屋敷、modules/testkit.md）
     │   ├── client/        [クライアント専用] 表示用状態、キー割り当て、クライアントイベント
     │   ├── ui/            [クライアント専用] hud/（HUD）, screen/（キャラクター画面）
     │   └── gametest/      [Forge・開発時のみ有効] サーバー内統合テスト

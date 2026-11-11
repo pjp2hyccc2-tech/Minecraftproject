@@ -39,7 +39,8 @@ import java.util.UUID;
  * Forge events of the guild houses: the gates' plaques open the catalogue, the rally bell in a house calls the
  * guild's members, vault chests in a house only open for its guild's master and officers, and every deposit and
  * withdrawal of a house's storage is logged when the chest is closed (per kind of item; changes others made
- * meanwhile are kept out of a player's share).
+ * meanwhile are kept out of a player's share). A showcase (docs/modules/testkit.md) belongs to no guild: its bell
+ * calls no one, its vaults open for the testers in it and nothing is logged.
  */
 public final class GuildHouseEvents {
     /** Open storage of a house: who looks into which piece, and what it held when they opened it (or last synced). */
@@ -73,8 +74,15 @@ public final class GuildHouseEvents {
         }
         if (level.getBlockState(pos).getBlock() instanceof BellBlock) {
             if (event.getHand() == net.minecraft.world.InteractionHand.MAIN_HAND) {
-                GuildHouses.estates().houseAt(level, pos).ifPresent(guildId ->
-                        GuildHouses.get().ifPresent(houses -> houses.rallyBell(player, guildId)));
+                GuildEstates estates = GuildHouses.estates();
+                estates.houseAt(level, pos).ifPresent(guildId -> {
+                    if (estates.isShowcase(guildId)) {
+                        player.displayClientMessage(Component.translatable("message.eternalrealm.showcase.bell")
+                                .withStyle(ChatFormatting.GRAY), true);
+                    } else {
+                        GuildHouses.get().ifPresent(houses -> houses.rallyBell(player, guildId));
+                    }
+                });
             }
             return;
         }
@@ -88,7 +96,7 @@ public final class GuildHouseEvents {
             return;
         }
         String piece = estates.pieceName(level, pos).orElse("");
-        if (!GuildHouseRules.isVault(piece)) {
+        if (!GuildHouseRules.isVault(piece) || estates.isShowcase(house.get()) && estates.mayTour(player)) {
             return;
         }
         Optional<Guild> guild = GuildHouses.guildOf(player);
@@ -133,7 +141,7 @@ public final class GuildHouseEvents {
         }
         GuildEstates estates = GuildHouses.estates();
         Optional<UUID> house = estates.houseAt(entity.getLevel(), entity.getBlockPos());
-        if (house.isEmpty()) {
+        if (house.isEmpty() || estates.isShowcase(house.get())) {
             return;
         }
         String piece = estates.pieceName(entity.getLevel(), entity.getBlockPos()).orElse("storage");

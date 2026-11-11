@@ -48,6 +48,41 @@ public interface GuildEstates {
     /** The storage piece name ({@code chest.2}, {@code vault.1}) written on a container by the blueprint, if any. */
     Optional<String> pieceName(Level level, BlockPos pos);
 
+    // ------------------------------------------------------------------ showcases (docs/modules/testkit.md)
+
+    /** Whether the house with this owner id is the showcase of a design (for testers), not a guild's house. */
+    default boolean isShowcase(UUID owner) {
+        return false;
+    }
+
+    /** Whether the player holds the test pass: the gates then take them into the showcase of their design. */
+    default boolean hasTourPass(ServerPlayer player) {
+        return false;
+    }
+
+    /** Whether the player may be in showcases and use them (the pass, or a creative operator). */
+    default boolean mayTour(ServerPlayer player) {
+        return false;
+    }
+
+    /**
+     * Makes sure the showcase of {@code design} stands or is being built.
+     *
+     * @return its build progress in percent (100 when it can be entered), or -1 if it cannot be built
+     */
+    default int prepareShowcase(String design) {
+        return -1;
+    }
+
+    /** Teleports the player into the showcase of {@code design}, remembering where they were. */
+    default Result enterShowcase(ServerPlayer player, String design) {
+        return Result.UNAVAILABLE;
+    }
+
+    /** Title on arrival in a showcase. */
+    default void welcomeShowcase(ServerPlayer player, String design) {
+    }
+
     GuildEstates UNAVAILABLE = new GuildEstates() {
         @Override
         public boolean available() {

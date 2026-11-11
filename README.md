@@ -99,6 +99,9 @@
 - `/ranking [部門]`, `/season`
 - `/eternalrealm outfit job|tier` — 防具を職業衣装／装備本来の外見で表示
 - 管理者: `/eternalrealm setup town`（アストリアのない世界で町のNPCを配置）, `/er admin ...`
+- テスト用（管理者）: `/er admin test all [プレイヤー]` — Lv・所持金を上限に、ステータスとスキルのポイントをすべて未使用で最大に、
+  宿屋の客室5室とギルドハウス20軒をすべて見学できるように開放（女将の「見学」、ギルド門の広場の門、`/er admin test tour <room|guild> <間取り>`）。
+  `max` / `unlock` / `lock` / `status` で個別に（[docs/modules/testkit.md](docs/modules/testkit.md)）
 
 ## 導入
 
@@ -124,7 +127,7 @@
 src/main/java/com/eternalrealm/
   core/ season/ character/ player/ persistence/ network/ combat/ job/ item/ economy/ party/ guild/
   ranking/ quest/ world/ monster/ boss/ dungeon/ story/        … Minecraft非依存（JUnitで検証）
-  */forge/ server/ bootstrap/ config/ menu/ npc/ entity/ sound/ gametest/   … Forge連携
+  */forge/ server/ bootstrap/ config/ menu/ npc/ entity/ sound/ testkit/ gametest/   … Forge連携
   client/ ui/                                                                … クライアント専用
 ```
 

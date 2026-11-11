@@ -570,6 +570,47 @@ public class PlayerDataServiceTest {
     }
 
     @Test
+    public void theTestKitMaxesTheCharacterOutWithEveryPointUnspent() throws Exception {
+        assertTrue("nothing to max out before the data is loaded", service.maxOut(ALICE).isEmpty());
+        joinAndLoad(ALICE, "Alice");
+        service.chooseJob(ALICE, com.eternalrealm.job.JobType.PRIEST, com.eternalrealm.job.JobRules.defaults());
+        service.setLevel(ALICE, 20);
+        assertEquals(AllocationResult.SUCCESS, service.allocateStat(ALICE, StatType.VIT, 10));
+        service.investSkill(ALICE, "priest_heal");
+        service.grantGold(ALICE, 1234L);
+        long earnedBefore = service.totalExperience(ALICE);
+        listener.changed.clear();
+
+        CharacterSnapshot maxed = service.maxOut(ALICE).orElseThrow();
+        assertEquals(CharacterRules.MAX_LEVEL, maxed.level());
+        assertTrue(maxed.atCap());
+        assertEquals(0L, maxed.experienceToNext());
+        assertEquals(CharacterRecord.MAX_GOLD, maxed.gold());
+        assertEquals("every stat point is back in the pool", 0, maxed.allocatedStats().total());
+        assertEquals("99 levels x 3 points", 297, maxed.unspentStatPoints());
+        assertEquals("99 x 2 + 10 milestones x 2", 218, maxed.unspentSkillPoints());
+        assertTrue(maxed.skillInvestments().isEmpty());
+        assertTrue(maxed.skillLoadout().isEmpty());
+        assertEquals("the job stays", "priest", maxed.jobId());
+        assertEquals("no EXP counts as earned", earnedBefore, service.totalExperience(ALICE));
+        assertTrue("the client is re-synced", listener.changed.contains(ALICE));
+        assertEquals("doing it again changes nothing", maxed, service.maxOut(ALICE).orElseThrow());
+
+        // a server with a lower cap: the cap of its rules
+        service.updateRules(new CharacterRules(50, 3, 5, 10, new PowerExperienceCurve(100, 1.5)));
+        CharacterSnapshot capped = service.maxOut(ALICE).orElseThrow();
+        assertEquals(50, capped.level());
+        assertEquals(147, capped.unspentStatPoints());
+        assertEquals(49 * 2 + 5 * 2, capped.unspentSkillPoints());
+
+        service.onPlayerLeave(ALICE);
+        settle();
+        assertEquals(50, stored(ALICE).level());
+        assertEquals(CharacterRecord.MAX_GOLD, stored(ALICE).gold());
+        assertTrue(stored(ALICE).skillInvestments().isEmpty());
+    }
+
+    @Test
     public void skillsOfAnotherJobAreRefundedOnLoad() throws Exception {
         java.time.Instant t = clock.instant();
         characters.stored.put(InMemoryRepositories.Characters.key(ALICE, SEASON), new CharacterRecord(ALICE, SEASON, 20, 0, 999, com.eternalrealm.character.StatBlock.ZERO, t, t,

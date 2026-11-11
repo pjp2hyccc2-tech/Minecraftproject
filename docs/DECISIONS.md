@@ -323,3 +323,17 @@ anyone away. Texts that promised a push were rewritten, and the four bow arts wh
 extra was "knocks foes far back" got another extra instead (blind, execute, stamina; the sandstorm relic bow: blind); the
 art generator now refuses a knockback extra on a bow or staff art.
 
+
+## D-TESTKIT: a test command that maxes a character and opens every room and guild house for touring (2026-11-11)
+The owner: 「テスト用に、すべての部屋とギルドハウスの開放とお金をマックスとレベルとステータスポイント、スキルポイントをマックスにする
+コマンドを実装して」. `/er admin test all [<player>]` (permission 2) = `max` + `unlock`. `max` sets the level to the
+configured cap, the gold to the purse limit and refunds every stat and skill point, so all points of the cap are unspent
+(297 and 218 by default); no points beyond the rules are created, and nothing counts as EXP earned (rankings). Since a
+player rents one room and a guild owns one house, "unlocking every room and guild house" means being able to enter every
+design: `unlock` hands out a test pass (the player's own persistent data, kept on respawn) and builds one showcase estate
+per design (5 rooms, 20 guild houses) owned by a fixed name-based id per kind and design, so the same showcase is found
+after a restart and never collides with a player or guild. Pass holders tour them through the innkeeper's "Tour" button,
+through the guild gates of designs their guild does not own, or `/er admin test tour`; the pass, not the operator
+permission, opens them, so operators walking the terrace see the normal gates. Showcases belong to no guild (no bell call,
+vaults open to testers, no storage log) and are never torn down (nothing stored in them is lost); `lock` takes the pass
+back. Details: `docs/modules/testkit.md`.

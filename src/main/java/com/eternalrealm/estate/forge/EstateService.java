@@ -6,6 +6,7 @@ import com.eternalrealm.estate.EstatePlot;
 import com.eternalrealm.estate.EstateRecord;
 import com.eternalrealm.estate.EstateResult;
 import com.eternalrealm.estate.EstateStatus;
+import com.eternalrealm.estate.Showcase;
 import com.eternalrealm.item.forge.Bags;
 import com.eternalrealm.persistence.file.AtomicFileStore;
 import com.eternalrealm.persistence.file.FileEstateRepository;
@@ -171,10 +172,16 @@ public final class EstateService {
         return at(player.level(), player.blockPosition());
     }
 
-    /** Whether {@code player} may enter and use the estate: its owner, those its kind's rule lets in, operators. */
+    /**
+     * Whether {@code player} may enter and use the estate: its owner, those its kind's rule lets in, operators; a
+     * showcase ({@link Showcase}) only those holding the test pass ({@link Showcases}).
+     */
     public static boolean mayAccess(ServerPlayer player, EstateKey key) {
         if (player.getUUID().equals(key.owner()) || player.isCreative() && player.hasPermissions(2)) {
             return true;
+        }
+        if (Showcase.is(key)) {
+            return Showcases.hasPass(player);
         }
         EstateAccess rule = ACCESS.get(key.kind());
         try {
