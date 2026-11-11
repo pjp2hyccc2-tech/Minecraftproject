@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "eternalrealm:block/verdigris_roof_tiles",
+    "top": "eternalrealm:block/verdigris_roof_tiles",
+    "side": "eternalrealm:block/verdigris_roof_tiles"
+  }
+}

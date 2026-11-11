@@ -16,7 +16,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 /**
  * Client wiring of the guild houses: the portal's two tint layers take its theme's colours, the board draws the guild's
- * notes, and the catalogue and board documents open their screens.
+ * notes, the training dummy has its model, and the catalogue and board documents open their screens.
  */
 @Mod.EventBusSubscriber(modid = ModInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public final class GuildHouseClient {
@@ -34,6 +34,12 @@ public final class GuildHouseClient {
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(GuildHouseBlocks.BOARD_ENTITY.get(), GuildBoardRenderer::new);
+        event.registerEntityRenderer(GuildHouseBlocks.DUMMY.get(), TrainingDummyRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(TrainingDummyModel.LAYER, TrainingDummyModel::createBodyLayer);
     }
 
     @SubscribeEvent

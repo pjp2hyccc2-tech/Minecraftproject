@@ -369,6 +369,39 @@ public final class GuildHouses {
         }
     }
 
+    /** Ticks between two calls of a guild's rally bell. */
+    static final int BELL_COOLDOWN_TICKS = 20 * 60;
+    private final Map<UUID, Long> bellRung = new HashMap<>();
+
+    /**
+     * A member rang the rally bell of their guild's house: every member online hears it (a chat line with who rang it
+     * and a bell chime), once a minute at most per guild.
+     */
+    public void rallyBell(ServerPlayer player, UUID guildId) {
+        Optional<Guild> guild = guildOf(player).filter(g -> g.id().equals(guildId));
+        if (guild.isEmpty()) {
+            return;
+        }
+        long now = server.overworld().getGameTime();
+        Long last = bellRung.get(guildId);
+        if (last != null && now - last < BELL_COOLDOWN_TICKS) {
+            return;
+        }
+        bellRung.put(guildId, now);
+        String design = service.design(guildId).map(GuildHouseDesign::nameKey).orElse("guildhouse.eternalrealm.title");
+        Component message = Component.translatable("message.eternalrealm.guildhouse.bell", player.getDisplayName(),
+                Component.translatable(design)).withStyle(ChatFormatting.GOLD);
+        for (UUID member : guild.get().members().keySet()) {
+            ServerPlayer online = server.getPlayerList().getPlayer(member);
+            if (online != null) {
+                online.sendSystemMessage(message);
+                if (online != player) {
+                    online.playNotifySound(SoundEvents.BELL_BLOCK, SoundSource.PLAYERS, 0.8F, 1.0F);
+                }
+            }
+        }
+    }
+
     /** A house finished building (first build or redesign): the guild hears of it. */
     public void onReady(UUID guildId) {
         ServerContext.current().flatMap(context -> context.game().guilds().service().guild(guildId)).ifPresent(guild ->

@@ -20,6 +20,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
@@ -35,9 +36,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Forge events of the guild houses: the gates' plaques open the catalogue, vault chests in a house only open for its
- * guild's master and officers, and every deposit and withdrawal of a house's storage is logged when the chest is
- * closed (per kind of item; changes others made meanwhile are kept out of a player's share).
+ * Forge events of the guild houses: the gates' plaques open the catalogue, the rally bell in a house calls the
+ * guild's members, vault chests in a house only open for its guild's master and officers, and every deposit and
+ * withdrawal of a house's storage is logged when the chest is closed (per kind of item; changes others made
+ * meanwhile are kept out of a player's share).
  */
 public final class GuildHouseEvents {
     /** Open storage of a house: who looks into which piece, and what it held when they opened it (or last synced). */
@@ -66,6 +68,13 @@ public final class GuildHouseEvents {
                 if (event.getHand() == net.minecraft.world.InteractionHand.MAIN_HAND) {
                     GuildHouseUi.openCatalogue(player, gate.get());
                 }
+            }
+            return;
+        }
+        if (level.getBlockState(pos).getBlock() instanceof BellBlock) {
+            if (event.getHand() == net.minecraft.world.InteractionHand.MAIN_HAND) {
+                GuildHouses.estates().houseAt(level, pos).ifPresent(guildId ->
+                        GuildHouses.get().ifPresent(houses -> houses.rallyBell(player, guildId)));
             }
             return;
         }

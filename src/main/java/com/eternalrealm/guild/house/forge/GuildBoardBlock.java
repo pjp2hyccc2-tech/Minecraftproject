@@ -1,5 +1,6 @@
 package com.eternalrealm.guild.house.forge;
 
+import com.eternalrealm.estate.forge.EstateProtection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,7 +27,8 @@ import org.jetbrains.annotations.Nullable;
  * wall, its block at the bottom centre ({@code facing} = the side it faces). The client draws the message of the day and the notes of the viewer's own guild on it (only members are
  * ever inside); using it opens the board screen. Carries no data of its own.
  */
-public class GuildBoardBlock extends HorizontalDirectionalBlock implements EntityBlock {
+public class GuildBoardBlock extends HorizontalDirectionalBlock implements EntityBlock,
+        EstateProtection.UsableInEstates {
     /** The board spans three blocks across and two up, its block at the bottom centre, two pixels off the wall. */
     private static final VoxelShape NORTH = Block.box(-16.0, 0.0, 14.0, 32.0, 32.0, 16.0);
     private static final VoxelShape SOUTH = Block.box(-16.0, 0.0, 0.0, 32.0, 32.0, 2.0);

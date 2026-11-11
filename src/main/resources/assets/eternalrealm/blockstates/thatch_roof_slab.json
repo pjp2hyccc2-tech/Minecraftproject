@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "eternalrealm:block/thatch_roof_slab"
+    },
+    "type=top": {
+      "model": "eternalrealm:block/thatch_roof_slab_top"
+    },
+    "type=double": {
+      "model": "eternalrealm:block/thatch_roof"
+    }
+  }
+}

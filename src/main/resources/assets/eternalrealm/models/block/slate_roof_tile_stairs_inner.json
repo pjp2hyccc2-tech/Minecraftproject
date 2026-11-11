@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "eternalrealm:block/slate_roof_tiles",
+    "top": "eternalrealm:block/slate_roof_tiles",
+    "side": "eternalrealm:block/slate_roof_tiles"
+  }
+}
