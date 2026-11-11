@@ -29,6 +29,7 @@ from capital import deco
 from capital.noise import hash2, hash3
 
 from . import _civic_kit as K
+from . import _gimmick_kit as GK
 from . import _town_kit as TK
 
 AIR = "minecraft:air"
@@ -426,5 +427,9 @@ def build(w):
     _warehouse(w)
     _black_market(w)
     _well(w)
+    # candle lanterns floating on the channel, the dock pool and the cistern (always lit underground)
+    GK.canal_lanterns(w, CH[0], 14, CH[1], 37, WTOP, every=3.0, seed=3)
+    GK.canal_lanterns(w, 39, 9, 44, 13, WTOP, every=2.5, seed=5)
+    GK.canal_lanterns(w, 26, 8, 35, 22, FLOOR, every=3.0, seed=4)
     TK.crowd(w, "undercroft", [(16, FLOOR + 1, 33), (11, FLOOR + 1, 29), (30, FLOOR + 1, 32),
                                (42, FLOOR + 1, 8)], need=12)

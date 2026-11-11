@@ -28,6 +28,7 @@ from capital.world import Frame
 
 from . import _civic_kit as K
 from . import _furnish as FU
+from . import _gimmick_kit as GK
 from . import _maze as MZ
 from . import _town_kit as TK
 
@@ -237,6 +238,7 @@ def _passage(f):
     f.set(12, 1, 12, F("carved_castle_stone"))
     f.set(12, 2, 12, B.S("water_cauldron", level=3))
     TK.spray(f, 12, 3, 12, power=2, facing="up")
+    GK.canal_lanterns(f, 11, 11, 13, 13, 0, every=1.5, seed=6)          # a candle lantern or two on the pool
     for x in range(10, 15):
         for z in range(10, 15):
             if x in (10, 14) or z in (10, 14):

@@ -18,6 +18,7 @@ from capital.noise import hash2
 from capital.world import X0, Y0, Z0
 
 from . import _civic_kit as K
+from . import _gimmick_kit as GK
 from . import _maze as MZ
 from . import _town_kit as TK
 
@@ -354,6 +355,8 @@ def build(w, district, terrain):
         if free(x) and free(x + 1) and w.is_empty(x, 1, 46):
             w.set(x, 1, 46, B.S("polished_blackstone_wall"))
     festoons(w, [x for x in lamps if not any(a - 1 <= x <= a + 4 for a in (-70, -16, 64, 88, 40))])
+    GK.canal_lanterns(w, -98, 41, 98, 45, WY, every=4.5, seed=1)        # candle lanterns floating on the canal
+    GK.canal_lanterns(w, -91, 46, -85, 108, WY, every=4.5, seed=2)
     branch(w, T)
     outside(w, T)
     east_mouth(w, T)

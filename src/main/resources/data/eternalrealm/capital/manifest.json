@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "fe134a84162f9f2c",
+ "build": "96d1e444c2eaef21",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -27,6 +27,7 @@
   "eternalrealm:clock_face[facing=south]",
   "eternalrealm:cobbled_paving",
   "eternalrealm:flag[facing=east]",
+  "eternalrealm:floating_lantern",
   "eternalrealm:fountain_spray[facing=east,power=1]",
   "eternalrealm:fountain_spray[facing=east,power=2]",
   "eternalrealm:fountain_spray[facing=north,power=1]",

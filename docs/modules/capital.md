@@ -227,7 +227,8 @@ z −54..−53) to the Guild Gate Terrace.
   coping, cobbled quays (north z 39..40, south z 46..47), the avenue bridge and the two street bridges (flat, piers
   and low arches, lamps), humped footbridges at x −78, −30, 22 and 73 (in line with the Galleria's south arch), a
   covered timber bridge (x 42..46) to the inn mansion, landing stairs with moored boats, lamps and bollards, strings
-  of paper lanterns across the water, the square where it turns south and the culvert into the undercroft.
+  of paper lanterns across the water, candle lanterns floating on it (`_gimmick_kit.canal_lanterns`), the square
+  where it turns south and the culvert into the undercroft.
   `walls.py` gives it two water gates (arched openings with a raised portcullis): east at z 41..45 and south at
   x −90..−86.
 - **Maze quarters** (`_maze.py`): `quarter(w, rect, seed, a1, a2, b, …)` lays a jogging north–south lane and a
@@ -255,7 +256,8 @@ z −54..−53) to the Guild Gate Terrace.
   smugglers' dock at its north end (pool, jetty, moored boats, a crane); the old cistern (marble columns in still
   water lit from below); a warehouse with racks and an archive wall of bookshelves; the black market behind a
   secret door in that wall (a fence, a potion seller, an information broker with the smugglers' ledger on a
-  lectern, weapons, a card table, a bar). Hidden ways in: swim or boat through the culvert and drop down the fall,
+  lectern, weapons, a card table, a bar). Candle lanterns float on the channel, the dock pool and the cistern (lit
+  day and night underground). Hidden ways in: swim or boat through the culvert and drop down the fall,
   the cellar hatch in the market aisle (x 30, z 17: a trapdoor over a ladder into the cistern), the dry old well on
   the square (x 8, z 27: a ladder down into the black market). `crowd.undercroft.1..4`.
 
