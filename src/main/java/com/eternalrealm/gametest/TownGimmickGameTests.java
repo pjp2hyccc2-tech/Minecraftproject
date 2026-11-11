@@ -105,6 +105,22 @@ public final class TownGimmickGameTests {
         });
     }
 
+    @GameTest(template = EMPTY, timeoutTicks = 300, batch = BATCH)
+    public static void secretDoorPlacedOpenClosesByItself(GameTestHelper helper) {
+        buildDoor(helper, SecretDoorBlock.Look.MOSSY_STONE_BRICKS);
+        BlockState lower = helper.getLevel().getBlockState(helper.absolutePos(LOWER));
+        BlockState upper = helper.getLevel().getBlockState(helper.absolutePos(UPPER));
+        helper.setBlock(LOWER, Blocks.AIR);                       // takes the upper half with it
+        helper.setBlock(LOWER, lower.setValue(SecretDoorBlock.OPEN, true));
+        helper.setBlock(UPPER, upper.setValue(SecretDoorBlock.OPEN, true));
+        check(isOpen(helper, LOWER) && isOpen(helper, UPPER), "placed standing open");
+        helper.runAfterDelay(SecretDoorMotion.STAY_OPEN_TICKS + SecretDoorMotion.MOVE_TICKS
+                + 2L * SecretDoorMotion.WATCH_TICKS + 4L, () -> {
+            check(!isOpen(helper, LOWER) && !isOpen(helper, UPPER), "a door left open closes by itself");
+            helper.succeed();
+        });
+    }
+
     @GameTest(template = EMPTY, batch = BATCH)
     public static void secretDoorHalvesNeverPart(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
