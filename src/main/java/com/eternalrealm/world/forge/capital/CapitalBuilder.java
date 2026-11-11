@@ -2,39 +2,22 @@ package com.eternalrealm.world.forge.capital;
 
 import com.eternalrealm.world.forge.AstoriaWorldState;
 import com.eternalrealm.world.forge.FieldPieces;
+import com.eternalrealm.world.forge.blueprint.BlueprintPlacer;
 import com.eternalrealm.world.gen.HubSpot;
 import com.mojang.logging.LogUtils;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.IronBarsBlock;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -74,7 +57,7 @@ public final class CapitalBuilder {
     /** Progress of the running build in percent (tiles placed), or -1 without a build. */
     public static int progressPercent() {
         Job current = job;
-        return current == null ? -1 : (int) (100L * current.tileIndex / Math.max(1, current.order.size()));
+        return current == null ? -1 : current.percent();
     }
 
     /** Starts building {@code blueprint} unless this world already has it (or a build is running). */
@@ -114,26 +97,19 @@ public final class CapitalBuilder {
     // ------------------------------------------------------------------------------------------------ the job
 
     private static final class Job {
-        private enum Phase { TILES, SHAPES, BLOCK_ENTITIES, ENTITIES, FLUIDS, BLEND, DONE }
+        private enum Phase { PLACE, BLEND, DONE }
 
         final ServerLevel level;
         final CapitalBlueprint blueprint;
         final int groundY;
-        final BlockState[] palette;
-        final List<CapitalBlueprint.Tile> order;
-        final LongArrayList shaped = new LongArrayList();
+        final BlueprintPlacer placer;
         final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         final int minX;
         final int maxX;
         final int minZ;
         final int maxZ;
-        Phase phase = Phase.TILES;
-        int tileIndex;
-        short[] voxels;
-        int voxel;
-        int index;
+        Phase phase = Phase.PLACE;
         int blendColumn;
-        long placed;
         long started = System.nanoTime();
         int lastPercent = -1;
 
@@ -141,62 +117,37 @@ public final class CapitalBuilder {
             this.level = level;
             this.blueprint = blueprint;
             this.groundY = groundY;
-            List<String> problems = new ArrayList<>();
-            this.palette = blueprint.resolvePalette(level.holderLookup(Registries.BLOCK), problems);
-            if (!problems.isEmpty()) {
-                LOG.error("{} capital palette entries are invalid and left out: {}", problems.size(), problems);
-            }
-            int size = blueprint.tileSize();
-            this.order = new ArrayList<>(blueprint.tiles());
-            this.order.sort(Comparator.comparingDouble(tile -> {
-                double cx = tile.x() * size + size / 2.0 - spawn.getX();
-                double cz = tile.z() * size + size / 2.0 - spawn.getZ();
-                return cx * cx + cz * cz;
-            }));
-            int x0 = Integer.MAX_VALUE;
-            int x1 = Integer.MIN_VALUE;
-            int z0 = Integer.MAX_VALUE;
-            int z1 = Integer.MIN_VALUE;
-            for (CapitalBlueprint.Tile tile : blueprint.tiles()) {
-                x0 = Math.min(x0, tile.x() * size);
-                x1 = Math.max(x1, tile.x() * size + size - 1);
-                z0 = Math.min(z0, tile.z() * size);
-                z1 = Math.max(z1, tile.z() * size + size - 1);
-            }
-            this.minX = x0;
-            this.maxX = x1;
-            this.minZ = z0;
-            this.maxZ = z1;
+            this.placer = new BlueprintPlacer(level, blueprint, new BlockPos(0, groundY, 0), spawn.getX(), spawn.getZ(),
+                    ENTITY_TAG, new BlueprintPlacer.Hooks() {
+                        @Override
+                        public void afterTile(int x0, int z0, int size) {
+                            liftBuriedPlayers(x0, z0, size);
+                        }
+
+                        @Override
+                        public void progress(int percent) {
+                            Job.this.progress(percent);
+                        }
+                    }, problems -> LOG.error("{} capital palette entries are invalid and left out: {}", problems.size(),
+                    problems));
+            this.minX = placer.minX();
+            this.maxX = placer.maxX();
+            this.minZ = placer.minZ();
+            this.maxZ = placer.maxZ();
+        }
+
+        int percent() {
+            return placer.percent();
         }
 
         /** @return true when everything is done */
         boolean step(long deadline) {
             while (System.nanoTime() < deadline) {
                 switch (phase) {
-                    case TILES -> {
-                        if (!tiles(deadline)) {
+                    case PLACE -> {
+                        if (!placer.step(deadline)) {
                             return false;
                         }
-                        phase = Phase.SHAPES;
-                        index = 0;
-                    }
-                    case SHAPES -> {
-                        if (!shapes(deadline)) {
-                            return false;
-                        }
-                        phase = Phase.BLOCK_ENTITIES;
-                        index = 0;
-                    }
-                    case BLOCK_ENTITIES -> {
-                        blockEntities();
-                        phase = Phase.ENTITIES;
-                    }
-                    case ENTITIES -> {
-                        entities();
-                        phase = Phase.FLUIDS;
-                    }
-                    case FLUIDS -> {
-                        fluids();
                         phase = Phase.BLEND;
                         blendColumn = 0;
                     }
@@ -214,67 +165,6 @@ public final class CapitalBuilder {
             return phase == Phase.DONE;
         }
 
-        // ---- tiles
-
-        private boolean tiles(long deadline) {
-            int size = blueprint.tileSize();
-            int height = blueprint.height();
-            int minBuild = level.getMinBuildHeight();
-            int maxBuild = level.getMaxBuildHeight() - 1;
-            while (tileIndex < order.size()) {
-                CapitalBlueprint.Tile tile = order.get(tileIndex);
-                if (voxels == null) {
-                    try {
-                        voxels = blueprint.decode(level.getServer().getResourceManager(), tile);
-                    } catch (IOException e) {
-                        LOG.error("Capital tile {} skipped", tile.file(), e);
-                        tileIndex++;
-                        continue;
-                    }
-                    voxel = 0;
-                    for (int cx = 0; cx < size; cx += 16) {
-                        for (int cz = 0; cz < size; cz += 16) {
-                            level.getChunk((tile.x() * size + cx) >> 4, (tile.z() * size + cz) >> 4);
-                        }
-                    }
-                }
-                while (voxel < voxels.length) {
-                    if ((voxel & 1023) == 0 && System.nanoTime() >= deadline) {
-                        progress();
-                        return false;
-                    }
-                    int paletteIndex = voxels[voxel];
-                    int at = voxel++;
-                    if (paletteIndex == 0) {
-                        continue;
-                    }
-                    BlockState state = palette[paletteIndex];
-                    if (state == null) {
-                        continue;
-                    }
-                    int column = at / height;
-                    int y = groundY + blueprint.minY() + at % height;
-                    if (y < minBuild || y > maxBuild) {
-                        continue;
-                    }
-                    cursor.set(tile.x() * size + column / size, y, tile.z() * size + column % size);
-                    if (level.getBlockState(cursor) != state) {
-                        level.setBlock(cursor, state, FLAGS);
-                        placed++;
-                    }
-                    Block block = state.getBlock();
-                    if (block instanceof StairBlock || block instanceof FenceBlock || block instanceof IronBarsBlock
-                            || block instanceof WallBlock || block instanceof FenceGateBlock) {
-                        shaped.add(cursor.asLong());
-                    }
-                }
-                liftBuriedPlayers(tile.x() * size, tile.z() * size, size);
-                voxels = null;
-                tileIndex++;
-            }
-            return true;
-        }
-
         private void liftBuriedPlayers(int x0, int z0, int size) {
             for (ServerPlayer player : level.players()) {
                 BlockPos feet = player.blockPosition();
@@ -290,8 +180,7 @@ public final class CapitalBuilder {
             }
         }
 
-        private void progress() {
-            int percent = (int) (100L * tileIndex / Math.max(1, order.size()));
+        private void progress(int percent) {
             if (percent == lastPercent) {
                 return;
             }
@@ -300,83 +189,6 @@ public final class CapitalBuilder {
                     .withStyle(ChatFormatting.GOLD);
             for (ServerPlayer player : level.players()) {
                 player.displayClientMessage(message, true);
-            }
-        }
-
-        // ---- shapes, data, entities, fluids
-
-        private boolean shapes(long deadline) {
-            while (index < shaped.size()) {
-                if ((index & 255) == 0 && System.nanoTime() >= deadline) {
-                    return false;
-                }
-                cursor.set(shaped.getLong(index++));
-                BlockState state = level.getBlockState(cursor);
-                BlockState fitted = Block.updateFromNeighbourShapes(state, level, cursor);
-                if (fitted != state && !fitted.isAir()) {
-                    level.setBlock(cursor, fitted, FLAGS);
-                }
-            }
-            return true;
-        }
-
-        private void blockEntities() {
-            for (CapitalBlueprint.BlockEntityData data : blueprint.blockEntities()) {
-                BlockPos pos = world(data.pos());
-                BlockEntity blockEntity = level.getBlockEntity(pos);
-                if (blockEntity == null) {
-                    LOG.warn("Capital block entity data at {} has no block entity ({})", pos, level.getBlockState(pos));
-                    continue;
-                }
-                try {
-                    CompoundTag tag = blockEntity.saveWithoutMetadata();
-                    tag.merge(TagParser.parseTag(data.snbt()));
-                    blockEntity.load(tag);
-                    blockEntity.setChanged();
-                    BlockState state = level.getBlockState(pos);
-                    level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
-                } catch (Exception e) {
-                    LOG.warn("Capital block entity data at {} is invalid: {}", pos, e.getMessage());
-                }
-            }
-        }
-
-        private void entities() {
-            AABB area = new AABB(minX - 2, groundY + blueprint.minY(), minZ - 2, maxX + 3, groundY + blueprint.maxY() + 1,
-                    maxZ + 3);
-            for (Entity old : level.getEntities((Entity) null, area, e -> e.getPersistentData().getBoolean(ENTITY_TAG))) {
-                old.discard();
-            }
-            for (CapitalBlueprint.EntityData data : blueprint.entities()) {
-                try {
-                    CompoundTag tag = TagParser.parseTag(data.snbt());
-                    tag.putString("id", data.type());
-                    double x = data.x();
-                    double y = groundY + data.y();
-                    double z = data.z();
-                    Entity entity = EntityType.loadEntityRecursive(tag, level, e -> {
-                        e.moveTo(x, y, z, data.yaw(), e.getXRot());
-                        return e;
-                    });
-                    if (entity == null) {
-                        LOG.warn("Capital entity {} could not be created", data.type());
-                        continue;
-                    }
-                    entity.getPersistentData().putBoolean(ENTITY_TAG, true);
-                    level.addFreshEntity(entity);
-                } catch (Exception e) {
-                    LOG.warn("Capital entity {} is invalid: {}", data.type(), e.getMessage());
-                }
-            }
-        }
-
-        private void fluids() {
-            for (BlockPos local : blueprint.fluidTicks()) {
-                BlockPos pos = world(local);
-                FluidState fluid = level.getFluidState(pos);
-                if (!fluid.isEmpty()) {
-                    level.scheduleTick(pos, fluid.getType(), fluid.getType().getTickDelay(level));
-                }
             }
         }
 
@@ -449,15 +261,11 @@ public final class CapitalBuilder {
             return true;
         }
 
-        private BlockPos world(BlockPos local) {
-            return new BlockPos(local.getX(), groundY + local.getY(), local.getZ());
-        }
-
         void finish() {
             AstoriaWorldState.get(level).markCapitalBuilt(blueprint.build(), groundY);
             long ms = (System.nanoTime() - started) / 1_000_000L;
             LOG.info("Built the capital blueprint {}: {} blocks changed, {} shaped, {} block entities, {} entities in {} s",
-                    blueprint.build(), placed, shaped.size(), blueprint.blockEntities().size(),
+                    blueprint.build(), placer.placed(), placer.shapedCount(), blueprint.blockEntities().size(),
                     blueprint.entities().size(), ms / 1000);
             Component message = Component.translatable("message.eternalrealm.capital.built").withStyle(ChatFormatting.GOLD);
             for (ServerPlayer player : level.players()) {
