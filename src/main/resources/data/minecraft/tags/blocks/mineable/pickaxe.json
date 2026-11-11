@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "eternalrealm:bunting",
     "eternalrealm:carved_castle_stone",
     "eternalrealm:castle_brick_slab",
     "eternalrealm:castle_brick_stairs",

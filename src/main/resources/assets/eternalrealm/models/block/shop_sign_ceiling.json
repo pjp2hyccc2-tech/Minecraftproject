@@ -1,0 +1,283 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "iron": "eternalrealm:block/shop_sign/bracket",
+    "particle": "eternalrealm:block/shop_sign/bracket"
+  },
+  "elements": [
+    {
+      "from": [
+        0.25,
+        15.5,
+        6.75
+      ],
+      "to": [
+        2.75,
+        16,
+        9.25
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            2.5
+          ],
+          "texture": "#iron"
+        },
+        "east": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            2.5
+          ],
+          "texture": "#iron"
+        },
+        "south": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            2.5
+          ],
+          "texture": "#iron"
+        },
+        "west": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            2.5
+          ],
+          "texture": "#iron"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            4.5
+          ],
+          "texture": "#iron"
+        },
+        "down": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            4.5
+          ],
+          "texture": "#iron"
+        }
+      }
+    },
+    {
+      "from": [
+        1.0,
+        14.6,
+        7.6
+      ],
+      "to": [
+        2.0,
+        15.5,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            2,
+            3.0,
+            2.9
+          ],
+          "texture": "#iron"
+        },
+        "east": {
+          "uv": [
+            2,
+            2,
+            2.8,
+            2.9
+          ],
+          "texture": "#iron"
+        },
+        "south": {
+          "uv": [
+            2,
+            2,
+            3.0,
+            2.9
+          ],
+          "texture": "#iron"
+        },
+        "west": {
+          "uv": [
+            2,
+            2,
+            2.8,
+            2.9
+          ],
+          "texture": "#iron"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            3.0,
+            2.8
+          ],
+          "texture": "#iron"
+        },
+        "down": {
+          "uv": [
+            2,
+            2,
+            3.0,
+            2.8
+          ],
+          "texture": "#iron"
+        }
+      }
+    },
+    {
+      "from": [
+        13.25,
+        15.5,
+        6.75
+      ],
+      "to": [
+        15.75,
+        16,
+        9.25
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            2.5
+          ],
+          "texture": "#iron"
+        },
+        "east": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            2.5
+          ],
+          "texture": "#iron"
+        },
+        "south": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            2.5
+          ],
+          "texture": "#iron"
+        },
+        "west": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            2.5
+          ],
+          "texture": "#iron"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            4.5
+          ],
+          "texture": "#iron"
+        },
+        "down": {
+          "uv": [
+            2,
+            2,
+            4.5,
+            4.5
+          ],
+          "texture": "#iron"
+        }
+      }
+    },
+    {
+      "from": [
+        14.0,
+        14.6,
+        7.6
+      ],
+      "to": [
+        15.0,
+        15.5,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            2,
+            3.0,
+            2.9
+          ],
+          "texture": "#iron"
+        },
+        "east": {
+          "uv": [
+            2,
+            2,
+            2.8,
+            2.9
+          ],
+          "texture": "#iron"
+        },
+        "south": {
+          "uv": [
+            2,
+            2,
+            3.0,
+            2.9
+          ],
+          "texture": "#iron"
+        },
+        "west": {
+          "uv": [
+            2,
+            2,
+            2.8,
+            2.9
+          ],
+          "texture": "#iron"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            3.0,
+            2.8
+          ],
+          "texture": "#iron"
+        },
+        "down": {
+          "uv": [
+            2,
+            2,
+            3.0,
+            2.8
+          ],
+          "texture": "#iron"
+        }
+      }
+    }
+  ]
+}

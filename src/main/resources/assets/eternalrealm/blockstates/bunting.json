@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "eternalrealm:block/bunting"
+    },
+    "facing=east": {
+      "model": "eternalrealm:block/bunting"
+    },
+    "facing=south": {
+      "model": "eternalrealm:block/bunting"
+    },
+    "facing=west": {
+      "model": "eternalrealm:block/bunting"
+    }
+  }
+}
