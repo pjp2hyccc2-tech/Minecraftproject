@@ -211,8 +211,10 @@ final class EstateManager {
         released.ifPresent(gone -> {
             sendOutOf(gone.plot());
             gone.previousPlot().ifPresent(this::sendOutOf);
-            queueWipe(gone.plot(), gone.key().owner());
-            gone.previousPlot().ifPresent(previous -> queueWipe(previous, gone.key().owner()));
+            // a build that never finished is not in the world's records: its blueprint tells where it reaches
+            AABB hint = EstateLevels.box(gone.plot(), EstateBlueprints.get(server, gone.key()).orElse(null), level);
+            queueWipe(gone.plot(), gone.key().owner(), hint);
+            gone.previousPlot().ifPresent(previous -> queueWipe(previous, gone.key().owner(), null));
             saveIfDirty();
         });
         return released;
@@ -324,8 +326,12 @@ final class EstateManager {
     }
 
     private void queueWipe(EstatePlot plot, UUID owner) {
+        queueWipe(plot, owner, null);
+    }
+
+    private void queueWipe(EstatePlot plot, UUID owner, AABB hint) {
         cancel(plot);
-        jobs.add(new WipeJob(plot, owner));
+        jobs.add(new WipeJob(plot, owner, hint));
     }
 
     /** Drops queued work on {@code plot} (a running build of it stops). */
@@ -487,11 +493,12 @@ final class EstateManager {
         int block;
         int waited;
 
-        WipeJob(EstatePlot plot, UUID owner) {
+        /** @param hint where a build that the world has no record of may reach (null: anywhere a build could) */
+        WipeJob(EstatePlot plot, UUID owner, AABB hint) {
             super(plot);
             this.owner = owner;
             this.box = state().built(plot).map(EstateWorldState.Built::aabb)
-                    .orElse(EstateLevels.box(plot, null, level));
+                    .orElse(hint != null ? hint : EstateLevels.box(plot, null, level));
         }
 
         private int chunksX() {

@@ -60,11 +60,13 @@ final class EstateReturns {
         player.getPersistentData().remove(KEY);
     }
 
-    /** Whether a player can stand at {@code point} (its level exists, is not the estates, and there is room). */
+    /** Whether a player can stand at {@code point} (its level exists, is not the estates or a dungeon, and there is
+     * room). */
     static boolean usable(ServerPlayer player, Point point) {
         ServerLevel level = player.server.getLevel(point.dimension());
-        if (level == null || EstateLevels.isEstateLevel(level)) {
-            return false;
+        if (level == null || EstateLevels.isEstateLevel(level)
+                || com.eternalrealm.dungeon.forge.DungeonLevels.isDungeonLevel(level)) {
+            return false; // a dungeon instance does not wait for anyone: its slot may be wiped or reused
         }
         BlockPos feet = BlockPos.containing(point.position());
         if (!level.isInWorldBounds(feet)) {
