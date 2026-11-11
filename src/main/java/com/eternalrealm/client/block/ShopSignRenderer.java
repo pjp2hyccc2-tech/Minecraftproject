@@ -74,9 +74,9 @@ public class ShopSignRenderer implements BlockEntityRenderer<ShopSignBlockEntity
 
         // pivot: the bracket arm (wall) or the ceiling hooks; where the board's top edge hangs below it
         double pivotX = 0.5;
-        double pivotY = wall ? 14.5 * PX : 1.0;
+        double pivotY = wall ? 12.5 * PX : 1.0;
         double pivotZ = 0.5;
-        double hang = wall ? 2.5 * PX : 4.5 * PX;
+        double hang = wall ? 2.0 * PX : 4.5 * PX;
         double along = wall ? 1.0 * PX : 0.0;     // wall boards keep a pixel clear of the wall
         double cx = pivotX + ex * along;
         double cz = pivotZ + ez * along;

@@ -48,6 +48,11 @@ import java.util.List;
 @PrefixGameTestTemplate(false)
 public final class TownGimmickGameTests {
     private static final String EMPTY = "empty";
+    /**
+     * Their own batch: tests that place players far from their structure (the market's 60 blocks) depend on the
+     * default batches' grid layout, which extra tests there would shift.
+     */
+    private static final String BATCH = "town_gimmicks";
     private static final BlockPos LOWER = new BlockPos(1, 1, 1);
     private static final BlockPos UPPER = LOWER.above();
     /** Ticks from a click until the door is shut again with nobody about (plus a little slack). */
@@ -59,7 +64,7 @@ public final class TownGimmickGameTests {
 
     // ------------------------------------------------------------------------------------------ secret door
 
-    @GameTest(template = EMPTY, timeoutTicks = 400)
+    @GameTest(template = EMPTY, timeoutTicks = 400, batch = BATCH)
     public static void secretDoorOpensLetsPeopleThroughAndCloses(GameTestHelper helper) {
         buildDoor(helper, SecretDoorBlock.Look.BOOKSHELF);
         check(isWall(helper, LOWER) && isWall(helper, UPPER), "a closed door is a solid wall");
@@ -81,7 +86,7 @@ public final class TownGimmickGameTests {
         });
     }
 
-    @GameTest(template = EMPTY, timeoutTicks = 600)
+    @GameTest(template = EMPTY, timeoutTicks = 600, batch = BATCH)
     public static void secretDoorWaitsWhileSomeoneStandsInIt(GameTestHelper helper) {
         buildDoor(helper, SecretDoorBlock.Look.STONE_BRICKS);
         use(helper, UPPER);
@@ -99,7 +104,7 @@ public final class TownGimmickGameTests {
         });
     }
 
-    @GameTest(template = EMPTY)
+    @GameTest(template = EMPTY, batch = BATCH)
     public static void secretDoorHalvesNeverPart(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         buildDoor(helper, SecretDoorBlock.Look.CASTLE_BRICKS);
@@ -167,7 +172,7 @@ public final class TownGimmickGameTests {
 
     // ------------------------------------------------------------------------------------------ bunting
 
-    @GameTest(template = EMPTY)
+    @GameTest(template = EMPTY, batch = BATCH)
     public static void buntingDataRoundTrips(GameTestHelper helper) {
         BlockPos relative = new BlockPos(1, 1, 1);
         helper.setBlock(relative, TownGimmickBlocks.BUNTING.get().defaultBlockState()
@@ -225,7 +230,7 @@ public final class TownGimmickGameTests {
 
     // ------------------------------------------------------------------------------------------ capital states
 
-    @GameTest(template = EMPTY)
+    @GameTest(template = EMPTY, batch = BATCH)
     public static void everyCapitalStateOfTheCanalGimmicksExists(GameTestHelper helper) {
         HolderLookup<Block> blocks = helper.getLevel().holderLookup(Registries.BLOCK);
         List<String> problems = new ArrayList<>();
