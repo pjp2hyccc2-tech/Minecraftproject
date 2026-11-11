@@ -95,6 +95,19 @@ while a player is near, a killed one back after about five seconds, now and then
 server builds each as a stone on a small platform when a player first comes near or travels there, so existing worlds get
 them as well.
 
+## D-MOUNTS: mounts are bought per character, called with U, never fought from (2026-11-11)
+The owner asked for the three mounts of the reference pictures, bought from Lv10 (horse), Lv30 (griffin) and Lv50
+(bike), the griffin flying, the horse fast and the bike faster. Ownership is character data (extension `mounts`): it
+never wears out, and like waystones and outfits it starts over with a new season's character, whose level gates and
+gold start over too. The mount is a short-lived entity (not saved) called in one second where the player stands still,
+outside dungeons, boss fights and combat, and it leaves when its rider gets off, logs out or travels. Movement is
+driven by the rider's client like vanilla vehicles (`MountMotion`, pure) and watched by the server over 20-tick
+windows (sustained speed or hovering above the flight ceiling sends the mount away). The griffin flies up to 32 blocks
+above the highest ground around it (8 below the world's top); dungeons cannot be entered mounted, so no instance or
+boss room can be flown over. Mounts take no damage and are never targets; big hits do not knock riders off, but a
+rider's own blow does not land from the saddle: the rider gets off to fight. No new packets: two UI actions and one
+view channel.
+
 ## D-HUD: one layout for the whole HUD; no hotbar, the main hand is slot 0 (2026-11-10)
 The owner asked for no overlapping HUD parts, no vanilla hotbar and a bag and an equipment icon on the right with their
 keys. Every part is placed by one pure layout (`hud.HudLayout`) computed per frame from the screen and what is showing,

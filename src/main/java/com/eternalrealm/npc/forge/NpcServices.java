@@ -60,6 +60,11 @@ public final class NpcServices {
                 com.eternalrealm.economy.forge.AuctionMenu.openMailbox(player);
             });
         });
+        Npcs.onInteract(NpcRole.STABLE_MASTER, (player, npc) -> {
+            StoryNpcs.serviceTalk(player, NpcRole.STABLE_MASTER, () -> {
+                com.eternalrealm.mount.forge.MountStable.open(player);
+            });
+        });
         Npcs.onInteract(NpcRole.ARENA_MASTER, (player, npc) ->
                 StoryNpcs.serviceTalk(player, NpcRole.ARENA_MASTER, () -> player.displayClientMessage(
                         net.minecraft.network.chat.Component.translatable("message.eternalrealm.npc.coming_soon")

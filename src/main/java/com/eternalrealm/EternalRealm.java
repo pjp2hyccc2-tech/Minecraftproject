@@ -55,6 +55,7 @@ public final class EternalRealm {
         EREntities.register(modBus);
         EREntityTypes.register(modBus);
         com.eternalrealm.npc.forge.NpcEntities.register(modBus);
+        com.eternalrealm.mount.forge.MountEntities.register(modBus);
         com.eternalrealm.block.forge.ERBlocks.register(modBus);
         com.eternalrealm.block.forge.ERBannerPatterns.register(modBus);
         com.eternalrealm.sound.ERSounds.register(modBus);
@@ -70,6 +71,7 @@ public final class EternalRealm {
         com.eternalrealm.item.forge.BagService.register();
         com.eternalrealm.revival.forge.RevivalService.register();
         com.eternalrealm.dungeon.forge.DungeonResults.register();
+        com.eternalrealm.mount.forge.MountService.register();
         AstoriaWorldgen.register(modBus);
 
         modBus.addListener(ServerBootstrap::onConfigReloading);

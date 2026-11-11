@@ -83,7 +83,7 @@ public final class NpcAnimations {
             case "ilsa" -> new AnimationDefinition[]{IDLE, WALK, WORK_BIGHAMMER, TALK_GRUFF};
             case "selene" -> new AnimationDefinition[]{IDLE_HOVER, WALK, WORK_ORB, TALK_MECH};
             case "gunter" -> new AnimationDefinition[]{IDLE_STILL, WALK, WORK_LANTERN, TALK_GRUFF};
-            case "king", "farmer", "sailor2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_HEARTY};
+            case "king", "farmer", "stable_master", "sailor2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_HEARTY};
             case "merchant", "merchant2", "noble_gent", "noble_gent2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_FLOURISH};
             case "housewife", "housewife2", "farmer2" -> new AnimationDefinition[]{IDLE, WALK, WORK, TALK_BOW};
             case "sailor" -> new AnimationDefinition[]{IDLE, WALK, WORK_PIPE, TALK_HEARTY};

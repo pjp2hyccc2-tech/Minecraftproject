@@ -916,6 +916,9 @@ FOLK = [
                             eye='#3a2a20')),
     (farmer, 'farmer2', dict(woman=True, skin=SKINS[0], hair='#c88a3a', dress='#8a6a3a', freckles=True,
                              hatband='#3a6a9a', eye='#4a7a3a')),
+    # the capital's stablemaster (mounts): the stable's blue, a gold hatband
+    (farmer, 'stable_master', dict(skin=SKINS[2], hair='#3a2618', overalls='#2c3f9c', shirt='#e6dcc4',
+                                   stubble='#4a3424', hatband='#d8a43c', eye='#3a2a20')),
     (sailor, 'sailor', dict(skin=SKINS[2], hair='#2a2018', stripe='#2c4f8a', cap='#1e2a4a', stubble='#3a2a20',
                             extra=('pipe',), eye='#2a3a5a')),
     (sailor, 'sailor2', dict(skin=SKINS[3], hair='#1a1410', stripe='#a83a3a', bandana='#2c4f8a', extra=('sack',),
