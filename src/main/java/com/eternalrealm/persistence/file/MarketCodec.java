@@ -2,7 +2,11 @@ package com.eternalrealm.persistence.file;
 
 import com.eternalrealm.core.data.CorruptDataException;
 import com.eternalrealm.core.data.IncompatibleDataException;
+import com.eternalrealm.economy.Bid;
 import com.eternalrealm.economy.ItemInfo;
+import com.eternalrealm.economy.Lot;
+import com.eternalrealm.economy.LotState;
+import com.eternalrealm.economy.PriceHistory;
 import com.eternalrealm.economy.Listing;
 import com.eternalrealm.economy.MailItem;
 import com.eternalrealm.economy.MailReason;
@@ -14,10 +18,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * JSON form of a season's market ({@code seasons/<seasonId>/market.json}, schema 1; docs/modules/party.md):
+ * JSON form of a season's market ({@code seasons/<seasonId>/market.json}, schema 2; docs/modules/party.md and
+ * docs/modules/market.md). Schema 2 added the items' board data ({@code category, level, gold, group, keywords}), the
+ * auction hall's {@code lots}, the price history {@code prices} and {@code savedAtMillis}; schema 1 files load with
+ * defaults for them.
  * <pre>
  * { "schema": 1, "seasonId": "s1",
  *   "listings":  [ { "id", "sellerId", "sellerName", "item": { "itemId", "count", "rarity" }, "itemData",
@@ -29,7 +38,7 @@ import java.util.List;
  * values and duplicate ids are corruption.
  */
 public final class MarketCodec {
-    public static final int SCHEMA_VERSION = 1;
+    public static final int SCHEMA_VERSION = 2;
 
     private MarketCodec() {
     }
@@ -66,11 +75,31 @@ public final class MarketCodec {
             json.add("items", items);
             mailboxes.add(json);
         }
+        JsonArray lots = new JsonArray();
+        for (Lot lot : data.lots()) {
+            lots.add(encodeLot(lot));
+        }
+        JsonObject prices = new JsonObject();
+        data.prices().forEach((group, sales) -> {
+            JsonArray array = new JsonArray();
+            for (PriceHistory.Sale sale : sales) {
+                JsonObject json = new JsonObject();
+                json.addProperty("unitPrice", sale.unitPrice());
+                json.addProperty("count", sale.count());
+                json.addProperty("atMillis", sale.atMillis());
+                json.addProperty("auction", sale.auction());
+                array.add(json);
+            }
+            prices.add(group, array);
+        });
         JsonObject root = new JsonObject();
         root.addProperty("schema", SCHEMA_VERSION);
         root.addProperty("seasonId", data.season().value());
         root.add("listings", listings);
         root.add("mailboxes", mailboxes);
+        root.add("lots", lots);
+        root.add("prices", prices);
+        root.addProperty("savedAtMillis", data.savedAtMillis());
         return JsonSupport.toJson(root);
     }
 
@@ -113,8 +142,28 @@ public final class MarketCodec {
                 mailboxes.add(new Mailbox(JsonSupport.requireUuid(mailbox, "owner"),
                         JsonSupport.requireLong(mailbox, "gold"), items));
             }
-            return new MarketData(season, listings, mailboxes);
-        } catch (IllegalArgumentException e) {
+            List<Lot> lots = new ArrayList<>();
+            if (root.has("lots")) {
+                for (JsonElement element : JsonSupport.requireArray(root, "lots")) {
+                    lots.add(decodeLot(JsonSupport.asObject(element, "lot")));
+                }
+            }
+            Map<String, List<PriceHistory.Sale>> prices = new LinkedHashMap<>();
+            if (root.has("prices")) {
+                for (Map.Entry<String, JsonElement> entry : JsonSupport.requireObject(root, "prices").entrySet()) {
+                    List<PriceHistory.Sale> sales = new ArrayList<>();
+                    for (JsonElement element : entry.getValue().getAsJsonArray()) {
+                        JsonObject sale = JsonSupport.asObject(element, "sale");
+                        sales.add(new PriceHistory.Sale(JsonSupport.requireLong(sale, "unitPrice"),
+                                JsonSupport.requireInt(sale, "count"), JsonSupport.requireLong(sale, "atMillis"),
+                                sale.has("auction") && sale.get("auction").getAsBoolean()));
+                    }
+                    prices.put(entry.getKey(), sales);
+                }
+            }
+            long savedAt = root.has("savedAtMillis") ? JsonSupport.requireLong(root, "savedAtMillis") : 0L;
+            return new MarketData(season, listings, mailboxes, lots, prices, savedAt);
+        } catch (IllegalArgumentException | IllegalStateException | UnsupportedOperationException e) {
             throw new CorruptDataException("Invalid market data: " + e.getMessage(), e);
         }
     }
@@ -124,11 +173,74 @@ public final class MarketCodec {
         json.addProperty("itemId", item.itemId());
         json.addProperty("count", item.count());
         json.addProperty("rarity", item.rarity());
+        json.addProperty("category", item.category());
+        json.addProperty("level", item.level());
+        json.addProperty("gold", item.gold());
+        json.addProperty("group", item.group());
+        json.addProperty("keywords", item.keywords());
         return json;
     }
 
     private static ItemInfo decodeItem(JsonObject json) throws CorruptDataException {
-        return new ItemInfo(JsonSupport.requireString(json, "itemId"), JsonSupport.requireInt(json, "count"),
+        ItemInfo basic = new ItemInfo(JsonSupport.requireString(json, "itemId"), JsonSupport.requireInt(json, "count"),
                 JsonSupport.requireString(json, "rarity"));
+        if (!json.has("category")) {
+            return basic; // schema 1
+        }
+        return new ItemInfo(basic.itemId(), basic.count(), basic.rarity(), JsonSupport.requireString(json, "category"),
+                JsonSupport.requireInt(json, "level"), json.has("gold") && json.get("gold").getAsBoolean(),
+                JsonSupport.requireString(json, "group"), JsonSupport.requireString(json, "keywords"));
+    }
+
+    private static JsonObject encodeLot(Lot lot) {
+        JsonObject json = new JsonObject();
+        json.addProperty("id", lot.id().toString());
+        json.addProperty("seller", lot.seller().toString());
+        json.addProperty("sellerName", lot.sellerName());
+        json.addProperty("itemData", lot.itemData());
+        json.add("item", encodeItem(lot.item()));
+        json.addProperty("startPrice", lot.startPrice());
+        json.addProperty("buyoutPrice", lot.buyoutPrice());
+        json.addProperty("durationMinutes", lot.durationMinutes());
+        json.addProperty("state", lot.state().id());
+        json.addProperty("createdAtMillis", lot.createdAtMillis());
+        json.addProperty("queuedAtMillis", lot.queuedAtMillis());
+        json.addProperty("startedAtMillis", lot.startedAtMillis());
+        json.addProperty("endsAtMillis", lot.endsAtMillis());
+        json.addProperty("latestEndMillis", lot.latestEndMillis());
+        JsonArray bids = new JsonArray();
+        for (Bid bid : lot.bids()) {
+            JsonObject b = new JsonObject();
+            b.addProperty("bidder", bid.bidder().toString());
+            b.addProperty("bidderName", bid.bidderName());
+            b.addProperty("amount", bid.amount());
+            b.addProperty("atMillis", bid.atMillis());
+            bids.add(b);
+        }
+        json.add("bids", bids);
+        json.addProperty("bidCount", lot.bidCount());
+        json.addProperty("feePaid", lot.feePaid());
+        json.addProperty("finishedAtMillis", lot.finishedAtMillis());
+        return json;
+    }
+
+    private static Lot decodeLot(JsonObject json) throws CorruptDataException {
+        String stateId = JsonSupport.requireString(json, "state");
+        LotState state = LotState.byId(stateId)
+                .orElseThrow(() -> new CorruptDataException("Unknown lot state '" + stateId + "'"));
+        List<Bid> bids = new ArrayList<>();
+        for (JsonElement element : JsonSupport.requireArray(json, "bids")) {
+            JsonObject bid = JsonSupport.asObject(element, "bid");
+            bids.add(new Bid(JsonSupport.requireUuid(bid, "bidder"), JsonSupport.requireString(bid, "bidderName"),
+                    JsonSupport.requireLong(bid, "amount"), JsonSupport.requireLong(bid, "atMillis")));
+        }
+        return new Lot(JsonSupport.requireUuid(json, "id"), JsonSupport.requireUuid(json, "seller"),
+                JsonSupport.requireString(json, "sellerName"), JsonSupport.requireString(json, "itemData"),
+                decodeItem(JsonSupport.requireObject(json, "item")), JsonSupport.requireLong(json, "startPrice"),
+                JsonSupport.requireLong(json, "buyoutPrice"), JsonSupport.requireInt(json, "durationMinutes"), state,
+                JsonSupport.requireLong(json, "createdAtMillis"), JsonSupport.requireLong(json, "queuedAtMillis"),
+                JsonSupport.requireLong(json, "startedAtMillis"), JsonSupport.requireLong(json, "endsAtMillis"),
+                JsonSupport.requireLong(json, "latestEndMillis"), bids, JsonSupport.requireInt(json, "bidCount"),
+                JsonSupport.requireLong(json, "feePaid"), JsonSupport.requireLong(json, "finishedAtMillis"));
     }
 }

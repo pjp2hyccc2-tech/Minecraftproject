@@ -8,7 +8,8 @@ import java.util.Objects;
  * are in basis points (1/100 of a percent: 200 = 2%) so that gold amounts stay exact integers.
  *
  * <pre>
- *   listing fee = max(minimumListingFee, floor(price × listingFeeBasisPoints / 10000))   paid when listing, not refunded
+ *   listing fee = max(minimumListingFee, floor(price × listingFeeBasisPoints / 10000)), at most MAX_LISTING_FEE
+ *                                                                                       paid when listing, not refunded
  *   sales tax   = floor(price × salesTaxBasisPoints / 10000)                            seller receives price − tax
  * </pre>
  * Fee and tax are gold sinks: they leave the economy.
@@ -44,9 +45,16 @@ public record AuctionRules(Duration listingDuration, int listingFeeBasisPoints, 
         return new AuctionRules(Duration.ofHours(48), 200, 1L, 500, 10);
     }
 
+    /**
+     * At most this much to list one item, however expensive: the board is also for rare pieces at high prices, and a
+     * fee lost on an unsold item should not keep them off it.
+     */
+    public static final long MAX_LISTING_FEE = 100_000L;
+
     public long listingFee(long price) {
         checkPrice(price);
-        return Math.max(minimumListingFee, basisPointsOf(price, listingFeeBasisPoints));
+        return Math.min(Math.max(minimumListingFee, MAX_LISTING_FEE),
+                Math.max(minimumListingFee, basisPointsOf(price, listingFeeBasisPoints)));
     }
 
     public long salesTax(long price) {

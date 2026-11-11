@@ -190,10 +190,9 @@ public final class AuctionHouse {
     /** Listings matching {@code query} that have not expired at {@code nowMillis}. */
     public Page<Listing> search(MarketQuery query, long nowMillis) {
         Objects.requireNonNull(query, "query");
-        String needle = query.itemIdContains().toLowerCase(Locale.ROOT);
         List<Listing> matches = new ArrayList<>();
         for (Listing listing : listings.values()) {
-            if (!listing.isExpired(nowMillis) && listing.item().itemId().contains(needle)) {
+            if (!listing.isExpired(nowMillis) && query.accepts(listing.item())) {
                 matches.add(listing);
             }
         }
