@@ -21,9 +21,10 @@ import org.joml.Vector3f;
  *     <li>bike: the idle hum and the ride (banner and flag in the wind); the wheels turn with the distance (their
  *     glowing rims are the emissive layer) and the bike leans and steers into turns.</li>
  * </ul>
- * Each mount wears its coat (the model variant) and its shape: a horse's mane cropped, flowing or long (with a longer
- * tail); a griffin's wings broad, swept (long narrow primaries folded back), fanned (short and spread) or royal (long
- * plumes on the crest, the wing tips and the tail).
+ * Each mount wears its coat (the model variant) and its shape: a horse's mane (the shards from the poll down the
+ * crest and the locks hanging over the neck) cropped, flowing or long (with a longer tail); a griffin's wings broad,
+ * swept (long narrow primaries folded back), fanned (short and spread) or royal (long plumes on the crest, the wing
+ * tips and the tail).
  */
 public class MountModel extends RigModel<MountEntity> {
     // animation slots (the order of SLOTS in rig_mounts.py)
@@ -48,10 +49,12 @@ public class MountModel extends RigModel<MountEntity> {
     private final ModelPart rearWheel;
     private final ModelPart fork;
     private final java.util.List<ModelPart> mane = new java.util.ArrayList<>();
+    private final java.util.List<ModelPart> locks = new java.util.ArrayList<>();
     private final java.util.List<ModelPart> tailEnds = new java.util.ArrayList<>();
     private final java.util.List<ModelPart> primaries = new java.util.ArrayList<>();
     private final java.util.List<ModelPart> hands = new java.util.ArrayList<>();
     private final java.util.List<ModelPart> crest = new java.util.ArrayList<>();
+    private final java.util.List<ModelPart> hackles = new java.util.ArrayList<>();
     private final ModelPart tailTip;
 
     public MountModel(ModelPart root, RigTables tables, MountKind kind) {
@@ -61,19 +64,23 @@ public class MountModel extends RigModel<MountEntity> {
         this.frontWheel = findOrNull(root, "front_wheel");
         this.rearWheel = findOrNull(root, "rear_wheel");
         this.fork = findOrNull(root, "fork");
-        for (int i = 1; i <= 11; i++) {
+        for (int i = 1; i <= 48; i++) {
             add(this.mane, findOrNull(root, "mane_" + i));
+        }
+        for (int i = 1; i <= 16; i++) {
+            add(this.locks, findOrNull(root, "lock_" + i));
         }
         add(this.tailEnds, findOrNull(root, "tail3"));
         add(this.tailEnds, findOrNull(root, "tail4"));
         for (String side : new String[] {"r", "l"}) {
-            for (int i = 1; i <= 6; i++) {
+            for (int i = 1; i <= 12; i++) {
                 add(this.primaries, findOrNull(root, "prim_" + side + i));
             }
             add(this.hands, findOrNull(root, "wing_" + side + "2"));
         }
-        for (int i = 1; i <= 8; i++) {
+        for (int i = 1; i <= 24; i++) {
             add(this.crest, findOrNull(root, "crest_" + i));
+            add(this.hackles, findOrNull(root, "hackle_" + i));
         }
         this.tailTip = kind == MountKind.GRIFFIN ? findOrNull(root, "tail2") : null;
     }
@@ -107,10 +114,17 @@ public class MountModel extends RigModel<MountEntity> {
                     part.zScale *= 0.55F;
                     part.yScale *= 0.85F;
                 }
+                // the hanging locks hang along y
+                for (ModelPart part : this.locks) {
+                    part.yScale *= 0.5F;
+                }
             }
             case "long" -> {
                 for (ModelPart part : this.mane) {
                     part.zScale *= 1.45F;
+                }
+                for (ModelPart part : this.locks) {
+                    part.yScale *= 1.4F;
                 }
                 for (ModelPart part : this.tailEnds) {
                     part.yScale *= 1.3F;
@@ -137,11 +151,15 @@ public class MountModel extends RigModel<MountEntity> {
             }
             case "royal" -> {
                 for (ModelPart part : this.crest) {
-                    part.zScale *= 1.9F;
+                    part.zScale *= 1.6F;
                 }
+                for (ModelPart part : this.hackles) {
+                    part.zScale *= 1.3F;
+                }
+                int perWing = this.primaries.size() / 2;
                 for (int i = 0; i < this.primaries.size(); i++) {
-                    if (i % 6 >= 2) {
-                        this.primaries.get(i).zScale *= 1.4F;
+                    if (perWing > 0 && i % perWing >= perWing / 3) {
+                        this.primaries.get(i).zScale *= 1.3F;
                     }
                 }
                 if (this.tailTip != null) {

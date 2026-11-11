@@ -35,8 +35,8 @@ public final class MountBodies {
 
     public static double seatHeight(MountKind kind) {
         return switch (kind) {
-            case HORSE -> 1.8125;
-            case GRIFFIN -> 1.625;
+            case HORSE -> 1.875;
+            case GRIFFIN -> 1.6875;
             case BIKE -> 1.25;
         };
     }
@@ -44,7 +44,7 @@ public final class MountBodies {
     public static double seatForward(MountKind kind) {
         return switch (kind) {
             case HORSE -> -0.0312;
-            case GRIFFIN -> -0.0625;
+            case GRIFFIN -> -0.0312;
             case BIKE -> -0.4375;
         };
     }
