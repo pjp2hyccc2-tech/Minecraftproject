@@ -1,12 +1,14 @@
 package com.eternalrealm.mount.forge;
 
 import com.eternalrealm.mount.MountBodies;
+import com.eternalrealm.mount.MountFamily;
 import com.eternalrealm.mount.MountIndividual;
 import com.eternalrealm.mount.MountKind;
 import com.eternalrealm.mount.MountLook;
 import com.eternalrealm.mount.MountLooks;
 import com.eternalrealm.mount.MountMotion;
 import com.eternalrealm.mount.MountRules;
+import com.eternalrealm.mount.MountTalent;
 import com.eternalrealm.mount.MountTraits;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
@@ -19,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -33,6 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 
@@ -44,9 +48,11 @@ import java.util.function.BooleanSupplier;
 
 /**
  * A summoned mount ({@link MountKind}): it exists only while ridden. The rider's client moves it (like vanilla
- * horses) with {@link MountMotion}; the server keeps it invulnerable, untargetable and unpushable, lets a griffin's
- * rider get off only on the ground, and sends it away when its rider is gone or moves it impossibly fast or high.
- * Not saved with the world (its entity type is {@code noSave}).
+ * horses) with {@link MountMotion}, keeping the ride's memory for the talents that need one (a surge, a step on the
+ * air); a wave runner stands on still water. The server keeps it invulnerable, untargetable and unpushable, lets a
+ * griffin's rider get off only on the ground, and sends it away when its rider is gone or moves it impossibly fast
+ * or high. Every client shows the breed's particles and sounds from how it moves ({@link MountEffects}). Not saved
+ * with the world (its entity type is {@code noSave}).
  */
 public class MountEntity extends Mob implements OwnableEntity {
     private static final Logger LOG = LogUtils.getLogger();
@@ -70,6 +76,8 @@ public class MountEntity extends Mob implements OwnableEntity {
     private MountLook look;
     private String lookFrom;
     private MountMotion.Velocity motion = MountMotion.Velocity.ZERO;
+    /** The ride's memory (the rider's client; GameTests drive on the server). */
+    private MountMotion.Ride ride = MountMotion.Ride.START;
     @Nullable
     private UUID owner;
     private int riderlessTicks;
@@ -99,6 +107,12 @@ public class MountEntity extends Mob implements OwnableEntity {
     private int airTicks;
     private int groundTicks;
     private float lastYaw = Float.NaN;
+    private float glide;
+    private float glideO;
+    private int glideTicks;
+    private float lastDy;
+    private boolean surging;
+    private int flapBeat;
 
     public MountEntity(EntityType<? extends MountEntity> type, Level level, MountKind kind) {
         super(type, level);
@@ -239,8 +253,10 @@ public class MountEntity extends Mob implements OwnableEntity {
     public void drive(MountMotion.Input input) {
         boolean water = isInWater() || isInLava();
         double gap = kind.flies() ? flightCeiling() - getY() : Double.MAX_VALUE;
-        MountMotion.Velocity next = MountMotion.step(kind, stats(), input, getYRot(), motion,
-                new MountMotion.Surroundings(onGround(), water, gap));
+        MountMotion.Step step = MountMotion.ride(kind, stats(), input, getYRot(), motion,
+                new MountMotion.Surroundings(onGround(), water, gap), ride);
+        ride = step.ride();
+        MountMotion.Velocity next = step.velocity();
         Vec3 before = position();
         move(MoverType.SELF, new Vec3(next.x(), next.y(), next.z()));
         Vec3 moved = position().subtract(before);
@@ -259,6 +275,20 @@ public class MountEntity extends Mob implements OwnableEntity {
     /** The current velocity of the ride (blocks per tick). */
     public MountMotion.Velocity motion() {
         return motion;
+    }
+
+    /** The ride's memory (GameTests: whether a surge is on, whether the step on the air is still to be used). */
+    public MountMotion.Ride ride() {
+        return ride;
+    }
+
+    /**
+     * A wave runner stands on still water (vanilla's collision for fluids a mob can stand on, as a strider on lava):
+     * it gallops over lakes and the sea, never into them.
+     */
+    @Override
+    public boolean canStandOnFluid(FluidState fluid) {
+        return kind.talent() == MountTalent.WAVE_RUNNER && fluid.is(FluidTags.WATER) || super.canStandOnFluid(fluid);
     }
 
     /** The highest this mount may fly here ({@link #terrainCeiling()}, or the ceiling a GameTest fixed). */
@@ -282,7 +312,7 @@ public class MountEntity extends Mob implements OwnableEntity {
                 heights.add(level().getHeight(Heightmap.Types.MOTION_BLOCKING, x + dx, z + dz));
             }
         }
-        return MountRules.flightCeiling(heights, level().getMaxBuildHeight());
+        return MountRules.flightCeiling(kind, heights, level().getMaxBuildHeight());
     }
 
     @Override
@@ -364,7 +394,9 @@ public class MountEntity extends Mob implements OwnableEntity {
         double dz = getZ() - watchedFrom.z;
         double perTick = Math.sqrt(dx * dx + dz * dz) / WATCH_WINDOW;
         watchedFrom = position();
-        speedingWindows = perTick > stats().topSpeed() * 1.35 + 0.25 ? speedingWindows + 1 : 0;
+        // a surge or a dive runs faster than the top speed: allowed for
+        double peak = stats().topSpeed() * kind.talent().peakFactor();
+        speedingWindows = perTick > peak * 1.35 + 0.25 ? speedingWindows + 1 : 0;
         if (kind.flies()) {
             // above the ceiling the ride sinks by itself (MountMotion.ABOVE_CEILING_SINK): only hovering up there counts
             boolean high = getY() > flightCeiling() + 6.0;
@@ -402,7 +434,7 @@ public class MountEntity extends Mob implements OwnableEntity {
     private void playMovementSound() {
         double speedNow = motion.horizontal() > 0.0 ? motion.horizontal()
                 : Math.sqrt((getX() - xo) * (getX() - xo) + (getZ() - zo) * (getZ() - zo));
-        if (kind == MountKind.BIKE && speedNow > 0.05) {
+        if (kind.family() == MountFamily.BIKE && speedNow > 0.05) {
             level().playSound(null, getX(), getY(), getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.NEUTRAL, 0.35F,
                     (float) (0.8 + speedNow));
         }
@@ -410,10 +442,11 @@ public class MountEntity extends Mob implements OwnableEntity {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        switch (kind) {
+        switch (kind.family()) {
             case HORSE -> playSound(motion.horizontal() > 0.3 || getDeltaMovement().horizontalDistanceSqr() > 0.09
                     ? SoundEvents.HORSE_GALLOP : SoundEvents.HORSE_STEP, 0.35F, 1.0F);
-            case GRIFFIN -> playSound(SoundEvents.HORSE_STEP_WOOD, 0.25F, 1.4F);
+            case GRIFFIN -> playSound(kind == MountKind.GRIFFIN_GOLD ? SoundEvents.WOLF_STEP : SoundEvents.HORSE_STEP_WOOD,
+                    0.25F, 1.4F);
             case BIKE -> {
                 // rolls silently: the hum is its sound
             }
@@ -526,7 +559,37 @@ public class MountEntity extends Mob implements OwnableEntity {
             float rate = !airborne ? 0.0F : climb > 0.04F || airTicks < 20 ? 0.11F : climb < -0.02F ? 0.0F : 0.04F;
             flap += rate;
             beat += ((rate > 0.0F ? Math.min(1.0F, rate * 12.0F) : 0.0F) - beat) * 0.15F;
+            if ((int) flap != flapBeat) {
+                flapBeat = (int) flap;
+                MountEffects.wingBeat(this);
+            }
         }
+        // a glider holding its slow sink spreads its wings; the step on the air and the surge show themselves
+        glideO = glide;
+        boolean sinkingSlowly = airTicks > 3 && dy < -0.05 && dy > -0.13;
+        glideTicks = sinkingSlowly ? glideTicks + 1 : 0;
+        float glideTarget = kind.talent() == MountTalent.GLIDE && glideTicks >= 3 ? 1.0F : 0.0F;
+        glide += (glideTarget - glide) * 0.25F;
+        if (kind.talent() == MountTalent.SKY_STEP && airTicks > 3 && dy > 0.25 && lastDy < 0.15) {
+            MountEffects.skyStep(this);
+        }
+        lastDy = (float) dy;
+        boolean surgingNow = kind.talent() == MountTalent.SURGE && horizontal > stats().topSpeed() * 1.04;
+        if (surgingNow && !surging) {
+            MountEffects.surge(this);
+        }
+        surging = surgingNow;
+        MountEffects.tick(this, horizontal, (float) dy);
+    }
+
+    /** The winged breed's glide: 0 wings folded, 1 spread (smoothed, client). */
+    public float glide(float partialTick) {
+        return Mth.lerp(partialTick, glideO, glide);
+    }
+
+    /** Whether the fire breed shows its surge right now (client). */
+    public boolean surging() {
+        return surging;
     }
 
     private float forwardSign(double dx, double dz) {

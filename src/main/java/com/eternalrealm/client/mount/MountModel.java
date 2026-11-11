@@ -2,6 +2,8 @@ package com.eternalrealm.client.mount;
 
 import com.eternalrealm.client.entity.model.RigModel;
 import com.eternalrealm.client.entity.model.RigTables;
+import com.eternalrealm.client.entity.model.gen.MountRigs;
+import com.eternalrealm.mount.MountFamily;
 import com.eternalrealm.mount.MountKind;
 import com.eternalrealm.mount.forge.MountEntity;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -11,11 +13,12 @@ import net.minecraft.util.Mth;
 import org.joml.Vector3f;
 
 /**
- * Model of a mount (tools/art_entities/rig_mounts.py). The layers are blended by weight every frame from how the mount
- * moves ({@link MountEntity}'s look values):
+ * Model of a mount (tools/art_entities/rig_mounts.py and the breeds' rigs). The layers are blended by weight every
+ * frame from how the mount moves ({@link MountEntity}'s look values), by the kind's family (every breed of a family
+ * has its bones and gaits; a breed's own parts move in its idle: flames flicker, the halo turns, shards circle):
  * <ul>
  *     <li>horse: idle; walk and gallop cycles following the distance run (mane and tail stream in the gallop); the
- *     jump pose in the air;</li>
+ *     jump pose in the air; the winged breed spreads its wings in the glide (its fifth slot);</li>
  *     <li>griffin: idle; the folded wings on the ground, the walk; in the air the wing beat (phase from the beats,
  *     faster when climbing) blended with the glide; the body pitches with the climb;</li>
  *     <li>bike: the idle hum and the ride (banner and flag in the wind); the wheels turn with the distance (their
@@ -32,6 +35,7 @@ public class MountModel extends RigModel<MountEntity> {
     private static final int HORSE_WALK = 1;
     private static final int HORSE_GALLOP = 2;
     private static final int HORSE_JUMP = 3;
+    private static final int HORSE_GLIDE = 4;
     private static final int GRIFFIN_WALK = 1;
     private static final int GRIFFIN_FOLD = 2;
     private static final int GRIFFIN_FLAP = 3;
@@ -43,6 +47,7 @@ public class MountModel extends RigModel<MountEntity> {
     private static final float GRIFFIN_WALK_STRIDE = 2.0F;
 
     private final MountKind kind;
+    private final boolean glides;
     private final Vector3f cache = new Vector3f();
     private final ModelPart base;
     private final ModelPart frontWheel;
@@ -60,6 +65,7 @@ public class MountModel extends RigModel<MountEntity> {
     public MountModel(ModelPart root, RigTables tables, MountKind kind) {
         super(root, tables);
         this.kind = kind;
+        this.glides = MountRigs.glides(kind);
         this.base = findOrNull(root, "base");
         this.frontWheel = findOrNull(root, "front_wheel");
         this.rearWheel = findOrNull(root, "rear_wheel");
@@ -82,7 +88,7 @@ public class MountModel extends RigModel<MountEntity> {
             add(this.crest, findOrNull(root, "crest_" + i));
             add(this.hackles, findOrNull(root, "hackle_" + i));
         }
-        this.tailTip = kind == MountKind.GRIFFIN ? findOrNull(root, "tail2") : null;
+        this.tailTip = kind.family() == MountFamily.GRIFFIN ? findOrNull(root, "tail2") : null;
     }
 
     private static void add(java.util.List<ModelPart> parts, ModelPart part) {
@@ -98,7 +104,7 @@ public class MountModel extends RigModel<MountEntity> {
         float partial = Mth.clamp(ageInTicks - mount.tickCount, 0.0F, 1.0F);
         long millis = (long) (ageInTicks * 50.0F);
         play(animation(index, IDLE), millis, 1.0F);
-        switch (this.kind) {
+        switch (this.kind.family()) {
             case HORSE -> horse(mount, index, partial);
             case GRIFFIN -> griffin(mount, index, partial);
             case BIKE -> bike(mount, index, partial, millis);
@@ -174,13 +180,18 @@ public class MountModel extends RigModel<MountEntity> {
 
     private void horse(MountEntity mount, int index, float partial) {
         float speed = mount.speed();
+        float glide = this.glides ? Mth.clamp(mount.glide(partial), 0.0F, 1.0F) : 0.0F;
         float air = mount.airTicks() > 2 ? Math.min(1.0F, (mount.airTicks() - 2) / 3.0F) : 0.0F;
         float gallop = smooth(speed, 0.2F, 0.38F) * (1.0F - air);
         float walk = smooth(speed, 0.015F, 0.08F) * (1.0F - gallop) * (1.0F - air);
         float distance = mount.distance(partial);
         cycle(animation(index, HORSE_WALK), distance / HORSE_WALK_STRIDE, walk);
         cycle(animation(index, HORSE_GALLOP), distance / HORSE_GALLOP_STRIDE, gallop);
-        play(animation(index, HORSE_JUMP), (long) (Math.min(mount.airTicks(), 12) * 50L), air);
+        play(animation(index, HORSE_JUMP), (long) (Math.min(mount.airTicks(), 12) * 50L), air * (1.0F - glide));
+        if (glide > 0.01F) {
+            // the wings come out of their fold (the idle folds them) and the legs tuck
+            play(animation(index, HORSE_GLIDE), (long) ((mount.tickCount + partial) * 50.0F), glide);
+        }
     }
 
     private void griffin(MountEntity mount, int index, float partial) {

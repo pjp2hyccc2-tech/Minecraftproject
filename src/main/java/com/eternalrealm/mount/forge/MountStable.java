@@ -327,6 +327,8 @@ public final class MountStable {
             for (MountKind kind : MountKind.values()) {
                 JsonObject json = new JsonObject();
                 json.addProperty("kind", kind.id());
+                json.addProperty("family", kind.family().id());
+                json.addProperty("talent", kind.talent().id());
                 json.addProperty("level", kind.requiredLevel());
                 json.addProperty("price", kind.price());
                 json.addProperty("flies", kind.flies());

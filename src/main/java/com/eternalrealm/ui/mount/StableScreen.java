@@ -1,10 +1,14 @@
 package com.eternalrealm.ui.mount;
 
 import com.eternalrealm.client.ClientUiState;
+import com.eternalrealm.client.entity.model.gen.MountRigs;
+import com.eternalrealm.core.ModInfo;
+import com.eternalrealm.mount.MountFamily;
 import com.eternalrealm.mount.MountKind;
 import com.eternalrealm.mount.MountLook;
 import com.eternalrealm.mount.MountLooks;
 import com.eternalrealm.mount.MountRules;
+import com.eternalrealm.mount.MountTalent;
 import com.eternalrealm.mount.MountTraits;
 import com.eternalrealm.mount.forge.MountEntities;
 import com.eternalrealm.mount.forge.MountEntity;
@@ -19,28 +23,38 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * The stable (docs/modules/mounts.md). At the stablemaster: a tab per kind with the {@value MountRules#OFFERS} horses or
- * griffins he shows (their looks turning on a stand, their values hidden as "???"), buying one (twice to confirm; its
- * values are then revealed, counting up to its grade), being shown others for a fee; the kept mounts with their values,
- * to pick, call or make into a deed; and the deeds in the bag, to take in. With the choose key (anywhere) only the kept
- * mounts. The server decides everything and sends the screen again after each action.
+ * The stable (docs/modules/mounts.md). At the stablemaster: a tab per family (horses, griffins, the arcbike) with a row
+ * of its breeds (their icons; a breed above the player's level is dimmed; hovering tells its name, description, price
+ * and talent), and for the chosen breed its line (level, price, speed), its talent and the {@value MountRules#OFFERS}
+ * horses or griffins the stablemaster shows (their looks turning on a stand, their values hidden as "???"), buying one
+ * (twice to confirm; its values are then revealed, counting up to its grade), being shown others for a fee; the kept
+ * mounts with their breeds' icons and their values, to pick, call or make into a deed; and the deeds in the bag, to take
+ * in. With the choose key (anywhere) only the kept mounts. The server decides everything and sends the screen again
+ * after each action.
  */
 public final class StableScreen extends Screen {
     private static final int WIDTH = 384;
-    private static final int HEIGHT = 236;
+    private static final int HEIGHT = 250;
     private static final int CARD_W = 88;
-    private static final int CARD_H = 150;
+    private static final int CARD_H = 140;
+    /** Where the offer cards start below the top (under the tabs, the breed row and the talent line). */
+    private static final int CARDS_Y = 72;
+    private static final int BREED_W = 22;
+    private static final int BREED_H = 20;
+    private static final int TALENT = 0xFF8FE8E0;
     private static final int ROW = 15;
     private static final int REVEAL_TICKS = 30;
     private static final int PANEL = 0xF0141018;
@@ -57,7 +71,16 @@ public final class StableScreen extends Screen {
     private static final int RARE = 0xFFE0A0FF;
 
     private enum Tab {
-        HORSE, GRIFFIN, BIKE, STABLE, DEEDS
+        HORSES, GRIFFINS, BIKE, STABLE, DEEDS
+    }
+
+    private static final Map<MountKind, ResourceLocation> ICONS = new EnumMap<>(MountKind.class);
+
+    static {
+        for (MountKind kind : MountKind.values()) {
+            ICONS.put(kind, ResourceLocation.fromNamespaceAndPath(ModInfo.MOD_ID,
+                    "textures/gui/hud/mount_" + kind.id() + ".png"));
+        }
     }
 
     private final boolean stableMode;
@@ -74,6 +97,8 @@ public final class StableScreen extends Screen {
     private int ticks;
     private int listScroll;
     private final Map<String, MountEntity> previews = new HashMap<>();
+    /** The breed shown in each family's tab. */
+    private final Map<MountFamily, MountKind> breeds = new EnumMap<>(MountFamily.class);
 
     private final Button[] buyButtons = new Button[MountRules.OFFERS];
     private Button rerollButton;
@@ -86,7 +111,10 @@ public final class StableScreen extends Screen {
     private StableScreen(boolean stableMode) {
         super(Component.translatable(stableMode ? MountRules.STABLE_TITLE : MountRules.CHOOSE_TITLE));
         this.stableMode = stableMode;
-        this.tab = stableMode ? Tab.HORSE : Tab.STABLE;
+        this.tab = stableMode ? Tab.HORSES : Tab.STABLE;
+        for (MountFamily family : MountFamily.values()) {
+            this.breeds.put(family, MountKind.breeds(family).get(0));
+        }
     }
 
     /** New stable data: opens the screen when the server says so; an open screen refreshes itself. */
@@ -107,7 +135,7 @@ public final class StableScreen extends Screen {
         for (int i = 0; i < buyButtons.length; i++) {
             int index = i;
             buyButtons[i] = addRenderableWidget(Button.builder(Component.empty(), button -> buy(index))
-                    .bounds(cardX(i) + 4, top + 50 + CARD_H - 20, CARD_W - 8, 16).build());
+                    .bounds(cardX(i) + 4, top + CARDS_Y + CARD_H - 20, CARD_W - 8, 16).build());
         }
         rerollButton = addRenderableWidget(Button.builder(Component.empty(), button -> reroll())
                 .bounds(left + WIDTH / 2 - 90, top + HEIGHT - 22, 180, 16).build());
@@ -183,7 +211,7 @@ public final class StableScreen extends Screen {
         boolean modal = reveal != null;
         MountKind kind = tabKind();
         JsonObject kindData = kind == null ? null : kindJson(kind);
-        boolean offersTab = !modal && kind != null && kind != MountKind.BIKE;
+        boolean offersTab = !modal && kind != null && MountLooks.varies(kind);
         boolean atStable = bool(data, "atStable");
         String status = str(kindData, "status");
         List<JsonObject> offers = objects(kindData, "offers");
@@ -200,7 +228,7 @@ public final class StableScreen extends Screen {
         String rerollKey = "reroll:" + (kind == null ? "" : kind.id());
         rerollButton.setMessage(confirming.equals(rerollKey) ? Component.translatable(MountRules.SCREEN_CONFIRM)
                 : Component.translatable(MountRules.SCREEN_REROLL, gold(num(kindData, "reroll"))));
-        bikeButton.visible = !modal && kind == MountKind.BIKE;
+        bikeButton.visible = !modal && kind != null && !MountLooks.varies(kind);
         bikeButton.active = atStable && "ok".equals(status);
         bikeButton.setMessage(confirming.equals("buy:bike:0") ? Component.translatable(MountRules.SCREEN_CONFIRM)
                 : "already_owned".equals(status) ? Component.translatable(MountRules.STABLE_OWNED)
@@ -220,10 +248,15 @@ public final class StableScreen extends Screen {
     }
 
     private MountKind tabKind() {
+        MountFamily family = tabFamily();
+        return family == null ? null : breeds.get(family);
+    }
+
+    private MountFamily tabFamily() {
         return switch (tab) {
-            case HORSE -> MountKind.HORSE;
-            case GRIFFIN -> MountKind.GRIFFIN;
-            case BIKE -> MountKind.BIKE;
+            case HORSES -> MountFamily.HORSE;
+            case GRIFFINS -> MountFamily.GRIFFIN;
+            case BIKE -> MountFamily.BIKE;
             default -> null;
         };
     }
@@ -357,6 +390,23 @@ public final class StableScreen extends Screen {
                 x += w + 2;
             }
         }
+        MountFamily family = tabFamily();
+        if (family != null && MountKind.breeds(family).size() > 1) {
+            List<MountKind> row = MountKind.breeds(family);
+            for (int i = 0; i < row.size(); i++) {
+                if (inside(mouseX, mouseY, breedX(i), top + 37, BREED_W, BREED_H)) {
+                    if (breeds.get(family) != row.get(i)) {
+                        breeds.put(family, row.get(i));
+                        confirming = "";
+                        if (minecraft != null) {
+                            minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance
+                                    .forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
         if (super.mouseClicked(mouseX, mouseY, button)) {
             return true;
         }
@@ -422,7 +472,7 @@ public final class StableScreen extends Screen {
             drawTabs(graphics, mouseX, mouseY);
         }
         switch (tab) {
-            case HORSE, GRIFFIN -> drawOffers(graphics, tabKind(), mouseX, mouseY);
+            case HORSES, GRIFFINS -> drawOffers(graphics, tabKind(), mouseX, mouseY);
             case BIKE -> drawBike(graphics);
             case STABLE -> drawStable(graphics, mouseX, mouseY);
             case DEEDS -> drawDeeds(graphics, mouseX, mouseY);
@@ -437,6 +487,9 @@ public final class StableScreen extends Screen {
         graphics.pose().translate(0.0F, 0.0F, reveal != null ? 400.0F : 0.0F);
         super.render(graphics, mouseX, mouseY, partialTick);
         graphics.pose().popPose();
+        if (reveal == null) {
+            breedTooltip(graphics, mouseX, mouseY);
+        }
     }
 
     private int tabWidth(Tab each) {
@@ -445,8 +498,8 @@ public final class StableScreen extends Screen {
 
     private Component tabName(Tab each) {
         return switch (each) {
-            case HORSE -> Component.translatable(MountKind.HORSE.translationKey());
-            case GRIFFIN -> Component.translatable(MountKind.GRIFFIN.translationKey());
+            case HORSES -> Component.translatable(MountFamily.HORSE.translationKey());
+            case GRIFFINS -> Component.translatable(MountFamily.GRIFFIN.translationKey());
             case BIKE -> Component.translatable(MountKind.BIKE.translationKey());
             case STABLE -> Component.translatable(MountRules.SCREEN_TAB_STABLE, objects(data, "mounts").size(),
                     num(data, "capacity"));
@@ -468,39 +521,104 @@ public final class StableScreen extends Screen {
         }
     }
 
+    private int breedX(int index) {
+        return left + 8 + index * (BREED_W + 2);
+    }
+
+    /** The family's breeds as icon buttons; the chosen one framed in gold, the ones above the level dimmed. */
+    private void drawBreedRow(GuiGraphics graphics, MountFamily family, int mouseX, int mouseY) {
+        List<MountKind> row = MountKind.breeds(family);
+        long level = num(data, "level");
+        for (int i = 0; i < row.size(); i++) {
+            MountKind each = row.get(i);
+            int x = breedX(i);
+            int y = top + 37;
+            boolean on = each == breeds.get(family);
+            boolean hover = inside(mouseX, mouseY, x, y, BREED_W, BREED_H);
+            boolean locked = level < each.requiredLevel();
+            graphics.fill(x, y, x + BREED_W, y + BREED_H, on ? ROW_SELECTED : hover ? ROW_HOVER : PANEL_INNER);
+            graphics.renderOutline(x, y, BREED_W, BREED_H, on ? RIM : RIM_DARK);
+            graphics.blit(ICONS.get(each), x + 3, y + 2, 0, 0, 16, 16, 16, 16);
+            if (locked) {
+                graphics.fill(x + 1, y + 1, x + BREED_W - 1, y + BREED_H - 1, 0x99101014);
+            }
+            if (each.talent() != MountTalent.NONE && !locked) {
+                graphics.fill(x + BREED_W - 4, y + 2, x + BREED_W - 2, y + 4, TALENT);
+            }
+        }
+    }
+
+    /** Hovering a breed's button tells its name, what it is, its level and price and its talent. */
+    private void breedTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        MountFamily family = tabFamily();
+        if (family == null || MountKind.breeds(family).size() < 2) {
+            return;
+        }
+        List<MountKind> row = MountKind.breeds(family);
+        for (int i = 0; i < row.size(); i++) {
+            if (inside(mouseX, mouseY, breedX(i), top + 37, BREED_W, BREED_H)) {
+                MountKind each = row.get(i);
+                JsonObject kindData = kindJson(each);
+                List<Component> lines = new ArrayList<>();
+                lines.add(Component.translatable(each.translationKey()).withStyle(net.minecraft.ChatFormatting.GOLD));
+                lines.add(Component.translatable(each.descriptionKey()).withStyle(net.minecraft.ChatFormatting.GRAY));
+                lines.add(Component.translatable(MountRules.SCREEN_KIND_LINE, each.requiredLevel(), gold(each.price()),
+                        str(kindData, "speed")));
+                if (each.talent() != MountTalent.NONE) {
+                    lines.add(talentLine(each).copy().withStyle(net.minecraft.ChatFormatting.AQUA));
+                }
+                graphics.renderComponentTooltip(font, lines, mouseX, mouseY);
+                return;
+            }
+        }
+    }
+
+    private Component talentLine(MountKind kind) {
+        return Component.translatable(MountRules.SCREEN_TALENT, Component.translatable(kind.talent().translationKey()),
+                Component.translatable(kind.talent().descriptionKey()));
+    }
+
     private void drawOffers(GuiGraphics graphics, MountKind kind, int mouseX, int mouseY) {
         JsonObject kindData = kindJson(kind);
-        Component line = Component.translatable(MountRules.SCREEN_KIND_LINE, num(kindData, "level"),
-                gold(num(kindData, "price")), str(kindData, "speed"));
-        graphics.drawString(font, line, left + 8, top + 38, TEXT, false);
+        drawBreedRow(graphics, kind.family(), mouseX, mouseY);
+        int textX = breedX(MountKind.breeds(kind.family()).size()) + 4;
+        Component name = Component.translatable(kind.translationKey());
+        graphics.drawString(font, name, textX, top + 39, GOLD, false);
         Component status = statusText(kindData);
         if (status != null) {
-            graphics.drawString(font, status, left + WIDTH - 8 - font.width(status), top + 38, BAD, false);
+            graphics.drawString(font, status, left + WIDTH - 8 - font.width(status), top + 39, BAD, false);
         }
+        Component line = Component.translatable(MountRules.SCREEN_KIND_LINE, num(kindData, "level"),
+                gold(num(kindData, "price")), str(kindData, "speed"));
+        graphics.drawString(font, fit(line.getString(), left + WIDTH - 8 - textX), textX, top + 50, TEXT, false);
+        Component talent = kind.talent() == MountTalent.NONE ? Component.translatable(kind.descriptionKey())
+                : talentLine(kind);
+        graphics.drawString(font, fit(talent.getString(), WIDTH - 16), left + 8, top + 61,
+                kind.talent() == MountTalent.NONE ? MUTED : TALENT, false);
         List<JsonObject> offers = objects(kindData, "offers");
         for (int i = 0; i < offers.size() && i < MountRules.OFFERS; i++) {
             JsonObject offer = offers.get(i);
             int x = cardX(i);
-            int y = top + 50;
+            int y = top + CARDS_Y;
             boolean hover = inside(mouseX, mouseY, x, y, CARD_W, CARD_H);
             graphics.fill(x, y, x + CARD_W, y + CARD_H, hover ? ROW_HOVER : ROW_COLOR);
             boolean rare = bool(offer, "rare");
             graphics.renderOutline(x, y, CARD_W, CARD_H, rare ? RARE : RIM_DARK);
             MountLook look = new MountLook(str(offer, "coat"), str(offer, "shape"));
             float yaw = 205.0F + 28.0F * Mth.sin((ticks + i * 17) * 0.035F);
-            drawMount(graphics, kind, look, x + CARD_W / 2, y + 74, kind == MountKind.GRIFFIN ? 21 : 27, yaw,
-                    x + 1, y + 1, x + CARD_W - 1, y + 84);
-            int ty = y + 88;
+            drawMount(graphics, kind, look, x + CARD_W / 2, y + 68, scale(kind, 0.92F), yaw, x + 1, y + 1,
+                    x + CARD_W - 1, y + 76);
+            int ty = y + 79;
             Component coat = Component.translatable(MountLooks.coatKey(kind, look.coat()));
             graphics.drawCenteredString(font, coat, x + CARD_W / 2, ty, rare ? RARE : TEXT);
             Component shape = Component.translatable(MountLooks.shapeKey(kind, look.shape()));
-            graphics.drawCenteredString(font, shape, x + CARD_W / 2, ty + 11, MUTED);
+            graphics.drawCenteredString(font, shape, x + CARD_W / 2, ty + 10, MUTED);
             if (rare) {
                 graphics.drawCenteredString(font, Component.translatable(MountRules.SCREEN_RARE), x + CARD_W / 2,
-                        ty + 22, RARE);
+                        ty + 20, RARE);
             }
             graphics.drawCenteredString(font, Component.translatable(MountRules.SCREEN_HIDDEN), x + CARD_W / 2,
-                    ty + (rare ? 33 : 24), 0xFF8A82A0);
+                    ty + (rare ? 31 : 22), 0xFF8A82A0);
         }
         if (!bool(data, "atStable")) {
             graphics.drawCenteredString(font, Component.translatable(MountRules.SCREEN_AT_STABLE), left + WIDTH / 2,
@@ -509,6 +627,11 @@ public final class StableScreen extends Screen {
             graphics.drawCenteredString(font, Component.translatable(MountRules.SCREEN_VALUES_LATER),
                     left + WIDTH / 2, top + HEIGHT - 34, 0xFF8A82A0);
         }
+    }
+
+    /** Pixels per block of {@code kind}'s preview: its rig's (a bigger breed smaller), times {@code factor}. */
+    private static int scale(MountKind kind, float factor) {
+        return Math.max(8, Math.round(MountRigs.previewScale(kind) * factor));
     }
 
     private Component statusText(JsonObject kindData) {
@@ -554,15 +677,25 @@ public final class StableScreen extends Screen {
             graphics.fill(left + 8, rowY, left + 172, rowY + ROW - 1, on ? ROW_SELECTED : hover ? ROW_HOVER : ROW_COLOR);
             MountKind kind = MountKind.byId(str(mount, "kind")).orElse(MountKind.HORSE);
             badge(graphics, mount, left + 10, rowY + 2);
+            icon(graphics, kind, left + 30, rowY + 1, 12);
             String name = Component.translatable(kind.translationKey()).getString();
             if (bool(mount, "varies")) {
                 name += "・" + Component.translatable(MountLooks.coatKey(kind, str(mount, "coat"))).getString();
             }
-            graphics.drawString(font, fit(name, 120), left + 30, rowY + 3, bool(mount, "rare") ? RARE : TEXT, false);
+            graphics.drawString(font, fit(name, 110), left + 44, rowY + 3, bool(mount, "rare") ? RARE : TEXT, false);
             String marks = (bool(mount, "riding") ? "▶" : "") + (bool(mount, "selected") ? "★" : "");
             graphics.drawString(font, marks, left + 170 - font.width(marks), rowY + 3, GOLD, false);
         }
         mount(selected).ifPresent(mount -> drawDetail(graphics, mount, left + 178, top + (stableMode ? 38 : 24)));
+    }
+
+    /** A kind's HUD icon, {@code size} pixels square. */
+    private static void icon(GuiGraphics graphics, MountKind kind, int x, int y, int size) {
+        graphics.pose().pushPose();
+        graphics.pose().translate(x, y, 0.0F);
+        graphics.pose().scale(size / 16.0F, size / 16.0F, 1.0F);
+        graphics.blit(ICONS.get(kind), 0, 0, 0, 0, 16, 16, 16, 16);
+        graphics.pose().popPose();
     }
 
     /** The detail of a kept mount: its look turning, its name, look and values with bars, its grade. */
@@ -573,8 +706,8 @@ public final class StableScreen extends Screen {
         graphics.fill(x, y, x + w, y + 88, PANEL_INNER);
         graphics.renderOutline(x, y, w, 88, RIM_DARK);
         float yaw = 205.0F + 28.0F * Mth.sin(ticks * 0.035F);
-        drawMount(graphics, kind, look, x + w / 2, y + 78, kind == MountKind.GRIFFIN ? 22 : 30, yaw, x + 1, y + 1,
-                x + w - 1, y + 87);
+        drawMount(graphics, kind, look, x + w / 2, y + 78, scale(kind, kind.flies() ? 1.05F : 1.11F), yaw, x + 1,
+                y + 1, x + w - 1, y + 87);
         int ty = y + 92;
         graphics.drawString(font, Component.translatable(kind.translationKey()), x, ty, GOLD, false);
         if (bool(mount, "varies")) {
@@ -591,6 +724,9 @@ public final class StableScreen extends Screen {
             badge(graphics, mount, x, ty + 57);
             graphics.drawString(font, Component.translatable(MountRules.SCREEN_TOTAL, num(mount, "total"),
                     Component.translatable(grade.translationKey())), x + 22, ty + 59, 0xFF000000 | grade.color(), false);
+            if (kind.talent() != MountTalent.NONE) {
+                graphics.drawString(font, fit(talentLine(kind).getString(), w), x, ty + 71, TALENT, false);
+            }
         } else {
             graphics.drawString(font, Component.translatable(MountRules.SCREEN_MACHINE), x, ty + 12, MUTED, false);
         }
@@ -635,13 +771,14 @@ public final class StableScreen extends Screen {
             graphics.fill(left + 8, rowY, left + WIDTH - 8, rowY + 20, ROW_COLOR);
             MountKind kind = MountKind.byId(str(deed, "kind")).orElse(MountKind.HORSE);
             badge(graphics, deed, left + 11, rowY + 5);
+            icon(graphics, kind, left + 31, rowY + 2, 16);
             String name = Component.translatable(kind.translationKey()).getString() + "・"
                     + Component.translatable(MountLooks.coatKey(kind, str(deed, "coat"))).getString() + "・"
                     + Component.translatable(MountLooks.shapeKey(kind, str(deed, "shape"))).getString();
-            graphics.drawString(font, fit(name, 190), left + 33, rowY + 2, bool(deed, "rare") ? RARE : TEXT, false);
+            graphics.drawString(font, fit(name, 174), left + 49, rowY + 2, bool(deed, "rare") ? RARE : TEXT, false);
             graphics.drawString(font, Component.translatable(MountRules.DEED_VALUES, num(deed, "speed"),
                     num(deed, "accel"), Component.translatable(kind.flies() ? MountRules.SCREEN_FLIGHT
-                            : MountRules.SCREEN_JUMP), num(deed, "lift")), left + 33, rowY + 11, MUTED, false);
+                            : MountRules.SCREEN_JUMP), num(deed, "lift")), left + 49, rowY + 11, MUTED, false);
             String redeem = str(deed, "redeem");
             int bx = left + WIDTH - 8 - 84;
             if ("ok".equals(redeem) && here) {
@@ -680,8 +817,8 @@ public final class StableScreen extends Screen {
         MountKind kind = MountKind.byId(str(reveal, "kind")).orElse(MountKind.HORSE);
         MountLook look = new MountLook(str(reveal, "coat"), str(reveal, "shape"));
         float yaw = 205.0F + 28.0F * Mth.sin(ticks * 0.035F);
-        drawMount(graphics, kind, look, x + w / 2, y + 86, kind == MountKind.GRIFFIN ? 24 : 32, yaw, x + 1, y + 16,
-                x + w - 1, y + 92);
+        drawMount(graphics, kind, look, x + w / 2, y + 86, scale(kind, kind.flies() ? 1.14F : 1.18F), yaw, x + 1,
+                y + 16, x + w - 1, y + 92);
         Component lookLine = Component.translatable(MountRules.DEED_LOOK,
                 Component.translatable(MountLooks.coatKey(kind, look.coat())),
                 Component.translatable(MountLooks.shapeKey(kind, look.shape())));

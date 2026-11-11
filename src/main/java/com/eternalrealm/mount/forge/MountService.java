@@ -7,6 +7,7 @@ import com.eternalrealm.mount.MountIndividual;
 import com.eternalrealm.mount.MountKind;
 import com.eternalrealm.mount.MountOwnership;
 import com.eternalrealm.mount.MountRules;
+import com.eternalrealm.mount.MountTalent;
 import com.eternalrealm.server.ServerContext;
 import com.eternalrealm.server.UiActions;
 import com.eternalrealm.server.UiData;
@@ -18,7 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -59,6 +59,10 @@ public final class MountService {
      */
     private static final Map<UUID, Long> HINTS = new HashMap<>();
     private static final long HINT_DELAY = 5L;
+    /** A breed's talent is told this long after the controls (the action bar shows one line at a time). */
+    private static final long TALENT_HINT_DELAY = 60L;
+    /** When to tell the ridden breed's talent, by player. */
+    private static final Map<UUID, Long> TALENT_HINTS = new HashMap<>();
 
     /** {@code player} is kept (not looked up by id) so GameTests' fake players can call mounts too. */
     private record Call(ServerPlayer player, MountIndividual mount, Vec3 from, long readyAt) {
@@ -204,7 +208,7 @@ public final class MountService {
         CALLS.put(player.getUUID(), new Call(player, mount, player.position(), now + MountRules.SUMMON_TICKS));
         player.displayClientMessage(Component.translatable(MountRules.CALLING,
                 Component.translatable(kind.translationKey()).withStyle(ChatFormatting.GOLD)), true);
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), callSound(kind),
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), MountEffects.callSound(kind),
                 SoundSource.PLAYERS, 0.8F, 1.0F);
         return check;
     }
@@ -251,8 +255,7 @@ public final class MountService {
                 mount.getBbWidth() * 0.5, 0.4, mount.getBbWidth() * 0.5, 0.03);
         level.sendParticles(ParticleTypes.END_ROD, mount.getX(), mount.getY() + 1.0, mount.getZ(), 16, 0.5, 0.6, 0.5,
                 0.05);
-        level.playSound(null, mount.getX(), mount.getY(), mount.getZ(), arriveSound(kind), SoundSource.NEUTRAL, 1.0F,
-                1.0F);
+        MountEffects.arrive(level, mount);
         HINTS.put(player.getUUID(), player.server.getTickCount() + HINT_DELAY);
         sendState(player);
         return Optional.of(mount);
@@ -289,7 +292,8 @@ public final class MountService {
         boolean bossFight = !BossFight.fightsOf(player.getUUID()).isEmpty();
         boolean combat = ServerContext.current().map(context -> context.combat().inCombat(player)).orElse(false);
         boolean down = !player.isAlive() || com.eternalrealm.revival.forge.RevivalService.isDown(player.getUUID());
-        boolean water = player.isInWater() || player.isInLava();
+        // a wave runner may come into water; lava keeps every mount away
+        boolean water = MountRules.waterStopsCall(kind, player.isInWater(), player.isInLava());
         boolean room = kind == null || hasRoom(player, kind);
         return new MountRules.Situation(allowed, bossFight, combat, down, water, room);
     }
@@ -298,22 +302,6 @@ public final class MountService {
     static boolean hasRoom(ServerPlayer player, MountKind kind) {
         AABB box = MountEntities.type(kind).getDimensions().makeBoundingBox(player.position()).deflate(0.05);
         return player.level().noCollision(box);
-    }
-
-    private static SoundEvent callSound(MountKind kind) {
-        return switch (kind) {
-            case HORSE -> SoundEvents.HORSE_AMBIENT;
-            case GRIFFIN -> SoundEvents.PARROT_FLY;
-            case BIKE -> SoundEvents.BEACON_POWER_SELECT;
-        };
-    }
-
-    private static SoundEvent arriveSound(MountKind kind) {
-        return switch (kind) {
-            case HORSE -> SoundEvents.HORSE_GALLOP;
-            case GRIFFIN -> SoundEvents.ENDER_DRAGON_FLAP;
-            case BIKE -> SoundEvents.BEACON_ACTIVATE;
-        };
     }
 
     // ------------------------------------------------------------------ the clock
@@ -395,6 +383,24 @@ public final class MountService {
             if (player != null && player.getVehicle() instanceof MountEntity mount) {
                 player.displayClientMessage(Component.translatable(mount.kind().flies() ? MountRules.FLIGHT_HINT
                         : MountRules.HINT).withStyle(ChatFormatting.GRAY), true);
+                if (mount.kind().talent() != MountTalent.NONE) {
+                    TALENT_HINTS.put(player.getUUID(), now + TALENT_HINT_DELAY);
+                }
+            }
+        }
+        Iterator<Map.Entry<UUID, Long>> talents = TALENT_HINTS.entrySet().iterator();
+        while (talents.hasNext()) {
+            Map.Entry<UUID, Long> entry = talents.next();
+            if (now < entry.getValue()) {
+                continue;
+            }
+            talents.remove();
+            ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
+            if (player != null && player.getVehicle() instanceof MountEntity mount) {
+                MountTalent talent = mount.kind().talent();
+                player.displayClientMessage(Component.translatable(MountRules.TALENT_HINT,
+                        Component.translatable(talent.translationKey()).withStyle(ChatFormatting.AQUA),
+                        Component.translatable(talent.descriptionKey())).withStyle(ChatFormatting.GRAY), true);
             }
         }
     }
@@ -465,6 +471,7 @@ public final class MountService {
             FALL_GUARDS.remove(player.getUUID());
             SENT.remove(player.getUUID());
             HINTS.remove(player.getUUID());
+            TALENT_HINTS.remove(player.getUUID());
         }
     }
 
@@ -491,6 +498,7 @@ public final class MountService {
         FALL_GUARDS.clear();
         SENT.clear();
         HINTS.clear();
+        TALENT_HINTS.clear();
     }
 
     // ------------------------------------------------------------------ the HUD
