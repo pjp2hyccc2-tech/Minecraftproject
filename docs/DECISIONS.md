@@ -237,3 +237,29 @@ custom chunk generator over the pure `FieldTerrain` heights instead of the overw
 map (mountains north, sea south-east, the lake, the falls) identically on every server and lets the world map be
 painted from the real land. There are no caves (dungeons are instanced). Worlds made with the rings regenerate
 アストリア once; characters, items and progress are not touched.
+
+## D-LORDROSTER: two lords of a field out at a time, a new line-up every 20 minutes (2026-11-11)
+The owner found the lords too frequent and asked for at most two at a time per field, and for the ones not beaten to
+leave every 20 minutes and different ones to appear. Each field keeps a line-up (`world.field.LordRoster`, pure): two of
+its three lords; every 20 minutes the resting one always comes out and the other place goes to one of the two that
+were out, at random, so each change shows a new face. A beaten lord rests until the next change (no separate respawn
+timer any more), and one still fighting players (hit within 60 s) leaves only after the fight, never in a player's
+face; a field never has more than two bodies, leaving ones included. The line-up is not saved: a restart deals a new
+one, which costs nothing (lords are not persistent progress) and keeps world data unchanged.
+
+## D-MINIMAPNPC: role icons and labels on the minimap inside the capital (2026-11-11)
+The owner asked to see on the minimap, inside the kingdom, where each NPC is and what they do. The minimap already
+receives the town people around the player (role and name in the map document), so no packet changed: inside the
+capital the dots become small role icons (one atlas drawn by `tools/art/map_npc_icons.py`) with short labels placed by
+a pure, tested routine (`world.map.NpcMarkers`: nearest first, at most eight, never overlapping or leaving the map).
+Outside the capital the plain dots stay, where labels would only clutter the wild.
+
+## D-CAPITALWALK: capital interiors are furnished from one kit and every staircase is checked (2026-11-11)
+The owner found holes, a smithy entered from the wrong side, interiors too plain and the stair to the princess facing
+the wrong way. The smithy was rebuilt to face its street; rooms are dressed by one kit (`districts/_furnish.py`) instead
+of ad-hoc blocks, and paintings are entities hung only where the game will keep them (a full block behind, nothing in
+front; `check.py` verifies it on the export). Looking for the reversed stair found more stairs that could not be
+climbed (a step short at the top, a beam or pier in the head room, a first step that needed a jump), so `check.py`
+now judges every staircase of the export by the rules a player's 1.8-block body imposes and fails the build on one
+that cannot be used or rises against its facing. A voxel check cannot see everything (it does not walk, and it does
+not judge looks), so the previews and section drawings are still looked at by eye.
