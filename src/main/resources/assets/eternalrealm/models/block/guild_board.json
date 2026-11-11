@@ -1,0 +1,108 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "eternalrealm:block/guild_board",
+    "board": "eternalrealm:block/guild_board"
+  },
+  "elements": [
+    {
+      "from": [
+        -16,
+        0,
+        0
+      ],
+      "to": [
+        32,
+        32,
+        2
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            10.6667
+          ],
+          "texture": "#board"
+        },
+        "north": {
+          "uv": [
+            0,
+            10.6667,
+            16,
+            16
+          ],
+          "texture": "#board"
+        },
+        "up": {
+          "uv": [
+            0,
+            10.6667,
+            16,
+            11.2
+          ],
+          "texture": "#board"
+        },
+        "down": {
+          "uv": [
+            0,
+            10.6667,
+            16,
+            11.2
+          ],
+          "texture": "#board"
+        },
+        "east": {
+          "uv": [
+            0,
+            10.6667,
+            1,
+            16
+          ],
+          "texture": "#board"
+        },
+        "west": {
+          "uv": [
+            0,
+            10.6667,
+            1,
+            16
+          ],
+          "texture": "#board"
+        }
+      }
+    }
+  ],
+  "display": {
+    "gui": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "translation": [
+        0,
+        -3,
+        0
+      ],
+      "scale": [
+        0.28,
+        0.28,
+        0.28
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        0.3,
+        0.3,
+        0.3
+      ]
+    }
+  }
+}

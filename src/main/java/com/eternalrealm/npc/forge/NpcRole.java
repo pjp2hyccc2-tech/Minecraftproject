@@ -20,7 +20,9 @@ public enum NpcRole {
     /** Sells mounts (docs/modules/mounts.md). */
     STABLE_MASTER("stable_master", "leatherworker"),
     /** Story characters: only talk. */
-    STORY("story", "nitwit");
+    STORY("story", "nitwit"),
+    /** Sells the guild houses on the Guild Gate Terrace (docs/modules/guildhouse.md). */
+    GUILD_ESTATES("guild_estates", "librarian");
 
     private final String id;
     private final String profession;
