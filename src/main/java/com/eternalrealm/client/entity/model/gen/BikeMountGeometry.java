@@ -8,9 +8,9 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-/** Geometry, UV layout and per-variant looks of the mount_bike rig (11 parts, 42 boxes, texture 128x128). */
+/** Geometry, UV layout and per-variant looks of the mount_bike rig (23 parts, 62 boxes, texture 256x128). */
 public final class BikeMountGeometry {
-    public static final int TEXTURE_WIDTH = 128;
+    public static final int TEXTURE_WIDTH = 256;
     public static final int TEXTURE_HEIGHT = 128;
 
     private BikeMountGeometry() {
@@ -23,66 +23,110 @@ public final class BikeMountGeometry {
         PartDefinition p1 = root.addOrReplaceChild("base", CubeListBuilder.create(),
                 PartPose.offset(0.0F, 24.0F, 0.0F));
         PartDefinition p2 = p1.addOrReplaceChild("frame", CubeListBuilder.create()
-                .texOffs(72, 63).addBox(-4.0F, -11.0F, -9.0F, 8.0F, 6.0F, 10.0F, new CubeDeformation(inflate))
-                .texOffs(60, 94).addBox(-1.5F, -11.5F, -8.0F, 3.0F, 1.0F, 8.0F, new CubeDeformation(inflate))
-                .texOffs(20, 81).addBox(-3.5F, -8.0F, 1.0F, 7.0F, 2.0F, 9.0F, new CubeDeformation(inflate))
-                .texOffs(36, 103).addBox(-3.5F, -11.0F, 9.0F, 7.0F, 3.0F, 2.0F, new CubeDeformation(inflate))
-                .texOffs(36, 63).addBox(-4.0F, -5.0F, -7.0F, 8.0F, 8.0F, 10.0F, new CubeDeformation(inflate))
-                .texOffs(110, 79).addBox(-5.0F, -4.0F, -5.0F, 1.0F, 5.0F, 6.0F, new CubeDeformation(inflate)).mirror(true)
-                .texOffs(110, 79).addBox(4.0F, -4.0F, -5.0F, 1.0F, 5.0F, 6.0F, new CubeDeformation(inflate)).mirror(false)
-                .texOffs(0, 92).addBox(-4.0F, -6.0F, 2.0F, 8.0F, 4.0F, 7.0F, new CubeDeformation(inflate))
-                .texOffs(72, 79).addBox(-3.0F, -4.0F, 8.0F, 6.0F, 2.0F, 13.0F, new CubeDeformation(inflate))
-                .texOffs(8, 0).addBox(-1.0F, 3.0F, -6.0F, 2.0F, 1.0F, 21.0F, new CubeDeformation(inflate))
-                .texOffs(0, 79).addBox(-7.0F, -8.0F, 10.0F, 3.0F, 6.0F, 7.0F, new CubeDeformation(inflate)).mirror(true)
-                .texOffs(0, 79).addBox(4.0F, -8.0F, 10.0F, 3.0F, 6.0F, 7.0F, new CubeDeformation(inflate)).mirror(false)
-                .texOffs(60, 22).addBox(-6.5F, 1.0F, -3.0F, 2.0F, 2.0F, 19.0F, new CubeDeformation(inflate)).mirror(true)
-                .texOffs(60, 22).addBox(4.5F, 1.0F, -3.0F, 2.0F, 2.0F, 19.0F, new CubeDeformation(inflate)),
+                .texOffs(0, 0).addBox(-4.5F, -5.0F, -9.0F, 9.0F, 10.0F, 16.0F, new CubeDeformation(inflate))
+                .texOffs(240, 40).addBox(-6.5F, -7.0F, -6.0F, 2.0F, 6.0F, 5.0F, new CubeDeformation(inflate)).mirror(true)
+                .texOffs(240, 40).addBox(4.5F, -7.0F, -6.0F, 2.0F, 6.0F, 5.0F, new CubeDeformation(inflate)).mirror(false)
+                .texOffs(158, 41).addBox(-5.5F, -1.0F, 0.0F, 1.0F, 4.0F, 5.0F, new CubeDeformation(inflate)).mirror(true)
+                .texOffs(158, 41).addBox(4.5F, -1.0F, 0.0F, 1.0F, 4.0F, 5.0F, new CubeDeformation(inflate)).mirror(false)
+                .texOffs(134, 22).addBox(-4.5F, -12.0F, -11.0F, 9.0F, 7.0F, 12.0F, new CubeDeformation(inflate))
+                .texOffs(190, 37).addBox(-5.0F, -10.5F, -10.0F, 1.0F, 4.0F, 10.0F, new CubeDeformation(inflate)).mirror(true)
+                .texOffs(190, 37).addBox(4.0F, -10.5F, -10.0F, 1.0F, 4.0F, 10.0F, new CubeDeformation(inflate)).mirror(false)
+                .texOffs(212, 40).addBox(-1.5F, -12.5F, -10.5F, 3.0F, 1.0F, 11.0F, new CubeDeformation(inflate))
+                .texOffs(158, 50).addBox(-1.0F, -13.0F, -9.0F, 2.0F, 1.0F, 7.0F, new CubeDeformation(inflate))
+                .texOffs(0, 26).addBox(-4.0F, -8.0F, 1.0F, 8.0F, 2.0F, 12.0F, new CubeDeformation(inflate))
+                .texOffs(84, 52).addBox(-4.0F, -10.0F, 11.0F, 8.0F, 2.0F, 3.0F, new CubeDeformation(inflate))
+                .texOffs(20, 40).addBox(-4.5F, -6.0F, 2.0F, 9.0F, 5.0F, 7.0F, new CubeDeformation(inflate))
+                .texOffs(0, 40).addBox(-8.0F, -7.0F, 9.0F, 3.0F, 6.0F, 7.0F, new CubeDeformation(inflate)).mirror(true)
+                .texOffs(0, 40).addBox(5.0F, -7.0F, 9.0F, 3.0F, 6.0F, 7.0F, new CubeDeformation(inflate)).mirror(false)
+                .texOffs(58, 0).addBox(-7.5F, 2.0F, -4.0F, 2.0F, 2.0F, 20.0F, new CubeDeformation(inflate)).mirror(true)
+                .texOffs(58, 0).addBox(5.5F, 2.0F, -4.0F, 2.0F, 2.0F, 20.0F, new CubeDeformation(inflate)),
                 PartPose.offset(0.0F, -12.0F, 0.0F));
         p2.addOrReplaceChild("banner", CubeListBuilder.create()
-                .texOffs(108, 63).addBox(-0.25F, 0.0F, -2.5F, 1.0F, 10.0F, 6.0F, new CubeDeformation(inflate)),
-                PartPose.offset(-7.25F, -7.0F, 13.5F));
-        p2.addOrReplaceChild("lantern", CubeListBuilder.create()
-                .texOffs(90, 103).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 2.0F, 1.0F, new CubeDeformation(inflate))
-                .texOffs(102, 99).addBox(-2.5F, 2.0F, -1.5F, 3.0F, 4.0F, 3.0F, new CubeDeformation(inflate))
-                .texOffs(74, 103).addBox(-2.0F, 6.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(inflate)),
-                PartPose.offset(-4.5F, -9.0F, -5.0F));
-        PartDefinition p5 = p2.addOrReplaceChild("flag_pole", CubeListBuilder.create()
-                .texOffs(114, 0).addBox(-0.5F, -20.0F, -0.5F, 1.0F, 20.0F, 1.0F, new CubeDeformation(inflate))
-                .texOffs(82, 103).addBox(-1.0F, -21.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(inflate)),
-                PartPose.offset(0.0F, -4.0F, 18.5F));
-        p5.addOrReplaceChild("flag", CubeListBuilder.create()
-                .texOffs(0, 64).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 6.0F, 9.0F, new CubeDeformation(inflate)),
-                PartPose.offset(0.0F, -19.5F, 0.5F));
-        PartDefinition p7 = p2.addOrReplaceChild("fork", CubeListBuilder.create()
-                .texOffs(0, 0).addBox(-4.5F, -4.0F, -1.0F, 2.0F, 21.0F, 2.0F, new CubeDeformation(inflate)).mirror(true)
-                .texOffs(0, 0).addBox(2.5F, -4.0F, -1.0F, 2.0F, 21.0F, 2.0F, new CubeDeformation(inflate)).mirror(false)
-                .texOffs(82, 94).addBox(-3.0F, -3.5F, -2.5F, 6.0F, 5.0F, 4.0F, new CubeDeformation(inflate))
-                .texOffs(30, 92).addBox(-2.5F, 8.5F, -5.0F, 5.0F, 1.0F, 10.0F, new CubeDeformation(inflate)),
-                PartPose.offsetAndRotation(0.0F, -10.0F, -10.0F, -0.4887F, 0.0F, 0.0F));
-        p7.addOrReplaceChild("headlight", CubeListBuilder.create()
-                .texOffs(110, 90).addBox(-2.5F, -2.0F, -3.0F, 5.0F, 5.0F, 4.0F, new CubeDeformation(inflate))
-                .texOffs(0, 103).addBox(-3.0F, -3.0F, -3.5F, 6.0F, 1.0F, 5.0F, new CubeDeformation(inflate)),
-                PartPose.offset(0.0F, -1.0F, -4.0F));
-        p7.addOrReplaceChild("bars", CubeListBuilder.create()
-                .texOffs(66, 103).addBox(-1.5F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(inflate))
-                .texOffs(70, 103).addBox(0.5F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(inflate))
-                .texOffs(74, 106).addBox(-7.0F, -4.0F, -0.5F, 14.0F, 1.0F, 1.0F, new CubeDeformation(inflate))
-                .texOffs(54, 103).addBox(-9.5F, -4.5F, 0.0F, 3.0F, 2.0F, 3.0F, new CubeDeformation(inflate)).mirror(true)
-                .texOffs(54, 103).addBox(6.5F, -4.5F, 0.0F, 3.0F, 2.0F, 3.0F, new CubeDeformation(inflate)),
-                PartPose.offsetAndRotation(0.0F, -4.0F, 0.0F, 0.4887F, 0.0F, 0.0F));
-        p7.addOrReplaceChild("front_wheel", CubeListBuilder.create()
-                .texOffs(0, 44).addBox(-1.5F, -7.0F, -3.0F, 3.0F, 14.0F, 6.0F, new CubeDeformation(inflate))
-                .texOffs(60, 43).addBox(-1.5F, -3.0F, -7.0F, 3.0F, 6.0F, 14.0F, new CubeDeformation(inflate + 0.01F))
-                .texOffs(8, 22).addBox(-1.5F, -6.0F, -5.0F, 3.0F, 12.0F, 10.0F, new CubeDeformation(inflate + 0.02F))
-                .texOffs(54, 0).addBox(-1.5F, -5.0F, -6.0F, 3.0F, 10.0F, 12.0F, new CubeDeformation(inflate + 0.03F))
-                .texOffs(114, 99).addBox(-2.0F, -1.5F, -1.5F, 4.0F, 3.0F, 3.0F, new CubeDeformation(inflate)),
-                PartPose.offset(0.0F, 17.0F, 0.0F));
+                .texOffs(176, 22).addBox(-0.25F, 0.0F, -2.5F, 1.0F, 10.0F, 6.0F, new CubeDeformation(inflate)),
+                PartPose.offset(-8.25F, -6.0F, 12.5F));
+        p2.addOrReplaceChild("lantern_r", CubeListBuilder.create()
+                .texOffs(252, 51).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 2.0F, 1.0F, new CubeDeformation(inflate))
+                .texOffs(240, 51).addBox(-2.0F, 2.0F, -1.5F, 3.0F, 4.0F, 3.0F, new CubeDeformation(inflate))
+                .texOffs(116, 52).addBox(-1.5F, 6.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offset(-5.0F, -10.0F, -8.0F));
+        p2.addOrReplaceChild("lantern_l", CubeListBuilder.create().mirror(true)
+                .texOffs(252, 51).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 2.0F, 1.0F, new CubeDeformation(inflate))
+                .texOffs(240, 51).addBox(-1.0F, 2.0F, -1.5F, 3.0F, 4.0F, 3.0F, new CubeDeformation(inflate))
+                .texOffs(116, 52).addBox(-0.5F, 6.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offset(5.0F, -10.0F, -8.0F));
+        PartDefinition p6 = p2.addOrReplaceChild("flag_pole", CubeListBuilder.create()
+                .texOffs(252, 0).addBox(-0.5F, -19.5F, -0.5F, 1.0F, 19.0F, 1.0F, new CubeDeformation(inflate))
+                .texOffs(124, 52).addBox(-1.0F, -20.5F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offset(0.0F, -4.5F, 21.0F));
+        p6.addOrReplaceChild("flag", CubeListBuilder.create()
+                .texOffs(190, 22).addBox(-0.5F, 0.0F, 0.0F, 1.0F, 6.0F, 9.0F, new CubeDeformation(inflate)),
+                PartPose.offset(0.0F, -19.0F, 0.5F));
+        p2.addOrReplaceChild("rfender_1", CubeListBuilder.create()
+                .texOffs(52, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 5.0F, 15.0F, 0.6981F, 0.0F, 0.0F));
+        p2.addOrReplaceChild("rfender_2", CubeListBuilder.create()
+                .texOffs(52, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 5.0F, 15.0F, 0.1745F, 0.0F, 0.0F));
+        p2.addOrReplaceChild("rfender_3", CubeListBuilder.create()
+                .texOffs(52, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 5.0F, 15.0F, -0.3491F, 0.0F, 0.0F));
+        p2.addOrReplaceChild("rfender_4", CubeListBuilder.create()
+                .texOffs(52, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 5.0F, 15.0F, -0.8727F, 0.0F, 0.0F));
+        p2.addOrReplaceChild("rfender_5", CubeListBuilder.create()
+                .texOffs(52, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 5.0F, 15.0F, -1.3963F, 0.0F, 0.0F));
+        p2.addOrReplaceChild("rfender_6", CubeListBuilder.create()
+                .texOffs(52, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 5.0F, 15.0F, -1.885F, 0.0F, 0.0F));
+        PartDefinition p14 = p2.addOrReplaceChild("fork", CubeListBuilder.create()
+                .texOffs(50, 0).addBox(-5.0F, -4.0F, -1.0F, 2.0F, 21.0F, 2.0F, new CubeDeformation(inflate)).mirror(true)
+                .texOffs(50, 0).addBox(3.0F, -4.0F, -1.0F, 2.0F, 21.0F, 2.0F, new CubeDeformation(inflate)).mirror(false)
+                .texOffs(176, 38).addBox(-5.5F, 8.0F, -1.5F, 3.0F, 9.0F, 3.0F, new CubeDeformation(inflate)).mirror(true)
+                .texOffs(176, 38).addBox(2.5F, 8.0F, -1.5F, 3.0F, 9.0F, 3.0F, new CubeDeformation(inflate)).mirror(false)
+                .texOffs(56, 52).addBox(-5.5F, -3.0F, -1.5F, 11.0F, 2.0F, 3.0F, new CubeDeformation(inflate))
+                .texOffs(108, 42).addBox(-3.5F, -2.0F, -3.5F, 7.0F, 5.0F, 5.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, -11.0F, -11.0F, -0.4189F, 0.0F, 0.0F));
+        p14.addOrReplaceChild("headlight", CubeListBuilder.create()
+                .texOffs(134, 41).addBox(-3.5F, -3.5F, -5.0F, 7.0F, 7.0F, 5.0F, new CubeDeformation(inflate))
+                .texOffs(176, 51).addBox(-4.0F, -4.5F, -5.5F, 8.0F, 1.0F, 6.0F, new CubeDeformation(inflate))
+                .texOffs(212, 52).addBox(-1.0F, -5.5F, -3.5F, 2.0F, 1.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offset(0.0F, 0.5F, -4.0F));
+        p14.addOrReplaceChild("bars", CubeListBuilder.create()
+                .texOffs(204, 51).addBox(-3.0F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(inflate))
+                .texOffs(208, 51).addBox(2.0F, -3.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(inflate))
+                .texOffs(116, 55).addBox(-8.0F, -4.0F, -0.5F, 16.0F, 1.0F, 1.0F, new CubeDeformation(inflate))
+                .texOffs(106, 52).addBox(-10.5F, -4.5F, 0.0F, 3.0F, 2.0F, 2.0F, new CubeDeformation(inflate)).mirror(true)
+                .texOffs(106, 52).addBox(7.5F, -4.5F, 0.0F, 3.0F, 2.0F, 2.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, -4.0F, 0.0F, 0.4189F, 0.0F, 0.0F));
+        p14.addOrReplaceChild("ffender_1", CubeListBuilder.create()
+                .texOffs(80, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 17.5F, 0.0F, -0.2793F, 0.0F, 0.0F));
+        p14.addOrReplaceChild("ffender_2", CubeListBuilder.create()
+                .texOffs(80, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 17.5F, 0.0F, 0.2443F, 0.0F, 0.0F));
+        p14.addOrReplaceChild("ffender_3", CubeListBuilder.create()
+                .texOffs(80, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 17.5F, 0.0F, 0.7679F, 0.0F, 0.0F));
+        p14.addOrReplaceChild("ffender_4", CubeListBuilder.create()
+                .texOffs(80, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 17.5F, 0.0F, 1.2915F, 0.0F, 0.0F));
+        p14.addOrReplaceChild("ffender_5", CubeListBuilder.create()
+                .texOffs(80, 42).addBox(-3.5F, -10.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(inflate)),
+                PartPose.offsetAndRotation(0.0F, 17.5F, 0.0F, 1.8151F, 0.0F, 0.0F));
+        p14.addOrReplaceChild("front_wheel", CubeListBuilder.create()
+                .texOffs(230, 0).addBox(-2.5F, -7.0F, -3.0F, 5.0F, 14.0F, 6.0F, new CubeDeformation(inflate))
+                .texOffs(58, 22).addBox(-2.5F, -3.0F, -7.0F, 5.0F, 6.0F, 14.0F, new CubeDeformation(inflate + 0.01F))
+                .texOffs(170, 0).addBox(-2.5F, -6.0F, -5.0F, 5.0F, 12.0F, 10.0F, new CubeDeformation(inflate + 0.02F))
+                .texOffs(102, 0).addBox(-2.5F, -5.0F, -6.0F, 5.0F, 10.0F, 12.0F, new CubeDeformation(inflate + 0.03F))
+                .texOffs(20, 52).addBox(-3.0F, -1.5F, -1.5F, 6.0F, 3.0F, 3.0F, new CubeDeformation(inflate)),
+                PartPose.offset(0.0F, 17.5F, 0.0F));
         p2.addOrReplaceChild("rear_wheel", CubeListBuilder.create()
-                .texOffs(18, 44).addBox(-1.5F, -7.0F, -3.0F, 3.0F, 14.0F, 6.0F, new CubeDeformation(inflate))
-                .texOffs(94, 43).addBox(-1.5F, -3.0F, -7.0F, 3.0F, 6.0F, 14.0F, new CubeDeformation(inflate + 0.01F))
-                .texOffs(34, 22).addBox(-1.5F, -6.0F, -5.0F, 3.0F, 12.0F, 10.0F, new CubeDeformation(inflate + 0.02F))
-                .texOffs(84, 0).addBox(-1.5F, -5.0F, -6.0F, 3.0F, 10.0F, 12.0F, new CubeDeformation(inflate + 0.03F))
-                .texOffs(22, 103).addBox(-2.0F, -1.5F, -1.5F, 4.0F, 3.0F, 3.0F, new CubeDeformation(inflate)),
+                .texOffs(230, 20).addBox(-2.5F, -7.0F, -3.0F, 5.0F, 14.0F, 6.0F, new CubeDeformation(inflate))
+                .texOffs(96, 22).addBox(-2.5F, -3.0F, -7.0F, 5.0F, 6.0F, 14.0F, new CubeDeformation(inflate + 0.01F))
+                .texOffs(200, 0).addBox(-2.5F, -6.0F, -5.0F, 5.0F, 12.0F, 10.0F, new CubeDeformation(inflate + 0.02F))
+                .texOffs(136, 0).addBox(-2.5F, -5.0F, -6.0F, 5.0F, 10.0F, 12.0F, new CubeDeformation(inflate + 0.03F))
+                .texOffs(38, 52).addBox(-3.0F, -1.5F, -1.5F, 6.0F, 3.0F, 3.0F, new CubeDeformation(inflate)),
                 PartPose.offset(0.0F, 5.0F, 15.0F));
         return LayerDefinition.create(mesh, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }

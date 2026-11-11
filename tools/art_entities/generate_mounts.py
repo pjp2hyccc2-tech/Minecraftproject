@@ -90,9 +90,20 @@ def write_bodies(rigs):
 
 # ------------------------------------------------------------------------------------------------ previews
 
-def view(rig, painted, yaw, pitch=14, ppu=6.0, pose=None, size=None, center=None):
+def lit(painter):
+    """The body texture with the emissive layer added on top, as the game shows it at night (previews only)."""
+    body = painter.img.astype(np.int32)
+    glow = painter.glow.astype(np.int32)
+    mask = glow[..., 3:4] > 0
+    out = body.copy()
+    out[..., :3] = np.where(mask, np.minimum(255, body[..., :3] * 0.35 + glow[..., :3] * 0.9), body[..., :3])
+    return out.astype(np.uint8)
+
+
+def view(rig, painted, yaw, pitch=14, ppu=6.0, pose=None, size=None, center=None, glow=False):
     v = rig.variants[0]
-    return Image.fromarray(ermodel.render(rig, v, painted[v.id].img, pose=pose, yaw=yaw, pitch=pitch, ppu=ppu,
+    texture = lit(painted[v.id]) if glow else painted[v.id].img
+    return Image.fromarray(ermodel.render(rig, v, texture, pose=pose, yaw=yaw, pitch=pitch, ppu=ppu,
                                           size=size, center=center))
 
 
@@ -129,14 +140,17 @@ def compare(rigs, directory):
         kind = rig.name.split('_', 1)[1]
         shots = []
         if rig.name == 'mount_griffin':
-            shots.append(view(rig, painted, -60, pitch=8, ppu=8.0, pose=ermodel.evaluate([(rig.anims['flap'], 0.08)])))
-            shots.append(view(rig, painted, 125, pitch=12, ppu=8.0, pose=ermodel.evaluate([(rig.anims['fold'], 0.0)])))
+            shots.append(view(rig, painted, -35, pitch=-4, ppu=7.0, glow=True,
+                              pose=ermodel.evaluate([(rig.anims['flap'], 0.0)])))
+            shots.append(view(rig, painted, 125, pitch=12, ppu=8.0, glow=True,
+                              pose=ermodel.evaluate([(rig.anims['fold'], 0.0)])))
         elif rig.name == 'mount_horse':
-            shots.append(view(rig, painted, 125, pitch=10, ppu=9.0))
-            shots.append(view(rig, painted, 235, pitch=12, ppu=7.0, pose=ermodel.evaluate([(rig.anims['gallop'], 0.1)])))
+            shots.append(view(rig, painted, 55, pitch=8, ppu=9.0, glow=True))
+            shots.append(view(rig, painted, 235, pitch=12, ppu=7.0, glow=True,
+                              pose=ermodel.evaluate([(rig.anims['gallop'], 0.1)])))
         else:
-            shots.append(view(rig, painted, 120, pitch=10, ppu=9.0))
-            shots.append(view(rig, painted, 215, pitch=14, ppu=7.0))
+            shots.append(view(rig, painted, 60, pitch=8, ppu=9.0, glow=True))
+            shots.append(view(rig, painted, 215, pitch=14, ppu=7.0, glow=True))
         height = max(s.height for s in shots)
         panel = []
         if os.path.exists(ref_path):

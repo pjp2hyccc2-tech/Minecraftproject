@@ -27,7 +27,8 @@ public final class BikeMountAnimations {
                 .addAnimation("frame", pos(false, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F, 0.0F, 0.12F, 0.0F, 0.2F, 0.0F, 0.0F, 0.0F, 0.3F, 0.0F, 0.1F, 0.0F, 0.4F, 0.0F, 0.0F, 0.0F, 0.5F, 0.0F, 0.12F, 0.0F, 0.6F, 0.0F, 0.0F, 0.0F, 0.7F, 0.0F, 0.1F, 0.0F, 0.8F, 0.0F, 0.0F, 0.0F, 0.9F, 0.0F, 0.12F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 1.1F, 0.0F, 0.1F, 0.0F, 1.2F, 0.0F, 0.0F, 0.0F))
                 .addAnimation("flag", rot(false, 0.0F, 0.0F, 8.0F, 0.0F, 0.6F, 0.0F, -8.0F, 0.0F, 1.2F, 0.0F, 8.0F, 0.0F))
                 .addAnimation("banner", rot(false, 0.0F, 0.0F, 0.0F, 2.0F, 0.6F, 0.0F, 0.0F, -2.0F, 1.2F, 0.0F, 0.0F, 2.0F))
-                .addAnimation("lantern", rot(false, 0.0F, 2.0F, 0.0F, 2.0F, 0.6F, -2.0F, 0.0F, -2.0F, 1.2F, 2.0F, 0.0F, 2.0F))
+                .addAnimation("lantern_r", rot(false, 0.0F, 2.0F, 0.0F, 2.0F, 0.6F, -2.0F, 0.0F, -2.0F, 1.2F, 2.0F, 0.0F, 2.0F))
+                .addAnimation("lantern_l", rot(false, 0.0F, -2.0F, 0.0F, -2.0F, 0.6F, 2.0F, 0.0F, 2.0F, 1.2F, -2.0F, 0.0F, -2.0F))
                 .build();
     }
 
@@ -36,7 +37,8 @@ public final class BikeMountAnimations {
                 .addAnimation("frame", pos(false, 0.0F, 0.0F, 0.0F, 0.0F, 0.15F, 0.0F, 0.2F, 0.0F, 0.3F, 0.0F, 0.0F, 0.0F, 0.45F, 0.0F, 0.15F, 0.0F, 0.6F, 0.0F, 0.0F, 0.0F))
                 .addAnimation("flag", rot(false, 0.0F, 0.0F, 18.0F, 6.0F, 0.15F, 0.0F, -6.0F, -4.0F, 0.3F, 0.0F, 20.0F, 4.0F, 0.45F, 0.0F, -4.0F, -6.0F, 0.6F, 0.0F, 18.0F, 6.0F))
                 .addAnimation("banner", rot(false, 0.0F, 34.0F, 0.0F, 0.0F, 0.3F, 42.0F, 0.0F, 0.0F, 0.6F, 34.0F, 0.0F, 0.0F))
-                .addAnimation("lantern", rot(false, 0.0F, 22.0F, 0.0F, 0.0F, 0.3F, 28.0F, 0.0F, 0.0F, 0.6F, 22.0F, 0.0F, 0.0F))
+                .addAnimation("lantern_r", rot(false, 0.0F, 22.0F, 0.0F, 0.0F, 0.3F, 28.0F, 0.0F, 0.0F, 0.6F, 22.0F, 0.0F, 0.0F))
+                .addAnimation("lantern_l", rot(false, 0.0F, 22.0F, 0.0F, 0.0F, 0.3F, 28.0F, 0.0F, 0.0F, 0.6F, 22.0F, 0.0F, 0.0F))
                 .build();
     }
 }
