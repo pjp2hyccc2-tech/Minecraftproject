@@ -94,12 +94,13 @@ def square(w):
         _cart(w, x, z, seed=x + z)
     for (x, z) in ((26, 30), (50, 30), (38, 17), (20, 30)):
         K.lamp(w, x, 0, z, height=4)
-    # pennant strings over the aisles between the masts, and from the top of the market cross
-    for (a, b, colors) in (((32, 6, 29), (50, 6, 30), (14, 4, 11, 0, 5)), ((9, 6, 30), (30, 6, 29), (1, 4, 3, 10, 5)),
-                           ((50, 6, 17), (40, 6, 19), (11, 0, 14, 4)), ((36, 8, 24), (50, 6, 30), (6, 4, 9, 0, 3)),
-                           ((35, 8, 25), (32, 6, 28), (14, 0, 11, 0))):
+    # pennant strings from the top of the market cross to the tops of three lamps (clear of the masts' flags,
+    # which stream east, and above the stall awnings)
+    for (a, b, colors) in (((36, 8, 24), (50, 8, 30), (14, 4, 11, 0, 5)), ((34, 8, 24), (20, 8, 30), (1, 4, 3, 10, 5)),
+                           ((35, 8, 23), (38, 8, 17), (6, 4, 9, 0, 3))):
+        span = ((b[0] - a[0]) ** 2 + (b[2] - a[2]) ** 2) ** 0.5
         MZ.bunting(w, *a, (b[0] - a[0], b[1] - a[1], b[2] - a[2]), style="pennant", colors=colors,
-                   sag=0.5 + 0.06 * abs(b[0] - a[0]), wind=1.0, facing="east")
+                   sag=round(0.25 + 0.06 * span, 2), wind=1.0, facing="east" if b[0] > a[0] else "west")
 
 
 def _cart(w, x, z, seed=0):

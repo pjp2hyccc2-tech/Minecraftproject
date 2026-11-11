@@ -190,14 +190,14 @@ def culvert(w, x0=40, width=3):
 
 
 def festoons(w, xs):
-    """Strings of paper lanterns across the canal: from a slim post on the north quay (z 39) to the lamp opposite on
-    the south quay (lantern at y 5, z 47)."""
+    """Strings of paper lanterns across the canal: from a slim post on the north quay (z 39) to the top of the lamp
+    opposite on the south quay (its lantern at y 5, z 47; the hook rests on it)."""
     for x in xs:
         if not (w.is_empty(x, 1, 39) and w.is_empty(x, 6, 39)):
             continue
         w.set(x, 1, 39, B.S("polished_blackstone"))
         w.fill(x, 2, 39, x, 5, 39, B.fence("dark_oak"))
-        MZ.bunting(w, x, 6, 39, (0, -1, 8), style="lanterns", colors=(1, 4, 14, 0), sag=1.4, wind=0.4, facing="south")
+        MZ.bunting(w, x, 6, 39, (0, 0, 8), style="lanterns", colors=(1, 4, 14, 0), sag=1.4, wind=0.4, facing="south")
 
 
 def covered_bridge(w, x0):

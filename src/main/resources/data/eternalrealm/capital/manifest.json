@@ -1,6 +1,6 @@
 {
  "format": 1,
- "build": "f424f27421e3cd9b",
+ "build": "4795e40d0a4dcb31",
  "tileSize": 32,
  "minY": -32,
  "maxY": 159,
@@ -9,6 +9,7 @@
   "minecraft:air",
   "eternalrealm:bunting[facing=east]",
   "eternalrealm:bunting[facing=south]",
+  "eternalrealm:bunting[facing=west]",
   "eternalrealm:carved_castle_stone",
   "eternalrealm:castle_brick_stairs[facing=east,half=bottom,shape=straight]",
   "eternalrealm:castle_brick_stairs[facing=north,half=bottom,shape=straight]",
@@ -1936,7 +1937,7 @@
     6,
     39
    ],
-   "nbt": "{Tx:0,Ty:-1,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [
@@ -2072,7 +2073,7 @@
     6,
     39
    ],
-   "nbt": "{Tx:0,Ty:-1,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [
@@ -3205,14 +3206,6 @@
   {
    "pos": [
     9,
-    6,
-    30
-   ],
-   "nbt": "{Tx:21,Ty:0,Tz:-1,Sag:1.8f,Style:\"pennant\",Colors:[I;1,4,3,10,5],Wind:1.0f}"
-  },
-  {
-   "pos": [
-    9,
     8,
     69
    ],
@@ -4022,17 +4015,9 @@
    "pos": [
     32,
     6,
-    29
-   ],
-   "nbt": "{Tx:18,Ty:0,Tz:1,Sag:1.6f,Style:\"pennant\",Colors:[I;14,4,11,0,5],Wind:1.0f}"
-  },
-  {
-   "pos": [
-    32,
-    6,
     39
    ],
-   "nbt": "{Tx:0,Ty:-1,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [
@@ -4049,6 +4034,14 @@
     -57
    ],
    "nbt": "{Width:3.0f,Height:2.0f,Design:\"cathedral\"}"
+  },
+  {
+   "pos": [
+    34,
+    8,
+    24
+   ],
+   "nbt": "{Tx:-14,Ty:0,Tz:6,Sag:1.2f,Style:\"pennant\",Colors:[I;1,4,3,10,5],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4078,9 +4071,9 @@
    "pos": [
     35,
     8,
-    25
+    23
    ],
-   "nbt": "{Tx:-3,Ty:-2,Tz:3,Sag:0.7f,Style:\"pennant\",Colors:[I;14,0,11,0],Wind:1.0f}"
+   "nbt": "{Tx:3,Ty:0,Tz:-6,Sag:0.7f,Style:\"pennant\",Colors:[I;6,4,9,0,3],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4096,7 +4089,7 @@
     8,
     24
    ],
-   "nbt": "{Tx:14,Ty:-2,Tz:6,Sag:1.3f,Style:\"pennant\",Colors:[I;6,4,9,0,3],Wind:1.0f}"
+   "nbt": "{Tx:14,Ty:0,Tz:6,Sag:1.2f,Style:\"pennant\",Colors:[I;14,4,11,0,5],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4241,14 +4234,6 @@
     51
    ],
    "nbt": "{Patterns:[{Pattern:\"er_crest\",Color:4},{Pattern:\"bo\",Color:4}]}"
-  },
-  {
-   "pos": [
-    50,
-    6,
-    17
-   ],
-   "nbt": "{Tx:-10,Ty:0,Tz:2,Sag:1.1f,Style:\"pennant\",Colors:[I;11,0,14,4],Wind:1.0f}"
   },
   {
    "pos": [
@@ -4624,7 +4609,7 @@
     6,
     39
    ],
-   "nbt": "{Tx:0,Ty:-1,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [
@@ -4720,7 +4705,7 @@
     6,
     39
    ],
-   "nbt": "{Tx:0,Ty:-1,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
+   "nbt": "{Tx:0,Ty:0,Tz:8,Sag:1.4f,Style:\"lanterns\",Colors:[I;1,4,14,0],Wind:0.4f}"
   },
   {
    "pos": [
