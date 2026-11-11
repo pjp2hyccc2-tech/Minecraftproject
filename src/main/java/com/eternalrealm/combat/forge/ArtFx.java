@@ -7,6 +7,7 @@ import com.eternalrealm.combat.HitFrame;
 import com.eternalrealm.combat.HitShape;
 import com.eternalrealm.combat.WeaponProfile;
 import com.eternalrealm.combat.WeaponType;
+import com.eternalrealm.item.ArtChoreography;
 import com.eternalrealm.item.ArtLook;
 import com.eternalrealm.item.GeneratedArts;
 import com.eternalrealm.sound.ERSounds;
@@ -45,7 +46,9 @@ import java.util.UUID;
  * (particles, colours, a primary shape for its hits, an accent shape for its wind-up and impacts, a wind-up style),
  * and this draws it fitted to the art's own hit geometry: arcs, circles, lines, the ground ahead or the launch of a
  * projectile. A readable wind-up before the first hit, a shape and a sound on every hit, a burst on every target, a
- * fading after-image, and the art's ground areas ({@code fx_<family>}). For everyone around; purely visual.
+ * fading after-image, and the art's ground areas ({@code fx_<family>}). Every hit also draws its strike's own trail
+ * ({@link ArtChoreography}: the crescent of a slash, a falling arc, a thrust streak, a ring, a quake...) and the last
+ * one lands with a shockwave, so arts of one weapon read differently. For everyone around; purely visual.
  */
 public final class ArtFx {
     private static final Map<UUID, Window> WINDOWS = new HashMap<>();
@@ -116,9 +119,13 @@ public final class ArtFx {
         boolean last = index >= hit.action().frames().size() - 1;
         if (frame.isProjectile()) {
             launch(player, look, last);
+            ArtChoreography.forAction(hit.action().id()).ifPresent(choreo -> strike(player, look,
+                    choreo.strike(index).trail(), geometry(player, HitFrame.NO_SHAPE), last, choreo.heavy()));
             return;
         }
         Geometry g = geometry(player, frame.shape());
+        ArtChoreography.forAction(hit.action().id()).ifPresent(choreo ->
+                strike(player, look, choreo.strike(index).trail(), g, last, choreo.heavy()));
         draw(level, look, look.primary(), g, last ? 1.25 : 1.0, level.getRandom(), false);
         draw(level, look, look.accent(), g, 0.6, level.getRandom(), true);
         sound(level, g.center(), hitSound(look.primary()), last ? 1.3F : 1.0F, pitch(look, 1.0F + 0.05F * index));
@@ -216,6 +223,183 @@ public final class ArtFx {
 
     static void forget(UUID playerId) {
         WINDOWS.remove(playerId);
+    }
+
+    // ------------------------------------------------------------------ the strike's own trail
+
+    /**
+     * The trail of one strike in particles, in the art's colours: a dense crescent along a slash's path with slash
+     * marks, a streak and a shock ring for a thrust, a full ring for a spin, rings and debris for a quake, a circle for
+     * a cast, a ring at the bow. The last strike adds a shockwave (bigger for heavy arts).
+     */
+    private static void strike(ServerPlayer player, ArtLook look, ArtChoreography.Trail trail, Geometry g,
+                               boolean last, boolean heavy) {
+        ServerLevel level = player.serverLevel();
+        ParticleOptions ink = dust(look.rgb(), last ? 2.0F : 1.6F);
+        ParticleOptions light = dust(look.accentRgb(), 1.2F);
+        ParticleOptions slash = ERParticles.SLASH.get();
+        Vec3 fwd = forward(player);
+        Vec3 right = new Vec3(-fwd.z, 0.0, fwd.x);
+        if (player.getMainArm() == net.minecraft.world.entity.HumanoidArm.LEFT) {
+            right = right.scale(-1.0);
+        }
+        Vec3 up = new Vec3(0.0, 1.0, 0.0);
+        Vec3 feet = player.position();
+        Vec3 chest = feet.add(0.0, 1.15, 0.0);
+        Vec3 lookDir = player.getLookAngle();
+        double r = Math.max(1.6, g.reach() * 0.8);
+        switch (trail) {
+            case ARC_RIGHT -> arc(level, ink, light, slash, chest.add(fwd.scale(0.15)), right.add(0.0, 0.18, 0.0)
+                    .normalize(), fwd, r, 155.0, 25.0);
+            case ARC_LEFT -> arc(level, ink, light, slash, chest.add(fwd.scale(0.15)), right.add(0.0, -0.18, 0.0)
+                    .normalize(), fwd, r, 25.0, 155.0);
+            case SWEEP -> {
+                arc(level, ink, light, slash, feet.add(0.0, 0.85, 0.0), right, fwd, g.reach() * 0.95, 205.0, -25.0);
+                arc(level, light, ink, slash, feet.add(0.0, 0.95, 0.0), right, fwd, g.reach() * 0.6, 205.0, -25.0);
+            }
+            case RISE -> arc(level, ink, light, slash, feet.add(fwd.scale(0.2)).add(0.0, 1.0, 0.0), up, fwd, r,
+                    155.0, -15.0);
+            case FALL -> {
+                arc(level, ink, light, slash, feet.add(fwd.scale(0.2)).add(0.0, 1.1, 0.0), up, fwd, r, -15.0, 160.0);
+                debris(level, player, feet.add(fwd.scale(Math.min(2.6, r))), look, 1.6);
+            }
+            case DIAG_RIGHT -> arc(level, ink, light, slash, chest.add(fwd.scale(0.2)),
+                    up.scale(0.75).subtract(right.scale(0.65)).normalize(), fwd, r, 0.0, 180.0);
+            case DIAG_LEFT -> arc(level, ink, light, slash, chest.add(fwd.scale(0.2)),
+                    up.scale(0.75).add(right.scale(0.65)).normalize(), fwd, r, 0.0, 180.0);
+            case CROSS -> {
+                arc(level, ink, light, slash, chest.add(fwd.scale(0.3)),
+                        up.scale(0.75).subtract(right.scale(0.65)).normalize(), fwd, r * 0.85, 0.0, 180.0);
+                arc(level, light, ink, slash, chest.add(fwd.scale(0.3)),
+                        up.scale(0.75).add(right.scale(0.65)).normalize(), fwd, r * 0.85, 0.0, 180.0);
+            }
+            case STREAK -> {
+                Vec3 from = player.getEyePosition().add(0.0, -0.35, 0.0).add(lookDir.scale(0.6));
+                double length = g.reach() * 1.05;
+                for (double t = 0.0; t <= length; t += 0.25) {
+                    Vec3 at = from.add(lookDir.scale(t));
+                    level.sendParticles(t > length - 1.0 ? light : ink, at.x, at.y, at.z, 1, 0.02, 0.02, 0.02, 0.0);
+                }
+                Vec3 tip = from.add(lookDir.scale(length));
+                ringAcross(level, light, tip, lookDir, 0.9, 18);
+                level.sendParticles(ParticleTypes.CRIT, tip.x, tip.y, tip.z, 10, 0.2, 0.2, 0.2, 0.4);
+            }
+            case RING -> {
+                ring(level, ink, feet.x, feet.y + 1.0, feet.z, r, 48, 0.0);
+                ring(level, light, feet.x, feet.y + 0.55, feet.z, r * 0.75, 28, 0.0);
+                for (int i = 0; i < 8; i++) {
+                    double angle = Math.PI * 2.0 * i / 8.0;
+                    level.sendParticles(slash, feet.x + Math.cos(angle) * r, feet.y + 1.0, feet.z + Math.sin(angle) * r,
+                            1, 0.0, 0.0, 0.0, 0.0);
+                }
+            }
+            case QUAKE -> debris(level, player, feet.add(fwd.scale(1.6)), look, heavy ? 3.2 : 2.4);
+            case FAN -> {
+                for (int ray = -2; ray <= 2; ray++) {
+                    Vec3 d = rotate(new Vec3(lookDir.x, 0.0, lookDir.z).normalize(), Math.toRadians(ray * 20.0));
+                    Vec3 from = player.getEyePosition().add(0.0, -0.3, 0.0);
+                    for (double t = 0.7; t <= 4.5; t += 0.4) {
+                        Vec3 at = from.add(d.scale(t));
+                        level.sendParticles(ray == 0 ? light : ink, at.x, at.y, at.z, 1, 0.0, 0.0, 0.0, 0.0);
+                    }
+                }
+            }
+            case SIGIL_AHEAD, BEAM -> {
+                Vec3 center = player.getEyePosition().add(lookDir.scale(1.6)).add(0.0, -0.1, 0.0);
+                ringAcross(level, ink, center, lookDir, 1.0, 28);
+                ringAcross(level, light, center, lookDir, 0.65, 18);
+                level.sendParticles(ParticleTypes.END_ROD, center.x, center.y, center.z, 8, 0.2, 0.2, 0.2, 0.05);
+                if (trail == ArtChoreography.Trail.BEAM) {
+                    for (double t = 0.0; t <= 10.0; t += 0.3) {
+                        Vec3 at = center.add(lookDir.scale(t));
+                        level.sendParticles(t % 0.9 < 0.3 ? light : ink, at.x, at.y, at.z, 1, 0.05, 0.05, 0.05, 0.0);
+                    }
+                }
+            }
+            case SIGIL_SKY -> {
+                Vec3 target = player.getEyePosition().add(lookDir.scale(10.0));
+                double y = Math.max(target.y, feet.y) + 6.0;
+                ring(level, ink, target.x, y, target.z, 2.2, 40, 0.0);
+                ring(level, light, target.x, y, target.z, 1.5, 28, 0.0);
+                level.sendParticles(ParticleTypes.END_ROD, target.x, y, target.z, 14, 1.2, 0.1, 1.2, 0.02);
+            }
+            case MUZZLE, MUZZLE_HEAVY -> {
+                Vec3 bow = player.getEyePosition().add(0.0, -0.12, 0.0).add(lookDir.scale(1.0));
+                boolean big = trail == ArtChoreography.Trail.MUZZLE_HEAVY;
+                ringAcross(level, ink, bow, lookDir, big ? 1.2 : 0.8, big ? 24 : 16);
+                if (big) {
+                    schedule(level, 2, () -> ringAcross(level, light, bow.add(lookDir.scale(0.8)), lookDir, 1.6, 26));
+                    level.sendParticles(ParticleTypes.EXPLOSION, bow.x, bow.y, bow.z, 1, 0.0, 0.0, 0.0, 0.0);
+                }
+            }
+        }
+        if (last) {
+            double waveReach = heavy ? 4.5 : 3.0;
+            for (int step = 1; step <= 3; step++) {
+                double radius = waveReach * step / 3.0;
+                ParticleOptions wave = step % 2 == 1 ? light : ink;
+                schedule(level, step, () -> ring(level, wave, feet.x, feet.y + 0.2, feet.z, radius,
+                        16 + (int) (radius * 6), 0.0));
+            }
+            level.sendParticles(ParticleTypes.FLASH, chest.x, chest.y, chest.z, 1, 0.0, 0.0, 0.0, 0.0);
+            if (heavy) {
+                level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, feet.x, feet.y + 0.5, feet.z, 1, 0.0, 0.0, 0.0,
+                        0.0);
+            }
+        }
+    }
+
+    /** Points along an arc in the plane of {@code a} (0°) and {@code b} (90°), slash marks along it. */
+    private static void arc(ServerLevel level, ParticleOptions ink, ParticleOptions light, ParticleOptions slash,
+                            Vec3 center, Vec3 a, Vec3 b, double radius, double from, double to) {
+        int points = Math.max(16, (int) (Math.abs(to - from) / 6.0));
+        for (int i = 0; i <= points; i++) {
+            double u = i / (double) points;
+            double angle = Math.toRadians(from + (to - from) * u);
+            Vec3 p = center.add(a.scale(Math.cos(angle) * radius)).add(b.scale(Math.sin(angle) * radius));
+            level.sendParticles(u > 0.75 ? light : ink, p.x, p.y, p.z, 1, 0.0, 0.0, 0.0, 0.0);
+            if (i % 5 == 2) {
+                level.sendParticles(slash, p.x, p.y, p.z, 1, 0.0, 0.0, 0.0, 0.0);
+            }
+        }
+        double end = Math.toRadians(to);
+        Vec3 tip = center.add(a.scale(Math.cos(end) * radius)).add(b.scale(Math.sin(end) * radius));
+        level.sendParticles(ParticleTypes.END_ROD, tip.x, tip.y, tip.z, 6, 0.1, 0.1, 0.1, 0.06);
+    }
+
+    /** A ring of points across a direction (around a thrust's tip, at a bow, a cast circle). */
+    private static void ringAcross(ServerLevel level, ParticleOptions particle, Vec3 center, Vec3 dir, double radius,
+                                   int count) {
+        Vec3[] basis = basis(dir);
+        for (int i = 0; i < count; i++) {
+            double angle = Math.PI * 2.0 * i / count;
+            Vec3 p = center.add(basis[0].scale(Math.cos(angle) * radius)).add(basis[1].scale(Math.sin(angle) * radius));
+            level.sendParticles(particle, p.x, p.y, p.z, 1, 0.0, 0.0, 0.0, 0.0);
+        }
+    }
+
+    /** Where something heavy lands: rings, the ground's own crumbs thrown up, cracks of light. */
+    private static void debris(ServerLevel level, ServerPlayer player, Vec3 at, ArtLook look, double radius) {
+        net.minecraft.core.BlockPos below = net.minecraft.core.BlockPos.containing(at.x, player.getY() - 0.5, at.z);
+        net.minecraft.world.level.block.state.BlockState ground = level.getBlockState(below);
+        double y = player.getY() + 0.1;
+        ring(level, dust(look.rgb(), 1.8F), at.x, y, at.z, radius * 0.5, 24, 0.0);
+        ring(level, dust(look.accentRgb(), 1.3F), at.x, y + 0.05, at.z, radius, 36, 0.0);
+        if (!ground.isAir()) {
+            level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, ground), at.x, y + 0.2, at.z, 30,
+                    radius * 0.4, 0.2, radius * 0.4, 0.25);
+        }
+        for (int i = 0; i < 8; i++) {
+            double angle = Math.PI * 2.0 * i / 8.0 + 0.2;
+            for (double t = 0.4; t <= radius; t += 0.35) {
+                level.sendParticles(dust(look.rgb(), 1.0F), at.x + Math.cos(angle) * t, y, at.z + Math.sin(angle) * t, 1,
+                        0.0, 0.0, 0.0, 0.0);
+            }
+        }
+        for (int h = 0; h < 10; h++) {
+            level.sendParticles(h % 2 == 0 ? ParticleTypes.END_ROD : dust(look.rgb(), 1.6F), at.x, y + h * 0.4, at.z, 1,
+                    0.05, 0.0, 0.05, 0.0);
+        }
     }
 
     // ------------------------------------------------------------------ wind-up and launch

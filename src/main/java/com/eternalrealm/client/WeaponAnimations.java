@@ -68,6 +68,12 @@ public final class WeaponAnimations {
         var main = right ? model.rightArm : model.leftArm;
         var other = right ? model.leftArm : model.rightArm;
         float side = right ? 1.0F : -1.0F;
+        Optional<ArtPoses.Play> art = ArtPoses.play(anim);
+        if (art.isPresent()) {
+            ArtPoses.pose(model, main, other, side, ArtPoses.body(art.get(), anim.elapsed(ClientCombatState.tick(),
+                    partial)));
+            return;
+        }
         float strike = strikeCurve(p);
         if (anim.weapon() == WeaponType.DUAL_BLADES && poseTwinBlades(model, anim.motion(), main, other, side, p, strike)) {
             return;
@@ -215,6 +221,11 @@ public final class WeaponAnimations {
             return true;
         }
         CombatAnimations.Anim anim = current.get();
+        Optional<ArtPoses.Play> art = ArtPoses.play(anim);
+        if (art.isPresent()) {
+            ArtPoses.hand(art.get(), anim.elapsed(ClientCombatState.tick(), partialTick), false).apply(pose, side);
+            return true;
+        }
         float p = anim.progress(ClientCombatState.tick(), partialTick);
         if (anim.weapon() == WeaponType.DUAL_BLADES && anim.motion() == CombatAnimations.Motion.SLASH_LEFT) {
             waitingBlade(pose, side, p); // this beat belongs to the off-hand blade
@@ -243,6 +254,11 @@ public final class WeaponAnimations {
             return;
         }
         CombatAnimations.Anim anim = current.get();
+        Optional<ArtPoses.Play> art = ArtPoses.play(anim);
+        if (art.isPresent()) {
+            ArtPoses.hand(art.get(), anim.elapsed(ClientCombatState.tick(), partialTick), true).apply(pose, side);
+            return;
+        }
         float p = anim.progress(ClientCombatState.tick(), partialTick);
         switch (anim.motion()) {
             case SLASH_RIGHT -> waitingBlade(pose, side, p);

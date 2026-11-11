@@ -104,6 +104,7 @@ public final class ClientForgeEvents {
     public static void onRenderLevelStage(RenderLevelStageEvent event) {
         com.eternalrealm.client.telegraph.TelegraphRenderer.render(event);
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
+            ArtTrails.render(event);
             DamageNumberRenderer.render(event);
         }
     }

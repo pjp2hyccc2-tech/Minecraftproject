@@ -348,3 +348,14 @@ spawns in worlds without it); lords, wanderers, dungeon monsters and bosses are 
 blocks from any other monster (was 4), and every habitat holds half again as many (3/4/6 → 5/6/9, the common kinds
 without a second home 9 → 13); a killed monster is back after 4-6 s instead of 5-7 s. `lingerSeconds`/`lingerRadius`
 are gone (`aggroRadius` is new, so existing worlds get 5 blocks).
+
+## D-ARTMOVES: every art form has its own choreography and glowing trails (2026-11-12)
+The owner: 「zボタンの技の視覚的効果と武器の動きが一緒すぎるのでもう少し各々派手にして」. The Z-key arts moved in only five
+motions (overhead, thrust, spin, cast, shoot), so arts of one weapon type looked alike. Now each of the 36 art forms (and
+the nine boss arts and the six weapon types' own skills) has a choreography (`item.ArtChoreography`): a wind-up stance,
+one strike per hit, a finishing stance. `item.ArtTimeline` times every strike to end on its hit tick. The client poses
+arms, body twist and the first-person weapon from it (`client.ArtPoses`) and draws additive glowing trails for every
+player in sight (`client.ArtTrails`: crescents, arcs, streaks, rings, quakes with pillars, magic circles, bow rings; a
+wind-up glow by the art's wind-up style; a heavy finisher shakes the wielder's view); the server draws the same strike
+trails in particles with a shockwave on the last hit (`ArtFx`), which is all a shader-pack user sees. Arts of one form are
+mirrored by their id, so half of them cut the other way round. The body's lean is not posed (legs would come apart).

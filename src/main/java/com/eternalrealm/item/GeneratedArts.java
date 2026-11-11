@@ -28,7 +28,8 @@ public final class GeneratedArts {
 
     private record Catalog(Map<String, WeaponArt> byId, Map<String, WeaponArt> byDesign,
                            Map<ItemTier, Map<WeaponType, WeaponArt>> byTier, Map<String, ArtLook> looks,
-                           Map<String, ArtLook> zoneLooks, List<WeaponArt> all, java.util.Set<String> relics) {
+                           Map<String, ArtLook> zoneLooks, List<WeaponArt> all, java.util.Set<String> relics,
+                           Map<String, ArtForge.Form> forms) {
     }
 
     private static final class Holder {
@@ -54,6 +55,11 @@ public final class GeneratedArts {
 
     public static Optional<ArtLook> look(String artId) {
         return Optional.ofNullable(artId == null ? null : Holder.CATALOG.looks().get(artId));
+    }
+
+    /** The attack form an art was forged from (its choreography: {@link ArtChoreography}). */
+    public static Optional<ArtForge.Form> form(String artId) {
+        return Optional.ofNullable(artId == null ? null : Holder.CATALOG.forms().get(artId));
     }
 
     /** The look of a ground area ({@code fx_<family>}), if one of these arts made it. */
@@ -90,6 +96,7 @@ public final class GeneratedArts {
         Map<String, ArtLook> zoneLooks = new HashMap<>();
         List<WeaponArt> all = new ArrayList<>();
         java.util.Set<String> relics = new java.util.HashSet<>();
+        Map<String, ArtForge.Form> forms = new HashMap<>();
         for (ArtTable.Row row : ArtTable.ROWS) {
             ArtLook look = new ArtLook(row.family(), ArtLook.Shape.valueOf(row.primary()),
                     ArtLook.Shape.valueOf(row.accent()), row.particle(), row.accentParticle(), row.rgb(),
@@ -142,6 +149,7 @@ public final class GeneratedArts {
             }
             looks.put(art.id(), look);
             zoneLooks.put(look.zoneLook(), look);
+            forms.put(art.id(), form);
             all.add(art);
         }
         for (ItemTier tier : ItemTier.values()) {
@@ -152,6 +160,6 @@ public final class GeneratedArts {
         return new Catalog(Collections.unmodifiableMap(byId), Collections.unmodifiableMap(byDesign),
                 Collections.unmodifiableMap(byTier), Collections.unmodifiableMap(looks),
                 Collections.unmodifiableMap(zoneLooks), Collections.unmodifiableList(all),
-                java.util.Set.copyOf(relics));
+                java.util.Set.copyOf(relics), Collections.unmodifiableMap(forms));
     }
 }

@@ -7,6 +7,7 @@ import com.eternalrealm.combat.Combatant;
 import com.eternalrealm.combat.WeaponProfile;
 import com.eternalrealm.combat.WeaponProfiles;
 import com.eternalrealm.combat.WeaponType;
+import com.eternalrealm.item.ArtChoreography;
 import com.eternalrealm.job.Jobs;
 import com.eternalrealm.network.forge.PlayerActionPacket;
 import net.minecraft.client.Minecraft;
@@ -31,17 +32,26 @@ public final class CombatAnimations {
         CAST,
         SHOOT,
         CHARGE,
-        DODGE
+        DODGE,
+        /** A Z-key weapon skill with its own choreography ({@link ArtChoreography}). */
+        ART
     }
 
     /**
      * @param start    client tick the action started
      * @param duration length in ticks
      * @param local    the local player's own action (it holds still during a {@link HitStop})
+     * @param actionId the action (for {@link Motion#ART}: whose choreography), may be {@code null}
      */
-    public record Anim(Motion motion, WeaponType weapon, long start, int duration, boolean local) {
+    public record Anim(Motion motion, WeaponType weapon, long start, int duration, boolean local, String actionId) {
         public Anim(Motion motion, WeaponType weapon, long start, int duration) {
-            this(motion, weapon, start, duration, false);
+            this(motion, weapon, start, duration, false, null);
+        }
+
+        /** Ticks since the action began (held still during the local player's hit stop). */
+        public float elapsed(long tick, float partialTick) {
+            float elapsed = tick - start + partialTick;
+            return local ? HitStop.adjust(tick, partialTick, elapsed) : elapsed;
         }
 
         /** Progress in [0, 1]. */
@@ -63,7 +73,8 @@ public final class CombatAnimations {
         WeaponProfile weapon = weaponOfAction(packet.actionId());
         WeaponType type = weapon == null ? WeaponType.ONE_HANDED_SWORD : weapon.type();
         Motion motion = packet.charging() ? Motion.CHARGE : motionOf(packet.actionId(), packet.comboStep(), type);
-        REMOTE.put(packet.entityId(), new Anim(motion, type, ClientCombatState.tick(), packet.duration()));
+        REMOTE.put(packet.entityId(), new Anim(motion, type, ClientCombatState.tick(), packet.duration(), false,
+                packet.actionId()));
         if (REMOTE.size() > 256) {
             REMOTE.values().removeIf(anim -> ClientCombatState.tick() - anim.start() > anim.duration() + 40);
         }
@@ -92,7 +103,7 @@ public final class CombatAnimations {
         long chargeStart = fighter.chargeStartTick();
         if (chargeStart >= 0) {
             return Optional.of(new Anim(Motion.CHARGE, type, chargeStart, fighter.weapon().heavy().maxChargeTicks(),
-                    true));
+                    true, null));
         }
         Optional<ActionDefinition> action = fighter.currentAction();
         if (action.isEmpty()) {
@@ -101,7 +112,7 @@ public final class CombatAnimations {
         long start = fighter.actionStartTick();
         int duration = (int) Math.max(1L, fighter.actionEndTick() - start);
         return Optional.of(new Anim(motionOf(action.get().id(), fighter.currentComboStep(), type), type, start, duration,
-                true));
+                true, action.get().id()));
     }
 
     /** Charge progress of the local player in [0, 1] (0 when not charging). */
@@ -117,6 +128,9 @@ public final class CombatAnimations {
     static Motion motionOf(String actionId, int comboStep, WeaponType weapon) {
         if (CombatRules.DODGE.id().equals(actionId)) {
             return Motion.DODGE;
+        }
+        if (ArtChoreography.forAction(actionId).isPresent()) {
+            return Motion.ART;
         }
         Optional<com.eternalrealm.item.WeaponArt> art = com.eternalrealm.item.WeaponArts.byId(actionId);
         if (art.isPresent()) {
