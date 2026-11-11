@@ -33,8 +33,7 @@ public final class ERServerConfig {
     public static final ForgeConfigSpec.BooleanValue MOB_KILL_EXP_ENABLED;
     public static final ForgeConfigSpec.BooleanValue MONSTER_SPAWNING;
     public static final ForgeConfigSpec.BooleanValue CALM_HABITATS;
-    public static final ForgeConfigSpec.IntValue LINGER_SECONDS;
-    public static final ForgeConfigSpec.DoubleValue LINGER_RADIUS;
+    public static final ForgeConfigSpec.DoubleValue AGGRO_RADIUS;
     public static final ForgeConfigSpec.BooleanValue KEEP_INVENTORY;
     public static final ForgeConfigSpec.DoubleValue RELIC_DROP_CHANCE;
     public static final ForgeConfigSpec.BooleanValue NATURAL_REGENERATION;
@@ -129,14 +128,12 @@ public final class ERServerConfig {
         builder.comment("Field monsters of the areas around the capital.").push("monsters");
         MONSTER_SPAWNING = builder.comment("Spawn the monsters of each area around the players (outside the capital).")
                 .define("spawning", true);
-        CALM_HABITATS = builder.comment("Monsters of the habitats leave players alone until a player hurts them or stays",
-                        "close to them for a while (lingerSeconds within lingerRadius).")
+        CALM_HABITATS = builder.comment("Field monsters leave players alone until a player hurts them or comes within",
+                        "aggroRadius of them (in sight).")
                 .define("calmUntilProvoked", true);
-        LINGER_SECONDS = builder.comment("Seconds a player may stay within lingerRadius of a calm monster before it attacks",
-                        "(it turns to look and growls halfway). 0: staying close never provokes.")
-                .defineInRange("lingerSeconds", 8, 0, 120);
-        LINGER_RADIUS = builder.comment("How close (blocks) a player must stay to annoy a calm monster.")
-                .defineInRange("lingerRadius", 8.0, 2.0, 32.0);
+        AGGRO_RADIUS = builder.comment("Blocks: a player this close to a field monster (in sight) is attacked at once; a",
+                        "few blocks farther it turns to look and growls. 0: only hurting it provokes it.")
+                .defineInRange("aggroRadius", 5.0, 0.0, 32.0);
         KEEP_INVENTORY = builder.comment("Players keep their items on death (the game has its own death penalty).",
                         "Sets the keepInventory game rule when the server starts.")
                 .define("keepInventory", true);

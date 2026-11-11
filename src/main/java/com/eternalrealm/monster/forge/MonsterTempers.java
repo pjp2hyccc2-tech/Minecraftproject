@@ -20,16 +20,18 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The calm monsters of the habitats ({@link Temper}): they pick no fight with a player until that player hurts them or
- * stays close for a while, and a calm one deals no damage (no touch damage of slimes either). Every way a monster picks
- * a target goes through {@link Mob#setTarget}, so vetoing the target change covers vanilla goals, the mod's own and
- * the spawner's aggro alike. Server thread only.
+ * The calm field monsters ({@link Temper}): they pick no fight with a player until that player hurts them or comes
+ * within the aggro radius (5 blocks by default; a few blocks farther they turn to look and growl), and a calm one deals
+ * no damage (no touch damage of slimes either). Every way a monster picks a target goes through {@link Mob#setTarget},
+ * so vetoing the target change covers vanilla goals, the mod's own and the spawner's aggro alike. Server thread only.
  */
 public final class MonsterTempers {
     /** Persistent tag of a monster that is calm until provoked (habitat monsters). */
     public static final String CALM_TAG = "er_calm";
-    /** How often the habitats look around (ticks; the spawner calls {@link #look} at this pace). */
-    public static final int LOOK_STEP = 20;
+    /** How often the field monsters look around (ticks; the spawner calls {@link #look} at this pace). */
+    public static final int LOOK_STEP = 10;
+    /** Blocks beyond the aggro radius where a calm monster warns a player (turns to look, growls). */
+    public static final double WARN_MARGIN = 3.0;
 
     private static final Map<UUID, Temper> TEMPERS = new HashMap<>();
 
@@ -48,8 +50,7 @@ public final class MonsterTempers {
     }
 
     private static Temper temper(Mob mob) {
-        return TEMPERS.computeIfAbsent(mob.getUUID(),
-                id -> new Temper(Math.max(0, ERServerConfig.LINGER_SECONDS.get()) * 20));
+        return TEMPERS.computeIfAbsent(mob.getUUID(), id -> new Temper());
     }
 
     /** Whether {@code mob} may fight {@code player} (always, for monsters without a temper). */
@@ -103,29 +104,35 @@ public final class MonsterTempers {
     }
 
     /**
-     * One look around of a habitat's monsters ({@link #LOOK_STEP} ticks after the last): players staying close annoy
-     * them; halfway a monster turns to look and growls, at the end it attacks.
+     * One look around of field monsters ({@link #LOOK_STEP} ticks after the last): a player within the aggro radius
+     * and in sight is attacked at once; a few blocks farther the monster turns to look and growls.
      */
     public static void look(ServerLevel level, List<Mob> monsters, List<ServerPlayer> players) {
         if (!ERServerConfig.CALM_HABITATS.get()) {
             return;
         }
-        double radius = ERServerConfig.LINGER_RADIUS.get();
+        double aggro = ERServerConfig.AGGRO_RADIUS.get();
+        double warn = aggro > 0.0 ? aggro + WARN_MARGIN : 0.0;
         for (Mob mob : monsters) {
             if (!hasTemper(mob) || !mob.isAlive()) {
                 continue;
             }
+            List<UUID> close = new ArrayList<>();
             List<UUID> near = new ArrayList<>();
             Map<UUID, ServerPlayer> byId = new HashMap<>();
             for (ServerPlayer player : players) {
-                if (!player.isCreative() && !player.isSpectator() && player.isAlive()
-                        && mob.distanceToSqr(player) <= radius * radius && mob.hasLineOfSight(player)) {
-                    near.add(player.getUUID());
-                    byId.put(player.getUUID(), player);
+                if (player.isCreative() || player.isSpectator() || !player.isAlive()) {
+                    continue;
                 }
+                double distance = mob.distanceToSqr(player);
+                if (distance > warn * warn || !mob.hasLineOfSight(player)) {
+                    continue;
+                }
+                (distance <= aggro * aggro ? close : near).add(player.getUUID());
+                byId.put(player.getUUID(), player);
             }
             boolean fighting = mob.getTarget() != null && mob.getTarget().isAlive();
-            Temper.Look look = temper(mob).look(near, LOOK_STEP, fighting);
+            Temper.Look look = temper(mob).look(close, near, LOOK_STEP, fighting);
             if (look.warned() != null) {
                 ServerPlayer player = byId.get(look.warned());
                 mob.getLookControl().setLookAt(player, 30.0F, 30.0F);

@@ -337,3 +337,14 @@ through the guild gates of designs their guild does not own, or `/er admin test 
 permission, opens them, so operators walking the terrace see the normal gates. Showcases belong to no guild (no bell call,
 vaults open to testers, no storage log) and are never torn down (nothing stored in them is lost); `lock` takes the pass
 back. Details: `docs/modules/testkit.md`.
+
+## D-AGGRO5: field monsters attack within 5 blocks; habitats hold half again as many, 5 blocks apart (2026-11-12)
+The owner: 「フィールドの敵は周囲5ブロック以内に入ったら攻撃してくるようにして。敵の湧く間隔を5ブロックごとにしてもう少し
+スポーンさせて」. This replaces the lingering rule of D-HABITAT2X (8 s within 8 blocks): a calm field monster now turns on
+a player who comes within `monsters.aggroRadius` (5 blocks, in sight) at once, and on anyone who hurts it; within 3
+blocks more it turns to look and growls once per approach, so the line can be seen. Monsters look around twice a
+second. Every monster the spawner places in the field is calm (habitats in アストリア, and the old around-the-player
+spawns in worlds without it); lords, wanderers, dungeon monsters and bosses are unchanged. New habitat monsters keep 5
+blocks from any other monster (was 4), and every habitat holds half again as many (3/4/6 → 5/6/9, the common kinds
+without a second home 9 → 13); a killed monster is back after 4-6 s instead of 5-7 s. `lingerSeconds`/`lingerRadius`
+are gone (`aggroRadius` is new, so existing worlds get 5 blocks).

@@ -265,11 +265,12 @@ public final class FieldSitesGenerator {
     /** The largest habitat radius; candidates are checked for it. */
     static final int MAX_RADIUS = 45;
 
+    /** Owner, 2026-11-12: 「もう少しスポーンさせて」: half as many again as before (3/4/6). */
     static int populationOf(MonsterTemplate template) {
         return switch (template.baseEntityType()) {
-            case "minecraft:ravager" -> 3;
-            case "minecraft:blaze", "minecraft:phantom" -> 4;
-            default -> 6;
+            case "minecraft:ravager" -> 5;
+            case "minecraft:blaze", "minecraft:phantom" -> 6;
+            default -> 9;
         };
     }
 
@@ -343,7 +344,7 @@ public final class FieldSitesGenerator {
             boolean common = species.stream().anyMatch(e -> e.template().id().equals(site.monster()) && e.weight() >= 25);
             if (common && !site.id().endsWith("_2") && placed.stream().noneMatch(s -> s.id().equals(second))) {
                 placed.set(i, new Site(site.id(), site.field(), site.monster(), site.x(), site.z(), site.radius(),
-                        Math.min(12, site.population() * 3 / 2)));
+                        Math.min(16, site.population() * 3 / 2)));
             }
         }
         habitats.addAll(placed);

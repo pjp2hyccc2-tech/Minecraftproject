@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The calm habitat monsters (owner, 2026-11-11: they attack only when attacked or when a player stays near them) and
- * the spacing of habitat spawns.
+ * The calm field monsters (owner, 2026-11-12: they attack when a player comes within 5 blocks, or when attacked) and
+ * the spacing of habitat spawns (5 blocks).
  */
 @GameTestHolder(ModInfo.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -95,32 +95,34 @@ public final class TemperGameTests {
         helper.succeed();
     }
 
+    /** The monster stands at z = 6.5: a player at z = 0.5 is 6 blocks away, at z = 2.0 is 4.5 blocks away. */
     @GameTest(template = ARENA)
-    public static void stayingNearACalmMonsterProvokesIt(GameTestHelper helper) {
+    public static void comingWithinFiveBlocksProvokesACalmMonster(GameTestHelper helper) {
+        check(ERServerConfig.AGGRO_RADIUS.get() == 5.0, "5 blocks by default, not " + ERServerConfig.AGGRO_RADIUS.get());
         Mob mob = calmMonster(helper);
-        FakePlayer lingerer = player(helper, "er_gt_linger", 4.5);
-        int looks = ERServerConfig.LINGER_SECONDS.get() * 20 / MonsterTempers.LOOK_STEP;
-        check(looks > 0, "lingering provokes by default");
-        for (int i = 1; i < looks; i++) {
-            MonsterTempers.look(helper.getLevel(), List.of(mob), List.of(lingerer));
-            check(!MonsterTempers.mayFight(mob, lingerer), "provoked too early, after look " + i);
-            check(mob.getTarget() == null, "attacked too early, after look " + i);
+        FakePlayer walker = player(helper, "er_gt_aggro", 0.5);
+        for (int i = 0; i < 30; i++) {
+            MonsterTempers.look(helper.getLevel(), List.of(mob), List.of(walker));
         }
-        MonsterTempers.look(helper.getLevel(), List.of(mob), List.of(lingerer));
-        check(MonsterTempers.mayFight(mob, lingerer), "staying " + ERServerConfig.LINGER_SECONDS.get()
-                + " s next to it must provoke it");
-        check(mob.getTarget() == lingerer, "it must attack the one who stayed, target " + mob.getTarget());
+        check(!MonsterTempers.mayFight(mob, walker), "6 blocks away, however long, must not provoke it");
+        check(mob.getTarget() == null, "attacked from 6 blocks, target " + mob.getTarget());
+        Vec3 closer = helper.absoluteVec(new Vec3(4.5, 2.0, 2.0));
+        walker.moveTo(closer.x, closer.y, closer.z, 0.0F, 0.0F);
+        MonsterTempers.look(helper.getLevel(), List.of(mob), List.of(walker));
+        check(MonsterTempers.mayFight(mob, walker), "4.5 blocks away must provoke it at the next look");
+        check(mob.getTarget() == walker, "it must attack the one who came close, target " + mob.getTarget());
         mob.discard();
         helper.succeed();
     }
 
     @GameTest(template = ARENA)
-    public static void habitatSpawnsKeepFourBlocksApart(GameTestHelper helper) {
+    public static void habitatSpawnsKeepFiveBlocksApart(GameTestHelper helper) {
         Mob mob = calmMonster(helper);
         ServerLevel level = helper.getLevel();
         check(MonsterSpawner.crowded(level, mob.getX() + 2.0, mob.getY(), mob.getZ()), "2 blocks away is too close");
-        check(MonsterSpawner.crowded(level, mob.getX() + 3.5, mob.getY(), mob.getZ() + 1.0), "3.6 blocks is too close");
-        check(!MonsterSpawner.crowded(level, mob.getX() + 4.5, mob.getY(), mob.getZ()), "4.5 blocks is far enough");
+        check(MonsterSpawner.crowded(level, mob.getX() + 4.5, mob.getY(), mob.getZ()), "4.5 blocks is too close");
+        check(MonsterSpawner.crowded(level, mob.getX() + 4.0, mob.getY(), mob.getZ() + 2.5), "4.7 blocks is too close");
+        check(!MonsterSpawner.crowded(level, mob.getX() + 5.5, mob.getY(), mob.getZ()), "5.5 blocks is far enough");
         mob.discard();
         helper.succeed();
     }

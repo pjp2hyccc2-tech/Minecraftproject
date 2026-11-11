@@ -27,10 +27,12 @@ import java.util.SplittableRandom;
  * Field monsters. In アストリア they live in their fixed habitats ({@link Habitats}): twice per second every habitat a
  * player is near fills up to its population (quickly while it is half empty, then one monster every few seconds, so a
  * killed one comes back), at the monster's own levels, now and then the field's elite instead, each at least
- * {@value #SPACING} blocks from any other monster. Habitat monsters keep near the spot they appeared at, walk back when
- * they stray and give up a chase far from home, and they are calm until provoked ({@link MonsterTempers}). Elsewhere (a world without アストリア) monsters of the
- * area's table appear around each player as before: 14-40 blocks away on solid ground, up to 21 per player and a cap
- * per server. Monsters that ignore players in daylight (spiders, endermen) are pointed at a player in sight.
+ * {@value #SPACING} blocks from any other monster (owner, 2026-11-12: 「敵の湧く間隔を5ブロックごとにしてもう少し
+ * スポーンさせて」). Habitat monsters keep near the spot they appeared at, walk back when they stray and give up a chase
+ * far from home. Every field monster is calm until a player hurts it or comes within the aggro radius
+ * ({@link MonsterTempers}: 5 blocks). Elsewhere (a world without アストリア) monsters of the area's table appear around
+ * each player as before: 14-40 blocks away on solid ground, up to 21 per player and a cap per server. Monsters that
+ * ignore players in daylight (spiders, endermen) are pointed at a player in sight once they may fight them.
  */
 public final class MonsterSpawner {
     private static final int NEAR_RADIUS = 48;
@@ -47,7 +49,6 @@ public final class MonsterSpawner {
     private static final double PACK_CHANCE = 0.5;
     /** Spawns per player per round while far below the cap (the field fills up quickly again). */
     private static final int BURST = 2;
-    private static final double AGGRO_RANGE_SQR = 12.0 * 12.0;
     private static final int RECOUNT_TICKS = 100;
     private static final double DESPAWN_DISTANCE = 96.0;
 
@@ -56,11 +57,14 @@ public final class MonsterSpawner {
     /** Spawns per habitat per round while it is less than half full. */
     private static final int FILL_BURST = 2;
     /** Ticks between spawns of a habitat that is at least half full (a killed monster is back after this). */
-    private static final int RESPAWN_TICKS = 100;
+    private static final int RESPAWN_TICKS = 80;
     /** Monsters never appear closer than this to a player. */
     private static final double PLAYER_CLEARANCE = 9.0;
-    /** Blocks between a new habitat monster and any other monster (owner: 「湧く間隔は4ブロック毎くらいで」). */
-    static final double SPACING = 4.0;
+    /**
+     * Blocks between a new habitat monster and any other monster (owner, 2026-11-12: 「敵の湧く間隔を5ブロックごとに」;
+     * before: 4).
+     */
+    static final double SPACING = 5.0;
     /** Persistent tags of the spot a habitat monster appeared at (it keeps near it). */
     public static final String HOME_X_TAG = "er_home_x";
     public static final String HOME_Z_TAG = "er_home_z";
@@ -118,10 +122,12 @@ public final class MonsterSpawner {
             tickHabitats(level, players, tick, cap);
             return;
         }
+        java.util.Set<Mob> watched = new java.util.LinkedHashSet<>();
         for (ServerPlayer player : players) {
             List<Mob> near = level.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(NEAR_RADIUS),
                     MonsterTags::isMonster);
             aggro(player, near);
+            watched.addAll(near);
             if (levelCount >= cap || near.size() >= PER_PLAYER_CAP || Realm.inCapital(level, player.getX(), player.getZ())) {
                 continue;
             }
@@ -133,6 +139,9 @@ public final class MonsterSpawner {
                 room -= spawned;
             }
         }
+        if (tick % MonsterTempers.LOOK_STEP == 7) {
+            MonsterTempers.look(level, new ArrayList<>(watched), players);
+        }
     }
 
     /** Spawned in the field (not a dungeon wave or a boss summon). */
@@ -140,12 +149,17 @@ public final class MonsterSpawner {
         return !entity.getPersistentData().contains("er_instance") && !entity.getPersistentData().hasUUID("er_fight");
     }
 
+    /**
+     * Monsters that may fight {@code player} (provoked, or without a temper) and stand within the aggro radius with
+     * the player in sight turn on them (some vanilla monsters ignore players in daylight).
+     */
     private static void aggro(ServerPlayer player, List<Mob> near) {
         if (player.isCreative()) {
             return;
         }
+        double range = Math.max(ERServerConfig.AGGRO_RADIUS.get(), 1.0);
         for (Mob mob : near) {
-            if (mob.getTarget() == null && mob.distanceToSqr(player) < AGGRO_RANGE_SQR && mob.hasLineOfSight(player)
+            if (mob.getTarget() == null && mob.distanceToSqr(player) < range * range && mob.hasLineOfSight(player)
                     && MonsterTempers.mayFight(mob, player)) {
                 mob.setTarget(player);
             }
@@ -182,10 +196,12 @@ public final class MonsterSpawner {
             if (!level.noCollision(type.getAABB(x + 0.5, spawnY, z + 0.5))) {
                 continue;
             }
-            if (MonsterFactory.spawn(level, spawn, x + 0.5, spawnY, z + 0.5,
-                    (float) (random.nextDouble() * 360.0)).isEmpty()) {
+            java.util.Optional<Mob> first = MonsterFactory.spawn(level, spawn, x + 0.5, spawnY, z + 0.5,
+                    (float) (random.nextDouble() * 360.0));
+            if (first.isEmpty()) {
                 return 0;
             }
+            MonsterTempers.makeCalm(first.get());
             int spawned = 1;
             if (spawn.template().role() == com.eternalrealm.monster.MonsterRole.NORMAL && room > 1
                     && random.nextDouble() < PACK_CHANCE) {
@@ -204,8 +220,10 @@ public final class MonsterSpawner {
                         mate = new MonsterSpawn(spawn.template(), Math.max(spawn.template().levels().min(),
                                 Math.min(spawn.template().levels().max(), spawn.level() + random.nextInt(-1, 2))));
                     }
-                    if (MonsterFactory.spawn(level, mate, cx + 0.5, cy, cz + 0.5,
-                            (float) (random.nextDouble() * 360.0)).isPresent()) {
+                    java.util.Optional<Mob> companion = MonsterFactory.spawn(level, mate, cx + 0.5, cy, cz + 0.5,
+                            (float) (random.nextDouble() * 360.0));
+                    if (companion.isPresent()) {
+                        MonsterTempers.makeCalm(companion.get());
                         spawned++;
                     }
                 }
