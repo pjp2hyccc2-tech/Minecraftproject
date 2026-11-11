@@ -129,7 +129,7 @@ south-east and farms with windmills south-west outside the walls.
 | `shops` | (−51, 6, −6, 39) − disc | post office with pigeon loft and the sorting room upstairs, item shop with Pim's storeroom upstairs, blacksmith forge x −50..−32, z 25..38 with its entrance on the street at z = 43 and a back door to the shop lane (`shops.py`) |
 | `market` | (6, 6, 51, 39) − disc, (59, 6, 87, 39), (88, 21, 98, 39) | stall square with market cross, covered market hall, avenue stalls (`market.py`) |
 | `cathedral` | (12, −86, 98, −47) | gothic cathedral x 30..88, z −84..−49, close with gardens (`cathedral.py`) |
-| `upper_town` | (−98, −86, −59, −47), (−51, −86, −12, −47) | noble houses, front gardens, formal gardens with fountains (`upper_town.py`) |
+| `guild_gates` | (−98, −86, −10, −47) | ギルド門の広場 Guild Gate Terrace: twenty guild-house gates on a two-tier terrace (street wall, lower court y 6 with the broker's pavilion, upper wall, upper court y 12), the viaduct passage's landing at x −10, z −54..−53, the undercroft behind the viaduct arches; spots `guildgate.<design>`, `npc.guild_estates` ([guildhouse.md](guildhouse.md), `guild_gates.py`, `_gate_kit.py`) |
 | `residential_west` | (−98, −39, −59, −6), (−98, 6, −59, 39) | half-timbered rows, back gardens (`residential_west.py`) |
 | `residential_east` | (59, −39, 87, −6), (88, −39, 98, −21) | houses, gardens (`residential_east.py`) |
 | `south_west` | (−98, 47, −25, 73), (−24, 47, −6, 65) | tavern (x −24..−8, z 48..64, faces the south avenue), houses, back lane (`south_west.py`) |
