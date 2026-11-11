@@ -33,12 +33,21 @@ CB, SM, GOLD, ROOF = K.CB, K.SM, K.GOLD, K.ROOF
 VIEWS = {
     "market_square": dict(pos=(14, 7, 6), look=(44, 2, 30), fov=74, sun=(40, -160), fog=2600,
                           label="The market square"),
-    "galleria": dict(pos=(63, 9, -4), look=(74, 8, 12), fov=72, sun=(40, -160), fog=2600,
+    "galleria": dict(pos=(74.5, 4.5, 1.5), look=(74.5, 9, 12), fov=75, sun=(40, -140), fog=2600,
                      label="The Galleria from the east avenue"),
-    "galleria_in": dict(pos=(74.5, 3.2, 12.5), look=(74.5, 6, 34), fov=80, sun=(40, -160), fog=900,
+    "galleria_in": dict(pos=(72.5, 2.6, 12.0), look=(74.5, 5, 34), fov=80, sun=(40, -160), fog=900,
                         label="Inside the Galleria"),
-    "galleria_shops": dict(pos=(76.5, 2.6, 19.5), look=(69, 2.5, 22), fov=80, sun=(40, -160), fog=900,
+    "galleria_shops": dict(pos=(76.5, 2.6, 17.5), look=(69, 2.8, 19.5), fov=85, sun=(40, -160), fog=900,
                            label="Shop fronts in the Galleria"),
+    "undercroft_waterway": dict(pos=(38.6, -8.6, 36.5), look=(41, -8, 14), fov=80, sun=(70, -150), fog=900,
+                                ambient_boost=2.5, exposure=1.6, label="The underground waterway under the market"),
+    "undercroft_cistern": dict(pos=(35.5, -8.4, 18.5), look=(26, -10, 12), fov=85, sun=(70, -150), fog=900,
+                               ambient_boost=2.5, exposure=1.6, label="The old cistern"),
+    "undercroft_black_market": dict(pos=(22.5, -8.4, 33.5), look=(9, -9.5, 30), fov=85, sun=(70, -150), fog=900,
+                                    ambient_boost=2.5, exposure=1.6, label="The black market behind the secret door"),
+    "undercroft_cutaway": dict(pos=(10, 26, 52), look=(28, -10, 22), fov=62, sun=(70, -150), fog=2600,
+                               clip=[(1, -5.5, True)], ambient_boost=1.8, exposure=1.3,
+                               label="The undercroft, cut away at the ceilings"),
 }
 
 GOODS_CYCLE = ["fruit", "veg", "flowers", "cloth", "fish", "pots", "bread", "potions", "arms", "books"]
