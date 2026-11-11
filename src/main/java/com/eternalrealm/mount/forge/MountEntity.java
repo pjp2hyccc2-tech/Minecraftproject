@@ -60,6 +60,7 @@ public class MountEntity extends Mob implements OwnableEntity {
     private double lastWatchedY = Double.NaN;
     /** Sneak was held when the griffin landed: the rider gets off only after letting go and sneaking again. */
     private boolean landingSneak;
+    private double fixedCeiling = Double.NaN;
 
     // what the model shows (client side, measured from the movement every tick)
     private float distance;
@@ -175,8 +176,18 @@ public class MountEntity extends Mob implements OwnableEntity {
         return motion;
     }
 
-    /** The highest this mount may fly here: above the highest ground around it, below the top of the world. */
+    /** The highest this mount may fly here ({@link #terrainCeiling()}, or the ceiling a GameTest fixed). */
     public double flightCeiling() {
+        return Double.isNaN(fixedCeiling) ? terrainCeiling() : fixedCeiling;
+    }
+
+    /** GameTests: flies under this absolute height instead of the terrain's ceiling (the test world's sky varies). */
+    public void fixCeilingForTests(double y) {
+        this.fixedCeiling = y;
+    }
+
+    /** The ceiling from the terrain: above the highest ground around it, below the top of the world. */
+    public double terrainCeiling() {
         List<Integer> heights = new ArrayList<>(9);
         int r = MountRules.CEILING_SAMPLE_RADIUS;
         int x = Mth.floor(getX());

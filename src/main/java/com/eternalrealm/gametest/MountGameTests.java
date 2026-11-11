@@ -254,9 +254,9 @@ public final class MountGameTests {
     }
 
     /**
-     * The griffin climbs (jump held) until its ceiling stops it, never above it; glides down gently without input;
-     * dives faster with sneak; a rider who gets off in the air is spared the fall. A horse jumping all the while
-     * stays near the ground.
+     * The terrain's ceiling stands 32 above the ground; under a fixed ceiling the griffin climbs (jump held) until
+     * the ceiling stops it, never above it; glides down gently without input; dives faster with sneak; a rider who
+     * gets off in the air is spared the fall. A horse jumping all the while stays near the ground.
      */
     @GameTest(template = ARENA, timeoutTicks = 500)
     public static void theGriffinFliesToItsCeilingAndGlidesDown(GameTestHelper helper) {
@@ -267,6 +267,15 @@ public final class MountGameTests {
         MountEntity horse = MountService.summonNow(jumper, MountKind.HORSE)
                 .orElseThrow(() -> new GameTestAssertException("no room for the horse"));
         double ground = griffin.getY();
+        // the terrain's ceiling stands at least 32 above the ground under the griffin (or 8 under the world's top);
+        // the flight itself runs under a fixed ceiling 8 above the ground, since the test world's sky varies
+        double terrain = griffin.terrainCeiling();
+        double worldTop = helper.getLevel().getMaxBuildHeight() - MountRules.TOP_MARGIN;
+        if (terrain < Math.min(ground + MountRules.FLIGHT_HEIGHT, worldTop) - 0.01) {
+            throw new GameTestAssertException("the terrain ceiling " + terrain + " should be at least "
+                    + MountRules.FLIGHT_HEIGHT + " above the ground " + ground);
+        }
+        griffin.fixCeilingForTests(ground + 8.0);
         AtomicInteger ticks = new AtomicInteger();
         AtomicInteger phase = new AtomicInteger();
         AtomicInteger inPhase = new AtomicInteger();
@@ -296,7 +305,7 @@ public final class MountGameTests {
                         phase.set(4);
                         helper.fail("the griffin rose above its ceiling: y " + griffin.getY() + ", ceiling " + ceiling);
                     } else if (step > 20 && griffin.motion().y() < 1.0E-3) {
-                        if (griffin.getY() < ceiling - 1.0 || griffin.getY() - ground < 20.0) {
+                        if (griffin.getY() < ceiling - 0.6) {
                             phase.set(4);
                             helper.fail("the griffin stopped at y " + griffin.getY() + " below its ceiling " + ceiling
                                     + " (ground " + ground + ")");
@@ -322,9 +331,9 @@ public final class MountGameTests {
                         next(phase, inPhase, 2);
                     }
                 }
-                case 2 -> { // dive with sneak
+                case 2 -> { // dive with sneak (8 ticks: still in the air afterwards)
                     griffin.drive(DESCEND);
-                    if (step == 20) {
+                    if (step == 8) {
                         double dived = notes[2] - griffin.getY();
                         if (dived < (notes[1] - notes[2]) * 2.0) {
                             phase.set(4);
