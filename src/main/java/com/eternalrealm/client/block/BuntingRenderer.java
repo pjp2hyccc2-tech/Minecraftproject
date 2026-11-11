@@ -27,7 +27,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
 
 /**
  * Strings of bunting. The cord is a catenary ({@link BuntingLine}) drawn as a thin ribbon turned towards the camera; the
@@ -58,6 +57,7 @@ public class BuntingRenderer implements BlockEntityRenderer<BuntingBlockEntity> 
     private final double[] cord = new double[(MAX_SEGMENTS + 1) * 6];
     private final double[] side = new double[(MAX_SEGMENTS + 1) * 3];
     private final double[] glows = new double[MAX_GLOWS * 7];
+    private final double[] axes = new double[6];
     private int glowCount;
     // state of the string being drawn
     private double camX;
@@ -465,9 +465,10 @@ public class BuntingRenderer implements BlockEntityRenderer<BuntingBlockEntity> 
             double s0 = Math.sin(a0);
             double c1 = Math.cos(a1);
             double s1 = Math.sin(a1);
-            float nx = (float) (tx * Math.cos(am) + ex * Math.sin(am));
-            float ny = (float) (ty * Math.cos(am) + ey * Math.sin(am));
-            float nz = (float) (tz * Math.cos(am) + ez * Math.sin(am));
+            // lit from inside after dusk the paper glows evenly all round; by day it is shaded like a body
+            float nx = glow > 0.3F ? 0.0F : (float) (tx * Math.cos(am) + ex * Math.sin(am));
+            float ny = glow > 0.3F ? 1.0F : (float) (ty * Math.cos(am) + ey * Math.sin(am));
+            float nz = glow > 0.3F ? 0.0F : (float) (tz * Math.cos(am) + ez * Math.sin(am));
             float ua = u0 + (u1 - u0) * j / sides;
             float ub = u0 + (u1 - u0) * (j + 1) / sides;
             // upper row: cap ring to the belly
@@ -543,33 +544,12 @@ public class BuntingRenderer implements BlockEntityRenderer<BuntingBlockEntity> 
 
     /** Soft additive halos round the lit lanterns, turned to the camera. */
     private void drawGlows(MultiBufferSource buffers, Camera camera) {
-        // the camera's side and up vectors: its rotation applied to x and y
-        Quaternionf q = camera.rotation();
-        double qx = q.x();
-        double qy = q.y();
-        double qz = q.z();
-        double qw = q.w();
-        double sideX = 1.0 - 2.0 * (qy * qy + qz * qz);
-        double sideY = 2.0 * (qx * qy + qw * qz);
-        double sideZ = 2.0 * (qx * qz - qw * qy);
-        double upX = 2.0 * (qx * qy - qw * qz);
-        double upY = 1.0 - 2.0 * (qx * qx + qz * qz);
-        double upZ = 2.0 * (qy * qz + qw * qx);
+        QuadWriter.cameraAxes(camera, axes);
         quads.target(buffers.getBuffer(GLOW)).light(LightTexture.FULL_BRIGHT);
         for (int i = 0; i < glowCount; i++) {
             int o = i * 7;
-            double size = glows[o + 6];
-            double lx = sideX * size;
-            double ly = sideY * size;
-            double lz = sideZ * size;
-            double ux = upX * size;
-            double uy = upY * size;
-            double uz = upZ * size;
             quads.color((float) glows[o + 3], (float) glows[o + 4], (float) glows[o + 5], 1.0F);
-            quads.vertex(glows[o] + lx + ux, glows[o + 1] + ly + uy, glows[o + 2] + lz + uz, 0.0F, 0.0F, 0, 1, 0);
-            quads.vertex(glows[o] + lx - ux, glows[o + 1] + ly - uy, glows[o + 2] + lz - uz, 0.0F, 1.0F, 0, 1, 0);
-            quads.vertex(glows[o] - lx - ux, glows[o + 1] - ly - uy, glows[o + 2] - lz - uz, 1.0F, 1.0F, 0, 1, 0);
-            quads.vertex(glows[o] - lx + ux, glows[o + 1] - ly + uy, glows[o + 2] - lz + uz, 1.0F, 0.0F, 0, 1, 0);
+            quads.billboard(glows[o], glows[o + 1], glows[o + 2], glows[o + 6], axes);
         }
     }
 

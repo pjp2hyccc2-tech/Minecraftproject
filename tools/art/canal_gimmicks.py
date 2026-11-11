@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Art for the canal town gimmicks: hanging shop signs (16 painted trade pictures on iron-framed boards, the
 wrought-iron bracket), bunting (pennants, flags, paper lanterns, laundry, garland leaves and flowers, cord, pegs, iron
-eyes, the lantern halo), the item icons, and the block models, blockstates, loot tables and tags.
+eyes, the lantern halo), the floating candle lantern (paper side, wooden float), the item icons, and the block
+models, blockstates, loot tables and tags.
 
     python3 tools/art/canal_gimmicks.py      # writes assets + data, and tools/art/canal_gimmicks_preview.png
 
@@ -1059,6 +1060,71 @@ def glow_texture() -> Image.Image:
     return Image.fromarray(a, "RGBA")
 
 
+# =========================================================================== floating lantern (16 x 16)
+def float_paper() -> Image.Image:
+    """A side of the floating lantern: a thin wooden frame round paper painted with a blossom (tinted warm)."""
+    r = rng("float_paper")
+    c = Canvas(16, 16)
+    wood = Ramp("#2a160b", "#40230f", "#5a3317", "#744421")
+    for y in range(16):
+        for x in range(16):
+            if y <= 1 or y >= 14:
+                c.put(x, y, wood[1 if y in (0, 15) else 2])
+            elif x in (0, 15):
+                c.put(x, y, wood[1])
+            else:
+                fibre = 0.03 * math.sin(x * 2.1 + y * 0.7) + (r.random() - 0.5) * 0.04
+                c.put(x, y, grey(0.95 + fibre))
+    petals = np.zeros((16, 16), bool)
+    for k in range(5):
+        a = -math.pi / 2 + k * 2 * math.pi / 5
+        petals |= ellipse_mask(16, 16, 7.5 + math.cos(a) * 2.6, 7.6 + math.sin(a) * 2.6, 1.9)
+    for y, x in zip(*np.nonzero(petals)):
+        if 2 <= y <= 13 and 1 <= x <= 14:
+            c.put(x, y, grey(0.8))
+    for y, x in zip(*np.nonzero(petals & ~(shift(petals, 1, 0) & shift(petals, -1, 0) & shift(petals, 0, 1)
+                                          & shift(petals, 0, -1)))):
+        if 2 <= y <= 13 and 1 <= x <= 14:
+            c.put(x, y, grey(0.64))
+    for (x, y) in ((7, 7), (8, 7), (7, 8), (8, 8)):
+        c.put(x, y, grey(0.5))
+    for x in range(2, 14, 3):
+        c.put(x, 12, grey(0.72))                   # a painted wave along the bottom
+        c.put(x + 1, 11, grey(0.72))
+    return c.image()
+
+
+def float_raft() -> Image.Image:
+    a = wood_board(16, 16, "float_raft", base="#6a4424", planks=3)
+    for x in (3, 12):
+        for y in range(16):
+            a[y, x, :3] = np.array(hexc("#b49a6a")[:3], float) * (0.85 if y % 2 else 1.0)   # rope binding
+    a[..., 3] = 255
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
+
+
+def item_floating_lantern() -> Image.Image:
+    c = Canvas(16, 16)
+    water = Ramp("#123a5a", "#1d5580", "#2c74a6", "#4a96c4")
+    for y in range(11, 16):
+        for x in range(16):
+            c.put(x, y, water[1 + ((x + y * 3) % 5 == 0) + (y == 11)])
+    for x in range(4, 12):
+        c.put(x, 11, hexc("#e8a04a") if 6 <= x <= 9 else water[3])
+    for y in (9, 10):
+        for x in range(3, 13):
+            c.put(x, y, hexc("#5a3317") if y == 10 else hexc("#744421"))
+    paper = Ramp("#a0602a", "#d28a3e", "#f2b85a", "#ffdc8c", "#fff3c8")
+    for y in range(3, 9):
+        for x in range(5, 11):
+            c.put(x, y, paper[4 if (x in (7, 8) and 4 <= y <= 7) else (3 if 5 <= y <= 7 else 2)])
+    for x in range(5, 11):
+        c.put(x, 2, hexc("#40230f"))
+        c.put(x, 8, hexc("#40230f"))
+    c.put(7, 1, hexc("#ffe9a8"))
+    return c.image()
+
+
 # =========================================================================== item icons (16 x 16)
 def item_bunting() -> Image.Image:
     c = Canvas(16, 16)
@@ -1263,13 +1329,18 @@ def gen_models():
                 for open_ in ("false", "true"):
                     door[f"facing={f},half={half},look={look},open={open_}"] = look_models[look]
     write_json(os.path.join(ASSETS, "blockstates", "secret_door.json"), {"variants": door})
-    for name in ("bunting", "secret_door", "shop_sign"):
+    # floating lantern: drawn by its renderer (float, paper, flame, halo, light on the water)
+    model("floating_lantern", {"textures": {"particle": t("floating_lantern/raft")}})
+    write_json(os.path.join(ASSETS, "blockstates", "floating_lantern.json"),
+               {"variants": {"": {"model": f"{NS}:block/floating_lantern"}}})
+    for name in ("bunting", "secret_door", "shop_sign", "floating_lantern"):
         item_model(name)
     loot("bunting")
     loot("shop_sign")
+    loot("floating_lantern")
     tags = os.path.join(DATA, "minecraft", "tags", "blocks")
     merge_tag(os.path.join(tags, "mineable", "pickaxe.json"), [f"{NS}:bunting"])
-    merge_tag(os.path.join(tags, "mineable", "axe.json"), [f"{NS}:shop_sign"])
+    merge_tag(os.path.join(tags, "mineable", "axe.json"), [f"{NS}:shop_sign", f"{NS}:floating_lantern"])
 
 
 # =========================================================================== preview
@@ -1373,12 +1444,14 @@ def preview(boards, sprites, items):
     # sprites at 6x
     x = 12
     for name in ("pennant", "flag", "lantern", "lantern_cap", "leaves", "flower", "shirt", "towel", "socks",
-                 "trousers", "dress", "peg", "cord", "ring", "iron"):
+                 "trousers", "dress", "peg", "cord", "ring", "iron", "float_paper", "float_raft"):
         img = sprites[name]
+        if name == "float_paper":
+            img = tint(img, (255, 214, 160))
         if name in ("pennant", "flag", "lantern", "flower", "shirt", "towel", "socks", "trousers", "dress"):
             img = tint(img, DYES["red" if name != "shirt" else "light_blue"])
-        sheet.alpha_composite(img.resize((64, 64), Image.NEAREST), (x, y0))
-        x += 70
+        sheet.alpha_composite(img.resize((60, 60), Image.NEAREST), (x, y0))
+        x += 66
     y0 += 72
     x = 12
     for img in items:
@@ -1408,14 +1481,17 @@ def main() -> int:
         "dress": cloth_from(DRESS, "dress", {"#": 0.95, "s": 0.8, "p": 0.6, "w": 0.7, "f": 0.86, "h": 0.8}),
         "peg": peg_sprite(), "cord": cord_sprite(), "ring": ring_sprite(), "iron": wrought_iron(),
     }
-    for name, img in sprites.items():
+    for name, img in list(sprites.items()):
         save_png(img, "block", "bunting", f"{name}.png")
     save_png(glow_texture(), "entity", "bunting", "glow.png")
+    sprites["float_paper"] = save_png(float_paper(), "block", "floating_lantern", "paper.png")
+    sprites["float_raft"] = save_png(float_raft(), "block", "floating_lantern", "raft.png")
     items = [save_png(item_bunting(), "item", "bunting.png"), save_png(item_secret_door(), "item", "secret_door.png"),
-             save_png(item_shop_sign(), "item", "shop_sign.png")]
+             save_png(item_shop_sign(), "item", "shop_sign.png"),
+             save_png(item_floating_lantern(), "item", "floating_lantern.png")]
     gen_models()
     preview(boards, sprites, items)
-    print(f"{len(boards)} shop sign boards, {len(sprites)} bunting sprites, 3 item icons, models and states")
+    print(f"{len(boards)} shop sign boards, {len(sprites)} cloth/float sprites, {len(items)} item icons, models, states")
     return 0
 
 

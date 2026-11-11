@@ -32,6 +32,9 @@ final class GimmickSprites {
     static final int SIGN_RING = 17;
     /** First of the shop sign boards, one per {@link ShopSignBlock.Icon} in order. */
     static final int SIGN_BOARD = 18;
+    /** The floating lantern's paper and its wooden float (after the boards). */
+    static final int FLOAT_PAPER = SIGN_BOARD + ShopSignBlock.Icon.values().length;
+    static final int FLOAT_RAFT = FLOAT_PAPER + 1;
 
     private static final ResourceLocation[] IDS;
     private static TextureAtlasSprite[] sprites;
@@ -42,7 +45,7 @@ final class GimmickSprites {
                 "bunting/trousers", "bunting/dress", "bunting/peg", "bunting/iron", "bunting/ring", "shop_sign/edge",
                 "shop_sign/chain", "shop_sign/ring"};
         ShopSignBlock.Icon[] icons = ShopSignBlock.Icon.values();
-        IDS = new ResourceLocation[names.length + icons.length];
+        IDS = new ResourceLocation[names.length + icons.length + 2];
         for (int i = 0; i < names.length; i++) {
             IDS[i] = new ResourceLocation(ModInfo.MOD_ID, "block/" + names[i]);
         }
@@ -50,6 +53,8 @@ final class GimmickSprites {
             IDS[SIGN_BOARD + icon.ordinal()] = new ResourceLocation(ModInfo.MOD_ID,
                     "block/shop_sign/" + icon.getSerializedName());
         }
+        IDS[FLOAT_PAPER] = new ResourceLocation(ModInfo.MOD_ID, "block/floating_lantern/paper");
+        IDS[FLOAT_RAFT] = new ResourceLocation(ModInfo.MOD_ID, "block/floating_lantern/raft");
     }
 
     private GimmickSprites() {

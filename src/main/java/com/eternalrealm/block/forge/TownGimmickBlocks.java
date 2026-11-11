@@ -43,6 +43,10 @@ public final class TownGimmickBlocks {
     public static final RegistryObject<Block> SHOP_SIGN = block("shop_sign", () -> new ShopSignBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(1.0F, 3.0F).sound(SoundType.HANGING_SIGN)
                     .noCollission().noOcclusion().pushReaction(PushReaction.DESTROY)), BlockItem::new);
+    public static final RegistryObject<Block> FLOATING_LANTERN = block("floating_lantern",
+            () -> new FloatingLanternBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(0.3F)
+                    .sound(SoundType.WOOD).lightLevel(state -> 9).noCollission().noOcclusion()
+                    .pushReaction(PushReaction.DESTROY)), BlockItem::new);
 
     @SuppressWarnings("DataFlowIssue") // the data fixer type may be null
     public static final RegistryObject<BlockEntityType<BuntingBlockEntity>> BUNTING_ENTITY =
@@ -56,6 +60,10 @@ public final class TownGimmickBlocks {
     public static final RegistryObject<BlockEntityType<ShopSignBlockEntity>> SHOP_SIGN_ENTITY =
             BLOCK_ENTITIES.register("shop_sign",
                     () -> BlockEntityType.Builder.of(ShopSignBlockEntity::new, SHOP_SIGN.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final RegistryObject<BlockEntityType<FloatingLanternBlockEntity>> FLOATING_LANTERN_ENTITY =
+            BLOCK_ENTITIES.register("floating_lantern", () -> BlockEntityType.Builder.of(FloatingLanternBlockEntity::new,
+                    FLOATING_LANTERN.get()).build(null));
 
     private TownGimmickBlocks() {
     }

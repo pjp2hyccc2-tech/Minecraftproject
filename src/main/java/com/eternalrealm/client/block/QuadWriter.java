@@ -1,10 +1,12 @@
 package com.eternalrealm.client.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 /**
  * Writes entity-format vertices with the pose applied by hand, so renderers drawn hundreds of times a frame (bunting)
@@ -92,6 +94,35 @@ final class QuadWriter {
         blue = b;
         alpha = a;
         return this;
+    }
+
+    /** The camera's side and up vectors in world terms (for billboards): {@code out[0..2]}, {@code out[3..5]}. */
+    static void cameraAxes(Camera camera, double[] out) {
+        Quaternionf q = camera.rotation();
+        double qx = q.x();
+        double qy = q.y();
+        double qz = q.z();
+        double qw = q.w();
+        out[0] = 1.0 - 2.0 * (qy * qy + qz * qz);
+        out[1] = 2.0 * (qx * qy + qw * qz);
+        out[2] = 2.0 * (qx * qz - qw * qy);
+        out[3] = 2.0 * (qx * qy - qw * qz);
+        out[4] = 1.0 - 2.0 * (qx * qx + qz * qz);
+        out[5] = 2.0 * (qy * qz + qw * qx);
+    }
+
+    /** A camera-facing square of half size {@code size} at (x, y, z) with the whole texture, axes from cameraAxes. */
+    void billboard(double x, double y, double z, double size, double[] axes) {
+        double lx = axes[0] * size;
+        double ly = axes[1] * size;
+        double lz = axes[2] * size;
+        double ux = axes[3] * size;
+        double uy = axes[4] * size;
+        double uz = axes[5] * size;
+        vertex(x + lx + ux, y + ly + uy, z + lz + uz, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F);
+        vertex(x + lx - ux, y + ly - uy, z + lz - uz, 0.0F, 1.0F, 0.0F, 1.0F, 0.0F);
+        vertex(x - lx - ux, y - ly - uy, z - lz - uz, 1.0F, 1.0F, 0.0F, 1.0F, 0.0F);
+        vertex(x - lx + ux, y - ly + uy, z - lz + uz, 1.0F, 0.0F, 0.0F, 1.0F, 0.0F);
     }
 
     /** One vertex at a position relative to the block (same space as the pose stack's block origin). */

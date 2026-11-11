@@ -30,5 +30,6 @@
   "shop_sign.eternalrealm.icon.scroll": {"ja": "巻物", "en": "Scroll"},
   "shop_sign.eternalrealm.icon.map": {"ja": "地図", "en": "Map"},
   "shop_sign.eternalrealm.icon.hammer": {"ja": "槌", "en": "Hammer"},
-  "shop_sign.eternalrealm.icon.ring": {"ja": "指輪", "en": "Ring"}
+  "shop_sign.eternalrealm.icon.ring": {"ja": "指輪", "en": "Ring"},
+  "block.eternalrealm.floating_lantern": {"ja": "浮き灯籠", "en": "Floating Lantern"}
 }

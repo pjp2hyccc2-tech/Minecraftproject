@@ -42,7 +42,8 @@ import java.util.List;
 /**
  * The canal town gimmicks in a real server: a secret door opens from either half, lets people through, waits while
  * someone stands in it and slides shut again; its halves never part; bunting data written by the capital build loads,
- * clamps and saves unchanged; and every block state the capital build may write for these blocks exists.
+ * clamps and saves unchanged; and every block state the capital build may write for these blocks (and the floating
+ * lantern) exists.
  */
 @GameTestHolder(ModInfo.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -252,15 +253,21 @@ public final class TownGimmickGameTests {
                 }
             }
         }
+        parse(blocks, "eternalrealm:floating_lantern", problems);
         // the capital build's schema lists exactly these looks and icons (tools/capital/blocks.py)
         check(SecretDoorBlock.Look.values().length == 7, "seven looks");
         check(ShopSignBlock.Icon.values().length == 16, "sixteen icons");
         BlockState sign = TownGimmickBlocks.SHOP_SIGN.get().defaultBlockState();
         BlockState anchor = TownGimmickBlocks.BUNTING.get().defaultBlockState();
         BlockPos origin = helper.absolutePos(BlockPos.ZERO);
+        BlockState lantern = TownGimmickBlocks.FLOATING_LANTERN.get().defaultBlockState();
         if (!sign.getCollisionShape(helper.getLevel(), origin).isEmpty()
-                || !anchor.getCollisionShape(helper.getLevel(), origin).isEmpty()) {
-            problems.add("signs and bunting hooks must not block the street");
+                || !anchor.getCollisionShape(helper.getLevel(), origin).isEmpty()
+                || !lantern.getCollisionShape(helper.getLevel(), origin).isEmpty()) {
+            problems.add("signs, bunting hooks and floating lanterns must not block streets and canals");
+        }
+        if (lantern.getLightEmission() != 9) {
+            problems.add("a floating lantern gives light 9, not " + lantern.getLightEmission());
         }
         if (!problems.isEmpty()) {
             throw new GameTestAssertException(problems.size() + " problems: " + String.join("; ", problems));

@@ -8,7 +8,7 @@
 
 Builds the whole capital (no export), then renders the town cameras below with ``capital.preview``. By default
 the animated gimmicks the game draws around their blocks (flags, windmill sails, clock dials, water wheels,
-fountain jets, bunting strings, shop signs, secret doors) are stood in by temporary blocks on a copy of the world so the previews show roughly what a
+fountain jets, bunting strings, shop signs, secret doors, floating lanterns) are stood in by temporary blocks on a copy of the world so the previews show roughly what a
 player will see; ``--raw`` renders the world as exported.
 """
 from __future__ import annotations
@@ -119,7 +119,7 @@ def gimmicks(w):
     out = []
     ids = {}
     kinds = ("flag", "clock_face", "windmill_sails", "water_wheel", "fountain_spray", "smoke_emitter", "bunting",
-             "secret_door", "shop_sign")
+             "secret_door", "shop_sign", "floating_lantern")
     for i, st in enumerate(w.palette):
         if st.startswith("eternalrealm:") and st.split(":")[1].split("[")[0] in kinds:
             ids[i] = st
@@ -228,6 +228,9 @@ def canal_problems(w, kind, pos, facing, snbt, props):
                 out.append(((x - fx, y, z - fz), "no wall behind the bracket"))
         if _solid(w.get(x, y - 1, z)):
             out.append(((x, y - 1, z), "the board's lower edge pokes into the block below"))
+    elif kind == "floating_lantern":
+        if not w.get(x, y - 1, z).startswith("minecraft:water"):
+            out.append(((x, y - 1, z), "not floating on water: " + w.get(x, y - 1, z).split(":")[1][:20]))
     return out
 
 
@@ -291,6 +294,8 @@ def _dress_canal(w, items):
             w.palette[i] = B.wall_sign("spruce", "east" if across_x else "south")
         elif bid.startswith("eternalrealm:") and name == "bunting":
             w.palette[i] = B.chain("y")
+        elif bid.startswith("eternalrealm:") and name == "floating_lantern":
+            w.palette[i] = B.lantern()
     for kind, pos, facing, snbt, props in items:
         if kind != "bunting":
             continue

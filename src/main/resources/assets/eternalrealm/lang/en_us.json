@@ -6166,5 +6166,6 @@
   "shop_sign.eternalrealm.icon.scroll": "Scroll",
   "shop_sign.eternalrealm.icon.map": "Map",
   "shop_sign.eternalrealm.icon.hammer": "Hammer",
-  "shop_sign.eternalrealm.icon.ring": "Ring"
+  "shop_sign.eternalrealm.icon.ring": "Ring",
+  "block.eternalrealm.floating_lantern": "Floating Lantern"
 }

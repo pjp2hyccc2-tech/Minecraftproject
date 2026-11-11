@@ -284,6 +284,34 @@ public class CanalGimmicksTest {
         assertTrue("a board edge-on to the wind barely moves", edgeOn < max * 0.6);
     }
 
+    @Test
+    public void floatingLanternsStayInTheirBlockOnTheWater() {
+        double[] d = new double[2];
+        double[] t = new double[2];
+        double minBob = 1.0;
+        double maxBob = -1.0;
+        for (long seed : new long[]{1L, 77L, -9_123_456_789L}) {
+            for (int i = 0; i < 4000; i++) {
+                double s = i * 0.05;
+                double bob = FloatingLanternMotion.bob(s, seed);
+                assertTrue(Math.abs(bob) <= FloatingLanternMotion.MAX_BOB);
+                minBob = Math.min(minBob, bob);
+                maxBob = Math.max(maxBob, bob);
+                FloatingLanternMotion.drift(s, seed, d);
+                assertTrue("drifts within its block", Math.hypot(d[0], d[1]) <= FloatingLanternMotion.MAX_DRIFT);
+                FloatingLanternMotion.tilt(s, seed, t);
+                assertTrue(Math.abs(t[0]) <= FloatingLanternMotion.MAX_TILT
+                        && Math.abs(t[1]) <= FloatingLanternMotion.MAX_TILT);
+                double f = FloatingLanternMotion.flicker(s, seed);
+                assertTrue(f >= 0.8 && f <= 1.0);
+                assertTrue(Double.isFinite(FloatingLanternMotion.yaw(s, seed)));
+            }
+        }
+        assertTrue("it bobs", maxBob - minBob > 0.04);
+        assertTrue("lanterns move on their own phases",
+                Math.abs(FloatingLanternMotion.bob(3.0, 1L) - FloatingLanternMotion.bob(3.0, 2L)) > 1e-6);
+    }
+
     private static double sq(double v) {
         return v * v;
     }

@@ -5,6 +5,8 @@
     GK.bunting_chain(t, [(x0, y, z0), (x1, y, z1), (x2, y, z2)], style="lanterns")      # zigzag over a canal
     GK.secret_door(t, x, y, z, facing="south", look="bookshelf")
     GK.shop_sign(t, x, y, z, facing="east", icon="potion", attach="wall")
+    GK.floating_lantern(t, x, y, z)                                                    # on the canal at night
+    GK.canal_lanterns(t, x0, z0, x1, z1, water_y, every=3.5)
 
 Targets are a ``World`` or a ``Frame`` (states, positions and the bunting's offset are rotated/mirrored with the frame;
 the block entity data is always written in world terms). See docs/modules/capital.md "Moving decorations" for what
@@ -262,3 +264,33 @@ def shop_sign(t, x, y, z, facing, icon, attach="wall"):
     if facing not in H4:
         raise ValueError(f"bad facing {facing!r}")
     t.set(x, y, z, B.S("shop_sign", facing=facing, icon=icon, attach=attach))
+
+
+# ====================================================================================== floating lantern
+def floating_lantern(t, x, y, z):
+    """A candle lantern floating on a canal: (x, y, z) is the AIR block right above the water surface block. It bobs,
+    rocks, turns and drifts within its block, gives light 9 day and night, and after dusk (always, under a roof or
+    underground) its paper glows with a halo and a shimmer of light on the water. Boats pass through it."""
+    t.set(x, y, z, B.S("floating_lantern"))
+
+
+def canal_lanterns(t, x0, z0, x1, z1, water_y, every=3.5, seed=0):
+    """Scatter floating lanterns over the open water of a rectangle whose water surface blocks are at ``water_y``:
+    about one per ``every`` x ``every`` blocks, never two side by side, only where the block above the water is air.
+    Returns the positions (local terms)."""
+    from capital.noise import hash2
+    x0, x1 = sorted((int(x0), int(x1)))
+    z0, z1 = sorted((int(z0), int(z1)))
+    placed = []
+    chance = 1.0 / max(1.0, float(every)) ** 2
+    for x in range(x0, x1 + 1):
+        for z in range(z0, z1 + 1):
+            if float(hash2(x, z, 7919 + int(seed))) >= chance:
+                continue
+            if not t.get(x, water_y, z).startswith("minecraft:water") or not t.is_empty(x, water_y + 1, z):
+                continue
+            if any(abs(px - x) <= 1 and abs(pz - z) <= 1 for px, _, pz in placed):
+                continue
+            floating_lantern(t, x, water_y + 1, z)
+            placed.append((x, water_y + 1, z))
+    return placed

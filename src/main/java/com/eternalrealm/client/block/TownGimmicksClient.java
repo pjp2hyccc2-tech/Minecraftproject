@@ -20,6 +20,8 @@ public final class TownGimmicksClient {
         event.registerBlockEntityRenderer(TownGimmickBlocks.BUNTING_ENTITY.get(), BuntingRenderer::new);
         event.registerBlockEntityRenderer(TownGimmickBlocks.SECRET_DOOR_ENTITY.get(), SecretDoorRenderer::new);
         event.registerBlockEntityRenderer(TownGimmickBlocks.SHOP_SIGN_ENTITY.get(), ShopSignRenderer::new);
+        event.registerBlockEntityRenderer(TownGimmickBlocks.FLOATING_LANTERN_ENTITY.get(),
+                FloatingLanternRenderer::new);
     }
 
     @SubscribeEvent

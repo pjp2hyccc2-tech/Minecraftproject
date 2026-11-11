@@ -6166,5 +6166,6 @@
   "shop_sign.eternalrealm.icon.scroll": "巻物",
   "shop_sign.eternalrealm.icon.map": "地図",
   "shop_sign.eternalrealm.icon.hammer": "槌",
-  "shop_sign.eternalrealm.icon.ring": "指輪"
+  "shop_sign.eternalrealm.icon.ring": "指輪",
+  "block.eternalrealm.floating_lantern": "浮き灯籠"
 }
